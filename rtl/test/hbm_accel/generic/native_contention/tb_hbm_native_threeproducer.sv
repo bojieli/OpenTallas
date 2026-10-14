@@ -55,22 +55,32 @@ module tb_hbm_native_threeproducer;
       assign admitted_su_wq[(aq*8+ab)*280+:280]={su_wq[(aq*8+ab)*280+279]&&((MUT!=11)||su_wg[aq]),su_wq[(aq*8+ab)*280+:279]};
     end
     ot_hbm_b2_native_owned4 #(.MUT(MUT==10?1:MUT==13?3:0),.FASTFIN(1),.FRONTFAST(1)) vehicle(
-      .su_clk(cclk),.quant_clk(cclk),.dma_clk(cclk),.vclk(vmclk),.rst_n(rst_n),
+      .su_clk(cclk),.quant_clk(cclk),.dma_clk({4{clk}}),.vclk(vmclk),.rst_n(rst_n),
       .su_rreq(su_read_req),.su_wreq(su_write_req),.su_drained(stdn&drdn&~stgo&~drgo),.su_mirror(su_mirror),
       .su_rq(su_rq),.su_rcredit(su_rc),.su_rr(su_rr),.su_wq(admitted_su_wq),.su_wcredit(su_wc),.su_done(su_done),
       .su_rgrant(su_rg),.su_wgrant(su_wg),.su_rack(su_ra),.su_wack(su_wa),
       .quant_rec(quant_rec),.quant_mirror(4'b0),.quant_ret(quant_ret),.quant_drained(quant_drained),
-      .dma_rreq(4'b0),.dma_wreq(4'b0),.dma_peer_drained(4'hf),.dma_rq(544'b0),.dma_rcredit(),.dma_rr(),
-      .dma_wq(8992'b0),.dma_wcredit(),.dma_wdone(),.dma_rgrant(),.dma_wgrant(),.dma_rack(),.dma_wack(),
+      .dma_rreq(dma_bridge_req),.dma_wreq(4'b0),.dma_peer_drained(dma_bridge_drained),.dma_rq(dma_bridge_rq),.dma_rcredit(dma_bridge_credit),.dma_rr(dma_bridge_rr),
+      .dma_wq(8992'b0),.dma_wcredit(),.dma_wdone(),.dma_rgrant(dma_bridge_grant),.dma_wgrant(),.dma_rack(dma_bridge_ack),.dma_wack(),
       .dma_dq(native_dq),.dma_dq_done(native_done),.probe_clk(cclk),.probe_permit(4'hf),.probe_mirror(4'b0),
       .probe_rq(512'b0),.probe_rcredit(),.probe_rr(),.probe_wq(8960'b0),.probe_wcredit(),.probe_done(),
       .su_cdrained(su_cd),.su_vdrained(su_vd),.dma_cdrained(dma_cd),.dma_vdrained(dma_vd),
       .vm_rgrant(owner_r),.vm_wgrant(owner_w),.bank_status(bank_status),.fault(parent_fault));
     assign vehicle_fault=parent_fault[31:0];
-    reg quant_go=0,quant_seed=0,quant_check=0;
+    reg quant_go=0,quant_seed=0,quant_check=0,dma_core_go=0;
     wire [4*683-1:0] quant_rec;wire [11:0] quant_ret;
     wire quant_done;wire [31:0] quant_cycles,quant_checked;
     ot_native_quant_stimulus quant(.clk(clk),.rst_n(rst_n),.go(quant_go),.rec(quant_rec),.ret(quant_ret),.done(quant_done),.cycles(quant_cycles),.checked(quant_checked));
+    wire [512:0] dma_legacy_q;wire [8256:0] dma_legacy_r;
+    wire [3:0] dma_bridge_req,dma_bridge_drained,dma_bridge_released,dma_bridge_grant,dma_bridge_ack;
+    wire [543:0] dma_bridge_rq;wire [31:0] dma_bridge_credit;wire [8223:0] dma_bridge_rr;wire [64:0] dma_bridge_fault;
+    wire dma_core_done;wire [31:0] dma_core_checked,dma_core_requests,dma_core_peak;
+    ot_hgi_dma_native_read_owned #(.HARD_CLOCKS(1),.MUT(MUT==20?1:MUT==22?2:MUT==23?3:0)) dma_bridge(
+      .clk(clk),.rst_n(rst_n),.leaf_clk({64{clk}}),.legacy_q(dma_legacy_q),.legacy_r(dma_legacy_r),
+      .rgrant(dma_bridge_grant),.rack(dma_bridge_ack),.rreq(dma_bridge_req),.drained(dma_bridge_drained),.released(dma_bridge_released),
+      .native_rq(dma_bridge_rq),.native_credit(dma_bridge_credit),.native_rr(dma_bridge_rr),.fault(dma_bridge_fault));
+    ot_native_dma_core_stimulus #(.MUT(MUT)) dma_core(.clk(clk),.rst_n(rst_n),.go(dma_core_go),.bridge_released(dma_bridge_released),
+      .legacy_q(dma_legacy_q),.legacy_r(dma_legacy_r),.done(dma_core_done),.checked_words(dma_core_checked),.request_count(dma_core_requests),.peak_pending(dma_core_peak));
     reg [3:0] su_mirror=0,su_mask=4'hf;reg mirror_wave=0,park_admission=0;
     reg [3:0] stgo=0,drgo=0;wire [3:0] stdn,drdn,su_ov;
     reg [23:0] su_lo=0,su_hi=65535;
@@ -122,10 +132,11 @@ module tb_hbm_native_threeproducer;
       end
     end
     always @(posedge vmclk)if(rst_n)begin
-      if(qfault||rfault||lfault||parent_fault||bank_status||su_ov)
+      if(qfault||rfault||lfault||parent_fault||dma_bridge_fault||bank_status||su_ov)
         $fatal(1,"FATAL actual native hardware queue%h router%h lease%h vehicle%h status%h su%h",qfault,rfault,lfault,vehicle_fault,bank_status,su_ov);
     end
     integer mirror_checked=0,mirror_posts=0,mirror_commits=0,mirror_macro_writes=0;
+    integer dma_read_owner_edges=0,read_handoffs=0;reg [11:0] seen_read_owners=0,previous_rowner=0;
     integer parked_su_posts=0,owner_handoffs=0,su_owner_edges=0,quant_owner_edges=0,su_write_posts=0,su_write_commits=0,su_read_posts=0,su_read_replies=0;
     reg [11:0] previous_wowner=0;
     always @(posedge clk)if(rst_n)for(integer q=0;q<4;q++)for(integer b=0;b<8;b++)
@@ -147,7 +158,13 @@ module tb_hbm_native_threeproducer;
         if(owner_w[q*3+:3]!=0 && !$onehot(owner_w[q*3+:3]))$fatal(1,"THREEPRODUCER multiple write owners q%0d",q);
         if(owner_w[q*3])su_owner_edges++;
         if(owner_w[q*3+1])quant_owner_edges++;
-        if(owner_r[q*3+2]||owner_w[q*3+2])$fatal(1,"THREEPRODUCER idle DMA peer gained owner");
+        if(owner_r[q*3+2])dma_read_owner_edges++;
+        seen_read_owners[q*3+:3]=seen_read_owners[q*3+:3]|owner_r[q*3+:3];
+        if(owner_r[q*3+:3]!=0)begin
+          if(previous_rowner[q*3+:3]!=0&&previous_rowner[q*3+:3]!=owner_r[q*3+:3])read_handoffs++;
+          previous_rowner[q*3+:3]=owner_r[q*3+:3];
+        end
+        if(owner_w[q*3+2])$fatal(1,"THREEOWNER read-only DMA peer gained write owner");
         if(owner_w[q*3+:3]!=0)begin
           if(previous_wowner[q*3+:3]!=0&&previous_wowner[q*3+:3]!=owner_w[q*3+:3])owner_handoffs++;
           previous_wowner[q*3+:3]=owner_w[q*3+:3];
@@ -255,7 +272,7 @@ module tb_hbm_native_threeproducer;
             es = (f == 0 || f == 5) ? 4 : (f == 1) ? 2 : 1; e0 = errs;
             if(load_count==0)begin quant_seed=1;wait(quant.loaded);end
             su_run(0,0,65535,1,0);
-            if(load_count==0)begin quant_go=1;quant_check=1;end
+            if(load_count==0)begin quant_go=1;quant_check=1;dma_core_go=1;end
             mv = 0; mv[1:0] = 0; mv[4:2] = f; mv[44:5] = 40'(sbase); mv[76:45] = 32'(sstr); mv[92:77] = 1;
             mv[94:93] = 1; mv[97:95] = 0; mv[137:98] = 40'(dbase); mv[169:138] = 32'(dstr); mv[185:170] = 1;
             mv[205:186] = 20'(m); mv[226:206] = 21'(n);
@@ -270,7 +287,7 @@ module tb_hbm_native_threeproducer;
                 dma_cycles=cyc-t0;dma_ok=mv_done;
               end
             join
-            if(load_count==0)wait(quant_done);
+            if(load_count==0)wait(quant_done&&dma_core_done);
             if (!dma_ok) begin $display("FAIL load f %0d m %0d n %0d: done %0d fault %0d", f, m, n, mv_done, mv_fault); errs = errs + 1; end
             else begin
                 tcyc = tcyc + dma_cycles;
@@ -313,13 +330,22 @@ module tb_hbm_native_threeproducer;
       begin
         if(quant_cycles*10>168*11)$display("THREEPRODUCER_QUANT_PRICE_FAIL cycles%0d immutable168 ratio%0.9f limit1.10",quant_cycles,quant_cycles/168.0);
         else $display("THREEPRODUCER_QUANT_PRICE_PASS cycles%0d immutable168",quant_cycles);
+        for(integer meta_wait=0;su_ra!=4'hf||su_wa!=4'hf||su_cd!=32'hffffffff||su_vd!=32'hffffffff||owner_r!=0||owner_w!=0||quant_drained!=4'hf||dma_bridge_released!=4'hf;meta_wait++)begin
+          @(negedge clk);if(meta_wait>4000)$fatal(1,"THREEOWNER source metadata flip before actual drain ACKs");
+        end
         // One real SU_h source posts mirrored beats; all four actual VM copies
         // are checked through the real SU_h read path after global commit.
         quant_seed=0;su_mask=4'b0001;su_mirror=4'b0001;mirror_wave=1;
         su_run(0,32752,32767,1,0);
-        while(owner_w!=0)@(negedge clk);
+        for(integer meta_wait=0;su_ra!=4'hf||su_wa!=4'hf||su_cd!=32'hffffffff||su_vd!=32'hffffffff||owner_r!=0||owner_w!=0;meta_wait++)begin
+          @(negedge clk);if(meta_wait>4000)$fatal(1,"THREEOWNER mirrored lease did not ACK before aperture change");
+        end
         mirror_wave=0;su_mirror=4'hf;su_mask=4'hf;
-        su_run(3,32752,32767,0,1);su_mirror=0;
+        su_run(3,32752,32767,0,1);
+        for(integer meta_wait=0;su_ra!=4'hf||su_wa!=4'hf||su_cd!=32'hffffffff||su_vd!=32'hffffffff||owner_r!=0||owner_w!=0;meta_wait++)begin
+          @(negedge clk);if(meta_wait>4000)$fatal(1,"THREEOWNER mirrored reads did not ACK before aperture change");
+        end
+        su_mirror=0;
         if(mirror_posts!=2||mirror_commits!=2||mirror_checked!=8||mirror_macro_writes!=8)$fatal(1,"THREEPRODUCER mirror count posts%0d commits%0d checked%0d macros%0d",mirror_posts,mirror_commits,mirror_checked,mirror_macro_writes);
         $display("THREEPRODUCER_GLOBAL_MIRROR PASS actual_source_posts2 global_commits2 destination_sectors8 words64");
         for(integer waitdrain=0;su_cd!=32'hffffffff||su_vd!=32'hffffffff||quant_drained!=4'hf||drained!=4'hf||owner_r!=0||owner_w!=0;waitdrain++)begin
@@ -327,20 +353,22 @@ module tb_hbm_native_threeproducer;
         end
         if(parked_su_posts==0||owner_handoffs==0||quant_owner_edges==0||su_owner_edges==0)$fatal(1,"THREEPRODUCER missing posted/grant/handoff evidence parked%0d handoff%0d SU%0d quant%0d",parked_su_posts,owner_handoffs,su_owner_edges,quant_owner_edges);
         if(su_write_posts!=su_write_commits||su_read_posts!=su_read_replies)$fatal(1,"THREEPRODUCER lost actual post W%0d/%0d R%0d/%0d",su_write_posts,su_write_commits,su_read_posts,su_read_replies);
+        if(seen_read_owners!=12'hfff||dma_read_owner_edges==0||read_handoffs<8||dma_core_checked!=1024||dma_core_requests!=128)$fatal(1,"THREEOWNER actual sources missing owner%h DMAedges%0d handoffs%0d golden%0d requests%0d",seen_read_owners,dma_read_owner_edges,read_handoffs,dma_core_checked,dma_core_requests);
+        $display("THREEOWNER_READ_HANDOFF PASS actual_q10_source39 requests128 goldenwords1024 all4_three_owner_mask%h handoffs%0d DMA_owner_edges%0d source_peak_pending%0d truthful_capacity32",seen_read_owners,read_handoffs,dma_read_owner_edges,dma_core_peak);
         $display("THREEPRODUCER_POST_RETENTION PASS write%0d commit%0d read%0d reply%0d parked%0d",su_write_posts,su_write_commits,su_read_posts,su_read_replies,parked_su_posts);
-        $display("THREEPRODUCER_DRAIN PASS parked_SU_posts%0d handoffs%0d SU_owner_edges%0d quant_owner_edges%0d two_group1_owners_DMA_DQ_only",parked_su_posts,owner_handoffs,su_owner_edges,quant_owner_edges);
+        $display("THREEPRODUCER_DRAIN PASS parked_SU_posts%0d handoffs%0d SU_owner_edges%0d quant_owner_edges%0d three_group1_R_owners_actual_DMAcore_and_separate_frontDQ",parked_su_posts,owner_handoffs,su_owner_edges,quant_owner_edges);
       end
     endtask
     integer su_limit=100000;
     integer load_count=0;
-    initial begin
+    initial begin:production
         if($test$plusargs("SMOKE"))su_limit=10000;
         repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
         load(3'd0, 64'd8594136608, 64'd0, 12544, 0, 1, 128); // dispatch3 disjoint from all quant vectors
         if($test$plusargs("SMOKE"))begin
           finish_contract();
-          $display("THREEPRODUCER_SMOKE PASS actualSU actualQDQ32 actualDMA_dispatch3 quantwords13312 phase%0d production147_not_run",PHASE);
-          $finish;
+          $display("THREEPRODUCER_SMOKE PASS actualSU actualQDQ32 actualDMA_dispatch3 actualq10_STORE4_FENCE4 quantwords13312 phase%0d production147_not_run",PHASE);
+          $finish;disable production;
         end
         load(3'd4, 64'd4294967296, 64'd0, 0, 0, 1, 4096); // dispatch0
         load(3'd1, 64'd17186160640, 64'd0, 156672, 0, 1, 1536); // dispatch7
