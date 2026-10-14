@@ -1496,6 +1496,22 @@ if {[llength $hv6_cells]} {
   add_pdn_connect -grid {hv6} -layers {M6 M7}
   add_pdn_connect -grid {hv6} -layers {M7 M8}
 }
+# qwen-split kvs1 (PSM-0039 on all 128 head_hs): cluster views whose PG pins are VERTICAL M7 stripes (no M6 PG) only need the
+# M7 -> M8 connect onto the core grid (the core M8 straps cross their M7 stripes)
+set hv7_cells {}
+foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] {
+  if {![$c isBlock] || [lsearch -exact $hv6_cells [$c getName]] >= 0} { continue }
+  set t [$c findMTerm VDD]
+  if {$t eq "NULL"} { continue }
+  foreach mp [$t getMPins] { foreach b [$mp getGeometry] {
+    if {[$b getTechLayer] ne "NULL" && [[$b getTechLayer] getName] eq "M7"} { lappend hv7_cells [$c getName] } } }
+} }
+set hv7_cells [lsort -unique $hv7_cells]
+puts "OT_HV7 masters [llength $hv7_cells]: $hv7_cells"
+if {[llength $hv7_cells]} {
+  define_pdn_grid -macro -cells $hv7_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {hv7}
+  add_pdn_connect -grid {hv7} -layers {M7 M8}
+}
 ''')
     man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
