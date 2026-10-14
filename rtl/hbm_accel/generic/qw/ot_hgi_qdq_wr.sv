@@ -15,7 +15,8 @@
 module ot_hgi_qdq_wr #(
     parameter integer LQ  = 10,
     parameter integer OD  = 64,
-    parameter integer RQ  = 16
+    parameter integer RQ  = 16,
+    parameter integer ACK_LOOKAHEAD = 0 // native candidate only; existing q8e default stands
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -99,8 +100,8 @@ module ot_hgi_qdq_wr #(
             df0 = dcnt[b] - sh[b*8 +: 8];
             df1 = dcnt[b] - sh[b*8 +: 8] + 8'd1;
             df2 = dcnt[b] - sh[b*8 +: 8] + 8'd2;
-            if ((f_wdone[b] && wwq_done[b]) ? df2[7] :
-                (f_wdone[b] || wwq_done[b]) ? df1[7] : df0[7]) fin = 1'b0;
+            if ((ACK_LOOKAHEAD && f_wdone[b] && wwq_done[b]) ? df2[7] :
+                (f_wdone[b] || (ACK_LOOKAHEAD && wwq_done[b])) ? df1[7] : df0[7]) fin = 1'b0;
         end
     end
     always @(posedge clk or negedge rr_n[0]) begin

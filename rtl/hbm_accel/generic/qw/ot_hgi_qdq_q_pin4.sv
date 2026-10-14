@@ -10,7 +10,8 @@ module ot_hgi_qdq_q_pin4 #(
     parameter integer RQ  = 16,     // record queue
     parameter integer DEC3 = 1,     // decoder: 1 = ot_hgi_qw_dec3 (track B: dxl / dbq / daq tiles), 0 = ot_hgi_qw_dec (one tile)
     parameter integer SPANPIPE = 0, // opt-in: seven local span stages (+6 edges), exact 52-bit product
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer FASTFIN = 0 // explicit native candidate; new views required
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -27,7 +28,7 @@ module ot_hgi_qdq_q_pin4 #(
     output wire              wg_req,
     input  wire              wg_gnt
 );
-    ot_hgi_qdq_q #(.LQ(LQ), .LD(LD), .NB(NB), .OD(OD), .RQ(RQ), .DEC3(DEC3), .SPANPIPE(SPANPIPE), .MUT(MUT)) u_qdq (
+    ot_hgi_qdq_q #(.LQ(LQ), .LD(LD), .NB(NB), .OD(OD), .RQ(RQ), .DEC3(DEC3), .SPANPIPE(SPANPIPE), .MUT(MUT), .FASTFIN(FASTFIN)) u_qdq (
         .clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret), .wrq(wrq), .wrq_cr(wrq_cr),
         .wrr({wrr_p3,wrr_p2,wrr_p1,wrr_p0}), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done),
         .rg_req(rg_req), .rg_gnt(rg_gnt), .wg_req(wg_req), .wg_gnt(wg_gnt));

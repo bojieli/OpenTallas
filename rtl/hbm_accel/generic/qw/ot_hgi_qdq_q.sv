@@ -39,7 +39,8 @@ module ot_hgi_qdq_q #(
     parameter integer RQ  = 16,     // record queue
     parameter integer DEC3 = 1,     // decoder: 1 = ot_hgi_qw_dec3 (track B: dxl / dbq / daq tiles), 0 = ot_hgi_qw_dec (one tile)
     parameter integer SPANPIPE = 0, // opt-in: seven local span stages (+6 edges), exact 52-bit product
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer FASTFIN = 0 // explicit native candidate; new views required
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -56,6 +57,9 @@ module ot_hgi_qdq_q #(
     output wire              wg_req,
     input  wire              wg_gnt
 );
+`ifdef OT_HARD_CHILDREN
+    initial if(FASTFIN!=0)$fatal(1,"FASTFIN requires source-matched new CORE/WR physical views; old closed hard children are not the candidate");
+`endif
     wire s1_v, s3_v, nfault; wire [189:0] s3;
     wire [7:0] c_pop, e_push; wire [3:0] e_ovf; wire [8*256-1:0] hq; wire [3:0] lq_rst_n; wire dec_rst_n, asm_rst_n, wr_rst_n;
     wire d_v, vo, qfault, dfault; wire [17:0] d_hd; wire [1023:0] d_x; wire [511:0] y;
@@ -71,7 +75,7 @@ module ot_hgi_qdq_q #(
 `ifdef OT_HARD_CHILDREN
     ot_hgi_qdq_core u_core (
 `else
-    ot_hgi_qdq_core #(.LQ(LQ), .LD(LD), .NB(NB), .RQ(RQ), .SPANPIPE(SPANPIPE), .MUT(MUT)) u_core (
+    ot_hgi_qdq_core #(.LQ(LQ), .LD(LD), .NB(NB), .RQ(RQ), .SPANPIPE(SPANPIPE), .MUT(MUT), .FIN_BYPASS(FASTFIN)) u_core (
 `endif
         .clk(clk), .rst_n(rst_n), .i_s1_v(s1_v), .i_s3_v(s3_v), .i_s3(s3), .i_nfault(nfault), .ret(ret), .wrq(wrq),
         .wrq_cr(wrq_cr), .rg_req(rg_req), .rg_gnt(rg_gnt), .asm_rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .i_pop(a_pop),
@@ -88,7 +92,7 @@ module ot_hgi_qdq_q #(
 `ifdef OT_HARD_CHILDREN
     ot_hgi_qdq_wr u_wr (
 `else
-    ot_hgi_qdq_wr #(.LQ(LQ), .OD(OD), .RQ(RQ)) u_wr (
+    ot_hgi_qdq_wr #(.LQ(LQ), .OD(OD), .RQ(RQ), .ACK_LOOKAHEAD(FASTFIN)) u_wr (
 `endif
         .clk(clk), .rst_n(wr_rst_n), .m_v(m_v), .m(m), .i_bad(a_bad_w), .vo(vo), .qfault(qfault), .dfault(dfault), .y(y),
         .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .wg_req(wg_req), .wg_gnt(wg_gnt), .i_act(c_act), .o_wf(w_wf),
