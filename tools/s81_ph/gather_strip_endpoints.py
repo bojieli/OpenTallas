@@ -37,6 +37,6 @@ def main():
    for b in range(12):
     hop(f'fcd{b}.parent',edge('f_cd',b),pin(chain[0],'i',b));hop(f'fcd{b}.ctl',pin(chain[0],'o',b),ctl('f_cd',b))
  lm=Path(args.leaf_manifest)
- x['planned_endpoint_hops']={'count':len(out),'max_um':max(v['length_um'] for v in out),'fail_over500':[v for v in out if v['length_um']>500],'leaf_manifest_sha256':hashlib.sha256(lm.read_bytes()).hexdigest(),'method':'actual preservedCTS leaf rs/fo pins + realCLOSED relayLEF pins + assignedctlTcl pins','limitations':['parentexternal source -> strip entry total wire unproven','ctl/root exactpair setup/hold from real routedviews pending','leaf origins x12.96 are .288mod .576 awaiting dielead lattice acceptance'],'hops':out}
+ x['planned_endpoint_hops']={'count':len(out),'max_um':max(v['length_um'] for v in out),'fail_over500':[v for v in out if v['length_um']>500],'leaf_manifest_sha256':hashlib.sha256(lm.read_bytes()).hexdigest(),'method':'actual preservedCTS leaf rs/fo pins + realCLOSED relayLEF pins + assignedctlTcl pins','limitations':['parentexternal source -> strip entry total wire unproven','ctl/root exactpair setup/hold from real routedviews pending','leaf origins accepted native X0.432/Y0.576; relays native0.576'],'hops':out}
  p.write_text(json.dumps(x,indent=2)+'\n');g=x['planned_endpoint_hops'];print(f"STRIP_ENDPOINT {'FAIL' if g['fail_over500'] else 'PASS'} {g['count']} bits, max{g['max_um']}um")
 if __name__=='__main__':main()
