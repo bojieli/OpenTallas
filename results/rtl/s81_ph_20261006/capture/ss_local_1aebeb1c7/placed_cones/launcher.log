@@ -1,0 +1,60 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/s81capture-ss-cones-holdreads-1aebeb1c7
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/s81capture-ss-cones-holdreads-1aebeb1c7
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81capture-ss-cones-holdreads-1aebeb1c7
+ot-run: ot-agidock128  admits   -88 GB (avail 89, growth 7, headroom 24, waiters 2/152 GB) load 13/64 running 3 disk 281 GB 
+ot-run: -> ot-agidock128 (will queue: admits -88 GB < 8 GB)
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-667791-1791970539 after 0 s
+CK_SS_MEAN=200 CK_SS_ALL_MEAN=198 CK_SS_MIN=195 CK_SS_ALL_MIN=193 CK_SS_MAX=206 CK_SS_ALL_MAX=207 CK_TT_MEAN=200 CK_TT_ALL_MEAN=198 CK_TT_MIN=195 CK_TT_ALL_MIN=193 CK_TT_MAX=206 CK_TT_ALL_MAX=207 CK_FF_MEAN=164 CK_FF_ALL_MEAN=162 CK_FF_MIN=159 CK_FF_ALL_MIN=157 CK_FF_MAX=170 CK_FF_ALL_MAX=171 CK_SSLIB_MEAN=259 CK_SSLIB_MIN=254 CK_SSLIB_MAX=266 CK_SSLIB_ALL_MEAN=258 CK_SSLIB_ALL_MIN=251 CK_SSLIB_ALL_MAX=267 CK_ROUTE_REF=TT
+CK_SS_MEAN=198 CK_SS_ALL_MEAN=194 CK_SS_MIN=189 CK_SS_ALL_MIN=186 CK_SS_MAX=201 CK_SS_ALL_MAX=202 CK_TT_MEAN=198 CK_TT_ALL_MEAN=194 CK_TT_MIN=189 CK_TT_ALL_MIN=186 CK_TT_MAX=201 CK_TT_ALL_MAX=202 CK_FF_MEAN=162 CK_FF_ALL_MEAN=159 CK_FF_MIN=154 CK_FF_ALL_MIN=152 CK_FF_MAX=165 CK_FF_ALL_MAX=167 CK_SSLIB_MEAN=256 CK_SSLIB_MIN=244 CK_SSLIB_MAX=260 CK_SSLIB_ALL_MEAN=252 CK_SSLIB_ALL_MIN=242 CK_SSLIB_ALL_MAX=261 CK_ROUTE_REF=TT
+OT_RAW_SLEW ck[0] slew_max_rise 0.000000
+OT_RAW_SLEW ck[0] slew_min_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_max_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_min_rise 0.000000
+OT_RAW_SLEW ck[0] slew_max_rise 0.000000
+OT_RAW_SLEW ck[0] slew_min_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_max_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_min_rise 0.000000
+OT_CONE ss core_clk core_clk max -30.022984 u_half.g_r[1].g_local_row.u_row/rs_n$_DFF_PN0_/QN u_half.g_r[1].g_local_row.u_row/g_local_store.g_slice[8].u_store/h[3][6]$_DFFE_PP_/D
+OT_CONE ss core_clk core_clk min 52.335773 u_half.u_s.mem[0][28]$_DFFE_PP_/QN u_half.u_s.mem[0][28]$_DFFE_PP_/D
+OT_CONE ss ser_clk ser_clk max 337.776184 u_half.rsv_h[1]$_DFF_PN0_/QN u_half.t_st[12]$_DFFE_PN0P_/D
+OT_CONE ss ser_clk ser_clk min 60.564533 u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[2][29]$_DFF_P_/QN u_half.g_r[4].g_local_row.u_row/od[29]$_DFF_P_/D
+OT_CONE ss core_clk ser_clk max 38.989243 u_half.g_r[6].g_local_row.u_row/u_x.w_st[1]$_SDFFE_PN0P_/QN u_half.g_r[6].g_local_row.u_row/u_x.g_local_wstate.w_st_r_n[1]$_DFF_P_/D
+OT_CONE ss core_clk ser_clk min 53.674210 u_half.g_r[3].g_local_row.u_row/u_x.wp_pub[1]$_DFF_P_/QN u_half.g_r[3].g_local_row.u_row/u_x.g_local_wpointer.wp_r_n[1]$_DFF_P_/D
+OT_CONE ss ser_clk core_clk max 25.244640 u_half.g_r[7].g_local_row.u_row/u_x.r_st[1]$_SDFFE_PN0P_/QN u_half.g_r[7].g_local_row.u_row/u_x.r_st_w[1]$_DFF_P_/D
+OT_CONE ss ser_clk core_clk min 56.028290 u_half.g_r[4].g_local_row.u_row/u_x.r_st[0]$_SDFFE_PN0P_/QN u_half.g_r[4].g_local_row.u_row/u_x.r_st_w[0]$_DFF_P_/D
+OT_BANK_INSTANCES 680
+OT_RAW_SLEW ck[0] slew_max_rise 0.000000
+OT_RAW_SLEW ck[0] slew_min_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_max_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_min_rise 0.000000
+OT_RAW_SLEW ck[0] slew_max_rise 0.000000
+OT_RAW_SLEW ck[0] slew_min_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_max_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_min_rise 0.000000
+OT_CONE ff core_clk core_clk max 404.503357 u_half.g_r[1].g_local_row.u_row/rs_n$_DFF_PN0_/QN u_half.g_r[1].g_local_row.u_row/g_local_store.g_slice[8].u_store/h[3][6]$_DFFE_PP_/D
+OT_CONE ff core_clk core_clk min 10.978765 u_half.u_s.mem[0][28]$_DFFE_PP_/QN u_half.u_s.mem[0][28]$_DFFE_PP_/D
+OT_CONE ff ser_clk ser_clk max 724.989136 u_half.rsv_h[1]$_DFF_PN0_/QN u_half.t_st[28]$_DFFE_PN0P_/D
+OT_CONE ff ser_clk ser_clk min 9.964154 u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[2][29]$_DFF_P_/QN u_half.g_r[4].g_local_row.u_row/od[29]$_DFF_P_/D
+OT_CONE ff core_clk ser_clk max 131.851639 u_half.u_s.w_st[0]$_SDFFE_PN0P_/QN u_half.u_s.g_local_wstate.w_st_r_n[0]$_DFF_P_/D
+OT_CONE ff core_clk ser_clk min 7.632211 u_half.g_r[7].g_local_row.u_row/u_x.mem[0][100]$_DFFE_PP_/QN u_half.g_r[7].g_local_row.u_row/u_x.g_local_shadow.sh_n[0][100]$_DFF_P_/D
+OT_CONE ff ser_clk core_clk max 121.522934 u_half.g_r[4].g_local_row.u_row/u_x.r_st[1]$_SDFFE_PN0P_/QN u_half.g_r[4].g_local_row.u_row/u_x.r_st_w[1]$_DFF_P_/D
+OT_CONE ff ser_clk core_clk min 12.040456 u_half.g_r[2].g_local_row.u_row/u_x.rp[0]$_DFF_P_/QN u_half.g_r[2].g_local_row.u_row/u_x.rp_w[0]$_DFF_P_/D
+OT_BANK_INSTANCES 680
+OT_RAW_SLEW ck[0] slew_max_rise 0.000000
+OT_RAW_SLEW ck[0] slew_min_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_max_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_min_rise 0.000000
+OT_RAW_SLEW ck[0] slew_max_rise 0.000000
+OT_RAW_SLEW ck[0] slew_min_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_max_rise 0.000000
+OT_RAW_SLEW ckv[0] slew_min_rise 0.000000
+OT_CONE tt core_clk core_clk max 247.541550 u_half.g_r[1].g_local_row.u_row/rs_n$_DFF_PN0_/QN u_half.g_r[1].g_local_row.u_row/g_local_store.g_slice[8].u_store/h[3][6]$_DFFE_PP_/D
+OT_CONE tt core_clk core_clk min 27.448429 u_half.u_s.mem[0][28]$_DFFE_PP_/QN u_half.u_s.mem[0][28]$_DFFE_PP_/D
+OT_CONE tt ser_clk ser_clk max 588.980530 u_half.rsv_h[1]$_DFF_PN0_/QN u_half.t_st[12]$_DFFE_PN0P_/D
+OT_CONE tt ser_clk ser_clk min 29.654047 u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[2][29]$_DFF_P_/QN u_half.g_r[4].g_local_row.u_row/od[29]$_DFF_P_/D
+OT_CONE tt core_clk ser_clk max 98.025818 u_half.g_r[6].g_local_row.u_row/u_x.w_st[1]$_SDFFE_PN0P_/QN u_half.g_r[6].g_local_row.u_row/u_x.g_local_wstate.w_st_r_n[1]$_DFF_P_/D
+OT_CONE tt core_clk ser_clk min 25.735060 u_half.g_r[7].g_local_row.u_row/u_x.mem[3][53]$_DFFE_PP_/QN u_half.g_r[7].g_local_row.u_row/u_x.g_local_shadow.sh_n[3][53]$_DFF_P_/D
+OT_CONE tt ser_clk core_clk max 88.702354 u_half.g_r[4].g_local_row.u_row/u_x.r_st[1]$_SDFFE_PN0P_/QN u_half.g_r[4].g_local_row.u_row/u_x.r_st_w[1]$_DFF_P_/D
+OT_CONE tt ser_clk core_clk min 30.486145 u_half.g_r[4].g_local_row.u_row/u_x.r_st[0]$_SDFFE_PN0P_/QN u_half.g_r[4].g_local_row.u_row/u_x.r_st_w[0]$_DFF_P_/D
+OT_BANK_INSTANCES 680
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-667791-1791970539): exit 0
