@@ -1,0 +1,5 @@
+PASS actual709 admission accepts=3 queries=24 outputs=24 coherent_edges=698 pauses=17 payload_checks=694
+- rtl/test/qwen_kv_die/tb_qwen_actual_admission.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 0.001 s; speed 8.377 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
