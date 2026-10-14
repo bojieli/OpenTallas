@@ -1110,5 +1110,8 @@
     "assigned pins and PG exclusion",
     "bitcut<=0.60",
     "unchanged production price; measured end-to-end acceptance ledger if applicable"
-  ]
+  ],
+  "arithmetic_grid_source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv",
+  "arithmetic_grid_kind": "WIRES_ONLY:16closedarithmetic+16registeredmap;1742-bit exact frozen control pack, independent clock/reset entries; not HGI quarter shell",
+  "arithmetic_grid_source_bound": true
 }
