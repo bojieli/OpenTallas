@@ -1,5 +1,5 @@
 {
- "name": "dsfd_gth_rw-g1-COMMIT",
+ "name": "dsfd_gth_rw-g1-4b2921f8b",
  "block": "dsfd_gth_rw",
  "ref_tile": true,
  "owner": "Claude:el1013-s81-gather",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "s81-gather-1013",
-  "commit": "COMMIT",
+  "commit": "4b2921f8b",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/s81_ctrl",
@@ -37,33 +37,46 @@
    },
    {
     "name": "root_s_lockstep",
-    "cmd": "S=16 bash rtl/dsrom_sys/s81_ph/test/run_root_s.sh . {RUN}/root_s rtl/dsrom_sys/s81_ph/test/real_order_trace.json",
+    "cmd": "S=16 bash rtl/dsrom_sys/s81_ph/test/run_root_s.sh $PWD {RUN}/root_s rtl/dsrom_sys/s81_ph/test/real_order_trace.json",
     "expect": "pass",
-    "pass_regex": "ROOT_S_GATE PASS",
-    "threads": 12,
-    "peak_ram_gb": 24,
+    "pass_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
+    "min_count_regex": "ROOT_S_GATE PASS \\(([0-9]+) runs\\)",
+    "threads": 16,
+    "peak_ram_gb": 32,
     "needs": [
      "verilator"
     ]
    },
    {
-    "name": "gather_cl_lockstep",
-    "cmd": "MODES=base bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh . {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json",
+    "name": "gather_cl_gate",
+    "cmd": "J=16 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
     "expect": "pass",
     "pass_regex": "GATHER_CL_GATE PASS",
+    "min_count_regex": "GATHER_CL_GATE PASS \\(([0-9]+) runs\\)",
     "threads": 16,
-    "peak_ram_gb": 48,
+    "peak_ram_gb": 64,
     "needs": [
      "verilator"
     ]
    },
    {
-    "name": "gather_cl_mut_chain",
-    "cmd": "MODES=chain bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh . {RUN}/gclm rtl/dsrom_sys/s81_ph/test/real_order_trace.json",
+    "name": "gather_cl_neg_chain",
+    "cmd": "RAW=1 MODES=chain J=16 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclm rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
     "expect": "fail",
-    "fail_regex": "GATHER_CL_GATE FAIL",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
     "threads": 16,
-    "peak_ram_gb": 48,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_ovf",
+    "cmd": "RAW=1 MODES=ovf J=16 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclo rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 16,
+    "peak_ram_gb": 32,
     "needs": [
      "verilator"
     ]
@@ -120,7 +133,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_gth_rw/dsfd_gth_rw-g1-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_gth_rw/dsfd_gth_rw-g1-4b2921f8b"
   }
  ],
  "cycles_added": 0,
