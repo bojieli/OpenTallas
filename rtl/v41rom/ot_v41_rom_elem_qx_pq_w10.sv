@@ -875,7 +875,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     reg [2:0]  bn_pos, w_pos;
     wire [7:0] n_pair = c_u0[n_c] + {2'd0, n_q, n_j};
     wire [UW-1:0] n_nx, n_nx0;          // n_nx0: the encoded walk2 step; n_nx = n_nx0, or the one-hot step (QX = 3)
-    reg [6*NSEG-1:0] wA, wB, fF0, fF1, nQ2, wQ2;     // xQ2: f(q + 2), registered every cycle
+    reg [6*NSEG-1:0] wA_s, wB_s, fF0, fF1, nQ2, wQ2;
+    wire [6*NSEG-1:0] wA, wB;     // xQ2: f(q + 2), registered every cycle
     reg [6*NSEG-1:0] nA_s, nB_s, nA_r, nB_r;          // WRT: storage / registered value on a match
     wire [6*NSEG-1:0] wsel_a = {{(3*NSEG){hp_a[1]}}, {(3*NSEG){hp_a[0]}}};
     wire [6*NSEG-1:0] wsel_b = {{(3*NSEG){hp_b[1]}}, {(3*NSEG){hp_b[0]}}};
@@ -1852,13 +1853,54 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             if (hit_k[2 % HC]) nB_s <= nB_c;
         end
         if (go_ew) begin
-            fF0 <= f0_go; fF1 <= f1_go; wA <= f0_go; wB <= f1_go;
+            fF0 <= f0_go; fF1 <= f1_go; wA_s <= f0_go; wB_s <= f1_go;
+        end else if (QS >= 6) begin
+            wA_s <= wA; wB_s <= wB;
         end else begin
-            if (w_restart) begin wA <= fF0; wB <= fF1; end
+            if (w_restart) begin wA_s <= fF0; wB_s <= fF1; end
             else if (w_step && ((QX != 0) ? qx_adv : w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q)) begin
-                wA <= wB; wB <= wQ2;
+                wA_s <= wB; wB_s <= wQ2;
             end
         end
+    end
+    if (QS >= 6) begin : g_word_decision
+        // Retire the issue/restart/advance decision into narrow registers.
+        // Stored current operands and the next-q table travel in parallel;
+        // their logical value after this edge is the original word walker.
+        reg restart_d, advance_d;
+        reg [6*NSEG-1:0] f0_d, f1_d, q2_d;
+        always @(posedge wclk or negedge rst_n) begin
+            if (!rst_n) begin restart_d <= 1'b0; advance_d <= 1'b0; end
+            else if (wen) begin
+                restart_d <= !go_ew && w_restart;
+                advance_d <= !go_ew && !w_restart && w_step
+                    && ((QX != 0) ? qx_adv : w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q);
+            end
+        end
+        always @(posedge wclk) if (wen) begin
+            f0_d <= fF0; f1_d <= fF1; q2_d <= wQ2;
+        end
+        assign wA = restart_d ? f0_d : advance_d ? wB_s : wA_s;
+`ifdef QS6_MUTANT_WORD
+        assign wB = restart_d ? f0_d : advance_d ? q2_d : wB_s;
+`else
+        assign wB = restart_d ? f1_d : advance_d ? q2_d : wB_s;
+`endif
+`ifdef QP_CHECK
+        reg [6*NSEG-1:0] a_reference, b_reference;
+        always @(posedge wclk) if (wen) begin
+            if (go_ew) begin a_reference <= f0_go; b_reference <= f1_go; end
+            else if (w_restart) begin a_reference <= fF0; b_reference <= fF1; end
+            else if (w_step && ((QX != 0) ? qx_adv : w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q)) begin
+                a_reference <= wB; b_reference <= wQ2;
+            end
+        end
+        always @(negedge clk) if (rst_n && qy_seen && (wA !== a_reference || wB !== b_reference)) begin
+            $display("QS6_CHECK FAIL: word candidates differ"); $fatal(1);
+        end
+`endif
+    end else begin : g_word_encoded
+        assign wA = wA_s; assign wB = wB_s;
     end
     integer si;
     always @(posedge wclk) if (wen) begin

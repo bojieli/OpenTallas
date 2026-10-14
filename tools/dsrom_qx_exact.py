@@ -64,6 +64,7 @@ BUILDS = {"pos": CHK, "pos_pq0": CHK + ["+define+QX_DUT_PQ0"], "pos_qw": CHK + [
           "pos_qs5u": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5"], "neg_qs5unq": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5", "+define+WRD_MUTANT_NQ"], "neg_qs5uwe": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5", "+define+QS5_MUTANT_WEN"], "neg_qs5ul1": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5", "+define+WRD_MUTANT_L1"], "neg_qs5ush": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=5", "+define+BT5_MUTANT_SH"],
           # QS=6: registered restart decision and parallel candidate operands; zero added cycles.
           "pos_qs6u": CHK + ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=6"],
+          "neg_qs6word": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=6", "+define+QS6_MUTANT_WORD"],
           "neg_qs6rs": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+QX_QS=6", "+define+QS6_MUTANT_RESTART"],
           "neg_qm5ns": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+BT5_MUTANT_NS"], "neg_qm5sh": ["+define+QX_DUT_PQ0", "+define+QX_QM=5", "+define+BT5_MUTANT_SH"],
           "neg_qmns": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_NS"], "neg_qmsh": ["+define+QX_DUT_PQ0", "+define+QX_QM=1", "+define+BT5_MUTANT_SH"], "xs0": CHK + ["-GXS=0"], "qx1": CHK + ["-GQX=1"], "qx0": CHK + ["-GQX=0"], "qy0": CHK + ["-GQX=0", "-GQY=0"],
@@ -172,7 +173,7 @@ def main() -> None:
         jobs += [("pos_qs3", s) for s in range(1, n + 1)] + [("pos_qs3", 1, ("+nan_sparse",)), ("neg_qs3ns", 1, ("+nan_sparse",)), ("neg_qs3sh", 1), ("neg_qs3yf", 1), ("neg_qs3nr", 1), ("neg_qs3sb", 1)]
         jobs += [("pos_qs4", s) for s in range(1, n + 1)] + [("pos_qs4", 1, ("+nan_sparse",)), ("neg_qs4nq", 1), ("neg_qs4l1", 1), ("neg_qs4sb", 1)]
         jobs += [("pos_qs5u", s) for s in range(1, n + 1)] + [("pos_qs5u", 1, ("+nan_sparse",)), ("neg_qs5unq", 1), ("neg_qs5ul1", 1), ("neg_qs5uwe", 1), ("neg_qs5ush", 1)]
-        jobs += [("pos_qs6u", s) for s in range(1, n + 1)] + [("pos_qs6u", 1, ("+nan_sparse",)), ("neg_qs6rs", 1)]
+        jobs += [("pos_qs6u", s) for s in range(1, n + 1)] + [("pos_qs6u", 1, ("+nan_sparse",)), ("neg_qs6rs", 1), ("neg_qs6word", 1)]
         if a.only:
             jobs = [j for j in jobs if re.fullmatch(a.only, j[0])]
         with cf.ThreadPoolExecutor(a.jobs) as ex:
