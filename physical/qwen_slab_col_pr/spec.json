@@ -137,7 +137,7 @@
  "orfs_vars": {
   "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Closed col_mga 9991f8339 per-pin screen (die lead 8f20ee74b): all 256 m5 launch > 220 (331.4 TT), cid capture 197.9. Routed STA m5[10]: m5 flop far from its pin (QN 80 ps into 17 fF, INV 55 ps) + TWO HB4 outhold stages (135 ps). Fix: recipe 2 pin flops anchored at the N face (io_flop_at_pins), single HB2 pad, and cid registered at its pin (CID_REG=1, static strap, 0 cycles).",
+ "structural_change": "Closed col_mga 9991f8339 per-pin screen (die lead 8f20ee74b): all 256 m5 launch > 220 (331.4 TT), cid capture 197.9. Routed STA m5[10]: m5 flop far from its pin (QN 80 ps into 17 fF, INV 55 ps) + TWO HB4 outhold stages (135 ps). Fix: recipe 2 pin flops anchored at the N face (io_flop_at_pins), single HB2 pad, and cid registered at its pin (CID_REG=1, static strap, 0 cycles). Balanced clock spine (TritonCTS gate showed leaf spread 101.6 ps > 80 native boundary rule).",
  "reroute_reason": {
   "kind": "pin_register",
   "source": "results/rtl/qwen_edge_pin_audit_1014/slab_pin_budget_summary_8f20ee74b.json",
@@ -145,5 +145,6 @@
   "launch_ps": 331.38,
   "capture_ps": 197.91,
   "fix": "recipe-2 pin flops at the m5 face, HB2 pad instead of 2x HB4, cid pin register (CID_REG=1)"
- }
+ },
+ "clock": "spine"
 }
