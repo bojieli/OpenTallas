@@ -102,3 +102,18 @@ drain; a full arithmetic barrier is not silently permitted. Also, a compute
 ib_go pulse travelling through live pure-delay stations can be lost while
 core_clk is paused. Instruction holding/buffering or coherent producer and
 corridor pause is required while a separate loader path remains live.
+
+Canonical native and local proof update
+--------------------------------------
+
+The historical GT6144 source cited above is now a legacy diagnostic only.
+Canonical TP8 uses GT3072 (768tiles x TG4), NW18, and a distinct ctl_tp8.
+Immutable20bd00eaa preserves the full address expression with fast CSA/prefix
+logic; its high24-stride and wrap checks reject split-mask and stride truncation.
+Immutable7cbe00c33 cached parent now passes actual RPS0/25-child-root arithmetic
+with a coherently paused cache response clock and live loader. Those tests
+retain full21 tags inside the indexed cache and use a full96 reference oracle.
+They establish local response placement, address and parent wiring only.
+The physical149-bit root encoding, source/control distribution, context/version
+reuse, instruction-go holding, whole-layer cycles and complete cache CTS remain
+unqualified. New tests drain instructions; they do not close old-context overlap.
