@@ -24,7 +24,7 @@
       "old_status": "REFUSED source_binding; preserved",
       "job_template": "hgi_xp_aq-r0-COMMIT",
       "actual_slot_fit": "pending requested guides, no invented coordinates",
-      "gate_action": "completed exact-source CTS, external immutable intake pending",
+      "gate_action": "current exact-source physical job accepted; sourcebinding True; old refused job preserved",
       "fresh_gate_verdict": "WARN",
       "fresh_gate_source": "c8128f717",
       "fresh_gate_host": null,
@@ -36,7 +36,8 @@
         "reg->reg      300 paths, worst slack -22.7 ps (e.g. u_scale.u.s2_pp1[29]$_DFF_PN0_/D)",
         "in->reg       300 paths, worst slack 286.9 ps (e.g. u_scale.u.s1_a[14]$_DFF_PN0_/RESETN)",
         "setup WNS -2.265632126352557e-11 hold WNS 2.5085225563437064e-11"
-      ]
+      ],
+      "current_job": "hgi_xp_aq-recover1-0f380981c"
     },
     {
       "element": "ot_hgi_xp_bfm",
@@ -53,7 +54,7 @@
       "old_status": "REFUSED source_binding; preserved",
       "job_template": "hgi_xp_bfm-r0-COMMIT",
       "actual_slot_fit": "pending requested guides, no invented coordinates",
-      "gate_action": "completed exact-source CTS, external immutable intake pending",
+      "gate_action": "current exact-source physical job accepted; sourcebinding True; old refused job preserved",
       "fresh_gate_verdict": "WARN",
       "fresh_gate_source": "c8128f717",
       "fresh_gate_host": null,
@@ -64,7 +65,8 @@
         "constraints signoff /src/physical/ref_tile/hgi_xp_bfm/signoff.sdc (TT placement RC; diagnostic)",
         "reg->out      300 paths, worst slack 232.9 ps (e.g. m_d[795])",
         "setup WNS 2.3287061168275613e-10 hold WNS 2.6308066836122634e-11"
-      ]
+      ],
+      "current_job": "hgi_xp_bfm-recover1-0f380981c"
     },
     {
       "element": "ot_hgi_xp_buf",
@@ -81,7 +83,7 @@
       "old_status": "REFUSED source_binding; preserved",
       "job_template": "hgi_xp_buf-r0-COMMIT",
       "actual_slot_fit": "pending requested guides, no invented coordinates",
-      "gate_action": "completed exact-source CTS, external immutable intake pending",
+      "gate_action": "current exact-source physical job accepted; sourcebinding True; old refused job preserved",
       "fresh_gate_verdict": "WARN",
       "fresh_gate_source": "c8128f717",
       "fresh_gate_host": null,
@@ -93,7 +95,8 @@
         "reg->out        1 paths, worst slack 137.3 ps (e.g. fault)",
         "reg->reg      299 paths, worst slack 145.1 ps (e.g. fl[1766]$_DFF_P_/D)",
         "setup WNS 1.372863489557119e-10 hold WNS 3.230407608079133e-11"
-      ]
+      ],
+      "current_job": "hgi_xp_buf-recover1-0f380981c"
     },
     {
       "element": "ot_hgi_xp_rd_ln",
@@ -112,7 +115,7 @@
       "old_status": "REFUSED source_binding; preserved",
       "job_template": "hgi_xp_rd_ln-r0-COMMIT",
       "actual_slot_fit": "pending requested guides, no invented coordinates",
-      "gate_action": "completed exact-source CTS, external immutable intake pending",
+      "gate_action": "current exact-source physical job accepted; sourcebinding True; old refused job preserved",
       "fresh_gate_verdict": "PASS",
       "fresh_gate_source": "c8128f717",
       "fresh_gate_host": null,
@@ -124,7 +127,8 @@
         "reg->out      299 paths, worst slack 192.8 ps (e.g. wrq[18])",
         "reg->reg        1 paths, worst slack 241.9 ps (e.g. lf[17][86]$_DFFE_PP_/D)",
         "setup WNS 1.9278351137685945e-10 hold WNS 2.658565034785454e-11"
-      ]
+      ],
+      "current_job": "hgi_xp_rd_ln-recover1-0f380981c"
     },
     {
       "element": "ot_hgi_xp_rdc",
@@ -146,7 +150,7 @@
       "old_status": "REFUSED source_binding; preserved",
       "job_template": "hgi_xp_rdc-r0-COMMIT",
       "actual_slot_fit": "pending requested guides, no invented coordinates",
-      "gate_action": "completed exact-source CTS, external immutable intake pending",
+      "gate_action": "current exact-source physical job accepted; sourcebinding True; old refused job preserved",
       "fresh_gate_verdict": "WARN",
       "fresh_gate_source": "c8128f717",
       "fresh_gate_host": null,
@@ -157,7 +161,8 @@
         "constraints signoff /src/physical/ref_tile/hgi_xp_rdc/signoff.sdc (TT placement RC; diagnostic)",
         "reg->reg      300 paths, worst slack 122.8 ps (e.g. tq[24][9]$_DFFE_PP_/D)",
         "setup WNS 1.227606349907262e-10 hold WNS 2.6944071973566963e-11"
-      ]
+      ],
+      "current_job": "hgi_xp_rdc-recover1-0f380981c"
     },
     {
       "element": "ot_hgi_xp_sps",
@@ -174,7 +179,20 @@
       "old_status": "REFUSED source_binding; preserved",
       "job_template": "hgi_xp_sps-r0-COMMIT",
       "actual_slot_fit": "pending requested guides, no invented coordinates",
-      "gate_action": "active exact-source CTS memory admission, session12441 on chosenEPYC1; no duplicate"
+      "gate_action": "measured DPL height repair passes fresh exact-source CTS; immutable intake next",
+      "fresh_gate_verdict": "WARN",
+      "fresh_gate_source": "c149044f4",
+      "fresh_gate_host": "ot-epyc4",
+      "clock_root_rule": [],
+      "actual_path_classes": [],
+      "requested_outline_um": {
+        "w": 172.8,
+        "h": 32.4
+      },
+      "original_outline_preserved": {
+        "w": 172.8,
+        "h": 21.6
+      }
     },
     {
       "element": "ot_hgi_xp_xwm",
@@ -191,7 +209,7 @@
       "old_status": "REFUSED source_binding; preserved",
       "job_template": "hgi_xp_xwm-r0-COMMIT",
       "actual_slot_fit": "pending requested guides, no invented coordinates",
-      "gate_action": "completed exact-source CTS, external immutable intake pending",
+      "gate_action": "current exact-source physical job accepted; sourcebinding True; old refused job preserved",
       "fresh_gate_verdict": "WARN",
       "fresh_gate_source": "c8128f717",
       "fresh_gate_host": null,
@@ -202,7 +220,8 @@
         "constraints signoff /src/physical/ref_tile/hgi_xp_xwm/signoff.sdc (TT placement RC; diagnostic)",
         "reg->out      300 paths, worst slack 192.7 ps (e.g. xw_data[1323])",
         "setup WNS 1.9267831774527622e-10 hold WNS 4.448047485894335e-11"
-      ]
+      ],
+      "current_job": "hgi_xp_xwm-recover1-0f380981c"
     }
   ]
 }
