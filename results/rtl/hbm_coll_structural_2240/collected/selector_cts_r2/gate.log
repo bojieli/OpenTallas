@@ -1,0 +1,27 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['chain_clr', 'chain_conv', 'chain_busy']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE INFO oflop: E face 20.1 pins/um (lane_heads1, lane_masks1, lane_epoch1): recipe-2 hold stages take 6.74 um behind the face, the pin flops need gap 8.6 um and 11 columns (derived in the flow)
+GATE INFO oflop: N face 35.7 pins/um (lane_heads2, lane_masks2, lane_epoch2): recipe-2 hold stages take 11.97 um behind the face, the pin flops need gap 15.3 um and 69 columns (derived in the flow)
+GATE INFO oflop: S face 23.6 pins/um (lane_heads3, lane_masks3, lane_epoch3): recipe-2 hold stages take 7.91 um behind the face, the pin flops need gap 10.1 um and 46 columns (derived in the flow)
+GATE INFO oflop: W face 16.9 pins/um (clk, rst_n, lane_heads0): recipe-2 hold stages take 5.67 um behind the face, the pin flops need gap 7.3 um and 10 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_tkm_selector_ref2240_20261014-034817.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_tkm_selector_ref2240_20261014-034817.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_tkm_selector_ref2240-20261014-034817
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 436 s (gate total 4821 s)
+GATE WARN util: synthesized std area 10000 um2 + macros 0 in core 28386: util 35%  -> FIX: set "std_area_um2": 10000 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hgi_coll_tkm_seq_lane_core cells 73,546 flops 14,749 depth 936.9 ps util 0.3541 reach 310.2 um (1.7 s)
+GATE WARN textbook.high_fanout: net _074873_/Y (XOR2x2_ASAP7_75t_R): 5,074 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.high_fanout: net _074869_/Y (XNOR2x2_ASAP7_75t_R): 4,985 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.high_fanout: reset u_rr.rst_n$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 2,746 loads (954 flops, e.g. br_flight[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 3 input->register endpoint(s) > 3 levels (worst lane_dv[2]->lane_live$_DFFE_PN0P_/D 11 lv, lane_dv[2]->ph[5]$_DFF_PN0_/D 9 lv, lane_dv[2]->ph[3]$_DFF_PN0_/D 8 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.logic_depth: reg->reg stage consume_epoch[0][1]$_DFFE_PN0P_ -> e1[1][13]$_DFFE_PP_/D: ~937 ps estimated (22 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.util_channel: utilisation 35.4% outside 45%-65% (std 10053 + macro 0 um2 in 28386 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 332.5..363.9 ps (spread 31.4), boundary mean 347.2; tt insertion all 251.5..280.9 ps (spread 29.4), boundary mean 263.7; ff insertion all 202.5..231.1 ps (spread 28.6), boundary mean 213.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_tkm_selector_ref2240/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out      273 paths, worst slack -622.2 ps (e.g. stat_surv[26])
+GATE INFO path_classes: reg->reg      327 paths, worst slack -410.8 ps (e.g. e1[0][69]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS -6.221617110391264e-10 hold WNS 2.8356816894614667e-11
+GATE INFO clock_rule: root port:clk: 14,749 sinks on the largest root <= 15,000; measured TT insertion 280.9 ps, leaf spread 29.4 ps
+PRE_ROUTE_GATE: WARN (0 fail, 8 warn)
+GATE: hbm_tkm_selector_ref2240/gate_result.json written (exact staged source binding; commit it with the kit)

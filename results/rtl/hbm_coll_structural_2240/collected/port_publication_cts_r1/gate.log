@@ -1,0 +1,18 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 13.4 pins/um (out_qp_push, out_qp_data, out_rx_credit): recipe-2 hold stages take 4.49 um behind the face, the pin flops need gap 5.8 um and 8 columns (derived in the flow)
+GATE WARN oflop: N face 26.7 pins/um (qr_push, qr_data, rx_valid): recipe-2 hold stages take 5.84 um behind the face, the pin flops need gap 7.5 um and 52 columns = 21.54 um, more than 45% of the 36.7 um core behind the face (GRT-0116 class)  -> FIX: a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face ("outhold": false + route.hold_delay in RTL)
+GATE WARN oflop: S face 26.7 pins/um (out_qr_push, out_qr_data, out_rx_valid): recipe-2 hold stages take 8.95 um behind the face, the pin flops need gap 11.5 um and 52 columns = 25.54 um, more than 45% of the 36.7 um core behind the face (GRT-0116 class)  -> FIX: a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face ("outhold": false + route.hold_delay in RTL)
+GATE INFO oflop: W face 13.4 pins/um (clk, rst_n, qp_push): recipe-2 hold stages take 2.93 um behind the face, the pin flops need gap 3.8 um and 8 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_coll_port_publication_ref2240_20261014-055249.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_coll_port_publication_ref2240_20261014-055249.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hbm_coll_port_publication_ref2240-20261014-055249
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 19 s (gate total 43 s)
+GATE WARN util: synthesized std area 550 um2 + macros 0 in core 1348: util 41%  -> FIX: set "std_area_um2": 550 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hcoll_port_publication545 cells 3,279 flops 1,639 depth 0.0 ps util 0.408 reach 73.4 um (0.0 s)
+GATE WARN textbook.util_channel: utilisation 40.8% outside 45%-65% (std 550 + macro 0 um2 in 1348 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0301] Utilization 110.124 % exceeds 100%.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO clock_rule: root port:clk: 1,639 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: FAIL (1 fail, 5 warn)
+GATE: hbm_coll_port_publication_ref2240/gate_result.json written (exact staged source binding; commit it with the kit)

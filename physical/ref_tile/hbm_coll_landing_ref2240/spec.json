@@ -41,7 +41,11 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M3 M5",
+   "v": "M2 M4"
+  }
  },
  "hold_merge": true,
  "structural_change": "Actual8x545landingFIFO inindependentownroot. Pin-capturedpush/data andepoch-guardedpop; coherentpublishedhead/dataepoch. Corecaptureshead/epoch, suppressesstalehead, returnscreditonlyafteractualleafpop. ExistingCAP8andCLOSEDportsunchanged; parentphysical9actuallandingclockentries, fullnativeproof/price pending. R1singleheadbodyprice2247.8vs1667.3=34.8%FAIL; R2sevenpublishedheads CAP8same, registeredcorepop withper-portthree-stagecoherentcapture roots maintainsII1 despite6edgeflight. Independent512full54564full8bursts II1PASS,300staleheadguardPASS/stalemutFAIL. Realoutline120.96 for3815dataoutputpins and~9150actualFF, measure beforequalification.",

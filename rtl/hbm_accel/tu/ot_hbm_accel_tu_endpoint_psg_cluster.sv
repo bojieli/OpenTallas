@@ -105,6 +105,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
     parameter integer COLUMN_MUT=0,
     parameter integer REDUCE_HARD=0,
     parameter integer LANDING_HARD=0,
+    parameter integer PORT_PUB_HARD=0,
     parameter integer ENABLE = 0,
     parameter integer REARM = 0, // opt-in; production pclk must equal clk
     parameter integer RGX = 0,     // 1: ROW_GATHER hardware mode available (rgx pin, stream inject, K*F delivery set)
@@ -137,6 +138,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
     input wire[NPT-1:0]port_clk,
     input wire[NPT-1:0]landing_clk,
     input wire[NPT-1:0]landing_capture_clk,
+    input wire[NPT-1:0]port_pub_clk,
     input wire[NC-1:0]column_clk,
     input wire[LANES-1:0]reduce_clk,
     input  wire                 clk,
@@ -364,10 +366,11 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
         reg  [NPT-1:0] qp_push, qr_push;
         reg  [PWT-1:0] qp_din [0:NPT-1];
         reg  [PWT-1:0] qr_din [0:NPT-1];
-        reg  [NPT-1:0] qp_push_q, qr_push_q, rbcr_q, lv_q, any_stall;
-        reg  [PWT-1:0] qp_din_q [0:NPT-1];
-        reg  [PWT-1:0] qr_din_q [0:NPT-1];
-        reg  [PWT-1:0] ld_q [0:NPT-1];
+        wire [NPT-1:0] qp_push_q, qr_push_q, rbcr_q, lv_q;
+        reg [NPT-1:0] any_stall;
+        wire [PWT-1:0] qp_din_q [0:NPT-1];
+        wire [PWT-1:0] qr_din_q [0:NPT-1];
+        wire [PWT-1:0] ld_q [0:NPT-1];
         reg  [31:0] cstall;
         reg  [NPT-1:0] rb_pop;
         wire [NPT-1:0] rb_empty, rb_ovf, pstall, pfault, s_rbv;
@@ -375,13 +378,25 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
         wire [PWT-1:0] s_rbd [0:NPT-1];
         wire[NPT-1:0]landing_credit,landing_pending;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin qp_push_q <= '0; qr_push_q <= '0; rbcr_q <= '0; lv_q <= '0; cstall <= 0; end
-            else begin
-                qp_push_q <= qp_push; qr_push_q <= qr_push; rbcr_q <= LANDING_HARD ? landing_credit : (rb_pop & ~rb_empty); lv_q <= s_rbv;
-                if (|pstall) cstall <= cstall + 1;
+            if(!rst_n)cstall<=0;else if(|pstall)cstall<=cstall+1;
+        for(genvar p=0;p<NPT;p=p+1)begin:g_publication
+            if(PORT_PUB_HARD)begin:g_hard
+                ot_hcoll_port_publication545 u_pub(.clk(port_pub_clk[p]),.rst_n(rst_n),
+                    .qp_push(qp_push[p]),.qr_push(qr_push[p]),.rx_valid(s_rbv[p]),
+                    .rx_credit(LANDING_HARD?landing_credit[p]:(rb_pop[p]&&!rb_empty[p])),
+                    .qp_data(qp_din[p]),.qr_data(qr_din[p]),.rx_data(s_rbd[p]),
+                    .out_qp_push(qp_push_q[p]),.out_qr_push(qr_push_q[p]),.out_rx_valid(lv_q[p]),.out_rx_credit(rbcr_q[p]),
+                    .out_qp_data(qp_din_q[p]),.out_qr_data(qr_din_q[p]),.out_rx_data(ld_q[p]));
+            end else begin:g_original
+                reg qv,rv,lv,cr;reg[PWT-1:0]qd,rd,ld;
+                always @(posedge clk)begin qd<=qp_din[p];rd<=qr_din[p];ld<=s_rbd[p];end
+                always @(posedge clk or negedge rst_n)
+                    if(!rst_n)begin qv<=0;rv<=0;lv<=0;cr<=0;end
+                    else begin qv<=qp_push[p];rv<=qr_push[p];lv<=s_rbv[p];cr<=LANDING_HARD?landing_credit[p]:(rb_pop[p]&&!rb_empty[p]);end
+                assign qp_push_q[p]=qv;assign qr_push_q[p]=rv;assign lv_q[p]=lv;assign rbcr_q[p]=cr;
+                assign qp_din_q[p]=qd;assign qr_din_q[p]=rd;assign ld_q[p]=ld;
             end
-        always @(posedge clk)
-            for (integer p = 0; p < NPT; p = p + 1) begin qp_din_q[p] <= qp_din[p]; qr_din_q[p] <= qr_din[p]; ld_q[p] <= s_rbd[p]; end
+        end
 `ifndef SYNTHESIS
         // [link] 2026-10-10: SWCRED is the slice's switch-ingress credit pool = the downstream TX buffer (hfd_lk_ep TXQ); the
         // RTL slice takes it as a parameter, a hardened slice (OT_HCOLL_PORT_HARD) is built at OT_HCOLL_PORT_HARD_SWCRED
