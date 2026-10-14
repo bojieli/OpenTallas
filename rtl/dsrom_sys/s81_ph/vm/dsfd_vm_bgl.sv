@@ -37,7 +37,8 @@ module dsfd_vm_bgl #(
     parameter integer FAST4 = 0,
     // Zero keeps the legacy compile-time selection. Two enables the explicit
     // registered N-to-S successor; bank EP2/ED3 is independent of this hop.
-    parameter integer FORWARD_HOP = 0
+    parameter integer FORWARD_HOP = 0,
+    parameter integer PIN_OUTPUT_COPY = 0
 ) (
     input  wire [0:0]          ck,
     input  wire                ck_req,
@@ -140,15 +141,34 @@ module dsfd_vm_bgl #(
         rb1_we <= rb0_we; rb1_row <= rb0_row; rb1_m <= rb0_m; rb1_d <= rb0_d;
     end
 `ifdef OT_VMBGL_MUT_RELAY
-    // Mutate the relay by one cycle in either implementation.
-    assign f_v = HOP1 ? rb1_v : rb0_v; assign f_we = HOP1 ? rb1_we : rb0_we;
-    assign f_row = HOP1 ? rb1_row : rb0_row; assign f_mask = HOP1 ? rb1_m : rb0_m;
-    assign f_d = HOP1 ? rb1_d : rb0_d;
+    localparam integer PIN_HOP1 = !HOP1;
 `else
-    assign f_v = HOP1 ? rb0_v : rb1_v; assign f_we = HOP1 ? rb0_we : rb1_we;
-    assign f_row = HOP1 ? rb0_row : rb1_row; assign f_mask = HOP1 ? rb0_m : rb1_m;
-    assign f_d = HOP1 ? rb0_d : rb1_d;
+    localparam integer PIN_HOP1 = HOP1;
 `endif
+    generate if (PIN_OUTPUT_COPY) begin : g_pin_copy
+        // Output-only registered copies isolate bank E3 fanout. Complemented
+        // storage lets the physical QN pin supply the true output directly.
+        // Both choices preserve the selected one/two-cycle forwarding contract.
+        (* keep = 1, dont_touch = 1 *) reg [NP-1:0] qb_v, qb_we;
+        (* keep = 1, dont_touch = 1 *) reg [NP*RA-1:0] qb_row;
+        (* keep = 1, dont_touch = 1 *) reg [NP*MW-1:0] qb_m;
+        (* keep = 1, dont_touch = 1 *) reg [NP*DW-1:0] qb_d;
+        always @(posedge req_clk or negedge rst_req)
+            if (!rst_req) qb_v <= {NP{1'b1}};
+            else qb_v <= ~(PIN_HOP1 ? i_v : rb0_v);
+        always @(posedge req_clk) begin
+            qb_we <= ~(PIN_HOP1 ? i_we : rb0_we);
+            qb_row <= ~(PIN_HOP1 ? i_row : rb0_row);
+            qb_m <= ~(PIN_HOP1 ? i_mask : rb0_m);
+            qb_d <= ~(PIN_HOP1 ? i_d : rb0_d);
+        end
+        assign f_v=~qb_v; assign f_we=~qb_we; assign f_row=~qb_row;
+        assign f_mask=~qb_m; assign f_d=~qb_d;
+    end else begin : g_pin_original
+        assign f_v = PIN_HOP1 ? rb0_v : rb1_v; assign f_we = PIN_HOP1 ? rb0_we : rb1_we;
+        assign f_row = PIN_HOP1 ? rb0_row : rb1_row; assign f_mask = PIN_HOP1 ? rb0_m : rb1_m;
+        assign f_d = PIN_HOP1 ? rb0_d : rb1_d;
+    end endgenerate
     wire wo_rd_any = |(rb0_v & ~rb0_we & ~RMASK);
 
     // Capture the static bank-match in parallel with the input payload, using
@@ -514,11 +534,11 @@ module dsfd_vm_bgl #(
     reg [NPR*DW-1:0] part;
     always @* for (p = 0; p < NPR; p = p + 1) part[p*DW +: DW] = own[p] ? ds[d_j[p]] : {DW{1'b0}};
     always @(posedge ret_clk or negedge rst_ret)
-        if (!rst_ret) begin ra_v <= {NPR{1'b0}}; rt_v <= {NPR{1'b0}}; end
-        else begin ra_v <= r_v; rt_v <= (HOP1 ? r_v : ra_v) | d_v; end
-    always @(posedge ret_clk) begin ra_d <= r_d; rt_d <= (HOP1 ? r_d : ra_d) | part; end
-    assign o_v = rt_v;
-    assign o_d = rt_d;
+        if (!rst_ret) begin ra_v <= {NPR{1'b0}}; rt_v <= PIN_OUTPUT_COPY ? {NPR{1'b1}} : {NPR{1'b0}}; end
+        else begin ra_v <= r_v; rt_v <= PIN_OUTPUT_COPY ? ~((HOP1 ? r_v : ra_v) | d_v) : ((HOP1 ? r_v : ra_v) | d_v); end
+    always @(posedge ret_clk) begin ra_d <= r_d; rt_d <= PIN_OUTPUT_COPY ? ~((HOP1 ? r_d : ra_d) | part) : ((HOP1 ? r_d : ra_d) | part); end
+    assign o_v = PIN_OUTPUT_COPY ? ~rt_v : rt_v;
+    assign o_d = PIN_OUTPUT_COPY ? ~rt_d : rt_d;
 
     // ------------------------------------------------------------------ status lane: N pin flops, S pin flops
     reg mis_r, stf;
@@ -537,14 +557,14 @@ module dsfd_vm_bgl #(
         end
     always @(posedge ret_clk or negedge rst_ret)
         if (!rst_ret) begin
-            sq_f <= 0; so_f <= 0; sq_o <= 0; so_o <= 0;
+            sq_f <= 0; so_f <= PIN_OUTPUT_COPY ? 4'hf : 0; sq_o <= 0; so_o <= PIN_OUTPUT_COPY ? {OW{1'b1}} : 0;
         end else begin
             sq_f <= r_f; sq_o <= r_o;
-            so_f <= (HOP1 ? r_f : sq_f) | {stf, stc};
-            so_o <= (sto > (HOP1 ? r_o : sq_o)) ? sto : (HOP1 ? r_o : sq_o);
+            so_f <= PIN_OUTPUT_COPY ? ~((HOP1 ? r_f : sq_f) | {stf, stc}) : ((HOP1 ? r_f : sq_f) | {stf, stc});
+            so_o <= PIN_OUTPUT_COPY ? ~((sto > (HOP1 ? r_o : sq_o)) ? sto : (HOP1 ? r_o : sq_o)) : ((sto > (HOP1 ? r_o : sq_o)) ? sto : (HOP1 ? r_o : sq_o));
         end
-    assign o_f = so_f;
-    assign o_o = so_o;
+    assign o_f = PIN_OUTPUT_COPY ? ~so_f : so_f;
+    assign o_o = PIN_OUTPUT_COPY ? ~so_o : so_o;
 endmodule
 
 // dsfd_vm_bgl28: the hard leaf at the dsfd_vm_bgq28 parameters (hardened once, placed x8)
@@ -610,7 +630,7 @@ module dsfd_vm_bgq28h (
 endmodule
 
 
-module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0) (
+module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0, parameter integer PIN_OUTPUT_COPY = 0) (
     input wire ck, input wire ck_req, input wire ck_ret, input wire [0:0] rs, input wire [1:0] grp, input wire [2:0] bi,
     input  wire [27:0] i_v, input wire [27:0] i_we, input wire [28*14-1:0] i_row, input wire [28*4-1:0] i_mask,
     input  wire [28*128-1:0] i_d,
@@ -627,7 +647,7 @@ module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0) (
 `else
     localparam integer MACRO = 1;
 `endif
-    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1), .FAST4(1), .FORWARD_HOP(FORWARD_HOP)) u (
+    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1), .FAST4(1), .FORWARD_HOP(FORWARD_HOP), .PIN_OUTPUT_COPY(PIN_OUTPUT_COPY)) u (
         .ck(ck), .ck_req(ck_req), .ck_ret(ck_ret), .rs(rs), .grp(grp), .bi(bi), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
         .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o)
