@@ -15,7 +15,7 @@
  ],
  "outline": {
   "w": 108.0,
-  "h": 129.6
+  "h": 211.68
  },
  "pins": {
   "S": [
@@ -63,12 +63,12 @@
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xl1",
-  "purpose": "Qwen TP8 compute die distributed x slice LEAF (owner 08:20 PT 10-14): 2 tiles x 2 epochs x 2 aligned 64-element beats of BF16 operands (RNE-rounded at the tap) + per-element valid; write chain pin-registered pass-through, 4-element window read (explicit 512:1 trees), answer pin flops. One clock root (~9.9k sinks).",
+  "tag": "xl2",
+  "purpose": "Qwen TP8 compute die distributed x slice LEAF (owner 08:20 PT 10-14): 2 tiles x 2 epochs x 2 aligned 64-element beats of BF16 operands (RNE-rounded at the tap) + per-element valid; write chain pin-registered pass-through, 4-element window read (explicit 512:1 trees), answer pin flops. One clock root (~10.1k sinks). xl2: outline 108 x 211.68 (gate xl1 08:29: util 85 % at 108 x 129.6), read-select pin registers replicated per tree level (<= 256 mux loads per copy; xl1 select flops drove ~8,600 loads).",
   "benches": [
    {
     "name": "dvm_array_exact",
-    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
     "expect": "pass",
     "pass_regex": "^PASS dvm",
     "threads": 16,
@@ -79,7 +79,7 @@
    },
    {
     "name": "dvm_array_swapped_tile",
-    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GLEAF_MUT=2",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GLEAF_MUT=2",
     "expect": "fail",
     "pass_regex": "^PASS dvm",
     "threads": 16,
