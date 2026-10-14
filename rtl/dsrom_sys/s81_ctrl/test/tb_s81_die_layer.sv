@@ -147,7 +147,7 @@ module tb_s81_die_layer;
     wire [S_RD-1:0] hrs_v; wire [S_RD*512-1:0] hrs_d; wire [S_RD-1:0] vq_v; wire [S_RD*14-1:0] vq_row;
     wire hl_flt; wire [3:0] hl_fc; wire [31:0] hl_ns, hl_nv;
     generate if (HST != 0) begin : g_hst
-        ot_s81_hc_hland #(.S_RD(S_RD), .XW(XW), .RXB(H_BASE), .VWA(14), .FD(64), .MUT(HLMUT)) u_hl (
+        ot_s81_hc_hland #(.S_RD(S_RD), .XW(XW), .RXB(H_BASE), .VWA(14), .FD(16), .MUT(HLMUT)) u_hl (
             .clk(ck), .rst_n(rst), .lw_v(vwe), .lw_a(vwa), .lw_d(vwd), .h_rq_v(rq_v), .h_rq_row(rq_row),
             .h_rs_v(hrs_v), .h_rs_d(hrs_d), .v_rq_v(vq_v), .v_rq_row(vq_row), .v_rs_v(rs_v), .v_rs_d(rs_d),
             .fault(hl_flt), .fault_code(hl_fc), .st_stream(hl_ns), .st_vm(hl_nv));
