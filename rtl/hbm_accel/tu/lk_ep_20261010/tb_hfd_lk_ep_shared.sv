@@ -8,7 +8,7 @@
 module tb_hfd_lk_ep_shared;
     parameter integer MUT_TX_SHARED = 0;
     parameter integer NS = 3;
-    parameter integer FCR = 16;
+    parameter integer FCR = 256;
     parameter integer TXQ = 32;
     localparam integer W = 545;
     reg clk = 0; always #0.5 clk = ~clk;
