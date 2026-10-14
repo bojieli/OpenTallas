@@ -1,0 +1,94 @@
+{
+  "name": "qdq_wr_pay_ref",
+  "top": "ot_hgi_qdq_wr_pay",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/link/ot_fifo_sram_fwft.sv",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 259.2,
+    "h": 125.28
+  },
+  "util": 0.52,
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "count": 1,
+      "inst": "u_od.g_tile[0].g_m0.u_m"
+    }
+  ],
+  "pins": {
+    "N": [
+      "wwq",
+      "wwq_cr",
+      "wg_req",
+      "wg_gnt"
+    ],
+    "S": [
+      "y",
+      "vo",
+      "qfault",
+      "dfault",
+      "clk"
+    ],
+    "W": [
+      "m_v",
+      "m",
+      "i_bad",
+      "rst_n",
+      "i_act",
+      "o_wf",
+      "o_bad",
+      "o_idle",
+      "snapshot",
+      "snapshot_v"
+    ]
+  },
+  "refglob": "*y_f*",
+  "io_flop_at_pins": {
+    "cols": 12,
+    "allow_none": true
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "cts_sink": {
+      "size": 12,
+      "diameter_um": 20
+    }
+  },
+  "job": {
+    "owner": "Codex:qdq-write-completion-split",
+    "branch": "codex-qdq-write-completion-split",
+    "tag": "p1",
+    "views_to": "physical/ref_tile/qdq_wr_pay_ref/views",
+    "record_to": "results/rtl/ref_tile/qdq_wr_pay_ref",
+    "purpose": "Opt-in native candidate real SRAM payload leaf; snapshot+valid captured by distinct completion root. Parent slot unresolved, throughput must qualify actual native4 driver.",
+    "benched_by": "qdq_native_peer4_split"
+  },
+  "pin_ranges": {
+    "y": [
+      95.0,
+      185.0
+    ]
+  },
+  "orfs_vars": {
+    "OT_MEG_MASTER": "ot_sram_1r1w_64x512_m1_r2c2",
+    "OT_MEG_EXPECT": 1,
+    "OT_MEG_BAND": "2.16",
+    "OT_MEG_EDGES": "EW"
+  },
+  "boundary_tcl": [
+    "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+  ],
+  "recipe": 2,
+  "structural_change": "Remove snapshot FIFO/done counters/completion feedback to separate FIN root; PAY registers 65-bit post-write snapshot at WWQ edge"
+}
