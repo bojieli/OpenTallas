@@ -86,6 +86,11 @@
   "physical/ref_tile/dsfd_vm_fcn_m5/signoff.sdc",
   "physical/ref_tile/dsfd_vm_fcn_m5/pdn.tcl",
   "physical/ref_tile/dsfd_vm_fcn_m5/pre_cts.tcl",
+  "physical/ref_tile/dsfd_vm_fcn_m5/post_cts.tcl",
+  "physical/ref_tile/dsfd_vm_fcn_m5/post_grt.tcl",
+  "physical/ref_tile/dsfd_vm_fcn_m5/pre_drt.tcl",
+  "physical/ref_tile/dsfd_vm_fcn_m5/pre_fill.tcl",
+  "physical/ref_tile/dsfd_vm_fcn_m5/post_fill.tcl",
   "physical/ref_tile/dsfd_vm_fcn_m5/pre_grt.tcl",
   "physical/ref_tile/dsfd_vm_fcn_m5/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -97,7 +102,13 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl"
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/dsfd_vm_fcn_m5/pre_gpl.tcl",
+  "physical/ref_tile/dsfd_vm_fcn_m5/pre_dpl.tcl"
  ]
 }

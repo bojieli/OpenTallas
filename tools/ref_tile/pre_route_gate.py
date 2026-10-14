@@ -52,6 +52,7 @@ import child_lint  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 import pin_fit as PF  # noqa: E402
 import source_binding as SB  # noqa: E402
+HO = SB.overlay_module()
 
 DEFAULT_SRC_PATHS = ("tools", "rtl", "physical", "Makefile")
 # the textbook checks whose refuse tier the gate enforces (calibrated: zero closed-set refusals, see README)
@@ -540,9 +541,12 @@ echo GATE_DONE
 """
 
 
-def ship_tar(paths):
+def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
     import io
     import tarfile
+    if overlay_payloads is None:
+        plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT, paths=[h for h in SHIP_HELPERS if (DAEMON_TREE / h).exists()])
+        overlay_modes = {f["path"]: f["mode"] for f in plan["files"]}
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
         for p in sorted(set(paths)):
@@ -556,8 +560,11 @@ def ship_tar(paths):
         for h in SHIP_HELPERS:      # the loop's shipped flow helpers win over the snapshot's copies
             f = DAEMON_TREE / h
             if f.exists():
-                tf.inodes.clear()  # overlays must contain bytes, not a link to the overridden member
-                tf.add(str(f), arcname=h)
+                payload = overlay_payloads[h]
+                ti = tarfile.TarInfo(h)
+                ti.size = len(payload)
+                ti.mode = overlay_modes[h] if overlay_modes is not None else f.stat().st_mode & 0o777
+                tf.addfile(ti, io.BytesIO(payload))
     return buf.getvalue()
 
 
@@ -584,8 +591,10 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     R = f"/srv/opentallas-scratch/claude/ref_gate/{spec['name']}-{ts}"
     start_commit = SB.git_head(ROOT)
     daemon_commit = SB.git_head(DAEMON_TREE)
-    data = ship_tar(dirs)
+    route_plan, overlay_payloads = HO.capture_plan(DAEMON_TREE, ROOT)
+    data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
     binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, SHIP_HELPERS)
+    binding["route_overlay_plan"] = route_plan
     binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
@@ -769,14 +778,19 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
 
 
-def kit_clock_evidence(kd: Path, source_commit=None) -> dict | None:
+def kit_gate_evidence(kd: Path, source_commit=None) -> dict | None:
     try:
         d = json.loads((kd / CLOCK_RESULT).read_text())
         binding = d.get("source_binding")
         ok, _ = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
-        return d["clock"] if ok and binding.get("remote_archive_verified") and isinstance(d.get("clock"), dict) else None
+        return d if ok and binding.get("remote_archive_verified") and isinstance(d.get("clock"), dict) else None
     except (OSError, ValueError, KeyError, AttributeError):
         return None
+
+
+def kit_clock_evidence(kd: Path, source_commit=None) -> dict | None:
+    rec = kit_gate_evidence(kd, source_commit)
+    return rec["clock"] if rec else None
 
 
 def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, closed_stands: bool = False, source_commit=None) -> dict:
@@ -784,7 +798,16 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     sink count of this block's latest synthesized design (known_sinks, from the loop's job history) does.  A kit with no
     gate result and no history passes here and is judged by the in-flow lint right after synthesis (FLOORPLAN_MARGIN,
     before placement).  closed_stands: a CLOSED tile is not re-judged."""
-    ev = kit_clock_evidence(kd, source_commit)
+    rec = kit_gate_evidence(kd, source_commit)
+    ev = rec["clock"] if rec else None
+    if rec and not closed_stands:
+        frozen = rec["source_binding"].get("route_overlay_plan")
+        if frozen is None:
+            # Legacy v2 has exact six-helper evidence, not a historical full route plan.
+            frozen, _ = HO.capture_plan(DAEMON_TREE, ROOT)
+            frozen["gate_verified_paths"] = rec["source_binding"].get("daemon_overlays", [])
+            frozen["scope"] = "legacy_gate_exact_overlays_with_current_full_route_plan"
+        g.route_overlay_plan = frozen
     if (kd / CLOCK_RESULT).exists() and ev is None and not closed_stands:
         g.add("FAIL", "source_binding", "gate result is legacy, unverified, or differs from the route source/daemon overlay",
               "preserve original as unqualified; regenerate the gate for this exact source")
@@ -987,7 +1010,7 @@ def submit_check(spec: dict, repo: str | None = None, known_sinks: int | None = 
     msg = " | ".join(f"{i['check']}: {i['message']}" + (f" (fix: {i['fix']})" if i["fix"] else "")
                      for i in (fails or warns))[:1500]
     return {"verdict": "REFUSE" if fails else ("WARN" if warns else "PASS"), "message": msg or "pre-route gate PASS",
-            "clock": getattr(g, "clock", None)}
+            "clock": getattr(g, "clock", None), "route_overlay_plan": getattr(g, "route_overlay_plan", None)}
 
 if __name__ == "__main__":
     sys.exit(main())
