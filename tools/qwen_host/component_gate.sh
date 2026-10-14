@@ -4,7 +4,7 @@ set -euo pipefail
 cd "$(dirname "$0")/../.."
 out=${1:?output dir};mkdir -p "$out";out=$(cd "$out"&&pwd)
 export TMPDIR="$out"
-for component in axi_packet ctrl_packet static_pc ingest_map ingest_station visibility_fence;do
+for component in axi_packet ctrl_packet static_pc ingest_map ingest_station visibility_fence rx_pad;do
  src="rtl/qwen_sys/host_20261013/qkd_host_${component}.sv"
  tb="rtl/test/qwen_host/tb_qkd_host_${component}.sv"
  deps=()

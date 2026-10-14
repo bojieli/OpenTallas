@@ -10,7 +10,7 @@
   "children": [
     {
       "master": "qkd_host_axi_packet",
-      "flop_bits": 3472,
+      "flop_bits": 3718,
       "role": "die0 HOST AXI termination",
       "instances_per_die": 1,
       "clock_entries": [
@@ -25,7 +25,7 @@
       "layer_cap": "M5",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv",
-      "sha256": "8c708d5de055184ddb521cb18347a3a90866828eb894d3aac90dd4c13e06feb8"
+      "sha256": "0c05ae5b59d242b4a99c937e47683224fe4e25d802b6543b8717e3d677c60767"
     },
     {
       "master": "qkd_host_ctrl_packet",
@@ -125,6 +125,63 @@
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv",
       "sha256": "28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c"
+    },
+    {
+      "master": "qkd_host_rx_class",
+      "flop_bits": 1107,
+      "role": "same die type runtime die_id class demux and independent RX credits",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        86.4,
+        86.4
+      ],
+      "area_request_um2": 7464.960000000001,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv",
+      "sha256": "b99255434849edd8876f4cf254b88396d6cfb3ab0a3a4c4c961e35330b6a0ee6"
+    },
+    {
+      "master": "qkd_host_tx_class",
+      "flop_bits": 6090,
+      "role": "logical credit TX queues and physical arbitration",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        129.6,
+        172.8
+      ],
+      "area_request_um2": 22394.88,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_tx_class.sv",
+      "sha256": "a1ea3c3a40853034e0582d7312423d61b2b414a9f7b23bb4b13ffafd5db1c9c2"
+    },
+    {
+      "master": "qkd_host_rx_pad",
+      "flop_bits": 1557,
+      "role": "FDI clock registered exact DATA1024 padding checker",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "clk"
+      ],
+      "outline_request_um": [
+        86.4,
+        86.4
+      ],
+      "area_request_um2": 7464.960000000001,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_rx_pad.sv",
+      "sha256": "65ff55e2098209df69bbacf523cd1327ba3a8327b1a9393ba841c51db8ad5c82"
     }
   ],
   "existing_children": [
@@ -149,7 +206,7 @@
         370,
         410
       ],
-      "view": "CLOSED export assigned root",
+      "view": "HISTORICAL_DEFAULT_ROUTE_DIAGNOSTIC_ONLY",
       "timing_ps": {
         "TT": 32.28,
         "FF": 1.92
@@ -161,11 +218,30 @@
         "measured_cycles": 5117,
         "ratio": 1.0023506366307542,
         "closed_default_view_reusable": false
+      },
+      "qualification": {
+        "parent_qualified": false,
+        "child_lint": "FAIL(c)40728 M6/M7 OBS over PG M5 strapM6",
+        "clk_i_sinks": 22490,
+        "clk_i_boundary_registers": 0,
+        "clk_i_all_sink_mean_ps": 512.6,
+        "clk_i_all_sink_spread_ps": 107.8,
+        "clk_i_boundary_R": "UNAVAILABLE",
+        "required": "new native mode physical partition/root and PG/window proof"
       }
     },
     {
-      "master": "ot_host_if FMT1 / physical prompt / CSR reset",
-      "status": "STILL_REQUIRES_PHYSICAL_PARTITION_AND_ND8_RESET_BOOT_BINDING"
+      "master": "qkd_host_fullcontrol",
+      "parent": "wires-only 0flops",
+      "partition": "physical/qkd_host_fullcontrol/partition.json",
+      "children_clock_sinks": {
+        "qkd_host_if_pins": 4157,
+        "qkd_host_csr_pins": 1175,
+        "qkd_host_rst_pins": 103,
+        "qkd_host_ctl_pins": 1292
+      },
+      "physical_status": "UNQUALIFIED: dimensions/pins/views required",
+      "functional": "actual FMT1 ring through class0/7 packet plane exact PASS; diagnostics/stale-done/FMT0 mutants FAIL"
     }
   ],
   "controller_variant": {
@@ -188,12 +264,12 @@
     "controller host observer variant pins and three-domain reset contract"
   ],
   "remaining": [
-    "full HOST class mux/credit and existing NG8 adapter binding",
-    "host_if FMT1 leaf + prompt SRAM + CSR/reset leaves bound to original ND8 controller",
-    "full static32-node chains+relays and saturation/hotPC composed bench",
-    "boot checksum/marker and reset sequence peer binding",
-    "full ingest composition benchmark against closed price5117 and production layer measurement",
-    "CTS gates/route/real views and die timing for every new component"
+    "actual W1024 NG8 PHY adapter and dedicated CDC placed binding",
+    "transported CTRL package plus full FMT1/PHY composition",
+    "full static32-node chains+relays with actual controller retirement and hotPC saturation price",
+    "native QM clock/PG structural partition and new RTL view",
+    "CTS gates/route/real views and die timing for every new component",
+    "TP8 downstream formatter/attention G1 ownership: legacy sequencer hardcodes G2/8KV/32Q/64RES; separate candidate must prove4KV/16Q/32RES without crediting historicalTP4bench"
   ],
   "physical_adapter": {
     "actual_phy_fdi_bits": 1043,
@@ -214,5 +290,21 @@
     "host_cdc_W": 546,
     "borrow_collective_xf_leaves": false,
     "fit": "UNPROVEN_NEW_HOST_ADAPTER_SLOT_REQUIRED"
+  },
+  "dedicated_host_cdc": {
+    "master": "qfd_xf_ch546 equivalent ot_qwen_die_cdc_ch W546 PIPE2",
+    "count": 2,
+    "outline_um": [
+      86.4,
+      129.6
+    ],
+    "per_instance_clock_entries": [
+      "wck",
+      "rck"
+    ],
+    "native_collective_instances_borrowed": 0,
+    "binding": "qkd_host_phy_cdc u_rx/u_tx",
+    "slot_assignment": "DIE_LEAD_REQUIRED",
+    "measured_existing_master_route": "qwen IO owner owns current W546 export; exact host placement not yet proven"
   }
 }

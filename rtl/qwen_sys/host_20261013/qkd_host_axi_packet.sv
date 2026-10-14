@@ -19,6 +19,38 @@ module qkd_host_axi_packet #(parameter integer RX_DEPTH=4, TX_CRED=4, MUT=0)(
  input wire m_wvalid,output reg m_wready,input wire[63:0] m_wdata,input wire[7:0] m_wstrb,
  output reg m_bvalid,input wire m_bready,output reg[1:0] m_bresp
 );
+
+ // All inter-child input pins capture before control/enable logic.
+ reg s_awready_q;
+ reg s_wready_q;
+ reg s_bvalid_q;
+ reg[1:0]s_bresp_q;
+ reg s_arready_q;
+ reg s_rvalid_q;
+ reg[31:0]s_rdata_q;
+ reg[1:0]s_rresp_q;
+ reg m_arvalid_q;
+ reg[63:0]m_araddr_q;
+ reg m_rready_q;
+ reg m_awvalid_q;
+ reg[63:0]m_awaddr_q;
+ reg m_wvalid_q;
+ reg[63:0]m_wdata_q;
+ reg[7:0]m_wstrb_q;
+ reg m_bready_q;
+ always @(posedge ck)begin
+  s_bresp_q<=s_bresp;
+  s_rdata_q<=s_rdata;
+  s_rresp_q<=s_rresp;
+  m_araddr_q<=m_araddr;
+  m_awaddr_q<=m_awaddr;
+  m_wdata_q<=m_wdata;
+  m_wstrb_q<=m_wstrb;
+ end
+ always @(posedge ck or negedge rst_n)begin
+  if(!rst_n)begin s_awready_q<=0;s_wready_q<=0;s_bvalid_q<=0;s_arready_q<=0;s_rvalid_q<=0;m_arvalid_q<=0;m_rready_q<=0;m_awvalid_q<=0;m_wvalid_q<=0;m_bready_q<=0; end
+  else begin s_awready_q<=s_awready;s_wready_q<=s_wready;s_bvalid_q<=s_bvalid;s_arready_q<=s_arready;s_rvalid_q<=s_rvalid;m_arvalid_q<=m_arvalid;m_rready_q<=m_rready;m_awvalid_q<=m_awvalid;m_wvalid_q<=m_wvalid;m_bready_q<=m_bready; end
+ end
  localparam integer PA=$clog2(RX_DEPTH);
  reg rv;reg[511:0] rd;reg tc;
  reg[511:0] q[0:RX_DEPTH-1];reg[PA-1:0] wp,rp;reg[PA:0] count;
@@ -37,9 +69,9 @@ module qkd_host_axi_packet #(parameter integer RX_DEPTH=4, TX_CRED=4, MUT=0)(
  wire emit=!fault&&credits!=0&&!tx_v;
  // AXI ready outputs are pulses paired with the capture edge; a pending pulse
  // inhibits another capture while the producer observes it.
- wire capture_ar=!dr&&!m_arready&&m_arvalid;
- wire capture_aw=!dw&&!ba&&!m_awready&&m_awvalid;
- wire capture_w=!dw&&!bd&&!m_wready&&m_wvalid;
+ wire capture_ar=!dr&&!m_arready&&m_arvalid_q;
+ wire capture_aw=!dw&&!ba&&!m_awready&&m_awvalid_q;
+ wire capture_w=!dw&&!bd&&!m_wready&&m_wvalid_q;
  reg ar_pending;reg[63:0] read_addr;
  always @(posedge ck)begin rd<=rx_d; if(rv&&count<(PA+1)'(RX_DEPTH))q[wp]<=rd;end
  always @(posedge ck or negedge rst_n)begin
@@ -54,11 +86,11 @@ module qkd_host_axi_packet #(parameter integer RX_DEPTH=4, TX_CRED=4, MUT=0)(
   end else begin
    rv<=rx_v;tc<=tx_cr;rx_cr<=consume;tx_v<=0;
    m_arready<=0;m_awready<=0;m_wready<=0;s_bready<=0;s_rready<=0;
-   if(s_awvalid&&s_awready)s_awvalid<=0;
-   if(s_wvalid&&s_wready)s_wvalid<=0;
-   if(s_arvalid&&s_arready)s_arvalid<=0;
-   if(m_rvalid&&m_rready)begin m_rvalid<=0;dr<=0;end
-   if(m_bvalid&&m_bready)begin m_bvalid<=0;dw<=0;end
+   if(s_awvalid&&s_awready_q)s_awvalid<=0;
+   if(s_wvalid&&s_wready_q)s_wvalid<=0;
+   if(s_arvalid&&s_arready_q)s_arvalid<=0;
+   if(m_rvalid&&m_rready_q)begin m_rvalid<=0;dr<=0;end
+   if(m_bvalid&&m_bready_q)begin m_bvalid<=0;dw<=0;end
    if(rv&&!fault)begin
     if(count==(PA+1)'(RX_DEPTH))fault<=1;
     else wp<=wp+1'b1;
@@ -68,9 +100,9 @@ module qkd_host_axi_packet #(parameter integer RX_DEPTH=4, TX_CRED=4, MUT=0)(
     2'b10:count<=count+1'b1;2'b01:count<=count-1'b1;default:;
    endcase
    if(tc)begin if(credits==TX_CRED)fault<=1;else credits<=credits+1'b1;end
-   if(capture_ar&&!fault)begin dr<=1;ar_pending<=1;read_addr<=m_araddr;m_arready<=1;end
-   if(capture_aw&&!fault)begin ba<=1;dma_addr<=m_awaddr;m_awready<=1;end
-   if(capture_w&&!fault)begin bd<=1;dma_data<=m_wdata;dma_strb<=m_wstrb;m_wready<=1;end
+   if(capture_ar&&!fault)begin dr<=1;ar_pending<=1;read_addr<=m_araddr_q;m_arready<=1;end
+   if(capture_aw&&!fault)begin ba<=1;dma_addr<=m_awaddr_q;m_awready<=1;end
+   if(capture_w&&!fault)begin bd<=1;dma_data<=m_wdata_q;dma_strb<=m_wstrb_q;m_wready<=1;end
    if(consume)begin
     if(!valid_header)fault<=1;
     else case(op)
@@ -98,11 +130,11 @@ module qkd_host_axi_packet #(parameter integer RX_DEPTH=4, TX_CRED=4, MUT=0)(
    if(emit)begin
     // Fixed priority responses then reads then writes; single-beat DMA limits
     // each source to one outstanding item, so a response cannot starve DMA.
-    if(bw&&!s_awvalid&&!s_wvalid&&s_bvalid&&!s_bready)begin
-     tx_v<=1;tx_d<={480'd0,wid,8'd1,8'h81}|(512'(s_bresp)<<32);s_bready<=1;bw<=0;
+    if(bw&&!s_awvalid&&!s_wvalid&&s_bvalid_q&&!s_bready)begin
+     tx_v<=1;tx_d<={480'd0,wid,8'd1,8'h81}|(512'(s_bresp_q)<<32);s_bready<=1;bw<=0;
      credits<=credits+8'(tc)-1'b1;
-    end else if(br&&!s_arvalid&&s_rvalid&&!s_rready)begin
-     tx_v<=1;tx_d<={480'd0,rid,8'd1,8'h82}|(512'(s_rresp)<<32)|(512'(s_rdata)<<96);s_rready<=1;br<=0;
+    end else if(br&&!s_arvalid&&s_rvalid_q&&!s_rready)begin
+     tx_v<=1;tx_d<={480'd0,rid,8'd1,8'h82}|(512'(s_rresp_q)<<32)|(512'(s_rdata_q)<<96);s_rready<=1;br<=0;
      credits<=credits+8'(tc)-1'b1;
     end else if(ar_pending)begin
      tx_v<=1;tx_d<=512'h0112|(512'(read_addr)<<32);ar_pending<=0;credits<=credits+8'(tc)-1'b1;
