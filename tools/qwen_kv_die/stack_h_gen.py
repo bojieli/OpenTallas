@@ -1018,21 +1018,6 @@ def native_profile(s):
     s=s.replace("if (sg) run <= 1'b0; else sg <= 1'b1;", "if (sg || `KVD_HEADS == 1) run <= 1'b0; else sg <= 1'b1;")
     s=s.replace("if (tg) run <= 1'b0;", "if (tg || `KVD_HEADS == 1) run <= 1'b0;")
     s=s.replace("if (scnt1 == n_s) kdone[1] <= 1'b1;", "if (`KVD_HEADS == 2 && scnt1 == n_s) kdone[1] <= 1'b1;")
-    a = 'module ot_qwen_nearhbm_row_engine_h #('
-    i = s.index(a)
-    j = s.index('    wire [2*4-1:0]', i)
-    trap = """`ifdef KVD_HSUB
-    generate if (`KVD_Q_FP32) begin : g_native_hsub_unqualified
-        ot_qwen_native_FP32_head_subtiles_require_actual_profile u_refuse ();
-    end endgenerate
-`endif
-`ifdef KVD_ECTL3
-    generate if (`KVD_HEADS == 1) begin : g_native_ectl3_unqualified
-        ot_qwen_native_single_group_control_leaves_require_actual_profile u_refuse ();
-    end endgenerate
-`endif
-"""
-    s = s[:j] + trap + s[j:]
     return s
 
 

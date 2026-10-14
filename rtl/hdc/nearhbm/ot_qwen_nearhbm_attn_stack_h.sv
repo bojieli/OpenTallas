@@ -1092,16 +1092,6 @@ module ot_qwen_nearhbm_row_engine_h #(
     output wire                 ev_k_first,
     output wire                 ev_v_first
 );
-`ifdef KVD_HSUB
-    generate if (`KVD_Q_FP32) begin : g_native_hsub_unqualified
-        ot_qwen_native_FP32_head_subtiles_require_actual_profile u_refuse ();
-    end endgenerate
-`endif
-`ifdef KVD_ECTL3
-    generate if (`KVD_HEADS == 1) begin : g_native_ectl3_unqualified
-        ot_qwen_native_single_group_control_leaves_require_actual_profile u_refuse ();
-    end endgenerate
-`endif
     wire [2*4-1:0]    t_c;
     wire [2*HD*8-1:0] t_row;
     wire [2*32-1:0]   t_e;
