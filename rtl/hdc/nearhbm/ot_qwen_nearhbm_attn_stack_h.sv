@@ -1895,7 +1895,7 @@ module ot_qwen_nearhbm_attn_stack_h #(
             if (start) begin lsent <= 2'b00; lh <= 0; end
             else if ((kdone[0] && !lsent[0]) || (kdone[1] && lsent[0] && !lsent[1])) begin
                 so_valid <= 1'b1; so_type <= 2'd0; so_g <= lsent[0]; so_hh <= lh[1:0]; so_k <= 0;
-                so_any <= sany[lsent[0]]; so_data <= smax[32*(4*lsent[0] + lh[1:0]) +: 32];
+                so_any <= (!`KVD_QK_ONLY || n_s != 0) && sany[lsent[0]]; so_data <= smax[32*(4*lsent[0] + lh[1:0]) +: 32];
                 if (lh == 3'd3) begin lh <= 0; lsent[lsent[0]] <= 1'b1; end else lh <= lh + 3'd1;
             end else if (zm_valid) begin
                 so_valid <= 1'b1; so_type <= zm_done ? 2'd2 : 2'd1; so_g <= zm_g; so_hh <= zm_hh; so_k <= zm_k;

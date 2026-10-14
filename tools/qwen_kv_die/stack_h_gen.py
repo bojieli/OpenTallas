@@ -1028,6 +1028,10 @@ def native_profile(s):
     sub=sub.replace('    output wire [15:0]       ev ', "    input wire native_e_read,\n    input wire [10:0] native_e_addr,\n    output reg [63:0] native_e_data,\n    output wire [15:0] native_exp_done,\n    output wire native_score_done,\n    output wire [15:0]       ev ",1)
     sub=sub.replace('    reg [63:0]  e_mem  [0:4095];', "    reg [63:0]  e_mem  [0:4095];\n    always @(posedge clk) if (native_e_read) native_e_data <= e_mem[{1'b0,native_e_addr}];")
     sub=sub.replace('    reg  [31:0] exp_done;', '    reg  [31:0] exp_done;\n    assign native_exp_done = exp_done[15:0];\n    assign native_score_done = kdone[0];')
+    # A native empty stack completes its parent count before the three-leaf
+    # controller start has cleared previous maxima. Ownership, not stored flags,
+    # decides whether this stack contributes a max to the new frame.
+    sub=sub.replace('so_any <= sany[lsent[0]];', "so_any <= (!`KVD_QK_ONLY || n_s != 0) && sany[lsent[0]];")
     return s[:a]+sub
 
 
