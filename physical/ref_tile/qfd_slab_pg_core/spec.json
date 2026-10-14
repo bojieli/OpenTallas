@@ -1,0 +1,349 @@
+{
+ "name": "qfd_slab_pg_core",
+ "top": "ot_qwen_slab_pg_core",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_slab_pg_entries.sv",
+  "rtl/physical/ot_qwen_slab_port_group.sv",
+  "rtl/common/ot_meso_fifo.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "params": {
+  "MUL_LAT": 7,
+  "BW_FIFO": 0,
+  "OREG": 1,
+  "MUL_KCP": 1,
+  "IN_STAGE": 1,
+  "AM_SPLIT": 1,
+  "S5_CTL": 1,
+  "SCALE_PAIR": 1,
+  "GT": 3072,
+  "GID": 47
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n",
+  "bw_rst_n"
+ ],
+ "defines": [],
+ "outline": {
+  "w": 259.2,
+  "h": 129.6
+ },
+ "pins": {
+  "W": [
+   "col_m5"
+  ],
+  "E": [
+   "lane_y",
+   "lane_vo",
+   "lane_err",
+   "p_v",
+   "p_last",
+   "p_oen",
+   "p_amax",
+   "p_rmax",
+   "p_wsrc",
+   "p_mmode",
+   "p_split",
+   "p_nb",
+   "p_lb",
+   "p_nout",
+   "p_sbase",
+   "p_oa",
+   "p_ots"
+  ],
+  "S": [
+   "lane_a",
+   "lane_s",
+   "lane_v",
+   "lane_ws",
+   "core_gre1",
+   "core_addr1",
+   "core_rs0",
+   "res_in"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "bw_clk",
+   "bw_rst_n",
+   "bw_v",
+   "bw_rdy",
+   "bw_d",
+   "tw_v",
+   "tw_rdy",
+   "tw_d",
+   "o_we",
+   "o_addr",
+   "o_mask",
+   "o_data",
+   "ov",
+   "am_tv",
+   "am_top",
+   "am_rmax",
+   "fault",
+   "bw_w_fault",
+   "bw_r_fault",
+   "bw_w_live",
+   "bw_r_live"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:el1013-qwen-small-masters r3b",
+  "branch": "claude/el1013-qwen-r3b-spine",
+  "tag": "cr1",
+  "purpose": "Slab original parentregisters hardened coreclocklocal partition",
+  "extra_paths": [
+   "physical/qwen_slab_structural"
+  ],
+  "benches": [
+   {
+    "name": "core_composition_exact",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --out {RUN}/bench/entries",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "core_composition_scale_mutant",
+    "cmd": "PYTHONPATH=src:tools python3 tools/qwen_slab_m3_takeover.py bench --variant s14o --tp 8 --entries --entry-mutant --out {RUN}/bench/entries_mut",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_slab_pg_core/views",
+  "record_to": "results/rtl/ref_tile/qfd_slab_pg_core"
+ },
+ "structural_change": "Original slab parent gate6761ownflops sharedclockspine insertion1771.3/spread510.7 fails dieclock requirement. Existing parent request/tag/scale merge/argmax/output registers extracted unchanged into hardened core leaf. Four scale columns+four multiplier leaves retain ownroots; new parent onlywires andoneentry perchild. No latency change; exact original TP8 golden bench and scale-return bit-swap mutant prove extraction.",
+ "slot_change_request": "Core leaf259.2x129.6 must beplaced in central172.8um slab bandwith21.6umchannelsabove/below; parent clocks oneentry percore+8children. Fullslab footprint777.6x691.2 exceeds8groups*1840.296 parentheight; exactdieportplacement redesign required before fullcluster route. GID47 coreonly currently; other47GID parameters require correspondingnamedcore views or runtime strap redesign, cannotbind thisview toallGIDs.",
+ "macros": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "pin_ranges": {
+  "col_m5": [
+   4,
+   125.6
+  ],
+  "lane_y": [
+   4,
+   86.912
+  ],
+  "lane_vo": [
+   87.488,
+   90.079
+  ],
+  "lane_err": [
+   90.655,
+   95.836
+  ],
+  "p_v": [
+   96.412,
+   96.574
+  ],
+  "p_last": [
+   97.15,
+   97.312
+  ],
+  "p_oen": [
+   97.888,
+   98.05
+  ],
+  "p_amax": [
+   98.626,
+   98.788
+  ],
+  "p_rmax": [
+   99.364,
+   99.526
+  ],
+  "p_wsrc": [
+   100.102,
+   100.264
+  ],
+  "p_mmode": [
+   100.84,
+   101.002
+  ],
+  "p_split": [
+   101.578,
+   102.226
+  ],
+  "p_nb": [
+   102.802,
+   105.555
+  ],
+  "p_lb": [
+   106.131,
+   108.884
+  ],
+  "p_nout": [
+   109.46,
+   112.213
+  ],
+  "p_sbase": [
+   112.789,
+   116.675
+  ],
+  "p_oa": [
+   117.251,
+   121.138
+  ],
+  "p_ots": [
+   121.714,
+   125.6
+  ],
+  "lane_a": [
+   4,
+   98.581
+  ],
+  "lane_s": [
+   99.157,
+   146.448
+  ],
+  "lane_v": [
+   147.024,
+   149.98
+  ],
+  "lane_ws": [
+   150.556,
+   153.512
+  ],
+  "core_gre1": [
+   154.088,
+   154.272
+  ],
+  "core_addr1": [
+   154.848,
+   159.282
+  ],
+  "core_rs0": [
+   159.858,
+   160.043
+  ],
+  "res_in": [
+   160.619,
+   255.2
+  ],
+  "clk": [
+   4,
+   4.145
+  ],
+  "rst_n": [
+   4.721,
+   4.867
+  ],
+  "bw_clk": [
+   5.443,
+   5.588
+  ],
+  "bw_rst_n": [
+   6.164,
+   6.309
+  ],
+  "bw_v": [
+   6.885,
+   7.03
+  ],
+  "bw_rdy": [
+   7.606,
+   7.752
+  ],
+  "bw_d": [
+   8.328,
+   82.704
+  ],
+  "tw_v": [
+   83.28,
+   83.425
+  ],
+  "tw_rdy": [
+   84.001,
+   84.147
+  ],
+  "tw_d": [
+   84.723,
+   159.099
+  ],
+  "o_we": [
+   159.675,
+   159.821
+  ],
+  "o_addr": [
+   160.397,
+   163.883
+  ],
+  "o_mask": [
+   164.459,
+   166.783
+  ],
+  "o_data": [
+   167.359,
+   241.736
+  ],
+  "ov": [
+   242.312,
+   242.457
+  ],
+  "am_tv": [
+   243.033,
+   243.178
+  ],
+  "am_top": [
+   243.754,
+   250.872
+  ],
+  "am_rmax": [
+   251.448,
+   251.594
+  ],
+  "fault": [
+   252.17,
+   252.315
+  ],
+  "bw_w_fault": [
+   252.891,
+   253.036
+  ],
+  "bw_r_fault": [
+   253.612,
+   253.757
+  ],
+  "bw_w_live": [
+   254.333,
+   254.479
+  ],
+  "bw_r_live": [
+   255.055,
+   255.2
+  ]
+ },
+ "refglob": "*u_core*",
+ "orfs_vars": {
+  "OT_OFLOP_GAP": "4.5"
+ },
+ "children": []
+}
