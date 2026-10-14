@@ -38,6 +38,8 @@ link_design probe
 set_cmd_units -time ps
 create_clock -name stream -period 833.333 [get_pins {a/ck b/ck}]
 set_propagated_clock [all_clocks]
+set_clock_uncertainty -setup 150 [all_clocks]
+set_clock_uncertainty -hold 100 [all_clocks]
 puts BASELINE
 set baseline [get_property [lindex [find_timing_paths -from a/q -to b/d -path_delay max] 0] slack]
 report_checks -from a/q -to b/d -path_delay max -format full_clock_expanded -digits 3
@@ -93,6 +95,11 @@ def test():
         s = (p / 'clocks.tcl').read_text()
         assert '-100.000000' in s and '-300.000000' in s
         assert s.count('create_clock ') == 1 and 'set_propagated_clock' in s
+        assert '-setup 150.000000' in s and '-hold 100.000000' in s
+        deep = D.clock_tcl({'stream': [('a/ck', 'A', 'ck'), ('b/ck', 'B', 'ck')]},
+                           {'A': {'tt': {'ck': 100}}, 'B': {'tt': {'ck': 301}}}, 'tt')
+        assert '-setup 210.000000' in deep and 'conservative domain-wide' in deep
+        assert deep.count('create_clock ') == 1 and 'set_clock_groups' not in deep
         assert 'set_false_path' not in s and 'set_clock_groups' not in s
         consumer = Path(__file__).resolve().parents[1] / 'qwen_kv_die/chain/sta_tcl.py'
         (p / 'clocks_ff.tcl').write_text(s.replace('COMPENSATED tt', 'COMPENSATED ff'))
@@ -100,6 +107,7 @@ def test():
         args = [sys.executable, str(consumer), 'r22k', 'ff', str(p / 'sta.tcl')]
         subprocess.run(args, env=env, check=True, capture_output=True)
         assert '# INSERTION_COMPENSATED ff' in (p / 'sta.tcl').read_text()
+        assert 'set_clock_uncertainty -hold 25 [all_clocks]' not in (p / 'sta.tcl').read_text()
         assert subprocess.run(args + ['forbidden_plan.json'], env=env, capture_output=True).returncode != 0
         (p / 'clocks_ff.tcl').unlink()
         assert subprocess.run(args, env=env, capture_output=True).returncode != 0
