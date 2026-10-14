@@ -58,7 +58,7 @@ module tb_hbm_b2_su_vm4_drain #(parameter integer MUT=0,PHASE=61,NSEC=512,PAIR=0
      checked[q]=checked[q]+1;
     end
    end
-   if(ov||(|fault[q*8+:8]))$fatal(1,"native client fault quarter%0d",q);
+   if(ov||(|fault[q*8+:8]))$fatal(1,"native client fault quarter%0d bank0 obligations=%0d/%0d/%0d/%0d next=%0d/%0d/%0d/%0d df=%b cf=%b vf=%b fifo=%h",q,vehicle.quad[q].lane[0].link.rresp,vehicle.quad[q].lane[0].link.rcred,vehicle.quad[q].lane[0].link.wcred,vehicle.quad[q].lane[0].link.wcommit,vehicle.quad[q].lane[0].link.nrresp,vehicle.quad[q].lane[0].link.nrcred,vehicle.quad[q].lane[0].link.nwcred,vehicle.quad[q].lane[0].link.nwcommit,vehicle.quad[q].lane[0].link.df,vehicle.quad[q].lane[0].link.cf,vehicle.quad[q].lane[0].link.vf,vehicle.quad[q].lane[0].link.faults);
   end
  end
  initial begin wait(&finished);repeat(16)@(negedge vclk);if(cdrained!==32'hffffffff||vdrained!==32'hffffffff)$fatal(1,"native drain incomplete source%h VM%h",cdrained,vdrained);$display("NATIVE_SU_VM4_DRAIN PASS quarters=4 sectors=%0d words=%0d LQ=10 RRS=3 WRS=3 client_edges=4 vm_edges=3 phase=%0d",4*NSEC,32*NSEC,PHASE);$finish;end

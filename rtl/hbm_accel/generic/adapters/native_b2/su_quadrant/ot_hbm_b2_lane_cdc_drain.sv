@@ -3,7 +3,7 @@
 // One exclusive native bank/group lane. Client owns ten end-to-end credits.
 // Protected pointer rails come from the real HBM CDC primitive. No pulse crosses directly.
 // Each payload FIFO is a distinct physical requirement; this RTL is not a closed SRAM view.
-module ot_hbm_b2_lane_cdc_drain #(parameter integer LQ=10, MUT=0)(
+module ot_hbm_b2_lane_cdc_drain #(parameter integer LQ=10, MAX_PENDING=48, MUT=0)(
  input wire cclk,vclk,rst_n,permit,
  input wire [16:0] crq,output reg crq_credit,output reg [256:0] crr,
  input wire [280:0] cwq,output reg cwq_credit,cwq_done,
@@ -33,7 +33,10 @@ module ot_hbm_b2_lane_cdc_drain #(parameter integer LQ=10, MUT=0)(
  end
  // Source obligations count accepted beats until each real returned event is consumed.
  // Credit return and commit/response are independent obligations.
- localparam integer CB=$clog2(LQ+1);
+ // Private local lane bound: requestFIFO16 + registered bank ingress1 + bankqueue10
+ // + read/commit pipeline4 + returnFIFO16 + registered return1 =48.
+ // Ten bank credits return on dequeue, before response/commit; they are not this bound.
+ localparam integer CB=$clog2(MAX_PENDING+1);
  reg [CB-1:0] rresp,rcred,wcred,wcommit,rresp_n,rcred_n,wcred_n,wcommit_n;
  reg df;
  wire racc=crq[16]&&permit,wacc=cwq[280]&&permit;
@@ -46,7 +49,7 @@ module ot_hbm_b2_lane_cdc_drain #(parameter integer LQ=10, MUT=0)(
   rresp_n<='1;rcred_n<='1;wcred_n<='1;wcommit_n<='1;df<=0;
  end else begin
   if(rresp!=~rresp_n||rcred!=~rcred_n||wcred!=~wcred_n||wcommit!=~wcommit_n||
-    nrresp>LQ||nrcred>LQ||nwcred>LQ||nwcommit>LQ)df<=1;
+    nrresp>MAX_PENDING||nrcred>MAX_PENDING||nwcred>MAX_PENDING||nwcommit>MAX_PENDING)df<=1;
   rresp<=nrresp[CB-1:0];rresp_n<=~nrresp[CB-1:0];
   rcred<=nrcred[CB-1:0];rcred_n<=~nrcred[CB-1:0];
   wcred<=nwcred[CB-1:0];wcred_n<=~nwcred[CB-1:0];
