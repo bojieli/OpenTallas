@@ -55,8 +55,8 @@
  "job": {
   "owner": "Claude:el1013-s81su-qual",
   "branch": "claude/el1013-s81su-qual",
-  "tag": "v1",
-  "purpose": "QB tap, low half-tap: slots 0-7 (4,096 b, pin flop + output flop) + the tap control (job, row counter, valid, tags, obase, FP4, status); with dsfd_su_t_swth (slots 8-15, hardened once for SW and QB) it replaces dsfd_su_t_qbt; lockstep-exact against ot_s81_su_qbt in the same cycle",
+  "tag": "v3-pinko",
+  "purpose": "QB tap, low half-tap: slots 0-7 (4,096 b, pin flop + output flop) + the tap control (job, row counter, valid, tags, obase, FP4, status); with dsfd_su_t_swth (slots 8-15, hardened once for SW and QB) it replaces dsfd_su_t_qbt; lockstep-exact against ot_s81_su_qbt in the same cycle | v2: v1 EARLY_FAIL_CONGESTION GRT-0116 (H overflow only in a 1.2-um band at x 26.2-27.4 over the whole height, nets e_d* / ot_outhold_*: kit recipe 2 put the 3-cell output hold stage of all 4,096 outputs FIRM at one x on a face with 10.4 b/um, so the legalised chains zigzag: 4 crossings a bit, ~47 H wires/um against 18 a gcell). v2: outhold off -- the output flop sits at its pin in the 4-column pin-flop array (flop -> pin a few um); the hold margin of the outgoing hop is the receiver's input hold stage (every SU tile input keeps its HB4 pair); inputs unchanged (in-hold pair + pin flop FIRM at the W face, no marker there in v1). | v3: v2 routed CLOSED (TT +315.50 / FF +16.97 / DRC 0) but its view failed child_lint (f): 33 of 8,462 face pins (e_f4, e_ob, ... in the control band of the E face) lie under M5 wires on the INNER half of the 0.192-um pin, which the default pin keepout (outer half, OT_PK_FRAC 0.5) leaves open; pin_access frac 1.0 keeps M5 off the whole pin depth on both faces.",
   "benches": [
    {
     "name": "lockstep_exact",
@@ -82,5 +82,9 @@
   ],
   "views_to": "physical/ref_tile/s81su_qbtl_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_qbtl_ref"
+ },
+ "outhold": false,
+ "pin_access": {
+  "frac": 1.0
  }
 }
