@@ -11,7 +11,7 @@ Bench rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv (Verilator)."""
 import argparse, json, re, subprocess, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
-SRCS = ['rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv', 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv',
+SRCS = ['rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv', 'rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv', 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv',
         'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv', 'rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv',
         'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv',
         'rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv', 'rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv',
@@ -64,6 +64,10 @@ for _n, _c in _base.items():
 FEH_SRC = 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv'
 COVER = ['rd', 'wr', 'drain', 'cap', 'cts_low', 'cw_stall', 'rdy', 'dv', 'ks']   # every bin must be hit over the lockstep set
 
+
+for _n in ('gold_s1','tp','mut_stale'):
+    _c=CASES[_n]
+    CASES['be_hard_'+_n]=dict(_c,defines=_c.get('defines',[])+['OT_SPVM_BE_HARD_RELAYS'])
 
 # Verilator >= 5.050 is REQUIRED (el1011-ds-vm 2026-10-11): 5.032 (Debian /usr/bin) miscompiles an automatic task that
 # push_back()s into an element of an unpacked array of queues when the task is called for two different indices (the

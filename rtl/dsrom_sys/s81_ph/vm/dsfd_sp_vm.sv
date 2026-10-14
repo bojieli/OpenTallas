@@ -1570,7 +1570,8 @@ module dsfd_vm_be #(
     parameter integer P2D = 40,         // P2 flit FIFO depth (the FE reader's credits)
     parameter integer MD = 9,           // tile-3 f_* (request exit) -> o_* (read data) skew
     parameter integer XT = 2,           // control stages inside a slice tile
-    parameter integer DR = 3            // reset / status relay stages (each tile alike)
+    parameter integer DR = 3,           // reset / status relay stages (each tile alike)
+    parameter integer HARD_RELAYS = 0    // opt-in fixed hard masters, exact same stages
 ) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rst,
@@ -1606,8 +1607,13 @@ module dsfd_vm_be #(
     wire clk = ck[0];
     wire rn0, rns0;
     // die glue: reset synchronisers (one each, at the die), equal-length relays to every slice
-    ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn0));
-    ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns0));
+    generate if (HARD_RELAYS != 0) begin : g_hrst
+        dsfd_die_rstsync u_rs (.ck(clk), .rst(rst[0]), .rn(rn0));
+        dsfd_die_rstsync u_rss (.ck(cks[0]), .rst(rss[0]), .rn(rns0));
+    end else begin : g_rst
+        ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn0));
+        ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns0));
+    end endgenerate
     wire [255:0] srq_d [0:NS-1]; wire [1:0] srq_v [0:NS-1]; wire [NS-1:0] vrv_s, c_l0v_s, t_p2c_s;
     wire [127:0] vrq_s [0:NS-1]; wire [16*128-1:0] bl_d [0:NS-1]; wire [15:0] bl_v [0:NS-1];
     wire [150:0] p2_s [0:NS-1]; wire [39:0] st [0:NS];
@@ -1616,18 +1622,40 @@ module dsfd_vm_be #(
     genvar gs, gl;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_s
         // die-top relays (behavioural): DR reset stages, DIE_D control stages, 1 c_l0r stage, all equal per slice
-        reg [DR-1:0] rnc, rns_;
-        reg [4:0] dvx [0:DIE_D-1]; reg [4:0] dwx [0:DIE_D-1]; reg [19:0] dmx [0:DIE_D-1];
-        reg dv5 [0:DIE_D-1]; reg dw5 [0:DIE_D-1]; reg [22:0] dm5 [0:DIE_D-1]; reg rr;
+        wire [DR-1:0] rnc, rns_;
+        wire [4:0] dvx [0:DIE_D-1]; wire [4:0] dwx [0:DIE_D-1]; wire [19:0] dmx [0:DIE_D-1];
+        wire dv5 [0:DIE_D-1]; wire dw5 [0:DIE_D-1]; wire [22:0] dm5 [0:DIE_D-1]; wire rr;
+        if (HARD_RELAYS != 0) begin : g_hard
+            wire [54:0] ctl [0:DIE_D];
+            assign ctl[0] = {f_vx, f_wex, f_mx, f_v5[0], f_we5[0], f_m5[23*gs +: 23]};
+            for (genvar ri=0; ri<DIE_D; ri=ri+1) begin : g_ctl
+                dsfd_be_r55 u_r (.ck(clk), .i(ctl[ri]), .o(ctl[ri+1]));
+                assign {dvx[ri],dwx[ri],dmx[ri],dv5[ri],dw5[ri],dm5[ri]}=ctl[ri+1];
+            end
+            for (genvar ri=0; ri<DR; ri=ri+1) begin : g_rst
+                dsfd_die_r1 u_c (.ck(clk), .i(ri==0 ? rn0 : rnc[ri==0 ? 0 : ri-1]), .o(rnc[ri]));
+                dsfd_die_r1 u_s (.ck(cks[0]), .i(ri==0 ? rns0 : rns_[ri==0 ? 0 : ri-1]), .o(rns_[ri]));
+            end
+            dsfd_die_r1 u_ready (.ck(clk), .i(c_l0r[0]), .o(rr));
+        end else begin : g_flat
+        reg [DR-1:0] rnc_q, rns_q;
+        reg [4:0] dvx_q [0:DIE_D-1]; reg [4:0] dwx_q [0:DIE_D-1]; reg [19:0] dmx_q [0:DIE_D-1];
+        reg dv5_q [0:DIE_D-1]; reg dw5_q [0:DIE_D-1]; reg [22:0] dm5_q [0:DIE_D-1]; reg rr_q;
         always @(posedge clk) begin : p_rl integer i;
-            rnc <= {rnc[DR-2:0], rn0};
-            rr <= c_l0r[0];
-            dvx[0] <= f_vx; dwx[0] <= f_wex; dmx[0] <= f_mx; dv5[0] <= f_v5[0]; dw5[0] <= f_we5[0]; dm5[0] <= f_m5[23*gs +: 23];
+            rnc_q <= {rnc_q[DR-2:0], rn0};
+            rr_q <= c_l0r[0];
+            dvx_q[0] <= f_vx; dwx_q[0] <= f_wex; dmx_q[0] <= f_mx; dv5_q[0] <= f_v5[0]; dw5_q[0] <= f_we5[0]; dm5_q[0] <= f_m5[23*gs +: 23];
             for (i = 1; i < DIE_D; i = i + 1) begin
-                dvx[i] <= dvx[i-1]; dwx[i] <= dwx[i-1]; dmx[i] <= dmx[i-1]; dv5[i] <= dv5[i-1]; dw5[i] <= dw5[i-1]; dm5[i] <= dm5[i-1];
+                dvx_q[i] <= dvx_q[i-1]; dwx_q[i] <= dwx_q[i-1]; dmx_q[i] <= dmx_q[i-1]; dv5_q[i] <= dv5_q[i-1]; dw5_q[i] <= dw5_q[i-1]; dm5_q[i] <= dm5_q[i-1];
             end
         end
-        always @(posedge cks[0]) rns_ <= {rns_[DR-2:0], rns0};
+        always @(posedge cks[0]) rns_q <= {rns_q[DR-2:0], rns0};
+            assign rnc=rnc_q; assign rns_=rns_q; assign rr=rr_q;
+            for (genvar ri=0; ri<DIE_D; ri=ri+1) begin : g_o
+                assign dvx[ri]=dvx_q[ri]; assign dwx[ri]=dwx_q[ri]; assign dmx[ri]=dmx_q[ri];
+                assign dv5[ri]=dv5_q[ri]; assign dw5[ri]=dw5_q[ri]; assign dm5[ri]=dm5_q[ri];
+            end
+        end
         dsfd_vm_be_sl u_sl (                // hard macro at its defaults (P2D 40, XT 2): no parameter overrides
             .ck(ck), .cks(cks), .rn_in(rnc[DR-1]), .rns_in(rns_[DR-1]),
             .o_v(o_v[10*gs +: 10]), .o_d(o_d[1280*gs +: 1280]), .o_f(o_f[4*gs +: 4]), .o_o(o_o[3*gs +: 3]),
@@ -1770,7 +1798,12 @@ module dsfd_sp_vm_m #(
             assign f0v = cv_[NT]; assign f0we = cwe[NT]; assign f0d = cd_[NT];
         end
     end endgenerate
-    dsfd_vm_be #(.NS(NS), .P2D(P2D), .MD(MD)) u_be (
+`ifdef OT_SPVM_BE_HARD_RELAYS
+    localparam integer BEHR=1;
+`else
+    localparam integer BEHR=0;
+`endif
+    dsfd_vm_be #(.NS(NS), .P2D(P2D), .MD(MD), .HARD_RELAYS(BEHR)) u_be (
         .ck(ck), .rst(rst), .cks(cks), .rss(rss), .o_v(ov), .o_d(od), .o_f(of), .o_o(oo),
         .f_v5(f0v[5]), .f_we5(f0we[5]), .f_m5(f0d[5*128 +: 92]), .fe_flt(fe_flt),
         .f_vx({f0v[9], f0v[8], f0v[2], f0v[7], f0v[6]}), .f_wex({f0we[9], f0we[8], f0we[2], f0we[7], f0we[6]}),

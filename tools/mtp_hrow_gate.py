@@ -27,15 +27,16 @@ MUT = [('OT_HROW_MUT_NOEPOCH', 'pos_late'), ('OT_HROW_MUT_NOPART', 'neg_drop')]
 
 
 TILES = False   # --tiles: the bench runs on the two-level tile composition dsfd_mtp_hrow_tc
+HARD_RELAYS = False
 UTURN = False   # --uturn (with --tiles): the die composition dsfd_mtp_hrow_td (tc + one die relay on the U-turn hop)
 TILE_SRC = 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv'   # --tile-src: another tiles file (e.g. a mixed-commit pair)
 
 
 def build(out, d=None):
     exe = out / ('sim' + ('_' + d if d else '') + ('_tiles' if TILES else '') + ('_uturn' if UTURN else ''))
-    src = SRC + ([TILE_SRC] if TILES else []) + (['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv'] if UTURN else [])
+    src = SRC + (['rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv'] if HARD_RELAYS else []) + ([TILE_SRC] if TILES else []) + (['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv'] if UTURN else [])
     subprocess.run(['iverilog', '-g2012', '-o', str(exe), '-s', 'tb_mtp_hrow'] + (['-D' + d] if d else [])
-                   + (['-DOT_HROW_TILES'] if TILES else []) + (['-DOT_HROW_DIE'] if UTURN else [])
+                   + (['-DOT_HROW_HARD_RELAYS'] if HARD_RELAYS else []) + (['-DOT_HROW_TILES'] if TILES else []) + (['-DOT_HROW_DIE'] if UTURN else [])
                    + [str(s) if Path(s).is_absolute() else str(ROOT / s) for s in src], check=True)
     return exe
 
@@ -57,15 +58,18 @@ def main():
     ap.add_argument('--record', type=Path)
     ap.add_argument('--tiles', action='store_true', help='run on the two-level tile composition (dsfd_mtp_hrow_tc)')
     ap.add_argument('--uturn', action='store_true', help='with --tiles: the die composition dsfd_mtp_hrow_td (U-turn relay)')
+    ap.add_argument('--hard-relays', action='store_true', help='with --uturn: exact fixed relay hard masters')
     ap.add_argument('--tile-src', help='tiles source file instead of ot_dsrom_mtp_hrow_tiles.sv (a mixed-commit pair)')
     a = ap.parse_args()
-    global TILES, UTURN, TILE_SRC
+    global TILES, UTURN, TILE_SRC, HARD_RELAYS
     TILES = a.tiles or a.uturn
     UTURN = a.uturn
+    HARD_RELAYS = a.hard_relays
+    if HARD_RELAYS and not UTURN: ap.error("--hard-relays requires --uturn")
     if a.tile_src:
         TILE_SRC = a.tile_src
     a.out.mkdir(parents=True, exist_ok=True)
-    rec = dict(schema='opentallas.mtp-hrow-gate.v1', sources=SRC, tiles=TILES, uturn=UTURN, tile_src=TILE_SRC if TILES else None,
+    rec = dict(schema='opentallas.mtp-hrow-gate.v1', sources=SRC, tiles=TILES, uturn=UTURN, tile_src=TILE_SRC if TILES else None, hard_relays=HARD_RELAYS,
                cases=[], mutants=[])
     ok = mut_ok = True
     if a.only != 'mut':
