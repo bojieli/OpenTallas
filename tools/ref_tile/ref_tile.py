@@ -303,15 +303,11 @@ probe may measure routing before the phase audit exists, but cannot auto-merge.
     if rec.get("requires_phase_aligned_die_pg") is not True:
         raise SpecError("cluster grant must require die-core phase aligned PG")
     if not s.get("job", {}).get("hold_merge"):
-        audit = s.get("die_pg_phase_audit", {})
-        ap = (ROOT / audit.get("source", "")).resolve()
-        if not ap.is_relative_to(ROOT.resolve()) or not ap.is_file() or not audit.get("sha256"):
-            raise SpecError("production upper cluster requires digest-bound die_pg_phase_audit; use hold_merge for a probe")
-        if hashlib.sha256(ap.read_bytes()).hexdigest() != audit["sha256"]:
-            raise SpecError("die PG phase audit digest mismatch")
-        ar = json.loads(ap.read_text())
-        if ar.get("verdict") != "PASS" or ar.get("master") != s["name"] or ar.get("grant_sha256") != g["sha256"]:
-            raise SpecError("die PG phase audit does not prove this master and grant")
+        import cluster_pg_phase
+        try:
+            cluster_pg_phase.validate(ROOT, s.get("die_pg_phase_audit", {}), s, g)
+        except (ValueError, KeyError, TypeError, OSError) as ex:
+            raise SpecError(f"production upper cluster PG geometry audit failed: {ex}; use hold_merge for a probe") from ex
     return cap, {"source": g["source"], "sha256": g["sha256"], "obligations": rec}
 
 
