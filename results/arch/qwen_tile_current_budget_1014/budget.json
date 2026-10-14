@@ -52,7 +52,22 @@
   "expanded_capacity_um2": 481798.26950399997,
   "known_expanded_area_um2": 473912.938944,
   "remaining_expanded_area_um2": 7885.330559999973,
-  "current_helpers": [
+  "necessary_condition": "Sum of expanded footprints of ALL current unmeasured helpers must fit remaining budget; meeting this area condition is insufficient for pin/channel placement, and changing any known shape requires a new measured candidate.",
+  "excluded_old_aliases": [
+    "store4800 and response129 sizing",
+    "old337 response before query40",
+    "old784 node before seq40",
+    "old10960 store before full40 event payload"
+  ],
+  "open": [
+    "current helper area/outline/corner facts",
+    "registered request/status/output transport",
+    "conditional TX/RQR shapes not final assigned closed masters",
+    "constructive child/pin placement and signal/PG transforms",
+    "real station corridor and reticle fit",
+    "field/node producer metadata and full native operation costs"
+  ],
+  "historical_helper_set": [
     {
       "name": "event_store",
       "logical_or_generic_Q": 11000,
@@ -89,19 +104,46 @@
       "outline_and_current_CTS": "UNQUALIFIED_DO_NOT_BORROW_OLD4800_STORE129_RESPONSE_OR_SEQ16_NODE_RECEIPTS"
     }
   ],
-  "necessary_condition": "Sum of expanded footprints of ALL current unmeasured helpers must fit remaining budget; meeting this area condition is insufficient for pin/channel placement, and changing any known shape requires a new measured candidate.",
-  "excluded_old_aliases": [
-    "store4800 and response129 sizing",
-    "old337 response before query40",
-    "old784 node before seq40",
-    "old10960 store before full40 event payload"
+  "current_helpers": [
+    {
+      "name": "event_store",
+      "logical_or_generic_Q": 11000,
+      "source": "rtl/physical/ot_qwen_xcache_context32_events.sv",
+      "source_sha256": "9696d349cde35bd8460f13161df53e09c23c9260b905384f83625f521c04f29f",
+      "outline_and_current_CTS": "UNQUALIFIED_DO_NOT_BORROW_OLD4800_STORE129_RESPONSE_OR_SEQ16_NODE_RECEIPTS"
+    },
+    {
+      "name": "event_response",
+      "logical_or_generic_Q": 377,
+      "source": "rtl/physical/ot_qwen_xcache_context32_events.sv",
+      "source_sha256": "9696d349cde35bd8460f13161df53e09c23c9260b905384f83625f521c04f29f",
+      "outline_and_current_CTS": "UNQUALIFIED_DO_NOT_BORROW_OLD4800_STORE129_RESPONSE_OR_SEQ16_NODE_RECEIPTS"
+    },
+    {
+      "name": "node_lifetime40",
+      "logical_or_generic_Q": 1048,
+      "source": "rtl/physical/ot_qwen_tile_node_lifetime.sv",
+      "source_sha256": "1d8ad88942b5cb009cb3857fb3b995ce33e4c47cfdba6c3c41b0c908d3f2b7e8",
+      "outline_and_current_CTS": "UNQUALIFIED_DO_NOT_BORROW_OLD4800_STORE129_RESPONSE_OR_SEQ16_NODE_RECEIPTS"
+    },
+    {
+      "name": "streaming_every_math_metadata",
+      "logical_or_generic_Q": 4094,
+      "source": "rtl/physical/ot_qwen_tile_numeric_output_metadata.sv",
+      "source_commit": "e24671b5b",
+      "source_sha256": "566c2f13020b8e467b528d6108761923b6583bea8d713e8cc5fdc694a2b63fc1",
+      "outline_and_current_CTS": "UNQUALIFIED_NO_OUTLINE_EXTRAPOLATION",
+      "composition": "default-off streaming candidate, not physical adoption"
+    },
+    {
+      "name": "live_numeric_stream_queue_D8",
+      "logical_or_generic_Q": 4820,
+      "source": "rtl/physical/ot_qwen_numeric_stream_queue.sv",
+      "source_commit": "393c9d1ef",
+      "source_sha256": "769f95de8152edfdb0e356bf11633a8ab6e57b553eadad51dc4d3081c3e3ca8e",
+      "outline_and_current_CTS": "UNQUALIFIED_NO_OUTLINE_EXTRAPOLATION",
+      "composition": "default-off streaming candidate, not physical adoption"
+    }
   ],
-  "open": [
-    "current helper area/outline/corner facts",
-    "registered request/status/output transport",
-    "conditional TX/RQR shapes not final assigned closed masters",
-    "constructive child/pin placement and signal/PG transforms",
-    "real station corridor and reticle fit",
-    "field/node producer metadata and full native operation costs"
-  ]
+  "current_helper_logical_or_generic_Q_total": 21339
 }
