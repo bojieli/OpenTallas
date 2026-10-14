@@ -1,0 +1,37 @@
+{
+  "slot": "hb_mtp",
+  "status": "candidate; no placement adoption",
+  "master": "hgi_mtp_native",
+  "outline_um": [
+    287.28,
+    200.88
+  ],
+  "pins": {
+    "W": [
+      "f_cmdproc"
+    ],
+    "E": [
+      "clk",
+      "rst_n",
+      "t_cmdproc"
+    ]
+  },
+  "clock": {
+    "port": "clk",
+    "face": "E",
+    "layer": "M4",
+    "phase": "phi-minus-measured-boundary-R"
+  },
+  "signal_and_pg_cap": "M5",
+  "parent_strap": "M6",
+  "predecessor": "hgi_mtp_native-n14-lvt-5b9670b6d-tc-hm10",
+  "actual_old_pin_failures": 114,
+  "no_arithmetic_edits": true,
+  "remaining": [
+    "actual CTS boundary mean/spread",
+    "native die source matched197/517bus seams and registered-grant root delivery",
+    "all TT/FF/DRC and childlint gates",
+    "production priced composition"
+  ],
+  "outline_note": "ref_tile snapped requested286.56 to287.28 lattice; actualslotchange requires+0.72um width and approval/adoption by dieowner"
+}
