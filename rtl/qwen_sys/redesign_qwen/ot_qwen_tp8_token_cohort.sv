@@ -33,6 +33,7 @@ module ot_qwen_tp8_token_cohort (
         terminal_generation == cohort_generation && (terminal_done || terminal_fault) &&
         (terminal_fault || dispatched);
     wire invalid_terminal = terminal_valid && !terminal_consumed && !terminal_matches;
+    wire invalid_begin = begin_valid && !begin_identity_ok;
     wire invalid_request = |request_valid && (!active || !warm_ready);
     assign begin_ready = por_n && warm_ready && !active && !identity_fault &&
         !terminal_valid && !terminal_consumed && !(|request_valid) && begin_identity_ok;
@@ -48,7 +49,7 @@ module ot_qwen_tp8_token_cohort (
                 participant_fault = 1;
     end
     assign dispatch_valid = active && (&accepted_ranks) && !dispatched &&
-        warm_ready && !identity_fault && !participant_fault && !invalid_terminal;
+        warm_ready && !identity_fault && !participant_fault && !invalid_terminal && !invalid_begin;
     always @(posedge clk or negedge por_n) begin
         if (!por_n) begin
             active <= 0; dispatched <= 0; identity_fault <= 0;
@@ -57,7 +58,7 @@ module ot_qwen_tp8_token_cohort (
         end else begin
             request_credit <= 0; terminal_accepted <= 0;
             if (!terminal_valid) terminal_consumed <= 0;
-            if (begin_valid && !begin_identity_ok) identity_fault <= 1;
+            if (invalid_begin) identity_fault <= 1;
             if (begin_valid && begin_ready) begin
                 active <= 1; dispatched <= 0; accepted_ranks <= 0;
                 cohort_tag <= begin_tag; cohort_generation <= begin_generation;
@@ -75,7 +76,7 @@ module ot_qwen_tp8_token_cohort (
                 terminal_accepted <= 1; terminal_consumed <= 1;
             end
             if (recovery_valid) begin
-                if (!active && !terminal_valid && !terminal_consumed && !(|request_valid) &&
+                if (!active && !begin_valid && !terminal_valid && !terminal_consumed && !(|request_valid) &&
                     drains && links_drained && link_reset_seen && retraining_done)
                     identity_fault <= 0;
                 else identity_fault <= 1;

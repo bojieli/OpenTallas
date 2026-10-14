@@ -48,6 +48,9 @@ int main(){
   d.warm_ready=1;pulse(254);tick();ck(d.dispatched,"warm-resume barrier failed");
   d.terminal_tag=tag(8,37,0,0);d.terminal_generation=0;d.terminal_done=1;d.terminal_fault=0;d.terminal_valid=1;drains(true);
   tick();ck(d.identity_fault&&d.active&&!d.terminal_accepted,"stale terminal released cohort");
+  reset();d.begin_valid=1;d.begin_tag=tag(9,1,0,0);d.recovery_valid=1;
+  d.links_drained=1;d.link_reset_seen=1;d.retraining_done=1;drains(true);
+  tick();ck(d.identity_fault&&!d.active,"simultaneous invalid begin erased by fence");
   std::cout<<"PASS checks="<<checks<<" delayed_peer7_edges=1000 identity_fault_cases=8\n";return 0;
  } catch(const std::exception& e){std::cerr<<"FAIL checks="<<checks<<" "<<e.what()<<"\n";return 1;}
 }

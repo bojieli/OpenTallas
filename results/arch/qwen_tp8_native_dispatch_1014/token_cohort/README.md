@@ -21,11 +21,15 @@ actual prior dispatch. Terminal identity is the same allocation with stage 37,
 segment 0; terminal acknowledgement is qualified by that full identity and
 generation. A held terminal is consumed once and rearms only after valid falls.
 
-The `v2` gate passed 1,055 checks with a 1,000-edge genuine delayed-rank input,
+The authoritative `v3` gate passed 1,056 checks with a 1,000-edge genuine delayed-rank input,
 normal terminal drain withholding, registered held-terminal rearming, duplicate
 and all six identity field errors, warm retention, drained cancellation, failed
 retraining, and stale terminal rejection. Four actual source mutants failed the
-strict observer. Unit `2491829-1791975272` ran via ot-run on EPYC1 and exited 0.
+strict observer. Unit `2510323-1791975477` ran via ot-run on EPYC1 and exited 0.
+It additionally proves that a simultaneous invalid begin and recovery fence
+cannot erase an identity fault. The source requires no asserted begin during
+recovery and blocks dispatch on the same edge as an invalid begin. The earlier
+`v2` positive and mutants remain preserved under their original source identity.
 `v1` preserves the failed observer run: the bench cleared a pulse without
 reevaluating combinational signals, so its immediate post-pulse observation was
 stale. The RTL was unchanged between these runs.
