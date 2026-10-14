@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.slot_change_request.v1",
+  "master": "hfd_lk_ep",
+  "status": "CANDIDATE_UNPUBLISHED_V13_ONLY",
+  "old_outline_um": [
+    2600,
+    830
+  ],
+  "requested_outline_um": [
+    2600,
+    830.52
+  ],
+  "actual_instance_orientations": [
+    "R0",
+    "MX"
+  ],
+  "reason": "Measuredplacementfails ep_N0: MX M4 residue40nm cannot intersect270nmrows. Height830.52um has24nm mod48 parity and is divisible270nm, so R0/MX contacts legal atorigin0mod48. No snap/assert bypass.",
+  "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
+  "published_contract_changed": false,
+  "source": "tools/hbm_accel_die_fp.py:r25gq_v13",
+  "new_orientations_granted": false,
+  "real_view_claim": false,
+  "next": [
+    "actual nativeendpoint ownlogic and perchildclockentries",
+    "integrated zerooverlap/hop/cut/clockwindow proof",
+    "single dailycontract publication after fullinventory"
+  ]
+}
