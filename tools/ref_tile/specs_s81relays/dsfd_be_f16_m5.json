@@ -6,9 +6,7 @@
     "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv"
   ],
   "clock_port": "ck",
-  "reset_ports": [
-    "rn"
-  ],
+  "reset_ports": [],
   "outline": {
     "w": 32.4,
     "h": 32.4,
@@ -40,8 +38,11 @@
     "extra_paths": [
       "rtl/dsrom_sys/s81_ph/relays"
     ],
-    "purpose": "Unallocated optional FE sticky-status relay:16 FF perstage on serial ck withsync reset rn; defaultSTAGES0; sixstages is FEbox geometric lowerboundonly. No physicalclock/sourcepin/adoption or data-returnlatencyclaim.",
+    "purpose": "Unallocated optional FE sticky-status relay with 16 FF per stage on serial ck. The rn input is a synchronous reset and must receive normal setup/hold input timing, with no reset false path. Default STAGES is zero; six stages is only the FE box distance lower bound, while the unadopted S9 candidate needs a uniform eight stages. Physical source pins, clocks, reset distribution and placement remain open. Data-return latency is unchanged.",
     "benched_by": "s81_be_fault_gate"
   },
-  "structural_change": "New optional16-bit status register. One serialcycle each; sourceactualpin null; statuslatency explicitlypriced. Master outline32.4square provisional, not routed/admitted."
+  "structural_change": "New optional 16-bit status register adding one serial cycle per stage. Source physical pins are unassigned and status latency is explicitly priced. The proposed 32.4 um square outline is unallocated and unrouted.",
+  "synchronous_reset_ports": [
+    "rn"
+  ]
 }
