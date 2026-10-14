@@ -15,7 +15,8 @@
 module ot_hgi_qdq_wr #(
     parameter integer LQ  = 10,
     parameter integer OD  = 64,
-    parameter integer RQ  = 16
+    parameter integer RQ  = 16,
+    parameter integer ACK_LOOKAHEAD = 0 // native candidate only; existing q8e default stands
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -60,6 +61,10 @@ module ot_hgi_qdq_wr #(
     // entry is written >= 20 cycles (decode latency) before its result can fire, so the one-edge-late copy is always current.
     reg [14:0] mh_o; reg [2:0] mh_n; reg mh_z;
     wire [OW-1:0] mq_h1 = mq_h + 1'b1;
+    // q8e: independent head reads stay in parallel with the fire cone. Keeping the
+    // read outputs prevents synthesis from moving fire in front of the 64:1 mux.
+    (* keep = 1 *) wire [18:0] mq_head0 = {mq_o[mq_h], mq_n[mq_h], mq_z[mq_h]};
+    (* keep = 1 *) wire [18:0] mq_head1 = {mq_o[mq_h1], mq_n[mq_h1], mq_z[mq_h1]};
     wire [14:0] w_sec0 = mh_o; wire [2:0] w_n = mh_n;
     reg [7:0] w_hit; reg w_cr_ok;
     always @* begin
@@ -75,12 +80,28 @@ module ot_hgi_qdq_wr #(
     // snapshot FIFO: per-lane write count after a record's last write, in record order
     reg [63:0] sq [0:RQ-1]; reg [QW-1:0] sq_t, sq_h; reg [QW:0] sq_n;
     wire sq_push = w_fire && mh_z;
+    // head snapshot in a register (q8b route 67a60693f: TT -175.9, sq_h -> 16:1 x 64 head read -> 8 x count compare ->
+    // fin -> sq_h / sq_n / o_fin, 21 levels).  sh == sq[sq_h] whenever sq_n != 0: both candidates (head, head + 1) are
+    // read from the registered pointer and fin selects one; a push into the slot that becomes the head (the FIFO is
+    // empty after this edge's pop) loads sh with the pushed counts directly.
+    reg [63:0] sh; reg [63:0] sq_pd;
+    wire [QW-1:0] sq_h1 = sq_h + 1'b1;
+    (* keep = 1 *) wire [63:0] sq_head0 = sq[sq_h];
+    (* keep = 1 *) wire [63:0] sq_head1 = sq[sq_h1];
+    always @* for (integer q = 0; q < 8; q = q + 1) sq_pd[q*8 +: 8] = wcnt[q] + 8'(w_hit[q]);
     reg fin;
     always @* begin
         fin = sq_n != 0;
         for (integer b = 0; b < 8; b = b + 1) begin : cmp
-            reg [7:0] df; df = 8'(dcnt[b] + 8'(f_wdone[b])) - sq[sq_h][b*8 +: 8];
-            if (df[7]) fin = 1'b0;
+            reg [7:0] df0, df1, df2;
+            // Committed ACKs: count plus the pending captured ACK and this
+            // edge's actual input ACK. The output register is the first capture
+            // for the early completion path. Select after independent carries.
+            df0 = dcnt[b] - sh[b*8 +: 8];
+            df1 = dcnt[b] - sh[b*8 +: 8] + 8'd1;
+            df2 = dcnt[b] - sh[b*8 +: 8] + 8'd2;
+            if ((ACK_LOOKAHEAD && f_wdone[b] && wwq_done[b]) ? df2[7] :
+                (f_wdone[b] || (ACK_LOOKAHEAD && wwq_done[b])) ? df1[7] : df0[7]) fin = 1'b0;
         end
     end
     always @(posedge clk or negedge rr_n[0]) begin
@@ -116,9 +137,13 @@ module ot_hgi_qdq_wr #(
     // Address/payload flops are written separately from resettable valid strobes (no ALDFF feedback on payload bits).
     always @(posedge clk) begin
         if (f_m_v) begin mq_o[mq_t] <= f_m[18:4]; mq_n[mq_t] <= f_m[3:1]; mq_z[mq_t] <= f_m[0]; end
-        mh_o <= w_fire ? mq_o[mq_h1] : mq_o[mq_h]; mh_n <= w_fire ? mq_n[mq_h1] : mq_n[mq_h];
-        mh_z <= w_fire ? mq_z[mq_h1] : mq_z[mq_h];
-        if (sq_push) for (integer q = 0; q < 8; q = q + 1) sq[sq_t][q*8 +: 8] <= wcnt[q] + 8'(w_hit[q]);
+        {mh_o, mh_n, mh_z} <= ({19{!w_fire}} & mq_head0) | ({19{w_fire}} & mq_head1);
+        if (sq_push) sq[sq_t] <= sq_pd;
+        if (sq_push && sq_n == (QW+1)'(fin)) sh <= sq_pd;          // it becomes the head
+        else sh <= ({64{!fin}} & sq_head0) | ({64{fin}} & sq_head1);
+`ifndef SYNTHESIS
+        if (rr_n[0] && sq_n != 0 && sh !== sq[sq_h]) $fatal(1, "FATAL: ot_hgi_qdq_wr head snapshot diverged");
+`endif
         for (integer b = 0; b < 8; b = b + 1) begin
             if (w_fire && w_hit[b]) begin
                 reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));

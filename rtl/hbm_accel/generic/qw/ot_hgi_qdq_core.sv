@@ -8,7 +8,7 @@
 //   out: ret, wrq, rg_req, the issued-beat bundle bp {lane 3, sectors 3, O sector 15, last 1, header 18} for the assembly
 //        leaf's beat queue (the lane round trip hides its two edges), o_act (-> the write leaf's wg_req), reset relay.
 // Retire: non-rejected records finish in queue order, so a count of finish pulses replaces the snapshot compare (which
-// lives beside the done pins in the write leaf); the pin flop is used as look-ahead (fin_c != 0 || f_fin).
+// lives beside the done pins in the write leaf); the first finish capture is fin_c / ret (fin_c != 0 || i_fin).
 // After a fault: the rest retires faulted once every leaf has been idle for 8 cycles (covers the seam transits).
 // MUT (bench): 2 = hazard masks ignored.
 module ot_hgi_qdq_core #(
@@ -17,7 +17,8 @@ module ot_hgi_qdq_core #(
     parameter integer NB  = 32,
     parameter integer RQ  = 16,
     parameter integer SPANPIPE = 1,   // ready margin only
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer FIN_BYPASS = 0 // native candidate only; closed default stays unchanged
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -115,7 +116,10 @@ module ot_hgi_qdq_core #(
     // ---------------------------------------------------------------- retire (in record order)
     reg [3:0] qc;                                     // consecutive all-idle cycles (fault drain)
     wire drained = qc[3];
-    wire fin_av = fin_c != 0 || f_fin;
+    // The first capture of the registered WR finish pulse is the credit/retire
+    // boundary itself. No combinational finish output or CDC bypass is added.
+    wire fin_edge = FIN_BYPASS ? i_fin : f_fin;
+    wire fin_av = fin_c != 0 || fin_edge;
     wire rt_ok = q_v[hd] && (q_rej[hd] || fin_av || (bad && drained));
     wire rt_fault = q_rej[hd] || bad;
     wire rt_fin = rt_ok && !q_rej[hd] && fin_av;
@@ -132,7 +136,7 @@ module ot_hgi_qdq_core #(
             if (s3_v) begin q_v[qt] <= 1'b1; q_rej[qt] <= !el3; qt <= qt + 1'b1; end
             if (n_load || n_skip) rp <= rp + 1'b1;
             if (rt_ok) begin q_v[hd] <= 1'b0; hd <= hd + 1'b1; end
-            fin_c <= fin_c + (QW+1)'(f_fin) - (QW+1)'(rt_fin);
+            fin_c <= fin_c + (QW+1)'(fin_edge) - (QW+1)'(rt_fin);
             if (f_abad || f_wbad) bad <= 1'b1;
             qc <= (!bp_v && f_aidle && f_widle && b_used == 0) ? (qc[3] ? qc : qc + 4'd1) : 4'd0;
             occ <= occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok);
