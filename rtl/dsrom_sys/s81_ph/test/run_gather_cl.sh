@@ -52,6 +52,7 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
       base) for c in $REAL; do run base $c 0 1 PASS & done; run base stress 0 1 PASS & run base ovf 1 0 PASS &
             run base refuse 0 1 REFUSED & ;;
       ovf)  run ovf ovf 1 0 FAIL & ;;
+      lane|nofwd) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
       *)    run $m $FIRST 0 0 FAIL & ;;
     esac
   done

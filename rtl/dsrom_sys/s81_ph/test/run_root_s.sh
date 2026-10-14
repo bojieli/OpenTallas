@@ -7,14 +7,14 @@
 # mutants (each must FAIL): S81PH_MUT_NOFWD (no entry forwarding), S81PH_MUT_WADDR (pairing store write address off by
 #   one), S81PH_MUT_CREDIT (dropped read credit), S81PH_MUT_QFWD (no queue write-register forward),
 #   S81PH_MUT_OVF (slot overflow not detected: the capacity fault mutant, on the ovf case).
-# Verdict line: ROOT_S_GATE PASS|FAIL.   Env: VL (verilator), J (16), S (8).
+# Verdict line: ROOT_S_GATE PASS|FAIL.   Env: VL (verilator), J (16), S (16).
 set -u
 SRC=$1; OUT=$2; TRACE=${3:-}
-VL=${VL:-verilator}; J=${J:-16}; S=${S:-8}
+VL=${VL:-verilator}; J=${J:-16}; S=${S:-16}
 mkdir -p $OUT
 P=$SRC/rtl/dsrom_sys/s81_ph; M=$SRC/physical/s81_ph_views/macros
 FILES="$SRC/rtl/hdc/ot_hdc_prefix.sv $SRC/rtl/gpu/ot_fp32_add_rne_deep.sv $P/ot_s81ph_ret_root_p.sv $P/ot_s81ph_ret_root_s.sv
- $M/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2.v $M/ot_sram_1r1w_512x34_m4_r2c2/ot_sram_1r1w_512x34_m4_r2c2.v
+ $M/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2.v $M/ot_sram_1r1w_512x34_m4_r2c2/ot_sram_1r1w_512x34_m4_r2c2.v $M/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2.v
  $P/test/tb_s81ph_root_s.sv"
 sha256sum $FILES $P/test/gen_root_stim.py $TRACE > $OUT/sources.sha256
 G="python3 $P/test/gen_root_stim.py"
