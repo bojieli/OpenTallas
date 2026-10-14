@@ -1,0 +1,21 @@
+{
+ "ss_ps": 70.12,
+ "tt_ps": 70.12,
+ "ff_ps": -66.66,
+ "drc": 0,
+ "sdc_name": "6_final.sdc",
+ "setup_post_sdc": [],
+ "setup_corner": "tt",
+ "ss_sensitivity_ps": -131.18,
+ "cells_added": 319,
+ "errors": [],
+ "pass": 1,
+ "session": "mm",
+ "window": "endpoints_below_hm 318 fixable 317 tight 0 infeasible 1 nodata 0 (hm 30.0 filt 40 accept_ss 0.0 accept_ff 0.0 r 2.4)",
+ "route_strategy": [
+  "incremental_original_guides"
+ ],
+ "score": -66.66,
+ "rank": -66.66,
+ "chosen": "least_bad"
+}

@@ -1,0 +1,1 @@
+source /src/physical/hbm_native_bounded_cdc_1014/related_domains.sdc

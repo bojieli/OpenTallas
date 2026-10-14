@@ -1,0 +1,101 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas/claude/closure-loop/hbm_native_no3_hub_pinaccess_m5_1014-pinM5-cfae4a05e/routes/hbm_native_no3_hub_pinaccess_m5_1014_pinM5_cfae4a05e/work/orfs/results/asap7/opentallas_ot_hbm_native_no3_hub_m5_1014_asap7_ref_hbm_native_no3_hub_pinaccess_m5_1014_pinM5_cfae4a05e/base",
+ "hold_ff": {
+  "paths_seen": 748,
+  "worst_slack_ps": -67.24,
+  "classes": [
+   {
+    "start_class": "clk_sm",
+    "end_class": "fclk_o",
+    "worst_slack_ps": -67.24,
+    "paths": 1,
+    "max_levels": 8,
+    "example_start": "clk_sm",
+    "example_end": "fclk_o"
+   },
+   {
+    "start_class": "u_hub.held.acko_p[*]$_DFF_P_/QN",
+    "end_class": "u_hub.held.acko_q[*]$_DFF_P_/D",
+    "worst_slack_ps": 17.46,
+    "paths": 52,
+    "max_levels": 2,
+    "example_start": "u_hub.held.acko_p[184]$_DFF_P_/QN",
+    "example_end": "u_hub.held.acko_q[184]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_hub.held.receipts[*].u_ack.u_state.verdict[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_hub.held.receipts[*].u_ack.u_state.m_clean[*]$_DFF_PN0_/D",
+    "worst_slack_ps": 17.8,
+    "paths": 4,
+    "max_levels": 3,
+    "example_start": "u_hub.held.receipts[0].u_ack.u_state.verdict[2][2]$_DFFE_PP_/QN",
+    "example_end": "u_hub.held.receipts[0].u_ack.u_state.m_clean[2]$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_hub.held.receipts[*].u_ack.u_state.staged[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_hub.held.receipts[*].u_ack.u_state.code[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 19.18,
+    "paths": 60,
+    "max_levels": 6,
+    "example_start": "u_hub.held.receipts[0].u_ack.u_state.staged[2][16]$_DFFE_PP_/QN",
+    "example_end": "u_hub.held.receipts[0].u_ack.u_state.code[2][16]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_hub.held.receipts[*].u_ack.u_state.code[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_hub.held.receipts[*].u_ack.u_state.d1_seat[*][*]$_DFF_P_/D",
+    "worst_slack_ps": 19.19,
+    "paths": 50,
+    "max_levels": 3,
+    "example_start": "u_hub.held.receipts[0].u_ack.u_state.code[1][38]$_DFFE_PP_/QN",
+    "example_end": "u_hub.held.receipts[0].u_ack.u_state.d1_seat[1][32]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_hub.held.receipts[*].u_ack.u_state.d1_seat[*][*]$_DFF_P_/QN",
+    "end_class": "u_hub.held.receipts[*].u_ack.u_state.q_d2[*][*]$_DFF_P_/D",
+    "worst_slack_ps": 20.53,
+    "paths": 41,
+    "max_levels": 7,
+    "example_start": "u_hub.held.receipts[0].u_ack.u_state.d1_seat[1][28]$_DFF_P_/QN",
+    "example_end": "u_hub.held.receipts[0].u_ack.u_state.q_d2[1][28]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_hub.held.acko_q[*]$_DFF_P_/QN",
+    "end_class": "u_hub.held.receipts[*].u_ack.u_state.staged[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 20.91,
+    "paths": 20,
+    "max_levels": 4,
+    "example_start": "u_hub.held.acko_q[93]$_DFF_P_/QN",
+    "example_end": "u_hub.held.receipts[0].u_ack.u_state.staged[1][35]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_hub.held.receipts[*].u_ack.u_state.code[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_hub.held.receipts[*].u_ack.u_state.snapshot_lo[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 22.03,
+    "paths": 5,
+    "max_levels": 5,
+    "example_start": "u_hub.held.receipts[0].u_ack.u_state.code[2][51]$_DFFE_PP_/QN",
+    "example_end": "u_hub.held.receipts[0].u_ack.u_state.snapshot_lo[2][57]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_hub.held.u_frame_guard.syndrome[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_hub.held.u_frame_guard.checked_syn[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 22.37,
+    "paths": 2,
+    "max_levels": 3,
+    "example_start": "u_hub.held.u_frame_guard.syndrome[0][1]$_DFFE_PP_/QN",
+    "example_end": "u_hub.held.u_frame_guard.checked_syn[0][1]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_hub.held.u_receipt.u_state.q_d2[*][*]$_DFF_P_/QN",
+    "end_class": "u_hub.held.u_relq.q[*]$_DFF_P_/D",
+    "worst_slack_ps": 23.55,
+    "paths": 16,
+    "max_levels": 5,
+    "example_start": "u_hub.held.u_receipt.u_state.q_d2[2][31]$_DFF_P_/QN",
+    "example_end": "u_hub.held.u_relq.q[159]$_DFF_P_/D"
+   }
+  ],
+  "errors": []
+ }
+}
