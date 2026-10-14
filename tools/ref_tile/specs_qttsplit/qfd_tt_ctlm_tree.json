@@ -349,13 +349,14 @@
    "group_max": 1,
    "h": "M4",
    "v": "M5"
-  }
+  },
+  "hold_margin_ns": 0.045
  },
  "slot_change_request": "Native-AUD33975 independent-root split below qfd_tt_ctlm. Existing DCU2/DUC2 distributed one stage per leaf: zero new station edges. Engine native local clock enable comes from synthesis-pruned duplicate controller predictor, with its OWN two explicitly accounted program SRAMs and direct duplicated head input pins. No clock or enable is forwarded, no shared parent CTS, no idle-gate waiver. Actual issuing head retains FULL operation fields/18-bit rows and original TP8 G3072 tree/tag stores. Candidate parent layout648x280.8: head237.6square at(0,0),tree388.8x280.8 at(259.2,0),21.6um channel. Requires actual original475.2square slot revision; interim seam pins headE/treeW at40..84(cmd380),92..104(ret95), other pins provisional pending top-down die assignment. This replaces the failed AUD64 candidate, which is NOT submitted/adopted. Head DCU/DUC station flops use edge-equivalent synchronous enable on its own core root; engine keeps native local ICG. Native engine clock activity proof required. Parent fixedhard source has no hard-child parameter overrides. TREE CLOCK ENTRY UPDATE: S213.12..214.56 (parent absolute x472.32..473.76), replacing provisional S6..7.5; explicit request sent to die lead before final physical assignment.",
  "job": {
-  "owner": "Codex:qwen-tt-split",
-  "branch": "claude/el1013-qwen-r3b-host",
-  "tag": "split1",
+  "owner": "Claude:q14-r6-compute",
+  "branch": "claude/q14-r6-ttree",
+  "tag": "g1",
   "purpose": "Native idle/supply-preserving controller/tree split with engine-local pruned gate predictor; full TP8 fields/18-bit rows; no clock/enable forwarding and zero added station stages. Production behavior must pass strict flat33975 comparison before routes.",
   "extra_paths": [
    "physical/qfd_tt_ctlm_split",
@@ -411,5 +412,9 @@
  "spine_through_icg": true,
  "local_clock_adapter": "physical/qfd_tt_ctlm_split/dual_clock_spine.tcl",
  "kit_generator": "tools/qwen_tt_split/gen_clock_kit.py",
- "clock_distribution_note": "Existing spine implementation twice with measured native ICG subtree insertion, no CTS remainder or new phase; head source/latency unchanged. One native ICG retained through actual route (OT_CG_EXCLUDE=u_cg.u_icg), no cloning. Primary data/reset cells remain movable and repairable; only clock buffers/nets and native ICG are protected. Provisional clock entry S213.12..214.56 lies in SRAM-column corridor201.528..226.8; all other pins unchanged. Leaf fanout32 reduces clock depth under the existing fanout32 bound. Requires fresh native ENA and both-domain proof. Successor keeps original GPL primary/ICG placement rather than primary-port packing, and the private predictor existing95-bit return station uses same leaf-local ec. Pre-edge enable/return epoch, strict full operation, explicit fault and native idle activity proofs are archived in physical/qfd_tt_ctlm_split/evidence/localret-native. Public head bytes unchanged; native ENA timing remains to be measured. Current-native-subtree successor re-measures actual gated sink arrivals and ICG CLK after primary buffering on every standard balance iteration, rather than freezing initial unbuffered-slew insertion. Actual mapped predictor return shift was only2FF;95 is logical width, not physical power saving. Prior19a97ebe3 final WC=TT/BC=FF ENA\u2212102.90ps preserved as unqualified; no exceptions/phase changes."
+ "clock_distribution_note": "Existing spine implementation twice with measured native ICG subtree insertion, no CTS remainder or new phase; head source/latency unchanged. One native ICG retained through actual route (OT_CG_EXCLUDE=u_cg.u_icg), no cloning. Primary data/reset cells remain movable and repairable; only clock buffers/nets and native ICG are protected. Provisional clock entry S213.12..214.56 lies in SRAM-column corridor201.528..226.8; all other pins unchanged. Leaf fanout32 reduces clock depth under the existing fanout32 bound. Requires fresh native ENA and both-domain proof. Successor keeps original GPL primary/ICG placement rather than primary-port packing, and the private predictor existing95-bit return station uses same leaf-local ec. Pre-edge enable/return epoch, strict full operation, explicit fault and native idle activity proofs are archived in physical/qfd_tt_ctlm_split/evidence/localret-native. Public head bytes unchanged; native ENA timing remains to be measured. Current-native-subtree successor re-measures actual gated sink arrivals and ICG CLK after primary buffering on every standard balance iteration, rather than freezing initial unbuffered-slew insertion. Actual mapped predictor return shift was only2FF;95 is logical width, not physical power saving. Prior19a97ebe3 final WC=TT/BC=FF ENA\u2212102.90ps preserved as unqualified; no exceptions/phase changes.",
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ],
+ "structural_change": "native-current-s1 2984e0c51 routed TT +12.58 / FF -8.12 / DRC 5 (archive 16c5406b8). DRC: all 5 markers are M4 Short/Spacing at the private program SRAM east/west OBS lips (x 30.3 / 201.25..201.49, wd_in nets) = the shared SRAM-lip signature fixed by sram_edge_guard.tcl on P12 (DRC 1->0) and slab col (24->0): add the guard. FF: two internal gated argmax paths c[3]->atop[3] -8.12 / c[5]->atop[5] -3.22 across GCLK branches: hold margin 30 -> 45 ps. Same RTL, outline, pins, clock topology."
 }
