@@ -17,6 +17,7 @@ proc capx_ref {clock} {
 }
 proc capx_apply_boundary {} {
     source $::capx_boundary_sdc
+    catch {sta::worst_slack_cmd max}
     lassign [capx_ref core_clk] capx_ch capx_cl
     lassign [capx_ref ser_clk] capx_sh capx_sl
     set capx_core_in [get_ports {f_w[*] f_sn[*]}]
