@@ -312,7 +312,7 @@ module ot_s81_pq_aq_math_native (
        end
     end
 endmodule
-module ot_s81_pq_aq_split_native (
+module ot_s81_pq_aq_split_native #(parameter integer QONLY=0) (
  input wire clk,rst_n,v,input wire[3:0] clk_mem,clk_math,
  input wire[1023:0] x,
  output wire vo,output wire[255:0] q,output wire signed[9:0] e,
@@ -330,6 +330,6 @@ module ot_s81_pq_aq_split_native (
  end endgenerate
  generate for(genvar g=0;g<4;g=g+1) begin:g_math
     ot_s81_pq_aq_math_native u_math (.clk(clk_math[g]),.rst_n(rst_n),.xg(xg[256*g +: 256]),
-       .ce_r(ce_r),.s15_e(s15_e),.q(q[64*g +: 64]),.y(y[128*g +: 128]),.qp(qp[g]));
+       .ce_r(ce_r),.s15_e(QONLY ? 10'sd0 : s15_e),.q(q[64*g +: 64]),.y(y[128*g +: 128]),.qp(qp[g]));
  end endgenerate
 endmodule

@@ -9,6 +9,9 @@
 // Functional candidate: ctl/AQ pin stages and clock closure are still owed.
 module ot_s81_pq_core_native (
     input wire ck_ctl, ck_qb, ck_fault,
+`ifdef OT_PQ_QB_PHYS_SPLIT
+    input wire [3:0] ck_qb_aux,
+`endif
     input wire [1:0] ck_aq,
 `ifdef OT_PQ_AQ_PHYS_SPLIT
     input wire [15:0] ck_aq_aux,
@@ -161,8 +164,27 @@ module ot_s81_pq_core_native (
             g_ix[z].u_ix.g_read_group[3].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[3].g_bank[1].rows_read;
         assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_read_group[0].g_bank[0].written;
 `endif
+`ifdef OT_PQ_QB_PHYS_SPLIT
+        if(z==0) begin:g_qb0
+            assign qb_rows_read[96*z +: 96] = u_qb.u_bank0.u_native.rows_read;
+            assign qb_rows_written[96*z +: 96] = u_qb.u_bank0.u_native.written;
+        end
+        else if(z==1) begin:g_qb1
+            assign qb_rows_read[96*z +: 96] = u_qb.u_bank1.u_native.rows_read;
+            assign qb_rows_written[96*z +: 96] = u_qb.u_bank1.u_native.written;
+        end
+        else if(z==2) begin:g_qb2
+            assign qb_rows_read[96*z +: 96] = u_qb.u_bank2.u_native.rows_read;
+            assign qb_rows_written[96*z +: 96] = u_qb.u_bank2.u_native.written;
+        end
+        else if(z==3) begin:g_qb3
+            assign qb_rows_read[96*z +: 96] = u_qb.u_bank3.u_native.rows_read;
+            assign qb_rows_written[96*z +: 96] = u_qb.u_bank3.u_native.written;
+        end
+`else
         assign qb_rows_read[96*z +: 96] = u_qb.g_bank[z].rows_read;
         assign qb_rows_written[96*z +: 96] = u_qb.g_bank[z].written;
+`endif
     end endgenerate
 `endif
 `endif
@@ -174,7 +196,7 @@ module ot_s81_pq_core_native (
     genvar g;
     generate for (g = 0; g < 2; g = g + 1) begin : g_aq
 `ifdef OT_PQ_AQ_PHYS_SPLIT
-        ot_s81_pq_aq_split_native u_aq (.clk(ck_aq[g]),.clk_mem(ck_aq_aux[8*g +: 4]),.clk_math(ck_aq_aux[8*g+4 +: 4]),
+        ot_s81_pq_aq_split_native #(.QONLY(1)) u_aq (.clk(ck_aq[g]),.clk_mem(ck_aq_aux[8*g +: 4]),.clk_math(ck_aq_aux[8*g+4 +: 4]),
 `else
         ot_dsrom_aq12t u_aq (.clk(ck_aq[g]),
 `endif
@@ -187,7 +209,12 @@ module ot_s81_pq_core_native (
     end endgenerate
     wire [255:0] hq0, hq1;
     wire [9:0] he0, he1;
-    ot_s81_pq_qb_sram u_qb (.clk(ck_qb), .rst_n(rst_n), .consume(q_consume), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
+`ifdef OT_PQ_QB_PHYS_SPLIT
+    ot_s81_pq_qb_split_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
+`else
+    ot_s81_pq_qb_sram u_qb (.clk(ck_qb),
+`endif
+        .rst_n(rst_n), .consume(q_consume), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
         .h_b0(h_b0), .h_b1(h_b1), .hw_sv(hw[13:12]), .hq0(hq0), .hq1(hq1), .he0(he0), .he1(he1),
         .fault(storage_fault[4])
 `ifdef OT_PQ_AQ_SIDE_PARITY
