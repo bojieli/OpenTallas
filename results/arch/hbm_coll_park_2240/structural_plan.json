@@ -1,0 +1,17 @@
+{
+  "status": "STRUCTURAL_IMPLEMENTATION_EXACT_PENDING",
+  "original": "3bb774699245b8827008b9c10ac7a87672bf475c",
+  "problem": "22180 sinks/root insertion940..1124ps, externalpv gatedpayload input path -450ps, pop-to-macroCE -1121ps",
+  "design": {
+    "parent": "wires-only EQ4 queue leaves independent clk_q[3:0] and small own-root overflow station",
+    "queue": "registered DEL4 545bit delivery lanes, four SRAM128x545 banks, EQ4 selected by QID; no per-edge register/cycle contract change",
+    "fifo": "array occupancy count maintained increment/decrement avoids pointer-subtract fanout; boolean two-slot room avoids arithmetic pop-to-CE; 32bit replicated head slices",
+    "pins": "payload pin capture unconditional removes pv->data enable; tags and valid registered",
+    "clock": "expected ~7k perqueue incl duplicate payload, exact synthesis owed <=15000",
+    "slot": "historical parent760x720 not assigned; need real placement request after macro sizing",
+    "throughput": "contract same registeredqueuehead, at most everyotheredge pop; immutable composition price pending measured production gate"
+  },
+  "qualification": "NONE",
+  "closed_stands": "no current exactparkCLOSED/live jobs; olda/bfailure retained",
+  "bench": "16000edge full545bit comparisons to immutableflat, bursts4lanesbankwrap queues448deep, allparkedflitsdrained; bank-indexmutant"
+}
