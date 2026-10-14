@@ -283,5 +283,11 @@
       ]
     }
   },
-  "verdict": "POSITIVE_PASS_MUTANT_FAIL"
+  "verdict": "POSITIVE_PASS_MUTANT_FAIL",
+  "build_log_sha256": {
+    "mutant.build.log": "9f79030c1bee95cee7d68f53aa5065076f361453587f89008d46531408430906",
+    "baseline.build.log": "a4d905ab34dc9e3018e69160a82870e16d9902801a8e51fe3733af63ab6e7799",
+    "hardleaf.build.log": "daa2e9cc98418e73ff58611b198c52e3b456b312fc0e127119c7fa91bc835d4f"
+  },
+  "tool_version": "Verilator 5.050 2026-07-01 rev v5.050 (actualbuildlogs)"
 }
