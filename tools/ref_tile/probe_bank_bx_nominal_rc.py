@@ -64,11 +64,16 @@ def main():
     for co in ('tt','ff','ss'):
         text='''set plat /OpenROAD-flow-scripts/flow/platforms/asap7
 read_lef $plat/lef/asap7_tech_1x_201209.lef
+read_lef $plat/lef/asap7sc7p5t_28_R_1x_220121a.lef
 '''
         for role,r in meta.items():text+=f"read_lef /probe/{role}/{r['master']}.lef\nread_liberty /probe/{role}/{r['master']}_{co}.lib\n"
         text+='''read_verilog /probe/pair.v
 link_design pair
-initialize_floorplan -die_area {0 0 345.6 211.68} -core_area {0 0 345.6 211.68}
+set sites {}
+foreach lib [[ord::get_db] getLibs] {foreach site [$lib getSites] {lappend sites [$site getName]}}
+set sites [lsort -unique $sites]
+if {[llength $sites]!=1} {error "ambiguous actual placement site"}
+initialize_floorplan -site [lindex $sites 0] -die_area {0 0 345.6 211.68} -core_area {0 0 345.6 211.68}
 set block [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 '''
