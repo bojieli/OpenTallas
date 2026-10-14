@@ -1197,6 +1197,9 @@ module dsfd_vm_be_rcdc #(
     output reg           o_v,
     output wire [W-1:0]  o_d,
     output wire [NC-1:0] o_vc
+`ifdef OT_SPVM_RESET_ACK
+    , output wire w_online, r_online
+`endif
 );
     localparam integer AW = $clog2(DEPTH);
     localparam integer CW = $clog2(HOLD + 1);
@@ -1211,6 +1214,11 @@ module dsfd_vm_be_rcdc #(
     always @(posedge wclk) begin rp_w <= rp; r_st_w <= r_st; end
     wire w_live = (w_st == S_RUN) && (r_st_w != S_DOWN);
     assign w_rdy = wrst_n && w_live && ((wp - rp_w) != DP);
+`ifdef OT_SPVM_RESET_ACK
+    // Export actual rendezvous state, independent of FIFO occupancy or traffic.
+    assign w_online = wrst_n && w_live;
+    assign r_online = rrst_n && r_live;
+`endif
     wire w_fire = w_v && w_rdy;
     reg [AW:0] wp_nx;
     always @* begin
@@ -1334,6 +1342,9 @@ module dsfd_vm_be_sl #(
     output reg  [0:0]        flt,
     output reg  [31:0]       fvec,
     output reg  [2:0]        max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , output reg rst_ack, rst_ack_s
+`endif
 );
     localparam integer KX = 4;          // in-tile alignment relays after the control pin flops (DIE_D + 1 + KX + XT = MD + 1)
     reg [4:0] sflt;                     // this cycle {x_col, x_mis, r_ovf, p_mis, p_ovf}
@@ -1349,6 +1360,32 @@ module dsfd_vm_be_sl #(
     dsfd_vm_be_kreg #(.W(1), .ID(4)) u_rn_p (.clk(clk), .d(rn_in[0]), .q(rn_p));
     dsfd_vm_be_kreg #(.W(1), .ID(5)) u_rn_w (.clk(clk), .d(rn_in[0]), .q(rn_w));
     dsfd_vm_be_kreg #(.W(1), .ID(6)) u_rns (.clk(sclk), .d(rns_in[0]), .q(rns));
+`ifdef OT_SPVM_RESET_ACK
+    wire [1:0] cdc_w_online, cdc_r_online;
+    reg ack_reset_seen, ack_reset_seen_s;
+    wire all_local_rn = rn_i && rn_x && rn_c && rn_p && rn_w;
+    wire no_local_rn = !(rn_i || rn_x || rn_c || rn_p || rn_w);
+`ifdef OT_SPVM_MUT_ACK_MIRROR
+    always @* begin rst_ack = rn_in[0]; rst_ack_s = rns_in[0]; end
+`else
+    // Witness reset at the real consumer clock; a stopped clock cannot acknowledge
+    // a reset pulse it never sampled. ACK state adds no datapath admission logic.
+    always @(posedge clk or negedge rn_in[0]) begin
+        if (!rn_in[0]) begin ack_reset_seen <= 1'b0; rst_ack <= 1'b0; end
+        else begin
+            if (no_local_rn) ack_reset_seen <= 1'b1;
+            rst_ack <= ack_reset_seen && all_local_rn && (&cdc_w_online);
+        end
+    end
+    always @(posedge sclk or negedge rns_in[0]) begin
+        if (!rns_in[0]) begin ack_reset_seen_s <= 1'b0; rst_ack_s <= 1'b0; end
+        else begin
+            if (!rns) ack_reset_seen_s <= 1'b1;
+            rst_ack_s <= ack_reset_seen_s && rns && (&cdc_r_online);
+        end
+    end
+`endif
+`endif
     // ---------------------------------------------------------------- pin flops (stage 0)
     reg [NP-1:0] q_v; reg [NP*128-1:0] q_d; reg [3:0] q_f; reg [2:0] q_o;
     always @(posedge clk) begin
@@ -1455,10 +1492,18 @@ module dsfd_vm_be_sl #(
     wire [1:0] rtk = {rr_v[1] && rr_nx, rr_v[0] && !rr_nx};
     dsfd_vm_be_rcdc #(.W(128), .DEPTH(8), .HOLD(2), .NC(NC), .IDB(100)) u_rc0 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[0]),
         .w_rdy(rw_rdy[0]), .w_d(wq_d0), .rclk(sclk), .rrst_n(rns), .r_v(rr_v[0]), .r_rdy(rtk[0]),
-        .o_v(o_vr[0]), .o_d(o_d0), .o_vc(o_vc0));
+        .o_v(o_vr[0]), .o_d(o_d0), .o_vc(o_vc0)
+`ifdef OT_SPVM_RESET_ACK
+        , .w_online(cdc_w_online[0]), .r_online(cdc_r_online[0])
+`endif
+        );
     dsfd_vm_be_rcdc #(.W(128), .DEPTH(8), .HOLD(2), .NC(NC), .IDB(200)) u_rc1 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[1]),
         .w_rdy(rw_rdy[1]), .w_d(wq_d1), .rclk(sclk), .rrst_n(rns), .r_v(rr_v[1]), .r_rdy(rtk[1]),
-        .o_v(o_vr[1]), .o_d(o_d1), .o_vc(o_vc1));
+        .o_v(o_vr[1]), .o_d(o_d1), .o_vc(o_vc1)
+`ifdef OT_SPVM_RESET_ACK
+        , .w_online(cdc_w_online[1]), .r_online(cdc_r_online[1])
+`endif
+        );
     always @(posedge sclk) begin : p_vr integer c;
         if (!rns) begin rr_nx <= 1'b0; vrv <= 1'b0; end
         else begin
@@ -1600,6 +1645,9 @@ module dsfd_vm_be #(
     output reg  [0:0]          flt,
     output reg  [31:0]         fvec,
     output reg  [2:0]          max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , output wire [NS-1:0] rst_ack, rst_ack_s
+`endif
 );
     localparam integer KX = 4;          // dsfd_vm_be_sl in-tile alignment relays
     localparam integer DIE_D = MD - KX - XT;   // die control relay stages (DIE_D + 1 + KX + XT = MD + 1, as v3's 1 + R + XT)
@@ -1663,7 +1711,11 @@ module dsfd_vm_be #(
             .f_m5s(dm5[DIE_D-1]), .c_l0r(rr), .fe_flt(gs == 0 ? fe_flt : 16'd0), .st_i(st[gs]), .st_o(st[gs+1]),
             .srq_d(srq_d[gs]), .srq_v(srq_v[gs]), .vrv(vrv_s[gs]), .vrq(vrq_s[gs]), .bl_d(bl_d[gs]), .bl_v(bl_v[gs]),
             .c_l0v(c_l0v_s[gs]), .c_l0d(p2_s[gs]), .t_p2c(t_p2c_s[gs]),
-            .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs]));
+            .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs])
+`ifdef OT_SPVM_RESET_ACK
+            , .rst_ack(rst_ack[gs]), .rst_ack_s(rst_ack_s[gs])
+`endif
+            );
         // this slice's bits of every response (S-FACE CONTRACT v3/v4: at this tile's x range)
         assign t_srq[128*gs +: 128] = srq_d[gs][127:0];
         assign t_srq[513 + 128*gs +: 128] = srq_d[gs][255:128];
