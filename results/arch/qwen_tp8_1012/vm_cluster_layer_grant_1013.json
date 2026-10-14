@@ -41,10 +41,11 @@
       0.0
     ],
     "core_origin_evidence": {
-      "source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/source_run.tcl",
-      "sha256": "d7363c70ecad50e0f4e55928169c4c7e6fa26a9f200ea9d91fe2022945d6cafd",
-      "command": "initialize_floorplan -die_area {0 0 31785.696 25870.320} -core_area {0 0 31785.696 25870.320} -site asap7sc7p5t",
-      "scope": "Actualsourcecaseinitializecommand; sourceODBsha separatelybound. ProductionphaseauditcomparesactualglobalPGpin geometryandactualdieDEFplacement."
+      "source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/core_receipt.log",
+      "sha256": "54a95124846e3898f55530db91b8fb2261c37b8f5b836e6843b2abdf11fc3544",
+      "scope": "Read-only actual ODB block.getCoreArea: dbu1000 core0,0,31785696,25870320; die area identical.",
+      "ot_unit": "oth-ubuntu-383661-1791950481",
+      "exit": 0
     }
   },
   "requires_phase_aligned_die_pg": true,
@@ -58,8 +59,8 @@
   "correction_authority": "ActualdiePDNODB audit623896b18: paired9.091same-net pitch has10.5598944percent combinedPG occupancy; source19:11capacityarithmetic corrected, physicalgridunchanged.",
   "actual_pg_receipt": {
     "source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/summary.json",
-    "sha256": "4197c39584615b5e8f36b7925e8177770b080ce06227f88a6212b5d853e674ab",
-    "lead_commit": "623896b18",
+    "sha256": "d74684965c957c563886b9b0bf4fec8c7fdb76146096b64ee4d870dd8b230fc0",
+    "lead_commit": "90240975c",
     "csv_source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/stripes.csv",
     "csv_sha256": "18f9bd34973bb982fffb0d9c1f59dfc05aa21d08101ba312cfdb72cb20707794",
     "run_log_source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/run.log",

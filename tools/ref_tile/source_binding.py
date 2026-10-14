@@ -39,6 +39,13 @@ def canonical_digest(entries):
     return hashlib.sha256(json.dumps(entries, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
+def overlay_module():
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "closure_loop"))
+    import helper_overlay
+    return helper_overlay
+
+
 def snapshot(data, root, start_commit, daemon, daemon_commit, helpers):
     """Read the completed bytes, resolving duplicate tar members as extraction does."""
     current, overlays = git_files(root, start_commit), git_files(daemon, daemon_commit)
@@ -64,7 +71,7 @@ def snapshot(data, root, start_commit, daemon, daemon_commit, helpers):
             "files": entries}
 
 
-def validate(binding, root, daemon, commit=None):
+def validate(binding, root, daemon, commit=None, route_overlay=True):
     """Match immutable staged contents against the requested route source and current tool overlay."""
     if not isinstance(binding, dict) or binding.get("schema") != SCHEMA:
         return False, "missing immutable source snapshot; legacy result is unqualified"
@@ -72,10 +79,27 @@ def validate(binding, root, daemon, commit=None):
     if not entries or canonical_digest(entries) != binding.get("manifest_sha256"):
         return False, "source manifest missing or digest mismatch"
     tree = git_files(root, commit) if commit else None
+    effective = {}
+    if route_overlay:
+        HO = overlay_module()
+        frozen = binding.get("route_overlay_plan")
+        paths = None if frozen else [e["path"] for e in entries if e["source"] == "daemon_overlay"]
+        try:
+            current, effective = HO.capture_plan(daemon, root, paths=paths)
+        except (OSError, subprocess.SubprocessError) as ex:
+            return False, f"cannot resolve effective route helpers: {ex}"
+        if frozen:
+            ok, why = HO.compare_plans(frozen, current)
+            if not ok:
+                return False, why
     for e in entries:
         p = Path(e["path"])
         if p.is_absolute() or ".." in p.parts:
             return False, "unsafe manifest path"
+        if e["source"] == "daemon_overlay" and route_overlay:
+            if hashlib.sha256(effective[str(p)]).hexdigest() != e["sha256"]:
+                return False, f"effective route overlay differs from staged snapshot: {p}"
+            continue
         if e["source"] == "daemon_overlay":
             f = daemon / p
         elif tree is not None:
@@ -91,3 +115,33 @@ def validate(binding, root, daemon, commit=None):
         if hashlib.sha256(payload).hexdigest() != e["sha256"]:
             return False, f"route source differs from staged snapshot: {p}"
     return True, "exact staged source and daemon overlay match"
+
+
+def recover_verified_snapshot(binding, staged_root, log_bytes, script_bytes):
+    """Recover original source identity after a parser failure, never infer a later commit.
+
+    This verifies the complete shipping sidecar, all extracted bytes, the exact
+    executed script, its SOURCE_COMMIT marker, and the remote archive-digest log.
+    The returned binding describes that original run; current route qualification
+    must still compare it against the requested route commit and live overlays.
+    """
+    import copy
+    import re
+    ok, why = validate(binding, staged_root, staged_root, route_overlay=False)
+    if not ok:
+        raise ValueError(why)
+    if hashlib.sha256(script_bytes).hexdigest() != binding.get("remote_script_sha256"):
+        raise ValueError("executed script differs from shipping manifest")
+    log = log_bytes.decode(errors="replace")
+    hashes = re.findall(r"^GATE_SOURCE_ARCHIVE_SHA256=(\S+)\s*$", log, re.M)
+    if hashes != [binding.get("archive_sha256")]:
+        raise ValueError("archive verification absent, ambiguous, or mismatched in original log")
+    identity = binding.get("commit") or "snapshot-sha256:" + binding["manifest_sha256"]
+    if (staged_root / "SOURCE_COMMIT").read_text().strip() != identity:
+        raise ValueError("original SOURCE_COMMIT marker differs from exact snapshot identity")
+    recovered = copy.deepcopy(binding)
+    recovered["remote_archive_verified"] = True
+    recovered["runtime_tool_provenance"] = re.findall(r"^GATE_TOOL_.*$", log, re.M)
+    recovered["recovery"] = {"kind": "full_original_snapshot_verified", "log_sha256": hashlib.sha256(log_bytes).hexdigest(),
+                             "staged_root": str(staged_root), "qualification": "original_source_only_not_current_HEAD"}
+    return recovered
