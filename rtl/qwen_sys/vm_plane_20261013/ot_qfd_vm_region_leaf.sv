@@ -75,10 +75,22 @@ module ot_qfd_vm_region_leaf #(
     parameter integer NRS = 1,
     parameter integer FSW = 32,
     parameter integer LEAF_MUT = 0,
-    parameter integer CLOCK_ENTRIES = 0
+    parameter integer CLOCK_ENTRIES = 0,
+    parameter integer INPUT_ENTRIES = 0
 ) (
     input  wire                      clk,
     input  wire [71:0]               leaf_clocks,
+    input wire [16:0] rst_entries,
+    input wire [24:0] me_entries,
+    input wire [8:0] xv_entries,
+    input wire [8:0] pop_entries,
+    input wire [5:0] sv_entries,
+    input wire [5:0] swe_entries,
+    input wire [59:0] swl_entries,
+    input wire [95:0] swm_entries,
+    input wire [3071:0] swd_entries,
+    input wire [3:0] rqb_entries,
+
     input  wire                      rst_n,
     input  wire                      me_in,
     input  wire [NBK-1:0]            re,
@@ -122,8 +134,8 @@ module ot_qfd_vm_region_leaf #(
 `else   // hardened leaf: built with its defaults (the production TP8 shape); no parameters on a hard child
         ot_qfd_vm_bctl_t u_bc (
 `endif
-            .clk(ck[3 + 6*g + 2]), .rst_n(rst_n), .me_in(me_in), .re(re[g]), .ra(ra[g*LAW +: LAW]), .we(we[g]),
-            .wl(wl[g*LAW +: LAW]), .wm(wm[g*16 +: 16]), .xv(xv), .pop(pop),
+            .clk(ck[3 + 6*g + 2]), .rst_n(INPUT_ENTRIES ? rst_entries[g] : rst_n), .me_in(INPUT_ENTRIES ? me_entries[g] : me_in), .re(re[g]), .ra(ra[g*LAW +: LAW]), .we(we[g]),
+            .wl(wl[g*LAW +: LAW]), .wm(wm[g*16 +: 16]), .xv(INPUT_ENTRIES ? xv_entries[g] : xv), .pop(INPUT_ENTRIES ? pop_entries[g] : pop),
             .rtg(rtg[g]), .pgw(pgw[g]), .xg(xg[g]), .m_re(m_re), .m_ra(m_ra), .m_we(m_we), .m_wl(m_wl), .m_wm(m_wm));
         if (LEAF_MUT == 4 && g == 5) begin : g_wdm
             `OT_QFD_VM_DELAY1_MOD u_wd (.clk(ck[3 + 6*g]), .d(wd[g*512 +: 512]), .q(m_wd[g*512 +: 512]));
@@ -157,14 +169,14 @@ module ot_qfd_vm_region_leaf #(
 `else
         ot_qfd_vm_sctl_t u_sc (
 `endif
-            .clk(ck[54 + 3*(c*NSB+j) + 2]), .rst_n(rst_n), .sre(sre[c*NSB + j]), .sra(sra[(c*NSB + j)*LAWS +: LAWS]), .swe(swe[j]),
-            .swl(swl[j*LAWS +: LAWS]), .swm(swm[j*16 +: 16]), .sv(sv[c]),
+            .clk(ck[54 + 3*(c*NSB+j) + 2]), .rst_n(INPUT_ENTRIES ? rst_entries[8+c*NSB+j] : rst_n), .sre(sre[c*NSB + j]), .sra(sra[(c*NSB + j)*LAWS +: LAWS]), .swe(INPUT_ENTRIES ? swe_entries[c*NSB+j] : swe[j]),
+            .swl(INPUT_ENTRIES ? swl_entries[(c*NSB+j)*LAWS +: LAWS] : swl[j*LAWS +: LAWS]), .swm(INPUT_ENTRIES ? swm_entries[(c*NSB+j)*16 +: 16] : swm[j*16 +: 16]), .sv(INPUT_ENTRIES ? sv_entries[c*NSB+j] : sv[c]),
             .rtg(rts[c*NSB + j]), .m_sre(m_sre), .m_sra(m_sra), .m_swe(m_swe), .m_swl(m_swl), .m_swm(m_swm),
             .svc(svc[c*NSB + j]));
         if (LEAF_MUT == 6 && c == 1 && j == 0) begin : g_sdm
-            `OT_QFD_VM_DELAY1_MOD u_sd (.clk(ck[54 + 3*(c*NSB+j) + 1]), .d(swd[j*512 +: 512]), .q(m_swd));
+            `OT_QFD_VM_DELAY1_MOD u_sd (.clk(ck[54 + 3*(c*NSB+j) + 1]), .d(INPUT_ENTRIES ? swd_entries[(c*NSB+j)*512 +: 512] : swd[j*512 +: 512]), .q(m_swd));
         end else begin : g_sd
-            `OT_QFD_VM_DELAY2_MOD u_sd (.clk(ck[54 + 3*(c*NSB+j) + 1]), .d(swd[j*512 +: 512]), .q(m_swd));
+            `OT_QFD_VM_DELAY2_MOD u_sd (.clk(ck[54 + 3*(c*NSB+j) + 1]), .d(INPUT_ENTRIES ? swd_entries[(c*NSB+j)*512 +: 512] : swd[j*512 +: 512]), .q(m_swd));
         end
 `ifndef OT_QFD_VM_HARD
         ot_qfd_vm_su_t #(.NSB(1), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(USE_MACRO)) u_st (.clk(ck[54 + 3*(c*NSB+j)]),
@@ -193,7 +205,7 @@ module ot_qfd_vm_region_leaf #(
 `else
         ot_qfd_vm_rr4_t u_r4 (
 `endif
-            .clk(ck[h]), .rst_n(rst_n), .rqb(rqb[1:0]),
+            .clk(ck[h]), .rst_n(INPUT_ENTRIES ? rst_entries[14+h] : rst_n), .rqb(INPUT_ENTRIES ? rqb_entries[h*2 +: 2] : rqb[1:0]),
             .bx(bx[h*2048 +: 2048]), .t1(t1[h*512 +: 512]));
     end endgenerate
     localparam integer R2MUT = (ROW_MUT != 0) ? 1 : (LEAF_MUT == 12) ? 2 : (LEAF_MUT == 7) ? 3 : 0;
@@ -202,7 +214,7 @@ module ot_qfd_vm_region_leaf #(
 `else
     ot_qfd_vm_rr2_t u_r2 (
 `endif
-        .clk(ck[2]), .rst_n(rst_n), .me_in(me_in), .rq(rq), .rqb(rqb), .xv(xv), .pop(pop),
+        .clk(ck[2]), .rst_n(INPUT_ENTRIES ? rst_entries[16] : rst_n), .me_in(INPUT_ENTRIES ? me_entries[8] : me_in), .rq(rq), .rqb(rqb), .xv(INPUT_ENTRIES ? xv_entries[8] : xv), .pop(INPUT_ENTRIES ? pop_entries[8] : pop),
         .t1a(t1[0 +: 512]), .t1b(t1[512 +: 512]), .ro(ro), .ovf(ovf));
     generate for (k = 0; k < 16; k = k + 1) begin : g_fifo16
 `ifndef OT_QFD_VM_HARD
@@ -210,7 +222,7 @@ module ot_qfd_vm_region_leaf #(
 `else
         ot_qfd_vm_xfifo8_t u_fifo (
 `endif
-            .clk(ck[3 + 6*(k/2) + 4 + k%2]), .me_in(me_in), .rtg(rtg[k/2 +: 1]),
+            .clk(ck[3 + 6*(k/2) + 4 + k%2]), .me_in(INPUT_ENTRIES ? me_entries[9+k] : me_in), .rtg(rtg[k/2 +: 1]),
             .pgw(pgw[k/2 +: 1]), .xg(xg[k/2 +: 1]),
             .bx(bx[k*256 +: 256]), .xo(xo[k*256 +: 256]));
     end endgenerate

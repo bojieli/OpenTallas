@@ -150,57 +150,234 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
     input wire ck_t74,
     input wire ck_t75,
     input wire ck_t76,
-    input wire rst_n,
-    input wire me_in,
-    input wire [7:0] re,
-    input wire [63:0] ra,
-    input wire [7:0] we,
-    input wire [63:0] wl,
-    input wire [127:0] wm,
-    input wire [4095:0] wd,
-    input wire xv,
-    input wire rq,
-    input wire [2:0] rqb,
-    input wire [5:0] sre,
-    input wire [59:0] sra,
-    input wire [2:0] sv,
-    input wire [1:0] swe,
-    input wire [19:0] swl,
-    input wire [31:0] swm,
-    input wire [1023:0] swd,
-    input wire pop,
-    input wire [29:0] lane_me,
+    input wire re_b0,
+    input wire re_b1,
+    input wire re_b2,
+    input wire re_b3,
+    input wire re_b4,
+    input wire re_b5,
+    input wire re_b6,
+    input wire re_b7,
+    input wire [7:0] ra_b0,
+    input wire [7:0] ra_b1,
+    input wire [7:0] ra_b2,
+    input wire [7:0] ra_b3,
+    input wire [7:0] ra_b4,
+    input wire [7:0] ra_b5,
+    input wire [7:0] ra_b6,
+    input wire [7:0] ra_b7,
+    input wire we_b0,
+    input wire we_b1,
+    input wire we_b2,
+    input wire we_b3,
+    input wire we_b4,
+    input wire we_b5,
+    input wire we_b6,
+    input wire we_b7,
+    input wire [7:0] wl_b0,
+    input wire [7:0] wl_b1,
+    input wire [7:0] wl_b2,
+    input wire [7:0] wl_b3,
+    input wire [7:0] wl_b4,
+    input wire [7:0] wl_b5,
+    input wire [7:0] wl_b6,
+    input wire [7:0] wl_b7,
+    input wire [15:0] wm_b0,
+    input wire [15:0] wm_b1,
+    input wire [15:0] wm_b2,
+    input wire [15:0] wm_b3,
+    input wire [15:0] wm_b4,
+    input wire [15:0] wm_b5,
+    input wire [15:0] wm_b6,
+    input wire [15:0] wm_b7,
+    input wire [511:0] wd_b0,
+    input wire [511:0] wd_b1,
+    input wire [511:0] wd_b2,
+    input wire [511:0] wd_b3,
+    input wire [511:0] wd_b4,
+    input wire [511:0] wd_b5,
+    input wire [511:0] wd_b6,
+    input wire [511:0] wd_b7,
+    input wire sre_s0,
+    input wire sre_s1,
+    input wire sre_s2,
+    input wire sre_s3,
+    input wire sre_s4,
+    input wire sre_s5,
+    input wire [9:0] sra_s0,
+    input wire [9:0] sra_s1,
+    input wire [9:0] sra_s2,
+    input wire [9:0] sra_s3,
+    input wire [9:0] sra_s4,
+    input wire [9:0] sra_s5,
+    input wire rst_b0,
+    input wire rst_b1,
+    input wire rst_b2,
+    input wire rst_b3,
+    input wire rst_b4,
+    input wire rst_b5,
+    input wire rst_b6,
+    input wire rst_b7,
+    input wire rst_s0,
+    input wire rst_s1,
+    input wire rst_s2,
+    input wire rst_s3,
+    input wire rst_s4,
+    input wire rst_s5,
+    input wire rst_r0,
+    input wire rst_r1,
+    input wire rst_r2,
+    input wire me_b0,
+    input wire me_b1,
+    input wire me_b2,
+    input wire me_b3,
+    input wire me_b4,
+    input wire me_b5,
+    input wire me_b6,
+    input wire me_b7,
+    input wire me_r2,
+    input wire me_f0,
+    input wire me_f1,
+    input wire me_f2,
+    input wire me_f3,
+    input wire me_f4,
+    input wire me_f5,
+    input wire me_f6,
+    input wire me_f7,
+    input wire me_f8,
+    input wire me_f9,
+    input wire me_f10,
+    input wire me_f11,
+    input wire me_f12,
+    input wire me_f13,
+    input wire me_f14,
+    input wire me_f15,
+    input wire xv_b0,
+    input wire xv_b1,
+    input wire xv_b2,
+    input wire xv_b3,
+    input wire xv_b4,
+    input wire xv_b5,
+    input wire xv_b6,
+    input wire xv_b7,
+    input wire xv_r2,
+    input wire pop_b0,
+    input wire pop_b1,
+    input wire pop_b2,
+    input wire pop_b3,
+    input wire pop_b4,
+    input wire pop_b5,
+    input wire pop_b6,
+    input wire pop_b7,
+    input wire pop_r2,
+    input wire sv_s0,
+    input wire sv_s1,
+    input wire sv_s2,
+    input wire sv_s3,
+    input wire sv_s4,
+    input wire sv_s5,
+    input wire swe_s0,
+    input wire swe_s1,
+    input wire swe_s2,
+    input wire swe_s3,
+    input wire swe_s4,
+    input wire swe_s5,
+    input wire [9:0] swl_s0,
+    input wire [9:0] swl_s1,
+    input wire [9:0] swl_s2,
+    input wire [9:0] swl_s3,
+    input wire [9:0] swl_s4,
+    input wire [9:0] swl_s5,
+    input wire [15:0] swm_s0,
+    input wire [15:0] swm_s1,
+    input wire [15:0] swm_s2,
+    input wire [15:0] swm_s3,
+    input wire [15:0] swm_s4,
+    input wire [15:0] swm_s5,
+    input wire [511:0] swd_s0,
+    input wire [511:0] swd_s1,
+    input wire [511:0] swd_s2,
+    input wire [511:0] swd_s3,
+    input wire [511:0] swd_s4,
+    input wire [511:0] swd_s5,
+    input wire rq_r2,
+    input wire [2:0] rqb_r2,
+    input wire [1:0] rqb_r0,
+    input wire [1:0] rqb_r1,
+    input wire me_vm_g6_sW_0,
+    input wire me_vm_g6_sW_1,
+    input wire me_vm_g6_sW_2,
+    input wire me_vm_g6_sW_3,
+    input wire me_vm_g6_sW_4,
+    input wire me_vm_g6_sW_5,
+    input wire me_vm_g6_sW_6,
+    input wire me_vm_g6_sW_7,
+    input wire me_vm_g6_sW_8,
+    input wire me_vm_g6_sW_9,
+    input wire me_vm_g6_sA_0,
+    input wire me_vm_g6_sA_1,
+    input wire me_vm_g6_sA_2,
+    input wire me_vm_g6_sA_3,
+    input wire me_vm_g6_sA_4,
+    input wire me_vm_g6_sA_5,
+    input wire me_vm_g6_sA_6,
+    input wire me_vm_g6_sA_7,
+    input wire me_vm_g6_sA_8,
+    input wire me_vm_g6_sA_9,
+    input wire me_vm_g6_sB_0,
+    input wire me_vm_g6_sB_1,
+    input wire me_vm_g6_sB_2,
+    input wire me_vm_g6_sB_3,
+    input wire me_vm_g6_sB_4,
+    input wire me_vm_g6_sB_5,
+    input wire me_vm_g6_sB_6,
+    input wire me_vm_g6_sB_7,
+    input wire me_vm_g6_sB_8,
+    input wire me_vm_g6_sB_9,
     input wire [2807:0] d_w,
     input wire [1823:0] d_e,
     output wire [511:0] ro,
-    output wire [3071:0] so,
     output wire ovf,
+    output wire [1023:0] so_s0,
+    output wire [1023:0] so_s1,
+    output wire [1023:0] so_s2,
     output wire [2975:0] q_w,
     output wire [1687:0] q_e,
     output wire [4063:0] q_s
 );
     wire [4095:0] xo;
-    ot_qfd_vm_region_leaf #(.DEPTH(174), .LAW(8), .DEPTHS(695), .LAWS(10), .USE_MACRO(0), .CLOCK_ENTRIES(1), .LEAF_MUT((MUT == 2) ? 1 : 0)) u_core (
+    wire [3071:0] so;
+    ot_qfd_vm_region_leaf #(.DEPTH(174), .LAW(8), .DEPTHS(695), .LAWS(10), .USE_MACRO(0), .CLOCK_ENTRIES(1), .INPUT_ENTRIES(1), .LEAF_MUT((MUT == 2) ? 1 : 0)) u_core (
         .clk(1'b0), .leaf_clocks({ck_c71, ck_c70, ck_c69, ck_c68, ck_c67, ck_c66, ck_c65, ck_c64, ck_c63, ck_c62, ck_c61, ck_c60, ck_c59, ck_c58, ck_c57, ck_c56, ck_c55, ck_c54, ck_c53, ck_c52, ck_c51, ck_c50, ck_c49, ck_c48, ck_c47, ck_c46, ck_c45, ck_c44, ck_c43, ck_c42, ck_c41, ck_c40, ck_c39, ck_c38, ck_c37, ck_c36, ck_c35, ck_c34, ck_c33, ck_c32, ck_c31, ck_c30, ck_c29, ck_c28, ck_c27, ck_c26, ck_c25, ck_c24, ck_c23, ck_c22, ck_c21, ck_c20, ck_c19, ck_c18, ck_c17, ck_c16, ck_c15, ck_c14, ck_c13, ck_c12, ck_c11, ck_c10, ck_c9, ck_c8, ck_c7, ck_c6, ck_c5, ck_c4, ck_c3, ck_c2, ck_c1, ck_c0}),
-        .rst_n(rst_n),
-        .me_in(me_in),
-        .re(re),
-        .ra(ra),
-        .we(we),
-        .wl(wl),
-        .wm(wm),
-        .wd(wd),
-        .xv(xv),
-        .rq(rq),
-        .rqb(rqb),
-        .sre(sre),
-        .sra(sra),
-        .sv(sv),
-        .swe(swe),
-        .swl(swl),
-        .swm(swm),
-        .swd(swd),
-        .pop(pop),
+        .re({re_b7, re_b6, re_b5, re_b4, re_b3, re_b2, re_b1, re_b0}),
+        .ra({ra_b7, ra_b6, ra_b5, ra_b4, ra_b3, ra_b2, ra_b1, ra_b0}),
+        .we({we_b7, we_b6, we_b5, we_b4, we_b3, we_b2, we_b1, we_b0}),
+        .wl({wl_b7, wl_b6, wl_b5, wl_b4, wl_b3, wl_b2, wl_b1, wl_b0}),
+        .wm({wm_b7, wm_b6, wm_b5, wm_b4, wm_b3, wm_b2, wm_b1, wm_b0}),
+        .wd({wd_b7, wd_b6, wd_b5, wd_b4, wd_b3, wd_b2, wd_b1, wd_b0}),
+        .sre({sre_s5, sre_s4, sre_s3, sre_s2, sre_s1, sre_s0}),
+        .sra({sra_s5, sra_s4, sra_s3, sra_s2, sra_s1, sra_s0}),
+        .rst_entries({rst_r2, rst_r1, rst_r0, rst_s5, rst_s4, rst_s3, rst_s2, rst_s1, rst_s0, rst_b7, rst_b6, rst_b5, rst_b4, rst_b3, rst_b2, rst_b1, rst_b0}),
+        .me_entries({me_f15, me_f14, me_f13, me_f12, me_f11, me_f10, me_f9, me_f8, me_f7, me_f6, me_f5, me_f4, me_f3, me_f2, me_f1, me_f0, me_r2, me_b7, me_b6, me_b5, me_b4, me_b3, me_b2, me_b1, me_b0}),
+        .xv_entries({xv_r2, xv_b7, xv_b6, xv_b5, xv_b4, xv_b3, xv_b2, xv_b1, xv_b0}),
+        .pop_entries({pop_r2, pop_b7, pop_b6, pop_b5, pop_b4, pop_b3, pop_b2, pop_b1, pop_b0}),
+        .sv_entries({sv_s5, sv_s4, sv_s3, sv_s2, sv_s1, sv_s0}),
+        .swe_entries({swe_s5, swe_s4, swe_s3, swe_s2, swe_s1, swe_s0}),
+        .swl_entries({swl_s5, swl_s4, swl_s3, swl_s2, swl_s1, swl_s0}),
+        .swm_entries({swm_s5, swm_s4, swm_s3, swm_s2, swm_s1, swm_s0}),
+        .swd_entries({swd_s5, swd_s4, swd_s3, swd_s2, swd_s1, swd_s0}),
+        .rq(rq_r2),
+        .rqb(rqb_r2),
+        .rqb_entries({rqb_r1, rqb_r0}),
+        .rst_n(1'b0),
+        .me_in(1'b0),
+        .xv(1'b0),
+        .sv(3'b0),
+        .swe(2'b0),
+        .swl(20'b0),
+        .swm(32'b0),
+        .swd(1024'b0),
+        .pop(1'b0),
         .ro(ro),
         .so(so),
         .ovf(ovf),
@@ -212,21 +389,21 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_0_t0 (
 `endif
-      .clk(ck_t0),.me_e(lane_me[0]),.d(d_u_vm_g6_sW_0_t0),.q(q_u_vm_g6_sW_0_t0));
+      .clk(ck_t0),.me_e(me_vm_g6_sW_0),.d(d_u_vm_g6_sW_0_t0),.q(q_u_vm_g6_sW_0_t0));
     wire [479:0] d_u_vm_g6_sW_0_t1, q_u_vm_g6_sW_0_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sW_0_t1 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_0_t1 (
 `endif
-      .clk(ck_t1),.me_e(lane_me[0]),.d(d_u_vm_g6_sW_0_t1),.q(q_u_vm_g6_sW_0_t1));
+      .clk(ck_t1),.me_e(me_vm_g6_sW_0),.d(d_u_vm_g6_sW_0_t1),.q(q_u_vm_g6_sW_0_t1));
     wire [511:0] d_u_vm_g6_sW_0_t2, q_u_vm_g6_sW_0_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_0_t2 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_0_t2 (
 `endif
-      .clk(ck_t2),.me_e(lane_me[0]),.d(d_u_vm_g6_sW_0_t2),.q(q_u_vm_g6_sW_0_t2));
+      .clk(ck_t2),.me_e(me_vm_g6_sW_0),.d(d_u_vm_g6_sW_0_t2),.q(q_u_vm_g6_sW_0_t2));
     assign d_u_vm_g6_sW_0_t2[496] = 1'b0;
     assign d_u_vm_g6_sW_0_t2[497] = 1'b0;
     assign d_u_vm_g6_sW_0_t2[498] = 1'b0;
@@ -249,98 +426,98 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_1_t0 (
 `endif
-      .clk(ck_t3),.me_e(lane_me[1]),.d(d_u_vm_g6_sW_1_t0),.q(q_u_vm_g6_sW_1_t0));
+      .clk(ck_t3),.me_e(me_vm_g6_sW_1),.d(d_u_vm_g6_sW_1_t0),.q(q_u_vm_g6_sW_1_t0));
     wire [479:0] d_u_vm_g6_sW_1_t1, q_u_vm_g6_sW_1_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sW_1_t1 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_1_t1 (
 `endif
-      .clk(ck_t4),.me_e(lane_me[1]),.d(d_u_vm_g6_sW_1_t1),.q(q_u_vm_g6_sW_1_t1));
+      .clk(ck_t4),.me_e(me_vm_g6_sW_1),.d(d_u_vm_g6_sW_1_t1),.q(q_u_vm_g6_sW_1_t1));
     wire [511:0] d_u_vm_g6_sW_1_t2, q_u_vm_g6_sW_1_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_w #(.W(512),.MEREG(1)) u_vm_g6_sW_1_t2 (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sW_1_t2 (
 `endif
-      .clk(ck_t5),.me_e(lane_me[1]),.d(d_u_vm_g6_sW_1_t2),.q(q_u_vm_g6_sW_1_t2));
+      .clk(ck_t5),.me_e(me_vm_g6_sW_1),.d(d_u_vm_g6_sW_1_t2),.q(q_u_vm_g6_sW_1_t2));
     wire [479:0] d_u_vm_g6_sW_2_t0, q_u_vm_g6_sW_2_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sW_2_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_2_t0 (
 `endif
-      .clk(ck_t6),.me_e(lane_me[2]),.d(d_u_vm_g6_sW_2_t0),.q(q_u_vm_g6_sW_2_t0));
+      .clk(ck_t6),.me_e(me_vm_g6_sW_2),.d(d_u_vm_g6_sW_2_t0),.q(q_u_vm_g6_sW_2_t0));
     wire [511:0] d_u_vm_g6_sW_2_t1, q_u_vm_g6_sW_2_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_2_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_2_t1 (
 `endif
-      .clk(ck_t7),.me_e(lane_me[2]),.d(d_u_vm_g6_sW_2_t1),.q(q_u_vm_g6_sW_2_t1));
+      .clk(ck_t7),.me_e(me_vm_g6_sW_2),.d(d_u_vm_g6_sW_2_t1),.q(q_u_vm_g6_sW_2_t1));
     wire [511:0] d_u_vm_g6_sW_2_t2, q_u_vm_g6_sW_2_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_w #(.W(512),.MEREG(1)) u_vm_g6_sW_2_t2 (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sW_2_t2 (
 `endif
-      .clk(ck_t8),.me_e(lane_me[2]),.d(d_u_vm_g6_sW_2_t2),.q(q_u_vm_g6_sW_2_t2));
+      .clk(ck_t8),.me_e(me_vm_g6_sW_2),.d(d_u_vm_g6_sW_2_t2),.q(q_u_vm_g6_sW_2_t2));
     wire [479:0] d_u_vm_g6_sW_3_t0, q_u_vm_g6_sW_3_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sW_3_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_3_t0 (
 `endif
-      .clk(ck_t9),.me_e(lane_me[3]),.d(d_u_vm_g6_sW_3_t0),.q(q_u_vm_g6_sW_3_t0));
+      .clk(ck_t9),.me_e(me_vm_g6_sW_3),.d(d_u_vm_g6_sW_3_t0),.q(q_u_vm_g6_sW_3_t0));
     wire [511:0] d_u_vm_g6_sW_3_t1, q_u_vm_g6_sW_3_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_3_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_3_t1 (
 `endif
-      .clk(ck_t10),.me_e(lane_me[3]),.d(d_u_vm_g6_sW_3_t1),.q(q_u_vm_g6_sW_3_t1));
+      .clk(ck_t10),.me_e(me_vm_g6_sW_3),.d(d_u_vm_g6_sW_3_t1),.q(q_u_vm_g6_sW_3_t1));
     wire [511:0] d_u_vm_g6_sW_3_t2, q_u_vm_g6_sW_3_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_3_t2 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_3_t2 (
 `endif
-      .clk(ck_t11),.me_e(lane_me[3]),.d(d_u_vm_g6_sW_3_t2),.q(q_u_vm_g6_sW_3_t2));
+      .clk(ck_t11),.me_e(me_vm_g6_sW_3),.d(d_u_vm_g6_sW_3_t2),.q(q_u_vm_g6_sW_3_t2));
     wire [479:0] d_u_vm_g6_sW_4_t0, q_u_vm_g6_sW_4_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sW_4_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_4_t0 (
 `endif
-      .clk(ck_t12),.me_e(lane_me[4]),.d(d_u_vm_g6_sW_4_t0),.q(q_u_vm_g6_sW_4_t0));
+      .clk(ck_t12),.me_e(me_vm_g6_sW_4),.d(d_u_vm_g6_sW_4_t0),.q(q_u_vm_g6_sW_4_t0));
     wire [511:0] d_u_vm_g6_sW_4_t1, q_u_vm_g6_sW_4_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_4_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_4_t1 (
 `endif
-      .clk(ck_t13),.me_e(lane_me[4]),.d(d_u_vm_g6_sW_4_t1),.q(q_u_vm_g6_sW_4_t1));
+      .clk(ck_t13),.me_e(me_vm_g6_sW_4),.d(d_u_vm_g6_sW_4_t1),.q(q_u_vm_g6_sW_4_t1));
     wire [511:0] d_u_vm_g6_sW_4_t2, q_u_vm_g6_sW_4_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_w #(.W(512),.MEREG(1)) u_vm_g6_sW_4_t2 (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sW_4_t2 (
 `endif
-      .clk(ck_t14),.me_e(lane_me[4]),.d(d_u_vm_g6_sW_4_t2),.q(q_u_vm_g6_sW_4_t2));
+      .clk(ck_t14),.me_e(me_vm_g6_sW_4),.d(d_u_vm_g6_sW_4_t2),.q(q_u_vm_g6_sW_4_t2));
     wire [479:0] d_u_vm_g6_sW_5_t0, q_u_vm_g6_sW_5_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sW_5_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_5_t0 (
 `endif
-      .clk(ck_t15),.me_e(lane_me[5]),.d(d_u_vm_g6_sW_5_t0),.q(q_u_vm_g6_sW_5_t0));
+      .clk(ck_t15),.me_e(me_vm_g6_sW_5),.d(d_u_vm_g6_sW_5_t0),.q(q_u_vm_g6_sW_5_t0));
     wire [511:0] d_u_vm_g6_sW_5_t1, q_u_vm_g6_sW_5_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_5_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_5_t1 (
 `endif
-      .clk(ck_t16),.me_e(lane_me[5]),.d(d_u_vm_g6_sW_5_t1),.q(q_u_vm_g6_sW_5_t1));
+      .clk(ck_t16),.me_e(me_vm_g6_sW_5),.d(d_u_vm_g6_sW_5_t1),.q(q_u_vm_g6_sW_5_t1));
     assign d_u_vm_g6_sW_5_t1[360] = 1'b0;
     assign d_u_vm_g6_sW_5_t1[361] = 1'b0;
     assign d_u_vm_g6_sW_5_t1[362] = 1'b0;
@@ -499,21 +676,21 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sW_5_t2 (
 `endif
-      .clk(ck_t17),.me_e(lane_me[5]),.d(d_u_vm_g6_sW_5_t2),.q(q_u_vm_g6_sW_5_t2));
+      .clk(ck_t17),.me_e(me_vm_g6_sW_5),.d(d_u_vm_g6_sW_5_t2),.q(q_u_vm_g6_sW_5_t2));
     wire [479:0] d_u_vm_g6_sW_6_t0, q_u_vm_g6_sW_6_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sW_6_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_6_t0 (
 `endif
-      .clk(ck_t18),.me_e(lane_me[6]),.d(d_u_vm_g6_sW_6_t0),.q(q_u_vm_g6_sW_6_t0));
+      .clk(ck_t18),.me_e(me_vm_g6_sW_6),.d(d_u_vm_g6_sW_6_t0),.q(q_u_vm_g6_sW_6_t0));
     wire [511:0] d_u_vm_g6_sW_6_t1, q_u_vm_g6_sW_6_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_6_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_6_t1 (
 `endif
-      .clk(ck_t19),.me_e(lane_me[6]),.d(d_u_vm_g6_sW_6_t1),.q(q_u_vm_g6_sW_6_t1));
+      .clk(ck_t19),.me_e(me_vm_g6_sW_6),.d(d_u_vm_g6_sW_6_t1),.q(q_u_vm_g6_sW_6_t1));
     assign d_u_vm_g6_sW_6_t1[344] = 1'b0;
     assign d_u_vm_g6_sW_6_t1[345] = 1'b0;
     assign d_u_vm_g6_sW_6_t1[346] = 1'b0;
@@ -688,28 +865,28 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sW_6_t2 (
 `endif
-      .clk(ck_t20),.me_e(lane_me[6]),.d(d_u_vm_g6_sW_6_t2),.q(q_u_vm_g6_sW_6_t2));
+      .clk(ck_t20),.me_e(me_vm_g6_sW_6),.d(d_u_vm_g6_sW_6_t2),.q(q_u_vm_g6_sW_6_t2));
     wire [479:0] d_u_vm_g6_sW_7_t0, q_u_vm_g6_sW_7_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sW_7_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_7_t0 (
 `endif
-      .clk(ck_t21),.me_e(lane_me[7]),.d(d_u_vm_g6_sW_7_t0),.q(q_u_vm_g6_sW_7_t0));
+      .clk(ck_t21),.me_e(me_vm_g6_sW_7),.d(d_u_vm_g6_sW_7_t0),.q(q_u_vm_g6_sW_7_t0));
     wire [511:0] d_u_vm_g6_sW_7_t1, q_u_vm_g6_sW_7_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_7_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_7_t1 (
 `endif
-      .clk(ck_t22),.me_e(lane_me[7]),.d(d_u_vm_g6_sW_7_t1),.q(q_u_vm_g6_sW_7_t1));
+      .clk(ck_t22),.me_e(me_vm_g6_sW_7),.d(d_u_vm_g6_sW_7_t1),.q(q_u_vm_g6_sW_7_t1));
     wire [511:0] d_u_vm_g6_sW_7_t2, q_u_vm_g6_sW_7_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_7_t2 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_7_t2 (
 `endif
-      .clk(ck_t23),.me_e(lane_me[7]),.d(d_u_vm_g6_sW_7_t2),.q(q_u_vm_g6_sW_7_t2));
+      .clk(ck_t23),.me_e(me_vm_g6_sW_7),.d(d_u_vm_g6_sW_7_t2),.q(q_u_vm_g6_sW_7_t2));
     assign d_u_vm_g6_sW_7_t2[312] = 1'b0;
     assign d_u_vm_g6_sW_7_t2[313] = 1'b0;
     assign d_u_vm_g6_sW_7_t2[314] = 1'b0;
@@ -916,7 +1093,7 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sW_8_t0 (
 `endif
-      .clk(ck_t24),.me_e(lane_me[8]),.d(d_u_vm_g6_sW_8_t0),.q(q_u_vm_g6_sW_8_t0));
+      .clk(ck_t24),.me_e(me_vm_g6_sW_8),.d(d_u_vm_g6_sW_8_t0),.q(q_u_vm_g6_sW_8_t0));
     assign d_u_vm_g6_sW_8_t0[24] = 1'b0;
     assign d_u_vm_g6_sW_8_t0[25] = 1'b0;
     assign d_u_vm_g6_sW_8_t0[26] = 1'b0;
@@ -1379,14 +1556,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_8_t1 (
 `endif
-      .clk(ck_t25),.me_e(lane_me[8]),.d(d_u_vm_g6_sW_8_t1),.q(q_u_vm_g6_sW_8_t1));
+      .clk(ck_t25),.me_e(me_vm_g6_sW_8),.d(d_u_vm_g6_sW_8_t1),.q(q_u_vm_g6_sW_8_t1));
     wire [511:0] d_u_vm_g6_sW_9_t0, q_u_vm_g6_sW_9_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sW_9_t0 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sW_9_t0 (
 `endif
-      .clk(ck_t26),.me_e(lane_me[9]),.d(d_u_vm_g6_sW_9_t0),.q(q_u_vm_g6_sW_9_t0));
+      .clk(ck_t26),.me_e(me_vm_g6_sW_9),.d(d_u_vm_g6_sW_9_t0),.q(q_u_vm_g6_sW_9_t0));
     assign d_u_vm_g6_sW_9_t0[48] = 1'b0;
     assign d_u_vm_g6_sW_9_t0[49] = 1'b0;
     assign d_u_vm_g6_sW_9_t0[50] = 1'b0;
@@ -1857,42 +2034,42 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sW_9_t1 (
 `endif
-      .clk(ck_t27),.me_e(lane_me[9]),.d(d_u_vm_g6_sW_9_t1),.q(q_u_vm_g6_sW_9_t1));
+      .clk(ck_t27),.me_e(me_vm_g6_sW_9),.d(d_u_vm_g6_sW_9_t1),.q(q_u_vm_g6_sW_9_t1));
     wire [479:0] d_u_vm_g6_sA_0_t0, q_u_vm_g6_sA_0_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sA_0_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sA_0_t0 (
 `endif
-      .clk(ck_t28),.me_e(lane_me[10]),.d(d_u_vm_g6_sA_0_t0),.q(q_u_vm_g6_sA_0_t0));
+      .clk(ck_t28),.me_e(me_vm_g6_sA_0),.d(d_u_vm_g6_sA_0_t0),.q(q_u_vm_g6_sA_0_t0));
     wire [479:0] d_u_vm_g6_sA_0_t1, q_u_vm_g6_sA_0_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sA_0_t1 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sA_0_t1 (
 `endif
-      .clk(ck_t29),.me_e(lane_me[10]),.d(d_u_vm_g6_sA_0_t1),.q(q_u_vm_g6_sA_0_t1));
+      .clk(ck_t29),.me_e(me_vm_g6_sA_0),.d(d_u_vm_g6_sA_0_t1),.q(q_u_vm_g6_sA_0_t1));
     wire [511:0] d_u_vm_g6_sA_0_t2, q_u_vm_g6_sA_0_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_0_t2 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_0_t2 (
 `endif
-      .clk(ck_t30),.me_e(lane_me[10]),.d(d_u_vm_g6_sA_0_t2),.q(q_u_vm_g6_sA_0_t2));
+      .clk(ck_t30),.me_e(me_vm_g6_sA_0),.d(d_u_vm_g6_sA_0_t2),.q(q_u_vm_g6_sA_0_t2));
     wire [479:0] d_u_vm_g6_sA_1_t0, q_u_vm_g6_sA_1_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sA_1_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sA_1_t0 (
 `endif
-      .clk(ck_t31),.me_e(lane_me[11]),.d(d_u_vm_g6_sA_1_t0),.q(q_u_vm_g6_sA_1_t0));
+      .clk(ck_t31),.me_e(me_vm_g6_sA_1),.d(d_u_vm_g6_sA_1_t0),.q(q_u_vm_g6_sA_1_t0));
     wire [511:0] d_u_vm_g6_sA_1_t1, q_u_vm_g6_sA_1_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_1_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_1_t1 (
 `endif
-      .clk(ck_t32),.me_e(lane_me[11]),.d(d_u_vm_g6_sA_1_t1),.q(q_u_vm_g6_sA_1_t1));
+      .clk(ck_t32),.me_e(me_vm_g6_sA_1),.d(d_u_vm_g6_sA_1_t1),.q(q_u_vm_g6_sA_1_t1));
     assign d_u_vm_g6_sA_1_t1[344] = 1'b0;
     assign d_u_vm_g6_sA_1_t1[345] = 1'b0;
     assign d_u_vm_g6_sA_1_t1[346] = 1'b0;
@@ -2067,14 +2244,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sA_1_t2 (
 `endif
-      .clk(ck_t33),.me_e(lane_me[11]),.d(d_u_vm_g6_sA_1_t2),.q(q_u_vm_g6_sA_1_t2));
+      .clk(ck_t33),.me_e(me_vm_g6_sA_1),.d(d_u_vm_g6_sA_1_t2),.q(q_u_vm_g6_sA_1_t2));
     wire [511:0] d_u_vm_g6_sA_2_t0, q_u_vm_g6_sA_2_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_2_t0 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_2_t0 (
 `endif
-      .clk(ck_t34),.me_e(lane_me[12]),.d(d_u_vm_g6_sA_2_t0),.q(q_u_vm_g6_sA_2_t0));
+      .clk(ck_t34),.me_e(me_vm_g6_sA_2),.d(d_u_vm_g6_sA_2_t0),.q(q_u_vm_g6_sA_2_t0));
     assign d_u_vm_g6_sA_2_t0[392] = 1'b0;
     assign d_u_vm_g6_sA_2_t0[393] = 1'b0;
     assign d_u_vm_g6_sA_2_t0[394] = 1'b0;
@@ -2201,14 +2378,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sA_2_t1 (
 `endif
-      .clk(ck_t35),.me_e(lane_me[12]),.d(d_u_vm_g6_sA_2_t1),.q(q_u_vm_g6_sA_2_t1));
+      .clk(ck_t35),.me_e(me_vm_g6_sA_2),.d(d_u_vm_g6_sA_2_t1),.q(q_u_vm_g6_sA_2_t1));
     wire [511:0] d_u_vm_g6_sA_3_t0, q_u_vm_g6_sA_3_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_3_t0 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_3_t0 (
 `endif
-      .clk(ck_t36),.me_e(lane_me[13]),.d(d_u_vm_g6_sA_3_t0),.q(q_u_vm_g6_sA_3_t0));
+      .clk(ck_t36),.me_e(me_vm_g6_sA_3),.d(d_u_vm_g6_sA_3_t0),.q(q_u_vm_g6_sA_3_t0));
     assign d_u_vm_g6_sA_3_t0[336] = 1'b0;
     assign d_u_vm_g6_sA_3_t0[337] = 1'b0;
     assign d_u_vm_g6_sA_3_t0[338] = 1'b0;
@@ -2391,14 +2568,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sA_3_t1 (
 `endif
-      .clk(ck_t37),.me_e(lane_me[13]),.d(d_u_vm_g6_sA_3_t1),.q(q_u_vm_g6_sA_3_t1));
+      .clk(ck_t37),.me_e(me_vm_g6_sA_3),.d(d_u_vm_g6_sA_3_t1),.q(q_u_vm_g6_sA_3_t1));
     wire [511:0] d_u_vm_g6_sA_4_t0, q_u_vm_g6_sA_4_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_4_t0 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_4_t0 (
 `endif
-      .clk(ck_t38),.me_e(lane_me[14]),.d(d_u_vm_g6_sA_4_t0),.q(q_u_vm_g6_sA_4_t0));
+      .clk(ck_t38),.me_e(me_vm_g6_sA_4),.d(d_u_vm_g6_sA_4_t0),.q(q_u_vm_g6_sA_4_t0));
     assign d_u_vm_g6_sA_4_t0[280] = 1'b0;
     assign d_u_vm_g6_sA_4_t0[281] = 1'b0;
     assign d_u_vm_g6_sA_4_t0[282] = 1'b0;
@@ -2637,14 +2814,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sA_4_t1 (
 `endif
-      .clk(ck_t39),.me_e(lane_me[14]),.d(d_u_vm_g6_sA_4_t1),.q(q_u_vm_g6_sA_4_t1));
+      .clk(ck_t39),.me_e(me_vm_g6_sA_4),.d(d_u_vm_g6_sA_4_t1),.q(q_u_vm_g6_sA_4_t1));
     wire [511:0] d_u_vm_g6_sA_5_t0, q_u_vm_g6_sA_5_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_5_t0 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_5_t0 (
 `endif
-      .clk(ck_t40),.me_e(lane_me[15]),.d(d_u_vm_g6_sA_5_t0),.q(q_u_vm_g6_sA_5_t0));
+      .clk(ck_t40),.me_e(me_vm_g6_sA_5),.d(d_u_vm_g6_sA_5_t0),.q(q_u_vm_g6_sA_5_t0));
     assign d_u_vm_g6_sA_5_t0[320] = 1'b0;
     assign d_u_vm_g6_sA_5_t0[321] = 1'b0;
     assign d_u_vm_g6_sA_5_t0[322] = 1'b0;
@@ -2843,21 +3020,21 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sA_5_t1 (
 `endif
-      .clk(ck_t41),.me_e(lane_me[15]),.d(d_u_vm_g6_sA_5_t1),.q(q_u_vm_g6_sA_5_t1));
+      .clk(ck_t41),.me_e(me_vm_g6_sA_5),.d(d_u_vm_g6_sA_5_t1),.q(q_u_vm_g6_sA_5_t1));
     wire [479:0] d_u_vm_g6_sA_6_t0, q_u_vm_g6_sA_6_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sA_6_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sA_6_t0 (
 `endif
-      .clk(ck_t42),.me_e(lane_me[16]),.d(d_u_vm_g6_sA_6_t0),.q(q_u_vm_g6_sA_6_t0));
+      .clk(ck_t42),.me_e(me_vm_g6_sA_6),.d(d_u_vm_g6_sA_6_t0),.q(q_u_vm_g6_sA_6_t0));
     wire [511:0] d_u_vm_g6_sA_6_t1, q_u_vm_g6_sA_6_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_6_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_6_t1 (
 `endif
-      .clk(ck_t43),.me_e(lane_me[16]),.d(d_u_vm_g6_sA_6_t1),.q(q_u_vm_g6_sA_6_t1));
+      .clk(ck_t43),.me_e(me_vm_g6_sA_6),.d(d_u_vm_g6_sA_6_t1),.q(q_u_vm_g6_sA_6_t1));
     assign d_u_vm_g6_sA_6_t1[288] = 1'b0;
     assign d_u_vm_g6_sA_6_t1[289] = 1'b0;
     assign d_u_vm_g6_sA_6_t1[290] = 1'b0;
@@ -3088,28 +3265,28 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sA_6_t2 (
 `endif
-      .clk(ck_t44),.me_e(lane_me[16]),.d(d_u_vm_g6_sA_6_t2),.q(q_u_vm_g6_sA_6_t2));
+      .clk(ck_t44),.me_e(me_vm_g6_sA_6),.d(d_u_vm_g6_sA_6_t2),.q(q_u_vm_g6_sA_6_t2));
     wire [479:0] d_u_vm_g6_sA_7_t0, q_u_vm_g6_sA_7_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sA_7_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sA_7_t0 (
 `endif
-      .clk(ck_t45),.me_e(lane_me[17]),.d(d_u_vm_g6_sA_7_t0),.q(q_u_vm_g6_sA_7_t0));
+      .clk(ck_t45),.me_e(me_vm_g6_sA_7),.d(d_u_vm_g6_sA_7_t0),.q(q_u_vm_g6_sA_7_t0));
     wire [511:0] d_u_vm_g6_sA_7_t1, q_u_vm_g6_sA_7_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_7_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_7_t1 (
 `endif
-      .clk(ck_t46),.me_e(lane_me[17]),.d(d_u_vm_g6_sA_7_t1),.q(q_u_vm_g6_sA_7_t1));
+      .clk(ck_t46),.me_e(me_vm_g6_sA_7),.d(d_u_vm_g6_sA_7_t1),.q(q_u_vm_g6_sA_7_t1));
     wire [511:0] d_u_vm_g6_sA_7_t2, q_u_vm_g6_sA_7_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sA_7_t2 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_7_t2 (
 `endif
-      .clk(ck_t47),.me_e(lane_me[17]),.d(d_u_vm_g6_sA_7_t2),.q(q_u_vm_g6_sA_7_t2));
+      .clk(ck_t47),.me_e(me_vm_g6_sA_7),.d(d_u_vm_g6_sA_7_t2),.q(q_u_vm_g6_sA_7_t2));
     assign d_u_vm_g6_sA_7_t2[312] = 1'b0;
     assign d_u_vm_g6_sA_7_t2[313] = 1'b0;
     assign d_u_vm_g6_sA_7_t2[314] = 1'b0;
@@ -3316,7 +3493,7 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sA_8_t0 (
 `endif
-      .clk(ck_t48),.me_e(lane_me[18]),.d(d_u_vm_g6_sA_8_t0),.q(q_u_vm_g6_sA_8_t0));
+      .clk(ck_t48),.me_e(me_vm_g6_sA_8),.d(d_u_vm_g6_sA_8_t0),.q(q_u_vm_g6_sA_8_t0));
     assign d_u_vm_g6_sA_8_t0[144] = 1'b0;
     assign d_u_vm_g6_sA_8_t0[145] = 1'b0;
     assign d_u_vm_g6_sA_8_t0[146] = 1'b0;
@@ -3659,14 +3836,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_8_t1 (
 `endif
-      .clk(ck_t49),.me_e(lane_me[18]),.d(d_u_vm_g6_sA_8_t1),.q(q_u_vm_g6_sA_8_t1));
+      .clk(ck_t49),.me_e(me_vm_g6_sA_8),.d(d_u_vm_g6_sA_8_t1),.q(q_u_vm_g6_sA_8_t1));
     wire [479:0] d_u_vm_g6_sA_9_t0, q_u_vm_g6_sA_9_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sA_9_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sA_9_t0 (
 `endif
-      .clk(ck_t50),.me_e(lane_me[19]),.d(d_u_vm_g6_sA_9_t0),.q(q_u_vm_g6_sA_9_t0));
+      .clk(ck_t50),.me_e(me_vm_g6_sA_9),.d(d_u_vm_g6_sA_9_t0),.q(q_u_vm_g6_sA_9_t0));
     assign d_u_vm_g6_sA_9_t0[8] = 1'b0;
     assign d_u_vm_g6_sA_9_t0[9] = 1'b0;
     assign d_u_vm_g6_sA_9_t0[10] = 1'b0;
@@ -4145,7 +4322,7 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sA_9_t1 (
 `endif
-      .clk(ck_t51),.me_e(lane_me[19]),.d(d_u_vm_g6_sA_9_t1),.q(q_u_vm_g6_sA_9_t1));
+      .clk(ck_t51),.me_e(me_vm_g6_sA_9),.d(d_u_vm_g6_sA_9_t1),.q(q_u_vm_g6_sA_9_t1));
     assign d_u_vm_g6_sA_9_t1[56] = 1'b0;
     assign d_u_vm_g6_sA_9_t1[57] = 1'b0;
     assign d_u_vm_g6_sA_9_t1[58] = 1'b0;
@@ -4608,28 +4785,28 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sA_9_t2 (
 `endif
-      .clk(ck_t52),.me_e(lane_me[19]),.d(d_u_vm_g6_sA_9_t2),.q(q_u_vm_g6_sA_9_t2));
+      .clk(ck_t52),.me_e(me_vm_g6_sA_9),.d(d_u_vm_g6_sA_9_t2),.q(q_u_vm_g6_sA_9_t2));
     wire [479:0] d_u_vm_g6_sB_0_t0, q_u_vm_g6_sB_0_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sB_0_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sB_0_t0 (
 `endif
-      .clk(ck_t53),.me_e(lane_me[20]),.d(d_u_vm_g6_sB_0_t0),.q(q_u_vm_g6_sB_0_t0));
+      .clk(ck_t53),.me_e(me_vm_g6_sB_0),.d(d_u_vm_g6_sB_0_t0),.q(q_u_vm_g6_sB_0_t0));
     wire [479:0] d_u_vm_g6_sB_0_t1, q_u_vm_g6_sB_0_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sB_0_t1 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sB_0_t1 (
 `endif
-      .clk(ck_t54),.me_e(lane_me[20]),.d(d_u_vm_g6_sB_0_t1),.q(q_u_vm_g6_sB_0_t1));
+      .clk(ck_t54),.me_e(me_vm_g6_sB_0),.d(d_u_vm_g6_sB_0_t1),.q(q_u_vm_g6_sB_0_t1));
     wire [511:0] d_u_vm_g6_sB_0_t2, q_u_vm_g6_sB_0_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sB_0_t2 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_0_t2 (
 `endif
-      .clk(ck_t55),.me_e(lane_me[20]),.d(d_u_vm_g6_sB_0_t2),.q(q_u_vm_g6_sB_0_t2));
+      .clk(ck_t55),.me_e(me_vm_g6_sB_0),.d(d_u_vm_g6_sB_0_t2),.q(q_u_vm_g6_sB_0_t2));
     assign d_u_vm_g6_sB_0_t2[504] = 1'b0;
     assign d_u_vm_g6_sB_0_t2[505] = 1'b0;
     assign d_u_vm_g6_sB_0_t2[506] = 1'b0;
@@ -4644,35 +4821,35 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sB_1_t0 (
 `endif
-      .clk(ck_t56),.me_e(lane_me[21]),.d(d_u_vm_g6_sB_1_t0),.q(q_u_vm_g6_sB_1_t0));
+      .clk(ck_t56),.me_e(me_vm_g6_sB_1),.d(d_u_vm_g6_sB_1_t0),.q(q_u_vm_g6_sB_1_t0));
     wire [479:0] d_u_vm_g6_sB_1_t1, q_u_vm_g6_sB_1_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sB_1_t1 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sB_1_t1 (
 `endif
-      .clk(ck_t57),.me_e(lane_me[21]),.d(d_u_vm_g6_sB_1_t1),.q(q_u_vm_g6_sB_1_t1));
+      .clk(ck_t57),.me_e(me_vm_g6_sB_1),.d(d_u_vm_g6_sB_1_t1),.q(q_u_vm_g6_sB_1_t1));
     wire [511:0] d_u_vm_g6_sB_1_t2, q_u_vm_g6_sB_1_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sB_1_t2 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_1_t2 (
 `endif
-      .clk(ck_t58),.me_e(lane_me[21]),.d(d_u_vm_g6_sB_1_t2),.q(q_u_vm_g6_sB_1_t2));
+      .clk(ck_t58),.me_e(me_vm_g6_sB_1),.d(d_u_vm_g6_sB_1_t2),.q(q_u_vm_g6_sB_1_t2));
     wire [511:0] d_u_vm_g6_sB_2_t0, q_u_vm_g6_sB_2_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sB_2_t0 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_2_t0 (
 `endif
-      .clk(ck_t59),.me_e(lane_me[22]),.d(d_u_vm_g6_sB_2_t0),.q(q_u_vm_g6_sB_2_t0));
+      .clk(ck_t59),.me_e(me_vm_g6_sB_2),.d(d_u_vm_g6_sB_2_t0),.q(q_u_vm_g6_sB_2_t0));
     wire [511:0] d_u_vm_g6_sB_2_t1, q_u_vm_g6_sB_2_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sB_2_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_2_t1 (
 `endif
-      .clk(ck_t60),.me_e(lane_me[22]),.d(d_u_vm_g6_sB_2_t1),.q(q_u_vm_g6_sB_2_t1));
+      .clk(ck_t60),.me_e(me_vm_g6_sB_2),.d(d_u_vm_g6_sB_2_t1),.q(q_u_vm_g6_sB_2_t1));
     assign d_u_vm_g6_sB_2_t1[256] = 1'b0;
     assign d_u_vm_g6_sB_2_t1[257] = 1'b0;
     assign d_u_vm_g6_sB_2_t1[258] = 1'b0;
@@ -4935,14 +5112,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_3_t0 (
 `endif
-      .clk(ck_t61),.me_e(lane_me[23]),.d(d_u_vm_g6_sB_3_t0),.q(q_u_vm_g6_sB_3_t0));
+      .clk(ck_t61),.me_e(me_vm_g6_sB_3),.d(d_u_vm_g6_sB_3_t0),.q(q_u_vm_g6_sB_3_t0));
     wire [511:0] d_u_vm_g6_sB_3_t1, q_u_vm_g6_sB_3_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sB_3_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_3_t1 (
 `endif
-      .clk(ck_t62),.me_e(lane_me[23]),.d(d_u_vm_g6_sB_3_t1),.q(q_u_vm_g6_sB_3_t1));
+      .clk(ck_t62),.me_e(me_vm_g6_sB_3),.d(d_u_vm_g6_sB_3_t1),.q(q_u_vm_g6_sB_3_t1));
     assign d_u_vm_g6_sB_3_t1[336] = 1'b0;
     assign d_u_vm_g6_sB_3_t1[337] = 1'b0;
     assign d_u_vm_g6_sB_3_t1[338] = 1'b0;
@@ -5125,7 +5302,7 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_4_t0 (
 `endif
-      .clk(ck_t63),.me_e(lane_me[24]),.d(d_u_vm_g6_sB_4_t0),.q(q_u_vm_g6_sB_4_t0));
+      .clk(ck_t63),.me_e(me_vm_g6_sB_4),.d(d_u_vm_g6_sB_4_t0),.q(q_u_vm_g6_sB_4_t0));
     assign d_u_vm_g6_sB_4_t0[192] = 1'b0;
     assign d_u_vm_g6_sB_4_t0[193] = 1'b0;
     assign d_u_vm_g6_sB_4_t0[194] = 1'b0;
@@ -5452,14 +5629,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sB_4_t1 (
 `endif
-      .clk(ck_t64),.me_e(lane_me[24]),.d(d_u_vm_g6_sB_4_t1),.q(q_u_vm_g6_sB_4_t1));
+      .clk(ck_t64),.me_e(me_vm_g6_sB_4),.d(d_u_vm_g6_sB_4_t1),.q(q_u_vm_g6_sB_4_t1));
     wire [511:0] d_u_vm_g6_sB_5_t0, q_u_vm_g6_sB_5_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sB_5_t0 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_5_t0 (
 `endif
-      .clk(ck_t65),.me_e(lane_me[25]),.d(d_u_vm_g6_sB_5_t0),.q(q_u_vm_g6_sB_5_t0));
+      .clk(ck_t65),.me_e(me_vm_g6_sB_5),.d(d_u_vm_g6_sB_5_t0),.q(q_u_vm_g6_sB_5_t0));
     assign d_u_vm_g6_sB_5_t0[168] = 1'b0;
     assign d_u_vm_g6_sB_5_t0[169] = 1'b0;
     assign d_u_vm_g6_sB_5_t0[170] = 1'b0;
@@ -5810,21 +5987,21 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sB_5_t1 (
 `endif
-      .clk(ck_t66),.me_e(lane_me[25]),.d(d_u_vm_g6_sB_5_t1),.q(q_u_vm_g6_sB_5_t1));
+      .clk(ck_t66),.me_e(me_vm_g6_sB_5),.d(d_u_vm_g6_sB_5_t1),.q(q_u_vm_g6_sB_5_t1));
     wire [479:0] d_u_vm_g6_sB_6_t0, q_u_vm_g6_sB_6_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sB_6_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sB_6_t0 (
 `endif
-      .clk(ck_t67),.me_e(lane_me[26]),.d(d_u_vm_g6_sB_6_t0),.q(q_u_vm_g6_sB_6_t0));
+      .clk(ck_t67),.me_e(me_vm_g6_sB_6),.d(d_u_vm_g6_sB_6_t0),.q(q_u_vm_g6_sB_6_t0));
     wire [511:0] d_u_vm_g6_sB_6_t1, q_u_vm_g6_sB_6_t1;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sB_6_t1 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_6_t1 (
 `endif
-      .clk(ck_t68),.me_e(lane_me[26]),.d(d_u_vm_g6_sB_6_t1),.q(q_u_vm_g6_sB_6_t1));
+      .clk(ck_t68),.me_e(me_vm_g6_sB_6),.d(d_u_vm_g6_sB_6_t1),.q(q_u_vm_g6_sB_6_t1));
     assign d_u_vm_g6_sB_6_t1[264] = 1'b0;
     assign d_u_vm_g6_sB_6_t1[265] = 1'b0;
     assign d_u_vm_g6_sB_6_t1[266] = 1'b0;
@@ -6079,14 +6256,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sB_6_t2 (
 `endif
-      .clk(ck_t69),.me_e(lane_me[26]),.d(d_u_vm_g6_sB_6_t2),.q(q_u_vm_g6_sB_6_t2));
+      .clk(ck_t69),.me_e(me_vm_g6_sB_6),.d(d_u_vm_g6_sB_6_t2),.q(q_u_vm_g6_sB_6_t2));
     wire [479:0] d_u_vm_g6_sB_7_t0, q_u_vm_g6_sB_7_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sB_7_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sB_7_t0 (
 `endif
-      .clk(ck_t70),.me_e(lane_me[27]),.d(d_u_vm_g6_sB_7_t0),.q(q_u_vm_g6_sB_7_t0));
+      .clk(ck_t70),.me_e(me_vm_g6_sB_7),.d(d_u_vm_g6_sB_7_t0),.q(q_u_vm_g6_sB_7_t0));
     assign d_u_vm_g6_sB_7_t0[120] = 1'b0;
     assign d_u_vm_g6_sB_7_t0[121] = 1'b0;
     assign d_u_vm_g6_sB_7_t0[122] = 1'b0;
@@ -6453,14 +6630,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_7_t1 (
 `endif
-      .clk(ck_t71),.me_e(lane_me[27]),.d(d_u_vm_g6_sB_7_t1),.q(q_u_vm_g6_sB_7_t1));
+      .clk(ck_t71),.me_e(me_vm_g6_sB_7),.d(d_u_vm_g6_sB_7_t1),.q(q_u_vm_g6_sB_7_t1));
     wire [511:0] d_u_vm_g6_sB_7_t2, q_u_vm_g6_sB_7_t2;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xrelay_t #(.W(512),.MEREG(1)) u_vm_g6_sB_7_t2 (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_7_t2 (
 `endif
-      .clk(ck_t72),.me_e(lane_me[27]),.d(d_u_vm_g6_sB_7_t2),.q(q_u_vm_g6_sB_7_t2));
+      .clk(ck_t72),.me_e(me_vm_g6_sB_7),.d(d_u_vm_g6_sB_7_t2),.q(q_u_vm_g6_sB_7_t2));
     assign d_u_vm_g6_sB_7_t2[320] = 1'b0;
     assign d_u_vm_g6_sB_7_t2[321] = 1'b0;
     assign d_u_vm_g6_sB_7_t2[322] = 1'b0;
@@ -6659,7 +6836,7 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sB_8_t0 (
 `endif
-      .clk(ck_t73),.me_e(lane_me[28]),.d(d_u_vm_g6_sB_8_t0),.q(q_u_vm_g6_sB_8_t0));
+      .clk(ck_t73),.me_e(me_vm_g6_sB_8),.d(d_u_vm_g6_sB_8_t0),.q(q_u_vm_g6_sB_8_t0));
     assign d_u_vm_g6_sB_8_t0[200] = 1'b0;
     assign d_u_vm_g6_sB_8_t0[201] = 1'b0;
     assign d_u_vm_g6_sB_8_t0[202] = 1'b0;
@@ -6946,14 +7123,14 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_t u_vm_g6_sB_8_t1 (
 `endif
-      .clk(ck_t74),.me_e(lane_me[28]),.d(d_u_vm_g6_sB_8_t1),.q(q_u_vm_g6_sB_8_t1));
+      .clk(ck_t74),.me_e(me_vm_g6_sB_8),.d(d_u_vm_g6_sB_8_t1),.q(q_u_vm_g6_sB_8_t1));
     wire [479:0] d_u_vm_g6_sB_9_t0, q_u_vm_g6_sB_9_t0;
 `ifndef OT_QFD_VM_HARD
     ot_qfd_vm_xpad2_t #(.W(480),.MEREG(1)) u_vm_g6_sB_9_t0 (
 `else
     ot_qfd_vm_xpad2_t u_vm_g6_sB_9_t0 (
 `endif
-      .clk(ck_t75),.me_e(lane_me[29]),.d(d_u_vm_g6_sB_9_t0),.q(q_u_vm_g6_sB_9_t0));
+      .clk(ck_t75),.me_e(me_vm_g6_sB_9),.d(d_u_vm_g6_sB_9_t0),.q(q_u_vm_g6_sB_9_t0));
     assign d_u_vm_g6_sB_9_t0[16] = 1'b0;
     assign d_u_vm_g6_sB_9_t0[17] = 1'b0;
     assign d_u_vm_g6_sB_9_t0[18] = 1'b0;
@@ -7424,7 +7601,7 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
 `else
     ot_qfd_vm_xrelay_w u_vm_g6_sB_9_t1 (
 `endif
-      .clk(ck_t76),.me_e(lane_me[29]),.d(d_u_vm_g6_sB_9_t1),.q(q_u_vm_g6_sB_9_t1));
+      .clk(ck_t76),.me_e(me_vm_g6_sB_9),.d(d_u_vm_g6_sB_9_t1),.q(q_u_vm_g6_sB_9_t1));
     assign d_u_vm_g6_sB_6_t2[112 +: 8] = d_e[0 +: 8];
     assign d_u_vm_g6_sA_6_t2[248 +: 8] = q_u_vm_g6_sB_6_t2[112 +: 8];
     assign d_u_vm_g6_sW_6_t2[408 +: 8] = q_u_vm_g6_sA_6_t2[248 +: 8];
@@ -12505,4 +12682,7 @@ module ot_qfd_vm_rg6 #(parameter integer MUT=0) (
     assign d_u_vm_g6_sW_3_t0[280 +: 8] = q_u_vm_g6_sW_3_t0[272 +: 8];
     assign d_u_vm_g6_sW_3_t1[392 +: 8] = q_u_vm_g6_sW_3_t0[280 +: 8];
     assign q_s[4056 +: 8] = q_u_vm_g6_sW_3_t1[392 +: 8];
+    assign so_s0 = so[0 +: 1024];
+    assign so_s1 = so[1024 +: 1024];
+    assign so_s2 = so[2048 +: 1024];
 endmodule
