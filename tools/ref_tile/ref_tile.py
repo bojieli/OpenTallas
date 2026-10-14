@@ -394,6 +394,8 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     og = TRACK_LATTICE_UM if s["kind"] == "cluster" else GRID_Y
     if s.get("outline"):
         o = s["outline"]
+        if o.get("exact"):      # a drop-in replacement of a closed view inside a fixed sub-slot (dsfd_vm_clt 80.64 x 230.04)
+            return float(o["w"]), float(o["h"]), "spec outline (exact: the closed view's sub-slot)"
         return snap_up(float(o["w"]), og), snap_up(float(o["h"]), og), "spec outline"
     area = area_um2 or s.get("std_area_um2")
     if not area:
