@@ -358,6 +358,7 @@ class Plan:
                 pa, pb = A[k:k + 64], B[k:k + 64]
                 segs.append((len(pa), np.mean([p[0] for p in pa]), np.mean([p[1] for p in pa]), np.mean([p[0] for p in pb]), np.mean([p[1] for p in pb])))
         chosen = [None] * len(segs)
+        unresolved = set()
         for it in range(3):
             for i, (bits, x0, y0, x1, y1) in enumerate(segs):
                 if chosen[i] is not None:
@@ -366,7 +367,18 @@ class Plan:
                 cands = [path(x0, y0, x1, y1, None, 'HV'), path(x0, y0, x1, y1, None, 'VH')]
                 cands += [path(x0, y0, x1, y1, m, 'HV') for m in range(min(ay, by), max(ay, by) + 1, 2)]
                 cands += [path(x0, y0, x1, y1, m, 'VH') for m in range(min(ax, bx), max(ax, bx) + 1, 4)]
-                best = min(cands, key=lambda c: cost(c, bits)); chosen[i] = best
+                def legal(c):
+                    return all((capH if d == 'H' else capV)[y,x] > 1e-6 for y,x,d in c)
+                valid = [c for c in cands if legal(c)]
+                if not valid:
+                    # A direct L/Z witness may cross a full-cap legacy macro.
+                    # Search the whole slot for legal three-segment detours; never delete blocked demand.
+                    extra = [path(x0,y0,x1,y1,m,'HV') for m in range(ny)]
+                    extra += [path(x0,y0,x1,y1,m,'VH') for m in range(nx)]
+                    valid = [c for c in extra if legal(c)]
+                if valid: unresolved.discard(i)
+                else: unresolved.add(i)
+                best = min(valid or cands, key=lambda c: cost(c, bits)); chosen[i] = best
                 for y, x, d in best: (useH if d == 'H' else useV)[y, x] += bits
         # Interior zero-capacity crossings are real violations. Endpoint pin landings
         # alone were excluded in path(); retain all remaining demand and capacity.
@@ -377,6 +389,10 @@ class Plan:
         win_v = max(float((np.convolve(useH[:, ix], k, 'valid') / np.maximum(np.convolve(capH[:, ix], k, 'valid'), 1e-6)).max()) for ix in range(nx))
         win_h = max(float((np.convolve(useV[iy, :], k, 'valid') / np.maximum(np.convolve(capV[iy, :], k, 'valid'), 1e-6)).max()) for iy in range(ny))
         return {'gcell_um': G, 'window_um': G * WIN,
+                'routing_model': 'finite L/Z plus full-slot legal detours; every blocked crossing retained',
+                'unroutable_bundle_segments': len(unresolved),
+                'route_segments_over_500_um': sum(len(c)*G > HOP_MAX for c in chosen),
+                'longest_grid_route_um': max(len(c)*G for c in chosen),
                 'blocked_interior_cells': int(((capH <= 1e-6) & (useH > 0)).sum() + ((capV <= 1e-6) & (useV > 0)).sum()),
                 'full_vertical_cut_max': [round(float(full_v.max()), 3), round(float(full_v.argmax() * G), 1)],
                 'full_horizontal_cut_max': [round(float(full_h.max()), 3), round(float(full_h.argmax() * G), 1)],
@@ -406,7 +422,7 @@ def main():
     place = p.check_place(); hops = p.check_hops(); cuts = p.check_cuts()
     over = {c: r['len_max'] for c, r in hops.items() if r['len_max'] > HOP_MAX}
     pa_fail = {c: r['verdict'].get('FAIL', 0) for c, r in hops.items() if r['verdict'].get('FAIL')}
-    cut_bad = [k for k in ('full_vertical_cut_max', 'full_horizontal_cut_max') if cuts[k][0] > CUT_MAX] + \
+    cut_bad = (['unroutable_bundle_segments'] if cuts.get('unroutable_bundle_segments') else []) + [k for k in ('full_vertical_cut_max', 'full_horizontal_cut_max') if cuts[k][0] > CUT_MAX] + \
               [k for k in ('window_vertical_cut_max', 'window_horizontal_cut_max') if cuts[k] > CUT_MAX]
     not_planned = []
     ew = None
