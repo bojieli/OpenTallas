@@ -610,6 +610,10 @@
     "added_status_latency_ps": 6666.6,
     "added_data_return_latency_cycles": 0,
     "physical_adopted": false,
+    "uniform_s9_candidate_stages": 8,
+    "uniform_s9_candidate_FF": 128,
+    "uniform_s9_candidate_status_latency_cycles": 8,
+    "reset_consumer_obligations": "OPEN: each new relay rn pin is a new synchronous-reset consumer. Existing root2fd8 282FF/ACK does not cover these. Need explicit upstream reset-source/per-corner clock binding, producer ACK, distribution/pin-hop/cut proof and updated consumer census; BE rn0 logical connection is not physical proof.",
     "placement": "OPEN: no relay corridor admitted; 21.6um BGQ gaps cannot fit 32.4um cells plus20um W/E channels"
   },
   "all_qualified": false

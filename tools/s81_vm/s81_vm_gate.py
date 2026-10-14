@@ -95,6 +95,7 @@ def verilator_bin():
 for _n in ('be_hard_h_gold_s1', 'be_hard_h_tp'):
     _c = CASES[_n]
     CASES['fault6_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=6))
+    CASES['fault8_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=8))
 
 def build(out, tag, defines, params):
     obj = out / f'obj_{tag}'
