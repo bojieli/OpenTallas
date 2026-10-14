@@ -77,7 +77,7 @@ module qkd_seq_core #(parameter integer HEADS=2, Q_FP32=0) (
         .hc(hc), .tk(tk), .fault(kst[9]), .fault_cause(kst[8:0]));
 endmodule
 
-module qkd_seq_xs (
+module qkd_seq_xs #(parameter integer HEADS=2) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire          x_v,
@@ -95,7 +95,7 @@ module qkd_seq_xs (
 );
     wire rr;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
-    ot_qkvd_seq_m_store #(.DW(128), .XS(40), .KD(8)) u_body (.clk(ck), .rst_n(rr), .x_v(x_v), .x_cls(x_cls), .x_d(x_d),
+    ot_qkvd_seq_m_store #(.HEADS(HEADS), .DW(128), .XS(40), .KD(8)) u_body (.clk(ck), .rst_n(rr), .x_v(x_v), .x_cls(x_cls), .x_d(x_d),
         .qpop(qpop), .kpop(kpop), .kidx(kidx), .kwgo(kwgo), .kwn(kwn), .q({q_e, q_w}), .kw({kw_e, kw_w}));
 endmodule
 
@@ -183,7 +183,7 @@ module qkd_seq #(parameter integer HEADS=2, Q_FP32=0) (
         .tk(tk), .kst(kst));
     genvar s, k;
     generate for (s = 0; s < 4; s = s + 1) begin : g_xs
-        qkd_seq_xs u_xs (.ck(ck), .rst_n(rst_n), .x_v(r_x3_d[523]), .x_cls(r_x3_d[522:520]), .x_d(r_x3_d[128*s +: 128]),
+        qkd_seq_xs #(.HEADS(HEADS)) u_xs (.ck(ck), .rst_n(rst_n), .x_v(r_x3_d[523]), .x_cls(r_x3_d[522:520]), .x_d(r_x3_d[128*s +: 128]),
             .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q_w(sq[s][127:0]), .q_e(sq[s][255:128]), .kw_w(skw[s][255:0]), .kw_e(skw[s][511:256]));
     end endgenerate
     // the store slices' two copies -> the full words of the W (copy 0) and E (copy 1) fans
