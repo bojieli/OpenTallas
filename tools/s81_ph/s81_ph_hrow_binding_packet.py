@@ -11,8 +11,8 @@ import pinreg_audit
 OUT=P.OUT/'binding_packet'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def ref(p):return dict(path=str(p),sha256=sha(p))
-def geometry(master):
- m=P.MP[master];p=ROOT/m['evidence']
+def geometry(master,metadata=None):
+ m=metadata if metadata is not None else P.MP[master];p=ROOT/m['evidence']
  if m['kind']=='closed_child_lef':
   t=child_lint.parse_lef(p.read_text());return {n:[dict(layer=r[0],rect_um=list(r[1:])) for r in v['rects']] for n,v in t['pins'].items()}
  d=json.load(open(p));return {n:v['boxes'] for n,v in d['pins'].items()}
@@ -24,18 +24,19 @@ def transformed(z,m,box):
   pts.append((x+z['x'],y+z['y']))
  return [min(x for x,y in pts),min(y for x,y in pts),max(x for x,y in pts),max(y for x,y in pts)]
 def main():
- a=argparse.ArgumentParser();a.add_argument('--contract',type=Path,default=Path('/home/ubuntu/wt/el1011-s81dieit/physical/s81_die_pins/v18/contract_trial.json'));a.add_argument('--consumed-plan',type=Path,default=Path('/home/ubuntu/wt/el1011-s81dieit/results/physical/die_iter_1012/s81/c7_native_classes_1013/plan.json.gz'));args=a.parse_args()
+ global OUT
+ a=argparse.ArgumentParser();a.add_argument('--candidate-dir',type=Path,default=P.OUT);a.add_argument('--contract',type=Path,default=Path('/home/ubuntu/wt/el1011-s81dieit/physical/s81_die_pins/v18/contract_trial.json'));a.add_argument('--consumed-plan',type=Path,default=Path('/home/ubuntu/wt/el1011-s81dieit/results/physical/die_iter_1012/s81/c7_native_classes_1013/plan.json.gz'));args=a.parse_args();P.OUT=args.candidate_dir.resolve();OUT=P.OUT/'binding_packet'
  d=json.load(open(P.OUT/'candidate.json'));OUT.mkdir(exist_ok=True)
- net=[];pins=[];geo={m:geometry(m) for m in {z['master'] for z in d['instances'].values()}}
+ net=[];pins=[];geo={m:geometry(m,d['masters'][m]) for m in {z['master'] for z in d['instances'].values()}}
  release_by={e['sink']:e['source'] for e in d['connectivity_edges'] if e['cls']=='local_reset_release'}
  for name,z in d['instances'].items():
-  ma=z['master'];m=P.MP[ma]
+  ma=z['master'];m=d['masters'][ma]
   for pin in ['ck','rst','rn']:
    if pin not in geo[ma]:continue
    kind='reference_clock_sink' if pin=='ck' else 'global_async_reset_sink' if pin=='rst' else 'local_reset_release_driver' if ma=='dsfd_die_rstsync' else 'local_reset_release_sink'
    source='TD.ck' if pin=='ck' else 'TD.rst' if pin=='rst' else name+'.rn' if kind.endswith('driver') else release_by[name]+'.rn'
    bs=[dict(layer=b['layer'],master_rect_um=b['rect_um'],slot_rect_um=transformed(z,m,b)) for b in geo[ma][pin]]
-   rect=bs[0]['slot_rect_um'];point=[(rect[0]+rect[2])/2,(rect[1]+rect[3])/2];face=m['pins'][pin]
+   rect=bs[0]['slot_rect_um'];point=[(rect[0]+rect[2])/2,(rect[1]+rect[3])/2]
    # Actual face is transformed by the legal orientation; no contract-face placeholder.
    x,y=point[0]-z['x'],point[1]-z['y'];f=min([(x,'W'),(y,'S'),(m['w']-x,'E'),(m['h']-y,'N')])[1]
    pins.append(dict(instance=name,master=ma,pin=pin,kind=kind,rtl_source=source,orientation=z['orient'],origin_slot_um=[z['x'],z['y']],pin_slot_um=point,pin_face=f,boxes=bs,evidence=m['evidence'],evidence_sha256=m['sha256'],global_die_coordinates=None,physical_producer_binding=None if pin in ['ck','rst'] else source))
@@ -44,9 +45,10 @@ def main():
  masters={}
  timing_facts={}
  for ma in sorted(geo):
-  m=P.MP[ma];e=dict(master=ma,instances=sum(z['master']==ma for z in d['instances'].values()),pin_evidence=m['evidence'],pin_evidence_sha256=m['sha256'],kind=m['kind'],insertion_corners=None,final_ss_lib=None,final_ff_lib=None,status='RELAY FINAL ROUTED ETMS/INSERTION PENDING')
-  if ma in P.CHILDREN:
-   directory=ROOT/'physical/ref_tile'/P.CHILDREN[ma]/'views'/ma;p=directory/'insertion.json';ins=json.load(open(p));e.update(insertion=ref(p),insertion_corners={c:ins[c]['boundary'] for c in ['ss','tt','ff']},final_ss_lib=ref(directory/(ma+'_ss.lib')),final_ff_lib=ref(directory/(ma+'_ff.lib')),status='CLOSED child views; parent delivery/timing not qualified')
+  m=d['masters'][ma];e=dict(master=ma,instances=sum(z['master']==ma for z in d['instances'].values()),pin_evidence=m['evidence'],pin_evidence_sha256=m['sha256'],kind=m['kind'],insertion_corners=None,final_ss_lib=None,final_ff_lib=None,status='RELAY FINAL ROUTED ETMS/INSERTION PENDING')
+  kit=P.CHILDREN.get(ma,ma+'_m5');directory=ROOT/'physical/ref_tile'/kit/'views'/ma
+  if (directory/'insertion.json').exists():
+   p=directory/'insertion.json';ins=json.load(open(p));e.update(insertion=ref(p),insertion_corners={c:ins[c]['boundary'] for c in ['ss','tt','ff']},final_ss_lib=ref(directory/(ma+'_ss.lib')),final_ff_lib=ref(directory/(ma+'_ff.lib')),status='CLOSED child views; parent delivery/timing not qualified')
    timing_facts[ma]={c:dict(liberty=ref(directory/(ma+'_'+c+'.lib')),pins=pinreg_audit.parse_lib(directory/(ma+'_'+c+'.lib'))['pins'],units='ps; all raw lookup values retained; original Liberty supplies axes; no load/slew interpolation assumed') for c in ['ss','ff']}
   masters[ma]=e
  contract=json.load(open(args.contract));slots=[s for s in contract['slots'] if 'hrow' in s.get('name','')];old={s.get('cell'):s for s in slots if s.get('kind')=='tile'}
@@ -60,7 +62,7 @@ def main():
  mapping=dict(consumed_contract_hrow_slots=slots,actual_retained_c7_instances=oldinst,clock_face_comparisons=compare,new_masters=masters,new_instance_map=d['instances'],new_clock_roots=88,new_rst_sinks=61,new_rn_links=27,default_numerical_behavior_changed=False,selected_parameters_default_off=True,logical_die_role_evidence='RTL describes primary hidden-row store; contract note says stage37..39. Exact production die identity/role must be resolved by root.')
  with gzip.open(OUT/'closed_child_ss_ff_timing_facts.json.gz','wt') as f:json.dump(timing_facts,f,separators=(',',':'))
  packet['closed_child_timing_facts']=ref(OUT/'closed_child_ss_ff_timing_facts.json.gz')
- packet['missing_final_relay_timing_masters']=[m for m in masters if m not in P.CHILDREN]
+ packet['missing_final_relay_timing_masters']=[m for m,v in masters.items() if v['final_ss_lib'] is None]
  for name in ['native207_evidence.json','native207_consumed_contract_slice.json']:
   side=OUT/name
   if side.exists():

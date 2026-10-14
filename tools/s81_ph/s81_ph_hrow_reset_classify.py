@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Trace actual mapped reset cones, stopping at sequential inputs; no driver inference."""
-import collections,gzip,hashlib,json,re
+import argparse,collections,gzip,hashlib,json,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];OUT=ROOT/'results/arch/s81_hrow_native_placement_1013/reset_classification'
 def blocks(s,kind):
@@ -18,10 +18,13 @@ def prop(s,n):
 def uses(expr,pin):return expr is not None and bool(re.search(r'(?<![\w])'+re.escape(pin)+r'(?![\w])',expr))
 def ref(p):return dict(path=str(p.relative_to(ROOT)),sha256=hashlib.sha256(p.read_bytes()).hexdigest())
 def main():
+ global OUT
+ ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,default=OUT);ap.add_argument('--inputs',type=Path);a=ap.parse_args();OUT=a.out.resolve();INPUTS=a.inputs.resolve() if a.inputs else OUT
+ def available(name):return OUT/name if (OUT/name).exists() else INPUTS/name
  libraries={};evidence={};raw={};paths={}
  for corner in ['SS','FF']:
   cells={};provenance=[]
-  for file in sorted(OUT.glob('*_RVT_'+corner+'.lib.gz')):
+  for file in sorted(INPUTS.glob('*_RVT_'+corner+'.lib.gz')):
    text=gzip.open(file,'rt').read();provenance.append(ref(file))
    for name,body,full in blocks(text,'cell'):
     ps={n:{'direction':prop(b,'direction'),'function':prop(b,'function'),'clock':prop(b,'clock'),'arcs':[{'timing_type':prop(a,'timing_type'),'related_pin':prop(a,'related_pin'),'when':prop(a,'when'),'body':a} for _,a,_ in blocks(b,'timing')]} for n,b,_ in list(blocks(body,'pin'))+list(blocks(body,'bus'))}
@@ -29,7 +32,8 @@ def main():
     cells[name]={'pins':ps,'sequential':seq};raw[(corner,name)]=(file,full)
   libraries[corner]=cells;evidence[corner]=provenance
  candidate=json.load(open(ROOT/'results/arch/s81_hrow_native_placement_1013/candidate.json'));masters={};used=set()
- for file in sorted(list(OUT.glob('*_6_final.v'))+list(OUT.glob('*_6_final.v.gz'))):
+ netlist_files={p.name.removesuffix('.gz'):p for base in [INPUTS,OUT] for p in list(base.glob('*_6_final.v'))+list(base.glob('*_6_final.v.gz'))}
+ for file in sorted(netlist_files.values()):
   master=file.name.removesuffix('.gz').removesuffix('_6_final.v');reset='rst' if master in ['dsfd_die_rstsync','dsfd_mtp_hrow_cbe','dsfd_mtp_hrow_cbw'] else 'rn';text=gzip.open(file,'rt').read() if file.suffix=='.gz' else file.read_text();cells={};fans=collections.defaultdict(list);aliases=collections.defaultdict(list)
   for cm in re.finditer(r'^\s*(\w+)\s+(\\\S+|[\w$]+)\s+\((.*?)\);',text,re.M|re.S):
    typ,name,body=cm.groups()
@@ -89,7 +93,7 @@ def main():
  subset=[]
  for c in ['SS','FF']:
   # Keep source license and exact cells. Full original templates remain available by source hash; this is cell-definition evidence, not a standalone timing library.
-  header=gzip.open(OUT/('SEQ_RVT_'+c+'.lib.gz'),'rt').read().split('library (')[0];pieces=[]
+  header=gzip.open(INPUTS/('SEQ_RVT_'+c+'.lib.gz'),'rt').read().split('library (')[0];pieces=[]
   for name in sorted(used):
    file,full=raw[(c,name)];pieces.append({'cell_type':name,'source_library':ref(file),'cell_definition_sha256':hashlib.sha256(full.encode()).hexdigest()});subset.append((c,name,full))
   path=OUT/('actual_reset_cells_'+c+'.lib.gz')
@@ -98,13 +102,13 @@ def main():
  for master,z in masters.items():
   reports={};active=[p for p in z['all_actual_async_sequential_pins'] if p['pin']=='RESETN']
   for c in ['ss','ff']:
-   path=OUT/(master+'_reset_'+c+'.rpt');checks=[]
+   path=available(master+'_reset_'+c+'.rpt');checks=[]
    for part in path.read_text().split('Startpoint:')[1:]:
     endpoint=re.search(r'Endpoint:\s*(.*?)\s*\((recovery|removal) check',part)
     slack=re.search(r'([-\d.]+)\s+slack \((MET|VIOLATED)\)',part)
     if endpoint and slack:checks.append({'startpoint':part.splitlines()[0].strip(),'endpoint':endpoint[1].strip(),'check_type':endpoint[2],'slack_ps':float(slack[1]),'result':slack[2]})
    missing=[{'instance':p['instance'],'pin':p['pin'],'check_type':check} for p in active for check in ['recovery','removal'] if not any(x['endpoint']==p['instance'].lstrip('\\') and x['check_type']==check for x in checks)]
-   reports[c]={'report':ref(path),'log':ref(OUT/(master+'_reset_'+c+'.log')),'checks':checks,'missing_active_async_endpoint_checks':missing,'worst_slack_ps':min(x['slack_ps'] for x in checks)}
+   reports[c]={'report':ref(path),'log':ref(available(master+'_reset_'+c+'.log')),'checks':checks,'missing_active_async_endpoint_checks':missing,'worst_slack_ps':min(x['slack_ps'] for x in checks)}
    assert not missing,(master,c,missing)
   z['routed_recovery_removal']=reports
   z['active_resetn_endpoint_count']=len(active)
@@ -112,13 +116,13 @@ def main():
   z['qualification_scope']='Explicit recovery/removal paths from original CLOSED routed ODB/SPEF and its export constraints, every active RESETN endpoint SS/FF. Leaf interface/local conditioner checks only; no production external source clock/reset delivery inferred.'
  retained={}
  for master in ['dsfd_mtp_hrow_ing','dsfd_mtp_hrow_hub']:
-  path=OUT/(master+'_6_finish.rpt');text=path.read_text();checks=[]
+  path=available(master+'_6_finish.rpt');text=path.read_text();checks=[]
   for part in text.split('Startpoint:')[1:]:
    endpoint=re.search(r'Endpoint:\s*(.*?)\s*\((recovery|removal) check',part,re.S)
    if not endpoint:continue
    mapped=re.findall(r'(\S+)/RESETN \(DFFASRHQNx1_ASAP7_75t_R\)',part)
    checks.append({'startpoint':part.splitlines()[0].strip(),'endpoint':endpoint[1].strip(),'check_type':endpoint[2],'explicit_mapped_reset_pins':mapped,'path_group':'asynchronous' if 'Path Group: asynchronous' in part else None,'reported_clock':'core_clk' if 'clock core_clk' in part else None})
   retained[master]={'retained_finish_report':ref(path),'actual_reported_reset_paths':checks,'status':'PARTIAL actual mapped RESETN report evidence. Final netlist/ODB purged; complete rst cone and all-sink coverage OPEN. Reported leaf core_clk does not establish production source identity.'}
- d={'schema':'opentallas.native_hrow_mapped_reset_classification.v1','status':'Partial actual mapped coverage; source clock/reset ABI still OPEN','masters':masters,'actual_cell_liberty_evidence':paths,'missing_closed_final_netlists':['dsfd_mtp_hrow_ing','dsfd_mtp_hrow_hub'],'missing_large_final_netlists':['dsfd_hrow_r1025','dsfd_hrow_r2079'],'retained_ing_hub_partial_report_evidence':retained,'actual_library_provenance':ref(OUT/'actual_liberty_provenance.json'),'producer_binding':None,'production_clock_delivery':None}
+ d={'schema':'opentallas.native_hrow_mapped_reset_classification.v1','status':'Partial actual mapped coverage; source clock/reset ABI still OPEN','masters':masters,'actual_cell_liberty_evidence':paths,'missing_closed_final_netlists':['dsfd_mtp_hrow_ing','dsfd_mtp_hrow_hub'],'missing_large_final_netlists':[m for m in ['dsfd_hrow_r1025','dsfd_hrow_r2079'] if m not in masters],'retained_ing_hub_partial_report_evidence':retained,'actual_library_provenance':ref(available('actual_liberty_provenance.json')),'producer_binding':None,'production_clock_delivery':None}
  (OUT/'mapped_reset_classification.json').write_text(json.dumps(d,indent=1)+'\n');print(json.dumps({m:d['endpoint_class_counts'] for m,d in masters.items()}))
 if __name__=='__main__':main()
