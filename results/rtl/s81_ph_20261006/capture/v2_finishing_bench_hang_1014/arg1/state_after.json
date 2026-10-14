@@ -1,0 +1,65 @@
+{
+  "name": "dsfd_capt_x8_dual-v2-bc2c93f92-arg1",
+  "status": "CANCELLED",
+  "updated": "2026-10-14T02:58:46-07:00",
+  "reason": "cancelled by a human (Superseded owned V2 variant: actual DRC1 ck/f_w248 M5 spacing; frozen shared-index bench SHA bcdcb5975a61e29b20630ccae1c13eb895da0e3b665dc55e9e1555be2eeee8d7 hangs. Exact source/process/failure evidence retained. No caught-mutant or qualification claim. Fresh structurally repaired V4 submitted.)",
+  "cancelled_at": "2026-10-14T02:58:08-07:00",
+  "finished_at": "2026-10-14T02:58:11-07:00",
+  "btrack": {
+    "bench_lint": {
+      "state": "done",
+      "tag": "bench_lint.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1",
+      "n": 1,
+      "started": "2026-10-13T22:57:28-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1/bench_src_a1"
+    },
+    "bench_capc_exact": {
+      "state": "done",
+      "tag": "bench_capc_exact.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1",
+      "n": 1,
+      "started": "2026-10-13T22:58:07-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1/bench_src_a1",
+      "wd_checked": 1791957540.7929564
+    },
+    "bench_capc_mut_kswap": {
+      "state": "running",
+      "tag": "bench_capc_mut_kswap.a1b1",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1",
+      "n": 1,
+      "started": "2026-10-13T23:06:19-07:00",
+      "stage_source": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1/bench_src_a1",
+      "wd_checked": 1791970714.624078,
+      "quiet_output_reported": "2026-10-14T02:38:35-07:00"
+    }
+  },
+  "events": [
+    "2026-10-13T22:56:49-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/dsfd_capt_x8_dual-v2-bc2c93f92-arg1.json",
+    "2026-10-13T22:56:51-07:00 STRUCTURE-REPEAT: 2 failed routes of dsfd_capt_x8_dual since its last CLOSED; exemption class near_miss_finishing: loop-submitted finishing variant g1 of near miss dsfd_capt_x8_dual-v2-bc2c93f92 (place density / hold margin only, same structure; at most 2 per near miss)",
+    "2026-10-13T22:56:51-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/dsfd_capt_x8_dual/pre_gpl.tcl'] but no macro LEF resolved from the commands",
+    "2026-10-13T22:56:54-07:00 CLOCK-RULE at submit: 5,744 sinks on the largest root <= 15,000; measured TT insertion 177.6 ps, leaf spread 9.8 ps",
+    "2026-10-13T22:56:54-07:00 REF_GATE WARN (refuse): pins: 1-bit vector ports ['ck', 'rst', 'ckv', 'rsv', 't_ho']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0]) (fix: declare them scalar in RTL)",
+    "2026-10-13T22:57:06-07:00 benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)",
+    "2026-10-13T22:57:19-07:00 git-mirror sync bc2c93f9283e via upstream in 2s + extract 8s; 2828 views / 5.2 GB hard-linked from the host view store",
+    "2026-10-13T22:57:24-07:00 source bc2c93f9283e synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1/src",
+    "2026-10-13T22:57:28-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-13T22:57:34-07:00 launched route (attempt 1) on ot-epyc1tb",
+    "2026-10-13T22:58:03-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-13T22:58:07-07:00 bench track: launched bench_capc_exact (bench_capc_exact.a1b1) beside route",
+    "2026-10-13T23:06:16-07:00 bench track: bench_capc_exact PASS (rc=0) work: [('cases', 9)]",
+    "2026-10-13T23:06:19-07:00 bench track: launched bench_capc_mut_kswap (bench_capc_mut_kswap.a1b1) beside route",
+    "2026-10-13T23:09:03-07:00 TEXTBOOK-LINT route.a1: WARN dsfd_capt_x8_dual cells 38,019 flops 10,183 depth 240.0 ps util 0.3657 reach 0.0 um (1.6 s) || INFO clock_roots max_root_sinks=5744 root=port:ck[0] rule=PASS: 5,744 sinks on the largest root <= 15,000; measured TT insertion 177.6 ps, leaf spread 9.8 ps || WARN util_channel: utilisation 36.6% outside 45%-65% (std 5724 + macro 0 um2 in 15653 um2): shrink the outline (long wires / sparse placement)",
+    "2026-10-13T23:30:22-07:00 route done (rc=0)",
+    "2026-10-13T23:31:25-07:00 verdict waits for the parallel bench track",
+    "2026-10-14T02:38:35-07:00 observation: bench_capc_mut_kswap wrote no file for 3 h; process preserved",
+    "2026-10-14T02:58:08-07:00 cancel requested: Superseded owned V2 variant: actual DRC1 ck/f_w248 M5 spacing; frozen shared-index bench SHA bcdcb5975a61e29b20630ccae1c13eb895da0e3b665dc55e9e1555be2eeee8d7 hangs. Exact source/process/failure evidence retained. No caught-mutant or qualification claim. Fresh structurally repaired V4 submitted.",
+    "2026-10-14T02:58:11-07:00 CANCELLED: cancelled by a human (Superseded owned V2 variant: actual DRC1 ck/f_w248 M5 spacing; frozen shared-index bench SHA bcdcb5975a61e29b20630ccae1c13eb895da0e3b665dc55e9e1555be2eeee8d7 hangs. Exact source/process/failure evidence retained. No caught-mutant or qualification claim. Fresh structurally repaired V4 submitted.)",
+    "2026-10-14T02:58:46-07:00 bulk release refused: near-miss route retained (ph_views/vm_master/routes/s81vm-clt-bca3ab44b-tc-rd-pd40/dsfd_vm_clt/corner_sta.json 37.78 -17.75\nRETAIN near-miss route (TT/FF >= -100 ps, not closed); set NEAR_MISS_RELEASE=1 once the element closes)"
+  ],
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1"
+}

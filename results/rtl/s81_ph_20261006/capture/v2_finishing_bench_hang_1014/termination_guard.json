@@ -1,0 +1,22 @@
+[
+  {
+    "tag": "arg1",
+    "pid": 999608,
+    "start_ticks": "94032460",
+    "cmd": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1/bench/obj_m1/sim +UNORD +STIM=/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1/bench/stim_mix.txt ",
+    "cwd": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1/bench_src_a1",
+    "signal": "SIGTERM via pidfd",
+    "source_tb_sha256": "bcdcb5975a61e29b20630ccae1c13eb895da0e3b665dc55e9e1555be2eeee8d7",
+    "alive_after_1s": false
+  },
+  {
+    "tag": "arg2",
+    "pid": 1012284,
+    "start_ticks": "94037941",
+    "cmd": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg2/bench/obj_m1/sim +UNORD +STIM=/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg2/bench/stim_mix.txt ",
+    "cwd": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg2/bench_src_a1",
+    "signal": "SIGTERM via pidfd",
+    "source_tb_sha256": "bcdcb5975a61e29b20630ccae1c13eb895da0e3b665dc55e9e1555be2eeee8d7",
+    "alive_after_1s": false
+  }
+]

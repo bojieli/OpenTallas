@@ -1,0 +1,8 @@
+OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); orfs corner WC, hold corners WC,BC
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/ref_tile/dsfd_capt_x8_dual/signoff.sdc]
+view=asap7 corner=TT block=dsfd_capt_x8_dual top=dsfd_capt_x8_dual purpose=signoff_target
+  pnr:   wirelength=228169 um vias=439892 DRC=1 antenna_nets=0 Fmax=1551.76 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92-arg1/routes/dsfd_capt_x8_dual_v2_bc2c93f92_arg1/physical.json
