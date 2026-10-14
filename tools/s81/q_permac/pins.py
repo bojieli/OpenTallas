@@ -2,7 +2,7 @@
 offset 0.012), die-facing pins on M5/M3: ctl S face (operands from the S bank), mac N face (p* results to the N bank)."""
 import json,math
 NETS=json.load(open('port_nets.json'))
-H=216.0; WC=41.04; WM=214.272
+H=216.0; WC=49.68; WM=214.272
 C,M0,M1='ot_s81_q_ctl_native_graph','ot_s81_q_mac0_native_graph','ot_s81_q_mac1_native_graph'
 def idx(mod,ports):
     out={}

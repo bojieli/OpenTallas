@@ -2786,6 +2786,8 @@ XB_RGAP_FIRST = False          # --xb-rgap-first (s81-die v17): the x relay site
 # up to 1,244 um from the banks.  An owned site beside the DRIVER station reaches both banks of its slot (<= ~360 um, bank
 # pair limit 407) and the next station's E-end xai / xbi (<= ~290 um, limit 500).  Register counts (cycles) unchanged.
 X_SITE_PAIR = False
+HOP_PLAN_R = {}                # --hop-pair: planned hop -> its effective plan reach (pair limit - margin)
+HOP_ITER = 0                   # --hop-iter N: re-plan the hop fix on the built die up to N times (new over-limit hops)
 HOP_PAIR = 0.0                 # --hop-pair UM: hop-fix plans each hop against its real pair limit minus UM (pin spread margin)
 XSITES = {}                    # (frame, slot) -> [(x, y) xa site, (x, y) xb site]  (lower-left corners)
 CK_RULE = False               # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
@@ -3491,6 +3493,8 @@ def hop_plan(m):
                     R = min(R, lim_ - HOP_PAIR)
             if L > R or (hard and L > PIN_SEG):
                 plan[(eps[0][0], eps[0][1], e[0], e[1])] = (round(L, 1), a, b, cls)
+                if pair is not None:
+                    HOP_PLAN_R[(eps[0][0], eps[0][1], e[0], e[1])] = R
     return plan
 
 
@@ -3508,6 +3512,20 @@ def build_r8(variant=None):
         finalize_r8(m0)
         HOP_PLAN = hop_plan(m0)
         RLY_FACES.clear()
+        for it_ in range(HOP_ITER):
+            # --hop-iter N (s81-die v18, 10-14): the pass-2 build moves relays (hop-fix stations change the occupancy the
+            # column relays and the relay-progress fix see), so a hop pass 1 never had can come out over its limit
+            # (xsp2: rt_<c>_2b_y3 517-527 um on all 128 frames, unplanned).  Re-plan on the built die and rebuild until
+            # no new over-limit hop appears (each hop keeps its first plan; register counts only grow where geometry
+            # needs a stage).
+            m1 = build_r8(variant)
+            finalize_r8(m1)
+            add_ = {k_: v_ for k_, v_ in hop_plan(m1).items() if k_ not in HOP_PLAN}
+            RLY_FACES.clear()
+            print('OT_HOP_ITER %d new planned hops %d' % (it_ + 1, len(add_)), file=sys.stderr)
+            if not add_:
+                break
+            HOP_PLAN.update(add_)
     variant = dict(variant or {})
     W, H = DIE
     insts, regions, notes = [], [], []
@@ -5281,6 +5299,8 @@ def _hop_fix(m, P):
             d0, l0 = by[eps[0][0]], by[e[0]]
             R = HOP_R_FWD if fwd else (HOP_R_HUB if (cls == 'hub' and HOP_R_HUB and not (is_glue(d0.master) and is_glue(l0.master)))
                                        else HOP_R_CC)
+            if HOP_PAIR and not fwd and key in HOP_PLAN_R:
+                R = min(R, HOP_PLAN_R[key] + HOP_PAIR)     # --hop-pair: the hop's own pair reach (the gate's limit)
             n = math.ceil(L / (R - 20.0) - 1e-9) - 1
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
             if fwd:
@@ -8274,6 +8294,8 @@ def die_options(ap):
                     'station (station | site | sequencer | ROMs) and the station takes xai / xbi at the E end of its S face')
     ap.add_argument('--hop-pair', type=float, default=0.0, help='s81-die v18: hop-fix plans every common-clock hop against its '
                     'real pair limit (pair_check, the gate\'s limit) minus UM of pin-spread margin; 0 = flat --hop-r-cc only')
+    ap.add_argument('--hop-iter', type=int, default=0, help='s81-die v18: re-plan the hop fix on the built die up to N times '
+                    '(hops the pass-2 build created over their limit get their stage); 0 = one plan (unchanged)')
     ap.add_argument('--x-site-pair', action='store_true', help='s81-die v18 frame-template relay-site repair: two owned relay '
                     'sites in the --xb-rgap gap E of every slot station, lower = xa_<r>_<s+1>, upper = xb_<r>_<s+1> (the lanes '
                     'that station drives); needs --xb-rgap-first')
@@ -8384,8 +8406,9 @@ def apply_options(a):
     global XB_RGAP_FIRST, X_SITE_PAIR
     XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
     X_SITE_PAIR = bool(getattr(a, 'x_site_pair', False))
-    global HOP_PAIR
+    global HOP_PAIR, HOP_ITER
     HOP_PAIR = float(getattr(a, 'hop_pair', 0.0) or 0.0)
+    HOP_ITER = int(getattr(a, 'hop_iter', 0) or 0)
     assert not X_SITE_PAIR or XB_RGAP_FIRST, '--x-site-pair needs --xb-rgap-first (and --xb-rgap)'
     FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
