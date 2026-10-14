@@ -1,0 +1,23 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/hbmqs2240-ovshared861
+ot-run: ot-epyc4       admits   599 GB (avail 826, growth 149, headroom 48, waiters 0/0 GB) load 43/128 running 14 disk 1089 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbmqs2240-ovshared861
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbmqs2240-ovshared861
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1716166-1791970802 after 0 s
+PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=184 priced=168
+QDQ_WIDE_CASE PASS m0
+PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=222 priced=168
+QDQ_WIDE_CASE PASS sk
+PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=2319 priced=168
+QDQ_WIDE_CASE PASS w3
+[2443584] %Fatal: tb_hgi_quant_wide_tput.sv:42: Assertion failed in tb_hgi_quant_wide_tput: FATAL: record 0 fault (MUT 1)
+QDQ_WIDE_CASE FAIL m1
+MISMATCH rec 0 word 0: 3e400000 != be700000
+MISMATCH rec 0 word 1: bd600000 != be800000
+MISMATCH rec 0 word 2: 3e700000 != bea00000
+MISMATCH rec 0 word 3: 3ee00000 != 3ea00000
+MISMATCH rec 0 word 4: 3e400000 != 3e700000
+QDQ_WIDE_CASE FAIL w1
+[2458560] %Fatal: tb_hgi_quant_wide_tput.sv:47: Assertion failed in tb_hgi_quant_wide_tput.unnamedblk2: FATAL: premature retirement record 0 lane 0 ack 0 target 2
+QDQ_WIDE_CASE FAIL r2
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1716166-1791970802): exit 0

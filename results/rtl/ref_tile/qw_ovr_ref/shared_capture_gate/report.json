@@ -1,0 +1,32 @@
+{
+  "source": "86159081f",
+  "model": "results/arch/hbm_native_1013/uncovered_structural_2240/ov_shared_capture_model.json",
+  "exact": {
+    "records": 8,
+    "words": 3328,
+    "cycles": 184,
+    "price": 168
+  },
+  "skew_control": {
+    "cycles": 222,
+    "words": 3328
+  },
+  "packet_control": {
+    "cycles": 2319,
+    "words": 3328
+  },
+  "mutants": [
+    "headerfails",
+    "lane-sectorfails",
+    "prematureretirementfails"
+  ],
+  "source_composition": [
+    "OVg",
+    "OVr shared512payload firstcapture",
+    "4xOVmeta"
+  ],
+  "edges_added": 0,
+  "FF_saved_vs_previous_split": 1536,
+  "adoption": "UNSELECTED parentallassignedslots/pins/perbitsetup/H100hold/clockopen",
+  "old_OVROW_closed": "stands asunselectedalternative, not usedinnewsharedcapturewrapper"
+}
