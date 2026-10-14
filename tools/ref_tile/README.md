@@ -141,6 +141,11 @@ is hardened leaves with their own roots. CLOSED tiles are not re-judged.
   all match one commit. A later HEAD never changes the receipt's source identity. The remote adjacent
   `<run>.source_snapshot.json` preserves the shipping manifest before execution; runtime image and environment
   provenance appear in the completed receipt. Old receipts are preserved in `source_binding_history/` when replaced.
+  A parser-failed v2 run can be recovered without rerouting with `tools/ref_tile/recover_gate_result.py KIT
+  --host ORIGINAL_HOST --run ORIGINAL_RUN --script ORIGINAL_SCRIPT --log ORIGINAL_LOG --route-commit EXPLICIT_COMMIT
+  [--cts]`. The adapter verifies the entire original manifest, staged source, execution script and archive verification
+  log, reruns local checks, and shares the live remote parser. It preserves the original identity and writes FAIL if
+  the explicitly requested route source or current daemon helpers differ; it never labels the receipt with current HEAD.
   Legacy receipts or receipts whose contents differ from the submitted commit/current daemon overlay are refused
   for unclosed tiles; regenerate their gate. CLOSED tiles continue to stand.
 - At submit a `ref_tile` job is REFUSED when the kit's gate result shows more than 15,000 sinks without passing

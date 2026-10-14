@@ -614,7 +614,13 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
     g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
-    secs = round(time.time() - t0)
+    analyse_remote(g, kd, spec, out, cts, binding, cap, host, round(time.time() - t0), local_snapshot)
+
+
+def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
+                   cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
+    """One parser for live runs and fully verified frozen-run recovery."""
+    fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if kv.get("GATE_SOURCE_ARCHIVE_SHA256") != binding["archive_sha256"]:
@@ -622,7 +628,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         return
     binding["remote_archive_verified"] = True
     binding["runtime_tool_provenance"] = re.findall(r"^GATE_TOOL_.*$", out, re.M)
-    local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
+    if local_snapshot is not None:
+        local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
     if kv.get("GATE_FLOW_RC") != "0":
         why = "; ".join(errs[:4]) or "see gate_remote.log"
         stall = any(re.search(r"tim(ed)? ?out|TimeoutExpired|exceeded", e, re.I) for e in errs) or \
