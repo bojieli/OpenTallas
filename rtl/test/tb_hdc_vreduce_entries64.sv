@@ -11,6 +11,7 @@ module tb_hdc_vreduce_entries64;
   cy=cy+1;
   if(aw)begin dataq[wi]=ad;addrq[wi]=aa;cycleq[wi]=cy;wi=wi+1;end
   if(bw)begin
+   if(!bb)begin $display("BUSY_RELEASE_EARLY");err=err+1;end
    if(ri>=wi || bd!==dataq[ri] || ba!==addrq[ri] || cy-cycleq[ri]!=3)begin
     if(err<10)$display("MISMATCH idx=%0d got=%h exp=%h addr=%h/%h delta=%0d",ri,bd,dataq[ri],ba,addrq[ri],cy-cycleq[ri]);err=err+1;
    end

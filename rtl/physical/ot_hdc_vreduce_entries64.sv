@@ -6,7 +6,7 @@ module ot_hdc_vreduce_region8 #(parameter integer AW=24) (
  input wire clk,rst_n,v_in,mx_in,sq_in,last_in,
  input wire [AW-1:0] addr_in,input wire [255:0] x_in,
  output reg v_out,output reg [AW+1:0] tag_out,output reg [31:0] data_out,
- output reg fault_out,output wire busy_out);
+ output reg fault_out,output reg busy_out);
  localparam integer SW=8,LA=3,LM=3,CD=21,NC=1,LC=0,TAG=AW+2;
  reg iv,imx,isq,ilast;reg [AW-1:0] ia;reg [255:0] ix;
  always @(posedge clk or negedge rst_n) if(!rst_n)iv<=0;else iv<=v_in;
@@ -68,17 +68,18 @@ module ot_hdc_vreduce_region8 #(parameter integer AW=24) (
   else begin v_out<=cv;fault_out<=(|fsq)||(|fch);end
  end
  always @(posedge clk)begin tag_out<=ct;data_out<=chunk;end
- assign busy_out=iv||(|vqs)||c_v||(|vch)||v_out;
+ always @(posedge clk or negedge rst_n) if(!rst_n) busy_out<=0;else busy_out<=iv||(|vqs)||c_v||(|vch)||v_out;
 endmodule
 module ot_hdc_vreduce_tail64 #(parameter integer AW=24,LV=7)(
  input wire clk,rst_n,input wire [7:0] rv,rb,rf,
  input wire [8*(AW+2)-1:0] rt,input wire [255:0] rd,
  output reg o_we,output reg [AW-1:0] o_addr,output reg [31:0] o_data,
- output wire busy,output reg fault);
+ output reg busy,output reg fault);
  localparam integer SW=64,NC=8,LC=3,LA=3,TAG=AW+2;
- reg cv;reg [TAG-1:0] ct;reg [255:0] chunk;reg [7:0] ibusy,ifault;
- always @(posedge clk or negedge rst_n)if(!rst_n)begin cv<=0;ibusy<=0;ifault<=0;end else begin cv<=rv[0];ibusy<=rb;ifault<=rf;end
- always @(posedge clk)begin ct<=rt[TAG-1:0];chunk<=rd;end
+ reg cv;reg [TAG-1:0] ct;reg [255:0] chunk;reg [7:0] ibusy,ifault,ival;reg [8*TAG-1:0] itags;
+ wire phase_fault=(|ival)&&((ival!=8'hff)||(itags!={8{itags[TAG-1:0]}}));
+ always @(posedge clk or negedge rst_n)if(!rst_n)begin cv<=0;ibusy<=0;ifault<=0;ival<=0;end else begin cv<=rv[0];ibusy<=rb;ifault<=rf;ival<=rv;end
+ always @(posedge clk)begin ct<=rt[TAG-1:0];itags<=rt;chunk<=rd;end
 `ifndef SYNTHESIS
  always @(posedge clk)if(rst_n && (|rv))begin
   if(rv!==8'hff)$fatal(1,"regional valid phase mismatch");
@@ -189,14 +190,14 @@ module ot_hdc_vreduce_tail64 #(parameter integer AW=24,LV=7)(
         if (!rst_n) begin o_we <= 1'b0; fault <= 1'b0; end
         else begin
             o_we <= sval[LV] && top_last;
-            fault <= (|ifault) || (|tf) || (|sf) || (sval[LV] && !top_last);
+            fault <= phase_fault || (|ifault) || (|tf) || (|sf) || (sval[LV] && !top_last);
         end
     end
     always @(posedge clk) begin
         o_addr <= st[LV][AW-1:0];
         o_data <= sv[LV];
     end
-    assign busy = (|ibusy) || cv || (|tv) || (|tvb) || (|sval) || (|tb) || o_we;
+    always @(posedge clk or negedge rst_n) if(!rst_n) busy<=0;else busy<=(|ibusy)||cv||(|tv)||(|tvb)||(|sval)||(|tb)||o_we;
 endmodule
 module ot_hdc_vreduce_entries64 #(parameter integer AW=24,LV=7)(
  input wire [7:0] ck_region,input wire ck_tail,rst_n,
@@ -214,5 +215,5 @@ module ot_hdc_vreduce_entries64 #(parameter integer AW=24,LV=7)(
  end endgenerate
  wire tbusy;
  ot_hdc_vreduce_tail64 #(.AW(AW),.LV(LV)) u_tail(.clk(ck_tail),.rst_n(rst_n),.rv(rv),.rb(rb),.rf(rf),.rt(rt),.rd(rd),.o_we(o_we),.o_addr(o_addr),.o_data(o_data),.busy(tbusy),.fault(fault));
- assign busy=v_in||(|rb)||tbusy;
+ assign busy=tbusy;
 endmodule
