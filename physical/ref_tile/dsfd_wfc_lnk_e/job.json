@@ -3,7 +3,7 @@
  "block": "dsfd_wfc_lnk",
  "ref_tile": true,
  "owner": "Claude:el1013-s81-wfcstg",
- "purpose": "S81 sp_wfc link bridge dsfd_wfc_lnk re-planned for the one-face slot (contract v16: all sp_wfc die pins on E): same RTL as the closed mtp-wfc_lnk-b-0cd6caa1b-tc (module text sha-pinned in rtl/dsrom_sys/mtp/closed_snap/manifest.json), same 216 x 151.2 outline; die link in AND out on E (1,030 pins), WFC in / out buses, credit, fault, clock and reset on W (toward the WFC), the unused DRAFT tap t_dw on N; layer cap M5 (the closed view routes to M7 and has its clock on S and the WFC buses on N: neither face has a channel when the tile sits over the VM-port tile at the slot's E face).",
+ "purpose": "S81 sp_wfc link bridge dsfd_wfc_lnk re-planned for the one-face slot (contract v16: all sp_wfc die pins on E): same RTL as the closed mtp-wfc_lnk-b-0cd6caa1b-tc (module text sha-pinned in rtl/dsrom_sys/mtp/closed_snap/manifest.json), outline 64.8 x 108 (the logic is 3.0k um2 of cells: the closed 216 x 151.2 was 10 % utilised, sized by its 513-b W / E / N faces; 108 um = the E face the slot has left over the 172.8-um VM-port tile on the 43.2-um child lattice); die link in AND out on E (1,030 pins), WFC in / out buses, credit, fault, clock and reset on W (toward the WFC), the unused DRAFT tap t_dw on N; layer cap M5 (the closed view routes to M7 and has its clock on S and the WFC buses on N: neither face has a channel when the tile sits over the VM-port tile at the slot's E face).",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {

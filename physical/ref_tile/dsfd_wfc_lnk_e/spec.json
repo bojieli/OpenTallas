@@ -19,8 +19,8 @@
   "rtl/common/ot_ratio_cdc_fifo.sv"
  ],
  "outline": {
-  "w": 216.0,
-  "h": 151.2
+  "w": 64.8,
+  "h": 108.0
  },
  "macros": [],
  "pins": {
@@ -64,7 +64,7 @@
   "owner": "Claude:el1013-s81-wfcstg",
   "branch": "claude/el1013-s81-wfcstg",
   "tag": "e1",
-  "purpose": "S81 sp_wfc link bridge dsfd_wfc_lnk re-planned for the one-face slot (contract v16: all sp_wfc die pins on E): same RTL as the closed mtp-wfc_lnk-b-0cd6caa1b-tc (module text sha-pinned in rtl/dsrom_sys/mtp/closed_snap/manifest.json), same 216 x 151.2 outline; die link in AND out on E (1,030 pins), WFC in / out buses, credit, fault, clock and reset on W (toward the WFC), the unused DRAFT tap t_dw on N; layer cap M5 (the closed view routes to M7 and has its clock on S and the WFC buses on N: neither face has a channel when the tile sits over the VM-port tile at the slot's E face).",
+  "purpose": "S81 sp_wfc link bridge dsfd_wfc_lnk re-planned for the one-face slot (contract v16: all sp_wfc die pins on E): same RTL as the closed mtp-wfc_lnk-b-0cd6caa1b-tc (module text sha-pinned in rtl/dsrom_sys/mtp/closed_snap/manifest.json), outline 64.8 x 108 (the logic is 3.0k um2 of cells: the closed 216 x 151.2 was 10 % utilised, sized by its 513-b W / E / N faces; 108 um = the E face the slot has left over the 172.8-um VM-port tile on the 43.2-um child lattice); die link in AND out on E (1,030 pins), WFC in / out buses, credit, fault, clock and reset on W (toward the WFC), the unused DRAFT tap t_dw on N; layer cap M5 (the closed view routes to M7 and has its clock on S and the WFC buses on N: neither face has a channel when the tile sits over the VM-port tile at the slot's E face).",
   "structural_change": "pin faces re-planned (die link both directions on E, WFC side on W) and layer cap M7 -> M5; RTL unchanged",
   "benches": [
    {
@@ -106,7 +106,7 @@
   "views_to": "physical/ref_tile/dsfd_wfc_lnk_e/views",
   "record_to": "results/rtl/ref_tile/dsfd_wfc_lnk_e"
  },
- "floorplan_why": "216 x 151.2 as closed (27.8k cells, 5,172 flops, one root, closed TT insertion 232 ps). Flow: E pins <-> link register pair <-> W pins; 1,030 pins on the 151.2-um E face at 2 M4 tracks (99 um), 1,035 on W (99 um). Cut W-E: 1,026 b over 151 um of M2 + M4 (~7,300 tracks) -> 0.14.",
+ "floorplan_why": "64.8 x 108: measured std area 2,972 um2 (first --cts gate, 216 x 151.2 with these pin faces: util 10 %, TT insertion 276 ps, spread 43 ps, 0 fail) -> util 0.47 here. The tile is pin-bound: 1,030 die-link pins on the 108-um E face at 2 M4 tracks (99 um), 1,035 on W (99 um), the unused DRAFT tap t_dw (513) on N. Height 108: the slot has 328.3 um, the VM-port tile takes y 43.2..216, this tile y 216..324. Cut W-E: 1,026 b over 108 um of M2 + M4 (~5,200 tracks) -> 0.20.",
  "children": [],
  "inter": [],
  "recipe": 2,
