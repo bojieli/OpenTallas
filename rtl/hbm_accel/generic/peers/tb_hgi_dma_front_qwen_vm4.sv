@@ -71,7 +71,7 @@ module tb_hgi_dma_front_qwen_vm4;
       ot_hgi_su_ctlw_native_h #(.LWB(16),.LQ(10),.LQSRAM(1)) ctl(
         .clk(cclk[q]),.clk_p0(cclk[q]),.clk_p1(cclk[q]),.clk_p2(cclk[q]),.clk_p3(cclk[q]),.rst_n(rst_n),
         .wst_go_i(stgo[q]),.wdr_go_i(drgo[q]),.lo_i({120'b0,su_lo}),.hi_i({120'b0,su_hi}),.lb_i(102'b0),.rv_i(6'b1),.dsec_i(126'b0),
-        .d_lo_i({24'b0,su_lo}),.d_hi_i({24'b0,su_hi}),.d_lb_i(34'b0),.d_rv_i(2'b01),.d_dsec_i(42'b0),.d_os_i(1'b0),.sl_i(2'(q)),
+        .d_lo_i({24'b0,su_lo}),.d_hi_i({24'b0,su_hi}),.d_lb_i({17'b0,17'(su_lo)}),.d_rv_i(2'b01),.d_dsec_i(42'b0),.d_os_i(1'b0),.sl_i(2'(q)),
         .wst_go_o(),.wdr_go_o(),.d_os_o(),.lo_o(),.hi_o(),.lb_o(),.rv_o(),.dsec_o(),.d_lo_o(),.d_hi_o(),.d_lb_o(),.d_rv_o(),.d_dsec_o(),
         .wst_dn_i(1'b1),.wdr_dn_i(1'b1),.ovf_i(1'b0),
         .wrq(su_rq[q*128+:128]),.wrq_cr(su_rc[q*8+:8]),.wrr(su_rr[q*2056+:2056]),
@@ -181,7 +181,7 @@ module tb_hgi_dma_front_qwen_vm4;
     always @(posedge clk) cyc <= cyc + 1;
     task automatic load(input [2:0] f, input longint sbase, input longint sstr, input integer dbase, input integer dstr,
                         input integer m, input integer n);
-        integer es, t0, o, i, e0, dma_cycles; longint a; reg [31:0] want;
+        integer es, t0, o, i, e0, dma_cycles;bit dma_ok; longint a; reg [31:0] want;
         begin
             es = (f == 0 || f == 5) ? 4 : (f == 1) ? 2 : 1; e0 = errs;
             su_run(0,0,65535,1,0);
@@ -196,10 +196,10 @@ module tb_hgi_dma_front_qwen_vm4;
               end
               begin
                 while (!mv_done && !mv_fault && cyc - t0 < 50000) @(negedge clk);
-                dma_cycles=cyc-t0;
+                dma_cycles=cyc-t0;dma_ok=mv_done;
               end
             join
-            if (!mv_done) begin $display("FAIL load f %0d m %0d n %0d: done %0d fault %0d", f, m, n, mv_done, mv_fault); errs = errs + 1; end
+            if (!dma_ok) begin $display("FAIL load f %0d m %0d n %0d: done %0d fault %0d", f, m, n, mv_done, mv_fault); errs = errs + 1; end
             else begin
                 tcyc = tcyc + dma_cycles;
                 su_run(2,0,65535,0,1); tbytes = tbytes + m * n * 4;

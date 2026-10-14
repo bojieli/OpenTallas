@@ -26,3 +26,10 @@ Run using ot-run with memory admission after complete input transfer. The
 run.sh argument1 selects observed front MUT1/BF16 or MUT6/ignored capacity
 credits, argument2 selects phase61 or487. +CHECK_PRICE on the resulting
 executable enforces the unchanged1.10 bound with a real fatal on failure.
+
+Initial8a451a3cc run reached all147LOADs with actual macros, but the fixture
+reported65errors: scratch d_lb remainedzero, so its eight sectors overwrote
+first64INT8 destinationwords; the128word FP32 donepulse was inspected after
+waiting concurrentSUtraffic and was missed. Both are corrected explicitly:
+scratch d_lb=su_lo and DMA done captured by the timing monitor. The original
+failed receipt remains initial_fixture_failure.log and conveys no acceptance.
