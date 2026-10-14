@@ -2,7 +2,7 @@
 import hashlib,json,re,subprocess,tempfile
 from pathlib import Path
 import rtl_v41x_window_stream_gate as stream
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).absolute().parents[1]
 SOURCES=[*stream.SOURCES,ROOT/'rtl/chip/ot_chip_v41x_window_retention.sv',ROOT/'rtl/test/tb_ds_layer_retention_compose.sv']
 
 def run():
