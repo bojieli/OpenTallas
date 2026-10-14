@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-cd /srv/opentallas-scratch/codex/qkez-phase-ee277
+cd "${1:-$(dirname "$0")/..}"
 python3 - <<'PY'
 import hashlib,json
 from pathlib import Path
