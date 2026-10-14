@@ -53,7 +53,7 @@ proc clock_tree_synthesis {args} {
     if {$net eq "NULL"} { error "ENGC macro clock disconnected: $child" }
     $it connect $net
     [$it getInst] setDoNotTouch 1
-    puts "ENGC reset clock [$it getName] = u_${child}/ck net [$net getName]"
+    puts "ENGC reset clock [[$it getInst] getName]/[[$it getMTerm] getName] = u_${child}/ck net [$net getName]"
   }
   estimate_parasitics -placement
 }

@@ -98,21 +98,21 @@ module dsfd_engram_c #(
     // The two-stage conditioners are placed at the corresponding macro reset pins;
     // stage-to-stage and final stage-to-child reset timing remain ordinary checks.
     wire rst_win_n;
-    ot_reset_sync u_rst_win (.clk(ck_win), .async_rst_n(rst[0]), .sync_rst_n(rst_win_n));
+    ot_engc_reset_sync u_rst_win (.clk(ck_win), .async_rst_n(rst[0]), .sync_rst_n(rst_win_n));
     wire rst_io_n;
-    ot_reset_sync u_rst_io (.clk(ck_io), .async_rst_n(rst[0]), .sync_rst_n(rst_io_n));
+    ot_engc_reset_sync u_rst_io (.clk(ck_io), .async_rst_n(rst[0]), .sync_rst_n(rst_io_n));
     wire rst_ws_n;
-    ot_reset_sync u_rst_ws (.clk(ck_ws), .async_rst_n(rst[0]), .sync_rst_n(rst_ws_n));
+    ot_engc_reset_sync u_rst_ws (.clk(ck_ws), .async_rst_n(rst[0]), .sync_rst_n(rst_ws_n));
     wire rst_pb1_n;
-    ot_reset_sync u_rst_pb1 (.clk(ck_pb1), .async_rst_n(rst[0]), .sync_rst_n(rst_pb1_n));
+    ot_engc_reset_sync u_rst_pb1 (.clk(ck_pb1), .async_rst_n(rst[0]), .sync_rst_n(rst_pb1_n));
     wire rst_pb0_n;
-    ot_reset_sync u_rst_pb0 (.clk(ck_pb0), .async_rst_n(rst[0]), .sync_rst_n(rst_pb0_n));
+    ot_engc_reset_sync u_rst_pb0 (.clk(ck_pb0), .async_rst_n(rst[0]), .sync_rst_n(rst_pb0_n));
     wire rst_pb2_n;
-    ot_reset_sync u_rst_pb2 (.clk(ck_pb2), .async_rst_n(rst[0]), .sync_rst_n(rst_pb2_n));
+    ot_engc_reset_sync u_rst_pb2 (.clk(ck_pb2), .async_rst_n(rst[0]), .sync_rst_n(rst_pb2_n));
     wire rst_lkp_n;
-    ot_reset_sync u_rst_lkp (.clk(ck_lkp), .async_rst_n(rst[0]), .sync_rst_n(rst_lkp_n));
+    ot_engc_reset_sync u_rst_lkp (.clk(ck_lkp), .async_rst_n(rst[0]), .sync_rst_n(rst_lkp_n));
     wire rst_sink_n;
-    ot_reset_sync u_rst_sink (.clk(ck_sink), .async_rst_n(rst[0]), .sync_rst_n(rst_sink_n));
+    ot_engc_reset_sync u_rst_sink (.clk(ck_sink), .async_rst_n(rst[0]), .sync_rst_n(rst_sink_n));
 
     ot_engc_t_win u_win (
         .ck(ck_win), .rst(rst_win_n), .f_win(f_win), .t_collective(t_collective[0]),
@@ -180,4 +180,15 @@ module ot_engc_ck_entry #(parameter integer N = 0) (input wire a, output wire y)
     end else begin : g_w
         assign y = a;          // N = 0: a wire (the spine's leaf buffer drives the child clock pin)
     end endgenerate
+endmodule
+
+// Kept two-stage local release conditioner. The parent clock aliases are
+// logically equal before physical clock-branch assignment; the canonicalize
+// keep-register hook must preserve every physical domain's two flops.
+module ot_engc_reset_sync(input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    (* keep = "true", dont_touch = "true", async_reg = "true" *) reg [1:0] reset_pipe;
+    always @(posedge clk or negedge async_rst_n)
+        if (!async_rst_n) reset_pipe <= 2'b00;
+        else reset_pipe <= {reset_pipe[0], 1'b1};
+    assign sync_rst_n = reset_pipe[1];
 endmodule
