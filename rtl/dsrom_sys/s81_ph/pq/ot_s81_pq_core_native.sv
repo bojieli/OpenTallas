@@ -225,7 +225,11 @@ module ot_s81_pq_core_native (
     wire [255:0] hq0, hq1;
     wire [9:0] he0, he1;
 `ifdef OT_PQ_QB_PHYS_SPLIT
+`ifdef OT_PQ_QB_ONE_BANK
+    ot_s81_pq_qb_split1_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
+`else
     ot_s81_pq_qb_split_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
+`endif
 `else
     ot_s81_pq_qb_sram u_qb (.clk(ck_qb),
 `endif
