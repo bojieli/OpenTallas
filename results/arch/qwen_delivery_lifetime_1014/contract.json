@@ -4,7 +4,7 @@
   "qualified": false,
   "production_composition": false,
   "assigned_pins": false,
-  "rtl_sha256": "4f8535bb5178eea2873ad1b25ae90079829b1a644a1caaf51ef6316044412aaf",
+  "rtl_sha256": "04200e6ce445014a3e1ea64ac44740a674b28bdbd1173dc4f62e0e125fae096b",
   "logical_topology": {
     "tiles": 768,
     "quad_recipients_per_tile": null,
@@ -20,11 +20,11 @@
   },
   "state": {
     "controller_Q_bits": 1985,
-    "bank_Q_bits": 1874,
-    "total_Q_bits": 31969,
+    "bank_Q_bits": 4322,
+    "total_Q_bits": 71137,
     "basis": "actual admitted Yosys0.52 proc/opt/memory_map production-parameter census; not mapped area or CTS",
-    "parallel_bank_Q_bits": 1922,
-    "parallel_total_Q_bits": 32737,
+    "parallel_bank_Q_bits": 4370,
+    "parallel_total_Q_bits": 71905,
     "superseded_3072_quad_estimate": "119521bits at16x192; incorrect actual transaction granularity, retained only historical component receipt"
   },
   "operation_scope": {
@@ -37,16 +37,16 @@
   },
   "event_payload_bits": {
     "controller_accept": 438,
-    "bank_issue": 71,
-    "bank_retire": 71,
+    "bank_issue": 95,
+    "bank_retire": 95,
     "bank_seal": 55,
     "dispatch_common": 428,
     "query": "170 at actual tile context candidate; precise event toggles and provenance separate"
   },
   "ordered_retire": {
-    "sequence_bits": 16,
-    "max_outstanding_per_recipient": 15,
-    "sequence_exhaustion": "blocks issues; no silent wrap",
+    "sequence_bits": 40,
+    "max_outstanding_per_recipient": 127,
+    "sequence_exhaustion": "physical40-bit space exceeds source-bound legal-operation maximum2^39; no mid-operation rollover fence or silent wrap",
     "out_of_order_or_duplicate": "sticky fault; requires ordered retirement or separately proven reorder adapter"
   },
   "cost_limits": {
@@ -57,10 +57,10 @@
     "pipeline_bubbles": "source acquire/all acceptance/full drain/release and fences; full native effect unmeasured"
   },
   "binding_owners": {
-    "actual_tile_acceptance": "/root/qwen_tile: a778c2ba6",
-    "cache_event_toggles": "/root/qwen_tile: c58d1436e",
+    "actual_tile_acceptance": "/root/qwen_tile:709403507; actual arithmetic/held-GO/pause proof ef32163ac/a422adeab",
+    "cache_event_toggles": "/root/qwen_tile:b646b9303 current queryseq40; exact native arithmetic join pending",
     "consumer_node_replay_seal": "/root/qwen_tile, pending actual trace/drain predicate and node context sideband",
-    "operation_vm_snapshot": "/root/qwen_vm/region_pilot, actual native ROW adapter in progress",
+    "operation_vm_snapshot": "/root/qwen_vm/region_pilot:9110bda97 actual ROW lease/provenance16; distinct40 parameterization pending",
     "full_actual_composition": "/root/qwen_die/x_delivery, pending actual production binding"
   },
   "pending_physical": [
@@ -69,15 +69,25 @@
     "local ordered-retire topology and buffering",
     "constructive subslots, clock/PG and assigned pins",
     "native throughput and whole-token cost",
-    "source-bound maximum query sequence count and wrap progress proof; wholeCC pause cannot freeze outstanding retirement"
+    "queued/pipelined event delivery instead of one-unACKed hit round-trip stalls",
+    "measured whole-field outstanding peak including actual registered event/ACK transport",
+    "spatial actual tagged acceptance reduction instead of768 serial callback edges"
   ],
   "parallel_alternative": {
     "module": "ot_qwen_xdelivery_ack_vector",
     "enabled_by_default": false,
     "capacity": "all48 recipients issue and retire simultaneously each live base edge",
-    "actual_burst_gate": "PASS48 requests,48 simultaneous issue/retire; one stale version cohort mutant and scalar-capacity mutant FAIL",
-    "pins_total_per_bank": 8790,
+    "actual_burst_gate": "PASS48 requests/edge plus49 outstanding requests per recipient, full40-bit identity; one stale-version, scalar-capacity, highbit-truncation and insufficient-counter-capacity mutants FAIL",
+    "pins_total_per_bank": 11094,
     "physical_capacity": "NOT_ASSIGNED_OR_QUALIFIED: actual48 independent tuple transport/wide-face delivery and registered admission needed",
     "full_field_events": "not synthesized from selected tile"
+  },
+  "sequence_bound": {
+    "commit": "b646b9303",
+    "path": "results/rtl/qwen_query_sequence40_1014/bound_and_interface.json",
+    "sha256": "af9f88c4d561dd7df01edc05059f991dcfe901e64cf064551451b35b3e3c370b",
+    "max_queries": 549755813888,
+    "query_rate": "actual x_re nonzero every active coherent edge, max1/tile/step",
+    "local_outstanding": "49-stage conservative local pipeline; actual field/event transport peak and buffering still require measured trace"
   }
 }

@@ -1,2 +1,2 @@
-PASS vector:48 simultaneous queries,48 simultaneous issue/retire, all-recipient drain, single stale version fault
-/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/tb_qwen_xdelivery_vector.sv:36: $finish called at 90000 (1ps)
+PASS vector:48 simultaneous queries,49 outstanding stages, all-recipient drain, stale version and full40-bit identity
+/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/tb_qwen_xdelivery_vector.sv:60: $finish called at 1130000 (1ps)

@@ -14,12 +14,20 @@ cases=[('positive',None,None,None),
  ('pending_retire_mutant','outstanding[j]!=0','1\'b0','seal waived outstanding'),
  ('vector_positive',None,None,None),
  ('vector_version_mutant','retire_version[g*32+:32]==version_q','1\'b1','one stale version escaped'),
- ('vector_capacity_mutant','assign issue_ready[g]=issue_match','assign issue_ready[g]=(g==0) && issue_match','parallel48 issue capacity lost')]
+ ('vector_capacity_mutant','assign issue_ready[g]=issue_match','assign issue_ready[g]=(g==0) && issue_match','parallel48 issue capacity lost'),
+ ('vector_seq_highbit_mutant','VECTOR_SEQ_TRUNCATION',None,'query sequence high bit truncated'),
+ ('vector_outstanding_capacity_mutant','parameter integer ENABLE=0, N=48, SEQ_W=40, COUNT_W=7\n','parameter integer ENABLE=0, N=48, SEQ_W=40, COUNT_W=4\n','49-stage outstanding capacity lost')]
 receipt={'scope':'LIFETIME_COMPONENT_ONLY_NOT_ACTUAL_TILE_VM_COMPOSITION',
  'sources':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (src,tb,root/'tb_qwen_xdelivery_vector.sv')},'cases':[]}
 for name,old,new,expected in cases:
  text=original
- if old:
+ if old=='VECTOR_SEQ_TRUNCATION':
+  for op in ['==','!=']:
+   a='issue_seq[g*SEQ_W+:SEQ_W]'+op+'issued'
+   b='issue_seq[g*SEQ_W+:32]'+op+'issued[31:0]'
+   assert text.count(a)==1
+   text=text.replace(a,b)
+ elif old:
   assert text.count(old)==1,(name,text.count(old))
   text=text.replace(old,new)
  variant=root/(name+'.sv');variant.write_text(text)

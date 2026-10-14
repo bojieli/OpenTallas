@@ -2,7 +2,7 @@
 // core levels. A seal is an explicit whole-consumer drain certificate; local
 // core_idle and cache response_capture are deliberately not connected here.
 module ot_qwen_xdelivery_ack_bank #(
-  parameter integer ENABLE=0, N=48, SEQ_W=16, COUNT_W=4,
+  parameter integer ENABLE=0, N=48, SEQ_W=40, COUNT_W=7,
   parameter integer ID_W=(N<2?1:$clog2(N))
 )(
   input wire clk, rst_n,
@@ -91,7 +91,7 @@ endmodule
 // input tuple retains its actual provenance; shared/current metadata is not
 // substituted for a late event. Physical wide-face delivery is still required.
 module ot_qwen_xdelivery_ack_vector #(
-  parameter integer ENABLE=0, N=48, SEQ_W=16, COUNT_W=4
+  parameter integer ENABLE=0, N=48, SEQ_W=40, COUNT_W=7
 )(
   input wire clk,rst_n,begin_v,fenced_clear,
   input wire [15:0] begin_context, input wire [31:0] begin_version,

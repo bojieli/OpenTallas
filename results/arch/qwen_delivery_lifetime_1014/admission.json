@@ -66,6 +66,38 @@
       "threads": 1,
       "exit": 0,
       "role": "controller current-source census"
+    },
+    {
+      "unit": "oth-ubuntu-1408830-1791968306",
+      "host": "ot-epyc4",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "seq40/count7 scalar+vector gates12cases"
+    },
+    {
+      "unit": "oth-ubuntu-1408832-1791968306",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "seq40/count7 scalar bank census"
+    },
+    {
+      "unit": "oth-ubuntu-1408829-1791968306",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "seq40/count7 vector bank census"
+    },
+    {
+      "unit": "oth-ubuntu-1408831-1791968306",
+      "host": "ot-epyc4",
+      "mem_GB": 4,
+      "threads": 1,
+      "exit": 0,
+      "role": "controller current-source census"
     }
   ]
 }

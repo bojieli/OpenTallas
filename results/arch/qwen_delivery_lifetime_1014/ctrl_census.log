@@ -6,14 +6,14 @@
  \----------------------------------------------------------------------------/
  Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
 
--- Running command `read_verilog -sv /srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv; hierarchy -top ot_qwen_xdelivery_lifetime_ctrl -chparam ENABLE 1 -chparam TILES 768 -chparam BANKS 16 -chparam TOKEN_W 16; proc; opt; memory_map; opt; stat; write_json ctrl.json' --
+-- Running command `read_verilog -sv /srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv; hierarchy -top ot_qwen_xdelivery_lifetime_ctrl -chparam ENABLE 1 -chparam TILES 768 -chparam BANKS 16 -chparam TOKEN_W 16; proc; opt; memory_map; opt; stat; write_json ctrl.json' --
 
-1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv
-Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv' to AST representation.
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv' to AST representation.
 Generating RTLIL representation for module `\ot_qwen_xdelivery_ack_bank'.
-Warning: Replacing memory \retired with list of registers. See /srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:54
-Warning: Replacing memory \issued with list of registers. See /srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:54
-Warning: Replacing memory \outstanding with list of registers. See /srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:54
+Warning: Replacing memory \retired with list of registers. See /srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:54
+Warning: Replacing memory \issued with list of registers. See /srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:54
+Warning: Replacing memory \outstanding with list of registers. See /srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:54
 Generating RTLIL representation for module `\ot_qwen_xdelivery_ack_vector'.
 Generating RTLIL representation for module `\ot_qwen_xdelivery_lifetime_ctrl'.
 Successfully finished Verilog frontend.
@@ -44,11 +44,11 @@ Removed 3 unused modules.
 4. Executing PROC pass (convert processes to netlists).
 
 4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
-Found and cleaned up 1 empty switch in `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Found and cleaned up 1 empty switch in `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
 Cleaned up 1 empty switch.
 
 4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
-Marked 5 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005 in module ot_qwen_xdelivery_lifetime_ctrl.
+Marked 5 switch rules as full_case in process $proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005 in module ot_qwen_xdelivery_lifetime_ctrl.
 Removed a total of 0 dead cases.
 
 4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
@@ -64,17 +64,17 @@ Converted 0 switches.
 <suppressed ~9 debug messages>
 
 4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
-Creating decoders for process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating decoders for process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
      1/18: $5$lookahead\accepted$2004[767:0]$2037
-     2/18: $4$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:218$1980[9:0]$2036
+     2/18: $4$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:218$1980[9:0]$2036
      3/18: $4$lookahead\accepted$2004[767:0]$2021
-     4/18: $3$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:218$1980[9:0]$2020
+     4/18: $3$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:218$1980[9:0]$2020
      5/18: $3$lookahead\accepted$2004[767:0]$2018
      6/18: $2$lookahead\accepted$2004[767:0]$2012
-     7/18: $2$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:218$1980[9:0]$2011
+     7/18: $2$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:218$1980[9:0]$2011
      8/18: $0\banks_begin[0:0]
      9/18: $1$lookahead\accepted$2004[767:0]$2010
-    10/18: $1$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:218$1980[9:0]$2009
+    10/18: $1$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:218$1980[9:0]$2009
     11/18: $0\next_context[15:0]
     12/18: $0\state[2:0]
     13/18: $0\held_version[31:0]
@@ -87,36 +87,36 @@ Creating decoders for process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opent
 4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
 
 4.9. Executing PROC_DFF pass (convert process syncs to FFs).
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\fault' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\fault' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2170' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\participants' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\participants' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2171' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\held_ib' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\held_ib' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2172' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\held_mode' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\held_mode' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2173' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\held_context' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\held_context' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2174' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\held_version' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\held_version' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2175' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\banks_begin' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\banks_begin' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2176' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\state' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\state' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2177' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\accepted' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\accepted' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2178' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\next_context' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.\next_context' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2179' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:218$1980' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.$bitselwrite$pos$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:218$1980' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2180' with positive edge clock.
-Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.$lookahead\accepted$2004' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Creating register for signal `\ot_qwen_xdelivery_lifetime_ctrl.$lookahead\accepted$2004' using process `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
   created $dff cell `$procdff$2181' with positive edge clock.
 
 4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
 
 4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
-Found and cleaned up 9 empty switches in `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
-Removing empty process `ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v3/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Found and cleaned up 9 empty switches in `\ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
+Removing empty process `ot_qwen_xdelivery_lifetime_ctrl.$proc$/srv/opentallas-scratch/codex/qwen-lifetime-1014-v4/ot_qwen_xdelivery_lifetime.sv:196$2005'.
 Cleaned up 9 empty switches.
 
 4.12. Executing OPT_EXPR pass (perform const folding).
@@ -1074,6 +1074,6 @@ Optimizing module ot_qwen_xdelivery_lifetime_ctrl.
 9. Executing JSON backend.
 
 Warnings: 3 unique messages, 3 total
-End of script. Logfile hash: 903e7ccfca, CPU: user 0.12s system 0.01s, MEM: 28.19 MB peak
+End of script. Logfile hash: 3d67248b34, CPU: user 0.11s system 0.01s, MEM: 30.20 MB peak
 Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
-Time spent: 31% 2x read_verilog (0 sec), 18% 3x opt_dff (0 sec), ...
+Time spent: 32% 2x read_verilog (0 sec), 18% 3x opt_dff (0 sec), ...
