@@ -4,6 +4,111 @@
   "optional_RTL_source": "2e054e8e9",
   "source_CLOSED_LEF_sha256": "03f7519e06e8f756f42b28382bd72c263a031113b060a12fa783d1f7a0e4b5d3",
   "data_request": "band10_request.json",
+  "historical_data_request_instance_names_not_adopted": true,
+  "current_data_cells": [
+    {
+      "instance": "u_be.u_fault_path.g_stage[0].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        600,
+        3517.776
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[1].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        200,
+        3517.776
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[2].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        20,
+        3300
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[3].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        20,
+        2880
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[4].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        20,
+        2460
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[5].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        20,
+        2040
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[6].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        20,
+        1620
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[7].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        20,
+        1200
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[8].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        20,
+        780
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[9].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        20,
+        360
+      ],
+      "source_epoch": "2e054e8e9",
+      "actual_placement": null
+    }
+  ],
+  "current_native_proof_commit": "14ee5b078",
+  "current_source_all_six_cases_pass": true,
   "cells": [
     {
       "instance": "u_be.u_fault_path.g_stage[0].g_local.u_rs",
@@ -737,7 +842,7 @@
   "extra_controller_individual_twoFF_capture_FF": 20,
   "total_new_consumer_plus_controller_FF": 200,
   "controller_capture_structure": "individual ordinary two-flop captures before reduction; no shared synchronizer, no conditioner used as collector",
-  "raw_reset_stopped_clock_gate": "source2e unit positive and common-RN/pre-AND mutants observed; native local gold/TP running",
+  "raw_reset_stopped_clock_gate": "source2e unit positive and common-RN/pre-AND mutants observed; fresh current-source default N0/common N10/local N10 gold+TP all six PASS at14ee5b078",
   "raw_driver_distribution_RC": null,
   "whole_parent_cut_proof": false,
   "allocator_grid_source_slot_binding": null,
