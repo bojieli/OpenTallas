@@ -7,7 +7,7 @@
   "port_gate": {
     "checked": 20359,
     "streams": 942,
-    "command": "python3 rtl/test/hbm_accel/b2_dma/compare_q5_ports.py results/rtl/b2_dma_q5_20261013/logs/fulltag_flat.log results/rtl/b2_dma_q5_20261013/logs/serial_split_partition.log",
+    "command": "python3 rtl/test/hbm_accel/b2_dma/compare_q5_ports.py results/rtl/b2_dma_q5_20261013/logs/fulltag_flat.log results/rtl/b2_dma_q5_20261013/logs/serial_go_pin_partition.log",
     "result": "PASS",
     "skipped": "Only explicitly marked reset-aborted record suffix; reset correctness independently checked by the real-port exact bench",
     "payloads": "all real request fields including K/R tags"
@@ -33,10 +33,10 @@
     "priced_unit_status": "UNMEASURED-vs-price; no immutable simulator DMA price row found. This is comparison to immutable measured flat, never a repricing."
   },
   "exact": {
-    "checked": 115258,
+    "checked": 115282,
     "records": 244,
     "pass": true,
-    "log": "logs/serial_split_partition.log"
+    "log": "logs/serial_go_pin_partition.log"
   },
   "seam_mutants": [
     {
@@ -103,7 +103,8 @@
     "cluster slot760x518.4 request pending die lead",
     "top-down assigned pins pending die guides",
     "VM local8 read-group interface not published; current32lane group retained",
-    "BACK1 explicit integration with separateNS1/NB8 back engine owed"
+    "BACK1 explicit integration with separateNS1/NB8 back engine owed",
+    "serial-go pin adds one MV FF vs measured root; latest source exact+mutant7 PASS/FAIL; gate currentsource refresh owed"
   ],
   "sources": {
     "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_q.sv": "70add28a906de75502ca2a59c90a5db2c06d65c992b90b3c90343abcdb78d75c",

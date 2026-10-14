@@ -291,7 +291,9 @@ module ot_hgi_b2_dma_mv #(
     always @(posedge clk or negedge rn) if (!rn) s_vmq_pin[337]<=0; else s_vmq_pin[337]<=pin_s_vmq[337];
     always @(posedge clk) s_vmq_pin[336:0]<=pin_s_vmq[336:0];
     assign s_vmq=s_vmq_pin;
-    assign ser_mv_v = cv_go && !fast_cmd && cm_q[94:93] != 2'd0;
+    reg ser_go;
+    always @(posedge clk or negedge rn) if (!rn) ser_go<=0; else ser_go<=cv_go && !fast_cmd && cm_q[94:93] != 2'd0;
+    assign ser_mv_v = ser_go;
     assign ser_mv = cm_q;
     assign s_mv_rdy = ser_mv_rdy;
     assign s_mv_done = ser_mv_done;

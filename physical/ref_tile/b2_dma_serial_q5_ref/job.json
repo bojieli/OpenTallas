@@ -3,7 +3,7 @@
  "block": "ot_hgi_b2_dma_serial",
  "ref_tile": true,
  "owner": "Codex:el1013-dma-q5",
- "purpose": "New request/mover leaf for the B2 DMA cluster; pin file from die lead pending. Production FRONT0 and closed KV siblings. BACK1 remains separate closed NB8 leaf; unified local8 VM port pending die interface publication. Exact gate also compares every port request payload/ordering to unchanged flat source. Six separate seam mutants bind skid, I-list, group OR, HBM lane mux, compact bank lane, qid. Production class has no simulator price row; rates measured against immutable flat, not re-priced.",
+ "purpose": "Independent element serial DMA root, extracted after measured MV clock refusal. Command/response pins captured, status registered; downstream MV supplies registered elastic HBM request ready. Exact immutable-flat real-port request comparison and all seven seam mutants bound; provisional pins and129.6x86.4 outline require die window approval. No price row found: UNMEASURED-vs-price.",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {

@@ -254,7 +254,8 @@
       "rtl/link",
       "rtl/model/hbm_pc40_native_sim_20261003",
       "physical/asap7_memory_macros"
-    ]
+    ],
+    "structural_change": " Serial engine split into a sixth independent root after actual SRAM MV gate15494 sinks/565.9ps refusal; command/response/status pin registers and two-entry registered serial HBM request station; no reset on wide MV payloads."
   },
   "macros": [
     {
