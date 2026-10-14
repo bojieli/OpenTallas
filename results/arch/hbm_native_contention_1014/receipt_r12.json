@@ -8,7 +8,8 @@
   "price": "quant192/168=1.142857143 FAIL1.10; production147 not run",
   "negative_observed": {
     "r12m14": "held_metadata0 with96pendingSUwrites; parent aperture faultFFFFFFFF",
-    "r12m22": "actual q10 STORE HBMaddr0x1000 a5a60000 != a5a50000"
+    "r12m22": "actual q10 STORE HBMaddr0x1000 a5a60000 != a5a50000",
+    "r12m10": "actual SU stage0 liveness fatal seen0/f donef/0 count0/0/0/0 after parked224"
   },
   "qualification_open": [
     "physical clock/reset delivery",
@@ -25,6 +26,5 @@
     "CDC_VM": 96,
     "commit": 32,
     "global_reset": "nominal simultaneous ties only"
-  },
-  "M10": "live actual owner-mutant liveness check"
+  }
 }
