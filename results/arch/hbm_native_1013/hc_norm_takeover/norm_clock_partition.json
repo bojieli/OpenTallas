@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.norm.clock_partition.v1",
+  "state": "RTL_CANDIDATE_EXACT_PENDING",
+  "top": "ot_hbm_norm_split_view_g8pc",
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "362ae99769b76ab02cb0e9b2795c0e85c10845c457b396c3f1a08fb5625ca620",
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "d3b4f28929f5fffa18ef6dac8b52e681bd4b743e033b912140a9ed1c148c0cf2"
+  },
+  "accepted_children": {
+    "ot_hbm_norm_gtile8": 8,
+    "rerouted": false,
+    "outline_um": [
+      365.04,
+      365.04
+    ]
+  },
+  "root_roles": {
+    "clk_tile": 8,
+    "clk_bcast": 8,
+    "clk_chunk": 7,
+    "clk_vector_connected": 127,
+    "clk_vector_active": 1,
+    "clk_scalar": 3,
+    "clk_quant": 2,
+    "clk_parent_remaining_state": 1
+  },
+  "active_vector_node_indices": [
+    1
+  ],
+  "state_partition": {
+    "ot_hbm_norm_sum_node": "Golden padded heap binary nodes, each ownclock, input pinflops, held output/data publicationflops, local synchronized reset; preserves rowassociation and left/right arithmeticorder",
+    "broadcast": "Existing bounded139-bit BD4 and33-bit RBD3/reset chains, independently rooted pergroup; ownhardviews still needed",
+    "chunk": "Seven original golden adders now independent clock entries; wrappers/views still needed",
+    "scalar": "Originaldivc/eps/rsqrt now separate clock entries; localreset/pin-hardening/view evidence still needed",
+    "quant": "Two originalactquant roots now separate entries; ownleaf boundary/views still needed",
+    "remaining_parent_state": "Input/control captures, partial metadata/heap values, output captures/OD chains; must harden bounded ownlogic after actualsinkmeasurement"
+  },
+  "latency": "New vector node adds explicit input/output registerstages; exact row/overlap/gain reload and throughput delta pending",
+  "clock_relationship": "Related compensated physical clocks required; current gate binds each entry to same logical clock for arithmetic/transaction proof. No falsepaths between them.",
+  "slot_response": "Dielead grants planning within SU quarter2016.144x2808, contingent actualexistingSUchildren and allnewleaffits; candidate norm frame1612.656x972 is not a published slot"
+}

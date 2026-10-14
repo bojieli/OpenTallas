@@ -65,9 +65,16 @@ module ot_hbm_norm_split_core_p #(
     parameter integer BD = 4,
     parameter integer RBD = 3,
     parameter integer OD = 3,
-    parameter integer RR = 3
+    parameter integer RR = 3,
+    parameter integer CLOCKED = 0,
+    parameter integer VNLEAF = 0
 ) (
     input  wire                 clk,
+    input wire [(N/G)-1:0] clk_tile,clk_bcast,
+    input wire [(N/G>1?N/G-1:1)-1:0] clk_chunk,
+    input wire [(D/N>1?(1<<$clog2(D/N)):2)-2:0] clk_vector,
+    input wire [2:0] clk_scalar,
+    input wire [(N/32)-1:0] clk_quant,
     input  wire                 rst_n,
     input  wire                 go,
     input  wire                 in_v,
@@ -143,12 +150,13 @@ module ot_hbm_norm_split_core_p #(
     genvar g, c, k, n;
     generate
         for (g = 0; g < NG; g = g + 1) begin : g_grp
+            wire bclk = CLOCKED ? clk_bcast[g] : clk;
             // control broadcast chain: stage 1 = the shared die-pin flops, stages 2..BD per group (* keep *)
             (* keep *) reg [BD-1:1] c_go, c_inv, c_wlv; (* keep *) reg [8*BD-1:8] c_wli; (* keep *) reg [128*BD-1:128] c_pre;
             (* keep *) reg [RBD-1:0] c_rbv; (* keep *) reg [32*RBD-1:0] c_rbd;
             (* keep *) reg [RR-1:0] c_rst;
             integer t;
-            always @(posedge clk) begin
+            always @(posedge bclk) begin
                 c_go[1] <= go_c; c_inv[1] <= in_v_c; c_wlv[1] <= wl_v_c; c_wli[15:8] <= wl_i_c; c_pre[255:128] <= pre_c;
                 for (t = 2; t < BD; t = t + 1) begin
                     c_go[t] <= c_go[t - 1]; c_inv[t] <= c_inv[t - 1]; c_wlv[t] <= c_wlv[t - 1];
@@ -172,7 +180,7 @@ module ot_hbm_norm_split_core_p #(
             for (k = 0; k < 4; k = k + 1) begin : g_cp
                 assign gx[k * G * 32 +: G * 32] = in_x[(k * N + g * G) * 32 +: G * 32];
             end
-            ot_hbm_norm_gtile8 #(.XI(BD), .YO(OD + 1)) u_g (.clk(clk), .rst_n(c_rst[RR - 1]), .go(c_go[BD - 1]),
+            ot_hbm_norm_gtile8 #(.XI(BD), .YO(OD + 1)) u_g (.clk(CLOCKED ? clk_tile[g] : clk), .rst_n(c_rst[RR - 1]), .go(c_go[BD - 1]),
                 .in_v(b_inv), .in_x(gx), .pre(c_pre[128 * (BD - 1) +: 128]), .wl_v(c_wlv[BD - 1]),
                 .wl_i(c_wli[8 * (BD - 1) +: 8]), .wl_d(wl_d[g * G * 32 +: G * 32]), .rb_v(c_rbv[RBD - 1]),
                 .rb_d(c_rbd[32 * (RBD - 1) +: 32]), .s_v(g_sv[g]), .s_i(g_si[g * 8 +: 8]), .s(g_s[g * 32 +: 32]),
@@ -210,7 +218,7 @@ module ot_hbm_norm_split_core_p #(
         for (k = 1; k <= LTT; k = k + 1) begin : g_tl
             wire [(NG >> k)-1:0] f;
             for (c = 0; c < (NG >> k); c = c + 1) begin : g_tn
-                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rstn, vt[LA * (k - 1)], tv[k - 1][2 * c], tv[k - 1][2 * c + 1],
+                ot_dsrom_qadd #(.LAT(LA)) u_a (CLOCKED ? clk_chunk[NG-(NG>>(k-1))+c] : clk, rstn, vt[LA * (k - 1)], tv[k - 1][2 * c], tv[k - 1][2 * c + 1],
                                                tv[k][c], f[c]);
             end
             for (c = (NG >> k); c < NG; c = c + 1) begin : g_tz
@@ -246,6 +254,14 @@ module ot_hbm_norm_split_core_p #(
         for (n = 1; n < NVP; n = n + 1) begin : g_vn
             localparam integer H = $clog2(NVP) - ($clog2(n + 1) - 1);
             if ((((2 * n + 1) << (H - 1)) - NVP) < NV) begin : g_add
+                if (VNLEAF) begin : g_hard
+                    ot_hbm_norm_sum_node #(.LAT(LAV)) u_node(
+                        .clk(CLOCKED ? clk_vector[n-1] : clk),.rst_n(rstn),.go(go_t),
+                        .left_ready(nd[2*n]),.right_ready(nd[2*n+1]),
+                        .left_data(nv[2*n]),.right_data(nv[2*n+1]),
+                        .ready(nd[n]),.published(np[n]),.data(nv[n]),.fault(nf[n]));
+                end else begin : g_legacy
+
                 reg st, vld;
                 reg [31:0] val;
                 wire [LAV:0] av;
@@ -265,6 +281,8 @@ module ot_hbm_norm_split_core_p #(
                 assign np[n] = av[LAV];
                 assign nd[n] = vld || av[LAV];
                 assign nv[n] = vld ? val : sm;
+
+                end
             end else begin : g_pass
                 assign nv[n] = nv[2 * n];
                 assign nd[n] = nd[2 * n];
@@ -281,13 +299,13 @@ module ot_hbm_norm_split_core_p #(
     ot_hdc_delay #(.W(33), .D(RW - 2), .RESET(1)) u_rw (.clk(clk), .rst_n(rstn), .d({ss_v, ss}), .q(ssw));
     wire [31:0] mq, me, rr;
     wire        mq_v, me_v, rr_v, f_div, f_eps, f_rsq;
-    ot_dsrom_divc #(.F(DF), .K(DK)) u_div (.clk(clk), .rst_n(rstn), .v(ssw[32]), .x(ssw[31:0]), .y(mq), .vo(mq_v),
+    ot_dsrom_divc #(.F(DF), .K(DK)) u_div (.clk(CLOCKED ? clk_scalar[0] : clk), .rst_n(rstn), .v(ssw[32]), .x(ssw[31:0]), .y(mq), .vo(mq_v),
                                            .fault(f_div));
     wire [LA:0] ve;
-    ot_hdc_vline #(.D(LA)) u_ve (.clk(clk), .rst_n(rstn), .v(mq_v), .vd(ve));
-    ot_dsrom_qadd #(.LAT(LA)) u_eps (clk, rstn, mq_v, mq, eps_c, me, f_eps);
+    ot_hdc_vline #(.D(LA)) u_ve (.clk(CLOCKED ? clk_scalar[1] : clk), .rst_n(rstn), .v(mq_v), .vd(ve));
+    ot_dsrom_qadd #(.LAT(LA)) u_eps (CLOCKED ? clk_scalar[1] : clk, rstn, mq_v, mq, eps_c, me, f_eps);
     assign me_v = ve[LA];
-    ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rstn), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
+    ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(CLOCKED ? clk_scalar[2] : clk), .rst_n(rstn), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
     // broadcast wire: BW - 3 stages here, then the output flop (here) and the group's pin flop = the flat engine's
     // BW - 1 stages; the group's rh is the BW-th
     ot_hdc_delay #(.W(33), .D(BW - 3), .RESET(1)) u_bw (.clk(clk), .rst_n(rstn), .d({rr_v, rr}), .q(rbw));
@@ -305,7 +323,7 @@ module ot_hbm_norm_split_core_p #(
     generate
         for (k = 0; k < N / 32; k = k + 1) begin : g_aq
             wire signed [9:0] e;
-            ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rstn), .v(y_v_o), .x(y_o[k * 1024 +: 1024]), .vo(aq_v[k]),
+            ot_dsrom_aq12 u_aq (.clk(CLOCKED ? clk_quant[k] : clk), .rst_n(rstn), .v(y_v_o), .x(y_o[k * 1024 +: 1024]), .vo(aq_v[k]),
                                 .q(aq_c[k * 256 +: 256]), .e(e), .y(aq_y[k * 512 +: 512]), .fault(aq_f[k]));
             assign aq_e[k * 10 +: 10] = e;
         end
@@ -359,6 +377,23 @@ module ot_hbm_norm_split_view_g8p (
     output wire [2*512-1:0] q_y, output wire ro_v, output wire [64*32-1:0] ro, output wire fault
 );
     ot_hbm_norm_split_core_p #(.G(8)) u (.clk(clk), .rst_n(rst_n), .go(go), .in_v(in_v), .in_x(in_x), .pre(pre),
+        .n_f(n_f), .eps(eps), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .cos_t(cos_t), .sin_t(sin_t), .y_v(y_v),
+        .y_i(y_i), .y(y), .r_v(r_v), .r(r), .q_v(q_v), .q_i(q_i), .q_codes(q_codes), .q_e(q_e), .q_y(q_y),
+        .ro_v(ro_v), .ro(ro), .fault(fault));
+endmodule
+
+// Direct-die clock partition candidate: independent accepted children and new state leaves.
+module ot_hbm_norm_split_view_g8pc (
+    input wire clk, input wire [7:0] clk_tile,clk_bcast, input wire [6:0] clk_chunk,
+    input wire [126:0] clk_vector,input wire [2:0] clk_scalar,input wire [1:0] clk_quant, input wire rst_n, input wire go, input wire in_v, input wire [4*64*32-1:0] in_x,
+    input wire [127:0] pre, input wire [31:0] n_f, input wire [31:0] eps, input wire wl_v, input wire [7:0] wl_i,
+    input wire [64*32-1:0] wl_d, input wire [31:0] cos_t, input wire [31:0] sin_t,
+    output wire y_v, output wire [7:0] y_i, output wire [64*32-1:0] y, output wire r_v, output wire [31:0] r,
+    output wire q_v, output wire [7:0] q_i, output wire [2*256-1:0] q_codes, output wire [2*10-1:0] q_e,
+    output wire [2*512-1:0] q_y, output wire ro_v, output wire [64*32-1:0] ro, output wire fault
+);
+    ot_hbm_norm_split_core_p #(.G(8),.CLOCKED(1),.VNLEAF(1)) u (.clk(clk),.clk_tile(clk_tile),.clk_bcast(clk_bcast),
+        .clk_chunk(clk_chunk),.clk_vector(clk_vector),.clk_scalar(clk_scalar),.clk_quant(clk_quant), .rst_n(rst_n), .go(go), .in_v(in_v), .in_x(in_x), .pre(pre),
         .n_f(n_f), .eps(eps), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .cos_t(cos_t), .sin_t(sin_t), .y_v(y_v),
         .y_i(y_i), .y(y), .r_v(r_v), .r(r), .q_v(q_v), .q_i(q_i), .q_codes(q_codes), .q_e(q_e), .q_y(q_y),
         .ro_v(ro_v), .ro(ro), .fault(fault));
