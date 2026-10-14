@@ -23,12 +23,12 @@
 // Mutants: S81PH_CAPC_MUT_KSWAP (every group takes its neighbour's constant bus), S81PH_CAPCD_MUT_NOTOG (dsfd_capt_cd).
 module dsfd_sp_capture_c (
     input wire [7:0] ck_g,                   // clock entry of dsfd_capt_g2 [g]
-    input wire [7:0] ck_x,                   // clock entry of dsfd_capt_x [g] (stream side)
+    input wire [15:0] ck_x,                   // clock entry of dsfd_capt_x [g] (stream side)
     input wire       ck_c,                   // clock entry of dsfd_capt_ctl
     input wire [7:0] ck_ka, ck_kb, ck_sb,    // separate entry for each hardened station relay
     input wire       ck_sn,                 // status-word relay entry
     input wire [0:0] rst,
-    input wire [7:0] ckv_x,                  // serial clock entry of dsfd_capt_x [g]
+    input wire [15:0] ckv_x,                  // serial clock entry of dsfd_capt_x [g]
     input wire       ckv_d,                  // serial clock entry of dsfd_capt_cd (S face, under the control tile)
     input wire       ckv_r,                  // serial clock entry of the t_cd relay (N face)
     input wire [0:0] rsv,
@@ -69,8 +69,13 @@ module dsfd_sp_capture_c (
         end
         dsfd_capt_g2 u_g (.ck(ck_g[g]), .rst(rst), .f_row(f_gather[53 * 16 * g +: 53 * 16]), .f_k(kd[KB * g +: KB]),
             .t_w(w), .f_ho(ho), .t_sb(st[2 * g +: 2]));
-        dsfd_capt_x u_x (.ck(ck_x[g]), .rst(rst), .ckv(ckv_x[g]), .rsv(rsv), .f_w(w), .t_vm(t_vm[104 * 16 * g +: 104 * 16]),
-            .t_ho(ho), .f_sn(sn_g), .t_st(stv[64 * g +: 64]));
+        wire [1:0] ho_half;
+        wire [63:0] st_unused;
+        dsfd_capt_x8_dual u_x0 (.ck(ck_x[2*g]), .rst(rst), .ckv(ckv_x[2*g]), .rsv(rsv),
+            .f_w(w[415:0]), .t_vm(t_vm[1664*g +: 832]), .t_ho(ho_half[0]), .f_sn(sn_g), .t_st(stv[64*g +: 64]));
+        dsfd_capt_x8_dual u_x1 (.ck(ck_x[2*g+1]), .rst(rst), .ckv(ckv_x[2*g+1]), .rsv(rsv),
+            .f_w(w[831:416]), .t_vm(t_vm[1664*g+832 +: 832]), .t_ho(ho_half[1]), .f_sn(sn_g), .t_st(st_unused));
+        assign ho[0] = |ho_half;
     end endgenerate
     wire [63:0] stw = stv[64 * (NT / 2 - 1) +: 64];   // the tile left of the control tile
     assign t_vm[13375:13312] = stw;

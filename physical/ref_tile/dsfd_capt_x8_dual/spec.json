@@ -1,0 +1,89 @@
+{
+ "name": "dsfd_capt_x8_dual",
+ "top": "dsfd_capt_x8_dual",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_dual.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "outline": {
+  "w": 59.4,
+  "h": 270.0
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck",
+   "f_sn",
+   "f_w",
+   "rst",
+   "t_ho"
+  ],
+  "N": [
+   "ckv",
+   "rsv",
+   "t_st",
+   "t_vm"
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "pin_v": "M3 M5",
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:s81-capture",
+  "branch": "s81-spwfc-1013",
+  "tag": "v1",
+  "purpose": "NR16 crossing partitioned into two NR8 leaves with independent related core and serial CTS roots; no transaction or cycle change. The old route omitted serial-clock constraints and measured TT serial boundary spread1294.2ps.",
+  "extra_paths": [
+   "tools/s81_ph",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/common",
+   "physical/s81_ph_views/capture"
+  ],
+  "benches": [
+   {
+    "name": "capc_exact",
+    "cmd": "bash tools/s81_ph/capc_bench.sh {RUN}/bench t1 'mix mix11 mix12 mix13 trace err over range rreq'",
+    "expect": "pass",
+    "pass_regex": "^CAPC_BENCH PASS",
+    "threads": 12,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "capc_mut_kswap",
+    "cmd": "bash tools/s81_ph/capc_bench.sh {RUN}/bench m1 'mix' S81PH_CAPC_MUT_KSWAP",
+    "expect": "fail",
+    "fail_regex": "CAPC_BENCH FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "sdc_extra": [
+  "physical/s81_ph_views/capture/x8_dual_clocks.sdc"
+ ],
+ "recipe": 2,
+ "clock": "cts",
+ "structural_change": "NR16 crossing partitioned into two NR8 leaves with independent related core and serial CTS roots; no transaction or cycle change. The old route omitted serial-clock constraints and measured TT serial boundary spread1294.2ps.",
+ "slot_change_request": "el1011-s81die.log capture serial-clock defect 2026-10-13: replace one x16 child by two x8 dual-clock children in identical total outline;68 parent clocks; no extra data cycles",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

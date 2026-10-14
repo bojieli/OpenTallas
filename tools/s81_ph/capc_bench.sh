@@ -26,8 +26,8 @@ module dsfd_sp_capture (input wire [0:0] ck, input wire [0:0] rst, input wire [0
     wire [13375:0] rv; wire [11:0] rc, dc;
     capc_ref u_ref (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_gather(f_gather), .t_vm(rv), .t_cd(rc));
     // the cluster: one clock entry per child (all the same clock here), t_cd one serial cycle after the reference
-    dsfd_sp_capture_c u_dut (.ck_g({8{ck[0]}}), .ck_x({8{ck[0]}}), .ck_c(ck[0]), .ck_ka({8{ck[0]}}), .ck_kb({8{ck[0]}}), .ck_sb({8{ck[0]}}), .ck_sn(ck[0]), .rst(rst),
-        .ckv_x({8{ckv[0]}}), .ckv_d(ckv[0]), .ckv_r(ckv[0]), .rsv(rsv), .f_gather(f_gather), .t_vm(t_vm), .t_cd(dc));
+    dsfd_sp_capture_c u_dut (.ck_g({8{ck[0]}}), .ck_x({16{ck[0]}}), .ck_c(ck[0]), .ck_ka({8{ck[0]}}), .ck_kb({8{ck[0]}}), .ck_sb({8{ck[0]}}), .ck_sn(ck[0]), .rst(rst),
+        .ckv_x({16{ckv[0]}}), .ckv_d(ckv[0]), .ckv_r(ckv[0]), .rsv(rsv), .f_gather(f_gather), .t_vm(t_vm), .t_cd(dc));
     integer mm = 0, tg = 0, nw = 0; reg tq = 1'b0; reg [1:0] live = 2'b00; reg [11:0] rc_q = 12'd0;
     always @(posedge ckv[0]) if (rsv[0]) begin
         live <= {live[0], 1'b1}; rc_q <= rc;
@@ -48,7 +48,7 @@ verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno
   rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv rtl/dsrom_sys/s81_ph/ot_s81ph_gather.sv \
   rtl/dsrom_sys/s81_ph/ot_s81ph_cap_p.sv rtl/dsrom_sys/s81_ph/ot_s81ph_capture.sv rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv \
   rtl/dsrom_sys/s81_ph/dsfd_sp_gather.sv $G/capc_ref_core.sv $G/capc_ref.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv $G/rly.sv \
-  rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv $G/capc_shim.sv \
+  rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_dual.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv $G/capc_shim.sv \
   rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_capture.sv > $OUT/build_$TAG.log 2>&1 || { tail -5 $OUT/build_$TAG.log; echo "CAPC_BENCH FAIL build"; exit 1; }
 for c in $CASES; do $OUT/obj_$TAG/sim +UNORD +STIM=$OUT/stim_$c.txt > $OUT/run_${TAG}_$c.log 2>&1 & done
 wait
