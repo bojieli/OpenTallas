@@ -37,6 +37,7 @@ import os
 import re
 import sys
 from collections import defaultdict
+from contextlib import contextmanager
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -3118,10 +3119,30 @@ class Occ:
         for k in self._bins(*r):
             self.g[k].append(r)
 
+    @contextmanager
+    def temporary(self):
+        """Reserve a candidate chain's boxes, then restore the exact spatial index."""
+        saved = {}
+
+        def reserve(r):
+            for k in self._bins(*r):
+                if k not in saved:
+                    saved[k] = len(self.g[k]) if k in self.g else None
+                self.g[k].append(r)
+
+        try:
+            yield reserve
+        finally:
+            for k, length in saved.items():
+                if length is None:
+                    del self.g[k]
+                else:
+                    del self.g[k][length:]
+
     def free(self, r, gap=0.0):
         x0, y0, x1, y1 = r
         for k in self._bins(x0 - gap, y0 - gap, x1 + gap, y1 + gap):
-            for a0, b0, a1, b1 in self.g[k]:
+            for a0, b0, a1, b1 in self.g.get(k, ()):
                 if a0 < x1 + gap - 1e-6 and x0 - gap < a1 - 1e-6 and b0 < y1 + gap - 1e-6 and y0 - gap < b1 - 1e-6:
                     return False
         return True
@@ -5381,12 +5402,16 @@ def _hop_fix(m, P):
                         n_c = (n0 if j_ == 0 else max(n0, math.ceil(_poly_len(cand) / (R - 20.0) - 1e-9) - 1)) + x_
                         pos_c = stations_at(cand, n_c, x_)
                         cur_, ok, rc_ = a, True, {}
-                        for k in range(len(pos_c)):
-                            pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, rc_, [])
-                            if pl_ is None:
-                                ok = False
-                                break
-                            cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
+                        # Later candidate stations must see the boxes already chosen
+                        # for this candidate, exactly as they do during construction.
+                        with P.occ.temporary() as reserve:
+                            for k in range(len(pos_c)):
+                                pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, rc_, [])
+                                if pl_ is None:
+                                    ok = False
+                                    break
+                                reserve((pl_[0], pl_[1], pl_[0] + w_, pl_[1] + h_))
+                                cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
                         if not ok:
                             continue
                         bad = sum(v for k_, v in rc_.items() if k_ in ('nxt_relaxed', 'relaxed_die', 'tt_reach'))
