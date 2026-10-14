@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_provider;
- parameter MUT_ROW=0,MUT_QBEAT=0,MUT_ACK=0;
+ parameter MUT_ROW=0,MUT_QBEAT=0,MUT_ACK=0,MUT_COMMIT=0,MUT_RSP=0;
  reg clk=0;always #5 clk=~clk;reg rst_n=0;
  reg start=0;reg [15:0] epoch=16'h1234;reg [17:0] pos=18'd15;
  wire qrstart,qreq,qready,qv,qdone,qfault;wire [15:0] re,qe;wire [2:0] rc;wire [23:0] a0,a1;wire [5:0] qb;wire [511:0] qd;
@@ -12,7 +12,7 @@ module tb_provider;
  ot_qfd_su_kv_native_posted #(.ENABLE(1),.HEADS(1)) u_f(.clk(clk),.rst_n(rst_n),.epoch_begin(start),.epoch_pos(pos),.issue_v(iv),.issue_kind(ik),.issue_nout(18'd1),.issue_nin(nin),.kv_we(we),.kv_waddr(wa),.kv_wdata(wd),.epoch_ready(fs),.drained(fd),.word_v(fv),.word_tag(ft),.word_data(data),.word_ready(fr),.fault(ff),.fault_code(fc));
  wire bs,rv,rkind,commit,pfault;wire [15:0] rowe;wire [5:0] rowl;wire [17:0] rowp;wire [1023:0] rowd;wire [3:0] acr;
  reg rr=0;reg [3:0] ackv=0,ackk=0;reg [63:0] acke=0;reg [23:0] ackl=0;reg [71:0] ackp=0;
- ot_qfd_native_kv_row_provider #(.ENABLE(1),.MUT_ROW(MUT_ROW)) u_p(.clk(clk),.rst_n(rst_n),.begin_v(start),.begin_epoch(epoch),.begin_layer(6'd0),.begin_pos(pos),.begin_ready(bs),.word_v(fv),.word_tag(ft),.word_data(data),.word_ready(fr),.formatter_emitted(fd&&!start),.row_v(rv),.row_ready(rr),.row_kind(rkind),.row_epoch(rowe),.row_layer(rowl),.row_pos(rowp),.row_data(rowd),.ack_v(ackv),.ack_kind(ackk),.ack_epoch(acke),.ack_layer(ackl),.ack_pos(ackp),.ack_credit(acr),.committed(commit),.fault(pfault));
+ ot_qfd_native_kv_row_provider #(.ENABLE(1),.MUT_ROW(MUT_ROW),.MUT_COMMIT(MUT_COMMIT)) u_p(.clk(clk),.rst_n(rst_n),.begin_v(start),.begin_epoch(epoch),.begin_layer(6'd0),.begin_pos(pos),.begin_ready(bs),.word_v(fv),.word_tag(ft),.word_data(data),.word_ready(fr),.formatter_emitted(fd&&!start),.row_v(rv),.row_ready(rr),.row_kind(rkind),.row_epoch(rowe),.row_layer(rowl),.row_pos(rowp),.row_data(rowd),.ack_v(ackv),.ack_kind(ackk),.ack_epoch(acke),.ack_layer(ackl),.ack_pos(ackp),.ack_credit(acr),.committed(commit),.fault(pfault));
  reg [7:0] landing [0:3][0:255];integer due[0:3][0:1];integer rowcount=0,ackcount=0,early=0;
  integer reqdue=-1;reg [15:0] reqepoch;reg [2:0] reqchunk;integer reqaddr=0;
  function automatic [7:0] bytecode(input integer k,input integer d);integer v;begin v=(k*91+d)%254;if(v>=127)v=v+1;bytecode=v;end endfunction
@@ -21,7 +21,7 @@ module tb_provider;
  always @(negedge clk)if(rst_n)begin
   reqready=cycles%4!=0;outready=cycles%7!=0;rr=cycles%5!=0;rspv=0;ackv=0;
   if(reqdue==cycles)begin
-   rspv=1;rspe=reqepoch;rspc=reqchunk;
+   rspv=1;rspe=reqepoch^(MUT_RSP!=0?16'd1:16'd0);rspc=reqchunk;
    for(j=0;j<64;j=j+1)rspd[32*j+:32]=vm[reqaddr-13696+j];reqdue=-1;
   end
   for(q=0;q<4;q=q+1)for(k=0;k<2;k=k+1)if(due[q][k]==cycles)begin
@@ -65,6 +65,7 @@ module tb_provider;
   for(q=0;q<4;q=q+1)begin for(j=0;j<256;j=j+1)landing[q][j]=8'haa;for(k=0;k<2;k=k+1)due[q][k]=-1;end
   repeat(3)step();rst_n=1;step();start=1;step();start=0;
   issue(0,128);write64(1,0);write64(1,64);issue(1,64);write64(0,0);issue(2,64);write64(0,64);
+  if(MUT_RSP!=0)begin wait(qfault);repeat(4)step();if(qwords==0)$display("PROVIDER_Q_REJECT_PASS stale response no output");else $display("PROVIDER_Q_REJECT_FAIL");$finish;end
   wait(qwords==32);wait(ackcount==8);repeat(6)step();
   for(q=0;q<4;q=q+1)for(k=0;k<2;k=k+1)for(j=0;j<128;j=j+1)if(landing[q][k*128+j]!==bytecode(k,j))errors=errors+1;
   if(MUT_ACK!=0)begin if(pfault&&!commit)$display("PROVIDER_ACK_REJECT_PASS stale epoch no release");else $display("PROVIDER_ACK_REJECT_FAIL");end

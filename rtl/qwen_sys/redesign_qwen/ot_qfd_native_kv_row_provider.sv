@@ -3,7 +3,7 @@
 // One finite epoch; formatter words must be the actual SU-derived encoded
 // bytes. row_ready reserves ALL four landing seats. Store ACKs are separate
 // tagged actual memory-write completion pulses, never a queue credit alias.
-module ot_qfd_native_kv_row_provider #(parameter integer ENABLE=0,MUT_ROW=0)(
+module ot_qfd_native_kv_row_provider #(parameter integer ENABLE=0,MUT_ROW=0,MUT_COMMIT=0)(
  input wire clk,rst_n,
  input wire begin_v,input wire [15:0] begin_epoch,input wire [5:0] begin_layer,input wire [17:0] begin_pos,
  output wire begin_ready,
@@ -28,7 +28,7 @@ module ot_qfd_native_kv_row_provider #(parameter integer ENABLE=0,MUT_ROW=0)(
  ot_qkvd_seq_m_store #(.DW(512),.XS(40),.KD(8)) u_store(
  .clk(clk),.rst_n(rst_n),.x_v(wt),.x_cls(3'b010),.x_d(word_data),.qpop(1'b0),
  .kpop(kpop),.kidx(tag),.kwgo(kwgo),.kwn(kind?2'd2:2'd0),.q(store_q),.kw(store_kw));
- ot_qfd_native_kv_commit_fence #(.ENABLE(ENABLE)) u_commit(
+ ot_qfd_native_kv_commit_fence #(.ENABLE(ENABLE),.MUT_OR(MUT_COMMIT)) u_commit(
  .clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_layer(begin_layer),.begin_pos(begin_pos),.begin_ready(fence_ready),
  .formatter_emitted(formatter_emitted&&active&&received==8'h33),.posted_v({4{rt}}),.posted_kind({4{row_kind}}),
  .posted_epoch({4{row_epoch}}),.posted_layer({4{row_layer}}),.posted_pos({4{row_pos}}),
