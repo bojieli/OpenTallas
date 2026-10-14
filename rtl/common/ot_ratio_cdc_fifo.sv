@@ -69,7 +69,10 @@ module ot_ratio_cdc_fifo #(
     localparam int AW = (DEPTH > 1) ? $clog2(DEPTH) : 1;
     localparam int CW = $clog2(HOLD + 1);
     initial if (HOLD < 1 || DEPTH < 2 || (DEPTH & (DEPTH - 1)) != 0) $error("ot_ratio_cdc_fifo: HOLD >= 1, DEPTH a power of two >= 2");
-    localparam logic [1:0] S_DOWN = 2'b00, S_WAIT = 2'b01, S_RUN = 2'b10;
+    // Local mode exposes UP in bit0 and RUN in bit1 for all reachable states.
+    // Default mode retains the original encoding and comparison behavior.
+    localparam logic [1:0] S_DOWN = 2'b00, S_WAIT = 2'b01,
+                           S_RUN = LOCAL_CTRL ? 2'b11 : 2'b10;
 
     // ---------------- write domain ----------------
     logic [W-1:0]  mem [DEPTH];         // write-domain storage      (crosses: mem[i] -> sh[i])
@@ -90,7 +93,9 @@ module ot_ratio_cdc_fifo #(
     // then has its ordinary polarity restoration, avoiding the measured short
     // reverse hold cone; no sampling edge or externally visible state changes.
     always_ff @(posedge wclk) r_st_w <= r_st;
-    assign w_live = (w_st == S_RUN) && (r_st_w != S_DOWN);
+    wire peer_r_up = LOCAL_CTRL ? r_st_w[0] : (r_st_w != S_DOWN);
+    wire peer_r_run = LOCAL_CTRL ? r_st_w[1] : (r_st_w == S_RUN);
+    assign w_live = (LOCAL_CTRL ? w_st[1] : (w_st == S_RUN)) && peer_r_up;
     wire full = LOCAL_CTRL ? ((wp[AW] != rp_w[AW]) && (wp[AW-1:0] == rp_w[AW-1:0]))
                            : ((wp - rp_w) == (AW+1)'(DEPTH));
     assign w_rdy  = wrst_n && w_live && !full;
@@ -102,16 +107,16 @@ module ot_ratio_cdc_fifo #(
             case (w_st)
                 S_DOWN: begin
                     wp <= '0;
-                    if (r_st_w != S_RUN) w_ok <= 1'b1;
+                    if (!peer_r_run) w_ok <= 1'b1;
                     if (w_cnt != '0) w_cnt <= w_cnt - 1'b1;
-                    else if (w_ok || r_st_w != S_RUN) w_st <= S_WAIT;
+                    else if (w_ok || !peer_r_run) w_st <= S_WAIT;
                 end
                 S_WAIT: begin
                     wp <= '0;
-                    if (r_st_w != S_DOWN) w_st <= S_RUN;
+                    if (peer_r_up) w_st <= S_RUN;
                 end
                 default: begin // S_RUN
-                    if (r_st_w == S_DOWN) begin
+                    if (!peer_r_up) begin
                         w_st <= S_DOWN; w_cnt <= CW'(HOLD); w_ok <= 1'b1; wp <= '0;
                     end else if (w_fire) wp <= wp + 1'b1;
                 end
@@ -157,7 +162,9 @@ module ot_ratio_cdc_fifo #(
     end else begin : g_original_wstate
         always_ff @(posedge rclk) w_st_r <= w_st;
     end endgenerate
-    assign r_live = (r_st == S_RUN) && (w_st_r != S_DOWN);
+    wire peer_w_up = LOCAL_CTRL ? w_st_r[0] : (w_st_r != S_DOWN);
+    wire peer_w_run = LOCAL_CTRL ? w_st_r[1] : (w_st_r == S_RUN);
+    assign r_live = (LOCAL_CTRL ? r_st[1] : (r_st == S_RUN)) && peer_w_up;
     assign r_v    = rrst_n && r_live && (wp_r != rp);
     assign r_take = r_v && r_rdy;
     logic [AW:0] rp_next;
@@ -166,7 +173,7 @@ module ot_ratio_cdc_fifo #(
         if (!rrst_n) rp_next = '0;
         else case (r_st)
             S_DOWN, S_WAIT: rp_next = '0;
-            default: if (w_st_r == S_DOWN) rp_next = '0;
+            default: if (!peer_w_up) rp_next = '0;
                      else if (r_take) rp_next = rp + 1'b1;
         endcase
     end
@@ -194,16 +201,16 @@ module ot_ratio_cdc_fifo #(
             case (r_st)
                 S_DOWN: begin
                     if (!LOCAL_CTRL) rp <= '0;
-                    if (w_st_r != S_RUN) r_ok <= 1'b1;
+                    if (!peer_w_run) r_ok <= 1'b1;
                     if (r_cnt != '0) r_cnt <= r_cnt - 1'b1;
-                    else if (r_ok || w_st_r != S_RUN) r_st <= S_WAIT;
+                    else if (r_ok || !peer_w_run) r_st <= S_WAIT;
                 end
                 S_WAIT: begin
                     if (!LOCAL_CTRL) rp <= '0;
-                    if (w_st_r != S_DOWN) r_st <= S_RUN;
+                    if (peer_w_up) r_st <= S_RUN;
                 end
                 default: begin // S_RUN
-                    if (w_st_r == S_DOWN) begin
+                    if (!peer_w_up) begin
                         r_st <= S_DOWN; r_cnt <= CW'(HOLD); r_ok <= 1'b1;
                         if (!LOCAL_CTRL) rp <= '0;
                     end else if (r_take) begin
