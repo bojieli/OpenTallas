@@ -270,7 +270,7 @@
   },
   "layer_cap": "M5",
   "recipe": 2,
-  "structural_change": "Actual copied CTS10 slow path has output x3FF81ps+lead4f30+HB485+final4f36+genericresizer24 29. Genuine output x1 FFs and folding final driver into one actual BUFx24, directly on the output port, reduce copied source0/load0 profile below220ps. Preserve leadBUF/HB4, input4f drivers, all3 related real roots, source phases, reset stages and transaction cycles. Keep output net and final24 driver intact through repair; complete true833ps TT/FF signoff remains required. No candidate qualification from copied-placement probe.",
+  "structural_change": "Actual copied CTS10 slow path has output x3FF81ps+lead4f30+HB485+final4f36+genericresizer24 29. Genuine output x1 FFs and folding final driver into one actual BUFx24, directly on the output port, reduce copied source0/load0 profile to f256.9709/o233.7673ps, still above220ps. Preserve leadBUF/HB4, input4f drivers, all3 related real roots, source phases, reset stages and transaction cycles. Keep output net and final24 driver intact through repair; complete true833ps TT/FF signoff remains required. No candidate qualification from copied-placement probe.",
   "defines": [
     "OT_VMBGL_HOP1"
   ],

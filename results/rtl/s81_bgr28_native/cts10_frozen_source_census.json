@@ -1,0 +1,22 @@
+{
+  "source_commit": null,
+  "source_binding_identity": "exact_content_snapshot",
+  "archive_sha256": "04ad750175bf724c5763196b94a5cd40d84606ad3e1701377754c800ea13e777",
+  "runtime_tools": [
+    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
+    "GATE_TOOL_CTS_MACRO_CLUSTER="
+  ],
+  "synth_cells": 67371,
+  "synth_flops": 16959,
+  "largest_root_sinks": 8206,
+  "forward_output_master": "DFFHQNx3_ASAP7_75t_R QN; actual combined forwarding/return data swaps5396",
+  "physical_ACK_ports": false,
+  "bank_reset_replica": "2FF complemented history conditioner, retained",
+  "outputdata_master_swaps": 5396,
+  "state_clocks": [
+    "ck",
+    "ck_req",
+    "ck_ret"
+  ],
+  "qualification": "OPEN actual source drivers/per-port peer clocks/raw export/slot allocation"
+}

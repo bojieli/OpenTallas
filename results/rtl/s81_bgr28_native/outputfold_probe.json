@@ -1,0 +1,17 @@
+{
+  "status": "UNQUALIFIED_COPIED_CTS_CONTEXT_NOT_FRESH_PLACEMENT",
+  "actual_base_source": "50373a397",
+  "fold_source": "05ac26958",
+  "phase": "same fixed nominal TT prototype; no FF compensation",
+  "period_ps": 833.333,
+  "raw_source_latency": 0,
+  "raw_load": 0,
+  "fold_raw_output_ps": {
+    "f": 256.970943,
+    "o": 233.767257
+  },
+  "budget_ps": 220,
+  "result": "FAIL_BUDGET",
+  "mutations": "restore5396 output data FFs x1; fold trailing generic buffers into genuine single BUFx24 final driver; keep lead4f/HB4",
+  "limits": "FreshCTS gate includes actual TT/FF setup/hold. Copied context linkedTT Liberty does not supply a FF hold verdict. Initial prose interpretation was corrected; raw log preserved."
+}
