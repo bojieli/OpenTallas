@@ -1,4 +1,13 @@
 `timescale 1ns/1ps
+`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
+`ifndef KVD_Q_FP32
+`define KVD_Q_FP32 0
+`endif
+`ifndef KVD_QK_ONLY
+`define KVD_QK_ONLY 0
+`endif
 // DEFAULT-OFF native arithmetic service. Build with KVD_HEADS=1,KVD_Q_FP32=1,
 // KVD_QK_ONLY=1,KVD_ECTL3. Common-clock adapter is functional evidence only;
 // it is not a routed clock contract or a qualified HBM timing model.
