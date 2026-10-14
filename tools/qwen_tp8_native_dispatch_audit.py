@@ -7,6 +7,8 @@ from pathlib import Path
 
 import hdc_qwen_fullshape_isa_w12 as ISA
 
+PROGRAM_SHA256 = '120b42a583db68fb9faaa32d2076f1515d5c07e41787bf47533a1d230b4d1903'
+
 LABELS = [
     'hidden sum of squares', 'QKV projection', 'hidden reciprocal RMS',
     'V scale and cache write', 'QK scale and sums of squares',
@@ -24,6 +26,12 @@ LABELS = [
 
 def audit(profile, image):
     raw = image.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != PROGRAM_SHA256:
+        raise ValueError('operation labels are bound to the exact accepted TP8 image')
+    root = Path(__file__).resolve().parents[1]
+    for source in ('tools/hdc_isa.py', 'tools/hdc_qwen_fullshape_isa_w12.py'):
+        if hashlib.sha256((root / source).read_bytes()).hexdigest() != profile['source_sha256'][source]:
+            raise ValueError(f'decoder source differs from pinned profile: {source}')
     words = [int(line, 16) for line in raw.decode().splitlines() if line.strip()]
     if words != [int(word, 16) for word in profile['program_hex']]:
         raise ValueError('actual image differs from profile instruction bits')
