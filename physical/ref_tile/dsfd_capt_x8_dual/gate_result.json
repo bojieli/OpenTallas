@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "dsfd_capt_x8_dual",
+ "verdict": "WARN",
+ "generated": "2026-10-13T19:58:30-0700",
+ "host": "ot-epyc4",
+ "cts": true,
+ "commit": "b6600469a",
+ "clock": {
+  "max_root_sinks": 5744,
+  "root": "port:ck[0]",
+  "cts": true,
+  "tt_insertion_ps": 257.2,
+  "tt_spread_ps": 21.8,
+  "declared_clock": "cts",
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "5,744 sinks on the largest root <= 15,000; measured TT insertion 257.2 ps, leaf spread 21.8 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['ck', 'rst', 'ckv', 'rsv', 't_ho']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])",
+   "fix": "declare them scalar in RTL"
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 5309 um2 + macros 0 in core 14921: util 36%",
+   "fix": "set \"std_area_um2\": 5309 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 35.6% outside 45%-65% (std 5318 + macro 0 um2 in 14921 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ]
+}
