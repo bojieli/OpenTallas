@@ -3,7 +3,7 @@
   "state": "RTL_CANDIDATE_EXACT_PENDING",
   "top": "ot_hbm_norm_split_view_g8pc",
   "source_sha256": {
-    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "310c1e9c94d4a74311e222423fbcf230a0380030c45755260f20bf3543cedc4c",
+    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "973f468f2aeee7e6984ca8fddcd5c2de31dbd7e6043d9d36586c52f8652459e4",
     "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "d3b4f28929f5fffa18ef6dac8b52e681bd4b743e033b912140a9ed1c148c0cf2"
   },
   "accepted_children": {
@@ -22,8 +22,9 @@
     "clk_scalar": 3,
     "clk_quant": 2,
     "clk_parent_remaining_state": 1,
-    "clk_control_relay": 24,
-    "clk_rstd_relay": 24
+    "clk_rstd_relay": 24,
+    "clk_control_pre_relay": 24,
+    "clk_control_metadata_relay": 24
   },
   "active_vector_node_indices": [
     1,
@@ -108,7 +109,7 @@
   ],
   "state_partition": {
     "ot_hbm_norm_sum_node": "Golden padded heap binary nodes, each ownclock, input pinflops, held output/data publicationflops, local synchronized reset; preserves rowassociation and left/right arithmeticorder",
-    "broadcast": "One independent root per140-bit control+reset stage (24) and per33-bit rstd stage(24); three bounded stages pergroup. No long group-wide hardened clock root.",
+    "broadcast": "24closed136bitpre+reset stages and24closed48bitmetadata stages;24closed48bitrstd stages. Existingone-cycle hardrelaymastersreplaceproposednewbroadcaststateleaves.",
     "chunk": "Seven original golden adders now independent clock entries; wrappers/views still needed",
     "scalar": "Originaldivc/eps/rsqrt now separate clock entries; localreset/pin-hardening/view evidence still needed",
     "quant": "Two originalactquant roots now separate entries; ownleaf boundary/views still needed",
@@ -116,5 +117,10 @@
   },
   "latency": "New vector node adds explicit input/output registerstages; exact row/overlap/gain reload and throughput delta pending",
   "clock_relationship": "Related compensated physical clocks required; current gate binds each entry to same logical clock for arithmetic/transaction proof. No falsepaths between them.",
-  "slot_response": "Dielead grants planning within SU quarter2016.144x2808, contingent actualexistingSUchildren and allnewleaffits; candidate norm frame1612.656x972 is not a published slot"
+  "slot_response": "Dielead grants planning within SU quarter2016.144x2808, contingent actualexistingSUchildren and allnewleaffits; candidate norm frame1612.656x972 is not a published slot",
+  "closed_relay_reuse": {
+    "hbfd_rly_136_WE": 24,
+    "hbfd_rly_48_WE": 48,
+    "latency": "Exactlyoneclockedge, paddinglowzeros; perhardchildclockentry; acceptedviewsuntouched"
+  }
 }

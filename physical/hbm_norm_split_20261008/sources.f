@@ -23,3 +23,5 @@ rtl/hdc/v41x/ot_hbm_norm_split_p.sv
 
 rtl/lib/ot_rst_relay.sv
 rtl/hdc/v41x/ot_hbm_norm_sum_node.sv
+rtl/hbm_accel/die_glue/ot_hbm_rly.sv
+rtl/hbm_accel/die_glue/hbfd_rly_masters.sv

@@ -71,7 +71,7 @@ module ot_hbm_norm_split_core_p #(
 ) (
     input  wire                 clk,
     input wire [(N/G)-1:0] clk_tile,
-    input wire [(N/G)*(BD-1)-1:0] clk_ctrl_relay,
+    input wire [(N/G)*(BD-1)-1:0] clk_ctrl_pre,clk_ctrl_meta,
     input wire [(N/G)*RBD-1:0] clk_rstd_relay,
     input wire [(N/G>1?N/G-1:1)-1:0] clk_chunk,
     input wire [(D/N>1?(1<<$clog2(D/N)):2)-2:0] clk_vector,
@@ -157,8 +157,30 @@ module ot_hbm_norm_split_core_p #(
             (* keep *) reg [BD-1:1] c_go, c_inv, c_wlv; (* keep *) reg [8*BD-1:8] c_wli; (* keep *) reg [128*BD-1:128] c_pre;
             (* keep *) reg [RBD-1:0] c_rbv; (* keep *) reg [32*RBD-1:0] c_rbd;
             (* keep *) reg [RR-1:0] c_rst;
+            if(CLOCKED)begin:g_closed_relays
+                for(genvar ct=1;ct<BD;ct=ct+1)begin:g_control
+                    wire[135:0]pi,po;wire[47:0]mi,mo;
+                    if(ct==1)begin:g_first
+                        assign pi={7'd0,rstn,pre_c};assign mi={37'd0,go_c,in_v_c,wl_v_c,wl_i_c};
+                    end else begin:g_next
+                        assign pi={7'd0,c_rst[ct-2],c_pre[128*(ct-1)+:128]};
+                        assign mi={37'd0,c_go[ct-1],c_inv[ct-1],c_wlv[ct-1],c_wli[8*(ct-1)+:8]};
+                    end
+                    hbfd_rly_136_WE u_pre(.ck(clk_ctrl_pre[g*(BD-1)+ct-1]),.rs(rst_n),.i(pi),.o(po));
+                    hbfd_rly_48_WE u_meta(.ck(clk_ctrl_meta[g*(BD-1)+ct-1]),.rs(rst_n),.i(mi),.o(mo));
+                    assign c_pre[128*ct+:128]=po[127:0];assign c_rst[ct-1]=po[128];
+                    assign {c_go[ct],c_inv[ct],c_wlv[ct],c_wli[8*ct+:8]}=mo[10:0];
+                end
+                for(genvar rt=0;rt<RBD;rt=rt+1)begin:g_rstd
+                    wire[47:0]ri,ro_;
+                    if(rt==0)assign ri={15'd0,rbw};
+                    else assign ri={15'd0,c_rbv[rt-1],c_rbd[32*(rt-1)+:32]};
+                    hbfd_rly_48_WE u_rstd(.ck(clk_rstd_relay[g*RBD+rt]),.rs(rst_n),.i(ri),.o(ro_));
+                    assign {c_rbv[rt],c_rbd[32*rt+:32]}=ro_[32:0];
+                end
+            end else begin:g_legacy_relays
             for(genvar ct=1;ct<BD;ct=ct+1)begin:g_ctrl_stage
-                wire cc=CLOCKED?clk_ctrl_relay[g*(BD-1)+ct-1]:clk;
+                wire cc=CLOCKED?clk_ctrl_meta[g*(BD-1)+ct-1]:clk;
                 if(ct==1)begin:g_first
                     always @(posedge cc)begin
                         c_go[ct]<=go_c;c_inv[ct]<=in_v_c;c_wlv[ct]<=wl_v_c;
@@ -182,9 +204,10 @@ module ot_hbm_norm_split_core_p #(
                 end
             end
             for(genvar rr_=0;rr_<RR;rr_=rr_+1)begin:g_reset_stage
-                wire rrclk=CLOCKED?clk_ctrl_relay[g*(BD-1)+(rr_%(BD-1))]:clk;
+                wire rrclk=CLOCKED?clk_ctrl_pre[g*(BD-1)+(rr_%(BD-1))]:clk;
                 if(rr_==0)always @(posedge rrclk)c_rst[rr_]<=rstn;
                 else always @(posedge rrclk)c_rst[rr_]<=c_rst[rr_-1];
+            end
             end
 `ifdef OT_NSPLIT_P_MUT
             // NEGATIVE CONTROL: group 1's in_v broadcast one stage short (in_v ahead of its x slice)
@@ -400,7 +423,7 @@ endmodule
 
 // Direct-die clock partition candidate: independent accepted children and new state leaves.
 module ot_hbm_norm_split_view_g8pc (
-    input wire clk, input wire [7:0] clk_tile, input wire [23:0] clk_ctrl_relay,clk_rstd_relay, input wire [6:0] clk_chunk,
+    input wire clk, input wire [7:0] clk_tile, input wire [23:0] clk_ctrl_pre,clk_ctrl_meta,clk_rstd_relay, input wire [6:0] clk_chunk,
     input wire [126:0] clk_vector,input wire [2:0] clk_scalar,input wire [1:0] clk_quant, input wire rst_n, input wire go, input wire in_v, input wire [4*64*32-1:0] in_x,
     input wire [127:0] pre, input wire [31:0] n_f, input wire [31:0] eps, input wire wl_v, input wire [7:0] wl_i,
     input wire [64*32-1:0] wl_d, input wire [31:0] cos_t, input wire [31:0] sin_t,
@@ -408,7 +431,7 @@ module ot_hbm_norm_split_view_g8pc (
     output wire q_v, output wire [7:0] q_i, output wire [2*256-1:0] q_codes, output wire [2*10-1:0] q_e,
     output wire [2*512-1:0] q_y, output wire ro_v, output wire [64*32-1:0] ro, output wire fault
 );
-    ot_hbm_norm_split_core_p #(.G(8),.CLOCKED(1),.VNLEAF(1)) u (.clk(clk),.clk_tile(clk_tile),.clk_ctrl_relay(clk_ctrl_relay),.clk_rstd_relay(clk_rstd_relay),
+    ot_hbm_norm_split_core_p #(.G(8),.CLOCKED(1),.VNLEAF(1)) u (.clk(clk),.clk_tile(clk_tile),.clk_ctrl_pre(clk_ctrl_pre),.clk_ctrl_meta(clk_ctrl_meta),.clk_rstd_relay(clk_rstd_relay),
         .clk_chunk(clk_chunk),.clk_vector(clk_vector),.clk_scalar(clk_scalar),.clk_quant(clk_quant), .rst_n(rst_n), .go(go), .in_v(in_v), .in_x(in_x), .pre(pre),
         .n_f(n_f), .eps(eps), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .cos_t(cos_t), .sin_t(sin_t), .y_v(y_v),
         .y_i(y_i), .y(y), .r_v(r_v), .r(r), .q_v(q_v), .q_i(q_i), .q_codes(q_codes), .q_e(q_e), .q_y(q_y),

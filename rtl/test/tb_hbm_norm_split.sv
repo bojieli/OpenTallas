@@ -32,7 +32,7 @@ module tb_hbm_norm_split #(parameter integer R = 4, parameter integer HUB_IN = 3
     wire [2*256-1:0] qc; wire [2*10-1:0] qe; wire [2*512-1:0] qy;
 `ifdef OT_NSPLIT_G8PC
     ot_hbm_norm_split_view_g8pc dut (
-        .clk_tile({8{clk}}),.clk_ctrl_relay({24{clk}}),.clk_rstd_relay({24{clk}}),.clk_chunk({7{clk}}),
+        .clk_tile({8{clk}}),.clk_ctrl_pre({24{clk}}),.clk_ctrl_meta({24{clk}}),.clk_rstd_relay({24{clk}}),.clk_chunk({7{clk}}),
         .clk_vector({127{clk}}),.clk_scalar({3{clk}}),.clk_quant({2{clk}}),
 `elsif OT_NSPLIT_G8P
     ot_hbm_norm_split_view_g8p dut (
