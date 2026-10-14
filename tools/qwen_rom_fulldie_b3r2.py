@@ -2795,7 +2795,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if idx not in pre_far:
             PT_EXT[_pt_key(P1)] = pos.ext(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
-        if d <= (RELAY_REACH_OK if skip_cl else RMAX):
+        terminal = getattr(v, 'TERMINAL_TIGHT', {})
+        direct_limit = min(terminal.get(tuple(eps[0]), float('inf')), terminal.get(tuple(eps[-1]), float('inf')))
+        if d <= min(RELAY_REACH_OK if skip_cl else RMAX, direct_limit):
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         cur_bits[0] = bits

@@ -631,16 +631,39 @@ def apply(v, m, G):
     # r9: a kept KV chain with a hop over the reach on the FINAL pins (a leaf re-seated, a view's real pins adopted) is
     # handed to the relay plan whole, like a chain with a relay inside a block
     pos = G._pin_pos(v, m)
+    from pair_check import Gate
+    clock_net = {(i, p.lstrip('*')): re.sub(r'_r\d+$', '', b)
+                 for b, c, n, es in m['buses'] if c == 'clock_trunk' for i, p in es}
+    pair_gate = Gate(default_um=G.RELAY_REACH_UM, buses=m['buses'], clock_net=clock_net)
+    by_final = {i.name: i for i in m['insts']}
     far = set()
     for b, c, n, e in m['buses']:
         if c.endswith('@kv') and len(e) == 2:
             (xa, ya), (xb, yb) = pos(*e[0]), pos(*e[1])
-            if abs(xa - xb) + abs(ya - yb) > G.RELAY_REACH_OK:
+            (ia, pa), (ib, pb) = e
+            limit = pair_gate.limit(ia, by_final[ia].master, pa, ib, by_final[ib].master, pb)
+            if abs(xa - xb) + abs(ya - yb) > min(G.RELAY_REACH_OK, limit - 10.0):
                 far.add(b.split('__r')[0])
     if far:
         t2 = _tear_overlapped(v, m, far)
         rec['torn_kv_chains_over_reach'] = t2
         m.setdefault('tp8b_kv', {}).setdefault('torn_chains', []).extend(t2)
+    # A rebuilt chain must also put its first/last relay inside the measured real endpoint reach.
+    # The interim relay has the pair gate's documented default residual; only exact view-bound limits tighten it.
+    tight = dict(getattr(v, 'TERMINAL_TIGHT', {}))
+    for b, c, n, es in m['buses']:
+        if len(es) != 2 or c in ('clock_trunk', 'reset') or c.endswith('@kv'):
+            continue
+        (ia, pa), (ib, pb) = es
+        for endpoint, outgoing in ((es[0], True), (es[1], False)):
+            inst, port = endpoint
+            master = by_final[inst].master
+            limit = (pair_gate.limit(inst, master, port, '__relay__', '__relay__', 'b') if outgoing else
+                     pair_gate.limit('__relay__', '__relay__', 'a', inst, master, port))
+            if 0 < limit < G.RELAY_REACH_OK:
+                tight[tuple(endpoint)] = min(tight.get(tuple(endpoint), float('inf')), max(1.0, limit - 10.0))
+    v.TERMINAL_TIGHT = tight
+    rec['pair_terminal_limits'] = {f'{i}.{p}': d for (i, p), d in sorted(tight.items())}
     return rec
 
 
