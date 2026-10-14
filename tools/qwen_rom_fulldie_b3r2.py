@@ -2488,6 +2488,17 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
 
     def poly_of(cl, P0, P1, bid=None, eps=None):
         path = _poly0(cl, P0, P1, bid=bid, eps=eps)
+        lane_window = (getattr(v, 'DIE_LANE_WINDOWS', {}) or {}).get(bid)
+        if lane_window:
+            lo, hi, xl = lane_window['y0'], lane_window['y1'], lane_window['x']
+            routed = [path[0]]
+            for a, b in zip(path, path[1:]):
+                if abs(a[0] - b[0]) < 1e-6 and max(a[1], b[1]) > lo and min(a[1], b[1]) < hi:
+                    ya, yb = max(lo, min(hi, a[1])), max(lo, min(hi, b[1]))
+                    routed.extend([(a[0], ya), (xl, ya), (xl, yb), (b[0], yb), b])
+                else:
+                    routed.append(b)
+            path = [q for j, q in enumerate(routed) if not j or q != routed[j - 1]]
         if not getattr(v, 'WALL_AVOID', False) or cl == 'corridor':
             return path
         if cl.startswith('kvn') or cl == 'd2d_fdi' or (bid or '') in tight_stride:

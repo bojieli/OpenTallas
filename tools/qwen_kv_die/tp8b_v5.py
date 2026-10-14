@@ -508,6 +508,15 @@ def apply(v, m, G):
         rec['ctrl'][st] = dict(strip=[cs.x, cs.y, cs.w, cs.h], kc=kc.name, pc=NPC)
     by = {i.name: i for i in m['insts']}
 
+    # g7 measured hot cut: x3 shares a 260-um window beside the PLL with kvn and embedding (0.676).
+    # Give that word a separate western lane; the next build still judges every adjacent cut and hop.
+    pll_lane = by.get('pll')
+    if pll_lane is not None:
+        v.DIE_LANE_WINDOWS = {'x3': dict(x=round(pll_lane.x - 216.0, 4),
+                                          y0=round(pll_lane.y - 50.0, 4),
+                                          y1=round(pll_lane.y + pll_lane.h + 50.0, 4))}
+        rec['die_lane_windows'] = v.DIE_LANE_WINDOWS
+
     # ---------------------------------------------------------------- T18 reset sequencer leaves, new reset nets
     pll, ck = by['pll'], by['clk_rx']
     # r9: qkd_rstseq is the CLOSED leaf (qkd_rstseq-kc1-b4a0a3156, 21.6 x 21.6); its reset input is por_n (PLL lock)
