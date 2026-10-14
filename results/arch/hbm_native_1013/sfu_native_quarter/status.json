@@ -31,10 +31,11 @@
   },
   "root_rule": "full-horizon payload75/60 \u00d7138 gives10350/8280FF perroot; plusvalid138 andcaptureregoptional; exactlyfourroots, slotsunassigned",
   "r4_mutant": {
-    "result": "COMPILING",
+    "result": "EXPECTED FAIL CONTROL_PHASE_MISMATCH cycle12",
     "mutation": "OT_SFU_PHASE_MUTANT adds real1742bit control register edge to grid while retirement metadata remainsunshifted; checker reads actual shifted grid bus",
     "source": "r4_mut_manifest.sha256",
-    "normal_source_relation": "default preprocessing retains direct raw_control\u2192control alias, same active graph as r3 source; strict production/native source gate stillpending"
+    "normal_source_relation": "default preprocessing retains direct raw_control\u2192control alias, same active graph as r3 source; strict production/native source gate stillpending",
+    "why_genuine": "actual clocked1742bit register inserted in candidate control\u2192arithmetic grid source, no checker-only mutation"
   },
   "r5_four_root": {
     "result": "COMPILING",
