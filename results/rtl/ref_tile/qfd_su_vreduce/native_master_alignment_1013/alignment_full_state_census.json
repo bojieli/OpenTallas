@@ -1,0 +1,52 @@
+{
+  "source_commit": "4c45b454f",
+  "source": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_master_bv_acc.sv",
+  "parameters": {
+    "SW": 64,
+    "VL": 7,
+    "IS": 1,
+    "OS": 1,
+    "CRX": 2,
+    "MC": 4,
+    "ML": 15
+  },
+  "full_declared_state": {
+    "VM_delay": 49152,
+    "CROM_delay": 45056,
+    "embedding_and_select_delay": 31680,
+    "mask_delay": 2880,
+    "VM_hold": 6144,
+    "source_embedding_select": 64,
+    "source_read_mask": 192
+  },
+  "partition_candidates": {
+    "8": {
+      "lanes_per_group": 8,
+      "declared_group_state": {
+        "VM_delay": 6144,
+        "CROM_delay": 5632,
+        "embedding_and_select_delay": 3960,
+        "mask_delay": 360,
+        "VM_hold": 768
+      },
+      "declared_group_total": 16864,
+      "source_staging_not_included": 256,
+      "implemented": false
+    },
+    "16": {
+      "lanes_per_group": 4,
+      "declared_group_state": {
+        "VM_delay": 3072,
+        "CROM_delay": 2816,
+        "embedding_and_select_delay": 1980,
+        "mask_delay": 180,
+        "VM_hold": 384
+      },
+      "declared_group_total": 8432,
+      "source_staging_not_included": 256,
+      "implemented": false
+    }
+  },
+  "qualification": "Declaration census only. Additional100352bits remains unchanged. Not mapped FF, clock-tree census, physical roots, placement, or source-to-leaf clock phase proof. Excludes input station, embedding producer, command controller, and lane datapath state.",
+  "full_declared_state_total": 135168
+}
