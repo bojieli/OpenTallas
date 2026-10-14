@@ -1,0 +1,78 @@
+{
+  "name": "hc_coeff_bank_ref",
+  "top": "ot_hgi_hc_coeff_bank",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_coeff_bank.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 30.24,
+    "h": 30.24
+  },
+  "std_area_um2": 300,
+  "area_basis": "Temporary estimate, actual mapped+pinhold+CTS needed",
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "wr_v",
+      "wr_index",
+      "wr_data"
+    ],
+    "N": [
+      "coef0",
+      "coef1"
+    ],
+    "E": [
+      "coef2",
+      "coef3"
+    ],
+    "S": [
+      "coef4"
+    ]
+  },
+  "macros": [],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 16
+  },
+  "job": {
+    "owner": "Codex:hbm_hc_norm",
+    "branch": "codex/hbm-hc-norm-takeover-1013",
+    "tag": "coeff",
+    "purpose": "Bounded5x128 coefficient storage,32leaves nativeHC; actualassignedpins/slot pending, no route",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/peers",
+      "rtl/hbm_accel/die_glue",
+      "rtl/lib"
+    ],
+    "benches": [
+      {
+        "name": "native_exact",
+        "cmd": "XDEF=\"-DHC_NATIVE -DHC_CLOCKED -DHC_STORELEAF -DHC_COEFFLEAF\" J=16 bash rtl/hbm_accel/generic/peers/run_hc_eng_b2.sh {RUN}/bench/exact eng && grep -q \"^HGI_HC_ENG_B2 PASS\" {RUN}/bench/exact/run.log",
+        "expect": "pass",
+        "threads": 16,
+        "peak_ram_gb": 96
+      },
+      {
+        "name": "native_coeff_mutant",
+        "cmd": "XDEF=\"-DHC_NATIVE -DHC_CLOCKED -DHC_STORELEAF -DHC_COEFFLEAF -DHMUT=15\" J=16 bash rtl/hbm_accel/generic/peers/run_hc_eng_b2.sh {RUN}/bench/coeff_mutant eng && grep -q \"^HGI_HC_ENG_B2 PASS\" {RUN}/bench/coeff_mutant/run.log",
+        "expect": "fail",
+        "threads": 16,
+        "peak_ram_gb": 96
+      }
+    ],
+    "views_to": "physical/ref_tile/hc_coeff_bank_ref/views",
+    "record_to": "results/rtl/ref_tile/hc_coeff_bank_ref"
+  },
+  "slot_change_request": {
+    "request": "results/arch/hbm_native_1013/hc_norm_takeover/slot_partition_request.json",
+    "reason": "Newsource-bound coefficient ownstate leaf has no v12 assigneddie slot or pins; measured outline pending"
+  }
+}
