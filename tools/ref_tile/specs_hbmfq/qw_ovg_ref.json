@@ -1,0 +1,118 @@
+{
+ "name": "qw_ovg_ref",
+ "top": "ot_hgi_qw_ovg",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovd.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 116.64,
+  "h": 177.12
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "W": [
+   "l_gp1",
+   "l_gp2"
+  ],
+  "S": [
+   "l_gp0",
+   "clk",
+   "rst_n",
+   "c_gv",
+   "c_gh"
+  ],
+  "N": [
+   "l_gp3"
+  ],
+  "E": [
+   "x_v",
+   "x_hd",
+   "x"
+  ]
+ },
+ "refglob": "*gpf*",
+ "io_flop_at_pins": {
+  "cols": 12,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 1,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "structural_change": "ovd split (Claude group-B r2/B3 10-14): qw_ovd_ref-w2 EARLY_FAIL_CONGESTION (GRT markers 16,481 -> 17,243): the 64x512 SRAM sat between the 4 x 1,024-b gather pins (W/S/N-west) and x (E) -> >= 1,600 b through two ~44-um channels (cut 0.75) and ~2,600 b of W-face fan-in in a 38.7-um W channel (2.6). The data head held two flows that share no signal (gather -> x; yc -> SRAM -> write beats), so it is split into ot_hgi_qw_ovg (gather, no macro) and ot_hgi_qw_ovs (SRAM + write side) with no seam and the same registers / reset relay depth: quant_wide_ov composition exact m0 PASS 3,328 words 184 cycles (= one-leaf 184/168), sk / w3 PASS, m1 / w1 / r2 mutants FAIL (EPYC4 gb3-ovsplit). This leaf: the gather (4 x 1,024 pin registers -> OR4 -> x 1,024), no macro.",
+ "job": {
+  "owner": "Claude:hbm-group-B3-1014",
+  "branch": "claude/hbm-quant-split-1013",
+  "tag": "s1",
+  "purpose": "WQ3 quant cluster data head, GATHER leaf of the split ovd: four gather pin registers (4,096) + OR4 register x (1,024) to the decoder; x_v / x_hd launch.",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ]
+ },
+ "pin_ranges": {
+  "l_gp1": [
+   2.0,
+   88.36
+  ],
+  "l_gp2": [
+   88.76,
+   175.12
+  ],
+  "l_gp0": [
+   2.0,
+   81.88
+  ],
+  "clk": [
+   82.28,
+   83.48
+  ],
+  "rst_n": [
+   83.88,
+   85.08
+  ],
+  "c_gv": [
+   85.48,
+   86.68
+  ],
+  "c_gh": [
+   87.08,
+   88.49
+  ],
+  "l_gp3": [
+   2.0,
+   109.28
+  ],
+  "x_v": [
+   15.6,
+   16.8
+  ],
+  "x_hd": [
+   17.2,
+   19.71
+  ],
+  "x": [
+   20.11,
+   163.12
+  ]
+ },
+ "why_floorplan": "gather leaf of the split data head: W face = gather pin registers of rows 1 / 2 (as ovd), S / N = rows 0 / 3, E = x (+ x_v / x_hd) to the decoder; no macro, so every pin register sits on its face and the OR4 + x register in the middle (2 levels).",
+ "clock": "spine",
+ "slot_change_request": "el1013-hbm-quant-split 2026-10-14 group-B3: quant data head ot_hgi_qw_ovd (unassigned parent slot) becomes two leaves: ot_hgi_qw_ovg 116.64 x 177.12 W of ot_hgi_qw_ovs 259.2 x 177.12; pins as ovd minus the moved faces; die lead to assign in v14."
+}
