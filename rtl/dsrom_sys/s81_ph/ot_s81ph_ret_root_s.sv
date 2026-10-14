@@ -314,13 +314,13 @@ module ot_s81ph_ret_root_s #(
 `endif
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            sv_s <= {S{1'b0}}; p_use <= 1'b0; p_ins <= 1'b0; p_slot <= {S{1'b0}};
-            for (k = 0; k < S; k = k + 1) scnt[k] <= 6'd0;
+            if (!LOCAL_DECISIONS) sv_s <= {S{1'b0}}; p_use <= 1'b0; p_ins <= 1'b0; p_slot <= {S{1'b0}};
+            if (!LOCAL_DECISIONS) for (k = 0; k < S; k = k + 1) scnt[k] <= 6'd0;
             a3_v <= 1'b0; a4_v <= 1'b0; add <= 1'b0; r_v <= 1'b0; fault <= 1'b0; e_two <= 1'b0; e_dup <= 1'b0;
             bwe_q <= 1'b0; bre_q <= 1'b0;
         end else begin
             p_use <= dec_add || dec_ins; p_ins <= dec_ins; p_slot <= slot_w;
-            for (k = 0; k < S; k = k + 1) if (slot_w[k]) begin
+            if (!LOCAL_DECISIONS) for (k = 0; k < S; k = k + 1) if (slot_w[k]) begin
                 if (dec_ins) begin scnt[k] <= (LOCAL_DECISIONS ? scnt[k] : cnt_sel) + 6'd1; sv_s[k] <= 1'b1; end
                 if (dec_add) begin scnt[k] <= (LOCAL_DECISIONS ? scnt[k] : cnt_sel) - 6'd1; sv_s[k] <= (LOCAL_DECISIONS ? scnt[k] : cnt_sel) != 6'd1; end
             end
@@ -339,6 +339,26 @@ module ot_s81ph_ret_root_s #(
     // vector update. The state still changes at the original decision edge.
     genvar bank, node;
     generate for (bank = 0; bank < S; bank = bank + 1) begin : g_ev_bank
+        // The selected slot alone consumes its local valid/count decision.
+        // These are the original state and edge, with no shared selected-vh
+        // reduction or counter operand selection in the per-slot update cone.
+        if (LOCAL_DECISIONS) begin : g_count_local
+            wire count_use = slot_w[bank] && ok;
+            wire count_cur = v_fwd ? p_ins : (!is_new && s2_vh[bank]);
+            wire [5:0] count_inc = scnt[bank] + 6'd1;
+            wire [5:0] count_dec = scnt[bank] - 6'd1;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) begin scnt[bank] <= 6'd0; sv_s[bank] <= 1'b0; end
+                else if (count_use) begin
+                    if (count_cur) begin
+                        scnt[bank] <= count_dec;
+                        sv_s[bank] <= scnt[bank] != 6'd1;
+                    end else if (!no_slot) begin
+                        scnt[bank] <= count_inc;
+                        sv_s[bank] <= 1'b1;
+                    end
+                end
+        end
         if (LOCAL_BANKS) begin : g_local
             (* keep = 1 *) wire bank_use = slot_w[bank] && (LOCAL_DECISIONS ? ok : (dec_add || dec_ins));
             wire bank_cur = LOCAL_DECISIONS ? (v_fwd ? p_ins : (!is_new && s2_vh[bank])) : v_cur;
