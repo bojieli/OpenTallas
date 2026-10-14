@@ -16,7 +16,8 @@
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
  ],
  "defines": [
-  "OT_S81PH_COLL_CES_SPLIT"
+  "OT_S81PH_COLL_CES_SPLIT",
+  "OT_S81_CES_LNPIN"
  ],
  "clock_port": "ck_x1",
  "reset_ports": [
@@ -56,7 +57,7 @@
    ]
   },
   {
-   "view": "physical/ref_tile/dscoll_cesc0/views/dsfd_coll_cesc0",
+   "view": "physical/ref_tile/dscoll_cesc0_ln/views/dsfd_coll_cesc0",
    "count": 1,
    "inst": "*u_c",
    "at": [
@@ -272,7 +273,7 @@
   "peak_ram_gb": 32,
   "pin_h": "M4"
  },
- "structural_change": "flat lane-slice (22,816 sinks on one clock root; three routes missed hold) split into hardened leaves with their own roots under a wires-only parent: 4 FP32 lane leaves, 3 xl relay leaves, 1 pass-through relay leaf, 1 output-stage leaf and the core (ces0 14,519 / cesn 13,919 sinks); one seam latency LSEAM in all four slices (lockstep asserted); every seam is leaf flop -> wire -> leaf flop; remove the shared parent clock spine: ten face entries each drive one hard-child clock pin, die delivers phi-R_i at each entry",
+ "structural_change": "flat lane-slice (22,816 sinks on one clock root; three routes missed hold) split into hardened leaves with their own roots under a wires-only parent: 4 FP32 lane leaves, 3 xl relay leaves, 1 pass-through relay leaf, 1 output-stage leaf and the core (ces0 14,519 / cesn 13,919 sinks); one seam latency LSEAM in all four slices (lockstep asserted); every seam is leaf flop -> wire -> leaf flop; remove the shared parent clock spine: ten face entries each drive one hard-child clock pin, die delivers phi-R_i at each entry | pc2: core child rebound to its LNPIN view (dedicated pin flops on the ln_d seam launch: gate5 TT -16.4/-39.5 ps came from the old core views 726 ps ln_d launch); Cn view spread 69.3 ps <= 80.",
  "child_clock_ref": "boundary",
  "slot_change_request": "el1011-s81die.log 2026-10-13 07:37 + 17:40 (s81-cesn): sp_collective/ce_s* slot 302.4 x 341.28 (flat lane-slice, M5) -> 432.0 x 345.6 hardened cluster of M5 leaves (parent routes M6 / M7 over them, PG M7, strap M8); pin faces N q / W xl / E tx+pt / S bw",
  "reroute_reason": {
@@ -281,14 +282,14 @@
  },
  "why_floorplan": "wires-only parent: 10 hard leaves, no register and no logic of its own; outline set by the leaves and their >= 20 um channels (see gen_specs.py CLUSTER)",
  "job": {
-  "owner": "Claude:s81-cesn-1013",
-  "branch": "claude/s81-cesn-1013",
-  "tag": "pc1",
-  "purpose": "Independent compensated clock entries; CLOSED leaves and all pipeline stages preserved",
+  "owner": "Claude:s81-romB2-1014",
+  "branch": "claude/s81-romB2-ces",
+  "tag": "pc2",
+  "purpose": "Per-child clock entries at phi-R_i (no parent spine); core child = the CLOSED LNPIN view (pin-flop launch of ln_d, OT_S81_CES_LNPIN): C0 ln2 boundary spread 80.5 ps (0.5 over 80: see log)",
   "benches": [
    {
     "name": "exact_coll_ceh_split",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench ceh_sp +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench ceh_sp +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -300,7 +301,7 @@
    },
    {
     "name": "exact_coll_ceh_split_cstress",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench ceh_sp_cs +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CSTRESS +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench ceh_sp_cs +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CSTRESS +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -312,7 +313,7 @@
    },
    {
     "name": "exact_coll_ceh_split_slow",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench ceh_sp_slow +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CSTRESS -GTSR=1 +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench ceh_sp_slow +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CSTRESS -GTSR=1 +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -324,7 +325,7 @@
    },
    {
     "name": "neg_cesl_lane_sum",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cesl +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CESL +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cesl +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CESL +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -335,7 +336,7 @@
    },
    {
     "name": "neg_cesx_parity_swap",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cesx +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CESX +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cesx +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CESX +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -346,7 +347,7 @@
    },
    {
     "name": "neg_cesp_lane_swap",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cesp +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CESP +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cesp +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CESP +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -357,7 +358,7 @@
    },
    {
     "name": "neg_ceh_err_flag",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_ceh +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CEH +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_ceh +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CEH +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -368,7 +369,7 @@
    },
    {
     "name": "neg_orc_slow",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_orc +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_ORC -GTSR=1 +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_orc +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_ORC -GTSR=1 +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -379,7 +380,7 @@
    },
    {
     "name": "neg_wfree2",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_wfree2 +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_LINK_WFREE2_MUT +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_wfree2 +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_LINK_WFREE2_MUT +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -390,7 +391,7 @@
    },
    {
     "name": "neg_cel_slice_swap",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cel +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CEL +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cel +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_MUT_CEL +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -401,7 +402,7 @@
    },
    {
     "name": "neg_nocredit_cstress",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_nocr_cs +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CSTRESS +define+OT_S81PH_MUT_NOCREDIT +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_nocr_cs +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CSTRESS +define+OT_S81PH_MUT_NOCREDIT +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -412,7 +413,7 @@
    },
    {
     "name": "neg_lockstep_noassert",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_lockstep_na +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CSTRESS +define+OT_S81PH_MUT_LOCKSTEP +define+OT_S81PH_LOCKSTEP_NOASSERT +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_lockstep_na +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81PH_COLL_CSTRESS +define+OT_S81PH_MUT_LOCKSTEP +define+OT_S81PH_LOCKSTEP_NOASSERT +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
@@ -423,13 +424,25 @@
    },
    {
     "name": "neg_coverage_no_passthrough",
-    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cov_nopt +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT -GNPT=0 +define+OT_S81PH_COLL_CES_ENTRIES",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench neg_cov_nopt +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT -GNPT=0 +define+OT_S81PH_COLL_CES_ENTRIES +define+OT_S81_CES_LNPIN",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 32,
     "needs": [
      "verilator"
     ],
+    "fail_regex": "TB_S81PH_COLL_SYS FAIL"
+   },
+   {
+    "name": "neg_ln_pin",
+    "cmd": "bash rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh {RUN}/bench ceh_sp +define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_RSL +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP +define+OT_S81PH_COLL_CEH +define+OT_S81PH_COLL_CES_SPLIT +define+OT_S81_CES_LNPIN +define+OT_S81_CES_MUT_LNPIN",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "min_count_regex": "records (\\d+) messages",
     "fail_regex": "TB_S81PH_COLL_SYS FAIL"
    }
   ],

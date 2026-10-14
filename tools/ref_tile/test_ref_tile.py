@@ -326,6 +326,48 @@ class Recipe(unittest.TestCase):
             if not f.startswith(kd):
                 self.assertTrue((RT.ROOT / f).is_file(), f)
 
+    def test_recipe_2_macro_edge_guard_default(self):
+        # el1014-root-macro-edge: a recipe-2 tile with hard macros routes with the macro-edge via guard (pre-GRT add,
+        # post-DRT remove); recipe 1, a spec with its own edge guard, and "macro_edge_guard": false do not get it
+        g = "source /src/physical/qwen_die_masters/sram_edge_guard.tcl"
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b, \
+                tempfile.TemporaryDirectory() as c, tempfile.TemporaryDirectory() as d:
+            new, old = self.kit(a), self.kit(b, recipe=1)
+            own = self.kit(c, boundary_tcl=["physical/qwen_die_masters/sram_edge_guard.tcl"])
+            off = self.kit(d, macro_edge_guard=False)
+        self.assertEqual(new["pre_grt.tcl"].count(g), 1)
+        self.assertEqual(new["post_drt.tcl"].count(g), 1)
+        self.assertLess(new["pre_grt.tcl"].index("grt_macro_top_layer.tcl"), new["pre_grt.tcl"].index(g))
+        self.assertNotIn(g, old["pre_grt.tcl"] + old["post_drt.tcl"])
+        self.assertEqual(own["pre_grt.tcl"].count(g), 1)                    # the spec's own entry, not a second one
+        self.assertNotIn(g, off["pre_grt.tcl"] + off["post_drt.tcl"])
+        s = RT.load_spec(spec(self.EXN))
+        RT.apply_recipe(s, 2)
+        kd = RT.kit_dir(s)
+        self.assertIn("physical/common_flow/macro_edge_via_guard.tcl", RT.referenced_paths(s, kd))
+        self.assertFalse(RT.macro_edge_guard(dict(s, macros=[])))           # no hard macro: no guard
+
+    def test_io_hold_margin_split(self):
+        # q14 r8 2026-10-14: route.io_hold_margin_ns relieves ONLY the route-time FF repair SDC of the boundary; sign-off
+        # (signoff.sdc, verdict post_sdc) is unchanged; no field -> one margin, no extra file (existing kits unchanged)
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            k = self.kit(a, name="iohm_a", route={"hold_margin_ns": 0.06, "io_hold_margin_ns": 0.01})
+            o = self.kit(b, name="iohm_b", route={"hold_margin_ns": 0.03})
+        ffr, so = k["signoff_ffrepair.sdc"], k["signoff.sdc"]
+        self.assertIn("set ::env(OT_IO_HOLD_SKEW) 0\nset ::env(OT_IO_IN_HOLD_SKEW) -50\n", ffr)
+        self.assertTrue(ffr.rstrip().endswith("unset -nocomplain ::env(OT_IO_IN_HOLD_SKEW)"))
+        self.assertNotIn("set ::env(OT_IO_IN_HOLD_SKEW)", so)
+        self.assertIn("set ::env(OT_IO_HOLD_SKEW) 50\n", so)
+        job = json.loads(k["job.json"])
+        self.assertIn("signoff_ffrepair.sdc'", job["stages"]["route"]["cmd"])
+        self.assertIn("HM=0.06 ", job["stages"]["route"]["cmd"])
+        self.assertTrue(job["verdict"]["post_sdc"][0].endswith("/signoff.sdc"))
+        self.assertTrue(any(f.endswith("/signoff_ffrepair.sdc") for f in json.loads(k["floorplan.json"])["referenced"]))
+        self.assertNotIn("signoff_ffrepair.sdc", o)
+        self.assertNotIn("signoff_ffrepair", json.loads(o["job.json"])["stages"]["route"]["cmd"])
+        with self.assertRaises(RT.SpecError):
+            RT.io_hold_relief_ps({"route": {"hold_margin_ns": 0.01, "io_hold_margin_ns": 0.02}})
+
     def test_recipe_2_spec_overrides(self):
         with tempfile.TemporaryDirectory() as a:
             k = self.kit(a, name="rcp_a", inhold=False, outhold=False, route={"hold_margin_ns": 0.02, "macro_halo_um": 3.24})

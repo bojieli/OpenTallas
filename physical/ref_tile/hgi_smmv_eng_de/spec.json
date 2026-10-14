@@ -150,5 +150,10 @@
  },
  "inhold": true,
  "outhold": true,
- "structural_change": "r0-b261b2e2c FLOORPLAN_MARGIN util 61.1% (std 6,573 um2 in 10,750 um2 core, flat leaf): outline 108 -> 112.32 sq (core ~11,660 um2 -> ~56%); RTL/pins/benches unchanged. Prior: "
+ "structural_change": "r0-b261b2e2c FLOORPLAN_MARGIN util 61.1% (std 6,573 um2 in 10,750 um2 core, flat leaf): outline 108 -> 112.32 sq (core ~11,660 um2 -> ~56%); RTL/pins/benches unchanged. Prior: ",
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

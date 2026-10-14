@@ -5,7 +5,7 @@ set -u
 SRC=$1; OUT=$2; mkdir -p $OUT
 S=$SRC/rtl/dsrom_sys
 FILES="$S/s81_ctrl/ot_s81_stage_seq.sv $S/s81_ctrl/ot_s81_pkg_ctrl.sv $S/s81_ctrl/ot_s81_stage_guard.sv $S/s81_ctrl/ot_s81_hop_tx.sv
- $S/s81_ctrl/ot_s81_stop.sv $S/s81_ctrl/ot_s81_host_cq.sv $S/s81_ctrl/ot_s81_ctrl.sv $S/ot_dsrom_stall_export.sv
+ $S/s81_ctrl/ot_s81_stop.sv $S/s81_ctrl/ot_s81_host_cq.sv $S/s81_ctrl/ot_s81_ctrl.sv $S/s81_ctrl/ot_s81_startup_barrier.sv $S/ot_dsrom_stall_export.sv
  $S/ot_dsrom_link_ct.sv $S/ot_dsrom_link_chan.sv $SRC/rtl/link/ot_link_crc32.sv $S/s81_ctrl/test/tb_s81_ctrl_chain.sv"
 bld() {   # <dir> <extra args>
   local B=$OUT/$1; shift; mkdir -p $B

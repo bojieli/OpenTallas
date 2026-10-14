@@ -102,6 +102,36 @@ def write(lef, plan, outdir, case):
     print(len(index), 'masters', sum(v['pins'] for v in index.values()), 'pins ->', out)
 
 
+def from_tcl(path, master, outline, out, case='v18'):
+    """Import a reviewed physical pin table, retaining exact bit ordering and clock entries.
+    Tile pin proposals must be reviewed/adjusted by the die lead before this becomes an assignment.
+    """
+    rx = re.compile(r'place_pin -pin_name \{([^}]+)\} -layer (M\d+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{([\d.]+) ([\d.]+)\}')
+    groups = defaultdict(list)
+    w, h = outline
+    clocks = defaultdict(list)
+    for name, ly, xs, ys, ws, hs in rx.findall(Path(path).read_text()):
+        x, y, pw, ph = map(float, (xs, ys, ws, hs))
+        face = min({'W': x, 'E': w-x, 'S': y, 'N': h-y}, key=lambda f: {'W': x, 'E': w-x, 'S': y, 'N': h-y}[f])
+        c, depth = (y, pw) if face in 'EW' else (x, ph)
+        mm = re.fullmatch(r'(.*)\[(\d+)\]', name)
+        base, bit = (mm.group(1), int(mm.group(2))) if mm else (name, 0)
+        groups[base].append((bit, face, ly, c, depth))
+        if base.startswith('ck'):
+            clocks['serial' if base.startswith('ckv') else 'stream'].append(name)
+    ports = {}
+    for base, bits in sorted(groups.items()):
+        bits.sort()
+        assert [b[0] for b in bits] == list(range(len(bits))), (base, 'duplicate or missing bits')
+        ports[base] = dict(bits=len(bits), uniform=False, per_bit=[list(b[1:]) for b in bits])
+    rec = dict(schema='opentallas.s81.assigned_pins.v1', master=master, case=case, outline_um=outline,
+               source=str(path), rule='die-reviewed explicit per-bit table; consumers must not change bit ordering',
+               clock_entries=dict(clocks), ports=ports)
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
+    Path(out).write_text(json.dumps(rec, separators=(',', ':'))+'\n')
+    print(master, sum(p['bits'] for p in ports.values()), 'pins,', sum(map(len, clocks.values())), 'clock entries')
+
+
 def tcl(path, scalar=()):
     r = json.loads(Path(path).read_text())
     w, h = r['outline_um']
@@ -114,13 +144,16 @@ def tcl(path, scalar=()):
             rows = [(s['face'], s['layer'], c_, s['depth']) for c_ in cs_]
         for i, (face, layer, c, d) in enumerate(rows):
             x, y = {'W': (d / 2, c), 'E': (w - d / 2, c), 'S': (c, d / 2), 'N': (c, h - d / 2)}[face]
-            sz = (d, 0.024) if face in 'EW' else (0.024, d)
+            width = 0.018 if layer in ('M2','M3') else 0.024
+            sz = (d, width) if face in 'EW' else (width, d)
             nm = port if port in scalar else f'{port}[{i}]'
             print(f"place_pin -pin_name {{{nm}}} -layer {layer} -location {{{x:.3f} {y:.3f}}} -pin_size {{{sz[0]:.3f} {sz[1]:.3f}}} -force_to_die_boundary")
 
 
 if __name__ == '__main__':
-    if len(sys.argv) >= 5 and sys.argv[1] == 'write':
+    if len(sys.argv) == 7 and sys.argv[1] == 'from-tcl':
+        from_tcl(sys.argv[2], sys.argv[3], [float(x) for x in sys.argv[4].split(',')], sys.argv[5], sys.argv[6])
+    elif len(sys.argv) >= 5 and sys.argv[1] == 'write':
         write(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[sys.argv.index('--case') + 1] if '--case' in sys.argv else 'v17')
     elif len(sys.argv) >= 3 and sys.argv[1] == 'tcl':
         tcl(sys.argv[2], tuple(sys.argv[sys.argv.index('--scalar') + 1].split(',')) if '--scalar' in sys.argv else ())
