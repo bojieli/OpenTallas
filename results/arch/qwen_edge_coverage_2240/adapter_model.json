@@ -38,12 +38,19 @@
       86.4
     ],
     "sum_leaf_height_um": 691.2,
-    "parent_height_left_for_channels_um": 86.4,
+    "parent_height_left_for_channels_um": 151.2,
     "max_leaf_pin_bits": 559,
     "clock_estimate_sinks_per_child": "~1900, real census required",
-    "arithmetic": "transport only, no arithmetic reorder"
+    "arithmetic": "transport only, no arithmetic reorder",
+    "requested_parent_outline_um": [
+      237.6,
+      842.4
+    ],
+    "interleaf_channel_um": 21.6,
+    "contract_777_6_fit": false
   },
   "unresolved": [
+    "Die lead accepted gate-only height842.4 request, no actual PHY frame fit/registered distribution claim.",
     "Die lead has no final native v5 pin assignment; candidate outlines not accepted.",
     "All external slice roots must deliver equal logical clock edges with phi-minus-R compensation, arrival spread and input edge staging verified; common-clock functional bench is not physical timing proof.",
     "Parent c/r delivery from current S face to tall stack needs per-pair reach analysis or registered distribution with explicitly priced cycles.",

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eu
-OUT=$1; CASE=$2; IMG=${3:?actualcromhexrequired}; mkdir -p "$OUT"
+OUT=$1; CASE=$2; IMG=${3:-physical/qwen_native_cbuf/images/layer0/crom.hex.gz}; mkdir -p "$OUT"
+if [[ "$IMG" == *.gz ]];then gzip -dc "$IMG" > "$OUT/crom.hex";IMG="$OUT/crom.hex";fi
 T=tb_qfd_cbuf_native_l0; MUT=0; LATERR=0
 case "$CASE" in exact) ;; row_mut) MUT=1;; bank_mut) MUT=2;; latency_mut) LATERR=1;; *) exit 2;; esac
 iverilog -g2012 -s "$T" -P"$T.MUT=$MUT" -P"$T.NTOK=1" -P"$T.RPS=1200" -P"$T.FLP=11" -P"$T.GRPS=1" -P"$T.TILE=1" -P"$T.LATERR=$LATERR" -o "$OUT/sim" \
