@@ -1107,6 +1107,17 @@ def build_r25gq_net(variant):
         moved[it.name] = (q.x - it.x, q.y - it.y)
         it.x, it.y, it.w, it.h, it.orient = q.x, q.y, q.w, q.h, q.orient
         insts.append(it)
+    if V.get('block_xy'):       # contract v14 (owner 10-14 P2P step 1): blocks re-sited by absolute origin (the VM8 union
+        # into the centre spine void); the closed tiles of a moved block move with it (child slots are block-relative)
+        byn_ = {i.name: i for i in insts}
+        for n_, xy_ in V['block_xy'].items():
+            it_ = byn_[n_]
+            it_.x, it_.y = round(xy_[0], 6), round(xy_[1], 6)     # exact (a whole-row GY shift keeps the union's seams)
+        for n_ in V['block_xy']:
+            bx_ = byn_[n_].box()
+            hh_ = [i.name for i in insts if i.name not in V['block_xy'] and i.kind != 'waypoint'
+                   and bx_[0] - 40 < i.x + i.w and i.x < bx_[2] + 40 and bx_[1] - 40 < i.y + i.h and i.y < bx_[3] + 40]
+            assert not hh_, ('re-sited block overlaps / closer than 40 um', n_, hh_)
     if V.get('att_su_relays'):          # the att -> SU relay stations sit at their [idx] positions
         insts += [i for i in geo_m['insts'] if i.master == 'hfd_att_su_relay']
     if V.get('hc_eng'):         # hgi-1010/b 10-10: the FUSED one-pass HC_POST + HC_PRE_NORM engine (~4-5 mm2 of cells,
@@ -1230,6 +1241,9 @@ def build_r25gq_net(variant):
     for bid, cls, bits, eps in base['buses']:
         if V.get('drop_buses') and re.fullmatch(V['drop_buses'], bid):
             continue
+        if V.get('ck_root'):    # contract v14: the PLL / POR ports leave hb_coll for the die clock root block
+            eps = [(V['ck_root'], e[1]) if e[0] == 'hb_coll' and re.fullmatch(r'(pll|por)_\w+', e[1]) else e
+                   for e in eps]
         if vb2_:
             eps = b2_retarget(bid, cls, eps)
         eps2 = [e for e in eps if e[0] not in gone]
@@ -1248,6 +1262,9 @@ def build_r25gq_net(variant):
         buses = [(b_, c_, w_, [e for e in eps if e[0] not in leaf]) for b_, c_, w_, eps in buses]
         buses = [b for b in buses if len(b[3]) >= 2 or (b[1].startswith(('clock', 'reset')) and b[3])]
         gone |= leaf
+    if V.get('p2p'):    # contract v14: a dropped chain's relays are on no bus at all (degree 0): they go too
+        used_ = {e[0] for b_ in buses for e in b_[3]}
+        gone |= {n for n, k_ in kind.items() if k_ == 'waypoint' and n not in used_}
     # ---- waypoints onto the R25GQ router paths
     wps = {it.name: it for it in base['insts'] if it.kind == 'waypoint' and it.name not in gone}
     adj = defaultdict(set)
@@ -1504,6 +1521,8 @@ def build_r25gq_net(variant):
         extra += b2_nets(vb2_)
     extra += [tuple(n_) for n_ in V.get('die_slot_nets') or ()]
     for ds_ in V.get('die_slots') or ():        # each die slot is a sink of its domain's clock and reset tree
+        if ds_.get('no_tree'):      # v14: the clock root block (PLL / POR) is the source of the trees, not a sink
+            continue
         for cls_, pre_, pin_ in (('clock_trunk', 'clk_', 'ck'), ('reset_tree', 'rst_', 'rst')):
             hit_ = [b_ for b_ in buses if b_[1] == cls_ and b_[0] == pre_ + ds_.get('domain', 'stream')]
             assert len(hit_) == 1, ('die slot clock / reset net', ds_['name'], pre_, len(hit_))
@@ -2837,7 +2856,7 @@ def build_r25gq_net(variant):
         # it, a registered reset relay (hfd_rrl, clocked by that buffer): the reset is a pipelined regional tree, never a
         # die-wide net.  Edges get buffer / relay pairs every <= LINK_STAGE_UM, so sibling paths are equal (balanced).
         # Leaves drive the block ck / rst pins of their cell and the common-clock data relays.
-        coll_ = next(i for i in insts if i.kind == 'spine' and i.name == 'hb_coll')
+        coll_ = next(i for i in insts if i.name == V.get('ck_root', 'hb_coll') and (V.get('ck_root') or i.kind == 'spine'))
         ck_sinks, rs_sinks, keep_b = defaultdict(list), defaultdict(list), []
         # v13 (pin_reach): the trees are built to the sinks' PINS (pin plans of this network, before the trees: a
         # block's ck / rst pin is where the die-wide net put it and pin_hold keeps it there), not to the block point
@@ -7199,7 +7218,9 @@ def r15_record(m):
 
 def write_sdc(path, m=None):
     if m is not None and m['variant'].get('clk_dom'):
-        Path(path).write_text(SDC_R15 + (vm8_fwd_clock_sdc() if m['variant'].get('vm8_fwd_clocks') else ''))
+        sdc_ = SDC_R15 if not m['variant'].get('ck_root') else \
+            SDC_R15.replace('hb_coll/pll_', m['variant']['ck_root'] + '/pll_').replace('on hb_coll', 'on ' + m['variant']['ck_root'])
+        Path(path).write_text(sdc_ + (vm8_fwd_clock_sdc() if m['variant'].get('vm8_fwd_clocks') else ''))
         return
     Path(path).write_text("""# HBM accelerator die clock domains (AGENTS.md clock domains), tools/hbm_accel_die_fp.py
 create_clock -name clk_stream -period 0.833 [get_pins {hb_vm/ck sm*/ck hb_cmdproc/ck hb_coll/pll}]
@@ -7813,6 +7834,102 @@ def r25gq_v13():
 
 V13_CONG = 'results/arch/hbm_die_feasibility_1014/v13_win_grt/cong_r4.npy'   # PathFinder round 4 (best GRT: 136,189)
 
+# contract v14 (owner 2026-10-14 09:00, HANDOFF 0ab: HBM peer-to-peer step 1; study results/arch/hbm_p2p_1014/STUDY.md)
+P2P_LINKS = dict(S0=('SW', 0), S1=('SW', 1), S2=('SW', 2), S3=('SE', 0), S4=('SE', 1),
+                 N0=('NW', 0), N1=('NW', 1), N2=('NE', 0), N3=('NE', 1))       # links rail-aligned 3 / 2 / 2 / 2
+P2P_RING = (('SW', 'SE'), ('SE', 'NE'), ('NE', 'NW'), ('NW', 'SW'))            # clockwise 2 x 2 ring, no diagonals
+COLLQ_H = 864.0                     # one row of closed ot_hcoll_port (406.08 x 401.76) + the engine core band
+COLLQ_WH = dict(q3=(4 * 45.36 + 3 * 406.08, COLLQ_H), q2=(950.4, COLLQ_H))   # 1,399.68 / 950.4 x 864 (slot estimate)
+CKGEN_WH = (216.0, 216.0)           # die clock root: PLL (behavioural analog core) + per-domain POR / reset release
+PR_BITS, RC_BITS, RR_BITS = 280, 261, 261   # ot_hfd_coll_q RW = 280; RED_CARRY {v, tag 3, mode, d 256} / {v, tag 3, d 256, rdy}
+
+
+def r25gq_v14():
+    """contract v14 (hbmdie 10-14, owner-approved P2P step 1) = v13 (pin-to-pin hops, IDX corner bands) +
+      * four quadrant COLL engines (ot_hfd_coll_q, one parameterised RTL: hfd_coll_q3 for SW = links S0-S2, hfd_coll_q2
+        for SE / NW / NE = 2 links each) at their link edges; the central hb_coll is gone.  Each engine talks to its own
+        lk_ep rail, its own SU quarter (inject / delivery / vmaddr / RED_CARRY) and its own VM slice (vcb, VM packet).
+      * 2 x 2 registered peer ring between the engines (280 b a direction: CTRL credits / done / fault, RED_CARRY,
+        RESULT bcast); the SU <-> SU 8 x 1,024 b cross links are REMOVED (RED_CARRY rides the ring, B2 sec 4).
+      * TKM: the 32-tile cluster stays ONE cluster (TOPK_MERGE k = 2,048 is not exact over 4 x 8 tiles; COLL RTL
+        finding 07:50, option (a)) beside the SW engine (QSOLO = SW), not 7.6 mm away in the NW HC column.
+      * VM8 union (25 closed tiles, cross buses abutted) moves into the centre spine void (centre at the die y centre).
+      * hb_hc_eng leaves the E equator band (it walled the SU_SE | SU_NE crossing: GRT r4 overflow there) for the
+        freed N spine band; its ring-client tap moves to the NE slice.
+      * die clock root hb_ckgen (PLL + POR, no longer on hb_coll) at the spine centre below VM8: the H-tree's first
+        two levels are the four quadrant roots (per-quadrant phi - R), reset staged down the same tree.
+      * cmdproc fans its COLL record (968 + recx 554 + cfg 40) to the four engines; only SW (HOME) returns.
+      * RGX lanes stay on HOME (SW)."""
+    v = r25gq_v13()
+    v['p2p'] = True
+    v['ck_root'] = 'hb_ckgen'
+    v['drop_blocks'] = tuple(v['drop_blocks']) + ('hb_coll',)
+    v['drop_buses'] = v['drop_buses'] + (r'|lk_lk_[NS]\d\w*|hb_su_[NS][EW]_coll\w*|hb_coll_su_[NS][EW]\w*|hgi_vmaddr_[NS][EW]\w*'
+                                         r'|hgi_coll_(cmd|ret)\w*|hgi_cfg_coll\w*|hgi_rgx[qrwa][01]\w*|hgi_vm[qr]_coll\w*'
+                                         r'|hb_su_[NS][EW]_su_[NS][EW]\w*')
+    v['vm_b2'] = dict(v['vm_b2'], coll_tree=(),
+                      clients=tuple((c, t, 'NE' if c == 'hb_hc_eng' else q) for c, t, q in v['vm_b2']['clients']))
+    # hb_hc_eng to the N spine band (x 14,304-18,689 / y 17,064-18,630; the preset y is before svc_ch_dh)
+    v['hc_eng'] = dict(v['hc_eng'], xy=(14304.0, 17064.0 - 108.0))
+    dy_ = -4918.32      # VM8 union: 2,277 rows of 2.16 down, centred on the die y centre (11,990.16 .. 13,990.27)
+    v['block_xy'] = {n_: (x_, y_ + dy_) for n_, (x_, y_) in dict(
+        hb_vm_sw=(14736.384, 16908.48), hb_vm_se=(15436.224, 16908.48),
+        hb_vm_nw=(14736.384, 17908.536), hb_vm_ne=(15436.224, 17908.536)).items()}
+    cq_ = dict(SW=('hfd_coll_q3', (10580.0, 6940.0)), SE=('hfd_coll_q2', (18960.0, 6960.0)),
+               NW=('hfd_coll_q2', (12150.0, 18135.0)), NE=('hfd_coll_q2', (19500.0, 18135.0)))
+    ds = [ds_ for ds_ in v['die_slots'] if ds_['name'] != 'hb_tkm']
+    for q, (mst_, xy_) in cq_.items():
+        ds.append(dict(name=f'hb_coll_{q}', master=mst_, xy=xy_, wh=COLLQ_WH[mst_[-2:]], clear=60.0))
+    ds.append(dict(name='hb_tkm', master='hfd_coll_tkm', xy=(8700.0, 8000.0), wh=TKM_WH, clear=100.0))
+    ds.append(dict(name='hb_ckgen', master='hfd_ckgen', xy=(15328.0, 11500.0), wh=CKGEN_WH, clear=20.0, no_tree=True))
+    nets = [n_ for n_ in v['die_slot_nets'] if not n_[0].startswith('tkm_')]
+    for l_, (q, k) in P2P_LINKS.items():
+        nets.append((f'lk_lk_{l_}', 'link_flit', 1122, (f'hb_coll_{q}', f'llk_{k}'), (f'ep_{l_}', 'f_lk')))
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        c_, su_, vs_ = f'hb_coll_{q}', f'hb_su_{q}', f'hb_vms_{q}'
+        nets += [(f'hb_su_{q}_coll', 'hub', 1024, (su_, 't_coll'), (c_, 'f_su')),
+                 (f'hb_coll_su_{q}', 'hub', 620, (c_, 't_su'), (su_, 'f_coll')),
+                 (f'hgi_vmaddr_{q}', 'hub', 80, (c_, 't_hgi_vmaddr'), (su_, 'f_hgi_vmaddr')),
+                 (f'rc_{q}', 'hub', RC_BITS, (su_, 't_rc'), (c_, 'f_rc')),             # RED_CARRY in (v, tag, mode, d)
+                 (f'rr_{q}', 'hub', RR_BITS, (c_, 't_rr'), (su_, 'f_rr')),             # carry result + rc_rdy
+                 (f'vcb_coll_{q}', 'hub', 1088, (c_, 't_vcb'), (vs_, 'f_vcb')),
+                 (f'vcb_coll_{q}_c', 'hub', 2, (vs_, 't_vcbc'), (c_, 'f_vcbc')),
+                 (f'hgi_vmq_coll_{q}', 'hub', 338, (c_, 't_hgi_vmq'), (vs_, 'f_hgi_coll')),
+                 (f'hgi_vmr_coll_{q}', 'hub', 274, (vs_, 't_hgi_coll'), (c_, 'f_hgi_vmr')),
+                 (f'hgi_coll_cmd_{q}', 'hub', 968, ('hb_cmdproc', f't_hgi_coll_{q}'), (c_, 'f_hgi_cmdproc')),
+                 (f'hgi_coll_recx_{q}', 'hub', 554, ('hb_cmdproc', f't_hgi_collx_{q}'), (c_, 'f_hgi_recx')),
+                 (f'hgi_cfg_coll_{q}', 'hub', 40, ('hb_cmdproc', f't_hgi_cfg_coll_{q}'), (c_, 'f_hgi_cfg'))]
+    nets.append(('hgi_coll_ret', 'hub', 3, ('hb_coll_SW', 't_hgi_cmdproc'), ('hb_cmdproc', 'f_hgi_coll')))
+    for a_, b_ in P2P_RING:     # cw a -> b, ccw b -> a (RTL ports pr_cw_o / pr_cw_i / pr_ccw_o / pr_ccw_i)
+        nets += [(f'pr_cw_{a_}_{b_}', 'hub', PR_BITS, (f'hb_coll_{a_}', 'pr_cw_o'), (f'hb_coll_{b_}', 'pr_cw_i')),
+                 (f'pr_ccw_{b_}_{a_}', 'hub', PR_BITS, (f'hb_coll_{b_}', 'pr_ccw_o'), (f'hb_coll_{a_}', 'pr_ccw_i'))]
+    nets += [('tkm_del', 'hub', 2180, ('hb_coll_SW', 't_tkm_del'), ('hb_tkm', 'f_del')),
+             ('tkm_w', 'hub', 545, ('hb_tkm', 't_w'), ('hb_coll_SW', 'f_tkm_w')),
+             ('tkm_cfg', 'hub', 40, ('hb_coll_SW', 't_tkm_cfg'), ('hb_tkm', 'f_cfg')),
+             ('tkm_st', 'hub', 8, ('hb_tkm', 't_st'), ('hb_coll_SW', 'f_tkm_st'))]
+    for k in (0, 1):            # RGX row-gather lanes: HOME engine
+        nets += [(f'hgi_rgxq{k}', 'hub', 38, ('hb_coll_SW', f't_hgi_rgxq{k}'), ('hb_loader', f'f_hgi_rgxq{k}')),
+                 (f'hgi_rgxr{k}', 'hub', 257, ('hb_loader', f't_hgi_rgxr{k}'), ('hb_coll_SW', f'f_hgi_rgxr{k}')),
+                 (f'hgi_rgxw{k}', 'hub', 326, ('hb_coll_SW', f't_hgi_rgxw{k}'), ('hb_loader', f'f_hgi_rgxw{k}')),
+                 (f'hgi_rgxa{k}', 'hub', 1, ('hb_loader', f't_hgi_rgxa{k}'), ('hb_coll_SW', f'f_hgi_rgxa{k}'))]
+    v['die_slots'], v['die_slot_nets'] = tuple(ds), tuple(nets)
+    v['dense_face_masters'] = tuple(m_ for m_ in v['dense_face_masters'] if m_ != 'hfd_coll') + ('hfd_coll_q3', 'hfd_coll_q2')
+    cs_ = dict(v['child_slots'])
+    cs_.pop('hfd_coll', None)
+    for mq_, n_ in (('hfd_coll_q3', 3), ('hfd_coll_q2', 2)):
+        cs_[mq_] = [dict(name=f'u_port[{c}]', cell='ot_hcoll_port', wh=HCOLL_WH,
+                         xy=(45.36 + c * (HCOLL_WH[0] + 45.36), 21.6), orient='R0') for c in range(n_)]
+    v['child_slots'] = cs_
+    c_ = os.environ.get('OT_HBMDIE_CONG', V14_CONG)
+    if c_:
+        v['cong'] = c_
+    else:
+        v.pop('cong', None)
+    return v
+
+
+V14_CONG = ''       # v14: no PathFinder history yet (rounds write results/arch/hbm_die_v14/cong_r<k>.npy)
+
 
 def _lef_size(lef, macro):
     txt = Path(lef).read_text()
@@ -7979,7 +8096,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gqn_pr9=r25gq_v9(), r25gqn_b2=r25gq_b2(), r25gqn_v10=r25gq_v10(), r25gqn_v10_hclegal=r25gq_v10_hclegal(), r25gqn_v12=r25gq_v12(), r25gqn_v13=r25gq_v13(), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25g4=R25G4, r25g4t4=R25G4T4, r25gp=R25GP, r25gph=R25GPH, r25gpht4=R25GPHT4, r25gv=R25GV, r25gq=R25GQ, r25gqn=dict(R25GQ, r25gq_net=True), r25gqn_pr=dict(R25GQ, r25gq_net=True, **R25GQ_PR), r25gqn_pr8=dict(R25GQ, r25gq_net=True, **dict(R25GQ_PR, **R25GQ_V8)), r25gqn_pr9=r25gq_v9(), r25gqn_b2=r25gq_b2(), r25gqn_v10=r25gq_v10(), r25gqn_v10_hclegal=r25gq_v10_hclegal(), r25gqn_v12=r25gq_v12(), r25gqn_v13=r25gq_v13(), r25gqn_v14=r25gq_v14(), r25gm=R25GM, r25g4m=R25G4M, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

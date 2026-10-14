@@ -283,7 +283,9 @@ def main(argv=None):
         if a.dump_model:
             a.dump_model.write_bytes(pickle.dumps(dict(
                 insts={i.name: (i.master, i.kind, i.x, i.y, i.w, i.h, i.orient) for i in m['insts']}, buses=m['buses'],
-                segs=segs, geo=m['geo'], phys=m.get('phys_relays'))))
+                segs=segs, geo=m['geo'], phys=m.get('phys_relays'),
+                fclk=m.get('fclk') or {}, fwd_dom=m.get('fwd_dom') or {}, group_slots=m.get('group_slots'),
+                child_slots=m.get('child_slots'))))
     res, (dH, dV, cH, cV, opn) = run(I, segs)
     nx, ny = dH.shape
     if a.hot:
