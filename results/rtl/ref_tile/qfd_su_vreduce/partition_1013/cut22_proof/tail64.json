@@ -1,0 +1,95 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_su_vred_tail64_20261013-220335.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_su_vred_tail64_20261013-220335.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qfd_su_vred_tail64-20261013-220335",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc1tb in 87 s (gate total 290 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 7783 um2 + macros 0 in core 13106: util 59%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hdc_vreduce_tail64 cells 66,902 flops 9,517 depth 636.8 ps util 0.5012 reach 0.0 um (1.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage chunk[248]$_DFF_P_ -> g_tree[1].g_pair[3].u_op.g_cut.u_add.s1_small[0]$_DFF_P_/D: ~637 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 232.9..248.9 ps (spread 16.0), boundary mean 244.4; tt insertion all 177.4..191.3 ps (spread 13.9), boundary mean 187.5; ff insertion all 143.8..157.2 ps (spread 13.4), boundary mean 153.6; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      299 paths, worst slack 4.1 ps (e.g. g_tree[1].g_pair[3].u_op.g_cut.u_add.s1_small[0]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out        1 paths, worst slack 18.9 ps (e.g. o_we)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       124 paths, worst slack 504.2 ps (e.g. g_tree[3].g_pair[0].u_op.g_cut.u_add.valid_out$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 4.141964549120303e-12 hold WNS 2.6129362562521408e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 9,517 sinks on the largest root <= 15,000; measured TT insertion 191.3 ps, leaf spread 13.9 ps",
+   "fix": ""
+  }
+ ]
+}

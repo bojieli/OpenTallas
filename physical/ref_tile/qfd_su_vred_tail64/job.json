@@ -1,9 +1,9 @@
 {
- "name": "qfd_su_vred_tail64-p2-COMMIT",
+ "name": "qfd_su_vred_tail64-p3-COMMIT",
  "block": "ot_hdc_vreduce_tail64",
  "ref_tile": true,
  "owner": "Codex smallmasters",
- "purpose": "Native64 regional reduction with actual add4/mul5 cuts; unchanged ordered arithmetic, +22resultedges vs original measured pending",
+ "purpose": "Native64 regional reduction with add4/mul5, valid-only reset at multiplier cuts; ordered arithmetic, measured +22 result edges versus original",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {

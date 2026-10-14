@@ -16,7 +16,16 @@ module ot_hdc_vreduce_region8 #(parameter integer AW=24,QLA=3,QLM=3) (
     wire [SW-1:0]    fsq;
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_sq
-        ot_hdc_qmul #(.L(LM)) u_sq (clk, rst_n, iv && isq, ix[32*l +: 32], ix[32*l +: 32], xsq[32*l +: 32], fsq[l]);
+        if (LM == 3) begin : g_fast
+          ot_hdc_qmul #(.L(LM)) u_sq (clk, rst_n, iv && isq, ix[32*l +: 32], ix[32*l +: 32], xsq[32*l +: 32], fsq[l]);
+        end else begin : g_cut
+          wire [1:0] err;
+          wire vo;
+          ot_hdc_fp32_mul_lat #(.LAT(LM), .DRST(0)) u_sq (.clk(clk), .rst_n(rst_n),
+            .valid_in(iv && isq), .a(ix[32*l +: 32]), .b(ix[32*l +: 32]),
+            .y(xsq[32*l +: 32]), .err(err), .valid_out(vo));
+          assign fsq[l] = vo && (err != 0);
+        end
     end endgenerate
     wire [SW*32-1:0] xq;
     wire [TAG-1:0]   tq;

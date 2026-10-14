@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   286 GB (avail 526, growth 228, headroom 48, waiters 0/0 GB) load 123/128 running 21 disk 1259 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-317437-1791954213 after 0 s
+CENSUS regioncut rc=0 top=ot_hdc_vreduce_region8 flops=15719 memcells=0
+     1 x ot_hdc_vreduce_region8                                                 flops    15719 (own 628) mem 0
+       8 x P:ot_hdc_qmul\L=s32'00000000000000000000000000000101                   flops      889 (own 0) mem 0
+         1 x P:ot_hdc_fp32_mul_lat\LAT=s32'00000000000000000000000000000101         flops      889 (own 617) mem 0
+       7 x P:ot_hdc_vred_leaf_op\LA=s32'00000000000000000000000000000100          flops      441 (own 0) mem 0
+         1 x P:ot_hdc_fp32_add_lat                                                  flops      309 (own 206) mem 0
+       1 x P:ot_hdc_delay                                                         flops     1415 (own 1415) mem 0
+       1 x P:ot_hdc_delay                                                         flops      768 (own 768) mem 0
+       1 x P:ot_hdc_delay                                                         flops      728 (own 728) mem 0
+       1 x P:ot_hdc_delay                                                         flops      640 (own 640) mem 0
+       1 x P:ot_hdc_delay                                                         flops      512 (own 512) mem 0
+       1 x P:ot_hdc_delay                                                         flops      384 (own 384) mem 0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-317437-1791954213): exit 0

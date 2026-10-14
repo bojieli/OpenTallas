@@ -24,7 +24,9 @@ module ot_hdc_fp32_mul_lat #(
     // KCP > 1 (margin m3, 2026-10-06): the C1 operand register is KCP kept copies (ot_hdc_mul_kcp48), each driving
     // 24/KCP partial products, so the 24-load operand broadcast to the partial-product rows is a local net.  Values
     // identical (every copy captures the same a_n / b_n); no added cycle.  Needs CUT1.
-    parameter integer KCP = 1
+    parameter integer KCP = 1,
+    // Opt-in: reset only valid bits at extra cuts; payload is ignored until valid.
+    parameter integer DRST = 1
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -57,7 +59,7 @@ module ot_hdc_fp32_mul_lat #(
     // ---- S1a: decode, normalise --------------------------------------------------------------------
     // C7: field / zero / non-finite decode | LZC, power
     wire [68:0] c7;
-    ot_hdc_w11_cut #(.W(69), .CUT(CUT7)) u_c7 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(69), .CUT(CUT7), .VB(DRST ? -1 : 69-1)) u_c7 (.clk(clk), .rst_n(rst_n),
         .d({valid_in, a, b, (a[30:23] == 8'd0), (b[30:23] == 8'd0),
             (a[30:23] == 8'hff) || (b[30:23] == 8'hff), (a[30:0] == 31'd0) || (b[30:0] == 31'd0)}), .q(c7));
     wire        x_v, x_afz, x_bfz, nonfinite, zero;
@@ -77,7 +79,7 @@ module ot_hdc_fp32_mul_lat #(
     // C5: decode / LZC | normalise shift
     localparam integer W5 = 1 + 1 + 2 + 1 + 24 + 24 + 5 + 5 + 12 + 12;
     wire [W5-1:0] c5;
-    ot_hdc_w11_cut #(.W(W5), .CUT(CUT5)) u_c5 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(W5), .CUT(CUT5), .VB(DRST ? -1 : W5-1)) u_c5 (.clk(clk), .rst_n(rst_n),
         .d({x_v, nonfinite || zero, (nonfinite ? E_NONFINITE : E_NONE), x_a[31] ^ x_b[31], a_raw, b_raw, a_lz[4:0],
             b_lz[4:0], a_power, b_power}), .q(c5));
     wire        n_v, n_bz, n_sign;
@@ -90,7 +92,7 @@ module ot_hdc_fp32_mul_lat #(
     wire [23:0] b_n = n_br << n_bl;
     localparam integer W1 = 1 + 1 + 2 + 1 + 24 + 24 + 12 + 12;
     wire [W1-1:0] c1;
-    ot_hdc_w11_cut #(.W(W1), .CUT(CUT1)) u_c1 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(W1), .CUT(CUT1), .VB(DRST ? -1 : W1-1)) u_c1 (.clk(clk), .rst_n(rst_n),
         .d({n_v, n_bz, n_err, n_sign, a_n, b_n, n_ap, n_bp}),
         .q(c1));
     wire        p_v, p_byp, p_sign;
@@ -163,7 +165,7 @@ module ot_hdc_fp32_mul_lat #(
     end
     localparam integer W2 = 1 + 1 + 2 + 1 + 96 + 1 + 1 + 12 + 12 + 6 + 48 + 48;
     wire [W2-1:0] c2;
-    ot_hdc_w11_cut #(.W(W2), .CUT(CUT2)) u_c2 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(W2), .CUT(CUT2), .VB(DRST ? -1 : W2-1)) u_c2 (.clk(clk), .rst_n(rst_n),
         .d({s1_v, s1_byp, s1_err, s1_sign, l7, fl47 < -12'sd126, fl46 < -12'sd126, fl47, fl46, shc, m_round, m_sticky}),
         .q(c2));
     wire        q_v, q_byp, q_sign, q_s47, q_s46;
@@ -211,7 +213,7 @@ module ot_hdc_fp32_mul_lat #(
     wire st = is_sub ? s_st : n_st;
     localparam integer W3 = 1 + 1 + 2 + 1 + 1 + 12 + 24 + 1;
     wire [W3-1:0] c3;
-    ot_hdc_w11_cut #(.W(W3), .CUT(CUT3)) u_c3 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(W3), .CUT(CUT3), .VB(DRST ? -1 : W3-1)) u_c3 (.clk(clk), .rst_n(rst_n),
         .d({s2_v, s2_byp, s2_err, s2_sign, is_sub, fl, main, rb && (st || main[0])}), .q(c3));
     wire        r_v, r_byp, r_sign, r_sub, r_inc;
     wire [1:0]  r_err;
@@ -224,7 +226,7 @@ module ot_hdc_fp32_mul_lat #(
     ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(r_main), .b(24'd0), .cin(r_inc), .s(rnd_w), .cout(rnd_cw));
     localparam integer W4 = 1 + 1 + 2 + 1 + 1 + 12 + 24 + 1;
     wire [W4-1:0] c4;
-    ot_hdc_w11_cut #(.W(W4), .CUT(CUT4)) u_c4 (.clk(clk), .rst_n(rst_n),
+    ot_hdc_w11_cut #(.W(W4), .CUT(CUT4), .VB(DRST ? -1 : W4-1)) u_c4 (.clk(clk), .rst_n(rst_n),
         .d({r_v, r_byp, r_err, r_sign, r_sub, r_fl, rnd_w, rnd_cw}), .q(c4));
     wire        o_v, o_byp, o_sign, o_sub, rnd_c;
     wire [1:0]  o_err;
@@ -243,7 +245,7 @@ module ot_hdc_fp32_mul_lat #(
     // C6: encode | refusals -> y
     localparam integer W6 = 1 + 1 + 2 + 1 + 32;
     wire [W6-1:0] c6;
-    ot_hdc_w11_cut #(.W(W6), .CUT(CUT6)) u_c6 (.clk(clk), .rst_n(rst_n), .d({o_v, o_byp, o_err, over, code}), .q(c6));
+    ot_hdc_w11_cut #(.W(W6), .CUT(CUT6), .VB(DRST ? -1 : W6-1)) u_c6 (.clk(clk), .rst_n(rst_n), .d({o_v, o_byp, o_err, over, code}), .q(c6));
     wire        e_v, e_byp, e_over;
     wire [1:0]  e_err;
     wire [31:0] e_code;
