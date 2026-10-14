@@ -48,16 +48,17 @@ module ot_hgi_dma_front_xs_vm4 #(
             end else e4m3_f = {c[7], 8'd120 + {4'd0, e}, m, 20'd0};
         end
     endfunction
+    // conv: every slice is a constant (word w of quarter 0): no runtime part-select (src16c; the j argument was
+    // always 2'd0 at every call site and is kept only so the call sites stay byte-identical).
     function automatic [255:0] conv(input [255:0] s, input [2:0] f, input [1:0] j);
-        reg [255:0] o; integer w; reg [7:0] b; reg [15:0] h;
+        reg [255:0] o; reg [7:0] b; reg [15:0] h;
         begin
             o = 256'd0;
-            for (w = 0; w < 8; w = w + 1) begin
+            for (int w = 0; w < 8; w = w + 1) begin
                 case (f)
-                    3'd1: begin h = s[({3'd0, j} * 8 + w) * 16 +: 16]; if (MUT == 1) h = s[({3'd0, j} * 8 + (7 - w)) * 16 +: 16];
-                                o[w*32 +: 32] = {h, 16'd0}; end
-                    3'd2: begin b = s[({3'd0, j} * 8 + w) * 8 +: 8]; o[w*32 +: 32] = e4m3_f(b); end
-                    3'd4: begin b = s[({3'd0, j} * 8 + w) * 8 +: 8]; o[w*32 +: 32] = i8_f(b); end
+                    3'd1: begin h = (MUT == 1) ? s[(7 - w) * 16 +: 16] : s[w * 16 +: 16]; o[w*32 +: 32] = {h, 16'd0}; end
+                    3'd2: begin b = s[w * 8 +: 8]; o[w*32 +: 32] = e4m3_f(b); end
+                    3'd4: begin b = s[w * 8 +: 8]; o[w*32 +: 32] = i8_f(b); end
                     default: o[w*32 +: 32] = s[w*32 +: 32];
                 endcase
             end
@@ -130,9 +131,11 @@ module ot_hgi_dma_front_xs_vm4 #(
           always @(posedge clk)begin:word_out
             reg [255:0] selected;reg [2:0] f;reg [17:0] sector;
             selected=0;f=0;sector=0;
+            // src16c: explicit AND-OR (mask, then OR) instead of if-guarded accumulation: synthesis sees a balanced
+            // 64-input OR per bit, not a 64-deep priority mux chain feeding conv (src16/16b synthesis passed 2,700 s).
             for(integer i=0;i<NIN;i++)begin
-              if(qsel[i*4+:4]!='0)f=f|ls_q[i*277+274+:3];
-              for(integer q=0;q<4;q++)if(qsel[i*4+q])begin sector=sector|ls_sec[(i*4+q)*18+:18];selected=selected|lw[(i*4+q)*256+:256];end
+              f=f|({3{qsel[i*4+:4]!='0}}&ls_q[i*277+274+:3]);
+              for(integer q=0;q<4;q++)begin sector=sector|({18{qsel[i*4+q]}}&ls_sec[(i*4+q)*18+:18]);selected=selected|({256{qsel[i*4+q]}}&lw[(i*4+q)*256+:256]);end
             end
             w_v<=x_v;w_bad<=x_v&&sector>=18'd36864;
             wl_d<={(MUT==8)?1'b0:(sector>=18'd32768&&sector<18'd36864),sector[14:0],conv(selected,f,2'd0),sector>=18'd36864 ? 8'h00 : 8'hff};
