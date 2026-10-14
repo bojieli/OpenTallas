@@ -8,9 +8,7 @@ module ot_s81_pq_qb_sram (
     input wire [9:0] aqi_d,
     input wire [511:0] aq_q,
     input wire [19:0] aq_e,
-`ifdef OT_PQ_AQ_SIDE_PARITY
-    input wire [9:0] aq_p,
-`endif
+    input wire [9:0] aq_p, // ignored unless OT_PQ_AQ_SIDE_PARITY
     input wire [15:0] h_b0, h_b1,
     input wire [1:0] hw_sv,
     output reg [255:0] hq0, hq1,

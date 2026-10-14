@@ -17,10 +17,9 @@ module ot_dsrom_aq12t (
     output reg  [255:0]  q,
     output reg  signed [9:0] e,
     output reg  [511:0]  y,
-    output reg           fault
-`ifdef OT_PQ_AQ_SIDE_PARITY
-    , output reg [4:0]    qp
-`endif
+    output reg           fault,
+    // Optional native seam; ignored by legacy parents, zero when disabled.
+    output reg [4:0]     qp
 );
     // the tile's reset relay (el1011-ds-misc/pqc): rst_n is synchronised and re-driven from a flop next to the tile's
     // control flops (vline, multiplier valids, ring pointers, vo / fault); no datapath register is reset.
@@ -305,6 +304,9 @@ module ot_dsrom_aq12t (
             s16_sub[i] <= (shs < 12'sd0) ? 7'd0 : ({2'd0, c} << shs[3:0]);
         end
     end
+`ifndef OT_PQ_AQ_SIDE_PARITY
+    always @* qp = 5'd0;
+`endif
     // -- cycle 29 (S17): codes and dequantised BF16 (output registers) ----------------------------------------------
     always @(posedge clk or negedge rst_l) begin
         if (!rst_l) begin vo <= 1'b0; fault <= 1'b0; end
