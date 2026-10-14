@@ -29,6 +29,13 @@ int main(){try {
  for(unsigned i=0;i<1000;++i){router.sample_core(bp);router.drive_core(bp);check(!b[7].core_tx_v,"paused peer cannot consume delayed request");}
  router.pause_ctrl_destination(7,false);router.drive_core(bp);check(b[7].core_tx_v,"genuine peer reservation after release");
  router.reset_all();for(auto& p:b)p=Pins{};
+ Payload ingest{};for(unsigned n=0;n<64;++n)check(router.enqueue(0,4,ingest),"bounded independent ING reservation");
+ check(!router.enqueue(0,4,ingest),"ING capacity cannot grow unbounded");
+ b[1].core_rx_v=true;b[1].core_rx_d=packet(1,status1);router.sample_core(bp);
+ check(b[1].core_rx_cr,"full ING cannot exclude actual CTRL receive reservation");
+ b[1].core_rx_v=false;
+ for(unsigned n=0;n<17;++n){router.drive_core(bp);if(n<16)check((b[0].core_tx_d[16]>>12)==4,"initial ING real logical window");else check(b[0].core_tx_v&&b[0].core_tx_d[0]==status1[0],"stalled ING cannot block independent CTRL");b[0].core_tx_cr=true;router.sample_core(bp);}
+ router.reset_all();for(auto& p:b)p=Pins{};
  Payload write{};write[0]=0x0114;put64(write,1,0x800);put64(write,3,0xdeadbeef87654321ull);write[5]=15;
  router.store64(0x800,0xaabbccdd11223344ull);b[0].core_rx_v=true;b[0].core_rx_d=packet(0,write);router.sample_core(bp);
  check(router.load64(0x800)==0xaabbccdd87654321ull&&router.dma_writes()==1,"actual DMA byte mask");

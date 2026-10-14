@@ -35,6 +35,7 @@ class Router {
  struct Queued { Word528 word;int origin; };
  // Original sender ownership is distinct from destination logical capacity.
  std::array<std::deque<Queued>,ranks> q_{};
+ std::array<std::array<unsigned,4>,ranks> pending_{};
  std::array<std::array<std::deque<int>,3>,ranks> owners_{};
  std::array<std::array<unsigned,3>,ranks> logical_{};
  std::array<unsigned,ranks> tx_capacity_{};
@@ -49,8 +50,9 @@ class Router {
  static unsigned limit(unsigned g) { return g==2?16:4; }
  static void check_rank(unsigned rank) { require(rank<ranks,"rank outside ND8"); }
  bool add(unsigned dest,const Word528& w,int origin) {
-  check_rank(dest);if(q_[dest].size()==depth)return false;
-  q_[dest].push_back({w,origin});return true;
+  check_rank(dest);unsigned cls=(w[16]>>12)&15;int g=group(cls);unsigned bucket=g<0?3:unsigned(g);
+  if(pending_[dest][bucket]==depth)return false;
+  q_[dest].push_back({w,origin});++pending_[dest][bucket];return true;
  }
  void add_required(unsigned dest,const Word528& w,int origin) {
   require(add(dest,w,origin),"router reservation queue exhausted");
@@ -60,8 +62,8 @@ class Router {
   Payload p{};p[0]=count<<(8*g);
   // Credit packets bypass destination application windows and must pass blocked
   // data in order to break a full logical-window stall.
-  require(q_[dest].size()<depth,"router credit reservation exhausted");
-  q_[dest].push_front({packet(7,p),-1});
+  require(pending_[dest][3]<depth,"router credit reservation exhausted");
+  q_[dest].push_front({packet(7,p),-1});++pending_[dest][3];
  }
  void returned(unsigned dest,const Payload& p) {
   require((p[0]&0xff000000u)==0,"credit packet reserved bits");
@@ -124,7 +126,7 @@ public:
  // Board RAM persists across a HOST/link reset; outstanding callbacks flush.
  void reset_all() {
   for(unsigned r=0;r<ranks;++r) {
-   q_[r].clear();tx_capacity_[r]=4;irq_[r]=false;pause_ctrl_[r]=false;
+   q_[r].clear();pending_[r]={};tx_capacity_[r]=4;irq_[r]=false;pause_ctrl_[r]=false;
    for(unsigned g=0;g<3;++g){owners_[r][g].clear();logical_[r][g]=limit(g);}
    to_host_[r]={};to_board_[r]={};
   }
@@ -210,6 +212,7 @@ public:
    }
    if(selected==q_[r].end())continue;
    Queued event=*selected;q_[r].erase(selected);unsigned cls=(event.word[16]>>12)&15;int g=group(cls);
+   --pending_[r][g<0?3:unsigned(g)];
    if(g>=0){--logical_[r][unsigned(g)];owners_[r][unsigned(g)].push_back(event.origin);}
    --tx_capacity_[r];for(unsigned n=0;n<17;++n)b.core_tx_d[n]=event.word[n];b.core_tx_v=1;
   }
