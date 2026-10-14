@@ -61,7 +61,7 @@ module tb_hgi_hc_coll_b2;
     localparam integer STOREMODE=0;
 `endif
     ot_hgi_hc_coll_b2 #(.STORELEAF(STOREMODE),.CLOCKED(STOREMODE),.NQ(4), .P(2), .NB(20), .CD(CD), .MUT(MUT)) u_coll (.clk(clk), .rst_n(rst_n), .clr(clr), .ep(ep),
-        .clk_store({20{clk}}),.clk_scan({4{clk}}),.clk_block_add({31{clk}}),.clk_heap_add({31{clk}}),
+        .clk_store({20{clk}}),.clk_scan({32{clk}}),.clk_block_add({31{clk}}),.clk_heap_add({31{clk}}),
         .pk_v(rst_n ? lv[LD] : 8'd0), .pk(ld[LD]), .pk_cr(pk_cr), .ss_v(ss_v), .ss(ss), .flt(flt), .n_stale(n_stale));
     // credits back: held at random (jit = 0: next cycle), and the protocol monitor at the concentrator pins
     integer jit = 0, errors = 0, pend [0:7], outst [0:7], maxout = 0, starved = 0;

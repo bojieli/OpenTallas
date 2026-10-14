@@ -118,7 +118,7 @@ module ot_hgi_hc_coll_b2 #(
 ) (
     input  wire               clk,
     input  wire               rst_n,
-    input wire[NB-1:0] clk_store,input wire[NQ-1:0] clk_scan,
+    input wire[NB-1:0] clk_store,input wire[NQ*8-1:0] clk_scan,
     input wire[30:0] clk_block_add,clk_heap_add,
     input  wire               clr,           // a new row: every chunk, block and heap node forgotten
     input  wire [1:0]         ep,            // the row's epoch (stable from clr)
@@ -186,7 +186,7 @@ module ot_hgi_hc_coll_b2 #(
           .full(store_full[bs]),.fault(store_fault[bs]));
       end
       for(genvar q=0;q<NQ;q++)begin:g_hub
-        ot_hgi_hc_chunk_scan5 u_hub(.clk(CLOCKED?clk_scan[q]:clk),.rst_n(rst_n),.clr(clr),
+        ot_hgi_hc_chunk_scan5 #(.CLOCKED(CLOCKED),.MUT(MUT==14?1:0))u_hub(.clk(clk),.clk_leaf(clk_scan[q*8+:8]),.rst_n(rst_n),.clr(clr),
           .in_v(scan_valid[q*5+:5]),.in_data(scan_data[q*5*256+:5*256]),.in_meta(meta1),
           .out_v(hub_v[q]),.out_data(hub_data[q*256+:256]),.out_meta(hub_meta[q*7+:7]),.fault(hub_fault[q]));
       end
@@ -209,7 +209,7 @@ module ot_hgi_hc_coll_b2 #(
       always @(posedge clk)if((|hub_v)&&land_meta[1:0]==3&&!clr&&scan_flush==0)b0_i<={1'b0,land_meta[6:2]};
       always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin scan_active<=0;scan_group<=0;scan_block<=0;scan_flush<=0;end
-        else if(clr)begin scan_active<=0;scan_group<=0;scan_flush<=8;end
+        else if(clr)begin scan_active<=0;scan_group<=0;scan_flush<=12;end
         else begin
           if(scan_flush!=0)scan_flush<=scan_flush-1;
           if(!scan_active&&fb_v&&scan_flush==0)begin scan_active<=1;scan_group<=0;scan_block<=5'(fb);end
