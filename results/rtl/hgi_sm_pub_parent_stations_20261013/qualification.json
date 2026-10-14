@@ -1,0 +1,10 @@
+{
+  "exact": "PASS 2780cycles 512VMpackets 2048STREAMwords",
+  "negative_control": "REJECTED stream mismatch cycle346 actual egress RTL bitflip",
+  "local_gates": "13/13 PASS",
+  "remote_gates": {
+    "cmd_relay": "WARN 0fail; stdarea28um2 reach26.6um"
+  },
+  "parent": "unqualified; requires all station routes, real child views, production throughput and die integration",
+  "added_cycles": 0
+}
