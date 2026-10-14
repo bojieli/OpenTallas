@@ -1,0 +1,31 @@
+{
+  "source": "fd3c5425e",
+  "mode": "unselected WQ3 OVERLAP1 withboth defaultoffLGR/LGW rootmacros",
+  "roots": "LGRouterestimated3402+2CLOSEDRQ6327each; LGWouterestimated2946+2CLOSEDWQ1187each; explicit3inputclocks eachgroup, softwaretied",
+  "cases": {
+    "m0": [
+      "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=184 priced=168"
+    ],
+    "m0_rc": "0",
+    "sk": [
+      "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=222 priced=168"
+    ],
+    "sk_rc": "0",
+    "w3": [
+      "PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 cycles=2319 priced=168"
+    ],
+    "w3_rc": "0",
+    "m1": [
+      "[2443584] %Fatal: tb_hgi_quant_wide_tput.sv:42: Assertion failed in tb_hgi_quant_wide_tput: FATAL: record 0 fault (MUT 1)"
+    ],
+    "m1_rc": "1",
+    "w1": [
+      "[5011136] %Fatal: tb_hgi_quant_wide_tput.sv:120: Assertion failed in tb_hgi_quant_wide_tput: FATAL: 2898 of 3328 words mismatch"
+    ],
+    "w1_rc": "1",
+    "r2": [
+      "[2458560] %Fatal: tb_hgi_quant_wide_tput.sv:47: Assertion failed in tb_hgi_quant_wide_tput.unnamedblk2: FATAL: premature retirement record 0 lane 0 ack 0 target 2"
+    ],
+    "r2_rc": "1"
+  }
+}
