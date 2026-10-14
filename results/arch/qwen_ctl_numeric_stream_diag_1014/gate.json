@@ -1,0 +1,125 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "38 port group(s) left to the IO placer (ANY): ['clk', 'rst_n', 'tile_id', 'ib_go']",
+   "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_ot_qwen_tile_ctl_numeric_stream_diag_20261014-050943.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_ot_qwen_tile_ctl_numeric_stream_diag_20261014-050943.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_ctl_numeric_stream_diag-20261014-050943",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc1tb in 81 s (gate total 475 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "38 port group(s) left to the IO placer (ANY): ['clk', 'rst_n', 'tile_id', 'ib_go']",
+   "fix": "give every bus a face (and an offset range) from the die contract before the die integrates it"
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 7882 um2 + macros 0 in core 15546: util 51%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_qwen_tile_ctl_tp8_numeric_stream cells 61,448 flops 13,389 depth 681.8 ps util 0.353 reach 60.2 um (0.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "1 output bit(s) combinational from input ports (e.g. query_ack_toggle->cx_query_credit 1 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "783 input->register endpoint(s) > 3 levels (worst accept_ack_toggle->u_control.u_logic.u_me.t[15]$_SDFFCE_PN0P_/D 10 lv, accept_ack_toggle->u_control.u_logic.u_me.t[6]$_SDFFCE_PN0P_/D 9 lv, accept_ack_toggle->u_control.u_logic.u_me.t[14]$_SDFFCE_PN0P_/D 9 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_control.u_logic.g_tidr.tile_id_q[0]$_DFF_P_ -> u_control.u_logic.u_me.x_addr[89]$_DFF_P_/D: ~682 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 35.3% outside 45%-65% (std 5488 + macro 0 um2 in 15546 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 293.0..312.0 ps (spread 19.0), boundary mean 305.0; tt insertion all 227.3..243.4 ps (spread 16.1), boundary mean 237.3; ff insertion all 186.6..201.9 ps (spread 15.3), boundary mean 195.8; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      296 paths, worst slack -81.4 ps (e.g. cx_accepted_ib[342])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg       12 paths, worst slack 0.9 ps (e.g. u_control.u_logic.u_me.x_addr[94]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       219 paths, worst slack 402.8 ps (e.g. u_metadata.valid[28]$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -8.138373308597124e-11 hold WNS -8.664430284355262e-12",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 13,389 sinks on the largest root <= 15,000; measured TT insertion 243.4 ps, leaf spread 16.1 ps",
+   "fix": ""
+  }
+ ]
+}
