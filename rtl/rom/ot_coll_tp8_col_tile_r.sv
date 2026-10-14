@@ -59,13 +59,22 @@ module ot_coll_tp8_col_tile_r (
     reg [2:0]   push_q;               // EQ, LQ, TQ pushes, one edge late with their words
     wire        qr;
     (* keep_hierarchy *) ot_coll_rst_leaf u_cr (.clk(clk), .arst_n(rst_n), .q(qr));
-    // static die-strap selects
-    wire [127:0] lo_i = die_s ? pq_hd : lb_hd;
-    wire [127:0] hi_i = die_s ? lb_hd : pq_hd;
+    // static die / meta straps: captured in flops (8 kept copies, one per 16-bit slice) so no output pin and no
+    // capture flop is combinational from a strap port (gate 10-14: die_s fanout 1,024, die_s -> s_lo feed-through)
+    (* keep *) reg [7:0] die_q, meta_q;
+    always @(posedge clk) begin die_q <= {8{die_s}}; meta_q <= {8{meta_s}}; end
+    wire [127:0] die_v, meta_v;
+    genvar gs;
+    generate for (gs = 0; gs < 8; gs = gs + 1) begin : g_strap
+        assign die_v[gs*16 +: 16] = {16{die_q[gs]}};
+        assign meta_v[gs*16 +: 16] = {16{meta_q[gs]}};
+    end endgenerate
+    wire [127:0] lo_i = (die_v & pq_hd) | (~die_v & lb_hd);
+    wire [127:0] hi_i = (die_v & lb_hd) | (~die_v & pq_hd);
 `ifdef OT_TP8_MUT_OWNER
-    wire held = die_s;
+    wire [127:0] held = die_v;
 `else
-    wire held = !die_s;               // die 0 owns the even word (held), die 1 the odd word (current)
+    wire [127:0] held = ~die_v;          // die 0 owns the even word (held), die 1 the odd word (current)
 `endif
     // gather words: data columns hi (held word) / lo (first word); meta column {tag of lo, mode 1, last}
 `ifdef OT_TP8_MUT_GATHER
@@ -73,13 +82,15 @@ module ot_coll_tp8_col_tile_r (
 `else
     wire [127:0] gd_w = hi_i, gf_w = lo_i;
 `endif
-    wire [127:0] gh_n = meta_s ? {94'd0, lo_i[33:2], 1'b1, lb_hd[0]} : gd_w;
-    wire [127:0] gf_n = meta_s ? {94'd0, lo_i[33:2], 1'b1, 1'b0}    : gf_w;
+    wire [127:0] gh_m = {94'd0, lo_i[33:2], 1'b1, lb_hd[0]};
+    wire [127:0] gf_m = {94'd0, lo_i[33:2], 1'b1, 1'b0};
+    wire [127:0] gh_n = (meta_v & gh_m) | (~meta_v & gd_w);
+    wire [127:0] gf_n = (meta_v & gf_m) | (~meta_v & gf_w);
     // held operands: hl/hh commit one edge after c_hold; the issue right after the hold reads the pre-hold copy
     wire [127:0] hl_e = hold_q ? hl_p : hl;
     wire [127:0] hh_e = hold_q ? hh_p : hh;
-    assign s_lo = held ? hl_e : lo_i;
-    assign s_hi = held ? hh_e : hi_i;
+    assign s_lo = (held & hl_e) | (~held & lo_i);
+    assign s_hi = (held & hh_e) | (~held & hi_i);
     always @(posedge clk) begin
         ir <= in_d; rl <= ir; up <= rl; dp <= dp_d; dr <= dr_d;
         sr <= sr_d; sx <= {3{e_tx}}; ur <= tq_hd;
