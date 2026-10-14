@@ -49,6 +49,19 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(d['hc_summary']['per_reservation_used_envelope_um'],[1231.2,470.88])
         self.assertFalse(d['private_pin_binding_qualified'])
 
+    def test_actual_clock_probe_retains_negative_paths_and_offset_conservation(self):
+        import gzip
+        from clock_ratio_check import validate
+        p=REPORT.parent/'clock_ratio_probe'
+        logs={m:gzip.decompress((p/(m+'.log.gz')).read_bytes()).decode() for m in ['ROUNDED','DERIVED','SHIFT100']}
+        d=validate(logs)
+        self.assertGreater(d['negative_path_count'],0)
+        self.assertEqual(len(d['offset_differences']),8)
+        self.assertFalse(d['qualified'])
+        with self.assertRaises(ValueError):validate({**logs,'DERIVED':logs['DERIVED'].replace('PAIR_BEGIN C V min','MISSING C V min')})
+        with self.assertRaises(ValueError):validate({**logs,'SHIFT100':logs['DERIVED'].replace('PROBE_COMPLETE DERIVED','PROBE_COMPLETE SHIFT100')})
+        with self.assertRaises(ValueError):validate({**logs,'ROUNDED':logs['ROUNDED']+' STA-1010'})
+
     def test_frontc_exact_geometry_flags_stale_metadata_without_grant(self):
         d=json.loads((REPORT.parent/'frontc_geometry_binding_audit.json').read_text())
         self.assertEqual(d['exact_bound_LEF_count'],9)
