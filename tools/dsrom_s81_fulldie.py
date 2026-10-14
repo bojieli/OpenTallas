@@ -1423,7 +1423,21 @@ DENS_SRC = ('hub/selector/collector logic 1.05 and service 0.385 W/mm2: Qwen ful
             'on 7.5 mm2); PHY and SerDes/UCIe on their own supplies (no core-grid load)')
 
 
+# r5 2026-10-14 (IR release gate): the hardened BF pair (--bf-hier: dsfd_bf_col | dsfd_bf_front | dsfd_bf_col MY) draws
+# its current where its cells are.  c8p put the whole ASSUMED 2 x q (0.507 W) on the 100.224 x 198.72 front (25.4 W/mm2,
+# 178.7 / 193.9 mV field IR) and 0 W on both columns.  MEASURED routed report_power (BC = FF libraries, the higher corner,
+# 833.3 ps clock) of the CLOSED views bound by name: ot_v41_bf_col 0.337 W (bfh_compact199_col_kreg_a1200_05a8d46ee-cl
+# 6_finish.rpt), ot_s81_bf_front 0.0709 W (el1013-bf-front-align-f003d825f-cl 6_finish.rpt) -> 0.745 W per BF pair (> the
+# 0.507 W assumption, kept as the upper of the two), uniform over each block's own outline.
+BF_COL_W = (0.337, 'MEASURED routed ot_v41_bf_col report_power BC (bfh_compact199_col_kreg_a1200_05a8d46ee-cl)')
+BF_FRONT_W_PWR = (0.0709, 'MEASURED routed ot_s81_bf_front report_power BC (el1013-bf-front-align-f003d825f-cl)')
+
+
 def inst_power(it):
+    if it.kind == 'bfcol':
+        return BF_COL_W[0]
+    if it.kind == 'bf' and it.master == 'dsfd_bf_front':
+        return BF_FRONT_W_PWR[0]
     if GEN == 'r8' and it.kind in ('stn', 'hstn', 'rly', 'qbank', 'hend', 'hb_elem', 'hbglue', 'xstg'):
         return it.power_w
     if GEN == 'r8' and it.kind in POWER8:
@@ -8345,6 +8359,8 @@ def die_options(ap):
                     'real pair limit (pair_check, the gate\'s limit) minus UM of pin-spread margin; 0 = flat --hop-r-cc only')
     ap.add_argument('--hop-iter', type=int, default=0, help='s81-die v18: re-plan the hop fix on the built die up to N times '
                     '(hops the pass-2 build created over their limit get their stage); 0 = one plan (unchanged)')
+    ap.add_argument('--pdn-field-cov', type=float, default=0.0, help='r5 10-14 IR release gate: per-net die M8/M9 strap '
+                    'coverage over the field / channels (default COV field 0.0439); pitch = bump pitch / odd n (bump-aligned)')
     ap.add_argument('--split-far-pins', action='store_true', help='r5 10-14: a hub local chain (end block -> slab) whose '
                     'die-assigned target pins split into a run and a far trailing group (gather rW*/rE* trunk status '
                     '{fault, live} -> control strip) routes the trailing bits as their own staged die path')
@@ -8460,6 +8476,8 @@ def apply_options(a):
     X_SITE_PAIR = bool(getattr(a, 'x_site_pair', False))
     global SPLIT_FAR_PINS
     SPLIT_FAR_PINS = bool(getattr(a, 'split_far_pins', False))
+    if getattr(a, 'pdn_field_cov', 0.0):
+        COV['field'] = COV['channel'] = float(a.pdn_field_cov)
     global HOP_PAIR, HOP_ITER
     HOP_PAIR = float(getattr(a, 'hop_pair', 0.0) or 0.0)
     HOP_ITER = int(getattr(a, 'hop_iter', 0) or 0)
