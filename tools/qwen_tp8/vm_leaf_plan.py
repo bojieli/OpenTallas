@@ -133,8 +133,11 @@ class Plan:
                 seam('delay2.q -> su.swd', face(si, 'E'), pin(su, 'swd'), 512); seam('sctl.m_* -> su pin flops', face(sc, 'E'), pin(su, 'swm'), 38)
                 seam('su.q (sx) -> su1024.so', pin(su, 'q'), pin(ans[k // 2], 'sx'), 512)
                 if k % 2 == 0: seam('sctl.svc/rtg -> su1024', face(sc, 'E'), pin(ans[k // 2], 'svc'), 2)
-            self.strip(f'vm_g{r}_sW', X + self.sW, Y, r); self.strip(f'vm_g{r}_sA', X + self.sA, Y, r, blocked=((0, 302.4, 518.4),))
-            self.strip(f'vm_g{r}_sB', X + self.sB, Y, r, blocked=((0, 302.4, 518.4),))
+            # the 4:1 rung holds the first tile column(s) of its strip over its own height (51.84 um wide since the second cut =
+            # three tile columns: its bank-major bx pins need >= 1,024 vertical crossings inside the leaf)
+            nbk = int(-(-(s['ot_qfd_vm_rr4_t'][0] + SGAP) // (TW + SGAP))); blk = tuple((c, 302.4, 518.4) for c in range(nbk))
+            self.strip(f'vm_g{r}_sW', X + self.sW, Y, r); self.strip(f'vm_g{r}_sA', X + self.sA, Y, r, blocked=blk)
+            self.strip(f'vm_g{r}_sB', X + self.sB, Y, r, blocked=blk)
             if r % 4 == 3: self.strip(f'vm_g{r}_sE', X + self.RW + 4.32, Y, r)
         # ---- band: one row of 32 bit-plane column leaves (d_lo S, d_hi N, x_q plane W / E) ----
         yb = Y0 + RH; PW, PH = s['ot_qfd_vm_xcol_t']; pitch = G((self.EW - 8.64 - PW) / 31 // 2.16 * 2.16); self.BAND = max(BAND, G(PH + 8.64))
