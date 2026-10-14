@@ -16129,3 +16129,14 @@ def hbm_qdq_dedicated_face_ff_model():
             "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
             "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
             "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
+
+
+def hbm_qdq_fin2_control_oracle_model():
+    """Test vehicle only: actual FIN1/FIN2 control, legal readiness and finite feedback."""
+    return {"source_commit":"80e1681e0","CORE_instances":2,"FR_instances":1,
+            "RQ":16,"default_ready_threshold":4,"diagnostic_ready_threshold":10,
+            "record_phase_count":512,"max_record_beats":12,
+            "backend_FIFO_capacity":8192,"response_delay_max_cycles":68,
+            "consumer_stall_max_cycles":5,"write_ack_delay_max_cycles":17,
+            "new_hardware_area_um2":0,"added_production_cycles":0,
+            "scope":"standalone control oracle; no native throughput qualification"}
