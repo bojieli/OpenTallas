@@ -3,7 +3,7 @@
 Use through ot-run --mem 32 --threads 4; immutable prices are never rewritten.
 """
 import argparse,hashlib,json,os,pathlib,subprocess,sys,re
-ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='217cc7362');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');ap.add_argument('--smoke',action='store_true');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='673de04e3');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');ap.add_argument('--smoke',action='store_true');a=ap.parse_args()
 root=pathlib.Path(__file__).resolve().parents[5];out=pathlib.Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 parent=a.parent;common='64fced1f9';quant='88b62f789';dma='4a49c18bc';vectors='7027d3ab1'
 graph={}
