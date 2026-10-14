@@ -147,7 +147,8 @@
  "recipe": 2,
  "boundary_tcl": [
   "physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl",
-  "physical/s81_hc_pinplan/pin_window_max.sdc"
+  "physical/s81_hc_pinplan/pin_window_max.sdc",
+  "physical/s81_hc_pinplan/ccf_internal_hold_repair.tcl"
  ],
  "reroute_reason": {
   "kind": "rtl_change"
@@ -165,6 +166,7 @@
   "implementation_margin_ps": 10,
   "scope": "MAX constraints only; existing MIN/hold, uncertainty and period preserved"
  },
+ "internal_hold_repair": "Separate internal repair before ordinary CTS repair; original SDC statements asserted identical after temporary optimizer-only input exclusion. Final external peer and internal signoff hold checks remain mandatory.",
  "children": [],
  "inter": []
 }

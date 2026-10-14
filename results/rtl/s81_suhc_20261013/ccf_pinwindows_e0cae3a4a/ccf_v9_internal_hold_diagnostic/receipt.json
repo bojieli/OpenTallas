@@ -1,0 +1,15 @@
+{
+  "status": "DIAGNOSTIC COPY ONLY, original source checkpoint unchanged; no route or view qualification",
+  "internal_ff_before_ps": -8.42104,
+  "internal_ff_after_ps": 15.001,
+  "tt_setup_before_ps": 5.824896120998346,
+  "tt_setup_after_ps": 5.824896120998346,
+  "all_original_sdc_statements_identical_after_restoration": true,
+  "only_write_sdc_timestamp_differs": true,
+  "added_hold_buffers": 853,
+  "source_odb": "ot-pve1:/srv/opentallas-scratch/claude/ref_gate/s81hc_ccfh2_ref-20261013-230828/.../4_1_cts.odb",
+  "candidate_odb": "ot-pve1:/srv/opentallas-scratch/codex/ccf_hold_classify/internal_hold_candidate.odb",
+  "external_standalone_unnormalized_hold_still_fails": true,
+  "actual_external_peer_hold_gate_required": true,
+  "route_admission": false
+}
