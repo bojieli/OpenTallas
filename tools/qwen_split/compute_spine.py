@@ -17,6 +17,7 @@ Layout (top-down, generous margins; el1014-qwen-split-compute.log, contract v1 /
   * distributed x slices (owner 10-14): qfd_xcol_e/w in each column corridor on the head row, qfd_xcst_n/s stations.
 Everything is a slot of the contract: a master that does not fit its slot files a slot change request in the log.
 """
+import collections
 import json
 import os
 
@@ -59,6 +60,44 @@ def _child_clocks(m, rec):
     rec['child_clocks'] = {k: v for k, v in CHILD_CK.items()}
 
 
+def morton(c, r):
+    z = 0
+    for i in range(4):
+        z |= ((c >> i) & 1) << (2 * i) | ((r >> i) & 1) << (2 * i + 1)
+    return z
+
+
+def ref_tile_id(c, r, rows=16, bc=4, br=4):
+    """the reference ot_qwen_me_array_w12 tile index of die tile (c, r): the die's split tree pairs tiles in
+    morton order inside each 4 x 4 block (host_level: node at level LT+k on tile t, t % 2^k == 2^(k-1) - 1) and block b
+    = (c // 4) * (rows // 4) + r // 4 is top word b; so t = 16 b + morton(c % 4, r % 4).  t sets the tile's output rows
+    (i_gbase = t * TG), its ROM image and its x chunk (TG * t mod S): ONE map for tree, ROM content and x slices."""
+    return bc * br * ((c // bc) * (rows // br) + r // br) + morton(c % bc, r % br)
+
+
+# C6 (die-bus audit vs ot_qwen_me_array_w12): tree words carry the tile's valid (t_vout -> n_va: the reference node
+# takes valid from leg a) and the fault (reference fab_fault = OR of every tile fault: the die ORs it up the tree, so
+# every block word brings its block's fault to the slab): every tree word (t_out / n_a / n_b / n_y, one width for the
+# one tile master) and every block word = {fault, valid, 512}; the node may check va == vb (an alignment check: a
+# misaligned leg then faults instead of summing wrong data)
+TREE_A, TREE_B, BWORD = 514, 514, 514
+
+
+def _tree_widths(m, rec):
+    import re as _re
+    nb, n_ = [], collections.Counter()
+    for b, c, n, e in m['buses']:
+        if c == 'tree_block' and _re.fullmatch(r'tree_\d+_\d_\d+a', b) and n == 512:
+            n = TREE_A; n_['a'] += 1
+        elif c == 'tree_block' and _re.fullmatch(r'tree_\d+_\d_\d+b', b) and n == 512:
+            n = TREE_B; n_['b'] += 1
+        elif _re.fullmatch(r'bword_\d+', b) and n == 512:
+            n = BWORD; n_['bword'] += 1
+        nb.append((b, c, n, e))
+    m['buses'] = nb
+    rec['tree_widths'] = dict(leg_a=TREE_A, leg_b=TREE_B, bword=BWORD, buses=dict(n_))
+
+
 def _dvm(v, m, put, rec, vm, su, xt):
     """Distributed x slices in the die (C4): stations -> qfd_xcst_n/s (516-b corridor word), column heads ->
     qfd_xcol_e/w (one cluster slot per column in the corridor, centred on the head row), the x tap qfd_xs_tap at the VM
@@ -78,7 +117,6 @@ def _dvm(v, m, put, rec, vm, su, xt):
         h.master = 'qfd_xcol_w' if c < half else 'qfd_xcol_e'
         h.w, h.h = XCOL_WH[0] - S, XCOL_WH[1] - S
         h.y = round(v.dn(cy - XCOL_WH[1] / 2, v.GY), 4)
-        ties.append((h.name, 'tid0', 16, c * 16))
     rows = {}
     for i in m['insts']:
         if i.kind == 'station':
@@ -92,7 +130,15 @@ def _dvm(v, m, put, rec, vm, su, xt):
             ties.append((i.name, 'sidx', 3, (r - nr // 2) if r >= nr // 2 else (nr // 2 - 1 - r)))
         elif i.kind == 'tile' and i.name.startswith('t_'):
             c, r = (int(q) for q in i.name.split('_')[1:3])
-            ties.append((i.name, 'tile_id', 16, c * 16 + ((r - nr // 2) if r >= nr // 2 else (nr - 1 - r))))
+            ties.append((i.name, 'tile_id', 16, ref_tile_id(c, r, nr)))
+    # C6 (die-bus audit): the head computes its 16 tiles' x windows from a per-row id table (the reference ids of a
+    # column are not affine in the row: 16 x block + morton), N stations 0..7 outward then S 8..15 outward
+    for c, h in enumerate(heads):
+        order = list(range(nr // 2, nr)) + list(range(nr // 2 - 1, -1, -1))
+        val = 0
+        for k, r in enumerate(order):
+            val |= ref_tile_id(c, r, nr) << (16 * k)
+        ties.append((h.name, 'tids', 16 * nr, val))
     tap = v.Inst('xs_tap', 'qfd_xs_tap', 0.0, 0.0, TAP_WH[0] - S, TAP_WH[1] - S, kind='spine', region='hub',
                  domain=vm.domain)
     m['insts'].append(tap)
@@ -121,8 +167,9 @@ def _dvm(v, m, put, rec, vm, su, xt):
     m['buses'] = nb
     rec['dvm'] = dict(xcol=len(heads), xcst=sum(1 for i in m['insts'] if i.kind == 'station'), tap=list(rec['slots']['xs_tap']),
                       xcol_wh=list(XCOL_WH), corridor_bits=XCOR_D, head_bits=XHEAD_D, roots=sorted(roots),
-                      straps=dict(sidx='station index from the head outward', tid0='column*16',
-                                  tile_id='column*16 + (N: row-8, S: 15-row)'))
+                      straps=dict(sidx='station index from the head outward',
+                                  tids='16 x 16-b reference tile ids of the column, N stations 0..7 then S 8..15',
+                                  tile_id='16 * block + morton(c % 4, r % 4) (ref_tile_id)'))
 
 
 def _snap(v, x, g):
@@ -242,6 +289,8 @@ def place(v, m, G):
     if bad:
         raise SystemExit(f'split compute spine: slots outside the spine: {bad[:8]}')
     _child_clocks(m, rec)
+    if os.environ.get('OT_SPLIT_TREE_VF', '1') != '0':
+        _tree_widths(m, rec)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         json.dump(dict(die=m['die'], rec=rec, insts=ins), open(os.environ['OT_SPLIT_DUMP'], 'w'), default=str)
