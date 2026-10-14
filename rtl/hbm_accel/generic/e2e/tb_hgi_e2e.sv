@@ -552,7 +552,11 @@ module tb_hgi_e2e;
         if (n_rec <= 0) $fatal(1, "E2E init failed");
         if (B2 == 2) $fatal(1, "E2E B2 2 (native cluster RTL) is not built yet: run B2 1 (old-VM mode)");
         if (B2 != 0 && e2e_b2_init(B2, B2_RING, B2_NCLUST, B2_SLICE_W) < 0) $fatal(1, "E2E B2 init failed");
-        fscr = (!MTP && host[69] != 0) ? host[69][17:0] : 18'(FUSED_SCRATCH);   // (MTP: host[69] is maxpos)
+        // MTP host[69] is maxpos. Its exporter reserves scratch against ALL launches,
+        // and carries the base / reservation size in otherwise unused words 96 / 97.
+        if (MTP && REAL_FUSED && (host[97] < 16384 || host[96] + host[97] > 262144))
+            $fatal(1, "MTP FUSED scratch binding missing or outside VM");
+        fscr = MTP ? host[96][17:0] : ((host[69] != 0) ? host[69][17:0] : 18'(FUSED_SCRATCH));
         if (REAL_FUSED) e2e_ignore(int'(fscr), int'(fscr) + 16384);
         if ($value$plusargs("WATCH=%d", w)) e2e_watch(w);
         t_cpl = 0;
