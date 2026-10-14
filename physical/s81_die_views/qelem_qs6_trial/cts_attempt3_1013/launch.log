@@ -1,0 +1,9 @@
+MACRO_TRACK_GATE PASS macros=1 hooks=3 warnings=1 record=/srv/opentallas-scratch/codex/qelem-qs6-11ab-cts/attempt3/cts/receipt.json.macro_gate.json
+view=asap7 corner=TT block=ot_v41_rom_elem_q_qxpq_w10 top=ot_v41_rom_elem_q_qxpq_w10 purpose=characterization
+  pnr:   wirelength=None um vias=None DRC=None antenna_nets=None Fmax=1110.96 MHz
+  drv:   max_slew=None max_cap=None max_fanout=None
+  sdc:   set_max_fanout 32 [current_design]; set_max_transition 320 [current_design]; SLEW_MARGIN=40
+  macro: ot_rom_4096x274_m8 1122304 bits (125.28 x 62.91 um) lef=ot_rom_4096x274_m8.lef lib=ot_rom_4096x274_m8_ss.lib
+  halo:  2 2 um (command line); placed macros=None
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/codex/qelem-qs6-11ab-cts/attempt3/cts/out

@@ -1,0 +1,28 @@
+{
+  "source_commit": "11ab82556",
+  "remote": "/srv/opentallas-scratch/codex/qelem-qs6-11ab-cts/attempt3",
+  "unit": "oth-ubuntu-3369338-1791951879",
+  "terminal": true,
+  "verdict": "STRUCTURAL_CLOCK_PARTITION_REQUIRED",
+  "setup_uncertainty_ps": 163,
+  "hold_uncertainty_ps": 25,
+  "setup_wns_ps": -66.7872,
+  "hold_wns_ps": 6.56872,
+  "setup_violators": 4260,
+  "register_subtree_sinks": [
+    15820,
+    37427
+  ],
+  "macro_subtree_sinks": [
+    1,
+    4
+  ],
+  "historical_route_replaced": false,
+  "physical_admission": false,
+  "remaining_worst": "g_word_decision.restart_d -> w_sf[0]; WC registered restart decision fanout",
+  "notes": [
+    "Original WC/BC CTS diagnostic, not route qualification.",
+    "Actual sink groups both exceed 15000; independent hardened leaves required before new route.",
+    "Fresh production nativePQ1 proof and SS internal60ps/FF25ps exactcaller replay still owed."
+  ]
+}
