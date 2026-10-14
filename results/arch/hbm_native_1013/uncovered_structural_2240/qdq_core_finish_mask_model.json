@@ -1,0 +1,9 @@
+{
+  "trigger": "FIN_BYPASS1 CTS criticalinputendpoint q_dep bit,49.3psslack: rawfinish crossesdynamicheadwrite decoder; actualP190pending",
+  "candidate": "Decodehead andtail index masksindependentoffinish, maskdependencybitsafterenqueue select; paralleloccupancy/finishcount plusminus candidates selectedafterrawfinish",
+  "state_added": 0,
+  "edges_added": 0,
+  "semantics": "samecycleFIN_BYPASS1 retirement,enqueueretirepriority,dependencyclear andcreditcount; FIN_BYPASS0 literaloldbranch preserved",
+  "default_closed_CORE": "unchangedlogicalbehavior; existingview stands",
+  "registered_reach": "mustmeasure actualnewCOREexportP190/Q220 andeachretiretoCOREpinH100, nomaxCTS/clockwish"
+}

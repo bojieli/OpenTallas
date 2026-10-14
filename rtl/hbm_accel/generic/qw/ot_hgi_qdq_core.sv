@@ -123,7 +123,15 @@ module ot_hgi_qdq_core #(
     wire rt_ok = q_v[hd] && (q_rej[hd] || fin_av || (bad && drained));
     wire rt_fault = q_rej[hd] || bad;
     wire rt_fin = rt_ok && !q_rej[hd] && fin_av;
-    always @* begin ret_oh = '0; if (rt_ok) ret_oh[hd] = 1'b1; end
+    (* keep=1 *) wire [RQ-1:0] hd_mask=(RQ'(1)<<hd),qt_mask=(RQ'(1)<<qt);
+    always @* begin
+        if(FIN_BYPASS)ret_oh=hd_mask&{RQ{rt_ok}};
+        else begin ret_oh='0;if(rt_ok)ret_oh[hd]=1'b1;end
+    end
+    (* keep=1 *) wire [QW:0] occ_inc=occ+(QW+1)'(f_s1v),occ_dec=occ_inc-1'b1;
+    (* keep=1 *) wire ready_inc=occ_inc<=(QW+1)'(RQ-(SPANPIPE?12:6));
+    (* keep=1 *) wire ready_dec=occ_dec<=(QW+1)'(RQ-(SPANPIPE?12:6));
+    (* keep=1 *) wire [QW:0] fin_plus=fin_c+1'b1,fin_minus=fin_c-1'b1;
     // ---------------------------------------------------------------- sequential control
     integer b;
     always @(posedge clk or negedge rr_n[0]) begin
@@ -133,23 +141,31 @@ module ot_hgi_qdq_core #(
         end else begin
             rg_req <= q_v != 0; o_act <= q_v != 0;
             rg_ok <= rg_req && f_rg;
-            if (s3_v) begin q_v[qt] <= 1'b1; q_rej[qt] <= !el3; qt <= qt + 1'b1; end
+            if (s3_v) begin if(!FIN_BYPASS)q_v[qt] <= 1'b1; q_rej[qt] <= !el3; qt <= qt + 1'b1; end
+            if(FIN_BYPASS)q_v<=(q_v|(qt_mask&{RQ{s3_v}}))&~ret_oh;
             if (n_load || n_skip) rp <= rp + 1'b1;
-            if (rt_ok) begin q_v[hd] <= 1'b0; hd <= hd + 1'b1; end
-            fin_c <= fin_c + (QW+1)'(fin_edge) - (QW+1)'(rt_fin);
+            if (rt_ok) begin if(!FIN_BYPASS)q_v[hd] <= 1'b0; hd <= hd + 1'b1; end
+            if(FIN_BYPASS)fin_c<=fin_edge&&!rt_fin?fin_plus:!fin_edge&&rt_fin?fin_minus:fin_c;
+            else fin_c <= fin_c + (QW+1)'(fin_edge) - (QW+1)'(rt_fin);
             if (f_abad || f_wbad) bad <= 1'b1;
             qc <= (!bp_v && f_aidle && f_widle && b_used == 0) ? (qc[3] ? qc : qc + 4'd1) : 4'd0;
-            occ <= occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok);
-            ret <= {rt_ok && rt_fault || f_nf, rt_ok, (occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok)) <= (QW+1)'(RQ - (SPANPIPE ? 12 : 6))};
+            if(FIN_BYPASS)occ<=rt_ok?occ_dec:occ_inc;
+            else occ <= occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok);
+            ret <= {rt_ok && rt_fault || f_nf, rt_ok, FIN_BYPASS?(rt_ok?ready_dec:ready_inc):((occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok)) <= (QW+1)'(RQ - (SPANPIPE ? 12 : 6)))};
         end
     end
     // Queue dependency masks have a separate, equally staged reset root (256 sinks at RQ16).
     always @(posedge clk or negedge rr_n[3]) begin
         if (!rr_n[3]) begin for (integer qe = 0; qe < RQ; qe = qe + 1) q_dep[qe] <= '0; end
         else begin
-            if (s3_v) q_dep[qt] <= el3 ? dep3 : '0;
-            for (integer qe = 0; qe < RQ; qe = qe + 1) if (rt_ok) q_dep[qe][hd] <= 1'b0;
-            if (s3_v && rt_ok) q_dep[qt][hd] <= 1'b0;
+            if(FIN_BYPASS)begin
+                for(integer qe=0;qe<RQ;qe=qe+1)
+                    q_dep[qe]<=(s3_v&&qt_mask[qe]?(el3?dep3:'0):q_dep[qe])&~ret_oh;
+            end else begin
+                if (s3_v) q_dep[qt] <= el3 ? dep3 : '0;
+                for (integer qe = 0; qe < RQ; qe = qe + 1) if (rt_ok) q_dep[qe][hd] <= 1'b0;
+                if (s3_v && rt_ok) q_dep[qt][hd] <= 1'b0;
+            end
         end
     end
     always @(posedge clk or negedge rr_n[1]) begin
