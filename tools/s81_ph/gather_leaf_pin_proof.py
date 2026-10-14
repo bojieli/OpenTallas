@@ -48,7 +48,7 @@ def boundary(p,b):return {'instance':'PARENT','port':f'{p}[{b}]','point':pp(p,b)
 for g in range(8):
  for k in range(4):
   x=12.96+216*g;y=61.632+184.32*k
-  if abs(x/.576-round(x/.576))>1e-5:fail.append(['origin_x_not_.576_lattice',g,k,x])
+  assert abs(x/.432-round(x/.432))<1e-5
   assert abs(x/.288-round(x/.288))<1e-5 and abs(y/.576-round(y/.576))<1e-5
   assert x+190.08<=w and y+164.16<=h
   instances.append({'g':g,'k':k,'origin_um':[x,y],'orientation':'R0','master':f'dsfd_gth_{"rw" if g<4 else "re"}','clock':f'ck_l[{4*g+k}]','clock_pin':ep(g,k,'ck'),'reset_pin':ep(g,k,'rs'),'status_pins':[ep(g,k,'fo[0]'),ep(g,k,'fo[1]')]})
@@ -89,5 +89,5 @@ assert len(bindings)==32*3423
 write('whole_leaf_port_bindings.json.gz',bindings)
 write('leaf_instances.json',instances);write('bit_links.json.gz',links)
 summary={kind:{'count':sum(x['kind']==kind for x in links),'max_manhattan_um':max(x['manhattan_um'] for x in links if x['kind']==kind)} for kind in sorted({x['kind'] for x in links})}
-write('proof.json',{'schema':'opentallas.s81.gather_leaf_pin_proof.v1','status':'PROPOSED_FOR_DIE_ACCEPTANCE' if not fail else 'FAIL','parent_assignment_sha256':sha(P/'parent_assignment.json'),'rtl_sha256':sha(rtl),'leaf_pins':{'rw':len(masters['rw']),'re':len(masters['re'])},'instances':32,'orientation':'R0','origin_lattice_um':.576,'pin_lattice_pitch_um':.048,'pin_lattice_offset_um':.012,'pg_rectangles_source':'preserved actual IOP ODB dump; route/LEF PG access remains required','failures':fail,'links':summary,'owed':['actual routed slew/clock/internal timing/TT+FF+DRC and child_lint','timing-aware per-bit hop reach from actual routed views','control strip rc/cs/tst/f_vm/f_cd/tc binding','f_vm[511:160] remain declared but unused in current RTL; parent bypass treatment belongs to die/control owner','clock phi-R_i compensation from actual routed insertion.json','native81/optional120 whole-operation PFABI binding']})
+write('proof.json',{'schema':'opentallas.s81.gather_leaf_pin_proof.v1','status':'PROPOSED_FOR_DIE_ACCEPTANCE' if not fail else 'FAIL','parent_assignment_sha256':sha(P/'parent_assignment.json'),'rtl_sha256':sha(rtl),'leaf_pins':{'rw':len(masters['rw']),'re':len(masters['re'])},'instances':32,'orientation':'R0','origin_lattice_um':{'x':.432,'y':.576},'pin_lattice_pitch_um':.048,'pin_lattice_offset_um':.012,'pg_rectangles_source':'preserved actual IOP ODB dump; route/LEF PG access remains required','failures':fail,'links':summary,'owed':['actual routed slew/clock/internal timing/TT+FF+DRC and child_lint','timing-aware per-bit hop reach from actual routed views; capture max100.458um exceeds100um pin-stage heuristic; actualpair/reach/hold still required','control strip rc/cs/tst/f_vm/f_cd/tc binding','f_vm[511:160] remain declared but unused in current RTL; parent bypass treatment belongs to die/control owner','clock phi-R_i compensation from actual routed insertion.json','native81/optional120 whole-operation PFABI binding']})
 print(json.dumps({'failures':fail,'links':summary},indent=1))

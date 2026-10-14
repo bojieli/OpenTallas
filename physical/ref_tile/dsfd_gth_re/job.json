@@ -2,12 +2,12 @@
  "name": "dsfd_gth_re-g2-COMMIT",
  "block": "dsfd_gth_re",
  "ref_tile": true,
- "owner": "Claude:el1013-s81-gather",
+ "owner": "Codex:el1013-s81-gather",
  "purpose": "S81 gather (dsfd_sp_gather_c, 2.9 M flops flat, does not fit its slot): hardened 4-root leaf of the gather cluster (E half: lanes enter E, leave W). Each root = ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4; S = 16 does not fit the slot: g1 stopped at FLOORPLAN_MARGIN, util 0.716): input queue in a 128 x 66 1R1W array, CAM-free pairing store {open-row slot, parent node} in a 256 x 34 array; cycle-identical to ot_s81ph_ret_root_p inside both capacities, sticky fault on a 9th open row. REAL field order (production binding d9f84be9, all 40 layers, golden experts): at most 4 (row, pos) open per root. Every port a flop at the pin; lanes passed on registered; column chain registered.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "s81-gather-1013",
+  "branch": "codex/s81-gather-leaf-v18",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
@@ -20,7 +20,8 @@
    "rtl/gpu",
    "tools/s81_ph",
    "physical/s81_ph_views/macros",
-   "results/rtl/s81_ph_20261006/gather"
+   "results/rtl/s81_ph_20261006/gather",
+   "physical/s81_die_pins/v18/gather_leaves"
   ]
  },
  "stages": {
