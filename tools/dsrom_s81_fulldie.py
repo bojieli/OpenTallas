@@ -1453,10 +1453,6 @@ def die_master_params(m):
     if 'ot_s81_cfg7_seq' in used and q_pq():
         # TA-10: the PQ q element's loader handshake (ef / go_tag) is the PQ 1 loader (tb_ot_s81_cfg7_seq.sv PQ 1)
         out['ot_s81_cfg7_seq'] = dict(PQ=1, _source='q element %s carries go_tag / sh_free / bank_free' % real_lef(Q_LEF)['name'])
-    for mst in ('dsfd_bk_selector_c', 'dsfd_bk_collector_c'):
-        if mst in used:      # stack lanes present on this die (F5: distinct per-stack streams, absent stacks have no port)
-            sts = list(m.get('svcs', {})) or list(STACKS.get(DIE_KIND, ()))
-            out[mst] = dict(NST=len(sts), _source='die stacks %s' % ','.join(sts))
     return out
 
 
@@ -4185,6 +4181,13 @@ def build_r8(variant=None):
         if 'sseq' in hub:   # s81die-1011/ctrl: per-engine c/d/s pins on the stream clock (kit / program faces cross)
             # F4 (--rtl-bind): a layer1 die has engines 0..7 only (stage programs); its master has no pins for 8..11
             hub['sseq'].master = 'dsfd_stage_seq_c8' if (RTL_BIND and DIE_KIND == 'layer1') else 'dsfd_stage_seq_c'
+        if RTL_BIND and 'collector' in hub and len(m.get('svcs', {}) or STACKS.get(DIE_KIND, ())) == 1:
+            # F5 (--rtl-bind): a 1-stack die's collector has the one stack lane (dsfd_bk_collector_c1: DONE join over the
+            # present stack; the 4-lane master would never emit a DONE there)
+            hub['collector'].master = 'dsfd_bk_collector_c1'
+            # ... and its selector the SW lane with the three absent quarters synthesised empty (dsfd_bk_selector_c1)
+            if 'selector' in hub:
+                hub['selector'].master = 'dsfd_bk_selector_c1'
     m['buses'] = []
     buses_r8(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:

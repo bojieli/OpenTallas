@@ -649,6 +649,8 @@ def elab_kit(die_v, top, idx, mparams, out_dir, defines):
         ps = ', '.join(f'.{k}({v})' for k, v in prm.items())
         return f'{m.group(1)}{mst} #({ps}){rest}'
     text = re.sub(r'^(\s+)(\w+)(\s+(?:#\s*\(.*?\)\s*)?[\w\\]\S*\s*\()', sub, text, flags=re.M)
+    # Verilator's preprocessor stops at 40,000 tokens a line: break the long bit-concatenation lines at their commas
+    text = '\n'.join(ln if len(ln) < 4000 else ln.replace(', ', ',\n      ') for ln in text.split('\n'))
     (out_dir / 'die_top.sv').write_text(text)
     files, seen, todo, missing = [], set(), sorted(used), []
     while todo:
