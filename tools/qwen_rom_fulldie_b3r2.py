@@ -2163,6 +2163,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         f0, f1 = in_field(*P0), in_field(*P1)
         if _os.environ.get('OT_FA_DBG') and bid and bid.startswith(_os.environ['OT_FA_DBG']):
             print('FA_DBG', bid, cl, P0, P1, f0, f1, FIELD_ALLOC, list(side_cols(P0[0]))[:2], flush=True)
+        if cl == 'head_chain' and abs(P0[0] - P1[0]) > 300.0 and abs(P0[1] - P1[1]) > 600.0:
+            # r10: a head root whose head stands off the VM pin's x (the E root: the VM region is W-aligned on the spine):
+            # one lane just outside the field on the head pin's side, entered from a short run below / above the VM pin
+            # (the lane is the open strip between the KV-centre column and the field, not a field corridor)
+            Ph, Pv = (P1, P0) if abs(P1[0] - (fw[2] + fe[0]) / 2) > abs(P0[0] - (fw[2] + fe[0]) / 2) else (P0, P1)
+            xl = Ph[0] + (150.0 if Pv[0] > Ph[0] else -150.0)
+            yv = Pv[1] + (130.0 if Ph[1] > Pv[1] else -130.0)
+            path = [Pv, (Pv[0], yv), (xl, yv), (xl, Ph[1]), Ph]
+            return path if Pv is P0 else path[::-1]
         if cl == 'corridor' or (abs(P0[0] - P1[0]) < 1.0 and not (FIELD_ALLOC and f0 and f1 and not cl.startswith('kvn'))):
             # it19: under FIELD_ALLOC a same-x field word goes through field_route too (the straight vertical
             # shortcut stacked 3 x 512-b tree words + a corridor word in one column channel: 0.72 / 0.68 / 0.65)
@@ -2536,7 +2545,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     stage_of = {}
     # it24: the KV host link (d2d_fdi) places first: its spine lane + IO sub-lane relay sites never depend on the
     # order of the other classes (it22: kvn before trees took its sites and it staircased into the SerDes window)
-    order = {'d2d_fdi': -1, 'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
+    # r10 (token path, el1013-rom-layer-tput-qwen.log): the two head roots (VM xw / xe -> h_23 / h_24) are on every ME
+    # op of a token: they place before every other class and take the shortest lane (run g0: head_24 was planned last
+    # into the E field, 6 columns off its head and back: 25 stages against 8 on the W root)
+    order = {'head_chain': -2, 'd2d_fdi': -1, 'corridor': 0, 'link_spine': 1, 'link_channel': 1, 'tree_spine': 2, 'tree_block': 3}
     buses = sorted(enumerate(m['buses']), key=lambda t: (order.get(t[1][1], 3), t[0]))
     keep = {}
     def relay_frame(bits, cl):
@@ -2609,6 +2621,17 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return any(mh(pts[i], pts[i + 1]) > mh(pts[i - 1], pts[i + 1]) + 20.0 for i in range(1, len(pts) - 1))
 
     GATE = bool(getattr(v, 'RELAY_REACH_GATE', False))
+    PT_EXT = {}          # r10: block pin point -> half extents of its pin group (pos.ext)
+
+    def _pt_key(o):
+        return (round(o[0], 2), round(o[1], 2))
+
+    def _ext_room(f, o, bits):
+        """um the outer bits of a block pin group stand beyond a relay face (one track per bit) centred on it"""
+        he = PT_EXT.get(_pt_key(o))
+        if he is None:
+            return 0.0
+        return max(0.0, (he[1] if f in 'EW' else he[0]) - bits * 0.048 / 2)
 
     def frame_faces(pts, k, fr, bits):
         """(in face, out face) of relay frame k of a chain (pts = P0, frame centres, P1): toward the previous / next
@@ -2631,9 +2654,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         need = bits / (0.60 * 31.51)
 
         def bad(f, o):
+            # r9 / r10: a block pin group is as wide as its own pin plan (two tracks, area pins, a closed view's free
+            # order): a relay nearer than the jog room is judged without trusting the centroid offset
             q = fp[f]
             gap, jog = (abs(q[0] - o[0]), abs(q[1] - o[1])) if f in 'EW' else (abs(q[1] - o[1]), abs(q[0] - o[0]))
-            return jog > 20.0 and gap < need
+            return gap < need and jog + _ext_room(f, o, bits) > 20.0
 
         def alt(f, o):
             dx, dy = o[0] - here[0], o[1] - here[1]
@@ -2684,6 +2709,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             if f_ is None:
                 continue
             gap, jog = (abs(a_[0] - b_[0]), abs(a_[1] - b_[1])) if f_ in 'EW' else (abs(a_[1] - b_[1]), abs(a_[0] - b_[0]))
+            if n and k in (0, n):                 # r10: a block pin end is as wide as its own pin plan
+                jog += _ext_room(f_, a_ if k == 0 else b_, pl['bits'])
             if (jog > JOG_OK_UM and gap < need) or (gap < 1.0 and jog > 0.1):      # + pin_align's abutted rule
                 bad.append(k)
         return bad
@@ -2764,6 +2791,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         P0, P1 = pos(*eps[0]), pre_far.get(idx) or pos(*eps[1])
+        PT_EXT[_pt_key(P0)] = pos.ext(*eps[0])
+        if idx not in pre_far:
+            PT_EXT[_pt_key(P1)] = pos.ext(*eps[1])
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
         if d <= (RELAY_REACH_OK if skip_cl else RMAX):
             keep[idx] = [(bid, cl, bits, eps)]
@@ -3335,6 +3365,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         for ix in ([0] if inc else range(-24, 25)):
                             for iy in range(-24, 25):
                                 cands.append((abs(ix) + abs(iy), ix * 20 * v.GX, iy * 4 * v.GY))
+                        if not inc:                  # r10: centre on an abutted block pin group (fine x / y steps first)
+                            for ix in range(-30, 31):
+                                for iy in range(-6, 7):
+                                    cands.append((0.02 * (abs(ix) + abs(iy)), ix * 2 * v.GX, iy * v.GY))
                         got = None
                         for _, dx_, dy_ in sorted(cands):
                             if dx_ == 0 and dy_ == 0:
@@ -4119,15 +4153,18 @@ def _pin_pos(v, m):
     """(inst, port) -> die position of the port's pin centroid (instance orientation applied)."""
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
-    cen = {}
+    cen, ext = {}, {}
     for name, mst in M.items():
         acc = {}
         for nm, layer, r in v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}):
-            a = acc.setdefault(nm.split('[')[0], [0.0, 0.0, 0])
-            a[0] += (r[0] + r[2]) / 2
-            a[1] += (r[1] + r[3]) / 2
+            a = acc.setdefault(nm.split('[')[0], [0.0, 0.0, 0, 1e18, -1e18, 1e18, -1e18])
+            cx_, cy_ = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
+            a[0] += cx_
+            a[1] += cy_
             a[2] += 1
+            a[3], a[4], a[5], a[6] = min(a[3], cx_), max(a[4], cx_), min(a[5], cy_), max(a[6], cy_)
         cen[name] = {p: (a[0] / a[2], a[1] / a[2]) for p, a in acc.items()}
+        ext[name] = {p: ((a[4] - a[3]) / 2, (a[6] - a[5]) / 2) for p, a in acc.items()}
     by = {i.name: i for i in m['insts']}
 
     extra = getattr(v, 'PIN_POS_EXTRA', None) or {}
@@ -4145,6 +4182,11 @@ def _pin_pos(v, m):
         if i.orient in ('MX', 'R180'):
             y = i.h - y
         return (i.x + x, i.y + y)
+
+    def pin_ext(inst, port):
+        """r10: half extents (x, y) of the port's pin group (a relay in front of it must leave the difference room)"""
+        return ext.get(by[inst].master, {}).get(port.lstrip('*'), (0.0, 0.0))
+    pos.ext = pin_ext
     return pos
 
 

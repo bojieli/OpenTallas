@@ -200,6 +200,22 @@ def phy_pin_y():
     return y
 
 
+_PHY_FIXED = {}
+
+
+def _phy_fixed_pins():
+    """PHY-local y of the abstract's clk / rst_n pins (W face of the unflipped macro)"""
+    if not _PHY_FIXED:
+        f = ROOT / 'physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy.lef'
+        t = f.read_text() if f.exists() else ''
+        for pn in ('clk', 'rst_n'):
+            mm = re.search(rf'  PIN {pn}\n(.*?)  END {pn}\n', t, re.S)
+            r = mm and re.search(r'RECT\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)', mm.group(1))
+            if r:
+                _PHY_FIXED[pn] = (float(r.group(2)) + float(r.group(4))) / 2
+    return _PHY_FIXED
+
+
 def phy_repin(text):
     """the ot_hbm3e_phy abstract LEF with every signal pin moved to its per-PC y (x extent, layer, width kept)"""
     ys = phy_pin_y()
@@ -395,6 +411,10 @@ def apply(v, m, G):
             v.PIN_POS_EXTRA[(ph.name, f'*dfi:{k}')] = (px, ph.y + gy[str(k)])
             ties.append((f'ctrlpc_{st}_{k}', 'pc', 5, k))
         v.PIN_POS_EXTRA[(ph.name, '*dfi:req')] = (px, ph.y + gy['req'])
+        # r10: the PHY's own clock / reset pins (real abstract, not re-pinned): the reset tree ended its branch at
+        # the instance centre, 1.7 mm from the pin (pinreg audit of run g0: 4 reset nets over 500 um)
+        for pn_, yy_ in _phy_fixed_pins().items():
+            v.PIN_POS_EXTRA[(ph.name, pn_)] = (px, ph.y + yy_)
         ties.append((f'ctrlpc_{st}_{NPC - 1}', 'rqi', 311, 0))          # request chain end: idle
         nb = []
         for b, c, n, e in B:
@@ -897,12 +917,15 @@ def _wrap(v, m, G, peers):
             r.face('ck', 1, 'N', 'M7', round(e2 + 6.0, 4), 1)
             assert e2 + 8.0 <= SEQ_WH[0], e2
             # W / E: quadrant words, the S quadrant's below the N quadrant's; E starts above the host words
+            # (r10 run g2: with the two 1-kb kvn words low on the face both took the row gap under the host, beside the
+            # host link: cut 0.64 at x 16,650 -- they stay at the top of the face as on the v4 frame, the attention
+            # words below them)
             for f, y0 in (('W', 6.0), ('E', 6.0)):
                 if f == 'E':
                     y0 = run('E', y0, ('tk', 'hc', 'kst')) + 6.0
-                y1 = run(f, y0, (f'kc_{f}S', f'kvn_{f}S', f'aq_{f}S', f'af_{f}S', f'mf_{f}S'))
-                y2 = run(f, y1 + 8.0, (f'mf_{f}N', f'af_{f}N', f'aq_{f}N', f'kvn_{f}N', f'kc_{f}N'))
-                assert y2 <= SEQ_WH[1] - 2.0, (f, y2)
+                y1 = run(f, y0, (f'af_{f}S', f'mf_{f}S', f'af_{f}N', f'mf_{f}N', f'aq_{f}N', f'aq_{f}S'))
+                y2 = run(f, SEQ_WH[1] - 4.0, (f'kc_{f}S', f'kc_{f}N', f'kvn_{f}S', f'kvn_{f}N'), -1)
+                assert y2 >= y1 + 4.0, (f, y1, y2)
             # S: the hub's words (ar follows the hub's ao pins: align_abutted), reset beside them
             ah, hub = byi.get('ahub'), M.get('qkd_ahub')
             if ah is not None and hub is not None and hub.ports.get('ao', ('',))[0] == 'face' and hub.ports['ao'][2] == 'N':
