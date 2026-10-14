@@ -38,6 +38,7 @@ sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
+import pin_fit  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -782,7 +783,12 @@ def gen_hooks(s: dict, kd: str) -> dict:
     # spec "boundary_tcl": repo Tcl files that re-apply a second-domain boundary after every io_ref switch (post-CTS
     # wrapper, pre-GRT, post-DRT), so the route times those ports against their own propagated clock, not only sign-off
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])]
-    pre_cts += btcl
+    if btcl:
+        # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
+        # SDC after building the tree. Apply additional domains AFTER that wrapper.
+        pre_cts += ["rename clock_tree_synthesis ::ot_ref_cts_boundary_orig",
+                    "proc clock_tree_synthesis {args} {",
+                    "  ::ot_ref_cts_boundary_orig {*}$args", *["  " + x for x in btcl], "}"]
     if fwd:
         pre_cts.append("source /src/physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
@@ -796,8 +802,17 @@ def gen_hooks(s: dict, kd: str) -> dict:
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"] + btcl
+    # Each stage's boundary reset must be followed by the complete domain-specific
+    # boundary. In particular, POST_CTS must write a correct SDC for the next stage.
+    post_plain = [f"source /src/{QDM}/post_plain.tcl"] + btcl
+    pre_ref = [f"source /src/{QDM}/pre_ref_skew.tcl"] + btcl
+    stage_hooks = {"post_cts.tcl": post_plain, "post_grt.tcl": post_plain,
+                   "pre_drt.tcl": pre_ref, "pre_fill.tcl": pre_ref,
+                   "post_fill.tcl": post_plain}
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
-            "post_drt.tcl": "\n".join(post_drt) + "\n", **files, **gen_pin_hooks(s)}
+            "post_drt.tcl": "\n".join(post_drt) + "\n",
+            **{name: "\n".join(lines) + "\n" for name, lines in stage_hooks.items()},
+            **files, **gen_pin_hooks(s)}
 
 
 def shq(v: str) -> str:
@@ -812,18 +827,8 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     # optional "pin_ranges" {port: [lo_um, hi_um]} (along the face, from its left / bottom end): one region per ranged port so
     # a face tile's bus pins sit at the end facing their die neighbour and >= the given margin off the tile corners
     # ([vm8cp] corner-pin DRT-0255 class); ports without a range keep the whole face.
-    rng = s.get("pin_ranges") or {}
-    regs = []
-    for f, v in s["pins"].items():
-        if not v or f == "ANY":
-            continue
-        plain = [n for n in v if n not in rng]
-        if plain:
-            regs.append(pin_regex(plain) + "=" + FACES[f])
-        for n in v:
-            if n in rng:
-                lo, hi = rng[n]
-                regs.append(pin_regex([n]) + "=" + FACES[f] + f":{float(lo):g}-{float(hi):g}")
+    regs = [pin_regex(g["names"]) + "=" + FACES[g["face"]]
+            + (f":{g['range'][0]:g}-{g['range'][1]:g}" if g["range"] else "") for g in pin_regions(s)]
     pins = " ".join(f"--pin-region {shq(r)}" for r in regs)
     if s.get("io_tcl"):
         # el1011-hbm-smh 2026-10-12: run_abi3_physical writes its own IO_CONSTRAINTS (/work/io_constraints.tcl) for any
@@ -960,6 +965,40 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
 
+def pin_regions(s: dict) -> list:
+    """the --pin-region list of the kit, in order: per face one region for the ports without a pin_ranges entry, then
+    one per ranged port.  [{"names", "face", "range": (lo, hi) | None}]"""
+    rng = s.get("pin_ranges") or {}
+    out = []
+    for f, v in s["pins"].items():
+        if not v or f == "ANY":
+            continue
+        plain = [n for n in v if n not in rng]
+        if plain:
+            out.append({"names": plain, "face": f, "range": None})
+        for n in v:
+            if n in rng:
+                lo, hi = rng[n]
+                out.append({"names": [n], "face": f, "range": (float(lo), float(hi))})
+    return out
+
+
+def route_pin_settings(s: dict, lc: dict) -> dict:
+    """the pin-placement settings the ROUTE runs with (ref_route.sh + kit.env + run_abi3_physical): the one description
+    the gate's --remote run, the local kit check and the submit hook judge a pin plan by (tools/pin_fit.py).
+    {"exact": io_tcl places every port, "tracks", "h": [W / E face layers], "v": [N / S], "group_max", "balance"}"""
+    r = s["route"]
+    ph, pv = pin_layers(s, lc)
+    pb = r.get("pin_balance")
+    out = {"exact": bool(s.get("io_tcl")), "tracks": float(r.get("pin_min_tracks", 2)), "h": ph.split(), "v": pv.split(),
+           "group_max": pin_fit.ROUTE_PIN_GROUP_MAX, "balance": False}
+    if pb:
+        env = dict(x[len("export "):].split("=", 1) for x in pin_balance_env(r, lc))
+        out.update(group_max=int(env["OT_PIN_GROUP_MAX"]), balance=True,
+                   h=env["OT_PIN_BALANCE_H"].strip("'").split(), v=env["OT_PIN_BALANCE_V"].strip("'").split())
+    return out
+
+
 def cts_sink_env(r: dict) -> list:
     """optional route.cts_sink {size, diameter_um}: explicit TritonCTS register-sink clustering (CTSA -> ref_route.sh
     CTS_ARGS).  ORFS CTS_CLUSTER_* are ignored once CTS_ARGS is set, and the automatic choice on small macro tiles
@@ -989,6 +1028,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
     out = [*s["sources"], *s.get("boundary_tcl", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+           *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
@@ -1079,7 +1119,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
             "calibrate": {"enabled": False, "reason": "ref_tile: boundary referenced in-run to the propagated tree "
                                                       "(io_ref_skew.sdc), as the Qwen die masters"},
             "route": {
-                "cmd": ROUTE_PREFIX + f"HM={hm} OT_MM_FF_SDC='{kd}/signoff.sdc' SRC={{SRC}} OT_PIN_GROUP_MAX=32 "
+                "cmd": ROUTE_PREFIX + f"HM={hm} OT_MM_FF_SDC='{kd}/signoff.sdc' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_fit.ROUTE_PIN_GROUP_MAX} "
                        f"bash tools/ref_tile/ref_route.sh {kd}/kit.env {{LABEL}} {{RUN}}/routes",
                 "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
                 "logs": ["{RUN}/routes/{LABEL}/flow.log"],
