@@ -11,8 +11,8 @@
     "rst_n"
   ],
   "outline": {
-    "w": 54,
-    "h": 54
+    "w": 86.4,
+    "h": 86.4
   },
   "util": 0.48,
   "pins": {
@@ -48,11 +48,11 @@
     }
   },
   "recipe": 2,
-  "structural_change": "Register exact queue-nonempty from registered snapshot/pop state, eliminating count decode from raw ACK first capture; compact private1206-sink leaf54x54 vs86.4x86.4 shortens N ACK-to-E finish capture wire. No added completion edge, source/slot/pin qualification required.",
+  "structural_change": "Dedicated ACK face capture, no raw ACK logic path; separate interior poptoken and o_fin output launch register/reset regions prevents feedback from pulling launch away from pin. Adds1completionedge, projectednative185 vs168 price unqualified until measured/recovered. Restores86.4sq to preserveclock/holdspace; priorf2/f3/f4 failedP190 retained.",
   "job": {
     "owner": "Codex:qdq-write-completion-split",
     "branch": "codex-qdq-write-completion-split",
-    "tag": "f4",
+    "tag": "f5",
     "views_to": "physical/ref_tile/qdq_wr_fin_ref/views",
     "record_to": "results/rtl/ref_tile/qdq_wr_fin_ref",
     "purpose": "Opt-in completion-only leaf; standalone scoreboard does not qualify actual native production price or parent geometry. Native actual4 gate required before adoption.",
@@ -91,8 +91,8 @@
     "parent": "ot_hgi_qdq_q_pin4",
     "selected": false,
     "outline_um": [
-      54,
-      54
+      86.4,
+      86.4
     ],
     "reason": "Concrete compact completion alternative, actual die owner slot/pinpair approval required before native adoption"
   }

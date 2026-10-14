@@ -5,14 +5,14 @@ module tb_hgi_qdq_wr_fin;
  reg rst_n=0,snapshot_v=0;reg [63:0] snapshot=0;reg [7:0] ack=0;
  wire fin,bad,idle;
  ot_hgi_qdq_wr_fin #(.MUT(MUT)) dut(.clk(clk),.rst_n(rst_n),.snapshot_v(snapshot_v),.snapshot(snapshot),.wwq_done(ack),.o_fin(fin),.o_bad(bad),.o_idle(idle));
- integer issued[0:7],committed[0:7],eligible[0:7][0:2047];
+ integer issued[0:7],committed[0:7],previous_committed[0:7],eligible[0:7][0:2047];
  integer target[0:511][0:7],posted[0:511];
  integer cycle,npost,nfin,totalfin=0,maxpending=0,wraps=0,seed=32'h451ef;
  reg expected,previous_fin=0;integer inc;
  task clear_score;
  begin
   npost=0;nfin=0;previous_fin=0;
-  for(integer b=0;b<8;b=b+1)begin issued[b]=0;committed[b]=0;end
+  for(integer b=0;b<8;b=b+1)begin issued[b]=0;committed[b]=0;previous_committed[b]=0;end
   snapshot_v=0;snapshot=0;ack=0;
  end
  endtask
@@ -45,13 +45,14 @@ module tb_hgi_qdq_wr_fin;
    expected=(nfin<npost)&&!previous_fin;
    if(expected)begin
     if(cycle<posted[nfin]+2)expected=0;
-    for(integer b=0;b<8;b=b+1)if(committed[b]<target[nfin][b])expected=0;
+    for(integer b=0;b<8;b=b+1)if(previous_committed[b]<target[nfin][b])expected=0;
    end
    @(posedge clk);#1;
    if(bad)$fatal(1,"unexpected FIFO overflow");
    if(fin!==expected)$fatal(1,"FIN scoreboard mismatch cycle%0d issued%0d retired%0d actual%b expected%b",cycle,npost,nfin,fin,expected);
    if(fin)begin nfin=nfin+1;totalfin=totalfin+1;end
    previous_fin=fin;
+   for(integer b=0;b<8;b=b+1)previous_committed[b]=committed[b];
    @(negedge clk);
    if(abort_after>0&&cycle==abort_after)begin
     if(npost==nfin)$fatal(1,"warm reset did not interrupt pending records");
