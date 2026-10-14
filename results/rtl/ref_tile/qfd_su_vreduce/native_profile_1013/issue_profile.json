@@ -1,0 +1,43 @@
+{
+ "status": "NEW_TP8_PROFILE_INSTRUCTION_IMAGE_NOT_CURRENT_PRODUCTION_PAYLOAD_OR_EXECUTION",
+ "tp": 8,
+ "groups": 3072,
+ "SW": 64,
+ "HEADS": 1,
+ "KV_DIM": 128,
+ "TMAX": 8192,
+ "program_sha256": "120b42a583db68fb9faaa32d2076f1515d5c07e41787bf47533a1d230b4d1903",
+ "KV_ops": [
+  {
+   "pc": 3,
+   "su_nout": 1,
+   "su_nin": 128,
+   "d_base": 1048576,
+   "d_so": 1048576,
+   "d_si": 1,
+   "d_d": 4
+  },
+  {
+   "pc": 8,
+   "su_nout": 1,
+   "su_nin": 64,
+   "d_base": 0,
+   "d_so": 1048576,
+   "d_si": 16,
+   "d_d": 3
+  },
+  {
+   "pc": 10,
+   "su_nout": 1,
+   "su_nin": 64,
+   "d_base": 1024,
+   "d_so": 1048576,
+   "d_si": 16,
+   "d_d": 3
+  }
+ ],
+ "KV_elements": 256,
+ "claim_boundary": "First-layer ISA address and encode/decode profile only; no weights, golden trace, or RTL execution.",
+ "encoded_nin_max": 4096,
+ "runtime_dynamic_counts": "Encoded maximum excludes DYN table substitutions; context capacity8192 is profile-only, no current runtime bound claim."
+}
