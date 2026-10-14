@@ -41,8 +41,9 @@ SHAPES = dict(reduced=dict(QN_N=64, KV_N=512, QB_NB=4, SW_W=64, SM_H=2, SM_LPH=1
 # the DS HBM SU case set the golden runs draw on: tools/dshbm_baseline_measure.py prep (snapshots sha256 cd0fc866...)
 # -> tools/dshbm_chain_levers.py prep (_il) -> prep2 (_ildr); recorded in results/rtl/hbm_su_fused_compiler_20261005/v2_ildr.json
 CASES_SHA256 = "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
-K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7)
-RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_su.sv",
+K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10)
+RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+       "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_su.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/hdc/v41x/ot_dsrom_su_norm.sv", "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv", "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
        "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv", "rtl/hdc/v41x/ot_dsrom_su_softmax.sv",
@@ -61,7 +62,7 @@ HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv", "rtl/hdc/ot_sram_bank.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
-        "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
+        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 
 
@@ -225,6 +226,48 @@ class Run:
             orows += [pack(lv[32 * r:32 * r + 32], 16) for r in range(len(lv) // 32)]
         self.expect(out2, orows)
 
+    # ---------------------------------------------------------------- die item F1 (s81-functional-token 2026-10-14)
+    def expect_at(self, addrs, rows):
+        """expected rows at explicit (strided) addresses; the job's rows must be consecutive in address order among
+        the expected rows (the done-time check takes the first one and a count)"""
+        self.jexp[len(self.prog) - 1] = (min(addrs), len(rows))
+        for a_, r_ in zip(addrs, rows):
+            self.exp[a_] = r_
+
+    def ra(self, x):
+        """ffn.softplus_sqrt: r = sqrt(softplus(x)) of the die's router scores (rows of 16 binary32)"""
+        import hdc_golden_v41 as V
+        x = np.asarray(x, F)
+        a = self.put(rows_of(x))
+        out = self.alloc(len(x) // 16)
+        self.job("RA", 0, self.desc(out, a, len(x) // 16))
+        self.expect(out, rows_of(V.sqrt(V.softplus(x))))
+
+    def rb(self, sc, bias):
+        """ffn.bias: scores + bias (golden add); the layer's bias rows sit directly after the score rows"""
+        import hdc_golden_v41 as V
+        sc, bias = np.asarray(sc, F), np.asarray(bias, F)
+        a = self.put(rows_of(sc) + rows_of(bias))
+        out = self.alloc(len(sc) // 16)
+        self.job("RB", 0, self.desc(out, a, len(sc) // 16))
+        self.expect(out, rows_of(V.add(sc, bias)))
+
+    def qr(self, q, cos, sin):
+        """attn.q_rope: rope_tail of each q head (heads x 512 binary32), rotated in place (out_base = in_base)"""
+        import hdc_golden_v41 as V
+        q = np.asarray(q, F)
+        heads = q.shape[0]
+        a = self.put(rows_of(q.reshape(-1)))
+        prow = rows_of(np.concatenate([cos, sin]))
+        self.job("QR", 0, self.desc(a, a, heads, prow=prow))
+        ro = V.rope_tail(q, (cos, sin))
+        addrs, rows = [], []
+        for h in range(heads):
+            rr = rows_of(ro[h])
+            for j in range(4):
+                addrs.append(a + 32 * h + 28 + j); rows.append(rr[28 + j])
+        self.expect_at(addrs, rows)
+
     def write(self, d, meta):
         d.mkdir(parents=True, exist_ok=True)
         with open(d / "vm.mem", "w") as f:
@@ -292,6 +335,20 @@ def build_run(sh, rng, gold=None):
         pv = (rng.normal(0, 1, (Hh, 512)) * rng.choice([1e-3, 1, 50], (Hh, 512))).astype(F)
         sink = rng.normal(0, 3, Hh).astype(F)
         r.softmax(s_raw, F(0.0441941738), sink, pv, cos, sin)
+    # die item F1: RA / RB / QR at the die's production counts (full: 96 scores = 6 rows, 384 = 24 rows, 16 q heads;
+    # reduced: within its beat store of 32 rows)
+    full = sh["S_RD"] >= 16
+    nra, nrb, nh = (96, 384, 16) if full else (32, 128, 8)
+    xr = (rng.standard_normal(nra) * rng.choice([0.05, 1.0, 4.0, 30.0], nra)).astype(F)
+    xr[:8] = [0.0, -0.0, 1e-40, -1e-40, 88.0, -88.0, 20.0, -20.0]
+    r.ra(xr)
+    scs = np.abs(rng.standard_normal(nrb)).astype(F)
+    bias = (rng.standard_normal(nrb) * 0.01).astype(F)
+    scs[:4] = [0.0, 1e-38, 3.0, 0.5]; bias[:4] = [-0.0, -1e-38, -3.0, 0.0]
+    r.rb(scs, bias)
+    qh = (rng.standard_normal((nh, 512)) * rng.choice([1e-3, 1.0, 40.0], (nh, 512))).astype(F)
+    qh[0, -64:-60] = [0.0, -0.0, 1e-40, -3e-39]
+    r.qr(qh, cos, sin)
     return r
 
 
@@ -322,7 +379,7 @@ JOB = re.compile(r"SUJ op=(\d+) kind=(\d+) start=(-?\d+) done=(-?\d+)")
 def cmd_run(a):
     sh = SHAPES[a.shape]
     out = Path(a.out)
-    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + ("_h" if a.hier else "") + ("_t" if a.tiles else "") + (f"_lvm{a.lvm}" if a.lvm else "")
+    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + (f"_x{a.xmut}" if a.xmut else "") + ("_h" if a.hier else "") + ("_t" if a.tiles else "") + (f"_lvm{a.lvm}" if a.lvm else "")
     rtl = RTL + (HIER if a.hier else [])
     gen = []
     if a.tiles:        # gate s81su_tiles: the slab with the ROUTED tops dsfd_su_t_<x> in place of the cores (su_tile_tops.py)
@@ -345,7 +402,7 @@ def cmd_run(a):
             srcs = H.dpi_rest(obj) + srcs
         cmd = [H.VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_su_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", *[f"-G{k}={v}" for k, v in sh.items()],
-               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *([f"-GLVM={a.lvm}"] if a.lvm else []), *(["-DSU_HIER"] if a.hier else []), *(["-DSU_TILE_TOPS"] if a.tiles else []), *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *([f"-GXMUT={a.xmut}"] if a.xmut else []), *([f"-GLVM={a.lvm}"] if a.lvm else []), *(["-DSU_HIER"] if a.hier else []), *(["-DSU_TILE_TOPS"] if a.tiles else []), *os.environ.get("OT_SU_VDEFS", "").split(), *map(str, srcs), "-CFLAGS", "-O1"]
         rr = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + rr.stdout + rr.stderr)
         if rr.returncode != 0:
@@ -373,7 +430,7 @@ def cmd_run(a):
               row["jobs"], "fault", row["fault"], row["fault_code"], "cyc", row["cycles"],
               "early", row["early_done_rows"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.su_gate.run.v1", generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, hier=bool(a.hier), lvm=(a.lvm or 10), runs=res,
+               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, xmut=a.xmut, hier=bool(a.hier), lvm=(a.lvm or 10), runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
                source_sha256={s: H.sha(ROOT / s) for s in H.FP[a.fp] + rtl + [TB]})
     if a.tiles:
@@ -402,6 +459,7 @@ def main():
     p.add_argument("--tiles", action="store_true", help="the slab built from the ROUTED tile tops dsfd_su_t_<x> (su_tile_tops.py)")
     p.add_argument("--lvm", type=int, default=0, help="VM read latency of the bench VM (tb LVM; 0 = the bench default 10): "
                    "measures how many serial VM read round trips a job class holds")
+    p.add_argument("--xmut", type=int, default=0, help="ot_s81_su_rx negative control (1 RA sp, 2 RB no bias, 3 QR inverse)")
     p.add_argument("--tmut", type=int, default=0, help="with --tiles: output mutant of tile class K (+tmut=K, no rebuild)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)

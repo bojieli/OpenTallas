@@ -44,6 +44,17 @@ elif [ "${STACK:-p}" = d ]; then
 else
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv"; DEFS=""
 fi
+# el1014-qwen-kvsys-elements: HUBD=1 -> the hub as die leaves (qkd_ahub_core + the 13 hard tiles; implies RECIPLEAF);
+# HUBD_RLY="ZW ZR RA SR PV Y RX PI" overrides the die relay stages of the composition
+if [ "${HUBD:-0}" = 1 ]; then
+  RECIPLEAF=1
+  DEFS="$DEFS +define+KVD_HUBD"
+  STK="$STK $W/hdc/nearhbm/ot_qkd_ahub_core.sv"
+  if [ -n "${HUBD_RLY:-}" ]; then
+    read -r a b c d e f g h <<< "$HUBD_RLY"
+    DEFS="$DEFS +define+KVD_HUBD_ZW=$a +define+KVD_HUBD_ZR=$b +define+KVD_HUBD_RA=$c +define+KVD_HUBD_SR=$d +define+KVD_HUBD_PV=$e +define+KVD_HUBD_Y=$f +define+KVD_HUBD_RX=$g +define+KVD_HUBD_PI=$h"
+  fi
+fi
 # Opt-in reciprocal local-clock leaf for the hierarchical hub.
 if [ "${RECIPLEAF:-0}" = 1 ]; then
   DEFS="$DEFS +define+QKH_RECIP_LEAF"
