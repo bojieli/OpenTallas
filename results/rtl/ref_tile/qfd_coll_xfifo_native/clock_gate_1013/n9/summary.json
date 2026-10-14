@@ -1,0 +1,22 @@
+{
+  "source_revision": "27fc3bff5",
+  "gate": "PASS",
+  "corners_ps": {
+    "tt": {
+      "setup": 213.771889,
+      "hold": 21.072533
+    },
+    "ff": {
+      "setup": 298.356062,
+      "hold": 9.46615
+    },
+    "ss": {
+      "setup": -4.476197,
+      "hold": 26.498692
+    }
+  },
+  "remaining": "CQ local ir_c0 to read mux to wq_data89 -4.476; global ir0 to next full comparator to full_c -4.23. SQ bypass-data old failure now +34.34.",
+  "qualified": false,
+  "route_submitted": false,
+  "reason": "SS still fails; die CKD source-slew policy and full native composition not proved."
+}
