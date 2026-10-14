@@ -1,6 +1,7 @@
 #include "actual_phy.hpp"
 #include "verilated.h"
 #include <iostream>
+#include <algorithm>
 #include <memory>
 #include <string>
 using namespace qwen_actual_phy;
@@ -12,7 +13,7 @@ int main(int argc,char**argv){
  VerilatedContext ctx;ctx.commandArgs(argc,argv);
  Vqwen_native_hbm_pc_provider m(&ctx,"pc31");Backing phy;phy.corrupt_read=data_mut;
  m.pc=31;m.ck=0;m.pll_hbm=0;m.rst_n=0;m.hrst=0;m.fi=0;m.ki=0;
- for(auto&x:m.ci)x=0;for(auto&x:m.pi)x=0;for(auto&x:m.host_es)x=0;for(auto&x:m.land_es)x=0;m.eval();
+ std::fill(m.ci.data(),m.ci.data()+10,0);std::fill(m.pi.data(),m.pi.data()+10,0);std::fill(m.host_es.data(),m.host_es.data()+9,0);std::fill(m.land_es.data(),m.land_es.data()+9,0);m.eval();
  std::vector<Cmd> cmd;
  for(unsigned i=0;i<12;i++){Cmd c{100+i/4,i%2,i%4,{}};for(unsigned j=0;j<8;j++)c.data[j]=0x9e3779b9u*(8*i+j+1)^0x13579bdf;cmd.push_back(c);}
  uint64_t ck_next=553667,hb_next=512000,ckedges=0,hbedges=0;
@@ -38,7 +39,7 @@ int main(int argc,char**argv){
     }
    } else {
     // Inputs set on falling edge, accepted on the next actual core rising edge.
-    for(auto&x:m.host_es)x=0;for(auto&x:m.land_es)x=0;
+    std::fill(m.host_es.data(),m.host_es.data()+9,0);std::fill(m.land_es.data(),m.land_es.data()+9,0);
     if(hbedges>=160&&posted<cmd.size()&&host_credit){
      auto&c=cmd[posted++];--host_credit;
      put(m.host_es.data(),0,1,1);put(m.host_es.data(),286,2,3);put(m.host_es.data(),281,5,c.bank);put(m.host_es.data(),276,5,c.col);put(m.host_es.data(),257,19,c.row);
