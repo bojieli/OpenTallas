@@ -47,3 +47,36 @@ owner. The closed hslice, q-end pack and T4 join remain constituent evidence;
 they do not close this native parent. Current functional clocks, geometry,
 complete-service bandwidth, native rate and parent physical timing are all
 unqualified. Fullgold and mutation receipts will be published separately.
+
+Complete native functional parent evidence is now published in
+`full_parent_d850fd545` and `parent_mutants_d850fd545`. Four independent stack
+scorers use all2,048 actual ready-leaf arithmetic objects, hardware FP32 query
+quantization, real SRAM topK, and the ordered max8/newest candidate collector.
+Canonical retained1M rank0 L20/L24 operands, rank37 partial4,100 keys with two
+empty quarters, and a refused-key fault pass without resetting between frames.
+Lane/GID/keep/value/order source mutations are actually detected. These are
+common-phase functional fixtures, direct endpoint nets; actual HBM PHY/service
+and downstream VM commit/drain barriers remain outside this proof.
+
+The separate clock/state cut successor is source-bound by `cut_edab82fb5`.
+Its actual census retains681,099 FF bits plus246,284 inferred buffer bits,
+185 glue clock names,2,048 new-ready leaf clocks and120 distinct SRAM clocks:
+2,353 unique source entries. Every glue root, counting inferred buffers, is
+at most13,860 bits. Source contains96 real64x512 line macros and28 real256x256
+score/topK/ordered macros. Exact caller line capacity64 and score capacity128
+include buffered/prefetched records; extra physical SRAM rows grant no credits.
+The actual SRAM catalog outline sum is1.477370mm2, in addition to the related
+leaf-only36.691771mm2, before glue/channels/clock/reset. `request_graph.json`
+contains actual module logical ports, source hashes, instance/clock/macro lists,
+and requested geometry; it contains no assigned slots or physical driver ABI.
+The related old scorer slots overlap107 real current-v13 children and are not
+available grants. This candidate's numerical proof is separately admitted;
+the uncut baseline verdict is never copied to it.
+
+New-ready nominal leaf sink demand15,335 requires fresh physical measurement,
+partition or the actual allowed300/80 clock rule; old15,334-sink CLOSED evidence
+cannot grandfather it. New macro/control seams, coherent clock delivery,
+active-clock-stop reset/drain leases, actual driver slots, source-bound die
+placement/STA/GRT and all physical rate/bandwidth claims remain unqualified.
+The original cancelled score_slice_reg/f0ba521d3 and ksub_el/9e9a8a8a7 are not
+silently aliased or retired by this distinct full-native successor.
