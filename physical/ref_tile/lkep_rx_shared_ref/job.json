@@ -22,7 +22,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_lkep_rx_shared #(.NS(3), .W(545), .TFD(4), .RL(2), .SL(64), .IDLE_P(1024), .MUT_TX(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_rx_shared.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_sub.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_crc_par.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_tx_shared.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_lkep_rx_shared #(.NS(3), .W(545), .OFD(4), .RL(2), .SL(64), .MUT_RX(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_rx_shared.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_sub.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_crc_par.sv rtl/hbm_accel/tu/lk_ep_20261010/ot_lkep_tx_shared.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,

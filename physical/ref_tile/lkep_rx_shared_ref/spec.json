@@ -13,11 +13,10 @@
  "params": {
   "NS": 3,
   "W": 545,
-  "TFD": 4,
+  "OFD": 4,
   "RL": 2,
   "SL": 64,
-  "IDLE_P": 1024,
-  "MUT_TX": 0
+  "MUT_RX": 0
  },
  "clock_port": "clk",
  "reset_ports": [
