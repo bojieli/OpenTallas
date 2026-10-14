@@ -644,6 +644,7 @@ def main(argv=None):
                                       '(default: DIE_V.params.json when present; inline #(...) on an instance wins)')
     ap.add_argument('--elab-out', help='write DIR/die_top.sv (sidecar parameters inline) + DIR/die_top.f (RTL closure) '
                                        'for a full-RTL Verilator elaboration of the die')
+    ap.add_argument('--closure', action='append', default=[], help='print the RTL file closure of MODULE (no die check)')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
     files = list(a.rtl_file)
@@ -661,6 +662,18 @@ def main(argv=None):
     roots = a.rtl_root if a.rtl_root is not None else (['rtl'] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'physical').glob('**/rtl')
                                                                   if p.is_dir()))
     idx, amb = rtl_index(roots, files, defines, a.prefer + files)
+    if a.closure:
+        seen, todo, files_ = set(), list(a.closure), []
+        while todo:
+            n = todo.pop()
+            if n in seen or n not in idx:
+                continue
+            seen.add(n)
+            if idx[n].path not in files_:
+                files_.append(idx[n].path)
+            todo += sorted(idx[n].children(idx) - seen)
+        print('\n'.join(files_))
+        return 0
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
     mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
     rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams)
