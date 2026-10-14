@@ -31,8 +31,8 @@ four observed wrong leaf words per pair. Individual JSON results, full build
 logs, input/source/binary/positive-output SHA256 digests are committed under
 `results/arch/qwen_tp8_pv256_parallel_1013`.
 
-This component does not yet contain canonical128-residue tree reduction or
-pair0+pair1 addition. It does not prove actual QK/exp e generation or actual HBM
+The default leaf profile exports all128 residues; TREE=1 also provides the
+canonical128-residue tree described below. Pair0+pair1 addition is outside this component. It does not prove actual QK/exp e generation or actual HBM
 row routing, since e is golden provided here. Its SRAM state is512KiB for both
 pairs, excluding reduction storage. Clock, pins, area, routing, and production
 whole-attention throughput remain unqualified. Contexts missing an entire owned
