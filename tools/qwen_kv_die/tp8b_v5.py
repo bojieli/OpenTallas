@@ -20,7 +20,7 @@ Called at the end of before_relays (after _tp8b_kv), i.e. on the final placement
        one PC master, one pin plan); ot_hbm3e_phy re-pinned per PC (phy_repin): rsp_* of PC k faces leaf k, req_* at the
        S end beside the kc leaf
   T17  qfd_seq_su bundles (consumer side): ib dropped (the ME instruction is issued by the control tile: tt_ctlm.ib ->
-       head root), dflt dropped (no link end on one die), dc 56 b / dh 187 b, cc 517 b valid only, cd = cd_d + cd_cr,
+       head root), dflt dropped (no link end on one die), dc 56 b / dh 187 b, cc 518 b valid only, cd = cd_d + cd_cr,
        cbr0..7 kept (8 producers; the cell owns the registered reducer)
   T18  reset: qkd_pll / qfd_clkrx are hard-macro abstracts; ot_qwen_sys_rst_seq is its own leaf (qkd_rstseq beside the
        PLL, qfd_rstseq beside the clock receiver); new reset nets rst_field (tiles, stations, heads) and rst_spine
@@ -302,12 +302,12 @@ def apply(v, m, G):
             n = 56
         elif b == 'd2d_seq':
             n = 187
-        elif b == 'coll_seq_x':
-            n = 517
+        elif b in ('coll_seq', 'coll_seq_x'):
+            n = 518
         nb.append((b, c, n, e))
     B = nb
     B.append(('tt_ib', 'tree_spine', 380, [('tt_ctlm', 'ib'), ('sp_vector_memory', 'ib')]))
-    rec['seq_su'] = dict(dropped=['seq_ib', 'd2d_flt'], dc=56, dh=187, cc=517, cd='cd_d[546:0] + cd_cr',
+    rec['seq_su'] = dict(dropped=['seq_ib', 'd2d_flt'], dc=56, dh=187, cc=518, cd='cd_d[546:0] + cd_cr',
                          ib='tt_ctlm.ib[379:0] -> sp_vector_memory.ib (head root)')
 
     # ---------------------------------------------------------------- T22b merged KV sequencer slot
@@ -1168,7 +1168,7 @@ def _wrap(v, m, G, peers):
                     if p in q.ports:
                         q.ports.pop(p)
                         q.order[:] = [x for x in q.order if x != p]
-                for p, nbit in (('dc', 56), ('dh', 187), ('cc', 517)):
+                for p, nbit in (('dc', 56), ('dh', 187), ('cc', 518)):
                     q.ports[p] = ('face', nbit) + tuple(q.ports[p][2:])
             if mn == 'qfd_tt_ctlm':
                 q.face('ib', 380, 'N', 'M5', 0.0, 1)

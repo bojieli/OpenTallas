@@ -129,6 +129,7 @@ if '--case' in sys.argv:
         (pdir / f'{name}.json').write_text(json.dumps(rec_, indent=1) + '\n')
         index[name] = dict(instances=rec_['instances'], ports=len(ports), bits=sum(q_['bits'] for q_ in ports.values()))
     (pdir / 'INDEX.json').write_text(json.dumps(index, indent=1) + '\n')
+r = rec['relays']  # pin rectangle iteration above uses its own local r value
 print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
                       unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'],
                       reset_over_500=len(rec['reset']['reset_named_over_500']), instances=rec['instances'],
