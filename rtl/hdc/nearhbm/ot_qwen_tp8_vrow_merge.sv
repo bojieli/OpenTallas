@@ -65,7 +65,7 @@ module ot_qwen_tp8_vrow_merge #(parameter integer PAIR=0) (
   end else begin
    done<=0;
    if(start)begin
-    if(active||fault||context_len>8192)fault<=1;
+    if(active||fault||context_len>8192||lo_rsp_valid||hi_rsp_valid)fault<=1;
     else begin
      ep<=epoch;limit<=context_len;allocated<=0;sent<=0;returned<=0;wp<=0;sp<=0;rp<=0;
      for(i=0;i<128;i=i+1)next_t[i]<=14'(PAIR*128+i);

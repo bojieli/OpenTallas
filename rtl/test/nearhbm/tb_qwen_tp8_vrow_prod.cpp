@@ -64,6 +64,12 @@ int main(int argc,char**argv){
   if(emitted==4096&&mul_tags.empty())break;
  }
  if(rows!=4096||words!=4096*512||!replies.empty()||cyc>=100000)return 2;
+ if(mode=="restart"){
+  d.start=1;d.epoch=53;d.lo_rsp_valid=1;d.hi_rsp_valid=0;
+  d.lo_rsp_epoch=52;d.lo_rsp_t=pair*128;tick();
+  std::cout<<"{\"stale_restart_fault\":"<<(d.fault?"true":"false")<<",\"pair\":"<<pair<<",\"cycles\":"<<cyc<<"}\n";
+  return !d.fault;
+ }
  std::cout<<"{\"pair\":"<<pair<<",\"cycles\":"<<cyc<<",\"rows\":"<<rows<<",\"product_words\":"<<words<<",\"mismatches\":"<<errors<<",\"out_of_order_responses\":"<<reordered<<",\"mutant\":\""<<mode<<"\"}\n";
  return mode=="data"?!errors:(errors||mode!="none");
 }
