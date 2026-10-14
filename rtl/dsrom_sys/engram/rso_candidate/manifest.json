@@ -23,7 +23,7 @@
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_pbank_rso.sv": "ef6a6ecd73c0960ac68ec7fb3382a79e2dcafbdfa609b5a71320b5c0c86233c0",
     "rtl/dsrom_sys/engram/rso_candidate/ot_async_fifo_rso.sv": "5415d6ecbd5cdb483487bb803d82fb59e54c5dfc6087c12ec7e24412ee37e064",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_ws_rso.sv": "ee6bd78f177ea4aee89c858986544fd68e3c81fd657111d1131c66ed6a813ba1",
-    "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso_r1.sv": "e459b0b6c35b2f65e4f6b219d3ad7c955670104c603f6621c16573738b8fe811"
+    "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso_r1.sv": "e211fc1b20fdef72999b43e263f8c177783cffa83195b7df428df1100aa4e474"
   },
   "parent_conditions": [
     "u_rst_win.reset_pipe[1]",
@@ -56,7 +56,8 @@
     "WIN_WS_PBB_PBC": 4,
     "IO_adapter_runs": 6,
     "IO_fifo_domains": 8,
-    "aggregate": 8
+    "aggregate": 9,
+    "IO_registered_ack": 9
   },
   "not_used": [
     "c_st online",
@@ -84,6 +85,7 @@
     "read_latency_edges": 14,
     "data_return_bits": 576,
     "data_pipeline_cycles": 1,
-    "validation": "pending exact/cost and matched return-skew negative; no physical admission"
+    "validation": "read13 exact/cost/ACK/return-skew passed before added registered ACK output; fresh ACK proof pending",
+    "ack_boundary": "rso_q registered actual adapter/FIFO final release; async rn assertion clears; adds one local ACK edge"
   }
 }

@@ -43,7 +43,13 @@ module ot_engc_t_io_rso_r1 #(
     always @(posedge ck or negedge rst) if (!rst) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
     wire rn = rs_q[1];
     wire ep_rso;
-    assign rso = rn && ep_rso;
+    // Export a genuine registered boundary acknowledgment after all local
+    // adapter/FIFO final releases. Global asynchronous assertion clears it.
+    reg rso_q;
+    always @(posedge ck or negedge rn)
+        if (!rn) rso_q <= 1'b0;
+        else rso_q <= ep_rso;
+    assign rso = rso_q;
     always @(posedge ck) cfg_o <= f_cfg;
 
     // ---------------- endpoint
