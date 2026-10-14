@@ -1,0 +1,5 @@
+PASS CORE_FIN2_ORACLE span=0 epochs=8 admitted=1642 retired=1638 enqueues=1641 wraps=102 concurrent=8 min_reuse_age=11 RAW=103 WAR=306 WAW=511 rejected=204 multi=1326 credit_stall=24664 beat_stall=6848
+- /srv/opentallas-scratch/claude/core-fin2-oracle/r4/rtl/test/hbm_accel/generic/tb_hgi_qdq_core_fin2_oracle.sv:185: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 42us; walltime 0.039 s; speed 1.061 ms/s
+- Verilator: cpu 0.039 s on 1 threads; allocated 8 MB
