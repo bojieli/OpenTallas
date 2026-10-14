@@ -1,0 +1,17 @@
+{
+  "scope": "independent full production NG256 flat RTL reference on the same three native 1940-row corpora",
+  "source_snapshot": "0cbcd9a07",
+  "runner": "a3ca48ed1",
+  "positive": "HIER0 exact three chains against golden checkpoint/stress expectations",
+  "negative": "MUT1 inside the flat reference, all chains fail; no physical timing claim",
+  "status": {
+    "positive": "pass",
+    "negative": "fail"
+  },
+  "cycles": [
+    2933,
+    2933,
+    2933
+  ],
+  "native_R2_comparison": "pending named parent R2 exact run; compare corpus and rows, cycles differ structurally"
+}
