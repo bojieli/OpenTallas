@@ -1,5 +1,5 @@
 {
- "name": "qfd_seq_su-sl1-56904c20e",
+ "name": "qfd_seq_su-sl2-026ab41b4",
  "block": "qfd_seq_su",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-romspine",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1013-qwen-romspine",
-  "commit": "56904c20e"
+  "commit": "026ab41b4"
  },
  "stages": {
   "bench": [
@@ -109,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_seq_su/qfd_seq_su-sl1-56904c20e"
+   "to": "results/rtl/ref_tile/qfd_seq_su/qfd_seq_su-sl2-026ab41b4"
   }
  ],
  "cycles_added": 0,
