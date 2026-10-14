@@ -38,7 +38,12 @@
 module ot_s81ph_ret_root_s #(
     parameter integer S    = 8,              // open (pos, row, n) slots: 8 (256 x 34 macro) or 16 (512 x 34 macro)
     parameter integer QD   = 128,
-    parameter integer SRAM = 0               // 1: the two hard macros; 0: flop arrays of the same cycle behaviour
+    parameter integer SRAM = 0,              // 1: the two hard macros; 0: flop arrays of the same cycle behaviour
+`ifdef S81PH_GTH_LOCAL_BANKS
+    parameter integer LOCAL_BANKS = 1
+`else
+    parameter integer LOCAL_BANKS = 0        // opt-in zero-cycle SS repair: predecode heap and local EV banks
+`endif
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -159,7 +164,32 @@ module ot_s81ph_ret_root_s #(
 
     // ------------------------------------------------------------ S1: candidate register, slot / entry look-ahead
     reg [31:0] cand;
-    always @(posedge clk) cand <= dv[LAT-2] ? dtg_last : ((!hv || !sv) ? pq_t : h_t);
+    wire [31:0] cand_next = dv[LAT-2] ? dtg_last : ((!hv || !sv) ? pq_t : h_t);
+    always @(posedge clk) cand <= cand_next;
+    // Decode in the existing candidate epoch. No additional decision/read edge.
+    function automatic [4:0] heap_h(input [31:0] t);
+        case (t[7:5])
+            3'd0: heap_h = {1'b1, t[12:9]};
+            3'd1: heap_h = {2'b01, t[12:10]};
+            3'd2: heap_h = {3'b001, t[12:11]};
+            3'd3: heap_h = {4'b0001, t[12]};
+            3'd4: heap_h = 5'd1;
+            3'd7: heap_h = t[12:8]; // original 3-bit (k+1) wraps at k=7; malformed still faults
+            default: heap_h = 5'd0;
+        endcase
+    endfunction
+    (* keep = 1 *) reg [4:0] cand_h;
+    (* keep = 1 *) reg [31:0] cand_h_oh;
+    generate if (LOCAL_BANKS) begin : g_heap_local
+        always @(posedge clk) begin
+            cand_h <= heap_h(cand_next);
+`ifdef S81PH_MUT_HEAP_PHASE
+            cand_h_oh <= 32'd1 << heap_h(cand); // mutant: decode lags the candidate epoch
+`else
+            cand_h_oh <= 32'd1 << heap_h(cand_next);
+`endif
+        end
+    end endgenerate
     wire        x_v = sv || hv;
     wire [31:0] x_d = sv ? sum : h_d;
     wire        x_e = sv ? (st_e | err != 2'd0) : h_e;
@@ -167,7 +197,7 @@ module ot_s81ph_ret_root_s #(
     wire [2:0]  x_kk = cand[7:5];
     wire [4:0]  x_lo = cand[12:8];
     // parent heap index: level k + 1 has 32 >> (k + 1) nodes, node lo >> (k + 1)
-    wire [4:0]  x_h = (5'd16 >> x_kk) | (x_lo >> (x_kk + 3'd1));
+    wire [4:0]  x_h = LOCAL_BANKS ? cand_h : ((5'd16 >> x_kk) | (x_lo >> (x_kk + 3'd1)));
     wire        x_bad = (x_kk > 3'd4) || ((x_lo & ~(5'h1F << x_kk)) != 5'd0);   // not a tree node below the top
     reg [S-1:0]  sv_s;                       // slot holds at least one entry
     reg [23:0]   skey [0:S-1];
@@ -176,10 +206,14 @@ module ot_s81ph_ret_root_s #(
     reg [S-1:0] m1, vh1;
     always @* for (k = 0; k < S; k = k + 1) begin
         m1[k] = sv_s[k] && (skey[k] == x_key);
-        vh1[k] = ev[k][x_h];
+        vh1[k] = LOCAL_BANKS ? (|(ev[k] & cand_h_oh)) : ev[k][x_h];
     end
     reg s2_v, s2_cmp, s2_sp, s2_sh, s2_e, s2_side, s2_bad; reg [31:0] s2_d, s2_t; reg [23:0] s2_key; reg [4:0] s2_h;
     reg [S-1:0] s2_m, s2_vh;
+    (* keep = 1 *) reg [31:0] s2_h_oh;
+    generate if (LOCAL_BANKS) begin : g_node_local
+        always @(posedge clk) s2_h_oh <= cand_h_oh;
+    end endgenerate
     always @(posedge clk or negedge rst_n) if (!rst_n) s2_v <= 1'b0; else s2_v <= x_v;
     always @(posedge clk) begin
         s2_t <= cand; s2_key <= x_key; s2_h <= x_h; s2_d <= x_d; s2_e <= x_e; s2_side <= x_lo[x_kk]; s2_bad <= x_bad;
@@ -242,14 +276,14 @@ module ot_s81ph_ret_root_s #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             sv_s <= {S{1'b0}}; p_use <= 1'b0; p_ins <= 1'b0; p_slot <= {S{1'b0}};
-            for (k = 0; k < S; k = k + 1) begin ev[k] <= 32'd0; scnt[k] <= 6'd0; end
+            for (k = 0; k < S; k = k + 1) scnt[k] <= 6'd0;
             a3_v <= 1'b0; a4_v <= 1'b0; add <= 1'b0; r_v <= 1'b0; fault <= 1'b0; e_two <= 1'b0; e_dup <= 1'b0;
             bwe_q <= 1'b0; bre_q <= 1'b0;
         end else begin
             p_use <= dec_add || dec_ins; p_ins <= dec_ins; p_slot <= slot_w;
             for (k = 0; k < S; k = k + 1) if (slot_w[k]) begin
-                if (dec_ins) begin ev[k][s2_h] <= 1'b1; scnt[k] <= cnt_sel + 6'd1; sv_s[k] <= 1'b1; end
-                if (dec_add) begin ev[k][s2_h] <= 1'b0; scnt[k] <= cnt_sel - 6'd1; sv_s[k] <= cnt_sel != 6'd1; end
+                if (dec_ins) begin scnt[k] <= cnt_sel + 6'd1; sv_s[k] <= 1'b1; end
+                if (dec_add) begin scnt[k] <= cnt_sel - 6'd1; sv_s[k] <= cnt_sel != 6'd1; end
             end
             bwe_q <= dec_ins; bre_q <= dec_add;
             a3_v <= dec_add; a4_v <= a3_v; add <= a4_v;
@@ -262,6 +296,26 @@ module ot_s81ph_ret_root_s #(
             if (ok && !v_cur && no_slot) fault <= 1'b1;               // a partial of an (S+1)-th open row
             if (e_two || e_dup) fault <= 1'b1;
         end
+    // Per-slot enable and predecoded node select replace the nested dynamic
+    // vector update. The state still changes at the original decision edge.
+    genvar bank, node;
+    generate for (bank = 0; bank < S; bank = bank + 1) begin : g_ev_bank
+        if (LOCAL_BANKS) begin : g_local
+            (* keep = 1 *) wire bank_use = slot_w[bank] && (dec_add || dec_ins);
+            for (node = 0; node < 32; node = node + 1) begin : g_node
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) ev[bank][node] <= 1'b0;
+                    else if (bank_use && s2_h_oh[node]) ev[bank][node] <= !v_cur;
+            end
+        end else begin : g_legacy
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) ev[bank] <= 32'd0;
+                else if (slot_w[bank]) begin
+                    if (dec_ins) ev[bank][s2_h] <= 1'b1;
+                    if (dec_add) ev[bank][s2_h] <= 1'b0;
+                end
+        end
+    end endgenerate
     always @(posedge clk) begin
         for (k = 0; k < S; k = k + 1) if (slot_w[k] && dec_ins) skey[k] <= s2_key;
         bwa_q <= b_wa; bwd_q <= {s2_side, s2_e, s2_d};
