@@ -44,3 +44,15 @@ if {[llength [info commands ::qdm_cts_orig]] && ![llength [info commands ::capx_
 } else {
     capx_apply_boundary
 }
+# ref_route also restores io_plain in POST_CTS, after the CTS wrapper returns.
+# Keep the second domain correct in the written stage SDC as well as repair STA.
+if {![llength [info commands ::capx_read_sdc_inner]]} {
+    rename read_sdc ::capx_read_sdc_inner
+    proc read_sdc {args} {
+        ::capx_read_sdc_inner {*}$args
+        set tail [file tail [lindex $args end]]
+        if {$tail in {io_plain.sdc io_ref_skew.sdc}} {
+            capx_apply_boundary
+        }
+    }
+}
