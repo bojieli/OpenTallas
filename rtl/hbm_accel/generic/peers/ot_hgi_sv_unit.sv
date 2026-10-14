@@ -736,6 +736,7 @@ module ot_hgi_sv_head #(
     reg [15:0] no_m1, ni_m1, nih_m1;
     reg [27:0] pn [0:5][0:7];                           // nibble x 24 partial products (a nibbles 0-3, c nibbles 4-7)
     reg [31:0] pq0 [0:5]; reg [31:0] pq1 [0:5]; reg [31:0] pq2 [0:5]; reg [31:0] pq3 [0:5]; reg [39:0] pacc [0:5];
+    reg [15:0] rm_a [0:5]; reg [15:0] rm_c [0:5]; reg [23:0] rso [0:5]; reg [23:0] rsi [0:5]; reg [39:0] s01 [0:5]; reg [39:0] s23 [0:5];
     reg [15:0] m_a [0:5]; reg [15:0] m_c [0:5]; reg [18:0] mhi [0:5]; reg [5:0] m_badv;
     always @* for (integer k = 0; k < 6; k = k + 1) begin
         m_a[k] = (k == 5 && (redwhole || redtree)) ? 16'd0 : no_m1;
@@ -951,15 +952,20 @@ module ot_hgi_sv_head #(
                 // extent (4 edges; 10-13: the 8 x 24 product in one edge was a 27-level stage, ~995 ps)
                 D_MUL: begin
                     for (integer k = 0; k < 6; k = k + 1) begin
+                        // B3 (head gate r4-pre: m_a -> pn 21 levels, pq -> pacc 4-input 40-b add -64 ps): operand selects
+                        // registered first (rm_*), the 4-input sum split into two pair sums (s01 / s23) and their add.
+                        // Two more MUL edges a record (mph 0..5); decode runs ahead of execution, so no service cycle.
+                        rm_a[k] <= m_a[k]; rm_c[k] <= m_c[k]; rso[k] <= c_so[k]; rsi[k] <= c_si[k];
                         for (integer h = 0; h < 4; h = h + 1) begin
-                            pn[k][h]     <= nib24(m_a[k][4*h +: 4], c_so[k]);
-                            pn[k][4 + h] <= nib24(m_c[k][4*h +: 4], c_si[k]);
+                            pn[k][h]     <= nib24(rm_a[k][4*h +: 4], rso[k]);
+                            pn[k][4 + h] <= nib24(rm_c[k][4*h +: 4], rsi[k]);
                         end
                         pq0[k] <= {4'd0, pn[k][0]} + {pn[k][1], 4'd0}; pq1[k] <= {4'd0, pn[k][2]} + {pn[k][3], 4'd0};
                         pq2[k] <= {4'd0, pn[k][4]} + {pn[k][5], 4'd0}; pq3[k] <= {4'd0, pn[k][6]} + {pn[k][7], 4'd0};
-                        pacc[k] <= {8'd0, pq0[k]} + {pq1[k], 8'd0} + {8'd0, pq2[k]} + {pq3[k], 8'd0};
+                        s01[k] <= {8'd0, pq0[k]} + {pq1[k], 8'd0}; s23[k] <= {8'd0, pq2[k]} + {pq3[k], 8'd0};
+                        pacc[k] <= s01[k] + s23[k];
                     end
-                    if (mph == 4'd3) begin
+                    if (mph == 4'd5) begin
                         for (integer k = 0; k < 6; k = k + 1) begin lo[k] <= c_base[k][17:0]; hi[k] <= mhi[k][17:0]; end
                         if (cpair) begin lo[0] <= c_base[0][17:0] & ~18'd1; hi[0] <= mhi[0][17:0] | 18'd1; end
                         if (m_badv != 6'd0) begin dfault <= 1'b1; dstt <= D_FAULT; end   // an operand word >= 2^18
