@@ -470,9 +470,14 @@
     "front_candidate": {
       "FASTFIN": 1,
       "FRONTFAST": 1,
-      "status": "ACTUAL_NATIVE_PRODUCTION_RUNNING",
+      "status": "ACTUAL_NATIVE_EXACT_PRICE_PHASE61_487_PASS_MUTANTS_FAIL",
       "standalone_exact_retirements": 2146,
-      "standalone_real_mutants": "ORDER4526 END914 failures"
+      "standalone_real_mutants": "ORDER4526 END914 failures",
+      "source": "3430b8aac",
+      "cycles": 184,
+      "words": 13312,
+      "records": 32,
+      "ratio": 1.0952380952380953
     },
     "old_span0_runs": "DIAGNOSTIC_NOT_ACTUAL_PHYSICAL_COMPOSITION",
     "physical": "closed general FR preserved; fast+retire gates child-owned; new CORE/WR matching physicalviews required; peer CDC payload arrays unclosed; aperture release and quiet proof open"
