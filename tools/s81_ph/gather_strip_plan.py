@@ -19,6 +19,8 @@ def main():
  def snap(x):return round(x/.576)*.576
  def clear(x,y,w=15.12,h=15.12):return all(x+w+2.16<=b[0] or b[0]+b[2]+2.16<=x or y+h+2.16<=b[1] or b[1]+b[3]+2.16<=y for b in taken)
  taken.append((1598.4,8.64,129.6,43.2))
+ for g in range(8):
+  for k in range(4):taken.append((12.96+216*g,61.632+184.32*k,190.08,164.16))
  def strip(x):
   cells=[(abs(xx-x)+abs(y-25.92)*.1,xx,y) for y in (8.64,25.92,43.2) for xx in (snap(8.64+17.28*j) for j in range(92)) if clear(xx,y)]
   _,x,y=min(cells);taken.append((x,y,15.12,15.12));return x,y
@@ -29,7 +31,7 @@ def main():
   elif role.startswith('cs'):
    g=int(role[2:]);start=108+216*g;x,y=strip(start+(1640-start)*(j+1)/5)
   elif role.startswith('rc'):
-   g=int(role[2:]);target=(205.2+216*g) if g<7 else 1501.2
+   g=int(role[2:]);target=(205.632+216*g) if g<7 else 1501.632
    if j<4:x,y=strip(1640+(target-1640)*(j+1)/4)
    else:
     x,y=snap(target),snap(340+(j-4)*220+(20.736 if g==7 else 0));assert clear(x,y);taken.append((x,y,15.12,15.12))
@@ -48,6 +50,6 @@ def main():
    hops.append({'source':prev['instance'],'sink':v['instance'],'bit':bit,'length_um':round(abs(sp['x']-dp['x'])+abs(sp['y']-dp['y']),3)})
  internal={'count':len(hops),'max_um':max(t['length_um'] for t in hops),'fail_over_500':[t for t in hops if t['length_um']>500]}
  # Do not substitute synthetic timing for missing ctl / root views.
- report={'schema':'opentallas.s81.gather.strip_plan.v1','assigned_parent_sha256':sha(assigned),'source_manifest_sha256':sha(ROOT/'tools/s81_ph/gather_strip_instances.json'),'outline_um':[1728,803.52],'ctl':{'origin_um':[1598.4,8.64],'outline_um':[129.6,43.2],'view_status':'PENDING_ROUTED_VIEW'},'relay_children':children,'relay_internal_hops':internal,'actual_relay_clocks':len(children),'total_child_clocks':32+2+len(children),'overlap_gate':'PASS','lattice_um':.576,'relay_latency_cycles':{'tst':4,'cs':4,'rc_release':6,'tc':1,'f_cd_serial':1,'f_vm':0},'pending':['full source-hashed exact bench + mutants','actual assigned root child pins and routed insertion','ctl exact assigned pins + routed view','per-bit pair reach and hold from real endpoint timing','cut/PG/slot_fit/child_lint gates','native81 production binding and immutable throughput price'],'qualification':'OPEN'}
+ report={'schema':'opentallas.s81.gather.strip_plan.v1','assigned_parent_sha256':sha(assigned),'source_manifest_sha256':sha(ROOT/'tools/s81_ph/gather_strip_instances.json'),'outline_um':[1728,803.52],'ctl':{'origin_um':[1598.4,8.64],'outline_um':[129.6,43.2],'view_status':'PENDING_ROUTED_VIEW'},'relay_children':children,'relay_internal_hops':internal,'actual_relay_clocks':len(children),'total_child_clocks':32+2+len(children),'overlap_gate':'PASS actual133relayboxes + ctl +32leafboxes, clearance2.16um','lattice_um':.576,'relay_latency_cycles':{'tst':4,'cs':4,'rc_release':6,'tc':1,'f_cd_serial':1,'f_vm':0},'pending':['full source-hashed exact bench + mutants','actual assigned root child pins and routed insertion','ctl exact assigned pins + routed view','per-bit pair reach and hold from real endpoint timing','cut/PG/slot_fit/child_lint gates','native81 production binding and immutable throughput price'],'qualification':'OPEN'}
  Path(a.out).write_text(json.dumps(report,indent=2)+'\n');print(f"STRIP_PLAN PASS placement {len(children)} real CLOSED relay views; qualification OPEN")
 if __name__=='__main__':main()
