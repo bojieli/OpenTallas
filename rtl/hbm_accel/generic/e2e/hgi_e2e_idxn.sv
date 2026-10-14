@@ -13,7 +13,9 @@
 // (stack << 35) | (row0 << 20) + 32 (32 j + pc); a request the map cannot produce is FATAL.
 module hgi_e2e_idxn #(
     parameter integer LEG = 24,          // relay stages per die net (q bus, score beats, score credits), each direction
-    parameter integer LAT = 104          // DRAM first access (cycles), as the IKS unit bench
+    parameter integer LAT = 104,          // DRAM first access (cycles), as the IKS unit bench
+    parameter integer ORDERED_CAND=0,
+    parameter integer ORDERED_MUT=0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -32,8 +34,13 @@ module hgi_e2e_idxn #(
     import "DPI-C" function void e2e_hbm_sector(input longint addr, input bit we, input bit [255:0] wd,
                                                 input bit [31:0] strb, output bit [255:0] rd);
     wire [2283:0] qo; wire [2439:0] si; wire [3:0] sc; wire co_ql;
+    generate if(ORDERED_CAND) begin:g_ordered
+    ot_hbm_idx_ordered_native #(.MUT(ORDERED_MUT)) u_sel (.ck(clk), .rst(rst_n), .fs(fs), .qb(qb), .qbr(qbr), .kin(kin), .qo(qo), .si(si), .sc(sc),
+        .to(to), .toc(toc), .co(co), .coc(coc), .ev(ev), .co_quarter_last(co_ql));
+    end else begin:g_legacy
     hfd_idx_sel_native_qend u_sel (.ck(clk), .rst(rst_n), .fs(fs), .qb(qb), .qbr(qbr), .kin(kin), .qo(qo), .si(si), .sc(sc),
         .to(to), .toc(toc), .co(co), .coc(coc), .ev(ev), .co_quarter_last(co_ql));
+    end endgenerate
     genvar g;
     generate for (g = 0; g < 4; g = g + 1) begin : gs
         // ---- svc stack g (IKS stripe only: no SM / KV / write traffic in this slot)

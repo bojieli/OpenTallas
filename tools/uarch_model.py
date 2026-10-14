@@ -603,6 +603,12 @@ def hbm_loader_kport_address_contract_model():
 
 # ---------------------------------------------------------------------------------------------------------
 
+def hbm_idx_ordered_candidate_model():
+    """Native source-tapped four-SRAM collector; no qualification inferred."""
+    from uarch_model_idx_ordered import model
+    return model()
+
+
 def hgi_generic_topk_heap_model(n=49152, k=2048, rows=1, iw=1, heaps=2):
     """HGI IDX.TOPK (unit 9 op 2) as W banked-SRAM pipelined min-heaps (hgi-1010/g2 2026-10-10,
     rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv): the structural successor of the 2,048-cell flop insertion /

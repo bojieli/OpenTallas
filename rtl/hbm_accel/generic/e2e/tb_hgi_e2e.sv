@@ -56,6 +56,7 @@ module tb_hgi_e2e;
     // read / write group (hgi_e2e_vmlanes, grants tied high); the packet client stays for the other IDX ops
     parameter integer IDX_IXW = 0;
     parameter integer IDX_TK2 = 0;      // el1013 redesign-idx: 1 = IDX.TOPK on ot_hgi_idx_tk2 (k <= 8, the route.top6 shape)
+    parameter integer IDX_ORDERED_CAND=0, IDX_ORDERED_MUT=0;
     parameter integer CP_IKS_I = IDX_NATIVE;   // hbmdie-1011: the CP passes an HBM operand I (IDX.INDEX IKS key region)
     // hgi-1010/h (2026-10-10) MTP=1: the DS DSpark job through the die -- the real native controller hgi_mtp_native, the MX1
     // MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job / provider / emit queue / transaction join) and ot_hgi_cp_die MTP=1
@@ -402,7 +403,7 @@ module tb_hgi_e2e;
             .wq({6720'd0, i_wwq}), .wq_cr(x_wcr), .wq_done(x_wd));
         assign i_wrq_cr = x_rcr[7:0]; assign i_wwq_cr = x_wcr[7:0]; assign i_wwq_done = x_wd[7:0]; assign i_wrr = x_rr[8*257-1:0];
         hgi_e2e_vmc #(.UNIT(9), .LAT(VLATE)) u_vm (.clk(clk), .rst_n(rst_n), .q(vq), .r(vr));
-        hgi_e2e_idxn #(.LEG(IDX_LEG)) u_idxn (.clk(clk), .rst_n(rst_n), .fs(s_fs), .qb(s_qb), .qbr(s_qbr), .kin(s_kin),
+        hgi_e2e_idxn #(.LEG(IDX_LEG),.ORDERED_CAND(IDX_ORDERED_CAND),.ORDERED_MUT(IDX_ORDERED_MUT)) u_idxn (.clk(clk), .rst_n(rst_n), .fs(s_fs), .qb(s_qb), .qbr(s_qbr), .kin(s_kin),
             .to(s_to), .toc(s_toc), .co(s_co), .coc(s_coc), .ev(s_ev), .iks_e(s_iks), .ik_fault_seen(idxn_fault));
     end else if (REAL_IDX) begin : g_idx
         wire [337:0] vq; wire [273:0] vr;
