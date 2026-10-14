@@ -34,6 +34,7 @@ module ot_s81_hc_cpad_split #(
     localparam integer FP = 2 + RF + PAD;                         // forward: send + capture + RF + padding
     localparam integer RP = RT + 2 + PAD + RET_EXTRA * (NP - L1) * (HALF ? 2 : 1);                         // return: relay + send + capture + padding
     // No assembly data/valid flop: each hard child's first/last flop is its boundary.
+    // PIN_CAPTURE transfers one forward stage into the CCF face; return stages are unchanged.
     localparam integer F0 = (FP-2-PIN_CAPTURE > 8) ? 8 : FP-2-PIN_CAPTURE;
     localparam integer F1 = FP-2-F0-PIN_CAPTURE;
     localparam integer R0 = (RP-2 > 6) ? 6 : RP-2;
