@@ -38,8 +38,8 @@
   "name": "s81engc_rr64",
   "reason": "NEW leaf (die decision 10-14 06:36): slot + die-assigned pins requested in el1011-s81die.log; provisional faces until the v18+ pin file",
   "outline": [
-   8.64,
-   8.64
+   17.28,
+   12.96
   ],
   "pin_faces": {
    "S": [
@@ -96,8 +96,8 @@
   ]
  },
  "outline": {
-  "w": 8.64,
-  "h": 8.64
+  "w": 17.28,
+  "h": 12.96
  },
  "why_floorplan": "pin-limited relay/control leaf: face length set by the bus at <= 6-10 b/um/layer, not by area",
  "macros": [],
