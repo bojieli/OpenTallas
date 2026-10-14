@@ -11,7 +11,7 @@ module qkd_ectl_a_tp8_direct (
     input  wire [1024:0] rs,             // W: {rsp_data 1024, rsp_valid}
     output wire [511:0]  t0_row,         // S / N: row bits [511:0] for the two head-tile pairs
     output wire [511:0]  t1_row,
-    input  wire [51:0]   x_i,            // E seam: control word from B
+    input  wire [51:0]   x_i,            // E: stage-2 control word directly from C
     output wire [512:0]  rs_o           // E seam: {row bits [1023:512] 512, rsp_valid}, E-face flops (stage 2), to B and C
 );
     ot_qkd_ectl_part #(.PART(1), .HEADS(1), .Q_FP32(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
@@ -57,8 +57,9 @@ module qkd_ectl_c_tp8_direct (
     input  wire [33:0]   s0, s1, s2, s3, // S / N: {g_f, sc_f, sc 32} of head 0..3
     output wire [518:0]  t0_q,           // S / N: {q_data 512, q_beat 6, q_valid}
     output wire [518:0]  t1_q,
-    input  wire          rsv_i,          // W seam: rsp_valid from B
-    output wire [51:0]   x_o             // W seam: control word to B and C
+    input  wire          rsv_i,          // W: response valid directly from A stage 2
+    output wire [51:0]   x_b,            // W: stage-1 control word to B
+    output wire [51:0]   x_a             // W: stage-2 control word directly to A
 );
     ot_qkd_ectl_part #(.PART(3), .HEADS(1), .Q_FP32(1)) u (.clk(ck), .rst_n(rst_n), .cfg_s(cfg[1:0]), .cfg_e(cfg[4:2]),
         .start_in(si[0]), .T_in(si[14:1]), .cyc8_in(si[17:15]), .q_valid_in(si[18]), .q_beat_in(si[24:19]),
