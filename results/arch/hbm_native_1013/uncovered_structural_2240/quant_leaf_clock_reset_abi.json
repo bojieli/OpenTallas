@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.quant_leaf_clocks.v1",
+  "endpoint": "ot_hgi_qdq_q_pin4_clocks",
+  "peer": "ot_hgi_qdq_native_peer4_leafclocks",
+  "roots": [
+    {
+      "index": 0,
+      "name": "DXL",
+      "reset_origin": "none",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 1,
+      "name": "DBQ",
+      "reset_origin": "ASM.dec_rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 2,
+      "name": "DAQ",
+      "reset_origin": "ASM.dec_rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 3,
+      "name": "LQ0",
+      "reset_origin": "ASM.lq_rst_n[0]",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 4,
+      "name": "LQ1",
+      "reset_origin": "ASM.lq_rst_n[1]",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 5,
+      "name": "LQ2",
+      "reset_origin": "ASM.lq_rst_n[2]",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 6,
+      "name": "LQ3",
+      "reset_origin": "ASM.lq_rst_n[3]",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 7,
+      "name": "FRgeneral",
+      "reset_origin": "rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 8,
+      "name": "FRface",
+      "reset_origin": "rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 9,
+      "name": "FRretire",
+      "reset_origin": "rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 10,
+      "name": "CORE",
+      "reset_origin": "rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 11,
+      "name": "ASM",
+      "reset_origin": "CORE.asm_rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 12,
+      "name": "WRPAY",
+      "reset_origin": "ASM.wr_rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    },
+    {
+      "index": 13,
+      "name": "WRFIN",
+      "reset_origin": "ASM.wr_rst_n",
+      "rate_ps": 833.333,
+      "physical_clock_entry": "phi - actual leaf R; no pin/slew/corner grant yet"
+    }
+  ],
+  "CDC_ledger_clock": "separate cclk[q] coherent with endpoint CORE index10; actual CDC separate physical clocks remainVMowner requirement",
+  "per_quadrant_clock_bits": 14,
+  "four_quadrant_clock_bits": 56,
+  "default_sources_unchanged": true,
+  "configuration": "fixed LQ10 LD16 NB32 OD64 RQ16 SPAN1 FACE_FF1 FIN_BYPASS1 WRSPLIT1",
+  "parent_logic": [
+    "nfault OR of FRgeneral/FRface/FRretirefaults before COREfirstcapture",
+    "PAYbad OR FINbad before COREfirstcapture",
+    "constant decoder header rearrangement; no addedstate"
+  ],
+  "status": "soft tied-clock logical proof pending; CORE/PAY/FIN actualphysical closure/pins and absolute slots unqualified. Hard child substitution explicitly fatal.",
+  "historical_owned88": "FAST1 mixedfront has three leafbodies plus monolithicWR; not11root originalgeneral-only contract. Its physicalview mapping must be sourceowned; do not silently alias14root latestcandidate."
+}
