@@ -331,15 +331,20 @@ def refusal(led, row, root=ROOT):
     return None
 
 
-def accept(led, design, unit, root=ROOT):
+def accept(led, design, unit, root=ROOT, note=""):
+    """Mark a row accepted (the refusal rules apply). `note` records the decision (who, when, on what basis); an
+    already-accepted row only gets the note added, its accepted_date stays."""
     row = find(led, design, unit)
     if row is None:
         raise LedgerError(f"no row {design} {unit}")
-    why = refusal(led, row, root)
-    if why:
-        raise LedgerError(f"REFUSED {design} {unit}: {why}")
-    row["status"] = "accepted"
-    row["accepted_date"] = datetime.date.today().isoformat()
+    if row["status"] != "accepted":
+        why = refusal(led, row, root)
+        if why:
+            raise LedgerError(f"REFUSED {design} {unit}: {why}")
+        row["status"] = "accepted"
+        row["accepted_date"] = datetime.date.today().isoformat()
+    if note:
+        row["acceptance_note"] = note
     return row
 
 
@@ -409,6 +414,7 @@ def main(argv=None):
     p = sub.add_parser("accept")
     p.add_argument("design", choices=DESIGNS)
     p.add_argument("unit")
+    p.add_argument("--note", default="", help="the acceptance decision: who, when, basis")
     sub.add_parser("table")
     sub.add_parser("check")
     a = ap.parse_args(argv)
@@ -426,7 +432,7 @@ def main(argv=None):
                 save_ledger(led, a.ledger)
             print(json.dumps(row, indent=1))
         elif a.cmd == "accept":
-            accept(led, a.design, a.unit)
+            accept(led, a.design, a.unit, note=a.note)
             save_ledger(led, a.ledger)
             print(f"ACCEPTED {a.design} {a.unit}")
         elif a.cmd == "table":

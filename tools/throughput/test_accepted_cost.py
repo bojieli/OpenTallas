@@ -98,6 +98,16 @@ def test_accept_within_limits(tmp_path):
     assert back["totals"]["s81"]["accepted_pct"] == 4.9 and AC.check(back) == []
 
 
+def test_accept_records_the_decision_note():
+    led = AC.empty_ledger()
+    AC.propose(led, row(loss=1.0))
+    r = AC.accept(led, "s81", "u", root=AC.ROOT, note="owner-accepted")
+    assert r["status"] == "accepted" and r["acceptance_note"] == "owner-accepted"
+    d = r["accepted_date"]
+    r = AC.accept(led, "s81", "u", root=AC.ROOT, note="owner re-confirmed")
+    assert r["acceptance_note"] == "owner re-confirmed" and r["accepted_date"] == d
+
+
 def test_refuses_over_five_percent():
     led = AC.empty_ledger()
     AC.propose(led, row(loss=5.01))

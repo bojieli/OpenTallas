@@ -10,7 +10,7 @@ import hdc_golden as G
 import rtl_gpu_sm_exact as S
 from w19_qwen_hbm_checkpoint import sm_snapshot
 
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).absolute().parents[1]
 
 
 def run(work,prepare_only=False):
