@@ -69,8 +69,8 @@ foreach kind {max min} {
   if {![llength $paths]} { error "PROBE missing actual ETM $kind path" }
   set slack [get_property [lindex $paths 0] slack]
   # u0/u1 use the same actual rr4 view, so insertion cancels. Source balancing
-  # reserves exactly90ps setup and50ps hold die skew.
-  set expected [expr {[dict get $before $kind] - ($kind eq "max" ? 90.0 : 50.0)}]
+  # reserves exactly90ps extra setup and75ps extra hold (H1 total100).
+  set expected [expr {[dict get $before $kind] - ($kind eq "max" ? 90.0 : 75.0)}]
   if {abs($slack-$expected) > 0.02} { error "PROBE $kind numerical slack mismatch $slack vs $expected" }
   puts "PROBE_PATH $kind $slack expected=$expected"
 }
