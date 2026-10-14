@@ -13,6 +13,7 @@ SRC=$1; OUT=$2; TRACE=${3:-}
 VL=${VL:-verilator}; J=${J:-16}; S=${S:-8}
 LOCAL_DEF=""
 if [ "${LOCAL_BANKS:-0}" = 1 ]; then LOCAL_DEF="+define+S81PH_GTH_LOCAL_BANKS"; fi
+if [ "${SSA2:-0}" = 1 ]; then LOCAL_DEF="$LOCAL_DEF +define+S81PH_GTH_SSA2"; fi
 mkdir -p $OUT
 P=$SRC/rtl/dsrom_sys/s81_ph; M=$SRC/physical/s81_ph_views/macros
 FILES="$SRC/rtl/hdc/ot_hdc_prefix.sv $SRC/rtl/gpu/ot_fp32_add_rne_deep.sv $P/ot_s81ph_ret_root_p.sv $P/ot_s81ph_ret_root_s.sv
@@ -49,6 +50,7 @@ run() { # mode case expect need
 ( build qfwd "+define+S81PH_MUT_QFWD" ) &
 ( build ovf "+define+S81PH_MUT_OVF" ) &
 if [ "${LOCAL_BANKS:-0}" = 1 ]; then ( build heap "+define+S81PH_MUT_HEAP_PHASE" ) & fi
+if [ "${SSA2:-0}" = 1 ]; then ( build decision "+define+S81PH_MUT_DECISION_PHASE" ) & fi
 wait
 {
   for c in $REAL; do run base $c 0 16 PASS; done
@@ -67,6 +69,7 @@ wait
   run qfwd stress1 0 0 FAIL
   run ovf ovf 1 0 FAIL
   if [ "${LOCAL_BANKS:-0}" = 1 ]; then run heap stress1 0 0 FAIL; fi
+  if [ "${SSA2:-0}" = 1 ]; then run decision stress1 0 0 FAIL; fi
 } | tee $OUT/verdicts.log
 bad=$(awk '{ w=""; for (i=1;i<=NF;i++) if ($i ~ /^want=/) w=substr($i,6); sub(":","",w); r=""; for (i=1;i<=NF;i++) if ($i=="RESULT") r=$(i+1); if (r!=w) print }' $OUT/verdicts.log | wc -l)
 n=$(wc -l < $OUT/verdicts.log)

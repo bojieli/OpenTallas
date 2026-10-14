@@ -50,16 +50,22 @@ module ot_s81ph_root_leaf #(
         if (!rl) begin
             lv <= {NRT{1'b0}}; busy_l <= {NRT{1'b0}}; flt_l <= 1'b0; fo <= 2'b00;
             for (j = 0; j < NLT; j = j + 1) lo[69*j] <= 1'b0;
+            `ifdef S81PH_GTH_SSA2
+            for (j = NRT; j < NCI + NRT; j = j + 1) co[53*j] <= 1'b0;
+`else
             for (j = 0; j < NCI + NRT; j = j + 1) co[53*j] <= 1'b0;
+`endif
         end else begin
             for (j = 0; j < NRT; j = j + 1) begin
                 lv[j] <= li[69*j];
                 if (lv[j]) busy_l[j] <= lw[68*j + 66];
                 if (rf[j] || (lv[j] && lw[68*j + 67])) flt_l <= 1'b1;
+`ifndef S81PH_GTH_SSA2
 `ifdef S81PH_MUT_CHAIN
                 co[53*j] <= rv[j ^ 1];       // MUTANT: own results of roots 2 i / 2 i + 1 leave in swapped chain slots
 `else
                 co[53*j] <= rv[j];
+`endif
 `endif
             end
             for (j = 0; j < NLT; j = j + 1) lo[69*j] <= li[69*(NRT+j)];
@@ -69,15 +75,35 @@ module ot_s81ph_root_leaf #(
     always @(posedge ck) begin
         for (j = 0; j < NRT; j = j + 1) begin
             lw[68*j +: 68] <= li[69*j + 1 +: 68];
+`ifndef S81PH_GTH_SSA2
 `ifdef S81PH_MUT_CHAIN
             co[53*j + 1 +: 52] <= {re[j ^ 1], rpos[3*(j ^ 1) +: 3], rrow[16*(j ^ 1) +: 16], rfp[32*(j ^ 1) +: 32]};
 `else
             co[53*j + 1 +: 52] <= {re[j], rpos[3*j +: 3], rrow[16*j +: 16], rfp[32*j +: 32]};
 `endif
+`endif
         end
         for (j = 0; j < NLT; j = j + 1) lo[69*j + 1 +: 68] <= li[69*(NRT+j) + 1 +: 68];
         for (j = 0; j < NCI; j = j + 1) co[53*(NRT+j) + 1 +: 52] <= ci[53*j + 1 +: 52];
     end
+`ifdef S81PH_GTH_SSA2
+    // Keep the genuine own-result output sampling role separate from the
+    // internal core delay-line state; sample the same D at the original edge.
+    wire [53*NRT-1:0] own_result_D;
+    genvar own;
+    generate for (own=0; own<NRT; own=own+1) begin : g_own_D
+`ifdef S81PH_MUT_CHAIN
+        localparam integer SRC_ROOT = own ^ 1;
+`else
+        localparam integer SRC_ROOT = own;
+`endif
+        assign own_result_D[53*own +: 53] = {re[SRC_ROOT], rpos[3*SRC_ROOT +: 3],
+            rrow[16*SRC_ROOT +: 16], rfp[32*SRC_ROOT +: 32], rv[SRC_ROOT]};
+    end endgenerate
+    (* keep_hierarchy = 1, dont_touch = 1 *)
+    ot_s81ph_own_output_role #(.NRT(NRT)) u_own_output
+        (.ck(ck), .rl(rl), .d(own_result_D), .q(co[53*NRT-1:0]));
+`endif
     genvar g;
     generate for (g = 0; g < NRT; g = g + 1) begin : g_r
         ot_s81ph_ret_root_s #(.S(S), .QD(128), .SRAM(SRAM)) u_root (.clk(ck), .rst_n(rl),
@@ -85,6 +111,32 @@ module ot_s81ph_root_leaf #(
             .r_v(rv[g]), .r_row(rrow[16*g +: 16]), .r_pos(rpos[3*g +: 3]), .r_fp32(rfp[32*g +: 32]),
             .r_bf16(rbf[16*g +: 16]), .r_e(re[g]), .fault(rf[g]));
     end endgenerate
+endmodule
+
+// State used by external own-result outputs, independent of used core state.
+(* keep_hierarchy = 1, dont_touch = 1 *)
+module ot_s81ph_own_output_role #(parameter integer NRT=4) (
+    input wire ck, input wire rl, input wire [53*NRT-1:0] d,
+    (* keep = 1, dont_touch = 1 *) output reg [53*NRT-1:0] q
+);
+`ifdef S81PH_MUT_OWN_CO_PHASE
+    reg [53*NRT-1:0] stale_D;
+    wire [53*NRT-1:0] sample_D = stale_D;
+    integer stale_j;
+    always @(posedge ck or negedge rl)
+        if (!rl) for (stale_j=0; stale_j<NRT; stale_j=stale_j+1) stale_D[53*stale_j] <= 1'b0;
+        else for (stale_j=0; stale_j<NRT; stale_j=stale_j+1) stale_D[53*stale_j] <= d[53*stale_j];
+    always @(posedge ck)
+        for (stale_j=0; stale_j<NRT; stale_j=stale_j+1) stale_D[53*stale_j+1 +: 52] <= d[53*stale_j+1 +: 52];
+`else
+    wire [53*NRT-1:0] sample_D = d;
+`endif
+    integer j;
+    always @(posedge ck or negedge rl)
+        if (!rl) for (j=0; j<NRT; j=j+1) q[53*j] <= 1'b0;
+        else for (j=0; j<NRT; j=j+1) q[53*j] <= sample_D[53*j];
+    always @(posedge ck)
+        for (j=0; j<NRT; j=j+1) q[53*j+1 +: 52] <= sample_D[53*j+1 +: 52];
 endmodule
 
 // open-row slots per root of the hardened cells: 8 (256 x 34 store).  Real field-order bound = 4 open (row, pos) per root

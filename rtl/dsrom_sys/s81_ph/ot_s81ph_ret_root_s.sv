@@ -44,6 +44,11 @@ module ot_s81ph_ret_root_s #(
 `else
     parameter integer LOCAL_BANKS = 0        // opt-in zero-cycle SS repair: predecode heap and local EV banks
 `endif
+`ifdef S81PH_GTH_SSA2
+    , parameter integer LOCAL_DECISIONS = 1
+`else
+    , parameter integer LOCAL_DECISIONS = 0
+`endif
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -232,9 +237,17 @@ module ot_s81ph_ret_root_s #(
         integer j;
         begin enc = {SW{1'b0}}; for (j = 0; j < S; j = j + 1) if (x[j]) enc = enc | j[SW-1:0]; end
     endfunction
+    (* keep = 1 *) reg s2_hit;
+    generate if (LOCAL_DECISIONS) begin : g_decision_local
+`ifdef S81PH_MUT_DECISION_PHASE
+        always @(posedge clk) s2_hit <= |s2_m; // deliberately stale epoch
+`else
+        always @(posedge clk) s2_hit <= |m1;   // same existing S2 edge as s2_m
+`endif
+    end endgenerate
     wire live = s2_v && !s2_cmp;
     wire use_fwd = s2_sp && p_use;
-    wire hit_m = |s2_m;
+    wire hit_m = LOCAL_DECISIONS ? s2_hit : (|s2_m);
     wire [S-1:0] free_oh = lowest(~sv_s);
     wire free_any = !(&sv_s);
     wire is_new = !use_fwd && !hit_m;
@@ -282,8 +295,8 @@ module ot_s81ph_ret_root_s #(
         end else begin
             p_use <= dec_add || dec_ins; p_ins <= dec_ins; p_slot <= slot_w;
             for (k = 0; k < S; k = k + 1) if (slot_w[k]) begin
-                if (dec_ins) begin scnt[k] <= cnt_sel + 6'd1; sv_s[k] <= 1'b1; end
-                if (dec_add) begin scnt[k] <= cnt_sel - 6'd1; sv_s[k] <= cnt_sel != 6'd1; end
+                if (dec_ins) begin scnt[k] <= (LOCAL_DECISIONS ? scnt[k] : cnt_sel) + 6'd1; sv_s[k] <= 1'b1; end
+                if (dec_add) begin scnt[k] <= (LOCAL_DECISIONS ? scnt[k] : cnt_sel) - 6'd1; sv_s[k] <= (LOCAL_DECISIONS ? scnt[k] : cnt_sel) != 6'd1; end
             end
             bwe_q <= dec_ins; bre_q <= dec_add;
             a3_v <= dec_add; a4_v <= a3_v; add <= a4_v;
@@ -301,11 +314,12 @@ module ot_s81ph_ret_root_s #(
     genvar bank, node;
     generate for (bank = 0; bank < S; bank = bank + 1) begin : g_ev_bank
         if (LOCAL_BANKS) begin : g_local
-            (* keep = 1 *) wire bank_use = slot_w[bank] && (dec_add || dec_ins);
+            (* keep = 1 *) wire bank_use = slot_w[bank] && (LOCAL_DECISIONS ? ok : (dec_add || dec_ins));
+            wire bank_cur = LOCAL_DECISIONS ? (v_fwd ? p_ins : (!is_new && s2_vh[bank])) : v_cur;
             for (node = 0; node < 32; node = node + 1) begin : g_node
                 always @(posedge clk or negedge rst_n)
                     if (!rst_n) ev[bank][node] <= 1'b0;
-                    else if (bank_use && s2_h_oh[node]) ev[bank][node] <= !v_cur;
+                    else if (bank_use && s2_h_oh[node]) ev[bank][node] <= !bank_cur;
             end
         end else begin : g_legacy
             always @(posedge clk or negedge rst_n)

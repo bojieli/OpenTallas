@@ -15,6 +15,10 @@ if [ "${LOCAL_BANKS:-0}" = 1 ]; then
  LOCAL_DEF="+define+S81PH_GTH_LOCAL_BANKS"
  if [ -z "${RAW:-}" ]; then MODES="$MODES heap"; fi
 fi
+if [ "${SSA2:-0}" = 1 ]; then
+ LOCAL_DEF="$LOCAL_DEF +define+S81PH_GTH_SSA2"
+ if [ -z "${RAW:-}" ]; then MODES="$MODES decision own_co"; fi
+fi
 mkdir -p $OUT
 P=$SRC/rtl/dsrom_sys/s81_ph; M=$SRC/physical/s81_ph_views/macros; C=$SRC/rtl/dsrom_sys/s81_ctrl
 FILES="$SRC/rtl/lib/ot_reset_sync.sv $SRC/rtl/lib/ot_async_fifo.sv $SRC/rtl/common/ot_ratio_cdc_fifo.sv
@@ -47,7 +51,7 @@ run() { # mode case expect need want
 }
 for m in $MODES; do
   case $m in base) X="";; lane) X="+define+S81PH_GTH_CL_MUT_LANE";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
-    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; esac
+    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; esac
   ( build $m "$X" ) &
 done
 wait
@@ -58,7 +62,7 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
       base) for c in $REAL; do run base $c 0 1 PASS & done; run base stress 0 1 PASS & run base ovf 1 0 PASS &
             run base refuse 0 1 REFUSED & ;;
       ovf)  run ovf ovf 1 0 FAIL & ;;
-      lane|nofwd|heap) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
+      lane|nofwd|heap|decision|own_co) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
       *)    run $m $FIRST 0 0 FAIL & ;;
     esac
   done
