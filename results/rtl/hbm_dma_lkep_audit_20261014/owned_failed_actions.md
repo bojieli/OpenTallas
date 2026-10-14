@@ -28,3 +28,18 @@ Observed 2026-10-14T05:41:02.046437-07:00. The historical table above records it
 Observed 2026-10-14T05:45:29.380940-07:00: DMA B hold genuine a83 is CLOSED: TT +208.86 ps / FF +20.62 ps / DRC 0, record a916f9880. SS sensitivity −3.29 ps and unassigned native pins/context keep native release OPEN. A hold and prefix core continue route.a1. STATUS 1fbe is READY after collection, not yet claimed CLOSED.
 
 Observed 2026-10-14T05:46:35.457009-07:00: STATUS 1fbe is genuinely CLOSED, TT +115.89 ps / FF +21.69 ps / DRC 0, record 724a1795f. SS sensitivity −77.09 ps and explicit native parent hold remain. The actual source hierarchy is g_t[g]/u_t; clock inventory corrected to those literal instance names.
+
+## Source-bound repair dispatch update
+
+Observed 2026-10-14T05:51:29.015438-07:00.
+
+| Candidate | Actual gate result | Concrete successor action |
+|---|---|---|
+| PARK Q0 guarded bank-row, 39d815a78 | TT +62.374 ps / FF +34.198 ps; 7,437 roots, insertion 482.9 ps / spread 30.9 ps | Exact executed snapshot frozen; validators PASS; genuine route descriptor prepared and push/intake in progress. |
+| PARK Q1 guarded bank-row, 469086ccd | TT +17.485 ps / FF +37.761 ps; 7,437 roots, insertion 454.6 ps / spread 34.6 ps | Exact executed snapshot frozen; validators PASS; genuine route descriptor prepared and push/intake in progress. |
+| PARK Q2 guarded bank-row, ca768d5b8 | TT +0.954 ps / FF +29.235 ps; 7,437 roots, insertion 455.5 ps / spread 33.8 ps | Genuine edgeguard4 route intake submitted after source/canonical validation. |
+| PARK Q3 guarded bank-row, 343fad535 | TT −7.651 ps / FF +38.061 ps; worst bank_ovf[3] output | Negative receipt preserved. Distinct same-state status pins S→N candidate 15687198e, fresh real CTS session 26263 running. |
+
+The guard hypothesis still requires real routed evidence; the original bank-row GRT failures remain terminal. No congestion benefit or native slot fit is inferred from CTS.
+
+The collective seven-head/CAP8 real numerical proof passes 2,304 replies and 24 owned outputs with no mismatch or fault, but price remains a failure: 1,826.5 cycles versus immutable 1,667.3 (+9.55%). Burst-eight II1 does not establish continuous production II1. Actual remaining snapshot/credit roundtrip diagnosis continues. Corrected two-layer landing/capture gates 47854/3517 are executing, along with ingress/config/reducer gates. Selector R2 is a structural failure at −622.16 ps despite compliant root count and measured clock insertion; selector/reset fanout is not solved by clock delivery.
