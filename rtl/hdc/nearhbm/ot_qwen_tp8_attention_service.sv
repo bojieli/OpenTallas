@@ -2,12 +2,12 @@
 // DEFAULT-OFF native arithmetic service. Build with KVD_HEADS=1,KVD_Q_FP32=1,
 // KVD_QK_ONLY=1,KVD_ECTL3. Common-clock adapter is functional evidence only;
 // it is not a routed clock contract or a qualified HBM timing model.
-// Requires the explicitly lowered 23-word program capability. Does not commit VM.
+// Requires the explicitly source-bound fused program capability. Does not commit VM.
 module ot_qwen_tp8_attention_service (
  input wire clk,rst_n,
  input wire request_valid,output wire request_ready,
  input wire [15:0] request_epoch,input wire [5:0] request_layer,
- input wire [17:0] request_position,input wire lowered23_capability,
+ input wire [17:0] request_position,input wire fused_program_capability,
  input wire q_valid,output wire q_ready,input wire [4:0] q_beat,input wire [511:0] q_data,
  output wire [31:0] k_req_valid,input wire [31:0] k_req_ready,
  output wire [415:0] k_req_t,output wire [15:0] active_epoch,output wire [5:0] active_layer,
@@ -55,7 +55,7 @@ module ot_qwen_tp8_attention_service (
     IDLE:if(request_valid)begin
      // Small contexts need an explicitly zero-filled PV residue implementation;
      // refuse rather than using stale SRAM contents as zero residues.
-     if(!lowered23_capability||request_position>8191||request_position<255||`KVD_HEADS!=1||!`KVD_Q_FP32||!`KVD_QK_ONLY)begin local_fault<=1;state<=BAD;end
+     if(!fused_program_capability||request_position>8191||request_position<255||`KVD_HEADS!=1||!`KVD_Q_FP32||!`KVD_QK_ONLY)begin local_fault<=1;state<=BAD;end
      else begin ep<=request_epoch;layer<=request_layer;ctx<=request_position+1'b1;qnext<=0;beat<=0;cleared<=0;cycles<=0;start_qk<=1;state<=QLOAD;end
     end
     QLOAD:begin

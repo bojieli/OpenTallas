@@ -19,13 +19,13 @@ int main(int argc,char**argv){
  std::ifstream f(d+"/kv.hex");std::string x;while(f>>x){if(x.size()!=256)return 2;std::vector<uint8_t>r(128);for(int j=0;j<128;j++)r[j]=strtoul(x.substr(2*(127-j),2).c_str(),0,16);kv.push_back(r);}
  int ctx=kv.size()/2;if(q.size()!=512||gold.size()!=512||kv.size()!=size_t(2*ctx)||ctx<256||ctx>8192)return 2;
  Vot_qwen_tp8_attention_service t;uint64_t cy=0;auto tick=[&](){t.clk=0;t.eval();t.clk=1;t.eval();cy++;};
- t.rst_n=0;t.request_valid=0;t.q_valid=0;t.k_rsp_valid=0;t.v_rsp_valid=0;t.k_req_ready=0;t.v_req_ready=0;t.result_ready=0;t.lowered23_capability=1;
+ t.rst_n=0;t.request_valid=0;t.q_valid=0;t.k_rsp_valid=0;t.v_rsp_valid=0;t.k_req_ready=0;t.v_req_ready=0;t.result_ready=0;t.fused_program_capability=1;
  for(int i=0;i<8;i++)tick();t.rst_n=1;for(int i=0;i<80;i++)tick();
  bool stalls=mode=="stalls";bool mutant=mode!="steady"&&mode!="stalls"&&mode!="restart";
  unsigned outputs=0,errors=0,epochs=0;uint64_t kcount=0,vcount=0,first=cy;bool changed=false;
  for(int round=0;round<(mode=="restart"?2:1);round++){
   int epoch=17+round,layer=6+round;
-  t.request_epoch=epoch;t.request_layer=layer;t.request_position=ctx-1-(mode=="context");t.lowered23_capability=mode!="capability";t.request_valid=1;tick();t.request_valid=0;
+  t.request_epoch=epoch;t.request_layer=layer;t.request_position=ctx-1-(mode=="context");t.fused_program_capability=mode!="capability";t.request_valid=1;tick();t.request_valid=0;
   int qb=0,ob=0;std::deque<Return>kq[32],vq[4];
   for(unsigned step=0;step<250000;step++){
    t.clk=0;t.eval();t.q_valid=qb<32&&(!stalls||cy%7!=0);t.q_beat=qb;
