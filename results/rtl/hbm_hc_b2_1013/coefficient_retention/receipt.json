@@ -1,0 +1,15 @@
+{
+  "source_commit": "05d5cc591",
+  "actual_source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_coeff_bank.sv": "97a1878dfb3631170a20f7b0a6e2a966d356a05b791c151ed37160b9195a7050",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_coeff_bank.sv": "f4b6dc53e16191aa02ab75acc3771091f87fdc106c3975fb0ed6fe60ed7a7e42"
+  },
+  "matches_immutable_source": true,
+  "exact_checks": 40,
+  "mutant_errors": 40,
+  "scope": "Coefficient leaf back-to-back bank writes, invalid-index retention, asynchronous abort between capture/write and subsequent recovery; separate from full native composition/physical qualification.",
+  "setup_attempt": "Missing parent obj directory, compiler did not complete; preserved failed diagnostic and corrected only mkdir in launcher.",
+  "whole_layer_qualified": false,
+  "ledger_eligible": false
+}
