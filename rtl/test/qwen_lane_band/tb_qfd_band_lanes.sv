@@ -20,6 +20,7 @@ module tb_qfd_band_lanes;
     parameter integer NL = 4, LNK = 0, MUT = 0, NOPS = 3000, SEED = 1;
     parameter integer RDMEM = 0, BANR = 0;   // el1011-q-seq: DUT delay lines in SRAM (2 = one-edge-short mutant) / valid-only adder resets
     parameter integer NBP = 6;               // bands: 6 (TP4, GT 6,144) or 3 (TP8, GT 3,072)
+    parameter integer BL = 0;                // el1013-qwen-small-masters r3b: 1 = each band is the slot composition qfd_sp_band_lanes (16 x qfd_bl_lane); 2 = its lnk strap wrong
     parameter integer CL = 0;                // el1013-qwen-small-masters: 1 = the tree top is the die CLUSTER cell qfd_tt_up4 (NL 16, NBP 3, LNK 1:
                                              // its two pin stages ARE the one link relay stage; no u_l1..u_l4 delay on its links, sel undelayed)
     localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK - 8 * (13 - LG);   // qwen-tp8/spine: the upper has LG-11 levels
@@ -47,10 +48,22 @@ module tb_qfd_band_lanes;
     wire [3*NL*32-1:0] tt, tt_r;
     wire tu, tvv, tu_r, tv_r2, uf;
     generate for (b = 0; b < NB; b = b + 1) begin : g_band
-        ot_qfd_band_lanes #(.NL(NL), .LNK(LNK), .MUT((MUT == 1 || MUT == 4) ? MUT : 0), .RDMEM(RDMEM), .BANR(BANR), .LG(LG)) u_b (
-            .clk(clk), .rst_n(rst_n), .b0(b == 0), .tw(din[b*8*NL*32 +: 8*NL*32]), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
-            .tt_ty(b == 0 ? tt_r : {3*NL*32{1'b0}}), .tt_use(b == 0 ? tu_r : 1'b0), .tt_v(b == 0 ? tv_r2 : 1'b0),
-            .pw(pw[b*NL*32 +: NL*32]), .pw_v(pv[b]), .ty(ty[b]), .fault(bf[b]));
+        if (BL == 0) begin : g_flatb
+            ot_qfd_band_lanes #(.NL(NL), .LNK(LNK), .MUT((MUT == 1 || MUT == 4) ? MUT : 0), .RDMEM(RDMEM), .BANR(BANR), .LG(LG)) u_b (
+                .clk(clk), .rst_n(rst_n), .b0(b == 0), .tw(din[b*8*NL*32 +: 8*NL*32]), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
+                .tt_ty(b == 0 ? tt_r : {3*NL*32{1'b0}}), .tt_use(b == 0 ? tu_r : 1'b0), .tt_v(b == 0 ? tv_r2 : 1'b0),
+                .pw(pw[b*NL*32 +: NL*32]), .pw_v(pv[b]), .ty(ty[b]), .fault(bf[b]));
+        end else begin : g_slotb
+            // el1013-qwen-small-masters r3b: the band is the die slot composition qfd_sp_band_lanes (16 hardened one-lane
+            // leaves qfd_bl_lane, wires only), driven through its contract bundles; the link relay count is its strap
+            // (BL = 2: strap one stage short of the bench's relays -> must FAIL)
+            wire [512:0] spw;
+            initial if (NL != 16 || NB != 3) begin $display("FAIL qfd_band_lanes BL needs NL 16, NBP 3"); $fatal(1); end
+            qfd_sp_band_lanes u_b (.ck(clk), .rst_n(rst_n), .b0(b == 0), .lnk(6'(BL == 2 ? LNK + 1 : LNK)), .tw(din[b*8*NL*32 +: 8*NL*32]),
+                .c({tv[LG:0], sel[LG:0]}), .tt(b == 0 ? {tv_r2, tu_r, tt_r} : 1538'd0), .pw(spw), .ty(ty[b]), .f(bf[b]));
+            assign pw[b*NL*32 +: NL*32] = spw[511:0];
+            assign pv[b] = spw[512];
+        end
     end endgenerate
     generate if (CL == 0) begin : g_flat
         ot_hdc_delay #(.W(NB*NL*32), .D(LNK)) u_l1 (.clk(clk), .rst_n(rst_n), .d(pw), .q(pw_r));
