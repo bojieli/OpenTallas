@@ -1,0 +1,83 @@
+{
+ "schema": "opentallas.qwen-native-control-domain.v1",
+ "qualified": false,
+ "correction": "GT3072 is the complete native TP8 field, not half-domain. GT6144 remains historical TP4. Geometry index is expected mapping, not already-bound RTL straps.",
+ "sources": {
+  "generator": "tools/qwen_rom_fulldie.py",
+  "tp8_config": "tools/die_top_lint.py QWEN_TP8B via qwen_rom_fulldie_b3r2.py",
+  "native_ctl": "rtl/physical/ot_qwen_tile_ctl.sv:ot_qwen_tile_ctl_tp8"
+ },
+ "groups": {
+  "columns": 48,
+  "rows": 16,
+  "tiles": 768,
+  "TG": 4,
+  "GT": 3072,
+  "expected_tid": "column*16+row",
+  "expected_gbase": "TG*tile_id",
+  "expected_range": [
+   0,
+   3071
+  ],
+  "binding_status": "PENDING die per-instance tile_id[15:0] constant ties"
+ },
+ "program": {
+  "commit": "14065c8c7",
+  "path": "results/rtl/ref_tile/qfd_su_vreduce/native_profile_1013/candidate_tp8_layer0.hex",
+  "sha256": "120b42a583db68fb9faaa32d2076f1515d5c07e41787bf47533a1d230b4d1903",
+  "status": "candidate_profile_only_not_weight_or_full_execution_qualification"
+ },
+ "profiles": [
+  {
+   "pc": 1,
+   "kind": "qkv",
+   "nout": 768,
+   "tiles": 1,
+   "k": 8,
+   "split": 9,
+   "xbase": 4096,
+   "xks": 1,
+   "xcs": 8
+  },
+  {
+   "pc": 16,
+   "kind": "o",
+   "nout": 4096,
+   "tiles": 3,
+   "k": 2,
+   "split": 8,
+   "xbase": 50672,
+   "xks": 1,
+   "xcs": 2
+  },
+  {
+   "pc": 19,
+   "kind": "gu",
+   "nout": 3072,
+   "tiles": 1,
+   "k": 32,
+   "split": 7,
+   "xbase": 4096,
+   "xks": 1,
+   "xcs": 32
+  },
+  {
+   "pc": 23,
+   "kind": "down",
+   "nout": 4096,
+   "tiles": 3,
+   "k": 6,
+   "split": 8,
+   "xbase": 55280,
+   "xks": 1,
+   "xcs": 6
+  }
+ ],
+ "missing": [
+  "actual native tile/cache arithmetic + mutants",
+  "per-instance native cfg straps and assigned pins",
+  "coherent pause and related-clock physical proof",
+  "leaf and die physical signoff",
+  "full native layer throughput against immutable price"
+ ]
+}
