@@ -9,7 +9,6 @@ set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
 set_output_delay 166.667 -clock core_clk [all_outputs]
 set_max_fanout 32 [current_design]
 set_load 80 [all_outputs]
-set_input_transition 150 [all_inputs -no_clocks]
 set_max_transition 260 [current_design]
 # ---- sdc_extra physical/s81_ph_views/capture/x8_dual_clocks.sdc
 # Related 3:4 stream/serial clocks; keep every crossing timed.
@@ -29,3 +28,4 @@ unset_output_delay [get_ports {t_vm[*] t_st[*]}]
 set_output_delay 222.222 -clock ser_clk [get_ports {t_vm[*] t_st[*]}]
 
 if {[get_property [get_clocks core_clk] is_propagated]} {set_propagated_clock [get_clocks ser_clk]}
+set_input_transition 150 [all_inputs -no_clocks]
