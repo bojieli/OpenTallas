@@ -288,5 +288,16 @@
     "actual layer1..35 and head payloads, head36 retained",
     "all parent pins/PG/slots/constructive fit",
     "total native cycle/memory/area/power price, excluding drain loop print"
-  ]
+  ],
+  "actual_lane_child_census": {
+    "profile": "ML15/RD2/QLA4/QLM5",
+    "head_FF": 13153,
+    "head_macro": "1 real128x256 tail SRAM,32768storagebits",
+    "exp_FF": 11306,
+    "rcp_FF": 8190,
+    "rsq_FF": 12561,
+    "each_root_below15000": true,
+    "physical_qualification": "UNQUALIFIED; clocks/pins/phase/slot/CTS remain open",
+    "provenance": "head_census_exact/bb_qla4_qlm5 and sfu_*_qla4_qlm5 source manifests"
+  }
 }
