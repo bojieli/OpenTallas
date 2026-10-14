@@ -1,5 +1,5 @@
 {
- "name": "qkd_kvwq_ctl_bin-sl3-18bd21c8e",
+ "name": "qkd_kvwq_ctl_bin-sl3-COMMIT",
  "block": "qkd_kvwq_ctl_bin",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-kvsys-el-1014",
-  "commit": "18bd21c8e"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -118,7 +118,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_kvwq_ctl_bin/qkd_kvwq_ctl_bin-sl3-18bd21c8e"
+   "to": "results/rtl/ref_tile/qkd_kvwq_ctl_bin/qkd_kvwq_ctl_bin-sl3-COMMIT"
   }
  ],
  "cycles_added": 0,

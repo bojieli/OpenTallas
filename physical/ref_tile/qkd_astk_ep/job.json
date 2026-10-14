@@ -1,5 +1,5 @@
 {
- "name": "qkd_astk_ep-ks2-7b66e8f3b",
+ "name": "qkd_astk_ep-ks2-COMMIT",
  "block": "qkd_astk_ep",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/qwen-kvsys-el-1014",
-  "commit": "7b66e8f3b",
+  "commit": "COMMIT",
   "extra_paths": [
    "configs/hardware",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -117,7 +117,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_astk_ep/qkd_astk_ep-ks2-7b66e8f3b"
+   "to": "results/rtl/ref_tile/qkd_astk_ep/qkd_astk_ep-ks2-COMMIT"
   }
  ],
  "cycles_added": 0,
