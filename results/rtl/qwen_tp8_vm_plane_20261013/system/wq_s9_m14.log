@@ -7,6 +7,6 @@ skid capacity rule: the memory overflowed 1 times, the rule's model 0
 FAIL qfd_vm_bv_ports x=0 su=0 row=0 land=0 image=1 faults x0 xh0 w1 wh0 ser000000 landed=1588/1588 su_reads=61149
 - rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:495: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 41us; walltime 1.712 s; speed 24.166 us/s
-- Verilator: cpu 1.343 s on 1 threads; allocated 10 MB
-maxrss_kb=5368 wall=1.71
+- Verilator: $finish at 41us; walltime 11.948 s; speed 3.463 us/s
+- Verilator: cpu 1.474 s on 1 threads; allocated 10 MB
+maxrss_kb=5328 wall=11.96
