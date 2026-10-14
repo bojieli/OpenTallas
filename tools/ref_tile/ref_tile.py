@@ -25,6 +25,7 @@ regeneration; a NEW kit takes RECIPE_LATEST; spec "recipe" overrides (see apply_
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -39,6 +40,7 @@ sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
+import clock_entry_constraints  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
@@ -71,6 +73,14 @@ RECIPE_OWN_HOOK_VARS = ("POST_TAPCELL_TCL", "PRE_GLOBAL_PLACE_TCL", "PRE_DETAIL_
 
 class SpecError(ValueError):
     pass
+
+
+def pin_group_max(s: dict) -> int:
+    """Bound ordered pin chunks without changing tracks, density or bit order."""
+    n = s.get("route", {}).get("pin_group_max", 32)
+    if isinstance(n, bool) or not isinstance(n, int) or not 1 <= n <= 32:
+        raise SpecError("route.pin_group_max must be an integer 1..32")
+    return n
 
 
 def snap_up(v: float, g: float) -> float:
@@ -160,6 +170,7 @@ def load_spec(path: str) -> dict:
     s.setdefault("macros", [])
     s.setdefault("children", [])
     s.setdefault("route", {})
+    pin_group_max(s)
     s.setdefault("reset_ports", [])
     s.setdefault("inter", [])
     if s["kind"] == "cluster" and not s["children"]:
@@ -266,6 +277,49 @@ def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
     return "M5", "contract"
 
 
+def cluster_signal_cap(s: dict, slot: dict | None = None) -> tuple[str, dict | None]:
+    """Upper cluster metals require a digest-bound die contract, never a text waiver.
+
+The grant carries the no-through-traffic and phase-aligned PG obligations. A
+probe may measure routing before the phase audit exists, but cannot auto-merge.
+"""
+    cap = s.get("signal_max_layer", "M7")
+    if cap == "M7":
+        return cap, None
+    if cap not in ("M8", "M9"):
+        raise SpecError(f"cluster signal cap must be M7, or die-granted M8/M9, not {cap}")
+    g = s.get("cluster_layer_grant") or (slot or {}).get("cluster_layer_grant")
+    if not isinstance(g, dict) or not g.get("source") or not g.get("sha256"):
+        raise SpecError("cluster M8/M9 needs cluster_layer_grant {source, sha256}")
+    p = (ROOT / g["source"]).resolve()
+    if not p.is_relative_to(ROOT.resolve()) or not p.is_file():
+        raise SpecError("cluster layer grant source must be an existing repository file")
+    if hashlib.sha256(p.read_bytes()).hexdigest() != g["sha256"]:
+        raise SpecError("cluster layer grant source digest mismatch")
+    try:
+        rec = json.loads(p.read_text())
+    except (ValueError, OSError) as ex:
+        raise SpecError("cluster layer grant source is not a JSON contract") from ex
+    if rec.get("schema") != "opentallas.cluster-layer-grant.v1" or rec.get("signal_cap") != cap:
+        raise SpecError("cluster layer grant schema/cap mismatch")
+    if s["name"] not in rec.get("masters", []):
+        raise SpecError("cluster layer grant does not name this master")
+    if rec.get("no_die_signal_through_traffic") is not True or rec.get("die_pg_layers") != ["M8", "M9"]:
+        raise SpecError("upper cluster grant must reserve die M8/M9 for PG only over its rectangle")
+    pg = rec.get("die_pg", {})
+    if not all(isinstance(pg.get(k), (int, float)) and pg[k] > 0 for k in ("width_um", "pitch_um")):
+        raise SpecError("cluster grant must declare the die PG width and pitch")
+    if rec.get("requires_phase_aligned_die_pg") is not True:
+        raise SpecError("cluster grant must require die-core phase aligned PG")
+    if not s.get("job", {}).get("hold_merge"):
+        import cluster_pg_phase
+        try:
+            cluster_pg_phase.validate(ROOT, s.get("die_pg_phase_audit", {}), s, g)
+        except (ValueError, KeyError, TypeError, OSError) as ex:
+            raise SpecError(f"production upper cluster PG geometry audit failed: {ex}; use hold_merge for a probe") from ex
+    return cap, {"source": g["source"], "sha256": g["sha256"], "obligations": rec}
+
+
 def layer_contract(s: dict, slot: dict | None) -> dict:
     """leaf tile: signals AND PG <= layer_cap (M5 default, M6 granted), PG = full-length stripes on the cap layer as pins,
     parent strap = cap + 1; legacy kits: signals M2-M6, PG M6 or M7.
@@ -297,7 +351,10 @@ def layer_contract(s: dict, slot: dict | None) -> dict:
     pg = pg or "M7"
     if pg != "M7":
         raise SpecError("layer contract: a cluster's PG layer is M7 (straps over M5/M6 children; M8/M9 die only)")
-    out.update(pg_layer="M7", rlayers=("M2", s.get("signal_max_layer", "M7")), strap_layer="M8")
+    cap, grant = cluster_signal_cap(s, slot)
+    out.update(pg_layer="M7", rlayers=("M2", cap), strap_layer="M8")
+    if grant:
+        out["cluster_layer_grant"] = grant
     if slot and slot.get("pg_layer") and slot["pg_layer"] != out["pg_layer"]:
         raise SpecError(f"layer contract: spec PG {out['pg_layer']} != contract slot PG {slot['pg_layer']}")
     return out
@@ -680,13 +737,13 @@ def gen_sdc(s: dict, period_ps: float) -> str:
     return (f"# generated by tools/ref_tile/ref_tile.py ({s['name']}): route SDC (over-constrained {period_ps} ps; sign-off\n"
             f"# 833.333 in signoff.sdc), 60 / 25 ps uncertainty, boundary {fin} / {fout} x 833.333 ps outside the block.\n"
             f"# After CTS the hooks re-reference the boundary to the propagated tree (qwen_die_masters/io_ref_skew.sdc).\n"
-            f"create_clock -name core_clk -period {period_ps} [get_ports {clock_ports_sdc(s)}]\n"
-            "set_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\n"
+            + "set ::ot_ref_pre_cts 1\n" + clock_entry_constraints.clocks(s, period_ps)
+            + "set_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\n"
             f"set_input_delay {833.333 * fin:.3f} -clock core_clk [all_inputs -no_clocks]\n"
             f"set_output_delay {833.333 * fout:.3f} -clock core_clk [all_outputs]\n"
             "set_max_fanout 32 [current_design]\nset_load 80 [all_outputs]\n"
             "set_input_transition 150 [all_inputs -no_clocks]\nset_max_transition 260 [current_design]\n"
-            + sdc_extra(s))
+            + sdc_extra(s) + clock_entry_constraints.generate(s, ROOT))
 
 
 def sdc_extra(s: dict) -> str:
@@ -694,20 +751,25 @@ def sdc_extra(s: dict) -> str:
     (e.g. a CDC adapter's controller clock) after core_clk exists"""
     out = ""
     for f in s.get("sdc_extra", []):
-        out += f"# ---- sdc_extra {f}\n" + (ROOT / f).read_text()
+        body = (ROOT / f).read_text()
+        if s.get("clock") == "entries" and "set ::ot_wc_entry_mode 1" in body:
+            continue
+        out += f"# ---- sdc_extra {f}\n" + body
     return out
 
 
 def gen_signoff(s: dict, refglob: str, inter: str) -> str:
-    io = (ROOT / QDM / "io_ref_skew.sdc").read_text()
+    io = "" if s.get("clock") == "entries" else (ROOT / QDM / "io_ref_skew.sdc").read_text()
     return (f"# {s['name']}: sign-off at 833.333 ps (generated by tools/ref_tile/ref_tile.py; same form as\n"
             f"# {QDM}/jobs/signoff_sdc.py): clock re-created at the real period, propagated, 60 / 25 ps uncertainty,\n"
             f"# die-context boundary io_ref_skew.sdc with this block's REFGLOB / INTER bound.\n"
-            f"create_clock -name core_clk -period 833.333 [get_ports {clock_ports_sdc(s)}]\n"
-            "set_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\n"
+            + "set ::ot_ref_pre_cts 0\n" + clock_entry_constraints.clocks(s, 833.333)
+            + "set_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\n"
             "set_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\n"
             f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
-            + io + sdc_extra(s))
+            + io + sdc_extra(s)
+            + ("set ::ot_ce_require_wire 1\n" if s.get("clock") == "entries" else "")
+            + clock_entry_constraints.generate(s, ROOT) + "\nset_propagated_clock [all_clocks]\n")
 
 
 def child_insertions(s: dict) -> dict:
@@ -782,13 +844,17 @@ def gen_hooks(s: dict, kd: str) -> dict:
     pre_cts.append(f"source /src/{QDM}/pre_cts_skew.tcl")
     # spec "boundary_tcl": repo Tcl files that re-apply a second-domain boundary after every io_ref switch (post-CTS
     # wrapper, pre-GRT, post-DRT), so the route times those ports against their own propagated clock, not only sign-off
-    btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])]
+    btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
+            if not (s.get("clock") == "entries" and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
+    if s.get("clock") == "entries":
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + clock_entry_constraints.generate(s, ROOT)
+        btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
         # SDC after building the tree. Apply additional domains AFTER that wrapper.
         pre_cts += ["rename clock_tree_synthesis ::ot_ref_cts_boundary_orig",
                     "proc clock_tree_synthesis {args} {",
-                    "  ::ot_ref_cts_boundary_orig {*}$args", *["  " + x for x in btcl], "}"]
+                    "  ::ot_ref_cts_boundary_orig {*}$args", "  set ::ot_ref_pre_cts 0", *["  " + x for x in btcl], "}"]
     if fwd:
         pre_cts.append("source /src/physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
@@ -962,6 +1028,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
+        *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
 
@@ -1055,7 +1122,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     if s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine":
         out += ["physical/common_flow/clock_spine.tcl", f"{kd}/spine_ins.tcl"]
     if s.get("clock") == "entries":
-        out.append("physical/common_flow/clock_entries.tcl")
+        out += ["physical/common_flow/clock_entries.tcl", f"{kd}/clock_entry.sdc"]
+        out += [f"{ch['view']}/insertion.json" for ch in s["children"]]
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
@@ -1119,7 +1187,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
             "calibrate": {"enabled": False, "reason": "ref_tile: boundary referenced in-run to the propagated tree "
                                                       "(io_ref_skew.sdc), as the Qwen die masters"},
             "route": {
-                "cmd": ROUTE_PREFIX + f"HM={hm} OT_MM_FF_SDC='{kd}/signoff.sdc' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_fit.ROUTE_PIN_GROUP_MAX} "
+                "cmd": ROUTE_PREFIX + f"HM={hm} OT_MM_FF_SDC='{kd}/signoff.sdc' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_group_max(s)} "
                        f"bash tools/ref_tile/ref_route.sh {kd}/kit.env {{LABEL}} {{RUN}}/routes",
                 "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
                 "logs": ["{RUN}/routes/{LABEL}/flow.log"],

@@ -115,11 +115,19 @@ class GateClock(unittest.TestCase):
         kd = Path(td) / "kit"
         kd.mkdir(exist_ok=True)
         if clock is not None:
-            (kd / PG.CLOCK_RESULT).write_text(json.dumps({"clock": clock}))
+            import hashlib
+            payload = b"module fixture; endmodule\n"
+            (kd / "fixture.v").write_bytes(payload)
+            entries = [{"path": "kit/fixture.v", "kind": "file", "sha256": hashlib.sha256(payload).hexdigest(),
+                        "git_blob": PG.SB.blob_hash(payload), "source": "working_tree"}]
+            binding = {"schema": PG.SB.SCHEMA, "files": entries, "manifest_sha256": PG.SB.canonical_digest(entries),
+                       "remote_archive_verified": True}
+            (kd / PG.CLOCK_RESULT).write_text(json.dumps({"clock": clock, "source_binding": binding}))
         return kd
 
     def test_submit_side(self):
-        with tempfile.TemporaryDirectory() as td:
+        with tempfile.TemporaryDirectory() as td, patch.object(PG, "ROOT", None):
+            PG.ROOT = Path(td)
             sev = lambda kd, **kw: (lambda g: (PG.check_clock_evidence(g, kd, **kw), g.verdict)[1])(PG.Gate())  # noqa: E731
             self.assertEqual(sev(self.kit(td)), "PASS")                            # nothing known: in-flow lint judges
             self.assertEqual(sev(self.kit(td), known_sinks=48000), "FAIL")         # history says big, no evidence

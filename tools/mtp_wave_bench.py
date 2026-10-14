@@ -79,6 +79,18 @@ def prepare(d: Path):
         shutil.copy2(ROOT / MARKOV / f'{a}.hex', d / f'{b}.hex')
 
 
+def classify_run(log: str, returncode: int) -> str:
+    # A missing PASS line is not evidence that a mutation was observed. Runtime
+    # crashes, missing memory files and simulator aborts are harness failures.
+    if returncode != 0 or re.search(r'(?im)^(?:FATAL:|ERROR:|Traceback|Segmentation fault)', log):
+        return 'runtime_error'
+    if re.search(r'^WAVE FAIL', log, re.M):
+        return 'fail'
+    if re.search(r'^WAVE PASS ', log, re.M):
+        return 'pass'
+    return 'no_observation'
+
+
 def run_case(name: str, out: Path, sim: str):
     c = CASES[name]
     d = out / name
@@ -101,10 +113,9 @@ def run_case(name: str, out: Path, sim: str):
     if b.returncode:
         return dict(case=name, expect=c['expect'], got='build_error', ok=False, tail=(b.stdout + b.stderr).splitlines()[-12:])
     with open(d / 'run.log', 'w') as fo:
-        subprocess.run(run, cwd=d, stdout=fo, stderr=subprocess.STDOUT)
+        result = subprocess.run(run, cwd=d, stdout=fo, stderr=subprocess.STDOUT)
     log = (d / 'run.log').read_text(errors='replace')
-    passed = bool(re.search(r'^WAVE PASS ', log, re.M))
-    got = 'pass' if passed else 'fail'
+    got = classify_run(log, result.returncode)
     lines = [l for l in log.splitlines() if l.startswith(('WAVE ', 'WAVE_CHARGE', 'WAVE_EVENT', 'WAVE FAIL'))]
     return dict(case=name, expect=c['expect'], got=got, ok=got == c['expect'], params=c['params'], defines=c['defines'],
                 lines=lines[:80], first_fail=next((l for l in lines if l.startswith('WAVE FAIL')), None))
@@ -113,7 +124,10 @@ def run_case(name: str, out: Path, sim: str):
 def main_run(a):
     out = a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
-    names = a.case or list(CASES)
+    names = list(a.case or CASES)
+    # Mutants use SMOKE parameters; their exact matched control must pass too.
+    if any(CASES[n]['expect'] == 'fail' for n in names) and 'smoke' not in names:
+        names.append('smoke')
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(lambda n: run_case(n, out, a.sim), names))
     src = sorted(set(SRC + TB + [f'{M}/tb/tb_mtp_wave_fn.svh', f'{M}/tb/tb_mtp_wave_meas.svh', 'tools/mtp_wave_bench.py']))
