@@ -259,6 +259,25 @@
         "per_PC_ACK_max_per_edge": 1,
         "prefix_retire_max_per_edge": 1
       }
+    },
+    {
+      "master": "qkd_host_hc_station",
+      "flop_bits": 376,
+      "role": "captured originalhc182 threepulse event station; bounded4CTRL broadcastcredits; role0 only",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        64.8,
+        86.4
+      ],
+      "area_request_um2": 5598.72,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv",
+      "sha256": "7f1a8f836bb114e19ece0154ca915408f840a9ba9b2e060b8f857e8bdd6f31c9"
     }
   ],
   "existing_children": [

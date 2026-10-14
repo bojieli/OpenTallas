@@ -1586,6 +1586,96 @@
       ]
     },
     {
+      "master": "qkd_host_hc_station",
+      "flop_bits": 376,
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        64.8,
+        86.4
+      ],
+      "area_request_um2": 5598.72,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv",
+      "source_sha256": "7f1a8f836bb114e19ece0154ca915408f840a9ba9b2e060b8f857e8bdd6f31c9",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "die_id",
+          "direction": "input",
+          "width": 3,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "raw_hc",
+          "direction": "input",
+          "width": 182,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cmd_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cmd_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "cmd_hc",
+          "direction": "output",
+          "width": 182,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "source_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "available",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ]
+    },
+    {
       "master": "qkd_host_if_pins",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_if_pins.sv",
       "source_sha256": "f989e311639e6b7c5e442f134fa62f769e0387c184a7084060269f50b73f720b",
@@ -17703,6 +17793,24 @@
       "source": "host.commit_order.prefix_v+zero7",
       "destination": "host.visibility_fence.ack_n",
       "bits": 8,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CTL.raw_hc",
+      "destination": "host.HC_STATION.raw_hc",
+      "bits": 182,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HC_STATION.cmd_v/hc",
+      "destination": "host.CTRL.cmd_v/hc",
+      "bits": 183,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CTRL.cmd_cr",
+      "destination": "host.HC_STATION.cmd_cr",
+      "bits": 1,
       "clock_family": "core"
     },
     {

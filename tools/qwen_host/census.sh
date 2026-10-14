@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../..";out=${1:?out};mkdir -p "$out";out=$(cd "$out"&&pwd)
 y=${YOSYS:-$HOME/.local/opentallas-tools/yosys/bin/yosys};[[ -x "$y" ]]||y=$(command -v yosys)
-tops=(qkd_host_rx_class qkd_host_tx_class qkd_host_rx_pad qkd_host_axi_packet qkd_host_ctrl_packet qkd_host_static_pc qkd_host_ingest_map qkd_host_ingest_station qkd_host_visibility_fence qkd_host_ack_sum qkd_host_commit_order)
+tops=(qkd_host_rx_class qkd_host_tx_class qkd_host_rx_pad qkd_host_axi_packet qkd_host_ctrl_packet qkd_host_static_pc qkd_host_ingest_map qkd_host_ingest_station qkd_host_visibility_fence qkd_host_ack_sum qkd_host_commit_order qkd_host_hc_station)
 if [[ $# -gt 1 ]];then tops=("${@:2}");fi
 for top in "${tops[@]}";do
  file=rtl/qwen_sys/host_20261013/$top.sv
