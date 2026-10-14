@@ -295,11 +295,10 @@ module ot_qfd_xdvm_fabric #(
     genvar c, j, s, h;
     generate for (c = 0; c < NCOL; c = c + 1) begin : g_col
         wire [CW-1:0] cn, cs;
-        wire [1:0]    lw_v, lc_v;
-        wire          lw_ep, lc_ep;
-        wire [5:0]    lw_off;
-        wire [63:0]   lw_m;
-        wire [1023:0] lw_d;
+        wire [1:0]    lw_v, lc_v, lw_ep, lc_ep;
+        wire [11:0]   lw_off;
+        wire [127:0]  lw_m;
+        wire [2047:0] lw_d;
         wire [NH*8-1:0] lw_ctl;
         wire [NH-1:0] lr_v, lr_t, lr_ep, lq_v, lq_bad;
         wire [NH*28-1:0] lr_p;
@@ -322,8 +321,8 @@ module ot_qfd_xdvm_fabric #(
             wire [63:0]   wm [0:NCH];
             wire [1023:0] wd [0:NCH];
             wire [NCH*8-1:0] wc [0:NCH];
-            assign cv[0] = lc_v[h]; assign cep[0] = lc_ep; assign wv[0] = lw_v[h]; assign wep[0] = lw_ep;
-            assign woff[0] = lw_off; assign wm[0] = lw_m; assign wd[0] = lw_d; assign wc[0] = lw_ctl[h*NCH*8 +: NCH*8];
+            assign cv[0] = lc_v[h]; assign cep[0] = lc_ep[h]; assign wv[0] = lw_v[h]; assign wep[0] = lw_ep[h];
+            assign woff[0] = lw_off[6*h +: 6]; assign wm[0] = lw_m[64*h +: 64]; assign wd[0] = lw_d[1024*h +: 1024]; assign wc[0] = lw_ctl[h*NCH*8 +: NCH*8];
             for (j = 0; j < NCH; j = j + 1) begin : g_leaf
                 localparam integer LF = h * NCH + j;
                 ot_qfd_xs_leaf #(.NCH(NCH), .MUT(LEAF_MUT)) u_leaf (.clk(clk), .rst_n(rst_n),

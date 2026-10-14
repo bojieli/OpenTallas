@@ -348,13 +348,13 @@ module ot_qfd_xhead #(
     // leaves (NH: NH/2 in the N chain = rows 0 .. NH-1, NH/2 in the S chain): one write word per chain, its
     // ctl field the chain's NH/2 leaves (leaf j of the chain at bits 8j); the two chains carry the same data
     output reg  [1:0]    lw_v,
-    output reg           lw_ep,
-    output reg  [5:0]    lw_off,
-    output reg  [63:0]   lw_m,
-    output reg  [1023:0] lw_d,
+    output reg  [1:0]    lw_ep,
+    output reg  [2*6-1:0] lw_off,
+    output reg  [2*64-1:0] lw_m,
+    output reg  [2*1024-1:0] lw_d,
     output reg  [NH*8-1:0] lw_ctl,
     output reg  [1:0]    lc_v,
-    output reg           lc_ep,
+    output reg  [1:0]    lc_ep,
     output reg  [NH-1:0] lr_v,
     output reg  [NH-1:0] lr_t,
     output reg  [NH-1:0] lr_ep,
@@ -473,7 +473,8 @@ module ot_qfd_xhead #(
             lc_v <= {2{d_v}};
         end
     always @(posedge ck) begin
-        lw_ep <= fep; lw_off <= foff; lw_m <= fm; lw_d <= fd; lw_ctl <= ctl; lc_ep <= d_ep;
+        // one kept copy of the write word per chain (N, S): each chain head is driven by its own flops
+        lw_ep <= {2{fep}}; lw_off <= {2{foff}}; lw_m <= {2{fm}}; lw_d <= {2{fd}}; lw_ctl <= ctl; lc_ep <= {2{d_ep}};
     end
 
     // ---- the go: verify against the oldest filled epoch, then the TDM read sequencer ----
