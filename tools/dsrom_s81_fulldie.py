@@ -7067,7 +7067,7 @@ def _spread_ports(Mx, k):
 
 
 def _faces_r8(m, Mx, it, ports):
-    if BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col'):
+    if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col'):
         from s81.bf_direct_pins import populate
         populate(sys.modules[__name__], Mx, it.master == 'dsfd_bf_col', ports)
         return
