@@ -1,0 +1,25 @@
+{
+  "source_commit": "86a83800b",
+  "exact": {
+    "requests": 32,
+    "rows": 32,
+    "errors": 0,
+    "fault": false
+  },
+  "mutants": {
+    "data": 32,
+    "request_tag": 64,
+    "credit": 31
+  },
+  "macro_storage": "4real128x256macros;32populatedrows;reverseHBMrow/beat responses;one-seatcreditdelayed7cycles",
+  "physical_view_closed": false,
+  "parent_scalar_rate_qualified": false,
+  "port_split_source": "3d1d8ea53 (must rebench; preserves data paths but physical port list differs)",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win.sv": "b2ac9c84ad692fc29294e707f3fa24cb3e0438e21bb6bb98759c0e371a083a95",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_win.sv": "d54a6bc06a9208f7bc62c6812d5e50dc3e5948e4a963e689d178bed93ce3cb94",
+    "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv": "af3b26131ecf4c810831d96a8363a62d5e5c25a962fb927b3b59530eba51fa3b",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  }
+}
