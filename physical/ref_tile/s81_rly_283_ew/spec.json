@@ -39,8 +39,8 @@
  "job": {
   "owner": "Claude:s81-die",
   "branch": "claude/el1011-s81dieit",
-  "tag": "v2",
-  "purpose": "S81 die relay master dsfd_rly_283_EW (512 instances in the v17 (g17/p2) placement, generated outline + interim timing there): real hard tile, 283 b in E / out W, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget",
+  "tag": "v3",
+  "purpose": "S81 die relay master dsfd_rly_283_EW (512 instances in the v17 (g17/p2) placement, generated outline + interim timing there): real hard tile, 283 b in E / out W, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget | v3: inhold removed (hold owned by the launcher's outhold), see structural_change",
   "benches": [
    {
     "name": "exact_words",
@@ -60,7 +60,8 @@
    }
   ],
   "views_to": "physical/ref_tile/s81_rly_283_ew/views",
-  "record_to": "results/rtl/ref_tile/s81_rly_283_ew"
+  "record_to": "results/rtl/ref_tile/s81_rly_283_ew",
+  "structural_change": "v2 GPL-0301 845 %: recipe-2 put hold stages on BOTH faces (283 x HB4+BUF in, 283 x BUF+HB4+BUF out) plus 283 FIRM flops = 1,871 fixed cells / 497.5 um2 in a 503.9 um2 core. Each seam's hold is owned ONCE, by the launcher: every die relay launches through its outhold stage (contract minimum FF launch 65 ps), so the input-side inhold duplicates it and is removed (as the CLOSED dsfd_rly_283_WE / 283_SN kits, which carry outhold only). Outline unchanged 23.76 x 30.24 (x relay site)."
  },
  "children": [],
  "inter": [],
@@ -69,5 +70,5 @@
   "cols": 4,
   "allow_none": true
  },
- "inhold": true
+ "inhold": false
 }

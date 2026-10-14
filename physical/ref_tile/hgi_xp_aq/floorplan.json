@@ -7,13 +7,13 @@
   0,
   0,
   172.8,
-  86.4
+  97.2
  ],
  "core": [
   2.16,
   2.16,
   170.64000000000001,
-  84.24000000000001
+  95.04
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -60,6 +60,11 @@
   "physical/ref_tile/hgi_xp_aq/signoff.sdc",
   "physical/ref_tile/hgi_xp_aq/pdn.tcl",
   "physical/ref_tile/hgi_xp_aq/pre_cts.tcl",
+  "physical/ref_tile/hgi_xp_aq/post_cts.tcl",
+  "physical/ref_tile/hgi_xp_aq/post_grt.tcl",
+  "physical/ref_tile/hgi_xp_aq/pre_drt.tcl",
+  "physical/ref_tile/hgi_xp_aq/pre_fill.tcl",
+  "physical/ref_tile/hgi_xp_aq/post_fill.tcl",
   "physical/ref_tile/hgi_xp_aq/pre_grt.tcl",
   "physical/ref_tile/hgi_xp_aq/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",

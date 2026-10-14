@@ -23,9 +23,18 @@ if(aq[c*338+337]) begin packets=packets+1;if(aq[c*338 +:338] !== bq[c*338 +:338]
 end
 if(av) words=words+1;
 end
-integer rows[32];integer left,seed=77,t,cmd_start,start_words,start_packets;
+integer rows[32];integer left,seed=77,t,cmd_start,start_words,start_packets,reset_phase;
 initial begin
-repeat(3) @(negedge clk);rst_n=1;repeat(8) @(negedge clk);
+repeat(3) @(negedge clk);rst_n=1;
+for(reset_phase=1;reset_phase<=8;reset_phase=reset_phase+1) begin
+ @(negedge clk);
+ for(integer col=0;col<4;col=col+1) begin
+  if(b.u_parent.rn_mid[col] !== (reset_phase>=3+col)) $fatal(1,"middle reset release col=%0d phase=%0d",col,reset_phase);
+  if(b.u_parent.rn_n[col] !== (reset_phase>=4+col) || b.u_parent.rn_s[col] !== (reset_phase>=4+col)) $fatal(1,"credit reset release col=%0d phase=%0d",col,reset_phase);
+ end
+end
+if(!ar || !br || !(&b.u_parent.rn_mid) || !(&b.u_parent.rn_n) || !(&b.u_parent.rn_s)) $fatal(1,"reset ready barrier");
+$display("RESET_PROOF baseline3 middle3/4/5/6 credit4/5/6/7 maxaddedcold4 hotadded0 bothready=1");
 for(integer cmd=0;cmd<4;cmd=cmd+1) begin
 wait(ar);@(posedge clk);cmd_start=cycle;start_words=words;start_packets=packets;pub_space=(cmd%2)?2:1;pub_base=cmd*4096;pub_stride=128;pub_bf16=(cmd>=2);pub_v=1;
 @(posedge clk);pub_v=0;repeat(12) @(posedge clk);

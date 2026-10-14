@@ -56,33 +56,36 @@
   "hold_margin_ns": 0.01
  },
  "job": {
-  "owner": "Claude:el1011-q-kvd",
-  "branch": "claude/el1011-q-kvd",
-  "tag": "q5b",
-  "purpose": "q-kvd RELAUNCH5: re-run of nhb_pbst_ref (prior job's 128 GB hubt bench was pinned to AGIdock whose per-job RAM limit is 110 GB -> bench never admitted for 9 h); hosts = the two hosts whose per-job limit fits the 128 GB bench || route peak declared 112 GB (> AGIdock per-job limit 110 GB) so the route lands on an EPYC: the loop pins benches to the route host and does not offload a 128 GB bench that exceeds AGIdock's per-job limit (reported to coordinator)",
+  "owner": "Claude:el1014-qwen-kvsys-elements",
+  "branch": "claude/qwen-kvsys-ahub-1014",
+  "tag": "np1",
+  "purpose": "Beat-store tile of the KV/system die ahub composition (ot_qkd_ahub_die, 4 instances): native pin re-route.",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
   ],
   "benches": [
    {
-    "name": "hubt_layer_exact",
-    "cmd": "HUBT=1 DQ=128 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hubt_pos",
+    "name": "qkd_ahub_d_eq_exact",
+    "cmd": "bash rtl/test/nearhbm/run_qkd_ahub_d_eq.sh pos {RUN}/bench/eq_pos",
     "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ahub_d eq all",
+    "note": "die-leaf hub (core + 13 tiles, 3 die relay configurations) vs hub_t on identical random layer traffic, 3 seeds x 6 layers: every mo / out word equal, no fault"
+   },
+   {
+    "name": "hubd_layer_pbmut",
+    "cmd": "HUBD=1 PBMUT=1 DQ=128 bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/hubd_pbmut",
+    "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 128,
     "needs": [
      "verilator"
-    ]
-   },
-   {
-    "name": "hubt_layer_pbmut",
-    "cmd": "HUBT=1 PBMUT=1 DQ=128 bash tools/qwen_kv_die/bench_gate.sh neg {RUN}/bench/hubt_neg 0",
-    "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 96,
-    "needs": [
-     "verilator"
-    ]
+    ],
+    "note": "beat-store read one beat off (KVD_PBMUT)"
    }
   ],
   "views_to": "physical/ref_tile/nhb_pbst_ref/views",
@@ -91,5 +94,15 @@
    "ot-epyc1tb",
    "ot-epyc4"
   ]
- }
+ },
+ "recipe": 2,
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/native_pin_audit_1014/qwen.json",
+  "cell": "ot_nhb_pbst",
+  "launch_ps": 212.1,
+  "capture_ps": 267.7,
+  "fix": "445 pdata inputs over 190 (worst pdata[392] 267.7, q5b recipe-1 kit: the pd_b pin flops sit by the SRAMs): recipe-2 kit (pin flops FIRM at the pins + HB2 pads, dedicated launch flops), RTL unchanged."
+ },
+ "structural_change": " np1: recipe 1 -> 2 (pin flops at the pins) for the native capture budget."
 }

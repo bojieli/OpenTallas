@@ -22,8 +22,16 @@ template<class M> void drive(M& m,const Stim& s) {
     for(int i=0;i<6;i++)m.ga_i[i]=s.ga[i];
 }
 template<class M> void tick(M& m) {
-    m.ck_ctl=m.ck_qb=m.ck_fault=0;m.ck_aq=m.ck_ix=m.ck_bc=0;m.eval();
-    m.ck_ctl=m.ck_qb=m.ck_fault=1;m.ck_aq=3;m.ck_ix=15;m.ck_bc=(sizeof(m.ck_bc)>1 ? 65535 : 15);m.eval();
+    m.ck_ctl=m.ck_qb=m.ck_fault=0;m.ck_aq=m.ck_ix=m.ck_bc=0;
+    if constexpr(requires {m.ck_ix_read;}) m.ck_ix_read=0;
+    if constexpr(requires {m.ck_aq_aux;}) m.ck_aq_aux=0;
+    if constexpr(requires {m.ck_qb_aux;}) m.ck_qb_aux=0;
+    m.eval();
+    m.ck_ctl=m.ck_qb=m.ck_fault=1;m.ck_aq=3;m.ck_ix=15;m.ck_bc=(sizeof(m.ck_bc)>1 ? 65535 : 15);
+    if constexpr(requires {m.ck_ix_read;}) m.ck_ix_read=0xffffffffU;
+    if constexpr(requires {m.ck_aq_aux;}) m.ck_aq_aux=65535;
+    if constexpr(requires {m.ck_qb_aux;}) m.ck_qb_aux=15;
+    m.eval();
 }
 static uint32_t bits(const uint32_t* p,int bit,int n) {
     uint64_t x=p[bit/32]>>(bit%32);
@@ -109,7 +117,7 @@ int main(int argc,char**argv) {
                     if(ra==rb)++qbsame;else++qbdiff;
                     if((((a>>3)&1)<<1|(a&1))!=(((b>>3)&1)<<1|(b&1)))++qbbankdiff;
                 }
-                bool mismatch=r.ready!=d.ready||r.idle!=d.idle||r.x_re!=d.x_re||r.x_addr!=d.x_addr||r.fault!=d.fault
+                bool mismatch=r.aq_results!=d.aq_results||r.ready!=d.ready||r.idle!=d.idle||r.x_re!=d.x_re||r.x_addr!=d.x_addr||r.fault!=d.fault
                     ||r.phase_cycles!=d.phase_cycles||r.ev_go!=d.ev_go||r.ev_end!=d.ev_end||r.ev_tag!=d.ev_tag
                     ||r.rom_pa0!=d.rom_pa0||r.rom_pa1!=d.rom_pa1||r.rom_sa!=d.rom_sa
                     ||std::memcmp(r.mdr_o.data(),d.mdr_o.data(),15*4);

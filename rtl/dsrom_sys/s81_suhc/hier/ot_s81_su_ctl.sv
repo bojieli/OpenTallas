@@ -69,7 +69,7 @@ endmodule
 
 module ot_s81_su_ctl #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16,
-    parameter integer S_RD = 16, S_WR = 16, NSW = 8, NQB = 4, NQN = 2, NKV = 2, MUT = 0, AMUT = 0
+    parameter integer S_RD = 16, S_WR = 16, NSW = 8, NQB = 4, NQN = 2, NKV = 2, MUT = 0, AMUT = 0, QRW = 2
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
@@ -133,7 +133,7 @@ module ot_s81_su_ctl #(
     wire [31:0] jobs;
     wire        bsy;
     ot_s81_su_hctl #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
-                     .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(NQB), .NQN(NQN), .NKV(NKV), .MUT(MUT)) u_core (
+                     .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(NQB), .NQN(NQN), .NKV(NKV), .MUT(MUT), .QRW(QRW)) u_core (
         .clk(sk), .rst_n(s1), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_done_v(d_v), .e_done_tag(d_t),
         .rq_v(p_rq_v), .rq_row(p_rq_row), .rs_v(rv_q), .rs_f(rf_q), .busy(bsy), .fault(c_flt), .fault_code(fcode),
         .st_jobs(jobs),

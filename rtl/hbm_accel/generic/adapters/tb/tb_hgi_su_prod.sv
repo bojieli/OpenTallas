@@ -327,6 +327,40 @@ module tb_hgi_su_prod;
         $display("ERR no record retired for 300000 edges (hang): retired %0d", k); $display("HGI_SU_PROD FAIL errors=hang"); $finish;
     end
     always @(posedge clk) begin if (rst_n && done) begin t_ret[k] = cyc; k = k + 1; end if (rst_n && fault) nf = nf + 1; end
+`ifdef DRAIN_TRAFFIC
+    // The software model records each record's sink before later in-place writes replace it. Observe actual
+    // SU VM write pins; match each masked transaction once. No controller internals supply expected data.
+    `include "su_drain_traffic.svh"
+    reg [295:0] dt_file [0:NDRAIN_TRAFFIC-1];
+    reg [255:0] dt_data [0:8*32768-1]; reg [7:0] dt_mask [0:8*32768-1];
+    reg dt_valid [0:8*32768-1]; integer dt_next [0:32767];
+    integer dt_seen = 0, dt_missing;
+    initial begin : dt_init
+        integer a, ix, sec;
+        for (a = 0; a < 8*32768; a = a + 1) dt_valid[a] = 0;
+        for (a = 0; a < 32768; a = a + 1) dt_next[a] = 0;
+        #0.1;
+        $readmemh({dir, "/su_drain_traffic.mem"}, dt_file);
+        for (a = 0; a < NDRAIN_TRAFFIC; a = a + 1) begin
+            sec = dt_file[a][295:264]; ix = 8*sec + dt_next[sec]; dt_next[sec] = dt_next[sec] + 1;
+            dt_data[ix] = dt_file[a][255:0]; dt_mask[ix] = dt_file[a][263:256]; dt_valid[ix] = 1;
+        end
+    end
+    always @(posedge clk) if (rst_n && inrec && c == 0) begin : dt_observe
+        integer lane, sec, v, wordi, found; reg equalv; reg [255:0] data; reg [7:0] mask;
+        for (lane = 0; lane < RPL; lane = lane + 1) if (w2q[lane*280 + 279]) begin
+            sec = w2q[lane*280 + 264 +: 15]; data = w2q[lane*280 + 8 +: 256]; mask = w2q[lane*280 +: 8]; found = -1;
+            for (v = 0; v < 8; v = v + 1) begin
+                equalv = dt_valid[8*sec + v] && dt_mask[8*sec + v] == mask;
+                for (wordi = 0; wordi < 8; wordi = wordi + 1)
+                    if (mask[wordi] && data[32*wordi +: 32] !== dt_data[8*sec + v][32*wordi +: 32]) equalv = 0;
+                if (equalv && found == -1) found = 8*sec + v;
+            end
+            if (found == -1) begin errors = errors + 1; if (errors < 20) $display("ERR DRAIN_TRAFFIC unexpected sector %0d mask %02x", sec, mask); end
+            else begin dt_valid[found] = 0; dt_seen = dt_seen + 1; end
+        end
+    end
+`endif
     // controller phase census (st sampled each edge while a record is in the unit)
     integer ph [0:4]; reg inrec = 0;
 `ifdef SV
@@ -420,6 +454,14 @@ module tb_hgi_su_prod;
                 if (a2_it >= 0 && qd !== apat(j, a2_it + 1)) begin errors = errors + 1; if (errors < 20) $display("ERR agent2 final sector %0d", j); end
             end
             $display("SHARED case %0d: agent bursts read %0d write %0d (group shared with the SU)", cid, a1_bursts, a2_bursts);
+`endif
+`ifdef DRAIN_TRAFFIC
+            if (c == 0) begin
+                dt_missing = 0;
+                for (integer dt_i = 0; dt_i < 8*32768; dt_i = dt_i + 1) if (dt_valid[dt_i]) dt_missing = dt_missing + 1;
+                $display("DRAIN_TRAFFIC golden %0d matched %0d missing %0d", NDRAIN_TRAFFIC, dt_seen, dt_missing);
+                if (dt_missing != 0) errors = errors + dt_missing;
+            end
 `endif
             if (k != nr || nf != 0) begin $display("ERR case %0d: retired %0d of %0d, faults %0d", cid, k, nr, nf); errors = errors + 1; end
             for (j = 0; j < k; j = j + 1) $display("REC %0d %0d accept %0d retire %0d", cid, j, t_acc[j] - t0, t_ret[j] - t0);

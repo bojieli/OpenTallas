@@ -301,8 +301,14 @@ class Recipe(unittest.TestCase):
                   "OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R", "--macro-place-halo 5.4 5.4"):
             self.assertIn(k, env)
         gpl = [x for x in new["pre_gpl.tcl"].splitlines() if x.startswith("source ")]
-        self.assertEqual(gpl, ["source /src/physical/dsrom_window_source/leaf_iohold.tcl",
-                               "source /src/physical/qwen_die_masters/io_flop_at_pins.tcl"])   # hold stages FIRST
+        self.assertEqual(gpl, ["source /src/physical/common_flow/pin_reg_split.tcl",          # one flop per pin FIRST
+                               "source /src/physical/dsrom_window_source/leaf_iohold.tcl",      # then the hold stages
+                               "source /src/physical/qwen_die_masters/io_flop_at_pins.tcl"])
+        # recipe-2 pin defaults (el1014-root-recipe2): HB2 pad, synthesis keep of top-level pin registers
+        self.assertIn("OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R", env)
+        self.assertIn("OT_KEEP_PIN_REGS=1", env)
+        self.assertNotIn("HB4xp67", env)
+        self.assertNotIn("OT_HOLD_PAD_STRONG", env)
         dpl = new["pre_dpl.tcl"]
         self.assertIn("leaf_inhold_release.tcl", dpl)
         self.assertIn("out_flop_release.tcl", dpl)
@@ -313,11 +319,54 @@ class Recipe(unittest.TestCase):
         self.assertEqual((sp["recipe"], sp["inhold"], sp["outhold"], sp["io_flop_at_pins"]["cols"]), (2, True, True, 4))
         ref = json.loads(new["floorplan.json"])["referenced"]
         for f in (f"{kd}/pre_gpl.tcl", f"{kd}/pre_dpl.tcl", "physical/dsrom_window_source/leaf_iohold.tcl",
+                  "physical/common_flow/pin_reg_split.tcl",
                   "physical/dsrom_window_source/leaf_inhold.tcl", "physical/dsrom_window_source/leaf_inhold_release.tcl",
                   "physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"):
             self.assertIn(f, ref)
             if not f.startswith(kd):
                 self.assertTrue((RT.ROOT / f).is_file(), f)
+
+    def test_recipe_2_macro_edge_guard_default(self):
+        # el1014-root-macro-edge: a recipe-2 tile with hard macros routes with the macro-edge via guard (pre-GRT add,
+        # post-DRT remove); recipe 1, a spec with its own edge guard, and "macro_edge_guard": false do not get it
+        g = "source /src/physical/qwen_die_masters/sram_edge_guard.tcl"
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b, \
+                tempfile.TemporaryDirectory() as c, tempfile.TemporaryDirectory() as d:
+            new, old = self.kit(a), self.kit(b, recipe=1)
+            own = self.kit(c, boundary_tcl=["physical/qwen_die_masters/sram_edge_guard.tcl"])
+            off = self.kit(d, macro_edge_guard=False)
+        self.assertEqual(new["pre_grt.tcl"].count(g), 1)
+        self.assertEqual(new["post_drt.tcl"].count(g), 1)
+        self.assertLess(new["pre_grt.tcl"].index("grt_macro_top_layer.tcl"), new["pre_grt.tcl"].index(g))
+        self.assertNotIn(g, old["pre_grt.tcl"] + old["post_drt.tcl"])
+        self.assertEqual(own["pre_grt.tcl"].count(g), 1)                    # the spec's own entry, not a second one
+        self.assertNotIn(g, off["pre_grt.tcl"] + off["post_drt.tcl"])
+        s = RT.load_spec(spec(self.EXN))
+        RT.apply_recipe(s, 2)
+        kd = RT.kit_dir(s)
+        self.assertIn("physical/common_flow/macro_edge_via_guard.tcl", RT.referenced_paths(s, kd))
+        self.assertFalse(RT.macro_edge_guard(dict(s, macros=[])))           # no hard macro: no guard
+
+    def test_io_hold_margin_split(self):
+        # q14 r8 2026-10-14: route.io_hold_margin_ns relieves ONLY the route-time FF repair SDC of the boundary; sign-off
+        # (signoff.sdc, verdict post_sdc) is unchanged; no field -> one margin, no extra file (existing kits unchanged)
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            k = self.kit(a, name="iohm_a", route={"hold_margin_ns": 0.06, "io_hold_margin_ns": 0.01})
+            o = self.kit(b, name="iohm_b", route={"hold_margin_ns": 0.03})
+        ffr, so = k["signoff_ffrepair.sdc"], k["signoff.sdc"]
+        self.assertIn("set ::env(OT_IO_HOLD_SKEW) 0\nset ::env(OT_IO_IN_HOLD_SKEW) -50\n", ffr)
+        self.assertTrue(ffr.rstrip().endswith("unset -nocomplain ::env(OT_IO_IN_HOLD_SKEW)"))
+        self.assertNotIn("set ::env(OT_IO_IN_HOLD_SKEW)", so)
+        self.assertIn("set ::env(OT_IO_HOLD_SKEW) 50\n", so)
+        job = json.loads(k["job.json"])
+        self.assertIn("signoff_ffrepair.sdc'", job["stages"]["route"]["cmd"])
+        self.assertIn("HM=0.06 ", job["stages"]["route"]["cmd"])
+        self.assertTrue(job["verdict"]["post_sdc"][0].endswith("/signoff.sdc"))
+        self.assertTrue(any(f.endswith("/signoff_ffrepair.sdc") for f in json.loads(k["floorplan.json"])["referenced"]))
+        self.assertNotIn("signoff_ffrepair.sdc", o)
+        self.assertNotIn("signoff_ffrepair", json.loads(o["job.json"])["stages"]["route"]["cmd"])
+        with self.assertRaises(RT.SpecError):
+            RT.io_hold_relief_ps({"route": {"hold_margin_ns": 0.01, "io_hold_margin_ns": 0.02}})
 
     def test_recipe_2_spec_overrides(self):
         with tempfile.TemporaryDirectory() as a:
@@ -349,6 +398,47 @@ class Recipe(unittest.TestCase):
             self.assertFalse("inhold" in s or "outhold" in s)
             with self.assertRaises(RT.SpecError):
                 self.kit(a, name="rcp_e", recipe=3)
+
+    def test_hold_pad_strong_ports_need_a_measured_basis(self):
+        with tempfile.TemporaryDirectory() as a:
+            with self.assertRaises(RT.SpecError):        # HB4 on some pins only with the routed FF evidence
+                self.kit(a, name="rcp_hp0", hold_pad={"strong_ports": "^n_y"})
+            k = self.kit(a, name="rcp_hp1", hold_pad={"strong_ports": "^(n_y|rq_row)",
+                                                      "basis": "job x-r1: FF -7.1 ps on n_y[*] with HB2"})
+            env = k["kit.env"]
+            self.assertIn("OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R", env)
+            self.assertIn("OT_HOLD_PAD_STRONG_RE='^(n_y|rq_row)'", env)
+            self.assertIn("OT_HOLD_PAD_STRONG_MASTER=HB4xp67_ASAP7_75t_R", env)
+            k = self.kit(a, name="rcp_hp2", hold_pad={"cell": "HB4xp67_ASAP7_75t_R"})   # an explicit pad wins
+            self.assertIn("OT_INHOLD_MASTER=HB4xp67_ASAP7_75t_R", k["kit.env"])
+            with self.assertRaises(RT.SpecError):
+                self.kit(a, name="rcp_hp3", hold_pad={"cell": "BUFx2_ASAP7_75t_R"})
+
+    def test_spec_orfs_vars_pad_and_driver_win(self):
+        # a spec that names its own pad / driver in orfs_vars keeps them (no recipe default appended after them)
+        with tempfile.TemporaryDirectory() as a:
+            k = self.kit(a, name="rcp_ov", orfs_vars={"OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R",
+                                                      "OT_INHOLD_DRV": "BUFx2_ASAP7_75t_R"})
+            env = k["kit.env"]
+            self.assertEqual(env.count("OT_INHOLD_MASTER="), 1)
+            self.assertEqual(env.count("OT_INHOLD_DRV="), 1)
+            self.assertIn("OT_INHOLD_DRV=BUFx2_ASAP7_75t_R", env)
+            self.assertNotIn("hold_pad", json.loads(k["spec.json"]))
+
+    def test_split_and_keep_switch_off(self):
+        with tempfile.TemporaryDirectory() as a:
+            k = self.kit(a, name="rcp_off", pin_reg_split=False, keep_pin_regs=False)
+            self.assertNotIn("pin_reg_split", k["pre_gpl.tcl"])
+            self.assertNotIn("OT_KEEP_PIN_REGS", k["kit.env"])
+            k = self.kit(a, name="rcp_noflop", io_flop_at_pins=None)          # hold stages alone: no split, no keep
+            self.assertNotIn("OT_KEEP_PIN_REGS", k["kit.env"])
+            self.assertIn("OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R", k["kit.env"])
+
+    def test_existing_kit_keeps_hb4_pad(self):
+        with tempfile.TemporaryDirectory() as a:
+            old = self.old_kit(a, name="rcp_old_pad", outhold=True)
+            self.assertNotIn("OT_INHOLD_MASTER", old["kit.env"])          # recipe 1: leaf_iohold default (HB4), unchanged
+            self.assertNotIn("OT_KEEP_PIN_REGS", old["kit.env"])
 
     def test_pin_flop_hook_knobs_are_opt_in(self):
         t = (RT.ROOT / "physical/qwen_die_masters/io_flop_at_pins.tcl").read_text()

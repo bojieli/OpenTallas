@@ -126,7 +126,8 @@ module tb_hgi_sv_leaf;
                 wr_out[g] = wr_out[g] + 1; if (wr_out[g] > LQ) fail("write credits exceeded");
                 if (s[4:0] != 5'(L0 + g)) fail("wwq sector on the wrong lane");
                 chk_write(g, s, wwq[g*280 + 8 +: 256], wwq[g*280 +: 8]);
-                d = t + 1 + longint'($urandom % 7); if (d <= wc_last[g]) d = wc_last[g] + 1; wc_last[g] = d;
+                // Delay legal credit returns long enough to fill the local prefetch queue; data are checked independently.
+                d = t + 64 + longint'($urandom % 7); if (d <= wc_last[g]) d = wc_last[g] + 1; wc_last[g] = d;
                 wc_due[g][w_t[g] % QD] = d;
                 d = d + 1 + longint'($urandom % 5); if (d <= wd_last[g]) d = wd_last[g] + 1; wd_last[g] = d;
                 wd_due[g][w_t[g] % QD] = d; wd_sec[g][w_t[g] % QD] = s; w_t[g] = w_t[g] + 1;
@@ -296,7 +297,7 @@ module tb_hgi_sv_leaf;
 
     // ------------------------------------------------------------------ the tests
     localparam [14:0] A_L = 15'd16424, A_V = 15'h2008, B_L = 15'd24646, B_V = 15'h5006;   // drain regions (frames 2, 3)
-    localparam integer A_N = 302, B_N = 151;
+    localparam integer A_N = 990, B_N = 151;
     integer jn [0:5]; reg [14:0] jv [0:5];
     integer k, fa, fb, todo, mid0; reg [14:0] v, l; reg [7:0] m; reg [255:0] d;
     initial begin

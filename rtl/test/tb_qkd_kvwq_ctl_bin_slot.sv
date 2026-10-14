@@ -16,7 +16,10 @@ module tb_qkd_kvwq_ctl_bin_slot;
     wire [3:0]    m_fv; wire [1023:0] m_fd; wire [95:0] m_fsec; wire [31:0] m_flane; wire [35:0] m_ftag; wire [21:0] m_rw_id;
     qkd_kvwq_ctl_bin dut (.ck(ck), .rst_n(rst_n), .kvn_d(kvn_d), .kvn_cr(kvn_cr), .f0(f[0]), .f1(f[1]), .f2(f[2]), .f3(f[3]),
         .r0(r[0]), .r1(r[1]), .r2(r[2]), .r3(r[3]), .durable(durable), .fault(fault));
-    ot_qkvd_kv_wq_ctl_binary #(.FLANE_BINARY(1)) mdl (.clk(ck), .rst_n(rst_n),
+    // el1014: the cell releases reset through its local synchroniser (2 sync + 1 relay) at the pin; the model sees the same release
+    reg [2:0] mrs;
+    always @(posedge ck or negedge rst_n) if (!rst_n) mrs <= 3'b000; else mrs <= {mrs[1:0], 1'b1};
+    ot_qkvd_kv_wq_ctl_binary #(.FLANE_BINARY(1)) mdl (.clk(ck), .rst_n(mrs[2]),
         .kvw_v(kvn_d[1046]), .kvw_vg(kvn_d[1045:1044]), .kvw_t(kvn_d[1043:1030]), .kvw_layer(kvn_d[1029:1024]),
         .kvw_d(kvn_d[1023:0]), .kvw_cr(m_cr), .f_v(m_fv), .f_d(m_fd), .f_sec(m_fsec), .f_lane(m_flane), .f_tag(m_ftag),
         .r_v({r[3][1], r[2][1], r[1][1], r[0][1]}), .r_bad({r[3][0], r[2][0], r[1][0], r[0][0]}),

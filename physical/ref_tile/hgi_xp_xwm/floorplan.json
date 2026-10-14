@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  345.6,
+  388.8,
   43.2
  ],
  "core": [
   2.16,
   2.16,
-  343.44,
+  386.64,
   41.040000000000006
  ],
  "why": "spec outline",
@@ -68,6 +68,11 @@
   "physical/ref_tile/hgi_xp_xwm/signoff.sdc",
   "physical/ref_tile/hgi_xp_xwm/pdn.tcl",
   "physical/ref_tile/hgi_xp_xwm/pre_cts.tcl",
+  "physical/ref_tile/hgi_xp_xwm/post_cts.tcl",
+  "physical/ref_tile/hgi_xp_xwm/post_grt.tcl",
+  "physical/ref_tile/hgi_xp_xwm/pre_drt.tcl",
+  "physical/ref_tile/hgi_xp_xwm/pre_fill.tcl",
+  "physical/ref_tile/hgi_xp_xwm/post_fill.tcl",
   "physical/ref_tile/hgi_xp_xwm/pre_grt.tcl",
   "physical/ref_tile/hgi_xp_xwm/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",

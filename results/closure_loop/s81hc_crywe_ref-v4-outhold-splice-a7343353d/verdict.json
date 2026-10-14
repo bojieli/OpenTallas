@@ -48,6 +48,38 @@
    "ok": true,
    "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.056 MB sources in 6 modules, into 0.008 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.007 s (elab=0.001, cvt=0.002, bld=0.000); cpu 0.007 s on 1 threads; allocated 33.383 MB\nlint-ok\n",
    "track": "parallel"
+  },
+  "bench_crywe_ng64_m0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "track": "post_closure_source_bound",
+   "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/crywe_ng64_m0/o/run_ng64_dpi_m0_a0_hier2_cp0_cs4_ls0.json",
+   "tail": "RUN ng64_dpi_m0_a0_hier2_cp0_cs4_ls0 pass err_rows [0, 0, 0]"
+  },
+  "bench_crywe_ng64_m1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "track": "post_closure_source_bound",
+   "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/crywe_ng64_m1/o/run_ng64_dpi_m1_a0_hier2_cp0_cs4_ls0.json",
+   "tail": "RUN ng64_dpi_m1_a0_hier2_cp0_cs4_ls0 fail err_rows [1781, 1789, 1798]"
+  },
+  "bench_crywe_ng256_m0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "track": "post_closure_source_bound",
+   "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/crywe_ng256_m0/o/run_ng256_dpi_m0_a0_hier2_cp0_cs4_ls0.json",
+   "tail": "RUN ng256_dpi_m0_a0_hier2_cp0_cs4_ls0 pass err_rows [0, 0, 0]"
+  },
+  "bench_crywe_ng256_m1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "track": "post_closure_source_bound",
+   "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/crywe_ng256_m1/o/run_ng256_dpi_m1_a0_hier2_cp0_cs4_ls0.json",
+   "tail": "RUN ng256_dpi_m1_a0_hier2_cp0_cs4_ls0 fail err_rows [1770, 1770, 1770]"
   }
  },
  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
@@ -153,5 +185,50 @@
   "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden"
  },
  "io_budget": "link_budget_consistent (fixed split)",
- "rebudget": null
+ "rebudget": null,
+ "behavioral_binding": {
+  "schema": "rootpub.r2.behavioral_binding/1",
+  "bound_at": "2026-10-14T07:03:25-07:00",
+  "bound_by": "root publication r2 (claude/rootpub-r2-1014)",
+  "how": "composition gate run via ot-run on a git-archive snapshot of the job source commit (tools+rtl+memory macro models; nothing else changed)",
+  "host": "ot-epyc1tb",
+  "snapshot_root": "/srv/opentallas-scratch/claude/rootpub-r2/src_<commit>",
+  "gate": "s81hc_ng64 + s81hc_ng256 (tools/ref_tile/composition_gates.json), tools/s81_suhc/hc_gate.py --hier 2",
+  "source_commit": "a7343353d",
+  "instantiation": "dsfd_sp_hc.sv instantiates ot_s81_hc_crooty -> u_w ot_s81_hc_crooty_w (the routed top) at hier 2",
+  "benches": {
+   "bench_crywe_ng64_m0": {
+    "expect": "pass",
+    "rc": 0,
+    "ok": true,
+    "track": "post_closure_source_bound",
+    "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/crywe_ng64_m0/o/run_ng64_dpi_m0_a0_hier2_cp0_cs4_ls0.json",
+    "tail": "RUN ng64_dpi_m0_a0_hier2_cp0_cs4_ls0 pass err_rows [0, 0, 0]"
+   },
+   "bench_crywe_ng64_m1": {
+    "expect": "fail",
+    "rc": 1,
+    "ok": true,
+    "track": "post_closure_source_bound",
+    "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/crywe_ng64_m1/o/run_ng64_dpi_m1_a0_hier2_cp0_cs4_ls0.json",
+    "tail": "RUN ng64_dpi_m1_a0_hier2_cp0_cs4_ls0 fail err_rows [1781, 1789, 1798]"
+   },
+   "bench_crywe_ng256_m0": {
+    "expect": "pass",
+    "rc": 0,
+    "ok": true,
+    "track": "post_closure_source_bound",
+    "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/crywe_ng256_m0/o/run_ng256_dpi_m0_a0_hier2_cp0_cs4_ls0.json",
+    "tail": "RUN ng256_dpi_m0_a0_hier2_cp0_cs4_ls0 pass err_rows [0, 0, 0]"
+   },
+   "bench_crywe_ng256_m1": {
+    "expect": "fail",
+    "rc": 1,
+    "ok": true,
+    "track": "post_closure_source_bound",
+    "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/crywe_ng256_m1/o/run_ng256_dpi_m1_a0_hier2_cp0_cs4_ls0.json",
+    "tail": "RUN ng256_dpi_m1_a0_hier2_cp0_cs4_ls0 fail err_rows [1770, 1770, 1770]"
+   }
+  }
+ }
 }
