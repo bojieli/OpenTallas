@@ -47,7 +47,7 @@ module ot_hgi_hc_win_ctl #(
     wire send=wv&&(credit||MUT==3);
     ot_hdc_v41x_weight_window #(.WB(W*32),.SB(256),.WORDS(WORDS),.AW(AW),.HAW(HAW),.NPC(1),.LENW(3),
         .BURST_MAX(4),.RTW(RTW),.MACRO(MACRO)) u_w(
-        .clk(clk),.rst_n(rn[0]),.start(start_qq&&n_qq!=0),.release_window(rel_qq),
+        .clk(clk),.rst_n(rn[0]),.start(start_qq&&n_qq!=0),.release_window(rel_qq&&n_qq!=0),
         .rom_base({AW{1'b0}}),.hbm_base(hbase),.nwords(n_qq),.ready(wrdy),
         .hq_v(wv),.hq_rdy(send),.hq_addr(wa),.hq_len(wl),.hq_tag(wt),
         .hr_v(rv_q&&tag_q[TG-1-:4]!=4'd8),.hr_rdy(),.hr_tag(tag_q[RTW-1:0]),.hr_beat(beat_q),.hr_data(256'd0),

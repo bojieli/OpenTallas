@@ -4,7 +4,7 @@ module tb_hgi_hc_win;
 `define WMUT 0
 `endif
  reg clk=0;always #1 clk=~clk;
- reg rst_n=0,start=0,rel=0,hr_v=0,re=0,hq_cr=0;
+ reg rst_n=0,start=0,rel=0,hr_v=0,re=0,hq_cr=0;reg[5:0]nwords=0;
  reg[10:0]hr_tag=0;reg[1:0]hr_beat=0;reg[255:0]hr_data=0;reg[15:0]addr=0;
  wire rv,hqv,ready,fault;wire[1023:0]rom;wire[34:0]ha;wire[2:0]hl;wire[10:0]ht;
 `ifdef HC_WIN_PARTITIONED
@@ -13,7 +13,7 @@ module tb_hgi_hc_win;
  ot_hgi_hc_win #(.MUT(`WMUT))dut(.clk(clk),
 `endif
  .rst_n(rst_n),.c_start(start),.c_rel(rel),
-  .c_base(35'd123),.c_soff(35'd77),.c_nwords(6'd32),.c_bound(16'd64),.c_limit(16'd96),
+  .c_base(35'd123),.c_soff(35'd77),.c_nwords(nwords),.c_bound(16'd64),.c_limit(16'd96),
   .hr_v(hr_v),.hr_tag(hr_tag),.hr_beat(hr_beat),.hr_data_lo(hr_data[127:0]),.hr_data_hi(hr_data[255:128]),.rom_re(re),.rom_addr(addr),
   .rom_v(rv),.rom_0(rom[127:0]),.rom_1(rom[255:128]),.rom_2(rom[383:256]),.rom_3(rom[511:384]),
   .rom_4(rom[639:512]),.rom_5(rom[767:640]),.rom_6(rom[895:768]),.rom_7(rom[1023:896]),.hq_v(hqv),.hq_addr(ha),.hq_len(hl),.hq_tag(ht),.hq_cr(hq_cr),.ready(ready),.fault(fault));
@@ -39,7 +39,11 @@ module tb_hgi_hc_win;
  end
  initial begin
   for(word_=0;word_<32;word_=word_+1)for(beat=0;beat<4;beat=beat+1)expected[word_][beat*256+:256]=pattern(word_,beat);
-  repeat(4)@(negedge clk);rst_n=1;repeat(6)@(negedge clk);start=1;@(negedge clk);start=0;
+  repeat(4)@(negedge clk);rst_n=1;repeat(6)@(negedge clk);
+  // Small rows leave striped windows empty. Releasing those windows is a no-op.
+  rel=1;@(negedge clk);rel=0;repeat(8)@(negedge clk);
+  if(fault||hqv)begin errors++;$display("ERR empty window release");end
+  nwords=32;repeat(4)@(negedge clk);start=1;@(negedge clk);start=0;
   t=0;while(req<32&&t<2000)begin @(posedge clk);t=t+1;end
   if(req!=32)$fatal(1,"request timeout %0d",req);
   // Response order is reverse row and reverse beat, independent of request order.
