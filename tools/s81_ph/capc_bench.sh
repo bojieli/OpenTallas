@@ -18,18 +18,21 @@ sed -e 's/module dsfd_sp_capture_c /module capc_ref /; s/dsfd_sp_capture #/capc_
   rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c.sv > $G/capc_ref.sv
 grep -q 'module capc_ref_core ' $G/capc_ref_core.sv && grep -q 'module capc_ref ' $G/capc_ref.sv && grep -q 'capc_ref_core #' $G/capc_ref.sv \
   || { echo "CAPC_BENCH FAIL rename"; exit 1; }
+cp rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv $G/rly.sv
 cat > $G/capc_shim.sv <<'S'
 `timescale 1ns/1ps
 module dsfd_sp_capture (input wire [0:0] ck, input wire [0:0] rst, input wire [0:0] ckv, input wire [0:0] rsv,
     input wire [6946:0] f_gather, output wire [13375:0] t_vm);
     wire [13375:0] rv; wire [11:0] rc, dc;
     capc_ref u_ref (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_gather(f_gather), .t_vm(rv), .t_cd(rc));
-    dsfd_sp_capture_c u_dut (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_gather(f_gather), .t_vm(t_vm), .t_cd(dc));
-    integer mm = 0, tg = 0, nw = 0; reg tq = 1'b0; reg live = 1'b0;
+    // the cluster: one clock entry per child (all the same clock here), t_cd one serial cycle after the reference
+    dsfd_sp_capture_c u_dut (.ck_g({8{ck[0]}}), .ck_x({8{ck[0]}}), .ck_c(ck[0]), .ck_s({9{ck[0]}}), .rst(rst),
+        .ckv_x({8{ckv[0]}}), .ckv_d({2{ckv[0]}}), .rsv(rsv), .f_gather(f_gather), .t_vm(t_vm), .t_cd(dc));
+    integer mm = 0, tg = 0, nw = 0; reg tq = 1'b0; reg [1:0] live = 2'b00; reg [11:0] rc_q = 12'd0;
     always @(posedge ckv[0]) if (rsv[0]) begin
-        live <= 1'b1;
-        if (live) begin
-            if (rv !== t_vm || rc !== dc) begin mm = mm + 1; if (mm < 5) $display("CAPC_EQ MISMATCH t=%0t cd %h/%h", $time, rc, dc); end
+        live <= {live[0], 1'b1}; rc_q <= rc;
+        if (live[1]) begin
+            if (rv !== t_vm || rc_q !== dc) begin mm = mm + 1; if (mm < 5) $display("CAPC_EQ MISMATCH t=%0t vm_eq %b cd %h/%h", $time, rv === t_vm, rc_q, dc); end
             if (dc[11] !== tq) begin tg = tg + 1; tq <= dc[11]; end
             if (|t_vm[13311:0]) nw = nw + 1;
         end
@@ -37,14 +40,15 @@ module dsfd_sp_capture (input wire [0:0] ck, input wire [0:0] rst, input wire [0
     final $display("CAPC_EQ mismatches=%0d tcd_toggles=%0d vm_active_cycles=%0d %s", mm, tg, nw, (mm == 0 && nw > 0) ? "EQ_PASS" : "EQ_FAIL");
 endmodule
 S
-timeout 5400 verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN \
+verilator --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN \
   --top-module tb_s81ph_gather_capture $d -Mdir $OUT/obj_$TAG -o sim \
   rtl/v41rom/ot_v41_ret.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/gpu/ot_fp32_add_rne_deep.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv \
   rtl/dsrom_sys/rd64_capture/ot_dsrom_rd64_vm_capture.sv rtl/dsrom_sys/rd64_capture/ot_dsrom_s81_phase_capture_profile.sv \
   rtl/common/ot_ratio_cdc_fifo.sv rtl/dsrom_sys/s81_ph/ot_s81ph_ret_root_p.sv rtl/dsrom_sys/s81_ph/ot_s81ph_root_blk.sv \
   rtl/dsrom_sys/s81_ph/ot_s81ph_root_tile.sv rtl/dsrom_sys/s81_ph/ot_s81ph_gather.sv \
   rtl/dsrom_sys/s81_ph/ot_s81ph_cap_p.sv rtl/dsrom_sys/s81_ph/ot_s81ph_capture.sv rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv \
-  rtl/dsrom_sys/s81_ph/dsfd_sp_gather.sv $G/capc_ref_core.sv $G/capc_ref.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv $G/capc_shim.sv \
+  rtl/dsrom_sys/s81_ph/dsfd_sp_gather.sv $G/capc_ref_core.sv $G/capc_ref.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv $G/rly.sv \
+  rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv $G/capc_shim.sv \
   rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_capture.sv > $OUT/build_$TAG.log 2>&1 || { tail -5 $OUT/build_$TAG.log; echo "CAPC_BENCH FAIL build"; exit 1; }
 for c in $CASES; do $OUT/obj_$TAG/sim +UNORD +STIM=$OUT/stim_$c.txt > $OUT/run_${TAG}_$c.log 2>&1 & done
 wait
