@@ -3215,6 +3215,11 @@ def build_r25gq_net(variant):
                 while eseg(by[cur[0]], by[ch[0]]) > 400.0:
                     if n_ >= 150:
                         tcap_rec['edges_capped'] += 1
+                        if len(tcap_rec.setdefault('capped', [])) < 200:     # v14 diag: where the chains thrash
+                            p0_, c0_ = by[par[0]], by[ch[0]]
+                            tcap_rec['capped'].append(dict(dom=d_, par=[round(p0_.x), round(p0_.y)],
+                                                           ch=[round(c0_.x), round(c0_.y)], stalls=nst_,
+                                                           last=[round(by[cur[0]].x), round(by[cur[0]].y)]))
                         break
                     G.inst.setdefault(cur[0], by[cur[0]])
                     pq_ = troute(cur[0], ch[0])
@@ -3655,6 +3660,8 @@ def build_r25gq_net(variant):
     m = _model()
     if phys_rec is not None:
         m['phys_relays'] = phys_rec
+        if os.environ.get('OT_HBMDIE_PHYS_REC'):        # diagnostic dump: tree / relay records of this build
+            Path(os.environ['OT_HBMDIE_PHYS_REC']).write_text(json.dumps(phys_rec, indent=1, default=str) + '\n')
     if V.get('child_slots'):
         m['child_slots'] = child_slots_check(V['child_slots'], insts)
     if V.get('vm8_union'):

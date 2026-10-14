@@ -1,0 +1,157 @@
+{
+ "schema": "opentallas.hbm_die_area.v14",
+ "die_mm2": 856.949,
+ "blocks_mm2": 467.876,
+ "waypoints_mm2": 49.606,
+ "free_mm2_100um_grid": 335.15,
+ "by_kind": {
+  "attn_tile": 111.13,
+  "host_slab": 10.0,
+  "hub": 140.341,
+  "link": 5.495,
+  "phy": 40.025,
+  "serdes_slab": 18.009,
+  "sm": 116.41,
+  "spine": 9.464,
+  "svc": 17.001,
+  "waypoint": 49.606
+ },
+ "coll_vm": {
+  "hfd_vm_sw": 0.6999,
+  "hfd_vm_se": 0.6999,
+  "hfd_vm_nw": 0.6999,
+  "hfd_vm_ne": 0.6999,
+  "hfd_coll_q3": 6.1081,
+  "hfd_coll_q2": 2.4634,
+  "hfd_ckgen": 0.0467
+ },
+ "v14_new": [
+  {
+   "element": "quadrant COLL SW (hfd_coll_q3: engine band + 3 hcoll ports + 32-tile TKM)",
+   "n": 1,
+   "mm2": 6.1081
+  },
+  {
+   "element": "quadrant COLL SE / NW / NE (hfd_coll_q2: engine + 2 hcoll ports)",
+   "n": 3,
+   "mm2": 2.4634
+  },
+  {
+   "element": "die clock root (hfd_ckgen)",
+   "n": 1,
+   "mm2": 0.0467
+  },
+  {
+   "element": "freed: central hfd_coll 1,399.68 x 1,561.68 + hb_tkm slot 2,255.04 x 1,844.64",
+   "n": 0,
+   "mm2": -6.3456
+  }
+ ],
+ "rows": [
+  {
+   "element": "IDX scorer (hfd_idx_score_native_grid)",
+   "n": 4,
+   "slot_um": [
+    2000.16,
+    2646.0
+   ],
+   "slot_mm2": 5.2924,
+   "real_mm2": 9.5423,
+   "real_basis": "leaf lower bound 9.1729 + actual SRAM macros (36.692 + 1.477 = 38.169 mm2 / 4); glue, halos, PG, pin channels NOT included",
+   "source": "codex-hbm-die-feasibility-1014 idx_cut_source_screen.json (be5859b3d), census 6bef69dff",
+   "ratio": 1.803,
+   "replan": "corner band (bottom edge kept): W x 11,175, E x 17,981.6; 2,965 x 4,374 = 12.969 mm2 (leaf+macro density 73.6 %); no die growth, uses the free band between the SM group, the serdes slab and the lk_ep row",
+   "new_slot_um": [
+    2965.0,
+    4374.0
+   ],
+   "new_slot_mm2": 12.969,
+   "fit": "AREA OK at 73.6 % leaf density; glue / partition unproven (owner: native IDX)",
+   "v14": "four corner bands kept (default): 2,965 x 4,374 each, leaf + macro density 73.6 %",
+   "fit_v14": "AREA OK at 73.6 % leaf density; glue / partition unproven (owner: native IDX)"
+  },
+  {
+   "element": "SFU quarter (hfd_sfu)",
+   "n": 4,
+   "slot_um": [
+    2016.144,
+    1095.12
+   ],
+   "slot_mm2": 2.2079,
+   "real_mm2": 1.668799,
+   "real_basis": "full leaf + cache vs USABLE 1.453075 mm2 of the slot (ring corridor / control row reservations)",
+   "source": "codex-hbm-die-feasibility-1014 sfu_full_geometry_prototype.json (2065b2bc2/0a52f59fd), retained controller 528a4990f",
+   "ratio": 1.1485,
+   "replan": "slot unchanged (2,016.144 x 1,095.12 = 2.2079 mm2): +108 um growth collides with hb_hc_eng 100-um clearance (generator assert); corridor repair instead: the internal ring corridor must shrink 0.755 -> <= 0.539 mm2 (usable 1.4531 -> >= 1.6688) or leave the slot",
+   "new_slot_um": [
+    2016.144,
+    1095.12
+   ],
+   "new_slot_mm2": 2.2079,
+   "fit": "FITS ONLY WITH the corridor repair (owner: SFU); 1,022-bit dynamic broadcast tree has no registered distribution",
+   "v14": "slot grows +216 um into the equator band hb_hc_eng left (v14 hc_eng in the N spine band): 2,016.144 x 1,311.12 = 2.6434 mm2, usable 1.4531 + 0.4355 = 1.8886 >= real 1.6688 (13 % margin); the corridor repair stays an optional SFU-owner improvement",
+   "fit_v14": "FITS (slot change, SFU owner re-pins against the assigned file)"
+  },
+  {
+   "element": "FrontC (SM front cluster C, inside hfd_sm)",
+   "n": 32,
+   "slot_um": [
+    915.84,
+    1105.92
+   ],
+   "slot_mm2": 1.01283,
+   "real_mm2": 1.16409,
+   "real_basis": "nine exact bound child LEFs, lattice pack 976.32 x 1,192.32 (zero overlaps)",
+   "source": "codex-hbm-die-feasibility-1014 frontc_geometry_binding_audit.json (46e60b056/94ecbbbc0)",
+   "ratio": 1.1494,
+   "replan": "belongs to the SM parent: no die-level slot; the SM parent compaction (below) must allot 976.32 x 1,192.32",
+   "new_slot_um": null,
+   "new_slot_mm2": null,
+   "fit": "OPEN: SM parent re-pack (owner: SM compaction)",
+   "v14": "unchanged",
+   "fit_v14": "OPEN: SM parent re-pack (owner: SM compaction)"
+  },
+  {
+   "element": "HC scalar leaves (inside hfd_hc SYS reservations)",
+   "n": 4,
+   "slot_um": [
+    1356.48,
+    756.0
+   ],
+   "slot_mm2": 1.0255,
+   "real_mm2": 0.57975,
+   "real_basis": "160 source-exact scalar leaves (32 ctl + 128 sectors) envelope 1,231.2 x 470.88 per quarter; zero overlap with 5,773 children / corridors",
+   "source": "codex-hbm-die-feasibility-1014 geometry_source_report.json hc_summary (fefde5406/245bd8b44)",
+   "ratio": 0.5653,
+   "replan": "no change: fits the existing reservation; hfd_hc slot 2,263.68 x 1,499.04 stays",
+   "new_slot_um": [
+    1356.48,
+    756.0
+   ],
+   "new_slot_mm2": 1.0255,
+   "fit": "GEOMETRY FIT; 660 residual roots + retained bank control have no outline yet (owner: HC)",
+   "v14": "unchanged",
+   "fit_v14": "GEOMETRY FIT; 660 residual roots + retained bank control have no outline yet (owner: HC)"
+  },
+  {
+   "element": "SM (hfd_sm)",
+   "n": 32,
+   "slot_um": [
+    3214.08,
+    1131.84
+   ],
+   "slot_mm2": 3.63782,
+   "real_mm2": 7.238,
+   "real_basis": "closed leaves only 231.616 mm2 / 32 (no channels); interim view bound in the die STA 2,202.79 x 2,072.81 = 4.566 mm2 does not fit the slot (H 2,072.8 > 1,131.8); native frames 15.69 mm2 / SM",
+   "source": "claude/hbm-native-die-1013 563b0dc18 SM_fit_inventory.json; STA case views.lef",
+   "ratio": 1.99,
+   "replan": "NOT re-planned here: +115 mm2 of leaves; die free area 374.7 mm2 (43.7 %) can hold it only with the compacted SMH parent (630.72 x 1,080, 12 closed children, e4f71db68) re-packed per SM; needs the SM owner's native frame",
+   "new_slot_um": null,
+   "new_slot_mm2": null,
+   "fit": "BLOCKER: SM is the die area binding element; top STA class (view_pin_off_plan, -13.57 ns) is this mismatch",
+   "v14": "UNCHANGED BLOCKER: 32 x 7.238 = 231.6 mm2 of closed SM leaves (no channels) vs 32 x 3.638 = 116.4 mm2 of slots; the SM.MATVEC redesign (XP tiles eng_de 112.32 sq + aq / bfm / buf / 4 rd_ln / rdc / sps / xwm = 0.127 mm2 a quadrant set) does not change it; SM rows are 1,131.84 tall with 1,209 / 562 um channels between rows, so a 2x SM needs the SM owner's compacted native frame (FrontC alone 976.32 x 1,192.32 > the 1,131.84 slot height)",
+   "fit_v14": "BLOCKER (owner: SM compaction / VM-SM 2240)"
+  }
+ ],
+ "model": "EPYC1 /srv/opentallas-scratch/claude/hbmdie-v13/win15/r25gqn_v14_c6.pkl"
+}
