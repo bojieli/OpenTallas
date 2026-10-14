@@ -28,6 +28,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_hgi_b2_dma_q;
     parameter integer MUT_B2 = 0;
+    parameter integer FLAT = 0;
+    parameter integer MUT_SEAM = 0;
     parameter integer NREC = 40;                        // random records per qid
     parameter integer SEED = 20261013;
     parameter integer LAT = 12;                         // HBM lane request -> first beat (cycles)
@@ -52,7 +54,8 @@ module tb_hgi_b2_dma_q;
     wire [255:0] r_req_wdata; wire [31:0] r_req_wstrb;
     wire [337:0] vmq; reg [273:0] vmr = 0; wire [512:0] vr2q; reg [8256:0] vr2r = '0;
     wire [32*280-1:0] wl; reg [31:0] wl_done = 0;
-    ot_hgi_b2_dma_q #(.MUT_B2(MUT_B2)) dut (.clk(clk), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
+    generate if (FLAT != 0) begin : g_flat
+    ot_hgi_b2_dma_q_flat #(.MUT_B2(MUT_B2)) dut (.clk(clk), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data),
@@ -60,7 +63,33 @@ module tb_hgi_b2_dma_q;
         .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we),
         .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data),
         .vmq(vmq), .vmr(vmr), .vr2q(vr2q), .vr2r(vr2r), .wl(wl), .wl_done(wl_done));
+    end else begin : g_partition
+    wire [279:0] q5_wl; wire [4:0] q5_bank;
+    reg [32*280-1:0] vm_wl;
+    // VM-side adapter, deliberately OUTSIDE the tile: expand one pin lane into its bank.
+    always @* begin vm_wl = '0; if (q5_wl[279]) vm_wl[q5_bank*280 +: 280] = q5_wl; end
+    assign wl = vm_wl;
+    ot_hgi_b2_dma_q #(.MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
+        .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
+        .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
+        .k_rsp_data(k_rsp_data),
+        .r_req_v(r_req_v), .r_req_rdy(r_req_rdy), .r_req_addr(r_req_addr), .r_req_len(r_req_len), .r_req_tag(r_req_tag),
+        .r_req_we(r_req_we), .r_req_wdata(r_req_wdata), .r_req_wstrb(r_req_wstrb), .r_rsp_v(r_rsp_v), .r_rsp_we(r_rsp_we),
+        .r_rsp_rdy(r_rsp_rdy), .r_rsp_tag(r_rsp_tag), .r_rsp_last(r_rsp_last), .r_rsp_data(r_rsp_data),
+        .vmq(vmq), .vmr(vmr), .vr2q(vr2q), .vr2r(vr2r), .wl(q5_wl), .wl_bank(q5_bank), .wl_done(|wl_done));
+    end endgenerate
     wire rec_rdy = dma_ret[0], rec_done = dma_ret[1], rec_fault = dma_ret[2];
+    bit trace_on; initial trace_on = $test$plusargs("DMA_Q5_TRACE");
+    always @(posedge clk) if (rst_n && trace_on) begin
+       if (dma_rec[0] && dma_ret[0]) $display("Q5TRACE %0d REC %h", n_rst, dma_rec);
+       if (k_req_v && k_req_rdy) $display("Q5TRACE %0d K %b %h %h %h", n_rst, k_req_we, k_req_addr, k_req_wdata & {256{k_req_we}}, k_req_wstrb & {32{k_req_we}});
+       if (r_req_v && r_req_rdy) $display("Q5TRACE %0d R %b %h %h %h %h", n_rst, r_req_we, r_req_addr, r_req_len, r_req_wdata & {256{r_req_we}}, r_req_wstrb & {32{r_req_we}});
+       if (vmq[337]) $display("Q5TRACE %0d VM %h", n_rst, vmq);
+       for (integer b = 0; b < 32; b = b + 1) begin
+          if (vr2q[b*16+15]) $display("Q5TRACE %0d G%0d %h", n_rst, b, vr2q[b*16 +: 15]);
+          if (wl[b*280+279]) $display("Q5TRACE %0d W%0d %h", n_rst, b, wl[b*280 +: 280]);
+       end
+    end
     // ---- the bench memories (sparse) and the reference expectation of the running record(s)
     function automatic [7:0] hb(input longint a);              // an unwritten HBM byte
         longint x;
@@ -80,7 +109,10 @@ module tb_hgi_b2_dma_q;
     integer bp = 0;                                             // back-pressure: 0 none, 1 light, 2 heavy
     integer n_rreq = 0, n_kreq = 0, n_vpk = 0, n_g = 0, n_wl = 0;
     bit quiet = 1;                                              // no record outstanding: any request is an error
-    function automatic bit hold; hold = (bp == 1) ? (rnd(4) == 0) : (bp == 2) ? (rnd(4) != 0) : 1'b0; endfunction
+    integer bp_seed = SEED ^ 32'h7a1bfc03;
+    function automatic bit hold;
+       integer br; begin br = int'($unsigned($random(bp_seed)) % 4); hold = bp == 1 ? br == 0 : bp == 2 ? br != 0 : 0; end
+    endfunction
     task automatic vm_write(input integer a, input [31:0] d, input string via);
         begin
             if (!exp_vw.exists(a)) bad($sformatf("%s: stray VM write word %0d data %h", via, a, d));
