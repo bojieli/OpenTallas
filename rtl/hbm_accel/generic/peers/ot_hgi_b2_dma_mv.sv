@@ -310,7 +310,12 @@ module ot_hgi_b2_dma_mv #(
     assign s_krr = ser_k_rsp_rdy;
     assign ser_k_rsp_we = kr_we;
     assign ser_k_rsp_data = kr_d;
-    assign ser_k_fault = (k_fault && sel_s) || b2_kx;
+    // Register the fault seam at the MV face; external fault never crosses the tile combinationally.
+    reg ser_k_fault_q;
+    always @(posedge clk or negedge rn)
+        if (!rn) ser_k_fault_q <= 1'b0;
+        else ser_k_fault_q <= (k_fault && sel_s) || b2_kx;
+    assign ser_k_fault = ser_k_fault_q;
     assign pin_s_vmq = ser_vmq;
     assign ser_vmr = sel_s ? vr_q : 274'd0;
     reg fence_pending;
@@ -1112,7 +1117,10 @@ module ot_hgi_b2_dma_mv #(
         integer t; begin mk = 256'd0; for (t = 0; t < 32; t = t + 1) if (s[t]) mk[8*t +: 8] = 8'hFF; end
     endfunction
     // ---- port muxing with the serial engine (it drives the ports while it owns them)
-    assign ko_ld = !ko_v || k_req_rdy;
+    // The output slot refills only while empty. Raw receiver ready reaches the valid flop only,
+    // never the serial FIFO payload mux (failed route: k_req_rdy -> out_data, -584 ps).
+    // A consumed request creates one refill edge; serial throughput is measured in the exact gate.
+    assign ko_ld = !ko_v;
     assign b2_kx = B2 != 0 && sel_s && s_kv && s_ka[36:35] != 2'(QID);
     // hgi-1010/c: the lane request leaves an OUTPUT REGISTER (route bf6565982: sel_s / kq_h -> k_req_wdata / k_req_addr
     // through the engine mux to the pins, -352 ps): the register loads the selected engine's request whenever it is
@@ -1120,6 +1128,7 @@ module ot_hgi_b2_dma_mv #(
     reg ko_v, ko_we; reg [36:0] ko_a; reg [255:0] ko_d; reg [31:0] ko_s;
     always @(posedge clk or negedge rn)
         if (!rn) ko_v <= 1'b0;
+        else if (ko_v && k_req_rdy) ko_v <= 1'b0;
         else if (ko_ld) begin
             ko_v <= sel_s ? s_kv && !b2_kx : f_kv;                      // B2: an off-stack request is never issued
             ko_we <= sel_s ? s_kwe : f_kwe; ko_a <= (sel_s ? s_ka : f_ka) + (37'(qid_q) << 35);
