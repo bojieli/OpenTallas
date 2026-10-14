@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  34.56,
-  32.4
+  60.48,
+  60.48
  ],
  "core": [
   2.16,
   2.16,
-  32.400000000000006,
-  30.24
+  58.31999999999999,
+  58.31999999999999
  ],
  "why": "spec outline",
- "std_area_um2": 450,
+ "std_area_um2": 296,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -55,7 +55,14 @@
  },
  "clock_port": "clk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 9% outside 45%-60% (std 296 + macro 0 in core 3154 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv",
