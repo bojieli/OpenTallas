@@ -3766,6 +3766,258 @@
       "default_off_protocol_candidate": true
     },
     {
+      "master": "qkd_host_native_token_endpoint",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_native_token_endpoint.sv",
+      "source_revision": "e09da4a22",
+      "source_sha256": "a97cc4703d95ed3661b3d8abe9fde113c5e47cb1db12c3156eb4bc1ae66d02f8",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "por_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "hc",
+          "direction": "input",
+          "width": 182,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "legacy_tk",
+          "direction": "input",
+          "width": 93,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "shared_epoch_valid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "shared_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "request_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "request_tag",
+          "direction": "output",
+          "width": 59,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "request_trace",
+          "direction": "output",
+          "width": 32,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "request_gen",
+          "direction": "output",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "request_token",
+          "direction": "output",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "request_pos",
+          "direction": "output",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "request_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "native_pr",
+          "direction": "output",
+          "width": 143,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "result_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_tag",
+          "direction": "input",
+          "width": 59,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_gen",
+          "direction": "input",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_done",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_fault",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_cause",
+          "direction": "input",
+          "width": 4,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_token",
+          "direction": "input",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_value",
+          "direction": "input",
+          "width": 32,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_cycles",
+          "direction": "input",
+          "width": 32,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "result_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "kv_drained",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "vm_drained",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "collective_drained",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "host_drained",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "collective_busy",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "kv_flush",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_tk",
+          "direction": "output",
+          "width": 93,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "protocol_fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "flop_bits": 923,
+      "clock_entries": [
+        "ck"
+      ],
+      "instances_per_die": 0,
+      "candidate_instances_per_die": 1,
+      "outline_status": "PENDING_MAPPED_AREA_PIN_CAPACITY",
+      "physical_qualified": false,
+      "default_off_protocol_candidate": true,
+      "params": {
+        "ENABLE_NATIVE": 0
+      },
+      "identity": "sole shared allocator epoch16; full TAG59; service epoch separate"
+    },
+    {
       "master": "qfd_xf_ch546",
       "source": "rtl/physical/ot_qwen_die_cdc_ch.sv",
       "params": {
@@ -20135,6 +20387,42 @@
       "source": "host.tx_class.ing_cr",
       "destination": "host.QM_DONE_CDC.o_cr",
       "bits": 1,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.CTRL.genuine_hc",
+      "destination": "host.NATIVE.hc",
+      "bits": 182,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.CTRL.token_epoch_valid/epoch",
+      "destination": "host.NATIVE.shared_epoch_valid/epoch",
+      "bits": 17,
+      "clock_family": "CORE833_TOKEN_VARIANT_PENDING"
+    },
+    {
+      "source": "host.NATIVE.request_v/tag/gen",
+      "destination": "native_dispatch.request_v/tag/gen",
+      "bits": 62,
+      "clock_family": "CORE833_REGISTERED_PEER_CLOCK_BINDING_REQUIRED"
+    },
+    {
+      "source": "native_dispatch.result_v/tag/gen/done/fault/cause/token/value/cycles",
+      "destination": "host.NATIVE.result",
+      "bits": 150,
+      "clock_family": "CORE833_REGISTERED_PEER_CLOCK_BINDING_REQUIRED"
+    },
+    {
+      "source": "native_dispatch.actual_KV_VM_collective_HOST_drains",
+      "destination": "host.NATIVE.drains",
+      "bits": 4,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.NATIVE.local_tk",
+      "destination": "host.SERVICE_GUARD.local_tk",
+      "bits": 93,
       "clock_family": "CORE833"
     }
   ],
