@@ -64,13 +64,14 @@
    "size": 12,
    "diameter_um": 20
   },
+  "pin_min_tracks": 1,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Codex:qdq-write-completion-split",
   "branch": "codex-qdq-write-completion-split",
-  "tag": "p5",
+  "tag": "p6",
   "views_to": "physical/ref_tile/qdq_wr_pay_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_wr_pay_ref",
   "purpose": "Registered-empty-bypass PAY candidate EMPTY_BYPASS1. Dedicated45056word gate forces1148SRAMwrites/readbacks and256actualbypasses; pending/native184 target with capturedACKFIN, exactsource fullnative required beforeadoption.",
@@ -130,7 +131,7 @@
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
  "recipe": 2,
- "structural_change": "Kept explicit WWQ launch registers via ot_keep_regs; separate sameedge WGREQ outputcapture/resetregion fromprivate f_act and moveN WGREQ toNW4.32..16.2 nexttoW i_act; fixes realQ307.6 outdefect withoutedge. One-track pin placement fixes p4 PPL0086 32-bit unassigned group. Real protectedemptybypass1 recoverscapturedACK latency; physicalpins and fullnative exact required.",
+ "structural_change": "Kept explicit WWQ launch registers via ot_keep_regs; separate sameedge WGREQ outputcapture/resetregion fromprivate f_act and moveN WGREQ toNW4.32..16.2 nexttoW i_act; fixes realQ307.6 outdefect withoutedge. One-track pin placement fixes p4 PPL0086 32-bit unassigned group. Real protectedemptybypass1 recoverscapturedACK latency; physicalpins and fullnative exact required. Correct actual route.pin_min_tracks=1 (top-level key didnotcontrol p5 kit); named internal kept outputFF banks preserve resolved portheader and explicit launch identity.",
  "clock": "spine",
  "params": {
   "EMPTY_BYPASS": 1
@@ -138,7 +139,6 @@
  "reroute_reason": {
   "kind": "rtl_change"
  },
- "pin_min_tracks": 1,
  "children": [],
  "inter": [],
  "inhold": true,

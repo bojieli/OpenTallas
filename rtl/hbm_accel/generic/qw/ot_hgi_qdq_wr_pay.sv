@@ -16,9 +16,9 @@ module ot_hgi_qdq_wr_pay #(
     input  wire              qfault,
     input  wire              dfault,
     input  wire [511:0]      y,
-    (* keep="true",dont_touch="true" *) output reg [8*280-1:0] wwq,
+    output wire [8*280-1:0] wwq,
     input  wire [7:0]        wwq_cr,
-    (* keep="true",dont_touch="true" *) output reg wg_req,
+    output wire wg_req,
     input  wire              wg_gnt,
     input  wire              i_act,
     output reg               o_wf,
@@ -27,6 +27,10 @@ module ot_hgi_qdq_wr_pay #(
     output reg               o_bad,
     output reg               o_idle
 );
+    (* keep="true",dont_touch="true" *) reg [8*280-1:0] wwq_q;
+    (* keep="true",dont_touch="true" *) reg wg_req_q;
+    assign wwq=wwq_q;
+    assign wg_req=wg_req_q;
     localparam integer QW = $clog2(RQ), OW = $clog2(OD), CW = $clog2(LQ + 1);
     reg f_rst, f_wg; reg [7:0] f_wcr; reg [18:0] f_m; reg [511:0] y_f; reg qf_f;
     always @(posedge clk) begin
@@ -40,7 +44,7 @@ module ot_hgi_qdq_wr_pay #(
         else begin f_m_v <= m_v; vo_f <= vo; df_f <= dfault; f_act <= i_act; f_bi <= i_bad; end
     // Same-edge output launch copy, with a separate reset region. The original
     // f_act is the W-face input capture/private control; wg_req is its own N pin.
-    always @(posedge clk or negedge rr_n[2])if(!rr_n[2])wg_req<=0;else wg_req<=i_act;
+    always @(posedge clk or negedge rr_n[2])if(!rr_n[2])wg_req_q<=0;else wg_req_q<=i_act;
     // fired-beat queue (one entry a beat in the decode or the result FIFO)
     reg [14:0] mq_o [0:OD-1]; reg [2:0] mq_n [0:OD-1]; reg mq_z [0:OD-1];
     reg [OW-1:0] mq_t, mq_h; reg [OW:0] infl;         // infl: fired beats not yet out of the decode
@@ -115,11 +119,11 @@ module ot_hgi_qdq_wr_pay #(
     end
     always @(posedge clk or negedge rr_n[2]) begin
         if (!rr_n[2]) begin
-            for (integer b = 0; b < 8; b = b + 1) begin wwq[b*280 + 279] <= 1'b0; wcr[b] <= LQ[CW-1:0]; wcnt[b] <= 0; end
+            for (integer b = 0; b < 8; b = b + 1) begin wwq_q[b*280 + 279] <= 1'b0; wcr[b] <= LQ[CW-1:0]; wcnt[b] <= 0; end
         end else begin
             for (integer b = 0; b < 8; b = b + 1) begin : lanes
                 reg wr; wr = w_fire && w_hit[b];
-                wwq[b*280 + 279] <= wr;
+                wwq_q[b*280 + 279] <= wr;
                 wcr[b] <= wcr[b] + CW'(f_wcr[b]) - CW'(wr);
                 wcnt[b] <= wcnt[b] + 8'(wr);
             end
@@ -137,7 +141,7 @@ module ot_hgi_qdq_wr_pay #(
                 c = ({128{s == 2'd0}} & result_head[127:0]) | ({128{s == 2'd1}} & result_head[255:128]) |
                     ({128{s == 2'd2}} & result_head[383:256]) | ({128{s == 2'd3}} & result_head[511:384]);
                 for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};
-                wwq[b*280 +: 279] <= {15'(w_sec0 + 15'(s)), d, 8'hff};
+                wwq_q[b*280 +: 279] <= {15'(w_sec0 + 15'(s)), d, 8'hff};
             end
         end
     end
