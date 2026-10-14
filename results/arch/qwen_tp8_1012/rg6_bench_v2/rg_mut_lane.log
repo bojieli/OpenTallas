@@ -1,0 +1,7 @@
+region lane mismatch segment 0 lane vm_g7_b6_xf1>p0
+region lane mismatch segment 0 lane vm_g7_b6_xf1>p0
+region lane mismatch segment 0 lane vm_g7_b6_xf1>p0
+FAIL qfd_vm_rg6 LEAF_MUT=0 ROW_MUT=0 SU_MUT=0 errors=6102 of 6166 (xo 0 ro 0 so 0 ovf 0)
+[61666000] %Fatal: tb_qfd_vm_rg6.sv:3422: Assertion failed in tb_qfd_vm_rg6: FAIL
+%Error: rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv:3422: Verilog $stop
+Aborting...

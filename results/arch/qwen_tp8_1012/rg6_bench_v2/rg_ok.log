@@ -1,0 +1,6 @@
+PASS qfd_vm_rg6 DEPTH=174 LAW=8 DEPTHS=695 LAWS=10 SEED=1 OVFMODE=0 exact 6166 checks: pushes=1913 pops=1907 row_reads=2096 su_answers=1855 stalls=1508 pop_garbage=756 deep=502 xo_chg=1878 ro_chg=1927 so_chg=1716 nonzero_words=1163552 ovf_cycles=147
+region lanes segments=1091 stage_bits=42024 checks=6675829 nonzero=6173334
+- rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv:3428: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 62us; walltime 2.399 s; speed 25.703 us/s
+- Verilator: cpu 2.399 s on 1 threads; allocated 10 MB

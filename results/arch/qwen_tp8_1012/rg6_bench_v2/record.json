@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.qwen.vm-region-bench.v1",
+  "source_commit": "fd5b37ace",
+  "shape": {
+    "region": 6,
+    "core_leaves": 72,
+    "lane_tiles": 77,
+    "segments": 1091,
+    "lane_stage_bits": 42024,
+    "DEPTH": 174,
+    "LAW": 8,
+    "DEPTHS": 695,
+    "LAWS": 10
+  },
+  "runs": [
+    {
+      "name": "rg_ok",
+      "verdict": "PASS",
+      "log": "results/arch/qwen_tp8_1012/rg6_bench_v2/rg_ok.log",
+      "sha256": "8c92c9ce92a1e9867bb2f90c656a61878c0873870283239e5abc185a417181c6",
+      "expected": "PASS",
+      "mutant_cause": null
+    },
+    {
+      "name": "rg_mut_lane",
+      "verdict": "FAIL",
+      "log": "results/arch/qwen_tp8_1012/rg6_bench_v2/rg_mut_lane.log",
+      "sha256": "6c28a7a6dc781f6044d0c4f73ca00022e18a7a55c2ad3338f0b6830e26666b8c",
+      "expected": "FAIL",
+      "mutant_cause": "first complete lane path bypassed"
+    },
+    {
+      "name": "rg_mut_core",
+      "verdict": "FAIL",
+      "log": "results/arch/qwen_tp8_1012/rg6_bench_v2/rg_mut_core.log",
+      "sha256": "3ae8c695a252d55c7047c79bfd18a6126232ee76dabe4cfd7aaa9be5dd2fb2a1",
+      "expected": "FAIL",
+      "mutant_cause": "rr4 bank select shifted"
+    }
+  ],
+  "source_sha256": {
+    "rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv": "dee1236b5465aac0a6fd29d925cb60ee82b02d6f37ec118b2e3f7665968bda17",
+    "rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv": "3d1292ddf4717a4618d2428b8f5d0352db27a3a10bbeac08fa2860b482a49630",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "31ec2d3d9b5d33780357698bbbedf66fbd36b3e8d572657c10dd9dcc2f32cea3"
+  },
+  "core_checks": 6166,
+  "lane_checks": 6675829,
+  "lane_nonzero": 6173334,
+  "mutation_errors": {
+    "lane": 6102,
+    "core": 2846
+  },
+  "verdict": "PASS",
+  "structural_change": "per-consumer core words/control and bay me entry pins; clocks nearest face; central b6 input relay S92.88um, exact same cycles"
+}

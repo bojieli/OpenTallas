@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.qwen.vm-region-boundary-fix.v1",
+  "master": "qfd_vm_rg6",
+  "source_commit": "fd5b37ace",
+  "changes": {
+    "vm_g6_b6_in": {
+      "old_local_um": [
+        518.4,
+        481.68
+      ],
+      "new_local_um": [
+        518.4,
+        388.8
+      ],
+      "shift_s_um": 92.88,
+      "added_edges": 0
+    }
+  },
+  "closed_delay2_d_pin_extent_um": [
+    0,
+    7.248,
+    0.084,
+    57.864
+  ],
+  "wd_b6_S_range_um": [
+    486.16,
+    568.08
+  ],
+  "conservative_pin_to_child_um": 496.34400000000005,
+  "actual_assigned_die_pins": false,
+  "routed_pin_flop_budget_proven": false,
+  "children": 149,
+  "bbox_overlap_pairs": []
+}

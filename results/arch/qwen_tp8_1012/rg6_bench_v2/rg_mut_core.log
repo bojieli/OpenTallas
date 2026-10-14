@@ -1,0 +1,7 @@
+region_leaf mismatch cyc 105 xo 0 ro 1 so 0 ovf 0
+region_leaf mismatch cyc 126 xo 0 ro 1 so 0 ovf 0
+region_leaf mismatch cyc 139 xo 0 ro 1 so 0 ovf 0
+FAIL qfd_vm_rg6 LEAF_MUT=0 ROW_MUT=0 SU_MUT=0 errors=2846 of 6166 (xo 0 ro 2846 so 0 ovf 0)
+[61666000] %Fatal: tb_qfd_vm_rg6.sv:3422: Assertion failed in tb_qfd_vm_rg6: FAIL
+%Error: rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv:3422: Verilog $stop
+Aborting...
