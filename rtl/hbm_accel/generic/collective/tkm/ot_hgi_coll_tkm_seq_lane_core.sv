@@ -57,6 +57,11 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     output reg  [31:0]          stat_ins,       // blocks inserted
     output reg  [31:0]          stat_surv       // survivors taken
 );
+    // Internal counters / busy keep their own state; the ports are separate same-edge copies with no internal
+    // fanout so the flow can place them at their pins (measured R2: 273 reg->out paths, worst stat_surv -622 ps,
+    // were the feedback-loaded counters themselves driving the face).
+    reg [31:0] st_cyc, st_ins, st_surv; reg busy_q;
+
     localparam integer W  = 4;
     localparam integer C  = KMAX / W;
     localparam integer EW = 85;               // {region, valid, okey, ~id, ~q, ~j, nz}
@@ -297,8 +302,8 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     end
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            busy<=0;lane_live<=0;ph <= P_IDLE; fault <= 1'b0; done <= 1'b0; pack_start<=0;pack_cell_v<=0;pack_cell<=0;pack_slot<=0;pack_last<=0;
-            stat_cycles <= 32'd0; stat_ins <= 32'd0; stat_surv <= 32'd0;
+            begin busy_q <= 0; busy <= 0; end lane_live<=0;ph <= P_IDLE; fault <= 1'b0; done <= 1'b0; pack_start<=0;pack_cell_v<=0;pack_cell<=0;pack_slot<=0;pack_last<=0;
+            begin st_cyc <= 32'd0; stat_cycles <= 32'd0; end begin st_ins <= 32'd0; stat_ins <= 32'd0; end begin st_surv <= 32'd0; stat_surv <= 32'd0; end
             n_q <= 12'd1; k_q <= 13'd1; nel <= 19'd0; g_q <= 8'd1; gb_q <= 8'd0; pf_q <= 16'd1; nout_q <= 13'd1; ob_q <= 40'd0; rb_q <= 40'd0; hr_q <= 1'b0;
             tot_q <= 24'd0; cact_q <= '0; tc_q <= '0; ts_q <= 2'd0; rcv <= 24'd0; tau <= '0;
             start_p<=0;e1_v<=0;e2_v<=0;
@@ -306,7 +311,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             cnv <= '0; cap <= '0; rdn <= '0; cneed <= 13'd0; qcnt <= 4'd0; wcnt <= 4'd0; tau_t <= '0; tau_l <= '0;
         end else begin
             done <= 1'b0;pack_start<=0;pack_cell_v<=0;
-            if (busy) stat_cycles <= stat_cycles + 32'd1;
+            if (busy_q) begin st_cyc <= st_cyc + 32'd1; stat_cycles <= st_cyc + 32'd1; end
             start_p <= start;
             tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> logic paths)
             cact_q <= CB'((nout_q + 13'd3) >> 2);
@@ -332,7 +337,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             // (re-insertion: the top cell, tagged region 1 -- the id order)
             e1_v <= (ins_live && (sel_n != 3'd0)) || rd2_v;
             for (s = 0; s < 4; s = s + 1) e1[s] <= rd2_v ? rd2[EW*s +: EW] : sel_e[s];
-            if (ins_live && sel_n != 3'd0) stat_surv <= stat_surv + 32'(sel_n);
+            if (ins_live && sel_n != 3'd0) begin st_surv <= st_surv + 32'(sel_n); stat_surv <= st_surv + 32'(sel_n); end
             e2_v <= e1_v;
             for (s = 0; s < 4; s = s + 1) e2[s] <= e1[s];
             e2_ge[0] <= key2(e1[0]) >= key2(e1[1]); e2_ge[1] <= key2(e1[0]) >= key2(e1[2]); e2_ge[2] <= key2(e1[0]) >= key2(e1[3]);
@@ -348,7 +353,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
                 for (s = 0; s < 4; s = s + 1)
                     eb[EW*s +: EW] <= tform(((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
                                             ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}}));
-                if (e2_v && (ph == P_INS || ph == P_DRAIN)) stat_ins <= stat_ins + 32'd1;
+                if (e2_v && (ph == P_INS || ph == P_DRAIN)) begin st_ins <= st_ins + 32'd1; stat_ins <= st_ins + 32'd1; end
             end
             // ---- the chain controls (one-edge pulses / levels; the tiles act 2 edges later)
             ctl_clr <= 1'b0; bw_v <= 1'b0;
@@ -375,11 +380,11 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             // ---- phase control
             case (ph)
                 P_IDLE: if (start_p) begin
-                    busy<=1;
+                    begin busy_q <= 1; busy <= 1; end
                     n_q <= cfg_n_p; k_q <= cfg_k_p; nel <= 19'd0; g_q <= cfg_g_p; gb_q <= cfg_gbase_p; pf_q <= cfg_pf_p; nout_q <= cfg_nout_p;
                     ob_q <= cfg_obase_p; rb_q <= cfg_rbase_p; hr_q <= cfg_has_r_p;
                     rcv <= 24'd0; tau <= '0;
-                    stat_ins <= 32'd0; stat_surv <= 32'd0; stat_cycles <= 32'd0;
+                    begin st_ins <= 32'd0; stat_ins <= 32'd0; end begin st_surv <= 32'd0; stat_surv <= 32'd0; end begin st_cyc <= 32'd0; stat_cycles <= 32'd0; end
                     pack_start<=1;
                     ctl_clr <= 1'b1; wcnt <= 4'd0;
                     ph <= P_CLR0;
@@ -400,8 +405,8 @@ module ot_hgi_coll_tkm_seq_lane_core #(
                 P_INS2: if (13'(rdn) == cneed) ph <= P_DRAIN2;
                 P_DRAIN2: if (qcnt >= 4'd4) begin cnv <= '0; cap <= '0; ph <= P_OUT; end
                 P_OUT: if (13'(cap) == cneed && pack_empty_pin && !pack_cell_v && !pack_tail && !dconv1 && !dconv2 && !dconv3) ph <= P_FLUSH;
-                P_FLUSH: if (!w_v_pin) begin ph <= P_IDLE;busy<=0; done <= 1'b1; end
-                default:begin ph <= P_IDLE;busy<=0;lane_live<=0;end
+                P_FLUSH: if (!w_v_pin) begin ph <= P_IDLE;begin busy_q <= 0; busy <= 0; end done <= 1'b1; end
+                default:begin ph <= P_IDLE;begin busy_q <= 0; busy <= 0; end lane_live<=0;end
             endcase
         end
     end

@@ -21,8 +21,8 @@
  "clock": "cts",
  "layer_cap": "M5",
  "outline": {
-  "w": 151.2,
-  "h": 151.2
+  "w": 172.8,
+  "h": 172.8
  },
  "pins": {
   "W": [
@@ -123,7 +123,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Real old core WNS-1324ps and boundaryspread97.6ps: move2SRAMs+packer to separate roots, capture triplehead/mask/epoch and feedback pins, balanced prefix replaces serial32-slot rank. 1024xfull340buffer exact/mut and15-case integrated small PASS; independent1280full85heads and631masked IDs exact/mut. Diagnostic ownrootCTS, not source/price waiver. Actual N5475 pin_fit failure preserved; expand real outline172.8 and use four mirrors per lane/five actual staging slots with anticipatory pop admission. ActualR2IOplaced10144um2/28386=36%, but6164Npins require\u2265147.936um width; real151.2sq is21575coreum2 at47%actualstd. Explicit2bithead-windowindex behindunchanged<4guard removescross-lane variablewide shift, no logicalepoch/price change.",
+ "structural_change": "R3 151.2-square gate failed DPL-0033 and R2 172.8-square failed setup -622 ps reg->out (stat_surv) with a 23-level consume_epoch->e1 stage, 5,074/4,985-load subtract nets and a 2,686-load reset. RTL 5dbde15a7+: head-mirror select registered one-hot from next-state epochs (cycle-identical), separate same-edge port copies of the feedback counters/busy, three reset relay regions; outline back to the placeable 172.8 square.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
@@ -156,7 +156,8 @@
   ],
   "extra_paths": [
    "rtl/hbm_accel/generic/collective/tkm"
-  ]
+  ],
+  "structural_change": "R3 151.2-square gate failed DPL-0033 and R2 172.8-square failed setup -622 ps reg->out (stat_surv) with a 23-level consume_epoch->e1 stage, 5,074/4,985-load subtract nets and a 2,686-load reset. RTL 5dbde15a7+: head-mirror select registered one-hot from next-state epochs (cycle-identical), separate same-edge port copies of the feedback counters/busy, three reset relay regions; outline back to the placeable 172.8 square."
  },
  "macros": [],
  "children": [],
