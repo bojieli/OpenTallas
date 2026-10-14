@@ -1,0 +1,135 @@
+{
+  "source_commit": "7602aac02",
+  "extractor_commit": "cd377489a",
+  "input_mapping_receipt_sha256": "0433365b8b0879f1114afee9fb1738b12acf86eb77930699a929d8c787f1c2b1",
+  "input_mapped_json_sha256": "679ab4a5f94c21be7a0192ef7b2ab739c04196640395443147336294dddf931a",
+  "physical_admission": false,
+  "clock_delivery_admission": false,
+  "groups": {
+    "ot_v41_rom_elem_q_qxpq_w10.u_data_control": {
+      "std_area_um2": 17594.954459996836,
+      "flops": 34484,
+      "macros": {},
+      "functional_clock_wires": {
+        "ot_v41_rom_elem_q_qxpq_w10:2": 7639,
+        "ot_v41_rom_elem_q_qxpq_w10.u_data_control:41542": 547,
+        "ot_v41_rom_elem_q_qxpq_w10:742": 13149,
+        "ot_v41_rom_elem_q_qxpq_w10:741": 13149
+      }
+    },
+    "ot_v41_rom_elem_q_qxpq_w10.u_return_pair": {
+      "std_area_um2": 10246.50323999929,
+      "flops": 19828,
+      "macros": {
+        "ot_rom_4096x274_m8": 4
+      },
+      "functional_clock_wires": {
+        "ot_v41_rom_elem_q_qxpq_w10:2": 8224,
+        "ot_v41_rom_elem_q_qxpq_w10.u_return_pair:82905": 4658,
+        "ot_v41_rom_elem_q_qxpq_w10.u_return_pair:82906": 4658,
+        "ot_v41_rom_elem_q_qxpq_w10:742": 1144,
+        "ot_v41_rom_elem_q_qxpq_w10:741": 1144
+      }
+    }
+  },
+  "functional_clock_wire_consumption": {
+    "ot_v41_rom_elem_q_qxpq_w10:2": {
+      "flops": 15863,
+      "macros": [],
+      "source": {
+        "actual_top_port": "clk",
+        "source_driver": null,
+        "physical_phase": null
+      },
+      "physical_root_qualification": false
+    },
+    "ot_v41_rom_elem_q_qxpq_w10.u_data_control:41542": {
+      "flops": 547,
+      "macros": [],
+      "source": {
+        "actual_instance": "ot_v41_rom_elem_q_qxpq_w10.u_data_control.u_e.g_cgbx.g_native_gate.u_cg.u_icg",
+        "cell": "ICGx1_ASAP7_75t_R",
+        "output_pin": "GCLK",
+        "input_clock_wire": "ot_v41_rom_elem_q_qxpq_w10:2",
+        "enable_wire": "ot_v41_rom_elem_q_qxpq_w10.u_data_control:41543"
+      },
+      "physical_root_qualification": false
+    },
+    "ot_v41_rom_elem_q_qxpq_w10:742": {
+      "flops": 14293,
+      "macros": [
+        {
+          "instance": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair.u_e.g_mac[0].g_pp.u_rom0",
+          "master": "ot_rom_4096x274_m8",
+          "clock_pin": "clk"
+        },
+        {
+          "instance": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair.u_e.g_mac[0].g_pp.u_rom1",
+          "master": "ot_rom_4096x274_m8",
+          "clock_pin": "clk"
+        }
+      ],
+      "source": {
+        "actual_instance": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair.u_e.g_mac[0].g_cgma.g_native_gate.u_cg.u_icg",
+        "cell": "ICGx1_ASAP7_75t_R",
+        "output_pin": "GCLK",
+        "input_clock_wire": "ot_v41_rom_elem_q_qxpq_w10:2",
+        "enable_wire": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair:82913"
+      },
+      "physical_root_qualification": false
+    },
+    "ot_v41_rom_elem_q_qxpq_w10:741": {
+      "flops": 14293,
+      "macros": [
+        {
+          "instance": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair.u_e.g_mac[1].g_pp.u_rom0",
+          "master": "ot_rom_4096x274_m8",
+          "clock_pin": "clk"
+        },
+        {
+          "instance": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair.u_e.g_mac[1].g_pp.u_rom1",
+          "master": "ot_rom_4096x274_m8",
+          "clock_pin": "clk"
+        }
+      ],
+      "source": {
+        "actual_instance": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair.u_e.g_mac[1].g_cgma.g_native_gate.u_cg.u_icg",
+        "cell": "ICGx1_ASAP7_75t_R",
+        "output_pin": "GCLK",
+        "input_clock_wire": "ot_v41_rom_elem_q_qxpq_w10:2",
+        "enable_wire": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair:82937"
+      },
+      "physical_root_qualification": false
+    },
+    "ot_v41_rom_elem_q_qxpq_w10.u_return_pair:82905": {
+      "flops": 4658,
+      "macros": [],
+      "source": {
+        "actual_instance": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair.u_e.g_mac[0].g_cgmb.g_native_gate.u_cg.u_icg",
+        "cell": "ICGx1_ASAP7_75t_R",
+        "output_pin": "GCLK",
+        "input_clock_wire": "ot_v41_rom_elem_q_qxpq_w10:2",
+        "enable_wire": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair:82914"
+      },
+      "physical_root_qualification": false
+    },
+    "ot_v41_rom_elem_q_qxpq_w10.u_return_pair:82906": {
+      "flops": 4658,
+      "macros": [],
+      "source": {
+        "actual_instance": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair.u_e.g_mac[1].g_cgmb.g_native_gate.u_cg.u_icg",
+        "cell": "ICGx1_ASAP7_75t_R",
+        "output_pin": "GCLK",
+        "input_clock_wire": "ot_v41_rom_elem_q_qxpq_w10:2",
+        "enable_wire": "ot_v41_rom_elem_q_qxpq_w10.u_return_pair:82938"
+      },
+      "physical_root_qualification": false
+    }
+  },
+  "total_flops": 54312,
+  "macro_counts": {
+    "ot_rom_4096x274_m8": 4
+  },
+  "replay_sha256": "b9b17f7bad5c839e0d31b2b97ced43bdbf3b1bcfeb6c73fbdd80def4c9ce69d4",
+  "qualification": "Mapped source area and direct clock-wire consumer census only; not a physical CTS root count, phase, pin or timing PASS."
+}
