@@ -1,0 +1,199 @@
+{
+  "stage": "4CTS placement-estimated",
+  "core_period_ps": 770,
+  "serial_period_ps": 1026.666667,
+  "records": [
+    {
+      "corner": "tt",
+      "phase": "common_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "max",
+      "slack_ps": 68.944656,
+      "endpoint": "u_half.g_r[1].u_x.sh[0][32]$_DFF_P_/D"
+    },
+    {
+      "corner": "tt",
+      "phase": "common_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "min",
+      "slack_ps": 24.303448,
+      "endpoint": "u_half.g_r[0].u_x.sh[0][28]$_DFF_P_/D"
+    },
+    {
+      "corner": "tt",
+      "phase": "common_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "max",
+      "slack_ps": 31.492086,
+      "endpoint": "u_half.u_s.r_st_w[1]$_DFF_P_/D"
+    },
+    {
+      "corner": "tt",
+      "phase": "common_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "min",
+      "slack_ps": 41.519955,
+      "endpoint": "u_half.g_r[6].u_x.rp_w[0]$_DFF_P_/D"
+    },
+    {
+      "corner": "tt",
+      "phase": "compensated_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "max",
+      "slack_ps": 38.64463,
+      "endpoint": "u_half.g_r[1].u_x.sh[0][32]$_DFF_P_/D"
+    },
+    {
+      "corner": "tt",
+      "phase": "compensated_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "min",
+      "slack_ps": 54.603497,
+      "endpoint": "u_half.g_r[0].u_x.sh[0][28]$_DFF_P_/D"
+    },
+    {
+      "corner": "tt",
+      "phase": "compensated_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "max",
+      "slack_ps": 61.792084,
+      "endpoint": "u_half.u_s.r_st_w[1]$_DFF_P_/D"
+    },
+    {
+      "corner": "tt",
+      "phase": "compensated_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "min",
+      "slack_ps": 11.219994,
+      "endpoint": "u_half.g_r[6].u_x.rp_w[0]$_DFF_P_/D"
+    },
+    {
+      "corner": "ff",
+      "phase": "common_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "max",
+      "slack_ps": 105.974815,
+      "endpoint": "u_half.g_r[1].u_x.sh[0][32]$_DFF_P_/D"
+    },
+    {
+      "corner": "ff",
+      "phase": "common_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "min",
+      "slack_ps": 9.291081,
+      "endpoint": "u_half.g_r[0].u_x.sh[0][28]$_DFF_P_/D"
+    },
+    {
+      "corner": "ff",
+      "phase": "common_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "max",
+      "slack_ps": 78.431786,
+      "endpoint": "u_half.u_s.r_st_w[1]$_DFF_P_/D"
+    },
+    {
+      "corner": "ff",
+      "phase": "common_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "min",
+      "slack_ps": 18.861982,
+      "endpoint": "u_half.g_r[4].u_x.rp_w[1]$_DFF_P_/D"
+    },
+    {
+      "corner": "ff",
+      "phase": "compensated_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "max",
+      "slack_ps": 85.374863,
+      "endpoint": "u_half.g_r[1].u_x.sh[0][32]$_DFF_P_/D"
+    },
+    {
+      "corner": "ff",
+      "phase": "compensated_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "min",
+      "slack_ps": 29.891075,
+      "endpoint": "u_half.g_r[0].u_x.sh[0][28]$_DFF_P_/D"
+    },
+    {
+      "corner": "ff",
+      "phase": "compensated_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "max",
+      "slack_ps": 99.031799,
+      "endpoint": "u_half.u_s.r_st_w[1]$_DFF_P_/D"
+    },
+    {
+      "corner": "ff",
+      "phase": "compensated_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "min",
+      "slack_ps": -1.738023,
+      "endpoint": "u_half.g_r[4].u_x.rp_w[1]$_DFF_P_/D"
+    },
+    {
+      "corner": "ss",
+      "phase": "common_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "max",
+      "slack_ps": -4.19173,
+      "endpoint": "u_half.g_r[1].u_x.sh[0][31]$_DFF_P_/D"
+    },
+    {
+      "corner": "ss",
+      "phase": "common_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "min",
+      "slack_ps": 53.116734,
+      "endpoint": "u_half.g_r[4].u_x.sh[2][35]$_DFF_P_/D"
+    },
+    {
+      "corner": "ss",
+      "phase": "common_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "max",
+      "slack_ps": -49.903442,
+      "endpoint": "u_half.u_s.r_st_w[1]$_DFF_P_/D"
+    },
+    {
+      "corner": "ss",
+      "phase": "common_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "min",
+      "slack_ps": 68.477974,
+      "endpoint": "u_half.g_r[6].u_x.rp_w[0]$_DFF_P_/D"
+    },
+    {
+      "corner": "ss",
+      "phase": "compensated_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "max",
+      "slack_ps": -44.591721,
+      "endpoint": "u_half.g_r[1].u_x.sh[0][31]$_DFF_P_/D"
+    },
+    {
+      "corner": "ss",
+      "phase": "compensated_pin_phase",
+      "pair": "core_clk->ser_clk",
+      "sense": "min",
+      "slack_ps": 93.516846,
+      "endpoint": "u_half.g_r[4].u_x.sh[2][35]$_DFF_P_/D"
+    },
+    {
+      "corner": "ss",
+      "phase": "compensated_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "max",
+      "slack_ps": -9.503412,
+      "endpoint": "u_half.u_s.r_st_w[1]$_DFF_P_/D"
+    },
+    {
+      "corner": "ss",
+      "phase": "compensated_pin_phase",
+      "pair": "ser_clk->core_clk",
+      "sense": "min",
+      "slack_ps": 28.07794,
+      "endpoint": "u_half.g_r[6].u_x.rp_w[0]$_DFF_P_/D"
+    }
+  ]
+}

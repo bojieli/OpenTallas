@@ -1,0 +1,17 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261013-213408
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261013-213408
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261013-213408
+ot-run: ot-agidock128  admits    70 GB (avail 95, growth 8, headroom 24, waiters 0/0 GB) load 29/64 running 3 disk 354 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-180783-1791953160 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+PIN_RECT f_w[1] M3 8.028 0.0 8.046 0.192
+PIN_RECT f_w[3] M3 8.46 0.0 8.478 0.192
+PIN_RECT t_vm[1] M3 5.004 135.888 5.022 136.08
+PIN_RECT t_st[1] M3 104.832 135.888 104.85 136.08
+PIN_RECT ck[0] M5 61.536 0.0 61.56 0.192
+PIN_RECT ckv[0] M5 61.536 135.888 61.56 136.08
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-180783-1791953160): exit 0
