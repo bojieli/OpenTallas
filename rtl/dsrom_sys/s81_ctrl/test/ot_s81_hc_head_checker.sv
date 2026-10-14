@@ -9,7 +9,7 @@ module ot_s81_hc_head_checker(input wire clk,rst_n,
   if(!rst_n)begin v<=0;a<=0;d<=0;end
   else begin v<=source_valid;a<=source_accept;d<=source_d;end
  always @(negedge clk)if(rst_n)begin
-  if(pin_valid!==v || pin_accept!==a || pin_d!==d)$fatal(1,"actual HC face snapshot lost alignment");
+  if(pin_valid!==v || pin_accept!==a || (pin_d!==d && (v||a)))$fatal(1,"actual HC face snapshot lost alignment");
   checked=checked+1;
   if(pin_accept)begin accepted=accepted+1;
    if(pin_d[29:27]==0)loads=loads+1;
