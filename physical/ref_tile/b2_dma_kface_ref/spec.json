@@ -44,7 +44,7 @@
   "tag": "face9",
   "views_to": "physical/hbm_accel_die_views/b2_dma_kface_ref/face9-COMMIT",
   "record_to": "results/rtl/b2_dma_kface_ref/face9-COMMIT",
-  "purpose": "Independent real request/ownership station root. Geometry and final seam pins remain unassigned. Deterministic exact stress plus fixed productionshape rates and all7 mutants mandatory.",
+  "purpose": "Independent real request/ownership station root. Geometry and final seam pins remain unassigned. Deterministic exact stress plus fixed productionshape rates and all7 mutants mandatory. Added request edge1 and return edge1 versus prior distributed MV path (scalar VM serial/IL request paths retain their previous two captures). Fixed productionshape rates remain measured separately; no repricing.",
   "benches": [
    {
     "name": "b2_dma_q_exact",
@@ -156,7 +156,8 @@
    "rtl/model/hbm_pc40_native_sim_20261003",
    "physical/asap7_memory_macros"
   ],
-  "structural_change": "Source-bound actual DP7 CTS K output final-buffer detour781.9ps and VM owner mux-277ps; separate independently clocked small hard stations preserve all request payloads and credit ownership. No clock/route relaxation."
+  "structural_change": "Source-bound actual DP7 CTS K output final-buffer detour781.9ps and VM owner mux-277ps; separate independently clocked small hard stations preserve all request payloads and credit ownership. No clock/route relaxation.",
+  "cycles_added": 2
  },
  "children": [],
  "route": {

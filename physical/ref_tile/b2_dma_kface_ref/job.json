@@ -3,7 +3,7 @@
  "block": "ot_hgi_b2_dma_kface",
  "ref_tile": true,
  "owner": "Codex:hbm_dma_lkep_2240",
- "purpose": "Independent real request/ownership station root. Geometry and final seam pins remain unassigned. Deterministic exact stress plus fixed productionshape rates and all7 mutants mandatory.",
+ "purpose": "Independent real request/ownership station root. Geometry and final seam pins remain unassigned. Deterministic exact stress plus fixed productionshape rates and all7 mutants mandatory. Added request edge1 and return edge1 versus prior distributed MV path (scalar VM serial/IL request paths retain their previous two captures). Fixed productionshape rates remain measured separately; no repricing.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
@@ -183,7 +183,7 @@
    "to": "results/rtl/b2_dma_kface_ref/face9-COMMIT/b2_dma_kface_ref-face9-COMMIT"
   }
  ],
- "cycles_added": 0,
+ "cycles_added": 2,
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
