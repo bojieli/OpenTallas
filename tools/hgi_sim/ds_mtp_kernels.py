@@ -309,7 +309,18 @@ def golden_spec(a):
 # =================================================================================================================
 EMBB = 1 << 32                       # BF16 embedding rows: EMBB + token * 10,240 (dyn_sel TOKEN)
 MTB = 0x170000000                    # MTP constants (ONE4 = 1, 0, 0, 0)
-COLB = 0x180000000                   # column slot store: COLB + slot * CSTR (dyn_sel TOKEN)
+# Column slot store: STACK-LOCAL COLB + slot * CSTR (dyn_sel TOKEN) on ALL FOUR stacks (h rides the swap on stacks
+# 0..3, PRE on stack 0), so the window must be free in every stack AND inside a stack's physical bytes.  It sits in
+# ds_native's reserved DATA WINDOW (stack-local 20 GiB + 512 MiB on every stack; the weight manifest skips it), above
+# the 256 MiB kept there for the HC stripe rows.
+# It was 0x180000000 (stack-local 6 GiB): on stack 2 that is flat 70 GiB, INSIDE the weight manifest's address map
+# (layers.0.ffn.experts.w2, expert 44, rows 4,098..4,881: measured 2026-10-13 with the vehicle's manifest) -- on the
+# dies that own those rows every swap-out of rows o = 2 mod 4 wrote over weight rows.  The simulator could not see it
+# (weights come from the checkpoint, the STRIPE4 code bit kept the address out of the manifest lookup) and neither
+# could the e2e bench (SM is a stub there).  Kernels.check_colslot_window() proves the window against the manifest,
+# the HC stripe rows and the stack capacity.  (A first move to stack-local 31 GiB faulted every RTL engine: above
+# STACK_BYTES, suite s5.)
+COLB = (20 << 30) + (256 << 20)
 ROPEB = 1 << 31                      # plain RoPE rows: ROPEB + pos * 256 (cos 32 | sin 32, dyn_sel POS)
 # VM tail above ds_native's buffer map (derived from DN.Layout().end at bind time, never hard-coded: the map grows --
 # EGID 144 moved it to 261,440, rule (A)'s bank-phase-0 HC buffers to 261,696): ZT = the END token word of non-head
@@ -476,9 +487,13 @@ class Kernels:
     part with real SU records)."""
 
     def __init__(self, m, spec=False, b2_swap=None, hc_plan=None):
-        """b2_swap (opt-in, default None = the legacy swap bodies, unchanged): callable rank -> (h_allocations,
-        pre_allocation) read from the live B2 record-liveness allocator (hgi_b2.mtp_swap.allocations_from_placement);
-        the swap bodies (0, 0) / (1, 0) are then swap_b2's native dispatch groups."""
+        """b2_swap (opt-in, default None = the legacy swap bodies, unchanged):
+        "native" = the native B2 swap in LOGICAL VM addresses (swap_native: the four-cluster h group + the PRE
+        singleton as GRP-marked linear DMA records; what the HGI simulator runs and the B2 pass places);
+        a callable rank -> (h_allocations, pre_allocation) read from the live B2 record-liveness allocator
+        (hgi_b2.mtp_swap.allocations_from_placement) = swap_b2's dispatch groups in resolved slice addresses (what
+        the cluster engines receive; not runnable on the simulator's one logical VM)."""
+        self.swap_layout = "native" if b2_swap is not None else "stripe4"
         self.hc_plan = HC_PLAN if hc_plan is None else hc_plan
         from hgi_sim import ds_native as DN
         from hgi_sim.records import MDesc, Rec
@@ -526,6 +541,27 @@ class Kernels:
                 self.body[r][(5, 0)] = seeds[r]
                 self.body[r][(9, 0)] = self.dhead(r)
                 self.body[r][(10, 0)] = self.markov(r)
+
+        self.check_colslot_window()
+
+    def check_colslot_window(self):
+        """The column slot windows [stack s local COLB, + NCOLSLOT x CSTR), s = 0..3, hold nothing else: they lie in
+        the reserved data window and inside the stack's physical bytes, and no weight manifest extent and no HC stripe
+        row (its whole 81,920 B span) overlaps them.  (Registered data regions are refused by Hbm.add in the run.)"""
+        DN = self.DN
+        span = NCOLSLOT * CSTR
+        assert COLB % 32 == 0 and DN.DATA_WIN + (256 << 20) <= COLB and COLB + span <= DN.DATA_WIN + DN.DATA_WIN_BYTES, \
+            "column slots outside the reserved data window"
+        assert COLB + span <= DN.STACK_BYTES, "column slots beyond the stack's physical bytes"
+        for s_ in range(4):
+            lo = (s_ << 35) | COLB
+            for e in self.man.ent:
+                a_, b_ = e["base"], e["base"] + e["estride"] * e["experts"]
+                assert not (a_ < lo + span and lo < b_), \
+                    f"column slot window of stack {s_} [{lo:#x}, +{span}) overlaps weight extent {e['key']} [{a_:#x}, {b_:#x})"
+        for loc in DN.HC_STRIPE:
+            assert not (loc < COLB + span and COLB < loc + 8 * DN.HC_RS * 8 * 4), \
+                f"column slot window overlaps the HC stripe row at stack-local {loc:#x}"
 
     # ---- tables (one region per layer slot, relocated)
     def table_region(self, L):
@@ -633,15 +669,30 @@ class Kernels:
         """(swapin, swapout) bodies of one rank: the legacy records unless the caller opted in with b2_swap."""
         if b2_swap is None:
             return self.swap(True), self.swap(False)
+        if isinstance(b2_swap, str):
+            assert b2_swap == "native", b2_swap
+            return self.swap_native(True), self.swap_native(False)
         h_allocations, pre_allocation = b2_swap(rank)
         return (self.swap_b2(True, h_allocations, pre_allocation),
                 self.swap_b2(False, h_allocations, pre_allocation))
+
+    def swap_native(self, into):
+        """The native B2 swap as the program carries it (hgi_b2.mtp_swap NATIVE LAYOUT): four linear own-stack DMA
+        records, cluster q moving its quarter of h (logical rows 80q .. 80q + 79) to / from stack q's 80 slot rows,
+        marked GRP (the last GLAST) so the DMA unit releases them on one edge, then PRE as a GRP | GLAST singleton on
+        stack 0.  Same sectors and stacks as the STRIPE4 record, rows permuted by owner; the slot image is NOT the
+        legacy one, so swapin and swapout always come from this one builder."""
+        from hgi_b2.mtp_swap import logical_h, lower_pre
+        legacy = self.swap(into)
+        h, pre = legacy[:2]
+        return [e.record for e in logical_h(h).records] + [lower_pre(pre, 0).records[0].record] + legacy[2:]
 
     def swap_b2(self, into, h_allocations, pre_allocation):
         """Native B2 swap groups for the allocator's CURRENT record lifetime.
 
         h_allocations maps cluster -> resolved LOCAL/MIRROR descriptor for
-        rows q+4*j. pre_allocation is PRE's resolved stack-zero descriptor.
+        its quarter (logical rows 80q .. 80q + 79; they land on slot rows
+        q + 4j). pre_allocation is PRE's resolved stack-zero descriptor.
         The cmdproc must dispatch every group's records in one beat. This
         explicit entry point keeps the legacy vehicle unchanged until its
         caller supplies the native B2 allocator and local-slice engines.
@@ -1058,7 +1109,11 @@ def sim(a):
     if getattr(a, "hc_hbm", False):
         DN.HC_DB[0] = False
     plan = {p_["name"]: p_ for p_ in (HC_PLAN, HC_PLAN_BACKBONE_CHAIN)}[getattr(a, "hc_plan", "mtp")]
-    K = Kernels(m, spec=spec, hc_plan=plan)
+    from hgi_b2.mtp_swap import native_row
+    native = getattr(a, "swap", "stripe4") == "native"
+    assert not (native and a.export), "--swap native has no die-bench export: the e2e harness has one central VM and " \
+        "no group adapter (the group is measured by tb_hgi_b2_swap_rec / tb_hgi_b2_swapin)"
+    K = Kernels(m, spec=spec, hc_plan=plan, b2_swap="native" if native else None)
     if spec and DN.HC_DB[0]:
         # the HC aperture reader trace of this job's launch order, before anything runs (the simulator's provenance
         # check faults on the first bad reader; this is the whole table)
@@ -1132,9 +1187,12 @@ def sim(a):
     col_out, stage_out = {}, {}
 
     def col_read(d, c):
-        """slot c as the linear column (h 20,480 words from its STRIPE4 rows, then PRE 4 words)"""
+        """slot c as the linear column (h 20,480 words from its slot rows, then PRE 4 words).  Logical row o sits on
+        stack o mod 4 at row o (STRIPE4) or, in the native layout, on its owner cluster's stack at slot row
+        q + 4j (o = 80q + j): hgi_b2.mtp_swap.native_row -- the reader is independent of the swap records"""
         lb = COLB + c * CSTR
-        h = [d.hbm.view(((o & 3) << 35) | (lb + o * 64), SW * 4).view(np.uint32) for o in range(HSTRIPE)]
+        rows = [native_row(o) if native else (o & 3, o) for o in range(HSTRIPE)]
+        h = [d.hbm.view((s_ << 35) | (lb + ro * 64), SW * 4).view(np.uint32) for s_, ro in rows]
         return np.concatenate(h + [d.hbm.view(lb + 81920, 16).view(np.uint32)]).copy()
 
     def on_launch(e):
@@ -1324,6 +1382,12 @@ def sim(a):
         r0_kern.setdefault(f"{x['kind']}{'' if x['Lp'] == 0 else x['Lp']}", x["s2_cycles"])
     print(f"swap-in round trip (rank 0, working h == slot h): {swapchk['n']} swap-ins, {swapchk['bad']} bad, first "
           f"{swapchk['first']}", flush=True)
+    # the column-slot HBM image this job left (rank 0, the four stacks' slot windows): the golden image of the swap
+    # layout in use (STRIPE4 and native hold the same sectors with h's rows permuted by owner)
+    cs = [dies[0].hbm.view((s_ << 35) | COLB, NCOLSLOT * CSTR) for s_ in range(4)]
+    colimg = dict(layout=K.swap_layout, rank=0, slots=NCOLSLOT, slot_bytes=CSTR,
+                  stack_sha256=[hashlib.sha256(x.tobytes()).hexdigest() for x in cs], file="colslots_rank0.npz")
+    np.savez_compressed(out / "colslots_rank0.npz", **{f"stack{s_}": x for s_, x in enumerate(cs)})
     ok_all = bool(swapchk["bad"] == 0 and accept_ok and all(c["bit_exact_all_ranks"] for c in colres) and (not spec or draft_checks["all_ok"]))
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_sim.v2", golden=str(a.golden),
                drafter="dspark (real, lowered)" if spec else "FORCED (golden drafts; draft kinds END stubs)",
@@ -1332,7 +1396,7 @@ def sim(a):
                machine_tokens=tok, steps=steps, accept_stream_equals_golden=bool(accept_ok),
                l0_columns=colres, l0_all_bit_exact=all(c["bit_exact_all_ranks"] for c in colres),
                draft_checks=draft_checks, verdict="PASS" if ok_all else "FAIL", step1_diverged=diverged,
-               swapin_round_trip=swapchk,
+               swapin_round_trip=swapchk, swap_layout=K.swap_layout, colslot_image=colimg,
                launches=len(eng.launches), s2_job_cycles=round(t_launch, 1),
                s2_l0_cycles=[x["s2_cycles"] for x in l0],
                s2_by_kind={k_: round(sum(x["s2_cycles"] for x in per_launch if x["kind"] == k_), 1)
@@ -1463,6 +1527,9 @@ def main():
                    help="HC aperture row plan; backbone_chain = the checker's negative case (the first lowering)")
     q.add_argument("--hc-hbm", action="store_true",
                    help="HC mix rows read from HBM directly (ds_native HC_DB off: no aperture slots; a bisection aid)")
+    q.add_argument("--swap", default="stripe4", choices=("stripe4", "native"),
+                   help="column swap: stripe4 = the legacy one-record STRIPE4 swap (the e2e die bench); native = the B2 "
+                        "four-cluster own-stack group (cluster q's quarter of h on stack q; another slot image)")
     q.add_argument("--hc-trace-only", action="store_true", help="build the kernels, write the reader trace, stop")
     a = ap.parse_args()
     if a.cmd == "golden":

@@ -2,7 +2,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 // Qwen ROM TP8 track B (one die type) 2026-10-13: end-to-end ATTENTION LAYER STEP through the MERGED-die KV sequencer
 // (bench top; the two-die form is ot_qkvd_layer_tb).  The ROM end, the two D2D adapters and the PHY pair are gone:
-//   ROM side : the SU / VM / sequencer faces (harness) -> ROM_ST on-die relay stages -> the merged sequencer
+//   ROM side : the SU / VM faces and the ROM sequencer's raw stage-step pins (harness: h_start / stage / token /
+//              position out, s_done / next token in, program + descriptor writes) -> ROM_ST on-die relay stages ->
+//              the merged sequencer;  host side: d_start {token, pos, gen} in, the done / result levels out
 //   KV side  : merged sequencer -> the near-HBM attention (4 stacks + hub, ot_qwen_nearhbm_attn_die_tb) with the row
 //              responses through the KV merge; RES back through the sequencer to the VM face.
 // DUT: ot_qkvd_kv_seq_merged (flat), or with KVD_CLUSTER the hardened-leaf cluster qkd_seq (wires-only parent,
@@ -10,7 +12,7 @@
 // copies of aq / kvn / kc are compared every cycle (faults[1]); each copy's row credit returns with its own delay
 // (0 / 2 / 5 / 9 cycles after the harness's) through the credit join.
 // MUT: 0 base | 2 KV merge off | 5 Q beats 0 / 1 swapped | 7 fence off (with KVL_STALL) | 13 launcher layer + 1 |
-//      15 program write also forwarded on dh
+//      15 the ROM sequencer's copy of a program write lands one address up
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_layer_m_tb #(
     parameter integer HD     = 128,
@@ -39,19 +41,13 @@ module ot_qkvd_layer_m_tb #(
     input  wire [511:0]      x3_d,
     input  wire [10:0]       x3_tag,
     output wire              x3_cr,
-    input  wire              dc_v,
-    input  wire [W-1:0]      dc_d,
-    output wire              dc_cr,
+    input  wire [55:0]       sd,
     input  wire [43:0]       kvd,
     output wire              ar_v,
     output wire [518:0]      ar_d,
     input  wire              ar_cr,
-    output wire              dh_v,
-    output wire [W-1:0]      dh_d,
-    input  wire              dh_cr,
-    output wire              pw_v,
-    output wire [9:0]        pw_addr,
-    output wire [63:0]       pw_data,
+    output wire [186:0]      ds,
+    output wire [74:0]       pw,
     output wire [E-1:0]      req_valid,
     output wire [E-1:0]      req_v,
     output wire [E-1:0]      req_g,
@@ -69,70 +65,59 @@ module ot_qkvd_layer_m_tb #(
     output wire [5:0]        kvw_layer,
     output wire [HD*8-1:0]   kvw_d,
     input  wire              kvw_cr,
-    input  wire              hc_v,
-    input  wire [W-1:0]      hc_d,
-    output wire              hc_cr,
-    output wire              tok_v,
-    output wire [W-1:0]      tok_d,
-    input  wire              tok_cr,
-    output wire [3:0]        faults,          // {attention, KV sequencer, quadrant copies differ, ROM-face fault word}
+    input  wire [181:0]      hc,
+    output wire [92:0]       tk,
+    output wire [3:0]        faults,          // {attention, KV sequencer, quadrant copies differ, 0}
     output wire              a_start_o,
     output wire              a_out_valid_o
 );
     // ---------------- ROM side: harness faces -> ROM_ST relay stages -> the sequencer ----------------
-    wire          x3_v_r, dc_v_r, kv_v_r, x3_cr_r, dc_cr_r, ar_v_r, dh_v_r, pw_v_r, ar_cr_r, dh_cr_r;
+    wire          x3_v_r, kv_v_r, x3_cr_r, ar_v_r, ar_cr_r;
     wire [522:0]  x3_r;
-    wire [W-1:0]  dc_r, dh_r;
+    wire [55:0]   sd_r;
     wire [42:0]   kv_r;
     wire [518:0]  ar_r;
-    wire [73:0]   pw_r;
-    ot_hdc_delay #(.W(3), .D(ROM_ST), .RESET(1)) u_r1v (.clk(clk), .rst_n(rst_n), .d({x3_v, dc_v, kvd[43]}), .q({x3_v_r, dc_v_r, kv_v_r}));
-    ot_hdc_delay #(.W(523 + W + 43), .D(ROM_ST)) u_r1d (.clk(clk), .rst_n(rst_n), .d({x3_tag, x3_d, dc_d, kvd[42:0]}),
-                                                        .q({x3_r, dc_r, kv_r}));
-    ot_hdc_delay #(.W(2), .D(ROM_ST), .RESET(1)) u_r1c (.clk(clk), .rst_n(rst_n), .d({x3_cr_r, dc_cr_r}), .q({x3_cr, dc_cr}));
-    ot_hdc_delay #(.W(3), .D(ROM_ST), .RESET(1)) u_r2v (.clk(clk), .rst_n(rst_n), .d({ar_v_r, dh_v_r, pw_v_r}), .q({ar_v, dh_v, pw_v}));
-    ot_hdc_delay #(.W(519 + W + 74), .D(ROM_ST)) u_r2d (.clk(clk), .rst_n(rst_n), .d({ar_r, dh_r, pw_r}), .q({ar_d, dh_d, pw_addr, pw_data}));
-    ot_hdc_delay #(.W(2), .D(ROM_ST), .RESET(1)) u_r2c (.clk(clk), .rst_n(rst_n), .d({ar_cr, dh_cr}), .q({ar_cr_r, dh_cr_r}));
+    wire [186:0]  ds_r;
+    wire [74:0]   pw_r;
+    ot_hdc_delay #(.W(2), .D(ROM_ST), .RESET(1)) u_r1v (.clk(clk), .rst_n(rst_n), .d({x3_v, kvd[43]}), .q({x3_v_r, kv_v_r}));
+    ot_hdc_delay #(.W(523 + 43), .D(ROM_ST)) u_r1d (.clk(clk), .rst_n(rst_n), .d({x3_tag, x3_d, kvd[42:0]}), .q({x3_r, kv_r}));
+    ot_hdc_delay #(.W(56), .D(ROM_ST), .RESET(1)) u_r1s (.clk(clk), .rst_n(rst_n), .d(sd), .q(sd_r));
+    ot_hdc_delay #(.W(1), .D(ROM_ST), .RESET(1)) u_r1c (.clk(clk), .rst_n(rst_n), .d(x3_cr_r), .q(x3_cr));
+    ot_hdc_delay #(.W(1), .D(ROM_ST), .RESET(1)) u_r2v (.clk(clk), .rst_n(rst_n), .d(ar_v_r), .q(ar_v));
+    ot_hdc_delay #(.W(519), .D(ROM_ST)) u_r2d (.clk(clk), .rst_n(rst_n), .d(ar_r), .q(ar_d));
+    ot_hdc_delay #(.W(187 + 75), .D(ROM_ST), .RESET(1)) u_r2s (.clk(clk), .rst_n(rst_n), .d({ds_r, pw_r}), .q({ds, pw}));
+    ot_hdc_delay #(.W(1), .D(ROM_ST), .RESET(1)) u_r2c (.clk(clk), .rst_n(rst_n), .d(ar_cr), .q(ar_cr_r));
     // ---------------- the merged sequencer ----------------
     wire [4*540-1:0]  aq;
     wire [4*(HD*8+23)-1:0] kvn;
     wire [3:0]    kvn_cr;
     wire [4*33-1:0] kc;
-    wire          a_ov, a_og, hs, seq_f, rflt;
+    wire          a_ov, a_og, hs, seq_f;
     wire [5:0]    a_ob;
     wire [511:0]  a_od;
     wire [8:0]    seq_fc;
-    wire [7:0]    rflt_c;
     wire [4:0]    af;
     wire [3:0]    mf;
 `ifdef KVD_CLUSTER
-    wire [8:0]    t_flt;
     wire [9:0]    kst;
-    wire [528:0]  tk_w, t_ds_w;
     wire [519:0]  t_ar_w;
-    wire [74:0]   t_pw_w;
-    qkd_seq u_seq (.ck(clk), .rst_n(rst_n), .r_x3({x3_v_r, x3_r}), .r_x3_cr(x3_cr_r), .r_sd({dc_v_r, dc_r}), .r_sd_cr(dc_cr_r),
-        .r_kvd({kv_v_r, kv_r}), .t_ar(t_ar_w), .t_ar_cr(ar_cr_r), .t_ds(t_ds_w), .t_ds_cr(dh_cr_r), .t_pw(t_pw_w), .t_flt(t_flt),
+    qkd_seq u_seq (.ck(clk), .rst_n(rst_n), .r_x3_d({x3_v_r, x3_r}), .r_x3_cr(x3_cr_r), .r_sd(sd_r),
+        .r_kvd({kv_v_r, kv_r}), .t_ar_d(t_ar_w), .t_ar_cr(ar_cr_r), .t_ds(ds_r), .t_pw(pw_r),
         .aq_WS(aq[0 +: 540]), .aq_WN(aq[540 +: 540]), .aq_ES(aq[1080 +: 540]), .aq_EN(aq[1620 +: 540]),
-        .kvn_WS(kvn[0 +: 1047]), .kvn_WN(kvn[1047 +: 1047]), .kvn_ES(kvn[2094 +: 1047]), .kvn_EN(kvn[3141 +: 1047]),
+        .kvn_WS_d(kvn[0 +: 1047]), .kvn_WN_d(kvn[1047 +: 1047]), .kvn_ES_d(kvn[2094 +: 1047]), .kvn_EN_d(kvn[3141 +: 1047]),
         .kvn_WS_cr(kvn_cr[0]), .kvn_WN_cr(kvn_cr[1]), .kvn_ES_cr(kvn_cr[2]), .kvn_EN_cr(kvn_cr[3]),
         .kc_WS(kc[0 +: 33]), .kc_WN(kc[33 +: 33]), .kc_ES(kc[66 +: 33]), .kc_EN(kc[99 +: 33]),
         .af_WS(af[0]), .af_WN(af[1]), .af_ES(af[2]), .af_EN(af[3]), .mf_WS(mf[0]), .mf_WN(mf[1]), .mf_ES(mf[2]), .mf_EN(mf[3]),
-        .ar({a_ov, a_og, a_ob, a_od}), .hf(af[4]), .hs(hs), .hc({hc_v, hc_d}), .hc_cr(hc_cr), .tk(tk_w), .tk_cr(tok_cr), .kst(kst));
+        .ar({a_ov, a_og, a_ob, a_od}), .hf(af[4]), .hs(hs), .hc(hc), .tk(tk), .kst(kst));
     assign {ar_v_r, ar_r} = t_ar_w;
-    assign {dh_v_r, dh_r} = t_ds_w;
-    assign {pw_v_r, pw_r} = t_pw_w;
-    assign {tok_v, tok_d} = tk_w;
-    assign {rflt, rflt_c} = t_flt;
     assign {seq_f, seq_fc} = kst;
 `else
-    ot_qkvd_kv_seq_merged #(.HD(HD), .W(W), .MUT(MUT == 5 ? 2 : (MUT == 13 ? 3 : (MUT == 15 ? 5 : 0)))) u_seq (
+    ot_qkvd_kv_seq_merged #(.HD(HD), .MUT(MUT == 5 ? 2 : (MUT == 13 ? 3 : (MUT == 15 ? 5 : 0)))) u_seq (
         .clk(clk), .rst_n(rst_n), .x3_v(x3_v_r), .x3_tag(x3_r[522:512]), .x3_d(x3_r[511:0]), .x3_cr(x3_cr_r),
-        .dc_v(dc_v_r), .dc_d(dc_r), .dc_cr(dc_cr_r), .kvd({kv_v_r, kv_r}), .ar_v(ar_v_r), .ar_d(ar_r), .ar_cr(ar_cr_r),
-        .dh_v(dh_v_r), .dh_d(dh_r), .dh_cr(dh_cr_r), .pw_v(pw_v_r), .pw_addr(pw_r[73:64]), .pw_data(pw_r[63:0]),
-        .rflt(rflt), .rflt_cause(rflt_c), .aq(aq), .kvn(kvn), .kvn_cr(kvn_cr), .kc(kc), .af(af[3:0]), .mf(mf), .hs(hs),
-        .a_out_valid(a_ov), .a_out_g(a_og), .a_out_beat(a_ob), .a_out_data(a_od), .a_hub_fault(af[4]), .hc_v(hc_v),
-        .hc_d(hc_d), .hc_cr(hc_cr), .tok_v(tok_v), .tok_d(tok_d), .tok_cr(tok_cr), .fault(seq_f), .fault_cause(seq_fc));
+        .sd(sd_r), .kvd({kv_v_r, kv_r}), .ar_v(ar_v_r), .ar_d(ar_r), .ar_cr(ar_cr_r), .ds(ds_r), .pw(pw_r),
+        .aq(aq), .kvn(kvn), .kvn_cr(kvn_cr), .kc(kc), .af(af[3:0]), .mf(mf), .hs(hs),
+        .a_out_valid(a_ov), .a_out_g(a_og), .a_out_beat(a_ob), .a_out_data(a_od), .a_hub_fault(af[4]), .hc(hc), .tk(tk),
+        .fault(seq_f), .fault_cause(seq_fc));
 `endif
     // quadrant copy 0 -> attention, landings and the harness; the four copies must agree every cycle
     wire          a_start = aq[539], a_qv = aq[518];
@@ -196,7 +181,7 @@ module ot_qkvd_layer_m_tb #(
         .clk(clk), .rst_n(rst_n), .start(x_start), .T(x_T), .q_valid(x_qv), .q_beat(x_qb), .q_data(x_qd),
         .req_valid(m_rq_v), .req_v(m_rq_vv), .req_g(m_rq_g), .req_t(m_rq_t), .rsp_valid(e_rv), .rsp_data(e_rd),
         .out_valid(h_ov), .out_g(h_og), .out_beat(h_ob), .out_data(h_od), .fault(af), .ev_stack(), .ev_hub());
-    assign faults = {|af, seq_f, cp_bad, rflt};
+    assign faults = {|af, seq_f, cp_bad, 1'b0};
     assign a_start_o = a_start;
     assign a_out_valid_o = a_ov;
     genvar hs_i;
