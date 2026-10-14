@@ -13,7 +13,7 @@ G=10.8;WIN=5;USABLE=.8
 HF=7/.270/2+1/.048+1/.064;VF=1/.036/2+1/.048+.85/.064
 HL=1/.064;VL=.85/.064
 
-def check(plan,w,h,chunk=8,passes=16,dump_path=None):
+def check(plan,w,h,chunk=8,passes=16,dump_path=None,wire_limit_um=None):
  nx,ny=int(np.ceil(w/G)),int(np.ceil(h/G));capH=np.full((ny,nx-1),HF*G*USABLE);capV=np.full((ny-1,nx),VF*G*USABLE)
  rects=plan.rects()
  for name,(x0,y0,x1,y1,master) in rects.items():
@@ -88,7 +88,10 @@ def check(plan,w,h,chunk=8,passes=16,dump_path=None):
   with ip.open('w') as f:
    f.write(f'{nx} {ny} {len(segs)}\n')
    for values in (capH,capV,useH,useV):np.savetxt(f,values.reshape(1,-1),fmt='%.12g')
-   for bits,a,b,cls,src,dst,fa,fb,pairs in segs:f.write(f'{bits} {a[0]} {a[1]} {b[0]} {b[1]} {faces[fa]} {faces[fb]}\n')
+   for bits,a,b,cls,src,dst,fa,fb,pairs in segs:
+    escape=max(sum(abs(pp['source_point_um'][j]-(a[j]+.5)*G)+abs(pp['sink_point_um'][j]-(b[j]+.5)*G) for j in (0,1)) for pp in pairs)
+    limit=int(np.floor((wire_limit_um-escape)/G+1e-10)) if wire_limit_um is not None else -1
+    f.write(f'{bits} {a[0]} {a[1]} {b[0]} {b[1]} {faces[fa]} {faces[fb]} {limit}\n')
   subprocess.run([str(executable),str(ip),str(op)],check=True)
   lines=op.read_text().splitlines();assert int(lines[0])==len(segs)
   for i,line in enumerate(lines[1:]):
@@ -113,4 +116,4 @@ def check(plan,w,h,chunk=8,passes=16,dump_path=None):
    return dict(bits=s[0],source_cell=s[1],sink_cell=s[2],cls=s[3],source_instance=s[4],sink_instance=s[5],source_face=s[6],sink_face=s[7],H=q[0].tolist(),V=q[1].tolist(),exact_pairs=pairs)
   document=dict(schema='opentallas.hrow_concrete_grid_routes.v1',gcell_um=G,outline_um=[w,h],capacity_H=capH.tolist(),capacity_V=capV.tolist(),escape_demand_H=escapeH.tolist(),escape_demand_V=escapeV.tolist(),routes=[document_route(s,q) for s,q in zip(segs,chosen)])
   with gzip.open(path,'wt') as f:json.dump(document,f,separators=(',',':'))
- return dict(schema='opentallas.hrow_grid_edge_routes.v1',gcell_um=G,window_um=G*WIN,groups=len(segs),chunk_max_bits=chunk,passes='A* repeated rip-up; up to16',pin_normal_escape=True,capacity='M2-M7 only;80% usable;overM5 M6(H),85%M7(V)',full_vertical_cut_max=[round(float(fullH.max()),4),round(float((fullH.argmax()+1)*G),2)],full_horizontal_cut_max=[round(float(fullV.max()),4),round(float((fullV.argmax()+1)*G),2)],window_vertical_cut_max=round(wH,4),window_horizontal_cut_max=round(wV,4),window_vertical_worst_gcell=pH,window_horizontal_worst_gcell=pV,gcell_max=[round(float((useH/capH).max()),4),round(float((useV/capV).max()),4)],pass_=max(wH,wV,float(fullH.max()),float(fullV.max()))<=.6 and max(float((useH/capH).max()),float((useV/capV).max()))<=1.0,route_segments=sum(len(r[0])+len(r[1]) for r in chosen),grid_route_path_max_um=round(max(len(r[0])+len(r[1]) for r in chosen)*G,2))
+ return dict(schema='opentallas.hrow_grid_edge_routes.v1',gcell_um=G,window_um=G*WIN,groups=len(segs),chunk_max_bits=chunk,passes='A* repeated rip-up; up to16',pin_normal_escape=True,capacity='M2-M7 only;80% usable;overM5 M6(H),85%M7(V)',physical_polyline_limit_um=wire_limit_um,full_vertical_cut_max=[round(float(fullH.max()),4),round(float((fullH.argmax()+1)*G),2)],full_horizontal_cut_max=[round(float(fullV.max()),4),round(float((fullV.argmax()+1)*G),2)],window_vertical_cut_max=round(wH,4),window_horizontal_cut_max=round(wV,4),window_vertical_worst_gcell=pH,window_horizontal_worst_gcell=pV,gcell_max=[round(float((useH/capH).max()),4),round(float((useV/capV).max()),4)],pass_=max(wH,wV,float(fullH.max()),float(fullV.max()))<=.6 and max(float((useH/capH).max()),float((useV/capV).max()))<=1.0,route_segments=sum(len(r[0])+len(r[1]) for r in chosen),grid_route_path_max_um=round(max(len(r[0])+len(r[1]) for r in chosen)*G,2))
