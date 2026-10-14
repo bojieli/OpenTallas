@@ -1,0 +1,34 @@
+{
+  "agent": "sm_gate_structural",
+  "branch": "codex/sm-gate-structural-1014",
+  "worktree": "/home/ubuntu/wt/codex-sm-gate-structural-1014",
+  "structural_source": "9a6aa5e3ef120f78fd7900283a1c96cc65131740",
+  "sourcebound_route_commit": "1dae833eb91436dab85b1bbea5fc51e1ce09d5bd",
+  "clock_slot_request_commit": "bbb4a5d5a",
+  "job": "smh_own_local_icg_eg_ref-strongdecode-1dae833eb",
+  "observed_status": "RUNNING",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/smh_own_local_icg_eg_ref-strongdecode-1dae833eb",
+  "memory_selected_host": "ot-agidock128",
+  "actual_loaded_gating_ps": {
+    "tt": [
+      208.031265,
+      102.539368
+    ],
+    "ff": [
+      295.888763,
+      58.306366
+    ],
+    "ss": [
+      67.97879,
+      193.971649
+    ]
+  },
+  "next": [
+    "Collect actualbench/mutant and calibration/verdict from closure loop; no hand finishing variant or unchanged retry",
+    "Native parent clock owner evaluate physical_clock_slot_request.json with real RAW source/root slot delivery, CGI/reset/pause source reach and epoch stablewindow proof",
+    "Recalibrate childR at actualdelivered GCLK slew and require conditionalICG PW/source0 proof",
+    "WG physicalcandidate remains unqualified; preserve originalclosedown3 and frozenfc752baseline"
+  ],
+  "serialmerge": "root only; no sharedhelper orledger changes",
+  "limits": "All own CTS corner results use TT placement RC. Real12childclk adjunct uses zero externalparent entry and overlapping childmacros. No native parent, production throughput, cost or closure qualification."
+}
