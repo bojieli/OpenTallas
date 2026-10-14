@@ -7,10 +7,10 @@
   "adopted_149_abi": false,
   "physical_qualification": false,
   "sources": {
-    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease.sv": "0e8b02ad6744a96a940951408c6006e536dba9fddbd59b96307d4cdb9b6e4b0b",
-    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_lease.sv": "46678de2f72e41c8fd5f7233c6aec19d0e6a413fc81611eaacfe78a0ce09906f",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease.sv": "6c98b25ec8f4bae81c77a687491485720cd190591a7cd6a817ecd5411b279b34",
+    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_lease.sv": "7c1f267362c675f788a82f3b41ebced242c35e51c138ae241f9a07658ff359b0",
     "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_row.sv": "94302ca2d21aa1c2d0d137519e11a97fabf23d3100ba2d6086a3f2e01498801c",
-    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_row_lease.sv": "8d0f38e855be0a965a74c56dbc58d954c7b6acced41c835d1e72a530e6f328dd",
+    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_row_lease.sv": "070dbeb55ecb876874a543ff823879c916afa28e87a681f50616a81d78a1910c",
     "tools/qwen_tp8/vm_producer_row_gate.sh": "7e488a5802296b270e4fd41b999515754f4704d4fbf97d091b1b7179ca8e00a7",
     "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "31ec2d3d9b5d33780357698bbbedf66fbd36b3e8d572657c10dd9dcc2f32cea3",
     "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
@@ -36,7 +36,7 @@
   },
   "integrated_gate": {
     "host": "ot-epyc4",
-    "unit": "oth-ubuntu-1301927-1791966930",
+    "unit": "oth-ubuntu-1345244-1791967344",
     "ot_run_exit": 0,
     "positive_reads": 64,
     "operations": 32,
@@ -61,5 +61,36 @@
   },
   "acquire_semantics": "reservation only; never emits read; every first/subsequent read requires accepted query context/version",
   "query_identity": "context16/version32 must match lease before ready",
-  "supersedes": "b7a82d759 acquisition synthesized first read; corrected followup API"
+  "supersedes": "b7a82d759 acquisition synthesized first read; corrected followup API",
+  "opaque_seq_bits_added": 16,
+  "stale_seq_mutant_exit": 1,
+  "flop_inventory": {
+    "lease": {
+      "cell_types": {
+        "$add": 3,
+        "$_OR_": 416,
+        "$_NOT_": 17,
+        "$_AND_": 38,
+        "$_MUX_": 3588,
+        "$_DFF_P_": 1178,
+        "$_XOR_": 111,
+        "$pmux": 1
+      },
+      "flop_bits": 1178
+    },
+    "row": {
+      "cell_types": {
+        "$add": 1,
+        "$_OR_": 50,
+        "$_NOT_": 11,
+        "$_AND_": 3,
+        "$_MUX_": 2288,
+        "$_DFF_P_": 597,
+        "$_XOR_": 25,
+        "$shl": 1
+      },
+      "flop_bits": 597
+    },
+    "note": "Behavioral synthesis only, no area/physical/CTS qualification. Each candidate root under15k flops; parent clock association and placed pins pending."
+  }
 }

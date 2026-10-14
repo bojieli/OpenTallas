@@ -28,5 +28,10 @@
     "mutant": 5,
     "exit": 1,
     "output": "FATAL: rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_lease.sv:23: FAIL retained payload after consumption\n       Time: 210000 Scope: tb_qfd_vm_producer_lease.ck\n"
+  },
+  {
+    "mutant": 6,
+    "exit": 1,
+    "output": "FATAL: rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_producer_lease.sv:23: FAIL second address same version\n       Time: 240000 Scope: tb_qfd_vm_producer_lease.ck\n"
   }
 ]

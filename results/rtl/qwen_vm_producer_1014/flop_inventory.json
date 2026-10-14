@@ -1,0 +1,29 @@
+{
+  "lease": {
+    "cell_types": {
+      "$add": 3,
+      "$_OR_": 416,
+      "$_NOT_": 17,
+      "$_AND_": 38,
+      "$_MUX_": 3588,
+      "$_DFF_P_": 1178,
+      "$_XOR_": 111,
+      "$pmux": 1
+    },
+    "flop_bits": 1178
+  },
+  "row": {
+    "cell_types": {
+      "$add": 1,
+      "$_OR_": 50,
+      "$_NOT_": 11,
+      "$_AND_": 3,
+      "$_MUX_": 2288,
+      "$_DFF_P_": 597,
+      "$_XOR_": 25,
+      "$shl": 1
+    },
+    "flop_bits": 597
+  },
+  "note": "Behavioral synthesis only, no area/physical/CTS qualification. Each candidate root under15k flops; parent clock association and placed pins pending."
+}

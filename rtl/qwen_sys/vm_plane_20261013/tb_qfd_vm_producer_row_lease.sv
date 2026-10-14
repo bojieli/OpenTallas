@@ -7,12 +7,12 @@ reg acquire=0,query=0,release_v=0,flush=0,qready=0;
 wire acquire_ready,query_ready,release_ready,flush_ack,write_allowed,qvalid,drained,fault;
 wire [511:0] qpayload; wire [31:0] version,qversion; wire [15:0] qcontext;
 reg [15:0] context_id=0; reg [31:0] leased_version=0; reg [378:0] descriptor=0;
-wire response_ready; wire [3:0] read_phase; wire [95:0] read_address;
+reg [15:0] query_seq=0; wire [15:0] qseq; wire response_ready; wire [3:0] read_phase; wire [95:0] read_address;
 ot_qfd_vm_producer_lease #(.ENABLE(1)) lease(
  .clk(clk),.rst_n(rst_n),.acquire_v(acquire),.acquire_ready(acquire_ready),
  .held_ib(descriptor),.held_mode(1'b0),.held_context(context_id),
  .request_phase({1'b0,bank}),.request_address({85'b0,bank,row}),.request_root(5'b0),.request_recipient(16'b1),
- .query_v(query),.query_ready(query_ready),.query_context(context_id),.query_version(leased_version),.commit_v(commit),.commit_pending(pending),
+ .query_seq16(query_seq),.q_seq16(qseq),.read_seq16(),.query_v(query),.query_ready(query_ready),.query_context(context_id),.query_version(leased_version),.commit_v(commit),.commit_pending(pending),
  .native_write_allowed(write_allowed),.acquire_version(version),
  .read_v(request_v),.read_ready(request_ready),.read_ib(),.read_mode(),.read_phase(read_phase),.read_address(read_address),.read_root(),.read_recipient(),
  .response_v(response_v),.response_ready(response_ready),.response_data(data),
@@ -49,7 +49,7 @@ initial begin
  end
  if(commits!=2||pending||version!=2) $fatal(1,"actual commit version mismatch");
  for(i=0;i<64;i=i+1) begin
-  bank=i%8; row=(i/8)%2;
+  bank=i%8; row=(i/8)%2; query_seq=i;
   if(i%2==0) begin
    context_id=i+100; descriptor=i+379'h1234567; acquire=1;
    if(!acquire_ready) $fatal(1,"acquire not ready"); leased_version=version; tick(); acquire=0;
@@ -61,7 +61,7 @@ initial begin
    if(write_allowed) $fatal(1,"write reservation lost during native query");
    tick(); elapsed=elapsed+1; if(elapsed>20) $fatal(1,"native query timeout");
   end
-  if(qpayload!==pattern(bank,row)||qversion!=leased_version||qcontext!=context_id) $fatal(1,"retained native ROW/provenance mismatch");
+  if(qpayload!==pattern(bank,row)||qversion!=leased_version||qcontext!=context_id||qseq!=query_seq) $fatal(1,"retained native ROW/provenance mismatch");
   // Offered writes must remain backpressured during private result stall.
   offered_we=8'hff; wm={128{1'b1}};
   for(b=0;b<8;b=b+1) begin wl[b*8+:8]=row; wd[b*512+:512]=~pattern(b,row); end

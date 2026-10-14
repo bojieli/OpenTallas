@@ -14,6 +14,7 @@ module ot_qfd_vm_producer_lease #(
     input wire [15:0] request_recipient,
     input wire query_v, output wire query_ready,
     input wire [15:0] query_context, input wire [31:0] query_version,
+    input wire [15:0] query_seq16,
     input wire commit_v, commit_pending,
     output wire native_write_allowed,
     output wire [31:0] acquire_version,
@@ -21,13 +22,14 @@ module ot_qfd_vm_producer_lease #(
     output wire [378:0] read_ib, output wire read_mode,
     output wire [3:0] read_phase, output wire [95:0] read_address,
     output wire [4:0] read_root, output wire [15:0] read_recipient,
+    output wire [15:0] read_seq16,
     input wire response_v, output wire response_ready,
     input wire [511:0] response_data,
     output wire q_v, input wire q_ready, output wire [511:0] q_data,
     output wire [15:0] q_context, output wire [31:0] q_version,
     output wire q_mode, output wire [3:0] q_phase,
     output wire [95:0] q_address, output wire [4:0] q_root,
-    output wire [15:0] q_recipient,
+    output wire [15:0] q_recipient, output wire [15:0] q_seq16,
     input wire release_v, output wire release_ready,
     input wire [15:0] release_context, input wire [31:0] release_version,
     input wire recipients_quiescent,
@@ -43,7 +45,7 @@ module ot_qfd_vm_producer_lease #(
     reg [378:0] descriptor;
     reg mode; reg [15:0] context_id;
     reg [3:0] phase; reg [95:0] address;
-    reg [4:0] root; reg [15:0] recipient;
+    reg [4:0] root; reg [15:0] recipient,seq; reg seen_query;
     reg [511:0] payload;
     wire match_release = release_context == context_id && release_version == snapshot_version;
     assign acquire_version = version;
@@ -56,13 +58,13 @@ module ot_qfd_vm_producer_lease #(
     assign read_ib = MUT==2 ? held_ib : descriptor;
     assign read_mode = mode;
     assign read_phase=phase; assign read_address=address;
-    assign read_root=root; assign read_recipient=recipient;
+    assign read_root=root; assign read_recipient=recipient; assign read_seq16=seq;
     assign response_ready = ENABLE && state==RESPONSE;
     assign q_v = ENABLE && (state==OUTPUT || (MUT==3 && state==RETAIN));
     assign q_data = payload;
     assign q_context = context_id; assign q_version = snapshot_version;
     assign q_mode=mode; assign q_phase=phase; assign q_address=address;
-    assign q_root=root; assign q_recipient=recipient;
+    assign q_root=root; assign q_recipient=recipient; assign q_seq16=seq;
     assign query_ready = ENABLE && state==RETAIN && !release_v && !transport_flush_req &&
                          query_context==context_id && query_version==snapshot_version;
     assign source_output_drained = !ENABLE || (state==RETAIN && !query_v);
@@ -74,7 +76,7 @@ module ot_qfd_vm_producer_lease #(
         if (!rst_n) begin
             state<=IDLE; armed<=0; version<=0; snapshot_version<=0;
             descriptor<=0; mode<=0; context_id<=0; phase<=0; address<=0;
-            root<=0; recipient<=0; payload<=0; fault<=0;
+            root<=0; recipient<=0; seq<=0; seen_query<=0; payload<=0; fault<=0;
             blocked_write_cycles<=0; leased_cycles<=0;
         end else begin
             if (commit_v) version<=version+1;
@@ -88,7 +90,7 @@ module ot_qfd_vm_producer_lease #(
             case (state)
                 IDLE: if (acquire_v && acquire_ready) begin
                     descriptor<=held_ib; mode<=held_mode; context_id<=held_context;
-                    snapshot_version<=version; state<=RETAIN;
+                    snapshot_version<=version; seen_query<=0; state<=RETAIN;
                 end
                 REQUEST: if (read_v && read_ready) state<=RESPONSE;
                 RESPONSE: if (response_v && response_ready) begin payload<=response_data; state<=OUTPUT; end
@@ -98,7 +100,9 @@ module ot_qfd_vm_producer_lease #(
                     if (release_v && release_ready) state<=IDLE;
                     else if (query_v && query_ready) begin
                         phase<=request_phase; address<=request_address; root<=request_root;
-                        recipient<=request_recipient; state<=REQUEST;
+                        recipient<=request_recipient;
+                        if (!(MUT==6 && seen_query)) seq<=query_seq16;
+                        seen_query<=1; state<=REQUEST;
                     end
                 end
                 default: state<=IDLE;
