@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_ectl_c_tp8-tp3-1715ccc61/record/views/qkd_ectl_c_tp8/qkd_ectl_c_tp8.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/qkd_ectl_c_tp8-tp1-4d79e59c1/record/views/qkd_ectl_c_tp8/qkd_ectl_c_tp8.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
   "(f) face-pin access: 2354 of 2357 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cfg[0] M5 (92.208,0.016), cfg[1] M5 (92.208,0.016), cfg[2] M5 (92.208,0.016))"
  ],
- "summary": "qkd_ectl_c_tp8 138.24 x 129.6: PG M5 VDD 25 stripes (94% spread, 100% cov) / VSS 25 stripes (94% spread, 100% cov); strap M6; face pins 2357 blocked-above 0 blocked-same 0; clock ck insertion 226 ps; pockets M5 0 (closed)",
+ "summary": "qkd_ectl_c_tp8 138.24 x 129.6: PG M5 VDD 25 stripes (94% spread, 100% cov) / VSS 25 stripes (94% spread, 100% cov); strap M6; face pins 2357 blocked-above 0 blocked-same 0; clock ck insertion 228 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_ectl_c_tp8",
   "W": 138.24,
@@ -40,7 +40,7 @@
   "face": {
    "face_pins": 2357,
    "blocked_above": 0,
-   "covered_below": 255,
+   "covered_below": 668,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -56,8 +56,8 @@
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 226.37,
-    "min_ps": 168.3
+    "max_ps": 227.95,
+    "min_ps": 167.26
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 1460
+    "added": 1765
    },
    "count": 0,
    "area_um2": 0,
