@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsfd_gth_re",
- "verdict": "FAIL",
- "generated": "2026-10-14T02:27:58-0700",
+ "verdict": "WARN",
+ "generated": "2026-10-14T02:41:23-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "6fa5a3ce918fe36814ae52801ae33f3d571ad35d",
+  "start_commit": "bd086d432689f1d0dd86aeac23b36a3dd54c87ad",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "3afb5b2c4f489783ac33b906fdd1f788d8700078566b29e265056873a904b804",
-  "manifest_sha256": "403e9831169ea12d232fabdd43bf888b1c14e6e191fefa15c426ad81a29f6385",
+  "archive_sha256": "9420348039a965f3ecc28825f9c479f370dcd7a9694d9b819fbc6b442c24928f",
+  "manifest_sha256": "3788833547fe0c530c9f00c12b007132b5a69b7706562d311954219b6cac2dc4",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -18019,8 +18019,8 @@
    {
     "path": "physical/s81_ph_views/gather/leaf_midpoint/anchor.tcl",
     "kind": "file",
-    "sha256": "1a7b8ca35585b1019cceebe40d9be186ceb05672db24ccedf2f195a4d7124d2e",
-    "git_blob": "de4cd9f5c383eb540e528bffe62f4e406f934596",
+    "sha256": "9f7ca111e0e95abbf7fd0485bd4c096beb4626e5f0a417f80f43e6b747b024ab",
+    "git_blob": "98baa822c98743ed9c3118e6dc11e8926464013f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18043,8 +18043,8 @@
    {
     "path": "physical/s81_ph_views/gather/leaf_midpoint/pre_dpl.tcl",
     "kind": "file",
-    "sha256": "97042f62abae04810b8224ba7cd50bbabe54b44015503a51c8dd5365462a3f26",
-    "git_blob": "9102e1710b0c707c611c283a0a6ae572c0488023",
+    "sha256": "054884740bece37e13e0ecdebe8dd90c853f29916d3b2d4ad144b62920cf681a",
+    "git_blob": "ecf31dee331b603b5042271fb212aad9e43af716",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -107307,7 +107307,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "2cb44dc18f7a45698b5f2c1947e4fc0b7b9cafb8",
+   "origin_main": "268dc756d627ff9b5aef95e6216a0b00b0f852f6",
    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
    "files": [
     {
@@ -107680,11 +107680,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T02:25:34-0700",
-  "remote_script_sha256": "f8d8e3f45c8e3823c179aac5460007a78e8ffe58c6275ded71f764c5f596976b",
+  "captured": "2026-10-14T02:34:35-0700",
+  "remote_script_sha256": "91554863770fe0e81eee725710f2bfb2d1037c254fd012250af9ea058fddf69c",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_re-20261014-022507",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_re-20261014-023401",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -107695,16 +107695,105 @@
   "max_root_sinks": 13073,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 293.6,
+  "tt_spread_ps": 63.5,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
+  "clock_measurements": [
+   {
+    "source": "ck",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 1956,
+      "mean": 253.4,
+      "min": 238.9,
+      "max": 284.3
+     },
+     "all": {
+      "n": 13073,
+      "mean": 254.0,
+      "min": 230.1,
+      "max": 293.6
+     },
+     "errors": [],
+     "macros": {
+      "n": 8,
+      "nets": 2,
+      "max_per_net": 4,
+      "reg_mean": 254.0,
+      "max_slew": 214.4,
+      "max_late": 7.3,
+      "pins": [
+       {
+        "pin": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+        "arr": 261.3,
+        "slew": 214.4,
+        "late": 7.3,
+        "net": "clknet_1_0__leaf_ck"
+       },
+       {
+        "pin": "u_l.g_r[0].u_root.u_qm.g_q.u_m/clk",
+        "arr": 238.9,
+        "slew": 144.7,
+        "late": -15.1,
+        "net": "clknet_1_1__leaf_ck"
+       },
+       {
+        "pin": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+        "arr": 254.6,
+        "slew": 195.1,
+        "late": 0.6,
+        "net": "clknet_1_0__leaf_ck"
+       },
+       {
+        "pin": "u_l.g_r[1].u_root.u_qm.g_q.u_m/clk",
+        "arr": 232.4,
+        "slew": 126.3,
+        "late": -21.6,
+        "net": "clknet_1_1__leaf_ck"
+       },
+       {
+        "pin": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+        "arr": 242.7,
+        "slew": 160.5,
+        "late": -11.3,
+        "net": "clknet_1_0__leaf_ck"
+       },
+       {
+        "pin": "u_l.g_r[2].u_root.u_qm.g_q.u_m/clk",
+        "arr": 230.1,
+        "slew": 120.2,
+        "late": -23.9,
+        "net": "clknet_1_1__leaf_ck"
+       },
+       {
+        "pin": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m/clk",
+        "arr": 249.4,
+        "slew": 179.9,
+        "late": -4.6,
+        "net": "clknet_1_0__leaf_ck"
+       },
+       {
+        "pin": "u_l.g_r[3].u_root.u_qm.g_q.u_m/clk",
+        "arr": 236.8,
+        "slew": 138.6,
+        "late": -17.2,
+        "net": "clknet_1_1__leaf_ck"
+       }
+      ]
+     },
+     "macro_libs": 2
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "13,073 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "13,073 sinks on the largest root <= 15,000; measured TT insertion 293.6 ps, leaf spread 63.5 ps"
  },
  "items": [
   {
@@ -107718,18 +107807,6 @@
    "check": "textbook.util_channel",
    "message": "6 macro channel(s) narrower than 20 um with placement rows (e.g. u_l.g_r\\[0\\].u_root.u_qm.g_q.u_m|u_l.g_r\\[1\\].u_root.u_qm.g_q.u_m 0.0 um, u_l.g_r\\[0\\].u_root.u_bm.genblk1.genblk1.g_b8.u_m|u_l.g_r\\[1\\].u_root.u_bm.genblk1.genblk1.g_b8.u_m 0.0 um, u_l.g_r\\[1\\].u_root.u_bm.genblk1.genblk1.g_b8.u_m|u_l.g_r\\[2\\].u_root.u_bm.genblk1.genblk1.g_b8.u_m 0.0 um): widen to >= 20 um or block the channel",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
-  },
-  {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: ",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
-  },
-  {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
-   "fix": ""
   }
  ]
 }

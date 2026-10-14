@@ -2,7 +2,7 @@
 """Normalize immutable expanded STA port reports, without changing IO constraints."""
 import argparse,gzip,hashlib,json,re
 from pathlib import Path
-ap=argparse.ArgumentParser();ap.add_argument('archive');a=ap.parse_args();D=Path(a.archive)
+ap=argparse.ArgumentParser();ap.add_argument('archive');ap.add_argument('--source-commit',required=True);ap.add_argument('--sides',nargs='+',choices=['rw','re'],default=['rw','re']);a=ap.parse_args();D=Path(a.archive)
 num=r'[-+]?\d+(?:\.\d+)?(?:e[-+]?\d+)?'
 def term(block,text):
  m=re.search(r'^\s*('+num+r')(?:\s+'+num+r')?\s+(?:[\^v]\s+)?'+re.escape(text)+r'\s*$',block,re.M)
@@ -25,7 +25,7 @@ def path(block,dr,kind,R):
  else:rec.update(master_ck_to_pin_ps=arrival,normalized_o_ps=round(arrival-R,4))
  return rec
 all_arcs={};summary={};hashes={}
-for side in ['rw','re']:
+for side in a.sides:
  ck=json.loads((D/side/'ck.json').read_text());summary[side]={'corners':{},'clock':{c:{'boundary':ck[c]['boundary'],'all':ck[c]['all'],'macro_max_slew_ps':ck[c]['macros']['max_slew']} for c in ['tt','ss','ff']}}
  all_arcs[side]={}
  for c in ['tt','ss','ff']:
@@ -46,7 +46,7 @@ for side in ['rw','re']:
   m=re.search(r'GATE_PC setup WNS ('+num+r') hold WNS ('+num+r')',text);assert m
   classes={m[1]:{'paths':int(m[2]),'worst_slack_ps':float(m[3]),'example':m[4]} for m in re.finditer(r'GATE_PC (\S+)\s+(\d+) paths, worst slack ('+num+r') ps \(e.g. ([^)]+)\)',text)}
   summary[side]['corners'][c]={'setup_ps':float(m[1])*1e12,'hold_ps':float(m[2])*1e12,'R_ps':R,'ports':counts,'classes':classes}
-for side in ['rw','re']:
+for side in a.sides:
  forward={}
  for c in ['tt','ss','ff']:
   x=all_arcs[side][c];rows=[]
@@ -61,14 +61,14 @@ for side in ['rw','re']:
 pairs={}
 for c in ['tt','ss','ff']:
  rows=[]
- for side in ['rw','re']:
+ for side in a.sides:
   x=all_arcs[side][c]
   for kind,N,inp,out in [('lane_seam',828,'li','lo'),('chain_seam',636,'ci','co')]:
    for bit in range(N):
     ip=f'{inp}[{bit}]';op=f'{out}[{bit}]';o=x['output_max'][op]['normalized_o_ps'];s=x['input_max'][ip]['normalized_s_ps'];omin=x['output_min'][op]['normalized_o_ps'];h=x['input_min'][ip]['normalized_h_ps']
     rows.append({'master':side,'kind':kind,'source':op,'consumer':ip,'o_max_ps':o,'s_ps':s,'o_plus_s_ps':round(o+s,4),'o_min_ps':omin,'h_ps':h,'o_min_minus_h_ps':round(omin-h,4)})
  pairs[c]=rows
-summary['pair_extrema_before_wire']={c:{s:{k:{'worst_max_sum':max((r for r in rows if r['master']==s and r['kind']==k),key=lambda r:r['o_plus_s_ps']),'worst_min_difference':min((r for r in rows if r['master']==s and r['kind']==k),key=lambda r:r['o_min_minus_h_ps'])} for k in ['lane_seam','chain_seam']} for s in ['rw','re']} for c,rows in pairs.items()}
-summary.update(status='DIAGNOSTIC_NO_ADOPTION',source_commit='2a239ca62',route_eligible=False,IO_delay_change=False,period_ps=833.333,uncertainty_setup_hold_ps=[60,25],report_precision_ps=.01,hashes=hashes,note='Master ck-to-output includes insertion once; o=arc-R. Input setup constraint=T-U-input_external-slack; s=constraint+R. Input hold constraint=input_external-U-slack; h=constraint-R. Zero CPPR verified on every exported port path. Pair extrema before wire are diagnostics; actual routed wire/clock phases and each assigned die pair budget remain owed. No ordinary0.2T IO WNS adoption.')
+summary['pair_extrema_before_wire']={c:{s:{k:{'worst_max_sum':max((r for r in rows if r['master']==s and r['kind']==k),key=lambda r:r['o_plus_s_ps']),'worst_min_difference':min((r for r in rows if r['master']==s and r['kind']==k),key=lambda r:r['o_min_minus_h_ps'])} for k in ['lane_seam','chain_seam']} for s in a.sides} for c,rows in pairs.items()}
+summary.update(status='DIAGNOSTIC_NO_ADOPTION',source_commit=a.source_commit,route_eligible=False,IO_delay_change=False,period_ps=833.333,uncertainty_setup_hold_ps=[60,25],report_precision_ps=.01,hashes=hashes,note='Master ck-to-output includes insertion once; o=arc-R. Input setup constraint=T-U-input_external-slack; s=constraint+R. Input hold constraint=input_external-U-slack; h=constraint-R. Zero CPPR verified on every exported port path. Pair extrema before wire are diagnostics; actual routed wire/clock phases and each assigned die pair budget remain owed. No ordinary0.2T IO WNS adoption.')
 (D/'port_arcs.json.gz').write_bytes(gzip.compress((json.dumps(all_arcs,indent=1)+'\n').encode(),mtime=0));(D/'interleaf_pair_arcs.json.gz').write_bytes(gzip.compress((json.dumps(pairs,indent=1)+'\n').encode(),mtime=0));(D/'corner_arc_summary.json').write_text(json.dumps(summary,indent=2)+'\n')
-print(json.dumps({s:summary[s]['corners'] for s in ['rw','re']},indent=1));print(json.dumps(summary['pair_extrema_before_wire']['ss'],indent=1))
+print(json.dumps({s:summary[s]['corners'] for s in a.sides},indent=1));print(json.dumps(summary['pair_extrema_before_wire']['ss'],indent=1))

@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsfd_gth_rw",
  "verdict": "FAIL",
- "generated": "2026-10-14T02:28:06-0700",
+ "generated": "2026-10-14T02:41:38-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "6fa5a3ce918fe36814ae52801ae33f3d571ad35d",
+  "start_commit": "bd086d432689f1d0dd86aeac23b36a3dd54c87ad",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "563d95d37508368bfd1444e9b81afd663e83670644d729fa1dbdbd295c09d325",
-  "manifest_sha256": "b512e306fe701d7a2b40ebfe9655c86cf713b20c6b235910ce07f918374b2adf",
+  "archive_sha256": "f8de3dd6ef129bcf2387475d0c59ac2a221bee8d589a7cdee85667fa393a5ba2",
+  "manifest_sha256": "ace6b53e2877694435733366ead410399032ebda8a6aaac400f4b2aeafc22877",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -18019,8 +18019,8 @@
    {
     "path": "physical/s81_ph_views/gather/leaf_midpoint/anchor.tcl",
     "kind": "file",
-    "sha256": "1a7b8ca35585b1019cceebe40d9be186ceb05672db24ccedf2f195a4d7124d2e",
-    "git_blob": "de4cd9f5c383eb540e528bffe62f4e406f934596",
+    "sha256": "9f7ca111e0e95abbf7fd0485bd4c096beb4626e5f0a417f80f43e6b747b024ab",
+    "git_blob": "98baa822c98743ed9c3118e6dc11e8926464013f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18043,8 +18043,8 @@
    {
     "path": "physical/s81_ph_views/gather/leaf_midpoint/pre_dpl.tcl",
     "kind": "file",
-    "sha256": "97042f62abae04810b8224ba7cd50bbabe54b44015503a51c8dd5365462a3f26",
-    "git_blob": "9102e1710b0c707c611c283a0a6ae572c0488023",
+    "sha256": "054884740bece37e13e0ecdebe8dd90c853f29916d3b2d4ad144b62920cf681a",
+    "git_blob": "ecf31dee331b603b5042271fb212aad9e43af716",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -107307,7 +107307,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "2cb44dc18f7a45698b5f2c1947e4fc0b7b9cafb8",
+   "origin_main": "268dc756d627ff9b5aef95e6216a0b00b0f852f6",
    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
    "files": [
     {
@@ -107680,11 +107680,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T02:25:35-0700",
-  "remote_script_sha256": "011b9cd68dddb43bf2e634ce42e7ad2ebf027df07e30c2279736450aabf212a2",
+  "captured": "2026-10-14T02:34:27-0700",
+  "remote_script_sha256": "9bc3c464bebb4d341cf2e728bc74d28e5832697cbf581851d3b74a484e3a7b2f",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_rw-20261014-022507",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_gth_rw-20261014-023401",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -107722,7 +107722,7 @@
   {
    "severity": "FAIL",
    "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR RSZ-3006] Failed to insert buffer before loads for net net5407",
+   "message": "placement / CTS of the kit failed: [ERROR DPL-0033] detailed placement checks failed during check placement.",
    "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
   },
   {
