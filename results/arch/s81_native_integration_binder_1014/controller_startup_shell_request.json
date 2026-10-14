@@ -12,7 +12,7 @@
     "physical/s81_ctrl/rtl/dsfd_sp_ctrl_startup.sv": "629ecf3e8ca0fbb597b6d5ffbcfd0b4c0b010babaaa0dd555bf9f683c14cdacb",
     "physical/s81_ctrl/rtl/dsfd_sp_ctrl_src_startup.sv": "8513cbaa2b709bea21a50b08aa653fe60c1cc43359507ae6e5776029c3281e60",
     "physical/s81_ctrl/rtl/dsfd_sp_ctrl_h_startup.sv": "188fba39ec72a5e86436f819f73fcddcad1b3fbcd10164b232c5f2c1bb4e5c61",
-    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_ctrl_startup_shell.sv": "2873ae38e4933793f867d727fbf86cc75eda9604a2d3b89cec9dba3a63abd3e4"
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_ctrl_startup_shell.sv": "7d4800c286afbf9a9774fab9d9d94dbb4f209818e41c90670cf9d506b7222c66"
   },
   "actual_reset_graph": [
     {
@@ -45,5 +45,14 @@
     "Historical dsfd_sp_ctrl_core and layer/source/head master sources are unchanged.",
     "This distinct successor requires new actual source-bound pins, clock/reset delivery, area and views.",
     "No fixed counter or service-ready substitution is used."
+  ],
+  "proof_history": [
+    {
+      "source_commit": "e00cce7cf",
+      "unit": "2209886",
+      "status": "BENCH_PENDING_ASSERTION_FAILED",
+      "reason": "Actual SOURCE job_v is conditional on job_rdy; check real nu_ok/active pending state while admission is blocked instead.",
+      "preserved_path": "/srv/opentallas-scratch/codex/startup-shell-e00c/proof"
+    }
   ]
 }

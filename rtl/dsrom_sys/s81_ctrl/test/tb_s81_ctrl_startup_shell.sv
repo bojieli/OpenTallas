@@ -55,8 +55,8 @@ module tb_s81_ctrl_startup_shell;
         host_command(1, 0, 0, 100); // PROMPT
         host_command(2, 1, 1, 1);   // LAUNCH one user, prompt one, generation one
         repeat (40) @(negedge ck);
-        if (!dut.u.j_v || dut.u.j_r || |cv)
-            $fatal(1, "STARTUP_SHELL_PENDING real SOURCE job must wait for remote ACKs");
+        if (!dut.u.u_pkg.nu_ok || !dut.u.g_src.u_hq.active || dut.u.j_r || |cv)
+            $fatal(1, "STARTUP_SHELL_PENDING real SOURCE scheduler request must wait for remote ACKs");
         startup_ready=1;
         begin : wait_command
             integer edges;
