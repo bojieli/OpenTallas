@@ -15,6 +15,8 @@
 // DEPTH / LAW / DEPTHS / LAWS (2026-10-13 VERIF): the memory depths of the region.  Defaults 8 / 3 / 8 / 3 = the bench
 // shape (same stimulus stream as before); 174 / 8 / 695 / 10 = the ROUTED parameters of the leaves (bctl_t LAW 8, sctl_t
 // LAWS 10, bank_t DEPTH 174 LAW 8, su_t DEPTHS 695 LAWS 10): every line address is then drawn per bank below the depth.
+// The overflow run must see ovf rise, not start with it: at most 158 of its 160 clocks (a FIFO left one beat deep by
+// the main run underflows after 4 pops: 156 clocks, seen at the routed depths with SEED 2; the bound was 150).
 // ROW_MUT / SU_MUT: the rr2_t (half select) / su1024_t leaf mutants of ot_qfd_vm_region_leaf (must FAIL).
 module tb_qfd_vm_region_leaf;
     parameter integer CYCLES = 6000, SEED = 1, LEAF_MUT = 0, OVFMODE = 0, NPP = 12;
@@ -126,7 +128,7 @@ module tb_qfd_vm_region_leaf;
         if (sched_err != 0) begin $display("FAIL qfd_vm_region_leaf BENCH schedule raised ovf in the main run (%0d)", sched_err); $fatal(1, "FAIL"); end
         if (pushes < CYCLES / 16 || pops < CYCLES / 16 || rowreads < CYCLES / 8 || suans < CYCLES / 8 || stalls < CYCLES / 8
             || moves < CYCLES / 2 || garbage < CYCLES / 32 || deep < CYCLES / 64 || xo_chg < pops / 2 || ro_chg < rowreads / 2
-            || so_chg < suans / 2 || nonzero < 64 * CYCLES || ovf_cmp < 8 || ovf_cmp > 150) begin
+            || so_chg < suans / 2 || nonzero < 64 * CYCLES || ovf_cmp < 8 || ovf_cmp > 158) begin
             $display("FAIL qfd_vm_region_leaf VACUOUS pushes=%0d pops=%0d row_reads=%0d su_answers=%0d stalls=%0d moves=%0d pop_garbage=%0d deep=%0d xo_chg=%0d ro_chg=%0d so_chg=%0d nonzero_words=%0d ovf_cycles=%0d",
                 pushes, pops, rowreads, suans, stalls, moves, garbage, deep, xo_chg, ro_chg, so_chg, nonzero, ovf_cmp);
             $fatal(1, "FAIL");

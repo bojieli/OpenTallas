@@ -145,9 +145,9 @@ positive exact at 3,149 cycles, mutant 5 fails, job cycles identical to the 9e37
 | MTP p2.core_transaction | 5,467 | 6,092 | 1.114 | 0.159 % MTP | accepted |
 | SU.HC_POST | 112.9 | 287 | 2.542 | 1.653 % | accepted |
 | SU.HC_PRE_NORM (hierarchical slab) | 329.9 | 713 | 2.161 | 3.566 % | proposed |
-| SU.QB | 80 | 167 | 2.088 | 0.418 % | proposed |
-| SU.SW | 191 | 353 | 1.848 | 0.776 % | proposed |
-| SU.SO | 244.9 | 303 | 1.237 | 0.280 % | proposed |
+| SU.QB | 80 | 167 | 2.088 | 0.418 % | accepted (coordinator 10-13) |
+| SU.SW | 191 | 353 | 1.848 | 0.776 % | accepted (coordinator 10-13) |
+| SU.SO | 244.9 | 303 | 1.237 | 0.280 % | accepted (coordinator 10-13) |
 | HC.H_XFER (H_STORE + H_LOAD per h transfer) | none | 723 | | 3.453 % at 41 transfers | proposed, removal named |
 | HC.COEF (before each NORM) | none | 17 | | 0.164 % | proposed |
 | SU.KV | 283 | 357 | 1.261 | 0 (off the critical path, slack 512.7) | no row |
@@ -157,7 +157,7 @@ positive exact at 3,149 cycles, mutant 5 fails, job cycles identical to the 9e37
 | Field X broadcast, +1 column relay (hop gate) | 183.6 | 184.6 | 1.005 | 0.034 % | qualifies, no row |
 | VM read, leaf hop 2 + front end (+44) | 41 | 85 | 2.07 | 0.67 % HC share measured; 4.49 % with field + SU, 6.02 % every VM-fed class (model) | NOT entered |
 
-Ledger total: accepted 1.812 % + proposed 8.657 % = 10.469 % of 15 %.
+Ledger total: accepted 3.286 % + proposed 7.183 % = 10.469 % of 15 %.
 
 What is not entered and why:
 

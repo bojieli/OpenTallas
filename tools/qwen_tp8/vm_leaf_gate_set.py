@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Qwen TP8 VM leaf gates at the ROUTED parameters: the whole record with one command.
 
-  tools/qwen_tp8/vm_leaf_gate_set.py [--only name,name] [--hosts a,b]
+  tools/qwen_tp8/vm_leaf_gate_set.py [--only name,name] [--hosts a,b] [--collect]
 
 Syncs the sources to ~/claude-vm-verif-1013/G on the fleet hosts, launches every run of RUNS in parallel, ONE
 `ot-run --mem` per bench (ot-run picks the host; nothing is built on localhost), fetches the logs and writes
 results/rtl/qwen_tp8_vm_plane_20261013/leaf_gate/{record.json,<name>.log}.  Exit 0 only when every PASS-expected run
 printed PASS (rc 0) and every mutant printed a real FAIL line (rc 1; a build failure is not a killed mutant).
+--collect launches nothing: it keeps the runs of the committed record (their sources must still hash the same) and
+re-evaluates the leaf table against the current system record.
 The runner is tools/qwen_tp8/vm_leaf_gate.sh (also the command of the composition gates qfd_vm_region_prod /
 qfd_vm_xplane_prod in tools/ref_tile/composition_gates.json).  LEAVES below is the qualification table of the closed
 VM leaves: routed module + parameters, what the closed job's own bench list ran, and the runs that bind it here.
@@ -137,12 +139,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="")
     ap.add_argument("--hosts", default="ot-epyc1tb,ot-epyc4,ot-agidock128,ot-pve1")
+    ap.add_argument("--collect", action="store_true")
     a = ap.parse_args()
     runs = [r for r in RUNS if not a.only or r["name"] in a.only.split(",")]
     out = os.path.join(ROOT, REC)
     os.makedirs(out, exist_ok=True)
     hosts = []
-    for h in a.hosts.split(","):
+    old = None
+    if a.collect:
+        old = json.load(open(os.path.join(out, "record.json")))
+    for h in ([] if a.collect else a.hosts.split(",")):
         p = sh(f"ssh -o ConnectTimeout=10 {h} 'mkdir -p {RDIR}/b' && cd {shlex.quote(ROOT)} && "
                f"rsync -a --relative {' '.join(SYNC)} {h}:{RDIR}/")
         if p.returncode == 0:
@@ -150,10 +156,17 @@ def main():
         else:
             print("no sync to", h, p.stderr[-200:], file=sys.stderr)
     hashes = {f: sha(os.path.join(ROOT, f)) for f in HASH}
-    with cf.ThreadPoolExecutor(len(runs)) as ex:
-        got = list(ex.map(lambda r: one(r, ",".join(hosts)), runs))
-    by = {g[0]: g for g in got}
     recs, bad = [], []
+    if a.collect:
+        if old["sources_sha256"] != hashes:
+            sys.exit("--collect: the sources changed since the recorded runs; run the set again")
+        recs = old["runs"]
+        bad = [o["name"] for o in recs if not o["ok"]]
+        runs = []
+    else:
+        with cf.ThreadPoolExecutor(len(runs)) as ex:
+            got = list(ex.map(lambda r: one(r, ",".join(hosts)), runs))
+        by = {g[0]: g for g in got}
     for r in runs:
         _, host, rc, line, last = by[r["name"]]
         m = re.search(r"rc=(\S+) ((?:PASS|FAIL) .*?) maxrss_kb=(\d+) wall=([\d.]+) build_s=(\d+)", line)
