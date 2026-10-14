@@ -7,10 +7,10 @@
 # mutants (each must FAIL): S81PH_MUT_NOFWD (no entry forwarding), S81PH_MUT_WADDR (pairing store write address off by
 #   one), S81PH_MUT_CREDIT (dropped read credit), S81PH_MUT_QFWD (no queue write-register forward),
 #   S81PH_MUT_OVF (slot overflow not detected: the capacity fault mutant, on the ovf case).
-# Verdict line: ROOT_S_GATE PASS|FAIL.   Env: VL (verilator), J (16), S (16).
+# Verdict line: ROOT_S_GATE PASS|FAIL.   Env: VL (verilator), J (16), S (8).
 set -u
 SRC=$1; OUT=$2; TRACE=${3:-}
-VL=${VL:-verilator}; J=${J:-16}; S=${S:-16}
+VL=${VL:-verilator}; J=${J:-16}; S=${S:-8}
 mkdir -p $OUT
 P=$SRC/rtl/dsrom_sys/s81_ph; M=$SRC/physical/s81_ph_views/macros
 FILES="$SRC/rtl/hdc/ot_hdc_prefix.sv $SRC/rtl/gpu/ot_fp32_add_rne_deep.sv $P/ot_s81ph_ret_root_p.sv $P/ot_s81ph_ret_root_s.sv

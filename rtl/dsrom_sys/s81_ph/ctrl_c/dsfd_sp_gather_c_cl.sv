@@ -10,8 +10,8 @@
 //   (W half c = g, E half c = 7 - g).  The column chain runs south: t_capture[53 (16 g + i) +: 53] = slot i of
 //   the bottom leaf of column g.
 // Row latency against the flat master, root r = 16 g + 4 k + s:  c + k - 2 cycles (-2 .. +4).  Control lane,
-// t_xgo, c_done, c_st: identical cycles.  Capacity (contract): each root holds partials of at most 16 open
-// (pos, row, nseg) at a time; a partial of a 17th raises the sticky fault (t_capture[6944]).
+// t_xgo, c_done, c_st: identical cycles.  Capacity (contract): each root holds partials of at most 8 open
+// (pos, row, nseg) at a time; a partial of a 9th raises the sticky fault (t_capture[6944]).
 // ---------------------------------------------------------------------------------------------------------------
 `ifndef S81PH_GTH_CL_NAME
 `define S81PH_GTH_CL_NAME dsfd_sp_gather_c

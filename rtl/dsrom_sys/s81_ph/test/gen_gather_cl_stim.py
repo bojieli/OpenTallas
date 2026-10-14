@@ -28,7 +28,7 @@ def emit(f, rng, ph, ev):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("case"); ap.add_argument("seed", type=int); ap.add_argument("out")
-    ap.add_argument("--trace"); ap.add_argument("--layer"); ap.add_argument("--S", type=int, default=16)
+    ap.add_argument("--trace"); ap.add_argument("--layer"); ap.add_argument("--S", type=int, default=8)
     a = ap.parse_args()
     rng = random.Random(a.seed)
     with open(a.out, "w") as f:

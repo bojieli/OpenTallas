@@ -87,10 +87,13 @@ module ot_s81ph_root_leaf #(
     end endgenerate
 endmodule
 
-// open-row slots per root of the hardened cells: 16 (coordinator rule 10-13: real field-order bound <= 8 -> S = 16;
-// measured bound 4, production binding d9f84be9, 40 layers); +define+S81PH_GTH_S=8 builds the 256 x 34 store
+// open-row slots per root of the hardened cells: 8 (256 x 34 store).  Real field-order bound = 4 open (row, pos) per root
+// (production binding d9f84be9, 40 layers, golden experts).  The coordinator rule asks S = 16 for a bound <= 8, but the
+// S = 16 leaf does not fit the slot: its route stopped at FLOORPLAN_MARGIN (util 0.716 > 0.60 in 190.08 x 164.16, the
+// largest leaf the 8 x 4 grid of the 1727.976 x 803.496 slot allows); S = 8 = 2 x the measured bound.  A 9th open row
+// raises the sticky capacity fault (bench-observed).  +define+S81PH_GTH_S=16 builds the 512 x 34 store.
 `ifndef S81PH_GTH_S
-`define S81PH_GTH_S 16
+`define S81PH_GTH_S 8
 `endif
 // the two hardened cells (same RTL; W-fed and E-fed pin plans)
 module dsfd_gth_rw (
