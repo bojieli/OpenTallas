@@ -1,0 +1,23 @@
+GATE_FLOW_RC=0 GATE_FLOW_S=15
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_qfd_vm_face_sn_e1 cells 2,168 flops 516 depth 98.4 ps util 0.258 reach 10.2 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=516 root=port:clk rule=PASS: 516 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 25.8% outside 45%-65% (std 279 + macro 0 um2 in 1082 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "me_e": [1, false], "d": [null, true], "q": [null, true]}
+GATE_AREA    Chip area for module '\ot_qfd_vm_face_sn_e1': 279.250740
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 132.9..142.6 ps (spread 9.7), boundary mean 138.4; tt insertion all 100.1..110.2 ps (spread 10.1), boundary mean 105.7; ff insertion all 80.6..91.0 ps (spread 10.4), boundary mean 86.4; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 516, "mean": 105.7, "min": 100.1, "max": 110.2}, "all": {"n": 516, "mean": 105.7, "min": 100.1, "max": 110.2}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC reg->out      300 paths, worst slack 285.5 ps (e.g. q[0])
+GATE_PC setup WNS 2.8549412833811516e-10 hold WNS 5.519089352201689e-11
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc4       admits   718 GB (avail 944, growth 69, headroom 48, waiters 0/0 GB) load 39/128 running 15 disk 1241 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-79420-1791950311 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-79420-1791950311): exit 0

@@ -1,9 +1,9 @@
 {
- "name": "qfd_vm_face_ns_e0-proto1-COMMIT",
+ "name": "qfd_vm_face_ns_e0-proto2-COMMIT",
  "block": "ot_qfd_vm_face_ns_e0",
  "ref_tile": true,
  "owner": "Codex:sn_face_leaf",
- "purpose": "RG6 registered S/N face candidate, no die contract approved; prototype site/PG/pin/CTS feasibility only. +1 ordinary CLK edge, no enable.",
+ "purpose": "RG6 registered S/N face candidate, no die contract approved; prototype site/PG/pin/CTS feasibility only. +1 ordinary CLK edge, no enable. Bit aligned d/q placement over the full edge avoids dense random-group pin bands.",
  "threads": 8,
  "peak_ram_gb": 6,
  "source": {
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_face_ns_e0/qfd_vm_face_ns_e0-proto1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_face_ns_e0/qfd_vm_face_ns_e0-proto2-COMMIT"
   }
  ],
  "cycles_added": 1,

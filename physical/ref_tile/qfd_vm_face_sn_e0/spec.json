@@ -39,8 +39,8 @@
  "job": {
   "owner": "Codex:sn_face_leaf",
   "branch": "codex/qwen-sn-face-1013",
-  "tag": "proto1",
-  "purpose": "RG6 registered S/N face candidate, no die contract approved; prototype site/PG/pin/CTS feasibility only. +1 ordinary CLK edge, no enable.",
+  "tag": "proto2",
+  "purpose": "RG6 registered S/N face candidate, no die contract approved; prototype site/PG/pin/CTS feasibility only. +1 ordinary CLK edge, no enable. Bit aligned d/q placement over the full edge avoids dense random-group pin bands.",
   "benches": [
    {
     "name": "exact",
@@ -71,6 +71,7 @@
   "record_to": "results/rtl/ref_tile/qfd_vm_face_sn_e0",
   "cycles_added": 1
  },
+ "io_tcl": "tools/qwen_sn_face/sn_e0_pins.tcl",
  "macros": [],
  "children": [],
  "recipe": 2,

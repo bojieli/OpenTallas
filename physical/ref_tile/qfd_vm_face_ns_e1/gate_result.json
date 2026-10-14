@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_vm_face_ns_e1",
+ "verdict": "WARN",
+ "generated": "2026-10-13T20:59:19-0700",
+ "host": "ot-epyc4",
+ "cts": true,
+ "commit": "3178efbaf",
+ "clock": {
+  "max_root_sinks": 516,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": 110.3,
+  "tt_spread_ps": 11.9,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "clock_measurements": [
+   {
+    "source": "clk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 516,
+      "mean": 105.3,
+      "min": 98.4,
+      "max": 110.3
+     },
+     "all": {
+      "n": 516,
+      "mean": 105.3,
+      "min": 98.4,
+      "max": 110.3
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
+  "verdict": "PASS",
+  "text": "516 sinks on the largest root <= 15,000; measured TT insertion 110.3 ps, leaf spread 11.9 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "oflop",
+   "message": "N face 10.5 pins/um (d): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns = 8.57 um, more than 45% of the 8.6 um core behind the face (GRT-0116 class)",
+   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
+  },
+  {
+   "severity": "WARN",
+   "check": "oflop",
+   "message": "S face 10.5 pins/um (q): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns = 10.17 um, more than 45% of the 8.6 um core behind the face (GRT-0116 class)",
+   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 279 um2 + macros 0 in core 1082: util 26%",
+   "fix": "set \"std_area_um2\": 279 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 25.8% outside 45%-65% (std 279 + macro 0 um2 in 1082 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+GATE_FLOW_RC=0 GATE_FLOW_S=28
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_qfd_vm_face_sn_e0 cells 1,024 flops 512 depth 0.0 ps util 0.1586 reach 29.0 um (0.0 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=512 root=port:clk rule=PASS: 512 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 15.9% outside 45%-65% (std 172 + macro 0 um2 in 1082 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "d": [null, true], "q": [null, true]}
+GATE_AREA    Chip area for module '\ot_qfd_vm_face_sn_e0': 171.694080
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 127.7..134.4 ps (spread 6.7), boundary mean 131.1; tt insertion all 96.3..102.9 ps (spread 6.6), boundary mean 99.6; ff insertion all 77.6..84.3 ps (spread 6.7), boundary mean 80.9; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 512, "mean": 99.6, "min": 96.3, "max": 102.9}, "all": {"n": 512, "mean": 99.6, "min": 96.3, "max": 102.9}, "errors": [], "macros": null, "macro_libs": 0}}
+GATE_PC reg->out      300 paths, worst slack 288.9 ps (e.g. q[210])
+GATE_PC setup WNS 2.8890739800502274e-10 hold WNS 1.838813268317807e-10
+GATE_DONE
+
+--- stderr
+ot-run: ot-agidock128  admits    61 GB (avail 94, growth 22, headroom 24, waiters 0/0 GB) load 14/64 running 6 disk 368 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3316538-1791950290 after 1 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3316538-1791950290): exit 0
