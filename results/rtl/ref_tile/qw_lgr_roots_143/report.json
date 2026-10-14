@@ -1,0 +1,14 @@
+{
+  "source": "1433668d9",
+  "selection": "WQ3 OVERLAP1 OT_QW_LGR_ROOTS; unselectednativealternative",
+  "configuration": "3readroots softwaretiedclk; unchangedCLOSEDRQ defaultsLD4",
+  "cases": {
+    "m0": "exact3328words184/168",
+    "sk": "exact3328words222cyclesACKskew40",
+    "w3": "exact3328words2319packetpath",
+    "m1": "observedheaderfatal",
+    "w1": "observed2898of3328wordswrong",
+    "r2": "observedprematureretirementrecord0lane0ack0target2"
+  },
+  "physical": "no parentornewframeassignment; fixedexistingRQ views preserved. Independentroot CTS/realpin/cut/nativebindingandprice gatesopen."
+}
