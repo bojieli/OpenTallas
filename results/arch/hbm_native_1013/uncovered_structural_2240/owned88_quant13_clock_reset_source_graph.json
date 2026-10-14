@@ -1,0 +1,214 @@
+{
+  "schema": "opentallas.owned88.quant13roots.v1",
+  "source_commit": "88b62f789",
+  "candidate": "sourceonly exposure of exactfrozen88 endpoint, not14root latestleaf source",
+  "fixed_selection": {
+    "SPANPIPE": 1,
+    "FRONTFAST": 1,
+    "FASTFIN": 1,
+    "LQ": 10,
+    "LD": 16,
+    "NB": 32,
+    "OD": 64,
+    "RQ": 16,
+    "DEC3": 1
+  },
+  "root_count": 13,
+  "roots": [
+    {
+      "index": 0,
+      "name": "DXL",
+      "frozen88_instance": "u_qdq.g_d3.u_dec.u_dxl",
+      "parameters": {},
+      "raw_reset_origin": null,
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 1,
+      "name": "DBQ",
+      "frozen88_instance": "u_qdq.g_d3.u_dec.u_dbq",
+      "parameters": {},
+      "raw_reset_origin": "ASM.dec_rst_n",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 2,
+      "name": "DAQ",
+      "frozen88_instance": "u_qdq.g_d3.u_dec.u_daq",
+      "parameters": {},
+      "raw_reset_origin": "ASM.dec_rst_n",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 3,
+      "name": "LQ0",
+      "frozen88_instance": "u_qdq.g_lq[0].u_lq",
+      "parameters": {},
+      "raw_reset_origin": "ASM.lq_rst_n[0]",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 4,
+      "name": "LQ1",
+      "frozen88_instance": "u_qdq.g_lq[1].u_lq",
+      "parameters": {},
+      "raw_reset_origin": "ASM.lq_rst_n[1]",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 5,
+      "name": "LQ2",
+      "frozen88_instance": "u_qdq.g_lq[2].u_lq",
+      "parameters": {},
+      "raw_reset_origin": "ASM.lq_rst_n[2]",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 6,
+      "name": "LQ3",
+      "frozen88_instance": "u_qdq.g_lq[3].u_lq",
+      "parameters": {},
+      "raw_reset_origin": "ASM.lq_rst_n[3]",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 7,
+      "name": "FRgeneral",
+      "frozen88_instance": "u_qdq.g_fast_front.u_fr.g_mix.u_general",
+      "parameters": {
+        "SPANPIPE": 1
+      },
+      "raw_reset_origin": "rst_n",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 8,
+      "name": "FRoneS2",
+      "frozen88_instance": "u_qdq.g_fast_front.u_fr.g_mix.u_one",
+      "parameters": {},
+      "raw_reset_origin": "rst_n",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 9,
+      "name": "FRretire",
+      "frozen88_instance": "u_qdq.g_fast_front.u_fr.g_mix.u_retire",
+      "parameters": {},
+      "raw_reset_origin": "rst_n",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 10,
+      "name": "CORE",
+      "frozen88_instance": "u_qdq.u_core",
+      "parameters": {
+        "LQ": 10,
+        "LD": 16,
+        "NB": 32,
+        "RQ": 16,
+        "SPANPIPE": 1,
+        "FIN_BYPASS": 1
+      },
+      "raw_reset_origin": "rst_n",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 11,
+      "name": "ASM",
+      "frozen88_instance": "u_qdq.u_asm",
+      "parameters": {
+        "LD": 16,
+        "NB": 32,
+        "OD": 64
+      },
+      "raw_reset_origin": "CORE.asm_rst_n",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    },
+    {
+      "index": 12,
+      "name": "WRmonolithic",
+      "frozen88_instance": "u_qdq.u_wr",
+      "parameters": {
+        "LQ": 10,
+        "OD": 64,
+        "RQ": 16,
+        "ACK_LOOKAHEAD": 1
+      },
+      "raw_reset_origin": "ASM.wr_rst_n",
+      "rate_ps": 833.333,
+      "clock_root_body": "only actual listed instance; wrappers/glue have no state/root"
+    }
+  ],
+  "source_files": {
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q_pin4.sv": {
+      "sha256": "6414787d2633e710b4cd29cb1f97467f476b281421d710252065c6d04b9f6ab1",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q.sv": {
+      "sha256": "9299b472d0feebe59dceb276636ee0c227bab5b5af7b10ae24e8b3ce142d0ff1",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_mix.sv": {
+      "sha256": "fbb0008a48a5244c6d52e9022886cdb2bd5ecb50465642ad9b020335e966a422",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr.sv": {
+      "sha256": "1d2f97942cff7aaff682a9b9854da8d8e151002c84c7ce5d2220c70d7d7b377d",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_one_s2.sv": {
+      "sha256": "17264cca77b3db15545f2917341a9d126a6e11d130c22e41d3f3b9c2411ebdec",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_retire.sv": {
+      "sha256": "212f55bdc1859b921c6ea1c437b87805bc42e1deb50aa0ed253862b07f930cdd",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core.sv": {
+      "sha256": "2d314229953b7c90fb0a95396e275837ebfb9bc8dd5793d13d22622014d0e198",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_asm.sv": {
+      "sha256": "000a03f38107d1ba256d5f06379f7a5d5c0634e31b82019c1d241bc45bbaaa3d",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr.sv": {
+      "sha256": "8ec0eac7980c57d3bd6d1c3a3d98224d9cc36ca97ae05a9a6bf1b70479423c2b",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_lq.sv": {
+      "sha256": "a8ffed16978e0032425376a5d41f9b34f2d6cdcc6484d48d741087d9f09e4ac2",
+      "source_commit": "88b62f789"
+    },
+    "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv": {
+      "sha256": "c51211c5286916fd084246c3ffee73126bf83f5f83e793dae3e0a58a0c7f91b6",
+      "source_commit": "88b62f789"
+    }
+  },
+  "reset_graph": "rawrst\u2192generalFR/oneS2/retire/CORE; CORE u_rst rr2\u2192ASM; ASM regionalrelay\u2192LQ[4]/DBQ/DAQ/WR; DXL dataunreset. Each leaf own internal relay source remainsfrozen88.",
+  "parent_comb_logic": [
+    "general/front/retirefault OR before CORE inputcapture",
+    "constantdecoder header extraction",
+    "no PAY/FINsplit or latestfirstcapture repair selected"
+  ],
+  "qualification": "all13rawclocks mustbeexported foractualgraph. This doesnot qualify eachphysicalview, slew/root/clockreset assignment, orowned192/168price. OriginalCORE/WRfailed physicalendpoint safeguards remain preserved; no CLOSEDparamalias.",
+  "compile_rule": "Use frozen88 files namedin SHAmanifest for originalmodule names. Latest90/COREfin2/FINf6/PAYbypass bodies aredifferentcandidates andmustnot silentlysubstitute. Caller canclonewires-only qpin4 andFRmix/dec3 exposing clocks tothese literalinstanceports without changingbody.",
+  "exact_relay_ports": {
+    "CORE.asm_rst_n": "u_core.u_rst rr_n[2] (REGIONS6; f_rst inputcapture retained)",
+    "ASM.lq_rst_n": "u_asm.u_rst rr_n[6:3] (REGIONS7)",
+    "ASM.dec_rst_n": "u_asm.u_rst rr_n[1]",
+    "ASM.wr_rst_n": "u_asm.u_rst rr_n[2]"
+  }
+}
