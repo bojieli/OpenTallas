@@ -7,6 +7,9 @@
 // PASS needs: N flits each way delivered, replays > 0 when ERRP > 0, no fault.
 module tb_hfd_lk_ep_shared;
     parameter integer MUT_TX_SHARED = 0;
+    parameter integer MUT_RX_SHARED = 0;
+    parameter integer MUT_PHY_SHARED = 0;
+    parameter integer MUT_STATUS_SHARED = 0;
     parameter integer NS = 3;
     parameter integer FCR = 256;
     parameter integer TXQ = 32;
@@ -29,10 +32,10 @@ module tb_hfd_lk_ep_shared;
     wire [LW-1:0]  a_x, b_x;
     reg  [LW-1:0]  a2b, b2a;
     wire [31:0]    a_rep = A.st_replays, b_rep = B.st_replays; wire [15:0] a_dr = A.st_drops, b_dr = B.st_drops;
-    ot_hbm_lk_ep #(.HARD_CLOCKS(1), .MUT_TX_SHARED(MUT_TX_SHARED), .NS(NS), .TXQ(TXQ), .FCR(FCR)) A (.clk(clk), .clk_sub({NS*4{clk}}), .clk_tx_shared(clk), .rst_n(rst_n), .session(24'h5A), .t_v(a_tv), .t_flit(a_tf),
+    ot_hbm_lk_ep #(.HARD_CLOCKS(1), .MUT_STATUS_SHARED(MUT_STATUS_SHARED), .MUT_PHY_SHARED(MUT_PHY_SHARED), .MUT_TX_SHARED(MUT_TX_SHARED), .MUT_RX_SHARED(MUT_RX_SHARED), .NS(NS), .TXQ(TXQ), .FCR(FCR)) A (.clk(clk), .clk_sub({NS*4{clk}}), .clk_tx_shared(clk), .clk_rx_shared(clk),.clk_status_shared(clk), .rst_n(rst_n), .session(24'h5A), .t_v(a_tv), .t_flit(a_tf),
         .t_cr(a_tcr), .r_v(a_rv), .r_flit(a_rf), .r_cr(a_rcr), .x_tx(a_x), .x_rx(b2a), .fault(a_f),
         .locked(a_l));
-    ot_hbm_lk_ep #(.HARD_CLOCKS(1), .MUT_TX_SHARED(MUT_TX_SHARED), .NS(NS), .TXQ(TXQ), .FCR(FCR)) B (.clk(clk), .clk_sub({NS*4{clk}}), .clk_tx_shared(clk), .rst_n(rst_n), .session(24'h5A), .t_v(b_tv), .t_flit(b_tf),
+    ot_hbm_lk_ep #(.HARD_CLOCKS(1), .MUT_STATUS_SHARED(MUT_STATUS_SHARED), .MUT_PHY_SHARED(MUT_PHY_SHARED), .MUT_TX_SHARED(MUT_TX_SHARED), .MUT_RX_SHARED(MUT_RX_SHARED), .NS(NS), .TXQ(TXQ), .FCR(FCR)) B (.clk(clk), .clk_sub({NS*4{clk}}), .clk_tx_shared(clk), .clk_rx_shared(clk),.clk_status_shared(clk), .rst_n(rst_n), .session(24'h5A), .t_v(b_tv), .t_flit(b_tf),
         .t_cr(b_tcr), .r_v(b_rv), .r_flit(b_rf), .r_cr(b_rcr), .x_tx(b_x), .x_rx(a2b), .fault(b_f),
         .locked(b_l));
     wire ga_tcr,ga_rv,ga_f,ga_l,gb_tcr,gb_rv,gb_f,gb_l;
@@ -44,8 +47,8 @@ module tb_hfd_lk_ep_shared;
       #0.01;
       if(rst_n) begin
         shared_edges=shared_edges+1;
-        if({a_tcr,a_rv,a_rf,a_x,a_f,a_l,b_tcr,b_rv,b_rf,b_x,b_f,b_l} !== {ga_tcr,ga_rv,ga_rf,ga_x,ga_f,ga_l,gb_tcr,gb_rv,gb_rf,gb_x,gb_f,gb_l})
-          $fatal(1,"LKEP_SHARED %s FAIL edge=%0d",MUT_TX_SHARED!=0?"MUTANT":"EXACT",shared_edges);
+        if({A.st_replays,B.st_replays,a_tcr,a_rv,a_rf,a_x,a_f,a_l,b_tcr,b_rv,b_rf,b_x,b_f,b_l} !== {GA.st_replays,GB.st_replays,ga_tcr,ga_rv,ga_rf,ga_x,ga_f,ga_l,gb_tcr,gb_rv,gb_rf,gb_x,gb_f,gb_l})
+          $fatal(1,"LKEP_SHARED %s FAIL edge=%0d",(MUT_TX_SHARED!=0 || MUT_RX_SHARED!=0 || MUT_PHY_SHARED!=0 || MUT_STATUS_SHARED!=0)?"MUTANT":"EXACT",shared_edges);
       end
     end
     // ---- lane with bit errors (one register each way, like the PHY)
