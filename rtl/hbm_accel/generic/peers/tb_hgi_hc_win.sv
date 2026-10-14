@@ -7,7 +7,12 @@ module tb_hgi_hc_win;
  reg rst_n=0,start=0,rel=0,hr_v=0,re=0,hq_cr=0;
  reg[10:0]hr_tag=0;reg[1:0]hr_beat=0;reg[255:0]hr_data=0;reg[15:0]addr=0;
  wire rv,hqv,ready,fault;wire[1023:0]rom;wire[34:0]ha;wire[2:0]hl;wire[10:0]ht;
- ot_hgi_hc_win #(.MUT(`WMUT)) dut(.clk(clk),.rst_n(rst_n),.c_start(start),.c_rel(rel),
+`ifdef HC_WIN_PARTITIONED
+ ot_hgi_hc_win_partitioned #(.MUT(`WMUT))dut(.clk_ctl(clk),.clk_mem0(clk),.clk_mem1(clk),.clk_mem2(clk),.clk_mem3(clk),
+`else
+ ot_hgi_hc_win #(.MUT(`WMUT))dut(.clk(clk),
+`endif
+ .rst_n(rst_n),.c_start(start),.c_rel(rel),
   .c_base(35'd123),.c_soff(35'd77),.c_nwords(6'd32),.c_bound(16'd64),.c_limit(16'd96),
   .hr_v(hr_v),.hr_tag(hr_tag),.hr_beat(hr_beat),.hr_data_lo(hr_data[127:0]),.hr_data_hi(hr_data[255:128]),.rom_re(re),.rom_addr(addr),
   .rom_v(rv),.rom_0(rom[127:0]),.rom_1(rom[255:128]),.rom_2(rom[383:256]),.rom_3(rom[511:384]),

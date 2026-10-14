@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.slot_partition_request.v1",
+  "state": "RTL_CANDIDATE",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win_partitioned.sv": "1a8d824dbd81b750e0205b3787bd017d326b58df05b7f3166767fc58846e6981"
+  },
+  "replaces": "Unclosed ot_hgi_hc_win flat controller+4SRAM window",
+  "reason": "Actual compact CTS boundary spread~101ps / all103.1ps exceeds80ps tile budget despite only2759root sinks; require structural local-memory/data roots",
+  "parent": "ot_hgi_hc_win_partitioned (wires only, direct-die expansion; do not harden another hierarchy level)",
+  "children_per_window": {
+    "ot_hgi_hc_win_ctl": 1,
+    "ot_hgi_hc_win_sector": 4
+  },
+  "total_die_children": {
+    "ot_hgi_hc_win_ctl": 32,
+    "ot_hgi_hc_win_sector": 128
+  },
+  "clocks_per_window": 5,
+  "macro_count_unchanged": "128 actual128x256 SRAMS total on die; one per sectorleaf",
+  "memory_sector_contract": {
+    "inputs": "clk,rst_n,live,hr_v/tag11/beat2/data_lo128/data_hi128,read_v/addr7",
+    "outputs": "ROM valid,data_lo128/data_hi128,fault",
+    "states": "Pin-flopped response/read descriptors and data;1SRAM;rawcapture and masked output;localcontrol reset; no whole-window clock root"
+  },
+  "controller_contract": {
+    "inputs": "clk,rst,cstart/crelease/base/offset/nwords/bounds;HRvalid/tag/beat;ROM request/address;creditreturn;4sectorfaults",
+    "outputs": "Registered HBMrequest;registered readrequest/address and activation;ready/fault",
+    "states": "Original window request/valid/duplicate/fault logic, data path removed; bounded one request seat"
+  },
+  "outline": "All child outlines pending actual synth/CTS and die-assigned pins. Prior whole-window256.176x151.2 is superseded as a physical master, retained failure evidence.",
+  "read_latency": "6edges from inputrequest to ROMoutput in equal-clock composition; parentSYS memory/latency parameters must be updated and case15remeasured",
+  "scope": "All4SYSwindows\u00d72banks\u00d74quarters; preservesdata/beat/tag/word ownership and mathematicalfunction",
+  "gates": [
+    "32row realSRAM reversebeat exact and data/tag/credit mutants",
+    "Fast-response,release/restart,scope/clock gates",
+    "Eachleaf ownroot insertion/spread",
+    "SYSunit exact18records/693words and MP/POST/XL mutants",
+    "Measured case15 cycles<=594; no acceptedcostrow"
+  ]
+}
