@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen.vm-band-production-miter.v1",
- "status": "NATIVE_AND_MUTANTS_PASS_FALLBACK_LIVE",
+ "status": "FULL32_NATIVE_FALLBACK_PASS_TWO_MUTANTS_FAIL_PHYSICAL_UNRESOLVED",
  "qualification": false,
  "source_sha256": {
   "tools/qwen_tp8/vm_band_cluster.py": "f0930d43ce5be0bd21aa39b239e0e13c0176112a64c874164451046403e319e9",
@@ -18,12 +18,24 @@
   "root_index": "FAIL82094errors"
  },
  "fallback": {
-  "status": "live",
+  "status": "PASS",
+  "SMAX": 11,
+  "phases": 16,
+  "cycles": 4000,
+  "lane_checks": 16216064,
+  "column_checks": 126688,
+  "all1024_root_groups_changes_minimum": 16,
+  "log": "results/rtl/qwen_tp8_vm_plane_20261013/band/fallback.log",
   "host": "ot-agidock128",
   "unit": "oth-ubuntu-3279677-1791948748",
-  "local_session": 52400,
-  "peak_prior_verilator_allocated_mb": 8948.789,
-  "request_gb": 16
+  "request_gb": 16,
+  "prior_verilator_allocated_mb": 8948.789
  },
- "open": "actualrootgather/controldistribution/boundaries, newsourceviewpins, congestion and realroutedtiming/hold"
+ "open": "actualrootgather/controldistribution/boundaries, newsourceviewpins, congestion and realroutedtiming/hold",
+ "log_sha256": {
+  "native.log": "320fe351b0f4ca55bdbd3c3998c7b025625f9975e5860b9d4077cf4683c31313",
+  "fallback.log": "0fcbfa4d5744ef1c2aa325217eaba8d301adb861951527d4f6aac013d911b6b5",
+  "lane_mutant.log": "b9867dc932a76151454a4f27d47e4708494b2c776cd9d98c90dc57079afbfe3b",
+  "root_mutant.log": "6ba667b42013063b149dd1d78b6c518c606668cdae362c3619e872c8c2878837"
+ }
 }

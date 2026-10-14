@@ -1,0 +1,3 @@
+FAIL controls SMAX=11 cycle=11 col=7 phase=11 epoch=0 pc=6f4da expected=37a6d lc=2a4c58e expected=2a4c58e tags=008c8f3 expected=008c8f3
+FATAL: /home/ubuntu/wt/codex-qwen-vm-band/rtl/qwen_sys/vm_plane_20261013/band_controls/tb_qfd_vm_band_controls.sv:52: full32 tag/delay/me mismatch
+       Time: 126000 Scope: tb_qfd_vm_band_controls
