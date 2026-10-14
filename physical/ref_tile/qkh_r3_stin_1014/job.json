@@ -1,5 +1,5 @@
 {
- "name": "qkh_r3_stin_1014-r3-37dbf33ca",
+ "name": "qkh_r3_stin_1014-r3-a14551041",
  "block": "ot_qkh_head_stin_native",
  "ref_tile": true,
  "owner": "Codex:coordinator-kvsys-1014-pm",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex/coordinator-takeover-1014-pm",
-  "commit": "37dbf33ca65d2d4397d08d2bc20efa046585fc12",
+  "branch": "codex/head-r3-sourcebound-1014-pm",
+  "commit": "a145510417fb45ed5f468a16ba3830896473c697",
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
@@ -110,6 +110,12 @@
  "structural_change": "83 independently clocked children; no data-cycle or FP32 operation change",
  "reroute_reason": {
   "kind": "slot_change",
-  "why": "retained v1.1 subslot and exact pin assignment; KP D2 / two NB D1 preserve all data stages"
+  "why": "retained v1.1 subslot and exact pin assignment; KP D2 / two NB D1 preserve all data stages",
+  "contract": {
+   "file": "results/arch/qwen_split_1014/kvsys_v1_1/contract.json",
+   "version": "1.1",
+   "slot": "qkd_rhead"
+  },
+  "slot_change_request": "Coordinator-assigned stin child shrinks from 54 x43.2 to32.4 x43.2 inside retained v1.1 head outline; physical/qwen_head_r3_1014/assignments.json and results/arch/qwen_split_1014/head_native_r3_codex_1014/plan.json assign exact pins/subslots, with470.754um maximum reach."
  }
 }

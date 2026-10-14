@@ -1,5 +1,5 @@
 {
- "name": "qkh_r3_stk_1014-r3-37dbf33ca",
+ "name": "qkh_r3_stk_1014-r3-a14551041",
  "block": "ot_qkh_head_stk_native",
  "ref_tile": true,
  "owner": "Codex:coordinator-kvsys-1014-pm",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex/coordinator-takeover-1014-pm",
-  "commit": "37dbf33ca65d2d4397d08d2bc20efa046585fc12",
+  "branch": "codex/head-r3-sourcebound-1014-pm",
+  "commit": "a145510417fb45ed5f468a16ba3830896473c697",
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
