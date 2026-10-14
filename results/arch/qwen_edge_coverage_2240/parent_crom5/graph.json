@@ -299,5 +299,15 @@
     "each_root_below15000": true,
     "physical_qualification": "UNQUALIFIED; clocks/pins/phase/slot/CTS remain open",
     "provenance": "head_census_exact/bb_qla4_qlm5 and sfu_*_qla4_qlm5 source manifests"
+  },
+  "parent_source_request": {
+    "source": "rtl/physical/ot_qfd_native_crom5_su64_parent_candidate.sv",
+    "sha256": "0e6aebe8a9bb8f75ab41c876fd68602d8cf325ee9d1844553f7b0acb07f5600f",
+    "candidate_only": true,
+    "source_clock_entries": 355,
+    "with_native59_control_station_and16programbanks": 373,
+    "admission": "External actualnative59 controller must bind joined ready/stage/position. No automaticgo gating, no writerlease qualification.",
+    "cache_master": "qfd_su_cbuf_native_l0_p13_l12_h2",
+    "far_response": "11pin_edges/internal12, CROM5"
   }
 }
