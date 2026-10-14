@@ -51,7 +51,9 @@ module ot_qwen_nearhbm_attn_hub_p #(
     // write and one read per stack a cycle) in 8 ot_sram_1r1w_128x256 macros (two per stack, the upper 64 rows unused),
     // read address = the stage-0 copy, data = the macro's registered output at the stage-1 edge (the flop array's sx):
     // the same cycle, so bit-identical, 0 cycles.  Removes the SYNTH_MEMORY_MAX_BITS override with zm packed.
-    parameter integer PSRAM = 0
+    parameter integer PSRAM = 0,
+    // Number of four-query-head groups: historical TP4=2, native TP8=1.
+    parameter integer HEADS = 2
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -78,6 +80,14 @@ module ot_qwen_nearhbm_attn_hub_p #(
     output reg           fault,
     output reg  [7:0]    ev
 );
+`ifndef SYNTHESIS
+    initial begin
+        if (HEADS != 1 && HEADS != 2) $fatal(1, "attention hub HEADS must be 1 or 2");
+    end
+`endif
+    // Keep the interface stable; a one-group profile never accepts dummy group 1.
+    wire [3:0] si_active = si_valid & ((HEADS == 1) ? ~si_g : 4'b1111);
+    wire [3:0] pi_active = pi_valid & ((HEADS == 1) ? ~pi_g : 4'b1111);
     localparam integer NBEAT = 4 * HD / 16;
     localparam integer BPH = HD / 16;
     integer sd_, s_, s2_, s3_, s4_, i_, i2_, z, z2_, z3_, z4_, e_, e2_, e3_, e4_;
@@ -104,7 +114,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
     reg [3:0]    pig_b;  reg [23:0] pib_b; reg [2047:0] pid_b;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin start_b <= 1'b0; siv_b <= 4'd0; piv_b <= 4'd0; end
-        else begin start_b <= start; siv_b <= si_valid; piv_b <= pi_valid; end
+        else begin start_b <= start; siv_b <= si_active; piv_b <= pi_active; end
     always @(posedge clk) begin
         sit_b <= si_type; sig_b <= si_g; sih_b <= si_hh; sik_b <= si_k; sia_b <= si_any; sid_b <= si_data;
         pig_b <= pi_g; pib_b <= pi_beat; pid_b <= pi_data;
@@ -151,7 +161,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
     reg [7:0]  lany;
     reg [4:0]  lcnt0, lcnt1;
     reg [1:0]  msent;
-    wire       mg = msent[0];
+    wire       mg = (HEADS == 1) ? 1'b0 : msent[0];
     reg [2:0]  mh;
     wire       mready = !msent[mg] && (mg ? (lcnt1 == 5'd16) : (lcnt0 == 5'd16));
     reg        ma_v, mb_v;
@@ -340,7 +350,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
                              + ((siv_c[3] && sit_c[7:6] == 2 && sig_c[3]) ? 1 : 0);
                 if (!zrun && !zwait_recip) begin
                     if (!zdone_tree[0] && zdc0 == 3'd4) begin zrun <= 1'b1; zg <= 1'b0; zl <= 3'd1; zp <= 0; zwt <= 0; end
-                    else if (zdone_tree[0] && !zdone_tree[1] && zdc1 == 3'd4) begin
+                    else if (HEADS == 2 && zdone_tree[0] && !zdone_tree[1] && zdc1 == 3'd4) begin
                         zrun <= 1'b1; zg <= 1'b1; zl <= 3'd1; zp <= 0; zwt <= 0;
                     end
                 end else if (zrun) begin
@@ -413,7 +423,7 @@ module ot_qwen_nearhbm_attn_hub_p #(
         else begin
             for (s_ = 0; s_ < 4; s_ = s_ + 1) if (piv_c[s_]) pc[{pig_c[s_], s_[1:0]}] <= pc[{pig_c[s_], s_[1:0]}] + 6'd1;
             if (p_ready) begin
-                if (pp == NBEAT - 1) begin pp <= 0; pdone[pg] <= 1'b1; pg <= 1'b1; end
+                if (pp == NBEAT - 1) begin pp <= 0; pdone[pg] <= 1'b1; pg <= (HEADS == 2); end
                 else pp <= pp + 6'd1;
             end
         end

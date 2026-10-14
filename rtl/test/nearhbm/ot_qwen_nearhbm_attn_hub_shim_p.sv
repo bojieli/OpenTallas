@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
 // BENCH-ONLY shim: the name ot_qwen_nearhbm_attn_hub bound to the timing successor ot_qwen_nearhbm_attn_hub_p.  The
 // successor's benches use it, through rtl/test/nearhbm/hubp_swap.sh, in place of the pinned parent hub source.  The
 // parent's benches (rtl/test/nearhbm/*, rtl/test/qwen_sys/*) thereby run unchanged around the successor.  Nothing
@@ -39,9 +42,9 @@ module ot_qwen_nearhbm_attn_hub #(
 `endif
 `ifdef KVD_HUBT
     // el1011-q-kvd 2026-10-11: the hardened-tile hub (ot_qwen_nearhbm_attn_hub_t.sv)
-    ot_qwen_nearhbm_attn_hub_t #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW)) u_p (
+    ot_qwen_nearhbm_attn_hub_t #(.HEADS(`KVD_HEADS), .HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW)) u_p (
 `else
-    ot_qwen_nearhbm_attn_hub_p #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .PSRAM(`KVD_HPSRAM)) u_p (
+    ot_qwen_nearhbm_attn_hub_p #(.HEADS(`KVD_HEADS), .HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .PSRAM(`KVD_HPSRAM)) u_p (
 `endif
         .clk(clk), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
         .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g), .pi_beat(pi_beat),
