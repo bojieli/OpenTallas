@@ -23,7 +23,7 @@ module ot_qwen_tp8_attention_service (
  output reg result_done,output wire busy,output wire fault,
  output reg [31:0] cycles,output wire [31:0] k_words,v_words
 );
- localparam IDLE=0,QLOAD=1,QK=2,PVSTART=3,PV=4,EMIT=5,BAD=6;
+ localparam IDLE=0,QLOAD=1,QK=2,PVSTART=3,PV=4,EMIT=5,BAD=6,RELEASE=7;
  reg [2:0] state;reg start_qk,start_pv;reg [15:0] ep;reg [5:0] layer;
  reg [13:0] ctx;reg [5:0] qnext;reg [4:0] beat;reg local_fault,cleared;
  wire [31:0] raw_req,raw_v,raw_g,checked_rsp,kbad;wire [415:0] raw_t;
@@ -69,7 +69,8 @@ module ot_qwen_tp8_attention_service (
     QK:if(cleared&&(&scdone)&&(&edone)&&rzok)begin start_pv<=1;state<=PVSTART;end
     PVSTART:state<=PV;
     PV:if(fvalid)begin state<=EMIT;beat<=0;end
-    EMIT:if(result_valid&&result_ready)begin if(beat==31)begin result_done<=1;state<=IDLE;end else beat<=beat+1'b1;end
+    EMIT:if(result_valid&&result_ready)begin if(beat==31)begin result_done<=1;state<=RELEASE;end else beat<=beat+1'b1;end
+    RELEASE:if(!fvalid)state<=IDLE;
     default:;
    endcase
   end
@@ -120,8 +121,8 @@ module ot_qwen_tp8_attention_service (
    if(!rst_n)begin rv<=0;slots<=0;ts<=0;eps<=0;rows<=0;bad0<=0;bad1<=0;end
    else begin
     rv<={eread[s+2],eread[s]};
-    if(v_rsp_valid[s]&&(!v_rsp_ready[s]||!rsp_good[0]))bad0<=1;
-    if(v_rsp_valid[s+2]&&(!v_rsp_ready[s+2]||!rsp_good[1]))bad1<=1;
+    if(v_rsp_valid[s]&&v_rsp_ready[s]&&!rsp_good[0])bad0<=1;
+    if(v_rsp_valid[s+2]&&v_rsp_ready[s+2]&&!rsp_good[1])bad1<=1;
     slots<={v_rsp_slot[3*(s+2)+:3],v_rsp_slot[3*s+:3]};ts<={v_rsp_t[14*(s+2)+:14],v_rsp_t[14*s+:14]};
     eps<={v_rsp_epoch[16*(s+2)+:16],v_rsp_epoch[16*s+:16]};rows<={v_rsp_data[1024*(s+2)+:1024],v_rsp_data[1024*s+:1024]};
    end
