@@ -1,0 +1,16 @@
+OK g8_negnan_fault expect=PASS got=PASS CYCLES=90 SURV=0 INS=0 SINK=86  | g8_negnan_fault 
+OK g1_n13_k5_ties expect=PASS got=PASS CYCLES=157 SURV=13 INS=4 SINK=146  | g1_n13_k5_ties 
+OK g1_n37_k1_ties expect=PASS got=PASS CYCLES=160 SURV=37 INS=10 SINK=149  | g1_n37_k1_ties 
+OK g1_n64_k64_zinf expect=PASS got=PASS CYCLES=213 SURV=64 INS=16 SINK=202  | g1_n64_k64_zinf 
+OK g8_nan_fault expect=PASS got=PASS CYCLES=586 SURV=28 INS=5 SINK=582  | g8_nan_fault 
+OK g4_dup_ids expect=PASS got=PASS CYCLES=655 SURV=32 INS=8 SINK=644  | g4_dup_ids 
+OK g4_n37_k1_ties expect=PASS got=PASS CYCLES=652 SURV=41 INS=13 SINK=641  | g4_n37_k1_ties 
+OK g2_n37_k1_ties expect=PASS got=PASS CYCLES=645 SURV=38 INS=11 SINK=634  | g2_n37_k1_ties 
+OK g8_n13_k5_ties expect=PASS got=PASS CYCLES=655 SURV=29 INS=11 SINK=644  | g8_n13_k5_ties 
+OK g4_n13_k5_ties expect=PASS got=PASS CYCLES=652 SURV=26 INS=9 SINK=641  | g4_n13_k5_ties 
+OK g2_n13_k5_ties expect=PASS got=PASS CYCLES=648 SURV=16 INS=5 SINK=637  | g2_n13_k5_ties 
+OK g8_n37_k1_ties expect=PASS got=PASS CYCLES=648 SURV=37 INS=10 SINK=637  | g8_n37_k1_ties 
+OK g4_n64_k64_zinf expect=PASS got=PASS CYCLES=726 SURV=204 INS=52 SINK=715  | g4_n64_k64_zinf 
+OK g2_n64_k64_zinf expect=PASS got=PASS CYCLES=707 SURV=122 INS=32 SINK=696  | g2_n64_k64_zinf 
+OK g8_n64_k64_zinf expect=PASS got=PASS CYCLES=759 SURV=298 INS=78 SINK=748  | g8_n64_k64_zinf 
+HGI_TKM PASS

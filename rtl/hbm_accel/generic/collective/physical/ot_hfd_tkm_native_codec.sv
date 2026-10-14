@@ -98,3 +98,70 @@ module ot_hfd_tkm_write_rx(
    end
   end
 endmodule
+// Proposed credit control word: {commit=0,valid=0,index=62,data32}.
+// data[3:0] is DEL reservation bitmap; data[7:4] grants whole-write leases;
+// data[8] acknowledges one actual sink write. A lease covers both 545b flits.
+// Source completion waits acknowledgements, including writes still inside TX.
+module ot_hfd_tkm_write_credit_tx # (parameter integer MUT=0)(
+ input wire clk,rst_n,input wire[39:0]control,
+ input wire w_v,input wire[39:0]w_addr,input wire[15:0]w_mask,input wire[511:0]w_data,
+ output wire w_rdy,output wire[544:0]packet,
+ input wire core_done,core_busy,core_fault,
+ output reg done,output wire busy,output reg fault,
+ output reg[15:0]outstanding,output reg[4:0]leases
+);
+ reg[39:0]control_pin;reg finishing;wire queue_rdy;
+ wire ctl=(control_pin[39:38]==0)&&(control_pin[37:32]==62);
+ wire[3:0]grant=ctl?control_pin[7:4]:4'd0;
+ wire ack=ctl&&control_pin[8];
+ wire admitted=w_v&&w_rdy;
+ assign w_rdy=queue_rdy&&(leases!=0)&&!finishing;
+ assign busy=core_busy||finishing||(outstanding!=0);
+ ot_hfd_tkm_write_tx u_tx(.clk(clk),.rst_n(rst_n),.w_v(admitted),.w_addr(w_addr),.w_mask(w_mask),.w_data(w_data),.w_rdy(queue_rdy),.packet(packet),.packet_rdy(1'b1));
+ always @(posedge clk)control_pin<=control;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin done<=0;finishing<=0;fault<=0;outstanding<=0;leases<=0;end
+  else begin
+   done<=0;
+   leases<=leases+5'(grant)-5'(admitted);
+   outstanding<=outstanding+16'(admitted)-16'(ack);
+   if((ack&&outstanding==0)||((6'(leases)+6'(grant))>8))fault<=1;
+   if(core_fault)fault<=1;
+   if(core_done)finishing<=1;
+   // MUT1 demonstrates why local TX acceptance cannot stand for sink completion.
+   if(finishing&&((MUT==1)||(outstanding==0&&!admitted)))begin done<=1;finishing<=0;end
+  end
+endmodule
+// Bounded native destination. There is no ready sideband on native545: the
+// source spends one granted queue slot before transmitting header and data.
+module ot_hfd_tkm_write_credit_rx(
+ input wire clk,rst_n,input wire[544:0]packet,
+ output wire w_v,output wire[39:0]w_addr,output wire[15:0]w_mask,output wire[511:0]w_data,
+ input wire w_rdy,output reg[3:0]grant,output reg ack,fault
+);
+ reg[544:0]packet_pin;reg header_valid;reg[39:0]addr;reg[15:0]mask;
+ reg[39:0]qa[0:7];reg[15:0]qm[0:7];reg[511:0]qd[0:7];reg[3:0]count;reg[2:0]head,tail;
+ reg initial_grant;
+ wire pop=(count!=0)&&w_rdy;
+ wire push=packet_pin[544]&&!packet_pin[543]&&header_valid;
+ assign w_v=count!=0;assign w_addr=qa[head];assign w_mask=qm[head];assign w_data=qd[head];
+ always @(posedge clk)begin
+  packet_pin<=packet;
+  if(push)begin qa[tail]<=addr;qm[tail]<=mask;qd[tail]<=packet_pin[511:0];end
+ end
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin header_valid<=0;addr<=0;mask<=0;count<=0;head<=0;tail<=0;grant<=0;ack<=0;fault<=0;initial_grant<=1;end
+  else begin
+   grant<=0;ack<=0;
+   if(initial_grant)begin grant<=8;initial_grant<=0;end
+   if(pop)begin head<=head+1'b1;ack<=1;grant<=1;end
+   if(push)begin tail<=tail+1'b1;if(count==8&&!pop)fault<=1;end
+   count<=count+4'(push)-4'(pop);
+   if(packet_pin[544])begin
+    if(packet_pin[543])begin
+     if(header_valid)fault<=1;
+     addr<=packet_pin[39:0];mask<=packet_pin[55:40];header_valid<=1;
+    end else begin if(!header_valid)fault<=1;header_valid<=0;end
+   end
+  end
+endmodule
