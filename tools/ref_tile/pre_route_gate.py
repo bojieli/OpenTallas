@@ -358,8 +358,9 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
-  python3 tools/closure_loop/ck_insertion.py --base $B --clock {CLK} --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
+  python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
+  python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt')}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
 fi
@@ -385,6 +386,16 @@ def ship_tar(paths):
 
 
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
+    if host == "auto":
+        picked = subprocess.run(["ot-run", "--mem", str(mem), "--pick"], capture_output=True, text=True)
+        if picked.returncode or not picked.stdout.strip():
+            g.add("FAIL", "remote", "fleet admission could not choose a host: " + picked.stderr[-500:], "read ot-run --status")
+            return
+        host = picked.stdout.strip()
+        g.add("INFO", "remote", f"ot-run selected {host} for {mem} GB; inputs ship there before admission")
+        auto = True
+    else:
+        auto = False
     fp = json.loads((kd / "floorplan.json").read_text())
     ref = set(fp["referenced"])
     # Ship the same transitive Tcl/shell dependencies checked by the local gate.
@@ -409,11 +420,18 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     if up.returncode:
         g.add("FAIL", "remote", f"cannot ship to {host}: {up.stderr[-200:]!r}", "pick another host")
         return
-    cmd = f"ot-heavy --mem {mem} -- bash {script}"
-    p = subprocess.run(["ssh", host, cmd], stdin=subprocess.DEVNULL, capture_output=True)
+    if auto:
+        # Exactly one ot-heavy reservation, inside ot-run; never nest guards.
+        p = subprocess.run(["ot-run", "--mem", str(mem), "--hosts", host,
+                            "--dir", str(Path(R).parent), "--", "bash", script],
+                           stdin=subprocess.DEVNULL, capture_output=True)
+    else:
+        cmd = f"ot-heavy --mem {mem} -- bash {script}"
+        p = subprocess.run(["ssh", host, cmd], stdin=subprocess.DEVNULL, capture_output=True)
     out = p.stdout.decode(errors="replace")
     logp = Path(os.environ.get("TMPDIR", "/tmp")) / f"ref_gate_{spec['name']}_{ts}.log"   # never into the kit (dirty tree)
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
+    g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
     secs = round(time.time() - t0)
     kv = dict(re.findall(r"\b(GATE_[A-Z_]+)=(\S+)", out))
@@ -503,10 +521,29 @@ def clock_record(out: str, cts: bool, spec: dict | None = None) -> dict:
     m = re.search(r"textbook_lint: INFO clock_roots max_root_sinks=(\d+) root=(\S+)", out)
     if m:
         rec["max_root_sinks"], rec["root"] = int(m.group(1)), m.group(2)
-    ck = re.search(r"^GATE_CK .*?\btt insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
-    if cts and ck:
-        lo, hi = float(ck.group(1)), float(ck.group(2))
-        rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
+    domains = []
+    for line in re.findall(r"^GATE_CK_DOMAIN (.*)$", out, re.M):
+        try:
+            domains.append(json.loads(line))
+        except (ValueError, TypeError):
+            continue
+    if domains:
+        rec["clock_measurements"] = domains
+        # The largest root may be a secondary clock (fcc: str_clk on cks[0],
+        # 17,460 sinks), so its tree must supply its own measured exception.
+        root = (rec["root"] or "").removeprefix("port:")
+        matched = [d for d in domains if d.get("source") == root or d.get("clock") == root]
+        if cts and len(matched) == 1:
+            al = (matched[0].get("tt") or {}).get("all")
+            if al and al.get("min") is not None and al.get("max") is not None:
+                lo, hi = float(al["min"]), float(al["max"])
+                rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
+                rec["measured_clock"] = matched[0].get("clock")
+    else:
+        ck = re.search(r"^GATE_CK .*?\btt insertion all ([\d.]+)\.\.([\d.]+) ps", out, re.M)
+        if cts and ck:
+            lo, hi = float(ck.group(1)), float(ck.group(2))
+            rec["tt_insertion_ps"], rec["tt_spread_ps"] = hi, round(hi - lo, 1)
     ok, text = TL.clock_rule(rec["max_root_sinks"], rec)
     rec["verdict"] = "PASS" if ok and rec["max_root_sinks"] is not None else ("UNKNOWN" if ok else "REFUSE")
     rec["text"] = text
@@ -570,7 +607,7 @@ def main(argv=None) -> int:
     ap.add_argument("target", nargs="?", help="kit dir (physical/ref_tile/<name>) or a tile spec json")
     ap.add_argument("--job", help="closure-loop job spec (default: the kit's job.json)")
     ap.add_argument("--commit", help="check source paths at this commit (default: working tree)")
-    ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (ot-epyc2, ...)")
+    ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (auto: ot-run admission and placement)")
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
     ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700)")
     ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
@@ -606,7 +643,7 @@ def main(argv=None) -> int:
     g.print()
     if a.remote and getattr(g, "clock", None) and "kd" in locals():
         out = {"schema": "opentallas.ref_tile.gate_result.v1", "kit": kd.name, "verdict": g.verdict,
-               "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": a.remote, "cts": bool(a.cts),
+               "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", a.remote), "cts": bool(a.cts),
                "commit": subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short=9", "HEAD"], capture_output=True,
                                         text=True).stdout.strip(),
                "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
