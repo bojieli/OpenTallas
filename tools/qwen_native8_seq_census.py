@@ -8,6 +8,7 @@ import argparse
 import collections
 import hashlib
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -95,11 +96,18 @@ def main():
     params = {'G': 3072, 'D': 8, 'NW': 18, 'SW': 64, 'CRED': 32, 'RB': 3,
               'IS': 1, 'OS': 1, 'RT': 4, 'PSRAM': a.psram, 'RRG': 0,
               'PCUT': 0, 'OLAG': 0, 'HQ2': 0, 'PMUT': 0, 'RLY': 0}
-    # Defer elaboration: eager processing plus top parameter overrides causes
-    # Yosys to rederive the controller before its shared helper is available.
-    script = 'read_verilog -defer -sv -D SYNTHESIS ' + ' '.join(SOURCES) + '\n'
+    # Top -chparam plus helper reprocessing collides in Yosys's parameter cache.
+    # Specialize ONLY the PSRAM default, leaving the complete body unchanged.
+    # All other requested values are already the pinned native8 defaults.
+    original = Path(SOURCES[0]).read_text()
+    specialized, count = re.subn(r'parameter integer PSRAM = 0,',
+                                'parameter integer PSRAM = %d,' % a.psram, original)
+    assert count == 1
+    profile = a.out / 'native8_profile.sv'
+    profile.write_text(specialized)
+    script = 'read_verilog -defer -sv -D SYNTHESIS ' + ' '.join([str(profile), *SOURCES[1:]]) + '\n'
     script += 'read_verilog -lib -sv ' + MACRO + '\n'
-    script += 'hierarchy -check -top ' + TOP + ' ' + ' '.join('-chparam %s %d' % p for p in params.items()) + '\n'
+    script += 'hierarchy -check -top ' + TOP + '\n'
     script += 'proc\nopt\nmemory_dff\nmemory_collect\nopt_clean\n'
     script += 'write_json ' + str(a.out / 'retained.json') + '\n'
     script += 'memory_map\nopt\nstat\nwrite_json ' + str(a.out / 'mapped.json') + '\n'
@@ -113,6 +121,8 @@ def main():
               'source_commit': '4fb280f39', 'top': TOP, 'parameters': params,
               'source_sha256': {p: sha(p) for p in [*SOURCES, MACRO]},
               'census_script_sha256': sha(__file__), 'yosys_script_sha256': sha(yp),
+              'analysis_profile_sha256': sha(profile),
+              'analysis_profile_transform': 'Only PSRAM parameter default specialized; all original body bytes and other native8 defaults preserved.',
               'retained': census(a.out / 'retained.json'),
               'mapped': census(a.out / 'mapped.json'),
               'physical_qualified': False, 'slots_assigned': False,
