@@ -14,7 +14,7 @@
  ],
  "outline": {
   "w": 140.832,
-  "h": 86.4
+  "h": 73.44
  },
  "std_area_um2": 450,
  "area_basis": "Temporary estimate, actual sourcebound synthesis/CTS required",
@@ -22,9 +22,7 @@
   "W": [
    "clk",
    "rst_n",
-   "sid"
-  ],
-  "S": [
+   "sid",
    "live",
    "read_v",
    "read_addr",
@@ -49,7 +47,7 @@
    "inst": "u_mem",
    "at": [
     23.328,
-    23.76
+    8.64
    ],
    "at_exact": true
   }

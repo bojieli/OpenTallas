@@ -7,13 +7,13 @@
   0,
   0,
   142.56,
-  86.4
+  73.44
  ],
  "core": [
   2.16,
   2.16,
   140.4,
-  84.24000000000001
+  71.28
  ],
  "why": "spec outline",
  "std_area_um2": 450,
@@ -32,9 +32,7 @@
   "W": [
    "clk",
    "rst_n",
-   "sid"
-  ],
-  "S": [
+   "sid",
    "live",
    "read_v",
    "read_addr",
@@ -62,7 +60,7 @@
    "inst": "u_mem",
    "idx": 0,
    "x": 23.328,
-   "y": 23.76,
+   "y": 8.64,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -73,14 +71,8 @@
   [
    "FAIL",
    "macro_edge",
-   "ot_sram_1r1w_128x256_m1_r2c2#0 19.4 um from the N core edge (< 20 um, a pin face)",
+   "ot_sram_1r1w_128x256_m1_r2c2#0 6.5 um from the S core edge (< 20 um)",
    "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "WARN",
-   "util",
-   "utilisation 38% outside 45%-60% (std 450 + macro 3894 in core 11347 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
  "referenced": [
