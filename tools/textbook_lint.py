@@ -120,8 +120,15 @@ HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by sp
 #                 with its pin flops at the pins; "fix" says what the new kit changes (recipe 2 / RTL pin flops)
 # M5 is the default for NEW tiles only.  Loop successors (auto-react, near-miss finishing, -hs / -ls re-runs) of a job
 # that is not CLOSED are unaffected.
-CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register")
+#   native_launch (el1014-root-macro-edge 2026-10-14) a CLOSED view fails the native launch budget (TT launch >
+#                 PIN_LAUNCH_MAX_PS at phi - R) only because its kit predates the recipe-2 output stage (main 36de4b87f):
+#                 the same RTL and outline / pin faces re-kitted with that stage ("source" audit JSON, "cell",
+#                 "launch_ps"); written by tools/ref_tile/rekit_native_launch.py
+CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
+                       "native_launch")
 DIE_WINDOW_CUT_MIN = 0.6
+PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
+PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
 PIN_REGISTER_PAIR_MAX_PS = 683.3      # 833.3 - 60 - SKEW 90 (same clock level): o + s of one view above it leaves no wire
 CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + "
                          "mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json "
@@ -132,7 +139,8 @@ CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it ag
                          "\"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ "
                          "\"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ "
                          "\"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > "
-                         "683.3, \"fix\")}")
+                         "683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; "
+                         "tools/ref_tile/rekit_native_launch.py)}")
 
 
 def clock_rule(max_sinks, evidence=None):

@@ -149,10 +149,19 @@ is hardened leaves with their own roots. CLOSED tiles are not re-judged.
   [--cts]`. The adapter verifies the entire original manifest, staged source, execution script and archive verification
   log, reruns local checks, and shares the live remote parser. It preserves the original identity and writes FAIL if
   the explicitly requested route source or current daemon helpers differ; it never labels the receipt with current HEAD.
+  For an already executed gate, `--frozen-helper-recovery` additionally verifies the original helper plan against its
+  recorded committed tree, all helper blob hashes and executable bits, and the actual staged helper bytes and full
+  transported modes. It recovers that original evidence without editing the staged tree. Uncommitted helper snapshots,
+  missing files, changed bytes/modes, changed producer sources or incomplete execution receipts still fail. The recovered
+  receipt retains its original producer identity; ordinary new-job submission continues to check current helpers.
   Gate packing and route refreshes share the effective helper resolver: an older main helper in the daemon is
   resolved to origin/main's bytes; a daemon-only edit retains its exact content identity. New receipts carry the
-  full effective route helper plan (hashes and modes). New ingested jobs freeze this plan and each helper refresh
-  refuses content/mode drift before sending any bytes; `<run>/cl/helper_overlay_plan.json` records the frozen plan.
+  full effective route helper plan (hashes and modes). New ingested jobs freeze this plan. Once installed, later stages
+  verify the committed original tree/blob identity and every actual `<run>/cl` helper byte/mode against its unchanged
+  sidecar, then reuse that directory without writing it. A later main update alone does not replace the executed helpers.
+  Missing/tampered original files or sidecars fail closed; recovery does not patch a live job. Initial installs still
+  resolve current helpers, and `<run>/cl/helper_overlay_plan.json` records the frozen plan. This transport recovery does
+  not change timing acceptance: negative setup/hold, unconstrained sentinel slacks, DRC or other failed checks remain failures.
   Older live jobs and CLOSED archives are preserved. Legacy v2 snapshots remain usable when their exact overlays
   match the effective resolver; an upgraded plan explicitly records the original narrower gate scope.
   Legacy receipts or receipts whose contents differ from the submitted commit/current daemon overlay are refused

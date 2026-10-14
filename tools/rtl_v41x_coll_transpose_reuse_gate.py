@@ -10,7 +10,7 @@ import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 VERILATOR = Path("/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator")
 SOURCES = [
     "rtl/chip/ot_chip_v41x_coll_transpose.sv",
