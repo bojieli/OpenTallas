@@ -63,7 +63,7 @@ module ot_qwen_tile_ctl_tp8_numeric_stream (
       .cx_accept_toggle(cx_accept_toggle),
       .cx_admission_fault(cx_admission_fault),
       .cx_op_accept(cx_op_accept),
-      .output wire cx_issue_last(output wire cx_issue_last),
+      .cx_issue_last(cx_issue_last),
       .cx_accepted_context(cx_accepted_context),
       .cx_accepted_version(cx_accepted_version),
       .cx_accepted_ib(cx_accepted_ib),
