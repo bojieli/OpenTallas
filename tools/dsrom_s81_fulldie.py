@@ -4000,7 +4000,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH, rt_strip=RT_STRIP,
+    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, suhc_1011=SUHC_1011, su_e_mm2=SU_E or None, hrow_tx=HROW_TX, vm_slab=list(VM_SLAB) if VM_SLAB else None, coll_slab_h=COLL_SLAB_H, ecol_slabs=list(ECOL_SLABS), ecol_w=ECOL_W if ECOL_SLABS else None, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, operand_path_pick=OPERAND_PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH, rt_strip=RT_STRIP,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -5152,6 +5152,7 @@ def _bank_nets(m):
 
 
 PATH_PICK = os.environ.get('OT_S81_PATH_PICK', '0') == '1'
+OPERAND_PATH_PICK = False  # opt-in column A/B/control alternate routes; register counts unchanged
 HOPDBG = os.environ.get('OT_S81_HOPDBG', '')
 # --relay-tt-reach UM (s81-gen 2026-10-09): option-B sign-off is TT setup (owner 10-07).  A relay / station with no legal box
 # inside the SS-derived reach (HOP_R_CC 410 um: the frame / corridor is 100 % packed, m221pq_r4c rt_0_8a_y1) takes the
@@ -5838,20 +5839,24 @@ def _col_relays(m, P):
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
             return pl, 'legacy'
         path = [a, (b[0], a[1]), b] if cls != 'ret_tree' else [a, (a[0], b[1]), b]
-        if cls == 'ret_tree' and RELAY_PROGRESS:
+        operand_candidate = OPERAND_PATH_PICK and re.fullmatch(r'(xa|xb|cc)_\d+_\d+', bid) is not None
+        if (cls == 'ret_tree' and RELAY_PROGRESS) or operand_candidate:
             # s81-die-iter 2026-10-12: the return tree's vertical-first L crosses the packed q slots where relay rows lie
             # ~546 um apart (rt_<c>_24b: y0 -> y1 546 um, TT tier, 518.4 um hop on all 128 columns).  Dry-run both L
             # paths and keep the one whose relays all place in the first (column-reach) tier, default L on ties.
             best_ = None
-            for j_, cand in enumerate((path, [a, (b[0], a[1]), b])):
+            alternate = [a, (a[0], b[1]), b] if operand_candidate else [a, (b[0], a[1]), b]
+            for j_, cand in enumerate((path, alternate)):
                 Lc, cur_, bad = _poly_len(cand), a, 0
-                for k in range(n):
-                    pl_, tier_ = _pick(cand, cur_, k, Lc, log=False)
-                    if pl_ is None:
-                        bad += 100
-                        break
-                    bad += tier_ != 'first'
-                    cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
+                with P.occ.temporary() as reserve:
+                    for k in range(n):
+                        pl_, tier_ = _pick(cand, cur_, k, Lc, log=False)
+                        if pl_ is None:
+                            bad += 100
+                            break
+                        reserve((pl_[0], pl_[1], pl_[0] + w_, pl_[1] + h_))
+                        bad += tier_ != 'first'
+                        cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
                 if best_ is None or bad < best_[0]:
                     best_ = (bad, j_, cand)
                 if bad == 0:
@@ -5859,6 +5864,8 @@ def _col_relays(m, P):
             if best_[1]:
                 path = best_[2]
                 m.setdefault('col_relay_path_pick', []).append(bid)
+            if operand_candidate:
+                m.setdefault('operand_path_candidates', []).append(dict(bus=bid, frame=r, selected_direction='vertical_first' if best_[1] else 'horizontal_first', nonfirst_tiers=best_[0], unchanged_register_count=n, per_bit_gate_required=True))
         prev, cur = eps[0], a
         chain = [a]
         Lp = _poly_len(path)
@@ -8150,6 +8157,7 @@ def die_options(ap):
                     'chains crossed 6-8 clock regions: 322 ps inter-region skew); default off')
     ap.add_argument('--path-pick', action='store_true', help='s81-gen 2026-10-09: a die-level hop runs on the L or '
                     'corridor Z path with the largest corridor share (station count from that path); = OT_S81_PATH_PICK=1')
+    ap.add_argument('--operand-path-pick', action='store_true', help='Source candidate: column xa/xb/cc relays try both L routes with actual trial occupancy; register counts unchanged. Full per-bit reach/cut gates remain required.')
     ap.add_argument('--relay-tt-reach', type=float, help='s81-gen 2026-10-09: a relay with no legal box inside the SS '
                     'reach takes the nearest box within this TT reach in um (option B: TT setup; 600 = 717 ps of TT wire); '
                     'listed in hop_fix.tt_reach_relays / col_relays.tt_reach_relays; default off')
@@ -8486,7 +8494,8 @@ def apply_options(a):
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
     # s81-gen: the OT_S81_HOP_R_CC override (9917e9987) was reset to 410 here, after import (the r4e_rcc runs were no-ops)
     HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, float(getattr(a, 'hop_r_cc', None) or os.environ.get('OT_S81_HOP_R_CC', 410.0))
-    global PATH_PICK, RELAY_TT_REACH
+    global PATH_PICK, RELAY_TT_REACH, OPERAND_PATH_PICK
+    OPERAND_PATH_PICK = bool(getattr(a, 'operand_path_pick', False))
     PATH_PICK = bool(getattr(a, 'path_pick', False)) or os.environ.get('OT_S81_PATH_PICK', '0') == '1'
     RELAY_TT_REACH = getattr(a, 'relay_tt_reach', None)
     if a.fwd_pitch:            # every hop on the die at or under the pitch
