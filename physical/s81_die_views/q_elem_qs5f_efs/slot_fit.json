@@ -2,8 +2,8 @@
  "schema": "opentallas.hier_contract.view_slot_fit.v1",
  "view": "physical/s81_die_views/q_elem_qs5f_efs/ot_v41_rom_elem_q_qxpq_w10.lef",
  "top": "ot_v41_rom_elem_q_qxpq_w10",
- "contract": "results/arch/hier_contract_1011/s81.json @ claude/el1011-s81dieit c40ca4c23 (contract v15; main is v14 without this row)",
- "contract_version": 15,
+ "contract": "results/arch/hier_contract_1011/s81.json",
+ "contract_version": 16,
  "slot": "rep/q_elem/ot_v41_rom_elem_q_qxpq_w10",
  "status": "fit",
  "mismatches": [],
@@ -73,6 +73,5 @@
  "est_insertion_ps": 597.97,
  "est_basis": "ot_v41_rom_elem_q_qxpq_w10_tt.lib max_clock_tree_path",
  "interior_pins": [],
- "ports_on_two_faces": [],
- "contract_ref": "results/arch/hier_contract_1011/s81.json @ claude/el1011-s81dieit c40ca4c23 (contract v15; main is v14 without this row)"
+ "ports_on_two_faces": []
 }
