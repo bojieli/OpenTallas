@@ -4,5 +4,5 @@ rename clock_tree_synthesis ::ot_ref_cts_boundary_orig
 proc clock_tree_synthesis {args} {
   ::ot_ref_cts_boundary_orig {*}$args
   set ::ot_ref_pre_cts 0
-  source /src/physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc5_boundary.tcl
+  source /src/physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc5s_boundary.tcl
 }
