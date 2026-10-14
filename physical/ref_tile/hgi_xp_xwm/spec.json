@@ -47,10 +47,15 @@
   "pin_h": "M4",
   "pin_v": "M3 M5",
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "outline": {
-  "w": 345.6,
+  "w": 388.8,
   "h": 43.2
  },
  "job": {
@@ -112,5 +117,88 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "pin_ranges": {
+  "c_v": [
+   2.16,
+   4.32
+  ],
+  "c_eop": [
+   4.32,
+   6.48
+  ],
+  "c_addr": [
+   6.48,
+   8.64
+  ],
+  "c_grp": [
+   8.64,
+   10.8
+  ],
+  "xw_en": [
+   10.8,
+   12.96
+  ],
+  "xw_addr": [
+   12.96,
+   15.12
+  ],
+  "xw_grp": [
+   15.12,
+   17.28
+  ],
+  "xw_eop": [
+   17.28,
+   19.44
+  ],
+  "c_d": [
+   19.44,
+   203.04
+  ],
+  "xw_data": [
+   203.04,
+   386.64
+  ],
+  "a_v": [
+   2.16,
+   4.32
+  ],
+  "a_eop": [
+   4.32,
+   6.48
+  ],
+  "a_addr": [
+   6.48,
+   8.64
+  ],
+  "a_grp": [
+   8.64,
+   10.8
+  ],
+  "b_v": [
+   10.8,
+   12.96
+  ],
+  "b_eop": [
+   12.96,
+   15.12
+  ],
+  "b_addr": [
+   15.12,
+   17.28
+  ],
+  "b_grp": [
+   17.28,
+   19.44
+  ],
+  "a_d": [
+   19.44,
+   203.04
+  ],
+  "b_d": [
+   203.04,
+   386.64
+  ]
+ },
+ "slot_change_request": "results/arch/hbm_native_1013/xp_recovery_1014/xwm_slot_request.json"
 }
