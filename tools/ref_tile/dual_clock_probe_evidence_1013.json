@@ -1,0 +1,52 @@
+{
+  "scope": "Actual CLOSED default VMX zero-wire clock API accounting diagnostic only; not priced die or physical qualification",
+  "actual_fixture": "/home/ubuntu/wt/el1013-s81-wfcstg/physical/s81_ph_views/closed/dsfd_wfc_vmx_prd_default",
+  "real_etm_status": "Full both-direction max/min rejected: no hold_rising or hold_falling arcs in any original ETM. Explicit setup-only diagnostic validates both directions at all corners.",
+  "actual_results": [
+    "DUAL_PATH tt cs max before=6.108447 after=-151.391571 expected=-151.391553",
+    "DUAL_PATH tt sc max before=-72.780060 after=-215.280075 expected=-215.28006",
+    "DUAL_REF tt a/ck[0] arrival=7.500000 R=342.4 phi=349.9",
+    "DUAL_REF tt b/ck[0] arrival=7.500000 R=342.4 phi=349.9",
+    "DUAL_REF tt a/ckv[0] arrival=0.000000 R=349.9 phi=349.9",
+    "DUAL_REF tt b/ckv[0] arrival=0.000000 R=349.9 phi=349.9",
+    "DUAL_PASS tt UNQUALIFIED actual ETM setup-only diagnostic; missing hold arcs; zero-wire API accounting only",
+    "DUAL_PATH ff cs max before=84.317139 after=-72.182869 expected=-72.182861",
+    "DUAL_PATH ff sc max before=-4.313550 after=-147.813568 expected=-147.81355",
+    "DUAL_REF ff a/ck[0] arrival=6.500000 R=277.6 phi=284.1",
+    "DUAL_REF ff b/ck[0] arrival=6.500000 R=277.6 phi=284.1",
+    "DUAL_REF ff a/ckv[0] arrival=0.000000 R=284.1 phi=284.1",
+    "DUAL_REF ff b/ckv[0] arrival=0.000000 R=284.1 phi=284.1",
+    "DUAL_PASS ff UNQUALIFIED actual ETM setup-only diagnostic; missing hold arcs; zero-wire API accounting only",
+    "DUAL_PATH ss cs max before=-129.927795 after=-289.927795 expected=-289.927795",
+    "DUAL_PATH ss sc max before=-205.352509 after=-345.352539 expected=-345.352509",
+    "DUAL_REF ss a/ck[0] arrival=10.000000 R=449.8 phi=459.8",
+    "DUAL_REF ss b/ck[0] arrival=10.000000 R=449.8 phi=459.8",
+    "DUAL_REF ss a/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
+    "DUAL_REF ss b/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
+    "DUAL_PASS ss UNQUALIFIED actual ETM setup-only diagnostic; missing hold arcs; zero-wire API accounting only"
+  ],
+  "synthetic_phase_diagnostic": [
+    "PHASE_PATH core cr max slack=127.777626 expected=127.77766666666702",
+    "PHASE_PATH core cr min slack=80.000000 expected=80",
+    "PHASE_PATH core cf max slack=127.777565 expected=127.77766666666702",
+    "PHASE_PATH core cf min slack=80.000053 expected=80",
+    "PHASE_PATH serial sr max slack=127.777733 expected=127.77766666666702",
+    "PHASE_PATH serial sr min slack=80.000000 expected=80",
+    "PHASE_PATH serial sf max slack=-11.111133 expected=-11.111166666667003",
+    "PHASE_PATH serial sf min slack=218.888763 expected=218.888833333333",
+    "PHASE_PASS synthetic diagnostic only",
+    "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-127835-1791951220): exit 0"
+  ],
+  "mutants": {
+    "serial_period_equal_core": [
+      "Error: phase.tcl, 15 phase mismatch core->cr max got683.333008 expected127.77766666666702",
+      "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-128335-1791951242): exit 1"
+    ],
+    "unmapped_top_input": [
+      "Error: probe_tt.tcl, 198 OT_ENTRIES: incomplete actual IO domain coverage (resets must also have a domain)"
+    ],
+    "zero_sources": [
+      "Error: probe_tt.tcl, 214 slack mismatch cs max -143.891571 vs -151.391553"
+    ]
+  }
+}
