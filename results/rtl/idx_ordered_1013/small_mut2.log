@@ -1,0 +1,59 @@
+ORDERED mismatch frame1 q0 beat0 got405ba015dfe01fe035 gold00077000bbfc03fc06
+ORDERED mismatch frame1 q0 beat1 got40bba045dfe01fe035 gold00137006bbfc03fc06
+ORDERED mismatch frame1 q0 beat2 got411ba075dfe00f9735 gold001f700cbbfc03fc06
+ORDERED mismatch frame1 q0 beat3 got417ba0a5dfe00f9835 gold002b7012bbfc01f2b6
+ORDERED mismatch frame1 q0 beat4 got41dba0d5dfe00f9935 gold00377018bbfc01f2d6
+ORDERED mismatch frame1 q0 beat5 got423ba105cfa25fe035 gold0043701ebbfc01f2f6
+ORDERED mismatch frame1 q0 beat6 got429ba135cfa35fe035 gold004f7024b9f41bfc06
+ORDERED mismatch frame1 q0 beat7 got42fba165cfa45fe035 gold005b702ab9f43bfc06
+ORDERED frame1 n10944 beats684 cycles2212 first11
+ORDERED frame2 n0 beats4 cycles504 first12
+ORDERED frame3 n1 beats4 cycles504 first14
+ORDERED frame4 n8 beats4 cycles504 first11
+ORDERED frame5 n9 beats4 cycles504 first12
+ORDERED frame6 n15 beats4 cycles504 first11
+ORDERED frame7 n16 beats4 cycles504 first11
+ORDERED frame8 n17 beats5 cycles504 first11
+ORDERED frame9 n2735 beats174 cycles504 first12
+ORDERED frame10 n2736 beats174 cycles504 first12
+ORDERED frame11 n2737 beats174 cycles504 first12
+ORDERED frame12 n5473 beats344 cycles728 first12
+ORDERED frame13 n8209 beats514 cycles1093 first11
+ORDERED frame14 n10944 beats684 cycles1460 first11
+ORDERED frame15 n9410 beats589 cycles1254 first11
+ORDERED frame16 n10042 beats628 cycles1344 first11
+ORDERED frame17 n9262 beats579 cycles1243 first12
+ORDERED frame18 n9476 beats593 cycles1249 first11
+ORDERED frame19 n4313 beats272 cycles582 first11
+ORDERED frame20 n7011 beats440 cycles932 first12
+ORDERED frame21 n5378 beats339 cycles726 first11
+ORDERED frame22 n10674 beats668 cycles1400 first11
+ORDERED frame23 n1018 beats67 cycles504 first11
+ORDERED frame24 n7584 beats475 cycles1011 first14
+ORDERED frame25 n4319 beats272 cycles586 first12
+ORDERED frame26 n6738 beats423 cycles915 first12
+ORDERED frame27 n10474 beats655 cycles1409 first11
+ORDERED frame28 n3805 beats240 cycles524 first12
+ORDERED frame29 n3926 beats248 cycles519 first13
+ORDERED frame30 n4866 beats307 cycles657 first11
+ORDERED frame31 n1652 beats107 cycles504 first11
+ORDERED frame32 n7390 beats463 cycles1013 first12
+ORDERED frame33 n1610 beats104 cycles504 first11
+ORDERED frame34 n3621 beats229 cycles504 first11
+ORDERED frame35 n5697 beats358 cycles752 first11
+ORDERED frame36 n4287 beats270 cycles584 first11
+ORDERED frame37 n7933 beats497 cycles1079 first11
+ORDERED frame38 n5089 beats321 cycles682 first11
+ORDERED frame39 n9614 beats601 cycles1281 first11
+ORDERED frame40 n4445 beats280 cycles602 first11
+ORDERED frame41 n2257 beats145 cycles504 first13
+ORDERED frame42 n5727 beats359 cycles757 first11
+ORDERED frame43 n884 beats59 cycles504 first11
+ORDERED frame44 n2233 beats143 cycles504 first12
+ORDERED frame45 n5670 beats356 cycles758 first11
+ORDERED frame46 n7317 beats459 cycles984 first11
+ORDERED MUT=2 frames=46 words=27659 errors=10742 FAIL
+- rtl/test/hbm_accel/tb_hbm_idx_ordered_candidate.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 373us; walltime 0.039 s; speed 9.547 ms/s
+- Verilator: cpu 0.039 s on 1 threads; allocated 8 MB

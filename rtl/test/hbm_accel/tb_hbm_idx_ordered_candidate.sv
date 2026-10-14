@@ -114,11 +114,34 @@ module tb_hbm_idx_ordered_candidate #(parameter integer MUT=0);
             $display("ORDERED frame%0d n%0d beats%0d cycles%0d first%0d",f,nn,got,cycle-start_cycle,first_output-start_cycle);
         end
     endtask
+    task automatic fault_case(input integer kind);
+        reg [609:0] beat;
+        begin
+            checking=0; rst=0; fs=0; si=0; coc=0; selector_ev=0;
+            repeat(4) @(negedge ck); rst=1; repeat(3) @(negedge ck);
+            fs={1'b0,1'b1,10'd512,14'd16,7'd23,20'd40000,4'd0,32'd56,1'b1};
+            @(negedge ck); fs=0; repeat(3) @(negedge ck);
+            beat=0; beat[0]=1; beat[1]=1; beat[33:18]=16'hffff;
+            for(integer l=0;l<16;l=l+1) begin
+                beat[34+16*l +:16]=16'h3f80;
+                beat[290+20*l +:20]=20'((23+96*(l/8))*8+l%8);
+            end
+            if(kind==0) beat[2]=1; // a refused valid score
+            if(kind==1) beat[290 +:20]=20'd0; // false global ID
+            if(kind==2) beat[1]=0; // missing required quarter tail
+            if(kind==3) selector_ev=2'd2; // selector fault must propagate
+            si[609:0]=beat;
+            @(negedge ck); si=0; selector_ev=0; repeat(12) @(negedge ck);
+            if(!ev[1]) begin $display("ORDERED fault%0d missed",kind); bad=bad+1; end
+            else $display("ORDERED fault%0d observed",kind);
+        end
+    endtask
     initial begin
         frame(1,10944); frame(2,0); frame(3,1); frame(4,8); frame(5,9);
         frame(6,15); frame(7,16); frame(8,17); frame(9,2735); frame(10,2736);
         frame(11,2737); frame(12,5473); frame(13,8209); frame(14,10944);
         for(integer f=15;f<47;f=f+1) frame(f,int'($urandom%10945));
+        for(integer k=0;k<4;k=k+1) fault_case(k);
         $display("ORDERED MUT=%0d frames=46 words=%0d errors=%0d %s",MUT,words,bad,bad==0?"PASS":"FAIL");
         $finish;
     end

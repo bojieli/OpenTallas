@@ -1,0 +1,89 @@
+{
+  "status": "PREBUILD_NOT_QUALIFIED",
+  "macs_per_cycle": 0,
+  "native_admission": {
+    "maximum_keys": 10944,
+    "quarter_keys": 2736,
+    "quarter_blocks": 342,
+    "quarter_score_beats": 171,
+    "empty_quarter_beats": 1,
+    "capacity_lines": 256,
+    "reasoning": "Native FS partitions keys into four fixed 2736-key quarters; each dense block-aligned score beat holds two owned blocks. No selector/scorer credit admission is changed."
+  },
+  "replicas": 96,
+  "independent_quarters": 4,
+  "boundary_bits_per_cycle": {
+    "score_input": 2440,
+    "frame_input": 90,
+    "candidate_output": 72,
+    "credit_input": 1,
+    "event_output": 2,
+    "selector_event_input": 2
+  },
+  "memory": {
+    "macros": 4,
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "physical_bits": 262144,
+    "logical_bits": 70656,
+    "macro_area_floor_um2": 28387.38,
+    "independent_read_ports": 4,
+    "independent_write_ports": 4,
+    "payload_read_bytes_per_cycle": 34.5,
+    "payload_write_bytes_per_cycle": 34.5,
+    "read_latency_edges": 1,
+    "finite_capacity": true
+  },
+  "datapath": {
+    "max8_per_cycle": 8,
+    "source": "ot_hdc_v41x_sel_cfront PIN=0",
+    "newest_comparators": 8,
+    "newest_fanout": 8,
+    "maximum_frontend_edges": 3,
+    "pin_capture_edges": 1,
+    "serializer": "registered four-way quarter mux, 72 bits, two candidates/cycle",
+    "output_credits": 8,
+    "credit_return_pin_edges": 1
+  },
+  "latency": {
+    "first_score_to_first_candidate_estimate": 6,
+    "maximum_output_beats": 684,
+    "source_window_estimate": 171,
+    "L20_dispatch_to_retire_estimate": 1138,
+    "L20_immutable_limit": 1333,
+    "measured": false,
+    "equation": "front 406 + capture/max/FIFO/output 6 + ordered beats 684 + prior measured drain 42; real top-k completion and finite VM-credit stalls remain to measure"
+  },
+  "physical": {
+    "target_period_ps": 833,
+    "routing_layer": "M5",
+    "boundary_tracks_required": 236.89320388349512,
+    "slot": null,
+    "pin_faces": null,
+    "mapped_area": null,
+    "slot_fit": false,
+    "clock_roots": 1,
+    "insertion_measured": false,
+    "compensated_clock_delivery_required": true
+  },
+  "adopted": false,
+  "source_pins": {
+    "rtl/hbm_accel/index/ot_hbm_idx_ordered_candidate.sv": "a6d77f443522fd60581417b8722e222f15ad3ec0a0dd4a9bce9e7ea001262e59",
+    "rtl/hbm_accel/index/ot_hbm_idx_ordered_native.sv": "38456d3e4b31c44bb4e4fc60f506479d9abe29ad30b46eb6b8e6f29f75522bce",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv": "0095d70919a7a3594757aab5f455e742f342285d0b7945a17782d279c4cfbd3c",
+    "rtl/link/ot_fifo_sram_fwft.sv": "b50f9c177198b74b9749e1f9780e63820586d06c035d2a5bcd43c93a31392685",
+    "rtl/hbm_accel/generic/idx/ix2/ot_hgi_idx_ix2_wp.sv": "9ca892c92e05bf4237f4eef7604862d0e8023a972520785c74c699181c5bad87",
+    "rtl/test/hbm_accel/tb_hbm_idx_ordered_candidate.sv": "f7bb2289e900ee92a0fc0dcd24f98053a85b1c099c34e4ab8ae73e90b3672eff"
+  },
+  "small_gate": {
+    "source_commit": "4c9d11582",
+    "base": "46 frames22459 words errors0 PASS",
+    "mutants": {
+      "1": 50,
+      "2": 10742,
+      "3": 11598
+    },
+    "fault_cases": "added after source gate, pending rerun",
+    "production": "not launched yet",
+    "closed_selector_scorer_unchanged": true
+  }
+}
