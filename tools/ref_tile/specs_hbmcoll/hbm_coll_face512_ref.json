@@ -1,0 +1,66 @@
+{
+  "name": "hbm_coll_face512_ref",
+  "top": "ot_hbm_coll_face_pipe512",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/collective/physical/ot_hbm_coll_face_pipe512.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [],
+  "clock": "cts",
+  "layer_cap": "M5",
+  "outline": {
+    "w": 108,
+    "h": 97.2
+  },
+  "pins": {
+    "W": [
+      "clk",
+      "d"
+    ],
+    "E": [
+      "q"
+    ]
+  },
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 16
+  },
+  "structural_change": "Replace hfd_coll five-stage face registers with 512-bit hard leaves, each owning 2560 flops and independent clock root. Core extraction and physical child placement remain prerequisites; no parent closure claim.",
+  "job": {
+    "owner": "Codex:coll_clusters2240",
+    "branch": "codex/hbm-coll-clusters-2240",
+    "tag": "r1",
+    "purpose": "Own-flop 512b hard face leaf preserves immutable hfd_coll five-cycle register chain with original cell comparator and early publication mutant",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/collective/physical",
+      "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv"
+    ],
+    "benches": [
+      {
+        "name": "coll_face_exact",
+        "cmd": "bash rtl/hbm_accel/generic/collective/physical/run_face_pipe512.sh {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "COLL_FACE PASS checked=1044480",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "coll_face_early_mutant",
+        "cmd": "bash rtl/hbm_accel/generic/collective/physical/run_face_pipe512.sh {RUN}/bench/mut mutant",
+        "expect": "fail",
+        "fail_regex": "COLL_FACE FAIL",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ]
+  }
+}
