@@ -31,14 +31,20 @@ module tb_qfd_link_adp512_split;
     wire ac,ar,at,af,bc,br,bt,bf; wire [1023:0] ard,brd; wire [1042:0] atf,btf;
     qfd_link_adp512 #(.MUT(MUT)) RA (.ck(clk),.rst_n(rst_n),.c_v(a_cv),.c_d(a_cd),.c_cr(ac),.r_v(ar),.r_d(ard),.r_cr(a_rcr),.tx_up(up),.tx_v(at),.tx_flit(atf),.rx_v(ba_v),.rx_flit(ba_f),.fault(af));
     qfd_link_adp512 RB (.ck(clk),.rst_n(rst_n),.c_v(b_cv),.c_d(b_cd),.c_cr(bc),.r_v(br),.r_d(brd),.r_cr(b_rcr),.tx_up(up),.tx_v(bt),.tx_flit(btf),.rx_v(ab_v),.rx_flit(ab_f),.fault(bf));
-    integer paired=0;
+    integer paired=0; integer header_g;
     always @(negedge clk) if(rst_n && cyc>5 && MUT==0) begin
       paired=paired+1;
       if ({ac,ar,at,af,bc,br,bt,bf} !== {a_ccr,a_rv,a_tv,a_f,b_ccr,b_rv,b_tv,b_f} ||
          (ar && ard!==a_rd) || (br && brd!==b_rd) ||
          (at && atf!==a_tf) || (bt && btf!==b_tf))
         $fatal(1,"FAIL split cycle equivalence cycle=%0d",cyc);
-      if (A.cc !== {8{ac}} || A.rv !== {8{ar}} || A.tv !== {8{at}} || A.ff !== {8{af}})
+      for(header_g=0;header_g<8;header_g=header_g+1) begin
+        if((at && A.headers[header_g] !== {atf[1042],atf[17:0]}) ||
+           (bt && B.headers[header_g] !== {btf[1042],btf[17:0]}))
+          $fatal(1,"FAIL split header replica cycle=%0d slice=%0d",cyc,header_g);
+      end
+      if (A.cc !== {8{ac}} || A.rv !== {8{ar}} || A.tv !== {8{at}} || A.ff !== {8{af}} ||
+          B.cc !== {8{bc}} || B.rv !== {8{br}} || B.tv !== {8{bt}} || B.ff !== {8{bf}})
         $fatal(1,"FAIL split control replicas cycle=%0d",cyc);
     end
     final $display("PAIR split checked_cycles=%0d",paired);
