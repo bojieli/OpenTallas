@@ -1,0 +1,293 @@
+{
+ "name": "qw_ovd_ref",
+ "top": "ot_hgi_qw_ovd",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovd.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 177.12
+ },
+ "util": 0.52,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_od"
+  }
+ ],
+ "pins": {
+  "W": [
+   "l_gp1",
+   "l_gp2"
+  ],
+  "S": [
+   "l_gp0",
+   "clk",
+   "rst_n",
+   "c_gv",
+   "c_gh",
+   "c_mw_v",
+   "c_mw_a",
+   "c_mw_sec",
+   "c_mw_n",
+   "c_wg",
+   "d_wf",
+   "d_bad",
+   "d_vo",
+   "d_f",
+   "d_df",
+   "d_y",
+   "l_wcr0",
+   "l_wv0",
+   "l_ws0",
+   "l_wsec0",
+   "l_wy0",
+   "l_wcr1",
+   "l_wv1",
+   "l_ws1",
+   "l_wsec1",
+   "l_wy1"
+  ],
+  "N": [
+   "l_gp3",
+   "l_wcr3",
+   "l_wv3",
+   "l_ws3",
+   "l_wsec3",
+   "l_wy3",
+   "l_wcr2",
+   "l_wv2",
+   "l_ws2",
+   "l_wsec2",
+   "l_wy2"
+  ],
+  "E": [
+   "dec_rst_n",
+   "x_v",
+   "x_hd",
+   "x"
+  ]
+ },
+ "refglob": "*gpf*",
+ "io_flop_at_pins": {
+  "cols": 12,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "pin_min_tracks": 1,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "structural_change": "quant_wide_ov flat cluster (38,353 flops + 20 macro clock pins on one root: ov1 crash, ov2 cancelled at 32-38k sinks with 495-727 ps CTS spread, ov3 EARLY_FAIL_HOLD) is replaced by a wires-only parent over hardened M5 leaves with their own clock roots: control head ot_hgi_qw_ovc, data head ot_hgi_qw_ovd (result SRAM + write side), 4 x read lane-group leaf ot_hgi_qw_lgr, 4 x write lane-group leaf ot_hgi_qw_lgw, the three closed decoder tiles; a register at both pins of every seam, no cycle added (gate quant_wide_ov: 184 cycles vs 168 priced = 1.095x, unchanged); w2 (w1 9734cdc71 crashed twice at IO placement, PPL-0086: pins on every track with one pin per group and explicit per-port ranges; --cts gate with TritonCTS: 9,647 sinks + the result SRAM at TT insertion 537.0 ps / spread 264.3 ps, the tree that cost the same-shape QDQ write leaf 215 ps of routed skew and TT -200.8): the leaf takes the pre-placed balanced clock spine (SRAM clock pin its own leaf), as qdq_wr_ref q8d (spread 49.7 ps, reg->reg +471.9); pin plan w2: outline 259.2 x 177.12 (was 172.8) and the row-1 / row-2 write beats on the S / N faces beside rows 0 / 3 (two vertical pin layers) instead of E: the E face had 2,404 pins on one M4 layer = 14.2 b/um and the W face 12.13 b/um (floorplan lint limit 12 over 100 um); now W 11.8, E 7.0 (x toward the dxl W face only), S / N 11.6 / 9.4 over M3 + M5",
+ "job": {
+  "owner": "Claude:el1013-hbm-quant-split",
+  "branch": "claude/hbm-quant-split-1013",
+  "tag": "w2",
+  "purpose": "WQ3 quant cluster data head: four gather pin registers (4,096) + OR4 register x to the decoder, decode launch / header RX, result capture, result FIFO on one 64x512 SRAM, meta FIFO, write credits, write issue, write beat registers (wy 512) to the write leaves, write grant.",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ]
+ },
+ "orfs_vars": {
+  "OT_MEG_MASTER": "ot_sram_1r1w_64x512_m1_r2c2",
+  "OT_MEG_EXPECT": 1,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "pin_ranges": {
+  "l_gp1": [
+   2.0,
+   88.36
+  ],
+  "l_gp2": [
+   88.76,
+   175.12
+  ],
+  "l_gp0": [
+   2.0,
+   81.88
+  ],
+  "clk": [
+   82.28,
+   83.48
+  ],
+  "rst_n": [
+   83.88,
+   85.08
+  ],
+  "c_gv": [
+   85.48,
+   86.68
+  ],
+  "c_gh": [
+   87.08,
+   88.49
+  ],
+  "c_mw_v": [
+   88.89,
+   90.09
+  ],
+  "c_mw_a": [
+   90.49,
+   91.69
+  ],
+  "c_mw_sec": [
+   92.09,
+   93.26
+  ],
+  "c_mw_n": [
+   93.66,
+   94.86
+  ],
+  "c_wg": [
+   95.26,
+   96.46
+  ],
+  "d_wf": [
+   96.86,
+   98.06
+  ],
+  "d_bad": [
+   98.46,
+   99.66
+  ],
+  "d_vo": [
+   100.06,
+   101.26
+  ],
+  "d_f": [
+   101.66,
+   102.86
+  ],
+  "d_df": [
+   103.26,
+   104.46
+  ],
+  "d_y": [
+   104.86,
+   144.8
+  ],
+  "l_wcr0": [
+   145.2,
+   146.4
+  ],
+  "l_wv0": [
+   146.8,
+   148.0
+  ],
+  "l_ws0": [
+   148.4,
+   150.9
+  ],
+  "l_wsec0": [
+   151.3,
+   160.66
+  ],
+  "l_wy0": [
+   161.06,
+   201.0
+  ],
+  "l_wcr1": [
+   201.4,
+   202.6
+  ],
+  "l_wv1": [
+   203.0,
+   204.2
+  ],
+  "l_ws1": [
+   204.6,
+   207.1
+  ],
+  "l_wsec1": [
+   207.5,
+   216.86
+  ],
+  "l_wy1": [
+   217.26,
+   257.2
+  ],
+  "l_gp3": [
+   2.0,
+   109.28
+  ],
+  "l_wcr3": [
+   109.68,
+   110.88
+  ],
+  "l_wv3": [
+   111.28,
+   112.48
+  ],
+  "l_ws3": [
+   112.88,
+   116.23
+  ],
+  "l_wsec3": [
+   116.63,
+   129.2
+  ],
+  "l_wy3": [
+   129.6,
+   183.24
+  ],
+  "l_wcr2": [
+   183.64,
+   184.84
+  ],
+  "l_wv2": [
+   185.24,
+   186.44
+  ],
+  "l_ws2": [
+   186.84,
+   190.19
+  ],
+  "l_wsec2": [
+   190.59,
+   203.16
+  ],
+  "l_wy2": [
+   203.56,
+   257.2
+  ],
+  "dec_rst_n": [
+   14.0,
+   15.2
+  ],
+  "x_v": [
+   15.6,
+   16.8
+  ],
+  "x_hd": [
+   17.2,
+   19.71
+  ],
+  "x": [
+   20.11,
+   163.12
+  ]
+ },
+ "why_floorplan": "cluster centre (216, 259.2), 259.2 x 172.8: W face = gather pin registers of rows 1 / 2 (facing, 71 um), S / N faces west = rows 0 / 3 (<= 440 um), E face = decoder x (dxl W face 43 um away) and the write beat of rows 1 / 2, S / N faces east = the write beat of rows 0 / 3 (<= ~510 um to the write leaves at x 730), S face = decode result y from daq's S pins and the control seam; pins on every track (4,096 gather pins: 0.57 of the W face, <= 0.67 elsewhere); w2: explicit balanced pin placement (pin_balance, a disjoint range for every port): w1 crashed twice at IO placement in the route (PPL-0086: the route's 32-pin ordered groups did not fit the N face; the gate's placement does not form those groups and had passed)",
+ "clock": "spine"
+}

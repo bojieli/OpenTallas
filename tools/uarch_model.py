@@ -16087,3 +16087,61 @@ def hbm_vm8_root_checker_bank_model():
     matched transaction timings and native ownership debt qualify the candidate.
     """
     return json.loads((ROOT / 'results/physical/vm8_root_checker_20261013/prebuild.json').read_text())
+
+
+def hbm_quant_ov_gather_write_split_model():
+    """Source 088e33d6d state partition; unchanged arithmetic and cycle price."""
+    return dict(schema='opentallas.hbm_quant_ov_split.v1', default_OFF=True,
+        selected_native_die=False, source='088e33d6d', MACs_per_cycle_added=0,
+        arithmetic_changed=False, pipeline_edges_added=0,
+        measured_source_cycles=184, immutable_price_cycles=168,
+        source_ratio=184/168, split_ratio_measured=False,
+        gather_register_bits=4*1024+1024+18+1,
+        gather_macro_count=0, write_macro_count=1,
+        write_macro='ot_sram_1r1w_64x512_m1_r2c2',
+        memory_read_bytes_per_cycle=64, memory_write_bytes_per_cycle=64,
+        gather_input_bits_per_cycle=4096, decoder_launch_bits_per_cycle=1044,
+        decoder_result_bits_per_cycle=515, write_row_output_bits_per_cycle=4*(512+8+120+32),
+        gather_outline_um=[86.4,388.8], write_outline_um=[250.56,177.12],
+        proposed_parent_outline_um=[777.6,691.2],
+        gather_origin_um=[181.44,259.2], write_origin_um=[293.76,120.96],
+        closed_decoder_column_x_um=570.24,
+        horizontal_clear_channels_um=[28.08,25.92,25.92,25.92],
+        gather_face_density_bits_per_um=4096/388.8,
+        gather_port_density_bits_per_um=1024/86.4,
+        layer_cap='M5 signals and PG; M6 parent straps; no PORT grant assumed',
+        physical_closed=False, clock_sinks='synthesis required; gather data state 5139 bits',
+        cts_requirement='each root <=15000; otherwise measured insertion <=300ps/spread<=80ps',
+        path_requirement='actual launch/capture insertion; registered seam and L-H>=100um',
+        cut_requirement='<=0.60 using real view obstructions and assigned pin ranges',
+        route_crossing='gather output y311.04..397.44 is above write leaf ending y298.08; final decoder access uses its west corridor',
+        unresolved=['actual per-bit pin correspondence','decoder internal seam cuts','physical leaf CTS','native alternative selection'])
+
+
+def hbm_sfu_b2_quarter_requirements_model():
+    """Actual v12 closed lane count, local B2 port and missing producer source."""
+    return dict(schema='opentallas.hbm_sfu_b2_quarter_requirements.v1',
+        source_contract='results/arch/hier_contract_1011/r25gq.json:v12',
+        quarter_master='hfd_sfu', quarter_count=4,
+        quarter_outline_um=[2016.144,1095.12], lanes_per_quarter=16, die_lanes=64,
+        arithmetic_master='ot_su12_sfu', arithmetic_view='physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu',
+        lane_outline_um=[216,330.48], lanes_layout='two rows of eight; x pitch250.56um, y86.4/509.76um',
+        local_vm_lanes=8, local_vm_bytes_per_cycle=8*256//8,
+        GLU_operand_words_per_lane_cycle=3, GLU_input_bytes_per_compute_cycle=16*3*4,
+        GLU_output_bytes_per_compute_cycle=16*4,
+        generic_lane_read_port_bits=16*(32+4*32),
+        closed_lane_load_bits=1200, max_glu_quarter_words=16384,
+        candidate_operand_macros=24, operand_macros_per_lane_pair=3,
+        operand_macro='ot_sram_1r1w_256x256_m2_r2c2', operand_macro_bytes=8192,
+        operand_storage_bytes=24*8192,
+        memory_candidate='three operand banks per pair of row0/row1 lanes; general address validity and exact stage transposition required',
+        producer_watermark_bits=20, producer_watermark_lanes=8,
+        watermark_tree_levels=3, watermark_ack_source='actual local bank O-write done; never issue or R-write done',
+        existing_watermark_source='d27cf80e6:ot_hgi_su_ctlw STREAM_WM',
+        source_gap='existing producer is32 lanes and refuses SLICES!=0; not this native8-lane quarter',
+        existing_controller_vehicle='rtl/hdc/v41x/phys/ot_hdc_su_ctl_c13_phys.sv:ot_su13_ctl64',
+        controller_gap='vehicle instantiates vec RTL; must extract source-equivalent controller ports and bind 16 closed lane masters',
+        proposed_macros_fit=False, native_source_binding=False, production_tput_measured=False,
+        clock_rule='closed lanes stand; each new memory/control/ACK root <=15000 or actual300/80 CTS',
+        latency_credit=0, repriced=False, physical_closed=False,
+        required_gates=['exact STRIPE4 sub-record ownership/local mapping','real16-lane c12 quarter arithmetic','actual8-lane stage/drain','O-only committed prefix plus early-issue mutant','registered per-pair reach L-H>=100um','actual pin files and cut<=0.60'])

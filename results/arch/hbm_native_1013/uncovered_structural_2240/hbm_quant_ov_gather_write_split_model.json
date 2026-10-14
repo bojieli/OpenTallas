@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.hbm_quant_ov_split.v1",
+  "default_OFF": true,
+  "selected_native_die": false,
+  "source": "088e33d6d",
+  "MACs_per_cycle_added": 0,
+  "arithmetic_changed": false,
+  "pipeline_edges_added": 0,
+  "measured_source_cycles": 184,
+  "immutable_price_cycles": 168,
+  "source_ratio": 1.0952380952380953,
+  "split_ratio_measured": false,
+  "gather_register_bits": 5139,
+  "gather_macro_count": 0,
+  "write_macro_count": 1,
+  "write_macro": "ot_sram_1r1w_64x512_m1_r2c2",
+  "memory_read_bytes_per_cycle": 64,
+  "memory_write_bytes_per_cycle": 64,
+  "gather_input_bits_per_cycle": 4096,
+  "decoder_launch_bits_per_cycle": 1044,
+  "decoder_result_bits_per_cycle": 515,
+  "write_row_output_bits_per_cycle": 2688,
+  "gather_outline_um": [
+    86.4,
+    388.8
+  ],
+  "write_outline_um": [
+    250.56,
+    177.12
+  ],
+  "proposed_parent_outline_um": [
+    777.6,
+    691.2
+  ],
+  "gather_origin_um": [
+    181.44,
+    259.2
+  ],
+  "write_origin_um": [
+    293.76,
+    120.96
+  ],
+  "closed_decoder_column_x_um": 570.24,
+  "horizontal_clear_channels_um": [
+    28.08,
+    25.92,
+    25.92,
+    25.92
+  ],
+  "gather_face_density_bits_per_um": 10.534979423868313,
+  "gather_port_density_bits_per_um": 11.851851851851851,
+  "layer_cap": "M5 signals and PG; M6 parent straps; no PORT grant assumed",
+  "physical_closed": false,
+  "clock_sinks": "synthesis required; gather data state 5139 bits",
+  "cts_requirement": "each root <=15000; otherwise measured insertion <=300ps/spread<=80ps",
+  "path_requirement": "actual launch/capture insertion; registered seam and L-H>=100um",
+  "cut_requirement": "<=0.60 using real view obstructions and assigned pin ranges",
+  "route_crossing": "gather output y311.04..397.44 is above write leaf ending y298.08; final decoder access uses its west corridor",
+  "unresolved": [
+    "actual per-bit pin correspondence",
+    "decoder internal seam cuts",
+    "physical leaf CTS",
+    "native alternative selection"
+  ]
+}

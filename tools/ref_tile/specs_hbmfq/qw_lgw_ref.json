@@ -1,0 +1,66 @@
+{
+ "name": "qw_lgw_ref",
+ "top": "ot_hgi_qw_lgw",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_wq.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_lg2.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 30.24,
+  "h": 144.72
+ },
+ "util": 0.52,
+ "macros": [],
+ "pins": {
+  "E": [
+   "wwq",
+   "wwq_cr",
+   "wwq_done"
+  ],
+  "W": [
+   "c_wy",
+   "c_wv",
+   "c_ws",
+   "c_wsec",
+   "e_wcr",
+   "e_done",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "refglob": "*f_wwq*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03
+ },
+ "structural_change": "quant_wide_ov flat cluster (38,353 flops + 20 macro clock pins on one root: ov1 crash, ov2 cancelled at 32-38k sinks with 495-727 ps CTS spread, ov3 EARLY_FAIL_HOLD) is replaced by a wires-only parent over hardened M5 leaves with their own clock roots: control head ot_hgi_qw_ovc, data head ot_hgi_qw_ovd (result SRAM + write side), 4 x read lane-group leaf ot_hgi_qw_lgr, 4 x write lane-group leaf ot_hgi_qw_lgw, the three closed decoder tiles; a register at both pins of every seam, no cycle added (gate quant_wide_ov: 184 cycles vs 168 priced = 1.095x, unchanged)",
+ "job": {
+  "owner": "Claude:el1013-hbm-quant-split",
+  "branch": "claude/hbm-quant-split-1013",
+  "tag": "w2",
+  "purpose": "WQ3 quant cluster write lane-group leaf (8 lanes, hardened once, x4 on the cluster E face): die-face pin flops (wwq 2,240 out), two write quads (flat), write relays stage 2 (wy 512 b from the data head).",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ]
+ },
+ "why_floorplan": "face-anchored on the cluster's lane face: four leaves stacked at 167.76 um pitch (144.72 high + 23.04 channels, 21.6 um edge margins) on the 691.2 um face; the die-face side carries 2,192 (read) / 2,256 (write) pins on M4, so pins take every track (pin_min_tracks 1: 0.73 / 0.75 of the face tracks; 2-track slots gave PPL-0111 at 129.6 um); recipe 1 (pin flops fixed at the pins, no per-pin hold chains): the recipe-2 chains on 3,424 pins put global placement at 155 % in the 25.92 um strip, and a strip wide enough for them is < 30 % utilised by the logic",
+ "recipe": 1
+}

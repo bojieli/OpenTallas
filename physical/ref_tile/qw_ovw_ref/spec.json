@@ -1,0 +1,120 @@
+{
+ "name": "qw_ovw_ref",
+ "top": "ot_hgi_qw_ovw",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovw.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 250.56,
+  "h": 177.12
+ },
+ "util": 0.52,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_od"
+  }
+ ],
+ "pins": {
+  "W": [
+   "c_mw_v",
+   "c_mw_a",
+   "c_mw_sec",
+   "c_mw_n",
+   "c_wg",
+   "d_wf",
+   "d_bad"
+  ],
+  "E": [
+   "d_vo",
+   "d_f",
+   "d_df",
+   "d_y"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "l_wcr0",
+   "l_wv0",
+   "l_ws0",
+   "l_wsec0",
+   "l_wy0",
+   "l_wcr1",
+   "l_wv1",
+   "l_ws1",
+   "l_wsec1",
+   "l_wy1"
+  ],
+  "N": [
+   "l_wcr2",
+   "l_wv2",
+   "l_ws2",
+   "l_wsec2",
+   "l_wy2",
+   "l_wcr3",
+   "l_wv3",
+   "l_ws3",
+   "l_wsec3",
+   "l_wy3"
+  ]
+ },
+ "refglob": "*yc*",
+ "io_flop_at_pins": {
+  "cols": 12,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 1,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "ovd w2 failed GRT with about17000markers at SRAM west edge, crossing gather escape and read-output fanout. Remove all gather state and decoder launch outputs from SRAM leaf; make independent no-macro gather leaf. Existing state/register edges unchanged; preserve closed decoder and lane constituents.",
+ "job": {
+  "owner": "Codex:hbm_quant_sfu_2240",
+  "branch": "codex/hbm-quant-sfu-2240",
+  "tag": "s1",
+  "purpose": "Alternative WQ3 data-head structural split: gather and SRAM/write state are separate leaves, existing registers reassigned with zero additional edges; no native die adoption claimed.",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ],
+  "views_to": "physical/ref_tile/qw_ovw_ref/views",
+  "record_to": "results/rtl/ref_tile/qw_ovw_ref"
+ },
+ "orfs_vars": {
+  "OT_MEG_MASTER": "ot_sram_1r1w_64x512_m1_r2c2",
+  "OT_MEG_EXPECT": 1,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "pin_ranges": {},
+ "why_floorplan": "cluster centre (216, 259.2), 259.2 x 172.8: W face = gather pin registers of rows 1 / 2 (facing, 71 um), S / N faces west = rows 0 / 3 (<= 440 um), E face = decoder x (dxl W face 43 um away) and the write beat of rows 1 / 2, S / N faces east = the write beat of rows 0 / 3 (<= ~510 um to the write leaves at x 730), S face = decode result y from daq's S pins and the control seam; pins on every track (4,096 gather pins: 0.57 of the W face, <= 0.67 elsewhere); w2: explicit balanced pin placement (pin_balance, a disjoint range for every port): w1 crashed twice at IO placement in the route (PPL-0086: the route's 32-pin ordered groups did not fit the N face; the gate's placement does not form those groups and had passed)",
+ "clock": "spine",
+ "recipe": 2,
+ "params": {},
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true
+}
