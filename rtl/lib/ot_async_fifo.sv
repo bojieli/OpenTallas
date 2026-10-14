@@ -25,6 +25,9 @@ module ot_async_fifo #(
     input  wire             rd_ready,
     output wire [WIDTH-1:0] rd_data,
     output reg              rd_underflow
+`ifdef OT_SPVM_RESET_ACK
+    , output wire wr_reset_live, output wire rd_reset_live
+`endif
 );
     initial begin
         if (DEPTH < 4 || (DEPTH & (DEPTH-1)) != 0)
@@ -77,6 +80,11 @@ module ot_async_fifo #(
     assign rd_empty_next = (rd_gray_next == wr_gray_r2);
     assign wr_ready = wr_domain_rst_n && rd_online_w2 && !wr_full;
     assign rd_valid = rd_domain_rst_n && wr_online_r2 && !rd_empty;
+`ifdef OT_SPVM_RESET_ACK
+    // Existing local online/rendezvous states; fullness/emptiness is not reset readiness.
+    assign wr_reset_live = wr_domain_rst_n && wr_online && rd_online_w2;
+    assign rd_reset_live = rd_domain_rst_n && rd_online && wr_online_r2;
+`endif
     assign rd_data = mem[rd_bin[ADDR_W-1:0]];
 
     always @(posedge wr_clk or negedge wr_domain_rst_n) begin

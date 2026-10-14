@@ -1,3 +1,6 @@
+`ifdef OT_SPVM_RESET_ACK
+`include "dsfd_vm_reset_ack.svh"
+`endif
 `timescale 1ns/1ps
 // Native S81 command pulses need buffering before a ready/valid CDC FIFO.
 // Both queues have depth8; the sequencer's8 outstanding credits cover queued,
@@ -7,6 +10,9 @@ module ot_s81_pulse_cdc #(parameter integer W=84, QD=8, XR=0)(
  input wire s_clk,s_rst_n, input wire i_v,input wire[W-1:0] i_d,
  output wire i_accept,output reg fault,
  input wire d_clk,d_rst_n,output wire o_v,input wire o_r,output wire[W-1:0] o_d
+`ifdef OT_SPVM_RESET_ACK
+ , output wire reset_live_s, output wire reset_live_d
+`endif
 );
  // XR 1: s_rst_n / d_rst_n are the two domains' conditioned resets (ot_async_fifo EXT_RST 1)
  localparam integer AW=$clog2(QD);
@@ -17,7 +23,11 @@ module ot_s81_pulse_cdc #(parameter integer W=84, QD=8, XR=0)(
  wire unused_over,unused_under;
  ot_async_fifo #(.WIDTH(W),.DEPTH(QD),.EXT_RST(XR)) u_fifo(
  .wr_clk(s_clk),.wr_rst_n(s_rst_n),.wr_valid(count!=0),.wr_ready(fready),.wr_data(q[rp]),.wr_overflow(unused_over),
- .rd_clk(d_clk),.rd_rst_n(d_rst_n),.rd_valid(o_v),.rd_ready(o_r),.rd_data(o_d),.rd_underflow(unused_under));
+ .rd_clk(d_clk),.rd_rst_n(d_rst_n),.rd_valid(o_v),.rd_ready(o_r),.rd_data(o_d),.rd_underflow(unused_under)
+`ifdef OT_SPVM_RESET_ACK
+ ,.wr_reset_live(reset_live_s),.rd_reset_live(reset_live_d)
+`endif
+ );
  always @(posedge s_clk or negedge s_rst_n) begin
   if(!s_rst_n) begin wp<=0;rp<=0;count<=0;fault<=0;end
   else begin
@@ -40,10 +50,16 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
  input wire e_clk,e_rst_n,output wire e_cmd_v,output wire[83:0] e_cmd_d,
  input wire e_cmd_ready,input wire e_inputs_present,
  input wire e_done_v,input wire[7:0] e_done_tag
+`ifdef OT_SPVM_RESET_ACK
+ , output wire rst_ack_c, output wire rst_ack_e
+`endif
 );
  localparam integer CW=$clog2(QD+1);
  wire arst_n=c_rst_n&&e_rst_n;
  wire c_run,e_run,c_run0,e_run0;
+`ifdef OT_SPVM_RESET_ACK
+ wire cmd_live_c,cmd_live_e,done_live_c,done_live_e;
+`endif
  wire c_rcmd,c_rdone,e_rcmd,e_rdone;   // FIFO-side reset copies
  ot_reset_sync u_cr(.clk(c_clk),.async_rst_n(arst_n),.sync_rst_n(c_run0));
  ot_reset_sync u_er(.clk(e_clk),.async_rst_n(arst_n),.sync_rst_n(e_run0));
@@ -74,7 +90,11 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
  wire[83:0] payload=(MUT==1)?(c_cmd_d^(84'd1<<73)):c_cmd_d;
  ot_s81_pulse_cdc #(.W(84),.QD(QD),.XR(XRT)) u_cmd(
  .s_clk(c_clk),.s_rst_n(c_rcmd),.i_v(admit),.i_d(payload),.i_accept(cmd_accept),.fault(cmd_fault),
- .d_clk(e_clk),.d_rst_n(e_rcmd),.o_v(cv),.o_r(cr),.o_d(cd));
+ .d_clk(e_clk),.d_rst_n(e_rcmd),.o_v(cv),.o_r(cr),.o_d(cd)
+`ifdef OT_SPVM_RESET_ACK
+ ,.reset_live_s(cmd_live_c),.reset_live_d(cmd_live_e)
+`endif
+ );
  // s81-ctl-1011 timing (dsfd_dw_ep_s TT -297: CDC read pointer -> rd_data mux -> epending[tag] 256:1 -> 20 levels):
  // the command leaves the CDC FIFO into a register first (+1 cycle); the pending lookup starts from that register
  reg rv; reg[83:0] rq;
@@ -89,7 +109,11 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
  wire[7:0] completion=(MUT==2)?(e_done_tag^8'h80):e_done_tag;
  ot_s81_pulse_cdc #(.W(8),.QD(QD),.XR(XRT)) u_done(
  .s_clk(e_clk),.s_rst_n(e_rdone),.i_v(complete),.i_d(completion),.i_accept(done_accept),.fault(done_fault),
- .d_clk(c_clk),.d_rst_n(c_rdone),.o_v(dv),.o_r(dr),.o_d(dt));
+ .d_clk(c_clk),.d_rst_n(c_rdone),.o_v(dv),.o_r(dr),.o_d(dt)
+`ifdef OT_SPVM_RESET_ACK
+ ,.reset_live_s(done_live_e),.reset_live_d(done_live_c)
+`endif
+ );
  assign dr=1'b1;
  always @(posedge c_clk or negedge c_run) begin
   if(!c_run) begin cpending<=0;cused<=0;cf<=0;c_done_v<=0;c_done_tag<=0;ef_c1<=0;ef_c2<=0;eonline_c1<=0;eonline_c2<=0;end
@@ -111,4 +135,8 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
    if((e_done_v&&!complete)||(rv&&epending[etag])||done_fault) ef<=1;
   end
  end
+`ifdef OT_SPVM_RESET_ACK
+ dsfd_vm_reset_ack #(.N(3)) u_ack_c (.clk(c_clk),.request_n(arst_n),.local_release({c_run,c_rcmd,c_rdone}),.consumer_live(online && cmd_live_c && done_live_c),.ack(rst_ack_c));
+ dsfd_vm_reset_ack #(.N(3)) u_ack_e (.clk(e_clk),.request_n(arst_n),.local_release({e_run,e_rcmd,e_rdone}),.consumer_live(e_run && cmd_live_e && done_live_e),.ack(rst_ack_e));
+`endif
 endmodule
