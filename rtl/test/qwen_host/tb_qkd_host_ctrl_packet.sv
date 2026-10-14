@@ -12,6 +12,8 @@ module tb_qkd_host_ctrl_packet;
  qkd_host_ctrl_packet #(.DIE(7))peer(.ck(ck),.rst_n(rst_n),.rx_v(prx_v),.rx_d(prx_d),.rx_cr(prx_cr),
  .tx_v(ptx_v),.tx_d(ptx_d),.tx_cr(ptx_cr),.local_tk(ptk),.local_boot(pb),.cmd_v(1'b0),.cmd_hc(182'd0),.cmd_cr(),
  .hc(phc),.tk8(),.boot8(),.seen(),.fault(pfault));
+ integer peerstarts=0;
+ always @(posedge ck)if(rst_n&&phc[38])begin peerstarts++;if(phc!=cmd_hc)$fatal(1,"peer command exact");end
  integer checks=0,n=0;reg[6:0]destseen=0;reg[511:0]p;
  task tick;begin @(posedge ck);#1;end endtask
  task check(input bit ok,input string why);begin checks++;if(!ok)$fatal(1,"%s",why);end endtask
@@ -41,7 +43,7 @@ module tb_qkd_host_ctrl_packet;
    end
    if(phc[38])check(phc==cmd_hc,"peer command exact");
   end
-  check(n==7&&destseen==7'h7f&&!fault&&!pfault,"all remote copies");
+  check(n==7&&destseen==7'h7f&&peerstarts==1&&!fault&&!pfault,"all remote copies");
   // Sequence replay fails closed instead of overwriting generation-qualified state.
   status(7,0,0);repeat(10)tick();check(fault,"replayed peer status rejected");
   $display("PASS CTRL8_PACKET checks=%0d",checks);$finish;
