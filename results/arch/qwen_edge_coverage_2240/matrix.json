@@ -30,7 +30,7 @@
       "actual_owner": "Codex:qwen_edge_coverage_2240",
       "state": "ACTIVE_NATIVE_CHILD_ROUTE_SUBMITTED",
       "current_source": "rtl/physical/ot_qfd_su_cbuf_native_l0.sv @23e6b338c",
-      "evidence": "Closedoldcbufbody stands. Actualcheckpoint basesPOST4736QS8832ROPE8833OSC533121DSC537217END541313 requireQKR10/NWIN138; nativeHEAD36retained. Realcrom.hex golden38152stage0reads PASS all8groups; mutantsrow6204/bank19188/latency25088 FAIL.",
+      "evidence": "Closedoldcbufbody stands. Actualcheckpoint basesPOST4736QS8832ROPE8833OSC533121DSC537217END541313 requireQKR10/NWIN138; nativeHEAD36retained. Realcrom.hex golden38152stage0reads PASS all8groups; mutantsrow6204/bank19188/latency25088 FAIL. c318routejobNEEDS_RTL onlyportableparserrgmissingAGI; actualunitPASS38152 preserved. Newgrep-E bench-firstsuccessor pending.",
       "next_action": "Submittedqfd_su_cbuf_native_l0-l0n1-c3183a825 exactproducer ea338634f/frozenrecordc3183a825,SB.validateTRUE. CTS4104/TTboundary332.3/sp79.9/setup126.845hold25.316. HoldfullmodelHEAD/actualdie/pricedcomposition; oldclosedviewsstand.",
       "historical_status_preserved": true,
       "registry_superseded": false

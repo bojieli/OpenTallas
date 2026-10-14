@@ -9,6 +9,6 @@ iverilog -g2012 -s "$T" -P"$T.MUT=$MUT" -P"$T.NTOK=1" -P"$T.RPS=1200" -P"$T.FLP=
  rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv rtl/hdc/ot_hdc_delay.sv \
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > "$OUT/build.log" 2>&1
 vvp "$OUT/sim" +CROM="$IMG" > "$OUT/run.log" 2>&1
-line=$(rg '^(PASS|FAIL) cbuf_native_l0' "$OUT/run.log" | tail -1)
+line=$(grep -E '^(PASS|FAIL) cbuf_native_l0' "$OUT/run.log" | tail -1)
 echo "$line"
 case "$line" in PASS*)exit 0;; *)exit 1;;esac
