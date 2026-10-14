@@ -35,6 +35,7 @@ int main(int argc,char**argv) {
     uint64_t compared=0,qbeats=0,bbeats=0,reads=0,counts=0,qualified_q=0,qualified_b=0,speculative_q=0,speculative_b=0;
     unsigned kmin=16383,kmax=0,phmin=511,phmax=0,saddrmax=0;
     uint64_t aq_requests=0,aq0_results=0,aq1_results=0;
+    uint64_t qbdual=0,qbsame=0,qbdiff=0,qbbankdiff=0;
     for(int test=0;test<4;test++) {
         Vref r;Vdut d;Stim s;
         int fam=test&1,np=(test>>1),phase=257+test*37;
@@ -101,6 +102,13 @@ int main(int argc,char**argv) {
                 ring_read[0][d.aq0_read_row]=true;ring_read[1][d.aq1_read_row]=true;
                 qualified_q+=(d.read_consumed&1)!=0;qualified_b+=(d.read_consumed&2)!=0;
                 speculative_q+=(d.read_speculative&1)!=0;speculative_b+=(d.read_speculative&2)!=0;
+                if(d.qb_pair_valid==3){
+                    ++qbdual;
+                    unsigned a=d.qb_q0_index,b=d.qb_q1_index;
+                    unsigned ra=((a>>4)<<2)|((a>>1)&3),rb=((b>>4)<<2)|((b>>1)&3);
+                    if(ra==rb)++qbsame;else++qbdiff;
+                    if((((a>>3)&1)<<1|(a&1))!=(((b>>3)&1)<<1|(b&1)))++qbbankdiff;
+                }
                 bool mismatch=r.ready!=d.ready||r.idle!=d.idle||r.x_re!=d.x_re||r.x_addr!=d.x_addr||r.fault!=d.fault
                     ||r.phase_cycles!=d.phase_cycles||r.ev_go!=d.ev_go||r.ev_end!=d.ev_end||r.ev_tag!=d.ev_tag
                     ||r.rom_pa0!=d.rom_pa0||r.rom_pa1!=d.rom_pa1||r.rom_sa!=d.rom_sa
@@ -144,6 +152,7 @@ int main(int argc,char**argv) {
         std::printf("PQ_NATIVE_CORE FAIL runtime coverage K=%u..%u PH=%u..%u AQ=%llu/%llu/%llu\n",kmin,kmax,phmin,phmax,
             (unsigned long long)aq_requests,(unsigned long long)aq0_results,(unsigned long long)aq1_results);return 1;
     }
+    std::printf("QB_ADDRESS_COVERAGE dual=%llu same_row=%llu different_row=%llu different_bank=%llu\n",qbdual,qbsame,qbdiff,qbbankdiff);
     std::printf("PQ_NATIVE_CORE PASS compared=%llu q=%llu bf=%llu reads=%llu counts=%llu consumed_q=%llu consumed_b=%llu speculative_q=%llu speculative_b=%llu KMIN=%u KMAX=%u PHMIN=%u PHMAX=%u SADDRMAX=%u positions=1,2 tags=0,1,2,3 IX_rows=96_per_macro_both_parities QB_rows=96_per_bank AQ_lanes=32x2 AQ_ring_rows=128 AQ_valid=%llu PHW=9 SAW=11 R=128 operand_macros=36 total_macros=44 return_groups=12\n",
         (unsigned long long)compared,(unsigned long long)qbeats,(unsigned long long)bbeats,(unsigned long long)reads,(unsigned long long)counts,
         (unsigned long long)qualified_q,(unsigned long long)qualified_b,(unsigned long long)speculative_q,(unsigned long long)speculative_b,

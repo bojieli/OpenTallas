@@ -48,6 +48,8 @@ module ot_s81_pq_core_native (
     , output wire [6:0] aq0_write_row, aq1_write_row, aq0_read_row, aq1_read_row
     , output wire aq_request
     , output wire [1:0] aq_results
+    , output wire [15:0] qb_q0_index, qb_q1_index
+    , output wire [1:0] qb_pair_valid
 `endif
 );
     wire aq_vin, ba_v;
@@ -83,6 +85,12 @@ module ot_s81_pq_core_native (
                               u_ctl.hw[0] && !u_ctl.h_fam && !q_consume};
     assign observed_k = u_ctl.ld_kk;
     assign observed_load_active = u_ctl.ld_run;
+`ifdef OT_PQ_REFERENCE
+    assign qb_q0_index = 0; assign qb_q1_index = 0; assign qb_pair_valid = 0;
+`else
+    assign qb_q0_index = u_qb.i0; assign qb_q1_index = u_qb.i1;
+    assign qb_pair_valid = u_qb.gates & {2{u_qb.consume_1}};
+`endif
     assign aq_request = aq_vin;
     assign aq_results = {g_aq[1].u_aq.vo, g_aq[0].u_aq.vo};
     assign aq0_write_row = g_aq[0].u_aq.r_wp;
