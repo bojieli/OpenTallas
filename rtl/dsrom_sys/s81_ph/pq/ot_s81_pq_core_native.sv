@@ -113,7 +113,11 @@ module ot_s81_pq_core_native (
     assign qb_q0_index = 0; assign qb_q1_index = 0; assign qb_pair_valid = 0;
 `else
     assign qb_q0_index = u_qb.i0; assign qb_q1_index = u_qb.i1;
+`ifdef OT_PQ_QB_PHYS_SPLIT
+    assign qb_pair_valid = u_qb.u_head.gates & {2{u_qb.u_head.consume_1}};
+`else
     assign qb_pair_valid = u_qb.gates & {2{u_qb.consume_1}};
+`endif
 `endif
     assign aq_request = aq_vin;
     assign aq_results = {g_aq[1].u_aq.vo, g_aq[0].u_aq.vo};

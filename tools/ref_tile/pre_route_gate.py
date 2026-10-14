@@ -956,7 +956,10 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          + ([sp["contract"]["file"]] if sp.get("contract") else [])
          # job.benches_from too (flowfix 10-13): gen_job reads the shared bench template, and without it the whole gate
          # went SKIP "gate error FileNotFoundError" for every kit that has one (all s81hc_cry* / ctr* kits of 10-13)
-         + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else []))
+         + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else [])
+         # cluster M8/M9 grant (VM6 10-14): ref_tile reads it at ROOT; without it every granted cluster (qfd_vm_rg* /
+         # qfd_vm_band and their probes) was REFUSED "cluster layer grant source must be an existing repository file"
+         + ([sp["cluster_layer_grant"]["source"]] if (sp.get("cluster_layer_grant") or {}).get("source") else []))
 
 
 def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:
