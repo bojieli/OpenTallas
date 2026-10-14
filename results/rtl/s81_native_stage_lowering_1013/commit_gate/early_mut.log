@@ -1,0 +1,6 @@
+TB_S81_HTRANSFER_VM qd=4 relay=0 stall=0 mut=1 native_bits=512 payload=640 beats=641 done=1 errors=633 faults=000 first_payload_cycles=28 completion_cycles=668 maxpending=14 FAIL
+HTRANSFER early=632 commits=640 transfer_fault=0 code=0
+- /srv/opentallas-scratch/codex/s81-native-head/commit-src/rtl/dsrom_sys/s81_ctrl/test/tb_s81_htransfer_vm.sv:78: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 4us; walltime 0.026 s; speed 143.033 us/s
+- Verilator: cpu 0.026 s on 1 threads; alloced 1019 MB
