@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen-tile-leaf-placement.v1",
- "status": "candidate_requires_measured_ctl_and_child_hop_gate",
+ "status": "REJECTED_station_corridor_overlap_and_reticle_height",
  "outline": [
   399.6,
   1442.88
@@ -347,5 +347,6 @@
  "rtl_top": "ot_qwen_rom_tile_nkt_mc",
  "control_inputs": "word={xl[127:0],ib[378:0],ib_go}; LOAD/EXEC protocol tools/qwen_kv_die/xline_delivery.md",
  "port_mapping": "RTL rtl/physical/ot_qwen_rom_tile_nkt.sv + ot_qwen_tile_kids.sv, cx_* wires connect ctl to children; external n_*,t_* are direct node ports",
- "assigned_pins": "pending die v5"
+ "assigned_pins": "pending die v5",
+ "rejection": "399.6 at pitch419.904 leaves20.304 but station requires64.8; old20um assumption was wrong. h1442.88 makes dieH26017.2 >26000. No adopted slot."
 }

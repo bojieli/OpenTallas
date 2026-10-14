@@ -1,0 +1,31 @@
+GATE WARN clock_span: 216.0 x 648.0 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: remote log /tmp/ref_gate_ot_qwen_tile_ctl_20261013-192513.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_ctl-20261013-192513
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 108 s (gate total 2607 s)
+GATE WARN util: synthesized std area 8019 um2 + macros 0 in core 136254: util 6%  -> FIX: set "std_area_um2": 8019 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: REFUSE ot_qwen_tile_ctl cells 61,541 flops 14,034 depth 486.8 ps util 0.0389 reach 772.4 um (1.1 s)
+GATE WARN textbook.clock_domain: clock root port clk: 14,034 flops > 8,000 spread over a 212 x 644 um outline (> 600 um) (+0 ICGs, 0 macro clock pins; e.g. fault$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.boundary: 512 output bit(s) combinational from input ports (e.g. cx_lq[9]->cx_td[9] 0 lv, cx_lq[99]->cx_td[90] 0 lv, cx_lq[98]->cx_td[89] 0 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE FAIL textbook.wire_reach: 1024 stage(s) beyond 500 um reach: insert relay flops  -> FIX: relay flops every <= 500 um, or move the logic next to its pins/macros
+GATE FAIL textbook.wire_reach: combinational path pin cx_lq[0] -> pin cx_td[0]: up to 772 um with no register (> 500 um)  -> FIX: relay flops every <= 500 um, or move the logic next to its pins/macros
+GATE FAIL textbook.wire_reach: combinational path pin cx_lq[0] -> pin cx_td[0]: up to 772 um with no register (> 500 um)  -> FIX: relay flops every <= 500 um, or move the logic next to its pins/macros
+GATE FAIL textbook.wire_reach: combinational path pin cx_lq[1] -> pin cx_td[1]: up to 772 um with no register (> 500 um)  -> FIX: relay flops every <= 500 um, or move the logic next to its pins/macros
+GATE WARN textbook.util_channel: utilisation 3.9% outside 45%-65% (std 5306 + macro 0 um2 in 136254 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 688.2..776.0 ps (spread 87.8), boundary mean 727.1; tt insertion all 536.3..614.1 ps (spread 77.8), boundary mean 569.8; ff insertion all 440.8..512.0 ps (spread 71.2), boundary mean 471.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: reg->out      300 paths, worst slack -78.7 ps (e.g. cx_rreq[31])
+GATE INFO path_classes: reg->reg       16 paths, worst slack 596.5 ps (e.g. u_logic.u_me.g_hier.g_sl[2].g_hx.g_tx.g_r[0].u_tx/q[389]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: in->reg        80 paths, worst slack 650.5 ps (e.g. u_logic.u_me.fault$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -7.87013232361744e-11 hold WNS -1.2522821668525808e-10
+GATE INFO clock_rule: root port:clk: 14,034 sinks on the largest root <= 15,000; measured TT insertion 614.1 ps, leaf spread 77.8 ps
+PRE_ROUTE_GATE: FAIL (4 fail, 5 warn)
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/q14-tile-parent/tools/ref_tile/pre_route_gate.py", line 717, in <module>
+    sys.exit(main())
+  File "/home/ubuntu/wt/q14-tile-parent/tools/ref_tile/pre_route_gate.py", line 613, in main
+    (kd / CLOCK_RESULT).write_text(json.dumps(out, indent=1) + "\n")
+  File "/usr/lib/python3.10/pathlib.py", line 1154, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/q14-tile-parent/physical/ref_tile/ot_qwen_tile_ctl/gate_result.json'

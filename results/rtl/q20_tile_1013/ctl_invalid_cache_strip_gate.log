@@ -1,0 +1,22 @@
+GATE WARN clock_span: 47.52 x 1404.0 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: remote log /tmp/ref_gate_ot_qwen_tile_ctl_strip_20261013-193249.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/ot_qwen_tile_ctl_strip-20261013-193249
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 136 s (gate total 2509 s)
+GATE WARN util: synthesized std area 8215 um2 + macros 0 in core 60466: util 14%  -> FIX: set "std_area_um2": 8215 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: REFUSE ot_qwen_tile_ctl cells 63,102 flops 14,164 depth 461.8 ps util 0.09 reach 861.1 um (1.9 s)
+GATE WARN textbook.clock_domain: clock root port clk: 14,164 flops > 8,000 spread over a 43 x 1400 um outline (> 600 um) (+0 ICGs, 0 macro clock pins; e.g. fault$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.high_fanout: reset port rst_n: 376 loads (220 flops, e.g. fault$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.high_fanout: port ib_go: 314 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 512 output bit(s) combinational from input ports (e.g. cx_lq[9]->cx_td[9] 0 lv, cx_lq[99]->cx_td[90] 0 lv, cx_lq[98]->cx_td[89] 0 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.boundary: 130 input->register endpoint(s) > 3 levels (worst ib[87]->u_xcapture.xl[9]$_DFFE_PN0P_/D 9 lv, ib[87]->u_xcapture.xl[99]$_DFFE_PN0P_/D 9 lv, ib[87]->u_xcapture.xl[98]$_DFFE_PN0P_/D 9 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE FAIL textbook.wire_reach: 1153 stage(s) beyond 500 um reach: insert relay flops  -> FIX: relay flops every <= 500 um, or move the logic next to its pins/macros
+GATE FAIL textbook.wire_reach: combinational path pin cx_lq[59] -> pin cx_td[59]: up to 861 um with no register (> 500 um)  -> FIX: relay flops every <= 500 um, or move the logic next to its pins/macros
+GATE FAIL textbook.wire_reach: combinational path pin cx_lq[57] -> pin cx_td[57]: up to 861 um with no register (> 500 um)  -> FIX: relay flops every <= 500 um, or move the logic next to its pins/macros
+GATE FAIL textbook.wire_reach: combinational path pin cx_lq[29] -> pin cx_td[29]: up to 861 um with no register (> 500 um)  -> FIX: relay flops every <= 500 um, or move the logic next to its pins/macros
+GATE WARN textbook.util_channel: utilisation 9.0% outside 45%-65% (std 5443 + macro 0 um2 in 60466 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_rule: root port:clk: 14,164 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: FAIL (5 fail, 9 warn)
+GATE: ot_qwen_tile_ctl_strip/gate_result.json written (clock evidence for the submit gate: commit it with the kit)

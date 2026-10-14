@@ -15,6 +15,9 @@ module ot_qwen_tile_ctl (
     input  wire [378:0]  ib,
     input  wire [127:0]  xl,
     output wire          fault,
+    output wire [3:0] cx_xre,
+    output wire [95:0] cx_xaddr,
+    output wire [20:0] cx_xepoch,
     output wire [69:0]   cx_rreq,
     input  wire [5119:0] cx_rq,
     output wire [3127:0] cx_ld,
@@ -23,24 +26,19 @@ module ot_qwen_tile_ctl (
     output wire          cx_tvd,
     input  wire          cx_nfault
 );
-    wire tile_fault, capture_fault;
-    wire exec_go;
-    wire [378:0] exec_ib;
-    wire [127:0] exec_xl;
-    // LOAD cache lives in this hardened leaf; EXEC is captured by the existing core pin registers.
-    ot_qwen_xline_capture u_xcapture (.clk(clk), .rst_n(rst_n), .tile_id(tile_id),
-        .word({xl, ib, ib_go}), .ib_go(exec_go), .ib(exec_ib), .xl(exec_xl), .fault(capture_fault));
+    wire tile_fault;
     ot_qwen_rom_tile_logic_w12 #(.NW(18), .GT(6144), .SMIN(7), .CODE_BANKS(5), .KV_LOCAL(0), .KV_VB(131072), .KV_NH(2),
         .MEM_EXTRA(1), .ACC_LAT(7), .TREE_LAT(7), .FAST_ISSUE(1), .KV_PREP(4), .MUL_LAT(8), .ROM_PIPE(1), .ROM_ARELAY(2),
         .ROM_CAP2(1), .ROM_CAPX(2), .LRST(3), .ARPB(1), .MPR(1), .HIER(2), .HIER_HARD(1), .TOREG(1), .TIDR(1), .LRR(1),
         .RPH(2), .RQR(1), .XTX(2), .ANR(1), .BAW(12), .NDH(1), .BMUT(0), .CEXT(1)) u_logic (
-        .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(exec_go), .ib(exec_ib), .xl(exec_xl),
+        .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(), .t_vout(), .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tile_fault),
         .rom_ce(), .rom_addr(), .rom_addr_n(), .rom_addr_b(), .rom_req_m(), .rom_rd({2*5*266{1'b0}}),
         .kvs_r_ce(), .kvs_r_addr(), .kvs_rd(512'd0), .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}),
+        .cx_xre(cx_xre), .cx_xaddr(cx_xaddr), .cx_xepoch(cx_xepoch),
         .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
     (* keep *) reg fault_q;    // the tile's flop-launched fault pin (ot_qwen_rom_tile_nk fault_q)
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) fault_q <= 1'b0; else fault_q <= tile_fault | capture_fault;
+        if (!rst_n) fault_q <= 1'b0; else fault_q <= tile_fault;
     assign fault = fault_q;
 endmodule

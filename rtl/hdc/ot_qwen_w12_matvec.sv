@@ -129,6 +129,7 @@ module ot_qwen_w12_matvec #(
     input  wire [G*W*32-1:0] kv_q,
     output wire [G-1:0]      x_re,
     output wire [G*AW-1:0]   x_addr,
+    output wire [NW+$clog2(IL)-1:0] x_epoch,
     input  wire [G*32-1:0]   x_q,
     output wire              ov,
     output wire [G-1:0]      o_we,
@@ -160,7 +161,7 @@ module ot_qwen_w12_matvec #(
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
         .kv_re(kv_re), .kv_addr(kv_addr), .kv_q(kv_q),
-        .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
+        .x_re(x_re), .x_addr(x_addr), .x_epoch(x_epoch), .x_q(x_q),
         .ov(ov), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data),
         .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
@@ -286,6 +287,7 @@ module ot_qwen_w12_matvec_part #(
     // x reads (vector memory, element), one port per group
     output reg  [G-1:0]      x_re,
     output reg  [G*AW-1:0]   x_addr,
+    output reg [NW+$clog2(IL)-1:0] x_epoch,
     input  wire [G*32-1:0]   x_q,
     // result words, one port per group
     output wire              ov,          // a result round-slot (whether or not written)
@@ -597,6 +599,8 @@ end endgenerate
                 x_re[gi] <= (gi < NPX) && (((gb + gi) >> split_r) < (GT >> split_r));
     end
     always @(posedge clk) begin
+        // Pre-update k/j correspond to this exact registered request, including arbitrary xjs.
+        x_epoch <= {k, j};
         for (gi = 0; gi < NPX; gi = gi + 1)
             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
     end

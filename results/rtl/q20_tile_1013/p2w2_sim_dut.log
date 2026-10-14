@@ -1,0 +1,27 @@
+[0] %Error: ot_qwen_rom_tile_w12.sv:260: Assertion failed in tb_qwen_me_partition_w12.u_arr.g_tile[0].u_t.g_ndh.g_bad: NDH needs W 16, NREG 1, TREE_LAT 7, ANR 1, TOREG 1 (the fixed hardened leaf ot_qwen_tile_node)
+%Error: /srv/opentallas/claude/q18-tile-tput/src/rtl/hdc/ot_qwen_rom_tile_w12.sv:260: Verilog $stop
+Aborting...
+Command exited with non-zero status 1
+	Command being timed: "/srv/opentallas/claude/q18-tile-tput/runs/p2w2/dut/Vtb_qwen_me_partition_w12"
+	User time (seconds): 5.10
+	System time (seconds): 0.55
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:05.67
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1481580
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 355569
+	Voluntary context switches: 11
+	Involuntary context switches: 15
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

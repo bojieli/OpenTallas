@@ -171,6 +171,10 @@ module ot_qwen_rom_tile_logic_w12 #(
     output wire              kv_re,
     output wire [TG*AW-1:0]  kv_addr,
     input  wire [TG*W*32-1:0] kv_q,
+    // Actual registered local X request: response timing must match u_me and pause with its clock.
+    output wire [TG-1:0] cx_xre,
+    output wire [TG*AW-1:0] cx_xaddr,
+    output wire [NW+$clog2(IL)-1:0] cx_xepoch,
     // CEXT seams (width 1 and unused when CEXT = 0)
     output wire [((CEXT != 0) ? CODE_BANKS * 14 : 1)-1:0]     cx_rreq,
     input  wire [((CEXT != 0) ? CODE_BANKS * 64 * W : 1)-1:0] cx_rq,
@@ -261,7 +265,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q),
         .scale_re(), .scale_gre(), .scale_addr(), .scale_q({TG*W*16{1'b0}}),
         .kv_re(me_kv_re), .kv_addr(me_kv_addr), .kv_q(me_kv_q),
-        .x_re(), .x_addr(), .x_q(xl_i),
+        .x_re(cx_xre), .x_addr(cx_xaddr), .x_epoch(cx_xepoch), .x_q(xl_i),
         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
         .progress(), .fault(me_fault),
