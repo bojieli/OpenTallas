@@ -1318,7 +1318,9 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             f"source /src/{s['orfs_vars']['POST_TAPCELL_TCL']}\n"
             "# then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when\n"
             "# a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)\n"
-            "foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
+            "# signal ports only: POWER/GROUND BTerm pins (made by pdngen at 2_4) are never re-created by io_tcl or\n"
+            "# place_pins; a pinless VDD/VSS BTerm makes AntennaChecker::designIsPlaced() false -> ANT-0008 at 5_1_grt\n"
+            "foreach bt [[ord::get_db_block] getBTerms] { if {[$bt getSigType] in {POWER GROUND}} continue; foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
         # el1013-smh-r11 2026-10-13: this ORFS sources IO_CONSTRAINTS at 2_1_floorplan ONLY (floorplan.tcl), not at
         # 3_2_place_iop, so after the unplace above place_pins placed EVERY port by wirelength and the exact plan was lost
         # (smh_tile_eg_ref r10: 7,766 of 7,766 ports re-placed; clk / cgi on the W face, gin on the E face on M4, 50 of the
@@ -1328,14 +1330,14 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             "# ref_tile: re-apply the exact abutment pin plan after place_pins (IO_CONSTRAINTS is sourced only at\n"
             "# 2_1_floorplan; the POST_TAPCELL hook unplaced the ports so place_pins could run) and save the stage result\n"
             "set ot_blk [ord::get_db_block]\n"
-            "foreach bt [$ot_blk getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n"
+            "foreach bt [$ot_blk getBTerms] { if {[$bt getSigType] in {POWER GROUND}} continue; foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n"
             f"source /src/{s['io_tcl']}\n"
             "set ot_n 0; set ot_miss {}\n"
             "foreach bt [$ot_blk getBTerms] {\n"
             "  if {[$bt getSigType] in {POWER GROUND}} continue\n"
             "  if {[llength [$bt getBPins]] == 0} { lappend ot_miss [$bt getName] } else { incr ot_n }\n"
             "}\n"
-            "if {[llength $ot_miss]} { error \"REF_TILE exact pin plan: [llength $ot_miss] ports left unplaced ([lrange $ot_miss 0 4])\" }\n"
+            "if {[llength $ot_miss]} { error \"REF_TILE exact pin plan: [llength $ot_miss] ports left unplaced ([lrange $ot_miss 0 4])\" }\n"            "foreach bt [$ot_blk getBTerms] { if {[$bt getSigType] in {POWER GROUND} && [llength [$bt getBPins]] == 0} { error \"REF_TILE power port [$bt getName] lost its pdn pin (ANT-0008 at grt)\" } }\n"
             "puts \"REF_TILE exact pin plan re-applied after place_pins: $ot_n ports\"\n"
             "orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb\n"
             "write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl\n")

@@ -46,10 +46,10 @@
   "price_status": "Structural+1UTedge only; full unit/modelprice remains pending"
  },
  "routing_timing_status": {
-  "status": "OPEN actual wire budgets/routed RC/timing",
-  "groups_over_diagnostic500": 238,
-  "bits_over_diagnostic500": 1643,
-  "worst_polyline_um": 716.3795,
+  "status": "Partial PASS geometry, connectivity, capacity and diagnostic500um polylines; OPEN actual per-pair RC budgets/routed views/timing",
+  "groups_over_diagnostic500": 0,
+  "bits_over_diagnostic500": 0,
+  "worst_polyline_um": 499.836,
   "actual_per_pair_rc_budget_bound": false
  }
 }
