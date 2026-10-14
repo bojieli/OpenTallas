@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  194.4,
-  64.8
+  259.2,
+  75.6
  ],
  "core": [
   2.16,
   2.16,
-  192.24,
-  62.64
+  257.03999999999996,
+  73.44
  ],
  "why": "spec outline",
- "std_area_um2": null,
+ "std_area_um2": 6507,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -63,7 +63,14 @@
  },
  "clock_port": "clk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 36% outside 45%-60% (std 6507 + macro 0 in core 18168 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/hbm_accel/generic/idx/ix2/ot_hgi_idx_ix2_wp.sv",
   "physical/ref_tile/hgi_ix2_wp/kit.env",
