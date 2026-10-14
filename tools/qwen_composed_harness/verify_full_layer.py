@@ -100,20 +100,8 @@ def verify(oracle, actual):
                       'expected_VM_sha256': sha(expected_path)})
     collectives = []
     for segment, pc in enumerate((12, 20)):
-        # Independent observer: exact binary32 pair folds, then package order.
-        # These values never enter the executable or collector input paths.
-        partials = []
-        for rank in range(8):
-            with np.load(oracle / f'die{rank}' / f'candidate_pc{pc}_vm.npz') as expected:
-                partials.append(expected['vm_bits'][:4096].view(np.float32).copy())
-        def add(a, b):
-            value = np.add(a, b, dtype=np.float32)
-            return np.where(value == 0, np.float32(0), value).astype(np.float32)
-        packages = [add(partials[p], partials[p + 4]) for p in range(4)]
-        folded = packages[0]
-        for package in packages[1:]:
-            folded = add(folded, package)
-        folded = folded.view(np.uint32)
+        # Independent production oracle returns are observer-only. Actual
+        # collector inputs remain the hardware-produced rank partials.
         errors = 0
         for rank in range(8):
             path = actual / f'collective{segment}' / 'actual' / f'rank{rank}.hex'
@@ -124,7 +112,11 @@ def verify(oracle, actual):
                 result.extend(int(word[128-8*(lane+1):128-8*lane], 16) for lane in range(16))
             if len(result) != 4096:
                 raise ValueError('actual collective output count differs')
-            errors += int(np.count_nonzero(np.array(result, dtype=np.uint32) != folded))
+            expected_path = oracle / f'die{rank}' / f'collective{segment}_return.hex'
+            expected = np.array([int(x, 16) for x in expected_path.read_text().split()], dtype=np.uint32)
+            if expected.size != 4096:
+                raise ValueError('independent collective return dimensions differ')
+            errors += int(np.count_nonzero(np.array(result, dtype=np.uint32) != expected))
         collectives.append({'segment': segment, 'actual_returned_words': 32768, 'errors': errors})
     report = {'scope': 'ACTUAL_LAYER0_DEFINED_EFFECT_COMPARISON_ONLY', 'ranks': ranks,
               'actual_collective_returns': collectives,

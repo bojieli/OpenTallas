@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd /srv/opentallas-scratch/codex/qwen-composed-harness-1014
+cd "${COMPOSED_STAGE:-/srv/opentallas-scratch/codex/qwen-composed-harness-1014}"
 mkdir -p out tmp
 export TMPDIR="$PWD/tmp"
 front=/srv/opentallas-scratch/codex/native-services-frontend-1014/library-v1/obj

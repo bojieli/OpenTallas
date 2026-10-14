@@ -121,5 +121,5 @@ int main(int argc,char**argv){try{
   std::ofstream v(fs::path(argv[6])/("rank"+std::to_string(rank)+"_VM_commits.txt"));for(auto w:x.vm.commits)v<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
   std::ofstream e(fs::path(argv[6])/("rank"+std::to_string(rank)+"_operation_commits.txt"));for(auto w:x.effects)e<<w.pc<<" "<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
  }
- std::cout<<"{\"scope\":\"ACTUAL_EIGHT_RANK_LAYER0_FUNCTIONAL_CANDIDATE\",\"instruction_issues_per_rank\":22,\"END_retirements_per_rank\":3,\"expected_X_words\":32768,\"errors\":"<<errors<<",\"layer_transitions_proved\":false,\"physical_VM_proved\":false,\"throughput_qualified\":false}\n";return errors?1:0;
+ std::cout<<"{\"scope\":\"ACTUAL_EIGHT_RANK_LAYER0_FUNCTIONAL_CANDIDATE\",\"instruction_issues_per_rank\":22,\"END_retirements_per_rank\":3,\"expected_X_words\":32768,\"errors\":"<<errors<<",\"past_cache_policy\":\"declared_synthetic_FP8_history_written_through_actual_controllers\",\"current_KV_policy\":\"actual_core_SU_writes_only\",\"layer_transitions_proved\":false,\"physical_VM_proved\":false,\"throughput_qualified\":false}\n";return errors?1:0;
  }catch(const std::exception&e){std::cerr<<"FAIL "<<e.what()<<"\n";return 2;}}
