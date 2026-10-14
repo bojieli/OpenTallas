@@ -13,5 +13,10 @@
   "VMT": 1,
   "VL": 15,
   "physical_or_canonical_native_adoption": false,
-  "mutation_job": "early predicted commit/remove accepted-to-stored obligations unit2482417 RUNNING"
+  "mutation_job": {
+    "unit": "oth-ubuntu-2482417-1791979844",
+    "status": "EXPECTED_REJECTION_PASS",
+    "observed_failure": "actual native row storage commit crossed active lease at2764ns",
+    "scope": "Earlier BW/WS intent substituted for actual storage commit and accepted-to-stored pending obligation removed; actual64-bank WE independent oracle catches lease overlap"
+  }
 }
