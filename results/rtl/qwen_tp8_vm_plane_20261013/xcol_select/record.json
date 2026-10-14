@@ -47,5 +47,24 @@
       "result": "FAIL",
       "checks": 3967
     }
+  ],
+  "legacy_regression": {
+    "shape": "NRB64 SMAX11",
+    "result": "PASS",
+    "checks": 1483,
+    "stalls": 400,
+    "q_changes": 318,
+    "line_writes": 532,
+    "replications": 370,
+    "odd_parity": 141
+  },
+  "artifact_logs": [
+    "legacy.log",
+    "mut1.log",
+    "mut2.log",
+    "mut3.log",
+    "ok.log",
+    "prod.log",
+    "seed2.log"
   ]
 }
