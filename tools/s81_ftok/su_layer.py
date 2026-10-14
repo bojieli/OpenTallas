@@ -21,9 +21,9 @@ the job, as the HC NORM absorbs attn.quant / ffn.norm.scale / ffn.quant):
   ffn.bias              RB                                              all 384 scores + bias
   ffn.shared_swiglu     SW  w = 1.0 (+ ffn.shared_quant)                shared expert, the die's 576 rows
   ffn.quant2            SW  routed (+ ffn.swiglu, ffn.route_w)          6 experts x the die's 576 rows, weight each
+  ffn.weights           RW  (r3, F11)                                   route weights -> the SW job's descriptor words
   boot: <L>.su.gain_q / gain_k  GQ (set 1) / GK (set 2): q_norm / kv_norm weights (layer constants)
-NOT an SU job kind (stay behavioural at program duration, listed in the result): ffn.weights (route weights: sum of the
-6 chosen scores, + 1e-20, divide, x route_scale), attn.cmp.* (compressor norm / row FP4 QDQ / index-key norm + RoPE at
+NOT an SU job kind (stay behavioural at program duration, listed in the result): attn.cmp.* (compressor norm / row FP4 QDQ / index-key norm + RoPE at
 head dim 128), attn.idx.newkey, attn.cand.final, and any op not in the table.
 
 SW lane fit: the slab's SW vector is SW_W = 1,024 lanes with ONE routing weight; an expert's die slice is 576 rows, so
@@ -173,7 +173,7 @@ def build(snap_path, layer, check_layer=True):
     lim = F(s["limit"])
     lo, hi = DIE * ROWS_DIE, (DIE + 1) * ROWS_DIE
 
-    def sw(name, ex, routed):
+    def sw(name, ex, routed, from_rw=False):
         g = np.zeros(len(ex) * W, F)
         u = np.zeros(len(ex) * W, F)
         for v, e in enumerate(ex):
@@ -183,12 +183,17 @@ def build(snap_path, layer, check_layer=True):
         act = SWG.golden_swiglu(g, u, np.repeat(wv, W).astype(F), lim)
         chk[f"{name} act == golden expert a"] = all(
             same(act[v * W:v * W + ROWS_DIE], np.asarray(e["a"], F)[lo:hi]) for v, e in enumerate(ex))
-        job(name, r.sw, g, u, wv, lim)
+        job(name, r.sw, g, u, wv, lim, weights_from_rw=from_rw)
     ex_r = [e for e in s["experts"] if e["weight"] is not None]
     ex_s = [e for e in s["experts"] if e["weight"] is None]
     assert len(ex_r) >= 1 and len(ex_s) == 1, (len(ex_r), len(ex_s))      # 6 routed (backbone) / 3 (DSpark)
     sw(f"{L}.ffn.shared_swiglu", ex_s, False)
-    sw(f"{L}.ffn.quant2", ex_r, True)
+    # routed: its routing weights come from the RW job (ffn.weights, F11) written into its descriptor at run time
+    rw_fits = router_fits and len(ex_r) <= 8
+    sw(f"{L}.ffn.quant2", ex_r, True, from_rw=rw_fits)
+    if rw_fits:
+        w_rw = job(f"{L}.ffn.weights", r.rw, np.asarray(rt["scores"], F), list(rt["ids"]), F(s["route_scale"]), r.sw_desc)
+        chk["RW weights == golden route weights"] = same(w_rw, np.asarray(rt["weights"], F))
     assert all(chk.values()), {k: v for k, v in chk.items() if not v}
     alias = {}
     for tail, (_k, al) in JOBS.items():
@@ -196,5 +201,5 @@ def build(snap_path, layer, check_layer=True):
             for x in al:
                 alias[f"{L}.{x}"] = f"{L}.{tail}"
     return dict(run=r, arg=su.arg, alias=alias, vm=dict(r.vm), exp=dict(r.exp), jexp=jexp, checks=chk, T=T,
-                softmax_fits=sm_ok, qb_fits=qb_ok, router_fits=router_fits, top=r.top,
+                softmax_fits=sm_ok, qb_fits=qb_ok, router_fits=router_fits, rw=rw_fits, top=r.top,
                 sw_fit=dict(lanes=W, rows_per_expert=ROWS_DIE, lane_ratio=round(W / ROWS_DIE, 3)))

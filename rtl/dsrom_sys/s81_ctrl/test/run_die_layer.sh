@@ -25,7 +25,7 @@
 # CHAINS may hold "%L", replaced by the layer name.  Unset: L0 / L2 exactly as before.
 # SUSNAP (s81-ftok r3): the REAL SU slab (+define+TB_SU_REAL): the layer's SU operand snapshot path, "%N" replaced by the
 # two-digit layer number (tools/dsrom_1m_su.py golden --engram snap_L%N.pkl); modes mut_su (slab MUT 4: gain set
-# ignored) and mut_sux (XMUT 3: QR inverse rotation) must FAIL.
+# ignored), mut_sux (XMUT 3: QR inverse rotation) and mut_rw (XMUT 4: RW without route_scale) must FAIL.
 set -u
 SRC=$1; OUT=$2; MODES=${3:-"base seqc mut_ep mut_drop mut_hc mut_coll mut_inp mut_seqc"}
 NG=${NG:-16}; FP=${FP:-rtl}; HCH=${HCH:-0}; LAYERS=${LAYERS:-"L0 L2"}; VL=${VL:-verilator}; J=${J:-16}; ADMIT=${ADMIT:-}
@@ -86,7 +86,7 @@ SUD=""; [ -n "${SUSNAP:-}" ] && SUD="+define+TB_SU_REAL"
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 HX=""; [ $HCH = 1 ] && HX="+define+TB_HC_HIER -GHIER=1 -GHALF=1 -GCSPLIT=1 -GTAIL_SPLIT=2 -GCNL_PIN=1 -GCHAIN_STEP=6 -GHEAD_ROWS=$([ $NG = 256 ] && echo 10 || echo 2)"
 for m in $MODES; do
-  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";;
+  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";; mut_rw) X="-GSUXMUT=4";;
     seqc) X="+define+TB_SEQC -GTMAX=110000";; mut_seqc) X="+define+TB_SEQC +define+OT_SSEQC_MUT_DROP_START -GTMAX=110000";; esac
   RUNL=$LAYERS; [ $m = base ] || [ $m = nom ] || [ $m = seqc ] || RUNL=$(echo $LAYERS | awk '{print $1}')
   XGM=""; for g in ${XG:-}; do n=${g%%=*}; case " $X " in *" $n="*) ;; *) XGM="$XGM $g";; esac; done
