@@ -25,8 +25,8 @@
    },
    "ratio": 0.613,
    "open": [
-    "k > 8 and non-unit inner stride stay on the old engine",
-    "Final ix2 + TK2 die e2e (IDX_TK2=1) running; unit throughput 173.5 is measured, die route.top6 cycles pending."
+    "k > 8 and non-unit inner stride stay on old engine",
+    "Current production die mutant rerun building in durable systemd unit; positive die records exact."
    ],
    "physical": {
     "job": "hgi_idx_tk2-r1-171a475eb",
@@ -34,6 +34,19 @@
     "tt_setup_ps": 70.95,
     "ff_hold_ps": 23.66,
     "drc": 0
+   },
+   "die_e2e": {
+    "cycles": 187,
+    "layers": [
+     24,
+     20,
+     2
+    ],
+    "words_checked_per_layer": 6,
+    "exact": true,
+    "ratio": 0.6607587064676618,
+    "flags": "IDX_TK2=1; REAL_IDX=1 IDX_NATIVE=1",
+    "evidence": "evidence_1013/e2e_L{24,20,2}_records.txt"
    }
   },
   {
@@ -49,7 +62,7 @@
     "ot_hgi_idx_ix2_wp"
    ],
    "exact": true,
-   "source_commit": "a9135c386 (branch claude/hbm-redesign-idx)",
+   "source_commit": "Final RTL staged from 449f87c8b plus final QA correction; source sha comparison in evidence_1013/e2e_source_comparison.json",
    "host": "ot-epyc4:/srv/opentallas-scratch2/claude/idx-redesign-1013/out/{BASE,MUT2} (ot-heavy --mem 140)",
    "price": {
     "L24": 1080.0,
@@ -59,27 +72,27 @@
     "per": "record; token = 4 x L24 + L20 + 3 x L2"
    },
    "measured": {
-    "L24": 1158,
+    "L24": 1140,
     "L20": 1872,
-    "L2": 880,
-    "token": 9144,
-    "L24_ratio": 1.072,
-    "L20_ratio": 1.545,
-    "L2_ratio": 1.336,
+    "L2": 850,
+    "token": 8982,
+    "L24_ratio": 1.0555555555555556,
+    "L20_ratio": 1.5445544554455446,
+    "L2_ratio": 1.2900288359386858,
     "words_checked": {
      "L24": 1024,
      "L20": 3756,
      "L2": 1024
     },
-    "mutant": "MUT2 on L24: FAIL, 136 mismatches"
+    "mutant": "PENDING current source MUT2 build; previous mutant receipt retained only as prior-source evidence"
    },
-   "ratio": 1.217,
+   "ratio": 1.195432282793867,
    "l20_vector_note": "The staged ds_L20 vector (10-11 03:53) holds the D candidate table value-descending (the pre-1011 rule); tools/hgi_sim/machine.py u_idx_index defines D = every owned block in ascending block id, which is what the hardware writes. With the SAME 1,366 (id, value) pairs of record 21 re-ordered by block id in vmw.bin / vm_final.bin (nothing else touched) the same binary gives HGI_E2E PASS, 3,756 / 3,756 words, final VM mismatch 0 (out/BASE/ds_L20r2). On the staged vector it shows 2,717 mismatches. A re-export of the layer by the DS exporter is owed.",
    "where_the_excess_is": "after the last query block the unchanged selector side (hfd_idx_sel / scorers) takes L24 841, L20 1,460, L2 629 cycles; ix2's front is 217-230 cycles (price content 268). L2 and L20 cannot reach 1.10x by the adapter alone.",
-   "e2e_loss_pct": 0.282,
-   "e2e_src": "tools/throughput/accepted_cost.py compute r25gq --unit IDX.INDEX --op IDX.INDEX --price 7513.6 --measured 9144 (8 records a token)",
+   "e2e_loss_pct": null,
+   "e2e_src": "Prior0.282% computed model loss applies to old measured9144, not current8982; recompute after current-source mutant.",
    "open": [
-    "Final ix2 + TK2 production die e2e exact base / failing mutant pending; previous exact baseline retained above, no current cost acceptance claimed.",
+    "Current production BASE exact all3 layers, final VM/HBM mismatch0; current-source mutant rerun still building. No accepted-cost row until complete gate.",
     "lane/kc/pk/wp resized r1 routes queued; qa r0 route running; kp CLOSED stands.",
     "Pin faces pending die assigned pin files / next daily contract revision; each changed outline has slot_change_request.",
     "L20 proper vector re-export still owed by DS exporter; documented same-pair ascending-id correction has 3756/3756 exact and final mismatch0 on previous source.",
@@ -105,28 +118,24 @@
     "back_L2": 44
    },
    "current_e2e": {
-    "status": "RUNNING",
+    "status": "BASE_PASS_MUTANT_RUNNING",
     "source": "449f87c8b plus final QA B pin-flop correction (fe9c3811d RTL)",
     "host": "ot-epyc4",
     "run": "/srv/opentallas-scratch2/claude/idx-redesign-1013b",
     "flags": "REAL_IDX=1 IDX_IXW=3 IDX_TK2=1 IDX_NATIVE=1 FLAT=40 KLAT=40 VLAT=6",
-    "base_pid": 3872619,
-    "mutant_note": "Original MUT2 terminated rc143; confirmed dead/no descendants; incomplete MUT2 output deleted. Running via ot-run 19:28 PT, remote PID4068815 (ot-heavy oth-ubuntu-4068815-1791944879), exec session28350; earlier detached launcher exited before starting."
+    "base_pid": null,
+    "mutant_note": "Durable local systemd codex-idx-e2e-mut2-1013.service; remote unit oth-ubuntu-87412-1791950410. Original local session28350 disappeared and PID4068815 terminal before build; verified before rerun."
    },
    "physical": {
     "kp": {
      "job": "hgi_ix2_kp-r0-d0ac43800",
      "status": "CLOSED",
-     "tt_setup_ps": 165.88,
-     "ff_hold_ps": 20.97,
-     "drc": 0
+     "reason": "CLOSED TT +165.88 / FF +20.97 ps DRC 0; SS sensitivity -154.28 ps | record claude/hbm-redesign-idx 063d1e31e (19 files) | AUTO-MERGED into main 40d0a2418"
     },
     "qa": {
      "job": "hgi_ix2_qa-r0-d0ac43800",
-     "status": "RUNNING",
-     "final_gate_sinks": 8449,
-     "final_gate_insertion_ps": 211.5,
-     "final_gate_spread_ps": 18.0
+     "status": "CLOSED",
+     "reason": "CLOSED TT +10.34 / FF +23.47 ps DRC 0; SS sensitivity -314.19 ps | record claude/hbm-redesign-idx 79b3d3df7 (19 files) | AUTO-MERGED into main 5bf80f595"
     },
     "rebuilds": {
      "jobs": [
@@ -143,7 +152,37 @@
       "wp": "259.2 x 75.6 um; VM cut0.423; core+57%; r0 GRT1693 stagnant markers"
      },
      "clock_evidence_note": "RTL unchanged; existing CTS clock sinks remain <15000; insertion/spread measurements are for r0 outlines, pending r1 routed evidence"
+    },
+    "lane": {
+     "job": "hgi_ix2_lane-r1-ced6bef1d",
+     "status": "CLOSED",
+     "reason": "CLOSED TT +86.42 / FF +24.17 ps DRC 0; SS sensitivity -261.49 ps | record claude/hbm-redesign-idx b10d6290b (19 files) | AUTO-MERGED into main c039f225f"
+    },
+    "kc": {
+     "job": "hgi_ix2_kc-r1-ced6bef1d",
+     "status": "CLOSED",
+     "reason": "CLOSED TT +243.89 / FF +22.24 ps DRC 0; SS sensitivity -19.79 ps | record claude/hbm-redesign-idx 94be6d422 (19 files) | AUTO-MERGED into main 0b9a9e2d0"
+    },
+    "pk": {
+     "job": "hgi_ix2_pk-r1-ced6bef1d",
+     "status": "CLOSED",
+     "reason": "CLOSED TT +171.44 / FF +26.96 ps DRC 0; SS sensitivity -136.50 ps | record claude/hbm-redesign-idx d6fedb246 (19 files) | AUTO-MERGED into main ad07b4500"
     }
+   },
+   "previous_measured": {
+    "L24": 1140,
+    "L20": 1872,
+    "L2": 850,
+    "token": 8982,
+    "L24_ratio": 1.0555555555555556,
+    "L20_ratio": 1.5445544554455446,
+    "L2_ratio": 1.2900288359386858,
+    "words_checked": {
+     "L24": 1024,
+     "L20": 3756,
+     "L2": 1024
+    },
+    "mutant": "PENDING current source MUT2 build; previous mutant receipt retained only as prior-source evidence"
    }
   }
  ]
