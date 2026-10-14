@@ -1,0 +1,107 @@
+{
+ "name": "sfu_lane_map_ref",
+ "top": "ot_hgi_sfu_lane_map",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_delay_ring.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 103.68,
+  "h": 49.68
+ },
+ "util": 0.52,
+ "clock": "spine",
+ "recipe": 2,
+ "macros": [],
+ "pins": {
+  "S": [
+   "ld_terms",
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "lane_j",
+   "i_o_v",
+   "i_i_v",
+   "i_krow",
+   "i_ls",
+   "i_lvw",
+   "i_emit",
+   "i_pass"
+  ],
+  "N": [
+   "o_ld_c"
+  ],
+  "E": [
+   "o_o_v",
+   "o_i_v",
+   "o_krow",
+   "o_ls",
+   "o_lvw",
+   "o_emit",
+   "o_pass"
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "refglob": "*terms0*",
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:hbm_quant_sfu_2240",
+  "branch": "codex/hbm-quant-sfu-2240",
+  "tag": "m1",
+  "views_to": "physical/ref_tile/sfu_lane_map_ref/views",
+  "record_to": "results/rtl/ref_tile/sfu_lane_map_ref",
+  "purpose": "Required native control adapter for CLOSED SFU lane index5. Four registered edges, native controller must bind and measure their phase/cost; not full quarter qualification. All new data/PG M5. Shape is pin-bound: N1200bits/103.68um=11.57, W546/49.68=10.99.",
+  "benches": [
+   {
+    "name": "lane_index_exact",
+    "cmd": "MUT=0 bash tools/hgi_unit_tput/run_sfu_lane_map.sh {RUN}/map_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "pass_regex": "SFU_LANE_MAP PASS checks=4092 errors=0"
+   },
+   {
+    "name": "lane_index_mutant",
+    "cmd": "MUT=1 bash tools/hgi_unit_tput/run_sfu_lane_map.sh {RUN}/map_m1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "fail_regex": "SFU_LANE_MAP FAIL checks=4092 errors=24552"
+   }
+  ]
+ },
+ "cycles_added": 4,
+ "slot_change_request": {
+  "contract": "r25gq v12",
+  "parent": "hfd_sfu",
+  "master": "ot_hgi_sfu_lane_map",
+  "replicas_per_quarter": 16,
+  "outline_um": [
+   103.68,
+   49.68
+  ],
+  "reason": "Closed master fixes lane5; new per-index mapper must sit at each lane clock boundary. Native phase and geometry approval pending."
+ },
+ "structural_change": "Actual CLOSED SFU source hardcodes lane5. Per-instance mapper preserves arithmetic view and changes only lane-dependent loaded offsets, indices and lin mask; four explicit registered edges and ring-delayed passthrough. Source-dependent exact/mutant proof, no lane RTL reroute.",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true
+}

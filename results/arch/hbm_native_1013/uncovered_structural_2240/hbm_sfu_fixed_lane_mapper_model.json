@@ -22,13 +22,19 @@
   "mapping": "desired offset in bit0 coefficient, other closed lane5 coefficients zero; o_v/i_v/krow compensate desired j versus5; emit masks desired lin; lvw>=3 so fixed5 is live",
   "quarter_phase_cost": "four explicit mapper edges; native controller phase and retire/ACK lifecycle must account for them, no zero-cycle claim",
   "proposed_outline_um": [
-    172.8,
-    64.8
+    103.68,
+    49.68
   ],
   "proposed_pins": "S480offset terms, W546metadata/payload, N1200closed coefficients, E542mappedmetadata/payload",
   "clock_rule": "new root <=15000 sinks; actual CTS and boundary spread<=80 required",
   "physical_closed": false,
   "composed_bench": false,
   "token_rate_credit": 0,
-  "required": "frozen closed source lane_id dependency equivalence plus actual16-lane GLU quarter exact/mutant gate"
+  "required": "frozen closed source lane_id dependency equivalence plus actual16-lane GLU quarter exact/mutant gate",
+  "ring_passthrough": {
+    "depth": 4,
+    "slots": 3,
+    "word_bits": 461,
+    "reason": "avoid pure wide flop-to-flop delay chains; same4-edge latency"
+  }
 }
