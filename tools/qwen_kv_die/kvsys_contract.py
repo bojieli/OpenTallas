@@ -28,9 +28,11 @@ EXTRA = dict(
     qkd_rhead=dict(
         rtl='rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv ot_qkh_head_native (Q_FP32 1)',
         clock_entries={**{'ck_f': 'ck_front', 'ck_k': 'ck_kt', 'ck_s': 'ck_score'},
-                       **{f'ck_t{i}': f'ck_station[{i}]' for i in range(16)}, **{f'ck_l{i}': f'ck_lane[{i}]' for i in range(16)}},
+                       **{f'ck_i{i}': f'ck_stin[{i}]' for i in range(16)}, **{f'ck_o{i}': f'ck_stout[{i}]' for i in range(16)},
+                       **{f'ck_l{i}': f'ck_lane[{i}]' for i in range(16)}},
         clock_rule='each entry is delivered at phi - R_child (R = that child view\'s insertion.json boundary mean); '
-                   'the die model holds them as 35 separate CTS sinks on the stack trunk (frames: R 0 until the views exist)',
+                   'the die model holds them as 51 separate CTS sinks on the stack trunk (head r2 d7c8b1909: front, ktree, '
+                   'score, 16 stin, 16 stout, 16 lane8; frames: R 0 until the views exist)',
         subslots_canonical_R0=dict(
             note='canonical orientation R0 = control tile BELOW (S face = control face). Heads below their control tile are '
                  'placed MX by the die (their S face then faces up). A feasible fit, not a mandate: the head team may move '
@@ -40,14 +42,14 @@ EXTRA = dict(
                   '(18 cells; 16 lanes + ktree + score)',
             ktree=dict(cell='one free cell + its 43.2 column gap (172.8 >= 151.2)', wh=[151.2, 97.2]),
             score=dict(cell='the other free cell', wh=[43.2, 43.2]),
-            stations='16 x station <= 32.4 x 32.4, in the 43.2-um column gaps beside their lanes (2 per gap per row)'),
+            stations='head r2: 16 stin + 16 stout leaves (<= 54 x 43.2) in the 43.2-um column gaps / free cells: stin '
+                     'between the front and its lane, stout between its lane and the E face / ktree'),
         reach_rules=['die pin -> first register <= 500 um: the ti / e inputs land in the front at the S face, s leaves '
                      'the score; nb leaves on the E face (astk side)',
-                     'inside the head every register-to-register hop <= 500 um: with the head 1,080 um wide, the native '
-                     'station (one leaf, D = 2 co-located) CANNOT reach both its lane and the E face from the far columns '
-                     '(nb from a column-0 station to the E face ~ 900 um): split the station nb stage into station D 1 + an '
-                     'nb relay leaf D 1 at the E side (latency unchanged), and keep every station within 500 um of the '
-                     'front f_dr pins (else split the front NRS stage the same way)']),
+                     'inside the head every register-to-register hop <= 500 um (head r2 stin / stout split does this in '
+                     'the old 734.4 x 855.36 slot; re-plan it in THIS slot with the front on the S = control face, so '
+                     'the ectl -> far-head hop stays <= 500 um: the old slot puts the far head 855+ um from its control '
+                     'tile, a die-level hop no intra-head plan can fix)']),
     qkd_ectl=dict(
         rtl='rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv qkd_ectl3_s = qkd_ectl_a_tp8 | qkd_ectl_b_tp8 | qkd_ectl_c_tp8 '
             '(rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv, native HEADS 1 / Q_FP32 1)',

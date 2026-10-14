@@ -166,7 +166,10 @@ SPLIT_HEAD = (734.4, 855.36)
 # face again (TP4 orientation rule); the control tile is centred in the wider column.
 SPLIT_HEAD_V11 = (1080.0, 492.48)
 # per-child clock entries (die ports, each its own CTS sink, delivered at phi - R of that child): die port -> RTL port
-HEAD_CLK = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_t{i}' for i in range(16)] + [f'ck_l{i}' for i in range(16)])
+# head r2 (d7c8b1909, kvsys-elements 11:39): the lane station is split into stin (front -> lane) and stout (lane -> ktree /
+# astk) leaves, each its own root: 51 entries = front, ktree, score, 16 stin, 16 stout, 16 lane8
+HEAD_CLK = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_i{i}' for i in range(16)] + [f'ck_o{i}' for i in range(16)] +
+            [f'ck_l{i}' for i in range(16)])
 ECTL_CLK = ['ck_a', 'ck_b', 'ck_c']
 SPLIT_FRAMES = dict(qkd_seq=(604.8, 475.2), qkd_lnk=(777.6, 129.6), qkd_embgw=(172.8, 216.0), qkd_ahub=(1175.04, 760.32))
 BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink', file='rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink.sv',
@@ -204,8 +207,9 @@ SPLIT_BINDINGS = dict(
                    parameters=dict(Q_FP32=1),
                    ports=dict(ti=['c_in', 'row_in', 'lt_in', 'q_valid_in', 'q_beat_in', 'q_data_in'], e=['e_in'],
                               s=['sc_d', 'sc_f', 'g_f'], nb=['nb_d'], ck_f=['ck_front'], ck_k=['ck_kt'], ck_s=['ck_score'],
-                              ck_t0=['ck_station'], ck_l0=['ck_lane'], rst_n=['rst_n']),
-                   sliced={**{f'ck_t{i}': 'ck_t0' for i in range(1, 16)}, **{f'ck_l{i}': 'ck_l0' for i in range(1, 16)}},
+                              ck_i0=['ck_stin'], ck_o0=['ck_stout'], ck_l0=['ck_lane'], rst_n=['rst_n']),
+                   sliced={**{f'ck_i{i}': 'ck_i0' for i in range(1, 16)}, **{f'ck_o{i}': 'ck_o0' for i in range(1, 16)},
+                           **{f'ck_l{i}': 'ck_l0' for i in range(1, 16)}},
                    classed={'hid': 'by_design: die-top strap (tie cells), the head index of this tile'}),
     # v1.1: the three native TP8 control leaves A / B / C behind the wires-only qkd_ectl3_s, ck[0..2] = die ck_a / ck_b / ck_c
     qkd_ectl=dict(module='qkd_ectl3_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv',
@@ -1350,7 +1354,8 @@ def _split_pins(M, m=None):
                 hm.ports['nb'] = ('face', hm.ports['nb'][1], 'E', 'M4', HEAD[1] / 2, 2)
             # 35 clock entries + reset on the W face (M4), at the rows of the children they enter (front / ktree / score
             # at the control-facing end, then the 16 stations, then the 16 lanes)
-            ys = [24.0, 48.0, 72.0] + [100.0 + 10.0 * i for i in range(16)] + [268.0 + 10.0 * i for i in range(16)]
+            ys = [24.0, 48.0, 72.0] + [100.0 + 7.0 * i for i in range(16)] + [216.0 + 7.0 * i for i in range(16)] + \
+                 [332.0 + 7.0 * i for i in range(16)]
             for p_, y_ in zip(HEAD_CLK, ys):
                 if p_ in hm.ports:
                     hm.ports[p_] = ('face', 1, 'W', 'M4', y_, 1)
