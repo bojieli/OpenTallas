@@ -274,6 +274,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     output wire         busy,
     output wire         fault
 );
+    generate if (QH != 0 && (QH != 1 || FAST == 0 || QPIPE == 0 || QM != 5 || QS != 6)) begin : g_bad_lane_hardening
+        initial begin $display("QH requires QH1 FAST1 QPIPE1 QM5 QS6"); $fatal(1); end
+    end endgenerate
     // ---------------- QPIPE boundary (see the header) --------------------------------------------------------
     wire         rst_n, cfg_v, go, go_bf, xs_v, xb_v;
     wire [4:0]   cfg_a;
