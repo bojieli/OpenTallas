@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       admits   753 GB (avail 980, growth 85, headroom 48, waiters 0/0 GB) load 28/128 running 13 disk 1171 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1105027-1791964851 after 0 s
+PASS native_coll_port messages=3000 words=17000 cycles=17319 rank3 exact posted everybeat; data everybit0and1 pair_mismatch=0
+PASS native_coll_port messages=512 words=2899 cycles=3218 rank3 exact posted everybeat; data everybit0and1 pair_mismatch=0
+FAIL native_coll_port sent=98 complete=53 words=300 mismatch=149 engine_mismatch=0 fault_ck=0 fault_ckd=0 pair_mismatch=0
+FAIL native_coll_port sent=307 complete=50 words=288 mismatch=0 engine_mismatch=0 fault_ck=0 fault_ckd=1 pair_mismatch=0
+FAIL native_coll_port sent=96 complete=51 words=289 mismatch=287 engine_mismatch=94 fault_ck=0 fault_ckd=0 pair_mismatch=94
+FAIL native_coll_port sent=96 complete=52 words=291 mismatch=289 engine_mismatch=0 fault_ck=0 fault_ckd=0 pair_mismatch=48
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1105027-1791964851): exit 0
