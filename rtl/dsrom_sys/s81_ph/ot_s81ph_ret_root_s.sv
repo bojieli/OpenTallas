@@ -358,6 +358,10 @@ module ot_s81ph_ret_root_s #(
                         sv_s[bank] <= 1'b1;
                     end
                 end
+            // The same local insertion decision drives the real key state.
+            // Data and sampling edge are identical to the shared-enable form.
+            always @(posedge clk)
+                if (count_use && !count_cur && !no_slot) skey[bank] <= s2_key;
         end
         if (LOCAL_BANKS) begin : g_local
             (* keep = 1 *) wire bank_use = slot_w[bank] && (LOCAL_DECISIONS ? ok : (dec_add || dec_ins));
@@ -377,7 +381,7 @@ module ot_s81ph_ret_root_s #(
         end
     end endgenerate
     always @(posedge clk) begin
-        for (k = 0; k < S; k = k + 1) if (slot_w[k] && dec_ins) skey[k] <= s2_key;
+        if (!LOCAL_DECISIONS) for (k = 0; k < S; k = k + 1) if (slot_w[k] && dec_ins) skey[k] <= s2_key;
         bwa_q <= b_wa; bwd_q <= {s2_side, s2_e, s2_d};
         bra_q <= {enc(slot_w), s2_h};
         a3_d <= s2_d; a3_e <= s2_e; a3_t <= s2_par; a3_right <= s2_side;
