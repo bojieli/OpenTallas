@@ -1,5 +1,5 @@
 {
- "name": "hgi_sv_lane2-r1-spread-COMMIT",
+ "name": "hgi_sv_lane2-r1-spread-1fe4e13fb",
  "block": "ot_hgi_sv_lane2",
  "ref_tile": true,
  "owner": "Claude:el1013-hbm-redesign-suvop",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-redesign-suvop",
-  "commit": "COMMIT",
+  "commit": "1fe4e13fb",
   "extra_paths": [
    "compiler",
    "results/arch/hgi_sim_20261009/conformance",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_sv_lane2/hgi_sv_lane2-r1-spread-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_sv_lane2/hgi_sv_lane2-r1-spread-1fe4e13fb"
   }
  ],
  "cycles_added": 0,

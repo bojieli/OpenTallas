@@ -1,6 +1,6 @@
 {
  "name": "hgi_sv_head",
- "top": "ot_hgi_sv_ctl",
+ "top": "ot_hgi_sv_head",
  "kind": "tile",
  "sources": [
   "rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv",
@@ -92,8 +92,8 @@
  "job": {
   "owner": "Claude:el1013-hbm-redesign-suvop",
   "branch": "claude/hbm-redesign-suvop",
-  "tag": "r0",
-  "purpose": "SU.VOP redesign (owner 10-13) head ot_hgi_sv_ctl (N 512, M 128): record ring of 8, 4-edge pipelined span multiply, region table, 4 frames + epochs, stage / drain dispatch to the 16 lane2 leaves, EXT stream credit and live drain frontier; one clock root; N = record bus 2,203 b on M3 + M5 (0.55), S = vec / local-memory control 1,609 b (0.40), W = packet client 614 b on M4 (0.46), E = leaf relay chain 510 b on M4 (0.38), for the final 194.4 x 129.6 outline",
+  "tag": "r1-slot",
+  "purpose": "SU.VOP redesign (owner 10-13) head ot_hgi_sv_head (N 512, M 128): record ring of 8, 4-edge pipelined span multiply, region table, 4 frames + epochs, stage / drain dispatch to the 16 lane2 leaves, EXT stream credit and live drain frontier; one clock root; N = record bus 2,203 b on M3 + M5 (0.55), S = vec / local-memory control 1,609 b (0.40), W = packet client 614 b on M4 (0.46), E = leaf relay chain 510 b on M4 (0.38), for the final 194.4 x 129.6 outline; physical master naming matches live v12 SU child slot; legacy ot_hgi_sv_ctl is a zero-logic compatibility wrapper",
   "extra_paths": [
    "compiler",
    "results/arch/hgi_sim_20261009/conformance",
@@ -131,5 +131,6 @@
   ],
   "views_to": "physical/ref_tile/hgi_sv_head/views",
   "record_to": "results/rtl/ref_tile/hgi_sv_head"
- }
+ },
+ "structural_change": "Per-region span and extent are registered in the existing classification edges, and bump placement uses page carry plus the low offset byte instead of subtraction followed by addition. This removes the 21-level rk-to-table-write allocator path (~847 ps) without adding service cycles. Physical master is ot_hgi_sv_head as granted in the current die contract; dense-face placement uses measured hold-strip spread."
 }
