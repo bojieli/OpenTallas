@@ -75,7 +75,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/hbm_quant_gather_1014/bit_place.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/common_flow/clock_spine.tcl",
   "physical/ref_tile/qw_ovg_ref/spine_ins.tcl"

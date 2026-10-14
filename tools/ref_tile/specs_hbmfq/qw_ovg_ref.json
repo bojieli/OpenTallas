@@ -37,10 +37,7 @@
   ]
  },
  "refglob": "*gpf*",
- "io_flop_at_pins": {
-  "cols": 12,
-  "allow_none": true
- },
+ "io_flop_at_pins": false,
  "route": {
   "pd": 0.35,
   "threads": 16,
@@ -50,11 +47,11 @@
    "group_max": 1
   }
  },
- "structural_change": "ovd w2 failed GRT with about17000markers at SRAM west edge, crossing gather escape and read-output fanout. Remove all gather state and decoder launch outputs from SRAM leaf; make independent no-macro gather leaf. Existing state/register edges unchanged; preserve closed decoder and lane constituents. Gather86.4um width leaves three1024-bit vertical streams above low decoder-aligned output: conservative M3+M5 capacity about2940 afterderate, >1.0cut. Width172.8 supplies about5880 beforePGreserve; all-fanout placement atoldwidth diverged twice. Widened leaf and parent alternative864um, no added edge. Measured s3 GPL has21465FIRM hold/pin cells but only4149movable/312um2 logic, then >650% inflation/divergence. Keep pin flops, omit fixed pre-placement hold chains for this sparse gather leaf; route must still meet unchanged FF hold and may add actual hold repair.",
+ "structural_change": "ovd w2 failed GRT with about17000markers at SRAM west edge, crossing gather escape and read-output fanout. Remove all gather state and decoder launch outputs from SRAM leaf; make independent no-macro gather leaf. Existing state/register edges unchanged; preserve closed decoder and lane constituents. Gather86.4um width leaves three1024-bit vertical streams above low decoder-aligned output: conservative M3+M5 capacity about2940 afterderate, >1.0cut. Width172.8 supplies about5880 beforePGreserve; all-fanout placement atoldwidth diverged twice. Widened leaf and parent alternative864um, no added edge. Measured s3 GPL has21465FIRM hold/pin cells but only4149movable/312um2 logic, then >650% inflation/divergence. Keep pin flops, omit fixed pre-placement hold chains for this sparse gather leaf; route must still meet unchanged FF hold and may add actual hold repair. Deterministic per-bit OR-cone placement at midpoint of real pin-flop endpoints removes globalplacer cross-bit interleaving; no cell/net/SDC changes, exact two-edge behavior preserved.",
  "job": {
   "owner": "Codex:hbm_quant_sfu_2240",
   "branch": "codex/hbm-quant-sfu-2240",
-  "tag": "s4",
+  "tag": "s5",
   "purpose": "Alternative WQ3 data-head structural split: gather and SRAM/write state are separate leaves, existing registers reassigned with zero additional edges; no native die adoption claimed. Pin-bound 4096-bit W input face and1024-bit E output face fixes388.8um height despite measured1711um2 standard area; sparse placement target0.15 avoids filler-dominated GPL divergence seen at0.50. Width172.8 provides routing capacity for3\u00d71024 vertical streams; source area remains pin/channel-bound.",
   "benched_by": "quant_wide_ov",
   "extra_paths": [
@@ -93,5 +90,11 @@
  "clock": "spine",
  "recipe": 2,
  "inhold": false,
- "outhold": false
+ "outhold": false,
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/hbm_quant_gather_1014/bit_place.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/qwen_die_masters/out_flop_release.tcl",
+  "OT_OFLOP_COLS": 12,
+  "OT_OFLOP_ALLOW_NONE": 1
+ }
 }
