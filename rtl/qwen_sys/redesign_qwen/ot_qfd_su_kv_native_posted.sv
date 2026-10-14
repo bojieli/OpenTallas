@@ -1,12 +1,12 @@
 `timescale 1ns/1ps
-// Candidate, default off. Native two-head FP8 epoch, not a generic SU transport.
-// The native program has V(2x128), Klo(2x64), Khi(2x64). Posted writes
-// cannot stall: all 512 bytes have dedicated assembly seats until epoch drain.
+// Candidate, default off. Native FP8 epoch (HEADS1 TP8 candidate; HEADS2 historical), not a generic SU transport.
+// The native program has V(HEADSx128), Klo(HEADSx64), Khi(HEADSx64). Posted writes
+// cannot stall: all HEADS*256 bytes have dedicated assembly seats until epoch drain.
 // Addresses and all byte masks are checked locally before omitting them from
 // the existing KVN class wire. The receiver's layer/position descriptor must
 // describe the SAME admitted epoch; this module does not fabricate that link.
 module ot_qfd_su_kv_native_posted #(
- parameter integer ENABLE=0, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0
+ parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0
 )(
  input wire clk,rst_n,
  input wire epoch_begin,input wire [17:0] epoch_pos,
@@ -30,6 +30,8 @@ module ot_qfd_su_kv_native_posted #(
    else encode={1'b1,8'd0};
   end
  endfunction
+ localparam integer VBASE=HEADS*65536;
+ initial if(HEADS<1||HEADS>2)$error("Only exact one/two-head profiles supported");
  reg active;reg [12:0] pos;
  reg [2:0] issued;
  reg [511:0] seen,seen_n;
@@ -49,23 +51,23 @@ module ot_qfd_su_kv_native_posted #(
   e=0;a=0;w=0;pp=0;code=0;dim=0;head=0;kind=0;idx=0;halfidx=0;
   for(li=0;li<64;li=li+1)if(kv_we[li])begin
    e=kv_waddr[24*li+:24];a=e[23:4];code=encode(kv_wdata[32*li+:32]);
-   if(a<131072)begin
+   if(a<VBASE)begin
     kind=0;head=a[16];dim=a[6:0];pp={a[15:7],e[3:0]};
     if(!allowed[dim<64?1:2])err[2]=1;
    end else begin
-    w=a-131072;kind=1;head=w[16];pp=w[15:3];dim={w[2:0],e[3:0]};
+    w=a-VBASE;kind=1;head=w[16];pp=w[15:3];dim={w[2:0],e[3:0]};
     if(!allowed[0])err[2]=1;
    end
    idx=kind*256+head*128+dim;
    if(MUT_LANE!=0)idx=idx^1;
-   if(!active||a>=262144||pp!=pos)err[0]=1;
+   if(!active||a>=2*VBASE||head>=HEADS||pp!=pos)err[0]=1;
    if(code[8]||KV_FP8==0)err[1]=1;
    if(seen_n[idx])err[3]=1;
    seen_n[idx]=1;bytes_n[8*idx+:8]=code[7:0];
   end
   choose=0;selected=0;
   for(halfidx=0;halfidx<8;halfidx=halfidx+1)
-   if(!choose&&!sent[halfidx]&&(&seen[64*halfidx+:64]))begin choose=1;selected=halfidx;end
+   if((halfidx/2)%2<HEADS&&!choose&&!sent[halfidx]&&(&seen[64*halfidx+:64]))begin choose=1;selected=halfidx;end
   if(choose&&(!word_v||take))sent_n[selected]=1;
  end
  always @(posedge clk or negedge rst_n)begin
@@ -73,11 +75,11 @@ module ot_qfd_su_kv_native_posted #(
   else if(ENABLE!=0)begin
    if(epoch_begin)begin
     if(!epoch_ready||epoch_pos>=8192)begin fault<=1;fault_code[4]<=1;end
-    else begin active<=1;pos<=epoch_pos[12:0];issued<=0;seen<=0;sent<=0;end
+    else begin active<=1;pos<=epoch_pos[12:0];issued<=0;seen<=0;sent<=(HEADS==1?8'hCC:8'h00);end
    end else begin
     seen<=seen_n;sent<=sent_n;bytes_r<=bytes_n;
     if(issue_v)begin
-     if(!active||issue_kind>=3||issue_nout!=2||issue_nin!=(issue_kind==0?128:64)||issued[issue_kind])begin fault<=1;fault_code[5]<=1;end
+     if(!active||issue_kind>=3||issue_nout!=HEADS||issue_nin!=(issue_kind==0?128:64)||issued[issue_kind])begin fault<=1;fault_code[5]<=1;end
      else issued[issue_kind]<=1;
     end
     if(|err)begin fault<=1;fault_code<=fault_code|err;end
