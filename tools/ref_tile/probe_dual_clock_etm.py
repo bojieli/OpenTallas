@@ -16,6 +16,7 @@ from pathlib import Path
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--fixture', required=True, type=Path)
+    p.add_argument('--period', type=float, default=833.333, help='Core route/signoff period; serial stays related4/3')
     p.add_argument('--tool-root', required=True, type=Path)
     p.add_argument('--out', required=True, type=Path)
     p.add_argument('--diagnostic-record', type=Path, help='Audit record for a tightened copied-SDC fixture; keep it with generated evidence')
@@ -72,7 +73,11 @@ endmodule
         text = f'''read_liberty /probe/dsfd_wfc_vmx/dsfd_wfc_vmx_{corner}.lib
 read_verilog /probe/probe.v
 link_design probe
-{api.clocks(spec, 833.333)}
+{api.clocks(spec, args.period)}
+foreach {{name period}} {{core_clk {args.period} ot_io_serial {args.period*4/3} ot_entry_0 {args.period} ot_entry_1 {args.period*4/3} ot_entry_2 {args.period} ot_entry_3 {args.period*4/3}}} {{
+  set clk [get_clocks $name]
+  if {{[llength $clk] != 1 || abs([get_property $clk period]-$period)>0.01}} {{error "related period mismatch $name"}}
+}}
 set ::ot_ce_corner {corner}
 proc sample {{}} {{
   set result {{}}

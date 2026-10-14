@@ -73,5 +73,18 @@
     "DUAL_PASS ss actual ETM both directions max/min; zero-wire API accounting only",
     "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-170657-1791951875): exit 0"
   ],
-  "tightened_actual_results_scope": "SS only currently, actual geometric model with1167 legacy data input-hold exceptions removed in copiedSDC; unqualified actual API diagnostic. TT/FF original models have nohold and were not run in this stronger probe."
+  "tightened_actual_results_scope": "SS only currently, actual geometric model with1167 legacy data input-hold exceptions removed in copiedSDC; unqualified actual API diagnostic. TT/FF original models have nohold and were not run in this stronger probe.",
+  "tightened_actual_route770_results": [
+    "DUAL_PATH ss cs max before=-151.038788 after=-371.038818 expected=-371.038788",
+    "DUAL_PATH ss cs min before=189.544159 after=99.544151 expected=99.54415900000001",
+    "DUAL_PATH ss sc max before=-226.463547 after=-426.463531 expected=-426.463547",
+    "DUAL_PATH ss sc min before=262.892334 after=152.892365 expected=152.892334",
+    "DUAL_REF ss a/ck[0] arrival=10.000000 R=449.8 phi=459.8",
+    "DUAL_REF ss b/ck[0] arrival=10.000000 R=449.8 phi=459.8",
+    "DUAL_REF ss a/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
+    "DUAL_REF ss b/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
+    "DUAL_PASS ss UNQUALIFIED tightened-constraint actual ETM both directions max/min; zero-wire API accounting only",
+    "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-173674-1791951954): exit 0"
+  ],
+  "related_period_coverage": "Probe verifies core virtual+entries periodP and serial virtual+entries period4P/3 independently at833.333 and770 route periods."
 }
