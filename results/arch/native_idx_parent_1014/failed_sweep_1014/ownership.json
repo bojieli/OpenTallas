@@ -7,7 +7,7 @@
       "successor": "ot_hbm_idx_score_cut_native, four actual NS4/NK4 scorers",
       "source_commit": "987dcdb69",
       "evidence": "cut_proof_987dcdb69 + cut_mutants_987dcdb69 + cut_edab82fb5",
-      "current_action": "Fresh distinct ready-leaf CTS gate source02f02c5b6, local3430 EPYC1 ref_gate/ot_hbm_idx_hslice_ready_native_c0-20261014-052818; no oldslot grant",
+      "current_action": "Fresh measured leaf CTS passes actual15335-sink >15k exception: TT206.4ps/spread25.5ps; source-bound standalone route QUEUED ot_hbm_idx_hslice_ready_native_c0-ready0-9a6274356. Full scorer/die slot still open.",
       "retired": false
     },
     {
@@ -53,7 +53,7 @@
       "historical_status": "EARLY_FAIL_CONGESTION / source-binding REFUSED",
       "cause": "R2 GRT0116; R3 intake rejected mismatched source binding",
       "terminal_oct13_gate": "8,529sinks, TT258.2/spread26.1, regreg+41.9 hold+26.5; currentSBvalidation rejects ck_insertion helper drift",
-      "current_action": "Fresh unchanged-source/current-overlay CTS gate session43691 against02f02c5b6; qualifybinding then externalintake only, freezekit metadata",
+      "current_action": "Fresh current-overlay CTS terminal0FAIL/4WARN, actual8529sinks TT258.2ps/spread26.1ps. Source-bound repaired R3 corridor route QUEUED hgi_ix2_wp-r3bound-9a6274356; no physical closure.",
       "retired": false
     }
   ],
