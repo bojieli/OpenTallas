@@ -1,8 +1,6 @@
 // Physical symbol derived from actual matching TT/FF/SS ETM pins.
 // Use source RTL for simulation; native slot/source binding remains open.
 (* blackbox, keep_hierarchy *) module ot_engc_t_pbc_rso (
-    input wire VDD,
-    input wire VSS,
     input wire ck,
     input wire [7:0] r_a,
     output wire [255:0] r_d,

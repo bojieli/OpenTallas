@@ -8841,6 +8841,9 @@
             "ck"
           ]
         }
+      },
+      "reset_port_classification": {
+        "rst": "asynchronous reset input; exported setup_rising/hold_rising includes recovery/removal and must remain separate from ordinary data. IO also directly resets command-side endpoint controls; raw finalDB reports bind exact endpoint roles."
       }
     },
     "ff": {
@@ -17681,6 +17684,9 @@
             "ck"
           ]
         }
+      },
+      "reset_port_classification": {
+        "rst": "asynchronous reset input; exported setup_rising/hold_rising includes recovery/removal and must remain separate from ordinary data. IO also directly resets command-side endpoint controls; raw finalDB reports bind exact endpoint roles."
       }
     },
     "ss": {
@@ -26521,12 +26527,19 @@
             "ck"
           ]
         }
+      },
+      "reset_port_classification": {
+        "rst": "asynchronous reset input; exported setup_rising/hold_rising includes recovery/removal and must remain separate from ordinary data. IO also directly resets command-side endpoint controls; raw finalDB reports bind exact endpoint roles."
       }
     }
   },
   "physical_symbol": {
     "file": "ot_engc_t_win_rso_bb.sv",
-    "sha256": "8cddd21f0847a1aa9ff0b9da1291bc4559b118a9d8df052c360ea6903b45e64e",
-    "signal_pin_count": 804
+    "sha256": "ef96f042f27112f9a165a99ac7d420ac835fa8eb367bb218329415732f87ccdb",
+    "signal_pin_count": 802,
+    "power_pins": [
+      "VDD",
+      "VSS"
+    ]
   }
 }
