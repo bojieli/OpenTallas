@@ -1,0 +1,21 @@
+{
+  "qualification": "NOT_SUBMITTABLE",
+  "source_commit": "71d79326a",
+  "TT_setup_ps": 144.1344821,
+  "TT_hold_ps": 15.2777235,
+  "TT_boundary_spread_ps": {
+    "ck": 30.7,
+    "ckd": 31.9
+  },
+  "actual_signoff_probes": {
+    "ss": {
+      "setup_ps": -134.27869927085112,
+      "hold_ps": 7.031319970707273
+    },
+    "ff": {
+      "setup_ps": 272.9690917746552,
+      "hold_ps": 9.810541268251427
+    }
+  },
+  "reason": "SQ bypass data enable SS\u2212134.3; CQ row-write enable SS\u2212103.7; per-word valid/full/pointer local copies and free bypass proposed; no credits/N/latency reduction."
+}
