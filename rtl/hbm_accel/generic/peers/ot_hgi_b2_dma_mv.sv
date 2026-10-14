@@ -79,6 +79,10 @@ module ot_hgi_b2_dma_mv #(
     parameter integer QID = 0,            // B2: this quadrant = its HBM stack (0..3)
     parameter integer MUT_B2 = 0          // B2 bench mutant: 1 rows of stack QID + 1 on lane QID; 2 lane QID driven on lane QID + 1
 ) (
+    output wire [264:0] land_write,
+    output wire [63:0] land_read,
+    output wire [6:0] source_format,
+    input wire [306:0] decoded,
     output wire ser_mv_v,
     output wire [226:0] ser_mv,
     input wire ser_mv_rdy,
@@ -339,28 +343,6 @@ module ot_hgi_b2_dma_mv #(
     function automatic [2:0] esz(input [2:0] f);
         esz = (f == 3'd0 || f == 3'd5) ? 3'd4 : (f == 3'd1) ? 3'd2 : 3'd1;
     endfunction
-    function automatic [31:0] i8_f(input [7:0] c);               // INT8 -> binary32 (exact)
-        reg [7:0] a; reg [2:0] p; integer k;
-        begin
-            a = c[7] ? (~c + 8'd1) : c; p = 3'd0;
-            for (k = 0; k < 8; k = k + 1) if (a[k]) p = k[2:0];
-            i8_f = (a == 8'd0) ? 32'd0 : {c[7], 8'd127 + {5'd0, p}, ({15'd0, a} << (5'd23 - {2'd0, p})) & 23'h7FFFFF};
-        end
-    endfunction
-    function automatic [31:0] e4m3_f(input [7:0] c);             // FP8 E4M3 -> binary32 (exact; NaN code -> qNaN)
-        reg [3:0] e; reg [2:0] m; reg [1:0] p;
-        begin
-            e = c[6:3]; m = c[2:0];
-            if (e == 4'hF && m == 3'h7) e4m3_f = 32'h7FC00000;
-            else if (e == 4'd0) begin
-                if (m == 3'd0) e4m3_f = {c[7], 31'd0};
-                else begin
-                    p = m[2] ? 2'd2 : m[1] ? 2'd1 : 2'd0;
-                    e4m3_f = {c[7], 8'd127 - 8'd9 + {6'd0, p}, ({20'd0, m} << (5'd23 - {3'd0, p})) & 23'h7FFFFF};
-                end
-            end else e4m3_f = {c[7], 8'd120 + {4'd0, e}, m, 20'd0};
-        end
-    endfunction
     function automatic [15:0] to_bf16(input [31:0] x);           // RNE (hdc_golden to_bf16), NaN kept quiet
         reg [31:0] r;
         begin
@@ -453,7 +435,6 @@ module ot_hgi_b2_dma_mv #(
     localparam integer SB = 8;
     reg [SB-1:0] sf_h, sf_a, v_ptr; reg [8:0] sf_n; reg [SFD-1:0] lv;
     reg lw_v; reg [SB-1:0] lw_a; reg [255:0] lw_d;          // landing write stage
-    wire [255:0] lr_d;                                      // the landing RAM's read register (PR stage)
     // ---- port in-flight accounting
     reg [7:0] k_in; reg [2:0] v_in; reg [7:0] v_kind;      // lane 2 (writes) / VM client (reads), kinds oldest at [0]
     reg [8:0] rd_in;                                        // source sectors issued, not landed
@@ -465,10 +446,8 @@ module ot_hgi_b2_dma_mv #(
     // the slot address, the PR stage reads the slot from that register (+1 cycle); the reader stops 2 slots short of
     // full, so a popped slot is not rewritten before PR has read it
     reg        p1_v; reg [3:0] p1_k; reg [SB-1:0] p1_h; reg [4:0] p1_sp; reg [5:0] p1_dp; reg [36:0] p1_dsec; reg p1_fl;
-    reg        pr_v; reg [3:0] pr_k; wire [255:0] p1_sec = lr_d; reg [4:0] pr_sp; reg [5:0] pr_dp; reg [36:0] pr_dsec; reg pr_fl;
     // extract (px) and convert (p2) are separate stages; encode (pe) and byte placement (p3) are separate stages
     // (route 51ae5ce55: p2_w / des -> p3_d, 31 levels: the encoders and the variable placement in one cycle)
-    reg        px_v; reg [3:0] px_k; reg [255:0] px_r; reg [4:0] px_sb; reg [5:0] px_dp; reg [36:0] px_dsec; reg px_fl;
     reg        p2_v; reg [3:0] p2_k; reg [255:0] p2_w; reg [5:0] p2_dp; reg [36:0] p2_dsec; reg p2_fl;
     reg        pe_v; reg [7:0] pe_lv; reg [255:0] pe_e; reg [5:0] pe_dp; reg [36:0] pe_dsec; reg pe_fl, pe_keep;
     reg        p3_v; reg [255:0] p3_d; reg [31:0] p3_s; reg [36:0] p3_dsec; reg p3_fl, p3_keep;
@@ -477,7 +456,7 @@ module ot_hgi_b2_dma_mv #(
     // one 32-byte barrel shift by pe_dp and the byte mask with it).  +1 cycle in the pipe.
     reg        pk_v; reg [255:0] pk_d; reg [31:0] pk_s; reg [5:0] pk_dp; reg [36:0] pk_dsec; reg pk_fl, pk_keep;
     reg [255:0] db_dat [0:3]; reg [31:0] db_strb [0:3]; reg [3:0] db_dirty;   // a merge buffer a reader slot (rows interleave)
-    reg [1:0] p1_sl, pr_sl, px_sl, p2_sl, pa_sl, pe_sl, pk_sl, p3_sl, u_sl;
+    reg [1:0] p1_sl, p2_sl, pa_sl, pe_sl, pk_sl, p3_sl, u_sl;
     // ---- source sector issue
     wire src_hbm = (ssp == 2'd0), dst_hbm = (dsp == 2'd0);
     // ---- unpack decision (combinational on registered state)
@@ -623,36 +602,12 @@ module ot_hgi_b2_dma_mv #(
     // slots reserved = queued + flushes in the pipe, kept as a register (a popcount over the 8 stages sat in u_go)
     reg [4:0] wq_res;
     wire wq_room = wq_res < 5'd15;
-    // The landing macro feeds the existing raw PX register directly; byte
-    // selection follows that register and joins decode before the existing P2
-    // boundary. No payload register bank or pipeline edge is added.
-    // ---- extract (p1 -> px): lane j's raw element, right-aligned (word / half / byte at offset sp + j << sl2)
-    reg [255:0] ext_r;
-    always @* begin
-        ext_r = 256'd0;
-        for (integer j = 0; j < 8; j = j + 1) begin : xl
-            reg [4:0] off; reg [31:0] w;
-            off = px_sb + (5'(j) << sl2);
-            w = px_r[{off[4:2], 5'd0} +: 32];
-            ext_r[32*j +: 32] = (sl2 == 2'd2) ? w : (sl2 == 2'd1) ? {16'd0, off[1] ? w[31:16] : w[15:0]}
-                                                             : {24'd0, w[{off[1:0], 3'd0} +: 8]};
-        end
-    end
-    // ---- convert (px -> p2): source format -> binary32 (VM source: the word)
-    reg [255:0] dec_w;
-    always @* begin
-        dec_w = 256'd0;
-        for (integer j = 0; j < 8; j = j + 1) begin : dl
-            reg [31:0] r; r = ext_r[32*j +: 32];
-            if (ssp == 2'd1) dec_w[32*j +: 32] = r;
-            else case (sf)
-                3'd1: dec_w[32*j +: 32] = {r[15:0], 16'd0};
-                3'd2: dec_w[32*j +: 32] = e4m3_f(r[7:0]);
-                3'd4: dec_w[32*j +: 32] = i8_f(r[7:0]);
-                default: dec_w[32*j +: 32] = r;
-            endcase
-        end
-    end
+    // The landing/decode leaf is independent. Keep every read reservation
+    // charged across its five in-flight stages, including the return pin edge.
+    reg [4:0] land_pending;
+    assign land_write={lw_v,lw_a,lw_d};
+    assign land_read={p1_v,p1_h,p1_k,p1_sp,p1_dp,p1_dsec,p1_fl,p1_sl};
+    assign source_format={ssp,sf,sl2};
     // ---- encode, two stages (hgi-1010/c, route f628d5015: p2_w -> pe_e 20 levels = E4M3 variable shift + sticky + round +
     //      code assembly in one edge).  ENC A (p2 -> pa): BF16 complete (one 32-bit add); E4M3 to the pre-round quotient,
     //      its round-up bit and the exponent class.  ENC B (pa -> pe): E4M3 round add + code.  +1 cycle in the pipe.
@@ -835,9 +790,6 @@ module ot_hgi_b2_dma_mv #(
     // KVW: bank 0 of the KV engine's buffer (the sector engine is idle while it runs; its enables pick the port)
     // (textbook audit 10-11: the KV engine owns both its buffer banks, OWN_B0 1: no shared macro port across the split)
     wire kb_we, kb_re; wire [7:0] kb_wa, kb_ra; wire [255:0] kb_wd;
-    ot_sram_1r1w_256x256_m2_r2c2 u_land (.clk(clk), .r_ce_in(p1_v), .r_addr_in(p1_h), .rd_out(lr_d),
-        .w_ce_in(lw_v), .w_addr_in(lw_a), .wd_in(lw_d), .w_mask_in({256{1'b1}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     always @(posedge clk) begin : lwd
         lw_a <= lt_v ? lt_tag + ((MUT == 3) ? 8'd0 : {5'd0, lt_bt}) : (SV != 0) ? g_slot[g_di] : v_ptr;
         lw_d <= lt_v ? lt_d : (SV != 0) ? g_d[g_di] : vr_q[255:0];
@@ -854,7 +806,7 @@ module ot_hgi_b2_dma_mv #(
             w_acc_q <= 4'd0; w_ack_q <= 4'd0; for (integer l = 0; l < 4; l = l + 1) l_wn[l] <= 6'd0;
             for (integer l = 0; l < 4; l = l + 1) lbc[l] <= 3'd0;
             wq_n <= 5'd0; wq_hl <= 2'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
-            p1_v <= 1'b0; pr_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pa_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 4'd0;
+            p1_v <= 1'b0; land_pending <= 0; p2_v <= 1'b0; pa_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 4'd0;
         end else begin
             mv_done <= 1'b0; fence_done <= 1'b0; mv_src <= 1'b0;
             if (fence_pending && fence_available) fence_done <= 1'b1;
@@ -1100,12 +1052,11 @@ module ot_hgi_b2_dma_mv #(
                 cf_n <= cf_n + {6'd0, r_go} - {6'd0, cf_hv && (!cd_v || take_cd)};
             end
             // ---- extract (p1 -> px), convert (px -> p2), encode (p2 -> pe), place (pe -> p3), merge (p3)
-            pr_v <= p1_v;
-            if (p1_v) begin pr_k <= p1_k; pr_sp <= p1_sp; pr_dp <= p1_dp; pr_dsec <= p1_dsec; pr_fl <= p1_fl; pr_sl <= p1_sl; end
-            px_v <= pr_v;
-            if (pr_v) begin px_k <= pr_k; px_r <= lr_d; px_sb <= pr_sp; px_dp <= pr_dp; px_dsec <= pr_dsec; px_fl <= pr_fl; px_sl <= pr_sl; end
-            p2_v <= px_v;
-            if (px_v) begin p2_k <= px_k; p2_w <= dec_w; p2_dp <= px_dp; p2_dsec <= px_dsec; p2_fl <= px_fl; p2_sl <= px_sl; end
+            land_pending <= {land_pending[3:0],p1_v};
+            p2_v <= decoded[306];
+            if(decoded[306])begin
+              {p2_k,p2_dp,p2_dsec,p2_fl,p2_sl,p2_w} <= decoded[305:0];
+            end
             pa_v <= p2_v;
             if (p2_v) begin
                 pa_k <= p2_k; pa_e <= enc_a; pa_q <= ea_q; pa_inc <= ea_inc; pa_big <= ea_big; pa_sat <= ea_sat; pa_sign <= ea_sign;
@@ -1133,7 +1084,7 @@ module ot_hgi_b2_dma_mv #(
             wq_n <= wq_n + {4'd0, p3_v && p3_fl && p3_keep} - {4'd0, iss_kw | iss_vw};
             wq_res <= wq_res + {4'd0, u_go && u_fl} - {4'd0, iss_kw | iss_vw} - {4'd0, p3_v && p3_fl && !p3_keep};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
-            if (busy_f && go_q4 && !f_fault && r_done && !u_cv && !cd_v && cf_n == 7'd0 && !lw_v && lq_v == 4'd0 && !p1_v && !pr_v && !px_v && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 &&
+            if (busy_f && go_q4 && !f_fault && r_done && !u_cv && !cd_v && cf_n == 7'd0 && !lw_v && lq_v == 4'd0 && !p1_v && land_pending == 0 && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 &&
                 !(iss_kw | iss_vw) && rd_in == 9'd0 && sf_n == 9'd0) begin
                 busy_f <= 1'b0; mv_done <= 1'b1;
             end

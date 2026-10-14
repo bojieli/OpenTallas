@@ -16,7 +16,7 @@ module ot_hgi_b2_dma_q #(
     parameter integer MUT_B2 = 0
 ) (
     input  wire          clk,
-    input wire [5:0] leaf_clk, // rq,mv,kc,h0,h1,serial; functional wrapper shares clk only when HARD_CLOCKS=0
+    input wire [6:0] leaf_clk, // rq,mv,kc,h0,h1,serial; functional wrapper shares clk only when HARD_CLOCKS=0
     input  wire          rst_n,
     input  wire [1:0]    qid,            // strap: this cluster's HBM stack (0..3); ONE hardened unit for all four
     input  wire [703:0]  dma_rec,        // {pos1, n_O, n_A, O, A, header, valid}; A[255:239,7] = the I-list address
@@ -57,7 +57,8 @@ module ot_hgi_b2_dma_q #(
     output wire [4:0] wl_bank,
     input wire wl_done
 );
-    wire [5:0] q5_clock = HARD_CLOCKS != 0 ? leaf_clk : {6{clk}};
+    wire [6:0] q5_clock = HARD_CLOCKS != 0 ? leaf_clk : {7{clk}};
+    wire [264:0] land_write;wire [63:0] land_read;wire [6:0] source_format;wire [306:0] decoded;
     wire mover_v, mover_rdy, mover_done, mover_fault, mover_src, mover_fv, mover_frdy, mover_fdone, mover_wld;
     wire [226:0] mover_cmd; wire [337:0] mover_vmq; wire [273:0] mover_vmr; wire il_active; wire [337:0] il_vmq; wire [279:0] mover_wl;
     wire kc_v, kc_rdy, kc_idle, kc_creq, kc_src, kc_done, kc_gnt;
@@ -103,6 +104,7 @@ module ot_hgi_b2_dma_q #(
     ot_hgi_b2_dma_mv
 `endif
     u_mv(
+      .land_write(land_write),.land_read(land_read),.source_format(source_format),.decoded(decoded),
       .ser_mv_v(ser_mv_v),
       .ser_mv(ser_mv),
       .ser_mv_rdy(ser_mv_rdy),
@@ -180,6 +182,8 @@ module ot_hgi_b2_dma_q #(
       .k_fault(ser_k_fault),
       .vmq(ser_vmq),
       .vmr(ser_vmr));
+    ot_hgi_b2_dma_land_dp u_dp(.clk(q5_clock[6]),.rst_n(rst_n),
+      .land_write(land_write),.land_read(land_read),.source_format(source_format),.decoded(decoded));
     assign r_req_addr = ra[36:0];
     assign wl_bank = wl[268:264];
     assign r_req_v=rv[0]; assign r_req_len=rl[3:0]; assign r_req_tag=rt[15:0]; assign r_req_we=rwe[0];

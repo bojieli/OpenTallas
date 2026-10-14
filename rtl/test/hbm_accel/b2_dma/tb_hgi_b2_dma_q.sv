@@ -70,7 +70,7 @@ module tb_hgi_b2_dma_q;
     // VM-side adapter, deliberately OUTSIDE the tile: expand one pin lane into its bank.
     always @* begin vm_wl = '0; if (q5_wl[279]) vm_wl[q5_bank*280 +: 280] = q5_wl; end
     assign wl = vm_wl;
-    ot_hgi_b2_dma_q #(.HARD_CLOCKS(CLOCK_ENTRIES), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .leaf_clk({6{clk}}), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
+    ot_hgi_b2_dma_q #(.HARD_CLOCKS(CLOCK_ENTRIES), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .leaf_clk({7{clk}}), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data),
