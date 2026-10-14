@@ -82,7 +82,10 @@ module ot_qwen_tile_kids #(
             wire [390:0] raw_ld = {cx_ld[391*g + 390], cx_ld[391*GS +: 390]};
             wire [390:0] ld;
             if (SPLIT != 0) begin : g_tx_leaf
-                ot_qwen_tile_tx u_tx (.clk((MCLK != 0) ? clk_tx[g] : clk), .rst_n(raw_ld[390]), .d((CMUT == 6 && g == 0) ? (raw_ld[389:0] ^ (390'd1 << 31)) : raw_ld[389:0]), .q(ld));
+                wire [389:0] tx_q;
+                ot_qwen_tile_tx u_tx (.clk((MCLK != 0) ? clk_tx[g] : clk), .rst_n(raw_ld[390]), .d((CMUT == 6 && g == 0) ? (raw_ld[389:0] ^ (390'd1 << 31)) : raw_ld[389:0]), .q(tx_q));
+                // Reset remains the control leaf's registered relay wire; it never passes through a data leaf.
+                assign ld = {raw_ld[390],tx_q};
             end else begin : g_tx_wire
                 assign ld = raw_ld;
             end
@@ -111,10 +114,10 @@ module ot_qwen_tile_kids #(
 endmodule
 
 // Last original XTX rung only: the control leaf retains the first rung and reset relay.
-module ot_qwen_tile_tx(input wire clk,input wire rst_n,input wire [389:0] d,output wire [390:0] q);
+module ot_qwen_tile_tx(input wire clk,input wire rst_n,input wire [389:0] d,output wire [389:0] q);
     wire [389:0] out;
     ot_qwen_tx_ff #(.W(390)) u_r (.clk(clk),.rst_n(rst_n),.d(d),.q(out));
-    assign q = {rst_n,out};
+    assign q = out;
 endmodule
 module ot_qwen_tile_rqr #(parameter integer NR=3)(input wire clk,input wire [NR*1024-1:0] d,output reg [1023:0] q);
     reg [1023:0] combined; integer i;
