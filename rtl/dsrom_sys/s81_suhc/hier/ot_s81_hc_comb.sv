@@ -132,6 +132,11 @@ module ot_s81_hc_comb #(
     // Fixed leaf order is native_comb_packing_request_1013.json.
     // PHYS_CLK is an elaboration constant: this creates wires, no parent clock mux.
     wire [13:0] ck = PHYS_CLK ? sk_leaf : {14{sk}};
+`ifndef SYNTHESIS
+    initial if (PHYS_CLK && (NG != 256 || NCOL != 3 || GS != 8 || S_RD != 2 || S_RT != 4 ||
+                            HALF != 1 || RLY != 2 || RF != 5 || RT != 1 || DW != 6 || RET_EXTRA != 1))
+        $fatal(1, "native HC clock map requires the 14-child production comb tuple");
+`endif
     // ---------------------------------------------------------------- seam nets (tile to tile)
     wire              ngo, t_ssv, t_flt, j_v, j_fq, j_fy, j_end, j_flt, j_civ, x_wdone, x_pob, x_f1, x_f4, c_yfl;
     wire [31:0]       t_ss;
