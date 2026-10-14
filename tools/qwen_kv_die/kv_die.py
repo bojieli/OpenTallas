@@ -485,7 +485,8 @@ def _write_buses(m):
             st, pc = bid[5:].rsplit('_', 1)
             buses.extend([(f'ww_{st}_{pc}', 'cdc_core', 290, [(f'wleaf_{st}_{pc}', 'w'), (f'cdc_{st}_{pc}', 'wi')]),
                           (f'wr_{st}_{pc}', 'cdc_core', 11, [(f'cdc_{st}_{pc}', 'wr'), (f'wleaf_{st}_{pc}', 'wr')]),
-                          (f'wcf_{st}_{pc}', 'cdc_core', 1, [(f'cdc_{st}_{pc}', 'cf'), (f'land_{st}', f'cf{pc}')])])
+                          (f'wcf_{st}_{pc}', 'spine_local' if m['geo'].get('split') else 'cdc_core', 1,
+                           [(f'cdc_{st}_{pc}', 'cf'), (f'land_{st}', f'cf{pc}')])])     # v1.2: relayed (kvs2 T1b, 620 um)
         elif bid.startswith('kvn_'):
             st = bid[4:]
             buses.append((bid, cl, bits, [('seq', f'kvn_{st}'), (f'wctl_{st}', 'kvn')]))
@@ -683,6 +684,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         gx = x_grp if side == 'W' else Wk - x_grp - grp_w
         gh = 4 * RENG[1] + 3 * GY
         gy = up(y0 + (stack_h - gh) / 2, GY)
+        grp_y = locals().setdefault('grp_y', {})
+        grp_y[st] = (gy, gy + gh)
         # qwen-1010/b 2026-10-10 (KV11 die STA: land -> ectl rs hops of ~3 mm between pins): every stack group is the
         # MIRROR of the WS group about the die's vertical axis (E stacks: aggregator MY, engines 0-3 in the column next
         # to the landing on both sides), so a shared master's pin is level with the same peer in every stack; the N
@@ -733,7 +736,9 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         'io', 'link_serdes')
     tw, th = FRAMES['qkd_host']
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
-    m['geo'] = dict(split=split, stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
+    # v1.2 candidate lanes are OFF by default (kvs2 T2 try: window fine H 1.37 -> 1.25, coarse 1.32 -> 1.17 H but 0.80 -> 1.10 V,
+    # lx 1 -> 2 stages, one re-plan reach miss): OT_KV_LANES=1 turns them on for the next revision's work
+    m['geo'] = dict(grp_y=grp_y, split=split, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES') == '1'), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
                     ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
     if kv_wq_leaves:
         _write_tiles(m, add)
@@ -900,6 +905,28 @@ def _relays(m):
         except ValueError:
             return route_(a, b, ring(by[a]), set(ring(by[b])))      # pin cells enclosed: any free ring cell
 
+    def route_via(a, b, pa, pb, lane_y):
+        """v1.2: an N-half KV-row chain (kvn / krs / krq / kc / emf / emr / ing) runs through its own lane row of the free
+        band above the N engine groups instead of every chain hugging the group edge (kvs2 T2: one corridor at the N
+        group top, GRT detours, kvn / emf / krs relay hops TT -155 / -108 / -90 ps)"""
+        xa = by[a].x + by[a].w / 2
+        xb = by[b].x + by[b].w / 2
+        wy = int(lane_y // G)
+        w_ = None
+        for dx_ in range(0, 400):
+            for sgn in (1, -1):
+                wx = int(((xa + xb) / 2) // G) + sgn * dx_
+                if 0 <= wx < nx and 0 <= wy < ny and not owner.get((wx, wy)) and (wx, wy) not in rocc:
+                    w_ = (wx, wy)
+                    break
+            if w_:
+                break
+        if w_ is None:
+            raise ValueError('no lane cell')
+        p1 = route_(a, f'lane{lane_y}', near_pin(ring(by[a]), a, pa), {w_})
+        p2 = route_(f'lane{lane_y}', b, [w_], set(near_pin(ring(by[b]), b, pb)))
+        return p1 + p2[1:]
+
     def route_(a, b, src, dst):
         if not src or not dst:
             raise ValueError(f'kv die: {a} or {b} has no free cell around it')
@@ -927,13 +954,26 @@ def _relays(m):
         return path[::-1]
     nb, stages, lengths = [], {}, {}
     rly_ends = {}                                  # relay inst -> (driver inst, load inst) of the bus it stages
-    for bid, cl, bits, eps in m['buses']:
+    order_ = list(m['buses'])
+    if m['geo'].get('split'):
+        # the link bridge <-> sequencer words (lx / lr = the measured link cost's K_ST) take their relay spots first, so
+        # other chains' relays never push them from one stage to two
+        order_.sort(key=lambda b_: b_[0] not in ('lx', 'lr'))
+    for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
             stages[bid] = 0
             continue
         (a, pa), (b, pb) = eps
-        path = route(a, b, pa, pb)
+        path = None
+        lane = _kv_lane(m, bid) if m['geo'].get('lanes') else None
+        if lane is not None:
+            try:
+                path = route_via(a, b, pa, pb, lane)
+            except ValueError:
+                path = None
+        if path is None:
+            path = route(a, b, pa, pb)
         L = (len(path) + 1) * G            # + the cell from each frame edge to the ring
         lengths[bid] = round(L, 1)
         span = bits * 0.048 + 4.0
@@ -1074,6 +1114,25 @@ def _relays(m):
     m['buses'] = nb
     m['relay_stages'] = stages
     m['route_um'] = lengths
+
+
+_LANES = {}
+
+
+def _kv_lane(m, bid):
+    """v1.2 lane row (y um) of an N-half KV-row chain of the split die, or None.  Lanes start 64.8 um above the N engine
+    groups and step 64.8 um up to two channels below the die edge; the chains are dealt round-robin over them.  The S
+    half keeps the shortest paths (its chains leave the centre column between the groups); aq / lt / lx / lr too."""
+    mt = re.match(r'(kvn|krs|krq|kc|emf|emr|ing)_(WN|EN)(?:_|$)', bid)
+    g = m['geo'].get('grp_y', {})
+    if not mt or not g:
+        return None
+    y0 = max(v[1] for k, v in g.items() if k[1] == 'N') + 64.8
+    n = max(1, int((m['die']['h'] - 2 * CHAN - y0) // 64.8))
+    key = id(m)
+    j = _LANES.get(key, 0)
+    _LANES[key] = j + 1
+    return y0 + (j % n) * 64.8
 
 
 def _regions(m):
@@ -1310,6 +1369,12 @@ def _split_pins(M, m=None):
         sq = M.get('qkd_seq')
         isq = by.get('seq')
         if sq is not None and isq is not None and il is not None:
+            # v1.2: the sequencer's link words leave its N face straight under the bridge (lr at x 250, lx at x 380, M5),
+            # so the 522-um gap takes exactly one relay each way (K_ST 1 of the measured link cost) whatever the other
+            # chains do (with level pins lx drifted to the W face and took 2 stages)
+            for p_, x_ in (('lr', 250.0), ('lx', 380.0)):
+                if p_ in sq.ports:
+                    sq.ports[p_] = ('face', sq.ports[p_][1], 'N', 'M5', x_, 1)
             for p_ in ('lx', 'lr'):
                 if p_ in ln.ports and p_ in sq.ports and sq.ports[p_][0] == 'face' and sq.ports[p_][2] == 'N':
                     ln.ports[p_] = ('face', ln.ports[p_][1], 'S', 'M5', sq.ports[p_][4] + isq.x - il.x, sq.ports[p_][5])
