@@ -695,9 +695,13 @@ def real_blocks_r8(die):
         # no RTL stays a stub and the record's verilog.stubs counts it (a FAIL of the full-RTL lint).
         sys.path.insert(0, str(ROOT / 'tools'))
         import die_port_bind as DPB
-        idx, _amb = DPB.rtl_index(['rtl'] + sorted(str(p_.relative_to(ROOT)) for p_ in (ROOT / 'physical').glob('**/rtl') if p_.is_dir()),
-                                  [_glue_path(), S.CFG7_RTL] + list(FULL_RTL_MODELS.values()),
-                                  {d_: '' for d_ in FULL_RTL_DEFINES}, [])
+        # the die RTL manifest (physical/s81_die_rtl/layer1.f: production cluster RTL per die master + defines + macro
+        # model libraries) -- the same binding tools/die_port_bind.py -f uses
+        mf_, md_, ml_ = DPB.load_manifest(ROOT / FULL_RTL_MANIFEST) if (ROOT / FULL_RTL_MANIFEST).exists() else ([], [], [])
+        files_ = [_glue_path(), S.CFG7_RTL] + list(FULL_RTL_MODELS.values()) + mf_
+        idx, _amb = DPB.rtl_index(['rtl'] + sorted(str(p_.relative_to(ROOT)) for p_ in (ROOT / 'physical').glob('**/rtl') if p_.is_dir()) + ml_,
+                                  files_, {d_: '' for d_ in tuple(FULL_RTL_DEFINES) + tuple(md_)}, mf_)
+        FULL_RTL_FILES[:] = mf_; FULL_RTL_EXTRA_DEFINES[:] = md_; FULL_RTL_LIBDIRS[:] = ml_
         mpar = S.die_master_params(m)
         for mst in sorted(used):
             if mst in out and not out[mst]['file'].endswith('_bb.v'):
@@ -722,6 +726,8 @@ FULL_RTL_MODELS = {     # hard-macro behavioural models allowed under real RTL (
     'ot_rom_4096x72_m8': 'physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v',
 }
 FULL_RTL_KEEP_BB = ()
+FULL_RTL_MANIFEST = 'physical/s81_die_rtl/layer1.f'   # s81-die-rtl-bind 2026-10-14
+FULL_RTL_FILES, FULL_RTL_EXTRA_DEFINES, FULL_RTL_LIBDIRS = [], [], []
 
 
 class SplitIO(list):
@@ -2665,6 +2671,26 @@ def run_lint(die, out, top_fix=False, tag=''):
     em = emit_verilog(die, m, real, pw, out, top)
     extra = (_glue_path(), S.CFG7_RTL) if R8_ACTIVE[0] else ()
     files, unresolved = rtl_closure([v['module'] for v in real.values() if not v['file'].endswith('_bb.v')], extra)
+    if R8_ACTIVE[0] and FULL_RTL[0]:
+        # s81-die-rtl-bind 2026-10-14: the full-RTL closure from the die RTL manifest (production cluster RTL of every
+        # die master under its defines, macro model libraries) -- the binding tools/die_port_bind.py checks
+        import die_port_bind as DPB
+        idx_, _ = DPB.rtl_index(['rtl'] + sorted(str(p_.relative_to(ROOT)) for p_ in (ROOT / 'physical').glob('**/rtl') if p_.is_dir())
+                                + list(FULL_RTL_LIBDIRS), [_glue_path(), S.CFG7_RTL] + list(FULL_RTL_MODELS.values()) + list(FULL_RTL_FILES),
+                                {d_: '' for d_ in tuple(FULL_RTL_DEFINES) + tuple(FULL_RTL_EXTRA_DEFINES)}, list(FULL_RTL_FILES))
+        files, seen_, todo_, unresolved = [], set(), sorted(v['module'] for v in real.values() if not v['file'].endswith('_bb.v')), []
+        while todo_:
+            n_ = todo_.pop()
+            if n_ in seen_:
+                continue
+            seen_.add(n_)
+            md_ = idx_.get(n_)
+            if md_ is None:
+                unresolved.append(n_); continue
+            if md_.path not in files:
+                files.append(md_.path)
+            todo_ += sorted(md_.children(idx_) - seen_)
+        files = [f'+define+{d_}' for d_ in tuple(FULL_RTL_DEFINES) + tuple(FULL_RTL_EXTRA_DEFINES)] + files
     bb = sorted({rb['file'] for rb in real.values() if rb['file'].endswith('_bb.v')})
     if R8_ACTIVE[0]:
         # die-level list: the q element by its interface shell, every glue master and primitive by its full RTL

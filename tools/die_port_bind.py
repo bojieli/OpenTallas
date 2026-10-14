@@ -669,6 +669,23 @@ def elab_kit(die_v, top, idx, mparams, out_dir, defines):
                 file_list=str(out_dir / 'die_top.f'))
 
 
+def load_manifest(fl):
+    """a file list / die RTL manifest -> (files, defines, libdirs): '+define+A+B' build defines, '+libdir+DIR' hard-macro
+    model libraries (indexed, not preferred), other non-comment lines = RTL files (preferred over other definitions)"""
+    base = Path(fl).parent
+    files, defines, libdirs = [], [], []
+    for ln in Path(fl).read_text().split('\n'):
+        ln = ln.strip()
+        if ln.startswith('+define+'):
+            defines += [d for d in ln[len('+define+'):].split('+') if d]
+        elif ln.startswith('+libdir+'):
+            libdirs.append(ln[len('+libdir+'):])
+        elif ln and not ln.startswith(('#', '//', '+', '-')):
+            p = Path(ln)
+            files.append(str(p if p.is_absolute() or (ROOT / p).exists() else base / p))
+    return files, defines, libdirs
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
     ap.add_argument('die_v')
@@ -691,18 +708,8 @@ def main(argv=None):
     files = list(a.rtl_file)
     libdirs = []
     for fl in a.filelists:
-        base = Path(fl).parent
-        for ln in Path(fl).read_text().split('\n'):
-            ln = ln.strip()
-            if ln.startswith('+define+'):          # a die RTL manifest carries its build defines
-                a.define += [d for d in ln[len('+define+'):].split('+') if d]
-                continue
-            if ln.startswith('+libdir+'):          # ... and the hard-macro model libraries its RTL instantiates
-                libdirs.append(ln[len('+libdir+'):])
-                continue
-            if ln and not ln.startswith(('#', '//', '+', '-')):
-                p = Path(ln)
-                files.append(str(p if p.is_absolute() or (ROOT / p).exists() else base / p))
+        f_, d_, l_ = load_manifest(fl)
+        files += f_; a.define += d_; libdirs += l_
     defines = {}
     for d in a.define:
         k, _, v = d.partition('=')
