@@ -19,7 +19,7 @@ if [[ -n "$plan" ]]; then
  [[ -n "$actual_initial_vm" && -f "$actual_initial_vm" ]]
  [[ -z "$catalog" ]] # each faithful sequence reference contains its own operation catalog
 fi
-allocator=${ALLOCATOR_OBJ:-/srv/opentallas-scratch/codex/qwen-full-layer-sequence-1014/allocator0/library/obj}
+allocator=${ALLOCATOR_OBJ:-/srv/opentallas-scratch/codex/qwen-full-layer-sequence-1014/allocator_v5_0/library/obj}
 front=${FRONT59_OBJ:?fresh source-exact ENABLE_NATIVE1 frontend59 object directory}
 sector=/srv/opentallas-scratch/codex/native-services-frontend-1014/sector-library-v1/obj
 pc=/srv/opentallas-scratch/codex/qwen-native-hbm-pc-provider-1014/library_v2/obj

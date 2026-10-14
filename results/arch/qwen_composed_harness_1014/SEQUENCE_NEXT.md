@@ -45,8 +45,9 @@ on its delivered held grant. Collector identities derive from that actual grant;
 actual returned tags/message/word/last/error/count are validated before VM
 commits. Its initial-grant adapter gate unit2159074 exited0 with epoch0, held
 until edge9 readiness. The acc7153 allocator library is historical
-initial-grant-only: the owner found a registered terminal producer hazard and
-is preparing a distinct successor. Terminal/HOST/link fence binding remains
+initial-grant-only. Repaired a23bf1e77 source3a7d297b…180fd now has a distinct
+INITIAL0 library (unit2293431 exit0) and held-grant adapter gate (unit2297510
+exit0); actual terminal/HOST integration remains unproved here. Terminal/HOST/link fence binding remains
 pending. Do not use historical TAG32 or acc7153 terminal acceptance.
 TAG59 tuple is epoch16/stage6/token18/position13/segment6; all decoder stages
 use the same token epoch, stage=L+1, segment0/1/2; head37/segment0. Q read port
@@ -60,9 +61,19 @@ Vot_qwen_tp8_native_services_frontend_native59 header/archive through FRONT59_OB
 Old frontend sources cannot qualify the token path. The QVM adapter captures actual request tags into pending responses and returns
 them unchanged when the source frontend exposes TAG59 ports, with actual request
 and reply logs. The strict observer requires all eight accepted requests and
-eight returned tags to match the actual central grant and decoder stage. The owner is building that source-exact fullTAG frontend.
+eight returned tags to match the actual central grant and decoder stage. Actual frontend59↔f460kernel↔VM port ABI syntax passed unit2297415.
+Fresh mapped frontend59/f460/128PC component gate2320593 exited0: normal512,
+stalls512, same-epoch0 two-frame1024 exact, with no reset between frames.
+Current K mutation512errors, actual old-layer ACK fault, and real saved old
+QVM packet replay fault were observed. See front59_component/receipt.json.
+Q/SU inputs remain explicit fixtures; no whole-layer/Xcarry/allocator/HOST or
+physical/rate proof is added. The owner is building distinct v2 full ATT write
+and commit TAG59 surfaces; v1 receipts remain immutable Q-only evidence.
 
-Next: bind successor allocator and fullTAG frontend, obtain genuine LV6 fullcore headers
+Metadata-complete TAG59 collector source2c146d6f9 binarycca72bb0…97eae5 is
+staged separately at tag59_metadata; v1 binary45c444e0 is historical.
+
+Next: bind v2 full ATT TAG59 frontend and actual HOST endpoint, obtain genuine LV6 fullcore headers
 and archive, run layer0 from actual embedding VM then no-reset layer0→1 under
 admission with every observer. Continue36 layers and real head/global sequence
 only after actual milestones pass. Physical VM/timing/bandwidth/rate/cost and
