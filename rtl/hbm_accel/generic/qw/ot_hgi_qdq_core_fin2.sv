@@ -68,23 +68,29 @@ module ot_hgi_qdq_core_fin2 #(
     reg [15:0] q_bpr [0:RQ-1]; reg [2:0] q_nsl [0:RQ-1]; reg [19:0] q_m [0:RQ-1]; reg [17:0] q_hd [0:RQ-1];
     reg [RQ-1:0] q_lb, q_lr; reg [7:0] q_hit [0:RQ-1];   // first-beat flags of an entry, computed at enqueue
     reg [QW-1:0] qt, rp;                          // tail, next to start, retire head
-    reg [QW:0] occ;                                   // accepted (bound) and not retired
+    wire [QW:0] occ;                                  // decoded observation: accepted, not retired
     wire [QW:0] fin_c;                                 // finished (all writes done), not yet retired
     localparam integer FCST=1<<(QW+1);
     (* keep="true",dont_touch="true" *) reg [RQ-1:0] head_oh;
     (* keep="true",dont_touch="true" *) reg [FCST-1:0] finish_oh;
+    (* keep="true",dont_touch="true" *) reg [FCST-1:0] occupancy_oh;
     reg [QW-1:0] hd; // decoded observation only, no clocked binary head
-    reg [QW:0] finish_index;
+    reg [QW:0] finish_index,occupancy_index;
     always @*begin
-      hd='0;finish_index='0;
+      hd='0;finish_index='0;occupancy_index='0;
       for(integer h=0;h<RQ;h=h+1)hd=hd|(QW'(h)&{QW{head_oh[h]}});
-      for(integer f=0;f<FCST;f=f+1)finish_index=finish_index|((QW+1)'(f)&{(QW+1){finish_oh[f]}});
+      for(integer f=0;f<FCST;f=f+1)begin
+        finish_index=finish_index|((QW+1)'(f)&{(QW+1){finish_oh[f]}});
+        occupancy_index=occupancy_index|((QW+1)'(f)&{(QW+1){occupancy_oh[f]}});
+      end
     end
     assign fin_c=finish_index;
+    assign occ=occupancy_index;
     wire head_live=|(q_v&head_oh),head_reject=|(q_rej&head_oh);
     wire head_bad=!(|head_oh)||(|(head_oh&(head_oh-1'b1)));
     wire finish_bad=!(|finish_oh)||(|(finish_oh&(finish_oh-1'b1)));
-    wire encoding_bad=head_bad||finish_bad;
+    wire occupancy_bad=!(|occupancy_oh)||(|(occupancy_oh&(occupancy_oh-1'b1)));
+    wire encoding_bad=head_bad||finish_bad||occupancy_bad;
     wire fin_has=!finish_oh[0];
     reg bad;
     // dependency of the S3 record on every valid entry (RAW: its A vs their O; WAR: its O vs their A; WAW: O vs O)
@@ -145,9 +151,12 @@ module ot_hgi_qdq_core_fin2 #(
         if(FIN_BYPASS)ret_oh=hd_mask&{RQ{rt_ok}};
         else begin ret_oh='0;if(rt_ok)ret_oh[hd]=1'b1;end
     end
-    (* keep=1 *) wire [QW:0] occ_inc=occ+(QW+1)'(f_s1v),occ_dec=occ_inc-1'b1;
-    (* keep=1 *) wire ready_inc=occ_inc<=(QW+1)'(RQ-(SPANPIPE?12:6));
-    (* keep=1 *) wire ready_dec=occ_dec<=(QW+1)'(RQ-(SPANPIPE?12:6));
+    // Full 2^(QW+1) ring retains original unsigned counter wrap, including faults.
+    // Ready uses a literal subset of prepared one-hot states, with no FIN carry.
+    (* keep=1 *) wire [FCST-1:0] occ_inc=f_s1v?{occupancy_oh[FCST-2:0],occupancy_oh[FCST-1]}:occupancy_oh;
+    (* keep=1 *) wire [FCST-1:0] occ_dec={occ_inc[0],occ_inc[FCST-1:1]};
+    (* keep=1 *) wire ready_inc=|occ_inc[RQ-(SPANPIPE?12:6):0];
+    (* keep=1 *) wire ready_dec=|occ_dec[RQ-(SPANPIPE?12:6):0];
     (* keep=1 *) wire [QW:0] fin_plus=fin_c+1'b1,fin_minus=fin_c-1'b1;
     // FIN2 moves all variable decode/carry before the raw finish select. A
     // registered prior-retire mask clears dependency storage one edge later;
@@ -162,7 +171,7 @@ module ot_hgi_qdq_core_fin2 #(
     (* keep=1 *) wire[RQ-1:0]qv0=qv_enq&~rm0,qv1=qv_enq&~rm1;
     (* keep=1 *) wire[RQ-1:0]hd_inc={head_oh[RQ-2:0],head_oh[RQ-1]};
     (* keep=1 *) wire[RQ-1:0]hd0=rt0?hd_inc:head_oh,hd1=rt1?hd_inc:head_oh;
-    (* keep=1 *) wire[QW:0]oc0=rt0?occ_dec:occ_inc,oc1=rt1?occ_dec:occ_inc;
+    (* keep=1 *) wire[FCST-1:0]oc0=rt0?occ_dec:occ_inc,oc1=rt1?occ_dec:occ_inc;
     (* keep=1 *) wire[FCST-1:0]fc0=rf0?{finish_oh[0],finish_oh[FCST-1:1]}:finish_oh;
     (* keep=1 *) wire[FCST-1:0]fc1=rf1?finish_oh:{finish_oh[FCST-2:0],finish_oh[FCST-1]};
     (* keep=1 *) wire[2:0]ret0={rt0&&rt_fault||f_nf||encoding_bad,rt0,rt0?ready_dec:ready_inc};
@@ -183,7 +192,7 @@ module ot_hgi_qdq_core_fin2 #(
     integer b;
     always @(posedge clk or negedge rr_n[0]) begin
         if (!rr_n[0]) begin
-            q_v <= 0; q_rej <= 0; qt <= 0; rp <= 0; head_oh <= {{(RQ-1){1'b0}},1'b1}; occ <= 0; bad <= 0; ret <= 0; finish_oh <= {{(FCST-1){1'b0}},1'b1}; qc <= 0;
+            q_v <= 0; q_rej <= 0; qt <= 0; rp <= 0; head_oh <= {{(RQ-1){1'b0}},1'b1}; occupancy_oh <= {{(FCST-1){1'b0}},1'b1}; bad <= 0; ret <= 0; finish_oh <= {{(FCST-1){1'b0}},1'b1}; qc <= 0;
             rg_req <= 0; rg_ok <= 0; o_act <= 0;
         end else begin
             rg_req <= q_v != 0; o_act <= q_v != 0;
@@ -196,9 +205,9 @@ module ot_hgi_qdq_core_fin2 #(
             finish_oh<=i_fin?fc1:fc0;
             if (f_abad || f_wbad || encoding_bad) bad <= 1'b1;
             qc <= (!bp_v && f_aidle && f_widle && b_used == 0) ? (qc[3] ? qc : qc + 4'd1) : 4'd0;
-            if(FIN_BYPASS==2)occ<=i_fin?oc1:oc0;
-            else if(FIN_BYPASS)occ<=rt_ok?occ_dec:occ_inc;
-            else occ <= occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok);
+            if(FIN_BYPASS==2)occupancy_oh<=i_fin?oc1:oc0;
+            else if(FIN_BYPASS)occupancy_oh<=rt_ok?occ_dec:occ_inc;
+            else occupancy_oh <= rt_ok?occ_dec:occ_inc;
             if(FIN_BYPASS==2)ret<=i_fin?ret1:ret0;
             else ret <= {rt_ok && rt_fault || f_nf, rt_ok, FIN_BYPASS?(rt_ok?ready_dec:ready_inc):((occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok)) <= (QW+1)'(RQ - (SPANPIPE ? 12 : 6)))};
         end
