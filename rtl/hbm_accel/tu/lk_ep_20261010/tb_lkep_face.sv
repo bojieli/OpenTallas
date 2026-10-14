@@ -15,7 +15,7 @@ module ot_hbm_lk_ep #(parameter NS=3, LW=487, TXQ=32, FCR=256)(
 endmodule
 module tb_lkep_face;
  parameter integer MUT_FACE=0;
- reg clk=0;always #.5 clk=~clk;reg rst_n=0;
+ reg clk=0;always #0.5 clk=~clk;reg rst_n=0;
  wire[1119:0] n_bus,g_bus;wire[973:0] n_phy,g_phy;
  reg[547:0] ins=0;reg[23:0] session=0;reg[486:0] rx=0;
  assign n_bus[546:0]=ins[546:0];assign g_bus[546:0]=ins[546:0];
