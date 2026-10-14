@@ -1,0 +1,62 @@
+{
+ "name": "ot_qwen_tile_local_drain",
+ "top": "ot_qwen_tile_local_drain",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_tile_local_drain.sv"
+ ],
+ "clock_port": "core_clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 43.2
+ },
+ "pins": {
+  "ANY": [
+   "core_clk",
+   "rst_n",
+   "issue_last",
+   "issue_context",
+   "issue_version",
+   "drain_ack_toggle",
+   "drain_toggle",
+   "drain_tuple",
+   "overflow_fault"
+  ]
+ },
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:q35-tile",
+  "branch": "claude/q14-tile-parent",
+  "tag": "lifetimeprobe",
+  "purpose": "Source-specific standalone CTS/census/corners only; ANYpins, registeredstatus/admission/CDC/producerseal/fullarithmeticunqualified, no hardmaster/globalABIadoption."
+ },
+ "structural_change": "Distinct fixed leaf owns ONLY its actual declared clock state. Preserve separate live-loader/coherent-response entries; no parent CTS or old CLOSED aliases.",
+ "params": {},
+ "macros": [],
+ "children": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

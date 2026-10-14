@@ -1,0 +1,79 @@
+{
+ "name": "ot_qwen_xcache_context32_events_store",
+ "top": "ot_qwen_xcache_context32_events_store",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_xcache_context32_events.sv"
+ ],
+ "clock_port": "load_clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 77.76,
+  "h": 216
+ },
+ "pins": {
+  "ANY": [
+   "load_clk",
+   "rst_n",
+   "clear",
+   "load_v",
+   "load_j_repeat",
+   "load_epoch",
+   "load_context",
+   "load_token",
+   "load_recipient",
+   "load_version",
+   "load_addr",
+   "load_x",
+   "load_root",
+   "load_phase",
+   "fill_ack_toggle",
+   "load_ready",
+   "fill_toggle",
+   "fill_tuple",
+   "read_j_repeat",
+   "read_epoch",
+   "read_context",
+   "read_version",
+   "read_addr",
+   "found",
+   "read_data",
+   "resident_tuple"
+  ]
+ },
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:q35-tile",
+  "branch": "claude/q14-tile-parent",
+  "tag": "lifetimeprobe",
+  "purpose": "Source-specific standalone CTS/census/corners only; ANYpins, registeredstatus/admission/CDC/producerseal/fullarithmeticunqualified, no hardmaster/globalABIadoption."
+ },
+ "structural_change": "Distinct fixed leaf owns ONLY its actual declared clock state. Preserve separate live-loader/coherent-response entries; no parent CTS or old CLOSED aliases.",
+ "params": {},
+ "macros": [],
+ "children": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}
