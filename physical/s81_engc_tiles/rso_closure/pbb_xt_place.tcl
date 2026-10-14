@@ -1,4 +1,4 @@
-# PBB_XT: fourteen dedicated same-edge transit flops anchored at actual output pins.
+# PBB_XT: all334 dedicated same-edge transit flops anchored at actual output pins.
 # Procs copied from tools/hbm_accel_smh_physical.py PIN_TCL (claude/hbm-sm-structure-20261005 bd35cd2dc).
 # piece port flops at their pins, FIRM (tools/hbm_accel_smh_physical.py; margin rule: every boundary flop -> pin)
 set ::ot_blk [ord::get_db_block]
@@ -85,7 +85,7 @@ proc ::ot_pin_place_auto {re depth} {
         if {![regexp $re [string map {"\\" ""} [$i getName]]]} { continue }
         set bt [::ot_flop_port $i]
         if {$bt eq ""} { incr skip; continue }
-        if {![regexp {^x_(oh|a)\[} [$bt getName]]} { continue }
+        if {![regexp {^x_(oh|a|do)\[} [$bt getName]]} { continue }
         set bb [$bt getBBox]
         set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
         if {$px < 2 * $m0} { set e W } elseif {$px > $dw - 2 * $m0} { set e E } elseif {$py < 2 * $m0} { set e S } else { set e N }
@@ -201,7 +201,7 @@ proc ::ot_pin_place_auto {re depth} {
             }
         }
     }
-    if {$placed != 14} { error "PBB_XT: expected fourteen dedicated transit flops, placed $placed" }
+    if {$placed != 334} { error "PBB_XT: expected334 dedicated transit flops, placed $placed" }
     puts "ot_pin_place_auto $re: $placed flops at their pins (W [llength [dict get $E W]] E [llength [dict get $E E]] S [llength [dict get $E S]] N [llength [dict get $E N]]), $skip without a port"
 }
 # the 3_1 skip-io global placement left every std cell PLACED: free them so the pin strips are empty (3_3 re-places)
