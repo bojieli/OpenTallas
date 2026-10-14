@@ -23,12 +23,26 @@ module tb_hbm_norm_sum_node;
    checks=checks+1;
   end
  endtask
+ task automatic abort_inflight;
+  integer p0;begin
+   @(negedge clk);go=1;lready=0;rready=0;@(negedge clk);go=0;
+   repeat(10)@(negedge clk);ld=32'h3f800000;rd=32'h40000000;lready=1;rready=1;
+   repeat(3)@(negedge clk);go=1;@(negedge clk);go=0;lready=0;rready=0;p0=pubs;
+   // No result from the previous epoch may publish after a row clear.
+   repeat(10)begin @(negedge clk);if(ready||pub)begin errors++;$display("ERR aborted node published stale sum");end end
+   ld=32'h40e00000;rd=32'h41100000;lready=1;rready=1;t=0;
+   while(!ready&&t<50)begin @(negedge clk);t++;end
+   if(!ready||fault||data!==32'h41800000||pubs-p0!=1)begin errors++;$display("ERR node restart expected16 got %h pubs %0d",data,pubs-p0);end
+   checks++;
+  end
+ endtask
  initial begin
   repeat(3)@(negedge clk);rst_n=1;repeat(6)@(negedge clk);
   run(32'h3fc00000,32'h40100000,32'h40700000,0);
   run(32'h3f800000,32'h3f800000,32'h40000000,5);
   run(32'h00000000,32'h40800000,32'h40800000,2);
   run(32'h3e800000,32'h3f000000,32'h3f400000,3);
+  abort_inflight();
   $display("NORM_SUM_NODE cases=%0d errors=%0d",checks,errors);
   if(errors==0)$display("NORM_SUM_NODE PASS");else $display("NORM_SUM_NODE FAIL");
   $finish;
