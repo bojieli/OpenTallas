@@ -402,6 +402,7 @@ endmodule
 
 // ---- the centre
 module ot_hgi_hc_ctl_b2 #(
+    parameter integer STORELEAF=0,CLOCKED=0,
     parameter integer D   = 5120,
     parameter integer RLQ = 6,               // relay flops centre <-> quarter (each way)
     parameter integer CD  = 16,
@@ -409,6 +410,8 @@ module ot_hgi_hc_ctl_b2 #(
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input wire[19:0]clk_store,input wire[31:0]clk_scan,
+    input wire[30:0]clk_block_add,clk_heap_add,
     input  wire              job_v_i,
     output wire              job_rdy,
     input  wire [148:0]      job_i,
@@ -495,8 +498,8 @@ module ot_hgi_hc_ctl_b2 #(
     // ---- the collector and the scalar tail: / D, + eps, rsqrt
     reg go_r; reg [1:0] ep;
     wire ss_v, c_flt; wire [31:0] ss; wire [15:0] c_stale;
-    ot_hgi_hc_coll_b2 #(.NQ(4), .P(2), .NB(NB), .CD(CD), .LA(LA), .MUT(MUT)) u_coll (.clk(clk), .rst_n(rst_n), .clr(go_r),
-        .ep(ep), .pk_v(k_v), .pk(k_d), .pk_cr(k_cr), .ss_v(ss_v), .ss(ss), .flt(c_flt), .n_stale(c_stale));
+    ot_hgi_hc_coll_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.NQ(4), .P(2), .NB(NB), .CD(CD), .LA(LA), .MUT(MUT)) u_coll (.clk(clk), .rst_n(rst_n), .clr(go_r),
+        .ep(ep), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.pk_v(k_v), .pk(k_d), .pk_cr(k_cr), .ss_v(ss_v), .ss(ss), .flt(c_flt), .n_stale(c_stale));
     reg [31:0] eps_r;
     reg ssv_q; reg [31:0] ss_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) ssv_q <= 1'b0; else ssv_q <= ss_v;
@@ -572,6 +575,7 @@ endmodule
 module ot_hgi_hc_eng_b2 #(
     parameter integer D   = 5120,
     parameter integer CLOCKED = 0,
+    parameter integer STORELEAF = 0,
     parameter integer LQ  = 32,
     parameter integer FD  = 64,
     parameter integer HSL = 1,
@@ -584,6 +588,8 @@ module ot_hgi_hc_eng_b2 #(
     input  wire              rst_n,
     input wire [255:0] clk_sl,
     input wire [223:0] clk_chunk,
+    input wire[19:0]clk_store,input wire[31:0]clk_scan,
+    input wire[30:0]clk_block_add,clk_heap_add,
     input  wire              job_v,
     output wire              job_rdy,
     input  wire [148:0]      job,
@@ -604,7 +610,7 @@ module ot_hgi_hc_eng_b2 #(
 );
     wire [3:0] q_dn_v; wire [4*139-1:0] q_dn; wire [7:0] q_ck_v, q_ck_cr; wire [4*88-1:0] q_ck;
     wire [3:0] q_sc_v; wire [4*258-1:0] q_sc; wire [4*6-1:0] q_stat;
-    ot_hgi_hc_ctl_b2 #(.D(D), .RLQ(RLQ), .CD(CD), .MUT(MUT)) u_ctl (.clk(clk), .rst_n(rst_n), .job_v_i(job_v),
+    ot_hgi_hc_ctl_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.D(D), .RLQ(RLQ), .CD(CD), .MUT(MUT)) u_ctl (.clk(clk), .rst_n(rst_n), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.job_v_i(job_v),
         .job_rdy(job_rdy), .job_i(job), .g_rdy_i(g_rdy), .done(done), .fault(fault), .idle(idle), .rg_req(rg_req),
         .rg_gnt(rg_gnt), .wg_req(wg_req), .wg_gnt(wg_gnt), .q_dn_v(q_dn_v), .q_dn(q_dn), .q_ck_v(q_ck_v), .q_ck(q_ck),
         .q_ck_cr(q_ck_cr), .q_sc_v(q_sc_v), .q_sc(q_sc), .q_stat(q_stat));
