@@ -43,7 +43,8 @@ TAP_SW, TAP_AW, TAP_PF, TAP_GI = 1 + 24 + 64 + 2048, 1 + 24 + 16 + 512, 74, 380
 # C5: masters whose hardened children each take their own die clock entry (delivered at phi - R of that child):
 # die ports ck0 .. ck<n-1> = RTL clock port bits ck[n-1:0] (qfd_tt_up4: 5 = 4 leaves + cluster pin flops, r5 10-14;
 # qfd_xcol_e/w: 9 = xhead + 8 leaves, ot_qfd_xslice_slots.sv)
-CHILD_CK = {'qfd_tt_up4': 5, 'qfd_xcol_e': 9, 'qfd_xcol_w': 9}
+CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # rtl/physical/ot_qwen_tt_up4_cluster.sv (+define OT_QFD_UP4_CK_ENTRIES)
+            'qfd_xcol_e': [f'ck{k}' for k in range(9)], 'qfd_xcol_w': [f'ck{k}' for k in range(9)]}   # DIE REQUEST: scalar ck0..ck8
 
 
 def _child_clocks(m, rec):
@@ -53,11 +54,11 @@ def _child_clocks(m, rec):
         if c == 'clock_trunk' and any(i in n_of and p == 'ck' for i, p in e):
             e2 = []
             for i, p in e:
-                e2 += [(i, f'ck{k}') for k in range(n_of[i])] if (i in n_of and p == 'ck') else [(i, p)]
+                e2 += [(i, q) for q in n_of[i]] if (i in n_of and p == 'ck') else [(i, p)]
             e = e2
         nb.append((b, c, n, e))
     m['buses'] = nb
-    rec['child_clocks'] = {k: v for k, v in CHILD_CK.items()}
+    rec['child_clocks'] = {k: list(v) for k, v in CHILD_CK.items()}
 
 
 def morton(c, r):
@@ -124,6 +125,20 @@ def _dvm(v, m, put, rec, vm, su, xt):
             c, r = (int(q) for q in i.name.split('_')[1:3])
             rows.setdefault(c, []).append(r)
     nr = max(max(q) for q in rows.values()) + 1
+    # chain termini (DVM corridor / head row): the outermost station / column head has no downstream peer: its ready
+    # input is tied 1 (never back-pressured) and its downstream word output is unread -- recorded, not hidden
+    term = []
+    for i in m['insts']:
+        if i.kind == 'station':
+            c, r = (int(q) for q in i.name.split('_')[1:3])
+            if r == 0:
+                term.append((i.name, 'b_r'))
+            elif r == nr - 1:
+                term.append((i.name, 'a_r'))
+    term += [(heads[0].name, 'w_r'), (heads[-1].name, 'e_r')]
+    for i_, p_ in term:
+        ties.append((i_, p_, 1, 1))
+    rec['dvm_termini'] = len(term)
     for i in m['insts']:
         if i.kind == 'station':
             c, r = (int(q) for q in i.name.split('_')[1:3])

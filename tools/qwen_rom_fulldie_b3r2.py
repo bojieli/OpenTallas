@@ -4389,7 +4389,7 @@ def _r18_post(v, m):
     _r18_masters(v, m)
 
 
-R18_CK = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n') + tuple(f'ck{i}' for i in range(9))
+R18_CK = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk', 'crst', 'hrst', 'rst_n', 'h_arst_n', 'c_arst_n') + tuple(f'ck{i}' for i in range(9)) + tuple(f'ck_l{i}' for i in range(4)) + ('ck_pin',)
 
 
 def _r18_masters(v, m):
