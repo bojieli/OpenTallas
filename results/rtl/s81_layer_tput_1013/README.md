@@ -261,3 +261,15 @@ Native lowering must bind an explicit spill/reload or a real POST-to-VM stream
 with committed rows. The graph's 41 changed-h groups therefore cannot establish
 the actual H_STORE/H_LOAD execution count; within-stage transfers may be needed.
 The complete native count stays unknown until these real bindings execute.
+
+## Round 2026-10-14 (rom-tput-1014): count, transfer fix on main, NORM decomposition, VM read, SU gaps
+
+`round_1014.json` holds the facts. h transfers a token (AR): 41 hop transfers on the critical path (40
+substage_hop0 + head.hop), 2 Engram materializations (critical, row HC.H_MAT_ENGRAM), 37 same-stage
+coefficient materializations (POST -> next attn hc.fn / hc.sumsq; >= 6,483 cycles slack, 0 e2e when issued
+after the NORM). The transfer fix (cseq PIPE default 1, FD16 H landing streamer, cut-through hand-off) is on
+main: 723 -> 246 cycles a transfer, HC.H_XFER 3.453 % -> 1.202 %. NORM 727 = 339 (mix + sums over the chain)
++ 74 (rsqrt) + 238 (scale broadcast + rows back) + 39 (rows) + 37 (writer / done): the fix is a tree, not
+faster arithmetic (not built). VM read: leaf hop 1 required (hop 2 = 9.1 % AR upper bound); row VM.READ at
+hop 1 + FE = 2.654 %. attn.q_rope, ffn.bias and ffn.softplus_sqrt have no S81 production RTL (the SU slab has
+no job kind for them): functional gaps for the SU owner; attn.sink is inside SE (under price).
