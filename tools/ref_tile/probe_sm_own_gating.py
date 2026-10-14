@@ -110,8 +110,10 @@ proc check_paths {tag} {
 }
 '''
         ownR=plan['own_ENA'][c]['R_ps'];text+=f"set_clock_latency -source {-ownR} [get_clocks OWN_RAW]\n"
-        text+=f"set ownarr [get_property [get_pins own/cut_2] arrival_max_rise]\nif {{abs($ownarr+{ownR})>0.01}} {{error \"OWN raw phase mismatch\"}}\n"
+        # OpenSTA pin arrival properties do not initialize a new timing graph.
+        # Find the mandatory real check paths first; missing checks fail closed.
         text+=f'set baseline [check_paths {c}_before_entry_comp]\n'
+        text+=f"set ownarr [get_property [get_pins own/cut_2] arrival_max_rise]\nif {{abs($ownarr+{ownR})>0.01}} {{error \"OWN raw phase mismatch\"}}\n"
         if c=='tt':text+='set levels [open /probe/TT_levels.tcl w]\n'
         else:text+='source /probe/TT_levels.tcl\n'
         for i,r in enumerate(plan['child_instances']):
