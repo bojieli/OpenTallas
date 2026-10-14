@@ -1843,6 +1843,11 @@ def main():
             assert encode_program(dec) == b_
             for x, y in zip(dec, recs):
                 x.tag, x.family = y.tag, y.family
+                # Provenance and implicit model operands are compiler annotations,
+                # not ABI fields. Keep them attached after validating the wire image.
+                for attr in ("hc_row", "implicit"):
+                    if hasattr(y, attr):
+                        setattr(x, attr, getattr(y, attr))
             progs.append(dec)
             nbytes += len(b_)
             if r == 0 and a.program_out:
