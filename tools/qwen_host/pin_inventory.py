@@ -48,8 +48,8 @@ for st in range(4):
  for pc in range(32):
   here=f'stack{st}.pc{pc}';
   if pc<31:
-   next=f'stack{st}.pc{pc+1}'
-   link(here+'.station.fo',next+'.station.fi',291,'core');link(next+'.station.co',here+'.station.ci',32,'core');link(next+'.station.ao',here+'.station.ai',32,'core');link(next+'.station.fault_o',here+'.station.fault_i',1,'core')
+   next_node=f'stack{st}.pc{pc+1}'
+   link(here+'.station.fo',next_node+'.station.fi',291,'core');link(next_node+'.station.co',here+'.station.ci',32,'core');link(next_node+'.station.ao',here+'.station.ai',32,'core');link(next_node+'.station.fault_o',here+'.station.fault_i',1,'core')
   link(here+'.station.host_es',here+'.static.host_es',288,'core');link(here+'.static.host_cr',here+'.station.host_cr',1,'core');link(here+'.static.host_ack',here+'.station.host_ack',1,'core');link(here+'.static.fault',here+'.station.host_fault',1,'core')
   link(here+'.emb_landing.es',here+'.static.land_es',288,'core');link(here+'.static.land_er',here+'.emb_landing.er',261,'core')
   link(here+'.static.ctrl_es',here+'.controller.es',288,'core');link(here+'.controller.er',here+'.static.ctrl_er',261,'core');link(here+'.controller.completion_v/we',here+'.static.completion_v/we',2,'core');link(here+'.KV_CDC.ho',here+'.controller.ci',319,'hbm');link(here+'.controller.co',here+'.KV_CDC.hi',294,'hbm');link(here+'.KCMD.pi',here+'.controller.ki',33,'hbm');link(here+'.controller.ko',here+'.KCMD.po',33,'hbm');link(here+'.controller.po',here+'.PHY.pi',328,'hbm');link(here+'.PHY.po',here+'.controller.pi',289,'hbm')

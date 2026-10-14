@@ -1,6 +1,7 @@
 {
   "status": "UNVERIFIED_CANDIDATE_PLACEMENT_INPUT_NOT_DIE_CONTRACT",
   "parent_fit": "UNPROVEN_NO_LEGACY_FRAME_FIT_ASSERTION",
+  "prompt_leaf": "SOURCE_PENDING_HELPER: originalprompt combinational ECC output/request decode requires newcapturedrequest/registeredresponse pinleaf; macro8192x18storage physical1024x256, latency/outline/census pending actualbind bench",
   "masters": [
     {
       "master": "qkd_host_axi_packet",
@@ -662,21 +663,21 @@
           "name": "in_v",
           "direction": "input",
           "width": 1,
-          "registered_domain": "ck",
+          "registered_domain": "clk_h",
           "seam": "CAPTURED_INPUT"
         },
         {
           "name": "in_d",
           "direction": "input",
           "width": 64,
-          "registered_domain": "ck",
+          "registered_domain": "clk_h",
           "seam": "CAPTURED_INPUT"
         },
         {
           "name": "in_cr",
           "direction": "output",
           "width": 1,
-          "registered_domain": "ck",
+          "registered_domain": "clk_h",
           "seam": "REGISTERED_OUTPUT"
         },
         {
@@ -704,14 +705,14 @@
           "name": "fault",
           "direction": "output",
           "width": 1,
-          "registered_domain": "ck",
+          "registered_domain": "clk_h",
           "seam": "REGISTERED_OUTPUT"
         },
         {
           "name": "landed_debug",
           "direction": "output",
           "width": 32,
-          "registered_domain": "ck",
+          "registered_domain": "clk_h",
           "seam": "REGISTERED_OUTPUT"
         }
       ]
@@ -2554,6 +2555,127 @@
       ]
     },
     {
+      "master": "qfd_link_adp512",
+      "source": "rtl/physical/ot_qwen_romio_slots.sv",
+      "source_checkout": "/home/ubuntu/wt/r3b-io",
+      "source_sha256": "c24b7b46296bb58741e6b63ff9e435587387ed641f718164b385dab730c554e4",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "c_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "c_d",
+          "direction": "input",
+          "width": 1024,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "c_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_d",
+          "direction": "output",
+          "width": 1024,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "tx_up",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "tx_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_flit",
+          "direction": "output",
+          "width": 1043,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "rx_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_flit",
+          "direction": "input",
+          "width": 1043,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "outline_request_um": [
+        237.6,
+        777.6
+      ],
+      "outline_status": "EXISTING_LIVE_JOB_GEOMETRY_HOST_SLOT_UNPROVEN",
+      "clock_entries": [
+        "ck"
+      ],
+      "actual_body_params": {
+        "W": 1024,
+        "RXD": 512,
+        "NG": 8,
+        "PINREG": 1
+      },
+      "flop_census": "IO_OWNER_MEASURED_REPORT_REQUIRED"
+    },
+    {
       "master": "qkd_ctrl_pc_host",
       "source": "rtl/qwen_sys/host_20261013/qkd_ctrl_pc_host.sv",
       "source_sha256": "1817467f76f6be5165d2184cf1346ea5009de371f7a65d81e829746598f3ef75",
@@ -2795,6 +2917,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc0.KV_CDC.ho",
+      "destination": "stack0.pc0.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc0.controller.co",
+      "destination": "stack0.pc0.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc0.KCMD.pi",
+      "destination": "stack0.pc0.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc0.controller.ko",
+      "destination": "stack0.pc0.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc0.controller.po",
       "destination": "stack0.pc0.PHY.pi",
       "bits": 328,
@@ -2883,6 +3029,30 @@
       "destination": "stack0.pc1.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc1.KV_CDC.ho",
+      "destination": "stack0.pc1.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc1.controller.co",
+      "destination": "stack0.pc1.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc1.KCMD.pi",
+      "destination": "stack0.pc1.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc1.controller.ko",
+      "destination": "stack0.pc1.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc1.controller.po",
@@ -2975,6 +3145,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc2.KV_CDC.ho",
+      "destination": "stack0.pc2.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc2.controller.co",
+      "destination": "stack0.pc2.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc2.KCMD.pi",
+      "destination": "stack0.pc2.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc2.controller.ko",
+      "destination": "stack0.pc2.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc2.controller.po",
       "destination": "stack0.pc2.PHY.pi",
       "bits": 328,
@@ -3063,6 +3257,30 @@
       "destination": "stack0.pc3.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc3.KV_CDC.ho",
+      "destination": "stack0.pc3.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc3.controller.co",
+      "destination": "stack0.pc3.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc3.KCMD.pi",
+      "destination": "stack0.pc3.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc3.controller.ko",
+      "destination": "stack0.pc3.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc3.controller.po",
@@ -3155,6 +3373,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc4.KV_CDC.ho",
+      "destination": "stack0.pc4.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc4.controller.co",
+      "destination": "stack0.pc4.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc4.KCMD.pi",
+      "destination": "stack0.pc4.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc4.controller.ko",
+      "destination": "stack0.pc4.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc4.controller.po",
       "destination": "stack0.pc4.PHY.pi",
       "bits": 328,
@@ -3243,6 +3485,30 @@
       "destination": "stack0.pc5.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc5.KV_CDC.ho",
+      "destination": "stack0.pc5.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc5.controller.co",
+      "destination": "stack0.pc5.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc5.KCMD.pi",
+      "destination": "stack0.pc5.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc5.controller.ko",
+      "destination": "stack0.pc5.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc5.controller.po",
@@ -3335,6 +3601,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc6.KV_CDC.ho",
+      "destination": "stack0.pc6.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc6.controller.co",
+      "destination": "stack0.pc6.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc6.KCMD.pi",
+      "destination": "stack0.pc6.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc6.controller.ko",
+      "destination": "stack0.pc6.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc6.controller.po",
       "destination": "stack0.pc6.PHY.pi",
       "bits": 328,
@@ -3423,6 +3713,30 @@
       "destination": "stack0.pc7.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc7.KV_CDC.ho",
+      "destination": "stack0.pc7.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc7.controller.co",
+      "destination": "stack0.pc7.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc7.KCMD.pi",
+      "destination": "stack0.pc7.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc7.controller.ko",
+      "destination": "stack0.pc7.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc7.controller.po",
@@ -3515,6 +3829,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc8.KV_CDC.ho",
+      "destination": "stack0.pc8.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc8.controller.co",
+      "destination": "stack0.pc8.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc8.KCMD.pi",
+      "destination": "stack0.pc8.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc8.controller.ko",
+      "destination": "stack0.pc8.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc8.controller.po",
       "destination": "stack0.pc8.PHY.pi",
       "bits": 328,
@@ -3603,6 +3941,30 @@
       "destination": "stack0.pc9.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc9.KV_CDC.ho",
+      "destination": "stack0.pc9.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc9.controller.co",
+      "destination": "stack0.pc9.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc9.KCMD.pi",
+      "destination": "stack0.pc9.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc9.controller.ko",
+      "destination": "stack0.pc9.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc9.controller.po",
@@ -3695,6 +4057,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc10.KV_CDC.ho",
+      "destination": "stack0.pc10.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc10.controller.co",
+      "destination": "stack0.pc10.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc10.KCMD.pi",
+      "destination": "stack0.pc10.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc10.controller.ko",
+      "destination": "stack0.pc10.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc10.controller.po",
       "destination": "stack0.pc10.PHY.pi",
       "bits": 328,
@@ -3783,6 +4169,30 @@
       "destination": "stack0.pc11.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc11.KV_CDC.ho",
+      "destination": "stack0.pc11.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc11.controller.co",
+      "destination": "stack0.pc11.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc11.KCMD.pi",
+      "destination": "stack0.pc11.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc11.controller.ko",
+      "destination": "stack0.pc11.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc11.controller.po",
@@ -3875,6 +4285,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc12.KV_CDC.ho",
+      "destination": "stack0.pc12.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc12.controller.co",
+      "destination": "stack0.pc12.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc12.KCMD.pi",
+      "destination": "stack0.pc12.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc12.controller.ko",
+      "destination": "stack0.pc12.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc12.controller.po",
       "destination": "stack0.pc12.PHY.pi",
       "bits": 328,
@@ -3963,6 +4397,30 @@
       "destination": "stack0.pc13.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc13.KV_CDC.ho",
+      "destination": "stack0.pc13.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc13.controller.co",
+      "destination": "stack0.pc13.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc13.KCMD.pi",
+      "destination": "stack0.pc13.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc13.controller.ko",
+      "destination": "stack0.pc13.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc13.controller.po",
@@ -4055,6 +4513,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc14.KV_CDC.ho",
+      "destination": "stack0.pc14.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc14.controller.co",
+      "destination": "stack0.pc14.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc14.KCMD.pi",
+      "destination": "stack0.pc14.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc14.controller.ko",
+      "destination": "stack0.pc14.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc14.controller.po",
       "destination": "stack0.pc14.PHY.pi",
       "bits": 328,
@@ -4143,6 +4625,30 @@
       "destination": "stack0.pc15.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc15.KV_CDC.ho",
+      "destination": "stack0.pc15.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc15.controller.co",
+      "destination": "stack0.pc15.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc15.KCMD.pi",
+      "destination": "stack0.pc15.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc15.controller.ko",
+      "destination": "stack0.pc15.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc15.controller.po",
@@ -4235,6 +4741,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc16.KV_CDC.ho",
+      "destination": "stack0.pc16.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc16.controller.co",
+      "destination": "stack0.pc16.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc16.KCMD.pi",
+      "destination": "stack0.pc16.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc16.controller.ko",
+      "destination": "stack0.pc16.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc16.controller.po",
       "destination": "stack0.pc16.PHY.pi",
       "bits": 328,
@@ -4323,6 +4853,30 @@
       "destination": "stack0.pc17.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc17.KV_CDC.ho",
+      "destination": "stack0.pc17.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc17.controller.co",
+      "destination": "stack0.pc17.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc17.KCMD.pi",
+      "destination": "stack0.pc17.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc17.controller.ko",
+      "destination": "stack0.pc17.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc17.controller.po",
@@ -4415,6 +4969,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc18.KV_CDC.ho",
+      "destination": "stack0.pc18.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc18.controller.co",
+      "destination": "stack0.pc18.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc18.KCMD.pi",
+      "destination": "stack0.pc18.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc18.controller.ko",
+      "destination": "stack0.pc18.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc18.controller.po",
       "destination": "stack0.pc18.PHY.pi",
       "bits": 328,
@@ -4503,6 +5081,30 @@
       "destination": "stack0.pc19.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc19.KV_CDC.ho",
+      "destination": "stack0.pc19.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc19.controller.co",
+      "destination": "stack0.pc19.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc19.KCMD.pi",
+      "destination": "stack0.pc19.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc19.controller.ko",
+      "destination": "stack0.pc19.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc19.controller.po",
@@ -4595,6 +5197,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc20.KV_CDC.ho",
+      "destination": "stack0.pc20.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc20.controller.co",
+      "destination": "stack0.pc20.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc20.KCMD.pi",
+      "destination": "stack0.pc20.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc20.controller.ko",
+      "destination": "stack0.pc20.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc20.controller.po",
       "destination": "stack0.pc20.PHY.pi",
       "bits": 328,
@@ -4683,6 +5309,30 @@
       "destination": "stack0.pc21.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc21.KV_CDC.ho",
+      "destination": "stack0.pc21.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc21.controller.co",
+      "destination": "stack0.pc21.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc21.KCMD.pi",
+      "destination": "stack0.pc21.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc21.controller.ko",
+      "destination": "stack0.pc21.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc21.controller.po",
@@ -4775,6 +5425,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc22.KV_CDC.ho",
+      "destination": "stack0.pc22.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc22.controller.co",
+      "destination": "stack0.pc22.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc22.KCMD.pi",
+      "destination": "stack0.pc22.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc22.controller.ko",
+      "destination": "stack0.pc22.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc22.controller.po",
       "destination": "stack0.pc22.PHY.pi",
       "bits": 328,
@@ -4863,6 +5537,30 @@
       "destination": "stack0.pc23.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc23.KV_CDC.ho",
+      "destination": "stack0.pc23.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc23.controller.co",
+      "destination": "stack0.pc23.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc23.KCMD.pi",
+      "destination": "stack0.pc23.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc23.controller.ko",
+      "destination": "stack0.pc23.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc23.controller.po",
@@ -4955,6 +5653,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc24.KV_CDC.ho",
+      "destination": "stack0.pc24.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc24.controller.co",
+      "destination": "stack0.pc24.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc24.KCMD.pi",
+      "destination": "stack0.pc24.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc24.controller.ko",
+      "destination": "stack0.pc24.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc24.controller.po",
       "destination": "stack0.pc24.PHY.pi",
       "bits": 328,
@@ -5043,6 +5765,30 @@
       "destination": "stack0.pc25.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc25.KV_CDC.ho",
+      "destination": "stack0.pc25.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc25.controller.co",
+      "destination": "stack0.pc25.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc25.KCMD.pi",
+      "destination": "stack0.pc25.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc25.controller.ko",
+      "destination": "stack0.pc25.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc25.controller.po",
@@ -5135,6 +5881,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc26.KV_CDC.ho",
+      "destination": "stack0.pc26.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc26.controller.co",
+      "destination": "stack0.pc26.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc26.KCMD.pi",
+      "destination": "stack0.pc26.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc26.controller.ko",
+      "destination": "stack0.pc26.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc26.controller.po",
       "destination": "stack0.pc26.PHY.pi",
       "bits": 328,
@@ -5223,6 +5993,30 @@
       "destination": "stack0.pc27.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc27.KV_CDC.ho",
+      "destination": "stack0.pc27.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc27.controller.co",
+      "destination": "stack0.pc27.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc27.KCMD.pi",
+      "destination": "stack0.pc27.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc27.controller.ko",
+      "destination": "stack0.pc27.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc27.controller.po",
@@ -5315,6 +6109,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc28.KV_CDC.ho",
+      "destination": "stack0.pc28.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc28.controller.co",
+      "destination": "stack0.pc28.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc28.KCMD.pi",
+      "destination": "stack0.pc28.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc28.controller.ko",
+      "destination": "stack0.pc28.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc28.controller.po",
       "destination": "stack0.pc28.PHY.pi",
       "bits": 328,
@@ -5403,6 +6221,30 @@
       "destination": "stack0.pc29.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc29.KV_CDC.ho",
+      "destination": "stack0.pc29.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc29.controller.co",
+      "destination": "stack0.pc29.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc29.KCMD.pi",
+      "destination": "stack0.pc29.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc29.controller.ko",
+      "destination": "stack0.pc29.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc29.controller.po",
@@ -5495,6 +6337,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack0.pc30.KV_CDC.ho",
+      "destination": "stack0.pc30.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc30.controller.co",
+      "destination": "stack0.pc30.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc30.KCMD.pi",
+      "destination": "stack0.pc30.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc30.controller.ko",
+      "destination": "stack0.pc30.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack0.pc30.controller.po",
       "destination": "stack0.pc30.PHY.pi",
       "bits": 328,
@@ -5559,6 +6425,30 @@
       "destination": "stack0.pc31.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc31.KV_CDC.ho",
+      "destination": "stack0.pc31.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc31.controller.co",
+      "destination": "stack0.pc31.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc31.KCMD.pi",
+      "destination": "stack0.pc31.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack0.pc31.controller.ko",
+      "destination": "stack0.pc31.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack0.pc31.controller.po",
@@ -5669,6 +6559,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc0.KV_CDC.ho",
+      "destination": "stack1.pc0.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc0.controller.co",
+      "destination": "stack1.pc0.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc0.KCMD.pi",
+      "destination": "stack1.pc0.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc0.controller.ko",
+      "destination": "stack1.pc0.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc0.controller.po",
       "destination": "stack1.pc0.PHY.pi",
       "bits": 328,
@@ -5757,6 +6671,30 @@
       "destination": "stack1.pc1.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc1.KV_CDC.ho",
+      "destination": "stack1.pc1.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc1.controller.co",
+      "destination": "stack1.pc1.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc1.KCMD.pi",
+      "destination": "stack1.pc1.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc1.controller.ko",
+      "destination": "stack1.pc1.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc1.controller.po",
@@ -5849,6 +6787,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc2.KV_CDC.ho",
+      "destination": "stack1.pc2.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc2.controller.co",
+      "destination": "stack1.pc2.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc2.KCMD.pi",
+      "destination": "stack1.pc2.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc2.controller.ko",
+      "destination": "stack1.pc2.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc2.controller.po",
       "destination": "stack1.pc2.PHY.pi",
       "bits": 328,
@@ -5937,6 +6899,30 @@
       "destination": "stack1.pc3.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc3.KV_CDC.ho",
+      "destination": "stack1.pc3.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc3.controller.co",
+      "destination": "stack1.pc3.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc3.KCMD.pi",
+      "destination": "stack1.pc3.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc3.controller.ko",
+      "destination": "stack1.pc3.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc3.controller.po",
@@ -6029,6 +7015,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc4.KV_CDC.ho",
+      "destination": "stack1.pc4.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc4.controller.co",
+      "destination": "stack1.pc4.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc4.KCMD.pi",
+      "destination": "stack1.pc4.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc4.controller.ko",
+      "destination": "stack1.pc4.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc4.controller.po",
       "destination": "stack1.pc4.PHY.pi",
       "bits": 328,
@@ -6117,6 +7127,30 @@
       "destination": "stack1.pc5.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc5.KV_CDC.ho",
+      "destination": "stack1.pc5.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc5.controller.co",
+      "destination": "stack1.pc5.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc5.KCMD.pi",
+      "destination": "stack1.pc5.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc5.controller.ko",
+      "destination": "stack1.pc5.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc5.controller.po",
@@ -6209,6 +7243,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc6.KV_CDC.ho",
+      "destination": "stack1.pc6.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc6.controller.co",
+      "destination": "stack1.pc6.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc6.KCMD.pi",
+      "destination": "stack1.pc6.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc6.controller.ko",
+      "destination": "stack1.pc6.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc6.controller.po",
       "destination": "stack1.pc6.PHY.pi",
       "bits": 328,
@@ -6297,6 +7355,30 @@
       "destination": "stack1.pc7.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc7.KV_CDC.ho",
+      "destination": "stack1.pc7.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc7.controller.co",
+      "destination": "stack1.pc7.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc7.KCMD.pi",
+      "destination": "stack1.pc7.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc7.controller.ko",
+      "destination": "stack1.pc7.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc7.controller.po",
@@ -6389,6 +7471,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc8.KV_CDC.ho",
+      "destination": "stack1.pc8.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc8.controller.co",
+      "destination": "stack1.pc8.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc8.KCMD.pi",
+      "destination": "stack1.pc8.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc8.controller.ko",
+      "destination": "stack1.pc8.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc8.controller.po",
       "destination": "stack1.pc8.PHY.pi",
       "bits": 328,
@@ -6477,6 +7583,30 @@
       "destination": "stack1.pc9.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc9.KV_CDC.ho",
+      "destination": "stack1.pc9.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc9.controller.co",
+      "destination": "stack1.pc9.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc9.KCMD.pi",
+      "destination": "stack1.pc9.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc9.controller.ko",
+      "destination": "stack1.pc9.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc9.controller.po",
@@ -6569,6 +7699,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc10.KV_CDC.ho",
+      "destination": "stack1.pc10.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc10.controller.co",
+      "destination": "stack1.pc10.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc10.KCMD.pi",
+      "destination": "stack1.pc10.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc10.controller.ko",
+      "destination": "stack1.pc10.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc10.controller.po",
       "destination": "stack1.pc10.PHY.pi",
       "bits": 328,
@@ -6657,6 +7811,30 @@
       "destination": "stack1.pc11.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc11.KV_CDC.ho",
+      "destination": "stack1.pc11.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc11.controller.co",
+      "destination": "stack1.pc11.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc11.KCMD.pi",
+      "destination": "stack1.pc11.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc11.controller.ko",
+      "destination": "stack1.pc11.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc11.controller.po",
@@ -6749,6 +7927,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc12.KV_CDC.ho",
+      "destination": "stack1.pc12.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc12.controller.co",
+      "destination": "stack1.pc12.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc12.KCMD.pi",
+      "destination": "stack1.pc12.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc12.controller.ko",
+      "destination": "stack1.pc12.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc12.controller.po",
       "destination": "stack1.pc12.PHY.pi",
       "bits": 328,
@@ -6837,6 +8039,30 @@
       "destination": "stack1.pc13.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc13.KV_CDC.ho",
+      "destination": "stack1.pc13.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc13.controller.co",
+      "destination": "stack1.pc13.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc13.KCMD.pi",
+      "destination": "stack1.pc13.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc13.controller.ko",
+      "destination": "stack1.pc13.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc13.controller.po",
@@ -6929,6 +8155,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc14.KV_CDC.ho",
+      "destination": "stack1.pc14.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc14.controller.co",
+      "destination": "stack1.pc14.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc14.KCMD.pi",
+      "destination": "stack1.pc14.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc14.controller.ko",
+      "destination": "stack1.pc14.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc14.controller.po",
       "destination": "stack1.pc14.PHY.pi",
       "bits": 328,
@@ -7017,6 +8267,30 @@
       "destination": "stack1.pc15.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc15.KV_CDC.ho",
+      "destination": "stack1.pc15.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc15.controller.co",
+      "destination": "stack1.pc15.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc15.KCMD.pi",
+      "destination": "stack1.pc15.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc15.controller.ko",
+      "destination": "stack1.pc15.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc15.controller.po",
@@ -7109,6 +8383,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc16.KV_CDC.ho",
+      "destination": "stack1.pc16.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc16.controller.co",
+      "destination": "stack1.pc16.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc16.KCMD.pi",
+      "destination": "stack1.pc16.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc16.controller.ko",
+      "destination": "stack1.pc16.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc16.controller.po",
       "destination": "stack1.pc16.PHY.pi",
       "bits": 328,
@@ -7197,6 +8495,30 @@
       "destination": "stack1.pc17.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc17.KV_CDC.ho",
+      "destination": "stack1.pc17.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc17.controller.co",
+      "destination": "stack1.pc17.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc17.KCMD.pi",
+      "destination": "stack1.pc17.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc17.controller.ko",
+      "destination": "stack1.pc17.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc17.controller.po",
@@ -7289,6 +8611,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc18.KV_CDC.ho",
+      "destination": "stack1.pc18.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc18.controller.co",
+      "destination": "stack1.pc18.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc18.KCMD.pi",
+      "destination": "stack1.pc18.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc18.controller.ko",
+      "destination": "stack1.pc18.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc18.controller.po",
       "destination": "stack1.pc18.PHY.pi",
       "bits": 328,
@@ -7377,6 +8723,30 @@
       "destination": "stack1.pc19.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc19.KV_CDC.ho",
+      "destination": "stack1.pc19.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc19.controller.co",
+      "destination": "stack1.pc19.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc19.KCMD.pi",
+      "destination": "stack1.pc19.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc19.controller.ko",
+      "destination": "stack1.pc19.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc19.controller.po",
@@ -7469,6 +8839,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc20.KV_CDC.ho",
+      "destination": "stack1.pc20.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc20.controller.co",
+      "destination": "stack1.pc20.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc20.KCMD.pi",
+      "destination": "stack1.pc20.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc20.controller.ko",
+      "destination": "stack1.pc20.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc20.controller.po",
       "destination": "stack1.pc20.PHY.pi",
       "bits": 328,
@@ -7557,6 +8951,30 @@
       "destination": "stack1.pc21.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc21.KV_CDC.ho",
+      "destination": "stack1.pc21.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc21.controller.co",
+      "destination": "stack1.pc21.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc21.KCMD.pi",
+      "destination": "stack1.pc21.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc21.controller.ko",
+      "destination": "stack1.pc21.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc21.controller.po",
@@ -7649,6 +9067,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc22.KV_CDC.ho",
+      "destination": "stack1.pc22.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc22.controller.co",
+      "destination": "stack1.pc22.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc22.KCMD.pi",
+      "destination": "stack1.pc22.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc22.controller.ko",
+      "destination": "stack1.pc22.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc22.controller.po",
       "destination": "stack1.pc22.PHY.pi",
       "bits": 328,
@@ -7737,6 +9179,30 @@
       "destination": "stack1.pc23.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc23.KV_CDC.ho",
+      "destination": "stack1.pc23.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc23.controller.co",
+      "destination": "stack1.pc23.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc23.KCMD.pi",
+      "destination": "stack1.pc23.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc23.controller.ko",
+      "destination": "stack1.pc23.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc23.controller.po",
@@ -7829,6 +9295,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc24.KV_CDC.ho",
+      "destination": "stack1.pc24.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc24.controller.co",
+      "destination": "stack1.pc24.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc24.KCMD.pi",
+      "destination": "stack1.pc24.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc24.controller.ko",
+      "destination": "stack1.pc24.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc24.controller.po",
       "destination": "stack1.pc24.PHY.pi",
       "bits": 328,
@@ -7917,6 +9407,30 @@
       "destination": "stack1.pc25.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc25.KV_CDC.ho",
+      "destination": "stack1.pc25.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc25.controller.co",
+      "destination": "stack1.pc25.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc25.KCMD.pi",
+      "destination": "stack1.pc25.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc25.controller.ko",
+      "destination": "stack1.pc25.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc25.controller.po",
@@ -8009,6 +9523,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc26.KV_CDC.ho",
+      "destination": "stack1.pc26.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc26.controller.co",
+      "destination": "stack1.pc26.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc26.KCMD.pi",
+      "destination": "stack1.pc26.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc26.controller.ko",
+      "destination": "stack1.pc26.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc26.controller.po",
       "destination": "stack1.pc26.PHY.pi",
       "bits": 328,
@@ -8097,6 +9635,30 @@
       "destination": "stack1.pc27.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc27.KV_CDC.ho",
+      "destination": "stack1.pc27.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc27.controller.co",
+      "destination": "stack1.pc27.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc27.KCMD.pi",
+      "destination": "stack1.pc27.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc27.controller.ko",
+      "destination": "stack1.pc27.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc27.controller.po",
@@ -8189,6 +9751,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc28.KV_CDC.ho",
+      "destination": "stack1.pc28.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc28.controller.co",
+      "destination": "stack1.pc28.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc28.KCMD.pi",
+      "destination": "stack1.pc28.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc28.controller.ko",
+      "destination": "stack1.pc28.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc28.controller.po",
       "destination": "stack1.pc28.PHY.pi",
       "bits": 328,
@@ -8277,6 +9863,30 @@
       "destination": "stack1.pc29.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc29.KV_CDC.ho",
+      "destination": "stack1.pc29.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc29.controller.co",
+      "destination": "stack1.pc29.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc29.KCMD.pi",
+      "destination": "stack1.pc29.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc29.controller.ko",
+      "destination": "stack1.pc29.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc29.controller.po",
@@ -8369,6 +9979,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc30.KV_CDC.ho",
+      "destination": "stack1.pc30.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc30.controller.co",
+      "destination": "stack1.pc30.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc30.KCMD.pi",
+      "destination": "stack1.pc30.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc30.controller.ko",
+      "destination": "stack1.pc30.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack1.pc30.controller.po",
       "destination": "stack1.pc30.PHY.pi",
       "bits": 328,
@@ -8433,6 +10067,30 @@
       "destination": "stack1.pc31.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack1.pc31.KV_CDC.ho",
+      "destination": "stack1.pc31.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc31.controller.co",
+      "destination": "stack1.pc31.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc31.KCMD.pi",
+      "destination": "stack1.pc31.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack1.pc31.controller.ko",
+      "destination": "stack1.pc31.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack1.pc31.controller.po",
@@ -8543,6 +10201,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc0.KV_CDC.ho",
+      "destination": "stack2.pc0.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc0.controller.co",
+      "destination": "stack2.pc0.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc0.KCMD.pi",
+      "destination": "stack2.pc0.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc0.controller.ko",
+      "destination": "stack2.pc0.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc0.controller.po",
       "destination": "stack2.pc0.PHY.pi",
       "bits": 328,
@@ -8631,6 +10313,30 @@
       "destination": "stack2.pc1.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc1.KV_CDC.ho",
+      "destination": "stack2.pc1.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc1.controller.co",
+      "destination": "stack2.pc1.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc1.KCMD.pi",
+      "destination": "stack2.pc1.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc1.controller.ko",
+      "destination": "stack2.pc1.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc1.controller.po",
@@ -8723,6 +10429,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc2.KV_CDC.ho",
+      "destination": "stack2.pc2.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc2.controller.co",
+      "destination": "stack2.pc2.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc2.KCMD.pi",
+      "destination": "stack2.pc2.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc2.controller.ko",
+      "destination": "stack2.pc2.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc2.controller.po",
       "destination": "stack2.pc2.PHY.pi",
       "bits": 328,
@@ -8811,6 +10541,30 @@
       "destination": "stack2.pc3.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc3.KV_CDC.ho",
+      "destination": "stack2.pc3.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc3.controller.co",
+      "destination": "stack2.pc3.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc3.KCMD.pi",
+      "destination": "stack2.pc3.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc3.controller.ko",
+      "destination": "stack2.pc3.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc3.controller.po",
@@ -8903,6 +10657,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc4.KV_CDC.ho",
+      "destination": "stack2.pc4.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc4.controller.co",
+      "destination": "stack2.pc4.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc4.KCMD.pi",
+      "destination": "stack2.pc4.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc4.controller.ko",
+      "destination": "stack2.pc4.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc4.controller.po",
       "destination": "stack2.pc4.PHY.pi",
       "bits": 328,
@@ -8991,6 +10769,30 @@
       "destination": "stack2.pc5.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc5.KV_CDC.ho",
+      "destination": "stack2.pc5.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc5.controller.co",
+      "destination": "stack2.pc5.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc5.KCMD.pi",
+      "destination": "stack2.pc5.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc5.controller.ko",
+      "destination": "stack2.pc5.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc5.controller.po",
@@ -9083,6 +10885,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc6.KV_CDC.ho",
+      "destination": "stack2.pc6.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc6.controller.co",
+      "destination": "stack2.pc6.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc6.KCMD.pi",
+      "destination": "stack2.pc6.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc6.controller.ko",
+      "destination": "stack2.pc6.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc6.controller.po",
       "destination": "stack2.pc6.PHY.pi",
       "bits": 328,
@@ -9171,6 +10997,30 @@
       "destination": "stack2.pc7.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc7.KV_CDC.ho",
+      "destination": "stack2.pc7.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc7.controller.co",
+      "destination": "stack2.pc7.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc7.KCMD.pi",
+      "destination": "stack2.pc7.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc7.controller.ko",
+      "destination": "stack2.pc7.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc7.controller.po",
@@ -9263,6 +11113,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc8.KV_CDC.ho",
+      "destination": "stack2.pc8.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc8.controller.co",
+      "destination": "stack2.pc8.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc8.KCMD.pi",
+      "destination": "stack2.pc8.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc8.controller.ko",
+      "destination": "stack2.pc8.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc8.controller.po",
       "destination": "stack2.pc8.PHY.pi",
       "bits": 328,
@@ -9351,6 +11225,30 @@
       "destination": "stack2.pc9.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc9.KV_CDC.ho",
+      "destination": "stack2.pc9.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc9.controller.co",
+      "destination": "stack2.pc9.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc9.KCMD.pi",
+      "destination": "stack2.pc9.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc9.controller.ko",
+      "destination": "stack2.pc9.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc9.controller.po",
@@ -9443,6 +11341,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc10.KV_CDC.ho",
+      "destination": "stack2.pc10.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc10.controller.co",
+      "destination": "stack2.pc10.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc10.KCMD.pi",
+      "destination": "stack2.pc10.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc10.controller.ko",
+      "destination": "stack2.pc10.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc10.controller.po",
       "destination": "stack2.pc10.PHY.pi",
       "bits": 328,
@@ -9531,6 +11453,30 @@
       "destination": "stack2.pc11.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc11.KV_CDC.ho",
+      "destination": "stack2.pc11.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc11.controller.co",
+      "destination": "stack2.pc11.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc11.KCMD.pi",
+      "destination": "stack2.pc11.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc11.controller.ko",
+      "destination": "stack2.pc11.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc11.controller.po",
@@ -9623,6 +11569,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc12.KV_CDC.ho",
+      "destination": "stack2.pc12.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc12.controller.co",
+      "destination": "stack2.pc12.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc12.KCMD.pi",
+      "destination": "stack2.pc12.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc12.controller.ko",
+      "destination": "stack2.pc12.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc12.controller.po",
       "destination": "stack2.pc12.PHY.pi",
       "bits": 328,
@@ -9711,6 +11681,30 @@
       "destination": "stack2.pc13.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc13.KV_CDC.ho",
+      "destination": "stack2.pc13.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc13.controller.co",
+      "destination": "stack2.pc13.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc13.KCMD.pi",
+      "destination": "stack2.pc13.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc13.controller.ko",
+      "destination": "stack2.pc13.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc13.controller.po",
@@ -9803,6 +11797,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc14.KV_CDC.ho",
+      "destination": "stack2.pc14.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc14.controller.co",
+      "destination": "stack2.pc14.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc14.KCMD.pi",
+      "destination": "stack2.pc14.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc14.controller.ko",
+      "destination": "stack2.pc14.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc14.controller.po",
       "destination": "stack2.pc14.PHY.pi",
       "bits": 328,
@@ -9891,6 +11909,30 @@
       "destination": "stack2.pc15.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc15.KV_CDC.ho",
+      "destination": "stack2.pc15.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc15.controller.co",
+      "destination": "stack2.pc15.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc15.KCMD.pi",
+      "destination": "stack2.pc15.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc15.controller.ko",
+      "destination": "stack2.pc15.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc15.controller.po",
@@ -9983,6 +12025,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc16.KV_CDC.ho",
+      "destination": "stack2.pc16.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc16.controller.co",
+      "destination": "stack2.pc16.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc16.KCMD.pi",
+      "destination": "stack2.pc16.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc16.controller.ko",
+      "destination": "stack2.pc16.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc16.controller.po",
       "destination": "stack2.pc16.PHY.pi",
       "bits": 328,
@@ -10071,6 +12137,30 @@
       "destination": "stack2.pc17.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc17.KV_CDC.ho",
+      "destination": "stack2.pc17.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc17.controller.co",
+      "destination": "stack2.pc17.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc17.KCMD.pi",
+      "destination": "stack2.pc17.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc17.controller.ko",
+      "destination": "stack2.pc17.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc17.controller.po",
@@ -10163,6 +12253,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc18.KV_CDC.ho",
+      "destination": "stack2.pc18.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc18.controller.co",
+      "destination": "stack2.pc18.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc18.KCMD.pi",
+      "destination": "stack2.pc18.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc18.controller.ko",
+      "destination": "stack2.pc18.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc18.controller.po",
       "destination": "stack2.pc18.PHY.pi",
       "bits": 328,
@@ -10251,6 +12365,30 @@
       "destination": "stack2.pc19.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc19.KV_CDC.ho",
+      "destination": "stack2.pc19.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc19.controller.co",
+      "destination": "stack2.pc19.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc19.KCMD.pi",
+      "destination": "stack2.pc19.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc19.controller.ko",
+      "destination": "stack2.pc19.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc19.controller.po",
@@ -10343,6 +12481,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc20.KV_CDC.ho",
+      "destination": "stack2.pc20.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc20.controller.co",
+      "destination": "stack2.pc20.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc20.KCMD.pi",
+      "destination": "stack2.pc20.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc20.controller.ko",
+      "destination": "stack2.pc20.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc20.controller.po",
       "destination": "stack2.pc20.PHY.pi",
       "bits": 328,
@@ -10431,6 +12593,30 @@
       "destination": "stack2.pc21.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc21.KV_CDC.ho",
+      "destination": "stack2.pc21.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc21.controller.co",
+      "destination": "stack2.pc21.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc21.KCMD.pi",
+      "destination": "stack2.pc21.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc21.controller.ko",
+      "destination": "stack2.pc21.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc21.controller.po",
@@ -10523,6 +12709,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc22.KV_CDC.ho",
+      "destination": "stack2.pc22.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc22.controller.co",
+      "destination": "stack2.pc22.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc22.KCMD.pi",
+      "destination": "stack2.pc22.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc22.controller.ko",
+      "destination": "stack2.pc22.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc22.controller.po",
       "destination": "stack2.pc22.PHY.pi",
       "bits": 328,
@@ -10611,6 +12821,30 @@
       "destination": "stack2.pc23.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc23.KV_CDC.ho",
+      "destination": "stack2.pc23.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc23.controller.co",
+      "destination": "stack2.pc23.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc23.KCMD.pi",
+      "destination": "stack2.pc23.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc23.controller.ko",
+      "destination": "stack2.pc23.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc23.controller.po",
@@ -10703,6 +12937,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc24.KV_CDC.ho",
+      "destination": "stack2.pc24.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc24.controller.co",
+      "destination": "stack2.pc24.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc24.KCMD.pi",
+      "destination": "stack2.pc24.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc24.controller.ko",
+      "destination": "stack2.pc24.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc24.controller.po",
       "destination": "stack2.pc24.PHY.pi",
       "bits": 328,
@@ -10791,6 +13049,30 @@
       "destination": "stack2.pc25.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc25.KV_CDC.ho",
+      "destination": "stack2.pc25.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc25.controller.co",
+      "destination": "stack2.pc25.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc25.KCMD.pi",
+      "destination": "stack2.pc25.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc25.controller.ko",
+      "destination": "stack2.pc25.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc25.controller.po",
@@ -10883,6 +13165,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc26.KV_CDC.ho",
+      "destination": "stack2.pc26.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc26.controller.co",
+      "destination": "stack2.pc26.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc26.KCMD.pi",
+      "destination": "stack2.pc26.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc26.controller.ko",
+      "destination": "stack2.pc26.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc26.controller.po",
       "destination": "stack2.pc26.PHY.pi",
       "bits": 328,
@@ -10971,6 +13277,30 @@
       "destination": "stack2.pc27.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc27.KV_CDC.ho",
+      "destination": "stack2.pc27.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc27.controller.co",
+      "destination": "stack2.pc27.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc27.KCMD.pi",
+      "destination": "stack2.pc27.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc27.controller.ko",
+      "destination": "stack2.pc27.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc27.controller.po",
@@ -11063,6 +13393,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc28.KV_CDC.ho",
+      "destination": "stack2.pc28.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc28.controller.co",
+      "destination": "stack2.pc28.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc28.KCMD.pi",
+      "destination": "stack2.pc28.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc28.controller.ko",
+      "destination": "stack2.pc28.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc28.controller.po",
       "destination": "stack2.pc28.PHY.pi",
       "bits": 328,
@@ -11151,6 +13505,30 @@
       "destination": "stack2.pc29.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc29.KV_CDC.ho",
+      "destination": "stack2.pc29.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc29.controller.co",
+      "destination": "stack2.pc29.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc29.KCMD.pi",
+      "destination": "stack2.pc29.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc29.controller.ko",
+      "destination": "stack2.pc29.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc29.controller.po",
@@ -11243,6 +13621,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc30.KV_CDC.ho",
+      "destination": "stack2.pc30.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc30.controller.co",
+      "destination": "stack2.pc30.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc30.KCMD.pi",
+      "destination": "stack2.pc30.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc30.controller.ko",
+      "destination": "stack2.pc30.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack2.pc30.controller.po",
       "destination": "stack2.pc30.PHY.pi",
       "bits": 328,
@@ -11307,6 +13709,30 @@
       "destination": "stack2.pc31.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack2.pc31.KV_CDC.ho",
+      "destination": "stack2.pc31.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc31.controller.co",
+      "destination": "stack2.pc31.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc31.KCMD.pi",
+      "destination": "stack2.pc31.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack2.pc31.controller.ko",
+      "destination": "stack2.pc31.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack2.pc31.controller.po",
@@ -11417,6 +13843,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc0.KV_CDC.ho",
+      "destination": "stack3.pc0.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc0.controller.co",
+      "destination": "stack3.pc0.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc0.KCMD.pi",
+      "destination": "stack3.pc0.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc0.controller.ko",
+      "destination": "stack3.pc0.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc0.controller.po",
       "destination": "stack3.pc0.PHY.pi",
       "bits": 328,
@@ -11505,6 +13955,30 @@
       "destination": "stack3.pc1.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc1.KV_CDC.ho",
+      "destination": "stack3.pc1.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc1.controller.co",
+      "destination": "stack3.pc1.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc1.KCMD.pi",
+      "destination": "stack3.pc1.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc1.controller.ko",
+      "destination": "stack3.pc1.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc1.controller.po",
@@ -11597,6 +14071,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc2.KV_CDC.ho",
+      "destination": "stack3.pc2.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc2.controller.co",
+      "destination": "stack3.pc2.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc2.KCMD.pi",
+      "destination": "stack3.pc2.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc2.controller.ko",
+      "destination": "stack3.pc2.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc2.controller.po",
       "destination": "stack3.pc2.PHY.pi",
       "bits": 328,
@@ -11685,6 +14183,30 @@
       "destination": "stack3.pc3.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc3.KV_CDC.ho",
+      "destination": "stack3.pc3.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc3.controller.co",
+      "destination": "stack3.pc3.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc3.KCMD.pi",
+      "destination": "stack3.pc3.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc3.controller.ko",
+      "destination": "stack3.pc3.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc3.controller.po",
@@ -11777,6 +14299,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc4.KV_CDC.ho",
+      "destination": "stack3.pc4.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc4.controller.co",
+      "destination": "stack3.pc4.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc4.KCMD.pi",
+      "destination": "stack3.pc4.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc4.controller.ko",
+      "destination": "stack3.pc4.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc4.controller.po",
       "destination": "stack3.pc4.PHY.pi",
       "bits": 328,
@@ -11865,6 +14411,30 @@
       "destination": "stack3.pc5.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc5.KV_CDC.ho",
+      "destination": "stack3.pc5.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc5.controller.co",
+      "destination": "stack3.pc5.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc5.KCMD.pi",
+      "destination": "stack3.pc5.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc5.controller.ko",
+      "destination": "stack3.pc5.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc5.controller.po",
@@ -11957,6 +14527,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc6.KV_CDC.ho",
+      "destination": "stack3.pc6.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc6.controller.co",
+      "destination": "stack3.pc6.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc6.KCMD.pi",
+      "destination": "stack3.pc6.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc6.controller.ko",
+      "destination": "stack3.pc6.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc6.controller.po",
       "destination": "stack3.pc6.PHY.pi",
       "bits": 328,
@@ -12045,6 +14639,30 @@
       "destination": "stack3.pc7.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc7.KV_CDC.ho",
+      "destination": "stack3.pc7.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc7.controller.co",
+      "destination": "stack3.pc7.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc7.KCMD.pi",
+      "destination": "stack3.pc7.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc7.controller.ko",
+      "destination": "stack3.pc7.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc7.controller.po",
@@ -12137,6 +14755,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc8.KV_CDC.ho",
+      "destination": "stack3.pc8.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc8.controller.co",
+      "destination": "stack3.pc8.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc8.KCMD.pi",
+      "destination": "stack3.pc8.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc8.controller.ko",
+      "destination": "stack3.pc8.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc8.controller.po",
       "destination": "stack3.pc8.PHY.pi",
       "bits": 328,
@@ -12225,6 +14867,30 @@
       "destination": "stack3.pc9.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc9.KV_CDC.ho",
+      "destination": "stack3.pc9.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc9.controller.co",
+      "destination": "stack3.pc9.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc9.KCMD.pi",
+      "destination": "stack3.pc9.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc9.controller.ko",
+      "destination": "stack3.pc9.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc9.controller.po",
@@ -12317,6 +14983,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc10.KV_CDC.ho",
+      "destination": "stack3.pc10.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc10.controller.co",
+      "destination": "stack3.pc10.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc10.KCMD.pi",
+      "destination": "stack3.pc10.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc10.controller.ko",
+      "destination": "stack3.pc10.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc10.controller.po",
       "destination": "stack3.pc10.PHY.pi",
       "bits": 328,
@@ -12405,6 +15095,30 @@
       "destination": "stack3.pc11.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc11.KV_CDC.ho",
+      "destination": "stack3.pc11.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc11.controller.co",
+      "destination": "stack3.pc11.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc11.KCMD.pi",
+      "destination": "stack3.pc11.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc11.controller.ko",
+      "destination": "stack3.pc11.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc11.controller.po",
@@ -12497,6 +15211,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc12.KV_CDC.ho",
+      "destination": "stack3.pc12.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc12.controller.co",
+      "destination": "stack3.pc12.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc12.KCMD.pi",
+      "destination": "stack3.pc12.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc12.controller.ko",
+      "destination": "stack3.pc12.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc12.controller.po",
       "destination": "stack3.pc12.PHY.pi",
       "bits": 328,
@@ -12585,6 +15323,30 @@
       "destination": "stack3.pc13.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc13.KV_CDC.ho",
+      "destination": "stack3.pc13.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc13.controller.co",
+      "destination": "stack3.pc13.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc13.KCMD.pi",
+      "destination": "stack3.pc13.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc13.controller.ko",
+      "destination": "stack3.pc13.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc13.controller.po",
@@ -12677,6 +15439,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc14.KV_CDC.ho",
+      "destination": "stack3.pc14.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc14.controller.co",
+      "destination": "stack3.pc14.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc14.KCMD.pi",
+      "destination": "stack3.pc14.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc14.controller.ko",
+      "destination": "stack3.pc14.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc14.controller.po",
       "destination": "stack3.pc14.PHY.pi",
       "bits": 328,
@@ -12765,6 +15551,30 @@
       "destination": "stack3.pc15.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc15.KV_CDC.ho",
+      "destination": "stack3.pc15.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc15.controller.co",
+      "destination": "stack3.pc15.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc15.KCMD.pi",
+      "destination": "stack3.pc15.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc15.controller.ko",
+      "destination": "stack3.pc15.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc15.controller.po",
@@ -12857,6 +15667,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc16.KV_CDC.ho",
+      "destination": "stack3.pc16.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc16.controller.co",
+      "destination": "stack3.pc16.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc16.KCMD.pi",
+      "destination": "stack3.pc16.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc16.controller.ko",
+      "destination": "stack3.pc16.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc16.controller.po",
       "destination": "stack3.pc16.PHY.pi",
       "bits": 328,
@@ -12945,6 +15779,30 @@
       "destination": "stack3.pc17.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc17.KV_CDC.ho",
+      "destination": "stack3.pc17.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc17.controller.co",
+      "destination": "stack3.pc17.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc17.KCMD.pi",
+      "destination": "stack3.pc17.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc17.controller.ko",
+      "destination": "stack3.pc17.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc17.controller.po",
@@ -13037,6 +15895,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc18.KV_CDC.ho",
+      "destination": "stack3.pc18.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc18.controller.co",
+      "destination": "stack3.pc18.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc18.KCMD.pi",
+      "destination": "stack3.pc18.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc18.controller.ko",
+      "destination": "stack3.pc18.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc18.controller.po",
       "destination": "stack3.pc18.PHY.pi",
       "bits": 328,
@@ -13125,6 +16007,30 @@
       "destination": "stack3.pc19.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc19.KV_CDC.ho",
+      "destination": "stack3.pc19.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc19.controller.co",
+      "destination": "stack3.pc19.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc19.KCMD.pi",
+      "destination": "stack3.pc19.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc19.controller.ko",
+      "destination": "stack3.pc19.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc19.controller.po",
@@ -13217,6 +16123,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc20.KV_CDC.ho",
+      "destination": "stack3.pc20.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc20.controller.co",
+      "destination": "stack3.pc20.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc20.KCMD.pi",
+      "destination": "stack3.pc20.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc20.controller.ko",
+      "destination": "stack3.pc20.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc20.controller.po",
       "destination": "stack3.pc20.PHY.pi",
       "bits": 328,
@@ -13305,6 +16235,30 @@
       "destination": "stack3.pc21.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc21.KV_CDC.ho",
+      "destination": "stack3.pc21.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc21.controller.co",
+      "destination": "stack3.pc21.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc21.KCMD.pi",
+      "destination": "stack3.pc21.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc21.controller.ko",
+      "destination": "stack3.pc21.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc21.controller.po",
@@ -13397,6 +16351,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc22.KV_CDC.ho",
+      "destination": "stack3.pc22.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc22.controller.co",
+      "destination": "stack3.pc22.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc22.KCMD.pi",
+      "destination": "stack3.pc22.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc22.controller.ko",
+      "destination": "stack3.pc22.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc22.controller.po",
       "destination": "stack3.pc22.PHY.pi",
       "bits": 328,
@@ -13485,6 +16463,30 @@
       "destination": "stack3.pc23.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc23.KV_CDC.ho",
+      "destination": "stack3.pc23.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc23.controller.co",
+      "destination": "stack3.pc23.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc23.KCMD.pi",
+      "destination": "stack3.pc23.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc23.controller.ko",
+      "destination": "stack3.pc23.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc23.controller.po",
@@ -13577,6 +16579,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc24.KV_CDC.ho",
+      "destination": "stack3.pc24.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc24.controller.co",
+      "destination": "stack3.pc24.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc24.KCMD.pi",
+      "destination": "stack3.pc24.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc24.controller.ko",
+      "destination": "stack3.pc24.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc24.controller.po",
       "destination": "stack3.pc24.PHY.pi",
       "bits": 328,
@@ -13665,6 +16691,30 @@
       "destination": "stack3.pc25.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc25.KV_CDC.ho",
+      "destination": "stack3.pc25.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc25.controller.co",
+      "destination": "stack3.pc25.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc25.KCMD.pi",
+      "destination": "stack3.pc25.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc25.controller.ko",
+      "destination": "stack3.pc25.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc25.controller.po",
@@ -13757,6 +16807,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc26.KV_CDC.ho",
+      "destination": "stack3.pc26.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc26.controller.co",
+      "destination": "stack3.pc26.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc26.KCMD.pi",
+      "destination": "stack3.pc26.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc26.controller.ko",
+      "destination": "stack3.pc26.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc26.controller.po",
       "destination": "stack3.pc26.PHY.pi",
       "bits": 328,
@@ -13845,6 +16919,30 @@
       "destination": "stack3.pc27.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc27.KV_CDC.ho",
+      "destination": "stack3.pc27.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc27.controller.co",
+      "destination": "stack3.pc27.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc27.KCMD.pi",
+      "destination": "stack3.pc27.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc27.controller.ko",
+      "destination": "stack3.pc27.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc27.controller.po",
@@ -13937,6 +17035,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc28.KV_CDC.ho",
+      "destination": "stack3.pc28.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc28.controller.co",
+      "destination": "stack3.pc28.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc28.KCMD.pi",
+      "destination": "stack3.pc28.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc28.controller.ko",
+      "destination": "stack3.pc28.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc28.controller.po",
       "destination": "stack3.pc28.PHY.pi",
       "bits": 328,
@@ -14025,6 +17147,30 @@
       "destination": "stack3.pc29.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc29.KV_CDC.ho",
+      "destination": "stack3.pc29.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc29.controller.co",
+      "destination": "stack3.pc29.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc29.KCMD.pi",
+      "destination": "stack3.pc29.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc29.controller.ko",
+      "destination": "stack3.pc29.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc29.controller.po",
@@ -14117,6 +17263,30 @@
       "clock_family": "core"
     },
     {
+      "source": "stack3.pc30.KV_CDC.ho",
+      "destination": "stack3.pc30.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc30.controller.co",
+      "destination": "stack3.pc30.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc30.KCMD.pi",
+      "destination": "stack3.pc30.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc30.controller.ko",
+      "destination": "stack3.pc30.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
       "source": "stack3.pc30.controller.po",
       "destination": "stack3.pc30.PHY.pi",
       "bits": 328,
@@ -14181,6 +17351,30 @@
       "destination": "stack3.pc31.static.completion_v/we",
       "bits": 2,
       "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc31.KV_CDC.ho",
+      "destination": "stack3.pc31.controller.ci",
+      "bits": 319,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc31.controller.co",
+      "destination": "stack3.pc31.KV_CDC.hi",
+      "bits": 294,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc31.KCMD.pi",
+      "destination": "stack3.pc31.controller.ki",
+      "bits": 33,
+      "clock_family": "hbm"
+    },
+    {
+      "source": "stack3.pc31.controller.ko",
+      "destination": "stack3.pc31.KCMD.po",
+      "bits": 33,
+      "clock_family": "hbm"
     },
     {
       "source": "stack3.pc31.controller.po",
@@ -14267,21 +17461,213 @@
       "clock_family": "core"
     },
     {
-      "source": "host.AXI.s_BAR",
-      "destination": "host.CSR.s_BAR",
-      "bits": 49,
+      "source": "host.AXI.s_awvalid",
+      "destination": "host.CSR.s_awvalid",
+      "bits": 1,
       "clock_family": "core"
     },
     {
-      "source": "host.CSR.h_BAR",
-      "destination": "host.HOST.s_BAR",
-      "bits": 48,
+      "source": "host.CSR.s_awready",
+      "destination": "host.AXI.s_awready",
+      "bits": 1,
       "clock_family": "core"
     },
     {
-      "source": "host.HOST.m_DMA",
-      "destination": "host.AXI.m_DMA",
-      "bits": 136,
+      "source": "host.AXI.s_awaddr",
+      "destination": "host.CSR.s_awaddr",
+      "bits": 13,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.s_wvalid",
+      "destination": "host.CSR.s_wvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CSR.s_wready",
+      "destination": "host.AXI.s_wready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.s_wdata",
+      "destination": "host.CSR.s_wdata",
+      "bits": 32,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.s_wstrb",
+      "destination": "host.CSR.s_wstrb",
+      "bits": 4,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CSR.s_bvalid",
+      "destination": "host.AXI.s_bvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.s_bready",
+      "destination": "host.CSR.s_bready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CSR.s_bresp",
+      "destination": "host.AXI.s_bresp",
+      "bits": 2,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.s_arvalid",
+      "destination": "host.CSR.s_arvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CSR.s_arready",
+      "destination": "host.AXI.s_arready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.s_araddr",
+      "destination": "host.CSR.s_araddr",
+      "bits": 13,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CSR.s_rvalid",
+      "destination": "host.AXI.s_rvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.s_rready",
+      "destination": "host.CSR.s_rready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CSR.s_rdata",
+      "destination": "host.AXI.s_rdata",
+      "bits": 32,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.CSR.s_rresp",
+      "destination": "host.AXI.s_rresp",
+      "bits": 2,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_arvalid",
+      "destination": "host.AXI.m_arvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_arready",
+      "destination": "host.HOST.m_arready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_araddr",
+      "destination": "host.AXI.m_araddr",
+      "bits": 64,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_rvalid",
+      "destination": "host.HOST.m_rvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_rready",
+      "destination": "host.AXI.m_rready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_rdata",
+      "destination": "host.HOST.m_rdata",
+      "bits": 64,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_rresp",
+      "destination": "host.HOST.m_rresp",
+      "bits": 2,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_rlast",
+      "destination": "host.HOST.m_rlast",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_awvalid",
+      "destination": "host.AXI.m_awvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_awready",
+      "destination": "host.HOST.m_awready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_awaddr",
+      "destination": "host.AXI.m_awaddr",
+      "bits": 64,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_wvalid",
+      "destination": "host.AXI.m_wvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_wready",
+      "destination": "host.HOST.m_wready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_wdata",
+      "destination": "host.AXI.m_wdata",
+      "bits": 64,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_wstrb",
+      "destination": "host.AXI.m_wstrb",
+      "bits": 8,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_bvalid",
+      "destination": "host.HOST.m_bvalid",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.m_bready",
+      "destination": "host.AXI.m_bready",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.AXI.m_bresp",
+      "destination": "host.HOST.m_bresp",
+      "bits": 2,
       "clock_family": "core"
     },
     {
