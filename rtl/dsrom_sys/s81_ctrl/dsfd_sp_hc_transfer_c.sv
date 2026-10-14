@@ -8,7 +8,7 @@
 // program remain required before this assembly is adopted.
 module dsfd_sp_hc_transfer_c #(
  parameter integer NG=256,D=5120,S_RD=2,S_WR=8,S_RT=4,
- parameter integer RXB=0,TXB=2048,XW=640,PIPE=0,PIPE_PD=40,
+ parameter integer RXB=0,TXB=6144,XW=640,PIPE=0,PIPE_PD=40,
  parameter integer TFW=(72+16*S_RD)+((S_RD*512>((NG/8+2)/3)*8*32)?S_RD*512:((NG/8+2)/3)*8*32)+S_RD+5+129,
  parameter integer TRW=S_RT+24*S_RT+8+512*S_RT+S_RT+4
 )(
@@ -28,11 +28,13 @@ module dsfd_sp_hc_transfer_c #(
  output wire [TFW-1:0] t_tf0,t_tf1,t_tf2,input wire [TRW-1:0] f_tr0,f_tr1,f_tr2,
  output wire transfer_fault,output wire [3:0] transfer_fault_code
 );
+ initial if(NG!=256 || D!=5120 || S_RD!=2 || S_WR!=8 || S_RT!=4 || XW!=640)
+   $fatal(1,"native HC assembly requires the actual production tuple");
  wire inp;wire [S_RD-1:0] hc_rq_v,hc_rs_v;
  wire [S_RD*14-1:0] hc_rq_row;wire [S_RD*512-1:0] hc_rs_d;
  dsfd_sp_hc_c #(.NG(NG),.D(D),.S_RD(S_RD),.S_WR(S_WR),.S_RT(S_RT),
  .HIER(1),.HALF(1),.CSPLIT(1),.TAIL_SPLIT(2),.CNL_PIN(1),.CHAIN_STEP(6),
- .HEAD_ROWS(10),.PIPE(PIPE),.PIPE_PD(PIPE_PD)) hc(
+ .HEAD_ROWS(10),.LANE_SPECIALIZE(1),.PIPE(PIPE),.PIPE_PD(PIPE_PD)) hc(
  .ck(ck),.rst(rst),.c_cmd(c_cmd),.c_done(c_done),.c_st(c_st),.f_inp(inp),.t_head(head_snapshot),
  .y_v(y_v),.y_rdy(y_rdy),.y_d(y_d),.rq_v(hc_rq_v),.rq_row(hc_rq_row),.rs_v(hc_rs_v),.rs_d(hc_rs_d),
  .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.wq_d(wq_d),
