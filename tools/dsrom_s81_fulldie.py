@@ -4027,6 +4027,9 @@ def _corridors(m):
         stripN=(g['x_lw'] + LINK_COL + 4.32, g['y_top'] + 4.32, g['x_le'] - 4.32, H - g['band_depth'] - 4.32),
         gapS=(m['gap_x'][0] + 4.32, 20.0, m['gap_x'][1] - 4.32, g['y_f'] - 4.32),
         gapN=(m['gap_x'][0] + 4.32, g['y_top'] + 4.32, m['gap_x'][1] - 4.32, H - 20.0))
+    if HUB_SOUTH_SHIFT:
+        su = m['hub']['su_s']
+        cor['su_south_bypass'] = (su.x - 216.0, EDGE, su.x + su.w + 216.0, su.y - 4.32)
     if COLL_SPLIT3:
         # --coll-split3: the collective slab (1,371.8 um) is narrower than the hub column; the column remainder beside it
         # is free for the link / hub chains' first stations (KE0t had no spot at the slab's E face)
@@ -6260,6 +6263,20 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
     def single(name, payload, fmt, src, src_xy, path, sink_end):
         """src: (inst, fclk port, data port); sink_end: (end inst) -> lane 0 ports fi0/di0"""
         lw = payload + (2 if fmt == 'vr' else 0)
+        if HUB_SOUTH_SHIFT:
+            su = hub['su_s']
+            clearance = max(stn_dims([lw], True) + stn_dims([lw], False)) + 17.28
+            below = su.y - clearance
+            left, right = su.x - clearance, su.x + su.w + clearance
+            detour = [path[0]]
+            for a_, b_ in zip(path, path[1:]):
+                if (abs(a_[1]-b_[1]) < 1e-6 and su.y < a_[1] < su.y+su.h
+                        and min(a_[0], b_[0]) < left and max(a_[0], b_[0]) > right):
+                    entry, exit_ = (left, right) if a_[0] < b_[0] else (right, left)
+                    detour += [(entry,a_[1]), (entry,below), (exit_,below), (exit_,b_[1])]
+                    m.setdefault('south_su_bypass_chains', []).append(name)
+                detour.append(b_)
+            path = detour
         sts = CH8.run(name, [lw], _dedup(path), allc, src_xy)
         chain_nets(CH8, name, src, [it for it, _, _ in sts], [lw])
         tail = m['chain_tail'][name]
