@@ -7,7 +7,7 @@
 // Assigned physical pins, current-source full arithmetic and a deployed
 // program remain required before this assembly is adopted.
 module dsfd_sp_hc_transfer_c #(
- parameter integer NG=256,D=5120,S_RD=2,S_WR=8,S_RT=4,
+ parameter integer NG=256,D=5120,S_RD=2,S_WR=8,S_RT=4,COMMIT_BANKS=32,
  parameter integer RXB=0,TXB=6144,XW=640,PIPE=0,PIPE_PD=40,
  parameter integer TFW=(72+16*S_RD)+((S_RD*512>((NG/8+2)/3)*8*32)?S_RD*512:((NG/8+2)/3)*8*32)+S_RD+5+129,
  parameter integer TRW=S_RT+24*S_RT+8+512*S_RT+S_RT+4
@@ -21,7 +21,7 @@ module dsfd_sp_hc_transfer_c #(
  input wire [S_RD-1:0] vm_rs_v,input wire [S_RD*512-1:0] vm_rs_d,
  output wire [S_WR-1:0] wq_v,output wire [S_WR*14-1:0] wq_row,
  output wire [S_WR*16-1:0] wq_mask,output wire [S_WR*512-1:0] wq_d,
- input wire [S_WR-1:0] commit_v,input wire [S_WR*14-1:0] commit_a,input wire [S_WR*16-1:0] commit_mask,
+ input wire [COMMIT_BANKS-1:0] commit_v,input wire [COMMIT_BANKS*14-1:0] commit_a,input wire [COMMIT_BANKS*16-1:0] commit_mask,
  output wire hop_go,input wire hop_re,input wire [13:0] hop_ra,
  output wire hop_vm_re,output wire [13:0] hop_vm_ra,
  output wire [85:0] head_snapshot,
@@ -39,7 +39,7 @@ module dsfd_sp_hc_transfer_c #(
  .y_v(y_v),.y_rdy(y_rdy),.y_d(y_d),.rq_v(hc_rq_v),.rq_row(hc_rq_row),.rs_v(hc_rs_v),.rs_d(hc_rs_d),
  .wq_v(wq_v),.wq_row(wq_row),.wq_mask(wq_mask),.wq_d(wq_d),
  .t_tf0(t_tf0),.t_tf1(t_tf1),.t_tf2(t_tf2),.f_tr0(f_tr0),.f_tr1(f_tr1),.f_tr2(f_tr2));
- ot_s81_htransfer_boundary #(.RXB(RXB),.TXB(TXB),.XW(XW),.S_RD(S_RD),.S_WR(S_WR)) boundary(
+ ot_s81_htransfer_boundary #(.RXB(RXB),.TXB(TXB),.XW(XW),.S_RD(S_RD),.S_WR(COMMIT_BANKS)) boundary(
  .clk(ck),.rst_n(rst),.land_v(package_vm_we),.land_a(package_vm_addr),.land_d(package_vm_data),
  .hc_head(head_snapshot),.normal_inputs_present(normal_inputs_present),.hc_inputs_present(inp),
  .hc_rq_v(hc_rq_v),.hc_rq_row(hc_rq_row),.hc_rs_v(hc_rs_v),.hc_rs_d(hc_rs_d),

@@ -37,7 +37,7 @@ module ot_s81_ctrl #(
     parameter integer SIDE_USH = 6,
     parameter integer NOPS     = 128,
     parameter integer HC_SLOT_REBASE = 0,
-    parameter integer H_TRANSFER = 0, HC_S_RD = 2, HC_S_WR = 8,
+    parameter integer H_TRANSFER = 0, HC_S_RD = 2, HC_COMMIT_BANKS = 32,
     parameter integer NENG     = 12,
     parameter integer USE_VM_RVALID = 0, OUT_DEPTH = 4,
     parameter integer QD       = 8,
@@ -109,9 +109,9 @@ module ot_s81_ctrl #(
     output wire [HC_S_RD*14-1:0] transfer_vm_rq_row,
     input wire [HC_S_RD-1:0] transfer_vm_rs_v,
     input wire [HC_S_RD*512-1:0] transfer_vm_rs_d,
-    input wire [HC_S_WR-1:0] hc_commit_v,
-    input wire [HC_S_WR*14-1:0] hc_commit_row,
-    input wire [HC_S_WR*16-1:0] hc_commit_mask,
+    input wire [HC_COMMIT_BANKS-1:0] hc_commit_v,
+    input wire [HC_COMMIT_BANKS*14-1:0] hc_commit_row,
+    input wire [HC_COMMIT_BANKS*16-1:0] hc_commit_mask,
     output wire transfer_fault,
     output wire [3:0] transfer_fault_code,
     // HEAD: the head root's argmax of the step
@@ -228,7 +228,7 @@ module ot_s81_ctrl #(
     generate if(H_TRANSFER) begin : g_htransfer
         initial if(ROLE!=0 || HOP_TX!=1 || !USE_VM_RVALID || !HC_SLOT_REBASE || FLIT!=512 || VWA!=14)
             $fatal(1,"native H transfer requires layer/internal hop, valid VM returns and explicit slot lowering");
-        ot_s81_htransfer_boundary #(.XW(XW),.RXB(RXB),.TXB(TXB),.S_RD(HC_S_RD),.S_WR(HC_S_WR)) hboundary(
+        ot_s81_htransfer_boundary #(.XW(XW),.RXB(RXB),.TXB(TXB),.S_RD(HC_S_RD),.S_WR(HC_COMMIT_BANKS)) hboundary(
             .clk(clk),.rst_n(rst_n),.land_v(vm_we),.land_a(vm_waddr),.land_d(vm_wdata),
             .hc_head(hc_queue_head),.normal_inputs_present(hc_normal_inputs_present),.hc_inputs_present(hc_inputs_present),
             .hc_rq_v(hc_vm_rq_v),.hc_rq_row(hc_vm_rq_row),.hc_rs_v(hc_vm_rs_v),.hc_rs_d(hc_vm_rs_d),
