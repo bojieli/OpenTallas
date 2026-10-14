@@ -276,7 +276,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
         if over and not (over == ["M6"] and fresh_lc.get("m6_pin_grant")):
             g.add("FAIL", "layer", f"pin layers {over} above the tile cap {rl.group(1)}: the parent strap layer would "
                   "carry pins", "pins on M4/M5 (route.pin_h / pin_v / pin_balance)")
-    elif spec["kind"] == "cluster":
+    elif rl is not None and spec["kind"] == "cluster":
         cap, grant = RT.cluster_signal_cap(spec, RT.contract_slot(spec))
         if rl.group(1) != cap or lc.get("pg_layer") != "M7":
             g.add("FAIL", "layer", "cluster kit signals/PG differ from its audited layer contract", "re-run ref_tile.py gen")

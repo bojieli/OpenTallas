@@ -40,5 +40,13 @@ class Phase(unittest.TestCase):
  def test_changed_physical_source_refused(self):
   ref=self.audit();(self.root/'child.lef').write_text('mutant')
   with self.assertRaises(ValueError):C.validate(self.root,ref,self.s,self.g)
+ def test_partial_95_percent_rail_refused(self):
+  ref=self.audit()
+  child=self.lef('ot_rg6',(0,0),40).replace('RECT 0 10.0 40 10.48','RECT 0 10.0 38 10.48')
+  self.assertIn('RECT 0 10.0 38 10.48',child)
+  record=json.loads((self.root/'audit.json').read_text())
+  record['cluster_view']=self.ref('child.lef',child)
+  ref=self.ref('audit.json',json.dumps(record))
+  with self.assertRaises(ValueError):C.validate(self.root,ref,self.s,self.g)
 
 if __name__=='__main__':unittest.main()
