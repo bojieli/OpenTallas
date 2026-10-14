@@ -2,16 +2,16 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "qfd_tt_ctlm",
  "verdict": "FAIL",
- "generated": "2026-10-13T13:07:52-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-13T20:45:42-0700",
+ "host": "ot-pve1",
  "cts": true,
- "commit": "7a8c32a10",
+ "commit": "220dfa378",
  "clock": {
   "max_root_sinks": 15220,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 876.4,
-  "tt_spread_ps": 238.1,
+  "tt_insertion_ps": 643.4,
+  "tt_spread_ps": 119.9,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -19,15 +19,9 @@
    "spread_ps": 80.0
   },
   "verdict": "REFUSE",
-  "text": "15,220 sinks on one clock root > 15,000: measured TT insertion 876.4 ps, leaf spread 238.1 ps; insertion 876.4 ps > 300 and spread 238.1 ps > 80"
+  "text": "15,220 sinks on one clock root > 15,000: measured TT insertion 643.4 ps, leaf spread 119.9 ps; insertion 643.4 ps > 300 and spread 119.9 ps > 80"
  },
  "items": [
-  {
-   "severity": "WARN",
-   "check": "util",
-   "message": "synthesized std area 11722 um2 + macros 42205 in core 221728: util 24%",
-   "fix": "set \"std_area_um2\": 11722 and drop 'outline' (gen sizes to util 0.52)"
-  },
   {
    "severity": "WARN",
    "check": "textbook.clock_domain",
@@ -37,19 +31,13 @@
   {
    "severity": "WARN",
    "check": "textbook.logic_depth",
-   "message": "reg->reg stage u_body.u_fpm.u_c.u_ctrl_me.kvd_pos[15]$_DFFE_PP_ -> u_body.u_fpm.u_c.u_ctrl_me.g_dtab.g_ds[10].r_q[10]$_DFFE_PP_/D: ~637 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
+   "message": "reg->reg stage u_body.u_fpm.u_c.u_ctrl_me.kvd_pos[15]$_DFFE_PP_ -> u_body.u_fpm.u_c.u_ctrl_me.g_dtab.g_ds[9].r_q[1]$_DFFE_PP_/D: ~632 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
    "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.util_channel",
-   "message": "utilisation 22.9% outside 45%-65% (std 8641 + macro 42205 um2 in 221728 um2): shrink the outline (long wires / sparse placement)",
-   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   },
   {
    "severity": "FAIL",
    "check": "clock_rule",
-   "message": "15,220 sinks on one clock root > 15,000: measured TT insertion 876.4 ps, leaf spread 238.1 ps; insertion 876.4 ps > 300 and spread 238.1 ps > 80",
+   "message": "15,220 sinks on one clock root > 15,000: measured TT insertion 643.4 ps, leaf spread 119.9 ps; insertion 643.4 ps > 300 and spread 119.9 ps > 80",
    "fix": "hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json"
   }
  ]

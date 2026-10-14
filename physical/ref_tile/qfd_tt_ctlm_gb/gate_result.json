@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_tt_ctlm_gb",
+ "verdict": "FAIL",
+ "generated": "2026-10-13T20:44:14-0700",
+ "host": "ot-pve1",
+ "cts": true,
+ "commit": "220dfa378",
+ "clock": {
+  "max_root_sinks": 15220,
+  "root": "port:ck",
+  "cts": true,
+  "tt_insertion_ps": 675.3,
+  "tt_spread_ps": 171.1,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "REFUSE",
+  "text": "15,220 sinks on one clock root > 15,000: measured TT insertion 675.3 ps, leaf spread 171.1 ps; insertion 675.3 ps > 300 and spread 171.1 ps > 80"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 15,214 flops > 15,000 on one root (+1 ICGs, 6 macro clock pins; e.g. u_body.u_fpm.u_c.g_dpin.dpin_q[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage u_body.u_fpm.u_c.u_ctrl_me.kvd_pos[15]$_DFFE_PP_ -> u_body.u_fpm.u_c.u_ctrl_me.g_dtab.g_ds[9].r_q[1]$_DFFE_PP_/D: ~632 ps estimated (17 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "15,220 sinks on one clock root > 15,000: measured TT insertion 675.3 ps, leaf spread 171.1 ps; insertion 675.3 ps > 300 and spread 171.1 ps > 80",
+   "fix": "hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json"
+  }
+ ]
+}
