@@ -250,8 +250,14 @@ module dsfd_wfc_hep_t #(parameter integer NW = 21, parameter integer USER_W = 10
     // reset: a pin flop, then one kept copy per quarter of the seen bits (the raw pin drove 1,057 loads in the gate);
     // the tile leaves reset 2 edges after the pin, long before a stage start can arrive
     localparam integer NR = 4, QS = (1 << USER_W) / NR;
+    // A single two-stage serial-domain release synchronizer precedes all reset
+    // fanout copies, so quarter banks never sample raw reset independently.
+    (* async_reg = "true" *) reg [1:0] hep_rst_sync;
+    always @(posedge clk or negedge rsv[0])
+        if (!rsv[0]) hep_rst_sync <= 2'b00;
+        else hep_rst_sync <= {hep_rst_sync[0], 1'b1};
     reg r0; (* keep *) reg [NR-1:0] rr; (* keep *) reg rc;
-    always @(posedge clk) begin r0 <= rsv[0]; rr <= {NR{r0}}; rc <= r0; end
+    always @(posedge clk) begin r0 <= hep_rst_sync[1]; rr <= {NR{r0}}; rc <= r0; end
     reg s1_st, s2_st; reg [USER_W-1:0] s1_u, s2_u; reg [NW-1:0] s1_p, s2_p;       // s1: pin flops
     wire [2*HW-1:0] rq;
     reg [NW+EW-1:0] rw;

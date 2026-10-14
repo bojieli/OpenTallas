@@ -148,7 +148,7 @@ module dsfd_wfc_vmx_w #(
     ot_dsrom_mtp_skid #(.W(VWA + FLIT)) u_sw (.clk(sclk), .rst_n(srst_n), .in_valid(sw_valid), .in_ready(sw_ready),
         .in_data({sw_addr, sw_data}), .out_valid(x_swv), .out_ready(x_swr), .out_data(x_swd));
     generate if (VM_LINK) begin : g_vm_link
-        ot_dsrom_mtp_ltx #(.W(VWA + FLIT)) u_swl (.clk(sclk), .rst_n(rsv[0]), .c_valid(x_swv), .c_ready(x_swr),
+        ot_dsrom_mtp_ltx #(.W(VWA + FLIT)) u_swl (.clk(sclk), .rst_n(srst_n), .c_valid(x_swv), .c_ready(x_swr),
             .c_data(x_swd), .l_valid(t_swv[0]), .l_ready(f_swr[0]), .l_data(t_swd));
     end else begin : g_vm_direct
         assign t_swv = x_swv; assign t_swd = x_swd; assign x_swr = f_swr;
@@ -260,7 +260,7 @@ module dsfd_wfc_vmx_r #(
     ot_dsrom_mtp_skid #(.W(SRW)) u_sr (.clk(sclk), .rst_n(srst_n), .in_valid(sr_valid), .in_ready(sr_ready),
         .in_data(sr_word), .out_valid(x_srv), .out_ready(x_srr), .out_data(x_srd));
     generate if (VM_LINK) begin : g_vm_link
-        ot_dsrom_mtp_ltx #(.W(SRW)) u_srl (.clk(sclk), .rst_n(rsv[0]), .c_valid(x_srv), .c_ready(x_srr),
+        ot_dsrom_mtp_ltx #(.W(SRW)) u_srl (.clk(sclk), .rst_n(srst_n), .c_valid(x_srv), .c_ready(x_srr),
             .c_data(x_srd), .l_valid(t_srv[0]), .l_ready(f_srr[0]), .l_data(t_srd));
     end else begin : g_vm_direct
         assign t_srv = x_srv; assign t_srd = x_srd; assign x_srr = f_srr;

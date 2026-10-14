@@ -1,0 +1,30 @@
+[
+ {
+  "case": "exact",
+  "expect": "pass",
+  "passed": true,
+  "verdict": "OK",
+  "result": "HEP_COV st0=50082 st1=49984 adv0=26867 adv1=26783 wrap=2887 b2b=50762 gap2=20686 gap3=11309 bad=0"
+ },
+ {
+  "case": "neg_stale",
+  "expect": "fail",
+  "passed": false,
+  "verdict": "OK",
+  "result": "HEP_COV st0=50082 st1=49984 adv0=26867 adv1=26783 wrap=2887 b2b=50762 gap2=20686 gap3=11309 bad=93213"
+ },
+ {
+  "case": "neg_nofwd",
+  "expect": "fail",
+  "passed": false,
+  "verdict": "OK",
+  "result": "HEP_COV st0=50082 st1=49984 adv0=26867 adv1=26783 wrap=2887 b2b=50762 gap2=20686 gap3=11309 bad=1412"
+ },
+ {
+  "case": "neg_nofwd2",
+  "expect": "fail",
+  "passed": false,
+  "verdict": "OK",
+  "result": "HEP_COV st0=50082 st1=49984 adv0=26867 adv1=26783 wrap=2887 b2b=50762 gap2=20686 gap3=11309 bad=1147"
+ }
+]

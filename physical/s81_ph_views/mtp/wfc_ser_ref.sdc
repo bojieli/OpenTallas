@@ -10,7 +10,8 @@ set_clock_uncertainty -setup 60 [get_clocks ser_clk]
 set_clock_uncertainty -hold 25 [get_clocks ser_clk]
 if {![catch {get_property [get_clocks core_clk] is_propagated} ot_sb_p] && $ot_sb_p eq "1"} { set_propagated_clock [get_clocks ser_clk] }
 catch {unset_input_delay [get_ports {ckv}]}
-set_false_path -from [get_ports -quiet {rst rsv rst[*] rsv[*]}]
+# Reset release is fully timed. Domain-local synchronizers condition the
+# downstream live/state flops; no blanket exception from reset ports.
 set ot_sb_si [get_ports -quiet {f_swr f_swa f_kdv f_srr f_srq f_kd f_hks f_swr[*] f_swa[*] f_kdv[*] f_srr[*] f_srq[*] f_kd[*] f_hks[*]}]
 set ot_sb_so [get_ports -quiet {t_swv t_swd t_ks t_hks t_srv t_srd t_hep t_swv[*] t_swd[*] t_ks[*] t_hks[*] t_srv[*] t_srd[*] t_hep[*]}]
 set ot_sb_io [expr {0.2 * [get_property [get_clocks ser_clk] period]}]
