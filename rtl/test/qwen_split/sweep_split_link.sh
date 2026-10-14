@@ -18,7 +18,20 @@ cases() {
   # mutants (must FAIL): 1 flit dropped in the PHY, 2 Q beats 0/1 swapped (sequencer MUT 2), 3 KVN v-tag dropped in the bridge
   for mu in 1 2 3; do echo "mut${mu} -P$P.SPLIT=1 -P$P.C_ST=8 -P$P.K_ST=16 -P$P.KVE_SPL=1 -P$P.MUT=$mu"; done
 }
-cases > $OUT/cases.txt
+cases_llr() {
+  # v1b (owner 08:05 no-stubs): the link-level retry + CRC layer at both ends (ot_qkvd_d2d_llr), KV end thin cluster
+  for e in 200 849; do echo "m_r0_e${e} -P$P.SPLIT=0 -P$P.ROM_ST=0 -P$P.ENG=$e"; done
+  for c in 0 8 26; do for k in 1 16; do
+    echo "l_c${c}_k${k}_e849 -P$P.SPLIT=1 -P$P.LLR=1 -P$P.C_ST=$c -P$P.K_ST=$k -P$P.KVE_SPL=1 -P$P.ENG=849"
+  done; done
+  echo "l_c8_k1_e200 -P$P.SPLIT=1 -P$P.LLR=1 -P$P.C_ST=8 -P$P.K_ST=1 -P$P.KVE_SPL=1 -P$P.ENG=200"
+  for p in 3 9; do echo "l_c8_k1_p${p}_e849 -P$P.SPLIT=1 -P$P.LLR=1 -P$P.C_ST=8 -P$P.K_ST=1 -P$P.PHY_LAT=$p -P$P.KVE_SPL=1 -P$P.ENG=849"; done
+  for er in 5001 501; do echo "l_c8_k1_err${er}_e849 -P$P.SPLIT=1 -P$P.LLR=1 -P$P.C_ST=8 -P$P.K_ST=1 -P$P.KVE_SPL=1 -P$P.ENG=849 -P$P.ERRP=$er"; done
+  echo "l_mut1_drop_recovers -P$P.SPLIT=1 -P$P.LLR=1 -P$P.C_ST=8 -P$P.K_ST=1 -P$P.KVE_SPL=1 -P$P.MUT=1"
+  for mu in 2 3; do echo "l_mut${mu} -P$P.SPLIT=1 -P$P.LLR=1 -P$P.C_ST=8 -P$P.K_ST=1 -P$P.KVE_SPL=1 -P$P.MUT=$mu"; done
+  for mu in 4 5; do echo "l_mut${mu}_err501 -P$P.SPLIT=1 -P$P.LLR=1 -P$P.C_ST=8 -P$P.K_ST=1 -P$P.KVE_SPL=1 -P$P.ERRP=501 -P$P.MUT=$mu"; done
+}
+if [ "${SWEEP:-v1}" = llr ]; then cases_llr > $OUT/cases.txt; else cases > $OUT/cases.txt; fi
 run1() { n=$1; shift; r=$($H/run_split_link.sh $OUT/$n "$@" 2>&1 | tail -1); echo "$n $r"; }
 export -f run1; export OUT H
 cat $OUT/cases.txt | xargs -P $J -L 1 bash -c 'run1 "$@"' _ > $OUT/results.txt
