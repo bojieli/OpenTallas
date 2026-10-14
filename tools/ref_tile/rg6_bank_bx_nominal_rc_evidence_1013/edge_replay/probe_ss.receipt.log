@@ -1,0 +1,160 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /probe/bank_Q/ot_qfd_vm_bank_t.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /probe/existing_BX_D/ot_qwen_tree_delay1_t.lef, created 1 library cells
+[INFO IFP-0001] Added 784 rows of 6400 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 345.600 211.680 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 345.600 211.680 ) um
+[INFO IFP-0102] Core area:                        73156.608 um^2
+[INFO IFP-0103] Total instances area:             41173.920 um^2
+[INFO IFP-0104] Effective utilization:                0.563
+[INFO IFP-0105] Number of instances:                      2
+PAIR_CLOCK_GEOMETRY ss bank coincidence=exact layer=M5
+PAIR_CLOCK_GEOMETRY ss bx coincidence=exact layer=M5
+PAIR_PATH ss_pin_cap_only max slack=17.517710
+PAIR_PATH ss_pin_cap_only min slack=461.397186
+PAIR_EDGE ss_pin_cap_only rise max slack=17.517710
+PAIR_EDGE ss_pin_cap_only rise min slack=484.868378
+PAIR_EDGE ss_pin_cap_only fall max slack=29.804049
+PAIR_EDGE ss_pin_cap_only fall min slack=461.397186
+Startpoint: bank (rising edge-triggered flip-flop clocked by A)
+Endpoint: bx (rising edge-triggered flip-flop clocked by B)
+Path Group: B
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                                  0.000000    0.000000   clock A (rise edge)
+                               -401.899994 -401.899994   clock source latency
+     1   29.326700    0.000000    0.000000 -401.899994 ^ ca (in)
+                      0.000000    0.000000 -401.899994 ^ bank/clk (ot_qfd_vm_bank_t)
+     1    1.577200   26.648878  895.307617  493.407654 ^ bank/q[286] (ot_qfd_vm_bank_t)
+                     26.648878    0.000000  493.407654 ^ bx/d[219] (ot_qwen_tree_delay1_t)
+                                            493.407654   data arrival time
+
+                                833.333008  833.333008   clock B (rise edge)
+                               -114.199997  719.133057   clock source latency
+     1    6.648000    0.000000    0.000000  719.133057 ^ cb (in)
+                      0.000000    0.000000  719.133057 ^ bx/clk (ot_qwen_tree_delay1_t)
+                               -210.000000  509.133026   clock uncertainty
+                                  0.000000  509.133026   clock reconvergence pessimism
+                                  1.792330  510.925354   library setup time
+                                            510.925354   data required time
+---------------------------------------------------------------------------------------------
+                                            510.925354   data required time
+                                           -493.407654   data arrival time
+---------------------------------------------------------------------------------------------
+                                             17.517710   slack (MET)
+
+
+Startpoint: bank (rising edge-triggered flip-flop clocked by A)
+Endpoint: bx (rising edge-triggered flip-flop clocked by B)
+Path Group: B
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                                  0.000000    0.000000   clock A (rise edge)
+                               -401.899994 -401.899994   clock source latency
+     1   29.326700    0.000000    0.000000 -401.899994 ^ ca (in)
+                      0.000000    0.000000 -401.899994 ^ bank/clk (ot_qfd_vm_bank_t)
+     1    1.577200   23.736570  889.554871  487.654907 v bank/q[286] (ot_qfd_vm_bank_t)
+                     23.736570    0.000000  487.654907 v bx/d[219] (ot_qwen_tree_delay1_t)
+                                            487.654907   data arrival time
+
+                                  0.000000    0.000000   clock B (rise edge)
+                               -114.199997 -114.199997   clock source latency
+     1    6.648000    0.000000    0.000000 -114.199997 ^ cb (in)
+                      0.000000    0.000000 -114.199997 ^ bx/clk (ot_qwen_tree_delay1_t)
+                                100.000000  -14.199995   clock uncertainty
+                                  0.000000  -14.199995   clock reconvergence pessimism
+                                 40.457729   26.257732   library hold time
+                                             26.257732   data required time
+---------------------------------------------------------------------------------------------
+                                             26.257732   data required time
+                                           -487.654907   data arrival time
+---------------------------------------------------------------------------------------------
+                                            461.397186   slack (MET)
+
+
+PAIR_ENTRY ss bank lambda0_wire=0.196843 childR=401.9
+PAIR_COMP ss bank phi=5.999999984851456e-6
+PAIR_ENTRY ss bx lambda0_wire=0.000359 childR=114.2
+PAIR_COMP ss bx phi=3.000000006636583e-6
+PAIR_PATH ss_nominal_M5 max slack=-6.373402
+PAIR_PATH ss_nominal_M5 min slack=482.166321
+PAIR_EDGE ss_nominal_M5 rise max slack=-6.373402
+PAIR_EDGE ss_nominal_M5 rise min slack=508.759491
+PAIR_EDGE ss_nominal_M5 fall max slack=9.034940
+PAIR_EDGE ss_nominal_M5 fall min slack=482.166321
+Startpoint: bank (rising edge-triggered flip-flop clocked by A)
+Endpoint: bx (rising edge-triggered flip-flop clocked by B)
+Path Group: B
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                                  0.000000    0.000000   clock A (rise edge)
+                               -402.096832 -402.096832   clock source latency
+     1   29.410309    0.000000    0.000000 -402.096832 ^ ca (in)
+                      0.623977    0.196843 -401.899994 ^ bank/clk (ot_qfd_vm_bank_t)
+     1    7.583349   65.428947  916.230896  514.330933 ^ bank/q[286] (ot_qfd_vm_bank_t)
+                     66.178322    2.967848  517.298767 ^ bx/d[219] (ot_qwen_tree_delay1_t)
+                                            517.298767   data arrival time
+
+                                833.333008  833.333008   clock B (rise edge)
+                               -114.200356  719.132629   clock source latency
+     1    6.648657    0.000000    0.000000  719.132629 ^ cb (in)
+                      0.001139    0.000389  719.133057 ^ bx/clk (ot_qwen_tree_delay1_t)
+                               -210.000000  509.133026   clock uncertainty
+                                  0.000000  509.133026   clock reconvergence pessimism
+                                  1.792330  510.925354   library setup time
+                                            510.925354   data required time
+---------------------------------------------------------------------------------------------
+                                            510.925354   data required time
+                                           -517.298767   data arrival time
+---------------------------------------------------------------------------------------------
+                                             -6.373402   slack (VIOLATED)
+
+
+Startpoint: bank (rising edge-triggered flip-flop clocked by A)
+Endpoint: bx (rising edge-triggered flip-flop clocked by B)
+Path Group: B
+Path Type: min
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                                  0.000000    0.000000   clock A (rise edge)
+                               -402.096832 -402.096832   clock source latency
+     1   29.410309    0.000000    0.000000 -402.096832 ^ ca (in)
+                      0.623977    0.196843 -401.899994 ^ bank/clk (ot_qfd_vm_bank_t)
+     1    7.583349   52.014549  907.362976  505.463013 v bank/q[286] (ot_qfd_vm_bank_t)
+                     52.808468    2.961020  508.424042 v bx/d[219] (ot_qwen_tree_delay1_t)
+                                            508.424042   data arrival time
+
+                                  0.000000    0.000000   clock B (rise edge)
+                               -114.200356 -114.200356   clock source latency
+     1    6.648657    0.000000    0.000000 -114.200356 ^ cb (in)
+                      0.001139    0.000361 -114.199997 ^ bx/clk (ot_qwen_tree_delay1_t)
+                                100.000000  -14.199995   clock uncertainty
+                                  0.000000  -14.199995   clock reconvergence pessimism
+                                 40.457729   26.257732   library hold time
+                                             26.257732   data required time
+---------------------------------------------------------------------------------------------
+                                             26.257732   data required time
+                                           -508.424042   data arrival time
+---------------------------------------------------------------------------------------------
+                                            482.166321   slack (MET)
+
+
+(A ^) r 514.330933:514.330933 f 505.463013:505.463013
+(A ^) r 517.298767:517.298767 f 508.424042:508.424042
+Clock                   Period          Waveform
+----------------------------------------------------
+A                       833.33        0.00    416.67
+B                       833.33        0.00    416.67
+PAIR_PASS ss nominal_M5_placementRC_diagnostic

@@ -1,0 +1,280 @@
+{
+  "status": "PLAN_ONLY_NOT_SUBMITTED; parent review before any heavy fixture",
+  "scope": "Specific two-actual-CLOSED-master, unbuffered nominal ASAP7 M5 placementRC diagnostic; no physical SS extraction, no M9/buffered inference, no RG6 qualification.",
+  "input_candidate_commit": "dc60cc60f",
+  "input_candidate_sha256": "8faa1d49fe7fc2bd00eaee47b2cfbc01faff7459e33c74b10be5140b5114f059",
+  "input_candidate_path": "/home/ubuntu/wt/codex-qwen-vm-rg6/results/arch/qwen_tp8_1012/rg6_bank_bx_joint_permutation_candidate.json",
+  "assignment": {
+    "logical_bit": 286,
+    "existing_BX_physical_bit": 219,
+    "bank_Q": {
+      "inst": "u_core.g_b[0].u_bt",
+      "pin": "q[286]",
+      "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+      "xy_um": [
+        308.83799999999997,
+        48.971999999999994
+      ]
+    },
+    "existing_BX_D": {
+      "inst": "u_core.g_b[0].g_bx.u_bx",
+      "pin": "d[219]",
+      "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+      "xy_um": [
+        313.24199999999996,
+        81.132
+      ]
+    },
+    "existing_BX_Q": {
+      "inst": "u_core.g_b[0].g_bx.u_bx",
+      "pin": "q[219]",
+      "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+      "xy_um": [
+        330.438,
+        113.004
+      ]
+    },
+    "FIFO_capture": {
+      "inst": "u_core.g_fifo16[1].u_fifo",
+      "pin": "bx[30]",
+      "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+      "xy_um": [
+        373.404,
+        140.442
+      ]
+    },
+    "row_station_capture": {
+      "pin": "d[284]",
+      "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+      "at_um": [
+        388.8,
+        69.12
+      ],
+      "xy_um": [
+        388.842,
+        88.284
+      ]
+    },
+    "hop_margins": [
+      {
+        "TTdeep210_geometric_ps": 165.80694999999994,
+        "FFidealH100_ps": 205.91965999999996,
+        "SSzero_ps": 18.108409999999992,
+        "manhattan_um": 36.56400000000001
+      },
+      {
+        "TTdeep210_geometric_ps": 335.3809499999999,
+        "FFidealH100_ps": 42.43464,
+        "SSzero_ps": 285.17495999999994,
+        "manhattan_um": 70.40400000000001
+      },
+      {
+        "TTdeep210_geometric_ps": 342.70534,
+        "FFidealH100_ps": 37.70106000000001,
+        "SSzero_ps": 303.07588999999996,
+        "manhattan_um": 83.124
+      }
+    ]
+  },
+  "bank_index": 0,
+  "actual_views": {
+    "bank_Q": {
+      "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+      "master": "ot_qfd_vm_bank_t",
+      "origin_um": [
+        90.72,
+        10.8
+      ],
+      "pin": "q[286]",
+      "clock_pin": "clk",
+      "files": {
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t.lef": "c79b13f7c056921b359ee878738fb7dcf01a133bb5b7e3859db34d4c75bdd986",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/insertion.json": "18edcdffcddd64f1246e15118acb18925b450aad54ae45f55537cc9c81f79f25",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_ff.lib": "77f7c73151b7486897285bff83ca23883d628fe8300e47549ec260da44f5ccf4",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_ss.lib": "6504933484b3443175c3db3dff585f26309352d322d8dbd64bf90669987f139a",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_tt.lib": "8719c8c4f4b98d6c1d261fc910ee1c6b2f2bfee1605677dd9eb41a45f718cf05"
+      }
+    },
+    "existing_BX_D": {
+      "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+      "master": "ot_qwen_tree_delay1_t",
+      "origin_um": [
+        313.2,
+        71.28
+      ],
+      "pin": "d[219]",
+      "clock_pin": "clk",
+      "files": {
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t.lef": "9077b7e7aa5446a0464855e9ed339f706fed577e16de896a155d276328597498",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/insertion.json": "3fa993e9b7efdff3baa9b2857583f7e7e7f0577bf44956f984338df0d5238e8c",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_ff.lib": "9179a6cf1ead04cd307782bb298ae4472bc33a15f8f847a89947538848638d67",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_ss.lib": "10d2974ab55c03bdeff6b3b78ade9fc0db674596ff5015958f7ae96185925b21",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_tt.lib": "59c3b9da98f6e480716cea42cfa97dec756443d790f5980011e5dff31653ca0c"
+      }
+    }
+  },
+  "corners": {
+    "tt": {
+      "bank_Q": {
+        "R_ps": 319.3,
+        "source_phase_ps": -319.3,
+        "raw_O_firstpoint_ps": 670.30713,
+        "raw_l_firstpoint_ps": 669.94513,
+        "raw_S_ps": null,
+        "raw_H_ps": null,
+        "boundary_spread_ps": 137.0
+      },
+      "existing_BX_D": {
+        "R_ps": 84.1,
+        "source_phase_ps": -84.1,
+        "raw_O_firstpoint_ps": null,
+        "raw_l_firstpoint_ps": null,
+        "raw_S_ps": -5.36972,
+        "raw_H_ps": 28.37321,
+        "boundary_spread_ps": 5.900000000000006
+      },
+      "first_table_point_zero_wire_setup_ps": 193.59558999999996,
+      "first_table_point_zero_wire_hold_ps": 306.37191999999993
+    },
+    "ff": {
+      "bank_Q": {
+        "R_ps": 266.2,
+        "source_phase_ps": -266.2,
+        "raw_O_firstpoint_ps": 534.09576,
+        "raw_l_firstpoint_ps": 533.20819,
+        "raw_S_ps": null,
+        "raw_H_ps": null,
+        "boundary_spread_ps": 126.1
+      },
+      "existing_BX_D": {
+        "R_ps": 67.3,
+        "source_phase_ps": -67.3,
+        "raw_O_firstpoint_ps": null,
+        "raw_l_firstpoint_ps": null,
+        "raw_S_ps": -10.94101,
+        "raw_H_ps": 28.38853,
+        "boundary_spread_ps": 5.8999999999999915
+      },
+      "first_table_point_zero_wire_setup_ps": 299.0782499999999,
+      "first_table_point_zero_wire_hold_ps": 205.91965999999996
+    },
+    "ss": {
+      "bank_Q": {
+        "R_ps": 401.9,
+        "source_phase_ps": -401.9,
+        "raw_O_firstpoint_ps": 894.71692,
+        "raw_l_firstpoint_ps": 889.01605,
+        "raw_S_ps": null,
+        "raw_H_ps": null,
+        "boundary_spread_ps": 150.09999999999997
+      },
+      "existing_BX_D": {
+        "R_ps": 114.2,
+        "source_phase_ps": -114.2,
+        "raw_O_firstpoint_ps": null,
+        "raw_l_firstpoint_ps": null,
+        "raw_S_ps": -1.79233,
+        "raw_H_ps": 40.45773,
+        "boundary_spread_ps": 6.0
+      },
+      "first_table_point_zero_wire_setup_ps": 18.108409999999992,
+      "first_table_point_zero_wire_hold_ps": 460.85831999999994
+    }
+  },
+  "wire_geometry": {
+    "source_M4_center_um": [
+      308.838,
+      48.972
+    ],
+    "capture_M4_center_um": [
+      313.242,
+      81.132
+    ],
+    "corridor_M5_x_um": 311.04,
+    "segments": [
+      {
+        "layer": "M4",
+        "start_um": [
+          308.838,
+          48.972
+        ],
+        "end_um": [
+          311.04,
+          48.972
+        ]
+      },
+      {
+        "layer": "M5",
+        "start_um": [
+          311.04,
+          48.972
+        ],
+        "end_um": [
+          311.04,
+          81.132
+        ]
+      },
+      {
+        "layer": "M4",
+        "start_um": [
+          311.04,
+          81.132
+        ],
+        "end_um": [
+          313.242,
+          81.132
+        ]
+      }
+    ],
+    "total_manhattan_um": 36.564,
+    "between_master_outline_gap_um": 4.32,
+    "constraints": "Real LEF OBS through M5; only the published M4 PORT rectangles may be used inside masters. Verify all segment/OBS and track/via access before treating an estimated fixture as physically legal."
+  },
+  "intended_executable_fixture": {
+    "netlist": "Only actual two masters, selected q286\u2192d219; unused DATA/controls explicitly static as isolated arc diagnostic, unused outputs open, no benchmark/function/composition claim. Exact static/reset inputs must be documented from actual pin list; never invent reset timing exceptions.",
+    "clock": "Separate top clock source for each actual macro clk, same833.333period/waveform; ideal entry phi-R per actual per-corner R. Assert clock pin arrival+R=phi. Entry wires unmodeled and explicitly assumed: no parent physical clock proof. No asynchronous or false-path exceptions.",
+    "constraints": "Setup reserve210 (potential deep), hold100 across all clocks, all selected rise/fall max/min checked. No nominal DATA top ports, so no unconstrained top DATA IO. Actual ETM clock/table source slew basis retained and documented.",
+    "RC": "Freeze actual platform setRC.tcl/tech LEF/layer values and source hashes. Nominal platform placementRC only; identify M4-access/M5 wire model. Same declared nominal RC each cell corner; actual SS driver/capture models, no invented SS-wire coefficient.",
+    "oracles": "Report selected complete max/min paths and wire delay/cap; compare loaded macro CQ/setup model vs first-table-point zero-wire screen separately. First tablepoint is1.44fF, not zero actual load; use actual capture pin capacitance+wire cap in executable. Keep all negative results.",
+    "safety": "Copies of published libraries/LEFs; no sourcechild modifications, reroute, main edits, clock/reset/load waivers. Heavy job via ot-run only after plan review.",
+    "static_pin_policy": {
+      "bank_rst_n": "1 (inactive active-low reset; no reset exception)",
+      "bank_re_we": "0 (unused opaque ETM controls; no functional activity/qualification claim)",
+      "bank_ra_wl_wm_wd": "0 on unused DATA inputs; selected output remains actual published clock-to-Q ETM arc",
+      "BX_d": "selected d[219] connected from bank q[286]; all remaining d bits static0",
+      "PG": "VDD1/VSS0 only as published PG pins; no DATA timing exception",
+      "ME": "No EN1 ME/ENGINE logic is replaced by this distinct existing BX D1 diagnostic"
+    }
+  },
+  "known_limits": [
+    "SSzero18.10841ps is a small necessary-screen margin; any actual load/wire cost may consume it.",
+    "Bank q286 TT firstpoint O-R351.00713ps>220; TT boundary spread137ps>80, independent physical limitations.",
+    "Unbuffered36.564um local corridor does not model fullbank fanout or any buffered M9 parent network.",
+    "Primitive placementRC can only diagnose nominal-model wire cost; cannot qualify extracted SS physical wire."
+  ],
+  "actual_capture_pin_capacitance_fF": {
+    "tt": 1.1829,
+    "ff": 1.2256,
+    "ss": 1.1551
+  },
+  "load_model_note": "Runtime net load includes both the published launch output pin cap and capture input cap, plus nominal wire cap. Actual cap-only sums exceed first1.44fF point in every corner, so no below-first-point extrapolation. Report runtime cap and lookup separately from firstpoint screen. The unrelated SN table2.88fF context does not apply here.",
+  "actual_launch_output_pin_capacitance_fF": {
+    "tt": 0.4221,
+    "ff": 0.4221,
+    "ss": 0.4221
+  },
+  "bank_output_table_axis_fF": [
+    1.44,
+    2.88,
+    5.76,
+    11.52,
+    23.04,
+    46.08,
+    92.16
+  ],
+  "actual_cap_only_net_load_fF": {
+    "tt": 1.605,
+    "ff": 1.6477,
+    "ss": 1.5772
+  }
+}

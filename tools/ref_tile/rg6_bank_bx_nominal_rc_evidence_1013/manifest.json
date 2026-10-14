@@ -1,0 +1,56 @@
+{
+  "scope": "Prepare exact two-master nominal M5 placement-RC diagnostic, not closure.",
+  "plan_sha256": "7d0cac8ed4e6cf8ec7280b4515fbb9596cd32301fe2ddfa3444ec8fb4f5cc859",
+  "actual_views": {
+    "bank_Q": {
+      "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+      "master": "ot_qfd_vm_bank_t",
+      "origin_um": [
+        90.72,
+        10.8
+      ],
+      "pin": "q[286]",
+      "clock_pin": "clk",
+      "files": {
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t.lef": "c79b13f7c056921b359ee878738fb7dcf01a133bb5b7e3859db34d4c75bdd986",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/insertion.json": "18edcdffcddd64f1246e15118acb18925b450aad54ae45f55537cc9c81f79f25",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_ff.lib": "77f7c73151b7486897285bff83ca23883d628fe8300e47549ec260da44f5ccf4",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_ss.lib": "6504933484b3443175c3db3dff585f26309352d322d8dbd64bf90669987f139a",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_tt.lib": "8719c8c4f4b98d6c1d261fc910ee1c6b2f2bfee1605677dd9eb41a45f718cf05"
+      },
+      "clock_layer": "M5",
+      "clock_rect_global_um": [
+        194.736,
+        10.8,
+        194.76,
+        12.937000000000001
+      ]
+    },
+    "existing_BX_D": {
+      "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+      "master": "ot_qwen_tree_delay1_t",
+      "origin_um": [
+        313.2,
+        71.28
+      ],
+      "pin": "d[219]",
+      "clock_pin": "clk",
+      "files": {
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t.lef": "9077b7e7aa5446a0464855e9ed339f706fed577e16de896a155d276328597498",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/insertion.json": "3fa993e9b7efdff3baa9b2857583f7e7e7f0577bf44956f984338df0d5238e8c",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_ff.lib": "9179a6cf1ead04cd307782bb298ae4472bc33a15f8f847a89947538848638d67",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_ss.lib": "10d2974ab55c03bdeff6b3b78ade9fc0db674596ff5015958f7ae96185925b21",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_tt.lib": "59c3b9da98f6e480716cea42cfa97dec756443d790f5980011e5dff31653ca0c"
+      },
+      "clock_layer": "M5",
+      "clock_rect_global_um": [
+        315.55199999999996,
+        71.28,
+        315.57599999999996,
+        71.365
+      ]
+    }
+  },
+  "source_generator_sha256": "2e106405c13b8b3e9f09c27c80255b89f5f8d38db86b81e3592217fd9af754ed",
+  "geometry_model": "Nominal M5 for all Manhattan wire; exact source/destination master positions, M4 access and M5 corridor only geometry plan, not extracted mixed-layer/via path."
+}

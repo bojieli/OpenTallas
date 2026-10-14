@@ -1,0 +1,367 @@
+{
+  "scope": "Two immutable actual CLOSED masters at exact candidate positions; specific nominal M5 placementRC diagnostic only. No extracted SS/M4-via-M5 route or M9/buffered/fullRG6 qualification.",
+  "input_candidate_commit": "dc60cc60f",
+  "input_candidate_sha256": "8faa1d49fe7fc2bd00eaee47b2cfbc01faff7459e33c74b10be5140b5114f059",
+  "helper_commit": "ab4ff888d",
+  "helper_sha256": "2e106405c13b8b3e9f09c27c80255b89f5f8d38db86b81e3592217fd9af754ed",
+  "actual_views": {
+    "bank_Q": {
+      "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+      "master": "ot_qfd_vm_bank_t",
+      "origin_um": [
+        90.72,
+        10.8
+      ],
+      "pin": "q[286]",
+      "clock_pin": "clk",
+      "files": {
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t.lef": "c79b13f7c056921b359ee878738fb7dcf01a133bb5b7e3859db34d4c75bdd986",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/insertion.json": "18edcdffcddd64f1246e15118acb18925b450aad54ae45f55537cc9c81f79f25",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_ff.lib": "77f7c73151b7486897285bff83ca23883d628fe8300e47549ec260da44f5ccf4",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_ss.lib": "6504933484b3443175c3db3dff585f26309352d322d8dbd64bf90669987f139a",
+        "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t_tt.lib": "8719c8c4f4b98d6c1d261fc910ee1c6b2f2bfee1605677dd9eb41a45f718cf05"
+      },
+      "clock_layer": "M5",
+      "clock_rect_global_um": [
+        194.736,
+        10.8,
+        194.76,
+        12.937000000000001
+      ]
+    },
+    "existing_BX_D": {
+      "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+      "master": "ot_qwen_tree_delay1_t",
+      "origin_um": [
+        313.2,
+        71.28
+      ],
+      "pin": "d[219]",
+      "clock_pin": "clk",
+      "files": {
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t.lef": "9077b7e7aa5446a0464855e9ed339f706fed577e16de896a155d276328597498",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/insertion.json": "3fa993e9b7efdff3baa9b2857583f7e7e7f0577bf44956f984338df0d5238e8c",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_ff.lib": "9179a6cf1ead04cd307782bb298ae4472bc33a15f8f847a89947538848638d67",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_ss.lib": "10d2974ab55c03bdeff6b3b78ade9fc0db674596ff5015958f7ae96185925b21",
+        "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t_tt.lib": "59c3b9da98f6e480716cea42cfa97dec756443d790f5980011e5dff31653ca0c"
+      },
+      "clock_layer": "M5",
+      "clock_rect_global_um": [
+        315.55199999999996,
+        71.28,
+        315.57599999999996,
+        71.365
+      ]
+    }
+  },
+  "selected_pair": {
+    "bank": 0,
+    "logical_bit": 286,
+    "source_pin": "bank/q[286]",
+    "capture_pin": "bx/d[219]",
+    "source_xy_um": [
+      308.838,
+      48.972
+    ],
+    "capture_xy_um": [
+      313.242,
+      81.132
+    ],
+    "manhattan_um": 36.564
+  },
+  "clock_contract": {
+    "period_ps": 833.333,
+    "waveform_ps": [
+      0,
+      416.6665
+    ],
+    "source_slew_ps": 0,
+    "setup_reserve_ps": 210,
+    "hold_margin_ps": 100,
+    "entry_policy": "SourceBTerm geometry coincides with actual clk LEF continuous rectangle union. Nonzero nominal entrywire is nevertheless measured at lambda0 separately each corner, then compensated source phi-(entrywire+childR). All arrival+childR phi assertions pass."
+  },
+  "load_basis": {
+    "table_axis_fF": [
+      1.44,
+      2.88,
+      5.76,
+      11.52,
+      23.04,
+      46.08,
+      92.16
+    ],
+    "launch_output_pin_cap_fF": 0.4221,
+    "capture_input_cap_fF": {
+      "tt": 1.1829,
+      "ff": 1.2256,
+      "ss": 1.1551
+    },
+    "below_firstpoint_extrapolation": false,
+    "note": "Both output and input pin caps enter runtime net load; firstpoint screen differs from actual pin-cap-only oracle. Initial plan2.88fF label copied from SN context corrected explicitly; executable uses exact actual Liberty axes throughout."
+  },
+  "nominal_RC": {
+    "M5_resistance_kohm_per_um": 0.0189935,
+    "M5_capacitance_fF_per_um": 0.164264,
+    "wire_cap_fF": 6.006148896,
+    "model": "OpenROAD estimate_parasitics-placement, signal/clock set_wire_rc-layerM5; identical declared nominal technology RC each cell corner. Runtime setRC/tech/image hashes frozen."
+  },
+  "corners": {
+    "tt": {
+      "slacks_ps": {
+        "pin_cap_only": {
+          "max": 193.486206,
+          "min": 306.792206
+        },
+        "nominal_M5": {
+          "max": 178.003494,
+          "min": 321.099457
+        },
+        "setup_cost_vs_pin_cap_only_ps": 15.48271200000002
+      },
+      "entry": {
+        "bank": {
+          "lambda0_wire_ps": 0.199049,
+          "child_R_ps": 319.3
+        },
+        "bx": {
+          "lambda0_wire_ps": 0.000368,
+          "child_R_ps": 84.1
+        }
+      },
+      "phi_ps": {
+        "bank": 1.2000000026546331e-05,
+        "bx": 1.9999999949504854e-06
+      },
+      "reported_driver_rows": {
+        "cap_only_max": [
+          1.605,
+          16.380501,
+          670.745728,
+          351.44574
+        ],
+        "cap_only_min": [
+          1.605,
+          15.189794,
+          670.365417,
+          351.06543
+        ],
+        "M5_max": [
+          7.611149,
+          41.121223,
+          683.255493,
+          363.955536
+        ],
+        "M5_min": [
+          7.611149,
+          35.077274,
+          681.811218,
+          362.51123
+        ]
+      },
+      "setup_pass": true,
+      "hold_pass": true,
+      "data_polarity_slacks_ps": {
+        "rise": {
+          "max": 178.003494,
+          "min": 330.858978
+        },
+        "fall": {
+          "max": 179.230026,
+          "min": 321.099457
+        }
+      }
+    },
+    "ff": {
+      "slacks_ps": {
+        "pin_cap_only": {
+          "max": 298.700226,
+          "min": 207.185257
+        },
+        "nominal_M5": {
+          "max": 287.854034,
+          "min": 218.031448
+        },
+        "setup_cost_vs_pin_cap_only_ps": 10.846191999999974
+      },
+      "entry": {
+        "bank": {
+          "lambda0_wire_ps": 0.202496,
+          "child_R_ps": 266.2
+        },
+        "bx": {
+          "lambda0_wire_ps": 0.000382,
+          "child_R_ps": 67.3
+        }
+      },
+      "phi_ps": {
+        "bank": 1.8000000011397788e-05,
+        "bx": 5.000000001587068e-06
+      },
+      "reported_driver_rows": {
+        "cap_only_max": [
+          1.6477,
+          10.852506,
+          534.473816,
+          268.273804
+        ],
+        "cap_only_min": [
+          1.6477,
+          10.852506,
+          534.473816,
+          268.273804
+        ],
+        "M5_max": [
+          7.653849,
+          25.820976,
+          542.351807,
+          276.151855
+        ],
+        "M5_min": [
+          7.653849,
+          25.820976,
+          542.351807,
+          276.151855
+        ]
+      },
+      "setup_pass": true,
+      "hold_pass": true,
+      "data_polarity_slacks_ps": {
+        "rise": {
+          "max": 289.490448,
+          "min": 223.846497
+        },
+        "fall": {
+          "max": 287.854034,
+          "min": 218.031448
+        }
+      }
+    },
+    "ss": {
+      "slacks_ps": {
+        "pin_cap_only": {
+          "max": 17.51771,
+          "min": 461.397186
+        },
+        "nominal_M5": {
+          "max": -6.373402,
+          "min": 482.166321
+        },
+        "setup_cost_vs_pin_cap_only_ps": 23.891112
+      },
+      "entry": {
+        "bank": {
+          "lambda0_wire_ps": 0.196843,
+          "child_R_ps": 401.9
+        },
+        "bx": {
+          "lambda0_wire_ps": 0.000359,
+          "child_R_ps": 114.2
+        }
+      },
+      "phi_ps": {
+        "bank": 5.999999984851456e-06,
+        "bx": 3.000000006636583e-06
+      },
+      "reported_driver_rows": {
+        "cap_only_max": [
+          1.5772,
+          26.648878,
+          895.307617,
+          493.407654
+        ],
+        "cap_only_min": [
+          1.5772,
+          23.73657,
+          889.554871,
+          487.654907
+        ],
+        "M5_max": [
+          7.583349,
+          65.428947,
+          916.230896,
+          514.330933
+        ],
+        "M5_min": [
+          7.583349,
+          52.014549,
+          907.362976,
+          505.463013
+        ]
+      },
+      "setup_pass": false,
+      "hold_pass": true,
+      "data_polarity_slacks_ps": {
+        "rise": {
+          "max": -6.373402,
+          "min": 508.759491
+        },
+        "fall": {
+          "max": 9.03494,
+          "min": 482.166321
+        }
+      }
+    }
+  },
+  "limits": [
+    "SS result is negative6.373402ps and remains diagnostic rejection under this specific nominal model.",
+    "Actual bank q286 intrinsic launch and bank boundary spread already independently fail220/80 gates.",
+    "This selected pair does not model full-bank fanout or prove producer functional bijection/epochs/composition.",
+    "No new route, sourceclock/slew/load threshold, timing exception, parent clock proof, or frozen shared helper change.",
+    "PG/reset/unused data static choices documented in corrected_plan.json; selected actual macro arc max/min checked, no top DATA IO.",
+    "PlacementRC includes nominalM5 cost for all Manhattanwire; M4 access/via legality/RC remains separate route proof."
+  ],
+  "artifact_sha256": {
+    "run_tt.receipt.log": "11f3db5629361d2095ec0052da5bf53cde16eb1b35645e34c46f298fe5104aae",
+    "corrected_plan.json": "c9c303a0f26ff282186cf378199af71798fc09c090aefe0739e08a723d73059a",
+    "probe_tt.tcl": "5192c2f99d03d814e6945d60538ddc64e3580aaa21b058f96fd548c696c0f264",
+    "plan.json": "7d0cac8ed4e6cf8ec7280b4515fbb9596cd32301fe2ddfa3444ec8fb4f5cc859",
+    "executed_tt.sdc": "45f874f3305cdd4aa98913c267162224d89924f38320ee714ac1089942a4f795",
+    "run_tt.sh": "c70880f65cbc8f5fff121b74d00cbfc1c6bb1e6992939f61cc53b1d29752a47e",
+    "probe_ff.tcl": "3eee5c5214abcdf2f72e65747c06a0c905a2ed682595b3acb27ecff765b7275e",
+    "executed_ss.sdc": "c17b10e1ec5a22907411134a3349a86ffa8082e610b6190969a16ab9e7ed3c25",
+    "initial_no_site_ot_run.receipt.log": "a0b8df45ebbc4310899469b0f603af0a59ae5d9a8048c0ad45dfbd27502584d6",
+    "run_ff_ss.sh": "66c7868a685fe4c8be6ad352db1932392fd0feb1321660a87cf555cac75db192",
+    "manifest.json": "df92de64b12184cc3beac085ad63ac6a2782661bed35a94fabac9ca48f424860",
+    "run_ff_ss.receipt.log": "41dd32c9e97645cbe2b2c6c85bdd2036076d950eb7d811f92e40b7af6bad61c2",
+    "probe_ss.receipt.log": "e5510f717af89543cb6c42757afb9fad987a7596c38e4f90a8bf87c7af89336a",
+    "executed_ff.sdc": "49b15ce69ac5f9042b715aad4693a86cabe5249abf0740618f5acded68d73284",
+    "probe_ff.receipt.log": "677526d2fdb64e73d4d9f05fedef5a57d61f0f1bc46fdaccfedaa286259659c4",
+    "probe_ss.tcl": "ee48655424400dc88cc0facf0845e70c874a410afc3da94ae3120c2f58305b0c",
+    "probe_tt.receipt.log": "35d706d4b8ad45d098d5eed6ea1e980f0d2b39f9b9341fd4f3f14a2db573e780",
+    "pair.v": "10d06d243738007c43880fccf69729373b82dc9de6f9dc9d78bb820babfe9ca7",
+    "initial_no_site_failure.receipt.log": "00a5b0eaa24191f27f0f3c9e7237d54bc323e1bef198f87a208760bf5c8e1a0f",
+    "edge_replay/mutant.receipt.log": "f5f2394eed037d228ed6e51e2f8bfcf4bb7c68ecaa5c8d2ae0cd9bbd5b80a0a1",
+    "edge_replay/run_all.receipt.log": "9fd828070732561b111ffeaff3206bc238d90d273566e6dfe6f2c3236bdc9a85",
+    "edge_replay/probe_tt.tcl": "34d3f058fb710f7b73c3a8f2ba1523e0b1e5b87e357ad9df9a862ba82a42393a",
+    "edge_replay/plan.json": "c9c303a0f26ff282186cf378199af71798fc09c090aefe0739e08a723d73059a",
+    "edge_replay/probe_ff.tcl": "4afd2ddef7c38e6e3a43f916fbd952aced5cce127615a58becee5b50871f3856",
+    "edge_replay/manifest.json": "e16efd5c11f1c71b79f8ef9b1dd27fb9cc378e42b73e3abbf2e526b10e060840",
+    "edge_replay/probe_ss.receipt.log": "e45e00b714d3f1068ce16b7f7d261dda4e92230a79d4549403a8e216f2f9c369",
+    "edge_replay/probe_ff.receipt.log": "0992313dcab51d6e76dd2069a465b4fbea42bd94119a363228de5dad42fbbaac",
+    "edge_replay/mutant_zero_child_R.tcl": "3a15db04f28b5c8c3637868945fdaac215bc7b8b65291554e38c73d62dd396ca",
+    "edge_replay/probe_ss.tcl": "c1aee3ba85afd653f42f11609c6231607d06cfc0927510f47cfc00f6a7cff13b",
+    "edge_replay/probe_tt.receipt.log": "2e719e17efcd30aa1bf3722b7e41a6ab55843a435aabbf172a00336da9dcae13",
+    "edge_replay/pair.v": "10d06d243738007c43880fccf69729373b82dc9de6f9dc9d78bb820babfe9ca7",
+    "edge_replay/run_all.sh": "201dfa68b66f04b721095315aa2e818a80c2127d570b2373b3b88bfadf2bc48d",
+    "source_context/bx_6_final.sdc": "a363e3b2dc9983e66414ae56a72a0052ab048d6b3c4455ae725cdcb53f63d8fd",
+    "source_context/bank_6_final.sdc": "ccceaea7884bd3243ea325b44e8955f1a7f646ae879fa84b07e83a459d3961d1",
+    "source_context/bx_extra.sdc": "0c3eabda591b57098fe526ec91504c31ca244956e3fea5d78d8b350b0fdd0107",
+    "source_context/bank_signoff.sdc": "50bdd4fe8b5e4668e4a934e3b9c6707fd08c8b7540ac22be2b25069a1b2821dc",
+    "runtime/tech.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+    "runtime/setRC.tcl": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14",
+    "runtime/image_id.txt": "cb7905146116b9a382bf4be3842e9bdafa8b4d90029ae75ae7c906e6b381d999",
+    "existing_BX_D/ot_qwen_tree_delay1_t_ss.lib.gz": "f235dcb128e5cd4895f009f0c016619aab510bfc344ad85fddc4c3cf1bd0127d",
+    "existing_BX_D/ot_qwen_tree_delay1_t.lef.gz": "90d5720067d0338241e9f984baadc44191df5d0bfed1452e7297f3757cfbd583",
+    "existing_BX_D/ot_qwen_tree_delay1_t_ff.lib.gz": "ec6a92682c797aa7272a18fc0607cb2061780ce57daab430f066b413c0fc6202",
+    "existing_BX_D/insertion.json.gz": "ef976b7bed6001c8158c515237d89f5d4deff2ab94eea5e21e4258ec5fc096a8",
+    "existing_BX_D/ot_qwen_tree_delay1_t_tt.lib.gz": "2b4d14d01f5c20d208266b7300fa5f8b43c477018d5f52ab722a5209d9c1c5bc",
+    "bank_Q/ot_qfd_vm_bank_t_ff.lib.gz": "03132e18a93378c66ec3dec74cd9fe58ef84597b368e87beff70dabc4cc2b582",
+    "bank_Q/ot_qfd_vm_bank_t_ss.lib.gz": "cd426532744b8de34de9917d77ee9ffd124b43bdac9aa004f9bb363d7b77f926",
+    "bank_Q/ot_qfd_vm_bank_t_tt.lib.gz": "3b0bdb7cc4568e72c35a8fe806b2b2a9f58c049133dbbc187459cbd4c36a0630",
+    "bank_Q/ot_qfd_vm_bank_t.lef.gz": "a3866d7ba50b613a29d3a4996ffe431ec77057977f92c91cbb3933e5b808a6f9",
+    "bank_Q/insertion.json.gz": "d71c2207b7dcb70dac7818219a7f510ab84838975cf3342017802aa832af7b73"
+  },
+  "final_edge_helper_commit": "d276e3ebc",
+  "final_edge_helper_sha256": "15ef985c11b90b0e3ba38c699d1a8a08da7165d02ac1b68041716e8d3c5982f5",
+  "zero_child_R_mutant": "REJECT: entry compensation failure bank; ot-run terminalexit0 confirms expected negative process and exact reason"
+}
