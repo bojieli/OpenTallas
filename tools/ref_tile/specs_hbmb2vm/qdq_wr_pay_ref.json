@@ -68,7 +68,7 @@
   "job": {
     "owner": "Codex:qdq-write-completion-split",
     "branch": "codex-qdq-write-completion-split",
-    "tag": "p1",
+    "tag": "p2",
     "views_to": "physical/ref_tile/qdq_wr_pay_ref/views",
     "record_to": "results/rtl/ref_tile/qdq_wr_pay_ref",
     "purpose": "Opt-in native candidate real SRAM payload leaf; snapshot+valid captured by distinct completion root. Parent slot unresolved, throughput must qualify actual native4 driver.",
@@ -90,5 +90,6 @@
     "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
   ],
   "recipe": 2,
-  "structural_change": "Remove snapshot FIFO/done counters/completion feedback to separate FIN root; PAY registers 65-bit post-write snapshot at WWQ edge"
+  "structural_change": "Remove snapshot FIFO/done counters/completion feedback to separate FIN root; PAY registers 65-bit post-write snapshot at WWQ edge; real balanced clock spine replaces CTS root to repair measured123.2ps boundary spread, no source/data edge change",
+  "clock": "spine"
 }
