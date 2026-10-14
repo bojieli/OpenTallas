@@ -5,7 +5,7 @@
   "rows": [
     {
       "element": "hfd_attn_half_hi",
-      "owner": "/root/hbm_quant_sfu_2240",
+      "owner": "/root/hbm_hc_norm",
       "snapshot_category": "needs redesign (no live job)",
       "die_used": true,
       "closed": false,
@@ -16,15 +16,18 @@
         "status": "CANCELLED",
         "text": "route bulk released (drive-resume disk cleanup, CANCELLED; MB before/after 2577 2577); kept 6_final.*, 5_2_route.odb, logs/reports/json"
       },
-      "successor_owner": "/root/hbm_die_repair_2240",
+      "successor_owner": "/root/hbm_hc_norm",
       "successor_source": "a95a4adfc",
       "status": "REAL_COMPONENT_RECEIPT_PARENT_GEOMETRY_OPEN",
       "geometry_owner": "/root/cluster_clock_delivery",
-      "proof": "Historicalcomponentreceiptstands; actualnativeattentionparent/sourcebindingandv13slot ownedattention+dielead, no parentclosure/cancellationcredit."
+      "proof": "Historicalcomponentreceiptstands; actualnativeattentionparent/sourcebindingandv13slot ownedattention+dielead, no parentclosure/cancellationcredit.",
+      "source_commit": "8c33fcd81653f46392b3e01048a0789241facca8",
+      "receipt_commit": "a95a4adfc53652b20bab9ccde6e88ddd3d9acf42",
+      "structural_next_action": "Audit actual native attention parent selection and half component binding; coordinate real v13 geometry with cluster_clock_delivery. Historical component geometry/SAT receipt does not qualify whole-parent CTS, pins, timing or signed M6 PORT grants."
     },
     {
       "element": "hfd_attn_half_lo",
-      "owner": "/root/hbm_quant_sfu_2240",
+      "owner": "/root/hbm_hc_norm",
       "snapshot_category": "needs redesign (no live job)",
       "die_used": true,
       "closed": false,
@@ -35,11 +38,14 @@
         "status": "REFUSED",
         "text": "route bulk released (drive-resume disk cleanup, REFUSED; MB before/after 1 1); kept 6_final.*, 5_2_route.odb, logs/reports/json"
       },
-      "successor_owner": "/root/hbm_die_repair_2240",
+      "successor_owner": "/root/hbm_hc_norm",
       "successor_source": "a95a4adfc",
       "status": "REAL_COMPONENT_RECEIPT_PARENT_GEOMETRY_OPEN",
       "geometry_owner": "/root/cluster_clock_delivery",
-      "proof": "Historicalcomponentreceiptstands; actualnativeattentionparent/sourcebindingandv13slot ownedattention+dielead, no parentclosure/cancellationcredit."
+      "proof": "Historicalcomponentreceiptstands; actualnativeattentionparent/sourcebindingandv13slot ownedattention+dielead, no parentclosure/cancellationcredit.",
+      "source_commit": "8c33fcd81653f46392b3e01048a0789241facca8",
+      "receipt_commit": "a95a4adfc53652b20bab9ccde6e88ddd3d9acf42",
+      "structural_next_action": "Audit actual native attention parent selection and half component binding; coordinate real v13 geometry with cluster_clock_delivery. Historical component geometry/SAT receipt does not qualify whole-parent CTS, pins, timing or signed M6 PORT grants."
     },
     {
       "element": "ot_hgi_qdq_wr",
@@ -54,7 +60,7 @@
         "status": "NEEDS_RTL",
         "text": "auto-react: no recipe; structural fix needed (noted in hgi-1010.log)"
       },
-      "successor_source": "ffd1a0692",
+      "successor_source": "bde6efa3e",
       "next_gate": "route TT>=0 FF>=0 DRC0; child lint; real insertion and per-pair reach after export",
       "behavior": {
         "exact_records": 8,
@@ -65,8 +71,8 @@
         "mutant2_wrong": 2898
       },
       "current_job": [
-        "qdq_wr_pay_ref-p3-94e699311",
-        "qdq_wr_fin_ref-f3-25308c5de"
+        "qdq_wr_pay_ref-p8-0f91720fa",
+        "qdq_wr_fin_ref-f6-c9ee48238"
       ],
       "source_commit": "85c81f4c29724a82d57342017f84e390c3313dcd",
       "status": "REAL_PAY_FIN_SPLIT_PARENT_PINS_OPEN",
@@ -86,7 +92,8 @@
         "drc": 0,
         "finishing": "automatic COMBO ECO; no hand variant"
       },
-      "proof": "Originalq8e NEEDS_RTL preserved. GenuinePAY+FIN snapshot/actualACKsplit nativephases61/487PASS184; FINf2all8ACKP216.2fails; FINf3/f4actualexportpending. PAYdaemonfinishingnohandvariant."
+      "proof": "FIN f6 actual routed P148.8/Q189.2, 1200 sinks, TT spread25.2, H191.1, flags[]; immutable f354 source. PAY f8 kept launch body p7 failed real GRT congestion1965 overflow; p8 same-outline Y pin spacing passed CTS4186/spread30.6 and route is live. Native bde actual SPAN1 phase61 exact32 records/13312 words184; phase487 and real faults live. Parent clock/reset/geometry/pair closure remains open.",
+      "structural_next_action": "Collect p8 routed pin export; if congestion or Q still fail, repair actual physical inlet/launch topology. Bind exact clean FIN/PAY source to parent; never inherit old CLOSED aliases."
     },
     {
       "element": "ot_hgi_su_ctlw",
@@ -120,7 +127,8 @@
       "actual_source_actions": [
         "CurrentSV microsequence successorproof ownedhc_norm, newdefaultoff FUSEDUSV source integration, no closedLQ8alias for nativeLQ10.",
         "VMowneractual4B2native_q extractedcontroller fixesstride8/modulo8andLQ10pointerwrap; realphase61/487actual2048sectors16384words pairproofsource64fced1f9 +drainsdb3, not full arithmeticSVhead/cache parent closure."
-      ]
+      ],
+      "structural_next_action": "HC/norm owner proves actual SV head/ROW_NORM production default-off USV selection; VM owner binds native LQ10 controller and full arithmetic/cache/CDC. Preserve CLOSED LQ8 constituent and original unselected slice variants; actual production source/master/native price/physical source topology remain independently open."
     },
     {
       "element": "ot_hgi_su_ctlw_slice",
@@ -154,7 +162,8 @@
       "actual_source_actions": [
         "CurrentSV microsequence successorproof ownedhc_norm, newdefaultoff FUSEDUSV source integration, no closedLQ8alias for nativeLQ10.",
         "VMowneractual4B2native_q extractedcontroller fixesstride8/modulo8andLQ10pointerwrap; realphase61/487actual2048sectors16384words pairproofsource64fced1f9 +drainsdb3, not full arithmeticSVhead/cache parent closure."
-      ]
+      ],
+      "structural_next_action": "HC/norm owner proves actual SV head/ROW_NORM production default-off USV selection; VM owner binds native LQ10 controller and full arithmetic/cache/CDC. Preserve CLOSED LQ8 constituent and original unselected slice variants; actual production source/master/native price/physical source topology remain independently open."
     },
     {
       "element": "hfd_sfu",
@@ -183,14 +192,16 @@
       "mapper_m1": "sfu_lane_map_ref-m1-b622c064c RUNNING OLD SOURCE; warm reset fails2 stale ld strobes",
       "mapper_m2": "routedTT+193.19FF+23.91DRC0, exact4096/mutant24552; collectpublicationpending; nativepin audit1outunregpass111q222.7; 26/657plannedpairsetupfails, allH100pass",
       "mapper_pin_next": "Separate103.68x54 nativepin slotrequest allmapped542W/raw541E/coeff1200N/terms487S; actualpinsnativebodyW. Closedm2stands.",
-      "successor_source": "fbc154dfd",
+      "successor_source": "994bb361d",
       "successor_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter",
       "status": "REAL_FOUR_ROOT_FROZEN_WORD_PROOF_NATIVE_CACHE_PARENT_OPEN",
-      "proof": "Actual16frozenarith+16mapper+realc12split BS1RET5 PASS39193checks1026emits192desc15090words+warmreset. Full276wheel4private roots modeled. MapperoneQ222.7/26setup-pair defects remain; actualnewpinfacecitation unassigned. Sharedcap0helper publicationpending; nativecache/ACK/watermark/price open."
+      "proof": "Actual frozen c12 BS1/RET5 full16-body proof PASS39193 checks/1026 emits/192 descriptors/15090 words and warm reset. All4 C2 CTS roots10852/10852/8767/8767, spread33.6\u201335.2 pass clock but reset418 fanout blocks selection. C3 reset-safe status masking exact5337 checks plus active async reset and real mask-removal mutant fail4310; four fresh CTS jobs live. Native bank seam533 checks/77 returns/78 commits and10-identity saturation tested; no full cache/ownership/price claim.",
+      "structural_next_action": "Collect C3 clock/reset results, partition actual mapper broadcast stages and qualify pin pairs. Bind source-exact native cache SRAM/ECC and committed ACK frontier. Bare bodies+controls+literal cache exceed bounded SW screen; compact cache requires actual descriptor/RTT/port/geography proof.",
+      "source_evidence_branch": "codex/sfu-native-quarter"
     },
     {
       "element": "ot_hbm_norm_engine_view",
-      "owner": "/root/hbm_quant_sfu_2240",
+      "owner": "/root/hbm_hc_norm",
       "snapshot_category": "flow failure (no live job)",
       "die_used": false,
       "closed": false,
@@ -206,7 +217,8 @@
       "successor_top": "ot_hbm_norm_split_view_g8pc",
       "status": "CANDIDATE_ONLY_NO_PRODUCTION_INSTANTIATION",
       "proof": "Normowner census:ot_hgi_fused_record.sv:7-21 ROW_NORM isSVmicrosequence;ne_* dedicatedengineportsunused; noactualgeneric/nativeinstantiation. g8pc mathgate4/645 exact+mutants doesnotadopt. ActualSV/head ROW_NORM source/master/gate requested fromSUVOPowner.",
-      "required_record_owner": "/root/hbm_idx_smmv_2240/suvop_collect"
+      "required_record_owner": "/root/hbm_hc_norm",
+      "structural_next_action": "Production ROW_NORM is an SV microsequence. Owner is proving explicit default-off FUSED USV source binding; standalone g8pc remains unbound candidate. No cancelled retirement or math-only alias."
     },
     {
       "element": "ot_hgi_qdq_q",
@@ -230,12 +242,13 @@
       "successor": "q8 four-leaf wires parent",
       "source": "9d9be7232",
       "native_successor": "343d86def ot_hgi_qdq_native_peer4 x4 actualendpoints/protected32CDC intoVM64fced1f9 group1",
-      "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet.",
-      "native_source": "62ed63ef6",
+      "native_gate": "Actual SPAN1 phase61 PASS184 cycles, 32 records and13312 exact words; phase487 and two real native fault jobs live. Captured-ACK previous ccdd phases184/183 remain independent historical proof.",
+      "native_source": "bde6efa3e",
       "status": "REAL_NATIVE_WORD_PRICE_PROOF_PARENT_GEOMETRY_OPEN",
-      "successor_source": "aaf4341d7",
-      "current_job": "qdq_core_fin_ref-n2-b415845f8",
-      "proof": "ffd WRSPLIT phases61/487 exact32records13312words184/168/all32clientVM+4recorddrains+2realmutants; aaf FRONTFAST3 phase61 PASS184. Assignedparent/productionCPresetreturnpeers/release/globalmirror remainopen."
+      "successor_source": "bde6efa3e",
+      "current_job": "CORE source3fba42011 CTS live; native bde phase487/mutants live; PAY p8 route live; FIN f6 routed pin-clean",
+      "proof": "Explicit14 roots per quarter retain decoder/LQ/ASM and three frontend entries plus CORE/PAY/FIN. CORE bde CTS4189/spread9.8 passes root but rawFIN occupancy/retire cone still4\u20135 levels. Distinct 3fba occupancy one-hot ring removes remaining carry with unchanged edge; control oracle and fresh CTS active. Old622.08x596.16 frame overlaps14 actual v13 attention children. Complete absolute slot, CP record/reset/return source and owned-parent price remain open.",
+      "structural_next_action": "Finish exact occupancy-ring oracle/native/gate, then actual CORE route P/Q audit. Assemble truthful child frames and raw clock/reset graph with die lead; measure complete owned parent rather than transplant direct184 price."
     },
     {
       "element": "ot_hgi_quant_wide",
@@ -251,21 +264,25 @@
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hgi_quant_wide_n-1dc0a88ca-tc-cl.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
-      "source_branch": "claude/hbm-quant-split-1013",
+      "source_branch": "codex/hbm-quant-sfu-2240",
       "open": "assignedpins/PG/cut<=.60/perpairL-H>=100; lgr/lgw signedM6PORT or newslot missing",
-      "structural_source": "c1080eae2",
+      "structural_source": "625507b68",
       "successor_children": [
-        "ot_hgi_qw_ovg:172.8x388.8 CTS5145TT534.4spread33.1",
-        "ot_hgi_qw_ovw:250.56x177.12 CTS4508TT474.8spread31.7",
-        "existing CLOSEDdecoder/lane"
+        "ot_hgi_qw_ovg",
+        "ot_hgi_qw_ovr",
+        "4x ot_hgi_qw_ovmeta",
+        "unchanged CLOSED decoder/RQ/WQ constituents"
       ],
-      "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
+      "slot_change_request": "Unselected alternative: no native slot or M6 PORT grant",
       "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL",
       "current_leaf_jobs": [
-        "qw_ovg_ref-s5-8b8bb5549 RUNNING",
-        "qw_ovw_ref-s1-8b8bb5549 RUNNING"
+        "qw_ovg_ref-s5-625507b68 CLOSED",
+        "qw_ovr_ref-r2-625507b68 CLOSED",
+        "qw_ovmeta_ref-r1-625507b68 CLOSED"
       ],
-      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved"
+      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved",
+      "latest_physical_evidence": "All three route views CLOSED but actual gather P194.2/Q243.7, RF reset Q382.8 and META count P201.4/sector P228.7 fail. Source-owned actual endpoint repair required.",
+      "structural_next_action": "Move META arithmetic to prior registered RF producer edge, expose pure capture META and local reset copies; repair actual gather control capture/launch. Prove whole WQ3 golden, faults, reset and unchanged price before new valid geometry gates."
     },
     {
       "element": "ot_hgi_quant_wide_h",
@@ -281,21 +298,25 @@
         "text": "deep release (fail, 0 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json"
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
-      "source_branch": "claude/hbm-quant-split-1013",
+      "source_branch": "codex/hbm-quant-sfu-2240",
       "open": "assignedpins/PG/cut<=.60/perpairL-H>=100; lgr/lgw signedM6PORT or newslot missing",
-      "structural_source": "c1080eae2",
+      "structural_source": "625507b68",
       "successor_children": [
-        "ot_hgi_qw_ovg:172.8x388.8 CTS5145TT534.4spread33.1",
-        "ot_hgi_qw_ovw:250.56x177.12 CTS4508TT474.8spread31.7",
-        "existing CLOSEDdecoder/lane"
+        "ot_hgi_qw_ovg",
+        "ot_hgi_qw_ovr",
+        "4x ot_hgi_qw_ovmeta",
+        "unchanged CLOSED decoder/RQ/WQ constituents"
       ],
-      "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
+      "slot_change_request": "Unselected alternative: no native slot or M6 PORT grant",
       "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL",
       "current_leaf_jobs": [
-        "qw_ovg_ref-s5-8b8bb5549 RUNNING",
-        "qw_ovw_ref-s1-8b8bb5549 RUNNING"
+        "qw_ovg_ref-s5-625507b68 CLOSED",
+        "qw_ovr_ref-r2-625507b68 CLOSED",
+        "qw_ovmeta_ref-r1-625507b68 CLOSED"
       ],
-      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved"
+      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved",
+      "latest_physical_evidence": "All three route views CLOSED but actual gather P194.2/Q243.7, RF reset Q382.8 and META count P201.4/sector P228.7 fail. Source-owned actual endpoint repair required.",
+      "structural_next_action": "Move META arithmetic to prior registered RF producer edge, expose pure capture META and local reset copies; repair actual gather control capture/launch. Prove whole WQ3 golden, faults, reset and unchanged price before new valid geometry gates."
     },
     {
       "element": "ot_hgi_quant_wide_ov",
@@ -311,35 +332,39 @@
         "text": "deep release (nearmiss, 0 MB): kept 5_2_route.odb, 6_final.*, objects/, src, receipt-referenced paths, logs/reports/json"
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
-      "source_branch": "claude/hbm-quant-split-1013",
+      "source_branch": "codex/hbm-quant-sfu-2240",
       "open": "assignedpins/PG/cut<=.60/perpairL-H>=100; lgr/lgw signedM6PORT or newslot missing",
-      "structural_source": "c1080eae2",
+      "structural_source": "625507b68",
       "successor_children": [
-        "ot_hgi_qw_ovg:172.8x388.8 CTS5145TT534.4spread33.1",
-        "ot_hgi_qw_ovw:250.56x177.12 CTS4508TT474.8spread31.7",
-        "existing CLOSEDdecoder/lane"
+        "ot_hgi_qw_ovg",
+        "ot_hgi_qw_ovr",
+        "4x ot_hgi_qw_ovmeta",
+        "unchanged CLOSED decoder/RQ/WQ constituents"
       ],
-      "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
+      "slot_change_request": "Unselected alternative: no native slot or M6 PORT grant",
       "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL",
       "current_leaf_jobs": [
-        "qw_ovg_ref-s5-8b8bb5549 RUNNING",
-        "qw_ovw_ref-s1-8b8bb5549 RUNNING"
+        "qw_ovg_ref-s5-625507b68 CLOSED",
+        "qw_ovr_ref-r2-625507b68 CLOSED",
+        "qw_ovmeta_ref-r1-625507b68 CLOSED"
       ],
       "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved",
       "structural_successor": {
-        "source": "17a539050",
+        "source": "625507b68",
         "composition": [
           "ovg",
           "ovr",
-          "4xovrow"
+          "4x ovmeta"
         ],
         "exact_words": 3328,
         "cycles": 184,
         "price": 168,
-        "status": "UNSELECTED_ALTERNATIVE_RF_ROW_CTS_ACTIVE",
+        "status": "UNSELECTED_ALTERNATIVE_CLOSED_LEAVES_ACTUAL_PIN_FAILURES",
         "parent_slot": "UNASSIGNED",
         "M6_PORT_grants": "PROVISIONAL_NO_SIGNED_GRANT"
-      }
+      },
+      "latest_physical_evidence": "All three route views CLOSED but actual gather P194.2/Q243.7, RF reset Q382.8 and META count P201.4/sector P228.7 fail. Source-owned actual endpoint repair required.",
+      "structural_next_action": "Move META arithmetic to prior registered RF producer edge, expose pure capture META and local reset copies; repair actual gather control capture/launch. Prove whole WQ3 golden, faults, reset and unchanged price before new valid geometry gates."
     },
     {
       "element": "ot_hgi_qw_ovd",
@@ -355,38 +380,41 @@
         "text": "deep release (fail, 0 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json"
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
-      "source_branch": "claude/hbm-quant-split-1013",
+      "source_branch": "codex/hbm-quant-sfu-2240",
       "open": "assignedpins/PG/cut<=.60/perpairL-H>=100; lgr/lgw signedM6PORT or newslot missing",
-      "structural_source": "c1080eae2",
+      "structural_source": "625507b68",
       "successor_children": [
-        "ot_hgi_qw_ovg:172.8x388.8 CTS5145TT534.4spread33.1",
-        "ot_hgi_qw_ovw:250.56x177.12 CTS4508TT474.8spread31.7",
-        "existing CLOSEDdecoder/lane"
+        "ot_hgi_qw_ovg",
+        "ot_hgi_qw_ovr",
+        "4x ot_hgi_qw_ovmeta",
+        "unchanged CLOSED decoder/RQ/WQ constituents"
       ],
-      "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
+      "slot_change_request": "Unselected alternative: no native slot or M6 PORT grant",
       "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL",
       "current_leaf_jobs": [
-        "qw_ovg_ref-s5-8b8bb5549 RUNNING",
-        "qw_ovw_ref-s1-8b8bb5549 RUNNING"
+        "qw_ovg_ref-s5-625507b68 CLOSED",
+        "qw_ovr_ref-r2-625507b68 CLOSED",
+        "qw_ovmeta_ref-r1-625507b68 CLOSED"
       ],
       "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved",
       "structural_successor": {
-        "source": "17a539050",
+        "source": "625507b68",
         "composition": [
           "ovg",
           "ovr",
-          "4xovrow"
+          "4x ovmeta"
         ],
         "exact_words": 3328,
         "cycles": 184,
         "price": 168,
-        "status": "UNSELECTED_ALTERNATIVE_RF_ROW_CTS_ACTIVE",
+        "status": "UNSELECTED_ALTERNATIVE_CLOSED_LEAVES_ACTUAL_PIN_FAILURES",
         "parent_slot": "UNASSIGNED",
         "M6_PORT_grants": "PROVISIONAL_NO_SIGNED_GRANT"
       },
       "selection_status": "UNSELECTED_WQ3_ALTERNATIVE_REQUIREDNESS_NOT_CANCELLED_AWAY",
       "latest_structural_source": "625507b68",
-      "latest_physical_evidence": "OVg/OVr/META allCLOSED but actualpin defects recorded13d961bf7; noadoption. LGR/LGW M5oldfacecuts>.60 unassignedunsignedM6PORT, preserveCLOSEDRQ/WQ constituents; requiretaller/private-root genuineproposal."
+      "latest_physical_evidence": "All three route views CLOSED but actual gather P194.2/Q243.7, RF reset Q382.8 and META count P201.4/sector P228.7 fail. Source-owned actual endpoint repair required.",
+      "structural_next_action": "Move META arithmetic to prior registered RF producer edge, expose pure capture META and local reset copies; repair actual gather control capture/launch. Prove whole WQ3 golden, faults, reset and unchanged price before new valid geometry gates."
     },
     {
       "element": "ot_hgi_qdq_q_pin4",
@@ -410,12 +438,13 @@
       "successor": "q8 four-leaf wires parent",
       "source": "9d9be7232",
       "native_successor": "343d86def ot_hgi_qdq_native_peer4 x4 actualendpoints/protected32CDC intoVM64fced1f9 group1",
-      "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet.",
-      "native_source": "62ed63ef6",
+      "native_gate": "Actual SPAN1 phase61 PASS184 cycles, 32 records and13312 exact words; phase487 and two real native fault jobs live. Captured-ACK previous ccdd phases184/183 remain independent historical proof.",
+      "native_source": "bde6efa3e",
       "status": "REAL_NATIVE_WORD_PRICE_PROOF_PARENT_GEOMETRY_OPEN",
-      "successor_source": "aaf4341d7",
-      "current_job": "qdq_core_fin_ref-n2-b415845f8",
-      "proof": "ffd WRSPLIT phases61/487 exact32records13312words184/168/all32clientVM+4recorddrains+2realmutants; aaf FRONTFAST3 phase61 PASS184. Assignedparent/productionCPresetreturnpeers/release/globalmirror remainopen."
+      "successor_source": "bde6efa3e",
+      "current_job": "CORE source3fba42011 CTS live; native bde phase487/mutants live; PAY p8 route live; FIN f6 routed pin-clean",
+      "proof": "Explicit14 roots per quarter retain decoder/LQ/ASM and three frontend entries plus CORE/PAY/FIN. CORE bde CTS4189/spread9.8 passes root but rawFIN occupancy/retire cone still4\u20135 levels. Distinct 3fba occupancy one-hot ring removes remaining carry with unchanged edge; control oracle and fresh CTS active. Old622.08x596.16 frame overlaps14 actual v13 attention children. Complete absolute slot, CP record/reset/return source and owned-parent price remain open.",
+      "structural_next_action": "Finish exact occupancy-ring oracle/native/gate, then actual CORE route P/Q audit. Assemble truthful child frames and raw clock/reset graph with die lead; measure complete owned parent rather than transplant direct184 price."
     },
     {
       "element": "ot_hgi_qw_lgr",
@@ -434,8 +463,11 @@
       "source_branch": "claude/hbm-quant-split-1013",
       "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding",
       "selection_status": "UNSELECTED_WQ3_ALTERNATIVE_REQUIREDNESS_NOT_CANCELLED_AWAY",
-      "latest_structural_source": "625507b68",
-      "latest_physical_evidence": "OVg/OVr/META allCLOSED but actualpin defects recorded13d961bf7; noadoption. LGR/LGW M5oldfacecuts>.60 unassignedunsignedM6PORT, preserveCLOSEDRQ/WQ constituents; requiretaller/private-root genuineproposal."
+      "latest_structural_source": "1433668d9",
+      "latest_physical_evidence": "OVg/OVr/META allCLOSED but actualpin defects recorded13d961bf7; noadoption. LGR/LGW M5oldfacecuts>.60 unassignedunsignedM6PORT, preserveCLOSEDRQ/WQ constituents; requiretaller/private-root genuineproposal.",
+      "source_path": "rtl/hbm_accel/generic/qw/ot_hgi_qw_lgr_roots.sv",
+      "proof": "Default-off source alternatives preserve two CLOSED RQ/WQ children and expose three actual roots. Combined six-case WQ3 campaign exact3328 words184/168, skew222, packet2319 and three real mutants observed fatal. Root estimates are not measured own-frame CTS. Old M5 facecuts .73/.75 fail .60; signed M6 grant absent.",
+      "structural_next_action": "Extract own-state frame around preserved CLOSED child rectangles; obtain real taller M5 slot, assign PG-aware pins/cuts and measure clock/root/P/Q/pairs. No invalid-envelope route."
     },
     {
       "element": "ot_hgi_qw_lgw",
@@ -454,8 +486,11 @@
       "source_branch": "claude/hbm-quant-split-1013",
       "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding",
       "selection_status": "UNSELECTED_WQ3_ALTERNATIVE_REQUIREDNESS_NOT_CANCELLED_AWAY",
-      "latest_structural_source": "625507b68",
-      "latest_physical_evidence": "OVg/OVr/META allCLOSED but actualpin defects recorded13d961bf7; noadoption. LGR/LGW M5oldfacecuts>.60 unassignedunsignedM6PORT, preserveCLOSEDRQ/WQ constituents; requiretaller/private-root genuineproposal."
+      "latest_structural_source": "fd3c5425e",
+      "latest_physical_evidence": "OVg/OVr/META allCLOSED but actualpin defects recorded13d961bf7; noadoption. LGR/LGW M5oldfacecuts>.60 unassignedunsignedM6PORT, preserveCLOSEDRQ/WQ constituents; requiretaller/private-root genuineproposal.",
+      "source_path": "rtl/hbm_accel/generic/qw/ot_hgi_qw_lgw_roots.sv",
+      "proof": "Default-off source alternatives preserve two CLOSED RQ/WQ children and expose three actual roots. Combined six-case WQ3 campaign exact3328 words184/168, skew222, packet2319 and three real mutants observed fatal. Root estimates are not measured own-frame CTS. Old M5 facecuts .73/.75 fail .60; signed M6 grant absent.",
+      "structural_next_action": "Extract own-state frame around preserved CLOSED child rectangles; obtain real taller M5 slot, assign PG-aware pins/cuts and measure clock/root/P/Q/pairs. No invalid-envelope route."
     },
     {
       "element": "ot_su12_sfu_lanex",
@@ -471,10 +506,12 @@
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hbm_sfu_lanex-1dcd1efb6-tc-cl.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
       },
       "current_master": "ot_su12_sfu",
-      "proof": "Actual16frozenarith+16mapper+realc12split BS1RET5 PASS39193checks1026emits192desc15090words+warmreset. Full276wheel4private roots modeled. MapperoneQ222.7/26setup-pair defects remain; actualnewpinfacecitation unassigned. Sharedcap0helper publicationpending; nativecache/ACK/watermark/price open.",
-      "successor_source": "fbc154dfd",
+      "proof": "Actual frozen c12 BS1/RET5 full16-body proof PASS39193 checks/1026 emits/192 descriptors/15090 words and warm reset. All4 C2 CTS roots10852/10852/8767/8767, spread33.6\u201335.2 pass clock but reset418 fanout blocks selection. C3 reset-safe status masking exact5337 checks plus active async reset and real mask-removal mutant fail4310; four fresh CTS jobs live. Native bank seam533 checks/77 returns/78 commits and10-identity saturation tested; no full cache/ownership/price claim.",
+      "successor_source": "994bb361d",
       "successor_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter",
-      "status": "REAL_FOUR_ROOT_FROZEN_WORD_PROOF_NATIVE_CACHE_PARENT_OPEN"
+      "status": "REAL_FOUR_ROOT_FROZEN_WORD_PROOF_NATIVE_CACHE_PARENT_OPEN",
+      "structural_next_action": "Collect C3 clock/reset results, partition actual mapper broadcast stages and qualify pin pairs. Bind source-exact native cache SRAM/ECC and committed ACK frontier. Bare bodies+controls+literal cache exceed bounded SW screen; compact cache requires actual descriptor/RTT/port/geography proof.",
+      "source_evidence_branch": "codex/sfu-native-quarter"
     },
     {
       "element": "ot_hgi_qw_ovw",
@@ -492,15 +529,15 @@
     }
   ],
   "notes": {
-    "qdq": "q8 four-leaf wires parent source 9d9be7232; fr/core/asm CLOSED. New write leaf q8e route submitted as qdq_wr_ref-q8e-85c81f4c2, source 85c81f4c2. Exact eight records and 3,328 words pass at unchanged 183/168 cycles; mutant2 detects 2,898 wrong words. Source-bound CTS PASS with 5,280 sinks, TT insertion 475.9 ps and spread 30.1 ps. Parent uses early trunk phase for R>300. Route closure, child lint and actual per-pair reach remain required; no physical qualification is claimed.",
-    "quant": "WQ3 wires-only split source 088e33d6d on claude/hbm-quant-split-1013: control leaf w1 is RUNNING and preserved; data leaf w2 failed GRT with about 17,000 markers concentrated at the SRAM west edge (x 25-100, y 50-125 um). Read-output fanout intersects gather input escape and macro obstructions. A separate gather leaf and result/write leaf is a structural candidate; no further route is claimed. Main ot_hgi_quant_unit selects WQ0 or WQ2 and does not bind WQ3. The current die uses qdq_q_pin4. Read/write lane-group leaves await a signed M6 PORT grant or approved slot change; provisional 31a02920b is not authorization. Aliases remain in coverage until actual composition is established.",
-    "sfu": "hfd_sfu remains required: four quarters over 64 CLOSED ot_su12_sfu lanes. The legacy rtl_tiled_r25gq envelope has 11,818 input bits, 11,863 output bits, an 8,257-bit f_lgW_rdn bus and negedge clock-root lockups. It does not prove native B2 quarter closure. Watermark integration source d27cf80e6 measured a synthetic 32-producer / 8-consumer pair: 186 SFU cycles versus price 120 (1.55x), which is not native eight-lane production qualification. Native quarter control, watermark source, physical reach and timing remain open. No old envelope route was launched.",
-    "ctlw": "Explicit successor source 7d0ad0538: SV=1 selects ot_hgi_sv_unit, containing sv_head, sixteen sv_lane2 leaves and sv_lmem. It replaces ctlw for the current SU.VOP redesign. Historical aliases remain recorded; the native physical and production gate belongs to suvop_collect and remains open.",
-    "attention": "native real-child components replace physical half routes, source a95a4adfc; generator half_v10 remains placeholder and die_repair_2240 owns phase geometry, no duplicate edits.",
-    "norm": "gtile8 CLOSED, g8p native parent child origins from actual365.04sq view available; actual parent contract slot absent; old norm monolith not silently removed.",
+    "qdq": "Current physical candidate has14 real roots and source bde production184 proof; CORE occupancy carry source3fba gate/oracle active, FIN f6 actual pin-clean, PAY p8 route active. Historical q8e failure and every earlier immutable proof remain.",
+    "quant": "Unselected WQ3 alternatives preserved; shared RF/META/gather routes CLOSED but actual exported endpoints fail. LGR/LGW genuine default-off clock exposure gold/mutants pass, own frames/cuts and native selection unassigned.",
+    "sfu": "Actual full276-horizon C2/C3 four-root successor proof retained; native cache/broadcast/mapper/ACK and physical parent remain open.",
+    "ctlw": "Historical monolithic/slice sources remain recorded. CLOSED LQ8 is preserved; actual native LQ10 controller and SV microsequence selection are separate source-bound successors under VM/HC owners.",
+    "attention": "Actual component8c33 receipt a95; HC/norm owns requiredness/native binding, cluster lead v13 geometry. No component-only parent closure.",
+    "norm": "HC/norm owns actual ROW_NORM SV production proof; g8pc standalone candidate remains unbound.",
     "structural_continuation_1014": "Original mapper m1 warm-reset fails; m2 repaired source cannot reuse its gate/view. OV split leaves distinct; unselected parent alternative remains unapproved."
   },
-  "update_source": "62ed63ef6",
+  "update_source": "3fba42011",
   "actual_native_quant": {
     "source": "62ed63ef6",
     "common_vm_source": "64fced1f9",
@@ -536,6 +573,24 @@
       "ratio": 1.0952380952380953
     },
     "old_span0_runs": "DIAGNOSTIC_NOT_ACTUAL_PHYSICAL_COMPOSITION",
-    "physical": "closed general FR preserved; fast+retire gates child-owned; new CORE/WR matching physicalviews required; peer CDC payload arrays unclosed; aperture release and quiet proof open"
+    "physical": "closed general FR preserved; fast+retire gates child-owned; new CORE/WR matching physicalviews required; peer CDC payload arrays unclosed; aperture release and quiet proof open",
+    "latest_candidate": {
+      "source": "bde6efa3e",
+      "SPANPIPE": 1,
+      "FASTFIN": 2,
+      "FRONTFAST": 3,
+      "WRSPLIT": 1,
+      "PAYBYPASS": 1,
+      "LEAFCLOCK": 1,
+      "phase61": {
+        "records": 32,
+        "words": 13312,
+        "cycles": 184,
+        "status": "PASS"
+      },
+      "phase487_mutants": "LIVE",
+      "next_core_source": "3fba42011",
+      "owned88_price": "192/168 FAIL; no direct-price inheritance"
+    }
   }
 }

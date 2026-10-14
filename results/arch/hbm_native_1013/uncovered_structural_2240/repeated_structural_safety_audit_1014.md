@@ -41,7 +41,7 @@ Current native quant proofs use four real q8 endpoints with production-record ve
 
 - `quant_sfu_actual_inventory.json`: complete source/body rectangles, clock/reset and open parent requirements.
 - `quant_leaf_clock_reset_abi.json`: exact14-root clock index and literal reset origins.
-- `../uncovered_2240_quant_sfu.json`: retained16-row ownership/requiredness matrix.
+- `../uncovered_2240_quant_sfu.json`: retained17-row ownership/requiredness matrix.
 - `results/arch/hbm_native_1013/qfront_1row/face_ff_final_report.json`: clean frontend actual P/Q, per-bit port inventory and deep-clock setup/hold windows.
 - `results/rtl/ref_tile/qdq_native_peer4/{wr_split_ffd,face_split_aaf,leaf_clocks_90,captured_ack_bypass_ccdd}/report.json`: distinct immutable native source proofs; the final report includes the185-cycle failing comparison.
 - `ov_shared_actual_pin_audit.json` and `ov_shared_actual_pin_report.json`: actual exported OV defects, including all failed bus classes.
@@ -52,3 +52,18 @@ Current native quant proofs use four real q8 endpoints with production-record ve
 SFU source-bound broadcast/cache frontier is additionally recorded in child commit`d52ad1e66`, `results/arch/hbm_native_1013/sfu_native_quarter/cache_extraction_boundary.json`; exact bit graph is `literal_source_pin_graph.json.gz`. A proposed alternative distributes existing four mapper registered stages geographically while retaining BCAST1/RET5, avoiding an assumed added-edge tree. It is an unimplemented source/clock/pin partition until its frozen oracle and real stage views pass.
 
 Next closure action is to finish actual FIN/PAY/CORE pin exports, preserve source-matched production prices after each real boundary change, and hand the resulting complete clock/reset/child graph to the die feasibility and owned-native vehicle owners. No leaf CLOSED count is reported as native parent closure.
+
+
+## Continuation evidence at approximately 06:05 PDT
+
+FINf6 source `f354e9c20`, route `qdq_wr_fin_ref-f6-c9ee48238`, now passes actual pin audit: P148.8 ps, Q189.2 ps, 1,200 sinks, TT spread25.2 ps, H191.1 µm and no flags. Its CLOSED route is TT+73.91/FF+24.96 ps, DRC0. This cures f5 raw snapshot-valid capture through the existing captured `s_v`; parent geometry and delivery remain open.
+
+PAYp7 preserved terminal GRT-0116 congestion with1,965 overflow despite42% total usage. The measured localization is mostly macro/interior and south escape; layer-region counts overlap and are not added as independent totals. P8 spreads captured512-bit Y south pins from73.6 µm over221 µm at0.432 µm pitch on the same outline/layers, preserving f8 logic and all edges. Its fresh CTS passes4,186 sinks, TT spread30.6, setup67.1/hold26.5 ps; `qdq_wr_pay_ref-p8-0f91720fa` route is live. No final output Q result is inferred from placement/gate.
+
+CORE `bde6efa3e` replaces head and finish counters with one-hot real state. Actual control oracle SPAN1/SPAN0 plus real dependency mutant pass/fail as intended; actual multi-hot head/finish corruption blocks issue, latches fault and recovers only through reset. Native phase61 passes32 records/13,312 exact words at184 cycles. Fresh CTS4,189 sinks/spread9.8 ps passes clock but rawFIN→occupancy/retire still has4–5 mapped levels. Source `3fba42011` replaces the remaining occupancy counter with an exact32-state ring and literal ready subset, retaining modulo wrap and edge count. Fresh oracle/corruption and CTS are active; this is not yet a route-qualified CORE.
+
+All4 SFU C2 CTS roots are measured10,852/10,852/8,767/8,767 with TT spreads33.6–35.2 ps; reset fanout418 remains a structural warning. C3 uses unreset local snapshots plus a reset-known mask and preserves all status edges. Actual active asynchronous reset and genuine mask-removal mutant fail4310 establish masking necessity; four C3 CTS gates are live. The full bank seam now checks10 outstanding identities separately from returned credits and delayed commits.
+
+The full failed ledger additionally assigns `ot_hgi_qw_ovw`; it is explicitly row17 in the matrix. Current source is real RF plus4 metadata leaves; `ot_hgi_qw_ovw_clocks` exposes5 literal roots. It is unselected and not physical closure. The architecture action moves metadata arithmetic onto the preceding registered RF producer edge and makes local reset copies, retaining the original edge count; actual whole-source proof and new pins are still required.
+
+SFU capacity is an architectural blocker: child `c6c68e31d` measures/request-censuses selected bodies+16mappers+compact4controls at1,274,744.56 µm². Literal four64K-word caches need at least32 actual1024×256 macros, raw394,054.71 µm², sum1,668,799.27 µm² before halos, ECC, ports, epochs, own control or PG. This exceeds the bounded~1.453 mm² southwest usable screen. A smaller window cannot be claimed until actual workload/RTT/coalescing/native ACK and SRAM port geography are proved.
