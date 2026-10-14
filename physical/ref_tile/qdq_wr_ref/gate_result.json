@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qdq_wr_ref",
- "verdict": "FAIL",
- "generated": "2026-10-13T22:47:31-0700",
- "host": "ot-agidock128",
+ "verdict": "PASS",
+ "generated": "2026-10-13T22:58:48-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "170fb09694ca3af4dc10f71bdb0472a31f113a59",
+  "start_commit": "d46e4d4a6fcc61f9f843eb1100e5a0dd119fe848",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "7ad715aea93ec995439adc41c40edec8cf99200f88dde66081c90b910bc989a1",
-  "manifest_sha256": "2b87207914af01f54f52aecd9ac4588b4914bbbd7b6aed7529d372fb25d7285c",
+  "archive_sha256": "27562628b76d5783783b13022f23ff459e550a688bdb2f180e561402d35d0425",
+  "manifest_sha256": "423118b6afae495405bb35553049f617a5b0661c2d6c26101f6aafa299a4e438",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.json",
@@ -16899,24 +16899,24 @@
    {
     "path": "physical/ref_tile/qdq_wr_ref/floorplan.json",
     "kind": "file",
-    "sha256": "d34c3d7235605757417fffb91d08eb029851814ab292b1539007743076fd151e",
-    "git_blob": "49da0cb9113bacea8b885a8832e6d626c3977639",
+    "sha256": "c3c0559b4f9cb6e7f19a3bf96fb2747046ec49eb4fe965f230d8ef3ecb1f4b58",
+    "git_blob": "822eeecc9540661c77f9924dd588e1c6308016e7",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qdq_wr_ref/job.json",
     "kind": "file",
-    "sha256": "996ca81e76ad5882a7425af872983d5492307555f0f150f5fb34d25b39287316",
-    "git_blob": "cf77824e22afb48ba22062aa144e15e61c008e55",
+    "sha256": "521b2153bc26859818935184fbafc60c476010265dc52099caabd7a92721173a",
+    "git_blob": "a5eac5e3ef3bc3af8078edca15f0397b9ffc9212",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qdq_wr_ref/kit.env",
     "kind": "file",
-    "sha256": "c83a0ad7f2940c42d91f1ccd321fde3727c96896e567767edb842737ef90a3c9",
-    "git_blob": "209ded26c6f5ea573ad9fc9ed303a532fe2e9eda",
+    "sha256": "05ebbd113409f76e610c709ce400dec800825dcec813bc70173acad3ee7be8cf",
+    "git_blob": "1758b8321a30271b8dc3fa912a3312a527c3fcfd",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17027,8 +17027,8 @@
    {
     "path": "physical/ref_tile/qdq_wr_ref/spec.json",
     "kind": "file",
-    "sha256": "b78f87dc2811035ac348fea9dcb59a121818a4fe0eeae496d3a5b1f90a08159e",
-    "git_blob": "ec5ea31a2576aca648faff1efcab1ffb26d79e02",
+    "sha256": "702cc3fc82e32b6572aa543d3f8a42ee3f4a512efd99f927f85f83960f581790",
+    "git_blob": "15f25adebd3470a58b773b45874b4c8e2e3c71e9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -84539,8 +84539,8 @@
    {
     "path": "tools/ref_tile/specs_hbmb2vm/qdq_wr_ref.json",
     "kind": "file",
-    "sha256": "46e044d76d4b96bd7dfaedfad88866dd4ebe4ae6b255faa261db5d2c27e42b29",
-    "git_blob": "8963c6e64e2688e24196d4187628fa9acc129991",
+    "sha256": "319774515203472502447348233c755a7992432bb393ac9e1ca7e36ba6a39221",
+    "git_blob": "ed88b7404d1c3204d0b85b5151494aa312b068d5",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -105745,11 +105745,11 @@
     "matches_provenance_commit": true
    }
   ],
-  "captured": "2026-10-13T22:45:51-0700",
-  "remote_script_sha256": "1473affdf3a361760e1befb1c563ef36fe9a29caa948efc02e4c5045c91ddde3",
+  "captured": "2026-10-13T22:49:21-0700",
+  "remote_script_sha256": "d62171a4fe0d5f089b09a316c6e65fdfd3e18d77f5873b7fc832d0583e0a1049",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qdq_wr_ref-20261013-224527",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qdq_wr_ref-20261013-224855",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -105757,50 +105757,59 @@
   ]
  },
  "clock": {
-  "max_root_sinks": null,
-  "root": null,
+  "max_root_sinks": 5280,
+  "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 475.9,
+  "tt_spread_ps": 30.1,
   "declared_clock": "spine",
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
-  "verdict": "UNKNOWN",
-  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+  "clock_measurements": [
+   {
+    "source": "clk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 1705,
+      "mean": 459.1,
+      "min": 448.0,
+      "max": 475.7
+     },
+     "all": {
+      "n": 5280,
+      "mean": 459.1,
+      "min": 445.8,
+      "max": 475.9
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 459.1,
+      "max_slew": 13.8,
+      "max_late": 7.4,
+      "pins": [
+       {
+        "pin": "u_od.g_tile[0].g_m0.u_m/clk",
+        "arr": 466.5,
+        "slew": 13.8,
+        "late": 7.4,
+        "net": "clkbuf_sp_L665_net"
+       }
+      ]
+     },
+     "macro_libs": 1
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
+  "verdict": "PASS",
+  "text": "5,280 sinks on the largest root <= 15,000; measured TT insertion 475.9 ps, leaf spread 30.1 ps"
  },
- "items": [
-  {
-   "severity": "WARN",
-   "check": "sources",
-   "message": "3 referenced file(s) do not exist: ['physical/dsrom_window_source/leaf_inhold.tcl', 'physical/dsrom_window_source/leaf_inhold_release.tcl', 'physical/dsrom_window_source/leaf_iohold.tcl']",
-   "fix": "commit them / fix the path"
-  },
-  {
-   "severity": "FAIL",
-   "check": "io_place",
-   "message": "IO placement failed: [ERROR PPL-0086] Pin group of size 32 was not assigned.",
-   "fix": "fix the pin plan / pin layers"
-  },
-  {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR PPL-0086] Pin group of size 32 was not assigned.",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
-  },
-  {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
-   "fix": ""
-  },
-  {
-   "severity": "WARN",
-   "check": "clock_rule",
-   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
-   "fix": "read the remote log (textbook lint line 'clock_roots')"
-  }
- ]
+ "items": []
 }
