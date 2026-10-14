@@ -103,7 +103,7 @@ module ot_hgi_b2_dma_mv #(
     output wire ser_k_fault,
     output wire [273:0] ser_vmr,
     input wire kv_c_rdy, kv_idle_w, kv_creq, kv_src, kv_done,
-    input wire [511:0] kv_kq, input wire [3:0] kv_wv, kv_wo,
+    input wire [31:0] kv_req_v, input wire [3:0] kv_wv, kv_wo,
     input wire [147:0] kv_wa, input wire [1023:0] kv_wd,
     output reg kc_v, output reg [14:0] kc_vs, kc_vst,
     output reg [31:0] kc_ds, kc_dst, output reg [17:0] kc_ns, output reg [19:0] kc_m,
@@ -669,7 +669,7 @@ module ot_hgi_b2_dma_mv #(
       if(!rn)wq_pending_push<=0;else wq_pending_push<=p3_v&&p3_fl&&p3_keep;
     always @(posedge clk)if(p3_v&&p3_fl&&p3_keep)begin wq_pending_slot<=p3_sl;wq_pending_dest<=p3_dsec;end
     wire [324:0] wq_push_data = {wq_pending_dest,db_strb[wq_pending_slot],db_dat[wq_pending_slot]};
-    ot_hgi_b2_dma_fifo #(.W(325), .DEPTH(16), .MACRO(0)) u_wq_mem(.clk(clk), .rst_n(rn),
+    ot_hgi_b2_dma_fifo #(.W(325), .DEPTH(16), .MACRO(0), .ESL(32)) u_wq_mem(.clk(clk), .rst_n(rn),
        .push(wq_pending_push), .wdata(wq_push_data), .pop(iss_kw || iss_vw), .hv(wq_hv), .head(wq_head), .ovf(wq_ovf));
     wire [59:0] cf_push_data = {r_k,q_rend[r_k],1'b0,rdd[r_k][4:0],q_ds[r_k],rsa[r_k][4:0],9'(q_by[r_k] >> sl2)};
     ot_hgi_b2_dma_fifo #(.W(60), .DEPTH(64), .MACRO(3)) u_cf_mem(.clk(clk), .rst_n(rn),
@@ -990,7 +990,7 @@ module ot_hgi_b2_dma_mv #(
                 for (integer b = 0; b < 32; b = b + 1) begin
                     if (SV != 0 && vr2r[b*257 + 256] && kv_idle) g_hv[b] <= 1'b1;     // KVW: the KV engine's responses are its own
                     g_cr[b] <= g_cr[b] + 6'(g_crp[b]) - 6'((r_go && !src_hbm && SV != 0 && rsa[r_k][9:5] == 5'(b)) ? 1 : 0)
-                               - 6'(kv_kq[b*16 + 15]);                // the KV engine's requests (hbm-fq/dma)
+                               - 6'(kv_req_v[b]);                // the KV engine's requests (hbm-fq/dma)
                 end
                 if (SV != 0 && g_dv) begin g_hv[g_di] <= 1'b0; g_busy[g_di] <= 1'b0; g_rr <= g_di + 5'd1; end
                 s_vr2q[511:0] <= '0;

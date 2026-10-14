@@ -89,6 +89,8 @@ module ot_hgi_b2_dma_q #(
     wire [337:0] ser_vmq;
     wire [273:0] ser_vmr;
     wire [36:0] ka;
+    wire [31:0] kc_req_valid;
+    for(genvar kr=0;kr<32;kr=kr+1)assign kc_req_valid[kr]=kc_kq[kr*16+15];
     wire [512:0] group_request;
     wire [342:0] mv_k_request; wire mv_k_ready; wire [257:0] mv_k_response;
     wire [337:0] fast_packet; wire packet_serial_owner; wire [273:0] packet_mover_return;
@@ -135,7 +137,7 @@ module ot_hgi_b2_dma_q #(
       .r_req_v(rv), .r_req_rdy({3'd0,r_req_rdy}), .r_req_addr(ra), .r_req_len(rl), .r_req_tag(rt), .r_req_we(rwe), .r_req_wdata(rwd), .r_req_wstrb(rws),
       .r_rsp_v({3'd0,r_rsp_v}), .r_rsp_we({3'd0,r_rsp_we}), .r_rsp_rdy(rrr), .r_rsp_tag({48'd0,r_rsp_tag}), .r_rsp_last({3'd0,r_rsp_last}), .r_rsp_data({768'd0,r_rsp_data}),
       .vr2q(group_request), .vr2r_ctrl(vr2r[8256:8224]), .vmq(fast_packet), .vmr(packet_mover_return), .wl(wl), .wl_done(wl_done),
-      .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_kq(kc_kq),
+      .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_req_v(kc_req_valid),
       .kv_wv(kc_wv), .kv_wo(kc_wo), .kv_wa(kc_wa), .kv_wd(kc_wd), .kc_v(kc_v), .kc_vs(kc_vs), .kc_vst(kc_vst), .kc_ds(kc_ds),
       .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .credit_source(credit_source), .kc_wrdy(kc_wrdy));
 `ifndef OT_B2_DMA_Q5_HARD
