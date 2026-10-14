@@ -1,0 +1,15 @@
+{
+  "gate_source": "6f6c9d816",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_xfifo_native-20261014-010028",
+  "classification": "Physical secondary CKD tree absent; generator ignored declared pre_cts_extra adapter. OT_SPINE_CTS_REST0 leaves CKD direct3364sinks and zeroBUF/INV. Clock periods833.333ps,1ps/1fF/1kohm units, sourceCLOCK tag0/noDATA,150ps source preserved. No unit/period or fake phase correction.",
+  "observed": {
+    "ckd_mean_ps": 9971.2,
+    "ckd_min_ps": 6904,
+    "ckd_max_ps": 11823.6,
+    "macro_slew_ps": 37678.9,
+    "setup_ps": -9727.5,
+    "hold_ps": -8822
+  },
+  "qualification": "Unqualified timing despite structural gate PASS. Preserve R for clocklead read-only receipts. New generator support f12c05ec2 must produce genuine both-root tree and fresh all-corner proof before route."
+}
