@@ -18,5 +18,9 @@ fi
  physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v "$RTL" \
  rtl/hbm_accel/generic/adapters/tb/smpub_parent/smpub_parent_reference.sv \
  rtl/hbm_accel/generic/adapters/tb/smpub_parent/tb_smpub_parent.sv > "$OUT/build.log" 2>&1
+set +e
 "$OUT/obj/Vtb_smpub_parent" > "$OUT/run.log" 2>&1
+bench_rc=$?
+set -e
 cat "$OUT/run.log"
+exit "$bench_rc"

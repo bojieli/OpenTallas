@@ -46,5 +46,17 @@
   "station_wire_reach_um": {
     "command_relay": 26.6
   },
-  "parent_pin_binding_status": "actual closed slice LEF positions extracted; station paths unqualified"
+  "parent_pin_binding_status": "actual closed slice LEF positions extracted; station paths unqualified",
+  "STREAM_target_words_per_cycle": 1,
+  "STREAM_budget_cycles_per_1024_words": 1126,
+  "STREAM_measured_cycles_per_1024_words": {
+    "fp32": 1059,
+    "bf16": 1059
+  },
+  "STREAM_ratio_to_ideal": 1.0341796875,
+  "MEM_measured_cycles_per_256_packets": {
+    "fp32": 293,
+    "bf16": 309
+  },
+  "throughput_scope": "publication station composition with matching external response traces, not whole SM MATVEC throughput"
 }

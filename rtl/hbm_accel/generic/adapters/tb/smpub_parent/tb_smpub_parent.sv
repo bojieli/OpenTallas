@@ -23,11 +23,11 @@ if(aq[c*338+337]) begin packets=packets+1;if(aq[c*338 +:338] !== bq[c*338 +:338]
 end
 if(av) words=words+1;
 end
-integer rows[32];integer left,seed=77,t;
+integer rows[32];integer left,seed=77,t,cmd_start,start_words,start_packets;
 initial begin
 repeat(3) @(negedge clk);rst_n=1;repeat(8) @(negedge clk);
 for(integer cmd=0;cmd<4;cmd=cmd+1) begin
-wait(ar);@(posedge clk);pub_space=(cmd%2)?2:1;pub_base=cmd*4096;pub_stride=128;pub_bf16=(cmd>=2);pub_v=1;
+wait(ar);@(posedge clk);cmd_start=cycle;start_words=words;start_packets=packets;pub_space=(cmd%2)?2:1;pub_base=cmd*4096;pub_stride=128;pub_bf16=(cmd>=2);pub_v=1;
 @(posedge clk);pub_v=0;repeat(12) @(posedge clk);
 for(integer sm=0;sm<32;sm=sm+1) rows[sm]=0;
 left=128;
@@ -42,6 +42,8 @@ end
 @(posedge clk);sm_rv=0;vmr='1;t=0;
 while(!ad && t<10000) begin @(posedge clk);t=t+1;end
 if(t>=10000 || af) $fatal(1,"timeout/fault cmd %0d",cmd);
+$display("PRODUCTION cmd=%0d space=%0d bf16=%0d cycles=%0d words=%0d packets=%0d",cmd,pub_space,pub_bf16,cycle-cmd_start,words-start_words,packets-start_packets);
+if(pub_space==2 && (words-start_words!=1024 || cycle-cmd_start>1126)) $fatal(1,"STREAM production budget: 1024words at 1word/cycle within10percent");
 repeat(12) @(posedge clk);
 end
 $display("PASS cycle exact production NSM32 NC8 NPC4 MEM/STREAM BF16 cycles=%0d packets=%0d words=%0d",cycle,packets,words);$finish;
