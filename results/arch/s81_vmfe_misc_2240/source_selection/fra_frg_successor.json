@@ -37,5 +37,10 @@
   "successor_state_bits": 546,
   "reset": "No reset: explicit payload relay registers; source and receiver control state reset in their leaves",
   "closed_successor_view": "physical/ref_tile/dsfd_vm_frm_m5/views",
-  "parent_native_qualification": "OPEN; this is source supersession proof, not parent clock/geometry closure"
+  "parent_native_qualification": "OPEN; this is source supersession proof, not parent clock/geometry closure",
+  "successor_instance_source_matches": [
+    "        dsfd_vm_frm u_m",
+    "        dsfd_vm_frm u_kl",
+    "        dsfd_vm_frm u_kr"
+  ]
 }
