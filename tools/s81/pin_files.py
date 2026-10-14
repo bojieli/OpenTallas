@@ -29,8 +29,15 @@ def parse_lef(text):
         sm = re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', body)
         w, h = float(sm.group(1)), float(sm.group(2))
         pins = []
-        for pm in re.finditer(r'PIN (\S+)\n.*?LAYER (\S+) ;\s*\n\s*RECT ([\d.\-]+) ([\d.\-]+) ([\d.\-]+) ([\d.\-]+) ;', body, re.S):
-            pins.append((pm.group(1), pm.group(2), tuple(float(pm.group(i)) for i in range(3, 7))))
+        # Search within each PIN block. A missing rectangle must never make a
+        # regex borrow the next pin's geometry, or scan every remaining pin.
+        markers = list(re.finditer(r'^\s*PIN\s+(\S+)\s*$', body, re.M))
+        for i, pm in enumerate(markers):
+            chunk = body[pm.end():markers[i+1].start() if i+1 < len(markers) else len(body)]
+            layer = re.search(r'\bLAYER\s+(\S+)\s*;', chunk)
+            rect = re.search(r'\bRECT\s+([\d.\-]+)\s+([\d.\-]+)\s+([\d.\-]+)\s+([\d.\-]+)\s*;', chunk)
+            if layer and rect:
+                pins.append((pm.group(1), layer.group(1), tuple(map(float, rect.groups()))))
         out[name] = (w, h, pins)
     return out
 
