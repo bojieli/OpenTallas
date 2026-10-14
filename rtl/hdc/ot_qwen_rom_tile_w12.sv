@@ -129,6 +129,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer XLOCAL = 0,
     parameter integer XMODE_EXPORT = 0,
     parameter integer XCONTEXT_EXPORT = 0,
+    parameter integer XADMIT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
@@ -184,6 +185,8 @@ module ot_qwen_rom_tile_logic_w12 #(
     input wire [31:0] vm_version,
     output wire [15:0] cx_xcontext,
     output wire [31:0] cx_xversion,
+    input wire accept_ack_toggle,accept_transport_fence,
+    output wire cx_accept_toggle,cx_admission_fault,
     output wire cx_op_accept,
     output wire cx_issue_last,
     output wire [15:0] cx_accepted_context,
@@ -213,12 +216,22 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire             go_i  = IREG ? go_q : ib_go;
     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
     wire me_ready;
+    wire go_core;
+    generate if (XADMIT != 0) begin:g_admission
+      ot_qwen_context_admission u_admit (.clk(clk),.rst_n(rst_n),.offer_go(go_i),
+       .core_ready(me_ready),.core_idle(cx_core_idle),.offered_identity(op_meta_i),
+       .accepted_identity({cx_accepted_version,cx_accepted_context}),
+       .accept_ack_toggle(accept_ack_toggle),.transport_fence(accept_transport_fence),
+       .core_go(go_core),.accept_toggle(cx_accept_toggle),.fault(cx_admission_fault));
+    end else begin:g_admission_unused
+      assign go_core=go_i;assign cx_accept_toggle=1'b0;assign cx_admission_fault=1'b0;
+    end endgenerate
     // Snapshot the post-IREG descriptor on the same edge that u_me accepts it.
     // Payload has no reset; cx_op_accept/context qualify its lifetime.
     generate if (XCONTEXT_EXPORT != 0) begin:g_accepted_ib
       reg [IBW-1:0] accepted_ib;
       always @(posedge clk)
-        if (rst_n && go_i && me_ready) accepted_ib <= ib_i;
+        if (rst_n && go_core && me_ready) accepted_ib <= ib_i;
       assign cx_accepted_ib = accepted_ib;
     end else begin:g_accepted_ib_unused
       assign cx_accepted_ib = {IBW{1'b0}};
@@ -289,7 +302,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
         .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX((XLOCAL != 0) ? TG : 0), .XADDR_FAST(XLOCAL != 0), .XMODE_EXPORT(XMODE_EXPORT), .XCONTEXT_EXPORT(XCONTEXT_EXPORT), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX), .LEXT(CEXT),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
-        .clk(clk), .rst_n(rst_n), .go(go_i), .ready(me_ready), .idle(cx_core_idle),
+        .clk(clk), .rst_n(rst_n), .go(go_core), .ready(me_ready), .idle(cx_core_idle),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
         .i_xbase(b_xbase), .i_xks(b_xks), .i_xjs(b_xjs), .i_xcs(b_xcs),
@@ -344,7 +357,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         ot_qwen_me_node_w12 #(.W(W), .WS(NREG), .TREE_LAT(TREE_LAT), .ANR(ANR)) u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va),
                                                .y(n_y), .vy(n_vy), .fault(node_fault));
     end endgenerate
-    assign fault = me_fault | node_fault;
+    assign fault = me_fault | node_fault | cx_admission_fault;
 
     function automatic [15:0] int8_bf16(input [7:0] code);   // == ot_qwen_w12_matvec_part int8_bf16
         reg [7:0] mag, norm;

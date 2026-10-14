@@ -1,0 +1,27 @@
+{
+  "status": "DEFAULT_OFF_ACTUAL_GO_GUARD_UNIT_LINT_ONLY_PENDING_FULL_PRODUCTION_ARITHMETIC",
+  "canonical_control": "ot_qwen_tile_ctl_tp8_ctx",
+  "parameter": "XADMIT=1 only newctl_ctx; historicaldefault0",
+  "event": "cx_accept_toggle changes on same go_core&&ready edge asacceptedIB/context/version",
+  "accepted_payload_hold": "go_core blocks whiletoggle!=accept_ack_toggle",
+  "duplicate_identity": "accepted context16/version32 compared againstpostIREG offeredidentity; suppressed until explicittransportfence",
+  "fence": "only no pendingACK, actualcx_core_idle, offeredgo_i0; otherwise stickyadmissionfault",
+  "extra_state_logical_FF": 3,
+  "extra_control_pin_bits": 4,
+  "clock_entries_added": 0,
+  "verified": [
+    "offerbeforeaccept",
+    "toggleexactedge andpauseimmediatelyafteraccept",
+    "heldGOthroughcompletion30CCedgesafterACK",
+    "acceptedpayloadholdlateACK",
+    "namespace reuseonlyexplicitfence",
+    "three mutants reject",
+    "parentBB lintPASS"
+  ],
+  "pending": [
+    "actualproduction heldGO/no-op/nativearithmetic proof",
+    "ACKclockfamily/registeredphysicalface",
+    "freshguardedCTScensus/assignedpins",
+    "allrecipientglobalacceptanddrain transportfence"
+  ]
+}

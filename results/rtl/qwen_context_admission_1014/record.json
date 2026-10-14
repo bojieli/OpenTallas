@@ -1,0 +1,22 @@
+{
+  "status": "ADMISSION_UNIT_PASS_ACTUAL_U_ME_ARITHMETIC_PENDING",
+  "cases": {
+    "positive": {
+      "exit": 0,
+      "source_sha256": "352417950f1b05ac03216cc2e6e2da3ab11bb2a8eeb7f3a5808791fefbca6cd1"
+    },
+    "duplicate_unguarded": {
+      "exit": 1,
+      "source_sha256": "6481095a1d50182168dbd78087ba0c6c73f21779d73767687050df6c74a1d836"
+    },
+    "pending_unguarded": {
+      "exit": 1,
+      "source_sha256": "d1ba37d8e0382821fef847dd925536490eab0275035a6b438e91b8810e310568"
+    },
+    "toggle_missing": {
+      "exit": 1,
+      "source_sha256": "96ca7e297fbe6c5f13534bc95d735166ce0fa6dad36f5a1e95a35690a7d3f97e"
+    }
+  },
+  "bench_sha256": "e02edd32415e1ec6c476bb02bfbec1cf449120c33aac00316d1114ea5beac311"
+}
