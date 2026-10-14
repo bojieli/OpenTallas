@@ -63,6 +63,9 @@ def main():
         return ('e' if dx > 0 else 'w') if abs(dx) >= abs(dy) else ('n' if dy > 0 else 's')
     lanes = []
     for name, chain in T['lane_chain'].items():
+        chain = sorted(chain, key=lambda c: c['visit'])
+        if [c['visit'] for c in chain] != list(range(len(chain))):
+            raise ValueError(f'{name}: lane visits are not contiguous')
         for i, c in enumerate(chain):
             if c['bay'] != a.bay: continue
             src, pl = name.split('>')
