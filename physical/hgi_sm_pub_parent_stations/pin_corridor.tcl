@@ -21,7 +21,7 @@ foreach bt [$cb getBTerms] {
   }
  }}
 }
-if {$minx eq "" || $cy eq ""} {error "SMPUB_CORRIDOR missing E-face group or pin box"}
+if {$minx eq "" || ![llength $centers]} {error "SMPUB_CORRIDOR missing E-face group or pin box"}
 set full [list [expr {$minx-$ph}] [expr {$miny-$ph}] $ex [expr {$maxy+$ph}]]
 lassign $full x0 y0 x1 y1
 set cuts {};set pieces {};set cursor $y0
