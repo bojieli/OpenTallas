@@ -41,6 +41,7 @@ module ot_hgi_coll_tkm_cluster #(
     input wire tile_ck29,
     input wire tile_ck30,
     input wire tile_ck31,
+    input wire buffer_ck,
     input wire packer_ck,
     input wire lane_ck0,
     input wire lane_ck1,
@@ -94,7 +95,7 @@ module ot_hgi_coll_tkm_cluster #(
     ot_hgi_coll_tkm_seq u_seq (
 `else
 `ifdef OT_TKM_LANE_SPLIT
-    ot_hgi_coll_tkm_seq_split #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_seq(.packer_clk(packer_ck),.lane_clk(lane_clk),
+    ot_hgi_coll_tkm_seq_split #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_seq(.buffer_clk(buffer_ck),.packer_clk(packer_ck),.lane_clk(lane_clk),
 `else
     ot_hgi_coll_tkm_seq #(.KMAX(KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .CAP(CAP), .MUT(MUT)) u_seq (
 `endif

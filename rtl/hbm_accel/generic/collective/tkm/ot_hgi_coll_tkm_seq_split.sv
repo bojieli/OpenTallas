@@ -17,6 +17,7 @@ module ot_hgi_coll_tkm_seq_split #(
     input wire [84*((KMAX+63)/64)-1:0] chain_tau,
     input wire [((KMAX+63)/64)-1:0] chain_busy,
     input wire [DEL-1:0] lane_clk,
+    input wire buffer_clk,
     input wire packer_clk,
     input  wire                 clk,
     input  wire                 rst_n,
@@ -52,6 +53,8 @@ module ot_hgi_coll_tkm_seq_split #(
  wire[DEL*8-1:0]hm,dn,occ,take;
  wire[DEL*2-1:0]hn;
  wire live;wire[82:0]tau;wire[7:0]g,gb;wire[15:0]pf;
+ wire bwv,brv,bresp;wire[9:0]bwa,bra;wire[339:0]bwd,brd;
+ ot_hgi_coll_tkm_buffer u_buffer(.clk(buffer_clk),.rst_n(rst_n),.w_v(bwv),.w_addr(bwa),.w_data(bwd),.r_v(brv),.r_addr(bra),.rd_v(bresp),.rd_data(brd));
  wire ps,pcv,plast,pempty;wire[339:0]pcell;wire[1:0]pslot;
  wire[12:0]pnout;wire[39:0]pob,prb;wire phr;wire[3:0]pq;wire[9:0]pl;
  ot_hgi_coll_tkm_packer #(.FW(FW),.MUT(MUT))u_packer(.clk(packer_clk),.rst_n(rst_n),
@@ -84,6 +87,7 @@ module ot_hgi_coll_tkm_seq_split #(
    .cfg_obase(cfg_obase),
    .cfg_rbase(cfg_rbase),
    .cfg_has_r(cfg_has_r),
+   .buf_w_v(bwv),.buf_w_addr(bwa),.buf_w_data(bwd),.buf_r_v(brv),.buf_r_addr(bra),.buf_rd_v(bresp),.buf_rd_data(brd),
    .w_v(w_v),.pack_empty(pempty),.pack_queued(pq),.pack_lines(pl),
    .pack_start(ps),.pack_cell_v(pcv),.pack_last(plast),.pack_cell(pcell),.pack_slot(pslot),
    .pack_nout(pnout),.pack_obase(pob),.pack_rbase(prb),.pack_has_r(phr),

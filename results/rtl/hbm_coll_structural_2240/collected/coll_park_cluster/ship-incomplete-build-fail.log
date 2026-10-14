@@ -1,0 +1,23 @@
+ot-run: ot-epyc1tb     admits   436 GB (avail 663, growth 118, headroom 64, waiters 0/0 GB) load 66/128 running 8 disk 846 GB 
+ot-run: ot-epyc4       admits   622 GB (avail 849, growth 161, headroom 48, waiters 0/0 GB) load 30/128 running 15 disk 1099 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/collparkcluster2240
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/collparkcluster2240
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1987834-1791969874 after 1 s
+%Error: Cannot find file containing module: 'rtl/lib/ot_rst_relay.sv'
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+        ... Looked in:
+             rtl/hbm_accel/generic/rtl/lib/ot_rst_relay.sv
+             rtl/hbm_accel/generic/rtl/lib/ot_rst_relay.sv.v
+             rtl/hbm_accel/generic/rtl/lib/ot_rst_relay.sv.sv
+             rtl/lib/ot_rst_relay.sv
+             rtl/lib/ot_rst_relay.sv.v
+             rtl/lib/ot_rst_relay.sv.sv
+             /srv/opentallas-scratch/codex/collparkcluster2240/exact/obj_pipe/rtl/lib/ot_rst_relay.sv
+             /srv/opentallas-scratch/codex/collparkcluster2240/exact/obj_pipe/rtl/lib/ot_rst_relay.sv.v
+             /srv/opentallas-scratch/codex/collparkcluster2240/exact/obj_pipe/rtl/lib/ot_rst_relay.sv.sv
+        ... With current working directory '/srv/opentallas-scratch/codex/collparkcluster2240'
+%Error: Cannot find file containing module: 'rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv'
+%Error: Cannot find file containing module: 'rtl/link/ot_link_afifo.sv'
+%Error: Exiting due to 3 error(s)
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1987834-1791969874): exit 2

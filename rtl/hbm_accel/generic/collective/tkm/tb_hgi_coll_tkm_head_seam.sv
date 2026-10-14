@@ -12,7 +12,7 @@ module tb_hgi_coll_tkm_head_seam;
  .lane_he(2720'b0),.lane_nv_mask(32'b0),.lane_hm(32'b0),.lane_dn(32'b0),.lane_occ(32'b0),
  .chain_up(340'b0),.chain_tau(84'b0),.chain_busy(1'b0),
  .cfg_n(12'd1),.cfg_k(13'd64),.cfg_g(8'd1),.cfg_gbase(8'd0),.cfg_pf(16'd1),.cfg_nout(13'd64),.cfg_obase(40'd0),.cfg_rbase(40'd0),.cfg_has_r(1'b0),
- .w_v(1'b0),.pack_empty(1'b1),.pack_queued(4'b0),.pack_lines(10'b0));
+ .buf_rd_v(1'b0),.buf_rd_data(340'b0),.w_v(1'b0),.pack_empty(1'b1),.pack_queued(4'b0),.pack_lines(10'b0));
  always @*begin
   heads=0;masks=0;epochs=0;hn=0;
   for(integer l=0;l<4;l=l+1)begin

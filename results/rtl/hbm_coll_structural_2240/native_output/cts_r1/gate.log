@@ -1,0 +1,20 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (native_control, native_write, done): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (clk, rst_n, start): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_tkm_native_output_ref2240_20261014-023004.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_tkm_native_output_ref2240_20261014-023004.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hbm_tkm_native_output_ref2240-20261014-023004
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 94 s (gate total 379 s)
+GATE INFO util: synthesized std area 5829 um2 + macros 0 in core 12131: util 48%
+GATE INFO textbook: WARN ot_hfd_tkm_native_output_leaf cells 45,119 flops 8,346 depth 413.4 ps util 0.4812 reach 67.7 um (0.8 s)
+GATE WARN textbook.high_fanout: net _81221_/Y (AND2x2_ASAP7_75t_R): 4,307 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 1 register->output bit(s) > 3 levels (worst u_codec.outstanding[11]$_DFF_PN0_->busy 5 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE INFO cts_calibration: ss insertion all 246.4..258.3 ps (spread 11.9), boundary mean 252.3; tt insertion all 188.0..199.0 ps (spread 11.0), boundary mean 193.6; ff insertion all 152.5..163.1 ps (spread 10.6), boundary mean 158.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.520 vs spec PD 0.52
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_tkm_native_output_ref2240/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      460 paths, worst slack 84.6 ps (e.g. u_pack.lq_d[3][238]$_DFFE_PP_/D)
+GATE INFO path_classes: in->reg         4 paths, worst slack 405.9 ps (e.g. u_pack.u_rr.rst_n$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 8.46186454239728e-11 hold WNS 2.6693952603906723e-11
+GATE INFO clock_rule: root port:clk: 8,346 sinks on the largest root <= 15,000; measured TT insertion 199.0 ps, leaf spread 11.0 ps
+PRE_ROUTE_GATE: WARN (0 fail, 2 warn)
+GATE: hbm_tkm_native_output_ref2240/gate_result.json written (exact staged source binding; commit it with the kit)
