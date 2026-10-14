@@ -1,5 +1,5 @@
 {
- "name": "hgi_xp_aq-r0-0ee901d5a",
+ "name": "hgi_xp_aq-r0-COMMIT",
  "block": "ot_hdc_actquant",
  "ref_tile": true,
  "owner": "Claude:el1013-hbm-redesign-smmv",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-redesign-smmv",
-  "commit": "0ee901d5a05b3333d0f5778fd1edb4e0a4c797d9",
+  "commit": "COMMIT",
   "extra_paths": [
    "results/arch/hgi_sim_20261010/g25_proof",
    "results/rtl/dshbm_1m_allmeasured_20261004",
@@ -112,7 +112,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_xp_aq/hgi_xp_aq-r0-0ee901d5a"
+   "to": "results/rtl/ref_tile/hgi_xp_aq/hgi_xp_aq-r0-COMMIT"
   }
  ],
  "cycles_added": 0,
