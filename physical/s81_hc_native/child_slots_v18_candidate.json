@@ -143,7 +143,7 @@
       "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_ccf.json",
       "clock_delivery": null,
       "target_insertion_ps": 640.2,
-      "submit_gate": "WAIT actual fresh source gate, internal hold, full external peer and source/clock contract, routed views",
+      "submit_gate": "WAIT actual complete external family, source/clock/reset contract and routed view; intrinsic source gate now passed",
       "provisional_measured_clock_delivery": {
         "tt": {
           "phi_minus_R_ps": -640.2,
@@ -167,10 +167,10 @@
           "spread_ps": 27.9
         }
       },
-      "provisional_source_commit": "e0cae3a4a",
+      "provisional_source_commit": "16ee5be7a",
       "route_admission": false,
       "current_physical_source_commit": "16ee5be7a",
-      "current_physical_gate": "ot-epyc4:.../s81hc_ccfh2_ref-20261014-014144 live54337"
+      "current_physical_gate": "ot-epyc4:.../s81hc_ccfh2_ref-20261014-014144 terminal WARN; intrinsic setup/hold/pins PASS; external source unresolved"
     },
     {
       "name": "sp_hc_s/comb/u_pd.u_f5r1",
@@ -778,8 +778,8 @@
   ],
   "parent_source": "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_hc_comb_native.sv",
   "parent_source_sha256": "6a0c1133557d594905354f24a1905c26417ad6ef272507de17a58400d41ae22c",
-  "open_seams_source": "results/rtl/s81_suhc_20261013/native_repack_v7_v9/milp_r0_headroom_candidate_seams.json",
-  "status": "PROPOSED_REPACK_NOT_ADMITTED: 78 actual internal seams pass setup>=76.0 hold>=35.3; actual external full family/source/clock/reset and routed views remain",
+  "open_seams_source": "results/rtl/s81_suhc_20261013/native_source_graph_1014/conservative_bus_screen.json",
+  "status": "PROPOSED_REPACK_NOT_ADMITTED: all13413actual internal bits accounted;13411timed bits pass90.8847setup/31.0819hold, constant/unused proof2bits; actual external source/clock/reset and routed views remain",
   "actual_family_binding": "results/rtl/s81_suhc_20261013/native_repack_v7_v9/actual_family_and_clock_binding.json",
   "geometry_delta_vs_assigned": {
     "height_um": 23.76,
@@ -794,5 +794,20 @@
     "height_um": 200.24,
     "area_um2": 115336.638,
     "area_percent": 31.28749999999998
-  }
+  },
+  "actual_elaborated_source_graph": "results/rtl/s81_suhc_20261013/native_source_graph_1014/source_joins.json",
+  "actual_source_bit_screen": "results/rtl/s81_suhc_20261013/native_source_graph_1014/actual_bit_screen/summary.json",
+  "actual_elaborated_internal_timing": {
+    "internal_bus_joins": 74,
+    "actual_bits": 13413,
+    "timed_bits": 13411,
+    "actual_constant_launch_bits": 1,
+    "actual_unused_capture_bits": 1,
+    "unresolved_bits": 0,
+    "fail_bits": 0,
+    "min_setup_ps": 90.8847,
+    "min_hold_ps": 31.0819,
+    "clock_source_relation_scope": "conditional commonPhi request, actual producer/source net binding remains pending"
+  },
+  "hc_reset_clock_consumer_request": "results/arch/s81_hc_native_source_request_1014/hc_reset_clock_consumer_request.json"
 }
