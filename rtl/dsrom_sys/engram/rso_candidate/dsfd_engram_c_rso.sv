@@ -60,12 +60,15 @@ module dsfd_engram_c_rso #(
     output wire [34:0]   t_hq,
     input  wire [264:0]  f_hr
 ,
-    output wire rso
+    output wire rso,
+    // Native binder synchronizes each genuine source before reducing it.
+    output wire [13:0] rso_contributors
 );
     localparam integer NSLOT = 8, SLW = 3;
     wire [5:0] child_rso;
     wire [13:0] release_states = {child_rso, rst_sink_n, rst_lkp_n, rst_pb2_n,
         rst_pb0_n, rst_pb1_n, rst_ws_n, rst_io_n, rst_win_n};
+    assign rso_contributors = release_states;
 `ifdef OT_ENGC_RSO_MUT_MISSING_PB2
     assign rso = &release_states[12:0]; // negative control: misses genuine final PB2 release
 `else

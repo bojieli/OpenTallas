@@ -1,11 +1,11 @@
 {
   "schema": "opentallas.s81.engram.optionA.source_joins.v1",
   "admission": false,
-  "source_commit": "6b3b8b925dc4cd12d6777df904e420222688fc27",
+  "source_commit": "980d05e1e",
   "parent_module": "dsfd_engram_c_rso",
   "parent_source": "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv",
   "source_sha256": {
-    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "311b9999665ce2e50b81e534f4e229e959ec61581d6f8b2560542393f0d05061",
+    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "7605ac10fd510a3694405df6f220f0235312a2354cf70caf7fdd329e08cfa85c",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_engine_adapter_rso.sv": "5ac1b628eff55eb35e480ea29255b5c5547b58eb6f80b3f5f50c33a2db52b584",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso.sv": "1f92e6dfc8327ec8612a1ea7bb9ec7cc15ce167424cecf0cf497600ccb698d2c",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_slab_ep_rso.sv": "598ae0b5912fac55018c48f92a22d8acc5164411aca3d117233cb178c830f9ed",
@@ -23,7 +23,7 @@
     "rtl/dsrom_sys/engram/tiles/ot_engc_pbank.sv": "e6956a55e008f12d2df42bd1d44b92a78dbe26378405bbfb2977dc63709b5194",
     "rtl/dsrom_sys/engram/dsfd_engram_c.sv": "906adc894c9764ac7f0821d8f2db98177bb1e0c795214ce1f87fc7751ccdafc3",
     "physical/s81_engc_tiles/compose/ck_entry_place.tcl": "cfdd4431e90128109b70ae6009cba14204ada726a1ac75071e716ccfbeb0c06f",
-    "rtl/dsrom_sys/engram/rso_candidate/manifest.json": "58832054a93808d610d26bb35551e22e26e66b01d5376ab9b0b3606824a1d720",
+    "rtl/dsrom_sys/engram/rso_candidate/manifest.json": "86f6e628ada505a708ed1ac2e70ec4c41821f1351187a5e09bfd6d51b827c43b",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_pbank_rso_xt.sv": "9e95aee176bc7466b5d8cdde1b16e0231fd0aa0e70ef76533b099129af51bbdc"
   },
   "source_only": true,
@@ -5994,5 +5994,27 @@
     "parent ordinary ownstate has no native leaf slots",
     "native actual clock/reset producer physical driver/phase proof",
     "native per-bit slot pin assignment and loaded paired endpoint closure"
-  ]
+  ],
+  "optional_parent_contributor_vector": {
+    "port": "rso_contributors[13:0]",
+    "latency_change": 0,
+    "bits": {
+      "0": "rst_win_n",
+      "1": "rst_io_n",
+      "2": "rst_ws_n",
+      "3": "rst_pb1_n",
+      "4": "rst_pb0_n",
+      "5": "rst_pb2_n",
+      "6": "rst_lkp_n",
+      "7": "rst_sink_n",
+      "8": "u_win.rso",
+      "9": "u_io.rso",
+      "10": "u_ws.rso",
+      "11": "u_pb1.rso",
+      "12": "u_pb0.rso",
+      "13": "u_pb2.rso"
+    },
+    "consumer_contract": "Native consumer synchronizes every genuine contributor separately before reduction. Scalar rso retained for current source proof; aggregate is not a multi-source CDC proof.",
+    "native_physical_phase_binding": null
+  }
 }

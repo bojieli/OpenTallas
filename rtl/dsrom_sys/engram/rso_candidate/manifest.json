@@ -15,7 +15,7 @@
     "rtl/dsrom_sys/engram/dsfd_engram_c.sv": "906adc894c9764ac7f0821d8f2db98177bb1e0c795214ce1f87fc7751ccdafc3"
   },
   "new_source_sha256": {
-    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "311b9999665ce2e50b81e534f4e229e959ec61581d6f8b2560542393f0d05061",
+    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "7605ac10fd510a3694405df6f220f0235312a2354cf70caf7fdd329e08cfa85c",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_engine_adapter_rso.sv": "5ac1b628eff55eb35e480ea29255b5c5547b58eb6f80b3f5f50c33a2db52b584",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso.sv": "1f92e6dfc8327ec8612a1ea7bb9ec7cc15ce167424cecf0cf497600ccb698d2c",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_slab_ep_rso.sv": "598ae0b5912fac55018c48f92a22d8acc5164411aca3d117233cb178c830f9ed",
@@ -146,5 +146,27 @@
       "strict_pocket_lint": "PASS",
       "native_admission": false
     }
+  },
+  "optional_parent_contributor_vector": {
+    "port": "rso_contributors[13:0]",
+    "latency_change": 0,
+    "bits": {
+      "0": "rst_win_n",
+      "1": "rst_io_n",
+      "2": "rst_ws_n",
+      "3": "rst_pb1_n",
+      "4": "rst_pb0_n",
+      "5": "rst_pb2_n",
+      "6": "rst_lkp_n",
+      "7": "rst_sink_n",
+      "8": "u_win.rso",
+      "9": "u_io.rso",
+      "10": "u_ws.rso",
+      "11": "u_pb1.rso",
+      "12": "u_pb0.rso",
+      "13": "u_pb2.rso"
+    },
+    "consumer_contract": "Native consumer synchronizes every genuine contributor separately before reduction. Scalar rso retained for current source proof; aggregate is not a multi-source CDC proof.",
+    "native_physical_phase_binding": null
   }
 }
