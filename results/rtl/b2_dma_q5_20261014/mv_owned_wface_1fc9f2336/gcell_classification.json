@@ -1,0 +1,42 @@
+{
+ "source_job": "b2_dma_mv_owned_wface_ref-owned-wface-4d78e250b",
+ "checkpoint": "5_1_grt-failed.odb",
+ "type": "rawOpenDB gcellcapacity/usage; bytequantization can differ from exactGRT reporting",
+ "reported_total_overflow": 296,
+ "raw_layers": {
+  "M3": {
+   "cells": 40,
+   "raw_overflow": 40.0,
+   "xmin": 0.0,
+   "xmax": 22.8,
+   "ymin": 84.93,
+   "ymax": 164.16,
+   "west_WQ_channel_overflow": 39.0
+  },
+  "M4": {
+   "cells": 218,
+   "raw_overflow": 220.0,
+   "xmin": 23.37,
+   "xmax": 237.12,
+   "ymin": 86.64,
+   "ymax": 162.45,
+   "west_WQ_channel_overflow": 0
+  },
+  "M5": {
+   "cells": 33,
+   "raw_overflow": 34.0,
+   "xmin": 0.57,
+   "xmax": 272.46,
+   "ymin": 26.22,
+   "ymax": 164.16,
+   "west_WQ_channel_overflow": 18.0
+  }
+ },
+ "WQmacro_bbox_um": [
+  23.328,
+  86.4,
+  194.616,
+  164.16
+ ],
+ "west_channel_width_um": 23.328
+}
