@@ -4,7 +4,8 @@
     gen_gather_cl_stim.py real <seed> <out> --trace trace.json --layer L     the REAL field order of one layer: every
         root's partial stream of every phase (tools/s81_ph/root_open_rows.py --trace-regions all)
     gen_gather_cl_stim.py stress <seed> <out>     every root: random rows / tree cuts, <= 4 rows open (S = 8)
-    gen_gather_cl_stim.py ovf <seed> <out>        root 37: 9 rows open at once (capacity fault), the others quiet rows
+    gen_gather_cl_stim.py ovf <seed> <out>        root 37: S + 1 rows open at once (capacity fault), the others quiet rows
+    gen_gather_cl_stim.py refuse <seed> <out>     one root never returns a row (coverage refusal)
 
   P <phase>                           phase word (VM) + fld descriptor
   C <gap> <root> <tag> <data> <e>     gap 0 = same cycle as the previous C
@@ -27,7 +28,7 @@ def emit(f, rng, ph, ev):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("case"); ap.add_argument("seed", type=int); ap.add_argument("out")
-    ap.add_argument("--trace"); ap.add_argument("--layer")
+    ap.add_argument("--trace"); ap.add_argument("--layer"); ap.add_argument("--S", type=int, default=16)
     a = ap.parse_args()
     rng = random.Random(a.seed)
     with open(a.out, "w") as f:
@@ -66,9 +67,13 @@ def main():
                         ev.append((t, r, tg))
                 emit(f, rng, ph + 1, ev)
         elif a.case == "ovf":
-            ev = [(i, 37, G.tag(0, 256 * i + 74, 0, 0, 2)) for i in range(9)]
-            ev += [(80 + i, 37, G.tag(0, 256 * i + 74, 1, 0, 2)) for i in range(9)]
+            n = a.S + 1                                   # S + 1 rows open at once at root 37
+            ev = [(i, 37, G.tag(0, 256 * i + 74, 0, 0, 2)) for i in range(n)]
+            ev += [(80 + i, 37, G.tag(0, 256 * i + 74, 1, 0, 2)) for i in range(n)]
             ev += [(5 + r % 7, r, G.tag(0, 2 * r, 0, 0, 1)) for r in range(128) if r != 37]
+            emit(f, rng, 1, ev)
+        elif a.case == "refuse":                          # root 5 never returns a row: +NEED=1 must REFUSE the pass
+            ev = [(5 + r % 7, r, G.tag(0, 2 * r, 0, 0, 1)) for r in range(128) if r != 5]
             emit(f, rng, 1, ev)
         else:
             raise SystemExit(a.case)

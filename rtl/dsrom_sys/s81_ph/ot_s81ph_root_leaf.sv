@@ -87,6 +87,11 @@ module ot_s81ph_root_leaf #(
     end endgenerate
 endmodule
 
+// open-row slots per root of the hardened cells: 16 (coordinator rule 10-13: real field-order bound <= 8 -> S = 16;
+// measured bound 4, production binding d9f84be9, 40 layers); +define+S81PH_GTH_S=8 builds the 256 x 34 store
+`ifndef S81PH_GTH_S
+`define S81PH_GTH_S 16
+`endif
 // the two hardened cells (same RTL; W-fed and E-fed pin plans)
 module dsfd_gth_rw (
     input wire ck, input wire rs, output wire rso,
@@ -98,7 +103,7 @@ module dsfd_gth_rw (
 `else
     localparam integer MEM = 1;
 `endif
-    ot_s81ph_root_leaf #(.NRT(4), .NLT(12), .NCI(12), .S(8), .SRAM(MEM)) u_l (.ck(ck), .rs(rs), .rso(rso), .li(li), .lo(lo),
+    ot_s81ph_root_leaf #(.NRT(4), .NLT(12), .NCI(12), .S(`S81PH_GTH_S), .SRAM(MEM)) u_l (.ck(ck), .rs(rs), .rso(rso), .li(li), .lo(lo),
         .ci(ci), .co(co), .fi(fi), .fo(fo));
 endmodule
 module dsfd_gth_re (
@@ -111,6 +116,6 @@ module dsfd_gth_re (
 `else
     localparam integer MEM = 1;
 `endif
-    ot_s81ph_root_leaf #(.NRT(4), .NLT(12), .NCI(12), .S(8), .SRAM(MEM)) u_l (.ck(ck), .rs(rs), .rso(rso), .li(li), .lo(lo),
+    ot_s81ph_root_leaf #(.NRT(4), .NLT(12), .NCI(12), .S(`S81PH_GTH_S), .SRAM(MEM)) u_l (.ck(ck), .rs(rs), .rso(rso), .li(li), .lo(lo),
         .ci(ci), .co(co), .fi(fi), .fo(fo));
 endmodule

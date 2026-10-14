@@ -25,12 +25,13 @@ FILES="$SRC/rtl/lib/ot_reset_sync.sv $SRC/rtl/lib/ot_async_fifo.sv $SRC/rtl/comm
 python3 $SRC/tools/s81_ph/gen_gather_cl.py --check || { echo "GATHER_CL_GATE FAIL generated cluster top is stale" | tee $OUT/verdicts.log; exit 1; }
 sha256sum $FILES $P/test/gen_gather_cl_stim.py $P/test/gen_root_stim.py $TRACE > $OUT/sources.sha256
 G="python3 $P/test/gen_gather_cl_stim.py"
-$G stress 3 $OUT/stress.txt; $G ovf 3 $OUT/ovf.txt
+SS=${SS:-16}; [ "$SS" = 16 ] && SDEF="" || SDEF="+define+S81PH_GTH_S=$SS"
+$G stress 3 $OUT/stress.txt; $G ovf 3 $OUT/ovf.txt --S $SS; $G refuse 3 $OUT/refuse.txt
 REAL=""
 if [ -n "$TRACE" ]; then for L in $LAYERS; do $G real 0 $OUT/real_L$L.txt --trace $TRACE --layer $L && REAL="$REAL real_L$L"; done; fi
 build() {
   $VL --binary --timing -j $J -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT --unroll-count 64 -CFLAGS -O1 \
-      +define+S81PH_GTH_CL_NAME=dsfd_sp_gather_c_cl --top-module tb_s81ph_gather_cl $2 --Mdir $OUT/obj_$1 -o sim $FILES > $OUT/build_$1.log 2>&1
+      +define+S81PH_GTH_CL_NAME=dsfd_sp_gather_c_cl $SDEF --top-module tb_s81ph_gather_cl $2 --Mdir $OUT/obj_$1 -o sim $FILES > $OUT/build_$1.log 2>&1
 }
 run() { # mode case expect need want
   $OUT/obj_$1/sim +STIM=$OUT/$2.txt +EXPECT=$3 +NEED=$4 > $OUT/run_$1_$2.log 2>&1
@@ -49,7 +50,7 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
   for m in $MODES; do
     case $m in
       base) for c in $REAL; do run base $c 0 1 PASS & done; run base stress 0 1 PASS & run base ovf 1 0 PASS &
-            cp $OUT/ovf.txt $OUT/refuse.txt; run base refuse 1 1 REFUSED & ;;
+            run base refuse 0 1 REFUSED & ;;
       ovf)  run ovf ovf 1 0 FAIL & ;;
       *)    run $m $FIRST 0 0 FAIL & ;;
     esac
