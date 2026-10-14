@@ -784,5 +784,38 @@
     "shared_allocator": "native_dispatch sole epoch16",
     "transport_status": "CTRL epoch230:245/valid246 variant pending",
     "end_to_end_execution_status": "native_dispatch actual engine binding pending"
+  },
+  "warm_service_candidate": {
+    "source_revision": "892bc0c9c",
+    "ENABLE_SERVICE": 0,
+    "default_off": true,
+    "guard": {
+      "master": "qkd_host_service_guard",
+      "flop_bits": 12594,
+      "port_bits": 480,
+      "clock_entry": "ck_guard"
+    },
+    "alternatives": [
+      {
+        "master": "qkd_host_ctl_service_pins",
+        "flop_bits": 2260,
+        "alternative_to": "qkd_host_ctl_pins"
+      },
+      {
+        "master": "qkd_host_csr_service_pins",
+        "flop_bits": 1387,
+        "alternative_to": "qkd_host_csr_pins"
+      },
+      {
+        "master": "qkd_host_ctrl_service_packet",
+        "flop_bits": 5851,
+        "alternative_to": "qkd_host_ctrl_packet"
+      }
+    ],
+    "outline_status": "PENDING_MAPPED_AREA_PIN_CAPACITY",
+    "owner_policy": "All accepted ingest/BEGIN remains dirty until genuine ordered BOOT_END; DONE does not establish payload ownership",
+    "barrier_source": "actual mapper marker_v with actual landed32 ordered prefix; BOOT_END metadata66 unchanged",
+    "clock_entries": "same existing10 control entries plus separate ck_guard; not extra alias of old clk_i",
+    "physical_qualified": false
   }
 }

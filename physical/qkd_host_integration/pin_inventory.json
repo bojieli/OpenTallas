@@ -3562,8 +3562,8 @@
     {
       "master": "qkd_host_service_guard",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv",
-      "source_revision": "290111b8e",
-      "source_sha256": "bb321da2993a6de061bc1e772618579849d74061acccbf1afc7500e1648789d7",
+      "source_revision": "892bc0c9c",
+      "source_sha256": "4cf2002bf0feb8f315598827eab527799289c9ae5f68fc52e91e9e188a6f7045",
       "ports": [
         {
           "name": "ck_guard",
@@ -3753,9 +3753,16 @@
           "width": 8,
           "registered_domain": "ck_guard",
           "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_protocol_fault",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
         }
       ],
-      "flop_bits_coarse": 12561,
+      "flop_bits_coarse": 12594,
       "clock_entries": [
         "ck_guard"
       ],
@@ -4016,6 +4023,860 @@
         "ENABLE_NATIVE": 0
       },
       "identity": "sole shared allocator epoch16; full TAG59; service epoch separate"
+    },
+    {
+      "master": "qkd_host_ctl_service_pins",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_ctl_service_pins.sv",
+      "source_revision": "892bc0c9c",
+      "source_sha256": "1163d7845a04e892c1a2451482bff75791191e4ee370e388be5c1b316f24f09e",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "sys_ready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "pb_fault",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "die_id",
+          "direction": "input",
+          "width": 3,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "req",
+          "direction": "input",
+          "width": 61,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "pr",
+          "direction": "input",
+          "width": 143,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "tk",
+          "direction": "input",
+          "width": 744,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "service_abort",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "service_ready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_block",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "epoch_fault",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "service_ready8",
+          "direction": "input",
+          "width": 8,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "hc",
+          "direction": "output",
+          "width": 182,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "res",
+          "direction": "output",
+          "width": 120,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "flop_bits": 2260,
+      "clock_entries": [
+        "ck"
+      ],
+      "instances_per_die": 0,
+      "candidate_instances_per_die": 1,
+      "outline_status": "PENDING_MAPPED_AREA_PIN_CAPACITY",
+      "physical_qualified": false,
+      "default_off_protocol_candidate": true,
+      "params": {
+        "ENABLE_SERVICE": 0
+      },
+      "alternative_to": "qkd_host_ctl_pins"
+    },
+    {
+      "master": "qkd_host_csr_service_pins",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_csr_service_pins.sv",
+      "source_revision": "892bc0c9c",
+      "source_sha256": "aef489bf2ecf88b88dc6287b115bd0a4744dc1dac490b0e0034e6d18bacf7b15",
+      "ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "s_awvalid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_awready",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "s_awaddr",
+          "direction": "input",
+          "width": 13,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_wvalid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_wready",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "s_wdata",
+          "direction": "input",
+          "width": 32,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_wstrb",
+          "direction": "input",
+          "width": 4,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_bvalid",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "s_bready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_bresp",
+          "direction": "output",
+          "width": 2,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "s_arvalid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_arready",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "s_araddr",
+          "direction": "input",
+          "width": 13,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_rvalid",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "s_rready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "s_rdata",
+          "direction": "output",
+          "width": 32,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "s_rresp",
+          "direction": "output",
+          "width": 2,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_awvalid",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_awready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "h_awaddr",
+          "direction": "output",
+          "width": 12,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_wvalid",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_wready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "h_wdata",
+          "direction": "output",
+          "width": 32,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_wstrb",
+          "direction": "output",
+          "width": 4,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_bvalid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "h_bready",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_arvalid",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_arready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "h_araddr",
+          "direction": "output",
+          "width": 12,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_rvalid",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "h_rready",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "h_rdata",
+          "direction": "input",
+          "width": 32,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "h_irq",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "sys_ready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "boot_fault",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "boot_state",
+          "direction": "input",
+          "width": 4,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "boot_err",
+          "direction": "input",
+          "width": 4,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "soft_rst",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "fault_src",
+          "direction": "input",
+          "width": 32,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "die_fault_vec",
+          "direction": "input",
+          "width": 32,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "die_kst",
+          "direction": "input",
+          "width": 80,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cnt",
+          "direction": "input",
+          "width": 512,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "irq",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "por_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "begin_tx_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_tx_available",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "service_ready8",
+          "direction": "input",
+          "width": 8,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "pending_ack8",
+          "direction": "input",
+          "width": 8,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "service_epoch8",
+          "direction": "input",
+          "width": 128,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "service_fault",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "ingest_permission",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "begin_epoch",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "begin_available",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "begin_fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "decode_request",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "decode_start",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "decode_done",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "epoch_busy",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "startup_allowed",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "flop_bits": 1387,
+      "clock_entries": [
+        "clk"
+      ],
+      "instances_per_die": 0,
+      "candidate_instances_per_die": 1,
+      "outline_status": "PENDING_MAPPED_AREA_PIN_CAPACITY",
+      "physical_qualified": false,
+      "default_off_protocol_candidate": true,
+      "params": {
+        "ENABLE_SERVICE": 0
+      },
+      "alternative_to": "qkd_host_csr_pins"
+    },
+    {
+      "master": "qkd_host_ctrl_service_packet",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_ctrl_service_packet.sv",
+      "source_revision": "892bc0c9c",
+      "source_sha256": "d5b0671598ff13fb7cff29e3cc99b34acea4391e97330b58a5974bd5afcd618e",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "die_id",
+          "direction": "input",
+          "width": 3,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_d",
+          "direction": "input",
+          "width": 512,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_d",
+          "direction": "output",
+          "width": 512,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_tk",
+          "direction": "input",
+          "width": 93,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_kst",
+          "direction": "input",
+          "width": 10,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_boot",
+          "direction": "input",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cmd_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cmd_hc",
+          "direction": "input",
+          "width": 182,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "cmd_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "hc",
+          "direction": "output",
+          "width": 182,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tk8",
+          "direction": "output",
+          "width": 744,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "kst8",
+          "direction": "output",
+          "width": 80,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "boot8",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "seen",
+          "direction": "output",
+          "width": 8,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "startup_allowed",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_service_ready",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_service_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "begin_available",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_begin_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_begin_epoch",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "pending_advertised",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "pending_epoch",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_ready8",
+          "direction": "output",
+          "width": 8,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "pending_ack8",
+          "direction": "output",
+          "width": 8,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_epoch8",
+          "direction": "output",
+          "width": 128,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "ingest_permission",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "flop_bits": 5851,
+      "clock_entries": [
+        "ck"
+      ],
+      "instances_per_die": 0,
+      "candidate_instances_per_die": 1,
+      "outline_status": "PENDING_MAPPED_AREA_PIN_CAPACITY",
+      "physical_qualified": false,
+      "default_off_protocol_candidate": true,
+      "params": {
+        "ENABLE_SERVICE": 0
+      },
+      "alternative_to": "qkd_host_ctrl_packet"
     },
     {
       "master": "qfd_xf_ch546",
@@ -20423,6 +21284,54 @@
       "source": "host.NATIVE.local_tk",
       "destination": "host.SERVICE_GUARD.local_tk",
       "bits": 93,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.rx_class.ing_v/cls/d[15:0]",
+      "destination": "host.SERVICE_GUARD.accepted_ing_v/cls/header",
+      "bits": 19,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.QM_DONE_CDC.o_v/d[63:0]",
+      "destination": "host.SERVICE_GUARD.done_v/d",
+      "bits": 65,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.map.marker_v/actual_landed32",
+      "destination": "host.SERVICE_GUARD.boot_barrier_v/target",
+      "bits": 33,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.CTRL.actual_service_begin_v/epoch",
+      "destination": "host.SERVICE_GUARD.begin_v/epoch",
+      "bits": 17,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.CTRL.actual_pending_advertised/epoch",
+      "destination": "host.SERVICE_GUARD.pending_advertised/epoch",
+      "bits": 17,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.SERVICE_GUARD.ready/epoch/abort",
+      "destination": "host.CTRL.local_service_ready/epoch/abort",
+      "bits": 18,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.CTRL.actual_all8_pendingACK_permission",
+      "destination": "host.QM_QUEUE.allow",
+      "bits": 1,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.SERVICE_GUARD.rawdiag26/status32",
+      "destination": "host.CSR.cnt14/cnt15",
+      "bits": 58,
       "clock_family": "CORE833"
     }
   ],
