@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.be_m7_access_successor_kit.v1",
-  "status": "PREPARED_NOT_LAUNCHED_NOT_ADOPTED",
+  "status": "PIN_FACE_SUCCESSOR_PREPARED_NOT_LAUNCHED_NOT_ADOPTED",
   "top": "dsfd_vm_be_sl",
   "source_epoch": "currentRTL leaf+helpers byteidenticaltoc15e2bf6a",
   "actual_route_cap": "M7",
@@ -13,8 +13,8 @@
   ],
   "source_file": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv",
   "source_sha256": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
-  "structural_change": "physicalfull-depth above-layerpinwindows, inwardM5PGstripe offset1.296, existingreset-inputholdbuffers; noRTL/state/latencychange",
-  "pin_plan": "4094signalpinrectangles derived from actual closedc15e2bf6a LEF; isolateddirectory, not stalepublishedcontract_vm28 pins",
+  "structural_change": "3902 physical contact targets changed; full-depth above-layer keepout and inward M5 PG; no RTL/state/latency change",
+  "pin_plan": "3902 actual contact changes; 2 failed pins S/W\u2192E/M4, all S/M5 width72nm and N/M7 x+16nm; all4094 identities preserved",
   "clock_period_ps": {
     "ck": 1111.1,
     "cks": 833.325
@@ -32,7 +32,7 @@
   "slot_request": {
     "legacy_view_cap": "M7",
     "adopted": false,
-    "reason": "truthfulactualM7 successor; M6metadata cannotdescribeactualroute",
+    "reason": "Genuine physical interface redesign: bl_d[1000] S/M5\u2192E/M4 and cks[0] W/M4\u2192E/M4; 2603 S/M5 contacts widen,1297 N/M7 contacts move16nm for actual requested parent phase",
     "parent_layers_must_reconcile": true
   },
   "qualification": [
@@ -41,20 +41,23 @@
     "childlintactualM7 withoutskips",
     "SSsetup+15 FFhold+15 DRC0",
     "routedclockreferenceperckandcks + actualglobaldriver/resetrefclk binding",
-    "parentfullpin/cut/sourcegraphproof"
+    "parentfullpin/cut/sourcegraphproof",
+    "actual newly routed contact identities/coordinates match pin-face request; no target scaffold treated as wired view"
   ],
   "old_CLOSEDchild_replaced": false,
   "global_clock_or_reset_binding": false,
   "kit_sha256": {
     "physical/s81_be_access_m7_candidate/helper_overlay_plan.json": "4e84f3b8b17edeb4d38cd5582b97afc400a86b7923ae9b0edbcd08bad5f3ed5c",
-    "physical/s81_be_access_m7_candidate/io_place.tcl": "01c3be3810ecccb81a89777f0723cf1d276191c6f2e5deb5555a803891b1a1e1",
+    "physical/s81_be_access_m7_candidate/io_place.tcl": "07ab966216511616ccf81e0a10ece975e95bdfd4d9d72ba1f3a4986719979327",
     "physical/s81_be_access_m7_candidate/margin.sdc": "1587b64ab7e05344cd6c14a7acc62f6ab5e7fbc576c645e843306503c92d2d90",
     "physical/s81_be_access_m7_candidate/full_depth_keepout.tcl": "7c0e1621e7f8d197fedb8cc7c79591e4523e1b00369377a4b10baaf8e2e176b1",
     "physical/s81_be_access_m7_candidate/post_cts.tcl": "c4898d81a24e166939a26065e5b60f9af365d2d27534590a65f825c8bbcaaac3",
     "physical/s81_be_access_m7_candidate/pdn.tcl": "a7cd1702729a1b3cc352daa0d22e1341405e499a46dbefe10aa54747e0e4028a",
     "physical/s81_be_access_m7_candidate/exact_gate_binding.json": "e6568256779f66ee149676f674c3627d2fdd74c2d1cb5a8227a80f75b258889f",
-    "physical/s81_be_access_m7_candidate/ports.json": "2c3981b27bce974b07620cef8fe3c51a742fe0e999b12a3ac314100c891804b9",
-    "physical/s81_be_access_m7_candidate/launch.sh": "9b2867163020fa357cbc81df795e8555f0be0bb3522859bcfb01a797b39fb188"
+    "physical/s81_be_access_m7_candidate/ports.json": "570f692dd492b2cd20e8697a96882a46b8653b97166700dc74e05b06bb0b8f28",
+    "physical/s81_be_access_m7_candidate/launch.sh": "9b2867163020fa357cbc81df795e8555f0be0bb3522859bcfb01a797b39fb188",
+    "results/arch/s81_be_pinface_successor_1014/global_phase_generated/request.json": "f79d375bcf5e0aef85fc31cae8765f08e11a0261b6e81f30777c7b57a971a239",
+    "results/arch/s81_be_pinface_successor_1014/global_phase_generated/target_contacts_unrouted.lef": "17eec65d0ec2fceaf56caa64151dd34fbde2f2df6742c1a9800f8dc2d7a0f071"
   },
   "validation": {
     "pin_identity_check": "results/arch/s81_be_view_audit_1014/kit_pin_identity_check.json",
@@ -63,5 +66,10 @@
   },
   "helper_count": 46,
   "helper_plan_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
-  "diagnostic_signoff_checker": "tools/s81_ph/s81_be_access_diagnostic_signoff.py"
+  "diagnostic_signoff_checker": "tools/s81_ph/s81_be_access_diagnostic_signoff.py",
+  "pin_face_successor_request": "results/arch/s81_be_pinface_successor_1014/global_phase_generated/request.json",
+  "global_VM_origin_requested_um": [
+    14036.112,
+    12804.48
+  ]
 }

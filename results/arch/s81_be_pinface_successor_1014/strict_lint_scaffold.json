@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.hier_contract.child_lint.v1",
+  "lef": "results/arch/s81_be_pinface_successor_1014/request_scaffold.lef",
+  "verdict": "FAIL",
+  "fails": [
+    "(d) libs: dsfd_vm_be_sl_tt.lib, dsfd_vm_be_sl_ff.lib, dsfd_vm_be_sl_ss.lib missing in physical/s81_ph_views/vm_master/routes/s81vm-besl4-c15e2bf6a-tc-rd-pd45/dsfd_vm_be_sl/view"
+  ],
+  "warns": [
+    "(f) face-pin access: 2594 of 4095 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bl_d[0] M5 (2.400,0.144), bl_d[100] M5 (2.400,0.144), bl_d[1014] M5 (2.400,0.144))",
+    "(g) clock insertion: no TT lib (pass --libs) - parent CTS cannot see the tile's insertion delay"
+  ],
+  "summary": "dsfd_vm_be_sl 302.4 x 92.88: PG M7 VDD 28 stripes (96% spread, 100% cov) / VSS 28 stripes (96% spread, 100% cov); strap M8; face pins 4095 blocked-above 0 blocked-same 0; pockets M7 0 (closed)",
+  "info": {
+    "cell": "dsfd_vm_be_sl",
+    "W": 302.4,
+    "H": 92.88,
+    "pg": {
+      "nets": {
+        "VDD": {
+          "top_layer": "M7",
+          "stripes": 28,
+          "dir": "V",
+          "spread": 0.964,
+          "coverage": 1.0,
+          "shapes_on_top": 28
+        },
+        "VSS": {
+          "top_layer": "M7",
+          "stripes": 28,
+          "dir": "V",
+          "spread": 0.964,
+          "coverage": 1.0,
+          "shapes_on_top": 28
+        }
+      },
+      "top_layer": "M7",
+      "ok": true,
+      "why": []
+    },
+    "pg_layer": "M7",
+    "strap_layer": "M8",
+    "cap": "M7",
+    "face": {
+      "face_pins": 4095,
+      "blocked_above": 0,
+      "covered_below": 1300,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 2594,
+      "band_examples": [
+        "bl_d[0] M5 (2.400,0.144)",
+        "bl_d[100] M5 (2.400,0.144)",
+        "bl_d[1014] M5 (2.400,0.144)",
+        "bl_d[1015] M5 (2.400,0.144)",
+        "bl_d[1016] M5 (2.400,0.144)",
+        "bl_d[1017] M5 (2.400,0.144)"
+      ]
+    },
+    "pockets": {
+      "layer": "M7",
+      "d_um": 2.048,
+      "marker": {
+        "layer": "M7",
+        "d_um": 2.048,
+        "added": 2127
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+    }
+  }
+}

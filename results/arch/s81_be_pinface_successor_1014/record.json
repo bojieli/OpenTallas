@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.be_pinface_successor_summary.v1",
+  "status": "REAL_PIN_FACE_CHANGE_REQUEST_UNALLOCATED_UNROUTED",
+  "selected": "results/arch/s81_be_pinface_successor_1014/global_phase_generated/request.json",
+  "old_closed_stands": true,
+  "physical_contacts_changed": 3902,
+  "native_EP2_relay_cells": 54,
+  "native_state_bits": 1352,
+  "selected_VM_origin_um": [
+    14036.112,
+    12804.48
+  ],
+  "legacy_N_M7_phase_correction_nm": 16,
+  "superseded_local_only_proposals": [
+    "generated",
+    "unrouted_parent_phase_pinplan.lef"
+  ],
+  "strict_target_lint": "PASS",
+  "target_AP_orientations": true,
+  "target_AP_requested_global_slots": true,
+  "legacy_raw_LEF_AP_requested_global_slots": false,
+  "relay_original_AP_all_masters": true,
+  "relay_global_center_phase_note": "All54 preferred M4 centers offset24nm; immutable CLOSED rectangles PASS actual AP at original rows. Preferred center arithmetic alone is not AP failure. Preserve original manufacturing-lattice placement; source-clock and parent-route proof remain OPEN.",
+  "raw_route_electrical_connectivity_verified": false,
+  "native_parent_adopted": false,
+  "M6_eligibility_waived": false,
+  "required_fresh_route": [
+    "exact new4094 contact matching",
+    "honest M7 cap/PG/OBS strict lint",
+    "actual AP both orientation and global requested slot placements",
+    "SSsetup>=15 FFhold>=15 DRC0",
+    "actual clock driver/reset reference binding and complete parent source/cut/pair proof"
+  ]
+}

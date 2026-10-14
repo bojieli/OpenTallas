@@ -1,0 +1,51 @@
+{
+  "status": "TARGET_CONTACTS_UNROUTED",
+  "changes": [
+    {
+      "pin": "bl_d[1000]",
+      "legacy": [
+        [
+          "M5",
+          135.552,
+          0.0,
+          135.576,
+          0.192
+        ]
+      ],
+      "target": [
+        "M4",
+        302.208,
+        6.0,
+        302.4,
+        6.024
+      ],
+      "old_face": "S",
+      "target_face": "E"
+    },
+    {
+      "pin": "cks[0]",
+      "legacy": [
+        [
+          "M4",
+          0.0,
+          6.48,
+          0.192,
+          6.504
+        ]
+      ],
+      "target": [
+        "M4",
+        302.208,
+        6.48,
+        302.4,
+        6.504
+      ],
+      "old_face": "W",
+      "target_face": "E"
+    }
+  ],
+  "electrical_connectivity_verified": false,
+  "legacy_raw_route_OBS_used": false,
+  "full_depth_halo_um": 0.072,
+  "all_remaining_contacts": "exact legacy full-size contacts; not rejected quarter-window contacts"
+}
