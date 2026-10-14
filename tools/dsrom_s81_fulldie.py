@@ -7695,7 +7695,10 @@ def glue_rtl(m):
                                     f'.r_rdy(1\'b1), .r_d(rq{j}), .w_live(), .r_live(rl{j}), .w_fault(wf{j}), .r_fault(rf{j}));')
                     else:
                         body.append(f'    assign wf{j} = 1\'b0; assign rf{j} = 1\'b0;')
-                        body.append(f'    ot_ratio_cdc_fifo #(.W({pw})) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), .w_v({wv}), '
+                        # --hend-vr-nobp (s81 grpA r3 2026-10-14, hcol / hsel TT -25.78: negedge pin register -> w_fire ->
+                        # DEPTH x W ratio-FIFO write enables in half a cycle): wide VR r2l ends write the FIFO always (WALL)
+                        wa = ", .WALL(1'b1)" if (HEND_VR_NOBP and vr and pw >= 512) else ''
+                        body.append(f'    ot_ratio_cdc_fifo #(.W({pw}){wa}) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), .w_v({wv}), '
                                     f'.w_rdy(), .w_d({wd}), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv{j}), .r_rdy(1\'b1), '
                                     f'.r_d(rq{j}), .w_live(), .r_live(rl{j}));')
                     pr = HEND_PINREG and kind == 'r2l'

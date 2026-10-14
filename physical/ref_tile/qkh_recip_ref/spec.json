@@ -44,13 +44,15 @@
  "route": {
   "pd": 0.55,
   "threads": 16,
-  "peak_ram_gb": 32
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:q-kvd",
-  "branch": "codex/q-kvd-1012",
-  "tag": "cx1",
-  "purpose": "Ahub reciprocal structural clock partition: local root, boundary pin flops (+2 cycles), reset per arithmetic operator. Original arithmetic/rounding/order unchanged. Child follows parent M2-M7 contract.",
+  "owner": "Claude:el1014-qwen-kvsys-elements",
+  "branch": "claude/qwen-kvsys-ahub-1014",
+  "tag": "np1",
+  "purpose": "Reciprocal leaf of the KV/system die ahub composition: native pin re-route (core on the local reset).",
   "benches": [
    {
     "name": "recip_eq",
@@ -71,13 +73,38 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "qkd_ahub_d_eq_exact",
+    "cmd": "bash rtl/test/nearhbm/run_qkd_ahub_d_eq.sh pos {RUN}/bench/eq_pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ahub_d eq all",
+    "note": "die-leaf hub (core + 13 tiles, 3 die relay configurations) vs hub_t on identical random layer traffic, 3 seeds x 6 layers: every mo / out word equal, no fault"
    }
   ],
   "views_to": "physical/ref_tile/qkh_recip_ref/views",
   "record_to": "results/rtl/ref_tile/qkh_recip_ref"
  },
+ "recipe": 2,
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "native pin audit: rst_n capture 233.9 > 190 (the raw reset pin fanned into ot_qkh_recip_core's reset tree); the core now takes the local synchronised reset rr[0]; recipe-2 kit."
+ },
+ "structural_change": " np1: core reset from the local synchroniser (rst_n pin -> one sync relay), recipe 2 pin defaults.",
  "params": {},
  "macros": [],
  "children": [],
- "inter": []
+ "inter": [],
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

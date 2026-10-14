@@ -108,5 +108,10 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

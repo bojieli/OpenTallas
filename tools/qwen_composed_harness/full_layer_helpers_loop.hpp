@@ -3,6 +3,9 @@
 #include "native59_helpers.hpp"
 #include "host_owner.hpp"
 #include "embedding_owner.hpp"
+#include "rank_parallel.hpp"
+#include <chrono>
+#include <iostream>
 #include <functional>
 // Startup/HC and HOST drain inputs are supplied by the actual owner. There is
 // no default producer and no synthetic cohort-ready or terminal-ready value.
@@ -44,9 +47,9 @@ static HelperSequenceResult run_actual_helper_layers(
  const uint64_t event_limit=clock.events+8000000ULL*(layers.size()+1);
  for(uint64_t&events=clock.events;events<event_limit;events++){
   bool core=cn<=hn;ctx.time(core?cn:hn);
-  if(!core){hn+=512000;hh=!hh;for(auto&x:r)x->backend.hbm_edge(hh);continue;}
+  if(!core){hn+=512000;hh=!hh;rank_pool().run([&](unsigned k){r[k]->backend.hbm_edge(hh);});continue;}
   cn+=416667;ch=!ch;
-  if(!ch){for(auto&x:r)x->fall();link.fall();if(embedding)embedding->fall();host.fall();continue;}
+  if(!ch){rank_pool().run([&](unsigned k){r[k]->fall();});link.fall();if(embedding)embedding->fall();host.fall();continue;}
   startup(host,inputs,events);bool providers=true,boot=true;
   for(auto&x:r){boot&=x->backend.hbm_edges>=8;providers&=x->front.epoch_ready&&x->front.native_idle&&!x->front.fault;}
   inputs.engine_admit_ready=boot&&providers&&(!embedding||embedding->admit_ready());inputs.host_drained=host_drain(host);host.low(inputs);
@@ -74,16 +77,20 @@ static HelperSequenceResult run_actual_helper_layers(
   }
   if(embedding)embedding->low(r,reset);
   link.low(r,reset,can_begin,host.epoch(),head?37:layers[layer_index].number+1,host.token(),host.position());
-  bool launch=false;
+  bool launch=false;std::array<bool,8> starts{};
   for(unsigned rank=0;rank<8;rank++){
    auto&h=link.rank(rank);bool start=h.core_start;
    if(start&&!host.dispatch())throw std::runtime_error("actual helper core start without actual eight-endpoint cohort dispatch");
    if(start){r[rank]->vm.segment_base=h.prog_base;launch=true;}
-   r[rank]->low(start);
+   starts[rank]=start;
   }
+  rank_pool().run([&](unsigned k){r[k]->low(starts[k]);});
   // Both read snapshots and inter-model pins are now frozen. Advance every
   // actual model, then apply its captured addressed writes without rewiring.
-  for(auto&x:r)x->rise();link.rise(r);if(embedding)embedding->rise(r);host.rise();
+  rank_pool().run([&](unsigned k){r[k]->rise();});link.rise(r);if(embedding)embedding->rise(r);host.rise();
+  if(host.core_edges%500==0){static const auto wall0=std::chrono::steady_clock::now();
+   std::cerr<<"PROGRESS core_edges "<<host.core_edges<<" layer_index "<<layer_index<<" head "<<head<<" dispatch "<<host.dispatch()<<" begun "<<begun<<" running "<<running<<" core_evals "<<r[0]->core_evals<<" skipped "<<r[0]->core_evals_skipped
+    <<" wall_s "<<std::chrono::duration<double>(std::chrono::steady_clock::now()-wall0).count()<<std::endl;}
   if(embedding&&!embedding_complete&&embedding_started&&embedding->done()){
    embedding_complete=true;fs::create_directories(out/"embedding");std::ofstream f(out/"embedding"/"actual_commits.txt");for(auto&w:embedding->commits)f<<w.address<<" "<<std::hex<<std::setw(8)<<std::setfill('0')<<w.value<<" "<<w.tag<<std::dec<<" "<<w.generation<<" "<<w.edge<<"\n";
    std::ofstream words(out/"embedding"/"actual_accepted_words.txt");for(auto&w:embedding->raw_events){words<<w.pc<<" "<<w.edge<<" ";for(unsigned j=0;j<32;j++)words<<std::hex<<std::setw(8)<<std::setfill('0')<<w.bits[31-j];words<<std::dec<<"\n";}

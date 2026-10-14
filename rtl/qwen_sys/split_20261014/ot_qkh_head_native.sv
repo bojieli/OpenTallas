@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// KV/system head candidate: preserve the HS reference pipeline and FP32 consumer
+// KV/system head candidate (r2 2026-10-14: 51 roots = front, score, ktree, 16 stin, 16 stout, 16 lane8): preserve the HS reference pipeline and FP32 consumer
 // rounding, with no state in the parent. The die delivers a separate phi-R entry
 // to every hardened child. Functional equivalence ties all entries to one clock;
 // physical qualification also needs assigned slots, native pin audits and STA.
@@ -10,7 +10,25 @@ module ot_qkh_head_front_native #(
   input wire [15:0] e_in, input wire [11:0] lt_in,
   input wire [1:0] hid, input wire q_valid_in,
   input wire [5:0] q_beat_in, input wire [511:0] q_data_in,
-  output wire [15:0] f_cr, output wire [1560:0] f_dr,
+  // kvsys-elements r2 2026-10-14: one 233-bit port a station ({cr 16, dr 217}, the parent's former slice of f_cr/f_dr),
+  // so the die-assigned pin plan puts each station's bits on the S-face range that faces it (pin_reg_split gives every
+  // output pin its own launch flop: the shared bits are duplicated by the flow, not in RTL).
+  output wire [232:0] f_t0,
+  output wire [232:0] f_t1,
+  output wire [232:0] f_t2,
+  output wire [232:0] f_t3,
+  output wire [232:0] f_t4,
+  output wire [232:0] f_t5,
+  output wire [232:0] f_t6,
+  output wire [232:0] f_t7,
+  output wire [232:0] f_t8,
+  output wire [232:0] f_t9,
+  output wire [232:0] f_t10,
+  output wire [232:0] f_t11,
+  output wire [232:0] f_t12,
+  output wire [232:0] f_t13,
+  output wire [232:0] f_t14,
+  output wire [232:0] f_t15,
   output wire pack_fault);
   localparam integer HD=128, LTW=12, NRS=1;
   wire [0:0] rr;
@@ -83,25 +101,58 @@ module ot_qkh_head_front_native #(
     wire [5:0]       qb3  = ds_o[512+2 +: 6];
     wire [511:0]     qd3  = ds_o[2 +: 512];
     wire [1:0]       hid3 = ds_o[1:0];
-  assign f_cr=cs_o;
-  assign f_dr=(MUT==1) ? {ds_o[1560:2],~ds_o[1:0]} : ds_o;
+  wire [15:0] f_cr=cs_o;
+  wire [1560:0] f_dr=(MUT==1) ? {ds_o[1560:2],~ds_o[1:0]} : ds_o;
+  wire [232:0] f_t [0:15];
+  genvar ft;
+  generate for(ft=0;ft<16;ft=ft+1) begin:g_ft
+    assign f_t[ft]={f_cr,f_dr[1560],f_dr[536+64*ft +:64],f_dr[520 +:16],f_dr[514 +:6],f_dr[2+128*(ft%4) +:128],f_dr[1:0]};
+  end endgenerate
+  assign f_t0=f_t[0];
+  assign f_t1=f_t[1];
+  assign f_t2=f_t[2];
+  assign f_t3=f_t[3];
+  assign f_t4=f_t[4];
+  assign f_t5=f_t[5];
+  assign f_t6=f_t[6];
+  assign f_t7=f_t[7];
+  assign f_t8=f_t[8];
+  assign f_t9=f_t[9];
+  assign f_t10=f_t[10];
+  assign f_t11=f_t[11];
+  assign f_t12=f_t[12];
+  assign f_t13=f_t[13];
+  assign f_t14=f_t[14];
+  assign f_t15=f_t[15];
   assign pack_fault=q_pack_fault;
 endmodule
 
-module ot_qkh_head_station_native #(
+// kvsys-elements r2 2026-10-14: the per-lane station is split into its two directions so the die can place each
+// where its hops are short (head plan results/arch/qwen_split_1014/head_native_plan_r2.json): stin (front -> lane,
+// cr/dr two stages, lane reset) beside the lane's S-face input corner, stout (lane -> ktree kp/kpv/gf and lane -> die
+// nb, two stages each) between the lane's E face, the ktree N face and the astk face.  Same stages, same cycles.
+module ot_qkh_head_stin_native #(
   parameter integer MUT=0
-)(input wire clk,rst_n,
+)(
+  input wire clk,rst_n,
   input wire [15:0] cr_i,input wire [216:0] dr_i,
-  input wire [31:0] kp_i,input wire kpv_i,gf_i,input wire [63:0] nb_i,
-  output wire [15:0] cr_o,output wire [216:0] dr_o,
-  output wire [31:0] kp_o,output wire kpv_o,gf_o,
-  output wire [63:0] nb_o,output wire lane_rst_n);
+  output wire [15:0] cr_o,output wire [216:0] dr_o,output wire lane_rst_n);
   wire [0:0] rr;
   ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst
     (.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
   assign lane_rst_n=rr[0];
   ot_qkh_relay #(.W(16),.D(2),.RST(1)) u_ric (.clk(clk),.rst_n(rr[0]),.d(cr_i),.q(cr_o));
-  ot_qkh_relay #(.W(217),.D(2)) u_rid (.clk(clk),.rst_n(rr[0]),.d(dr_i),.q(dr_o));
+  ot_qkh_relay #(.W(217),.D(2)) u_rid (.clk(clk),.rst_n(rr[0]),.d(MUT==4 ? {dr_i[216:2],dr_i[0],dr_i[1]} : dr_i),.q(dr_o));
+endmodule
+
+module ot_qkh_head_stout_native #(
+  parameter integer MUT=0
+)(input wire clk,rst_n,
+  input wire [31:0] kp_i,input wire kpv_i,gf_i,input wire [63:0] nb_i,
+  output wire [31:0] kp_o,output wire kpv_o,gf_o,output wire [63:0] nb_o);
+  wire [0:0] rr;
+  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst
+    (.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
   ot_qkh_relay #(.W(32),.D(2)) u_rkd (.clk(clk),.rst_n(rr[0]),.d(kp_i),.q(kp_o));
   ot_qkh_relay #(.W(2),.D(2),.RST(1)) u_rkv (.clk(clk),.rst_n(rr[0]),.d({kpv_i,gf_i}),.q({kpv_o,gf_o}));
   ot_qkh_relay #(.W(64),.D(2)) u_rn (.clk(clk),.rst_n(rr[0]),.d(MUT==2 ? {nb_i[31:0],nb_i[63:32]}:nb_i),.q(nb_o));
@@ -125,26 +176,31 @@ endmodule
 module ot_qkh_head_native #(
   parameter integer Q_FP32=1,parameter integer MUT=0
 )(input wire ck_front,ck_score,ck_kt,
-  input wire [15:0] ck_station,ck_lane,
+  input wire [15:0] ck_stin,ck_stout,ck_lane,
   input wire rst_n,input wire [3:0] c_in,input wire [1023:0] row_in,
   input wire [15:0] e_in,input wire [11:0] lt_in,input wire [1:0] hid,
   input wire q_valid_in,input wire [5:0] q_beat_in,input wire [511:0] q_data_in,
   output wire [31:0] sc_d,output wire sc_f,g_f,output wire [1023:0] nb_d);
-  wire [15:0] f_cr;wire [1560:0] f_dr;wire pack_fault;
+  wire [232:0] f_t [0:15];wire pack_fault;
   ot_qkh_head_front_native #(.Q_FP32(Q_FP32),.MUT(MUT)) u_front
     (.clk(ck_front),.rst_n(rst_n),.c_in(c_in),.row_in(row_in),.e_in(e_in),.lt_in(lt_in),.hid(hid),
-     .q_valid_in(q_valid_in),.q_beat_in(q_beat_in),.q_data_in(q_data_in),.f_cr(f_cr),.f_dr(f_dr),.pack_fault(pack_fault));
+     .q_valid_in(q_valid_in),.q_beat_in(q_beat_in),.q_data_in(q_data_in),
+.f_t0(f_t[0]),.f_t1(f_t[1]),.f_t2(f_t[2]),.f_t3(f_t[3])
+    ,.f_t4(f_t[4]),.f_t5(f_t[5]),.f_t6(f_t[6]),.f_t7(f_t[7])
+    ,.f_t8(f_t[8]),.f_t9(f_t[9]),.f_t10(f_t[10]),.f_t11(f_t[11])
+    ,.f_t12(f_t[12]),.f_t13(f_t[13]),.f_t14(f_t[14]),.f_t15(f_t[15])
+    ,.pack_fault(pack_fault));
   wire [511:0] kp_t,kp_k;wire [15:0] kpv_t,kpv_k,gf_t,gf_k;
   wire [1023:0] nb_t;wire [15:0] lane_rst_n;
   genvar t;
   generate for(t=0;t<16;t=t+1) begin:g_t
-    wire [15:0] cr_i=f_cr,cr_o;
-    wire [216:0] dr_i={f_dr[1560],f_dr[536+64*t +:64],f_dr[520 +:16],
-      f_dr[514 +:6],f_dr[2+128*(t%4) +:128],f_dr[1:0]},dr_o;
-    ot_qkh_head_station_native #(.MUT(MUT)) u_station
-      (.clk(ck_station[t]),.rst_n(rst_n),.cr_i(cr_i),.dr_i(dr_i),.cr_o(cr_o),.dr_o(dr_o),
-       .kp_i(kp_t[32*t +:32]),.kpv_i(kpv_t[t]),.gf_i(gf_t[t]),.nb_i(nb_t[64*t +:64]),
-       .kp_o(kp_k[32*t +:32]),.kpv_o(kpv_k[t]),.gf_o(gf_k[t]),.nb_o(nb_d[64*t +:64]),.lane_rst_n(lane_rst_n[t]));
+    wire [15:0] cr_o;wire [216:0] dr_o;
+    ot_qkh_head_stin_native #(.MUT(MUT)) u_stin
+      (.clk(ck_stin[t]),.rst_n(rst_n),.cr_i(f_t[t][232:217]),.dr_i(f_t[t][216:0]),.cr_o(cr_o),.dr_o(dr_o),
+       .lane_rst_n(lane_rst_n[t]));
+    ot_qkh_head_stout_native #(.MUT(MUT)) u_stout
+      (.clk(ck_stout[t]),.rst_n(rst_n),.kp_i(kp_t[32*t +:32]),.kpv_i(kpv_t[t]),.gf_i(gf_t[t]),.nb_i(nb_t[64*t +:64]),
+       .kp_o(kp_k[32*t +:32]),.kpv_o(kpv_k[t]),.gf_o(gf_k[t]),.nb_o(nb_d[64*t +:64]));
     ot_qkh_lane8 u_l8 (.clk(ck_lane[t]),.rst_n(lane_rst_n[t]),
       .c_in({cr_o[15:13],dr_o[216]}),.row_in(dr_o[215:152]),.e_in(dr_o[151:136]),.lt_in(cr_o[12:1]),
       .hid(dr_o[1:0]),.bsel(2'(t/4)),.q_valid_in(cr_o[0]),.q_beat_in(dr_o[135:130]),.q_data_in(dr_o[129:2]),
