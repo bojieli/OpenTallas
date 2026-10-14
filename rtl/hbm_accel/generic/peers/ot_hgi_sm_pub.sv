@@ -954,6 +954,107 @@ module ot_hgi_sm_pub_smrg #(
 endmodule
 
 // The HIER parent: command pin flops + relay chain, slices, per-client VM merge, STREAM credit tree, done / fault.
+// Hard station: command pins, acceptance, completion and column-zero launch.
+module ot_hgi_sm_pub_cmd #(parameter integer NSL=8, NPC=4, NC=8, LV=3)(
+ input wire clk,rn,pub_v, input wire [39:0] pub_base, input wire [31:0] pub_stride,
+ input wire [1:0] pub_space, input wire [19:0] pub_m, input wire [12:0] pub_q,
+ input wire [3:0] pub_p, input wire pub_bf16, input wire [NSL-1:0] dn_l,ft_l,
+ input wire agg_r, input wire [NPC-1:0] vq_vw,
+ output wire pub_rdy, output reg pub_done,pub_fault,cgo, output reg [74:0] cfd);
+ reg rel,busy,acc_q; reg [39:0] pf_b; reg [31:0] pf_s; reg [1:0] pf_sp;
+ reg [19:0] pf_m; reg [12:0] pf_q; reg [3:0] pf_p; reg pf_bf;
+ assign pub_rdy=rel && !busy && !acc_q;
+ always @(posedge clk) begin pf_b<=pub_base; pf_s<=pub_stride; pf_sp<=pub_space;
+ pf_m<=pub_m; pf_q<=pub_q; pf_p<=pub_p; pf_bf<=pub_bf16; end
+    always @(posedge clk) begin
+        if (acc_q) cfd <= {pf_sp == 2'd2, pf_bf, pf_b[17:0], pf_s[17:0], pf_m, pf_q, pf_p};
+    end
+    // ---- control
+    reg [NSL-1:0] sdn; reg [7:0] allc;
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
+            rel <= 1'b0; busy <= 1'b0; acc_q <= 1'b0; pub_done <= 1'b0; pub_fault <= 1'b0;
+ sdn <= '0; allc <= 8'd0; cgo <= 1'b0;
+        end else begin
+            rel <= 1'b1;
+            acc_q <= pub_v && pub_rdy;
+            pub_done <= 1'b0; cgo <= 1'b0;
+            if (|ft_l) pub_fault <= 1'b1;                                   // a slice overrun: fail closed
+            if (acc_q) begin
+                if (!(pf_sp == 2'd1 || pf_sp == 2'd2) || pf_p == 4'd0 || pf_p > NC) pub_fault <= 1'b1;
+                else begin
+                    busy <= 1'b1; sdn <= '0; allc <= 8'd0;
+                    cgo <= 1'b1;
+                end
+            end else if (busy) begin
+                sdn <= sdn | dn_l;
+                if (&sdn && allc != 8'hFF) allc <= allc + 8'd1;
+                if (&sdn && allc >= 8'(LV + 1) && !agg_r && vq_vw == 0) begin busy <= 1'b0; pub_done <= 1'b1; end
+            end
+        end
+    end
+endmodule
+
+module ot_hgi_sm_pub_vmmerge #(parameter integer NIN=2)(
+ input wire clk,rn, input wire [NIN-1:0] i_v, input wire [NIN*279-1:0] i_pkt,
+ input wire [273:0] vmr, output wire [337:0] vmq, output wire active, output wire [NIN-1:0] ack);
+ localparam integer OWW=(NIN>1)?$clog2(NIN):1;
+ assign ack=ak;
+        reg [NIN-1:0] pend, ak; reg bsy, n_v, va_q, vq_v; reg [278:0] n_p, vq_p; reg [OWW-1:0] own, rr;
+        assign active = vq_v;
+        assign vmq = {vq_v, 1'b1, 12'd0, vq_p[278:264], 5'd0, vq_p[263:8],
+            {{4{vq_p[7]}}, {4{vq_p[6]}}, {4{vq_p[5]}}, {4{vq_p[4]}}, {4{vq_p[3]}}, {4{vq_p[2]}}, {4{vq_p[1]}}, {4{vq_p[0]}}},
+            16'h5042};
+        always @(posedge clk) if (n_v) vq_p <= n_p;
+        always @(posedge clk or negedge rn) begin
+            if (!rn) begin pend <= '0; ak <= '0; bsy <= 1'b0; n_v <= 1'b0; va_q <= 1'b0; vq_v <= 1'b0; own <= '0; rr <= '0; end
+            else begin : nd
+                reg f; integer q_, jj; reg [NIN-1:0] pn;
+                va_q <= vmr[273] && vmr[256];           // port pin flop (MEM 1: vr[273] && vr[256])
+                vq_v <= n_v; n_v <= 1'b0; ak <= '0;
+                pn = pend;
+                for (q_ = 0; q_ < NIN; q_ = q_ + 1) if (i_v[q_]) pn[q_] = 1'b1;
+                f = 1'b0;
+                if (!bsy) for (jj = 0; jj < NIN; jj = jj + 1) begin q_ = (rr + 1 + jj) % NIN;
+                    if (!f && pend[q_]) begin
+                        f = 1'b1; pn[q_] = 1'b0; own <= OWW'(q_); rr <= OWW'(q_); bsy <= 1'b1; n_v <= 1'b1;
+                        n_p <= i_pkt[q_ * 279 +: 279];
+                    end
+                end
+                if (bsy && va_q) begin bsy <= 1'b0; ak[own] <= 1'b1; end    // acknowledged: back to the owning slice
+                pend <= pn;
+            end
+        end
+
+endmodule
+
+module ot_hgi_sm_pub_cmd_relay(input wire clk,rn,i_go,input wire [74:0] i_data,
+ output reg o_go,output reg [74:0] o_data);
+ always @(posedge clk) o_data<=i_data;
+ always @(posedge clk or negedge rn) if(!rn) o_go<=1'b0; else o_go<=i_go;
+endmodule
+
+module ot_hgi_sm_pub_return #(parameter integer DL=1)(input wire clk,rn,i_done,i_fault,
+ output wire o_done,o_fault);
+ reg [DL-1:0] dq,fq;
+ always @(posedge clk or negedge rn) if(!rn) begin dq<='0;fq<='0;end
+ else begin dq<=(dq<<1)|i_done;fq<=(fq<<1)|i_fault;end
+ assign o_done=dq[DL-1];assign o_fault=fq[DL-1];
+endmodule
+
+module ot_hgi_sm_pub_credit #(parameter integer NSM=32)(input wire clk,rn,input wire [NSM-1:0] i_cr,
+ output reg [NSM-1:0] o_cr);
+ always @(posedge clk or negedge rn) if(!rn) o_cr<='0;else o_cr<=i_cr;
+endmodule
+
+module ot_hgi_sm_pub_egress(input wire clk,rn,i_v,i_busy,input wire [51:0] i_data,
+ output reg relay_v,busy,o_v,output reg [19:0] o_idx,output reg [31:0] o_data);
+ reg [51:0] relay_d;
+ always @(posedge clk) begin if(i_v) relay_d<=i_data;if(relay_v) begin o_idx<=relay_d[51:32];o_data<=relay_d[31:0];end end
+ always @(posedge clk or negedge rn) if(!rn) begin relay_v<=1'b0;busy<=1'b0;o_v<=1'b0;end
+ else begin relay_v<=i_v;busy<=i_busy;o_v<=relay_v;end
+endmodule
+
 module ot_hgi_sm_pub_hier #(
     parameter integer NSM = 32,
     parameter integer NC = 8,
@@ -975,17 +1076,86 @@ module ot_hgi_sm_pub_hier #(
     input  wire [12:0]        pub_q,
     input  wire [3:0]         pub_p,
     input  wire               pub_bf16,
-    output reg                pub_done,
-    output reg                pub_fault,
+    output wire                pub_done,
+    output wire                pub_fault,
     input  wire [NSM-1:0]     sm_rv,
     input  wire [NSM*12-1:0]  sm_rrow,
     input  wire [NSM*NC*32-1:0] sm_rdata,
     output wire [NPC*338-1:0] vmq,
     input  wire [NPC*274-1:0] vmr,
-    output reg                s0_v,
-    output reg  [19:0]        s0_idx,
-    output reg  [31:0]        s0_data,
-    output reg  [NSM-1:0]     sm_cr          // row credits to ot_hgi_sm_record: slice pulses, one output flop
+    output wire                s0_v,
+    output wire  [19:0]        s0_idx,
+    output wire  [31:0]        s0_data,
+    output wire  [NSM-1:0]     sm_cr          // row credits to ot_hgi_sm_record: slice pulses, one output flop
+);
+    ot_hgi_sm_pub_parent #(.NSM(NSM),.NC(NC),.NPC(NPC),.MUT_ROW(MUT_ROW),.MUT_PAR(MUT_PAR),.NSS(NSS),.SD(SD),.AD(AD)) u_parent (
+      .clk_rst(clk),.clk_reset_hops({11{clk}}),.rst_slice({8{rst_n}}),.clk_cmd(clk),.clk_cmd_relay({3{clk}}),.clk_slice({8{clk}}),
+      .clk_return({20{clk}}),.clk_vm_core({4{clk}}),.clk_vm_port({4{clk}}),.clk_tree({7{clk}}),.clk_credit({8{clk}}),.clk_stream_edge({2{clk}}),
+      .rst_n(rst_n),
+      .pub_v(pub_v),
+      .pub_rdy(pub_rdy),
+      .pub_base(pub_base),
+      .pub_stride(pub_stride),
+      .pub_space(pub_space),
+      .pub_m(pub_m),
+      .pub_q(pub_q),
+      .pub_p(pub_p),
+      .pub_bf16(pub_bf16),
+      .pub_done(pub_done),
+      .pub_fault(pub_fault),
+      .sm_rv(sm_rv),
+      .sm_rrow(sm_rrow),
+      .sm_rdata(sm_rdata),
+      .vmq(vmq),
+      .vmr(vmr),
+      .s0_v(s0_v),
+      .s0_idx(s0_idx),
+      .s0_data(s0_data),
+      .sm_cr(sm_cr));
+endmodule
+
+// Wires-only production composition: every hard-child clock has an actual top entry.
+module ot_hgi_sm_pub_parent #(
+    parameter integer NSM = 32,
+    parameter integer NC = 8,
+    parameter integer NPC = 4,
+    parameter integer MUT_ROW = 0,
+    parameter integer MUT_PAR = 0,
+    parameter integer NSS = 4,
+    parameter integer SD = 8,
+    parameter integer AD = 32              // per-SM arrival entries in every slice (= the slice default; row credits)
+) (
+    input wire clk_rst,clk_cmd,
+    input wire [10:0] clk_reset_hops,
+    input wire [7:0] rst_slice,
+    input wire [1:0] clk_stream_edge,
+    input wire [7:0] clk_credit,
+    input wire [2:0] clk_cmd_relay,
+    input wire [7:0] clk_slice,
+    input wire [19:0] clk_return,
+    input wire [3:0] clk_vm_core,clk_vm_port,
+    input wire [6:0] clk_tree,
+    input  wire               rst_n,
+    input  wire               pub_v,
+    output wire               pub_rdy,
+    input  wire [39:0]        pub_base,
+    input  wire [31:0]        pub_stride,
+    input  wire [1:0]         pub_space,
+    input  wire [19:0]        pub_m,
+    input  wire [12:0]        pub_q,
+    input  wire [3:0]         pub_p,
+    input  wire               pub_bf16,
+    output wire                pub_done,
+    output wire                pub_fault,
+    input  wire [NSM-1:0]     sm_rv,
+    input  wire [NSM*12-1:0]  sm_rrow,
+    input  wire [NSM*NC*32-1:0] sm_rdata,
+    output wire [NPC*338-1:0] vmq,
+    input  wire [NPC*274-1:0] vmr,
+    output wire                s0_v,
+    output wire  [19:0]        s0_idx,
+    output wire  [31:0]        s0_data,
+    output wire  [NSM-1:0]     sm_cr          // row credits to ot_hgi_sm_record: slice pulses, one output flop
 );
     localparam integer NSL = (NSM + NSS - 1) / NSS;            // slices
     localparam integer NCOL = (NSL + 1) / 2;                   // columns (slice k: column k % NCOL; N row k < NCOL)
@@ -996,28 +1166,56 @@ module ot_hgi_sm_pub_hier #(
     localparam integer NSMP = NSL * NSS;
     integer k, j;
     wire rn;
-    ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
-    // ---- command: pin flops, accept processed one edge after the handshake
-    reg rel, busy, acc_q; reg [39:0] pf_b; reg [31:0] pf_s; reg [1:0] pf_sp; reg [19:0] pf_m; reg [12:0] pf_q;
-    reg [3:0] pf_p; reg pf_bf;
-    assign pub_rdy = rel && !busy && !acc_q;
-    always @(posedge clk) begin pf_b <= pub_base; pf_s <= pub_stride; pf_sp <= pub_space; pf_m <= pub_m; pf_q <= pub_q;
-                                pf_p <= pub_p; pf_bf <= pub_bf16; end
-    // command chain: cp[0] at the command port, one relay a column
-    // {sm, bf, ob 18, ost 18, mm 20, qq 13, pp 4} fields (no reset) and the go pulse (reset), one stage a column
-    reg [NCOL*(CW-1)-1:0] cfd; reg [NCOL-1:0] cgo;
-    reg r1_v; reg [W-1:0] r1_d; reg agg_r;
-    always @(posedge clk) begin
-        if (acc_q) cfd[0 +: CW-1] <= {pf_sp == 2'd2, pf_bf, pf_b[17:0], pf_s[17:0], pf_m, pf_q, pf_p};
-        for (j = 1; j < NCOL; j = j + 1) cfd[j*(CW-1) +: CW-1] <= cfd[(j-1)*(CW-1) +: CW-1];
-    end
+    ot_hgi_sm_pub_reset u_rst (.clk(clk_rst), .rst_n_in(rst_n), .rn(rn));
+    // Real synchronous-release reset mesh: command remains on the original root.
+    // The command wave (go at root+2+column) is later than each local release.
+    wire [NCOL-1:0] rn_mid,rn_n,rn_s;
+    assign rn_mid[0]=rn;
+    genvar reset_col;
+    generate for(reset_col=0;reset_col<NCOL;reset_col=reset_col+1) begin:g_rst_region
+        if(reset_col>0) begin:g_h
+            ot_hgi_sm_pub_reset_hop u (.clk(clk_reset_hops[reset_col-1]),.i_rn(rn_mid[reset_col-1]),.o_rn(rn_mid[reset_col]));
+        end
+        ot_hgi_sm_pub_reset_hop u_n (.clk(clk_reset_hops[3+reset_col]),.i_rn(rn_mid[reset_col]),.o_rn(rn_n[reset_col]));
+        ot_hgi_sm_pub_reset_hop u_s (.clk(clk_reset_hops[7+reset_col]),.i_rn(rn_mid[reset_col]),.o_rn(rn_s[reset_col]));
+    end endgenerate
+
+    wire [NCOL*75-1:0] cfd; wire [NCOL-1:0] cgo;
+    wire r1_v, agg_r;
+`ifdef SYNTHESIS
+    ot_hgi_sm_pub_cmd_quiet
+`else
+    ot_hgi_sm_pub_cmd_quiet #(.NSL(NSL),.NPC(NPC),.NC(NC),.LV(LV))
+`endif
+    u_cmd (
+      .clk(clk_cmd),.rn(rn),.pub_v(pub_v),.pub_base(pub_base),.pub_stride(pub_stride),
+      .pub_space(pub_space),.pub_m(pub_m),.pub_q(pub_q),.pub_p(pub_p),.pub_bf16(pub_bf16),
+      .dn_l(dn_l),.ft_l(ft_l),.agg_r(agg_r),.pub_rdy(pub_rdy),
+      .pub_done(pub_done),.pub_fault(pub_fault),.cgo(cgo[0]),.cfd(cfd[0 +: 75]));
+    genvar col;
+    generate for(col=1;col<NCOL;col=col+1) begin:g_cmd
+      ot_hgi_sm_pub_cmd_relay u (.clk(clk_cmd_relay[col-1]),.rn(rn_mid[col]),.i_go(cgo[col-1]),
+        .i_data(cfd[(col-1)*75 +:75]),.o_go(cgo[col]),.o_data(cfd[col*75 +:75]));
+    end endgenerate
     // ---- slices
     wire [NSMP-1:0] rv_p = NSMP'(sm_rv);
     wire [NSMP*12-1:0] rr_p = (NSMP*12)'(sm_rrow);
     wire [NSMP*NC*32-1:0] rd_p = (NSMP*NC*32)'(sm_rdata);
     wire [NSL-1:0] s_wv, s_sov, s_dn, s_ft; wire [NSL*279-1:0] s_wp; wire [NSL*W-1:0] s_sod;
     wire [NSL-1:0] s_cr; wire [NSMP-1:0] s_smcr;
-    always @(posedge clk or negedge rn) if (!rn) sm_cr <= '0; else sm_cr <= NSM'(s_smcr);
+    genvar crk;
+    generate for(crk=0;crk<NSL;crk=crk+1) begin:g_credit
+        wire [NSS-1:0] credit_out;
+`ifdef SYNTHESIS
+        ot_hgi_sm_pub_credit4 u
+`else
+        ot_hgi_sm_pub_credit #(.NSM(NSS)) u
+`endif
+        (.clk(clk_credit[crk]),.rn((crk<NCOL)?rn_n[crk%NCOL]:rn_s[crk%NCOL]),.i_cr(s_smcr[crk*NSS +:NSS]),.o_cr(credit_out));
+        for(genvar crs=0;crs<NSS;crs=crs+1) begin:g_sm
+          if(crk*NSS+crs<NSM) assign sm_cr[crk*NSS+crs]=credit_out[crs];
+        end
+    end endgenerate
     genvar gk, gl, gn, gc, gj;
     generate for (gk = 0; gk < NSL; gk = gk + 1) begin : g_s
         localparam integer COL = gk % NCOL;
@@ -1029,7 +1227,7 @@ module ot_hgi_sm_pub_hier #(
 `else
         ot_hgi_sm_pub_slice #(.NSS(NSS), .NC(NC), .SD(SD), .AD(AD), .MUT_ROW(MUT_ROW), .MUT_PAR(MUT_PAR)) u (
 `endif
-            .clk(clk), .rst_n(rst_n), .sid(3'(gk)), .sm_en(EN), .c_go(ci[CW-1]), .c_sm(ci[CW-2]), .c_bf(ci[CW-3]),
+            .clk(clk_slice[gk]), .rst_n(rst_slice[gk]), .sid(3'(gk)), .sm_en(EN), .c_go(ci[CW-1]), .c_sm(ci[CW-2]), .c_bf(ci[CW-3]),
             .c_ob(ci[72:55]), .c_ost(ci[54:37]), .c_mm(ci[36:17]), .c_qq(ci[16:4]), .c_pp(ci[3:0]),
             .sm_rv(rv_p[gk*NSS +: NSS]), .sm_rrow(rr_p[gk*NSS*12 +: NSS*12]), .sm_rdata(rd_p[gk*NSS*NC*32 +: NSS*NC*32]),
             .w_v(s_wv[gk]), .w_pkt(s_wp[gk*279 +: 279]), .w_ack(s_ack[gk]),
@@ -1038,47 +1236,46 @@ module ot_hgi_sm_pub_hier #(
     end endgenerate
     // ---- done / fault return: col + 1 relays a slice
     wire [NSL-1:0] dn_l, ft_l;
+    genvar ret_hop;
     generate for (gk = 0; gk < NSL; gk = gk + 1) begin : g_ret
-        localparam integer DL = gk % NCOL + 1;
-        reg [DL:0] dq, fq;
-        always @(posedge clk or negedge rn)
-            if (!rn) begin dq <= '0; fq <= '0; end
-            else begin dq <= {dq[DL-1:0], s_dn[gk]}; fq <= {fq[DL-1:0], s_ft[gk]}; end
-        assign dn_l[gk] = dq[DL-1]; assign ft_l[gk] = fq[DL-1];
+        localparam integer COL_ = gk % NCOL, DL = COL_ + 1;
+        localparam integer RET_BASE = (gk / NCOL)*(NCOL*(NCOL+1)/2) + COL_*(COL_+1)/2;
+        wire [DL:0] dq,fq;
+        assign dq[0]=s_dn[gk];assign fq[0]=s_ft[gk];
+        for(ret_hop=0;ret_hop<DL;ret_hop=ret_hop+1) begin:g_hop
+            ot_hgi_sm_pub_return_d1 u (.clk(clk_return[RET_BASE+ret_hop]),.rn(rn_mid[COL_-ret_hop]),
+              .i_done(dq[ret_hop]),.i_fault(fq[ret_hop]),.o_done(dq[ret_hop+1]),.o_fault(fq[ret_hop+1]));
+        end
+        assign dn_l[gk]=dq[DL];assign ft_l[gk]=fq[DL];
     end endgenerate
     // ---- VM: one merge node a client (its slices' held packets; one write out a client, as MEM 1)
     wire [NPC-1:0] vq_vw; wire [NSL-1:0] s_ack;
     localparam integer OWW = (NIN > 1) ? $clog2(NIN) : 1;
     generate for (gc = 0; gc < NPC; gc = gc + 1) begin : g_c
-        reg [NIN-1:0] pend, ak; reg bsy, n_v, va_q, vq_v; reg [278:0] n_p, vq_p; reg [OWW-1:0] own, rr;
-        assign vq_vw[gc] = vq_v;
-        assign vmq[gc*338 +: 338] = {vq_v, 1'b1, 12'd0, vq_p[278:264], 5'd0, vq_p[263:8],
-            {{4{vq_p[7]}}, {4{vq_p[6]}}, {4{vq_p[5]}}, {4{vq_p[4]}}, {4{vq_p[3]}}, {4{vq_p[2]}}, {4{vq_p[1]}}, {4{vq_p[0]}}},
-            16'h5042};
-        always @(posedge clk) if (n_v) vq_p <= n_p;
-        always @(posedge clk or negedge rn) begin
-            if (!rn) begin pend <= '0; ak <= '0; bsy <= 1'b0; n_v <= 1'b0; va_q <= 1'b0; vq_v <= 1'b0; own <= '0; rr <= '0; end
-            else begin : nd
-                reg f; integer q_, jj; reg [NIN-1:0] pn;
-                va_q <= vmr[gc*274 + 273] && vmr[gc*274 + 256];           // port pin flop (MEM 1: vr[273] && vr[256])
-                vq_v <= n_v; n_v <= 1'b0; ak <= '0;
-                pn = pend;
-                for (q_ = 0; q_ < NIN; q_ = q_ + 1) if (gc + q_ * NPC < NSL) if (s_wv[gc + q_ * NPC]) pn[q_] = 1'b1;
-                f = 1'b0;
-                if (!bsy) for (jj = 0; jj < NIN; jj = jj + 1) begin q_ = (rr + 1 + jj) % NIN;
-                    if (!f && pend[q_]) begin
-                        f = 1'b1; pn[q_] = 1'b0; own <= OWW'(q_); rr <= OWW'(q_); bsy <= 1'b1; n_v <= 1'b1;
-                        n_p <= s_wp[(gc + q_ * NPC) * 279 +: 279];
-                    end
-                end
-                if (bsy && va_q) begin bsy <= 1'b0; ak[own] <= 1'b1; end    // acknowledged: back to the owning slice
-                pend <= pn;
-            end
-        end
-        for (gj = 0; gj < NIN; gj = gj + 1) begin : g_a
-            if (gc + gj * NPC < NSL) begin : g_ae assign s_ack[gc + gj * NPC] = ak[gj]; end
+        wire [NIN-1:0] i_v,ak; wire [NIN*279-1:0] i_pkt;
+            wire n_v,ack_q;wire [278:0] n_p;
+`ifdef SYNTHESIS
+        ot_hgi_sm_pub_vmcore u_core
+`else
+        ot_hgi_sm_pub_vmcore #(.NIN(NIN)) u_core
+`endif
+        (.clk(clk_vm_core[gc]),.rn(rn_mid[gc]),.i_v(i_v),.i_pkt(i_pkt),.ack_q(ack_q),.ack(ak),.n_v(n_v),.n_p(n_p));
+        ot_hgi_sm_pub_vmport u_port (.clk(clk_vm_port[gc]),.rn((gc<2)?rn_mid[0]:rn_mid[NCOL-1]),.n_v(n_v),.n_p(n_p),
+          .vmr(vmr[gc*274 +:274]),.vmq(vmq[gc*338 +:338]),.ack_q(ack_q),.active(vq_vw[gc]));
+        for(gj=0;gj<NIN;gj=gj+1) begin:g_a
+          if(gc+gj*NPC<NSL) begin:g_ae
+            assign i_v[gj]=s_wv[gc+gj*NPC]; assign i_pkt[gj*279 +:279]=s_wp[(gc+gj*NPC)*279 +:279];
+            assign s_ack[gc+gj*NPC]=ak[gj];
+          end else begin:g_az
+            assign i_v[gj]=1'b0; assign i_pkt[gj*279 +:279]='0;
+          end
         end
     end endgenerate
+`ifndef SYNTHESIS
+    // Exercised by the full-shape cycle-exact bench; this is an assertion, never a mask.
+    always @(posedge clk_cmd) if(rn && u_cmd.quiet_claim && |vq_vw)
+      $fatal(1,"publication done proof: request still live after every write ACK");
+`endif
     // ---- STREAM: credit tree of 2:1 nodes (level 0 = the slices)
     wire [(LV+1)*NLF-1:0] t_v, t_cr, t_a; wire [(LV+1)*NLF*W-1:0] t_d;
     generate
@@ -1094,10 +1291,31 @@ module ot_hgi_sm_pub_hier #(
         for (gl = 1; gl <= LV; gl = gl + 1) begin : g_l
             for (gn = 0; gn < (NLF >> gl); gn = gn + 1) begin : g_n
                 localparam integer B = gl * NLF + gn, C0 = (gl - 1) * NLF + 2 * gn;
-                ot_hgi_sm_pub_smrg #(.D(SD), .W(W), .ROOT(gl == LV), .LVL(gl)) u (
-                    .clk(clk), .rn(rn), .i_v(t_v[C0 +: 2]), .i_d(t_d[C0*W +: 2*W]), .i_cr(t_cr[C0 +: 2]),
+`ifdef SYNTHESIS
+                if(gl==1) begin:g_h1
+                ot_hgi_sm_pub_smrg_l1 u (
+                    .clk(clk_tree[NLF-(NLF >> (gl-1))+gn]), .rn((gl==1)?rn_mid[gn]:(gl==2)?rn_mid[2*gn+1]:rn_mid[2]), .i_v(t_v[C0 +: 2]), .i_d(t_d[C0*W +: 2*W]), .i_cr(t_cr[C0 +: 2]),
                     .o_v(t_v[B]), .o_d(t_d[B*W +: W]), .o_cr((gl == LV) ? 1'b0 : t_cr[B]), .xb((gl == LV) ? r1_v : 1'b0),
                     .a_in(t_a[C0 +: 2]), .a_out(t_a[B]));
+                end
+                else if(gl==2) begin:g_h2
+                ot_hgi_sm_pub_smrg_l2 u (
+                    .clk(clk_tree[NLF-(NLF >> (gl-1))+gn]), .rn((gl==1)?rn_mid[gn]:(gl==2)?rn_mid[2*gn+1]:rn_mid[2]), .i_v(t_v[C0 +: 2]), .i_d(t_d[C0*W +: 2*W]), .i_cr(t_cr[C0 +: 2]),
+                    .o_v(t_v[B]), .o_d(t_d[B*W +: W]), .o_cr((gl == LV) ? 1'b0 : t_cr[B]), .xb((gl == LV) ? r1_v : 1'b0),
+                    .a_in(t_a[C0 +: 2]), .a_out(t_a[B]));
+                end
+                else if(gl==3) begin:g_h3
+                ot_hgi_sm_pub_smrg_l3 u (
+                    .clk(clk_tree[NLF-(NLF >> (gl-1))+gn]), .rn((gl==1)?rn_mid[gn]:(gl==2)?rn_mid[2*gn+1]:rn_mid[2]), .i_v(t_v[C0 +: 2]), .i_d(t_d[C0*W +: 2*W]), .i_cr(t_cr[C0 +: 2]),
+                    .o_v(t_v[B]), .o_d(t_d[B*W +: W]), .o_cr((gl == LV) ? 1'b0 : t_cr[B]), .xb((gl == LV) ? r1_v : 1'b0),
+                    .a_in(t_a[C0 +: 2]), .a_out(t_a[B]));
+                end
+`else
+                ot_hgi_sm_pub_smrg #(.D(SD), .W(W), .ROOT(gl == LV), .LVL(gl)) u (
+                    .clk(clk_tree[NLF-(NLF >> (gl-1))+gn]), .rn((gl==1)?rn_mid[gn]:(gl==2)?rn_mid[2*gn+1]:rn_mid[2]), .i_v(t_v[C0 +: 2]), .i_d(t_d[C0*W +: 2*W]), .i_cr(t_cr[C0 +: 2]),
+                    .o_v(t_v[B]), .o_d(t_d[B*W +: W]), .o_cr((gl == LV) ? 1'b0 : t_cr[B]), .xb((gl == LV) ? r1_v : 1'b0),
+                    .a_in(t_a[C0 +: 2]), .a_out(t_a[B]));
+`endif
             end
             for (gn = (NLF >> gl); gn < NLF; gn = gn + 1) begin : g_u
                 assign t_v[gl*NLF + gn] = 1'b0; assign t_d[(gl*NLF + gn)*W +: W] = '0; assign t_a[gl*NLF + gn] = 1'b0;
@@ -1108,33 +1326,12 @@ module ot_hgi_sm_pub_hier #(
             assign t_cr[LV*NLF + gn] = 1'b0;
         end
     endgenerate
-    // root -> relay -> s0 (the port register); the root's busy snapshot relayed to the collector
-    always @(posedge clk) begin if (t_v[LV*NLF]) r1_d <= t_d[LV*NLF*W +: W]; if (r1_v) begin s0_idx <= r1_d[51:32]; s0_data <= r1_d[31:0]; end end
-    // ---- control
-    reg [NSL-1:0] sdn; reg [7:0] allc;
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin
-            rel <= 1'b0; busy <= 1'b0; acc_q <= 1'b0; pub_done <= 1'b0; pub_fault <= 1'b0; s0_v <= 1'b0; r1_v <= 1'b0;
-            agg_r <= 1'b0; sdn <= '0; allc <= 8'd0; cgo <= '0;
-        end else begin
-            rel <= 1'b1;
-            acc_q <= pub_v && pub_rdy;
-            pub_done <= 1'b0; cgo <= {cgo, 1'b0};
-            r1_v <= t_v[LV*NLF]; s0_v <= r1_v; agg_r <= t_a[LV*NLF];
-            if (|ft_l) pub_fault <= 1'b1;                                   // a slice overrun: fail closed
-            if (acc_q) begin
-                if (!(pf_sp == 2'd1 || pf_sp == 2'd2) || pf_p == 4'd0 || pf_p > NC) pub_fault <= 1'b1;
-                else begin
-                    busy <= 1'b1; sdn <= '0; allc <= 8'd0;
-                    cgo[0] <= 1'b1;
-                end
-            end else if (busy) begin
-                sdn <= sdn | dn_l;
-                if (&sdn && allc != 8'hFF) allc <= allc + 8'd1;
-                if (&sdn && allc >= 8'(LV + 1) && !agg_r && vq_vw == 0) begin busy <= 1'b0; pub_done <= 1'b1; end
-            end
-        end
-    end
+    wire [51:0] stream_relay_data,stream_out_data;
+    ot_hgi_sm_pub_stream_edge u_stream_relay (.clk(clk_stream_edge[0]),.rn(rn_mid[1]),.i_v(t_v[LV*NLF]),
+      .i_data(t_d[LV*NLF*W +:W]),.i_busy(t_a[LV*NLF]),.o_v(r1_v),.o_busy(agg_r),.o_data(stream_relay_data));
+    ot_hgi_sm_pub_stream_edge u_stream_port (.clk(clk_stream_edge[1]),.rn(rn),.i_v(r1_v),
+      .i_data(stream_relay_data),.i_busy(1'b0),.o_v(s0_v),.o_busy(),.o_data(stream_out_data));
+    assign s0_idx=stream_out_data[51:32];assign s0_data=stream_out_data[31:0];
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1201,5 +1398,135 @@ module ot_hgi_sm_pub #(
             .pub_fault(pub_fault), .sm_rv(sm_rv), .sm_rrow(sm_rrow), .sm_rdata(sm_rdata), .vmq(vmq), .vmr(vmr), .s0_v(s0_v),
             .s0_idx(s0_idx), .s0_data(s0_data), .sm_cr(sm_cr));
     end endgenerate
+endmodule
+module ot_hgi_sm_pub_return_d1(input wire clk,rn,i_done,i_fault,output wire o_done,o_fault);
+ ot_hgi_sm_pub_return #(.DL(1)) u(.*);
+endmodule
+
+module ot_hgi_sm_pub_return_d2(input wire clk,rn,i_done,i_fault,output wire o_done,o_fault);
+ ot_hgi_sm_pub_return #(.DL(2)) u(.*);
+endmodule
+
+module ot_hgi_sm_pub_return_d3(input wire clk,rn,i_done,i_fault,output wire o_done,o_fault);
+ ot_hgi_sm_pub_return #(.DL(3)) u(.*);
+endmodule
+
+module ot_hgi_sm_pub_return_d4(input wire clk,rn,i_done,i_fault,output wire o_done,o_fault);
+ ot_hgi_sm_pub_return #(.DL(4)) u(.*);
+endmodule
+
+module ot_hgi_sm_pub_smrg_l1(input wire clk,rn,input wire [1:0] i_v,input wire [103:0] i_d,
+ output wire [1:0] i_cr,output wire o_v,output wire [51:0] o_d,input wire o_cr,xb,
+ input wire [1:0] a_in,output wire a_out);
+ ot_hgi_sm_pub_smrg #(.D(8),.W(52),.ROOT(0),.LVL(1)) u(.*);
+endmodule
+
+module ot_hgi_sm_pub_smrg_l2(input wire clk,rn,input wire [1:0] i_v,input wire [103:0] i_d,
+ output wire [1:0] i_cr,output wire o_v,output wire [51:0] o_d,input wire o_cr,xb,
+ input wire [1:0] a_in,output wire a_out);
+ ot_hgi_sm_pub_smrg #(.D(8),.W(52),.ROOT(0),.LVL(2)) u(.*);
+endmodule
+
+module ot_hgi_sm_pub_smrg_l3(input wire clk,rn,input wire [1:0] i_v,input wire [103:0] i_d,
+ output wire [1:0] i_cr,output wire o_v,output wire [51:0] o_d,input wire o_cr,xb,
+ input wire [1:0] a_in,output wire a_out);
+ ot_hgi_sm_pub_smrg #(.D(8),.W(52),.ROOT(1),.LVL(3)) u(.*);
+endmodule
+
+module ot_hgi_sm_pub_credit4(input wire clk,rn,input wire [3:0] i_cr,output wire [3:0] o_cr);
+ ot_hgi_sm_pub_credit #(.NSM(4)) u(.*);
+endmodule
+module ot_hgi_sm_pub_reset(input wire clk,rst_n_in,output wire rn);
+ ot_rst_relay #(.REGIONS(1)) u(.clk(clk),.rst_n_in(rst_n_in),.rst_n(rn));
+endmodule
+// Die-wire split of the existing two-stage VM merge. No transaction edge is added.
+module ot_hgi_sm_pub_vmcore #(parameter integer NIN=2)(
+ input wire clk,rn, input wire [NIN-1:0] i_v, input wire [NIN*279-1:0] i_pkt,
+ input wire ack_q, output wire [NIN-1:0] ack, output reg n_v, output reg [278:0] n_p);
+ localparam integer OWW=(NIN>1)?$clog2(NIN):1;
+ assign ack=ak;
+        reg [NIN-1:0] pend, ak; reg bsy; reg [OWW-1:0] own, rr;
+        always @(posedge clk or negedge rn) begin
+            if (!rn) begin pend <= '0; ak <= '0; bsy <= 1'b0; n_v <= 1'b0; own <= '0; rr <= '0; end
+            else begin : nd
+                reg f; integer q_, jj; reg [NIN-1:0] pn;
+                n_v <= 1'b0; ak <= '0;
+                pn = pend;
+                for (q_ = 0; q_ < NIN; q_ = q_ + 1) if (i_v[q_]) pn[q_] = 1'b1;
+                f = 1'b0;
+                if (!bsy) for (jj = 0; jj < NIN; jj = jj + 1) begin q_ = (rr + 1 + jj) % NIN;
+                    if (!f && pend[q_]) begin
+                        f = 1'b1; pn[q_] = 1'b0; own <= OWW'(q_); rr <= OWW'(q_); bsy <= 1'b1; n_v <= 1'b1;
+                        n_p <= i_pkt[q_ * 279 +: 279];
+                    end
+                end
+                if (bsy && ack_q) begin bsy <= 1'b0; ak[own] <= 1'b1; end    // acknowledged: back to the owning slice
+                pend <= pn;
+            end
+        end
+
+endmodule
+module ot_hgi_sm_pub_vmport(input wire clk,rn,n_v,input wire [278:0] n_p,
+ input wire [273:0] vmr,output wire [337:0] vmq,output reg ack_q,output wire active);
+ reg vq_v;reg [278:0] vq_p;
+ assign active=vq_v;
+ assign vmq={vq_v,1'b1,12'd0,vq_p[278:264],5'd0,vq_p[263:8],
+ {{4{vq_p[7]}},{4{vq_p[6]}},{4{vq_p[5]}},{4{vq_p[4]}},{4{vq_p[3]}},{4{vq_p[2]}},{4{vq_p[1]}},{4{vq_p[0]}}},16'h5042};
+ always @(posedge clk) if(n_v) vq_p<=n_p;
+ always @(posedge clk or negedge rn) if(!rn) begin ack_q<=1'b0;vq_v<=1'b0;end
+ else begin ack_q<=vmr[273] && vmr[256];vq_v<=n_v;end
+endmodule
+module ot_hgi_sm_pub_stream_edge(input wire clk,rn,i_v,i_busy,input wire [51:0] i_data,
+ output reg o_v,o_busy,output reg [51:0] o_data);
+ always @(posedge clk) if(i_v) o_data<=i_data;
+ always @(posedge clk or negedge rn) if(!rn) begin o_v<=1'b0;o_busy<=1'b0;end
+ else begin o_v<=i_v;o_busy<=i_busy;end
+endmodule
+
+module ot_hgi_sm_pub_cmd_quiet #(parameter integer NSL=8, NPC=4, NC=8, LV=3)(
+ input wire clk,rn,pub_v, input wire [39:0] pub_base, input wire [31:0] pub_stride,
+ input wire [1:0] pub_space, input wire [19:0] pub_m, input wire [12:0] pub_q,
+ input wire [3:0] pub_p, input wire pub_bf16, input wire [NSL-1:0] dn_l,ft_l,
+ input wire agg_r,
+ output wire pub_rdy, output reg pub_done,pub_fault,cgo, output reg [74:0] cfd);
+ reg rel,busy,acc_q; reg [39:0] pf_b; reg [31:0] pf_s; reg [1:0] pf_sp;
+ reg [19:0] pf_m; reg [12:0] pf_q; reg [3:0] pf_p; reg pf_bf;
+ assign pub_rdy=rel && !busy && !acc_q;
+ always @(posedge clk) begin pf_b<=pub_base; pf_s<=pub_stride; pf_sp<=pub_space;
+ pf_m<=pub_m; pf_q<=pub_q; pf_p<=pub_p; pf_bf<=pub_bf16; end
+    always @(posedge clk) begin
+        if (acc_q) cfd <= {pf_sp == 2'd2, pf_bf, pf_b[17:0], pf_s[17:0], pf_m, pf_q, pf_p};
+    end
+    // ---- control
+    reg [NSL-1:0] sdn; reg [7:0] allc;
+    // Every slice's done requires its last write ACK (tok==0). Return hops and the
+    // existing LV+1 guard follow that ACK; VM request-valid cannot still be live.
+    // Removing that redundant far-die status input preserves the completion edge.
+    wire quiet_claim=busy && (&sdn) && allc >= 8'(LV+1) && !agg_r;
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
+            rel <= 1'b0; busy <= 1'b0; acc_q <= 1'b0; pub_done <= 1'b0; pub_fault <= 1'b0;
+ sdn <= '0; allc <= 8'd0; cgo <= 1'b0;
+        end else begin
+            rel <= 1'b1;
+            acc_q <= pub_v && pub_rdy;
+            pub_done <= 1'b0; cgo <= 1'b0;
+            if (|ft_l) pub_fault <= 1'b1;                                   // a slice overrun: fail closed
+            if (acc_q) begin
+                if (!(pf_sp == 2'd1 || pf_sp == 2'd2) || pf_p == 4'd0 || pf_p > NC) pub_fault <= 1'b1;
+                else begin
+                    busy <= 1'b1; sdn <= '0; allc <= 8'd0;
+                    cgo <= 1'b1;
+                end
+            end else if (busy) begin
+                sdn <= sdn | dn_l;
+                if (&sdn && allc != 8'hFF) allc <= allc + 8'd1;
+                if (quiet_claim) begin busy <= 1'b0; pub_done <= 1'b1; end
+            end
+        end
+    end
+endmodule
+module ot_hgi_sm_pub_reset_hop(input wire clk,i_rn,output reg o_rn);
+ always @(posedge clk or negedge i_rn) if(!i_rn) o_rn<=1'b0;else o_rn<=1'b1;
 endmodule
 `default_nettype wire

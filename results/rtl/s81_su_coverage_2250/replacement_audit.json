@@ -1,0 +1,1087 @@
+{
+  "rows": [
+    {
+      "historical_element": "dsfd_su_t_kv",
+      "replacement_evidence": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv comments + actual v3 hierarchy",
+      "status": "replacement-family identified; actual die param binding still unresolved",
+      "successors": [
+        {
+          "master": "dsfd_su_t_kvt",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvt_ref-v2-cceaf47dc",
+              "commit": "cceaf47dc",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvt_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kve",
+          "closed_candidates": [
+            {
+              "job": "s81su_kve_ref-v1-00167e741",
+              "commit": "00167e741",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_bank.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kve_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kvp",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvp_ref-v1-00167e741",
+              "commit": "00167e741",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_bank.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvp_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kvr",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvr_ref-v1-00167e741",
+              "commit": "00167e741",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_divc.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvr_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kvq",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvq_ref-v4-ebdb80f0e",
+              "commit": "ebdb80f0e",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_dline.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvq_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_kvq_ref-v4-ebdb80f0e"
+          ]
+        }
+      ]
+    },
+    {
+      "historical_element": "dsfd_su_t_kv0",
+      "replacement_evidence": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv comments + actual v3 hierarchy",
+      "status": "replacement-family identified; actual die param binding still unresolved",
+      "successors": [
+        {
+          "master": "dsfd_su_t_kvt",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvt_ref-v2-cceaf47dc",
+              "commit": "cceaf47dc",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvt_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kve",
+          "closed_candidates": [
+            {
+              "job": "s81su_kve_ref-v1-00167e741",
+              "commit": "00167e741",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_bank.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kve_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kvr",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvr_ref-v1-00167e741",
+              "commit": "00167e741",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_divc.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvr_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kvq",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvq_ref-v4-ebdb80f0e",
+              "commit": "ebdb80f0e",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_dline.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvq_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_kvq_ref-v4-ebdb80f0e"
+          ]
+        }
+      ]
+    },
+    {
+      "historical_element": "dsfd_su_t_kv1",
+      "replacement_evidence": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv comments + actual v3 hierarchy",
+      "status": "replacement-family identified; actual die param binding still unresolved",
+      "successors": [
+        {
+          "master": "dsfd_su_t_kvt",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvt_ref-v2-cceaf47dc",
+              "commit": "cceaf47dc",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvt_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kvp",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvp_ref-v1-00167e741",
+              "commit": "00167e741",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_bank.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvp_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kvr",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvr_ref-v1-00167e741",
+              "commit": "00167e741",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_divc.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvr_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_kvq",
+          "closed_candidates": [
+            {
+              "job": "s81su_kvq_ref-v4-ebdb80f0e",
+              "commit": "ebdb80f0e",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_dline.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_kvq_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_kvq_ref-v4-ebdb80f0e"
+          ]
+        }
+      ]
+    },
+    {
+      "historical_element": "dsfd_su_t_qn",
+      "replacement_evidence": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv comments + actual v3 hierarchy",
+      "status": "replacement-family identified; actual die param binding still unresolved",
+      "successors": [
+        {
+          "master": "dsfd_su_t_qnt",
+          "closed_candidates": [
+            {
+              "job": "s81su_qnt_cb32_ref-v6-cb32-c904b01fb",
+              "commit": "c904b01fb",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qnt_cb32_ref.json",
+              "params": {
+                "CB": 32
+              },
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_qne",
+          "closed_candidates": [
+            {
+              "job": "s81su_qne_ref-v2-8946ebc79",
+              "commit": "8946ebc79",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_bank.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qne_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_qnh",
+          "closed_candidates": [
+            {
+              "job": "s81su_qnh_ref-v2-8946ebc79",
+              "commit": "8946ebc79",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_divc.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qnh_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            },
+            {
+              "job": "s81su_qnh_ref-v4m-46d62c427",
+              "commit": "46d62c427",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_divc.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qnh_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_qnr",
+          "closed_candidates": [
+            {
+              "job": "s81su_qnr_ref-v4m-46d62c427",
+              "commit": "46d62c427",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_divc.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qnr_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            },
+            {
+              "job": "s81su_qnr_ref-v2-8946ebc79",
+              "commit": "8946ebc79",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_divc.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qnr_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_qnq",
+          "closed_candidates": [
+            {
+              "job": "s81su_qnq_spx_ref-v5-spx-2df2353b8",
+              "commit": "2df2353b8",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_dline.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qnq_spx_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            },
+            {
+              "job": "s81su_qnq_sp8_ref-v5-sp8-2df2353b8",
+              "commit": "2df2353b8",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_dline.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qnq_sp8_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        }
+      ]
+    },
+    {
+      "historical_element": "dsfd_su_t_sm",
+      "replacement_evidence": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv comments + actual v3 hierarchy",
+      "status": "replacement-family identified; actual die param binding still unresolved",
+      "successors": [
+        {
+          "master": "dsfd_su_t_smt",
+          "closed_candidates": [
+            {
+              "job": "s81su_smt_hb2_ref-v2-hb2-ab43f2fe0",
+              "commit": "ab43f2fe0",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "exact",
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_smt_hb2_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            },
+            {
+              "job": "s81su_smt_hb1_ref-v2-hb1-ab43f2fe0",
+              "commit": "ab43f2fe0",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "exact",
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_smt_hb1_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_smt_hb2_ref-v2-hb2-ab43f2fe0",
+            "s81su_smt_hb1_ref-v2-hb1-ab43f2fe0"
+          ]
+        },
+        {
+          "master": "dsfd_su_t_sml",
+          "closed_candidates": [
+            {
+              "job": "s81su_sml_ref-v1-47c31b637",
+              "commit": "47c31b637",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "exact",
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_sml_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            },
+            {
+              "job": "s81su_sml_u65_ref-v1-6494b8a37",
+              "commit": "6494b8a37",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "exact",
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_sml_u65_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_sml_ref-v1-47c31b637",
+            "s81su_sml_u65_ref-v1-6494b8a37"
+          ]
+        },
+        {
+          "master": "dsfd_su_t_smc",
+          "closed_candidates": [
+            {
+              "job": "s81su_smc_ref-v1-47c31b637",
+              "commit": "47c31b637",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "exact",
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_smc_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_smc_ref-v1-47c31b637"
+          ]
+        },
+        {
+          "master": "dsfd_su_t_smr",
+          "closed_candidates": [
+            {
+              "job": "s81su_smr_ref-v1-47c31b637",
+              "commit": "47c31b637",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "exact",
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_smr_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_smr_ref-v1-47c31b637"
+          ]
+        },
+        {
+          "master": "dsfd_su_t_smd",
+          "closed_candidates": [
+            {
+              "job": "s81su_smd_u65_ref-v1-6494b8a37",
+              "commit": "6494b8a37",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "exact",
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_smd_u65_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            },
+            {
+              "job": "s81su_smd_ref-v1-47c31b637",
+              "commit": "47c31b637",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "exact",
+                "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_smd_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_smd_u65_ref-v1-6494b8a37",
+            "s81su_smd_ref-v1-47c31b637"
+          ]
+        }
+      ]
+    },
+    {
+      "historical_element": "dsfd_su_t_sw",
+      "replacement_evidence": "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv comments + actual v3 hierarchy",
+      "status": "replacement-family identified; actual die param binding still unresolved",
+      "successors": [
+        {
+          "master": "dsfd_su_t_swtl",
+          "closed_candidates": [
+            {
+              "job": "s81su_swtl_ref-v2-noouthold-13223932b",
+              "commit": "13223932b",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_swtl_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_swtl_ref-v2-noouthold-13223932b"
+          ]
+        },
+        {
+          "master": "dsfd_su_t_swth",
+          "closed_candidates": [
+            {
+              "job": "s81su_swth_ref-v2-noouthold-13223932b",
+              "commit": "13223932b",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv": "exact",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv": "exact",
+                "rtl/hdc/ot_hdc_delay.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_swth_ref.json",
+              "params": {},
+              "all_current_sources_exact": true
+            }
+          ],
+          "exact_current_sources_candidates": [
+            "s81su_swth_ref-v2-noouthold-13223932b"
+          ]
+        },
+        {
+          "master": "dsfd_su_t_swe",
+          "closed_candidates": [
+            {
+              "job": "s81su_swe_sp8_ref-v4-sp8-1ec43dde7",
+              "commit": "1ec43dde7",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_swe_sp8_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            },
+            {
+              "job": "s81su_swe_spx_ref-v4-spx-1ec43dde7",
+              "commit": "1ec43dde7",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_swe_spx_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            },
+            {
+              "job": "s81su_swe_gfix_ref-v3-gfix-1065bcb90",
+              "commit": "1065bcb90",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sw.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_swe_gfix_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        },
+        {
+          "master": "dsfd_su_t_qbe",
+          "closed_candidates": [
+            {
+              "job": "s81su_qbe_spx_ref-v5-spx-2df2353b8",
+              "commit": "2df2353b8",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qb.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_dline.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qbe_spx_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            },
+            {
+              "job": "s81su_qbe_sp8_ref-v5-sp8-2df2353b8",
+              "commit": "2df2353b8",
+              "status": "CLOSED",
+              "source_equality": {
+                "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qb.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv": "DIFF_OR_UNAVAILABLE",
+                "rtl/hdc/ot_hdc_delay.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp.sv": "exact",
+                "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_add_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_f12.sv": "exact",
+                "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "exact",
+                "rtl/hdc/ot_hdc_prefix.sv": "exact",
+                "rtl/hdc/ot_hdc_sfu.sv": "exact",
+                "rtl/hdc/ot_sram_dline.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "exact",
+                "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "exact"
+              },
+              "spec": "tools/ref_tile/specs_s81su/s81su_qbe_sp8_ref.json",
+              "params": {},
+              "all_current_sources_exact": false
+            }
+          ],
+          "exact_current_sources_candidates": []
+        }
+      ]
+    }
+  ],
+  "actual_native_param_binding": "UNRESOLVED: candidate hierarchy params S_RD16,SM_NVMAX40; no die production qualification inferred from cancelled aliases",
+  "source_head": "472216edf9fb3dd7108a3f80ba0c8abc51a059c2"
+}

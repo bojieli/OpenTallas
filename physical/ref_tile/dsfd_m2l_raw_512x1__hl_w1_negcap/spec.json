@@ -57,8 +57,8 @@
  },
  "job": {
   "owner": "Codex:s81-end-relays",
-  "branch": "codex/s81-hend-negcap-1013",
-  "tag": "nc",
+  "branch": "main",
+  "tag": "nc3-flowfix",
   "purpose": "Fix forwarded input rising-edge hold race with negedge pin capture, assigned v17 pins, complete forwarded/core clock STA",
   "benches": [
    {
