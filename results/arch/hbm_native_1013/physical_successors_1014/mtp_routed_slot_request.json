@@ -1,0 +1,149 @@
+{
+  "slot": "hb_mtp",
+  "status": "Actual CLOSED successor; native parent adoption OPEN",
+  "master": "hgi_mtp_native",
+  "outline_um": [
+    287.28,
+    200.88
+  ],
+  "pins": {
+    "W": [
+      "f_cmdproc"
+    ],
+    "E": [
+      "clk",
+      "rst_n",
+      "t_cmdproc"
+    ]
+  },
+  "clock": {
+    "port": "clk",
+    "face": "E",
+    "layer": "M4",
+    "phase": "phi-minus-measured-boundary-R",
+    "boundary_reference_corner": "TT",
+    "R_ps": 261.6,
+    "spread_ps": 63.3
+  },
+  "signal_and_pg_cap": "M5",
+  "parent_strap": "M6",
+  "predecessor": "hgi_mtp_native-n14-lvt-5b9670b6d-tc-hm10",
+  "actual_old_pin_failures": 114,
+  "no_arithmetic_edits": true,
+  "remaining": [
+    "Native die hb_mtp actual +0.72um width slot adoption, W197/E517 seam coordinates and real parent clock/reset ports",
+    "Actual phi-R clock/reset graph and registered boundary max/min timing, no inferred placeholder mapping",
+    "Actual source-bound production priced composition; no accepted-cost ledger entry"
+  ],
+  "outline_note": "ref_tile snapped requested286.56 to287.28 lattice; actualslotchange requires+0.72um width and approval/adoption by dieowner",
+  "predecessor_actual_native_slot": {
+    "name": "hb_mtp",
+    "cell": "hgi_mtp_native",
+    "kind": "element",
+    "parent": "die",
+    "outline": {
+      "w": 286.56,
+      "h": 200.88
+    },
+    "origin": {
+      "x": 15202.512,
+      "y": 9940.32,
+      "orient": "R0"
+    },
+    "io_budget": {
+      "in_delay_frac": 0.2,
+      "out_delay_frac": 0.2,
+      "registered_in": true,
+      "registered_out": true
+    },
+    "clock_entry": {
+      "pin": "ck",
+      "face": "E",
+      "layer": "M4",
+      "offset": 199.804
+    },
+    "pg_layer": "M5",
+    "strap_layer": "M6",
+    "signal_max_layer": "M5",
+    "version": 12,
+    "notes": "hierarchy hardened_block",
+    "pins": [
+      {
+        "name": "t_cmdproc[516:0]",
+        "face": "W",
+        "layer": "M4",
+        "offset": 112.636
+      },
+      {
+        "name": "f_cmdproc[196:0]",
+        "face": "W",
+        "layer": "M4",
+        "offset": 181.372
+      },
+      {
+        "name": "ck",
+        "face": "E",
+        "layer": "M4",
+        "offset": 199.804
+      },
+      {
+        "name": "rst",
+        "face": "E",
+        "layer": "M4",
+        "offset": 200.188
+      }
+    ],
+    "layer_rule": "tile_m5",
+    "view_layers": {
+      "pg_layer": "M7",
+      "strap_layer": "M8",
+      "signal_max_layer": "M7"
+    },
+    "view_cap": "M7",
+    "view_status": "legacy cap M7 (measured top signal M7): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+    "layer_cap": "M5"
+  },
+  "intake_failure_preserved": "hbm_native_mtp_pinaccess_m5_1014-pinM5-e5adab2d8 REFUSED slot_fit: missing top-levelslot_change_request; zero route launched",
+  "successor_intake": "hbm_native_mtp_pinaccess_m5_1014-pinM5-e5adab2d8-scr1 exactsamestagedsource, explicitrequest onjob",
+  "source_commit": "e5adab2d83ab39fe06afd64400c0bb83f2ee4733",
+  "job": "hbm_native_mtp_pinaccess_m5_1014-pinM5-e5adab2d8-packfix",
+  "closed_record": "59a14cfe5",
+  "routed_gate": {
+    "TT_setup_ps": 12.08,
+    "FF_hold_ps": 23.51,
+    "DRC": 0,
+    "SS_sensitivity_setup_ps": -319.01,
+    "child_lint": "PASS",
+    "face_pins": 716,
+    "blocked_above": 0,
+    "blocked_same": 0
+  },
+  "actual_clock_boundary": {
+    "tt": {
+      "n": 1007,
+      "mean": 261.6,
+      "min": 242.9,
+      "max": 306.2
+    },
+    "ff": {
+      "n": 1007,
+      "mean": 216.6,
+      "min": 199.2,
+      "max": 256.3
+    },
+    "ss": {
+      "n": 1007,
+      "mean": 334.3,
+      "min": 313.7,
+      "max": 383.5
+    }
+  },
+  "view_hashes": {
+    "physical/ref_tile/hbm_native_mtp_pinaccess_m5_1014/views/hgi_mtp_native/hgi_mtp_native_tt.lib": "68bdf47564bd1cf0e59d17d728d77587d2e59457bc6211ca6eb3828e26767abe",
+    "physical/ref_tile/hbm_native_mtp_pinaccess_m5_1014/views/hgi_mtp_native/insertion.json": "6a68093c8b72c8b037ae37291e5005dbdf1735309a1dc277185ae9f473ef11f5",
+    "physical/ref_tile/hbm_native_mtp_pinaccess_m5_1014/views/hgi_mtp_native/hgi_mtp_native_ss.lib": "748b9db92183bf90438b14cbc45ae49c9e596af5084a2f4d08771e81cb1198b6",
+    "physical/ref_tile/hbm_native_mtp_pinaccess_m5_1014/views/hgi_mtp_native/hgi_mtp_native_ff.lib": "3c2b4bad54cf8601c346084885f5e00f9b8a82290bff7b297e3de60cb563770e",
+    "physical/ref_tile/hbm_native_mtp_pinaccess_m5_1014/views/hgi_mtp_native/child_lint.json": "ce5b8d12c0b8d97ccba5e2cd91275218d1fb225d1b8e478ed6c293cb043eafc3",
+    "physical/ref_tile/hbm_native_mtp_pinaccess_m5_1014/views/hgi_mtp_native/hgi_mtp_native.lef": "e85c71666e748aaaaba5c1f936107e8f6bad8104426a1c4984ce516db01eb0a8"
+  }
+}
