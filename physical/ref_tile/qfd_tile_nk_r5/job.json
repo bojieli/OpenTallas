@@ -1,5 +1,5 @@
 {
- "name": "qfd_tile_nk_r5-fp1-COMMIT",
+ "name": "qfd_tile_nk_r5-fp1-63e7ca004",
  "block": "ot_qwen_rom_tile_nk",
  "ref_tile": true,
  "owner": "Claude:q15-tile",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/q14-tile-parent",
-  "commit": "COMMIT"
+  "commit": "63e7ca004"
  },
  "stages": {
   "bench": [
@@ -218,7 +218,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_nk_r5/qfd_tile_nk_r5-fp1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tile_nk_r5/qfd_tile_nk_r5-fp1-63e7ca004"
   }
  ],
  "cycles_added": 4,
