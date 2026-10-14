@@ -26,6 +26,20 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "link_exact",
+    "cmd": "J=4 bash tools/hgi_adapters/run_hc_quarter_link.sh {RUN}/bench/link_exact exact",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "link_association_mutant",
+    "cmd": "J=4 bash tools/hgi_adapters/run_hc_quarter_link.sh {RUN}/bench/link_mutant mutant",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8
    }
   ],
   "calibrate": {

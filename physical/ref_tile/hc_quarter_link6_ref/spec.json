@@ -14,8 +14,8 @@
   "w": 64.8,
   "h": 64.8
  },
- "std_area_um2": 1400,
- "area_basis": "Unmeasured planning estimate1400um2 for2982shiftstate plus reset tree; no area/outline qualification before actual synth/CTS. Private clock probe only, no actualassignedpins or route.",
+ "std_area_um2": 1008,
+ "area_basis": "Measuredrawsynth1008um2/2985sinks; actualCTS1646.23/core3657.83=45.0056%, TTmean118.3/spread8.0 at64.8square. Fullsourcebind refreshed after test-only tag-preserving association mutant change; no slot/pin grant.",
  "pins": {
   "W": [
    "clk",
@@ -54,7 +54,22 @@
    "rtl/hbm_accel/die_glue",
    "rtl/lib"
   ],
-  "benches": [],
+  "benches": [
+   {
+    "name": "link_exact",
+    "cmd": "J=4 bash tools/hgi_adapters/run_hc_quarter_link.sh {RUN}/bench/link_exact exact",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "link_association_mutant",
+    "cmd": "J=4 bash tools/hgi_adapters/run_hc_quarter_link.sh {RUN}/bench/link_mutant mutant",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ],
   "views_to": "physical/ref_tile/hc_quarter_link6_ref/views",
   "record_to": "results/rtl/ref_tile/hc_quarter_link6_ref"
  },
