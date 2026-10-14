@@ -1,0 +1,7 @@
+face region lane mismatch segment 1037
+face region lane mismatch segment 1024
+face region lane mismatch segment 1020
+FAIL qfd_vm_rg6_face_model LEAF_MUT=0 ROW_MUT=0 SU_MUT=0 errors=2379018 of 6166 (xo 0 ro 0 so 0 ovf 0)
+[61666000] %Fatal: tb_qfd_vm_rg6_face_model.sv:3470: Assertion failed in tb_qfd_vm_rg6_face_model: FAIL
+%Error: rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6_face_model.sv:3470: Verilog $stop
+Aborting...

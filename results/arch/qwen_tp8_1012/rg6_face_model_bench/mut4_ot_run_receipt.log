@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     admits   462 GB (avail 688, growth 138, headroom 64, waiters 0/0 GB) load 43/128 running 18 disk 702 GB 
+ot-run: ot-epyc4       admits   498 GB (avail 733, growth 188, headroom 48, waiters 0/0 GB) load 45/128 running 23 disk 783 GB 
+ot-run: ot-pve1        admits   154 GB (avail 202, growth 11, headroom 32, waiters 0/0 GB) load 47/28 running 5 disk 1322 GB 
+ot-run: ot-agidock128  admits    65 GB (avail 94, growth 24, headroom 24, waiters 0/0 GB) load 14/64 running 6 disk 354 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-527226-1791952558 after 0 s
+FAIL qfd_vm_rg6_face_model LEAF_MUT=0 ROW_MUT=0 SU_MUT=0 errors=2379018 of 6166 (xo 0 ro 0 so 0 ovf 0)
+[61666000] %Fatal: tb_qfd_vm_rg6_face_model.sv:3470: Assertion failed in tb_qfd_vm_rg6_face_model: FAIL
+%Error: rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6_face_model.sv:3470: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-527226-1791952558): exit 0

@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     admits   460 GB (avail 687, growth 67, headroom 64, waiters 0/0 GB) load 46/128 running 18 disk 702 GB 
+ot-run: ot-epyc4       admits   515 GB (avail 742, growth 179, headroom 48, waiters 0/0 GB) load 50/128 running 21 disk 783 GB 
+ot-run: ot-pve1        admits   154 GB (avail 202, growth 11, headroom 32, waiters 0/0 GB) load 47/28 running 5 disk 1322 GB 
+ot-run: ot-agidock128  admits    65 GB (avail 94, growth 28, headroom 24, waiters 0/0 GB) load 20/64 running 7 disk 355 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-524649-1791952494 after 0 s
+- rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6_face_model.sv:3476: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 62us; walltime 1.579 s; speed 39.063 us/s
+- Verilator: cpu 1.578 s on 1 threads; allocated 11 MB
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-524649-1791952494): exit 0
