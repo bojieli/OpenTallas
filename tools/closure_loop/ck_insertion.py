@@ -236,28 +236,31 @@ def main():
     ap.add_argument("--routed", action="store_true")
     ap.add_argument("--image", default="openroad/orfs:latest")
     ap.add_argument("--output", type=Path, required=True)
-    ap.add_argument("--all-clocks", action="store_true", help="measure each external clock in the routed write_sdc, preserving per-pin references")
+    ap.add_argument("--all-clocks", action="store_true", help="measure each external clock in the selected write_sdc, preserving per-pin references")
     ap.add_argument("--route-corner", default="", help="TC/TT: CK_SS_* carry the TT insertion (route-time IO reference)")
     a = ap.parse_args()
     base = a.base.resolve()
     if a.all_clocks:
-        if not a.routed:
-            raise SystemExit("--all-clocks requires --routed")
-        clocks = re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_ports\s+\{([^}]+)\}\]", (base / "6_final.sdc").read_text(), re.M)
+        sdc = "6_final.sdc" if a.routed else next((s for s in ("4_cts.sdc", "3_place.sdc", "2_floorplan.sdc", "1_synth.sdc") if (base / s).exists()), None)
+        if sdc is None:
+            raise SystemExit(f"no CTS SDC under {base}")
+        clocks = re.findall(r"^create_clock\s+-name\s+(\S+)[^\n]*\[get_ports\s+\{([^}]+)\}\]", (base / sdc).read_text(), re.M)
         if not clocks or any(len(pin.split()) != 1 for name, pin in clocks):
-            raise SystemExit("routed write_sdc must identify each external clock's single source port")
+            raise SystemExit("write_sdc must identify each external clock's single source port")
         if len({pin for name, pin in clocks}) != len(clocks):
             raise SystemExit("multiple external clocks on one pin: select their references explicitly")
         records = {}
         with tempfile.TemporaryDirectory() as td:
             for index, (name, pin) in enumerate(clocks):
                 out = Path(td) / f"clock_{index}.json"
-                cmd = [sys.executable, str(Path(__file__).resolve()), "--base", str(base), "--routed", "--clock", name,
+                cmd = [sys.executable, str(Path(__file__).resolve()), "--base", str(base), "--clock", name,
                        "--image", a.image, "--route-corner", a.route_corner, "--output", str(out)]
+                if a.routed:
+                    cmd.append("--routed")
                 subprocess.run(cmd, check=True)
                 rec = json.loads(out.read_text())
                 rec["lib_clock_pin"] = pin
-                rec["clock_mapping_basis"] = f"6_final.sdc create_clock -name {name} [get_ports {{{pin}}}]"
+                rec["clock_mapping_basis"] = f"{sdc} create_clock -name {name} [get_ports {{{pin}}}]"
                 records[pin] = rec
         rec = dict(next(iter(records.values())))
         rec["clock_measurements"] = records
