@@ -35,12 +35,16 @@ static HelperSequenceResult run_actual_helper_layers(
  qwen_native_host::Inputs&inputs,const ActualHostStartup&startup,
  const ActualHostDrain&host_drain,const fs::path&out,
  const std::string&head_image={},const std::string&head_program={},
- EmbeddingOwner*embedding=nullptr,const std::string&embedding_bank={},SequenceClock*clock_state=nullptr){
+ EmbeddingOwner*embedding=nullptr,const std::string&embedding_bank={},SequenceClock*clock_state=nullptr,bool head_first=false){
  if(!startup||!host_drain)throw std::runtime_error("actual HOST producer/drain binding required");
  if(layers.empty())throw std::runtime_error("missing actual layers");
  if(layers.size()==36&&!head_image.empty()&&!embedding)throw std::runtime_error("full38-stage token requires actual embedding after HOST dispatch");
  if(embedding&&embedding_bank.empty())throw std::runtime_error("actual embedding code/scale bank required");
  link.banks(layers.front().program);size_t layer_index=0;unsigned segment=0;bool begun=false,running=false,head=false;
+ if(head_first){
+  if(head_image.empty()||head_program.empty()||layers.size()!=1)throw std::runtime_error("head-first run needs one plan layer plus head banks");
+  for(auto&x:r)x->prepare_head_first(head_image,head_program);link.banks(head_program);head=true;
+ }
  SequenceClock local_clock;SequenceClock&clock=clock_state?*clock_state:local_clock;
  uint64_t&cn=clock.cn,&hn=clock.hn;bool&ch=clock.ch,&hh=clock.hh;HelperSequenceResult result;
  bool grant_saved=false,embedding_started=false,embedding_complete=!embedding;uint64_t layer_helper_begin=0;
@@ -88,8 +92,9 @@ static HelperSequenceResult run_actual_helper_layers(
   // Both read snapshots and inter-model pins are now frozen. Advance every
   // actual model, then apply its captured addressed writes without rewiring.
   rank_pool().run([&](unsigned k){r[k]->rise();});link.rise(r);if(embedding)embedding->rise(r);host.rise();
-  if(host.core_edges%500==0){static const auto wall0=std::chrono::steady_clock::now();
-   std::cerr<<"PROGRESS core_edges "<<host.core_edges<<" layer_index "<<layer_index<<" head "<<head<<" dispatch "<<host.dispatch()<<" begun "<<begun<<" running "<<running<<" core_evals "<<r[0]->core_evals<<" skipped "<<r[0]->core_evals_skipped
+  static const auto wall0=std::chrono::steady_clock::now();
+  if(host.core_edges%500==0){
+   std::cerr<<"PROGRESS core_edges "<<host.core_edges<<" layer_index "<<layer_index<<" head "<<head<<" dispatch "<<host.dispatch()<<" begun "<<begun<<" running "<<running<<" core_evals "<<r[0]->core_evals<<" skipped "<<r[0]->core_evals_skipped<<" memo_hits "<<r[0]->memo_hits<<" memo_verified "<<r[0]->memo_verified<<" memo_records "<<r[0]->memo_records
     <<" wall_s "<<std::chrono::duration<double>(std::chrono::steady_clock::now()-wall0).count()<<std::endl;}
   if(embedding&&!embedding_complete&&embedding_started&&embedding->done()){
    embedding_complete=true;fs::create_directories(out/"embedding");std::ofstream f(out/"embedding"/"actual_commits.txt");for(auto&w:embedding->commits)f<<w.address<<" "<<std::hex<<std::setw(8)<<std::setfill('0')<<w.value<<" "<<w.tag<<std::dec<<" "<<w.generation<<" "<<w.edge<<"\n";
