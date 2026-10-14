@@ -1,0 +1,7 @@
+ot-run: ot-epyc1tb     admits   627 GB (avail 854, growth 44, headroom 64, waiters 0/0 GB) load 32/128 running 12 disk 1514 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas/claude/closure-loop/qfd_tt_ctlm_head-native-s1-daf5f1142-arg2
+ot-run: ot-pve1        skipped: no /srv/opentallas/claude/closure-loop/qfd_tt_ctlm_head-native-s1-daf5f1142-arg2
+ot-run: ot-agidock128  skipped: no /srv/opentallas/claude/closure-loop/qfd_tt_ctlm_head-native-s1-daf5f1142-arg2
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1401871-1791962869 after 0 s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1401871-1791962869): exit 0

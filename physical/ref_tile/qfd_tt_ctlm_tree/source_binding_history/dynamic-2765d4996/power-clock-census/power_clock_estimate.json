@@ -1,0 +1,19 @@
+{
+  "head_closed_family": "ARG2",
+  "head_record": "5f46813ea",
+  "head_station_ff": 434,
+  "head_command_station_ff": 380,
+  "head_return_station_ff": 54,
+  "head_total_ff": 4608,
+  "private_shadow_primary_ff": 545,
+  "private_shadow_gated_ff": 2,
+  "private_shadow_extra_program_ram": 2,
+  "existing_tree_primary_ff_excluded": 81,
+  "idle_cycles": 30814,
+  "native_idle_enabled_edges": 154,
+  "estimated_added_head_idle_clock_edges": 13306440,
+  "estimated_added_shadow_idle_clock_edges": 16793938,
+  "estimated_added_ff_idle_clock_edges_total": 30100378,
+  "estimated_added_program_ram_idle_clock_edges": 61628,
+  "label": "Measured physical clock-sink counts times measured functional idle epochs; FF/ram clock-pin event ESTIMATE, not watts, clock-wire/buffer power/capacitance or leakage. Does not imply owner adoption."
+}
