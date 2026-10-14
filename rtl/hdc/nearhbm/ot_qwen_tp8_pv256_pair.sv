@@ -12,9 +12,9 @@ module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0, parameter integer TREE
  output reg fault,output wire busy,output reg[31:0] accepted,committed,
  output reg[7:0] peak_inflight
 );
- localparam IDLE=0,FEED=1,DRAIN=2,READ=3,WAIT=4,OUT=5,BAD=6,TRA=7,TRB=8,TRADD=9,TRDRAIN=10;
+ localparam IDLE=0,FEED=1,DRAIN=2,READ=3,WAIT=4,OUT=5,BAD=6,TRA=7,TRB=8,TRADD=9,TRDRAIN=10,INIT=11;
  reg[3:0] state;reg[7:0] nodes;reg[6:0] ti;wire[16383:0] raw_leaf,tree_sum;reg[13:0] lim,next_t;reg[15:0] ep;
- reg[127:0] pending;reg[6:0] rc;reg[7:0] inflight;
+ reg[6:0] init_c;reg[127:0] pending;reg[6:0] rc;reg[7:0] inflight;
  wire[31:0] sf,cv;wire[6:0] cc[0:31];
  wire good=in_epoch==ep && in_t==next_t && in_c==next_t[6:0]
   && in_first==(next_t<256) && in_last==(next_t+256>=lim);
@@ -27,7 +27,7 @@ module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0, parameter integer TREE
  generate for(h=0;h<4;h=h+1)begin:gh
   for(b=0;b<8;b=b+1)begin:gb
    localparam S=h*8+b;
-   ot_qwen_tp8_pv256_slice u_slice(.clk(slice_clk[S]),.rst_n(rst_n),.take(take),.c(in_c),.first(in_first),
+   ot_qwen_tp8_pv256_slice u_slice(.clk(slice_clk[S]),.rst_n(rst_n),.take(take),.c(in_c),.first(in_first),.init_zero(state==INIT),.init_c(init_c),
     .v(in_v[128*b+:128]),.e(in_e[16*h+:16]),.read_leaf(state==READ||state==TRA||state==TRB),.leaf_c((state==TRA||state==TRB)?((ti<<1)+(state==TRB)):rc),
     .reduce_issue(state==TRADD),.reduce_capture(state==TRB),.reduce_last(nodes==2),.reduce_dst(ti),.tree_sum(tree_sum[512*S+:512]),
     .leaf(raw_leaf[512*S+:512]),.commit(cv[S]),.commit_c(cc[S]),.fault(sf[S]));
@@ -46,12 +46,13 @@ module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0, parameter integer TREE
    if(inflight>peak_inflight)peak_inflight<=inflight;
    case(state)
     IDLE:if(start)begin
-     ep<=epoch;lim<=context_len;next_t<=PAIR*128;rc<=0;accepted<=0;committed<=0;
+     ep<=epoch;lim<=context_len;init_c<=0;next_t<=PAIR*128;rc<=0;accepted<=0;committed<=0;
      peak_inflight<=0;pending<=0;inflight<=0;
-     // Current full-shape candidate requires all 128 owned residues present.
-     if(context_len<=PAIR*128+127||context_len>8192)begin state<=BAD;fault<=1;end
-     else state<=FEED;
+     // Initialize every canonical residue, including absent rows and empty pairs.
+     if(context_len==0||context_len>8192)begin state<=BAD;fault<=1;end
+     else state<=INIT;
     end
+    INIT:if(init_c==127)state<=(lim<=PAIR*128)?DRAIN:FEED;else init_c<=init_c+1;
     FEED:if(take)begin
      if(in_c==127)begin
       if(next_t+129>=lim)state<=DRAIN;

@@ -3,6 +3,7 @@
 // Feedback lives in two actual 128x256 SRAM macros, not a flop-array proxy.
 module ot_qwen_tp8_pv256_slice(
  input wire clk,rst_n, take, input wire [6:0] c,
+ input wire init_zero,input wire[6:0] init_c,
  input wire first, input wire [127:0] v, input wire [15:0] e,
  input wire read_leaf, input wire [6:0] leaf_c,
  input wire reduce_issue,reduce_capture,reduce_last,input wire[6:0] reduce_dst,
@@ -33,7 +34,7 @@ module ot_qwen_tp8_pv256_slice(
  generate for(m=0;m<2;m=m+1)begin:g_mem
   ot_sram_1r1w_128x256_m1_r2c2 u_mem(.clk(clk),
    .r_ce_in(take||read_leaf),.r_addr_in(read_leaf?leaf_c:c),.rd_out(rd[256*m+:256]),
-   .w_ce_in(commit),.w_addr_in(commit_c),.wd_in(sum[256*m+:256]),.w_mask_in({256{1'b1}}),
+   .w_ce_in(init_zero||commit),.w_addr_in(init_zero?init_c:commit_c),.wd_in(init_zero?256'b0:sum[256*m+:256]),.w_mask_in({256{1'b1}}),
    .rr_en(2'b0),.rr_addr(12'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end
  for(l=0;l<16;l=l+1)begin:g_lane
