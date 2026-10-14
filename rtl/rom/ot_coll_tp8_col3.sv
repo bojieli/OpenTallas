@@ -27,7 +27,8 @@
 // First-word-fall-through queue, D / 32 banks behind a 2-entry output buffer (one pop per edge sustained).
 // MEM 1: ot_sram_1r1w_32x128_m1 macros (registered read).  MEM 2: flop storage read through a register at the same
 // edge as the macro's read (identical hv / hd timing to MEM 1; used for the narrow metadata column).
-module ot_coll_tp8_cq #(parameter integer W = 128, parameter integer D = 32, parameter integer MEM = 1) (
+module ot_coll_tp8_cq #(parameter integer W = 128, parameter integer D = 32, parameter integer MEM = 1,
+                       parameter integer PRESYNC = 0) (
     input  wire         clk,
     input  wire         rst_n,
     input  wire         push,
@@ -42,7 +43,12 @@ module ot_coll_tp8_cq #(parameter integer W = 128, parameter integer D = 32, par
     initial if (D % 32 != 0 || W > 128 || (K & (K - 1)) != 0 || (MEM != 1 && MEM != 2))
         $error("ot_coll_tp8_cq: D = 32 * 2^k, W <= 128, MEM 1 or 2");
     wire qr;
-    (* keep_hierarchy *) ot_coll_rst_leaf u_qr (.clk(clk), .arst_n(rst_n), .q(qr));
+    // PRESYNC 1: rst_n is already the 2-flop synchronised release of the enclosing leaf (same edge as u_qr would give)
+    generate if (PRESYNC != 0) begin : g_ps
+        assign qr = rst_n;
+    end else begin : g_rs
+        (* keep_hierarchy *) ot_coll_rst_leaf u_qr (.clk(clk), .arst_n(rst_n), .q(qr));
+    end endgenerate
     reg [AB-1:0] wp, rp;
     reg [AB:0] mcnt;
     reg rf;
@@ -99,7 +105,8 @@ module ot_coll_tp8_col_core #(
     parameter integer WLQ = 128,
     parameter integer WTQ = 128,
     parameter integer WRQ = 128,
-    parameter integer MEM = 1
+    parameter integer MEM = 1,
+    parameter integer PRESYNC = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -125,7 +132,11 @@ module ot_coll_tp8_col_core #(
     reg         sel_q, hold_q;
     reg [2:0]   push_q;
     wire        qr;
-    (* keep_hierarchy *) ot_coll_rst_leaf u_cr (.clk(clk), .arst_n(rst_n), .q(qr));
+    generate if (PRESYNC != 0) begin : g_ps
+        assign qr = rst_n;
+    end else begin : g_rs
+        (* keep_hierarchy *) ot_coll_rst_leaf u_cr (.clk(clk), .arst_n(rst_n), .q(qr));
+    end endgenerate
     (* keep *) reg [7:0] die_q, meta_q;
     always @(posedge clk) begin die_q <= {8{die_s}}; meta_q <= {8{meta_s}}; end
     wire [W-1:0] die_v, meta_v;
@@ -176,12 +187,12 @@ module ot_coll_tp8_col_core #(
     wire [W-1:0] eq_w = sel_q ? sum_q : loc_q;
 `endif
     wire [WLQ-1:0] lq_h; wire [WTQ-1:0] tq_h; wire [WRQ-1:0] rq_h;
-    ot_coll_tp8_cq #(.W(W),   .D(64),  .MEM(MEM)) u_lb(.clk(clk),.rst_n(rst_n),.push(c_push[0]),.pop(c_pop[0]),.wd(rl),.hd(lb_hd),.hv(hv[0]),.ovf(ovf[0]));
-    ot_coll_tp8_cq #(.W(W),   .D(64),  .MEM(MEM)) u_pq(.clk(clk),.rst_n(rst_n),.push(c_push[1]),.pop(c_pop[1]),.wd(dp),.hd(pq_hd),.hv(hv[1]),.ovf(ovf[1]));
-    ot_coll_tp8_cq #(.W(W),   .D(32),  .MEM(MEM)) u_eq(.clk(clk),.rst_n(rst_n),.push(push_q[0]),.pop(c_pop[2]),.wd(eq_w),.hd(eq_hd),.hv(hv[2]),.ovf(ovf[2]));
-    ot_coll_tp8_cq #(.W(WLQ), .D(128), .MEM(MEM)) u_lq(.clk(clk),.rst_n(rst_n),.push(push_q[1]),.pop(c_pop[3]),.wd(lqw_q[WLQ-1:0]),.hd(lq_h),.hv(hv[3]),.ovf(ovf[3]));
-    ot_coll_tp8_cq #(.W(WTQ), .D(128), .MEM(MEM)) u_tq(.clk(clk),.rst_n(rst_n),.push(push_q[2]),.pop(c_pop[4]),.wd(tqw_q[WTQ-1:0]),.hd(tq_h),.hv(hv[4]),.ovf(ovf[4]));
-    ot_coll_tp8_cq #(.W(WRQ), .D(32),  .MEM(MEM)) u_rq(.clk(clk),.rst_n(rst_n),.push(c_push[5]),.pop(c_pop[5]),.wd(dr[WRQ-1:0]),.hd(rq_h),.hv(hv[5]),.ovf(ovf[5]));
+    ot_coll_tp8_cq #(.W(W),   .D(64),  .MEM(MEM), .PRESYNC(PRESYNC)) u_lb(.clk(clk),.rst_n(rst_n),.push(c_push[0]),.pop(c_pop[0]),.wd(rl),.hd(lb_hd),.hv(hv[0]),.ovf(ovf[0]));
+    ot_coll_tp8_cq #(.W(W),   .D(64),  .MEM(MEM), .PRESYNC(PRESYNC)) u_pq(.clk(clk),.rst_n(rst_n),.push(c_push[1]),.pop(c_pop[1]),.wd(dp),.hd(pq_hd),.hv(hv[1]),.ovf(ovf[1]));
+    ot_coll_tp8_cq #(.W(W),   .D(32),  .MEM(MEM), .PRESYNC(PRESYNC)) u_eq(.clk(clk),.rst_n(rst_n),.push(push_q[0]),.pop(c_pop[2]),.wd(eq_w),.hd(eq_hd),.hv(hv[2]),.ovf(ovf[2]));
+    ot_coll_tp8_cq #(.W(WLQ), .D(128), .MEM(MEM), .PRESYNC(PRESYNC)) u_lq(.clk(clk),.rst_n(rst_n),.push(push_q[1]),.pop(c_pop[3]),.wd(lqw_q[WLQ-1:0]),.hd(lq_h),.hv(hv[3]),.ovf(ovf[3]));
+    ot_coll_tp8_cq #(.W(WTQ), .D(128), .MEM(MEM), .PRESYNC(PRESYNC)) u_tq(.clk(clk),.rst_n(rst_n),.push(push_q[2]),.pop(c_pop[4]),.wd(tqw_q[WTQ-1:0]),.hd(tq_h),.hv(hv[4]),.ovf(ovf[4]));
+    ot_coll_tp8_cq #(.W(WRQ), .D(32),  .MEM(MEM), .PRESYNC(PRESYNC)) u_rq(.clk(clk),.rst_n(rst_n),.push(c_push[5]),.pop(c_pop[5]),.wd(dr[WRQ-1:0]),.hd(rq_h),.hv(hv[5]),.ovf(ovf[5]));
     assign lq_hd = {{(W-WLQ){1'b0}}, lq_h};
     assign tq_hd = {{(W-WTQ){1'b0}}, tq_h};
     assign rq_hd = {{(W-WRQ){1'b0}}, rq_h};
@@ -229,7 +240,13 @@ module ot_coll_tp8_col_tile_r3 (
     wire [127:0] lo_c, hi_c;
     wire [127:0] lb_h, pq_h, lq_h, tq_h, rq_h;
     wire [5:0]   hv_c;
-    ot_coll_tp8_col_core #(.W(128), .MEM(1)) u_c (.clk(clk), .rst_n(rst_n), .die_s(die_s), .meta_s(1'b0),
+    // r4 (native audit of coll_tp8_colr3_a-r3b: rst_n recovery 210.5 / die_s 252.4 ps at phi - R, both fanned out to
+    // 8 reset leaves / 8 strap flops across the tile): rst_n reaches ONE reset leaf (u_pr) at its pin and the core +
+    // queues take its synchronised release (PRESYNC: the identical edge their own leaves produced); die_s lands in ONE
+    // pin flop (a static strap: one edge later is invisible).
+    reg die_p;
+    always @(posedge clk) die_p <= die_s;
+    ot_coll_tp8_col_core #(.W(128), .MEM(1), .PRESYNC(1)) u_c (.clk(clk), .rst_n(pr), .die_s(die_p), .meta_s(1'b0),
         .in_d(in_q), .dp_d(dp_q), .dr_d(dr_q), .sr_d(sr_q), .sum_d(sum_q), .lq_wd(lq_q), .tq_wd(tq_q), .e_tx(tx_q),
         .c_push(push_p), .c_pop(pop_p), .c_hold(hold_p), .c_sel(sel_p), .c_takel(takel_p),
         .up(up), .ur(ur), .od(od), .sr(sr), .sx(sx), .s_lo(lo_c), .s_hi(hi_c),

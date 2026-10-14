@@ -28,7 +28,10 @@ module tb_coll_tp8 #(
     parameter integer EMEMM  = 1,
     parameter integer ECT    = 1,
     parameter integer QLQD   = 64,
-    parameter integer QTQD   = 32
+    parameter integer QTQD   = 32,
+    // STRAP 1 (qwen-coll-io r3): every die is the SAME master (PKG 0 / DIE 0 parameters) told its rank by the straps;
+    // OT_TP8_MUT_STRAP (negative control): packages 1 and 2 get each other's pkg strap
+    parameter integer STRAP  = 0
 ) (input wire clk);
     localparam integer ND = 8, FW = 32 * LANES, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
     reg [FW-1:0] part [0:MAXW-1];
@@ -66,7 +69,12 @@ module tb_coll_tp8 #(
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
-            ot_coll_tp8_die #(.PKG(P), .DIE(D), .LANES(LANES), .WT(WT), .ICR(ICR), .DEPTH(EDEPTH), .PR(EPR), .MEMM(EMEMM),
+`ifdef OT_TP8_MUT_STRAP
+            localparam integer PS = (P == 1) ? 2 : (P == 2) ? 1 : P;
+`else
+            localparam integer PS = P;
+`endif
+            ot_coll_tp8_die #(.PKG(STRAP ? 0 : P), .DIE(STRAP ? 0 : D), .STRAP(STRAP), .LANES(LANES), .WT(WT), .ICR(ICR), .DEPTH(EDEPTH), .PR(EPR), .MEMM(EMEMM),
                 .CT(ECT), .LQD(QLQD), .TQD(QTQD)) u_die (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(iv[g]), .in_cr(icr[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]),
@@ -79,7 +87,8 @@ module tb_coll_tp8 #(
                 .sx_cr_in(sxcr[g*3 +: 3]), .sr_valid(srv[g*3 +: 3]), .sr_rec(srrec[g*3*PW +: 3*PW]),
                 .sr_cr_out(srcr[g*3 +: 3]),
                 .out_valid(ov[g]), .out_data(od[g*FW +: FW]), .out_last(ol[g]), .out_rank(orank[g*3 +: 3]),
-                .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]));
+                .out_err(oe[g]), .fault(flt[g]), .fault_code(fc[g*5 +: 5]),
+                .pkg_s(PS[1:0]), .die_ps(D[0]));
             // in-package UCIe: this die -> its peer (g ^ 1)
             ot_rom_ucie_link #(.PW(PW), .LAT(LATU), .FLIT_BYTES(FW / 8), .BPC_NUM(BPC)) u_up (
                 .clk(clk), .rst_n(rst_n), .in_valid(upv[g]), .in_rec(uprec[g*PW +: PW]), .in_ready(uprdy[g]),
