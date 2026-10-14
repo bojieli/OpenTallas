@@ -1,5 +1,5 @@
 {
- "name": "qfd_xf_ch546-n1-COMMIT",
+ "name": "qfd_xf_ch546-n1-5d0843e92",
  "block": "qfd_xf_ch",
  "ref_tile": true,
  "owner": "Codex:qwen_small/io",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1013-qwen-r3b-io",
-  "commit": "COMMIT",
+  "commit": "5d0843e92",
   "extra_paths": [
    "physical/qwen_romio_slots"
   ]
@@ -120,7 +120,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_xf_ch546/qfd_xf_ch546-n1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_xf_ch546/qfd_xf_ch546-n1-5d0843e92"
   }
  ],
  "cycles_added": 0,
