@@ -589,6 +589,23 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
     return buf.getvalue()
 
 
+def gate_consumed(data: bytes, kd: Path, spec: dict, referenced, entries) -> dict:
+    """The staged files this gate consumes (SB.consumed_closure over the archive bytes): the kit directory (spec.json,
+    kit.env, SDCs, hooks, pin files), the spec's RTL file list and its `include closure, the floorplan's referenced
+    closure, child/macro view directories, the job's source.extra_paths, the tools REMOTE_SH runs and the daemon
+    overlays.  The route binding compares only these; any other staged-file difference is reported, not refused."""
+    kit = str(kd.relative_to(ROOT))
+    try:
+        job = json.loads((kd / "job.json").read_text())
+    except (OSError, ValueError):
+        job = {}
+    extra = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])]
+    views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
+    seeds = list(spec.get("sources") or []) + sorted(referenced) + list(SB.GATE_TOOLS) + list(SHIP_HELPERS)
+    paths = SB.consumed_closure(SB.archive_contents(data), seeds, [kit, *views, *extra], PATH_RE)
+    return SB.consumed_record(paths, entries, "staged archive closure at gate time")
+
+
 def absent_working_inputs(seeds):
     # The archive is made from the working tree, not git show.  A sparse checkout
     # can contain the hook but omit a committed helper that the hook sources.
@@ -630,6 +647,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     data = ship_tar(dirs, overlay_payloads, {f["path"]: f["mode"] for f in route_plan["files"]})
     binding = SB.snapshot(data, ROOT, start_commit, DAEMON_TREE, daemon_commit, SHIP_HELPERS)
     binding["route_overlay_plan"] = route_plan
+    binding["consumed"] = gate_consumed(data, kd, spec, ref, binding["files"])
     binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
@@ -813,7 +831,7 @@ def clock_item(g: Gate, rec: dict) -> None:
         g.add("INFO", "clock_rule", f"root {rec['root']}: {rec['text']}")
 
 
-def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None) -> dict | None:
+def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, note: list | None = None) -> dict | None:
     """The kit's gate result when it is bound to this exact source commit and to the daemon overlays the gate executed
     (SB.validate: route-only helper drift does not invalidate a gate).  why: receives the refusal reason."""
     def no(reason):
@@ -826,6 +844,8 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None) -> 
         ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
         if not ok:
             return no(reason)
+        if note is not None:
+            note.append(reason)
         if not binding.get("remote_archive_verified"):
             return no("remote archive verification missing")
         if not isinstance(d.get("clock"), dict):
@@ -845,9 +865,11 @@ def check_clock_evidence(g: Gate, kd: Path, known_sinks: int | None = None, clos
     sink count of this block's latest synthesized design (known_sinks, from the loop's job history) does.  A kit with no
     gate result and no history passes here and is judged by the in-flow lint right after synthesis (FLOORPLAN_MARGIN,
     before placement).  closed_stands: a CLOSED tile is not re-judged."""
-    why = []
-    rec = kit_gate_evidence(kd, source_commit, why)
+    why, note = [], []
+    rec = kit_gate_evidence(kd, source_commit, why, note)
     ev = rec["clock"] if rec else None
+    if rec and note and "reported, not refused" in note[0]:
+        g.add("INFO", "source_binding", note[0][:1500])
     if rec and not closed_stands:
         frozen = rec["source_binding"].get("route_overlay_plan")
         if frozen is None:
