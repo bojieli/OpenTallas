@@ -1,5 +1,5 @@
 {
-  "name": "hbm_native_mtp_pinaccess_m5_1014-pinM5-e5adab2d8",
+  "name": "hbm_native_mtp_pinaccess_m5_1014-pinM5-e5adab2d8-scr1",
   "block": "hgi_mtp_native",
   "ref_tile": true,
   "owner": "Codex:hbm-native-physical-1014",
@@ -106,5 +106,6 @@
   "reroute_reason": {
     "kind": "slot_change",
     "slot_change_request": "results/arch/hbm_native_1013/physical_successors_1014/mtp_slot_change.json"
-  }
+  },
+  "slot_change_request": "results/arch/hbm_native_1013/physical_successors_1014/mtp_slot_change.json: proposed actual287.28x200.88 M5 W197/E517 clk+rst_nE/M4; hb_mtp v12 hasplaceholderck/rst andbothbusesW. Candidateonly, dieowner mustadoptactualports/coordinates/reach beforequalification."
 }
