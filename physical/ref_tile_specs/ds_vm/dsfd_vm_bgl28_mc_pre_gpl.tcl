@@ -22,3 +22,22 @@ if {$j != 2} { error "BGL_MC_RESET_CLUSTER expected2actualresetFFs found$j" }
 set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt a]
 foreach n $moved { puts $fh $n }
 close $fh
+
+# H0 captures bank hits beside the row/valid ingress. Count actual mapped DFFs,
+# including Yosys's hit wire alias; no combinational or hold-buffer aliases.
+set hcount 0
+set hnames {}
+foreach i [$b getInsts] {
+    set n [$i getName]
+    if {![string match {u.h0*} $n] && ![string match {u.hit*} $n]} { continue }
+    if {![string match DFF* [[$i getMaster] getName]]} { continue }
+    $i setLocation [expr {round((12.0+0.72*$hcount)*$dbu)}] [expr {round(70.2*$dbu)}]
+    $i setPlacementStatus FIRM
+    lappend hnames $n
+    incr hcount
+}
+if {$hcount != 28} { error "BGL_MC_H0 expected28actualhitFFs found$hcount" }
+puts "BGL_MC_H0 placed $hcount input hit flops near N row/valid pins"
+set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt a]
+foreach n $hnames {puts $fh $n}
+close $fh

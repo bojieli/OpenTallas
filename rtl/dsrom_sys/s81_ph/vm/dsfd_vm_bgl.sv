@@ -29,7 +29,8 @@ module dsfd_vm_bgl #(
     parameter integer MACRO = 1,
     parameter integer DW = 128,
     parameter integer CLOCK_SPLIT = 0,
-    parameter integer BAL_PREFIX = 0
+    parameter integer BAL_PREFIX = 0,
+    parameter integer PREHIT = 0
 ) (
     input  wire [0:0]          ck,
     input  wire                ck_req,
@@ -129,6 +130,22 @@ module dsfd_vm_bgl #(
 `endif
     wire wo_rd_any = |(rb0_v & ~rb0_we & ~RMASK);
 
+    // Capture the static bank-match in parallel with the input payload, using
+    // the same request root/edge. This removes the compare from fused E1/E2
+    // without adding a transaction stage. grp/bi are static straps by contract.
+    reg [NP-1:0] h0;
+    integer hp;
+    always @(posedge req_clk or negedge rst_req)
+        if (!rst_req) h0 <= 0;
+        else for (hp = 0; hp < NP; hp = hp + 1)
+            h0[hp] <= i_v[hp] && i_row[hp*RA +: BB] == gidq;
+`ifdef OT_VMBGL_MUT_HIT
+    reg [NP-1:0] h_late;
+    always @(posedge req_clk or negedge rst_req)
+        if (!rst_req) h_late <= 0; else h_late <= h0;
+`endif
+
+
     // ------------------------------------------------------------------ E1 + E2 fused: hits -> one-hot slot selects
     localparam integer NG = 4, GZ = (NP + NG - 1) / NG, CW = $clog2(NP + 1);
     // Exact integer popcounts with a balanced reduction tree. The physical
@@ -158,7 +175,12 @@ module dsfd_vm_bgl #(
     reg [NP-1:0] sel_c [0:QD-1];
     integer g2, i2, j2;
     always @* begin
-        for (i2 = 0; i2 < NP; i2 = i2 + 1) hit[i2] = rb0_v[i2] && rb0_row[i2*RA +: BB] == gidq;
+        for (i2 = 0; i2 < NP; i2 = i2 + 1)
+`ifdef OT_VMBGL_MUT_HIT
+            hit[i2] = PREHIT ? h_late[i2] : (rb0_v[i2] && rb0_row[i2*RA +: BB] == gidq);
+`else
+            hit[i2] = PREHIT ? h0[i2] : (rb0_v[i2] && rb0_row[i2*RA +: BB] == gidq);
+`endif
         for (i2 = 0; i2 < NP; i2 = i2 + 1)
 `ifdef OT_VMBGL_MUT_ORDER
             ho[i2] = hit[NP-1-i2];
@@ -517,7 +539,7 @@ module dsfd_vm_bgl28_mc (
 `else
     localparam integer MACRO = 1;
 `endif
-    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(1)) u (
+    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1)) u (
         .ck(ck), .ck_req(ck_req), .ck_ret(ck_ret), .rs(rs), .grp(grp), .bi(bi), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
         .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));
