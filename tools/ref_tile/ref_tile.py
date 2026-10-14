@@ -841,6 +841,9 @@ def gen_hooks(s: dict, kd: str) -> dict:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
         files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())))
+    # Install structural clock adapters before the boundary wrapper invokes CTS.
+    # Every adapter is an explicit repository path and is shipped with the kit.
+    pre_cts += [f"source /src/{f}" for f in s.get("pre_cts_extra", [])]
     pre_cts.append(f"source /src/{QDM}/pre_cts_skew.tcl")
     # spec "boundary_tcl": repo Tcl files that re-apply a second-domain boundary after every io_ref switch (post-CTS
     # wrapper, pre-GRT, post-DRT), so the route times those ports against their own propagated clock, not only sign-off
@@ -1094,7 +1097,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
