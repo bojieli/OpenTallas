@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.behavior_gate.v1",
+  "source_commit": "170fb0969",
+  "kit_commit": "d46e4d4a6",
+  "rtl_sha256": "c75b5ec5a97fcafcf8ac672cdbf3bc0eac83ed2aba298a70343a7e0c10b2ceab",
+  "top": "ot_hgi_qdq_q_pin4",
+  "bench": "tools/hgi_unit_tput/run_qdq_case.sh",
+  "params": {
+    "S": 3,
+    "SPANPIPE": 1,
+    "PIN4": 1
+  },
+  "exact": {
+    "status": "PASS",
+    "records": 8,
+    "words": 3328,
+    "wrong": 0,
+    "cycles": 183,
+    "priced_cycles": 168,
+    "ratio": 1.0892857142857142
+  },
+  "mutant2": {
+    "status": "DETECTED",
+    "words_wrong": 2898,
+    "total_words": 3328,
+    "rc": 134
+  },
+  "adopted": false,
+  "physical_status": "UNQUALIFIED_CTS_PENDING"
+}
