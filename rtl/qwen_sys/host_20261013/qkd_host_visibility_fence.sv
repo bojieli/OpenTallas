@@ -15,7 +15,14 @@ module qkd_host_visibility_fence #(parameter integer ENABLE=1,MUT=0)(
  end else begin:g_on
   reg[31:0] commits,snapshot;reg req;
   reg ack_host,ac1,ac2;reg fc;
-  wire[32:0] add={1'b0,commits}+ack_n;
+  reg rc1,rc2,fc1,fc2;reg[31:0] landed;reg fh;
+
+ reg[7:0]ack_q;reg iv_q,ocr_q,fault_q;reg[63:0]id_q;
+ always @(posedge ck or negedge rst_n)if(!rst_n)ack_q<=0;else ack_q<=ack_n;
+ always @(posedge clk_h)id_q<=in_d;
+ always @(posedge clk_h or negedge rst_n)if(!rst_n)begin iv_q<=0;ocr_q<=0;fault_q<=0;end
+ else begin iv_q<=in_v;ocr_q<=out_cr;fault_q<=fc2|fh;end
+  wire[32:0] add={1'b0,commits}+ack_q;
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)begin commits<=0;snapshot<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end
    else begin
@@ -27,13 +34,12 @@ module qkd_host_visibility_fence #(parameter integer ENABLE=1,MUT=0)(
     end
    end
   end
-  reg rc1,rc2,fc1,fc2;reg[31:0] landed;reg fh;
   reg[63:0] q[0:7];reg[2:0] wp,rp;reg[3:0] count;
   reg[2:0] host_credits;
   wire[63:0] head=q[rp];
   wire is_done=head[63:56]==8'h01;
   wire pop=count!=0&&host_credits!=0&&!fh&&!fc2&&(!is_done||MUT!=0||landed>=head[31:0]);
-  assign fault=fc2|fh;assign landed_debug=landed;
+  assign fault=fault_q;assign landed_debug=landed;
   reg[2:0] nw,nr,nh;reg[3:0] nc;
   always @(posedge clk_h or negedge rst_n)begin
    if(!rst_n)begin rc1<=0;rc2<=0;ack_host<=0;fc1<=0;fc2<=0;landed<=0;fh<=0;
@@ -47,11 +53,11 @@ module qkd_host_visibility_fence #(parameter integer ENABLE=1,MUT=0)(
     end
     nw=wp;nr=rp;nc=count;nh=host_credits;
     if(!fh&&!fc2)begin
-     if(in_v)begin
+     if(iv_q)begin
       if(count==8&&!pop)fh<=1;
-      else begin q[wp]<=in_d;nw=wp+1'b1;nc=nc+1'b1;end
+      else begin q[wp]<=id_q;nw=wp+1'b1;nc=nc+1'b1;end
      end
-     if(out_cr)begin if(host_credits==4&&!pop)fh<=1;else nh=host_credits+1'b1;end
+     if(ocr_q)begin if(host_credits==4&&!pop)fh<=1;else nh=host_credits+1'b1;end
      if(pop)begin
       out_v<=1;out_d<=head;in_cr<=1;nr=rp+1'b1;nc=nc-1'b1;nh=nh-1'b1;
      end

@@ -1,6 +1,6 @@
 {
   "qkd_host_visibility_fence": {
-    "flop_bits": 696,
+    "flop_bits": 771,
     "cells": {
       "$add": 5,
       "$dffe": 8,
@@ -16,7 +16,8 @@
       "$ne": 2,
       "$reduce_bool": 2,
       "$or": 1,
-      "$adff": 8,
+      "$adff": 12,
+      "$dff": 1,
       "$mux": 18,
       "$pmux": 1,
       "$sub": 2

@@ -614,7 +614,7 @@
     },
     {
       "master": "qkd_host_visibility_fence",
-      "flop_bits": 696,
+      "flop_bits": 771,
       "instances_per_die": 1,
       "clock_entries": [
         "ck",
@@ -629,7 +629,7 @@
       "layer_cap": "M5",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv",
-      "source_sha256": "3b259728ed1569207f9c5acdf77600141648699b12ec4ea60fd7e8a34608ce80",
+      "source_sha256": "dd41029c8ccf60bc8ead02389ab9cdae2bd6c359ebb18a983695863372c18491",
       "ports": [
         {
           "name": "rst_n",
@@ -962,6 +962,9 @@
       "layer_cap": "M5",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv",
+      "params": {
+        "STRAPPED": 1
+      },
       "source_sha256": "b99255434849edd8876f4cf254b88396d6cfb3ab0a3a4c4c961e35330b6a0ee6",
       "ports": [
         {
@@ -1907,7 +1910,20 @@
           "registered_domain": "clk",
           "seam": "CAPTURED_INPUT"
         }
-      ]
+      ],
+      "params": {
+        "NSLOT": 1,
+        "MODE": 0,
+        "ENG_CTX": 1,
+        "NW": 18,
+        "PLB": 13,
+        "CTX_MAX": 8192,
+        "AW": 24,
+        "KVW": 1024,
+        "FMT": 1,
+        "PB_VALID_ONLY": 1,
+        "PB_READ_PIPE": 2
+      }
     },
     {
       "master": "qkd_host_csr_pins",
@@ -2239,7 +2255,8 @@
           "registered_domain": "clk",
           "seam": "REGISTERED_OUTPUT"
         }
-      ]
+      ],
+      "params": {}
     },
     {
       "master": "qkd_host_rst_pins",
@@ -2368,7 +2385,11 @@
           "registered_domain": "clk",
           "seam": "REGISTERED_OUTPUT"
         }
-      ]
+      ],
+      "params": {
+        "NL": 6,
+        "ND": 8
+      }
     },
     {
       "master": "qkd_host_ctl_pins",
@@ -2455,7 +2476,8 @@
           "registered_domain": "ck",
           "seam": "REGISTERED_OUTPUT"
         }
-      ]
+      ],
+      "params": {}
     },
     {
       "master": "qfd_xf_ch546",
