@@ -1418,11 +1418,11 @@
         "ck"
       ],
       "outline_request_um": [
-        220.08,
-        110.04
+        237.6,
+        129.6
       ],
       "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
-      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "pin_assignment": "DIE_LEAD_REQUIRED_HOST_HOSTIF_CTL_FACES_FROM_ACTUAL_CANDIDATE_PLACEMENT",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_prompt_pins.sv",
       "macro": {
         "master": "ot_sram_1r1w_1024x256_m2_r2c2",
@@ -1435,6 +1435,9 @@
       },
       "data_latency_edges": 3,
       "fault_latency_edges": 4,
+      "area_request_um2": 30792.96,
+      "physical_owner": "qwen_edge_coverage_2240",
+      "request_reason": "at least20um edge margin around174.744x70.470 macro; prior220.08x110.04 height0.43um short of40um total",
       "source_sha256": "0b57548cb6f1736fe2dad3c6d61fb647a7f4c14d2fd7f43f7f793ab26410ada5",
       "ports": [
         {
