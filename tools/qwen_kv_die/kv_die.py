@@ -183,6 +183,156 @@ BINDINGS['qkd_kvwq_ctl_bin_h'] = copy.deepcopy(BINDINGS['qkd_kvwq_ctl_bin'])
 BINDINGS['qkd_kvwq_ctl_bin_h']['parameters'] = dict(FLANE_BINARY=1, HEAD_PIPE=1)
 BINDINGS['qkd_kvwq_leaf_s_w129_m'] = copy.deepcopy(BINDINGS['qkd_kvwq_leaf_s_w129'])
 
+# el1013-qwen-kvstrips 2026-10-13 (coordinator-accepted slot change): the controller strip qkd_ctrl / qkd_ctrl_n is 32
+# die slots of ONE hardened master qkd_ctrl_pc (PC k at strip y = 378 k, pc[4:0] strapped) + one qkd_ctrl_kc leaf at the
+# N end (strip y = 12,096); the PHY is re-pinned per PC (po / pi face the leaf).  The masters' ports ARE the die buses;
+# STRIP_FIELDS gives each bus's fields LSB first (the benches generate their offsets from it).
+STRIP_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv'
+STRIP_FIELDS = dict(
+    qkd_ctrl_pc=dict(
+        ci=[('h_cred', 3), ('h_wv', 1), ('h_wsec', 24), ('h_cv', 1), ('h_csec', 24), ('h_cdata', 256), ('h_ctag', 9),
+            ('h_fault', 1)],                                                   # = qkd_cdc_wleaf ho
+        co=[('h_lv', 1), ('h_lsec', 17), ('h_lrow', 8), ('h_ldata', 256), ('h_hand', 1), ('h_wcon', 1), ('h_av', 1),
+            ('h_atag', 9)],                                                    # = qkd_cdc_wleaf hi
+        es=[('s_v', 1), ('w_d', 256), ('s_row', 19), ('s_col', 5), ('s_bank', 5), ('s_we', 1), ('w_v', 1)],
+        er=[('e_v', 1), ('e_data', 256), ('e_ce', 1), ('e_ue', 1), ('s_credit', 1), ('fault_core', 1)],
+        po=[('row_v', 1), ('row_op', 3), ('row_bank', 5), ('row_row', 19), ('col_v', 1), ('col_we', 1),
+            ('col_bank', 5), ('col_col', 5), ('wd', 288)],
+        pi=[('r_v', 1), ('r_d', 288)], ki=[('k_v', 1), ('k_d', 32)], ko=[('k_v', 1), ('k_d', 32)]),
+    qkd_ctrl_kc=dict(kc=[('kc_v', 1), ('kc_d', 32)], ko=[('k_v', 1), ('k_d', 32)]))
+assert [f for f, _ in STRIP_FIELDS['qkd_ctrl_pc']['ci']] == BINDINGS['qkd_cdc_wleaf']['ports']['ho']
+assert [f for f, _ in STRIP_FIELDS['qkd_ctrl_pc']['co']] == BINDINGS['qkd_cdc_wleaf']['ports']['hi']
+BINDINGS['qkd_ctrl_pc'] = dict(module='qkd_ctrl_pc', file=STRIP_FILE,
+    ports=dict(ci=['ci'], co=['co'], es=['es'], er=['er'], po=['po'], pi=['pi'], ki=['ki'], ko=['ko'], fi=['fi'],
+               fo=['fo'], pc=['pc'], pll_hbm=['pll_hbm'], hrst=['hrst'], ck=['ck'], rsi=['rsi']), classed={})
+BINDINGS['qkd_ctrl_kc'] = dict(module='qkd_ctrl_kc', file=STRIP_FILE,
+    ports=dict(kc=['kc'], ko=['ko'], fi=['fi'], kf=['kf'], pll_hbm=['pll_hbm'], hrst=['hrst'], ck=['ck'],
+               rsi=['rsi']), classed={})
+
+# KV landing strip qkd_land / qkd_land_n -> 32 x qkd_land_pc (E half, one a PC slot) + 8 x qkd_land_grp (W half, one a row
+# engine beside its four PCs) + 1 x qkd_land_emb (N end).  Strip slot 4 i + q hosts logical PC {q, G(i)} (LAND_GROUP_ORDER:
+# i = 0 at the S end; every group then sits beside its engine's rq / rs pins).
+LAND_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_land_strip.sv'
+LAND_GROUP_ORDER = (4, 5, 0, 1, 2, 3, 6, 7)
+STRIP_FIELDS.update(
+    qkd_land_pc=dict(
+        li=[('l_v', 1), ('l_sec', 17), ('l_row', 8), ('l_data', 256)], lp=[('l_pop', 1)],          # = qkd_cdc_wleaf co
+        gw=[('v', 1), ('layer', 6), ('j', 10), ('data', 256)],
+        es=STRIP_FIELDS['qkd_ctrl_pc']['es'], er=STRIP_FIELDS['qkd_ctrl_pc']['er'],
+        dni=[('v', 1), ('kind', 1), ('bc', 1), ('pc', 5), ('side', 1), ('s_we', 1), ('w_v', 1), ('s_bank', 5),
+             ('s_col', 5), ('s_row', 19), ('w_d', 256), ('tag', 2)],
+        upi=[('v', 1), ('side', 1), ('tag', 2), ('e_data', 256), ('e_ce', 1), ('e_ue', 1)]),
+    qkd_land_grp=dict(
+        rq=[('req_valid', 1), ('req_v', 1), ('req_g', 1), ('req_t', 13)], rs=[('rsp_valid', 1), ('rsp_data', 1024)],
+        lt=[('lay_start', 1), ('lay_T', 14), ('lay_idx', 6)],
+        kn=[('kvw_v', 1), ('kvw_vg', 2), ('kvw_t', 14), ('kvw_layer', 6), ('kvw_d', 1024)]),
+    qkd_land_emb=dict(emf=[('i_v', 1), ('i_d', 523), ('pad', 5), ('o_cr', 1)], emr=[('o_v', 1), ('o_d', 523), ('pad', 5), ('i_cr', 1)]))
+assert [f for f, _ in STRIP_FIELDS['qkd_land_pc']['li']] + ['l_pop'] == BINDINGS['qkd_cdc_wleaf']['ports']['co']
+assert [f for f, _ in STRIP_FIELDS['qkd_land_grp']['rq']] == BINDINGS['qkd_ectl']['ports']['rq']
+BINDINGS['qkd_land_pc'] = dict(module='qkd_land_pc', file=LAND_FILE,
+    ports={k: [k] for k in ('li', 'lp', 'cf', 'gw', 'gc', 'es', 'er', 'dni', 'dno', 'upi', 'upo', 'cri', 'cro', 'fi', 'fo',
+                            'lpc', 'ck', 'rst_n')}, classed={})
+BINDINGS['qkd_land_grp'] = dict(module='qkd_land_grp', file=LAND_FILE,
+    ports={k: [k] for k in ('gw0', 'gw1', 'gw2', 'gw3', 'gc0', 'gc1', 'gc2', 'gc3', 'rq', 'rs', 'lt', 'kn', 'fi', 'fo', 'g',
+                            's', 'ck', 'rst_n')}, classed={})
+BINDINGS['qkd_land_emb'] = dict(module='qkd_land_emb', file=LAND_FILE,
+    ports={k: [k] for k in ('emf', 'emr', 'dno', 'upi', 'cri', 'fi', 'gfi', 'mf', 'st', 'ck', 'rst_n')}, classed={})
+
+# el1013-qwen-kvstrips 2026-10-13: the stack aggregator qkd_astk / qkd_astk_n (ot_qwen_nearhbm_attn_stack_h minus its
+# engines) -> two 162 um columns of hardened leaves (ASTK_W 324 requested) (rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv; exact bench
+# physical/qkd_astk_strip/bench.sh against the golden aggregator; die wiring = rtl/test/qwen_kv_die/
+# ot_qwen_nearhbm_attn_stack_k.sv ot_qkd_astk_strip).  Per row (engines 2 r on the W, 2 r + 1 on the E; rows counted from
+# the end away from the hub) and column, bottom to top: head 0 A, B; head 1 A, B; ex, ex, ep, ex, ex; head 2 A, B;
+# head 3 A, B (A = level-4 tree cell, B = the row's second-level cell); 4 x qkd_astk_zn + qkd_astk_ctl at the hub end.
+ASTK_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv'
+ASTK_LEAF = dict(qkd_astk_pv=(162.0, 103.68), qkd_astk_ex=(162.0, 149.04), qkd_astk_ep=(162.0, 345.6), qkd_astk_zn=(86.4, 86.4),
+                 qkd_astk_ctl=(324.0, 43.2))
+STRIP_FIELDS.update(
+    qkd_astk_pv=dict(
+        cfg=[('h', 2), ('lvl', 2), ('am', 2), ('bm', 2), ('ym', 2), ('ath', 3), ('bth', 3), ('far', 1), ('tdir', 1)],
+        nc=[('v', 1), ('beat', 4), ('g', 1), ('gam', 4)],                    # = qkd_ectl so[421:412]
+        li=[('v', 1), ('idx', 4), ('g', 1), ('d', 128)],                     # stream word (lo, each lane of ui / uo / di / do_)
+        pi=[('v', 1), ('beat', 5), ('g', 1), ('d', 256)],                    # P.V lane word
+        ci=[('start', 1), ('gmax', 5)]),
+    qkd_astk_ep=dict(
+        qi=[('start', 1), ('T', 14), ('q_valid', 1), ('q_beat', 6), ('q_data', 512), ('kdone', 2), ('m_v', 1), ('m_g', 1),
+            ('m_hh', 2), ('m_data', 32)],
+        xi=[('fault', 1), ('cnt0', 4), ('cnt1', 4), ('any', 2), ('lmax', 256)],
+        zi=[('v', 1), ('tok', 1), ('g', 1), ('k', 4), ('gam', 4), ('sum', 128), ('row', 512)],
+        ri=[('v', 1), ('g', 1), ('k', 4), ('gam', 4), ('row', 512)],
+        xa=[('v', 1), ('pos', 1), ('s', 32), ('m', 32)] * 4, xe=[('v', 1), ('fault', 1), ('e', 32)] * 4,
+        sq=[('engine', 3), ('stack', 2)]),
+    qkd_astk_zn=dict(zi=[('v', 1), ('g', 1), ('k', 4), ('slot', 4), ('sum', 128)], zc=[('stack', 2), ('level', 2)],
+                     tc=[('start', 1), ('T', 14)]),
+    qkd_astk_ctl=dict(
+        aq=[('start', 1), ('T', 14), ('layer', 6), ('q_valid', 1), ('q_beat', 6), ('q_data', 512)],
+        lt=[('start', 1), ('T', 14), ('layer', 6)], am=[('v', 1), ('g', 1), ('hh', 2), ('data', 32)],
+        ap=[('so_valid', 1), ('so_type', 2), ('so_g', 1), ('so_hh', 2), ('so_k', 4), ('so_any', 1), ('so_data', 32),
+            ('pv_done', 2), ('pv_valid', 1), ('pv_g', 1), ('pv_beat', 6), ('pv_data', 512)]))
+STRIP_FIELDS['qkd_astk_ep']['zo'] = STRIP_FIELDS['qkd_astk_ep']['zi']
+STRIP_FIELDS['qkd_astk_ep']['xo'] = STRIP_FIELDS['qkd_astk_ep']['xi']
+STRIP_FIELDS['qkd_astk_ctl']['qo'] = STRIP_FIELDS['qkd_astk_ep']['qi']
+STRIP_FIELDS['qkd_astk_ctl']['xi'] = STRIP_FIELDS['qkd_astk_ep']['xi']
+_ASTK_LANES = ('ui', 'uo', 'di', 'do_', 'pi', 'po', 'ci', 'co', 'kui', 'kuo', 'kdi', 'kdo', 'tui', 'tuo', 'tdi', 'tdo', 'fi', 'fo')
+BINDINGS['qkd_astk_pv'] = dict(module='qkd_astk_pv', file=ASTK_FILE,
+    ports={k: [k] for k in ('cfg', 'wa', 'wb', 'nc', 'nd', 'nco', 'ndo', 'cra', 'crb', 'li', 'lo', 'lci', 'lco', 'ck', 'rst_n')
+           + _ASTK_LANES}, classed={})
+BINDINGS['qkd_astk_ex'] = dict(module='qkd_astk_ex', file=ASTK_FILE,
+    ports={k: [k] for k in ('xa', 'xe', 'ck', 'rst_n') + _ASTK_LANES}, classed={})
+BINDINGS['qkd_astk_ep'] = dict(module='qkd_astk_ep', file=ASTK_FILE,
+    ports={k: [k] for k in ('sq', 'so', 'si', 'qi', 'xi', 'xo', 'zi', 'zo', 'ri', 'xa', 'xe', 'cr', 'ck', 'rst_n') + _ASTK_LANES},
+    classed={})
+BINDINGS['qkd_astk_zn'] = dict(module='qkd_astk_zn', file=ASTK_FILE,
+    ports={k: [k] for k in ('zc', 'tc', 'zi', 'zo', 'fi', 'fo', 'ck', 'rst_n')}, classed={})
+BINDINGS['qkd_astk_ctl'] = dict(module='qkd_astk_ctl', file=ASTK_FILE,
+    ports={k: [k] for k in ('st', 'aq', 'lt', 'am', 'ap', 'af', 'qo', 'xi', 'co', 'px', 'py', 'zi', 'fx', 'fy', 'fz', 'ck', 'rst_n')},
+    classed={})
+assert sum(w for _, w in STRIP_FIELDS['qkd_astk_ep']['qi']) == 572 and sum(w for _, w in STRIP_FIELDS['qkd_astk_ep']['zi']) == 651
+assert sum(w for _, w in STRIP_FIELDS['qkd_astk_ctl']['ap']) == 565 and sum(w for _, w in STRIP_FIELDS['qkd_astk_ctl']['aq']) == 540
+assert [f for f, _ in STRIP_FIELDS['qkd_astk_pv']['nc']] == ['v', 'beat', 'g', 'gam']
+
+
+def astk_cfg(h, lvl=0, am=0, bm=0, ym=0, ath=0, bth=0, far=0, tdir=0):
+    """qkd_astk_pv strap word (STRIP_FIELDS order, LSB first)."""
+    return h | lvl << 2 | am << 4 | bm << 6 | ym << 8 | ath << 10 | bth << 13 | far << 16 | tdir << 17
+
+
+def astk_plan(stack=0):
+    """The strip's leaf instances in its own frame (y from the end away from the hub; N stacks: the strip is placed MX).
+    Rows of (name, master, column, y, straps).  Column x = 0 (W, X cells: kk mod 4 < 2) / 162 (E, Y cells)."""
+    out = []
+    ph, eh, xh = ASTK_LEAF['qkd_astk_pv'][1], ASTK_LEAF['qkd_astk_ep'][1], ASTK_LEAF['qkd_astk_ex'][1]
+    row_h = ENG_H + GY                       # an engine row
+    used = 8 * ph + eh + 4 * xh
+    assert used <= row_h, (used, row_h)
+    gap = (row_h - used) / 12                # the die's relay stations stand in the gaps
+    for r in range(4):
+        for c in range(2):
+            y = r * row_h + gap / 2
+            eng = 2 * r + c
+
+            def put(name, master, straps):
+                nonlocal y
+                out.append((name, master, c, round(y, 3), straps))
+                y += ASTK_LEAF[master][1] + gap
+            lvl_b, am_b, bm_b, ym_b = ((1, 0, 2, 1), (2, 1, 2, 1), (1, 0, 2, 2), (3, 1, 0, 0))[r]
+            ath_b, bth_b = ((0, 2), (0, 4), (4, 6), (0, 0))[r]
+            for hp in range(4):
+                if hp == 2:
+                    put(f'ex_{eng}_0', 'qkd_astk_ex', {}); put(f'ex_{eng}_1', 'qkd_astk_ex', {})
+                    put(f'ep_{eng}', 'qkd_astk_ep', dict(sq=stack << 3 | eng))
+                    put(f'ex_{eng}_2', 'qkd_astk_ex', {}); put(f'ex_{eng}_3', 'qkd_astk_ex', {})
+                put(f'pva_{r}_{hp}_{"xy"[c]}', 'qkd_astk_pv',
+                    dict(cfg=astk_cfg(hp, ym=2 if r in (1, 3) else 0, ath=2 * r, bth=2 * r + 1, far=int(hp in (0, 3)))))
+                put(f'pvb_{r}_{hp}_{"xy"[c]}', 'qkd_astk_pv', dict(cfg=astk_cfg(hp, lvl_b, am_b, bm_b, ym_b, ath_b, bth_b)))
+    top = 4 * row_h                          # the hub end: 237.6 um beyond the four engine rows (slot change request)
+    zh = ASTK_LEAF['qkd_astk_zn'][1]
+    for z in range(4):
+        out.append((f'zn_{z}', 'qkd_astk_zn', z % 2, round(top + zh * (z // 2), 3), dict(zc=z << 2 | stack)))
+    out.append(('ctl', 'qkd_astk_ctl', 0, round(top + 2 * zh, 3), dict(st=stack)))
+    return out
+
+
 
 def _write_tiles(m, add):
     """Opt-in candidate.  Closed ctl/leaf tiles; the explicit OR encoder remains unclosed.

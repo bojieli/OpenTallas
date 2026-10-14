@@ -457,6 +457,17 @@ def generate():
         ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
                                         .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
     end endgenerate""")
+    # (h) el1013-qwen-kvstrips: the e read's latency is a build constant KVD_ERL (default 1 = the golden contract: data the
+    # cycle after er_valid).  The die's aggregator slice registers the read address at its pin and the SRAM output before
+    # its pin (qkd_astk_ep: 3), so the push follows the word by that many cycles; nothing else changes.
+    ectl = rep(ectl, """    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;""",
+               """`ifdef KVD_ERL
+    reg [`KVD_ERL-1:0] er_dl;
+    always @(posedge clk or negedge rc) if (!rc) er_dl <= {`KVD_ERL{1'b0}}; else er_dl <= {er_dl, er_valid};
+    always @* er_pend = er_dl[`KVD_ERL-1];
+`else
+    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;
+`endif""")
     wrapper = ENGINE
     s = s[:i] + HEAD.lstrip('\n') + '\n' + ectl + '\n' + wrapper + s[j:]
     # ================= the aggregator: node beat lanes (beat b = lanes d = LFB k + b of every head) =================
@@ -527,9 +538,9 @@ def hsub(s):
 `else
     localparam integer HSUB = 0;
 `endif
-    localparam integer NRI = 2, NRK = 2, NRN = 2;          // head_hs parent relay stages: inputs, K partials, node slice
-    localparam integer HXK = HSUB ? NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
-    localparam integer HXN = HSUB ? NRI + NRN : 0;
+    localparam integer NRS = 1, NRI = 2, NRK = 2, NRN = 2; // head_hs parent relay stages: shared S2b, inputs, K partials, node slice
+    localparam integer HXK = HSUB ? NRS + NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
+    localparam integer HXN = HSUB ? NRS + NRI + NRN : 0;
     ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
                              .LFB(LFB), .ND(ND), .HXK(HXK), .HXN(HXN)) u_ctl (""")
     s = rep(s, """        ot_qwen_nearhbm_head_h #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB)) u_head (
@@ -537,7 +548,7 @@ def hsub(s):
             .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
             .q_data_in(t_qd[512*P +: 512]), .sc_d(t_sc[32*h +: 32]), .sc_f(t_sf[h]), .g_f(t_gf[h]),
             .nb_d(nb_data[(HD*32/LFB)*h +: HD*32/LFB]));""", """        if (HSUB != 0) begin : g_hs
-        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRI(NRI),
+        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRS(NRS), .NRI(NRI),
                                   .NRK(NRK), .NRN(NRN)) u_head (
             .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
             .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),
@@ -871,8 +882,115 @@ endmodule
 '''
 
 
+# ---- q13-ectl 2026-10-13: the control tile in its TP8 contract slot (results/arch/hier_contract_1012/qwen_rom_tp8.json,
+#      cell qkd_ectl, 648 x 129.6 um, M5 cap), opt-in `KVD_ECTL_SLOT (default text unchanged) -------------------------------
+# The slot's pin plan differs from the frames the control tile was cut for (kv_die variant c / f: returns spread over
+# the S / N faces): the heads' score returns s0..s3 enter at the W end of the S / N faces (x 19..36 um), the scores and
+# running max leave on the E face (x 648), the 1,025-b row word enters on W and feeds a 5-macro SRAM row ~530 um wide,
+# and er_data (E face) went straight into the e FIFO.  Structure for the slot (wires <= ~330 um a stage):
+#   * score return: pin stage u_tsp0/1 at the s pins + a mid relay u_tsm before the E-face score register (SRL = 2;
+#     the score tags u_tag / u_scv delayed by the same 2)
+#   * row word: W-face pin flops rsp_*_p + the relay rsp_valid / rsp_data in front of the FIFO (+1 cycle)
+#   * e read: E-face pin flops on er_valid / er_addr (out) and er_data (in); the generator's registers are one stage
+#     back and the push is delayed by 2, so the tile-boundary contract (er_data the cycle after er_valid) is unchanged
+#   * flop level of the two-level row / e FIFOs 8 -> 4 rows (the refill is one row a cycle; -4,352 clock sinks: the
+#     tile stays under 15,000 sinks on its one clock root)
+ECTL_MACROS = '''// q13-ectl: the control tile in its TP8 contract slot (opt-in KVD_ECTL_SLOT; see tools/qwen_kv_die/stack_h_gen.py ectl_slot)
+`ifdef KVD_ECTL_SLOT
+ `define ECTL_ERV er_valid_g
+ `define ECTL_ERA er_addr_g
+ `define ECTL_ERP er_pd[1]
+ `define ECTL_ERD er_data_p
+ `define ECTL_D1 4
+ `define ECTL_SRL 2
+`else
+ `define ECTL_ERV er_valid
+ `define ECTL_ERA er_addr
+ `define ECTL_ERP er_valid
+ `define ECTL_ERD er_data
+ `define ECTL_D1 8
+ `define ECTL_SRL 0
+`endif
+'''
+
+
+def ectl_slot(s):
+    def rall(s, a, b, n):
+        if s.count(a) != n:
+            raise SystemExit(f'ectl_slot: anchor {a[:60]!r} found {s.count(a)} times, expected {n}')
+        return s.replace(a, b)
+    s = rall(s, 'module ot_qwen_nearhbm_ectl_h #(', ECTL_MACROS + 'module ot_qwen_nearhbm_ectl_h #(', 1)
+    a = ('    output reg                  er_valid,\n'
+         '    output reg  [11:0]          er_addr,      // {g, idx}\n')
+    s = rall(s, a, '`ifdef KVD_ECTL_SLOT\n'
+             '    output wire                 er_valid,     // E-face pin flops (the generator registers are one stage back)\n'
+             '    output wire [11:0]          er_addr,      // {g, idx}\n'
+             '`else\n' + a + '`endif\n', 1)
+    a = ('    always @(posedge clk or negedge rst_n)\n'
+         "        if (!rst_n) begin start <= 1'b0; rsp_valid <= 1'b0; end\n"
+         '        else begin start <= start_in; rsp_valid <= rsp_valid_in; end\n'
+         '    always @(posedge clk) begin T <= T_in; cyc8_r <= cyc8_in; rsp_data <= rsp_data_in; end\n')
+    s = rall(s, a, '`ifdef KVD_ECTL_SLOT\n'
+             '    reg             rsp_valid_p;                // W-face pin flops; rsp_valid / rsp_data relay to the row FIFO\n'
+             '    reg  [HD*8-1:0] rsp_data_p;\n'
+             '    reg             er_valid_g, er_valid_o;     // generator register, E-face pin flop\n'
+             '    reg  [11:0]     er_addr_g, er_addr_o;\n'
+             '    reg  [63:0]     er_data_p;                  // E-face pin flops of the e word\n'
+             '    reg  [1:0]      er_pd;                      // the push follows the word through both pin stages\n'
+             '    assign er_valid = er_valid_o;\n'
+             '    assign er_addr = er_addr_o;\n'
+             '    always @(posedge clk or negedge rst_n)\n'
+             "        if (!rst_n) begin start <= 1'b0; rsp_valid_p <= 1'b0; rsp_valid <= 1'b0; er_valid_o <= 1'b0; er_pd <= 2'b00; end\n"
+             '        else begin\n'
+             '            start <= start_in; rsp_valid_p <= rsp_valid_in; rsp_valid <= rsp_valid_p;\n'
+             '            er_valid_o <= er_valid_g; er_pd <= {er_pd[0], er_valid_g};\n'
+             '        end\n'
+             '    always @(posedge clk) begin\n'
+             '        T <= T_in; cyc8_r <= cyc8_in; rsp_data_p <= rsp_data_in; rsp_data <= rsp_data_p;\n'
+             '        er_addr_o <= er_addr_g; er_data_p <= er_data;\n'
+             '    end\n'
+             '`else\n' + a + '`endif\n', 1)
+    s = rall(s, 'er_valid <= ', '`ECTL_ERV <= ', 3)
+    s = rall(s, 'er_addr <= {rg_g', '`ECTL_ERA <= {rg_g', 1)
+    s = rall(s, 'else er_pend <= er_valid;', 'else er_pend <= `ECTL_ERP;', 1)
+    # merge of el1013-qwen-kvstrips (KVD_ERL) with q13-ectl (KVD_ECTL_SLOT): the KVD_ERL delay line starts from the same
+    # slot-qualified strobe, so the two build constants compose (slot push delay + e-slice read latency)
+    s = rall(s, 'else er_dl <= {er_dl, er_valid};', 'else er_dl <= {er_dl, `ECTL_ERP};', 1)
+    s = rall(s, '.push(er_pend), .din(er_data),', '.push(er_pend), .din(`ECTL_ERD),', 2)
+    s = rall(s, 'ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows', 'ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ), .D1(`ECTL_D1)) u_rows', 1)
+    s = rall(s, 'ot_nhb_fifo_rows2_h #(.W(64), .D(DQ)) u_e', 'ot_nhb_fifo_rows2_h #(.W(64), .D(DQ), .D1(`ECTL_D1)) u_e', 1)
+    a = ('    wire [4*32-1:0]   t_sc = {ts1_sc, ts0_sc};\n'
+         '    wire [3:0]        t_sf = {ts1_sf, ts0_sf};\n'
+         '    wire [3:0]        t_gf = {ts1_gf, ts0_gf};\n')
+    s = rall(s, a, '`ifdef KVD_ECTL_SLOT\n'
+             '    // the returns enter at the W end of the S / N faces, the scores leave on the E face: pin stage + mid relay\n'
+             '    wire [135:0]      ts_p, ts_m;\n'
+             '    (* keep_hierarchy *) ot_nhb_rep_h #(.W(68)) u_tsp0 (.clk(clk), .d({ts0_gf, ts0_sf, ts0_sc}), .q(ts_p[67:0]));\n'
+             '    (* keep_hierarchy *) ot_nhb_rep_h #(.W(68)) u_tsp1 (.clk(clk), .d({ts1_gf, ts1_sf, ts1_sc}), .q(ts_p[135:68]));\n'
+             '    (* keep_hierarchy *) ot_nhb_rep_h #(.W(136)) u_tsm (.clk(clk), .d(ts_p), .q(ts_m));\n'
+             '    wire [4*32-1:0]   t_sc = {ts_m[68 +: 64], ts_m[0 +: 64]};\n'
+             '    wire [3:0]        t_sf = {ts_m[132 +: 2], ts_m[64 +: 2]};\n'
+             '    wire [3:0]        t_gf = {ts_m[134 +: 2], ts_m[66 +: 2]};\n'
+             '`else\n' + a + '`endif\n', 1)
+    s = rall(s, '    localparam integer SCD = KDEPTH + LANE_D + 2;\n',
+             '    localparam integer SCD = KDEPTH + LANE_D + 2 + `ECTL_SRL;\n', 1)
+    return s
+
+
+def ectl3(s):
+    """q13-kvleaves 2026-10-13: +define+KVD_ECTL3 puts the three hard die leaves of the control cell (qkd_ectl_a / _b / _c behind
+    ot_qkd_ectl3_h, rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv) in the row engine in place of the one-tile control."""
+    a = '    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),\n'
+    i = s.index('module ot_qwen_nearhbm_row_engine_h #(')
+    if s.count(a, i) != 1:
+        raise SystemExit(f'ectl3: anchor found {s.count(a, i)} times in the row engine, expected 1')
+    b = ('`ifdef KVD_ECTL3\n    ot_qkd_ectl3_h\n`else\n    ot_qwen_nearhbm_ectl_h\n`endif\n'
+         '                           #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),\n')
+    return s[:i] + s[i:].replace(a, b)
+
+
 def main():
-    txt = generate()
+    txt = ectl3(ectl_slot(generate()))
     if '--check' in sys.argv:
         sys.exit(0 if DST.exists() and DST.read_text() == txt else 1)
     DST.write_text(txt)

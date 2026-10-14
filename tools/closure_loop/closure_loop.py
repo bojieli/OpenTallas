@@ -1016,6 +1016,76 @@ def structure_repeat_at_submit(j, jobs=None):
         log(f"[{j['name']}] structure-repeat WARN: {len(fails)} failed routes, no structural_change")
 
 
+# CLOSED STANDS (owner 2026-10-12 19:00 "M5 cap narrowed"; submit gate 2026-10-13, el1013-rule-enforcement).  128 failed
+# jobs in 24 h ran on 81 blocks that had already closed, 74 of them M5 re-routes of closed tiles.  A block (top module +
+# parameter set) with a counting CLOSED job whose view is published takes a new ROUTE only with spec "reroute_reason"
+# {"kind": die_window | slot_change | param_change | rtl_change | evidence_gap | pin_register, ...}; the gate verifies what it can
+# (cut > 0.6 / GRT overflow + source file, kit outline / pin faces, parameter set, RTL blobs against the closed commit,
+# the closed job's bench + mutant and routed verdict).  Logic: closed_stands.py; rule text + constants:
+# tools/textbook_lint.py.  Loop successors of a job that is not CLOSED are exempt.  Mode from STATE/ref_gate.json
+# "closed_stands": "refuse" (default) | "warn" | "off".
+TAKEOVER_DIR = Path(os.environ.get("CL_TAKEOVER", str(Path.home() / "claude-takeover-20261007")))
+
+
+def closed_stands_mode():
+    try:
+        return str(json.loads((STATE / "ref_gate.json").read_text()).get("closed_stands", "refuse"))
+    except (OSError, ValueError):
+        return "refuse"
+
+
+def closed_stands_check(spec, name, jobs=None):
+    """closed_stands.check on the loop's history and object store; never raises ({"verdict": "SKIP"} on a gate error)"""
+    try:
+        import closed_stands
+        git_ = submit_lint.Git(REPO)
+        commit = str((spec.get("source") or {}).get("commit") or "")
+        rv = revoked_closures()
+
+        def exists(path):
+            q = Path(path)
+            if q.is_absolute():
+                return q.exists()
+            return ((REPO / path).exists() or (TAKEOVER_DIR / path).exists()
+                    or any(git_.blob(c, path) for c in (commit, "origin/main") if c))
+        return closed_stands.check(spec, name, jobs if jobs is not None else all_jobs(), git_.show, git_.blob,
+                                   closure_counts=lambda x: closure_counts(x, rv), bench_gap=bench_evidence_gap,
+                                   exists=exists)
+    except Exception as ex:  # noqa: BLE001
+        return {"verdict": "SKIP", "message": f"gate error {type(ex).__name__}: {str(ex)[:200]}", "closed": [], "kind": None}
+
+
+def closed_stands_at_submit(j, jobs=None):
+    spec = j["spec"]
+    if j["status"] != "QUEUED" or "route" not in (spec.get("stages") or {}):
+        return
+    mode = closed_stands_mode()
+    if mode == "off":
+        return
+    res = closed_stands_check(j.get("spec_submitted") or spec, j["name"], jobs)
+    v, msg = res["verdict"], res.get("message", "")
+    if v == "NA":
+        return
+    if v == "SKIP":
+        event(j, f"closed-stands gate skipped: {msg[:300]}")
+        return
+    if v == "REFUSE" and mode != "refuse":
+        v = "WARN"
+    j.setdefault("submit_checks", {})["closed_stands"] = {
+        "verdict": v, "mode": mode, "kind": res.get("kind"), "closed": res.get("closed", [])[-4:],
+        "facts": res.get("facts") or {}, "message": msg[:1500]}
+    if v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT CLOSED_STANDS: {msg}"[:1800]
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+    elif v == "WARN":
+        event(j, f"CLOSED_STANDS WARN ({mode}): {msg[:1200]}")
+        log(f"[{j['name']}] closed-stands WARN: {msg[:300]}")
+    else:
+        event(j, f"CLOSED-STANDS {v}: {msg[:600]}")
+
+
 def ref_gate_at_submit(j, jobs=None):
     if j["status"] != "QUEUED" or j["spec"].get("ref_gate") is False:
         return
@@ -1265,6 +1335,8 @@ def ingest():
                 if hist is None:
                     hist = all_jobs()                # one read per ingest pass that sees a new job
                 structure_repeat_at_submit(j, hist)  # no compute: job history only
+                if j["status"] == "QUEUED":
+                    closed_stands_at_submit(j, hist)  # history + a few blob ids: a CLOSED tile stands
                 if j["status"] == "QUEUED":
                     bench_gate_at_submit(j)          # seconds, before the commit-reading lints
                 if j["status"] == "QUEUED":
@@ -1587,18 +1659,32 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         allh = [h for h in allh if not host_down(h)]       # HOST-DOWN: smoke_only-equivalent while it is down
         order = [h for h in allh if h not in exclude and self.compatible(h, spec)]
 
-        def score(h):
-            """higher = better: free cores and free RAM after this job, both as fractions of the host; spillover-only
-            hosts (EPYC3, die-top) rank after every other host; listed hosts get a small preference"""
+        def cpu_ratio(h):
+            """projected CPU load of h with this job on it, in units of its cores (None: no probe)"""
             info, cfg = self.probe(h), host_cfg(h)
             if info is None:
+                return None
+            return (info["load1"] + self.own_pending(h)[0] + threads) / host_cores(cfg)
+
+        # OWNER 2026-10-13 17:55 (EPYC1 at load 259 on 128 cores while EPYC4 ran at 39): a job goes to the host with the
+        # lowest projected load1 / cores among those that can admit it, so the big hosts fill evenly before either
+        # passes 1.0 x cores; a host with fewer than SMALL_HOST_CORES cores (PVE1, localhost) never gets a job of more
+        # than SMALL_HOST_THREADS threads while a larger host still has cores.  Memory alone decides ADMISSION (fits).
+        ratios = {h: cpu_ratio(h) for h in order}
+        big_has_cores = any(r is not None and r <= 1.0 and host_cores(host_cfg(h)) >= SMALL_HOST_CORES
+                            and not host_cfg(h).get("spillover_only") for h, r in ratios.items())
+
+        def score(h):
+            """higher = better: lowest projected CPU load first (free RAM only breaks near-ties); spillover-only hosts
+            rank after every other host; listed hosts get a small preference"""
+            info, cfg = self.probe(h), host_cfg(h)
+            if info is None or ratios.get(h) is None:
                 return -9e9
             pt, pr = self.own_pending(h)
-            fc = (cfg["cap"] - info["load1"] - pt - threads) / cfg["cap"]
             fr = (info["mem_gb"] - pr - ram) / cfg.get("ram_gb", 1133)
-            # OWNER 2026-10-08: memory is the only ADMISSION limit; ranking sends a job where it runs fastest among hosts
-            # that fit -- free CPU weighs 0.5 (was 0.1: AGIdock sat at load 15/64 with 67 GB free while EPYCs ran 4x over)
-            return fr + 0.5 * max(fc, -1.0) + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
+            small = host_cores(cfg) < SMALL_HOST_CORES and threads > SMALL_HOST_THREADS and big_has_cores
+            return -ratios[h] + 0.05 * fr + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0) \
+                - (5 if small else 0)
         order.sort(key=score, reverse=True)
         why = []
         for h in order:
@@ -1607,6 +1693,13 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return h, None
             why.append(msg)
         return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
+
+
+SMALL_HOST_CORES, SMALL_HOST_THREADS = 48, 8   # see Fleet._choose
+
+
+def host_cores(cfg):
+    return max(1, cfg.get("cores") or cfg.get("cap") or 1)
 
 
 TOOL_REF_HOST = "ot-epyc1tb"  # 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
@@ -7603,6 +7696,12 @@ def cmd_validate(a):
             errs.append(f"SUBMIT_LINT BENCH_REQUIRED: the loop would REFUSE this job: {why} (fix: {BENCH_GATE_FIX})")
         elif why:
             print(f"BENCH_REQUIRED WARN: {why}: the guarded auto-merge would skip this job's CLOSED")
+        cs = (closed_stands_check(spec, spec.get("name")) if closed_stands_mode() != "off"
+              else {"verdict": "NA"})
+        if cs["verdict"] == "REFUSE" and closed_stands_mode() == "refuse":
+            errs.append(f"SUBMIT_LINT CLOSED_STANDS: the loop would REFUSE this job: {cs['message']}")
+        elif cs["verdict"] != "NA":
+            print(f"closed-stands {cs['verdict']}: {cs.get('message', '')}")
         res = submit_check(spec)
         print(f"submit lint {res['verdict']}: {res.get('message', '')}"
               + (f" (estimate {res.get('est')} b/um, with fix {res.get('est_fix')})" if res.get("est") else ""))

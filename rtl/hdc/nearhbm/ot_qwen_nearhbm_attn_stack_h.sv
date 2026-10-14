@@ -453,6 +453,22 @@ module ot_qwen_nearhbm_head_h #(
         else begin sc_f <= sv && (merr != 2'd0); g_f <= |gfault; end
 endmodule
 
+// q13-ectl: the control tile in its TP8 contract slot (opt-in KVD_ECTL_SLOT; see tools/qwen_kv_die/stack_h_gen.py ectl_slot)
+`ifdef KVD_ECTL_SLOT
+ `define ECTL_ERV er_valid_g
+ `define ECTL_ERA er_addr_g
+ `define ECTL_ERP er_pd[1]
+ `define ECTL_ERD er_data_p
+ `define ECTL_D1 4
+ `define ECTL_SRL 2
+`else
+ `define ECTL_ERV er_valid
+ `define ECTL_ERA er_addr
+ `define ECTL_ERP er_valid
+ `define ECTL_ERD er_data
+ `define ECTL_D1 8
+ `define ECTL_SRL 0
+`endif
 module ot_qwen_nearhbm_ectl_h #(
     parameter integer HD = 128,
     parameter integer S = 0,             // stack index 0..3
@@ -484,8 +500,13 @@ module ot_qwen_nearhbm_ectl_h #(
     input  wire                 rsp_valid_in,
     input  wire [HD*8-1:0]      rsp_data_in,
     // e memory read (data one cycle later)
+`ifdef KVD_ECTL_SLOT
+    output wire                 er_valid,     // E-face pin flops (the generator registers are one stage back)
+    output wire [11:0]          er_addr,      // {g, idx}
+`else
     output reg                  er_valid,
     output reg  [11:0]          er_addr,      // {g, idx}
+`endif
     input  wire [63:0]          er_data,
     // scores
     output reg                  sc_valid,
@@ -565,10 +586,31 @@ module ot_qwen_nearhbm_ectl_h #(
     reg  [2:0]  cyc8_r;
     reg  [HD*8-1:0] rsp_data;
     wire [2:0]  cyc8 = cyc8_r + 3'd1;                     // the free-running counter's current value
+`ifdef KVD_ECTL_SLOT
+    reg             rsp_valid_p;                // W-face pin flops; rsp_valid / rsp_data relay to the row FIFO
+    reg  [HD*8-1:0] rsp_data_p;
+    reg             er_valid_g, er_valid_o;     // generator register, E-face pin flop
+    reg  [11:0]     er_addr_g, er_addr_o;
+    reg  [63:0]     er_data_p;                  // E-face pin flops of the e word
+    reg  [1:0]      er_pd;                      // the push follows the word through both pin stages
+    assign er_valid = er_valid_o;
+    assign er_addr = er_addr_o;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin start <= 1'b0; rsp_valid_p <= 1'b0; rsp_valid <= 1'b0; er_valid_o <= 1'b0; er_pd <= 2'b00; end
+        else begin
+            start <= start_in; rsp_valid_p <= rsp_valid_in; rsp_valid <= rsp_valid_p;
+            er_valid_o <= er_valid_g; er_pd <= {er_pd[0], er_valid_g};
+        end
+    always @(posedge clk) begin
+        T <= T_in; cyc8_r <= cyc8_in; rsp_data_p <= rsp_data_in; rsp_data <= rsp_data_p;
+        er_addr_o <= er_addr_g; er_data_p <= er_data;
+    end
+`else
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin start <= 1'b0; rsp_valid <= 1'b0; end
         else begin start <= start_in; rsp_valid <= rsp_valid_in; end
     always @(posedge clk) begin T <= T_in; cyc8_r <= cyc8_in; rsp_data <= rsp_data_in; end
+`endif
     // re-cut: this engine's q registers, written from the registered beat broadcast (q_ready = all 32 beats in)
     localparam integer NQB = 8 * HD * 16 / 512;
     reg               qv_r;
@@ -637,9 +679,9 @@ module ot_qwen_nearhbm_ectl_h #(
     always @(posedge clk or negedge rc) begin
         if (!rc) begin
             rg_run <= 1'b0; rg_vph <= 1'b0; rg_g <= 1'b0; rg_idx <= 0; rg_gam <= 0; rg_k <= 0; rg_j <= 0;
-            rq_valid <= 1'b0; er_valid <= 1'b0; credit_used <= 0;
+            rq_valid <= 1'b0; `ECTL_ERV <= 1'b0; credit_used <= 0;
         end else begin
-            rq_valid <= 1'b0; er_valid <= 1'b0;
+            rq_valid <= 1'b0; `ECTL_ERV <= 1'b0;
             issue = 1'b0;
             if (start) begin
                 rg_run <= 1'b1; rg_vph <= 1'b0; rg_g <= 1'b0; rg_idx <= E; rg_gam <= E; rg_k <= 0; rg_j <= 0;
@@ -663,7 +705,7 @@ module ot_qwen_nearhbm_ectl_h #(
                         if (rg_v_valid_row) begin
                             issue = 1'b1;
                             rq_valid <= 1'b1; rq_v <= 1'b1; rq_g <= rg_g; rq_t <= rg_vt[12:0];
-                            er_valid <= 1'b1; er_addr <= {rg_g, rg_k, rg_gam[3:0], rg_j};
+                            `ECTL_ERV <= 1'b1; `ECTL_ERA <= {rg_g, rg_k, rg_gam[3:0], rg_j};
                         end
                         rg_j <= rg_j + 3'd1;
                         if (rg_j == 3'd7) begin
@@ -702,9 +744,15 @@ module ot_qwen_nearhbm_ectl_h #(
     reg             er_pend;
     wire [63:0]     e_word;
     wire            e_ne;
-    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= er_valid;
+`ifdef KVD_ERL
+    reg [`KVD_ERL-1:0] er_dl;
+    always @(posedge clk or negedge rc) if (!rc) er_dl <= {`KVD_ERL{1'b0}}; else er_dl <= {er_dl, `ECTL_ERP};
+    always @* er_pend = er_dl[`KVD_ERL-1];
+`else
+    always @(posedge clk or negedge rc) if (!rc) er_pend <= 1'b0; else er_pend <= `ECTL_ERP;
+`endif
     generate if (DQ > 32) begin : g_rows2
-        ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
+        ot_nhb_fifo_rows2_h #(.W(HD*8), .D(DQ), .D1(`ECTL_D1)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
                                                  .pop(consume), .dout(row), .nonempty(row_ne), .count(row_cnt));
     end else begin : g_rows1
         ot_nhb_fifo_rows_h #(.W(HD*8), .D(DQ)) u_rows (.clk(clk), .rst_n(rc), .push(rsp_valid), .din(rsp_data),
@@ -712,10 +760,10 @@ module ot_qwen_nearhbm_ectl_h #(
     end endgenerate
     wire pop_e;
     generate if (DQ > 32) begin : g_e2
-        ot_nhb_fifo_rows2_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+        ot_nhb_fifo_rows2_h #(.W(64), .D(DQ), .D1(`ECTL_D1)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(`ECTL_ERD),
                                                .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
     end else begin : g_e1
-        ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(er_data),
+        ot_nhb_fifo_h #(.W(64), .D(DQ)) u_e (.clk(clk), .rst_n(rc), .push(er_pend), .din(`ECTL_ERD),
                                         .pop(pop_e), .dout(e_word), .nonempty(e_ne), .count(e_cnt));
     end endgenerate
 
@@ -828,9 +876,20 @@ module ot_qwen_nearhbm_ectl_h #(
     wire [1:0]        t_qv;
     wire [2*6-1:0]    t_qb;
     wire [2*512-1:0]  t_qd;
+`ifdef KVD_ECTL_SLOT
+    // the returns enter at the W end of the S / N faces, the scores leave on the E face: pin stage + mid relay
+    wire [135:0]      ts_p, ts_m;
+    (* keep_hierarchy *) ot_nhb_rep_h #(.W(68)) u_tsp0 (.clk(clk), .d({ts0_gf, ts0_sf, ts0_sc}), .q(ts_p[67:0]));
+    (* keep_hierarchy *) ot_nhb_rep_h #(.W(68)) u_tsp1 (.clk(clk), .d({ts1_gf, ts1_sf, ts1_sc}), .q(ts_p[135:68]));
+    (* keep_hierarchy *) ot_nhb_rep_h #(.W(136)) u_tsm (.clk(clk), .d(ts_p), .q(ts_m));
+    wire [4*32-1:0]   t_sc = {ts_m[68 +: 64], ts_m[0 +: 64]};
+    wire [3:0]        t_sf = {ts_m[132 +: 2], ts_m[64 +: 2]};
+    wire [3:0]        t_gf = {ts_m[134 +: 2], ts_m[66 +: 2]};
+`else
     wire [4*32-1:0]   t_sc = {ts1_sc, ts0_sc};
     wire [3:0]        t_sf = {ts1_sf, ts0_sf};
     wire [3:0]        t_gf = {ts1_gf, ts0_gf};
+`endif
     assign {t1_c, t0_c} = t_c;
     assign {t1_row, t0_row} = t_row;
     assign {t1_e, t0_e} = t_e;
@@ -924,7 +983,7 @@ module ot_qwen_nearhbm_ectl_h #(
         end
     end
     // ---- K pass: the scores come back from the head tiles (their scd1); tags as before ---------------------------------------
-    localparam integer SCD = KDEPTH + LANE_D + 2;
+    localparam integer SCD = KDEPTH + LANE_D + 2 + `ECTL_SRL;
     wire [11:0] tag_sc;
     wire        sc_v_n;
     ot_hdc_delay #(.W(12), .D(SCD - 1)) u_tag (.clk(clk), .rst_n(rc), .d({c_g, c_pidx[10:0]}), .q(tag_sc));
@@ -1029,10 +1088,15 @@ module ot_qwen_nearhbm_row_engine_h #(
 `else
     localparam integer HSUB = 0;
 `endif
-    localparam integer NRI = 2, NRK = 2, NRN = 2;          // head_hs parent relay stages: inputs, K partials, node slice
-    localparam integer HXK = HSUB ? NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
-    localparam integer HXN = HSUB ? NRI + NRN : 0;
-    ot_qwen_nearhbm_ectl_h #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
+    localparam integer NRS = 1, NRI = 2, NRK = 2, NRN = 2; // head_hs parent relay stages: shared S2b, inputs, K partials, node slice
+    localparam integer HXK = HSUB ? NRS + NRI + NRK + 3 : 0;     // sub-tile out flop + K-tree pin flop + parent score relay
+    localparam integer HXN = HSUB ? NRS + NRI + NRN : 0;
+`ifdef KVD_ECTL3
+    ot_qkd_ectl3_h
+`else
+    ot_qwen_nearhbm_ectl_h
+`endif
+                           #(.HD(HD), .S(S), .R(R), .E(E), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .DQ(DQ), .SCALE(SCALE),
                              .LFB(LFB), .ND(ND), .HXK(HXK), .HXN(HXN)) u_ctl (
         .clk(clk), .rst_n(rst_n), .start_in(start_in), .T_in(T_in), .cyc8_in(cyc8_in), .q_valid_in(q_valid_in),
         .q_beat_in(q_beat_in), .q_data_in(q_data_in), .exp_done(exp_done), .req_valid(req_valid), .req_v(req_v),
@@ -1049,7 +1113,7 @@ module ot_qwen_nearhbm_row_engine_h #(
     generate for (h = 0; h < 4; h = h + 1) begin : g_head
         localparam integer P = h / 2;          // the S1b copy of this head's tile pair
         if (HSUB != 0) begin : g_hs
-        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRI(NRI),
+        ot_qwen_nearhbm_head_hs #(.HD(HD), .H(h), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .SCALE(SCALE), .LFB(LFB), .NRS(NRS), .NRI(NRI),
                                   .NRK(NRK), .NRN(NRN)) u_head (
             .clk(clk), .rst_n(rst_n), .c_in(t_c[4*P +: 4]), .row_in(t_row[HD*8*P +: HD*8]),
             .e_in(t_e[32*P + 16*(h % 2) +: 16]), .hid(2'(h)), .lt_in(t_lt[12*P +: 12]), .q_valid_in(t_qv[P]), .q_beat_in(t_qb[6*P +: 6]),

@@ -50,7 +50,8 @@ from collections import defaultdict
 from pathlib import Path
 
 THRESHOLDS = {
-    "util_max": 0.60,             # (std + macro) / core
+    "util_max": 0.60,             # (std + macro) / core; cluster: std / (core - macro)
+    "cluster_macro_frac": 0.50,   # macros >= this share of the core = cluster of hardened children
     "util_hold_max": 0.65,        # ... + hold-buffer allowance
     "hold_buf_per_flop": 1.0,     # BUFx2 per flop (HM-50 mm repair on back-to-back flop arrays: 1-2.2 per flop)
     # signal pins / um / (edge, layer) over a 100 um window.  Calibrated 2026-10-08: hbm_vm8 seam 20.8 (3,166 bits on
@@ -308,6 +309,83 @@ def die_margin(insts, buses, relay_kinds, reach_um=504.0, back_slack_um=20.0, st
     return out
 
 
+PIN_REACH_UM = 500.0       # owner 2026-10-13: register at the pin -> wire <= 500 um -> register at the pin
+
+
+def die_pin_hops(insts, buses, pin_pt, reach_um=PIN_REACH_UM, skip_cls=('clock_trunk',), reset_cls=('reset_tree', 'reset'),
+                 relay_kinds=(), limit=20):
+    """Die hop rule PIN TO PIN (owner 2026-10-13; the measure of tools/hier_contract/pinreg_audit.py --case): every
+    die-level net is one hop between registers at the pins, so the half perimeter of the box around its PINS must be
+    <= reach_um.  die_margin measures instance box to nearest box point: a hop into a pin on the far face of a 3.2 mm
+    block reads 0 um there and passes.
+
+    insts: objects with name, kind, master, x, y, w, h; buses: (bid, cls, bits, [(inst, port), ...]);
+    pin_pt(inst, port) -> die (x, y) of the centroid of that endpoint's pins (slot pin plan / view LEF), or None for an
+    endpoint with no pins (a placeholder).  Nets of skip_cls are not hops (clock trunks: the clock rule audits them);
+    nets of reset_cls count as reset nets (a reset must be a registered tree: each leaf net is a hop too).
+
+    A net with a pin-less endpoint is measured from the nearest point of that endpoint's BOX (a lower bound) and is
+    flagged: it is listed under box_to_box and can never show as pin-to-pin evidence.  Verdict FAIL on any hop over
+    the reach, whatever its measure."""
+    by = {it.name: it for it in insts}
+
+    def near(it, q):
+        return (min(max(q[0], it.x), it.x + it.w), min(max(q[1], it.y), it.y + it.h))
+    over, hist = [], defaultdict(int)
+    n_nets = n_box = n_box_over = n_rst = 0
+    box_masters = defaultdict(int)
+    for bid, cls, bits, eps in buses:
+        if cls in skip_cls:
+            continue
+        ends = [(i, p) for i, p in eps if i in by]
+        if len(ends) < 2 or len({i for i, _ in ends}) < 2:
+            continue
+        n_nets += 1
+        is_rst = cls in reset_cls
+        n_rst += is_rst
+        pts = [pin_pt(i, p) for i, p in ends]
+        known = [q for q in pts if q is not None]
+        boxed = [e for e, q in zip(ends, pts) if q is None]
+        if boxed:
+            n_box += 1
+            for i, _ in boxed:
+                box_masters[getattr(by[i], 'master', by[i].name)] += 1
+            # pin-less endpoints: nearest box point to the centre of the known pins (or of the other boxes)
+            ref = known or [(by[i].x + by[i].w / 2, by[i].y + by[i].h / 2) for i, _ in ends]
+            cx, cy = sum(q[0] for q in ref) / len(ref), sum(q[1] for q in ref) / len(ref)
+            pts = [q if q is not None else near(by[i], (cx, cy)) for (i, _), q in zip(ends, pts)]
+        xs, ys = [q[0] for q in pts], [q[1] for q in pts]
+        L = max(xs) - min(xs) + max(ys) - min(ys)
+        if L <= reach_um:
+            continue
+        n_box_over += bool(boxed)
+        hist['500-600' if L <= 600 else '600-800' if L <= 800 else '800-1200' if L <= 1200 else '1200-2000' if L <= 2000
+             else '>2000'] += 1
+        ks = [by[i].kind in relay_kinds for i, _ in ends]
+        cause = 'reset net' if is_rst else 'station <-> station' if all(ks) else \
+            'block <-> station: ' + '/'.join(sorted({re.sub(r'_?[NS][EW](_s?\d+)?$|\d+$', '', str(getattr(by[i], 'master', i)))
+                                                     for (i, _), k_ in zip(ends, ks) if not k_})[:2]) if any(ks) else \
+            'block <-> block: ' + '/'.join(sorted({str(getattr(by[i], 'master', i)) for i, _ in ends})[:2])
+        over.append(dict(net=str(bid), cls=cls, bits=bits, um=round(L, 1), pins=len(ends),
+                         ends=[f'{i}.{p}' for i, p in ends[:4]], kind='reset' if is_rst else 'data', cause=cause,
+                         measure='box-to-box (placeholder without pins: lower bound)' if boxed else 'pin-to-pin'))
+    over.sort(key=lambda h: -h['um'])
+    causes = {}
+    for h in over:
+        c = causes.setdefault(h['cause'], dict(hops=0, bits=0, max_um=0.0))
+        c['hops'] += 1
+        c['bits'] += h['bits']
+        c['max_um'] = max(c['max_um'], h['um'])
+    n_rst_over = sum(1 for h in over if h['kind'] == 'reset')
+    return dict(rule=f'pin-to-pin half perimeter <= {reach_um:g} um per die net (register at the pin both ends)',
+                reach_um=reach_um, nets=n_nets, reset_nets=n_rst, hops_over=len(over), data_hops_over=len(over) - n_rst_over,
+                reset_nets_over=n_rst_over, bits_over=sum(h['bits'] for h in over), max_um=over[0]['um'] if over else 0.0,
+                box_to_box_nets=n_box, box_to_box_over=n_box_over,
+                box_to_box_masters=dict(sorted(box_masters.items(), key=lambda kv: -kv[1])[:30]),
+                hist=dict(hist), by_cause=dict(sorted(causes.items(), key=lambda kv: -kv[1]['hops'])[:40]),
+                examples=over[:limit], verdict='FAIL' if over else 'PASS')
+
+
 def sliver_gaps(rects, max_gap_um=12.0, min_overlap_um=1.0):
     """rects: list of (name, [x0,y0,x1,y1]).  -> list of (name_a, name_b, gap_rect, gap_um) for facing pairs whose
     gap is 0 < g < max_gap_um (the strip between them).  Grid-bucketed (scales to thousands of macros)."""
@@ -395,7 +473,23 @@ def lint(dump, th=None):
     util_h = (std + macro_area + hold) / core_area if core_area > 0 else 0.0
     met.update(core_um2=round(core_area, 1), std_um2=round(std, 1), macro_um2=round(macro_area, 1), flops=int(flops),
                hold_allow_um2=round(hold, 1), util=round(util, 4), util_hold=round(util_h, 4), n_macros=len(macros))
-    if util > T["util_max"]:
+    # A cluster of hardened children (macros cover most of the core) is judged on the area the macros leave free:
+    # its own cells go in the channels, and channel width is checked by the sliver / channel rules below.  The flat
+    # rule (std + macro) / core refused wires-only parents at 65-86% although their own cells filled < 5% of the
+    # channels (qfd_tile_nk r5, engram cluster, 2026-10-13).
+    free_area = core_area - macro_area
+    cluster = core_area > 0 and macro_area / core_area >= T.get("cluster_macro_frac", 0.50)
+    if cluster:
+        util_f = std / free_area if free_area > 0 else 9.99
+        util_fh = (std + hold) / free_area if free_area > 0 else 9.99
+        met.update(cluster=True, free_um2=round(free_area, 1), util_free=round(util_f, 4), util_free_hold=round(util_fh, 4))
+        if util_f > T["util_max"]:
+            fails.append(("util", f"cluster free-area utilisation {util_f:.1%} > {T['util_max']:.0%} (std {std:.0f} um2 in "
+                                  f"{free_area:.0f} um2 left by {len(macros)} macros): widen the channels"))
+        elif util_fh > T["util_hold_max"]:
+            fails.append(("util", f"cluster free-area utilisation {util_fh:.1%} with the hold-buffer allowance > "
+                                  f"{T['util_hold_max']:.0%}: widen the channels"))
+    elif util > T["util_max"]:
         fails.append(("util", f"utilisation {util:.1%} > {T['util_max']:.0%} (std {std:.0f} + macro {macro_area:.0f} um2 "
                               f"in {core_area:.0f} um2): grow the outline to <= 55-60%"))
     elif util_h > T["util_hold_max"]:
