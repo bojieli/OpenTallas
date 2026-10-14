@@ -39,7 +39,13 @@ def main():
         bv = G.bound_views()
         texts.append('\n'.join(bv[n]['text'] for n in sorted(m['bound_views'])))
     lim = G.HOP_GATE_UM or 500.0
-    hg = HG.gate(m['insts'], m['buses'], texts, G.pslice, limit_um=lim, ss_um=G.SS_REACH_UM, top=100000)
+    pair = None
+    import os
+    if os.environ.get('OT_S81_PAIR_GATE', '0') != '0':      # per-pair limits + hold races, exactly as mode `real`
+        sys.path.insert(0, str(ROOT / 'tools' / 'hier_contract'))
+        import pair_check as PC
+        pair = PC.Gate(default_um=lim, buses=[(b_, c_, n_, [(e_[0], G.pslice(e_[1])[0]) for e_ in eps_]) for b_, c_, n_, eps_ in m['buses']])
+    hg = HG.gate(m['insts'], m['buses'], texts, G.pslice, limit_um=lim, ss_um=G.SS_REACH_UM, top=100000, pair=pair)
     (work / 'hop_gate_full.json').write_text(json.dumps(hg, indent=1) + '\n')
     pal = None
     if hasattr(G, 'pin_align_gate'):      # owner 2026-10-13 pin alignment gate of `real` (never raises here: reported)
