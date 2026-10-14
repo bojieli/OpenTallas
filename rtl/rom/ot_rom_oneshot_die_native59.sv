@@ -303,20 +303,26 @@ module ot_rom_oneshot_die_native59 #(
     wire s0_vc = (PR >= 2) ? s0_vl : s0_v;           // consumer-timed s0 valid / mode / last
     wire s0_mc = (PR >= 2) ? s0_ml : s0_mode;
     wire s0_lc = (PR >= 2) ? s0_ll : s0_last;
-    reg [TAGW:0] s0_t [0:N-1];
+    reg [TAGW+1:0] s0_t [0:N-1];
     generate if (PR == 0) begin : g_s0o
         for (g = 0; g < N; g = g + 1) begin : g_hdf
             assign hdf[g*PW +: PW] = hd[g];
         end
         always @(posedge clk) if (pop) for (r = 0; r < N; r = r + 1) begin
             s0_d[r] <= hd[r][FW-1:0];
-            s0_t[r] <= hd[r][PW-1 -: TAGW + 1];
+            s0_t[r] <= hd[r][PW-1 -: TAGW + 2];
         end
     end endgenerate
     reg agree;
     always @(*) begin
         agree = 1'b1;
-        for (r = 1; r < N; r = r + 1) if (s0_t[r] != s0_t[0]) agree = 1'b0;
+        for (r = 1; r < N; r = r + 1) begin
+`ifdef OT_NATIVE59_MUT_IGNORE_LAST
+            if ((s0_t[r] >> 1) != (s0_t[0] >> 1)) agree = 1'b0;
+`else
+            if (s0_t[r] != s0_t[0]) agree = 1'b0;
+`endif
+        end
     end
     // ---- all-reduce: ((p0 + p1) + p2) + ... in rank order ----------------------------------------------------------
     wire red_in = s0_vc && !s0_mc;
@@ -505,7 +511,7 @@ module ot_rom_oneshot_die_native59 #(
         if (!rst_i) begin identity_wp<=0; identity_rp<=0; identity_count<=0; identity_fault<=0; identity_out<=0; identity_bad_out<=0; end
         else begin
             if (identity_push) begin
-                identity_mem[identity_wp] <= s0_t[0][TAGW:1];
+                identity_mem[identity_wp] <= s0_t[0][TAGW+1:2];
                 identity_bad_mem[identity_wp] <= !agree;
                 identity_wp <= identity_wp + 1'b1;
                 if (identity_count == IDDEP && !identity_pop) identity_fault<=1;
@@ -607,7 +613,7 @@ module ot_rom_oneshot_die_native59 #(
         end
         always @(*) for (r = 0; r < N; r = r + 1) begin
             s0_d[r] = s0f[r*PW +: FW];
-            s0_t[r] = s0f[r*PW + PW - 1 -: TAGW + 1];
+            s0_t[r] = s0f[r*PW + PW - 1 -: TAGW + 2];
         end
     end else if (PR >= 2) begin : g_s0r2
         // ---- PR = 2: 2-level registered fanout tree (keep_hierarchy leaves) ------------------------------------------
@@ -720,7 +726,7 @@ module ot_rom_oneshot_die_native59 #(
         end
         always @(*) for (r = 0; r < N; r = r + 1) begin
             s0_d[r] = s0f[r*PW +: FW];
-            s0_t[r] = s0f[r*PW + PW - 1 -: TAGW + 1];
+            s0_t[r] = s0f[r*PW + PW - 1 -: TAGW + 2];
         end
     end endgenerate
     generate if (CT == 0) begin : g_nct

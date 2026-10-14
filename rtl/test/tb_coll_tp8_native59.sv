@@ -22,7 +22,7 @@ module tb_coll_tp8_native59 #(
     reg [FW-1:0] part [0:MAXW-1];
     reg [FW-1:0] sum  [0:MAXW-1];
     reg          mode [0:4095];
-    integer NMSG, WORDS, GAP, SEED, INJECT, SKEW, TAGBAD, MAXCYC;
+    integer NMSG, WORDS, GAP, SEED, INJECT, SKEW, TAGBAD, LASTBAD, MAXCYC;
     reg [31:0] IVAL;
     string dir;
     reg [3:0] rcnt = 0;
@@ -115,7 +115,7 @@ module tb_coll_tp8_native59 #(
             end
             assign iv[g] = go && m < NMSG && cred > 0;
             assign id[g*FW +: FW] = word;
-            assign il[g] = (w == WORDS - 1);
+            assign il[g] = (w == WORDS - 1) || (LASTBAD == m && (g == 2 || g == 3) && w == 1);
             assign im[g] = mode[m];
             assign it[g*TAGW +: TAGW] = (TAGBAD == m && g == 2) ? (identity(m) ^ (59'd1 << 58)) : identity(m);
             // checker
@@ -165,6 +165,7 @@ module tb_coll_tp8_native59 #(
         if (!$value$plusargs("IVAL=%h", IVAL)) IVAL = 32'h7fc00000;
         if (!$value$plusargs("SKEW=%d", SKEW)) SKEW = 0;
         if (!$value$plusargs("TAGBAD=%d", TAGBAD)) TAGBAD = -1;
+        if (!$value$plusargs("LASTBAD=%d", LASTBAD)) LASTBAD = -1;
         if (!$value$plusargs("MAXCYC=%d", MAXCYC)) MAXCYC = 300000;
         $readmemh({dir, "/part.hex"}, part);
         $readmemh({dir, "/sum.hex"}, sum);
@@ -183,6 +184,13 @@ module tb_coll_tp8_native59 #(
     integer t;
     reg tagok;
     always @(posedge clk) begin
+        if(LASTBAD>=0 && cyc>6000) begin
+            tagok=1'b1;
+            for(t=0;t<ND;t=t+1) if(!fc[t*5+1])tagok=1'b0;
+            $display("PARTICIPANT_LAST fault=%b complete_metadata_rejected=%0d outputs=%0d",flt,tagok,words_out);
+            if(tagok && flt=={ND{1'b1}} && words_out==0) $display("PASS"); else $display("FAIL");
+            $finish;
+        end
 `ifdef OT_NATIVE59_MUT_PEERID
         if(cyc > 6000) begin
             tagok=1'b1;
