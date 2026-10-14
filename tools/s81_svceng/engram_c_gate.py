@@ -54,7 +54,7 @@ def main():
     ap.add_argument("--neg", choices=[n for n, _ in NEG])
     ap.add_argument("--top", default="dsfd_engram_c_rso", choices=["dsfd_engram_c_rso", "dsfd_engram_c_hl"],
                     help="with --rso-candidate: the parent under test (dsfd_engram_c_hl = hardened-leaf form, no parent flop)")
-    ap.add_argument("--leaf-mut", choices=["OT_ENGC_HL_MUT_RR", "OT_ENGC_HL_MUT_CTL"],
+    ap.add_argument("--leaf-mut", choices=["OT_ENGC_HL_MUT_RR", "OT_ENGC_HL_MUT_RR64", "OT_ENGC_HL_MUT_CTL"],
                     help="with --top dsfd_engram_c_hl: build the leaf negative control; exit 0 only when it FAILS the exact bench")
     a = ap.parse_args()
     if a.return_skew_negative and not a.rso_candidate:
