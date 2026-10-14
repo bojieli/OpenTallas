@@ -38,3 +38,16 @@ pairs, excluding reduction storage. Clock, pins, area, routing, and production
 whole-attention throughput remain unqualified. Contexts missing an entire owned
 residue are explicitly refused: current input contract requires
 context_len>128*PAIR+127. No performance ledger or physical adoption is changed.
+
+Optional TREE=1 now reduces128 leaf residues canonically, reusing the same
+feedback SRAM and the same LAT7 adders. It reads adjacent source addresses,
+issues a node every3cycles, writes its result to a lower address after the
+source is consumed, and drains the pipeline between levels. Output out_leaf is
+then one512-word pair partial with out_c=0, retained under backpressure. All
+1024 native pair partial words match the canonical golden tree. Steady complete
+pair computation measures4543 cycles, stalled5225. The same partial contexts
+and protocol/data mutants pass. The default TREE=0 full leaf profile was rerun
+on this exact source and still matches all131072 words. Results and positive
+pair-partial binary fixtures are in the `tree` proof subdirectory. There is no
+additional reduction SRAM. Pair joining and reciprocal normalization remain
+outside this component.

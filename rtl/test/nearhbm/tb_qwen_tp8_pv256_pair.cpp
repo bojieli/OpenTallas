@@ -17,11 +17,21 @@ int main(int argc,char**argv){Verilated::commandArgs(argc,argv);if(argc<4)return
    auto &dst=gold[(h*256+r)*128+j];uint32_t src=prod[(h*8192+t)*128+j];float a,b;std::memcpy(&a,&dst,4);std::memcpy(&b,&src,4);volatile float z=a+b;float zz=z;std::memcpy(&dst,&zz,4);if(!(dst&0x7fffffff))dst=0;
   }
  }
+#ifdef PV_TREE
+ for(unsigned h=0;h<4;h++)for(unsigned j=0;j<128;j++){
+  uint32_t a[128];for(unsigned r=0;r<128;r++)a[r]=gold[(h*256+pair*128+r)*128+j];
+  for(unsigned ns=128;ns>1;ns/=2)for(unsigned r=0;r<ns/2;r++){float x,y;std::memcpy(&x,&a[2*r],4);std::memcpy(&y,&a[2*r+1],4);volatile float z=x+y;float zz=z;std::memcpy(&a[r],&zz,4);if(!(a[r]&0x7fffffff))a[r]=0;}
+  gold[(h*256+pair*128)*128+j]=a[0];
+ }
+ const unsigned expected_leaves=1;const std::string profile="tree";
+#else
+ const unsigned expected_leaves=128;const std::string profile="leaf";
+#endif
  Vot_qwen_tp8_pv256_pair d;unsigned c=0,n=0,leaves=0;uint64_t cyc=0,bad=0,words=0;
  auto tick=[&](){d.clk=0;d.eval();d.clk=1;d.eval();cyc++;};
  d.rst_n=0;d.start=0;d.in_valid=0;d.out_ready=0;tick();tick();d.rst_n=1;tick();
  d.context_len=ctx;d.epoch=71;d.start=1;tick();d.start=0;bool sent=false;
- uint64_t feed_end=0;std::ofstream actual("actual-p"+std::to_string(pair)+"-"+mode+"-"+std::to_string(ctx)+".bin",std::ios::binary);
+ uint64_t feed_end=0;std::ofstream actual("actual-"+profile+"-p"+std::to_string(pair)+"-"+mode+"-"+std::to_string(ctx)+".bin",std::ios::binary);
  while(cyc<100000){unsigned t=sent?0:pair*128+c+256*n;d.in_valid=!sent && (mode=="steady"||cyc%7!=2);
  d.in_c=c;d.in_t=t;d.in_epoch=71;d.in_first=n==0;d.in_last=t+256>=ctx;
  if(n==1&&c==3){if(mode=="epoch")d.in_epoch=70;if(mode=="order")d.in_t^=1;if(mode=="first")d.in_first=1;if(mode=="last")d.in_last^=1;}
@@ -33,8 +43,8 @@ int main(int argc,char**argv){Verilated::commandArgs(argc,argv);if(argc<4)return
  bool take=d.in_valid&&d.in_ready;tick();
  if(d.fault){std::cout<<"{\"pair\":"<<pair<<",\"mode\":\""<<mode<<"\",\"observed_fault\":true,\"cycles\":"<<cyc<<"}\n";return(mode=="epoch"||mode=="order"||mode=="first"||mode=="last"||mode=="restart"||mode=="context")?0:1;}
  if(take){if(c==127||t+1>=ctx){c=0;n++;if(pair*128+256*n>=ctx){sent=true;feed_end=cyc;}}else c++;}
- if(leaves==128&&!d.busy)break;
+ if(leaves==expected_leaves&&!d.busy)break;
  }
  std::cout<<"{\"pair\":"<<pair<<",\"mode\":\""<<mode<<"\",\"context\":"<<ctx<<",\"cycles\":"<<cyc<<",\"feed_end\":"<<feed_end<<",\"rows\":"<<d.accepted<<",\"committed\":"<<d.committed<<",\"peak_inflight\":"<<(unsigned)d.peak_inflight<<",\"words\":"<<words<<",\"mismatches\":"<<bad<<"}\n";
- return leaves==128&&((mode=="data")?bad>0:bad==0)?0:1;
+ return leaves==expected_leaves&&((mode=="data")?bad>0:bad==0)?0:1;
 }
