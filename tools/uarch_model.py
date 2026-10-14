@@ -16109,3 +16109,10 @@ def hbm_qdq_ordered_one_row_front_model():
             "macs_per_cycle": 0,
             "slot_requests_um": [(129.6, 71.28), (172.8, 103.68)],
             "parent_pin_clock_pg_status": "unassigned; no native qualification"}
+
+
+def hbm_sfu_native_quarter_model():
+    """Actual c12 source boundaries; native local8 binding remains unqualified."""
+    import json
+    from pathlib import Path
+    return json.loads((Path(__file__).resolve().parents[1] / "results/arch/hbm_native_1013/sfu_native_quarter/model.json").read_text())

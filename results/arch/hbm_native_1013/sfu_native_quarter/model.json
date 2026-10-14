@@ -1,0 +1,108 @@
+{
+  "schema": "opentallas.sfu.native_quarter_model.v1",
+  "qualified": false,
+  "source_controller": {
+    "path": "rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv",
+    "sha256": "2ee06447a5adbf1b8ba3cd40ba0b856d97292e2eba5a2b2d7bd70be26e95b6a3"
+  },
+  "replicas": {
+    "quarters": 4,
+    "body_per_quarter": 16,
+    "mapper_per_quarter": 16,
+    "requested_local_banks": 8
+  },
+  "params": {
+    "N": 16,
+    "M": 16,
+    "AW": 24,
+    "NW": 16,
+    "MLAT": 6,
+    "ALAT": 6,
+    "DDIV": 21,
+    "OPR": 1,
+    "CAPR": 1,
+    "GSH": 1,
+    "KIMM": 1,
+    "DENR": 1,
+    "DRING": 3,
+    "SFUT": 0,
+    "BCAST_STAGES": 0,
+    "RET_STAGES": 4
+  },
+  "latency": {
+    "mapper": 4,
+    "fetch_direct": 4,
+    "fetch_gather": 8,
+    "pre": 1,
+    "m1_mul": 7,
+    "m1_div": 22,
+    "m2": 6,
+    "ad": 7,
+    "exp": 94,
+    "sigmoid_silu": 122,
+    "e1": 7,
+    "e2": 6,
+    "out_retire": 1,
+    "control_note": "cx/cp/cm/ca/ci/cs/ce/co are already staged by real insertion pipes, then all are shifted4 by mapper; no extra BCAST4",
+    "return_note": "retirement metadata shifted4; mapper-shifted write payload bypasses old RET4 payload stages"
+  },
+  "boundaries": {
+    "controller_to_grid_bits": 1742,
+    "controller_terms_active_bits": 480,
+    "grid_lane_response_bits_per_cycle": 2560,
+    "grid_lane_request_bits_per_cycle": 2128,
+    "grid_write_bits_per_cycle": 1824,
+    "arithmetic_elements_per_cycle_max": 16,
+    "operand_bytes_per_cycle_max": 256,
+    "result_bytes_per_cycle_max": 64,
+    "sector_bytes": 32,
+    "local8_sector_bytes_per_cycle_max": 256,
+    "note": "8 sectors/cycle requires conflict-free assembly/transpose, not guaranteed by sixteen arbitrary scalar lane reads"
+  },
+  "candidate_scope": {
+    "reductions": false,
+    "side_sfu": false,
+    "supported_sfu": [
+      0,
+      1,
+      4,
+      5
+    ],
+    "supported_destination": "VM only",
+    "opt_in": false
+  },
+  "lifetime_source": {
+    "path": "rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv",
+    "implementation": "32-bank four-frame SU head/lane2/lmem, not a native local8 cache",
+    "retire_rule": "s_cd & stc & O-drain-done & R-write-acks and pointers passed in ring order",
+    "watermark": "fr_run derived from matching cr_seq/cr_cnt, propagated into drain frontier",
+    "requirements": [
+      "real eight-bank descriptor sector remap",
+      "finite miss/return identity queue",
+      "per-bank credit and write ACK count",
+      "ordered read returns with epoch and word mask",
+      "lease/mirror held until every write ACK and drain",
+      "production record oracle and immutable throughput price"
+    ]
+  },
+  "physical": {
+    "parent_um": [
+      2016.144,
+      1095.12
+    ],
+    "contract": "r25gq v12 current parent; no new slot grant",
+    "clock_roots": "each mapper and closed body independent; extracted controller not sized by synthesis yet",
+    "setup_pin_ps_max": 190,
+    "launch_pin_ps_max": 220,
+    "wire_um_max": 500,
+    "hold_ps_min": 100,
+    "cut_max": 0.6,
+    "track_demand": "requires actual pin census and placement, not inferred from bulk bits",
+    "native_vm_group": "unassigned; quant group1 already occupied",
+    "area_fit": "existing sixteen body/map proposal; controller/cache/ACK slots still unassigned"
+  },
+  "price": {
+    "production_cycles": "UNMEASURED",
+    "token_latency": "cannot compose until local8 cache and native VM group assignment measured"
+  }
+}
