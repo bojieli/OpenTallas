@@ -74,6 +74,7 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
     reg sq_p0v; reg [59:0] sq_p0; reg [2:0] sq_ph; reg [59:0] sq_p; reg [42:0] sq_lo, sq_hi; reg [31:0] sq_id;
     reg [34:0] sq_pp [0:3];
     reg [30:0] sq_nlo [0:3], sq_nhi [0:3];
+    reg [28:0] sq_qp [0:15];
     reg [31:0] sq_dw; // modulo32 destination: base + row_index * stride
     reg sq_skd;                                                 // B2: the stream's last row was another stack's (done pulse)
     localparam integer QS = (MUT_B2 == 1) ? (QID + 1) % 4 : QID;
@@ -141,10 +142,16 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
             if (sq_act) begin
                 if (sq_ph == 3'd0 && !sq_wait && s_id_v) begin sq_id <= idf[idf_h]; sq_ph <= 3'd1; end
                 if (sq_ph == 3'd1) begin
-                    // Capture two 4x27 products, then combine on a separate edge.
+                    // Each two-bit product contains only one 29-bit add.
+                    // Two registered combine edges preserve the unsigned8x27 result.
+                    for (integer pp=0;pp<16;pp=pp+1)
+                        sq_qp[pp] <= {27'd0,sq_id[pp*2 +: 2]} * {2'd0,sc[69:43]};
+                    sq_ph <= 3'd6;
+                end
+                if (sq_ph == 3'd6) begin
                     for (integer pp=0;pp<4;pp=pp+1) begin
-                        sq_nlo[pp] <= {27'd0,sq_id[pp*8 +: 4]} * {4'd0,sc[69:43]};
-                        sq_nhi[pp] <= {27'd0,sq_id[pp*8+4 +: 4]} * {4'd0,sc[69:43]};
+                        sq_nlo[pp] <= {2'd0,sq_qp[pp*4]} + {sq_qp[pp*4+1],2'd0};
+                        sq_nhi[pp] <= {2'd0,sq_qp[pp*4+2]} + {sq_qp[pp*4+3],2'd0};
                     end
                     sq_ph <= 3'd5;
                 end
