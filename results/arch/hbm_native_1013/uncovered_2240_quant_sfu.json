@@ -161,7 +161,8 @@
       "requirements_file": "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_quarter_composition_request.json",
       "native_grid": "16 CLOSED lane5 bodies plus16 four-edge mappers; arithmetic only",
       "mapper_m1": "sfu_lane_map_ref-m1-b622c064c RUNNING OLD SOURCE; warm reset fails2 stale ld strobes",
-      "mapper_m2": "reset ld bit only; exact4096 PASS/mutant24552FAIL; CTS pending"
+      "mapper_m2": "routedTT+193.19FF+23.91DRC0, exact4096/mutant24552; collectpublicationpending; nativepin audit1outunregpass111q222.7; 26/657plannedpairsetupfails, allH100pass",
+      "mapper_pin_next": "Separate103.68x54 nativepin slotrequest allmapped542W/raw541E/coeff1200N/terms487S; actualpinsnativebodyW. Closedm2stands."
     },
     {
       "element": "ot_hbm_norm_engine_view",
@@ -169,7 +170,7 @@
       "snapshot_category": "flow failure (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "UNBOUND_STANDALONE_NORM_ALTERNATIVE_REQUIRED_ROW_NORM_SV_PATH_OPEN",
       "latest_snapshot": {
         "t": 1791821151.0,
         "job": "hbm-norm-mem1-keepfp-43dd4a6b6",
@@ -177,10 +178,11 @@
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hbm-norm-mem1-keepfp-43dd4a6b6.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
       },
       "successor_owner": "/root/hbm_hc_norm",
-      "successor_source": "e71f1dde9",
+      "successor_source": "01f83170b",
       "successor_top": "ot_hbm_norm_split_view_g8pc",
-      "status": "REQUIRED_NATIVE_COMPOSITION_OPEN",
-      "proof": "8 CLOSED gtile8;79 sum_nodes CTS646/TT101spread4.6 exact+mutant;72 CLOSEDrelays;7chunk3scalar2quant leaf/state open; no parentclosure"
+      "status": "CANDIDATE_ONLY_NO_PRODUCTION_INSTANTIATION",
+      "proof": "Normowner census:ot_hgi_fused_record.sv:7-21 ROW_NORM isSVmicrosequence;ne_* dedicatedengineportsunused; noactualgeneric/nativeinstantiation. g8pc mathgate4/645 exact+mutants doesnotadopt. ActualSV/head ROW_NORM source/master/gate requested fromSUVOPowner.",
+      "required_record_owner": "/root/hbm_idx_smmv_2240/suvop_collect"
     },
     {
       "element": "ot_hgi_qdq_q",
@@ -202,7 +204,9 @@
         596.16
       ],
       "successor": "q8 four-leaf wires parent",
-      "source": "9d9be7232"
+      "source": "9d9be7232",
+      "native_successor": "343d86def ot_hgi_qdq_native_peer4 x4 actualendpoints/protected32CDC intoVM64fced1f9 group1",
+      "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet."
     },
     {
       "element": "ot_hgi_quant_wide",
@@ -227,7 +231,12 @@
         "existing CLOSEDdecoder/lane"
       ],
       "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
-      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL"
+      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL",
+      "current_leaf_jobs": [
+        "qw_ovg_ref-s5-8b8bb5549 RUNNING",
+        "qw_ovw_ref-s1-8b8bb5549 RUNNING"
+      ],
+      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved"
     },
     {
       "element": "ot_hgi_quant_wide_h",
@@ -252,7 +261,12 @@
         "existing CLOSEDdecoder/lane"
       ],
       "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
-      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL"
+      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL",
+      "current_leaf_jobs": [
+        "qw_ovg_ref-s5-8b8bb5549 RUNNING",
+        "qw_ovw_ref-s1-8b8bb5549 RUNNING"
+      ],
+      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved"
     },
     {
       "element": "ot_hgi_quant_wide_ov",
@@ -277,7 +291,12 @@
         "existing CLOSEDdecoder/lane"
       ],
       "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
-      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL"
+      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL",
+      "current_leaf_jobs": [
+        "qw_ovg_ref-s5-8b8bb5549 RUNNING",
+        "qw_ovw_ref-s1-8b8bb5549 RUNNING"
+      ],
+      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved"
     },
     {
       "element": "ot_hgi_qw_ovd",
@@ -302,7 +321,12 @@
         "existing CLOSEDdecoder/lane"
       ],
       "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
-      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL"
+      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL",
+      "current_leaf_jobs": [
+        "qw_ovg_ref-s5-8b8bb5549 RUNNING",
+        "qw_ovw_ref-s1-8b8bb5549 RUNNING"
+      ],
+      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved"
     },
     {
       "element": "ot_hgi_qdq_q_pin4",
@@ -324,7 +348,9 @@
         596.16
       ],
       "successor": "q8 four-leaf wires parent",
-      "source": "9d9be7232"
+      "source": "9d9be7232",
+      "native_successor": "343d86def ot_hgi_qdq_native_peer4 x4 actualendpoints/protected32CDC intoVM64fced1f9 group1",
+      "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet."
     },
     {
       "element": "ot_hgi_qw_lgr",
