@@ -37,13 +37,13 @@ module ot_qfd_su_kv_native_posted #(
    else encode={1'b1,8'd0};
   end
  endfunction
- localparam integer VBASE=HEADS*65536;
+ localparam integer VBASE=HEADS*65536, NBYTES=HEADS*256, NWORDS=HEADS*4;
  initial if(HEADS<1||HEADS>2)$error("Only exact one/two-head profiles supported");
  reg active;reg [12:0] pos;
  reg [2:0] issued;
- reg [511:0] seen,seen_n;
- reg [7:0] sent,sent_n;
- reg [4095:0] bytes_r,bytes_n;
+ reg [NBYTES-1:0] seen,seen_n;
+ reg [NWORDS-1:0] sent,sent_n;
+ reg [NBYTES*8-1:0] bytes_r,bytes_n;
  reg [7:0] err;
  reg choose;integer selected,li,idx,dim,head,kind,halfidx;
  reg [23:0] e;reg [19:0] a;reg [16:0] w;reg [12:0] pp;
@@ -65,16 +65,18 @@ module ot_qfd_su_kv_native_posted #(
     w=a-VBASE;kind=1;head=w[16];pp=w[15:3];dim={w[2:0],e[3:0]};
     if(!allowed[0])err[2]=1;
    end
-   idx=kind*256+head*128+dim;
+   idx=kind*HEADS*128+head*128+dim;
    if(MUT_LANE!=0)idx=idx^1;
    if(!active||a>=2*VBASE||head>=HEADS||pp!=pos)err[0]=1;
    if(code[8]||KV_FP8==0)err[1]=1;
-   if(seen_n[idx])err[3]=1;
-   seen_n[idx]=1;bytes_n[8*idx+:8]=code[7:0];
+   if(head<HEADS)begin
+    if(seen_n[idx])err[3]=1;
+    seen_n[idx]=1;bytes_n[8*idx+:8]=code[7:0];
+   end
   end
   choose=0;selected=0;
-  for(halfidx=0;halfidx<8;halfidx=halfidx+1)
-   if((halfidx/2)%2<HEADS&&!choose&&!sent[halfidx]&&(&seen[64*halfidx+:64]))begin choose=1;selected=halfidx;end
+  for(halfidx=0;halfidx<NWORDS;halfidx=halfidx+1)
+   if(!choose&&!sent[halfidx]&&(&seen[64*halfidx+:64]))begin choose=1;selected=halfidx;end
   if(choose&&(!word_v||take))sent_n[selected]=1;
  end
  always @(posedge clk or negedge rst_n)begin
@@ -82,7 +84,7 @@ module ot_qfd_su_kv_native_posted #(
   else if(ENABLE!=0)begin
    if(eb_q)begin
     if(active||word_v||fault||ep_q>=8192)begin fault<=1;fault_code[4]<=1;end
-    else begin active<=1;pos<=ep_q[12:0];issued<=0;seen<=0;sent<=(HEADS==1?8'hCC:8'h00);end
+    else begin active<=1;pos<=ep_q[12:0];issued<=0;seen<=0;sent<=0;end
    end else begin
     seen<=seen_n;sent<=sent_n;bytes_r<=bytes_n;
     if(iv_q)begin
@@ -91,7 +93,7 @@ module ot_qfd_su_kv_native_posted #(
     end
     if(|err)begin fault<=1;fault_code<=fault_code|err;end
     if(!fault&&!(|err)&&choose&&(!word_v||take))begin
-     word_v<=1;word_tag<={3'b010,5'd0,3'(selected^(MUT_TAG!=0?1:0))};
+     word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
      word_data<=bytes_r[512*selected+:512];
      if(MUT_MASK!=0)word_data[7:0]<=0;
     end else if(take||fault||(|err))word_v<=0;
