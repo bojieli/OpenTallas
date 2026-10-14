@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.vmfe-coupled-finite-repair.v1",
+  "input": "placement-s21-final-escape.json",
+  "input_sha256": "29d5e5b1d4c0acc321ef4cb2a3b6016943f77c92f9d5b7991d0498296cf568a1",
+  "source_sha256": "6a564096256c0253de7ced686cd6e8e7800073f96efe9b41f5f08b5a91ca471a",
+  "radius_um": 345.6,
+  "direct_reach_reserve_um": 21.6,
+  "node_limit": 2000,
+  "elapsed_s": 41.73648118972778,
+  "status": 4,
+  "message": "The HiGHS status code was not recognized. (HiGHS Status 16: model_status is Solution limit reached; primal_status is None)",
+  "variables": 21173,
+  "constraints": 28146,
+  "coupled_nonoverlap_disjunctions": 5449,
+  "immediate_infeasible_pairs": [],
+  "node_count": null,
+  "mip_gap": null,
+  "objective": null,
+  "warnings": [
+    "Unrecognized options detected: {'threads'}. These will be passed to HiGHS verbatim."
+  ],
+  "global_impossibility_claim": false,
+  "native_qualified": false,
+  "limits": {
+    "hop_um": 500,
+    "cut": 0.6
+  },
+  "existing_anchored_CLT_abutment_preserved": true,
+  "other_macro_gap_um": 2.16,
+  "fixed_instances": [
+    "clt0",
+    "clt1",
+    "clt2",
+    "clt3",
+    "clt4",
+    "clt5",
+    "clt6",
+    "clt7",
+    "clt8",
+    "clt9",
+    "clt10",
+    "clt11",
+    "clt12",
+    "clt13",
+    "clt14",
+    "clt15",
+    "fsr0",
+    "fsr1",
+    "fsr2",
+    "fsr3"
+  ],
+  "actual_clock_rc_budget_um": null
+}

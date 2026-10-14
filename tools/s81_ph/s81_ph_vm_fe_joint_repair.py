@@ -14,7 +14,7 @@ def solve(inp,pins,capture,out,radius,margin,nodes):
  lower=np.maximum(-radius,-xy);upper=np.minimum(radius,np.array([F.W,F.H])-xy-size)
  for i,n in enumerate(names):
   if n.startswith(('clt','fsr')):lower[i]=0;upper[i]=0
- lo=list(np.ceil(lower/step).ravel());hi=list(np.floor(upper/step).ravel());obj=[0.]*(2*N);integ=[1]*(2*N);rr=[];cc=[];vv=[];rl=[];ru=[]
+ lo=list(np.ceil(lower/step).ravel());hi=list(np.floor(upper/step).ravel());obj=[0.]*(2*N);integ=[1]*(2*N);rr=[];cc=[];vv=[];rl=[];ru=[];reach_rows=[]
  def var(l,h,c,integer):
   k=len(lo);lo.append(l);hi.append(h);obj.append(c);integ.append(integer);return k
  def row(d,l=-np.inf,u=np.inf):
@@ -36,7 +36,21 @@ def solve(inp,pins,capture,out,radius,margin,nodes):
       # Candidate boundary x follows its leaf except assigned capture/status.
       if ax==0 and (a.startswith('FE.') or b.startswith('FE.')) and cls not in ('f_cap','f_cap_status'):continue
       k=2*idx[n]+ax;d[k]=d.get(k,0)+sg*s[ax]*step[ax]
-   row(d,u=500-margin-base)
+   row(d,u=500-margin-base);reach_rows.append((d,500-margin-base))
+ # Propagate implied integer bounds from the unchanged actual pin inequalities.
+ propagation_passes=0;reach_bound_infeasible=[]
+ for iteration in range(100):
+  changed=False;propagation_passes=iteration+1
+  for d,rhs in reach_rows:
+   terms={k:v*(lo[k] if v>0 else hi[k]) for k,v in d.items()};minimum=sum(terms.values())
+   if minimum>rhs+1e-6:reach_bound_infeasible.append({'coefficients':d,'rhs':rhs,'minimum':minimum});continue
+   for k,v in d.items():
+    bound=(rhs-(minimum-terms[k]))/v
+    if v>0:
+     new=min(hi[k],np.floor(bound+1e-7));changed|=new<hi[k];hi[k]=new
+    else:
+     new=max(lo[k],np.ceil(bound-1e-7));changed|=new>lo[k];lo[k]=new
+  if not changed:break
  # Coupled four-way nonoverlap disjunctions, with tight bounded big-M values.
  disjunctions=0;immediate=[]
  for i in range(N):
@@ -56,8 +70,8 @@ def solve(inp,pins,capture,out,radius,margin,nodes):
    row({z:1 for z in zs},l=1)
  mat=coo_matrix((vv,(rr,cc)),shape=(len(rl),len(lo))).tocsr();start=time.time()
  with warnings.catch_warnings(record=True) as ws:
-  res=milp(np.array(obj),integrality=np.array(integ),bounds=Bounds(lo,hi),constraints=LinearConstraint(mat,rl,ru),options={'node_limit':nodes,'mip_rel_gap':.05,'threads':1})
- rec=dict(schema='opentallas.vmfe-coupled-finite-repair.v1',input=inp,input_sha256=hashlib.sha256(Path(inp).read_bytes()).hexdigest(),source_sha256=hashlib.sha256(F.SRC.encode()).hexdigest(),radius_um=radius,direct_reach_reserve_um=margin,node_limit=nodes,elapsed_s=time.time()-start,status=int(res.status),message=res.message,variables=len(lo),constraints=len(rl),coupled_nonoverlap_disjunctions=disjunctions,immediate_infeasible_pairs=immediate,node_count=getattr(res,'mip_node_count',None),mip_gap=getattr(res,'mip_gap',None),objective=getattr(res,'fun',None),warnings=[str(w.message) for w in ws],global_impossibility_claim=False,native_qualified=False,limits={'hop_um':500,'cut':.60},existing_anchored_CLT_abutment_preserved=True,other_macro_gap_um=2.16,fixed_instances=[n for n in names if n.startswith(('clt','fsr'))],actual_clock_rc_budget_um=None)
+  res=milp(np.array(obj),integrality=np.array(integ),bounds=Bounds(lo,hi),constraints=LinearConstraint(mat,rl,ru),options={'node_limit':nodes,'mip_rel_gap':.05,'threads':1,'disp':True})
+ rec=dict(schema='opentallas.vmfe-coupled-finite-repair.v1',input=inp,input_sha256=hashlib.sha256(Path(inp).read_bytes()).hexdigest(),source_sha256=hashlib.sha256(F.SRC.encode()).hexdigest(),radius_um=radius,direct_reach_reserve_um=margin,node_limit=nodes,elapsed_s=time.time()-start,status=int(res.status),message=res.message,propagation_passes=propagation_passes,reach_bound_infeasible=reach_bound_infeasible,integer_move_bounds={n:[[int(lo[2*i+a]),int(hi[2*i+a])] for a in range(2)] for i,n in enumerate(names)},variables=len(lo),constraints=len(rl),coupled_nonoverlap_disjunctions=disjunctions,immediate_infeasible_pairs=immediate,node_count=getattr(res,'mip_node_count',None),mip_gap=getattr(res,'mip_gap',None),objective=getattr(res,'fun',None),warnings=[str(w.message) for w in ws],global_impossibility_claim=False,native_qualified=False,limits={'hop_um':500,'cut':.60},existing_anchored_CLT_abutment_preserved=True,other_macro_gap_um=2.16,fixed_instances=[n for n in names if n.startswith(('clt','fsr'))],actual_clock_rc_budget_um=None)
  if res.x is not None:
   delta=np.rint(res.x[:2*N]).reshape(N,2)*step;F.reposition(p,{n:tuple(xy[i]+delta[i]) for i,n in enumerate(names)},True)
   rec['moved_instances']={n:delta[i].tolist() for i,n in enumerate(names) if np.any(abs(delta[i])>1e-6)}
