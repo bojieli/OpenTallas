@@ -114,17 +114,19 @@ module ot_hgi_coll_tkm_seq_lane_core #(
 
     // ---------------------------------------------------------------- delivery credits + decode + FIFO
     wire [DEL-1:0] rr_dummy;
-    wire [0:0] rr;
-    ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
-    wire rn=rr[0];
+    wire [2:0] rr;
+    // three relay copies (main control / lane take+epoch / small flight+count state): the measured single relay
+    // output drove 2,686 loads (955 flops); each region now has its own registered copy
+    ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+    wire rn=rr[0],rn_l=rr[1],rn_s=rr[2];
     reg[3:0]pack_queued_pin;reg[9:0]pack_lines_pin;
     reg pack_empty_pin,pack_tail,w_v_pin;reg[DEL*8-1:0]occ_pin;
     reg[DEL-1:0]early0_pin,early1_pin,landing_pin,fault_pin;
     always @(posedge clk)begin pack_queued_pin<=pack_queued;pack_lines_pin<=pack_lines;pack_empty_pin<=pack_empty;
      w_v_pin<=w_v;occ_pin<=lane_occ;early0_pin<=lane_d0v;early1_pin<=lane_d1v;landing_pin<=lane_ldv;fault_pin<=lane_fault;end
-    always @(posedge clk or negedge rn)if(!rn)pack_tail<=0;else pack_tail<=pack_cell_v;
+    always @(posedge clk or negedge rn_s)if(!rn_s)pack_tail<=0;else pack_tail<=pack_cell_v;
     reg[DEL-1:0]count_v;reg[DEL*8-1:0]count_mask;
-    always @(posedge clk or negedge rn)if(!rn)count_v<=0;else count_v<=lane_dv;
+    always @(posedge clk or negedge rn_s)if(!rn_s)count_v<=0;else count_v<=lane_dv;
     always @(posedge clk)count_mask<=lane_nv_mask;
     wire [DEL-1:0] d2_v=count_v,d0_v=early0_pin,d1_v=early1_pin;
     wire [DEL-1:0] ld_v=landing_pin;
@@ -142,19 +144,38 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     reg[DEL*2720-1:0]head_pin;reg[DEL*32-1:0]mask_pin;
     reg[DEL*8-1:0]epoch_pin;reg[DEL*3-1:0]hn_pin;
     reg[7:0]consume_epoch[0:DEL-1],consume_mask[0:DEL-1];
-    wire[7:0]head_offset[0:DEL-1];
+    wire ins_live = (ph == P_INS); reg [DEL-1:0] sel_pop;
     always @(posedge clk)begin head_pin<=lane_heads;mask_pin<=lane_masks;epoch_pin<=lane_epochs;hn_pin<=lane_hn;end
+    // Mirror selection is REGISTERED (structural repair of the measured 23-level consume_epoch -> e1 stage and the
+    // 5,074-load subtract nets): the offset consume_epoch - epoch_pin that the old code subtracted after the edge is
+    // formed before it from the next-state values (consume_epoch + pop, lane_epochs = next epoch_pin, lane_hn =
+    // next hn_pin) and stored one-hot, one private copy per 85-bit element / mask, so the cycle behaviour is
+    // identical (offset_reg(t) == consume_epoch(t) - epoch_pin(t)) and no subtract or shared select fans out.
+    // During reset ins_live is 0 and consume_epoch is 0, so the stored offset is 0 - epoch, as before.
     for(genvar l=0;l<DEL;l=l+1)begin:g_lane_faces
-     assign head_offset[l]=consume_epoch[l]-epoch_pin[8*l+:8];
-     assign st_e[l][0]=(head_offset[l]<4)?head_pin[2720*l+680*head_offset[l][1:0]+:680]:680'd0;
+     wire[7:0]d0=consume_epoch[l]-lane_epochs[8*l+:8];
+     wire[7:0]d1=consume_epoch[l]+8'd1-lane_epochs[8*l+:8];
+     wire take_pop=ins_live&&sel_pop[l];
+     wire[3:0]oh0={d0==8'd3,d0==8'd2,d0==8'd1,d0==8'd0},oh1={d1==8'd3,d1==8'd2,d1==8'd1,d1==8'd0};
+     wire hv0=d0<8'(lane_hn[3*l+:3]),hv1=d1<8'(lane_hn[3*l+:3]);
+     (* keep *)reg[3:0]oh_e[0:7];(* keep *)reg[3:0]oh_m;(* keep *)reg hv;
+     always @(posedge clk)begin
+      for(integer i=0;i<8;i=i+1)oh_e[i]<=take_pop?oh1:oh0;
+      oh_m<=take_pop?oh1:oh0;hv<=take_pop?hv1:hv0;
+     end
+     for(genvar i=0;i<8;i=i+1)begin:g_el
+      assign st_e[l][0][85*i+:85]=({85{oh_e[i][0]}}&head_pin[2720*l+85*i+:85])|({85{oh_e[i][1]}}&head_pin[2720*l+680+85*i+:85])
+                                 |({85{oh_e[i][2]}}&head_pin[2720*l+1360+85*i+:85])|({85{oh_e[i][3]}}&head_pin[2720*l+2040+85*i+:85]);
+     end
      assign st_e[l][1]='0;assign st_e[l][2]='0;
-     assign st_m[l][0]=(head_offset[l]<4)?mask_pin[32*l+8*head_offset[l][1:0]+:8]:8'd0;
+     assign st_m[l][0]=({8{oh_m[0]}}&mask_pin[32*l+:8])|({8{oh_m[1]}}&mask_pin[32*l+8+:8])
+                      |({8{oh_m[2]}}&mask_pin[32*l+16+:8])|({8{oh_m[3]}}&mask_pin[32*l+24+:8]);
      assign st_m[l][1]='0;assign st_m[l][2]='0;
      assign dn[l]=consume_mask[l];assign occ[l]=occ_pin[8*l+:8];
-     assign st_n[l]=(head_offset[l]<8'(hn_pin[3*l+:3]))?2'd1:2'd0;
+     assign st_n[l]=hv?2'd1:2'd0;
     end
-    always @(posedge clk or negedge rn)begin
-     if(!rn)begin
+    always @(posedge clk or negedge rn_l)begin
+     if(!rn_l)begin
       lane_take<=0;lane_pop<=0;lane_take_epochs<=0;
       for(integer l=0;l<DEL;l=l+1)begin consume_epoch[l]<=0;consume_mask[l]<=0;end
      end else begin
@@ -234,7 +255,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     assign buf_w_v=bw_v;assign buf_w_addr=10'(bw_a);assign buf_w_data=bw_d;
     assign buf_r_v=br_v;assign buf_r_addr=10'(br_a);
     reg[3:0]br_flight;
-    always @(posedge clk or negedge rn)if(!rn)br_flight<=0;else br_flight<={br_flight[2:0],br_v};
+    always @(posedge clk or negedge rn_s)if(!rn_s)br_flight<=0;else br_flight<={br_flight[2:0],br_v};
     always @(posedge clk)rd2<=buf_rd_data;
     reg [BA:0] cnv, cap, rdn; reg [12:0] cneed; reg [3:0] qcnt; reg [3:0] wcnt;
     integer c, s, a, b, l, i;
@@ -245,7 +266,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     wire [11:0] lq_need = 12'(pack_queued_pin) + 12'(lines_iss - 11'(pack_lines_pin)) * (hr_q ? 12'd2 : 12'd1);
     wire pgo = (ph == P_OUT) && (13'(cnv) < cneed) && (lq_need <= 12'd8);
     // select (combinational over the registered staging heads)
-    reg [EW-1:0] sel_e [0:3]; reg [2:0] sel_n; reg [7:0] sel_take [0:DEL-1]; reg [DEL-1:0] sel_pop;
+    reg [EW-1:0] sel_e [0:3]; reg [2:0] sel_n; reg [7:0] sel_take [0:DEL-1];
     function automatic[3:0]pop8(input[7:0]m);
         reg[1:0]a,b,c,d;reg[2:0]ab,cd;
         begin a=2'(m[0])+2'(m[1]);b=2'(m[2])+2'(m[3]);c=2'(m[4])+2'(m[5]);d=2'(m[6])+2'(m[7]);
@@ -274,7 +295,6 @@ module ot_hgi_coll_tkm_seq_lane_core #(
         end
         sel_n=(total>4)?3'd4:3'(total);
     end
-    wire ins_live = (ph == P_INS);
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             busy<=0;lane_live<=0;ph <= P_IDLE; fault <= 1'b0; done <= 1'b0; pack_start<=0;pack_cell_v<=0;pack_cell<=0;pack_slot<=0;pack_last<=0;
