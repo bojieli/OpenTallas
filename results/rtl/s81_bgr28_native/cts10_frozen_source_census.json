@@ -1,5 +1,5 @@
 {
-  "source_commit": null,
+  "source_commit": "50373a397d480ff1ceeba0aaddaf94f2d5829074",
   "source_binding_identity": "exact_content_snapshot",
   "archive_sha256": "04ad750175bf724c5763196b94a5cd40d84606ad3e1701377754c800ea13e777",
   "runtime_tools": [
@@ -18,5 +18,25 @@
     "ck_req",
     "ck_ret"
   ],
-  "qualification": "OPEN actual source drivers/per-port peer clocks/raw export/slot allocation"
+  "qualification": "OPEN actual source drivers/per-port peer clocks/raw export/slot allocation",
+  "exact_snapshot_commit_field": null,
+  "actual_clock_sink_census": {
+    "ck": {
+      "FFs": 7454,
+      "SRAM_clock_pins": 1
+    },
+    "ck_req": {
+      "FFs": 8206
+    },
+    "ck_ret": {
+      "FFs": 1299
+    }
+  },
+  "all_FFs_total": 16959,
+  "source_port_clock_ownership": {
+    "f_v,f_we,f_row,f_mask,f_d": "ck_req",
+    "o_v,o_d,o_f,o_o": "ck_ret",
+    "bank SRAM clock": "ck"
+  },
+  "macro_root_note": "Generic gate macro summary repeats SRAM macro in each root record; actual SRAM clk net is clknet_1_0__leaf_ck, owned solely by ck."
 }
