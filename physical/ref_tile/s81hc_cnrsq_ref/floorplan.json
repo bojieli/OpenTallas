@@ -38,13 +38,13 @@
   "W": [
    "sk",
    "srs",
+   "flt"
+  ],
+  "E": [
    "ss_v",
    "ss",
    "tflt",
    "cflt"
-  ],
-  "E": [
-   "flt"
   ]
  },
  "clock_port": "sk",
@@ -103,6 +103,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_die_pins/v19_ntree/ot_s81_hc_cnrsq.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",

@@ -111,5 +111,11 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cncla_C1.tcl",
+ "assigned_pins": {
+  "file": "physical/s81_die_pins/v19_ntree/ot_s81_hc_cncla_C1.json",
+  "source": "S81 die lead r5 tools/s81/hc_ntree_pins.py (d46f94fbb, el1011-s81dieit), top-down per-bit",
+  "layout": "physical/s81_die_pins/v19_ntree/layout.json"
  }
 }
