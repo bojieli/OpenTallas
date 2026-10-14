@@ -118,4 +118,20 @@ module tb_s81_hc_master;
         if (errs == 0 && ndone == nj && !flt && bad_tag == 0 && pend == 0) $display("HCG PASS"); else $display("HCG FAIL");
         $finish;
     end
+// Diagnostic event stamps only; no RTL datapath or timing parameter changes.
+    generate if (HIER) begin : g_norm_trace
+        integer trace_tag;
+        always @(posedge sk) if (srs) begin
+            if (dut.g_hier.u_cb.u_seq.take && dut.g_hier.u_cb.u_seq.c_arg[22:20] == 4) begin
+                trace_tag = dut.g_hier.u_cb.u_seq.e_d[6:0];
+                $display("NTRACE op=%0d event=accept cyc=%0d", trace_tag, scyc);
+            end
+            if (dut.g_hier.u_cb.u_seq.run && dut.g_hier.u_cb.u_seq.kind == 4) begin
+                if (dut.g_hier.u_cb.u_seq.t_ssv) $display("NTRACE op=%0d event=sum_return cyc=%0d", trace_tag, scyc);
+                if (dut.g_hier.u_cb.u_seq.rr_v) $display("NTRACE op=%0d event=rsqrt_ready cyc=%0d", trace_tag, scyc);
+                if (dut.g_hier.u_cb.u_rx.rv[0]) $display("NTRACE op=%0d event=return_row cyc=%0d", trace_tag, scyc);
+                if (dut.g_hier.u_cb.u_seq.wd_q) $display("NTRACE op=%0d event=writer_done cyc=%0d", trace_tag, scyc);
+            end
+        end
+    end endgenerate
 endmodule
