@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_native_bounded_cdc_w1_1014",
  "verdict": "WARN",
- "generated": "2026-10-14T05:57:42-0700",
+ "generated": "2026-10-14T06:15:23-0700",
  "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "07423714813a0eaf09398e39631b56ef2a56fabd",
+  "start_commit": "2f5113fab803d6568a3cc7fb27605cfa080e94cf",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "f4d73be6574b5904f60190a35c8939245607850f1e4d0f7453b94a6c738031c5",
-  "manifest_sha256": "ef1317deba04ce0d810e4a5386b03952914614b89604d3bd7ddac1a84230c0f9",
+  "archive_sha256": "e61ecb3dffb33f38b7c318a89eb0faac3e46252328308e757c7a9aaef4fe27b1",
+  "manifest_sha256": "3a7567525bd8c84ccf2b66690f7a351dca926b78a6cfac445074482ba42dd456",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -611,16 +611,16 @@
    {
     "path": "physical/hbm_native_bounded_cdc_1014/related_domains.sdc",
     "kind": "file",
-    "sha256": "aa4547d19643598beb3e99e5938c06031e28fc2345a18678f44ce2d24b29b411",
-    "git_blob": "e8ade2f078b9d6c987d2c69171e4da0a86f4691c",
+    "sha256": "2a27ce4af93a16468c365b2003df1fcf9cd03aa5f77f272005d48ffb9a80c59f",
+    "git_blob": "5f5523bfcedad45874ac5ea59beb4835a17d5eba",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/hbm_native_bounded_cdc_1014/source_manifest.json",
     "kind": "file",
-    "sha256": "6049f931569e648ecb62361e026c1cdcf429e6746d67ed3c6e54bc43f17f5da0",
-    "git_blob": "9af50fb109150fa861a86eca7c532fb7ccedd745",
+    "sha256": "e134446d519375437b4c096bd245e9e6498e1a7ff075bb2a1a1b515146b946d5",
+    "git_blob": "0f64d877c35567c604c3506f7cfb57df941842d4",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -643,16 +643,16 @@
    {
     "path": "physical/hbm_native_bounded_cdc_1014/w16_spec.json",
     "kind": "file",
-    "sha256": "5b8907b321d16022f1d85dd1270f806d669049b39ee485a645996a60571ceb64",
-    "git_blob": "008625c8c8c56710c3f2c8bd2f701357bd37696e",
+    "sha256": "be1c67797c4fc7e41a5d059ca431690bfaf05dbf3413439951666c94e3acad80",
+    "git_blob": "4c308c33b14f455f13d8932f717c0a375cd07018",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/hbm_native_bounded_cdc_1014/w1_spec.json",
     "kind": "file",
-    "sha256": "de8876c705e8a5e2bb12363c401f635933f142ca24c7b70a3d45ab741ddce425",
-    "git_blob": "01b2cc13957b0fb8e711b9e42bc6d0462f660527",
+    "sha256": "dd2f21a4f5287d2c9e77685ab3191d73d77152ca0b42d835545b0cc20442eac0",
+    "git_blob": "7a38d45911fa11d96f8375390f686edb2f217f0a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17787,8 +17787,8 @@
    {
     "path": "physical/ref_tile/hbm_native_bounded_cdc_w1_1014/clock.sdc",
     "kind": "file",
-    "sha256": "9fff57ce93493668635a6e423b93ba648f8d7a26a9afc17715e1ac119843b07d",
-    "git_blob": "ddcb7dd5380a3764a47a1b7213520e377c219d33",
+    "sha256": "4e53ef2283f0107d44dc2fe6cdbfbe9cd488e34338638eccf8883cbf6d82b08b",
+    "git_blob": "2b408244d6005829fb5db6a6c20f2d0c92f29ad3",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17803,8 +17803,8 @@
    {
     "path": "physical/ref_tile/hbm_native_bounded_cdc_w1_1014/job.json",
     "kind": "file",
-    "sha256": "e77809bf62bc9ddecebb37a7e1fe1c85add36aababd9b24f7123dbb3a5b36328",
-    "git_blob": "527e2aa59e4cc46d916a7dddf0a2d0f4045643d7",
+    "sha256": "4db379acca446f44f8078e157cf6258042a45ee69dce547bddaca7094c5c0434",
+    "git_blob": "6824d969363754943a7e3cb3a22813bba03fe669",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17907,16 +17907,16 @@
    {
     "path": "physical/ref_tile/hbm_native_bounded_cdc_w1_1014/signoff.sdc",
     "kind": "file",
-    "sha256": "20870267ec7ecc41bbee6177d362caf2ad324bbd117e5502bebfebae7221b814",
-    "git_blob": "144b1ecba5ae92ed7eebce3fe307bc3a3289fb12",
+    "sha256": "4e7827014a86a0f24fe013f781c9473a53e67944db398ff28b69b009582598c0",
+    "git_blob": "e82af92acbada15ca5f04a6586ce5425684c4dee",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_native_bounded_cdc_w1_1014/spec.json",
     "kind": "file",
-    "sha256": "73025f5842569a4c8e61b524781a7922db8c41c3902f269eadad0d3d0d342295",
-    "git_blob": "e318b73188f42430f1872fcb04473d814b627bb6",
+    "sha256": "1ab3e645b7c79fa48521309be915ed664256203c5311ae40806b91e271a87dbb",
+    "git_blob": "183c035e3ee272f5815cd4f621d81f5643f7cb6e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -110464,11 +110464,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T05:49:14-0700",
-  "remote_script_sha256": "d18916e3857db4f0d03c3fd1bfdb62b4fc3a55b8ce054cbba8064489b9eec938",
+  "captured": "2026-10-14T06:09:11-0700",
+  "remote_script_sha256": "e8f70acb47a791fbaae3e7b877f6127ff6a544b9b8a4eeebd9ba62efd693a5a8",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_bounded_cdc_w1_1014-20261014-054839",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_bounded_cdc_w1_1014-20261014-060845",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -110479,8 +110479,8 @@
   "max_root_sinks": 1588,
   "root": "port:wclk",
   "cts": true,
-  "tt_insertion_ps": 129.4,
-  "tt_spread_ps": 16.3,
+  "tt_insertion_ps": 127.9,
+  "tt_spread_ps": 12.5,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -110495,14 +110495,14 @@
      "boundary": {
       "n": 1588,
       "mean": 122.4,
-      "min": 113.1,
-      "max": 129.4
+      "min": 115.4,
+      "max": 127.9
      },
      "all": {
       "n": 1588,
       "mean": 122.4,
-      "min": 113.1,
-      "max": 129.4
+      "min": 115.4,
+      "max": 127.9
      },
      "errors": [],
      "macros": null,
@@ -110515,15 +110515,15 @@
     "tt": {
      "boundary": {
       "n": 279,
-      "mean": 96.2,
-      "min": 92.2,
-      "max": 99.8
+      "mean": 93.4,
+      "min": 89.2,
+      "max": 98.2
      },
      "all": {
       "n": 679,
-      "mean": 96.3,
-      "min": 92.2,
-      "max": 99.8
+      "mean": 93.9,
+      "min": 89.2,
+      "max": 98.5
      },
      "errors": [],
      "macros": null,
@@ -110533,7 +110533,7 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "1,588 sinks on the largest root <= 15,000; measured TT insertion 129.4 ps, leaf spread 16.3 ps"
+  "text": "1,588 sinks on the largest root <= 15,000; measured TT insertion 127.9 ps, leaf spread 12.5 ps"
  },
  "items": [
   {
@@ -110575,7 +110575,7 @@
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 41.6% outside 45%-65% (std 1520 + macro 0 um2 in 3658 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 40.5% outside 45%-65% (std 1480 + macro 0 um2 in 3658 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
