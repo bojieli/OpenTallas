@@ -21,6 +21,9 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
 `ifdef S81PH_GTH_DIE_CLOCKS
     input wire [31:0] ck_l, // one compensated die clock pin per hardened root leaf; no parent tree
 `endif
+`ifdef S81PH_GTH_CONTROL_STRIP
+    input wire [132:0] ck_r, // one compensated clock per actual CLOSED relay instance
+`endif
     input wire [511:0] f_vm,
     output wire [6946:0] t_capture,
     input wire [691:0] rW0, input wire [760:0] rW1, input wire [760:0] rW2, input wire [760:0] rW3,
@@ -172,6 +175,14 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
 `endif
     wire [23:0] tst = {rE5[690 +: 2], rE4[759 +: 2], rE3[759 +: 2], rE2[759 +: 2], rE1[759 +: 2], rE0[690 +: 2], rW5[690 +: 2], rW4[759 +: 2], rW3[759 +: 2], rW2[759 +: 2], rW1[759 +: 2], rW0[690 +: 2]};
     wire [7:0] rc; wire [15:0] cs; wire [162:0] tc;
+`ifdef S81PH_GTH_CONTROL_STRIP
+    wire [23:0] tst_ctl; wire [15:0] cs_ctl; wire [7:0] rc_ctl; wire [162:0] tc_ctl; wire [11:0] fcd_ctl;
+    dsfd_gth_strip u_strip (.ck_r(ck_r), .rst(rst[0]), .tst_i(tst), .cs_i(cs), .rc_i(rc_ctl), .tc_i(tc_ctl), .fcd_i(f_cd),
+        .tst_o(tst_ctl), .cs_o(cs_ctl), .rc_o(rc), .tc_o(tc), .fcd_o(fcd_ctl));
+`else
+    wire [23:0] tst_ctl = tst; wire [15:0] cs_ctl = cs; wire [7:0] rc_ctl; wire [162:0] tc_ctl; wire [11:0] fcd_ctl = f_cd;
+    assign rc = rc_ctl; assign tc = tc_ctl;
+`endif
     // leaf (g, k) = index 4 g + k; plain buses (no hierarchical references)
     wire [828*32-1:0] lo_a;               // lanes passed on by leaf (g, k)
     wire [848*40-1:0] ch_a;               // [848 (5 g + k) +: 848] = chain out of leaf (g, k); k = 4: none
@@ -208,7 +219,7 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
 `else
     dsfd_gth_ctl #(.MUT(MUT)) u_ctl (
 `endif
-        .ck(ck[0]), .rst(rst[0]), .ckv(ckv[0]), .rsv(rsv[0]), .f_vm(f_vm[159:0]), .tst(tst), .cs(cs),
-        .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cd(f_cd), .t_xgo(t_xgo), .tc(tc), .rc(rc));
+        .ck(ck[0]), .rst(rst[0]), .ckv(ckv[0]), .rsv(rsv[0]), .f_vm(f_vm[159:0]), .tst(tst_ctl), .cs(cs_ctl),
+        .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cd(fcd_ctl), .t_xgo(t_xgo), .tc(tc_ctl), .rc(rc_ctl));
     assign t_capture[6946:6784] = tc;
 endmodule

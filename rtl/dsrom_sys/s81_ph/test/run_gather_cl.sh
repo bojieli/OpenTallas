@@ -18,7 +18,7 @@ FILES="$SRC/rtl/lib/ot_reset_sync.sv $SRC/rtl/lib/ot_async_fifo.sv $SRC/rtl/comm
  $C/ot_s81_engine_adapter.sv $C/ot_s81_slab_ep.sv
  $P/ot_s81ph_ret_root_p.sv $P/ot_s81ph_root_blk.sv $P/ot_s81ph_root_tile.sv $P/ot_s81ph_gather.sv $P/dsfd_sp_gather.sv
  $P/ctrl_c/dsfd_sp_gather_c.sv
- $P/ot_s81ph_ret_root_s.sv $P/ot_s81ph_root_leaf.sv $P/dsfd_gth_ctl.sv $P/ctrl_c/dsfd_sp_gather_c_cl.sv
+ $P/ot_s81ph_ret_root_s.sv $P/ot_s81ph_root_leaf.sv $P/dsfd_gth_ctl.sv $P/dsfd_gth_strip.sv $SRC/rtl/dsrom_sys/s81_glue/ot_s81_rly.sv $SRC/rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv $P/ctrl_c/dsfd_sp_gather_c_cl.sv
  $M/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2.v $M/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2.v
  $M/ot_sram_1r1w_512x34_m4_r2c2/ot_sram_1r1w_512x34_m4_r2c2.v
  $P/test/tb_s81ph_gather_cl.sv"
@@ -26,6 +26,7 @@ python3 $SRC/tools/s81_ph/gen_gather_cl.py --check || { echo "GATHER_CL_GATE FAI
 sha256sum $FILES $P/test/gen_gather_cl_stim.py $P/test/gen_root_stim.py $TRACE > $OUT/sources.sha256
 G="python3 $P/test/gen_gather_cl_stim.py"
 SS=${SS:-8}; SDEF="+define+S81PH_GTH_S=$SS"
+if [ "${CONTROL_STRIP:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_CONTROL_STRIP"; fi
 if [ "${DIE_CLOCKS:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_DIE_CLOCKS"; fi
 $G stress 3 $OUT/stress.txt; $G ovf 3 $OUT/ovf.txt --S $SS; $G refuse 3 $OUT/refuse.txt
 REAL=""

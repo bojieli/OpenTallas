@@ -23,12 +23,25 @@ module tb_s81ph_gather_cl;
     localparam integer NC [0:5] = '{10, 11, 11, 11, 11, 10};
     reg [760:0] tp [0:11];
     reg [511:0] f_vm = 0; reg [84:0] c_cmd = 0; reg [11:0] f_cd = 0;
+    `ifdef S81PH_GTH_CONTROL_STRIP
+    // Exact flat semantic reference observes the same priced completion transport.
+    // tc transport is checked against the flat output delayed exactly one cycle.
+    reg [11:0] fcd_reference = 0;
+    reg [159:0] tf_control = 0;
+    always @(posedge ck) begin fcd_reference <= f_cd; tf_control <= tf[6943:6784]; end
+`else
+    wire [11:0] fcd_reference = f_cd;
+    wire [159:0] tf_control = tf[6943:6784];
+`endif
     wire [6946:0] tf, tc; wire [8:0] df, dc; wire [1:0] sf, sc; wire [10:0] xf, xc;
     dsfd_sp_gather_c u_f (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_vm(f_vm), .t_capture(tf),
         .rW0(tp[0][691:0]), .rW1(tp[1][760:0]), .rW2(tp[2][760:0]), .rW3(tp[3][760:0]), .rW4(tp[4][760:0]), .rW5(tp[5][691:0]),
         .rE0(tp[6][691:0]), .rE1(tp[7][760:0]), .rE2(tp[8][760:0]), .rE3(tp[9][760:0]), .rE4(tp[10][760:0]), .rE5(tp[11][691:0]),
-        .c_cmd(c_cmd), .c_done(df), .c_st(sf), .f_cd(f_cd), .t_xgo(xf));
+        .c_cmd(c_cmd), .c_done(df), .c_st(sf), .f_cd(fcd_reference), .t_xgo(xf));
     dsfd_sp_gather_c_cl u_c (
+`ifdef S81PH_GTH_CONTROL_STRIP
+        .ck_r({133{ck}}),
+`endif
 `ifdef S81PH_GTH_DIE_CLOCKS
         .ck_l({32{ck}}),
 `endif
@@ -92,9 +105,9 @@ module tb_s81ph_gather_cl;
                     else if (frow[{k[6:0], tc[53*k + 33 +: 19], 1'b0}] !== tc[53*k + 1 +: 32]) bad_before_fault = bad_before_fault + 1;
                 end
             end
-            if (tf[6943:6784] !== tc[6943:6784] || xf !== xc || df !== dc || sf !== sc) begin
+            if (tf_control !== tc[6943:6784] || xf !== xc || df !== dc || sf !== sc) begin
                 ctl_mism = ctl_mism + 1; if (first_bad < 0) first_bad = cyc;
-                if (ctl_mism < 6) $display("CTL MISMATCH cycle %0d: lane %b xgo %h/%h done %h/%h st %b/%b", cyc, tf[6943:6784] !== tc[6943:6784], xf, xc, df, dc, sf, sc);
+                if (ctl_mism < 6) $display("CTL MISMATCH cycle %0d: lane %b xgo %h/%h done %h/%h st %b/%b", cyc, tf_control !== tc[6943:6784], xf, xc, df, dc, sf, sc);
             end
             if (xc[10]) n_xgo = n_xgo + 1;
             if (dc[8]) n_done = n_done + 1;
