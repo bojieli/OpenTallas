@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "sfu_lane_map_ref",
  "verdict": "WARN",
- "generated": "2026-10-13T23:47:21-0700",
+ "generated": "2026-10-14T00:02:22-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "df7bf485eaa0c6f04aa172bee9d42019faabc4a3",
+  "start_commit": "94bee37a1f87a8c5865c1914ac13ff05b1455cb1",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "2f16761a9e5e9cdb640a3a3b0fa14a9c1922aafe01c955fc289b8cf4b99ebc1a",
-  "manifest_sha256": "f2085f243b84ad6a60257d7bc113b3daf1ddcb48b6b09b7f7cdce462dd4960b2",
+  "archive_sha256": "fb7cca3fafd8e7491fb73a390d644f8dc7be203f922edd4018c6460654e46cb3",
+  "manifest_sha256": "f4bd0f84546961ef26e905c0e362422964a2c592e8e5ccf05a6772a60514c6ba",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -17035,8 +17035,8 @@
    {
     "path": "physical/ref_tile/sfu_lane_map_ref/job.json",
     "kind": "file",
-    "sha256": "1318250bdd11d66baa3c76f4bc8d3b5110d5cad81412456fa9c02019c1e18797",
-    "git_blob": "113f2ff3bdc4538a44bc418b2dde094d241e7889",
+    "sha256": "ea73af795e62c1087a0b11dc105d59a6ecfcf2c528dcc6da13411bac73ff7435",
+    "git_blob": "79dd0ea65261d64bb27adc96f8ba7514da9bc01d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -75891,8 +75891,8 @@
    {
     "path": "tools/hgi_unit_tput/run_sfu_lane_map.sh",
     "kind": "file",
-    "sha256": "7cf4ebbab3e6b31577a7347a1a5fdc61251fbfc2693031d344ec127654517b20",
-    "git_blob": "3d6070c654c23d81a74775970a617d080e67b1d4",
+    "sha256": "476456248d94fb7d78b6124e7f8d286e24c2ddb14b47200a8eb0b17015d6af3c",
+    "git_blob": "88865c13671c2e8f65749f21434f07eb9eaf51f5",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -84891,8 +84891,8 @@
    {
     "path": "tools/ref_tile/specs_hbmfq/qw_ovg_ref.json",
     "kind": "file",
-    "sha256": "c6bf310bc07433e8bafd0d951aaf9b0fb230c04abe1340726e1a17a824782d7f",
-    "git_blob": "dfaec7ef24dae2e98cfd7b94e02d6fdbaacbb660",
+    "sha256": "e5324975b2951551ca1b0342bac32964a94fa1d75f65008b866e39c0e5de2fcb",
+    "git_blob": "db004d2794459347f3263ee6eabc160335e3a474",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -106001,11 +106001,11 @@
     "matches_provenance_commit": true
    }
   ],
-  "captured": "2026-10-13T23:43:09-0700",
-  "remote_script_sha256": "4e43025b631bf883c056d2d5e0dd6063df197ba980ea49b8b865e4323c1e8490",
+  "captured": "2026-10-13T23:58:42-0700",
+  "remote_script_sha256": "53dea052083512a82612182da5c303fad7a0fb7794b67c4c9c56d0c983536580",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/sfu_lane_map_ref-20261013-234242",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/sfu_lane_map_ref-20261013-235820",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
