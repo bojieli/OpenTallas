@@ -1,0 +1,71 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_fit",
+   "message": "pin fit not estimated: the top's port widths are not resolved from its header with the spec parameters (the --remote run places the pins with the route's settings)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-pve1 for 24 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hgi_dfe_ctrl_20261013-225936.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hgi_dfe_ctrl_20261013-225936.log; host dir ot-pve1:/srv/opentallas-scratch/claude/ref_gate/hgi_dfe_ctrl-20261013-225936",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-pve1 in 895 s (gate total 1105 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "io_place",
+   "message": "IO placement failed: [ERROR PPL-0093] Pin group of size 21 does not fit in the constrained region 0.00-82.08 at LEFT edge on a single metal layer. First pin of the group is tag_sectors[267].",
+   "fix": "give every bus its own disjoint pin_ranges and set route.pin_balance (place_pin, uniform over the range, no PPL groups), or a longer edge / a second pin layer"
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 3025 um2 + macros 0 in core 6047: util 50%",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR PPL-0093] Pin group of size 21 does not fit in the constrained region 0.00-82.08 at LEFT edge on a single metal layer. First pin of the group is tag_sectors[267].",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=1",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
+   "fix": "read the remote log (textbook lint line 'clock_roots')"
+  }
+ ]
+}
