@@ -1,0 +1,95 @@
+{
+ "name": "hbm_tkm_native_config_ref2240",
+ "top": "ot_hfd_tkm_native_config_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/physical/ot_hfd_tkm_native_config_leaf.sv",
+  "rtl/hbm_accel/generic/collective/physical/ot_hfd_tkm_native_codec.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock": "cts",
+ "layer_cap": "M5",
+ "outline": {
+  "w": 25.92,
+  "h": 25.92
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "packet"
+  ],
+  "E": [
+   "start",
+   "fault",
+   "n",
+   "k",
+   "nout",
+   "g",
+   "gbase",
+   "pf",
+   "obase",
+   "rbase",
+   "has_r",
+   "reservations"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "hold_merge": true,
+ "structural_change": "Actualnative40own-flop config/reservation root preservesall151bits (5words+commit), indices62grantACK framescannotcorruptconfig. WiresonlynativeTKMcompositionconnects32CLOSEDtiles+4ingress+selector+buffer+nativeoutput+config roots; producerpacing, actualdiepins,STATUS8andfullshapeprice remainunadopted. Independent64full151configs+16reservationbitmapsPASS/missingwordmutFAIL.",
+ "job": {
+  "owner": "Codex:coll_clusters2240",
+  "branch": "codex/hbm-coll-clusters-2240",
+  "tag": "r1",
+  "purpose": "Native40configuration ownroot and actual4bitreservation decode component",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/physical",
+   "rtl/hbm_accel/generic/collective/tkm"
+  ],
+  "benches": [
+   {
+    "name": "native_cfg_full151",
+    "cmd": "bash rtl/hbm_accel/generic/collective/physical/run_native_config_leaf.sh {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "NATIVE_CFG PASS full151 configurations=64",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "native_cfg_missing",
+    "cmd": "bash rtl/hbm_accel/generic/collective/physical/run_native_config_leaf.sh {RUN}/bench/mut 1",
+    "expect": "fail",
+    "fail_regex": "NATIVE_CFG FAIL missing/full frame",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

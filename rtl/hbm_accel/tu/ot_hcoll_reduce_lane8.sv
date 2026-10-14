@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // One true own-flop lane of the original NC8 ordered FP32 tree (7 adders).
-// The original pairing and LAT stay fixed. One request capture and one reply
+// The original pairing and LAT stay fixed; only validity has reset. One request capture and one reply
 // publication edge are explicit; parent reduction/index accounting must adopt
 // both before this native hard interface can replace the retained tree.
 module ot_hcoll_reduce_lane8 #(parameter integer LAT=7,MUT=0)(
@@ -15,14 +15,14 @@ module ot_hcoll_reduce_lane8 #(parameter integer LAT=7,MUT=0)(
  wire[31:0]l1[0:3],l2[0:1],l3;wire[3:0]v1;wire[1:0]v2;wire v3;
  wire[1:0]e1[0:3],e2[0:1],e3;
  for(genvar a=0;a<4;a=a+1)begin:g_l1
-  ot_hdc_fp32_add_lat #(.LAT(LAT))u_add(.clk(clk),.rst_n(rr[0]),.valid_in(pin_v),
+  ot_hdc_fp32_add_lat #(.LAT(LAT),.DRST(0))u_add(.clk(clk),.rst_n(rr[0]),.valid_in(pin_v),
    .a(pin_data[64*a+:32]),.b(pin_data[64*a+32+:32]),.y(l1[a]),.err(e1[a]),.valid_out(v1[a]));
  end
  for(genvar a=0;a<2;a=a+1)begin:g_l2
-  ot_hdc_fp32_add_lat #(.LAT(LAT))u_add(.clk(clk),.rst_n(rr[0]),.valid_in(v1[2*a]),
+  ot_hdc_fp32_add_lat #(.LAT(LAT),.DRST(0))u_add(.clk(clk),.rst_n(rr[0]),.valid_in(v1[2*a]),
    .a(l1[2*a]),.b(l1[2*a+1]),.y(l2[a]),.err(e2[a]),.valid_out(v2[a]));
  end
- ot_hdc_fp32_add_lat #(.LAT(LAT))u_l3(.clk(clk),.rst_n(rr[0]),.valid_in(v2[0]),
+ ot_hdc_fp32_add_lat #(.LAT(LAT),.DRST(0))u_l3(.clk(clk),.rst_n(rr[0]),.valid_in(v2[0]),
   .a(l2[0]),.b(l2[1]),.y(l3),.err(e3),.valid_out(v3));
  reg[15:0]idx[0:3*LAT-1];
  always @(posedge clk)begin

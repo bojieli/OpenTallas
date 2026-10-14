@@ -1,0 +1,90 @@
+{
+ "name": "hbm_coll_landing_ref2240",
+ "top": "ot_hcoll_landing545",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/tu/ot_hcoll_landing545.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "clock": "cts",
+ "layer_cap": "M5",
+ "outline": {
+  "w": 82.08,
+  "h": 82.08
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "push",
+   "data",
+   "pop",
+   "pop_epoch"
+  ],
+  "E": [
+   "valid",
+   "head",
+   "head_epoch",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "hold_merge": true,
+ "structural_change": "Actual8x545landingFIFO inindependentownroot. Pin-capturedpush/data andepoch-guardedpop; coherentpublishedhead/dataepoch. Corecaptureshead/epoch, suppressesstalehead, returnscreditonlyafteractualleafpop. ExistingCAP8andCLOSEDportsunchanged; parentphysical9actuallandingclockentries, fullnativeproof/price pending.",
+ "job": {
+  "owner": "Codex:coll_clusters2240",
+  "branch": "codex/hbm-coll-clusters-2240",
+  "tag": "r1",
+  "purpose": "Actual9landingqueuehardcut afteroperand8root/reducer16root; nativehead-epoch andrealpopcredit protocol",
+  "extra_paths": [
+   "rtl/hbm_accel/tu"
+  ],
+  "benches": [
+   {
+    "name": "landing_full545",
+    "cmd": "bash rtl/hbm_accel/tu/run_landing.sh {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "LANDING PASS full545 checked=300",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "landing_stale_pop",
+    "cmd": "bash rtl/hbm_accel/tu/run_landing.sh {RUN}/bench/mut 1",
+    "expect": "fail",
+    "fail_regex": "LANDING FAIL stale epoch",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

@@ -104,6 +104,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
     parameter integer COLUMN_HARD=0,
     parameter integer COLUMN_MUT=0,
     parameter integer REDUCE_HARD=0,
+    parameter integer LANDING_HARD=0,
     parameter integer ENABLE = 0,
     parameter integer REARM = 0, // opt-in; production pclk must equal clk
     parameter integer RGX = 0,     // 1: ROW_GATHER hardware mode available (rgx pin, stream inject, K*F delivery set)
@@ -134,6 +135,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
     parameter integer PIPE   = 0    // hgi-unitrate: 1 = pipelined gather bypass (epoch-tagged multicast, see below)
 ) (
     input wire[NPT-1:0]port_clk,
+    input wire[NPT-1:0]landing_clk,
     input wire[NC-1:0]column_clk,
     input wire[LANES-1:0]reduce_clk,
     input  wire                 clk,
@@ -370,10 +372,11 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
         wire [NPT-1:0] rb_empty, rb_ovf, pstall, pfault, s_rbv;
         wire [PWT-1:0] rb_head [0:NPT-1];
         wire [PWT-1:0] s_rbd [0:NPT-1];
+        wire[NPT-1:0]landing_credit,landing_pending;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin qp_push_q <= '0; qr_push_q <= '0; rbcr_q <= '0; lv_q <= '0; cstall <= 0; end
             else begin
-                qp_push_q <= qp_push; qr_push_q <= qr_push; rbcr_q <= rb_pop & ~rb_empty; lv_q <= s_rbv;
+                qp_push_q <= qp_push; qr_push_q <= qr_push; rbcr_q <= LANDING_HARD ? landing_credit : (rb_pop & ~rb_empty); lv_q <= s_rbv;
                 if (|pstall) cstall <= cstall + 1;
             end
         always @(posedge clk)
@@ -403,9 +406,31 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
                 .sw_cr_ret(sw_cr_ret[p]), .ph_tx_v(ph_tx_v[p]), .ph_tx_flit(ph_tx_flit[p*PWT +: PWT]),
                 .ph_rx_v(ph_rx_v[p]), .ph_rx_flit(ph_rx_flit[p*PWT +: PWT]),
                 .rb_v(s_rbv[p]), .rb_d(s_rbd[p]), .rb_cr(rbcr_q[p]), .stall(pstall[p]), .fault(pfault[p]));
-            wire [3:0] lc;
-            (* keep_hierarchy *) ot_ha2_fifo #(.W(PWT), .AW(3)) u_land (.clk(clk), .rst_n(rst_n), .push(lv_q[p]), .din(ld_q[p]),
-                .pop(rb_pop[p]), .empty(rb_empty[p]), .dout(rb_head[p]), .ovf(rb_ovf[p]), .count(lc));
+            if(LANDING_HARD)begin:g_landing_hard
+                wire valid,fault;wire[544:0]head;wire[7:0]epoch;
+                reg[544:0]head_pin;reg[7:0]epoch_pin,consume_epoch,credit_epoch;
+                reg valid_pin,fault_pin;
+                always @(posedge clk)begin head_pin<=head;epoch_pin<=epoch;end
+                always @(posedge clk or negedge rst_n)begin
+                    if(!rst_n)begin consume_epoch<=0;credit_epoch<=0;valid_pin<=0;fault_pin<=0;end
+                    else begin
+                        valid_pin<=valid;fault_pin<=fault;credit_epoch<=epoch_pin;
+                        if(rb_pop[p]&&!rb_empty[p])consume_epoch<=consume_epoch+1'b1;
+                    end
+                end
+                ot_hcoll_landing545 u_land(.clk(landing_clk[p]),.rst_n(rst_n),.push(lv_q[p]),.data(ld_q[p]),
+                    .pop(rb_pop[p]),.pop_epoch(consume_epoch),.valid(valid),.head(head),.head_epoch(epoch),.fault(fault));
+                assign rb_head[p]=PWT'(head_pin);assign rb_empty[p]=!valid_pin||(epoch_pin!=consume_epoch);
+                assign rb_ovf[p]=fault_pin;
+                // Return credit only after the actual leaf pop has advanced its epoch.
+                assign landing_credit[p]=(epoch_pin!=credit_epoch);
+                assign landing_pending[p]=(epoch_pin!=consume_epoch);
+            end else begin:g_landing_original
+                wire [3:0] lc;
+                (* keep_hierarchy *) ot_ha2_fifo #(.W(PWT), .AW(3)) u_land (.clk(clk), .rst_n(rst_n), .push(lv_q[p]), .din(ld_q[p]),
+                    .pop(rb_pop[p]), .empty(rb_empty[p]), .dout(rb_head[p]), .ovf(rb_ovf[p]), .count(lc));
+                assign landing_credit[p]=1'b0;assign landing_pending[p]=1'b0;
+            end
         end
         assign stat_credit_stall = cstall;
         assign rx_credit = rb_pop & ~rb_empty;
@@ -765,7 +790,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
                        inj_done && (NC==1 || (BYP && byp_sum==byp_sum_exp && byp_xor==byp_xor_exp) ||
                                  (!BYP && rptr>=OF && produced_count==ROF && own_count==ROF)) &&
                        {15'd0, tx_count}==expected_tx && {15'd0, delivery_count}==expected_delivery && rx_pending==0 &&
-                       (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !issue && !column_pending && !(REDUCE_HARD && (|reduce_flight)))
+                       (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !(|landing_pending) && !issue && !column_pending && !(REDUCE_HARD && (|reduce_flight)))
                         completed<=1;
 `ifdef OT_COLL_MUT_PREMATURE_DONE
                     if(k>=PF)completed<=1;

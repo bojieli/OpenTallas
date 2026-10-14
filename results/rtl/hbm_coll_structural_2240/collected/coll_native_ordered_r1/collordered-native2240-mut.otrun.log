@@ -1,0 +1,21 @@
+ot-run: ot-epyc1tb     admits   657 GB (avail 884, growth 24, headroom 64, waiters 0/0 GB) load 17/128 running 6 disk 828 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/collordered_native2240
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/collordered_native2240
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/collordered_native2240
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2599579-1791976267 after 0 s
+TUCFG seed=3 rank=19 NC=8 NOG=12 PF=384 INJ=2 DEL=4 NPT=8 RXAW=8 BUDGET=377.60 CRED=113.80 T_CORE=0.833333 T_PHY=1.000000 TOT=2304
+TUMISMATCH gi=456
+TUMISMATCH gi=457
+TUMISMATCH gi=458
+TUMISMATCH gi=459
+TUMISMATCH gi=460
+TUMISMATCH gi=461
+TUMISMATCH gi=462
+TUMISMATCH gi=463
+TUMISMATCH gi=464
+TUDONE seed=3 rank=19 pf=384 lat_ns=1394.448 lat_cyc=1673.3 tx_first_ns=48.372 tx_last_ns=647.184 rx_first_ns=426.174 rx_last_ns=1108.386 res_first_ns=493.728 res_last_ns=647.184 deliver_tail_ns=286.062 ndep=360 narr=2616 nres=24 got=2304 own_exact=0 mismatches=24 faults=0 credit_stall=0
+[1812000] %Fatal: tb_hcoll_columns_ordered.sv:300: Assertion failed in tb_hcoll_columns_ordered: ORDERED_COLL FAIL mismatches=24 own=0
+%Error: rtl/hbm_accel/tu/tb_hcoll_columns_ordered.sv:300: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2599579-1791976267): exit 0

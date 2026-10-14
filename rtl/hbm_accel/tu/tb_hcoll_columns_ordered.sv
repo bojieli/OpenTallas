@@ -50,7 +50,7 @@
 `define TU_RXAW 8
 `endif
 module tb_hcoll_columns_ordered #(
-    parameter integer MUT_COLUMN=0, NATIVE_REDUCE=0,
+    parameter integer MUT_COLUMN=0, NATIVE_REDUCE=0, HARD_COL=1,HARD_LANDING=0,
     parameter integer NC = `TU_NC, NOG = `TU_NOG, PFMAX = `TU_PFMAX, BF16 = `TU_BF16,
     parameter integer INJ = `TU_INJ, DEL = `TU_DEL, NPT = `TU_NPT, RXAW = `TU_RXAW,
     parameter integer LANES = 16, HUBW = 35, WSTG = 14, BITS_X100 = 72000, PWB = 545, LAT = 7,
@@ -130,12 +130,12 @@ module tb_hcoll_columns_ordered #(
 `endif
     `TU_DUT #(.ENABLE(1), .NC(DNC), .NOG(DNG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
-        .SWCRED(1 << RXAW), .LAT(LAT),.COLUMN_HARD(1),.COLUMN_MUT(MUT_COLUMN),.REDUCE_HARD(NATIVE_REDUCE)
+        .SWCRED(1 << RXAW), .LAT(LAT),.COLUMN_HARD(HARD_COL),.COLUMN_MUT(MUT_COLUMN),.REDUCE_HARD(NATIVE_REDUCE),.LANDING_HARD(HARD_LANDING)
 `ifdef TU_SYNCPHY
         , .SYNCPHY(1)
 `endif
         )
-      dut (.reduce_clk({LANES{clk}}),.column_clk({DNC{clk}}),.port_clk({NPT{clk}}),.byp(1'b0),.gsz(4'hf),.mcast_all(1'b0),.mcast_group_size(8'd96),.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
+      dut (.landing_clk({NPT{clk}}),.reduce_clk({LANES{clk}}),.column_clk({DNC{clk}}),.port_clk({NPT{clk}}),.byp(1'b0),.gsz(4'hf),.mcast_all(1'b0),.mcast_group_size(8'd96),.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
 `ifdef TU_GSZPORT
            .gsz(4'(`TU_GSZPORT)),
 `ifdef TU_MCAST_ALL
@@ -153,7 +153,7 @@ module tb_hcoll_columns_ordered #(
     wire[DEL-1:0]ref_dv;wire[DEL*PWT-1:0]ref_dfl;wire ref_flt;wire[31:0]ref_cst;
     ot_hbm_accel_tu_endpoint_ps #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
-        .SWCRED(1 << RXAW), .LAT(LAT),.COLUMN_HARD(1),.COLUMN_MUT(MUT_COLUMN),.REDUCE_HARD(NATIVE_REDUCE)
+        .SWCRED(1 << RXAW), .LAT(LAT),.COLUMN_HARD(HARD_COL),.COLUMN_MUT(MUT_COLUMN),.REDUCE_HARD(NATIVE_REDUCE),.LANDING_HARD(HARD_LANDING)
 `ifdef TU_SYNCPHY
         , .SYNCPHY(1)
 `endif
