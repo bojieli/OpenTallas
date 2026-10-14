@@ -2247,12 +2247,35 @@ def build_r25gq_net(variant):
             return pth[::-1]
         sp_d = {}
 
+        Ao_ = [Ag_, 0]
+
+        def regraph():
+            """the distance field's cost with the stations as they stand: a route cell whose block-free area is taken
+            by stations costs up to 9x (a packed channel is no way through: the field on the blocks alone sent every
+            chain along the 23-um strip left beside the multicast blocks of the SM columns, where no site exists)"""
+            f_ = 10
+            occ_ = _np.zeros((G.ny * f_, G.nx * f_), bool)
+            for it_ in insts:
+                if it_.kind != 'waypoint':
+                    continue
+                bx0, by0, bx1, by1 = it_.x - 2.0, it_.y - 2.0, it_.x + it_.w + 2.0, it_.y + it_.h + 2.0
+                occ_[max(0, int(by0 / RP.CELL * f_)):int(math.ceil(by1 / RP.CELL * f_)),
+                     max(0, int(bx0 / RP.CELL * f_)):int(math.ceil(bx1 / RP.CELL * f_))] = True
+            ow_ = occ_.reshape(G.ny, f_, G.nx, f_).mean(axis=(1, 3))
+            fill_ = _np.minimum(1.0, ow_ / _np.maximum(G.free, 0.05))
+            Ao_[0] = G.graph(1.0 + V['phys_block_cost'] * (G.free < V.get('phys_free_min', 0.2)) +
+                             8.0 * _np.maximum(0.0, fill_ - 0.25) / 0.75)
+            Ao_[1] = len(insts)
+            sp_d.clear()
+
         def dfield(kb):
-            """block-avoiding distance (um) of every route cell from cell kb, as a (ny, nx) array"""
+            """block- and station-avoiding distance (um) of every route cell from cell kb, as a (ny, nx) array"""
+            if len(insts) - Ao_[1] >= 400:
+                regraph()
             if kb not in sp_d:
                 if len(sp_d) > 300:
                     sp_d.clear()
-                sp_d[kb] = _dj(Ag_, indices=kb).reshape(G.ny, G.nx)
+                sp_d[kb] = _dj(Ao_[0], indices=kb).reshape(G.ny, G.nx)
             return sp_d[kb]
 
         def dscore(D, px, py):
@@ -2284,7 +2307,7 @@ def build_r25gq_net(variant):
 
         _site_fail = {}
 
-        def site_toward(bid, bits, cp_, tgt_, D, lim_):
+        def site_toward(bid, bits, cp_, tgt_, D, lim_, skip_=()):
             """place one family station of bus bid on the free site, within the pin reach of the pins cp_ (the half
             perimeter of cp_ + its a face), whose b face is nearest tgt_ on the field D; None when no free site
             advances by MINADV"""
@@ -2301,6 +2324,8 @@ def build_r25gq_net(variant):
                 if sc[n_] > cur - MINADV:
                     break
                 cx_, cy_ = float(px[n_]), float(py[n_])
+                if skip_ and any(abs(cx_ - q_[0]) + abs(cy_ - q_[1]) < 80.0 for q_ in skip_):
+                    continue
                 hz_ = abs(cx_ - rx_) >= abs(cy_ - ry_)
                 for horiz in (hz_, not hz_):
                     sw_, sh_ = (dph_, ln_) if horiz else (up(ln_, GX), dpv_)
@@ -2338,6 +2363,45 @@ def build_r25gq_net(variant):
                     new_rl[nm] = bid
                     return nm
             return None
+        if V.get('rly_family'):
+            # v13 r7: the box-era relay banks do not survive the family outline.  A lane-group chain bank (wq*_lg*: one
+            # strip registering rdn 2,067 + wdn 19 + rup 131 + wup 2,243 b) is 1,832 um long at 0.096 um a bit: it
+            # walls its channel and two of the 34 found no site at all (left on top of hb_su_NW / hb_vms_NW).  A bank
+            # is only a register stage of four independent nets, so it is DISSOLVED: each net runs through (in -> out
+            # joined) and the rounds below stage it with family tiles on free sites.  The same for any other box-era
+            # station that overlaps a block or a station.
+            def _ovl(it_):
+                b_ = it_.box()
+                return any(o != b_ and b_[0] < o[2] - 0.01 and o[0] < b_[2] - 0.01 and b_[1] < o[3] - 0.01 and o[1] < b_[3] - 0.01
+                           for o in near(b_))
+            gone_ = [it_ for it_ in insts if it_.kind == 'waypoint' and it_.master.startswith('hfd_stn_q') and
+                     (re.fullmatch(r'wq\d+_lg(?:SW|SE|NW|NE|W|E)\d*', it_.name) or _ovl(it_))]
+            n_dis = 0
+            for it_ in gone_:
+                nm_ = it_.name
+                tb_ = [(i_, b_) for i_, b_ in enumerate(buses) if any(e[0] == nm_ for e in b_[3])]
+                if any('@' in e[1] or b_[1] in ('clock_trunk', 'reset_tree') for _, b_ in tb_ for e in b_[3] if e[0] == nm_):
+                    continue
+                ins_ = {e[1]: i_ for i_, b_ in tb_ for e in b_[3][1:] if e[0] == nm_}
+                outs_ = {b_[3][0][1]: i_ for i_, b_ in tb_ if b_[3][0][0] == nm_}
+                pair_ = lambda p_: 'b' if p_ == 'a' else ('t' + p_[1:] if p_.startswith('f_') else None)
+                if any(pair_(p_) is None for p_ in ins_) or any(o_ not in {pair_(p_) for p_ in ins_} for o_ in outs_):
+                    continue
+                drop_ = set()
+                for p_, i_ in ins_.items():
+                    bi_ = buses[i_]
+                    eps_ = [e for e in bi_[3] if e != (nm_, p_)]
+                    o_ = outs_.get(pair_(p_))
+                    if o_ is not None:
+                        eps_ += list(buses[o_][3][1:])
+                        drop_.add(o_)
+                    buses[i_] = (bi_[0], bi_[1], bi_[2], eps_)
+                buses[:] = [b_ for i_, b_ in enumerate(buses) if i_ not in drop_]
+                unplace(nm_)
+                n_dis += 1
+            pin_rec['dissolved_box_stations'] = n_dis
+            if os.environ.get('OT_HBMDIE_TRACE'):
+                print('dissolved', n_dis, 'of', len(gone_), 'box-era stations', file=sys.stderr, flush=True)
         for _pr in range(V.get('pin_repair_rounds', 10)):
             P_ = pin_points(_model(), 16)
 
@@ -2367,6 +2431,7 @@ def build_r25gq_net(variant):
             nb_, n_bad, n_new, n_stuck, n_noprog, n_dead, worst_, n_split = [], 0, 0, 0, 0, 0, 0.0, 0
             _t0 = time.time()
             work_, wi_ = list(buses), 0
+            regraph()
             mcount_ = defaultdict(int)
             for it_ in insts:
                 mcount_[it_.master] += 1
@@ -2393,9 +2458,9 @@ def build_r25gq_net(variant):
                     nb_.append(b_)
                     continue
                 if bits > RLY_CLASSES[-1] and V.get('rly_family') and bid not in fcl_ and all(e[0] in by for e in eps) and \
-                        all((by[e[0]].master.startswith('hfd_stn_q') and port_base(e[1]) in ('a', 'b')
-                             if by[e[0]].kind == 'waypoint' else mcount_[by[e[0]].master] == 1 and
-                             not re.match(r'[tf]_lg', e[1])) for e in eps):
+                        all((by[e[0]].master.startswith('hfd_stn_q') and port_base(e[1]) in ('a', 'b') or
+                             by[e[0]].master.startswith('hfd_stn_lg') and mcount_[by[e[0]].master] == 1
+                             if by[e[0]].kind == 'waypoint' else mcount_[by[e[0]].master] == 1) for e in eps):
                     for e in eps:       # a station of a shared master gets its own (its ports are sliced, the others' not)
                         it_ = by[e[0]]
                         if it_.kind == 'waypoint' and mcount_[it_.master] > 1:
@@ -2459,12 +2524,24 @@ def build_r25gq_net(variant):
                             dirs_ = len({sect_(pts_[e2_]) for e2_ in far_[j_:]})
                             lim1_ = hp_(kpts) + max(80.0, (PLIM - SL_ - hp_(kpts)) / dirs_)
                         cur_pts, rl = list(nd_['pts']), []
+                        # depth-first with backtracking: a chain that runs into a full pocket takes its last station
+                        # off and tries the next-best site at least 80 um from it (<= 40 steps back a chain)
+                        skips_, nbt_ = [[]], 0
                         while hp_(cur_pts + [tgt_]) > PLIM - SL_ and len(rl) < 200:
-                            nm_ = site_toward(bid, bits, cur_pts, tgt_, D_, lim1_ if not rl else PLIM - SL_)
+                            nm_ = site_toward(bid, bits, cur_pts, tgt_, D_, lim1_ if not rl else PLIM - SL_, skips_[-1])
                             if nm_ is None:
-                                break
+                                if not rl or nbt_ >= 40:
+                                    break
+                                st_ = by[rl.pop()]
+                                skips_.pop()
+                                skips_[-1].append((st_.x + st_.w / 2, st_.y + st_.h / 2))
+                                unplace(st_.name)
+                                nbt_ += 1
+                                cur_pts = [face_pt(by[rl[-1]], stnf_[by[rl[-1]].master]['b'])] if rl else list(nd_['pts'])
+                                continue
                             st_ = by[nm_]
                             rl.append(nm_)
+                            skips_.append([])
                             cur_pts = [face_pt(st_, stnf_[st_.master]['b'])]
                         if hp_(cur_pts + [tgt_]) > PLIM - SL_:      # a full pocket / a pin no free site reaches: undo
                             for nm_ in rl:
@@ -6095,12 +6172,12 @@ def masters(m, k=1):
         ff_ = m['variant'].get('face_force') or {}
         if isinstance(ff_, dict) and any(isinstance(k_, str) for k_ in ff_):    # a JSON variant: 'master|port' keys
             ff_ = {tuple(k_.split('|')) if isinstance(k_, str) else k_: v_ for k_, v_ in ff_.items()}
-        mlg_ = re.fullmatch(r'([tf])_(lg(?:[WE]2?|[NS][EW]))_(rdn|wdn|rup|wup)', port)
+        mlg_ = re.fullmatch(r'([tf])_(lg(?:[WE]2?|[NS][EW]))_(rdn|wdn|rup|wup)', bport)
         if mlg_:        # chain nets: down buses keep the old t_ / f_ face, up buses enter / leave on the opposite one
             port_ff = (mlg_.group(1) if mlg_.group(3).endswith('dn') else {'t': 'f', 'f': 't'}[mlg_.group(1)]) + '_' + mlg_.group(2)
         else:
             port_ff = port
-        mst_ = re.fullmatch(r'([tf])_(lg(?:[WE]2?|[NS][EW]))(c?)_(rdn|wdn|rup|wup)', port)
+        mst_ = re.fullmatch(r'([tf])_(lg(?:[WE]2?|[NS][EW]))(c?)_(rdn|wdn|rup|wup)', bport)
         if mst_ and mname.startswith('hfd_stn_lg') and (m.get('lane_station_face') or {}).get(it.name):
             # a lane-group client station: the full-width tap on the face toward its client, the chain on the opposite
             # (outer) face -- a mid-chain station's upstream and downstream share the outer face
@@ -6633,6 +6710,40 @@ def pin_points(m, k=16, M=None):
             y = mst.h - y
         return (it.x + x, it.y + y)
     return pt
+
+
+def plan_dump(m, out):
+    """die-timing classification inputs (owner 2026-10-13: classify failing endpoints by cause before fixing; the S81
+    pilot's tools/s81/sta_path_classes.py): <out>/plan.json.gz = {insts: [[name, master, kind, x, y, w, h, orient]],
+    hops: [[bus, class, bits, driver inst, port, load inst, port, um]]} with um = the pin-to-pin Manhattan length of
+    that driver -> load pair (None: a placeholder end without pins), and <out>/clock_delivery.json = {tiles: {master:
+    {view: real | hard_macro | relay | placeholder}}} (real = a LEF the die binds from a closed view)."""
+    import gzip
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    P = pin_points(m, 16)
+    by = {it.name: it for it in m['insts']}
+    hops = []
+    for bid, cls, bits, eps in m['buses']:
+        ends = [e for e in eps if e[0] in by]
+        if len(ends) < 2:
+            continue
+        q0 = P(*ends[0])
+        for e in ends[1:]:
+            q1 = P(*e)
+            um = round(abs(q0[0] - q1[0]) + abs(q0[1] - q1[1]), 1) if q0 and q1 else None
+            hops.append([bid, cls, bits, ends[0][0], port_base(ends[0][1]), e[0], port_base(e[1]), um])
+    json.dump(dict(insts=[[it.name, it.master, it.kind, round(it.x, 3), round(it.y, 3), round(it.w, 3), round(it.h, 3), it.orient]
+                          for it in m['insts']], hops=hops), gzip.open(out / 'plan.json.gz', 'wt'))
+    tiles = {}
+    for it in m['insts']:
+        if it.master not in tiles:
+            tiles[it.master] = dict(view='hard_macro' if it.kind in ('phy', 'serdes_slab') and it.master in REAL else
+                                    'real' if it.master in REAL else
+                                    'relay' if it.kind == 'waypoint' else 'placeholder', kind=it.kind)
+    (out / 'clock_delivery.json').write_text(json.dumps(dict(tiles=tiles), indent=1) + '\n')
+    return dict(plan=str(out / 'plan.json.gz'), hops=len(hops), masters=len(tiles),
+                real_masters=sum(1 for t in tiles.values() if t['view'] == 'real'))
 
 
 def pin_hop_lint(m, k=16, limit=20):
@@ -7474,7 +7585,8 @@ def vm8_union_group(insts, root=None):
     mem = ('hb_vm_sw', 'hb_vm_se', 'hb_vm_nw', 'hb_vm_ne')
     x0, y0 = min(by[n_].x for n_ in mem), min(by[n_].y for n_ in mem)
     x1, y1 = max(by[n_].x + by[n_].w for n_ in mem), max(by[n_].y + by[n_].h for n_ in mem)
-    assert abs(x1 - x0 - g['region'][0]) < 0.01 and abs(y1 - y0 - g['region'][1]) < 0.01, \
+    # the quarters sit on the die placement grid: their union is 24 nm wider than the plan region (1,399.656)
+    assert abs(x1 - x0 - g['region'][0]) < 0.05 and abs(y1 - y0 - g['region'][1]) < 0.05, \
         ('VM8 union is not the four quarter slots', (x1 - x0, y1 - y0), g['region'])
     ch, boxes = [], []
     for nm, i_ in g['instances'].items():
@@ -8271,6 +8383,8 @@ def main(argv=None):
                               notes=m['notes'], power=die_power(m)['peak_in_phase_w'])))
         ml = margin_lint(m)
         print(json.dumps(dict(margin_lint=ml), indent=1))
+        if a.out:       # the hop list of the die-timing classifier (S81 method, tools/s81/sta_path_classes.py)
+            print(json.dumps(plan_dump(m, a.out.resolve())))
         return 3 if ml['verdict'] == 'FAIL' else 0
     if a.mode == 'irwin':
         print(' '.join(ir_windows(m)))
