@@ -41,7 +41,8 @@ module ot_qkvd_embgw_m #(
     parameter integer OD  = 4,
     parameter integer TXC = 4,
     parameter integer BD  = 4,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer OUT_STAGE = 0     // 1: eq_* and lt_* leave through one more pure register (kvsys-elements r3)
 ) (
     input  wire              ck,
     input  wire              rst_n,
@@ -60,10 +61,10 @@ module ot_qkvd_embgw_m #(
     input  wire [4*512-1:0]  lr_d,
     input  wire [3:0]        lr_cr,
     // gateway -> strip words (per link) and the credit for the strip's words
-    output reg  [3:0]        lt_v,
-    output reg  [4*2-1:0]    lt_k,
-    output reg  [4*4-1:0]    lt_s,
-    output reg  [4*281-1:0]  lt_d,
+    output wire [3:0]        lt_v,
+    output wire [4*2-1:0]    lt_k,
+    output wire [4*4-1:0]    lt_s,
+    output wire [4*281-1:0]  lt_d,
     output reg  [3:0]        lt_cr,
     // boot words from the host
     input  wire              hb_v,
@@ -116,6 +117,13 @@ module ot_qkvd_embgw_m #(
             e_d[i*523 +: 523] = {1'b1, rh[RW-1 -: 2], rh[RW-3], 3'b000, rh[515:512], rh[511:0]};
         end
     always @(posedge ck) for (i = 0; i < 4; i = i + 1) if (lrv_p[i]) rf[i*OD + rfw[i][OA-1:0]] <= lrw_p[i];
+    // ---- link words as built by the transmit logic below (lt_*_r); OUT_STAGE adds one pure register to the pins ----
+    reg  [3:0]       lt_v_r;
+    reg  [4*2-1:0]   lt_k_r;
+    reg  [4*4-1:0]   lt_s_r;
+    reg  [4*281-1:0] lt_d_r;
+    wire             eq_v_g;
+    wire [511:0]     eq_d_g;
     // ---- the gateway (unchanged) ----
     wire          g_v;
     wire [10:0]   g_tag;
@@ -126,7 +134,7 @@ module ot_qkvd_embgw_m #(
     wire [7:0]    g_fc;
     wire [31:0]   g_fetches;
     ot_qfd_emb_gw #(.RQD(RQD), .MUT((MUT == 4) ? 4 : 0)) u_gw (.ck(ck), .rn(rs),
-        .ea_v(eav_p), .ea_kind(eak_p), .ea_addr(eaa_p), .ea_cr(ea_cr), .eq_v(eq_v), .eq_d(eq_d),
+        .ea_v(eav_p), .ea_kind(eak_p), .ea_addr(eaa_p), .ea_cr(ea_cr), .eq_v(eq_v_g), .eq_d(eq_d_g),
         .e_v(rne), .e_d(e_d), .e_take(e_take),
         .g_v(g_v), .g_tag(g_tag), .g_d(g_d), .g_rdy(gsend), .bend_v(bend_v), .bend_d(bend_d),
         .emb_ready(emb_ready), .fault(g_fault), .fault_code(g_fc), .fetches(g_fetches));
@@ -160,11 +168,11 @@ module ot_qkvd_embgw_m #(
     wire [280:0]  t_d = gsend ? g_d[280:0] : (bh_end ? {217'd0, bh[63:0]} : {bh[255:0], bh[280:256]});
     reg           f_rx, f_bq, f_lc;
     always @(posedge ck) for (i = 0; i < 4; i = i + 1) if (tgt[i]) begin
-        lt_k[2*i +: 2] <= t_k; lt_s[4*i +: 4] <= t_s; lt_d[281*i +: 281] <= t_d;
+        lt_k_r[2*i +: 2] <= t_k; lt_s_r[4*i +: 4] <= t_s; lt_d_r[281*i +: 281] <= t_d;
     end
     always @(posedge ck or negedge rs)
         if (!rs) begin
-            bw <= 0; br <= 0; lt_v <= 4'd0; lt_cr <= 4'd0; hb_cr <= 1'b0; f_rx <= 1'b0; f_bq <= 1'b0; f_lc <= 1'b0;
+            bw <= 0; br <= 0; lt_v_r <= 4'd0; lt_cr <= 4'd0; hb_cr <= 1'b0; f_rx <= 1'b0; f_bq <= 1'b0; f_lc <= 1'b0;
             for (i = 0; i < 4; i = i + 1) begin rfw[i] <= 0; rfr[i] <= 0; lc[i] <= TXC[CW-1:0]; end
         end else begin
             for (i = 0; i < 4; i = i + 1) begin
@@ -174,11 +182,27 @@ module ot_qkvd_embgw_m #(
                 if (lrc_p[i] && !tgt[i] && lc[i] == TXC[CW-1:0]) f_lc <= 1'b1;
             end
             lt_cr <= e_take;
-            lt_v  <= tgt;
+            lt_v_r <= tgt;
             if (hbv_p) begin if (bfull) f_bq <= 1'b1; else bw <= bw + 1'b1; end
             if (bsend) br <= br + 1'b1;
             hb_cr <= bsend;
         end
+    // ---- output stage: with OUT_STAGE the eq / lt pin flops are pure copies of a register (no logic cone behind the
+    //      pin register, so recipe-2 pin clones sit at the pin with flop -> flop D paths; +1 cycle on the embedding
+    //      response and on each strip word, credits unchanged: the strip and the SU are credit/valid driven) ----
+    generate if (OUT_STAGE != 0) begin : g_os
+        reg          eqv_o;
+        reg  [511:0] eqd_o;
+        reg  [3:0]   ltv_o;
+        reg  [4*2-1:0] ltk_o;  reg [4*4-1:0] lts_o;  reg [4*281-1:0] ltd_o;
+        always @(posedge ck or negedge rs) if (!rs) begin eqv_o <= 1'b0; ltv_o <= 4'd0; end else begin eqv_o <= eq_v_g; ltv_o <= lt_v_r; end
+        always @(posedge ck) begin eqd_o <= eq_d_g; ltk_o <= lt_k_r; lts_o <= lt_s_r; ltd_o <= lt_d_r; end
+        assign eq_v = eqv_o; assign eq_d = eqd_o;
+        assign lt_v = ltv_o; assign lt_k = ltk_o; assign lt_s = lts_o; assign lt_d = ltd_o;
+    end else begin : g_no
+        assign eq_v = eq_v_g; assign eq_d = eq_d_g;
+        assign lt_v = lt_v_r; assign lt_k = lt_k_r; assign lt_s = lt_s_r; assign lt_d = lt_d_r;
+    end endgenerate
     // ---- status (flops at the pins) ----
     reg [12:0] st_q;
     always @(posedge ck or negedge rs)
