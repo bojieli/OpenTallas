@@ -1,0 +1,27 @@
+HCJ op=0 kind=5 start=16 done=206
+HCJ op=1 kind=5 start=192 done=382
+HCJ op=2 kind=5 start=368 done=557
+HCJ op=3 kind=5 start=544 done=734
+HCJ op=4 kind=0 start=720 done=1069
+HCJ op=5 kind=0 start=1056 done=1406
+HCJ op=6 kind=2 start=1392 done=1423
+HCJ op=7 kind=4 start=1409 done=2136
+HCJ op=8 kind=2 start=2122 done=2153
+HCJ op=9 kind=4 start=2139 done=2866
+HCJ op=10 kind=3 start=2852 done=3139
+HCJ op=11 kind=3 start=3125 done=3412
+HCJ op=12 kind=2 start=3398 done=3428
+HCJ op=13 kind=4 start=3415 done=4142
+HCJ op=14 kind=2 start=4128 done=4159
+HCJ op=15 kind=4 start=4145 done=4872
+HCJ op=16 kind=3 start=4858 done=5144
+HCJ op=17 kind=3 start=5131 done=5418
+HCJ op=18 kind=1 start=5404 done=5805
+HCJ op=19 kind=1 start=5791 done=6192
+HCG jobs=20 done=20 err=0 rows=1940 fault=0 code=0 cyc=6392 bad_tag=0
+HCG PASS
+- /srv/opentallas-scratch/codex/s81-head-production/exact/rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_master.sv:119: Verilog $finish
+HC_HEAD_PIN_CHECK checked=6391 accepted=20 loads=2 stores=2
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 43.258 s; speed 125.963 ns/s
+- Verilator: cpu 43.258 s on 1 threads; allocated 40 MB
