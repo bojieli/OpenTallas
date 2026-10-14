@@ -3,7 +3,7 @@
 // same independently registered core model. Compare the entire external bus,
 // including session/reset/status, over randomized traffic and resets.
 module ot_hbm_lk_ep #(parameter NS=3, LW=487, TXQ=32, FCR=256, HARD_CLOCKS=0)(
- input wire clk,rst_n,input wire[NS*4-1:0] clk_sub,input wire[23:0]session,input wire t_v,input wire[544:0]t_flit,
+ input wire clk,rst_n,input wire[NS*4-1:0] clk_sub,input wire clk_tx_shared,input wire[23:0]session,input wire t_v,input wire[544:0]t_flit,
  output reg t_cr,r_v,output reg[544:0]r_flit,input wire r_cr,output reg[LW-1:0]x_tx,
  input wire[LW-1:0]x_rx,output reg fault,locked);
  always @(posedge clk) begin
@@ -21,7 +21,7 @@ module tb_lkep_face;
  assign n_bus[546:0]=ins[546:0];assign g_bus[546:0]=ins[546:0];
  assign n_bus[1117:1094]=session;assign g_bus[1117:1094]=session;
  assign n_phy[973:487]=rx;assign g_phy[973:487]=rx;
- hfd_lk_ep #(.HARD_CLOCKS(1),.MUT_FACE(MUT_FACE)) n(.clk(clk),.clk_face(clk),.clk_sub({12{clk}}),.rst_n(rst_n),.f_lk(n_bus),.phy(n_phy));
+ hfd_lk_ep #(.HARD_CLOCKS(1),.MUT_FACE(MUT_FACE)) n(.clk(clk),.clk_face(clk),.clk_sub({12{clk}}),.clk_tx_shared(clk),.rst_n(rst_n),.f_lk(n_bus),.phy(n_phy));
  hfd_lk_ep_face_golden g(.clk(clk),.rst_n(rst_n),.f_lk(g_bus),.phy(g_phy));
  integer count=0;reg[31:0] prng=32'h34ea0013;
  task automatic step_random;begin
