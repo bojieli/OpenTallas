@@ -744,8 +744,12 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             f"set_input_delay {833.333 * fin:.3f} -clock core_clk [all_inputs -no_clocks]\n"
             f"set_output_delay {833.333 * fout:.3f} -clock core_clk [all_outputs]\n"
             "set_max_fanout 32 [current_design]\nset_load 80 [all_outputs]\n"
-            "set_input_transition 150 [all_inputs -no_clocks]\nset_max_transition 260 [current_design]\n"
-            + sdc_extra(s) + clock_entry_constraints.generate(s, ROOT))
+            "set_max_transition 260 [current_design]\n"
+            + sdc_extra(s)
+            # Extra SDC may declare secondary clocks. Data slew must exclude
+            # their sources; explicit source-clock transitions in extra SDC stand.
+            + "set_input_transition 150 [all_inputs -no_clocks]\n"
+            + clock_entry_constraints.generate(s, ROOT))
 
 
 def sdc_extra(s: dict) -> str:
