@@ -1,3 +1,5 @@
+set ::ot_ref_pre_cts 0
+set_propagated_clock [get_clocks {core_clk w_*}]
 unset_input_delay [all_inputs]
 unset_output_delay [all_outputs]
 # CLAUDE S81-DIE hub end / start block POST_CTS (make_sdc_hend.sh): each virtual IO clock at its own tree's measured

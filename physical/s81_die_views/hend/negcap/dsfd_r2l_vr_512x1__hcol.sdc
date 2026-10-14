@@ -15,6 +15,8 @@ set_output_delay 372.222 -clock vclk [get_ports {o*}]
 set_output_delay -min 0 -clock vclk [get_ports {o*}]
 set_false_path -from [get_ports {rs*}]
 set_max_fanout 32 [current_design]
+# Placement has no buffered clock tree. Measure phase only after CTS/signoff.
+if {![info exists ::ot_ref_pre_cts] || !$::ot_ref_pre_cts} {
 set_propagated_clock [get_clocks {core_clk w_*}]
 
 # CLAUDE S81-DIE hub end / start block POST_CTS (make_sdc_hend.sh): each virtual IO clock at its own tree's measured
@@ -40,4 +42,6 @@ foreach {c v} [list core_clk vclk $ot_w vw] {
   set L [expr {round(([lindex $wc 0] + [lindex $wc 1]) / 2.0)}]
   set_clock_latency $L [get_clocks $v]
   puts "post_cts_hend: $c WC $wc -> $v latency $L"
+}
+
 }
