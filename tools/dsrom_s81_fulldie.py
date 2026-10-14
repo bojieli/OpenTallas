@@ -3769,6 +3769,12 @@ def build_r8(variant=None):
         slab('su_n', su_area - su_lo, x_sp, yy, cw, dom=SUHC_DOM)
     vm = hub['vm']
     corr_c = vm.y - SPINE_GAP / 2          # corridor at the gather / VM boundary: the E-half returns exit it at gather
+    if HUB_SOUTH_SHIFT and SUHC_V2_HC_N and HC_T_UM:
+        # The west hub column can move south without shrinking the closed east
+        # HC tail. Retain its floor clearance; the longer VM bridge is judged
+        # by the normal relay/pair gates, rather than hiding an overlap.
+        floor_corr = band + SPINE_GAP + up(HC_T_UM[1], GY) + HC_CORR / 2
+        corr_c = max(corr_c, up(floor_corr, GY))
     c0, c1 = dn(corr_c - HC_CORR / 2, GY), up(corr_c + HC_CORR / 2, GY)
     lo_av, hi_av = c0 - (band + SPINE_GAP), (H - band - SPINE_GAP) - c1      # HC halves sized to the room each side
     fs = lo_av / (lo_av + hi_av)
