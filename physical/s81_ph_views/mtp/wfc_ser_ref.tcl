@@ -115,7 +115,16 @@ proc ot_ser_boundary {} {
   }
 }
 if {[string match *pre_cts.tcl $ot_sb_stage]} {
-  if {[info procs ::ot_sb_cts_orig] eq ""} {
+  # ref_tile invokes boundary_tcl from its wrapper AFTER CTS and the core
+  # io_ref switch. Apply the serial model now, before hold repair. Installing
+  # another wrapper at that point would defer it to a CTS call that never runs.
+  set ot_sb_after_cts 0
+  if {![catch {get_property [get_clocks core_clk] is_propagated} ot_sb_prop]
+      && $ot_sb_prop eq "1"} { set ot_sb_after_cts 1 }
+  if {$ot_sb_after_cts} {
+    ot_ser_balance
+    ot_ser_boundary
+  } elseif {[info procs ::ot_sb_cts_orig] eq ""} {
     rename clock_tree_synthesis ::ot_sb_cts_orig
     proc clock_tree_synthesis {args} {
       ::ot_sb_cts_orig {*}$args

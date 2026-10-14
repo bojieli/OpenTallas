@@ -1,0 +1,13 @@
+{
+  "qualified_physical": false,
+  "defect": "boundary_tcl invoked by generated ref_tile wrapper after CTS, but legacy serial hook installed a future CTS wrapper instead of executing now",
+  "evidence": "wfc_p4_cts_hook_defect_1013.log: only OT_SER hook invoked before hold repair; no OT_SER_SINKS or OT_SER_BOUNDARY; sr_rq[58] hold -438.779 ps",
+  "fix": "when core_clk already propagated, execute serial balance and boundary immediately before hold repair; retain wrapper for legacy pre-tree invocation",
+  "tests": {
+    "after_cts": "source actual Tcl with propagated core clock: immediate balance+boundary emitted",
+    "before_cts": "source actual Tcl with ideal core clock: balance+boundary emitted only after original CTS callback"
+  },
+  "stopped": "own container ba8cbf9995a7 on EPYC1 uniquely mounted dsfd_wfc_vmx_p-20261013-205708",
+  "source_snapshot": "wfc_p4_source_snapshot_1013.json",
+  "archive_sha256": "e6b75c147507743bce6b8c14efe93a53f5d2656f9f9da5ca0282a0507de61c6b"
+}
