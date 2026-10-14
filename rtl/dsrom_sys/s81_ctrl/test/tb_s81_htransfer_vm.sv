@@ -5,6 +5,7 @@ module tb_s81_htransfer_vm #(parameter integer QD=4, MUT=0, STALL=0, RET_DELAY=0
  reg we=0;reg[13:0] wa=0;reg[511:0] wd=0;
  wire re,hre;wire[13:0] ra,hra;wire rv;wire[511:0] rq;
  wire[1:0] iv,iw,ov;wire[27:0] rows;wire[31:0] masks;wire[1023:0] data,od;
+ wire [31:0] committed_v;wire [32*14-1:0] committed_a;wire [32*16-1:0] committed_mask;
  wire af,mf;wire[1:0] raw_ov;wire[1023:0] raw_od;wire[2:0] mfc;wire[$clog2(QD):0] occ;
  ot_s81_vm_adapter bridge(.clk(ck),.rst_n(rst),.we(we),.wa(wa),.wd(wd),.re(re),.ra(ra),
  .i_v(iv),.i_we(iw),.i_row(rows),.i_mask(masks),.i_d(data),.o_v(ov),.o_d(od),.vm_fault(mf),.rq_v(rv),.rq(rq),.fault(af));
@@ -12,7 +13,7 @@ module tb_s81_htransfer_vm #(parameter integer QD=4, MUT=0, STALL=0, RET_DELAY=0
  // control mechanism. The VM implementation itself retains its exact bank,
  // request ordering and QD+6 read-return pipeline.
  ot_s81ph_vm_mem #(.NP(2),.NB(32),.QD(QD),.RQ(16),.MACRO(0)) vm(.clk(ck),.rst_n(rst),.grp(1'b0),
- .i_v(iv),.i_we(iw),.i_row(rows),.i_mask(masks),.i_d(data),.o_v(raw_ov),.o_d(raw_od),.fault(mf),.fault_code(mfc),.max_occ(occ));
+ .i_v(iv),.i_we(iw),.i_row(rows),.i_mask(masks),.i_d(data),.o_v(raw_ov),.o_d(raw_od),.fault(mf),.fault_code(mfc),.max_occ(occ),.commit_v(committed_v),.commit_row(committed_a),.commit_mask(committed_mask));
  generate if(RET_DELAY==0)begin
  assign ov=raw_ov;assign od=raw_od;
  end else begin
@@ -30,14 +31,15 @@ module tb_s81_htransfer_vm #(parameter integer QD=4, MUT=0, STALL=0, RET_DELAY=0
  .vm_re(hre),.vm_raddr(hra),.vm_rq(rq),.vm_rvalid(rv),
  .out_valid(hv),.out_ready(ready),.out_data(hd),.out_last(hl),.fault(hf),.fault_code(hfc),.st_msgs(msgs));
  wire tf;wire[3:0] tfc;wire[19:0] committed;
- ot_s81_htransfer #(.DEPTH(32),.S_WR(1),.MUT(MUT==1?1:0)) transfer(
+ ot_s81_htransfer #(.DEPTH(32),.S_WR(32),.MUT(MUT==1?1:0)) transfer(
  .clk(ck),.rst_n(rst),.store_begin(sbegin),.store_slot(1'b0),
- .wr_v(we),.wr_a(wa),.wr_mask(MUT==2?16'h0001:16'hffff),
+ .wr_v(committed_v),.wr_a(committed_a),.wr_mask(MUT==2?(committed_mask & {32{16'h0001}}):committed_mask),
  .hop_go(go),.hop_re(hre),.hop_ra(hra),.vm_re(re),.vm_ra(ra),
  .fault(tf),.fault_code(tfc),.committed_rows(committed));
  reg [639:0] written=0;integer early=0;
  always @(posedge ck) if(rst)begin
-   if(we)written[wa-BASE]=1;
+   for(integer b=0;b<32;b=b+1) if(committed_v[b] && committed_a[b*14+:14]>=BASE && committed_a[b*14+:14]<BASE+XW)
+     written[committed_a[b*14+:14]-BASE]=1;
    if(re && !written[ra-BASE])early=early+1;
  end
  function automatic[511:0] word(input integer row);

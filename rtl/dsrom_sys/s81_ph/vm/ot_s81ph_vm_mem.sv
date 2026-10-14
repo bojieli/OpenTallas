@@ -46,6 +46,11 @@ module ot_s81ph_vm_mem #(
     input  wire [NP*DW-1:0]  i_d,
     output reg  [NP-1:0]     o_v,
     output reg  [NP*DW-1:0]  o_d,
+    // Actual macro-write edge metadata. Each bank drives these from its
+    // existing serve flops; request admission is not a memory commit.
+    output wire [NBL-1:0]    commit_v,
+    output wire [NBL*($clog2(NB)+9)-1:0] commit_row,
+    output wire [NBL*(DW/32)-1:0] commit_mask,
     output reg               fault,
     output reg  [2:0]        fault_code,
     output reg  [$clog2(QD):0] max_occ
@@ -218,6 +223,12 @@ module ot_s81ph_vm_mem #(
 `else
                 s_bm[32*e +: 32] <= {32{q_m[qh][e]}};
 `endif
+        end
+        assign commit_v[gb] = s_we;
+        assign commit_row[gb*RA +: RA] = {s_r,gid};
+        genvar cm;
+        for(cm=0;cm<MW;cm=cm+1) begin : g_commit_mask
+            assign commit_mask[gb*MW+cm] = s_bm[32*cm];
         end
         // ---- macros: 4 x 128 b
         wire [DW-1:0] rd;
