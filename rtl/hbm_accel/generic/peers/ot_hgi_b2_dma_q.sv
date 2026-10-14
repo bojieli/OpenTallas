@@ -9,6 +9,7 @@ module ot_hgi_b2_dma_q #(
     parameter integer MUT_CORE_PIN = 0,
     parameter integer MUT_CORE_LOOK = 0,
     parameter integer MUT_CORE_ADV = 0,
+    parameter integer MUT_GROUP_OWN = 0,
     parameter integer HARD_CLOCKS = 0, // physical parent: ten independent die-compensated clock entries
     parameter integer FRONT = 0,
     parameter integer VR2 = 1,
@@ -209,6 +210,6 @@ module ot_hgi_b2_dma_q #(
     assign wl_bank = wl[268:264];
     assign r_req_v=rv[0]; assign r_req_len=rl[3:0]; assign r_req_tag=rt[15:0]; assign r_req_we=rwe[0];
     assign r_req_wdata=rwd[255:0]; assign r_req_wstrb=rws[31:0]; assign r_rsp_rdy=rrr[0];
-    ot_hgi_b2_dma_groupface #(.MUT_SEAM(MUT_SEAM)) u_groupface(.clk(q5_clock[9]),.rst_n(rst_n),.request(group_request),.kv_request(kc_kq),.vr2q(vr2q));
+    ot_hgi_b2_dma_groupface_owned #(.MUT_SEAM(MUT_SEAM),.MUT_OWNED(MUT_GROUP_OWN)) u_groupface(.clk(q5_clock[9]),.rst_n(rst_n),.kv_owned(kc_creq),.request(group_request),.kv_request(kc_kq),.vr2q(vr2q));
 endmodule
 `default_nettype wire
