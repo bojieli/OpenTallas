@@ -1,0 +1,22 @@
+# Current native attention physical requirements
+
+This source-bound inventory owns eight requirement rows. It does not assign a final v5 slot or pins, qualify changed source, retire cancelled jobs, or alter CLOSED archives. The daemon snapshot contains 86 relevant historical jobs and **zero live jobs**.
+
+The authoritative native arithmetic source is `f460730903b452982cd68d9208f07219f108fdee`; evidence `19261b9c8` binds HEADS1/Q_FP32/QK_ONLY/ECTL3, S128/PV256. Its actual full service uses the flat head, with FP DPI, common clocks and synthetic response substitutions. The optional hierarchical head has no corresponding full-service arithmetic receipt. Native footprints and physical census remain open.
+
+| Requirement | Concrete retained evidence | Owner's next action |
+| --- | --- | --- |
+| Native ECTL | A/B CLOSED q17; C CLOSED q16; old widths 254.88/254.88/138.24×129.6 | Compare reachable native Q_FP32/SRAM dependencies; expose three independent physical clocks and preserve copied-control/reset/registered-seam latency. |
+| nearhbm_head_h | Historical head_hs CLOSED q13b, actual LEF734.4×855.36; old16lane+ktree children preserved | Bind current FP32 two-half/RNE hierarchical producer to full native service; expose17 child clocks and place parent relay/packer state in genuine leaves. No current-source view alias. |
+| nearhbm_attn_hub_p | Current HEADS1 score/max/Z/reciprocal functional service | Census actual source with service constants/connected reciprocal output. Partition true retained state and registered faces; do not infer half-size arrays from inactive group1. |
+| nearhbm_attn_hub_t | Failed q13e FF−122.2, legacy13-child cluster1170.72×760.32 | Map old hub requirement to native score hub plus actual PV256 graph with source evidence; separate parent state, per-child clock entries, registered boundaries. |
+| Native merge/PV/finalizer and engine/head clocks | Two vrow merges, two32-slice PV pairs, finalizer32join clocks in f460; functional adapter ties them | Inventory actual leaf state and ports. Current row engine requires ECTL3 plus four head instances; preserve explicit roots and phases rather than common-clock wrapper inheritance. |
+| kv_end | Eighteen-child p2 precursor with ten parent face flops; CANCELLED | Requirement persists. Bind actual native widths/credits/context, expose18child entries, harden remaining face flops, and prove reset/drain plus real phi-minus-R seams before successor route. |
+| slab_port_group | gd3 core CLOSED, source42e2bcb1b/record6b6747847; actual core129.6square and TTboundaryR203.8 | Bind four retained ROM columns and four lanes separately from additional core. Nine entries already explicit in entries RTL; exact child source/LEF/phase/registered returns and new group slot remain required. Full48group proof72240words remains preserved. |
+| io_collective | Distinct native59 functional persistent transport ca9524959 | Physical successor requires actual573bit ingress/peer-result,576bit local return, identity/queue/arithmetic state census and registered lossless credit partition. Old N4/TAG32/WT1 view cannot alias native59/MEMM0. |
+
+Die lead owns constructive windows, assigned pins and delivered phases. No final v5 assignment exists. Historical contract slots in the JSON are reservations only; particularly the head CLOSED rectangle exceeds its historical691.2×453.6 envelope. g9 evidence `414d80093` records315 stack reach failures,128 te/ts paths with no terminal relay sites, and192 ECTL/head pin records: rebuilding placeholder geometry does not resolve these actual endpoint requirements.
+
+The edge stream retains the four fresh **SU** head/SFU gates at eb35db4b5/evidence93f745d4d, with no routes and functional bench binding pending. Those are separate from the attention QK head and do not replace its requirement. The changed shared multiplier dependency blocks automatic reuse of its historical943c39997 views.
+
+`inventory.py` regenerates source SHA, historical specification and daemon lineage evidence without modifying the registry. `inventory.json` names each exact source reference and current next action. Port, root and count figures above describe declared/source hierarchy or historical measured masters; none is a native physical qualification or adoption.

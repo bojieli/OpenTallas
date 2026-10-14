@@ -1,0 +1,26 @@
+[
+  {
+    "module": "ot_qwen_slab_pg_col",
+    "old_source": "81025983b",
+    "current_reference": "42e2bcb1b",
+    "old_module_sha256": "8c3eb317dab4c198c30b7d9ccfe33ee7603d8a2bb26b9f6d68c747429d67468b",
+    "current_module_sha256": "8c3eb317dab4c198c30b7d9ccfe33ee7603d8a2bb26b9f6d68c747429d67468b",
+    "module_body_equal": true
+  },
+  {
+    "module": "ot_qwen_slab_pg_lanes",
+    "old_source": "ec5f7bb16",
+    "current_reference": "42e2bcb1b",
+    "old_module_sha256": "1f6ff1dc5326a311b0ea17bfdf3d68855270528e8c9915c13da66f87c3c0c12b",
+    "current_module_sha256": "1f6ff1dc5326a311b0ea17bfdf3d68855270528e8c9915c13da66f87c3c0c12b",
+    "module_body_equal": true
+  },
+  {
+    "dependency": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "old_source": "ec5f7bb16",
+    "current_reference": "42e2bcb1b",
+    "old_sha256": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "current_sha256": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "equal": true
+  }
+]

@@ -1,0 +1,2116 @@
+{
+  "schema": "opentallas.qwen-attention-current-inventory.v1",
+  "status": "SOURCE_BOUND_REQUIREMENT_INVENTORY_NOT_FINAL_V5",
+  "qualified": false,
+  "assigned_pins": false,
+  "adopted": false,
+  "snapshot_commit": "5e59481fb9b522782291625bcb09d8dcb97fd253",
+  "arithmetic_source": "f460730903b452982cd68d9208f07219f108fdee",
+  "arithmetic_receipt": {
+    "path": "tools/qwen_tp8_attention_service_evidence/service_f46073090.json",
+    "commit": "19261b9c8",
+    "sha256": "6cf8fc73fbe68718985f03f1faa9e43a28858783a37dfd884c977a637d21c6ef"
+  },
+  "arithmetic_scope": "FP_DPI/commonclock/syntheticresponse component; flathead, notHSUB fullservice",
+  "historical_contract_version": 4,
+  "historical_slots_not_native_grants": [
+    {
+      "name": "io_collective",
+      "cell": "qfd_io_collective",
+      "outline": {
+        "w": 3453.384,
+        "h": 1563.816
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M5",
+        "offset": 1151.052
+      },
+      "layer_cap": {
+        "cap": "M5",
+        "view_max_layer": "M8",
+        "conforms": false
+      }
+    },
+    {
+      "name": "sp_port_tiles_0",
+      "cell": "qfd_port_tiles_0",
+      "outline": {
+        "w": 777.576,
+        "h": 1840.296
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M5",
+        "offset": 388.788
+      },
+      "layer_cap": {
+        "cap": "M5",
+        "view_max_layer": "M8",
+        "conforms": false
+      }
+    },
+    {
+      "name": "ahub",
+      "cell": "qkd_ahub",
+      "outline": {
+        "w": 647.976,
+        "h": 647.976
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M5",
+        "offset": 323.988
+      },
+      "layer_cap": {
+        "cap": "M5",
+        "view_max_layer": "M8",
+        "conforms": false
+      }
+    },
+    {
+      "name": "ectl_EN_0",
+      "cell": "qkd_ectl",
+      "outline": {
+        "w": 647.976,
+        "h": 129.576
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M5",
+        "offset": 323.988
+      },
+      "layer_cap": {
+        "cap": "M5",
+        "view_max_layer": "M8",
+        "conforms": false
+      }
+    },
+    {
+      "name": "head_EN_0_0",
+      "cell": "qkd_rhead",
+      "outline": {
+        "w": 691.2,
+        "h": 453.6
+      },
+      "clock_entry": {
+        "pin": "ck",
+        "face": "N",
+        "layer": "M7",
+        "offset": 345.6
+      },
+      "layer_cap": {
+        "cap": "M7",
+        "kind": "cluster",
+        "die_over": "M8+",
+        "pin_layers": [
+          "M5",
+          "M6",
+          "M7"
+        ],
+        "layer_cap_grant": "qwen-tp8 die lead 2026-10-13: hardened-once head cluster (16 x ot_qkh_lane8 M5 leaves + ot_qkh_ktree), PG M7, signals to M7, nb on M6 (q13-rhead-fit option A)"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "requirement": "ECTL/current native controller",
+      "owner": "/root/qwen_small",
+      "status": "HISTORICAL_LEAVES_CLOSED_NATIVE_BINDING_OPEN",
+      "next_action": "Audit reachable native Q_FP32 controller and SRAM path against actual CLOSED A/B/C compiled dependencies; distinct physical parent must expose3 entries, preserve current copied control/registered seams and reset latency.",
+      "children": [
+        {
+          "name": "qkd_ectl_a",
+          "top": "qkd_ectl_a",
+          "kind": "tile",
+          "params": {},
+          "outline": {
+            "w": 254.88,
+            "h": 129.6
+          },
+          "clock_port": "ck",
+          "reset_ports": [
+            "rst_n"
+          ],
+          "children": [],
+          "pins": {
+            "W": [
+              "rq",
+              "rs"
+            ],
+            "E": [
+              "rs_o",
+              "rvm_o",
+              "x_i"
+            ],
+            "S": [
+              "cfg",
+              "rst_n",
+              "t0_row"
+            ],
+            "N": [
+              "ck",
+              "t1_row"
+            ]
+          },
+          "sources": [
+            {
+              "path": "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+              "commit": "7eb95c2b1",
+              "sha256": "43a4065234c245fb1fb436acc8e17bed0dc9f2baec9b120a0e28b271a88b0ce9"
+            },
+            {
+              "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+              "commit": "7eb95c2b1",
+              "sha256": "723aee53be076e4e5cbe4656db0371bca9d81aa1637d3a31859299fcdf232028"
+            },
+            {
+              "path": "rtl/hdc/ot_hdc_delay.sv",
+              "commit": "7eb95c2b1",
+              "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+            },
+            {
+              "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+              "commit": "7eb95c2b1",
+              "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+            }
+          ]
+        },
+        {
+          "name": "qkd_ectl_b",
+          "top": "qkd_ectl_b",
+          "kind": "tile",
+          "params": {},
+          "outline": {
+            "w": 254.88,
+            "h": 129.6
+          },
+          "clock_port": "ck",
+          "reset_ports": [
+            "rst_n"
+          ],
+          "children": [],
+          "pins": {
+            "W": [
+              "rs_i",
+              "rvm_i",
+              "x_o"
+            ],
+            "E": [
+              "rsv_o",
+              "x_i"
+            ],
+            "S": [
+              "t0_cl",
+              "t0_row",
+              "rst_n",
+              "cfg"
+            ],
+            "N": [
+              "t1_cl",
+              "t1_row",
+              "ck"
+            ]
+          },
+          "sources": [
+            {
+              "path": "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+              "commit": "7eb95c2b1",
+              "sha256": "43a4065234c245fb1fb436acc8e17bed0dc9f2baec9b120a0e28b271a88b0ce9"
+            },
+            {
+              "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+              "commit": "7eb95c2b1",
+              "sha256": "723aee53be076e4e5cbe4656db0371bca9d81aa1637d3a31859299fcdf232028"
+            },
+            {
+              "path": "rtl/hdc/ot_hdc_delay.sv",
+              "commit": "7eb95c2b1",
+              "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+            },
+            {
+              "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+              "commit": "7eb95c2b1",
+              "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+            }
+          ]
+        },
+        {
+          "name": "qkd_ectl_c",
+          "top": "qkd_ectl_c",
+          "kind": "tile",
+          "params": {},
+          "outline": {
+            "w": 138.24,
+            "h": 129.6
+          },
+          "clock_port": "ck",
+          "reset_ports": [
+            "rst_n"
+          ],
+          "children": [],
+          "pins": {
+            "W": [
+              "rsv_i",
+              "x_o"
+            ],
+            "E": [
+              "si",
+              "so"
+            ],
+            "S": [
+              "t0_q",
+              "e0",
+              "e1",
+              "s0",
+              "s1",
+              "rst_n",
+              "cfg"
+            ],
+            "N": [
+              "t1_q",
+              "e2",
+              "e3",
+              "s2",
+              "s3",
+              "ck"
+            ]
+          },
+          "sources": [
+            {
+              "path": "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+              "commit": "c5167e964",
+              "sha256": "43a4065234c245fb1fb436acc8e17bed0dc9f2baec9b120a0e28b271a88b0ce9"
+            },
+            {
+              "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+              "commit": "c5167e964",
+              "sha256": "3db4c707f3747c87f31052f56f9d617361770d2ceb23bf2be642a9b80eaf7c36"
+            },
+            {
+              "path": "rtl/hdc/ot_hdc_delay.sv",
+              "commit": "c5167e964",
+              "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+            },
+            {
+              "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+              "commit": "c5167e964",
+              "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+            }
+          ]
+        }
+      ],
+      "current_sources": [
+        {
+          "path": "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+          "commit": "f46073090",
+          "sha256": "3912b0b5636167d90ff5e6923f23a352158cc28c0481aad8751e8f0e1d06d3cf"
+        },
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+          "commit": "f46073090",
+          "sha256": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b"
+        }
+      ],
+      "multiplicity": "4 stacks \u00d78 engines =32 ECTL3,96 leafinstances; 3 clocks tied in current functional wrapper",
+      "source_reference": "f46073090"
+    },
+    {
+      "requirement": "ot_qwen_nearhbm_head_h",
+      "owner": "/root/qwen_small",
+      "status": "FLAT_NATIVE_HEAD_NOT_PHYSICALLY_QUALIFIED",
+      "next_action": "Build source-exact native paired-FP32 hierarchical head functional binding before new master requests; expose16 lane entries+ktree entry and harden relay/packer state separately. Closed historical head_hs is retained, not native alias.",
+      "historical": {
+        "name": "qkh_head_hs_ref",
+        "top": "ot_qwen_nearhbm_head_hs",
+        "kind": "cluster",
+        "params": {},
+        "outline": {
+          "w": 734.4,
+          "h": 853.2
+        },
+        "clock_port": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "children": [
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[0].u_l8",
+            "at": [
+              43.2,
+              43.2
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[1].u_l8",
+            "at": [
+              216.0,
+              43.2
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[2].u_l8",
+            "at": [
+              388.8,
+              43.2
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[3].u_l8",
+            "at": [
+              561.6000000000001,
+              43.2
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[4].u_l8",
+            "at": [
+              43.2,
+              216.0
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[5].u_l8",
+            "at": [
+              216.0,
+              216.0
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[6].u_l8",
+            "at": [
+              388.8,
+              216.0
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[7].u_l8",
+            "at": [
+              561.6000000000001,
+              216.0
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[8].u_l8",
+            "at": [
+              43.2,
+              388.8
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[9].u_l8",
+            "at": [
+              216.0,
+              388.8
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[10].u_l8",
+            "at": [
+              388.8,
+              388.8
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[11].u_l8",
+            "at": [
+              561.6000000000001,
+              388.8
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[12].u_l8",
+            "at": [
+              43.2,
+              561.6000000000001
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[13].u_l8",
+            "at": [
+              216.0,
+              561.6000000000001
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[14].u_l8",
+            "at": [
+              388.8,
+              561.6000000000001
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8",
+            "count": 1,
+            "inst": "g_t[15].u_l8",
+            "at": [
+              561.6000000000001,
+              561.6000000000001
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_ktree_ref/views/ot_qkh_ktree",
+            "count": 1,
+            "inst": "u_kt",
+            "at": [
+              259.2,
+              734.4
+            ]
+          }
+        ],
+        "pins": {
+          "S": [
+            "c_in",
+            "row_in",
+            "e_in",
+            "lt_in",
+            "hid",
+            "q_valid_in",
+            "q_beat_in",
+            "q_data_in"
+          ],
+          "E": [
+            "nb_d"
+          ],
+          "W": [
+            "clk",
+            "rst_n"
+          ],
+          "N": [
+            "sc_d",
+            "sc_f",
+            "g_f"
+          ]
+        },
+        "sources": [
+          {
+            "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv",
+            "commit": "54a543b22",
+            "sha256": "fd4bbedc8d7f507ae59797d82dfeb0eca47df0311524877abf8d5f998b608ded"
+          },
+          {
+            "path": "rtl/hdc/nearhbm/ot_qkh_subtiles_bb.v",
+            "commit": "54a543b22",
+            "sha256": "dad31054f7380f4b1246dbfdf5b7b5150c15dd88b3e7649c1253cf44c3e55e4a"
+          },
+          {
+            "path": "rtl/lib/ot_rst_relay.sv",
+            "commit": "54a543b22",
+            "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+          }
+        ]
+      },
+      "routed_outline": [
+        734.4,
+        855.36
+      ],
+      "multiplicity": "32 engines\u00d74 queryheads=128 heads; optionalHSUB16lanes+1ktree each",
+      "current_sources": [
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+          "commit": "f46073090",
+          "sha256": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b"
+        },
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv",
+          "commit": "f46073090",
+          "sha256": "bf404eba5181b25abd165133247a700a701dd1dc92afb6aae3b33d17abe8df41"
+        },
+        {
+          "path": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+          "commit": "f46073090",
+          "sha256": "22db707f26a61ad7cad2f32c1155dc8b371d6a0552d4fec9f1b6ca7d085362f8"
+        }
+      ],
+      "source_reference": "f46073090"
+    },
+    {
+      "requirement": "ot_qwen_nearhbm_attn_hub_p",
+      "owner": "/root/qwen_small",
+      "status": "CURRENT_HEADS1_FLAT_HUB_NO_QUALIFIED_FOOTPRINT",
+      "next_action": "Census actual score-only usage with HEADS1, constants and reciprocal output; partition current max/Z/reciprocal/control state into genuine leaves, then independent roots. Do not adopt old HEADS2 pb/Z footprint or discard unused storage without actual elaboration.",
+      "current_sources": [
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv",
+          "commit": "f46073090",
+          "sha256": "417c81bbb813810131301371991cc93b8844c51fc44e0a7e7e75b8352dad9dd5"
+        }
+      ],
+      "profile": {
+        "HEADS": 1,
+        "Q_FP32": 1,
+        "QK_ONLY": 1,
+        "HD": 128
+      },
+      "source_reference": "f46073090"
+    },
+    {
+      "requirement": "ot_qwen_nearhbm_attn_hub_t",
+      "owner": "/root/qwen_small",
+      "status": "FAILED_PARENT_REQUIRES_DISTINCT_NATIVE_SUCCESSOR",
+      "next_action": "Separate source-compatible historical13children from current native reciprocal+PV256 graph; register actual faces and isolate parent control/relay state. New physical parent exposes each actual child clock, not hierarchical CTS.",
+      "historical": {
+        "name": "qkd_ahub_ref",
+        "top": "ot_qwen_nearhbm_attn_hub_t",
+        "kind": "cluster",
+        "params": {},
+        "outline": {
+          "w": 1170.72,
+          "h": 760.32
+        },
+        "clock_port": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "children": [
+          {
+            "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+            "count": 1,
+            "at": [
+              43.2,
+              43.2
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+            "count": 1,
+            "at": [
+              259.2,
+              43.2
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+            "count": 1,
+            "at": [
+              475.2,
+              43.2
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_pbst_ref/views/ot_nhb_pbst",
+            "count": 1,
+            "at": [
+              691.2,
+              43.2
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+            "count": 1,
+            "at": [
+              43.2,
+              302.4
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+            "count": 1,
+            "at": [
+              259.2,
+              302.4
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+            "count": 1,
+            "at": [
+              475.2,
+              302.4
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_pvlg_ref/views/ot_nhb_pvlg",
+            "count": 1,
+            "at": [
+              691.2,
+              302.4
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_zh_ref/views/ot_nhb_zh",
+            "count": 1,
+            "at": [
+              43.2,
+              561.6
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_zh_ref/views/ot_nhb_zh",
+            "count": 1,
+            "at": [
+              259.2,
+              561.6
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_zh_ref/views/ot_nhb_zh",
+            "count": 1,
+            "at": [
+              475.2,
+              561.6
+            ]
+          },
+          {
+            "view": "physical/ref_tile/nhb_zh_ref/views/ot_nhb_zh",
+            "count": 1,
+            "at": [
+              691.2,
+              561.6
+            ]
+          },
+          {
+            "view": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf",
+            "count": 1,
+            "inst": "u_recip",
+            "at": [
+              907.2,
+              259.2
+            ]
+          }
+        ],
+        "pins": {
+          "S": [
+            "start",
+            "si_valid",
+            "si_type",
+            "si_g",
+            "si_hh",
+            "si_k",
+            "si_any",
+            "si_data",
+            "pi_valid",
+            "pi_g",
+            "pi_beat",
+            "pi_data"
+          ],
+          "N": [
+            "mo_valid",
+            "mo_g",
+            "mo_hh",
+            "mo_data",
+            "out_valid",
+            "out_g",
+            "out_beat",
+            "out_data",
+            "fault",
+            "ev"
+          ],
+          "W": [
+            "clk",
+            "rst_n"
+          ]
+        },
+        "sources": [
+          {
+            "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_t.sv",
+            "commit": "6b847a5d7",
+            "sha256": "e5dc94e076ffac8f076f749172c3b495b946e7b9846673a07a4683d6b03eeeec"
+          },
+          {
+            "path": "rtl/hdc/nearhbm/ot_nhb_tiles_bb.v",
+            "commit": "6b847a5d7",
+            "sha256": "48bcb23847696f7e3a6256c9bcc90faa979327b40f517ba3bbad9618986fc474"
+          },
+          {
+            "path": "rtl/hdc/nearhbm/ot_qkh_recip_leaf_bb.v",
+            "commit": "6b847a5d7",
+            "sha256": "c1be0aa1b69c1333f048101398f711ec1dde7094a6aa343b170b821abe16014a"
+          },
+          {
+            "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv",
+            "commit": "6b847a5d7",
+            "sha256": "1d50c4d809285711fe045d92e51dc21ee272965339dab8fe0db72f97e3d35f46"
+          },
+          {
+            "path": "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+            "commit": "6b847a5d7",
+            "sha256": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_sfu.sv",
+            "commit": "6b847a5d7",
+            "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+            "commit": "6b847a5d7",
+            "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+            "commit": "6b847a5d7",
+            "sha256": "e9f1a1efa70de86bb09b532290d5b802f585f1ad90e6e12ec89a4e0b189b3ea5"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+            "commit": "6b847a5d7",
+            "sha256": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_prefix.sv",
+            "commit": "6b847a5d7",
+            "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fastfp.sv",
+            "commit": "6b847a5d7",
+            "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_delay.sv",
+            "commit": "6b847a5d7",
+            "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+          },
+          {
+            "path": "rtl/lib/ot_rst_relay.sv",
+            "commit": "6b847a5d7",
+            "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+          },
+          {
+            "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+            "commit": "6b847a5d7",
+            "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+          },
+          {
+            "path": "rtl/lib/ot_rst_pipe.sv",
+            "commit": "6b847a5d7",
+            "sha256": "7d6cba3c9dc09470b92d2304a41a1907c4aca1d44249904c0e5065a835117441"
+          }
+        ]
+      },
+      "failure": "FF hold\u2212122.2ps at I2R2253 endpoints; q13d setup\u2212464.1; no live job",
+      "source_reference": "6b847a5d7"
+    },
+    {
+      "requirement": "native PV256/merge/finalizer and engine/head roots",
+      "owner": "/root/qwen_small",
+      "status": "CURRENT_ARITHMETIC_COMPONENT_ONLY_NO_MASTER_OUTLINES",
+      "next_action": "Census real2 vrow_merge+2 PV256pairs (32slice clocks each)+32join finalizer; retain explicit source states, registered interfaces and accepted epoch/reset/drain. Row engine must expose actual ECTL3 and four head clocks rather than inherited commonclk.",
+      "current_sources": [
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_tp8_attention_service.sv",
+          "commit": "f46073090",
+          "sha256": "85f477c60d15c372cd7fa8764c6b84a3a6a39c637c848571285270fd590956a6"
+        },
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_tp8_vrow_merge.sv",
+          "commit": "f46073090",
+          "sha256": "79fb614efe7afa5b229d42cbb56b5b03164a3d6b834fdad127b05ef364dc49b5"
+        },
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_pair.sv",
+          "commit": "f46073090",
+          "sha256": "efc153b1fae57acbdb5bb084db0c9c356304b6a0b3680b0ac349925d38c85cbf"
+        },
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_slice.sv",
+          "commit": "f46073090",
+          "sha256": "ea0eefe4eccda4d429b294d76e3573e212068790357b170e7c5b2b036aff5007"
+        },
+        {
+          "path": "rtl/hdc/nearhbm/ot_qwen_tp8_pv256_finalize.sv",
+          "commit": "f46073090",
+          "sha256": "e848a81f88d4d77e30777d46245240566f8d2d3f3421c67eb916a17af511bade"
+        }
+      ],
+      "source_reference": "f46073090"
+    },
+    {
+      "requirement": "ot_qkvd_kv_end",
+      "owner": "/root/qwen_small",
+      "status": "CANCELLED_PARENT_REQUIREMENT_REMAINS_OPEN",
+      "next_action": "Rebind actual native transport widths/credits/context/reset; expose18 child clocks and move ten parent faceflops into real hardened leaf. Source-exact18-child mapping and pair phi-minus-R/pin requests precede route.",
+      "historical": {
+        "name": "qkd_d2d_p2_ref",
+        "top": "ot_qkvd_kv_end",
+        "kind": "cluster",
+        "params": {
+          "QD": 48,
+          "UCX": 48,
+          "SPL": 1
+        },
+        "outline": {
+          "w": 777.576,
+          "h": 518.376
+        },
+        "clock_port": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "children": [
+          {
+            "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+            "count": 1,
+            "inst": "*u_tb0",
+            "at": [
+              22.464,
+              73.44
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+            "count": 1,
+            "inst": "*u_tb2",
+            "at": [
+              280.368,
+              73.44
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+            "count": 1,
+            "inst": "*u_tb1",
+            "at": [
+              397.872,
+              73.44
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+            "count": 1,
+            "inst": "*u_rb1",
+            "at": [
+              22.464,
+              291.6
+            ],
+            "orient": "MX"
+          },
+          {
+            "view": "physical/ref_tile/qkd_sbufp_ref/views/ot_qkvd_sbufp",
+            "count": 1,
+            "inst": "*u_rb3",
+            "at": [
+              280.368,
+              291.6
+            ],
+            "orient": "MX"
+          },
+          {
+            "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+            "count": 1,
+            "inst": "*u_rb0",
+            "at": [
+              538.272,
+              345.6
+            ],
+            "orient": "MX"
+          },
+          {
+            "view": "physical/ref_tile/qkd_fbuf8p_ref/views/ot_qkvd_fbuf8p",
+            "count": 1,
+            "inst": "*u_rb2",
+            "at": [
+              655.776,
+              345.6
+            ],
+            "orient": "MX"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_ti_ref/views/ot_qkvd_ke_ti",
+            "count": 1,
+            "inst": "*u_ti0",
+            "at": [
+              22.464,
+              23.76
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_ro_ref/views/ot_qkvd_ke_ro",
+            "count": 1,
+            "inst": "*u_ro1",
+            "at": [
+              129.168,
+              23.76
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_ti_ref/views/ot_qkvd_ke_ti",
+            "count": 1,
+            "inst": "*u_ti2",
+            "at": [
+              235.872,
+              23.76
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_ro_ref/views/ot_qkvd_ke_ro",
+            "count": 1,
+            "inst": "*u_ro3",
+            "at": [
+              342.576,
+              23.76
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_ti_ref/views/ot_qkvd_ke_ti",
+            "count": 1,
+            "inst": "*u_ti1",
+            "at": [
+              449.28,
+              23.76
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_ro_ref/views/ot_qkvd_ke_ro",
+            "count": 1,
+            "inst": "*u_ro0",
+            "at": [
+              555.984,
+              23.76
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_ro_ref/views/ot_qkvd_ke_ro",
+            "count": 1,
+            "inst": "*u_ro2",
+            "at": [
+              662.688,
+              23.76
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_tm_ref/views/ot_qkvd_ke_tm",
+            "count": 1,
+            "inst": "*u_tm",
+            "at": [
+              108.0,
+              246.24
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_ctl_ref/views/ot_qkvd_ke_ctl",
+            "count": 1,
+            "inst": "*u_ctl",
+            "at": [
+              367.2,
+              246.24
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_tf_ref/views/ot_qkvd_ke_tf",
+            "count": 1,
+            "inst": "*u_tf",
+            "at": [
+              194.4,
+              464.4
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/qkd_ke_rq_ref/views/ot_qkvd_ke_rq",
+            "count": 1,
+            "inst": "*u_rq",
+            "at": [
+              302.4,
+              464.4
+            ],
+            "orient": "R0"
+          }
+        ],
+        "pins": {
+          "S": [
+            "r_v",
+            "r_cr",
+            "r_d",
+            "t_v",
+            "t_cr",
+            "t_d"
+          ],
+          "N": [
+            "tx_up",
+            "tx_v",
+            "tx_flit",
+            "rx_v",
+            "rx_flit"
+          ],
+          "W": [
+            "clk",
+            "rst_n",
+            "fault",
+            "fault_cause"
+          ]
+        },
+        "sources": [
+          {
+            "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv",
+            "commit": "133062899",
+            "sha256": "3b5e2a816231baecb1964017415d1cd1ef9a42004b20da40258e450d092b34e3"
+          },
+          {
+            "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_ke_cluster.sv",
+            "commit": "133062899",
+            "sha256": "2ce4aeb1440545ce7a9f3a849dce0cb9592160033c1d3cfea9e824e19dc2e29c"
+          },
+          {
+            "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv",
+            "commit": "133062899",
+            "sha256": "2d9850cef709672e7feda8dcdeb6d0df07456cfad58f59d1793140f6356a3321"
+          },
+          {
+            "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+            "commit": "133062899",
+            "sha256": "bc3bd92ed39105c671d759bbeecc246485d690db5f23e54083705206bb9d7ed5"
+          },
+          {
+            "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo_sb.sv",
+            "commit": "133062899",
+            "sha256": "05c79f6bdd0a7d5187631776742ff873905f7e51bc266111e601e227f3587297"
+          },
+          {
+            "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_buf_tiles_bb.v",
+            "commit": "133062899",
+            "sha256": "737b8de9b811a33545476dbff963e9ee051ab73ae9fae531d2b566201990ebef"
+          },
+          {
+            "path": "rtl/qwen_sys/kv_die_20261009/ot_qkvd_ke_tiles_bb.v",
+            "commit": "133062899",
+            "sha256": "56fecaffd0a3c5baf152ea03dd7ce7f4b8a2577ab67f05411b3b9b51ae98b451"
+          }
+        ]
+      },
+      "failure": "p2 CANCELLED; no accepted physical successor inferred",
+      "source_reference": "133062899"
+    },
+    {
+      "requirement": "ot_qwen_slab_port_group",
+      "owner": "/root/qwen_small",
+      "status": "CORE_AND_CHILD_CLOSURES_PARENT_UNQUALIFIED",
+      "next_action": "Bind immutable gd3 core and4ROMcolumns+4lane bodies; obtain actual9-root slot/pins/phases/reset/wire budgets. Preserve +2 captured-return clocks and all48group exact72240word proof. No old slotfit claim.",
+      "core": {
+        "name": "qfd_slab_pg_core_gid",
+        "top": "ot_qwen_slab_pg_core",
+        "kind": "tile",
+        "params": {
+          "MUL_LAT": 7,
+          "BW_FIFO": 0,
+          "OREG": 1,
+          "MUL_KCP": 1,
+          "IN_STAGE": 1,
+          "AM_SPLIT": 1,
+          "S5_CTL": 1,
+          "SCALE_PAIR": 1,
+          "GT": 3072,
+          "NW": 18
+        },
+        "outline": {
+          "w": 129.6,
+          "h": 129.6
+        },
+        "clock_port": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "children": [],
+        "pins": {
+          "W": [
+            "col_m5"
+          ],
+          "E": [
+            "lane_y",
+            "lane_vo",
+            "lane_err",
+            "p_v",
+            "p_last",
+            "p_oen",
+            "p_amax",
+            "p_rmax",
+            "p_wsrc",
+            "p_mmode",
+            "p_split",
+            "p_nb",
+            "p_lb",
+            "p_nout",
+            "p_sbase",
+            "p_oa",
+            "p_ots"
+          ],
+          "S": [
+            "lane_a",
+            "lane_s",
+            "lane_v",
+            "lane_ws",
+            "core_gre1",
+            "core_addr1",
+            "core_rs0",
+            "res_in"
+          ],
+          "N": [
+            "clk",
+            "rst_n",
+            "o_we",
+            "o_addr",
+            "o_mask",
+            "o_data",
+            "ov",
+            "am_tv",
+            "am_top",
+            "am_rmax",
+            "fault",
+            "gid"
+          ]
+        },
+        "sources": [
+          {
+            "path": "rtl/physical/ot_qwen_slab_pg_entries.sv",
+            "commit": "42e2bcb1b",
+            "sha256": "faef43089312f4fb20a43302506413818e37dba21aec58543d7add6790498689"
+          },
+          {
+            "path": "rtl/physical/ot_qwen_slab_port_group.sv",
+            "commit": "42e2bcb1b",
+            "sha256": "7a785daa53103dcfce92c5ace49089d03a8d063c4ed3cb27342deb8dc7b59d73"
+          },
+          {
+            "path": "rtl/common/ot_meso_fifo.sv",
+            "commit": "42e2bcb1b",
+            "sha256": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_delay.sv",
+            "commit": "42e2bcb1b",
+            "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+            "commit": "42e2bcb1b",
+            "sha256": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+            "commit": "42e2bcb1b",
+            "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fastfp.sv",
+            "commit": "42e2bcb1b",
+            "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_prefix.sv",
+            "commit": "42e2bcb1b",
+            "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+          }
+        ]
+      },
+      "core_closed_record": "6b6747847",
+      "actual_core_lef": [
+        129.6,
+        129.6
+      ],
+      "insertion": {
+        "path": "physical/ref_tile/qfd_slab_pg_core/views/ot_qwen_slab_pg_core/insertion.json",
+        "commit": "6b6747847",
+        "sha256": "d0fd8f20b3036d307937ef0d89c8499d15833003304b03396fdfa814cbc1d500"
+      },
+      "current_sources": [
+        {
+          "path": "rtl/physical/ot_qwen_slab_pg_entries.sv",
+          "commit": "42e2bcb1b",
+          "sha256": "faef43089312f4fb20a43302506413818e37dba21aec58543d7add6790498689"
+        }
+      ],
+      "retained_children": "4ROMcolumns324\u00d7216 and4lanes71.28square, conditional source binding required; rawchildarea300259.3536um\u00b2 excludes core/relay/channel area",
+      "candidate_envelope": [
+        777.6,
+        691.2
+      ],
+      "source_reference": "42e2bcb1b"
+    },
+    {
+      "requirement": "qfd_io_collective",
+      "owner": "/root/qwen_small",
+      "status": "DISTINCT_FUNCTIONAL_TAG59_SUCCESSOR_PHYSICAL_PARTITION_OPEN",
+      "next_action": "Inventory actual573bit input/peer-result and576bit localreturn state; partition native59 queues/arithmetic/identity into\u226415k roots with lossless registered credit seams. HistoricalN4/TAG32/WT1 views retained, never alias new tag widths or functionalMEMM0 source.",
+      "historical": {
+        "name": "qfd_io_collective_rt",
+        "top": "ot_rom_oneshot_die_m",
+        "kind": "cluster",
+        "params": {
+          "N": 4,
+          "RANK": 0,
+          "LANES": 16,
+          "TAGW": 32,
+          "DEPTH": 32,
+          "ADD_LAT": 7,
+          "IB": 4,
+          "PR": 2,
+          "TXK": 1,
+          "FPIPE": 2,
+          "HDLO": 0,
+          "MEMM": 1,
+          "FSL": 1,
+          "IBH": 1
+        },
+        "outline": {
+          "w": 561.6,
+          "h": 950.4
+        },
+        "clock_port": "clk",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "children": [
+          {
+            "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+            "count": 1,
+            "inst": "*g_sl?0?*u_fs",
+            "at": [
+              302.4,
+              43.2
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+            "count": 1,
+            "inst": "*g_sl?1?*u_fs",
+            "at": [
+              302.4,
+              259.2
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+            "count": 1,
+            "inst": "*g_sl?2?*u_fs",
+            "at": [
+              302.4,
+              475.2
+            ],
+            "orient": "R0"
+          },
+          {
+            "view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+            "count": 1,
+            "inst": "*g_sl?3?*u_fs",
+            "at": [
+              302.4,
+              691.2
+            ],
+            "orient": "R0"
+          }
+        ],
+        "pins": {
+          "S": [
+            "in_valid",
+            "in_cr",
+            "in_data",
+            "in_last",
+            "in_mode",
+            "in_tag",
+            "clk",
+            "rst_n",
+            "fault",
+            "fault_code"
+          ],
+          "E": [
+            "out_valid",
+            "out_last",
+            "out_rank",
+            "out_err",
+            "out_data",
+            "tx_valid",
+            "tx_rec",
+            "tx_ready",
+            "cr_in",
+            "cr_out"
+          ],
+          "N": [
+            "rx_valid",
+            "rx_rec"
+          ]
+        },
+        "sources": [
+          {
+            "path": "rtl/rom/ot_rom_oneshot_die_m.sv",
+            "commit": "77c22a0e1",
+            "sha256": "0195a821f68e5335f58fe53c1b292f5a504089c35094cd374293c77812728b44"
+          },
+          {
+            "path": "rtl/rom/ot_coll_rst_leaf.sv",
+            "commit": "77c22a0e1",
+            "sha256": "ff6546f30f4c166ac47a96c876161984256073904fbf444b74fbbb22ac4a2916"
+          },
+          {
+            "path": "rtl/lib/ot_hdly.sv",
+            "commit": "77c22a0e1",
+            "sha256": "8839e0bad5c7289180b736e93ca98d98aab25021d3ddf3a811963e0f52c6e574"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+            "commit": "77c22a0e1",
+            "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_prefix.sv",
+            "commit": "77c22a0e1",
+            "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+          },
+          {
+            "path": "rtl/hdc/ot_hdc_fastfp.sv",
+            "commit": "77c22a0e1",
+            "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+          }
+        ]
+      },
+      "functional_receipt": "ca9524959 persistent8die73operations",
+      "current_sources": [
+        {
+          "path": "rtl/rom/ot_rom_oneshot_die_native59.sv",
+          "commit": "ca9524959",
+          "sha256": "b02b4e1406c700adaf98b1f416c8ed4ba394092e4a1426c79d3277d9cb3e34e1"
+        },
+        {
+          "path": "rtl/rom/ot_coll_tp8_die_native59.sv",
+          "commit": "ca9524959",
+          "sha256": "9cdb4e67a8a9ef7d33bdf3489d77ea546ba8fc3b91f48294e66c421234515a89"
+        },
+        {
+          "path": "rtl/physical/ot_qwen_native59_collective8.sv",
+          "commit": "ca9524959",
+          "sha256": "47806b66a0606e80722c4bb77e860af2155b62092a7ef8bb144c8ae5beda7a87"
+        }
+      ],
+      "source_reference": "ca9524959"
+    }
+  ],
+  "jobs": [
+    {
+      "name": "qkd_ectl_b-q16-c5167e964-arg1",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkd_ectl_b-q16-c5167e964-arg1",
+      "commit_full": "c5167e964026491f95b92ad55894e9e46e669858",
+      "reason": "TT 87.48 / FF 17.81 ps / DRC 2 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_slab_pg_col_mgb-c5b-81025983b",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col_mgb-c5b-81025983b",
+      "commit_full": "81025983b7e1fedb1c0139ca6ae23e9158b83283",
+      "reason": "CLOSED TT +137.48 / FF +4.77 ps DRC 0; SS sensitivity -22.00 ps | record claude/q13-coll 622b30874 (19 files) | AUTO-MERGED into main a6181c8ed"
+    },
+    {
+      "name": "qfd_io_collective_pr2m-33350b4e7-tc-cl",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qfd_io_collective_pr2m-33350b4e7-tc-cl",
+      "commit_full": "33350b4e7633ec692785cffd9c52d64c905146fc",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -118.5 ps (start -143.36), 7510 it / 12667 buffers, 18968 endpoints in margin, 2.5 h in step, HM guard present"
+    },
+    {
+      "name": "qfd_io_collective_pr2_pf-7f5522d03-tc-pd45-hm0-f9a",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2_pf-7f5522d03-tc-pd45-hm0-f9a",
+      "commit_full": "7f5522d033e4d184c0d112140351a971b072a5b8",
+      "reason": "TT -63.63 / FF -18.01 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_pr2h-8d0cb6a8b-tc-cl",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2h-8d0cb6a8b-tc-cl",
+      "commit_full": null,
+      "reason": "source commit 8d0cb6a8bef9 is not on origin/claude/el1011-q-coll"
+    },
+    {
+      "name": "qfd_io_collective_pr-f5c360282-tt",
+      "status": "CANCELLED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr-f5c360282-tt",
+      "commit_full": "f5c3602829a31131453b348687665db9fa3f576d",
+      "reason": "cancelled by a human (stuckscan: newer commit 3d5ad2a4f of the same variant is RUNNING (qfd_io_collective_pr-3d5ad2a4ftt))"
+    },
+    {
+      "name": "qkd_ahub_t-73cb30b1a-tc-hm10-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qkd_ahub_t-73cb30b1a-tc-hm10-cl",
+      "commit_full": "73cb30b1ae7bf15e49caa4aa5115f7ee2188492e",
+      "reason": "cancelled by a human (el1011-q-kvd: tile abstracts lack pin access (DRT-0073 sbuf rst_n, tile M5 jog beside M4 stub; tiles routed on M7) -> tiles re-hardened with PINKO + M2-M6 at 25f3c6343; parent resubmits on the new views)"
+    },
+    {
+      "name": "qfd_slab_pg_col_mgc-c5c-81025983b",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col_mgc-c5c-81025983b",
+      "commit_full": "81025983b7e1fedb1c0139ca6ae23e9158b83283",
+      "reason": "CLOSED TT +141.97 / FF +1.69 ps DRC 0; SS sensitivity -16.78 ps | record claude/q13-coll 4d9341d03 (19 files) | AUTO-MERGED into main b0e66fe20"
+    },
+    {
+      "name": "qkd_ectl_c-2c6c4c720-tc-hm10-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_c-2c6c4c720-tc-hm10-cl",
+      "commit_full": "2c6c4c720254716c13a2d7da8c99cbae2e3bbcdd",
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qkh_head_hs_ref-q13b-54a543b22",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkh_head_hs_ref-q13b-54a543b22",
+      "commit_full": "54a543b2201f3907e58567244d0a8e50ca63c703",
+      "reason": "CLOSED TT +1.80 / FF +18.16 ps DRC 0; SS sensitivity -194.76 ps | record claude/q13-kvh 48f7defed (19 files) | AUTO-MERGED into main f97489a15"
+    },
+    {
+      "name": "qkd_ahub_ref-q13e-6b847a5d7",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_ahub_ref-q13e-6b847a5d7",
+      "commit_full": "6b847a5d7ae5b259d54bf69d7dd247faa22eb628",
+      "reason": "FF hold -122.2: route hold repair stalled; window I2R=2253@-126.5 R2R=10@-13.9 I2R=2253@-101.0 R2R=9@-16.8"
+    },
+    {
+      "name": "qfd_io_collective-orfs-1e34cdc16",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16",
+      "commit_full": "1e34cdc1683d938aa18b862865d6b5145eff69d3",
+      "reason": "SS -581.33 / FF -64.06 ps / DRC 0 (line SS >= +15 / FF >= +15 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_pr2-4d8c7f487-tc-balanced-lvt-cl",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2-4d8c7f487-tc-balanced-lvt-cl",
+      "commit_full": "4d8c7f48781e655e6ff8fcbc1e74e70c888d948b",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -30.8 ps (start -52.52), 4440 it / 6173 buffers, 17729 endpoints in margin, 2.2 h in step, HM guard present"
+    },
+    {
+      "name": "qkd_ectl_e-6243f17c4-tc-hm10-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_e-6243f17c4-tc-hm10-cl",
+      "commit_full": "6243f17c4e9925768809db0ed7d0f9ac07dd8657",
+      "reason": "cancelled by a human (qwen-1010/b: superseded by qkd_ectl_f (same DQ128 SRAM design without the SYNTH_MEMORY_MAX_BITS override: flop level explicit registers, e FIFO on SRAM; fe-push audit))"
+    },
+    {
+      "name": "qkd_ahub_ref-q13c-befcb9337",
+      "status": "REFUSED",
+      "host": null,
+      "run": null,
+      "commit_full": null,
+      "reason": "SUBMIT_LINT STRUCTURE_REPEAT: ot_qwen_nearhbm_attn_hub_t has 2 terminal failed routes since its last CLOSED (qkd_ahub_ref-q13-44e42d6e9, qkd_ahub_ref-q8-fcb9fa5a5): a new route needs a changed structure (fix: add \"structural_change\": \"<one sentence: what is structurally different from the failed routes>\" to the spec; a re-route of the same structure is not accepted; hold-overlay re-runs (-hs) are exempt)"
+    },
+    {
+      "name": "qkd_ahub_ref-q13b-937831901",
+      "status": "REFUSED",
+      "host": null,
+      "run": null,
+      "commit_full": null,
+      "reason": "SUBMIT_LINT STRUCTURE_REPEAT: ot_qwen_nearhbm_attn_hub_t has 2 terminal failed routes since its last CLOSED (qkd_ahub_ref-q13-44e42d6e9, qkd_ahub_ref-q8-fcb9fa5a5): a new route needs a changed structure (fix: add \"structural_change\": \"<one sentence: what is structurally different from the failed routes>\" to the spec; a re-route of the same structure is not accepted; hold-overlay re-runs (-hs) are exempt)"
+    },
+    {
+      "name": "qfd_io_collective_pr2-4d8c7f487-tc-balanced",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-4d8c7f487-tc-balanced",
+      "commit_full": "4d8c7f48781e655e6ff8fcbc1e74e70c888d948b",
+      "reason": "stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.3% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -58.6 ps (start -81.23), 4000 it / 5805 buffers, 17749 endpoints in margin, 1.9 h in step, HM guard present"
+    },
+    {
+      "name": "qkd_ectl_c-31a4f64a0-tc-hm10-cl",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_c-31a4f64a0-tc-hm10-cl",
+      "commit_full": "31a4f64a0ad270eefcf26be0ad0436a0df0c0c27",
+      "reason": "TT -28.74 / FF -0.41 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_slab_pg_col-c1-ec5f7bb16",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col-c1-ec5f7bb16",
+      "commit_full": "ec5f7bb16a434dc9d647a7d4dcaecbed1c6da614",
+      "reason": "TT 132.35 / FF -21.09 ps / DRC 12 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_pr2s-835975149-tc-cl",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2s-835975149-tc-cl",
+      "commit_full": "83597514999e737faf5c9423396e1b8f20691b40",
+      "reason": "FF hold -67.7: route hold repair stalled; window I2R=2194@-384.6 I2R=1974@-41.9"
+    },
+    {
+      "name": "qfd_io_collective_pr2h-e25b752fa-tc-cl",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2h-e25b752fa-tc-cl",
+      "commit_full": "e25b752fa2db5ad6c984d8f5173aae95fbe63ed3",
+      "reason": "route crashed twice (rc=1 ok-check failed;; first error: qfd_io_collective_pr2h_e25b752fa_tc_cl/flow.log: ERROR: Module `ot_coll_fold_slice' referenced in module `ot_rom_oneshot_die_m' in cell `g_fsl.g_sl[3].u_fs' does not have a parameter named 'SEAM'.; resource=False)"
+    },
+    {
+      "name": "qfd_io_collective_rt-rt1-77c22a0e1",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_io_collective_rt-rt1-77c22a0e1",
+      "commit_full": "77c22a0e15e6b7783cd33899a03ac5aef3fe6b35",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.3% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -504.7 ps (start -504.72), 2310 it / 236 buffers, 8610 endpoints in margin, 0.1 h in step, HM guard present"
+    },
+    {
+      "name": "qkd_ectl_a-q16-c5167e964-arg1",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkd_ectl_a-q16-c5167e964-arg1",
+      "commit_full": "c5167e964026491f95b92ad55894e9e46e669858",
+      "reason": "TT 55.13 / FF -2.44 ps / DRC 6 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_pr2s-120a6c175-tc-cl",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2s-120a6c175-tc-cl",
+      "commit_full": "120a6c175be87deed3c20b82b50ffb978e46fd63",
+      "reason": "textbook_lint: wire_reach: 1 stage(s) beyond 500 um reach: insert relay flops; register in_cr$_DFF_PN0_: its fixed terminals pin in_cr and pin tx_valid put it >= 509 um from one of them (> 500 um per stage)"
+    },
+    {
+      "name": "qfd_io_collective_pr2h-8d0cb6a8b-tc-cl-r2",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2h-8d0cb6a8b-tc-cl-r2",
+      "commit_full": "8d0cb6a8bef94fb413f1cd9a860ddb1d61372a9f",
+      "reason": "FF hold -93.2: route hold repair stalled; window I2R=1600@-253.6 I2R=76@-49.9"
+    },
+    {
+      "name": "qkd_ectl_c-f8a6d7c30-tc-hm10-cl",
+      "status": "EARLY_FAIL_SETUP",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_c-f8a6d7c30-tc-hm10-cl",
+      "commit_full": "f8a6d7c301700cc41921083587a88f2e67cc9ed7",
+      "reason": "post-cts TT setup WNS -519.2 ps at 833.333 (route-period -543.2 at 770), 746 failing endpoints, TNS -93098.6; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (path register clock arrival)"
+    },
+    {
+      "name": "qkd_ectl_f-10f11cd99-tc-hm10-cl",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qkd_ectl_f-10f11cd99-tc-hm10-cl",
+      "commit_full": "10f11cd9903b7334e751e2f4328526bb2ee8fd34",
+      "reason": "TT 19.39 / FF -1.78 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qkd_ahub-fea-5736e945a-tc-hm10-cl",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qkd_ahub-fea-5736e945a-tc-hm10-cl",
+      "commit_full": "5736e945ad1365bfd029df5c5a26584850c0e9a2",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.9% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -52.9 ps (start -73.24), 7580 it / 12975 buffers, 28173 endpoints in margin, 4.1 h in step, HM guard present"
+    },
+    {
+      "name": "qfd_slab_pg_core_gid-gd3-42e2bcb1b",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qfd_slab_pg_core_gid-gd3-42e2bcb1b",
+      "commit_full": "42e2bcb1b8390bdc138a09199ecb622989532fa7",
+      "reason": "CLOSED TT +93.78 / FF +3.52 ps DRC 0; SS sensitivity -246.58 ps | record claude/el1013-qwen-r3b-spine 6b6747847 (19 files) | AUTO-MERGE CONFLICT (2 files: physical/qwen_kv_slots/bench_tt_ctlm.sh, rtl/test/qwen_lane_band/tb_qfd_band_lanes.sv)"
+    },
+    {
+      "name": "qfd_io_collective_pr2h-4f2116d8f-tc-cl",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_io_collective_pr2h-4f2116d8f-tc-cl",
+      "commit_full": "4f2116d8faecf96cfcd073339e4019728f66c605",
+      "reason": "route crashed twice (rc=1 ok-check failed;; first error: qfd_io_collective_pr2h_4f2116d8f_tc_cl/flow.log: [ERROR PDN-0006] VSS on M6 is blocked by obstructions on M7 for g_fsl.g_sl\\[0\\].u_fs [step do-2_4_floorplan_pdn]; resource=False)"
+    },
+    {
+      "name": "qkd_ectl_a-60db99084-tc-hm10-cl",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_a-60db99084-tc-hm10-cl",
+      "commit_full": "60db99084d9a361c191654aa3aba81bf19183183",
+      "reason": "TT -92.62 / FF -3.14 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_pr2q-7f5522d03-tc-pd45-hm0-f9b",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2q-7f5522d03-tc-pd45-hm0-f9b",
+      "commit_full": "7f5522d033e4d184c0d112140351a971b072a5b8",
+      "reason": "TT -96.34 / FF -11.83 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective-3d5ad2a4ftt-d1956",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-3d5ad2a4ftt-d1956",
+      "commit_full": "3d5ad2a4fba12b21909b86d18314a5fa48bd27a2",
+      "reason": "pin_density: pin density > 12.0 bits/um/layer over 100 um: E/M4 20.8 b/um @422: spread over the face (target <= 6.0) / more layers / a longer edge"
+    },
+    {
+      "name": "qfd_io_collective_pr2-4d8c7f487-f6-ecocont",
+      "status": "CANCELLED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2-4d8c7f487-f6-ecocont",
+      "commit_full": "2a4340a331e4368003917bce03c26f73453c1abd",
+      "reason": "cancelled by a human (main 10-11 owner textbook audit: hold-ECO / variant on the flat 36k-156k-sink clock tree (class 1); superseded by el1011-q-coll SRAM-macro rebuilds)"
+    },
+    {
+      "name": "qfd_io_collective_pr-1d3c576bbtc",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_io_collective_pr-1d3c576bbtc",
+      "commit_full": "1d3c576bb11c6c1087abe31b19c2d7e587f2124f",
+      "reason": "pin_density: pin density > 12.0 bits/um/layer over 100 um: E/M4 20.8 b/um @422: spread over the face (target <= 6.0) / more layers / a longer edge"
+    },
+    {
+      "name": "qfd_io_collective-orfs-1e34cdc16-tt",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-orfs-1e34cdc16-tt",
+      "commit_full": "1e34cdc1683d938aa18b862865d6b5145eff69d3",
+      "reason": "stuckscan: 4_1_cts hold repair flooded: 110508 endpoints in margin (> 20000), hold WNS now -63.166 ps (start -85.66), 11.4 h in step, HM guard present"
+    },
+    {
+      "name": "qkd_ahub_ref-q13d-befcb9337",
+      "status": "EARLY_FAIL_SETUP",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkd_ahub_ref-q13d-befcb9337",
+      "commit_full": "befcb9337ea9488d1f478f8246543cc5345ee921",
+      "reason": "post-cts TT setup WNS -464.1 ps at 833.333 (route-period -527.4 at 770), 2583 failing endpoints, TNS -277176; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (path register clock arrival)"
+    },
+    {
+      "name": "qkd_d2d_p2_ref-q16-133062899",
+      "status": "CANCELLED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_d2d_p2_ref-q16-133062899",
+      "commit_full": "133062899bb3cc3e7b2df4b17f4d9e0a8da98167",
+      "reason": "cancelled by a human (die lead 10-13 18:22 (el1011-qwen-tp8.log): qkd_d2d (KV-end parent) is NOT on the merged die: d2d_kv / d2d_rom dropped, contract qwen_rom_tp8 v4/v5 has no slot for qkd_d2d nor for any of its 18 children (sbufp, fbuf8p, ke_*); coordinator instruction 18:3x)"
+    },
+    {
+      "name": "qfd_slab_pg_lanes-l1-ec5f7bb16",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_lanes-l1-ec5f7bb16",
+      "commit_full": "ec5f7bb16a434dc9d647a7d4dcaecbed1c6da614",
+      "reason": "CLOSED TT +197.43 / FF +6.22 ps DRC 0; SS sensitivity -94.34 ps | record claude/el1011-qwen-slab2 e1830227e (19 files) | AUTO-MERGED into main b8c894c8f"
+    },
+    {
+      "name": "qfd_io_collective-3d5ad2a4ftt",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-3d5ad2a4ftt",
+      "commit_full": "3d5ad2a4fba12b21909b86d18314a5fa48bd27a2",
+      "reason": "stuckscan: 4_1_cts hold repair flooded: 110331 endpoints in margin (> 20000), hold WNS now -39.635 ps (start -75.46), 14.4 h in step, old flow without the HM/stall guard"
+    },
+    {
+      "name": "qfd_io_collective_pr-3d5ad2a4ftt",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr-3d5ad2a4ftt",
+      "commit_full": "3d5ad2a4fba12b21909b86d18314a5fa48bd27a2",
+      "reason": "stuckscan: 4_1_cts hold repair flooded: 110584 endpoints in margin (> 20000), hold WNS now -53.34 ps (start -75.63), 14.5 h in step, old flow without the HM/stall guard"
+    },
+    {
+      "name": "qkd_ahub_a-eafd37271-tc-hm10-cl",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qkd_ahub_a-eafd37271-tc-hm10-cl",
+      "commit_full": "eafd372716d5ef62bf66a2a7954303362f275983",
+      "reason": "TT 5.28 / FF -27.12 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_cx-41b1598bf-tc-h11",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_cx-41b1598bf-tc-h11",
+      "commit_full": "41b1598bf0ef2e026d3b70501aa76ff99dff9dde",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -33.5 ps (start -56.32), 3930 it / 5642 buffers, 17978 endpoints in margin, 1.9 h in step, HM guard present"
+    },
+    {
+      "name": "qkd_ectl_a-q17-7eb95c2b1",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_ectl_a-q17-7eb95c2b1",
+      "commit_full": "7eb95c2b150f56a30095f3b2c3967a5aa55b432a",
+      "reason": "CLOSED TT +61.58 / FF +19.45 ps DRC 0; SS sensitivity -230.05 ps | record claude/q17-ectl b15fb355e (19 files) | AUTO-MERGED into main cdc0bf05a"
+    },
+    {
+      "name": "qfd_io_collective_pr2t-730305741-tc-pd45-hm10-lvt-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_io_collective_pr2t-730305741-tc-pd45-hm10-lvt-cl",
+      "commit_full": "730305741b93650b4fe4e659eb2ee76e35a35e25",
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qkd_ectl_c-2dc20f7de-tc-hm10-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qkd_ectl_c-2dc20f7de-tc-hm10-cl",
+      "commit_full": "2dc20f7de2ee74660625d512a1063e98b59a2ed6",
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qfd_io_collective_pr2-4d8c7f487-tc-balanced-f5-hm0",
+      "status": "CANCELLED",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2-4d8c7f487-tc-balanced-f5-hm0",
+      "commit_full": "4d8c7f48781e655e6ff8fcbc1e74e70c888d948b",
+      "reason": "cancelled by a human (owner 10-10: >24h stale (drive-1010 sweep 07:35; current stage >8 h old or a READY/QUEUED hold, not progressing; evidence kept))"
+    },
+    {
+      "name": "qkd_ectl_slot-q13r3-4800fafd7",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_ectl_slot-q13r3-4800fafd7",
+      "commit_full": "4800fafd776444f575fc6a27294300dc346b98df",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.3% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -31.9 ps (start -53.61), 5230 it / 7816 buffers, 8710 endpoints in margin, 0.2 h in step, HM guard present"
+    },
+    {
+      "name": "qkd_ectl_b-60db99084-tc-hm10-cl",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_b-60db99084-tc-hm10-cl",
+      "commit_full": "60db99084d9a361c191654aa3aba81bf19183183",
+      "reason": "CLOSED TT +13.15 / FF +7.46 ps DRC 0; SS sensitivity -364.01 ps | record claude/kv-die-20261009 f763d6b28 (14 files) | DEFERRED main merge: Claude owns integration; record committed on source branch"
+    },
+    {
+      "name": "qfd_io_collective-load80-e721e27b5-tt",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-load80-e721e27b5-tt",
+      "commit_full": "e721e27b561104aac303e4cdd1187b59cd163e20",
+      "reason": "route crashed twice (rc=1 ok-check failed: ; resource=False)"
+    },
+    {
+      "name": "qfd_io_collective_pr2t-730305741-tc-pd45-hm10-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_io_collective_pr2t-730305741-tc-pd45-hm10-cl",
+      "commit_full": "730305741b93650b4fe4e659eb2ee76e35a35e25",
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qkd_ectl_d-75c52a74d-tc-hm10-cl",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_d-75c52a74d-tc-hm10-cl",
+      "commit_full": "75c52a74d5a5074b7e6d6da156a5bcbf4f8d9753",
+      "reason": "bench_layer_step_exact expected PASS but rc=1"
+    },
+    {
+      "name": "qkd_ahub_h-3a3aba7c2-tc-hm10-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_ahub_h-3a3aba7c2-tc-hm10-cl",
+      "commit_full": "3a3aba7c2463cf096f875deef4d5ee86cdbc99c0",
+      "reason": "cancelled by a human (el1011-q-kvd: flat-tree hub (~95k sinks, class 1; sibling ahub_g EARLY_FAIL_HOLD -37.7) superseded by hardened-tile hub_t (qkd_nhb_* tiles))"
+    },
+    {
+      "name": "qfd_io_collective_pr-942f13c8atc",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr-942f13c8atc",
+      "commit_full": "942f13c8a3795692d7bdecd2d73c10aa2ace274b",
+      "reason": "route crashed twice (rc=1 ok-check failed;; first error: qfd_io_collective_pr_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]; resource=False)"
+    },
+    {
+      "name": "qkd_ahub_b-eafd37271-tc-hm10-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qkd_ahub_b-eafd37271-tc-hm10-cl",
+      "commit_full": "eafd372716d5ef62bf66a2a7954303362f275983",
+      "reason": "cancelled by a human (OWNER 10-11 textbook audit (el1011-q-kvd): class 1 (flat clock tree 226k sinks, 648 um) + 5/6; LVT/hold combo ECO is a tweak -> rebuilt (PSRAM + hardened sub-tiles))"
+    },
+    {
+      "name": "qfd_io_collective_pr2-942f13c8atc",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc",
+      "commit_full": "942f13c8a3795692d7bdecd2d73c10aa2ace274b",
+      "reason": "route crashed twice (rc=1 ok-check failed;; first error: qfd_io_collective_pr2_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]; resource=False)"
+    },
+    {
+      "name": "qkd_ectl_b-q17-7eb95c2b1",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_ectl_b-q17-7eb95c2b1",
+      "commit_full": "7eb95c2b150f56a30095f3b2c3967a5aa55b432a",
+      "reason": "CLOSED TT +132.78 / FF +13.68 ps DRC 0; SS sensitivity -144.33 ps | record claude/q17-ectl 2b6f87f31 (19 files) | AUTO-MERGED into main 47ee63547"
+    },
+    {
+      "name": "qfd_io_collective_pr2c-c5d3843bb-tc-cl",
+      "status": "NEEDS_RTL",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2c-c5d3843bb-tc-cl",
+      "commit_full": "c5d3843bb18283cd77d12bd5587d04828494f16a",
+      "reason": "TT -29.84 / FF -18.78 ps / DRC 24 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qkd_ectl_c-q16-c5167e964",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_ectl_c-q16-c5167e964",
+      "commit_full": "c5167e964026491f95b92ad55894e9e46e669858",
+      "reason": "CLOSED TT +38.71 / FF +17.38 ps DRC 0; SS sensitivity -276.28 ps | record claude/q13-ectl 7bb5ed993 (19 files) | AUTO-MERGE CONFLICT (1 files: rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv)"
+    },
+    {
+      "name": "qfd_io_collective_fs-b760fc991-tc-cl",
+      "status": "CLOSED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qfd_io_collective_fs-b760fc991-tc-cl",
+      "commit_full": "b760fc991565e0d1d7e960965787a69a125abb0e",
+      "reason": "CLOSED TT +231.10 / FF +2.85 ps DRC 0; SS sensitivity -46.52 ps | record claude/el1011-q-coll 9d175f443 (6 files) | AUTO-MERGED into main 1516ce153"
+    },
+    {
+      "name": "qkh_head_hs_ref-q13a-75e0349aa",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkh_head_hs_ref-q13a-75e0349aa",
+      "commit_full": "75e0349aad5aac658eaadc9006901bcd6ed1a8e8",
+      "reason": "TT -41.92 / FF -64.05 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_slab_pg_col_mga-c5a-81025983b",
+      "status": "CLOSED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col_mga-c5a-81025983b",
+      "commit_full": "81025983b7e1fedb1c0139ca6ae23e9158b83283",
+      "reason": "CLOSED TT +141.39 / FF +2.45 ps DRC 0; SS sensitivity -17.93 ps | record claude/q13-coll 9991f8339 (19 files) | AUTO-MERGED into main 86211c834"
+    },
+    {
+      "name": "qfd_io_collective_pr2s-2361a8c18-tc-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2s-2361a8c18-tc-cl",
+      "commit_full": "2361a8c189654048a690048a0edd67cffaeb9536",
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qfd_slab_pg_col_cx-c4-cx-5d7a5bd22",
+      "status": "NEEDS_RTL",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_slab_pg_col_cx-c4-cx-5d7a5bd22",
+      "commit_full": "5d7a5bd22e48fc19b76673172934159a861f091c",
+      "reason": "TT 134.08 / FF 2.48 ps / DRC 6 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_slab_pg_cl-cl2-450202c1e",
+      "status": "REFUSED",
+      "host": null,
+      "run": null,
+      "commit_full": null,
+      "reason": "SUBMIT_LINT REF_GATE: clock_rule: 24,517 sinks on one clock root > 15,000: no measured clock tree (no --cts gate evidence) [this block's latest synthesized design] (fix: hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json)"
+    },
+    {
+      "name": "qfd_slab_pg_col_h6-c3-a89b702eb",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col_h6-c3-a89b702eb",
+      "commit_full": "a89b702ebe78866aba512194452cc3032ab8fd0e",
+      "reason": "TT 116.93 / FF -27.16 ps / DRC 10 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_pr2m-7fd506b6f-tc-cl",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2m-7fd506b6f-tc-cl",
+      "commit_full": "7fd506b6fc11558c9d843bf806a1c1cc056a88f4",
+      "reason": "bench_coll_margin6_exact expected PASS but rc=1"
+    },
+    {
+      "name": "qfd_slab_pg_col-c2-a89b702eb",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qfd_slab_pg_col-c2-a89b702eb",
+      "commit_full": "a89b702ebe78866aba512194452cc3032ab8fd0e",
+      "reason": "TT 94.42 / FF -7.55 ps / DRC 15 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qkh_head_hs_ref-cx2-38d5bf5b2",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkh_head_hs_ref-cx2-38d5bf5b2",
+      "commit_full": "38d5bf5b2a05cfb6646ca7f4f8f94d3831e5cfea",
+      "reason": "bench_layer_hs_pos expected PASS but rc=1"
+    },
+    {
+      "name": "qkd_ahub_ref-q8-fcb9fa5a5",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkd_ahub_ref-q8-fcb9fa5a5",
+      "commit_full": "fcb9fa5a536fe4cba1777b49f15f485d62ee5b0d",
+      "reason": "4_1_cts hold repair past the buffer cap: 38553 buffers > 38109 (cap 100000, 127029 instances, WNS gain 0.0 ps / 2000 it); hold WNS now -102.1 ps (start -154.65), 16070 it / 38553 buffers, 7621 endpoints in margin, 4.1 h in step, HM guard present"
+    },
+    {
+      "name": "qkd_ahub_i-3a3aba7c2-tc-hm10-cl",
+      "status": "CANCELLED",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qkd_ahub_i-3a3aba7c2-tc-hm10-cl",
+      "commit_full": "3a3aba7c2463cf096f875deef4d5ee86cdbc99c0",
+      "reason": "cancelled by a human (el1011-q-kvd: flat-tree hub (~95k sinks, class 1; sibling ahub_g EARLY_FAIL_HOLD -37.7) superseded by hardened-tile hub_t (qkd_nhb_* tiles))"
+    },
+    {
+      "name": "qkd_ahub_a-eafd37271-tc-hm10-cl-f5-rq",
+      "status": "CANCELLED",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qkd_ahub_a-eafd37271-tc-hm10-cl-f5-rq",
+      "commit_full": "eafd372716d5ef62bf66a2a7954303362f275983",
+      "reason": "cancelled by a human (owner 10-10: >24h stale (drive-1010 sweep))"
+    },
+    {
+      "name": "qkd_ectl_b-q16-c5167e964",
+      "status": "NEEDS_RTL",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_b-q16-c5167e964",
+      "commit_full": "c5167e964026491f95b92ad55894e9e46e669858",
+      "reason": "TT 141.28 / FF 16.62 ps / DRC 7 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective-7c8f1a3c1",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective-7c8f1a3c1",
+      "commit_full": "7c8f1a3c13fe46dea18189013f3a25f32030148c",
+      "reason": "bench_coll_margin_exact expected PASS but rc=1"
+    },
+    {
+      "name": "qfd_io_collective_pr2s-b73c2121b-tc-cl",
+      "status": "REFUSED",
+      "host": null,
+      "run": null,
+      "commit_full": null,
+      "reason": "SUBMIT_LINT MACRO_GRID: MACRO_GRID: physical/qwen_die_masters/icoll_c_place.tcl: 8 of 8 placed macros off-grid: ot_coll_fold_slice at (25.056, 24.030) MY: 645 of 645 signal pins off-track (nearest on-grid origin (25.080, 24.000) leaves 0); ot_coll_fold_slice at (25.056, 228.150) MY: 645 of 645 signal pins off-track (nearest on-grid origin (25.080, 228.096) leaves 0); ot_coll_fold_slice at (325.056, 24.030) R0: 643 of 645 signal pins off-track (nearest on-grid origin (325.056, 24.000) leaves 0); ot_coll_fold_slice at (325.056, 228.150) R0: 643 of 645 signal pins off-track (nearest on-grid origin (325.056, 228.096) leaves 0); ot_sram_1r1w_32x546_m1 at (75.006, 432.270) R0: 1651 of 1651 signal pins off-track (nearest on-grid origin (75.006, 432.288) leaves 0); ot_sram_1r1w_32x546_m1 at (75.006, 537.300) R0: 1651 of 1651 signal pins off-track (nearest on-grid origin (75.006, 537.312) leaves 0) -- place every macro at an origin that keeps its pins on the asap7 tracks (M4 y 0.012+0.048k, M5 x 0.012+0.048k; tools/check_macro_track_alignment.py lists the legal residues per LEF)"
+    },
+    {
+      "name": "qfd_io_collective-load80-e721e27b5",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective-load80-e721e27b5",
+      "commit_full": "e721e27b561104aac303e4cdd1187b59cd163e20",
+      "reason": "route crashed twice (rc=1 ok-check failed: ; resource=False)"
+    },
+    {
+      "name": "qkd_ectl_b-q16-c5167e964-arg2",
+      "status": "NEEDS_RTL",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qkd_ectl_b-q16-c5167e964-arg2",
+      "commit_full": "c5167e964026491f95b92ad55894e9e46e669858",
+      "reason": "TT 125.18 / FF 16.63 ps / DRC 2 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_pr2-1d3c576bbtc",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-1d3c576bbtc",
+      "commit_full": "1d3c576bb11c6c1087abe31b19c2d7e587f2124f",
+      "reason": "pin_density: pin density > 12.0 bits/um/layer over 100 um: E/M4 20.8 b/um @422: spread over the face (target <= 6.0) / more layers / a longer edge"
+    },
+    {
+      "name": "qkd_ahub_ref-q13-44e42d6e9",
+      "status": "EARLY_FAIL_SETUP",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/qkd_ahub_ref-q13-44e42d6e9",
+      "commit_full": "44e42d6e995ab20128cd2e340a3c200859b23d38",
+      "reason": "stuckscan: post-cts TT setup WNS -2387.4 ps at 833.333 (route-period -722.8 at 770), 2906 failing endpoints, TNS -425677; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (path register clock arrival)"
+    },
+    {
+      "name": "qfd_io_collective_pr2-4d8c7f487-tc-balanced-f6-pd45-hm0",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_collective_pr2-4d8c7f487-tc-balanced-f6-pd45-hm0",
+      "commit_full": "2a4340a331e4368003917bce03c26f73453c1abd",
+      "reason": "TT -32.89 / FF -9.49 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qfd_io_collective_pr-f5c360282",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr-f5c360282",
+      "commit_full": "f5c3602829a31131453b348687665db9fa3f576d",
+      "reason": "SS -340.69 / FF -40.1 ps / DRC 0 (line SS >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qkd_ectl_a-q16-c5167e964",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_ectl_a-q16-c5167e964",
+      "commit_full": "c5167e964026491f95b92ad55894e9e46e669858",
+      "reason": "TT 61.61 / FF 12.58 ps / DRC 5 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qkh_head_hs_ref-cx1-5c8b6de97",
+      "status": "CANCELLED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkh_head_hs_ref-cx1-5c8b6de97",
+      "commit_full": "5c8b6de97ed92673998b46a81ebdb480f4e71ddf",
+      "reason": "cancelled by a human (Structural score-face reach: ktree is N, existing single score relay cannot span855um toS; corrected successor scoresN, identical arithmetic/price.)"
+    },
+    {
+      "name": "qkd_ectl_a-q16-c5167e964-arg2",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/qkd_ectl_a-q16-c5167e964-arg2",
+      "commit_full": "c5167e964026491f95b92ad55894e9e46e669858",
+      "reason": "TT 77.7 / FF 9.86 ps / DRC 6 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "qkd_ahub_g-3a3aba7c2-tc-hm10-cl",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qkd_ahub_g-3a3aba7c2-tc-hm10-cl",
+      "commit_full": "3a3aba7c2463cf096f875deef4d5ee86cdbc99c0",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -37.7 ps (start -69.43), 5330 it / 8106 buffers, 26988 endpoints in margin, 1.7 h in step, HM guard present"
+    },
+    {
+      "name": "qkd_ahub-feb-5736e945a-tc-hm10-cl",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qkd_ahub-feb-5736e945a-tc-hm10-cl",
+      "commit_full": "5736e945ad1365bfd029df5c5a26584850c0e9a2",
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.1% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -53.2 ps (start -73.44), 7870 it / 13235 buffers, 28174 endpoints in margin, 4.1 h in step, HM guard present"
+    }
+  ],
+  "live_jobs": []
+}
