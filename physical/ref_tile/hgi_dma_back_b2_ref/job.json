@@ -1,5 +1,5 @@
 {
- "name": "hgi_dma_back_b2_ref-nl1-COMMIT",
+ "name": "hgi_dma_back_b2_ref-nl1-0b786012b",
  "block": "ot_hgi_dma_back",
  "ref_tile": true,
  "owner": "Claude:el1011-hbm-tputx-mtp",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "main",
-  "commit": "COMMIT"
+  "commit": "0b786012b"
  },
  "stages": {
   "bench": [
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_dma_back_b2_ref/hgi_dma_back_b2_ref-nl1-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_dma_back_b2_ref/hgi_dma_back_b2_ref-nl1-0b786012b"
   }
  ],
  "cycles_added": 0,
