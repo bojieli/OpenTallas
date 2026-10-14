@@ -903,12 +903,32 @@ module dsfd_vm_fcn (
         if (!rn) k2_arm <= 1'b0; else k2_arm <= k_arm;
         k2_s <= k_s; k2_need <= k_arg[18:0]; k2_tag <= k_tag; k2_user <= k_user; k2_ntf <= st_ntf[k_s];
     end
+`ifdef OT_VMFE_FCN_SUM_PIPE
+    // Stage K3: reduce the four K2 groups before the wide count/compare.
+    // ARM metadata and read hits advance with the same accepted operation.
+    reg [9:0] k3_inc [0:NSLOT-1]; reg [NSLOT-1:0] k3_hr;
+    reg k3_arm; reg [1:0] k3_s; reg [18:0] k3_need; reg [7:0] k3_tag;
+    reg [9:0] k3_user; reg k3_ntf;
+    always @(posedge clk) begin : p_k3 integer kk;
+        for (kk = 0; kk < NSLOT; kk = kk + 1)
+            k3_inc[kk] <= ({2'd0, k2_g[kk*4]} + {2'd0, k2_g[kk*4+1]})
+                         + ({2'd0, k2_g[kk*4+2]} + {2'd0, k2_g[kk*4+3]});
+        k3_hr <= k2_hr;
+        if (!rn) k3_arm <= 1'b0; else k3_arm <= k2_arm;
+        k3_s <= k2_s; k3_need <= k2_need; k3_tag <= k2_tag;
+        k3_user <= k2_user; k3_ntf <= k2_ntf;
+    end
+`endif
     reg [9:0] inc [0:NSLOT-1];
     reg [NSLOT-1:0] hit_r, cmpl;
     always @* begin : p_l691 integer kk;
         for (kk = 0; kk < NSLOT; kk = kk + 1) begin
+`ifdef OT_VMFE_FCN_SUM_PIPE
+            inc[kk] = k3_inc[kk]; hit_r[kk] = k3_hr[kk];
+`else
             inc[kk] = ({2'd0, k2_g[kk*4]} + {2'd0, k2_g[kk*4 + 1]}) + ({2'd0, k2_g[kk*4 + 2]} + {2'd0, k2_g[kk*4 + 3]});
             hit_r[kk] = k2_hr[kk];
+`endif
 `ifdef OT_SPVM_MUT_EARLY
             cmpl[kk] = sl_arm[kk] && sl_cnt[kk] + inc[kk] + 19'd1 >= sl_need[kk];   // MUTANT: one element early
 `else
@@ -957,11 +977,19 @@ module dsfd_vm_fcn (
             if (k_armb) begin st_base[k_s] <= k_arg[13:0]; st_ntf[k_s] <= k_arg[18]; end
             if (k_armr) st_n[k_s] <= k_arg[14:0];
             if (k_arm) begin sl_base[k_s] <= st_base[k_s]; sl_n[k_s] <= st_n[k_s]; end   // range half: stage K compares
+`ifdef OT_VMFE_FCN_SUM_PIPE
+            if (k3_arm) begin                                                            // counter half: with the K2 sums
+                if (sl_arm[k3_s] || sl_dp[k3_s] || sl_rp[k3_s]) rearm <= 1'b1;
+                sl_arm[k3_s] <= 1'b1; t_rdy[k3_s] <= 1'b0; sl_ntf[k3_s] <= k3_ntf; sl_user[k3_s] <= k3_user;
+                sl_need[k3_s] <= k3_need; sl_cnt[k3_s] <= 19'd0; sl_tag[k3_s] <= k3_tag;
+            end
+`else
             if (k2_arm) begin                                                            // counter half: with the K2 sums
                 if (sl_arm[k2_s] || sl_dp[k2_s] || sl_rp[k2_s]) rearm <= 1'b1;
                 sl_arm[k2_s] <= 1'b1; t_rdy[k2_s] <= 1'b0; sl_ntf[k2_s] <= k2_ntf; sl_user[k2_s] <= k2_user;
                 sl_need[k2_s] <= k2_need; sl_cnt[k2_s] <= 19'd0; sl_tag[k2_s] <= k2_tag;
             end
+`endif
             // engine done output (one a cycle)
             ed_v <= d_slot || d_p2 || d_x || d_imm;
             ed_t <= d_slot ? dsel_tag : d_p2 ? pd_q[pd_h] : d_x ? x_tag[xsel] : imm_t;
