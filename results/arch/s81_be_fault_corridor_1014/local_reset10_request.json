@@ -1,0 +1,746 @@
+{
+  "schema": "opentallas.be_fault_local_reset_request.v1",
+  "status": "REQUESTED_UNALLOCATED_UNROUTED",
+  "optional_RTL_source": "2e054e8e9",
+  "source_CLOSED_LEF_sha256": "03f7519e06e8f756f42b28382bd72c263a031113b060a12fa783d1f7a0e4b5d3",
+  "data_request": "band10_request.json",
+  "cells": [
+    {
+      "instance": "u_be.u_fault_path.g_stage[0].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        652.4,
+        3517.776
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[0]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[1].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        252.4,
+        3517.776
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[1]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[2].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        20,
+        3343.2
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[2]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[3].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        20,
+        2923.2
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[3]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[4].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        20,
+        2503.2
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[4]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[5].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        20,
+        2083.2
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[5]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[6].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        20,
+        1663.2
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[6]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[7].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        20,
+        1243.2
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[7]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[8].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        20,
+        823.2
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[8]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    },
+    {
+      "instance": "u_be.u_fault_path.g_stage[9].g_local.u_rs",
+      "master": "dsfd_die_rstsync",
+      "CLOSED_commit": "626202850",
+      "origin_VM_um": [
+        20,
+        403.2
+      ],
+      "actual_placement": null,
+      "logical_clock": "parent clk serial",
+      "raw_rst_input": "parent raw rst[0]",
+      "raw_rst_physical_driver_pin": null,
+      "actual_launch_reference_clock": null,
+      "ACK_output": "u_be.fault_conditioner_ack[9]",
+      "controller_capture_clock": null,
+      "controller_capture_pin": null
+    }
+  ],
+  "pairs": [
+    {
+      "stage": 0,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        684.758,
+        3533.964
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        600.042,
+        3533.868
+      ],
+      "route_VM_um": [
+        [
+          684.758,
+          3533.964
+        ],
+        [
+          689.916,
+          3533.964
+        ],
+        [
+          689.916,
+          3556.092
+        ],
+        [
+          594.876,
+          3556.092
+        ],
+        [
+          594.876,
+          3533.868
+        ],
+        [
+          600.042,
+          3533.868
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 149.716,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 1,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        284.758,
+        3533.964
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        200.042,
+        3533.868
+      ],
+      "route_VM_um": [
+        [
+          284.758,
+          3533.964
+        ],
+        [
+          289.98,
+          3533.964
+        ],
+        [
+          289.98,
+          3556.092
+        ],
+        [
+          194.844,
+          3556.092
+        ],
+        [
+          194.844,
+          3533.868
+        ],
+        [
+          200.042,
+          3533.868
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 149.908,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 2,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        52.358,
+        3359.388
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        20.042,
+        3316.092
+      ],
+      "route_VM_um": [
+        [
+          52.358,
+          3359.388
+        ],
+        [
+          57.564,
+          3359.388
+        ],
+        [
+          57.564,
+          3338.316
+        ],
+        [
+          14.844,
+          3338.316
+        ],
+        [
+          14.844,
+          3316.092
+        ],
+        [
+          20.042,
+          3316.092
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 96.42,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 3,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        52.358,
+        2939.388
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        20.042,
+        2896.092
+      ],
+      "route_VM_um": [
+        [
+          52.358,
+          2939.388
+        ],
+        [
+          57.564,
+          2939.388
+        ],
+        [
+          57.564,
+          2918.316
+        ],
+        [
+          14.844,
+          2918.316
+        ],
+        [
+          14.844,
+          2896.092
+        ],
+        [
+          20.042,
+          2896.092
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 96.42,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 4,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        52.358,
+        2519.388
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        20.042,
+        2476.092
+      ],
+      "route_VM_um": [
+        [
+          52.358,
+          2519.388
+        ],
+        [
+          57.564,
+          2519.388
+        ],
+        [
+          57.564,
+          2498.316
+        ],
+        [
+          14.844,
+          2498.316
+        ],
+        [
+          14.844,
+          2476.092
+        ],
+        [
+          20.042,
+          2476.092
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 96.42,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 5,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        52.358,
+        2099.388
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        20.042,
+        2056.092
+      ],
+      "route_VM_um": [
+        [
+          52.358,
+          2099.388
+        ],
+        [
+          57.564,
+          2099.388
+        ],
+        [
+          57.564,
+          2078.316
+        ],
+        [
+          14.844,
+          2078.316
+        ],
+        [
+          14.844,
+          2056.092
+        ],
+        [
+          20.042,
+          2056.092
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 96.42,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 6,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        52.358,
+        1679.388
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        20.042,
+        1636.092
+      ],
+      "route_VM_um": [
+        [
+          52.358,
+          1679.388
+        ],
+        [
+          57.564,
+          1679.388
+        ],
+        [
+          57.564,
+          1658.316
+        ],
+        [
+          14.844,
+          1658.316
+        ],
+        [
+          14.844,
+          1636.092
+        ],
+        [
+          20.042,
+          1636.092
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 96.42,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 7,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        52.358,
+        1259.388
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        20.042,
+        1216.092
+      ],
+      "route_VM_um": [
+        [
+          52.358,
+          1259.388
+        ],
+        [
+          57.564,
+          1259.388
+        ],
+        [
+          57.564,
+          1238.316
+        ],
+        [
+          14.844,
+          1238.316
+        ],
+        [
+          14.844,
+          1216.092
+        ],
+        [
+          20.042,
+          1216.092
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 96.42,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 8,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        52.358,
+        839.388
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        20.042,
+        796.092
+      ],
+      "route_VM_um": [
+        [
+          52.358,
+          839.388
+        ],
+        [
+          57.564,
+          839.388
+        ],
+        [
+          57.564,
+          818.316
+        ],
+        [
+          14.844,
+          818.316
+        ],
+        [
+          14.844,
+          796.092
+        ],
+        [
+          20.042,
+          796.092
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 96.42,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    },
+    {
+      "stage": 9,
+      "source_master": "dsfd_die_rstsync",
+      "source_pin": "rn",
+      "source_contact": [
+        52.358,
+        419.388
+      ],
+      "destination_master": "dsfd_be_f16",
+      "destination_pin": "rn",
+      "destination_contact": [
+        20.042,
+        376.092
+      ],
+      "route_VM_um": [
+        [
+          52.358,
+          419.388
+        ],
+        [
+          57.564,
+          419.388
+        ],
+        [
+          57.564,
+          398.316
+        ],
+        [
+          14.844,
+          398.316
+        ],
+        [
+          14.844,
+          376.092
+        ],
+        [
+          20.042,
+          376.092
+        ]
+      ],
+      "layers": [
+        "M4",
+        "M5",
+        "M4",
+        "M5",
+        "M4"
+      ],
+      "requested_length_um": 96.42,
+      "actual_routed_length_um": null,
+      "actual_launch_capture_clock_R_phase_RC": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "registered_pair_limit_um": 500,
+      "qualified": false
+    }
+  ],
+  "requested_route_violations": [],
+  "geometry_pass": true,
+  "added_data_consumer_FF": 160,
+  "added_conditioner_consumer_FF": 20,
+  "consumer_total_FF": 180,
+  "consumer_ACK_signals": 10,
+  "extra_controller_individual_twoFF_capture_FF": 20,
+  "total_new_consumer_plus_controller_FF": 200,
+  "controller_capture_structure": "individual ordinary two-flop captures before reduction; no shared synchronizer, no conditioner used as collector",
+  "raw_reset_stopped_clock_gate": "source2e unit positive and common-RN/pre-AND mutants observed; native local gold/TP running",
+  "raw_driver_distribution_RC": null,
+  "whole_parent_cut_proof": false,
+  "allocator_grid_source_slot_binding": null,
+  "old_CLOSED_replaced": false,
+  "parent_adopted": false
+}
