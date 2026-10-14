@@ -16120,3 +16120,28 @@ def hbm_qdq_pin_capture_front_model():
             "memory_bytes_per_cycle": 0, "macs_per_cycle": 0,
             "replicas": 4, "slot_requests_um": [(129.6,71.28),(172.8,103.68)],
             "pin_budget_status": "must measure P190/Q220 and actual per-pair L-H100"}
+
+
+def hbm_qdq_write_completion_split_model():
+    """Opt-in physical split; immutable native production price stays 168 cycles."""
+    return {
+        "status": "modeled_unqualified_opt_in", "compute_items_per_cycle": 32,
+        "payload_bytes_per_cycle": 64, "vm_write_bytes_per_cycle_peak": 128,
+        "replicas_per_quant_quarter": 8, "quarters": 4,
+        "pay_to_fin": {"bits":65,"registered_launch":True,"registered_capture":True,"capture_edges":1},
+        "fin_ack_face_bits":8, "fin_to_core_bits":1,
+        "fin_state_bits_estimate": {"snapshot_fifo":1024,"head":64,"input_snapshot":65,"done_counts":64,"input_acks":8,"comparison_flags":24,"pointers_count":13,"reset_control":12},
+        "pay_state_change": {"remove_snapshot_fifo_bits":1024,"remove_done_count_bits":64,"remove_head_bits":64,"remove_compare_flags_bits":24,"add_launch_snapshot_bits":65},
+        "fin_slot_request_um": [86.4,86.4], "pay_slot_request_um":[259.2,125.28],
+        "slot_status":"unassigned; die owner must approve real placement and all pin pairs",
+        "routing_tracks": {"pay_fin_m5":65,"fin_ack_m5":8,"fin_core_m5":1,"m6_grant":False},
+        "clock_roots": {"pay":"private payload/SRAM root","fin":"distinct private completion root, estimated <1500 sinks"},
+        "timing_contract": {"period_ps":833.333,"launch_max_ps":220,"capture_max_ps":190,"clock_delivery":"phi-R","wire_um_max":500,"hold_min_ps":100},
+        "latency": {"snapshot_admission_extra_edges":1,"generic_cycle_equivalence":False,
+            "native_min_ack_argument":"WWQ registered launch -> client CDC write capture -> two VM pointer sync edges -> VM WWQ output register -> VM commit -> return FIFO -> two client pointer sync edges -> client ACK output register; even zero-time VM commit cannot return by second engine edge",
+            "safe_snapshot_deadline":"FIN snapshot captured at edge1, FIFO/head flags admitted edge2 after PAY launch edge0; ACK cannot return before admission on actual CDC",
+            "native_measured_cycles":None,"immutable_production_cycles":168,"maximum_integer_cycles":184},
+        "communication_intensity_bits_per_payload_byte":65/64,
+        "fanout":"eight local count comparators; snapshot 64bits two FIFO candidate reads, no payload clock/control feedback",
+        "area_status":"estimated; SRAM macro unchanged, route validates actual cell area/outline/pins",
+        "single_user_latency_status":"must measure on actual 4-quadrant 13312-word driver, both phases and negatives"}
