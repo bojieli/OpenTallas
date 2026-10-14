@@ -1,5 +1,5 @@
 {
- "name": "b2_dma_rq_q5_ref-q5r1-COMMIT",
+ "name": "b2_dma_rq_q5_ref-q5r1-ea656e923",
  "block": "ot_hgi_b2_dma_rq",
  "ref_tile": true,
  "owner": "Codex:el1013-dma-q5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1013-dma-q5",
-  "commit": "COMMIT",
+  "commit": "ea656e923",
   "extra_paths": [
    "rtl/test/hbm_accel/b2_dma",
    "rtl/hbm_accel/generic/peers",
@@ -119,6 +119,17 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "q5_serial_descriptor_mutant",
+    "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/q5_serial_descriptor -GMUT_SEAM=7 -GNREC=4",
+    "expect": "fail",
+    "fail_regex": "B2_DMA_Q FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "calibrate": {
@@ -169,7 +180,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/b2_dma_rq_q5_ref/b2_dma_rq_q5_ref-q5r1-COMMIT"
+   "to": "results/rtl/ref_tile/b2_dma_rq_q5_ref/b2_dma_rq_q5_ref-q5r1-ea656e923"
   }
  ],
  "cycles_added": 0,
