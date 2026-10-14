@@ -323,7 +323,7 @@ def apply(v, m, G):
     grp = [i for i in m['insts'] if i.name == 'seq_su' or i.master in ('qfd_su_cbuf_g', 'qfd_crom_g')]
     old = dict(vm=[vm.x, vm.y, vm.w, vm.h], su=[su.x, su.y])
     # r10: a variant column pitch (OT_TP8_TILE) moves the spine with the W field: the VM / SU reservation follows it
-    dxs = round((v.KV_TILE_W - 394.848) * v.COLS / 2, 4)
+    dxs = round((v.KV_TILE_W - 394.848) * (v.COLS / 2 - 1) + (v.TILE_BODY_W - 311.04), 4)      # = the shift of column 23's station
     vm.x, vm.y, vm.w, vm.h = round(VM_ENV['x'] + dxs, 4), VM_ENV['y'], VM_ENV['w'], VM_ENV['h']
     su_new = (round(SU_X + dxs, 4), round(VM_ENV['y'] + VM_ENV['h'], 4))
     dx = su_new[0] - su.x
