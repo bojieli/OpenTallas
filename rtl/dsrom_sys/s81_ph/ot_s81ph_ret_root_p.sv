@@ -363,6 +363,26 @@ module ot_s81ph_ret_root_p #(
         st_e <= dtg[33*(LAT-2)];
     end
 `ifndef SYNTHESIS
+`ifdef S81PH_OCC_PROBE
+    // occupancy probe (s81-gather-1013): queue words seen by an arriving word (memory only / memory + read pipe +
+    // prefetch + P + H), buffer slots seen by an insert; bins 0, 1, 2, 3-4, 5-8, 9-16, 17-32, 33-64, 65-128
+    integer oc_w = 0, oc_i = 0, oc_qp = 0, oc_tp = 0, oc_bp = 0, oc_q, oc_t, oc_b, oc_k;
+    integer oc_th [0:8]; integer oc_bh [0:8];
+    function integer oc_bin(input integer x); oc_bin = (x <= 0) ? 0 : (x == 1) ? 1 : 1 + $clog2(x); endfunction
+    initial for (oc_k = 0; oc_k < 9; oc_k = oc_k + 1) begin oc_th[oc_k] = 0; oc_bh[oc_k] = 0; end
+    always @(posedge clk) if (rst_n) begin
+        oc_q = mc; oc_t = mc + cr + pv + hv; oc_b = $countones(bv);
+        if (n_v) begin
+            oc_w = oc_w + 1; if (oc_q > oc_qp) oc_qp = oc_q; if (oc_t > oc_tp) oc_tp = oc_t;
+            oc_th[oc_bin(oc_t)] = oc_th[oc_bin(oc_t)] + 1;
+        end
+        if (dec_ins) begin oc_i = oc_i + 1; oc_bh[oc_bin(oc_b)] = oc_bh[oc_bin(oc_b)] + 1; end
+        if (oc_b > oc_bp) oc_bp = oc_b;
+    end
+    final $display("OCC %m words=%0d inserts=%0d q_peak=%0d qtot_peak=%0d b_peak=%0d qtot_hist=%0d,%0d,%0d,%0d,%0d,%0d,%0d,%0d,%0d b_hist=%0d,%0d,%0d,%0d,%0d,%0d,%0d,%0d,%0d",
+        oc_w, oc_i, oc_qp, oc_tp, oc_bp, oc_th[0], oc_th[1], oc_th[2], oc_th[3], oc_th[4], oc_th[5], oc_th[6], oc_th[7], oc_th[8],
+        oc_bh[0], oc_bh[1], oc_bh[2], oc_bh[3], oc_bh[4], oc_bh[5], oc_bh[6], oc_bh[7], oc_bh[8]);
+`endif
     always @(posedge clk) if (rst_n && sv_add !== sv) $error("ot_s81ph_ret_root_p: adder latency != %0d", LAT);
     initial if (D % NC != 0 || D < 2) $fatal(1, "ot_s81ph_ret_root_p: D %% NC");
 `endif
