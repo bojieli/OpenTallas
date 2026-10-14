@@ -44,7 +44,7 @@ endmodule
 // column cluster body: xhead + two write chains of NH/2 leaves (N chain = rows 0 .. NH-1, S chain = NH .. 2NH-1)
 module ot_qfd_xcol #(
     parameter integer AW = 24, parameter integer NW = 18, parameter integer XCW = 12, parameter integer TG = 4,
-    parameter integer NH = 8, parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer DX = 4
+    parameter integer NH = 8, parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer DX = 5
 ) (
     input  wire          ck,
     input  wire          rst_n,

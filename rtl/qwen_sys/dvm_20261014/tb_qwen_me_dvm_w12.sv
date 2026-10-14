@@ -18,7 +18,7 @@ module tb_qwen_me_dvm_w12;
     parameter integer NCOL = 2, NH = 8, TG = 4;
     parameter integer GT = NCOL * 2 * NH * TG;
     parameter integer SMIN = 4, SMAX = 7, TCUT = 3;
-    parameter integer HB = 3, DX = 4, XOFF = 3, XVMR = 12;
+    parameter integer HB = 3, DX = 5, XOFF = 3, XVMR = 12;
     parameter integer NOPS = 40, SEED = 1, GAP = 4, DROP = 0;
     parameter integer TAP_MUT = 0, LEAF_MUT = 0, HEAD_MUT = 0;
     parameter integer MAXCYC = 2000000;

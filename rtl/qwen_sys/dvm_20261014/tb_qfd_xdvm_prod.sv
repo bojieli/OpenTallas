@@ -16,7 +16,7 @@ module tb_qfd_xdvm_prod;
     parameter integer NCOL = 48, NH = 8, TG = 4;
     parameter integer GT = NCOL * 2 * NH * TG;
     parameter integer SMIN = 7, SMAX = 11, TCUT = 3;
-    parameter integer HB = 3, DX = 4, XOFF = 3, XVMR = 12;
+    parameter integer HB = 3, DX = 5, XOFF = 3, XVMR = 12;
     parameter integer NLAYER = 2, NRAND = 6, SEED = 1, GAP = 4;
     parameter integer TAP_MUT = 0, LEAF_MUT = 0, HEAD_MUT = 0;
     localparam integer W = 16, IL = 8, AW = 24, NW = 16, XCW = 12;
