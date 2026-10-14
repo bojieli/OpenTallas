@@ -1,0 +1,27 @@
+{
+  "core_commit": "709403507",
+  "controller_commit": "c86c62017",
+  "cache_commit": "a5aa39d5a",
+  "unit": "oth-ubuntu-1432665-1791968558",
+  "exit": 0,
+  "actual_participants": 768,
+  "actual_bound_tiles": [
+    767
+  ],
+  "accepted_count": 1,
+  "queries": 8,
+  "outputs": 8,
+  "full_key_cache_fills": 8,
+  "callbacks": 1,
+  "coherent_edges": 187,
+  "base_edges": 207,
+  "release_blocked": true,
+  "scope": "selected actual tile acceptance/controller/full-key cache composition; no aggregate retirement/seal/provider reservation/CDC/physical/native performance qualification",
+  "retire_events": 0,
+  "seal_events": 0,
+  "mutants": [
+    "held_op_accept_level",
+    "offered_instead_of_accepted_IB",
+    "one_recipient_treated_as_all"
+  ]
+}
