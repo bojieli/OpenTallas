@@ -1,0 +1,43 @@
+{
+  "source_integration_commit": "17a89eff9",
+  "proof_commit": "a9faca959",
+  "route_job": "qdq_fr_one_payload_face_ref-f2-a9faca959",
+  "closed_route": "TT148.00/FF26.10ps/DRC0;SSsensitivity-168.52ps(notSSheadline)",
+  "record_commit": "fd8656cd2",
+  "main_record": "bb9fa3a27",
+  "integration": "ot_hgi_qdq_fr_pin_capture #(.PIN_CAPTURE(1),.FACE_FF(1)) withunchangedpublicrec683/s1_v/s3_v/s3_190/nfault/clk/rst_nABI. DefaultPIN_CAPTURE0andFACE_FF0preserveclosedalternatives. ParentmaymapdistinctFRONTFAST3; noaddededge.",
+  "required_sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr.sv",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_one_payload.sv",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_one_payload_face.sv",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_capture_retire.sv",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr_pin_capture.sv"
+  ],
+  "hard_child_instances": {
+    "general": "g_mix.u_general",
+    "face_fast": "g_mix.g_dedicated_face.u_one",
+    "capture_retire": "g_mix.u_retire"
+  },
+  "physical_binding": "Useonlynewfaceview plusclosedcapture_retire+closedgeneral views. Literalchildinstantiations underOT_HARD_CHILDREN; nobenchmarkmutantparameteroverrideonhardchild. Parentmustprovideactualentryclockphi-Randregisteredwirepaths.",
+  "native_stage_edges": {
+    "fast": 4,
+    "general_retirement_extra": 2
+  },
+  "immutable_price": 168,
+  "native_fullshape_proof": "parentowned; mustremeasureactualsource-matched13312words/all32drains andmutants afteradoptingFACE_FF1",
+  "all_leaf_pin_audit": "0violations;fastP149.9/Q216.5,R198.1;retireP153.3/Q208.7,R299.2;generalP154.4/Q217.6,R139.1",
+  "connected_bits": 383,
+  "timed_bits": 381,
+  "constant_bits": [
+    "fast_payload[56]",
+    "general_payload[56]"
+  ],
+  "deep_clock_scenario": "SKEW150 +setup60; captureR299.2 +entrywire>0.8ps becomesdeep; donotassumeshallow",
+  "minimum_deep_L_minus_H_um": 317.16521052631583,
+  "all_timed_internal_windows_pass_H100": true,
+  "geometry": "Requirements envelope259.2x293.76 only;actualLEFmanhattanmax273.72/minsetupheadroom48.66;track screen<=.584 withPGderates/noM8credit. Notassignedplacementoractualfull-quartercutproof.",
+  "actual_global_blocker": "Dieleadreports oldv12quarter622x596globalbboxoverlaps14realv13children/212353.428um\u00b2; v13hasnoquantplacedsource/slot. Fullquarterrequiresrealclearframe+allremainingPAY/FIN/CORE/recordresetretclasses.",
+  "owner": "diefeasibility /root/cluster_clock_delivery owns actualclearframe/clock and finalPGcuts; parent /root/hbm_quant_sfu_2240 owns CORE/WR/peer/nativeintegration."
+}
