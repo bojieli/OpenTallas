@@ -955,7 +955,9 @@ def _wrap(v, m, G, peers):
                 x += n * 0.048 * pitch + 2.0
             assert x <= 475.2, x
             r.face('nb', q.ports['nb'][1], 'E', 'M6', 226.8, 2)
-            r.face("ck", 1, "N", "M7", 356.4, 1)
+            # M5 and M7 have incompatible mirrored x residues (2*12 vs 2*16 nm mod16).
+            # The unclosed head clock port follows its S-word M5 lattice; parent internal cap stays M7.
+            r.face("ck", 1, "N", "M5", 356.4, 1)
             M['qkd_rhead'] = r
             # r9: the engine-control leaf's head pins follow the head's S-face window.  An ectl serves 2 heads below
             # (far, near) and 2 above (near, far); a far head's e / s / ti pin is one head (457.9 um) away, so its ectl
