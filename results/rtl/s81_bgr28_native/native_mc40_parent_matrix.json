@@ -181,8 +181,50 @@
         "RESULT cyc=24000 checked=14461 mismatches_or_fails=615 phases=49 arm=49 p2rd=177 done=2403 rows_ready=29 starts=160 p2_words=4652 ctrl_reads=1040 el=70240/70240 cap_ops=4209 max_occ=3 mirror_max=3 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1",
         "FAIL"
       ]
+    },
+    "burst_r128_np2": {
+      "case": "burst_r128_np2",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=743 checked=128 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=9 rows_ready=0 starts=0 p2_words=128 ctrl_reads=0 el=32768/32768 cap_ops=2048 max_occ=1 mirror_max=1 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "THROUGHPUT mode=2 rows_per_root=128 positions=2 elements=32768 emit_cycles=195 (first 231 last 425) cap_ops=2048 cap_write_span=192 landing_tail=19 (last element at the pins -> done) arm_to_done=244 p2_done=482 wfc_23pairs=11 x_ctrl=0 (serial cycles from t0 200)",
+        "PASS"
+      ],
+      "throughput": "THROUGHPUT mode=2 rows_per_root=128 positions=2 elements=32768 emit_cycles=195 (first 231 last 425) cap_ops=2048 cap_write_span=192 landing_tail=19 (last element at the pins -> done) arm_to_done=244 p2_done=482 wfc_23pairs=11 x_ctrl=0 (serial cycles from t0 200)"
+    },
+    "mut_stale": {
+      "case": "mut_stale",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "MISMATCH ctrl read 37",
+        "MISMATCH ctrl read 41",
+        "MISMATCH ctrl read 42",
+        "MISMATCH ctrl read 52",
+        "MISMATCH ctrl read 53",
+        "MISMATCH ctrl read 71",
+        "MISMATCH ctrl read 72",
+        "MISMATCH cyc 1527 port 1: got 3ba11c14c01bc02e.. exp 41f2f62fccc434df..",
+        "MISMATCH cyc 1765 port 1: got 3ba11c14c01bc02e.. exp 41f2f62fccc434df..",
+        "MISMATCH ctrl read 126",
+        "RESULT cyc=24000 checked=13738 mismatches_or_fails=34 phases=34 arm=34 p2rd=170 done=2330 rows_ready=20 starts=156 p2_words=3856 ctrl_reads=1044 el=56224/56224 cap_ops=3296 max_occ=2 mirror_max=2 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ]
+    },
+    "neg_early_consumer": {
+      "case": "neg_early_consumer",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "[2318000] %Error: dsfd_sp_vm.sv:1122: Assertion failed in tb_dsfd_sp_vm.dut.u_fe: SPVM EARLY_READ: read into slot 1 range [1056, +128) at 0 of 2048 elements (ports 0000000000000000000000100000)",
+        "%Error: /srv/opentallas-scratch/codex/s81-native-parent-mc40/src/rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1122: Verilog $stop"
+      ]
     }
   },
   "all_expected": true,
-  "case_count": 12
+  "case_count": 15
 }
