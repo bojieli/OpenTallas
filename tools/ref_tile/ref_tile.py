@@ -783,7 +783,12 @@ def gen_hooks(s: dict, kd: str) -> dict:
     # spec "boundary_tcl": repo Tcl files that re-apply a second-domain boundary after every io_ref switch (post-CTS
     # wrapper, pre-GRT, post-DRT), so the route times those ports against their own propagated clock, not only sign-off
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])]
-    pre_cts += btcl
+    if btcl:
+        # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
+        # SDC after building the tree. Apply additional domains AFTER that wrapper.
+        pre_cts += ["rename clock_tree_synthesis ::ot_ref_cts_boundary_orig",
+                    "proc clock_tree_synthesis {args} {",
+                    "  ::ot_ref_cts_boundary_orig {*}$args", *["  " + x for x in btcl], "}"]
     if fwd:
         pre_cts.append("source /src/physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
@@ -797,8 +802,17 @@ def gen_hooks(s: dict, kd: str) -> dict:
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"] + btcl
+    # Each stage's boundary reset must be followed by the complete domain-specific
+    # boundary. In particular, POST_CTS must write a correct SDC for the next stage.
+    post_plain = [f"source /src/{QDM}/post_plain.tcl"] + btcl
+    pre_ref = [f"source /src/{QDM}/pre_ref_skew.tcl"] + btcl
+    stage_hooks = {"post_cts.tcl": post_plain, "post_grt.tcl": post_plain,
+                   "pre_drt.tcl": pre_ref, "pre_fill.tcl": pre_ref,
+                   "post_fill.tcl": post_plain}
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
-            "post_drt.tcl": "\n".join(post_drt) + "\n", **files, **gen_pin_hooks(s)}
+            "post_drt.tcl": "\n".join(post_drt) + "\n",
+            **{name: "\n".join(lines) + "\n" for name, lines in stage_hooks.items()},
+            **files, **gen_pin_hooks(s)}
 
 
 def shq(v: str) -> str:
@@ -1014,6 +1028,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
     out = [*s["sources"], *s.get("boundary_tcl", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+           *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
