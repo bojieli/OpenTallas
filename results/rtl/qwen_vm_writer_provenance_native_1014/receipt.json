@@ -1,0 +1,17 @@
+{
+  "source_commit": "b9853a4c6",
+  "unit": "oth-ubuntu-2451882-1791979243",
+  "status": "PASS_ACTUAL_SELECTED_TILED_SOURCE_WITH_NO_WRITE_MASK",
+  "commands": 120,
+  "actual_full512row_reads": 120,
+  "full247_provenance_checks": 120,
+  "leased_edges": 2160,
+  "request_wait_edges": 22520,
+  "writer_certificate_checks": 7046,
+  "future_write_hazards": 0,
+  "SW": 8,
+  "VMT": 1,
+  "VL": 15,
+  "physical_or_canonical_native_adoption": false,
+  "mutation_job": "early predicted commit/remove accepted-to-stored obligations unit2482417 RUNNING"
+}

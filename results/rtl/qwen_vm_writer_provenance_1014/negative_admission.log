@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   448 GB (avail 689, growth 192, headroom 48, waiters 0/0 GB) load 62/128 running 17 disk 881 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2446827-1791979092 after 0 s
+[2088000] %Fatal: tb_qfd_vm_writer_lease_provenance.sv:227: Assertion failed in tb_qfd_vm_writer_lease_provenance: lease admitted before actual command/writer/commit drain
+%Error: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_provenance.sv:227: Verilog $stop
+Aborting...
+[2087000] %Fatal: tb_qfd_vm_writer_lease_provenance.sv:182: Assertion failed in tb_qfd_vm_writer_lease_provenance: accepted descriptor replaced by offered command
+%Error: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_provenance.sv:182: Verilog $stop
+Aborting...
+[2087000] %Fatal: tb_qfd_vm_writer_lease_provenance.sv:245: Assertion failed in tb_qfd_vm_writer_lease_provenance: new command admission remained open during acquisition
+%Error: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_provenance.sv:245: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2446827-1791979092): exit 0

@@ -51,5 +51,11 @@
     "registered physical admission/transport",
     "HOSTTAG59 allocator binding",
     "wholefield recipient/node drain"
+  ],
+  "negative_unit": "oth-ubuntu-2446827-1791979092",
+  "negative_expected_rejections": [
+    "ignore_actual_command/writer/commitdrain",
+    "replace_accepteddescriptor_with_offeredcommand",
+    "admit_newcommand_duringacquisition"
   ]
 }
