@@ -435,6 +435,11 @@ module dsfd_capt_x #(
     wire [NR-1:0] hovf;
     genvar g;
     generate for (g = 0; g < NR; g = g + 1) begin : g_r
+        if (LOCAL_CTRL) begin : g_local_row
+            (* keep_hierarchy *) dsfd_capt_row_local #(.LD(LD)) u_row
+                (.ck(ck), .ckv(ckv), .rs_s(rst_s[1]), .rv_s(rv_s[1]),
+                 .fw(fw[52*g +: 52]), .t_vm(t_vm[104*g +: 104]), .hovf(hovf[g]));
+        end else begin : g_original_row
         localparam integer H = g / (NR / 2);
         wire rs_n = rst_h[H];
         wire vm_valid = fw[52 * g];
@@ -473,6 +478,7 @@ module dsfd_capt_x #(
         always @(posedge ckv[0] or negedge rsv_h[H]) if (!rsv_h[H]) ov <= 2'b00; else ov <= {cv & cd[51], cv};
         always @(posedge ckv[0]) begin od[50:0] <= cd[50:0]; od[101:51] <= cd[102:52]; end
         assign t_vm[104 * g +: 104] = {od[101:51], ov[1], od[50:0], ov[0]};
+        end
     end endgenerate
     reg hq;
     always @(posedge ck[0] or negedge rst_h[0]) if (!rst_h[0]) hq <= 1'b0; else hq <= |hovf;
@@ -487,6 +493,60 @@ module dsfd_capt_x #(
     assign t_st = stq;
 endmodule
 
+
+// Each local row retains its controller and reset driver. These reset flops
+// sample the same synchronizer output at the same edge as rst_h/rsv_h; no
+// additional reset, data or transaction edge is introduced.
+module dsfd_capt_row_local #(parameter integer LD = 4) (
+    input wire [0:0] ck, ckv,
+    input wire rs_s, rv_s,
+    input wire [51:0] fw,
+    output wire [103:0] t_vm,
+    output wire hovf
+);
+    (* keep *) reg rs_n, rv_n;
+    always @(posedge ck[0] or negedge rs_s)
+        if (!rs_s) rs_n <= 1'b0; else rs_n <= 1'b1;
+    always @(posedge ckv[0] or negedge rv_s)
+        if (!rv_s) rv_n <= 1'b0; else rv_n <= 1'b1;
+        wire vm_valid = fw[0];
+        wire [50:0] din = fw[1 +: 51];
+        reg [50:0] h [0:3];
+        reg [1:0] hr, hw;
+        reg [2:0] hc;
+        reg ho;
+        wire wr;
+        wire [2:0] npop = (!wr || hc == 3'd0) ? 3'd0 : (hc == 3'd1) ? 3'd1 : 3'd2;
+        wire crdy = !hc[2] || (wr && !hc[1]);
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin hr <= 2'd0; hw <= 2'd0; hc <= 3'd0; ho <= 1'b0; end
+            else begin
+                hr <= hr + npop[1:0];
+                if (vm_valid && crdy) hw <= hw + 2'd1;
+                hc <= hc - npop + ((vm_valid && crdy) ? 3'd1 : 3'd0);
+                if (vm_valid && !crdy) ho <= 1'b1;
+            end
+        generate if (1) begin : g_local_store
+            for (genvar off = 0; off < 51; off = off + 17) begin : g_slice
+                wire [67:0] words;
+                (* keep_hierarchy *) dsfd_capt_hold_slice u_store
+                    (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
+                     .hw(hw), .din(din[off +: 17]), .words(words));
+                for (genvar bank = 0; bank < 4; bank = bank + 1)
+                    assign h[bank][off +: 17] = words[17*bank +: 17];
+            end
+        end
+        endgenerate
+        assign hovf = ho;
+        wire cv; wire [102:0] cd;
+        ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD), .LAG(1), .LOCAL_CTRL(1)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
+            .w_d({h[hr + 2'd1], hc >= 3'd2, h[hr]}), .rclk(ckv[0]), .rrst_n(rv_n), .r_v(cv), .r_rdy(1'b1),
+            .r_d(cd), .w_live(), .r_live());
+        reg [1:0] ov; reg [101:0] od;
+        always @(posedge ckv[0] or negedge rv_n) if (!rv_n) ov <= 2'b00; else ov <= {cv & cd[51], cv};
+        always @(posedge ckv[0]) begin od[50:0] <= cd[50:0]; od[101:51] <= cd[102:52]; end
+        assign t_vm = {od[101:51], ov[1], od[50:0], ov[0]};
+endmodule
 
 // Local hold-buffer slices retain independent write-enable cones at the same
 // write edge. Storage contents, address and reset gating match the flat bank.
