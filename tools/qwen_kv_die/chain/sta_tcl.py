@@ -54,8 +54,22 @@ foreach k {ucie serdes} { create_clock -name $k -period 833.333 [get_pins -quiet
     DOMS = ['stream', 'serial', 'ucie', 'serdes']
 # qwen-tp8 r10: a case-specific clock file ($OT_STA_CLOCKS: create_clock lines, first line '# DOMS a b c') replaces the
 # built-in die clocks (the merged tp8b die has the KV PLL, the clock receiver and four strip PLLs)
+compensated_clock_budget = False
 if os.environ.get('OT_STA_CLOCKS'):
-    _ct = Path(os.environ['OT_STA_CLOCKS']).read_text()
+    _cp = Path(os.environ['OT_STA_CLOCKS'].format(corner=c))
+    if _cp.is_dir():
+        _cp = _cp / f'clocks_{c}.tcl'
+    elif _cp.name == 'clocks.tcl' and _cp.with_name(f'clocks_{c}.tcl').exists():
+        _cp = _cp.with_name(f'clocks_{c}.tcl')
+    _ct = _cp.read_text()
+    if '# INSERTION_COMPENSATED ' in _ct:
+        if '# OWNER_CLOCK_BUDGET v1\n' not in _ct:
+            raise ValueError('phi-R clock file lacks strict owner setup/hold budget; regenerate it')
+        compensated_clock_budget = True
+        if f'# INSERTION_COMPENSATED {c}\n' not in _ct:
+            raise ValueError(f'wrong clock measurement corner: {_cp} for {c}')
+        if plan:
+            raise ValueError('measured clock plan cannot override phi-R source-compensated clocks')
     DOMS = _ct.splitlines()[0].split()[2:]
     clocks = _ct
 lat, ocv_src = '', ''
@@ -137,7 +151,11 @@ if plan:
         clocks += '\nsource /work/clock_regions_' + c + '.tcl\nset_clock_groups -asynchronous ' + ' '.join(
             '-group [get_clocks {' + ' '.join([d_] + sorted(grp.get(d_, []))) + '}]' for d_ in DOMS)
 mm, unc = ('max', 'set_clock_uncertainty -setup 60 [all_clocks]') if c in ('tt', 'ss') else ('min', 'set_clock_uncertainty -hold 25 [all_clocks]')
-if 'set_clock_groups' not in clocks:
+if compensated_clock_budget:
+    # phi-R files carry the owner setup skew and H1 hold bounds themselves.
+    # The generic 60/25 defaults would overwrite these strict budgets.
+    unc = ''
+if not compensated_clock_budget and 'set_clock_groups' not in clocks:
     clocks += '\nset_clock_groups -asynchronous ' + ' '.join(f'-group {d_}' for d_ in DOMS)
 unc += ocv_src
 rd = '\n'.join(f'read_liberty {x}' for x in libs)
