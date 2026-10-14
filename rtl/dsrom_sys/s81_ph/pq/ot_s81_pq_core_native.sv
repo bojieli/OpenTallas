@@ -10,6 +10,9 @@
 module ot_s81_pq_core_native (
     input wire ck_ctl, ck_qb, ck_fault,
     input wire [1:0] ck_aq,
+`ifdef OT_PQ_AQ_PHYS_SPLIT
+    input wire [15:0] ck_aq_aux,
+`endif
     input wire [3:0] ck_ix,
 `ifdef OT_PQ_IX_PHYS_SPLIT
 `ifdef OT_PQ_IX_BANK_SPLIT
@@ -170,7 +173,12 @@ module ot_s81_pq_core_native (
 `endif
     genvar g;
     generate for (g = 0; g < 2; g = g + 1) begin : g_aq
-        ot_dsrom_aq12t u_aq (.clk(ck_aq[g]), .rst_n(rst_n), .v(aq_vin), .x(x_q[1024*g +: 1024]),
+`ifdef OT_PQ_AQ_PHYS_SPLIT
+        ot_s81_pq_aq_split_native u_aq (.clk(ck_aq[g]),.clk_mem(ck_aq_aux[8*g +: 4]),.clk_math(ck_aq_aux[8*g+4 +: 4]),
+`else
+        ot_dsrom_aq12t u_aq (.clk(ck_aq[g]),
+`endif
+            .rst_n(rst_n), .v(aq_vin), .x(x_q[1024*g +: 1024]),
             .vo(), .q(aq_q[256*g +: 256]), .e(aq_e[10*g +: 10]), .y(), .fault(aqf[g])
 `ifdef OT_PQ_AQ_SIDE_PARITY
             , .qp(aq_p[5*g +: 5])
