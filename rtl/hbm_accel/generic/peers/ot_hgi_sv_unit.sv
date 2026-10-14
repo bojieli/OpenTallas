@@ -108,6 +108,7 @@ endmodule
 // ot_hgi_sv_lane2: 2 VM wide lanes (L0, L0 + 1) + their 2 banks' stage-write / drain-read ports (DESIGN.md section 3)
 //   cmd pin flop (edge 1) -> load stage ld_* with the two lane offsets (edge 2) -> lane-slot state (edge 3) -> first
 //   wrq / ldr flop (edge 4).  Status flops show a load from edge 2 on (done cleared, prefix 0).
+//   An ssel change shows in the stage prefix 6 edges after the cmd pin, a dsel change in the drain prefix after 5.
 //   Every pin is a flop here; payload flops (wrr, lsw_d, ldr_d, wwq data) have no reset.
 //   HARDENED ONCE, x16: the leaf index is the pin strap lid (lanes 2 lid, 2 lid + 1; tied by the parent, registered
 //   here), not a parameter.  RELAY (hop <= 500 um by construction): cmd_r = the registered copy of cmd for the next
@@ -347,14 +348,24 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                 end
             end
         // ---- prefix terms of this lane (pre-edge state: one edge stale, never ahead of the memory)
-        always @(posedge clk) begin : pre
-            reg [13:0] pm, v;
-            pm = PMAX;
-            for (integer q = 0; q < NSJ; q = q + 1) begin
-                v = (sl_c[q] || sl_l[q]) ? 14'd0 : ln_sbusy[g][q] ? {s_lc[q], s_off[q]} : PMAX;
-                if (ssel[q] && v < pm) pm = v;
+        // TWO registered steps (10-13: the one-step form was a 27-level reg -> reg path, ~1,070 ps): step A = the
+        // per-slot term (PMAX when not selected or idle, 0 while loading), step B = the minimum of the NSJ terms by
+        // all-pairs compare and a one-hot select (lowest index wins a tie).
+        reg [13:0] sv_q [0:NSJ-1]; reg [13:0] pmin; reg [NSJ-1:0] pwin;
+        always @* begin
+            pmin = 14'd0;
+            for (integer a = 0; a < NSJ; a = a + 1) begin
+                pwin[a] = 1'b1;
+                for (integer b = 0; b < NSJ; b = b + 1)
+                    if (b < a) pwin[a] = pwin[a] && (sv_q[a] < sv_q[b]);
+                    else if (b > a) pwin[a] = pwin[a] && (sv_q[a] <= sv_q[b]);
+                pmin = pmin | (pwin[a] ? sv_q[a] : 14'd0);
             end
-            ln_sp[g] <= pm;
+        end
+        always @(posedge clk) begin : pre
+            for (integer q = 0; q < NSJ; q = q + 1)
+                sv_q[q] <= !ssel[q] ? PMAX : (sl_c[q] || sl_l[q]) ? 14'd0 : ln_sbusy[g][q] ? {s_lc[q], s_off[q]} : PMAX;
+            ln_sp[g] <= pmin;
             ln_dp[g] <= (dl_c[dsel] || dl_l[dsel]) ? 14'd0 : (d_rem[dsel] != 9'd0) ? {d_k[dsel], d_off[dsel]} : PMAX;
         end
         assign wrq[g*16 +: 16] = {wrq_vf[g], wrq_sf[g], B};
@@ -366,8 +377,15 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
 
     // ---------------- status flops
     reg [NSJ-1:0] st_sdone; reg [1:0] st_ddone; reg st_shome, st_dhome, st_err; reg [13:0] st_spre, st_dpre;
-    wire [13:0] own_sp = (ln_sp[0] < ln_sp[1]) ? ln_sp[0] : ln_sp[1];
-    wire [13:0] own_dp = (ln_dp[0] < ln_dp[1]) ? ln_dp[0] : ln_dp[1];
+    // own prefix of the two lanes: its own registered step (one compare a step).  The load override below covers the
+    // edges the longer line still shows the slot's old term, so a load is reported (done 0, prefix 0) from edge 2 on
+    // exactly as before; the true prefix follows 2 (stage) / 1 (drain) edges later (stale LOW meanwhile).
+    reg [13:0] own_sp, own_dp; reg [NSJ-1:0] sl_2, sl_3; reg [1:0] dl_2, dl_3;
+    always @(posedge clk) begin
+        own_sp <= (ln_sp[0] < ln_sp[1]) ? ln_sp[0] : ln_sp[1];
+        own_dp <= (ln_dp[0] < ln_dp[1]) ? ln_dp[0] : ln_dp[1];
+        sl_2 <= sl_l; sl_3 <= sl_2; dl_2 <= dl_l; dl_3 <= dl_2;
+    end
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             st_sdone <= '1; st_ddone <= 2'b11; st_shome <= 1'b1; st_dhome <= 1'b1; st_err <= 1'b0; st_spre <= PMAX; st_dpre <= PMAX;
@@ -379,8 +397,8 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
 `ifdef SVDBG
             if (!st_err && (|ln_err)) $display("SV leaf %0d err %b", lid_q, ln_err);
 `endif
-            st_spre <= (|(ssel & sl_c)) ? 14'd0 : (own_sp < sti_q[NSJ+4 +: 14]) ? own_sp : sti_q[NSJ+4 +: 14];
-            st_dpre <= dl_c[dsel] ? 14'd0 : (own_dp < sti_q[NSJ+18 +: 14]) ? own_dp : sti_q[NSJ+18 +: 14];
+            st_spre <= (|(ssel & (sl_c | sl_l | sl_2 | sl_3))) ? 14'd0 : (own_sp < sti_q[NSJ+4 +: 14]) ? own_sp : sti_q[NSJ+4 +: 14];
+            st_dpre <= (dl_c[dsel] || dl_l[dsel] || dl_2[dsel] || dl_3[dsel]) ? 14'd0 : (own_dp < sti_q[NSJ+18 +: 14]) ? own_dp : sti_q[NSJ+18 +: 14];
         end
     assign status = {st_err, st_dpre, st_spre, st_dhome, st_shome, st_ddone, st_sdone};
 endmodule
@@ -411,7 +429,8 @@ endmodule
 //   near leaf pin register E+1, its relay output register E+2, far leaf pin register E+3, far leaf job state E+4, far
 //   leaf done register E+4 / prefix (two registered steps) E+5, near leaf st_in pin flop E+6, near leaf status
 //   register (folded) E+7, head pin flops E+8, 4:1 E+9, 2:1 E+10 -> first use at edge E+11.
-//   BL = 14 blanks a slot's done bit and the prefixes for 14 edges after the cmd register write (3 edges of margin).
+//   (10-13: the leaf's stage prefix has two more registered steps: first use of a prefix at edge E+13.)
+//   BL = 16 blanks a slot's done bit and the prefixes for 16 edges after the cmd register write (3 edges of margin).
 //
 // DELIBERATE CHOICES (correctness points of the brief):
 //  * operands before writes: a staged source over an older live sink waits for that owner's RETIRE (swait mask);
@@ -489,7 +508,7 @@ module ot_hgi_sv_ctl #(
     input  wire          ready,
     input  wire          idle,
     input  wire          vfault,
-    output reg  [669:0]  wl,
+    output wire [669:0]  wl,
     output reg  [7:0]    x_seq,
     output reg  [7:0]    x_dseq,
     output reg  [15:0]   x_cnt,
@@ -517,14 +536,14 @@ module ot_hgi_sv_ctl #(
     output reg  [15:0]   walks                // non-dense O drains (frame walks) since reset
 );
     localparam integer NS = 8, NE = 8, NJQ = 8;
-    localparam integer BL = 14;                         // status blanking after a cmd register write (see header)
+    localparam integer BL = 16;                         // status blanking after a cmd register write (see header)
     localparam [2:0]   LA = 3'd2;                       // stage lookahead: records ahead of RUN
     localparam integer CW = 83 + NSJ, SW = NSJ + 33;
     localparam integer LN_ = $clog2(N), LM_ = $clog2(M);
     localparam [1:0] K_SRC = 2'd0, K_OS = 2'd1, K_RS = 2'd2;
     localparam [1:0] F_FREE = 2'd0, F_OPEN = 2'd1, F_HELD = 2'd2, F_SCRUB = 2'd3;
     localparam [13:0] PDONE = 14'h3FFF;
-    localparam [3:0]  BLV = 4'(BL);
+    localparam [4:0]  BLV = 5'd16;
 
     function automatic [7:0] oh8(input [2:0] i); oh8 = 8'd1 << i; endfunction
     function automatic [3:0] ff8(input [7:0] m);        // {valid, index of the first set bit}
@@ -621,8 +640,8 @@ module ot_hgi_sv_ctl #(
     reg [2:0] jq_slot [0:NJQ-1]; reg [14:0] jq_vsec [0:NJQ-1]; reg [13:0] jq_n [0:NJQ-1]; reg [14:0] jq_lsec [0:NJQ-1];
     reg [NJQ-1:0] jq_strm; reg [3:0] jq_wp, jq_rp;
     // ---- leaf stage / drain slots
-    reg [NSJ-1:0] sj_busy, sj_strm, sj_scrub; reg [2:0] sj_own [0:NSJ-1]; reg [1:0] sj_fr [0:NSJ-1]; reg [3:0] sj_bl [0:NSJ-1];
-    reg [1:0] dr_busy, dr_live; reg [2:0] dr_own [0:1]; reg [13:0] dr_n [0:1]; reg [3:0] dr_bl [0:1];
+    reg [NSJ-1:0] sj_busy, sj_strm, sj_scrub; reg [2:0] sj_own [0:NSJ-1]; reg [1:0] sj_fr [0:NSJ-1]; reg [4:0] sj_bl [0:NSJ-1];
+    reg [1:0] dr_busy, dr_live; reg [2:0] dr_own [0:1]; reg [13:0] dr_n [0:1]; reg [4:0] dr_bl [0:1];
     reg [13:0] dfr [0:1];
     reg [NSJ-1:0] ssel; reg dsel;
     // ---- frames
@@ -1084,9 +1103,9 @@ module ot_hgi_sv_ctl #(
     wire       jq_ne = jq_wp != jq_rp;
     wire [2:0] jh_own = jq_slot[jh];
     wire [2:0] jh_dist = jh_own - rp;
-    reg        jh_ok; reg [3:0] sh_bl; reg [2:0] rcool;
+    reg        jh_ok; reg [4:0] sh_bl; reg [2:0] rcool;
     reg [NSJ-1:0] sdn;
-    always @* for (integer j = 0; j < NSJ; j = j + 1) sdn[j] = sj_busy[j] && sj_bl[j] == 4'd0 && st_sdone[j];
+    always @* for (integer j = 0; j < NSJ; j = j + 1) sdn[j] = sj_busy[j] && sj_bl[j] == 5'd0 && st_sdone[j];
     wire [3:0] fj = ff8({{(8-NSJ){1'b0}}, ~sj_busy});               // a free stage slot
     wire [3:0] fd = ff8({{(8-NSJ){1'b0}}, sdn});                    // a finished one (one an edge)
     wire [2:0] scp = ff4({fr_st[3] == F_SCRUB && !sc_ld[3], fr_st[2] == F_SCRUB && !sc_ld[2],
@@ -1103,14 +1122,14 @@ module ot_hgi_sv_ctl #(
     wire vm_stg_busy = (sj_busy & ~sj_scrub) != '0;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            jq_rp <= 4'd0; jh_ok <= 1'b0; sh_bl <= 4'd0; rcool <= 3'd0; rg_req <= 1'b0; sc_ld <= 4'd0;
+            jq_rp <= 4'd0; jh_ok <= 1'b0; sh_bl <= 5'd0; rcool <= 3'd0; rg_req <= 1'b0; sc_ld <= 4'd0;
             sj_busy <= '0; sj_strm <= '0; sj_scrub <= '0;
-            for (integer j = 0; j < NSJ; j = j + 1) begin sj_own[j] <= 3'd0; sj_fr[j] <= 2'd0; sj_bl[j] <= 4'd0; end
+            for (integer j = 0; j < NSJ; j = j + 1) begin sj_own[j] <= 3'd0; sj_fr[j] <= 2'd0; sj_bl[j] <= 5'd0; end
         end else begin
             // the head job's gate, registered (false for one edge after a pop: it describes the old head)
             jh_ok <= jq_ne && !ld_st && jh_dist <= LA && (swait[jh_own] & ~retmask) == 8'd0;
-            for (integer j = 0; j < NSJ; j = j + 1) if (sj_bl[j] != 4'd0) sj_bl[j] <= sj_bl[j] - 4'd1;
-            if (sh_bl != 4'd0) sh_bl <= sh_bl - 4'd1;
+            for (integer j = 0; j < NSJ; j = j + 1) if (sj_bl[j] != 5'd0) sj_bl[j] <= sj_bl[j] - 5'd1;
+            if (sh_bl != 5'd0) sh_bl <= sh_bl - 5'd1;
             if (rcool != 3'd0) rcool <= rcool - 3'd1;
             if (fd[3]) begin                                           // a job is done (blanked sdone): free the slot
                 sj_busy[fd[2:0]] <= 1'b0;
@@ -1128,7 +1147,7 @@ module ot_hgi_sv_ctl #(
             // blanked shome; then >= 5 edges before the next request
             if (!rg_req) begin
                 if (jq_ne && jh_ok && rcool == 3'd0 && !hfault) rg_req <= 1'b1;
-            end else if (rg_q && !(jq_ne && jh_ok) && !ld_st && !vm_stg_busy && sh_bl == 4'd0 && st_shome) begin
+            end else if (rg_q && !(jq_ne && jh_ok) && !ld_st && !vm_stg_busy && sh_bl == 5'd0 && st_shome) begin
                 rg_req <= 1'b0; rcool <= 3'd5;
             end
         end
@@ -1140,10 +1159,10 @@ module ot_hgi_sv_ctl #(
     // (dwait), own stage complete if the O sectors overlap own staged sources (o_ovs).
     reg [2:0] dv_tag; reg dv_v, dv_nop, dv_ov, dv_dense, dv_live, dv_rdy, dv_soon;
     reg [14:0] dv_vsec, dv_lsec; reg [13:0] dv_n; reg [3:0] dv_ep;
-    reg [3:0] dh_bl; reg [2:0] wcool;
+    reg [4:0] dh_bl; reg [2:0] wcool;
     wire dv_ok = dv_v && dv_tag == dp;
     wire fdr_v = !(&dr_busy); wire fdr = dr_busy[0];
-    wire [1:0] ddn = {dr_busy[1] && dr_bl[1] == 4'd0 && st_ddone[1], dr_busy[0] && dr_bl[0] == 4'd0 && st_ddone[0]};
+    wire [1:0] ddn = {dr_busy[1] && dr_bl[1] == 5'd0 && st_ddone[1], dr_busy[0] && dr_bl[0] == 5'd0 && st_ddone[0]};
     wire dfin_v = ddn != 2'd0; wire dfin = !ddn[0];
     wire dr_want = dv_ok && !dv_nop && dv_ov && dv_rdy;
     assign dr_can = dr_want && fdr_v && wg_req && wg_q && !hfault;
@@ -1154,8 +1173,8 @@ module ot_hgi_sv_ctl #(
         if (!rst_n) begin
             dp <= 3'd0; dv_v <= 1'b0; dv_tag <= 3'd0; dv_nop <= 1'b0; dv_ov <= 1'b0; dv_rdy <= 1'b0; dv_soon <= 1'b0;
             dv_dense <= 1'b0; dv_live <= 1'b0;
-            dr_busy <= 2'd0; dr_live <= 2'd0; dh_bl <= 4'd0; wcool <= 3'd0; wg_req <= 1'b0; walks <= 16'd0;
-            for (integer d = 0; d < 2; d = d + 1) begin dr_own[d] <= 3'd0; dr_bl[d] <= 4'd0; dr_n[d] <= 14'd0; end
+            dr_busy <= 2'd0; dr_live <= 2'd0; dh_bl <= 5'd0; wcool <= 3'd0; wg_req <= 1'b0; walks <= 16'd0;
+            for (integer d = 0; d < 2; d = d + 1) begin dr_own[d] <= 3'd0; dr_bl[d] <= 5'd0; dr_n[d] <= 14'd0; end
         end else begin
             // the registered view of slot dp (a slot is never retired before dp passed it)
             dv_tag <= dp; dv_v <= s_v[dp] && s_dd[dp]; dv_nop <= s_nop[dp]; dv_ov <= sl_ov[dp];
@@ -1163,8 +1182,8 @@ module ot_hgi_sv_ctl #(
             dv_lsec <= sl_olsec[dp]; dv_ep <= sl_oep[dp];
             dv_rdy <= (sl_odense[dp] ? s_gone[dp] : s_cd[dp]) && (dwait[dp] & ~retmask) == 8'd0 && (!sl_oovs[dp] || stc[dp]);
             dv_soon <= sl_odense[dp] && rp == dp && rs != 2'd0 && (dwait[dp] & ~retmask) == 8'd0;   // about to go
-            for (integer d = 0; d < 2; d = d + 1) if (dr_bl[d] != 4'd0) dr_bl[d] <= dr_bl[d] - 4'd1;
-            if (dh_bl != 4'd0) dh_bl <= dh_bl - 4'd1;
+            for (integer d = 0; d < 2; d = d + 1) if (dr_bl[d] != 5'd0) dr_bl[d] <= dr_bl[d] - 5'd1;
+            if (dh_bl != 5'd0) dh_bl <= dh_bl - 5'd1;
             if (wcool != 3'd0) wcool <= wcool - 3'd1;
             if (dfin_v) dr_busy[dfin] <= 1'b0;                          // drain done (blanked ddone)
             if (ld_dr) begin
@@ -1175,7 +1194,7 @@ module ot_hgi_sv_ctl #(
             // the write lane group
             if (!wg_req) begin
                 if ((dr_want || (dv_ok && dv_ov && dv_soon)) && wcool == 3'd0 && !hfault) wg_req <= 1'b1;
-            end else if (wg_q && !dr_want && !(dv_ok && dv_ov && dv_soon) && !ld_dr && dr_busy == 2'd0 && dh_bl == 4'd0 && st_dhome) begin
+            end else if (wg_q && !dr_want && !(dv_ok && dv_ov && dv_soon) && !ld_dr && dr_busy == 2'd0 && dh_bl == 5'd0 && st_dhome) begin
                 wg_req <= 1'b0; wcool <= 3'd5;
             end
         end
@@ -1209,19 +1228,27 @@ module ot_hgi_sv_ctl #(
     localparam [1:0] R_IDLE = 2'd0, R_SET = 2'd1, R_GO = 2'd2, R_RUN = 2'd3;
     reg [1:0] rs_r; assign rs = rs_r;
     reg wl_v, q1_v; reg [627:0] q1;
+    // the head word: payload wl_lo has no reset (its own clocked block: no async-load flops), the chain field wl_hi has
+    reg [627:0] wl_lo; reg [41:0] wl_hi; assign wl = {wl_hi, wl_lo};
     reg [2:0] rvw_tag; reg rvw_ok, rvw_nop, rvw_sp, rvw_ipg, rvw_olive, rvw_ov, rvw_otwo; reg [2:0] rvw_ipold;
     reg [13:0] rvw_on; reg [2:0] rvw_lo3; reg [3:0] rvw_lvw, rvw_oep; reg [1:0] rvw_ofr;
     reg [2:0] ipv_tag; reg ipv_done, ipv_ld, ipv_dsl;
     reg [13:0] r_on; reg [2:0] r_lo3; reg [3:0] r_lvw, r_oep; reg [1:0] r_ofr; reg r_olive, r_ov, r_ext, r_otwo;
     reg [7:0] r_seq, xs, vseq, vseq_run; reg [1:0] idle_ph; reg vf_seen;
-    reg [13:0] gs_r, gi_r; reg [3:0] sp_bl, dp_bl;
+    reg [13:0] gs_r, gi_r; reg [4:0] sp_bl, dp_bl;
     wire rvw_cur = rvw_tag == rp;
     wire push_ok = !wl_v || !q1_v;
     assign push_take = (dstt == D_HOLD) && push_ok;
     assign ev_go = rs_r == R_GO && ready_q && !hfault;
     wire run_end = rs_r == R_RUN && idle_ph == 2'd3 && idle_q;
     assign ev_cd = run_end && !(vf_seen || vfault_q);
+    always @(posedge clk) begin
+        if (ev_cd || (run_end && (vf_seen || vfault_q))) wl_lo <= push_take ? w : q1;    // pop (a push fills the head)
+        else if (push_take && !wl_v) wl_lo <= w;
+    end
     reg [NSJ-1:0] ssel_n;
+    reg [NSJ-1:0] fd_oh;                                               // the stage slot freed this edge, one-hot (no sized cast: yosys)
+    always @* for (integer j = 0; j < NSJ; j = j + 1) fd_oh[j] = fd[3] && fd[2:0] == 3'(j);
     always @* for (integer j = 0; j < NSJ; j = j + 1) ssel_n[j] = sj_busy[j] && !sj_scrub[j] && sj_strm[j] && sj_own[j] == rp;
     wire ext_s = rvw_sp;                                               // a (streamed) stage job of the record is active
     wire ext_i = rvw_ipg && MUT_V != 3;                                // in place over an owner that still drains
@@ -1232,10 +1259,10 @@ module ot_hgi_sv_ctl #(
         if (!rst_n) begin
             rs_r <= R_IDLE; rp <= 3'd0; wl_v <= 1'b0; q1_v <= 1'b0; go <= 1'b0; wep <= 16'd0; rnfault <= 1'b0;
             x_seq <= 8'd0; x_dseq <= 8'hFF; x_cnt <= 16'd0; xs <= 8'd0; vseq <= 8'd0; vseq_run <= 8'd0; r_seq <= 8'd0;
-            idle_ph <= 2'd0; vf_seen <= 1'b0; ssel <= '0; dsel <= 1'b0; sp_bl <= 4'd0; dp_bl <= 4'd0; gs_r <= 14'd0; gi_r <= 14'd0;
+            idle_ph <= 2'd0; vf_seen <= 1'b0; ssel <= '0; dsel <= 1'b0; sp_bl <= 5'd0; dp_bl <= 5'd0; gs_r <= 14'd0; gi_r <= 14'd0;
             rvw_tag <= 3'd0; rvw_ok <= 1'b0; rvw_nop <= 1'b0; rvw_sp <= 1'b0; rvw_ipg <= 1'b0; rvw_ipold <= 3'd0;
             rvw_olive <= 1'b0; rvw_ov <= 1'b0; rvw_otwo <= 1'b0; r_otwo <= 1'b0; ipv_tag <= 3'd0; ipv_done <= 1'b0; ipv_ld <= 1'b0; ipv_dsl <= 1'b0;
-            r_ext <= 1'b0; r_olive <= 1'b0; r_ov <= 1'b0; wl[669:628] <= 42'd0;
+            r_ext <= 1'b0; r_olive <= 1'b0; r_ov <= 1'b0; wl_hi <= 42'd0;
             r_on <= 14'd0; r_lo3 <= 3'd0; r_lvw <= 4'd0; r_oep <= 4'd0; r_ofr <= 2'd0;
         end else begin
             go <= 1'b0; rnfault <= 1'b0;
@@ -1249,16 +1276,16 @@ module ot_hgi_sv_ctl #(
             ipv_tag <= rvw_tag; ipv_done <= s_odone[rvw_ipold]; ipv_ld <= s_old[rvw_ipold]; ipv_dsl <= s_odsl[rvw_ipold];
             // ---- word FIFO
             if (ev_cd || (run_end && (vf_seen || vfault_q))) begin         // pop
-                if (push_take) begin wl[627:0] <= w; wl_v <= 1'b1; end      // (q1 is empty when a push is allowed)
-                else begin wl[627:0] <= q1; wl_v <= q1_v; q1_v <= 1'b0; end
+                if (push_take) wl_v <= 1'b1;                                // (q1 is empty when a push is allowed)
+                else begin wl_v <= q1_v; q1_v <= 1'b0; end
             end else if (push_take) begin
-                if (!wl_v) begin wl[627:0] <= w; wl_v <= 1'b1; end
+                if (!wl_v) wl_v <= 1'b1;
                 else begin q1 <= w; q1_v <= 1'b1; end
             end
             if (push_take && wl_v && q1_v) rnfault <= 1'b1;                  // cannot happen (push_ok)
             // ---- blank counters
-            if (sp_bl != 4'd0) sp_bl <= sp_bl - 4'd1;
-            if (dp_bl != 4'd0) dp_bl <= dp_bl - 4'd1;
+            if (sp_bl != 5'd0) sp_bl <= sp_bl - 5'd1;
+            if (dp_bl != 5'd0) dp_bl <= dp_bl - 5'd1;
             if (vfault_q && rs_r == R_RUN) vf_seen <= 1'b1;
             // a freed stage slot leaves ssel (it may be reloaded for another record): re-blank the prefix
             if (fd[3] && ssel[fd[2:0]]) begin ssel[fd[2:0]] <= 1'b0; sp_bl <= BLV; end
@@ -1269,10 +1296,10 @@ module ot_hgi_sv_ctl #(
                     r_on <= rvw_on; r_lo3 <= rvw_lo3; r_lvw <= rvw_lvw; r_oep <= rvw_oep; r_ofr <= rvw_ofr;
                     r_olive <= rvw_olive; r_ov <= rvw_ov; r_ext <= ext_s || ext_i; r_otwo <= rvw_otwo;
                     if (ext_s || ext_i) begin
-                        wl[669:628] <= (MUT_V == 8) ? 42'd0 : {f_mul, f_lead, xs, 2'd3}; x_seq <= xs; r_seq <= xs; xs <= xs + 8'd1;
-                    end else wl[669:628] <= 42'd0;
+                        wl_hi <= (MUT_V == 8) ? 42'd0 : {f_mul, f_lead, xs, 2'd3}; x_seq <= xs; r_seq <= xs; xs <= xs + 8'd1;
+                    end else wl_hi <= 42'd0;
                     x_cnt <= 16'd0; gs_r <= 14'd0; gi_r <= 14'd0;
-                    ssel <= fd[3] ? (ssel_n & ~NSJ'(8'd1 << fd[2:0])) : ssel_n; sp_bl <= BLV;   // (a slot freed this edge is out)
+                    ssel <= ssel_n & ~fd_oh; sp_bl <= BLV;   // (a slot freed this edge is out)
                     rs_r <= R_GO;
                 end
                 R_GO: if (ev_go) begin
@@ -1295,10 +1322,10 @@ module ot_hgi_sv_ctl #(
             // ---- EXT credits (R_GO / R_RUN): x_cnt = min(stage prefix, in-place gate); each term holds while blanked
             if (rs_r == R_GO || rs_r == R_RUN) begin
                 if (rvw_cur && !rvw_sp) gs_r <= PDONE;                     // every stage job of the record accepted done
-                else if (sp_bl == 4'd0) gs_r <= st_spre;
+                else if (sp_bl == 5'd0) gs_r <= st_spre;
                 if (MUT_V == 3 || !s_ipg[rp]) gi_r <= PDONE;               // the old owner retired (or never gated)
                 else if (ipv_ok && ipv_done) gi_r <= PDONE;                // its drain is done
-                else if (ipv_ok && ipv_ld && dsel == ipv_dsl && dp_bl == 4'd0) gi_r <= st_dpre;
+                else if (ipv_ok && ipv_ld && dsel == ipv_dsl && dp_bl == 5'd0) gi_r <= st_dpre;
                 if (r_ext) begin
                     x_cnt <= {2'b00, (gs_r < gi_r) ? gs_r : gi_r};
                     if (gs_r == PDONE && gi_r == PDONE) x_dseq <= r_seq;

@@ -226,8 +226,10 @@ module tb_hgi_sv_leaf;
         end
     endtask
     task automatic cmd_idle(); begin @(posedge clk); jb[0] <= 1'b0; end endtask
-    task automatic set_ssel(input [NSJ-1:0] v); begin @(posedge clk); ssel <= v; ssel_valid = now() + 4; end endtask
-    task automatic set_dsel(input v); begin @(posedge clk); dsel <= v; dsel_valid = now() + 4; end endtask
+    // an ssel change shows in spre after 6 edges, a dsel change in dpre after 5 (10-13: the stage prefix is two
+    // registered steps + the lane-pair step, the drain prefix one step + the lane-pair step; was 4 / 4)
+    task automatic set_ssel(input [NSJ-1:0] v); begin @(posedge clk); ssel <= v; ssel_valid = now() + 6; end endtask
+    task automatic set_dsel(input v); begin @(posedge clk); dsel <= v; dsel_valid = now() + 5; end endtask
     // final check of a finished stage job against the memory itself, then retire the shadow
     task automatic finish_stage(input integer q);
         integer cnt;
