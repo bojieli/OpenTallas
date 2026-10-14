@@ -213,7 +213,9 @@ def cmd_golden(a):
     out.mkdir(parents=True, exist_ok=True)
     layers = [int(x) for x in a.layers.split(",")] if a.layers else list(LAYERS)
     ck = LC.Checkpoint()
-    m, init_sha = LC.build_model(ck, engram=False)
+    # --engram (s81-functional-token r2, 2026-10-14): Engram layers (L1, L14) read the post-Engram h; without the tables
+    # the replay of those layers is not the golden's (their checks fail)
+    m, init_sha = LC.build_model(ck, engram=bool(getattr(a, "engram", False)))
     summary = {}
     for L in layers:
         t0 = time.time()
@@ -1184,6 +1186,7 @@ def main():
     ap.add_argument("step", choices=("golden", "prep", "check", "select", "quant", "run", "equiv", "record"))
     ap.add_argument("--out", required=True)
     ap.add_argument("--layers", default=None)
+    ap.add_argument("--engram", action="store_true", help="golden: build the model with the Engram tables (L1 / L14)")
     ap.add_argument("--fns", default=None, help="prep: only these chain fns (comma list)")
     ap.add_argument("--extra-cases", default="su_cases_rw.pkl", help="record: merged extra case set if run")
     ap.add_argument("--cases", default="su_cases.pkl")
