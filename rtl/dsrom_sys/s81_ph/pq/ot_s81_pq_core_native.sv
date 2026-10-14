@@ -9,8 +9,21 @@
 // Functional candidate: ctl/AQ pin stages and clock closure are still owed.
 module ot_s81_pq_core_native (
     input wire ck_ctl, ck_qb, ck_fault,
+`ifdef OT_PQ_QB_PHYS_SPLIT
+    input wire [3:0] ck_qb_aux,
+`endif
     input wire [1:0] ck_aq,
+`ifdef OT_PQ_AQ_PHYS_SPLIT
+    input wire [15:0] ck_aq_aux,
+`endif
     input wire [3:0] ck_ix,
+`ifdef OT_PQ_IX_PHYS_SPLIT
+`ifdef OT_PQ_IX_BANK_SPLIT
+    input wire [31:0] ck_ix_read,
+`else
+    input wire [15:0] ck_ix_read,
+`endif
+`endif
 `ifdef OT_PQ_BC_SLICED
     input wire [15:0] ck_bc,
 `else
@@ -68,8 +81,12 @@ module ot_s81_pq_core_native (
     // RG11 selects exactly twelve count groups in this controller. The
     // group region census is external: each tier/half has 10 or 11 regions,
     // not eleven equal groups and a seven-region tail.
+`ifdef OT_PQ_CTL_FIXED
+    ot_s81_pq_ctl_fixed_native u_ctl (
+`else
     ot_s81_pq_ctl_native #(.PHW(9), .SAW(11), .R(128), .VAW(19), .VRD(64), .KMAX(6144),
         .BST(2), .NSEG(8), .PQ(1), .RG(11), .XRV(1), .XCAP(16), .RPT(2), .BW(1633)) u_ctl (
+`endif
         .clk(ck_ctl), .rst_n(rst_n), .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase),
         .i_xps(i_xps), .i_obase(i_obase), .i_ops(i_ops), .i_fmt(i_fmt),
         .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_rv(x_rv), .f_fault(fault_to_ctl),
@@ -81,10 +98,17 @@ module ot_s81_pq_core_native (
         .rom_sa(rom_sa), .rom_sq(rom_sq));
 `ifdef OT_PQ_BENCH_TELEMETRY
     assign read_consumed = {b_consume, q_consume};
+`ifdef OT_PQ_CTL_FIXED
+    assign read_speculative = {u_ctl.u_native.hw[0] && u_ctl.u_native.h_fam && !b_consume,
+                              u_ctl.u_native.hw[0] && !u_ctl.u_native.h_fam && !q_consume};
+    assign observed_k = u_ctl.u_native.ld_kk;
+    assign observed_load_active = u_ctl.u_native.ld_run;
+`else
     assign read_speculative = {u_ctl.hw[0] && u_ctl.h_fam && !b_consume,
                               u_ctl.hw[0] && !u_ctl.h_fam && !q_consume};
     assign observed_k = u_ctl.ld_kk;
     assign observed_load_active = u_ctl.ld_run;
+`endif
 `ifdef OT_PQ_REFERENCE
     assign qb_q0_index = 0; assign qb_q1_index = 0; assign qb_pair_valid = 0;
 `else
@@ -103,35 +127,139 @@ module ot_s81_pq_core_native (
 `else
     genvar z;
     generate for (z = 0; z < 4; z = z + 1) begin : g_coverage
+`ifdef OT_PQ_IX_PHYS_SPLIT
+`ifdef OT_PQ_IX_BANK_SPLIT
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].u_ix.g_rg[0].g_bankpart[0].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[0].g_bankpart[1].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[1].g_bankpart[0].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[1].g_bankpart[1].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[2].g_bankpart[0].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[2].g_bankpart[1].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[3].g_bankpart[0].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[3].g_bankpart[1].u_rb.g_bank[0].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_rg[0].g_bankpart[0].u_rb.g_bank[0].written;
+`else
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].u_ix.g_rg[0].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[0].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[1].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[1].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[2].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[2].u_rg.g_bank[1].rows_read &
+            g_ix[z].u_ix.g_rg[3].u_rg.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[3].u_rg.g_bank[1].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_rg[0].u_rg.g_bank[0].written;
+`endif
+`elsif OT_PQ_IX_PIN_VARIANTS
+        if(z < 2) begin : g_l
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[1].rows_read &
+            g_ix[z].g_left.u_ix.u_native.g_read_group[1].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[1].g_bank[1].rows_read &
+            g_ix[z].g_left.u_ix.u_native.g_read_group[2].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[2].g_bank[1].rows_read &
+            g_ix[z].g_left.u_ix.u_native.g_read_group[3].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[3].g_bank[1].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[0].written;
+        end else begin : g_r
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].g_right.u_ix.u_native.g_read_group[0].g_bank[0].rows_read & g_ix[z].g_right.u_ix.u_native.g_read_group[0].g_bank[1].rows_read &
+            g_ix[z].g_right.u_ix.u_native.g_read_group[1].g_bank[0].rows_read & g_ix[z].g_right.u_ix.u_native.g_read_group[1].g_bank[1].rows_read &
+            g_ix[z].g_right.u_ix.u_native.g_read_group[2].g_bank[0].rows_read & g_ix[z].g_right.u_ix.u_native.g_read_group[2].g_bank[1].rows_read &
+            g_ix[z].g_right.u_ix.u_native.g_read_group[3].g_bank[0].rows_read & g_ix[z].g_right.u_ix.u_native.g_read_group[3].g_bank[1].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].g_right.u_ix.u_native.g_read_group[0].g_bank[0].written;
+        end
+`else
         assign ix_rows_read[96*z +: 96] =
             g_ix[z].u_ix.g_read_group[0].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[0].g_bank[1].rows_read &
             g_ix[z].u_ix.g_read_group[1].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[1].g_bank[1].rows_read &
             g_ix[z].u_ix.g_read_group[2].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[2].g_bank[1].rows_read &
             g_ix[z].u_ix.g_read_group[3].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[3].g_bank[1].rows_read;
         assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_read_group[0].g_bank[0].written;
+`endif
+`ifdef OT_PQ_QB_PHYS_SPLIT
+        if(z==0) begin:g_qb0
+            assign qb_rows_read[96*z +: 96] = u_qb.u_bank0.u_native.rows_read;
+            assign qb_rows_written[96*z +: 96] = u_qb.u_bank0.u_native.written;
+        end
+        else if(z==1) begin:g_qb1
+            assign qb_rows_read[96*z +: 96] = u_qb.u_bank1.u_native.rows_read;
+            assign qb_rows_written[96*z +: 96] = u_qb.u_bank1.u_native.written;
+        end
+        else if(z==2) begin:g_qb2
+            assign qb_rows_read[96*z +: 96] = u_qb.u_bank2.u_native.rows_read;
+            assign qb_rows_written[96*z +: 96] = u_qb.u_bank2.u_native.written;
+        end
+        else if(z==3) begin:g_qb3
+            assign qb_rows_read[96*z +: 96] = u_qb.u_bank3.u_native.rows_read;
+            assign qb_rows_written[96*z +: 96] = u_qb.u_bank3.u_native.written;
+        end
+`else
         assign qb_rows_read[96*z +: 96] = u_qb.g_bank[z].rows_read;
         assign qb_rows_written[96*z +: 96] = u_qb.g_bank[z].written;
+`endif
     end endgenerate
 `endif
 `endif
     wire [511:0] aq_q;
     wire [19:0] aq_e;
+`ifdef OT_PQ_AQ_SIDE_PARITY
+    wire [9:0] aq_p;
+`endif
     genvar g;
     generate for (g = 0; g < 2; g = g + 1) begin : g_aq
-        ot_dsrom_aq12t u_aq (.clk(ck_aq[g]), .rst_n(rst_n), .v(aq_vin), .x(x_q[1024*g +: 1024]),
-            .vo(), .q(aq_q[256*g +: 256]), .e(aq_e[10*g +: 10]), .y(), .fault(aqf[g]));
+`ifdef OT_PQ_AQ_PHYS_SPLIT
+        ot_s81_pq_aq_split_native #(.QONLY(1)) u_aq (.clk(ck_aq[g]),.clk_mem(ck_aq_aux[8*g +: 4]),.clk_math(ck_aq_aux[8*g+4 +: 4]),
+`else
+        ot_dsrom_aq12t u_aq (.clk(ck_aq[g]),
+`endif
+            .rst_n(rst_n), .v(aq_vin), .x(x_q[1024*g +: 1024]),
+            .vo(), .q(aq_q[256*g +: 256]), .e(aq_e[10*g +: 10]), .y(), .fault(aqf[g])
+`ifdef OT_PQ_AQ_SIDE_PARITY
+            , .qp(aq_p[5*g +: 5])
+`endif
+        );
     end endgenerate
     wire [255:0] hq0, hq1;
     wire [9:0] he0, he1;
-    ot_s81_pq_qb_sram u_qb (.clk(ck_qb), .rst_n(rst_n), .consume(q_consume), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
+`ifdef OT_PQ_QB_PHYS_SPLIT
+    ot_s81_pq_qb_split_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
+`else
+    ot_s81_pq_qb_sram u_qb (.clk(ck_qb),
+`endif
+        .rst_n(rst_n), .consume(q_consume), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
         .h_b0(h_b0), .h_b1(h_b1), .hw_sv(hw[13:12]), .hq0(hq0), .hq1(hq1), .he0(he0), .he1(he1),
-        .fault(storage_fault[4]));
+        .fault(storage_fault[4])
+`ifdef OT_PQ_AQ_SIDE_PARITY
+        , .aq_p(aq_p)
+`endif
+    );
     wire [1023:0] bt_d;
     generate for (g = 0; g < 4; g = g + 1) begin : g_ix
         wire [255:0] d;
+`ifdef OT_PQ_IX_PHYS_SPLIT
+        ot_s81_pq_ix_split_native u_ix (.clk(ck_ix[g]),
+`ifdef OT_PQ_IX_BANK_SPLIT
+            .clk_read(ck_ix_read[8*g +: 8]),
+`else
+            .clk_read(ck_ix_read[4*g +: 4]),
+`endif
+            .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+            .bt_d(d), .fault(storage_fault[g]));
+`elsif OT_PQ_IX_PIN_VARIANTS
+        if(g < 2) begin : g_left
+        ot_s81_pq_ix_left_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+            .bt_d(d), .fault(storage_fault[g]));
+        end else begin : g_right
+        ot_s81_pq_ix_right_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+            .bt_d(d), .fault(storage_fault[g]));
+        end
+`else
         ot_s81_pq_ix_sram u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
             .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
             .bt_d(d), .fault(storage_fault[g]));
+`endif
         genvar u;
         for (u = 0; u < 4; u = u + 1) begin : g_u
             assign bt_d[256*u + 64*g +: 64] = d[64*u +: 64];
@@ -1819,7 +1947,14 @@ module ot_s81_pq_fault_pin (
     reg [17:0] captured;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin captured <= 0; fault <= 0; end
-        else begin captured <= faults; fault <= fault || |captured; end
+        else begin
+`ifdef OT_S81_PQ_FAULT_MUT
+            captured <= faults | 18'd1;
+`else
+            captured <= faults;
+`endif
+            fault <= fault || |captured;
+        end
 endmodule
 
 // Native BC physical slice0: 409 bits, exact source permutation in bc_slice_request_2250.json.
