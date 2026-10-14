@@ -35,6 +35,7 @@ module ot_s81_hop_tx #(
     parameter integer SUW      = 10,     // the sequencer's descriptor user width
     parameter integer USE_VM_RVALID = 0,
     parameter integer OUT_DEPTH = 4,
+    parameter integer OUT_SRAM = 0, // opt-in bounded native VM-return queue; one 64x512 macro
     parameter integer QD       = 8
 ) (
     input  wire               clk,
@@ -111,8 +112,17 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     reg            oq_l [0:OUT_DEPTH-1];
     reg [OB-1:0]   oq_w, oq_r;
     reg [OB:0]     oq_n;
-    assign out_valid = oq_n != 0;
-    assign out_data  = oq_d[oq_r];
+    reg oq_push; reg [FLIT-1:0] oq_push_data;
+    wire oq_hv, oq_ovf; wire [FLIT-1:0] oq_head;
+    generate if(OUT_SRAM) begin : g_oq_sram
+        initial if(FLIT!=512 || OUT_DEPTH>64) $fatal(1,"native hop SRAM queue needs 512bit records and <=64 credits");
+        ot_fifo_sram_fwft #(.W(512),.DEPTH(OUT_DEPTH),.MACRO(0)) output_fifo(
+          .clk(clk),.rst_n(rst_n),.push(oq_push),.wdata(oq_push_data),.pop(pop),.hv(oq_hv),.head(oq_head),.ovf(oq_ovf));
+        assign out_valid=oq_hv;assign out_data=oq_head;
+    end else begin : g_oq_flop
+        assign oq_hv=0;assign oq_head=0;assign oq_ovf=0;
+        assign out_valid=oq_n!=0;assign out_data=oq_d[oq_r];
+    end endgenerate
     assign out_last  = oq_l[oq_r];
     wire pop = out_valid && out_ready;
 
@@ -145,7 +155,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             dq_w <= 0; dq_r <= 0; dq_n <= 0; go_n <= 0;
-            oq_w <= 0; oq_r <= 0; oq_n <= 0; cur_typ <= 0;
+            oq_w <= 0; oq_r <= 0; oq_n <= 0; cur_typ <= 0; oq_push<=0;oq_push_data<=0;
             st <= S_IDLE; k <= 0; nw <= 0; rd_v <= 1'b0; rd_l <= 1'b0; r1_v <= 1'b0; r1_l <= 1'b0; cur_slot <= 1'b0; cur_op <= 0; pend_flits <= 0;
             read_w <= 0; read_r <= 0; read_pending <= 0; read_last <= 0;
             vm_re <= 1'b0; vm_raddr <= 0; dn_v <= 1'b0; dn_tag <= 0;
@@ -154,7 +164,8 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
         end else begin
             dn_v <= 1'b0;
             vm_re <= 1'b0;
-            push = 1'b0; push_d = 0; push_l = 1'b0;
+            push = 1'b0; push_d = 0; push_l = 1'b0;oq_push<=0;
+            if(oq_ovf)begin fault<=1;if(fault_code==0)fault_code<=5;end
             pf_n = pend_flits;
             read_issue = 1'b0;
             // descriptors (the engine-side queue of QD entries)
@@ -223,7 +234,13 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
                 2'b01: read_pending <= read_pending - 1'b1;
                 default: read_pending <= read_pending;
             endcase
-            if (push) begin oq_d[oq_w] <= push_d; oq_l[oq_w] <= push_l; oq_w <= oq_w + 1'b1; end
+            if (push) begin
+                if(OUT_SRAM)begin oq_push<=1;oq_push_data<=push_d;end
+                else oq_d[oq_w]<=push_d;
+                // One-bit last metadata stays in a matching flop ring, rather
+                // than allocating an entire second512-bit macro for one bit.
+                oq_l[oq_w]<=push_l;oq_w<=oq_w+1'b1;
+            end
             if (pop) begin oq_r <= oq_r + 1'b1; pf_n = pf_n - 1'b1; end
             oq_n <= oq_n + (push ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
             pend_flits <= pf_n;

@@ -39,7 +39,7 @@ module ot_s81_ctrl #(
     parameter integer HC_SLOT_REBASE = 0,
     parameter integer H_TRANSFER = 0, HC_S_RD = 2, HC_COMMIT_BANKS = 32,
     parameter integer NENG     = 12,
-    parameter integer USE_VM_RVALID = 0, OUT_DEPTH = 4,
+    parameter integer USE_VM_RVALID = 0, OUT_DEPTH = 4, HOP_OUT_SRAM = 0,
     parameter integer QD       = 8,
     parameter integer ENG_HOP  = 7,
     parameter integer HOP_TX   = 1,          // 0 (s81-ctl-1011, decision 10-10 22:02): hop_tx retired; port ENG_HOP is an external engine port
@@ -228,7 +228,7 @@ module ot_s81_ctrl #(
     generate if(H_TRANSFER) begin : g_htransfer
         initial if(ROLE!=0 || HOP_TX!=1 || !USE_VM_RVALID || !HC_SLOT_REBASE || FLIT!=512 || VWA!=14)
             $fatal(1,"native H transfer requires layer/internal hop, valid VM returns and explicit slot lowering");
-        ot_s81_htransfer_boundary #(.XW(XW),.RXB(RXB),.TXB(TXB),.S_RD(HC_S_RD),.S_WR(HC_COMMIT_BANKS)) hboundary(
+        ot_s81_htransfer_boundary #(.XW(XW),.RXB(RXB),.TXB(TXB),.S_RD(HC_S_RD),.S_WR(HC_COMMIT_BANKS),.HDEPTH(OUT_DEPTH)) hboundary(
             .clk(clk),.rst_n(rst_n),.land_v(vm_we),.land_a(vm_waddr),.land_d(vm_wdata),
             .hc_head(hc_queue_head),.hc_done_v(dn_v[2]),.hc_done_tag(dn_tag[2*TAGW+:8]),.normal_inputs_present(hc_normal_inputs_present),.hc_inputs_present(hc_inputs_present),
             .hc_rq_v(hc_vm_rq_v),.hc_rq_row(hc_vm_rq_row),.hc_rs_v(hc_vm_rs_v),.hc_rs_d(hc_vm_rs_d),
@@ -261,7 +261,7 @@ module ot_s81_ctrl #(
         else if (r_v) begin rh_v <= 1'b1; rh_tok <= r_tok; rh_val <= r_val; rh_stop <= r_stop; end
     generate if (HOP_TX != 0) begin : g_hoptx
     ot_s81_hop_tx #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .VWA(VWA), .XW(XW), .TXB(TXB),
-        .SIDE_TXB(SIDE_TXB), .SIDE_RXB(SIDE_RXB), .CMDW(CMDW), .OPW(OPW), .ARGW(ARGW), .SUW(SUW), .USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .QD(QD)) u_hop (
+        .SIDE_TXB(SIDE_TXB), .SIDE_RXB(SIDE_RXB), .CMDW(CMDW), .OPW(OPW), .ARGW(ARGW), .SUW(SUW), .USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .OUT_SRAM(HOP_OUT_SRAM), .QD(QD)) u_hop (
         .clk(clk), .rst_n(rst_n), .cmd_v(s_cv[ENG_HOP]), .cmd_d(s_cd[ENG_HOP*CMDW +: CMDW]), .dn_v(h_dv), .dn_tag(h_dt),
         .win_ctx_v(native_win_v),.win_ctx_slot(native_win_slot),.win_ctx_user(native_win_user),
         .win_ctx_pos(native_win_pos),.win_ctx_tok(native_win_tok),.win_ctx_ids(native_win_ids),.win_ctx_dead(native_win_dead),

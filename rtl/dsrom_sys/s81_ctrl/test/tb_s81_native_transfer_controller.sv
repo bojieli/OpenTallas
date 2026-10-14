@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // The real package/stage/HC/banked-VM/hop chain, H load/store only. This is
 // not a full layer: coefficients, fields and FP POST/NORM remain separate.
-module tb_s81_native_transfer_controller #(parameter integer MUT=0,STALL=0);
+module tb_s81_native_transfer_controller #(parameter integer MUT=0,STALL=0,TX_DEPTH=32,TX_SRAM=1);
  reg ck=0,rst=0;always #0.4166 ck=~ck;
  reg pw=0;reg[6:0] pa=0;reg[27:0] pd=0;
  reg iv=0,il=0;reg[511:0] id=0;wire ir,ov,ol;wire[511:0] od;reg outready=1;
@@ -15,7 +15,7 @@ module tb_s81_native_transfer_controller #(parameter integer MUT=0,STALL=0);
  wire[31:0] jobs;
  assign dnv={9'd0,hdone[8],2'd0};assign dnt={72'd0,hdone[7:0],16'd0};
  ot_s81_ctrl #(.ROLE(0),.MY_ID(17),.SRC_LO(16),.SRC_HI(16),.MAXU(16),.XW(640),.RXB(0),.TXB(6144),
- .H_TRANSFER(1),.HC_SLOT_REBASE(1),.USE_VM_RVALID(1),.OUT_DEPTH(4),.STUCK(10000)) ctrl(
+ .H_TRANSFER(1),.HC_SLOT_REBASE(1),.USE_VM_RVALID(1),.OUT_DEPTH(TX_DEPTH),.HOP_OUT_SRAM(TX_SRAM),.STUCK(10000)) ctrl(
  .clk(ck),.rst_n(rst),.source_token_dead(1'b0),.eng_rb_v(1'b0),.eng_rb_user(12'd0),.eng_rb_n(3'd0),
  .pw_v(pw),.pw_a(pa),.pw_d(pd),.prog_len(8'd3),.cfg_users_static(12'd16),
  .in_valid(iv),.in_ready(ir),.in_data(id),.in_last(il),.out_valid(ov),.out_ready(outready),.out_data(od),.out_last(ol),
