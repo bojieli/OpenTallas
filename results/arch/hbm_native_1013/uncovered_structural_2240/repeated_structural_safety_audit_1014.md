@@ -42,11 +42,13 @@ Current native quant proofs use four real q8 endpoints with production-record ve
 - `quant_sfu_actual_inventory.json`: complete source/body rectangles, clock/reset and open parent requirements.
 - `quant_leaf_clock_reset_abi.json`: exact14-root clock index and literal reset origins.
 - `../uncovered_2240_quant_sfu.json`: retained16-row ownership/requiredness matrix.
-- `../../qfront_1row/face_ff_final_report.json`: clean frontend actual P/Q, per-bit port inventory and deep-clock setup/hold windows.
-- `../../../../rtl/ref_tile/qdq_native_peer4/wr_split_ffd/report.json`, `face_split_aaf/report.json`, `leaf_clocks_90/report.json`, `captured_ack_bypass_ccdd/report.json`: distinct immutable native source proofs; the final report includes the185-cycle failing comparison.
+- `results/arch/hbm_native_1013/qfront_1row/face_ff_final_report.json`: clean frontend actual P/Q, per-bit port inventory and deep-clock setup/hold windows.
+- `results/rtl/ref_tile/qdq_native_peer4/{wr_split_ffd,face_split_aaf,leaf_clocks_90,captured_ack_bypass_ccdd}/report.json`: distinct immutable native source proofs; the final report includes the185-cycle failing comparison.
 - `ov_shared_actual_pin_audit.json` and `ov_shared_actual_pin_report.json`: actual exported OV defects, including all failed bus classes.
-- `qw_lane_root_partition_requirements.json` and `../../../../rtl/ref_tile/qw_lgr_roots_143/report.json`: source/private-root alternatives, estimates distinguished from actual closed constituent measurements.
+- `qw_lane_root_partition_requirements.json` and `results/rtl/ref_tile/qw_lgr_roots_143/report.json`: source/private-root alternatives, estimates distinguished from actual closed constituent measurements.
 - `sfu_quarter_composition_request.json`, `sfu_mapper_lane_actual_pairs.json`: real frozen constituents and actual mapper pair defects.
 - Sourcebranches: `codex/hbm-quant-sfu-2240`, immutable `codex/hbm-core-cts-n3`, child `codex/sfu-native-quarter`, child `codex-qdq-write-completion-split`. Root serial publication owns shared helper/main merges.
+
+SFU source-bound broadcast/cache frontier is additionally recorded in child commit`d52ad1e66`, `results/arch/hbm_native_1013/sfu_native_quarter/cache_extraction_boundary.json`; exact bit graph is `literal_source_pin_graph.json.gz`. A proposed alternative distributes existing four mapper registered stages geographically while retaining BCAST1/RET5, avoiding an assumed added-edge tree. It is an unimplemented source/clock/pin partition until its frozen oracle and real stage views pass.
 
 Next closure action is to finish actual FIN/PAY/CORE pin exports, preserve source-matched production prices after each real boundary change, and hand the resulting complete clock/reset/child graph to the die feasibility and owned-native vehicle owners. No leaf CLOSED count is reported as native parent closure.
