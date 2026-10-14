@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_bay_pad15s0-bp1-COMMIT",
+ "name": "qfd_vm_bay_pad15s0-bp2-a6a2fb5a8",
  "block": "ot_qfd_vm_bay_pad15s0",
  "ref_tile": true,
  "owner": "Claude:qwen_tp8_vm4",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-tp8-vm-phys",
-  "commit": "COMMIT",
+  "commit": "a6a2fb5a8",
   "extra_paths": [
    "rtl/qwen_sys/vm_plane_20261013",
    "rtl/hdc",
@@ -19,7 +19,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_vm_bay_pad15s0 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_vm_bay_pad15s0 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QFD_VM_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -121,7 +121,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_bay_pad15s0/qfd_vm_bay_pad15s0-bp1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_bay_pad15s0/qfd_vm_bay_pad15s0-bp2-a6a2fb5a8"
   }
  ],
  "cycles_added": 0,

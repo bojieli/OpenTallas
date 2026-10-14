@@ -967,7 +967,12 @@ def cts_sink_env(r: dict) -> list:
     cs = r.get("cts_sink")
     if not cs:
         return []
-    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size ' + str(int(cs['size'])) + ' -sink_clustering_max_diameter ' + str(int(cs['diameter_um'])))}"]
+    # "extra": further clock_tree_synthesis options, validated ("-sink_clustering_levels 2", "-distance_between_buffers 40":
+    # qkd_astk_ep 10-13: the last H-tree net strung 8 leaf buffers over ~150 um, its far leaves 70 ps late)
+    extra = str(cs.get("extra", "")).strip()
+    if extra and not re.fullmatch(r"(-[a-z_]+( [0-9.]+)?)( -[a-z_]+( [0-9.]+)?)*", extra):
+        raise SpecError(f"spec: route.cts_sink.extra {extra!r}: '-option [number]' items only")
+    return [f"CTSA={shq('-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size ' + str(int(cs['size'])) + ' -sink_clustering_max_diameter ' + str(int(cs['diameter_um'])) + (' ' + extra if extra else ''))}"]
 
 
 def pin_balance_env(r: dict, lc: dict | None = None) -> list:

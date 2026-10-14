@@ -150,12 +150,12 @@ def main():
           f'-CFLAGS -O0 -j 2 --top-module tb_qfd_vm_bay_{tag} %s --Mdir {{RUN}}/bench/%s {P}/bay/tb_qfd_vm_bay_{tag}.sv ' + ' '.join(srcs) +
           f' > {{RUN}}/bench/%s.build.log 2>&1 && {{RUN}}/bench/%s/Vtb_qfd_vm_bay_{tag} > {{RUN}}/bench/%s.log 2>&1; tail -3 {{RUN}}/bench/%s.log; grep -q \'^PASS qfd_vm_bay_{tag}\' {{RUN}}/bench/%s.log')
     def bench(n, args, exp): return dict(name=n, cmd=vb % ((args, n) + (n,) * 5), expect=exp, threads=2, peak_ram_gb=4, needs=['verilator'])
-    spec = dict(name=f'qfd_vm_bay_{tag}', top=top, kind='cluster', sources=srcs, params={}, clock_port='clk', reset_ports=[], hard_define='OT_QFD_VM_HARD',
+    spec = dict(name=f'qfd_vm_bay_{tag}', top=top, kind='cluster', sources=srcs, params={}, clock_port='clk', reset_ports=[], hard_define='OT_QFD_VM_HARD', defines=['OT_QFD_VM_HARD'],
                 outline=dict(w=W_, h=H_), child_lattice_um=2.16, children=children,
                 abut_plan=dict(channel_um=4.32, edge_um=8.64, why='the VM lane plan stands relay / pad tiles at 21.6-um pitch (4.32-um channels, pins face to face); this probe routes the fullest bay to measure that channel'), pins=pins, inter=['*'], refglob='*',
                 slot_change_request='el1011-qwen-tp8.log 2026-10-13 VM4: bay PILOT, not a die slot: the fullest pad-row bay of the tile-level lane plan with a 21.6-um routing frame; the band cluster takes these tiles flat',
                 route=dict(pd=0.5, period_ps=770, threads=8, peak_ram_gb=16, hold_margin_ns=0.03),
-                job=dict(owner='Claude:qwen_tp8_vm4', branch='claude/qwen-tp8-vm-phys', tag='bp1',
+                job=dict(owner='Claude:qwen_tp8_vm4', branch='claude/qwen-tp8-vm-phys', tag='bp2',
                          purpose=f'Qwen TP8 VM lane-bay PILOT ({a.bay}, the fullest pad-row bay: {len(tl)} closed tiles in {B["tiles"]} slots at the plan pitch 21.6 um, 4.32-um channels, '
                                  f'{len(lanes)} lanes of 8 b, {sum(8 * l["stages"] for l in lanes)} stage bits; wires + hard children only): measures the real congestion / DRC / timing of abutted relay and pad tiles '
                                  'with their closed pins before the band and region clusters are cut. Bench = every lane against its planned me-enabled stage count, every clock; mutants: one lane a tile short, two lanes swapped.',
