@@ -21,8 +21,9 @@
 // Order and values are preserved exactly; the engine sees the same word stream on every port.  Latency: TX +1,
 // RX +3 edges (pin capture, queue head, launch).  Faults (sticky): link word into a full buffer (far sender ignored
 // credits), engine credit overflow (more engine credits returned than EC), queue overflow.
-// Negative controls (bench only): OT_LINKEND_MUT_NOGATE (TX grants ignore the link credits) and OT_LINKEND_MUT_RXNOGATE
-// (RX releases words without engine credits) must overflow a receive buffer and fault under skew.
+// Negative control (bench only): OT_LINKEND_MUT_NOGATE (TX grants ignore the link credits) must overflow the far receive
+// buffer and fault (LC 32 unit bench: detected).  An RX-gate mutant was NOT detected by any case (the engine is never
+// back-pressured long enough) and is not claimed.
 // ---------------------------------------------------------------------------
 module ot_coll_link_end #(
     parameter integer PW  = 546,
@@ -84,11 +85,7 @@ module ot_coll_link_end #(
     reg [CW-1:0] ea;
     wire         q_hv, q_ovf;
     wire [PW-1:0] q_hd;
-`ifdef OT_LINKEND_MUT_RXNOGATE
-    wire         pop = q_hv;                 // mutant: words leave without an engine credit
-`else
     wire         pop = q_hv && (ea != 0);
-`endif
     always @(posedge clk) begin rr_q <= l_rx_rec; od_q <= q_hd; end
     ot_coll_tp8_q #(.W(PW), .D(LC), .MEM(MEM)) u_q (.clk(clk), .rst_n(rst_n), .push(rv_q), .wd(rr_q), .pop(pop),
         .hv(q_hv), .hd(q_hd), .ovf(q_ovf));

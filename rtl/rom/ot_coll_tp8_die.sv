@@ -481,8 +481,10 @@ module ot_coll_tp8_die #(
         end
         assign lb_hd=lbh[PW-1:0]; assign pq_hd=pqh[PW-1:0]; assign eq_hd=eqh[PW-1:0];
         assign lq_hd=lqh[LW-1:0]; assign tq_hd=tqh[RW-1:0]; assign rq_hd=rqh[RW-1:0];
-        assign {rq_hv,tq_hv,lq_hv,eq_hv,pq_hv,lb_hv}=hv[5:0];
-        assign {rq_ovf,tq_ovf,lq_ovf,eq_ovf,pq_ovf,lb_ovf}=ovf[5:0];
+        // queue status from the META leaf (column 4: the controller reads its heads' tag / mode / last anyway, so the
+        // control sits beside one leaf); overflow is the OR over all five replicas
+        assign {rq_hv,tq_hv,lq_hv,eq_hv,pq_hv,lb_hv}=hv[29:24];
+        assign {rq_ovf,tq_ovf,lq_ovf,eq_ovf,pq_ovf,lb_ovf}=ovf[29:24]|ovf[23:18]|ovf[17:12]|ovf[11:6]|ovf[5:0];
     end endgenerate
 
     // ---------------- faults ----------------

@@ -97,10 +97,10 @@ def harness(scratch: Path) -> Path:
 
 
 def build(scratch: Path, latu: int, lats: int, define: str | None, wrapper_columns: int = 0, leb: int = 0,
-          lc: int = 128) -> Path:
-    obj = scratch / f"obj_u{latu}_s{lats}_w{wrapper_columns}_e{leb}_{lc}{('_' + define) if define else ''}"
+          lc: int = 128, eng: str = "") -> Path:
+    obj = scratch / f"obj_u{latu}_s{lats}_w{wrapper_columns}_e{leb}_{lc}{('_' + eng) if eng else ''}{('_' + define) if define else ''}"
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
-           "-Wno-TIMESCALEMOD", "--top-module", "tb_coll_tp8", f"-GWT={int(wrapper_columns)}", f"-GLEB={leb}", f"-GLC={lc}", f"-GLATU={latu}", f"-GLATS={lats}", "-GBPC=3600", "-GICR=32",
+           "-Wno-TIMESCALEMOD", "--top-module", "tb_coll_tp8", f"-GWT={int(wrapper_columns)}", f"-GLEB={leb}", f"-GLC={lc}"] + [f"-G{kv}" for kv in eng.split(",") if kv] + [ f"-GLATU={latu}", f"-GLATS={lats}", "-GBPC=3600", "-GICR=32",
            "-Mdir", str(obj)] + ([f"+define+{define}"] if define else []) + [str(s) for s in SRC] + \
           [str(harness(scratch)), "-CFLAGS", "-O1", "-j", "16"]
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -119,6 +119,7 @@ def main():
                     help="WT: 1 = closed column leaves, 2 = registered-return column leaves (qwen-coll-io 10-14)")
     ap.add_argument("--leb", type=int, default=0, help="1: ot_coll_link_end on every SerDes port (link-level credits)")
     ap.add_argument("--lc", type=int, default=128, help="link credits = receive buffer words with --leb 1")
+    ap.add_argument("--eng", default="", help="depth sweep, WT 0 only: comma list of EDEPTH=,EPR=,EMEMM=,ECT=,QLQD=,QTQD=")
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None, help="regex on case names")
     a = ap.parse_args()
@@ -127,7 +128,7 @@ def main():
     if a.only:
         cases = [c for c in cases if re.search(a.only, c[0])]
     a.out.mkdir(parents=True, exist_ok=True)
-    exe = build(a.out, a.latu, a.lats, a.mutant_define, a.wrapper_columns, a.leb, a.lc)
+    exe = build(a.out, a.latu, a.lats, a.mutant_define, a.wrapper_columns, a.leb, a.lc, a.eng)
     bad = []
     records = []
     for i, (name, nmsg, words, gap, skew, mk, inj, ival, big, tagbad) in enumerate(cases):
@@ -153,7 +154,7 @@ def main():
         if not ok:
             bad.append(name)
     (a.out / "record.json").write_text(json.dumps(dict(schema="opentallas.qwen.tp8.collective.v1", ranks=ND, lanes=LANES,
-        latu=a.latu, lats=a.lats, wrapper_columns=a.wrapper_columns, link_end=a.leb, link_credits=a.lc, mutant=a.mutant_define, production=a.production,
+        latu=a.latu, lats=a.lats, wrapper_columns=a.wrapper_columns, link_end=a.leb, link_credits=a.lc, engine_sweep=a.eng, mutant=a.mutant_define, production=a.production,
         cycle_span="first accepted input on any rank to last output on all ranks, excludes reset",
         cases=records, source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC},
         executable_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(), native_layer_qualified=False), indent=2) + "\n")

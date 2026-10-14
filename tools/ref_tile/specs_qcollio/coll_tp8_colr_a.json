@@ -1,0 +1,372 @@
+{
+ "name": "coll_tp8_colr_a",
+ "top": "ot_coll_tp8_col_tile_r",
+ "kind": "tile",
+ "recipe": 1,
+ "sources": [
+  "rtl/rom/ot_coll_tp8_col_tile_r.sv",
+  "rtl/rom/ot_coll_tp8_col_tile.sv",
+  "rtl/rom/ot_coll_rst_leaf.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 291.6
+ },
+ "pins": {
+  "E": [
+   "in_d",
+   "dp_d",
+   "dr_d",
+   "sr_d",
+   "up",
+   "ur",
+   "od",
+   "sx"
+  ],
+  "W": [
+   "e_tx",
+   "eq_hd",
+   "lq_wd",
+   "tq_wd",
+   "sr"
+  ],
+  "N": [
+   "s_lo",
+   "s_hi",
+   "sum_d"
+  ],
+  "S": [
+   "lb_hd",
+   "pq_hd",
+   "lq_hd",
+   "tq_hd",
+   "rq_hd",
+   "clk",
+   "rst_n",
+   "die_s",
+   "meta_s",
+   "c_push",
+   "c_pop",
+   "c_hold",
+   "c_sel",
+   "c_takel",
+   "hv",
+   "ovf"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_eq.g_m.g_k?0?.*u_m",
+   "at": [
+    31.968,
+    54.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lq.g_m.g_k?0?.*u_m",
+   "at": [
+    31.968,
+    95.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lq.g_m.g_k?1?.*u_m",
+   "at": [
+    31.968,
+    136.08
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_m.g_k?0?.*u_m",
+   "at": [
+    31.968,
+    177.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lb.g_m.g_k?0?.*u_m",
+   "at": [
+    175.392,
+    95.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lb.g_m.g_k?1?.*u_m",
+   "at": [
+    175.392,
+    136.08
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_pq.g_m.g_k?0?.*u_m",
+   "at": [
+    175.392,
+    177.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_pq.g_m.g_k?1?.*u_m",
+   "at": [
+    103.68,
+    177.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_rq.g_m.g_k?0?.*u_m",
+   "at": [
+    103.68,
+    95.04
+   ],
+   "orient": "R0"
+  }
+ ],
+ "refglob": "*",
+ "route": {
+  "pd": 0.55,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "macro_halo_um": 6.48
+ },
+ "children": [],
+ "inter": [],
+ "orfs_vars": {
+  "OT_MEG_MASTER": "ot_sram_1r1w_32x128_m1",
+  "OT_MEG_EXPECT": 9,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "pin_ranges": {
+  "e_tx": [
+   4.0,
+   24.0
+  ],
+  "eq_hd": [
+   44.0,
+   64.0
+  ],
+  "lq_wd": [
+   95.0,
+   125.0
+  ],
+  "tq_wd": [
+   170.0,
+   195.0
+  ],
+  "sr": [
+   200.0,
+   287.6
+  ],
+  "in_d": [
+   4.0,
+   24.0
+  ],
+  "dp_d": [
+   24.0,
+   44.0
+  ],
+  "dr_d": [
+   44.0,
+   64.0
+  ],
+  "sr_d": [
+   64.0,
+   124.0
+  ],
+  "up": [
+   130.0,
+   150.0
+  ],
+  "ur": [
+   150.0,
+   170.0
+  ],
+  "od": [
+   170.0,
+   190.0
+  ],
+  "sx": [
+   195.0,
+   287.6
+  ],
+  "s_lo": [
+   20.0,
+   100.0
+  ],
+  "s_hi": [
+   100.0,
+   180.0
+  ],
+  "sum_d": [
+   180.0,
+   250.0
+  ],
+  "lb_hd": [
+   4.0,
+   40.0
+  ],
+  "pq_hd": [
+   40.0,
+   76.0
+  ],
+  "lq_hd": [
+   76.0,
+   112.0
+  ],
+  "tq_hd": [
+   112.0,
+   148.0
+  ],
+  "rq_hd": [
+   148.0,
+   184.0
+  ],
+  "clk": [
+   200.0,
+   200.4
+  ],
+  "rst_n": [
+   204.0,
+   204.4
+  ],
+  "die_s": [
+   208.0,
+   208.4
+  ],
+  "meta_s": [
+   212.0,
+   212.4
+  ],
+  "c_push": [
+   216.0,
+   220.0
+  ],
+  "c_pop": [
+   222.0,
+   226.0
+  ],
+  "c_hold": [
+   228.0,
+   228.4
+  ],
+  "c_sel": [
+   230.0,
+   231.0
+  ],
+  "c_takel": [
+   233.0,
+   233.4
+  ],
+  "hv": [
+   236.0,
+   240.0
+  ],
+  "ovf": [
+   242.0,
+   246.0
+  ]
+ },
+ "job": {
+  "owner": "Claude:qwen-coll-io-1014",
+  "branch": "claude/qwen-coll-io-1014",
+  "tag": "r1",
+  "structural_change": "NEW master (WT 2) after 29 failed qfd_io_collective routes: the WT 1 column leaf took every word in on W and out on E, so the pairing (heads -> lo/hi -> hl/hh/gh), EQ (heads/gh/fold-slice sum -> eq_wd), result (engine e_od -> lq_wd/tq_wd) and merger (heads -> m_d -> od) loops left the leaf and returned across 500-900 um into un-registered SRAM write pins. ot_coll_tp8_col_tile_r computes every pairing/gather/merger word INSIDE the leaf from its own heads (static die/meta straps), registers every externally fed write word (fold-slice sum, engine results) at its pin and writes it one edge later, and lands c_hold (512 loads from the port) in a pin flop with a pre-hold copy. Pins face their consumers: E link words, W engine, N pre-fold slices, S control + head meta. +1 edge on the reduce path and +1 on the result path (production AR256 496 vs 494 at LAT 40).",
+  "purpose": "Qwen TP8 compute-die collective (qfd_io_collective) wrapper column leaf, registered-return redesign (qwen-coll-io 10-14, el1014-qwen-coll-io.log). Same 9 x 32x128 macro plan as the closed wt3a leaf; 259.2 x 291.6, cap M5, recipe 1 + macro-edge M5 guard (the wt3a closure recipe). Composition benches: 8-rank TP8 golden ((P0+P1)+P2)+P3 with Pp = die0+die1, exact unit 9 cases + production 3 cases; mutants OT_TP8_MUT_OWNER / OT_TP8_MUT_GATHER / OT_TP8R_MUT_SEAM (the EQ write takes the live, un-aligned word) all fail.",
+  "benches": [
+   {
+    "name": "tp8r_exact",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 2 --out {RUN}/bench/tp8r_exact",
+    "expect": "pass",
+    "pass_regex": "^COLL_TP8 PASS cases=9",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tp8r_production",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 2 --production --out {RUN}/bench/tp8r_production",
+    "expect": "pass",
+    "pass_regex": "^COLL_TP8 PASS cases=3",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tp8r_mut_seam",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 2 --mutant-define OT_TP8R_MUT_SEAM --out {RUN}/bench/tp8r_mut_seam",
+    "expect": "fail",
+    "fail_regex": "^COLL_TP8 FAIL mutant=OT_TP8R_MUT_SEAM",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tp8r_mut_owner",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 2 --mutant-define OT_TP8_MUT_OWNER --out {RUN}/bench/tp8r_mut_owner",
+    "expect": "fail",
+    "fail_regex": "^COLL_TP8 FAIL mutant=OT_TP8_MUT_OWNER",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tp8r_mut_gather",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 2 --mutant-define OT_TP8_MUT_GATHER --out {RUN}/bench/tp8r_mut_gather",
+    "expect": "fail",
+    "fail_regex": "^COLL_TP8 FAIL mutant=OT_TP8_MUT_GATHER",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/qwen_coll_cx"
+  ],
+  "views_to": "physical/ref_tile/coll_tp8_colr/views",
+  "record_to": "results/rtl/ref_tile/coll_tp8_colr"
+ }
+}

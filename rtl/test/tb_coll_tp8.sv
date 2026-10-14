@@ -20,7 +20,15 @@ module tb_coll_tp8 #(
     // qwen-coll-io 2026-10-14: LEB 1 puts ot_coll_link_end (link-level credit termination, LC-word receive buffer)
     // at both ends of every SerDes port; LEB 0 = the engine's 32-credit loop closed over the board link.
     parameter integer LEB   = 0,
-    parameter integer LC    = 128
+    parameter integer LC    = 128,
+    // qwen-coll-io 2026-10-14 depth sweep (WT 0 only; WT 1/2 fix the production shape): engine DEPTH / PR / MEMM / CT and
+    // the result-queue reservation depths LQD / TQD
+    parameter integer EDEPTH = 32,
+    parameter integer EPR    = 2,
+    parameter integer EMEMM  = 1,
+    parameter integer ECT    = 1,
+    parameter integer QLQD   = 64,
+    parameter integer QTQD   = 32
 ) (input wire clk);
     localparam integer ND = 8, FW = 32 * LANES, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
     reg [FW-1:0] part [0:MAXW-1];
@@ -58,7 +66,8 @@ module tb_coll_tp8 #(
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
-            ot_coll_tp8_die #(.PKG(P), .DIE(D), .LANES(LANES), .WT(WT), .ICR(ICR)) u_die (
+            ot_coll_tp8_die #(.PKG(P), .DIE(D), .LANES(LANES), .WT(WT), .ICR(ICR), .DEPTH(EDEPTH), .PR(EPR), .MEMM(EMEMM),
+                .CT(ECT), .LQD(QLQD), .TQD(QTQD)) u_die (
                 .clk(clk), .rst_n(rst_n),
                 .in_valid(iv[g]), .in_cr(icr[g]), .in_data(id[g*FW +: FW]), .in_last(il[g]), .in_mode(im[g]),
                 .in_tag(it[g*TAGW +: TAGW]),
@@ -88,7 +97,7 @@ module tb_coll_tp8 #(
                     .cr_in(srcr[R2*3 + J2]), .cr_out(sxcr[g*3 + j]));
                 assign lef[g*3 + j] = 1'b0;
                 end else begin : g_le
-                ot_coll_link_end #(.PW(PW), .EC(32), .LC(LC)) u_le (.clk(clk), .rst_n(rst_n),
+                ot_coll_link_end #(.PW(PW), .EC(EDEPTH), .LC(LC)) u_le (.clk(clk), .rst_n(rst_n),
                     .e_tx_v(sxv[g*3 + j]), .e_tx_rec(sxrec[(g*3 + j)*PW +: PW]), .e_tx_cr(sxcr[g*3 + j]),
                     .l_tx_v(lsxv[g*3 + j]), .l_tx_rec(lsxrec[(g*3 + j)*PW +: PW]), .l_tx_cr(lsxcr[g*3 + j]),
                     .l_rx_v(lsrv[g*3 + j]), .l_rx_rec(lsrrec[(g*3 + j)*PW +: PW]), .l_rx_cr(lsrcr[g*3 + j]),
