@@ -56,9 +56,9 @@
   "h": 75.6
  },
  "job": {
-  "owner": "Codex:el1013-hbm-redesign-idx",
-  "branch": "claude/hbm-redesign-idx",
-  "tag": "r3-corridor",
+  "owner": "Claude:hbm-group-B3-1014",
+  "branch": "claude/hbm-group-b2-1014",
+  "tag": "r4pin",
   "purpose": "IDX.INDEX ix2 WP structural output-hold corridor repair after r2 GRT132 overflow. Same finite landing-credit/cache-head RTL and259.2x75.6 outline; M5, identical hold circuits, physically disjoint rows before launch-flop planning. Exact ix2 equivalence plus failing head mutant; actual native throughput proof remains separate and in flight. No price or timing relaxation.",
   "extra_paths": [
    "tools/hgi_unit_tput"
@@ -94,7 +94,7 @@
   "record_to": "results/rtl/ref_tile/hgi_ix2_wp"
  },
  "std_area_um2": 6507,
- "structural_change": "R2 failed GRT with132 total overflow: M2 9/M3 52/M4 23/M5 48. South wwq/hold-chain seam at x200-233um y1.7-4.6um dominates congestion-30.rpt. Preserve identical recipe2 BUF-HB4-BUF output and HB4-BUF input circuits, but replace coincident three-cell FIRM seeds with disjoint measured-width chains, each in three legal inward rows; greedily allocate separate lanes for overlapping x intervals. Derive launch-flop anchoring behind this actual hold corridor with unchanged shared auto planner. No RTL, pin face, outline, layer, hold margin, clock, price or behavioural contract changed. Fresh sourcebound CTS measures new physical placement before routing.",
+ "structural_change": "r4pin (Claude group-B3 10-14): same RTL as CLOSED hgi_ix2_wp-r3bound-9a6274356 (TT +17.78 / FF +23.39 / DRC 0); native pin audit (tools/hier_contract/native_pin_audit.py, results/arch/hbm_group_b2_1014/native_pin_audit_b3.json): launch 271.7 ps > 220 on 1,393 of 2,244 outputs (worst wg_req), capture 168.8, R 249.7, spread 21.6. Kit regenerated with the recipe-2 pin defaults of main >= 36de4b87f (pin_reg_split: one dedicated launch flop per output pin, keep_pin_regs, HB2 pad, flops at pins). R2 failed GRT with132 total overflow: M2 9/M3 52/M4 23/M5 48. South wwq/hold-chain seam at x200-233um y1.7-4.6um dominates congestion-30.rpt. Preserve identical recipe2 BUF-HB4-BUF output and HB4-BUF input circuits, but replace coincident three-cell FIRM seeds with disjoint measured-width chains, each in three legal inward rows; greedily allocate separate lanes for overlapping x intervals. Derive launch-flop anchoring behind this actual hold corridor with unchanged shared auto planner. No RTL, pin face, outline, layer, hold margin, clock, price or behavioural contract changed. Fresh sourcebound CTS measures new physical placement before routing.",
  "slot_change_request": "el1013-hbm-redesign-idx 2026-10-13 Codex: ix2 leaf wp Outline 194.4 x 64.8 -> 259.2 x 75.6 um. Widen VM face by 33% (2258 bits / (259.2 um x 20.6 tracks/um) = 0.423), increase core area by 57%; failed GRT had 1693 markers and no decreasing trend. Separate pin-access demand from packer placement; no layer/timing gate changed. Same pin faces/layers; pending die lead assigned pin file / next daily contract revision.",
  "recipe": 2,
  "orfs_vars": {
@@ -104,6 +104,15 @@
  "inhold": false,
  "outhold": false,
  "io_flop_at_pins": false,
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/hbm_group_b2_1014/native_pin_audit_b3.json",
+  "cell": "ot_hgi_idx_ix2_wp",
+  "launch_ps": 271.7,
+  "capture_ps": 168.8,
+  "fix": "1,393 outputs over 220 (worst wg_req 271.7): kit regenerated with recipe-2 pin_reg_split (one dedicated launch flop per output pin), keep_pin_regs, HB2 pad, flops at pins; RTL unchanged"
+ },
+ "keep_pin_regs": true,
  "params": {},
  "macros": [],
  "children": [],
