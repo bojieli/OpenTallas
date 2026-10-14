@@ -209,7 +209,11 @@ module ot_hgi_coll_ep #(
     always @(posedge clk) if (r_go || go) b_run <= r_bbase;
     always @(posedge clk or negedge rst_n) if (!rst_n) tkm_inj <= 1'b0; else if (r_go) tkm_inj <= (TKM != 0) && r_tkm; else if (go) tkm_inj <= 1'b0;
     generate if (TKM != 0) begin : g_tkm
+`ifdef OT_TKM_CLUSTER_BENCH
+        ot_hgi_coll_tkm_cluster #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.tile_clk({((TKM_KMAX+63)/64){clk}}), .clk(clk), .rst_n(rst_n),
+`else
         ot_hgi_coll_tkm #(.KMAX(TKM_KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .MUT(MUT_TKM)) u_tkm (.clk(clk), .rst_n(rst_n),
+`endif
             .start(tk_start), .cfg_n(tk_n), .cfg_k(tk_ko), .cfg_g(tk_g), .cfg_gbase(tk_gb), .cfg_pf(tk_pf), .cfg_nout(tk_no),
             .cfg_obase(tk_ob), .cfg_rbase(tk_rb), .cfg_has_r(tk_hr),
             .del_reserve(tkm_now ? rg_reserve : {DEL{1'b0}}), .del_permit(tk_permit),

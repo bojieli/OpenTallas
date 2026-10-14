@@ -10,10 +10,14 @@ R=$(cd "$(dirname "$0")/../../../../.." && pwd)
 O=$(realpath -m "$1"); VEC=$(realpath -m "$2"); MODE=${3:-quick}; mkdir -p "$O/logs"
 V=${VERILATOR:-$(ls /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator 2>/dev/null || echo verilator)}
 J=${J:-8}
+TKM_SOURCES=()
+if [ "${TKM_CLUSTER:-0}" = 1 ]; then
+  TKM_SOURCES=(-DOT_TKM_CLUSTER_BENCH rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_cluster.sv)
+fi
 build() {  # build <obj> [verilator -G/-D ...]
   local ob=$O/$1; shift
   ( cd "$R" && $V --binary --timing -j $J -O2 --x-assign fast --x-initial fast -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
-    -Wno-MULTIDRIVEN -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm -Mdir "$ob" -Irtl/hbm_accel/generic "$@" \
+    -Wno-MULTIDRIVEN -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm -Mdir "$ob" -Irtl/hbm_accel/generic "${TKM_SOURCES[@]}" "$@" \
     rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv rtl/lib/ot_rst_relay.sv \
     rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_src.sv rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_sink.sv \
     rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv \
