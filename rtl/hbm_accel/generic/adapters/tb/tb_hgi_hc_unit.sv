@@ -116,8 +116,14 @@ module tb_hgi_hc_unit;
 `ifdef WMAC
         , .WMACRO(1)
 `endif
+`ifdef HWINPART
+        , .WINPART(1)
+`endif
 `ifdef SYS
         , .SYS(1)
+`ifdef QPAIR
+        , .QPAIR(1)
+`endif
 `endif
         ) u (.clk(clk), .rst_n(rst_n), .cfg_norm_eps(NEPS), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]),
