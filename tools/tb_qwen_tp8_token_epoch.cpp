@@ -14,7 +14,7 @@ int main(int argc,char**argv){try{Verilated::commandArgs(argc,argv);Vot_qwen_tp8
  auto deliver=[&](){m.grant_ready=1;step();m.grant_ready=0;must(!m.grant_valid&&m.busy,"delivered token lost ownership");};
  auto terminal=[&](unsigned epoch,unsigned token,unsigned pos,unsigned gen){m.terminal_tag=(uint64_t(epoch)<<43)|(uint64_t(37)<<37)|(uint64_t(token)<<19)|(uint64_t(pos)<<6);m.terminal_generation=gen;m.terminal_valid=1;};
  request(65534,151935,8191,3);uint64_t held=m.grant_tag;
- m.warm_ready=0;for(unsigned i=0;i<17;++i){step();must(m.grant_tag==held&&!m.grant_valid&&m.busy&&!m.request_ready,"warmreset dropped active epoch");}m.warm_ready=1;deliver();
+ m.warm_ready=0;for(unsigned i=0;i<17;++i){step();must(m.grant_tag==held&&!m.grant_valid&&m.busy&&!m.request_ready,"warmreset dropped active epoch");must(m.allocated_valid&&!m.allocated_delivered,"allocated witness disappeared during warm hold");}m.warm_ready=1;deliver();must(m.allocated_valid&&m.allocated_delivered,"actual grant delivery witness");
  terminal(65534,151935,8191,3);all_drains(1);
  for(unsigned bit:{43u,37u,19u,6u,0u}){m.terminal_tag^=uint64_t(1)<<bit;step();must(m.busy&&!m.terminal_accepted,"stale identity released token");m.terminal_tag^=uint64_t(1)<<bit;}
  m.terminal_generation^=1;step();must(m.busy&&!m.terminal_accepted,"stale generation released token");m.terminal_generation^=1;
@@ -24,11 +24,13 @@ int main(int argc,char**argv){try{Verilated::commandArgs(argc,argv);Vot_qwen_tp8
  m.terminal_host_drained=0;step();must(m.busy&&!m.terminal_accepted,"early HOST completion");all_drains(1);
  step();must(!m.busy&&m.terminal_accepted,"real committed terminal not accepted");m.terminal_valid=0;step();must(!m.request_ready,"identity fault admitted later token");
  m.wrap_fence_valid=1;m.wrap_links_drained=1;m.wrap_link_reset_seen=1;m.wrap_retraining_done=1;step();must(!m.identity_fault,"actual fault recovery fence not accepted");m.wrap_fence_valid=0;m.wrap_link_reset_seen=0;step();
- request(65535,65536,7935,0);deliver();terminal(65535,65536,7935,0);m.terminal_done=0;m.terminal_fault=1;all_drains(1);step();must(!m.busy&&m.terminal_accepted&&m.wrap_locked,"drained abort/FFFF lock");m.terminal_valid=0;
+ request(65535,65536,7935,0);deliver();terminal(65535,65536,7935,0);m.terminal_done=0;m.terminal_fault=1;all_drains(1);step();must(!m.busy&&m.terminal_accepted&&m.wrap_locked,"drained abort/FFFF lock");
+ // A registered sender sees the registered ACK only at the NEXT rising edge.
+ bool sampled_ack=m.terminal_accepted;step();must(!m.identity_fault,"held registered terminal falsely stale");if(sampled_ack)m.terminal_valid=0;step();must(!m.identity_fault,"terminal rearm fault");
  for(unsigned i=0;i<5;++i){step();must(!m.request_ready&&m.wrap_locked,"FFFF reused without real link fence");}
  m.wrap_fence_valid=1;m.wrap_links_drained=1;m.wrap_retraining_done=1;step();must(m.wrap_locked,"missing link reset accepted");m.wrap_link_reset_seen=1;step();must(!m.wrap_locked,"actual retraining fence not accepted");m.wrap_fence_valid=0;step();
  m.request_position=8192;m.request_token=0;m.request_valid=1;step();must(!m.request_ready&&!m.busy&&!m.grant_valid,"invalid position silently truncated");
  m.request_position=0;m.request_token=151936;step();must(!m.request_ready&&!m.busy&&!m.grant_valid,"invalid vocabulary token admitted");m.request_valid=0;must(m.identity_fault,"invalid request did not fault");
- m.wrap_fence_valid=1;step();must(!m.identity_fault,"invalid-request recovery fence");m.wrap_fence_valid=0;step();
+ m.wrap_fence_valid=1;m.terminal_valid=1;m.terminal_tag^=uint64_t(1)<<43;step();must(m.identity_fault&&!m.request_ready,"fence cleared simultaneous invalid terminal");m.terminal_valid=0;step();must(!m.identity_fault,"invalid-request recovery fence");m.wrap_fence_valid=0;step();
  request(0,0,0,1);std::cout<<"PASS epoch allocator checks="<<checks<<" retainedwarmreset/tag59/staledrains/FFFFfence/failclosed\n";return 0;
 }catch(const std::exception&e){std::cerr<<"FAIL "<<e.what()<<"\n";return 1;}}

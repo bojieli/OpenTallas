@@ -62,16 +62,19 @@
     "runtime_queue_and_credit_contract": "Requires actual composition; static widths do not prove delayed stale credits, queue drain or warm reset coherence"
   },
   "central_epoch_allocator": {
-    "unit": "oth-ubuntu-2117645-1791970997",
+    "unit": "oth-ubuntu-2261808-1791972223",
     "exit": 0,
-    "checks": 56,
+    "checks": 77,
     "mutants_detected": [
       "early_drain",
       "warm_identity",
-      "fault_admit"
+      "fault_admit",
+      "terminal_rearm"
     ],
-    "source_receipt": "token_epoch/v3/receipt.json",
-    "status": "SOURCE_AND_COMPONENT_PROTOCOL_PASS_REAL_SYSTEM_DRAIN_BINDING_PENDING"
+    "source_receipt": "token_epoch/v5/receipt.json",
+    "status": "SOURCE_AND_COMPONENT_PROTOCOL_PASS_REAL_SYSTEM_DRAIN_BINDING_PENDING",
+    "held_terminal": "Actual registered producer retains valid one edge after registered ACK; consumed/rearm suppresses duplicate classification and blocks next request until valid low",
+    "allocated_witness": "allocated_valid/delivered remain explicit accepted-reservation witnesses during warm hold; actual cancellation must carry matching retained tuple and real drains"
   },
   "faithful_cold_token_reference_first2": {
     "unit": "oth-ubuntu-654587-1791969935",
