@@ -45,8 +45,8 @@ RL = "+define+OT_QFD_VM_TILE_MOD=ot_qfd_vm_region_leaf " + " ".join(RL_FILES)
 # leaf owners with 2 x_q relay stages (+ XQR + 2 = 4 edges: XVM 32 -> 36 on r21, 31 -> 35 on the RO 2 / r11 shapes).
 T = "-GXTK=3 -GXMK=2 -GXLO=1 -GXQR=2"
 TR = dict(XTK=3, XMK=2, XLO=1, XQR=2)
-TP = "-GXTK=6 -GXMK=2 -GXLO=1 -GXQR=2"
-TRP = dict(XTK=6, XMK=2, XLO=1, XQR=2)
+TP = "-GXTK=7 -GXMK=2 -GXLO=1 -GXQR=2"
+TRP = dict(XTK=7, XMK=2, XLO=1, XQR=2)
 S3 = "-GSEED=3 -GVL=15 -GXPR=10"
 S9 = "-GSEED=9 -GVL=15 -GXPR=10"
 R11 = "-GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GXPR=10"
@@ -203,10 +203,10 @@ RUNS = [
         mem=PM, prod=1, wq=dict(model_overflow=0, dut_overflow=">=1")),
     # ---- PLAN parameters (claude/qwen-tp8-vm PLAN 2026-10-13, results/arch/qwen_tp8_1012/vm_plane_lanes_claude.json): the
     #      placed x lanes need XPR 12 relay stages (every lane padded to 12), the control trees over the 5-mm column row
-    #      need XTK 6 registered levels (stations at the strip tops, <= 449 um apart, root at the row centre; tapped 6
-    #      entries early: + 0; 6 is the deepest tap the line-control pipeline has), me tree 2 levels, XQR 2.  x latency = XPR + 1 - RO
+    #      need XTK 7 registered levels (13 stations at the strip tops, <= 449 um apart, root at the row centre; tapped 7
+    #      entries early: + 0), me tree 2 levels, XQR 2.  x latency = XPR + 1 - RO
     #      + XQR + 2: r21 / r11 (RO 1) 22 -> 38 / 21 -> 37, RO 2 shape 22 -> 37, production (RO 1) 24 -> 40 = + 16. ----
-    run("plan_r21", R21 + " -GXVM=38 -GXPR=12 " + TP, "PASS", "PLAN XPR 12 / XTK 6 / XMK 2 / XQR 2, r21: XVM 38",
+    run("plan_r21", R21 + " -GXVM=38 -GXPR=12 " + TP, "PASS", "PLAN XPR 12 / XTK 7 / XMK 2 / XQR 2, r21: XVM 38",
         same_as="mw3_bp_r21", tree=TRP),
     run("plan_s3", "-GSEED=3 -GVL=15 -GXPR=12 -GXVM=37 " + TP, "PASS", "PLAN parameters, RV 1 RO 2 SEED 3: XVM 37",
         same_as="mw3_bp_s3", tree=TRP),
@@ -217,11 +217,11 @@ RUNS = [
         "PLAN parameters, mutant: a line-control tree node (last level) is transparent"),
     run("plan_n64_rl", N64 + " -GXVM=37 -GXPR=12 " + TP, "PASS", "PLAN parameters, NRB=64, region_leaf tile: XVM 37",
         None, RL, 8, same_as="mw3_n64_bp_rq", tree=TRP),
-    run("plan_prod", "-GXPR=12 -GXVM=40 -GXTK=6", "PASS", "PRODUCTION shape at the PLAN parameters (XPR 12, XTK 6): XVM 40",
+    run("plan_prod", "-GXPR=12 -GXVM=40 -GXTK=7", "PASS", "PRODUCTION shape at the PLAN parameters (XPR 12, XTK 7): XVM 40",
         mem=PM, prod=1, same_as="prod_ref", tree=TRP, wq=dict(model_overflow=0, dut_overflow=0)),
-    run("plan_prod_m6", "-GXPR=12 -GXVM=40 -GXTK=6 -GMUT=6", "FAIL", "PRODUCTION shape, PLAN parameters, mutant: one x relay free-runs",
+    run("plan_prod_m6", "-GXPR=12 -GXVM=40 -GXTK=7 -GMUT=6", "FAIL", "PRODUCTION shape, PLAN parameters, mutant: one x relay free-runs",
         mem=PM, prod=1),
-    run("plan_prod_m8", "-GXPR=12 -GXVM=40 -GXTK=6 -GMUT=8", "FAIL",
+    run("plan_prod_m8", "-GXPR=12 -GXVM=40 -GXTK=7 -GMUT=8", "FAIL",
         "PRODUCTION shape, PLAN parameters, mutant: a plane-control tree node is transparent", mem=PM, prod=1),
 ]
 
