@@ -163,22 +163,23 @@ module tb_s81ph_gather_cl;
                 root = a1; n_v[root] = 1; n_t[root] = a2; n_d[root] = a3; n_e[root] = a4;
             end else if (cmd == "E") begin
                 flush; settle; status_check;
-                if (restart && n_ph % 2 == 0) begin
+                f_cd = {~tgl, 1'b0, ph}; tgl = ~tgl;            // the capture's phase-drained event
+                idle(40);
+                n_ph = n_ph + 1;
+                if (restart && expect_ == 0 && n_ph % 2 == 0) begin
                     // Restart only at the documented drained boundary; clear both domains.
                     // Subsequent field commands/rows must still match after the priced rc6 release.
                     armed=0;rst=0;rsv=0;f_vm=0;c_cmd=0;f_cd=0;tgl=0;
                     idle(10);rst=1;rsv=1;idle(80);armed=1;
                     $display("RESTART drained boundary after phase %0d",n_ph);
                 end
-                f_cd = {~tgl, 1'b0, ph}; tgl = ~tgl;            // the capture's phase-drained event
-                idle(40);
-                n_ph = n_ph + 1;
+
             end
         end
         idle(300); status_check;
         $display("SUMMARY phases=%0d rows_flat=%0d rows_cluster=%0d row_mismatch=%0d ctl_mismatch=%0d status_mismatch=%0d first=%0d roots_with_rows=%0d xgo=%0d done=%0d ctl_words=%0d busy_seen=%0d fault_flat=%b fault_cluster=%b bad_before_fault=%0d shift=c+k-2",
                  n_ph, rows_f, rows_c, row_mism, ctl_mism, st_mism, first_bad, $countones(got), n_xgo, n_done, n_ctl, busy_seen, tf[6944], tc[6944], bad_before_fault);
-        if (need != 0 && !($countones(got) == NR && n_xgo > 0 && n_done > 0 && busy_seen))
+        if (need != 0 && !($countones(got) == NR && n_xgo == n_ph && n_done == n_ph && n_ctl >= n_ph && n_ph > 0 && busy_seen))
             $display("RESULT REFUSED coverage: roots %0d/128 xgo %0d done %0d busy %0d", $countones(got), n_xgo, n_done, busy_seen);
         else if (expect_ == 0 && row_mism == 0 && ctl_mism == 0 && st_mism == 0 && rows_f == rows_c && rows_f > 0 && !tf[6944] && !tc[6944]) $display("RESULT PASS");
         else if (expect_ == 1 && tc[6944] && !tf[6944] && bad_before_fault == 0 && ctl_mism == 0) $display("RESULT PASS");
