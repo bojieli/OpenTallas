@@ -30,24 +30,14 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "name": "qkh_native_station_1014",
- "top": "ot_qkh_head_station_native",
+ "name": "qkh_native_stout_1014",
+ "top": "ot_qkh_head_stout_native",
  "outline": {
-  "w": 54.0,
+  "w": 43.2,
   "h": 43.2
  },
  "pins": {
-  "S": [
-   "cr_i",
-   "dr_i"
-  ],
   "N": [
-   "cr_o",
-   "dr_o"
-  ],
-  "W": [
-   "clk",
-   "rst_n",
    "kp_i",
    "kpv_i",
    "gf_i",
@@ -57,30 +47,34 @@
    "kp_o",
    "kpv_o",
    "gf_o",
-   "nb_o",
-   "lane_rst_n"
+   "nb_o"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
   ]
  },
  "params": {},
  "children": [],
  "inter": [],
- "why_floorplan": "Pin-bound state leaf of the wires-only native head: separate root and registered boundary; provisional subslot inside the existing qkd_rhead reservation, measured geometry pending.",
+ "why_floorplan": "Pin-bound state leaf of the wires-only native head (r2: 51 roots). Outline/faces/ranges from the head plan results/arch/qwen_split_1014/head_native_plan_r2.json (lane8/ktree R0 grid in the qkd_rhead 734.4 x 855.36 contract slot; every intra-head hop <= 396 um).",
  "slot_change_request": {
   "parent": "qkd_rhead",
   "contract": "results/arch/qwen_split_1014/kvsys_v1/contract_v1.json",
-  "reason": "Native head audit R993.2/spread114.6, launch251.7/capture391.0: move parent state into hardened leaves with independent clock entries; exact reference proof on main results/rtl/qkh_head_native_1014. Existing head slot734.4x855.36 remains reserved; final die-assigned subslot/pin coordinates required before route or adoption.",
+  "plan": "results/arch/qwen_split_1014/head_native_plan_r2.json",
+  "reason": "Native head audit R993.2/spread114.6, launch251.7/capture391.0: parent state moved into hardened leaves with their own phi-R entries (wires-only parent bound in the die). The qkd_rhead slot is unchanged; the sub-slot origins of this leaf are in the plan file (two plans: astk E / W, leaves R0). Pin file not yet assigned by the die lead (asked 2026-10-14 r2): faces and ranges derived from the plan.",
   "requested_outline_um": [
-   54.0,
+   43.2,
    43.2
   ],
-  "status": "PROVISIONAL clock/area gate, not assigned or qualified"
+  "status": "sub-slot inside the existing qkd_rhead slot; die binding by the kvsys lead"
  },
  "job": {
-  "owner": "Codex:coordinator-head-native-1014",
-  "branch": "codex/coordinator-takeover-1014",
-  "tag": "p1",
-  "purpose": "Native head station leaf; functional proof is whole-head exact real arithmetic against original HS reference, physical and assigned pin qualification pending.",
-  "structural_change": "Parent state partition into independent clock roots; no same-domain timing exceptions or new parent flops.",
+  "owner": "Claude:el1014-qwen-kvsys-elements",
+  "branch": "claude/qwen-kvsys-el-1014",
+  "tag": "r2",
+  "purpose": "Native head station-out leaf x16: lane8 -> ktree kp/kpv/gf and lane8 -> astk nb, two stages each.",
+  "structural_change": "r2: Codex 35-root form re-partitioned (station -> stin + stout, front per-station ports) so every intra-head hop fits 500 um; same stages and cycles, no timing exceptions.",
   "benches": [
    {
     "name": "head_native_exact",
@@ -92,7 +86,7 @@
     "min_count_regex": "HEAD_NATIVE_PASS checks=([0-9]+)"
    },
    {
-    "name": "head_native_station_mutant",
+    "name": "head_native_stout_mutant",
     "cmd": "bash rtl/test/qwen_split/run_qkh_head_native.sh {RUN}/bench/m2 2",
     "expect": "fail",
     "threads": 8,

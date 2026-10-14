@@ -1,18 +1,18 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
- "name": "qkh_native_station_1014",
- "top": "ot_qkh_head_station_native",
+ "name": "qkh_native_stout_1014",
+ "top": "ot_qkh_head_stout_native",
  "kind": "tile",
  "die": [
   0,
   0,
-  54.0,
+  43.2,
   43.2
  ],
  "core": [
   2.16,
   2.16,
-  51.84,
+  41.040000000000006,
   41.040000000000006
  ],
  "why": "spec outline",
@@ -29,17 +29,7 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "S": [
-   "cr_i",
-   "dr_i"
-  ],
   "N": [
-   "cr_o",
-   "dr_o"
-  ],
-  "W": [
-   "clk",
-   "rst_n",
    "kp_i",
    "kpv_i",
    "gf_i",
@@ -49,8 +39,11 @@
    "kp_o",
    "kpv_o",
    "gf_o",
-   "nb_o",
-   "lane_rst_n"
+   "nb_o"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
   ]
  },
  "clock_port": "clk",
@@ -61,18 +54,18 @@
   "rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv",
   "rtl/hdc/nearhbm/ot_qkh_subtiles_bb.v",
   "rtl/lib/ot_rst_relay.sv",
-  "physical/ref_tile/qkh_native_station_1014/kit.env",
-  "physical/ref_tile/qkh_native_station_1014/clock.sdc",
-  "physical/ref_tile/qkh_native_station_1014/signoff.sdc",
-  "physical/ref_tile/qkh_native_station_1014/pdn.tcl",
-  "physical/ref_tile/qkh_native_station_1014/pre_cts.tcl",
-  "physical/ref_tile/qkh_native_station_1014/post_cts.tcl",
-  "physical/ref_tile/qkh_native_station_1014/post_grt.tcl",
-  "physical/ref_tile/qkh_native_station_1014/pre_drt.tcl",
-  "physical/ref_tile/qkh_native_station_1014/pre_fill.tcl",
-  "physical/ref_tile/qkh_native_station_1014/post_fill.tcl",
-  "physical/ref_tile/qkh_native_station_1014/pre_grt.tcl",
-  "physical/ref_tile/qkh_native_station_1014/post_drt.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/kit.env",
+  "physical/ref_tile/qkh_native_stout_1014/clock.sdc",
+  "physical/ref_tile/qkh_native_stout_1014/signoff.sdc",
+  "physical/ref_tile/qkh_native_stout_1014/pdn.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/pre_cts.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/post_cts.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/post_grt.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/pre_drt.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/pre_fill.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/post_fill.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/pre_grt.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
   "physical/qwen_die_masters/io_ref_skew.sdc",
   "physical/qwen_die_masters/io_plain.sdc",
@@ -88,8 +81,8 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/qkh_native_station_1014/pre_gpl.tcl",
-  "physical/ref_tile/qkh_native_station_1014/pre_dpl.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/pre_gpl.tcl",
+  "physical/ref_tile/qkh_native_stout_1014/pre_dpl.tcl",
   "physical/common_flow/pin_reg_split.tcl"
  ]
 }

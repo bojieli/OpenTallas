@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  216.0,
-  194.4
+  259.2,
+  172.8
  ],
  "core": [
   2.16,
   2.16,
-  213.84,
-  192.24
+  257.03999999999996,
+  170.64000000000001
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -29,7 +29,7 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "S": [
+  "N": [
    "c_in",
    "row_in",
    "e_in",
@@ -37,16 +37,30 @@
    "hid",
    "q_valid_in",
    "q_beat_in",
-   "q_data_in",
-   "rst_n"
+   "q_data_in"
   ],
-  "N": [
-   "f_cr",
-   "f_dr",
+  "S": [
+   "f_t15",
+   "f_t14",
+   "f_t12",
+   "f_t13",
+   "f_t9",
+   "f_t10",
+   "f_t11",
+   "f_t8",
+   "f_t4",
+   "f_t6",
+   "f_t7",
+   "f_t2",
+   "f_t3",
+   "f_t0",
+   "f_t1",
+   "f_t5",
    "pack_fault"
   ],
   "W": [
-   "clk"
+   "clk",
+   "rst_n"
   ]
  },
  "clock_port": "clk",
