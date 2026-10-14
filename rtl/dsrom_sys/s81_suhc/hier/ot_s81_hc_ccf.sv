@@ -47,21 +47,20 @@ module ot_s81_hc_ccf #(
     // interior reset driver that fans out to the FIFO and transaction state.
     // Both second-stage flops consume rsr[0], preserving the reset epoch.
     ot_s81_hc_ccf_keep_ff u_reset_pin(.clk(sk),.rst_n(1'b1),.d(rsr[0]),.q(ch_rst));
-    // One synthesis-preserved capture per face bit. Distributed local POST copies consume
+    // One synthesis-preserved capture per FV face bit. Distributed local POST copies consume
     // this stage rather than the die port. The matching forward pad gives up one stage,
-    // so chain issue, FIFO pop, return and completion keep their production cycle counts.
+    // in its FV path only, so chain issue, FIFO pop, return and completion keep their production cycle counts.
     wire [FVW-1:0] fv_face;
     wire [FSW-1:0] fd_face;
     generate if(PIN_CAPTURE) begin:g_face_capture
         (* keep="true" *) reg [FVW-1:0] fv_pin;
-        (* keep="true" *) reg [FSW-1:0] fd_pin;
         always @(posedge sk or negedge rs_n)
             if(!rs_n) fv_pin<=0; else fv_pin<=fv_i;
-        always @(posedge sk) fd_pin<=fd_i;
-        assign fv_face=fv_pin; assign fd_face=fd_pin;
+        assign fv_face=fv_pin;
     end else begin:g_face_legacy
-        assign fv_face=fv_i; assign fd_face=fd_i;
+        assign fv_face=fv_i;
     end endgenerate
+    assign fd_face=fd_i; // fd_p is already the direct data-port capture; do not duplicate it.
     // the POST pop selects the y slice into ch_fd: one kept copy of the pop bit per 128-bit slice of the data field
     // (no 3,600-load select net; textbook high_fanout class 2)
     localparam integer NPS = (FDD + 127) / 128;

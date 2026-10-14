@@ -114,8 +114,8 @@
     "benches_from": "tools/s81_suhc/hc_tile_benches_ccf.json",
     "owner": "Codex:s81_hc_ccf",
     "branch": "codex-s81-ccf-pinreg-1013",
-    "tag": "v6-facecapture-m5-spine",
-    "purpose": "Kept first-stage fv/fd face capture isolates fv_i from distributed pop replicas. One forward stage transfers from pad_f5r1 to the new pad_f4r1 leaf; chain issue and completion latency unchanged.",
+    "tag": "v7-fv-facecapture-spine",
+    "purpose": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with about14196sinks. Balanced clock spine repairs the measured171psspread. Final actual hop audit is required.",
     "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
     "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
   },
@@ -139,7 +139,7 @@
     "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff"
   },
   "io_tcl": "physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl",
-  "structural_change": "Kept first-stage fv/fd face capture isolates fv_i from distributed pop replicas. One forward stage transfers from pad_f5r1 to the new pad_f4r1 leaf; chain issue and completion latency unchanged. Clock replaced with balanced spine: closed control boundary mean539.1ps and spread171.2ps cannot carry the new >15000-sink root; candidate must prove <=300ps insertion and <=80ps spread before route.",
+  "structural_change": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with about14196sinks. Balanced clock spine repairs the measured171psspread. Final actual hop audit is required.",
   "recipe": 2,
   "boundary_tcl": [
     "physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl"

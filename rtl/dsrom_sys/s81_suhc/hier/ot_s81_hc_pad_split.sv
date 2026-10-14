@@ -49,9 +49,9 @@ module ot_s81_hc_cpad_split #(
 `endif
         .sk(sk),.srs(srs),.v_i(fv_i),.d_i(fd_i),.v_o(fm),.d_o(dm));
 `ifdef OT_S81_HC_PAD_HARD
-    ot_s81_hc_pad_f4r1 u_f5r1 (
+    ot_s81_hc_pad_fv4fd5r1 u_f5r1 (
 `else
-    ot_s81_hc_pad_f4r1 #(.FW(FSW),.VW(FVW),.RW(RDW),.DEPTH(F1)) u_f5r1 (
+    ot_s81_hc_pad_fv4fd5r1 #(.FW(FSW),.VW(FVW),.RW(RDW),.DEPTH(F1+PIN_CAPTURE),.VDEPTH(F1)) u_f5r1 (
 `endif
         .sk(sk),.srs(srs),.v_i(fm),.d_i(dm),.v_o(fv_o),.d_o(fd_o),.r_i(crd_i),.r_o(rpin));
 `ifdef OT_S81_HC_PAD_HARD
@@ -225,4 +225,16 @@ module ot_s81_hc_pad_meta2 #(parameter integer VW=8,EW=512,DEPTH=2)(
  reg[1:0] rr;always @(posedge sk)rr<={rr[0],srs};
  ot_hdc_delay #(.W(VW),.D(DEPTH),.RESET(1))u_v(.clk(sk),.rst_n(rr[1]),.d(v_i),.q(v_o));
  ot_hdc_delay #(.W(8+EW),.D(DEPTH))u_d(.clk(sk),.rst_n(rr[1]),.d({e_i,p_i}),.q({e_o,p_o}));
+endmodule
+
+
+// Only FV transfers one stage into CCF; FD and return retain the closed production latency.
+module ot_s81_hc_pad_fv4fd5r1 #(parameter integer FW=1128,VW=7,RW=2156,DEPTH=5,VDEPTH=4)(
+ input wire sk,srs,input wire[VW-1:0]v_i,input wire[FW-1:0]d_i,
+ output wire[VW-1:0]v_o,output wire[FW-1:0]d_o,
+ input wire[RW-1:0]r_i,output reg[RW-1:0]r_o);
+ reg[1:0] rr;always @(posedge sk)rr<={rr[0],srs};
+ ot_hdc_delay #(.W(VW),.D(VDEPTH),.RESET(1)) u_v(.clk(sk),.rst_n(rr[1]),.d(v_i),.q(v_o));
+ ot_hdc_delay #(.W(FW),.D(DEPTH)) u_d(.clk(sk),.rst_n(rr[1]),.d(d_i),.q(d_o));
+ always @(posedge sk)r_o<=r_i;
 endmodule
