@@ -740,6 +740,13 @@ def apply(v, m, G):
     rec.update(n_overlaps=len(ov), overlaps=ov[:20], outside=out[:20])
     if ov or out:
         raise SystemExit(f'tp8b v5: {len(ov)} overlaps {ov[:8]}, {len(out)} outside {out[:6]}')
+    # SPEC F2: the 33-mm reticle axis is W-E; area alone cannot admit F1 or a grown slot.
+    area = W * H / 1e6
+    rec['reticle'] = dict(width_um=W, height_um=H, area_mm2=area,
+                          limits=dict(width_um=33000.0, height_um=26000.0, area_mm2=858.0))
+    if W > 33000.0 + 1e-6 or H > 26000.0 + 1e-6 or area > 858.0 + 1e-6:
+        raise SystemExit(f'tp8b v5: die {W:.3f} x {H:.3f} um ({area:.6f} mm2) exceeds '
+                         'SPEC F2 33000 x 26000 um / 858 mm2 reticle')
 
     peers = {}
     for b, c, n, e in m['buses']:
