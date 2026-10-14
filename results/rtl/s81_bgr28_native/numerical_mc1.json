@@ -1,0 +1,98 @@
+{
+  "schema": "s81.bgl28.split_clock_numerical_evidence.v1",
+  "source_commit": "2c80aaf8a",
+  "rtl_blob": "df2df9aaa410eb6b27a465eda570860be845f2a3",
+  "defines": [
+    "OT_VMBGL_HOP1",
+    "OT_VMBGL_MC_BENCH",
+    "OT_VMBGL_FLOPMEM"
+  ],
+  "clock_scope": "Bench ties three clock inputs to one edge; physical phase/insertion qualification pending",
+  "ports": 28,
+  "read_ports": 10,
+  "groups": 4,
+  "banks_per_group": 8,
+  "data_width": 128,
+  "uncovered": [
+    "production_master_MC_selection",
+    "production_trace_MC",
+    "SS_TT_FF_physical_compensated_cross_root_paths",
+    "routed_per_bit_pin_flop_geometry",
+    "routed_cut_and_DRC",
+    "allocated_die_slot"
+  ],
+  "cases": [
+    {
+      "case": "gold",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "expected_outcome_pass": true,
+      "log_excerpt": "RESULT cycles 200000 ops 700875 own_reads 31253 returned 124712 same_cycle_same_bank_reads 305 status 9 max_occ 4 errors 0",
+      "log_sha256": "40a75395704f7284dcd5b5043f12a08b7f767d179e1a3593f0dd935870b9ebff"
+    },
+    {
+      "case": "mut_ID",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "log_excerpt": "RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status 9 max_occ 4 errors 740",
+      "log_sha256": "aef1ffd81b668abf51dc1287dd709333ea7cde707cc9fae0d55b2ae3bc035fd9"
+    },
+    {
+      "case": "gold_s2",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "expected_outcome_pass": true,
+      "log_excerpt": "RESULT cycles 200000 ops 700874 own_reads 31147 returned 124723 same_cycle_same_bank_reads 292 status 9 max_occ 4 errors 0",
+      "log_sha256": "04cf54929682ebcbd631bdf8c21c06e03d3ac86b18ab89fc1ced536abaeeefb7"
+    },
+    {
+      "case": "stress",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "expected_outcome_pass": true,
+      "log_excerpt": "RESULT cycles 200000 ops 1866279 own_reads 83250 returned 333854 same_cycle_same_bank_reads 1919 status f max_occ 4 errors 0",
+      "log_sha256": "04cf54929682ebcbd631bdf8c21c06e03d3ac86b18ab89fc1ced536abaeeefb7"
+    },
+    {
+      "case": "cov_refuse",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "log_excerpt": "COVERAGE_REFUSED 10 items",
+      "log_sha256": "04cf54929682ebcbd631bdf8c21c06e03d3ac86b18ab89fc1ced536abaeeefb7"
+    },
+    {
+      "case": "mut_RELAY",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "log_excerpt": "RESULT cycles 40000 ops 140121 own_reads 6241 returned 161886 same_cycle_same_bank_reads 63 status 9 max_occ 4 errors 219589",
+      "log_sha256": "04cf54929682ebcbd631bdf8c21c06e03d3ac86b18ab89fc1ced536abaeeefb7"
+    },
+    {
+      "case": "mut_J0",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "log_excerpt": "RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status b max_occ 4 errors 62",
+      "log_sha256": "04cf54929682ebcbd631bdf8c21c06e03d3ac86b18ab89fc1ced536abaeeefb7"
+    },
+    {
+      "case": "mut_ORDER",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "log_excerpt": "RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status b max_occ 4 errors 82",
+      "log_sha256": "04cf54929682ebcbd631bdf8c21c06e03d3ac86b18ab89fc1ced536abaeeefb7"
+    },
+    {
+      "case": "mut_MASK",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "log_excerpt": "RESULT cycles 40000 ops 140121 own_reads 6241 returned 25156 same_cycle_same_bank_reads 63 status 9 max_occ 4 errors 5429",
+      "log_sha256": "04cf54929682ebcbd631bdf8c21c06e03d3ac86b18ab89fc1ced536abaeeefb7"
+    }
+  ]
+}
