@@ -130,6 +130,7 @@ def gate(m, role, bindings=None, used=None):
     seqs = [it for it in m['insts'] if it.master in bindings['sequencers']]
     if len(seqs) != 1:
         out['findings'].append('sequencer instances %d (need exactly 1 of %s)' % (len(seqs), bindings['sequencers']))
+        out['verdict'] = 'FAIL'
         return out
     sq = seqs[0].name
     absent = set(bindings['role_absent'].get(role, []))
