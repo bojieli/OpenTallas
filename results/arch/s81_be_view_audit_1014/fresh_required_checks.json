@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.be_access_required_checks.v1",
+  "native_proof": "SOURCE_HASH_MATCH_REUSE",
+  "reused_not_rerun": true,
+  "sources": {
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv": {
+      "expected": "531ff23c22e581e79e5498076d2a1d821c5245dd819d6207d9e42b414b33ad9c",
+      "actual": "531ff23c22e581e79e5498076d2a1d821c5245dd819d6207d9e42b414b33ad9c",
+      "pass_": true
+    },
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": {
+      "expected": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
+      "actual": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
+      "pass_": true
+    },
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv": {
+      "expected": "ebc847fc7eca27c45fccc034f217db906ff2ccfe51e15aea452808de0667d9da",
+      "actual": "ebc847fc7eca27c45fccc034f217db906ff2ccfe51e15aea452808de0667d9da",
+      "pass_": true
+    },
+    "rtl/dsrom_sys/mtp/tb_mtp_hrow.sv": {
+      "expected": "45ff62c53891f820b19104d8828cb3bdf2f5b27dbd56be7b56373e416608829d",
+      "actual": "45ff62c53891f820b19104d8828cb3bdf2f5b27dbd56be7b56373e416608829d",
+      "pass_": true
+    },
+    "tools/mtp_hrow_gate.py": {
+      "expected": "526d76c827590eed4cbf812b9db9c1ba9889e07f9da593a45923c48c71a7a672",
+      "actual": "526d76c827590eed4cbf812b9db9c1ba9889e07f9da593a45923c48c71a7a672",
+      "pass_": true
+    },
+    "tools/s81_vm/s81_vm_gate.py": {
+      "expected": "dde3c1025f71c07c7779d25102a689fc5e7ec9a5f847dbaaf0e889ba99da671c",
+      "actual": "dde3c1025f71c07c7779d25102a689fc5e7ec9a5f847dbaaf0e889ba99da671c",
+      "pass_": true
+    }
+  },
+  "kit_sources": {
+    "physical/s81_be_access_m7_candidate/helper_overlay_plan.json": {
+      "expected": "4e84f3b8b17edeb4d38cd5582b97afc400a86b7923ae9b0edbcd08bad5f3ed5c",
+      "actual": "4e84f3b8b17edeb4d38cd5582b97afc400a86b7923ae9b0edbcd08bad5f3ed5c",
+      "pass_": true
+    },
+    "physical/s81_be_access_m7_candidate/io_place.tcl": {
+      "expected": "01c3be3810ecccb81a89777f0723cf1d276191c6f2e5deb5555a803891b1a1e1",
+      "actual": "01c3be3810ecccb81a89777f0723cf1d276191c6f2e5deb5555a803891b1a1e1",
+      "pass_": true
+    },
+    "physical/s81_be_access_m7_candidate/margin.sdc": {
+      "expected": "1587b64ab7e05344cd6c14a7acc62f6ab5e7fbc576c645e843306503c92d2d90",
+      "actual": "1587b64ab7e05344cd6c14a7acc62f6ab5e7fbc576c645e843306503c92d2d90",
+      "pass_": true
+    },
+    "physical/s81_be_access_m7_candidate/full_depth_keepout.tcl": {
+      "expected": "7c0e1621e7f8d197fedb8cc7c79591e4523e1b00369377a4b10baaf8e2e176b1",
+      "actual": "7c0e1621e7f8d197fedb8cc7c79591e4523e1b00369377a4b10baaf8e2e176b1",
+      "pass_": true
+    },
+    "physical/s81_be_access_m7_candidate/post_cts.tcl": {
+      "expected": "c4898d81a24e166939a26065e5b60f9af365d2d27534590a65f825c8bbcaaac3",
+      "actual": "c4898d81a24e166939a26065e5b60f9af365d2d27534590a65f825c8bbcaaac3",
+      "pass_": true
+    },
+    "physical/s81_be_access_m7_candidate/pdn.tcl": {
+      "expected": "a7cd1702729a1b3cc352daa0d22e1341405e499a46dbefe10aa54747e0e4028a",
+      "actual": "a7cd1702729a1b3cc352daa0d22e1341405e499a46dbefe10aa54747e0e4028a",
+      "pass_": true
+    },
+    "physical/s81_be_access_m7_candidate/exact_gate_binding.json": {
+      "expected": "e6568256779f66ee149676f674c3627d2fdd74c2d1cb5a8227a80f75b258889f",
+      "actual": "e6568256779f66ee149676f674c3627d2fdd74c2d1cb5a8227a80f75b258889f",
+      "pass_": true
+    },
+    "physical/s81_be_access_m7_candidate/ports.json": {
+      "expected": "2c3981b27bce974b07620cef8fe3c51a742fe0e999b12a3ac314100c891804b9",
+      "actual": "2c3981b27bce974b07620cef8fe3c51a742fe0e999b12a3ac314100c891804b9",
+      "pass_": true
+    },
+    "physical/s81_be_access_m7_candidate/launch.sh": {
+      "expected": "9b2867163020fa357cbc81df795e8555f0be0bb3522859bcfb01a797b39fb188",
+      "actual": "9b2867163020fa357cbc81df795e8555f0be0bb3522859bcfb01a797b39fb188",
+      "pass_": true
+    }
+  },
+  "helper_plan_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
+  "helper_count": 46,
+  "applied_helpers": [],
+  "helper_check_mode": "fresh_effective_intake",
+  "helper_identity": "exact_content_snapshot",
+  "candidate_view_cap": "M7",
+  "global_clocks_and_reset_refs_bound": false,
+  "slot_allocated": false,
+  "diagnostic_only": true,
+  "checks_pass": true
+}

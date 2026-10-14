@@ -1,0 +1,105 @@
+{
+  "name": "s81be-access-m7-fullhalo-ebe929a3e",
+  "block": "dsfd_vm_be_sl",
+  "owner": "Codex:s81_vmfe_misc_2240/be_native_placement",
+  "source": {
+    "branch": "codex/s81-be-native-placement",
+    "commit": "ebe929a3e04085aa93e01f2e200af69a3150e4ad",
+    "extra_paths": [
+      "results/arch/s81_vmfe_misc_2240/relay_proofs",
+      "results/arch/s81_be_native_mc_placement_1014/inputs",
+      "results/arch/s81_be_view_audit_1014"
+    ]
+  },
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc4",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "purpose": "Actualpinaccessrepair diagnostic: existingCLOSEDc15leaf+helpers byteidentical, actualM7cap retained, full-depthabove-layerpinhalo and inwardM5PG torepairmeasuredDRT0073. No publishedview replacement.",
+  "structural_change": "Full-depth .072above-layerpinhalo replaces observedhalfdepthfailure; firstM5PGstripe.300\u21921.296 reservesW/Eviaaccess; existing2reset-inputholdcells; noRTL/states/cycles change",
+  "hold_merge": "DIAGNOSTIC ONLY: unallocatedtruthfulM7slotrequest; M6eligibilitynotwaived; oldCLOSEDview stands; requiresactualAP/cornersPASS plus globalclock/resetbindings and completeparentproof before adoption",
+  "auto_merge": false,
+  "merge_target": null,
+  "slot_change_request": {
+    "status": "REQUESTED_UNALLOCATED",
+    "old_declared_cap": "M6",
+    "actual_legacy_cap": "M7",
+    "candidate_actual_cap": "M7",
+    "parent_strap": "M8",
+    "outline_um": [
+      302.4,
+      92.88
+    ],
+    "eligibility_waived": false,
+    "old_CLOSED_replaced": false
+  },
+  "no_bench_reason": "Existingnativegold63966lockstep0,TP554,observedstale mutantFAIL sourcepinned proof reusedonlyafterall exactsourcehashesmatch physical/s81_be_access_m7_candidate/exact_gate_binding.json; freshsource/helpercheck stageverifiesbinding. No arithmeticbench rerun duplicated.",
+  "stages": {
+    "bench": [
+      {
+        "name": "existing_native_evidence_source_binding",
+        "cmd": "python3 tools/s81_ph/s81_be_access_required_checks.py --cl {CL} --out {RUN}/required_checks_bench.json",
+        "expect": "pass",
+        "pass_regex": "BE_ACCESS_REQUIRED_CHECKS_PASS",
+        "threads": 1,
+        "peak_ram_gb": 2
+      },
+      {
+        "name": "legacy_actual_AP_negative",
+        "cmd": "python3 tools/s81_ph/s81_be_pin_access_probe.py results/arch/s81_be_native_mc_placement_1014/inputs/be_sl_c15e2bf6a.lef {RUN}/legacy_AP",
+        "expect": "fail",
+        "fail_regex": "\"pass_\": false",
+        "threads": 4,
+        "peak_ram_gb": 8
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ActualrelatedCK/CKS preserved; localper-clock virtuals re-referencedfromactualCTS/routedboundarymeans; no guessed globalinsertion; routecheckpoint measuresR."
+    },
+    "route": {
+      "cmd": "python3 tools/s81_ph/s81_be_access_required_checks.py --cl {CL} --out {RUN}/required_checks_route.json && SRC={SRC} OUT={RUN}/routes CORES={THREADS} NEED=32 bash physical/s81_be_access_m7_candidate/launch.sh {LABEL}",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "needs": [
+        "orfs"
+      ]
+    },
+    "signoff": {
+      "cmd": "python3 tools/s81_ph/s81_be_access_diagnostic_signoff.py --run {RUN}/routes/{LABEL} --out {RUN}/diagnostic_signoff.json",
+      "needs": [
+        "orfs"
+      ]
+    }
+  },
+  "verdict": {
+    "metrics_cmd": "python3 -c \"import json; print(json.dumps(json.load(open('{RUN}/diagnostic_signoff.json'))['metrics']))\"",
+    "checks": [
+      {
+        "name": "actual_M7_AP_and_SS_FF_DRC",
+        "cmd": "python3 -c \"import json; d=json.load(open('{RUN}/diagnostic_signoff.json')); assert d['diagnostic_checks_pass']\""
+      },
+      {
+        "name": "routed_at_actual_SS",
+        "cmd": "python3 {CL}/route_corner_check.py {RUN}/routes/{LABEL} --want SS"
+      }
+    ]
+  },
+  "hold_eco": {
+    "enabled": false,
+    "reason": "Preservefirstactualfullhalo diagnostic result; no automaticreplacement"
+  },
+  "cycles_added": 0,
+  "route_corner": "WC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "budget": {
+    "enabled": false,
+    "reason": "Diagnosticpreservesactuallegacydualclockperiods andcurrentper-domainIOpolicy; actualglobalclock/resetdriversandR remainopen; no headlineclosure"
+  },
+  "resource_basis": "Sameclosed302.4x92.88 leafsource/inventory plus12existingreset-holdcells; reserve32GiB againstmeasuredhostcapacity through admission, no per-process RAMlimit ordeadline. RequiredpredecessorAP runs separately at8GiB capacityreservation."
+}

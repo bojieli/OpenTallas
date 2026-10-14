@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.be_access_launch_attempt.v1",
+  "status": "INTAKE_REFUSED_NOT_LAUNCHED",
+  "source_commit": "ebe929a3e04085aa93e01f2e200af69a3150e4ad",
+  "immutable_source_branch": "codex/s81-be-native-placement",
+  "validate_exit": 1,
+  "validate_log": "results/arch/s81_be_access_launch_1014/validate_refusal.log",
+  "fresh_required_checks": "results/arch/s81_be_view_audit_1014/fresh_required_checks.json",
+  "old_closed_replaced": false,
+  "slot_allocated": false,
+  "candidate_cap": "M7",
+  "global_clock_reset_binding": false,
+  "reason": "CLOSED_STANDS permits no actual pin-access defect diagnostic reroute reason; equal outline and pin faces preclude honest slot_change. No fabricated cut, overflow, RTL or parameter difference; no job submitted.",
+  "spec_sha256": "ab1303101deaea74632347bdeb1c174233280c475be81e55707a4a42b481b329"
+}

@@ -8,8 +8,13 @@ import helper_overlay as HO
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--cl',type=Path);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--cl',type=Path);ap.add_argument('--daemon',type=Path);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
+    if bool(a.cl)==bool(a.daemon):ap.error('supply exactly one of --cl (shipped snapshot) or --daemon (fresh intake helpers)')
     kit=ROOT/'physical/s81_be_access_m7_candidate'
+    request=json.loads((kit/'request.json').read_text());kit_checks={}
+    for rel,expected in request['kit_sha256'].items():
+        p=ROOT/rel;kit_checks[rel]=dict(expected=expected,actual=sha(p),pass_=sha(p)==expected)
+    if not all(v['pass_'] for v in kit_checks.values()):raise SystemExit('KIT_SOURCE_MISMATCH')
     proof=json.loads((kit/'exact_gate_binding.json').read_text());checks={}
     for rel,expected in proof['source_sha256'].items():
         p=ROOT/rel;checks[rel]=dict(expected=expected,actual=sha(p),pass_=sha(p)==expected)
@@ -18,7 +23,7 @@ def main():
     assert any(c['case']=='be-native-tp' and c['passes_expected'] for c in proof['cases'])
     assert any(c['case']=='be-native-mut_stale' and c['passes_expected'] for c in proof['cases'])
     frozen=json.loads((kit/'helper_overlay_plan.json').read_text())
-    actual=frozen if a.cl is None else json.loads((a.cl/'helper_overlay_plan.json').read_text())
+    actual=(HO.capture_plan(a.daemon,ROOT)[0] if a.daemon else json.loads((a.cl/'helper_overlay_plan.json').read_text()))
     ok,why=HO.compare_plans(frozen,actual)
     if not ok:raise SystemExit('HELPER_DRIFT: '+why)
     assert len(actual['files'])==46
@@ -32,7 +37,8 @@ def main():
             target=ROOT/f['path'];target.parent.mkdir(parents=True,exist_ok=True)
             target.write_bytes(src.read_bytes());target.chmod(f['mode']);applied.append(f['path'])
     record=dict(schema='opentallas.be_access_required_checks.v1',native_proof='SOURCE_HASH_MATCH_REUSE',reused_not_rerun=True,
-                sources=checks,helper_plan_sha256=actual['content_sha256'],helper_count=len(actual['files']),applied_helpers=applied,
+                sources=checks,kit_sources=kit_checks,helper_plan_sha256=actual['content_sha256'],helper_count=len(actual['files']),applied_helpers=applied,
+                helper_check_mode='fresh_effective_intake' if a.daemon else 'shipped_snapshot',
                 helper_identity='exact_content_snapshot',candidate_view_cap='M7',global_clocks_and_reset_refs_bound=False,
                 slot_allocated=False,diagnostic_only=True,checks_pass=True)
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(record,indent=2)+'\n');print('BE_ACCESS_REQUIRED_CHECKS_PASS')
