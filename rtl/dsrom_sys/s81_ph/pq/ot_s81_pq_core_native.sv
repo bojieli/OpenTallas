@@ -134,16 +134,27 @@ module ot_s81_pq_core_native (
 `endif
     wire [511:0] aq_q;
     wire [19:0] aq_e;
+`ifdef OT_PQ_AQ_SIDE_PARITY
+    wire [9:0] aq_p;
+`endif
     genvar g;
     generate for (g = 0; g < 2; g = g + 1) begin : g_aq
         ot_dsrom_aq12t u_aq (.clk(ck_aq[g]), .rst_n(rst_n), .v(aq_vin), .x(x_q[1024*g +: 1024]),
-            .vo(), .q(aq_q[256*g +: 256]), .e(aq_e[10*g +: 10]), .y(), .fault(aqf[g]));
+            .vo(), .q(aq_q[256*g +: 256]), .e(aq_e[10*g +: 10]), .y(), .fault(aqf[g])
+`ifdef OT_PQ_AQ_SIDE_PARITY
+            , .qp(aq_p[5*g +: 5])
+`endif
+        );
     end endgenerate
     wire [255:0] hq0, hq1;
     wire [9:0] he0, he1;
     ot_s81_pq_qb_sram u_qb (.clk(ck_qb), .rst_n(rst_n), .consume(q_consume), .aqi_d(aqi), .aq_q(aq_q), .aq_e(aq_e),
         .h_b0(h_b0), .h_b1(h_b1), .hw_sv(hw[13:12]), .hq0(hq0), .hq1(hq1), .he0(he0), .he1(he1),
-        .fault(storage_fault[4]));
+        .fault(storage_fault[4])
+`ifdef OT_PQ_AQ_SIDE_PARITY
+        , .aq_p(aq_p)
+`endif
+    );
     wire [1023:0] bt_d;
     generate for (g = 0; g < 4; g = g + 1) begin : g_ix
         wire [255:0] d;

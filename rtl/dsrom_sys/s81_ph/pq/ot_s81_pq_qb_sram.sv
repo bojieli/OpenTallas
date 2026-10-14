@@ -8,6 +8,9 @@ module ot_s81_pq_qb_sram (
     input wire [9:0] aqi_d,
     input wire [511:0] aq_q,
     input wire [19:0] aq_e,
+`ifdef OT_PQ_AQ_SIDE_PARITY
+    input wire [9:0] aq_p,
+`endif
     input wire [15:0] h_b0, h_b1,
     input wire [1:0] hw_sv,
     output reg [255:0] hq0, hq1,
@@ -90,7 +93,11 @@ module ot_s81_pq_qb_sram (
         reg [95:0] written;
         reg [4:0] expected;
         reg checked, sticky;
+`ifdef OT_PQ_AQ_SIDE_PARITY
+        wire [4:0] wp = a ? aq_p[4:0] : aq_p[9:5];
+`else
         wire [4:0] wp = {^ew, ^wd[255:192], ^wd[191:128], ^wd[127:64], ^wd[63:0]};
+`endif
         wire [4:0] rp = {^erd[b], ^rd[b][255:192], ^rd[b][191:128], ^rd[b][127:64], ^rd[b][63:0]};
         always @(posedge clk or negedge rst_l[0]) begin
             if (!rst_l[0]) begin written <= 0; checked <= 0; sticky <= 0; end
