@@ -65,16 +65,16 @@ def main(request):
         for p,width in groups:
             rows=[]
             for i in range(width):
-                x = 5.004+(n//2)*.096
+                x = (8.028+(n//2)*.432) if face == 'S' else (5.004+(n//2)*.24)
                 layer = 'M5' if n%2 == 0 else 'M3'
                 if layer == 'M3':
                     x = .009+round((x-.009)/.036)*.036
                 rows.append([face,layer,round(x,3),.192])
                 n+=1
             ports[p]=spec(rows)
-    for p,face,x in [('ck','S',55.02),('rst','S',55.212),('t_ho','S',55.404),('ckv','N',55.02),('rsv','N',55.212)]:
+    for p,face,x in [('ck','S',61.548),('rst','S',61.74),('t_ho','S',61.932),('ckv','N',61.548),('rsv','N',61.74)]:
         ports[p]=spec([[face,'M5',x,.192]])
-    leaf=dict(schema='opentallas.s81.assigned_pins.v1',master='dsfd_capt_x8_dual',case='v18',outline_um=[60.48,270.],
+    leaf=dict(schema='opentallas.s81.assigned_pins.v1',master='dsfd_capt_x8_dual',case='v18',outline_um=[123.12,136.08],
               source='tools/s81/capture_x8_assignment.py; exact parent RTL x8 slice map 733ab4b39',
               rule='die-owned bit order and direct parent/VM peer projection; gate against PG stripes before route',
               clock_entries=dict(stream=['ck[0]'],serial=['ckv[0]']),ports=ports)
@@ -82,16 +82,33 @@ def main(request):
     rows=[None]*13376
     for g,x in enumerate(xg):
         for h in range(2):
-            lx=x-11.52+h*80.64
+            lx=x-2.304
             for i,(_,ly,c,d) in enumerate(ports['t_vm']['per_bit']):
-                rows[1664*g+832*h+i]=['S',ly,round(lx+c,3),d]
+                if h == 0:
+                    px=lx+c
+                else:
+                    # Upper MX leaf outputs descend in the two measured side
+                    # channels. A repeated leaf has identical x coordinates;
+                    # copying them to the parent would short both 832-bit buses.
+                    j=i%416
+                    px=lx+(-22.548 if i<416 else 125.148)+(j//2)*.096
+                    if ly == 'M3':
+                        px=.009+round((px-.009)/.036)*.036
+                rows[1664*g+832*h+i]=['S',ly,round(px,3),d]
             k=2*g+h
-            capture['ports']['ck_x']['per_bit'][k]=['N','M5',round(lx+55.02,3),.192]
-            capture['ports']['ckv_x']['per_bit'][k]=['S','M5',round(lx+55.02,3),.192]
+            capture['ports']['ck_x']['per_bit'][k]=['N','M5',round(lx+61.548,3),.192]
+            capture['ports']['ckv_x']['per_bit'][k]=['S','M5',round(lx+61.548,3),.192]
     for i,(_,ly,c,d) in enumerate(ports['t_st']['per_bit']):
-        rows[13312+i]=['S',ly,round(xg[3]-11.52+c,3),d]
+        rows[13312+i]=['S',ly,round(xg[3]-2.304+c,3),d]
     assert all(rows)
     capture['ports']['t_vm']=spec(rows)
+    capture['child_placements']=[dict(name=f'g{g}/u_x{h}',master='dsfd_capt_x8_dual',
+        origin_um=[x-2.304,24.768 if h==0 else 181.44],outline_um=[123.12,136.08],orient='MX')
+        for g,x in enumerate(xg) for h in range(2)]
+    capture['upper_output_routing']=dict(bits_per_sidechannel=416,
+        channels=[dict(column=g,left=[x-27.144,x-2.304],right=[x+120.816,x+145.656],y=[0,337.536])
+                  for g,x in enumerate(xg)],
+        rule='upper outputs routed through side channels, parent pin order retained; no added data stage')
     capture['data_clock_bits'] = {
         'f_gather': ['ck_g[%d]'%(i//848) if i<6784 else 'ck_c[0]' for i in range(6947)],
         't_vm': ['ckv_x[%d]'%(i//832) if i<13312 else 'ckv_x[6]' for i in range(13376)],
