@@ -100,6 +100,40 @@ CLOCK_RULE_FIX = ("hardened leaves with their own clock roots (kind cluster: eac
                   "<kit>/gate_result.json")
 HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by spec
 
+# CLOSED STANDS (owner decision 2026-10-12 19:00 "M5 cap narrowed", made a submit gate 2026-10-13; logic in
+# tools/closure_loop/closed_stands.py, enforced by the closure loop at submit).  A block (same top module, same parameter
+# set) with a CLOSED job whose view is published is NOT routed again: the closed tile stands.  A new route is admitted
+# only with spec "reroute_reason": {"kind": <one of CLOSED_STANDS_KINDS>, ...}:
+#   die_window    the tile sits under a die window that needs the tracks: "slot" (contract slot), "cut" (measured fine
+#                 cut, must be > DIE_WINDOW_CUT_MIN in the direction the freed layer serves) or "grt_overflow" (measured
+#                 die-GRT overflow over the tile, > 0), and "source" (the file the figure was read from; must exist)
+#   slot_change   outline / pin faces differ from the closed view: "contract" (name + version) or "slot_change_request"
+#   param_change  elaborated parameters differ: "params" lists them
+#   rtl_change    the block's RTL differs from the closed job's commit (the gate compares the source blobs itself)
+#   evidence_gap  the closed job lacks a behavioural bench + mutant or a routed verdict: "why_route" says why a route
+#                 (and not a bench bind / re-export) is needed
+#   pin_register  (owner 2026-10-13, die timing by construction: a tile with an unregistered face pin or a long
+#                 pin-to-flop wire is a defect to fix, not to waive) the closed view is a ranked violation of the
+#                 insertion-compensated pin-register audit (tools/hier_contract/pinreg_audit.py v2): "source" (the
+#                 audit JSON, must exist), "cell", and the measured "pair_cost_ps" (o + s of the view, must be >
+#                 PIN_REGISTER_PAIR_MAX_PS: no hop of any length closes against it) -- the die needs the tile re-placed
+#                 with its pin flops at the pins; "fix" says what the new kit changes (recipe 2 / RTL pin flops)
+# M5 is the default for NEW tiles only.  Loop successors (auto-react, near-miss finishing, -hs / -ls re-runs) of a job
+# that is not CLOSED are unaffected.
+CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register")
+DIE_WINDOW_CUT_MIN = 0.6
+PIN_REGISTER_PAIR_MAX_PS = 683.3      # 833.3 - 60 - SKEW 90 (same clock level): o + s of one view above it leaves no wire
+CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + "
+                         "mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json "
+                         "\"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), "
+                         "or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. "
+                         "A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": "
+                         "\"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | "
+                         "\"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ "
+                         "\"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ "
+                         "\"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > "
+                         "683.3, \"fix\")}")
+
 
 def clock_rule(max_sinks, evidence=None):
     """The measured clock rule.  evidence: the kit gate result's "clock" record ({"max_root_sinks", "tt_insertion_ps",

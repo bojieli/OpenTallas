@@ -8,7 +8,7 @@ and run next to the route:
     python3 view_export.py --orfs-dir W/work/orfs --name NAME --out DIR [--interface-sdc F] [--macro-view D ...]
                            [--corners ss,ff,tt] [--image openroad/orfs:latest] [--tmp-dir T]
                            [--verdict-json F | --no-verdict] [--sdc-name N] [--post-sdc F ...] [--verdict-tol PS]
-                           [--job-json F --src DIR [--cl-dir D]] [--expect-tt PS] [--expect-ff PS] [--require-check]
+                           [--job-json F --src DIR [--cl-dir D] [--job-extra-sdc F]] [--expect-tt PS] [--expect-ff PS] [--require-check]
 
 CONSTRAINT SEQUENCE (export-sdc 2026-10-13).  A view must carry the timing its route was SIGNED OFF with, so the
 constraints are read in the verdict's own order, never a substitute:
@@ -166,7 +166,7 @@ def corner_sta_sections(orfs):
     return dict(sec=sec, src=src, work=orfs, files=dict(sorted(host.items())))
 
 
-def load_job(jobj, src, cl, rel):
+def load_job(jobj, src, cl, rel, extra_sdc=None):
     """JOB REPLAY: -> dict(seq{ss,ff}, expect{tt,ff}, files, basis) rebuilt from a closure-loop job record"""
     j = json.loads(jobj.read_text())
     m = j.get("metrics") or {}
@@ -201,6 +201,10 @@ def load_job(jobj, src, cl, rel):
     for c in ("ss", "ff"):
         s = [f"read_db /in/{rel}/6_final.odb", f"read_sdc /in/{rel}/{m['sdc_name']}",
              f"read_spef /in/{rel}/6_final.spef", "set_propagated_clock [all_clocks]"]
+        # Legacy corner_sta wrappers recorded their literal extra SDC separately
+        # from metrics.post_sdc. Replay that original file before the post-SDCs.
+        if extra_sdc is not None:
+            s.append(need("/job_extra.sdc", extra_sdc))
         s += [need(f"/cl/{Path(f).name}", cl / Path(f).name) for f in ins]
         s += ["set_propagated_clock [all_clocks]"] if ins else []
         for p in list(m["post_sdc"]) + (list(m.get("setup_post_sdc") or []) if c == "ss" else []):
@@ -233,6 +237,8 @@ def main():
                     help="read after the routed SDC, SPEF and set_propagated_clock, in order (corner_sta.py's order)")
     ap.add_argument("--verdict-tol", type=float, default=0.05, help="ps; export session slack vs the verdict")
     ap.add_argument("--job-json", type=Path, help="closure-loop job record to rebuild the sign-off sequence from (2b)")
+    ap.add_argument("--job-extra-sdc", type=Path,
+                    help="original corner_sta.json extra_sdc saved as a file; replay before the job's post-SDCs")
     ap.add_argument("--src", type=Path, help="job commit tree (+ flow overlay) holding the job's post-SDCs (/src)")
     ap.add_argument("--cl-dir", type=Path, help="the run's cl/ dir (routed_ioref json + appended SDCs); default by --job-json")
     ap.add_argument("--expect-tt", type=float, help="ps; sign-off TT setup slack the export session must reproduce")
@@ -263,7 +269,8 @@ def main():
         if a.job_json is not None:
             if a.src is None:
                 raise VerdictError("--job-json needs --src")
-            jb = load_job(a.job_json.resolve(), a.src.resolve(), a.cl_dir.resolve() if a.cl_dir else None, rel)
+            jb = load_job(a.job_json.resolve(), a.src.resolve(), a.cl_dir.resolve() if a.cl_dir else None, rel,
+                          a.job_extra_sdc.resolve() if a.job_extra_sdc is not None else None)
         vj = None if (a.no_verdict or jb is not None) else find_verdict(orfs, a.verdict_json)
         if vj is not None:
             vd = load_verdict(vj, orfs, base)
@@ -281,6 +288,8 @@ def main():
             expect[c] = v
     if jb is not None:
         mounts += ["-v", f"{a.src.resolve()}:/src:ro", "-v", f"{jb['cl']}:/cl:ro"]
+        if a.job_extra_sdc is not None:
+            mounts += ["-v", f"{a.job_extra_sdc.resolve()}:/job_extra.sdc:ro"]
         rec["verdict"] = dict(json=None, job_json=str(a.job_json.resolve()), job=jb["job"], commit=jb["commit"],
                               overlay=jb["overlay"], basis=jb["basis"], expect_ps=jb["expect"], tol_ps=a.verdict_tol,
                               files=jb["files"], check={})

@@ -43,6 +43,8 @@ module tb_dsfd_sp_vm;
     parameter integer EARLYC = 0;
     parameter integer LA = 12;              // capture lane row entries (DUT)            // negative control: read a region right after its ARMN (before done)
     parameter integer NSVC = 1;
+    parameter integer LBP = 0;              // MODE 4 back-pressure: the collective offers 4 words EVERY cycle (1,024 words) so its
+                                            // lanes fill past the room threshold and t_cts[0] must drop (and hold the producer)
     localparam integer QD = 4, NB = 32, NP = 28, NROW = 16384, POOL = 64, MARK = 32767, NR = 128, CP = 12;
 
     reg clk = 0, cks = 0;
@@ -552,7 +554,7 @@ module tb_dsfd_sp_vm;
                 if (lq_hc.size() >= 2 && (MODE != 0 || rnd(82) % 3 == 0)) begin
                     f_hc[512] <= 1'b1; f_hc[511:0] <= lq_hc.pop_front(); f_hc[1025] <= 1'b1; f_hc[1024:513] <= lq_hc.pop_front(); l_pend = l_pend - 2;
                 end
-                if (lq_coll.size() != 0 && t_cts[0] && cyc % 2 == 0) begin : cw
+                if (lq_coll.size() != 0 && t_cts[0] && (LBP != 0 || cyc % 2 == 0)) begin : cw
                     integer w; reg [3:0] mk4; mk4 = 4'd0;
                     f_coll[0] <= 1'b1; f_coll[2:1] <= 2'd1;
                     for (w = 0; w < 4; w = w + 1) if (lq_coll.size() != 0) begin
@@ -712,7 +714,7 @@ module tb_dsfd_sp_vm;
                 if (cyc == 200) begin
                     tp_t0 = cyc;
                     if (MODE == 4) begin
-                        lphase(0, 0, 2048, 128, 1); lphase(5, 1, 2304, 64, 2); lphase(6, 2, 4096, 680, 3); lphase(4, 3, 6144, 320, 4);
+                        lphase(0, 0, 2048, 128, 1); lphase(5, 1, 2304, 64, 2); lphase(6, 2, 4096, 680, 3); lphase(4, 3, 6144, (LBP != 0) ? 1024 : 320, 4);
                     end else lphase(7, 0, 2048, 128, 5);
                     l_start = cyc + 40;
                 end
@@ -797,6 +799,75 @@ module tb_dsfd_sp_vm;
         for (k = 0; k < NR; k = k + 1) begin r_cr[k] = 0; r_gap[k] = 0; r_tail[k] = 0; end
         rs = SEED * 32'h2545f491 + 1;
     end
+`ifdef OT_SPVM_FE_H
+    // ------------------------------------------------------------ LOCKSTEP: hierarchy dsfd_vm_fe_h vs flat dsfd_vm_fe
+    // (el1013-s81-vmfe).  Both see the same FE inputs; every FE output is compared bit-exact every serial cycle from
+    // LK_IDLE cycles after reset release (the hierarchy's reset tree releases its leaves up to 2 + 1 + 2 * 10 cycles
+    // after the flat module: the stimulus is idle in that window, and the flat reference gets the same window).
+    // Sticky fault vectors fe_flt / m_rf (contract rule 3: inter-leaf fault wires may add cycles): the hierarchy may
+    // lag the flat module by <= LK_FLAG cycles and may never lead it.  Coverage is printed; the gate refuses a
+    // lockstep set that did not exercise reads, writes, landing drains and back-pressure.
+    localparam integer LK_IDLE = 28, LK_FLAG = 8;
+    integer lk_rel = 0, lk_n = 0, lk_bad = 0, lk_pre = 0, lk_i;
+    integer lk_rd = 0, lk_wr = 0, lk_drain = 0, lk_cts_low = 0, lk_cw_stall = 0, lk_cap = 0, lk_cts_tog = 0, lk_rdy = 0, lk_dv = 0, lk_ks = 0;
+    reg [NP-1:0] lk_ports = 0; reg [2:0] lk_cts_q = 0;
+    reg [15:0] lk_fh [0:LK_FLAG]; reg [15:0] lk_rh [0:LK_FLAG];
+    initial for (lk_i = 0; lk_i <= LK_FLAG; lk_i = lk_i + 1) begin lk_fh[lk_i] = 0; lk_rh[lk_i] = 0; end
+    task automatic lk_fail(input string what);
+        lk_bad = lk_bad + 1; nbad = nbad + 1;
+        if (lk_bad <= 12) $display("FAIL cyc %0d: LOCKSTEP mismatch on %s", cyc, what);
+    endtask
+    always @(posedge clk) begin
+        if (!rst_n) lk_rel <= 0; else lk_rel <= lk_rel + 1;
+        lk_fh[0] <= dut.f_flt; lk_rh[0] <= dut.fmrf;
+        for (lk_i = 1; lk_i <= LK_FLAG; lk_i = lk_i + 1) begin lk_fh[lk_i] <= lk_fh[lk_i-1]; lk_rh[lk_i] <= lk_rh[lk_i-1]; end
+        if (rst_n && lk_rel < LK_IDLE) begin
+            // the window must really be idle: no op may leave either FE before the compare starts
+            if (dut.fmv != 0 || dut.hmv != 0) begin lk_pre = lk_pre + 1; $display("LOCKSTEP pre-window op at cyc %0d (rel %0d) f %x h %x", cyc, lk_rel, dut.fmv, dut.hmv); end
+        end
+        if (rst_n && lk_rel >= LK_IDLE) begin
+            lk_n = lk_n + 1;
+            if (dut.hmv !== dut.fmv) lk_fail("m_v");
+            if (dut.hmwe !== dut.fmwe) lk_fail("m_we");
+            if (dut.hmrow !== dut.fmrow) lk_fail("m_row");
+            if (dut.hmm !== dut.fmm) lk_fail("m_mask");
+            if (dut.hmd !== dut.fmd) lk_fail("m_d");
+            if (dut.h_swg !== dut.f_swg) lk_fail("t_swg");
+            if (dut.h_srg !== dut.f_srg) lk_fail("t_srg");
+            if (dut.h_ks !== dut.f_ks) lk_fail("t_ks");
+            if (dut.h_dv !== dut.f_dv) lk_fail("dv");
+            if (dut.h_dt !== dut.f_dt) lk_fail("dt");
+            if (dut.h_cts !== dut.f_cts) lk_fail("t_cts");
+            if (dut.h_cwv !== dut.f_cwv) lk_fail("c_wv");
+            if (dut.h_cwd !== dut.f_cwd) lk_fail("c_wd");
+            if (dut.h_rdy !== dut.f_rdy) lk_fail("t_rdy");
+            if ((dut.h_flt & ~dut.f_flt) != 0) lk_fail("fe_flt (hierarchy leads)");
+            if ((lk_fh[LK_FLAG] & ~dut.h_flt) != 0) lk_fail("fe_flt (hierarchy lags > LK_FLAG)");
+            if ((dut.hmrf & ~dut.fmrf) != 0) lk_fail("m_rf (hierarchy leads)");
+            if ((lk_rh[LK_FLAG] & ~dut.hmrf) != 0) lk_fail("m_rf (hierarchy lags > LK_FLAG)");
+            // coverage, on the flat reference's outputs (slice 0)
+            for (lk_i = 0; lk_i < NP; lk_i = lk_i + 1) if (dut.fmv[lk_i]) begin
+                lk_ports[lk_i] = 1'b1;
+                if (dut.fmwe[lk_i]) lk_wr = lk_wr + 1; else lk_rd = lk_rd + 1;
+                if (lk_i == 10 || lk_i == 11) lk_drain = lk_drain + 1;
+                if (lk_i >= CP) lk_cap = lk_cap + 1;
+            end
+            if (dut.f_cts[1] && !dut.f_cts[0]) lk_cts_low = lk_cts_low + 1;
+            if (dut.f_cts != lk_cts_q) lk_cts_tog = lk_cts_tog + 1;
+            lk_cts_q <= dut.f_cts;
+            if (dut.f_cwv && !c_wr) lk_cw_stall = lk_cw_stall + 1;
+            if (dut.f_rdy != 0) lk_rdy = lk_rdy + 1;
+            if (dut.f_dv) lk_dv = lk_dv + 1;
+            if (dut.f_ks[0]) lk_ks = lk_ks + 1;
+        end
+    end
+    final begin
+        if (lk_pre != 0) $display("FAIL: LOCKSTEP idle window violated %0d cycles (an op left the FE < %0d cycles after reset)", lk_pre, LK_IDLE);
+        $display("LOCKSTEP cycles=%0d mismatches=%0d pre=%0d ports=%07x rd=%0d wr=%0d drain=%0d cap=%0d cts_low=%0d cts_tog=%0d cw_stall=%0d rdy=%0d dv=%0d ks=%0d fe_flt=%04x/%04x",
+                 lk_n, lk_bad, lk_pre, lk_ports, lk_rd, lk_wr, lk_drain, lk_cap, lk_cts_low, lk_cts_tog, lk_cw_stall, lk_rdy, lk_dv, lk_ks, dut.h_flt, dut.f_flt);
+        if (lk_bad == 0 && lk_pre == 0 && lk_n > 0) $display("LOCKSTEP_OK"); else $display("LOCKSTEP_BAD");
+    end
+`endif
     reg flt_seen = 0;
     always @(posedge clk) if (!flt_seen && rst_n && (dut.u_fe.fe_flt != 0 || fvec != 0)) begin
         flt_seen <= 1; $display("FAULT first at cyc %0d: fe_flt %b fvec %b", cyc, dut.u_fe.fe_flt, fvec);

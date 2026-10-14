@@ -1,5 +1,5 @@
 {
- "name": "qfd_res_slot_rs-s1-COMMIT",
+ "name": "qfd_res_slot_rs-s1-c724a7101",
  "block": "ot_qfd_res_slot_tile",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-elements-r6",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1013-qwen-elements-r6",
-  "commit": "COMMIT"
+  "commit": "c724a7101"
  },
  "stages": {
   "bench": [
@@ -97,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_res_slot_rs/qfd_res_slot_rs-s1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_res_slot_rs/qfd_res_slot_rs-s1-c724a7101"
   }
  ],
  "cycles_added": 0,

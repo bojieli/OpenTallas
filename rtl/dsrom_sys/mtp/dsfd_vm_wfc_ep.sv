@@ -28,7 +28,9 @@ module dsfd_vm_wfc_ep #(
     parameter integer PIPE = 2,                               // registered stages from the receivers to the VM pins
     parameter integer RL = 6,                                 // VM port read latency (cycles from the pins)
     parameter integer VMROWS = 16384,                         // VM rows (ot_s81ph_vm_mem NB 32 x 512); beyond -> error
-    parameter integer RD2 = 0                                 // 2-port prefetch: request {v1, row1, row0}, VM ports 0 + 1
+    parameter integer RD2 = 0,                                // 2-port prefetch: request {v1, row1, row0}, VM ports 0 + 1
+    parameter integer WNQ = 0                                 // write receiver without slots (its consumer wr_ is tied high below:
+                                                              // the VF + VR + 4 slots of the default receiver are never read)
 ) (
     input  wire [0:0] ck, rst,
     input  wire [0:0] f_swv, input wire [VWA+FLIT-1:0] f_swd, output wire [0:0] t_swg,   // kit writes + doorbell
@@ -49,7 +51,7 @@ module dsfd_vm_wfc_ep #(
     wire rn = rs_q[1];
     localparam integer SRW = RD2 ? 2*VWA+1 : VWA;
     wire wv, rv; wire [VWA+FLIT-1:0] wd; wire [SRW-1:0] rd; wire wr_, rr_;
-    ot_dsrom_mtp_lrx_rtt #(.W(VWA+FLIT), .D(VF+VR+4), .ENABLE_RTT(1), .FORWARD_HOPS(VF), .RETURN_HOPS(VR)) u_sw (
+    ot_dsrom_mtp_lrx_rtt #(.W(VWA+FLIT), .D(VF+VR+4), .ENABLE_RTT(1), .FORWARD_HOPS(VF), .RETURN_HOPS(VR), .ALWAYS_READY(WNQ != 0)) u_sw (
         .clk(clk), .rst_n(rn), .l_valid(f_swv[0]), .l_ready(t_swg[0]), .l_data(f_swd), .c_valid(wv), .c_ready(wr_), .c_data(wd));
     ot_dsrom_mtp_lrx_rtt #(.W(SRW), .D(VF+VR+4), .ENABLE_RTT(1), .FORWARD_HOPS(VF), .RETURN_HOPS(VR)) u_sr (
         .clk(clk), .rst_n(rn), .l_valid(f_srv[0]), .l_ready(t_srg[0]), .l_data(f_srd), .c_valid(rv), .c_ready(rr_), .c_data(rd));
