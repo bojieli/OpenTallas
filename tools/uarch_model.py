@@ -16120,3 +16120,12 @@ def hbm_qdq_pin_capture_front_model():
             "memory_bytes_per_cycle": 0, "macs_per_cycle": 0,
             "replicas": 4, "slot_requests_um": [(129.6,71.28),(172.8,103.68)],
             "pin_budget_status": "must measure P190/Q220 and actual per-pair L-H100"}
+
+
+def hbm_qdq_dedicated_face_ff_model():
+    """Repair measured payload139 Q224.6 with independent same-edge launch FFs."""
+    return {"immutable_price":168,"fast_edges":4,"general_extra_edges":2,
+            "launch_FFs":190,"estimated_extra_FFs":32,"estimated_extra_std_um2":24,
+            "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
+            "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
+            "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}

@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hgi_qdq_fr_pin_capture #(parameter integer PIN_CAPTURE=0,MUT_ORDER=0,MUT_END=0)(
+module ot_hgi_qdq_fr_pin_capture #(parameter integer PIN_CAPTURE=0,FACE_FF=0,MUT_ORDER=0,MUT_END=0)(
  input wire clk,rst_n,input wire[682:0]rec,
  output wire s1_v,s3_v,output wire[189:0]s3,output wire nfault
 );
@@ -10,12 +10,21 @@ module ot_hgi_qdq_fr_pin_capture #(parameter integer PIN_CAPTURE=0,MUT_ORDER=0,M
   wire gs1,gv,gfault,fs1,one_s1,ffault,overflow;
   wire[189:0]gp,fp;
   ot_hgi_qdq_fr u_general(.clk(clk),.rst_n(rst_n),.rec(rec),.s1_v(gs1),.s3_v(gv),.s3(gp),.nfault(gfault));
+  if(FACE_FF==0)begin:g_shared_face
 `ifdef OT_HARD_CHILDREN
   ot_hgi_qdq_fr_one_payload u_one(
 `else
   ot_hgi_qdq_fr_one_payload #(.MUT_END(MUT_END))u_one(
 `endif
    .clk(clk),.rst_n(rst_n),.rec(rec),.s1_v(fs1),.one_s1(one_s1),.payload(fp),.nfault(ffault));
+  end else begin:g_dedicated_face
+`ifdef OT_HARD_CHILDREN
+  ot_hgi_qdq_fr_one_payload_face u_one(
+`else
+  ot_hgi_qdq_fr_one_payload_face #(.MUT_END(MUT_END))u_one(
+`endif
+   .clk(clk),.rst_n(rst_n),.rec(rec),.s1_v(fs1),.one_s1(one_s1),.payload(fp),.nfault(ffault));
+  end
 `ifdef OT_HARD_CHILDREN
   ot_hgi_qdq_fr_capture_retire u_retire(
 `else
