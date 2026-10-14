@@ -1,0 +1,49 @@
+{
+  "status": "W12_FORWARD_IO_CONSTRAINTS_INCOMPLETE_ORIGINAL_GATE_INVALID",
+  "source_commit": "fefc8935d",
+  "source_archive_sha256": "f067eef68279d48e38e42f08987396ebfc51a234462fab7b51966f0b23ab1268",
+  "actual_per_root_TT_R_mean_ps": {
+    "bank": 392.9807062222222,
+    "request": 254.16380906893176,
+    "return": 265.699960328714,
+    "forward0": 167.7740422246865,
+    "forward1": 217.58742572034737
+  },
+  "actual_FF_counts": {
+    "bank": 7454,
+    "request": 4062,
+    "return": 1299,
+    "forward0": 2074,
+    "forward1": 2074
+  },
+  "SRAM_clock_pins": 1,
+  "raw_output_ps": {
+    "forward0": 219.168758,
+    "forward1": 209.676274,
+    "return": 220.11134
+  },
+  "corrected_ports": {
+    "f": 4144,
+    "o": 1297
+  },
+  "original_gate_forwarding_delays": "ABSENT due incorrect escapedbus get_ports; original +61.6011/+5.9231 is not a full verdict",
+  "same_fixed_TT_mean_eachcorner": true,
+  "corrected_single_corner_replay": {
+    "TT": {
+      "setup_ps": 39.375392,
+      "hold_ps": -27.97897
+    },
+    "FF": {
+      "setup_ps": 158.853625,
+      "hold_ps": -13.754123,
+      "zero_output_load_hold_ps": -32.698344
+    },
+    "SS": {
+      "setup_ps": -236.47051,
+      "hold_ps": -103.243664
+    }
+  },
+  "next": "S-clock-entry topology/reset hold delay/full normal clock/reset constraints, no phase repricing",
+  "qualified_clock_driver_pair": "UNBOUND",
+  "route": "NOT_SUBMITTED"
+}

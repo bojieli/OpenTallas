@@ -76,9 +76,9 @@ foreach half {0 1} {
   for {set p [expr {14*$half}]} {$p < 14*($half+1)} {incr p} {
    for {set bit 0} {$bit < $width} {incr bit} {
     set index [expr {$p*$width+$bit}]
-    # Escaped literal brackets prevent Tcl substitutions and glob ranges.
-    lappend outs [format {f_%s\[%d\]} $signal $index]
-    lappend ins [format {i_%s\[%d\]} $signal $index]
+    # Literal bus names inside Tcl format braces bind actual synthesized ports.
+    lappend outs [format {f_%s[%d]} $signal $index]
+    lappend ins [format {i_%s[%d]} $signal $index]
    }
   }
  }
@@ -96,6 +96,12 @@ foreach owner $ot_mc_owners {
     if {$ot_mc_post} { lassign [ot_bgl_mc_mean $clock $refs] R Rmin }
     dict set ot_mc_refs $clock [list $R $Rmin]
     set ii [ot_bgl_mc_ports $inputs]; set oo [ot_bgl_mc_ports $outputs]
+    if {$clock eq "req_clk" && [llength $ii] != 4144} {error "MC5 req input coverage [llength $ii] !=4144"}
+    if {$clock eq "ret_clk" && ([llength $ii] !=1297 || [llength $oo] !=1297)} {error "MC5 ret port coverage incomplete"}
+    if {$clock eq "fwd0_clk" || $clock eq "fwd1_clk"} {
+        if {[llength $ii] !=2072 || [llength $oo] !=2072} {error "MC5 actual forwarding port coverage $clock input[llength $ii] output[llength $oo] !=2072"}
+    }
+    puts "MC5_PORT_OWNERS clock=$clock inputs=[llength $ii] outputs=[llength $oo]"
     set sk [expr {$ot_mc_post ? 90.0 : 0.0}]
     set hk [expr {$ot_mc_post ? 50.0 : 0.0}]
     if {[llength $ii]} {
