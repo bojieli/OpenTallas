@@ -6297,6 +6297,22 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
             face_ = (max(strip_[0],sv.x), strip_[1], min(strip_[2],sv.x+sv.w), strip_[3])
             pl = P.near(x, yy, w, h, [face_], horiz=True, span=sv.w,
                         rows=max(1, int((face_[3]-face_[1])/max(h,4.32))))
+            if not pl and face_[3]-face_[1] < h:
+                # The true compact frame leaves only 103.68 um above the
+                # shoreline service, less than the receiver's height. Allocate
+                # side bays beside that service instead of stretching the
+                # strip or shrinking a hardened leaf. Occupancy still rejects
+                # every overlap with service/control/SU tiles.
+                if sv.orient == 'R0':
+                    by0, by1 = sv.y+sv.h-h-17.28, face_[3]
+                else:
+                    by0, by1 = face_[1], sv.y+h+17.28
+                bays = [(sv.x-w-21.6,by0,sv.x-4.32,by1),
+                        (sv.x+sv.w+4.32,by0,sv.x+sv.w+w+21.6,by1)]
+                pl = P.near(x,yy,w,h,bays,horiz=True,span=sv.w+2*w,rows=8)
+                if pl:
+                    allc.extend(bays)
+                    m.setdefault('compact_bf_service_bays', {})[name] = bays
             if pl:
                 m.setdefault('compact_bf_service_sites', {})[name] = dict(rect=[*pl,w,h], service=sv.name, corridor=face_)
             else:
