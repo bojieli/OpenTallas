@@ -78,6 +78,27 @@ def master_pins():
 
 
 MP = master_pins()
+PIN_RECEIPTS = {}
+
+
+def load_actual_master_pins(directory):
+    """Use actual source-bound IOP/CTS rectangles; final abstract/timing stays pending."""
+    for f in sorted(Path(directory).glob('*/pins.json')):
+        master = f.parent.name
+        if master not in MP:
+            raise ValueError(f'unknown FE master: {master}')
+        rec = json.loads(f.read_text()); w,h = rec['outline_um']
+        if abs(w-MP[master][0]) > .001 or abs(h-MP[master][1]) > .001:
+            raise ValueError(f'{master}: actual outline {w,h} differs from selected kit {MP[master][:2]}')
+        pins = {}
+        for name, v in rec['pins'].items():
+            if name in ('VDD','VSS') or not v['boxes']: continue
+            box=v['boxes'][0]; x0,y0,x1,y1=box['rect_um']; x,y=(x0+x1)/2,(y0+y1)/2
+            face=min((x,'W'),(w-x,'E'),(y,'S'),(h-y,'N'))[1]
+            pins[name]=(x,y,face,box['layer'])
+        MP[master]=(w,h,pins,True)
+        PIN_RECEIPTS[master]={k:rec.get(k) for k in ('schema','odb_source','odb_sha256','status')}
+
 
 
 def reposition(plan, positions, derive_external=False):
@@ -403,6 +424,7 @@ class Plan:
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--variant', default='B'); ap.add_argument('--height', type=float, default=695.52); ap.add_argument('--out', default=None)
+    ap.add_argument('--master-pins', help='actual source-bound master/pins.json directory; never a final closure claim')
     ap.add_argument('--width', type=float, default=1520.064)
     ap.add_argument('--fsr-pitch', type=float, default=388.8)
     ap.add_argument('--placements', help='replay a source-bound search placement JSON')
@@ -411,6 +433,7 @@ def main():
     global H, W
     H = a.height
     W = a.width
+    if a.master_pins: load_actual_master_pins(a.master_pins)
     p = Plan(a.variant)
     reposition(p, {f'fsr{i}': (a.fsr_pitch*i,p.inst[f'fsr{i}'][2]) for i in range(4)})
     if a.placements:
@@ -433,7 +456,7 @@ def main():
     except Exception:
         pass
     res = {'schema': 'opentallas.s81_vm_fe_h.floorplan.v1', 'agent': 'el1013-s81-vmfe/B8', 'rtl': 'B8 (R 3, KD 3, XRT 1, CCA 1)', 'variant': a.variant,
-           'outline': [W, H], 'limits': {'hop_um': HOP_MAX, 'cut': CUT_MAX, 'usable_tracks': USABLE},
+           'outline': [W, H], 'actual_pin_receipts': PIN_RECEIPTS, 'limits': {'hop_um': HOP_MAX, 'cut': CUT_MAX, 'usable_tracks': USABLE},
            'instances': {n: {'master': m, 'x': x, 'y': y, 'w': MP[m][0], 'h': MP[m][1]} for n, (m, x, y) in sorted(p.inst.items())},
            'masters_with_exact_pins': sorted(m for m, v in MP.items() if v[3]), 'masters_with_planned_pins': sorted(m for m, v in MP.items() if not v[3]),
            'placement_violations': place, 'hops': hops, 'hops_over_limit': over, 'pin_align_fail': pa_fail, 'cuts': cuts, 'cuts_over_limit': cut_bad,
