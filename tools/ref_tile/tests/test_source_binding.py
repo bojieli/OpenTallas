@@ -116,6 +116,30 @@ class SourceBindingTest(unittest.TestCase):
                 self.assertEqual(g.clock['tt_spread_ps'], 70.)
                 self.assertEqual(g.verdict, 'PASS')
 
+    def test_recovery_requires_full_manifest_log_script_and_staged_bytes(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as td:
+            root, daemon = Path(td) / 'repo', Path(td) / 'daemon'
+            start = self.init(root)
+            daemon.mkdir()
+            with patch.object(PG, 'ROOT', root), patch.object(PG, 'DAEMON_TREE', daemon), patch.object(PG, 'SHIP_HELPERS', ()):
+                data = PG.ship_tar({'kit'})
+            binding = SB.snapshot(data, root, start, daemon, None, ())
+            script = b'exact executed script'
+            binding['remote_script_sha256'] = hashlib.sha256(script).hexdigest()
+            (root / 'SOURCE_COMMIT').write_text(start)
+            log = ('GATE_SOURCE_ARCHIVE_SHA256=' + binding['archive_sha256'] + '\n').encode()
+            recovered = SB.recover_verified_snapshot(binding, root, log, script)
+            self.assertTrue(recovered['remote_archive_verified'])
+            self.assertEqual(recovered['commit'], start)
+            with self.assertRaises(ValueError):
+                SB.recover_verified_snapshot(binding, root, b'wrong archive log', script)
+            with self.assertRaises(ValueError):
+                SB.recover_verified_snapshot(binding, root, log, b'changed script')
+            (root / 'kit/input.v').write_text('changed source')
+            with self.assertRaises(ValueError):
+                SB.recover_verified_snapshot(binding, root, log, script)
+
     def test_remote_script_verifies_archive_before_extracting(self):
         script = PG.REMOTE_SH.format(R='/tmp/test', ARCHIVE_SHA256='a' * 64, COMMIT='snapshot-sha256:abc', CAP=1,
                                     KIT='kit', IMG='unused', RC='', TOP='test', CTS=0, PGM=1, CLK='clk')
