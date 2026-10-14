@@ -79,7 +79,7 @@ class Gate(unittest.TestCase):
     # ---------------------------------------------------------------- when the gate does not apply
     def test_constants(self):
         self.assertEqual(TL.CLOSED_STANDS_KINDS, ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap",
-                                                  "pin_register"))
+                                                  "pin_register", "native_launch"))
         self.assertEqual(TL.DIE_WINDOW_CUT_MIN, 0.6)
 
     def test_new_block_and_unclosed_history_pass(self):
@@ -179,6 +179,37 @@ class Gate(unittest.TestCase):
         r = self.run_(spec(reroute_reason=dict(ok, source="results/arch/missing.json")))
         self.assertEqual(r["verdict"], "REFUSE")
         self.assertIn("does not exist", r["message"])
+
+    # ---------------------------------------------------------------- native_launch
+    def test_native_launch(self):
+        kd = "physical/ref_tile/t"
+        stage = "source /src/physical/common_flow/pin_reg_split.tcl\n"
+        for c in ("bbbbbbbbb", "ccccccccc", "eeeeeeeee"):                          # the re-kit: recipe-2 output stage
+            self.r.c[c][f"{kd}/kit.env"] += "EXTRA=(--orfs-var OT_KEEP_PIN_REGS=1)\nRECIPE=2\n"
+            self.r.c[c][f"{kd}/pre_gpl.tcl"] = stage
+        ok = {"kind": "native_launch", "source": "results/arch/cuts.json", "cell": "ot_t", "launch_ps": 331.4}
+        r = self.run_(spec(reroute_reason=ok))
+        self.assertEqual((r["verdict"], r["kind"]), ("PASS", "native_launch"), r["message"])
+        for k in ("source", "cell", "launch_ps"):
+            self.assertEqual(self.run_(spec(reroute_reason={a: b for a, b in ok.items() if a != k}))["verdict"], "REFUSE", k)
+        r = self.run_(spec(reroute_reason=dict(ok, launch_ps=210.0)))               # within the budget: the view stands
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("capture-only", r["message"])
+        r = self.run_(spec(commit="ccccccccc", reroute_reason=ok))                  # RTL changed: not a re-kit
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("rtl_change", r["message"])
+        r = self.run_(spec(commit="eeeeeeeee", reroute_reason=ok))                  # outline moved: slot_change
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("FW", r["message"])
+        self.r.c["bbbbbbbbb"][f"{kd}/pre_gpl.tcl"] = "source /src/x/io_flop_at_pins.tcl\n"
+        r = self.run_(spec(reroute_reason=ok))                                      # same output stage as before
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("repeats the launch miss", r["message"])
+        self.r.c["bbbbbbbbb"][f"{kd}/pre_gpl.tcl"] = stage
+        self.r.c["aaaaaaaaa"][f"{kd}/pre_gpl.tcl"] = stage                          # the closed kit already had it
+        r = self.run_(spec(reroute_reason=ok))
+        self.assertEqual(r["verdict"], "REFUSE")
+        self.assertIn("another cause", r["message"])
 
     # ---------------------------------------------------------------- param_change
     def test_param_change(self):
