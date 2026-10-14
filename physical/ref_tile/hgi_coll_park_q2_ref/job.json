@@ -1,5 +1,5 @@
 {
- "name": "hgi_coll_park_q2_ref-qsplit1-COMMIT",
+ "name": "hgi_coll_park_q2_ref-qsplit1-e69fc82b6",
  "block": "ot_hgi_coll_park_q2",
  "ref_tile": true,
  "owner": "Codex:hbm_lkep:park",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/el1013-lkep-split",
-  "commit": "COMMIT",
+  "commit": "e69fc82b6",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
    "rtl/link",
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_coll_park_q2_ref/hgi_coll_park_q2_ref-qsplit1-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_coll_park_q2_ref/hgi_coll_park_q2_ref-qsplit1-e69fc82b6"
   }
  ],
  "cycles_added": 0,
