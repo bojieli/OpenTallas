@@ -1357,7 +1357,10 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         insertion = o / "insertion.json"
         insertion.unlink(missing_ok=True)  # a failed measurement cannot retain a prior route's clock record
-        cr = subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--all-clocks", "--output", str(insertion)])
+        # --raw-source: the published R is the physical tree from the clock pin (the die delivers phi - R), never an
+        # arrival a compensated entry SDC (set_clock_latency -source -R) pulled to ~0
+        cr = subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--all-clocks", "--raw-source",
+                             "--output", str(insertion)])
         if cr.returncode:
             (o / "CLOCK_INSERTION_FAILED").write_text(f"clock measurement exit {cr.returncode}; no insertion.json published\n")
         else:
