@@ -12,8 +12,8 @@
     "w": 138.24,
     "h": 99.36
   },
-  "std_area_um2": 2681,
-  "why_floorplan": "Production registered relay; <=15k sinks; exact depth and width defaults; standalone closure does not adopt the pending comb-strip placement. Estimated area must be replaced by measured synthesis.",
+  "std_area_um2": 2710,
+  "why_floorplan": "Assigned v18 parent child slot and exact forward-peer pin alignment preserve the 138.24 x 99.36 outline. Synthesis measured 2710 um2 standard-cell area; standalone CTS measures 7826 sinks, TT max 206.3 ps, spread 24.6 ps. Geometry remains assigned while routed pin arcs and parent hops are pending.",
   "pins": {
     "N": [
       "v_i",

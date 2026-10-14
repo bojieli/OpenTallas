@@ -1,0 +1,69 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/ref_gate/s81hc_ccfh2_ref-20261013-212318/src
+ot-run: ot-epyc4       admits   556 GB (avail 782, growth 110, headroom 48, waiters 0/0 GB) load 58/128 running 17 disk 1262 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/s81hc_ccfh2_ref-20261013-212318/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/s81hc_ccfh2_ref-20261013-212318/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-231565-1791952817 after 0 s
+{
+  "n_yacc": {
+    "bits": 1,
+    "min_ps": 252.76294999999993,
+    "max_ps": 252.76294999999993,
+    "worst_bits": [
+      "n_yacc"
+    ]
+  },
+  "srs": {
+    "bits": 1,
+    "min_ps": 252.26212999999996,
+    "max_ps": 252.26212999999996,
+    "worst_bits": [
+      "srs"
+    ]
+  },
+  "fd_i": {
+    "bits": 1128,
+    "min_ps": 240.78217999999998,
+    "max_ps": 301.0880599999999,
+    "worst_bits": [
+      "fd_i[30]",
+      "fd_i[11]",
+      "fd_i[1]",
+      "fd_i[280]",
+      "fd_i[18]",
+      "fd_i[229]",
+      "fd_i[4]",
+      "fd_i[50]"
+    ]
+  },
+  "fv_i": {
+    "bits": 7,
+    "min_ps": 256.48599999999993,
+    "max_ps": 281.28183999999993,
+    "worst_bits": [
+      "fv_i[3]",
+      "fv_i[5]",
+      "fv_i[6]",
+      "fv_i[1]",
+      "fv_i[4]",
+      "fv_i[0]",
+      "fv_i[2]"
+    ]
+  },
+  "n_y": {
+    "bits": 2560,
+    "min_ps": 239.73474999999996,
+    "max_ps": 308.20432999999997,
+    "worst_bits": [
+      "n_y[2487]",
+      "n_y[1292]",
+      "n_y[2381]",
+      "n_y[1294]",
+      "n_y[349]",
+      "n_y[1469]",
+      "n_y[1520]",
+      "n_y[1413]"
+    ]
+  }
+}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-231565-1791952817): exit 0

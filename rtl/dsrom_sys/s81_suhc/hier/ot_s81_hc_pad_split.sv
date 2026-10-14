@@ -7,7 +7,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cpad_split #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1, PHYS_CLK = 0, PIN_CAPTURE = 1
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1, PHYS_CLK = 0, PIN_CAPTURE = 1, RETURN_CAPTURE = 1
 ) (
     input  wire                 sk, srs,
     input  wire [3:0]           sk_leaf,
@@ -35,11 +35,13 @@ module ot_s81_hc_cpad_split #(
     localparam integer FP = 2 + RF + PAD;                         // forward: send + capture + RF + padding
     localparam integer RP = RT + 2 + PAD + RET_EXTRA * (NP - L1) * (HALF ? 2 : 1);                         // return: relay + send + capture + padding
     // No assembly data/valid flop: each hard child's first/last flop is its boundary.
-    // PIN_CAPTURE transfers one forward stage into the CCF face; return stages are unchanged.
+    // FV transfers one stage into CCF; return transfers one R6 stage into the two-face middle pad.
     localparam integer F0 = (FP-2-PIN_CAPTURE > 8) ? 8 : FP-2-PIN_CAPTURE;
     localparam integer F1 = FP-2-F0-PIN_CAPTURE;
-    localparam integer R0 = (RP-2 > 6) ? 6 : RP-2;
-    localparam integer R1 = RP-2-R0;
+    localparam integer R0_BASE = (RP-2 > 6) ? 6 : RP-2;
+    localparam integer RCAP = (R0_BASE > 0) ? RETURN_CAPTURE : 0;
+    localparam integer R0 = R0_BASE-RCAP;
+    localparam integer R1 = RP-2-R0_BASE;
     wire [FVW-1:0] fm;
     wire [FSW-1:0] dm;
     wire [RDW-1:0] rpin, rm;
@@ -50,15 +52,15 @@ module ot_s81_hc_cpad_split #(
 `endif
         .sk(PHYS_CLK ? sk_leaf[0] : sk),.srs(srs),.v_i(fv_i),.d_i(fd_i),.v_o(fm),.d_o(dm));
 `ifdef OT_S81_HC_PAD_HARD
-    ot_s81_hc_pad_fv4fd5r1 u_f5r1 (
+    ot_s81_hc_pad_fv4fd5r2 u_f5r1 (
 `else
-    ot_s81_hc_pad_fv4fd5r1 #(.FW(FSW),.VW(FVW),.RW(RDW),.DEPTH(F1+PIN_CAPTURE),.VDEPTH(F1)) u_f5r1 (
+    ot_s81_hc_pad_fv4fd5r2 #(.FW(FSW),.VW(FVW),.RW(RDW),.DEPTH(F1+PIN_CAPTURE),.VDEPTH(F1),.RDEPTH(1+RCAP)) u_f5r1 (
 `endif
         .sk(PHYS_CLK ? sk_leaf[1] : sk),.srs(srs),.v_i(fm),.d_i(dm),.v_o(fv_o),.d_o(fd_o),.r_i(crd_i),.r_o(rpin));
 `ifdef OT_S81_HC_PAD_HARD
-    ot_s81_hc_pad_r6 u_r6 (
+    ot_s81_hc_pad_r5 u_r6 (
 `else
-    ot_s81_hc_pad_r6 #(.W(RDW),.DEPTH(R0)) u_r6 (
+    ot_s81_hc_pad_r5 #(.W(RDW),.DEPTH(R0)) u_r6 (
 `endif
         .sk(PHYS_CLK ? sk_leaf[2] : sk),.srs(srs),.d_i(rpin),.d_o(rm));
 `ifdef OT_S81_HC_PAD_HARD
@@ -72,7 +74,7 @@ module ot_s81_hc_cpad_split #(
         if (F0<0 || F1<0 || R0<0 || R1<0) $fatal(1,"pad split requires nonnegative soft relay depths");
 `ifdef OT_S81_HC_PAD_HARD
         if(NG!=256 || HALF!=1 || RLY!=2 || RF!=5 || RT!=1 || RET_EXTRA!=1 ||
-           S_RD!=2 || S_RT!=4 || DW!=6 || F0!=8 || F1!=4 || R0!=6 || R1!=5)
+           S_RD!=2 || S_RT!=4 || DW!=6 || F0!=8 || F1!=4 || RETURN_CAPTURE!=1 || RCAP!=1 || R0!=5 || R1!=5)
             $fatal(1,"pad hard views require exact production depth/width tuple");
 `endif
     end
@@ -239,4 +241,15 @@ module ot_s81_hc_pad_fv4fd5r1 #(parameter integer FW=1128,VW=7,RW=2156,DEPTH=5,V
  ot_hdc_delay #(.W(VW),.D(VDEPTH),.RESET(1)) u_v(.clk(sk),.rst_n(rr[1]),.d(v_i),.q(v_o));
  ot_hdc_delay #(.W(FW),.D(DEPTH)) u_d(.clk(sk),.rst_n(rr[1]),.d(d_i),.q(d_o));
  always @(posedge sk)r_o<=r_i;
+endmodule
+
+// Separate actual return capture and launch registers; one downstream R6 stage transfers here.
+module ot_s81_hc_pad_fv4fd5r2 #(parameter integer FW=1128,VW=7,RW=2156,DEPTH=5,VDEPTH=4,RDEPTH=2)(
+ input wire sk,srs,input wire[VW-1:0]v_i,input wire[FW-1:0]d_i,
+ output wire[VW-1:0]v_o,output wire[FW-1:0]d_o,
+ input wire[RW-1:0]r_i,output wire[RW-1:0]r_o);
+ reg[1:0] rr;always @(posedge sk)rr<={rr[0],srs};
+ ot_hdc_delay #(.W(VW),.D(VDEPTH),.RESET(1)) u_v(.clk(sk),.rst_n(rr[1]),.d(v_i),.q(v_o));
+ ot_hdc_delay #(.W(FW),.D(DEPTH)) u_d(.clk(sk),.rst_n(rr[1]),.d(d_i),.q(d_o));
+ ot_hdc_delay #(.W(RW),.D(RDEPTH)) u_r(.clk(sk),.rst_n(rr[1]),.d(r_i),.q(r_o));
 endmodule

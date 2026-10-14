@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.s81.hc.ccf_fv_only_cost.v1",
+  "scope": "NG256 HIER3 CNL_PIN1 CHAIN_STEP6 LANE_SPECIALIZE1 PIPE0 production fixture, exact soft and hard composition; final die throughput remains pending",
+  "candidate_source_commit": "3144b850c",
+  "baseline_source": "origin/main:results/rtl/s81_suhc_20261013/cryys_split_189c83072/run_ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_probe.json",
+  "baseline_sha256": "bd865ef20020d568b61d0ce29ed6bad5cc20ccfc805dffdb4deef4a81972bac3",
+  "measured_composition_cycle_loss_percent": 0,
+  "rows": [
+    {
+      "mode": "bench_0",
+      "run": "golden_L0_L2",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_0",
+      "run": "stress_0",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_0",
+      "run": "stress_1",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_hard",
+      "run": "golden_L0_L2",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_hard",
+      "run": "stress_0",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "mode": "bench_hard",
+      "run": "stress_1",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    }
+  ],
+  "rtl_retime": "Only one FV pad stage moves into the CCF actual face capture; FD keeps its original direct capture and pad5 depth; return unchanged.",
+  "ledger_row_added": false
+}

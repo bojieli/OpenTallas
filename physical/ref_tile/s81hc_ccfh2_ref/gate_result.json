@@ -2,42 +2,110 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "s81hc_ccfh2_ref",
  "verdict": "WARN",
- "generated": "2026-10-13T09:08:36-0700",
+ "generated": "2026-10-13T21:40:04-0700",
  "host": "ot-epyc4",
  "cts": true,
- "commit": "40841c342",
+ "commit": "674580d80",
  "clock": {
-  "max_root_sinks": 14188,
+  "max_root_sinks": 14196,
   "root": "port:sk",
   "cts": true,
-  "tt_insertion_ps": 731.1,
-  "tt_spread_ps": 279.5,
-  "declared_clock": null,
+  "tt_insertion_ps": 708.4,
+  "tt_spread_ps": 32.1,
+  "declared_clock": "spine",
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
+  "clock_measurements": [
+   {
+    "source": "sk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 6370,
+      "mean": 689.8,
+      "min": 676.5,
+      "max": 708.4
+     },
+     "all": {
+      "n": 14194,
+      "mean": 688.8,
+      "min": 676.3,
+      "max": 708.4
+     },
+     "errors": [],
+     "macros": {
+      "n": 5,
+      "nets": 5,
+      "max_per_net": 1,
+      "reg_mean": 688.8,
+      "max_slew": 14.4,
+      "max_late": 5.0,
+      "pins": [
+       {
+        "pin": "g_yf.g_slice.g_f[0].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 683.5,
+        "slew": 14.4,
+        "late": -5.3,
+        "net": "clkbuf_sp_L1406_net"
+       },
+       {
+        "pin": "g_yf.g_slice.g_f[1].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 693.8,
+        "slew": 14.0,
+        "late": 5.0,
+        "net": "clkbuf_sp_L1206_net"
+       },
+       {
+        "pin": "g_yf.g_slice.g_f[2].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 683.1,
+        "slew": 13.9,
+        "late": -5.7,
+        "net": "clkbuf_sp_L1111_net"
+       },
+       {
+        "pin": "g_yf.g_slice.g_f[3].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 685.3,
+        "slew": 13.8,
+        "late": -3.5,
+        "net": "clkbuf_sp_L779_net"
+       },
+       {
+        "pin": "g_yf.g_slice.g_f[4].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 688.9,
+        "slew": 14.0,
+        "late": 0.1,
+        "net": "clkbuf_sp_L662_net"
+       }
+      ]
+     },
+     "macro_libs": 1
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "14,188 sinks on the largest root <= 15,000; measured TT insertion 731.1 ps, leaf spread 279.5 ps"
+  "text": "14,196 sinks on the largest root <= 15,000; measured TT insertion 708.4 ps, leaf spread 32.1 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "utilisation 34% outside 45%-60% (std 6553 + macro 66617 in core 218406 um2)",
+   "message": "utilisation 34% outside 45%-60% (std 7212 + macro 66617 in core 218406 um2)",
    "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   },
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 6902 um2 + macros 66617 in core 218406: util 34%",
-   "fix": "set \"std_area_um2\": 6902 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 6855 um2 + macros 66617 in core 218406: util 34%",
+   "fix": "set \"std_area_um2\": 6855 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 33.7% outside 45%-65% (std 7074 + macro 66617 um2 in 218406 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 33.7% outside 45%-65% (std 6988 + macro 66617 um2 in 218406 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]

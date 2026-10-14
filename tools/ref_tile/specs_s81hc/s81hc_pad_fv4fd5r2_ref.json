@@ -1,0 +1,61 @@
+{
+  "name": "s81hc_pad_fv4fd5r2_ref",
+  "top": "ot_s81_hc_pad_fv4fd5r2",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv",
+    "rtl/hdc/ot_hdc_delay.sv"
+  ],
+  "clock_port": "sk",
+  "reset_ports": [],
+  "outline": {
+    "w": 138.24,
+    "h": 99.36
+  },
+  "std_area_um2": 3448,
+  "why_floorplan": "Candidate assigned outline from FV4/FD5/R1; estimated area only. Distinct return input/output stages permit both W/E faces to have actual capture/launch flops. Exact actual pin density and clock measurement must precede admission.",
+  "pins": {
+    "N": [
+      "v_i",
+      "d_i"
+    ],
+    "S": [
+      "v_o",
+      "d_o"
+    ],
+    "W": [
+      "sk",
+      "srs",
+      "r_i"
+    ],
+    "E": [
+      "r_o"
+    ]
+  },
+  "macros": [],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.01,
+    "pin_min_tracks": 1
+  },
+  "io_tcl": "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r2.tcl",
+  "job": {
+    "benches_from": "tools/s81_suhc/hc_tile_benches_fv4fd5r2.json",
+    "owner": "Codex:s81_hc_ccf",
+    "branch": "codex-s81-ccf-pinreg-1013",
+    "tag": "v1-return-two-face",
+    "purpose": "Actual return pin capture and launch with two stages; downstream R6 replaced by existing closed R5, preserving total return epochs.",
+    "views_to": "physical/ref_tile/s81hc_pad_fv4fd5r2_ref/views",
+    "record_to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref"
+  },
+  "layer_cap": "M5",
+  "structural_change": "FV4/FD5/R2: separate return W-face capture and E-face launch flops. Downstream R5 plus R5 reuses the existing closed master instead of R6 plus R5; total transaction/return epochs are preserved. Fixed hold stages omitted; all constraints and automatic hold repair remain active.",
+  "io_flop_at_pins": {
+    "cols": 16
+  },
+  "recipe": 2,
+  "inhold": false,
+  "outhold": false
+}

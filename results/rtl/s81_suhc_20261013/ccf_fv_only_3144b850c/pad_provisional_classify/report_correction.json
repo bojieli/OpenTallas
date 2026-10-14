@@ -1,0 +1,20 @@
+{
+  "status": "UNQUALIFIED PROVISIONAL CTS; prior timing report used zero RC and is superseded",
+  "source_gate": "s81hc_pad_fv4fd5r1_ref-20261013-212319",
+  "prior_timing": {
+    "method": "obsolete path_classes.tcl omitted PDK setRC",
+    "setup_ps": 130.79118343917173,
+    "hold_ps": 3.0448144006101074
+  },
+  "corrected_timing": {
+    "method": "same ODB/SDC with official ASAP7 setRC; TT placement parasitics",
+    "global_setup_ps": -477.0112638219359,
+    "global_hold_ps": 22.811919020426785,
+    "worst_endpoint": "r_o[2047]",
+    "sample_r_o1271_setup_ps": -197.28419
+  },
+  "published_tool_ref": "origin/main includes b9bbf2a60 (original06b8e54b3/rootc2fed625d)",
+  "published_tool_sha256": "0b14d26cfecc2e3ca1cb14c8584a1c69fe777781de0969824252e82e47504fad",
+  "local_duplicate_commit": "98675b62c NOT FOR MAIN; fixed code was already published; current tree matches published bytes",
+  "final_routed_qualification": false
+}

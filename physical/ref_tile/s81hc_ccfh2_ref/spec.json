@@ -37,7 +37,7 @@
  "reset_ports": [
   "srs"
  ],
- "std_area_um2": 7212,
+ "std_area_um2": 6855,
  "util": 0.52,
  "pg_layer": "M5",
  "macros": [
@@ -115,8 +115,8 @@
   "benches_from": "tools/s81_suhc/hc_tile_benches_ccf.json",
   "owner": "Codex:s81_hc_ccf",
   "branch": "codex-s81-ccf-pinreg-1013",
-  "tag": "v7-fv-facecapture-spine",
-  "purpose": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with about14196sinks. Balanced clock spine repairs the measured171psspread. Final actual hop audit is required.",
+  "tag": "v8-fv-facecapture-minhold",
+  "purpose": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with measured 14,196 sinks. Balanced clock spine repairs the measured 171 ps spread. Final actual hop audit is required.",
   "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
  },
@@ -140,7 +140,7 @@
   "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff"
  },
  "io_tcl": "physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl",
- "structural_change": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with about14196sinks. Balanced clock spine repairs the measured171psspread. Final actual hop audit is required.",
+ "structural_change": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with measured 14,196 sinks. Balanced clock spine repairs the measured 171 ps spread. Final actual hop audit is required.",
  "recipe": 2,
  "boundary_tcl": [
   "physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl"
@@ -152,8 +152,9 @@
   "cols": 24
  },
  "clock": "spine",
+ "inhold": false,
+ "outhold": false,
+ "boundary_hold_experiment": "Keep all existing hold constraints and automatic repair; omit fixed HB4 input/output stages whose measured chains put FV at281ps and forward outputs at285ps. This is a physical candidate requiring fresh CTS and TT/FF pin-window proof, never a relaxed timing budget.",
  "children": [],
- "inter": [],
- "inhold": true,
- "outhold": true
+ "inter": []
 }
