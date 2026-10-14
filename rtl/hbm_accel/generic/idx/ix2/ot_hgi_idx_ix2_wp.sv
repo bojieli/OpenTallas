@@ -47,13 +47,20 @@ module ot_hgi_idx_ix2_wp #(
     end
     // ---------------------------------------------------------------- link queues
     reg [299:0] tq [0:3]; reg [1:0] tqw, tqr; reg [2:0] tqn;
-    reg [67:0]  dq [0:3]; reg [1:0] dqw, dqr; reg [2:0] dqn;
+    // The CLOSED beat tile has four D link credits. Return a credit when this
+    // landing FIFO has reserved space, rather than waiting for the packers to
+    // consume the beat through a six-edge round trip (4/6 beats per cycle).
+    // Withhold acknowledgements above 11 queued beats: at most four credited
+    // packets can still arrive, so the sixteen entries cannot overflow.
+    reg [67:0] dq [0:15]; reg [3:0] dqw, dqr; reg [4:0] dqn;
+    reg [2:0] dc_pending;
+    wire dc_ack = dc_pending != 3'd0 && dqn < 5'd12;
     wire [299:0] tqh = tq[tqr]; wire [67:0] dqh = dq[dqr];
     wire [3:0] pk_rdy, pk_ev, pk_empty; wire [59:0] pk_sec; wire [1023:0] pk_d; wire [31:0] pk_m;
     reg [3:0] e_take; reg fl_pend, fl_done;
     wire t_go = tqn != 3'd0 && pk_rdy[0] && (pk_rdy[1] || !has_r);
-    wire d_go = dqn != 3'd0 && pk_rdy[2] && pk_rdy[3];
-    wire fl_go = fl_pend && tqn == 3'd0 && dqn == 3'd0 && !tv_q && !dv_q && (&pk_rdy);
+    wire d_go = dqn != 5'd0 && pk_rdy[2] && pk_rdy[3];
+    wire fl_go = fl_pend && tqn == 3'd0 && dqn == 5'd0 && !tv_q && !dv_q && (&pk_rdy);
     reg [255:0] w_o, w_r, w_di, w_dx;
     always @* begin
         for (i = 0; i < 8; i = i + 1) begin
@@ -97,17 +104,18 @@ module ot_hgi_idx_ix2_wp #(
     end
     always @(posedge clk or negedge rn)
         if (!rn) begin
-            tqw <= 2'd0; tqr <= 2'd0; tqn <= 3'd0; dqw <= 2'd0; dqr <= 2'd0; dqn <= 3'd0; t_cr <= 1'b0; d_cr <= 1'b0;
+            tqw <= 2'd0; tqr <= 2'd0; tqn <= 3'd0; dqw <= 4'd0; dqr <= 4'd0; dqn <= 5'd0; dc_pending <= 3'd0; t_cr <= 1'b0; d_cr <= 1'b0;
             fl_pend <= 1'b0; fl_done <= 1'b0; wg_req <= 1'b0; wp_idle <= 1'b0; w_out <= 12'd0;
             for (l = 0; l < 8; l = l + 1) begin wcred[l] <= CB'(LQ); wwq[l*280 + 279] <= 1'b0; end
         end else begin
-            t_cr <= t_go; d_cr <= d_go;
+            t_cr <= t_go; d_cr <= dc_ack;
+            dc_pending <= dc_pending + 3'(dv_q) - 3'(dc_ack);
             if (tv_q) tqw <= tqw + 2'd1;
             if (t_go) tqr <= tqr + 2'd1;
             tqn <= tqn + 3'(tv_q) - 3'(t_go);
-            if (dv_q) dqw <= dqw + 2'd1;
-            if (d_go) dqr <= dqr + 2'd1;
-            dqn <= dqn + 3'(dv_q) - 3'(d_go);
+            if (dv_q) dqw <= dqw + 4'd1;
+            if (d_go) dqr <= dqr + 4'd1;
+            dqn <= dqn + 5'(dv_q) - 5'(d_go);
             for (l = 0; l < 8; l = l + 1) begin
                 wcred[l] <= wcred[l] + CB'(wcr_q[l]) - CB'(w_used[l]);
                 wwq[l*280 + 279] <= w_used[l];
@@ -119,7 +127,7 @@ module ot_hgi_idx_ix2_wp #(
             wp_idle <= fl_done && (&pk_empty) && e_take == 4'd0 && w_out == 12'd0;
             if (!run_q) wg_req <= 1'b0;
             if (st_q) begin
-                tqw <= 2'd0; tqr <= 2'd0; tqn <= 3'd0; dqw <= 2'd0; dqr <= 2'd0; dqn <= 3'd0; fl_pend <= 1'b0; fl_done <= 1'b0;
+                tqw <= 2'd0; tqr <= 2'd0; tqn <= 3'd0; dqw <= 4'd0; dqr <= 4'd0; dqn <= 5'd0; dc_pending <= 3'd0; fl_pend <= 1'b0; fl_done <= 1'b0;
                 wg_req <= 1'b0; wp_idle <= 1'b0;
             end
         end
