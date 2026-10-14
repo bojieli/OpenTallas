@@ -1,0 +1,753 @@
+
+-- Executing script file `xs_mapped.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/physical/ot_qwen_kv_centre_slots.sv
+Parsing SystemVerilog input from `rtl/physical/ot_qwen_kv_centre_slots.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_seq_core'.
+Generating RTLIL representation for module `\qkd_seq_xs'.
+Generating RTLIL representation for module `\qkd_seq_fan'.
+Generating RTLIL representation for module `\qkd_seq'.
+Generating RTLIL representation for module `\qkd_rstseq'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qkvd_seq_m_ctl'.
+Warning: Replacing memory \jc with list of registers. See rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:263
+Generating RTLIL representation for module `\ot_qkvd_seq_m_sfifo'.
+Generating RTLIL representation for module `\ot_qkvd_seq_m_store'.
+Generating RTLIL representation for module `\ot_qkvd_seq_m_fan'.
+Generating RTLIL representation for module `\ot_qkvd_kv_seq_merged'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qkvd_fifo'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_dctl'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qkvd_kv_desc'.
+Generating RTLIL representation for module `\ot_qkvd_kcmd_tap'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `rtl/lib/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See rtl/lib/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: rtl/qwen_sys/ot_qwen_sys_rst_seq.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/ot_qwen_sys_rst_seq.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_sys_rst_seq'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: rtl/physical/ot_qwen_kv_seq_tp8.sv
+Parsing SystemVerilog input from `rtl/physical/ot_qwen_kv_seq_tp8.sv' to AST representation.
+Generating RTLIL representation for module `\qkd_seq_core_tp8'.
+Generating RTLIL representation for module `\qkd_seq_xs_tp8'.
+Generating RTLIL representation for module `\qkd_seq_tp8'.
+Successfully finished Verilog frontend.
+
+10. Executing HIERARCHY pass (managing design hierarchy).
+
+10.1. Analyzing design hierarchy..
+Top module:  \qkd_seq_xs_tp8
+Used module:     \qkd_seq_xs
+Used module:         \ot_qkvd_seq_m_store
+Used module:             \ot_qkvd_seq_m_sfifo
+Used module:         \ot_rst_relay
+Parameter \HEADS = 2
+Parameter \DW = 128
+Parameter \XS = 40
+Parameter \KD = 8
+
+10.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_store'.
+Parameter \HEADS = 2
+Parameter \DW = 128
+Parameter \XS = 40
+Parameter \KD = 8
+Generating RTLIL representation for module `$paramod$3df1abda641b7a9383f9f68410a473dd807e5d6e\ot_qkvd_seq_m_store'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+10.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See rtl/lib/ot_rst_relay.sv:42
+Parameter \W = 512
+Parameter \D = 8
+
+10.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_sfifo'.
+Parameter \W = 512
+Parameter \D = 8
+Generating RTLIL representation for module `$paramod$9d3e710d11c9ed6f5dd7167c4cc38250d2690399\ot_qkvd_seq_m_sfifo'.
+Parameter \W = 512
+Parameter \D = 40
+
+10.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_sfifo'.
+Parameter \W = 512
+Parameter \D = 40
+Generating RTLIL representation for module `$paramod$f8b1dba44dbfe7a77f39db345c831f958d5f3adc\ot_qkvd_seq_m_sfifo'.
+Parameter \HEADS = 1
+
+10.6. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_seq_xs'.
+Parameter \HEADS = 1
+Generating RTLIL representation for module `$paramod\qkd_seq_xs\HEADS=s32'00000000000000000000000000000001'.
+
+10.7. Analyzing design hierarchy..
+Top module:  \qkd_seq_xs_tp8
+Used module:     $paramod\qkd_seq_xs\HEADS=s32'00000000000000000000000000000001
+Used module:         \ot_qkvd_seq_m_store
+Used module:             $paramod$9d3e710d11c9ed6f5dd7167c4cc38250d2690399\ot_qkvd_seq_m_sfifo
+Used module:             $paramod$f8b1dba44dbfe7a77f39db345c831f958d5f3adc\ot_qkvd_seq_m_sfifo
+Used module:         \ot_rst_relay
+Parameter \HEADS = 1
+Parameter \DW = 128
+Parameter \XS = 40
+Parameter \KD = 8
+
+10.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_store'.
+Parameter \HEADS = 1
+Parameter \DW = 128
+Parameter \XS = 40
+Parameter \KD = 8
+Generating RTLIL representation for module `$paramod$8fdcff561a913ae72ba8c22ae27c5ac6ef153fb7\ot_qkvd_seq_m_store'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Found cached RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+
+10.9. Analyzing design hierarchy..
+Top module:  \qkd_seq_xs_tp8
+Used module:     $paramod\qkd_seq_xs\HEADS=s32'00000000000000000000000000000001
+Used module:         $paramod$8fdcff561a913ae72ba8c22ae27c5ac6ef153fb7\ot_qkvd_seq_m_store
+Used module:             \ot_qkvd_seq_m_sfifo
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Parameter \W = 128
+Parameter \D = 8
+
+10.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_sfifo'.
+Parameter \W = 128
+Parameter \D = 8
+Generating RTLIL representation for module `$paramod$f32351a6275ae418317a689ebee46dd00804100f\ot_qkvd_seq_m_sfifo'.
+Parameter \W = 128
+Parameter \D = 40
+
+10.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qkvd_seq_m_sfifo'.
+Parameter \W = 128
+Parameter \D = 40
+Generating RTLIL representation for module `$paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo'.
+
+10.12. Analyzing design hierarchy..
+Top module:  \qkd_seq_xs_tp8
+Used module:     $paramod\qkd_seq_xs\HEADS=s32'00000000000000000000000000000001
+Used module:         $paramod$8fdcff561a913ae72ba8c22ae27c5ac6ef153fb7\ot_qkvd_seq_m_store
+Used module:             $paramod$f32351a6275ae418317a689ebee46dd00804100f\ot_qkvd_seq_m_sfifo
+Used module:             $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+10.13. Analyzing design hierarchy..
+Top module:  \qkd_seq_xs_tp8
+Used module:     $paramod\qkd_seq_xs\HEADS=s32'00000000000000000000000000000001
+Used module:         $paramod$8fdcff561a913ae72ba8c22ae27c5ac6ef153fb7\ot_qkvd_seq_m_store
+Used module:             $paramod$f32351a6275ae418317a689ebee46dd00804100f\ot_qkvd_seq_m_sfifo
+Used module:             $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Removing unused module `$paramod$f8b1dba44dbfe7a77f39db345c831f958d5f3adc\ot_qkvd_seq_m_sfifo'.
+Removing unused module `$paramod$9d3e710d11c9ed6f5dd7167c4cc38250d2690399\ot_qkvd_seq_m_sfifo'.
+Removing unused module `$paramod$3df1abda641b7a9383f9f68410a473dd807e5d6e\ot_qkvd_seq_m_store'.
+Removing unused module `\qkd_seq_tp8'.
+Removing unused module `\qkd_seq_core_tp8'.
+Removing unused module `\ot_reset_sync'.
+Removing unused module `\ot_qwen_sys_rst_seq'.
+Removing unused module `\ot_rst_relay'.
+Removing unused module `\ot_qkvd_kcmd_tap'.
+Removing unused module `\ot_qkvd_kv_desc'.
+Removing unused module `\ot_qfd_dctl'.
+Removing unused module `\ot_qkvd_fifo'.
+Removing unused module `\ot_qkvd_kv_seq_merged'.
+Removing unused module `\ot_qkvd_seq_m_fan'.
+Removing unused module `\ot_qkvd_seq_m_store'.
+Removing unused module `\ot_qkvd_seq_m_sfifo'.
+Removing unused module `\ot_qkvd_seq_m_ctl'.
+Removing unused module `\qkd_rstseq'.
+Removing unused module `\qkd_seq'.
+Removing unused module `\qkd_seq_fan'.
+Removing unused module `\qkd_seq_xs'.
+Removing unused module `\qkd_seq_core'.
+Removed 22 unused modules.
+
+11. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$2acd31737455e65c4c7406f863657a94ff31e811\ot_qkvd_seq_m_sfifo.
+Deleting now unused module $paramod$f32351a6275ae418317a689ebee46dd00804100f\ot_qkvd_seq_m_sfifo.
+Deleting now unused module $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay.
+Deleting now unused module $paramod$8fdcff561a913ae72ba8c22ae27c5ac6ef153fb7\ot_qkvd_seq_m_store.
+Deleting now unused module $paramod\qkd_seq_xs\HEADS=s32'00000000000000000000000000000001.
+<suppressed ~5 debug messages>
+
+12. Executing PROC pass (convert processes to netlists).
+
+12.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$839'.
+Cleaned up 1 empty switch.
+
+12.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$839 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$837 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1269 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1276 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1281 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1287 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1293 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1299 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1305 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1311 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1317 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1323 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1330 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1337 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1342 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1348 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1354 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1360 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1366 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1372 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1378 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1384 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259 in module qkd_seq_xs_tp8.
+Marked 1 switch rules as full_case in process $flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:427$1253 in module qkd_seq_xs_tp8.
+Removed a total of 0 dead cases.
+
+12.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 6 redundant assignments.
+Promoted 13 assignments to connections.
+
+12.4. Executing PROC_INIT pass (extract init attributes).
+
+12.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \u_native.u_rr.rst_n_in in `\qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$839'.
+Found async reset \u_native.u_rr.rst_n_in in `\qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$837'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1276'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1281'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1287'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1293'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1299'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1305'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1311'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1317'.
+Found async reset \u_native.u_body.u_k.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1323'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1337'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1342'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1348'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1354'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1360'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1366'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1372'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1378'.
+Found async reset \u_native.u_body.u_q.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1384'.
+Found async reset \u_native.u_body.rst_n in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:427$1253'.
+
+12.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~23 debug messages>
+
+12.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$839'.
+     1/1: $flatten\u_native.\u_rr.$0\relay_q[0][0:0]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$837'.
+     1/1: $flatten\u_native.\u_rr.$0\sync_q[1:0]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1269'.
+     1/3: $flatten\u_native.\u_body.\u_k.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_EN[127:0]$1275
+     2/3: $flatten\u_native.\u_body.\u_k.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1274
+     3/3: $flatten\u_native.\u_body.\u_k.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_ADDR[2:0]$1273
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1276'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\wp[2:0]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1281'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\rp[2:0]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1287'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\rp[5:3]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1293'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\rp[8:6]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1299'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\rp[11:9]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1305'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\rp[14:12]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1311'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\rp[17:15]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1317'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\rp[20:18]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1323'.
+     1/1: $flatten\u_native.\u_body.\u_k.$0\rp[23:21]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1330'.
+     1/3: $flatten\u_native.\u_body.\u_q.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_EN[127:0]$1336
+     2/3: $flatten\u_native.\u_body.\u_q.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1335
+     3/3: $flatten\u_native.\u_body.\u_q.$1$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_ADDR[5:0]$1334
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1337'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\wp[5:0]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1342'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\rp[5:0]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1348'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\rp[11:6]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1354'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\rp[17:12]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1360'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\rp[23:18]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1366'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\rp[29:24]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1372'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\rp[35:30]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1378'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\rp[41:36]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1384'.
+     1/1: $flatten\u_native.\u_body.\u_q.$0\rp[47:42]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259'.
+     1/5: $flatten\u_native.\u_body.$1$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_EN[127:0]$1265
+     2/5: $flatten\u_native.\u_body.$1$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_DATA[127:0]$1264
+     3/5: $flatten\u_native.\u_body.$1$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_ADDR[2:0]$1263
+     4/5: $flatten\u_native.\u_body.$0\kw[511:0]
+     5/5: $flatten\u_native.\u_body.$0\q[255:0]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:427$1253'.
+     1/4: $flatten\u_native.\u_body.$0\kg[0:0]
+     2/4: $flatten\u_native.\u_body.$0\kp[0:0]
+     3/4: $flatten\u_native.\u_body.$0\qp[0:0]
+     4/4: $flatten\u_native.\u_body.$0\xv[0:0]
+Creating decoders for process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:426$1252'.
+
+12.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+12.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_rr.relay_q[0]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$839'.
+  created $adff cell `$procdff$1466' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_rr.sync_q' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$837'.
+  created $adff cell `$procdff$1471' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_ADDR' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1269'.
+  created $dff cell `$procdff$1472' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1269'.
+  created $dff cell `$procdff$1473' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_EN' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1269'.
+  created $dff cell `$procdff$1474' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.wp' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1276'.
+  created $adff cell `$procdff$1479' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.rp [2:0]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1281'.
+  created $adff cell `$procdff$1484' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.rp [5:3]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1287'.
+  created $adff cell `$procdff$1489' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.rp [8:6]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1293'.
+  created $adff cell `$procdff$1494' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.rp [11:9]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1299'.
+  created $adff cell `$procdff$1499' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.rp [14:12]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1305'.
+  created $adff cell `$procdff$1504' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.rp [17:15]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1311'.
+  created $adff cell `$procdff$1509' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.rp [20:18]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1317'.
+  created $adff cell `$procdff$1514' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_k.rp [23:21]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1323'.
+  created $adff cell `$procdff$1519' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_ADDR' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1330'.
+  created $dff cell `$procdff$1520' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1330'.
+  created $dff cell `$procdff$1521' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_EN' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1330'.
+  created $dff cell `$procdff$1522' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.wp' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1337'.
+  created $adff cell `$procdff$1527' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.rp [5:0]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1342'.
+  created $adff cell `$procdff$1532' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.rp [11:6]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1348'.
+  created $adff cell `$procdff$1537' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.rp [17:12]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1354'.
+  created $adff cell `$procdff$1542' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.rp [23:18]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1360'.
+  created $adff cell `$procdff$1547' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.rp [29:24]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1366'.
+  created $adff cell `$procdff$1552' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.rp [35:30]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1372'.
+  created $adff cell `$procdff$1557' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.rp [41:36]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1378'.
+  created $adff cell `$procdff$1562' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.u_q.rp [47:42]' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1384'.
+  created $adff cell `$procdff$1567' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.q' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259'.
+  created $dff cell `$procdff$1568' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.kw' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259'.
+  created $dff cell `$procdff$1569' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_ADDR' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259'.
+  created $dff cell `$procdff$1570' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_DATA' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259'.
+  created $dff cell `$procdff$1571' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_EN' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259'.
+  created $dff cell `$procdff$1572' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.xv' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:427$1253'.
+  created $adff cell `$procdff$1577' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.qp' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:427$1253'.
+  created $adff cell `$procdff$1582' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.kp' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:427$1253'.
+  created $adff cell `$procdff$1587' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.kg' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:427$1253'.
+  created $adff cell `$procdff$1592' with positive edge clock and positive level reset.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.xc' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:426$1252'.
+  created $dff cell `$procdff$1593' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.ki' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:426$1252'.
+  created $dff cell `$procdff$1594' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.kn' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:426$1252'.
+  created $dff cell `$procdff$1595' with positive edge clock.
+Creating register for signal `\qkd_seq_xs_tp8.\u_native.u_body.xd' using process `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:426$1252'.
+  created $dff cell `$procdff$1596' with positive edge clock.
+
+12.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+12.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:40$839'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_rr.$proc$rtl/lib/ot_rst_relay.sv:28$837'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1269'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1269'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1276'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1276'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1281'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1281'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1287'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1287'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1293'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1293'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1299'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1299'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1305'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1305'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1311'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1311'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1317'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1317'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1323'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_k.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1323'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1330'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1330'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1337'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:382$1337'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1342'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1342'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1348'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1348'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1354'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1354'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1360'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1360'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1366'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1366'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1372'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1372'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1378'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1378'.
+Found and cleaned up 1 empty switch in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1384'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.\u_q.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:390$1384'.
+Found and cleaned up 3 empty switches in `\qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:434$1259'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:427$1253'.
+Removing empty process `qkd_seq_xs_tp8.$flatten\u_native.\u_body.$proc$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:426$1252'.
+Cleaned up 23 empty switches.
+
+12.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_xs_tp8.
+<suppressed ~48 debug messages>
+
+13. Executing OPT pass (performing simple optimizations).
+
+13.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_xs_tp8.
+
+13.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_xs_tp8'.
+<suppressed ~123 debug messages>
+Removed a total of 41 cells.
+
+13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_xs_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~29 debug messages>
+
+13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_xs_tp8.
+    Consolidated identical input bits for $mux cell $procmux$1450:
+      Old ports: A=128'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=128'11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111, Y=$procmux$1450_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$1450_Y [0]
+      New connections: $procmux$1450_Y [127:1] = { $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] $procmux$1450_Y [0] }
+    Consolidated identical input bits for $mux cell $procmux$1423:
+      Old ports: A=128'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=128'11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111, Y=$procmux$1423_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$1423_Y [0]
+      New connections: $procmux$1423_Y [127:1] = { $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] $procmux$1423_Y [0] }
+    Consolidated identical input bits for $mux cell $procmux$1396:
+      Old ports: A=128'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=128'11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111, Y=$procmux$1396_Y
+      New ports: A=1'0, B=1'1, Y=$procmux$1396_Y [0]
+      New connections: $procmux$1396_Y [127:1] = { $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] $procmux$1396_Y [0] }
+  Optimizing cells in module \qkd_seq_xs_tp8.
+Performed a total of 3 changes.
+
+13.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_xs_tp8'.
+Removed a total of 0 cells.
+
+13.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$1504 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1309_Y, Q = \u_native.u_body.u_k.rp [14:12]).
+Adding EN signal on $procdff$1568 ($dff) from module qkd_seq_xs_tp8 (D = { $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1389_DATA [127:112] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1383_DATA [111:96] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1377_DATA [95:80] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1371_DATA [79:64] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1365_DATA [63:48] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1359_DATA [47:32] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1353_DATA [31:16] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1347_DATA [15:0] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1389_DATA [127:112] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1383_DATA [111:96] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1377_DATA [95:80] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1371_DATA [79:64] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1365_DATA [63:48] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1359_DATA [47:32] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1353_DATA [31:16] $flatten\u_native.\u_body.\u_q.$memrd$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:393$1347_DATA [15:0] }, Q = \u_native.u_body.q).
+Adding EN signal on $procdff$1509 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1315_Y, Q = \u_native.u_body.u_k.rp [17:15]).
+Adding EN signal on $procdff$1567 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1388_Y, Q = \u_native.u_body.u_q.rp [47:42]).
+Adding EN signal on $procdff$1547 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1364_Y, Q = \u_native.u_body.u_q.rp [23:18]).
+Adding EN signal on $procdff$1514 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1321_Y, Q = \u_native.u_body.u_k.rp [20:18]).
+Adding EN signal on $procdff$1562 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1382_Y, Q = \u_native.u_body.u_q.rp [41:36]).
+Adding EN signal on $procdff$1519 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1327_Y, Q = \u_native.u_body.u_k.rp [23:21]).
+Adding EN signal on $procdff$1569 ($dff) from module qkd_seq_xs_tp8 (D = { $flatten\u_native.\u_body.$memrd$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:437$1267_DATA $flatten\u_native.\u_body.$memrd$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:437$1266_DATA $flatten\u_native.\u_body.$memrd$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:437$1267_DATA $flatten\u_native.\u_body.$memrd$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:437$1266_DATA }, Q = \u_native.u_body.kw).
+Adding EN signal on $procdff$1527 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:384$1341_Y, Q = \u_native.u_body.u_q.wp).
+Adding EN signal on $procdff$1552 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1370_Y, Q = \u_native.u_body.u_q.rp [29:24]).
+Adding EN signal on $procdff$1532 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1346_Y, Q = \u_native.u_body.u_q.rp [5:0]).
+Adding EN signal on $procdff$1479 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:384$1280_Y, Q = \u_native.u_body.u_k.wp).
+Adding EN signal on $procdff$1484 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1285_Y, Q = \u_native.u_body.u_k.rp [2:0]).
+Adding EN signal on $procdff$1537 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1352_Y, Q = \u_native.u_body.u_q.rp [11:6]).
+Adding EN signal on $procdff$1489 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1291_Y, Q = \u_native.u_body.u_k.rp [5:3]).
+Adding EN signal on $procdff$1557 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1376_Y, Q = \u_native.u_body.u_q.rp [35:30]).
+Adding EN signal on $procdff$1494 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1297_Y, Q = \u_native.u_body.u_k.rp [8:6]).
+Adding EN signal on $procdff$1499 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1303_Y, Q = \u_native.u_body.u_k.rp [11:9]).
+Adding EN signal on $procdff$1542 ($adff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$ternary$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:392$1358_Y, Q = \u_native.u_body.u_q.rp [17:12]).
+
+13.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_xs_tp8..
+Removed 33 unused cells and 193 unused wires.
+<suppressed ~34 debug messages>
+
+13.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_xs_tp8.
+
+13.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+13.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_xs_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~27 debug messages>
+
+13.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_xs_tp8.
+Performed a total of 0 changes.
+
+13.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_xs_tp8'.
+Removed a total of 0 cells.
+
+13.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+13.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_xs_tp8..
+
+13.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_xs_tp8.
+
+13.16. Finished OPT passes. (There is nothing left to do.)
+
+14. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory \u_native.u_body.kvn in module \qkd_seq_xs_tp8:
+  created 8 $dff cells and 0 static cells of width 128.
+  read interface: 0 $dff and 14 $mux cells.
+  write interface: 8 write mux blocks.
+Mapping memory \u_native.u_body.u_k.mem in module \qkd_seq_xs_tp8:
+  created 8 $dff cells and 0 static cells of width 128.
+  read interface: 0 $dff and 56 $mux cells.
+  write interface: 8 write mux blocks.
+Mapping memory \u_native.u_body.u_q.mem in module \qkd_seq_xs_tp8:
+  created 40 $dff cells and 0 static cells of width 128.
+  read interface: 0 $dff and 504 $mux cells.
+  write interface: 40 write mux blocks.
+
+15. Executing OPT pass (performing simple optimizations).
+
+15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_xs_tp8.
+<suppressed ~36 debug messages>
+
+15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_xs_tp8'.
+Removed a total of 0 cells.
+
+15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_xs_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~93 debug messages>
+
+15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_xs_tp8.
+Performed a total of 0 changes.
+
+15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_xs_tp8'.
+Removed a total of 0 cells.
+
+15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_xs_tp8..
+Removed 18 unused cells and 489 unused wires.
+<suppressed ~23 debug messages>
+
+15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_xs_tp8.
+
+15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_xs_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~89 debug messages>
+
+15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_xs_tp8.
+Performed a total of 0 changes.
+
+15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_xs_tp8'.
+Removed a total of 0 cells.
+
+15.13. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[9]$2016 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[9]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[8]$2014 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[8]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[7]$2012 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[7]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[6]$2010 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[6]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[5]$2008 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[5]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[4]$2006 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[4]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[3]$2004 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[3]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[39]$2076 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[39]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[38]$2074 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[38]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[37]$2072 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[37]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[36]$2070 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[36]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[35]$2068 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[35]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[34]$2066 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[34]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[33]$2064 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[33]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[32]$2062 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[32]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[31]$2060 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[31]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[30]$2058 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[30]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[2]$2002 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[2]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[29]$2056 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[29]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[28]$2054 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[28]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[27]$2052 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[27]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[26]$2050 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[26]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[25]$2048 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[25]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[24]$2046 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[24]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[23]$2044 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[23]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[22]$2042 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[22]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[21]$2040 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[21]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[20]$2038 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[20]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[1]$2000 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[1]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[19]$2036 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[19]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[18]$2034 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[18]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[17]$2032 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[17]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[16]$2030 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[16]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[15]$2028 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[15]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[14]$2026 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[14]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[13]$2024 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[13]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[12]$2022 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[12]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[11]$2020 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[11]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[10]$2018 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[10]).
+Adding EN signal on $memory\u_native.u_body.u_q.mem[0]$1998 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_q.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1329_DATA[127:0]$1332, Q = \u_native.u_body.u_q.mem[0]).
+Adding EN signal on $memory\u_native.u_body.u_k.mem[7]$1760 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1271, Q = \u_native.u_body.u_k.mem[7]).
+Adding EN signal on $memory\u_native.u_body.u_k.mem[6]$1758 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1271, Q = \u_native.u_body.u_k.mem[6]).
+Adding EN signal on $memory\u_native.u_body.u_k.mem[5]$1756 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1271, Q = \u_native.u_body.u_k.mem[5]).
+Adding EN signal on $memory\u_native.u_body.u_k.mem[4]$1754 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1271, Q = \u_native.u_body.u_k.mem[4]).
+Adding EN signal on $memory\u_native.u_body.u_k.mem[3]$1752 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1271, Q = \u_native.u_body.u_k.mem[3]).
+Adding EN signal on $memory\u_native.u_body.u_k.mem[2]$1750 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1271, Q = \u_native.u_body.u_k.mem[2]).
+Adding EN signal on $memory\u_native.u_body.u_k.mem[1]$1748 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1271, Q = \u_native.u_body.u_k.mem[1]).
+Adding EN signal on $memory\u_native.u_body.u_k.mem[0]$1746 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.\u_k.$0$memwr$\mem$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:381$1268_DATA[127:0]$1271, Q = \u_native.u_body.u_k.mem[0]).
+Adding EN signal on $memory\u_native.u_body.kvn[5]$1630 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.$0$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_DATA[127:0]$1261, Q = \u_native.u_body.kvn[5]).
+Adding EN signal on $memory\u_native.u_body.kvn[4]$1628 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.$0$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_DATA[127:0]$1261, Q = \u_native.u_body.kvn[4]).
+Adding EN signal on $memory\u_native.u_body.kvn[1]$1622 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.$0$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_DATA[127:0]$1261, Q = \u_native.u_body.kvn[1]).
+Adding EN signal on $memory\u_native.u_body.kvn[0]$1620 ($dff) from module qkd_seq_xs_tp8 (D = $flatten\u_native.\u_body.$0$memwr$\kvn$rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv:435$1251_DATA[127:0]$1261, Q = \u_native.u_body.kvn[0]).
+
+15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_xs_tp8..
+Removed 52 unused cells and 52 unused wires.
+<suppressed ~53 debug messages>
+
+15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_xs_tp8.
+
+15.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \qkd_seq_xs_tp8..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~37 debug messages>
+
+15.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \qkd_seq_xs_tp8.
+Performed a total of 0 changes.
+
+15.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\qkd_seq_xs_tp8'.
+Removed a total of 0 cells.
+
+15.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \qkd_seq_xs_tp8..
+
+15.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qkd_seq_xs_tp8.
+
+15.23. Finished OPT passes. (There is nothing left to do.)
+
+16. Printing statistics.
+
+=== qkd_seq_xs_tp8 ===
+
+   Number of wires:               1110
+   Number of wire bits:         108078
+   Number of public wires:         156
+   Number of public wire bits:   12510
+   Number of ports:                 14
+   Number of port bits:            910
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                858
+     $add                           18
+     $adff                           6
+     $adffe                         18
+     $and                          130
+     $dff                            4
+     $dffe                          54
+     $eq                            20
+     $logic_and                      2
+     $mux                          589
+     $not                           12
+     $scopeinfo                      5
+
+17. Executing JSON backend.
+
+Warnings: 2 unique messages, 3 total
+End of script. Logfile hash: 70019fb064, CPU: user 0.73s system 0.03s, MEM: 99.84 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 31% 5x opt_clean (0 sec), 23% 5x opt_dff (0 sec), ...
