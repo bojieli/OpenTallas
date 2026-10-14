@@ -7,6 +7,7 @@ physical bit; no array reversal or width clamping is allowed.
 import json
 from pathlib import Path
 import sys
+from bisect import bisect_left, insort
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pin_files import from_tcl
 ROOT = Path(__file__).resolve().parents[2]
@@ -14,6 +15,36 @@ OUT = ROOT / 'physical/s81_die_pins/v18'
 
 def spec(rows):
     return dict(bits=len(rows), uniform=False, per_bit=rows)
+
+def reserve_clocks(record):
+    """Use free native M5 tracks beside each child entry, preserving all data pins."""
+    occupied = {}
+    for p,s in record['ports'].items():
+        if p.startswith('ck'):
+            continue
+        for face,ly,c,d in s['per_bit']:
+            occupied.setdefault((face,ly),[]).append(c)
+    for used in occupied.values():
+        used.sort()
+    for p,s in record['ports'].items():
+        if not p.startswith('ck'):
+            continue
+        for row in s['per_bit']:
+            face,ly,target,depth = row
+            assert ly == 'M5', (p,ly)
+            limit = record['outline_um'][0 if face in 'NS' else 1]
+            tracks = [.012+.048*k for k in range(int(limit/.048))]
+            used = occupied.setdefault((face,ly),[])
+            for c in sorted(tracks,key=lambda c:abs(c-target)):
+                if not .012<=c<=limit-.012:
+                    continue
+                ix = bisect_left(used,c)
+                if all(abs(c-v)>=.048-1e-6 for v in used[max(0,ix-1):ix+1]):
+                    row[2] = round(c,3)
+                    insort(used,row[2])
+                    break
+            else:
+                raise ValueError((p,'no free clock track'))
 
 def main(request):
     capture = json.loads((OUT/'dsfd_sp_capture_c.json').read_text())
@@ -61,6 +92,7 @@ def main(request):
         rows[13312+i]=['S',ly,round(xg[3]-11.52+c,3),d]
     assert all(rows)
     capture['ports']['t_vm']=spec(rows)
+    reserve_clocks(capture)
     capture['data_clock_bits'] = {
         'f_gather': ['ck_g[%d]'%(i//848) if i<6784 else 'ck_c[0]' for i in range(6947)],
         't_vm': ['ckv_x[%d]'%(i//832) if i<13312 else 'ckv_x[6]' for i in range(13376)],
