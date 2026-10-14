@@ -1,0 +1,320 @@
+{
+  "source_commit": "6ed42d12c",
+  "source_graph_partition_sha256": "b87cec558c72e65ddccaa5577f750c820ebf9fea09b853e2b055c9b3c0012c67",
+  "partition_script_sha256": "734443b247555a5a807e391b6fd7a81d988e88c7a47cb6d11ff5baf27b0ff4d0",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "physical_admission": false,
+  "commands": [
+    {
+      "phase": "generic",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/codex/q-full-map-6ed42:/srv/opentallas-scratch/codex/q-full-map-6ed42",
+        "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys",
+        "-s",
+        "/srv/opentallas-scratch/codex/q-full-map-6ed42/native_graph/generic.ys"
+      ],
+      "returncode": 0
+    },
+    {
+      "phase": "mapped",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/codex/q-full-map-6ed42:/srv/opentallas-scratch/codex/q-full-map-6ed42",
+        "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+        "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys",
+        "-s",
+        "/srv/opentallas-scratch/codex/q-full-map-6ed42/native_graph/mapped.ys"
+      ],
+      "returncode": 0
+    }
+  ],
+  "groups": [
+    {
+      "instance": "u_control",
+      "module": "ot_s81_q_control_native_graph",
+      "mapped_std_area_um2": 4421.632859999152,
+      "sinks": 8186,
+      "macros": {},
+      "ports": {
+        "clock_0": {
+          "direction": "input",
+          "width": 1
+        },
+        "in_bus": {
+          "direction": "input",
+          "width": 2843
+        },
+        "out_bus": {
+          "direction": "output",
+          "width": 1747
+        }
+      }
+    },
+    {
+      "instance": "u_e.g_mac[0].g_lane_hardened.u_lane",
+      "module": "$paramod\\ot_s81_q_lane_pair_native\\TW=s32'00000000000000000000000000010001",
+      "mapped_std_area_um2": 6586.660799997134,
+      "sinks": 13149,
+      "macros": {},
+      "ports": {
+        "gclk_ma": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_m": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_v0": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_v1": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_t": {
+          "direction": "input",
+          "width": 17
+        },
+        "l_xq0": {
+          "direction": "input",
+          "width": 256
+        },
+        "l_xq1": {
+          "direction": "input",
+          "width": 256
+        },
+        "w0q": {
+          "direction": "input",
+          "width": 256
+        },
+        "w1q": {
+          "direction": "input",
+          "width": 256
+        },
+        "l_xe0": {
+          "direction": "input",
+          "width": 10
+        },
+        "l_xe1": {
+          "direction": "input",
+          "width": 10
+        },
+        "we0": {
+          "direction": "input",
+          "width": 10
+        },
+        "we1": {
+          "direction": "input",
+          "width": 10
+        },
+        "l0_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "l1_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "l0_f": {
+          "direction": "output",
+          "width": 1
+        },
+        "l1_f": {
+          "direction": "output",
+          "width": 1
+        },
+        "l0_y": {
+          "direction": "output",
+          "width": 32
+        },
+        "l1_y": {
+          "direction": "output",
+          "width": 32
+        },
+        "l0_t": {
+          "direction": "output",
+          "width": 17
+        },
+        "l1_t": {
+          "direction": "output",
+          "width": 17
+        }
+      }
+    },
+    {
+      "instance": "u_e.g_mac[1].g_lane_hardened.u_lane",
+      "module": "$paramod\\ot_s81_q_lane_pair_native\\TW=s32'00000000000000000000000000010001",
+      "mapped_std_area_um2": 6586.660799997134,
+      "sinks": 13149,
+      "macros": {},
+      "ports": {
+        "gclk_ma": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_m": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_v0": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_v1": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_t": {
+          "direction": "input",
+          "width": 17
+        },
+        "l_xq0": {
+          "direction": "input",
+          "width": 256
+        },
+        "l_xq1": {
+          "direction": "input",
+          "width": 256
+        },
+        "w0q": {
+          "direction": "input",
+          "width": 256
+        },
+        "w1q": {
+          "direction": "input",
+          "width": 256
+        },
+        "l_xe0": {
+          "direction": "input",
+          "width": 10
+        },
+        "l_xe1": {
+          "direction": "input",
+          "width": 10
+        },
+        "we0": {
+          "direction": "input",
+          "width": 10
+        },
+        "we1": {
+          "direction": "input",
+          "width": 10
+        },
+        "l0_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "l1_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "l0_f": {
+          "direction": "output",
+          "width": 1
+        },
+        "l1_f": {
+          "direction": "output",
+          "width": 1
+        },
+        "l0_y": {
+          "direction": "output",
+          "width": 32
+        },
+        "l1_y": {
+          "direction": "output",
+          "width": 32
+        },
+        "l0_t": {
+          "direction": "output",
+          "width": 17
+        },
+        "l1_t": {
+          "direction": "output",
+          "width": 17
+        }
+      }
+    },
+    {
+      "instance": "u_return0",
+      "module": "ot_s81_q_return0_native_graph",
+      "mapped_std_area_um2": 5123.645279998953,
+      "sinks": 9912,
+      "macros": {
+        "ot_rom_4096x274_m8": 2
+      },
+      "ports": {
+        "clock_0": {
+          "direction": "input",
+          "width": 1
+        },
+        "clock_1": {
+          "direction": "input",
+          "width": 1
+        },
+        "in_bus": {
+          "direction": "input",
+          "width": 1250
+        },
+        "out_bus": {
+          "direction": "output",
+          "width": 2138
+        }
+      }
+    },
+    {
+      "instance": "u_return1",
+      "module": "ot_s81_q_return1_native_graph",
+      "mapped_std_area_um2": 5124.155579998948,
+      "sinks": 9912,
+      "macros": {
+        "ot_rom_4096x274_m8": 2
+      },
+      "ports": {
+        "clock_0": {
+          "direction": "input",
+          "width": 1
+        },
+        "clock_1": {
+          "direction": "input",
+          "width": 1
+        },
+        "in_bus": {
+          "direction": "input",
+          "width": 1250
+        },
+        "out_bus": {
+          "direction": "output",
+          "width": 2138
+        }
+      }
+    }
+  ],
+  "total": [
+    27842.75531999132,
+    54308,
+    {
+      "ot_rom_4096x274_m8": 4
+    }
+  ],
+  "library_sha256": "0e17d8d9aa8df5156cac87abedb9a6c7ea3d24d7ffa0e4993eebc203c7879c00",
+  "outputs_sha256": {
+    "mapped.log": "39f9cec971fe7cccfedbc9fd2a00135dabfcf64a074c2f52dc769a207d843d03",
+    "generic.log": "2cb43e10e057f9e836c0cc69757119eac550745b6d5e59f95a06f543d6c5c2f9",
+    "mapped.ys": "0922fbe8e546fb7d66307c1eae56102012d75ceb5998b3c61a80fc4c8e3a4615",
+    "input.json": "b87cec558c72e65ddccaa5577f750c820ebf9fea09b853e2b055c9b3c0012c67",
+    "generic.ys": "11bcafc6e3798a6423c71de6c9cb730538b444f98b26d57a52994a48f8ed0835",
+    "mapped.json": "4c410781ee62810f54720b57930147dda2ac293bf408af182c77b06b5c68041e",
+    "generic.json": "67920dffce46bbdaa0a63bce85133b0bae390f452bce76b3dd67dcbe4095178a"
+  },
+  "qualification": "Actual source partition inventory only; original cell/memory connectivity reconstructed exactly, functional full PQ1 proof, independent five clocks, assigned physical interfaces and route remain OPEN."
+}

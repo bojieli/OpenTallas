@@ -1,0 +1,6 @@
+read_json /srv/opentallas-scratch/codex/q-full-map-6ed42/native_graph/input.json
+hierarchy -top ot_v41_rom_elem_q_qxpq_w10
+check
+synth -top ot_v41_rom_elem_q_qxpq_w10 -flatten -noabc
+stat
+write_json /srv/opentallas-scratch/codex/q-full-map-6ed42/native_graph/generic.json

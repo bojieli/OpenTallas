@@ -1,0 +1,1761 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch/codex/q-full-map-6ed42/native_graph/mapped.ys' --
+
+1. Executing JSON frontend.
+Importing module ot_v41_rom_elem_q_qxpq_w10 from JSON tree.
+Importing module ot_s81_q_return1_native_graph from JSON tree.
+Importing module ot_s81_q_return0_native_graph from JSON tree.
+Importing module ot_s81_q_control_native_graph from JSON tree.
+Importing module ot_rom_8192x274_m8 from JSON tree.
+Importing module ot_rom_4096x274_m8 from JSON tree.
+Importing module XOR2xp5_ASAP7_75t_R from JSON tree.
+Importing module XOR2x2_ASAP7_75t_R from JSON tree.
+Importing module XOR2x1_ASAP7_75t_R from JSON tree.
+Importing module XNOR2xp5_ASAP7_75t_R from JSON tree.
+Importing module XNOR2x2_ASAP7_75t_R from JSON tree.
+Importing module XNOR2x1_ASAP7_75t_R from JSON tree.
+Importing module TIELOx1_ASAP7_75t_R from JSON tree.
+Importing module TIEHIx1_ASAP7_75t_R from JSON tree.
+Importing module SDFLx4_ASAP7_75t_R from JSON tree.
+Importing module SDFLx3_ASAP7_75t_R from JSON tree.
+Importing module SDFLx2_ASAP7_75t_R from JSON tree.
+Importing module SDFLx1_ASAP7_75t_R from JSON tree.
+Importing module SDFHx4_ASAP7_75t_R from JSON tree.
+Importing module SDFHx3_ASAP7_75t_R from JSON tree.
+Importing module SDFHx2_ASAP7_75t_R from JSON tree.
+Importing module SDFHx1_ASAP7_75t_R from JSON tree.
+Importing module OR5x2_ASAP7_75t_R from JSON tree.
+Importing module OR5x1_ASAP7_75t_R from JSON tree.
+Importing module OR4x2_ASAP7_75t_R from JSON tree.
+Importing module OR4x1_ASAP7_75t_R from JSON tree.
+Importing module OR3x4_ASAP7_75t_R from JSON tree.
+Importing module OR3x2_ASAP7_75t_R from JSON tree.
+Importing module OR3x1_ASAP7_75t_R from JSON tree.
+Importing module OR2x6_ASAP7_75t_R from JSON tree.
+Importing module OR2x4_ASAP7_75t_R from JSON tree.
+Importing module OR2x2_ASAP7_75t_R from JSON tree.
+Importing module OAI33xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI333xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI332xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI331xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI32xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI322xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI321xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI31xp67_ASAP7_75t_R from JSON tree.
+Importing module OAI31xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI311xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI22xp5_ASAP7_75t_R from JSON tree.
+Importing module OAI22xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI22x1_ASAP7_75t_R from JSON tree.
+Importing module OAI222xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI221xp5_ASAP7_75t_R from JSON tree.
+Importing module OAI21xp5_ASAP7_75t_R from JSON tree.
+Importing module OAI21xp33_ASAP7_75t_R from JSON tree.
+Importing module OAI21x1_ASAP7_75t_R from JSON tree.
+Importing module OAI211xp5_ASAP7_75t_R from JSON tree.
+Importing module OA33x2_ASAP7_75t_R from JSON tree.
+Importing module OA333x2_ASAP7_75t_R from JSON tree.
+Importing module OA333x1_ASAP7_75t_R from JSON tree.
+Importing module OA332x2_ASAP7_75t_R from JSON tree.
+Importing module OA332x1_ASAP7_75t_R from JSON tree.
+Importing module OA331x2_ASAP7_75t_R from JSON tree.
+Importing module OA331x1_ASAP7_75t_R from JSON tree.
+Importing module OA31x2_ASAP7_75t_R from JSON tree.
+Importing module OA22x2_ASAP7_75t_R from JSON tree.
+Importing module OA222x2_ASAP7_75t_R from JSON tree.
+Importing module OA221x2_ASAP7_75t_R from JSON tree.
+Importing module OA21x2_ASAP7_75t_R from JSON tree.
+Importing module OA211x2_ASAP7_75t_R from JSON tree.
+Importing module O2A1O1Ixp5_ASAP7_75t_R from JSON tree.
+Importing module O2A1O1Ixp33_ASAP7_75t_R from JSON tree.
+Importing module NOR5xp2_ASAP7_75t_R from JSON tree.
+Importing module NOR4xp75_ASAP7_75t_R from JSON tree.
+Importing module NOR4xp25_ASAP7_75t_R from JSON tree.
+Importing module NOR3xp33_ASAP7_75t_R from JSON tree.
+Importing module NOR3x2_ASAP7_75t_R from JSON tree.
+Importing module NOR3x1_ASAP7_75t_R from JSON tree.
+Importing module NOR2xp67_ASAP7_75t_R from JSON tree.
+Importing module NOR2xp33_ASAP7_75t_R from JSON tree.
+Importing module NOR2x2_ASAP7_75t_R from JSON tree.
+Importing module NOR2x1p5_ASAP7_75t_R from JSON tree.
+Importing module NOR2x1_ASAP7_75t_R from JSON tree.
+Importing module NAND5xp2_ASAP7_75t_R from JSON tree.
+Importing module NAND4xp75_ASAP7_75t_R from JSON tree.
+Importing module NAND4xp25_ASAP7_75t_R from JSON tree.
+Importing module NAND3xp33_ASAP7_75t_R from JSON tree.
+Importing module NAND3x2_ASAP7_75t_R from JSON tree.
+Importing module NAND3x1_ASAP7_75t_R from JSON tree.
+Importing module NAND2xp67_ASAP7_75t_R from JSON tree.
+Importing module NAND2xp5_ASAP7_75t_R from JSON tree.
+Importing module NAND2xp33_ASAP7_75t_R from JSON tree.
+Importing module NAND2x2_ASAP7_75t_R from JSON tree.
+Importing module NAND2x1p5_ASAP7_75t_R from JSON tree.
+Importing module NAND2x1_ASAP7_75t_R from JSON tree.
+Importing module MAJx3_ASAP7_75t_R from JSON tree.
+Importing module MAJx2_ASAP7_75t_R from JSON tree.
+Importing module MAJIxp5_ASAP7_75t_R from JSON tree.
+Importing module INVxp67_ASAP7_75t_R from JSON tree.
+Importing module INVxp33_ASAP7_75t_R from JSON tree.
+Importing module INVx8_ASAP7_75t_R from JSON tree.
+Importing module INVx6_ASAP7_75t_R from JSON tree.
+Importing module INVx5_ASAP7_75t_R from JSON tree.
+Importing module INVx4_ASAP7_75t_R from JSON tree.
+Importing module INVx3_ASAP7_75t_R from JSON tree.
+Importing module INVx2_ASAP7_75t_R from JSON tree.
+Importing module INVx1_ASAP7_75t_R from JSON tree.
+Importing module INVx13_ASAP7_75t_R from JSON tree.
+Importing module INVx11_ASAP7_75t_R from JSON tree.
+Importing module ICGx8DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx6p67DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx5p33DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx5_ASAP7_75t_R from JSON tree.
+Importing module ICGx4_ASAP7_75t_R from JSON tree.
+Importing module ICGx4DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx3_ASAP7_75t_R from JSON tree.
+Importing module ICGx2p67DC_ASAP7_75t_R from JSON tree.
+Importing module ICGx2_ASAP7_75t_R from JSON tree.
+Importing module ICGx1_ASAP7_75t_R from JSON tree.
+Importing module HB4xp67_ASAP7_75t_R from JSON tree.
+Importing module HB3xp67_ASAP7_75t_R from JSON tree.
+Importing module HB2xp67_ASAP7_75t_R from JSON tree.
+Importing module HB1xp67_ASAP7_75t_R from JSON tree.
+Importing module HAxp5_ASAP7_75t_R from JSON tree.
+Importing module FAx1_ASAP7_75t_R from JSON tree.
+Importing module DLLx3_ASAP7_75t_R from JSON tree.
+Importing module DLLx2_ASAP7_75t_R from JSON tree.
+Importing module DLLx1_ASAP7_75t_R from JSON tree.
+Importing module DHLx3_ASAP7_75t_R from JSON tree.
+Importing module DHLx2_ASAP7_75t_R from JSON tree.
+Importing module DHLx1_ASAP7_75t_R from JSON tree.
+Importing module DFFLQx4_ASAP7_75t_R from JSON tree.
+Importing module DFFLQNx3_ASAP7_75t_R from JSON tree.
+Importing module DFFLQNx2_ASAP7_75t_R from JSON tree.
+Importing module DFFLQNx1_ASAP7_75t_R from JSON tree.
+Importing module DFFHQx4_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNx3_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNx2_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNx1_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNV4Xx3_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNV4Xx2_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNV4Xx1_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNV2Xx3_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNV2Xx2_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNV2Xx1_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNH2V2Xx3_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNH2V2Xx2_ASAP7_75t_R from JSON tree.
+Importing module DFFHQNH2V2Xx1_ASAP7_75t_R from JSON tree.
+Importing module DFFASRHQNx1_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx9p33_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx8_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx6p67_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx5p33_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx20_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx16_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx14_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx12_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx11_ASAP7_75t_R from JSON tree.
+Importing module CKINVDCx10_ASAP7_75t_R from JSON tree.
+Importing module BUFx8_ASAP7_75t_R from JSON tree.
+Importing module BUFx6f_ASAP7_75t_R from JSON tree.
+Importing module BUFx5_ASAP7_75t_R from JSON tree.
+Importing module BUFx4f_ASAP7_75t_R from JSON tree.
+Importing module BUFx4_ASAP7_75t_R from JSON tree.
+Importing module BUFx3_ASAP7_75t_R from JSON tree.
+Importing module BUFx2_ASAP7_75t_R from JSON tree.
+Importing module BUFx24_ASAP7_75t_R from JSON tree.
+Importing module BUFx16f_ASAP7_75t_R from JSON tree.
+Importing module BUFx12f_ASAP7_75t_R from JSON tree.
+Importing module BUFx12_ASAP7_75t_R from JSON tree.
+Importing module BUFx10_ASAP7_75t_R from JSON tree.
+Importing module AOI33xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI333xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI332xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI331xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI32xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI322xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI321xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI31xp67_ASAP7_75t_R from JSON tree.
+Importing module AOI31xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI311xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI22xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI22xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI22x1_ASAP7_75t_R from JSON tree.
+Importing module AOI222xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI221xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI221x1_ASAP7_75t_R from JSON tree.
+Importing module AOI21xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI21xp33_ASAP7_75t_R from JSON tree.
+Importing module AOI21x1_ASAP7_75t_R from JSON tree.
+Importing module AOI211xp5_ASAP7_75t_R from JSON tree.
+Importing module AOI211x1_ASAP7_75t_R from JSON tree.
+Importing module AO33x2_ASAP7_75t_R from JSON tree.
+Importing module AO333x2_ASAP7_75t_R from JSON tree.
+Importing module AO333x1_ASAP7_75t_R from JSON tree.
+Importing module AO332x2_ASAP7_75t_R from JSON tree.
+Importing module AO332x1_ASAP7_75t_R from JSON tree.
+Importing module AO331x2_ASAP7_75t_R from JSON tree.
+Importing module AO331x1_ASAP7_75t_R from JSON tree.
+Importing module AO32x2_ASAP7_75t_R from JSON tree.
+Importing module AO32x1_ASAP7_75t_R from JSON tree.
+Importing module AO322x2_ASAP7_75t_R from JSON tree.
+Importing module AO31x2_ASAP7_75t_R from JSON tree.
+Importing module AO22x2_ASAP7_75t_R from JSON tree.
+Importing module AO22x1_ASAP7_75t_R from JSON tree.
+Importing module AO222x2_ASAP7_75t_R from JSON tree.
+Importing module AO221x2_ASAP7_75t_R from JSON tree.
+Importing module AO221x1_ASAP7_75t_R from JSON tree.
+Importing module AO21x2_ASAP7_75t_R from JSON tree.
+Importing module AO21x1_ASAP7_75t_R from JSON tree.
+Importing module AO211x2_ASAP7_75t_R from JSON tree.
+Importing module AND5x2_ASAP7_75t_R from JSON tree.
+Importing module AND5x1_ASAP7_75t_R from JSON tree.
+Importing module AND4x2_ASAP7_75t_R from JSON tree.
+Importing module AND4x1_ASAP7_75t_R from JSON tree.
+Importing module AND3x4_ASAP7_75t_R from JSON tree.
+Importing module AND3x2_ASAP7_75t_R from JSON tree.
+Importing module AND3x1_ASAP7_75t_R from JSON tree.
+Importing module AND2x6_ASAP7_75t_R from JSON tree.
+Importing module AND2x4_ASAP7_75t_R from JSON tree.
+Importing module AND2x2_ASAP7_75t_R from JSON tree.
+Importing module A2O1A1O1Ixp25_ASAP7_75t_R from JSON tree.
+Importing module A2O1A1Ixp33_ASAP7_75t_R from JSON tree.
+Importing module $paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100 from JSON tree.
+Importing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000110000 from JSON tree.
+Importing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000 from JSON tree.
+Importing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011 from JSON tree.
+Importing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010 from JSON tree.
+Importing module $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001 from JSON tree.
+Importing module $paramod\ot_s81_q_lane_pair_native\TW=s32'00000000000000000000000000010001 from JSON tree.
+Importing module $paramod$f8b62a98a482f3bb2a2d6affdb4832ed8efd29c4\ot_v41_kreg from JSON tree.
+Importing module $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg from JSON tree.
+Importing module $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg from JSON tree.
+Importing module $paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg from JSON tree.
+Importing module $paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg from JSON tree.
+Importing module $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg from JSON tree.
+
+2. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+3. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+3.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `$paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg':
+  mapped 1 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg':
+  mapped 3 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg':
+  mapped 2 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg':
+  mapped 1 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg':
+  mapped 1 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod$f8b62a98a482f3bb2a2d6affdb4832ed8efd29c4\ot_v41_kreg':
+  mapped 2 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_s81_q_lane_pair_native\TW=s32'00000000000000000000000000010001':
+  mapped 42 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 13071 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001':
+  mapped 1 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010':
+  mapped 2 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011':
+  mapped 19 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000':
+  mapped 32 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000110000':
+  mapped 48 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `$paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100':
+  mapped 532 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `\ot_s81_q_control_native_graph':
+  mapped 101 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 7854 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `\ot_s81_q_return0_native_graph':
+  mapped 453 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 8695 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `\ot_s81_q_return1_native_graph':
+  mapped 453 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 8695 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `\ot_v41_rom_elem_q_qxpq_w10':
+
+4. Executing ABC pass (technology mapping using ABC).
+
+4.1. Extracting gate netlist of module `$paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg' to `<abc-temp-dir>/input.blif'..
+
+4.1.1. Executed ABC.
+Extracted 1 gates and 2 wires to a netlist network with 1 inputs and 1 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.1.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        1
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        1
+ABC RESULTS:          output signals:        1
+Removing temp directory.
+
+4.2. Extracting gate netlist of module `$paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.2.1. Executed ABC.
+Extracted 3 gates and 6 wires to a netlist network with 3 inputs and 3 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.2.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        3
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        3
+ABC RESULTS:          output signals:        3
+Removing temp directory.
+
+4.3. Extracting gate netlist of module `$paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.3.1. Executed ABC.
+Extracted 2 gates and 4 wires to a netlist network with 2 inputs and 2 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.3.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        2
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        2
+ABC RESULTS:          output signals:        2
+Removing temp directory.
+
+4.4. Extracting gate netlist of module `$paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.4.1. Executed ABC.
+Extracted 1 gates and 2 wires to a netlist network with 1 inputs and 1 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.4.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        1
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        1
+ABC RESULTS:          output signals:        1
+Removing temp directory.
+
+4.5. Extracting gate netlist of module `$paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.5.1. Executed ABC.
+Extracted 1 gates and 2 wires to a netlist network with 1 inputs and 1 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.5.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        1
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        1
+ABC RESULTS:          output signals:        1
+Removing temp directory.
+
+4.6. Extracting gate netlist of module `$paramod$f8b62a98a482f3bb2a2d6affdb4832ed8efd29c4\ot_v41_kreg' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.6.1. Executed ABC.
+Extracted 2 gates and 4 wires to a netlist network with 2 inputs and 2 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.6.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        2
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        2
+ABC RESULTS:          output signals:        2
+Removing temp directory.
+
+4.7. Extracting gate netlist of module `$paramod\ot_s81_q_lane_pair_native\TW=s32'00000000000000000000000000010001' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.7.1. Executed ABC.
+Extracted 53057 gates and 66208 wires to a netlist network with 13149 inputs and 13871 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.7.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:      279
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:       75
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      654
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:     1752
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       41
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:       74
+ABC RESULTS:   AO211x2_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:      460
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:      147
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:     3040
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:        8
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:       72
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:      132
+ABC RESULTS:   HB1xp67_ASAP7_75t_R cells:       86
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     7023
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:     1846
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:      558
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:     2022
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:      733
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:      157
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:       23
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:     3622
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:      592
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:      659
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:       54
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:       80
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:       14
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:      971
+ABC RESULTS:   OA221x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:      128
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:      170
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:     3497
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:      130
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:      210
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:        9
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:      343
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:     1499
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:      162
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:       11
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:     2433
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:     1459
+ABC RESULTS:        internal signals:    39188
+ABC RESULTS:           input signals:    13149
+ABC RESULTS:          output signals:    13871
+Removing temp directory.
+
+4.8. Extracting gate netlist of module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.8.1. Executed ABC.
+Extracted 1 gates and 2 wires to a netlist network with 1 inputs and 1 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.8.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        1
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        1
+ABC RESULTS:          output signals:        1
+Removing temp directory.
+
+4.9. Extracting gate netlist of module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.9.1. Executed ABC.
+Extracted 2 gates and 4 wires to a netlist network with 2 inputs and 2 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.9.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:        2
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:        2
+ABC RESULTS:          output signals:        2
+Removing temp directory.
+
+4.10. Extracting gate netlist of module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.10.1. Executed ABC.
+Extracted 19 gates and 38 wires to a netlist network with 19 inputs and 19 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.10.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:       19
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:       19
+ABC RESULTS:          output signals:       19
+Removing temp directory.
+
+4.11. Extracting gate netlist of module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.11.1. Executed ABC.
+Extracted 32 gates and 64 wires to a netlist network with 32 inputs and 32 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.11.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:       32
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:       32
+ABC RESULTS:          output signals:       32
+Removing temp directory.
+
+4.12. Extracting gate netlist of module `$paramod\ot_v41_kreg\W=s32'00000000000000000000000000110000' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.12.1. Executed ABC.
+Extracted 48 gates and 96 wires to a netlist network with 48 inputs and 48 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.12.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:       48
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:       48
+ABC RESULTS:          output signals:       48
+Removing temp directory.
+
+4.13. Extracting gate netlist of module `$paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.13.1. Executed ABC.
+Extracted 532 gates and 1064 wires to a netlist network with 532 inputs and 532 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.13.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      532
+ABC RESULTS:        internal signals:        0
+ABC RESULTS:           input signals:      532
+ABC RESULTS:          output signals:      532
+Removing temp directory.
+
+4.14. Extracting gate netlist of module `\ot_s81_q_control_native_graph' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.14.1. Executed ABC.
+Extracted 31497 gates and 41838 wires to a netlist network with 10339 inputs and 9812 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.14.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:      298
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:       47
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:       89
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:       47
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       20
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:        4
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:      538
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:        6
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:      634
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:     2610
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:       41
+ABC RESULTS:   AOI222xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:       58
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:       19
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:       35
+ABC RESULTS:   AOI321xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        3
+ABC RESULTS:   HB1xp67_ASAP7_75t_R cells:        1
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     4510
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:       66
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:      102
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:     3412
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:      148
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:       45
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:       16
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:     2721
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:      224
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:       58
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:       18
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:      260
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:       38
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:      143
+ABC RESULTS:   OA222x2_ASAP7_75t_R cells:       63
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:      149
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:     8197
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:      299
+ABC RESULTS:   OAI222xp33_ASAP7_75t_R cells:      191
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:      318
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:       24
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:       40
+ABC RESULTS:   OAI321xp33_ASAP7_75t_R cells:        4
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:       19
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:     2052
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:      356
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:       10
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        3
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:      468
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:       80
+ABC RESULTS:          _const0_ cells:        1
+ABC RESULTS:        internal signals:    21687
+ABC RESULTS:           input signals:    10339
+ABC RESULTS:          output signals:     9812
+Removing temp directory.
+
+4.15. Extracting gate netlist of module `\ot_s81_q_return0_native_graph' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.15.1. Executed ABC.
+Extracted 38901 gates and 48245 wires to a netlist network with 9342 inputs and 14309 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.15.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:      467
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:       90
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      302
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:      264
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       43
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:       14
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:     1954
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO22x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:        9
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:      298
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:     1456
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:       23
+ABC RESULTS:   AOI222xp33_ASAP7_75t_R cells:        2
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:      122
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:       14
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:       49
+ABC RESULTS:   AOI321xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        5
+ABC RESULTS:   AOI33xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   HB1xp67_ASAP7_75t_R cells:       59
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     5142
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:      138
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:       47
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:     4716
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:      221
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:       72
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:       86
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:     3484
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:      346
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:      374
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:      151
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:      834
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:       56
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:      198
+ABC RESULTS:   OA222x2_ASAP7_75t_R cells:      103
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:        7
+ABC RESULTS:   OA31x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:      325
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:     5190
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:      326
+ABC RESULTS:   OAI222xp33_ASAP7_75t_R cells:      393
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:     1167
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:       16
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:      155
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:       54
+ABC RESULTS:   OAI33xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:      660
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:       41
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:       58
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:       18
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:      455
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:      182
+ABC RESULTS:        internal signals:    24594
+ABC RESULTS:           input signals:     9342
+ABC RESULTS:          output signals:    14309
+Removing temp directory.
+
+4.16. Extracting gate netlist of module `\ot_s81_q_return1_native_graph' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.16.1. Executed ABC.
+Extracted 38901 gates and 48245 wires to a netlist network with 9342 inputs and 14309 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_scl /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl 
+ABC: Warning: Detected 2 multi-output cells (for example, "FAx1_ASAP7_75t_R").
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.16.2. Re-integrating ABC results.
+ABC RESULTS:   A2O1A1Ixp33_ASAP7_75t_R cells:      469
+ABC RESULTS:   A2O1A1O1Ixp25_ASAP7_75t_R cells:       56
+ABC RESULTS:   AND2x2_ASAP7_75t_R cells:      287
+ABC RESULTS:   AND3x1_ASAP7_75t_R cells:      264
+ABC RESULTS:   AND4x1_ASAP7_75t_R cells:       50
+ABC RESULTS:   AND5x1_ASAP7_75t_R cells:       18
+ABC RESULTS:   AO21x1_ASAP7_75t_R cells:     1968
+ABC RESULTS:   AO221x1_ASAP7_75t_R cells:        2
+ABC RESULTS:   AO32x1_ASAP7_75t_R cells:        7
+ABC RESULTS:   AOI211xp5_ASAP7_75t_R cells:      313
+ABC RESULTS:   AOI21xp33_ASAP7_75t_R cells:     1517
+ABC RESULTS:   AOI221xp5_ASAP7_75t_R cells:       25
+ABC RESULTS:   AOI22xp33_ASAP7_75t_R cells:      110
+ABC RESULTS:   AOI311xp33_ASAP7_75t_R cells:       13
+ABC RESULTS:   AOI31xp33_ASAP7_75t_R cells:       36
+ABC RESULTS:   AOI321xp33_ASAP7_75t_R cells:        1
+ABC RESULTS:   AOI32xp33_ASAP7_75t_R cells:        8
+ABC RESULTS:   HB1xp67_ASAP7_75t_R cells:       59
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:     5127
+ABC RESULTS:   MAJIxp5_ASAP7_75t_R cells:       99
+ABC RESULTS:   MAJx2_ASAP7_75t_R cells:       67
+ABC RESULTS:   NAND2xp33_ASAP7_75t_R cells:     4733
+ABC RESULTS:   NAND3xp33_ASAP7_75t_R cells:      220
+ABC RESULTS:   NAND4xp25_ASAP7_75t_R cells:       83
+ABC RESULTS:   NAND5xp2_ASAP7_75t_R cells:       78
+ABC RESULTS:   NOR2xp33_ASAP7_75t_R cells:     3393
+ABC RESULTS:   NOR3xp33_ASAP7_75t_R cells:      338
+ABC RESULTS:   NOR4xp25_ASAP7_75t_R cells:      349
+ABC RESULTS:   NOR5xp2_ASAP7_75t_R cells:      141
+ABC RESULTS:   O2A1O1Ixp33_ASAP7_75t_R cells:      857
+ABC RESULTS:   OA211x2_ASAP7_75t_R cells:       77
+ABC RESULTS:   OA21x2_ASAP7_75t_R cells:      204
+ABC RESULTS:   OA222x2_ASAP7_75t_R cells:       96
+ABC RESULTS:   OA22x2_ASAP7_75t_R cells:        5
+ABC RESULTS:   OA31x2_ASAP7_75t_R cells:        1
+ABC RESULTS:   OAI211xp5_ASAP7_75t_R cells:      316
+ABC RESULTS:   OAI21xp33_ASAP7_75t_R cells:     5238
+ABC RESULTS:   OAI221xp5_ASAP7_75t_R cells:      317
+ABC RESULTS:   OAI222xp33_ASAP7_75t_R cells:      428
+ABC RESULTS:   OAI22xp33_ASAP7_75t_R cells:     1126
+ABC RESULTS:   OAI311xp33_ASAP7_75t_R cells:       27
+ABC RESULTS:   OAI31xp33_ASAP7_75t_R cells:      133
+ABC RESULTS:   OAI32xp33_ASAP7_75t_R cells:       56
+ABC RESULTS:   OR2x2_ASAP7_75t_R cells:      668
+ABC RESULTS:   OR3x1_ASAP7_75t_R cells:       44
+ABC RESULTS:   OR4x1_ASAP7_75t_R cells:       80
+ABC RESULTS:   OR5x1_ASAP7_75t_R cells:        9
+ABC RESULTS:   XNOR2xp5_ASAP7_75t_R cells:      475
+ABC RESULTS:   XOR2xp5_ASAP7_75t_R cells:      180
+ABC RESULTS:        internal signals:    24594
+ABC RESULTS:           input signals:     9342
+ABC RESULTS:          output signals:    14309
+Removing temp directory.
+
+4.17. Extracting gate netlist of module `\ot_v41_rom_elem_q_qxpq_w10' to `<abc-temp-dir>/input.blif'..
+ABC: using cached merged SCL: /tmp/yosys-liberty-scl-cache/yosys_merged_0e117faf.scl (1 files)
+
+4.17.1. Executed ABC.
+Extracted 0 gates and 0 wires to a netlist network with 0 inputs and 0 outputs.
+Don't call ABC as there is nothing to map.
+Removing temp directory.
+Removing global temp directory.
+
+5. Printing statistics.
+
+=== $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        7        - wires
+        7        - wire bits
+        4        - public wires
+        4        - public wire bits
+        4        - ports
+        4        - port bits
+        2    0.423 cells
+        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg': 0.422820
+     of which used for sequential elements: 0.379080 (89.66%)
+
+=== $paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       13        - wires
+       17        - wire bits
+        4        - public wires
+        8        - public wire bits
+        4        - ports
+        8        - port bits
+        6    1.268 cells
+        3    1.137   DFFASRHQNx1_ASAP7_75t_R
+        3    0.131   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg': 1.268460
+     of which used for sequential elements: 1.137240 (89.66%)
+
+=== $paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       10        - wires
+       12        - wire bits
+        4        - public wires
+        6        - public wire bits
+        4        - ports
+        6        - port bits
+        4    0.846 cells
+        2    0.758   DFFASRHQNx1_ASAP7_75t_R
+        2    0.087   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg': 0.845640
+     of which used for sequential elements: 0.758160 (89.66%)
+
+=== $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        7        - wires
+        7        - wire bits
+        4        - public wires
+        4        - public wire bits
+        4        - ports
+        4        - port bits
+        2    0.423 cells
+        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg': 0.422820
+     of which used for sequential elements: 0.379080 (89.66%)
+
+=== $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        7        - wires
+        7        - wire bits
+        4        - public wires
+        4        - public wire bits
+        4        - ports
+        4        - port bits
+        2    0.423 cells
+        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg': 0.422820
+     of which used for sequential elements: 0.379080 (89.66%)
+
+=== $paramod$f8b62a98a482f3bb2a2d6affdb4832ed8efd29c4\ot_v41_kreg ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       10        - wires
+       12        - wire bits
+        4        - public wires
+        6        - public wire bits
+        4        - ports
+        6        - port bits
+        4    0.846 cells
+        2    0.758   DFFASRHQNx1_ASAP7_75t_R
+        2    0.087   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod$f8b62a98a482f3bb2a2d6affdb4832ed8efd29c4\ot_v41_kreg': 0.845640
+     of which used for sequential elements: 0.758160 (89.66%)
+
+=== $paramod\ot_s81_q_lane_pair_native\TW=s32'00000000000000000000000000010001 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    71825        - wires
+   154899        - wire bits
+     2021        - public wires
+    50903        - public wire bits
+       21        - ports
+     1187        - port bits
+    48361 6.57E+03 cells
+       18        -   $scopeinfo
+      279   24.407   A2O1A1Ixp33_ASAP7_75t_R
+       75    9.842   A2O1A1O1Ixp25_ASAP7_75t_R
+      654   57.212   AND2x2_ASAP7_75t_R
+     1752  153.265   AND3x1_ASAP7_75t_R
+       41    4.184   AND4x1_ASAP7_75t_R
+       74    8.631   AND5x1_ASAP7_75t_R
+        2    0.467   AO211x2_ASAP7_75t_R
+      460   40.241   AO21x1_ASAP7_75t_R
+      147    12.86   AOI211xp5_ASAP7_75t_R
+     3040  221.616   AOI21xp33_ASAP7_75t_R
+        8    0.816   AOI221xp5_ASAP7_75t_R
+       72    6.299   AOI22xp33_ASAP7_75t_R
+        2    0.204   AOI311xp33_ASAP7_75t_R
+      132   11.547   AOI31xp33_ASAP7_75t_R
+       42   15.921   DFFASRHQNx1_ASAP7_75t_R
+    13071 3.81E+03   DFFHQNx1_ASAP7_75t_R
+       86    5.016   HB1xp67_ASAP7_75t_R
+     7023  307.186   INVx1_ASAP7_75t_R
+     1846  188.403   MAJIxp5_ASAP7_75t_R
+      558   73.221   MAJx2_ASAP7_75t_R
+     2022  117.923   NAND2xp33_ASAP7_75t_R
+      733   53.436   NAND3xp33_ASAP7_75t_R
+      157   13.734   NAND4xp25_ASAP7_75t_R
+       23    2.347   NAND5xp2_ASAP7_75t_R
+     3622  211.235   NOR2xp33_ASAP7_75t_R
+      592   43.157   NOR3xp33_ASAP7_75t_R
+      659   57.649   NOR4xp25_ASAP7_75t_R
+       54    5.511   NOR5xp2_ASAP7_75t_R
+       80    6.998   O2A1O1Ixp33_ASAP7_75t_R
+       14    1.633   OA211x2_ASAP7_75t_R
+      971     99.1   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+      128   18.662   OA22x2_ASAP7_75t_R
+      170   14.872   OAI211xp5_ASAP7_75t_R
+     3497  254.931   OAI21xp33_ASAP7_75t_R
+      130   11.372   OAI22xp33_ASAP7_75t_R
+      210   18.371   OAI31xp33_ASAP7_75t_R
+        9    0.919   OAI32xp33_ASAP7_75t_R
+      343   30.006   OR2x2_ASAP7_75t_R
+     1499  131.133   OR3x1_ASAP7_75t_R
+      162   16.534   OR4x1_ASAP7_75t_R
+       11    1.283   OR5x1_ASAP7_75t_R
+     2433  319.258   XNOR2xp5_ASAP7_75t_R
+     1459   191.45   XOR2xp5_ASAP7_75t_R
+       36        - submodules
+       36        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '$paramod\ot_s81_q_lane_pair_native\TW=s32'00000000000000000000000000010001': 6574.588560
+     of which used for sequential elements: 3827.424960 (58.22%)
+
+=== $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+        7        - wires
+        7        - wire bits
+        4        - public wires
+        4        - public wire bits
+        4        - ports
+        4        - port bits
+        2    0.335 cells
+        1    0.292   DFFHQNx1_ASAP7_75t_R
+        1    0.044   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001': 0.335340
+     of which used for sequential elements: 0.291600 (86.96%)
+
+=== $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       10        - wires
+       12        - wire bits
+        4        - public wires
+        6        - public wire bits
+        4        - ports
+        6        - port bits
+        4    0.671 cells
+        2    0.583   DFFHQNx1_ASAP7_75t_R
+        2    0.087   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010': 0.670680
+     of which used for sequential elements: 0.583200 (86.96%)
+
+=== $paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+       61        - wires
+       97        - wire bits
+        4        - public wires
+       40        - public wire bits
+        4        - ports
+       40        - port bits
+       38    6.371 cells
+       19     5.54   DFFHQNx1_ASAP7_75t_R
+       19    0.831   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011': 6.371460
+     of which used for sequential elements: 5.540400 (86.96%)
+
+=== $paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      100        - wires
+      162        - wire bits
+        4        - public wires
+       66        - public wire bits
+        4        - ports
+       66        - port bits
+       64   10.731 cells
+       32    9.331   DFFHQNx1_ASAP7_75t_R
+       32      1.4   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000': 10.730880
+     of which used for sequential elements: 9.331200 (86.96%)
+
+=== $paramod\ot_v41_kreg\W=s32'00000000000000000000000000110000 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+      148        - wires
+      242        - wire bits
+        4        - public wires
+       98        - public wire bits
+        4        - ports
+       98        - port bits
+       96   16.096 cells
+       48   13.997   DFFHQNx1_ASAP7_75t_R
+       48      2.1   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_v41_kreg\W=s32'00000000000000000000000000110000': 16.096320
+     of which used for sequential elements: 13.996800 (86.96%)
+
+=== $paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1600        - wires
+     2662        - wire bits
+        4        - public wires
+     1066        - public wire bits
+        4        - ports
+     1066        - port bits
+     1064  178.401 cells
+      532  155.131   DFFHQNx1_ASAP7_75t_R
+      532    23.27   INVx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100': 178.400880
+     of which used for sequential elements: 155.131200 (86.96%)
+
+=== ot_s81_q_control_native_graph ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    61326        - wires
+    98649        - wire bits
+     1118        - public wires
+    28484        - public wire bits
+        3        - ports
+     4591        - port bits
+    36461 4.34E+03 cells
+       16        -   $scopeinfo
+      298   26.069   A2O1A1Ixp33_ASAP7_75t_R
+       47    6.167   A2O1A1O1Ixp25_ASAP7_75t_R
+       89    7.786   AND2x2_ASAP7_75t_R
+       47    4.112   AND3x1_ASAP7_75t_R
+       20    2.041   AND4x1_ASAP7_75t_R
+        4    0.467   AND5x1_ASAP7_75t_R
+      538   47.064   AO21x1_ASAP7_75t_R
+        2    0.292   AO221x1_ASAP7_75t_R
+        6      0.7   AO32x1_ASAP7_75t_R
+      634   55.462   AOI211xp5_ASAP7_75t_R
+     2610  190.269   AOI21xp33_ASAP7_75t_R
+       41    4.184   AOI221xp5_ASAP7_75t_R
+        1    0.146   AOI222xp33_ASAP7_75t_R
+       58    5.074   AOI22xp33_ASAP7_75t_R
+       19    1.939   AOI311xp33_ASAP7_75t_R
+       35    3.062   AOI31xp33_ASAP7_75t_R
+        1    0.117   AOI321xp33_ASAP7_75t_R
+        3    0.306   AOI32xp33_ASAP7_75t_R
+      101   38.287   DFFASRHQNx1_ASAP7_75t_R
+     7854 2.29E+03   DFFHQNx1_ASAP7_75t_R
+        1    0.058   HB1xp67_ASAP7_75t_R
+        1    0.262   ICGx1_ASAP7_75t_R
+     4510  197.267   INVx1_ASAP7_75t_R
+       66    6.736   MAJIxp5_ASAP7_75t_R
+      102   13.384   MAJx2_ASAP7_75t_R
+     3412  198.988   NAND2xp33_ASAP7_75t_R
+      148   10.789   NAND3xp33_ASAP7_75t_R
+       45    3.937   NAND4xp25_ASAP7_75t_R
+       16    1.633   NAND5xp2_ASAP7_75t_R
+     2721  158.689   NOR2xp33_ASAP7_75t_R
+      224    16.33   NOR3xp33_ASAP7_75t_R
+       58    5.074   NOR4xp25_ASAP7_75t_R
+       18    1.837   NOR5xp2_ASAP7_75t_R
+      260   22.745   O2A1O1Ixp33_ASAP7_75t_R
+       38    4.432   OA211x2_ASAP7_75t_R
+      143   14.595   OA21x2_ASAP7_75t_R
+       63   11.022   OA222x2_ASAP7_75t_R
+        1    0.146   OA22x2_ASAP7_75t_R
+      149   13.035   OAI211xp5_ASAP7_75t_R
+     8197  597.561   OAI21xp33_ASAP7_75t_R
+      299   30.516   OAI221xp5_ASAP7_75t_R
+      191   27.848   OAI222xp33_ASAP7_75t_R
+      318   27.819   OAI22xp33_ASAP7_75t_R
+       24    2.449   OAI311xp33_ASAP7_75t_R
+       40    3.499   OAI31xp33_ASAP7_75t_R
+        4    0.467   OAI321xp33_ASAP7_75t_R
+       19    1.939   OAI32xp33_ASAP7_75t_R
+     2052  179.509   OR2x2_ASAP7_75t_R
+      356   31.143   OR3x1_ASAP7_75t_R
+       10    1.021   OR4x1_ASAP7_75t_R
+        3     0.35   OR5x1_ASAP7_75t_R
+      468   61.411   XNOR2xp5_ASAP7_75t_R
+       80   10.498   XOR2xp5_ASAP7_75t_R
+       39        - submodules
+       19        -   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+       12        -   $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
+        4        -   $paramod$f8b62a98a482f3bb2a2d6affdb4832ed8efd29c4\ot_v41_kreg
+        4        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000110000
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_s81_q_control_native_graph': 4340.757600
+     of which used for sequential elements: 2328.513480 (53.64%)
+
+=== ot_s81_q_return0_native_graph ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    61239        - wires
+   120477        - wire bits
+     1923        - public wires
+    48527        - public wire bits
+        4        - ports
+     3390        - port bits
+    39424 4.86E+03 cells
+       80        -   $scopeinfo
+      467   40.853   A2O1A1Ixp33_ASAP7_75t_R
+       90    11.81   A2O1A1O1Ixp25_ASAP7_75t_R
+      302   26.419   AND2x2_ASAP7_75t_R
+      264   23.095   AND3x1_ASAP7_75t_R
+       43    4.389   AND4x1_ASAP7_75t_R
+       14    1.633   AND5x1_ASAP7_75t_R
+     1954  170.936   AO21x1_ASAP7_75t_R
+        2    0.292   AO221x1_ASAP7_75t_R
+        2    0.262   AO22x1_ASAP7_75t_R
+        9     1.05   AO32x1_ASAP7_75t_R
+      298   26.069   AOI211xp5_ASAP7_75t_R
+     1456  106.142   AOI21xp33_ASAP7_75t_R
+       23    2.347   AOI221xp5_ASAP7_75t_R
+        2    0.292   AOI222xp33_ASAP7_75t_R
+      122   10.673   AOI22xp33_ASAP7_75t_R
+       14    1.429   AOI311xp33_ASAP7_75t_R
+       49    4.287   AOI31xp33_ASAP7_75t_R
+        1    0.117   AOI321xp33_ASAP7_75t_R
+        5     0.51   AOI32xp33_ASAP7_75t_R
+        1    0.117   AOI33xp33_ASAP7_75t_R
+      453  171.723   DFFASRHQNx1_ASAP7_75t_R
+     8695 2.54E+03   DFFHQNx1_ASAP7_75t_R
+       59    3.441   HB1xp67_ASAP7_75t_R
+     5142  224.911   INVx1_ASAP7_75t_R
+      138   14.084   MAJIxp5_ASAP7_75t_R
+       47    6.167   MAJx2_ASAP7_75t_R
+     4716  275.037   NAND2xp33_ASAP7_75t_R
+      221   16.111   NAND3xp33_ASAP7_75t_R
+       72    6.299   NAND4xp25_ASAP7_75t_R
+       86    8.777   NAND5xp2_ASAP7_75t_R
+     3484  203.187   NOR2xp33_ASAP7_75t_R
+      346   25.223   NOR3xp33_ASAP7_75t_R
+      374   32.718   NOR4xp25_ASAP7_75t_R
+      151   15.411   NOR5xp2_ASAP7_75t_R
+      834   72.958   O2A1O1Ixp33_ASAP7_75t_R
+       56    6.532   OA211x2_ASAP7_75t_R
+      198   20.208   OA21x2_ASAP7_75t_R
+      103   18.021   OA222x2_ASAP7_75t_R
+        7    1.021   OA22x2_ASAP7_75t_R
+        1    0.219   OA31x2_ASAP7_75t_R
+      325   28.431   OAI211xp5_ASAP7_75t_R
+     5190  378.351   OAI21xp33_ASAP7_75t_R
+      326   33.272   OAI221xp5_ASAP7_75t_R
+      393   57.299   OAI222xp33_ASAP7_75t_R
+     1167  102.089   OAI22xp33_ASAP7_75t_R
+       16    1.633   OAI311xp33_ASAP7_75t_R
+      155   13.559   OAI31xp33_ASAP7_75t_R
+       54    5.511   OAI32xp33_ASAP7_75t_R
+        1    0.117   OAI33xp33_ASAP7_75t_R
+      660   57.737   OR2x2_ASAP7_75t_R
+       41    3.587   OR3x1_ASAP7_75t_R
+       58    5.919   OR4x1_ASAP7_75t_R
+       18      2.1   OR5x1_ASAP7_75t_R
+      455   59.705   XNOR2xp5_ASAP7_75t_R
+      182   23.882   XOR2xp5_ASAP7_75t_R
+        2        -   ot_rom_4096x274_m8
+       45        - submodules
+        4        -   $paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg
+       12        -   $paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg
+       10        -   $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
+        4        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        8        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010
+        2        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011
+        4        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000
+        1        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_rom_4096x274_m8 is unknown!
+
+   Chip area for module '\ot_s81_q_return0_native_graph': 4863.421440
+     of which used for sequential elements: 2707.185240 (55.66%)
+
+=== ot_s81_q_return1_native_graph ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    61213        - wires
+   120451        - wire bits
+     1923        - public wires
+    48527        - public wire bits
+        4        - ports
+     3390        - port bits
+    39398 4.86E+03 cells
+       80        -   $scopeinfo
+      469   41.028   A2O1A1Ixp33_ASAP7_75t_R
+       56    7.348   A2O1A1O1Ixp25_ASAP7_75t_R
+      287   25.107   AND2x2_ASAP7_75t_R
+      264   23.095   AND3x1_ASAP7_75t_R
+       50    5.103   AND4x1_ASAP7_75t_R
+       18      2.1   AND5x1_ASAP7_75t_R
+     1968  172.161   AO21x1_ASAP7_75t_R
+        2    0.292   AO221x1_ASAP7_75t_R
+        7    0.816   AO32x1_ASAP7_75t_R
+      313   27.381   AOI211xp5_ASAP7_75t_R
+     1517  110.589   AOI21xp33_ASAP7_75t_R
+       25    2.551   AOI221xp5_ASAP7_75t_R
+      110    9.623   AOI22xp33_ASAP7_75t_R
+       13    1.327   AOI311xp33_ASAP7_75t_R
+       36    3.149   AOI31xp33_ASAP7_75t_R
+        1    0.117   AOI321xp33_ASAP7_75t_R
+        8    0.816   AOI32xp33_ASAP7_75t_R
+      453  171.723   DFFASRHQNx1_ASAP7_75t_R
+     8695 2.54E+03   DFFHQNx1_ASAP7_75t_R
+       59    3.441   HB1xp67_ASAP7_75t_R
+     5127  224.255   INVx1_ASAP7_75t_R
+       99   10.104   MAJIxp5_ASAP7_75t_R
+       67    8.792   MAJx2_ASAP7_75t_R
+     4733  276.029   NAND2xp33_ASAP7_75t_R
+      220   16.038   NAND3xp33_ASAP7_75t_R
+       83    7.261   NAND4xp25_ASAP7_75t_R
+       78    7.961   NAND5xp2_ASAP7_75t_R
+     3393   197.88   NOR2xp33_ASAP7_75t_R
+      338    24.64   NOR3xp33_ASAP7_75t_R
+      349   30.531   NOR4xp25_ASAP7_75t_R
+      141    14.39   NOR5xp2_ASAP7_75t_R
+      857    74.97   O2A1O1Ixp33_ASAP7_75t_R
+       77    8.981   OA211x2_ASAP7_75t_R
+      204    20.82   OA21x2_ASAP7_75t_R
+       96   16.796   OA222x2_ASAP7_75t_R
+        5    0.729   OA22x2_ASAP7_75t_R
+        1    0.219   OA31x2_ASAP7_75t_R
+      316   27.644   OAI211xp5_ASAP7_75t_R
+     5238   381.85   OAI21xp33_ASAP7_75t_R
+      317   32.353   OAI221xp5_ASAP7_75t_R
+      428   62.402   OAI222xp33_ASAP7_75t_R
+     1126   98.502   OAI22xp33_ASAP7_75t_R
+       27    2.756   OAI311xp33_ASAP7_75t_R
+      133   11.635   OAI31xp33_ASAP7_75t_R
+       56    5.715   OAI32xp33_ASAP7_75t_R
+      668   58.437   OR2x2_ASAP7_75t_R
+       44    3.849   OR3x1_ASAP7_75t_R
+       80    8.165   OR4x1_ASAP7_75t_R
+        9     1.05   OR5x1_ASAP7_75t_R
+      475   62.329   XNOR2xp5_ASAP7_75t_R
+      180    23.62   XOR2xp5_ASAP7_75t_R
+        2        -   ot_rom_4096x274_m8
+       45        - submodules
+        4        -   $paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg
+       12        -   $paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg
+       10        -   $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
+        4        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        8        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010
+        2        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011
+        4        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000
+        1        -   $paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_rom_4096x274_m8 is unknown!
+
+   Chip area for module '\ot_s81_q_return1_native_graph': 4863.931740
+     of which used for sequential elements: 2707.185240 (55.66%)
+
+=== ot_v41_rom_elem_q_qxpq_w10 ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     1735        - wires
+    39466        - wire bits
+     1693        - public wires
+    38344        - public wire bits
+       28        - ports
+      739        - port bits
+        5        - submodules
+        2        -   $paramod\ot_s81_q_lane_pair_native\TW=s32'00000000000000000000000000010001
+        1        -   ot_s81_q_control_native_graph
+        1        -   ot_s81_q_return0_native_graph
+        1        -   ot_s81_q_return1_native_graph
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_rom_4096x274_m8 is unknown!
+
+   Chip area for module '\ot_v41_rom_elem_q_qxpq_w10': 0.000000
+     of which used for sequential elements: 0.000000 (-nan%)
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+   215667 2.78E+04 ot_v41_rom_elem_q_qxpq_w10
+    48361 6.57E+03 $paramod\ot_s81_q_lane_pair_native\TW=s32'00000000000000000000000000010001
+        2    0.335   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+    36461 4.34E+03 ot_s81_q_control_native_graph
+        2    0.423   $paramod$72a7d8320db9da745f30c144f32f45668d8b911e\ot_v41_kreg
+        2    0.423   $paramod$df851f880c0dc675fbf4af5d1f811949ac8dc0de\ot_v41_kreg
+        4    0.846   $paramod$f8b62a98a482f3bb2a2d6affdb4832ed8efd29c4\ot_v41_kreg
+       96   16.096   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000110000
+    39424 4.86E+03 ot_s81_q_return0_native_graph
+        6    1.268   $paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg
+        4    0.846   $paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg
+        2    0.423   $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
+        2    0.335   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        4    0.671   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010
+       38    6.371   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011
+       64   10.731   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000
+     1064  178.401   $paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100
+    39398 4.86E+03 ot_s81_q_return1_native_graph
+        6    1.268   $paramod$91266e2085b87b5ca08ddae057c8433ca5793397\ot_v41_kreg
+        4    0.846   $paramod$cb344c00d767e0cf72978deb90a560a60971055d\ot_v41_kreg
+        2    0.423   $paramod$d41602f9b2cf0a8111e2817a76f98643b5b8faaa\ot_v41_kreg
+        2    0.335   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000001
+        4    0.671   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000000010
+       38    6.371   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000010011
+       64   10.731   $paramod\ot_v41_kreg\W=s32'00000000000000000000000000100000
+     1064  178.401   $paramod\ot_v41_kreg\W=s32'00000000000000000000001000010100
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+   335460        - wires
+   698398        - wire bits
+    11503        - public wires
+   269752        - public wire bits
+      885        - ports
+    18548        - port bits
+        -        - memories
+        -        - memory bits
+        -        - processes
+   215667 2.78E+04 cells
+      212        -   $scopeinfo
+     1792  156.764   A2O1A1Ixp33_ASAP7_75t_R
+      343   45.008   A2O1A1O1Ixp25_ASAP7_75t_R
+     1986  173.735   AND2x2_ASAP7_75t_R
+     4079  356.831   AND3x1_ASAP7_75t_R
+      195   19.902   AND4x1_ASAP7_75t_R
+      184   21.462   AND5x1_ASAP7_75t_R
+        4    0.933   AO211x2_ASAP7_75t_R
+     5380  470.642   AO21x1_ASAP7_75t_R
+        6    0.875   AO221x1_ASAP7_75t_R
+        2    0.262   AO22x1_ASAP7_75t_R
+       22    2.566   AO32x1_ASAP7_75t_R
+     1539  134.632   AOI211xp5_ASAP7_75t_R
+    11663  850.233   AOI21xp33_ASAP7_75t_R
+      105   10.716   AOI221xp5_ASAP7_75t_R
+        3    0.437   AOI222xp33_ASAP7_75t_R
+      434   37.966   AOI22xp33_ASAP7_75t_R
+       50    5.103   AOI311xp33_ASAP7_75t_R
+      384   33.592   AOI31xp33_ASAP7_75t_R
+        3     0.35   AOI321xp33_ASAP7_75t_R
+       16    1.633   AOI32xp33_ASAP7_75t_R
+        1    0.117   AOI33xp33_ASAP7_75t_R
+     1222  463.236   DFFASRHQNx1_ASAP7_75t_R
+    53086 1.55E+04   DFFHQNx1_ASAP7_75t_R
+      291   16.971   HB1xp67_ASAP7_75t_R
+        1    0.262   ICGx1_ASAP7_75t_R
+    30656 1.34E+03   INVx1_ASAP7_75t_R
+     3995   407.73   MAJIxp5_ASAP7_75t_R
+     1332  174.785   MAJx2_ASAP7_75t_R
+    16905    985.9   NAND2xp33_ASAP7_75t_R
+     2055  149.809   NAND3xp33_ASAP7_75t_R
+      514   44.965   NAND4xp25_ASAP7_75t_R
+      226   23.066   NAND5xp2_ASAP7_75t_R
+    16842  982.225   NOR2xp33_ASAP7_75t_R
+     2092  152.507   NOR3xp33_ASAP7_75t_R
+     2099  183.621   NOR4xp25_ASAP7_75t_R
+      418   42.661   NOR5xp2_ASAP7_75t_R
+     2111   184.67   O2A1O1Ixp33_ASAP7_75t_R
+      199   23.211   OA211x2_ASAP7_75t_R
+     2487  253.823   OA21x2_ASAP7_75t_R
+        2    0.467   OA221x2_ASAP7_75t_R
+      262    45.84   OA222x2_ASAP7_75t_R
+      269    39.22   OA22x2_ASAP7_75t_R
+        2    0.437   OA31x2_ASAP7_75t_R
+     1130   98.852   OAI211xp5_ASAP7_75t_R
+    25619 1.87E+03   OAI21xp33_ASAP7_75t_R
+      942   96.141   OAI221xp5_ASAP7_75t_R
+     1012   147.55   OAI222xp33_ASAP7_75t_R
+     2871  251.155   OAI22xp33_ASAP7_75t_R
+       67    6.838   OAI311xp33_ASAP7_75t_R
+      748   65.435   OAI31xp33_ASAP7_75t_R
+        4    0.467   OAI321xp33_ASAP7_75t_R
+      147   15.003   OAI32xp33_ASAP7_75t_R
+        1    0.117   OAI33xp33_ASAP7_75t_R
+     4066  355.694   OR2x2_ASAP7_75t_R
+     3439  300.844   OR3x1_ASAP7_75t_R
+      472   48.172   OR4x1_ASAP7_75t_R
+       52    6.065   OR5x1_ASAP7_75t_R
+     6264  821.962   XNOR2xp5_ASAP7_75t_R
+     3360  440.899   XOR2xp5_ASAP7_75t_R
+        4        -   ot_rom_4096x274_m8
+        5 2.78E+04 submodules
+        2 1.32E+04   $paramod\ot_s81_q_lane_pair_native\TW=s32'00000000000000000000000000010001
+        1 4.42E+03   ot_s81_q_control_native_graph
+        1 5.12E+03   ot_s81_q_return0_native_graph
+        1 5.12E+03   ot_s81_q_return1_native_graph
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_rom_4096x274_m8 is unknown!
+
+   Chip area for top module '\ot_v41_rom_elem_q_qxpq_w10': 27842.755320
+     of which used for sequential elements: 15943.113360 (57.26%)
+
+6. Executing JSON backend.
+
+End of script. Logfile hash: 84abd7554e, time: 13.30s, user: 4.98s, system: 0.29s, MEM: 1043.31 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 76% 1x abc (10 sec), 13% 2x read_json (1 sec), ...
