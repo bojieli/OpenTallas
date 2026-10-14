@@ -94,7 +94,7 @@ set ot_port_re [expr {[info exists ::env(OT_OFLOP_PORT_RE)] ? $::env(OT_OFLOP_PO
 # the ordinary single-sink tracer continues for all other inputs.
 set ot_role_input_map [dict create]
 foreach inst [$ot_blk getInsts] {
-  set name [$inst getName]
+  regsub -all {\\} [$inst getName] {} name
   if {[regexp {lo_input_role\[([0-9]+)\]} $name -> bit]} {
     dict set ot_role_input_map "li\[[expr {$bit + 276}]\]" $inst
   } elseif {[regexp {co_input_role\[([0-9]+)\]} $name -> bit] && $bit >= 212} {
