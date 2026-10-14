@@ -1,0 +1,201 @@
+{
+  "schema": "opentallas.native-seq.clock-pin-candidate.v1",
+  "status": "CANDIDATE_NOT_FINAL_DIE_ASSIGNED_PINS",
+  "source_commit": "4b66ce3a4",
+  "parent": "qkd_seq_tp8",
+  "outline_request_um": [
+    604.8,
+    475.2
+  ],
+  "entry_lattice": "relative M7 pitch0.064 offset0.016; matches current g8 parent ck residue; actual die-origin/orientation legality must pass",
+  "data_pin_basis": "g8 qkd_seq assigned pin file, N data layer M5. Candidate clock ports M7; no data pin relocation inferred.",
+  "physical_gates": [
+    "actual native core/xs clock pin locations",
+    "nonoverlap and die-origin pin lattice legality",
+    "real parent internal congestion",
+    "actual per-corner entry compensation and setup150/210 hold100",
+    "final v5 placement and assigned ports"
+  ],
+  "entries": [
+    {
+      "port": "clk_core",
+      "child_pattern": "*u_core*",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        314.192,
+        475.2
+      ],
+      "child_clock_target_um": [
+        314.22,
+        237.60000000000002
+      ],
+      "clock_wire_manhattan_um": 237.628,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_core/views/qkd_seq_core/qkd_seq_core.lef",
+      "geometry_source_sha256": "fb2551d20cc9c4069dbaf95befb19ca1abbbb8b0dce9265d284ce330900e6a8f",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_xs0",
+      "child_pattern": "*g_xs?0?*u_xs",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        201.04,
+        475.2
+      ],
+      "child_clock_target_um": [
+        201.06,
+        170.64
+      ],
+      "clock_wire_manhattan_um": 304.58,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_xs/views/qkd_seq_xs/qkd_seq_xs.lef",
+      "geometry_source_sha256": "41651e83ae109faf70eb8d7da31573c6a0e3fb83e6de60009498316a25bf8695",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_xs1",
+      "child_pattern": "*g_xs?1?*u_xs",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        319.888,
+        475.2
+      ],
+      "child_clock_target_um": [
+        319.86,
+        170.64
+      ],
+      "clock_wire_manhattan_um": 304.588,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_xs/views/qkd_seq_xs/qkd_seq_xs.lef",
+      "geometry_source_sha256": "41651e83ae109faf70eb8d7da31573c6a0e3fb83e6de60009498316a25bf8695",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_xs2",
+      "child_pattern": "*g_xs?2?*u_xs",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        203.024,
+        475.2
+      ],
+      "child_clock_target_um": [
+        201.06,
+        365.03999999999996
+      ],
+      "clock_wire_manhattan_um": 112.124,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_xs/views/qkd_seq_xs/qkd_seq_xs.lef",
+      "geometry_source_sha256": "41651e83ae109faf70eb8d7da31573c6a0e3fb83e6de60009498316a25bf8695",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_xs3",
+      "child_pattern": "*g_xs?3?*u_xs",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        321.872,
+        475.2
+      ],
+      "child_clock_target_um": [
+        319.86,
+        365.03999999999996
+      ],
+      "clock_wire_manhattan_um": 112.172,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_xs/views/qkd_seq_xs/qkd_seq_xs.lef",
+      "geometry_source_sha256": "41651e83ae109faf70eb8d7da31573c6a0e3fb83e6de60009498316a25bf8695",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_fan0",
+      "child_pattern": "*g_fan?0?*u_fan",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        69.072,
+        475.2
+      ],
+      "child_clock_target_um": [
+        69.084,
+        226.8
+      ],
+      "clock_wire_manhattan_um": 248.412,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_fan/views/qkd_seq_fan/qkd_seq_fan.lef",
+      "geometry_source_sha256": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_fan1",
+      "child_pattern": "*g_fan?1?*u_fan",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        71.056,
+        475.2
+      ],
+      "child_clock_target_um": [
+        69.084,
+        399.6
+      ],
+      "clock_wire_manhattan_um": 77.572,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_fan/views/qkd_seq_fan/qkd_seq_fan.lef",
+      "geometry_source_sha256": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_fan2",
+      "child_pattern": "*g_fan?2?*u_fan",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        535.696,
+        475.2
+      ],
+      "child_clock_target_um": [
+        535.716,
+        226.8
+      ],
+      "clock_wire_manhattan_um": 248.42,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_fan/views/qkd_seq_fan/qkd_seq_fan.lef",
+      "geometry_source_sha256": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    },
+    {
+      "port": "clk_fan3",
+      "child_pattern": "*g_fan?3?*u_fan",
+      "child_clock_port": "ck",
+      "face": "N",
+      "layer": "M7",
+      "parent_pin_um": [
+        537.68,
+        475.2
+      ],
+      "child_clock_target_um": [
+        535.716,
+        399.6
+      ],
+      "clock_wire_manhattan_um": 77.564,
+      "target_status": "PROVISIONAL inherited clock-port geometry; replace core/xs coordinates with native assigned/gated port geometry",
+      "geometry_source_lef": "physical/ref_tile/qkd_seq_fan/views/qkd_seq_fan/qkd_seq_fan.lef",
+      "geometry_source_sha256": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248",
+      "corner_compensation": "PENDING actual per-entry parent-wire plus native child boundary references; never inherit TP4 core/xs R"
+    }
+  ]
+}
