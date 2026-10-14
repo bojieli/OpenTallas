@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.native_hrow_source_binding_packet.v1",
- "status": "OPEN production source driver/refclk/reset ABI; geometry stable",
+ "status": "OPEN production source ABI; 88-instance geometry historical pending large relay successors",
  "parameters": {
   "HARD_RELAYS": 1,
   "CQ": 3,
@@ -69,10 +69,44 @@
    "pin_evidence": "results/arch/s81_hrow_native_placement_1013/pins/dsfd_die_rstsync/pins.json",
    "pin_evidence_sha256": "1dc32ac24c797572f36d24c301352364ba9cc291c366b8fd5b42db6522f05f1e",
    "kind": "actual_cts_pins_route_pending",
-   "insertion_corners": null,
-   "final_ss_lib": null,
-   "final_ff_lib": null,
-   "status": "RELAY FINAL ROUTED ETMS/INSERTION PENDING"
+   "insertion_corners": {
+    "ss": {
+     "n": 2,
+     "mean": 58.4,
+     "min": 58.4,
+     "max": 58.5
+    },
+    "tt": {
+     "n": 2,
+     "mean": 42.0,
+     "min": 42.0,
+     "max": 42.1
+    },
+    "ff": {
+     "n": 2,
+     "mean": 32.3,
+     "min": 32.3,
+     "max": 32.4
+    }
+   },
+   "final_ss_lib": {
+    "path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync_ss.lib",
+    "sha256": "9d43eee71822e3da4a5d40af09490f1956afa2626090b0928f11dffe9408ab57"
+   },
+   "final_ff_lib": {
+    "path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync_ff.lib",
+    "sha256": "a0e0a3d63b84f8b3bf77feb208189c4ded4d68b92746911680bf8e32d15ace50"
+   },
+   "status": "CLOSED final relay views; historical CTS pin geometry retained separately; parent delivery/timing OPEN",
+   "final_view_record_commit": "626202850",
+   "final_lef": {
+    "path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync.lef",
+    "sha256": "03f7519e06e8f756f42b28382bd72c263a031113b060a12fa783d1f7a0e4b5d3"
+   },
+   "insertion": {
+    "path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/insertion.json",
+    "sha256": "7b64d9212a985afce40845b40b1f4d299cc0716b32a92bd8bc9481ad28d74c53"
+   }
   },
   "dsfd_hrow_r1025": {
    "master": "dsfd_hrow_r1025",
@@ -91,10 +125,44 @@
    "pin_evidence": "results/arch/s81_hrow_native_placement_1013/pins/dsfd_hrow_r15/pins.json",
    "pin_evidence_sha256": "c5782dba4b7bcf6e5b6da7bfacd1dacbb35da11a6834f56800a98c7d98917d53",
    "kind": "actual_cts_pins_route_pending",
-   "insertion_corners": null,
-   "final_ss_lib": null,
-   "final_ff_lib": null,
-   "status": "RELAY FINAL ROUTED ETMS/INSERTION PENDING"
+   "insertion_corners": {
+    "ss": {
+     "n": 15,
+     "mean": 60.8,
+     "min": 60.7,
+     "max": 60.9
+    },
+    "tt": {
+     "n": 15,
+     "mean": 42.9,
+     "min": 42.8,
+     "max": 43.2
+    },
+    "ff": {
+     "n": 15,
+     "mean": 32.5,
+     "min": 32.4,
+     "max": 32.8
+    }
+   },
+   "final_ss_lib": {
+    "path": "physical/ref_tile/dsfd_hrow_r15_m5/views/dsfd_hrow_r15/dsfd_hrow_r15_ss.lib",
+    "sha256": "0b1e53c0347f306fe2d31bd83a66e143aec31901fcace7f8dde324b7fefdeb8a"
+   },
+   "final_ff_lib": {
+    "path": "physical/ref_tile/dsfd_hrow_r15_m5/views/dsfd_hrow_r15/dsfd_hrow_r15_ff.lib",
+    "sha256": "957860bd7ba27e50c5ddba4e7bc79e01ac24bac8024c2ba3c2b4ab84838c1418"
+   },
+   "status": "CLOSED final relay views; historical CTS pin geometry retained separately; parent delivery/timing OPEN",
+   "final_view_record_commit": "b4e5e2af3",
+   "final_lef": {
+    "path": "physical/ref_tile/dsfd_hrow_r15_m5/views/dsfd_hrow_r15/dsfd_hrow_r15.lef",
+    "sha256": "759ac50813acb136aeafc795008705d43f4ff4bc695735508961ab100e9d67e4"
+   },
+   "insertion": {
+    "path": "physical/ref_tile/dsfd_hrow_r15_m5/views/dsfd_hrow_r15/insertion.json",
+    "sha256": "5d745b71278bc962c6687f1e496f18f73570b595aae91efb0866704d12324fa8"
+   }
   },
   "dsfd_hrow_r2079": {
    "master": "dsfd_hrow_r2079",
@@ -113,10 +181,44 @@
    "pin_evidence": "results/arch/s81_hrow_native_placement_1013/pins/dsfd_hrow_r23/pins.json",
    "pin_evidence_sha256": "1ec5c6fe4a2ace837d9a9523d75228b5a344756f3e317126de62b889fcea1052",
    "kind": "actual_cts_pins_route_pending",
-   "insertion_corners": null,
-   "final_ss_lib": null,
-   "final_ff_lib": null,
-   "status": "RELAY FINAL ROUTED ETMS/INSERTION PENDING"
+   "insertion_corners": {
+    "ss": {
+     "n": 23,
+     "mean": 62.9,
+     "min": 62.7,
+     "max": 63.1
+    },
+    "tt": {
+     "n": 23,
+     "mean": 44.5,
+     "min": 44.2,
+     "max": 44.6
+    },
+    "ff": {
+     "n": 23,
+     "mean": 33.7,
+     "min": 33.5,
+     "max": 33.9
+    }
+   },
+   "final_ss_lib": {
+    "path": "physical/ref_tile/dsfd_hrow_r23_m5/views/dsfd_hrow_r23/dsfd_hrow_r23_ss.lib",
+    "sha256": "43851200aff31ea2844da3d86e3e66aff52bf6a18e5c15c1dae4498a05605998"
+   },
+   "final_ff_lib": {
+    "path": "physical/ref_tile/dsfd_hrow_r23_m5/views/dsfd_hrow_r23/dsfd_hrow_r23_ff.lib",
+    "sha256": "50bc6aaadd940753bd54649e81cb4c4c8b15c555dfadbb2028e16a53d161c428"
+   },
+   "status": "CLOSED final relay views; historical CTS pin geometry retained separately; parent delivery/timing OPEN",
+   "final_view_record_commit": "16f451be6",
+   "final_lef": {
+    "path": "physical/ref_tile/dsfd_hrow_r23_m5/views/dsfd_hrow_r23/dsfd_hrow_r23.lef",
+    "sha256": "dd00f258b92778b9e224b6eba38c8b9eb60ba6d752aac3d754574e16c44ee63e"
+   },
+   "insertion": {
+    "path": "physical/ref_tile/dsfd_hrow_r23_m5/views/dsfd_hrow_r23/insertion.json",
+    "sha256": "daa98de1025d23bbfc779c28126ef994bafea6a1ab82a40b2651aece429c6b4e"
+   }
   },
   "dsfd_mtp_hrow_cbe": {
    "master": "dsfd_mtp_hrow_cbe",
@@ -291,17 +393,14 @@
  "current_native207_owner_statement": "s81_die_v18 confirms no instantiatedhrow/origin/producer; independentread ofterminalnative207source/plan agrees. Exacthost/path/contenthashes recorded.",
  "adoption_requested_not_completed": true,
  "allocator_request": "allocator_request.json",
- "rc_budget_status": "OPEN: final relay SS/FF ETMs and source/destination clock delivery required; no budget or frequency inferred from500um",
+ "rc_budget_status": "OPEN; actual producer clock/refclk ABI and delivery absent, large ETMs absent",
  "closed_child_timing_facts": {
   "path": "/home/ubuntu/wt/codex-s81-hrow-native-placement/results/arch/s81_hrow_native_placement_1013/binding_packet/closed_child_ss_ff_timing_facts.json.gz",
   "sha256": "37504ec48745a55b7d2833b6df324d8d6e9e054d3432c741305cc967d0582e1c"
  },
  "missing_final_relay_timing_masters": [
-  "dsfd_die_rstsync",
   "dsfd_hrow_r1025",
-  "dsfd_hrow_r15",
-  "dsfd_hrow_r2079",
-  "dsfd_hrow_r23"
+  "dsfd_hrow_r2079"
  ],
  "clock_reset_delivery_route_scope": "Retained81363pairs cover data/localrn only. Globalclock88roots and originalrst61sinks require actualallocator routes, loads/skew and aggregatecapacity validation; no clock/reset delivery qualification borrowed fromdata500um.",
  "source_binding_prerequisite": {
@@ -628,5 +727,9 @@
   "source_options_hrow_tokens": [],
   "actual_production_hrow_binding": null
  },
- "consumed_current_hrow_actual_binding": null
+ "consumed_current_hrow_actual_binding": null,
+ "final_relay_intake": {
+  "path": "results/arch/s81_hrow_native_placement_1013/binding_packet/final_relay_intake.json",
+  "sha256": "899102a4fd08d6220fd66f0cb8edc4c0e062b146eaadbb59e2dc972438dd3f91"
+ }
 }
