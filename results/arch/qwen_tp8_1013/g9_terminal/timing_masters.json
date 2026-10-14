@@ -1,0 +1,66 @@
+{
+ "qfd_cst_s": {
+  "view": "physical/ref_tile/qfd_cst_s/views/qfd_cst_s",
+  "binding": "exact current die master pins"
+ },
+ "qfd_cst_n": {
+  "view": "physical/ref_tile/qfd_cst_n/views/qfd_cst_n",
+  "binding": "exact current die master pins"
+ },
+ "qfd_chead_e": {
+  "view": "physical/ref_tile/qfd_chead_e/views/qfd_chead_e",
+  "binding": "exact current die master pins"
+ },
+ "qfd_chead_w": {
+  "view": "physical/ref_tile/qfd_chead_w/views/qfd_chead_w",
+  "binding": "exact current die master pins"
+ },
+ "qkd_cdc_wleaf": {
+  "view": "physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf",
+  "binding": "exact current die master pins"
+ },
+ "qkd_kvwq_leaf_s_w129_m": {
+  "view": "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/views/qkd_kvwq_leaf_s_w129_m",
+  "binding": "exact current die master pins"
+ },
+ "qkd_kvwq_ctl_bin": {
+  "view": "physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin",
+  "binding": "exact current die master pins"
+ },
+ "ot_qfd_serdes_112g_x12_phy": {
+  "view": "physical/qwen_missing_phy/tp8_1013/ot_qfd_serdes_112g_x12_phy",
+  "binding": "exact current die master pins"
+ },
+ "qkd_rstseq": {
+  "view": "physical/ref_tile/qkd_rstseq/views/qkd_rstseq",
+  "binding": "exact current die master pins"
+ },
+ "qkd_ctrl_pc": {
+  "view": "physical/ref_tile/qkd_ctrl_pc/views/qkd_ctrl_pc",
+  "binding": "exact current die master pins"
+ },
+ "qkd_ctrl_kc": {
+  "view": "physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc",
+  "binding": "exact current die master pins"
+ },
+ "qkd_ectl_a": {
+  "view": "physical/ref_tile/qkd_ectl_a/views/qkd_ectl_a",
+  "binding": "exact current die master pins"
+ },
+ "qkd_ectl_b": {
+  "view": "physical/ref_tile/qkd_ectl_b/views/qkd_ectl_b",
+  "binding": "exact current die master pins"
+ },
+ "qkd_ectl_c": {
+  "view": "physical/ref_tile/qkd_ectl_c/views/qkd_ectl_c",
+  "binding": "exact current die master pins"
+ },
+ "qfd_su_cbuf_g": {
+  "view": "physical/ref_tile/qfd_su_cbuf_g_m5/views/ot_qfd_su_cbuf_g",
+  "binding": "exact current die master pins"
+ },
+ "qfd_crom_g": {
+  "view": "physical/ref_tile/qfd_crom_g_m5/views/ot_qfd_crom_gr",
+  "binding": "exact current die master pins"
+ }
+}
