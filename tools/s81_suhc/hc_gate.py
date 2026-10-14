@@ -103,7 +103,34 @@ TILES = {
                                 mut=("wq_row[14 * s +: 14] <= w_c[WSL * s + 1 +: 14];",
                                      "wq_row[14 * s +: 14] <= w_c[WSL * s + 1 +: 14] ^ 14'd1;")),
 }
-TILE_RE = re.compile(r"^HCTILE (\w+) (\S+) (.*)$", re.M)
+# ---- the other closed HC tiles (s81hc-1013 r6): same method.  "routed" = the closed kit's tuple (kit.env PARAMS over the
+# module defaults); a parameter the module body never uses (tile_inert) is left out of the comparison and reported.
+_H = "rtl/dsrom_sys/s81_suhc/hier/"
+_H2 = dict(HALF=1, RLY=2, RF=4, DW=6)                    # the *h2 kits (crxh2 / cseqh2 / cntreeh2; ccr: module defaults)
+_BIT = lambda w, at: "({{(%s-1){1'b0}}, 1'b1} << (%s))" % (w, at)
+_CR = _H + "ot_s81_hc_crootr.sv"
+TILES.update({
+    "ot_s81_hc_cpin":     dict(src=_H + "ot_s81_hc_cpin.sv", routed=[{}], mut=("rq_row <= n_rq_row;", "rq_row <= n_rq_row ^ 14'd1;")),
+    "ot_s81_hc_caq":      dict(src=_H + "ot_s81_hc_caq.sv", routed=[{}], mut=("x_q <= rdd;", "x_q <= rdd ^ 512'h8000;")),
+    "ot_s81_hc_crx":      dict(src=_H + "ot_s81_hc_crx.sv", routed=[_H2], mut=("jb <= j_base;", "jb <= j_base ^ 14'd1;")),
+    "ot_s81_hc_ccr":      dict(src=_H + "ot_s81_hc_ccr.sv", routed=[{}], mut=("crd <= ch_rd;", "crd <= ch_rd ^ " + _BIT("RDW", "P_D + 15") + ";")),
+    "ot_s81_hc_cseq":     dict(src=_H + "ot_s81_hc_cseq.sv", routed=[_H2], mut=("ssq <= t_ss;", "ssq <= t_ss ^ 32'h00800000;")),
+    "ot_s81_hc_cntree":   dict(src=_H + "ot_s81_hc_cntree.sv", routed=[_H2], mut=("ss <= nv_[1];", "ss <= nv_[1] ^ 32'h00800000;")),
+    "ot_s81_hc_ctfn":     dict(src=_CTH, routed=[{}], mut=("fd <= fd_in;", "fd <= fd_in ^ " + _BIT("FDW", "O_D + 15") + ";")),
+    "ot_s81_hc_ctfx":     dict(src=_CTH, routed=[{}], mut=("fdx <= fd_in;", "fdx <= fd_in ^ " + _BIT("FXW", "O_D + 15") + ";")),
+    "ot_s81_hc_ctfs":     dict(src=_CTH, routed=[{}], mut=("fd_out <= fdm_d;", "fd_out <= fdm_d ^ " + _BIT("FDW", "O_D + 15") + ";")),
+    "ot_s81_hc_ctpl":     dict(src=_CTH, routed=[dict(PIN_STAGE=1)], mut=("x_d <= b_d;", "x_d <= b_d ^ 160'h00800000;")),
+    "ot_s81_hc_ctrn":     dict(src=_CTH, routed=[{}], mut=("rd_out <= rd_out_d;", "rd_out <= rd_out_d ^ " + _BIT("RDW", "123") + ";")),
+    "ot_s81_hc_crootr_t": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("s_ex <= ex_r;", "s_ex <= ex_r ^ 32'h00800000;")),
+    "ot_s81_hc_crootr_f": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=(".D(RF)) u_rfd", ".D(RF - 1)) u_rfd")),
+    "ot_s81_hc_crootr_r": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("s_rd <= rd_r;", "s_rd <= rd_r ^ " + _BIT("RDW", "P_D + 15") + ";")),
+    "ot_s81_hc_crootr_w": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("p_w <= w_r;", "p_w <= w_r ^ 2'd2;")),
+    "ot_s81_hc_ccf":      dict(src=_H + "ot_s81_hc_ccf.sv", routed=[dict(HALF=1, RLY=2, RF=5, DW=6, FIFO_SLICE=512, KEEP_POP=1, Y_RELAY=1)],
+                               mut=("ty[YS1-1:0] = yf_head;", "ty[YS1-1:0] = yf_head ^ " + _BIT("YS1", "30") + ";")),
+    "ot_s81_hc_crooty_y": dict(src=_CRY, routed=[dict(C=0, FIFO_SLICE=256), dict(C=2, FIFO_SLICE=256)],
+                               mut=("p_y <= yh;", "p_y <= yh ^ " + _BIT("YS", "30") + ";")),
+})
+TILE_RE = re.compile(r"^HCTILE (\w+) (\S+) ?(.*)$", re.M)
 
 
 def tile_block(text, mod):
@@ -115,12 +142,44 @@ def tile_block(text, mod):
     return m.start(), e + len("endmodule")
 
 
-def tile_params(text, mod):
-    """{name: default} of the module's header parameters (plain integers in every hard HC leaf)"""
+def _tile_head(text, mod):
+    """(parameter header text, rest of the module) with comments removed; a module without #( .. ) has an empty header"""
     a, b = tile_block(text, mod)
-    blk = text[a:b]
-    head = blk[blk.index("#(") + 2:blk.index("input")]
-    return {k: int(v) for k, v in re.findall(r"(\w+)\s*=\s*(-?\d+)", head)}
+    blk = re.sub(r"//[^\n]*", "", text[a:b])
+    m = re.match(r"module\s+\w+\s*#\(", blk)
+    if not m:
+        return "", blk
+    depth, i = 1, m.end()
+    while depth:
+        depth += {"(": 1, ")": -1}.get(blk[i], 0)
+        i += 1
+    return blk[m.end():i - 1], blk[i:]
+
+
+def tile_params(text, mod):
+    """{name: default} of the module's header parameters, in order; a default may be an expression of earlier ones"""
+    head, _ = _tile_head(text, mod)
+    out = {}
+    for name, expr in re.findall(r"(\w+)\s*=\s*([^,]+?)\s*(?:,|$)", re.sub(r"parameter\s+integer", "", head).strip()):
+        out[name] = int(eval(expr, {"__builtins__": {}}, dict(out)))
+    return out
+
+
+def tile_inert(text, mod):
+    """header parameters the module cannot depend on: not named in the ports / body, nor (transitively) in a localparam
+    statement that defines a name the ports / body use.  Conservative: a whole localparam statement is one group."""
+    head, rest = _tile_head(text, mod)
+    ident = lambda s: set(re.findall(r"[A-Za-z_]\w*", s))
+    groups = [(set(re.findall(r"(\w+)\s*(?<![<>=!])=(?!=)", g)), ident(g)) for g in re.findall(r"\blocalparam\b[^;]*;", rest)]
+    live = ident(re.sub(r"\blocalparam\b[^;]*;", "", rest))
+    grew = True
+    while grew:
+        grew = False
+        for defs, used in groups:
+            if defs & live and not used <= live:
+                live |= used
+                grew = True
+    return [p for p in tile_params(text, mod) if p not in live]
 
 
 def tile_sha(text, mod):
@@ -148,7 +207,7 @@ def tile_edit(srcs, obj, probes, tmut):
             else:
                 names = list(tile_params(text, mod))
                 fmt = " ".join(f"{n}=%0d" for n in names)
-                blk = blk[:-len("endmodule")] + f'    initial $display("HCTILE {mod} %m {fmt}", {", ".join(names)});\nendmodule'
+                blk = blk[:-len("endmodule")] + f'    initial $display("HCTILE {mod} %m {fmt}"{"".join(", " + n for n in names)});\nendmodule'
             text = text[:a] + blk + text[b:]
         dst = obj / ("tileedit_" + Path(rel).name)
         dst.write_text(text)
@@ -157,20 +216,27 @@ def tile_edit(srcs, obj, probes, tmut):
 
 
 def tile_check(stdout, probes):
-    """per probed tile: the instances the bench elaborated, and whether each is a routed parameter tuple (all seen)"""
+    """per probed tile: the instances the bench elaborated, and whether each is a routed parameter tuple (all seen).
+    Parameters the module body cannot depend on (tile_inert) are not compared; they are listed with the values seen."""
     seen = {}
     for mod, path, kv in TILE_RE.findall(stdout):
         seen.setdefault(mod, []).append((path, {k: int(v) for k, v in (x.split("=") for x in kv.split())}))
     rep = {}
     for mod in probes:
-        dflt = tile_params((ROOT / TILES[mod]["src"]).read_text(), mod)
+        text = (ROOT / TILES[mod]["src"]).read_text()
+        dflt = tile_params(text, mod)
+        inert = tile_inert(text, mod)
+        cut = lambda q: {k: v for k, v in q.items() if k not in inert}
         want = [dict(dflt, **o) for o in TILES[mod]["routed"]]
         inst = seen.get(mod, [])
-        rep[mod] = dict(instances=len(inst), routed_params=want, params_seen=[p for p in want if any(q == p for _, q in inst)],
-                        foreign=[dict(path=a, params=q) for a, q in inst if q not in want][:4],
-                        example=inst[0][0] if inst else None,
-                        module_sha256=tile_sha((ROOT / TILES[mod]["src"]).read_text(), mod),
-                        ok=bool(inst) and all(q in want for _, q in inst) and all(any(q == p for _, q in inst) for p in want))
+        hit = lambda q: any(cut(q) == cut(p) for p in want)
+        rep[mod] = dict(instances=len(inst), routed_params=want, params_seen=[p for p in want if any(cut(q) == cut(p) for _, q in inst)],
+                        foreign=[dict(path=a, params=q) for a, q in inst if not hit(q)][:4],
+                        inert_params=inert,
+                        inert_differing=sorted({f"{k}={q[k]} (routed {p[k]})" for _, q in inst for p in want if cut(q) == cut(p) for k in inert if q[k] != p[k]}),
+                        example=inst[0][0] if inst else None, example_params=inst[0][1] if inst else None,
+                        module_sha256=tile_sha(text, mod),
+                        ok=bool(inst) and all(hit(q) for _, q in inst) and all(any(cut(q) == cut(p) for _, q in inst) for p in want))
     return rep
 
 
@@ -415,7 +481,7 @@ HCG = re.compile(r"HCG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) co
 JOB = re.compile(r"HCJ op=(\d+) kind=(\d+) start=(\d+) done=(\d+)")
 
 
-def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0, pad_hard=0, probes=(), tmut=None):
+def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0, pad_hard=0, probes=(), tmut=None, tmax=0):
     # hier: 1 = root split + column chains of octet sub-tiles; 2 = the structural variant (half-octet sub-tiles, split
     # column roots)
     tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + {0: "", 1: "_hier", 2: "_hier2", 3: "_hier3tail"}[hier]
@@ -431,7 +497,7 @@ def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, la
         srcs = tile_edit(srcs, obj, probes, tmut)
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
-               f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *(["+define+OT_S81_HC_PAD_HARD"] if pad_hard else []), *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *(["+define+OT_S81_HC_PAD_HARD"] if pad_hard else []), *([f"-GTMAX={tmax}"] if tmax else []), *map(str, srcs), "-CFLAGS", "-O1"]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode != 0:
@@ -447,7 +513,7 @@ def cmd_run(a):
         if x not in TILES:
             sys.exit(f"unknown tile {x}: {', '.join(TILES)}")
     exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier, a.cnl_pin, a.chain_step, a.lane_specialize,
-                     a.pad_hard, probes, a.tile_mut)
+                     a.pad_hard, probes, a.tile_mut, a.tmax)
     res = []
     tiles = None
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
@@ -501,6 +567,7 @@ def main():
     p.add_argument("--chain-step", type=int, default=4)
     p.add_argument("--lane-specialize", type=int, default=0)
     p.add_argument("--pad-hard", type=int, default=0, help="1: define OT_S81_HC_PAD_HARD (pad leaves at their hardened defaults)")
+    p.add_argument("--tmax", type=int, default=0, help="testbench cycle cap (default: the bench's 400000); a mutant that hangs then fails in minutes")
     p.add_argument("--tile-probe", default="", help="comma list of TILES (or all): report every instance + parameters; the run fails unless all are routed tuples")
     p.add_argument("--tile-mut", default=None, help="one of TILES: build with that module's mutant (the run must fail)")
     a = ap.parse_args()

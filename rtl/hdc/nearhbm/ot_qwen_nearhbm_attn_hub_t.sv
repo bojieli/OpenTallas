@@ -57,7 +57,16 @@ module ot_qwen_nearhbm_attn_hub_t #(
     endfunction
     // reset: 0 input stage, 1 max, 2 Z control, 4 P control, 5 tag, 6 recip, 7 outputs (one relay, one copy each)
     wire [7:0] rl;
+`ifdef QKH_RECIP_LEAF
+    // q13 hardened form (1,175 x 760 um cluster): the rst_n port drives only the pin synchroniser of ot_rst_pipe; the 8
+    // control regions and the 12 hard tiles (rc: 0-3 zh, 4-7 pbst, 8-11 pvlg) each get their own 2-stage flop chain.
+    // q13 route: port -> tile rst_n pins -722 ps and port -> relay recovery -611 ps (raw port net across the cluster).
+    wire [11:0] rc;
+    ot_rst_pipe #(.REGIONS(20), .STAGES(2)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n({rc, rl}));
+`else
+    wire [11:0] rc = {12{rst_n}};
     ot_rst_relay #(.REGIONS(8), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+`endif
 
     // ---- boundary input registers (_b) and decode stage (_c); pi_data goes straight to the beat-store tiles --------
     reg          start_b;
@@ -181,7 +190,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
         for (ge = 0; ge < 128; ge = ge + 1) begin : g_we      // {g, k, sd} of head gh = zs_we[{g, gh, k, sd}]
             assign we_h[ge] = zs_we[{ge[6], gh[1:0], ge[5:0]}];
         end
-        ot_nhb_zh u_zh (.clk(clk), .rst_n(rst_n), .start(start_c), .zs_we(we_h), .sid(sid_c), .ziv(ziv), .zg(zg), .zp(zp),
+        ot_nhb_zh u_zh (.clk(clk), .rst_n(rc[gh]), .start(start_c), .zs_we(we_h), .sid(sid_c), .ziv(ziv), .zg(zg), .zp(zp),
                         .root(zroot[64*gh +: 64]), .zerr(zerr[4*gh +: 4]));
     end endgenerate
     // reciprocal: issue (rv0 / ra0) delayed 3 cycles to the root read (tile +2, root register +1)
@@ -302,7 +311,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
     wire [2047:0] sr;
     genvar gs, gl;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-        ot_nhb_pbst u_pbst (.clk(clk), .rst_n(rst_n), .pv(pi_valid[gs]), .pgi(pi_g[gs]), .pbeat(pi_beat[6*gs +: 6]),
+        ot_nhb_pbst u_pbst (.clk(clk), .rst_n(rc[4 + gs]), .pv(pi_valid[gs]), .pgi(pi_g[gs]), .pbeat(pi_beat[6*gs +: 6]),
                             .pdata(pi_data[512*gs +: 512]), .ra({pg, pp[4:0]}), .sr(sr[512*gs +: 512]));
     end endgenerate
     wire [5:0]   phh6 = pp / BPH;
@@ -318,7 +327,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
     always @(posedge clk) begin sr_r <= sr; rz_r <= rz_d; end
     wire [511:0] y_o;
     generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_pv
-        ot_nhb_pvlg u_pv (.clk(clk), .rst_n(rst_n), .v(pr3),
+        ot_nhb_pvlg u_pv (.clk(clk), .rst_n(rc[8 + gl]), .v(pr3),
             .s0(sr_r[0    + 128*gl +: 128]), .s1(sr_r[512  + 128*gl +: 128]),
             .s2(sr_r[1024 + 128*gl +: 128]), .s3(sr_r[1536 + 128*gl +: 128]),
             .rz(rz_r), .y(y_o[128*gl +: 128]), .pf(pf[4*gl +: 4]));

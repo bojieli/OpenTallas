@@ -374,3 +374,121 @@ module ot_s81_su_swt #(
         end
     end endgenerate
 endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// TAP, SPLIT (el1013-s81su-qual, structural change after swt v1 FLOORPLAN_MARGIN / v2 EARLY_FAIL_DRC): the rate-aligned
+// tap (S_RD == 2 NSQ, the full configuration) as TWO half-taps, each a kvt-shaped column with its own clock root:
+//   ot_s81_su_swtl  the low S_RD / 2 slots (slot 0 = the descriptor row) + the whole control (job, pass counters, tag,
+//                   route weight, lim, obase, status, the lane-fault relay);
+//   ot_s81_su_swth  the high S_RD / 2 slots: a pure two-register data stage.
+// REGISTER AT THE PIN (owner 10-13): every input pin feeds exactly one flop (q_*) and nothing else, every output is a
+// flop.  The data takes two registers (pin flop, output flop), so the pair is ONE CYCLE DEEPER than ot_s81_su_swt's
+// g_al branch and otherwise identical cycle for cycle (bench tb_s81_su_swt_split: lockstep against ot_s81_su_swt).
+// ot_s81_su_swt stays as the assembling tap of the reduced shapes (S_RD < L) and as the lockstep reference.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_s81_su_swtl #(
+    parameter integer SW_W = 1024, S_RD = 16,
+    parameter integer NSQ = (S_RD / 2 > 2) ? S_RD / 2 : 2,
+    parameter integer NCH = 32,
+    parameter integer MUT = 0                      // bench negative control: 1 = the pass tag one pass early
+) (
+    input  wire                   clk,
+    input  wire                   rst_in,
+    input  wire                   dn_st_i,
+    input  wire [3:0]             dn_kind_i,
+    input  wire [1:0]             dn_gsel_i,
+    input  wire                   dn_fp4_i,
+    input  wire [7:0]             dn_jid_i,
+    input  wire [S_RD-1:0]        dn_v_i,
+    input  wire [S_RD*256-1:0]    dn_d_i,         // slots 0 .. S_RD / 2 - 1
+    input  wire [NCH-1:0]         i_f,
+    output reg  [S_RD*256-1:0]    e_d,            // pass rows 0 .. NSQ - 1
+    output reg  [((SW_W/32)/NSQ)-1:0] e_gv, e_uv,
+    output reg  [11:0]            e_t,
+    output reg  [31:0]            e_w, e_lim,
+    output reg  [13:0]            e_ob,
+    output reg                    o_fu, o_fo, o_alive, o_den, o_rdy,
+    output reg  [7:0]             o_rjid
+);
+    localparam integer L = 2 * NSQ, RSW = SW_W / 16, RPB = 2 * RSW, NPS = RSW / L;
+    localparam integer LL = $clog2(L), LR = $clog2(RPB);
+    localparam integer NWB = 11;                                  // route weights in the descriptor (words 5..15)
+    localparam [3:0] K_SW = 3;
+`ifndef SYNTHESIS
+    initial begin
+        if ((1 << LL) != L || (1 << LR) != RPB) $fatal(1, "ot_s81_su_swtl: L and RPB powers of two");
+        if (S_RD != L || RSW % L || NPS > 4) $fatal(1, "ot_s81_su_swtl: S_RD == L (rate-aligned), RSW a multiple of L, <= 4 passes");
+    end
+`endif
+    // reset relay: rr1 releases the pin flops, rr2 (one cycle later) the tap state, so the tap is ot_s81_su_swt delayed
+    // by exactly one cycle from the first cycle out of reset
+    reg rr0, rr1, rr2;
+    always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; rr2 <= 1'b0; end
+                                            else begin rr0 <= 1'b1; rr1 <= rr0; rr2 <= rr1; end
+    wire rst_p = rr1, rst_n = rr2;
+    // pin flops
+    reg q_st; reg [3:0] q_kind; reg [7:0] q_jid; reg [S_RD-1:0] q_v; reg [S_RD*256-1:0] q_d;
+    always @(posedge clk) begin q_kind <= dn_kind_i; q_jid <= dn_jid_i; q_d <= dn_d_i; end
+    always @(posedge clk or negedge rst_p) if (!rst_p) begin q_st <= 1'b0; q_v <= 0; end
+                                           else begin q_st <= dn_st_i; q_v <= dn_v_i; end
+    // lane faults (relayed chain heads): sticky
+    reg [NCH-1:0] f_q; reg fs;
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin f_q <= 0; fs <= 1'b0; end
+                                           else begin f_q <= i_f; fs <= fs | (|f_q); end
+    // descriptor words: obase (bits 13:0), lim (word 3), route weights (words 5..15); datapath: no reset
+    reg [32*NWB-1:0] wv;
+    function automatic [31:0] wsel(input [9:0] b);
+        integer k;
+        begin
+            wsel = 32'd0;
+            for (k = 0; k < NWB; k = k + 1) if (b == k) wsel = wv[32 * k +: 32];
+        end
+    endfunction
+    reg mine, rnz; reg [7:0] jid; reg [15:0] rcnt, rinc;
+    reg dq_m, dq_desc; reg [S_RD-1:0] dq_v;
+    wire v0   = q_v[0] && !q_st;
+    wire desc = mine && v0 && !rnz;
+    wire opc  = mine && v0 && rnz;
+    wire [15:0] ix0 = rcnt - 16'd1;
+    wire [9:0]  bt  = ix0 >> LR;                                // the beat
+    wire        isu = ix0[LR - 1];
+    wire [15:0] pp  = (ix0 >> LL) % NPS;
+    wire [1:0]  ppm = (MUT == 1) ? pp[1:0] + 2'd1 : pp[1:0];
+    always @(posedge clk) begin : dreg
+        e_d <= q_d;
+        e_t <= {bt, ppm};
+        if (desc) begin e_ob <= q_d[13:0]; e_lim <= q_d[96 +: 32]; wv <= q_d[160 +: 32 * NWB]; end
+        e_w <= wsel(bt);
+    end
+    always @(posedge clk or negedge rst_n) begin : creg
+        integer k;
+        if (!rst_n) begin
+            mine <= 1'b0; rnz <= 1'b0; jid <= 8'd0; rcnt <= 16'd0; rinc <= 16'd0; e_gv <= 0; e_uv <= 0;
+            dq_m <= 1'b0; dq_desc <= 1'b0; dq_v <= 0;
+            o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0;
+        end else begin
+            if (q_st) begin mine <= (q_kind == K_SW); jid <= q_jid; rcnt <= 16'd0; rnz <= 1'b0; end
+            else if (desc) begin rcnt <= 16'd1; rinc <= 16'd1 + S_RD; rnz <= 1'b1; end
+            else if (opc) begin rcnt <= rinc; rinc <= rinc + S_RD; end
+            for (k = 0; k < NPS; k = k + 1) begin
+                e_gv[k] <= opc && !isu && pp == k;
+                e_uv[k] <= opc && isu && pp == k;
+            end
+            dq_m <= mine && !q_st; dq_desc <= desc; dq_v <= q_v;
+            o_fu <= fs; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= jid;
+            o_fo <= o_fo | (dq_m && (|dq_v) && (dq_desc ? (|dq_v[S_RD-1:1]) : !(&dq_v)));
+        end
+    end
+endmodule
+
+module ot_s81_su_swth #(
+    parameter integer S_RD = 16,
+    parameter integer MUT = 0                      // bench negative control: 1 = one register only
+) (
+    input  wire                   clk,
+    input  wire [S_RD*256-1:0]    dn_d_i,         // slots S_RD / 2 .. S_RD - 1
+    output reg  [S_RD*256-1:0]    e_d             // pass rows NSQ .. 2 NSQ - 1
+);
+    reg [S_RD*256-1:0] q_d;                        // pin flop; datapath: no reset
+    always @(posedge clk) begin q_d <= dn_d_i; e_d <= (MUT == 1) ? dn_d_i : q_d; end
+endmodule

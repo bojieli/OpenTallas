@@ -3,7 +3,10 @@
 
 The three taps are pin-bound register stages; their first kits let the pin placer choose the tracks:
 
-  dsfd_su_t_qbt / dsfd_su_t_swt (572.4 x 453.6; e_d <= dn_d, 8,192 b through one register):
+  dsfd_su_t_swtl / dsfd_su_t_swth (36.72 x 453.6 each, el1013-s81su-qual): the SW tap as two half-taps after swt v1
+      (FLOORPLAN_MARGIN) and v2 (EARLY_FAIL_DRC: 473 of the violations in one 60 x 60 um bin, the control cluster pulled
+      to the middle of the 572-um tile by the 352 descriptor bits it captures); each half 4,096 b W -> E on M4.
+  dsfd_su_t_qbt / (dsfd_su_t_swt until 10-13) (572.4 x 453.6; e_d <= dn_d, 8,192 b through one register):
       FLOORPLAN_MARGIN, pins packed on every track of ~200 um of each face (20 b/um/layer > 12).
       Plan: pins on every SECOND track over the whole face (10.4 b/um on W / E M4, <= 8.6 b/um on N / S M5 between the
       M5 power stripes); bit i enters and leaves on the SAME track (dn_dl[i] W -> e_dl[i] E, dn_dh[i] S -> e_dh[i] N),
@@ -124,18 +127,36 @@ def through_tap(w: float, h: float, w_ctl: list, e_ctl: list) -> Plan:
     return p
 
 
-def qbt() -> Plan:
+def half_tap(w_ctl: list, e_ctl: list, din: str, dout: str) -> Plan:
+    """SW / QB half-tap column (36.72 x 453.6, as kvt / qnt): 4,096 data bits W -> E, bit i in and out on the same M4 track,
+    every second track (393 um of the 453.6-um face, 10.4 b/um); the control low on both faces, next to data bit 0
+    (the descriptor words the control captures are bits 0..511)."""
+    p = Plan(36.72, 453.6)
+    k = int((6.0 - M4_OFF) / M4_P) + 1
+    kw = p.run("W", w_ctl, k)
+    ke = p.run("E", e_ctl, k)
+    k0 = max(kw, ke) + 8
+    p.run("W", bits(din, 4096), k0)
+    p.run("E", bits(dout, 4096), k0)
+    return p
+
+
+def qbtl() -> Plan:
     w_ctl = ["ck", "rst", "dn_st", *bits("dn_kind", 4), *bits("dn_gsel", 2), "dn_fp4", *bits("dn_jid", 8), *bits("dn_v", 16)]
     e_ctl = [*bits("e_v", 16), *bits("e_t", 192), *bits("e_ob", 14), "e_f4", "o_fu", "o_fo", "o_alive", "o_den", "o_rdy",
              *bits("o_rjid", 8)]
-    return through_tap(572.4, 453.6, w_ctl, e_ctl)
+    return half_tap(w_ctl, e_ctl, "dn_dl", "e_dl")
 
 
-def swt() -> Plan:
+def swtl() -> Plan:
     w_ctl = ["ck", "rst", "dn_st", *bits("dn_kind", 4), *bits("dn_gsel", 2), "dn_fp4", *bits("dn_jid", 8), *bits("dn_v", 16)]
     e_ctl = [*bits("e_gv", 4), *bits("e_uv", 4), *bits("e_t", 12), *bits("e_w", 32), *bits("e_lim", 32), *bits("e_ob", 14),
              *bits("i_f", 32), "o_fu", "o_fo", "o_alive", "o_den", "o_rdy", *bits("o_rjid", 8)]
-    return through_tap(572.4, 453.6, w_ctl, e_ctl)
+    return half_tap(w_ctl, e_ctl, "dn_dl", "e_dl")
+
+
+def swth() -> Plan:
+    return half_tap(["ck"], [], "dn_dh", "e_dh")
 
 
 def kvt() -> Plan:
@@ -165,8 +186,9 @@ def kvt() -> Plan:
     return p
 
 
-TILES = {"s81su_qbt_ref": (qbt, "dsfd_su_t_qbt: straight-through bit tracks, every second track"),
-         "s81su_swt_ref": (swt, "dsfd_su_t_swt: straight-through bit tracks, every second track"),
+TILES = {"s81su_qbtl_ref": (qbtl, "dsfd_su_t_qbtl: QB half-tap (slots 0-7 + control), 4,096 straight M4 bit tracks W -> E; slots 8-15 = dsfd_su_t_swth"),
+         "s81su_swtl_ref": (swtl, "dsfd_su_t_swtl: SW half-tap (slots 0-7 + control), 4,096 straight M4 bit tracks W -> E"),
+         "s81su_swth_ref": (swth, "dsfd_su_t_swth: SW half-tap (slots 8-15), 4,096 straight M4 bit tracks W -> E"),
          "s81su_kvt_ref": (kvt, "dsfd_su_t_kvt: bit-local bands (16 slots W, 32 positions E), control at mid height")}
 
 
