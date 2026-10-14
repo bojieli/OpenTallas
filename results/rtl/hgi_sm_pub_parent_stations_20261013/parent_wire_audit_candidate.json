@@ -2,7 +2,6 @@
   "schema": "opentallas.smpub.actual-net-pin-candidate.v1",
   "qualification": "UNQUALIFIED candidate geometry; actual parent routed parasitics, child access, reset recovery/removal and native context remain required",
   "pending_actual_views": [
-    "ot_hgi_sm_pub_vmport",
     "ot_hgi_sm_pub_vmcore"
   ],
   "child_count": 69,
@@ -516,11 +515,11 @@
       "b": [
         "g_c[2].u_port",
         "n_v",
-        1676.16,
+        1676.1960000000001,
         446.412,
         "input"
       ],
-      "manhattan_um": 495.36
+      "manhattan_um": 495.396
     },
     {
       "net": 13144,
@@ -25626,11 +25625,11 @@
       "b": [
         "g_c[1].u_port",
         "n_v",
-        69.12,
+        69.084,
         558.7320000000001,
         "input"
       ],
-      "manhattan_um": 417.6
+      "manhattan_um": 417.636
     },
     {
       "net": 15442,
@@ -63498,11 +63497,11 @@
       "b": [
         "g_c[3].u_port",
         "n_v",
-        1676.16,
+        1676.1960000000001,
         576.0120000000001,
         "input"
       ],
-      "manhattan_um": 221.76
+      "manhattan_um": 221.796
     },
     {
       "net": 13455,
@@ -66587,7 +66586,7 @@
       "a": [
         "g_c[1].u_core",
         "i_v[1]",
-        561.6,
+        561.564,
         486.73199999999997,
         "input"
       ],
@@ -66598,7 +66597,7 @@
         371.478,
         "output"
       ],
-      "manhattan_um": 205.554
+      "manhattan_um": 205.59
     },
     {
       "net": 12476,
@@ -78719,7 +78718,7 @@
       "a": [
         "g_c[3].u_core",
         "i_v[1]",
-        1425.6,
+        1425.636,
         434.892,
         "input"
       ],
@@ -78730,7 +78729,7 @@
         371.478,
         "output"
       ],
-      "manhattan_um": 153.714
+      "manhattan_um": 153.678
     },
     {
       "net": 12602,
@@ -79439,7 +79438,7 @@
       "a": [
         "g_c[2].u_core",
         "i_v[1]",
-        1166.4,
+        1166.4360000000001,
         434.892,
         "input"
       ],
@@ -79450,7 +79449,7 @@
         371.478,
         "output"
       ],
-      "manhattan_um": 145.914
+      "manhattan_um": 145.95
     },
     {
       "net": 14364,
@@ -81451,6 +81450,24 @@
       "manhattan_um": 132.69
     },
     {
+      "net": 12179,
+      "a": [
+        "g_c[0].u_core",
+        "n_v",
+        129.6,
+        518.412,
+        "output"
+      ],
+      "b": [
+        "g_c[0].u_port",
+        "n_v",
+        69.084,
+        446.412,
+        "input"
+      ],
+      "manhattan_um": 132.516
+    },
+    {
       "net": 14385,
       "a": [
         "g_c[3].u_core",
@@ -81467,24 +81484,6 @@
         "output"
       ],
       "manhattan_um": 132.498
-    },
-    {
-      "net": 12179,
-      "a": [
-        "g_c[0].u_core",
-        "n_v",
-        129.6,
-        518.412,
-        "output"
-      ],
-      "b": [
-        "g_c[0].u_port",
-        "n_v",
-        69.12,
-        446.412,
-        "input"
-      ],
-      "manhattan_um": 132.48
     },
     {
       "net": 14384,
@@ -94415,7 +94414,7 @@
       "a": [
         "g_c[0].u_core",
         "i_v[1]",
-        216.0,
+        215.964,
         434.892,
         "input"
       ],
@@ -94426,7 +94425,7 @@
         371.478,
         "output"
       ],
-      "manhattan_um": 67.314
+      "manhattan_um": 67.35
     },
     {
       "net": 13025,

@@ -3,7 +3,7 @@
 source /src/physical/qwen_die_masters/pre_ref_skew.tcl
 source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
 source /src/physical/common_flow/grt_macro_top_layer.tcl
-set ::ot_smpub_corridor_pin {i_v[1]}
+set ::ot_smpub_corridor_pins {{i_v[0]} {i_v[1]}}
 set ::ot_smpub_corridor_half 0.864
 set ::ot_smpub_corridor_post 0
 source /src/physical/hgi_sm_pub_parent_stations/pin_corridor.tcl

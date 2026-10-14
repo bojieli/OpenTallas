@@ -7,10 +7,15 @@
       "port": "clk_rst",
       "hard_child_pin": "u_rst.clk",
       "location_um": [
+        198.736,
+        701.904
+      ],
+      "child_pin_um": [
         198.762,
         701.916
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset",
       "view": "physical/ref_tile/smpub_reset/views/ot_hgi_sm_pub_reset"
@@ -19,10 +24,15 @@
       "port": "clk_cmd",
       "hard_child_pin": "u_cmd.clk",
       "location_um": [
+        86.416,
+        720.528
+      ],
+      "child_pin_um": [
         86.44200000000001,
         720.7320000000001
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.23,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_cmd_quiet",
       "view": "physical/ref_tile/smpub_cmd_quiet/views/ot_hgi_sm_pub_cmd_quiet"
@@ -31,10 +41,15 @@
       "port": "clk_reset_hops[0]",
       "hard_child_pin": "g_rst_region[1].g_h.u.clk",
       "location_um": [
+        561.616,
+        684.624
+      ],
+      "child_pin_um": [
         561.642,
         684.636
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -43,10 +58,15 @@
       "port": "clk_reset_hops[1]",
       "hard_child_pin": "g_rst_region[2].g_h.u.clk",
       "location_um": [
+        1002.512,
+        762.64
+      ],
+      "child_pin_um": [
         1002.282,
         762.396
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.474,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -55,10 +75,15 @@
       "port": "clk_reset_hops[2]",
       "hard_child_pin": "g_rst_region[3].g_h.u.clk",
       "location_um": [
+        1425.616,
+        667.6
+      ],
+      "child_pin_um": [
         1425.642,
         667.356
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.27,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -67,10 +92,15 @@
       "port": "clk_reset_hops[3]",
       "hard_child_pin": "g_rst_region[0].u_n.clk",
       "location_um": [
+        60.752,
+        1030.224
+      ],
+      "child_pin_um": [
         60.522,
         1030.2359999999999
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -79,10 +109,15 @@
       "port": "clk_reset_hops[4]",
       "hard_child_pin": "g_rst_region[1].u_n.clk",
       "location_um": [
+        484.112,
+        1047.504
+      ],
+      "child_pin_um": [
         483.88199999999995,
         1047.5159999999998
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -91,10 +126,15 @@
       "port": "clk_reset_hops[5]",
       "hard_child_pin": "g_rst_region[2].u_n.clk",
       "location_um": [
+        916.112,
+        1047.504
+      ],
+      "child_pin_um": [
         915.8820000000001,
         1047.5159999999998
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -103,10 +143,15 @@
       "port": "clk_reset_hops[6]",
       "hard_child_pin": "g_rst_region[3].u_n.clk",
       "location_um": [
+        1348.112,
+        1047.504
+      ],
+      "child_pin_um": [
         1347.8819999999998,
         1047.5159999999998
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -115,10 +160,15 @@
       "port": "clk_reset_hops[7]",
       "hard_child_pin": "g_rst_region[0].u_s.clk",
       "location_um": [
+        86.416,
+        347.664
+      ],
+      "child_pin_um": [
         86.44200000000001,
         347.676
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -127,10 +177,15 @@
       "port": "clk_reset_hops[8]",
       "hard_child_pin": "g_rst_region[1].u_s.clk",
       "location_um": [
+        501.136,
+        287.44
+      ],
+      "child_pin_um": [
         501.162,
         287.196
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.27,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -139,10 +194,15 @@
       "port": "clk_reset_hops[9]",
       "hard_child_pin": "g_rst_region[2].u_s.clk",
       "location_um": [
+        950.416,
+        356.304
+      ],
+      "child_pin_um": [
         950.442,
         356.31600000000003
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -151,10 +211,15 @@
       "port": "clk_reset_hops[10]",
       "hard_child_pin": "g_rst_region[3].u_s.clk",
       "location_um": [
+        1348.112,
+        269.904
+      ],
+      "child_pin_um": [
         1347.8819999999998,
         269.916
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_reset_hop",
       "view": "physical/ref_tile/smpub_reset_hop/views/ot_hgi_sm_pub_reset_hop"
@@ -163,10 +228,15 @@
       "port": "clk_stream_edge[0]",
       "hard_child_pin": "u_stream_relay.clk",
       "location_um": [
+        501.136,
+        691.216
+      ],
+      "child_pin_um": [
         501.132,
         691.2
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.02,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_stream_edge",
       "view": "physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge"
@@ -175,10 +245,15 @@
       "port": "clk_stream_edge[1]",
       "hard_child_pin": "u_stream_port.clk",
       "location_um": [
+        103.952,
+        622.224
+      ],
+      "child_pin_um": [
         103.69200000000001,
         622.08
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.404,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_stream_edge",
       "view": "physical/ref_tile/smpub_stream_edge/views/ot_hgi_sm_pub_stream_edge"
@@ -187,10 +262,15 @@
       "port": "clk_credit[0]",
       "hard_child_pin": "g_credit[0].u.clk",
       "location_um": [
+        52.112,
+        1232.464
+      ],
+      "child_pin_um": [
         51.882000000000005,
         1231.932
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.762,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_credit4",
       "view": "physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4"
@@ -199,10 +279,15 @@
       "port": "clk_credit[1]",
       "hard_child_pin": "g_credit[1].u.clk",
       "location_um": [
+        484.112,
+        1232.464
+      ],
+      "child_pin_um": [
         483.88199999999995,
         1231.932
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.762,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_credit4",
       "view": "physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4"
@@ -211,10 +296,15 @@
       "port": "clk_credit[2]",
       "hard_child_pin": "g_credit[2].u.clk",
       "location_um": [
+        916.112,
+        1232.464
+      ],
+      "child_pin_um": [
         915.8820000000001,
         1231.932
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.762,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_credit4",
       "view": "physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4"
@@ -223,10 +313,15 @@
       "port": "clk_credit[3]",
       "hard_child_pin": "g_credit[3].u.clk",
       "location_um": [
+        1348.112,
+        1232.464
+      ],
+      "child_pin_um": [
         1347.8819999999998,
         1231.932
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.762,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_credit4",
       "view": "physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4"
@@ -235,10 +330,15 @@
       "port": "clk_credit[4]",
       "hard_child_pin": "g_credit[4].u.clk",
       "location_um": [
+        52.112,
+        64.08
+      ],
+      "child_pin_um": [
         51.882000000000005,
         64.06800000000001
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_credit4",
       "view": "physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4"
@@ -247,10 +347,15 @@
       "port": "clk_credit[5]",
       "hard_child_pin": "g_credit[5].u.clk",
       "location_um": [
+        484.112,
+        64.08
+      ],
+      "child_pin_um": [
         483.88199999999995,
         64.06800000000001
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_credit4",
       "view": "physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4"
@@ -259,10 +364,15 @@
       "port": "clk_credit[6]",
       "hard_child_pin": "g_credit[6].u.clk",
       "location_um": [
+        916.112,
+        64.08
+      ],
+      "child_pin_um": [
         915.8820000000001,
         64.06800000000001
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_credit4",
       "view": "physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4"
@@ -271,10 +381,15 @@
       "port": "clk_credit[7]",
       "hard_child_pin": "g_credit[7].u.clk",
       "location_um": [
+        1348.112,
+        64.08
+      ],
+      "child_pin_um": [
         1347.8819999999998,
         64.06800000000001
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.242,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_credit4",
       "view": "physical/ref_tile/smpub_credit/views/ot_hgi_sm_pub_credit4"
@@ -283,10 +398,15 @@
       "port": "clk_cmd_relay[0]",
       "hard_child_pin": "g_cmd[1].u.clk",
       "location_um": [
+        604.816,
+        717.008
+      ],
+      "child_pin_um": [
         604.842,
         716.988
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.046,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_cmd_relay",
       "view": "physical/ref_tile/smpub_cmd_relay/views/ot_hgi_sm_pub_cmd_relay"
@@ -295,10 +415,15 @@
       "port": "clk_cmd_relay[1]",
       "hard_child_pin": "g_cmd[2].u.clk",
       "location_um": [
+        1045.712,
+        725.648
+      ],
+      "child_pin_um": [
         1045.482,
         725.628
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.25,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_cmd_relay",
       "view": "physical/ref_tile/smpub_cmd_relay/views/ot_hgi_sm_pub_cmd_relay"
@@ -307,10 +432,15 @@
       "port": "clk_cmd_relay[2]",
       "hard_child_pin": "g_cmd[3].u.clk",
       "location_um": [
+        1468.816,
+        725.648
+      ],
+      "child_pin_um": [
         1468.8419999999999,
         725.628
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.046,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_cmd_relay",
       "view": "physical/ref_tile/smpub_cmd_relay/views/ot_hgi_sm_pub_cmd_relay"
@@ -319,10 +449,15 @@
       "port": "clk_slice[0]",
       "hard_child_pin": "g_s[0].u.clk",
       "location_um": [
+        258.96,
+        881.424
+      ],
+      "child_pin_um": [
         258.972,
         881.322
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.114,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_slice",
       "view": "physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice"
@@ -331,10 +466,15 @@
       "port": "clk_slice[1]",
       "hard_child_pin": "g_s[1].u.clk",
       "location_um": [
+        690.96,
+        881.424
+      ],
+      "child_pin_um": [
         690.972,
         881.322
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.114,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_slice",
       "view": "physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice"
@@ -343,10 +483,15 @@
       "port": "clk_slice[2]",
       "hard_child_pin": "g_s[2].u.clk",
       "location_um": [
+        1122.96,
+        881.424
+      ],
+      "child_pin_um": [
         1122.972,
         881.322
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.114,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_slice",
       "view": "physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice"
@@ -355,10 +500,15 @@
       "port": "clk_slice[3]",
       "hard_child_pin": "g_s[3].u.clk",
       "location_um": [
+        1554.96,
+        881.424
+      ],
+      "child_pin_um": [
         1554.972,
         881.322
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.114,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_slice",
       "view": "physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice"
@@ -367,10 +517,15 @@
       "port": "clk_slice[4]",
       "hard_child_pin": "g_s[4].u.clk",
       "location_um": [
+        258.96,
+        371.472
+      ],
+      "child_pin_um": [
         258.972,
         371.478
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.018,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_slice",
       "view": "physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice"
@@ -379,10 +534,15 @@
       "port": "clk_slice[5]",
       "hard_child_pin": "g_s[5].u.clk",
       "location_um": [
+        690.96,
+        371.472
+      ],
+      "child_pin_um": [
         690.972,
         371.478
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.018,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_slice",
       "view": "physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice"
@@ -391,10 +551,15 @@
       "port": "clk_slice[6]",
       "hard_child_pin": "g_s[6].u.clk",
       "location_um": [
+        1122.96,
+        371.472
+      ],
+      "child_pin_um": [
         1122.972,
         371.478
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.018,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_slice",
       "view": "physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice"
@@ -403,10 +568,15 @@
       "port": "clk_slice[7]",
       "hard_child_pin": "g_s[7].u.clk",
       "location_um": [
+        1554.96,
+        371.472
+      ],
+      "child_pin_um": [
         1554.972,
         371.478
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.018,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_slice",
       "view": "physical/ref_tile/hgi_pub_slice_rt/views/ot_hgi_sm_pub_slice"
@@ -415,10 +585,15 @@
       "port": "clk_return[0]",
       "hard_child_pin": "g_ret[0].g_hop[0].u.clk",
       "location_um": [
+        172.816,
+        615.312
+      ],
+      "child_pin_um": [
         172.842,
         615.324
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -427,10 +602,15 @@
       "port": "clk_return[1]",
       "hard_child_pin": "g_ret[1].g_hop[0].u.clk",
       "location_um": [
+        604.816,
+        572.112
+      ],
+      "child_pin_um": [
         604.842,
         572.124
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -439,10 +619,15 @@
       "port": "clk_return[2]",
       "hard_child_pin": "g_ret[1].g_hop[1].u.clk",
       "location_um": [
+        216.016,
+        615.312
+      ],
+      "child_pin_um": [
         216.042,
         615.324
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -451,10 +636,15 @@
       "port": "clk_return[3]",
       "hard_child_pin": "g_ret[2].g_hop[0].u.clk",
       "location_um": [
+        1036.816,
+        615.312
+      ],
+      "child_pin_um": [
         1036.8419999999999,
         615.324
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -463,10 +653,15 @@
       "port": "clk_return[4]",
       "hard_child_pin": "g_ret[2].g_hop[1].u.clk",
       "location_um": [
+        648.016,
+        572.112
+      ],
+      "child_pin_um": [
         648.042,
         572.124
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -475,10 +670,15 @@
       "port": "clk_return[5]",
       "hard_child_pin": "g_ret[2].g_hop[2].u.clk",
       "location_um": [
+        259.216,
+        615.312
+      ],
+      "child_pin_um": [
         259.24199999999996,
         615.324
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -487,10 +687,15 @@
       "port": "clk_return[6]",
       "hard_child_pin": "g_ret[3].g_hop[0].u.clk",
       "location_um": [
+        1468.816,
+        615.312
+      ],
+      "child_pin_um": [
         1468.8419999999999,
         615.324
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -499,10 +704,15 @@
       "port": "clk_return[7]",
       "hard_child_pin": "g_ret[3].g_hop[1].u.clk",
       "location_um": [
+        1080.016,
+        615.312
+      ],
+      "child_pin_um": [
         1080.042,
         615.324
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -511,10 +721,15 @@
       "port": "clk_return[8]",
       "hard_child_pin": "g_ret[3].g_hop[2].u.clk",
       "location_um": [
+        691.216,
+        572.112
+      ],
+      "child_pin_um": [
         691.2420000000001,
         572.124
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -523,10 +738,15 @@
       "port": "clk_return[9]",
       "hard_child_pin": "g_ret[3].g_hop[3].u.clk",
       "location_um": [
+        302.416,
+        615.312
+      ],
+      "child_pin_um": [
         302.44199999999995,
         615.324
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -535,10 +755,15 @@
       "port": "clk_return[10]",
       "hard_child_pin": "g_ret[4].g_hop[0].u.clk",
       "location_um": [
+        172.816,
+        658.512
+      ],
+      "child_pin_um": [
         172.842,
         658.524
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -547,10 +772,15 @@
       "port": "clk_return[11]",
       "hard_child_pin": "g_ret[5].g_hop[0].u.clk",
       "location_um": [
+        561.616,
+        727.632
+      ],
+      "child_pin_um": [
         561.642,
         727.644
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -559,10 +789,15 @@
       "port": "clk_return[12]",
       "hard_child_pin": "g_ret[5].g_hop[1].u.clk",
       "location_um": [
+        216.016,
+        658.512
+      ],
+      "child_pin_um": [
         216.042,
         658.524
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -571,10 +806,15 @@
       "port": "clk_return[13]",
       "hard_child_pin": "g_ret[6].g_hop[0].u.clk",
       "location_um": [
+        1036.816,
+        658.512
+      ],
+      "child_pin_um": [
         1036.8419999999999,
         658.524
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -583,10 +823,15 @@
       "port": "clk_return[14]",
       "hard_child_pin": "g_ret[6].g_hop[1].u.clk",
       "location_um": [
+        673.936,
+        684.432
+      ],
+      "child_pin_um": [
         673.962,
         684.444
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -595,10 +840,15 @@
       "port": "clk_return[15]",
       "hard_child_pin": "g_ret[6].g_hop[2].u.clk",
       "location_um": [
+        259.216,
+        658.512
+      ],
+      "child_pin_um": [
         259.24199999999996,
         658.524
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -607,10 +857,15 @@
       "port": "clk_return[16]",
       "hard_child_pin": "g_ret[7].g_hop[0].u.clk",
       "location_um": [
+        1468.816,
+        658.512
+      ],
+      "child_pin_um": [
         1468.8419999999999,
         658.524
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -619,10 +874,15 @@
       "port": "clk_return[17]",
       "hard_child_pin": "g_ret[7].g_hop[1].u.clk",
       "location_um": [
+        1080.016,
+        658.512
+      ],
+      "child_pin_um": [
         1080.042,
         658.524
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -631,10 +891,15 @@
       "port": "clk_return[18]",
       "hard_child_pin": "g_ret[7].g_hop[2].u.clk",
       "location_um": [
+        691.216,
+        727.632
+      ],
+      "child_pin_um": [
         691.2420000000001,
         727.644
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -643,10 +908,15 @@
       "port": "clk_return[19]",
       "hard_child_pin": "g_ret[7].g_hop[3].u.clk",
       "location_um": [
+        302.416,
+        658.512
+      ],
+      "child_pin_um": [
         302.44199999999995,
         658.524
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.038,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_return_d1",
       "view": "physical/ref_tile/smpub_return_d1/views/ot_hgi_sm_pub_return_d1"
@@ -655,10 +925,15 @@
       "port": "clk_vm_core[0]",
       "hard_child_pin": "g_c[0].u_core.clk",
       "location_um": [
+        129.616,
+        544.336
+      ],
+      "child_pin_um": [
         129.6,
         544.332
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.02,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_vmcore",
       "view": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore"
@@ -667,10 +942,15 @@
       "port": "clk_vm_core[1]",
       "hard_child_pin": "g_c[1].u_core.clk",
       "location_um": [
+        475.216,
+        596.176
+      ],
+      "child_pin_um": [
         475.2,
         596.172
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.02,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_vmcore",
       "view": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore"
@@ -679,10 +959,15 @@
       "port": "clk_vm_core[2]",
       "hard_child_pin": "g_c[2].u_core.clk",
       "location_um": [
+        1252.816,
+        544.336
+      ],
+      "child_pin_um": [
         1252.8000000000002,
         544.332
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.02,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_vmcore",
       "view": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore"
@@ -691,10 +976,15 @@
       "port": "clk_vm_core[3]",
       "hard_child_pin": "g_c[3].u_core.clk",
       "location_um": [
+        1512.016,
+        544.336
+      ],
+      "child_pin_um": [
         1512.0,
         544.332
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.02,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_vmcore",
       "view": "physical/ref_tile/smpub_vmcore/views/ot_hgi_sm_pub_vmcore"
@@ -703,10 +993,15 @@
       "port": "clk_vm_port[0]",
       "hard_child_pin": "g_c[0].u_port.clk",
       "location_um": [
+        34.576,
+        432.016
+      ],
+      "child_pin_um": [
         34.572,
         432.0
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.02,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_vmport",
       "view": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport"
@@ -715,10 +1010,15 @@
       "port": "clk_vm_port[1]",
       "hard_child_pin": "g_c[1].u_port.clk",
       "location_um": [
+        34.576,
+        544.336
+      ],
+      "child_pin_um": [
         34.572,
         544.32
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.02,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_vmport",
       "view": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport"
@@ -727,10 +1027,15 @@
       "port": "clk_vm_port[2]",
       "hard_child_pin": "g_c[2].u_port.clk",
       "location_um": [
+        1710.736,
+        432.016
+      ],
+      "child_pin_um": [
         1710.708,
         432.0
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.044,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_vmport",
       "view": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport"
@@ -739,10 +1044,15 @@
       "port": "clk_vm_port[3]",
       "hard_child_pin": "g_c[3].u_port.clk",
       "location_um": [
+        1710.736,
+        561.616
+      ],
+      "child_pin_um": [
         1710.708,
         561.6
       ],
-      "layer": "M5",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.044,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_vmport",
       "view": "physical/ref_tile/smpub_vmport/views/ot_hgi_sm_pub_vmport"
@@ -751,10 +1061,15 @@
       "port": "clk_tree[0]",
       "hard_child_pin": "g_l[1].g_n[0].g_h1.u.clk",
       "location_um": [
+        345.616,
+        630.224
+      ],
+      "child_pin_um": [
         345.642,
         630.204
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.046,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_smrg_l1",
       "view": "physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1"
@@ -763,10 +1078,15 @@
       "port": "clk_tree[1]",
       "hard_child_pin": "g_l[1].g_n[1].g_h1.u.clk",
       "location_um": [
+        768.976,
+        638.864
+      ],
+      "child_pin_um": [
         769.0020000000001,
         638.844
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.046,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_smrg_l1",
       "view": "physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1"
@@ -775,10 +1095,15 @@
       "port": "clk_tree[2]",
       "hard_child_pin": "g_l[1].g_n[2].g_h1.u.clk",
       "location_um": [
+        1166.416,
+        638.864
+      ],
+      "child_pin_um": [
         1166.442,
         638.844
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.046,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_smrg_l1",
       "view": "physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1"
@@ -787,10 +1112,15 @@
       "port": "clk_tree[3]",
       "hard_child_pin": "g_l[1].g_n[3].g_h1.u.clk",
       "location_um": [
+        1555.216,
+        638.864
+      ],
+      "child_pin_um": [
         1555.242,
         638.844
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.046,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_smrg_l1",
       "view": "physical/ref_tile/smpub_smrg_l1/views/ot_hgi_sm_pub_smrg_l1"
@@ -799,10 +1129,15 @@
       "port": "clk_tree[4]",
       "hard_child_pin": "g_l[2].g_n[0].genblk1.g_h2.u.clk",
       "location_um": [
+        604.816,
+        793.936
+      ],
+      "child_pin_um": [
         604.842,
         793.98
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.07,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_smrg_l2",
       "view": "physical/ref_tile/smpub_smrg_l2/views/ot_hgi_sm_pub_smrg_l2"
@@ -811,10 +1146,15 @@
       "port": "clk_tree[5]",
       "hard_child_pin": "g_l[2].g_n[1].genblk1.g_h2.u.clk",
       "location_um": [
+        1296.016,
+        681.68
+      ],
+      "child_pin_um": [
         1296.042,
         681.66
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.046,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_smrg_l2",
       "view": "physical/ref_tile/smpub_smrg_l2/views/ot_hgi_sm_pub_smrg_l2"
@@ -823,10 +1163,15 @@
       "port": "clk_tree[6]",
       "hard_child_pin": "g_l[3].g_n[0].genblk1.genblk1.g_h3.u.clk",
       "location_um": [
+        898.576,
+        667.6
+      ],
+      "child_pin_um": [
         898.602,
         667.452
       ],
-      "layer": "M4",
+      "layer": "M7",
+      "placement_entry_reach_um": 0.174,
       "actual_entry_wire_measurement_required": true,
       "master": "ot_hgi_sm_pub_smrg_l3",
       "view": "physical/ref_tile/smpub_smrg_l3/views/ot_hgi_sm_pub_smrg_l3"

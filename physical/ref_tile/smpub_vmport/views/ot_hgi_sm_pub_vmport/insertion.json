@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch2/claude/closure-loop/smpub_vmport-r3-0239fbbd4/routes/smpub_vmport_r3_0239fbbd4/work/orfs/results/asap7/opentallas_ot_hgi_sm_pub_vmport_asap7_ref_smpub_vmport_r3_0239fbbd4/base",
+ "base": "/srv/opentallas/claude/closure-loop/smpub_vmport-r5-688db4054/routes/smpub_vmport_r5_688db4054/work/orfs/results/asap7/opentallas_ot_hgi_sm_pub_vmport_asap7_ref_smpub_vmport_r5_688db4054/base",
  "db": "6_final.odb",
  "sdc": "6_final.sdc",
  "clock": "core_clk",
@@ -8,15 +8,15 @@
  "ss": {
   "boundary": {
    "n": 281,
-   "mean": 109.4,
-   "min": 106.6,
-   "max": 111.9
+   "mean": 108.9,
+   "min": 105.4,
+   "max": 111.7
   },
   "all": {
    "n": 281,
-   "mean": 109.4,
-   "min": 106.6,
-   "max": 111.9
+   "mean": 108.9,
+   "min": 105.4,
+   "max": 111.7
   },
   "errors": [],
   "macros": null,
@@ -25,14 +25,14 @@
  "tt": {
   "boundary": {
    "n": 281,
-   "mean": 81.1,
-   "min": 78.2,
+   "mean": 80.6,
+   "min": 77.6,
    "max": 83.2
   },
   "all": {
    "n": 281,
-   "mean": 81.1,
-   "min": 78.2,
+   "mean": 80.6,
+   "min": 77.6,
    "max": 83.2
   },
   "errors": [],
@@ -42,15 +42,15 @@
  "ff": {
   "boundary": {
    "n": 281,
-   "mean": 65.2,
-   "min": 62.1,
-   "max": 67.2
+   "mean": 64.7,
+   "min": 61.8,
+   "max": 67.3
   },
   "all": {
    "n": 281,
-   "mean": 65.2,
-   "min": 62.1,
-   "max": 67.2
+   "mean": 64.7,
+   "min": 61.8,
+   "max": 67.3
   },
   "errors": [],
   "macros": null,
@@ -67,8 +67,8 @@
  "env": {
   "CK_SS_MEAN": 109,
   "CK_SS_ALL_MEAN": 109,
-  "CK_SS_MIN": 107,
-  "CK_SS_ALL_MIN": 107,
+  "CK_SS_MIN": 105,
+  "CK_SS_ALL_MIN": 105,
   "CK_SS_MAX": 112,
   "CK_SS_ALL_MAX": 112,
   "CK_TT_MEAN": 81,
@@ -90,7 +90,7 @@
  "clock_measurements": {
   "clk": {
    "schema": "opentallas.closure_loop.ck_insertion.v1",
-   "base": "/srv/opentallas-scratch2/claude/closure-loop/smpub_vmport-r3-0239fbbd4/routes/smpub_vmport_r3_0239fbbd4/work/orfs/results/asap7/opentallas_ot_hgi_sm_pub_vmport_asap7_ref_smpub_vmport_r3_0239fbbd4/base",
+   "base": "/srv/opentallas/claude/closure-loop/smpub_vmport-r5-688db4054/routes/smpub_vmport_r5_688db4054/work/orfs/results/asap7/opentallas_ot_hgi_sm_pub_vmport_asap7_ref_smpub_vmport_r5_688db4054/base",
    "db": "6_final.odb",
    "sdc": "6_final.sdc",
    "clock": "core_clk",
@@ -98,15 +98,15 @@
    "ss": {
     "boundary": {
      "n": 281,
-     "mean": 109.4,
-     "min": 106.6,
-     "max": 111.9
+     "mean": 108.9,
+     "min": 105.4,
+     "max": 111.7
     },
     "all": {
      "n": 281,
-     "mean": 109.4,
-     "min": 106.6,
-     "max": 111.9
+     "mean": 108.9,
+     "min": 105.4,
+     "max": 111.7
     },
     "errors": [],
     "macros": null,
@@ -115,14 +115,14 @@
    "tt": {
     "boundary": {
      "n": 281,
-     "mean": 81.1,
-     "min": 78.2,
+     "mean": 80.6,
+     "min": 77.6,
      "max": 83.2
     },
     "all": {
      "n": 281,
-     "mean": 81.1,
-     "min": 78.2,
+     "mean": 80.6,
+     "min": 77.6,
      "max": 83.2
     },
     "errors": [],
@@ -132,15 +132,15 @@
    "ff": {
     "boundary": {
      "n": 281,
-     "mean": 65.2,
-     "min": 62.1,
-     "max": 67.2
+     "mean": 64.7,
+     "min": 61.8,
+     "max": 67.3
     },
     "all": {
      "n": 281,
-     "mean": 65.2,
-     "min": 62.1,
-     "max": 67.2
+     "mean": 64.7,
+     "min": 61.8,
+     "max": 67.3
     },
     "errors": [],
     "macros": null,
@@ -157,8 +157,8 @@
    "env": {
     "CK_SS_MEAN": 109,
     "CK_SS_ALL_MEAN": 109,
-    "CK_SS_MIN": 107,
-    "CK_SS_ALL_MIN": 107,
+    "CK_SS_MIN": 105,
+    "CK_SS_ALL_MIN": 105,
     "CK_SS_MAX": 112,
     "CK_SS_ALL_MAX": 112,
     "CK_TT_MEAN": 81,
