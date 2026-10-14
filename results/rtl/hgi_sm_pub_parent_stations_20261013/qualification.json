@@ -30,7 +30,7 @@
     "SM_bits": 8640,
     "SM_max_manhattan_um": 86.442,
     "raw_slice_reset_entries": 8,
-    "raw_slice_reset_max_manhattan_um": 414.774
+    "raw_slice_reset_max_manhattan_um": 414.726
   },
   "reset_proof": {
     "baseline_release_cycles": 3,
@@ -55,8 +55,11 @@
     "cmd_quiet": "smpub_cmd_quiet-r1-0239fbbd4 CLOSED",
     "reset_hop": "smpub_reset_hop-r1-0239fbbd4 CLOSED",
     "stream_edge": "smpub_stream_edge-r2-c1f27e3d1 CLOSED unchanged",
-    "vmcore": "smpub_vmcore-r4-ef963d0a6 RUNNING",
-    "vmport": "smpub_vmport-r4-ef963d0a6 RUNNING"
+    "vmcore": "smpub_vmcore-r6 source staged; R5 actual upper request-valid pin access FAIL",
+    "vmport": "smpub_vmport-r5-688db4054 CLOSED"
   },
-  "preserved_unqualified_evidence": "R3 source-bound exports retain actual fixed M5 PDN overlap above M4 face stub; daemon frozen-helper drift retained separately and untouched"
+  "preserved_unqualified_evidence": "R3 source-bound exports retain actual fixed M5 PDN overlap above M4 face stub; daemon frozen-helper drift retained separately and untouched",
+  "clock_entry_native_layer": "M7",
+  "clock_entry_max_placement_reach_um": 0.762,
+  "clock_entry_route_status": "PENDING actual parent via/entry routing and TT/FF/SS measured wire delay; no zero-wire timing claim"
 }

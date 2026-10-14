@@ -877,7 +877,8 @@ def gen_hooks(s: dict, kd: str) -> dict:
     corridor = s.get("pin_access", {}).get("corridor")
     if corridor:
         for post, hook in ((0, pre_grt), (1, post_drt)):
-            hook += [f"set ::ot_smpub_corridor_pin {{{corridor['pin']}}}",
+            cpins = ("set ::ot_smpub_corridor_pins {" + " ".join("{" + p + "}" for p in corridor['pins']) + "}") if corridor.get('pins') else f"set ::ot_smpub_corridor_pin {{{corridor['pin']}}}"
+            hook += [cpins,
                      f"set ::ot_smpub_corridor_half {float(corridor.get('half_height_um', 0.864))}",
                      f"set ::ot_smpub_corridor_post {post}", f"source /src/{corridor['script']}"]
     # Each stage's boundary reset must be followed by the complete domain-specific

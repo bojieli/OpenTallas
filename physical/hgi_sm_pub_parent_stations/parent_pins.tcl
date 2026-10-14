@@ -1,81 +1,81 @@
-# Actual die pins: every production bit aliases its exact hard-child pin; each clock is a distributed own-root entry.
-place_pin -pin_name {clk_rst} -layer M4 -location {198.762 701.916}
-place_pin -pin_name {clk_cmd} -layer M4 -location {86.442 720.732}
-place_pin -pin_name {clk_reset_hops[0]} -layer M4 -location {561.642 684.636}
-place_pin -pin_name {clk_reset_hops[1]} -layer M4 -location {1002.282 762.396}
-place_pin -pin_name {clk_reset_hops[2]} -layer M4 -location {1425.642 667.356}
-place_pin -pin_name {clk_reset_hops[3]} -layer M4 -location {60.522 1030.236}
-place_pin -pin_name {clk_reset_hops[4]} -layer M4 -location {483.882 1047.516}
-place_pin -pin_name {clk_reset_hops[5]} -layer M4 -location {915.882 1047.516}
-place_pin -pin_name {clk_reset_hops[6]} -layer M4 -location {1347.882 1047.516}
-place_pin -pin_name {clk_reset_hops[7]} -layer M4 -location {86.442 347.676}
-place_pin -pin_name {clk_reset_hops[8]} -layer M4 -location {501.162 287.196}
-place_pin -pin_name {clk_reset_hops[9]} -layer M4 -location {950.442 356.316}
-place_pin -pin_name {clk_reset_hops[10]} -layer M4 -location {1347.882 269.916}
-place_pin -pin_name {rst_slice[0]} -layer M5 -location {259.164 1296.000}
-place_pin -pin_name {rst_slice[1]} -layer M5 -location {691.164 1296.000}
-place_pin -pin_name {rst_slice[2]} -layer M5 -location {1123.164 1296.000}
-place_pin -pin_name {rst_slice[3]} -layer M5 -location {1555.164 1296.000}
-place_pin -pin_name {rst_slice[4]} -layer M5 -location {259.164 0.000}
-place_pin -pin_name {rst_slice[5]} -layer M5 -location {691.164 0.000}
-place_pin -pin_name {rst_slice[6]} -layer M5 -location {1123.164 0.000}
-place_pin -pin_name {rst_slice[7]} -layer M5 -location {1555.164 0.000}
-place_pin -pin_name {clk_stream_edge[0]} -layer M5 -location {501.132 691.200}
-place_pin -pin_name {clk_stream_edge[1]} -layer M5 -location {103.692 622.080}
-place_pin -pin_name {clk_credit[0]} -layer M4 -location {51.882 1231.932}
-place_pin -pin_name {clk_credit[1]} -layer M4 -location {483.882 1231.932}
-place_pin -pin_name {clk_credit[2]} -layer M4 -location {915.882 1231.932}
-place_pin -pin_name {clk_credit[3]} -layer M4 -location {1347.882 1231.932}
-place_pin -pin_name {clk_credit[4]} -layer M4 -location {51.882 64.068}
-place_pin -pin_name {clk_credit[5]} -layer M4 -location {483.882 64.068}
-place_pin -pin_name {clk_credit[6]} -layer M4 -location {915.882 64.068}
-place_pin -pin_name {clk_credit[7]} -layer M4 -location {1347.882 64.068}
-place_pin -pin_name {clk_cmd_relay[0]} -layer M4 -location {604.842 716.988}
-place_pin -pin_name {clk_cmd_relay[1]} -layer M4 -location {1045.482 725.628}
-place_pin -pin_name {clk_cmd_relay[2]} -layer M4 -location {1468.842 725.628}
-place_pin -pin_name {clk_slice[0]} -layer M5 -location {258.972 881.322}
-place_pin -pin_name {clk_slice[1]} -layer M5 -location {690.972 881.322}
-place_pin -pin_name {clk_slice[2]} -layer M5 -location {1122.972 881.322}
-place_pin -pin_name {clk_slice[3]} -layer M5 -location {1554.972 881.322}
-place_pin -pin_name {clk_slice[4]} -layer M5 -location {258.972 371.478}
-place_pin -pin_name {clk_slice[5]} -layer M5 -location {690.972 371.478}
-place_pin -pin_name {clk_slice[6]} -layer M5 -location {1122.972 371.478}
-place_pin -pin_name {clk_slice[7]} -layer M5 -location {1554.972 371.478}
-place_pin -pin_name {clk_return[0]} -layer M4 -location {172.842 615.324}
-place_pin -pin_name {clk_return[1]} -layer M4 -location {604.842 572.124}
-place_pin -pin_name {clk_return[2]} -layer M4 -location {216.042 615.324}
-place_pin -pin_name {clk_return[3]} -layer M4 -location {1036.842 615.324}
-place_pin -pin_name {clk_return[4]} -layer M4 -location {648.042 572.124}
-place_pin -pin_name {clk_return[5]} -layer M4 -location {259.242 615.324}
-place_pin -pin_name {clk_return[6]} -layer M4 -location {1468.842 615.324}
-place_pin -pin_name {clk_return[7]} -layer M4 -location {1080.042 615.324}
-place_pin -pin_name {clk_return[8]} -layer M4 -location {691.242 572.124}
-place_pin -pin_name {clk_return[9]} -layer M4 -location {302.442 615.324}
-place_pin -pin_name {clk_return[10]} -layer M4 -location {172.842 658.524}
-place_pin -pin_name {clk_return[11]} -layer M4 -location {561.642 727.644}
-place_pin -pin_name {clk_return[12]} -layer M4 -location {216.042 658.524}
-place_pin -pin_name {clk_return[13]} -layer M4 -location {1036.842 658.524}
-place_pin -pin_name {clk_return[14]} -layer M4 -location {673.962 684.444}
-place_pin -pin_name {clk_return[15]} -layer M4 -location {259.242 658.524}
-place_pin -pin_name {clk_return[16]} -layer M4 -location {1468.842 658.524}
-place_pin -pin_name {clk_return[17]} -layer M4 -location {1080.042 658.524}
-place_pin -pin_name {clk_return[18]} -layer M4 -location {691.242 727.644}
-place_pin -pin_name {clk_return[19]} -layer M4 -location {302.442 658.524}
-place_pin -pin_name {clk_vm_core[0]} -layer M4 -location {129.600 544.332}
-place_pin -pin_name {clk_vm_core[1]} -layer M4 -location {475.200 596.172}
-place_pin -pin_name {clk_vm_core[2]} -layer M4 -location {1252.800 544.332}
-place_pin -pin_name {clk_vm_core[3]} -layer M4 -location {1512.000 544.332}
-place_pin -pin_name {clk_vm_port[0]} -layer M5 -location {34.572 432.000}
-place_pin -pin_name {clk_vm_port[1]} -layer M5 -location {34.572 544.320}
-place_pin -pin_name {clk_vm_port[2]} -layer M5 -location {1710.708 432.000}
-place_pin -pin_name {clk_vm_port[3]} -layer M5 -location {1710.708 561.600}
-place_pin -pin_name {clk_tree[0]} -layer M4 -location {345.642 630.204}
-place_pin -pin_name {clk_tree[1]} -layer M4 -location {769.002 638.844}
-place_pin -pin_name {clk_tree[2]} -layer M4 -location {1166.442 638.844}
-place_pin -pin_name {clk_tree[3]} -layer M4 -location {1555.242 638.844}
-place_pin -pin_name {clk_tree[4]} -layer M4 -location {604.842 793.980}
-place_pin -pin_name {clk_tree[5]} -layer M4 -location {1296.042 681.660}
-place_pin -pin_name {clk_tree[6]} -layer M4 -location {898.602 667.452}
+# Actual die pins: each data/reset bit binds its exact hard child; M7 own-root clock pads require real entry routing and measurement.
+place_pin -pin_name {clk_rst} -layer M7 -location {198.736 701.904} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_cmd} -layer M7 -location {86.416 720.528} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[0]} -layer M7 -location {561.616 684.624} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[1]} -layer M7 -location {1002.512 762.640} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[2]} -layer M7 -location {1425.616 667.600} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[3]} -layer M7 -location {60.752 1030.224} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[4]} -layer M7 -location {484.112 1047.504} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[5]} -layer M7 -location {916.112 1047.504} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[6]} -layer M7 -location {1348.112 1047.504} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[7]} -layer M7 -location {86.416 347.664} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[8]} -layer M7 -location {501.136 287.440} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[9]} -layer M7 -location {950.416 356.304} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_reset_hops[10]} -layer M7 -location {1348.112 269.904} -pin_size {0.064 0.128}
+place_pin -pin_name {rst_slice[0]} -layer M5 -location {259.116 1296.000}
+place_pin -pin_name {rst_slice[1]} -layer M5 -location {691.116 1296.000}
+place_pin -pin_name {rst_slice[2]} -layer M5 -location {1123.116 1296.000}
+place_pin -pin_name {rst_slice[3]} -layer M5 -location {1555.116 1296.000}
+place_pin -pin_name {rst_slice[4]} -layer M5 -location {259.116 0.000}
+place_pin -pin_name {rst_slice[5]} -layer M5 -location {691.116 0.000}
+place_pin -pin_name {rst_slice[6]} -layer M5 -location {1123.116 0.000}
+place_pin -pin_name {rst_slice[7]} -layer M5 -location {1555.116 0.000}
+place_pin -pin_name {clk_stream_edge[0]} -layer M7 -location {501.136 691.216} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_stream_edge[1]} -layer M7 -location {103.952 622.224} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_credit[0]} -layer M7 -location {52.112 1232.464} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_credit[1]} -layer M7 -location {484.112 1232.464} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_credit[2]} -layer M7 -location {916.112 1232.464} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_credit[3]} -layer M7 -location {1348.112 1232.464} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_credit[4]} -layer M7 -location {52.112 64.080} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_credit[5]} -layer M7 -location {484.112 64.080} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_credit[6]} -layer M7 -location {916.112 64.080} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_credit[7]} -layer M7 -location {1348.112 64.080} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_cmd_relay[0]} -layer M7 -location {604.816 717.008} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_cmd_relay[1]} -layer M7 -location {1045.712 725.648} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_cmd_relay[2]} -layer M7 -location {1468.816 725.648} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_slice[0]} -layer M7 -location {258.960 881.424} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_slice[1]} -layer M7 -location {690.960 881.424} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_slice[2]} -layer M7 -location {1122.960 881.424} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_slice[3]} -layer M7 -location {1554.960 881.424} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_slice[4]} -layer M7 -location {258.960 371.472} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_slice[5]} -layer M7 -location {690.960 371.472} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_slice[6]} -layer M7 -location {1122.960 371.472} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_slice[7]} -layer M7 -location {1554.960 371.472} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[0]} -layer M7 -location {172.816 615.312} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[1]} -layer M7 -location {604.816 572.112} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[2]} -layer M7 -location {216.016 615.312} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[3]} -layer M7 -location {1036.816 615.312} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[4]} -layer M7 -location {648.016 572.112} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[5]} -layer M7 -location {259.216 615.312} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[6]} -layer M7 -location {1468.816 615.312} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[7]} -layer M7 -location {1080.016 615.312} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[8]} -layer M7 -location {691.216 572.112} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[9]} -layer M7 -location {302.416 615.312} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[10]} -layer M7 -location {172.816 658.512} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[11]} -layer M7 -location {561.616 727.632} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[12]} -layer M7 -location {216.016 658.512} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[13]} -layer M7 -location {1036.816 658.512} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[14]} -layer M7 -location {673.936 684.432} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[15]} -layer M7 -location {259.216 658.512} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[16]} -layer M7 -location {1468.816 658.512} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[17]} -layer M7 -location {1080.016 658.512} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[18]} -layer M7 -location {691.216 727.632} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_return[19]} -layer M7 -location {302.416 658.512} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_vm_core[0]} -layer M7 -location {129.616 544.336} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_vm_core[1]} -layer M7 -location {475.216 596.176} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_vm_core[2]} -layer M7 -location {1252.816 544.336} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_vm_core[3]} -layer M7 -location {1512.016 544.336} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_vm_port[0]} -layer M7 -location {34.576 432.016} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_vm_port[1]} -layer M7 -location {34.576 544.336} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_vm_port[2]} -layer M7 -location {1710.736 432.016} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_vm_port[3]} -layer M7 -location {1710.736 561.616} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_tree[0]} -layer M7 -location {345.616 630.224} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_tree[1]} -layer M7 -location {768.976 638.864} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_tree[2]} -layer M7 -location {1166.416 638.864} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_tree[3]} -layer M7 -location {1555.216 638.864} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_tree[4]} -layer M7 -location {604.816 793.936} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_tree[5]} -layer M7 -location {1296.016 681.680} -pin_size {0.064 0.128}
+place_pin -pin_name {clk_tree[6]} -layer M7 -location {898.576 667.600} -pin_size {0.064 0.128}
 place_pin -pin_name {rst_n} -layer M4 -location {0.000 702.012}
 place_pin -pin_name {pub_v} -layer M4 -location {0.000 729.756}
 place_pin -pin_name {pub_rdy} -layer M4 -location {0.000 719.292}

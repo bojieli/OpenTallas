@@ -840,7 +840,7 @@ place_pin -pin_name {i_pkt[554]} -layer M4 -location {86.400 32.172}
 place_pin -pin_name {i_pkt[555]} -layer M4 -location {86.400 32.268}
 place_pin -pin_name {i_pkt[556]} -layer M4 -location {86.400 32.364}
 place_pin -pin_name {i_pkt[557]} -layer M4 -location {86.400 32.460}
-place_pin -pin_name {i_v[0]} -layer M4 -location {86.400 126.732}
+place_pin -pin_name {i_v[0]} -layer M5 -location {86.364 126.732} -pin_size {0.096 0.096}
 place_pin -pin_name {i_v[1]} -layer M5 -location {86.364 2.892} -pin_size {0.096 0.096}
 place_pin -pin_name {ack[0]} -layer M4 -location {86.400 73.452}
 place_pin -pin_name {ack[1]} -layer M4 -location {86.400 73.548}
