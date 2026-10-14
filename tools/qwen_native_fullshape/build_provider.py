@@ -26,7 +26,7 @@ def main():
     '-GG=3072','-GW=16','-GIL=8','-GSU_VEC=1','-GSW=64','-GLV=4',
     '-GHID=4096','-GHALF=64','-GHD=128','-GNATIVE_ATTENTION=1',
     '-GINT8_WEIGHT=1','-GINT8_SCALE_WCS_BASE=1','-GQWEN_FULLSHAPE=1','-GKV_VEC_WRITE_BRIDGE=1',
-    '-Wno-fatal','-Wno-WIDTH','-Wno-UNUSED','-Wno-TIMESCALEMOD',
+    '--unroll-count','131072','--unroll-limit','131072','-Wno-fatal','-Wno-WIDTH','-Wno-UNUSED','-Wno-TIMESCALEMOD',
     '-I'+str(ROOT/'rtl/hdc'),'--Mdir',str(a.work/'obj')]
     if not a.lint_only: cmd+=['--build','-j',str(a.jobs),'-CFLAGS','-O0','--output-split','20000','--output-split-cfuncs','1000']
     cmd+=list(map(str,SOURCES))

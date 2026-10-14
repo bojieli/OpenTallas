@@ -1,0 +1,31 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v4/src/rtl/hdc/ot_hdc_core_vector_weight_native_candidate.sv:575:87: Instance has missing pin: 'obs_active'
+  575 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                       ^~~~
+                     /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v4/src/rtl/hdc/ot_hdc_vstream.sv:100:30: ... Location of port declaration
+  100 |     output wire              obs_active,
+      |                              ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v4/src/rtl/hdc/ot_hdc_core_vector_weight_native_candidate.sv:575:87: Instance has missing pin: 'obs_inflight'
+  575 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                       ^~~~
+                     /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v4/src/rtl/hdc/ot_hdc_vstream.sv:101:30: ... Location of port declaration
+  101 |     output wire [7:0]        obs_inflight
+      |                              ^~~~~~~~~~~~
+%Error: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v4/src/rtl/hdc/ot_hdc_matvec.sv:578:13: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 16384
+                                                                                                         : ... note: In instance 'ot_hdc_core_vector_weight_native_candidate.u_me.u_p'
+  578 |             for (p = 0; p < PAIRS; p = p + 1) begin : g_add
+      |             ^~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v4/src/rtl/hdc/ot_hdc_matvec.sv:676:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 16384
+                                                                                                        : ... note: In instance 'ot_hdc_core_vector_weight_native_candidate.u_me.u_p'
+  676 |         for (si = 0; si < NPG*W; si = si + 1) begin : g_scale
+      |         ^~~
+%Error: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v4/src/rtl/hdc/ot_hdc_matvec.sv:813:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 16384
+                                                                                                        : ... note: In instance 'ot_hdc_core_vector_weight_native_candidate.u_me.u_p'
+  813 |         for (e = 0; e < NL; e = e + 1) begin : g_leaf
+      |         ^~~
+%Error: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v4/src/rtl/hdc/ot_hdc_matvec.sv:826:13: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 16384
+  826 |             for (e = 0; e < (AN >> lv); e = e + 1) begin : g_node
+      |             ^~~
+%Error: Exiting due to 4 error(s)
