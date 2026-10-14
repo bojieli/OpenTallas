@@ -238,6 +238,43 @@
     "base0/ot_qfd_vm_face_sn_e1_ss.lib.gz": "084a68e20e698c89ded078ba55d34e2339a66559c9836a97a28debafe4ab089b",
     "loaded80/ot_qfd_vm_face_sn_e1_ff.lib.gz": "9658038744a707bc2ab532ff29b9e31a367ed1cda0b1b28f98b30cd007c2c32d",
     "loaded80/ot_qfd_vm_face_sn_e1_tt.lib.gz": "4862d0f69330aabc78080e7439f1012e35271f8d0c5967c3a3c82d1619d5f79b",
-    "loaded80/ot_qfd_vm_face_sn_e1_ss.lib.gz": "7183832f3832fccff0c31169d68d5c91f9bd5540a8eeffd47a178b6dfc4fe8d9"
+    "loaded80/ot_qfd_vm_face_sn_e1_ss.lib.gz": "7183832f3832fccff0c31169d68d5c91f9bd5540a8eeffd47a178b6dfc4fe8d9",
+    "place_gp.receipt.log": "b351c7a8a62bf451bdc529852fb63a500f104d9339b5632b57d604a5c3ce5fe0",
+    "executed_io_flop_at_pins.tcl": "695010446a366cbcbe645021d576dd04a4278d53ad3cae3be4e86145fcd93178",
+    "mapped_yosys.v.gz": "9ad75bb7f2709841f134257ae07c641d1cfc4afcc48651d414a6c1671afc82ae"
+  },
+  "pin_anchoring": {
+    "actual_output_flops_fixed": 0,
+    "actual_input_flops_fixed": 0,
+    "ports_not_single_flop": 1026,
+    "executed_hook": "physical/qwen_die_masters/io_flop_at_pins.tcl",
+    "procedures": [
+      "ot_of_fbonly",
+      "ot_of_isff",
+      "ot_of_isbuf",
+      "output/input traversal in BTerm loop"
+    ],
+    "reason": "Output feedback branch rejects inverter candidate and mapped AND2\u2192AO21 own-feedback cone; input traversal rejects AO21 data-enable cone. HOPS8 alone does not solve this.",
+    "mapped_q334": {
+      "ff": "q[334]$_DFFE_PP_",
+      "ff_QN": "_0083_",
+      "output_inverter": "_1738_",
+      "feedback_AND2": "_3121_",
+      "data_AO21": "_3122_",
+      "ff_D": "_0944_",
+      "data_input": "d[334]",
+      "enable_true": "_1544_",
+      "enable_false": "_1545_",
+      "control_root": "g_me[2].me_r$_DFF_P_/QN _0514_",
+      "enable_true_chain": [
+        "INV _3010_",
+        "BUF _3057_",
+        "BUF _3103_"
+      ],
+      "enable_false_chain": [
+        "BUF _3059_",
+        "BUF _3104_"
+      ]
+    }
   }
 }
