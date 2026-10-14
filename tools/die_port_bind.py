@@ -488,7 +488,9 @@ def expr_bits(expr, nets):
 
 
 # ------------------------------------------------------------------------------------------------ check
-def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
+def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset()):
+    """straps: {(master, port)} declared STRAP inputs (die constants by contract: tile ids, station indexes, group
+    numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  Every other tied input fails."""
     nets, tin, tout, insts = parse_die(die_v, top)
     mparams = mparams or {}
     drv = defaultdict(int)       # (net) -> bitmask of driven bits (by count via lists below)
@@ -507,7 +509,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
             continue
         rec = masters.setdefault(mst, dict(instances=0, rtl=None, kind=None, param_sets={}, examples=[],
                                            die_port_not_in_rtl=set(), input_unconnected=set(), input_tied=set(),
-                                           output_open=set(), width_mismatch={}, unparsed_conn=set()))
+                                           output_open=set(), width_mismatch={}, unparsed_conn=set(), straps=set()))
         rec['instances'] += 1
         if len(rec['examples']) < 3:
             rec['examples'].append(inst)
@@ -548,7 +550,10 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
             for b in bits:
                 if b[0] in ('CONST', 'Z'):
                     if d != 'output':
-                        rec['input_tied'].add(pn)
+                        if b[0] == 'CONST' and (mst, pn) in straps:
+                            rec['straps'].add(pn)
+                        else:
+                            rec['input_tied'].add(pn)
                 elif b[0] == 'UNDECL':
                     rec['unparsed_conn'].add(pn)
                 elif d == 'output':
@@ -589,7 +594,8 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
              unbound_masters=0, stub_masters=0, ambiguous_masters=0, port_not_in_rtl=0, width_mismatch=0,
              input_unconnected=0, input_tied=0, unparsed_connections=0, undriven_net_bits=sum(undriven.values()),
              multi_driven_net_bits=sum(multi.values()), top_assigns=len(findings['TOP_ASSIGN']),
-             params_not_in_rtl=len(findings['PARAM_NOT_IN_RTL']))
+             params_not_in_rtl=len(findings['PARAM_NOT_IN_RTL']),
+             strap_ports=sum(len(r['straps']) for r in masters.values()))
     out_m = {}
     for mst, r in sorted(masters.items()):
         bad = []
@@ -612,10 +618,11 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40):
                           die_port_not_in_rtl=sorted(r['die_port_not_in_rtl'])[:max_list],
                           input_unconnected=sorted(r['input_unconnected'])[:max_list],
                           input_tied=sorted(r['input_tied'])[:max_list],
+                          straps=sorted(r['straps'])[:max_list],
                           output_open=sorted(r['output_open'])[:max_list],
                           width_mismatch={p: sorted(v) for p, v in sorted(r['width_mismatch'].items())[:max_list]},
                           unparsed_conn=sorted(r['unparsed_conn'])[:max_list])
-    fail_keys = [k for k in S if k not in ('masters', 'instances') and S[k]]
+    fail_keys = [k for k in S if k not in ('masters', 'instances', 'strap_ports') and S[k]]
     return dict(schema=SCHEMA, die_v=str(die_v), top=top, verdict='PASS' if not fail_keys else 'FAIL',
                 failing=fail_keys, summary=S, masters=out_m,
                 undriven_nets=dict(sorted(undriven.items(), key=lambda kv: -kv[1])[:200]),
@@ -703,8 +710,15 @@ def main(argv=None):
     ap.add_argument('--elab-out', help='write DIR/die_top.sv (sidecar parameters inline) + DIR/die_top.f (RTL closure) '
                                        'for a full-RTL Verilator elaboration of the die')
     ap.add_argument('--closure', action='append', default=[], help='print the RTL file closure of MODULE (no die check)')
+    ap.add_argument('--strap', action='append', default=[], help='MASTER:PORT declared strap input (a die constant by '
+                    'contract, e.g. a tile id); a constant on it is recorded, not INPUT_TIED')
+    ap.add_argument('--strap-file', help='JSON [[master, port], ...] or {"straps": [[master, port], ...]}')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
+    straps = {tuple(s.split(':', 1)) for s in a.strap}
+    if a.strap_file:
+        sj = json.loads(Path(a.strap_file).read_text())
+        straps |= {tuple(x) for x in (sj.get('straps', []) if isinstance(sj, dict) else sj)}
     files = list(a.rtl_file)
     libdirs = []
     for fl in a.filelists:
@@ -732,7 +746,8 @@ def main(argv=None):
         return 0
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
     mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
-    rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams)
+    rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps))
+    rec['straps_declared'] = sorted(':'.join(s) for s in straps)
     rec['params_file'] = pj
     if a.elab_out:
         rec['elab'] = elab_kit(a.die_v, a.top, idx, mparams, a.elab_out, a.define)
