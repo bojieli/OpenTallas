@@ -44,6 +44,10 @@ module ot_hdc_vstream #(
                                       // lane output leaves 1 edge later (2 + RD); the memory answers (va/vb/vc/crom per lane,
                                       // the wrom row on the group broadcast) come back over RD - 1 relay stages instead of
                                       // RD, so the read round trip -- and the closed head's ML alignment -- is unchanged.
+    parameter integer LIREG = 0,      // LT (r7 2026-10-14): the lane cluster registers its inputs too (lane_t IREG = 1):
+                                      // every input reaches the head 1 edge later (results +1 edge); the five read
+                                      // requests leave over RD - 1 relay stages instead of RD, so the read round trip --
+                                      // and the closed head's ML alignment -- is unchanged.  Requires LOREG = 1.
     parameter integer RED_ENTRIES = 0 // opt-in functional regional64 reducer; physical top supplies nine distinct clocks
 ) (
     input  wire              clk,
@@ -278,7 +282,13 @@ module ot_hdc_vstream #(
             localparam integer ODW = 7*AW + 2*32 + 32 + 2 + 1 + AW;
             wire [OVW-1:0] o_v, o_vq;
             wire [ODW-1:0] o_d, o_dq;
-            ot_hdc_vstream_lane_t #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD), .OREG(LOREG)) u_tile (
+`ifdef OT_LIREG_MUT
+            localparam integer AQ = 0;   // bench mutant: the read requests keep RD stages under LIREG (one edge late: must FAIL)
+`else
+            localparam integer AQ = LIREG;
+`endif
+            ot_hdc_vstream_lane_t #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD), .OREG(LOREG),
+                                    .IREG(LIREG)) u_tile (
                 .clk(clk), .rst_n(rst_l), .emit0(bv_q[2]), .live(lv_q), .i(t_i), .fin_th(t_fin), .i_last_r(bv_q[0]),
                 .cura0(p_q[PDW-1 -: AW]), .curb0(p_q[PDW-1-AW -: AW]), .curc0(p_q[PDW-1-2*AW -: AW]),
                 .curd0(p_q[PDW-1-3*AW -: AW]), .rrow(t_rrow),
@@ -295,8 +305,13 @@ module ot_hdc_vstream #(
                 .kv_we(o_v[4]), .kv_waddr(o_d[ODW-1-6*AW-32 -: AW]), .kv_wdata(o_d[ODW-1-7*AW-32 -: 32]),
                 .l_ov(o_v[3]), .l_out(o_d[AW+3 +: 32]), .l_red(o_d[AW+1 +: 2]), .l_redsq(o_d[AW]),
                 .l_raddr(o_d[0 +: AW]), .l_last(o_v[2]), .retire(o_v[1]), .l_fault(o_v[0]));
-            ot_hdc_delay #(.W(OVW), .D(RD), .RESET(1)) u_ov (.clk(clk), .rst_n(rst_l), .d(o_v), .q(o_vq));
-            ot_hdc_delay #(.W(ODW), .D(RD)) u_od (.clk(clk), .rst_n(rst_l), .d(o_d), .q(o_dq));
+            //: the five read requests (valid o_v[10:6], addresses the top 5*AW of o_d): RD - LIREG stages; the rest RD
+            ot_hdc_delay #(.W(5), .D(RD - AQ), .RESET(1)) u_ovr (.clk(clk), .rst_n(rst_l), .d(o_v[10:6]), .q(o_vq[10:6]));
+            ot_hdc_delay #(.W(OVW - 5), .D(RD), .RESET(1)) u_ov (.clk(clk), .rst_n(rst_l), .d(o_v[5:0]), .q(o_vq[5:0]));
+            ot_hdc_delay #(.W(5*AW), .D(RD - AQ)) u_odr (.clk(clk), .rst_n(rst_l), .d(o_d[ODW-1 -: 5*AW]),
+                .q(o_dq[ODW-1 -: 5*AW]));
+            ot_hdc_delay #(.W(ODW - 5*AW), .D(RD)) u_od (.clk(clk), .rst_n(rst_l), .d(o_d[ODW-5*AW-1:0]),
+                .q(o_dq[ODW-5*AW-1:0]));
             assign {va_re[l], vb_re[l], vc_re[l], l_wrom_re[l], crom_re[l], vm_we[l], kv_we[l], l_ov[l], l_last[l],
                     l_retire[l], l_fault[l]} = o_vq;
             assign {va_addr[l*AW +: AW], vb_addr[l*AW +: AW], vc_addr[l*AW +: AW], l_wrom_addr[l*AW +: AW],

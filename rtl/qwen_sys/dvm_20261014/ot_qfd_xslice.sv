@@ -30,9 +30,10 @@
 //
 // Fill word (head row, FW bits, LSB first in the concatenation below):
 //   desc:  dv, dep, dxb[AW], dxcs[XCW], dxks[XCW], dsp[4], dk[NW], drnd           (DESC = 2 + AW + 2*XCW + 4 + NW + 1)
-//   data:  fv, fep, fb[AW-6] (aligned 64-element beat), foff[6] (write start mod 64), fm[64] (per position), fd[64*16]
-// A data beat is the write ROTATED so that position p holds element 64*fb + p for p >= foff and element
-// 64*(fb + 1) + p for p < foff: any 64-element write (any alignment) is ONE beat.
+//   data:  fv, fep, fb[AW-6] (aligned 64-element beat), foff[6] (write start mod 64), fm[64] (per lane), fd[64*16]
+// A data beat travels UNROTATED (lane l = element 64*fb + foff + l); the column head rotates it by foff so that
+// position p holds element 64*fb + p for p >= foff and element 64*(fb + 1) + p for p < foff: any 64-element write
+// (any alignment) is ONE beat.
 // =====================================================================================================================
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -41,7 +42,7 @@
 //   sw_*   SU lane write: element sw_a + l for lane l (stride 1), lanes with sw_m[l].
 //   aw_*   attention-return write: element aw_a + l, l < 16.
 // Pipeline: descriptor E1 pin registers, E2 range products, E3 range armed + DESC out; writes E1 pin registers, E2
-// merged / classified / rounded / rotated data out.  SEQUENCER RULE: the first write of an armed range comes >= 3 edges
+// merged / classified (+ per-lane RNE carry), E3 rounded data out, UNROTATED (the column head rotates it).  SEQUENCER RULE: the first write of an armed range comes >= 3 edges
 // after its XPF (the descriptor then leads the range's first data beat by >= 2 edges on the head row, the time an
 // xhead needs to compute the tile windows).
 // --------------------------------------------------------------------------------------------------------------------
@@ -166,43 +167,47 @@ module ot_qfd_xs_tap #(
     wire        hep = hit[1];
     wire        hrd = rnd[hep];
     wire [5:0]  off = w_a[5:0];
-    // round every lane to the consumer operand, then rotate lanes so that lane l lands at position (off + l) mod 64
+    // E2 (gate 11:35 xt1: merge -> classify -> round -> rotate in ONE stage was 23 levels, setup -524 ps): register the
+    // merged, classified write with each lane's BF16 high half and its RNE carry; E3 adds the carry when the consumer
+    // rounds.  The beat stays UNROTATED (lane l = element w_a + l): the column head rotates it on its leaf-write register
+    // (ot_qfd_xhead lw_d / lw_m), where the word is already a register.  One more fill edge: FILL_LEAD 5 in the head.
     reg  [1023:0] h_d;
+    reg  [63:0]   c_y;
     integer l;
     reg [31:0] xe;
-    reg        cy;
     always @* begin
         for (l = 0; l < 64; l = l + 1) begin
             xe = w_d[32*l +: 32];
-            cy = (xe[15:0] > 16'h8000) || (xe[15:0] == 16'h8000 && xe[16]);
-            h_d[16*l +: 16] = (hrd && MUT != 1) ? (xe[31:16] + {15'd0, cy}) : xe[31:16];
+            h_d[16*l +: 16] = xe[31:16];
+            c_y[l] = (xe[15:0] > 16'h8000) || (xe[15:0] == 16'h8000 && xe[16]);
         end
     end
-    wire [1023:0] rd_s [0:6];
-    wire [63:0]   rm_s [0:6];
-    assign rd_s[0] = h_d;
-    assign rm_s[0] = w_m;
-    genvar rs;
-    generate for (rs = 0; rs < 6; rs = rs + 1) begin : g_rot
-        localparam integer K = 1 << rs;
-        assign rd_s[rs+1] = off[rs] ? {rd_s[rs][1023-16*K:0], rd_s[rs][1023 -: 16*K]} : rd_s[rs];
-        assign rm_s[rs+1] = off[rs] ? {rm_s[rs][63-K:0], rm_s[rs][63 -: K]} : rm_s[rs];
-    end endgenerate
-    wire [63:0]   r_m = rm_s[6];
-    wire [1023:0] r_d = rd_s[6];
+    reg              e4_v, e4_ep, e4_rnd;
+    reg [BW-1:0]     e4_b;
+    reg [5:0]        e4_off;
+    reg [63:0]       e4_m, e4_cy;
+    reg [1023:0]     e4_h;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin e4_v <= 1'b0; fault <= 1'b0; end
+        else begin
+            e4_v <= w_v && (hit != 2'b00);
+            if (q_ovf || (w_v && hit == 2'b11)) fault <= 1'b1;
+        end
+    always @(posedge clk) begin
+        e4_ep <= hep; e4_rnd <= hrd && (MUT != 1); e4_b <= w_a[AW-1:6]; e4_off <= off; e4_m <= w_m; e4_cy <= c_y; e4_h <= h_d;
+    end
+    // E3: the consumer operand (RNE16 when the op rounds, else the high half)
     reg              e5_v, e5_ep;
     reg [BW-1:0]     e5_b;
     reg [5:0]        e5_off;
     reg [63:0]       e5_m;
     reg [1023:0]     e5_d;
+    integer k;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin e5_v <= 1'b0; fault <= 1'b0; end
-        else begin
-            e5_v <= w_v && (hit != 2'b00);
-            if (q_ovf || (w_v && hit == 2'b11)) fault <= 1'b1;
-        end
+        if (!rst_n) e5_v <= 1'b0; else e5_v <= e4_v;
     always @(posedge clk) begin
-        e5_ep <= hep; e5_b <= w_a[AW-1:6]; e5_off <= off; e5_m <= r_m; e5_d <= r_d;
+        e5_ep <= e4_ep; e5_b <= e4_b; e5_off <= e4_off; e5_m <= e4_m;
+        for (k = 0; k < 64; k = k + 1) e5_d[16*k +: 16] <= e4_h[16*k +: 16] + {15'd0, e4_rnd & e4_cy[k]};
     end
     assign fo = {e5_d, e5_m, e5_off, e5_b, e5_ep, e5_v, d_o};
 endmodule
@@ -252,18 +257,40 @@ module ot_qfd_xs_leaf #(
     output reg  [63:0]   q,
     output reg           q_bad
 );
+    function automatic integer ot_qfd_xs_nrep(input integer w, input integer ln, input integer lv);
+        integer loads;
+        begin
+            loads = w << (ln - 1 - lv);
+            ot_qfd_xs_nrep = (loads + 255) / 256;
+            if (ot_qfd_xs_nrep < 1) ot_qfd_xs_nrep = 1;
+        end
+    endfunction
+    function automatic integer ot_qfd_xs_mux_rep_sw(input integer w, input integer ln);
+        integer lv;
+        begin
+            ot_qfd_xs_mux_rep_sw = 0;
+            for (lv = 0; lv < ln; lv = lv + 1) ot_qfd_xs_mux_rep_sw = ot_qfd_xs_mux_rep_sw + ot_qfd_xs_nrep(w, ln, lv);
+        end
+    endfunction
+    function automatic integer ot_qfd_xs_soff(input integer w, input integer ln, input integer lv);
+        integer l;
+        begin
+            ot_qfd_xs_soff = 0;
+            for (l = 0; l < lv; l = l + 1) ot_qfd_xs_soff = ot_qfd_xs_soff + ot_qfd_xs_nrep(w, ln, l);
+        end
+    endfunction
+    localparam integer RSW = ot_qfd_xs_mux_rep_sw(17, 9);
     // pin registers
-    reg          wv, wep, cv, cep, rv, rt, rep;
+    reg          wv, wep, cv, cep, rv;
     reg [5:0]    woff;
     reg [63:0]   wm;
     reg [1023:0] wd;
     reg [NCH*8-1:0] wctl;
-    reg [27:0]   rp;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin wv <= 1'b0; cv <= 1'b0; rv <= 1'b0; end
         else begin wv <= w_v; cv <= c_v; rv <= r_v; end
     always @(posedge clk) begin
-        wep <= w_ep; woff <= w_off; wm <= w_m; wd <= w_d; wctl <= w_ctl; cep <= c_ep; rt <= r_t; rep <= r_ep; rp <= r_p;
+        wep <= w_ep; woff <= w_off; wm <= w_m; wd <= w_d; wctl <= w_ctl; cep <= c_ep;
     end
     assign wo_v = wv; assign wo_ep = wep; assign wo_off = woff; assign wo_m = wm; assign wo_d = wd;
     assign wo_ctl = {8'd0, wctl[NCH*8-1:8]};
@@ -292,13 +319,26 @@ module ot_qfd_xs_leaf #(
         assign mem_f[16*ge +: 16] = m;
         assign val_f[ge] = v;
     end endgenerate
-    // read: four elements of one tile's window through explicit 512:1 trees
+    // read: four elements of one tile's window through explicit 512:1 trees.  The select of each tree level is a
+    // REPLICATED pin register (one copy per <= 256 mux loads: 17 x 2^(8 - level) 2:1 muxes at level 0 .. 8 -> 17, 9,
+    // 5, 3, 2, 1, 1, 1, 1 copies), each copy driven by the input pin (gate 08:29: one select flop drove ~8,600 loads).
     wire [63:0] qq;
     wire [3:0]  vv;
     genvar gi;
     generate for (gi = 0; gi < 4; gi = gi + 1) begin : g_rd
-        wire [8:0] ix = {(MUT == 2) ? 1'b0 : rt, rep, rp[7*gi +: 7]};
-        ot_qfd_xs_mux #(.W(17), .LN(9)) u_m (.d(interleave(mem_f, val_f)), .s(ix), .q({vv[gi], qq[16*gi +: 16]}));
+        wire [8:0] ix_pin = {(MUT == 2) ? 1'b0 : r_t, r_ep, r_p[7*gi +: 7]};
+        wire [RSW-1:0] sr;
+        genvar lv, c;
+        for (lv = 0; lv < 9; lv = lv + 1) begin : g_lv
+            localparam integer NR = ot_qfd_xs_nrep(17, 9, lv);
+            localparam integer OF = ot_qfd_xs_soff(17, 9, lv);
+            for (c = 0; c < NR; c = c + 1) begin : g_c
+                (* keep *) reg f;
+                always @(posedge clk) f <= ix_pin[lv];
+                assign sr[OF + c] = f;
+            end
+        end
+        ot_qfd_xs_mux_rep #(.W(17), .LN(9), .SW(RSW)) u_m (.d(interleave(mem_f, val_f)), .s(sr), .q({vv[gi], qq[16*gi +: 16]}));
     end endgenerate
     wire bad = ~&vv;
     function automatic [512*17-1:0] interleave(input [8191:0] m, input [511:0] v);
@@ -335,8 +375,8 @@ module ot_qfd_xhead #(
     parameter integer NH   = 8,          // tiles per corridor (half column)
     parameter integer SMIN = 7,
     parameter integer SMAX = 11,
-    parameter integer DX   = 8,          // four-edge fill lead + four-edge read-to-corridor launch
-    parameter integer FILL_LEAD = 4,     // includes the tap's two-entry attention-write queue
+    parameter integer DX   = 9,          // five-edge fill lead + four-edge read-to-corridor launch
+    parameter integer FILL_LEAD = 5,     // includes the tap's two-entry attention-write queue and its E3 rounding stage
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
                                          // 4: the reads use the OTHER epoch (stale buffer)   -- both must FAIL
 ) (
@@ -465,6 +505,21 @@ module ot_qfd_xhead #(
             wo[dp_ep][r] <= emin[5:0];
         end
 
+    // ---- the beat arrives unrotated (lane l = element 64*fb + foff + l): rotate lanes to positions (foff + l) mod 64
+    //      in front of the leaf-write registers (f_q is a register; 6 levels of 2:1 per bit) ----
+    wire [1023:0] rd_s [0:6];
+    wire [63:0]   rm_s [0:6];
+    assign rd_s[0] = fd;
+    assign rm_s[0] = fm;
+    genvar rs;
+    generate for (rs = 0; rs < 6; rs = rs + 1) begin : g_rot
+        localparam integer K = 1 << rs;
+        assign rd_s[rs+1] = foff[rs] ? {rd_s[rs][1023-16*K:0], rd_s[rs][1023 -: 16*K]} : rd_s[rs];
+        assign rm_s[rs+1] = foff[rs] ? {rm_s[rs][63-K:0], rm_s[rs][63 -: K]} : rm_s[rs];
+    end endgenerate
+    wire [1023:0] fd_r = rd_s[6];
+    wire [63:0]   fm_r = rm_s[6];
+
     // ---- data beat -> leaf write control (one edge), to the leaf pins ----
     reg  [BW:0] dd;
     reg  [NH*8-1:0] ctl;
@@ -488,7 +543,7 @@ module ot_qfd_xhead #(
         end
     always @(posedge ck) begin
         // one kept copy of the write word per chain (N, S): each chain head is driven by its own flops
-        lw_ep <= {2{fep}}; lw_off <= {2{foff}}; lw_m <= {2{fm}}; lw_d <= {2{fd}}; lw_ctl <= ctl; lc_ep <= {2{d_ep}};
+        lw_ep <= {2{fep}}; lw_off <= {2{foff}}; lw_m <= {2{fm_r}}; lw_d <= {2{fd_r}}; lw_ctl <= ctl; lc_ep <= {2{d_ep}};
     end
 
     // ---- the go: verify against the oldest filled epoch, then the TDM read sequencer ----
@@ -670,6 +725,52 @@ module ot_qfd_xcst #(
         if (!rst_n) begin br_q <= 1'b0; tr_q <= 1'b0; ar_q <= 1'b0; end
         else begin br_q <= b_r; tr_q <= tap_r; ar_q <= br_q & tr_q; end
     assign a_r = ar_q;
+endmodule
+
+// Replicated-select mux tree: level lv (0 = the 2^(LN-1) muxes next to the data) takes nrep(lv) copies of select bit
+// lv; mux k of the level uses copy k * nrep / nodes, so no select copy drives more than ~256 mux bits.
+module ot_qfd_xs_mux_rep #(parameter integer W = 16, parameter integer LN = 9, parameter integer SW = 64) (
+    input  wire [(W << LN)-1:0] d,
+    input  wire [SW-1:0]        s,      // SW = ot_qfd_xs_mux_rep_sw(W, LN), checked below
+    output wire [W-1:0]         q
+);
+    function automatic integer ot_qfd_xs_nrep(input integer w, input integer ln, input integer lv);
+        integer loads;
+        begin
+            loads = w << (ln - 1 - lv);
+            ot_qfd_xs_nrep = (loads + 255) / 256;
+            if (ot_qfd_xs_nrep < 1) ot_qfd_xs_nrep = 1;
+        end
+    endfunction
+    function automatic integer ot_qfd_xs_mux_rep_sw(input integer w, input integer ln);
+        integer lv;
+        begin
+            ot_qfd_xs_mux_rep_sw = 0;
+            for (lv = 0; lv < ln; lv = lv + 1) ot_qfd_xs_mux_rep_sw = ot_qfd_xs_mux_rep_sw + ot_qfd_xs_nrep(w, ln, lv);
+        end
+    endfunction
+    function automatic integer ot_qfd_xs_soff(input integer w, input integer ln, input integer lv);
+        integer l;
+        begin
+            ot_qfd_xs_soff = 0;
+            for (l = 0; l < lv; l = l + 1) ot_qfd_xs_soff = ot_qfd_xs_soff + ot_qfd_xs_nrep(w, ln, l);
+        end
+    endfunction
+    genvar lv, k;
+    generate for (lv = 0; lv <= LN; lv = lv + 1) begin : g_l
+        wire [(W << (LN - lv))-1:0] n;
+        if (lv == 0) begin : g_in
+            assign n = d;
+        end else begin : g_mx
+            localparam integer NODES = 1 << (LN - lv);
+            localparam integer NR = ot_qfd_xs_nrep(W, LN, lv - 1);
+            localparam integer OFF = ot_qfd_xs_soff(W, LN, lv - 1);
+            for (k = 0; k < NODES; k = k + 1) begin : g_k
+                assign n[W*k +: W] = s[OFF + (k * NR) / NODES] ? g_l[lv-1].n[W*(2*k+1) +: W] : g_l[lv-1].n[W*(2*k) +: W];
+            end
+        end
+    end endgenerate
+    assign q = g_l[LN].n;
 endmodule
 
 // Explicit 2^LN : 1 mux tree of W-bit words (no runtime-indexed select for synthesis to re-share).

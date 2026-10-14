@@ -161,6 +161,98 @@ endmodule
 `ifndef S81PH_GTH_S
 `define S81PH_GTH_S 8
 `endif
+// ---------------------------------------------------------------------------------------------------------------
+// ot_s81ph_root_leaf_d -- gather v4 DIRECT leaf (s81-gather 2026-10-14).  The v3 leaf above passed 12 lanes (828 b)
+// W -> E and 12 chain slots (636 b) N -> S THROUGH the tile; with 8 SRAM macros (OBS M1-M4) in two 116-um walls a
+// 190.08 x 164.16 leaf leaves 44 um of M2/M4 for 1,932 crossings and global route overflowed (g2 / g3, GRT-0116), and
+// the parent tied 3 of every 4 forwarded slots to 0.  Here a leaf carries ONLY its own traffic: the parent delivers
+// each leaf's 4 lanes and collects its 4 results directly (relay tiles in the channels, tools/s81_ph/gen_gather_cl.py
+// --direct).  Every port is a flop at the pin.
+//   li  = its 4 lane slots {word 68 {fault, busy, e, d32, t32, v}, lane valid}  (69 b each)
+//   co  = its 4 results, slot s = root s: {e, pos3, row16, fp32 32, v}           (53 b each)
+//   st  = {busy, fault} of these lanes and roots (the column OR is in the control leaf)
+//   rso = reset release to the leaf below (2 synchroniser stages + the registered region copy, as v3)
+// Cycle behaviour per root is identical to the v3 leaf (lane pin register -> root -> result register at the pin).
+// ---------------------------------------------------------------------------------------------------------------
+module ot_s81ph_root_leaf_d #(
+    parameter integer NRT = 4,
+    parameter integer S   = 8,
+    parameter integer SRAM = 1
+) (
+    input  wire                ck,
+    input  wire                rs,
+    output wire                rso,
+    input  wire [69*NRT-1:0]   li,
+    output reg  [53*NRT-1:0]   co,
+    output reg  [1:0]          st
+);
+    reg [1:0] rst_s;
+    always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    wire rl;
+    (* keep_hierarchy = 1, dont_touch = 1 *) ot_s81ph_rst_stage u_rl (.clk(ck), .rst_n(rst_s[1]), .q(rl));
+    assign rso = rl;
+    reg [NRT-1:0] lv; reg [68*NRT-1:0] lw;
+    wire [NRT-1:0] rv, re, rf; wire [16*NRT-1:0] rrow, rbf; wire [3*NRT-1:0] rpos; wire [32*NRT-1:0] rfp;
+    reg [NRT-1:0] busy_l; reg flt_l;
+    integer j;
+    always @(posedge ck or negedge rl)
+        if (!rl) begin
+            lv <= {NRT{1'b0}}; busy_l <= {NRT{1'b0}}; flt_l <= 1'b0; st <= 2'b00;
+            for (j = 0; j < NRT; j = j + 1) co[53*j] <= 1'b0;
+        end else begin
+            for (j = 0; j < NRT; j = j + 1) begin
+                lv[j] <= li[69*j];
+                if (lv[j]) busy_l[j] <= lw[68*j + 66];
+                if (rf[j] || (lv[j] && lw[68*j + 67])) flt_l <= 1'b1;
+`ifdef S81PH_MUT_CHAIN
+                co[53*j] <= rv[j ^ 1];                 // MUTANT: results of roots 2 i / 2 i + 1 leave in swapped slots
+`else
+                co[53*j] <= rv[j];
+`endif
+            end
+            st <= {|busy_l, flt_l};
+        end
+    always @(posedge ck)
+        for (j = 0; j < NRT; j = j + 1) begin
+            lw[68*j +: 68] <= li[69*j + 1 +: 68];
+`ifdef S81PH_MUT_CHAIN
+            co[53*j + 1 +: 52] <= {re[j ^ 1], rpos[3*(j ^ 1) +: 3], rrow[16*(j ^ 1) +: 16], rfp[32*(j ^ 1) +: 32]};
+`else
+            co[53*j + 1 +: 52] <= {re[j], rpos[3*j +: 3], rrow[16*j +: 16], rfp[32*j +: 32]};
+`endif
+        end
+    genvar g;
+    generate for (g = 0; g < NRT; g = g + 1) begin : g_r
+        ot_s81ph_ret_root_s #(.S(S), .QD(128), .SRAM(SRAM), .RST_REG(1)) u_root (.clk(ck), .rst_n(rst_s[1]),
+            .i_v(lv[g] & lw[68*g]), .i_t(lw[68*g + 1 +: 32]), .i_d(lw[68*g + 33 +: 32]), .i_e(lw[68*g + 65]),
+            .r_v(rv[g]), .r_row(rrow[16*g +: 16]), .r_pos(rpos[3*g +: 3]), .r_fp32(rfp[32*g +: 32]),
+            .r_bf16(rbf[16*g +: 16]), .r_e(re[g]), .fault(rf[g]));
+    end endgenerate
+endmodule
+
+// the two hardened cells (same RTL; W-fed and E-fed pin plans).  Default = gather v4 direct leaf; the v3 chain leaf
+// (li 1104 / lo 828 / ci 636 / co 848 / fi / fo) only under +define+S81PH_GTH_V3_CHAIN (history benches).
+`ifndef S81PH_GTH_V3_CHAIN
+`ifdef S81PH_LEAF_FF
+`define S81PH_GTH_MEM 0
+`else
+`define S81PH_GTH_MEM 1
+`endif
+module dsfd_gth_rw (
+    input wire ck, input wire rs, output wire rso,
+    input wire [275:0] li, output wire [211:0] co, output wire [1:0] st
+);
+    ot_s81ph_root_leaf_d #(.NRT(4), .S(`S81PH_GTH_S), .SRAM(`S81PH_GTH_MEM)) u_l (.ck(ck), .rs(rs), .rso(rso), .li(li),
+        .co(co), .st(st));
+endmodule
+module dsfd_gth_re (
+    input wire ck, input wire rs, output wire rso,
+    input wire [275:0] li, output wire [211:0] co, output wire [1:0] st
+);
+    ot_s81ph_root_leaf_d #(.NRT(4), .S(`S81PH_GTH_S), .SRAM(`S81PH_GTH_MEM)) u_l (.ck(ck), .rs(rs), .rso(rso), .li(li),
+        .co(co), .st(st));
+endmodule
+`else
 // the two hardened cells (same RTL; W-fed and E-fed pin plans)
 module dsfd_gth_rw (
     input wire ck, input wire rs, output wire rso,
@@ -188,3 +280,4 @@ module dsfd_gth_re (
     ot_s81ph_root_leaf #(.NRT(4), .NLT(12), .NCI(12), .S(`S81PH_GTH_S), .SRAM(MEM)) u_l (.ck(ck), .rs(rs), .rso(rso), .li(li), .lo(lo),
         .ci(ci), .co(co), .fi(fi), .fo(fo));
 endmodule
+`endif
