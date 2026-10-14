@@ -43,7 +43,7 @@
   "owner": "Codex:s81-capture",
   "branch": "codex-s81-capture-ss-1013",
   "tag": "v4ss",
-  "purpose": "SS structural control/read repair after actual v2 SS cones: pointer-full equality replaces subtract; exact hold-ready Boolean replaces subtract; complemented same-epoch state sampler removes crossing polarity inversion; local16bit onehot read-bank selectors registered from same rp_next replace high-fanout binary select. No added data/valid cycle or clock root; default FIFO mode retained. a8620c02e focused four-phase reset/backpressure equivalence PASS, capture exact9 PASS0 and observedKSWAP121697/zero timeouts. Native SS/FF actual context qualification remains required.",
+  "purpose": "Native SS structural repair: exact pointer-full/hold-ready Boolean reductions; same-epoch local16bit onehot read selectors; complete per-row controller hierarchy with independent reset copies sampled at the existing reset edge; local17bit hold-store enable cones; complemented forward shadow/write-pointer and write-state samplers with original positive reverse read-state sampler. No extra data, valid, reset or transaction cycle and unchanged68 parent roots/assigned123.12x136.08 outline. Prior source-bound placed experiments repair both same-domainSS cones but expose crossing gaps. Corrected first-CTS dual-domain IO rebind applied after tree; actual compensated SS/FF remains required before native qualification.",
   "extra_paths": [
    "tools/s81_ph",
    "rtl/dsrom_sys/s81_ph",
@@ -68,7 +68,8 @@
     "threads": 8,
     "peak_ram_gb": 16
    }
-  ]
+  ],
+  "structural_change": "Native SS structural repair: exact pointer-full/hold-ready Boolean reductions; same-epoch local16bit onehot read selectors; complete per-row controller hierarchy with independent reset copies sampled at the existing reset edge; local17bit hold-store enable cones; complemented forward shadow/write-pointer and write-state samplers with original positive reverse read-state sampler. No extra data, valid, reset or transaction cycle and unchanged68 parent roots/assigned123.12x136.08 outline. Prior source-bound placed experiments repair both same-domainSS cones but expose crossing gaps. Corrected first-CTS dual-domain IO rebind applied after tree; actual compensated SS/FF remains required before native qualification."
  },
  "children": [],
  "inter": [],
@@ -85,6 +86,6 @@
  "io_tcl": "physical/s81_die_pins/v18/dsfd_capt_x8_dual.tcl",
  "reroute_reason": {
   "kind": "rtl_change",
-  "change": "SS structural control/read repair after actual v2 SS cones: pointer-full equality replaces subtract; exact hold-ready Boolean replaces subtract; complemented same-epoch state sampler removes crossing polarity inversion; local16bit onehot read-bank selectors registered from same rp_next replace high-fanout binary select. No added data/valid cycle or clock root; default FIFO mode retained. a8620c02e focused four-phase reset/backpressure equivalence PASS, capture exact9 PASS0 and observedKSWAP121697/zero timeouts. Native SS/FF actual context qualification remains required."
+  "change": "Native SS structural repair: exact pointer-full/hold-ready Boolean reductions; same-epoch local16bit onehot read selectors; complete per-row controller hierarchy with independent reset copies sampled at the existing reset edge; local17bit hold-store enable cones; complemented forward shadow/write-pointer and write-state samplers with original positive reverse read-state sampler. No extra data, valid, reset or transaction cycle and unchanged68 parent roots/assigned123.12x136.08 outline. Prior source-bound placed experiments repair both same-domainSS cones but expose crossing gaps. Corrected first-CTS dual-domain IO rebind applied after tree; actual compensated SS/FF remains required before native qualification."
  }
 }
