@@ -40,6 +40,18 @@
     "min_count_regex": "words=(\\d+)"
    },
    {
+    "name": "native_local_meta_exact",
+    "cmd": "bash physical/qwen_romio_slots/bench_coll_native.sh {RUN}/bench/meta_exact meta_exact",
+    "expect": "pass",
+    "pass_regex": "^PASS native_coll_port messages=512 ",
+    "min_count_regex": "words=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
     "name": "native_local_data_mutant",
     "cmd": "bash physical/qwen_romio_slots/bench_coll_native.sh {RUN}/bench/data_mutant data_mutant",
     "expect": "fail",

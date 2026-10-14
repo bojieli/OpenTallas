@@ -3,15 +3,16 @@ set -u
 OUT=$1; CASE=$2
 R=$(cd "$(dirname "$0")/../.." && pwd)
 mkdir -p "$OUT"
-define=""
+define=""; params=""
 case "$CASE" in
   exact) ;;
+  meta_exact) params="-Ptb_qfd_coll_xfifo_native.META=1 -Ptb_qfd_coll_xfifo_native.M=512" ;;
   data_mutant) define=-DOT_NCOLL_NATIVE_MUT ;;
   reservation_mutant) define=-DOT_NCOLL_MUT_NOREFUND_CHECK ;;
   narrow_rr_mutant) define=-DOT_NCOLL_MUT_NARROW_RR ;;
   *) exit 2 ;;
 esac
-iverilog -g2012 -s tb_qfd_coll_xfifo_native $define -o "$OUT/sim" \
+iverilog -g2012 -s tb_qfd_coll_xfifo_native $define $params -o "$OUT/sim" \
  "$R/rtl/test/tb_qfd_coll_xfifo_native.sv" "$R/rtl/physical/ot_qwen_coll_xfifo_native.sv" \
  "$R/rtl/physical/ot_qwen_die_coll_xfifo.sv" "$R/rtl/physical/ot_qwen_die_cdc_ch.sv" \
  "$R/rtl/physical/ot_qwen_async_fifo_w.sv" "$R/rtl/lib/ot_async_fifo.sv" \
