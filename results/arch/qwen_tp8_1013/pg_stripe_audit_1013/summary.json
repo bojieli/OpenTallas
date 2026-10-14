@@ -78,5 +78,29 @@
   "combined_fraction_by_layer": {
     "M8": 0.10559894401055847,
     "M9": 0.10559894401055583
-  }
+  },
+  "core_receipt": {
+    "method": "read_db original source_odb; block.getCoreArea and block.getDieArea",
+    "unit": "oth-ubuntu-383661-1791950481",
+    "exit_code": 0,
+    "dbu_per_um": 1000,
+    "core_dbu": [
+      0,
+      0,
+      31785696,
+      25870320
+    ],
+    "die_dbu": [
+      0,
+      0,
+      31785696,
+      25870320
+    ],
+    "core_origin_um": [
+      0,
+      0
+    ],
+    "log": "core_receipt.log"
+  },
+  "stripes_csv_sha256": "18f9bd34973bb982fffb0d9c1f59dfc05aa21d08101ba312cfdb72cb20707794"
 }
