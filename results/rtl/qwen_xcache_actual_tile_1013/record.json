@@ -1,0 +1,59 @@
+{
+  "status": "actual_native_tile_arithmetic_seam_pass_not_complete_ME_delivery",
+  "canonical_source": "41be8efee",
+  "legacy_source": "f1b1acae7",
+  "admissions": {
+    "canonical": "oth-ubuntu-257410-1791953129",
+    "legacy": "oth-ubuntu-226297-1791952707",
+    "raw_split": "oth-ubuntu-285180-1791953361"
+  },
+  "host": "ot-epyc4",
+  "memory_gb_each": 12,
+  "threads_each": 4,
+  "canonical": {
+    "GT": 3072,
+    "NW": 18,
+    "CEXT": 2,
+    "XLOCAL": 1,
+    "ME_EXTRA": 8,
+    "ops": 6,
+    "arithmetic_outputs": 680,
+    "nonzero_requests": 684,
+    "reactive_misses": 144,
+    "tile_ids": [
+      0,
+      127,
+      512,
+      767,
+      511,
+      703
+    ],
+    "source_program_commit": "14065c8c7",
+    "source_program_sha256": "120b42a583db68fb9faaa32d2076f1515d5c07e41787bf47533a1d230b4d1903",
+    "program_scope": "candidate_profile_not_checkpoint_or_token_qualification"
+  },
+  "negatives": [
+    "adjacent_indexed_row fails actual arithmetic",
+    "unwanted extra XL edge fails actual arithmetic"
+  ],
+  "raw_split_diagnostic": {
+    "ops": 22,
+    "arithmetic_outputs": 936,
+    "requests": 876,
+    "raw_split_values": "0..15",
+    "scope": "preserve canonical local fault/data behavior; full spine validity gate not changed"
+  },
+  "cache_storage_flops_upper_bound": 4929,
+  "physical_qualification": false,
+  "end_to_end_cost_qualification": false,
+  "remaining": [
+    "source41be physical x_addr timing repair and fresh proof",
+    "actual VM snapshot/transport/phase/epoch/fill protocol",
+    "instruction-context overlap and VM write freshness",
+    "live load_step separate from paused core_step",
+    "buffer or hold IB/go while core is paused",
+    "coherent global clock/collector protocol with real related-clock views",
+    "assigned pins and native per-instance tile_id ties",
+    "native layer/token measurement including source preparation and pauses"
+  ]
+}

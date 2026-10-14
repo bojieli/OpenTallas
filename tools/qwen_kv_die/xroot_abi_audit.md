@@ -91,3 +91,14 @@ No new physical ABI is adopted here.149/5148/529 stay proposed until an
 actual controller/consumer proof closes the opaque-token obligations;154
 is the direct-coordinate lower bound conditional on serialization and
 freshness. Full96 keys remain the established arithmetic proof vehicle.
+
+Back-to-back context warning: production ready=!active&&!pend rather than
+full idle. The spine explicitly retains the previous instruction's last X
+through two read-latency edges after accepting the next instruction. The
+current arithmetic seam gate drains between instructions. Do not treat
+clear-before-next-preload or one latched instruction as already proven by
+ready. Preserve outstanding old context/returns, or prove and price an X-path
+drain; a full arithmetic barrier is not silently permitted. Also, a compute
+ib_go pulse travelling through live pure-delay stations can be lost while
+core_clk is paused. Instruction holding/buffering or coherent producer and
+corridor pause is required while a separate loader path remains live.
