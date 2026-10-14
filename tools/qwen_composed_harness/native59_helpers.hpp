@@ -20,10 +20,13 @@ class Native59Helpers {
  struct Pending {bool desc=false,vm=false;uint64_t descriptor=0;std::array<uint32_t,16> word{};};
  std::array<Pending,8> pending;
  struct Posted {bool valid=false;unsigned address=0;std::array<uint32_t,16>data{};};
- std::array<Posted,8> posted;
+ std::array<Posted,8> posted;std::array<uint64_t,8> accepted_return_tag{};
  native59_input offered{};native59_output observed{};
  bool sampled=false;uint64_t edges=0;int return_bit=-1;bool mutated=false;
 public:
+ struct ReturnEvent {uint64_t edge,tag;unsigned rank,sender_rank;bool last,error;std::array<uint32_t,16>data;};
+ struct WriteEvent {uint64_t edge,tag;unsigned rank,address;std::array<uint32_t,16>data;};
+ std::vector<ReturnEvent> return_events;std::vector<WriteEvent> write_events;
  std::array<uint64_t,8> reads{},writes{},sent{},received{};
  Native59Helpers(VerilatedContext&ctx,const std::string&so){
   library=dlopen(so.c_str(),RTLD_NOW|RTLD_LOCAL);if(!library)throw std::runtime_error(dlerror());
@@ -68,13 +71,15 @@ public:
    // vm_we/data are registered faces from the preceding edge, like core writes.
    auto&post=posted[rank];post.valid=h.vm_we;post.address=16*unsigned(h.vm_waddr);if(post.valid)for(unsigned j=0;j<16;j++)post.data[j]=h.vm_wdata[j];
    sent[rank]+=bool((offered.valid>>rank)&1);received[rank]+=bool((observed.valid>>rank)&1);
+   if((observed.valid>>rank)&1){ReturnEvent e{edges,observed.tag[rank],rank,observed.rank[rank],bool((observed.last>>rank)&1),bool((observed.err>>rank)&1),{}};for(unsigned j=0;j<16;j++)e.data[j]=observed.data[rank][j];return_events.push_back(e);}
   }
   sampled=true;
  }
  template<class Ranks>void rise(Ranks&r){if(!sampled)throw std::runtime_error("helper rise without frozen low phase");if(advance(collector))throw std::runtime_error("collector rise failed");for(auto&h:helper){h->clk=1;h->eval();}
   // Commit the frozen pre-edge write faces only after every read snapshot and
   // helper/collector edge. A later return fault cannot erase an earlier write.
-  for(unsigned rank=0;rank<8;rank++)if(posted[rank].valid){auto&post=posted[rank];for(unsigned j=0;j<16;j++)r[rank]->vm.external_commit(post.address+j,post.data[j],"ACTUAL_NATIVE59_HELPER");++writes[rank];}
+  for(unsigned rank=0;rank<8;rank++)if(posted[rank].valid){auto&post=posted[rank];for(unsigned j=0;j<16;j++)r[rank]->vm.external_commit(post.address+j,post.data[j],"ACTUAL_NATIVE59_HELPER");++writes[rank];write_events.push_back({edges,accepted_return_tag[rank],rank,post.address,post.data});}
+  for(unsigned rank=0;rank<8;rank++)if(helper[rank]->vm_we&&!helper[rank]->fault)accepted_return_tag[rank]=helper[rank]->r_tag;
   sampled=false;++edges;for(auto&h:helper)if(h->fault)throw std::runtime_error("actual helper return rejected");}
  void fall(){for(auto&h:helper){h->clk=0;h->eval();}}
  bool ready()const{return observed.online==255&&!observed.fault;}

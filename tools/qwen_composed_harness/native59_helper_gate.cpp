@@ -25,5 +25,10 @@ int main(int argc,char**argv){try{
   for(unsigned rank=0;rank<8;rank++){if(link.writes[rank]!=256*(frame+1)||link.sent[rank]!=256*(frame+1)||link.received[rank]!=256*(frame+1)||link.reads[rank]!=256*(frame+1))throw std::runtime_error("missing actual read/send/return/write effects");for(auto value:r[rank]->vm.vm){if(value!=bits(float(36*(frame+1))))throw std::runtime_error("actual helper returned numerical mismatch");++outputs;}}
  }
  if(argc==4)throw std::runtime_error("tag mutant escaped actual helper guard");
+ std::array<unsigned,8> ret_counts{},write_counts{};
+ std::array<std::vector<Native59Helpers::ReturnEvent>,8> observed_returns;
+ for(auto&e:link.return_events){unsigned ordinal=ret_counts[e.rank]++;if(e.tag!=(uint64_t(ordinal/256+1)<<37)||e.error||e.last!=(ordinal%256==255))throw std::runtime_error("actual return observer identity/order differs");observed_returns[e.rank].push_back(e);}
+ for(auto&e:link.write_events){unsigned ordinal=write_counts[e.rank]++;auto&ret=observed_returns[e.rank].at(ordinal);if(e.tag!=ret.tag||e.data!=ret.data||e.address!=16*(ordinal%256)||e.edge!=ret.edge+1)throw std::runtime_error("actual posted VM store lost accepted return identity/data/old-edge ownership");}
+ for(unsigned rank=0;rank<8;rank++)if(ret_counts[rank]!=512||write_counts[rank]!=512)throw std::runtime_error("missing actual return/write observations");
  std::cout<<"{\"scope\":\"ACTUAL_HELPER_PERSISTENT_COLLECTOR_VM_FIXTURE_COMPONENT_ONLY\",\"frames\":2,\"reset_after_boot\":0,\"exact_outputs\":"<<outputs<<",\"cycles\":"<<link.cycles()<<",\"core_bound\":false,\"HOST_bound\":false,\"whole_token\":false}\n";return 0;
 }catch(const std::exception&e){std::cerr<<"FAIL "<<e.what()<<"\n";return 2;}}

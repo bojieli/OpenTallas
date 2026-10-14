@@ -53,6 +53,18 @@ def prepare(spec, output):
             if digest != FUSED_SHA or digest != report['ranks'][str(rank)]['lowered_program_sha256']:
                 raise ValueError('actual native 25-word program bytes differ')
             pins[str(path)] = digest
+            lowering_path = program / f'die{rank}' / 'lowering.json'
+            lowering = json.loads(lowering_path.read_text())
+            descriptors = program / f'die{rank}' / 'segments.hex'
+            expected_descriptors = ['0000000000000001', '0000000e00000001', '0000001600000000']
+            if (lowering['candidate_program_sha256'] != digest or
+                lowering['source_program_sha256'] != meta['image_sha256']['program.hex'] or
+                lowering['payload_layer'] != layer or lowering['payload_die'] != rank or
+                lowering['descriptor_hex'] != expected_descriptors or
+                descriptors.read_text().split() != expected_descriptors):
+                raise ValueError('actual source-bound AR256/window0/base0,14,22 descriptor bank differs')
+            pins[str(lowering_path)] = sha(lowering_path)
+            pins[str(descriptors)] = sha(descriptors)
             for kind in ('K', 'V'):
                 path = oracle / f'die{rank}' / f'prior_{kind}_fp8.bin'
                 if path.stat().st_size != position * 128 or sha(path) != report['ranks'][str(rank)][f'prior_{kind}_sha256']:
@@ -60,19 +72,35 @@ def prepare(spec, output):
                 pins[str(path)] = sha(path)
         lines.append(f'{layer} {epoch} {position} {image} {program} {oracle}')
         previous = layer
-    initial = Path(request['actual_initial_vm']).resolve()
-    if not initial.is_file() or sha(initial) != request['actual_initial_vm_sha256']:
-        raise ValueError('actual embedding/previous execution VM export digest differs')
-    pins[str(initial)] = sha(initial)
-    upstream = Path(request['actual_initial_receipt']).resolve()
-    receipt = json.loads(upstream.read_text())
-    if not receipt.get('passed') or receipt['actual_exports_sha256'].get(initial.name) != pins[str(initial)]:
-        raise ValueError('initial VM is not a passing actual RTL export bound by its upstream receipt')
-    pins[str(upstream)] = sha(upstream)
+    if 'actual_stage0' in request:
+        if 'actual_initial_vm' in request or stages[0]['layer'] != 0 or position != 0:
+            raise ValueError('cold actual stage0 requires layer0/position0 and no VM import')
+        stage0 = request['actual_stage0']
+        program = Path(stage0['program']).resolve()
+        if sha(program) != stage0['program_sha256'] or len(program.read_text().split()) != 2:
+            raise ValueError('actual embedding two-word program drift')
+        pins[str(program)] = sha(program)
+        for name, digest in stage0['bank_sha256'].items():
+            path = Path(stage0['bank']).resolve() / 'token0' / name
+            if name not in ('codes.hex', 'scale.hex') or sha(path) != digest:
+                raise ValueError('actual checkpoint embedding operand drift')
+            pins[str(path)] = sha(path)
+        initial_mode = 'ZERO_COLD_VM_THEN_REAL_EMBEDDING_AFTER_ACTUAL_HOST_COHORT'
+    else:
+        initial = Path(request['actual_initial_vm']).resolve()
+        if not initial.is_file() or sha(initial) != request['actual_initial_vm_sha256']:
+            raise ValueError('actual embedding/previous execution VM export digest differs')
+        pins[str(initial)] = sha(initial)
+        upstream = Path(request['actual_initial_receipt']).resolve()
+        receipt = json.loads(upstream.read_text())
+        if not receipt.get('passed') or receipt['actual_exports_sha256'].get(initial.name) != pins[str(initial)]:
+            raise ValueError('initial VM is not a passing actual RTL export bound by its upstream receipt')
+        pins[str(upstream)] = sha(upstream)
+        initial_mode = 'STAGED_ACTUAL_VM_EXPORT_IMPORT'
     output.mkdir(parents=True, exist_ok=False)
     (output / 'layers.plan').write_text('\n'.join(lines) + '\n')
     (output / 'input_pins.json').write_text(json.dumps({'scope': 'VALIDATED_ACTUAL_INPUTS_NOT_RTL_EXECUTION',
-        'actual_initial_vm': str(initial), 'spec_sha256': sha(spec), 'payload_sha256': pins,
+        'initial_mode': initial_mode, 'spec_sha256': sha(spec), 'payload_sha256': pins,
         'no_reference_VM_import_after_initial_actual_input': True}, indent=2) + '\n')
 
 if __name__ == '__main__':

@@ -15,3 +15,4 @@ CoreInstructionFace read_actual_core_instruction_face(const Vot_hdc_core_vector_
  }
  return face;
 }
+uint64_t actual_core_root_bytes(){return sizeof(Vot_hdc_core_vector_weight_native_candidate___024root);}

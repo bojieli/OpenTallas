@@ -65,6 +65,14 @@ for image,program,oracle in stages:
   p=program/f'die{rank}'/'program.hex';digest=hashlib.sha256(p.read_bytes()).hexdigest()
   assert digest=='cc5bc8fc17d4068ac9a49e8bf79f34e74350d56d114dd7fe5cde433d2ac82796'
   assert digest==report['ranks'][str(rank)]['lowered_program_sha256'];pins[str(p)]=digest
+  lower_path=program/f'die{rank}'/'lowering.json';lower=json.loads(lower_path.read_text())
+  desc_path=program/f'die{rank}'/'segments.hex'
+  expected=['0000000000000001','0000000e00000001','0000001600000000']
+  assert lower['candidate_program_sha256']==digest
+  assert lower['source_program_sha256']==manifest['image_sha256']['program.hex']
+  assert (lower['payload_layer'],lower['payload_die'])==(layer,rank)
+  assert lower['descriptor_hex']==expected==desc_path.read_text().split()
+  for p in (lower_path,desc_path):pins[str(p)]=hashlib.sha256(p.read_bytes()).hexdigest()
   for kind in ('K','V'):
    p=oracle/f'die{rank}'/f'prior_{kind}_fp8.bin';digest=hashlib.sha256(p.read_bytes()).hexdigest()
    assert p.stat().st_size==report['position']*128

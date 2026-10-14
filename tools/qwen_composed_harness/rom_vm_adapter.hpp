@@ -64,13 +64,17 @@ public:
     std::vector<HexWord<2>> constants;
     Response pending,next;
     std::vector<Commit> writes;
-    RomVmAdapter(const std::string& image,const std::string& fused_program,const std::string& x_preload)
+    RomVmAdapter(const std::string& image,const std::string& fused_program,const std::string& x_preload,bool zero_cold_vm=false)
       :vm(VM_WORDS,0),program(read_hex<32>(fused_program)),
        code(read_hex<G*W/4>(image+"/matrix_int8.hex")),
        scales(read_hex<W/2>(image+"/matrix_scale_bf16.hex")),
        constants(read_hex<2>(image+"/crom.hex")) {
-        auto x=read_hex<1>(x_preload);if(x.size()>vm.size())throw std::runtime_error("VM preload too large");
-        for(size_t i=0;i<x.size();++i)vm[i]=x[i][0];
+        if(zero_cold_vm){
+            if(!x_preload.empty())throw std::runtime_error("cold VM must not import embedding/reference state");
+        }else{
+            auto x=read_hex<1>(x_preload);if(x.size()>vm.size())throw std::runtime_error("VM preload too large");
+            for(size_t i=0;i<x.size();++i)vm[i]=x[i][0];
+        }
         if(code.size()!=512)throw std::runtime_error("actual compact code bank must contain512words");
     }
     uint32_t load(unsigned addr)const{if(addr>=vm.size())throw std::runtime_error("VM read outside56816: "+std::to_string(addr));return vm[addr];}
