@@ -28,7 +28,12 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "name": "qkh_native_front_1014",
  "top": "ot_qkh_head_front_native",
@@ -180,6 +185,46 @@
   "pack_fault": [
    251.2,
    257.2
+  ],
+  "c_in": [
+   2.0,
+   3.0
+  ],
+  "row_in": [
+   3.6,
+   166.19
+  ],
+  "e_in": [
+   166.79,
+   169.33
+  ],
+  "lt_in": [
+   169.93,
+   171.84
+  ],
+  "hid": [
+   172.44,
+   173.44
+  ],
+  "q_valid_in": [
+   174.04,
+   175.04
+  ],
+  "q_beat_in": [
+   175.64,
+   176.64
+  ],
+  "q_data_in": [
+   177.24,
+   258.54
+  ],
+  "clk": [
+   80.0,
+   82.0
+  ],
+  "rst_n": [
+   90.0,
+   92.0
   ]
  }
 }
