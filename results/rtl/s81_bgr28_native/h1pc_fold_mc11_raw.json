@@ -1,0 +1,33 @@
+{
+  "source_commit": "05ac26958",
+  "verdict": "RAW_OUTPUT_BUDGET_FAIL_NO_ROUTE",
+  "TT_setup_ps": 61.931404,
+  "FF_hold_ps": 4.801423,
+  "raw_TT_roots": {
+    "bank": {
+      "n": 9,
+      "mean_ps": 400.370606,
+      "spread_ps": 13.474792
+    },
+    "request": {
+      "n": 8206,
+      "mean_ps": 276.477887,
+      "spread_ps": 35.658325
+    },
+    "return": {
+      "n": 1299,
+      "mean_ps": 263.124856,
+      "spread_ps": 11.969788
+    }
+  },
+  "raw_output_ps": {
+    "f": 261.390313,
+    "o": 239.564644
+  },
+  "nominal_phase": "old3root prototype399.836/257.924/266.201, unbound actual die driver",
+  "source_latency": 0,
+  "output_load": 0,
+  "RC": "placement",
+  "actual_single_final24_drivers": 5441,
+  "hold_cells": "realHB4 retained; exact frozen source in kitgate binding"
+}

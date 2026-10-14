@@ -1,0 +1,28 @@
+{
+  "status": "REJECTED_OUTPUT_HOLD_FAIL_IN_COPIED_CONTEXT",
+  "base_source": "50373a397",
+  "fixed_TT_nominal_reference_ps": {
+    "bank": 392.192359,
+    "request": 276.890862,
+    "return": 265.543253
+  },
+  "phase_policy": "ONE measured nominalTT mean, identical early/late atTTandFF",
+  "TT_raw_output_ps": {
+    "forward_HB2": 218.7215,
+    "return_HB3": "see actual TT log"
+  },
+  "FF_hold_ps": -23.688,
+  "actual_endpoint": "f_d[2782]",
+  "actual_FF_path_ps": {
+    "raw_capture_clock": 207.146862,
+    "source_phase": -276.890862,
+    "clock_Q": 39.1193,
+    "lead_BUF4f": 14.7493,
+    "HB2": 27.0207,
+    "final_BUF24": 30.1624,
+    "pin_wire": 10.0043,
+    "data_arrival": 51.312,
+    "required": 75
+  },
+  "limits": "Output-only FF primary-cell Liberty; macroTT stubs not complete bankFF signoff. Whole native peer phase/driver remainsUNBOUND. No independent-Rff; no route or clock qualification."
+}
