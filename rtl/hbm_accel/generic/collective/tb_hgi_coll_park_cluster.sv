@@ -40,12 +40,15 @@ module tb_hgi_coll_park_cluster;
     ot_hgi_coll_ep_cluster
 `ifdef PIPE
         #(.PIPE(1)
+`ifdef HARD_COLUMNS
+        , .COLUMN_HARD(1)
+`endif
 `ifdef MUT_PIPE
         , .MUT_PIPE(`MUT_PIPE)
 `endif
         )
 `endif
-        dut (.port_clk({8{clk}}),.park_clk_q({4{clk}}),.park_fault_clk(clk),.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
+        dut (.column_clk({8{clk}}),.port_clk({8{clk}}),.park_clk_q({4{clk}}),.park_fault_clk(clk),.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
         .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
         .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt), .stat_credit_stall(cst),
         .hgi_rec(rec), .hgi_ret(ret), .hgi_cfg(cfgb), .hgi_rowfmt_o(rfo), .hgi_rowfmt_i(3'b000), .hgi_vmaddr(vma)
