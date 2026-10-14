@@ -24,7 +24,7 @@
  ],
  "outline": {
   "w": 80.64,
-  "h": 230.04,
+  "h": 267.84,
   "exact": true
  },
  "pins": {
@@ -68,7 +68,7 @@
    "physical/s81_ph_views/vm_master",
    "results/arch"
   ],
-  "purpose": "el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf dsfd_vm_clt at M5 (capture lane, RT 1 (S3: match / touch terms from registers; bit- and cycle-exact to the closed clt8a RTL)); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline 80.64 x 230.04; EXACT pin plan (io_tcl, bit-ordered by data flow). ck signed off at 833.3 ps (the VM serial clock is 1,111.1 ps: stricter). ",
+  "purpose": "el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf dsfd_vm_clt at M5 (capture lane, RT 1 (S3: match / touch terms from registers; bit- and cycle-exact to the closed clt8a RTL)); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline 80.64 x 267.84; EXACT pin plan (io_tcl, bit-ordered by data flow). ck signed off at 833.3 ps (the VM serial clock is 1,111.1 ps: stricter). ",
   "benches": [
    {
     "name": "exact_clrt",
