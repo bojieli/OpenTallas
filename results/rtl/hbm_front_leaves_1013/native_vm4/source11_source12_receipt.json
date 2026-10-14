@@ -61,8 +61,26 @@
     "mirror12m9p487c16i0.log": {
       "sha256": "d7675fb9c0caee70dab88eededb7a954fe80e593a0809175e47c6894df430435",
       "local_path": "/home/ubuntu/hbm-front-leaves-1013/mirror12m9p487c16i0.log"
+    },
+    "qvm12m1p61c16i0.log": {
+      "sha256": "c9fb9e6406d5f312c7fa117ede7474df06dc1ea395b36ef648ecf3bb02d50146",
+      "local_path": "/home/ubuntu/hbm-front-leaves-1013/qvm12m1p61c16i0.log"
+    },
+    "qvm12m6p61c16i0.log": {
+      "sha256": "5cfd46930e69c4173b85486512fbab657440635b9c032e9d8c7fa26c1b378448",
+      "local_path": "/home/ubuntu/hbm-front-leaves-1013/qvm12m6p61c16i0.log"
+    },
+    "qvm12m7p487c16i0.log": {
+      "sha256": "a717594ad09d7aee95e66e7b3cb8c2b4876998c630b4268d8ee02a3dc6b1c034",
+      "local_path": "/home/ubuntu/hbm-front-leaves-1013/qvm12m7p487c16i0.log"
+    },
+    "mirror12m0p487c16i0.log": {
+      "sha256": "b295ee5f4cd87db4f82ac15318beb86107a4b86449bd9951c89e83a710862cb2",
+      "local_path": "/home/ubuntu/hbm-front-leaves-1013/mirror12m0p487c16i0.log"
     }
   },
   "main11_generic_mapped_root": 13340,
-  "native_MUT6": "observed actual FIFO16queue000000ff overrun fatal"
+  "native_MUT6": "observed actual FIFO16queue000000ff overrun fatal",
+  "native_MUT1": "actual macro/SU BF16609364errors fatal",
+  "native_MUT7_phase487": "first LOAD no completion, next admission front never ready fatal"
 }
