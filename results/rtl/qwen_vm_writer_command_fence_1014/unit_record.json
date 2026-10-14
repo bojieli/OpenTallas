@@ -1,0 +1,27 @@
+{
+  "scope": "current478Q command fence unit only; actual writer/memory composition pending",
+  "cases": {
+    "positive": {
+      "exit": 0,
+      "source_sha256": "ea57c1504c6b83edacfe90cf413853cb4ceac318e0644392d4eda3acbc37e012"
+    },
+    "ignore_drain": {
+      "exit": 1,
+      "source_sha256": "ea57c1504c6b83edacfe90cf413853cb4ceac318e0644392d4eda3acbc37e012"
+    },
+    "offered_descriptor": {
+      "exit": 1,
+      "source_sha256": "ea57c1504c6b83edacfe90cf413853cb4ceac318e0644392d4eda3acbc37e012"
+    },
+    "new_offer_during_request": {
+      "exit": 1,
+      "source_sha256": "ea57c1504c6b83edacfe90cf413853cb4ceac318e0644392d4eda3acbc37e012"
+    },
+    "stale_posted_ready": {
+      "exit": 1,
+      "source_sha256": "df0d2eab81ac8be6853b3b58b1c73ce9dc5195c894a720a55424dec58af4a729"
+    }
+  },
+  "source_sha256": "ea57c1504c6b83edacfe90cf413853cb4ceac318e0644392d4eda3acbc37e012",
+  "bench_sha256": "61035b96b076676da0750c523a9639154a030260fc84e287987d718cd8e27835"
+}

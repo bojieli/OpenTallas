@@ -1,0 +1,5 @@
+PASS qfd_vm_region_leaf DEPTH=174 LAW=8 DEPTHS=695 LAWS=10 SEED=2 OVFMODE=1 exact 6166 checks: pushes=1435 pops=1432 row_reads=2010 su_answers=1805 stalls=1607 pop_garbage=772 deep=2277 xo_chg=1533 ro_chg=1835 so_chg=1678 nonzero_words=1162624 ovf_cycles=151
+- bench.sv:142: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 62us; walltime 0.192 s; speed 320.424 us/s
+- Verilator: cpu 0.192 s on 1 threads; allocated 9 MB

@@ -1,0 +1,945 @@
+%Warning-PINMISSING: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:135:83: Instance has missing pin: 'obs_active'
+  135 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                   ^~~~
+                     rtl/hdc/ot_hdc_vstream.sv:101:30: ... Location of port declaration
+  101 |     output wire              obs_active,
+      |                              ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:135:83: Instance has missing pin: 'obs_inflight'
+  135 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                   ^~~~
+                     rtl/hdc/ot_hdc_vstream.sv:102:30: ... Location of port declaration
+  102 |     output wire [7:0]        obs_inflight
+      |                              ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:103:193: Instance has missing pin: 'accepted_ops'
+  103 |     ot_qfd_sp_su64_sfu_bv_acc #(.SW(SW), .IS(IS), .OS(OS), .CRX(CRX), .VL(VL), .MUT(MUT), .LOFF(LOFF), .LT(LT), .RD(RD), .LMIN(LMIN), .RED_ENTRIES(RED_ENTRIES), .ALIGN_ENTRIES(ALIGN_ENTRIES)) dut (
+      |                                                                                                                                                                                                 ^~~
+                     rtl/qwen_sys/redesign_qwen/ot_qfd_su_master_bv_acc.sv:47:30: ... Location of port declaration
+   47 |     output wire [23:0]       accepted_ops,  
+      |                              ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:125:141: Instance has missing pin: 'me_en_e'
+  125 |         .DSET({8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0}), .SW(SW), .NSU(3), .NB(6), .MUT(VMUT), .VMT(VMT), .RV(RV), .RO(RO)) vm (
+      |                                                                                                                                             ^~
+                     rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:169:36: ... Location of port declaration
+  169 |     input  wire                    me_en_e,         
+      |                                    ^~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:125:141: Instance has missing pin: 'me_en_t'
+  125 |         .DSET({8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0}), .SW(SW), .NSU(3), .NB(6), .MUT(VMUT), .VMT(VMT), .RV(RV), .RO(RO)) vm (
+      |                                                                                                                                             ^~
+                     rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:170:36: ... Location of port declaration
+  170 |     input  wire                    me_en_t,         
+      |                                    ^~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'read_ib'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:24:25: ... Location of port declaration
+   24 |     output wire [378:0] read_ib, output wire read_mode,
+      |                         ^~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'read_mode'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:24:46: ... Location of port declaration
+   24 |     output wire [378:0] read_ib, output wire read_mode,
+      |                                              ^~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'read_phase'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:25:23: ... Location of port declaration
+   25 |     output wire [3:0] read_phase, output wire [95:0] read_address,
+      |                       ^~~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'read_address'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:25:54: ... Location of port declaration
+   25 |     output wire [3:0] read_phase, output wire [95:0] read_address,
+      |                                                      ^~~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'read_root'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:26:23: ... Location of port declaration
+   26 |     output wire [4:0] read_root, output wire [15:0] read_recipient,
+      |                       ^~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'read_recipient'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:26:53: ... Location of port declaration
+   26 |     output wire [4:0] read_root, output wire [15:0] read_recipient,
+      |                                                     ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'read_seq40'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:27:24: ... Location of port declaration
+   27 |     output wire [39:0] read_seq40,
+      |                        ^~~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'blocked_write_cycles'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:41:23: ... Location of port declaration
+   41 |     output reg [31:0] blocked_write_cycles, output reg [31:0] leased_cycles
+      |                       ^~~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:205:50: Instance has missing pin: 'leased_cycles'
+  205 |     ot_qfd_vm_producer_lease_seq40 #(.ENABLE(1)) lease (
+      |                                                  ^~~~~
+                     rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:41:63: ... Location of port declaration
+   41 |     output reg [31:0] blocked_write_cycles, output reg [31:0] leased_cycles
+      |                                                               ^~~~~~~~~~~~~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:921:36: Operator VAR 'DV' expects 32 bits on the Initial value, but Initial value's SEL generates 8 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  921 |                 localparam integer DV = DSET[dd*8 +: 8];
+      |                                    ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_sfu_q.sv:374:38: Operator ADD expects 46 bits on the LHS, but LHS's ARRAYSEL generates 32 bits.
+                                                    : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane.g_sfi.u_exp'
+  374 |     always @(posedge clk) y <= pa[6] + {{14{nint_d[8]}}, nint_d, 23'd0};
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_sfu_q.sv:374:29: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's ADD generates 46 bits.
+                                                   : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane.g_sfi.u_exp'
+  374 |     always @(posedge clk) y <= pa[6] + {{14{nint_d[8]}}, nint_d, 23'd0};
+      |                             ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_vstream_lane.sv:96:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'cura0' generates 24 bits.
+                                                          : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+   96 |     wire [AW-1:0] cura = cura0 + LANE * asi;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_vstream_lane.sv:96:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+   96 |     wire [AW-1:0] cura = cura0 + LANE * asi;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_vstream_lane.sv:97:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'curb0' generates 24 bits.
+                                                          : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+   97 |     wire [AW-1:0] curb = curb0 + LANE * bsi;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_vstream_lane.sv:97:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+   97 |     wire [AW-1:0] curb = curb0 + LANE * bsi;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_vstream_lane.sv:98:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'curc0' generates 24 bits.
+                                                          : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+   98 |     wire [AW-1:0] curc = curc0 + LANE * csi;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_vstream_lane.sv:98:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+   98 |     wire [AW-1:0] curc = curc0 + LANE * csi;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_vstream_lane.sv:99:32: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'curd0' generates 24 bits.
+                                                          : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+   99 |     wire [AW-1:0] curd = curd0 + LANE * dsi;
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_vstream_lane.sv:99:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+   99 |     wire [AW-1:0] curd = curd0 + LANE * dsi;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_vstream_lane.sv:121:49: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'ex' generates 8 bits.
+                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+  121 |             ex = v[30:23]; mt = v[22:0]; e = ex - 127;
+      |                                                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_vstream_lane.sv:134:24: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                          : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+  134 |                     sh = 14 - e;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_vstream_lane.sv:448:28: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'KV_FP8' generates 32 bits.
+                                                          : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su.g_lane[7].g_flat.u_lane'
+  448 |         kv_wdata <= KV_FP8 ? fp8r(out) : (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_vstream.sv:135:36: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'i_nin' generates 18 bits.
+                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su'
+  135 |     wire [NW-1:0] nvec_in = (i_nin + (SW - 1)) >> LS;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_vstream.sv:135:27: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su'
+  135 |     wire [NW-1:0] nvec_in = (i_nin + (SW - 1)) >> LS;
+      |                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_vstream.sv:153:39: Operator SUB expects 19 bits on the RHS, but RHS's CONST '17'h8' generates 17 bits.
+                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_su'
+  153 |             fin_th <= {1'b0, nvec_in} - 17'd8;
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:83:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'nrsp' generates 8 bits.
+                                                                                : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+   83 |     wire fill_done = hold && nrsp == NWD + 1;
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:99:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'nreq' generates 8 bits.
+                                                                                : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+   99 |                 ea_kind <= (nreq == NWD);
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:100:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'nreq' generates 8 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  100 |                 ea_addr <= (nreq == NWD) ? {{(AW-NW){1'b0}}, btok} : (btok * NWD + nreq);
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:100:42: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 24 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  100 |                 ea_addr <= (nreq == NWD) ? {{(AW-NW){1'b0}}, btok} : (btok * NWD + nreq);
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:100:82: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'nreq' generates 8 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  100 |                 ea_addr <= (nreq == NWD) ? {{(AW-NW){1'b0}}, btok} : (btok * NWD + nreq);
+      |                                                                                  ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:100:25: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  100 |                 ea_addr <= (nreq == NWD) ? {{(AW-NW){1'b0}}, btok} : (btok * NWD + nreq);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:97:30: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'nreq' generates 8 bits.
+                                                                                : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+   97 |             if (hold && nreq != NWD + 1 && (cred != 0 || ea_cr)) begin
+      |                              ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:103:67: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'nreq' generates 8 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  103 |             cred <= cred + (ea_cr ? 1'b1 : 1'b0) - ((hold && nreq != NWD + 1 && (cred != 0 || ea_cr)) ? 1'b1 : 1'b0);
+      |                                                                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:103:35: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  103 |             cred <= cred + (ea_cr ? 1'b1 : 1'b0) - ((hold && nreq != NWD + 1 && (cred != 0 || ea_cr)) ? 1'b1 : 1'b0);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:103:35: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  103 |             cred <= cred + (ea_cr ? 1'b1 : 1'b0) - ((hold && nreq != NWD + 1 && (cred != 0 || ea_cr)) ? 1'b1 : 1'b0);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:103:103: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                  : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  103 |             cred <= cred + (ea_cr ? 1'b1 : 1'b0) - ((hold && nreq != NWD + 1 && (cred != 0 || ea_cr)) ? 1'b1 : 1'b0);
+      |                                                                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:103:103: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                  : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  103 |             cred <= cred + (ea_cr ? 1'b1 : 1'b0) - ((hold && nreq != NWD + 1 && (cred != 0 || ea_cr)) ? 1'b1 : 1'b0);
+      |                                                                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:112:40: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'nrsp' generates 8 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  112 |         if (RSRAM == 0 && eq_v && nrsp < NWD) rowbuf[nrsp[LWD-1:0]] <= eq_data;
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:113:26: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'nrsp' generates 8 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  113 |         if (eq_v && nrsp == NWD) rscale <= eq_data[15:0];
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:121:48: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                 : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  121 |     wire [AW-1:0] word = ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) / EMB_CODE_LANES;
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv:121:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's DIV generates 32 bits.
+                                                                                : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_emb'
+  121 |     wire [AW-1:0] word = ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) / EMB_CODE_LANES;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:38:20: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                        : ... note: In instance 'tb_qfd_vm_writer_lease_composition.dut.u_rs'
+   38 |             else r <= {r, 1'b1};
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:252:42: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 2 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  252 |         assign hd[g*EW +: EW] = fq[g*CRB + fr[g]];
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:266:60: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                                          : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  266 |         for (b = NB - 1; b >= 0; b = b - 1) if (blk[b]) fb = b;
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:269:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'fb' generates 3 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  269 |     wire          done_nul = (fb == NB);
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:282:46: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  282 |                 if (in_v[k]) fw[k] <= (fw[k] == CRB - 1) ? 0 : fw[k] + 1'b1;
+      |                                              ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:283:45: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 2 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  283 |                 if (pop[k]) fr[k] <= (fr[k] == CRB - 1) ? 0 : fr[k] + 1'b1;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:284:43: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  284 |                 fn[k] <= fn[k] + (in_v[k] ? 1'b1 : 1'b0) - (pop[k] ? 1'b1 : 1'b0);
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:284:43: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  284 |                 fn[k] <= fn[k] + (in_v[k] ? 1'b1 : 1'b0) - (pop[k] ? 1'b1 : 1'b0);
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:284:68: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  284 |                 fn[k] <= fn[k] + (in_v[k] ? 1'b1 : 1'b0) - (pop[k] ? 1'b1 : 1'b0);
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:284:68: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  284 |                 fn[k] <= fn[k] + (in_v[k] ? 1'b1 : 1'b0) - (pop[k] ? 1'b1 : 1'b0);
+      |                                                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:285:38: Operator EQ expects 32 bits on the LHS, but LHS's ARRAYSEL generates 3 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  285 |                 if (in_v[k] && fn[k] == CRB && !pop[k]) fault <= 1'b1;
+      |                                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:288:44: Operator COND expects 16 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  288 |             land_cnt <= land_cnt + (land_q ? 1'b1 : 1'b0);
+      |                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:288:44: Operator COND expects 16 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  288 |             land_cnt <= land_cnt + (land_q ? 1'b1 : 1'b0);
+      |                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:294:49: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'fb' generates 3 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  294 |                     m_land <= hsel[EW-1] && (fb == NB - 1);
+      |                                                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:295:46: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'fb' generates 3 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  295 |                     ptr <= hsel[EW-1] ? ((fb == NB - 1) ? 0 : fb + 1'b1) : fb;
+      |                                              ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv:307:53: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 2 bits.
+                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm.u_merge'
+  307 |         always @(posedge clk) if (in_v[g]) fq[g*CRB + fw[g]] <= in_e[g*EW +: EW];
+      |                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:56:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   56 |     assign acquire_ready = ENABLE && armed && state==IDLE && !transport_flush_req &&
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:59:35: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   59 |     assign native_write_allowed = !ENABLE || (!transport_flush_req &&
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:61:28: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   61 |     assign read_v = ENABLE && state==REQUEST;
+      |                            ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:66:36: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   66 |     assign response_ready = ENABLE && state==RESPONSE;
+      |                                    ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:67:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   67 |     assign q_v = ENABLE && (state==OUTPUT || (MUT==3 && state==RETAIN));
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:72:33: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   72 |     assign query_ready = ENABLE && state==RETAIN && !release_v && !transport_flush_req &&
+      |                                 ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:75:36: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   75 |     assign source_output_drained = !ENABLE || (state==RETAIN && !query_v);
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:76:35: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   76 |     assign release_ready = ENABLE && state==RETAIN && !query_v && match_release &&
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:78:41: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   78 |     assign transport_flush_ack = ENABLE && transport_flush_req && state==IDLE &&
+      |                                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:90:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   90 |             if (ENABLE && !native_write_allowed) blocked_write_cycles<=blocked_write_cycles+1;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:91:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   91 |             if (ENABLE && state!=IDLE) leased_cycles<=leased_cycles+1;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:92:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   92 |             if (ENABLE && release_v && state!=RETAIN) fault<=1;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:93:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   93 |             if (ENABLE && release_v && state==RETAIN && !match_release) fault<=1;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease_seq40.sv:94:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                           : ... note: In instance 'tb_qfd_vm_writer_lease_composition.lease'
+   94 |             if (ENABLE && commit_v && state!=IDLE) fault<=1;
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/physical/ot_qfd_vm_writer_command_fence.sv:20:31: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.fence'
+   20 |  assign command_pending=ENABLE&&pending;
+      |                               ^~
+%Warning-WIDTHTRUNC: rtl/physical/ot_qfd_vm_writer_command_fence.sv:21:25: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ENABLE' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.fence'
+   21 |  assign writer_go=ENABLE?pending&&writer_ready&&!lease_active:command_v;
+      |                         ^
+%Warning-WIDTHTRUNC: rtl/physical/ot_qfd_vm_writer_command_fence.sv:22:28: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.fence'
+   22 |  assign writer_data=(ENABLE&&MUT!=2)?descriptor:command_data;
+      |                            ^~
+%Warning-WIDTHTRUNC: rtl/physical/ot_qfd_vm_writer_command_fence.sv:23:23: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.fence'
+   23 |  assign command_ready=!ENABLE||((MUT==3||!lease_request)&&!lease_active&&(!pending||writer_go));
+      |                       ^
+%Warning-WIDTHTRUNC: rtl/physical/ot_qfd_vm_writer_command_fence.sv:24:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_vm_writer_lease_composition.fence'
+   24 |  assign lease_guard=ENABLE&&!lease_active&&!writer_go&&
+      |                           ^~
+%Warning-WIDTHTRUNC: rtl/physical/ot_qfd_vm_writer_command_fence.sv:28:8: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                        : ... note: In instance 'tb_qfd_vm_writer_lease_composition.fence'
+   28 |   else if(ENABLE)begin
+      |        ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:335:69: Operator EQ expects 24 bits on the RHS, but RHS's SEL generates 8 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  335 |     always @(*) for (di = 0; di < ND; di = di + 1) din[di] = (x_dcs == DSET[di*8 +: 8]);
+      |                                                                     ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:361:36: Operator DIV expects 37 bits on the RHS, but RHS's VARREF 'BEAT' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  361 |         wire [AW+12:0] bq = span_n / BEAT;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:363:28: Operator GTE expects 37 bits on the RHS, but RHS's VARREF 'BMAX' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  363 |         assign bq_ge = (bq >= BMAX);
+      |                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:375:39: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 3 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  375 |                 bi_v = 1'b1; bi_j = a + h_b[a] - (XVMI - 7 - XS); bi_dc = h_dc[a]; bi_d = h_d[a]; bi_sp = h_sp[a];
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:375:35: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  375 |                 bi_v = 1'b1; bi_j = a + h_b[a] - (XVMI - 7 - XS); bi_dc = h_dc[a]; bi_d = h_d[a]; bi_sp = h_sp[a];
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:376:34: Operator ADD expects 37 bits on the LHS, but LHS's ARRAYSEL generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  376 |                 bi_end = h_dc[a] + h_span[a];
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:374:31: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 3 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  374 |             if (h_new[a] && a + h_b[a] >= XVMI - 7 - XS && a <= XVMI - 8 - XS) begin
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:381:26: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'xcnt' generates 5 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  381 |     assign x_rdy = (xcnt == BMAX);
+      |                          ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:383:26: Operator ASSIGNDLY expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'BMAX' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  383 |         if (!rst_n) xcnt <= BMAX;
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:384:47: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'xcnt' generates 5 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  384 |         else if (me_c) xcnt <= nt ? 0 : (xcnt == BMAX) ? xcnt : xcnt + 1'b1;
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:392:50: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'x_dsp' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  392 |             if (nt && (bq_ge || !(|din) || x_dsp > SMAX || x_dsp < SMIN)) x_fault <= 1'b1;
+      |                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:392:66: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'x_dsp' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  392 |             if (nt && (bq_ge || !(|din) || x_dsp > SMAX || x_dsp < SMIN)) x_fault <= 1'b1;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:402:30: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'bi_dc' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  402 |     wire [AW-1:0] ba = bi_dc + bi_j * BEAT;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:402:22: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  402 |     wire [AW-1:0] ba = bi_dc + bi_j * BEAT;
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:406:31: Operator ADD expects 37 bits on the LHS, but LHS's VARREF 'ba' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  406 |     wire [AW+12:0] bl_e = (ba + BEAT - 1 < bi_end) ? ba + BEAT - 1 : bi_end;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:406:31: Operator ADD expects 37 bits on the RHS, but RHS's VARREF 'BEAT' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  406 |     wire [AW+12:0] bl_e = (ba + BEAT - 1 < bi_end) ? ba + BEAT - 1 : bi_end;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:406:57: Operator ADD expects 37 bits on the LHS, but LHS's VARREF 'ba' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  406 |     wire [AW+12:0] bl_e = (ba + BEAT - 1 < bi_end) ? ba + BEAT - 1 : bi_end;
+      |                                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:406:57: Operator ADD expects 37 bits on the RHS, but RHS's VARREF 'BEAT' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  406 |     wire [AW+12:0] bl_e = (ba + BEAT - 1 < bi_end) ? ba + BEAT - 1 : bi_end;
+      |                                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:407:40: Operator SUB expects 33 bits on the RHS, but RHS's VARREF 'br0' generates 20 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  407 |     wire [AW+8:0]  bnr = bl_e[AW+12:4] - br0 + 1'b1;       
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:412:34: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'br0' generates 20 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  412 |         wire [AW-5:0] rowb = br0 + ((g - br0) & (NRB - 1));
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:412:40: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'br0' generates 20 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  412 |         wire [AW-5:0] rowb = br0 + ((g - br0) & (NRB - 1));
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:412:28: Operator ASSIGNW expects 20 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  412 |         wire [AW-5:0] rowb = br0 + ((g - br0) & (NRB - 1));
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:414:46: Operator SUB expects 33 bits on the RHS, but RHS's VARREF 'br0' generates 20 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  414 |             b_re[g] <= (me_c && bi_v && (((g - br0) & (NRB - 1)) < bnr)) || (r_v && r_rdy && (r_row[LNRB-1:0] == g));
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:458:69: Operator EQ expects 24 bits on the RHS, but RHS's SEL generates 8 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  458 |     always @(*) for (di = 0; di < ND; di = di + 1) bdin[di] = (bi_d == DSET[di*8 +: 8]);
+      |                                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:491:82: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's VARREF 'i' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  491 |     always @(*) begin hi_l = 0; for (i = 0; i < SW; i = i + 1) if (e1_m[i]) hi_l = i; end
+      |                                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:504:43: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'e1_off' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  504 |             mm = 1'b0; md = 32'd0; ll = g - e1_off;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:510:39: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  510 |             if ({e1_a0[AW-1:4], 4'h0} + g >= ELEMS) mm = 1'b0;
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:506:23: Operator EQ expects 32 or 5 bits on the RHS, but RHS's VARREF 'e1_off' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  506 |                 if (g == e1_off) begin mm = |e1_m; md = e1_d[hi_l*32 +: 32]; end
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:527:90: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  527 |         for (i = 0; i < 16; i = i + 1) k1_mb[k][i] = k1_mask[k][i] && ({k1_row[k], 4'h0} + i < ELEMS);
+      |                                                                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:539:86: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  539 |     always @(*) for (i = 0; i < 16; i = i + 1) m_mb[i] = m_mask[i] && ({m_row, 4'h0} + i < ELEMS);
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:552:36: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'kk' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  552 |             su_hit[b] = f_v && (kk < NWR) && (|f_m[kk*16 +: 16]);
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:561:35: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'kk' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  561 |             su_hs[b] = f_v && (kk < NWR) && (|f_m[kk*16 +: 16]);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:591:35: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'kk' generates 3 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  591 |         wire [RW-1:0] srow = f_r0 + kk;
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:603:29: Operator OR expects 32 bits on the LHS, but LHS's VARREF 'es' generates 3 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  603 |                     es = es | (ee / SQD + 2); er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:603:24: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's OR generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  603 |                     es = es | (ee / SQD + 2); er = er | q_row[ee]; em = em | q_mask[ee]; ed = ed | q_data[ee];
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:630:35: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'kk' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  630 |         wire [RW-1:0] srow = f_r0 + kk;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:672:76: Operator ASSIGN expects 3 bits on the Assign RHS, but Assign RHS's VARREF 'i' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  672 |                     cs_v[k*SQD + n] = 1'b1; cs_src[(k*SQD + n)*LSQ +: LSQ] = i; n = n + 1;
+      |                                                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:702:54: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 3 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  702 |                     q_row[k*SQD + i]  <= q_row[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:703:55: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 3 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  703 |                     q_mask[k*SQD + i] <= q_mask[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:704:55: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 3 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  704 |                     q_data[k*SQD + i] <= q_data[k*SQD + cs_src[(k*SQD + i)*LSQ +: LSQ]];
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:861:55: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'rot' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  861 |                 rot1[i*512 +: 512] <= capx[((i + (rot & ~((NRB >= 8) ? 7 : 0))) % NRB)*512 +: 512];
+      |                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:865:115: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'rotf' generates 4 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  865 |             for (i = 0; i < NRB; i = i + 1) if (me_x[(i * 8) / NRB]) rot2[i*512 +: 512] <= rot1[((i + ((NRB >= 8) ? rotf : 0)) % NRB)*512 +: 512];
+      |                                                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:870:42: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 's5_a' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  870 |                 bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:870:66: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'sh' generates 4 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  870 |                 bv[i*32 +: 32] <= ((s5_a + i) < ELEMS) ? rot2[(i + sh)*32 +: 32] : 32'd0;
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:925:56: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 's6_j' generates 3 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+  925 |                     assign hit[dd] = s6_d[dd] && (s6_j == JJ);
+      |                                                        ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1037:41: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1037 |             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1037:26: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '4'h1' generates 4 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1037 |             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1037:19: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1037 |             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1045:41: Operator ADD expects 20 bits on the RHS, but RHS's VARREF 'kk' generates 4 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1045 |             wire [RW-1:0]    rr = d2_r0 + kk;
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1056:17: Operator ASSIGNDLY expects 5 bits on the Assign RHS, but Assign RHS's REPLICATE generates 6 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1056 |             dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1056:37: Operator ASSIGNDLY expects 5 bits on the Assign RHS, but Assign RHS's REPLICATE generates 6 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1056 |             dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
+      |                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1056:58: Operator ASSIGNDLY expects 120 bits on the Assign RHS, but Assign RHS's REPLICATE generates 144 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1056 |             dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
+      |                                                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1073:81: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'r5' generates 4 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1073 |             for (i = 0; i < NPS; i = i + 1) pos[i*512 +: 512] <= scap[((i + (r5 & ~7)) % NRBS)*512 +: 512];
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1075:79: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'r6' generates 4 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1075 |             for (i = 0; i < NWR; i = i + 1) win[i*512 +: 512] <= pos[(i + (r6 & 7))*512 +: 512];
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1081:43: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'd7_a0' generates 24 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1081 |                 q8[i*32 +: 32] <= ((d7_a0 + (d7_si ? i : 0)) < ELEMS) ? win[(off7 + (d7_si ? i : 0))*32 +: 32] : 32'd0;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1081:83: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'off7' generates 4 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1081 |                 q8[i*32 +: 32] <= ((d7_a0 + (d7_si ? i : 0)) < ELEMS) ? win[(off7 + (d7_si ? i : 0))*32 +: 32] : 32'd0;
+      |                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1109:63: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1109 |                     bw_src[q_row[k*SQD + i][LNRB-1:0]*3 +: 3] != k + 2 &&
+      |                                                               ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1126:28: Operator LTE expects 37 bits on the LHS, but LHS's REPLICATE generates 24 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1126 |         hits = ({lo, 4'h0} <= dc + sp) && ({hi, 4'hf} >= dc);
+      |                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1126:34: Operator ADD expects 37 bits on the LHS, but LHS's VARREF 'dc' generates 24 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1126 |         hits = ({lo, 4'h0} <= dc + sp) && ({hi, 4'hf} >= dc);
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1132:44: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'lr_r0' generates 20 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1132 |             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, h_dc[a], h_span[a])) hzx = 1'b1;
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1132:26: Operator FUNCREF 'hits' expects 20 bits on the Function Argument, but Function Argument's SUB generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1132 |             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, h_dc[a], h_span[a])) hzx = 1'b1;
+      |                          ^~~~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1137:44: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'lr_r0' generates 20 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1137 |             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, x_dc, span_n)) hzx = 1'b1;
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1137:26: Operator FUNCREF 'hits' expects 20 bits on the Function Argument, but Function Argument's SUB generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition.vm'
+ 1137 |             if (lr_su && hits(lr_r0, lr_r0 + NWR - 1, x_dc, span_n)) hzx = 1'b1;
+      |                          ^~~~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv:133:33: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                        : ... note: In instance 'tb_qfd_vm_writer_lease_composition.ref_emb'
+  133 |          (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv:135:31: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                        : ... note: In instance 'tb_qfd_vm_writer_lease_composition.ref_emb'
+  135 |         ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv:131:28: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition.ref_emb'
+  131 |     assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:227:20: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  227 |           query_row<=ops%256;query_delivered<=0;
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:277:76: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  277 |             for (dl = 0; dl < SW; dl = dl + 1) begin a = d_a0[dq*AW +: AW] + dl * si; e[(dq*SW + dl)*32 +: 32] = (a < VMN) ? vm_m[a] : 0; end
+      |                                                                            ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:281:65: Bit extraction of array[32767:0] requires 15 bit index, not 24 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  281 |         for (dl = 0; dl < SW; dl = dl + 1) if (d_vm_we[dl]) vm_m[d_vm_waddr[dl*AW +: AW]] = d_vm_wdata[32*dl +: 32];
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:282:27: Bit extraction of array[32767:0] requires 15 bit index, not 24 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  282 |         if (d_red_we) vm_m[d_red_addr] = d_red_data;
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:301:67: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's VARREF 'ops' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  301 |         if (|rre1 && nrq < 2048) begin ra_s[nrq] = ra1; op_s[nrq] = ops; end
+      |                                                                   ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:324:71: Operator ASSIGNDLY expects 8 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  324 |                 d_eqv <= 1; d_eacr <= 1; eq_r <= eq_r + 1'b1; eq_wait <= $random(seed) & 7;
+      |                                                                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:341:25: Operator TASKREF 'ev' expects 8 bits on the Function Argument, but Function Argument's CONST '2'h3' generates 2 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  341 |         if (r_va_re[0]) ev(0, 0, 2'b11, {r_va_addr[AW +: AW], r_va_addr[0 +: AW]}, {r_va_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:341:25: Operator TASKREF 'ev' expects 192 bits on the Function Argument, but Function Argument's REPLICATE generates 48 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  341 |         if (r_va_re[0]) ev(0, 0, 2'b11, {r_va_addr[AW +: AW], r_va_addr[0 +: AW]}, {r_va_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:341:25: Operator TASKREF 'ev' expects 256 bits on the Function Argument, but Function Argument's REPLICATE generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  341 |         if (r_va_re[0]) ev(0, 0, 2'b11, {r_va_addr[AW +: AW], r_va_addr[0 +: AW]}, {r_va_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:342:23: Operator TASKREF 'ev' expects 8 bits on the Function Argument, but Function Argument's CONST '2'h3' generates 2 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  342 |         if (d_re0[0]) ev(1, 0, 2'b11, {d_a1[0 +: AW], d_a0[0 +: AW]}, {d_re1[0], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:342:23: Operator TASKREF 'ev' expects 192 bits on the Function Argument, but Function Argument's REPLICATE generates 48 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  342 |         if (d_re0[0]) ev(1, 0, 2'b11, {d_a1[0 +: AW], d_a0[0 +: AW]}, {d_re1[0], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:342:23: Operator TASKREF 'ev' expects 256 bits on the Function Argument, but Function Argument's REPLICATE generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  342 |         if (d_re0[0]) ev(1, 0, 2'b11, {d_a1[0 +: AW], d_a0[0 +: AW]}, {d_re1[0], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:343:25: Operator TASKREF 'ev' expects 8 bits on the Function Argument, but Function Argument's CONST '2'h3' generates 2 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  343 |         if (r_vb_re[0]) ev(0, 1, 2'b11, {r_vb_addr[AW +: AW], r_vb_addr[0 +: AW]}, {r_vb_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:343:25: Operator TASKREF 'ev' expects 192 bits on the Function Argument, but Function Argument's REPLICATE generates 48 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  343 |         if (r_vb_re[0]) ev(0, 1, 2'b11, {r_vb_addr[AW +: AW], r_vb_addr[0 +: AW]}, {r_vb_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:343:25: Operator TASKREF 'ev' expects 256 bits on the Function Argument, but Function Argument's REPLICATE generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  343 |         if (r_vb_re[0]) ev(0, 1, 2'b11, {r_vb_addr[AW +: AW], r_vb_addr[0 +: AW]}, {r_vb_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:344:23: Operator TASKREF 'ev' expects 8 bits on the Function Argument, but Function Argument's CONST '2'h3' generates 2 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  344 |         if (d_re0[1]) ev(1, 1, 2'b11, {d_a1[AW +: AW], d_a0[AW +: AW]}, {d_re1[1], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:344:23: Operator TASKREF 'ev' expects 192 bits on the Function Argument, but Function Argument's REPLICATE generates 48 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  344 |         if (d_re0[1]) ev(1, 1, 2'b11, {d_a1[AW +: AW], d_a0[AW +: AW]}, {d_re1[1], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:344:23: Operator TASKREF 'ev' expects 256 bits on the Function Argument, but Function Argument's REPLICATE generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  344 |         if (d_re0[1]) ev(1, 1, 2'b11, {d_a1[AW +: AW], d_a0[AW +: AW]}, {d_re1[1], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:345:25: Operator TASKREF 'ev' expects 8 bits on the Function Argument, but Function Argument's CONST '2'h3' generates 2 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  345 |         if (r_vc_re[0]) ev(0, 2, 2'b11, {r_vc_addr[AW +: AW], r_vc_addr[0 +: AW]}, {r_vc_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:345:25: Operator TASKREF 'ev' expects 192 bits on the Function Argument, but Function Argument's REPLICATE generates 48 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  345 |         if (r_vc_re[0]) ev(0, 2, 2'b11, {r_vc_addr[AW +: AW], r_vc_addr[0 +: AW]}, {r_vc_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:345:25: Operator TASKREF 'ev' expects 256 bits on the Function Argument, but Function Argument's REPLICATE generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  345 |         if (r_vc_re[0]) ev(0, 2, 2'b11, {r_vc_addr[AW +: AW], r_vc_addr[0 +: AW]}, {r_vc_re[1], 31'd0}, 1);
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:346:23: Operator TASKREF 'ev' expects 8 bits on the Function Argument, but Function Argument's CONST '2'h3' generates 2 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  346 |         if (d_re0[2]) ev(1, 2, 2'b11, {d_a1[2*AW +: AW], d_a0[2*AW +: AW]}, {d_re1[2], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:346:23: Operator TASKREF 'ev' expects 192 bits on the Function Argument, but Function Argument's REPLICATE generates 48 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  346 |         if (d_re0[2]) ev(1, 2, 2'b11, {d_a1[2*AW +: AW], d_a0[2*AW +: AW]}, {d_re1[2], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:346:23: Operator TASKREF 'ev' expects 256 bits on the Function Argument, but Function Argument's REPLICATE generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  346 |         if (d_re0[2]) ev(1, 2, 2'b11, {d_a1[2*AW +: AW], d_a0[2*AW +: AW]}, {d_re1[2], 31'd0}, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:351:23: Operator TASKREF 'ev' expects 192 bits on the Function Argument, but Function Argument's VARREF 'r_red_addr' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  351 |         if (r_red_we) ev(0, 5, 1, r_red_addr, r_red_data, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:351:23: Operator TASKREF 'ev' expects 256 bits on the Function Argument, but Function Argument's VARREF 'r_red_data' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  351 |         if (r_red_we) ev(0, 5, 1, r_red_addr, r_red_data, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:352:23: Operator TASKREF 'ev' expects 192 bits on the Function Argument, but Function Argument's VARREF 'd_red_addr' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  352 |         if (d_red_we) ev(1, 5, 1, d_red_addr, d_red_data, 1);
+      |                       ^~
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:352:23: Operator TASKREF 'ev' expects 256 bits on the Function Argument, but Function Argument's VARREF 'd_red_data' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  352 |         if (d_red_we) ev(1, 5, 1, d_red_addr, d_red_data, 1);
+      |                       ^~
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:391:29: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  391 |             hw_ = (ops & 1) ? 24'h4000 : 24'h0000; hr_ = (ops & 1) ? 24'h0000 : 24'h4000;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:391:68: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  391 |             hw_ = (ops & 1) ? 24'h4000 : 24'h0000; hr_ = (ops & 1) ? 24'h0000 : 24'h4000;
+      |                                                                    ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:393:18: Operator ASSIGN expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  393 |             nout = 1 + ($random(seed) & 3); nin = 1 + ($random(seed) & 63);
+      |                  ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:393:49: Operator ASSIGN expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  393 |             nout = 1 + ($random(seed) & 3); nin = 1 + ($random(seed) & 63);
+      |                                                 ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:398:25: Operator OR expects 32 bits on the LHS, but LHS's VARREF 'hr_' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  398 |             abase = hr_ | ($random(seed) & 24'h0fff); aso = $random(seed) & 24'h3f; asi = $random(seed) & 1;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:398:42: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'hfff' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  398 |             abase = hr_ | ($random(seed) & 24'h0fff); aso = $random(seed) & 24'h3f; asi = $random(seed) & 1;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:398:19: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's OR generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  398 |             abase = hr_ | ($random(seed) & 24'h0fff); aso = $random(seed) & 24'h3f; asi = $random(seed) & 1;
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:398:75: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'h3f' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  398 |             abase = hr_ | ($random(seed) & 24'h0fff); aso = $random(seed) & 24'h3f; asi = $random(seed) & 1;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:398:59: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  398 |             abase = hr_ | ($random(seed) & 24'h0fff); aso = $random(seed) & 24'h3f; asi = $random(seed) & 1;
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:398:89: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  398 |             abase = hr_ | ($random(seed) & 24'h0fff); aso = $random(seed) & 24'h3f; asi = $random(seed) & 1;
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:400:25: Operator OR expects 32 bits on the LHS, but LHS's VARREF 'hr_' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  400 |             bbase = hr_ | ($random(seed) & 24'h0fff); bso = $random(seed) & 24'h3f; bsi = $random(seed) & 1;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:400:42: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'hfff' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  400 |             bbase = hr_ | ($random(seed) & 24'h0fff); bso = $random(seed) & 24'h3f; bsi = $random(seed) & 1;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:400:19: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's OR generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  400 |             bbase = hr_ | ($random(seed) & 24'h0fff); bso = $random(seed) & 24'h3f; bsi = $random(seed) & 1;
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:400:75: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'h3f' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  400 |             bbase = hr_ | ($random(seed) & 24'h0fff); bso = $random(seed) & 24'h3f; bsi = $random(seed) & 1;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:400:59: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  400 |             bbase = hr_ | ($random(seed) & 24'h0fff); bso = $random(seed) & 24'h3f; bsi = $random(seed) & 1;
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:400:89: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  400 |             bbase = hr_ | ($random(seed) & 24'h0fff); bso = $random(seed) & 24'h3f; bsi = $random(seed) & 1;
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:401:25: Operator OR expects 32 bits on the LHS, but LHS's VARREF 'hr_' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  401 |             cbase = hr_ | ($random(seed) & 24'h0fff); cso = $random(seed) & 24'h3f; csi = $random(seed) & 1;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:401:42: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'hfff' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  401 |             cbase = hr_ | ($random(seed) & 24'h0fff); cso = $random(seed) & 24'h3f; csi = $random(seed) & 1;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:401:19: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's OR generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  401 |             cbase = hr_ | ($random(seed) & 24'h0fff); cso = $random(seed) & 24'h3f; csi = $random(seed) & 1;
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:401:75: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'h3f' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  401 |             cbase = hr_ | ($random(seed) & 24'h0fff); cso = $random(seed) & 24'h3f; csi = $random(seed) & 1;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:401:59: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  401 |             cbase = hr_ | ($random(seed) & 24'h0fff); cso = $random(seed) & 24'h3f; csi = $random(seed) & 1;
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:401:89: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  401 |             cbase = hr_ | ($random(seed) & 24'h0fff); cso = $random(seed) & 24'h3f; csi = $random(seed) & 1;
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:402:25: Operator OR expects 32 bits on the LHS, but LHS's VARREF 'hw_' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  402 |             dbase = hw_ | ($random(seed) & 24'h0fff); dso = $random(seed) & 24'h3f; dsi = 1;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:402:42: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'hfff' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  402 |             dbase = hw_ | ($random(seed) & 24'h0fff); dso = $random(seed) & 24'h3f; dsi = 1;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:402:19: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's OR generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  402 |             dbase = hw_ | ($random(seed) & 24'h0fff); dso = $random(seed) & 24'h3f; dsi = 1;
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:402:75: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'h3f' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  402 |             dbase = hw_ | ($random(seed) & 24'h0fff); dso = $random(seed) & 24'h3f; dsi = 1;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:402:59: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  402 |             dbase = hw_ | ($random(seed) & 24'h0fff); dso = $random(seed) & 24'h3f; dsi = 1;
+      |                                                           ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:403:25: Operator OR expects 32 bits on the LHS, but LHS's VARREF 'hw_' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  403 |             rbase = hw_ | 24'h2000 | ($random(seed) & 24'h0fff); rso = $random(seed) & 24'h3f;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:403:25: Operator OR expects 32 bits on the RHS, but RHS's CONST '24'h2000' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  403 |             rbase = hw_ | 24'h2000 | ($random(seed) & 24'h0fff); rso = $random(seed) & 24'h3f;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:403:53: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'hfff' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  403 |             rbase = hw_ | 24'h2000 | ($random(seed) & 24'h0fff); rso = $random(seed) & 24'h3f;
+      |                                                     ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:403:19: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's OR generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  403 |             rbase = hw_ | 24'h2000 | ($random(seed) & 24'h0fff); rso = $random(seed) & 24'h3f;
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:403:86: Operator AND expects 32 bits on the RHS, but RHS's CONST '24'h3f' generates 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  403 |             rbase = hw_ | 24'h2000 | ($random(seed) & 24'h0fff); rso = $random(seed) & 24'h3f;
+      |                                                                                      ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:403:70: Operator ASSIGN expects 24 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  403 |             rbase = hw_ | 24'h2000 | ($random(seed) & 24'h0fff); rso = $random(seed) & 24'h3f;
+      |                                                                      ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:405:36: Operator ASSIGN expects 18 bits on the Assign RHS, but Assign RHS's MODDIVS generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  405 |             if (r[27:25] == 0) tok = $random(seed) % 151936;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:423:46: Operator ASSIGN expects 20 bits on the Assign RHS, but Assign RHS's VARREF 'i' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  423 |             @(negedge clk); pw_v = 1; pw_row = i;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:465:46: Operator ASSIGN expects 20 bits on the Assign RHS, but Assign RHS's VARREF 'rb_i' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  465 |             pr_v = (rb_i < VMN / 16); pr_row = rb_i;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:473:48: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'done_' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  473 |             for (x = 0; x < nrq && x < 2048 && !done_; x = x + 1) begin
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:475:41: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'done_' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  475 |                 for (z = 0; z < 3*SW && !done_; z = z + 1)
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:477:236: Bit extraction of array[32767:0] requires 15 bit index, not 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  477 |                         $display("operand event %0d: operand %0d lane %0d ref %h dut %h (mask %h) op %0d a-lane0 addr %h now vm_r %h vm_m %h", x, z / SW, z % SW, rq_s[x][32*z +: 32], dq_s[x][32*z +: 32], rm_s[x], op_s[x], ra_s[x], vm_r[ra_s[x]], vm_m[ra_s[x]]);
+      |                                                                                                                                                                                                                                            ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:477:251: Bit extraction of array[32767:0] requires 15 bit index, not 24 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  477 |                         $display("operand event %0d: operand %0d lane %0d ref %h dut %h (mask %h) op %0d a-lane0 addr %h now vm_r %h vm_m %h", x, z / SW, z % SW, rq_s[x][32*z +: 32], dq_s[x][32*z +: 32], rm_s[x], op_s[x], ra_s[x], vm_r[ra_s[x]], vm_m[ra_s[x]]);
+      |                                                                                                                                                                                                                                                           ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:483:48: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'done_' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  483 |             for (x = 0; x < nlr && x < 4096 && !done_; x = x + 1)
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:484:39: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'done_' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  484 |                 for (z = 0; z < SW && !done_; z = z + 1)
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:491:48: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'done_' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  491 |             for (x = 0; x < ncr && x < 4096 && !done_; x = x + 1)
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:492:39: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'done_' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  492 |                 for (z = 0; z < SW && !done_; z = z + 1)
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:497:48: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'done_' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  497 |             for (x = 0; x < nre && x < 1024 && !done_; x = x + 1) if (rr_e[x][16 +: AW+32] !== rd_e[x][16 +: AW+32]) begin
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:511:40: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'lat_n' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  511 |                  lat_n, r_sum / (lat_n ? lat_n : 1), (100 * r_sum / (lat_n ? lat_n : 1)) % 100, d_sum / (lat_n ? lat_n : 1),
+      |                                        ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:511:76: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'lat_n' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  511 |                  lat_n, r_sum / (lat_n ? lat_n : 1), (100 * r_sum / (lat_n ? lat_n : 1)) % 100, d_sum / (lat_n ? lat_n : 1),
+      |                                                                            ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:511:112: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'lat_n' generates 32 bits.
+                                                                                      : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  511 |                  lat_n, r_sum / (lat_n ? lat_n : 1), (100 * r_sum / (lat_n ? lat_n : 1)) % 100, d_sum / (lat_n ? lat_n : 1),
+      |                                                                                                                ^
+%Warning-WIDTHTRUNC: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:512:40: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'lat_n' generates 32 bits.
+                                                                                     : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  512 |                  (100 * d_sum / (lat_n ? lat_n : 1)) % 100, d_min, d_max, r_min, r_max, SW, IS, OS, CRX, VL);
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:518:225: Operator EQ expects 32 bits on the LHS, but LHS's VARXREF 'accepted_ops' generates 24 bits.
+                                                                                       : ... note: In instance 'tb_qfd_vm_writer_lease_composition'
+  518 |         if (quiet_checks > 0 && quiet_hazards == 0 && vbad == 0 && bad == 0 && hbad == 0 && nr[4] * SW > OPS * 8 && nr[4] * 2 > OPS && d_fault == r_fault && ops == OPS && !m_wf && !m_wh && !m_xf && !m_xh && dut.accepted_ops == OPS)
+      |                                                                                                                                                                                                                                 ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 7.402 MB sources in 96 modules, into 226.356 MB in 199 C++ files needing 0.000 MB
+- Verilator: Walltime 61.638 s (elab=0.524, cvt=55.379, bld=0.000); cpu 61.618 s on 1 threads; allocated 6603.316 MB

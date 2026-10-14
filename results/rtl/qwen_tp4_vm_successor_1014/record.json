@@ -1,0 +1,85 @@
+{
+  "status": "EXACT_ORIGINAL_TP4_FUNCTIONAL_REPRESENTATION_PASS_PHYSICAL_SUCCESSOR_UNQUALIFIED",
+  "runs": {
+    "mut1": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "6ef6528f550d8d1be84f030f70b4f1466fcac10b26e1c418a56693102786994d"
+    },
+    "mut10": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "caffcd8a548072e648f594d4aba41936685f1d32308ac3bfc0e41450fa356cb6"
+    },
+    "mut11": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "d4e9b1bcd7c7dca91bea51f47bd62e310444780a7da3bea15026db989a0a6849"
+    },
+    "mut12": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "f352ed7838c6cbfe255bfe142316d08d59d25cfb2c3a4ac94e04ee0a38db496a"
+    },
+    "mut2": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "b072622ddea00205cb25f735151bd9a51f98de7922bfc268ab8c70d522df210f"
+    },
+    "mut3": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "1f961d3dbb9ae018304be50d77b9b76143c40209a0ddbab8efa0b25f4342fd53"
+    },
+    "mut4": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "610be8b92ebbbc925d4a736e851fc6f4e1ef75a24c2554247c9e59e93fdcdd23"
+    },
+    "mut5": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "8178ec82043e70f7610a518616bf28f40d40132563c56121b34bca2773addbb3"
+    },
+    "mut6": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "d8d8519c503fb11613f95fb7c251311f79dead856dc1e10da6884fe90ee31547"
+    },
+    "mut7": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "7d3673691e7f8d9e13c3557dc09f1174d5156862e0231ca5196b8d15c1261e4f"
+    },
+    "mut8": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "724fbc2ac2d07d0f251b10ee7eaab3afcdd15ec64ea33ec39bd17aed4465825b"
+    },
+    "mut9": {
+      "expected_positive": false,
+      "observed_expected": true,
+      "log_sha256": "5813d72eabe8a8115ba36a91599a78add1bfa3f642e942a99fbd257033c979dc"
+    },
+    "positive": {
+      "expected_positive": true,
+      "observed_expected": true,
+      "log_sha256": "350eb2debe79e2ba1ea0fb3f68df09e0266c2596d556786effa3f0a12fcdf0ee"
+    },
+    "positive_seed2_underflow": {
+      "expected_positive": true,
+      "observed_expected": true,
+      "log_sha256": "4c986386df067847e3a36cb730ee3cdd227d6dc9d1d02a7f9308c798a4d85593"
+    }
+  },
+  "positive_cases": 2,
+  "mutant_cases": 12,
+  "original_closed_views_unchanged": true,
+  "candidate_physical_parameter_binding_open": [
+    "NPP7 original vs current hard FIFO default12",
+    "actual new clock entries and phi-R pin coverage",
+    "row and command stations add unqualified edges",
+    "registered field IO and reset recovery semantics",
+    "whole TP4 eight-group parent composition vs current TP8 field topology"
+  ]
+}

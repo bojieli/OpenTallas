@@ -1,0 +1,47 @@
+ot-run: ot-epyc4       admits   260 GB (avail 496, growth 188, headroom 48, waiters 0/0 GB) load 39/128 running 8 disk 1036 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2043578-1791974663 after 0 s
+operand event 0: operand 0 lane 0 ref 408f1c00 dut bed45000 (mask ffffff) op 1 a-lane0 addr 004341 now vm_r 40c353bd vm_m 40af7a32
+operand events ref 1188 dut 1188
+lane-out event 0 lane 0: ref ov 1 3424d07b dut ov 1 b423a6d5
+  ev 0 ref ffb2bf7227b55cf141350952e4b57728313424d07bb4c53717b518c8d13424d07b | dut ffb4122692b384d900b4474d49b362cdddb423a6d5b3df97f9b3b767f8b423a6d5
+  ev 1 ref ffb5100bd734c5c05e35174e0e34bb43fd347fb110b3bbac34b57fe52c350b1249 | dut ffb3bde354b4390ab4b44c7cc5b43718e5b42c13feb40bab37b355d727b447f338
+  op13 operand ev 105 mask 0000ff a c1c8c1473a2c188bbd68edd1c230c3d7c08525b8451227ddbb7ab06f40008561 | dut c1c8c1473a2c188bbd68edd1c230c3d7c08525b8451227ddbb7ab06f40008561
+  op13 operand ev 106 mask 0000ff a 42b5493bbb5c4f5c3807acd2bc2e4b3c3b44369b3bd740f8c656eb1bbc86df70 | dut 42b5493bbb5c4f5c3807acd2bc2e4b3c3b44369b3bd740f8c656eb1bbc86df70
+  op13 operand ev 107 mask 0000ff a 460a1c7f3e60d9b544b9573945ebd43344dd69e74184d48f3745f694b76292bf | dut 460a1c7f3e60d9b544b9573945ebd43344dd69e74184d48f3745f694b76292bf
+  op13 operand ev 108 mask 000003 a 460a1c7f3e60d9b544b9573945ebd43344dd69e74184d48f40f58a92c2369060 | dut 460a1c7f3e60d9b544b9573945ebd43344dd69e74184d48f40f58a92c2369060
+  op13 operand ev 109 mask 0000ff a be338dd7b9df9b60b8bc106e40f58a92c2369060460a1c7f3e60d9b544b95739 | dut be338dd7b9df9b60b8bc106e40f58a92c2369060460a1c7f3e60d9b544b95739
+  op13 operand ev 110 mask 0000ff a 37c6b42743df05fb3a7765b9c6c46eccbc4944f5393e7dffbd8dd8d5b859ca6a | dut 37c6b42743df05fb3a7765b9c6c46eccbc4944f5393e7dffbd8dd8d5b859ca6a
+  op13 operand ev 111 mask 0000ff a bf5d0d4f39f5bfe8436814deb98362fa38218a0d3fe6012ebe57c00137e5f6b7 | dut bf5d0d4f39f5bfe8436814deb98362fa38218a0d3fe6012ebe57c00137e5f6b7
+  op13 operand ev 112 mask 000003 a bf5d0d4f39f5bfe8436814deb98362fa38218a0d3fe6012e3b77fe1bb739bdc4 | dut bf5d0d4f39f5bfe8436814deb98362fa38218a0d3fe6012e3b77fe1bb739bdc4
+  op13 operand ev 113 mask 0000ff a c473989e3edad4b2404cbf1e3b77fe1bb739bdc4bf5d0d4f39f5bfe8436814de | dut c473989e3edad4b2404cbf1e3b77fe1bb739bdc4bf5d0d4f39f5bfe8436814de
+  op13 operand ev 114 mask 0000ff a be79b5c1c49540f0c201c35db7fe04753a018725c51a5d1cbc854beec6a11192 | dut be79b5c1c49540f0c201c35db7fe04753a018725c51a5d1cbc854beec6a11192
+  op13 operand ev 115 mask 0000ff a c45c6656c4ea91bbc1b7f603bbc50315c6a0f43ebc93464e409c98173d4ef4c3 | dut c45c6656c4ea91bbc1b7f603bbc50315c6a0f43ebc93464e409c98173d4ef4c3
+  op13 operand ev 116 mask 000003 a c45c6656c4ea91bbc1b7f603bbc50315c6a0f43ebc93464e3f8798343c4a6052 | dut c45c6656c4ea91bbc1b7f603bbc50315c6a0f43ebc93464e3f8798343c4a6052
+  op13 operand ev 117 mask 0000ff a 4531c691bf0f1e5c46c1e3983f8798343c4a6052c45c6656c4ea91bbc1b7f603 | dut 4531c691bf0f1e5c46c1e3983f8798343c4a6052c45c6656c4ea91bbc1b7f603
+  op13 operand ev 118 mask 0000ff a c298629db8e1af13b9987bbb46f2c89bbec73e0cc28e86d8c0c5a9d73e35f030 | dut c298629db8e1af13b9987bbb46f2c89bbec73e0cc28e86d8c0c5a9d73e35f030
+  op13 operand ev 119 mask 0000ff a c46289fc425e5d23bd373583b92673183df43863c2e04ff7b90a2e1940982a25 | dut c46289fc425e5d23bd373583b92673183df43863c2e04ff7b90a2e1940982a25
+  op13 operand ev 120 mask 000003 a c46289fc425e5d23bd373583b92673183df43863c2e04ff7b80d12ab41752f58 | dut c46289fc425e5d23bd373583b92673183df43863c2e04ff7b80d12ab41752f58
+lane-out events 1188 / 1188, crom events 786 / 786
+reducer event 36: ref op 26 addr 0061ea data 50bbbf7a | dut op 26 addr 0061ea data 57a55d68
+first write diff event 46 (ref op 25, dut op 25): mask ff/ff addr 000f22/000f22
+  lane 0 ref 4385fb1b dut 4388bf18
+  lane 1 ref c619d841 dut c611aae5
+  lane 2 ref c204920b dut c1fe961c
+  lane 3 ref 426e1e85 dut 426c99ab
+  lane 4 ref c29ad8dd dut c2954dfa
+  lane 5 ref c52e1099 dut c53334d3
+  lane 6 ref 3cc4ccf9 dut 3cc759ce
+  lane 7 ref bd680f86 dut bd6a6f9f
+port stream 4 differs: ref 147 events, master 147
+port stream 5 differs: ref 202 events, master 202
+port stream 6 differs: ref 362 events, master 362
+SU_LAT ops=119 ref_avg=95.00 dut_avg=183.10 delta_min=36 delta_max=384 ref_min=24 ref_max=185 (SW=8 IS=1 OS=1 CRX=2 VL=7)
+SU_COMPONENT_CYCLES benchmark_cyc=454 accepted=120 samples=119 ref_sum=11305 dut_sum=21789
+WRITER_QUIESCENT checks=5742 future_write_hazards=0
+FAIL qfd_su_vm_bv vm_answer_bad=0 vm_mismatch=310 port_streams_differing=3 faults r0 d0 vm w_fault 0 w_hazard 0 ops=120 vm_write_events=147 (floors: events x SW 1176 > 960 lanes, events > 60) x_fault 0 x_hazard 0
+- rtl/test/qwen_vm_me/tb_qfd_vm_writer_lease_composition.sv:522: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 28us; walltime 11.031 s; speed 2.521 us/s
+- Verilator: cpu 11.030 s on 1 threads; allocated 33 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2043578-1791974663): exit 1

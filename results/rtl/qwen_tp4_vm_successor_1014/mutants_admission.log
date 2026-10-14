@@ -1,0 +1,53 @@
+ot-run: ot-epyc4       admits   179 GB (avail 527, growth 300, headroom 48, waiters 0/0 GB) load 21/128 running 11 disk 1061 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1992446-1791973906 after 0 s
+region_leaf mismatch cyc 70 xo 0 ro 1 so 0 ovf 0
+region_leaf mismatch cyc 78 xo 0 ro 1 so 0 ovf 0
+region_leaf mismatch cyc 89 xo 0 ro 1 so 0 ovf 0
+FAIL qfd_vm_region_leaf LEAF_MUT=1 ROW_MUT=0 SU_MUT=0 errors=2817 of 6166 (xo 0 ro 2817 so 0 ovf 0)
+[61666000] %Fatal: bench.sv:138: Assertion failed in tb_qfd_vm_tp4_successor: FAIL
+%Error: bench.sv:138: Verilog $stop
+Aborting...
+region_leaf mismatch cyc 84 xo 1 ro 0 so 0 ovf 0
+region_leaf mismatch cyc 85 xo 1 ro 0 so 0 ovf 0
+region_leaf mismatch cyc 86 xo 1 ro 0 so 0 ovf 0
+FAIL qfd_vm_region_leaf LEAF_MUT=3 ROW_MUT=0 SU_MUT=0 errors=5361 of 6166 (xo 5361 ro 0 so 0 ovf 0)
+[61666000] %Fatal: bench.sv:138: Assertion failed in tb_qfd_vm_tp4_successor: FAIL
+%Error: bench.sv:138: Verilog $stop
+Aborting...
+region_leaf mismatch cyc 116 xo 0 ro 1 so 0 ovf 0
+region_leaf mismatch cyc 117 xo 0 ro 1 so 0 ovf 0
+region_leaf mismatch cyc 164 xo 1 ro 0 so 0 ovf 0
+FAIL qfd_vm_region_leaf LEAF_MUT=4 ROW_MUT=0 SU_MUT=0 errors=5339 of 6166 (xo 5308 ro 700 so 0 ovf 0)
+[61666000] %Fatal: bench.sv:138: Assertion failed in tb_qfd_vm_tp4_successor: FAIL
+%Error: bench.sv:138: Verilog $stop
+Aborting...
+region_leaf mismatch cyc 170 xo 0 ro 0 so 1 ovf 0
+region_leaf mismatch cyc 171 xo 0 ro 0 so 1 ovf 0
+region_leaf mismatch cyc 172 xo 0 ro 0 so 1 ovf 0
+FAIL qfd_vm_region_leaf LEAF_MUT=6 ROW_MUT=0 SU_MUT=0 errors=4668 of 6166 (xo 0 ro 0 so 4668 ovf 0)
+[61666000] %Fatal: bench.sv:138: Assertion failed in tb_qfd_vm_tp4_successor: FAIL
+%Error: bench.sv:138: Verilog $stop
+Aborting...
+region_leaf mismatch cyc 98 xo 0 ro 0 so 1 ovf 0
+region_leaf mismatch cyc 123 xo 0 ro 0 so 1 ovf 0
+region_leaf mismatch cyc 169 xo 0 ro 0 so 1 ovf 0
+FAIL qfd_vm_region_leaf LEAF_MUT=8 ROW_MUT=0 SU_MUT=0 errors=4220 of 6166 (xo 0 ro 0 so 4220 ovf 0)
+[61666000] %Fatal: bench.sv:138: Assertion failed in tb_qfd_vm_tp4_successor: FAIL
+%Error: bench.sv:138: Verilog $stop
+Aborting...
+region_leaf mismatch cyc 102 xo 1 ro 0 so 0 ovf 0
+region_leaf mismatch cyc 103 xo 1 ro 0 so 0 ovf 0
+region_leaf mismatch cyc 104 xo 1 ro 0 so 0 ovf 0
+FAIL qfd_vm_region_leaf LEAF_MUT=11 ROW_MUT=0 SU_MUT=0 errors=5786 of 6166 (xo 5765 ro 778 so 0 ovf 0)
+[61666000] %Fatal: bench.sv:138: Assertion failed in tb_qfd_vm_tp4_successor: FAIL
+%Error: bench.sv:138: Verilog $stop
+Aborting...
+region_leaf mismatch cyc 78 xo 0 ro 1 so 0 ovf 0
+region_leaf mismatch cyc 92 xo 0 ro 1 so 0 ovf 0
+region_leaf mismatch cyc 93 xo 0 ro 1 so 0 ovf 0
+FAIL qfd_vm_region_leaf LEAF_MUT=12 ROW_MUT=0 SU_MUT=0 errors=4859 of 6166 (xo 0 ro 4859 so 0 ovf 0)
+[61666000] %Fatal: bench.sv:138: Assertion failed in tb_qfd_vm_tp4_successor: FAIL
+%Error: bench.sv:138: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1992446-1791973906): exit 0

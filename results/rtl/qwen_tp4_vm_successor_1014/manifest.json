@@ -1,0 +1,92 @@
+{
+  "original_commit": "da28dc03eb72c086612503f5a30affa8995f6da2",
+  "candidate_commit": "36f141274",
+  "params": {
+    "NBK": 8,
+    "NSB": 2,
+    "NSU": 3,
+    "DEPTH": 174,
+    "LAW": 8,
+    "DEPTHS": 695,
+    "LAWS": 10,
+    "USE_MACRO": 1,
+    "NPP": 7,
+    "MEREG": 1,
+    "NRI": 2,
+    "NRX": 2,
+    "NRS": 1
+  },
+  "scope": "exact TP4 group vs parameter-bound region leaf; functional macro models, no hard view or TP8 field alias",
+  "source_records": {
+    "original:rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+      "sha256": "433cee886930aa952a120dfb09e1c2c3e63daa66622c7890e095c30cb1d0cf5a",
+      "transformed_sha256": "c4f2db5dd7d0098a400fade6e15b825529bc5ec632e86f7fccbc93eff8e026e1",
+      "local": "original_0.sv"
+    },
+    "original:rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+      "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+      "transformed_sha256": "1b69c2b6b5feb2eaf77e348014c64e1748b5bdeb0a7b69aeab43c1a4369a28d5",
+      "local": "original_1.sv"
+    },
+    "original:rtl/hdc/ot_hdc_delay.sv": {
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "transformed_sha256": "dae6cb17713a10d0d187a506dd3038a0bdf8afcbb5049e61ddb71c337bfa4a7a",
+      "local": "original_2.sv"
+    },
+    "original:physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+      "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "transformed_sha256": "2641bbd1d60aad07a4676bd110a8b4555fe55b26f02f146fef7a6d4ef33be4b1",
+      "local": "original_3.sv"
+    },
+    "original:physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "transformed_sha256": "87d3e77871eaea0df0a14ee55380bd880f6f090100e76f3fcfa1d0603ae7143b",
+      "local": "original_4.sv"
+    },
+    "candidate:rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": {
+      "sha256": "e8cc62d896270e78ed65c81c888958e885be50623fff552658e84b2c8d37123d",
+      "local": "candidate_0.sv"
+    },
+    "candidate:rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv": {
+      "sha256": "8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853",
+      "local": "candidate_1.sv"
+    },
+    "candidate:rtl/hdc/ot_hdc_delay.sv": {
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "local": "candidate_2.sv"
+    },
+    "candidate:physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+      "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "local": "candidate_3.sv"
+    },
+    "candidate:physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "local": "candidate_4.sv"
+    },
+    "candidate:rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": {
+      "sha256": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647",
+      "local": "candidate_5.sv"
+    },
+    "candidate:rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": {
+      "sha256": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
+      "local": "candidate_6.sv"
+    },
+    "candidate:rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": {
+      "sha256": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
+      "local": "candidate_7.sv"
+    }
+  },
+  "renamed_original_modules": {
+    "ot_qfd_vm_rowbank_s": "ot_qfd_vm_rowbank_s_tp4_da28",
+    "ot_qfd_vm_grp": "ot_qfd_vm_grp_tp4_da28",
+    "ot_qfd_sp_vector_memory_bv": "ot_qfd_sp_vector_memory_bv_tp4_da28",
+    "ot_qfd_vm_su_t": "ot_qfd_vm_su_t_tp4_da28",
+    "ot_qfd_vm_rowbank": "ot_qfd_vm_rowbank_tp4_da28",
+    "ot_sram_1r1w_256x256_m2_r2c2": "ot_sram_1r1w_256x256_m2_r2c2_tp4_da28",
+    "ot_qfd_sp_vector_memory": "ot_qfd_sp_vector_memory_tp4_da28",
+    "ot_qfd_vm_bank_t": "ot_qfd_vm_bank_t_tp4_da28",
+    "ot_hdc_delay": "ot_hdc_delay_tp4_da28",
+    "ot_sram_1r1w_1024x256_m2_r2c2": "ot_sram_1r1w_1024x256_m2_r2c2_tp4_da28"
+  },
+  "bench_sha256": "73a6278fe1c9ca64e40fb99b385b502b4b4759f6a25329b498629700639fd471"
+}

@@ -1,0 +1,5 @@
+region_leaf mismatch cyc 6012 xo 0 ro 0 so 0 ovf 1
+FAIL qfd_vm_region_leaf LEAF_MUT=7 ROW_MUT=0 SU_MUT=0 errors=1 of 6166 (xo 0 ro 0 so 0 ovf 1)
+[61666000] %Fatal: bench.sv:138: Assertion failed in tb_qfd_vm_tp4_successor: FAIL
+%Error: bench.sv:138: Verilog $stop
+Aborting...
