@@ -1,5 +1,5 @@
 {
- "name": "qkd_ectl_a_tp8-tp3-COMMIT",
+ "name": "qkd_ectl_a_tp8-tp3-d3fd95895",
  "block": "qkd_ectl_a_tp8",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-kvsys-el-1014",
-  "commit": "COMMIT",
+  "commit": "d3fd95895",
   "extra_paths": [
    "rtl/hdc",
    "rtl/test/qwen_kv_die",
@@ -114,7 +114,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ectl_a_tp8/qkd_ectl_a_tp8-tp3-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ectl_a_tp8/qkd_ectl_a_tp8-tp3-d3fd95895"
   }
  ],
  "cycles_added": 0,
