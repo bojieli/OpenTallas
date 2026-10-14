@@ -74,7 +74,7 @@
   "branch": "claude/s81-norm-tree-1014",
   "tag": "v1",
   "structural_change": "NORM tree variant",
-  "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 64 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
+  "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctfs_nt: the forward relay/out strip + the partial lane relay",
   "views_to": "physical/ref_tile/s81hc_ctfsnt_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfsnt_ref"
