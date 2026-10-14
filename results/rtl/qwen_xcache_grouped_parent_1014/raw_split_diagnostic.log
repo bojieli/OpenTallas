@@ -1,0 +1,5 @@
+PASS actual grouped cached parent GT3072 NW18 ops=22 arithmetic=936 requests=876 misses=144 XLOCAL=1 IREG_XL_bypass_only=1 ME_EXTRA=8 indexed_entries=32 coherent19roots=1 raw_split_fault_diagnostics=1
+- rtl/test/qwen_kv_die/tb_qwen_xcache_grouped_parent.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 64us; walltime 0.679 s; speed 94.104 us/s
+- Verilator: cpu 0.679 s on 1 threads; allocated 20 MB

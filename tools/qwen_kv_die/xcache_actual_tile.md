@@ -135,3 +135,24 @@ wiring/arithmetic proof with deterministic operands and the simulation pause
 contract; it does not qualify the combinational hit face as a registered
 physical admission round trip, source context/ACK propagation, complete cache
 CTS or whole-layer throughput. The earlier generic-parent evidence is retained.
+
+Distinct grouped-TX parent local wiring receipt
+-----------------------------------------------
+
+Immutable4b94b3b00 (not earlier fde2) actual ot_qwen_tile_tp8_cached_grouped
+uses scalar clk_tx_group and fixed native RQR wrappers. It now passes the same
+real RPS0 arithmetic fixture:680 outputs/684 requests/144 misses, raw split
+diagnostic936/876; wrong cache row and actual parent word rotation fail
+arithmetic. Its19 coherent core/cache roots and independent live load root
+retain the same logical response edge. EPYC4 unit
+oth-ubuntu-868609-1791963380 completed exit0. Source/mutant manifests and logs
+are results/rtl/qwen_xcache_grouped_parent_1014. Reproduce with parent_prepare
+--parent-commit 4b94b3b00 --grouped-tx and xcache_grouped_parent_gate.py, under
+ot-run --mem 32 --threads 16 after transferring prepared sources.
+
+This distinct candidate master does not replace or relabel the old25-root
+source. Its fixture drains descriptors, so it retains the same unqualified live
+j_repeat context-overlap contract. The separate actual-mode counterexample and
+default-off repair are documented in xcache_mode_repair.md; they are not wired
+into this grouped parent. Physical admission faces, source/version/ACK handling,
+full clock/pin closure and native layer cost remain separate pending obligations.
