@@ -41,7 +41,7 @@
         345.6,
         216.0
       ],
-      "view": "new mv leaf CTS gate live"
+      "view": "serial now separate; latest SRAM MV root gate pending"
     },
     {
       "instance": "u_kc",
@@ -54,7 +54,7 @@
         250,
         250
       ],
-      "view": "hgi_dma_kvw_core_a-d8ef9b43d-tc-cl re-export pending"
+      "view": "original FF actual SRAM -6.121ps; bounded official hold ECO live, no waiver"
     },
     {
       "instance": "u_h0",
@@ -67,7 +67,7 @@
         145,
         145
       ],
-      "view": "hgi_dma_kvw_hold_a-d24a9898a-tc-cl re-export pending"
+      "view": "hold_a timing passes; child_lint FAIL upper OBS/blocked-above pins and PG; repairs owed"
     },
     {
       "instance": "u_h1",
@@ -80,7 +80,20 @@
         145,
         145
       ],
-      "view": "same closed hold_a master"
+      "view": "hold_a timing passes; child_lint FAIL upper OBS/blocked-above pins and PG; repairs owed"
+    },
+    {
+      "instance": "u_ser",
+      "master": "ot_hgi_b2_dma_serial",
+      "origin": [
+        151.2,
+        108
+      ],
+      "outline": [
+        129.6,
+        86.4
+      ],
+      "view": "new serial child split required by measured SRAM MV15494sinks/insertion565.9ps refusal"
     }
   ],
   "interfaces": {

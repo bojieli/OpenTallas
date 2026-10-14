@@ -153,6 +153,17 @@
         "needs": [
           "verilator"
         ]
+      },
+      {
+        "name": "q5_serial_descriptor_mutant",
+        "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/q5_serial_descriptor -GMUT_SEAM=7 -GNREC=4",
+        "expect": "fail",
+        "fail_regex": "B2_DMA_Q FAIL",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
       }
     ],
     "extra_paths": [

@@ -79,6 +79,26 @@ module ot_hgi_b2_dma_mv #(
     parameter integer QID = 0,            // B2: this quadrant = its HBM stack (0..3)
     parameter integer MUT_B2 = 0          // B2 bench mutant: 1 rows of stack QID + 1 on lane QID; 2 lane QID driven on lane QID + 1
 ) (
+    output wire ser_mv_v,
+    output wire [226:0] ser_mv,
+    input wire ser_mv_rdy,
+    input wire ser_mv_done,
+    input wire ser_mv_fault,
+    input wire ser_fence_rdy,
+    input wire ser_k_req_v,
+    output wire ser_k_req_rdy,
+    input wire ser_k_req_we,
+    input wire [36:0] ser_k_req_addr,
+    input wire [255:0] ser_k_req_wdata,
+    input wire [31:0] ser_k_req_wstrb,
+    input wire [15:0] ser_k_req_tag,
+    output wire ser_k_rsp_v,
+    input wire ser_k_rsp_rdy,
+    output wire ser_k_rsp_we,
+    output wire [255:0] ser_k_rsp_data,
+    output wire ser_k_fault,
+    input wire [337:0] ser_vmq,
+    output wire [273:0] ser_vmr,
     input wire kv_c_rdy, kv_idle_w, kv_creq, kv_src, kv_done,
     input wire [511:0] kv_kq, input wire [3:0] kv_wv, kv_wo,
     input wire [147:0] kv_wa, input wire [1023:0] kv_wd,
@@ -222,8 +242,9 @@ module ot_hgi_b2_dma_mv #(
     reg kr_v, kr_we; reg [255:0] kr_d; reg [273:0] vr_q;
     reg wld_q; always @(posedge clk) wld_q <= wl_done;     // wide-port done pin flop (hgi-1010/c: wl_done -> wr_in was 17 levels)
     always @(posedge clk or negedge rn)
-        if (!rn) begin kr_v <= 1'b0; vr_q <= 274'd0; end
-        else begin kr_v <= k_rsp_v; vr_q <= vmr_local; end
+        if (!rn) begin kr_v <= 1'b0; vr_q[273] <= 1'b0; end
+        else begin kr_v <= k_rsp_v; vr_q[273] <= vmr_local[273]; end
+    always @(posedge clk) vr_q[272:0] <= vmr_local[272:0];
     always @(posedge clk) begin kr_we <= k_rsp_we; kr_d <= k_rsp_data; end
     wire fast_cmd = (cm_q[92:77] == 16'd1) && (cm_q[185:170] == 16'd1);     // src istride 1 and dst istride 1
     // hbm-fq/dma (KVW = 1): a raw VM -> HBM row copy goes to the KV write-back engine: VM source, HBM linear destination,
@@ -240,7 +261,8 @@ module ot_hgi_b2_dma_mv #(
     wire kv_idle = (KVW != 0) ? kv_idle_q && !kc_pending && !kc_v : 1'b1;
     reg [1:0] qid_q; always @(posedge clk) qid_q <= (MUT_SEAM == 6) ? qid + 2'd1 : qid;
     wire [273:0] vmr_local = il_active ? 274'd0 : vmr;
-    always @(posedge clk or negedge rn) if (!rn) il_vmr <= 0; else il_vmr <= il_active ? (vmr ^ ((MUT_SEAM == 2) ? 274'd1 : 274'd0)) : 274'd0;
+    always @(posedge clk or negedge rn) if (!rn) il_vmr[273] <= 1'b0; else il_vmr[273] <= il_active && vmr[273];
+    always @(posedge clk) il_vmr[272:0] <= il_active ? (vmr[272:0] ^ ((MUT_SEAM == 2) ? 273'd1 : 273'd0)) : 273'd0;
     // B2: refused at the command station (fail-closed, no request): a linear HBM side starting on another stack (the KV
     // engine streams a move on its row-0 stack), a strided move with a STRIPE4 side (the serial engine addresses linearly)
     wire b2_bad = B2 != 0 && ((cm_q[1:0] == 2'd0 && cm_q[44:42] == 3'd0 && cm_q[41:40] != 2'(QID)) ||
@@ -258,11 +280,37 @@ module ot_hgi_b2_dma_mv #(
     wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
     reg  f_fault;
     assign command_ready = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
-    ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE), .SXP(PX >= 2 ? 1 : 0)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_go && !fast_cmd && cm_q[94:93] != 2'd0),
-        .mv_rdy(s_mv_rdy), .mv(cm_q), .mv_done(s_mv_done), .mv_fault(s_mv_fault), .fence_v(1'b0), .fence_rdy(s_fence_rdy),
-        .fence_done(s_fence_done), .k_req_v(s_kv), .k_req_rdy(ko_ld && sel_s && !b2_kx), .k_req_we(s_kwe), .k_req_addr(s_ka),
-        .k_req_wdata(s_kd), .k_req_wstrb(s_ks), .k_req_tag(s_kt), .k_rsp_v(kr_v && sel_s), .k_rsp_rdy(s_krr),
-        .k_rsp_we(kr_we), .k_rsp_data(kr_d), .k_fault((k_fault && sel_s) || b2_kx), .vmq(s_vmq), .vmr(sel_s ? vr_q : 274'd0));
+    wire pin_s_kv, pin_s_kwe, s_pin_ready; wire [36:0] pin_s_ka;
+    wire [255:0] pin_s_kd; wire [31:0] pin_s_ks; wire [15:0] pin_s_kt;
+    wire [337:0] pin_s_vmq; reg [337:0] s_vmq_pin;
+    wire [341:0] serial_head;
+    ot_hgi_b2_dma_cmd_pin #(.W(342)) u_serial_kpin(.clk(clk), .rst_n(rn), .in_v(pin_s_kv),
+      .in_data({pin_s_kwe,pin_s_ka,pin_s_kd,pin_s_ks,pin_s_kt}), .in_ready(s_pin_ready),
+      .out_v(s_kv), .out_data(serial_head), .out_ready(ko_ld && sel_s && !b2_kx));
+    assign {s_kwe,s_ka,s_kd,s_ks,s_kt}=serial_head;
+    always @(posedge clk or negedge rn) if (!rn) s_vmq_pin[337]<=0; else s_vmq_pin[337]<=pin_s_vmq[337];
+    always @(posedge clk) s_vmq_pin[336:0]<=pin_s_vmq[336:0];
+    assign s_vmq=s_vmq_pin;
+    assign ser_mv_v = cv_go && !fast_cmd && cm_q[94:93] != 2'd0;
+    assign ser_mv = cm_q;
+    assign s_mv_rdy = ser_mv_rdy;
+    assign s_mv_done = ser_mv_done;
+    assign s_mv_fault = ser_mv_fault;
+    assign s_fence_rdy = ser_fence_rdy;
+    assign pin_s_kv = ser_k_req_v;
+    assign ser_k_req_rdy = s_pin_ready;
+    assign pin_s_kwe = ser_k_req_we;
+    assign pin_s_ka = ser_k_req_addr;
+    assign pin_s_kd = ser_k_req_wdata;
+    assign pin_s_ks = ser_k_req_wstrb;
+    assign pin_s_kt = ser_k_req_tag;
+    assign ser_k_rsp_v = kr_v && sel_s;
+    assign s_krr = ser_k_rsp_rdy;
+    assign ser_k_rsp_we = kr_we;
+    assign ser_k_rsp_data = kr_d;
+    assign ser_k_fault = (k_fault && sel_s) || b2_kx;
+    assign pin_s_vmq = ser_vmq;
+    assign ser_vmr = sel_s ? vr_q : 274'd0;
     reg fence_pending;
     wire fence_available = !busy_f && s_mv_rdy && s_fence_rdy && kv_idle && !cv_q && !command_valid;
     assign fence_rdy = !fence_pending;
@@ -365,8 +413,12 @@ module ot_hgi_b2_dma_mv #(
     // pin flops (registered boundary: route lint 98f8152b3 counted 96 levels from c_gnt through the reader issue)
     reg g_gnt; reg [31:0] g_crp; reg [512:0] s_vr2q;
     reg [512:0] group_q;
-    always @(posedge clk or negedge rn) if (!rn) group_q <= 0;
-       else group_q <= {s_vr2q[512], s_vr2q[511:0] | kv_kq} ^ ((MUT_SEAM == 3 && |kv_kq) ? 513'd1 : 513'd0);
+    wire [512:0] group_next = {s_vr2q[512],s_vr2q[511:0] | kv_kq} ^ ((MUT_SEAM == 3 && |kv_kq) ? 513'd1 : 513'd0);
+    always @(posedge clk or negedge rn) begin
+       if (!rn) begin group_q[512] <= 0; for (integer b=0;b<32;b=b+1) group_q[b*16+15] <= 0; end
+       else begin group_q[512] <= group_next[512]; for (integer b=0;b<32;b=b+1) group_q[b*16+15] <= group_next[b*16+15]; end
+    end
+    always @(posedge clk) for (integer b=0;b<32;b=b+1) group_q[b*16 +: 15] <= group_next[b*16 +: 15];
     assign vr2q = group_q;
     always @(posedge clk or negedge rn) if (!rn) begin g_gnt <= 1'b0; g_crp <= 32'd0; end
                                         else begin g_gnt <= vr2r[8256]; g_crp <= vr2r[8255:8224]; end
@@ -641,6 +693,13 @@ module ot_hgi_b2_dma_mv #(
     // shift: the packed elements to the destination byte offset (a run never crosses the sector: d_room bounds k)
     wire [255:0] put_d = pk_d << {pk_dp[4:0], 3'd0};
     wire [31:0]  put_s = pk_s << pk_dp[4:0];
+    // Datapath payloads have no reset net and no reset-derived enable. Only valid bits reset.
+    always @(posedge clk) if (iss_vr) f_vmq[336:0] <= {1'b0,rsa[r_k][31:5],5'd0,256'd0,32'd0,16'h4D52};
+    always @(posedge clk) if (iss_vw) begin
+       reg [7:0] mask_words;
+       for (integer t=0;t<8;t=t+1) mask_words[t] = &wq_head[256+4*t +: 4];
+       wl[278:0] <= {wq_head[302:288] ^ ((MUT_SEAM == 5) ? 15'd1 : 15'd0),wq_head[255:0],mask_words};
+    end
     // Native memory queues with two registered head entries. Their credits include pipe reservations.
     wire [324:0] wq_push_data = {p3_dsec,
        (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s,
@@ -747,7 +806,7 @@ module ot_hgi_b2_dma_mv #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             busy_f <= 1'b0; sel_s <= 1'b0; go_f <= 1'b0; go_q2 <= 1'b0; f_fault <= 1'b0;
-            mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq <= 338'd0; wl <= 280'd0; mv_src <= 1'b0; src_sent <= 1'b0;
+            mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq[337] <= 1'b0; wl[279] <= 1'b0; mv_src <= 1'b0; src_sent <= 1'b0;
             k_in <= 8'd0; v_in <= 3'd0; v_kind <= 8'd0; rd_in <= 9'd0; wr_in <= 9'd0;
             sf_h <= '0; sf_a <= '0; v_ptr <= '0; sf_n <= 9'd0; lv <= '0; lw_v <= 1'b0; lq_v <= 4'd0; lg <= 4'd0; lgi <= 2'd0; ract <= 4'd0; rrr <= 2'd0;
             cf_n <= 7'd0; cd_v <= 1'b0; u_cv <= 1'b0; go_q4 <= 1'b0; stp <= 1'b0; stpd <= 1'b0;
@@ -874,10 +933,10 @@ module ot_hgi_b2_dma_mv #(
                 if (iss_vw) begin : wide
                     reg [7:0] wm; integer t;
                     for (t = 0; t < 8; t = t + 1) wm[t] = &wq_head[256+4*t +: 4];
-                    wl <= {1'b1, wq_head[302:288] ^ ((MUT_SEAM == 5) ? 15'd1 : 15'd0), wq_head[255:0], wm};
+                    wl[279] <= 1'b1;
                 end
                 if (iss_vr) begin
-                    f_vmq <= {1'b1, 1'b0, rsa[r_k][31:5], 5'd0, 256'd0, 32'd0, 16'h4D52}; vpush = 1'b1;
+                    f_vmq[337] <= 1'b1; vpush = 1'b1;
                 end
                 // write queue pop
                 // read lane requests leave their registers when the lane takes them
@@ -1087,11 +1146,11 @@ endmodule
 `default_nettype wire
 
 // Two-entry input pin station: payload, valid and ready are all registered at the face.
-module ot_hgi_b2_dma_cmd_pin(
- input wire clk, rst_n, in_v, input wire [226:0] in_data, output reg in_ready,
- output reg out_v, output reg [226:0] out_data, input wire out_ready
+module ot_hgi_b2_dma_cmd_pin #(parameter integer W=227)(
+ input wire clk, rst_n, in_v, input wire [W-1:0] in_data, output reg in_ready,
+ output reg out_v, output reg [W-1:0] out_data, input wire out_ready
 );
- reg [1:0] count; reg [226:0] tail;
+ reg [1:0] count; reg [W-1:0] tail;
  wire push = in_v && in_ready, pop = out_v && out_ready;
  wire [1:0] count_next = count + {1'b0,push} - {1'b0,pop};
  always @(posedge clk or negedge rst_n) begin

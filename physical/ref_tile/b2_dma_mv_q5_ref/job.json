@@ -23,7 +23,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_b2_dma_mv #(.B2(1), .QID(0), .VR2(1), .SVR2(0), .KVW(1), .PX(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_mv.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_b2_dma_mv #(.B2(1), .QID(0), .VR2(1), .SVR2(0), .KVW(1), .PX(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_mv.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -112,6 +112,17 @@
    {
     "name": "q5_qid_pin_address_mutant",
     "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/q5_qid_pin_address -GMUT_SEAM=6 -GNREC=4",
+    "expect": "fail",
+    "fail_regex": "B2_DMA_Q FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "q5_serial_descriptor_mutant",
+    "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/q5_serial_descriptor -GMUT_SEAM=7 -GNREC=4",
     "expect": "fail",
     "fail_regex": "B2_DMA_Q FAIL",
     "threads": 8,

@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `default_nettype none
-// B2 five-leaf cluster: request/record+I-list, sector+serial mover, CLOSED KV core, two CLOSED16-lane hold leaves.
+// B2 partition: request/record+I-list, sector mover, serial mover, KV core, two16-lane hold leaves.
 // Every parent connection is wiring; the VM receiver expands compact wl into its bank.
 // Read-group32-lane format remains the current contract while the local8-lane die interface is unresolved.
 // BACK1 belongs to its separate CLOSED NS1/NB8 engine beside each VM slice; integration is still owed.
@@ -63,6 +63,26 @@ module ot_hgi_b2_dma_q #(
     wire [147:0] kc_wa; wire [1023:0] kc_wd;
     wire [31:0] hv; wire [1023:0] hd; wire [63:0] hs0, hs1; wire ha;
     wire [3:0] rv, rwe, rrr; wire [147:0] ra; wire [15:0] rl; wire [63:0] rt; wire [1023:0] rwd; wire [127:0] rws;
+    wire ser_mv_v;
+    wire [226:0] ser_mv;
+    wire ser_mv_rdy;
+    wire ser_mv_done;
+    wire ser_mv_fault;
+    wire ser_fence_rdy;
+    wire ser_k_req_v;
+    wire ser_k_req_rdy;
+    wire ser_k_req_we;
+    wire [36:0] ser_k_req_addr;
+    wire [255:0] ser_k_req_wdata;
+    wire [31:0] ser_k_req_wstrb;
+    wire [15:0] ser_k_req_tag;
+    wire ser_k_rsp_v;
+    wire ser_k_rsp_rdy;
+    wire ser_k_rsp_we;
+    wire [255:0] ser_k_rsp_data;
+    wire ser_k_fault;
+    wire [337:0] ser_vmq;
+    wire [273:0] ser_vmr;
     wire [36:0] ka;
 `ifndef OT_B2_DMA_Q5_HARD
     ot_hgi_b2_dma_rq #(.SBIT(SBIT), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM))
@@ -80,6 +100,26 @@ module ot_hgi_b2_dma_q #(
     ot_hgi_b2_dma_mv
 `endif
     u_mv(
+      .ser_mv_v(ser_mv_v),
+      .ser_mv(ser_mv),
+      .ser_mv_rdy(ser_mv_rdy),
+      .ser_mv_done(ser_mv_done),
+      .ser_mv_fault(ser_mv_fault),
+      .ser_fence_rdy(ser_fence_rdy),
+      .ser_k_req_v(ser_k_req_v),
+      .ser_k_req_rdy(ser_k_req_rdy),
+      .ser_k_req_we(ser_k_req_we),
+      .ser_k_req_addr(ser_k_req_addr),
+      .ser_k_req_wdata(ser_k_req_wdata),
+      .ser_k_req_wstrb(ser_k_req_wstrb),
+      .ser_k_req_tag(ser_k_req_tag),
+      .ser_k_rsp_v(ser_k_rsp_v),
+      .ser_k_rsp_rdy(ser_k_rsp_rdy),
+      .ser_k_rsp_we(ser_k_rsp_we),
+      .ser_k_rsp_data(ser_k_rsp_data),
+      .ser_k_fault(ser_k_fault),
+      .ser_vmq(ser_vmq),
+      .ser_vmr(ser_vmr),
       .clk(clk), .rst_n(rst_n), .qid(qid), .il_active(il_active), .il_vmq(il_vmq), .il_vmr(mover_vmr), .mv_v(mover_v), .mv(mover_cmd), .mv_rdy(mover_rdy), .mv_done(mover_done), .mv_fault(mover_fault), .mv_src(mover_src),
       .fence_v(mover_fv), .fence_rdy(mover_frdy), .fence_done(mover_fdone),
       .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
@@ -111,6 +151,32 @@ module ot_hgi_b2_dma_q #(
     ot_hgi_dma_kvw_hold
 `endif
     u_h1(.clk(clk), .rst_n(rst_n), .rsp(vr2r[8223:4112]), .act(ha), .sel0(hs0[63:32]), .sel1(hs1[63:32]), .hv(hv[31:16]), .d0(hd[767:512]), .d1(hd[1023:768]));
+`ifndef OT_B2_DMA_Q5_HARD
+    ot_hgi_b2_dma_serial #(.MUT_RNE(0),.MUT_SEAM(MUT_SEAM))
+`else
+    ot_hgi_b2_dma_serial
+`endif
+    u_ser(.clk(clk),.rst_n(rst_n),
+      .mv_v(ser_mv_v),
+      .mv(ser_mv),
+      .mv_rdy(ser_mv_rdy),
+      .mv_done(ser_mv_done),
+      .mv_fault(ser_mv_fault),
+      .fence_rdy(ser_fence_rdy),
+      .k_req_v(ser_k_req_v),
+      .k_req_rdy(ser_k_req_rdy),
+      .k_req_we(ser_k_req_we),
+      .k_req_addr(ser_k_req_addr),
+      .k_req_wdata(ser_k_req_wdata),
+      .k_req_wstrb(ser_k_req_wstrb),
+      .k_req_tag(ser_k_req_tag),
+      .k_rsp_v(ser_k_rsp_v),
+      .k_rsp_rdy(ser_k_rsp_rdy),
+      .k_rsp_we(ser_k_rsp_we),
+      .k_rsp_data(ser_k_rsp_data),
+      .k_fault(ser_k_fault),
+      .vmq(ser_vmq),
+      .vmr(ser_vmr));
     assign r_req_addr = ra[36:0];
     assign wl_bank = wl[268:264];
     assign r_req_v=rv[0]; assign r_req_len=rl[3:0]; assign r_req_tag=rt[15:0]; assign r_req_we=rwe[0];

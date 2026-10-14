@@ -83,7 +83,7 @@
     "tag": "q5r1",
     "views_to": "physical/ref_tile/b2_dma_q5_cluster_ref/views",
     "record_to": "results/rtl/ref_tile/b2_dma_q5_cluster_ref",
-    "purpose": "Wires-only parent. DO NOT gen/submit until actual five child views pass child_lint and approved geometry/assigned pins. BACK1/8-lane final interface still pending; the existing separate closed BACK does not count as integrated functionality here.",
+    "purpose": "Wires-only parent. DO NOT gen/submit until actual six child views pass child_lint and approved geometry/assigned pins. BACK1/8-lane final interface still pending; the existing separate closed BACK does not count as integrated functionality here.",
     "benches": [
       {
         "name": "b2_dma_q_exact",
@@ -173,6 +173,17 @@
         "needs": [
           "verilator"
         ]
+      },
+      {
+        "name": "q5_serial_descriptor_mutant",
+        "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/q5_serial_descriptor -GMUT_SEAM=7 -GNREC=4",
+        "expect": "fail",
+        "fail_regex": "B2_DMA_Q FAIL",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
       }
     ],
     "extra_paths": [
@@ -238,6 +249,15 @@
       "at": [
         518.4,
         324.0
+      ]
+    },
+    {
+      "view": "physical/ref_tile/b2_dma_serial_q5_ref/views",
+      "count": 1,
+      "inst": "u_ser",
+      "at": [
+        151.2,
+        108.0
       ]
     }
   ],
