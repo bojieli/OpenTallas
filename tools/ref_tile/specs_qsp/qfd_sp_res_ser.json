@@ -1,0 +1,203 @@
+{
+ "name": "qfd_sp_res_ser",
+ "top": "qfd_sp_res_ser",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/vm_me_20261008/qfd_sp_res_ser.sv",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_tiles.sv",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "defines": [
+  "OT_HARD_CHILDREN"
+ ],
+ "hard_define": "OT_HARD_CHILDREN",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "contract": {
+  "file": "results/arch/hier_contract_1012/qwen_rom_tp8.json",
+  "slot": "sp_res_ser_0"
+ },
+ "child_lattice_um": 2.16,
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile",
+   "count": 1,
+   "inst": "g_slot[0].u_t",
+   "at": [
+    533.52,
+    352.08
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile",
+   "count": 1,
+   "inst": "g_slot[1].u_t",
+   "at": [
+    282.96,
+    352.08
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile",
+   "count": 1,
+   "inst": "g_slot[2].u_t",
+   "at": [
+    23.76,
+    352.08
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile",
+   "count": 1,
+   "inst": "g_slot[3].u_t",
+   "at": [
+    23.76,
+    187.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile",
+   "count": 1,
+   "inst": "g_slot[4].u_t",
+   "at": [
+    282.96,
+    187.92
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile",
+   "count": 1,
+   "inst": "g_slot[5].u_t",
+   "at": [
+    23.76,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile",
+   "count": 1,
+   "inst": "g_slot[6].u_t",
+   "at": [
+    282.96,
+    23.76
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile",
+   "count": 1,
+   "inst": "g_slot[7].u_t",
+   "at": [
+    533.52,
+    23.76
+   ],
+   "orient": "MY"
+  }
+ ],
+ "pins": {
+  "N": [
+   "i",
+   "me_en",
+   "rst_n",
+   "ck"
+  ],
+  "E": [
+   "o",
+   "ok",
+   "cr",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/res_ser/qfd_sp_res_ser_pins.tcl",
+ "io_flop_at_pins": {
+  "cols": 12
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03
+ },
+ "orfs_vars": {
+  "OT_MPFLOP_PINS": "i_addr[0],i_addr[10],i_addr[11],i_addr[12],i_addr[13],i_addr[14],i_addr[15],i_addr[16],i_addr[17],i_addr[18],i_addr[19],i_addr[1],i_addr[20],i_addr[21],i_addr[22],i_addr[23],i_addr[2],i_addr[3],i_addr[4],i_addr[5],i_addr[6],i_addr[7],i_addr[8],i_addr[9],i_data[0],i_data[100],i_data[101],i_data[102],i_data[103],i_data[104],i_data[105],i_data[106],i_data[107],i_data[108],i_data[109],i_data[10],i_data[110],i_data[111],i_data[112],i_data[113],i_data[114],i_data[115],i_data[116],i_data[117],i_data[118],i_data[119],i_data[11],i_data[120],i_data[121],i_data[122],i_data[123],i_data[124],i_data[125],i_data[126],i_data[127],i_data[128],i_data[129],i_data[12],i_data[130],i_data[131],i_data[132],i_data[133],i_data[134],i_data[135],i_data[136],i_data[137],i_data[138],i_data[139],i_data[13],i_data[140],i_data[141],i_data[142],i_data[143],i_data[144],i_data[145],i_data[146],i_data[147],i_data[148],i_data[149],i_data[14],i_data[150],i_data[151],i_data[152],i_data[153],i_data[154],i_data[155],i_data[156],i_data[157],i_data[158],i_data[159],i_data[15],i_data[160],i_data[161],i_data[162],i_data[163],i_data[164],i_data[165],i_data[166],i_data[167],i_data[168],i_data[169],i_data[16],i_data[170],i_data[171],i_data[172],i_data[173],i_data[174],i_data[175],i_data[176],i_data[177],i_data[178],i_data[179],i_data[17],i_data[180],i_data[181],i_data[182],i_data[183],i_data[184],i_data[185],i_data[186],i_data[187],i_data[188],i_data[189],i_data[18],i_data[190],i_data[191],i_data[192],i_data[193],i_data[194],i_data[195],i_data[196],i_data[197],i_data[198],i_data[199],i_data[19],i_data[1],i_data[200],i_data[201],i_data[202],i_data[203],i_data[204],i_data[205],i_data[206],i_data[207],i_data[208],i_data[209],i_data[20],i_data[210],i_data[211],i_data[212],i_data[213],i_data[214],i_data[215],i_data[216],i_data[217],i_data[218],i_data[219],i_data[21],i_data[220],i_data[221],i_data[222],i_data[223],i_data[224],i_data[225],i_data[226],i_data[227],i_data[228],i_data[229],i_data[22],i_data[230],i_data[231],i_data[232],i_data[233],i_data[234],i_data[235],i_data[236],i_data[237],i_data[238],i_data[239],i_data[23],i_data[240],i_data[241],i_data[242],i_data[243],i_data[244],i_data[245],i_data[246],i_data[247],i_data[248],i_data[249],i_data[24],i_data[250],i_data[251],i_data[252],i_data[253],i_data[254],i_data[255],i_data[256],i_data[257],i_data[258],i_data[259],i_data[25],i_data[260],i_data[261],i_data[262],i_data[263],i_data[264],i_data[265],i_data[266],i_data[267],i_data[268],i_data[269],i_data[26],i_data[270],i_data[271],i_data[272],i_data[273],i_data[274],i_data[275],i_data[276],i_data[277],i_data[278],i_data[279],i_data[27],i_data[280],i_data[281],i_data[282],i_data[283],i_data[284],i_data[285],i_data[286],i_data[287],i_data[288],i_data[289],i_data[28],i_data[290],i_data[291],i_data[292],i_data[293],i_data[294],i_data[295],i_data[296],i_data[297],i_data[298],i_data[299],i_data[29],i_data[2],i_data[300],i_data[301],i_data[302],i_data[303],i_data[304],i_data[305],i_data[306],i_data[307],i_data[308],i_data[309],i_data[30],i_data[310],i_data[311],i_data[312],i_data[313],i_data[314],i_data[315],i_data[316],i_data[317],i_data[318],i_data[319],i_data[31],i_data[320],i_data[321],i_data[322],i_data[323],i_data[324],i_data[325],i_data[326],i_data[327],i_data[328],i_data[329],i_data[32],i_data[330],i_data[331],i_data[332],i_data[333],i_data[334],i_data[335],i_data[336],i_data[337],i_data[338],i_data[339],i_data[33],i_data[340],i_data[341],i_data[342],i_data[343],i_data[344],i_data[345],i_data[346],i_data[347],i_data[348],i_data[349],i_data[34],i_data[350],i_data[351],i_data[352],i_data[353],i_data[354],i_data[355],i_data[356],i_data[357],i_data[358],i_data[359],i_data[35],i_data[360],i_data[361],i_data[362],i_data[363],i_data[364],i_data[365],i_data[366],i_data[367],i_data[368],i_data[369],i_data[36],i_data[370],i_data[371],i_data[372],i_data[373],i_data[374],i_data[375],i_data[376],i_data[377],i_data[378],i_data[379],i_data[37],i_data[380],i_data[381],i_data[382],i_data[383],i_data[384],i_data[385],i_data[386],i_data[387],i_data[388],i_data[389],i_data[38],i_data[390],i_data[391],i_data[392],i_data[393],i_data[394],i_data[395],i_data[396],i_data[397],i_data[398],i_data[399],i_data[39],i_data[3],i_data[400],i_data[401],i_data[402],i_data[403],i_data[404],i_data[405],i_data[406],i_data[407],i_data[408],i_data[409],i_data[40],i_data[410],i_data[411],i_data[412],i_data[413],i_data[414],i_data[415],i_data[416],i_data[417],i_data[418],i_data[419],i_data[41],i_data[420],i_data[421],i_data[422],i_data[423],i_data[424],i_data[425],i_data[426],i_data[427],i_data[428],i_data[429],i_data[42],i_data[430],i_data[431],i_data[432],i_data[433],i_data[434],i_data[435],i_data[436],i_data[437],i_data[438],i_data[439],i_data[43],i_data[440],i_data[441],i_data[442],i_data[443],i_data[444],i_data[445],i_data[446],i_data[447],i_data[448],i_data[449],i_data[44],i_data[450],i_data[451],i_data[452],i_data[453],i_data[454],i_data[455],i_data[456],i_data[457],i_data[458],i_data[459],i_data[45],i_data[460],i_data[461],i_data[462],i_data[463],i_data[464],i_data[465],i_data[466],i_data[467],i_data[468],i_data[469],i_data[46],i_data[470],i_data[471],i_data[472],i_data[473],i_data[474],i_data[475],i_data[476],i_data[477],i_data[478],i_data[479],i_data[47],i_data[480],i_data[481],i_data[482],i_data[483],i_data[484],i_data[485],i_data[486],i_data[487],i_data[488],i_data[489],i_data[48],i_data[490],i_data[491],i_data[492],i_data[493],i_data[494],i_data[495],i_data[496],i_data[497],i_data[498],i_data[499],i_data[49],i_data[4],i_data[500],i_data[501],i_data[502],i_data[503],i_data[504],i_data[505],i_data[506],i_data[507],i_data[508],i_data[509],i_data[50],i_data[510],i_data[511],i_data[51],i_data[52],i_data[53],i_data[54],i_data[55],i_data[56],i_data[57],i_data[58],i_data[59],i_data[5],i_data[60],i_data[61],i_data[62],i_data[63],i_data[64],i_data[65],i_data[66],i_data[67],i_data[68],i_data[69],i_data[6],i_data[70],i_data[71],i_data[72],i_data[73],i_data[74],i_data[75],i_data[76],i_data[77],i_data[78],i_data[79],i_data[7],i_data[80],i_data[81],i_data[82],i_data[83],i_data[84],i_data[85],i_data[86],i_data[87],i_data[88],i_data[89],i_data[8],i_data[90],i_data[91],i_data[92],i_data[93],i_data[94],i_data[95],i_data[96],i_data[97],i_data[98],i_data[99],i_data[9],i_empty,i_last,i_mask[0],i_mask[10],i_mask[11],i_mask[12],i_mask[13],i_mask[14],i_mask[15],i_mask[1],i_mask[2],i_mask[3],i_mask[4],i_mask[5],i_mask[6],i_mask[7],i_mask[8],i_mask[9],i_ov,i_we,me_en,rst_n,rq_v,rq_slot[0],rq_slot[1],rq_slot[2],rq_ptr[0],rq_ptr[1],rq_ptr[2],rq_ptr[3],rq_ptr[4],rq_ptr[5]",
+  "OT_MPFLOP_GAP": "2.7"
+ },
+ "slot_change_request": "el1013-qwen-elements-r6 10-13: outline, faces, layers and the ck / rst_n / me_en offsets (388.8 / 392 / 396) as contract v4b. PIN SPANS re-planned (the v4b spans put 4,425 i pins on every M5 track over 212 um = 20.8 b/um and 551 o pins over 26 um, above the 12 b/um/layer limit): i[4424:0] on N M5 over x 32..750, each slot word directly above its tile (<= 9 b/um); o[550:0], ok, cr, fault on E M4 over y 200..310 beside the head cell (5 b/um). SUB-LAYOUT inside the unchanged slot: 8 tiles of 216 x 142.56 (kit qfd_res_slot_ru) on a 3 x 3 grid WITH channels, columns 1 and 2 mirrored (MY), head in cell (2,1); the 259.2 x 172.8 rs tiles cannot abut (W/E stubs short or corner-touch). Packing: i = {i_data 4096, i_mask 128, i_addr 192, i_we 8, i_ov} (i_ov = i[0]); o = {o_v, o_end, o_nul, o_row 20, o_mask 16, o_data 512} (o_v = o[550]); 1-bit pins are scalars. +1 capture cycle at the head (RS + 1 inside; v4b allowed +2); reset release 4 ck edges after the pin.",
+ "job": {
+  "owner": "Claude:el1013-qwen-elements-r6",
+  "branch": "claude/el1013-qwen-elements-r6",
+  "tag": "c1",
+  "purpose": "Qwen ROM TP8 contract v4b slot cell qfd_sp_res_ser (3 instances sp_res_ser_0..2, 777.6 x 518.4): hardened cluster under the die master name. 8 hard slot tiles (qfd_res_slot_ru) + the serialiser head in the ninth cell; parent = one flop at every die pin, two more stages for the row-0 tiles, reset relay, wires. Clock: balanced spine with each tile's routed insertion as its leaf target; every seam registered on both sides. Floorplan, hops and cuts: physical/res_ser/qfd_sp_res_ser_fp.json (tools/qwen_vm_me/res_ser_cluster_fp.py).",
+  "extra_paths": [
+   "physical/res_ser",
+   "rtl/test/res_ser",
+   "rtl/test/res_tiles",
+   "physical/res_tiles",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "tools/qwen_vm_me"
+  ],
+  "benches": [
+   {
+    "name": "res_ser_exact",
+    "cmd": "bash physical/res_ser/bench.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "pass_regex": "^PASS res_ser",
+    "min_count_regex": "beats=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the assembled cluster (8 tiles USE_MACRO=1 + head + pin / row-0 stages + reset relay) through the die ports: 360 bursts / 1,465 beats exact, conveyor latency 19, 42-edge stopping debt, coverage floors"
+   },
+   {
+    "name": "res_ser_mutant_tile",
+    "cmd": "bash physical/res_ser/bench.sh {RUN}/bench/neg1 1",
+    "expect": "fail",
+    "fail_regex": "^FAIL res_ser mutant detected",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "MUT 1: one data bit of slot 1 inverted inside the tile"
+   },
+   {
+    "name": "res_ser_mutant_seam",
+    "cmd": "bash physical/res_ser/bench.sh {RUN}/bench/neg2 2",
+    "expect": "fail",
+    "fail_regex": "^FAIL res_ser mutant detected",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "MUT 2: the row-0 tiles' strobes bypass the X stage (word one cycle behind its strobe)"
+   },
+   {
+    "name": "res_ser_coverage_refusal",
+    "cmd": "bash physical/res_ser/bench.sh {RUN}/bench/cov 0 0 40",
+    "expect": "fail",
+    "fail_regex": "^COVERAGE_REFUSED",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "40-burst control: every beat exact but the floors are not reached, the bench must refuse"
+   }
+  ]
+ },
+ "structural_change": "c1: no flat serialiser. A hardened CLUSTER drawn top-down: 8 closed result-slot tiles (qfd_res_slot_ru, 216 x 142.56, CLOSED TT +150.27 / FF +14.44) on a 3 x 3 grid with routing channels, the ninth cell = serialiser head; the parent holds only pin flops and A / M / X staging registers (~9.0k flops, every hop <= 360 um, row 0 in two hops), a balanced clock spine whose leaf targets include the tiles' own insertion (338.7 ps); i word of each slot enters straight above its tile. Earlier routes were one flat block (setup -757..-1,142 ps post-CTS, pin density 20.8 b/um)."
+}

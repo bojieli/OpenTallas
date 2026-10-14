@@ -1,0 +1,258 @@
+{
+ "schema": "opentallas.qwen.res_ser_cluster_fp.v2",
+ "outline_um": [
+  777.6,
+  518.4
+ ],
+ "tile_um": [
+  216.0,
+  142.56
+ ],
+ "col_x": [
+  23.76,
+  282.96,
+  533.52
+ ],
+ "row_y": [
+  23.76,
+  187.92,
+  352.08
+ ],
+ "orient": {
+  "0": "R0",
+  "1": "MY",
+  "2": "MY"
+ },
+ "ring": [
+  [
+   2,
+   2
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ]
+ ],
+ "head_cell": [
+  2,
+  1
+ ],
+ "ninth_cell": "column 2 row 1 = serialiser head (ot_qfd_res_tiles_ctl, o / ok / cr / fault pin flops)",
+ "hops_um": {
+  "word A -> tile pin flop (row 2)": {
+   "bits": 1656,
+   "max_um": 38.1
+  },
+  "word A -> tile pin flop (row 1)": {
+   "bits": 1656,
+   "max_um": 202.4
+  },
+  "word A -> M -> X at the tile pin (row 0): whole path, two hops": {
+   "bits": 1656,
+   "max_um": 366.6
+  },
+  "strobes / we A (centre) -> tile pin flop (row 2)": {
+   "bits": 15,
+   "max_um": 195.8
+  },
+  "strobes / we A (centre) -> tile pin flop (row 1)": {
+   "bits": 15,
+   "max_um": 360.0
+  },
+  "strobes / we A (centre) -> M -> X at the tile pin (row 0): whole path, two hops": {
+   "bits": 15,
+   "max_um": 524.1
+  },
+  "strobes A (centre) -> head pe / po": {
+   "bits": 2,
+   "max_um": 320.4
+  }
+ },
+ "chain_hops": [
+  {
+   "hop": "head -> slot 0",
+   "bits": 10,
+   "um": 40.7,
+   "over_tile": null
+  },
+  {
+   "hop": "slot 0 -> slot 1",
+   "bits": 563,
+   "um": 250.7,
+   "over_tile": [
+    1,
+    2
+   ]
+  },
+  {
+   "hop": "slot 1 -> slot 2",
+   "bits": 563,
+   "um": 43.3,
+   "over_tile": null
+  },
+  {
+   "hop": "slot 2 -> slot 3",
+   "bits": 563,
+   "um": 164.3,
+   "over_tile": null
+  },
+  {
+   "hop": "slot 3 -> slot 4",
+   "bits": 563,
+   "um": 43.3,
+   "over_tile": null
+  },
+  {
+   "hop": "slot 4 -> slot 5",
+   "bits": 563,
+   "um": 207.5,
+   "over_tile": null
+  },
+  {
+   "hop": "slot 5 -> slot 6",
+   "bits": 563,
+   "um": 43.3,
+   "over_tile": null
+  },
+  {
+   "hop": "slot 6 -> slot 7",
+   "bits": 563,
+   "um": 250.7,
+   "over_tile": [
+    1,
+    0
+   ]
+  },
+  {
+   "hop": "slot 7 -> head (rd capture)",
+   "bits": 552,
+   "um": 146.7,
+   "over_tile": null
+  },
+  {
+   "hop": "head rd capture (SW corner) -> o pin flops at E",
+   "bits": 551,
+   "um": 312.7,
+   "over_tile": null
+  }
+ ],
+ "cuts": [
+  {
+   "cut": "y through tile (0,2): words of the rows below, straight over the tile",
+   "bits": 1104,
+   "tracks": 2458,
+   "ratio": 0.449,
+   "basis": "M7 over the tile's own word span (185.1 um), 85 % usable"
+  },
+  {
+   "cut": "y through tile (1,2): words of the rows below, straight over the tile",
+   "bits": 1104,
+   "tracks": 2458,
+   "ratio": 0.449,
+   "basis": "M7 over the tile's own word span (185.1 um), 85 % usable"
+  },
+  {
+   "cut": "y through tile (2,2): words of the rows below, straight over the tile",
+   "bits": 552,
+   "tracks": 2458,
+   "ratio": 0.224,
+   "basis": "M7 over the tile's own word span (185.1 um), 85 % usable"
+  },
+  {
+   "cut": "y through tile (0,1): words of the rows below, straight over the tile",
+   "bits": 552,
+   "tracks": 2458,
+   "ratio": 0.224,
+   "basis": "M7 over the tile's own word span (185.1 um), 85 % usable"
+  },
+  {
+   "cut": "y through tile (1,1): words of the rows below, straight over the tile",
+   "bits": 552,
+   "tracks": 2458,
+   "ratio": 0.224,
+   "basis": "M7 over the tile's own word span (185.1 um), 85 % usable"
+  },
+  {
+   "cut": "x through tile (1,2): slot 0 -> slot 1 on M6 over the tile",
+   "bits": 563,
+   "tracks": 2004,
+   "ratio": 0.281,
+   "basis": "M6 over one tile row, 90 % usable"
+  },
+  {
+   "cut": "x through tile (1,0): slot 6 -> slot 7 on M6 over the tile",
+   "bits": 563,
+   "tracks": 2004,
+   "ratio": 0.281,
+   "basis": "M6 over one tile row, 90 % usable"
+  },
+  {
+   "cut": "y = row 0/1 boundary in the gap x 239.76..282.96: conveyor hops",
+   "bits": 563,
+   "tracks": 1679,
+   "ratio": 0.335,
+   "basis": "M3 + M5 in the gap, 80 % usable"
+  },
+  {
+   "cut": "y = row 1/2 boundary in the gap x 239.76..282.96: conveyor hops",
+   "bits": 563,
+   "tracks": 1679,
+   "ratio": 0.335,
+   "basis": "M3 + M5 in the gap, 80 % usable"
+  },
+  {
+   "cut": "y = row 0/1 boundary in the gap x 498.96..533.52: conveyor hops",
+   "bits": 0,
+   "tracks": 1344,
+   "ratio": 0.0,
+   "basis": "M3 + M5 in the gap, 80 % usable"
+  },
+  {
+   "cut": "y = row 1/2 boundary in the gap x 498.96..533.52: conveyor hops",
+   "bits": 0,
+   "tracks": 1344,
+   "ratio": 0.0,
+   "basis": "M3 + M5 in the gap, 80 % usable"
+  }
+ ],
+ "pin_density": {
+  "cluster_N_M5_max_b_per_um_100um": 9.24,
+  "cluster_E_M4_b_per_um": 5.1,
+  "tile_N_M5_b_per_um": 2.6,
+  "tile_E_M4_b_per_um_100um": 10.42
+ },
+ "parent_flops_estimate": {
+  "A (die pins)": 4426,
+  "M + X (row 0: 3 tiles x 557 x 2)": 3342,
+  "head (ctl, rd capture 552, o 551)": 1160,
+  "reset relay + fault ring": 31
+ },
+ "parent_flops_total_estimate": 8959,
+ "max_hop_um": 360.0,
+ "max_path_two_hops_um": 524.1,
+ "max_cut": 0.449
+}

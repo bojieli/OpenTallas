@@ -1,0 +1,128 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_sp_res_ser",
+ "verdict": "WARN",
+ "generated": "2026-10-13T12:45:49-0700",
+ "host": "ot-epyc4",
+ "cts": true,
+ "commit": "43baa7eaa",
+ "clock": {
+  "max_root_sinks": 8944,
+  "root": "port:ck",
+  "cts": true,
+  "tt_insertion_ps": 1678.2,
+  "tt_spread_ps": 315.6,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "8,944 sinks on the largest root <= 15,000; measured TT insertion 1678.2 ps, leaf spread 315.6 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_res_slot_tile#0: origin (533.544, 352.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_res_slot_tile#0: origin (282.984, 352.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_res_slot_tile#0: origin (23.76, 352.08) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_res_slot_tile#0: origin (23.76, 187.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_res_slot_tile#0: origin (282.984, 187.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_res_slot_tile#0: origin (23.76, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_res_slot_tile#0: origin (282.984, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qfd_res_slot_tile#0: origin (533.544, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qfd_res_slot_tile: (f) face-pin access: 1686 of 1687 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (8.160,141.349), i_addr[0] M5 (8.160,141.349), i_addr[10] M5 (8.160,141.349))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qfd_res_slot_tile: (f) face-pin access: 1686 of 1687 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (8.160,141.349), i_addr[0] M5 (8.160,141.349), i_addr[10] M5 (8.160,141.349))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qfd_res_slot_tile: (f) face-pin access: 1686 of 1687 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (8.160,141.349), i_addr[0] M5 (8.160,141.349), i_addr[10] M5 (8.160,141.349))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qfd_res_slot_tile: (f) face-pin access: 1686 of 1687 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (8.160,141.349), i_addr[0] M5 (8.160,141.349), i_addr[10] M5 (8.160,141.349))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qfd_res_slot_tile: (f) face-pin access: 1686 of 1687 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (8.160,141.349), i_addr[0] M5 (8.160,141.349), i_addr[10] M5 (8.160,141.349))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qfd_res_slot_tile: (f) face-pin access: 1686 of 1687 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (8.160,141.349), i_addr[0] M5 (8.160,141.349), i_addr[10] M5 (8.160,141.349))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qfd_res_slot_tile: (f) face-pin access: 1686 of 1687 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (8.160,141.349), i_addr[0] M5 (8.160,141.349), i_addr[10] M5 (8.160,141.349))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qfd_res_slot_tile: (f) face-pin access: 1686 of 1687 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (8.160,141.349), i_addr[0] M5 (8.160,141.349), i_addr[10] M5 (8.160,141.349))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 8,936 flops > 8,000 spread over a 773 x 514 um outline (> 600 um) (+0 ICGs, 8 macro clock pins; e.g. a_addr[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  }
+ ]
+}

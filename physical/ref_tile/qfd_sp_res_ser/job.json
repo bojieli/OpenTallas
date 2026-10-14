@@ -1,0 +1,142 @@
+{
+ "name": "qfd_sp_res_ser-c1-COMMIT",
+ "block": "qfd_sp_res_ser",
+ "ref_tile": true,
+ "owner": "Claude:el1013-qwen-elements-r6",
+ "purpose": "Qwen ROM TP8 contract v4b slot cell qfd_sp_res_ser (3 instances sp_res_ser_0..2, 777.6 x 518.4): hardened cluster under the die master name. 8 hard slot tiles (qfd_res_slot_ru) + the serialiser head in the ninth cell; parent = one flop at every die pin, two more stages for the row-0 tiles, reset relay, wires. Clock: balanced spine with each tile's routed insertion as its leaf target; every seam registered on both sides. Floorplan, hops and cuts: physical/res_ser/qfd_sp_res_ser_fp.json (tools/qwen_vm_me/res_ser_cluster_fp.py).",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/el1013-qwen-elements-r6",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/res_ser",
+   "rtl/test/res_ser",
+   "rtl/test/res_tiles",
+   "physical/res_tiles",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "tools/qwen_vm_me"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sp_res_ser u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_HARD_CHILDREN --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_me_20261008/qfd_sp_res_ser.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_tiles.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "res_ser_exact",
+    "cmd": "bash physical/res_ser/bench.sh {RUN}/bench/pos",
+    "expect": "pass",
+    "pass_regex": "^PASS res_ser",
+    "min_count_regex": "beats=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "the assembled cluster (8 tiles USE_MACRO=1 + head + pin / row-0 stages + reset relay) through the die ports: 360 bursts / 1,465 beats exact, conveyor latency 19, 42-edge stopping debt, coverage floors"
+   },
+   {
+    "name": "res_ser_mutant_tile",
+    "cmd": "bash physical/res_ser/bench.sh {RUN}/bench/neg1 1",
+    "expect": "fail",
+    "fail_regex": "^FAIL res_ser mutant detected",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "MUT 1: one data bit of slot 1 inverted inside the tile"
+   },
+   {
+    "name": "res_ser_mutant_seam",
+    "cmd": "bash physical/res_ser/bench.sh {RUN}/bench/neg2 2",
+    "expect": "fail",
+    "fail_regex": "^FAIL res_ser mutant detected",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "MUT 2: the row-0 tiles' strobes bypass the X stage (word one cycle behind its strobe)"
+   },
+   {
+    "name": "res_ser_coverage_refusal",
+    "cmd": "bash physical/res_ser/bench.sh {RUN}/bench/cov 0 0 40",
+    "expect": "fail",
+    "fail_regex": "^COVERAGE_REFUSED",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "note": "40-burst control: every beat exact but the floors are not reached, the bench must refuse"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_sp_res_ser/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_sp_res_ser/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_sp_res_ser --out {RUN}/record/views/qfd_sp_res_ser --macro-view physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_sp_res_ser/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qfd_res_slot_ru/views/ot_qfd_res_slot_tile"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_sp_res_ser/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_sp_res_ser/qfd_sp_res_ser-c1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}
