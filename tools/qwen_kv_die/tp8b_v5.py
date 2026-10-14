@@ -1381,6 +1381,11 @@ def _wrap(v, m, G, peers):
             pw1 = v.port_widths(model, 1)
             for mn in VIEWS:
                 adopt_view(M, mn, split, vrec, pw1)
+            # Candidate only: no default pin change or source-view edit.
+            import os
+            if os.environ.get('OT_TP8_ECTL_PIN_REPLAN_CANDIDATE') == '1':
+                from qwen_tp8.ectl_pin_replan_candidate import apply as head_pin_candidate
+                head_pin_candidate(model, M)
             align_abutted(v, model, M, pw1, split, model['tp8b_v5'].setdefault('pin_align', {}))
     v.V5_FINAL_MASTERS = final
 
