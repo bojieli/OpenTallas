@@ -226,7 +226,6 @@ module tb_qwen_tile_lface;
   $display("PASS lface registered faces GT%0d ops=%0d arithmetic=%0d requests=%0d misses=%0d streamed_queries=%0d streamed_words=%0d no_fault no_deadlock",TARGET_GT,ops,checks,requests,misses,requests,checks);$finish;
  end
 endmodule
-endmodule
 
 // Bench-only synchronous hash model for the actual RPS0 hard-ROM interfaces.
 // Both reference and candidate instantiate the real rpair leaf and this model.
