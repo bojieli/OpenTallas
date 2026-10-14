@@ -77,5 +77,8 @@
  "recipe": 2,
  "clock": "cts",
  "structural_change": "NR16 crossing partitioned into two NR8 leaves with independent related core and serial CTS roots; no transaction or cycle change. The old route omitted serial-clock constraints and measured TT serial boundary spread1294.2ps.",
- "slot_change_request": "el1011-s81die.log capture serial-clock defect 2026-10-13: replace one x16 child by two x8 dual-clock children in identical total outline;68 parent clocks; no extra data cycles"
+ "slot_change_request": "el1011-s81die.log capture serial-clock defect 2026-10-13: replace one x16 child by two x8 dual-clock children in identical total outline;68 parent clocks; no extra data cycles",
+ "boundary_tcl": [
+  "physical/s81_ph_views/capture/x8_dual_boundary.tcl"
+ ]
 }
