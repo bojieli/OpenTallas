@@ -16286,3 +16286,10 @@ def hbm_qdq_write_completion_split_model():
         "fanout":"eight local count comparators; snapshot 64bits two FIFO candidate reads, no payload clock/control feedback",
         "area_status":"estimated; SRAM macro unchanged, route validates actual cell area/outline/pins",
         "single_user_latency_status":"must measure on actual 4-quadrant 13312-word driver, both phases and negatives"}
+def hbm_qdq_dedicated_face_ff_model():
+    """Repair measured payload139 Q224.6 with independent same-edge launch FFs."""
+    return {"immutable_price":168,"fast_edges":4,"general_extra_edges":2,
+            "launch_FFs":190,"estimated_extra_FFs":32,"estimated_extra_std_um2":24,
+            "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
+            "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
+            "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
