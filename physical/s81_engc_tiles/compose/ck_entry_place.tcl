@@ -23,6 +23,36 @@ foreach ot_m [$ot_cp_b getInsts] {
   puts "OT_CK_ENTRY place: [$ot_m getName] ck pin ([expr {$ot_x / 1000.0}] [expr {$ot_y / 1000.0}]) chain $ot_c"
 }
 puts "OT_CK_ENTRY place: $ot_cp_k delay cells moved to their child's clock pin"
+# Mapped ASAP7 reset/status flops expose QN and need an ordinary inverter
+# for the RTL-positive value. Those inverter names are anonymous after ABC;
+# moving only HDL-named flops leaves a long QN->INV->D path behind.
+proc ot_engc_place_output_cone {seed x y} {
+  set pending [list $seed]; set seen [dict create]; set moved 0
+  while {[llength $pending]} {
+    set inst [lindex $pending 0]; set pending [lrange $pending 1 end]
+    set name [$inst getName]
+    if {[dict exists $seen $name]} continue
+    dict set seen $name 1
+    $inst setLocation $x $y
+    $inst setPlacementStatus PLACED
+    incr moved
+    foreach out [$inst getITerms] {
+      if {[$out getIoType] ne "OUTPUT"} continue
+      set net [$out getNet]
+      if {$net eq "NULL" || $net eq ""} continue
+      foreach load [$net getITerms] {
+        if {[$load getIoType] ne "INPUT"} continue
+        set next [$load getInst]; set master [$next getMaster]
+        # Stop at the next register or hard child. Only transport/inversion
+        # cells belong to this local output cone; shared reset-input trees do not.
+        if {[$master isBlock] || ![regexp {^(INV|BUF|HB)} [$master getName]]} continue
+        lappend pending $next
+      }
+    }
+  }
+  return $moved
+}
+
 # Local reset conditioners sit in legal rows beside each macro reset pin.
 foreach ot_child {win io ws pb1 pb0 pb2 lkp sink} {
   set ot_macro [$ot_cp_b findInst u_$ot_child]
@@ -36,8 +66,7 @@ foreach ot_child {win io ws pb1 pb0 pb2 lkp sink} {
   set ot_found 0
   foreach ot_i [$ot_cp_b getInsts] {
     if {![string match *u_rst_${ot_child}* [$ot_i getName]]} continue
-    $ot_i setLocation $ot_x $ot_y
-    $ot_i setPlacementStatus PLACED
+    ot_engc_place_output_cone $ot_i $ot_x $ot_y
     incr ot_found
   }
   if {$ot_found == 0} { error "ENGC reset conditioner absent: $ot_child" }
@@ -53,8 +82,7 @@ set ot_y [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
 set ot_status_cells 0
 foreach ot_i [$ot_cp_b getInsts] {
   if {![string match *u_status_win* [$ot_i getName]]} continue
-  $ot_i setLocation $ot_x $ot_y
-  $ot_i setPlacementStatus PLACED
+  ot_engc_place_output_cone $ot_i $ot_x $ot_y
   incr ot_status_cells
 }
 if {$ot_status_cells < 16} { error "ENGC status stage cells missing" }
