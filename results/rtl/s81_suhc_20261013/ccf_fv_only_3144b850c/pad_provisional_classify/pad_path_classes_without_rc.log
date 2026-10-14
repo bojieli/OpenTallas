@@ -1,0 +1,37 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/ref_gate/s81hc_pad_fv4fd5r1_ref-20261013-212319/src
+ot-run: ot-epyc4       admits   292 GB (avail 531, growth 219, headroom 48, waiters 0/0 GB) load 109/128 running 18 disk 1259 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/s81hc_pad_fv4fd5r1_ref-20261013-212319/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/s81hc_pad_fv4fd5r1_ref-20261013-212319/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-316623-1791954128 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[WARNING EST-0018] wire capacitance for corner default is zero. Use the set_wire_rc command to set wire resistance and capacitance.
+GATE_PC reg->out      300 paths, worst slack 130.8 ps (e.g. r_o[1271])
+GATE_PC reg->reg       28 paths, worst slack 619.2 ps (e.g. u_v.genblk1.g_line.line[22]$_DFF_PN0_/RESETN)
+GATE_PC setup WNS 1.3079118343917173e-10 hold WNS 3.0448144006101074e-12
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-316623-1791954128): exit 0

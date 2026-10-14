@@ -15,7 +15,6 @@ foreach l [split [exec sh -c "grep -h 'ADDITIONAL_LEFS\\|ADDITIONAL_LIBS' /work/
 read_db $base/4_1_cts.odb
 if {[file exists $base/4_cts.sdc]} { read_sdc $base/4_cts.sdc } else { read_sdc $base/3_place.sdc }
 set_propagated_clock [all_clocks]
-# Match ck_insertion: a fresh OpenROAD process needs the PDK wire RC before placement STA.
 source $plat/setRC.tcl
 estimate_parasitics -placement
 proc kind {pin end} {
