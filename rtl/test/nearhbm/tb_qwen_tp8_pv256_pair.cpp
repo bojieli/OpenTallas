@@ -1,0 +1,40 @@
+#include "Vot_qwen_tp8_pv256_pair.h"
+#include "verilated.h"
+#include <fstream>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <stdexcept>
+#include <cstdint>
+#include <cstring>
+template<class T>std::vector<T>rd(std::string p,size_t n){std::vector<T>x(n);std::ifstream f(p,std::ios::binary);if(!f.read((char*)x.data(),n*sizeof(T)))throw std::runtime_error(p);return x;}
+int main(int argc,char**argv){Verilated::commandArgs(argc,argv);if(argc<4)return 2;
+ std::string dir=argv[1],mode=argv[3];unsigned pair=std::stoul(argv[2]);unsigned ctx=argc>4?std::stoul(argv[4]):8192;
+ auto v=rd<uint8_t>(dir+"/v-fp8.bin",8192*128);auto e=rd<uint16_t>(dir+"/exp-bf16.bin",8192*4);
+ auto gold=rd<uint32_t>(dir+"/leaves.bin",4*256*128);
+ if(ctx!=8192&&ctx<=8192){auto prod=rd<uint32_t>(dir+"/products.bin",4*8192*128);std::fill(gold.begin(),gold.end(),0);
+  for(unsigned h=0;h<4;h++)for(unsigned r=0;r<256;r++)for(unsigned t=r;t<ctx;t+=256)for(unsigned j=0;j<128;j++){
+   auto &dst=gold[(h*256+r)*128+j];uint32_t src=prod[(h*8192+t)*128+j];float a,b;std::memcpy(&a,&dst,4);std::memcpy(&b,&src,4);volatile float z=a+b;float zz=z;std::memcpy(&dst,&zz,4);if(!(dst&0x7fffffff))dst=0;
+  }
+ }
+ Vot_qwen_tp8_pv256_pair d;unsigned c=0,n=0,leaves=0;uint64_t cyc=0,bad=0,words=0;
+ auto tick=[&](){d.clk=0;d.eval();d.clk=1;d.eval();cyc++;};
+ d.rst_n=0;d.start=0;d.in_valid=0;d.out_ready=0;tick();tick();d.rst_n=1;tick();
+ d.context_len=ctx;d.epoch=71;d.start=1;tick();d.start=0;bool sent=false;
+ uint64_t feed_end=0;std::ofstream actual("actual-p"+std::to_string(pair)+"-"+mode+"-"+std::to_string(ctx)+".bin",std::ios::binary);
+ while(cyc<100000){unsigned t=sent?0:pair*128+c+256*n;d.in_valid=!sent && (mode=="steady"||cyc%7!=2);
+ d.in_c=c;d.in_t=t;d.in_epoch=71;d.in_first=n==0;d.in_last=t+256>=ctx;
+ if(n==1&&c==3){if(mode=="epoch")d.in_epoch=70;if(mode=="order")d.in_t^=1;if(mode=="first")d.in_first=1;if(mode=="last")d.in_last^=1;}
+ for(unsigned b=0;b<32;b++){uint32_t q=0;for(unsigned k=0;k<4;k++)q|=(uint32_t)v[t*128+4*b+k]<<(8*k);if(mode=="data"&&n==1&&c==3&&b==0)q^=0x80;d.in_v[b]=q;}
+ uint64_t ex=0;for(unsigned h=0;h<4;h++)ex|=(uint64_t)e[t*4+h]<<(16*h);d.in_e=ex;
+ d.start=(mode=="restart"&&cyc==100);d.out_ready=mode=="steady"||cyc%11!=4;d.clk=0;d.eval();
+ if(d.out_valid&&d.out_ready){if(d.out_c!=leaves)return 2;
+  for(unsigned h=0;h<4;h++)for(unsigned j=0;j<128;j++){uint32_t x=d.out_leaf[h*128+j];words++;bad+=x!=gold[(h*256+pair*128+leaves)*128+j];actual.write((char*)&x,4);}leaves++;}
+ bool take=d.in_valid&&d.in_ready;tick();
+ if(d.fault){std::cout<<"{\"pair\":"<<pair<<",\"mode\":\""<<mode<<"\",\"observed_fault\":true,\"cycles\":"<<cyc<<"}\n";return(mode=="epoch"||mode=="order"||mode=="first"||mode=="last"||mode=="restart"||mode=="context")?0:1;}
+ if(take){if(c==127||t+1>=ctx){c=0;n++;if(pair*128+256*n>=ctx){sent=true;feed_end=cyc;}}else c++;}
+ if(leaves==128&&!d.busy)break;
+ }
+ std::cout<<"{\"pair\":"<<pair<<",\"mode\":\""<<mode<<"\",\"context\":"<<ctx<<",\"cycles\":"<<cyc<<",\"feed_end\":"<<feed_end<<",\"rows\":"<<d.accepted<<",\"committed\":"<<d.committed<<",\"peak_inflight\":"<<(unsigned)d.peak_inflight<<",\"words\":"<<words<<",\"mismatches\":"<<bad<<"}\n";
+ return leaves==128&&((mode=="data")?bad>0:bad==0)?0:1;
+}
