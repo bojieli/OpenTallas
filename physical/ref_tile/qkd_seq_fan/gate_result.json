@@ -2,16 +2,16 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "qkd_seq_fan",
  "verdict": "WARN",
- "generated": "2026-10-13T09:04:58-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-13T17:29:42-0700",
+ "host": "ot-epyc4",
  "cts": true,
- "commit": "c1338744a",
+ "commit": "d173f596b",
  "clock": {
   "max_root_sinks": 3249,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 172.6,
-  "tt_spread_ps": 17.6,
+  "tt_insertion_ps": 165.6,
+  "tt_spread_ps": 18.2,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -19,7 +19,7 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "3,249 sinks on the largest root <= 15,000; measured TT insertion 172.6 ps, leaf spread 17.6 ps"
+  "text": "3,249 sinks on the largest root <= 15,000; measured TT insertion 165.6 ps, leaf spread 18.2 ps"
  },
  "items": [
   {

@@ -551,6 +551,19 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
     if "ANY" in pin_faces:
         pin_faces = set(FACES)
     x0c, y0c, x1c, y1c = CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN
+    # abut_plan (2026-10-13, Qwen VM lane bays): a PROBE cluster of wires + hard tiles placed at a planned channel narrower
+    # than CHANNEL_UM, routed to MEASURE that channel.  {"channel_um": c, "edge_um": e, "why": "..."}: tile-tile gaps >= c
+    # and tile-edge distances >= e pass as WARN "abut_plan"; only on a cluster whose job carries "hold_merge" (a probe is
+    # never a closure candidate), so the 20-um rule still judges every block that can merge.
+    ab = s.get("abut_plan") or None
+    ab_n = {"channel": 0, "macro_edge": 0}
+    if ab is not None:
+        if s.get("kind") != "cluster" or not (s.get("job") or {}).get("hold_merge") or not ab.get("why"):
+            out.append(("FAIL", "abut_plan", "abut_plan is for a probe cluster only: kind cluster, job.hold_merge and a 'why'",
+                        "drop abut_plan, or make the job a probe (job.hold_merge)"))
+            ab = None
+    ch_min = float(ab["channel_um"]) if ab else CHANNEL_UM
+    edge_min = float(ab.get("edge_um", ab["channel_um"])) if ab else None
     for b in blocks:
         bx0, by0, bx1, by1 = b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"]
         nm = f"{b['master']}#{b['idx']}"
@@ -558,6 +571,9 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             out.append(("FAIL", "macro_outside", f"{nm} at ({bx0},{by0}) leaves the core", "enlarge the outline"))
         for f, d in (("W", bx0 - x0c), ("E", x1c - bx1), ("S", by0 - y0c), ("N", y1c - by1)):
             need = PIN_EDGE_UM if f in pin_faces else CHANNEL_UM
+            if edge_min is not None and edge_min - 1e-6 <= d < need - 1e-6:
+                ab_n["macro_edge"] += 1
+                continue
             if d < need - 1e-6:
                 out.append(("FAIL", "macro_edge", f"{nm} {d:.1f} um from the {f} core edge (< {need:.0f} um"
                             + (", a pin face" if f in pin_faces else "") + ")",
@@ -576,9 +592,16 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gap = max(gx, gy)
             if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
                 continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
+            if ab is not None and ch_min - 1e-6 <= gap < CHANNEL_UM - 1e-6:
+                ab_n["channel"] += 1
+                continue
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
                             f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"))
+    if ab is not None and (ab_n["channel"] or ab_n["macro_edge"]):
+        out.append(("WARN", "abut_plan", f"PROBE: {ab_n['channel']} tile-tile channels in [{ch_min:g}, {CHANNEL_UM:g}) um and "
+                    f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",
+                    "the route measures the channel; a block that merges obeys the 20-um rule"))
     core = (x1c - x0c) * (y1c - y0c)
     mac = sum(b["w"] * b["h"] for b in blocks)
     if std_area:
