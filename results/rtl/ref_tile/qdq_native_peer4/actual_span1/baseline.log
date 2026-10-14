@@ -1,0 +1,87 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/hbmqs2240-nativeq4
+ot-run: ot-epyc4       admits   721 GB (avail 947, growth 61, headroom 48, waiters 0/0 GB) load 72/128 running 11 disk 1118 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbmqs2240-nativeq4
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbmqs2240-nativeq4
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1376647-1791967858 after 0 s
+b2/ot_vms_bank.sv: OK
+b2/ot_vms_hub.sv: OK
+b2/ot_vms_rstop.sv: OK
+b2/ot_vms_rcl.sv: OK
+b2/ot_vms_star.sv: OK
+b2/ot_vms_relay.sv: OK
+b2/ot_vms_slice.sv: OK
+ot_hbm_b2_lane_cdc.sv: OK
+ot_hbm_b2_su_vm4.sv: OK
+ot_hbm_accel_cdc_fifo_p2.sv: OK
+ot_hgi_qdq_core.sv: OK
+ot_hgi_qdq_wr.sv: OK
+NATIVE_QDQ_TPUT q0 rec0 issue0 ret104 cost24
+NATIVE_QDQ_TPUT q1 rec0 issue0 ret104 cost24
+NATIVE_QDQ_TPUT q2 rec0 issue0 ret104 cost24
+NATIVE_QDQ_TPUT q3 rec0 issue0 ret104 cost24
+NATIVE_QDQ_TPUT q0 rec1 issue1 ret120 cost24
+NATIVE_QDQ_TPUT q1 rec1 issue1 ret120 cost24
+NATIVE_QDQ_TPUT q2 rec1 issue1 ret120 cost24
+NATIVE_QDQ_TPUT q3 rec1 issue1 ret120 cost24
+NATIVE_QDQ_TPUT q0 rec2 issue2 ret124 cost12
+NATIVE_QDQ_TPUT q1 rec2 issue2 ret124 cost12
+NATIVE_QDQ_TPUT q2 rec2 issue2 ret124 cost12
+NATIVE_QDQ_TPUT q3 rec2 issue2 ret124 cost12
+NATIVE_QDQ_TPUT q0 rec3 issue3 ret140 cost24
+NATIVE_QDQ_TPUT q1 rec3 issue3 ret140 cost24
+NATIVE_QDQ_TPUT q2 rec3 issue3 ret140 cost24
+NATIVE_QDQ_TPUT q3 rec3 issue3 ret140 cost24
+NATIVE_QDQ_TPUT q0 rec4 issue4 ret156 cost24
+NATIVE_QDQ_TPUT q1 rec4 issue4 ret156 cost24
+NATIVE_QDQ_TPUT q2 rec4 issue4 ret156 cost24
+NATIVE_QDQ_TPUT q3 rec4 issue4 ret156 cost24
+NATIVE_QDQ_TPUT q0 rec5 issue5 ret172 cost24
+NATIVE_QDQ_TPUT q1 rec5 issue5 ret172 cost24
+NATIVE_QDQ_TPUT q2 rec5 issue5 ret172 cost24
+NATIVE_QDQ_TPUT q3 rec5 issue5 ret172 cost24
+NATIVE_QDQ_TPUT q0 rec6 issue6 ret188 cost24
+NATIVE_QDQ_TPUT q1 rec6 issue6 ret188 cost24
+NATIVE_QDQ_TPUT q2 rec6 issue6 ret188 cost24
+NATIVE_QDQ_TPUT q3 rec6 issue6 ret188 cost24
+NATIVE_QDQ_TPUT q0 rec7 issue7 ret192 cost12
+NATIVE_QDQ_TPUT q1 rec7 issue7 ret192 cost12
+NATIVE_QDQ_TPUT q2 rec7 issue7 ret192 cost12
+NATIVE_QDQ_TPUT q3 rec7 issue7 ret192 cost12
+EXACT 0 mismatch 0
+EXACT 1 mismatch 0
+EXACT 2 mismatch 0
+EXACT 3 mismatch 0
+EXACT 4 mismatch 0
+EXACT 5 mismatch 0
+EXACT 6 mismatch 0
+EXACT 7 mismatch 0
+EXACT 0 mismatch 0
+EXACT 1 mismatch 0
+EXACT 2 mismatch 0
+EXACT 3 mismatch 0
+EXACT 4 mismatch 0
+EXACT 5 mismatch 0
+EXACT 6 mismatch 0
+EXACT 7 mismatch 0
+EXACT 0 mismatch 0
+EXACT 1 mismatch 0
+EXACT 2 mismatch 0
+EXACT 3 mismatch 0
+EXACT 4 mismatch 0
+EXACT 5 mismatch 0
+EXACT 6 mismatch 0
+EXACT 7 mismatch 0
+EXACT 0 mismatch 0
+EXACT 1 mismatch 0
+EXACT 2 mismatch 0
+EXACT 3 mismatch 0
+EXACT 4 mismatch 0
+EXACT 5 mismatch 0
+EXACT 6 mismatch 0
+EXACT 7 mismatch 0
+NATIVE_QDQ_EXACT PASS quadrants=4 records=32 words=13312 cycles=192 priced_per_quarter=168 PHASE=61
+[37154196000] %Fatal: tb_hgi_qdq_native_peer4.sv:124: Assertion failed in tb_hgi_qdq_native_peer4: NATIVE_QDQ_PRICE_MISS cycles192 immutable168 limit1.10
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_native_peer4.sv:124: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1376647-1791967858): exit 1

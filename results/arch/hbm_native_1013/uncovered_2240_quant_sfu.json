@@ -206,7 +206,9 @@
       "successor": "q8 four-leaf wires parent",
       "source": "9d9be7232",
       "native_successor": "343d86def ot_hgi_qdq_native_peer4 x4 actualendpoints/protected32CDC intoVM64fced1f9 group1",
-      "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet."
+      "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet.",
+      "native_source": "62ed63ef6",
+      "status": "ACTUAL_SPAN1_NATIVE_PRICE_REPAIR_ACTIVE"
     },
     {
       "element": "ot_hgi_quant_wide",
@@ -296,7 +298,21 @@
         "qw_ovg_ref-s5-8b8bb5549 RUNNING",
         "qw_ovw_ref-s1-8b8bb5549 RUNNING"
       ],
-      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved"
+      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved",
+      "structural_successor": {
+        "source": "17a539050",
+        "composition": [
+          "ovg",
+          "ovr",
+          "4xovrow"
+        ],
+        "exact_words": 3328,
+        "cycles": 184,
+        "price": 168,
+        "status": "UNSELECTED_ALTERNATIVE_RF_ROW_CTS_ACTIVE",
+        "parent_slot": "UNASSIGNED",
+        "M6_PORT_grants": "PROVISIONAL_NO_SIGNED_GRANT"
+      }
     },
     {
       "element": "ot_hgi_qw_ovd",
@@ -326,7 +342,21 @@
         "qw_ovg_ref-s5-8b8bb5549 RUNNING",
         "qw_ovw_ref-s1-8b8bb5549 RUNNING"
       ],
-      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved"
+      "prior_leaf_jobs": "239d22c78 REFUSED beforecompute duewhole-sourcebinding drift; preserved",
+      "structural_successor": {
+        "source": "17a539050",
+        "composition": [
+          "ovg",
+          "ovr",
+          "4xovrow"
+        ],
+        "exact_words": 3328,
+        "cycles": 184,
+        "price": 168,
+        "status": "UNSELECTED_ALTERNATIVE_RF_ROW_CTS_ACTIVE",
+        "parent_slot": "UNASSIGNED",
+        "M6_PORT_grants": "PROVISIONAL_NO_SIGNED_GRANT"
+      }
     },
     {
       "element": "ot_hgi_qdq_q_pin4",
@@ -350,7 +380,9 @@
       "successor": "q8 four-leaf wires parent",
       "source": "9d9be7232",
       "native_successor": "343d86def ot_hgi_qdq_native_peer4 x4 actualendpoints/protected32CDC intoVM64fced1f9 group1",
-      "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet."
+      "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet.",
+      "native_source": "62ed63ef6",
+      "status": "ACTUAL_SPAN1_NATIVE_PRICE_REPAIR_ACTIVE"
     },
     {
       "element": "ot_hgi_qw_lgr",
@@ -411,5 +443,38 @@
     "attention": "native real-child components replace physical half routes, source a95a4adfc; generator half_v10 remains placeholder and die_repair_2240 owns phase geometry, no duplicate edits.",
     "norm": "gtile8 CLOSED, g8p native parent child origins from actual365.04sq view available; actual parent contract slot absent; old norm monolith not silently removed.",
     "structural_continuation_1014": "Original mapper m1 warm-reset fails; m2 repaired source cannot reuse its gate/view. OV split leaves distinct; unselected parent alternative remains unapproved."
+  },
+  "update_source": "62ed63ef6",
+  "actual_native_quant": {
+    "source": "62ed63ef6",
+    "common_vm_source": "64fced1f9",
+    "actual_parameters": {
+      "SPANPIPE": 1,
+      "FASTFIN": 0,
+      "FRONTFAST": 0
+    },
+    "baseline": {
+      "words": 13312,
+      "cycles": 192,
+      "price": 168,
+      "limit_cycles": 184,
+      "status": "EXACT_PASS_PRICE_FAIL"
+    },
+    "completion_candidate": {
+      "FASTFIN": 1,
+      "FRONTFAST": 0,
+      "words": 13312,
+      "cycles": 190,
+      "status": "EXACT_PASS_PRICE_FAIL"
+    },
+    "front_candidate": {
+      "FASTFIN": 1,
+      "FRONTFAST": 1,
+      "status": "ACTUAL_NATIVE_PRODUCTION_RUNNING",
+      "standalone_exact_retirements": 2146,
+      "standalone_real_mutants": "ORDER4526 END914 failures"
+    },
+    "old_span0_runs": "DIAGNOSTIC_NOT_ACTUAL_PHYSICAL_COMPOSITION",
+    "physical": "closed general FR preserved; fast+retire gates child-owned; new CORE/WR matching physicalviews required; peer CDC payload arrays unclosed; aperture release and quiet proof open"
   }
 }
