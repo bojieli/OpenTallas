@@ -1,0 +1,398 @@
+{
+ "name": "coll_tp8_colr3_a",
+ "top": "ot_coll_tp8_col_tile_r3",
+ "kind": "tile",
+ "recipe": 2,
+ "sources": [
+  "rtl/rom/ot_coll_tp8_col3.sv",
+  "rtl/rom/ot_coll_rst_leaf.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 244.08,
+  "h": 237.6
+ },
+ "pins": {
+  "E": [
+   "in_d",
+   "dp_d",
+   "dr_d",
+   "sr_d",
+   "up",
+   "ur",
+   "od",
+   "sx"
+  ],
+  "W": [
+   "e_tx",
+   "eq_hd",
+   "lq_wd",
+   "tq_wd",
+   "sr"
+  ],
+  "N": [
+   "s_lo",
+   "s_hi",
+   "sum_d"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "die_s",
+   "c_push",
+   "c_pop",
+   "c_hold",
+   "c_sel",
+   "c_takel",
+   "ovf"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_eq.g_mac.g_k?0?.*u_m",
+   "at": [
+    23.76,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lq.g_mac.g_k?0?.*u_m",
+   "at": [
+    23.76,
+    64.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lq.g_mac.g_k?1?.*u_m",
+   "at": [
+    23.76,
+    105.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lq.g_mac.g_k?2?.*u_m",
+   "at": [
+    23.76,
+    146.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lq.g_mac.g_k?3?.*u_m",
+   "at": [
+    23.76,
+    187.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_mac.g_k?2?.*u_m",
+   "at": [
+    95.472,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_rq.g_mac.g_k?0?.*u_m",
+   "at": [
+    95.472,
+    64.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_mac.g_k?0?.*u_m",
+   "at": [
+    95.472,
+    105.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_pq.g_mac.g_k?1?.*u_m",
+   "at": [
+    95.472,
+    146.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_mac.g_k?1?.*u_m",
+   "at": [
+    95.472,
+    187.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_mac.g_k?3?.*u_m",
+   "at": [
+    167.184,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lb.g_mac.g_k?0?.*u_m",
+   "at": [
+    167.184,
+    64.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lb.g_mac.g_k?1?.*u_m",
+   "at": [
+    167.184,
+    105.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_pq.g_mac.g_k?0?.*u_m",
+   "at": [
+    167.184,
+    146.88
+   ],
+   "orient": "R0"
+  }
+ ],
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "children": [],
+ "inter": [],
+ "orfs_vars": {
+  "OT_MEG_MASTER": "ot_sram_1r1w_32x128_m1",
+  "OT_MEG_EXPECT": 14,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "pin_ranges": {
+  "e_tx": [
+   4.0,
+   24.0
+  ],
+  "eq_hd": [
+   24.0,
+   44.0
+  ],
+  "lq_wd": [
+   62.0,
+   140.0
+  ],
+  "tq_wd": [
+   150.0,
+   170.0
+  ],
+  "sr": [
+   175.0,
+   233.0
+  ],
+  "in_d": [
+   4.0,
+   22.0
+  ],
+  "dp_d": [
+   22.0,
+   40.0
+  ],
+  "dr_d": [
+   40.0,
+   58.0
+  ],
+  "sr_d": [
+   58.0,
+   108.0
+  ],
+  "up": [
+   110.0,
+   128.0
+  ],
+  "ur": [
+   128.0,
+   146.0
+  ],
+  "od": [
+   146.0,
+   164.0
+  ],
+  "sx": [
+   166.0,
+   233.0
+  ],
+  "s_lo": [
+   10.0,
+   80.0
+  ],
+  "s_hi": [
+   80.0,
+   150.0
+  ],
+  "sum_d": [
+   150.0,
+   225.0
+  ],
+  "clk": [
+   120.0,
+   120.4
+  ],
+  "rst_n": [
+   124.0,
+   124.4
+  ],
+  "die_s": [
+   128.0,
+   128.4
+  ],
+  "c_push": [
+   132.0,
+   136.0
+  ],
+  "c_pop": [
+   138.0,
+   142.0
+  ],
+  "c_hold": [
+   144.0,
+   144.4
+  ],
+  "c_sel": [
+   146.0,
+   147.0
+  ],
+  "c_takel": [
+   149.0,
+   149.4
+  ],
+  "ovf": [
+   152.0,
+   156.0
+  ]
+ },
+ "job": {
+  "owner": "Claude:qwen-coll-io-1014",
+  "branch": "claude/qwen-coll-io-1014",
+  "tag": "r3",
+  "structural_change": "NEW master (WT 3) replacing the CLOSED WT 2 leaf ot_coll_tp8_col_tile_r, which FAILS the native pin audit (TT phi-R, R 312.2: c_pop/c_takel/c_sel/c_push capture 385-459 ps, hv launch 346, s_lo/s_hi launch 418 = combinational head muxes; 1,038 pins over 220/190): the parent controller read hv from the meta leaf and returned c_pop in the same edge (346 + logic + 458 > 833 before wire), so no cluster of WT 2 leaves can close. ot_coll_tp8_col_tile_r3 lands EVERY input (control and data) in a pin flop ahead of the unchanged WT 2 column core and drives s_lo/s_hi from pin flops; the controller reads only the metadata column, now flat beside it in the cluster glue (ot_coll_tp8_col_core MEM 2). The leaf is an exact replica of the WT 2 column one edge late (s_lo/s_hi two); the parent pairs each leaf output with its valid/meta delayed by the same edge. 4 data leaves per die (the meta column is no longer a leaf).",
+  "purpose": "Qwen TP8 compute-die collective (qfd_io_collective) data column leaf, pin-registered WT 3 (qwen-coll-io r2 10-14, el1014-qwen-coll-io.log). 14 x 32x128 macros (same plan as the closed WT 2 leaf), 244.08 x 237.6, cap M5, recipe 2 (pin flops at pins, hold pads, halo 5.4) + macro-edge M5 guard. Composition benches: 8-rank TP8 golden ((P0+P1)+P2)+P3 with Pp = die0+die1, exact unit 9 cases + production 3 cases (WT 3, DEPTH 64 engine, LQ/TQ 128); mutants OT_TP8_MUT_OWNER / OT_TP8_MUT_GATHER / OT_TP8R_MUT_SEAM / OT_TP8R3_MUT_SKEW (s_lo/s_hi pin flop bypassed: slices see words one edge early) all fail.",
+  "benches": [
+   {
+    "name": "tp8r3_exact",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 3 --out {RUN}/bench/tp8r3_exact",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_TP8 PASS cases=9"
+   },
+   {
+    "name": "tp8r3_production",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 3 --production --out {RUN}/bench/tp8r3_production",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_TP8 PASS cases=3"
+   },
+   {
+    "name": "tp8r3_mut_skew",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 3 --mutant-define OT_TP8R3_MUT_SKEW --out {RUN}/bench/tp8r3_mut_skew",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_TP8 FAIL mutant=OT_TP8R3_MUT_SKEW"
+   },
+   {
+    "name": "tp8r3_mut_seam",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 3 --mutant-define OT_TP8R_MUT_SEAM --out {RUN}/bench/tp8r3_mut_seam",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_TP8 FAIL mutant=OT_TP8R_MUT_SEAM"
+   },
+   {
+    "name": "tp8r3_mut_owner",
+    "cmd": "python3 tools/qwen_coll_tp8_bench.py --wrapper-columns 3 --mutant-define OT_TP8_MUT_OWNER --out {RUN}/bench/tp8r3_mut_owner",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_TP8 FAIL mutant=OT_TP8_MUT_OWNER"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/qwen_coll_cx"
+  ],
+  "views_to": "physical/ref_tile/coll_tp8_colr3/views",
+  "record_to": "results/rtl/ref_tile/coll_tp8_colr3"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
