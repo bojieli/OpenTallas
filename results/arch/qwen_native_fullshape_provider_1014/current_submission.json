@@ -1,0 +1,56 @@
+{
+  "source_commit": "0c6709f5b",
+  "status": "IN_FLIGHT_NOT_QUALIFIED",
+  "scope": "FUNCTIONAL_NOT_PHYSICAL",
+  "history": [
+    {
+      "version": 1,
+      "status": "NOT_RUN_CANCELLED_MEMORY_WAITER",
+      "cause": "complete KV fence correction"
+    },
+    {
+      "version": 2,
+      "status": "CANCELLED_BEFORE_EXECUTION",
+      "guard": "exact waiter tag plus no work directory",
+      "cause": "missing independent scale base parameter and acceptance counters"
+    },
+    {
+      "version": 3,
+      "status": "EXECUTED_FAIL",
+      "unit": "oth-ubuntu-475455-1791958232",
+      "exit": 1,
+      "cause": "legacy simulation companion missing current L parameter; raw receipt preserved"
+    },
+    {
+      "version": 4,
+      "status": "EXECUTED_FAIL",
+      "unit": "oth-ubuntu-482086-1791958335",
+      "exit": 1,
+      "cause": "default Verilator16384 generate limit less than actual49152/65536 arrays; raw receipt preserved"
+    }
+  ],
+  "version": 5,
+  "session": 56140,
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-486583-1791958395",
+  "reservation_GB": 382,
+  "threads": 8,
+  "source": "/srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v5/src",
+  "work": "/srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v5/full_g3072_su64",
+  "parameters": {
+    "G": 3072,
+    "W": 16,
+    "IL": 8,
+    "SW": 64,
+    "INT8_WEIGHT": 1,
+    "INT8_SCALE_WCS_BASE": 1,
+    "NATIVE_ATTENTION": 1,
+    "KV_VEC_WRITE_BRIDGE": 1
+  },
+  "qualification": {
+    "compile_pass": false,
+    "full_layer_exact": false,
+    "physical": false,
+    "throughput": false
+  }
+}
