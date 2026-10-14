@@ -219,7 +219,7 @@ inline DrainReport host_transport_drain(const Vqkd_host_token_service& model) {
  d.check(r.qkd_host_token_service__DOT__u_qm__DOT__u_cx__DOT__wbin == r.qkd_host_token_service__DOT__u_qm__DOT__u_cx__DOT__rbin,4u,"u_qm.u_cx.wbin=u_qm.u_cx.rbin");
  d.check(r.qkd_host_token_service__DOT__u_qm__DOT__cx_empty == 1,4u,"u_qm.cx_empty");
  d.check(r.qkd_host_token_service__DOT__u_qm__DOT__tcr == 4,4u,"u_qm.tcr");
- d.check(r.qkd_host_token_service__DOT__u_qm__DOT__ocr == 4,4u,"u_qm.ocr");
+ d.check(r.qkd_host_token_service__DOT__u_qm__DOT__ocr == 8,4u,"u_qm.ocr");
  d.check(r.qkd_host_token_service__DOT__u_qm__DOT__u_eng__DOT__dq_n == 0,4u,"u_qm.u_eng.dq_n");
  d.check(r.qkd_host_token_service__DOT__u_qm__DOT__u_eng__DOT__s_full == 0,4u,"u_qm.u_eng.s_full");
  d.check(r.qkd_host_token_service__DOT__u_qm__DOT__u_eng__DOT__s_pre == 0,4u,"u_qm.u_eng.s_pre");
