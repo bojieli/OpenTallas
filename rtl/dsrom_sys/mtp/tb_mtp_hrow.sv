@@ -142,7 +142,9 @@ module tb_mtp_hrow;
     tb_hrow_relay #(.W(AW + 1), .HOPS(QF)) u_qf (.clk(clk), .rst_n(rst_n), .i(t_vrq), .o(vrq_far));
     tb_hrow_relay #(.W(1), .HOPS(QR)) u_qg (.clk(clk), .rst_n(rst_n), .i(vg_far), .o(vg_near));
     tb_hrow_relay #(.W(1025), .HOPS(QR)) u_qs (.clk(clk), .rst_n(rst_n), .i(t_vrs), .o(vrs_near));
-`ifdef OT_HROW_TILES
+`ifdef OT_HROW_DIE
+    dsfd_mtp_hrow_td #(.NW(NW)
+`elsif OT_HROW_TILES
     dsfd_mtp_hrow_tc #(.NW(NW)
 `else
     dsfd_mtp_hrow #(.NW(NW)

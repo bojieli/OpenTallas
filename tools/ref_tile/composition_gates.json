@@ -89,15 +89,27 @@
    ]
   },
   "qfd_vm_region_prod": {
-   "what": "Qwen TP8 VM region built from its closed leaves (ot_qfd_vm_region_leaf: gctl_t, rowrd_t, 8 x bank_t, 6 x su_t, xfifo8_t, 3 x su1024_t, delay leaves bound to the routed ot_qwen_tree_delay1_t / delay2_t) against the flat ot_qfd_vm_region_quarter at the ROUTED parameters (DEPTH 174 / LAW 8 / DEPTHS 695 / LAWS 10, NPP 12, MEREG 1), xo / ro / so / ovf on every clock; mutants in gctl_t, at bank_t's and su_t's write-data pins, in rowrd_t and su1024_t must fail. Behavioural memories (USE_MACRO 0). Needs a source snapshot that holds tools/qwen_tp8/vm_leaf_gate.sh (claude/qwen-tp8-vm-verif or later). Evidence: results/rtl/qwen_tp8_vm_plane_20261013/leaf_gate/record.json.",
-   "covers": ["ot_qfd_vm_gctl_t", "ot_qfd_vm_bank_t", "ot_qfd_vm_su_t", "ot_qfd_vm_rowrd_t", "ot_qfd_vm_xfifo8_t", "ot_qfd_vm_su1024_t", "ot_qwen_tree_delay1_t", "ot_qwen_tree_delay2_t"],
+   "what": "Qwen TP8 VM region built from its closed leaves (ot_qfd_vm_region_leaf: 8 x bctl_t, 6 x sctl_t, 2 x rr4_t (kept AND-OR tree), rr2_t, 8 x bank_t, 6 x su_t, 16 x xfifo8_t, 3 x su1024_t, delay leaves bound to the routed ot_qwen_tree_delay1_t / delay2_t) against the flat ot_qfd_vm_region_quarter at the ROUTED parameters (DEPTH 174 / LAW 8 / DEPTHS 695 / LAWS 10, NPP 12, MEREG 1), xo / ro / so / ovf on every clock; mutants in rr4_t, bctl_t, sctl_t, rr2_t, at bank_t's and su_t's write-data pins and in su1024_t must fail (VM4 2026-10-13: gctl_t / rowrd_t are dissolved into the per-consumer leaves). Behavioural memories (USE_MACRO 0). Needs a source snapshot that holds tools/qwen_tp8/vm_leaf_gate.sh (claude/qwen-tp8-vm-verif or later). Evidence: results/rtl/qwen_tp8_vm_plane_20261013/leaf_gate/record.json.",
+   "covers": ["ot_qfd_vm_bctl_t", "ot_qfd_vm_sctl_t", "ot_qfd_vm_rr4_t", "ot_qfd_vm_rr2_t", "ot_qfd_vm_bank_t", "ot_qfd_vm_su_t", "ot_qfd_vm_xfifo8_t", "ot_qfd_vm_su1024_t", "ot_qwen_tree_delay1_t", "ot_qwen_tree_delay2_t"],
    "benches": [
-    {"name": "exact", "expect": "pass", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region exact", "pass_regex": "PASS qfd_vm_region_leaf DEPTH=174 LAW=8 DEPTHS=695 LAWS=10", "min_count_regex": "exact (\\d+) checks"},
-    {"name": "mutant", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant -GLEAF_MUT=2", "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=2 .*errors="},
-    {"name": "mutant_bank", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_bank -GLEAF_MUT=4", "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=4 .*errors="},
-    {"name": "mutant_su", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_su -GLEAF_MUT=6", "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=6 .*errors="},
-    {"name": "mutant_rowrd", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_rowrd -GROW_MUT=1", "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=0 ROW_MUT=1 .*errors="},
-    {"name": "mutant_su1024", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_su1024 -GSU_MUT=1", "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=0 ROW_MUT=0 SU_MUT=1 .*errors="}
+    {"name": "exact", "expect": "pass", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "pass_regex": "PASS qfd_vm_region_leaf DEPTH=174 LAW=8 DEPTHS=695 LAWS=10", "min_count_regex": "exact (\\d+) checks",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region exact"},
+    {"name": "mutant", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=2 .*errors=",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant -GLEAF_MUT=2"},
+    {"name": "mutant_rr4", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=1 .*errors=",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_rr4 -GLEAF_MUT=1"},
+    {"name": "mutant_bctl", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=3 .*errors=",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_bctl -GLEAF_MUT=3"},
+    {"name": "mutant_sctl", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=8 .*errors=",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_sctl -GLEAF_MUT=8"},
+    {"name": "mutant_bank", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=4 .*errors=",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_bank -GLEAF_MUT=4"},
+    {"name": "mutant_su", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=6 .*errors=",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_su -GLEAF_MUT=6"},
+    {"name": "mutant_rr2", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=0 ROW_MUT=1 .*errors=",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_rr2 -GROW_MUT=1"},
+    {"name": "mutant_su1024", "expect": "fail", "threads": 8, "peak_ram_gb": 4, "needs": ["verilator"], "fail_regex": "FAIL qfd_vm_region_leaf LEAF_MUT=0 ROW_MUT=0 SU_MUT=1 .*errors=",
+     "cmd": "bash tools/qwen_tp8/vm_leaf_gate.sh {RUN}/bench/cg_vm region mutant_su1024 -GSU_MUT=1"}
    ]
   },
   "qfd_vm_xplane_prod": {

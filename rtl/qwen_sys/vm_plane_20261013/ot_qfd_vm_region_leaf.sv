@@ -351,13 +351,14 @@ module ot_qfd_vm_rr4_t #(
         always @(posedge clk or negedge r[s % 4])
             if (!r[s % 4]) rs1 <= 4'd0;
             else rs1 <= (MUT == 1 && s == 5) ? {rdc[2:0], rdc[3]} : rdc;
-        reg [31:0] t, tn;
-        integer i;
-        always @* begin
-            tn = 32'd0;
-            for (i = 0; i < 4; i = i + 1) tn = tn | (bx[i*512 + s*32 +: 32] & {32{rs1[i]}});
-        end
-        always @(posedge clk) t <= tn;
+        // VM3 2026-10-13: the one-hot AND-OR as a KEPT TREE (banks 0 | 1, banks 2 | 3, then the OR; same function, same
+        // single level between the bx relays and t).  Mapped as one star gate per bit, up to two of the four bank nets
+        // crossed mid height for every bit (1,024 crossings in a 17.28-um leaf: GRT-0116); with the two pair nets kept
+        // every horizontal cut of the leaf is crossed by ONE net a bit (512).
+        reg [31:0] t;
+        (* keep = "true" *) wire [31:0] p01 = (bx[0*512 + s*32 +: 32] & {32{rs1[0]}}) | (bx[1*512 + s*32 +: 32] & {32{rs1[1]}});
+        (* keep = "true" *) wire [31:0] p23 = (bx[2*512 + s*32 +: 32] & {32{rs1[2]}}) | (bx[3*512 + s*32 +: 32] & {32{rs1[3]}});
+        always @(posedge clk) t <= p01 | p23;
         assign t1[s*32 +: 32] = t;
     end endgenerate
 endmodule

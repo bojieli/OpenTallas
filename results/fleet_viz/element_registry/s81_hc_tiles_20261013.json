@@ -1162,6 +1162,56 @@
      "results/rtl/s81_suhc_20261013/hc_tile_qualification2_1013.json"
     ]
    }
+  },
+  {
+   "element": "ot_s81_hc_cryys",
+   "target": "DeepSeek ROM",
+   "owner": "Claude:s81hc-1013 (collected by s81-suhc r9)",
+   "recorded_at": "2026-10-14T01:37:31.850171+00:00",
+   "description": "S81 HC y slice leaf (32.4 x 300.24, 256 b, 16 x 256 flop store, own clock root; hardened once, 11 instances per outer column root = 22 a die, replacing ot_s81_hc_crooty_y whose SRAM tile failed global route six times). Qualified as a leaf AND as the 11-leaf composition: lockstep against the SRAM tile on every cycle, production-shape HC gate bit-exact with every instance at the routed tuple, in-leaf mutants fail. The die places the 11 leaves itself (contract v17 rows sp_hc_s/crooty_c{0,2}/ys0..10); ot_s81_hc_crooty_yl is an RTL wrapper only (wires, no view).",
+   "source": {
+    "commit": "023a586caf8d87d05bea0102b7316bb9d77f68e6",
+    "paths": [
+     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv",
+     "rtl/dsrom_sys/s81_suhc/test/tb_s81_hc_cryy_split.sv",
+     "tools/s81_suhc/cryy_split_bench.sh",
+     "tools/s81_suhc/hc_tile_bench.sh",
+     "tools/s81_suhc/hc_gate.py"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS: lockstep 11 leaves vs ot_s81_hc_crooty_y 0 mismatches / 60,000 cycles (C 0 and C 2); NG256 production-shape HC gate 0 / 1940 rows x3 at 6,392 cycles, 22 instance(s) all at the routed tuple {W 256, YD 16}; both re-run in the loop job at the route commit (bench_lockstep_exact, bench_hc_tile_exact ok)",
+     "evidence": [
+      "results/closure_loop/s81hc_cryys_ref-v1-flopslice-023a586ca/verdict.json",
+      "results/rtl/s81_suhc_20261013/cryys_split_189c83072"
+     ]
+    },
+    "negative": {
+     "status": "PASS (mutants FAIL): lockstep stored-bit mutant CRYY_SPLIT FAIL; leaf p_y bit 30 inverted -> 1,770 / 1940 error rows x3; both re-run in the loop job (bench_lockstep_mutant, bench_hc_tile_mut ok)",
+     "evidence": [
+      "results/closure_loop/s81hc_cryys_ref-v1-flopslice-023a586ca/verdict.json",
+      "results/rtl/s81_suhc_20261013/cryys_split_189c83072"
+     ]
+    }
+   },
+   "physical": {
+    "status": "CLOSED: s81hc_cryys_ref-v1-flopslice-023a586ca (CLOSED TT +77.08 / FF +23.36 ps DRC 0; SS sensitivity -264.64 ps); cap M5, 5,656 sinks, routed TT insertion 234.5..264.1 ps (boundary mean 256.4, boundary spread 14.2 ps); child_lint PASS",
+    "corners": {
+     "route": "TT",
+     "hold": "FF"
+    },
+    "evidence": [
+     "results/closure_loop/s81hc_cryys_ref-v1-flopslice-023a586ca/verdict.json",
+     "physical/ref_tile/s81hc_cryys_ref/views"
+    ]
+   },
+   "integration": {
+    "status": "die-placed slices (11 abutted W -> E, R0, 356.4 of the 369.36-um slot). Pin-register audit of the closed view: no flag; o 197.3 ps (p_y), s 165.6 (y_s) / 159.7 (yacc) / 155.2 (p_req) / 155.0 (srs), reach 421.6 um against its own kind, L - H 188.2 ps. Against its CLOSED neighbours the hops are limited by THEIR pin-register defects (pinreg audit list): p_y -> ot_s81_hc_crootr_f s 497.0 = 694.3 ps at zero wire (11 ps over 683.3); crootr_f p_req o 381.9 allows 192 um, the 11 p_req pins span 324 um; cpin yacc_w / _e o 427.9 / 417.4 allow 126 / 139 um (a relay at o 225 allows 393 um). HC parent assembly not started",
+    "evidence": [
+     "results/rtl/s81_suhc_20261013/cryys_composition_1013/pair_audit.md"
+    ]
+   }
   }
  ]
 }
