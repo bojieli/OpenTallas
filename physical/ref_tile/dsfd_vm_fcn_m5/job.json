@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_fcn_m5-p4-COMMIT",
+ "name": "dsfd_vm_fcn_m5-p4-42e660d28",
  "block": "dsfd_vm_fcn",
  "ref_tile": true,
  "owner": "Codex:s81_vmfe_misc_2240",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "codex/s81-vmfe-misc-2240",
-  "commit": "COMMIT",
+  "commit": "42e660d28",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/mtp",
@@ -85,7 +85,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_fcn_m5/dsfd_vm_fcn_m5-p4-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_fcn_m5/dsfd_vm_fcn_m5-p4-42e660d28"
   }
  ],
  "cycles_added": 0,
