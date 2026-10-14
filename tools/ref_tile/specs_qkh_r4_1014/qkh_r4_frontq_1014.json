@@ -32,7 +32,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "pin_balance": {
-   "h": "M2 M4",
+   "h": "M4",
    "v": "M5",
    "group_max": 1
   }
@@ -58,7 +58,6 @@
    "row_in"
   ],
   "E": [
-   "q_data_in",
    "e_in"
   ],
   "N": [
@@ -66,6 +65,9 @@
    "f_t1",
    "f_t2",
    "f_t3"
+  ],
+  "ANY": [
+   "q_data_in"
   ]
  },
  "params": {
@@ -89,7 +91,7 @@
  "job": {
   "owner": "Codex:coordinator-kvsys-1014-pm",
   "branch": "codex/coordinator-takeover-1014-pm",
-  "tag": "r4",
+  "tag": "r4m4",
   "purpose": "Four front quarters inside the retained v1.1 head slot;86 independently clocked children",
   "structural_change": "83 independently clocked children; no data-cycle or FP32 operation change",
   "benches": [
@@ -128,6 +130,6 @@
  "io_tcl": "physical/qwen_head_r4_1014/frontq_io.tcl",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "4 independent row-quarter front leaves replace the congested 648x32.4 band, with unchanged FP32 packing/cycles; logical producer-order lane placement, exact per-bit input pins"
+  "why": "4 independent row-quarter front leaves replace the congested 648x32.4 band, with unchanged FP32 packing/cycles; logical producer-order lane placement, exact per-bit input pins; M2 E-pin GRT-0209 fixed by splitting Q pins across W/E M4, all per-bit capture paths still<=500um"
  }
 }

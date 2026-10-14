@@ -1,5 +1,5 @@
 {
- "name": "qkh_r4_frontq_1014-r4-bd7e7285a",
+ "name": "qkh_r4_frontq_1014-r4m4-COMMIT",
  "block": "ot_qkh_head_frontq_native",
  "ref_tile": true,
  "owner": "Codex:coordinator-kvsys-1014-pm",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex/head-r4-sourcebound-1014-pm",
-  "commit": "bd7e7285ab3c5b347eff8f801d77127d700f358c",
+  "branch": "codex/coordinator-takeover-1014-pm",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
@@ -100,7 +100,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_r4_frontq_1014/qkh_r4_frontq_1014-r4-COMMIT"
+   "to": "results/rtl/ref_tile/qkh_r4_frontq_1014/qkh_r4_frontq_1014-r4m4-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -112,6 +112,6 @@
  "structural_change": "83 independently clocked children; no data-cycle or FP32 operation change",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "4 independent row-quarter front leaves replace the congested 648x32.4 band, with unchanged FP32 packing/cycles; logical producer-order lane placement, exact per-bit input pins"
+  "why": "4 independent row-quarter front leaves replace the congested 648x32.4 band, with unchanged FP32 packing/cycles; logical producer-order lane placement, exact per-bit input pins; M2 E-pin GRT-0209 fixed by splitting Q pins across W/E M4, all per-bit capture paths still<=500um"
  }
 }

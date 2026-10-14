@@ -43,7 +43,6 @@
    "row_in"
   ],
   "E": [
-   "q_data_in",
    "e_in"
   ],
   "N": [
@@ -51,6 +50,9 @@
    "f_t1",
    "f_t2",
    "f_t3"
+  ],
+  "ANY": [
+   "q_data_in"
   ]
  },
  "clock_port": "clk",

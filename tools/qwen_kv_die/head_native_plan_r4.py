@@ -141,8 +141,8 @@ def plan(closed_pins=None):
             caps[f'row_in[{j}]']=dict(face='S',layer='M5',slot_xy_um=list(dest),parent_ti_bit=bit)
             hops.append((f'die_ti[{bit}]->front{g}.row[{j}]',bound([src],[dest])))
         for j in range(512):
-            bit=1047+j;dest=(x+w,y+8.892+0.096*(j//2));src=(ti_base+0.288*bit,0.)
-            caps[f'q_data_in[{j}]']=dict(face='E',layer='M2' if j%2==0 else 'M4',slot_xy_um=list(dest),parent_ti_bit=bit)
+            bit=1047+j;dest=(x if j%2==0 else x+w,y+8.892+0.096*(j//2));src=(ti_base+0.288*bit,0.)
+            caps[f'q_data_in[{j}]']=dict(face='W' if j%2==0 else 'E',layer='M4',slot_xy_um=list(dest),parent_ti_bit=bit)
             hops.append((f'die_ti[{bit}]->front{g}.q[{j}]',bound([src],[dest])))
         for j in range(16):
             dest=(x+w,y+3.036+0.096*j);src=(686.076+0.096*j,0.)
