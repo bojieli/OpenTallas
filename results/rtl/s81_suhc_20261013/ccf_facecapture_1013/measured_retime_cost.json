@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.s81.hc.ccf_face_retime_cost.v1",
+  "scope": "NG256 HIER3 CNL_PIN1 CHAIN_STEP6 LANE_SPECIALIZE1 PIPE0, same three production fixture chains; not the final die-throughput qualification",
+  "bench_source_commit": "e24586c03",
+  "candidate_source_commit": "79664b51fc11973ab610941b59a9109b95df635e",
+  "baseline_source": "origin/main:results/rtl/s81_suhc_20261013/cryys_split_189c83072/run_ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_probe.json",
+  "baseline_sha256": "bd865ef20020d568b61d0ce29ed6bad5cc20ccfc805dffdb4deef4a81972bac3",
+  "measured_composition_cycle_loss_percent": 0,
+  "rows": [
+    {
+      "run": "golden_L0_L2",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "run": "stress_0",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    },
+    {
+      "run": "stress_1",
+      "rows": 1940,
+      "jobs": 20,
+      "cycles": 6392,
+      "all_start_and_done_cycles_identical": true,
+      "delta_cycles": 0
+    }
+  ],
+  "rtl_retime": "one forward pad stage moves to the actual CCF fv/fd face capture; return depth unchanged",
+  "ledger_row_added": false
+}

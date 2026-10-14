@@ -1,0 +1,124 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "s81hc_ccfh2_ref",
+ "verdict": "FAIL",
+ "generated": "2026-10-13T20:46:44-0700",
+ "host": "ot-epyc4",
+ "cts": true,
+ "commit": "446583fc7",
+ "clock": {
+  "max_root_sinks": 15324,
+  "root": "port:sk",
+  "cts": true,
+  "tt_insertion_ps": 757.9,
+  "tt_spread_ps": 33.6,
+  "declared_clock": "spine",
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "clock_measurements": [
+   {
+    "source": "sk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 6370,
+      "mean": 740.2,
+      "min": 727.5,
+      "max": 757.9
+     },
+     "all": {
+      "n": 15322,
+      "mean": 739.8,
+      "min": 724.3,
+      "max": 757.9
+     },
+     "errors": [],
+     "macros": {
+      "n": 5,
+      "nets": 5,
+      "max_per_net": 1,
+      "reg_mean": 739.8,
+      "max_slew": 14.1,
+      "max_late": 15.8,
+      "pins": [
+       {
+        "pin": "g_yf.g_slice.g_f[0].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 743.1,
+        "slew": 14.1,
+        "late": 3.3,
+        "net": "clkbuf_sp_L1474_net"
+       },
+       {
+        "pin": "g_yf.g_slice.g_f[1].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 743.4,
+        "slew": 13.8,
+        "late": 3.6,
+        "net": "clkbuf_sp_L1209_net"
+       },
+       {
+        "pin": "g_yf.g_slice.g_f[2].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 734.5,
+        "slew": 13.6,
+        "late": -5.3,
+        "net": "clkbuf_sp_L1093_net"
+       },
+       {
+        "pin": "g_yf.g_slice.g_f[3].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 748.7,
+        "slew": 13.8,
+        "late": 8.9,
+        "net": "clkbuf_sp_L776_net"
+       },
+       {
+        "pin": "g_yf.g_slice.g_f[4].u_yf.g_tile[0].g_m0.u_m/clk",
+        "arr": 755.6,
+        "slew": 13.9,
+        "late": 15.8,
+        "net": "clkbuf_sp_L668_net"
+       }
+      ]
+     },
+     "macro_libs": 1
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
+  "verdict": "REFUSE",
+  "text": "15,324 sinks on one clock root > 15,000: measured TT insertion 757.9 ps, leaf spread 33.6 ps; insertion 757.9 ps > 300"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "utilisation 34% outside 45%-60% (std 7212 + macro 66617 in core 218406 um2)",
+   "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 7213 um2 + macros 66617 in core 218406: util 34%",
+   "fix": "set \"std_area_um2\": 7213 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port sk: 15,319 flops > 15,000 on one root (+0 ICGs, 5 macro clock pins; e.g. ch_fd[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 33.9% outside 45%-65% (std 7346 + macro 66617 um2 in 218406 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "15,324 sinks on one clock root > 15,000: measured TT insertion 757.9 ps, leaf spread 33.6 ps; insertion 757.9 ps > 300 (declared clock 'spine' does not waive it)",
+   "fix": "hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json"
+  }
+ ]
+}

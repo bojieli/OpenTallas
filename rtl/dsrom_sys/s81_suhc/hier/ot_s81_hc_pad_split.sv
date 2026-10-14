@@ -7,7 +7,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cpad_split #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1, PHYS_CLK = 0
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1, PHYS_CLK = 0, PIN_CAPTURE = 1
 ) (
     input  wire                 sk, srs,
     input  wire [3:0]           sk_leaf,
@@ -35,8 +35,9 @@ module ot_s81_hc_cpad_split #(
     localparam integer FP = 2 + RF + PAD;                         // forward: send + capture + RF + padding
     localparam integer RP = RT + 2 + PAD + RET_EXTRA * (NP - L1) * (HALF ? 2 : 1);                         // return: relay + send + capture + padding
     // No assembly data/valid flop: each hard child's first/last flop is its boundary.
-    localparam integer F0 = (FP-2 > 8) ? 8 : FP-2;
-    localparam integer F1 = FP-2-F0;
+    // PIN_CAPTURE transfers one forward stage into the CCF face; return stages are unchanged.
+    localparam integer F0 = (FP-2-PIN_CAPTURE > 8) ? 8 : FP-2-PIN_CAPTURE;
+    localparam integer F1 = FP-2-F0-PIN_CAPTURE;
     localparam integer R0 = (RP-2 > 6) ? 6 : RP-2;
     localparam integer R1 = RP-2-R0;
     wire [FVW-1:0] fm;
@@ -49,9 +50,9 @@ module ot_s81_hc_cpad_split #(
 `endif
         .sk(PHYS_CLK ? sk_leaf[0] : sk),.srs(srs),.v_i(fv_i),.d_i(fd_i),.v_o(fm),.d_o(dm));
 `ifdef OT_S81_HC_PAD_HARD
-    ot_s81_hc_pad_f5r1 u_f5r1 (
+    ot_s81_hc_pad_fv4fd5r1 u_f5r1 (
 `else
-    ot_s81_hc_pad_f5r1 #(.FW(FSW),.VW(FVW),.RW(RDW),.DEPTH(F1)) u_f5r1 (
+    ot_s81_hc_pad_fv4fd5r1 #(.FW(FSW),.VW(FVW),.RW(RDW),.DEPTH(F1+PIN_CAPTURE),.VDEPTH(F1)) u_f5r1 (
 `endif
         .sk(PHYS_CLK ? sk_leaf[1] : sk),.srs(srs),.v_i(fm),.d_i(dm),.v_o(fv_o),.d_o(fd_o),.r_i(crd_i),.r_o(rpin));
 `ifdef OT_S81_HC_PAD_HARD
@@ -71,7 +72,7 @@ module ot_s81_hc_cpad_split #(
         if (F0<0 || F1<0 || R0<0 || R1<0) $fatal(1,"pad split requires nonnegative soft relay depths");
 `ifdef OT_S81_HC_PAD_HARD
         if(NG!=256 || HALF!=1 || RLY!=2 || RF!=5 || RT!=1 || RET_EXTRA!=1 ||
-           S_RD!=2 || S_RT!=4 || DW!=6 || F0!=8 || F1!=5 || R0!=6 || R1!=5)
+           S_RD!=2 || S_RT!=4 || DW!=6 || F0!=8 || F1!=4 || R0!=6 || R1!=5)
             $fatal(1,"pad hard views require exact production depth/width tuple");
 `endif
     end
@@ -87,6 +88,17 @@ module ot_s81_hc_pad_f8 #(parameter integer FW=1128,VW=7,DEPTH=8)(
 endmodule
 
 module ot_s81_hc_pad_f5r1 #(parameter integer FW=1128,VW=7,RW=2156,DEPTH=5)(
+ input wire sk,srs,input wire[VW-1:0]v_i,input wire[FW-1:0]d_i,
+ output wire[VW-1:0]v_o,output wire[FW-1:0]d_o,
+ input wire[RW-1:0]r_i,output reg[RW-1:0]r_o);
+ reg[1:0] rr;always @(posedge sk)rr<={rr[0],srs};
+ ot_hdc_delay #(.W(VW),.D(DEPTH),.RESET(1)) u_v(.clk(sk),.rst_n(rr[1]),.d(v_i),.q(v_o));
+ ot_hdc_delay #(.W(FW),.D(DEPTH)) u_d(.clk(sk),.rst_n(rr[1]),.d(d_i),.q(d_o));
+ always @(posedge sk)r_o<=r_i;
+endmodule
+
+// New forward retiming leaf. The closed five-stage master remains unchanged.
+module ot_s81_hc_pad_f4r1 #(parameter integer FW=1128,VW=7,RW=2156,DEPTH=4)(
  input wire sk,srs,input wire[VW-1:0]v_i,input wire[FW-1:0]d_i,
  output wire[VW-1:0]v_o,output wire[FW-1:0]d_o,
  input wire[RW-1:0]r_i,output reg[RW-1:0]r_o);
@@ -117,7 +129,7 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_ccr_align #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1, PHYS_CLK = 0
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1, PHYS_CLK = 0, PIN_CAPTURE = 1
 ) (
     input  wire                 sk, srs,
     input  wire [1:0]           sk_leaf,
@@ -215,4 +227,16 @@ module ot_s81_hc_pad_meta2 #(parameter integer VW=8,EW=512,DEPTH=2)(
  reg[1:0] rr;always @(posedge sk)rr<={rr[0],srs};
  ot_hdc_delay #(.W(VW),.D(DEPTH),.RESET(1))u_v(.clk(sk),.rst_n(rr[1]),.d(v_i),.q(v_o));
  ot_hdc_delay #(.W(8+EW),.D(DEPTH))u_d(.clk(sk),.rst_n(rr[1]),.d({e_i,p_i}),.q({e_o,p_o}));
+endmodule
+
+
+// Only FV transfers one stage into CCF; FD and return retain the closed production latency.
+module ot_s81_hc_pad_fv4fd5r1 #(parameter integer FW=1128,VW=7,RW=2156,DEPTH=5,VDEPTH=4)(
+ input wire sk,srs,input wire[VW-1:0]v_i,input wire[FW-1:0]d_i,
+ output wire[VW-1:0]v_o,output wire[FW-1:0]d_o,
+ input wire[RW-1:0]r_i,output reg[RW-1:0]r_o);
+ reg[1:0] rr;always @(posedge sk)rr<={rr[0],srs};
+ ot_hdc_delay #(.W(VW),.D(VDEPTH),.RESET(1)) u_v(.clk(sk),.rst_n(rr[1]),.d(v_i),.q(v_o));
+ ot_hdc_delay #(.W(FW),.D(DEPTH)) u_d(.clk(sk),.rst_n(rr[1]),.d(d_i),.q(d_o));
+ always @(posedge sk)r_o<=r_i;
 endmodule
