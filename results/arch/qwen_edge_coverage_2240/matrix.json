@@ -10,7 +10,7 @@
       "actual_owner": "Codex:qwen_edge_coverage_2240",
       "state": "ACTIVE_CLOSED128_CHILD_DEFAULT_OFF_PROXY_CENSUS",
       "current_source": "rtl/physical/ot_qfd_link_adp512_split.sv @2aa3e0423",
-      "evidence": "Leafcebc45086 CLOSED TT188.60 FF24.13 DRC0, actualboundaryTT41.8/FF41.4. Full1043 eight-root functionalproof passed, parent stillunqualified. Default-off78-root proxy realIBUF12/OCRED12+heads passedexact1500/stall3000/blocked3000/3resetepochs; 5observedmutants. Sustained1.000word/clk +16cycles vsbaseline. Generic66575sequentialbits max9275root +8SRAM; power/slots/unpriced.",
+      "evidence": "Leafcebc45086 CLOSED TT188.60 FF24.13 DRC0, actualboundaryTT41.8/FF41.4. Full1043 eight-root functionalproof passed, parent stillunqualified. Default-off78-root proxy realIBUF12/OCRED12+heads passedexact1500/stall3000/blocked3000/3resetepochs; 5observedmutants. Sustained1.000word/clk +16cycles vsbaseline. Freshgeneric66583sequentialbits max9275root +8SRAM; power/slots/unpriced.",
       "next_action": "NewP12r_crcapturedprofile source795e0f2b9 positive rate1000/+16cycles blocked3000/reset3 and5mutants rerun. Fresh2965root clockgateTTboundary332.6/all28.0/setup175.50hold26.43, SB.validateTRUE; submitted qfd_link_adp128_p12-p12g2-aeaa5f66b withparentexact/rate/stall/reset+5mutants. Parent78rootphysicalplacement/PG/cornerpairs/power/pricing stillopen.",
       "historical_status_preserved": true,
       "registry_superseded": false

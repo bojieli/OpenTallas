@@ -37,8 +37,8 @@
     "physical_reference": "phi-minusR peractualrouted insertion, perpin O-R/S+R/cornerbudget pending",
     "aggregate_sequential_bits": 66583,
     "max_measured_generic_root_sinks": 9275,
-    "census": "proxy/census.json, Yosys generic bit synthesis noabc, not physical",
-    "census_note": "Prioractual66575 genericcensus + eight newlyadded independentcreditFFs; refreshedactualcensus pending."
+    "census": "proxy/census_credit_capture.json measured66583/MAX9275/8SRAM, ot-runEPYC1 unit1579030-1791965104",
+    "census_note": "Freshactualgeneric bit synthesis with capturedRcredit, notphysicalplacement/power."
   },
   "registered_transport": {
     "C_each_branch_stages": 3,
@@ -76,7 +76,7 @@
   },
   "arithmetic": "None, exacttransport unchanged1043fullheader/payload",
   "production_target": "Measuredproxy/baseline sustained1000/1000 words per cycle atLAT229; firstword267vs251 andcompletion2274vs2258 = +16cycles. Native composition not priced.",
-  "clock_power": "Measuredgenericaggregate66575clockedbits+8real512x128macros vslegacy estimated14.7k; power adoption unqualified, actual idle activity/gating model pending.",
+  "clock_power": "Measuredgenericaggregate66583clockedbits+8real512x128macros vslegacy estimated14.7k; power adoption unqualified, actual idle activity/gating model pending.",
   "guards": "all8TXheader/valids capturebeforecompleteflitcommit; all8Rvalids beforehalfstore, bothRhalfvalids beforefullwordcollectorcommit; stickyoverflow/credit/header/fault beforecontinuedlaunch",
   "mutants": [
     "Cpayload1bit",
