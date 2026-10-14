@@ -59,10 +59,10 @@
   "job": {
     "owner": "Codex:hbm_quant_sfu_2240",
     "branch": "codex/hbm-quant-sfu-2240",
-    "tag": "n1",
+    "tag": "n2",
     "views_to": "physical/ref_tile/qdq_core_fin_ref/views",
     "record_to": "results/rtl/ref_tile/qdq_core_fin_ref",
-    "purpose": "Real nativeSPAN1 immutableprice repair: {'FIN_BYPASS': 1, 'SPANPIPE': 1}; candidate changes completionedges while retainingregisteredtransactionboundaries. Actual4B2 production32records13312words184/168 phases61/487 exact andheader/assemblymutants fail. Existing CLOSEDdefaultCORE andfailedq8eWR retained; newsource-matchedbody needed before any hardparentadoption.",
+    "purpose": "FIN_BYPASS1 runtimefinish no longer precedes variableheaddecoder/carry: kepthead/tail masks, dependencyclearafterenqueue mux, parallelfinishcount/occupancy candidates selectedafterrawfinish. Noaddedstate/edge; defaultFIN0literaloldbehavior retained. Priorinputendpointq_dep critical preserveddiagnostic.",
     "extra_paths": [
       "rtl",
       "compiler",
@@ -73,7 +73,7 @@
     "benches": [
       {
         "name": "exact61",
-        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=1 MUT=0 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_exact61",
+        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=2 FINFLAGS=1 DRAIN=1 MUT=0 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_exact61",
         "expect": "pass",
         "threads": 8,
         "peak_ram_gb": 12,
@@ -83,7 +83,7 @@
       },
       {
         "name": "exact487",
-        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=1 MUT=0 PHASE=487 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_exact487",
+        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=2 FINFLAGS=1 DRAIN=1 MUT=0 PHASE=487 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_exact487",
         "expect": "pass",
         "threads": 8,
         "peak_ram_gb": 12,
@@ -93,7 +93,7 @@
       },
       {
         "name": "mut_header",
-        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=1 MUT=1 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_mut_header",
+        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=2 FINFLAGS=1 DRAIN=1 MUT=1 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_mut_header",
         "expect": "fail",
         "threads": 8,
         "peak_ram_gb": 12,
@@ -102,7 +102,7 @@
       },
       {
         "name": "mut_assembly",
-        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=1 MUT=2 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_mut_assembly",
+        "cmd": "NATIVE_COMMON_DIR=results/rtl/ref_tile/qdq_native_peer4/native_common64 FASTFIN=1 FRONTFAST=2 FINFLAGS=1 DRAIN=1 MUT=2 PHASE=61 bash tools/hgi_unit_tput/run_qdq_native_peer4.sh results/rtl/ref_tile/qdq_native_peer4/vectors {RUN}/native_mut_assembly",
         "expect": "fail",
         "threads": 8,
         "peak_ram_gb": 12,
@@ -115,7 +115,7 @@
     "FIN_BYPASS": 1,
     "SPANPIPE": 1
   },
-  "structural_change": "Real nativeSPAN1 immutableprice repair: {'FIN_BYPASS': 1, 'SPANPIPE': 1}; candidate changes completionedges while retainingregisteredtransactionboundaries. Actual4B2 production32records13312words184/168 phases61/487 exact andheader/assemblymutants fail. Existing CLOSEDdefaultCORE andfailedq8eWR retained; newsource-matchedbody needed before any hardparentadoption.",
+  "structural_change": "FIN_BYPASS1 runtimefinish no longer precedes variableheaddecoder/carry: kepthead/tail masks, dependencyclearafterenqueue mux, parallelfinishcount/occupancy candidates selectedafterrawfinish. Noaddedstate/edge; defaultFIN0literaloldbehavior retained. Priorinputendpointq_dep critical preserveddiagnostic.",
   "slot_change_request": {
     "parent": "ot_hgi_qdq_q_pin4",
     "selected": false,
