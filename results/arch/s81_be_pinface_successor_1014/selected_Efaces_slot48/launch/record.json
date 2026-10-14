@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.be_pinface_diagnostic_launch.v1",
+  "status": "RUNNING",
+  "name": "s81be-access-Efaces-slot48-5b6ab0a5b",
+  "source_branch": "codex/s81-be-native-placement",
+  "source_commit": "5b6ab0a5b72a4cabc4b67c262811fa174cf93430",
+  "drop_path": "/tmp/claude-review-20261003/closure_jobs/s81be-access-Efaces-slot48-5b6ab0a5b.json",
+  "submitted_UTC": "2026-10-14T09:17:46.763764+00:00",
+  "spec_sha256": "855d9911e580513ac3ac216f4b37277d63e88c46b702fc57446474f5bc6b45c1",
+  "validate_exit": 0,
+  "local_IO_on_track": 4094,
+  "helper_count": 46,
+  "helper_digest": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
+  "old_CLOSED_replaced": false,
+  "hold_merge": true,
+  "slot_allocated": false,
+  "allocator_lattice_acceptance": "OPEN",
+  "raw_route_electrical_connectivity_verified": false,
+  "global_clock_reset_binding": false,
+  "host": "ot-epyc1tb",
+  "daemon_job_path": "/home/ubuntu/.local/state/closure_loop/jobs/s81be-access-Efaces-slot48-5b6ab0a5b.json",
+  "daemon_updated": "2026-10-14T02:21:38-07:00",
+  "adopted": false,
+  "run": "/srv/opentallas/claude/closure-loop/s81be-access-Efaces-slot48-5b6ab0a5b",
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "remote_benches": {
+    "bench_existing_native_evidence_source_binding": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "BE_ACCESS_REQUIRED_CHECKS_PASS\n",
+      "track": "parallel"
+    },
+    "bench_target_contacts_four_orientations": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "{\"elapsed_s\": 4.669416666030884, \"returncode\": 0, \"DRT0073\": 0, \"OT_PA_DONE\": true, \"pass_\": true}\n",
+      "track": "parallel"
+    },
+    "bench_target_contacts_actual_global_slots": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "{\"elapsed_s\": 3.870112180709839, \"returncode\": 0, \"DRT0073\": 0, \"OT_PA_DONE\": true, \"pass_\": true}\n",
+      "track": "parallel"
+    }
+  },
+  "helper_overlay_verification": {
+    "status": "verified_original",
+    "origin_main": "2cb44dc18f7a45698b5f2c1947e4fc0b7b9cafb8",
+    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
+    "files": 46,
+    "verified_at": "2026-10-14T02:19:04-07:00",
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas/claude/closure-loop/s81be-access-Efaces-slot48-5b6ab0a5b",
+    "mutation": false
+  }
+}

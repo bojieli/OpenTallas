@@ -1,0 +1,60 @@
+{
+  "schema": "opentallas.be_slot_grid_witness.v1",
+  "image": "openroad/orfs:asap7lock",
+  "candidate_BE_base_x_um": "64.752",
+  "old_BE_base_x_um": "64.8",
+  "native_allocator_lattice_acceptance": "OPEN",
+  "macro_placement_legality_claimed": false,
+  "files": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef",
+      "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+      "witness": [
+        " MANUFACTURINGGRID 0.001 ;"
+      ]
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef",
+      "sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+      "witness": [
+        [
+          "asap7sc7p5t",
+          " CLASS CORE ;\n SIZE 0.054 BY 0.270 ;\n SYMMETRY Y ;\n"
+        ]
+      ]
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl",
+      "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
+      "witness": [
+        "make_tracks M9 -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080",
+        "make_tracks M8 -x_offset 0.116 -x_pitch 0.080 -y_offset 0.116 -y_pitch 0.080",
+        "make_tracks M7 -x_offset 0.016 -x_pitch 0.064 -y_offset 0.016 -y_pitch 0.064",
+        "make_tracks M6 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.016 -y_pitch 0.064",
+        "make_tracks M5 -x_offset 0.012 -x_pitch 0.048 -y_offset 0.012 -y_pitch 0.048",
+        "make_tracks M4 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.012 -y_pitch 0.048",
+        "make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036",
+        "make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.045 -y_pitch 0.270",
+        "make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.081 -y_pitch 0.270",
+        "make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.117 -y_pitch 0.270",
+        "make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.153 -y_pitch 0.270",
+        "make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.189 -y_pitch 0.270",
+        "make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.225 -y_pitch 0.270",
+        "make_tracks M2 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.270 -y_pitch 0.270",
+        "make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036"
+      ]
+    }
+  ],
+  "site_um": [
+    "0.054",
+    "0.270"
+  ],
+  "manufacturing_grid_um": "0.001",
+  "native_576_lattice_legal": false,
+  "BE_local_x_mod_576_um": "0.240",
+  "BE_global_x_mod_576_um": "0.384",
+  "BE_global_x_mod_192_um": "0.000",
+  "native_macro_origin_rule_source": "OPEN: die lead requires exact applicable allocator/child-origin rule; .576 alignment is not established by AP",
+  "manufacturing_grid_only_is_not_native_placement_qualification": true,
+  "BE_LEF_macro_header": "MACRO dsfd_vm_be_sl\n  FOREIGN dsfd_vm_be_sl 0 0 ;\n  CLASS BLOCK ;\n  SIZE 302.4 BY 92.88 ;\n"
+}
