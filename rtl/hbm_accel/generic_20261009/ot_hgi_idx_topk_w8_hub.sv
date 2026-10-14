@@ -207,6 +207,8 @@ module ot_hgi_w8_bfifo #(parameter integer W=32) (
 `else
  wire [1:0] next_rp = rp + 1'b1;
 `endif
+ (* keep *) wire [W-1:0] h_pop = (cnt > 1) ? mem[next_rp] : (pin_v ? pin_d : head_d);
+ (* keep *) wire [W-1:0] h_hold = (cnt == 0 && pin_v) ? pin_d : head_d;
  // Input pins each reach exactly one reset-free capture flop. The valid bit
  // carries the acceptance event; invalid input samples are never consumed.
  always @(posedge clk) begin
@@ -214,11 +216,11 @@ module ot_hgi_w8_bfifo #(parameter integer W=32) (
   if (pin_v) mem[wp] <= pin_d;
   // Cache the oldest entry: no memory-selection cone remains after the
   // output launch flop. Bypass the incoming beat at empty/last-pop boundaries.
-  if (cnt == 0 && pin_v) head_d <= pin_d;
-  else if (pop) begin
-   if (cnt > 1) head_d <= mem[next_rp];
-   else if (pin_v) head_d <= pin_d;
-  end
+  // B2 (Claude hbm-group-B r2 10-14, rt_g TT class 'out_ready -> u_bo head_d 13 levels'): both candidate next heads
+  // (h_pop: the head if this edge pops, h_hold: if it does not) come from registered state only (cnt, rp, mem, pin_v,
+  // pin_d, head_d); the raw o_r pin only selects between them, one kept 2:1 mux per bit.  The same value on every edge
+  // as the nested form (a pop implies cnt != 0, so the empty bypass belongs to h_hold only).
+  head_d <= pop ? h_pop : h_hold;
  end
  always @(posedge clk or negedge rst_n)
   if (!rst_n) begin wp <= 0; rp <= 0; up <= 0; pin_v <= 0; cnt <= 0; end

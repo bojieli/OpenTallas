@@ -412,7 +412,13 @@ module ot_hgi_topk_mnode #(parameter bit UNARY=0) (
  input wire cpop, output wire apop, output wire bpop,
  output wire ov, output wire [53:0] od, output reg oe
 );
- reg en, hv, pv; reg [53:0] hd, pd;
+ // B2 (Claude hbm-group-B r2 2026-10-14, rt_g TT class 'g_rel en -> od 19 levels'): the 2-entry node buffer was a head /
+ // spill pair (hd, pd): a parent pop (cpop = the parent's fire & pick, behind its 53-b compare) steered the load of all
+ // 108 data flops of the child.  It is now a 2-entry POINTER FIFO with the same occupancy (hv = cnt >= 1, pv = cnt == 2)
+ // and the same fire / pop rule on every edge: entries are written at wp and never move; cpop advances the 1-bit read
+ // pointer and the count only, and od is a 2:1 mux of two flops by rp.  Cycle-identical to the head / spill pair.
+ reg en; reg [1:0] cnt; reg wp, rp; reg [53:0] e0, e1;
+ wire hv = cnt != 2'd0, pv = cnt == 2'd2;
  wire bvi = UNARY ? 1'b0 : bv; wire bei = UNARY ? 1'b1 : be;
  wire a_lt_b;
  generate if (UNARY) begin : g_u assign a_lt_b = 1'b0; end
@@ -420,24 +426,23 @@ module ot_hgi_topk_mnode #(parameter bit UNARY=0) (
  wire fire = en && !pv && (av || bvi) && (av || ae) && (bvi || bei);
  wire pick_b = bvi && (!av || a_lt_b);
  wire [53:0] x = pick_b ? bd : ad;
+ wire pop = cpop && hv;
  assign apop = fire && !pick_b; assign bpop = fire && pick_b;
- assign ov = hv; assign od = hd;
+ assign ov = hv; assign od = rp ? e1 : e0;
  always @(posedge clk or negedge rn) begin
-  if (!rn) begin en <= 1'b0; hv <= 1'b0; pv <= 1'b0; oe <= 1'b0; end
+  if (!rn) begin en <= 1'b0; cnt <= 2'd0; wp <= 1'b0; rp <= 1'b0; oe <= 1'b0; end
   else begin
    en <= mrg;
-   if (!en) begin hv <= 1'b0; pv <= 1'b0; oe <= 1'b0; end
+   if (!en) begin cnt <= 2'd0; wp <= 1'b0; rp <= 1'b0; oe <= 1'b0; end
    else begin
     oe <= ae && bei && !hv && !pv;                     // exhausted, registered (monotone: a lag only delays a fire)
-    if (cpop) begin if (pv) pv <= 1'b0; else hv <= fire; end
-    else if (fire) begin if (!hv) hv <= 1'b1; else pv <= 1'b1; end
+    if (fire) wp <= ~wp;
+    if (pop) rp <= ~rp;
+    cnt <= cnt + {1'b0, fire} - {1'b0, pop};
    end
   end
  end
- always @(posedge clk) begin
-  if (cpop) begin if (pv) hd <= pd; else hd <= x; end
-  else if (fire) begin if (!hv) hd <= x; else pd <= x; end
- end
+ always @(posedge clk) if (fire) begin if (wp) e1 <= x; else e0 <= x; end
 endmodule
 
 // Wide engine: IW scores a beat (in_nw valid, the row's last beat may be partial), W heaps (W a multiple of IW).
@@ -525,15 +530,26 @@ module ot_hgi_idx_topk_hw #(
  end
  always @* gth = gt[WL][0];
  // ---------------------------------------------------------------- front end: F1 (beat) -> F2 (keys, compares) -> lanes
- reg f1_v; reg [IW*32-1:0] f1_s; reg [$clog2(IW+1)-1:0] f1_nw; reg [19:0] f1_c; reg [$clog2(G+1)-1:0] f1_g, grp;
+ assign in_ready = ENABLE && st == FILL && in_ok;
+ wire beat = in_valid && in_ready;
+ reg f1_v; reg [$clog2(IW+1)-1:0] f1_nw; reg [$clog2(G+1)-1:0] f1_g, grp;
  wire f1_nan; wire [53:0] f1_e [0:IW-1]; wire [IW-1:0] f1_nl;
+ // B2 (rt_g TT classes 'f1_c -> f2_gt 18 levels', 'f1_s -> f2_e 13 levels'): the key of each lane (negative-zero flag,
+ // monotone score, ~index) and its NaN flag are formed from the beat and the cursor IN FRONT OF the F1 register (the beat
+ // comes from the boundary FIFO's head register, the cursor is a register), so F1 -> F2 holds only the 53-b threshold
+ // compare.  Same F1 / F2 edges, same keys: cycle-identical.
+ reg [53:0] f1_k [0:IW-1]; reg [IW-1:0] f1_n;
  generate for (l = 0; l < IW; l = l + 1) begin : g_key
-  wire [31:0] s = f1_s[32 * l +: 32];
+  wire [31:0] s = in_score[32 * l +: 32];
   wire [31:0] canon = (s[30:0] == 31'd0) ? 32'd0 : s;
   wire [31:0] mono = canon[31] ? ~canon : (canon | 32'h80000000);
-  wire [19:0] idx = f1_c + l;
-  assign f1_e[l] = {s == 32'h80000000, 1'b1, mono, MUTANT_TIE ? idx : ~idx};
-  assign f1_nl[l] = (l < f1_nw) && (s[30:23] == 8'hff) && (s[22:0] != 23'd0);
+  wire [19:0] idx = cursor[19:0] + l;
+  always @(posedge clk) if (beat) begin
+   f1_k[l] <= {s == 32'h80000000, 1'b1, mono, MUTANT_TIE ? idx : ~idx};
+   f1_n[l] <= (l < in_nw) && (s[30:23] == 8'hff) && (s[22:0] != 23'd0);
+  end
+  assign f1_e[l] = f1_k[l];
+  assign f1_nl[l] = f1_n[l];
  end endgenerate
  assign f1_nan = f1_v && (|f1_nl);
  wire [IW-1:0] f1_gt;                                   // lane key above the drop threshold
@@ -545,8 +561,6 @@ module ot_hgi_idx_topk_hw #(
   for (i = 0; i < IW; i = i + 1) f2_e[i] <= f1_e[i];
   f2_gt <= f1_gt; f2_nw <= f1_nw; f2_g <= f1_g;
  end
- assign in_ready = ENABLE && st == FILL && in_ok;
- wire beat = in_valid && in_ready;
  // ---------------------------------------------------------------- lanes
  wire l_lv [0:W-1], l_le [0:W-1], l_pop [0:W-1]; wire [53:0] l_ld [0:W-1];
  localparam integer MQD = 6;                            // LANE: merge credit FIFO (credit round trip 5 = full rate)
@@ -738,7 +752,7 @@ module ot_hgi_idx_topk_hw #(
    sct <= (act || !r_q || pst != st) ? 4'd0 : (sct == 4'd15 ? sct : sct + 4'd1);
    f1_v <= beat;
    if (beat) begin
-    f1_s <= in_score; f1_nw <= in_nw; f1_c <= cursor[19:0]; f1_g <= grp; grp <= (grp + 1 == G) ? 0 : grp + 1;
+    f1_nw <= in_nw; f1_g <= grp; grp <= (grp + 1 == G) ? 0 : grp + 1;
     cursor <= cursor + in_nw;
     if (cursor + in_nw >= n) st <= FLUSH;
    end
