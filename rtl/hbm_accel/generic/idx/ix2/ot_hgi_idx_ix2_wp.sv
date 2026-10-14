@@ -55,8 +55,20 @@ module ot_hgi_idx_ix2_wp #(
     // so sixteen entries cannot overflow even when the packers stall.
     reg [67:0] dq [0:15]; reg [3:0] dqw, dqr; reg [4:0] dqn;
     reg [2:0] dc_pending;
-    wire dc_ack = (dc_pending != 3'd0 || d_v) && dqn < 5'd10;
-    wire [299:0] tqh = tq[tqr]; wire [67:0] dqh = dq[dqr];
+    // Bookkeeping consumes only pin-registered signals. dc_available folds
+    // the prior pin arrival and prior ACK into the pending count; current d_v
+    // only reaches the registered ACK through OR/AND, never an input adder.
+    wire [2:0] dc_available = dc_pending + 3'(dv_q) - 3'(d_cr);
+    wire dc_ack = (dc_available != 3'd0 || d_v) && dqn < 5'd10;
+    wire [299:0] tqh = tq[tqr];
+    // Cache the D FIFO head: isolate its sixteen-way read mux from the
+    // packers' word-placement stage. Direct landing bypass supplies a new
+    // head when an empty/last-entry queue receives a beat on this edge.
+    reg [67:0] dqh;
+    always @(posedge clk) begin
+        if (dv_q && (dqn == 5'd0 || (d_go && dqn == 5'd1))) dqh <= di;
+        else if (d_go && dqn > 5'd1) dqh <= dq[dqr + 4'd1];
+    end
     wire [3:0] pk_rdy, pk_ev, pk_empty; wire [59:0] pk_sec; wire [1023:0] pk_d; wire [31:0] pk_m;
     reg [3:0] e_take; reg fl_pend, fl_done;
     wire t_go = tqn != 3'd0 && pk_rdy[0] && (pk_rdy[1] || !has_r);
@@ -110,7 +122,7 @@ module ot_hgi_idx_ix2_wp #(
             for (l = 0; l < 8; l = l + 1) begin wcred[l] <= CB'(LQ); wwq[l*280 + 279] <= 1'b0; end
         end else begin
             t_cr <= t_go; d_cr <= dc_ack;
-            dc_pending <= dc_pending + 3'(d_v) - 3'(dc_ack);
+            dc_pending <= dc_available;
             if (tv_q) tqw <= tqw + 2'd1;
             if (t_go) tqr <= tqr + 2'd1;
             tqn <= tqn + 3'(tv_q) - 3'(t_go);
