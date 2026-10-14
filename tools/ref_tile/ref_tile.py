@@ -874,6 +874,12 @@ def gen_hooks(s: dict, kd: str) -> dict:
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"] + btcl
+    corridor = s.get("pin_access", {}).get("corridor")
+    if corridor:
+        for post, hook in ((0, pre_grt), (1, post_drt)):
+            hook += [f"set ::ot_smpub_corridor_pin {{{corridor['pin']}}}",
+                     f"set ::ot_smpub_corridor_half {float(corridor.get('half_height_um', 0.864))}",
+                     f"set ::ot_smpub_corridor_post {post}", f"source /src/{corridor['script']}"]
     # Each stage's boundary reset must be followed by the complete domain-specific
     # boundary. In particular, POST_CTS must write a correct SDC for the next stage.
     post_plain = [f"source /src/{QDM}/post_plain.tcl"] + btcl
