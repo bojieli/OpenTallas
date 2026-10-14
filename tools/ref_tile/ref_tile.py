@@ -39,7 +39,6 @@ sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE.parent / "hier_contract"))
 import check_macro_track_alignment as cmta  # noqa: E402
 import child_lint  # noqa: E402
-import pin_fit  # noqa: E402
 import clock_entry_constraints  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
