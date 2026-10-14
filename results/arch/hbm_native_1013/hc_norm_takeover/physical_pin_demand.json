@@ -1,0 +1,2974 @@
+{
+  "schema": "opentallas.hc_norm.physical_pin_demand.v1",
+  "owner": "Codex:hbm_hc_norm",
+  "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
+  "contract_SHA256": "f1c9332f12fd679b53f9536f8fd94265a8d028be31bba7d494793f5d5a504f94",
+  "contract_version_in_own_tree": 12,
+  "current_v13_assignment": "Await explicit authoritative source/geometry SHA from dedicated die owner; no v12 legacy alias grant",
+  "publication_eligible": false,
+  "inventory": [
+    {
+      "master": "ot_hgi_hc_win_ctl",
+      "count": 32,
+      "kit": "physical/ref_tile/hc_win_ctl_ref",
+      "physical_views": null,
+      "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+      "source_binding": {
+        "start_commit": "6f4a20b6341dab5dc4155a4c3803bb1e383120c8",
+        "archive_sha256": "d4982373341ddb6e721a9668efbd79f20222ad2a17ef81af93bb00ea2c195e77",
+        "manifest_sha256": "def074514242c87a7f8af5c40cd8a26a6f796fcc5babecce9322054b418843f4",
+        "receipt": "physical/ref_tile/hc_win_ctl_ref/gate_result.json"
+      },
+      "measured_outline_um": [
+        30.24,
+        25.92
+      ],
+      "actual_ports": [
+        {
+          "name": "c_base",
+          "direction": "INPUT",
+          "bits": 35,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "c_bound",
+          "direction": "INPUT",
+          "bits": 16,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "c_limit",
+          "direction": "INPUT",
+          "bits": 16,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "c_nwords",
+          "direction": "INPUT",
+          "bits": 6,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "c_rel",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "c_soff",
+          "direction": "INPUT",
+          "bits": 35,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "c_start",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "fault",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "hq_addr",
+          "direction": "OUTPUT",
+          "bits": 35,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hq_cr",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hq_len",
+          "direction": "OUTPUT",
+          "bits": 3,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hq_tag",
+          "direction": "OUTPUT",
+          "bits": 11,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hq_v",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hr_beat",
+          "direction": "INPUT",
+          "bits": 2,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hr_tag",
+          "direction": "INPUT",
+          "bits": 11,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hr_v",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "ready",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "rom_addr",
+          "direction": "INPUT",
+          "bits": 16,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "rom_re",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "sector_addr",
+          "direction": "OUTPUT",
+          "bits": 7,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "sector_fault",
+          "direction": "INPUT",
+          "bits": 4,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "sector_live",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "sector_read",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        }
+      ],
+      "actual_signal_bits": 209,
+      "actual_clock_pins": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_reset_pins": [
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_pin_coordinates_file": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_win_ctl_ref/actual_floorplan_pins.json",
+      "layer_contract": {
+        "children": {},
+        "pg_layer": "M5",
+        "rlayers": [
+          "M2",
+          "M5"
+        ],
+        "strap_layer": "M6",
+        "layer_cap": "M5",
+        "cap_basis": "contract"
+      },
+      "actual_PG_bterms": [
+        {
+          "name": "VDD",
+          "type": "POWER",
+          "shapes": [
+            [
+              "M5",
+              [
+                24.192,
+                2.151,
+                24.312,
+                23.769
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.792,
+                2.151,
+                18.912,
+                23.769
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.392,
+                2.151,
+                13.512,
+                23.769
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.992,
+                2.151,
+                8.112,
+                23.769
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.592,
+                2.151,
+                2.712,
+                23.769
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "VSS",
+          "type": "GROUND",
+          "shapes": [
+            [
+              "M5",
+              [
+                24.0,
+                2.137,
+                24.12,
+                23.783
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.6,
+                2.137,
+                18.72,
+                23.783
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.2,
+                2.137,
+                13.32,
+                23.783
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.8,
+                2.137,
+                7.92,
+                23.783
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.4,
+                2.137,
+                2.52,
+                23.783
+              ]
+            ]
+          ]
+        }
+      ],
+      "PG_geometry": "actual_floorplan_pins.pdn_edge; no exported abstract PG pin qualification",
+      "clock_insertion_all_corners": {
+        "tt": {
+          "boundary": {
+            "n": 202,
+            "mean": 97.7,
+            "min": 95.9,
+            "max": 100.3
+          },
+          "all": {
+            "n": 461,
+            "mean": 97.5,
+            "min": 95.4,
+            "max": 100.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 202,
+            "mean": 73.6,
+            "min": 71.8,
+            "max": 76.1
+          },
+          "all": {
+            "n": 461,
+            "mean": 73.4,
+            "min": 71.2,
+            "max": 76.1
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 202,
+            "mean": 141.0,
+            "min": 139.0,
+            "max": 144.3
+          },
+          "all": {
+            "n": 461,
+            "mean": 141.0,
+            "min": 138.4,
+            "max": 144.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "full_clock_measurements": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_win_ctl_ref/clock_insertion_cts.json",
+      "actual_postCTS_std_area_um2": 401.606,
+      "actual_postCTS_core_util": 0.717318,
+      "blocks": []
+    },
+    {
+      "master": "ot_hgi_hc_win_sector",
+      "count": 128,
+      "kit": "physical/ref_tile/hc_win_sector_ref",
+      "physical_views": null,
+      "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+      "source_binding": {
+        "start_commit": "81b095ce07c04b594a5a33d693804c4e2c927e51",
+        "archive_sha256": "bb9816fc382f2404919abf18250192abbf3d941e88f49c85cb40303a25458527",
+        "manifest_sha256": "0a40f1cb3236935b13a139e864d953cd03fc80b92053ed2568724f4c18f1220f",
+        "receipt": "physical/ref_tile/hc_win_sector_ref/gate_result.json"
+      },
+      "measured_outline_um": [
+        142.56,
+        88.56
+      ],
+      "actual_ports": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "fault",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "hr_beat",
+          "direction": "INPUT",
+          "bits": 2,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hr_data_hi",
+          "direction": "INPUT",
+          "bits": 128,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hr_data_lo",
+          "direction": "INPUT",
+          "bits": 128,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hr_tag",
+          "direction": "INPUT",
+          "bits": 11,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "hr_v",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "live",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "read_addr",
+          "direction": "INPUT",
+          "bits": 7,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "read_v",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "rom_hi",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "rom_lo",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "rom_v",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "sid",
+          "direction": "INPUT",
+          "bits": 2,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_signal_bits": 541,
+      "actual_clock_pins": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_reset_pins": [
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_pin_coordinates_file": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_win_sector_ref/actual_floorplan_pins.json",
+      "layer_contract": {
+        "children": {},
+        "pg_layer": "M5",
+        "rlayers": [
+          "M2",
+          "M5"
+        ],
+        "strap_layer": "M6",
+        "layer_cap": "M5",
+        "cap_basis": "contract"
+      },
+      "actual_PG_bterms": [
+        {
+          "name": "VDD",
+          "type": "POWER",
+          "shapes": [
+            [
+              "M5",
+              [
+                137.592,
+                2.151,
+                137.712,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                132.192,
+                2.151,
+                132.312,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                126.792,
+                2.151,
+                126.912,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                121.392,
+                2.151,
+                121.512,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                115.992,
+                2.151,
+                116.112,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                110.592,
+                2.151,
+                110.712,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                105.192,
+                2.151,
+                105.312,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                99.792,
+                2.151,
+                99.912,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                94.392,
+                2.151,
+                94.512,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                88.992,
+                2.151,
+                89.112,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                83.592,
+                2.151,
+                83.712,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                78.192,
+                2.151,
+                78.312,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                72.792,
+                2.151,
+                72.912,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                67.392,
+                2.151,
+                67.512,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                61.992,
+                2.151,
+                62.112,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                56.592,
+                2.151,
+                56.712,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                51.192,
+                2.151,
+                51.312,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                45.792,
+                2.151,
+                45.912,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                40.392,
+                2.151,
+                40.512,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                34.992,
+                2.151,
+                35.112,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.592,
+                2.151,
+                29.712,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.192,
+                2.151,
+                24.312,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.792,
+                2.151,
+                18.912,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.392,
+                2.151,
+                13.512,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.992,
+                2.151,
+                8.112,
+                86.409
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.592,
+                2.151,
+                2.712,
+                86.409
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "VSS",
+          "type": "GROUND",
+          "shapes": [
+            [
+              "M5",
+              [
+                137.4,
+                2.137,
+                137.52,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                132.0,
+                2.137,
+                132.12,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                126.6,
+                2.137,
+                126.72,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                121.2,
+                2.137,
+                121.32,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                115.8,
+                2.137,
+                115.92,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                110.4,
+                2.137,
+                110.52,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                105.0,
+                2.137,
+                105.12,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                99.6,
+                2.137,
+                99.72,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                94.2,
+                2.137,
+                94.32,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                88.8,
+                2.137,
+                88.92,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                83.4,
+                2.137,
+                83.52,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                78.0,
+                2.137,
+                78.12,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                72.6,
+                2.137,
+                72.72,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                67.2,
+                2.137,
+                67.32,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                61.8,
+                2.137,
+                61.92,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                56.4,
+                2.137,
+                56.52,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                51.0,
+                2.137,
+                51.12,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                45.6,
+                2.137,
+                45.72,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                40.2,
+                2.137,
+                40.32,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                34.8,
+                2.137,
+                34.92,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.4,
+                2.137,
+                29.52,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.0,
+                2.137,
+                24.12,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.6,
+                2.137,
+                18.72,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.2,
+                2.137,
+                13.32,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.8,
+                2.137,
+                7.92,
+                86.423
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.4,
+                2.137,
+                2.52,
+                86.423
+              ]
+            ]
+          ]
+        }
+      ],
+      "PG_geometry": "actual_floorplan_pins.pdn_edge; no exported abstract PG pin qualification",
+      "clock_insertion_all_corners": {
+        "tt": {
+          "boundary": {
+            "n": 540,
+            "mean": 175.6,
+            "min": 160.1,
+            "max": 191.0
+          },
+          "all": {
+            "n": 799,
+            "mean": 176.7,
+            "min": 156.5,
+            "max": 191.2
+          },
+          "errors": [],
+          "macros": {
+            "n": 1,
+            "nets": 1,
+            "max_per_net": 1,
+            "reg_mean": 176.7,
+            "max_slew": 13.6,
+            "max_late": -17.8,
+            "pins": [
+              {
+                "pin": "u_mem/clk",
+                "arr": 158.9,
+                "slew": 13.6,
+                "late": -17.8,
+                "net": "clknet_1_0__leaf_clk"
+              }
+            ]
+          },
+          "macro_libs": 1
+        },
+        "ff": {
+          "boundary": {
+            "n": 540,
+            "mean": 147.7,
+            "min": 132.8,
+            "max": 162.6
+          },
+          "all": {
+            "n": 799,
+            "mean": 148.8,
+            "min": 122.8,
+            "max": 162.8
+          },
+          "errors": [],
+          "macros": {
+            "n": 1,
+            "nets": 1,
+            "max_per_net": 1,
+            "reg_mean": 148.8,
+            "max_slew": 11.5,
+            "max_late": -26.0,
+            "pins": [
+              {
+                "pin": "u_mem/clk",
+                "arr": 122.8,
+                "slew": 11.5,
+                "late": -26.0,
+                "net": "clknet_1_0__leaf_clk"
+              }
+            ]
+          },
+          "macro_libs": 1
+        },
+        "ss": {
+          "boundary": {
+            "n": 540,
+            "mean": 220.5,
+            "min": 204.4,
+            "max": 236.2
+          },
+          "all": {
+            "n": 799,
+            "mean": 221.6,
+            "min": 201.0,
+            "max": 236.4
+          },
+          "errors": [],
+          "macros": {
+            "n": 1,
+            "nets": 1,
+            "max_per_net": 1,
+            "reg_mean": 221.6,
+            "max_slew": 18.4,
+            "max_late": -0.8,
+            "pins": [
+              {
+                "pin": "u_mem/clk",
+                "arr": 220.8,
+                "slew": 18.4,
+                "late": -0.8,
+                "net": "clknet_1_0__leaf_clk"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      },
+      "full_clock_measurements": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_win_sector_ref/clock_insertion_cts.json",
+      "actual_postCTS_std_area_um2": 589.163,
+      "actual_postCTS_core_util": 0.384962,
+      "blocks": [
+        {
+          "kind": "macro",
+          "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "inst": "u_mem",
+          "idx": 0,
+          "x": 23.328,
+          "y": 23.76,
+          "w": 94.824,
+          "h": 41.064,
+          "orient": "R0",
+          "offtrack": 0
+        }
+      ]
+    },
+    {
+      "master": "ot_hgi_hc_chunk_store32",
+      "count": 20,
+      "kit": "physical/ref_tile/hc_chunk_store32_ref",
+      "physical_views": null,
+      "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+      "source_binding": {
+        "start_commit": "0fb434343c4b2f2121ec366149524a0f8efaf274",
+        "archive_sha256": "12feca3d23c3273664fe3afc0197212237717803545014bad548041972a1f937",
+        "manifest_sha256": "0aa9a2cc4c02603007ad559890a0a2ad65aaf232444747a46ce833e73f57deb3",
+        "receipt": "physical/ref_tile/hc_chunk_store32_ref/gate_result.json"
+      },
+      "measured_outline_um": [
+        51.84,
+        49.68
+      ],
+      "actual_ports": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "clr",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "fault",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "full",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "scan_data",
+          "direction": "OUTPUT",
+          "bits": 256,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "scan_group",
+          "direction": "INPUT",
+          "bits": 2,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "scan_o_v",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "scan_v",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "wr_data",
+          "direction": "INPUT",
+          "bits": 64,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "wr_tag",
+          "direction": "INPUT",
+          "bits": 10,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "wr_v",
+          "direction": "INPUT",
+          "bits": 2,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        }
+      ],
+      "actual_signal_bits": 341,
+      "actual_clock_pins": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_reset_pins": [
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_pin_coordinates_file": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_chunk_store32_ref/actual_floorplan_pins.json",
+      "layer_contract": {
+        "children": {},
+        "pg_layer": "M5",
+        "rlayers": [
+          "M2",
+          "M5"
+        ],
+        "strap_layer": "M6",
+        "layer_cap": "M5",
+        "cap_basis": "contract"
+      },
+      "actual_PG_bterms": [
+        {
+          "name": "VDD",
+          "type": "POWER",
+          "shapes": [
+            [
+              "M5",
+              [
+                45.792,
+                2.151,
+                45.912,
+                47.529
+              ]
+            ],
+            [
+              "M5",
+              [
+                40.392,
+                2.151,
+                40.512,
+                47.529
+              ]
+            ],
+            [
+              "M5",
+              [
+                34.992,
+                2.151,
+                35.112,
+                47.529
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.592,
+                2.151,
+                29.712,
+                47.529
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.192,
+                2.151,
+                24.312,
+                47.529
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.792,
+                2.151,
+                18.912,
+                47.529
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.392,
+                2.151,
+                13.512,
+                47.529
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.992,
+                2.151,
+                8.112,
+                47.529
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.592,
+                2.151,
+                2.712,
+                47.529
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "VSS",
+          "type": "GROUND",
+          "shapes": [
+            [
+              "M5",
+              [
+                45.6,
+                2.137,
+                45.72,
+                47.543
+              ]
+            ],
+            [
+              "M5",
+              [
+                40.2,
+                2.137,
+                40.32,
+                47.543
+              ]
+            ],
+            [
+              "M5",
+              [
+                34.8,
+                2.137,
+                34.92,
+                47.543
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.4,
+                2.137,
+                29.52,
+                47.543
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.0,
+                2.137,
+                24.12,
+                47.543
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.6,
+                2.137,
+                18.72,
+                47.543
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.2,
+                2.137,
+                13.32,
+                47.543
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.8,
+                2.137,
+                7.92,
+                47.543
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.4,
+                2.137,
+                2.52,
+                47.543
+              ]
+            ]
+          ]
+        }
+      ],
+      "PG_geometry": "actual_floorplan_pins.pdn_edge; no exported abstract PG pin qualification",
+      "clock_insertion_all_corners": {
+        "tt": {
+          "boundary": {
+            "n": 342,
+            "mean": 99.8,
+            "min": 98.2,
+            "max": 101.7
+          },
+          "all": {
+            "n": 1398,
+            "mean": 99.8,
+            "min": 97.5,
+            "max": 101.7
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 342,
+            "mean": 79.1,
+            "min": 77.2,
+            "max": 81.0
+          },
+          "all": {
+            "n": 1398,
+            "mean": 78.9,
+            "min": 76.8,
+            "max": 81.0
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 342,
+            "mean": 136.7,
+            "min": 135.0,
+            "max": 138.5
+          },
+          "all": {
+            "n": 1398,
+            "mean": 136.9,
+            "min": 134.5,
+            "max": 138.7
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "full_clock_measurements": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_chunk_store32_ref/clock_insertion_cts.json",
+      "actual_postCTS_std_area_um2": 1254.33,
+      "actual_postCTS_core_util": 0.58192,
+      "blocks": []
+    },
+    {
+      "master": "ot_hgi_hc_chunk_scan2",
+      "count": 16,
+      "kit": "physical/ref_tile/hc_chunk_scan2_ref",
+      "physical_views": null,
+      "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+      "source_binding": {
+        "start_commit": "0e843c94ec3ab9acc805efaf37af915c2e396fc9",
+        "archive_sha256": "7f3dda4d33a9083daef286d5b026135181e5f10763678d400fcfe2c53bf6ca42",
+        "manifest_sha256": "7af7aa3f0123a4db0260de5da98ffbfbb4f9a01b1cc09b980134f4fb9b28e787",
+        "receipt": "physical/ref_tile/hc_chunk_scan2_ref/gate_result.json"
+      },
+      "measured_outline_um": [
+        38.88,
+        38.88
+      ],
+      "actual_ports": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "clr",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "d0_hi",
+          "direction": "INPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "d0_lo",
+          "direction": "INPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "d1_hi",
+          "direction": "INPUT",
+          "bits": 128,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "d1_lo",
+          "direction": "INPUT",
+          "bits": 128,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "fault",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "m0",
+          "direction": "INPUT",
+          "bits": 7,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "m1",
+          "direction": "INPUT",
+          "bits": 7,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "out_hi",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "out_lo",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "out_meta",
+          "direction": "OUTPUT",
+          "bits": 7,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "out_v",
+          "direction": "OUTPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "v0",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "v1",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        }
+      ],
+      "actual_signal_bits": 796,
+      "actual_clock_pins": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_reset_pins": [
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_pin_coordinates_file": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_chunk_scan2_ref/actual_floorplan_pins.json",
+      "layer_contract": {
+        "children": {},
+        "pg_layer": "M5",
+        "rlayers": [
+          "M2",
+          "M5"
+        ],
+        "strap_layer": "M6",
+        "layer_cap": "M5",
+        "cap_basis": "contract"
+      },
+      "actual_PG_bterms": [
+        {
+          "name": "VDD",
+          "type": "POWER",
+          "shapes": [
+            [
+              "M5",
+              [
+                34.992,
+                2.151,
+                35.112,
+                36.729
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.592,
+                2.151,
+                29.712,
+                36.729
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.192,
+                2.151,
+                24.312,
+                36.729
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.792,
+                2.151,
+                18.912,
+                36.729
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.392,
+                2.151,
+                13.512,
+                36.729
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.992,
+                2.151,
+                8.112,
+                36.729
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.592,
+                2.151,
+                2.712,
+                36.729
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "VSS",
+          "type": "GROUND",
+          "shapes": [
+            [
+              "M5",
+              [
+                34.8,
+                2.137,
+                34.92,
+                36.743
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.4,
+                2.137,
+                29.52,
+                36.743
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.0,
+                2.137,
+                24.12,
+                36.743
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.6,
+                2.137,
+                18.72,
+                36.743
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.2,
+                2.137,
+                13.32,
+                36.743
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.8,
+                2.137,
+                7.92,
+                36.743
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.4,
+                2.137,
+                2.52,
+                36.743
+              ]
+            ]
+          ]
+        }
+      ],
+      "PG_geometry": "actual_floorplan_pins.pdn_edge; no exported abstract PG pin qualification",
+      "clock_insertion_all_corners": {
+        "tt": {
+          "boundary": {
+            "n": 797,
+            "mean": 101.3,
+            "min": 96.3,
+            "max": 103.3
+          },
+          "all": {
+            "n": 797,
+            "mean": 101.3,
+            "min": 96.3,
+            "max": 103.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 797,
+            "mean": 76.5,
+            "min": 72.0,
+            "max": 78.5
+          },
+          "all": {
+            "n": 797,
+            "mean": 76.5,
+            "min": 72.0,
+            "max": 78.5
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 797,
+            "mean": 145.5,
+            "min": 138.5,
+            "max": 148.2
+          },
+          "all": {
+            "n": 797,
+            "mean": 145.5,
+            "min": 138.5,
+            "max": 148.2
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "full_clock_measurements": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_chunk_scan2_ref/clock_insertion_cts.json",
+      "actual_postCTS_std_area_um2": 582.85,
+      "actual_postCTS_core_util": 0.487988,
+      "blocks": []
+    },
+    {
+      "master": "ot_hgi_hc_coeff_bank",
+      "count": 32,
+      "kit": "physical/ref_tile/hc_coeff_bank_ref",
+      "physical_views": null,
+      "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+      "source_binding": {
+        "start_commit": "c105def88a5be7b14df1de5889bff88c60157535",
+        "archive_sha256": "ca6b878f41a0cc90a3f6e806ced6ad9952894a0f039956e81cdb7c550156c842",
+        "manifest_sha256": "e7545fb4f44dd203a66af27e1bc6274154ab4bcf5a7dab67b869c5c6f271c4f0",
+        "receipt": "physical/ref_tile/hc_coeff_bank_ref/gate_result.json"
+      },
+      "measured_outline_um": [
+        45.36,
+        45.36
+      ],
+      "actual_ports": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "coef0",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "coef1",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "coef2",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "coef3",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        },
+        {
+          "name": "coef4",
+          "direction": "OUTPUT",
+          "bits": 128,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "wr_data",
+          "direction": "INPUT",
+          "bits": 128,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "wr_index",
+          "direction": "INPUT",
+          "bits": 3,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "wr_v",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_signal_bits": 774,
+      "actual_clock_pins": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_reset_pins": [
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_pin_coordinates_file": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_coeff_bank_ref/actual_floorplan_pins.json",
+      "layer_contract": {
+        "children": {},
+        "pg_layer": "M5",
+        "rlayers": [
+          "M2",
+          "M5"
+        ],
+        "strap_layer": "M6",
+        "layer_cap": "M5",
+        "cap_basis": "contract"
+      },
+      "actual_PG_bterms": [
+        {
+          "name": "VDD",
+          "type": "POWER",
+          "shapes": [
+            [
+              "M5",
+              [
+                40.392,
+                2.151,
+                40.512,
+                43.209
+              ]
+            ],
+            [
+              "M5",
+              [
+                34.992,
+                2.151,
+                35.112,
+                43.209
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.592,
+                2.151,
+                29.712,
+                43.209
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.192,
+                2.151,
+                24.312,
+                43.209
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.792,
+                2.151,
+                18.912,
+                43.209
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.392,
+                2.151,
+                13.512,
+                43.209
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.992,
+                2.151,
+                8.112,
+                43.209
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.592,
+                2.151,
+                2.712,
+                43.209
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "VSS",
+          "type": "GROUND",
+          "shapes": [
+            [
+              "M5",
+              [
+                40.2,
+                2.137,
+                40.32,
+                43.223
+              ]
+            ],
+            [
+              "M5",
+              [
+                34.8,
+                2.137,
+                34.92,
+                43.223
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.4,
+                2.137,
+                29.52,
+                43.223
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.0,
+                2.137,
+                24.12,
+                43.223
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.6,
+                2.137,
+                18.72,
+                43.223
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.2,
+                2.137,
+                13.32,
+                43.223
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.8,
+                2.137,
+                7.92,
+                43.223
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.4,
+                2.137,
+                2.52,
+                43.223
+              ]
+            ]
+          ]
+        }
+      ],
+      "PG_geometry": "actual_floorplan_pins.pdn_edge; no exported abstract PG pin qualification",
+      "clock_insertion_all_corners": {
+        "tt": {
+          "boundary": {
+            "n": 775,
+            "mean": 103.9,
+            "min": 102.2,
+            "max": 106.2
+          },
+          "all": {
+            "n": 775,
+            "mean": 103.9,
+            "min": 102.2,
+            "max": 106.2
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 775,
+            "mean": 78.5,
+            "min": 76.7,
+            "max": 80.9
+          },
+          "all": {
+            "n": 775,
+            "mean": 78.5,
+            "min": 76.7,
+            "max": 80.9
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 775,
+            "mean": 148.7,
+            "min": 146.5,
+            "max": 151.2
+          },
+          "all": {
+            "n": 775,
+            "mean": 148.7,
+            "min": 146.5,
+            "max": 151.2
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "full_clock_measurements": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_coeff_bank_ref/clock_insertion_cts.json",
+      "actual_postCTS_std_area_um2": 828.523,
+      "actual_postCTS_core_util": 0.491915,
+      "blocks": []
+    },
+    {
+      "master": "ot_hgi_hc_quarter_link6",
+      "count": 4,
+      "kit": "physical/ref_tile/hc_quarter_link6_ref",
+      "physical_views": null,
+      "status": "PRIVATE_CTS_ONLY_UNASSIGNED; no routed/exported hard view",
+      "source_binding": {
+        "start_commit": "b3f1e5757b8805f7522da22d69b5f8fac1deaeb2",
+        "archive_sha256": "953e5120b8fbbf24fd32a30e83baac6fec42df5e1b5ba06d9735caf19a1fae32",
+        "manifest_sha256": "14c47ed6f4b69cfc770a50c95b8f8c158be82b7ea962629b63b40d95435b53e7",
+        "receipt": "physical/ref_tile/hc_quarter_link6_ref/gate_result.json"
+      },
+      "measured_outline_um": [
+        64.8,
+        64.8
+      ],
+      "actual_ports": [
+        {
+          "name": "ck_i",
+          "direction": "INPUT",
+          "bits": 90,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "ck_o",
+          "direction": "OUTPUT",
+          "bits": 90,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "dn_i",
+          "direction": "INPUT",
+          "bits": 140,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "dn_o",
+          "direction": "OUTPUT",
+          "bits": 140,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "fb_i",
+          "direction": "INPUT",
+          "bits": 8,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "fb_o",
+          "direction": "OUTPUT",
+          "bits": 8,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "N"
+        },
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "sc_i",
+          "direction": "INPUT",
+          "bits": 259,
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "sc_o",
+          "direction": "OUTPUT",
+          "bits": 259,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        }
+      ],
+      "actual_signal_bits": 996,
+      "actual_clock_pins": [
+        {
+          "name": "clk",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_reset_pins": [
+        {
+          "name": "rst_n",
+          "direction": "INPUT",
+          "bits": 1,
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        }
+      ],
+      "actual_pin_coordinates_file": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_quarter_link6_ref/actual_floorplan_pins.json",
+      "layer_contract": {
+        "children": {},
+        "pg_layer": "M5",
+        "rlayers": [
+          "M2",
+          "M5"
+        ],
+        "strap_layer": "M6",
+        "layer_cap": "M5",
+        "cap_basis": "contract"
+      },
+      "actual_PG_bterms": [
+        {
+          "name": "VDD",
+          "type": "POWER",
+          "shapes": [
+            [
+              "M5",
+              [
+                61.992,
+                2.151,
+                62.112,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                56.592,
+                2.151,
+                56.712,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                51.192,
+                2.151,
+                51.312,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                45.792,
+                2.151,
+                45.912,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                40.392,
+                2.151,
+                40.512,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                34.992,
+                2.151,
+                35.112,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.592,
+                2.151,
+                29.712,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.192,
+                2.151,
+                24.312,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.792,
+                2.151,
+                18.912,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.392,
+                2.151,
+                13.512,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.992,
+                2.151,
+                8.112,
+                62.649
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.592,
+                2.151,
+                2.712,
+                62.649
+              ]
+            ]
+          ]
+        },
+        {
+          "name": "VSS",
+          "type": "GROUND",
+          "shapes": [
+            [
+              "M5",
+              [
+                61.8,
+                2.137,
+                61.92,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                56.4,
+                2.137,
+                56.52,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                51.0,
+                2.137,
+                51.12,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                45.6,
+                2.137,
+                45.72,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                40.2,
+                2.137,
+                40.32,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                34.8,
+                2.137,
+                34.92,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                29.4,
+                2.137,
+                29.52,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                24.0,
+                2.137,
+                24.12,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                18.6,
+                2.137,
+                18.72,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                13.2,
+                2.137,
+                13.32,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                7.8,
+                2.137,
+                7.92,
+                62.663
+              ]
+            ],
+            [
+              "M5",
+              [
+                2.4,
+                2.137,
+                2.52,
+                62.663
+              ]
+            ]
+          ]
+        }
+      ],
+      "PG_geometry": "actual_floorplan_pins.pdn_edge; no exported abstract PG pin qualification",
+      "clock_insertion_all_corners": {
+        "tt": {
+          "boundary": {
+            "n": 997,
+            "mean": 118.3,
+            "min": 115.4,
+            "max": 122.2
+          },
+          "all": {
+            "n": 2985,
+            "mean": 118.1,
+            "min": 114.2,
+            "max": 122.2
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 997,
+            "mean": 93.5,
+            "min": 90.9,
+            "max": 97.5
+          },
+          "all": {
+            "n": 2985,
+            "mean": 93.3,
+            "min": 89.6,
+            "max": 97.5
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 997,
+            "mean": 162.4,
+            "min": 158.9,
+            "max": 166.3
+          },
+          "all": {
+            "n": 2985,
+            "mean": 162.2,
+            "min": 157.6,
+            "max": 166.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "full_clock_measurements": "results/arch/hbm_native_1013/hc_norm_takeover/die_pin_demand/hc_quarter_link6_ref/clock_insertion_cts.json",
+      "actual_postCTS_std_area_um2": 1646.23,
+      "actual_postCTS_core_util": 0.450056,
+      "blocks": []
+    },
+    {
+      "master": "hbfd_rly_304_WE",
+      "count": 16,
+      "status": "REUSE_CLOSED; actual die placement/pins pending",
+      "physical_views": "physical/ref_tile/hbfd_rly_304_we/views/hbfd_rly_304_WE",
+      "measured_outline_um": [
+        21.6,
+        34.56
+      ],
+      "layer_contract": {
+        "children": {},
+        "pg_layer": "M5",
+        "rlayers": [
+          "M2",
+          "M5"
+        ],
+        "strap_layer": "M6",
+        "layer_cap": "M5",
+        "cap_basis": "contract"
+      },
+      "actual_ports": [
+        {
+          "name": "ck",
+          "bits": 1,
+          "direction": "INPUT",
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "rs",
+          "bits": 1,
+          "direction": "INPUT",
+          "layers": [
+            "M5"
+          ],
+          "provisional_face": "S"
+        },
+        {
+          "name": "i",
+          "bits": 304,
+          "direction": "INPUT",
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "W"
+        },
+        {
+          "name": "o",
+          "bits": 304,
+          "direction": "OUTPUT",
+          "layers": [
+            "M4"
+          ],
+          "provisional_face": "E"
+        }
+      ],
+      "actual_PG_pins": [
+        {
+          "name": "VDD",
+          "layers": [
+            "M5"
+          ]
+        },
+        {
+          "name": "VSS",
+          "layers": [
+            "M5"
+          ]
+        }
+      ],
+      "clock_insertion_all_corners": {
+        "tt": {
+          "boundary": {
+            "n": 308,
+            "mean": 82.3,
+            "min": 80.1,
+            "max": 85.3
+          },
+          "all": {
+            "n": 308,
+            "mean": 82.3,
+            "min": 80.1,
+            "max": 85.3
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ff": {
+          "boundary": {
+            "n": 308,
+            "mean": 62.9,
+            "min": 60.6,
+            "max": 66.1
+          },
+          "all": {
+            "n": 308,
+            "mean": 62.9,
+            "min": 60.6,
+            "max": 66.1
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        },
+        "ss": {
+          "boundary": {
+            "n": 308,
+            "mean": 116.9,
+            "min": 114.7,
+            "max": 119.9
+          },
+          "all": {
+            "n": 308,
+            "mean": 116.9,
+            "min": 114.7,
+            "max": 119.9
+          },
+          "errors": [],
+          "macros": null,
+          "macro_libs": 0
+        }
+      },
+      "clock_pin": "ck",
+      "reset_pin": "rs"
+    }
+  ],
+  "source_connection_graph": "results/arch/hbm_native_1013/hc_norm_takeover/native_connection_graph.json",
+  "closed_SL": "256151.2square unchanged body;224 ABOVE_LAYER_OBS reject binding; see closed_sl_recovery",
+  "norm_scope": "Separate unassigned standalone g8pc candidate; production ROW_NORM SV microsequence proof explicitly open; no alias",
+  "implementation_source_commit": "a0f403d93",
+  "implementation_source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv": "eeb730b3838be7abbf7f2485fb0f33de06592f6692b18f596852e871c51ba6f0",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv": "21a1d284d674cae7eb62ef6e2e69b532034e15316688f5f94690238f0f70e37a",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_coeff_bank.sv": "97a1878dfb3631170a20f7b0a6e2a966d356a05b791c151ed37160b9195a7050",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "0228e9c5bf8a35254b33cab335c6881f28e48a7bab8499d9851fb44d3fb9726d",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv": "5df326d47fe5f662e64804b51a1d90285dc367673642b6ba6ad359fc5b235955",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "6e6b5c15961d533bfdc0c8178da126be7004292a9f5e6b8a4ab444aa1a4c8811",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_quarter_link6.sv": "c25692e6edff07584e803ef55c98ceb3d6067e6e65e95fadb7f3b2ffdec9fe7a",
+    "rtl/hbm_accel/generic/peers/run_hc_eng_b2.sh": "2924d6a3fc44b30283ca8481a7b8edf76e5bc7a9257ca90589fa27d5f22dc795",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_eng_b2.sv": "4f935f497131f9d85df9844276221d470f2cf82befa41aa4b19464112345557f",
+    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "9119d052dec52368a11694abf479934f9f95eafaef0bd865c4af61370fbca554",
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "be6ab417e31a36500e04f1577b2978717134c45efa1acb7d84ea28f10cb1dfa9",
+    "tools/hgi_adapters/hc_coll_b2_bench.py": "8fac714c438fe5b8886a4a581a8f99bea868858ba816b3c3a3273dd417d80fc8",
+    "tools/hgi_adapters/hc_eng_bench.py": "5dd977ed6244c23f81b8eacb25f4ed669b63661d3a7d0e6862c928c1d06ff536"
+  }
+}
