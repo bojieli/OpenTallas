@@ -71,8 +71,15 @@ endmodule
 // copies, one more cycle of staged release): copy 0 -> this module's state, copy 1 / 2 -> the two CDC FIFOs, which build
 // no conditioner of their own (EXT_RST).  No flop of one domain reaches a reset pin of the other (XRT 0: the FIFOs'
 // conditioners were cleared by c_run && e_run: a serial-domain flop -> stream-domain RESETN recovery arc, -334 ps).
-module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
+module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0
+`ifdef OT_VMFE_FCN_TAG_PREDECODE
+ ,parameter integer TAG_PREDECODE=0
+`endif
+)(
  input wire c_clk,c_rst_n,input wire c_cmd_v,input wire[83:0] c_cmd_d,
+`ifdef OT_VMFE_FCN_TAG_PREDECODE
+ input wire [255:0] c_cmd_tag_sel,
+`endif
  output reg c_done_v,output reg[7:0] c_done_tag,output wire fault,output wire online,
  input wire e_clk,e_rst_n,output wire e_cmd_v,output wire[83:0] e_cmd_d,
  input wire e_cmd_ready,input wire e_inputs_present,
@@ -127,7 +134,17 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
 `else
  wire return_ok=dq_v&&cpending[dq_t]&&(cused!=0);
 `endif
- wire admit=c_cmd_v&&cmd_accept&&!cpending[ctag]&&((cused<QD)||return_ok);
+`ifdef OT_VMFE_FCN_TAG_PREDECODE
+ wire cmd_tag_pending;
+ generate if(TAG_PREDECODE!=0) begin:g_tag_predecode
+  assign cmd_tag_pending=|(cpending & c_cmd_tag_sel);
+ end else begin:g_tag_binary
+  assign cmd_tag_pending=cpending[ctag];
+ end endgenerate
+`else
+ wire cmd_tag_pending=cpending[ctag];
+`endif
+ wire admit=c_cmd_v&&cmd_accept&&!cmd_tag_pending&&((cused<QD)||return_ok);
  wire[83:0] payload=(MUT==1)?(c_cmd_d^(84'd1<<73)):c_cmd_d;
  ot_s81_pulse_cdc #(.W(84),.QD(QD),.XR(XRT)
 `ifdef OT_S81_ADAPTER_CMD_PIPE

@@ -661,6 +661,21 @@ module dsfd_vm_fcn (
     // every command alike) so the adapter's tag lookup (cd -> cpending[tag] -> admit -> u_cmd, 14 levels) starts at a flop
     reg cv_p; reg [83:0] cd_p;
     always @(posedge cks[0]) begin if (!rns) cv_p <= 1'b0; else cv_p <= cv[0]; cd_p <= cd; end
+`ifdef OT_VMFE_FCN_TAG_PREDECODE
+    // Same edge as cd_p: predecode the actual tag, with no admission cycle.
+    // Reset-free data is ignored while the registered command-valid is low.
+    reg [255:0] c_tag_sel;
+    genvar tag_bit;
+    generate for(tag_bit=0;tag_bit<256;tag_bit=tag_bit+1) begin:g_tag_pin
+        always @(posedge cks[0])
+`ifdef OT_VMFE_FCN_TAG_PREDECODE_MUT
+            c_tag_sel[tag_bit] <= ({cd[83],cd[6:0]} ^ 8'd1)==tag_bit;
+`else
+            c_tag_sel[tag_bit] <= {cd[83],cd[6:0]}==tag_bit;
+`endif
+    end endgenerate
+`endif
+
     // engine done pin flops (el1013-s81-vmfe/B6, DVR 1 = the hard leaf dsfd_vm_fcn): the adapter's done register sits in its
     // tag logic (enable, asynchronous clear, 280-load reset), not at the face; dv / dt leave their own stream-domain register
     wire ad_dv; wire [7:0] ad_dt;
@@ -671,8 +686,15 @@ module dsfd_vm_fcn (
     end else begin : g_ndvr
         assign dv[0] = ad_dv; assign dt = ad_dt;
     end endgenerate
-    ot_s81_engine_adapter #(.QD(8), .XRT(XRT)) u_ad (
+    ot_s81_engine_adapter #(.QD(8), .XRT(XRT)
+`ifdef OT_VMFE_FCN_TAG_PREDECODE
+        ,.TAG_PREDECODE(1)
+`endif
+    ) u_ad (
         .c_clk(cks[0]), .c_rst_n(rss[0]), .c_cmd_v(cv_p), .c_cmd_d(cd_p), .c_done_v(ad_dv), .c_done_tag(ad_dt),
+`ifdef OT_VMFE_FCN_TAG_PREDECODE
+        .c_cmd_tag_sel(c_tag_sel),
+`endif
         .fault(ad_flt_c), .online(ad_on),
 `ifdef OT_SPVM_RESET_ACK
         .rst_ack_c(rst_ack_s[1]), .rst_ack_e(rst_ack[1]),
