@@ -22,9 +22,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 W_CL, H_CL = 1728.0, 561.6
 XG = [129.6 + 172.8 * g for g in range(4)] + [950.4 + 172.8 * g for g in range(4)]
-Y_X, Y_G, Y_R = 43.2, 336.96, 519.552
+Y_X, Y_G, Y_R = 24.768, 337.536, 519.552
 CTL = (820.8, 172.8)
-CD = (842.4, 86.4)
+CD = (842.688, 86.4)
 RW0, RE0, RP = 435.456, 907.776, 35.136
 V = {"g2": "physical/ref_tile/dsfd_capt_g2_m5/views/dsfd_capt_g2", "x": "physical/ref_tile/dsfd_capt_x8_dual/views/dsfd_capt_x8_dual",
      "ctl": "physical/ref_tile/dsfd_capt_ctl_m5/views/dsfd_capt_ctl", "cd": "physical/ref_tile/dsfd_capt_cd/views/dsfd_capt_cd"}
@@ -75,7 +75,7 @@ def build(assigned):
     for g in range(8):
         add(V["g2"], f"*g_t?{g}?*u_g", XG[g], Y_G, "MX")
         for half in range(2):
-            add(V["x"], f"*g_t?{g}?*u_x{half}", XG[g] - 11.52 + 80.64 * half, Y_X, "MX")
+            add(V["x"], f"*g_t?{g}?*u_x{half}", XG[g] - 2.304, Y_X + 156.672 * half, "MX")
     add(V["cd"], "u_cd", *CD)
     rel = {}                                             # relay instance -> (x, view)
     k = 0
@@ -125,7 +125,7 @@ def build(assigned):
                 pin_arg = "$capc_reset_pin"
             tcl.append(f"place_pin -pin_name {pin_arg} -layer {layer} "
                        f"-location {{{along:.3f} {H_CL if face == 'N' else 0.0}}} "
-                       f"-pin_size {{0.024 {depth}}} -force_to_die_boundary")
+                       f"-pin_size {{{0.018 if layer == 'M3' else 0.024} {depth}}} -force_to_die_boundary")
     # ---- clocks
     R = {"ck_g": ins(V["g2"]), "ck_x": ins(V["x"], "ck"), "ckv_x": ins(V["x"], "ckv"), "ck_c": ins(V["ctl"]), "ckv_d": ins(V["cd"]), "ckv_r": ins(RV(15, "SN")),
          "ck_sn": ins(RV(68, "EW"))}
@@ -133,42 +133,29 @@ def build(assigned):
         if g < 8:
             port = {"u_ka": "ck_ka", "u_kb": "ck_kb", "u_sb": "ck_sb"}[nm]
             R[f"{port}[{g}]"] = ins(view)
-    # One synchronous clock per source port: ETM exports require unambiguous
-    # single-port references. All core entries keep the same phase and period,
-    # all serial entries keep the same phase and 4:3 period; every path is timed.
-    sdc = ["# capture has no logic/tree; each entry supplies phi-R to one child",
-           "set ot_cc_p [get_property [get_clocks core_clk] period]"]
-    clocks = {}
+    core_ports, serial_ports = [], []
     for port, count in expected.items():
         if not port.startswith("ck"): continue
-        for bit in range(count):
-            pin = port if port in scalars else f"{port}[{bit}]"
-            name = "core_clk" if port == "ck_c" else f"cap_{port}_{bit}"
-            clocks[pin] = name
-            period = "[expr {$ot_cc_p * 4.0 / 3.0}]" if port.startswith("ckv") else "$ot_cc_p"
-            r = R.get(pin, R.get(port))
-            if r is None: raise ValueError(f"clock insertion missing: {pin}")
-            if name != "core_clk":  # retain the generator's existing core clock and IO references
-                sdc.append(f"create_clock -name {name} -period {period} [get_ports {{{pin}}}]")
-            sdc += [f"unset_input_delay [get_ports {{{pin}}}]",
-                    f"set_clock_latency -source {-r:.1f} [get_ports {{{pin}}}]"]
-    sdc += ["if {[get_property [get_clocks core_clk] is_propagated]} {set_propagated_clock [all_clocks]}",
-            "set_clock_uncertainty -setup 60 [all_clocks]", "set_clock_uncertainty -hold 25 [all_clocks]",
-            "set_false_path -from [get_ports {rst[*] rsv[*]}]",
-            "unset_output_delay [get_ports {t_vm[*] t_cd[*]}]"]
-    for half in range(16):
-        output = " ".join(f"t_vm[{bit}]" for bit in range(832*half,832*(half+1)))
-        sdc.append(f"set_output_delay [expr {{0.2 * $ot_cc_p * 4.0 / 3.0}}] -clock {clocks[f'ckv_x[{half}]']} [get_ports {{{output}}}]")
-    tail = " ".join(f"t_vm[{bit}]" for bit in range(13312,13376))
-    sdc += [f"set_output_delay [expr {{0.2 * $ot_cc_p * 4.0 / 3.0}}] -clock {clocks['ckv_x[6]']} [get_ports {{{tail}}}]",
-            f"set_output_delay [expr {{0.2 * $ot_cc_p * 4.0 / 3.0}}] -clock {clocks['ckv_r']} [get_ports {{t_cd[*]}}]"]
+        group = serial_ports if port.startswith("ckv") else core_ports
+        group.extend(port if port in scalars else f"{port}[{bit}]" for bit in range(count))
+    if len(core_ports) != 50 or len(serial_ports) != 18:
+        raise ValueError("capture requires exactly 50 core and 18 serial sources")
+    # Production clock creation/compensation belongs to the versioned renderer.
+    # This legacy filename is retained as a plan note, never sourced by the kit.
+    sdc = ["# Capture clock metadata is in spec.clock_entry_domains; this file is not an SDC hook.",
+           "# Require clock_entry_constraints.ENTRY_DOMAIN_API_VERSION >= 1.",
+           "# 50 core entries at 833.333 ps, 18 serial entries at related ratio 4:3.",
+           "# Nominal IO budgets remain 166.667 / 222.222 ps under route over-constraint."]
     EX = ["tools/s81_ph", "rtl/v41rom", "rtl/proto", "rtl/gpu", "rtl/hdc", "rtl/common", "rtl/dsrom_sys/rd64_capture",
           "rtl/dsrom_sys/s81_ph", "rtl/dsrom_sys/s81_glue", "physical/s81_ph_views/capture"]
     spec = {"name": "s81sp_capc_cl", "top": "dsfd_sp_capture_c", "kind": "cluster",
             "sources": ["rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv"], "params": {},
-            "signal_max_layer": "M6", "clock_port": "ck_c", "reset_ports": ["rst", "rsv"], "clock": "cts", "child_lattice_um": 0.576,
+            "signal_max_layer": "M6", "clock_port": "ck_c", "reset_ports": ["rst", "rsv"], "clock": "entries", "child_lattice_um": 0.576,
             "outline": {"w": W_CL, "h": H_CL},
-            "sdc_extra": [str(OUT_SDC.relative_to(ROOT))], "io_tcl": str(OUT_PINS.relative_to(ROOT)),
+            "clock_ports": core_ports + serial_ports,
+            "clock_entry_domains": {"core": {"ratio": [1, 1], "ports": core_ports, "inputs": ["f_gather[*]", "rst*"], "outputs": []},
+                                    "serial": {"ratio": [4, 3], "ports": serial_ports, "inputs": ["rsv*"], "outputs": ["t_vm[*]", "t_cd[*]"]}},
+            "clock_entry_domain_api_required": 1, "io_tcl": str(OUT_PINS.relative_to(ROOT)),
             "children": kids,
             "pins": {"N": ["f_gather", "t_cd", "ck_g", "ck_x", "ck_c", "ck_ka", "ck_kb", "ck_sb", "ck_sn", "ckv_r"], "S": ["t_vm", "ckv_x", "ckv_d", "rst", "rsv"]},
             "refglob": "*", "recipe": 2, "route": {"pd": 0.5, "threads": 16, "peak_ram_gb": 64},
@@ -193,6 +180,10 @@ def main():
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--assigned-pins", type=Path, default=ROOT / "physical/s81_die_pins/v18/dsfd_sp_capture_c.json")
     a = ap.parse_args()
+    sys.path.insert(0, str(ROOT / "tools/ref_tile"))
+    import clock_entry_constraints
+    if getattr(clock_entry_constraints, "ENTRY_DOMAIN_API_VERSION", 0) < 1:
+        raise SystemExit("capture requires clock-entry domain API version >= 1; refusing legacy all-833 ps clocks")
     spec, tcl, sdc, plan = build(a.assigned_pins)
     outs = ((OUT_SPEC, json.dumps(spec, indent=1) + "\n"), (OUT_PINS, tcl), (OUT_SDC, sdc), (OUT_PLAN, json.dumps(plan, indent=1) + "\n"))
     if a.check:

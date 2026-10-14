@@ -14,8 +14,8 @@
   "rsv"
  ],
  "outline": {
-  "w": 59.4,
-  "h": 270.0
+  "w": 123.12,
+  "h": 136.08
  },
  "macros": [],
  "pins": {
@@ -44,8 +44,8 @@
  "job": {
   "owner": "Codex:s81-capture",
   "branch": "s81-spwfc-1013",
-  "tag": "v1",
-  "purpose": "NR16 crossing partitioned into two NR8 leaves with independent related core and serial CTS roots; no transaction or cycle change. The old route omitted serial-clock constraints and measured TT serial boundary spread1294.2ps.",
+  "tag": "v2",
+  "purpose": "Aspect-ratio structural repair after narrow NR8 GRT congestion9695: widen60.48 to123.12 um, shorten270 to136.08 um. PG-aware cross-domain mem+status+pointer cut3464bits / (3420M3+2451usableM5)=0.590. Two leaves stack vertically within unchanged parent1728x561.6, roots/transactions/cycles unchanged.",
   "extra_paths": [
    "tools/s81_ph",
    "rtl/dsrom_sys/s81_ph",
@@ -79,8 +79,8 @@
  ],
  "recipe": 2,
  "clock": "cts",
- "structural_change": "NR16 crossing partitioned into two NR8 leaves with independent related core and serial CTS roots; no transaction or cycle change. The old route omitted serial-clock constraints and measured TT serial boundary spread1294.2ps.",
- "slot_change_request": "el1011-s81die.log capture serial-clock defect 2026-10-13: replace one x16 child by two x8 dual-clock children in identical total outline;68 parent clocks; no extra data cycles",
+ "structural_change": "Aspect-ratio structural repair after narrow NR8 GRT congestion9695: widen60.48 to123.12 um, shorten270 to136.08 um. PG-aware cross-domain mem+status+pointer cut3464bits / (3420M3+2451usableM5)=0.590. Two leaves stack vertically within unchanged parent1728x561.6, roots/transactions/cycles unchanged.",
+ "slot_change_request": "el1011-s81die.log wide x8 vertical stack approved2026-10-13:123.12x136.08,68parent roots, unchanged1728x561.6 parent; exact die-reviewed pins pending",
  "boundary_tcl": [
   "physical/s81_ph_views/capture/x8_dual_boundary.tcl"
  ],

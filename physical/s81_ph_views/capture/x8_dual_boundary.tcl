@@ -26,11 +26,11 @@ proc capx_apply_boundary {} {
     unset_input_delay [get_ports {ck ck[*] ckv ckv[*]}]
     unset_input_delay $capx_core_in
     unset_output_delay [concat $capx_core_out $capx_ser_out]
-    set_input_delay [expr {0.2*$capx_p+$capx_ch+90}] -max -clock core_clk $capx_core_in
+    set_input_delay [expr {166.667+$capx_ch+90}] -max -clock core_clk $capx_core_in
     set_input_delay $capx_cl -min -clock core_clk $capx_core_in
-    set_output_delay [expr {0.2*$capx_p-$capx_ch+90}] -max -clock core_clk $capx_core_out
+    set_output_delay [expr {166.667-$capx_ch+90}] -max -clock core_clk $capx_core_out
     set_output_delay [expr {-$capx_cl-50}] -min -clock core_clk $capx_core_out
-    set_output_delay [expr {0.2*$capx_p*4.0/3.0-$capx_sh+90}] -max -clock ser_clk $capx_ser_out
+    set_output_delay [expr {222.222-$capx_sh+90}] -max -clock ser_clk $capx_ser_out
     set_output_delay [expr {-$capx_sl-50}] -min -clock ser_clk $capx_ser_out
     puts "CAPX_BOUNDARY core $capx_ch/$capx_cl serial $capx_sh/$capx_sl"
 }

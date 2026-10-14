@@ -12,6 +12,6 @@ foreach capx_pin [get_ports {ck ck[*] ckv ckv[*]}] {
 }
 set_false_path -from [get_ports {rsv rsv[*]}]
 unset_output_delay [get_ports {t_vm[*] t_st[*]}]
-set_output_delay [expr {0.2 * $capx_p * 4.0 / 3.0}] -clock ser_clk [get_ports {t_vm[*] t_st[*]}]
+set_output_delay 222.222 -clock ser_clk [get_ports {t_vm[*] t_st[*]}]
 
 if {[get_property [get_clocks core_clk] is_propagated]} {set_propagated_clock [get_clocks ser_clk]}

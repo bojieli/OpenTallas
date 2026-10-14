@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.s81.capture_cut.v1",
+  "failed_job": "dsfd_capt_x8_dual-v1-955c7b33b",
+  "grt_overflow": 9695,
+  "crossing_bits": {
+    "root_mem_shadow": 3296,
+    "status_mem_shadow": 128,
+    "wp_state": 40
+  },
+  "wide_outline_um": [
+    123.12,
+    136.08
+  ],
+  "m3_tracks": 3420.0000000000005,
+  "m5_tracks": 2565.0,
+  "m5_pg_fraction": 0.04444444444444444,
+  "usable_tracks": 5871.0,
+  "crossing_total": 3464,
+  "cut_fraction": 0.5900187361607904,
+  "side_channel_bits": 1312,
+  "side_channel_usable_tracks": 2369.0,
+  "side_channel_cut": 0.5538201772899958,
+  "pin_reach": "UNMEASURED for successor until real wide x8 routed per-clock ETM; do not claim pair reach from outline or500um alone"
+}

@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  60.48,
-  270.0
+  123.12,
+  136.08
  ],
  "core": [
   2.16,
   2.16,
-  58.31999999999999,
-  267.84
+  120.96000000000001,
+  133.92000000000002
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -56,6 +56,11 @@
   "physical/ref_tile/dsfd_capt_x8_dual/signoff.sdc",
   "physical/ref_tile/dsfd_capt_x8_dual/pdn.tcl",
   "physical/ref_tile/dsfd_capt_x8_dual/pre_cts.tcl",
+  "physical/ref_tile/dsfd_capt_x8_dual/post_cts.tcl",
+  "physical/ref_tile/dsfd_capt_x8_dual/post_grt.tcl",
+  "physical/ref_tile/dsfd_capt_x8_dual/pre_drt.tcl",
+  "physical/ref_tile/dsfd_capt_x8_dual/pre_fill.tcl",
+  "physical/ref_tile/dsfd_capt_x8_dual/post_fill.tcl",
   "physical/ref_tile/dsfd_capt_x8_dual/pre_grt.tcl",
   "physical/ref_tile/dsfd_capt_x8_dual/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",

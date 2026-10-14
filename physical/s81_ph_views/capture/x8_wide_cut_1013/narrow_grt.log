@@ -1,0 +1,80 @@
+OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); orfs corner WC, hold corners WC,BC
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/ref_tile/dsfd_capt_x8_dual/signoff.sdc]
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[WARNING GRT-0273] Disabled NDR (to reduce congestion) for net: ckv[0]
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0102] Start extra iteration 14/30
+[INFO GRT-0102] Start extra iteration 15/30
+[INFO GRT-0102] Start extra iteration 16/30
+[INFO GRT-0102] Start extra iteration 17/30
+[INFO GRT-0102] Start extra iteration 18/30
+[INFO GRT-0102] Start extra iteration 19/30
+[INFO GRT-0102] Start extra iteration 20/30
+[INFO GRT-0102] Start extra iteration 21/30
+[INFO GRT-0102] Start extra iteration 22/30
+[INFO GRT-0102] Start extra iteration 23/30
+[INFO GRT-0102] Start extra iteration 24/30
+[INFO GRT-0102] Start extra iteration 25/30
+[INFO GRT-0102] Start extra iteration 26/30
+[INFO GRT-0102] Start extra iteration 27/30
+[INFO GRT-0102] Start extra iteration 28/30
+[INFO GRT-0102] Start extra iteration 29/30
+[INFO GRT-0102] Start extra iteration 30/30
+[INFO GRT-0197] Via related to pin nodes: 322544
+[INFO GRT-0198] Via related Steiner nodes: 6511
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 474263
+[INFO GRT-0112] Final usage 3D: 2101567
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              463569        122876           26.51%             8 /  0 / 830
+M3              568562        382107           67.21%             0 / 19 / 5627
+M4              434333         39796            9.16%             9 /  1 / 792
+M5              420335        133999           31.88%             0 /  8 / 2446
+---------------------------------------------------------------------------------------
+Total          1886799        678778           35.98%            17 / 28 / 9695
+
+[INFO GRT-0018] Total wirelength: 483221 um
+[INFO GRT-0014] Routed nets: 58400
+[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+write_db /work/results/asap7/opentallas_dsfd_capt_x8_dual_asap7_ref_dsfd_capt_x8_dual_v1_955c7b33b/base/5_1_grt-failed.odb
+Error: global_route.tcl, 175 GRT-0116
+
+Elapsed time: 0:02.70[h:]min:sec. CPU time: user 2.57 sys 0.13 (99%). Peak memory: 388752KB.
+Elapsed time: 0:18.31[h:]min:sec. CPU time: user 19.58 sys 0.80 (111%). Peak memory: 468516KB.
+Elapsed time: 0:02.86[h:]min:sec. CPU time: user 2.73 sys 0.12 (99%). Peak memory: 364304KB.
+Elapsed time: 0:02.93[h:]min:sec. CPU time: user 2.80 sys 0.13 (99%). Peak memory: 342820KB.
+Elapsed time: 0:03.30[h:]min:sec. CPU time: user 3.13 sys 0.17 (99%). Peak memory: 373688KB.
+Elapsed time: 0:03.09[h:]min:sec. CPU time: user 2.94 sys 0.15 (99%). Peak memory: 346584KB.
+Elapsed time: 0:03.42[h:]min:sec. CPU time: user 3.27 sys 0.15 (99%). Peak memory: 371056KB.
+Elapsed time: 0:57.22[h:]min:sec. CPU time: user 133.62 sys 6.57 (245%). Peak memory: 973056KB.
+Elapsed time: 0:28.67[h:]min:sec. CPU time: user 35.05 sys 3.12 (133%). Peak memory: 638100KB.
+Elapsed time: 0:45.64[h:]min:sec. CPU time: user 50.37 sys 4.73 (120%). Peak memory: 666052KB.
+Elapsed time: 2:50.66[h:]min:sec. CPU time: user 206.51 sys 7.39 (125%). Peak memory: 1020252KB.
+Elapsed time: 5:09.14[h:]min:sec. CPU time: user 798.87 sys 16.72 (263%). Peak memory: 1282556KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/results/asap7/opentallas_dsfd_capt_x8_dual_asap7_ref_dsfd_capt_x8_dual_v1_955c7b33b/base/5_1_grt.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/routes/dsfd_capt_x8_dual_v1_955c7b33b/physical.json
