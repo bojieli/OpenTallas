@@ -6666,8 +6666,8 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
         if PIN_ALIGN and not (LINK_SPLIT and lk.master == real_lef(SERDES_LEF)['name']):
             # --pin-align: an un-split link macro (UCIe: 512 tx / rx pins over 823 um of its face) fans into ONE 25-um
             # station pin group: up to 249 jog wires cross the gap between macro and station.  At the 5.5 / 8.6 um gap
-            # that is 1.43 / 0.92 of its tracks (FAIL); the stations stand 10 um farther out (gap >= 14: <= 0.57).
-            lx += 10.0 if side == 'W' else -10.0
+            # that is 1.43 / 0.92 of its tracks (FAIL); the end stations are aimed 26 um off the face (gap >= 14: <= 0.57).
+            lx += 26.0 if side == 'W' else -26.0      # the 36.7-um edge corridor starts 5 um off the face: +26 = gap >= 14
         if LINK_FIX:
             ly_t, ly_r = link_span_y(lk, 'tx'), link_span_y(lk, 'rx')
         else:
@@ -7165,6 +7165,8 @@ def _faces_r8(m, Mx, it, ports):
             need = sum(max(1, math.ceil(b / K)) * K * 0.048 + max(0.144, 0.0576 * K) for _, b in lst) + 1.0
             if need > L:
                 raise ValueError(f'{Mx.name}: face {f} needs {need:.1f} um > {L:.1f}')
+            if os.environ.get('OT_S81_PADBG') and 'hr_E3' in Mx.name:
+                print('PADBG face', Mx.name, f, lst, K, PIN_ALIGN, file=sys.stderr)
             if PIN_ALIGN and K == 1 and len(lst) == 1:
                 # --pin-align: a face with ONE port whose peers are all stations stands on the stations' pin group, not on
                 # the face centre (v16: hr_E3.o 110 um beside its first station f_hr_E3_o_1 across a 37.9-um gap:
@@ -7172,6 +7174,8 @@ def _faces_r8(m, Mx, it, ports):
                 p1_, b1_ = lst[0]
                 pe_ = {i_ for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p1_), []) for i_, _q in eps_
                        if i_ != it.name and i_ in m['_by']}
+                if os.environ.get('OT_S81_PADBG'):
+                    print('PADBG hend', Mx.name, f, p1_, b1_, sorted((i_, m['_by'][i_].kind) for i_ in pe_), file=sys.stderr)
                 if pe_ and all(m['_by'][i_].kind in ('hstn', 'stn', 'xstg') for i_ in pe_):
                     bw_ = b1_ * 0.048
                     c_ = min(max(_peer_pos(m, it, p1_, f), bw_ / 2 + 0.4), L - bw_ / 2 - 0.4)
