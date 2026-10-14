@@ -31,7 +31,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME"])
+    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC"])
+    ap.add_argument("--bc-sliced", action="store_true")
+    ap.add_argument("--bc-mut-slice", type=int, choices=range(4), default=0)
     a = ap.parse_args(); w = a.work.resolve(); w.mkdir(parents=True, exist_ok=True)
     src = CORE.read_text()
     ref = src.replace("module ot_s81_pq_core_native", "module ot_s81_pq_core_ref", 1)
@@ -53,9 +55,11 @@ def main():
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv"])
         defs = ["+define+OT_PQ_ROM_PORTS", "+define+OT_PQ_BENCH_TELEMETRY"]
+        if name == "dut" and a.bc_sliced: defs += ["+define+OT_PQ_BC_SLICED"]
         if name == "ref": defs += ["+define+OT_PQ_REFERENCE"]
+        if name == "dut" and a.mut == "BC": defs += ["+define+OT_S81_PQ_BC_MUT_SLICE_K=" + str(a.bc_mut_slice)]
         if name == "dut" and a.mut:
-            defs += ["+define+OT_S81_PQ_CTL_MUT_EARLY_CONSUME" if a.mut == "CONSUME"
+            defs += ["+define+OT_S81_PQ_BC_MUT_SLICE" if a.mut == "BC" else "+define+OT_S81_PQ_CTL_MUT_EARLY_CONSUME" if a.mut == "CONSUME"
                      else "+define+OT_S81_PQ_" + a.mut + "_MUT_ROW"]
         md = w / name
         run([V,"--cc","-O2","-Wno-fatal","-Wno-lint","-Wno-style","--x-assign","0","--x-initial","0",

@@ -137,7 +137,12 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "pin_v": "M3 M5",
-  "pin_h": "M4"
+  "pin_h": "M4",
+  "cts_sink": {
+   "size": 12,
+   "diameter_um": 24,
+   "extra": "-sink_clustering_levels 2 -distance_between_buffers 40"
+  }
  },
  "job": {
   "owner": "Codex:s81-rom-2250",
@@ -360,7 +365,7 @@
  },
  "layer_cap": "M5",
  "recipe": 2,
- "structural_change": "After terminal H1 congestion20k, widen leaf345.6->432um and move bank SRAM from center x85.536 to east x235.44: release contiguous std-cell/routing region beneath exact5441-bit north/south pins; retain90.72height and all port x/layers/RTL/clockperiod/benchepochs. Native8-bankparent requests453.6x725.76.",
+ "structural_change": "After terminal H1 congestion20k, widen leaf345.6->432um and move bank SRAM from center x85.536 to east x235.44: release contiguous std-cell/routing region beneath exact5441-bit north/south pins; retain90.72height and all port x/layers/RTL/clockperiod/benchepochs. Native8-bankparent requests453.6x725.76. Gate1 boundaryspread110.3ps is defective: new physical clock topology uses12sink/24um two-levelclusters and40um buffer spacing; unchanged833.333signoff, no waiver.",
  "defines": [
   "OT_VMBGL_HOP1"
  ],
