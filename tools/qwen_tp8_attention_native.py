@@ -82,7 +82,7 @@ def run(binary, vecdir, out, stall, mutant, maxcyc):
         record = None
     # A crash/timeout/invalid request is not an observed arithmetic mutant.
     positive = result.returncode == 0 and record and record.get('exact') and record.get('outputs') == 512
-    negative = result.returncode == 1 and record and (record.get('mismatches', 0) > 0 or record.get('fault', 0) > 0)
+    negative = result.returncode == 1 and record and (record.get('data_mismatches', 0) > 0 or record.get('fault', 0) > 0)
     passed = positive if mutant == 'none' else negative
     receipt = dict(schema='qwen-tp8-attention-native-run-v1', command=cmd,
                    binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(), vectors=meta,

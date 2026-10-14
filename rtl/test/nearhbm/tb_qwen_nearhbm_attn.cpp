@@ -187,8 +187,13 @@ int main(int argc, char** argv) {
             out_last = now;
         }
     }
-    int mism = 0, first_bad = -1;
+    int mism = 0, data_mism = 0, missing = 0, duplicates = 0, first_bad = -1;
     for (int i = 0; i < NH * HD; i++) if (got[i] != 1 || out[i] != gold[i]) { if (first_bad < 0) first_bad = i; mism++; }
+    for (int i = 0; i < NH * HD; i++) {
+        if (!got[i]) missing++;
+        if (got[i] > 1) duplicates++;
+        if (got[i] == 1 && out[i] != gold[i]) data_mism++;
+    }
     // phase marks (latest stack)
     auto mx = [&](int b) { int64_t m = -1; for (int s = 0; s < 4; s++) if (ev_first[s][b] > m) m = ev_first[s][b]; return m; };
     auto mn = [&](int b) { int64_t m = -1; for (int s = 0; s < 4; s++) if (ev_first[s][b] >= 0 && (m < 0 || ev_first[s][b] < m)) m = ev_first[s][b]; return m; };
@@ -199,7 +204,7 @@ int main(int argc, char** argv) {
         if (row_first[s][1] >= 0 && (vf < 0 || row_first[s][1] < vf)) vf = row_first[s][1];
         if (row_last[s][1] > vl) vl = row_last[s][1];
     }
-    printf("{\"ctx\": %d, \"R\": %d, \"HD\": %d, \"hbm_latency\": %d, \"bytes_per_cycle\": %d, "
+    printf("{\"kv_heads\": %d, \"q_fp32\": %d, \"stall\": %d, \"data_mismatches\": %d, \"missing_words\": %d, \"duplicate_words\": %d, \"ctx\": %d, \"R\": %d, \"HD\": %d, \"hbm_latency\": %d, \"bytes_per_cycle\": %d, "
            "\"outputs\": %d, \"mismatches\": %d, \"first_bad\": %d, \"fault\": %d, \"exact\": %s, "
            "\"cycles_total\": %lld, \"rows_served\": %llu, "
            "\"marks\": {\"q_ready\": %lld, \"k_first_issue\": %lld, \"k_rows_served_first\": %lld, \"k_rows_served_last\": %lld, "
@@ -207,7 +212,7 @@ int main(int argc, char** argv) {
            "\"exp_done_g1\": %lld, \"v_first_issue\": %lld, \"v_rows_served_first\": %lld, \"v_rows_served_last\": %lld, "
            "\"v_issued_all\": %lld, \"last_leaf\": %lld, \"pv_first_beat\": %lld, \"hub_M_sent\": %lld, "
            "\"hub_rz_ok_g0\": %lld, \"hub_rz_ok_g1\": %lld, \"out_first\": %lld, \"out_last\": %lld}}\n",
-           T, R, HD, LAT, BPC, nout, mism, first_bad, fault, (mism == 0 && fault == 0 && nout == NH * HD) ? "true" : "false",
+           KVH, NHB_Q_FP32, STALL, data_mism, missing, duplicates, T, R, HD, LAT, BPC, nout, mism, first_bad, fault, (mism == 0 && fault == 0 && nout == NH * HD) ? "true" : "false",
            (long long)out_last, (unsigned long long)served,
            (long long)mx(8), (long long)mn(9), (long long)kf, (long long)kl, (long long)mx(5), (long long)mx(11),
            (long long)mx(12), (long long)mn(13), (long long)mx(6), (long long)mx(7), (long long)mn(10), (long long)vf,
