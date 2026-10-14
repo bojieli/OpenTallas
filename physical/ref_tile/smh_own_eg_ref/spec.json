@@ -671,8 +671,8 @@
  "job": {
   "owner": "Codex:hbm_vm_sm_2240",
   "branch": "codex/hbm-vm-sm-2240",
-  "tag": "own2",
-  "purpose": "Actual retained SM tile ownlogic995Q+ICG, exact flat-parent cut/gating bench+mutant; separate physical ownleaf candidate with explicit pending compactslot request",
+  "tag": "own3",
+  "purpose": "Actual retained SM tile ownlogic995Q+ICG, exact flat-parent cut/gating bench+mutant; separate physical ownleaf candidate with explicit pending compactslot request Own3 runner prints actual exact/mutant runtime output into supervised bench log; own2 rc0 positive was hidden by stdout redirection, no RTL change.",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm_own_logic"
   ],

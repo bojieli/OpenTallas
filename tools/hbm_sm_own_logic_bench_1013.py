@@ -95,7 +95,10 @@ def main():
                   f'yosys -Q -p "read_json {v}_gold.json; hierarchy -top gold_{v}; write_verilog -noattr {v}_gold.sv" > {v}_gold_emit.log',
                   f'yosys -Q -p "read_json {v}_${{tag}}.json; hierarchy -top split_{v}; write_verilog -noattr {v}_dut.sv" > {v}_dut_emit.log',
                   f'"$V" --binary --timing -j 4 -Wno-fatal --top-module tb --Mdir work_{v}_${{tag}}_v5050 {v}_gold.sv {v}_dut.sv {v}_surrogates.sv {v}_tb.sv ' + ('retention_cell_models.sv ' if args.mapped else '') + f'> {v}_${{tag}}_build.log 2>&1',
-                  f'./work_{v}_${{tag}}_v5050/Vtb > {v}_${{tag}}_runtime.log 2>&1']
+                  'set +e',
+                  f'./work_{v}_${{tag}}_v5050/Vtb > {v}_${{tag}}_runtime.log 2>&1',
+                  'sim_rc=$?', 'set -e',
+                  f'cat {v}_${{tag}}_runtime.log', 'exit "$sim_rc"']
         path = out / (v + '_run.sh'); path.write_text('\n'.join(script) + '\n'); path.chmod(0o755)
 
 
