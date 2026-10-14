@@ -32,6 +32,7 @@ module tb_hbm_norm_sum_node;
    repeat(10)begin @(negedge clk);if(ready||pub)begin errors++;$display("ERR aborted node published stale sum");end end
    ld=32'h40e00000;rd=32'h41100000;lready=1;rready=1;t=0;
    while(!ready&&t<50)begin @(negedge clk);t++;end
+   repeat(2)@(negedge clk); // settle the publication monitor before counting
    if(!ready||fault||data!==32'h41800000||pubs-p0!=1)begin errors++;$display("ERR node restart expected16 got %h pubs %0d",data,pubs-p0);end
    checks++;
   end
