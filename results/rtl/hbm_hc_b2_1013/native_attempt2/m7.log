@@ -1,0 +1,12 @@
+case 0:     HC_POST d 5120             221 cycles
+case 1:     HC_POST d 5120             221 cycles
+case 2: HC_PRE_NORM d 5120             486 cycles
+case 3: HC_PRE_NORM d 5120             485 cycles
+ERR sector 5710 lane 22: got 3f2600003e5700003e2f00003f4200003fb100003f520000bf2600003ee60000 expected 3f2600003e5700003e2f00003f4200003fb000003f520000bf2600003ee60000
+protocol: early_gain_reads 0
+summary: 4 HC B2 engine cases, 6432 sectors checked, 1 sector errors, stale chunks 0
+HGI_HC_ENG_B2 FAIL errors=1
+- rtl/hbm_accel/generic/peers/tb_hgi_hc_eng_b2.sv:241: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 68.114 s; speed 63.629 ns/s
+- Verilator: cpu 68.108 s on 1 threads; allocated 276 MB
