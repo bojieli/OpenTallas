@@ -2,6 +2,7 @@
 module ot_hgi_dma_kvw_core_reg_kq #(
     parameter integer MUT = 0,
     parameter integer MUT_KQ_ZERO = 0,
+    parameter integer MUT_LOOKAHEAD = 0,
     parameter integer OWN_B0 = 1          // 1: bank 0 is this engine's own macro (a hardened element of its own, the textbook
                                           //    split 10-11); 0: bank 0 = the mover's landing RAM on the b0_* ports
 ) (
@@ -48,6 +49,7 @@ module ot_hgi_dma_kvw_core_reg_kq #(
     output reg           idle
 );
     // ================================================================ descriptor FIFO (two readers: issue, write)
+    reg [31:0] f_dsn [0:3], f_dnx [0:3], f_dnx1 [0:3];
     reg [14:0] f_vs [0:3], f_vst [0:3]; reg [31:0] f_ds [0:3], f_dst [0:3]; reg [17:0] f_ns [0:3]; reg [19:0] f_m [0:3];
     reg [2:0] f_t, f_i, f_w;
     reg st_v; reg [14:0] st_vs, st_vst; reg [31:0] st_ds, st_dst; reg [17:0] st_ns; reg [19:0] st_m;                                // tail, issue head, write head (mod 8 counters, 4 entries)
@@ -65,8 +67,8 @@ module ot_hgi_dma_kvw_core_reg_kq #(
     // masked invalid payload (zero) by clearing the existing sector FFs instead
     // of placing a valid-dependent AND behind them at the physical boundary.
     for(genvar lane=0;lane<32;lane=lane+1)begin : g_sector_pin
-        always @(posedge clk or negedge rn)begin
-            if(!rn)kq_s[lane]<=15'd0;
+        always @(posedge clk or negedge rl[1])begin
+            if(!rl[1])kq_s[lane]<=15'd0;
             else if(pi_n==2'd2 && pi_l1==5'(lane))kq_s[lane]<=15'(pi_vs+15'd1);
             else if(pi_n!=2'd0 && pi_l0==5'(lane))kq_s[lane]<=pi_vs;
             else if(MUT_KQ_ZERO==0)kq_s[lane]<=15'd0;
@@ -238,6 +240,10 @@ module ot_hgi_dma_kvw_core_reg_kq #(
             if (c_v && c_rdy) begin st_vs <= c_vs; st_vst <= c_vst; st_ds <= c_ds; st_dst <= c_dst; st_ns <= c_ns; st_m <= c_m; owed <= 1'b1; end
             if (st_v) begin
                 f_vs[f_t[1:0]] <= st_vs; f_vst[f_t[1:0]] <= st_vst; f_ds[f_t[1:0]] <= st_ds; f_dst[f_t[1:0]] <= st_dst;
+                // Lookahead uses already registered station fields on the original writeedge.
+                f_dsn[f_t[1:0]] <= st_ds+32'd1;
+                f_dnx[f_t[1:0]] <= st_ds+st_dst;
+                f_dnx1[f_t[1:0]] <= (st_ds+st_dst+32'd1)^32'(MUT_LOOKAHEAD);
                 f_ns[f_t[1:0]] <= st_ns; f_m[f_t[1:0]] <= st_m; f_t <= f_t + 3'd1;
             end
             c_rdy <= 3'(f_t + {2'd0, st_v} - f_w) < 3'd2 && !(c_v && c_rdy) && !st_v;   // registered: FIFO + station <= 3
@@ -347,8 +353,8 @@ module ot_hgi_dma_kvw_core_reg_kq #(
         end else begin
             // ---- write side: dispatch a move to its stack's stream; each bank serves one stream a cycle
             if (w_disp) begin
-                w_act[f_stk] <= 1'b1; w_q[f_stk] <= f_q[f_w[1:0]]; w_ds[f_stk] <= f_ds[f_w[1:0]]; w_dsn[f_stk] <= f_ds[f_w[1:0]] + 32'd1;
-                w_dnx[f_stk] <= f_ds[f_w[1:0]] + f_dst[f_w[1:0]]; w_dnx1[f_stk] <= f_ds[f_w[1:0]] + f_dst[f_w[1:0]] + 32'd1; w_dst[f_stk] <= f_dst[f_w[1:0]];
+                w_act[f_stk] <= 1'b1; w_q[f_stk] <= f_q[f_w[1:0]]; w_ds[f_stk] <= f_ds[f_w[1:0]]; w_dsn[f_stk] <= f_dsn[f_w[1:0]];
+                w_dnx[f_stk] <= f_dnx[f_w[1:0]]; w_dnx1[f_stk] <= f_dnx1[f_w[1:0]]; w_dst[f_stk] <= f_dst[f_w[1:0]];
                 w_lst[f_stk] <= f_ns[f_w[1:0]] == 18'd1; w_left[f_stk] <= f_ns[f_w[1:0]]; w_ns[f_stk] <= f_ns[f_w[1:0]]; w_rows[f_stk] <= f_m[f_w[1:0]]; f_w <= f_w + 3'd1;
             end
             b0_re <= g_v[0]; b0_ra <= w_q[g_s[0]][8:1]; b1_re <= g_v[1]; b1_ra <= w_q[g_s[1]][8:1];
