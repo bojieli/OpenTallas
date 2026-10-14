@@ -1,7 +1,8 @@
 // Slot cell qkd_kvwq_ctl_bin through its OWN ports against an independent bundle model: the benched body
 // ot_qkvd_kv_wq_ctl_binary #(FLANE_BINARY=1) runs in lock step on the same stimulus and every slot bundle is compared
 // bit-exact, every cycle, with the documented packing.  Stimulus is credit-true: a row is posted only while fewer than
-// QD rows are outstanding, every feed beat is acknowledged 3 cycles later (1/64 of them bad).
+// QD rows are outstanding, every feed beat is acknowledged 3 cycles after it leaves the CELL's pin (1/64 of them bad).
+// sl2: the cell adds a pin stage on f0..f3 / fault: those pins are compared with the body's fields one cycle earlier.
 `timescale 1ns/1ps
 module tb_qkd_kvwq_ctl_bin_slot;
     localparam integer N = 40000;
@@ -23,6 +24,10 @@ module tb_qkd_kvwq_ctl_bin_slot;
     integer i, g, k, out = 0, err = 0, rows = 0, feeds = 0, dur = 0, lanehi = 0;
     reg [3:0] d1 = 0, d2 = 0;
     reg [292:0] e;
+    reg [292:0] e1 [0:3];             // sl2: the cell's feed pins are the body's feed one cycle later (pin stage)
+    reg         mf1 = 0;              //      and so is the fault level
+    reg [3:0]   dfv;
+    initial for (g = 0; g < 4; g = g + 1) e1[g] = 0;
     initial begin
         for (g = 0; g < 4; g = g + 1) r[g] = 0;
         repeat (8) @(posedge ck);
@@ -31,16 +36,19 @@ module tb_qkd_kvwq_ctl_bin_slot;
             @(posedge ck); #0.2;
             for (g = 0; g < 4; g = g + 1) begin
                 e = {m_fv[g], m_fd[256*g +: 256], m_fsec[24*g +: 24], m_flane[8*g +: 3], m_ftag[9*g +: 9]};
-                if (f[g] !== e) begin err = err + 1; if (err < 4) $display("MISMATCH cyc %0d f%0d", i, g); end
+                if (i > 0 && f[g] !== e1[g]) begin err = err + 1; if (err < 4) $display("MISMATCH cyc %0d f%0d", i, g); end
+                e1[g] = e;
                 if (m_fv[g]) feeds = feeds + 1;
                 if (m_flane[8*g+3 +: 5] !== 5'd0 && m_fv[g]) lanehi = lanehi + 1;
             end
             if (durable !== {m_rw_v, m_rw_id}) err = err + 1;
-            if (kvn_cr !== m_cr || fault !== m_fault) err = err + 1;
+            if (kvn_cr !== m_cr || (i > 0 && fault !== mf1)) err = err + 1;
+            mf1 = m_fault;
             if (m_rw_v) dur = dur + 1;
             if (m_cr) out = out - 1;
             for (g = 0; g < 4; g = g + 1) r[g] = {d2[g], d2[g] && ($urandom % 64 == 0)};
-            d2 = d1; d1 = m_fv;
+            dfv = {f[3][292], f[2][292], f[1][292], f[0][292]};
+            d2 = d1; d1 = dfv;
             for (k = 0; k < 1024; k = k + 32) kvn_d[k +: 32] = $urandom;
             kvn_d[1045:1024] = $urandom;
             kvn_d[1046] = (out < 4) && ($urandom % 3 == 0);

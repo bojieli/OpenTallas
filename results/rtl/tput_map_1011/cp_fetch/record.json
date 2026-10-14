@@ -4,7 +4,7 @@
  "model": "DS AR 1M (HBM)",
  "elements": [
   "ot_hgi_cp",
-  "ot_hgi_seq",
+  "ot_hgi_seq_split (ot_hgi_seq_fe + ot_hgi_seq_au + ot_hgi_seq_be)",
   "hfd_cmdproc_n",
   "hfd_cmdproc_s",
   "hfd_loader"
@@ -15,36 +15,26 @@
   "src": "tools/hgi_sim/timing.py schedule(recs, POS, 'S2', cost_fn=0) on the G25 DS rank-0 program with T.rebuild_waits (the records and schedule throughput_budget prices): fetch_latency 160 + 64 B / 2 cyc streaming prefetch, decode 1 + 1 a 32 B chunk, addr 2, wait rule, dispatch / retire wires; without wait masks 17,214"
  },
  "measured": {
-  "cycles": 25258,
+  "cycles": 30341,
   "per": "token",
   "dispatches": 3923,
   "records": 4120,
   "image_bytes": 478720,
-  "cycles_per_dispatch": 6.44,
-  "fetch_B_per_cycle": 19.0,
+  "cycles_per_dispatch": 7.73,
+  "fetch_B_per_cycle": 15.8,
   "lane_requests": 17009,
   "sectors": 17009,
   "max_fetch_inflight": 160,
-  "def": "doorbell -> last dispatch, units always ready and retiring the next cycle, memory lane always ready (FAST), FLAT 160",
+  "def": "doorbell -> last dispatch, units always ready and retiring the next cycle, memory lane always ready (FAST), FLAT 160; SPLIT = ot_hgi_seq_split (wires-only parent over ot_hgi_seq_fe / _au / _be, five registered seams)",
   "variants": {
    "BURST1_FLAT160": 25258,
    "BURST0_FLAT160": 25271,
    "BURST1_FLAT104_random_ready_jitter_unit_delays (diagnostic: unit retire 0-20 / IDX+ARGMAX 40-60 cycles, die 1 credit a unit: not CP-alone)": 43552,
    "v2.1 QD 8 (9cdf62fc7)": 23769,
    "v2.0 no early indexed resolver, QD 4 (7754c2edb)": 32900,
-   "v2.3 timing restructure (1a12191a0)": 25258
-  },
-  "breakdown_cycles": {
-   "src": "tb +define+CPF_PROF (CPF_DEFS=-DCPF_PROF tools/tput_map_1011/run_cp_fetch.sh)",
-   "BE_head_wait_queue_empty": 278,
-   "BE_head_in_AU": 2083,
-   "BE_head_pending_indexed": 9929,
-   "BE_head_wait_mask": 1180,
-   "BE_dispatch_issue": 3924,
-   "BE_dispatch_accept": 7846,
-   "FE_decode_busy": 17022,
-   "FE_queue_full": 7813,
-   "FE_fifo_starved": 408
+   "v2.3 timing restructure (1a12191a0)": 25258,
+   "v2.3 flat sequencer (1a12191a0), superseded": 25258,
+   "split FE / AU / BE, SEAM_JL_WAIT 6, FE read pipe 4 edges (ad77e7a3c)": 30341
   },
   "v1_breakdown_cycles": {
    "header_DEC_H1_H1B_H2_HQ": 20774,
@@ -56,14 +46,14 @@
    "advance": 3923
   }
  },
- "ratio": 0.794,
+ "ratio": 0.953,
  "exact": true,
  "exactness": "HGI_SEQ_DIE PASS: all 3,923 dispatches (header, SUT, 7 effective descriptors, n sidebands) equal the HGI-1 v1.0 reference sequencer (tools/hgi_seq_vectors.Ref) and the completion token / status match.  Regression on the same RTL: committed 43-case vectors PASS standalone (tb_hgi_seq), with the macro ring (SEQ_MACRO), CC preset, and through ot_hgi_cp_die (tb_hgi_cp_die_seq BURST 1); conformance 66 cases PASS; G24 LOOP-from-VM gate PASS (mutant FAIL); tb_hgi_cp_die_mtp PASS.  The DS vector set (SEQ_DS, hgi_seq_*_ds) fails at dispatch 266 on v1 and v2 alike (stale vector set, pre-existing).",
  "mutant": "MUT 9 (loader burst one sector longer) FAIL: FATAL more than 160 ring sectors in flight; sequencer mutants on the 43-case vectors: OT_HGI_SEQ_MUT_WAIT / MUT_LOOP / MUT_IDXL / MUT_TOKX all FAIL.  MUT_WAIT on the G25 program with random unit delays (FLAT 104, FAST 0) FAILs (839 wait-rule violations).  (MUT_WAIT on the FAST G25 bench passes: units retire one cycle after accept and dispatches are >= 3 cycles apart, so FAST cannot expose a wait bug; the random-delay benches do.)",
  "bench": "tools/tput_map_1011/run_cp_fetch.sh <out> 1 0 160 1  (vectors: tools/tput_map_1011/cp_fetch_vectors.py; tb rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv +FAST +FLAT, NOS 160, Icarus 12.0)",
- "host": "ot-epyc4:/home/ubuntu/tputx-cpf/b",
- "source_commit": "1a12191a0 (claude/el1011-hbm-tputx-cpf; v2.3 = v2.2 + route-905100ec5 timing restructure, cycle-identical)",
- "verdict": "THROUGHPUT PASS (0.794 <= 1.10, cycle-identical to v2.2: 25,258 cyc, 3,923 dispatches exact); route of v2.2 (hgi_seq_v2-v2-905100ec5) failed TT -186.91 / FF -17.85 -> v2.3 restructure re-routed as hgi_seq_v2-v23-<commit>; unit qualification needs that route CLOSED",
+ "host": "ot-epyc1tb",
+ "source_commit": "ad77e7a3c (claude/hbm-seq-split-1013; FE s3 RTL = the CLOSED leaves: hgi_seq_fe-s3-2d9d65aad TT +61.64 / FF +20.32, hgi_seq_au-s1-26d458185 +98.59 / +24.69, hgi_seq_be-s1-26d458185 +33.76 / +22.49, DRC 0 each)",
+ "verdict": "THROUGHPUT PASS (0.953 <= 1.10): 30,341 cycles doorbell -> last dispatch, 3,923 dispatches, 17,009 sectors, HGI_SEQ_DIE PASS (flat 25,258 = 0.794: the split costs +5,083 cycles = the registered seams and the 6-edge job-load wait); lockstep gate of the split vs the flat: 159 programs bit-exact, 8 mutants + 6 corruptions FAIL",
  "notes": "tputx-cpf v2.1 restructure of ot_hgi_seq (ports unchanged): FE sector reader (32 B a cycle) + 12-word FIFO + parser (header 1 cycle, one 32 B item a cycle = the price's 1 + 1-a-chunk decode); 6-stage address unit, one descriptor a cycle (DYN from a per-slot table built at job start; 60 partial-product rows CSA-reduced; 17-bit chunk carry-select adds); 4-entry record queue (8 entries: 0.747x, +11k flops); early indexed resolver (one X + one N VM read a record as soon as its wait mask holds with older queued dispatches counted busy; reader and AU re-injection overlapped); BE dispatch 3 cycles a record.  NOS 48 -> 160 (the priced 32 B/cyc x 160-cycle lane; at 48 the lane caps at 9.6 B/cyc = 49.9k cycles for this image).  Residual: the resolver's serial VM round trip (~8.5 cycles, one outstanding read) shows as head-pending 9.9k; decode is 17.0k busy. | v2.3 (route 905100ec5 limiter = FIFO head word -> header class -> queue allocation enable to ~800 entry flops, 29 lv): registered header allocation + ring-limit register, thermometer FIFO control, S_HD payload load, staged item/SUT writes, registered DYN row / resolver N-read operands, FE run copy, faddr next-next; kept HB4 hold-delay stage on every input, pos->p1 and ring write data (ref_tile route.hold_delay). Function and cycle count unchanged.",
  "history": [
   {
@@ -103,6 +93,13 @@
    "measured_cycles": 25258,
    "ratio": 0.794,
    "route": "hgi_seq_v2-v2-905100ec5 NEEDS_RTL: TT -186.91 ps (TNS -248.6 ns, 2,664 reg-to-reg D pins) / FF -17.85 (input pin flops), DRC 0"
+  },
+  {
+   "source_commit": "1a12191a0 (claude/el1011-hbm-tputx-cpf; v2.3 = v2.2 + route-905100ec5 timing restructure, cycle-identical)",
+   "measured_cycles": 25258,
+   "ratio": 0.794,
+   "route": "flat ot_hgi_seq (25,081 sinks on one root): v23 / v24 / v25s / v26s / v27a / v27b all failed (TT -48 .. FF -61 ps); replaced by the three-leaf split",
+   "label": "v2.3 flat sequencer: kept as measured"
   }
  ]
 }

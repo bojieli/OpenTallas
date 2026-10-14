@@ -52,6 +52,12 @@ create_clock -name serial -period [expr {833.333*4.0/3.0}] [get_pins -quiet io_c
 foreach k {ucie serdes} { create_clock -name $k -period 833.333 [get_pins -quiet io_collective/pll_$k] }
 """
     DOMS = ['stream', 'serial', 'ucie', 'serdes']
+# qwen-tp8 r10: a case-specific clock file ($OT_STA_CLOCKS: create_clock lines, first line '# DOMS a b c') replaces the
+# built-in die clocks (the merged tp8b die has the KV PLL, the clock receiver and four strip PLLs)
+if os.environ.get('OT_STA_CLOCKS'):
+    _ct = Path(os.environ['OT_STA_CLOCKS']).read_text()
+    DOMS = _ct.splitlines()[0].split()[2:]
+    clocks = _ct
 lat, ocv_src = '', ''
 if plan:
     P_ = json.loads(Path(plan).read_text())
@@ -130,7 +136,7 @@ if plan:
         # the domain clocks keep every register the plan does not hold; region clocks join their domain's sync group
         clocks += '\nsource /work/clock_regions_' + c + '.tcl\nset_clock_groups -asynchronous ' + ' '.join(
             '-group [get_clocks {' + ' '.join([d_] + sorted(grp.get(d_, []))) + '}]' for d_ in DOMS)
-mm, unc = ('max', 'set_clock_uncertainty -setup 60 [all_clocks]') if c == 'tt' else ('min', 'set_clock_uncertainty -hold 25 [all_clocks]')
+mm, unc = ('max', 'set_clock_uncertainty -setup 60 [all_clocks]') if c in ('tt', 'ss') else ('min', 'set_clock_uncertainty -hold 25 [all_clocks]')
 if 'set_clock_groups' not in clocks:
     clocks += '\nset_clock_groups -asynchronous ' + ' '.join(f'-group {d_}' for d_ in DOMS)
 unc += ocv_src

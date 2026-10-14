@@ -2,16 +2,16 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "vm_cp_re_cx",
  "verdict": "WARN",
- "generated": "2026-10-13T08:23:43-0700",
+ "generated": "2026-10-13T17:48:33-0700",
  "host": "ot-epyc1tb",
  "cts": true,
- "commit": "14a21ce46",
+ "commit": "6c2abccb0",
  "clock": {
-  "max_root_sinks": 2265,
+  "max_root_sinks": 8656,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": 369.6,
-  "tt_spread_ps": 70.2,
+  "tt_insertion_ps": 480.7,
+  "tt_spread_ps": 96.6,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -19,7 +19,7 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "2,265 sinks on the largest root <= 15,000; measured TT insertion 369.6 ps, leaf spread 70.2 ps"
+  "text": "8,656 sinks on the largest root <= 15,000; measured TT insertion 480.7 ps, leaf spread 96.6 ps"
  },
  "items": [
   {
@@ -37,13 +37,13 @@
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 910 um2 + macros 0 in core 101300: util 1%",
-   "fix": "set \"std_area_um2\": 910 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 3203 um2 + macros 0 in core 101300: util 3%",
+   "fix": "set \"std_area_um2\": 3203 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 1.0% outside 45%-65% (std 987 + macro 0 um2 in 101300 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 3.2% outside 45%-65% (std 3206 + macro 0 um2 in 101300 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
