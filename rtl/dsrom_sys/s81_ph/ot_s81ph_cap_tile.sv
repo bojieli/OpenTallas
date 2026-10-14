@@ -450,10 +450,20 @@ module dsfd_capt_x #(
             if (!rs_n) begin hr <= 2'd0; hw <= 2'd0; hc <= 3'd0; ho <= 1'b0; end
             else begin
                 hr <= hr + npop[1:0];
-                if (vm_valid && crdy) begin hw <= hw + 2'd1; h[hw] <= din; end
+                if (vm_valid && crdy) begin hw <= hw + 2'd1; if (!LOCAL_CTRL) h[hw] <= din; end
                 hc <= hc - npop + ((vm_valid && crdy) ? 3'd1 : 3'd0);
                 if (vm_valid && !crdy) ho <= 1'b1;
             end
+        if (LOCAL_CTRL) begin : g_local_store
+            for (genvar off = 0; off < 51; off = off + 17) begin : g_slice
+                wire [67:0] words;
+                (* keep_hierarchy *) dsfd_capt_hold_slice u_store
+                    (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
+                     .hw(hw), .din(din[off +: 17]), .words(words));
+                for (genvar bank = 0; bank < 4; bank = bank + 1)
+                    assign h[bank][off +: 17] = words[17*bank +: 17];
+            end
+        end
         assign hovf[g] = ho;
         wire cv; wire [102:0] cd;
         ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD), .LAG(1), .LOCAL_CTRL(LOCAL_CTRL)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
@@ -475,6 +485,23 @@ module dsfd_capt_x #(
     reg [63:0] stq;
     always @(posedge ckv[0] or negedge rsv_h[1]) if (!rsv_h[1]) stq <= 64'd0; else if (s_v) stq <= s_d;
     assign t_st = stq;
+endmodule
+
+
+// Local hold-buffer slices retain independent write-enable cones at the same
+// write edge. Storage contents, address and reset gating match the flat bank.
+module dsfd_capt_hold_slice (
+    input wire ck, rs_n, valid, ready,
+    input wire [1:0] hw,
+    input wire [16:0] din,
+    output wire [67:0] words
+);
+    reg [16:0] h [0:3];
+    always @(posedge ck) if (rs_n && valid && ready) h[hw] <= din;
+    genvar bank;
+    generate for (bank = 0; bank < 4; bank = bank + 1) begin : g_bank
+        assign words[17*bank +: 17] = h[bank];
+    end endgenerate
 endmodule
 
 

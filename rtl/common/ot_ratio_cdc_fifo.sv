@@ -137,10 +137,16 @@ module ot_ratio_cdc_fifo #(
     logic [1:0]    w_st_r;              // sampler of w_st
     logic          r_take;
 
-    always_ff @(posedge rclk) begin
-        wp_r   <= wp_pub;
-        for (int i = 0; i < DEPTH; i++) sh[i] <= mem[i];
-    end
+    always_ff @(posedge rclk) wp_r <= wp_pub;
+    generate if (LOCAL_CTRL) begin : g_local_shadow
+        logic [W-1:0] sh_n [DEPTH];
+        always_ff @(posedge rclk)
+            for (int i = 0; i < DEPTH; i++) sh_n[i] <= ~mem[i];
+        for (genvar bank = 0; bank < DEPTH; bank++) assign sh[bank] = ~sh_n[bank];
+    end else begin : g_original_shadow
+        always_ff @(posedge rclk)
+            for (int i = 0; i < DEPTH; i++) sh[i] <= mem[i];
+    end endgenerate
     generate if (LOCAL_CTRL) begin : g_local_wstate
         logic [1:0] w_st_r_n;
         always_ff @(posedge rclk) w_st_r_n <= ~w_st;
