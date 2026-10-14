@@ -23,7 +23,7 @@
 `endif
 module tb_s81_su_master;
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40;
-    parameter integer S_RD = 16, S_WR = 16, LVM = 10, MUT = 0, AMUT = 0;
+    parameter integer S_RD = 16, S_WR = 16, LVM = 10, MUT = 0, AMUT = 0, XMUT = 0;
     parameter integer MAXJ = 64, MAXE = 4096, MAXY = 2048, TMAX = 400000;
     reg cck = 0, sk = 0, crs = 0, srs = 0;
     always #0.4165 cck = ~cck;              // controller 1.2 GHz
@@ -45,14 +45,14 @@ module tb_s81_su_master;
     wire [3:0] fcode;
 `ifdef SU_HIER
     dsfd_sp_su_h #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX),
-        .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT)) dut (
+        .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT), .XMUT(XMUT)) dut (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt),
         .online(online), .fcode(fcode));
 `else
     dsfd_sp_su #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH), .SM_NVMAX(SM_NVMAX),
-        .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT)) dut (
+        .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT), .XMUT(XMUT)) dut (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt),

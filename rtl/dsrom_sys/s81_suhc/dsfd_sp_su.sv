@@ -9,7 +9,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_su #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
-    parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, OQ = 1024, MUT = 0, AMUT = 0
+    parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, OQ = 1024, MUT = 0, AMUT = 0, XMUT = 0, RAL = 16
 ) (
     input  wire                cck, crs,                 // controller clock / reset (dsfd_sp_ctrl domain)
     input  wire                sk, srs,                  // slab clock / reset
@@ -48,7 +48,7 @@ module dsfd_sp_su #(
     always @(posedge sk) rs_d_q <= rs_d;
     always @(posedge sk or negedge srs) if (!srs) rs_v_q <= 0; else rs_v_q <= rs_v;
     ot_s81_su_core #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
-                     .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .LM(LM), .LA(LA), .OQ(OQ), .MUT(MUT)) u_core (
+                     .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .LM(LM), .LA(LA), .OQ(OQ), .MUT(MUT), .XMUT(XMUT), .RAL(RAL)) u_core (
         .clk(sk), .rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_done_v(d_v), .e_done_tag(d_t),
         .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v_q), .rs_d(rs_d_q),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .busy(bsy), .fault(c_flt), .fault_code(fcode),

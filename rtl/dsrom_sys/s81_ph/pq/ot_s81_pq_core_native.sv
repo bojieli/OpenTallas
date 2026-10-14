@@ -113,7 +113,11 @@ module ot_s81_pq_core_native (
     assign qb_q0_index = 0; assign qb_q1_index = 0; assign qb_pair_valid = 0;
 `else
     assign qb_q0_index = u_qb.i0; assign qb_q1_index = u_qb.i1;
+`ifdef OT_PQ_QB_PHYS_SPLIT
+    assign qb_pair_valid = u_qb.u_head.gates & {2{u_qb.u_head.consume_1}};
+`else
     assign qb_pair_valid = u_qb.gates & {2{u_qb.consume_1}};
+`endif
 `endif
     assign aq_request = aq_vin;
     assign aq_results = {g_aq[1].u_aq.vo, g_aq[0].u_aq.vo};
@@ -221,7 +225,11 @@ module ot_s81_pq_core_native (
     wire [255:0] hq0, hq1;
     wire [9:0] he0, he1;
 `ifdef OT_PQ_QB_PHYS_SPLIT
+`ifdef OT_PQ_QB_ONE_BANK
+    ot_s81_pq_qb_split1_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
+`else
     ot_s81_pq_qb_split_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
+`endif
 `else
     ot_s81_pq_qb_sram u_qb (.clk(ck_qb),
 `endif
