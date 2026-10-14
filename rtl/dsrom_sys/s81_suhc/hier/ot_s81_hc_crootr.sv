@@ -123,7 +123,8 @@ endmodule
 module ot_s81_hc_crootr_f #(
     parameter integer NG = 256, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, AL = 4, C = 0,
     parameter integer RF = 5, RT = 1, RW = 1,
-    parameter integer PQ = 1                              // 1 pin-register form (routed); 0 the v2 form (lockstep reference)
+    parameter integer PQ = 1,                             // 1 pin-register form (routed); 0 the v2 form (lockstep reference)
+    parameter integer NPR = 16                            // PQ 1: kept replicas of the POST select (pop) at the chain output flop
 ) (
     input  wire                 sk,
     input  wire                 srs,
@@ -196,9 +197,42 @@ module ot_s81_hc_crootr_f #(
     wire [FVW-1:0] fv_1, fv_r;
     wire [FSW-1:0] fd_r;
     ot_hdc_delay #(.W(FVW), .D(1), .RESET(1)) u_rfv0 (.clk(sk), .rst_n(rs_n), .d(f_fv), .q(fv_1));          // W-face capture
-    ot_hdc_delay #(.W(FVW), .D(RF - 1), .RESET(1)) u_rfv (.clk(sk), .rst_n(rs_n), .d(fv_1), .q(fv_r));
     ot_hdc_delay #(.W(FSW), .D(RF)) u_rfd (.clk(sk), .rst_n(rs_n), .d(f_fd), .q(fd_r));
+    // v5 (2026-10-14, s81-elemB): the POST select fanned out from ONE line flop to the FDD-bit chain output mux across the
+    // 276-um S face (routed v4: SS -325 ps u_rfv.line -> ch_fd).  At PQ 1 the last fv relay stage also writes NPR kept
+    // copies of the select bit (same cycle, same reset); copy k selects the k-th contiguous FDD/NPR slice of ch_fd.
+    localparam integer NPQ = (PQ != 0) ? NPR : 1;
+    wire [NPQ-1:0] popv;
+    generate
+        if (PQ != 0) begin : g_popr
+            wire [FVW-1:0] fv_m;
+            ot_hdc_delay #(.W(FVW), .D(RF - 2), .RESET(1)) u_rfv (.clk(sk), .rst_n(rs_n), .d(fv_1), .q(fv_m));
+            reg [FVW-1:0] fv_l;
+            (* keep = "true" *) reg [NPQ-1:0] popq;
+            always @(posedge sk or negedge rs_n)
+                if (!rs_n) begin fv_l <= {FVW{1'b0}}; popq <= {NPQ{1'b0}}; end
+`ifdef OT_S81_HC_CRRF_MUT3
+                else begin fv_l <= fv_m; popq <= {NPQ{fv_m[S_RD]}} & ~({{(NPQ-1){1'b0}}, 1'b1} << (NPQ - 1)); end   // negative control: last replica stuck
+`else
+                else begin fv_l <= fv_m; popq <= {NPQ{fv_m[S_RD]}}; end
+`endif
+            assign fv_r = fv_l;
+            assign popv = popq;
+        end else begin : g_pop1
+            ot_hdc_delay #(.W(FVW), .D(RF - 1), .RESET(1)) u_rfv (.clk(sk), .rst_n(rs_n), .d(fv_1), .q(fv_r));
+            assign popv = fv_r[S_RD];
+        end
+    endgenerate
     wire pop = fv_r[S_RD];                                        // a POST beat: the chain's y slice joins it
+    wire [FDD-1:0] dsel;                                          // the chain output data field: y slice at POST, else fd
+    genvar gi;
+    generate
+        for (gi = 0; gi < FDD; gi = gi + 1) begin : g_dsel
+            wire yb = (gi < YS) ? yr[(gi < YS) ? gi : 0] : 1'b0;
+            wire fb = (gi < S_RD * 512) ? fd_r[O_D + ((gi < S_RD * 512) ? gi : 0)] : 1'b0;
+            assign dsel[gi] = popv[(gi * NPQ) / FDD] ? yb : fb;
+        end
+    endgenerate
 `ifdef OT_S81_HC_CRRF_MUT1
     wire prq_d = f_fv[S_RD];                                      // negative control: the request one cycle early
 `else
@@ -216,13 +250,7 @@ module ot_s81_hc_crootr_f #(
         end
     always @(posedge sk) begin
         ch_fd[O_D-1:0] <= fd_r[O_D-1:0];
-        begin : dfield
-            reg [FDD-1:0] t;
-            t = {FDD{1'b0}};
-            if (pop) t[YS-1:0] = yr;
-            else t[S_RD*512-1:0] = fd_r[O_D +: S_RD * 512];
-            ch_fd[O_D +: FDD] <= t;
-        end
+        ch_fd[O_D +: FDD] <= dsel;
     end
 endmodule
 
