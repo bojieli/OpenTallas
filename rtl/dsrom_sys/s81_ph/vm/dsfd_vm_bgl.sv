@@ -30,7 +30,8 @@ module dsfd_vm_bgl #(
     parameter integer DW = 128,
     parameter integer CLOCK_SPLIT = 0,
     parameter integer BAL_PREFIX = 0,
-    parameter integer PREHIT = 0
+    parameter integer PREHIT = 0,
+    parameter integer FAST4 = 0
 ) (
     input  wire [0:0]          ck,
     input  wire                ck_req,
@@ -133,12 +134,30 @@ module dsfd_vm_bgl #(
     // Capture the static bank-match in parallel with the input payload, using
     // the same request root/edge. This removes the compare from fused E1/E2
     // without adding a transaction stage. grp/bi are static straps by contract.
+    localparam integer PAIR_N = (NP + 1) / 2;
+    localparam integer PAIR_P2 = 1 << $clog2(PAIR_N);
+    wire [NP-1:0] capture_hit, capture_order;
+    genvar ih;
+    generate for (ih = 0; ih < NP; ih = ih + 1) begin : g_input_hit
+        assign capture_hit[ih] = i_v[ih] && i_row[ih*RA +: BB] == gidq;
+`ifdef OT_VMBGL_MUT_ORDER
+        assign capture_order[ih] = capture_hit[NP-1-ih];
+`else
+        assign capture_order[ih] = capture_hit[ih];
+`endif
+    end endgenerate
     reg [NP-1:0] h0;
+    reg [2*PAIR_N-1:0] hpair_q;
     integer hp;
     always @(posedge req_clk or negedge rst_req)
-        if (!rst_req) h0 <= 0;
-        else for (hp = 0; hp < NP; hp = hp + 1)
-            h0[hp] <= i_v[hp] && i_row[hp*RA +: BB] == gidq;
+        if (!rst_req) begin h0 <= 0; hpair_q <= 0; end
+        else begin
+            h0 <= capture_hit;
+            for (hp = 0; hp < PAIR_N; hp = hp + 1)
+                hpair_q[2*hp +: 2] <= {1'b0, capture_order[2*hp]} +
+                    ((2*hp+1 < NP) ? {1'b0, capture_order[2*hp+1]} : 2'b00);
+        end
+    initial if (FAST4 && (QD != 4 || !PREHIT)) $error("FAST4 requires QD4 and parallel input capture");
 `ifdef OT_VMBGL_MUT_HIT
     reg [NP-1:0] h_late;
     always @(posedge req_clk or negedge rst_req)
@@ -166,6 +185,38 @@ module dsfd_vm_bgl #(
             balanced_count = tree[1];
         end
     endfunction
+    // Count-state monoid: low2=count modulo4, bit2=count>=4,
+    // bit3=count>=5. Pair counts are captured alongside H0 and payload.
+    // Prefix rank0..3 needs only low2/bit2; total maps exactly to min(count,5).
+    function automatic [3:0] count_state;
+        input [NP-1:0] hits;
+        input [2*PAIR_N-1:0] pairs;
+        input integer stop_pos;
+        reg [3:0] tree [1:2*PAIR_P2-1];
+        reg [3:0] a, b;
+        reg [2:0] low_sum;
+        reg ge4, ge5;
+        integer n;
+        begin
+            for (n = 0; n < PAIR_P2; n = n + 1) begin
+                tree[PAIR_P2+n] = 0;
+                if (n < PAIR_N && 2*n+1 < stop_pos)
+                    tree[PAIR_P2+n] = {2'b00, pairs[2*n +: 2]};
+                else if (2*n < NP && 2*n < stop_pos)
+                    tree[PAIR_P2+n] = {3'b000, hits[2*n]};
+            end
+            for (n = PAIR_P2-1; n > 0; n = n - 1) begin
+                a = tree[2*n]; b = tree[2*n+1];
+                low_sum = {1'b0,a[1:0]} + {1'b0,b[1:0]};
+                ge4 = a[2] | b[2] | low_sum[2];
+                ge5 = a[3] | b[3] | (a[2] & (b[2] | (|b[1:0]))) |
+                      (b[2] & (a[2] | (|a[1:0]))) | (low_sum[2] & (|low_sum[1:0]));
+                tree[n] = {ge5,ge4,low_sum[1:0]};
+            end
+            count_state = tree[1];
+        end
+    endfunction
+    reg [3:0] fast_prefix, fast_total;
     reg [NP-1:0] hit, ho;
     reg [CW-1:0] lpre [0:NP-1];
     reg [CW-1:0] gt [0:NG-1];
@@ -211,6 +262,20 @@ module dsfd_vm_bgl #(
 `else
                 sel_c[j2][i2] = ho[i2] && opre[i2] == j2;
 `endif
+        fast_prefix = 0; fast_total = 0;
+        if (FAST4) begin
+            fast_total = count_state(ho, hpair_q, NP);
+            tot = fast_total[3] ? 5 : (fast_total[2] ? 4 : fast_total[1:0]);
+            for (i2 = 0; i2 < NP; i2 = i2 + 1) begin
+                fast_prefix = count_state(ho, hpair_q, i2);
+                for (j2 = 0; j2 < QD; j2 = j2 + 1)
+`ifdef OT_VMBGL_MUT_ORDER
+                    sel_c[j2][NP-1-i2] = ho[i2] && !fast_prefix[2] && fast_prefix[1:0] == j2;
+`else
+                    sel_c[j2][i2] = ho[i2] && !fast_prefix[2] && fast_prefix[1:0] == j2;
+`endif
+            end
+        end
     end
     reg [NP-1:0] e_sel [0:QD-1];
     reg [QW+PW:0] e_cnt;
@@ -539,7 +604,7 @@ module dsfd_vm_bgl28_mc (
 `else
     localparam integer MACRO = 1;
 `endif
-    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1)) u (
+    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1), .FAST4(1)) u (
         .ck(ck), .ck_req(ck_req), .ck_ret(ck_ret), .rs(rs), .grp(grp), .bi(bi), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
         .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));

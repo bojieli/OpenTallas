@@ -41,3 +41,17 @@ puts "BGL_MC_H0 placed $hcount input hit flops near N row/valid pins"
 set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt a]
 foreach n $hnames {puts $fh $n}
 close $fh
+
+# Parallel pair-count FFs sit beside H0; both are captured from the SAME input edge.
+set pcount 0; set pnames {}
+foreach i [$b getInsts] {
+    if {![string match {u.hpair_q*} [$i getName]]} { continue }
+    if {![string match DFF* [[$i getMaster] getName]]} { continue }
+    $i setLocation [expr {round((12.0+0.72*$pcount)*$dbu)}] [expr {round(68.04*$dbu)}]
+    $i setPlacementStatus FIRM
+    lappend pnames [$i getName]; incr pcount
+}
+if {$pcount != 28} {error "BGL_MC_PAIR expected28pair-countFFs found$pcount"}
+set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt a]
+foreach n $pnames {puts $fh $n}; close $fh
+puts "BGL_MC_PAIR placed $pcount pair count flops beside H0"
