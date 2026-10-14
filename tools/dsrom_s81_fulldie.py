@@ -2712,6 +2712,7 @@ TIER_COLS_SET = False                # --tier-cols given (reticle die, ROOTS = 2
 BF_FRONT_W = 280.152
 BF_ROUTE_H = 190.08
 BF_FRAME_EXTRA = 0.0
+BF_SEAM_UM = 0.0                    # compact199: two die-routed seam channels, not an abutted parent
 LANES_W = 2 * LANE_W                 # lane zone width of a frame (2 lanes + BF_FRAME_EXTRA)
 BFH_IFACE = (('issue', 1), ('a_ctr', 14), ('i1_v', 1), ('i1_bk', 1), ('i1_bf', 1), ('i1_t', 17), ('i2x_q0', 256),
              ('i2x_e0', 10), ('i2x_q1', 256), ('i2x_e1', 10), ('ze_d', 1), ('so_row', 128), ('so_idx', 40), ('so_n', 40))
@@ -3468,9 +3469,9 @@ def build_r8(variant=None):
                 cw_ = BF_HIER
                 insts.append(Inst(f'e{p}w', 'dsfd_bf_col', ex, sy + ELEM_DY, cw_, BF_ROUTE_H, 'R0', kind='bfcol',
                                   region=f'frame_{r}'))
-                insts.append(Inst(f'e{p}e', 'dsfd_bf_col', ex + cw_ + BF_FRONT_W, sy + ELEM_DY, cw_, BF_ROUTE_H, 'MY',
+                insts.append(Inst(f'e{p}e', 'dsfd_bf_col', ex + cw_ + BF_FRONT_W + 2 * BF_SEAM_UM, sy + ELEM_DY, cw_, BF_ROUTE_H, 'MY',
                                   kind='bfcol', region=f'frame_{r}'))
-                it = Inst(f'e{p}', 'dsfd_bf_front', ex + cw_, sy + ELEM_DY, BF_FRONT_W, BF_ROUTE_H, kind='bf',
+                it = Inst(f'e{p}', 'dsfd_bf_front', ex + cw_ + BF_SEAM_UM, sy + ELEM_DY, BF_FRONT_W, BF_ROUTE_H, kind='bf',
                           region=f'frame_{r}')
             elif kind == 'BF':
                 it = Inst(f'e{p}', 'dsfd_bf', ex, sy + ELEM_DY, 1002.888, ELEM_FRAME_H - SHAVE, kind='bf', region=f'frame_{r}')
@@ -7066,6 +7067,10 @@ def _spread_ports(Mx, k):
 
 
 def _faces_r8(m, Mx, it, ports):
+    if BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col'):
+        from s81.bf_direct_pins import populate
+        populate(sys.modules[__name__], Mx, it.master == 'dsfd_bf_col', ports)
+        return
     P_ = lambda names: [(n, ports[n][1]) for n in names if n in ports]
     kind, mst = it.kind, Mx.name
     if kind == 'stn':
@@ -8157,14 +8162,15 @@ def apply_options(a):
         if COLL_P2_LANE and getattr(a, 'draft', None) != 'A':
             raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
         COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr_%s.json' % ('mtpl' if COLL_MTP_LANE else 'p2l')
-    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, HOP_GATE_UM, CTRL_SVC_ALIGN, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, LANES_W, COL_W8, COL_PITCH8, DIE
+    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, HOP_GATE_UM, CTRL_SVC_ALIGN, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, BF_SEAM_UM, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
     if getattr(a, 'bf_hier_compact', False):
         assert BF_HIER is None, '--bf-hier and --bf-hier-compact are exclusive'
         BF_HIER, BF_FRONT_W, BF_ROUTE_H = 450.144, 100.224, a.bf_hier_height
     else:
         BF_FRONT_W, BF_ROUTE_H = 280.152, 190.08
-    BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
+    BF_SEAM_UM = 1.188 if getattr(a, 'bf_hier_compact', False) else 0.0
+    BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 2 * BF_SEAM_UM + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
     COL_W8 = LANES_W + NS_W + RSC_W
     COL_PITCH8 = COL_W8 + 8.64
