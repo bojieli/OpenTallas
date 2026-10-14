@@ -14,7 +14,7 @@ module ot_hbm_b2_lane_cdc_drain #(parameter integer LQ=10, MUT=0)(
  wire rf,wf,rdempty,wdempty,retempty,crempty,wcempt,wdempt;
  wire [15:0] rqdata;wire [279:0] wqdata;wire [255:0] rrdata;
  wire [11:0] faults; wire [2:0] unused_freed[0:5];wire unused1,unused2,unused3;
- reg [4:0] rcredit,wcredit;reg cf,vf;
+ reg [4:0] rcredit,wcredit,rcredit_n,wcredit_n;reg cf,vf;
  wire rpop=!rdempty&&rcredit!=0,wpop=!wdempty&&wcredit!=0;
  ot_hbm_accel_cdc_fifo_p2 #(.W(16),.AW(4)) rqfifo(.wclk(cclk),.wrst_n(rst_n),.we(crq[16]&&permit),.wdata(crq[15:0]),.full(rf),.rd_freed(unused_freed[0]),.w_fault(faults[0]),.rclk(vclk),.rrst_n(rst_n),.re(rpop),.rdata(rqdata),.empty(rdempty),.r_fault(faults[1]));
  ot_hbm_accel_cdc_fifo_p2 #(.W(280),.AW(4)) wqfifo(.wclk(cclk),.wrst_n(rst_n),.we(cwq[280]&&permit),.wdata(cwq[279:0]),.full(wf),.rd_freed(unused_freed[1]),.w_fault(faults[2]),.rclk(vclk),.rrst_n(rst_n),.re(wpop),.rdata(wqdata),.empty(wdempty),.r_fault(faults[3]));
@@ -27,9 +27,9 @@ module ot_hbm_b2_lane_cdc_drain #(parameter integer LQ=10, MUT=0)(
   crq_credit<=!crempty;cwq_credit<=!wcempt;cwq_done<=!wdempt;crr<={!retempty,rrdata};
   if((crq[16]&&(!permit||rf))||(cwq[280]&&(!permit||wf)))cf<=1;
  end
- always @(posedge vclk or negedge rst_n)if(!rst_n)begin rcredit<=LQ;wcredit<=LQ;vrq<=0;vwq<=0;vf<=0;end else begin
-  vrq<={rpop,rqdata};vwq<={wpop,wqdata};rcredit<=rcredit-rpop+vrq_credit;wcredit<=wcredit-wpop+vwq_credit;
-  if((vrr[256]&&rrfull)||(vrq_credit&&rcfull)||(vwq_credit&&wcfull)||(vwq_done&&wdfull)||rcredit-rpop+vrq_credit>LQ||wcredit-wpop+vwq_credit>LQ)vf<=1;
+ always @(posedge vclk or negedge rst_n)if(!rst_n)begin rcredit<=LQ;rcredit_n<=~(5'(LQ));wcredit<=LQ;wcredit_n<=~(5'(LQ));vrq<=0;vwq<=0;vf<=0;end else begin
+  vrq<={rpop,rqdata};vwq<={wpop,wqdata};rcredit<=rcredit-rpop+vrq_credit;wcredit<=wcredit-wpop+vwq_credit;rcredit_n<=~(rcredit-rpop+vrq_credit);wcredit_n<=~(wcredit-wpop+vwq_credit);
+  if(rcredit!=~rcredit_n||wcredit!=~wcredit_n||(vrr[256]&&rrfull)||(vrq_credit&&rcfull)||(vwq_credit&&wcfull)||(vwq_done&&wdfull)||rcredit-rpop+vrq_credit>LQ||wcredit-wpop+vwq_credit>LQ)vf<=1;
  end
  // Source obligations count accepted beats until each real returned event is consumed.
  // Credit return and commit/response are independent obligations.
@@ -52,11 +52,11 @@ module ot_hbm_b2_lane_cdc_drain #(parameter integer LQ=10, MUT=0)(
   wcred<=nwcred[CB-1:0];wcred_n<=~nwcred[CB-1:0];
   wcommit<=nwcommit[CB-1:0];wcommit_n<=~nwcommit[CB-1:0];
  end
- assign cdrained=(MUT==2)?1'b1:!df&&!cf&&!(|faults)&&rresp==0&&rcred==0&&wcred==0&&wcommit==0&&
+ assign cdrained=(MUT==2)?1'b1:!df&&!cf&&!(|faults)&&rresp==~rresp_n&&rcred==~rcred_n&&wcred==~wcred_n&&wcommit==~wcommit_n&&rresp==0&&rcred==0&&wcred==0&&wcommit==0&&
   !crq[16]&&!cwq[280]&&!crr[256]&&!crq_credit&&!cwq_credit&&!cwq_done;
  // This VM-local predicate must be combined with the synchronized source predicate
  // by the held-owner lease. It cannot by itself prove returned queues consumed.
- assign vdrained=!vf&&!(|faults)&&rdempty&&wdempty&&rcredit==LQ&&wcredit==LQ&&
+ assign vdrained=!vf&&!(|faults)&&rcredit==~rcredit_n&&wcredit==~wcredit_n&&rdempty&&wdempty&&rcredit==LQ&&wcredit==LQ&&
   !vrq[16]&&!vwq[280]&&!vrr[256]&&!vrq_credit&&!vwq_credit&&!vwq_done;
  assign fault=df|cf|vf|(|faults);
 endmodule
