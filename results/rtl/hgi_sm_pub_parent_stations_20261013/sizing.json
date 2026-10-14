@@ -1,0 +1,50 @@
+{
+  "source_head": "1ff961f595fd70e99747b0d6091bdbf6a11e6c65",
+  "NSM": 32,
+  "NC": 8,
+  "NPC": 4,
+  "slices": 8,
+  "command_columns": 4,
+  "command_bits": 76,
+  "VM_merge_inputs": 2,
+  "VM_packet_bits": 279,
+  "stream_bits": 52,
+  "stream_tree_nodes": 7,
+  "stream_depth": 3,
+  "arrival_entries_per_SM": 32,
+  "station_instances": {
+    "cmd": 1,
+    "cmd_relay": 3,
+    "vmmerge": 4,
+    "returns": 8,
+    "credit": 8,
+    "egress": 1,
+    "reset": 1
+  },
+  "added_cycles": 0,
+  "added_state_bits": 0,
+  "qualification": "unqualified until exactness, production throughput, physical and die pins pass",
+  "slice_prefix_sha256": "6cce6b903219505b6f55b494d5a460a613e8800b5d4862591e333103e8bc063a",
+  "credit_bits_per_station": 4,
+  "clock_entries": 41,
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "boundary_bits_per_cycle": {
+    "SM_result": 8192,
+    "row_credit": 32,
+    "VM_requests": 1352,
+    "STREAM": 52
+  },
+  "physical_area_status": "station synthesis and routed measurements pending",
+  "slice_outline_um": [
+    332.64,
+    328.32
+  ],
+  "measured_std_area_um2": {
+    "command_relay": 28
+  },
+  "station_wire_reach_um": {
+    "command_relay": 26.6
+  },
+  "parent_pin_binding_status": "actual closed slice LEF positions extracted; station paths unqualified"
+}
