@@ -15,7 +15,7 @@ the lane arrangement.  Model = B2's track model, every term MEASURED or taken fr
     4 fxs under their clt quad, fcn in the x centre (KD 2: one wire from the k pins of fxs0 and fxs3).
   * bundle demand of a vertical cut = bits of the 7 x 4 slice bundles (592 b each, FIXED width: the fxr master) whose
     source pin and dsfd_vm_fsr pin lie on opposite sides.  Independent of the relay placement.
-  * a landing lane (216.00 x 125.28: macro 171.288 x 77.784 + 20-um channels, the ref_tile floorplan rule) adds its height to
+  * a landing lane (216.00 x 129.60: macro 171.288 x 77.784 + 20-um channels, the ref_tile floorplan rule) adds its height to
     every cut it covers and 546 b (ret 526, av / ok / ovf / sflt 4, g 1, arm 15) to every cut between its pins and fld.
   * contract reach: av / ok / ovf / sflt are ONE wire (<= 500 um) from the lane to fld; the lane input word is ONE wire
     from the die N face (rows A / B under the clt row, 4 rows in the E column).
@@ -37,7 +37,7 @@ FREE, CUT_MAX, HOP_MAX = 0.80, 0.60, 500.0
 HT_FREE, HT_M5 = TPU['M2'] / 2 + TPU['M4'] + TPU['M6'], TPU['M6']
 CM, EDGE = 2.16, 20.0                    # ref_tile CORE_MARGIN, CHANNEL_UM / PIN_EDGE_UM
 MAC_W, MAC_H, MAC_X, MAC_Y = 171.288, 77.784, 22.464, 23.76
-LW, LH, LANE_BITS, NLANE = 216.0, 125.28, 546, 10
+LW, LH, LANE_BITS, NLANE = 216.0, 129.6, 546, 10       # 125.28 = the gate minimum; the route flow measured util 60.0 % there (FLOORPLAN_MARGIN)
 AREAS = json.loads((ROOT / 'results/arch/s81_vm_fe_h_areas_1013.json').read_text())['leaves']
 # leaf outlines: the smallest the shared gate accepts (2.16-um lattice, core = outline - 2.16 all round, std <= 0.55 of core,
 # std + macro <= 0.60, macro >= 20 um from every core edge), THEN grown to what the remote --cts gate measured (B5): ORFS

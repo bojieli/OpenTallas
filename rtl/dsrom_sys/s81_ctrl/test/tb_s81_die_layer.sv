@@ -43,7 +43,10 @@ module tb_s81_die_layer;
     // at NG 256; build it with +define+TB_HC_HIER (the probes below then read the slab's sequencer tile).
     parameter integer HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4;
     localparam integer NR = 128, XW = 640, MAXC = 16384, MAXR = 1024, MAXQ = 4096, MAXE = 2048, MAXM = 16, FW = 512,
-                       PW = 547, W = 552, LVM = 10;
+                       PW = 547, W = 552;
+    // LVM: read latency of the bench's behavioural VM (request -> rs_v), <= 63.  A measurement knob for the serial cost of
+    // the VM read round trip in the layer (bgq28 leaf chain / front-end hierarchy add latency, not rate); default unchanged.
+    parameter integer LVM = 10;
     localparam integer S_RD = 2, S_WR = 8, H_BASE = 0, G_BASE = 1280, GROWS = 320, C_BASE = 2560, S_BASE = 6144;
     string dir;
 `ifdef TB_SEQC

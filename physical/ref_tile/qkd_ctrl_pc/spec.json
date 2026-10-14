@@ -116,6 +116,11 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 32,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
@@ -124,7 +129,7 @@
  "job": {
   "owner": "Claude:el1013-qwen-kvstrips",
   "branch": "claude/el1013-qwen-kvstrips",
-  "tag": "ks1",
+  "tag": "ks2",
   "purpose": "Qwen ROM TP8 (track B) HBM controller strip master qkd_ctrl_pc: ONE hardened per-PC leaf replaces the 12 mm qkd_ctrl / qkd_ctrl_n strip (32 slots a strip + qkd_ctrl_kc).  Tap station + ot_qwen_ctrl_pc_emb built for PC 0 with a strapped reset delay (cycle-exact to the parameterised scheduler) + pcport KVW 2 + landing ECC + embedding static crossing + command arbiter / read tags / write-done glue; registers at every pin; two roots (pll_hbm ~10k sinks, ck ~3k).  core_clk = ck (the embedding static crossing's core side, 833.333 ps); the HBM controller clock pll_hbm is the second root at its real 1,024 ps (sdc_extra, the form of qkd_cdc_wleaf).",
   "extra_paths": [
    "physical/qkd_ctrl_strip",
