@@ -1,0 +1,23 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "oflop",
+   "message": "N face 10.5 pins/um (d): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns = 8.57 um, more than 45% of the 8.6 um core behind the face (GRT-0116 class)",
+   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
+  },
+  {
+   "severity": "WARN",
+   "check": "oflop",
+   "message": "S face 10.5 pins/um (q): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns = 10.17 um, more than 45% of the 8.6 um core behind the face (GRT-0116 class)",
+   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
+  }
+ ]
+}

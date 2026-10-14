@@ -1,0 +1,72 @@
+{
+ "name": "qfd_vm_face_sn_e0",
+ "top": "ot_qfd_vm_face_sn_e0",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/vm_plane_20261013/face/ot_qfd_vm_face.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [],
+ "outline": {
+  "w": 129.6,
+  "h": 12.96
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "S": [
+   "d"
+  ],
+  "N": [
+   "q"
+  ],
+  "W": [
+   "clk"
+  ]
+ },
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.3,
+  "threads": 8,
+  "peak_ram_gb": 6
+ },
+ "job": {
+  "owner": "Codex:sn_face_leaf",
+  "branch": "codex/qwen-sn-face-1013",
+  "tag": "proto1",
+  "purpose": "RG6 registered S/N face candidate, no die contract approved; prototype site/PG/pin/CTS feasibility only. +1 ordinary CLK edge, no enable.",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/qwen_sn_face/bench.sh {RUN}/bench 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "data_mutant",
+    "cmd": "bash tools/qwen_sn_face/bench.sh {RUN}/bench 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "tools/qwen_sn_face",
+   "rtl/qwen_sys/vm_plane_20261013/face"
+  ],
+  "views_to": "physical/ref_tile/qfd_vm_face_sn_e0/views",
+  "record_to": "results/rtl/ref_tile/qfd_vm_face_sn_e0",
+  "cycles_added": 1
+ }
+}

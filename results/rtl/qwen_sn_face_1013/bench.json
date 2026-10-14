@@ -1,0 +1,25 @@
+{
+ "scope": "Four candidate masters, independent scalar engine-qualifier golden; no reset port; upstream reset/flush patterns tested",
+ "runs": [
+  {
+   "mode": 0,
+   "exit": 0,
+   "output": "PASS face exact all512bits edges=4200 enable=1101 stalls=3099 upstream_flush=3\n"
+  },
+  {
+   "mode": 1,
+   "exit": 1,
+   "output": "FATAL: rtl/qwen_sys/vm_plane_20261013/face/tb_face.sv:30: DATA/latency mismatch edge=0\n       Time: 3000 Scope: tb_face\n"
+  },
+  {
+   "mode": 2,
+   "exit": 1,
+   "output": "FATAL: rtl/qwen_sys/vm_plane_20261013/face/tb_face.sv:31: ENGINE/early-consume mismatch edge=5\n       Time: 28000 Scope: tb_face\n"
+  },
+  {
+   "mode": 3,
+   "exit": 1,
+   "output": "FATAL: rtl/qwen_sys/vm_plane_20261013/face/tb_face.sv:31: ENGINE/early-consume mismatch edge=4\n       Time: 23000 Scope: tb_face\n"
+  }
+ ]
+}
