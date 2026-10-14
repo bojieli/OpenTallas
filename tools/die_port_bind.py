@@ -296,7 +296,8 @@ def rtl_index(roots, files, defines, prefer):
         rp = (ROOT / r) if not Path(r).is_absolute() else Path(r)
         for p in sorted(list(rp.rglob('*.sv')) + list(rp.rglob('*.v'))):
             s = str(p)
-            if '/test/' in s or '/tests/' in s or p.name.startswith('tb_') or p.name.startswith('tb') and p.name[2:3] in '_.':
+            if ('/test/' in s or '/tests/' in s or p.name.startswith('tb_') or p.name.endswith('_bb.v')
+                    or (p.name.startswith('tb') and p.name[2:3] in '_.')):
                 continue
             paths.append(p)
     paths += [Path(f) if Path(f).is_absolute() else ROOT / f for f in files]
@@ -657,7 +658,9 @@ def main(argv=None):
     for d in a.define:
         k, _, v = d.partition('=')
         defines[k] = v
-    idx, amb = rtl_index(a.rtl_root if a.rtl_root is not None else ['rtl'], files, defines, a.prefer + files)
+    roots = a.rtl_root if a.rtl_root is not None else (['rtl'] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'physical').glob('**/rtl')
+                                                                  if p.is_dir()))
+    idx, amb = rtl_index(roots, files, defines, a.prefer + files)
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
     mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
     rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams)
@@ -667,7 +670,7 @@ def main(argv=None):
         if rec['elab']['unresolved_modules']:
             rec['verdict'] = 'FAIL'
             rec['failing'].append('elab_unresolved_modules')
-    rec['rtl_roots'] = a.rtl_root or ['rtl']; rec['rtl_files'] = files; rec['defines'] = a.define
+    rec['rtl_roots'] = roots; rec['rtl_files'] = files; rec['defines'] = a.define
     if a.out:
         Path(a.out).write_text(json.dumps(rec, indent=1) + '\n')
     S = rec['summary']

@@ -695,7 +695,8 @@ def real_blocks_r8(die):
         # no RTL stays a stub and the record's verilog.stubs counts it (a FAIL of the full-RTL lint).
         sys.path.insert(0, str(ROOT / 'tools'))
         import die_port_bind as DPB
-        idx, _amb = DPB.rtl_index(['rtl'], [_glue_path(), S.CFG7_RTL] + list(FULL_RTL_MODELS.values()),
+        idx, _amb = DPB.rtl_index(['rtl'] + sorted(str(p_.relative_to(ROOT)) for p_ in (ROOT / 'physical').glob('**/rtl') if p_.is_dir()),
+                                  [_glue_path(), S.CFG7_RTL] + list(FULL_RTL_MODELS.values()),
                                   {d_: '' for d_ in FULL_RTL_DEFINES}, [])
         mpar = S.die_master_params(m)
         for mst in sorted(used):
