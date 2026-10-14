@@ -1,0 +1,17 @@
+REF_TILE FAIL macro_edge: ot_hbm_accel_smh_fc_xl#0 10.8 um from the N core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)
+REF_TILE FAIL macro_outside: ot_hbm_accel_smh_fc_t#0 at (0.0,907.2) leaves the core -> enlarge the outline
+REF_TILE FAIL macro_edge: ot_hbm_accel_smh_fc_t#0 -2.2 um from the W core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)
+REF_TILE FAIL macro_edge: ot_hbm_accel_smh_fc_t#0 6.5 um from the N core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)
+REF_TILE FAIL macro_edge: ot_hbm_accel_smh_fc_t#0 6.5 um from the N core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)
+REF_TILE WARN macro_grid: ot_hbm_accel_smh_fc_t#0: origin (691.224, 907.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch) -> build the child on the common lattice
+REF_TILE FAIL macro_outside: ot_hbm_accel_smh_fc_xr#0 at (0.0,518.4) leaves the core -> enlarge the outline
+REF_TILE FAIL macro_edge: ot_hbm_accel_smh_fc_xr#0 -2.2 um from the W core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)
+REF_TILE WARN macro_grid: ot_hbm_accel_smh_fc_xr#0: origin (691.224, 518.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch) -> build the child on the common lattice
+REF_TILE FAIL macro_outside: ot_hbm_accel_smh_fc_b#0 at (0.0,0.0) leaves the core -> enlarge the outline
+REF_TILE FAIL macro_edge: ot_hbm_accel_smh_fc_b#0 -2.2 um from the W core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)
+REF_TILE FAIL macro_edge: ot_hbm_accel_smh_fc_b#0 -2.2 um from the S core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)
+REF_TILE FAIL macro_outside: ot_hbm_accel_smh_fc_b#0 at (691.224,0.0) leaves the core -> enlarge the outline
+REF_TILE FAIL macro_edge: ot_hbm_accel_smh_fc_b#0 -2.2 um from the S core edge (< 20 um, a pin face) -> move the macro inward / to a face without pins (sliver + pin-access blockage)
+REF_TILE WARN macro_grid: ot_hbm_accel_smh_fc_b#0: origin (691.224, 0.0) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch) -> build the child on the common lattice
+REF_TILE FAIL channel: ot_hbm_accel_smh_fc_bc#0 / ot_hbm_accel_smh_fc_is#0 channel -4.3 um (< 20 um) -> spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)
+REF_TILE kit physical/ref_tile/smh_frontc_native_parent_ref outline 941.76 x 1131.84 um (spec outline); job smh_frontc_native_parent_ref-ref-COMMIT

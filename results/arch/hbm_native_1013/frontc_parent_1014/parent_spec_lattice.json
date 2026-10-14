@@ -1,0 +1,246 @@
+{
+  "name": "smh_frontc_native_parent_ref",
+  "top": "ot_smh_frontc_native_parent",
+  "kind": "cluster",
+  "recipe": 1,
+  "sources": [
+    "results/arch/hbm_native_1013/frontc_parent_1014/frontc_parent.sv",
+    "results/arch/hbm_native_1013/frontc_parent_1014/frontc_blackboxes.sv"
+  ],
+  "params": {},
+  "hard_define": "SYNTHESIS",
+  "clock": "entries",
+  "clock_port": "raw_u_bc",
+  "clock_ports": [
+    "raw_u_bc",
+    "raw_u_is",
+    "raw_u_xl",
+    "raw_u_tw",
+    "raw_u_te",
+    "raw_u_rw",
+    "raw_u_re",
+    "raw_u_bw",
+    "raw_u_be"
+  ],
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "raw_u_bc",
+        "raw_u_is",
+        "raw_u_xl",
+        "raw_u_tw",
+        "raw_u_te",
+        "raw_u_rw",
+        "raw_u_re",
+        "raw_u_bw",
+        "raw_u_be"
+      ],
+      "inputs": [
+        "*"
+      ],
+      "outputs": [
+        "*"
+      ]
+    }
+  },
+  "reset_ports": [
+    "rst_u_bc",
+    "rst_u_is",
+    "rst_u_xl",
+    "rst_u_tw",
+    "rst_u_te",
+    "rst_u_rw",
+    "rst_u_re",
+    "rst_u_bw",
+    "rst_u_be"
+  ],
+  "outline": {
+    "w": 976.32,
+    "h": 1192.32
+  },
+  "children": [
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_bc",
+      "count": 1,
+      "at": [
+        302.4,
+        43.2
+      ],
+      "orient": "R0",
+      "inst": "u_bc"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_is",
+      "count": 1,
+      "at": [
+        302.4,
+        561.6
+      ],
+      "orient": "R0",
+      "inst": "u_is"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_xl",
+      "count": 1,
+      "at": [
+        345.6,
+        864.0
+      ],
+      "orient": "R0",
+      "inst": "u_xl"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_t",
+      "count": 1,
+      "at": [
+        43.2,
+        950.4
+      ],
+      "orient": "R0",
+      "inst": "u_tw"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_t",
+      "count": 1,
+      "at": [
+        734.4,
+        950.4
+      ],
+      "orient": "MY",
+      "inst": "u_te"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_xr",
+      "count": 1,
+      "at": [
+        43.2,
+        561.6
+      ],
+      "orient": "R0",
+      "inst": "u_rw"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_xr",
+      "count": 1,
+      "at": [
+        734.4,
+        561.6
+      ],
+      "orient": "MY",
+      "inst": "u_re"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_b",
+      "count": 1,
+      "at": [
+        43.2,
+        43.2
+      ],
+      "orient": "R0",
+      "inst": "u_bw"
+    },
+    {
+      "view": "results/arch/hbm_native_1013/frontc_parent_1014/views/ot_hbm_accel_smh_fc_b",
+      "count": 1,
+      "at": [
+        734.4,
+        43.2
+      ],
+      "orient": "MY",
+      "inst": "u_be"
+    }
+  ],
+  "pins": {
+    "S": [
+      "fd_v",
+      "fd_d",
+      "fp_v",
+      "fp_d",
+      "fq_ret",
+      "fsv",
+      "fd_ret",
+      "fq_v",
+      "fq_d",
+      "fo_row3",
+      "raw_u_bc",
+      "rst_u_bc"
+    ],
+    "N": [
+      "fs_v",
+      "fs_d",
+      "fx_b",
+      "fr_rl",
+      "fs_ret",
+      "fo_row0",
+      "fo_pbz",
+      "raw_u_xl",
+      "rst_u_xl"
+    ],
+    "W": [
+      "rout_l1",
+      "rout_l2",
+      "bout_l1",
+      "raw_u_is",
+      "rst_u_is",
+      "raw_u_bw",
+      "rst_u_bw",
+      "raw_u_rw",
+      "rst_u_rw",
+      "raw_u_tw",
+      "rst_u_tw"
+    ],
+    "E": [
+      "rout_r1",
+      "rout_r2",
+      "bout_r1",
+      "raw_u_be",
+      "rst_u_be",
+      "raw_u_re",
+      "rst_u_re",
+      "raw_u_te",
+      "rst_u_te"
+    ]
+  },
+  "route": {
+    "pin_h": "M6",
+    "pin_v": "M7",
+    "max_layer": "M7",
+    "macro_halo_um": 1,
+    "hold_margin_ns": 0.03
+  },
+  "job": {
+    "owner": "Codex:sm_gate_structural",
+    "purpose": "Literal source49b frontC zero-own-state nine real CLOSED children; each original child clock/reset gets actual entry port. No monolithic front route, guessed children, dummy root or semantic/phase exception. Changed genuine 43.2um PG-lattice placement with >=20um channels after inherited rigid placement rejection. Pending native die slot/phase/source approval.",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "hold_merge": true,
+    "extra_paths": [
+      "results/arch/hbm_native_1013/frontc_parent_1014"
+    ],
+    "bench": [
+      {
+        "name": "literal_frontc_exact",
+        "cmd": "bash results/arch/hbm_native_1013/frontc_parent_1014/bench_build.sh && bash results/arch/hbm_native_1013/frontc_parent_1014/bench_run.sh split",
+        "expect": "pass",
+        "pass_regex": "FRONTC_EXACT checked=8159 mismatches=0",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "wrong_RAW_mapping_mutant",
+        "cmd": "bash results/arch/hbm_native_1013/frontc_parent_1014/bench_run.sh mut",
+        "expect": "fail",
+        "fail_regex": "frontC literal comparison mismatch",
+        "threads": 1,
+        "peak_ram_gb": 2
+      }
+    ]
+  }
+}
