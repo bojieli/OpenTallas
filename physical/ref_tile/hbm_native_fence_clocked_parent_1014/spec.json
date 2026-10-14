@@ -21,7 +21,7 @@
   "HOLDBUF": 2
  },
  "clock_port": "clk",
- "clock": "cts",
+ "clock": "spine",
  "reset_ports": [
   "rst_n"
  ],
@@ -1575,8 +1575,8 @@
  "job": {
   "owner": "Codex:hbm-native-physical-1014",
   "branch": "codex/hbm-native-physical-1014",
-  "tag": "parent1",
-  "purpose": "Actual mixed own-CTS/164-independent-hardbank-root parent probe. Real source and routed six fixed masters; clock phase and 600um root span must measure. Immutable 1.606 fence price failure retained.",
+  "tag": "parent2",
+  "purpose": "Actual mixed 8499-FF own H-tree spine and164 independent hardbank roots, after original measured644um-root span warning and failed Port selector. Parent RTL/165 active roots unchanged; routed child references bind every phase. Original FAIL and immutable1.606 price preserved.",
   "hold_merge": "Explicit new footprint/layer/clock-entry probe awaiting actual parent slot and phase qualification; root serial merge only.",
   "benches": [
    {

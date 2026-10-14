@@ -1,0 +1,27 @@
+GATE_SOURCE_ARCHIVE_SHA256=10c5f34bf084117a69412beff6ac079b42fbfb753f10187439778527b606ad83
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=163
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_hbm_native_fence_clocked_1014 cells 45,076 flops 8,499 depth 390.1 ps util 0.2432 reach 0.0 um (5.9 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=8499 root=port:clk rule=PASS: 8,499 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN clock_domain: clock root port clk: 8,499 flops > 8,000 spread over a 644 x 644 um outline (> 600 um) (+0 ICGs, 0 macro clock pins; e.g. fault$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine
+GATE_TB textbook_lint: WARN high_fanout: reset rs[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 394 loads (57 flops, e.g. fault$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)
+GATE_TB textbook_lint: WARN util_channel: utilisation 24.3% outside 45%-65% (std 5577 + macro 95178 um2 in 414324 um2): shrink the outline (long wires / sparse placement)
+GATE_TB textbook_lint: WARN util_channel: 62 macro channel(s) narrower than 20 um with placement rows (e.g. u_cap.g_g\[10\].g_b128.u_bank|u_cap.g_g\[9\].g_b128.u_bank 10.8 um, u_cap.g_g\[17\].g_b128.u_bank|u_cap.g_g\[18\].g_b128.u_bank 10.8 um, u_cap.g_g\[22\].g_b128.u_bank|u_cap.g_g\[23\].g_b128.u_bank 10.8 um): widen to >= 20 um or block the channel
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "bank_clks": [null, true], "op_valid": [1, false], "op_ready": [1, false], "op_epoch": [null, true], "op_vectors": [null, true], "cap_valid": [1, false], "cap_ready": [1, false], "cap_epoch": [null, true], "cap_addr": [null, true], "cap_last": [1, false], "cap_data": [null, true], "producer_done_valid": [1, false], "producer_done_epoch": [null, true], "host_wr_valid": [1, false], "host_wr_ready": [1, false], "host_dst": [null, true], "host_wdata": [null, true], "host_ack_valid": [1, false], "host_ack_ready": [1, false], "ack_retire_enable": [1, false], "vector_ACK_visible": [1, false], "vector_ACK_addr": [null, true], "vector_ACK_epoch": [null, true], "writes_visible": [1, false], "fence_valid": [1, false], "fence_ready": [1, false], "fence_epoch": [null, true], "pending_write": [1, false], "fault": [1, false]}
+GATE_AREA    Chip area for top module '\ot_hbm_native_fence_clocked_1014': 24774.014380
+GATE_CTS_RC=2
+GATE_CTSERR [ERROR STA-0100] unsupported object type Port.
+GATE_GPLD global_placement -density 0.55 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5500
+GATE_CK_RC=1
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc4       admits   470 GB (avail 696, growth 126, headroom 48, waiters 0/0 GB) load 44/128 running 11 disk 969 GB 
+ot-run: -> ot-epyc4
+ot-heavy: request 64G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_hbm_native_fence_clocked_parent_#_#-#.sh' not measured yet)); the cap stays 64G
+ot-heavy: admitted on regular-crane as oth-ubuntu-2236452-1791977279 after 0 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2236452-1791977279): exit 0
