@@ -226,7 +226,7 @@ module ot_s81_ctrl #(
     // cut-through. The hop's actual read requests are checked row by row.
     wire hop_re_raw; wire [VWA-1:0] hop_ra_raw; wire transfer_go;
     generate if(H_TRANSFER) begin : g_htransfer
-        initial if(ROLE!=1 || HOP_TX!=1 || !USE_VM_RVALID || !HC_SLOT_REBASE || FLIT!=512 || VWA!=14)
+        initial if(ROLE!=0 || HOP_TX!=1 || !USE_VM_RVALID || !HC_SLOT_REBASE || FLIT!=512 || VWA!=14)
             $fatal(1,"native H transfer requires layer/internal hop, valid VM returns and explicit slot lowering");
         ot_s81_htransfer_boundary #(.XW(XW),.RXB(RXB),.TXB(TXB),.S_RD(HC_S_RD),.S_WR(HC_S_WR)) hboundary(
             .clk(clk),.rst_n(rst_n),.land_v(vm_we),.land_a(vm_waddr),.land_d(vm_wdata),
