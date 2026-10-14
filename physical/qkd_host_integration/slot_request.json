@@ -390,6 +390,44 @@
       },
       "clock_contract": "same compensated PHY clock family as adapter RX output and CDC write entry; actual setup/hold required",
       "functional_gate": "96RX/96TX under300corecycle stall; direct48payload/padding/ghostcredit/overflow; dataMUTfails; oldpassCDFw_fault thenword16lost"
+    },
+    {
+      "master": "qkd_host_qm_ingress16",
+      "flop_bits": 10303,
+      "role": "actual16word514bit ING window with two registered8:1 reads and reserved CDC4",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        172.8,
+        216
+      ],
+      "area_request_um2": 37324.8,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16.sv",
+      "sha256": "e93142527458bd3d954852efca6739c4b6319ca815c9884c6e8521b6e22e36f5"
+    },
+    {
+      "master": "qkd_host_qm_credit_pacer",
+      "flop_bits": 16,
+      "role": "QM-local count5 termination and reserved-credit pulse conversion",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "clk_h"
+      ],
+      "outline_request_um": [
+        43.2,
+        43.2
+      ],
+      "area_request_um2": 1866.2400000000002,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv",
+      "sha256": "6c1e788ccd0cc5422f3e57d33c4db74fa8ca5dcf63abca7527489b6574a67c7f"
     }
   ],
   "existing_children": [
@@ -604,19 +642,19 @@
   "qm_host_clock_seam": {
     "packet_core_period_ps": 833.3,
     "QM_host_period_ps": 1000,
-    "status": "UNRESOLVED_CDC_REQUIRED_OR_SOURCE_EXACT_NEW_HOST_CLOCK_TIMING_VARIANT",
+    "status": "DEDICATED_CDC_COMPONENT_FUNCTIONAL_PASS_FULL_ASSEMBLY_AND_PHYSICAL_PENDING",
     "raw_bus_crossing_permitted": false,
     "additional_dedicated_W546_CDC_if_profile_preserved": 2,
     "additional_cdc_outline_um": [
       90.72,
       129.6
     ],
-    "credit_station": "countedcredit/capacitybridge required; source/actualFF/clock/pins pending",
+    "credit_station": "Actual16word queue and local counted-return pacer, measured10303FF/16FF; dedicated2CDC source proof separate, fullFDI composition running",
     "collective_CDF_borrowed": 0,
     "original_class_QM_functional_bench": "same1ns family; doesnotprove833\u21921000 assembly",
     "total_HOST_dedicated_W546_CDC_if_profile_preserved": 4,
     "capacity_bridge": {
-      "status": "SOURCE_AND_CENSUS_PENDING",
+      "status": "COMPONENT_PASS_FULL_FDI_PENDING_PHYSICAL_UNQUALIFIED",
       "forward_source_capacity": 16,
       "forward_queue_words": 16,
       "forward_word_bits": 514,
@@ -633,7 +671,23 @@
         "QM_local_credit_pacer1000"
       ],
       "clock_entry_outline_census": "UNVERIFIED_PENDING",
-      "credit_meaning": "queue/CDC capacity only; actual HBM committed prefix remains separate"
+      "credit_meaning": "queue/CDC capacity only; actual HBM committed prefix remains separate",
+      "actual_ff": {
+        "packet_queue": 10303,
+        "QM_credit_pacer": 16
+      },
+      "outline_request_um": {
+        "packet_queue": [
+          172.8,
+          216
+        ],
+        "QM_credit_pacer": [
+          43.2,
+          43.2
+        ]
+      },
+      "counter_held_snapshot": "No count bus crosses domains. Original h_crn count is consumed locally, single reservation credit enters existing Gray-pointer CDC return path; no separate held-snapshot bridge needed.",
+      "proof": "192 exact514bit ingress/96 completion, independent832/1000ps clocks phase197ps, longstall500/700,48batch4, finalcredits exact; three RTL mutants detected"
     }
   },
   "clock_contract": {

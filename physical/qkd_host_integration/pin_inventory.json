@@ -2064,6 +2064,158 @@
       ]
     },
     {
+      "master": "qkd_host_qm_ingress16",
+      "flop_bits": 10303,
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        172.8,
+        216
+      ],
+      "area_request_um2": 37324.8,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16.sv",
+      "source_sha256": "e93142527458bd3d954852efca6739c4b6319ca815c9884c6e8521b6e22e36f5",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "in_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "in_cls",
+          "direction": "input",
+          "width": 2,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "in_d",
+          "direction": "input",
+          "width": 512,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "in_crn",
+          "direction": "output",
+          "width": 5,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "out_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "out_d",
+          "direction": "output",
+          "width": 546,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "out_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ]
+    },
+    {
+      "master": "qkd_host_qm_credit_pacer",
+      "flop_bits": 16,
+      "instances_per_die": 1,
+      "clock_entries": [
+        "clk_h"
+      ],
+      "outline_request_um": [
+        43.2,
+        43.2
+      ],
+      "area_request_um2": 1866.2400000000002,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv",
+      "source_sha256": "6c1e788ccd0cc5422f3e57d33c4db74fa8ca5dcf63abca7527489b6574a67c7f",
+      "ports": [
+        {
+          "name": "clk_h",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk_h",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk_h",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "in_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk_h",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "in_crn",
+          "direction": "input",
+          "width": 5,
+          "registered_domain": "clk_h",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "out_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk_h",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk_h",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ]
+    },
+    {
       "master": "qkd_host_if_pins",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_if_pins.sv",
       "source_sha256": "f989e311639e6b7c5e442f134fa62f769e0387c184a7084060269f50b73f720b",
@@ -3323,7 +3475,13 @@
         "wck",
         "rck"
       ],
-      "instances_per_die": 2,
+      "instances_per_die": 4,
+      "instance_roles": [
+        "PHY_RX",
+        "PHY_TX",
+        "QM_INGRESS",
+        "QM_COMPLETION"
+      ],
       "ports": [
         {
           "name": "wck",
@@ -18650,27 +18808,75 @@
     },
     {
       "source": "host.rx_class.ing_v/cls/d",
+      "destination": "host.QM_QUEUE.in_v/cls/d",
+      "bits": 515,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.QM_QUEUE.in_crn",
+      "destination": "host.rx_class.ing_crn",
+      "bits": 5,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.QM_QUEUE.out_v/d",
+      "destination": "host.QM_ING_CDC.i_v/d",
+      "bits": 547,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.QM_ING_CDC.i_cr",
+      "destination": "host.QM_QUEUE.out_cr",
+      "bits": 1,
+      "clock_family": "CORE833"
+    },
+    {
+      "source": "host.QM_ING_CDC.o_v/d[513:0]",
       "destination": "host.QM.h_v/cls/d",
       "bits": 515,
-      "clock_family": "UNRESOLVED_CORE833_TO_QMHOST1000_CDC_REQUIRED"
+      "clock_family": "QM_HOST1000"
+    },
+    {
+      "source": "host.QM_ING_CDC.o_v",
+      "destination": "host.QM_PACER.in_v",
+      "bits": 1,
+      "clock_family": "QM_HOST1000"
     },
     {
       "source": "host.QM.h_crn",
-      "destination": "host.rx_class.ing_crn",
+      "destination": "host.QM_PACER.in_crn",
       "bits": 5,
-      "clock_family": "UNRESOLVED_QMHOST1000_TO_CORE833_COUNTED_CDC_REQUIRED"
+      "clock_family": "QM_HOST1000"
     },
     {
-      "source": "host.visibility_fence.out_v/d",
+      "source": "host.QM_PACER.out_cr",
+      "destination": "host.QM_ING_CDC.o_cr",
+      "bits": 1,
+      "clock_family": "QM_HOST1000"
+    },
+    {
+      "source": "host.visibility_fence.out_v/d+zero482",
+      "destination": "host.QM_DONE_CDC.i_v/d",
+      "bits": 547,
+      "clock_family": "QM_HOST1000"
+    },
+    {
+      "source": "host.QM_DONE_CDC.i_cr",
+      "destination": "host.visibility_fence.out_cr",
+      "bits": 1,
+      "clock_family": "QM_HOST1000"
+    },
+    {
+      "source": "host.QM_DONE_CDC.o_v/d[63:0]",
       "destination": "host.tx_class.ing_v/d",
       "bits": 65,
-      "clock_family": "UNRESOLVED_QMHOST1000_TO_CORE833_CDC_REQUIRED"
+      "clock_family": "CORE833"
     },
     {
       "source": "host.tx_class.ing_cr",
-      "destination": "host.visibility_fence.out_cr",
+      "destination": "host.QM_DONE_CDC.o_cr",
       "bits": 1,
-      "clock_family": "UNRESOLVED_CORE833_TO_QMHOST1000_CDC_REQUIRED"
+      "clock_family": "CORE833"
     }
   ],
   "clock_delivery": "Separate entry per child; core family synchronous and insertion-compensated, PHY crossings via own twoW546CDC; packet833-to-QMhost1000 seam additionally requires countedCDC or separatelytimednewhostclockvariant",
@@ -19771,19 +19977,19 @@
   "qm_host_clock_seam": {
     "packet_core_period_ps": 833.3,
     "QM_host_period_ps": 1000,
-    "status": "UNRESOLVED_CDC_REQUIRED_OR_SOURCE_EXACT_NEW_HOST_CLOCK_TIMING_VARIANT",
+    "status": "DEDICATED_CDC_COMPONENT_FUNCTIONAL_PASS_FULL_ASSEMBLY_AND_PHYSICAL_PENDING",
     "raw_bus_crossing_permitted": false,
     "additional_dedicated_W546_CDC_if_profile_preserved": 2,
     "additional_cdc_outline_um": [
       90.72,
       129.6
     ],
-    "credit_station": "countedcredit/capacitybridge required; source/actualFF/clock/pins pending",
+    "credit_station": "Actual16word queue and local counted-return pacer, measured10303FF/16FF; dedicated2CDC source proof separate, fullFDI composition running",
     "collective_CDF_borrowed": 0,
     "original_class_QM_functional_bench": "same1ns family; doesnotprove833\u21921000 assembly",
     "total_HOST_dedicated_W546_CDC_if_profile_preserved": 4,
     "capacity_bridge": {
-      "status": "SOURCE_AND_CENSUS_PENDING",
+      "status": "COMPONENT_PASS_FULL_FDI_PENDING_PHYSICAL_UNQUALIFIED",
       "forward_source_capacity": 16,
       "forward_queue_words": 16,
       "forward_word_bits": 514,
@@ -19800,7 +20006,23 @@
         "QM_local_credit_pacer1000"
       ],
       "clock_entry_outline_census": "UNVERIFIED_PENDING",
-      "credit_meaning": "queue/CDC capacity only; actual HBM committed prefix remains separate"
+      "credit_meaning": "queue/CDC capacity only; actual HBM committed prefix remains separate",
+      "actual_ff": {
+        "packet_queue": 10303,
+        "QM_credit_pacer": 16
+      },
+      "outline_request_um": {
+        "packet_queue": [
+          172.8,
+          216
+        ],
+        "QM_credit_pacer": [
+          43.2,
+          43.2
+        ]
+      },
+      "counter_held_snapshot": "No count bus crosses domains. Original h_crn count is consumed locally, single reservation credit enters existing Gray-pointer CDC return path; no separate held-snapshot bridge needed.",
+      "proof": "192 exact514bit ingress/96 completion, independent832/1000ps clocks phase197ps, longstall500/700,48batch4, finalcredits exact; three RTL mutants detected"
     }
   },
   "QM": "NEW SIX-ENTRY NATIVE RTL FUNCTIONAL PARTITION PROVEN; PHYSICAL PG/CTS/PINS OPEN; HISTORICAL VIEW FAIL NO REUSE"
