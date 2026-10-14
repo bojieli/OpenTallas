@@ -247,3 +247,17 @@ the immutable HC POST last-output endpoint as qualification: local write-back
 continues after issue-order completion. The gate proves dependent jobs remain
 exact, and the composed layer delta measures their overlap. The diagnostic
 76/112.9 ratio in the r7 record does not establish priced unit throughput.
+
+## Native h materialization is still missing
+
+The price graph contains same-stage HC POST-to-field coefficient and Engram
+read dependencies; `h_materialization_audit.json` lists them with pinned sources.
+For example S001 holds L0.ffn.hc_post then L1.eng.hh/dot, and S002 holds
+L1.ffn.hc_post then L2.attn.hc.fn. The current hierarchical POST updates its
+resident h SRAM; it does not emit the hidden-row VM write packets that these
+real readers need. Behavioral coefficient/Engram engines hide this dependency.
+
+Native lowering must bind an explicit spill/reload or a real POST-to-VM stream
+with committed rows. The graph's 41 changed-h groups therefore cannot establish
+the actual H_STORE/H_LOAD execution count; within-stage transfers may be needed.
+The complete native count stays unknown until these real bindings execute.
