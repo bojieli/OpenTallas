@@ -25,14 +25,14 @@ def main():
     cmd=[a.verilator, '--lint-only' if a.lint_only else '--cc','--top-module',TOP,
     '-GG=3072','-GW=16','-GIL=8','-GSU_VEC=1','-GSW=64','-GLV=4',
     '-GHID=4096','-GHALF=64','-GHD=128','-GNATIVE_ATTENTION=1',
-    '-GINT8_WEIGHT=1','-GQWEN_FULLSHAPE=1','-GKV_VEC_WRITE_BRIDGE=1',
+    '-GINT8_WEIGHT=1','-GINT8_SCALE_WCS_BASE=1','-GQWEN_FULLSHAPE=1','-GKV_VEC_WRITE_BRIDGE=1',
     '-Wno-fatal','-Wno-WIDTH','-Wno-UNUSED','-Wno-TIMESCALEMOD',
     '-I'+str(ROOT/'rtl/hdc'),'--Mdir',str(a.work/'obj')]
     if not a.lint_only: cmd+=['--build','-j',str(a.jobs),'-CFLAGS','-O0','--output-split','20000','--output-split-cfuncs','1000']
     cmd+=list(map(str,SOURCES))
     t=time.monotonic()
     with (a.work/'build.log').open('w') as out:r=subprocess.run(cmd,stdout=out,stderr=subprocess.STDOUT)
-    record={'scope':'FUNCTIONAL_NOT_PHYSICAL','parameters':{'G':3072,'W':16,'IL':8,'SU_VEC':1,'SW':64,'INT8_WEIGHT':1,'NATIVE_ATTENTION':1},
+    record={'scope':'FUNCTIONAL_NOT_PHYSICAL','parameters':{'G':3072,'W':16,'IL':8,'SU_VEC':1,'SW':64,'INT8_WEIGHT':1,'INT8_SCALE_WCS_BASE':1,'NATIVE_ATTENTION':1},
     'command':cmd,'exit_code':r.returncode,'elapsed_seconds':time.monotonic()-t,'source_sha256':pins,
     'source_stable':all(hashlib.sha256((ROOT/f).read_bytes()).hexdigest()==s for f,s in pins.items()),
     'mode':'lint' if a.lint_only else 'library','library':str(a.work/'obj'/('V'+TOP+'__ALL.a')),

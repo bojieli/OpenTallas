@@ -89,6 +89,9 @@ module ot_hdc_core_vector_weight_native_candidate #(
     output reg  [31:0]       next_val,        // its logit (for an argmax combined across packages)
     output reg  [31:0]       cycles,
     output reg               fault,
+    output wire instruction_issue, end_retired,
+    output wire [1:0] instruction_unit,
+    output wire [PAW-1:0] instruction_pc, end_pc,
     // Actual native service admission/status. WSRC=1 is native only in the opt-in image.
     input wire native_contract_ready, native_ready, native_idle, native_fault,
     input wire [15:0] native_progress,
@@ -290,6 +293,11 @@ module ot_hdc_core_vector_weight_native_candidate #(
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
     wire load = (st == S_RUN) && (fq_n != 0) && (!nx_v || issue);
     wire push = (st == S_RUN) && pend1;
+    assign instruction_issue = issue;
+    assign instruction_unit = d_unit;
+    assign instruction_pc = pc;
+    assign end_retired = fin;
+    assign end_pc = pc;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
