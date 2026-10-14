@@ -53,14 +53,14 @@
       "qkd_seq_xs_tp8"
     ],
     "master_names_status": "Requests only; new source, census, timing views and placement remain required.",
-    "candidate_source_branch": "codex/kv-seq-tp8-1013",
-    "candidate_checkpoint": "331ffc8a9",
+    "candidate_source_branch": "codex/kv-seq-tp8-clocks-1013",
+    "candidate_checkpoint": "4b66ce3a4",
     "physical_clock_entries_required": {
       "core": 1,
       "xs": 4,
       "fan": 4,
       "total": 9,
-      "status": "Candidate parent currently exports one ck; requested nine separate child entries before physical binding. Functional tie to one clock does not establish die delivery topology."
+      "status": "Implemented on native candidate: clk_core,clk_xs0..3,clk_fan0..3 each directly drives one child. Functional proof ties all nine synchronously; actual coordinates, corner references and physical delivery remain pending."
     },
     "candidate_parent_outline_um": [
       604.8,
@@ -100,8 +100,8 @@
       "return_credit_bits": 1,
       "fault_bits": 1,
       "status": "Separate local ready/valid leaf; coherent clock or exact CDC required.",
-      "analytical_q_bits": 532,
-      "census_measured": false
+      "census_measured": true,
+      "measured_q_bits": 532
     },
     "candidate_source_sha256": "dea18a2fc95179cb4aa17c7474b7e3b097f4d19d4e12f47568d39d01c1d9ee8c",
     "census": {
@@ -114,7 +114,8 @@
       "exit_code": 0,
       "receipt": "results/arch/qwen_su_kv_formatter_1013/receipt.json on codex/qwen-su-kv-format-1013",
       "mapping_status": "Unmapped; arbitrary-lane-address scatter contains 130shiftx/194shift and1951genericmux cells. No physical area, CTS or SS proof."
-    }
+    },
+    "source_bound_candidate_checkpoint": "c8d25629c"
   },
   "open_gates": [
     "Named native wrapper parameter forwarding and exact control/store proof",
@@ -125,5 +126,13 @@
     "Current die slot revision with actual source-consumer faces and clock roots",
     "Native end-to-end cycle cost without waived bubbles or first-startup cost",
     "Real die window congestion and three-corner timing on the assigned views"
-  ]
+  ],
+  "host_inventory_request": {
+    "branch": "codex/qwen-host-integrate-1013",
+    "commit": "9d67cf530",
+    "path": "physical/qkd_host_integration/pin_inventory.json",
+    "masters": 17,
+    "connectivity_records": 2481,
+    "status": "Unverified requested outlines; parent fit unproven; prompt leaf pending; dedicated host CDC two instances width90.72x129.6; one required adapter count explicitly included; no free-PC-pocket assumption."
+  }
 }
