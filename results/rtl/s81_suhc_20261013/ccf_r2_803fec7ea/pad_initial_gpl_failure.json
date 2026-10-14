@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "s81hc_pad_fv4fd5r2_ref",
+ "verdict": "FAIL",
+ "generated": "2026-10-13T22:30:16-0700",
+ "host": "ot-agidock128",
+ "cts": true,
+ "commit": "8fc735a25",
+ "clock": {
+  "max_root_sinks": 9982,
+  "root": "port:sk",
+  "cts": true,
+  "tt_insertion_ps": null,
+  "tt_spread_ps": null,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "9,982 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "utilisation 27% outside 45%-60% (std 3448 + macro 0 in core 12728 um2)",
+   "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 3590 um2 + macros 0 in core 12728: util 28%",
+   "fix": "set \"std_area_um2\": 3590 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 28.2% outside 45%-65% (std 3591 + macro 0 um2 in 12728 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=1",
+   "fix": ""
+  }
+ ]
+}

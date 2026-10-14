@@ -12,8 +12,8 @@
     "w": 138.24,
     "h": 99.36
   },
-  "std_area_um2": 3448,
-  "why_floorplan": "Candidate assigned outline from FV4/FD5/R1; estimated area only. Distinct return input/output stages permit both W/E faces to have actual capture/launch flops. Exact actual pin density and clock measurement must precede admission.",
+  "std_area_um2": 3590,
+  "why_floorplan": "Assigned138.24x99.36 geometry retained; synthesis measured3590um2 and9982clock sinks. Initial0.50 global placement diverged (GPL-0305);0.42 is a placement candidate, all timing/pin/clock limits unchanged. Distinct W/E return registers require fresh physical qualification.",
   "pins": {
     "N": [
       "v_i",
@@ -34,7 +34,7 @@
   },
   "macros": [],
   "route": {
-    "pd": 0.5,
+    "pd": 0.42,
     "threads": 8,
     "peak_ram_gb": 8,
     "hold_margin_ns": 0.01,
@@ -45,7 +45,7 @@
     "benches_from": "tools/s81_suhc/hc_tile_benches_fv4fd5r2.json",
     "owner": "Codex:s81_hc_ccf",
     "branch": "codex-s81-ccf-pinreg-1013",
-    "tag": "v1-return-two-face",
+    "tag": "v2-pd42",
     "purpose": "Actual return pin capture and launch with two stages; downstream R6 replaced by existing closed R5, preserving total return epochs.",
     "views_to": "physical/ref_tile/s81hc_pad_fv4fd5r2_ref/views",
     "record_to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref"
