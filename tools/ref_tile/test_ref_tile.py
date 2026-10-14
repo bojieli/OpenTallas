@@ -25,6 +25,22 @@ def spec(_ex, **kw):
 
 
 class Gen(unittest.TestCase):
+    def test_ordered_pin_group_limit_reaches_gate_and_route(self):
+        s = RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": 16}))
+        r = RT.gen(spec("nhb_pbst_ref", route={"pin_group_max": 16}), write=False)
+        blocks = RT.place_blocks(s, *r["outline"], RT.blocks_of(s))
+        env = RT.gen_env(s, "k", *r["outline"], RT.layer_contract(s, None), blocks)
+        self.assertIn("export OT_PIN_GROUP_MAX=16", env)
+        self.assertIn("PIN_MIN_TRACKS=2", env)
+        self.assertIn("OT_PIN_GROUP_MAX=16", RT.gen_job(s, "k", "deadbeef", blocks)["stages"]["route"]["cmd"])
+        s["route"].pop("pin_group_max")
+        self.assertEqual(RT.pin_group_max(s), 32)
+
+    def test_invalid_ordered_pin_group_limit_refused(self):
+        for value in (0, -1, 33, True, 16.5, "16"):
+            with self.assertRaises(RT.SpecError):
+                RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": value}))
+
     def test_pbst_kit(self):
         r = RT.gen(spec("nhb_pbst_ref"), write=False)
         self.assertEqual([f for f in r["findings"] if f[0] == "FAIL"], [])

@@ -253,6 +253,10 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if [round(x, 3) for x in fp["die"][2:]] != [round(x, 3) for x in fresh["outline"]]:
         g.add("FAIL", "kit", f"kit outline {fp['die'][2:]} != regenerated {fresh['outline']}", "re-run ref_tile.py gen")
     env = (kd / "kit.env").read_text()
+    if "pin_group_max" in spec.get("route", {}):
+        pgm = re.search(r"^export OT_PIN_GROUP_MAX=(\d+)$", env, re.M)
+        if not pgm or int(pgm[1]) != RT.pin_group_max(spec):
+            g.add("FAIL", "pin_group", "kit ordered pin chunk limit differs from route.pin_group_max", "re-run ref_tile.py gen")
     if "PLACE_DENSITY_LB_ADDON=" not in env:
         g.add("FAIL", "density", "kit leaves ORFS's PLACE_DENSITY_LB_ADDON in force: the placer target becomes lower-bound + "
               "0.05, not the spec PD (qkd_nhb_pbst 0.50 -> 0.1075, GPL-0305)", "re-run ref_tile.py gen")
