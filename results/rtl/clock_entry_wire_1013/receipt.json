@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.actual-clock-entry-wire-replay.v1",
+  "status": "CLOCK_ACCOUNTING_DIAGNOSTIC_NOT_ROUTE_QUALIFICATION",
+  "vehicle": "actual dscoll_ces0_pc 4_1_cts.odb, snapshot194650",
+  "db_source": "ot-pve1:/srv/opentallas-scratch/claude/ref_gate/dscoll_ces0_pc-20261013-194650/routes/gate/work/orfs/results/asap7/opentallas_dsfd_coll_ces0_pc_asap7_ref_gate/base/4_1_cts.odb",
+  "parasitics": "actual placed pin geometry, placement estimated RC at each real library corner; no extracted route",
+  "admitted_positive_unit": "oth-ubuntu-570538-1791950614",
+  "positive_exit": 0,
+  "admitted_mutant_unit": "oth-ubuntu-570284-1791950587",
+  "mutant_harness_exit": 0,
+  "mutant_result": "forced zero wire rejected despite103.68um actual source/pin separation on ck_core",
+  "required_coverage": 10,
+  "corners": {
+    "tt": {
+      "peak_entry_wire_ps": 48.837574,
+      "phi_spread_ps": 3.7e-05
+    },
+    "ff": {
+      "peak_entry_wire_ps": 49.330292,
+      "phi_spread_ps": 1.2e-05
+    },
+    "ss": {
+      "peak_entry_wire_ps": 48.51815,
+      "phi_spread_ps": 4.2e-05
+    }
+  },
+  "corner_proof": "Each replay loads actual TT/FF/SS ETMs while envCORNER deliberately remainsWC; actual loaded bound Liberty object names select the correct reference. No WC-toSS guess.",
+  "strict_zero_policy": "Route-boundary and signoff constraints require positive actual clock-wire measurement; zero is admitted only with actual source/childpin physical coincidence <=0.001um. Initial149ETM zero-wire simulation is separate numerical calibration.",
+  "files_sha256": {
+    "wire_ff.log": "6bed9551f761e731ce3484154ff272d478b96644cff09eac7660bc11485267bd",
+    "mutant.sh": "7439ee58eb59d5d85abdc48276fccdc7520ab4bcba91f3420aed9d942310e15d",
+    "wire_tt.log": "7e3f22bb61164b9cdd66c860a17f2ecd3fac62bf39701611564aa9f45580631c",
+    "mutant_zero.tcl": "1fbe0883ba97fac0862428ad573f44f766c8630d7321ae5ab5db3f8f7be387f2",
+    "wire_ff.tcl": "dbe8f23a0588f99fdcf41ea80db29f01e8eba4a5f7f63e7dee20550897cb629e",
+    "wire_ss.tcl": "994b9ccb3cbdd092cd7a16905c99eb63f31e972e29ad4970d453a0c2bb732973",
+    "wire_ss.log": "f4105c4b7bccd639bec8ef517658ce3048f7a21f185240263e27b899869568b5",
+    "wire_tt.tcl": "cfedb26cf401eb488b1ee6c1900b6f1e3e20ebe03248c1ce8f36013541083d96",
+    "mutant_zero.log": "be44adf75a44f4b3ed68080064ee8e4ecdfe838261159813afd42c4ce3e4f7a4",
+    "run.sh": "bcbbb98206edac7154cfde61ce6090adc2836690cb32c1757fd931ed4bb83b12"
+  }
+}
