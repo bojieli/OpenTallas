@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_slab_pg_col_pr",
  "verdict": "PASS",
- "generated": "2026-10-14T16:34:22-0700",
+ "generated": "2026-10-14T16:48:56-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "77d40d8daf02a002812fd80847f07111d7fbe6c2",
+  "start_commit": "f2d521906d5554f81138cf6e748e87d5e655e133",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "3b2fa67d8e428db6c13f2cd95f41c13b13c1ccdaa3e022b72746f7bc1cdb851f",
-  "manifest_sha256": "0de38e4ef0340e1f73d571b54d889c27abc1ed42cbf06110a547c31ba0645be8",
+  "archive_sha256": "fa89781185d6728075af4c9f69c0f266df2f12711317b53d8ae981953ce153a3",
+  "manifest_sha256": "b2b1fb634fb925d213e8c068c44b7d28cb383578fcc10fa1673aa14353b40227",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.json",
@@ -17875,8 +17875,8 @@
    {
     "path": "physical/ref_tile/qfd_slab_pg_col_pr/job.json",
     "kind": "file",
-    "sha256": "6c5f41037b44ab1d69900df27250d0734c5262108708c57ebc481f9910b4a098",
-    "git_blob": "282130fe71b0e44e6287e8598d6d091c5cd12e8d",
+    "sha256": "3e8050fba63b4d2d4c9ab9e8cb3349c1512ad69fd704d68f3cd53d180c0a505d",
+    "git_blob": "f52f1e417f0cccad6e94279bec67e16d986419b4",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -40867,8 +40867,8 @@
    {
     "path": "rtl/physical/ot_qwen_band_lanes_slots.sv",
     "kind": "file",
-    "sha256": "9cad01cce92199acd3f7c6198171d1f59418c4c6ac883af61a1598d99266baeb",
-    "git_blob": "d5f88af8d7a93a7fa6aedbe0a7b37ee7ea08c300",
+    "sha256": "28e1410b45c6ddcd6376be5ba5db65d6f01a4103e04c60e14da31a34c33b1153",
+    "git_blob": "4f9f4c6ef4806fb7b85b8ff9e76454115ad30e85",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -41501,6 +41501,14 @@
     "kind": "file",
     "sha256": "906d6e3460c33691b520dae0026a8ec4da6eccbb31c3af7ddf1d9204e1067b65",
     "git_blob": "22b6f10ae682d4a137944dd486927d6dddcb8c20",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/physical/qfd_tile_nk_slot.sv",
+    "kind": "file",
+    "sha256": "57f6cb09df408cf5ca6b999d34f0b6bce1f0bb3fc24fb7f16b8d5b5767c653fa",
+    "git_blob": "bc10407a53e35a2cd35fc3951ef4f81612db7809",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -55069,6 +55077,14 @@
     "kind": "file",
     "sha256": "01a55279343e0e165bfdf9f94189619b6bd6c3f80887c441369070adc6f7c9ee",
     "git_blob": "6de6732b1b89ffe5cd5158bed5951e6b7e919ba7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
+    "path": "rtl/test/tb_qfd_tile_nk_slot.sv",
+    "kind": "file",
+    "sha256": "71657e8e3b2ed467584236b4f5a79f3f3331db5d253d9910b554149d184c301e",
+    "git_blob": "467460c76ec70fcf97e52f67fd72b2253bcaa041",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -94321,10 +94337,18 @@
     "matches_provenance_commit": true
    },
    {
+    "path": "tools/ref_tile/specs_q14r6/qfd_bl_lane_rr.json",
+    "kind": "file",
+    "sha256": "72a7bf8e0ae3db6391b435585d5889d7cc5f48e12f55fc641667f0adc37a8e1f",
+    "git_blob": "8026914075d0a81b84110666cff5db7a60bee9e7",
+    "source": "working_tree",
+    "matches_provenance_commit": true
+   },
+   {
     "path": "tools/ref_tile/specs_q14r6/qfd_su_lane_t_i2.json",
     "kind": "file",
-    "sha256": "3e42fc5e2740257665b90ae1dffa5c696cc38d92ca4f4888f4da88bb8c449bd2",
-    "git_blob": "39f3b2227e4aff1a870faf0596558e5fae0f7006",
+    "sha256": "838f0c5876cb54ae70a36b427d9bddfbca8f6cbb8815707b6ac49ef931ba134f",
+    "git_blob": "46a8a52e0b30c8af6969b98d20bf77ccceab2167",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -116203,7 +116227,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "eb466f4703bbb1665d8eb2bf4038d01dc8c9d8b4",
+   "origin_main": "df38ffc3987440140c031547c3f175da285b06c7",
    "content_sha256": "3aa06e8a1032dc99d562bed65137a274b594aaf57a13b24cb79440b848b5e115",
    "files": [
     {
@@ -116576,11 +116600,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T16:26:50-0700",
-  "remote_script_sha256": "1ee615ce9647c91c1d4b5247bc174629a4d4af239610afecf05f21ce0c3be7e8",
+  "captured": "2026-10-14T16:40:18-0700",
+  "remote_script_sha256": "6d9f635f2af53c77a8752628070bb6b6b158180e9db291bc24b6ef3d184cda37",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_slab_pg_col_pr-20261014-162626",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_slab_pg_col_pr-20261014-163954",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
