@@ -1343,6 +1343,7 @@ module dsfd_vm_be_sl #(
     output reg  [31:0]       fvec,
     output reg  [2:0]        max_occ
 `ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, reset_epoch_s_n
     , output reg rst_ack, rst_ack_s
 `endif
 );
@@ -1363,6 +1364,11 @@ module dsfd_vm_be_sl #(
 `ifdef OT_SPVM_RESET_ACK
     wire [1:0] cdc_w_online, cdc_r_online;
     reg ack_reset_seen, ack_reset_seen_s;
+`ifdef OT_SPVM_MUT_ACK_EPOCH_FORWARD
+    wire ack_epoch_n = rn_in[0], ack_epoch_s_n = rns_in[0];
+`else
+    wire ack_epoch_n = reset_epoch_n, ack_epoch_s_n = reset_epoch_s_n;
+`endif
     wire all_local_rn = rn_i && rn_x && rn_c && rn_p && rn_w;
     wire no_local_rn = !(rn_i || rn_x || rn_c || rn_p || rn_w);
 `ifdef OT_SPVM_MUT_ACK_MIRROR
@@ -1370,15 +1376,15 @@ module dsfd_vm_be_sl #(
 `else
     // Witness reset at the real consumer clock; a stopped clock cannot acknowledge
     // a reset pulse it never sampled. ACK state adds no datapath admission logic.
-    always @(posedge clk or negedge rn_in[0]) begin
-        if (!rn_in[0]) begin ack_reset_seen <= 1'b0; rst_ack <= 1'b0; end
+    always @(posedge clk or negedge ack_epoch_n) begin
+        if (!ack_epoch_n) begin ack_reset_seen <= 1'b0; rst_ack <= 1'b0; end
         else begin
             if (no_local_rn) ack_reset_seen <= 1'b1;
             rst_ack <= ack_reset_seen && all_local_rn && (&cdc_w_online);
         end
     end
-    always @(posedge sclk or negedge rns_in[0]) begin
-        if (!rns_in[0]) begin ack_reset_seen_s <= 1'b0; rst_ack_s <= 1'b0; end
+    always @(posedge sclk or negedge ack_epoch_s_n) begin
+        if (!ack_epoch_s_n) begin ack_reset_seen_s <= 1'b0; rst_ack_s <= 1'b0; end
         else begin
             if (!rns) ack_reset_seen_s <= 1'b1;
             rst_ack_s <= ack_reset_seen_s && rns && (&cdc_r_online);
@@ -1713,6 +1719,7 @@ module dsfd_vm_be #(
             .c_l0v(c_l0v_s[gs]), .c_l0d(p2_s[gs]), .t_p2c(t_p2c_s[gs]),
             .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs])
 `ifdef OT_SPVM_RESET_ACK
+            , .reset_epoch_n(rst[0]), .reset_epoch_s_n(rss[0])
             , .rst_ack(rst_ack[gs]), .rst_ack_s(rst_ack_s[gs])
 `endif
             );
