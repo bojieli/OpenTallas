@@ -85,7 +85,21 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0, XRT=0)(
  reg dq_v; reg[7:0] dq_t;
  always @(posedge c_clk or negedge c_run) if(!c_run) dq_v<=1'b0; else dq_v<=dv;
  always @(posedge c_clk) dq_t<=dt;
+`ifdef OT_S81_ADAPTER_RETURN_ONEHOT
+ // Optional same-cycle lookup successor for the measured FCN dq_t -> command
+ // queue write-enable path. This samples the same completion tag as dq_t.
+ reg [255:0] dq_sel;
+ always @(posedge c_clk) begin
+`ifdef OT_S81_MUT_ADAPTER_RETURN_ONEHOT
+  dq_sel <= 256'b1 << (dt ^ 8'h80);
+`else
+  dq_sel <= 256'b1 << dt;
+`endif
+ end
+ wire return_ok=dq_v&&(|(cpending & dq_sel))&&(cused!=0);
+`else
  wire return_ok=dq_v&&cpending[dq_t]&&(cused!=0);
+`endif
  wire admit=c_cmd_v&&cmd_accept&&!cpending[ctag]&&((cused<QD)||return_ok);
  wire[83:0] payload=(MUT==1)?(c_cmd_d^(84'd1<<73)):c_cmd_d;
  ot_s81_pulse_cdc #(.W(84),.QD(QD),.XR(XRT)) u_cmd(
