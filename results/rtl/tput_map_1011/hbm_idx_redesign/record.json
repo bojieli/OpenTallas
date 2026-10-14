@@ -118,13 +118,13 @@
     "back_L2": 44
    },
    "current_e2e": {
-    "status": "BASE_PASS_MUTANT_RUNNING",
+    "status": "BASE_PASS_MUTANT_OOM100G",
     "source": "449f87c8b plus final QA B pin-flop correction (fe9c3811d RTL)",
     "host": "ot-epyc4",
     "run": "/srv/opentallas-scratch2/claude/idx-redesign-1013b",
     "flags": "REAL_IDX=1 IDX_IXW=3 IDX_TK2=1 IDX_NATIVE=1 FLAT=40 KLAT=40 VLAT=6",
     "base_pid": null,
-    "mutant_note": "Durable local systemd codex-idx-e2e-mut2-1013.service; remote unit oth-ubuntu-87412-1791950410. Original local session28350 disappeared and PID4068815 terminal before build; verified before rerun."
+    "mutant_note": "All original-source MUT2 attempts killed by cgroup OOM100GiB. Journal retained; new-source creditfix BASE+MUT2 running with180GiB based on completed BASE140GiB peak."
    },
    "physical": {
     "kp": {
@@ -138,20 +138,15 @@
      "reason": "CLOSED TT +10.34 / FF +23.47 ps DRC 0; SS sensitivity -314.19 ps | record claude/hbm-redesign-idx 79b3d3df7 (19 files) | AUTO-MERGED into main 5bf80f595"
     },
     "rebuilds": {
-     "jobs": [
-      "hgi_ix2_lane-r1-ced6bef1d",
-      "hgi_ix2_kc-r1-ced6bef1d",
-      "hgi_ix2_pk-r1-ced6bef1d",
-      "hgi_ix2_wp-r1-ced6bef1d"
-     ],
-     "source_commit": "ced6bef1d",
-     "changes": {
-      "lane": "64.8 x 54 um; r0 util64.3% refused",
-      "kc": "64.8 x 54 um; r0 util64.3% refused",
-      "pk": "129.6 x 86.4 um; r0 util63.4% refused",
-      "wp": "259.2 x 75.6 um; VM cut0.423; core+57%; r0 GRT1693 stagnant markers"
-     },
-     "clock_evidence_note": "RTL unchanged; existing CTS clock sinks remain <15000; insertion/spread measurements are for r0 outlines, pending r1 routed evidence"
+     "wp": {
+      "outline_um": [
+       259.2,
+       75.6
+      ],
+      "status": "r2_pending_fresh_source_gate",
+      "fix": "main pin-bank auto gap/columns + WP credited landing FIFO",
+      "reroute_reason": "RTL change and measured south seam congestion; no gate changes"
+     }
     },
     "lane": {
      "job": "hgi_ix2_lane-r1-ced6bef1d",
@@ -183,6 +178,26 @@
      "L2": 1024
     },
     "mutant": "PENDING current source MUT2 build; previous mutant receipt retained only as prior-source evidence"
+   },
+   "pending_structural_credit_fix": {
+    "source_commit": "a3896fbe1",
+    "leaf": "WP only; five CLOSED leaves unchanged",
+    "change": "D FIFO4->16; guarded pin-landing credit ACK, defer above9 queued beats and reserve6 slots",
+    "equivalence": "3x100 frames PASS; MUT1/2/3 FAIL",
+    "saturated_683_beat_test": {
+     "rt8_total_before": 1025,
+     "rt8_total_after": 853,
+     "rt16_total_before": 1033,
+     "rt16_total_after": 861,
+     "drain_before": 30,
+     "drain_after": 22
+    },
+    "production": "ot-epyc4:/srv/opentallas-scratch2/claude/codex-idx-credit-e2e-1013 BASE+MUT2 running, remote118891/118896, mem180GB each",
+    "systemd_units": [
+     "codex-idx-credit-e2e-base-1013",
+     "codex-idx-credit-e2e-mut2-1013"
+    ],
+    "gate": "fresh source binding v2 gate in progress; known shared parser defect excludes SHA256 digits, coordinator notified; raw evidence retained"
    }
   }
  ]
