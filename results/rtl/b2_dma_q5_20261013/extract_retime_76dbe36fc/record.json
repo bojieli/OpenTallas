@@ -1,0 +1,40 @@
+{
+  "source": "76dbe36fc",
+  "base": "19cfe6a7a",
+  "changes": [
+    "capture landing RAM output in existing PX raw register; select bytes after PX and decode into existing P2 stage",
+    "capture byte offset in five PX metadata bits",
+    "192 registered KV credit output bits"
+  ],
+  "added_pipeline_edges": {
+    "landing_decode": 0,
+    "kv_credit_output": 1
+  },
+  "estimated_added_flops": 197,
+  "expected_root_sinks": 14877,
+  "exact": {
+    "checked": 115306,
+    "records": 244,
+    "ordered_port_requests": 20359,
+    "streams": 942,
+    "launcher_exit": 0
+  },
+  "cycles": [
+    686,
+    362,
+    872
+  ],
+  "prior_kv_pin_cycles": [
+    686,
+    362,
+    872
+  ],
+  "immutable_flat_cycles": [
+    682,
+    356,
+    862
+  ],
+  "throughput_price_status": "UNMEASURED-vs-price; no model repricing claimed",
+  "qualified": false,
+  "physical_status": "source-bound CTS admitted/running; terminal pending"
+}
