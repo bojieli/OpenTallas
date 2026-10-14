@@ -62,7 +62,15 @@ def main(request):
         't_vm': ['ckv_x[%d]'%(i//832) if i<13312 else 'ckv_x[6]' for i in range(13376)],
         't_cd': ['ckv_r[0]']*12,
     }
-    vm['ports']['f_capture']=spec([['N',ly,x,d] for _,ly,x,d in rows])
+    contract = json.loads((OUT/'contract_trial.json').read_text())
+    slots = {s['name']:s for s in contract['slots']}
+    delta = slots['sp_vm']['origin']['x'] - slots['sp_capture']['origin']['x']
+    vm_rows = [['N',ly,round(x-delta,3),d] for _,ly,x,d in rows]
+    assert all(.012 <= x <= vm['outline_um'][0]-.012 for _,_,x,_ in vm_rows)
+    assert all(abs(a[2]+slots['sp_capture']['origin']['x']-b[2]-slots['sp_vm']['origin']['x']) < .001
+               for a,b in zip(rows,vm_rows))
+    vm['ports']['f_capture']=spec(vm_rows)
+    vm['peer_origin_delta_um']=round(delta,3)
     capture['source']='tools/s81/capture_x8_assignment.py;68clock per-child capture; exact x8 output map'
     vm['source']='tools/s81/capture_x8_assignment.py;bitwise facing capture peer'
     assert sum(map(len,capture['clock_entries'].values()))==68
