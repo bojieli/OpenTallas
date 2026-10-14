@@ -1,0 +1,29 @@
+{
+ "status": "DRAFT_NOT_GENERATED_NOT_SUBMITTED",
+ "reason": "commoncore view route pending; actual diegroup allocation/pinassignment pending",
+ "parent_own_registers": 0,
+ "children": 9,
+ "clock_entries": [
+  "clk",
+  "ck_col0",
+  "ck_col1",
+  "ck_col2",
+  "ck_col3",
+  "ck_lane0",
+  "ck_lane1",
+  "ck_lane2",
+  "ck_lane3"
+ ],
+ "latency_added_vs_original": 2,
+ "pipeline_proof": "results/rtl/ref_tile/qfd_slab_pg_core_gid/fullrows_1013/latency",
+ "group_outline": [
+  777.6,
+  691.2
+ ],
+ "eight_group_area": 4299816.96,
+ "v4_porttile_outline": [
+  777.576,
+  1840.296
+ ],
+ "v4_porttile_area": 1430970.0024960001
+}
