@@ -2,12 +2,12 @@
 // Structural opt-in prototype: eight regional SQ/chunk leaves and one tail.
 // Every child has its own clock input; parent only wires. Relative result latency +3:
 // region input capture, region output capture, tail input capture. Original remains reference.
-module ot_hdc_vreduce_region8 #(parameter integer AW=24) (
+module ot_hdc_vreduce_region8 #(parameter integer AW=24,QLA=3,QLM=3) (
  input wire clk,rst_n,v_in,mx_in,sq_in,last_in,
  input wire [AW-1:0] addr_in,input wire [255:0] x_in,
  output reg v_out,output reg [AW+1:0] tag_out,output reg [31:0] data_out,
  output reg fault_out,output reg busy_out);
- localparam integer SW=8,LA=3,LM=3,CD=21,NC=1,LC=0,TAG=AW+2;
+ localparam integer SW=8,LA=QLA,LM=QLM,CD=7*LA,NC=1,LC=0,TAG=AW+2;
  reg iv,imx,isq,ilast;reg [AW-1:0] ia;reg [255:0] ix;
  always @(posedge clk or negedge rst_n) if(!rst_n)iv<=0;else iv<=v_in;
  always @(posedge clk)begin imx<=mx_in;isq<=sq_in;ilast<=last_in;ia<=addr_in;ix<=x_in;end
@@ -16,7 +16,7 @@ module ot_hdc_vreduce_region8 #(parameter integer AW=24) (
     wire [SW-1:0]    fsq;
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_sq
-        ot_hdc_qmul u_sq (clk, rst_n, iv && isq, ix[32*l +: 32], ix[32*l +: 32], xsq[32*l +: 32], fsq[l]);
+        ot_hdc_qmul #(.L(LM)) u_sq (clk, rst_n, iv && isq, ix[32*l +: 32], ix[32*l +: 32], xsq[32*l +: 32], fsq[l]);
     end endgenerate
     wire [SW*32-1:0] xq;
     wire [TAG-1:0]   tq;
@@ -53,7 +53,7 @@ module ot_hdc_vreduce_region8 #(parameter integer AW=24) (
             wire [31:0] xj;
             ot_hdc_delay #(.W(32), .D(LA * (j - 1))) u_xd (.clk(clk), .rst_n(rst_n),
                 .d(c_x[32*(8*k + j) +: 32]), .q(xj));
-            ot_hdc_vred_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(vch[LA * (j - 1)]), .mx(mxl[LA * (j - 1)]),
+            ot_hdc_vred_leaf_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(vch[LA * (j - 1)]), .mx(mxl[LA * (j - 1)]),
                 .a(acc[32*(j-1) +: 32]), .b(xj), .y(acc[32*j +: 32]), .fault(fch[7*k + j - 1]));
         end
         assign chunk[32*k +: 32] = acc[32*7 +: 32];
@@ -70,12 +70,12 @@ module ot_hdc_vreduce_region8 #(parameter integer AW=24) (
  always @(posedge clk)begin tag_out<=ct;data_out<=chunk;end
  always @(posedge clk or negedge rst_n) if(!rst_n) busy_out<=0;else busy_out<=iv||(|vqs)||c_v||(|vch)||v_out;
 endmodule
-module ot_hdc_vreduce_tail64 #(parameter integer AW=24,LV=7)(
+module ot_hdc_vreduce_tail64 #(parameter integer AW=24,LV=7,QLA=3)(
  input wire clk,rst_n,input wire [7:0] rv,rb,rf,
  input wire [8*(AW+2)-1:0] rt,input wire [255:0] rd,
  output reg o_we,output reg [AW-1:0] o_addr,output reg [31:0] o_data,
  output reg busy,output reg fault);
- localparam integer SW=64,NC=8,LC=3,LA=3,TAG=AW+2;
+ localparam integer SW=64,NC=8,LC=3,LA=QLA,TAG=AW+2;
  reg cv;reg [TAG-1:0] ct;reg [255:0] chunk;reg [7:0] ibusy,ifault,ival;reg [8*TAG-1:0] itags;
  wire phase_fault=(|ival)&&((ival!=8'hff)||(itags!={8{itags[TAG-1:0]}}));
  always @(posedge clk or negedge rst_n)if(!rst_n)begin cv<=0;ibusy<=0;ifault<=0;ival<=0;end else begin cv<=rv[0];ibusy<=rb;ifault<=rf;ival<=rv;end
@@ -107,7 +107,7 @@ module ot_hdc_vreduce_tail64 #(parameter integer AW=24,LV=7)(
         ot_hdc_delay #(.W(TAG), .D(LA)) u_td (.clk(clk), .rst_n(rst_n), .d(tt[lv-1]), .q(td));
         for (p = 0; p < (NC >> lv); p = p + 1) begin : g_pair
             wire [31:0] s;
-            ot_hdc_vred_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
+            ot_hdc_vred_leaf_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(tv[lv-1]), .mx(tt[lv-1][TAG-1]),
                 .a(lvl[lv-1][32*(2*p) +: 32]), .b(lvl[lv-1][32*(2*p+1) +: 32]), .y(s), .fault(pf[p]));
             always @(posedge clk) q[32*p +: 32] <= s;
         end
@@ -159,7 +159,7 @@ module ot_hdc_vreduce_tail64 #(parameter integer AW=24,LV=7)(
         always @(posedge clk) if (in_v && !held_v && !pass) held <= in_x;
         wire [31:0] s, pd;
         wire f;
-        ot_hdc_vred_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(pair), .mx(in_t[TAG-1]), .a(held),
+        ot_hdc_vred_leaf_op #(.LA(LA)) u_op (.clk(clk), .rst_n(rst_n), .v(pair), .mx(in_t[TAG-1]), .a(held),
                                         .b(in_x), .y(s), .fault(f));
         wire [TAG+2-1:0] od;
         ot_hdc_delay #(.W(TAG + 2 + 32), .D(LA)) u_od (.clk(clk), .rst_n(rst_n),
@@ -199,7 +199,7 @@ module ot_hdc_vreduce_tail64 #(parameter integer AW=24,LV=7)(
     end
     always @(posedge clk or negedge rst_n) if(!rst_n) busy<=0;else busy<=(|ibusy)||cv||(|tv)||(|tvb)||(|sval)||(|tb)||o_we;
 endmodule
-module ot_hdc_vreduce_entries64 #(parameter integer AW=24,LV=7)(
+module ot_hdc_vreduce_entries64 #(parameter integer AW=24,LV=7,QLA=3,QLM=3)(
  input wire [7:0] ck_region,input wire ck_tail,rst_n,
  input wire v_in,mx_in,sq_in,last_in,input wire [AW-1:0] addr_in,input wire [2047:0] x_in,
  output wire o_we,output wire [AW-1:0] o_addr,output wire [31:0] o_data,output wire busy,fault);
@@ -211,9 +211,49 @@ module ot_hdc_vreduce_entries64 #(parameter integer AW=24,LV=7)(
 `else
   assign xi=x_in[256*i+:256];
 `endif
-  ot_hdc_vreduce_region8 #(.AW(AW)) u_r(.clk(ck_region[i]),.rst_n(rst_n),.v_in(v_in),.mx_in(mx_in),.sq_in(sq_in),.last_in(last_in),.addr_in(addr_in),.x_in(xi),.v_out(rv[i]),.tag_out(rt[(AW+2)*i+:AW+2]),.data_out(rd[32*i+:32]),.fault_out(rf[i]),.busy_out(rb[i]));
+`ifdef OT_VRED_HARD
+  ot_hdc_vreduce_region8 u_r(
+`else
+  ot_hdc_vreduce_region8 #(.AW(AW),.QLA(QLA),.QLM(QLM)) u_r(
+`endif
+.clk(ck_region[i]),.rst_n(rst_n),.v_in(v_in),.mx_in(mx_in),.sq_in(sq_in),.last_in(last_in),.addr_in(addr_in),.x_in(xi),.v_out(rv[i]),.tag_out(rt[(AW+2)*i+:AW+2]),.data_out(rd[32*i+:32]),.fault_out(rf[i]),.busy_out(rb[i]));
  end endgenerate
  wire tbusy;
- ot_hdc_vreduce_tail64 #(.AW(AW),.LV(LV)) u_tail(.clk(ck_tail),.rst_n(rst_n),.rv(rv),.rb(rb),.rf(rf),.rt(rt),.rd(rd),.o_we(o_we),.o_addr(o_addr),.o_data(o_data),.busy(tbusy),.fault(fault));
+`ifdef OT_VRED_HARD
+ ot_hdc_vreduce_tail64 u_tail(
+`else
+ ot_hdc_vreduce_tail64 #(.AW(AW),.LV(LV),.QLA(QLA)) u_tail(
+`endif
+.clk(ck_tail),.rst_n(rst_n),.rv(rv),.rb(rb),.rf(rf),.rt(rt),.rd(rd),.o_we(o_we),.o_addr(o_addr),.o_data(o_data),.busy(tbusy),.fault(fault));
  assign busy=tbusy;
+endmodule
+
+// Same scalar MAX/SUM and reduction association as immutable ot_hdc_vred_op.
+// Extra adder cuts use the qualified LAT pipeline; only valid bits carry reset.
+module ot_hdc_vred_leaf_op #(parameter integer LA=3)(
+ input wire clk,rst_n,v,mx,input wire[31:0] a,b,output wire[31:0]y,output wire fault);
+ function automatic[31:0]okey(input[31:0]x);
+  okey=x[31]?~x:{1'b1,x[30:0]};
+ endfunction
+ wire[31:0]ys,ym;wire mxd;
+ generate if(LA==3)begin:g_fast
+  ot_hdc_qadd u_add(clk,rst_n,v&&!mx,a,b,ys,fault);
+ end else begin:g_cut
+  wire[1:0]err;wire vo;
+  ot_hdc_fp32_add_lat #(.LAT(LA),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(v&&!mx),.a(a),.b(b),.y(ys),.err(err),.valid_out(vo));
+  assign fault=vo&&(err!=0);
+ end endgenerate
+ ot_hdc_delay #(.W(33),.D(LA)) u_m(.clk(clk),.rst_n(rst_n),.d({mx,(okey(a)>=okey(b))?a:b}),.q({mxd,ym}));
+ assign y=mxd?ym:ys;
+endmodule
+
+// Physical parent boundary: nine scalar independent child entries; no parent registers or gates.
+module qfd_su_vred_entries64 #(parameter integer QLA=4,QLM=5)(
+ input wire ck_region0,ck_region1,ck_region2,ck_region3,ck_region4,ck_region5,ck_region6,ck_region7,ck_tail,rst_n,
+ input wire v_in,mx_in,sq_in,last_in,input wire [23:0]addr_in,input wire [2047:0]x_in,
+ output wire o_we,output wire [23:0]o_addr,output wire [31:0]o_data,output wire busy,fault);
+ ot_hdc_vreduce_entries64 #(.QLA(QLA),.QLM(QLM)) u_body(
+  .ck_region({ck_region7,ck_region6,ck_region5,ck_region4,ck_region3,ck_region2,ck_region1,ck_region0}),
+  .ck_tail(ck_tail),.rst_n(rst_n),.v_in(v_in),.mx_in(mx_in),.sq_in(sq_in),.last_in(last_in),.addr_in(addr_in),.x_in(x_in),
+  .o_we(o_we),.o_addr(o_addr),.o_data(o_data),.busy(busy),.fault(fault));
 endmodule

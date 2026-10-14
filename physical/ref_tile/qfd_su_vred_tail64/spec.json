@@ -8,19 +8,24 @@
   "rtl/hdc/ot_hdc_sfu.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
-  "rtl/hdc/ot_hdc_delay.sv"
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv"
  ],
  "params": {
   "AW": 24,
-  "LV": 7
+  "LV": 7,
+  "QLA": 4
  },
  "clock_port": "clk",
  "reset_ports": [
   "rst_n"
  ],
  "outline": {
-  "w": 216,
-  "h": 194.4
+  "w": 118.8,
+  "h": 118.8
  },
  "pins": {
   "W": [
@@ -64,21 +69,29 @@
  "job": {
   "owner": "Codex smallmasters",
   "branch": "claude/el1013-qwen-r3b-spine",
-  "tag": "p1",
-  "purpose": "Structuralprototype SU64 regional reducer; actualwhole-reducer exact and perregion mutant pending",
-  "cycles_added": 3,
+  "tag": "p2",
+  "purpose": "Native64 regional reduction with actual add4/mul5 cuts; unchanged ordered arithmetic, +22resultedges vs original measured pending",
+  "cycles_added": 22,
   "benches": [
    {
     "name": "reducer64_exact",
-    "cmd": "bash rtl/test/run_hdc_vreduce_entries64.sh {RUN}/bench/exact exact",
+    "cmd": "bash rtl/test/run_hdc_vreduce_entries64.sh {RUN}/bench/exact exact 4 5",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 2,
-    "pass_regex": "^PASS VRED segments=120 .*delta=3$"
+    "pass_regex": "^PASS VRED segments=120 .*delta=22$"
    },
    {
     "name": "reducer64_region_mutant",
-    "cmd": "bash rtl/test/run_hdc_vreduce_entries64.sh {RUN}/bench/mutant mutant",
+    "cmd": "bash rtl/test/run_hdc_vreduce_entries64.sh {RUN}/bench/mutant mutant 4 5",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "^FAIL VRED errors=[1-9][0-9]*$"
+   },
+   {
+    "name": "reducer64_phase_fault_mutant",
+    "cmd": "bash rtl/test/run_hdc_vreduce_entries64.sh {RUN}/bench/phase phase 4 5",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 2,
@@ -86,7 +99,7 @@
    }
   ]
  },
- "structural_change": "Flat vreduce88388FF exceedsclockroot count. ActualSQ+8elementchain partition eight11154FF regionalleaves and7100FF tree/time tail, localroots, thinparent9entries. Regioninput/outputcapture andtailinputcapture propose+3clocks, referencewhole-reducer proofpending. Nojobsubmituntil exact+mutants/CTS/pins.",
+ "structural_change": "Flat vreduce88388FF exceedsclockroot count. ActualSQ+8elementchain partition eight11154FF regionalleaves and7100FF tree/time tail, localroots, thinparent9entries. Regioninput/outputcapture andtailinputcapture propose+3clocks, referencewhole-reducer proofpending. Nojobsubmituntil exact+mutants/CTS/pins. First real CTSmapped9278regional/7172tail under15k withgoodspread but regionalinternalSQ -77.5ps at770/sparse13%util. Use actualmul5/add4 arithmeticcuts (samevalues/order) and compact151.2regional/118.8tail frommeasuredarea. Proposed+22relativeoutputclocks, pendingexact/mutant proof; registeredbusy, hardwareall8tag/validphasevalidation.",
  "slot_change_request": "Childsubslots forSU64stillunassigned; provisionaloutline/pins, actualmaster full64lane+reducer+glue regionneeded; old777.576x2058.456 slotnotfit.",
  "macros": [],
  "children": [],

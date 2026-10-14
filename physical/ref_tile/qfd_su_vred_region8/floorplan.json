@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  259.2,
-  237.6
+  151.2,
+  151.2
  ],
  "core": [
   2.16,
   2.16,
-  257.03999999999996,
-  235.44
+  149.04,
+  149.04
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -61,6 +61,10 @@
   "rtl/hdc/ot_hdc_fastfp.sv",
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
   "physical/ref_tile/qfd_su_vred_region8/kit.env",
   "physical/ref_tile/qfd_su_vred_region8/clock.sdc",
   "physical/ref_tile/qfd_su_vred_region8/signoff.sdc",

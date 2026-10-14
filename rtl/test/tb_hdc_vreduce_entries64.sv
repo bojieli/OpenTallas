@@ -1,10 +1,13 @@
 `timescale 1ns/1ps
-module tb_hdc_vreduce_entries64;
+module tb_hdc_vreduce_entries64 #(parameter integer DUTQLA=3,DUTQLM=3);
+ localparam integer DELTA=3+(DUTQLM-3)+17*(DUTQLA-3);
  reg clk=0,rst=0,v=0,mx=0,sq=0,last=0;reg[23:0]addr=0;reg[2047:0]x=0;
  always #5 clk=~clk;
  wire aw,bw,ab,bb,af,bf;wire[23:0]aa,ba;wire[31:0]ad,bd;
  ot_hdc_vreduce #(.SW(64),.LV(7)) baseline(clk,rst,v,mx,sq,last,addr,x,aw,aa,ad,ab,af);
- ot_hdc_vreduce_entries64 split({8{clk}},clk,rst,v,mx,sq,last,addr,x,bw,ba,bd,bb,bf);
+ qfd_su_vred_entries64 #(.QLA(DUTQLA),.QLM(DUTQLM)) split(
+ .ck_region0(clk),.ck_region1(clk),.ck_region2(clk),.ck_region3(clk),.ck_region4(clk),.ck_region5(clk),.ck_region6(clk),.ck_region7(clk),.ck_tail(clk),.rst_n(rst),
+ .v_in(v),.mx_in(mx),.sq_in(sq),.last_in(last),.addr_in(addr),.x_in(x),.o_we(bw),.o_addr(ba),.o_data(bd),.busy(bb),.fault(bf));
  reg[31:0] dataq[0:255];reg[23:0] addrq[0:255];integer cycleq[0:255];integer wi=0,ri=0,cy=0,err=0;
  integer seg,j,l,seed=73,n,words=0,sums=0,maxes=0,squares=0;
  always @(negedge clk) if(rst)begin
@@ -12,7 +15,7 @@ module tb_hdc_vreduce_entries64;
   if(aw)begin dataq[wi]=ad;addrq[wi]=aa;cycleq[wi]=cy;wi=wi+1;end
   if(bw)begin
    if(!bb)begin $display("BUSY_RELEASE_EARLY");err=err+1;end
-   if(ri>=wi || bd!==dataq[ri] || ba!==addrq[ri] || cy-cycleq[ri]!=3)begin
+   if(ri>=wi || bd!==dataq[ri] || ba!==addrq[ri] || cy-cycleq[ri]!=DELTA)begin
     if(err<10)$display("MISMATCH idx=%0d got=%h exp=%h addr=%h/%h delta=%0d",ri,bd,dataq[ri],ba,addrq[ri],cy-cycleq[ri]);err=err+1;
    end
    ri=ri+1;
@@ -37,6 +40,6 @@ module tb_hdc_vreduce_entries64;
   repeat(400)@(negedge clk);
   if(wi!=120||ri!=wi||sums!=80||maxes!=40||squares!=40)begin $display("COUNT_FAIL baseline=%0d split=%0d",wi,ri);err=err+1;end
   if(err)begin $display("FAIL VRED errors=%0d",err);$fatal(1);end
-  $display("PASS VRED segments=%0d words=%0d sum=%0d max=%0d square=%0d delta=3",ri,words,sums,maxes,squares);$finish;
+  $display("PASS VRED segments=%0d words=%0d sum=%0d max=%0d square=%0d delta=%0d",ri,words,sums,maxes,squares,DELTA);$finish;
  end
 endmodule
