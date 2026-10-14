@@ -290,30 +290,6 @@ module ot_async_fifo #(
             rd_empty <= rd_empty_next;
         end
     end
-    reg [PTR_W-1:0] wr_gray_prev, rd_gray_prev;
-    wire [PTR_W-1:0] wr_gray_delta = wr_gray ^ wr_gray_prev;
-    wire [PTR_W-1:0] rd_gray_delta = rd_gray ^ rd_gray_prev;
-    wire [PTR_W-1:0] gray_one = {{(PTR_W-1){1'b0}},1'b1};
-    wire wr_gray_multi = |(wr_gray_delta & (wr_gray_delta - gray_one));
-    wire rd_gray_multi = |(rd_gray_delta & (rd_gray_delta - gray_one));
-    always @(posedge wr_clk or negedge wr_domain_rst_n) begin
-        if (!wr_domain_rst_n)
-            wr_gray_prev <= {PTR_W{1'b0}};
-        else begin
-            if (wr_gray_multi)
-                $error("ot_async_fifo write Gray pointer changed multiple bits");
-            wr_gray_prev <= wr_gray;
-        end
-    end
-    always @(posedge rd_clk or negedge rd_domain_rst_n) begin
-        if (!rd_domain_rst_n)
-            rd_gray_prev <= {PTR_W{1'b0}};
-        else begin
-            if (rd_gray_multi)
-                $error("ot_async_fifo read Gray pointer changed multiple bits");
-            rd_gray_prev <= rd_gray;
-        end
-    end
 endmodule
 
 (* keep_hierarchy = "yes" *)
@@ -340,10 +316,6 @@ module ot_reset_sync #(
             reset_pipe <= {reset_pipe[ASYNC_STAGES-2:0],1'b1};
     end
     assign sync_rst_n = reset_pipe[ASYNC_STAGES-1];
-    initial begin
-        if (ASYNC_STAGES < 2)
-            $error("ot_reset_sync requires at least two stages");
-    end
 endmodule
 
 module ot_dsrom_mtp_rstsync (input wire clk, input wire rst_n_async, output wire rst_n);
