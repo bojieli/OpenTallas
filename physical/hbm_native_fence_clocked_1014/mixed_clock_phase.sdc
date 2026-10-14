@@ -167,6 +167,12 @@ if {![llength [get_clocks -quiet ot_entry_163]]} { create_clock -name ot_entry_1
 if {![llength [get_clocks -quiet ot_unused_ack_clock]]} { create_clock -name ot_unused_ack_clock -period $ot_fence_period [get_ports {bank_clks[34]}] }
 # Secondary clock sources were initially normal inputs in generic clock.sdc.
 # Remove all clock-source data delays before measuring actual wire delivery.
+foreach ot_c [all_clocks] {
+ foreach ot_p [get_ports {clk bank_clks*}] {
+  unset_input_delay -clock $ot_c $ot_p
+  unset_input_delay -clock $ot_c -clock_fall $ot_p
+ }
+}
 unset_input_delay [get_ports {clk bank_clks*}]
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 # AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
@@ -205,6 +211,46 @@ proc ot_ce_corner {} {
   }
   error "OT_ENTRIES: ambiguous actual loaded child corners [dict keys $found]"
 }
+proc ot_ce_finite {value} {
+  return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
+}
+proc ot_ce_clock_wire {pin clock} {
+  set scene [get_property [sta::cmd_scene] name]
+  set clock_name [get_full_name $clock]
+  set values {}
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    set paths [$vertex path_iterator rise max]
+    while {[$paths has_next]} {
+      set path [$paths next]
+      # OpenSTA's Path tag identifies scene, rise/max, clock and propagation.
+      # Match the complete fixed fields, never accept another scene's path.
+      set tag [$path tag]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "^max" ||
+          [lindex $tag 3] ne $clock_name || [lindex $tag 4] ne "^" ||
+          [string first "(clock prop)" $tag] < 0} continue
+      set arrival [sta::time_sta_ui [$path arrival]]
+      if {![ot_ce_finite $arrival]} {
+        $paths finish
+        error "OT_ENTRIES: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+      }
+      lappend values $arrival
+    }
+    $paths finish
+  }
+  if {[llength $values] != 1} {
+    # Synthesis/floorplan have no extracted entry wire. This is solely a finite
+    # pre-CTS diagnostic reference; routed gates must measure a clock path.
+    if {![llength $values] && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+        (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+      puts "OT_ENTRIES PRE_CTS_ZERO_WIRE [get_full_name $pin] scene=$scene"
+      return 0.0
+    }
+    error "OT_ENTRIES: missing unique finite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+  }
+  return [lindex $values 0]
+}
+
 proc ot_ce_apply {} {
   if {![info exists ::qdm_lmax] || ![info exists ::qdm_lmin] || ![string is double -strict $::qdm_lmax] || ![string is double -strict $::qdm_lmin]} { error "FENCE_PHASE: actual own-parent boundary reference unavailable" }
   set corner [ot_ce_corner]
@@ -233,7 +279,9 @@ proc ot_ce_apply {} {
       set port [lindex $ports 0]; set name [get_full_name $port]
       if {$name ni $::ot_ce_ports || [dict exists $seen $name]} { error "OT_ENTRIES: duplicate or undeclared source $name" }
       dict set seen $name 1
-      set wire [get_property $pin arrival_max_rise]
+      set ot_exact_clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      if {[llength $ot_exact_clock] != 1} { error "FENCE_PHASE: source lacks exact clock $name" }
+      set wire [ot_ce_clock_wire $pin $ot_exact_clock]
       if {![string is double -strict $wire]} { error "OT_ENTRIES: missing entry wire clock arrival on [get_full_name $pin]" }
       if {abs($wire) < 1.0e-9 && [info exists ::ot_ce_require_wire] && $::ot_ce_require_wire} {
         # A zero arrival is admissible only if actual source and child pin are

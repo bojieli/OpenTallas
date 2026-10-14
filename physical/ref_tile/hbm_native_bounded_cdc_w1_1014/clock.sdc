@@ -11,25 +11,80 @@ set_max_fanout 32 [current_design]
 set_load 80 [all_outputs]
 set_max_transition 260 [current_design]
 # ---- sdc_extra physical/hbm_native_bounded_cdc_1014/related_domains.sdc
+# Exact propagated clock-path selection adapted from deployed 9ebcd61e5/59774111c.
+proc ot_ce_finite {value} {
+  return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
+}
+proc ot_bound_clock_arr {pin clock sense} {
+  set scene [get_property [sta::cmd_scene] name]
+  set clock_name [get_full_name $clock]
+  set values {}
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    set paths [$vertex path_iterator rise $sense]
+    while {[$paths has_next]} {
+      set path [$paths next]
+      # OpenSTA's Path tag identifies scene, rise/max, clock and propagation.
+      # Match the complete fixed fields, never accept another scene's path.
+      set tag [$path tag]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "^$sense" ||
+          [lindex $tag 3] ne $clock_name || [lindex $tag 4] ne "^" ||
+          [string first "(clock prop)" $tag] < 0} continue
+      set arrival [sta::time_sta_ui [$path arrival]]
+      if {![ot_ce_finite $arrival]} {
+        $paths finish
+        error "BOUNDED_CDC_CLOCK_PATH: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+      }
+      lappend values $arrival
+    }
+    $paths finish
+  }
+  if {[llength $values] != 1} {
+    # Synthesis/floorplan have no extracted entry wire. This is solely a finite
+    # pre-CTS diagnostic reference; routed gates must measure a clock path.
+    if {![llength $values] && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+        (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+      puts "BOUNDED_CDC_CLOCK_PATH PRE_CTS_ZERO_WIRE [get_full_name $pin] scene=$scene"
+      return 0.0
+    }
+    error "BOUNDED_CDC_CLOCK_PATH: missing unique finite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+  }
+  return [lindex $values 0]
+}
+
 # Related PLL /3 and /4 clocks. No asynchronous groups or crossing exceptions.
 set ot_bound_period [expr {[get_property [get_clocks core_clk] period]*4.0/3.0}]
 create_clock -name vm_clk -period $ot_bound_period [get_ports rclk]
+# IO-reference SDCs can carry explicit rising/falling delays on a secondary clock source.
+# Clear every clock-tagged edge before querying the actual clock-pin boundary arrivals.
+foreach ot_c [all_clocks] {
+ foreach ot_p [get_ports {wclk rclk}] {
+  unset_input_delay -clock $ot_c $ot_p
+  unset_input_delay -clock $ot_c -clock_fall $ot_p
+ }
+}
 unset_input_delay [get_ports {wclk rclk}]
 puts "BOUNDED_CDC_PERIODS core=[get_property [get_clocks core_clk] period] vm=[get_property [get_clocks vm_clk] period] ratio=4/3"
-set_clock_uncertainty -setup 150 -from [get_clocks {core_clk vm_clk}] -to [get_clocks {core_clk vm_clk}]
-set_clock_uncertainty -hold 100 -from [get_clocks {core_clk vm_clk}] -to [get_clocks {core_clk vm_clk}]
+# Canonical same-domain60/25 remains; related4:3 crossings use S150/H100.
+set_clock_uncertainty -setup 60 [get_clocks {core_clk vm_clk}]
+set_clock_uncertainty -hold 25 [get_clocks {core_clk vm_clk}]
+foreach {ot_from ot_to} {core_clk vm_clk vm_clk core_clk} {
+ set_clock_uncertainty -setup 150 -from [get_clocks $ot_from] -to [get_clocks $ot_to]
+ set_clock_uncertainty -hold 100 -from [get_clocks $ot_from] -to [get_clocks $ot_to]
+}
 foreach {c ins outs} {core_clk {wrst_n we wdata* wepoch*} {full rd_freed* w_fault} vm_clk {rrst_n re repoch*} {rdata* empty r_fault}} {
  set cc [get_clocks $c]; set offmax 0; set offmin 0
  if {![info exists ::ot_ref_pre_cts] || !$::ot_ref_pre_cts} {
+  set_clock_latency -source 0 $cc
   set_propagated_clock $cc; sta::worst_slack_cmd max
   set arrivals {}
   foreach pin [all_registers -clock $cc -clock_pins] {
-   set a [get_property $pin arrival_max_rise]
+   set a [ot_bound_clock_arr $pin $cc max]
    if {[string is double -strict $a]} { lappend arrivals [list $a $pin] }
   }
   if {![llength $arrivals]} { error "BOUNDED_CDC: actual clock root has no timed registers $c" }
   set a [lindex [lsort -real -index 0 $arrivals] [expr {[llength $arrivals]/2}]]
-  set offmax [lindex $a 0];set offmin [get_property [lindex $a 1] arrival_min_rise]
+  set offmax [lindex $a 0];set offmin [ot_bound_clock_arr [lindex $a 1] $cc min]
   puts "BOUNDED_CDC_BOUNDARY $c logicalclockpins=[llength $arrivals] min=$offmin max=$offmax"
  }
  set budget [expr {$c eq "core_clk" ? 166.6666 : 222.2222}]

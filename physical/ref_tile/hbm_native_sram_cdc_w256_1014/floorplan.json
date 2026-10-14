@@ -69,7 +69,7 @@
  "referenced": [
   "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
-  "physical/hbm_native_bounded_cdc_1014/physical_boundary.tcl",
+  "physical/hbm_native_sram_cdc_1014/deep_boundary.tcl",
   "physical/ref_tile/hbm_native_sram_cdc_w256_1014/kit.env",
   "physical/ref_tile/hbm_native_sram_cdc_w256_1014/clock.sdc",
   "physical/ref_tile/hbm_native_sram_cdc_w256_1014/signoff.sdc",

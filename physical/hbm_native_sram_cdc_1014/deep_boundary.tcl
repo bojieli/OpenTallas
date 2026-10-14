@@ -1,0 +1,1 @@
+source /src/physical/hbm_native_sram_cdc_1014/deep_related_domains.sdc

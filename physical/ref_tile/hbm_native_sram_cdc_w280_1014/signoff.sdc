@@ -123,37 +123,13 @@ if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
   puts "OT_IO_INTER [llength $ot_ii] inputs [llength $ot_io] outputs at $ot_ski ps"
 }
 if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports tile_id*] }
-# ---- sdc_extra physical/hbm_native_bounded_cdc_1014/related_domains.sdc
-# Related PLL /3 and /4 clocks. No asynchronous groups or crossing exceptions.
-set ot_bound_period [expr {[get_property [get_clocks core_clk] period]*4.0/3.0}]
-create_clock -name vm_clk -period $ot_bound_period [get_ports rclk]
-unset_input_delay [get_ports {wclk rclk}]
-puts "BOUNDED_CDC_PERIODS core=[get_property [get_clocks core_clk] period] vm=[get_property [get_clocks vm_clk] period] ratio=4/3"
-set_clock_uncertainty -setup 150 -from [get_clocks {core_clk vm_clk}] -to [get_clocks {core_clk vm_clk}]
-set_clock_uncertainty -hold 100 -from [get_clocks {core_clk vm_clk}] -to [get_clocks {core_clk vm_clk}]
-foreach {c ins outs} {core_clk {wrst_n we wdata* wepoch*} {full rd_freed* w_fault} vm_clk {rrst_n re repoch*} {rdata* empty r_fault}} {
- set cc [get_clocks $c]; set offmax 0; set offmin 0
- if {![info exists ::ot_ref_pre_cts] || !$::ot_ref_pre_cts} {
-  set_propagated_clock $cc; sta::worst_slack_cmd max
-  set arrivals {}
-  foreach pin [all_registers -clock $cc -clock_pins] {
-   set a [get_property $pin arrival_max_rise]
-   if {[string is double -strict $a]} { lappend arrivals [list $a $pin] }
-  }
-  if {![llength $arrivals]} { error "BOUNDED_CDC: actual clock root has no timed registers $c" }
-  set a [lindex [lsort -real -index 0 $arrivals] [expr {[llength $arrivals]/2}]]
-  set offmax [lindex $a 0];set offmin [get_property [lindex $a 1] arrival_min_rise]
-  puts "BOUNDED_CDC_BOUNDARY $c logicalclockpins=[llength $arrivals] min=$offmin max=$offmax"
- }
- set budget [expr {$c eq "core_clk" ? 166.6666 : 222.2222}]
- set ip {}; set op {}
- foreach pat $ins { foreach x [get_ports -quiet $pat] { lappend ip $x } }
- foreach pat $outs { foreach x [get_ports -quiet $pat] { lappend op $x } }
- unset_input_delay $ip;unset_output_delay $op
- set_input_delay [expr {$budget+$offmax+90}] -max -clock $cc $ip
- set_input_delay $offmin -min -clock $cc $ip
- set_output_delay [expr {$budget-$offmax+90}] -max -clock $cc $op
- set_output_delay [expr {-$offmin-50}] -min -clock $cc $op
+# ---- sdc_extra physical/hbm_native_sram_cdc_1014/deep_related_domains.sdc
+source /src/physical/hbm_native_bounded_cdc_1014/related_domains.sdc
+# Actual TT source-root R315.9/304.3 in predecessor CTS; use deep pair S210/H100.
+# No native clock delivery or corner compensation is inferred.
+foreach {ot_from ot_to} {core_clk vm_clk vm_clk core_clk} {
+ set_clock_uncertainty -setup 210 -from [get_clocks $ot_from] -to [get_clocks $ot_to]
+ set_clock_uncertainty -hold 100 -from [get_clocks $ot_from] -to [get_clocks $ot_to]
 }
 
 set_propagated_clock [all_clocks]

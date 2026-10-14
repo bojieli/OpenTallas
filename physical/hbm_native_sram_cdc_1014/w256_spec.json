@@ -54,10 +54,10 @@
   "children": [],
   "recipe": 2,
   "sdc_extra": [
-    "physical/hbm_native_bounded_cdc_1014/related_domains.sdc"
+    "physical/hbm_native_sram_cdc_1014/deep_related_domains.sdc"
   ],
   "boundary_tcl": [
-    "physical/hbm_native_bounded_cdc_1014/physical_boundary.tcl"
+    "physical/hbm_native_sram_cdc_1014/deep_boundary.tcl"
   ],
   "route": {
     "pd": 0.55,
@@ -67,7 +67,7 @@
   "job": {
     "owner": "Codex:hbm-native-physical-1014",
     "branch": "codex/hbm-native-physical-1014",
-    "tag": "landing1",
+    "tag": "clockpath2",
     "purpose": "Actual source-clock SRAM+SECDED W256 backend with eight protected coded source slots and eight coded consumer landing banks; actual ASIC controller/root/port/PG diagnostic. Catalog macro descriptor calibration/claim_boundary retained verbatim; no transistor layout/SPICE/silicon qualification or native184 price inheritance.",
     "hold_merge": "Diagnostic only; actual slots and phase delivery must be qualified before native integration.",
     "benches": [
@@ -95,7 +95,9 @@
       }
     ],
     "extra_paths": [
-      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.json"
+      "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+      "physical/hbm_native_bounded_cdc_1014/related_domains.sdc",
+      "physical/hbm_native_sram_cdc_1014/deep_related_domains.sdc"
     ]
   }
 }

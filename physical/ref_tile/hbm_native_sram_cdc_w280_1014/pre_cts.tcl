@@ -4,5 +4,5 @@ rename clock_tree_synthesis ::ot_ref_cts_boundary_orig
 proc clock_tree_synthesis {args} {
   ::ot_ref_cts_boundary_orig {*}$args
   set ::ot_ref_pre_cts 0
-  source /src/physical/hbm_native_bounded_cdc_1014/physical_boundary.tcl
+  source /src/physical/hbm_native_sram_cdc_1014/deep_boundary.tcl
 }
