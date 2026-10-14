@@ -51,3 +51,9 @@ on this exact source and still matches all131072 words. Results and positive
 pair-partial binary fixtures are in the `tree` proof subdirectory. There is no
 additional reduction SRAM. Pair joining and reciprocal normalization remain
 outside this component.
+
+The production pair now exposes32 separate `slice_clk` entry pins plus the
+small controller clock. Each slice's SRAM, products, and adders use its own
+entry. A common-clock adapter exists only in the simulation TB. Arithmetic
+runs use synchronous related roots; routed insertion, skew, boundary hold,
+reset release, and per-entry physical qualification remain outstanding.

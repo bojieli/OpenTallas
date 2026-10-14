@@ -27,5 +27,7 @@
   "tree_steady_cycles": 4543,
   "tree_stalled_cycles": 5225,
   "tree_partial_words_per_pair": 512,
-  "tree_extra_sram_bytes": 0
+  "tree_extra_sram_bytes": 0,
+  "clock_entries_per_pair": 33,
+  "clock_status": "independent slice roots exposed; equal-phase simulation only; physical unqualified"
 }

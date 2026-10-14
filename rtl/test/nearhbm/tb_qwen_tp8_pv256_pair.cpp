@@ -1,4 +1,4 @@
-#include "Vot_qwen_tp8_pv256_pair.h"
+#include "Vot_qwen_tp8_pv256_pair_tb.h"
 #include "verilated.h"
 #include <fstream>
 #include <vector>
@@ -27,7 +27,7 @@ int main(int argc,char**argv){Verilated::commandArgs(argc,argv);if(argc<4)return
 #else
  const unsigned expected_leaves=128;const std::string profile="leaf";
 #endif
- Vot_qwen_tp8_pv256_pair d;unsigned c=0,n=0,leaves=0;uint64_t cyc=0,bad=0,words=0;
+ Vot_qwen_tp8_pv256_pair_tb d;unsigned c=0,n=0,leaves=0;uint64_t cyc=0,bad=0,words=0;
  auto tick=[&](){d.clk=0;d.eval();d.clk=1;d.eval();cyc++;};
  d.rst_n=0;d.start=0;d.in_valid=0;d.out_ready=0;tick();tick();d.rst_n=1;tick();
  d.context_len=ctx;d.epoch=71;d.start=1;tick();d.start=0;bool sent=false;

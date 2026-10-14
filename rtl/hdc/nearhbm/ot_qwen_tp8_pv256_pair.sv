@@ -3,7 +3,7 @@
 // Rows are n-major, c-minor, preserving each c's serial FP32 addition order.
 // Readout occurs after drain; retained SRAM supplies stable backpressured leaves.
 module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0, parameter integer TREE=0)(
- input wire clk,rst_n,start,input wire[13:0] context_len,input wire[15:0] epoch,
+ input wire clk,rst_n,start,input wire[31:0] slice_clk,input wire[13:0] context_len,input wire[15:0] epoch,
  input wire in_valid,output wire in_ready,input wire[1023:0] in_v,input wire[63:0] in_e,
  input wire[6:0] in_c,input wire[13:0] in_t,input wire[15:0] in_epoch,
  input wire in_first,in_last,
@@ -27,7 +27,7 @@ module ot_qwen_tp8_pv256_pair #(parameter integer PAIR=0, parameter integer TREE
  generate for(h=0;h<4;h=h+1)begin:gh
   for(b=0;b<8;b=b+1)begin:gb
    localparam S=h*8+b;
-   ot_qwen_tp8_pv256_slice u_slice(.clk(clk),.rst_n(rst_n),.take(take),.c(in_c),.first(in_first),
+   ot_qwen_tp8_pv256_slice u_slice(.clk(slice_clk[S]),.rst_n(rst_n),.take(take),.c(in_c),.first(in_first),
     .v(in_v[128*b+:128]),.e(in_e[16*h+:16]),.read_leaf(state==READ||state==TRA||state==TRB),.leaf_c((state==TRA||state==TRB)?((ti<<1)+(state==TRB)):rc),
     .reduce_issue(state==TRADD),.reduce_capture(state==TRB),.reduce_last(nodes==2),.reduce_dst(ti),.tree_sum(tree_sum[512*S+:512]),
     .leaf(raw_leaf[512*S+:512]),.commit(cv[S]),.commit_c(cc[S]),.fault(sf[S]));
