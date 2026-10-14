@@ -1,141 +1,146 @@
 {
-  "name": "qdq_wr_pay_ref",
-  "top": "ot_hgi_qdq_wr_pay",
-  "kind": "tile",
-  "sources": [
-    "rtl/lib/ot_rst_relay.sv",
-    "rtl/link/ot_fifo_sram_fwft.sv",
-    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv",
-    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ "name": "qdq_wr_pay_ref",
+ "top": "ot_hgi_qdq_wr_pay",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/link/ot_fifo_sram_fwft.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 142.56
+ },
+ "util": 0.52,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_od.g_tile[0].g_m0.u_m",
+   "at": [
+    44.064,
+    23.76
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "wwq",
+   "wwq_cr",
+   "wg_req",
+   "wg_gnt"
   ],
-  "clock_port": "clk",
-  "reset_ports": [
-    "rst_n"
+  "S": [
+   "y",
+   "vo",
+   "qfault",
+   "dfault",
+   "clk"
   ],
-  "outline": {
-    "w": 259.2,
-    "h": 125.28
+  "W": [
+   "m_v",
+   "m",
+   "i_bad",
+   "rst_n",
+   "i_act",
+   "o_wf",
+   "o_bad",
+   "o_idle",
+   "snapshot",
+   "snapshot_v"
+  ]
+ },
+ "refglob": "*y_f*",
+ "io_flop_at_pins": {
+  "cols": 12,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "cts_sink": {
+   "size": 12,
+   "diameter_um": 20
   },
-  "util": 0.52,
-  "macros": [
-    {
-      "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
-      "count": 1,
-      "inst": "u_od.g_tile[0].g_m0.u_m"
-    }
+  "pin_min_tracks": 1
+ },
+ "job": {
+  "owner": "Codex:qdq-write-completion-split",
+  "branch": "codex-qdq-write-completion-split",
+  "tag": "p9",
+  "views_to": "physical/ref_tile/qdq_wr_pay_ref/views",
+  "record_to": "results/rtl/ref_tile/qdq_wr_pay_ref",
+  "purpose": "Registered-empty-bypass PAY candidate EMPTY_BYPASS1. Dedicated45056word gate forces1148SRAMwrites/readbacks and256actualbypasses; pending/native184 target with capturedACKFIN, exactsource fullnative required beforeadoption.",
+  "benches": [
+   {
+    "name": "payload_sram_exact",
+    "cmd": "BYPASS=1 MUT=0 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "pass_regex": "PASS QDQ_WR_PAY words=45056 snapshots=352",
+    "min_count_regex": "words=(45056)"
+   },
+   {
+    "name": "payload_bit_mutant",
+    "cmd": "BYPASS=1 MUT=1 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m1",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "PAY word/address mismatch"
+   },
+   {
+    "name": "snapshot_count_mutant",
+    "cmd": "BYPASS=1 MUT=2 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m2",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "PAY post-write snapshot mismatch"
+   },
+   {
+    "name": "obligation_rail_mutant",
+    "cmd": "BYPASS=1 MUT=3 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m3",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "unexpected PAY fault"
+   }
+  ]
+ },
+ "pin_ranges": {
+  "y": [
+   95.0,
+   185.0
   ],
-  "pins": {
-    "N": [
-      "wwq",
-      "wwq_cr",
-      "wg_req",
-      "wg_gnt"
-    ],
-    "S": [
-      "y",
-      "vo",
-      "qfault",
-      "dfault",
-      "clk"
-    ],
-    "W": [
-      "m_v",
-      "m",
-      "i_bad",
-      "rst_n",
-      "i_act",
-      "o_wf",
-      "o_bad",
-      "o_idle",
-      "snapshot",
-      "snapshot_v"
-    ]
-  },
-  "refglob": "*y_f*",
-  "io_flop_at_pins": {
-    "cols": 12,
-    "allow_none": true
-  },
-  "route": {
-    "pd": 0.5,
-    "threads": 16,
-    "peak_ram_gb": 40,
-    "cts_sink": {
-      "size": 12,
-      "diameter_um": 20
-    },
-    "pin_min_tracks": 1
-  },
-  "job": {
-    "owner": "Codex:qdq-write-completion-split",
-    "branch": "codex-qdq-write-completion-split",
-    "tag": "p8",
-    "views_to": "physical/ref_tile/qdq_wr_pay_ref/views",
-    "record_to": "results/rtl/ref_tile/qdq_wr_pay_ref",
-    "purpose": "Registered-empty-bypass PAY candidate EMPTY_BYPASS1. Dedicated45056word gate forces1148SRAMwrites/readbacks and256actualbypasses; pending/native184 target with capturedACKFIN, exactsource fullnative required beforeadoption.",
-    "benches": [
-      {
-        "name": "payload_sram_exact",
-        "cmd": "BYPASS=1 MUT=0 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m0",
-        "expect": "pass",
-        "threads": 2,
-        "peak_ram_gb": 1,
-        "pass_regex": "PASS QDQ_WR_PAY words=45056 snapshots=352",
-        "min_count_regex": "words=(45056)"
-      },
-      {
-        "name": "payload_bit_mutant",
-        "cmd": "BYPASS=1 MUT=1 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m1",
-        "expect": "fail",
-        "threads": 2,
-        "peak_ram_gb": 1,
-        "fail_regex": "PAY word/address mismatch"
-      },
-      {
-        "name": "snapshot_count_mutant",
-        "cmd": "BYPASS=1 MUT=2 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m2",
-        "expect": "fail",
-        "threads": 2,
-        "peak_ram_gb": 1,
-        "fail_regex": "PAY post-write snapshot mismatch"
-      },
-      {
-        "name": "obligation_rail_mutant",
-        "cmd": "BYPASS=1 MUT=3 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m3",
-        "expect": "fail",
-        "threads": 2,
-        "peak_ram_gb": 1,
-        "fail_regex": "unexpected PAY fault"
-      }
-    ]
-  },
-  "pin_ranges": {
-    "y": [
-      95.0,
-      185.0
-    ],
-    "wg_req": [
-      4.32,
-      16.2
-    ]
-  },
-  "orfs_vars": {
-    "OT_MEG_MASTER": "ot_sram_1r1w_64x512_m1_r2c2",
-    "OT_MEG_EXPECT": 1,
-    "OT_MEG_BAND": "2.16",
-    "OT_MEG_EDGES": "EW"
-  },
-  "boundary_tcl": [
-    "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
-  ],
-  "recipe": 2,
-  "structural_change": "Kept explicit WWQ launch registers via ot_keep_regs; separate sameedge WGREQ outputcapture/resetregion fromprivate f_act and moveN WGREQ toNW4.32..16.2 nexttoW i_act; fixes realQ307.6 outdefect withoutedge. One-track pin placement fixes p4 PPL0086 32-bit unassigned group. Real protectedemptybypass1 recoverscapturedACK latency; physicalpins and fullnative exact required. Correct actual route.pin_min_tracks=1 (top-level key didnotcontrol p5 kit); named internal kept outputFF banks preserve resolved portheader and explicit launch identity. Replace failedautomaticPPL32 group packing with actual2857 deterministic fixedfacepins, unchangedoutline/layers/source. NoM6grant. Actual p7 terminalGRT0116 congestion localizedsouth/macro: spread512capturedY inputs across221um S pitch0.432 instead73.6um pitch0.144; sameoutline/M5/RTL/edge, preservefailedp7.",
-  "clock": "spine",
-  "params": {
-    "EMPTY_BYPASS": 1
-  },
-  "reroute_reason": {
-    "kind": "rtl_change"
-  },
-  "io_tcl": "physical/hbm_qdq_wr_split/pay_pins.tcl"
+  "wg_req": [
+   4.32,
+   16.2
+  ]
+ },
+ "orfs_vars": {
+  "OT_MEG_MASTER": "ot_sram_1r1w_64x512_m1_r2c2",
+  "OT_MEG_EXPECT": 1,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "recipe": 2,
+ "structural_change": "p7 GRT-0116 (1,965 overflow, 2,178 markers at x 80-140 incl. 1,041 capacity-0 over-macro gcells) is a cut failure, not a pin spread: the 64x512 SRAM has ALL pins on its W/E M4 edges; head rd_out 512 (W edge) and the EMPTY_BYPASS y path fan into 8 x 280 WWQ lane registers across the whole N face, so ~540 nets cross the N channel horizontally (macro top 101.52 -> die 125.28 = 23.76 um, ~580 usable M2+M4 tracks: 0.94 > 0.60); p8 only re-spread the S face y pins (does not touch that cut) and also collided dfault with y[58]. p9: outline 259.2 x 142.56 with the macro pinned at y 23.76 -> N channel 41.04 um (~1,000 tracks: 0.54); S channel unchanged (y[0..265] -> W-edge wd_in, y[266..511] -> E-edge wd_in, index-ordered pins: <= 0.36). RTL unchanged.",
+ "clock": "spine",
+ "params": {
+  "EMPTY_BYPASS": 1
+ },
+ "reroute_reason": {
+  "kind": "rtl_change"
+ },
+ "io_tcl": "physical/hbm_qdq_wr_split/pay_pins.tcl",
+ "slot_change_request": "parent slot unassigned (no die contract slot for ot_hgi_qdq_wr_pay); outline 259.2 x 125.28 -> 259.2 x 142.56, faces unchanged; posted to el1011-hbmdie.log 2026-10-14 by Claude hbm-group-B"
 }
