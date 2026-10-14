@@ -1327,6 +1327,10 @@ def write_lefs(m, k, path):
 
 def write_netlist(m, k, path, top='dsfd_die', skip=()):
     rp = real_ports() if k == 1 else {}
+    spare_out = {}
+    if k == 1:
+        _cfg = real_lef(CFG_LEF)
+        spare_out[(_cfg['name'], 'rd_out')] = sum(1 for p_ in _cfg['pins'] if p_.startswith('rd_out['))
     by = {it.name: it for it in m['insts']}
     conns = defaultdict(list)
     tops = [b for b in m['buses'] if b[1] == 'top_in']        # r8: die top input ports (refclk, por_n)
@@ -1378,6 +1382,16 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
         for base, bits_ in bus_bits.items():
             hi = max(bits_)
+            full = spare_out.get((it.master, base))
+            if full and full > hi + 1:
+                # r5 2026-10-14: a real macro's spare OUTPUT columns (cfg ROM rd_out[71:48]) get their own no-load nets so
+                # the connection is the port's full width (OpenSTA 'port rd_out size 72 does not match net size 48',
+                # die_port_bind width check); never used for inputs (an unconnected functional input stays an error)
+                nc = f'n_nc_{it.name}_{base}'
+                V.append(f'  wire [{full - 1}:{hi + 1}] {nc};')
+                for j in range(hi + 1, full):
+                    bits_[j] = f'{nc}[{j}]'
+                hi = full - 1
             cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))
             parts.append(f'.{Q.esc(base)}({{{cat}}})')
         V.append(f'  {it.master} {it.name} (' + ', '.join(parts) + ');')
@@ -2786,6 +2800,7 @@ XB_RGAP_FIRST = False          # --xb-rgap-first (s81-die v17): the x relay site
 # up to 1,244 um from the banks.  An owned site beside the DRIVER station reaches both banks of its slot (<= ~360 um, bank
 # pair limit 407) and the next station's E-end xai / xbi (<= ~290 um, limit 500).  Register counts (cycles) unchanged.
 X_SITE_PAIR = False
+SPLIT_FAR_PINS = False         # --split-far-pins (r5 10-14): a local chain whose assigned target pins split into a run + a far trailing group gets its own chain to that group
 HOP_PLAN_R = {}                # --hop-pair: planned hop -> its effective plan reach (pair limit - margin)
 HOP_ITER = 0                   # --hop-iter N: re-plan the hop fix on the built die up to N times (new over-limit hops)
 HOP_PAIR = 0.0                 # --hop-pair UM: hop-fix plans each hop against its real pair limit minus UM (pin spread margin)
@@ -6039,11 +6054,45 @@ def _col_relays(m, P):
                                      ('rt_', 'xa_', 'xb_', 'cc_', 'qt_', 'es_', 'ss_', 'so_', 'nf_', 'cfg_', 'go_', 'rr_')})
 
 
-def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom):
-    """r9: a local block-to-block bus (end block -> slab) staged by common-clock stations when it exceeds one hop"""
+def _split_far_pins(Bk, pb, bits, gap_um=200.0):
+    """r5 2026-10-14 (gather hop gate, el1013-s81-gather.log 11:21 answer (a)): the die-assigned pins of Bk.pb as one
+    run plus a trailing group whose pins sit > gap_um along the face from the run (gather rW*/rE* [N-2:N-1] = trunk
+    status {fault, live} to the bottom control strip).  Returns (k, face, coord) of the trailing group or None."""
+    rec = _assigned_record(Bk.master)
+    spec = (rec or {}).get('ports', {}).get(pb)
+    if not spec or not spec.get('per_bit') or spec['bits'] != bits:
+        return None
+    pbits = spec['per_bit']
+    k = 0
+    while k < bits - 1 and abs(pbits[bits - 1 - k][2] - pbits[bits - 2 - k][2]) <= gap_um and pbits[bits - 1 - k][0] == pbits[bits - 2 - k][0]:
+        k += 1
+    k += 1                                   # trailing group size (pins contiguous with the last pin)
+    if k >= bits or abs(pbits[bits - k][2] - pbits[bits - k - 1][2]) <= gap_um:
+        return None
+    face = pbits[bits - 1][0]
+    coord = sum(pb_[2] for pb_ in pbits[bits - k:]) / k
+    return k, face, coord
+
+
+def _local_chain(m, CH8, allowed, A, pa, Bk, pb, bits, name, dom, target=None):
+    """r9: a local block-to-block bus (end block -> slab) staged by common-clock stations when it exceeds one hop.
+    r5: when Bk's assigned pins of pb split into a run and a far trailing group, the trailing bits are a separate die
+    path with their own stations to their own pins (target = (face, coord) along the face)."""
+    if target is None and SPLIT_FAR_PINS:
+        sp_ = _split_far_pins(Bk, pb, bits)
+        if sp_:
+            k, face, coord = sp_
+            _local_chain(m, CH8, allowed, A, f'{pa}[0:{bits - k - 1}]', Bk, f'{pb}[0:{bits - k - 1}]', bits - k, name, dom)
+            _local_chain(m, CH8, allowed, A, f'{pa}[{bits - k}:{bits - 1}]', Bk, f'{pb}[{bits - k}:{bits - 1}]', k,
+                         name + '_st', dom, target=(face, coord))
+            return
     a = (A.x + A.w / 2, A.y + A.h / 2)
     fx = Bk.x + Bk.w if a[0] > Bk.x + Bk.w else (Bk.x if a[0] < Bk.x else a[0])
     b = (fx, min(max(a[1], Bk.y + 6.0), Bk.y + Bk.h - 6.0))
+    if target is not None:
+        face, coord = target
+        b = ((Bk.x if face == 'W' else Bk.x + Bk.w), Bk.y + coord) if face in 'WE' else \
+            (Bk.x + coord, (Bk.y if face == 'S' else Bk.y + Bk.h))
     path = _dedup([a, (b[0], a[1]), b])
     L = _poly_len(path)
     if L <= CC_REACH - 60.0:
@@ -8296,6 +8345,9 @@ def die_options(ap):
                     'real pair limit (pair_check, the gate\'s limit) minus UM of pin-spread margin; 0 = flat --hop-r-cc only')
     ap.add_argument('--hop-iter', type=int, default=0, help='s81-die v18: re-plan the hop fix on the built die up to N times '
                     '(hops the pass-2 build created over their limit get their stage); 0 = one plan (unchanged)')
+    ap.add_argument('--split-far-pins', action='store_true', help='r5 10-14: a hub local chain (end block -> slab) whose '
+                    'die-assigned target pins split into a run and a far trailing group (gather rW*/rE* trunk status '
+                    '{fault, live} -> control strip) routes the trailing bits as their own staged die path')
     ap.add_argument('--x-site-pair', action='store_true', help='s81-die v18 frame-template relay-site repair: two owned relay '
                     'sites in the --xb-rgap gap E of every slot station, lower = xa_<r>_<s+1>, upper = xb_<r>_<s+1> (the lanes '
                     'that station drives); needs --xb-rgap-first')
@@ -8406,6 +8458,8 @@ def apply_options(a):
     global XB_RGAP_FIRST, X_SITE_PAIR
     XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
     X_SITE_PAIR = bool(getattr(a, 'x_site_pair', False))
+    global SPLIT_FAR_PINS
+    SPLIT_FAR_PINS = bool(getattr(a, 'split_far_pins', False))
     global HOP_PAIR, HOP_ITER
     HOP_PAIR = float(getattr(a, 'hop_pair', 0.0) or 0.0)
     HOP_ITER = int(getattr(a, 'hop_iter', 0) or 0)
