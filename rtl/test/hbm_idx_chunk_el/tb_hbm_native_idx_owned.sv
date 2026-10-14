@@ -54,7 +54,8 @@ module tb_hbm_native_idx_owned #(
         begin t = s ^ (s << 13); t = t ^ (t >> 17); xs = t ^ (t << 5); end
     endfunction
 
-    reg rst_n = 1'b0;
+    reg rst_n = 1'b0; integer leaf_off_until=64,reset_hold=0,reset_count=0; reg did_warm_reset=0;
+    wire[NS*128-1:0]leaf_clocks={{(NS*128-1){clk}},(clk && cyc>=leaf_off_until)};
     reg              ql_v = 1'b0;
     wire             ql_ready;
     reg [7:0]        ql_head = 0;
@@ -76,7 +77,7 @@ module tb_hbm_native_idx_owned #(
     wire             protocol_fault;
     wire [7:0] query_head_for_dut = ($test$plusargs("MUT_QUERY_HEAD") && ql_head == 8'd7) ? 8'd8 : ql_head;
     ot_hbm_idx_array_owned_native #(.NS(NS)) dut (
-        .clk(clk),.clk_engine({NS{clk}}),.clk_meta({NS{clk}}),.clk_tail({NS{clk}}),.clk_chunk({(NS*4){clk}}),.clk_hslice({(NS*128){clk}}), .rst_n(rst_n), .ql_v(ql_v), .ql_ready(ql_ready), .ql_head(query_head_for_dut),
+        .clk(clk),.clk_engine({NS{clk}}),.clk_meta({NS{clk}}),.clk_tail({NS{clk}}),.clk_chunk({(NS*4){clk}}),.clk_hslice(leaf_clocks), .rst_n(rst_n), .ql_v(ql_v), .ql_ready(ql_ready), .ql_head(query_head_for_dut),
         .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w),
         .i_valid(i_valid), .i_ready(i_ready), .i_last(i_last), .i_kv(i_kv), .i_ref(i_ref),
         .i_keep(i_keep), .i_index(i_index), .i_key(i_key),
@@ -98,6 +99,10 @@ module tb_hbm_native_idx_owned #(
     always @(posedge clk) begin
         cyc <= cyc + 1;
         if (cyc == 4) rst_n <= 1'b1;
+        if(rst_n && cyc<leaf_off_until && ql_ready)$fatal(1,"FORWARDED_READY accepted while actual leaf clock stopped");
+        if(rst_n && tok==3 && st==0 && !did_warm_reset)begin
+          rst_n<=0;reset_hold=5;did_warm_reset=1;reset_count=reset_count+1;leaf_off_until=cyc+64;
+        end else if(reset_hold>0)begin reset_hold=reset_hold-1;if(reset_hold==0)rst_n<=1;end
         // ---- sink ----
         if (rst_n) begin
             seed2 = xs(seed2);
@@ -149,7 +154,7 @@ module tb_hbm_native_idx_owned #(
             t_last_out = cyc;
         end
         // ---- source ----
-        if (rst_n) begin
+        if (rst_n && !(tok==3 && st==0 && !did_warm_reset) && reset_hold==0) begin
             ql_v <= 1'b0;
             case (st)
                 0: begin                                   // next token: load q once permitted

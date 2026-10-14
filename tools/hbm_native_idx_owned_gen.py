@@ -10,7 +10,7 @@ assert hashlib.sha256(BASE.read_bytes()).hexdigest()=='2b8f96a2275df9fbe6c8747d9
 hs=Path('rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv').read_text()
 hs=hs.replace('module ot_hdc_v41x_idx_hslice #(', 'module ot_hbm_idx_hslice_ready_native #(')
 hs=hs.replace('    input  wire              rst_n,','    input  wire              rst_n, output reg online,')
-hs=hs.replace('    // ---- pin flops',"    always @(posedge clk or negedge rst_n)\n      if (!rst_n) online<=1'b0; else online<=rs && rn_p;\n    // ---- pin flops")
+hs=hs.replace('    // ---- pin flops',"`ifdef OT_HBM_IDX_READY_MUT_LAX\n    always @* online=rst_n;\n`else\n    always @(posedge clk or negedge rst_n)\n      if (!rst_n) online<=1'b0; else online<=rs && rn_p;\n`endif\n    // ---- pin flops")
 # rn_p is the actual consumer reset sample. Declaration remains in original body.
 s=CH.read_text();a=s.index(') (')+4;b=s.index(');',a);ports=s[a:b];body=s[b+2:s.rindex('endmodule')]
 ports=ports.replace('input  wire                  clk,','input wire clk, input wire [31:0] clk_hslice,')

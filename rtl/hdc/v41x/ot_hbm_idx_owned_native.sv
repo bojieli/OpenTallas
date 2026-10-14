@@ -49,8 +49,12 @@ module ot_hbm_idx_hslice_ready_native #(
     // reset standard: the port drives only the relay
     wire [0:0] srr; wire rs = srr[0];
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(srr));
+`ifdef OT_HBM_IDX_READY_MUT_LAX
+    always @* online=rst_n;
+`else
     always @(posedge clk or negedge rst_n)
       if (!rst_n) online<=1'b0; else online<=rs && rn_p;
+`endif
     // ---- pin flops
     reg rn_p; reg [7:0] hid_p; reg first_p;
     reg qv_p; reg [7:0] qh_p; reg [NB*128-1:0] qc_p; reg [NB*8-1:0] qs_p; reg [15:0] qw_p;

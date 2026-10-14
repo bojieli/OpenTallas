@@ -57,15 +57,15 @@ def census(path, top):
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
- source=Path('rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv').read_text()
- # Preserve exact declarations/defaults/ports; skip body only for glue census.
- end=source.index(');',source.index('module ot_hdc_v41x_idx_hslice'))+2
- macro=source[source.index('module ot_hdc_v41x_idx_hslice'):end]+'\nendmodule\n'
- macro='(* blackbox *) '+macro
+ source=Path('rtl/hdc/v41x/ot_hbm_idx_owned_native.sv').read_text()
+ start=source.index('module ot_hbm_idx_hslice_ready_native')
+ end=source.index(');',start)+2
+ macro='(* blackbox *) '+source[start:end]+'\nendmodule\n'
  (a.out/'hslice_abi.sv').write_text(macro)
  src=['rtl/hdc/v41x/ot_hbm_idx_owned_native.sv','rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv','rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv','rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv','rtl/hdc/ot_hdc_delay.sv','rtl/hdc/ot_hdc_fastfp.sv','rtl/hdc/ot_hdc_prefix.sv','rtl/hdc/ot_hdc_fp32_add_lat.sv','rtl/lib/ot_rst_relay.sv']
  # Fixed full-native die NS16 without top-chparam parameter cache reprocessing.
  profile=Path(src[0]).read_text().replace('parameter integer NS=4,MUT=0','parameter integer NS=16,MUT=0')
+ profile=profile[:start]+profile[profile.index('endmodule',start)+len('endmodule'):]
  (a.out/'owned_profile.sv').write_text(profile)
  ys='read_verilog -defer -sv -D SYNTHESIS '+str(a.out/'owned_profile.sv')+' '+' '.join(src[1:])+'\nread_verilog -lib -sv '+str(a.out/'hslice_abi.sv')+'\nhierarchy -check -top ot_hbm_idx_array_owned_native\nproc\nopt\nmemory_dff\nmemory_collect\nopt_clean\nwrite_json '+str(a.out/'retained.json')+'\nmemory_map\nopt\nwrite_json '+str(a.out/'mapped.json')+'\n'
  (a.out/'census.ys').write_text(ys)
@@ -73,6 +73,6 @@ def main():
   r=subprocess.run([str(Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys'),'-s',str(a.out/'census.ys')],stdout=f,stderr=subprocess.STDOUT)
  if r.returncode:raise SystemExit(r.returncode)
  result=census(a.out/'mapped.json','ot_hbm_idx_array_owned_native')
- x={'source_sha256':{f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in src+['rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv']},'profile':'NS16/NK4/IH32/NB4/FPL7/FML5/QL5','mapped_glue':result,'closed_leaf_macro_count':len(result['blackbox_macros']),'closed_leaf_measured_ff_sinks_each':15334,'macro_glue_combined_sink_count_scope':'Separate source-glue generic FF bits and measured closed standalone hslice sinks; no fullcellmapping or CTS','physical_qualified':False,'slots_assigned':False}
- (a.out/'receipt.json').write_text(json.dumps(x,indent=2)+'\n');print(json.dumps({'glue_ff_bits':result['total_generic_ff_bits'],'macros':len(result['blackbox_macros']),'roots':result['clock_ff_bits']}))
+ x={'source_sha256':{f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in src+['rtl/hdc/v41x/ot_hdc_v41x_idx_hslice.sv']},'profile':'NS16/NK4/IH32/NB4/FPL7/FML5/QL5','mapped_glue':result,'closed_leaf_macro_count':len(result['blackbox_macros']),'related_legacy_leaf_measured_ff_sinks_each':15334,'additional_registered_ACK_FF_per_new_leaf':1,'new_ready_leaf_physical_qualified':False,'macro_glue_combined_sink_count_scope':'Separate source-glue generic FF bits and measured closed standalone hslice sinks; no fullcellmapping or CTS','physical_qualified':False,'slots_assigned':False}
+ (a.out/'receipt.json').write_text(json.dumps(x,indent=2)+'\n');print(json.dumps({'glue_ff_bits':result['total_generic_ff_bits'],'macros':len(result['blackbox_macros']),'largest_glue_root_bits':max(result['clock_ff_bits'].values()),'glue_clock_roots':len(result['clock_ff_bits'])}))
 if __name__=='__main__':main()
