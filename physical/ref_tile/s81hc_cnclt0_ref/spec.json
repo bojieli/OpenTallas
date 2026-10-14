@@ -1,0 +1,86 @@
+{
+ "name": "s81hc_cnclt0_ref",
+ "top": "ot_s81_hc_cnclt",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_hc_core.sv",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_skid_buffer.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv"
+ ],
+ "clock_port": "sk",
+ "reset_ports": [],
+ "outline": {
+  "w": 276.48,
+  "h": 276.48
+ },
+ "why_floorplan": "bottom collector of chain 0: pin flops on the far tile's fv / vector index / partial lane (N face, under the far tile), leaf buffer 5 x L x 128 b + the chain's own stree subtree; outline = the closed crootr_t tree tile's order (276.48) pending the remote gate's synthesized area",
+ "macros": [],
+ "pins": {
+  "N": [
+   "f_fv",
+   "f_nv",
+   "dl"
+  ],
+  "S": [
+   "rvt",
+   "pi",
+   "ex",
+   "flt"
+  ],
+  "W": [
+   "sk",
+   "srs"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03
+ },
+ "job": {
+  "benches_from": "tools/s81_suhc/hc_ntree_benches.json",
+  "owner": "Claude:el1014-s81-norm-tree",
+  "branch": "claude/s81-norm-tree-1014",
+  "tag": "v1",
+  "structural_change": "NORM tree variant",
+  "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 64 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
+  "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_cnclt C=0: bottom leaf collector + the chain's subtree of the golden pairwise tree (unchanged ot_s81_hc_stree OWN=0)",
+  "views_to": "physical/ref_tile/s81hc_cnclt0_ref/views",
+  "record_to": "results/rtl/ref_tile/s81hc_cnclt0_ref"
+ },
+ "params": {
+  "C": 0
+ },
+ "children": [],
+ "inter": []
+}

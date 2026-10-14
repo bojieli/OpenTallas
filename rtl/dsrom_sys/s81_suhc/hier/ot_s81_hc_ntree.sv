@@ -54,7 +54,8 @@ module ot_s81_hc_ctfx_nt #(
     output reg  [S_RD+4:0]    fv,
     output reg  [FXW-1:0]     fdx,
     input  wire [7:0]         tid,
-    input  wire [127:0]       cs,
+    input  wire [63:0]        cs_n,          // chunk sums of banks 0 / 1 (ctnl rows above the band: lanes 3, 7)
+    input  wire [63:0]        cs_s,          // banks 2 / 3 (rows below: lanes 11, 15)
     input  wire [DLW-1:0]     dl_in,
     output reg  [DLW-1:0]     dl_out,
     input  wire [32:0]        ul_in,
@@ -94,6 +95,7 @@ module ot_s81_hc_ctfx_nt #(
     ot_s81_hc_ctq #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP)) u_q (.clk(clk), .rst_n(rst_n),
         .fv(fvl), .fdx({{(FXW - O_D){1'b0}}, fcl}), .n_hs(n_hs), .n_cs(n_cs), .n_gs(n_gs), .mx_v(mx_v), .x_v(x_v),
         .xi(xi), .vs(vs), .si(si), .rh(rh), .sc_i(sc_i), .b_v(b_v), .vy(vy), .wi(wi), .yi(yi));
+    wire [127:0] cs = {cs_s, cs_n};
     reg       farq;
     reg [4:0] oct;
     always @(posedge clk) begin farq <= tid[0]; oct <= tid[5:1]; end
@@ -117,9 +119,11 @@ endmodule
 // (ot_s81_hc_stree OWN = C) on the buffered leaves.  rvt / pi / ex leave on output flops with the timing of
 // ot_s81_hc_crootr_t's s_ex (v_q -> tree -> output flop) so the closed ot_s81_hc_cntree consumes them unchanged.
 // Sticky fault: lane fault bit, a leaf outside the chain / a vector >= NV / a duplicate, a leaf missing at fire, tree.
+// NT_K 67 = measured (hc_gate NG 256 hier3, 0c402af5a NT_DBG): the far octet's leaf of vector j is captured 66 cycles
+// after j's beat (all three chains in the same cycle); zero slack, the missing-leaf fault guards it (NT_K 66 must FAIL).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cnclt #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, AL = 4, C = 0, NT_K = 80
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, AL = 4, C = 0, NT_K = 67
 ) (
     input  wire                 sk,
     input  wire                 srs,
@@ -281,15 +285,15 @@ module ot_s81_hc_cnrsq #(
         if (fvq[S_RD+1]) n_eps <= cf_eps[fcq[O_NG + 1]];
     end
     wire [31:0] mq, me, rr_;
-    wire        mq_v, rr_v, f_div, f_eps, f_rsq;
+    wire        mq_v, rr_v, f_div, f_ep, f_rsq;
     ot_dsrom_divc #(.F(DF), .K(DK)) u_div (.clk(sk), .rst_n(rs_n), .v(ssq_v), .x(ssq), .y(mq), .vo(mq_v), .fault(f_div));
     wire [LA:0] ve;
     ot_hdc_vline #(.D(LA)) u_ve (.clk(sk), .rst_n(rs_n), .v(mq_v), .vd(ve));
-    ot_dsrom_qadd #(.LAT(LA)) u_eps (sk, rs_n, mq_v, mq, n_eps, me, f_eps);
+    ot_dsrom_qadd #(.LAT(LA)) u_eps (sk, rs_n, mq_v, mq, n_eps, me, f_ep);
     ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(sk), .rst_n(rs_n), .v(ve[LA]), .x(me), .y(rr_), .vo(rr_v), .fault(f_rsq));
     always @(posedge sk or negedge rs_n)
         if (!rs_n) begin ul <= 0; flt <= 1'b0; end
-        else begin ul <= {3{rr_v, rr_}}; flt <= flt | tfq | (|cfq) | f_div | f_eps | f_rsq; end
+        else begin ul <= {3{rr_v, rr_}}; flt <= flt | tfq | (|cfq) | f_div | f_ep | f_rsq; end
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -297,7 +301,7 @@ endmodule
 // tile ot_s81_hc_cntree at its h2 tuple (ngo = the norm go as it leaves chain 0's far tile), the scalar tail.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cnbot #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, NT_K = 80
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, NT_K = 67
 ) (
     input  wire                 sk,
     input  wire                 srs,
@@ -459,7 +463,7 @@ module ot_s81_hc_cth_nt #(
     wire [32:0]    ul_m;
     ot_s81_hc_ctfx_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(CNL_PIN)) u_fx (
         .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx),
-        .tid(tid), .cs(cs), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_in), .ul_out(ul_m));
+        .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_in), .ul_out(ul_m));
     ot_s81_hc_ctfs_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
         .clk(clk), .rst_in(rst_c), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out),
         .dl_in(dl_m), .dl_out(dl_out));

@@ -7,7 +7,7 @@
 // (expected VM rows), n.mem (counts).  Prints per job its engine start / done (slab cycles) and
 // HCG jobs= done= err= rows= fault= code= cyc= bad_tag=  then HCG PASS / HCG FAIL.
 module tb_s81_hc_master;
-    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, MUT = 0, AMUT = 0, HIER = 0, NCOL = 3, GS = 8, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4, LANE_SPECIALIZE = 0, PIPE = 0, PIPE_PD = 40, NTREE = 0, NT_K = 80, NT_DBG = 0;
+    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, MUT = 0, AMUT = 0, HIER = 0, NCOL = 3, GS = 8, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4, LANE_SPECIALIZE = 0, PIPE = 0, PIPE_PD = 40, NTREE = 0, NT_K = 67, NT_DBG = 0;
     parameter integer MAXJ = 64, MAXE = 4096, MAXY = 2048, TMAX = 400000;
     reg cck = 0, sk = 0, crs = 0, srs = 0;
     always #0.4165 cck = ~cck;              // controller 1.2 GHz

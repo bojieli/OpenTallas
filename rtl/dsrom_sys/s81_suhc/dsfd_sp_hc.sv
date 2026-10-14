@@ -25,7 +25,7 @@ module dsfd_sp_hc #(
     // NORM tree variant (el1014-s81-norm-tree; hier/ot_s81_hc_ntree.sv): 0 = the closed serial-chain slab (default,
     // unchanged); 1 = half-octets ot_s81_hc_cth_nt + the bottom region ot_s81_hc_cnbot (HIER, HALF, TAIL_SPLIT 0 / 2).
     // NT_K: the bottom collectors' fire offset after the vector beat leaves the far tile (cycles).
-    parameter integer NTREE = 0, NT_K = 80
+    parameter integer NTREE = 0, NT_K = 67
 ) (
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
     input  wire [TRW-1:0] f_tr0, f_tr1, f_tr2,
@@ -438,7 +438,7 @@ endmodule
 
 module dsfd_sp_hc_t #(
     parameter integer NG=256,D=5120,S_RD=2,S_RT=4,WIN=2,WOUT=2,ML=5,AL=4,NCOL=3,GS=8,RLY=2,HEAD_ROWS=10,CNL_PIN=0,CHAIN_STEP=AL,LANE_SPECIALIZE=0,
-    parameter integer NTREE=0,NT_K=80,
+    parameter integer NTREE=0,NT_K=67,
     parameter integer FDW=(72+16*S_RD)+((S_RD*512>((NG/GS+NCOL-1)/NCOL)*GS*32)?S_RD*512:((NG/GS+NCOL-1)/NCOL)*GS*32),
     parameter integer FVW=S_RD+5,RVW=S_RT+4,RDW=S_RT+24*S_RT+8+512*S_RT,TFW=FDW+FVW+129,TRW=RDW+RVW,NTW=2*137+1
  )(input wire ck,input wire [TFW-1:0] f_sf0,f_sf1,f_sf2,output wire [TRW-1:0] t_sr0,t_sr1,t_sr2,

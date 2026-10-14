@@ -133,6 +133,17 @@ TILES.update({
     # closed) is the lockstep reference only (tools/s81_suhc/cryy_split_bench.sh) and is not elaborated in production
     "ot_s81_hc_cryys":    dict(src=_CRY, routed=[{}], mut=("p_y <= yh;", "p_y <= yh ^ " + _BIT("W", "30") + ";")),
 })
+# ---- NORM tree variant tiles (el1014-s81-norm-tree, hier/ot_s81_hc_ntree.sv; probed / mutated only with --ntree 1)
+_NT = _H + "ot_s81_hc_ntree.sv"
+TILES.update({
+    "ot_s81_hc_ctfx_nt": dict(src=_NT, routed=[{}], mut=("o[SW * oct[0] +: SW] = {cs, si[2:0], oct, 1'b1};",
+                                                         "o[SW * oct[0] +: SW] = {cs ^ (128'd1 << 29), si[2:0], oct, 1'b1};")),
+    "ot_s81_hc_ctfs_nt": dict(src=_NT, routed=[{}], mut=("else dl_out <= dl_in;", "else dl_out <= dl_in ^ (275'd1 << 40);")),
+    "ot_s81_hc_ctrn_nt": dict(src=_NT, routed=[{}], mut=("else ul_out <= ul_in;", "else ul_out <= ul_in ^ 33'h0_0040_0000;")),
+    "ot_s81_hc_cnclt":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("pk_q <= lb[fi];", "pk_q <= lb[fi] ^ (1 << 29);")),
+    "ot_s81_hc_cnrsq":   dict(src=_NT, routed=[{}], mut=("cf_eps[fcq[O_RS]] <= epq[32 * s +: 32];",
+                                                         "cf_eps[fcq[O_RS]] <= epq[32 * s +: 32] ^ 32'h00800000;")),
+})
 TILE_RE = re.compile(r"^HCTILE (\w+) (\S+) ?(.*)$", re.M)
 
 
@@ -573,7 +584,7 @@ def main():
     p.add_argument("--pipe", type=int, default=0, help="1: ot_s81_hc_cseq PIPE (POST issue-order done; hierarchical slab)")
     p.add_argument("--pipe-pd", type=int, default=40, help="PIPE guard cycles after the last y beat (0 = negative control: must fail)")
     p.add_argument("--ntree", type=int, default=0, help="1: NORM tree variant (hier/ot_s81_hc_ntree.sv, dsfd_sp_hc NTREE 1; --hier 2 / 3)")
-    p.add_argument("--nt-k", type=int, default=80, help="NTREE: bottom collectors' fire offset NT_K")
+    p.add_argument("--nt-k", type=int, default=67, help="NTREE: bottom collectors' fire offset NT_K")
     p.add_argument("--nt-dbg", type=int, default=0, help="NTREE: print the collectors' lane leaves / vector beats (NT_K calibration)")
     p.add_argument("--pad-hard", type=int, default=0, help="1: define OT_S81_HC_PAD_HARD (pad leaves at their hardened defaults)")
     p.add_argument("--tmax", type=int, default=0, help="testbench cycle cap (default: the bench's 400000); a mutant that hangs then fails in minutes")
