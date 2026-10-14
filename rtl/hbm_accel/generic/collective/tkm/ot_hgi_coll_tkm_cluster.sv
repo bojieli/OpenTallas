@@ -55,7 +55,11 @@ module ot_hgi_coll_tkm_cluster #(
 `ifdef OT_TKM_SEQ_HARD
     ot_hgi_coll_tkm_seq u_seq (
 `else
+`ifdef OT_TKM_LANE_SPLIT
+    ot_hgi_coll_tkm_seq_split #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_seq(.lane_clk({DEL{clk}}),
+`else
     ot_hgi_coll_tkm_seq #(.KMAX(KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .CAP(CAP), .MUT(MUT)) u_seq (
+`endif
 `endif
         .chain_entry(chain_entry), .chain_valid(chain_valid), .chain_up(chain_up),
         .chain_clr(chain_clr), .chain_conv(chain_conv), .chain_tt(chain_tt), .chain_tl(chain_tl),
