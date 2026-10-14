@@ -510,11 +510,18 @@ PH_C = dict(ss=dict(ins_min=70.0, ins_max=90.0, ckq=60.0, r=0.30, setup=30.0, ho
             tt=dict(ins_min=55.0, ins_max=72.0, ckq=45.0, r=0.22, setup=22.0, hold=12.0, tr=9.0, v=0.70, t=25.0))
 
 
-def placeholder_libs(m, work, libs):
-    """write <master>_{ss,ff,tt}.lib for the PLACEHOLDER_LIB_MASTERS present without a lib; returns their names"""
-    want = sorted({it.master for it in m['insts'] if it.master in PLACEHOLDER_LIB_MASTERS and it.master not in libs})
+def placeholder_libs(m, work, libs, all_=False):
+    """write <master>_{ss,ff,tt}.lib for the PLACEHOLDER_LIB_MASTERS present without a lib; returns their names.
+    all_ (die --placeholder-all, hbmdie 10-13: the die STA timed 31 views and left the 8,429 family stations and every
+    unclosed block a black box): EVERY instantiated master without a Liberty that has one clock-pin family (ck / ck<n>
+    or clk, one die net) gets the boundary-registered recipe, so every die hop has a launch and a capture; a master
+    with both families (two clock domains: a single related clock would launch its outputs in the wrong domain, the
+    S81 pilot's first defect) is skipped and listed in <work>/placeholder_masters.json."""
+    want = sorted({it.master for it in m['insts'] if (all_ or it.master in PLACEHOLDER_LIB_MASTERS) and it.master not in libs})
     if not want:
         return []
+    if all_:
+        return _placeholder_all(m, work, want)
     lef = '\n'.join(p.read_text() for p in sorted(work.glob('*.lef')))
     insts = {it.name: it.master for it in m['insts']}
     drv = defaultdict(set)
@@ -569,7 +576,83 @@ def placeholder_libs(m, work, libs):
     return out
 
 
-def sta_tcl(m, work, index):
+def _placeholder_all(m, work, want):
+    """one bundled library hfd_ph_<corner>.lib for every master of `want` (one LEF pass)"""
+    ws = set(want)
+    width = {n: defaultdict(int) for n in want}
+    for lf in sorted(work.glob('*.lef')):
+        cur = None
+        with open(lf, errors='ignore') as f:
+            for ln in f:
+                if ln.startswith('MACRO '):
+                    cur = ln.split()[1]
+                    cur = cur if cur in ws else None
+                elif cur and ln.startswith('  PIN '):
+                    pn = ln.split()[1]
+                    b_, _, i_ = pn.partition('[')
+                    width[cur][b_] = max(width[cur][b_], int(i_.rstrip(']')) + 1 if i_ else 1)
+    insts = {it.name: it.master for it in m['insts']}
+    drv = defaultdict(set)
+    for bid, cls, bits, eps in m['buses']:
+        if eps and eps[0][0] in insts:
+            drv[insts[eps[0][0]]].add(eps[0][1].split('@', 1)[0])
+    caps = [1.44, 5.76, 23.04, 92.16, 368.64]
+    done, skipped = [], {}
+    cells = {c: [] for c in PH_C}
+    types = set()
+    for n in want:
+        w_ = width[n]
+        fam = {('ck' if re.fullmatch(r'ck\d*', b_) else 'clk') for b_ in w_ if re.fullmatch(r'ck\d*|clk', b_)}
+        if len(fam) != 1:
+            skipped[n] = 'no clock pin' if not fam else 'two clock-pin families (ck + clk): needs a related clock per port'
+            continue
+        clocks = sorted(b_ for b_ in w_ if re.fullmatch(r'ck\d*|clk', b_))
+        ref = clocks[0]
+        types |= set(w_.values())
+        for corner, c in PH_C.items():
+            dl = ', '.join(f'{c["ins_max"] + c["ckq"] + c["r"] * x:.2f}' for x in caps)
+            tr = ', '.join(f'{c["tr"] + 0.5 * c["r"] * x:.2f}' for x in caps)
+            L_ = [f'  cell ({n}) {{', '    area : 1.0;', '    is_macro_cell : true;']
+            for b_, w in sorted(w_.items()):
+                if b_ in ('VDD', 'VSS'):
+                    continue
+                if b_ in clocks:
+                    L_.append(f'    bus ({b_}) {{ bus_type : pb{w}; direction : input; clock : true; capacitance : 5.0; }}')
+                elif b_ in drv[n]:
+                    L_ += [f'    bus ({b_}) {{ bus_type : pb{w}; direction : output;',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : rising_edge; cell_rise (ld) {{ values ("{dl}"); }} cell_fall (ld) {{ values ("{dl}"); }} rise_transition (ld) {{ values ("{tr}"); }} fall_transition (ld) {{ values ("{tr}"); }} }}',
+                           '    }']
+                else:
+                    L_ += [f'    bus ({b_}) {{ bus_type : pb{w}; direction : input; capacitance : 0.6;',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : setup_rising; rise_constraint (scalar) {{ values ("{c["setup"] - c["ins_min"]:.2f}"); }} fall_constraint (scalar) {{ values ("{c["setup"] - c["ins_min"]:.2f}"); }} }}',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : hold_rising; rise_constraint (scalar) {{ values ("{c["hold"] + c["ins_max"]:.2f}"); }} fall_constraint (scalar) {{ values ("{c["hold"] + c["ins_max"]:.2f}"); }} }}',
+                           '    }']
+            L_.append('  }')
+            cells[corner] += L_
+        done.append(n)
+    for corner, c in PH_C.items():
+        H_ = [f'library (hfd_ph_{corner}) {{', '  delay_model : table_lookup;', '  time_unit : "1ps";',
+              '  voltage_unit : "1V";', '  current_unit : "1mA";', '  pulling_resistance_unit : "1kohm";',
+              '  leakage_power_unit : "1pW";', '  capacitive_load_unit (1,fF);',
+              f'  nom_process : 1.0; nom_temperature : {c["t"]}; nom_voltage : {c["v"]};',
+              '  input_threshold_pct_rise : 50; input_threshold_pct_fall : 50;',
+              '  output_threshold_pct_rise : 50; output_threshold_pct_fall : 50;',
+              '  slew_lower_threshold_pct_rise : 10; slew_lower_threshold_pct_fall : 10;',
+              '  slew_upper_threshold_pct_rise : 90; slew_upper_threshold_pct_fall : 90;',
+              '  lu_table_template (ld) { variable_1 : total_output_net_capacitance; index_1 ("'
+              + ', '.join(f'{x:.2f}' for x in caps) + '"); }']
+        for w in sorted(types):
+            H_.append(f'  type (pb{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1}; bit_to : 0; }}')
+        (work / f'hfd_ph_{corner}.lib').write_text('\n'.join(H_ + cells[corner] + ['}']) + '\n')
+    kinds = {it.master: it.kind for it in m['insts']}
+    (work / 'placeholder_masters.json').write_text(json.dumps(dict(
+        library='hfd_ph_<corner>.lib', recipe=PH_C,
+        masters={n: ('relay_ph' if kinds.get(n) == 'waypoint' else 'placeholder_lib') for n in done}, skipped=skipped),
+        indent=0) + '\n')
+    return done
+
+
+def sta_tcl(m, work, index, ph_all=False):
     """die-context STA (owner addendum 2026-10-06: a block counts as closed only after die-context STA with the real
     abstract): the real-abstract die placement (case real, k = 1) with every indexed view that has SS / FF Liberty,
     wires from placement (estimate_parasitics -placement, ASAP7 setRC), one ideal clock per die clock net on the lib
@@ -606,8 +689,12 @@ def sta_tcl(m, work, index):
                     continue
                 lib_lines.append(f'read_liberty -corner {c} /work/{n}_{c}.lib')
             libs[n] = dict(phy_bb=True)
-    for n in placeholder_libs(m, work, libs):
-        lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
+    ph_ = placeholder_libs(m, work, libs, ph_all)
+    if ph_all and ph_:
+        lib_lines += ['read_liberty -corner ss /work/hfd_ph_ss.lib', 'read_liberty -corner ff /work/hfd_ph_ff.lib']
+    for n in ph_:
+        if not ph_all:
+            lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
         libs[n] = dict(placeholder=True)
     if m.get('relay_masters'):      # the instanced die relays / wire stages (tools/hbm_die_relays.py)
         lib_lines += ['read_liberty -corner ss /work/hfd_rly_ss.lib', 'read_liberty -corner ff /work/hfd_rly_ff.lib']
@@ -840,7 +927,7 @@ def cmd_die(a):
                                                      'foreach f {phy.lef serdes.lef ucie.lef elements.lef views.lef}')
         (work / 'run.tcl').write_text(run)
         if a.case == 'sta':
-            sta_tcl(m, work, a.index)
+            sta_tcl(m, work, a.index, getattr(a, 'placeholder_all', False))
     else:
         cov = dict(H.COV)
         H.case_grt(m, work, a.k, a.tag, a.iters, cov)
@@ -1377,6 +1464,8 @@ def main(argv=None):
     p.add_argument('--case', choices=['real', 'grt', 'sta'], required=True)
     p.add_argument('--relays', action='store_true', help='instance the r22 pin relays + budget wire stages')
     p.add_argument('--no-wire-stages', action='store_true', help='with --relays: pin relays only')
+    p.add_argument('--placeholder-all', action='store_true', help='case sta: a boundary-registered placeholder Liberty '
+                   'for every instantiated master without one (stations, unclosed blocks): every die hop is timed')
     p.add_argument('--relay-all-pins', action='store_true', help='with --relays: a relay at every die pin whose segment '
                    'is > 100 um (BRIEF 2026-10-07), not only the r22 relay_ends list')
     p.add_argument('--index', default=str(ROOT / VIEWS / 'index.json'))

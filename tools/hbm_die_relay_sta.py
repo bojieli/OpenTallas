@@ -18,6 +18,95 @@ from collections import defaultdict
 from pathlib import Path
 
 RELAY_INS = dict(ss=80.0, ff=47.5, tt=63.5)
+SKEW_ALL = False        # --skew-all: 60 + 150 ps on every endpoint (the pre-rule uniform budget)
+R_COMMON_MAX_PS, SPREAD_MAX_PS = 300.0, 80.0
+
+
+def view_clock_trees(case, master):
+    """Explicit ETM insertion per clock pin and corner, in Liberty ps units."""
+    out = {}
+    for corner in ('ss', 'ff', 'tt'):
+        path = case / f'{master}_{corner}.lib'
+        if not path.exists():
+            continue
+        text = path.read_text()
+        pins = {}
+        # Balance braces so a timing group cannot consume the following pin.
+        for match in re.finditer(r'\bpin\s*\(\s*"?([^"\s)]+)"?\s*\)\s*\{', text):
+            depth, end = 1, match.end()
+            while end < len(text) and depth:
+                depth += (text[end] == '{') - (text[end] == '}')
+                end += 1
+            body = text[match.end():end - 1]
+            tree = {}
+            for arc in re.finditer(r'timing_type\s*:\s*(min|max)_clock_tree_path\s*;.*?cell_rise\s*\([^)]*\)\s*\{[^}]*?values\s*\(\s*"\s*([-\d.]+)', body, re.S):
+                tree[arc.group(1)] = float(arc.group(2))
+            if tree:
+                pins[match.group(1)] = tree
+        if pins:
+            out[corner] = pins
+    # tt_prefix binds SS Liberty if this view has no TT model.
+    if not (case / f'{master}_tt.lib').exists() and 'ss' in out:
+        out['tt'] = out['ss']
+    return out
+
+
+def view_spread(case, master, measured=None):
+    """Boundary clock-arrival spread from the routed insertion measurement.
+
+    Liberty min/max_clock_tree_path arcs normalize the ETM timing reference:
+    extrema across clock pins can describe different clock trees and timing
+    envelopes, rather than one sampled boundary population. They cannot by
+    themselves establish the measured boundary skew bound.
+    """
+    record = (measured or {}).get(master, {})
+    out = {}
+    for c in ('ss', 'ff', 'tt'):
+        corner = record.get(c, {})
+        boundary = corner.get('kind') == 'boundary' or record.get('boundary_n', 0) > 0
+        if boundary and 'routed' in record.get('parasitics', '') and 'min' in corner and 'max' in corner:
+            out[c] = round(float(corner['max']) - float(corner['min']), 1)
+    return out
+
+
+def delivery_record(case, sinks, measured=None):
+    """clock delivery per tile class (master): R per corner and its source, level (common <= 300 ps / early tap),
+    entry = phi - R as the STA binds it, boundary spread and the spread defect, instances; also tags every sink with
+    its level (constraints() reads it)"""
+    by = defaultdict(list)
+    for k, s in sinks.items():
+        by[s['master']].append(s)
+    tiles = {}
+    for mst, ss in sorted(by.items()):
+        ins = next((s.get('internal_ps') for s in ss if s.get('internal_ps')), None)
+        src = next((s.get('insertion_source') for s in ss if s.get('insertion_source')), None)
+        r_tt = (ins or {}).get('tt')
+        level = 'unmeasured' if r_tt is None else ('common' if r_tt <= R_COMMON_MAX_PS else 'early_tap')
+        if mst == 'hfd_rly':
+            src = 'relay recipe (analytic)'
+        spr = view_spread(case, mst, measured)
+        trees = view_clock_trees(case, mst)
+        for s in ss:
+            s['level'] = level
+            s['etm_tree_ps'] = trees
+        ent = sorted({round(s['entry_ps']['tt'], 1) for s in ss if 'tt' in s.get('entry_ps', {})})
+        tiles[mst] = dict(instances=len({s['instance'] for s in ss}), clock_pins=len(ss), R_ps=ins, R_source=src, level=level,
+                          spread_source='routed boundary insertion metadata' if spr else None,
+                          etm_clock_tree_ps=trees or None,
+                          hop_skew_ps=150 if level == 'early_tap' else 90, spread_ps=spr or None,
+                          spread_defect=bool(spr and max(spr.values()) > SPREAD_MAX_PS),
+                          entry_tt_ps=[ent[0], ent[-1]] if ent else None,
+                          regions=len({s.get('region') for s in ss}))
+    return dict(sta_reference='source entry_ps remains physical phi - R; propagated source clocks retain the ETM I/O '
+                              'tables unchanged in the validated OpenSTA 3.1.0 flow; tree arcs are metadata only',
+                rule='clock pin delivered at phi - R (region flop target - the bound view\'s insertion); R <= 300 ps one '
+                     'level (hop budget 60 + SKEW 90), R > 300 ps early tap (60 + SKEW 150 on hops with either endpoint on an early tap); boundary '
+                     'spread <= 80 ps', skew_all=SKEW_ALL, tiles=tiles,
+                summary=dict(common=sum(1 for t_ in tiles.values() if t_['level'] == 'common'),
+                             early_tap=sorted(k for k, t_ in tiles.items() if t_['level'] == 'early_tap'),
+                             unmeasured=sorted(k for k, t_ in tiles.items() if t_['level'] == 'unmeasured'),
+                             spread_defects=sorted(k for k, t_ in tiles.items() if t_['spread_defect']),
+                             spread_unmeasured=sorted(k for k, t_ in tiles.items() if not t_['spread_ps'])))
 DOM = {'n_clk_stream': 'clk_stream', 'n_clk_serial': 'clk_serial', 'n_clk_hbm': 'clk_hbm', 'n_clk_link': 'clk_link'}
 PERIOD_PS = {'clk_stream': 833.333, 'clk_serial': 1111.111, 'clk_hbm': 1024.0, 'clk_link': 833.333}
 
@@ -105,10 +194,14 @@ def compose(case, ctx, measured=None):
     # TT region flop targets: the plan has SS / FF only; TT = their mean (interpolation, labelled) -- only the
     #   relative arrival of sinks in one domain matters for timing, and every sink of a region keeps one target
     tgt0 = {r_: list(t_[:2]) + [(t_[0] + t_[1]) / 2] for r_, t_ in ctx['region_flop_target_ps'].items()}
+    pj = case / 'placeholder_masters.json'
+    ph_all = set(json.loads(pj.read_text())['masters']) if pj.exists() else set()
     for k, s_ in sinks.items():
         if 'tt' not in s_.get('entry_ps', {}):        # placeholder / sheet-target sink: TT entry interpolated
             s_['entry_ps'] = dict(s_['entry_ps'], tt=round((s_['entry_ps']['ss'] + s_['entry_ps']['ff']) / 2, 3))
         ins, src = view_insertion(case, s_['master'], measured or {})
+        if not ins and s_['master'] in ph_all:      # die --placeholder-all: the bundled recipe's own insertion (mid)
+            ins, src = dict(RELAY_INS), 'placeholder recipe (analytic, hfd_ph_<corner>.lib)'
         if ins:
             t_ = tgt0[s_['region']]
             s_['internal_ps'] = ins
@@ -160,29 +253,49 @@ def compose(case, ctx, measured=None):
 
 def constraints(sinks, corner):
     L = ['set_cmd_units -time ns -capacitance fF',
-         'set ot_clock_missing {}', 'set ot_clock_bound 0', 'set ot_dom [dict create]', 'set ot_lat {}']
+         'set ot_clock_missing {}', 'set ot_clock_bound 0', 'set ot_dom [dict create]', 'set ot_lat {}', 'set ot_level_clocks [dict create]', 'set ot_early 0', 'set ot_etm_corrected 0']
     for key, s in sorted(sinks.items()):
         pin = key if '[' in s['port'] else key + '[0]'
+        early = s.get('level') == 'early_tap' and not SKEW_ALL
+        clk = s['domain'] + ('__early_tap' if early else '')
         # die-gaps 2026-10-08: the r25 kit left 22 view clocks unbound (paths untimed): the hub quarters hfd_hc /
         # hfd_sfu / hfd_su enter their clock on ck0..ck7 (one die net) and the SerDes / host PHY macros on 'clk', while
         # the die model names every sink port 'ck'.  Fallbacks: <inst>/clk, then <inst>/ck? (all taps, same entry).
         inst = key.rsplit('/', 1)[0]
         L.append(f'set p [get_pins -quiet {{{pin}}}]; foreach alt {{{{{key}}} {{{inst}/clk}} {{{inst}/ck?}} {{{inst}/ck?[0]}}}} '
                  f'{{ if {{![llength $p]}} {{ set p [get_pins -quiet $alt] }} }}; '
-                 f'if {{![llength $p]}} {{ lappend ot_clock_missing {{{pin}}} }} else {{ dict lappend ot_dom {s["domain"]} $p; '
-                 f'lappend ot_lat [list {s["domain"]} {s["entry_ps"][corner] / 1000:.6f} $p] }}')
+                 f'if {{![llength $p]}} {{ lappend ot_clock_missing {{{pin}}} }} else {{ dict lappend ot_dom {clk} $p; '
+                 f'dict set ot_level_clocks {clk} {s["domain"]}; '
+                 f'foreach pp $p {{ lappend ot_lat [list {clk} {s["entry_ps"][corner] / 1000:.6f} '
+                 f'{s["entry_ps"][corner] / 1000:.6f} $pp] }}'
+                 + (' ; incr ot_early [llength $p]' if early else '') + ' }')
     for d, per in PERIOD_PS.items():
-        L.append(f'if {{[dict exists $ot_dom {d}]}} {{ create_clock -name {d} -period {per / 1000:.6f} [dict get $ot_dom {d}] }}')
-    # propagated mode: the clocks start AT the sink pins (no die clock net is traversed) and the view Liberty
-    #   clock -> output / setup / hold arcs carry the view's own insertion (write_timing_model, propagated); in ideal
-    #   mode OpenSTA strips the macro clock-tree arcs instead (checked on w289 -> relay: 30 ps ideal vs 221 ps arc)
-    L += ['foreach e $ot_lat { lassign $e d l p; set_clock_latency -source -clock $d $l $p; incr ot_clock_bound }',
+        for clk in (d, d + '__early_tap'):
+            L.append(f'if {{[dict exists $ot_dom {clk}]}} {{ create_clock -name {clk} -period {per / 1000:.6f} [dict get $ot_dom {clk}] }}')
+    # Actual OpenSTA 3.1.0 probes with a published hbfd_rly8 ETM show
+    # propagated source-clock timing is byte-identical with clock-tree groups
+    # present or stripped. Preserve physical phi-R; adding those tree values
+    # here would introduce a second insertion instead of compensating one.
+    L += ['foreach e $ot_lat { lassign $e d early late p; '
+          'set_clock_latency -source -early -clock $d $early $p; '
+          'set_clock_latency -source -late -clock $d $late $p; incr ot_clock_bound }',
           'set_propagated_clock [all_clocks]',
-          'set_clock_uncertainty -setup 0.210 [all_clocks]', 'set_clock_uncertainty -hold 0.025 [all_clocks]',
+          # die clock delivery rule (owner 2026-10-13 09:25, el1013-pinreg-audit.log): every clock pin is delivered at
+          #   phi - R (entry = region flop target - the view's own insertion, compose()); a hop inside one clock level
+          #   (R <= 300 ps) is budgeted 60 ps + SKEW 90, a hop with either endpoint on an early tap (R > 300 ps) 60 +
+          #   SKEW 150.  --skew-all restores the older uniform 60 + 150 on every endpoint.
+          f'set_clock_uncertainty -setup {0.210 if SKEW_ALL else 0.150:.3f} [all_clocks]',
+          'set_clock_uncertainty -hold 0.025 [all_clocks]',
+          # Pair constraints cover early launch -> common capture as well as the reverse.
+          # Preserve 210 ps on early -> early until a shared early trunk is qualified.
+          'dict for {a da} $ot_level_clocks { dict for {b db} $ot_level_clocks { '
+          'if {$da eq $db && ([string match *__early_tap $a] || [string match *__early_tap $b])} { '
+          'set_clock_uncertainty -setup -from [get_clocks $a] -to [get_clocks $b] 0.210 } } }',
           # mesochronous domains: no synchronous timing between different die clocks (crossings are FIFO / forwarded)
           'set cl [all_clocks]',
-          'foreach a $cl { foreach b $cl { if {[get_name $a] ne [get_name $b]} { set_false_path -from $a -to $b } } }',
-          f'puts "OT_CLOCK_CONTEXT corner={corner} bound=$ot_clock_bound missing=[llength $ot_clock_missing]"',
+          'dict for {a da} $ot_level_clocks { dict for {b db} $ot_level_clocks { '
+          'if {$da ne $db} { set_false_path -from [get_clocks $a] -to [get_clocks $b] } } }',
+          f'puts "OT_CLOCK_CONTEXT corner={corner} bound=$ot_clock_bound missing=[llength $ot_clock_missing] early_tap_pins=$ot_early etm_corrected_pins=$ot_etm_corrected"',
           'puts "OT_CLOCK_MISSING [lrange $ot_clock_missing 0 40]"']
     return '\n'.join(L) + '\n'
 
@@ -406,7 +519,10 @@ def main():
     ap.add_argument('--cap-scales', default='1.40,2.44',
                     help='GRT-vs-DRT wire-capacitance sensitivity (results/physical/die_region_drt_1012: DRT/GRT net C '
                          'median +40 %%, p95 +144 %%); empty = off')
+    ap.add_argument('--skew-all', action='store_true', help='uniform 60 + 150 ps setup uncertainty (pre-rule budget)')
     a = ap.parse_args()
+    global SKEW_ALL
+    SKEW_ALL = a.skew_all
     if a.detour_of:
         print(json.dumps(detour(*a.detour_of)))
         return
@@ -420,6 +536,9 @@ def main():
     measured = json.loads(Path(a.measured).read_text())['blocks'] if a.measured else {}
     added, nodom, sinks0 = compose(case, ctx, measured)
     sinks = dict(sinks0, **added)
+    dr = delivery_record(case, sinks, measured)
+    (case / 'clock_delivery.json').write_text(json.dumps(dr, indent=1) + '\n')
+    print(json.dumps(dict(clock_delivery=dr['summary'])))
     (case / 'relay_clock_context.json').write_text(json.dumps(dict(view_sinks=sinks0, relay_sinks=added, relays_without_domain=nodom,
                                                                    relay_internal_ps=RELAY_INS), indent=0))
     base = (case / 'run.tcl').read_text()
