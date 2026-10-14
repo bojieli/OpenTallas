@@ -3781,10 +3781,10 @@ def build_r8(variant=None):
                               NODE_FRAME[0] - SHAVE, NODE_FRAME[1] - SHAVE, kind='node', region=f'frame_{r}'))
         # column FIFO: entry meso + column clock / reset root + return register, top band of the channel below
         # (--pq-place: below the root row, which takes the channel's top PQ_ROOT_ROW)
-        pq_dy = PQ_ROOT_ROW if PQ_PLACE else 0.0
+        pq_dy = PQ_ROOT_ROW if PQ_ROOTS else 0.0
         insts.append(Inst(f'cf{r}', 'dsfd_cfifo', x0 + CF_X, ch_y[t] + chh(t) - pq_dy - 4.32 - CF_WH[1], CF_WH[0] - SHAVE,
                           CF_WH[1] - SHAVE, kind='cfifo', region=f'frame_{r}'))
-        if PQ_PLACE:
+        if PQ_ROOTS:
             # S81-DIE PQ root row: N station (tree word in) / ret_root_r128 / S station (root word out), centred in the
             # 142.56 um return strip (node strip + rstg sub-column) directly under the frame
             yr = ch_y[t] + chh(t) - PQ_ROOT_ROW
@@ -4482,7 +4482,7 @@ def buses_r8(m):
         sx = f['x'] + LANES_W + NS_W + 4.32
         ytop = rootn.y + rootn.h
         ybot = cfi.y + cfi.h
-        if PQ_PLACE:      # the strip chain now ends at the root row's N station, not at the column FIFO
+        if PQ_ROOTS:      # the strip chain now ends at the root row's N station, not at the column FIFO
             pqn_ = next(i_ for i_ in m['insts'] if i_.name == f'pqn{r}')
             ybot = pqn_.y + pqn_.h
         prev, k_ = (f'n{r}_{ids[root]}', 'o'), 0
@@ -4496,7 +4496,7 @@ def buses_r8(m):
             col_rs.append((it.name, 'rs'))
             bus(f'rr_{r}_{i_}', 'col_ret', NODEB, [prev, (it.name, 'i')])
             prev = (it.name, 'o')
-        if PQ_PLACE:
+        if PQ_ROOTS:
             # tree word -> N station -> ret_root_r128 -> S station -> column FIFO return (all column clock: no crossing)
             bus(f'rr_{r}_{nst}', 'col_ret', NODEB, [prev, (f'pqn{r}', 'i')])
             bus(f'pqt_{r}', 'col_ret', PQ_TI, [(f'pqn{r}', 'o'), (f'pqr{r}', 'ti')])
@@ -4679,8 +4679,9 @@ def buses_r8(m):
                                  ('capture', 'vm', 512, 't_vm', 'f_capture'), ('collective', 'vm', 512, 't_vm', 'f_collective'),
                                  ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
                                  ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')) + \
-            ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
-              ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
+            ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'),) if PQ_PLACE else ()) + \
+            ((('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
+              ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_ROOTS else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
             (wfc_kit_buses(WFC_ROLE, 'host' in hub, COLL_MTP_FAR, WFC_CRP) if 'wfc' in hub and hub['wfc'].master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2') else ()) + \
             ((MTP_SEQ_EP_BUSES if 'cap_ep' in hub else MTP_SEQ_BUSES) if 'mtp' in hub else ()) + \
@@ -5144,6 +5145,11 @@ CAPTURE_FACE_UM = 129.6         #   capture slab height with the MTP endpoints (
 MTP_LINKS = 0                   # --mtp-links N: head die: N extra board SerDes (ot_pdie_serdes, real LEF) for the draft
                                 #   fan-out (DP1-EP5 primary on head dies h0..h3: one link per draft ROW package)
 PQ_PLACE = False                # --pq-place (S81-DIE 2026-10-07): production PQ roots / core on the mixed221 layer die
+PQ_G = False                    # --pq-g (s81-die r6 2026-10-14, PQ return topology G): the gather root leaves are THE roots;
+                                #   the frame pq_root row (rstg_pq66 / dsfd_pq_root / rstg_pq68, PQ_ROOT_ROW a tier channel)
+                                #   leaves the die, the column return ends at the cfifo as on non-PQ dies; the PQ core stays
+                                #   (VM read); its ga / q2f / mdr ports wait for the count-only RWB leaves (UNBOUND, reported)
+PQ_ROOTS = False                # = PQ_PLACE and not PQ_G
 PQ_ROOT_ROW = 241.92            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 211.68 + 8.64 + 8.64)
 PQ_ROOT_WH = (132.192, 211.68)  #   ret_root_r128 reserved outline.  CLAUDE pq-rootcam 2026-10-08: grown from 133.92 (placed at
                                 #   85.8% util, rule ~55-60%) for the pipelined CAM ot_s81_pq_ret_root_cam_p.  ADOPTED PAR 0
@@ -8573,6 +8579,8 @@ def die_options(ap):
                     'return-tree node pins in fixed slots (abutted stack bit-aligned), slot-station xa / xb on the pins of '
                     'their abutting column relay (pin_align gate: 0 FAIL in the field frames)')
     ap.add_argument('--hend-vr-nobp', action='store_true', help='s81 grpA 10-14: wide (>= 512 b) m2l VR hub ends: ot_meso_fifo NOBP + WCHK (r_rdy is tied 1; the negedge pin register no longer fans out to every ring write enable in half a cycle); same words / cycles')
+    ap.add_argument('--pq-g', action='store_true', help='s81-die r6: PQ return topology G (the gather roots are the roots; '
+                    'no frame pq_root row; PQ core count inputs await the count-only RWB leaves)')
     ap.add_argument('--cfifo-fall-launch', action='store_true', help='s81-die r6: the x-lane station that taps a cfifo '
                     'forwards a non-inverted clock copy (fn0) as its xf: xd launches on the falling xf edge, the closed colck '
                     'cfifo captures on the rising one (half-cycle source-synchronous hop)')
@@ -8863,11 +8871,15 @@ def apply_options(a):
         # s81-die-2 2026-10-08: the adopted PQ root (211.68 tall, row 241.92 vs 164.16) takes 6 x 77.76 um from the field;
         # at the 216 um minimum gap the mixed221 frame lost its 9th slot by 0.35 um a tier ("mixed slots exceed field
         # height").  Under --pq-place the minimum gap is PQ_FIELD_MARGIN; the field stays centred (actual gap ~215 um).
-        FIELD_MARGIN = PQ_FIELD_MARGIN if PQ_PLACE else FIELD_MARGIN_DEFAULT
+        FIELD_MARGIN = PQ_FIELD_MARGIN if (PQ_PLACE and not getattr(a, 'pq_g', False)) else FIELD_MARGIN_DEFAULT
+    global PQ_G, PQ_ROOTS
+    PQ_G = bool(getattr(a, 'pq_g', False))
+    assert not PQ_G or PQ_PLACE, '--pq-g needs --pq-place (the PQ core slot)'
+    PQ_ROOTS = PQ_PLACE and not PQ_G
     if PQ_PLACE:
         assert a.gen == 'r8' and a.rev == 'r9' and a.die in LAYER_KINDS and getattr(a, 'q_elem_h', None), \
             '--pq-place: the r9 mixed q/BF layer die (--q-elem-h) only'
-        CHS = [c + (PQ_ROOT_ROW if t < TIERS else 0.0) for t, c in enumerate(CHS or [CH] * (TIERS + 1))]
+        CHS = [c + (PQ_ROOT_ROW if (t < TIERS and PQ_ROOTS) else 0.0) for t, c in enumerate(CHS or [CH] * (TIERS + 1))]
     VCH8 = float(a.vch_w) if getattr(a, 'vch_w', None) else 1209.6
     HC_CORR = float(a.hc_corr) if getattr(a, 'hc_corr', None) else 1209.6
     SPINE_W8 = (2 * up(a.hub_column_width, GX) + VCH8) if getattr(a, "hub_column_width", None) else SPINE_W + VCH8 - VCH
