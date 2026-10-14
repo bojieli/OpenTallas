@@ -176,9 +176,11 @@ proc ot_ce_apply {} {
   # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew.
   # Tile-local25ps uncertainty is not the composed pair margin.
   set_clock_uncertainty -hold 100 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
-  if {[llength $lowclocks] && [llength $highclocks]} {
-    set_clock_uncertainty -setup 210 -from $lowclocks -to $highclocks
-    set_clock_uncertainty -setup 210 -from $highclocks -to $lowclocks
+  # TREE pair_check.SKEW_DEEP applies when either TT reference exceeds300ps,
+  # including two deep entries with their own earlier trunk taps.
+  if {[llength $highclocks]} {
+    set_clock_uncertainty -setup 210 -from $highclocks -to [get_clocks ot_entry_*]
+    set_clock_uncertainty -setup 210 -from [get_clocks ot_entry_*] -to $highclocks
   }
   # Preserve measured boundary spread: balancing the mean does not erase the
   # earliest/latest physical boundary arrivals or change ETM setup/hold arcs.
