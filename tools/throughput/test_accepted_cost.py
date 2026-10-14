@@ -108,6 +108,36 @@ def test_accept_records_the_decision_note():
     assert r["acceptance_note"] == "owner re-confirmed" and r["accepted_date"] == d
 
 
+def test_owner_exception_waives_only_the_limits():
+    led = AC.empty_ledger()
+    AC.propose(led, row(unit="a", loss=4.0))
+    AC.propose(led, row(unit="a2", loss=4.5))
+    AC.accept(led, "s81", "a2", root=AC.ROOT)
+    AC.accept(led, "s81", "a", root=AC.ROOT)
+    AC.propose(led, row(unit="b", loss=9.0))
+    with pytest.raises(AC.LedgerError):
+        AC.accept(led, "s81", "b", root=AC.ROOT)
+    r = AC.accept(led, "s81", "b", root=AC.ROOT, owner_exception="owner 2026-10-14")
+    assert r["status"] == "accepted" and r["owner_exception"]
+    assert AC.check(led) == [] and AC.totals(led)["s81"]["over_limit_by_owner_exception"]
+    AC.find(led, "s81", "b").pop("owner_exception")
+    assert len(AC.check(led)) == 2          # mutant: without the exception both limits are violations
+    AC.propose(led, row(unit="c", loss=9.0, grade="interim_log"))
+    with pytest.raises(AC.LedgerError):     # the exception never waives the committed-bench requirement
+        AC.accept(led, "s81", "c", root=AC.ROOT, owner_exception="owner")
+
+
+def test_supersede_accepted_keeps_the_old_decision():
+    led = AC.empty_ledger()
+    AC.propose(led, row(loss=2.0))
+    AC.accept(led, "s81", "u", root=AC.ROOT, note="first")
+    with pytest.raises(AC.LedgerError):
+        AC.propose(led, row(loss=9.0))
+    new = AC.propose(led, row(loss=9.0), supersede_accepted="owner 2026-10-14")
+    assert new["status"] == "proposed" and new["supersedes"]["e2e_loss_pct"] == 2.0
+    assert new["supersedes"]["acceptance_note"] == "first"
+
+
 def test_refuses_over_five_percent():
     led = AC.empty_ledger()
     AC.propose(led, row(loss=5.01))

@@ -370,7 +370,7 @@
    "note": "per-layer die run tb_s81_die_layer HCH=1 NG=256 nominal link, L0 / L2 / L14 bit-exact, mut_hc + mut_coll fail: NORM 713 cycles in all 6 jobs against the fused price 327.0-333.9 (hc_pre + quant [+ norm.scale]); hc_gate --hier 3 unit bench 727. REPLACES the row at 449 (1.361x, 1.178 %), which was the FLAT engine at the reduced NG 16 shape; the flat engine at NG 256 measures 235-237 (0.71x): the excess is the hierarchical slab's serial forward / return chains, not arithmetic DECOMPOSITION (Codex trace 7eb398556, hc_gate NG 256 hier3, 4 NORMs identical, exact 0/1940): accept -> sum_return 339 (mix forward + partial sums back over the 22-half-tile chain) + rsqrt 74 + rsqrt -> first row 238 (scale broadcast forward + scaled rows back) + 40 rows 39 + writer 22 + done 15 = 727; the two chain traversal pairs are 577 of 727. Structural fix (not built): registered regional reduction collectors + a narrow registered rsqrt broadcast tree instead of the serial chains (no FP reassociation).",
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); owner ~06:55 PT 2026-10-14: stays accepted at its CURRENT measured figure (serial chain); the NORM tree replaces it only if it closes"
   },
   {
    "design": "s81",
@@ -524,38 +524,50 @@
   },
   {
    "design": "s81",
-   "unit": "VM.READ (VM read latency at the leaf chain: bgq28 leaf hop 1 (+8 a read round trip) + dsfd_vm_fe_h FRL 6 (+4); flat 41 -> 53 cycles)",
+   "unit": "VM.READ (VM read latency at the leaf chain, CURRENT design: leaf hop 2 (+40 a read round trip) + dsfd_vm_fe_h FRL 6 (+4); flat 41 -> 85 cycles)",
    "group": "VM.READ",
-   "measured": 53.0,
+   "measured": 85.0,
    "price": 41.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 1.2927,
-   "e2e_loss_pct": 2.654,
+   "unit_ratio": 2.0732,
+   "e2e_loss_pct": 9.093,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path, node deltas by class",
      "base_cycles": 828866.4,
-     "added_cycles": 22602.0,
-     "e2e_loss_pct": 2.654,
-     "delta": "field +12 a critical field node, SU +24 a critical SU node (2 serial VM reads a job), hc_pre +18"
+     "e2e_loss_pct": 9.093,
+     "source": "results/rtl/s81_layer_tput_1013/round_1014.json vm_read.model_upper_bound_pct.hop2_fe",
+     "delta": "hop-2 node deltas: unit +44 over flat 41 (hop 2 +40, FE FRL 6 +4); field +44 a critical field node, SU +88 a critical SU node (2 serial VM reads a job), hc_pre +66"
     },
     "mtp": {
      "model": "token-path longest path, node deltas by class",
      "base_cycles": 1177516.1,
-     "added_cycles": 26250.0,
-     "e2e_loss_pct": 2.181
+     "e2e_loss_pct": 7.556,
+     "source": "results/rtl/s81_layer_tput_1013/round_1014.json vm_read.model_upper_bound_pct.hop2_fe"
     }
    },
-   "within_unit_limit": true,
+   "within_unit_limit": false,
    "evidence": "results/rtl/s81_layer_tput_1013/round_1014.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-14",
    "status": "accepted",
-   "note": "MEASURED unit latency: flat dsfd_vm_bgr read latency 41 (master gate s81_vm_gate tp, price basis) -> 81 at leaf hop 2 (claude/s81-bgq28-1013 1640f47fb), 49 at leaf hop 1 (a841984b9 one-cycle bank relay, exact + mutants), + 4 from the vm_fe hierarchy FRL 6 (693940a56) = 53 at hop 1. Per-layer MEASURED part: tb_s81_die_layer LVM 10/30/54 shows 3 serial HC reads a layer (+60 / +139 a layer at +20 / +44); su_gate --lvm 30 / 54 shows TWO serial VM read round trips per SU job. Token share MODELLED (upper bound): every critical field node +12, every critical SU node +24 (2 reads; the slab fuses some nodes into one job, so this over-counts), hc_pre +18. At leaf hop 2 (+44) the same model gives 9.09 % AR (over the 5 % unit limit): LEAF HOP 1 IS REQUIRED, not optional. Remaining removal: XGO prefetch of the next op's operand stream on the producer's ARMN event and SU descriptor prefetch (the first of the two SU round trips), not built.",
+   "note": "CURRENT DESIGN (leaf hop 2): MEASURED unit latency flat dsfd_vm_bgr 41 (master gate s81_vm_gate tp, price basis) -> 81 at leaf hop 2 (claude/s81-bgq28-1013 1640f47fb) + 4 from the vm_fe hierarchy FRL 6 (693940a56) = 85. Per-layer MEASURED part: tb_s81_die_layer LVM 10/30/54 (3 serial HC reads a layer, +139 a layer at +44); su_gate --lvm 54: two serial VM read round trips a SU job (+87..89). Token share MODELLED (upper bound) -> 9.093 % AR / 7.556 % MTP (round_1014.json vm_read.model_upper_bound_pct.hop2_fe). Hop-1 variant (a841984b9, 53 cycles, 2.654 %) built in parallel; replaces this row only if it closes (then re-measured).",
    "share_basis": "modelled",
+   "supersedes": {
+    "unit": "VM.READ (VM read latency at the leaf chain: bgq28 leaf hop 1 (+8 a read round trip) + dsfd_vm_fe_h FRL 6 (+4); flat 41 -> 53 cycles)",
+    "measured": 53.0,
+    "price": 41.0,
+    "unit_ratio": 1.2927,
+    "e2e_loss_pct": 2.654,
+    "status": "accepted",
+    "accepted_date": "2026-10-14",
+    "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); accepted ONLY at leaf hop 1 (flat 41 -> 53 cycles, bgq28 a841984b9 +8); hop 2 (+44, ~9.09%) is NOT accepted and would break 15%",
+    "by": "OWNER ~06:55 PT 2026-10-14: current designs (VM leaf hop 2, serial NORM) accepted as long as they close; optimized variants replace them only if they close"
+   },
    "accepted_date": "2026-10-14",
-   "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated); accepted ONLY at leaf hop 1 (flat 41 -> 53 cycles, bgq28 a841984b9 +8); hop 2 (+44, ~9.09%) is NOT accepted and would break 15%"
+   "owner_exception": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces",
+   "acceptance_note": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces; S81 accepted total 17.485 % is OVER the 15 % design limit: owner-accepted exception (owner ~06:55 PT 2026-10-14 accepts the CURRENT VM read (leaf hop 2) and HC NORM (serial chain) designs as long as they close)"
   },
   {
    "design": "r25gq",
@@ -986,16 +998,20 @@
    "limit_pct": 15.0,
    "accepted_rows": 0,
    "proposed_rows": 3,
-   "headroom_pct": 15.0
+   "headroom_pct": 15.0,
+   "owner_exception_rows": 0,
+   "over_limit_by_owner_exception": false
   },
   "s81": {
-   "accepted_pct": 11.046,
+   "accepted_pct": 17.485,
    "proposed_pct": 0,
-   "accepted_plus_proposed_pct": 11.046,
+   "accepted_plus_proposed_pct": 17.485,
    "limit_pct": 15.0,
    "accepted_rows": 10,
    "proposed_rows": 0,
-   "headroom_pct": 3.954
+   "headroom_pct": -2.485,
+   "owner_exception_rows": 1,
+   "over_limit_by_owner_exception": true
   },
   "r25gq": {
    "accepted_pct": 0,
@@ -1004,7 +1020,9 @@
    "limit_pct": 15.0,
    "accepted_rows": 0,
    "proposed_rows": 14,
-   "headroom_pct": 15.0
+   "headroom_pct": 15.0,
+   "owner_exception_rows": 0,
+   "over_limit_by_owner_exception": false
   }
  }
 }

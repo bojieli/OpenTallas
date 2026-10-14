@@ -4,9 +4,14 @@ module ot_s81_pq_qb_head_native (
  input wire[15:0] h_b0,h_b1,input wire[1:0] hw_sv,
  input wire[1023:0] rd_data,input wire[39:0] erd_data,input wire[3:0] bfault,
  output reg[8:0] w0,w1,output reg wv,
- output reg[15:0] i0,i1,output reg[1:0] gates,output reg consume_1,
+ output reg[15:0] i0,i1,
+ // Registered per-bank read enables and predecoded metadata rows (hi one-hot of row[6:4] < 6,
+ // lo one-hot of row[3:0]): same edge and value as the former gates/consume_1/i0/i1 decode in
+ // every bank, moved before the head output flops so no bank decodes them behind its pins.
+ output reg[3:0] rq0,rq1,output reg[5:0] ph0,ph1,output reg[15:0] pl0,pl1,
  output reg[255:0] hq0,hq1,output reg[9:0] he0,he1,output wire fault
 );
+    reg [1:0] gates; reg consume_1;
     wire [0:0] rst_l;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr
         (.clk(clk), .rst_n_in(rst_n), .rst_n(rst_l));
@@ -21,8 +26,21 @@ module ot_s81_pq_qb_head_native (
         end
     end
     always @(posedge clk or negedge rst_l[0])
-        if (!rst_l[0]) begin i0 <= 0; i1 <= 0; gates <= 0; consume_1 <= 0; end
-        else begin i0 <= h_b0; i1 <= h_b1; gates <= hw_sv; consume_1 <= consume; end
+        if (!rst_l[0]) begin i0 <= 0; i1 <= 0; gates <= 0; consume_1 <= 0;
+            rq0 <= 0; rq1 <= 0; ph0 <= 0; ph1 <= 0; pl0 <= 0; pl1 <= 0; end
+        else begin i0 <= h_b0; i1 <= h_b1; gates <= hw_sv; consume_1 <= consume;
+            rq0 <= {4{consume & hw_sv[0]}} & (4'b1 << {h_b0[3], h_b0[0]});
+            rq1 <= {4{consume & hw_sv[1]}} & (4'b1 << {h_b1[3], h_b1[0]});
+            ph0 <= (h_b0[8:6] < 3'd6) ? (6'b1 << h_b0[8:6]) : 6'd0;
+            ph1 <= (h_b1[8:6] < 3'd6) ? (6'b1 << h_b1[8:6]) : 6'd0;
+`ifdef OT_S81_PQ_QBPRE_MUT_ROW
+            // Mutant: predecoded low row field in the wrong bit order (metadata of another row).
+            pl0 <= 16'b1 << {h_b0[2:1], h_b0[5:4]};
+`else
+            pl0 <= 16'b1 << {h_b0[5:4], h_b0[2:1]};
+`endif
+            pl1 <= 16'b1 << {h_b1[5:4], h_b1[2:1]};
+        end
     wire [1:0] bank0 = {i0[3], i0[0]}, bank1 = {i1[3], i1[0]};
     wire [6:0] row0 = {i0[8:4], i0[2:1]}, row1 = {i1[8:4], i1[2:1]};
     wire [255:0] rd [0:3];
@@ -59,7 +77,7 @@ endmodule
 module ot_s81_pq_qb_bank_native #(parameter integer B=0) (
  input wire clk,rst_n,input wire[8:0] w0,w1,input wire wv,
  input wire[511:0] aq_q,input wire[19:0] aq_e,input wire[9:0] aq_p,
- input wire[15:0] i0,i1,input wire[1:0] gates,input wire consume_1,
+ input wire[15:0] i0,i1,input wire rq0,rq1,input wire[5:0] ph0,ph1,input wire[15:0] pl0,pl1,
  output wire[255:0] rd,output reg[9:0] erd,output wire fault
 );
     wire [0:0] rst_l;
@@ -74,8 +92,23 @@ module ot_s81_pq_qb_bank_native #(parameter integer B=0) (
         wire [6:0] wa = {wi[8:4],wi[2:1]};
         wire [255:0] wd = a ? aq_q[255:0] : aq_q[511:256];
         wire [9:0] ew = a ? aq_e[9:0] : aq_e[19:10];
-        wire r0 = consume_1 && gates[0] && bank0 == 2'(B);
-        wire r1 = consume_1 && gates[1] && bank1 == 2'(B);
+        // Read enables arrive registered from the head (rq = consume_1 && gates && bank == B there).
+        wire r0 = rq0;
+        wire r1 = rq1;
+        // Predecoded metadata row reads: AND-OR over 6 x 16 rows, no compare/decode behind the pins.
+        // |ph == (row < 96); a one-hot pair selects exactly the original row.
+        function automatic [15:0] pick (input [5:0] ph, input [15:0] pl, input [96*16-1:0] v);
+            reg [15:0] acc; integer g, j;
+            begin
+                acc = 16'd0;
+                for (g = 0; g < 6; g = g + 1) begin : grp
+                    reg [15:0] ga; ga = 16'd0;
+                    for (j = 0; j < 16; j = j + 1) ga = ga | ({16{pl[j]}} & v[16*(16*g+j) +: 16]);
+                    acc = acc | ({16{ph[g]}} & ga);
+                end
+                pick = acc;
+            end
+        endfunction
         wire re = r0 || r1;
 `ifdef OT_S81_PQ_QB_BANK_MUT_K
         wire [6:0] ra = B==`OT_S81_PQ_QB_BANK_MUT_K ? 7'd0 : (r0 ? row0 : row1);
@@ -105,6 +138,11 @@ module ot_s81_pq_qb_bank_native #(parameter integer B=0) (
         wire [4:0] wp = {^ew, ^wd[255:192], ^wd[191:128], ^wd[127:64], ^wd[63:0]};
 `endif
         wire [4:0] rp = {^erd, ^rd[255:192], ^rd[191:128], ^rd[127:64], ^rd[63:0]};
+        wire [96*16-1:0] meta;
+        generate for (genvar k = 0; k < 96; k = k + 1) begin : g_meta
+            assign meta[16*k +: 16] = {written[k], parity[k], exponent[k]};
+        end endgenerate
+        wire [15:0] m0 = pick(ph0, pl0, meta), m1 = pick(ph1, pl1, meta);
         always @(posedge clk or negedge rst_l[0]) begin
             if (!rst_l[0]) begin written <= 0; checked <= 0; sticky <= 0; end
             else begin
@@ -117,11 +155,11 @@ module ot_s81_pq_qb_bank_native #(parameter integer B=0) (
                 // Select the original two row values after local metadata reads.
                 // This removes bank-selection decode from the address-mux tree,
                 // while preserving the exact selected row and capture edge.
-                if (re && (r0 ? row0 < 96 : row1 < 96)) begin erd <= r0 ? exponent[row0] : exponent[row1]; expected <= r0 ? parity[row0] : parity[row1]; end
+                if (re && (r0 ? |ph0 : |ph1)) begin erd <= r0 ? m0[9:0] : m1[9:0]; expected <= r0 ? m0[14:10] : m1[14:10]; end
 `endif
-                checked <= re && (r0 ? (row0 < 96 && written[row0]) : (row1 < 96 && written[row1]));
+                checked <= re && (r0 ? m0[15] : m1[15]);
                 if (checked && expected != rp) sticky <= 1'b1;
-                if (re && (r0 ? (row0 >= 96 || !written[row0]) : (row1 >= 96 || !written[row1]))) sticky <= 1'b1;
+                if (re && !(r0 ? m0[15] : m1[15])) sticky <= 1'b1;
             end
         end
         assign fault = sticky;
@@ -139,40 +177,40 @@ endmodule
 module ot_s81_pq_qb_bank0_native (
  input wire clk,rst_n,input wire[8:0] w0,w1,input wire wv,
  input wire[511:0] aq_q,input wire[19:0] aq_e,input wire[9:0] aq_p,
- input wire[15:0] i0,i1,input wire[1:0] gates,input wire consume_1,
+ input wire[15:0] i0,i1,input wire rq0,rq1,input wire[5:0] ph0,ph1,input wire[15:0] pl0,pl1,
  output wire[255:0] rd,output wire[9:0] erd,output wire fault
 );
- ot_s81_pq_qb_bank_native #(.B(0)) u_native (.clk(clk),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),.aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),.rd(rd),.erd(erd),.fault(fault));
+ ot_s81_pq_qb_bank_native #(.B(0)) u_native (.clk(clk),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),.aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.rq0(rq0),.rq1(rq1),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),.rd(rd),.erd(erd),.fault(fault));
 endmodule
 
 // Fixed physical master B=1; complete wire identity, no state or epoch added.
 module ot_s81_pq_qb_bank1_native (
  input wire clk,rst_n,input wire[8:0] w0,w1,input wire wv,
  input wire[511:0] aq_q,input wire[19:0] aq_e,input wire[9:0] aq_p,
- input wire[15:0] i0,i1,input wire[1:0] gates,input wire consume_1,
+ input wire[15:0] i0,i1,input wire rq0,rq1,input wire[5:0] ph0,ph1,input wire[15:0] pl0,pl1,
  output wire[255:0] rd,output wire[9:0] erd,output wire fault
 );
- ot_s81_pq_qb_bank_native #(.B(1)) u_native (.clk(clk),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),.aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),.rd(rd),.erd(erd),.fault(fault));
+ ot_s81_pq_qb_bank_native #(.B(1)) u_native (.clk(clk),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),.aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.rq0(rq0),.rq1(rq1),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),.rd(rd),.erd(erd),.fault(fault));
 endmodule
 
 // Fixed physical master B=2; complete wire identity, no state or epoch added.
 module ot_s81_pq_qb_bank2_native (
  input wire clk,rst_n,input wire[8:0] w0,w1,input wire wv,
  input wire[511:0] aq_q,input wire[19:0] aq_e,input wire[9:0] aq_p,
- input wire[15:0] i0,i1,input wire[1:0] gates,input wire consume_1,
+ input wire[15:0] i0,i1,input wire rq0,rq1,input wire[5:0] ph0,ph1,input wire[15:0] pl0,pl1,
  output wire[255:0] rd,output wire[9:0] erd,output wire fault
 );
- ot_s81_pq_qb_bank_native #(.B(2)) u_native (.clk(clk),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),.aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),.rd(rd),.erd(erd),.fault(fault));
+ ot_s81_pq_qb_bank_native #(.B(2)) u_native (.clk(clk),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),.aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.rq0(rq0),.rq1(rq1),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),.rd(rd),.erd(erd),.fault(fault));
 endmodule
 
 // Fixed physical master B=3; complete wire identity, no state or epoch added.
 module ot_s81_pq_qb_bank3_native (
  input wire clk,rst_n,input wire[8:0] w0,w1,input wire wv,
  input wire[511:0] aq_q,input wire[19:0] aq_e,input wire[9:0] aq_p,
- input wire[15:0] i0,i1,input wire[1:0] gates,input wire consume_1,
+ input wire[15:0] i0,i1,input wire rq0,rq1,input wire[5:0] ph0,ph1,input wire[15:0] pl0,pl1,
  output wire[255:0] rd,output wire[9:0] erd,output wire fault
 );
- ot_s81_pq_qb_bank_native #(.B(3)) u_native (.clk(clk),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),.aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),.rd(rd),.erd(erd),.fault(fault));
+ ot_s81_pq_qb_bank_native #(.B(3)) u_native (.clk(clk),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),.aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.rq0(rq0),.rq1(rq1),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),.rd(rd),.erd(erd),.fault(fault));
 endmodule
 
 module ot_s81_pq_qb_split_native (
@@ -182,21 +220,21 @@ module ot_s81_pq_qb_split_native (
  output wire[255:0] hq0,hq1,output wire[9:0] he0,he1,output wire fault
 );
  wire[1023:0] rd;wire[39:0] erd;wire[3:0] bfault;
- wire[8:0] w0,w1;wire wv;wire[15:0] i0,i1;wire[1:0] gates;wire consume_1;
+ wire[8:0] w0,w1;wire wv;wire[15:0] i0,i1;wire[3:0] rq0,rq1;wire[5:0] ph0,ph1;wire[15:0] pl0,pl1;
  ot_s81_pq_qb_head_native u_head (.clk(clk),.rst_n(rst_n),.consume(consume),.aqi_d(aqi_d),
    .h_b0(h_b0),.h_b1(h_b1),.hw_sv(hw_sv),.rd_data(rd),.erd_data(erd),.bfault(bfault),
-   .w0(w0),.w1(w1),.wv(wv),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),
+   .w0(w0),.w1(w1),.wv(wv),.i0(i0),.i1(i1),.rq0(rq0),.rq1(rq1),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),
    .hq0(hq0),.hq1(hq1),.he0(he0),.he1(he1),.fault(fault));
  ot_s81_pq_qb_bank0_native u_bank0 (.clk(clk_bank[0]),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),
-     .aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),
+     .aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.rq0(rq0[0]),.rq1(rq1[0]),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),
      .rd(rd[0 +: 256]),.erd(erd[0 +: 10]),.fault(bfault[0]));
  ot_s81_pq_qb_bank1_native u_bank1 (.clk(clk_bank[1]),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),
-     .aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),
+     .aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.rq0(rq0[1]),.rq1(rq1[1]),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),
      .rd(rd[256 +: 256]),.erd(erd[10 +: 10]),.fault(bfault[1]));
  ot_s81_pq_qb_bank2_native u_bank2 (.clk(clk_bank[2]),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),
-     .aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),
+     .aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.rq0(rq0[2]),.rq1(rq1[2]),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),
      .rd(rd[512 +: 256]),.erd(erd[20 +: 10]),.fault(bfault[2]));
  ot_s81_pq_qb_bank3_native u_bank3 (.clk(clk_bank[3]),.rst_n(rst_n),.w0(w0),.w1(w1),.wv(wv),
-     .aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.gates(gates),.consume_1(consume_1),
+     .aq_q(aq_q),.aq_e(aq_e),.aq_p(aq_p),.i0(i0),.i1(i1),.rq0(rq0[3]),.rq1(rq1[3]),.ph0(ph0),.ph1(ph1),.pl0(pl0),.pl1(pl1),
      .rd(rd[768 +: 256]),.erd(erd[30 +: 10]),.fault(bfault[3]));
 endmodule

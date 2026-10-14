@@ -64,6 +64,8 @@ module ot_qkd_fifo2_sh #(parameter integer D = 128, parameter integer D1 = 8) (
 endmodule
 
 module ot_qkd_ectl_part #(
+    parameter integer HEADS = `KVD_HEADS,
+    parameter integer Q_FP32 = `KVD_Q_FP32,
     parameter integer PART = 1,          // 1 = A (W leaf), 2 = B (middle leaf), 3 = C (E leaf)
     parameter integer HD = 128,
     parameter integer R = 8,             // row engines in the stack
@@ -241,7 +243,7 @@ module ot_qkd_ectl_part #(
         else begin er_valid_o <= er_valid_g; er_pd <= {er_pd[0], er_valid_g}; end
     always @(posedge clk) begin er_addr_o <= er_addr_g; er_data_p <= er_data; end
     // the q beat (leaf C): pin flops, mid stage, third stage (with qv_r of the control word), then the S1b copies
-    localparam integer NQB = 4 * `KVD_HEADS * HD * (`KVD_Q_FP32 ? 32 : 16) / 512;
+    localparam integer NQB = 4 * HEADS * HD * (Q_FP32 ? 32 : 16) / 512;
     reg  [5:0]        qb_p, qb_m, qb_r;
     reg  [511:0]      qd_p, qd_m, qd_r;
     reg  [6:0]        qcnt;
@@ -323,7 +325,7 @@ module ot_qkd_ectl_part #(
                         rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
                         rg_idx <= rg_idx + R;
                     end
-                end else if (`KVD_HEADS == 2 && !rg_g) begin
+                end else if (HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_idx <= E;
                 end else begin
                     if (`KVD_QK_ONLY) rg_run <= 1'b0;
@@ -345,7 +347,7 @@ module ot_qkd_ectl_part #(
                             end else rg_k <= rg_k + 4'd1;
                         end
                     end
-                end else if (`KVD_HEADS == 2 && !rg_g) begin
+                end else if (HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_gam <= E; rg_k <= 0; rg_j <= 0;
                 end else rg_run <= 1'b0;
             end
@@ -449,7 +451,7 @@ module ot_qkd_ectl_part #(
                             c_idx <= c_idx + R;
                             if (c_idx == E && !c_g) ev_k_first <= 1'b1;
                         end
-                    end else if (`KVD_HEADS == 2 && !c_g) begin
+                    end else if (HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_idx <= E;
                     end else begin
                         k_done <= 1'b1;
@@ -466,7 +468,7 @@ module ot_qkd_ectl_part #(
                                 else c_k <= c_k + 4'd1;
                             end
                         end
-                    end else if (`KVD_HEADS == 2 && !c_g) begin
+                    end else if (HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_gam <= E; c_k <= 0; c_j <= 0;
                     end else begin
                         c_fin <= 1'b1; v_done <= 1'b1;

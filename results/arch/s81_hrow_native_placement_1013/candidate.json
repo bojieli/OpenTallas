@@ -21,7 +21,7 @@
   "u_hub": {
    "master": "dsfd_mtp_hrow_hub",
    "x": 1522.8,
-   "y": 1486.08,
+   "y": 1529.28,
    "orient": "R0"
   },
   "g_part[0]/u_ig": {
@@ -116,13 +116,13 @@
   },
   "g_part[0]/g_hev/g_ev[0]/u_r": {
    "master": "dsfd_hrow_r23",
-   "x": 673.92,
+   "x": 706.3199999999999,
    "y": 1607.04,
    "orient": "MX"
   },
   "g_part[0]/g_hev/g_ev[1]/u_r": {
    "master": "dsfd_hrow_r23",
-   "x": 1114.56,
+   "x": 1168.56,
    "y": 1667.52,
    "orient": "R0"
   },
@@ -262,12 +262,12 @@
    "master": "dsfd_hrow_r15",
    "x": 1017.36,
    "y": 1561.68,
-   "orient": "MY"
+   "orient": "R0"
   },
   "g_part[2]/u_ig": {
    "master": "dsfd_mtp_hrow_ing",
    "x": 2168.64,
-   "y": 1499.04,
+   "y": 1607.04,
    "orient": "R0"
   },
   "g_part[2]/g_c[0]/g_e/u_b": {
@@ -356,7 +356,7 @@
   },
   "g_part[2]/g_hev/g_ev[0]/u_r": {
    "master": "dsfd_hrow_r23",
-   "x": 1842.48,
+   "x": 1896.48,
    "y": 1617.84,
    "orient": "R0"
   },
@@ -380,43 +380,43 @@
   },
   "g_part[2]/g_hev/g_rc[2]/u_r": {
    "master": "dsfd_hrow_r15",
-   "x": 2136.24,
+   "x": 2114.64,
    "y": 1650.24,
    "orient": "R0"
   },
   "g_part[0]/g_hut/g_r[0]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 231.12,
-   "y": 88.56,
+   "x": 274.32,
+   "y": 390.96000000000004,
    "orient": "R0"
   },
   "g_part[0]/g_hut/g_r[1]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 490.32000000000005,
-   "y": 88.56,
+   "x": 533.52,
+   "y": 390.96000000000004,
    "orient": "R0"
   },
   "g_part[0]/g_hrp/g_r[0]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 714.96,
-   "y": 1557.3600000000001,
+   "x": 758.1600000000001,
+   "y": 1492.5600000000002,
    "orient": "R0"
   },
   "g_part[0]/g_hrp/g_r[1]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 1164.24,
-   "y": 1712.88,
+   "x": 1121.04,
+   "y": 1583.2800000000002,
    "orient": "R0"
   },
   "g_part[0]/g_hev/g_ev[0]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 615.6,
+   "x": 648.0,
    "y": 1607.0400000000002,
    "orient": "R0"
   },
   "g_part[0]/g_hev/g_ev[1]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 1099.44,
+   "x": 1153.44,
    "y": 1710.72,
    "orient": "R0"
   },
@@ -440,26 +440,26 @@
   },
   "g_part[1]/g_hut/g_r[0]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 1224.72,
-   "y": 88.56,
+   "x": 1267.92,
+   "y": 390.96000000000004,
    "orient": "R0"
   },
   "g_part[1]/g_hut/g_r[1]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 1483.92,
-   "y": 88.56,
+   "x": 1527.1200000000001,
+   "y": 390.96000000000004,
    "orient": "R0"
   },
   "g_part[1]/g_hrp/g_r[0]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 1753.92,
-   "y": 1715.0400000000002,
+   "x": 1775.5200000000002,
+   "y": 1693.44,
    "orient": "R0"
   },
   "g_part[1]/g_hrp/g_r[1]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 2110.32,
-   "y": 1689.1200000000001,
+   "x": 2088.7200000000003,
+   "y": 1581.1200000000001,
    "orient": "MY"
   },
   "g_part[1]/g_hev/g_ev[0]/g_rst/u_rs": {
@@ -488,44 +488,44 @@
   },
   "g_part[1]/g_hev/g_rc[2]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 1075.68,
+   "x": 959.0400000000001,
    "y": 1561.68,
-   "orient": "MY"
+   "orient": "R0"
   },
   "g_part[2]/g_hut/g_r[0]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 2218.32,
-   "y": 88.56,
+   "x": 2261.52,
+   "y": 390.96000000000004,
    "orient": "R0"
   },
   "g_part[2]/g_hut/g_r[1]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 2477.52,
-   "y": 88.56,
+   "x": 2520.7200000000003,
+   "y": 390.96000000000004,
    "orient": "R0"
   },
   "g_part[2]/g_hrp/g_r[0]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 2652.48,
-   "y": 1518.48,
+   "x": 2609.28,
+   "y": 1626.48,
    "orient": "MY"
   },
   "g_part[2]/g_hrp/g_r[1]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 2090.88,
-   "y": 1524.96,
+   "x": 2112.48,
+   "y": 1697.7600000000002,
    "orient": "MY"
   },
   "g_part[2]/g_hev/g_ev[0]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 1827.3600000000001,
-   "y": 1682.64,
+   "x": 1881.3600000000001,
+   "y": 1661.0400000000002,
    "orient": "R0"
   },
   "g_part[2]/g_hev/g_ev[1]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
-   "x": 1699.92,
-   "y": 1710.72,
+   "x": 1764.72,
+   "y": 1732.3200000000002,
    "orient": "R0"
   },
   "g_part[2]/g_hev/g_rc[0]/g_rst/u_rs": {
@@ -543,7 +543,7 @@
   "g_part[2]/g_hev/g_rc[2]/g_rst/u_rs": {
    "master": "dsfd_die_rstsync",
    "x": 2099.52,
-   "y": 1585.44,
+   "y": 1542.24,
    "orient": "R0"
   }
  },
@@ -683,7 +683,7 @@
     "source": "g_part[2]/u_ig",
     "sink": "g_part[2]/g_c[0]/g_e/u_b",
     "bits": 1039,
-    "max_um": 297.6,
+    "max_um": 405.6,
     "over_500": 0,
     "worst_source_pin": "t_wc[16]",
     "worst_sink_pin": "f_w[16]",
@@ -697,8 +697,8 @@
       "M4",
       "M5"
      ],
-     "len_max": 297.6,
-     "len_mean": 195.746,
+     "len_max": 405.6,
+     "len_mean": 303.746,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4249,7 +4249,7 @@
     "source": "g_part[0]/g_hrp/g_r[1]/u_r",
     "sink": "u_hub",
     "bits": 1025,
-    "max_um": 295.998,
+    "max_um": 339.198,
     "over_500": 0,
     "worst_source_pin": "o[991]",
     "worst_sink_pin": "f_pr0[991]",
@@ -4263,8 +4263,8 @@
       "M2",
       "M5"
      ],
-     "len_max": 295.998,
-     "len_mean": 236.057,
+     "len_max": 339.198,
+     "len_mean": 270.923,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4335,7 +4335,7 @@
     "source": "g_part[1]/g_hrp/g_r[1]/u_r",
     "sink": "u_hub",
     "bits": 1025,
-    "max_um": 390.177,
+    "max_um": 346.977,
     "over_500": 0,
     "worst_source_pin": "o[937]",
     "worst_sink_pin": "f_pr1[937]",
@@ -4349,23 +4349,23 @@
       "M2",
       "M4"
      ],
-     "len_max": 390.177,
-     "len_mean": 319.317,
+     "len_max": 346.977,
+     "len_mean": 276.614,
      "kind": "straight",
      "axis": "x",
      "gap": 216.07,
-     "jog_max": 174.117,
-     "jog_mean": 103.247,
-     "jog_min": 31.914,
+     "jog_max": 130.917,
+     "jog_mean": 60.544,
+     "jog_min": 1.614,
      "order": "interleaved",
      "cross_share": 0.5063,
-     "jog_cross": 1025,
-     "jog_cut": 0.1505,
+     "jog_cross": 849,
+     "jog_cut": 0.1247,
      "cap_tracks": 6808.5,
-     "window_share": 0.1869,
+     "window_share": 0.1548,
      "verdict": "WARN",
      "why": [
-      "jog 174.1 um > 20",
+      "jog 130.9 um > 20",
       "bit order interleaved (51% of pairs cross)"
      ]
     }
@@ -4443,7 +4443,7 @@
     "source": "g_part[2]/g_hrp/g_r[1]/u_r",
     "sink": "u_hub",
     "bits": 1025,
-    "max_um": 486.342,
+    "max_um": 443.142,
     "over_500": 0,
     "worst_source_pin": "o[768]",
     "worst_sink_pin": "f_pr2[768]",
@@ -4457,8 +4457,8 @@
       "M2",
       "M5"
      ],
-     "len_max": 486.342,
-     "len_mean": 428.061,
+     "len_max": 443.142,
+     "len_mean": 384.902,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4474,7 +4474,7 @@
     "source": "g_part[0]/u_ig",
     "sink": "g_part[0]/g_hev/g_ev[0]/u_r",
     "bits": 23,
-    "max_um": 415.056,
+    "max_um": 447.456,
     "over_500": 0,
     "worst_source_pin": "t_ev[15]",
     "worst_sink_pin": "i[15]",
@@ -4488,8 +4488,8 @@
       "M5",
       "M4"
      ],
-     "len_max": 415.056,
-     "len_mean": 415.056,
+     "len_max": 447.456,
+     "len_mean": 447.456,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4503,7 +4503,7 @@
     "source": "g_part[0]/g_hev/g_ev[0]/u_r",
     "sink": "g_part[0]/g_hev/g_ev[1]/u_r",
     "bits": 23,
-    "max_um": 471.852,
+    "max_um": 493.452,
     "over_500": 0,
     "worst_source_pin": "o[22]",
     "worst_sink_pin": "i[22]",
@@ -4517,19 +4517,19 @@
       "M4",
       "M4"
      ],
-     "len_max": 471.852,
-     "len_mean": 469.74,
+     "len_max": 493.452,
+     "len_mean": 491.34,
      "kind": "straight",
      "axis": "x",
-     "gap": 408.324,
+     "gap": 429.924,
      "jog_max": 63.528,
      "jog_mean": 61.416,
      "jog_min": 59.304,
      "order": "reversed",
      "cross_share": 1.0,
      "jog_cross": 23,
-     "jog_cut": 0.0018,
-     "cap_tracks": 12866.5,
+     "jog_cut": 0.0017,
+     "cap_tracks": 13547.1,
      "window_share": 0.0042,
      "verdict": "WARN",
      "why": [
@@ -4543,7 +4543,7 @@
     "source": "g_part[0]/g_hev/g_ev[1]/u_r",
     "sink": "u_hub",
     "bits": 23,
-    "max_um": 472.032,
+    "max_um": 461.232,
     "over_500": 0,
     "worst_source_pin": "o[4]",
     "worst_sink_pin": "f_ev0[4]",
@@ -4557,8 +4557,8 @@
       "M4",
       "M5"
      ],
-     "len_max": 472.032,
-     "len_mean": 472.032,
+     "len_max": 461.232,
+     "len_mean": 461.232,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4630,7 +4630,7 @@
     "source": "g_part[1]/g_hev/g_ev[1]/u_r",
     "sink": "u_hub",
     "bits": 23,
-    "max_um": 395.904,
+    "max_um": 439.104,
     "over_500": 0,
     "worst_source_pin": "o[3]",
     "worst_sink_pin": "f_ev1[3]",
@@ -4644,8 +4644,8 @@
       "M4",
       "M4"
      ],
-     "len_max": 395.904,
-     "len_mean": 395.904,
+     "len_max": 439.104,
+     "len_mean": 439.104,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4659,10 +4659,10 @@
     "source": "g_part[2]/u_ig",
     "sink": "g_part[2]/g_hev/g_ev[0]/u_r",
     "bits": 23,
-    "max_um": 416.28,
+    "max_um": 457.5,
     "over_500": 0,
-    "worst_source_pin": "t_flt[1]",
-    "worst_sink_pin": "i[22]",
+    "worst_source_pin": "t_ev[15]",
+    "worst_sink_pin": "i[15]",
     "pin_alignment": {
      "bits": 23,
      "face": [
@@ -4673,8 +4673,8 @@
       "M5",
       "M4"
      ],
-     "len_max": 416.28,
-     "len_mean": 414.168,
+     "len_max": 457.5,
+     "len_mean": 457.5,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4688,7 +4688,7 @@
     "source": "g_part[2]/g_hev/g_ev[0]/u_r",
     "sink": "g_part[2]/g_hev/g_ev[1]/u_r",
     "bits": 23,
-    "max_um": 124.212,
+    "max_um": 178.212,
     "over_500": 0,
     "worst_source_pin": "o[0]",
     "worst_sink_pin": "i[0]",
@@ -4702,8 +4702,8 @@
       "M4",
       "M4"
      ],
-     "len_max": 124.212,
-     "len_mean": 122.1,
+     "len_max": 178.212,
+     "len_mean": 176.1,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4717,7 +4717,7 @@
     "source": "g_part[2]/g_hev/g_ev[1]/u_r",
     "sink": "u_hub",
     "bits": 23,
-    "max_um": 346.404,
+    "max_um": 303.204,
     "over_500": 0,
     "worst_source_pin": "o[0]",
     "worst_sink_pin": "f_ev2[0]",
@@ -4731,8 +4731,8 @@
       "M4",
       "M5"
      ],
-     "len_max": 346.404,
-     "len_mean": 344.292,
+     "len_max": 303.204,
+     "len_mean": 301.092,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4748,7 +4748,7 @@
     "source": "u_hub",
     "sink": "g_part[0]/g_hev/g_rc[0]/u_r",
     "bits": 15,
-    "max_um": 343.332,
+    "max_um": 386.532,
     "over_500": 0,
     "worst_source_pin": "t_rc0[7]",
     "worst_sink_pin": "i[7]",
@@ -4762,8 +4762,8 @@
       "M5",
       "M4"
      ],
-     "len_max": 343.332,
-     "len_mean": 322.231,
+     "len_max": 386.532,
+     "len_mean": 365.431,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4864,7 +4864,7 @@
     "source": "u_hub",
     "sink": "g_part[1]/g_hev/g_rc[0]/u_r",
     "bits": 15,
-    "max_um": 350.556,
+    "max_um": 393.756,
     "over_500": 0,
     "worst_source_pin": "t_rc1[0]",
     "worst_sink_pin": "i[0]",
@@ -4878,8 +4878,8 @@
       "M4",
       "M4"
      ],
-     "len_max": 350.556,
-     "len_mean": 348.764,
+     "len_max": 393.756,
+     "len_mean": 391.964,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -4922,7 +4922,7 @@
     "source": "g_part[1]/g_hev/g_rc[1]/u_r",
     "sink": "g_part[1]/g_hev/g_rc[2]/u_r",
     "bits": 15,
-    "max_um": 330.792,
+    "max_um": 363.108,
     "over_500": 0,
     "worst_source_pin": "o[0]",
     "worst_sink_pin": "i[0]",
@@ -4930,19 +4930,19 @@
      "bits": 15,
      "face": [
       "E",
-      "E"
+      "W"
      ],
      "layer": [
       "M4",
       "M4"
      ],
-     "len_max": 330.792,
-     "len_mean": 329.448,
+     "len_max": 363.108,
+     "len_mean": 361.764,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
      "why": [
-      "u-turn: driver face E, load face E"
+      "u-turn: driver face E, load face W"
      ]
     }
    },
@@ -4951,28 +4951,27 @@
     "source": "g_part[1]/g_hev/g_rc[2]/u_r",
     "sink": "g_part[1]/g_c[0]/g_e/u_b",
     "bits": 15,
-    "max_um": 478.44,
+    "max_um": 446.124,
     "over_500": 0,
     "worst_source_pin": "o[14]",
     "worst_sink_pin": "f_r[14]",
     "pin_alignment": {
      "bits": 15,
      "face": [
-      "W",
+      "E",
       "N"
      ],
      "layer": [
       "M4",
       "M5"
      ],
-     "len_max": 478.44,
-     "len_mean": 476.76,
-     "kind": "uturn",
-     "order": "n/a",
-     "verdict": "WARN",
-     "why": [
-      "u-turn: driver face W, load face N"
-     ]
+     "len_max": 446.124,
+     "len_mean": 444.444,
+     "kind": "corner",
+     "order": "nested",
+     "cross_share": 0.0,
+     "verdict": "OK",
+     "why": []
     }
    },
    {
@@ -4980,7 +4979,7 @@
     "source": "u_hub",
     "sink": "g_part[2]/g_hev/g_rc[0]/u_r",
     "bits": 15,
-    "max_um": 337.044,
+    "max_um": 380.244,
     "over_500": 0,
     "worst_source_pin": "t_rc2[8]",
     "worst_sink_pin": "i[8]",
@@ -4994,8 +4993,8 @@
       "M5",
       "M4"
      ],
-     "len_max": 337.044,
-     "len_mean": 323.118,
+     "len_max": 380.244,
+     "len_mean": 366.318,
      "kind": "corner",
      "order": "crossing",
      "cross_share": 0.4667,
@@ -5047,7 +5046,7 @@
     "source": "g_part[2]/g_hev/g_rc[1]/u_r",
     "sink": "g_part[2]/g_hev/g_rc[2]/u_r",
     "bits": 15,
-    "max_um": 489.348,
+    "max_um": 467.748,
     "over_500": 0,
     "worst_source_pin": "o[0]",
     "worst_sink_pin": "i[0]",
@@ -5061,19 +5060,19 @@
       "M4",
       "M4"
      ],
-     "len_max": 489.348,
-     "len_mean": 489.348,
+     "len_max": 467.748,
+     "len_mean": 467.748,
      "kind": "straight",
      "axis": "x",
-     "gap": 64.884,
+     "gap": 43.284,
      "jog_max": 424.464,
      "jog_mean": 424.464,
      "jog_min": 424.464,
      "order": "preserved",
      "cross_share": 0.0,
      "jog_cross": 15,
-     "jog_cut": 0.0073,
-     "cap_tracks": 2044.5,
+     "jog_cut": 0.011,
+     "cap_tracks": 1363.9,
      "window_share": 0.0027,
      "verdict": "WARN",
      "why": [
@@ -5086,7 +5085,7 @@
     "source": "g_part[2]/g_hev/g_rc[2]/u_r",
     "sink": "g_part[2]/g_c[0]/g_e/u_b",
     "bits": 15,
-    "max_um": 409.404,
+    "max_um": 431.004,
     "over_500": 0,
     "worst_source_pin": "o[14]",
     "worst_sink_pin": "f_r[14]",
@@ -5100,8 +5099,8 @@
       "M4",
       "M5"
      ],
-     "len_max": 409.404,
-     "len_mean": 407.724,
+     "len_max": 431.004,
+     "len_mean": 429.324,
      "kind": "corner",
      "order": "nested",
      "cross_share": 0.0,
@@ -5116,7 +5115,7 @@
     "source": "g_part[0]/g_hut/g_r[0]/g_rst/u_rs",
     "sink": "g_part[0]/g_hut/g_r[0]/u_r",
     "bits": 1,
-    "max_um": 26.65,
+    "max_um": 318.95,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5130,22 +5129,14 @@
       "M4",
       "M2"
      ],
-     "len_max": 26.65,
-     "len_mean": 26.65,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 25.981,
-     "jog_max": 0.669,
-     "jog_mean": 0.669,
-     "jog_min": 0.669,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
-     "window_share": 0.0002,
-     "verdict": "OK",
-     "why": []
+     "len_max": 318.95,
+     "len_mean": 318.95,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face W"
+     ]
     }
    },
    {
@@ -5153,7 +5144,7 @@
     "source": "g_part[0]/g_hut/g_r[1]/g_rst/u_rs",
     "sink": "g_part[0]/g_hut/g_r[1]/u_r",
     "bits": 1,
-    "max_um": 26.649,
+    "max_um": 318.95,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5167,22 +5158,14 @@
       "M4",
       "M2"
      ],
-     "len_max": 26.649,
-     "len_mean": 26.649,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 25.98,
-     "jog_max": 0.669,
-     "jog_mean": 0.669,
-     "jog_min": 0.669,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
-     "window_share": 0.0002,
-     "verdict": "OK",
-     "why": []
+     "len_max": 318.95,
+     "len_mean": 318.95,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face W"
+     ]
     }
    },
    {
@@ -5190,7 +5173,7 @@
     "source": "g_part[0]/g_hrp/g_r[0]/g_rst/u_rs",
     "sink": "g_part[0]/g_hrp/g_r[0]/u_r",
     "bits": 1,
-    "max_um": 46.629,
+    "max_um": 102.668,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5204,23 +5187,13 @@
       "M4",
       "M2"
      ],
-     "len_max": 46.629,
-     "len_mean": 46.629,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 25.981,
-     "jog_max": 20.649,
-     "jog_mean": 20.649,
-     "jog_min": 20.649,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
-     "window_share": 0.0002,
+     "len_max": 102.668,
+     "len_mean": 102.668,
+     "kind": "uturn",
+     "order": "n/a",
      "verdict": "WARN",
      "why": [
-      "jog 20.6 um > 20"
+      "u-turn: driver face E, load face W"
      ]
     }
    },
@@ -5229,7 +5202,7 @@
     "source": "g_part[0]/g_hrp/g_r[1]/g_rst/u_rs",
     "sink": "g_part[0]/g_hrp/g_r[1]/u_r",
     "bits": 1,
-    "max_um": 70.131,
+    "max_um": 154.629,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5243,23 +5216,23 @@
       "M4",
       "M2"
      ],
-     "len_max": 70.131,
-     "len_mean": 70.131,
+     "len_max": 154.629,
+     "len_mean": 154.629,
      "kind": "straight",
      "axis": "x",
-     "gap": 25.98,
-     "jog_max": 44.151,
-     "jog_mean": 44.151,
-     "jog_min": 44.151,
+     "gap": 69.18,
+     "jog_max": 85.449,
+     "jog_mean": 85.449,
+     "jog_min": 85.449,
      "order": "preserved",
      "cross_share": 0.0,
      "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
+     "jog_cut": 0.0005,
+     "cap_tracks": 2179.9,
      "window_share": 0.0002,
      "verdict": "WARN",
      "why": [
-      "jog 44.2 um > 20"
+      "jog 85.4 um > 20"
      ]
     }
    },
@@ -5437,7 +5410,7 @@
     "source": "g_part[1]/g_hut/g_r[0]/g_rst/u_rs",
     "sink": "g_part[1]/g_hut/g_r[0]/u_r",
     "bits": 1,
-    "max_um": 26.649,
+    "max_um": 318.951,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5451,22 +5424,14 @@
       "M4",
       "M2"
      ],
-     "len_max": 26.649,
-     "len_mean": 26.649,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 25.98,
-     "jog_max": 0.669,
-     "jog_mean": 0.669,
-     "jog_min": 0.669,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
-     "window_share": 0.0002,
-     "verdict": "OK",
-     "why": []
+     "len_max": 318.951,
+     "len_mean": 318.951,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face W"
+     ]
     }
    },
    {
@@ -5474,7 +5439,7 @@
     "source": "g_part[1]/g_hut/g_r[1]/g_rst/u_rs",
     "sink": "g_part[1]/g_hut/g_r[1]/u_r",
     "bits": 1,
-    "max_um": 26.649,
+    "max_um": 318.951,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5488,22 +5453,14 @@
       "M4",
       "M2"
      ],
-     "len_max": 26.649,
-     "len_mean": 26.649,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 25.98,
-     "jog_max": 0.669,
-     "jog_mean": 0.669,
-     "jog_min": 0.669,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
-     "window_share": 0.0002,
-     "verdict": "OK",
-     "why": []
+     "len_max": 318.951,
+     "len_mean": 318.951,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face W"
+     ]
     }
    },
    {
@@ -5540,7 +5497,7 @@
     "source": "g_part[1]/g_hrp/g_r[1]/g_rst/u_rs",
     "sink": "g_part[1]/g_hrp/g_r[1]/u_r",
     "bits": 1,
-    "max_um": 48.532,
+    "max_um": 89.83,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5554,23 +5511,23 @@
       "M4",
       "M2"
      ],
-     "len_max": 48.532,
-     "len_mean": 48.532,
+     "len_max": 89.83,
+     "len_mean": 89.83,
      "kind": "straight",
      "axis": "x",
-     "gap": 25.981,
-     "jog_max": 22.551,
-     "jog_mean": 22.551,
-     "jog_min": 22.551,
+     "gap": 4.381,
+     "jog_max": 85.449,
+     "jog_mean": 85.449,
+     "jog_min": 85.449,
      "order": "preserved",
      "cross_share": 0.0,
      "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
+     "jog_cut": 0.0072,
+     "cap_tracks": 138.0,
      "window_share": 0.0002,
      "verdict": "WARN",
      "why": [
-      "jog 22.6 um > 20"
+      "jog 85.4 um > 20"
      ]
     }
    },
@@ -5710,8 +5667,8 @@
     "pin_alignment": {
      "bits": 1,
      "face": [
-      "W",
-      "E"
+      "E",
+      "W"
      ],
      "layer": [
       "M4",
@@ -5740,7 +5697,7 @@
     "source": "g_part[2]/g_hut/g_r[0]/g_rst/u_rs",
     "sink": "g_part[2]/g_hut/g_r[0]/u_r",
     "bits": 1,
-    "max_um": 26.649,
+    "max_um": 318.951,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5754,22 +5711,14 @@
       "M4",
       "M2"
      ],
-     "len_max": 26.649,
-     "len_mean": 26.649,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 25.98,
-     "jog_max": 0.669,
-     "jog_mean": 0.669,
-     "jog_min": 0.669,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
-     "window_share": 0.0002,
-     "verdict": "OK",
-     "why": []
+     "len_max": 318.951,
+     "len_mean": 318.951,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face W"
+     ]
     }
    },
    {
@@ -5777,7 +5726,7 @@
     "source": "g_part[2]/g_hut/g_r[1]/g_rst/u_rs",
     "sink": "g_part[2]/g_hut/g_r[1]/u_r",
     "bits": 1,
-    "max_um": 26.65,
+    "max_um": 318.951,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5791,22 +5740,14 @@
       "M4",
       "M2"
      ],
-     "len_max": 26.65,
-     "len_mean": 26.65,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 25.981,
-     "jog_max": 0.669,
-     "jog_mean": 0.669,
-     "jog_min": 0.669,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
-     "window_share": 0.0002,
-     "verdict": "OK",
-     "why": []
+     "len_max": 318.951,
+     "len_mean": 318.951,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face E, load face W"
+     ]
     }
    },
    {
@@ -5814,7 +5755,7 @@
     "source": "g_part[2]/g_hrp/g_r[0]/g_rst/u_rs",
     "sink": "g_part[2]/g_hrp/g_r[0]/u_r",
     "bits": 1,
-    "max_um": 26.931,
+    "max_um": 126.171,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5828,22 +5769,14 @@
       "M4",
       "M2"
      ],
-     "len_max": 26.931,
-     "len_mean": 26.931,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 25.98,
-     "jog_max": 0.951,
-     "jog_mean": 0.951,
-     "jog_min": 0.951,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
-     "window_share": 0.0002,
-     "verdict": "OK",
-     "why": []
+     "len_max": 126.171,
+     "len_mean": 126.171,
+     "kind": "uturn",
+     "order": "n/a",
+     "verdict": "WARN",
+     "why": [
+      "u-turn: driver face W, load face E"
+     ]
     }
    },
    {
@@ -5851,7 +5784,7 @@
     "source": "g_part[2]/g_hrp/g_r[1]/g_rst/u_rs",
     "sink": "g_part[2]/g_hrp/g_r[1]/u_r",
     "bits": 1,
-    "max_um": 26.932,
+    "max_um": 221.332,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5865,22 +5798,24 @@
       "M4",
       "M2"
      ],
-     "len_max": 26.932,
-     "len_mean": 26.932,
+     "len_max": 221.332,
+     "len_mean": 221.332,
      "kind": "straight",
      "axis": "x",
-     "gap": 25.981,
-     "jog_max": 0.951,
-     "jog_mean": 0.951,
-     "jog_min": 0.951,
+     "gap": 47.581,
+     "jog_max": 173.751,
+     "jog_mean": 173.751,
+     "jog_min": 173.751,
      "order": "preserved",
      "cross_share": 0.0,
      "jog_cross": 1,
-     "jog_cut": 0.0012,
-     "cap_tracks": 818.7,
+     "jog_cut": 0.0007,
+     "cap_tracks": 1499.3,
      "window_share": 0.0002,
-     "verdict": "OK",
-     "why": []
+     "verdict": "WARN",
+     "why": [
+      "jog 173.8 um > 20"
+     ]
     }
    },
    {
@@ -5888,7 +5823,7 @@
     "source": "g_part[2]/g_hev/g_ev[0]/g_rst/u_rs",
     "sink": "g_part[2]/g_hev/g_ev[0]/u_r",
     "bits": 1,
-    "max_um": 80.94,
+    "max_um": 59.34,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5902,8 +5837,8 @@
       "M4",
       "M4"
      ],
-     "len_max": 80.94,
-     "len_mean": 80.94,
+     "len_max": 59.34,
+     "len_mean": 59.34,
      "kind": "uturn",
      "order": "n/a",
      "verdict": "WARN",
@@ -5917,7 +5852,7 @@
     "source": "g_part[2]/g_hev/g_ev[1]/g_rst/u_rs",
     "sink": "g_part[2]/g_hev/g_ev[1]/u_r",
     "bits": 1,
-    "max_um": 113.436,
+    "max_um": 104.628,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -5931,23 +5866,13 @@
       "M4",
       "M4"
      ],
-     "len_max": 113.436,
-     "len_mean": 113.436,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 47.604,
-     "jog_max": 65.832,
-     "jog_mean": 65.832,
-     "jog_min": 65.832,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0007,
-     "cap_tracks": 1500.0,
-     "window_share": 0.0002,
+     "len_max": 104.628,
+     "len_mean": 104.628,
+     "kind": "uturn",
+     "order": "n/a",
      "verdict": "WARN",
      "why": [
-      "jog 65.8 um > 20"
+      "u-turn: driver face E, load face W"
      ]
     }
    },
@@ -6030,7 +5955,7 @@
     "source": "g_part[2]/g_hev/g_rc[2]/g_rst/u_rs",
     "sink": "g_part[2]/g_hev/g_rc[2]/u_r",
     "bits": 1,
-    "max_um": 69.972,
+    "max_um": 125.964,
     "over_500": 0,
     "worst_source_pin": "rn",
     "worst_sink_pin": "rn",
@@ -6044,23 +5969,13 @@
       "M4",
       "M4"
      ],
-     "len_max": 69.972,
-     "len_mean": 69.972,
-     "kind": "straight",
-     "axis": "x",
-     "gap": 4.404,
-     "jog_max": 65.568,
-     "jog_mean": 65.568,
-     "jog_min": 65.568,
-     "order": "preserved",
-     "cross_share": 0.0,
-     "jog_cross": 1,
-     "jog_cut": 0.0072,
-     "cap_tracks": 138.8,
-     "window_share": 0.0002,
+     "len_max": 125.964,
+     "len_mean": 125.964,
+     "kind": "uturn",
+     "order": "n/a",
      "verdict": "WARN",
      "why": [
-      "jog 65.6 um > 20"
+      "u-turn: driver face E, load face W"
      ]
     }
    }
@@ -170180,31 +170095,32 @@
   "passes": "A* repeated rip-up; up to16",
   "pin_normal_escape": true,
   "capacity": "M2-M7 only;80% usable;overM5 M6(H),85%M7(V)",
+  "physical_polyline_limit_um": 500.0,
   "full_vertical_cut_max": [
    0.1312,
    1674.0
   ],
   "full_horizontal_cut_max": [
-   0.1492,
+   0.1355,
    151.2
   ],
-  "window_vertical_cut_max": 0.5972,
-  "window_horizontal_cut_max": 0.5943,
+  "window_vertical_cut_max": 0.597,
+  "window_horizontal_cut_max": 0.5953,
   "window_vertical_worst_gcell": [
-   146,
-   211
+   139,
+   163
   ],
   "window_horizontal_worst_gcell": [
-   137,
-   142
+   145,
+   174
   ],
   "gcell_max": [
    0.9926,
    0.9958
   ],
   "pass_": true,
-  "route_segments": 153913,
-  "grid_route_path_max_um": 702.0
+  "route_segments": 152594,
+  "grid_route_path_max_um": 486.0
  },
  "clock_reset_graph": {
   "clock": {
@@ -170216,7 +170132,7 @@
      "pin": "ck",
      "point_um": [
       1522.8419999999999,
-      1612.2839999999999
+      1655.484
      ]
     },
     {
@@ -170343,7 +170259,7 @@
      "instance": "g_part[0]/g_hev/g_ev[0]/u_r",
      "pin": "ck",
      "point_um": [
-      673.962,
+      706.362,
       1624.5
      ]
     },
@@ -170351,7 +170267,7 @@
      "instance": "g_part[0]/g_hev/g_ev[1]/u_r",
      "pin": "ck",
      "point_um": [
-      1114.6019999999999,
+      1168.6019999999999,
       1682.46
      ]
     },
@@ -170535,7 +170451,7 @@
      "instance": "g_part[1]/g_hev/g_rc[2]/u_r",
      "pin": "ck",
      "point_um": [
-      1049.718,
+      1017.402,
       1577.1000000000001
      ]
     },
@@ -170544,7 +170460,7 @@
      "pin": "ck",
      "point_um": [
       2251.932,
-      1499.0819999999999
+      1607.0819999999999
      ]
     },
     {
@@ -170663,7 +170579,7 @@
      "instance": "g_part[2]/g_hev/g_ev[0]/u_r",
      "pin": "ck",
      "point_um": [
-      1842.522,
+      1896.522,
       1632.78
      ]
     },
@@ -170695,7 +170611,7 @@
      "instance": "g_part[2]/g_hev/g_rc[2]/u_r",
      "pin": "ck",
      "point_um": [
-      2136.2819999999997,
+      2114.682,
       1665.66
      ]
     },
@@ -170703,39 +170619,39 @@
      "instance": "g_part[0]/g_hut/g_r[0]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      231.162,
-      104.748
+      274.36199999999997,
+      407.148
      ]
     },
     {
      "instance": "g_part[0]/g_hut/g_r[1]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      490.362,
-      104.748
+      533.562,
+      407.148
      ]
     },
     {
      "instance": "g_part[0]/g_hrp/g_r[0]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      715.0020000000001,
-      1573.5480000000002
+      758.2020000000001,
+      1508.7480000000003
      ]
     },
     {
      "instance": "g_part[0]/g_hrp/g_r[1]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      1164.282,
-      1729.0680000000002
+      1121.0819999999999,
+      1599.4680000000003
      ]
     },
     {
      "instance": "g_part[0]/g_hev/g_ev[0]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      615.642,
+      648.042,
       1623.2280000000003
      ]
     },
@@ -170743,7 +170659,7 @@
      "instance": "g_part[0]/g_hev/g_ev[1]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      1099.482,
+      1153.482,
       1726.9080000000001
      ]
     },
@@ -170775,32 +170691,32 @@
      "instance": "g_part[1]/g_hut/g_r[0]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      1224.762,
-      104.748
+      1267.962,
+      407.148
      ]
     },
     {
      "instance": "g_part[1]/g_hut/g_r[1]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      1483.962,
-      104.748
+      1527.162,
+      407.148
      ]
     },
     {
      "instance": "g_part[1]/g_hrp/g_r[0]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      1753.962,
-      1731.2280000000003
+      1775.5620000000001,
+      1709.6280000000002
      ]
     },
     {
      "instance": "g_part[1]/g_hrp/g_r[1]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      2142.6780000000003,
-      1705.3080000000002
+      2121.0780000000004,
+      1597.3080000000002
      ]
     },
     {
@@ -170839,7 +170755,7 @@
      "instance": "g_part[1]/g_hev/g_rc[2]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      1108.038,
+      959.0820000000001,
       1577.8680000000002
      ]
     },
@@ -170847,48 +170763,48 @@
      "instance": "g_part[2]/g_hut/g_r[0]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      2218.362,
-      104.748
+      2261.562,
+      407.148
      ]
     },
     {
      "instance": "g_part[2]/g_hut/g_r[1]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      2477.562,
-      104.748
+      2520.762,
+      407.148
      ]
     },
     {
      "instance": "g_part[2]/g_hrp/g_r[0]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      2684.838,
-      1534.6680000000001
+      2641.6380000000004,
+      1642.6680000000001
      ]
     },
     {
      "instance": "g_part[2]/g_hrp/g_r[1]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      2123.2380000000003,
-      1541.1480000000001
+      2144.838,
+      1713.9480000000003
      ]
     },
     {
      "instance": "g_part[2]/g_hev/g_ev[0]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      1827.402,
-      1698.8280000000002
+      1881.402,
+      1677.2280000000003
      ]
     },
     {
      "instance": "g_part[2]/g_hev/g_ev[1]/g_rst/u_rs",
      "pin": "ck",
      "point_um": [
-      1699.962,
-      1726.9080000000001
+      1764.762,
+      1748.5080000000003
      ]
     },
     {
@@ -170912,7 +170828,7 @@
      "pin": "ck",
      "point_um": [
       2099.562,
-      1601.6280000000002
+      1558.428
      ]
     }
    ],
@@ -170928,7 +170844,7 @@
      "pin": "rst",
      "point_um": [
       1522.8419999999999,
-      1621.98
+      1665.18
      ]
     },
     {
@@ -171112,7 +171028,7 @@
      "pin": "rst",
      "point_um": [
       2252.22,
-      1499.0819999999999
+      1607.0819999999999
      ]
     },
     {
@@ -171199,39 +171115,39 @@
      "instance": "g_part[0]/g_hut/g_r[0]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      231.162,
-      104.844
+      274.36199999999997,
+      407.244
      ]
     },
     {
      "instance": "g_part[0]/g_hut/g_r[1]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      490.362,
-      104.844
+      533.562,
+      407.244
      ]
     },
     {
      "instance": "g_part[0]/g_hrp/g_r[0]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      715.0020000000001,
-      1573.6440000000002
+      758.2020000000001,
+      1508.8440000000003
      ]
     },
     {
      "instance": "g_part[0]/g_hrp/g_r[1]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      1164.282,
-      1729.1640000000002
+      1121.0819999999999,
+      1599.5640000000003
      ]
     },
     {
      "instance": "g_part[0]/g_hev/g_ev[0]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      615.642,
+      648.042,
       1623.3240000000003
      ]
     },
@@ -171239,7 +171155,7 @@
      "instance": "g_part[0]/g_hev/g_ev[1]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      1099.482,
+      1153.482,
       1727.0040000000001
      ]
     },
@@ -171271,32 +171187,32 @@
      "instance": "g_part[1]/g_hut/g_r[0]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      1224.762,
-      104.844
+      1267.962,
+      407.244
      ]
     },
     {
      "instance": "g_part[1]/g_hut/g_r[1]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      1483.962,
-      104.844
+      1527.162,
+      407.244
      ]
     },
     {
      "instance": "g_part[1]/g_hrp/g_r[0]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      1753.962,
-      1731.3240000000003
+      1775.5620000000001,
+      1709.7240000000002
      ]
     },
     {
      "instance": "g_part[1]/g_hrp/g_r[1]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      2142.6780000000003,
-      1705.4040000000002
+      2121.0780000000004,
+      1597.4040000000002
      ]
     },
     {
@@ -171335,7 +171251,7 @@
      "instance": "g_part[1]/g_hev/g_rc[2]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      1108.038,
+      959.0820000000001,
       1577.9640000000002
      ]
     },
@@ -171343,48 +171259,48 @@
      "instance": "g_part[2]/g_hut/g_r[0]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      2218.362,
-      104.844
+      2261.562,
+      407.244
      ]
     },
     {
      "instance": "g_part[2]/g_hut/g_r[1]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      2477.562,
-      104.844
+      2520.762,
+      407.244
      ]
     },
     {
      "instance": "g_part[2]/g_hrp/g_r[0]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      2684.838,
-      1534.7640000000001
+      2641.6380000000004,
+      1642.7640000000001
      ]
     },
     {
      "instance": "g_part[2]/g_hrp/g_r[1]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      2123.2380000000003,
-      1541.2440000000001
+      2144.838,
+      1714.0440000000003
      ]
     },
     {
      "instance": "g_part[2]/g_hev/g_ev[0]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      1827.402,
-      1698.9240000000002
+      1881.402,
+      1677.3240000000003
      ]
     },
     {
      "instance": "g_part[2]/g_hev/g_ev[1]/g_rst/u_rs",
      "pin": "rst",
      "point_um": [
-      1699.962,
-      1727.0040000000001
+      1764.762,
+      1748.6040000000003
      ]
     },
     {
@@ -171408,7 +171324,7 @@
      "pin": "rst",
      "point_um": [
       2099.562,
-      1601.7240000000002
+      1558.5240000000001
      ]
     }
    ]
@@ -171531,12 +171447,37 @@
   ]
  },
  "routing_timing_status": {
-  "status": "OPEN actual wire budgets/routed RC/timing",
-  "groups_over_diagnostic500": 238,
-  "bits_over_diagnostic500": 1643,
-  "worst_polyline_um": 716.3795,
+  "status": "Partial PASS geometry, connectivity, capacity and diagnostic500um polylines; OPEN actual per-pair RC budgets/routed views/timing",
+  "groups_over_diagnostic500": 0,
+  "bits_over_diagnostic500": 0,
+  "worst_polyline_um": 499.836,
   "actual_per_pair_rc_budget_bound": false
  },
  "grid_route_artifact": "results/arch/s81_hrow_native_placement_1013/grid_routes.json.gz",
- "grid_route_artifact_sha256": "bfaed3cd04afcf4d2c570445fbaa31221a90209b72280ec25c93dacb5bd580db"
+ "grid_route_artifact_sha256": "403ea620a6fdfb9e400ec10561580c424b2595e95a8921de0cc355932cf6ab9b",
+ "independent_route_replay": {
+  "schema": "opentallas.hrow_route_replay.v1",
+  "artifact_sha256": "403ea620a6fdfb9e400ec10561580c424b2595e95a8921de0cc355932cf6ab9b",
+  "groups": 12498,
+  "full_cut_max": [
+   0.13118783582942734,
+   0.1355382308525568
+  ],
+  "window54um_cut_max": [
+   0.5970370370370369,
+   0.59527302363488
+  ],
+  "edge_capacity_max": [
+   0.992592592592606,
+   0.9957805907172996
+  ],
+  "pass_": true,
+  "connectivity_and_normal_escapes_pass": true
+ },
+ "tool_source_sha256": {
+  "tools/s81_ph/s81_ph_hrow_native_placement.py": "2bce03eda69a96f35b878fa91cd38305b0e74a503e79e675fd8ad74e0f49ebc9",
+  "tools/s81_ph/s81_ph_hrow_route_cuts.py": "2d92d3c03ff58e20955b9208365ac831f050efbb657ee36c63719191bbd3a941",
+  "tools/s81_ph/hrow_grid_router.cpp": "40eb3b5caed29ff2d95f997919f3041d1f2616b77b4e52c9f81987f265cfe4d2",
+  "tools/s81_ph/s81_ph_hrow_route_replay.py": "d2e4acb8820672bcdc6edc8f00b52c471272dc1a77fdcd2e078b3daa148abe4d"
+ }
 }
