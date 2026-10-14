@@ -66,6 +66,7 @@ def main():
     p.add_argument('--negative',action='store_true')
     p.add_argument('--entries',action='store_true',help='use core-leaf/eight-child clock-entry slab parent (same cycles)')
     p.add_argument('--entry-mutant',action='store_true',help='swap two scale-return bits in the entries wrapper')
+    p.add_argument('--fullrows',action='store_true',help='18-bit production row boundary checks:65536/131072 and151936 nout')
     p.add_argument('--gid',type=int,help='exact group identity override for a common core view')
     p.add_argument('--gid-mutant',action='store_true',help='flip the core group strap while golden group stays unchanged')
     p.add_argument('--tp',type=int,choices=(4,8),default=4,help='bench: die cut (8: GT 3072, GID 47; see TP8)')
@@ -87,7 +88,7 @@ def main():
         if a.mutant: a.negative=True;neg=MUTANTS[a.mutant]
         elif a.entry_mutant or a.gid_mutant: neg=['LEAD=9']
         else: neg=(['BMUT=1','LEAD=9'] if bf else ['LEAD=8']) if a.negative else ['LEAD=9']
-        for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+(TP8 if a.tp==8 else [])+([f'GID={a.gid}'] if a.gid is not None else [])+neg:
+        for kv in [f"MUL_LAT={v['mul_lat']}",f"MUL_KCP={v['kcp']}",'OREG=1','IN_STAGE=1','AM_SPLIT=1','S5_CTL=1','SCALE_PAIR=1']+bf+(TP8 if a.tp==8 else [])+([f'GID={a.gid}'] if a.gid is not None else [])+(['NW=18','FULLROWS=1'] if a.fullrows else [])+neg:
             cmd+=['-P','tb_qwen_slab_port_group.'+kv]
         cmd+=BENCH_SOURCES
         proc=subprocess.run(cmd,capture_output=True,text=True,cwd=ROOT)
@@ -97,7 +98,7 @@ def main():
         (a.out/'run.log').write_text(proc.stdout+proc.stderr)
         evidence_sources=BENCH_SOURCES+(['rtl/physical/ot_qwen_slab_pg_entries.sv'] if a.entries else [])
         pins={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in evidence_sources}
-        (a.out/'result.json').write_text(json.dumps(dict(returncode=proc.returncode,negative=a.negative,variant=a.variant,tp=a.tp,mutant=('group_strap_bit' if a.gid_mutant else 'scale_return_bits' if a.entry_mutant else a.mutant),entries=a.entries,source_pins=pins),indent=2)+'\n')
+        (a.out/'result.json').write_text(json.dumps(dict(returncode=proc.returncode,negative=a.negative,variant=a.variant,tp=a.tp,mutant=('group_strap_bit' if a.gid_mutant else 'scale_return_bits' if a.entry_mutant else a.mutant),entries=a.entries,fullrows=a.fullrows,source_pins=pins),indent=2)+'\n')
         print((proc.stdout+proc.stderr)[-1500:]);raise SystemExit(proc.returncode)
     from uarch_model import qwen_slab_m3_closure_model
     cmd=command(a.out,a.name,a.threads,a.variant)

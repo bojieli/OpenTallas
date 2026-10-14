@@ -48,7 +48,7 @@ module tb_qwen_slab_port_group;
     //   SPR 1:      the split is random in 5..7 (BANDF 0), so the range test is exercised on both sides.
     //   NOUT_REL 1: nout is drawn near GID*W*IL (partial masks for any GID, as the TP4 default draws them for GID 95).
     //   DUT_GT / DUT_GID (> 0 / >= 0): mutants -- the element is built with another GT / GID than the golden expects.
-    parameter integer SPR = 0, NOUT_REL = 0, DUT_GT = 0, DUT_GID = -1;
+    parameter integer SPR = 0, NOUT_REL = 0, DUT_GT = 0, DUT_GID = -1, FULLROWS = 0;
     localparam integer GT_D = (DUT_GT > 0) ? DUT_GT : GT;
     localparam integer GID_D = (DUT_GID >= 0) ? DUT_GID : GID;
     localparam integer TB = TCUT + 3;
@@ -92,7 +92,7 @@ module tb_qwen_slab_port_group;
 `else
     ot_qwen_slab_port_group #(
 `endif
-        .GID(GID_D), .GT(GT_D), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
+        .NW(NW), .GID(GID_D), .GT(GT_D), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
         .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP)) dut (
 `ifdef OT_SLAB_ENTRIES
         .ck_col0(clk),.ck_col1(clk),.ck_col2(clk),.ck_col3(clk),
@@ -168,15 +168,15 @@ module tb_qwen_slab_port_group;
             G = xg(sp_r); GOK = xok(sp_r);
             p_split <= sp_r;                                // base: GT >> 6 = 96 ports: GID 95 is a port
             p_oen <= 1; p_amax <= (rnd32(seed + 4) % 2); p_rmax <= 0;
-            p_nb <= (rnd32(seed + 5) % 64) * 16;
-            p_lb <= rnd32(seed + 6) % 32;
+            p_nb <= ((FULLROWS != 0) ? ((cyc % 3 == 0) ? 65536 : (cyc % 3 == 1) ? 131072 : 147456) : 0) + (rnd32(seed + 5) % 64) * 16;
+            p_lb <= ((FULLROWS != 0) ? ((cyc % 3 == 0) ? 65536 : (cyc % 3 == 1) ? 131072 : 147456) : 0) + rnd32(seed + 6) % 32;
             // partial masks near GID*W*IL = 12160 .. and lb + GID*W; with COVER_DPOS, one op in 8 has a small nout
             // (row-count difference d <= 0 and near 0 in both modes: no active request, all-zero masks)
-            p_nout <= (BANDF != 0 || NOUT_REL != 0) ? ((rnd32(seed + 11) % 8) == 0 ? rnd32(seed + 7) % 2000
+            p_nout <= (FULLROWS != 0) ? ((cyc % 3 == 2) ? 151936 : ((cyc % 3 == 0) ? 65536 : 131072) + G * W * IL + 900 + (rnd32(seed + 7) % 400)) : (BANDF != 0 || NOUT_REL != 0) ? ((rnd32(seed + 11) % 8) == 0 ? rnd32(seed + 7) % 2000
                                                                    : G * W * IL + 900 + (rnd32(seed + 7) % 400)) :
                       (COVER_DPOS != 0 && (rnd32(seed + 11) % 8) == 0) ? 1400 + (rnd32(seed + 7) % 12000)
                                                                     : 15000 + (rnd32(seed + 7) % 3000);
-            p_sbase <= rnd32(seed + 8) % 60000;
+            p_sbase <= rnd32(seed + 8) % ((FULLROWS != 0) ? 16000 : 60000); // high-row tests stay inside populated scale banks
             p_oa <= rnd32(seed + 9) % (1 << 20);
             p_ots <= rnd32(seed + 10) % 4096;
             @(negedge clk);

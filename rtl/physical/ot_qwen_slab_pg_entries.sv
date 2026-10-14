@@ -5,7 +5,7 @@ module ot_qwen_slab_pg_core #(
     parameter integer W = 16,
     parameter integer IL = 8,
     parameter integer AW = 24,
-    parameter integer NW = 16,
+    parameter integer NW = 18,
     parameter integer GT = 6144,
     parameter integer SCALE_BANKS = 16,
     parameter integer COLS = 4,             // macro columns: banks c*BPC .. c*BPC+BPC-1 share a column copy
@@ -369,7 +369,7 @@ module ot_qwen_slab_pg_entries #(
     parameter integer W = 16,
     parameter integer IL = 8,
     parameter integer AW = 24,
-    parameter integer NW = 16,
+    parameter integer NW = 18,
     parameter integer GT = 6144,
     parameter integer GID = 95,
     parameter integer SCALE_BANKS = 16,
