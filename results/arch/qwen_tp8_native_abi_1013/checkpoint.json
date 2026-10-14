@@ -129,10 +129,11 @@
   ],
   "host_inventory_request": {
     "branch": "codex/qwen-host-integrate-1013",
-    "commit": "9d67cf530",
+    "commit": "818e86975",
     "path": "physical/qkd_host_integration/pin_inventory.json",
-    "masters": 17,
-    "connectivity_records": 2481,
-    "status": "Unverified requested outlines; parent fit unproven; prompt leaf pending; dedicated host CDC two instances width90.72x129.6; one required adapter count explicitly included; no free-PC-pocket assumption."
+    "masters": 19,
+    "connectivity_records": 2494,
+    "status": "UNVERIFIED outlines, no parent fit; registered prompt request237.6x129.6 source818e86975, actual72clock sinks; own physical owner edge_coverage_2240. Commit-order prefix root4639FF and ORDERED mapper4457FF; current PHY adapter eight-leaf candidate237.6wide/842.4high before margins, distribution/cost unclosed. Dedicated two host CDC90.72x129.6; no free-PC-pocket assumption.",
+    "sha256": "91910eadfbc3f45fd59da185a6b3dd375abbfe01ed9f01079ca735eb09b96d02"
   }
 }
