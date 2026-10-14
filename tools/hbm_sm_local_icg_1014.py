@@ -68,7 +68,8 @@ for v in ('eg','wg'):
             own['port_directions'][port]=direction;own['connections'][port]=[external]
         gate['connections']={'CLK':[rawbit],'ENA':[dedicated_ena if i in (4,9,10,11) else aux_ena],'SE':['0'],'GCLK':[gatedbit]}
         gate['attributes']={'keep':'1','dont_touch':'1'};leaf['cells'][name]=gate
-        clockports.append({'raw':raw,'gclk':gated,'gate':name})
+        child_name,child=next((cn,cc) for cn,cc in parent['cells'].items() if cc['type'].startswith('ot_hbm_accel_smh_') and cc['connections'].get('clk')==own['connections'][gated])
+        clockports.append({'raw':raw,'gclk':gated,'gate':name,'parent_clock_port':f'clk_child_{i}','original_gated_clock_bit':7768,'child_instance':child_name,'child_master':child['type'],'reset_parent_bits':child['connections'].get('rst_n',[])})
     (OUT/f'{v}_split.json').write_text(json.dumps(design)+'\n')
     mapped=copy.deepcopy(design);mapped['modules'].pop(f'split_{v}')
     (OUT/f'{v}_leaf.json').write_text(json.dumps(mapped)+'\n')
@@ -98,7 +99,7 @@ for v in ('eg','wg'):
     spec['job']['benches'] += [{'name':'local_icg_functional_phase_ss','cmd':f'bash {OUT.relative_to(ROOT)}/phase_run.sh split ss','expect':'pass','pass_regex':'LOCAL_ICG_PHASE_ss checked=4096 enable_checks=4096 pulses=[1-9]','threads':4,'peak_ram_gb':4},{'name':'local_icg_mirror_mutant','cmd':f'bash {OUT.relative_to(ROOT)}/phase_run.sh mut ss','expect':'fail','fail_regex':'enable mirror state differs from original8870','threads':4,'peak_ram_gb':4}]
     spec['reroute_reason']={'kind':'rtl_change'}
     (OUT/f'{v}_physical_spec.json').write_text(json.dumps(spec,indent=2)+'\n')
-    records.append({'variant':v,'master':master,'original_enable_bit':8870,'original_gated_bit':7768,'launch_cell':launchname,'launch_D_bits':launch['connections']['D'],'raw_clock_bits':launch['connections']['CLK'],'mirror_type':mirror['type'],'mirror_count':2,'original_decode_cells':[nor_name,nand_name],'local_decode_cgi_parent_bit':own['connections']['local_cgi'],'local_decode_D_bits':[local_next],'inverter_type':'INVx4_ASAP7_75t_R','critical_indices':[4,9,10,11],'local_gate_count':12,'ports':clockports,'source_split_sha256':hashlib.sha256((SRC/f'{v}_split.json').read_bytes()).hexdigest(),'logical_phase_and_latency':'UNCHANGED; all clocks common in exact functional bench; physical phi-R checks required separately'})
+    records.append({'variant':v,'master':master,'original_enable_bit':8870,'original_gated_bit':7768,'launch_cell':launchname,'launch_D_bits':launch['connections']['D'],'raw_clock_bits':launch['connections']['CLK'],'mirror_type':mirror['type'],'mirror_count':2,'original_decode_cells':[nor_name,nand_name],'local_decode_cgi_parent_bit':own['connections']['local_cgi'],'local_decode_D_bits':[local_next],'inverter_type':'INVx4_ASAP7_75t_R','critical_indices':[4,9,10,11],'local_gate_count':12,'ports':clockports,'source_split_sha256':hashlib.sha256((SRC/f'{v}_split.json').read_bytes()).hexdigest(),'reset_driver_ABI':{'parent_port':'rst_n','original_parent_bit':3,'own_port':'cut_3','polarity':'active_low','original_child_connections':'unchanged, see each child reset_parent_bits'},'logical_phase_and_latency':'UNCHANGED; all clocks common in exact functional bench; physical phi-R checks required separately'})
 plan=json.loads((OUT/'clock_baseline/plan.json').read_text())
 sdc=(SRC/'own_generated_clock.sdc').read_text()
 sdc+='set local_icg_corner tt\nforeach local_lib [get_libs *] {set local_ln [get_property $local_lib name]; if {[regexp {(^|_)SS($|_)} $local_ln]} {set local_icg_corner ss}; if {[regexp {(^|_)FF($|_)} $local_ln]} {set local_icg_corner ff}}\n'

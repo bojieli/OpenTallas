@@ -6,7 +6,9 @@ R=Path(__file__).resolve().parents[1];O=R/'results/arch/hbm_native_1013/sm_local
 s=(E/'gating.v').read_text().replace('module gating(input clk,','module gating(input next_enable, input clk_aux, input clk,').replace('wire ena;','wire ena; wire old_ena; wire local_qn; wire aux_ena; wire aux_qn;\nDFFHQNx1_ASAP7_75t_R mirror_aux(.CLK(clk_aux),.D(next_enable),.QN(aux_qn));\nINVx4_ASAP7_75t_R aux_inv(.A(aux_qn),.Y(aux_ena));\nDFFHQNx1_ASAP7_75t_R mirror(.CLK(clk),.D(next_enable),.QN(local_qn));\nINVx4_ASAP7_75t_R local_inv(.A(local_qn),.Y(ena));').replace('.cut_8870(ena)','.cut_8870(old_ena)');
 for i in [0,1,2,3,5,6,7,8]: s=s.replace(f'gate_{i}(.CLK(clk_child_{i}), .ENA(ena)',f'gate_{i}(.CLK(clk_child_{i}), .ENA(aux_ena)')
 (O/'gating.v').write_text(s)
-for c,ownR in [('tt',149.2),('ff',114.9),('ss',207.0)]:
+phase_plan=json.loads((E/'plan.json').read_text())
+for c in ('tt','ff','ss'):
+ ownR=phase_plan['own_ENA'][c]['R_ps']
  s=(E/f'probe_{c}.tcl').read_text().replace('read_verilog /probe/gating.v',f'read_liberty /probe/INVBUF_{c}.lib\nread_verilog /probe/gating.v')
  s=s.replace('own/cut_8870','mirror/QN')
  s=s.replace('create_clock -name RAW_0',f'create_clock -name OWN_AUX -period 833.333 [get_ports clk_aux]\nset_clock_latency -source {-ownR+80.0} [get_clocks OWN_AUX]\ncreate_clock -name RAW_0')
@@ -15,6 +17,7 @@ for c,ownR in [('tt',149.2),('ff',114.9),('ss',207.0)]:
  s=s.replace('set current_U($i) $u','set current_U($i) $u')
  s=s.replace('set after [check_paths', 'for {set i 0} {$i<12} {incr i} {set_clock_uncertainty -setup $current_U($i) -from [get_clocks OWN_AUX] -to [get_clocks RAW_$i]}\nset after [check_paths')
  s=s.replace('set_propagated_clock [all_clocks]', 'set_propagated_clock [all_clocks]')
+ assert f'set_clock_latency -source -{ownR} [get_clocks OWN_RAW]' in s
  s=s.replace(f'set_clock_latency -source -{ownR} [get_clocks OWN_RAW]',f'set_clock_latency -source {-ownR+20.0} [get_clocks OWN_RAW]').replace(f'abs($ownarr+{ownR})',f'abs($ownarr+{ownR-20.0})')
  s=s.replace('static_diagnostic_only_no_native_phase_qualification','REQUESTED_EARLY_TAP_20PS_IDEAL_WIRES_NO_D_SETUP_PHYSICAL_QUALIFICATION');(O/f'probe_{c}.tcl').write_text(s)
 (O/'run.sh').write_text('''#!/bin/bash

@@ -7,7 +7,9 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];O=ROOT/'results/arch/hbm_native_1013/sm_local_icg_1014'
 E=Path(__file__).resolve().parents[1]/'results/arch/hbm_native_1013/sm_local_icg_1014/clock_baseline'
 records={}
-for c,Rown in [('tt',149.2),('ff',114.9),('ss',207.0)]:
+phase_plan=json.loads((E/'plan.json').read_text())
+for c in ('tt','ff','ss'):
+ Rown=phase_plan['own_ENA'][c]['R_ps']
  log=(E/f'probe_{c}.receipt.log').read_text()
  phases=[]
  for i in range(12):

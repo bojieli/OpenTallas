@@ -23,62 +23,62 @@ wire [199:0] s_gout;
 
 split_eg u_split(.clk(clk),.rst_n(rst_n),.cgi(cgi),.cgo(s_cgo),.xs_a1(xs_a1),.xs_g1(xs_g1),.xs_a2(xs_a2),.xs_g2(xs_g2),.rin(rin),.bin(bin),.rout(s_rout),.bout(s_bout),.gin(gin),.gout(s_gout),.clk_child_0(phase_raw_0),.clk_child_1(phase_raw_1),.clk_child_2(phase_raw_2),.clk_child_3(phase_raw_3),.clk_child_4(phase_raw_4),.clk_child_5(phase_raw_5),.clk_child_6(phase_raw_6),.clk_child_7(phase_raw_7),.clk_child_8(phase_raw_8),.clk_child_9(phase_raw_9),.clk_child_10(phase_raw_10),.clk_child_11(phase_raw_11));
 reg phase_raw_0=0; wire reference_gclk_0;
-initial begin #(1181.444853); forever begin phase_raw_0=1; #416.6665; phase_raw_0=0; #416.6665; end end
+initial begin #(1183.444853); forever begin phase_raw_0=1; #416.6665; phase_raw_0=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_0(.CLK(phase_raw_0),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_0));
 always @(phase_raw_0,reference_gclk_0,u_split.u_own.local_gclk_0) begin #0.001; if(checked>32 && reference_gclk_0 !== u_split.u_own.local_gclk_0) $fatal(1,"phase ff child0 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_0) if(checked>32) pulses=pulses+1;
 reg phase_raw_1=0; wire reference_gclk_1;
-initial begin #(1188.281315); forever begin phase_raw_1=1; #416.6665; phase_raw_1=0; #416.6665; end end
+initial begin #(1190.281315); forever begin phase_raw_1=1; #416.6665; phase_raw_1=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_1(.CLK(phase_raw_1),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_1));
 always @(phase_raw_1,reference_gclk_1,u_split.u_own.local_gclk_1) begin #0.001; if(checked>32 && reference_gclk_1 !== u_split.u_own.local_gclk_1) $fatal(1,"phase ff child1 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_1) if(checked>32) pulses=pulses+1;
 reg phase_raw_2=0; wire reference_gclk_2;
-initial begin #(1188.281315); forever begin phase_raw_2=1; #416.6665; phase_raw_2=0; #416.6665; end end
+initial begin #(1190.281315); forever begin phase_raw_2=1; #416.6665; phase_raw_2=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_2(.CLK(phase_raw_2),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_2));
 always @(phase_raw_2,reference_gclk_2,u_split.u_own.local_gclk_2) begin #0.001; if(checked>32 && reference_gclk_2 !== u_split.u_own.local_gclk_2) $fatal(1,"phase ff child2 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_2) if(checked>32) pulses=pulses+1;
 reg phase_raw_3=0; wire reference_gclk_3;
-initial begin #(1184.421002); forever begin phase_raw_3=1; #416.6665; phase_raw_3=0; #416.6665; end end
+initial begin #(1186.421002); forever begin phase_raw_3=1; #416.6665; phase_raw_3=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_3(.CLK(phase_raw_3),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_3));
 always @(phase_raw_3,reference_gclk_3,u_split.u_own.local_gclk_3) begin #0.001; if(checked>32 && reference_gclk_3 !== u_split.u_own.local_gclk_3) $fatal(1,"phase ff child3 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_3) if(checked>32) pulses=pulses+1;
 reg phase_raw_4=0; wire reference_gclk_4;
-initial begin #(1046.538543); forever begin phase_raw_4=1; #416.6665; phase_raw_4=0; #416.6665; end end
+initial begin #(1048.538543); forever begin phase_raw_4=1; #416.6665; phase_raw_4=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_4(.CLK(phase_raw_4),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_4));
 always @(phase_raw_4,reference_gclk_4,u_split.u_own.local_gclk_4) begin #0.001; if(checked>32 && reference_gclk_4 !== u_split.u_own.local_gclk_4) $fatal(1,"phase ff child4 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_4) if(checked>32) pulses=pulses+1;
 reg phase_raw_5=0; wire reference_gclk_5;
-initial begin #(1181.444853); forever begin phase_raw_5=1; #416.6665; phase_raw_5=0; #416.6665; end end
+initial begin #(1183.444853); forever begin phase_raw_5=1; #416.6665; phase_raw_5=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_5(.CLK(phase_raw_5),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_5));
 always @(phase_raw_5,reference_gclk_5,u_split.u_own.local_gclk_5) begin #0.001; if(checked>32 && reference_gclk_5 !== u_split.u_own.local_gclk_5) $fatal(1,"phase ff child5 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_5) if(checked>32) pulses=pulses+1;
 reg phase_raw_6=0; wire reference_gclk_6;
-initial begin #(1188.281315); forever begin phase_raw_6=1; #416.6665; phase_raw_6=0; #416.6665; end end
+initial begin #(1190.281315); forever begin phase_raw_6=1; #416.6665; phase_raw_6=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_6(.CLK(phase_raw_6),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_6));
 always @(phase_raw_6,reference_gclk_6,u_split.u_own.local_gclk_6) begin #0.001; if(checked>32 && reference_gclk_6 !== u_split.u_own.local_gclk_6) $fatal(1,"phase ff child6 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_6) if(checked>32) pulses=pulses+1;
 reg phase_raw_7=0; wire reference_gclk_7;
-initial begin #(1188.281315); forever begin phase_raw_7=1; #416.6665; phase_raw_7=0; #416.6665; end end
+initial begin #(1190.281315); forever begin phase_raw_7=1; #416.6665; phase_raw_7=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_7(.CLK(phase_raw_7),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_7));
 always @(phase_raw_7,reference_gclk_7,u_split.u_own.local_gclk_7) begin #0.001; if(checked>32 && reference_gclk_7 !== u_split.u_own.local_gclk_7) $fatal(1,"phase ff child7 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_7) if(checked>32) pulses=pulses+1;
 reg phase_raw_8=0; wire reference_gclk_8;
-initial begin #(1184.421002); forever begin phase_raw_8=1; #416.6665; phase_raw_8=0; #416.6665; end end
+initial begin #(1186.421002); forever begin phase_raw_8=1; #416.6665; phase_raw_8=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_8(.CLK(phase_raw_8),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_8));
 always @(phase_raw_8,reference_gclk_8,u_split.u_own.local_gclk_8) begin #0.001; if(checked>32 && reference_gclk_8 !== u_split.u_own.local_gclk_8) $fatal(1,"phase ff child8 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_8) if(checked>32) pulses=pulses+1;
 reg phase_raw_9=0; wire reference_gclk_9;
-initial begin #(1046.538543); forever begin phase_raw_9=1; #416.6665; phase_raw_9=0; #416.6665; end end
+initial begin #(1048.538543); forever begin phase_raw_9=1; #416.6665; phase_raw_9=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_9(.CLK(phase_raw_9),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_9));
 always @(phase_raw_9,reference_gclk_9,u_split.u_own.local_gclk_9) begin #0.001; if(checked>32 && reference_gclk_9 !== u_split.u_own.local_gclk_9) $fatal(1,"phase ff child9 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_9) if(checked>32) pulses=pulses+1;
 reg phase_raw_10=0; wire reference_gclk_10;
-initial begin #(1027.178518); forever begin phase_raw_10=1; #416.6665; phase_raw_10=0; #416.6665; end end
+initial begin #(1029.178518); forever begin phase_raw_10=1; #416.6665; phase_raw_10=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_10(.CLK(phase_raw_10),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_10));
 always @(phase_raw_10,reference_gclk_10,u_split.u_own.local_gclk_10) begin #0.001; if(checked>32 && reference_gclk_10 !== u_split.u_own.local_gclk_10) $fatal(1,"phase ff child10 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_10) if(checked>32) pulses=pulses+1;
 reg phase_raw_11=0; wire reference_gclk_11;
-initial begin #(978.044885); forever begin phase_raw_11=1; #416.6665; phase_raw_11=0; #416.6665; end end
+initial begin #(980.044885); forever begin phase_raw_11=1; #416.6665; phase_raw_11=0; #416.6665; end end
 ICGx1_ASAP7_75t_R reference_11(.CLK(phase_raw_11),.ENA(u_split.u_own.cut_8870),.SE(1'b0),.GCLK(reference_gclk_11));
 always @(phase_raw_11,reference_gclk_11,u_split.u_own.local_gclk_11) begin #0.001; if(checked>32 && reference_gclk_11 !== u_split.u_own.local_gclk_11) $fatal(1,"phase ff child11 mirrored original8870 pulse differs"); end
 always @(posedge u_split.u_own.local_gclk_11) if(checked>32) pulses=pulses+1;

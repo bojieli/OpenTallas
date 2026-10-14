@@ -21,7 +21,7 @@ read_verilog /probe/gating.v
 link_design gating
 create_clock -name OWN_RAW -period 833.333 -waveform {0 416.6665} [get_ports clk]
 create_clock -name OWN_AUX -period 833.333 [get_ports clk_aux]
-set_clock_latency -source -34.900000000000006 [get_clocks OWN_AUX]
+set_clock_latency -source -36.900000000000006 [get_clocks OWN_AUX]
 create_clock -name RAW_0 -period 833.333 -waveform {0 416.6665} [get_ports clk_child_0]
 create_generated_clock -name G_0 -master_clock RAW_0 -source [get_ports clk_child_0] -divide_by 1 [get_pins gate_0/GCLK]
 create_clock -name RAW_1 -period 833.333 -waveform {0 416.6665} [get_ports clk_child_1]
@@ -74,10 +74,10 @@ proc check_paths {tag} {
  }
  return $result
 }
-set_clock_latency -source -116.9 [get_clocks OWN_RAW]
+set_clock_latency -source -96.9 [get_clocks OWN_RAW]
 set baseline [check_paths ff_before_entry_comp]
 set ownarr [get_property [get_pins own/cut_2] arrival_max_rise]
-if {abs($ownarr+116.9)>0.01} {error "OWN raw phase mismatch"}
+if {abs($ownarr+96.9)>0.01} {error "OWN raw phase mismatch"}
 source /probe/TT_levels.tcl
 set rise [get_property [get_pins child_0/clk] arrival_max_rise]
 set fall [get_property [get_pins child_0/clk] arrival_max_fall]
