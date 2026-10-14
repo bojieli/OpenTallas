@@ -73,7 +73,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Native57clock PQ: one original SRAM bank per physical read leaf, own original rounding, metadata, parity/written state, selector and final captured32bits. No parent mux/register, no new logical cycle,44SRAM unchanged. Replaces two-SRAM group failing actual100.1ps spread; new CTS and routed parent joins owed.",
+ "structural_change": "Native57clock PQ: one original SRAM bank per physical read leaf, own original rounding, metadata, parity/written state, selector and final captured32bits. No parent mux/register, no new logical cycle,44SRAM unchanged. Replaces two-SRAM group failing actual100.1ps spread; new CTS and routed parent joins owed. Local real SRAM east M3/M5 via escape keepout .144in/.288out forces pin exits on M4 before via; repairs actual3macro-edgeDRC, no layer/gate waiver.",
  "slot_change_request": {
   "name": "s81pq_ix_rb_native-0240",
   "outline": [
@@ -107,7 +107,7 @@
  "job": {
   "owner": "Codex:s81-rom-2250",
   "branch": "codex/s81-rom-2250",
-  "tag": "g1",
+  "tag": "esc1",
   "purpose": "Actual native one-SRAM IX bank with unchanged selector and final capture epochs",
   "benches": [
    {
@@ -162,17 +162,14 @@
   }
  ],
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "Physical bank partition preserving native storage/selector/final FF epochs; two-SRAM RG100.1ps spread held"
+  "kind": "slot_change",
+  "why": "Actual bank g1 TT116.88/FF23.36 but DRC3 at real SRAM M4eastOBS; add M3/M5 local via escape keepout, realLEF and macro/data pins/epochs unchanged"
  },
  "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_rb_split_pins.tcl",
+ "orfs_vars": {
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/s81pq_native/ix_rb_macro_escape.tcl"
+ },
  "params": {},
  "children": [],
- "inter": [],
- "io_flop_at_pins": {
-  "cols": 4,
-  "allow_none": true
- },
- "inhold": true,
- "outhold": true
+ "inter": []
 }
