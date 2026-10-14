@@ -49,6 +49,25 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(d['hc_summary']['per_reservation_used_envelope_um'],[1231.2,470.88])
         self.assertFalse(d['private_pin_binding_qualified'])
 
+    def test_frontc_exact_geometry_flags_stale_metadata_without_grant(self):
+        d=json.loads((REPORT.parent/'frontc_geometry_binding_audit.json').read_text())
+        self.assertEqual(d['exact_bound_LEF_count'],9)
+        self.assertEqual(d['stale_candidate_hash_count'],8)
+        self.assertEqual(d['geometry_overlap_count'],0)
+        self.assertFalse(d['qualified'])
+        self.assertEqual(len({r['clock_port'] for r in d['children']}),9)
+        self.assertTrue(all(r['actual_clock_source_driver'] is None and r['fixed_TT_source_phase_ps'] is None for r in d['children']))
+        self.assertTrue(all(set(r['raw_corner_clock_measurements'])=={'tt','ff','ss'} for r in d['children']))
+
+    def test_frontc_bound_bytes_or_outline_mismatch_refused(self):
+        from frontc_screen import check_child,sha
+        c={'w_um':10,'h_um':20,'logical_instance':'p/u','xy_um':[0,0],'orientation':'R0','view_sha256':'stale'}
+        b={'instance':'u','master':'leaf','clock_port':'raw_u','reset_port':'rst_u','view':{'w_um':10,'h_um':20,'hashes':{'lef':sha(b'actual')}}}
+        self.assertFalse(check_child(c,b,b'actual',[])['candidate_recorded_hash_matches_actual'])
+        with self.assertRaises(ValueError):check_child(c,b,b'tampered',[])
+        c['w_um']=11
+        with self.assertRaises(ValueError):check_child(c,b,b'actual',[])
+
     def test_actual_idx_cut_counts_and_lower_bound_remain_unqualified(self):
         d=json.loads((REPORT.parent/'idx_cut_source_screen.json').read_text())
         self.assertEqual(d['all_source_hashes_verified'],43)
