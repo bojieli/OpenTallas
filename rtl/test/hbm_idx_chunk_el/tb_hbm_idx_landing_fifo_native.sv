@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
-module native_fifo_case #(parameter W=1098,AW=6)(input wire clk,output reg done);
+module native_fifo_case #(parameter W=1098,AW=6,CAP_ATTACK=0,MUT=0)(input wire clk,output reg done);
  localparam DEPTH=1<<AW;
  localparam MB=(AW==6)?512:256;
  localparam NM=(W+MB-1)/MB;
  reg rst_n=0,we=0,re=0;reg [W-1:0]wd;
  wire ne,fault;wire[W-1:0]rd;wire[AW:0]cnt;
- ot_hbm_idx_landing_fifo_native #(.W(W),.AW(AW))dut(
+ ot_hbm_idx_landing_fifo_native #(.W(W),.AW(AW),.MUT(MUT))dut(
   .clk(clk),.clk_mem({NM{clk}}),.rst_n(rst_n),.we(we),.wd(wd),.re(re),.rd(rd),.ne(ne),.cnt(cnt),.fault(fault));
  function automatic [W-1:0]word(input integer n);
   reg[W-1:0]v;integer i;
@@ -18,14 +18,17 @@ module native_fifo_case #(parameter W=1098,AW=6)(input wire clk,output reg done)
   if(cycles==3)rst_n=1;
   if(rst_n&&!done)begin
    rng=rng^(rng<<13);rng=rng^(rng>>17);rng=rng^(rng<<5);
-   we=(sent<2048)&&(cnt<DEPTH)&&((rng&3)!=0);
-   re=(sent>=DEPTH)&&(rng[7:4]!=0)&&ne;
+   we=(sent<2048)&&((cnt<DEPTH)||CAP_ATTACK)&&((rng&3)!=0);
+   re=!CAP_ATTACK&&(sent>=DEPTH)&&(rng[7:4]!=0)&&ne;
    wd=word(sent);
    if(cnt==DEPTH)full_edges=full_edges+1;
   end else begin we=0;re=0;end
  end
  always @(posedge clk)if(rst_n&&!done)begin
-  if(fault)$fatal(1,"Unexpected FIFO fault W%0d",W);
+  if(fault)begin
+   if(!CAP_ATTACK)$fatal(1,"Unexpected FIFO fault W%0d",W);
+   else begin $display("LANDING_OVERFLOW W%0d D%0d count%0d PASS",W,DEPTH,cnt);done=1;end
+  end
   if(cnt>DEPTH)$fatal(1,"Invented logical capacity");
   if(we)sent=sent+1;
   if(re&&ne)begin
@@ -39,9 +42,10 @@ module native_fifo_case #(parameter W=1098,AW=6)(input wire clk,output reg done)
   if(cycles>20000)$fatal(1,"FIFO timeout");
  end
 endmodule
-module tb_hbm_idx_landing_fifo_native;
- reg clk=0;always #5 clk=~clk;wire done0,done1;
+module tb_hbm_idx_landing_fifo_native #(parameter MUT=0);
+ reg clk=0;always #5 clk=~clk;wire done0,done1,done2;
  native_fifo_case #(.W(1098),.AW(6))a(clk,done0);
  native_fifo_case #(.W(609),.AW(7))b(clk,done1);
- always @(posedge clk)if(done0&&done1)$finish;
+ native_fifo_case #(.W(1098),.AW(6),.CAP_ATTACK(1),.MUT(MUT))c(clk,done2);
+ always @(posedge clk)if(done0&&done1&&done2)$finish;
 endmodule
