@@ -1,0 +1,9 @@
+FRAME id=0 sent=128 acked=128 received=128 writes=128 depleted_edges=128 cycles=588 credit=32 faults=0
+FRAME id=1 sent=128 acked=128 received=128 writes=128 depleted_edges=128 cycles=588 credit=32 faults=0
+FRAME id=2 sent=128 acked=128 received=128 writes=128 depleted_edges=128 cycles=588 credit=32 faults=0
+VOCAB_NATIVE59 actual_start_captures=151936 stage_count=38 positions=8191,7935 bad=0
+PASS NATIVE59 mutant=0 frames=3 full_windows=3 fault=0 writes=128
+- rtl/test/tb_qwen_native8_identity59.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 913us; walltime 0.184 s; speed 4.974 ms/s
+- Verilator: cpu 0.184 s on 1 threads; allocated 7 MB

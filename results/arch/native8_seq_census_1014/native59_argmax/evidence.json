@@ -1,0 +1,19 @@
+{
+  "fleet_unit": "oth-ubuntu-1606332-1791969917",
+  "outer_exit": 0,
+  "qualification": "Actual helper, fixture descriptor/core/gather; no production LM-head or transport proof.",
+  "actual_descriptor_row0": 132944,
+  "local_row": 18991,
+  "global_token": 151935,
+  "rank_returns": 8,
+  "positive_fault": false,
+  "rank7_to3_mutation_fault": true,
+  "note": "Rank-error fault is detected; legacy receive update semantics still expose next_token while fault1. Consumers must refuse faulted completion.",
+  "source_helper_sha256": "0eaf31d8b6dbecf6cb264accae7c273b60a7793ea94ad846909f24c97ceb6e44",
+  "artifacts": {
+    "run1.log": "a685d973ece67934b1c77d238820b1a2046023a94ebd8b667d6c3230a691811c",
+    "run0.log": "c2883a3fb12a27bf8b4c43640e5cad5cf3edd0c224b2581db8b913bd3c0ba166",
+    "source_binary.sha256": "7fe6258ac71631f28033870f34104328f6ab6b4f34a479f04975901bb59d4911"
+  },
+  "physical_qualified": false
+}
