@@ -16,7 +16,11 @@ module tb_coll_tp8 #(
     parameter integer LATS  = 40,
     parameter integer BPC   = 3600,
     parameter integer WT    = 0,
-    parameter integer ICR   = 32
+    parameter integer ICR   = 32,
+    // qwen-coll-io 2026-10-14: LEB 1 puts ot_coll_link_end (link-level credit termination, LC-word receive buffer)
+    // at both ends of every SerDes port; LEB 0 = the engine's 32-credit loop closed over the board link.
+    parameter integer LEB   = 0,
+    parameter integer LC    = 128
 ) (input wire clk);
     localparam integer ND = 8, FW = 32 * LANES, TAGW = 32, PW = FW + 2 + TAGW, RW = FW + 2, MAXW = 1 << 16;
     reg [FW-1:0] part [0:MAXW-1];
@@ -42,6 +46,8 @@ module tb_coll_tp8 #(
     wire [ND*RW-1:0] urrec, drrec;
     wire [ND*3-1:0] sxv, sxrdy, sxcr, srv, srcr;
     wire [ND*3*PW-1:0] sxrec, srrec;
+    wire [ND*3-1:0] lsxv, lsxcr, lsrv, lsrcr, lef;
+    wire [ND*3*PW-1:0] lsxrec, lsrrec;
 
     function [31:0] xs(input [31:0] v0);
         reg [31:0] v;
@@ -75,10 +81,24 @@ module tb_coll_tp8 #(
             // SerDes: port j -> die D of package Q = (P + 1 + j) mod 4, arriving on its port (P - Q + 3) mod 4
             for (j = 0; j < 3; j = j + 1) begin : g_sx
                 localparam integer Q = (P + 1 + j) % 4, R2 = 2 * Q + D, J2 = (P - Q + 7) % 4;
+                if (LEB == 0) begin : g_direct
                 ot_rom_ucie_link #(.PW(PW), .LAT(LATS), .FLIT_BYTES(FW / 8), .BPC_NUM(BPC)) u_sx (
                     .clk(clk), .rst_n(rst_n), .in_valid(sxv[g*3 + j]), .in_rec(sxrec[(g*3 + j)*PW +: PW]),
                     .in_ready(sxrdy[g*3 + j]), .out_valid(srv[R2*3 + J2]), .out_rec(srrec[(R2*3 + J2)*PW +: PW]),
                     .cr_in(srcr[R2*3 + J2]), .cr_out(sxcr[g*3 + j]));
+                assign lef[g*3 + j] = 1'b0;
+                end else begin : g_le
+                ot_coll_link_end #(.PW(PW), .EC(32), .LC(LC)) u_le (.clk(clk), .rst_n(rst_n),
+                    .e_tx_v(sxv[g*3 + j]), .e_tx_rec(sxrec[(g*3 + j)*PW +: PW]), .e_tx_cr(sxcr[g*3 + j]),
+                    .l_tx_v(lsxv[g*3 + j]), .l_tx_rec(lsxrec[(g*3 + j)*PW +: PW]), .l_tx_cr(lsxcr[g*3 + j]),
+                    .l_rx_v(lsrv[g*3 + j]), .l_rx_rec(lsrrec[(g*3 + j)*PW +: PW]), .l_rx_cr(lsrcr[g*3 + j]),
+                    .e_rx_v(srv[g*3 + j]), .e_rx_rec(srrec[(g*3 + j)*PW +: PW]), .e_rx_cr(srcr[g*3 + j]),
+                    .fault(lef[g*3 + j]));
+                ot_rom_ucie_link #(.PW(PW), .LAT(LATS), .FLIT_BYTES(FW / 8), .BPC_NUM(BPC)) u_sx (
+                    .clk(clk), .rst_n(rst_n), .in_valid(lsxv[g*3 + j]), .in_rec(lsxrec[(g*3 + j)*PW +: PW]),
+                    .in_ready(sxrdy[g*3 + j]), .out_valid(lsrv[R2*3 + J2]), .out_rec(lsrrec[(R2*3 + J2)*PW +: PW]),
+                    .cr_in(lsrcr[R2*3 + J2]), .cr_out(lsxcr[g*3 + j]));
+                end
             end
             // sender (sequencer with ICR credits)
             integer m = 0, w = 0, cred = ICR;
@@ -167,6 +187,7 @@ module tb_coll_tp8 #(
     always @(posedge clk) begin
         if ((done_n == ND && INJECT < 0 && TAGBAD < 0) ||
             ((INJECT >= 0 || TAGBAD >= 0) && cyc > 4000 + 4 * LATS + NMSG * WORDS * 16)) begin
+            if (lef != 0) begin bad = bad + 1; $display("LINKEND_FAULT %b", lef); end
             $display("TP8COLL dies=%0d latu=%0d lats=%0d msgs=%0d words=%0d gap=%0d skew=%0d inject=%0d mismatches=%0d out_err=%0d fault=%b code=%b words_out=%0d first=%0d last=%0d",
                      ND, LATU, LATS, NMSG, WORDS, GAP, SKEW, INJECT, bad, errs, flt, fc, words_out, first, lastc);
             if (TAGBAD >= 0) begin
