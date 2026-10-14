@@ -719,6 +719,43 @@
    "date": "2026-10-13",
    "status": "proposed",
    "note": "applied to every SU.VOP record of both programs (the DS bench of record is 1.067, qualified)"
+  },
+  {
+   "design": "r25gq",
+   "unit": "VM8 x-load service start-to-dispatch (ot_hbm_b2_xcommit XR_LEAD 6 + closed vm_cp_root, WR +4 / RD +12)",
+   "group": "VM8.XLOAD_SERVICE",
+   "measured": 169.0,
+   "price": 139.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.2158,
+   "e2e_loss_pct": 2.977,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 576702.4,
+     "cycles": 594397.5,
+     "added_cycles": 17695.1,
+     "program_records": 1095,
+     "added_cycles_per_record": 30.0,
+     "e2e_loss_pct": 2.977
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, fixed cycles added to every record of the op",
+     "base_cycles": 1269120.1,
+     "cycles": 1273470.1,
+     "added_cycles": 4350.0,
+     "program_records": 5,
+     "added_cycles_per_record": 30.0,
+     "e2e_loss_pct": 0.342
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/vm8_service_root_1013/xload_service_gate_r5.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-13",
+   "status": "proposed",
+   "note": "structural design first (next fetch overlapped under the drain: period 1.0143x <= 1.10; dispatch two edges after the final release on the measured write-before-read lead 6-9 edges); what remains is +29/30 edges start-to-dispatch a record (worst record 169 / 139 = 1.2158x), of which 16 = the closed root composition's measured accept -> release latency (results/rtl/vm8_service_root_1013/root_latency_closed_1013.json: WR +4 / RD +12, hash MATCH) and 13/14 the tracker tail; charged as 30 fixed cycles on every SM.MATVEC record of the S2 schedule (DS 1,095 records, Qwen 5); without the root 0.87 % / 0.16 %, a full 27-edge drain would be 3.79 %"
   }
  ],
  "totals": {
@@ -742,11 +779,11 @@
   },
   "r25gq": {
    "accepted_pct": 0,
-   "proposed_pct": 104.995,
-   "accepted_plus_proposed_pct": 104.995,
+   "proposed_pct": 107.972,
+   "accepted_plus_proposed_pct": 107.972,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 13,
+   "proposed_rows": 14,
    "headroom_pct": 15.0
   }
  }

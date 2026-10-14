@@ -394,6 +394,8 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     og = TRACK_LATTICE_UM if s["kind"] == "cluster" else GRID_Y
     if s.get("outline"):
         o = s["outline"]
+        if o.get("exact"):      # a drop-in replacement of a closed view inside a fixed sub-slot (dsfd_vm_clt 80.64 x 230.04)
+            return float(o["w"]), float(o["h"]), "spec outline (exact: the closed view's sub-slot)"
         return snap_up(float(o["w"]), og), snap_up(float(o["h"]), og), "spec outline"
     area = area_um2 or s.get("std_area_um2")
     if not area:
@@ -631,6 +633,16 @@ def child_insertions(s: dict) -> dict:
     out = {}
     for ch in s["children"]:
         v = ch["view"]
+        # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
+        # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
+        # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
+        # which would hand the core its clock ~90 ps early against the leaves it talks to).  Lib max when no record exists.
+        ij = ROOT / v / "insertion.json"
+        if s.get("child_clock_ref") == "boundary" and ij.exists():
+            b = json.loads(ij.read_text()).get("tt", {}).get("boundary", {})
+            if b.get("n") and b.get("mean") is not None:
+                out[view_name(v)] = round(float(b["mean"]), 1)
+                continue
         p = ROOT / v / f"{view_name(v)}_tt.lib"
         ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
         vals = [x["max_ps"] for x in ins.values() if x]
