@@ -287,6 +287,71 @@ CHILD_PLAN = {
 }
 
 
+def auto_plan(c):
+    """plan of a child slot the generator binds by view (contract v13: c['view'] = the closed view directory): PG /
+    signal layers and the clock pin are READ from the view's LEF (highest signal layer over pins and OBS, the PG pins'
+    layer, the ck / clk pin's face and layer).  Without a view: the M5 leaf default, status says so."""
+    cell = c['cell']
+    if not c.get('view'):
+        return dict(pg='M5', strap='M6', sig='M5', ck=dict(pin='clk', face='W', layer='M4'), status=c.get('status', 'no view'))
+    txt = (ROOT / c['view'] / f'{cell}.lef').read_text()
+    body = txt[txt.index(f'MACRO {cell}'):]
+    sig, pg, ck = 1, 1, None
+    for m_ in re.finditer(r'\n\s+PIN\s+(\S+)(.*?)\n\s+END\s+\1', body, re.S):
+        lays = [int(x) for x in re.findall(r'LAYER\s+M(\d+)', m_.group(2))]
+        if not lays:
+            continue
+        if re.search(r'USE\s+(POWER|GROUND)', m_.group(2)):
+            pg = max(pg, max(lays))
+        else:
+            sig = max(sig, max(lays))
+    ob = re.search(r'\n\s+OBS(.*?)\n\s+END\b', body, re.S)
+    if ob:
+        sig = max([sig] + [int(x) for x in re.findall(r'LAYER\s+M(\d+)', ob.group(1))])
+    _w, _h, vpins = lef_face_pins(ROOT / c['view'] / f'{cell}.lef', cell)
+    for pn_ in ('ck', 'clk', 'clk_i', 'ck_i'):
+        ck = ck or next((dict(pin=p_['name'], face=p_['face'], layer=p_['layer']) for p_ in vpins if p_['name'] == pn_), None)
+    return dict(view=c['view'], auto_view=True, pg=f'M{pg}', strap=f'M{pg + 1}', sig=f'M{sig}',
+                ck=ck or dict(pin='ck', face='W', layer='M4'), status=c.get('status', f"CLOSED view {c['view']}"))
+
+
+def group_slots(con, m, version):
+    """contract v13: a cluster that is the UNION of several die slots (m['group_slots']: the VM8 CP cluster over the four
+    logical quarter slots).  Adds the cluster slot (kind parent) and its child tiles (the views' outlines, pins and
+    layers), re-parents the member slots (origins in the cluster frame; they stay as the die-face port carriers) and
+    drops the members' own stale sub-slots."""
+    for g in m.get('group_slots') or []:
+        mem = set(g['members'])
+        con['slots'] = [s_ for s_ in con['slots'] if s_.get('parent') not in mem]
+        x0, y0 = g['xy']
+        for s_ in con['slots']:
+            if s_['name'] in mem:
+                s_['parent'] = g['name']
+                s_['origin'] = dict(s_['origin'], x=round(s_['origin']['x'] - x0, 3), y=round(s_['origin']['y'] - y0, 3))
+                s_['notes'] = (s_.get('notes', '') + f"; logical quarter of {g['name']} (die-face port carrier; the logic "
+                               'is in the cluster tiles)').lstrip('; ')
+        con['slots'].append(dict(
+            name=g['name'], cell=g['cell'], kind='parent', parent='die', outline=dict(w=g['wh'][0], h=g['wh'][1]),
+            origin=dict(x=x0, y=y0, orient='R0'),
+            io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True),
+            clock_entry=dict(pin='ck', face='N', layer='M7'), pg_layer='M7', strap_layer='M8', signal_max_layer='M7',
+            version=version, notes=g['note']))
+        seen = set()
+        for c in g['children']:
+            plan = auto_plan(c)
+            vw, vh, vpins = lef_face_pins(ROOT / c['view'] / f"{c['cell']}.lef", c['cell'])
+            assert abs(vw - c['wh'][0]) < 0.006 and abs(vh - c['wh'][1]) < 0.006, ('group child is not its closed view', c['name'])
+            con['slots'].append(dict(
+                name=f"{g['name']}/{c['name']}", cell=c['cell'], kind='tile', parent=g['name'],
+                outline=dict(w=c['wh'][0], h=c['wh'][1]), origin=dict(x=c['xy'][0], y=c['xy'][1], orient=c['orient']),
+                io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2, registered_in=True, registered_out=True),
+                clock_entry=plan['ck'], pg_layer=plan['pg'], strap_layer=plan['strap'], signal_max_layer=plan['sig'],
+                version=version, notes=f"cluster tile; {plan['status']}",
+                **({'pins': vpins} if c['cell'] not in seen else {})))
+            seen.add(c['cell'])
+    return con
+
+
 def child_tiles(m):
     """{parent cell: [tile dicts]} from the generator's granted child slots (m['child_slots']); region entries (cluster
     logic strips) stay in the detail sidecar only"""
@@ -297,10 +362,10 @@ def child_tiles(m):
             if c.get('kind') == 'region':
                 continue
             cell = c['cell']
-            plan = CHILD_VIEWS.get(cell) or CHILD_PLAN[cell]
+            plan = CHILD_VIEWS.get(cell) or CHILD_PLAN.get(cell) or auto_plan(c)
             w, h = c['wh']
             pins = None
-            if cell in CHILD_VIEWS:
+            if cell in CHILD_VIEWS or plan.get('auto_view'):
                 vw, vh, vpins = lef_face_pins(ROOT / plan['view'] / f'{cell}.lef', cell)
                 assert abs(vw - w) < 1e-3 and abs(vh - h) < 1e-3, ('child slot is not its closed view', cell, (w, h), (vw, vh))
                 pins = vpins
@@ -758,7 +823,8 @@ def main(argv=None):
     detail = a.out.with_name(a.out.stem + '_detail.json')
     rec['schema'] = 'hbmdie-1011 detail (sidecar of the opentallas.hier_contract.v1 file ' + a.out.name + ')'
     detail.write_text(json.dumps(rec, indent=1) + '\n')
-    con = to_schema(rec, a)
+    con = group_slots(to_schema(rec, a), m, a.version)
+    rec['group_slots'] = m.get('group_slots') or []
     summary = None
     if a.base:
         con, summary = merge_base(con, json.loads(a.base.read_text()), a.version, a.note or f'v{a.version}')
