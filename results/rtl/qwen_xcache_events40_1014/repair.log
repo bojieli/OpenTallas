@@ -1,0 +1,7 @@
+EVENT40 fills=289 responses=680
+QUERY40 durable_callbacks=680 observed_pending_base_edges=873 base_edges=4721 max_pending_queries=1
+PASS production acceptedIB and request ports GT3072 NW18 ops=6 arithmetic=680 requests=680 misses=143 XLOCAL=1 IREG_XL_bypass_only=1 ME_EXTRA=8 indexed_entries=32 coherent26roots=1 raw_split_fault_diagnostics=0
+- rtl/test/qwen_kv_die/tb_qwen_xcache_events40.sv:207: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 47us; walltime 0.399 s; speed 118.192 us/s
+- Verilator: cpu 0.399 s on 1 threads; allocated 20 MB

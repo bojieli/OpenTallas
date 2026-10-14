@@ -1,0 +1,5 @@
+{
+  "before": "next_sequence<=next_sequence+1'b1;",
+  "after": "next_sequence<=next_sequence+40'd2;",
+  "sha256": "bde7a95ff6fe0d758087f5c484afc62a29e43fac1d89092719e487c41272a920"
+}
