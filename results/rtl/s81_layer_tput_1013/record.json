@@ -29454,5 +29454,10 @@
     "ratio": 1.017
    }
   ]
+ },
+ "r6_candidate_scope": {
+  "record": "results/rtl/s81_layer_tput_1013/r6_scope.json",
+  "status": "candidate measurement only; full production die throughput unmeasured",
+  "adoption": "default-on and hardened landing commits require separate current-source gates and native physical integration"
  }
 }

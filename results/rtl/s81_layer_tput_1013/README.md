@@ -180,3 +180,35 @@ Still without a production-shape measurement: the SU nodes attn.sink, attn.q_rop
 Order of the structural fixes by what they return: H_LOAD / H_STORE streaming (3.45 %, and the hop-count exposure),
 the hierarchical NORM chains (3.57 %: the flat engine meets the price at 0.71x), VM read prefetch with leaf hop 1
 (2.5 to 4.5 %), SU job overlap in the slab control (1.47 %).
+
+## Round 6 candidate scope (Codex takeover, 10-13 evening)
+
+The exact source and raw measurements are preserved in `runs/r6_*` and `r6_scope.json`.
+These measurements establish HC candidate exactness, output flit checks, and cycle
+deltas at production HC width NG256. They do not qualify the complete production
+die layer: the VM and SU/service/select/coefficient engines are behavioural, the
+Engram path is behavioural, and production PHY/FEC/board and die relay stages are
+not present. Any token-path replay using these durations is a modelled share,
+not measured end-to-end tok/s. No accepted-cost row is added by this record.
+
+PIPE-only saves 419/421 layer cycles. PIPE plus landing stream and watermark
+hand-off saves 942/938 cycles to the final flit at L0/L2, with 640/640 exact flits,
+zero early reads and at least 19 rows of writer lead. At LVM54 and PGAP600 the
+stream path passes at adjusted xfer8569/17475; the PGAP400 run fell back to VM
+and is excluded from streaming latency comparisons. Engram L14 never enters the
+landing stream and remains a separate VM-path observation. The original PIPE
+parameter defaults are zero; production default-on and pin-safe landing changes
+are separate candidates requiring fresh gates and physical adoption.
+
+The `r6_pD` batch contains only negative controls: its aggregate gate prints FAIL
+because the harness requires a positive case. Both individual actual mutant
+cases fail as expected. The aggregate FAIL is retained and classified, never
+promoted to a full positive gate. The NG64 PD0 mutant is reduced-shape evidence;
+a fresh NG256 PD0 mutation is running before default-on adoption.
+
+The immutable AR graph has 80 HC POST nodes in 41 changed-h groups, while the
+MTP graph has 86 in 44 groups. This establishes the graph/program requirement
+for changed-h transfers, not a measured deployed H_LOAD/H_STORE count: native
+stage schedules for the full 120-stage allocation are still owed. Hop-only stages
+can forward landing rows without an HC copy; gratuitous H_LOAD/H_STORE jobs
+there would create extra serial work that is absent from the price.
