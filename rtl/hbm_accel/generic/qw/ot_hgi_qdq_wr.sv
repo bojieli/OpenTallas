@@ -16,6 +16,7 @@ module ot_hgi_qdq_wr #(
     parameter integer LQ  = 10,
     parameter integer OD  = 64,
     parameter integer RQ  = 16,
+    parameter integer ACK_FLAGS = 0, // opt-in registered compare flags, same completion edge
     parameter integer ACK_LOOKAHEAD = 0 // native candidate only; existing q8e default stands
 ) (
     input  wire              clk,
@@ -89,9 +90,11 @@ module ot_hgi_qdq_wr #(
     (* keep = 1 *) wire [63:0] sq_head0 = sq[sq_h];
     (* keep = 1 *) wire [63:0] sq_head1 = sq[sq_h1];
     always @* for (integer q = 0; q < 8; q = q + 1) sq_pd[q*8 +: 8] = wcnt[q] + 8'(w_hit[q]);
-    reg fin;
+    wire fin;
+    generate if(ACK_FLAGS==0)begin:g_old_compare
+        reg fin_raw;
     always @* begin
-        fin = sq_n != 0;
+        fin_raw = sq_n != 0;
         for (integer b = 0; b < 8; b = b + 1) begin : cmp
             reg [7:0] df0, df1, df2;
             // Committed ACKs: count plus the pending captured ACK and this
@@ -101,9 +104,37 @@ module ot_hgi_qdq_wr #(
             df1 = dcnt[b] - sh[b*8 +: 8] + 8'd1;
             df2 = dcnt[b] - sh[b*8 +: 8] + 8'd2;
             if ((ACK_LOOKAHEAD && f_wdone[b] && wwq_done[b]) ? df2[7] :
-                (f_wdone[b] || (ACK_LOOKAHEAD && wwq_done[b])) ? df1[7] : df0[7]) fin = 1'b0;
+                (f_wdone[b] || (ACK_LOOKAHEAD && wwq_done[b])) ? df1[7] : df0[7]) fin_raw = 1'b0;
         end
     end
+        assign fin=fin_raw;
+    end else begin:g_flag_compare
+        reg [7:0] neg0,neg1,neg2;
+        wire [7:0] select_neg=(neg0 & ~(f_wdone|({8{ACK_LOOKAHEAD!=0}}&wwq_done))) |
+            (neg1 & ((f_wdone ^ ({8{ACK_LOOKAHEAD!=0}}&wwq_done)))) |
+            (neg2 & f_wdone & ({8{ACK_LOOKAHEAD!=0}}&wwq_done));
+        assign fin=(sq_n!=0)&&!(|select_neg);
+        for(genvar b=0;b<8;b=b+1)begin:g_lane_flag
+            wire [7:0] dc_next=dcnt[b]+8'(f_wdone[b]);
+            wire [7:0] hs0=sq_head0[b*8+:8],hs1=sq_head1[b*8+:8],hsp=sq_pd[b*8+:8];
+            (* keep=1 *) wire [7:0] d00=dc_next-hs0,d10=dc_next-hs1,dp0=dc_next-hsp;
+            (* keep=1 *) wire [7:0] d01=dc_next-hs0+8'd1,d11=dc_next-hs1+8'd1,dp1=dc_next-hsp+8'd1;
+            (* keep=1 *) wire [7:0] d02=dc_next-hs0+8'd2,d12=dc_next-hs1+8'd2,dp2=dc_next-hsp+8'd2;
+            wire pushed_head=sq_push&&sq_n==(QW+1)'(fin);
+            always @(posedge clk)begin
+                neg0[b]<=pushed_head?dp0[7]:fin?d10[7]:d00[7];
+                neg1[b]<=pushed_head?dp1[7]:fin?d11[7]:d01[7];
+                neg2[b]<=pushed_head?dp2[7]:fin?d12[7]:d02[7];
+            end
+`ifndef SYNTHESIS
+            always @(negedge clk)if(rr_n[0]&&rr_n[2]&&sq_n!=0)begin
+                reg [7:0] chk0,chk1,chk2;
+                chk0=dcnt[b]-sh[b*8+:8];chk1=chk0+8'd1;chk2=chk0+8'd2;
+                if({neg2[b],neg1[b],neg0[b]}!={chk2[7],chk1[7],chk0[7]})$fatal(1,"FATAL completion flags diverged lane%0d",b);
+            end
+`endif
+        end
+    end endgenerate
     always @(posedge clk or negedge rr_n[0]) begin
         if (!rr_n[0]) begin
             mq_t <= 0; mq_h <= 0; infl <= 0; bad <= 0; wg_ok <= 0; o_wf <= 0; o_fin <= 0; o_bad <= 0; o_idle <= 0;

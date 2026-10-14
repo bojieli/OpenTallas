@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.qdq.ack_flags.v1",
+  "trigger": "ACK_LOOKAHEAD1CTS gate inputWWDONE->o_fin -73.8ps; originaloptinroutedboundary cannotbequalified",
+  "candidate": "Register3perlane modularcompare flagsfornextactualdcnt+snapshothead inparallel; cur/next/pushedsnapshot flags evaluatedbeforefinselection; currentrawACK selects registeredflags, thenall8finish reduction,o_fin is firstscalarcapture",
+  "state_added": 24,
+  "edges_added": 0,
+  "invariant": "aftereachedge validhead flagK[b] == sign(dcnt[b]-sh[b]+K), K0,1,2; fin sameoldcandidatefunction ofcapturedpendingACK/currentactualACK",
+  "next_head": "emptyafterpop +push usespushedtarget; else current ornextsameoldshchoose",
+  "native_price": "mustretainactualSPAN1 native4exact13,312words184/168 atphases61/487 andmutants; newphysicalviewrequired",
+  "default": "ACK_FLAGS0 retainsoldsourceprotocol; candidate1optin",
+  "physical": "Parallelcur/next/pushedcompares terminateatflagsFFs beforefinfeedback mux; inputWWDONE noarithmeticcarry beforefirstcapture. ActualP190/Q220/CTS/perpairH100 pending"
+}
