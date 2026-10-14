@@ -33,7 +33,7 @@ def main():
         "CTSA='-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150 -macro_clustering_size 1 -macro_clustering_max_diameter 20' CLK=ck "
         "bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_engram_c rtl/dsrom_sys/engram/dsfd_engram_c.sv "
         f"--orfs-var MACRO_PLACEMENT_TCL=/src/{C}/macro_place.tcl --orfs-var DONT_BUFFER_PORTS=1 "
-        "--orfs-var OT_SPINE_PORT=ck --orfs-var OT_SPINE_MACRO_LEAF=1 " f"--orfs-var ENGC_VCLK_PS={a.vclk} --orfs-var ENGC_VCLK_FF_PS={a.vclk_ff} "
+        "--orfs-var OT_SPINE_PORT=ck --orfs-var OT_SPINE_MACRO_LEAF=1 --orfs-var OT_SPINE_PAD_CELL=BUFx24_ASAP7_75t_R " f"--orfs-var ENGC_VCLK_PS={a.vclk} --orfs-var ENGC_VCLK_FF_PS={a.vclk_ff} "
         f"--step-tcl PRE_FLOORPLAN={K} --step-tcl PRE_GLOBAL_PLACE={K} --step-tcl PRE_RESIZE={K} --step-tcl PRE_DETAIL_PLACE={C}/ck_entry_place.tcl $CL_STOP_AFTER")
     mv = " ".join("--macro-view " + m.split("=")[1] for m in MACROS.split())
     spec = {
@@ -66,7 +66,7 @@ def main():
                     "checks": [{"name": "lef_check_MATCH", "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""}],
                     "post_sdc": ["physical/s81_ph_views/common/signoff_unc60.sdc"]},
         "record": [{"from": "{RUN}/record", "to": "physical/s81_ph_views/closed/dsfd_engram_c"}],
-        "structural_change": "unqualified diagnostic candidate: positive-edge TT boundary means from seven exact original child routes replace fall-edge maximum insertion targets; all hand offsets removed. The parent owns 16 kept local reset flops and 350 coherent status/write transit flops. Reset conditioners share exact child clock branches; data relays use ordinary spine leaves and each bit is placed with its mapped output cone at the actual destination pin. Child face keepouts and own-M7 pocket normalization are preserved; row-bearing seams >=12um and sliver-row removal preserve power access. Normal recovery/removal and H1 hold100 remain; no reset timing exception. Actual native clock source, corner driver, reset lifecycle and assigned pins still need binding before closure submission.",
+        "structural_change": "unqualified diagnostic candidate: positive-edge TT boundary means from seven exact original child routes replace fall-edge maximum insertion targets; all hand offsets removed. Ordinary BUFx24 clock pad cells replace weak HB4 pads to test actual corner tracking with targets unchanged. The parent owns 16 kept local reset flops and 350 coherent status/write transit flops. Reset conditioners share exact child clock branches; data relays use ordinary spine leaves and each bit is placed with its mapped output cone at the actual destination pin. Child face keepouts and own-M7 pocket normalization are preserved; row-bearing seams >=12um and sliver-row removal preserve power access. Normal recovery/removal and H1 hold100 remain; no reset timing exception. Actual native clock source, corner driver, reset lifecycle and assigned pins still need binding before closure submission.",
     }
     print(json.dumps(spec, indent=1))
 
