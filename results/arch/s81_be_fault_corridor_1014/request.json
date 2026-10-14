@@ -1,0 +1,3897 @@
+{
+  "schema": "opentallas.be_fault_corridor_request.v1",
+  "status": "UNALLOCATED_UNROUTED_DATA_GEOMETRY_REQUEST",
+  "source_trace_epoch": "55740b883",
+  "optional_RTL_source": "73b52f789",
+  "enable_parameter": "BE_FAULT_STAGES=9; default remains0",
+  "inputs": {
+    "trace.json": "9a911ab5f7d07ce6312a77aa9d62df5e5cc370db263d1928795307f865dccf64",
+    "fe_candidate_s9.json": "af7b0a685fadd4e9e01f1d80594039f2e1bacd9a3a0f5122a6ba5b6e494fba75",
+    "provisional_geometry.json": "3a75926340c1a68a448dc8db7d9ccab26b2150c9c6253c391b4c7a7e2efc4819"
+  },
+  "cells": [
+    {
+      "instance": "u_be.g_fault.g_stage[0].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        545.6,
+        3196.8
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    },
+    {
+      "instance": "u_be.g_fault.g_stage[1].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        473.6,
+        2830
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    },
+    {
+      "instance": "u_be.g_fault.g_stage[2].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        473.6,
+        2410
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    },
+    {
+      "instance": "u_be.g_fault.g_stage[3].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        473.6,
+        1990
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    },
+    {
+      "instance": "u_be.g_fault.g_stage[4].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        473.6,
+        1570
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    },
+    {
+      "instance": "u_be.g_fault.g_stage[5].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        473.6,
+        1150
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    },
+    {
+      "instance": "u_be.g_fault.g_stage[6].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        473.6,
+        730
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    },
+    {
+      "instance": "u_be.g_fault.g_stage[7].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        473.6,
+        360
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    },
+    {
+      "instance": "u_be.g_fault.g_stage[8].u_r",
+      "master": "dsfd_be_f16",
+      "origin_VM_um": [
+        220,
+        204.12
+      ],
+      "outline_um": [
+        32.4,
+        32.4
+      ],
+      "bits": 16,
+      "actual_LEF": null,
+      "actual_ETM": null
+    }
+  ],
+  "pairs": [
+    {
+      "bit": 0,
+      "segment": 0,
+      "source_requested_VM_um": [
+        459.909,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3212.628
+      ],
+      "Manhattan_route_request_um": 426.378,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3212.628
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2845.828
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2845.828
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2425.828
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2425.828
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2005.828
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2005.828
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1585.828
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1585.828
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1165.828
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1165.828
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        745.828
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        745.828
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        375.828
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        375.828
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        219.948
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 0,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        219.948
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        51.228
+      ],
+      "Manhattan_route_request_um": 356.176,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 0,
+      "source_requested_VM_um": [
+        471.357,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3212.676
+      ],
+      "Manhattan_route_request_um": 414.882,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3212.676
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2845.8759999999997
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2845.8759999999997
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2425.8759999999997
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2425.8759999999997
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2005.876
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2005.876
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1585.876
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1585.876
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1165.876
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1165.876
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        745.876
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        745.876
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        375.876
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        375.876
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        219.996
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 1,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        219.996
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        51.612
+      ],
+      "Manhattan_route_request_um": 355.84,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 0,
+      "source_requested_VM_um": [
+        482.769,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3212.724
+      ],
+      "Manhattan_route_request_um": 403.422,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3212.724
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2845.924
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2845.924
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2425.924
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2425.924
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2005.924
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2005.924
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1585.924
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1585.924
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1165.924
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1165.924
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        745.924
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        745.924
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        375.924
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        375.924
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.044
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 2,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.044
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        51.996
+      ],
+      "Manhattan_route_request_um": 355.504,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 0,
+      "source_requested_VM_um": [
+        494.18100000000004,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3212.772
+      ],
+      "Manhattan_route_request_um": 391.962,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3212.772
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2845.9719999999998
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2845.9719999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2425.9719999999998
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2425.9719999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2005.972
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2005.972
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1585.972
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1585.972
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1165.972
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1165.972
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        745.972
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        745.972
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        375.972
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        375.972
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.092
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 3,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.092
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        52.38
+      ],
+      "Manhattan_route_request_um": 355.168,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 0,
+      "source_requested_VM_um": [
+        505.593,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3212.82
+      ],
+      "Manhattan_route_request_um": 380.502,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3212.82
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.02
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.02
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.02
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.02
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.02
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.02
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.02
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.02
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.02
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.02
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.02
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.02
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.02
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.02
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.14000000000001
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 4,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.14000000000001
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        52.764
+      ],
+      "Manhattan_route_request_um": 354.832,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 0,
+      "source_requested_VM_um": [
+        517.005,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3212.868
+      ],
+      "Manhattan_route_request_um": 369.042,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3212.868
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.0679999999998
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.0679999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.0679999999998
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.0679999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.068
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.068
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.068
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.068
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.068
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.068
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.068
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.068
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.068
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.068
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.18800000000002
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 5,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.18800000000002
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        53.148
+      ],
+      "Manhattan_route_request_um": 354.496,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 0,
+      "source_requested_VM_um": [
+        528.417,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3212.916
+      ],
+      "Manhattan_route_request_um": 357.582,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3212.916
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.116
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.116
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.116
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.116
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.116
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.116
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.116
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.116
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.116
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.116
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.116
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.116
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.116
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.116
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.23600000000002
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 6,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.23600000000002
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        53.532000000000004
+      ],
+      "Manhattan_route_request_um": 354.16,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 0,
+      "source_requested_VM_um": [
+        539.829,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3212.964
+      ],
+      "Manhattan_route_request_um": 346.122,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3212.964
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.1639999999998
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.1639999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.1639999999998
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.1639999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.164
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.164
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.164
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.164
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.164
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.164
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.164
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.164
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.164
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.164
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.28400000000002
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 7,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.28400000000002
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        53.916000000000004
+      ],
+      "Manhattan_route_request_um": 353.824,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 0,
+      "source_requested_VM_um": [
+        551.277,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3213.012
+      ],
+      "Manhattan_route_request_um": 345.788,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3213.012
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.212
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.212
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.212
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.212
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.212
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.212
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.212
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.212
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.212
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.212
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.212
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.212
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.212
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.212
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.332
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 8,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.332
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        54.300000000000004
+      ],
+      "Manhattan_route_request_um": 353.488,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 0,
+      "source_requested_VM_um": [
+        562.689,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3213.06
+      ],
+      "Manhattan_route_request_um": 357.152,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3213.06
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.2599999999998
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.2599999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.2599999999998
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.2599999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.26
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.26
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.26
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.26
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.26
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.26
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.26
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.26
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.26
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.26
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.38
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 9,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.38
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        54.684000000000005
+      ],
+      "Manhattan_route_request_um": 353.152,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 0,
+      "source_requested_VM_um": [
+        574.101,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3213.108
+      ],
+      "Manhattan_route_request_um": 368.516,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3213.108
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.308
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.308
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.308
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.308
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.308
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.308
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.308
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.308
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.308
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.308
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.308
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.308
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.308
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.308
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.428
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 10,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.428
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        55.068000000000005
+      ],
+      "Manhattan_route_request_um": 352.816,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 0,
+      "source_requested_VM_um": [
+        585.513,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3213.156
+      ],
+      "Manhattan_route_request_um": 379.88,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3213.156
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.3559999999998
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.3559999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.3559999999998
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.3559999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.356
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.356
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.356
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.356
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.356
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.356
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.356
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.356
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.356
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.356
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.476
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 11,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.476
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        55.452000000000005
+      ],
+      "Manhattan_route_request_um": 352.48,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 0,
+      "source_requested_VM_um": [
+        596.925,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3213.204
+      ],
+      "Manhattan_route_request_um": 391.244,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3213.204
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.404
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.404
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.404
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.404
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.404
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.404
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.404
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.404
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.404
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.404
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.404
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.404
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.404
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.404
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.524
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 12,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.524
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        55.836
+      ],
+      "Manhattan_route_request_um": 352.144,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 0,
+      "source_requested_VM_um": [
+        608.337,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3213.252
+      ],
+      "Manhattan_route_request_um": 402.608,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3213.252
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.4519999999998
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.4519999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.4519999999998
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.4519999999998
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.452
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.452
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.452
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.452
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.452
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.452
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.452
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.452
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.452
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.452
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.572
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 13,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.572
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        56.22
+      ],
+      "Manhattan_route_request_um": 351.808,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 0,
+      "source_requested_VM_um": [
+        619.749,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3213.3
+      ],
+      "Manhattan_route_request_um": 413.972,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3213.3
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.5
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.5
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.5
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.5
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.5
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.5
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.5
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.5
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.5
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.5
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.5
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.5
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.5
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.5
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.62
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 14,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.62
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        56.604
+      ],
+      "Manhattan_route_request_um": 351.472,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 0,
+      "source_requested_VM_um": [
+        631.197,
+        3553.2189999999996
+      ],
+      "destination_requested_VM_um": [
+        545.696,
+        3213.348
+      ],
+      "Manhattan_route_request_um": 425.372,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 1,
+      "source_requested_VM_um": [
+        577.904,
+        3213.348
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2846.548
+      ],
+      "Manhattan_route_request_um": 471.008,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 2,
+      "source_requested_VM_um": [
+        505.904,
+        2846.548
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2426.548
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 3,
+      "source_requested_VM_um": [
+        505.904,
+        2426.548
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        2006.548
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 4,
+      "source_requested_VM_um": [
+        505.904,
+        2006.548
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1586.548
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 5,
+      "source_requested_VM_um": [
+        505.904,
+        1586.548
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        1166.548
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 6,
+      "source_requested_VM_um": [
+        505.904,
+        1166.548
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        746.548
+      ],
+      "Manhattan_route_request_um": 452.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 7,
+      "source_requested_VM_um": [
+        505.904,
+        746.548
+      ],
+      "destination_requested_VM_um": [
+        473.696,
+        376.548
+      ],
+      "Manhattan_route_request_um": 402.208,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 8,
+      "source_requested_VM_um": [
+        505.904,
+        376.548
+      ],
+      "destination_requested_VM_um": [
+        220.096,
+        220.668
+      ],
+      "Manhattan_route_request_um": 441.688,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    },
+    {
+      "bit": 15,
+      "segment": 9,
+      "source_requested_VM_um": [
+        252.304,
+        220.668
+      ],
+      "destination_requested_VM_um": [
+        64.848,
+        56.988
+      ],
+      "Manhattan_route_request_um": 351.136,
+      "source_qualified": false,
+      "capture_qualified": false,
+      "actual_launch_clock_driver": null,
+      "actual_capture_clock_driver": null,
+      "actual_source_R_phase_slew": null,
+      "actual_capture_R_phase_slew": null,
+      "actual_routed_length_um": null,
+      "setup_available_ps": null,
+      "hold_available_ps": null,
+      "maximum_timing_length_um": null
+    }
+  ],
+  "added_FF": 144,
+  "fault_status_cycles_added": 9,
+  "hot_data_return_cycles_added": 0,
+  "slot_request": {
+    "previous_VM_um": [
+      1887.384,
+      4013.256
+    ],
+    "requested_VM_um": [
+      1952.184,
+      4056.456
+    ],
+    "delta_width_um": 64.8,
+    "delta_BE_height_um": 43.2,
+    "requested_BE_height_um": 239.76,
+    "requested_BGQ_FE_shift_y_um": 43.2,
+    "BGQ_column01_seam_um": 86.4,
+    "BGQ_column01_previous_seam_um": 21.6,
+    "BGQ_later_columns_shift_x_um": 64.8,
+    "seam_west_clearance_um": 20,
+    "seam_east_clearance_um": 34,
+    "first_stage_FE_local_um": [
+      524,
+      32.4
+    ],
+    "other_FE_instances_moved": false,
+    "placement_allocator_lattice_acceptance": null,
+    "manufacturing_grid_um": 0.001,
+    "actual_per_layer_global_contact_grid_acceptance": null,
+    "adopted": false
+  },
+  "FE_first_stage_rectangle_channel_violations": [],
+  "maximum_requested_data_segment_um": 471.008,
+  "requested_data_segments": 160,
+  "cut_receipt": {
+    "scope": "additional fault bundle only; existing full-parent cuts must be rerun",
+    "tracks": 208.33333333333334,
+    "bits": 16,
+    "utilization": 0.0768,
+    "limit": 0.6,
+    "complete_parent_cut_proof": false
+  },
+  "clock_reset": {
+    "serial_clock_R_phase_RC": null,
+    "rn_is_synchronous": true,
+    "rn_setup_hold_false_path": false,
+    "actual_rn_driver": null,
+    "actual_rn_routes": null,
+    "rn_register_relay_semantics_not_proved": true,
+    "additional_reset_consumers": 9,
+    "additional_ACK_binding": null,
+    "root_2fd8_census_covers_new_state": false
+  },
+  "required": [
+    "fresh N9 native gold/TP and observed mutant",
+    "actual mapped f16 routed pins/SS/FF/AP/DRC",
+    "current helper intake",
+    "actual FE output master/pin/launchclock binding",
+    "full parent all-net cuts and route length",
+    "ordinary synchronous rn reset distribution and reset latency proof",
+    "new ACK/census coverage",
+    "allocator source-slot/grant and global per-layer contact lattice"
+  ],
+  "partial_requested_data_geometry_pass": true,
+  "physical_qualified": false,
+  "parent_closed": false
+}
