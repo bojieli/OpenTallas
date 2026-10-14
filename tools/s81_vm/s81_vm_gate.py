@@ -104,8 +104,33 @@ def verilator_bin():
     return None, ' / '.join(str(b) for b in cands if b)
 
 
+# REFERENCE ISOLATION (s81 grpA 2026-10-14: Codex's FCN balanced-sum mutant d72a755ff PASSED the lockstep bench because
+# its define reached BOTH the hierarchy under test (dsfd_vm_fe_h.sv) and the flat lockstep reference (dsfd_vm_fe in
+# dsfd_sp_vm.sv), which then made the same error in the same cycle).  In a lockstep build (OT_SPVM_FE_H) the flat
+# reference is compiled with (a) every FE mutant define (OT_VMFE_*MUT*) and (b) every LATENCY-NEUTRAL FE implementation
+# choice (REF_NEUTRAL: same cycles by construction, so the reference must keep the original arithmetic) UNDEFINED, and
+# they are re-defined for the files after it.  Latency-changing choices (OT_VMFE_FCN_SUM_PIPE, OT_VMFE_FCC_PIPE,
+# OT_VMFE_FLD_PARALLEL_ARB) stay on both sides: the reference must mirror their cycle shift; their own mutants are now
+# reference-free (only the hierarchy carries the mutation).
+REF_NEUTRAL = ('OT_VMFE_FCN_BALANCED_GROUP_SUM',)
+REF_FILE = 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv'
+
+
+def ref_isolated(defines):
+    return sorted(d for d in defines if d.startswith('OT_VMFE_') and ('MUT' in d or d in REF_NEUTRAL))
+
+
 def build(out, tag, defines, params):
     obj = out / f'obj_{tag}'
+    srcs = [str(ROOT / s) for s in SRCS + ([FEH_SRC] if 'OT_SPVM_FE_H' in defines else [])]
+    iso = ref_isolated(defines) if 'OT_SPVM_FE_H' in defines else []
+    if iso:
+        out.mkdir(parents=True, exist_ok=True)
+        pre, post = out / f'ref_iso_pre_{tag}.sv', out / f'ref_iso_post_{tag}.sv'
+        pre.write_text(''.join(f'`undef {d}\n' for d in iso))
+        post.write_text(''.join(f'`define {d}\n' for d in iso))
+        i = srcs.index(str(ROOT / REF_FILE))
+        srcs[i:i + 1] = [str(pre), srcs[i], str(post)]
     vbin, vver = verilator_bin()
     if vbin is None:
         msg = f'TOOL_VERSION: Verilator >= {MIN_VERILATOR[0]}.{MIN_VERILATOR[1]:03d} required, none found ({vver})'
@@ -114,7 +139,7 @@ def build(out, tag, defines, params):
     cmd = [vbin, '--binary', '--timing', '-O1', '-Wno-UNOPTFLAT', '-Wno-fatal', '-Wno-lint', '-Wno-style', '-j', '8',
            '--top-module', 'tb_dsfd_sp_vm', '--Mdir', str(obj), *[f'+define+{d}' for d in defines],
            *[f'-G{k}={v}' for k, v in params.items()], '-I' + str(ROOT / 'rtl/dsrom_sys/s81_ph/vm'),
-           *[str(ROOT / s) for s in SRCS + ([FEH_SRC] if 'OT_SPVM_FE_H' in defines else [])]]
+           *srcs]
     b = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     (out / f'build_{tag}.log').write_text(vver + '\n' + ' '.join(cmd) + '\n' + b.stdout + b.stderr)
     return b.returncode, obj / 'Vtb_dsfd_sp_vm', b.stdout + b.stderr

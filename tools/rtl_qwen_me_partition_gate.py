@@ -21,7 +21,7 @@ import subprocess
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 ORIG_COMMIT = "0e8df511"
 TB = ROOT / "rtl/test/tb_qwen_me_partition.sv"
 RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_qwen_me_array", "ot_qwen_rom_tile", "ot_hdc_matvec", "ot_hdc_fpu",

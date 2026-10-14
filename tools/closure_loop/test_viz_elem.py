@@ -40,8 +40,11 @@ class VizElem(unittest.TestCase):
         with patch.object(cl.subprocess, "Popen") as po:
             cl.finish(j, "CLOSED", "ok", "CLOSED")
         self.assertEqual(j["status"], "CLOSED")
-        argv, kw = po.call_args[0][0], po.call_args[1]
-        self.assertIn("auto", argv)
+        # the export is one of possibly two detached starts (the layout-viewer hook, when installed on this host,
+        # is started after it): judge the explorer export call itself, not whichever Popen came last
+        calls = [c for c in po.call_args_list if "auto" in c[0][0]]
+        self.assertEqual(len(calls), 1)
+        argv, kw = calls[0][0][0], calls[0][1]
         self.assertEqual(argv[argv.index("--job") + 1], "j1")
         self.assertTrue(kw.get("start_new_session"))                         # detached: own session
         m = json.loads((self.d / "marks" / "j1.json").read_text())
