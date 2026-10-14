@@ -1,0 +1,105 @@
+{
+  "observed_utc": "2026-10-14T09:34:07.751158+00:00",
+  "host": "ot-epyc4",
+  "src": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/smpub_parent-r1-490ae2be6/src",
+    "exists": true,
+    "size_bytes": 4096,
+    "mtime_utc": "2026-10-14T09:32:02.185673+00:00",
+    "uid": 0,
+    "gid": 0,
+    "entries": []
+  },
+  "expected_original_failed_odb": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/smpub_parent-r1-490ae2be6/routes/smpub_parent_r1_490ae2be6.attempt1/work/orfs/results/asap7/opentallas_ot_hgi_sm_pub_parent_asap7_ref_smpub_parent_r1_490ae2be6/base/3_3_place_gp-failed.odb",
+    "exists": false
+  },
+  "routes": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/closure-loop/smpub_parent-r1-490ae2be6/routes/smpub_parent_r1_490ae2be6",
+      "exists": true,
+      "size_bytes": 4096,
+      "mtime_utc": "2026-10-14T09:30:11.605778+00:00",
+      "uid": 1000,
+      "gid": 1000,
+      "entries": [
+        "flow.log",
+        "physical.json",
+        "signoff.sdc",
+        "sta.log",
+        "work"
+      ],
+      "orfs_work": {
+        "path": "/srv/opentallas-scratch2/claude/closure-loop/smpub_parent-r1-490ae2be6/routes/smpub_parent_r1_490ae2be6/work/orfs",
+        "exists": true,
+        "size_bytes": 4096,
+        "mtime_utc": "2026-10-14T09:30:11.605778+00:00",
+        "uid": 1000,
+        "gid": 1000,
+        "entries": [
+          "config.mk",
+          "constraint.sdc",
+          "hooks",
+          "logs",
+          "objects",
+          "orfs_flow.log",
+          "orfs_synth.log",
+          "reports",
+          "results",
+          "w18_extra.sdc"
+        ]
+      },
+      "remaining_odb_paths": []
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/closure-loop/smpub_parent-r1-490ae2be6/routes/smpub_parent_r1_490ae2be6.attempt1",
+      "exists": true,
+      "size_bytes": 4096,
+      "mtime_utc": "2026-10-14T09:30:11.674779+00:00",
+      "uid": 1000,
+      "gid": 1000,
+      "entries": [
+        "flow.log",
+        "physical.json",
+        "signoff.sdc",
+        "sta.log",
+        "work"
+      ],
+      "orfs_work": {
+        "path": "/srv/opentallas-scratch2/claude/closure-loop/smpub_parent-r1-490ae2be6/routes/smpub_parent_r1_490ae2be6.attempt1/work/orfs",
+        "exists": true,
+        "size_bytes": 4096,
+        "mtime_utc": "2026-10-14T09:30:11.674779+00:00",
+        "uid": 1000,
+        "gid": 1000,
+        "entries": [
+          "config.mk",
+          "constraint.sdc",
+          "hooks",
+          "logs",
+          "objects",
+          "orfs_flow.log",
+          "orfs_synth.log",
+          "reports",
+          "results",
+          "w18_extra.sdc"
+        ]
+      },
+      "remaining_odb_paths": []
+    }
+  ],
+  "final_probe": {
+    "source_commit": "b757e8460",
+    "helper_source_sha256": "7ce021b8fc3c53bc683fec7679b89f4ca40b8734fdaea2bd22191c557244f96a",
+    "generated_candidate_sha256": "72814e53d5dc0a4111600624cbaf810a407837a75a88e52e92f05a7722bcc079",
+    "tt_admission": "ot-run 8 GB / 4 threads, ot-epyc4 unit oth-ubuntu-1653593-1791970322",
+    "tt_exit_code": 2,
+    "status": "failed before timing load; original macro Liberty absent",
+    "ff_and_negative_status": "not run; original source and failed ODB absent",
+    "tt_log": "/tmp/smpub-rsz-debug/final_strict_tt.log",
+    "original_success_logs_preserved": [
+      "/tmp/smpub-rsz-debug/strict_tt.log",
+      "/tmp/smpub-rsz-debug/strict_ff_and_negative.log"
+    ]
+  }
+}
