@@ -1,0 +1,36 @@
+{
+  "status": "QUEUED_NOT_QUALIFIED",
+  "scope": "FUNCTIONAL_NOT_PHYSICAL",
+  "source_commit": "065b9e74b",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/ot_hdc_core_vector_weight_native_candidate.sv": "0ff0acb4f3862d5d99f98ecf781147356340dfc52f9b7ca4b6eb3fe4bcf4b449",
+    "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_me_provider_dispatch.sv": "12545f4eb0d3e148bb88a8f1615784a9f7420de515e0730e569c46572f1cbefe",
+    "tools/qwen_native_fullshape/build_provider.py": "03db5233e86e74e7a3d0c45a6cbc3bb476dc4ef76552610246a03d34584e5cf9"
+  },
+  "original_controller_modified": false,
+  "old_submission": {
+    "session": 41936,
+    "exit": 130,
+    "verdict": "NOT RUN: memory waiter cancelled before executable admission due to corrected KV fence semantics"
+  },
+  "current_submission": {
+    "session": 10383,
+    "mem_GB": 382,
+    "threads": 8,
+    "selected_host": "ot-epyc4",
+    "remote_source": "/srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v2/src",
+    "work": "/srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v2/full_g3072_su64",
+    "command": "ot-run --mem 382 --threads 8 --dir /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v2/src -- python3 tools/qwen_native_fullshape/build_provider.py --work /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v2/full_g3072_su64 --jobs 8"
+  },
+  "actual_tests": [
+    "Python build driver compilation only; existing dispatcher component gates inherited, own full library pending"
+  ],
+  "qualification": {
+    "full_checkpoint": false,
+    "native_layer": false,
+    "physical_hierarchy": false,
+    "clock": false,
+    "throughput": false
+  }
+}
