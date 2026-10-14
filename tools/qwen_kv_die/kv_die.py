@@ -1619,6 +1619,24 @@ if {[llength $hv7_cells]} {
   define_pdn_grid -macro -cells $hv7_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {hv7}
   add_pdn_connect -grid {hv7} -layers {M7 M8}
 }
+# qwen-split kvsys v1.1 (kvs1 PSM-0039 on all 128 qkd_cdc_wleaf; the sl1 write leaf too): M5-capped leaf views whose PG pins
+# are VERTICAL M5 stripes (no M6 / M7 PG): the core grid's horizontal M8 straps cross them -> a stacked M5 -> M8 connect
+# (M6 / M7 are free over an M5-capped leaf)
+set hv5_cells {}
+foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] {
+  if {![$c isBlock] || [lsearch -exact $hv6_cells [$c getName]] >= 0 || [lsearch -exact $hv7_cells [$c getName]] >= 0} { continue }
+  if {[string match ot_hbm3e_phy* [$c getName]]} { continue }
+  set t [$c findMTerm VDD]
+  if {$t eq "NULL"} { continue }
+  foreach mp [$t getMPins] { foreach b [$mp getGeometry] {
+    if {[$b getTechLayer] ne "NULL" && [[$b getTechLayer] getName] eq "M5"} { lappend hv5_cells [$c getName] } } }
+} }
+set hv5_cells [lsort -unique $hv5_cells]
+puts "OT_HV5 masters [llength $hv5_cells]: $hv5_cells"
+if {[llength $hv5_cells]} {
+  define_pdn_grid -macro -cells $hv5_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {hv5}
+  add_pdn_connect -grid {hv5} -layers {M5 M8}
+}
 ''')
     man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
