@@ -1,0 +1,19 @@
+{
+  "source_commit": "5e63d2e98",
+  "actual_source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_sv_native_write_owned.sv": "79f1b56568026e664d0b1f58288d0b36211085b422d20f6258af55a61e1d9ac2",
+    "rtl/hbm_accel/generic/peers/tb_hgi_sv_native_write_owned.sv": "f6e7d4bb0e57d54735ab93595743a0163b40e772f873590265f0b75bdd2065a8",
+    "rtl/hbm_accel/generic/peers/run_sv_native_write_owned.sh": "f8a7744421b65bdc96c2dca63658b4de08d570a3a419f24c705b6d80245ef29a"
+  },
+  "mismatches": [],
+  "exact": "PASS1009masked writes/commits cycles157, eight tickets reserved before held SID grants",
+  "mutants": [
+    "FAIL1871 wrongcreditowner",
+    "FAIL1357 wrongcommitowner",
+    "FAIL1009 creditasdone"
+  ],
+  "scope": "Variable-latency independent bank model; native parent composition not yet proven",
+  "physical_qualified": false,
+  "whole_layer_qualified": false,
+  "ledger_eligible": false
+}
