@@ -12,7 +12,8 @@ its price and everything else left at price:
                                 on the critical path and only its excess over its slack when it is overlapped.
   HBM die (r25gq)               the S2 command-processor schedule of the exact per-die program (the same one
                                 tools/throughput_budget/build.py prices), re-scheduled with the op at its measured
-                                ratio.  An op the schedule overlaps costs 0.
+                                ratio (--op-delta: with a fixed number of cycles added to every
+                                record of the op instead).  An op the schedule overlaps costs 0.
   rate classes                  a credit / link class that moves W words a token at r words a cycle: W / r_measured
                                 - W / r_price cycles, added to the token when the class is on the critical path.
 
@@ -177,18 +178,25 @@ def hbm_schedule(model):
         cf, pos = T.cost, 8191
     count = collections.Counter(f"{r.unit}.{r.op}" for r in recs)
 
-    def run(op=None, f=1.0):
+    def run(op=None, f=1.0, delta=0.0):
         def g(r, dyn, L):
             c = cf(r, dyn, L)
-            return (c[0] * f if f"{r.unit}.{r.op}" == op else c[0]), c[1], c[2]
+            return (c[0] * f + delta if f"{r.unit}.{r.op}" == op else c[0]), c[1], c[2]
         return T.schedule(recs, pos, "S2", cost_fn=g)["total_cycles"]
     return run, count
 
 
-def hbm_loss(run, count, op, ratio, base=None):
+def hbm_loss(run, count, op, ratio, base=None, delta=None):
+    """delta: a FIXED number of cycles added to every record of the op (a latency the op pays once a record whatever
+    its length, e.g. the VM8 x-load start-to-dispatch edges before every SM.MATVEC); the op's own cycles stay at price"""
     if not count.get(op):
         return None                 # the workload's program never issues this op
     base = run() if base is None else base
+    if delta is not None:
+        new = run(op, 1.0, delta)
+        return dict(model="S2 schedule, fixed cycles added to every record of the op", base_cycles=round(base, 1),
+                    cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=count[op],
+                    added_cycles_per_record=delta, e2e_loss_pct=round(loss_pct(base, new), 3))
     new = run(op, ratio)
     return dict(model="S2 schedule, op re-scheduled at its measured ratio", base_cycles=round(base, 1),
                 cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=count[op],
@@ -197,7 +205,7 @@ def hbm_loss(run, count, op, ratio, base=None):
 
 # ---------------------------------------------------------------------------------------------------------------
 def compute(design, *, match=None, op=None, price=None, measured=None, ratio=None, scale=False,
-            words_per_token=None, critical=True, workloads=None, node_delta=None):
+            words_per_token=None, critical=True, workloads=None, node_delta=None, op_delta=None):
     """-> {workload: composition result} for one unit of one design"""
     spec = DESIGNS[design]
     out = {}
@@ -216,7 +224,7 @@ def compute(design, *, match=None, op=None, price=None, measured=None, ratio=Non
                     raise
         else:
             run, count = hbm_schedule(name)
-            r = hbm_loss(run, count, op, ratio if ratio is not None else measured / price)
+            r = hbm_loss(run, count, op, ratio if ratio is not None else measured / price, delta=op_delta)
             if r:
                 out[wl] = r
     if not out:
@@ -380,6 +388,8 @@ def main(argv=None):
         p.add_argument("--measured", type=float, required=True)
         p.add_argument("--scale", action="store_true", help="ROM: scale every matched node by measured / price")
         p.add_argument("--node-delta", type=float, help="ROM: cycles added to every matched node")
+        p.add_argument("--op-delta", type=float, help="HBM: cycles added to every record of --op (a fixed latency per "
+                                                      "record; --price / --measured then describe the unit itself)")
         p.add_argument("--group", help="rows that measure the same composition op share a group")
         p.add_argument("--words-per-token", type=float, help="rate class: price / measured are words a cycle")
         p.add_argument("--off-critical", action="store_true")
@@ -399,7 +409,7 @@ def main(argv=None):
             rate = a.words_per_token is not None
             per = compute(a.design, match=a.match, op=a.op, price=a.price, measured=a.measured, scale=a.scale,
                           words_per_token=a.words_per_token, critical=not a.off_critical, workloads=a.workload,
-                          node_delta=a.node_delta)
+                          node_delta=a.node_delta, op_delta=a.op_delta)
             row = make_row(a.design, a.unit, a.price, a.measured, per, a.evidence, a.grade, a.note, rate,
                            unit_of_measure="words/cycle" if rate else "cycles", group=a.group)
             if a.cmd == "propose":
