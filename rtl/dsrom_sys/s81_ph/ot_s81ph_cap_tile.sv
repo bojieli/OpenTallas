@@ -464,7 +464,7 @@ module dsfd_capt_x #(
                 wire [67:0] words;
                 (* keep_hierarchy *) dsfd_capt_hold_slice u_store
                     (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
-                     .pop(wr), .hw(hw), .din(din[off +: 17]), .words(words));
+                     .pop(wr), .hw(hw), .read_next(2'd0), .read0(), .read1(), .din(din[off +: 17]), .words(words));
                 for (genvar bank = 0; bank < 4; bank = bank + 1)
                     assign h[bank][off +: 17] = words[17*bank +: 17];
             end
@@ -526,13 +526,16 @@ module dsfd_capt_row_local #(parameter integer LD = 4) (
                 hc <= hc - npop + ((vm_valid && crdy) ? 3'd1 : 3'd0);
                 if (vm_valid && !crdy) ho <= 1'b1;
             end
+        wire [50:0] hold0, hold1;
         generate if (1) begin : g_local_store
             for (genvar off = 0; off < 51; off = off + 8) begin : g_slice
                 localparam integer SW = (51-off < 8) ? 51-off : 8;
                 wire [4*SW-1:0] words;
-                (* keep_hierarchy *) dsfd_capt_hold_slice #(.W(SW), .LOCAL_COUNT(1)) u_store
+                (* keep_hierarchy *) dsfd_capt_hold_slice #(.W(SW), .LOCAL_COUNT(1), .LOCAL_READ(1)) u_store
                     (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
-                     .pop(wr), .hw(hw), .din(din[off +: SW]), .words(words));
+                     .pop(wr), .hw(hw), .read_next(hr + npop[1:0]),
+                     .read0(hold0[off +: SW]), .read1(hold1[off +: SW]),
+                     .din(din[off +: SW]), .words(words));
                 for (genvar bank = 0; bank < 4; bank = bank + 1)
                     assign h[bank][off +: SW] = words[SW*bank +: SW];
             end
@@ -541,7 +544,7 @@ module dsfd_capt_row_local #(parameter integer LD = 4) (
         assign hovf = ho;
         wire cv; wire [102:0] cd;
         ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD), .LAG(1), .LOCAL_CTRL(1)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
-            .w_d({h[hr + 2'd1], hc >= 3'd2, h[hr]}), .rclk(ckv[0]), .rrst_n(rv_n), .r_v(cv), .r_rdy(1'b1),
+            .w_d({hold1, hc >= 3'd2, hold0}), .rclk(ckv[0]), .rrst_n(rv_n), .r_v(cv), .r_rdy(1'b1),
             .r_d(cd), .w_live(), .r_live());
         reg [1:0] ov; reg [101:0] od;
         always @(posedge ckv[0] or negedge rv_n) if (!rv_n) ov <= 2'b00; else ov <= {cv & cd[51], cv};
@@ -551,14 +554,34 @@ endmodule
 
 // Local hold-buffer slices retain independent write-enable cones at the same
 // write edge. Storage contents, address and reset gating match the flat bank.
-module dsfd_capt_hold_slice #(parameter integer W = 17, parameter integer LOCAL_COUNT = 0) (
+module dsfd_capt_hold_slice #(parameter integer W = 17, parameter integer LOCAL_COUNT = 0, parameter integer LOCAL_READ = 0) (
     input wire ck, rs_n, valid, ready, pop,
-    input wire [1:0] hw,
+    input wire [1:0] hw, read_next,
     input wire [W-1:0] din,
+    output wire [W-1:0] read0, read1,
     output wire [4*W-1:0] words
 );
     reg [W-1:0] h [0:3];
     wire accept_ready;
+    generate if (LOCAL_READ) begin : g_read
+        // Same update edge/epoch as hr. Each small memory slice retains its
+        // selector locally rather than driving a whole-row pointer mux.
+        (* keep *) reg [3:0] sel_n;
+        always @(posedge ck or negedge rs_n)
+            if (!rs_n) sel_n <= 4'b1110;
+            else sel_n <= ~(4'b0001 << read_next);
+        assign read0 = (h[0] & {W{!sel_n[0]}}) |
+                       (h[1] & {W{!sel_n[1]}}) |
+                       (h[2] & {W{!sel_n[2]}}) |
+                       (h[3] & {W{!sel_n[3]}});
+        assign read1 = (h[0] & {W{!sel_n[3]}}) |
+                       (h[1] & {W{!sel_n[0]}}) |
+                       (h[2] & {W{!sel_n[1]}}) |
+                       (h[3] & {W{!sel_n[2]}});
+    end else begin : g_unused_read
+        assign read0 = {W{1'b0}};
+        assign read1 = {W{1'b0}};
+    end endgenerate
     generate if (LOCAL_COUNT) begin : g_count
         // A local copy follows the row count on the identical write edges.
         // It exposes the ready decode beside each small memory slice.
