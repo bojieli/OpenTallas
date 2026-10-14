@@ -1,0 +1,71 @@
+{
+  "schema": "archived_actual_macro_replay_v1",
+  "status": "FAILED_ACTUAL_SRAM_HOLD",
+  "source_commit": "d8ef9b43d24a8523ca48ab5d43139e6771ad3d89",
+  "archive": "/home/ubuntu/closed_archive/ot_hgi_dma_kvw_core/hgi_dma_kvw_core_a-d8ef9b43d-tc-cl",
+  "historical_verdict": {
+    "tt_ps": 7.18,
+    "ff_ps": 6.59,
+    "drc": 0
+  },
+  "actual_replay": {
+    "tt_ps": 5.206501896282134,
+    "ff_ps": -6.121131379543954,
+    "source_clock": "core_clk",
+    "endpoint": "u_b1/wd_in[139]",
+    "startpoint": "b1_wd[139]$_DFFE_PP_",
+    "classification": "register-to-SRAM data hold; original verdict omitted actual macro libraries",
+    "macro_registers_added": 2
+  },
+  "original_tcl_sha256": {
+    "ss": "d4b85bb72ed2db705a8ffb8fa40108a56563b1c2a638b2581e980b21e7759898",
+    "ff": "c69211141cb047d4cc7e74c59ed23fc0b021df449ef20a5a76beb0ff0ef2c5fc"
+  },
+  "post_sdc_sha256": {
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc": "3f3f9b793318432209bd04277091a4d17ff1816859ceb48c0ee886c3f5ebf128",
+    "physical/common_flow/link_budget_consistent.sdc": "be32b4ccdfcdde205e77c9c0909579a025a6dffa59ca52b0c8a4f27991c60169",
+    "physical/common_flow/io_ref_routed.sdc": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+  },
+  "input_sha256": {
+    "/home/ubuntu/dma-core-repair-1013-v1/job.json": "e019ebbb5f0d31ea55e96d27d56582ed7f742544227c62dd61e32e03c3c172fe",
+    "/home/ubuntu/dma-core-repair-1013-v1/orfs/results/asap7/tile/base/6_final.odb.zst": "04f842b050f03ec9f85b0bf60de3457717ac7157f17257b02bf6db6f3c1ab359",
+    "/home/ubuntu/dma-core-repair-1013-v1/orfs/results/asap7/tile/base/6_final.spef.zst": "d32c518bc3174c1612d56c6aa31a1393b666d2688c31a524806b977add75b9e4",
+    "/home/ubuntu/dma-core-repair-1013-v1/orfs/results/asap7/tile/base/6_final.sdc": "f7a37c1cde643dd86a98598ba2f06ba2adb8548087bd40c6ebe67b0c3261f2f3",
+    "/home/ubuntu/dma-core-repair-1013-v1/cl/io_ref_routed.sdc": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562",
+    "/home/ubuntu/dma-core-repair-1013-v1/view_export.py": "2eb060cd9bb3817bc41d87ed6c61c3ffaf3d4c08870d4a86878c241adf86ca4a",
+    "/home/ubuntu/dma-core-repair-1013-v1/route_config.mk": "4c54cb080d30ca2265386e1b1fd9666f684049bd7581fe9f80c5210e39086ebc",
+    "/home/ubuntu/closed_archive/ot_hgi_dma_kvw_core/hgi_dma_kvw_core_a-d8ef9b43d-tc-cl/manifest.json": "36825cbf04da1d3d4ef11d2763d0c12edf85d3928921f15e87883b927790dffa",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.json": "f0e8d51af00ec806eddea2f031e4ecaab6316557c9c4a78c00827dc84323d2c5",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.lef": "72036137c53eda29ac3b432fb704791ac864ad9b5c32dc81e2e71bbe906862bf",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib": "592e1919daaac25556526000751db205eab1515a53fc0dc05ab3daae2958a12c",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib": "f08869109c2b5657c81d86d6fec22f4e5c8ce0811db8b551872fa85362e79258",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib": "267e994041e8d97e6ff1a470e618058a8c790b7e71be52d9ba83e94be9f5816a",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/hbm_accel_die_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc": "3f3f9b793318432209bd04277091a4d17ff1816859ceb48c0ee886c3f5ebf128",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/common_flow/link_budget_consistent.sdc": "be32b4ccdfcdde205e77c9c0909579a025a6dffa59ca52b0c8a4f27991c60169",
+    "/home/ubuntu/dma-core-repair-1013-v1/src/physical/common_flow/io_ref_routed.sdc": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+  },
+  "evidence_sha256": {
+    "regen-proof.json": "c2e30413e812bd7e5e3d305123e8ab1643faff0d4a7bb1ceff50caf62a475f69",
+    "actual_ff.log": "d31ffd77848f8b47c71e631ce5b40da04cc0b16d9b174cefe7aee9b6a889bb51",
+    "original_ss.tcl": "d4b85bb72ed2db705a8ffb8fa40108a56563b1c2a638b2581e980b21e7759898",
+    "actual_ff.tcl": "ffd5d68b949a43509cd7ab19710f1033a78e66f1ced2b0993b9ed6e8b28557e2",
+    "failed_export_abstract.json": "100b398e5ea7a0f0eb4255154fd59f90c1cf77867141f7030b6aa89212612834",
+    "original_ff.tcl": "c69211141cb047d4cc7e74c59ed23fc0b021df449ef20a5a76beb0ff0ef2c5fc",
+    "app0_io_ref_routed.sdc": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562",
+    "actual_tt.tcl": "cc158e86d2a9a437601859e58eff2a26078f064920418beed33fe30df666f5f1",
+    "actual_tt.log": "bbeb02e4ea8c4741a71b99772b2e9ddb20a4643818205124b81382fae87a0fb8"
+  },
+  "repair": {
+    "authorized": "bounded official hold ECO on preserved accepted ODB",
+    "passes": 2,
+    "hold_margin_ps": 30,
+    "fresh_grt_allowed": false,
+    "keep_untouched_wires": true,
+    "out": "/srv/opentallas-scratch/dma-core-repair-1013-v1/eco-repair",
+    "status": "running, corner audit defect discovered; not qualified"
+  }
+}

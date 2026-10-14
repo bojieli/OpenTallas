@@ -1,0 +1,56 @@
+{
+  "rn": "hgi_dma_kvw_core_a-d8ef9b43d-tc-cl",
+  "arch": "/home/ubuntu/closed_archive/ot_hgi_dma_kvw_core/hgi_dma_kvw_core_a-d8ef9b43d-tc-cl",
+  "ok": true,
+  "spef": true,
+  "fb": "cl/eco-combo1/pass1/orfs/results/asap7/opentallas_ot_hgi_dma_kvw_core_asap7_mtp_hgi_dma_kvw_core_a_d8ef9b43d_tc_cl/base",
+  "orfs": "cl/eco-combo1/pass1/orfs",
+  "commit": "d8ef9b43d24a8523ca48ab5d43139e6771ad3d89",
+  "vj": "cl/routed_ioref.a1.json",
+  "vj_matches_manifest": true,
+  "n_vj": 1,
+  "verdict": {
+    "tt": 7.18,
+    "ff": 6.59
+  },
+  "manifest": {
+    "tt": 7.18,
+    "ff": 6.59
+  },
+  "variant": {
+    "corner_sta_json": "record/corner_sta.json",
+    "corner_sta_py_sha256": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f",
+    "ref_wrapper": null,
+    "macros": [],
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+      "physical/common_flow/link_budget_consistent.sdc",
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "setup_post_sdc": [],
+    "sdc_name": "6_final.sdc",
+    "vts": [
+      "LVT"
+    ],
+    "vtswap_sed": false,
+    "census": true
+  },
+  "tcl_sha256": {
+    "ss": "d4b85bb72ed2db705a8ffb8fa40108a56563b1c2a638b2581e980b21e7759898",
+    "ff": "c69211141cb047d4cc7e74c59ed23fc0b021df449ef20a5a76beb0ff0ef2c5fc"
+  },
+  "app": [
+    "app0_io_ref_routed.sdc"
+  ],
+  "appended": [
+    "/srv/opentallas/claude/closure-loop/hgi_dma_kvw_core_a-d8ef9b43d-tc-cl/cl/io_ref_routed.sdc"
+  ],
+  "post_sha": {
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc": "3f3f9b793318432209bd04277091a4d17ff1816859ceb48c0ee886c3f5ebf128",
+    "physical/common_flow/link_budget_consistent.sdc": "be32b4ccdfcdde205e77c9c0909579a025a6dffa59ca52b0c8a4f27991c60169",
+    "physical/common_flow/io_ref_routed.sdc": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+  },
+  "extra_sdc_sha": null
+}

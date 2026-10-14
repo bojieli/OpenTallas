@@ -1,0 +1,189 @@
+{
+  "name": "ot_hgi_dma_kvw_core",
+  "orfs_dir": "/srv/opentallas-scratch/dma-core-repair-1013-v1/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -3.7315472933840965e-10 min 2.842892588006407e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/actual_export:/out",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/cl:/cl:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": false,
+      "ws": "OT_WS max 5.78744829837774e-11 min -6.121131379543954e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/actual_export:/out",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/cl:/cl:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": false,
+      "ws": "OT_WS max 5.206501896282134e-12 min 5.523081991753997e-13",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/actual_export:/out",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/cl:/cl:ro",
+        "-v",
+        "/srv/opentallas-scratch/dma-core-repair-1013-v1/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "verdict": {
+    "json": null,
+    "job_json": "/srv/opentallas-scratch/dma-core-repair-1013-v1/job.json",
+    "job": "hgi_dma_kvw_core_a-d8ef9b43d-tc-cl",
+    "commit": "d8ef9b43d24a8523ca48ab5d43139e6771ad3d89",
+    "overlay": null,
+    "basis": "routed_ioref.a1.json",
+    "expect_ps": {
+      "tt": 7.18,
+      "ff": 6.59
+    },
+    "tol_ps": 0.05,
+    "files": {
+      "/src/physical/hbm_accel_die_views/common/signoff_unc60.sdc": {
+        "host": "/srv/opentallas-scratch/dma-core-repair-1013-v1/src/physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+        "sha256": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f"
+      },
+      "/src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc": {
+        "host": "/srv/opentallas-scratch/dma-core-repair-1013-v1/src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+        "sha256": "3f3f9b793318432209bd04277091a4d17ff1816859ceb48c0ee886c3f5ebf128"
+      },
+      "/src/physical/common_flow/link_budget_consistent.sdc": {
+        "host": "/srv/opentallas-scratch/dma-core-repair-1013-v1/src/physical/common_flow/link_budget_consistent.sdc",
+        "sha256": "be32b4ccdfcdde205e77c9c0909579a025a6dffa59ca52b0c8a4f27991c60169"
+      },
+      "/src/physical/common_flow/io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch/dma-core-repair-1013-v1/src/physical/common_flow/io_ref_routed.sdc",
+        "sha256": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+      },
+      "/cl/io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch/dma-core-repair-1013-v1/cl/io_ref_routed.sdc",
+        "sha256": "84fa5e041cf97fb38dceb3ca9179272db4e889863b83afd4bf6fe142c2677562"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": -6.121131379543954,
+        "verdict_ps": 6.59,
+        "ok": false
+      },
+      "tt": {
+        "export_ps": 5.206501896282134,
+        "verdict_ps": 7.18,
+        "ok": false
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "job_replay",
+      "tcl": [
+        "read_db /in/results/asap7/tile/base/6_final.odb",
+        "read_sdc /in/results/asap7/tile/base/6_final.sdc",
+        "read_spef /in/results/asap7/tile/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+        "read_sdc /src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+        "read_sdc /src/physical/common_flow/link_budget_consistent.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /cl/io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "job_replay",
+      "tcl": [
+        "read_db /in/results/asap7/tile/base/6_final.odb",
+        "read_sdc /in/results/asap7/tile/base/6_final.sdc",
+        "read_spef /in/results/asap7/tile/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+        "read_sdc /src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+        "read_sdc /src/physical/common_flow/link_budget_consistent.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /cl/io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "job_replay",
+      "tcl": [
+        "read_db /in/results/asap7/tile/base/6_final.odb",
+        "read_sdc /in/results/asap7/tile/base/6_final.sdc",
+        "read_spef /in/results/asap7/tile/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+        "read_sdc /src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+        "read_sdc /src/physical/common_flow/link_budget_consistent.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /cl/io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "vt_flavours_added": [
+    "L"
+  ],
+  "files": {
+    "ot_hgi_dma_kvw_core.lef": "5fdebb2fe623fb62dbb1f04b083a4c7cb00a823fab045f19419a396cecc40a81",
+    "ot_hgi_dma_kvw_core_ff.lib": "2fe2231b670093817eae827b439929c18cd48278881c1b7ccfae789e25e5e908",
+    "ot_hgi_dma_kvw_core_ss.lib": "710e8598fa61068366f7ba4593cf1289901cc548af662e49142be8ace37a3cc2",
+    "ot_hgi_dma_kvw_core_tt.lib": "1d099b4dbe70d65acdb252b826ebc0512b68abddf687b053dab563256faf2046"
+  },
+  "ok": false,
+  "checked": false
+}
