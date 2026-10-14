@@ -134,7 +134,7 @@ module ot_hgi_sv_native_write_owned #(
   reg[TW+1:0]np;reg[32:0]nd;
   np={1'b0,pending[l]}+legacy_q[l*280+279]-legacy_credit[l];
   nd={1'b0,commits[l]}+legacy_q[l*280+279]-legacy_done[l];
-  if(pending[l]!=~pending_n[l]||commits[l]!=~commits_n[l]||np>LEGACY_SLOTS||nd>32'(32*LEGACY_SLOTS)||(legacy_q[l*280+279]&&(!(&wgrant)||legacy_q[l*280+264+:5]!=5'(l))))sf<=1;
+  if(pending[l]!=~pending_n[l]||commits[l]!=~commits_n[l]||np>LEGACY_SLOTS||nd>32'(32*LEGACY_SLOTS)||(legacy_q[l*280+279]&&legacy_q[l*280+264+:5]!=5'(l)))sf<=1;
   pending[l]<=np[TW:0];pending_n[l]<=~np[TW:0];commits[l]<=nd[31:0];commits_n[l]<=~nd[31:0];
  end
  assign fault[64]=sf;

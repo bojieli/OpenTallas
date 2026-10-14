@@ -32,8 +32,8 @@ module tb_hgi_sv_native_write_owned;
   for(integer t=0;t<6000;t++)begin
    legacy_q=0;legacy_q[8960]=(received<expected_total);
    // Held all-SID ownership arrives after the real request. Never post before grant.
-   if(|wreq)begin wgrant=4'hf;wack=0;end
-   if(legacy_grant)for(integer l=0;l<32;l++)if(sent[l]<quota(l)&&available[l]>0)begin
+   if((|wreq)&&t>=8)begin wgrant=(t<10)?4'h1:(t<12)?4'h3:4'hf;wack=0;end
+   if(legacy_grant||t<8)for(integer l=0;l<32;l++)if(sent[l]<quota(l)&&available[l]>0)begin
     legacy_q[l*280+:280]={1'b1,sector(l,sent[l]),pattern(l,sent[l]),mask(l,sent[l])};
    end
    @(posedge clk);cycle++;
@@ -52,6 +52,7 @@ module tb_hgi_sv_native_write_owned;
     reg[14:0]s;reg[255:0]d;reg[7:0]m;integer l,n;
     s=native_wq[b*281+264+:15];d=native_wq[b*281+8+:256];m=native_wq[b*281+:8];l=int'(s[4:0]);n=int'(s[12:5]);
     if(native_wq[b*281+279]||int'(s[14:13])*8+int'(s[2:0])!=b)err("native mirror/SID/bank mapping");
+    if(!wgrant[b/8])err("native request posted without its actual SID permit");
     if(n>=sent[l]||d!==pattern(l,n)||m!==mask(l,n))err("native write data/word mask association");
     if(issued[b]>=256)err("reference queue exhausted");
     born[b][issued[b]]=cycle;owners[b][issued[b]]=l;sectors[b][issued[b]]=s;data[b][issued[b]]=d;masks[b][issued[b]]=m;issued[b]++;received++;
