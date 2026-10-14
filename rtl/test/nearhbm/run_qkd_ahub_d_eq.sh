@@ -33,6 +33,7 @@ build r2 +define+R_ZW=2 +define+R_ZR=1 +define+R_RA=0 +define+R_SR=2 +define+R_P
 for t in r0 r1 r2; do for sd in 1 7 23; do
   r=$("$OUT/$t/Vtb" +LAYERS=6 +SEED=$sd 2>&1 | grep -E '^AHUB|^PASS|^FAIL' | tr '\n' ' '); echo "$t seed $sd: $r"
   echo "$r" | grep -q 'PASS ahub_d == hub_t' || ok=0
+  echo "$r" | grep -q 'disagree' && ok=0
 done; done
 [ $ok = 1 ] && { echo "PASS qkd_ahub_d eq all"; exit 0; }
 echo "FAIL qkd_ahub_d eq"; exit 1
