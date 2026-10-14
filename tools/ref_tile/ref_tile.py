@@ -711,7 +711,9 @@ def gen_signoff(s: dict, refglob: str, inter: str) -> str:
             + "set_propagated_clock [all_clocks]\nset_clock_uncertainty -setup 60 [all_clocks]\n"
             "set_clock_uncertainty -hold 25 [all_clocks]\nset ::env(OT_IO_SKEW) 90\nset ::env(OT_IO_HOLD_SKEW) 50\n"
             f"set ::env(OT_REF_GLOB) {{{refglob}}}\nset ::env(OT_IO_INTER) {{{inter}}}\nset ::env(OT_IO_SKEW_INTER) 150\n"
-            + io + sdc_extra(s) + clock_entry_constraints.generate(s, ROOT))
+            + io + sdc_extra(s)
+            + ("set ::ot_ce_require_wire 1\n" if s.get("clock") == "entries" else "")
+            + clock_entry_constraints.generate(s, ROOT))
 
 
 def child_insertions(s: dict) -> dict:
@@ -789,7 +791,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") == "entries" and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") == "entries":
-        files["clock_entry.sdc"] = clock_entry_constraints.generate(s, ROOT)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + clock_entry_constraints.generate(s, ROOT)
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
