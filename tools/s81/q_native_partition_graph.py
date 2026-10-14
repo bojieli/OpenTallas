@@ -35,7 +35,7 @@ def extract(data, top, coalesce_containers=False):
     kept = {}
     assignment = {}
     for name, cell in original['cells'].items():
-        if 'ot_s81_q_lane_pair_native' in cell['type']:
+        if any(kind in cell['type'] for kind in ('ot_s81_q_lane_pair_native', 'ot_s81_q_lane_pair_startup_native')):
             lane_names.append(name)
             if coalesce_containers:
                 groups['data_control'][name] = cell
