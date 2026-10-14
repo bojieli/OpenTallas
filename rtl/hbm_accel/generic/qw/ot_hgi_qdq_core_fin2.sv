@@ -176,9 +176,17 @@ module ot_hgi_qdq_core_fin2 #(
     (* keep=1 *) wire[FCST-1:0]fc1=rf1?finish_oh:{finish_oh[FCST-2:0],finish_oh[FCST-1]};
     (* keep=1 *) wire[2:0]ret0={rt0&&rt_fault||f_nf||encoding_bad,rt0,rt0?ready_dec:ready_inc};
     (* keep=1 *) wire[2:0]ret1={rt1&&rt_fault||f_nf||encoding_bad,rt1,rt1?ready_dec:ready_inc};
+    // FIN3 (Claude 10-14): the raw i_fin pin enters ONLY the last select of every next state.  Both futures (i_fin 0 / 1)
+    // are computed from registered state; one explicit AO22 per bit (ot_qdq_fin_sel) picks between them, so synthesis cannot
+    // fold the raw input into the decode cone (FIN2 gate: i_fin -> ret / occupancy_oh 4 logic levels).  Same edge, no
+    // added cycle, identical function.
+    wire [RQ-1:0] qv_n, hd_n, dc_n; wire [FCST-1:0] fc_n, oc_n; wire [2:0] ret_n;
+    ot_qdq_fin_sel #(.W(4*RQ+2*FCST+3)) u_fin_sel (.s(i_fin),
+        .a0({qv0, hd0, rm0, fc0, oc0, ret0}), .a1({qv1, hd1, rm1, fc1, oc1, ret1}),
+        .y({qv_n, hd_n, dc_n, fc_n, oc_n, ret_n}));
     generate if(FIN_BYPASS==2)begin:g_deferred_dep
       always @(posedge clk or negedge rr_n[6])
-        if(!rr_n[6])dep_clear<='0;else dep_clear<=i_fin?rm1:rm0;
+        if(!rr_n[6])dep_clear<='0;else dep_clear<=dc_n;
 `ifndef SYNTHESIS
       always @(posedge clk)if(rr_n[3]&&rr_n[6])begin
         if(|(q_v&dep_clear))$fatal(1,"CORE_FIN2_LIVE_SLOT_REUSED_BEFORE_CLEAR");
@@ -198,17 +206,17 @@ module ot_hgi_qdq_core_fin2 #(
             rg_req <= q_v != 0; o_act <= q_v != 0;
             rg_ok <= rg_req && f_rg;
             if (s3_v) begin if(!FIN_BYPASS)q_v[qt] <= 1'b1; q_rej[qt] <= !el3; qt <= qt + 1'b1; end
-            if(FIN_BYPASS==2)q_v<=i_fin?qv1:qv0;
+            if(FIN_BYPASS==2)q_v<=qv_n;
             else if(FIN_BYPASS)q_v<=(q_v|(qt_mask&{RQ{s3_v}}))&~ret_oh;
             if (n_load || n_skip) rp <= rp + 1'b1;
-            head_oh<=i_fin?hd1:hd0;
-            finish_oh<=i_fin?fc1:fc0;
+            head_oh<=hd_n;
+            finish_oh<=fc_n;
             if (f_abad || f_wbad || encoding_bad) bad <= 1'b1;
             qc <= (!bp_v && f_aidle && f_widle && b_used == 0) ? (qc[3] ? qc : qc + 4'd1) : 4'd0;
-            if(FIN_BYPASS==2)occupancy_oh<=i_fin?oc1:oc0;
+            if(FIN_BYPASS==2)occupancy_oh<=oc_n;
             else if(FIN_BYPASS)occupancy_oh<=rt_ok?occ_dec:occ_inc;
             else occupancy_oh <= rt_ok?occ_dec:occ_inc;
-            if(FIN_BYPASS==2)ret<=i_fin?ret1:ret0;
+            if(FIN_BYPASS==2)ret<=ret_n;
             else ret <= {rt_ok && rt_fault || f_nf, rt_ok, FIN_BYPASS?(rt_ok?ready_dec:ready_inc):((occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok)) <= (QW+1)'(RQ - (SPANPIPE ? 12 : 6)))};
         end
     end
@@ -294,5 +302,25 @@ module ot_hgi_qdq_core_fin2 #(
         if ((RQ & (RQ - 1)) != 0 || RQ < 8) $fatal(1, "ot_hgi_qdq_q: RQ must be a power of two >= 8");
         if ((NB & (NB - 1)) != 0 || (LD & (LD - 1)) != 0) $fatal(1, "ot_hgi_qdq_q: NB / LD powers of two");
     end
+endmodule
+
+// One raw select bit -> W next-state bits, each through one AO22 (y = s & a1 | ~s & a0) that synthesis keeps as a cell:
+// the select is the only logic between the input pin and the state flops (pin -> INV/AO22 -> D).
+module ot_qdq_fin_sel #(parameter integer W = 1) (
+    input  wire         s,
+    input  wire [W-1:0] a0,
+    input  wire [W-1:0] a1,
+    output wire [W-1:0] y
+);
+`ifdef SYNTHESIS
+    wire sn;
+    (* keep="true",dont_touch="true" *) INVx2_ASAP7_75t_R u_sn (.A(s), .Y(sn));
+    genvar i;
+    for (i = 0; i < W; i = i + 1) begin : g_b
+        (* keep="true",dont_touch="true" *) AO22x1_ASAP7_75t_R u_m (.A1(s), .A2(a1[i]), .B1(sn), .B2(a0[i]), .Y(y[i]));
+    end
+`else
+    assign y = s ? a1 : a0;
+`endif
 endmodule
 `default_nettype wire

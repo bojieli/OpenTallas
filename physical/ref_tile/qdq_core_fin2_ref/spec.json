@@ -59,9 +59,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:hbm_quant_sfu_2240",
-  "branch": "codex/hbm-quant-sfu-2240",
-  "tag": "f2",
+  "owner": "Claude:hbm-group-B-1014",
+  "branch": "claude/hbm-qdq-core-fin3",
+  "tag": "f3",
   "views_to": "physical/ref_tile/qdq_core_fin2_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_core_fin2_ref",
   "purpose": "Distinct FIN2 body: complete rawFIN0/1 retire-state candidates before final input mux, registered previous-retire dependencyclear removes rawFIN fanout to256q_dep captures. Eligibility alreadymasks dependencies withliveq_v; actualready/wrap/no-slotreuse assertions+oracle required. Independentkept3outputlaunchFFs. No retire/dataedge change, no oldclosedCORE substituted.",
@@ -117,7 +117,7 @@
   "FIN_BYPASS": 2,
   "SPANPIPE": 1
  },
- "structural_change": "Distinct FIN2 body: complete rawFIN0/1 retire-state candidates before final input mux, registered previous-retire dependencyclear removes rawFIN fanout to256q_dep captures. Eligibility alreadymasks dependencies withliveq_v; actualready/wrap/no-slotreuse assertions+oracle required. Independentkept3outputlaunchFFs. No retire/dataedge change, no oldclosedCORE substituted.",
+ "structural_change": "FIN3: the raw i_fin pin enters ONLY the final select of each next state (q_v, head_oh, finish_oh, occupancy_oh, dep_clear, ret: 4*RQ+2*FCST+3 = 131 bits) through one explicit kept AO22 per bit (ot_qdq_fin_sel, INV for the inverted select); FIN2 synthesis had folded i_fin into the decode cone (gate WARN: 38 input endpoints, i_fin -> ret / occupancy_oh 4 levels). Both futures stay computed from registered state; same edge, no added cycle, function identical. Previous: Distinct FIN2 body: complete rawFIN0/1 retire-state candidates before final input mux, registered previous-retire dependencyclear removes rawFIN fanout to256q_dep captures. Eligibility alreadymasks dependencies withliveq_v; actualready/wrap/no-slotreuse assertions+oracle required. Independentkept3outputlaunchFFs. No retire/dataedge change, no oldclosedCORE substituted.",
  "children": [],
  "inter": [],
  "recipe": 2,
