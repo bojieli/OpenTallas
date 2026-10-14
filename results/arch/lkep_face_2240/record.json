@@ -13,5 +13,20 @@
   "original_wrapper_source": "19cfe6a7a",
   "cycle_changes": 0,
   "parent_qualified": false,
-  "next": "valid-flit mutant/current-source bench, ownrootmappedcount, actualpin/clock/physicalgate; coreglueextraction stillowed"
+  "next": "valid-flit mutant/current-source bench, ownrootmappedcount, actualpin/clock/physicalgate; coreglueextraction stillowed",
+  "valid_flit_mutant": {
+    "source": "4b4ff15f0",
+    "edge": 13,
+    "otrun_exit": 1
+  },
+  "physical_probe": {
+    "source": "b1b181818",
+    "root_sinks": 3312,
+    "tt_max_insertion_ps": 270.1,
+    "tt_spread_ps": 27.4,
+    "tt_setup_ps": 204.4,
+    "tt_hold_ps": 25.52,
+    "verdict": "WARN0FAIL2WARN",
+    "routed": false
+  }
 }
