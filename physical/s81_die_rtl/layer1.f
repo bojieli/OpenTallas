@@ -15,3 +15,5 @@ rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv
 rtl/v41die/ot_s81_cfg7_seq.sv
 # cfg ROM macro model (bit array; the macro is hard IP)
 physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
+# hard-macro behavioural models (SRAM / ROM bit arrays) instantiated by the RTL (children of real RTL only)
++libdir+physical/asap7_memory_macros_v2

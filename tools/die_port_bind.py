@@ -689,12 +689,16 @@ def main(argv=None):
     ap.add_argument('--out')
     a = ap.parse_args(argv)
     files = list(a.rtl_file)
+    libdirs = []
     for fl in a.filelists:
         base = Path(fl).parent
         for ln in Path(fl).read_text().split('\n'):
             ln = ln.strip()
             if ln.startswith('+define+'):          # a die RTL manifest carries its build defines
                 a.define += [d for d in ln[len('+define+'):].split('+') if d]
+                continue
+            if ln.startswith('+libdir+'):          # ... and the hard-macro model libraries its RTL instantiates
+                libdirs.append(ln[len('+libdir+'):])
                 continue
             if ln and not ln.startswith(('#', '//', '+', '-')):
                 p = Path(ln)
@@ -705,6 +709,7 @@ def main(argv=None):
         defines[k] = v
     roots = a.rtl_root if a.rtl_root is not None else (['rtl'] + sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'physical').glob('**/rtl')
                                                                   if p.is_dir()))
+    roots = roots + libdirs
     idx, amb = rtl_index(roots, files, defines, a.prefer + files)
     if a.closure:
         seen, todo, files_ = set(), list(a.closure), []
