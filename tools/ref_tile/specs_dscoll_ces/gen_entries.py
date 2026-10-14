@@ -38,4 +38,23 @@ for zero in [True, False]:
     path.write_text(json.dumps(s,indent=1)+'\n')
     import subprocess,sys
     subprocess.run([sys.executable,str(ROOT/'tools/ref_tile/wires_only_ioref.py'),str(path),str(ROOT/ref)],check=True)
+    # ETM calibration must see one external source per clock. All entries remain synchronous:
+    # equal periods and phases, every cross-clock path timed, no async groups or false paths.
+    clocks = {port: ('core_clk' if port == 'ck_core' else 'entry_' + port) for port in PORTS}
+    constraint = ['# Independent synchronous source clocks; preserve the current route/signoff period.',
+        'set ot_pc_period [get_property [get_clocks core_clk] period]',
+        'delete_clock [get_clocks core_clk]']
+    for port, cname in clocks.items():
+        constraint.append(f'create_clock -name {cname} -period $ot_pc_period [get_ports {port}]')
+    constraint += ['set_propagated_clock [all_clocks]',
+        'set_clock_uncertainty -setup 60 [all_clocks]', 'set_clock_uncertainty -hold 25 [all_clocks]',
+        'set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]',
+        'set_output_delay 166.667 -clock core_clk [all_outputs]',
+        'set ::ot_wc_clocks [dict create ' + ' '.join(port+' '+cname for port,cname in clocks.items()) + ']']
+    generated = (ROOT/ref).read_text()
+    generated = generated.replace('foreach src [get_property [get_clocks core_clk] sources] { set_clock_latency -source 0.0 -clock [get_clocks core_clk] $src }',
+        'dict for {entry cname} $::ot_wc_clocks { set_clock_latency -source 0.0 -clock [get_clocks $cname] [get_ports $entry] }')
+    generated = generated.replace('set_clock_latency -source $lat -clock [get_clocks core_clk] $tp',
+        'set_clock_latency -source $lat -clock [get_clocks [dict get $::ot_wc_clocks $tn]] $tp')
+    (ROOT/ref).write_text('\n'.join(constraint) + '\n' + generated)
     print(path)
