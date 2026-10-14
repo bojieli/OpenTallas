@@ -72,8 +72,8 @@ module ot_hgi_qdq_q #(
 `ifdef OT_HARD_CHILDREN
     ot_hgi_qdq_fr u_fr (
 `else
-    generate if(FRONTFAST==2)begin:g_pin_front
-    ot_hgi_qdq_fr_pin_capture #(.PIN_CAPTURE(1)) u_fr (
+    generate if(FRONTFAST==2 || FRONTFAST==3)begin:g_pin_front
+    ot_hgi_qdq_fr_pin_capture #(.PIN_CAPTURE(1),.FACE_FF(FRONTFAST==3)) u_fr (
         .clk(clk), .rst_n(rst_n), .rec(rec), .s1_v(s1_v), .s3_v(s3_v), .s3(s3), .nfault(nfault));
     end else if(FRONTFAST!=0) begin:g_fast_front
     ot_hgi_qdq_fr_mix #(.ONE_ROW(1)) u_fr (
