@@ -1,0 +1,4 @@
+PINFLOP-REF overlay: physical/qwen_die_masters/mc/qfd_sp_constants_sequencer_fqh/io_ref_skew.sdc
+PINFLOP-REF overlay: physical/qwen_die_masters/mc/qfd_sp_constants_sequencer_sys/io_ref_skew.sdc
+hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm); calibrate CTS-only (no repair) added
+tt_overlay: OK run_abi3_physical bd229e41ff37: corner block v2 (WC reads TT) replaced a rename block; OT_CTS_FIX_HOOKS function replaced (context fallback); direct config.mk WC->TT x7; context copy helpers x4; SMH flow: generator honours OT_ORFS_CORNER (no patch); h1_patch: 3 files rewritten under /srv/opentallas-scratch/claude/closure-loop/dsfd_capt_x8_dual-v3-9c12f4d15/src

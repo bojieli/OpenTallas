@@ -1,0 +1,432 @@
+2026-10-13T23:03:50-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] ingested from /tmp/claude-review-20261003/closure_jobs/dsfd_capt_x8_dual-v3-9c12f4d15.json
+2026-10-13T23:03:52-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] STRUCTURE-REPEAT: 2 failed routes of dsfd_capt_x8_dual since its last CLOSED; structural_change: Actual assigned-pin repair after wide v2 DRC1: CK61.548 conflicts with f_w24861.596 on M5 (spacing bbox61.560,0..61.584,0.227). Die-reviewed6e20fb09c relocates scalar controls to vacant east centres114.012/114.204/114.396, actual44M5PG rectangles clear both faces and1.392um nearest stripe clearance 
+2026-10-13T23:03:52-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] structure-repeat: 2 failed routes; structural_change: Actual assigned-pin repair after wide v2 DRC1: CK61.548 conflicts with f_w24861.596 on M5 (spacing bbox61.560,0..61.584,0.227). Die-reviewed6e20fb09c relocates scalar controls to vacant east centres11
+2026-10-13T23:03:52-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/dsfd_capt_x8_dual/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:03:52-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] macro_grid WARN: MACRO_GRID WARN: macro placement ['physical/ref_tile/dsfd_capt_x8_dual/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:03:55-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] CLOCK-RULE at submit: 5,744 sinks on the largest root <= 15,000; measured TT insertion 203.0 ps, leaf spread 14.3 ps
+2026-10-13T23:03:55-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] REF_GATE WARN (refuse): pins: 1-bit vector ports ['ck', 'rst', 'ckv', 'rsv', 't_ho']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0]) (fix: declare them scalar in RTL)
+2026-10-13T23:03:55-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] ref gate WARN: pins: 1-bit vector ports ['ck', 'rst', 'ckv', 'rsv', 't_ho']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0]) (fix: declare them scalar in RTL)
+2026-10-13T23:03:55-07:00 [hgi_sv_lane2_pf-r2-prefetch-63c91fc76] ingested from /tmp/claude-review-20261003/closure_jobs/hgi_sv_lane2_pf-r2-prefetch-63c91fc76.json
+2026-10-13T23:03:55-07:00 [hgi_sv_lane2_pf-r2-prefetch-63c91fc76] CLOSED-STANDS PASS: ot_hgi_sv_lane2 is CLOSED with a published view (hgi_sv_lane2-r1-spread-1fe4e13fb @ 1fe4e13fb); reroute_reason rtl_change: 1 of 1 RTL source file(s) differ from 1fe4e13fb: rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv (verified)
+2026-10-13T23:03:56-07:00 [hgi_sv_lane2_pf-r2-prefetch-63c91fc76] MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/hgi_sv_lane2_pf/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:03:56-07:00 [hgi_sv_lane2_pf-r2-prefetch-63c91fc76] macro_grid WARN: MACRO_GRID WARN: macro placement ['physical/ref_tile/hgi_sv_lane2_pf/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:03:58-07:00 [hgi_sv_lane2_pf-r2-prefetch-63c91fc76] CLOCK-RULE at submit: 4,170 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+2026-10-13T23:03:58-07:00 [hgi_sv_lane2_pf-r2-prefetch-63c91fc76] SUBMIT_LINT REF_GATE: source_binding: gate result is legacy, unverified, or differs from the route source/daemon overlay (fix: preserve original as unqualified; regenerate the gate for this exact source)
+2026-10-13T23:04:07-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+2026-10-13T23:04:07-07:00 [hgi_coll_park_q2_ref-qsplit1-e69fc82b6] bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)
+2026-10-13T23:04:07-07:00 [qdq_wr_ref-q8e-85c81f4c2] bench track: bench_production_qdq_m1 FAIL as expected (rc=1) 
+2026-10-13T23:04:07-07:00 [hgi_coll_park_q3_ref-qsplit1-e69fc82b6] bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)
+2026-10-13T23:04:07-07:00 [hgi_coll_park_q1_ref-qsplit1-e69fc82b6] bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)
+2026-10-13T23:04:08-07:00 [code_pair_m2qd_45c8e964c] bench re-judgment deferred: bench log unreadable on ot-epyc3: /srv/opentallas-scratch2/scratch/claude/closure-loop/code_pair_m2qd_45c8e964c/cl/bench_exact_s1.a1.log
+2026-10-13T23:04:08-07:00 [hgi_coll_park_q2_ref-qsplit1-e69fc82b6] bench track: launched bench_park_full545_flat_exact (bench_park_full545_flat_exact.a1b1) beside route
+2026-10-13T23:04:08-07:00 [qdq_wr_ref-q8e-85c81f4c2] bench track: launched bench_production_qdq_m2 (bench_production_qdq_m2.a1b1) beside route
+2026-10-13T23:04:08-07:00 [hgi_coll_park_q3_ref-qsplit1-e69fc82b6] bench track: launched bench_park_full545_flat_exact (bench_park_full545_flat_exact.a1b1) beside route
+2026-10-13T23:04:08-07:00 [hgi_coll_park_q1_ref-qsplit1-e69fc82b6] bench track: launched bench_park_full545_flat_exact (bench_park_full545_flat_exact.a1b1) beside route
+2026-10-13T23:04:09-07:00 [hgi_coll_park_fault_ref-qsplit1-e69fc82b6] bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)
+2026-10-13T23:04:12-07:00 [hgi_coll_park_fault_ref-qsplit1-e69fc82b6] bench track: launched bench_park_full545_flat_exact (bench_park_full545_flat_exact.a1b1) beside route
+2026-10-13T23:04:49-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] ingested from /tmp/claude-review-20261003/closure_jobs/b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc.json
+2026-10-13T23:04:51-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] STRUCTURE-REPEAT: 3 failed routes of ot_hgi_b2_dma_serial since its last CLOSED; structural_change: Three same-RTL routes terminal TT+56.98/FF+18.88 DRC1. Actual retained arg1 5_route_drc.rpt short obstruction vs vmr[273] M5 at56.118..56.136,86.293..86.316 NEcorner. Structural pin window repair: VM input/output north pins constrained to1.08..55.08um, preserving fullM5PG and all pin flops, outline5
+2026-10-13T23:04:51-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] structure-repeat: 3 failed routes; structural_change: Three same-RTL routes terminal TT+56.98/FF+18.88 DRC1. Actual retained arg1 5_route_drc.rpt short obstruction vs vmr[273] M5 at56.118..56.136,86.293..86.316 NEcorner. Structural pin window repair: VM 
+2026-10-13T23:04:51-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/b2_dma_serial_q5_ref/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:04:51-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] macro_grid WARN: MACRO_GRID WARN: macro placement ['physical/ref_tile/b2_dma_serial_q5_ref/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:01-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] git-mirror sync 9c12f4d15db4 via upstream in 11s + extract 41s; 2828 views / 5.2 GB hard-linked from the host view store
+2026-10-13T23:05:02-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] source 9c12f4d15db4 synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/dsfd_capt_x8_dual-v3-9c12f4d15/src
+2026-10-13T23:05:03-07:00 [smpub_egress-r1-6e353db2e] CLOCK-RULE at submit: clock sinks unknown; no measured clock tree (no --cts gate evidence)
+2026-10-13T23:05:03-07:00 [smpub_egress-r1-6e353db2e] ref gate PASS: pre-route gate PASS
+2026-10-13T23:05:03-07:00 [smpub_reset-r1-6e353db2e] ingested from /tmp/claude-review-20261003/closure_jobs/smpub_reset-r1-6e353db2e.json
+2026-10-13T23:05:03-07:00 [smpub_reset-r1-6e353db2e] MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/smpub_reset/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:03-07:00 [smpub_reset-r1-6e353db2e] macro_grid WARN: MACRO_GRID WARN: macro placement ['physical/ref_tile/smpub_reset/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:04-07:00 [smpub_reset-r1-6e353db2e] CLOCK-RULE at submit: clock sinks unknown; no measured clock tree (no --cts gate evidence)
+2026-10-13T23:05:04-07:00 [smpub_reset-r1-6e353db2e] ref gate PASS: pre-route gate PASS
+2026-10-13T23:05:05-07:00 [smpub_return_d1-r1-6e353db2e] ingested from /tmp/claude-review-20261003/closure_jobs/smpub_return_d1-r1-6e353db2e.json
+2026-10-13T23:05:05-07:00 [smpub_return_d1-r1-6e353db2e] MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/smpub_return_d1/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:05-07:00 [smpub_return_d1-r1-6e353db2e] macro_grid WARN: MACRO_GRID WARN: macro placement ['physical/ref_tile/smpub_return_d1/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:06-07:00 [smpub_return_d1-r1-6e353db2e] CLOCK-RULE at submit: clock sinks unknown; no measured clock tree (no --cts gate evidence)
+2026-10-13T23:05:06-07:00 [smpub_return_d1-r1-6e353db2e] ref gate PASS: pre-route gate PASS
+2026-10-13T23:05:06-07:00 [smpub_return_d2-r1-6e353db2e] ingested from /tmp/claude-review-20261003/closure_jobs/smpub_return_d2-r1-6e353db2e.json
+2026-10-13T23:05:06-07:00 [smpub_return_d2-r1-6e353db2e] MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/smpub_return_d2/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:06-07:00 [smpub_return_d2-r1-6e353db2e] macro_grid WARN: MACRO_GRID WARN: macro placement ['physical/ref_tile/smpub_return_d2/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:08-07:00 [smpub_return_d2-r1-6e353db2e] CLOCK-RULE at submit: clock sinks unknown; no measured clock tree (no --cts gate evidence)
+2026-10-13T23:05:15-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] git-mirror sync 9c12f4d15db4 via upstream in 2s + extract 9s; 2828 views / 5.2 GB hard-linked from the host view store
+2026-10-13T23:05:16-07:00 [smpub_smrg_l3-r1-6e353db2e] CLOCK-RULE at submit: clock sinks unknown; no measured clock tree (no --cts gate evidence)
+2026-10-13T23:05:16-07:00 [smpub_smrg_l3-r1-6e353db2e] ref gate PASS: pre-route gate PASS
+2026-10-13T23:05:16-07:00 [smpub_vmmerge-r1-6e353db2e] ingested from /tmp/claude-review-20261003/closure_jobs/smpub_vmmerge-r1-6e353db2e.json
+2026-10-13T23:05:16-07:00 [smpub_vmmerge-r1-6e353db2e] MACRO_GRID WARN (refuse): MACRO_GRID WARN: macro placement ['physical/ref_tile/smpub_vmmerge/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:16-07:00 [smpub_vmmerge-r1-6e353db2e] macro_grid WARN: MACRO_GRID WARN: macro placement ['physical/ref_tile/smpub_vmmerge/pre_gpl.tcl'] but no macro LEF resolved from the commands
+2026-10-13T23:05:18-07:00 [smpub_vmmerge-r1-6e353db2e] CLOCK-RULE at submit: clock sinks unknown; no measured clock tree (no --cts gate evidence)
+2026-10-13T23:05:18-07:00 [smpub_vmmerge-r1-6e353db2e] ref gate PASS: pre-route gate PASS
+2026-10-13T23:05:18-07:00 SLOW-TICK: ingest held the dispatch thread 32 s
+2026-10-13T23:05:20-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] bench track: offloaded to ot-epyc1tb:/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v3-9c12f4d15-bench (job host ot-pve1 lacks bench tools)
+2026-10-13T23:05:24-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] bench track: launched bench_lint (bench_lint.a1b1) beside None
+2026-10-13T23:05:27-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] launched route (attempt 1) on ot-pve1
+2026-10-13T23:05:29-07:00 [smpub_cmd-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)2026-10-13T23:05:29-07:00 [smpub_egress-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+2026-10-13T23:05:29-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] benches run in parallel with calibrate/route (10 benches; spec bench_first opts out)
+
+2026-10-13T23:05:29-07:00 [smpub_return_d1-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+2026-10-13T23:05:29-07:00 [smpub_return_d3-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+2026-10-13T23:05:29-07:00 [smpub_return_d2-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)2026-10-13T23:05:29-07:00 [smpub_credit-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+
+2026-10-13T23:05:29-07:00 [smpub_vmmerge-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)2026-10-13T23:05:29-07:00 [smpub_return_d4-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)2026-10-13T23:05:29-07:00 [smpub_reset-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+2026-10-13T23:05:29-07:00 [smpub_smrg_l2-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+
+2026-10-13T23:05:29-07:00 [smpub_smrg_l3-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+
+2026-10-13T23:05:29-07:00 [smpub_smrg_l1-r1-6e353db2e] benches run in parallel with calibrate/route (3 benches; spec bench_first opts out)
+2026-10-13T23:05:29-07:00 [hgi_coll_park_q2_ref-qsplit1-e69fc82b6] bench track: bench_park_full545_flat_exact PASS (rc=0) work: [16000]
+2026-10-13T23:05:29-07:00 [hgi_coll_park_q1_ref-qsplit1-e69fc82b6] bench track: bench_park_full545_flat_exact PASS (rc=0) work: [16000]
+2026-10-13T23:05:29-07:00 [hgi_coll_park_q3_ref-qsplit1-e69fc82b6] bench track: bench_park_full545_flat_exact PASS (rc=0) work: [16000]
+2026-10-13T23:05:31-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)
+2026-10-13T23:05:34-07:00 [hgi_coll_park_fault_ref-qsplit1-e69fc82b6] bench track: launched bench_park_fault_station_mutant (bench_park_fault_station_mutant.a1b1) beside route
+2026-10-13T23:05:35-07:00 SLOW-TICK: tick held the dispatch thread 49 s
+2026-10-13T23:05:36-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] bench track: launched bench_capc_exact (bench_capc_exact.a1b1) beside route
+2026-10-13T23:05:39-07:00 [hgi_coll_park_fault_ref-qsplit1-e69fc82b6] route crashed (rc=1 ok-check failed;; first error: hgi_coll_park_fault_ref_qsplit1_e69fc82b6/flow.log: Error: global_place.tcl, 5 OT_IOFLOP: no pin flop found (netlist changed?) [step do-3_3_place_gp]) -> retry once on the same host
+2026-10-13T23:05:43-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] git-mirror sync 7d874a5cce36 via upstream in 2s + extract 9s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:05:45-07:00 [smpub_egress-r1-6e353db2e] git-mirror sync 6e353db2e320 via upstream in 2s + extract 9s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:05:47-07:00 [smpub_cmd-r1-6e353db2e] git-mirror sync 6e353db2e320 via upstream in 1s + extract 9s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:05:47-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] source 7d874a5cce36 synced to ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc/src
+2026-10-13T23:05:49-07:00 [smpub_credit-r1-6e353db2e] git-mirror sync 6e353db2e320 via upstream in 2s + extract 9s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:05:49-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] bench track: launched bench_lint (bench_lint.a1b1) beside None
+2026-10-13T23:05:49-07:00 [smpub_return_d3-r1-6e353db2e] git-mirror sync 6e353db2e320 via upstream in 1s + extract 9s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:05:50-07:00 [smpub_egress-r1-6e353db2e] source 6e353db2e320 synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/smpub_egress-r1-6e353db2e/src
+2026-10-13T23:05:51-07:00 [smpub_return_d2-r1-6e353db2e] git-mirror sync 6e353db2e320 via upstream in 1s + extract 9s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:05:51-07:00 [smpub_cmd-r1-6e353db2e] source 6e353db2e320 synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/smpub_cmd-r1-6e353db2e/src
+2026-10-13T23:05:51-07:00 [smpub_credit-r1-6e353db2e] source 6e353db2e320 synced to ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/smpub_credit-r1-6e353db2e/src
+2026-10-13T23:05:53-07:00 [smpub_return_d3-r1-6e353db2e] source 6e353db2e320 synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/smpub_return_d3-r1-6e353db2e/src
+2026-10-13T23:05:53-07:00 [smpub_vmmerge-r1-6e353db2e] git-mirror sync 6e353db2e320 via upstream in 1s + extract 9s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:05:53-07:00 [smpub_return_d2-r1-6e353db2e] source 6e353db2e320 synced to ot-epyc4:/srv/opentallas-scratch2/claude/closure-loop/smpub_return_d2-r1-6e353db2e/src
+2026-10-13T23:05:54-07:00 [smpub_egress-r1-6e353db2e] bench track: launched bench_lint (bench_lint.a1b1) beside None
+2026-10-13T23:13:34-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] bench track: bench_capc_exact PASS (rc=0) work: [('cases', 9)]
+2026-10-13T23:13:36-07:00 [b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc] bench track: launched bench_q5_qid_pin_address_mutant (bench_q5_qid_pin_address_mutant.a1b1) beside route
+2026-10-13T23:13:37-07:00 SLOW-TICK: tick held the dispatch thread 51 s
+2026-10-13T23:13:39-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] bench track: launched bench_capc_mut_kswap (bench_capc_mut_kswap.a1b1) beside route
+2026-10-13T23:13:45-07:00 [smpub_egress-r3-ef1510eba] git-mirror sync ef1510ebaa2a via upstream in 1s + extract 10s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:13:45-07:00 [smpub_egress-r3-ef1510eba] source ef1510ebaa2a synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/smpub_egress-r3-ef1510eba/src
+2026-10-13T23:13:46-07:00 [smpub_egress-r3-ef1510eba] bench track: launched bench_lint (bench_lint.a1b1) beside None
+2026-10-13T23:13:47-07:00 [smpub_egress-r3-ef1510eba] launched route (attempt 1) on ot-agidock128
+2026-10-13T23:13:47-07:00 [smpub_return_d1-r3-ef1510eba] git-mirror sync ef1510ebaa2a via upstream in 0s + extract 10s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:13:47-07:00 [smpub_return_d1-r3-ef1510eba] source ef1510ebaa2a synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/smpub_return_d1-r3-ef1510eba/src
+2026-10-13T23:13:47-07:00 [smpub_return_d1-r3-ef1510eba] bench track: launched bench_lint (bench_lint.a1b1) beside None
+2026-10-13T23:13:48-07:00 [smpub_return_d1-r3-ef1510eba] launched route (attempt 1) on ot-agidock128
+2026-10-13T23:13:48-07:00 [smpub_return_d2-r3-ef1510eba] git-mirror sync ef1510ebaa2a via upstream in 0s + extract 11s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:13:48-07:00 [smpub_return_d2-r3-ef1510eba] source ef1510ebaa2a synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/smpub_return_d2-r3-ef1510eba/src
+2026-10-13T23:13:49-07:00 [smpub_return_d2-r3-ef1510eba] bench track: launched bench_lint (bench_lint.a1b1) beside None
+2026-10-13T23:13:50-07:00 [smpub_return_d2-r3-ef1510eba] launched route (attempt 1) on ot-agidock128
+2026-10-13T23:13:52-07:00 [smpub_cmd_relay-r3-ef1510eba] git-mirror sync ef1510ebaa2a via upstream in 0s + extract 12s; 2834 views / 5.3 GB hard-linked from the host view store
+2026-10-13T23:13:52-07:00 [smpub_cmd_relay-r3-ef1510eba] source ef1510ebaa2a synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/smpub_cmd_relay-r3-ef1510eba/src
+2026-10-13T23:13:52-07:00 [smpub_cmd_relay-r3-ef1510eba] bench track: launched bench_lint (bench_lint.a1b1) beside None
+2026-10-13T23:13:53-07:00 [smpub_cmd_relay-r3-ef1510eba] launched route (attempt 1) on ot-agidock128
+2026-10-13T23:16:02-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] TEXTBOOK-LINT route.a1: WARN dsfd_capt_x8_dual cells 38,019 flops 10,183 depth 240.0 ps util 0.3657 reach 0.0 um (4.7 s) || INFO clock_roots max_root_sinks=5744 root=port:ck[0] rule=PASS: 5,744 sinks on the largest root <= 15,000; measured TT insertion 203.0 ps, leaf spread 14.3 ps || WARN util_channel: utilisation 36.6% outside 45%-65% (std 5724 + macro 0 um2 in 15653 um2): shrink the outline (long wires / sparse placement)
+2026-10-13T23:16:02-07:00 [smpub_cmd_relay-r3-ef1510eba] bench track: launched bench_parent_mutant (bench_parent_mutant.a1b1) beside route
+2026-10-13T23:16:02-07:00 [smpub_credit-r3-ef1510eba] bench track: launched bench_parent_mutant (bench_parent_mutant.a1b1) beside route
+2026-10-13T23:16:02-07:00 [smpub_return_d2-r3-ef1510eba] bench track: launched bench_parent_mutant (bench_parent_mutant.a1b1) beside route
+2026-10-13T23:16:02-07:00 [smpub_vmmerge-r3-ef1510eba] bench track: launched bench_parent_mutant (bench_parent_mutant.a1b1) beside route
+2026-10-13T23:16:02-07:00 [smpub_return_d4-r3-ef1510eba] bench track: launched bench_parent_mutant (bench_parent_mutant.a1b1) beside route
+2026-10-13T23:16:02-07:00 [smpub_smrg_l1-r3-ef1510eba] bench track: launched bench_parent_mutant (bench_parent_mutant.a1b1) beside route
+2026-10-13T23:16:02-07:00 [smpub_smrg_l3-r3-ef1510eba] bench track: launched bench_parent_mutant (bench_parent_mutant.a1b1) beside route
+2026-10-13T23:16:03-07:00 [qfd_bl_lane_cs-cs2-cbe59a08a-arg1] bench track: bench_bl_slot_mut_strap FAIL as expected (rc=1) 
+2026-10-13T23:16:03-07:00 [qfd_slab_pg_core_gid-gd3-42e2bcb1b] bench track: bench_group_34_fullrows_exact PASS (rc=0) WARN: pass log has no count line (set min_count_regex)
+2026-10-13T23:16:06-07:00 [qfd_slab_pg_core_gid-gd3-42e2bcb1b] bench track: launched bench_group_35_fullrows_exact (bench_group_35_fullrows_exact.a1b1) beside verdict
+2026-10-13T23:17:02-07:00 [smpub_credit-r3-ef1510eba] bench track: bench_parent_mutant FAIL as expected (rc=1) 
+2026-10-13T23:17:02-07:00 [smpub_cmd_relay-r3-ef1510eba] bench track: bench_parent_mutant FAIL as expected (rc=1) 
+2026-10-13T23:17:02-07:00 [smpub_reset-r3-ef1510eba] route done (rc=0)
+2026-10-13T23:17:02-07:00 [smpub_return_d1-r3-ef1510eba] route done (rc=0)
+2026-10-13T23:17:02-07:00 [smpub_return_d4-r3-ef1510eba] bench track: bench_parent_mutant FAIL as expected (rc=1) 
+2026-10-13T23:17:02-07:00 [smpub_egress-r3-ef1510eba] route done (rc=0)
+2026-10-13T23:22:05-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] bench track: bench_capc_mut_kswap FAIL as expected (rc=1) 
+2026-10-13T23:22:05-07:00 [hgi_coll_park_q2_ref-qsplit1-e69fc82b6] auto-react: CTS/GRT hold flood with the pin-flop reference already in use; structural fix needed (noted in hgi-1010.log)
+2026-10-13T23:22:07-07:00 [hgi_coll_park_q3_ref-qsplit1-e69fc82b6] auto-react: CTS/GRT hold flood with the pin-flop reference already in use; structural fix needed (noted in hgi-1010.log)
+2026-10-13T23:22:07-07:00 [qfd_link_adp128-s1-7114237ab] bench track: launched bench_split_exact (bench_split_exact.a1b1) beside route
+2026-10-13T23:22:08-07:00 [qfd_link_adp128-s1-7114237ab] TEXTBOOK-LINT route.a1: WARN qfd_link_adp128 cells 7,618 flops 1,932 depth 295.1 ps util 0.3347 reach 0.0 um (0.2 s) || INFO clock_roots max_root_sinks=1933 root=port:ck rule=PASS: 1,933 sinks on the largest root <= 15,000; measured TT insertion 277.4 ps, leaf spread 92.3 ps || WARN util_channel: utilisation 33.5% outside 45%-65% (std 1232 + macro 5178 um2 in 19148 um2): shrink the outline (long wires / sparse placement)
+2026-10-13T23:22:12-07:00 [smpub_return_d1-r3-ef1510eba] CLOSED: CLOSED TT +317.15 / FF +32.75 ps DRC 0; SS sensitivity +210.95 ps | record codex/smpub-parent-1013 2e7f119b9 (19 files) | AUTO-MERGED into main 492140c90
+2026-10-13T23:22:13-07:00 [smpub_return_d1-r3-ef1510eba] viz-elem: element page export started (explorer_elem_export.py auto)
+2026-10-13T23:22:14-07:00 [smpub_vmmerge-r3-ef1510eba] routed-insertion IO re-STA: TT setup +164.95 / FF hold +14.60 (route SDC 164.95 / 14.6); routed reference TT [ot_lb_v_core_clk 139] FF [ot_lb_v_core_clk 119]
+2026-10-13T23:22:14-07:00 [smpub_vmmerge-r3-ef1510eba] verdict at the ROUTED insertion: TT +164.95 / FF +14.60 -> CLOSED
+2026-10-13T23:22:32-07:00 [smpub_cmd_relay-r3-ef1510eba] CLOSED: CLOSED TT +293.39 / FF +40.17 ps DRC 0; SS sensitivity +173.39 ps | record codex/smpub-parent-1013 5de02a0f3 (19 files) | AUTO-MERGED into main 1b05679ca
+2026-10-13T23:22:33-07:00 [smpub_cmd_relay-r3-ef1510eba] viz-elem: element page export started (explorer_elem_export.py auto)
+2026-10-13T23:22:52-07:00 [smpub_credit-r3-ef1510eba] CLOSED: CLOSED TT +308.54 / FF +32.05 ps DRC 0; SS sensitivity +198.23 ps | record codex/smpub-parent-1013 c20c9826b (19 files) | AUTO-MERGED into main fed570540
+2026-10-13T23:22:56-07:00 [smpub_credit-r3-ef1510eba] viz-elem: element page export started (explorer_elem_export.py auto)
+2026-10-13T23:23:03-07:00 [smpub_smrg_l2-r3-ef1510eba] collect done (rc=0)
+2026-10-13T23:23:03-07:00 [smpub_smrg_l1-r3-ef1510eba] collect done (rc=0)
+2026-10-13T23:23:03-07:00 [smpub_smrg_l3-r3-ef1510eba] collect done (rc=0)
+2026-10-13T23:23:03-07:00 [dsfd_vm_fcn_m5-p4-42e660d28] TEXTBOOK-LINT route.a1: WARN dsfd_vm_fcn cells 30,590 flops 5,506 depth 738.5 ps util 0.4056 reach 6.2 um (3.7 s) || INFO clock_roots max_root_sinks=4444 root=port:ck[0] rule=PASS: 4,444 sinks on the largest root <= 15,000; measured TT insertion 219.9 ps, leaf spread 30.5 ps || WARN boundary: 13 input->register endpoint(s) > 3 levels (worst c_wr[0]->sl_rp[3]$_SDFF_PN0_/D 5 lv, c_wr[0]->sl_rp[1]$_SDFF_PN0_/D 4 lv, c_wr[0]->c_wv$_SDFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs) || WARN logic_depth: reg->reg stage k2_g[0][5]$_SDFF_PN0_ -> early$_SDFFE_PN0P_/D: ~738 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage || WARN util_channel: utilisation 40.6% outside 45%-65% (std 4538 + macro 0 um2 in 11188 um2): shrink the outline (long wires / sparse placement)
+2026-10-14T01:06:02-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] route done (rc=0)
+2026-10-14T01:06:03-07:00 [qfd_link_adp128_p12-p12g2-aeaa5f66b] launched bench_proxy_exact (attempt 1) on ot-agidock128
+2026-10-14T01:06:03-07:00 [dscoll_cescn_ln_c16-c16-73c6efe18] bench track: launched bench_exact_coll_ceh_split (bench_exact_coll_ceh_split.a1b1) beside route
+2026-10-14T01:06:03-07:00 [dsfd_hrow_r1025_m5-r2-06542a05c] auto-react: no recipe; structural fix needed (noted in ds-1010.log)
+2026-10-14T01:06:04-07:00 [b2_dma_land_dp_ref-dp7-5d6b675be-arg1] verdict TT +95.78 / FF +21.54 / DRC 11 / checks failed [] -> NOT CLOSED
+2026-10-14T01:06:04-07:00 [b2_dma_land_dp_ref-dp7-5d6b675be-arg1] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+2026-10-14T01:07:05-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:07:05-07:00 [qdq_wr_ref-q8e-85c81f4c2] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5029, in step
+    if not summarize_failure(j, fleet, m):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 3947, in summarize_failure
+    launch_stage(j, st, cmd)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2862, in launch_stage
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:07:05-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:07:05-07:00 [dsfd_hrow_r2079_m5-r2-06542a05c] bench track: launched bench_s81_hrow_hard_relays_mutant (bench_s81_hrow_hard_relays_mutant.a1b1) beside route
+2026-10-14T01:07:07-07:00 [hgi_ix2_kp-r0-d0ac43800] deep release (closed, 7740 MB): kept 6_final.{odb,def,v,sdc,spef} of the accepted ORFS dir + route tree, receipt-referenced paths, logs/reports/json
+2026-10-14T01:07:07-07:00 [dsfd_hrow_r23_m5-r1-06542a05c] bench track: bench_s81_hrow_hard_relays_mutant FAIL as expected (rc=1) 2026-10-14T01:07:07-07:00 [dsfd_hrow_r15_m5-r1-06542a05c] bench track: bench_s81_hrow_hard_relays_mutant FAIL as expected (rc=1) 
+2026-10-14T01:07:31-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:07:31-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:07:32-07:00 [dsfd_hrow_r15_m5-r1-06542a05c] bench track: bench_s81_hrow_hard_relays_mutant FAIL as expected (rc=1) 
+2026-10-14T01:07:32-07:00 [dsfd_be_r55_m5-r1-06542a05c] bench track: bench_s81_be_hard_relays_exact PASS (rc=0) work: [63966]
+2026-10-14T01:07:32-07:00 [dsfd_hrow_r23_m5-r1-06542a05c] bench track: bench_s81_hrow_hard_relays_mutant FAIL as expected (rc=1) 
+2026-10-14T01:08:28-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:08:28-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:08:28-07:00 [hbm_coll_face512_ref-r4stable-d1b0c74b3] bench track: launched bench_coll_face_exact (bench_coll_face_exact.a1b1) beside route
+2026-10-14T01:08:28-07:00 [qfd_su_cbuf_native_l0_sp-l0sp3-0ee5fae18] TEXTBOOK-LINT route.a1: WARN qfd_su_cbuf_native_l0 cells 16,893 flops 4,101 depth 420.1 ps util 0.3225 reach 20.7 um (0.5 s) || INFO clock_roots max_root_sinks=4104 root=port:clk rule=PASS: 4,104 sinks on the largest root <= 15,000; measured TT insertion 450.6 ps, leaf spread 26.0 ps || WARN util_channel: utilisation 32.3% outside 45%-65% (std 2777 + macro 11675 um2 in 44808 um2): shrink the outline (long wires / sparse placement)
+2026-10-14T01:08:32-07:00 [dsfd_hrow_r15_m5-r1-06542a05c] launched collect (attempt 1) on ot-epyc1tb
+2026-10-14T01:09:26-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:09:26-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:09:26-07:00 [qfd_link_adp128_p12-p12g2-aeaa5f66b] launched bench_proxy_blocked (attempt 1) on ot-agidock128
+2026-10-14T01:09:26-07:00 [hbm_coll_face512_ref-r4stable-d1b0c74b3] bench track: launched bench_coll_face_early_mutant (bench_coll_face_early_mutant.a1b1) beside route
+2026-10-14T01:09:26-07:00 [hbm_coll_face512_ref-r4stable-d1b0c74b3] TEXTBOOK-LINT route.a1: PASS ot_hbm_coll_face_pipe512 cells 5,120 flops 2,560 depth 11.7 ps util 0.6015 reach 0.0 um (0.2 s) || INFO clock_roots max_root_sinks=2560 root=port:clk rule=PASS: 2,560 sinks on the largest root <= 15,000; measured TT insertion 112.1 ps, leaf spread 14.2 ps
+2026-10-14T01:10:28-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:10:28-07:00 [qdq_wr_ref-q8e-85c81f4c2] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5029, in step
+    if not summarize_failure(j, fleet, m):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 3947, in summarize_failure
+    launch_stage(j, st, cmd)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2862, in launch_stage
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:10:28-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:10:28-07:00 [hbm_coll_face512_ref-r4stable-d1b0c74b3] auto-react: floorplan lint ['util']; structural fix needed (noted in hbm-phys-1010.log)
+2026-10-14T01:10:29-07:00 [qw_ovw_ref-s1-8b8bb5549] TEXTBOOK-LINT route.a1: WARN ot_hgi_qw_ovw cells 16,949 flops 4,507 depth 608.5 ps util 0.3932 reach 107.9 um (0.4 s) || INFO clock_roots max_root_sinks=4508 root=port:clk rule=PASS: 4,508 sinks on the largest root <= 15,000; measured TT insertion 474.8 ps, leaf spread 31.7 ps || WARN logic_depth: reg->reg stage od_n[2]$_DFF_PN0_ -> hd_ln[16]$_DFF_P_/D: ~608 ps estimated (15 logic levels) > 600 ps: pipeline / restructure the stage || WARN util_channel: utilisation 39.3% outside 45%-65% (std 3411 + macro 13319 um2 in 42550 um2): shrink the outline (long wires / sparse placement)2026-10-14T01:10:29-07:00 [dsfd_die_rstsync_m5-r1-06542a05c] bench track: bench_s81_be_hard_relays_mutant FAIL as expected (rc=0) 
+
+2026-10-14T01:11:34-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:11:35-07:00 [qdq_wr_ref-q8e-85c81f4c2] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5029, in step
+    if not summarize_failure(j, fleet, m):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 3947, in summarize_failure
+    launch_stage(j, st, cmd)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2862, in launch_stage
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:11:35-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:11:37-07:00 [dsfd_be_r55_m5-r1-06542a05c] bench track: bench_s81_be_hard_relays_mutant FAIL as expected (rc=0) 
+2026-10-14T01:11:38-07:00 [dsfd_die_rstsync_m5-r1-06542a05c] launched collect (attempt 1) on ot-epyc4
+2026-10-14T01:11:38-07:00 [dsfd_die_r1_m5-r1-06542a05c] launched collect (attempt 1) on ot-epyc1tb
+2026-10-14T01:12:29-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:12:29-07:00 [dsfd_die_r1_m5-r1-06542a05c] collect done (rc=0)
+2026-10-14T01:12:29-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:12:29-07:00 [qfd_link_adp128_p12-p12g2-aeaa5f66b] launched bench_proxy_reset_epochs (attempt 1) on ot-agidock128
+2026-10-14T01:12:29-07:00 [dscoll_cescn_ln_c16-c16-73c6efe18] bench track: launched bench_exact_coll_ceh_split_cstress (bench_exact_coll_ceh_split_cstress.a1b1) beside route
+2026-10-14T01:12:30-07:00 [smpub_vmcore-r5-688db4054] bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)
+2026-10-14T01:13:28-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:13:28-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:13:28-07:00 [qdq_wr_ref-q8e-85c81f4c2] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+2026-10-14T01:14:33-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:14:33-07:00 [qfd_link_adp128_p12-p12g2-aeaa5f66b] launched bench_proxy_data_mut (attempt 1) on ot-agidock128
+2026-10-14T01:14:33-07:00 [code_pair_m2q_a136eaf57] bench re-judgment deferred: bench log unreadable on ot-epyc3: /srv/opentallas-scratch2/scratch/claude/closure-loop/code_pair_m2q_a136eaf57/cl/bench_exact_s1.a1.log
+2026-10-14T01:14:34-07:00 [qdq_wr_ref-q8e-85c81f4c2] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5029, in step
+    if not summarize_failure(j, fleet, m):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 3947, in summarize_failure
+    launch_stage(j, st, cmd)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2862, in launch_stage
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:14:34-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:14:34-07:00 [dsfd_be_r55_m5-r1-06542a05c] child-lint gate (cf) PASS on /srv/opentallas/claude/closure-loop/dsfd_be_r55_m5-r1-06542a05c/record/views/dsfd_be_r55/dsfd_be_r55.lef
+2026-10-14T01:14:34-07:00 [qw_ovw_ref-s1-8b8bb5549] verdict TT -52.19 / FF -20.28 / DRC 0 / checks failed [] -> NOT CLOSED
+2026-10-14T01:14:35-07:00 [smpub_vmcore-r5-688db4054] bench track: bench_parent_mutant FAIL as expected (rc=1) 2026-10-14T01:14:35-07:00 [smpub_vmport-r5-688db4054] bench track: bench_parent_mutant FAIL as expected (rc=1) 
+2026-10-14T01:15:31-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] verdict TT +49.91 / FF +19.18 / DRC 0 / checks failed [] -> CLOSED
+2026-10-14T01:15:31-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4887, in step
+    return do_verdict(j, fleet, stl)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5172, in do_verdict
+    rr = routed_ioref(j, m)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 4560, in routed_ioref
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:15:31-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] NEEDS_HUMAN: 10 consecutive loop errors: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21
+2026-10-14T01:15:31-07:00 [dsfd_hrow_r2079_m5-r2-06542a05c] EARLY_FAIL_CONGESTION: global route finished with congestion (GRT-0116): dsfd_hrow_r2079_m5_r2_06542a05c/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]
+2026-10-14T01:15:32-07:00 [qw_ovw_ref-s1-8b8bb5549] NEEDS_RTL: TT -52.19 / FF -20.28 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)
+2026-10-14T01:15:33-07:00 [qfd_bl_lane_ce-ce1-0613586f2] bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)
+2026-10-14T01:15:34-07:00 [code_pair_m2qd_45c8e964c] bench re-judgment deferred: bench log unreadable on ot-epyc3: /srv/opentallas-scratch2/scratch/claude/closure-loop/code_pair_m2qd_45c8e964c/cl/bench_exact_s1.a1.log
+2026-10-14T01:15:36-07:00 [smpub_vmport-r5-688db4054] launched collect (attempt 1) on ot-epyc1tb
+2026-10-14T01:15:36-07:00 [qfd_bl_lane_ce-ce1-0613586f2] bench track: launched bench_bl_slot_exact_lnk1 (bench_bl_slot_exact_lnk1.a1b1) beside route
+2026-10-14T01:15:42-07:00 [dsfd_vm_fcc_m5-p5-b35448723] git-mirror sync b35448723a30 via upstream in 2s + extract 7s; 2872 views / 5.4 GB hard-linked from the host view store
+2026-10-14T01:15:48-07:00 [dsfd_vm_fcc_m5-p5-b35448723] source b35448723a30 synced to ot-epyc1tb:/srv/opentallas/claude/closure-loop/dsfd_vm_fcc_m5-p5-b35448723/src
+2026-10-14T01:15:51-07:00 [dsfd_vm_fcc_m5-p5-b35448723] bench track: launched bench_lint (bench_lint.a1b1) beside None
+2026-10-14T01:15:57-07:00 [dsfd_vm_fcc_m5-p5-b35448723] launched route (attempt 1) on ot-epyc1tb
+2026-10-14T01:16:29-07:00 [dsfd_capt_x8_dual-v3-9c12f4d15] auto-react: block dsfd_capt_x8_dual has a live or closed sibling job; no action
+2026-10-14T01:16:29-07:00 [qdq_wr_ref-q8e-85c81f4c2] hold ECO MISS: {'ss_ps': -10.45, 'tt_ps': -10.45, 'ff_ps': 8.35, 'drc': 1, 'sdc_name': '6_final.sdc', 'setup_post_sdc': [], 'setup_corner': 'tt', 'ss_sensitivity_ps': -341.61, 'cells_added': 2785, 'errors': [], 'pass': 1, 'session': 'mm', 'window': 'endpoints_below_hm 2871 fixable 2759 tight 112 infeasible 0 nodata 0 (hm 24.0 filt 40 accept_ss 0 accept_ff 0 r 2.4)', 'route_strategy': ['incremental_original_guides'], 'score': -1000000000.0, 'rank': -1010.45, 'chosen': 'least_bad'}
+2026-10-14T01:16:29-07:00 [qdq_wr_ref-q8e-85c81f4c2] step error:
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 6156, in advance_job
+    step(j, fleet)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 5029, in step
+    if not summarize_failure(j, fleet, m):
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 3947, in summarize_failure
+    launch_stage(j, st, cmd)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2862, in launch_stage
+    ship_helpers(j["host"], j["run"], j)
+  File "/home/ubuntu/wt-claude-closure-daemon-1010/tools/closure_loop/closure_loop.py", line 2491, in ship_helpers
+    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+ValueError: FROZEN_HELPER_OVERLAY: effective route helper drift: tools/closure_loop/ck_insertion.py (frozen {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': 'a1048b22ccc6fb48a1af4522d5e3360c50ac0041bfac21932556f4cc6ba416d3', 'git_blob': '21fc1d876bc5d4f3ea87883cd9819dd9ac9f0e15', 'mode': 436}, current {'path': 'tools/closure_loop/ck_insertion.py', 'sha256': '72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad', 'git_blob': '7ac829e2bbf358332beaca7667f5f1b7beceb335', 'mode': 436}); preserve original job and submit a fresh source-bound gate
+
+2026-10-14T01:16:29-07:00 [dscoll_cescn_ln_c16-c16-73c6efe18] TEXTBOOK-LINT route.a1: PASS dsfd_coll_cescn cells 62,996 flops 14,311 depth 445.1 ps util 0.5231 reach 0.2 um (2.8 s) || INFO clock_roots max_root_sinks=14313 root=port:ck rule=PASS: 14,313 sinks on the largest root <= 15,000; measured TT insertion 458.7 ps, leaf spread 85.0 ps
