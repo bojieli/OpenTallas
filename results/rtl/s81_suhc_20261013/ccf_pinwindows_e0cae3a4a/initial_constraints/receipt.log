@@ -1,6 +1,6 @@
-ot-run: ot-epyc1tb     admits   455 GB (avail 682, growth 149, headroom 64, waiters 0/0 GB) load 53/128 running 24 disk 987 GB 
+ot-run: ot-epyc1tb     admits   454 GB (avail 680, growth 138, headroom 64, waiters 0/0 GB) load 49/128 running 22 disk 982 GB 
 ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1117929-1791959264 after 0 s
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1132578-1791959392 after 1 s
 OpenROAD 26Q3-1510-g6cb3f2b704 
 Features included (+) or not (-): +GPU +GUI +Python
 This program is licensed under the BSD-3 license. See the LICENSE file for details.
@@ -449,5 +449,5 @@ Components of this program may be licensed under more restrictive licenses which
   SDFLx2_ASAP7_75t_SL
   SDFLx3_ASAP7_75t_SL
   SDFLx4_ASAP7_75t_SL
-PIN_WINDOW_INITIAL_OR_PROPAGATED_MAX: T 770.000 R_median 201.628 in_max 731.628 out_max 298.372 target_capture180 target_launch210; MIN/hold unchanged
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1117929-1791959264): exit 0
+PIN_WINDOW_INITIAL_OR_PROPAGATED_MAX: T 770.000 R_median 0.000 in_max 530.000 out_max 500.000 target_capture180 target_launch210; MIN/hold unchanged
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1132578-1791959392): exit 0

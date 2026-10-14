@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   -31 GB (avail 619, growth 220, headroom 48, waiters 1/382 GB) load 206/128 running 29 disk 1217 GB 
+ot-run: -> ot-epyc4 (will queue: admits -31 GB < 24 GB)
+ot-heavy: admitted on regular-crane as oth-ubuntu-472412-1791958158 after 0 s
+golden_L0_L2 20 jobs 1940 rows checks 8 [{'src': 'L0', 'attn_to_ffn_consistent': True}, {'src': 'L2', 'attn_to_ffn_consistent': True}]
+stress_0 20 jobs 1940 rows checks 0 [{'src': 'stress0', 'attn_to_ffn_consistent': None}, {'src': 'stress1', 'attn_to_ffn_consistent': None}]
+stress_1 20 jobs 1940 rows checks 0 [{'src': 'stress2', 'attn_to_ffn_consistent': None}, {'src': 'stress3', 'attn_to_ffn_consistent': None}]
+golden_L0_L2 FAIL 1940 / 1940 fault 0 cyc 40199
+stress_0 FAIL 1940 / 1940 fault 0 cyc 40199
+stress_1 FAIL 1940 / 1940 fault 0 cyc 40199
+/srv/opentallas-scratch/codex/s81-ccf-pinwindows-e0cae3a4a/tools/s81_suhc/hc_gate.py:538: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
+RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_tm-ot_s81_hc_pad_fv4fd5r2 fail
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-472412-1791958158): exit 1

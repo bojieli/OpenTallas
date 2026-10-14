@@ -1,0 +1,39 @@
+ot-run: ot-epyc4       admits   642 GB (avail 869, growth 148, headroom 48, waiters 0/0 GB) load 50/128 running 24 disk 1193 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-527759-1791958888 after 0 s
+golden_L0_L2 20 jobs 1940 rows checks 8 [{'src': 'L0', 'attn_to_ffn_consistent': True}, {'src': 'L2', 'attn_to_ffn_consistent': True}]
+stress_0 20 jobs 1940 rows checks 0 [{'src': 'stress0', 'attn_to_ffn_consistent': None}, {'src': 'stress1', 'attn_to_ffn_consistent': None}]
+stress_1 20 jobs 1940 rows checks 0 [{'src': 'stress2', 'attn_to_ffn_consistent': None}, {'src': 'stress3', 'attn_to_ffn_consistent': None}]
+golden_L0_L2 PASS 0 / 1940 fault 0 cyc 6392
+stress_0 PASS 0 / 1940 fault 0 cyc 6392
+stress_1 PASS 0 / 1940 fault 0 cyc 6392
+/srv/opentallas-scratch/codex/s81-ccf-pinwindows-56e0c23de/tools/s81_suhc/hc_gate.py:538: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
+TILE ot_s81_hc_pad_f8 ok instances 1 routed [{'FW': 1128, 'VW': 7, 'DEPTH': 8}]
+TILE ot_s81_hc_pad_fv4fd5r2 ok instances 1 routed [{'FW': 1128, 'VW': 7, 'RW': 2156, 'DEPTH': 5, 'VDEPTH': 4, 'RDEPTH': 2}]
+TILE ot_s81_hc_pad_r5 ok instances 2 routed [{'W': 2156, 'DEPTH': 5}]
+TILE ot_s81_hc_pad_meta2 ok instances 1 routed [{'VW': 8, 'EW': 512, 'DEPTH': 2}]
+TILE ot_s81_hc_ctnl_l0 ok instances 256 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'ML': 5, 'AL': 4, 'RLY': 2, 'PIN_STAGE': 1, 'CHAIN_STEP': 6}]
+TILE ot_s81_hc_ctnl_l1 ok instances 256 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'ML': 5, 'AL': 4, 'RLY': 2, 'PIN_STAGE': 1, 'CHAIN_STEP': 6}]
+TILE ot_s81_hc_ctnl_l2 ok instances 256 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'ML': 5, 'AL': 4, 'RLY': 2, 'PIN_STAGE': 1, 'CHAIN_STEP': 6}]
+TILE ot_s81_hc_ctnl_l3 ok instances 256 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'ML': 5, 'AL': 4, 'RLY': 2, 'PIN_STAGE': 1, 'CHAIN_STEP': 6}]
+TILE ot_s81_hc_crooty_w ok instances 2 routed [{'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'C': 0, 'YD': 16}, {'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'C': 2, 'YD': 16}]
+TILE ot_s81_hc_cpin ok instances 1 routed [{'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'TH': 8}]
+TILE ot_s81_hc_caq ok instances 4 routed [{}]
+TILE ot_s81_hc_crx ok instances 1 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_WR': 8, 'S_RT': 4, 'ML': 5, 'AL': 4, 'MUT': 0, 'AMUT': 0, 'RF': 4, 'RT': 1, 'RW': 2, 'YD': 16, 'HALF': 1, 'RLY': 2, 'DW': 6}]
+TILE ot_s81_hc_ccr ok instances 1 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_WR': 8, 'S_RT': 4, 'ML': 5, 'AL': 4, 'MUT': 0, 'AMUT': 0, 'RF': 4, 'RT': 1, 'RW': 2, 'YD': 16, 'HALF': 1, 'RLY': 2, 'DW': 6, 'RET_EXTRA': 0}]
+TILE ot_s81_hc_cseq ok instances 1 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_WR': 8, 'S_RT': 4, 'ML': 5, 'AL': 4, 'MUT': 0, 'AMUT': 0, 'RF': 4, 'RT': 1, 'RW': 2, 'YD': 16, 'HALF': 1, 'RLY': 2, 'DW': 6, 'PIPE': 0, 'PD': 40}]
+TILE ot_s81_hc_cntree ok instances 1 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_WR': 8, 'S_RT': 4, 'ML': 5, 'AL': 4, 'MUT': 0, 'AMUT': 0, 'RF': 4, 'RT': 1, 'RW': 2, 'YD': 16, 'HALF': 1, 'RLY': 2, 'DW': 6}]
+TILE ot_s81_hc_ctfn ok instances 64 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2}]
+TILE ot_s81_hc_ctfx ok instances 64 routed [{'S_RD': 2}]
+TILE ot_s81_hc_ctfs ok instances 64 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'RLY': 2}]
+TILE ot_s81_hc_ctpl ok instances 512 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'WIN': 2, 'WOUT': 2, 'ML': 5, 'AL': 4, 'PIN_STAGE': 1}]
+TILE ot_s81_hc_ctrn ok instances 64 routed [{'S_RT': 4, 'RDW': 2156, 'RLY': 2}]
+TILE ot_s81_hc_crootr_t ok instances 2 routed [{'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'AL': 4, 'C': 0, 'RF': 5, 'RT': 1, 'RW': 1}, {'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'AL': 4, 'C': 2, 'RF': 5, 'RT': 1, 'RW': 1}]
+TILE ot_s81_hc_crootr_f ok instances 2 routed [{'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'AL': 4, 'C': 0, 'RF': 5, 'RT': 1, 'RW': 1}, {'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'AL': 4, 'C': 2, 'RF': 5, 'RT': 1, 'RW': 1}]
+TILE ot_s81_hc_crootr_r ok instances 2 routed [{'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'AL': 4, 'C': 0, 'RF': 5, 'RT': 1, 'RW': 1}, {'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'AL': 4, 'C': 2, 'RF': 5, 'RT': 1, 'RW': 1}]
+TILE ot_s81_hc_crootr_w ok instances 2 routed [{'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'AL': 4, 'C': 0, 'RF': 5, 'RT': 1, 'RW': 1}, {'NG': 256, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_RT': 4, 'AL': 4, 'C': 2, 'RF': 5, 'RT': 1, 'RW': 1}]
+TILE ot_s81_hc_ccf ok instances 1 routed [{'NG': 256, 'D': 5120, 'NCOL': 3, 'GS': 8, 'S_RD': 2, 'S_WR': 8, 'S_RT': 4, 'ML': 5, 'AL': 4, 'FIFO_SLICE': 512, 'KEEP_POP': 1, 'Y_RELAY': 1, 'PIN_CAPTURE': 1, 'MUT': 0, 'AMUT': 0, 'RF': 5, 'RT': 1, 'RW': 2, 'YD': 16, 'HALF': 1, 'RLY': 2, 'DW': 6}]
+TILE ot_s81_hc_cryys ok instances 22 routed [{'W': 256, 'YD': 16}]
+RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_probe pass
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-527759-1791958888): exit 0

@@ -1,0 +1,58 @@
+{
+  "status": "PASS fullNG256 exact soft/hard and real CCF/pad depth mutants fail",
+  "source_rtl": "e0cae3a4a",
+  "active_probe_checker": "56e0c23de",
+  "baseline_sha256": "bd865ef20020d568b61d0ce29ed6bad5cc20ccfc805dffdb4deef4a81972bac3",
+  "measured_local_cycle_loss_percent": 0,
+  "rows": [
+    {
+      "mode": 0,
+      "run": "golden_L0_L2",
+      "rows": 1940,
+      "cycles": 6392,
+      "delta_cycles": 0,
+      "all20_job_start_done_pairs_identical": true
+    },
+    {
+      "mode": 0,
+      "run": "stress_0",
+      "rows": 1940,
+      "cycles": 6392,
+      "delta_cycles": 0,
+      "all20_job_start_done_pairs_identical": true
+    },
+    {
+      "mode": 0,
+      "run": "stress_1",
+      "rows": 1940,
+      "cycles": 6392,
+      "delta_cycles": 0,
+      "all20_job_start_done_pairs_identical": true
+    },
+    {
+      "mode": 1,
+      "run": "golden_L0_L2",
+      "rows": 1940,
+      "cycles": 6392,
+      "delta_cycles": 0,
+      "all20_job_start_done_pairs_identical": true
+    },
+    {
+      "mode": 1,
+      "run": "stress_0",
+      "rows": 1940,
+      "cycles": 6392,
+      "delta_cycles": 0,
+      "all20_job_start_done_pairs_identical": true
+    },
+    {
+      "mode": 1,
+      "run": "stress_1",
+      "rows": 1940,
+      "cycles": 6392,
+      "delta_cycles": 0,
+      "all20_job_start_done_pairs_identical": true
+    }
+  ],
+  "die_throughput_claim": false
+}

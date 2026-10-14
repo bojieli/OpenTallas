@@ -137,6 +137,7 @@ foreach pw_pin [all_registers -clock_pins] {
 if {![llength $pw_refs]} { error "PIN_WINDOW_MAX: no register clock arrivals" }
 set pw_refs [lsort -real $pw_refs]
 set pw_R [lindex $pw_refs [expr {[llength $pw_refs] / 2}]]
+if {![get_property $pw_clock is_propagated]} { set pw_R 0.0 }
 set pw_T [get_property $pw_clock period]
 # Generator uses 60 ps setup uncertainty; 180/210 are stricter than owner capture190/launch220.
 set pw_in [expr {$pw_T - 60.0 - 180.0 + $pw_R}]
