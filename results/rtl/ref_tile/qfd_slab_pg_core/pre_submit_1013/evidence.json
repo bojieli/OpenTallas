@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.slab_core.pre_submit.v1",
+ "body_sha256": "cb225804d4e1db5e276a8c9ca365d21f7b43fa1dace397d625acbb17bc4c8d07",
+ "exact": {
+  "requests": 1505,
+  "results": 1505,
+  "argmax_tops": 751,
+  "in_range": 1021,
+  "GT": 3072,
+  "GID": 47,
+  "exit": 0
+ },
+ "scale_return_mutant": {
+  "errors": 109,
+  "exit": 1
+ },
+ "host": "ot-agidock128",
+ "ot_run_units": [
+  "oth-ubuntu-3144205-1791945361",
+  "oth-ubuntu-3144210-1791945361"
+ ],
+ "latency": "unchanged original request/tag pipelines, extraction only",
+ "qualification": "functional TP8 core composition proof only; gate and routed timing still required"
+}
