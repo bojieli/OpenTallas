@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.dma_q5_gate.v1",
   "branch": "claude/el1013-dma-q5",
-  "source_commit": "7f8248f3f",
+  "source_commit": "9f15c9e01",
   "status": "RTL BENCHED; PHYSICAL/LOCAL8/BACK1 INTEGRATION INCOMPLETE",
   "flat_reference_commit": "6403f77f2",
   "port_gate": {
@@ -148,15 +148,16 @@
   ],
   "submitted": [
     "b2_dma_rq_q5_ref-q5r1-f1a05657e",
-    "b2_dma_mv_q5_ref-q5sram1-49d9fbadc",
+    "b2_dma_mv_q5_ref-q5splitface2-9f15c9e01",
     "b2_dma_serial_q5_ref-q5r2-7f8248f3f"
   ],
   "intake": {
     "rq49": "REFUSED stale unverified legacy gate cache, preserved original and replacementsourcefresh",
-    "rqf1": "RUNNING routeAGI",
-    "mv49": "RUNNING route+benchtrack",
+    "rqf1": "RUNNING",
+    "mv49": "FLOORPLAN_MARGIN W/M4 density17.2bits/um/window100 >12",
     "serial49": "FLOORPLAN_MARGIN pin_density14.5bits/um/100um E/M4 >12",
-    "serial7f": "SUBMITTED replacement E836bits+N612bits pinfaces; localgatePASS0fail0warn"
+    "serial7f": "RUNNING E836/N612 splitface replacement",
+    "mv9f": "RUNNING replacement W10.5/N10.2/S9.0pins/um, serialseamN"
   },
   "manual_mv_gate": {
     "sinks": 13749,
@@ -164,5 +165,24 @@
     "TT_spread_ps": 29.1,
     "qualification_status": "unqualifiedlegacyv1; actualearlierEface/no-goFF differsprintedcollecttimecommit",
     "evidence": "mv_earlier_eface_unqualified_gate_result.json"
+  },
+  "geometry_request": {
+    "parent": [
+      760,
+      518.4
+    ],
+    "serial_origin": [
+      267.84,
+      129.6
+    ],
+    "serial_outline": [
+      56.16,
+      86.4
+    ],
+    "core_origin": [
+      43.2,
+      237.6
+    ],
+    "status": "requested, not die approved; exact closed child pins/clock/hop/hold still owed"
   }
 }
