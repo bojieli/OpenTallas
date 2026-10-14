@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/hgi_seq_fe-s3-2d9d65aad/record/views/ot_hgi_seq_fe/ot_hgi_seq_fe.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hgi_seq_fe-s4-05bf45654/record/views/ot_hgi_seq_fe/ot_hgi_seq_fe.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 1540 of 1572 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. au_tbl_ok M5 (210.096,209.749), f_req_addr[0] M5 (210.096,209.749), f_req_addr[10] M5 (210.096,209.749))"
+  "(f) face-pin access: 1539 of 1572 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. au_tbl_ok M5 (147.408,210.277), f_rsp_data[245] M5 (147.408,210.277), f_rsp_data[246] M5 (147.408,210.277))"
  ],
- "summary": "ot_hgi_seq_fe 248.4 x 211.68: PG M5 VDD 46 stripes (98% spread, 100% cov) / VSS 46 stripes (98% spread, 100% cov); strap M6; face pins 1572 blocked-above 0 blocked-same 0; clock clk insertion 415 ps; pockets M5 0 (closed)",
+ "summary": "ot_hgi_seq_fe 248.4 x 211.68: PG M5 VDD 46 stripes (98% spread, 100% cov) / VSS 46 stripes (98% spread, 100% cov); strap M6; face pins 1572 blocked-above 0 blocked-same 0; clock clk insertion 676 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hgi_seq_fe",
   "W": 248.4,
@@ -40,24 +40,24 @@
   "face": {
    "face_pins": 1572,
    "blocked_above": 0,
-   "covered_below": 170,
+   "covered_below": 306,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 1540,
+   "band_same": 1539,
    "band_examples": [
-    "au_tbl_ok M5 (210.096,209.749)",
-    "f_req_addr[0] M5 (210.096,209.749)",
-    "f_req_addr[10] M5 (210.096,209.749)",
-    "f_req_addr[11] M5 (210.096,209.749)",
-    "f_req_addr[12] M5 (210.096,209.749)",
-    "f_req_addr[13] M5 (210.096,209.749)"
+    "au_tbl_ok M5 (147.408,210.277)",
+    "f_rsp_data[245] M5 (147.408,210.277)",
+    "f_rsp_data[246] M5 (147.408,210.277)",
+    "f_rsp_data[247] M5 (147.408,210.277)",
+    "f_rsp_data[248] M5 (147.408,210.277)",
+    "f_rsp_data[249] M5 (147.408,210.277)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 415.3,
-    "min_ps": 265.41
+    "max_ps": 675.68,
+    "min_ps": 544.57
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 1389
+    "added": 1211
    },
    "count": 0,
    "area_um2": 0,
