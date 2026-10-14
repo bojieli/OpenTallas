@@ -76,7 +76,35 @@
       },
       "parasitics": "placement-estimated",
       "characterized_TT_FF_SS_leaflibs": "NOT_EXPORTED_NO_CLOSED_VIEW",
-      "setup_margin_ps": 1.9055867994666187
+      "setup_margin_ps": 1.9055867994666187,
+      "clock_census": {
+        "mapped_text_netlist_ff": 8921,
+        "physical_db_ff": 7767,
+        "mapped_netlist_sha256": "12734ab2ad36e51aae6c3df2e77d21211cb48b54d043f15426b4392e391991ac",
+        "db_ff_types": {
+          "DFFHQNx1_ASAP7_75t_R": 7675,
+          "DFFASRHQNx1_ASAP7_75t_R": 92
+        },
+        "all_measured_per_corner": 7767,
+        "boundary_subset_per_corner": 5130,
+        "stages": {
+          "1_synth": 7767,
+          "2_1_floorplan": 7767,
+          "3_3_place_gp": 7767,
+          "3_4_place_resized": 7767,
+          "4_1_cts": 7767
+        },
+        "difference": 1154,
+        "cause": "OpenROAD 1_synth invokes eliminate_dead_logic before write_db; log removes26395 unusedinstances/nets. Exact FF name comparison shows1154 text-only and0 physical-only after normalization.",
+        "full_clock_coverage": "all7767 actualDB flipflops measured; no subset presented as8921 measured sinks",
+        "receipts": [
+          "q29_stage_census.log",
+          "q29_census_diff.json",
+          "q29_1_synth.log",
+          "q29_odb_sha256.txt"
+        ],
+        "scope": "frozen864dc sourcecompactgate only; newctx exports needfreshgate"
+      }
     },
     {
       "kit": "ot_qwen_xcache_store32_compact",

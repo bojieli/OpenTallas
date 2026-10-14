@@ -1,0 +1,29 @@
+ot-run: ot-epyc1tb     admits   404 GB (avail 631, growth 100, headroom 64, waiters 0/0 GB) load 43/128 running 11 disk 938 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1530793-1791964891 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CENSUS_STAGE 1_synth FF 7767 TYPES DFFASRHQNx1_ASAP7_75t_R 92 DFFHQNx1_ASAP7_75t_R 7675
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CENSUS_STAGE 2_1_floorplan FF 7767 TYPES DFFASRHQNx1_ASAP7_75t_R 92 DFFHQNx1_ASAP7_75t_R 7675
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CENSUS_STAGE 3_3_place_gp FF 7767 TYPES DFFASRHQNx1_ASAP7_75t_R 92 DFFHQNx1_ASAP7_75t_R 7675
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CENSUS_STAGE 3_4_place_resized FF 7767 TYPES DFFASRHQNx1_ASAP7_75t_R 92 DFFHQNx1_ASAP7_75t_R 7675
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CENSUS_STAGE 4_1_cts FF 7767 TYPES DFFASRHQNx1_ASAP7_75t_R 92 DFFHQNx1_ASAP7_75t_R 7675
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1530793-1791964891): exit 0
