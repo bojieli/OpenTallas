@@ -111,7 +111,7 @@
     },
     {
       "name": "sp_hc_s/comb/u_pd.u_f5r1",
-      "cell": "ot_s81_hc_pad_fv4fd5r1",
+      "cell": "ot_s81_hc_pad_fv4fd5r2",
       "outline": {
         "w": 138.24,
         "h": 99.36
@@ -125,30 +125,32 @@
         420.12,
         0.0
       ],
-      "kit": "s81hc_pad_fv4fd5r1_ref",
+      "kit": "s81hc_pad_fv4fd5r2_ref",
       "production_params": {
         "FW": 1128,
         "VW": 7,
         "RW": 2156,
         "DEPTH": 5,
-        "VDEPTH": 4
+        "VDEPTH": 4,
+        "RDEPTH": 2
       },
       "clock_entry": {
         "pin": "sk",
         "parent_net": "sk_leaf[1]",
         "delivery": "phi - measured boundary R for THIS child, never common entry phase"
       },
-      "status": "NO CLOSED SUCCESSOR VIEW; old reference clock cannot be used for signoff",
-      "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r1.json",
+      "status": "WAIT R2 CTS and routed successor view; old R1 R194 not applicable",
+      "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r2.json",
       "clock_delivery": null,
-      "pre_cts_clock_evidence": {
+      "target_insertion_ps": null,
+      "historical_R1_pre_cts_clock": {
         "boundary_mean_ps": 194.0,
         "max_insertion_ps": 206.3,
         "spread_ps": 24.6,
         "source_commit": "f65a06258",
         "scope": "preCTS, not routed view"
       },
-      "target_insertion_ps": 194.0
+      "submit_gate": "WAIT actual R2 clock/pin timing; no old R1 timing binding"
     },
     {
       "name": "sp_hc_s/comb/u_pd.u_f8",
@@ -282,10 +284,10 @@
     },
     {
       "name": "sp_hc_s/comb/u_pd.u_r6",
-      "cell": "ot_s81_hc_pad_r6",
+      "cell": "ot_s81_hc_pad_r5",
       "outline": {
         "w": 138.24,
-        "h": 114.48
+        "h": 99.36
       },
       "origin": {
         "x": 1040.04,
@@ -296,8 +298,11 @@
         420.12,
         490.32
       ],
-      "kit": "s81hc_pad_r6_ref",
-      "production_params": {},
+      "kit": "s81hc_pad_r5_ref",
+      "production_params": {
+        "W": 2156,
+        "DEPTH": 5
+      },
       "clock_entry": {
         "pin": "sk",
         "parent_net": "sk_leaf[5]",
@@ -307,18 +312,26 @@
       "assigned_pins": null,
       "clock_delivery": {
         "tt": {
-          "entry_relative_to_phi_ps": -188.2,
-          "boundary_spread_ps": 15.199999999999989
+          "entry_relative_to_phi_ps": -179.1,
+          "boundary_spread_ps": 12.099999999999994
         },
         "ss": {
-          "entry_relative_to_phi_ps": -245.0,
-          "boundary_spread_ps": 16.200000000000017
+          "entry_relative_to_phi_ps": -234.9,
+          "boundary_spread_ps": 12.0
         },
         "ff": {
-          "entry_relative_to_phi_ps": -154.3,
-          "boundary_spread_ps": 14.599999999999994
+          "entry_relative_to_phi_ps": -146.1,
+          "boundary_spread_ps": 12.400000000000006
         }
-      }
+      },
+      "reserved_outline": {
+        "w": 138.24,
+        "h": 114.48
+      },
+      "unused_reserved_height_um": 15.12,
+      "target_insertion_ps": 179.1,
+      "immutable_view": "physical/ref_tile/s81hc_pad_r5_ref/views/ot_s81_hc_pad_r5",
+      "immutable_lef_sha256": "7d07cdf275f03dbc56bca27e89fcc8399dffd7583ea2826216a980e031a23573"
     },
     {
       "name": "sp_hc_s/comb/u_pd.u_r5",

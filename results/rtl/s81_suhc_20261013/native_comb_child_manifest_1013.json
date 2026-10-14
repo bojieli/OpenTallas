@@ -80,14 +80,15 @@
     },
     {
       "instance": "u_pd.u_f5r1",
-      "cell": "ot_s81_hc_pad_fv4fd5r1",
-      "kit": "s81hc_pad_fv4fd5r1_ref",
+      "cell": "ot_s81_hc_pad_fv4fd5r2",
+      "kit": "s81hc_pad_fv4fd5r2_ref",
       "params": {
         "FW": 1128,
         "VW": 7,
         "RW": 2156,
         "DEPTH": 5,
-        "VDEPTH": 4
+        "VDEPTH": 4,
+        "RDEPTH": 2
       },
       "origin_um": [
         420.12,
@@ -116,12 +117,12 @@
           "boundary_spread_ps": 22.299999999999983
         }
       },
-      "view_status": "NO CLOSED SUCCESSOR VIEW; old reference clock cannot be used for signoff",
+      "view_status": "NO CLOSED R2 SUCCESSOR VIEW; prior R1 R194 is historical only",
       "clock_delivery": null,
-      "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r1.json",
+      "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r2.json",
       "clock_pin_connection": "sk_leaf[1]",
       "physical_hierarchy": "u_cb.u_pd.u_f5r1",
-      "pre_cts_clock_evidence": {
+      "historical_R1_pre_cts_clock": {
         "boundary_mean_ps": 194.0,
         "spread_ps": 24.6,
         "sinks": 7826,
@@ -243,37 +244,46 @@
     },
     {
       "instance": "u_pd.u_r6",
-      "cell": "ot_s81_hc_pad_r6",
-      "kit": "s81hc_pad_r6_ref",
-      "params": {},
+      "cell": "ot_s81_hc_pad_r5",
+      "kit": "s81hc_pad_r5_ref",
+      "params": {
+        "W": 2156,
+        "DEPTH": 5
+      },
       "origin_um": [
         420.12,
         490.32
       ],
       "outline_um": [
         138.24,
-        114.48
+        99.36
       ],
       "orient": "R0",
       "clock_port": "ck_leaf[5]",
       "clock_delivery": {
         "tt": {
-          "entry_relative_to_phi_ps": -188.2,
-          "boundary_spread_ps": 15.199999999999989
+          "entry_relative_to_phi_ps": -179.1,
+          "boundary_spread_ps": 12.099999999999994
         },
         "ss": {
-          "entry_relative_to_phi_ps": -245.0,
-          "boundary_spread_ps": 16.200000000000017
+          "entry_relative_to_phi_ps": -234.9,
+          "boundary_spread_ps": 12.0
         },
         "ff": {
-          "entry_relative_to_phi_ps": -154.3,
-          "boundary_spread_ps": 14.599999999999994
+          "entry_relative_to_phi_ps": -146.1,
+          "boundary_spread_ps": 12.400000000000006
         }
       },
-      "view": "physical/ref_tile/s81hc_pad_r6_ref/views/ot_s81_hc_pad_r6",
-      "insertion_sha256": "672c378785f2932d8848570de31d6d05d04c827220f4c5c318755e4dcc19a0fd",
+      "view": "physical/ref_tile/s81hc_pad_r5_ref/views/ot_s81_hc_pad_r5",
+      "insertion_sha256": "0b13c7acd44a09bd4765c596448198b188d20383287c4bfb0880e976b3bccb90",
       "clock_pin_connection": "sk_leaf[5]",
-      "physical_hierarchy": "u_cb.u_pd.u_r6"
+      "physical_hierarchy": "u_cb.u_pd.u_r6",
+      "reserved_outline_um": [
+        138.24,
+        114.48
+      ],
+      "unused_reserved_height_um": 15.12,
+      "view_sha256": "7d07cdf275f03dbc56bca27e89fcc8399dffd7583ea2826216a980e031a23573"
     },
     {
       "instance": "u_pd.u_r5",
@@ -571,5 +581,16 @@
   "parent_cell": "dsfd_sp_hc_comb_native",
   "parent_source": "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_hc_comb_native.sv",
   "die_trial_source": "origin/claude/el1011-s81dieit physical/s81_die_pins/v18/contract_trial.json",
-  "parent_comb_data_logic": "NONE: only leaf net wiring, static geometry functions and constant-selected clock wires"
+  "parent_comb_data_logic": "NONE: only leaf net wiring, static geometry functions and constant-selected clock wires",
+  "return_epoch_stage_count": {
+    "old_middle_R1": 1,
+    "old_downstream_R6": 6,
+    "old_final_R5": 5,
+    "new_middle_R2": 2,
+    "new_downstream_R5": 5,
+    "new_final_R5": 5,
+    "old_total": 12,
+    "new_total": 12,
+    "scope": "structural stage arithmetic; current named R2 exact/mutant gate still required"
+  }
 }
