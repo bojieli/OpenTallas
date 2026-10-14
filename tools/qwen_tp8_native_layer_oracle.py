@@ -65,7 +65,16 @@ class NativeOracleMachine(DieMachine):
             raise ValueError('unsupported dynamic attention instruction')
 
 
-def generate(image_root, snapshot, out, position=255, token=0):
+def production_tp8_fold(partials):
+    """Existing TP8 rank=4*DIE+PKG contract; preserve every FP32 add."""
+    if len(partials) != 8:
+        raise ValueError('production TP8 collective requires eight ranks')
+    return G.fold([G.add(partials[p], partials[p+4]) for p in range(4)])
+
+
+def generate(image_root, snapshot, out, position=255, token=0, collective_profile='legacy_linear8'):
+    if collective_profile not in ('legacy_linear8', 'production_tp8_two_level'):
+        raise ValueError('unknown collective reference profile')
     if TP != 8 or GROUPS != 3072 or I.SU_WIDTH != 64 or G.KV_FMT != 'fp8':
         raise ValueError('requires QWEN_O4_TP8/GROUPS3072/HDC_SU_WIDTH64/KV_FMTfp8 environment')
     if not 0 <= position < 8192:
@@ -98,6 +107,14 @@ def generate(image_root, snapshot, out, position=255, token=0):
                     ('tools/qwen_tp8_native_layer_oracle.py', 'tools/qwen_o4_layer0_oracle_w12.py',
                      'tools/hdc_golden.py', 'tools/hdc_program.py', 'tools/hdc_isa.py',
                      'tools/qwen_tp8_payload_fused_lower.py', 'tools/qwen_tp8_fused_attention_lower.py')}}
+    report['collective_reference_profile'] = collective_profile
+    report['production_tp8_collective_compatible'] = collective_profile == 'production_tp8_two_level'
+    if collective_profile == 'production_tp8_two_level':
+        report['collective_reference_contract'] = {
+            'rank': '4*DIE+PKG', 'pair': 'rank[p]+rank[p+4]',
+            'package_fold': '((P0+P1)+P2)+P3',
+            'rtl/rom/ot_coll_tp8_die.sv': sha(ROOT/'rtl/rom/ot_coll_tp8_die.sv'),
+            'tools/qwen_coll_tp8_bench.py': sha(ROOT/'tools/qwen_coll_tp8_bench.py')}
     for die, machine in enumerate(machines):
         machine.pos = position
         machine.vm[vm_map['X']:vm_map['X']+4096] = x_initial
@@ -153,7 +170,7 @@ def generate(image_root, snapshot, out, position=255, token=0):
             if descriptor['kind'] == P.COLL_ALLREDUCE:
                 lo = descriptor['vm_word']*16; hi = lo+descriptor['words']*16
                 partials = [machine.vm[lo:hi].copy() for machine in machines]
-                folded = G.fold(partials)
+                folded = production_tp8_fold(partials) if collective_profile == 'production_tp8_two_level' else G.fold(partials)
                 for die, machine in enumerate(machines):
                     machine.vm[lo:hi] = folded
                     report['ranks'][str(die)][f'collective{segment_index}_partial'] = hex_vector(out / f'die{die}/collective{segment_index}_partial.hex', partials[die])
@@ -174,8 +191,9 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--position', type=int, default=255)
     parser.add_argument('--token', type=int, default=0)
+    parser.add_argument('--collective-profile', choices=('legacy_linear8', 'production_tp8_two_level'), default='legacy_linear8')
     args = parser.parse_args()
-    generate(args.image_root, args.snapshot, args.out, args.position, args.token)
+    generate(args.image_root, args.snapshot, args.out, args.position, args.token, args.collective_profile)
 
 if __name__ == '__main__':
     main()
