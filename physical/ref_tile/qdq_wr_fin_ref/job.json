@@ -1,5 +1,5 @@
 {
- "name": "qdq_wr_fin_ref-f2-COMMIT",
+ "name": "qdq_wr_fin_ref-f2-de1974858",
  "block": "ot_hgi_qdq_wr_fin",
  "ref_tile": true,
  "owner": "Codex:qdq-write-completion-split",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "codex-qdq-write-completion-split",
-  "commit": "COMMIT"
+  "commit": "de1974858e61e1e957e3f8312f44ea5a19a30070"
  },
  "stages": {
   "bench": [
@@ -96,7 +96,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qdq_wr_fin_ref/qdq_wr_fin_ref-f2-COMMIT"
+   "to": "results/rtl/ref_tile/qdq_wr_fin_ref/qdq_wr_fin_ref-f2-de1974858"
   }
  ],
  "cycles_added": 0,
