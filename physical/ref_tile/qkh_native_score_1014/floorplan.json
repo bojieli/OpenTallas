@@ -30,20 +30,22 @@
  },
  "pins": {
   "W": [
-   "clk",
-   "rst_n"
-  ],
-  "S": [
    "sc_i",
    "sf_i",
    "gf_i",
-   "pack_fault"
+   "kt_rst_n"
   ],
   "N": [
+   "pack_fault"
+  ],
+  "E": [
    "sc_o",
    "sf_o",
-   "gf_o",
-   "kt_rst_n"
+   "gf_o"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
   ]
  },
  "clock_port": "clk",

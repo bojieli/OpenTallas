@@ -20,7 +20,17 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-CLOCKS = ('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk')
+
+
+class _Clocks(tuple):
+    """the clock pin names; qwen-split kvsys v1.1 adds the per-child clock entries of a wires-only parent frame
+    (ck_<letter>[<index>]: ck_a / ck_b / ck_c of the control tile, ck_f / ck_k / ck_s / ck_t0..15 / ck_l0..15 of the
+    native head), each its own clock input"""
+    def __contains__(self, p):
+        return tuple.__contains__(self, p) or bool(re.fullmatch(r'ck_[a-z]\d{0,2}', str(p)))
+
+
+CLOCKS = _Clocks(('ck', 'ckx', 'cks', 'cku', 'ckd', 'clk', 'hclk'))
 CORNERS = dict(  # setup, hold, clk->q base, ps/fF output slope, output transition base, ps/fF, input cap fF (ASSUMED)
     ss=dict(setup=30.0, hold=5.0, cq=75.0, k=0.9, tr=25.0, tk=1.6, cin=0.7, volt=0.63, temp=100),
     ff=dict(setup=12.0, hold=12.0, cq=32.0, k=0.35, tr=10.0, tk=0.7, cin=0.6, volt=0.77, temp=0))

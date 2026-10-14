@@ -13,7 +13,8 @@
 // Faults: the engine's (o_fu); two operand rows of a job in one cycle (the issue contract broken) -> o_fo.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_su_rxt #(
-    parameter integer S_RD = 16, RAL = 16, LM = 5, LA = 4, XMUT = 0
+    parameter integer S_RD = 16, RAL = 16, LM = 5, LA = 4, XMUT = 0,
+    parameter integer QW = 1                  // QR rope rows a cycle (2: rows j, j + 1 of a head on two read / write slots)
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -26,6 +27,9 @@ module ot_s81_su_rxt #(
     output reg  [13:0]            o_a,
     output reg  [15:0]            o_m,
     output reg  [511:0]           o_d,
+    output reg                    o_v2,       // QW 2: the second QR result row (write slot W0 + 1)
+    output reg  [13:0]            o_a2,
+    output reg  [511:0]           o_d2,
     output reg                    o_fu, o_fo, o_alive, o_den, o_rdy,
     output reg  [7:0]             o_rjid
 );
@@ -48,6 +52,7 @@ module ot_s81_su_rxt #(
     // ------------------------------------------------------------------ rows of this cycle, numbered from the announce
     // (the descriptor + parameter rows may arrive several a cycle; operand rows arrive one a cycle)
     reg  [511:0] xin;                         // the operand row of this cycle
+    reg  [511:0] xin2;                        // RB: the bias row arriving with its score row (pair issue)
     reg          xv, xtwo;
     reg  [15:0]  nrc;                         // rows of the job after this cycle
     reg  [15:0]  xidx;                        // the operand row's number from the announce
@@ -64,14 +69,14 @@ module ot_s81_su_rxt #(
     always @(*) begin : pick
         integer i;
         reg [15:0] c;
-        xin = 512'd0; xv = 1'b0; xtwo = 1'b0; xidx = 16'd0; sv = 0; sj = 0;
+        xin = 512'd0; xin2 = 512'd0; xv = 1'b0; xtwo = 1'b0; xidx = 16'd0; sv = 0; sj = 0;
         c = rc;
         for (i = 0; i < S_RD; i = i + 1)
             if (dq_v[i]) begin
                 if (c < np) begin sv[i] = 1'b1; sj[3 * i +: 3] = c[2:0]; end
                 else begin
-                    if (xv) xtwo = 1'b1;
-                    xv = 1'b1; xin = dq_d[512 * i +: 512]; xidx = c;
+                    if (xv) begin xtwo = 1'b1; xin2 = dq_d[512 * i +: 512]; end
+                    else begin xv = 1'b1; xin = dq_d[512 * i +: 512]; xidx = c; end
                 end
                 c = c + 1;
             end
@@ -92,33 +97,49 @@ module ot_s81_su_rxt #(
             for (i = 0; i < S_RD; i = i + 1)
                 for (j = 0; j < MAXP; j = j + 1)
                     if (sv[i] && sj[3 * i +: 3] == j) prow[j] <= dq_d[512 * i +: 512];
-            if (xv && jk == K_RB && !oi[0]) hold <= xin;
+            if (xv && jk == K_RB && !oi[0] && !xtwo) hold <= xin;   // legacy split pair (not issued by hctl any more)
         end
 
     // ------------------------------------------------------------------ engine
-    wire        e_v = isop && !dq_st && (jk != K_RB || oi[0]);
+    // RB: a score row and its bias row arrive in one cycle (xin = score, xin2 = bias; xtwo); a lone RB row is the legacy
+    // interleave (score held, then bias)
+    wire        rbp = (jk == K_RB) && xtwo;
+    wire        e_v = isop && !dq_st && (jk != K_RB || rbp || oi[0]);
+    wire        qrp = (QW > 1) && (jk == K_QR) && xtwo;      // QR pair: rope rows oi, oi + 1 of one head
     wire [1:0]  e_k = (jk == K_RA) ? 2'd0 : (jk == K_RB) ? 2'd1 : 2'd2;
-    wire [511:0] e_x = (jk == K_RB) ? hold : xin;
-    wire        ev, ef, erdy;
-    wire [511:0] ed;
-    ot_s81_su_rxe #(.RAL(RAL), .LM(LM), .LA(LA), .MUT(XMUT)) u_e (
-        .clk(clk), .rst_n(rst_n), .i_v(e_v), .i_k(e_k), .i_x(e_x), .i_b(xin), .i_j(oi[1:0]), .i_rdy(erdy),
-        .cos_t({prow[2], prow[1]}), .sin_t({prow[4], prow[3]}), .o_v(ev), .o_d(ed), .fault(ef));
+    wire [511:0] e_x = (jk == K_RB) ? (rbp ? xin : hold) : xin;
+    wire [511:0] e_b = (rbp || qrp) ? xin2 : xin;
+    wire        ev, ev2, ef, erdy;
+    wire [511:0] ed, ed2;
+    ot_s81_su_rxe #(.RAL(RAL), .LM(LM), .LA(LA), .MUT(XMUT), .QW(QW)) u_e (
+        .clk(clk), .rst_n(rst_n), .i_v(e_v), .i_k(e_k), .i_x(e_x), .i_b(e_b), .i_v2(qrp), .i_j(oi[1:0]), .i_rdy(erdy),
+        .cos_t({prow[2], prow[1]}), .sin_t({prow[4], prow[3]}), .o_v(ev), .o_d(ed), .o_v2(ev2), .o_d2(ed2), .fault(ef));
 
     // ------------------------------------------------------------------ result rows -> the write slot
     reg [15:0] wc;                            // result rows of the job written
     wire [13:0] wa = (jk == K_QR) ? obase + {wc[13:2], 5'd0} + 14'd28 + {12'd0, wc[1:0]} : obase + wc[13:0];
+    wire [15:0] wc1 = wc + 16'd1;
+    wire [13:0] wa2 = obase + {wc1[13:2], 5'd0} + 14'd28 + {12'd0, wc1[1:0]};
     always @(posedge clk) begin
-        o_a <= wa; o_m <= 16'hFFFF; o_d <= ed;
+        o_a <= wa; o_m <= 16'hFFFF; o_d <= ed; o_a2 <= wa2; o_d2 <= ed2;
     end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            o_v <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; wc <= 0;
+            o_v <= 0; o_v2 <= 0; o_fu <= 0; o_fo <= 0; o_alive <= 0; o_den <= 0; o_rdy <= 0; o_rjid <= 0; wc <= 0;
         end else begin
-            o_v <= ev; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= 8'd0;
-            if (dq_st) wc <= 0; else if (ev) wc <= wc + 1;
+            o_v <= ev; o_v2 <= ev2; o_alive <= 1'b1; o_den <= 1'b1; o_rdy <= 1'b0; o_rjid <= 8'd0;
+            if (dq_st) wc <= 0; else if (ev) wc <= wc + (ev2 ? 16'd2 : 16'd1);
             if (ef) o_fu <= 1'b1;
-            if ((xtwo && mine) || (e_v && !erdy)) o_fo <= 1'b1;
+            if ((xtwo && mine && jk != K_RB && !(QW > 1 && jk == K_QR)) || (e_v && !erdy)) o_fo <= 1'b1;
         end
     end
+`ifdef SU_RX_TRACE
+    reg [31:0] tr_cyc; reg tr_f, tr_e;
+    always @(posedge clk) begin
+        tr_cyc <= (!rst_n) ? 32'd0 : tr_cyc + 32'd1;
+        if (dq_st) begin tr_f <= 1'b0; tr_e <= 1'b0; end
+        if (isop && !dq_st && !tr_f) begin tr_f <= 1'b1; $display("RXTR rxt %0d first_operand_at_tile", tr_cyc); end
+        if (ev && !tr_e) begin tr_e <= 1'b1; $display("RXTR rxt %0d first_result", tr_cyc); end
+    end
+`endif
 endmodule

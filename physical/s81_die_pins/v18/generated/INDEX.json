@@ -1,0 +1,1223 @@
+{
+ "case": "v18_native207",
+ "masters": {
+  "dsfd_bf_col": {
+   "file": "dsfd_bf_col.json",
+   "pins": 842,
+   "ports": 5,
+   "instances": 1024
+  },
+  "dsfd_bf_front": {
+   "file": "dsfd_bf_front.json",
+   "pins": 2162,
+   "ports": 11,
+   "instances": 512
+  },
+  "dsfd_bk_collector_c": {
+   "file": "dsfd_bk_collector_c.json",
+   "pins": 1128,
+   "ports": 8,
+   "instances": 1
+  },
+  "dsfd_bk_selector_c": {
+   "file": "dsfd_bk_selector_c.json",
+   "pins": 1128,
+   "ports": 8,
+   "instances": 1
+  },
+  "dsfd_cfifo": {
+   "file": "dsfd_cfifo.json",
+   "pins": 1277,
+   "ports": 14,
+   "instances": 128
+  },
+  "dsfd_ctrl": {
+   "file": "dsfd_ctrl.json",
+   "pins": 42113,
+   "ports": 8,
+   "instances": 1
+  },
+  "dsfd_host_s": {
+   "file": "dsfd_host_s.json",
+   "pins": 1001,
+   "ports": 10,
+   "instances": 1
+  },
+  "dsfd_hstnh_1": {
+   "file": "dsfd_hstnh_1.json",
+   "pins": 3,
+   "ports": 3,
+   "instances": 39
+  },
+  "dsfd_hstnh_1024": {
+   "file": "dsfd_hstnh_1024.json",
+   "pins": 2049,
+   "ports": 3,
+   "instances": 81
+  },
+  "dsfd_hstnh_1027": {
+   "file": "dsfd_hstnh_1027.json",
+   "pins": 2055,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnh_1029": {
+   "file": "dsfd_hstnh_1029.json",
+   "pins": 2059,
+   "ports": 3,
+   "instances": 3
+  },
+  "dsfd_hstnh_11": {
+   "file": "dsfd_hstnh_11.json",
+   "pins": 23,
+   "ports": 3,
+   "instances": 6
+  },
+  "dsfd_hstnh_112": {
+   "file": "dsfd_hstnh_112.json",
+   "pins": 225,
+   "ports": 3,
+   "instances": 9
+  },
+  "dsfd_hstnh_128": {
+   "file": "dsfd_hstnh_128.json",
+   "pins": 257,
+   "ports": 3,
+   "instances": 9
+  },
+  "dsfd_hstnh_130": {
+   "file": "dsfd_hstnh_130.json",
+   "pins": 261,
+   "ports": 3,
+   "instances": 14
+  },
+  "dsfd_hstnh_192": {
+   "file": "dsfd_hstnh_192.json",
+   "pins": 385,
+   "ports": 3,
+   "instances": 5
+  },
+  "dsfd_hstnh_2": {
+   "file": "dsfd_hstnh_2.json",
+   "pins": 5,
+   "ports": 3,
+   "instances": 54
+  },
+  "dsfd_hstnh_2100": {
+   "file": "dsfd_hstnh_2100.json",
+   "pins": 4201,
+   "ports": 3,
+   "instances": 5
+  },
+  "dsfd_hstnh_2162": {
+   "file": "dsfd_hstnh_2162.json",
+   "pins": 4325,
+   "ports": 3,
+   "instances": 7
+  },
+  "dsfd_hstnh_28": {
+   "file": "dsfd_hstnh_28.json",
+   "pins": 57,
+   "ports": 3,
+   "instances": 9
+  },
+  "dsfd_hstnh_3": {
+   "file": "dsfd_hstnh_3.json",
+   "pins": 7,
+   "ports": 3,
+   "instances": 8
+  },
+  "dsfd_hstnh_36": {
+   "file": "dsfd_hstnh_36.json",
+   "pins": 73,
+   "ports": 3,
+   "instances": 11
+  },
+  "dsfd_hstnh_4": {
+   "file": "dsfd_hstnh_4.json",
+   "pins": 9,
+   "ports": 3,
+   "instances": 9
+  },
+  "dsfd_hstnh_4096": {
+   "file": "dsfd_hstnh_4096.json",
+   "pins": 8193,
+   "ports": 3,
+   "instances": 9
+  },
+  "dsfd_hstnh_508": {
+   "file": "dsfd_hstnh_508.json",
+   "pins": 1017,
+   "ports": 3,
+   "instances": 4
+  },
+  "dsfd_hstnh_512": {
+   "file": "dsfd_hstnh_512.json",
+   "pins": 1025,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnh_513": {
+   "file": "dsfd_hstnh_513.json",
+   "pins": 1027,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnh_514": {
+   "file": "dsfd_hstnh_514.json",
+   "pins": 1029,
+   "ports": 3,
+   "instances": 23
+  },
+  "dsfd_hstnh_515": {
+   "file": "dsfd_hstnh_515.json",
+   "pins": 1031,
+   "ports": 3,
+   "instances": 6
+  },
+  "dsfd_hstnh_53": {
+   "file": "dsfd_hstnh_53.json",
+   "pins": 107,
+   "ports": 3,
+   "instances": 9
+  },
+  "dsfd_hstnh_54": {
+   "file": "dsfd_hstnh_54.json",
+   "pins": 109,
+   "ports": 3,
+   "instances": 11
+  },
+  "dsfd_hstnh_560": {
+   "file": "dsfd_hstnh_560.json",
+   "pins": 1121,
+   "ports": 3,
+   "instances": 3
+  },
+  "dsfd_hstnh_592": {
+   "file": "dsfd_hstnh_592.json",
+   "pins": 1185,
+   "ports": 3,
+   "instances": 8
+  },
+  "dsfd_hstnh_6": {
+   "file": "dsfd_hstnh_6.json",
+   "pins": 13,
+   "ports": 3,
+   "instances": 12
+  },
+  "dsfd_hstnh_692": {
+   "file": "dsfd_hstnh_692.json",
+   "pins": 1385,
+   "ports": 3,
+   "instances": 10
+  },
+  "dsfd_hstnh_761": {
+   "file": "dsfd_hstnh_761.json",
+   "pins": 1523,
+   "ports": 3,
+   "instances": 23
+  },
+  "dsfd_hstnh_8": {
+   "file": "dsfd_hstnh_8.json",
+   "pins": 17,
+   "ports": 3,
+   "instances": 21
+  },
+  "dsfd_hstnh_85": {
+   "file": "dsfd_hstnh_85.json",
+   "pins": 171,
+   "ports": 3,
+   "instances": 31
+  },
+  "dsfd_hstnh_9": {
+   "file": "dsfd_hstnh_9.json",
+   "pins": 19,
+   "ports": 3,
+   "instances": 36
+  },
+  "dsfd_hstnv_1": {
+   "file": "dsfd_hstnv_1.json",
+   "pins": 3,
+   "ports": 3,
+   "instances": 6
+  },
+  "dsfd_hstnv_1029": {
+   "file": "dsfd_hstnv_1029.json",
+   "pins": 2059,
+   "ports": 3,
+   "instances": 6
+  },
+  "dsfd_hstnv_1090": {
+   "file": "dsfd_hstnv_1090.json",
+   "pins": 2181,
+   "ports": 3,
+   "instances": 24
+  },
+  "dsfd_hstnv_11": {
+   "file": "dsfd_hstnv_11.json",
+   "pins": 23,
+   "ports": 3,
+   "instances": 4
+  },
+  "dsfd_hstnv_12": {
+   "file": "dsfd_hstnv_12.json",
+   "pins": 25,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnv_1264": {
+   "file": "dsfd_hstnv_1264.json",
+   "pins": 2529,
+   "ports": 3,
+   "instances": 24
+  },
+  "dsfd_hstnv_130": {
+   "file": "dsfd_hstnv_130.json",
+   "pins": 261,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnv_192": {
+   "file": "dsfd_hstnv_192.json",
+   "pins": 385,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnv_2": {
+   "file": "dsfd_hstnv_2.json",
+   "pins": 5,
+   "ports": 3,
+   "instances": 42
+  },
+  "dsfd_hstnv_2100": {
+   "file": "dsfd_hstnv_2100.json",
+   "pins": 4201,
+   "ports": 3,
+   "instances": 20
+  },
+  "dsfd_hstnv_2162": {
+   "file": "dsfd_hstnv_2162.json",
+   "pins": 4325,
+   "ports": 3,
+   "instances": 14
+  },
+  "dsfd_hstnv_3": {
+   "file": "dsfd_hstnv_3.json",
+   "pins": 7,
+   "ports": 3,
+   "instances": 17
+  },
+  "dsfd_hstnv_36": {
+   "file": "dsfd_hstnv_36.json",
+   "pins": 73,
+   "ports": 3,
+   "instances": 15
+  },
+  "dsfd_hstnv_4": {
+   "file": "dsfd_hstnv_4.json",
+   "pins": 9,
+   "ports": 3,
+   "instances": 16
+  },
+  "dsfd_hstnv_48": {
+   "file": "dsfd_hstnv_48.json",
+   "pins": 97,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnv_508": {
+   "file": "dsfd_hstnv_508.json",
+   "pins": 1017,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnv_512": {
+   "file": "dsfd_hstnv_512.json",
+   "pins": 1025,
+   "ports": 3,
+   "instances": 4
+  },
+  "dsfd_hstnv_514": {
+   "file": "dsfd_hstnv_514.json",
+   "pins": 1029,
+   "ports": 3,
+   "instances": 5
+  },
+  "dsfd_hstnv_53": {
+   "file": "dsfd_hstnv_53.json",
+   "pins": 107,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnv_54": {
+   "file": "dsfd_hstnv_54.json",
+   "pins": 109,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnv_560": {
+   "file": "dsfd_hstnv_560.json",
+   "pins": 1121,
+   "ports": 3,
+   "instances": 6
+  },
+  "dsfd_hstnv_565": {
+   "file": "dsfd_hstnv_565.json",
+   "pins": 1131,
+   "ports": 3,
+   "instances": 1
+  },
+  "dsfd_hstnv_592": {
+   "file": "dsfd_hstnv_592.json",
+   "pins": 1185,
+   "ports": 3,
+   "instances": 14
+  },
+  "dsfd_hstnv_6": {
+   "file": "dsfd_hstnv_6.json",
+   "pins": 13,
+   "ports": 3,
+   "instances": 15
+  },
+  "dsfd_hstnv_692": {
+   "file": "dsfd_hstnv_692.json",
+   "pins": 1385,
+   "ports": 3,
+   "instances": 5
+  },
+  "dsfd_hstnv_761": {
+   "file": "dsfd_hstnv_761.json",
+   "pins": 1523,
+   "ports": 3,
+   "instances": 7
+  },
+  "dsfd_hstnv_8": {
+   "file": "dsfd_hstnv_8.json",
+   "pins": 17,
+   "ports": 3,
+   "instances": 14
+  },
+  "dsfd_hstnv_85": {
+   "file": "dsfd_hstnv_85.json",
+   "pins": 171,
+   "ports": 3,
+   "instances": 42
+  },
+  "dsfd_hstnv_9": {
+   "file": "dsfd_hstnv_9.json",
+   "pins": 19,
+   "ports": 3,
+   "instances": 40
+  },
+  "dsfd_l2r_vr_1x1__hs_s4_svcj": {
+   "file": "dsfd_l2r_vr_1x1__hs_s4_svcj.json",
+   "pins": 10,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_1x1__hs_s5_bk_selector": {
+   "file": "dsfd_l2r_vr_1x1__hs_s5_bk_selector.json",
+   "pins": 10,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_1x1__hs_s6_bk_collector": {
+   "file": "dsfd_l2r_vr_1x1__hs_s6_bk_collector.json",
+   "pins": 10,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_291x1__hs_hwSW": {
+   "file": "dsfd_l2r_vr_291x1__hs_hwSW.json",
+   "pins": 590,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_512x1__hq_SW": {
+   "file": "dsfd_l2r_vr_512x1__hq_SW.json",
+   "pins": 1035,
+   "ports": 8,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_564x1__hx_E": {
+   "file": "dsfd_l2r_vr_564x1__hx_E.json",
+   "pins": 1139,
+   "ports": 8,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_564x1__hx_W": {
+   "file": "dsfd_l2r_vr_564x1__hx_W.json",
+   "pins": 1139,
+   "ports": 8,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_84x1__hs_c4_svcj": {
+   "file": "dsfd_l2r_vr_84x1__hs_c4_svcj.json",
+   "pins": 176,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_84x1__hs_c5_bk_selector": {
+   "file": "dsfd_l2r_vr_84x1__hs_c5_bk_selector.json",
+   "pins": 176,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_84x1__hs_c6_bk_collector": {
+   "file": "dsfd_l2r_vr_84x1__hs_c6_bk_collector.json",
+   "pins": 176,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_8x1__hs_d4_svcj": {
+   "file": "dsfd_l2r_vr_8x1__hs_d4_svcj.json",
+   "pins": 24,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_8x1__hs_d5_bk_selector": {
+   "file": "dsfd_l2r_vr_8x1__hs_d5_bk_selector.json",
+   "pins": 24,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_8x1__hs_d6_bk_collector": {
+   "file": "dsfd_l2r_vr_8x1__hs_d6_bk_collector.json",
+   "pins": 24,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_l2r_vr_8x1__hs_hcSW": {
+   "file": "dsfd_l2r_vr_8x1__hs_hcSW.json",
+   "pins": 24,
+   "ports": 7,
+   "instances": 1
+  },
+  "dsfd_lkck_NE": {
+   "file": "dsfd_lkck_NE.json",
+   "pins": 2,
+   "ports": 2,
+   "instances": 1
+  },
+  "dsfd_lkck_NW": {
+   "file": "dsfd_lkck_NW.json",
+   "pins": 2,
+   "ports": 2,
+   "instances": 1
+  },
+  "dsfd_lkck_SE": {
+   "file": "dsfd_lkck_SE.json",
+   "pins": 2,
+   "ports": 2,
+   "instances": 3
+  },
+  "dsfd_lkck_SW": {
+   "file": "dsfd_lkck_SW.json",
+   "pins": 2,
+   "ports": 2,
+   "instances": 3
+  },
+  "dsfd_m2l_raw_512x1__hl_E0": {
+   "file": "dsfd_m2l_raw_512x1__hl_E0.json",
+   "pins": 1030,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_E1": {
+   "file": "dsfd_m2l_raw_512x1__hl_E1.json",
+   "pins": 1030,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_E2": {
+   "file": "dsfd_m2l_raw_512x1__hl_E2.json",
+   "pins": 1030,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_E3": {
+   "file": "dsfd_m2l_raw_512x1__hl_E3.json",
+   "pins": 1030,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_W0": {
+   "file": "dsfd_m2l_raw_512x1__hl_W0.json",
+   "pins": 1030,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_W1": {
+   "file": "dsfd_m2l_raw_512x1__hl_W1.json",
+   "pins": 1030,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_W2": {
+   "file": "dsfd_m2l_raw_512x1__hl_W2.json",
+   "pins": 1030,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_raw_512x1__hl_W3": {
+   "file": "dsfd_m2l_raw_512x1__hl_W3.json",
+   "pins": 1030,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_1x1__he_s4_svcj": {
+   "file": "dsfd_m2l_vr_1x1__he_s4_svcj.json",
+   "pins": 8,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_1x1__he_s5_bk_selector": {
+   "file": "dsfd_m2l_vr_1x1__he_s5_bk_selector.json",
+   "pins": 8,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_1x1__he_s6_bk_collector": {
+   "file": "dsfd_m2l_vr_1x1__he_s6_bk_collector.json",
+   "pins": 8,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_291x1__he_hwSW": {
+   "file": "dsfd_m2l_vr_291x1__he_hwSW.json",
+   "pins": 588,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_512x1__hco_SW": {
+   "file": "dsfd_m2l_vr_512x1__hco_SW.json",
+   "pins": 1032,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_512x1__hix_SW": {
+   "file": "dsfd_m2l_vr_512x1__hix_SW.json",
+   "pins": 1032,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_512x1__hqe_SW": {
+   "file": "dsfd_m2l_vr_512x1__hqe_SW.json",
+   "pins": 1032,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x10__hr_E0": {
+   "file": "dsfd_m2l_vr_68x10__hr_E0.json",
+   "pins": 1404,
+   "ports": 23,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x10__hr_E5": {
+   "file": "dsfd_m2l_vr_68x10__hr_E5.json",
+   "pins": 1404,
+   "ports": 23,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x10__hr_W0": {
+   "file": "dsfd_m2l_vr_68x10__hr_W0.json",
+   "pins": 1404,
+   "ports": 23,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x10__hr_W5": {
+   "file": "dsfd_m2l_vr_68x10__hr_W5.json",
+   "pins": 1404,
+   "ports": 23,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_E1": {
+   "file": "dsfd_m2l_vr_68x11__hr_E1.json",
+   "pins": 1544,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_E2": {
+   "file": "dsfd_m2l_vr_68x11__hr_E2.json",
+   "pins": 1544,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_E3": {
+   "file": "dsfd_m2l_vr_68x11__hr_E3.json",
+   "pins": 1544,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_E4": {
+   "file": "dsfd_m2l_vr_68x11__hr_E4.json",
+   "pins": 1544,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_W1": {
+   "file": "dsfd_m2l_vr_68x11__hr_W1.json",
+   "pins": 1544,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_W2": {
+   "file": "dsfd_m2l_vr_68x11__hr_W2.json",
+   "pins": 1544,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_W3": {
+   "file": "dsfd_m2l_vr_68x11__hr_W3.json",
+   "pins": 1544,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_68x11__hr_W4": {
+   "file": "dsfd_m2l_vr_68x11__hr_W4.json",
+   "pins": 1544,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_84x1__he_c4_svcj": {
+   "file": "dsfd_m2l_vr_84x1__he_c4_svcj.json",
+   "pins": 174,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_84x1__he_c5_bk_selector": {
+   "file": "dsfd_m2l_vr_84x1__he_c5_bk_selector.json",
+   "pins": 174,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_84x1__he_c6_bk_collector": {
+   "file": "dsfd_m2l_vr_84x1__he_c6_bk_collector.json",
+   "pins": 174,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_8x1__he_d4_svcj": {
+   "file": "dsfd_m2l_vr_8x1__he_d4_svcj.json",
+   "pins": 22,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_8x1__he_d5_bk_selector": {
+   "file": "dsfd_m2l_vr_8x1__he_d5_bk_selector.json",
+   "pins": 22,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_8x1__he_d6_bk_collector": {
+   "file": "dsfd_m2l_vr_8x1__he_d6_bk_collector.json",
+   "pins": 22,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_m2l_vr_8x1__he_hcSW": {
+   "file": "dsfd_m2l_vr_8x1__he_hcSW.json",
+   "pins": 22,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_node_LLd": {
+   "file": "dsfd_node_LLd.json",
+   "pins": 195,
+   "ports": 6,
+   "instances": 128
+  },
+  "dsfd_node_LLfd": {
+   "file": "dsfd_node_LLfd.json",
+   "pins": 196,
+   "ports": 7,
+   "instances": 896
+  },
+  "dsfd_node_LLfu": {
+   "file": "dsfd_node_LLfu.json",
+   "pins": 196,
+   "ports": 7,
+   "instances": 768
+  },
+  "dsfd_node_NNfd": {
+   "file": "dsfd_node_NNfd.json",
+   "pins": 202,
+   "ports": 7,
+   "instances": 768
+  },
+  "dsfd_node_NNfu": {
+   "file": "dsfd_node_NNfu.json",
+   "pins": 202,
+   "ports": 7,
+   "instances": 896
+  },
+  "dsfd_pq_root": {
+   "file": "dsfd_pq_root.json",
+   "pins": 136,
+   "ports": 4,
+   "instances": 128
+  },
+  "dsfd_qbank_N": {
+   "file": "dsfd_qbank_N.json",
+   "pins": 258,
+   "ports": 8,
+   "instances": 1280
+  },
+  "dsfd_qbank_S": {
+   "file": "dsfd_qbank_S.json",
+   "pins": 1210,
+   "ports": 10,
+   "instances": 1280
+  },
+  "dsfd_r2l_vr_1024x1__ha_SW": {
+   "file": "dsfd_r2l_vr_1024x1__ha_SW.json",
+   "pins": 2056,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_r2l_vr_512x1__hcol": {
+   "file": "dsfd_r2l_vr_512x1__hcol.json",
+   "pins": 1032,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_r2l_vr_512x1__hsel": {
+   "file": "dsfd_r2l_vr_512x1__hsel.json",
+   "pins": 1032,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_rly_15_NS": {
+   "file": "dsfd_rly_15_NS.json",
+   "pins": 32,
+   "ports": 4,
+   "instances": 384
+  },
+  "dsfd_rly_1_EW": {
+   "file": "dsfd_rly_1_EW.json",
+   "pins": 4,
+   "ports": 4,
+   "instances": 384
+  },
+  "dsfd_rly_1_WN": {
+   "file": "dsfd_rly_1_WN.json",
+   "pins": 4,
+   "ports": 4,
+   "instances": 512
+  },
+  "dsfd_rly_266_EN": {
+   "file": "dsfd_rly_266_EN.json",
+   "pins": 534,
+   "ports": 4,
+   "instances": 384
+  },
+  "dsfd_rly_266_EW": {
+   "file": "dsfd_rly_266_EW.json",
+   "pins": 534,
+   "ports": 4,
+   "instances": 128
+  },
+  "dsfd_rly_266_NW": {
+   "file": "dsfd_rly_266_NW.json",
+   "pins": 534,
+   "ports": 4,
+   "instances": 128
+  },
+  "dsfd_rly_266_SE": {
+   "file": "dsfd_rly_266_SE.json",
+   "pins": 534,
+   "ports": 4,
+   "instances": 128
+  },
+  "dsfd_rly_266_SN": {
+   "file": "dsfd_rly_266_SN.json",
+   "pins": 534,
+   "ports": 4,
+   "instances": 1152
+  },
+  "dsfd_rly_266_WE": {
+   "file": "dsfd_rly_266_WE.json",
+   "pins": 534,
+   "ports": 4,
+   "instances": 512
+  },
+  "dsfd_rly_266_WN": {
+   "file": "dsfd_rly_266_WN.json",
+   "pins": 534,
+   "ports": 4,
+   "instances": 128
+  },
+  "dsfd_rly_266_WS": {
+   "file": "dsfd_rly_266_WS.json",
+   "pins": 534,
+   "ports": 4,
+   "instances": 256
+  },
+  "dsfd_rly_283_EW": {
+   "file": "dsfd_rly_283_EW.json",
+   "pins": 568,
+   "ports": 4,
+   "instances": 256
+  },
+  "dsfd_rly_283_NE": {
+   "file": "dsfd_rly_283_NE.json",
+   "pins": 568,
+   "ports": 4,
+   "instances": 256
+  },
+  "dsfd_rly_283_NS": {
+   "file": "dsfd_rly_283_NS.json",
+   "pins": 568,
+   "ports": 4,
+   "instances": 256
+  },
+  "dsfd_rly_283_SE": {
+   "file": "dsfd_rly_283_SE.json",
+   "pins": 568,
+   "ports": 4,
+   "instances": 256
+  },
+  "dsfd_rly_283_SN": {
+   "file": "dsfd_rly_283_SN.json",
+   "pins": 568,
+   "ports": 4,
+   "instances": 384
+  },
+  "dsfd_rly_283_SW": {
+   "file": "dsfd_rly_283_SW.json",
+   "pins": 568,
+   "ports": 4,
+   "instances": 512
+  },
+  "dsfd_rly_283_WE": {
+   "file": "dsfd_rly_283_WE.json",
+   "pins": 568,
+   "ports": 4,
+   "instances": 384
+  },
+  "dsfd_rly_283_WN": {
+   "file": "dsfd_rly_283_WN.json",
+   "pins": 568,
+   "ports": 4,
+   "instances": 128
+  },
+  "dsfd_rly_54_WN": {
+   "file": "dsfd_rly_54_WN.json",
+   "pins": 110,
+   "ports": 4,
+   "instances": 512
+  },
+  "dsfd_rstg": {
+   "file": "dsfd_rstg.json",
+   "pins": 134,
+   "ports": 4,
+   "instances": 256
+  },
+  "dsfd_rstg_pq66": {
+   "file": "dsfd_rstg_pq66.json",
+   "pins": 134,
+   "ports": 4,
+   "instances": 128
+  },
+  "dsfd_rstg_pq68": {
+   "file": "dsfd_rstg_pq68.json",
+   "pins": 138,
+   "ports": 4,
+   "instances": 128
+  },
+  "dsfd_sp_capture_c": {
+   "file": "dsfd_sp_capture_c.json",
+   "pins": 20405,
+   "ports": 15,
+   "instances": 1
+  },
+  "dsfd_sp_collective_c": {
+   "file": "dsfd_sp_collective_c.json",
+   "pins": 20891,
+   "ports": 47,
+   "instances": 1
+  },
+  "dsfd_sp_gather_c": {
+   "file": "dsfd_sp_gather_c.json",
+   "pins": 17169,
+   "ports": 25,
+   "instances": 1
+  },
+  "dsfd_sp_hc_c": {
+   "file": "dsfd_sp_hc_c.json",
+   "pins": 20755,
+   "ports": 23,
+   "instances": 1
+  },
+  "dsfd_sp_hc_t": {
+   "file": "dsfd_sp_hc_t.json",
+   "pins": 7064,
+   "ports": 8,
+   "instances": 1
+  },
+  "dsfd_sp_pq": {
+   "file": "dsfd_sp_pq.json",
+   "pins": 4183,
+   "ports": 18,
+   "instances": 1
+  },
+  "dsfd_sp_su_c": {
+   "file": "dsfd_sp_su_c.json",
+   "pins": 17235,
+   "ports": 14,
+   "instances": 1
+  },
+  "dsfd_sp_vm": {
+   "file": "dsfd_sp_vm.json",
+   "pins": 45458,
+   "ports": 34,
+   "instances": 1
+  },
+  "dsfd_sstn_e0c0si": {
+   "file": "dsfd_sstn_e0c0si.json",
+   "pins": 1138,
+   "ports": 12,
+   "instances": 384
+  },
+  "dsfd_sstn_e0c0sinf": {
+   "file": "dsfd_sstn_e0c0sinf.json",
+   "pins": 1139,
+   "ports": 13,
+   "instances": 128
+  },
+  "dsfd_sstn_e0e1c0c1_cp1": {
+   "file": "dsfd_sstn_e0e1c0c1_cp1.json",
+   "pins": 1140,
+   "ports": 13,
+   "instances": 128
+  },
+  "dsfd_sstn_e0e1c0c1si": {
+   "file": "dsfd_sstn_e0e1c0c1si.json",
+   "pins": 1142,
+   "ports": 14,
+   "instances": 512
+  },
+  "dsfd_stage_seq_c": {
+   "file": "dsfd_stage_seq_c.json",
+   "pins": 831,
+   "ports": 28,
+   "instances": 1
+  },
+  "dsfd_stnh_1026x1": {
+   "file": "dsfd_stnh_1026x1.json",
+   "pins": 2054,
+   "ports": 4,
+   "instances": 7
+  },
+  "dsfd_stnh_10x1": {
+   "file": "dsfd_stnh_10x1.json",
+   "pins": 22,
+   "ports": 4,
+   "instances": 40
+  },
+  "dsfd_stnh_293x1": {
+   "file": "dsfd_stnh_293x1.json",
+   "pins": 588,
+   "ports": 4,
+   "instances": 10
+  },
+  "dsfd_stnh_3x1": {
+   "file": "dsfd_stnh_3x1.json",
+   "pins": 8,
+   "ports": 4,
+   "instances": 29
+  },
+  "dsfd_stnh_512x1": {
+   "file": "dsfd_stnh_512x1.json",
+   "pins": 1026,
+   "ports": 4,
+   "instances": 598
+  },
+  "dsfd_stnh_514x1": {
+   "file": "dsfd_stnh_514x1.json",
+   "pins": 1030,
+   "ports": 4,
+   "instances": 44
+  },
+  "dsfd_stnh_566x1": {
+   "file": "dsfd_stnh_566x1.json",
+   "pins": 1134,
+   "ports": 4,
+   "instances": 393
+  },
+  "dsfd_stnh_70x1": {
+   "file": "dsfd_stnh_70x1.json",
+   "pins": 142,
+   "ports": 4,
+   "instances": 53
+  },
+  "dsfd_stnh_70x10": {
+   "file": "dsfd_stnh_70x10.json",
+   "pins": 1420,
+   "ports": 40,
+   "instances": 53
+  },
+  "dsfd_stnh_70x11": {
+   "file": "dsfd_stnh_70x11.json",
+   "pins": 1562,
+   "ports": 44,
+   "instances": 48
+  },
+  "dsfd_stnh_70x2": {
+   "file": "dsfd_stnh_70x2.json",
+   "pins": 284,
+   "ports": 8,
+   "instances": 36
+  },
+  "dsfd_stnh_70x3": {
+   "file": "dsfd_stnh_70x3.json",
+   "pins": 426,
+   "ports": 12,
+   "instances": 36
+  },
+  "dsfd_stnh_70x4": {
+   "file": "dsfd_stnh_70x4.json",
+   "pins": 568,
+   "ports": 16,
+   "instances": 36
+  },
+  "dsfd_stnh_70x5": {
+   "file": "dsfd_stnh_70x5.json",
+   "pins": 710,
+   "ports": 20,
+   "instances": 36
+  },
+  "dsfd_stnh_70x6": {
+   "file": "dsfd_stnh_70x6.json",
+   "pins": 852,
+   "ports": 24,
+   "instances": 36
+  },
+  "dsfd_stnh_70x7": {
+   "file": "dsfd_stnh_70x7.json",
+   "pins": 994,
+   "ports": 28,
+   "instances": 36
+  },
+  "dsfd_stnh_70x8": {
+   "file": "dsfd_stnh_70x8.json",
+   "pins": 1136,
+   "ports": 32,
+   "instances": 36
+  },
+  "dsfd_stnh_70x9": {
+   "file": "dsfd_stnh_70x9.json",
+   "pins": 1278,
+   "ports": 36,
+   "instances": 36
+  },
+  "dsfd_stnh_86x1": {
+   "file": "dsfd_stnh_86x1.json",
+   "pins": 174,
+   "ports": 4,
+   "instances": 25
+  },
+  "dsfd_stnv_1026x1": {
+   "file": "dsfd_stnv_1026x1.json",
+   "pins": 2054,
+   "ports": 4,
+   "instances": 27
+  },
+  "dsfd_stnv_10x1": {
+   "file": "dsfd_stnv_10x1.json",
+   "pins": 22,
+   "ports": 4,
+   "instances": 137
+  },
+  "dsfd_stnv_256x1": {
+   "file": "dsfd_stnv_256x1.json",
+   "pins": 514,
+   "ports": 4,
+   "instances": 24
+  },
+  "dsfd_stnv_293x1": {
+   "file": "dsfd_stnv_293x1.json",
+   "pins": 588,
+   "ports": 4,
+   "instances": 47
+  },
+  "dsfd_stnv_3x1": {
+   "file": "dsfd_stnv_3x1.json",
+   "pins": 8,
+   "ports": 4,
+   "instances": 91
+  },
+  "dsfd_stnv_512x1": {
+   "file": "dsfd_stnv_512x1.json",
+   "pins": 1026,
+   "ports": 4,
+   "instances": 427
+  },
+  "dsfd_stnv_514x1": {
+   "file": "dsfd_stnv_514x1.json",
+   "pins": 1030,
+   "ports": 4,
+   "instances": 133
+  },
+  "dsfd_stnv_566x1": {
+   "file": "dsfd_stnv_566x1.json",
+   "pins": 1134,
+   "ports": 4,
+   "instances": 135
+  },
+  "dsfd_stnv_70x1": {
+   "file": "dsfd_stnv_70x1.json",
+   "pins": 142,
+   "ports": 4,
+   "instances": 9
+  },
+  "dsfd_stnv_70x10": {
+   "file": "dsfd_stnv_70x10.json",
+   "pins": 1420,
+   "ports": 40,
+   "instances": 102
+  },
+  "dsfd_stnv_70x11": {
+   "file": "dsfd_stnv_70x11.json",
+   "pins": 1562,
+   "ports": 44,
+   "instances": 139
+  },
+  "dsfd_stnv_86x1": {
+   "file": "dsfd_stnv_86x1.json",
+   "pins": 174,
+   "ports": 4,
+   "instances": 92
+  },
+  "dsfd_svc_c": {
+   "file": "dsfd_svc_c.json",
+   "pins": 22784,
+   "ports": 21,
+   "instances": 1
+  },
+  "dsfd_svc_join": {
+   "file": "dsfd_svc_join.json",
+   "pins": 131,
+   "ports": 5,
+   "instances": 1
+  },
+  "dsfd_wfc_stg": {
+   "file": "dsfd_wfc_stg.json",
+   "pins": 2734,
+   "ports": 21,
+   "instances": 1
+  },
+  "dsfd_xstg_515": {
+   "file": "dsfd_xstg_515.json",
+   "pins": 1032,
+   "ports": 4,
+   "instances": 2
+  },
+  "ot_s81_cfg7_seq": {
+   "file": "ot_s81_cfg7_seq.json",
+   "pins": 433,
+   "ports": 23,
+   "instances": 1792
+  }
+ }
+}
