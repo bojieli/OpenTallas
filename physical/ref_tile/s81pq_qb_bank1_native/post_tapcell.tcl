@@ -4,4 +4,6 @@ source /src/physical/ref_tile_specs/s81pq_native/qb_bank1_split_pins.tcl
 source /src/physical/ref_tile_specs/s81pq_native/qb_macro_escape.tcl
 # then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when
 # a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)
-foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }
+# signal ports only: POWER/GROUND BTerm pins (made by pdngen at 2_4) are never re-created by io_tcl or
+# place_pins; a pinless VDD/VSS BTerm makes AntennaChecker::designIsPlaced() false -> ANT-0008 at 5_1_grt
+foreach bt [[ord::get_db_block] getBTerms] { if {[$bt getSigType] in {POWER GROUND}} continue; foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }

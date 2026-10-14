@@ -11,7 +11,7 @@ import tempfile
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 SOURCES = [ROOT / p for p in (
     "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
     "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
@@ -82,7 +82,7 @@ def main() -> None:
                 "response_stall_cycles": out_stalls,
             })
             print(run.stdout.strip(), flush=True)
-    script = Path(__file__).resolve()
+    script = Path(__file__).absolute()
     rec = {
         "schema": "opentallas.hdc-v41x-idx-four-stack-gate.v1",
         "status": "pass",

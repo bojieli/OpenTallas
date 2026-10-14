@@ -31,7 +31,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR", "AQMEM", "AQMAX", "QBBANK", "QBHEAD", "FAULT"])
+    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR", "AQMEM", "AQMAX", "QBBANK", "QBHEAD", "QBPRE", "FAULT"])
     ap.add_argument("--aq-pin", action="store_true")
     ap.add_argument("--aq-split", action="store_true")
     ap.add_argument("--qb-split", action="store_true")
