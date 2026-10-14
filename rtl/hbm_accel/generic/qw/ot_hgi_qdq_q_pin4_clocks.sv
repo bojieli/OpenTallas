@@ -5,7 +5,7 @@
 // not qualify clock delivery, reset routing, parent pins or absolute placement.
 // Fixed production state LQ10/LD16/NB32/OD64/RQ16/SPAN1, frontend FACE_FF1,
 // CORE FIN1 and write PAY/FIN split. FIN boundary remains unqualified.
-module ot_hgi_qdq_q_pin4_clocks #(parameter integer MUT=0,PAYBYPASS=0) (
+module ot_hgi_qdq_q_pin4_clocks #(parameter integer MUT=0,PAYBYPASS=0,CORE_FIN_MODE=1) (
     input  wire [13:0]       leaf_clk,
     input  wire              rst_n,
     input  wire [682:0]      rec,          // {n_O, n_A, desc_O, desc_A, header, valid} (hgi_die_dispatch 'quant')
@@ -38,10 +38,17 @@ module ot_hgi_qdq_q_pin4_clocks #(parameter integer MUT=0,PAYBYPASS=0) (
     ot_hgi_qdq_fr_capture_retire u_retire(.clk(leaf_clk[9]),.rst_n(rst_n),.accept(fs1),.accept_one(one_s1),.fast_payload(fp_front),
       .general_v(gv),.general_payload(gp_front),.s3_v(s3_v),.s3(s3),.overflow(overflow));
     assign s1_v=fs1;assign nfault=gfault|ffault|overflow;
+    generate if(CORE_FIN_MODE==2)begin:g_fin2_core
+    ot_hgi_qdq_core_fin2 #(.LQ(10), .LD(16), .NB(32), .RQ(16), .SPANPIPE(1), .MUT(MUT), .FIN_BYPASS(2)) u_core (
+        .clk(leaf_clk[10]), .rst_n(rst_n), .i_s1_v(s1_v), .i_s3_v(s3_v), .i_s3(s3), .i_nfault(nfault), .ret(ret), .wrq(wrq),
+        .wrq_cr(wrq_cr), .rg_req(rg_req), .rg_gnt(rg_gnt), .asm_rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .i_pop(a_pop),
+        .i_fire(a_fire), .i_abad(a_bad_c), .i_aidle(a_idle), .o_act(c_act), .i_fin(w_fin), .i_wbad(w_bad), .i_widle(w_idle));
+    end else begin:g_original_core
     ot_hgi_qdq_core #(.LQ(10), .LD(16), .NB(32), .RQ(16), .SPANPIPE(1), .MUT(MUT), .FIN_BYPASS(1)) u_core (
         .clk(leaf_clk[10]), .rst_n(rst_n), .i_s1_v(s1_v), .i_s3_v(s3_v), .i_s3(s3), .i_nfault(nfault), .ret(ret), .wrq(wrq),
         .wrq_cr(wrq_cr), .rg_req(rg_req), .rg_gnt(rg_gnt), .asm_rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .i_pop(a_pop),
         .i_fire(a_fire), .i_abad(a_bad_c), .i_aidle(a_idle), .o_act(c_act), .i_fin(w_fin), .i_wbad(w_bad), .i_widle(w_idle));
+    end endgenerate
     ot_hgi_qdq_asm #(.LD(16), .NB(32), .OD(64), .MUT(MUT)) u_asm (
         .clk(leaf_clk[11]), .rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .hq_p0(hq[511:0]), .hq_p1(hq[1023:512]),
         .hq_p2(hq[1535:1024]), .hq_p3(hq[2047:1536]), .e_push(e_push), .e_ovf(e_ovf), .c_pop(c_pop),

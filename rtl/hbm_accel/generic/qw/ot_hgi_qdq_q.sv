@@ -88,12 +88,22 @@ module ot_hgi_qdq_q #(
 `endif
 `ifdef OT_HARD_CHILDREN
     ot_hgi_qdq_core u_core (
-`else
-    ot_hgi_qdq_core #(.LQ(LQ), .LD(LD), .NB(NB), .RQ(RQ), .SPANPIPE(SPANPIPE), .MUT(MUT), .FIN_BYPASS(FASTFIN)) u_core (
-`endif
         .clk(clk), .rst_n(rst_n), .i_s1_v(s1_v), .i_s3_v(s3_v), .i_s3(s3), .i_nfault(nfault), .ret(ret), .wrq(wrq),
         .wrq_cr(wrq_cr), .rg_req(rg_req), .rg_gnt(rg_gnt), .asm_rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .i_pop(a_pop),
         .i_fire(a_fire), .i_abad(a_bad_c), .i_aidle(a_idle), .o_act(c_act), .i_fin(w_fin), .i_wbad(w_bad), .i_widle(w_idle));
+`else
+    generate if(FASTFIN==2)begin:g_fin2_core
+    ot_hgi_qdq_core_fin2 #(.LQ(LQ), .LD(LD), .NB(NB), .RQ(RQ), .SPANPIPE(SPANPIPE), .MUT(MUT), .FIN_BYPASS(2)) u_core (
+        .clk(clk), .rst_n(rst_n), .i_s1_v(s1_v), .i_s3_v(s3_v), .i_s3(s3), .i_nfault(nfault), .ret(ret), .wrq(wrq),
+        .wrq_cr(wrq_cr), .rg_req(rg_req), .rg_gnt(rg_gnt), .asm_rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .i_pop(a_pop),
+        .i_fire(a_fire), .i_abad(a_bad_c), .i_aidle(a_idle), .o_act(c_act), .i_fin(w_fin), .i_wbad(w_bad), .i_widle(w_idle));
+    end else begin:g_original_core
+    ot_hgi_qdq_core #(.LQ(LQ), .LD(LD), .NB(NB), .RQ(RQ), .SPANPIPE(SPANPIPE), .MUT(MUT), .FIN_BYPASS(FASTFIN)) u_core (
+        .clk(clk), .rst_n(rst_n), .i_s1_v(s1_v), .i_s3_v(s3_v), .i_s3(s3), .i_nfault(nfault), .ret(ret), .wrq(wrq),
+        .wrq_cr(wrq_cr), .rg_req(rg_req), .rg_gnt(rg_gnt), .asm_rst_n(asm_rst_n), .bp_v(bp_v), .bp(bp), .i_pop(a_pop),
+        .i_fire(a_fire), .i_abad(a_bad_c), .i_aidle(a_idle), .o_act(c_act), .i_fin(w_fin), .i_wbad(w_bad), .i_widle(w_idle));
+    end endgenerate
+`endif
 `ifdef OT_HARD_CHILDREN
     ot_hgi_qdq_asm u_asm (
 `else

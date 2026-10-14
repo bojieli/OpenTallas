@@ -24,7 +24,7 @@ module tb_hgi_qdq_native_peer4 #(parameter integer MUT=0,PHASE=61,FASTFIN=0,FRON
   .peer_rq(peer_rq),.peer_rq_credit(peer_rc),.peer_rr(peer_rr),
   .peer_wq(peer_wq),.peer_wq_credit(peer_wc),.peer_wq_done(peer_done),.adapter_fault(adapter_fault));
  end else if(LEAFCLOCK!=0)begin:g_leaf_clocks
- ot_hgi_qdq_native_peer4_leafclocks #(.MUT_QDQ(MUT==2?1:0),.PAYBYPASS(PAYBYPASS)) endpoint(
+ ot_hgi_qdq_native_peer4_leafclocks #(.MUT_QDQ(MUT==2?1:0),.PAYBYPASS(PAYBYPASS),.CORE_FIN_MODE(FASTFIN==2?2:1)) endpoint(
   .cclk(cclk),.q_leaf_clk({{14{cclk[3]}},{14{cclk[2]}},{14{cclk[1]}},{14{cclk[0]}}}),.vclk(vclk),.rst_n(rst_n),.permit(q_owned),.mirror(4'b0),.rec(rec),.ret(ret),
   .rg_req(rg_req),.wg_req(wg_req),.rg_gnt(q_owned),.wg_gnt(q_owned),
   .peer_rq(peer_rq),.peer_rq_credit(peer_rc),.peer_rr(peer_rr),

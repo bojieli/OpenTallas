@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.qdq_core_fin2.v1",
+  "default_off": "FIN_BYPASS2 distinct from original0 and failedraw1",
+  "actual_failure": "COREn3 CLOSEDroute but i_finP450 and3launchportsQ247..269",
+  "new_state": "16-bit registered previous retiremask for delayeddependencyclear; same immediateq_v/head/retire semantics",
+  "safety_argument": "n_ok uses q_dep&currentq_v, so newly retired bits immediately stop blocking even while q_dep clear is deferred. Admitted source ready margin prevents slotreuse before one-edgeclear; actual assertions+wrap/hazardoracle mustprove it. No queue-entry or completion dropped.",
+  "rawFIN_path": "select complete0/1 retire-state candidates after headdecode/count/mask logic; rawFIN no longer feeds256dependency captures",
+  "output_repair": "keep independent bp_v/o_act/rg_req launchregisters under standardot_keep_regs hook, no addededge",
+  "modeled_added_FF": 16,
+  "clock_root": "sameprivateCOREroot ~4132+16 before synthesis; measuredCTSrequired",
+  "price": "immutable168 maximuminteger184; intendedsamecurrentcyclebehavior, actualfullnative anddependencyoracle required",
+  "M6_PORT_grant": false,
+  "actual_slot": null,
+  "qualification": "unqualified until sourceexact wrap/hazard/reset/mutants, actual nativeprice, CTS/route/P190Q220 andactualperpairH100"
+}
