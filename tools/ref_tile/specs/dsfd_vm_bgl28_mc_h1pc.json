@@ -1,0 +1,313 @@
+{
+ "name": "dsfd_vm_bgl28_mc_h1pc",
+ "top": "dsfd_vm_bgl28_mc",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 432.0,
+  "h": 90.72
+ },
+ "pins": {
+  "N": [
+   "i_v",
+   "i_we",
+   "i_row",
+   "i_mask",
+   "i_d",
+   "r_v",
+   "r_d",
+   "r_f",
+   "r_o"
+  ],
+  "S": [
+   "f_v",
+   "f_we",
+   "f_row",
+   "f_mask",
+   "f_d",
+   "o_v",
+   "o_d",
+   "o_f",
+   "o_o"
+  ],
+  "W": [
+   "ck",
+   "ck_req",
+   "ck_ret",
+   "rs",
+   "grp",
+   "bi"
+  ],
+  "E": []
+ },
+ "pin_ranges": {
+  "i_v": [
+   2.362,
+   3.71
+  ],
+  "f_v": [
+   2.362,
+   3.71
+  ],
+  "i_we": [
+   3.631,
+   4.991
+  ],
+  "f_we": [
+   3.631,
+   4.991
+  ],
+  "i_row": [
+   4.954,
+   23.198
+  ],
+  "f_row": [
+   4.954,
+   23.198
+  ],
+  "i_mask": [
+   23.143,
+   28.391
+  ],
+  "f_mask": [
+   23.143,
+   28.391
+  ],
+  "i_d": [
+   28.363,
+   259.502
+  ],
+  "f_d": [
+   28.363,
+   259.502
+  ],
+  "r_v": [
+   260.491,
+   261.491
+  ],
+  "o_v": [
+   260.491,
+   261.491
+  ],
+  "r_d": [
+   261.499,
+   341.231
+  ],
+  "o_d": [
+   261.499,
+   341.231
+  ],
+  "r_f": [
+   341.29,
+   342.131
+  ],
+  "o_f": [
+   341.29,
+   342.131
+  ],
+  "r_o": [
+   342.319,
+   343.103
+  ],
+  "o_o": [
+   342.319,
+   343.103
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_pins.tcl",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    235.44,
+    30.24
+   ],
+   "orient": "MY",
+   "inst": "*u_m"
+  }
+ ],
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "pin_v": "M3 M5",
+  "pin_h": "M4"
+ },
+ "job": {
+  "owner": "Codex:bgr28_native_closure",
+  "branch": "codex/s81-bgr28-native",
+  "tag": "h1pincopy",
+  "purpose": "UNQUALIFIED default-off H1 output-only registered pin copies, isolate bank fanout and expose direct QN, unchanged cycles EP2/ED3.",
+  "benches": [
+   {
+    "name": "exact_gold",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold gold",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_gold_s2",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold_s2 gold_s2",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold_s2: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_stress",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/stress stress",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_stress: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "neg_relay",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_RELAY mut_RELAY",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_RELAY: FAIL"
+   },
+   {
+    "name": "neg_id",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ID mut_ID",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ID: FAIL"
+   },
+   {
+    "name": "neg_j0",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_J0 mut_J0",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_J0: FAIL"
+   },
+   {
+    "name": "neg_order",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ORDER mut_ORDER",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ORDER: FAIL"
+   },
+   {
+    "name": "neg_mask",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_MASK mut_MASK",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_MASK: FAIL"
+   },
+   {
+    "name": "neg_hit_alignment",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=1 -GMC_PIN_COPY=1' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_HIT mut_HIT",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_HIT: FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsfd_vm_bgl28_mc/views",
+  "record_to": "results/rtl/ref_tile/dsfd_vm_bgl28_mc",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/common",
+   "tools/s81_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile_specs/ds_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_nominal.json"
+  ],
+  "hold_merge": true,
+  "notes": "UNQUALIFIED raw nominal clock prototype only; fresh H1PC actual R and true-period gates plus NP28 full native parent/cost/clock-driver/pin proofs required before diagnostic route. No compensated nearzeroR view publication."
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "structural_change": "Both H2 relocation and generic port-buffer/strong-driver probe leave source-normalized f>370ps/o>270ps. Default-off PIN_OUTPUT_COPY instantiates kept output-only complemented forwarding FFs on ck_req, preserving one-cycle H1 hop, isolating physical FF from E3 bank mux fanout. Complemented output return/state FFs expose direct QN. Generic port buffering omitted after explicit BUF/HB4/BUF; original4f hold drivers restored to reduce larger HB4 load delay. All HB4 hold cells/clock periods/skew budgets preserved. Prototype old H1 nominalR is diagnostic only; actual fresh roots required before any verdict.",
+ "defines": [
+  "OT_VMBGL_HOP1"
+ ],
+ "slot_change_request": {
+  "name": "s81-bgq-h1-east-bay-2250",
+  "old_outline": [
+   345.6,
+   90.72
+  ],
+  "new_outline": [
+   432,
+   90.72
+  ],
+  "parent_outline": [
+   453.6,
+   725.76
+  ],
+  "source": "tools/ref_tile/specs/dsfd_vm_bgl28_mc.json",
+  "reason": "actual20kflatGRTcongestion and96202cells in oldslot; SRAM servicebay keeps dense relay pins free"
+ },
+ "sdc_extra": [
+  "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_boundary.tcl"
+ ],
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_pre_gpl.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_pre_dpl.tcl",
+  "OT_OFLOP_HOPS": "8",
+  "OT_OFLOP_ALLOW_NONE": "1",
+  "OT_OFLOP_COLS": "4",
+  "OT_IOHOLD_IN": "1",
+  "OT_INHOLD_DRV": "BUFx4f_ASAP7_75t_R",
+  "DONT_BUFFER_PORTS": "1"
+ },
+ "params": {
+  "FORWARD_HOP": 1,
+  "PIN_OUTPUT_COPY": 1
+ }
+}
