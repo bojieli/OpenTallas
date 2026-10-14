@@ -1,0 +1,104 @@
+%Warning-TIMESCALEMOD: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:6:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    6 | module ot_qwen_numeric_stream_queue #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:2:8: ... Location of module with timescale
+    2 | module stream_case #(parameter integer DEPTH=8,STALL=0)(input wire clk,rst_n,output reg done=0);
+      |        ^~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:26:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                             : ... note: In instance 'tb_qwen_numeric_stream_queue.e.dut'
+   26 |  assign consume_v=ENABLE&&!fault&&count!=0;
+      |                         ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:30:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                             : ... note: In instance 'tb_qwen_numeric_stream_queue.e.dut'
+   30 |  assign core_credit=ENABLE&&!fault&&({1'b0,count}+pending_post<DEPTH);
+      |                           ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:30:50: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 5 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.e.dut'
+   30 |  assign core_credit=ENABLE&&!fault&&({1'b0,count}+pending_post<DEPTH);
+      |                                                  ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:40:17: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'tail' generates 3 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.e.dut'
+   40 |      tail<=(tail==DEPTH-1)?{PW{1'b0}}:tail+1'b1;
+      |                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:37:13: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 4 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.e.dut'
+   37 |     if(count==DEPTH&&!pop)fault<=1;
+      |             ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:43:22: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'head' generates 3 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.e.dut'
+   43 |    if(pop)head<=(head==DEPTH-1)?{PW{1'b0}}:head+1'b1;
+      |                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:45:19: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 4 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.e.dut'
+   45 |     2'b10:if(count!=DEPTH)count<=count+1'b1;
+      |                   ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:33:8: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                                                            : ... note: In instance 'tb_qwen_numeric_stream_queue.e.dut'
+   33 |   else if(ENABLE)begin
+      |        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:30:50: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 3 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.c.dut'
+   30 |  assign core_credit=ENABLE&&!fault&&({1'b0,count}+pending_post<DEPTH);
+      |                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:40:17: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'tail' generates 1 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.c.dut'
+   40 |      tail<=(tail==DEPTH-1)?{PW{1'b0}}:tail+1'b1;
+      |                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:37:13: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 2 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.c.dut'
+   37 |     if(count==DEPTH&&!pop)fault<=1;
+      |             ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:43:22: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'head' generates 1 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.c.dut'
+   43 |    if(pop)head<=(head==DEPTH-1)?{PW{1'b0}}:head+1'b1;
+      |                      ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv:45:19: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 2 bits.
+                                                                                              : ... note: In instance 'tb_qwen_numeric_stream_queue.c.dut'
+   45 |     2'b10:if(count!=DEPTH)count<=count+1'b1;
+      |                   ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:16:10: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'STALL' generates 32 bits.
+                                                                                                                 : ... note: In instance 'tb_qwen_numeric_stream_queue.d'
+   16 |   ready<=!STALL||cycle>=35&&(cycle%29<17);
+      |          ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:32:12: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'STALL' generates 32 bits.
+                                                                                                                 : ... note: In instance 'tb_qwen_numeric_stream_queue.d'
+   32 |    if(STALL&&cycle==30&&(typed_retire!=0||posts!=DEPTH))$fatal(1,"posting fabricated retirement or failed full reservation");
+      |            ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:33:75: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARXREF 'count' generates 4 bits.
+                                                                                                                  : ... note: In instance 'tb_qwen_numeric_stream_queue.d'
+   33 |    #1;if(fault)$fatal(1,"stream reservation fault");if(dut.count>peak)peak=dut.count;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:33:65: Operator GT expects 32 bits on the LHS, but LHS's VARXREF 'count' generates 4 bits.
+                                                                                                                  : ... note: In instance 'tb_qwen_numeric_stream_queue.d'
+   33 |    #1;if(fault)$fatal(1,"stream reservation fault");if(dut.count>peak)peak=dut.count;
+      |                                                                 ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:36:8: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'STALL' generates 32 bits.
+                                                                                                                : ... note: In instance 'tb_qwen_numeric_stream_queue.d'
+   36 |     if(!STALL&&DEPTH==8&&last_produce-first_produce!=WORDS-1)$fatal(1,"stream unit rate lost");
+      |        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:33:75: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARXREF 'count' generates 2 bits.
+                                                                                                                  : ... note: In instance 'tb_qwen_numeric_stream_queue.c'
+   33 |    #1;if(fault)$fatal(1,"stream reservation fault");if(dut.count>peak)peak=dut.count;
+      |                                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:33:65: Operator GT expects 32 bits on the LHS, but LHS's VARXREF 'count' generates 2 bits.
+                                                                                                                  : ... note: In instance 'tb_qwen_numeric_stream_queue.c'
+   33 |    #1;if(fault)$fatal(1,"stream reservation fault");if(dut.count>peak)peak=dut.count;
+      |                                                                 ^
+make: Entering directory '/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_late_tag'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+python3 /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vtb_qwen_numeric_stream_queue.cpp Vtb_qwen_numeric_stream_queue___024root__0.cpp Vtb_qwen_numeric_stream_queue__main.cpp Vtb_qwen_numeric_stream_queue__ConstPool__0__Slow.cpp Vtb_qwen_numeric_stream_queue___024root__Slow.cpp Vtb_qwen_numeric_stream_queue___024root__0__Slow.cpp Vtb_qwen_numeric_stream_queue__Syms__Slow.cpp > Vtb_qwen_numeric_stream_queue__ALL.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o Vtb_qwen_numeric_stream_queue__ALL.o Vtb_qwen_numeric_stream_queue__ALL.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_qwen_numeric_stream_queue__ALL.a    -pthread -lpthread -latomic   -o Vtb_qwen_numeric_stream_queue
+rm Vtb_qwen_numeric_stream_queue__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_late_tag'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.059 MB sources in 5 modules, into 0.483 MB in 7 C++ files needing 0.002 MB
+- Verilator: Walltime 4.549 s (elab=0.002, cvt=0.015, bld=4.526); cpu 0.023 s on 1 threads; allocated 36.418 MB

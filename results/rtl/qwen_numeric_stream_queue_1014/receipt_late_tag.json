@@ -1,0 +1,25 @@
+{
+  "source_sha256": "769f95de8152edfdb0e356bf11633a8ab6e57b553eadad51dc4d3081c3e3ca8e",
+  "fixture_sha256": "7efc49b0a1f9950028c765748ed87a3092e49828553749c31703ee5dfd54779b",
+  "cases": [
+    {
+      "case": "late_tag",
+      "source_sha256": "c33dae5c9b1d9c267634ab303b39f2e101fb05422c14dc8c7a561aac78a7752f",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_numeric_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_late_tag",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv"
+      ]
+    }
+  ]
+}

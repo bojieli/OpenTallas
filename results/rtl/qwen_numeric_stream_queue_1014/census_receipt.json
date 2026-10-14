@@ -1,0 +1,26 @@
+[
+  {
+    "depth": 2,
+    "Q_bits": 1208,
+    "cell_flop_bits": {
+      "$sdff": 2,
+      "$sdffe": 4,
+      "$dffe": 1202
+    },
+    "source_sha256": "769f95de8152edfdb0e356bf11633a8ab6e57b553eadad51dc4d3081c3e3ca8e",
+    "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+    "command": "read_verilog -sv ot_qwen_numeric_stream_queue.sv; chparam -set ENABLE 1 -set DEPTH 2 ot_qwen_numeric_stream_queue; hierarchy -top ot_qwen_numeric_stream_queue; proc; opt; memory_map; opt; write_json census2.json; stat"
+  },
+  {
+    "depth": 8,
+    "Q_bits": 4820,
+    "cell_flop_bits": {
+      "$sdff": 2,
+      "$sdffe": 10,
+      "$dffe": 4808
+    },
+    "source_sha256": "769f95de8152edfdb0e356bf11633a8ab6e57b553eadad51dc4d3081c3e3ca8e",
+    "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+    "command": "read_verilog -sv ot_qwen_numeric_stream_queue.sv; chparam -set ENABLE 1 -set DEPTH 8 ot_qwen_numeric_stream_queue; hierarchy -top ot_qwen_numeric_stream_queue; proc; opt; memory_map; opt; write_json census8.json; stat"
+  }
+]

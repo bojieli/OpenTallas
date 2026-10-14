@@ -1,0 +1,120 @@
+{
+  "source_sha256": "769f95de8152edfdb0e356bf11633a8ab6e57b553eadad51dc4d3081c3e3ca8e",
+  "fixture_sha256": "7efc49b0a1f9950028c765748ed87a3092e49828553749c31703ee5dfd54779b",
+  "cases": [
+    {
+      "case": "positive",
+      "source_sha256": "769f95de8152edfdb0e356bf11633a8ab6e57b553eadad51dc4d3081c3e3ca8e",
+      "exit_code": 0,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_numeric_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_positive",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/positive.sv",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "late_tag",
+      "source_sha256": "ec95177ba593d41c4516982cbfade72036936910b1fc3ca1e5bf0c9657fe5dec",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_numeric_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_late_tag",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/late_tag.sv",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "forced_query",
+      "source_sha256": "d446427efb7e6968095eb47b942923f224600add52bfef2c598495907dcce0f4",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_numeric_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_forced_query",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/forced_query.sv",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "truncated_seq",
+      "source_sha256": "6b0f2eb9ce888850c8506c2f468b9b008115813651eda13920ff12ac359f428f",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_numeric_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_truncated_seq",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/truncated_seq.sv",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "post_as_pop",
+      "source_sha256": "1263851f0090f7be622b1871a1b2eb38e84e57deaf62df29924fb5d5fbad21eb",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_numeric_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_post_as_pop",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/post_as_pop.sv",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv"
+      ]
+    },
+    {
+      "case": "unreserved_post",
+      "source_sha256": "1f889b7fbb4fb5e0a85ec7727f9c3edf6cca09b160e08daee41f8b3bb9cd855d",
+      "exit_code": 1,
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-j",
+        "1",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_qwen_numeric_stream_queue",
+        "--Mdir",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/obj_unreserved_post",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/unreserved_post.sv",
+        "/srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv"
+      ]
+    }
+  ]
+}
