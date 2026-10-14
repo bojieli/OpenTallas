@@ -40,5 +40,29 @@
     "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv": "05d15a075003c65fb84248b671a1acec741e1b195c2562c62201ab2c6a520e0f",
     "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828"
+  },
+  "onehead_edge": {
+    "status": "PASS_NO_PRICE_CLAIM",
+    "heads": 1,
+    "layers": [
+      0,
+      17,
+      35
+    ],
+    "positions": "5..12,128..143,8180..8191",
+    "descriptors": 9,
+    "beats": 864,
+    "sectors": 864,
+    "core_cycles": 30047,
+    "first": 2497,
+    "last": 29179,
+    "fences": 9,
+    "binary": "same source-exact compiled fullFDI8 binary, original driver/seed1",
+    "plusargs": {
+      "ND": 9,
+      "NP": 864,
+      "NSECTOR": 864
+    },
+    "discarded_config": "prior NP459 metadata value was incorrect though unused bybench driver; not adopted as evidence; exactNP864 rerun retained"
   }
 }
