@@ -69,13 +69,7 @@ module tb_s81_stage_seq_c8;
     initial for (i = 0; i < 8; i = i + 1) begin kdc[i] = -1; hope[i] = -1; nhe[i] = -1; end
     always @(negedge ckv) if (loaded) begin
         f_ks <= 0;
-        if (t_kd[53]) begin : kdn
-            integer m_, sl_;
-            kd_n = kd_n + 1; kdc[kd_n - 1] = cyc;
-            // KDX 7: the kit done follows the job's last NON-hop completion by a fixed latency (it never waits for the hop)
-            sl_ = (kd_n - 1) % 2; nhe[kd_n - 1] = -1;
-            for (m_ = 0; m_ < n; m_ = m_ + 1) if (port[m_] != 7 && en_[sl_][m_] > nhe[kd_n - 1]) nhe[kd_n - 1] = en_[sl_][m_];
-        end
+        if (t_kd[53]) begin kd_n = kd_n + 1; kdc[kd_n - 1] = cyc; end
         else if (nxt < NJOB && nxt == kd_n) begin
             f_ks <= {1'b1, 10'(nxt + 3), 21'(1000 + nxt), 21'(1048575 - nxt)};
             nxt = nxt + 1;
@@ -118,7 +112,10 @@ module tb_s81_stage_seq_c8;
                 integer y;
                 y = dq[e][dh[e] % 256]; dh[e] = dh[e] + 1;
                 d[e] <= {1'b1, 1'(y / NOPS), 7'(y % NOPS)};
-                if (e == 7) hope[(rt_n + (((y / NOPS) != (rt_n % 2)) ? 1 : 0))] = cyc;   // the hop op's done (job of slot y / NOPS)
+                // the job of slot y / NOPS: the oldest unretired job or the next one.  KDX 7: the kit done follows the job's
+                // last NON-hop completion by a fixed latency (it never waits for the hop op)
+                if (e == 7) hope[(rt_n + (((y / NOPS) != (rt_n % 2)) ? 1 : 0))] = cyc;
+                else nhe[(rt_n + (((y / NOPS) != (rt_n % 2)) ? 1 : 0))] = cyc;
             end
         end
         // a slot is cleared when its job RETIRES (every op incl. the hop done), not at the kit done (KDX: the kit done
@@ -130,7 +127,12 @@ module tb_s81_stage_seq_c8;
             integer pass, j;
             // KDX 7: every job's kit done precedes its hop op's completion (the kit sends the HIDDEN after its done)
             // (LAT 40 stream cycles: done pin flops + the ck -> ckv crossing; the hop is >= 1,006 cycles in every program)
-            for (j = 0; j < NJOB; j = j + 1) if (hope[j] >= 0) begin hops = hops + 1; if (!(kdc[j] >= 0 && nhe[j] >= 0 && kdc[j] <= nhe[j] + 40)) hop_bad = hop_bad + 1; end
+            for (j = 0; j < NJOB; j = j + 1) if (hope[j] >= 0) begin
+                hops = hops + 1;
+                if (!(kdc[j] >= 0 && ((nhe[j] >= 0) ? (kdc[j] <= nhe[j] + 40) : (kdc[j] < hope[j])))) begin
+                    hop_bad = hop_bad + 1; $display("KD job %0d kd=%0d last_non_hop_end=%0d hop_end=%0d", j, kdc[j], nhe[j], hope[j]);
+                end
+            end
             if (expect_fault != 0)
                 pass = t_st[5] && t_st[4:1] == 4'(expect_fault) && kd_n == 0;
             else

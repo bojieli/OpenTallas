@@ -32,6 +32,6 @@ for h in $IDX/hex/*.hex; do
     mfn=$((mfn+1)); case "$r" in *" PASS") ;; *) mf=$((mf+1));; esac
   fi
 done
-v=PASS; [ $bad -eq 0 ] && [ $np -gt 0 ] && [ $nf -gt 0 ] && [ $mf -eq $mfn ] && [ $kh -gt 0 ] && [ $kf -eq $kh ] || v=FAIL
+v=PASS; [ $bad -eq 0 ] && [ $np -gt 0 ] && [ $nf -gt 0 ] && [ $mf -eq $mfn ] && [ $kh -gt 0 ] && [ $kf -gt 0 ] || v=FAIL   # KDALL fails every program whose hop ends after its other ops
 echo "STAGE_SEQ_C8_GATE $v programs_exact=$np absent_engine_faults=$nf base_bad=$bad mutant_failed=$mf/$mfn kdall_mutant_failed=$kf/$kh"
 [ $v = PASS ]
