@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def ref(p):return {'path':str(p.relative_to(ROOT)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--candidate-dir',type=Path,required=True);a=ap.parse_args();r=a.candidate_dir.resolve()
+ ap=argparse.ArgumentParser();ap.add_argument('--candidate-dir',type=Path,required=True);ap.add_argument('--reset-dir',type=Path);a=ap.parse_args();r=a.candidate_dir.resolve()
  subprocess.run([sys.executable,str(ROOT/'tools/s81_ph/s81_ph_hrow_binding_packet.py'),'--candidate-dir',str(r)],check=True)
  d=json.load(open(r/'candidate.json'));facts=json.load(gzip.open(r/'binding_packet/closed_child_ss_ff_timing_facts.json.gz','rt'));pairs=[]
  for e in d['connectivity_edges']:
@@ -18,7 +18,7 @@ def main():
  with gzip.GzipFile(filename=str(pairfile),mode='wb',mtime=0) as f:f.write(json.dumps(pairs,separators=(',',':')).encode())
  packetpath=r/'binding_packet/packet.json';packet=json.load(open(packetpath));replay=json.load(open(r/'route_replay.json'));assert replay['actual_final_lef_pin_rebind_pass'] and replay['candidate_sha256']==ref(r/'candidate.json')['sha256']
  binding=ROOT/'results/arch/s81_vmfe_misc_2240/relay_proofs/r4_final_binding/packet.json';packet.update(status='PARTIAL PASS actual final pin geometry/capacity/replay; actual production binding and per-pair timing budgets OPEN',actual_final_master_binding=dict(**ref(binding),record_commit='32ac456ae'),all_final_etm_pair_mapping=dict(**ref(pairfile),pairs=len(pairs)),rc_budget_status='All9 final SS/FF ETMs available; actual production clock/reset producer, delivery, operating load/slew and route RC OPEN.500um is geometric ceiling only.',placement_commit='Historical88 origins/orientations5281a6feb; fresh r4 contacts/routing. No global adoption.',actual_final_pin_pair_verification=replay)
- mapped=r/'reset_classification/mapped_reset_classification.json';reset=json.load(open(mapped));packet['actual_mapped_reset_classification']=ref(mapped)
+ mapped=(a.reset_dir.resolve() if a.reset_dir else r/'reset_classification')/'mapped_reset_classification.json';reset=json.load(open(mapped));packet['actual_mapped_reset_classification']=ref(mapped)
  packet['large_relay_reset_evidence']={m:dict(active_reset_endpoints=[e['instance']+'.'+e['input_pin'] for e in reset['masters'][m]['sequential_endpoints']],routed_recovery_removal=reset['masters'][m]['routed_recovery_removal'],scope='Explicit mapped RESETN recovery/removal leaf checks; actual inter-master delivery and pulse-width qualification OPEN. Exporter labels unchanged.') for m in ['dsfd_hrow_r1025','dsfd_hrow_r2079']}
  graphpath=r/'binding_packet/source_graph.json';graph=json.load(open(graphpath))
  for link in graph['local_release']:
@@ -26,6 +26,7 @@ def main():
   link['physical_recovery_removal_status']='Actual destination leaf SS/FF checks available and positive. Inter-master source/capture clock delivery, RN wire RC and pulse width OPEN.'
  graphpath.write_text(json.dumps(graph,indent=1)+'\n')
  packet['source_graph']=ref(graphpath)
+ packet['cut_policy']=dict(full_and_54um_window_limit=.6,individual_grid_edge_limit=replay.get('edge_limit',1.0),individual_grid_edge_max=replay['edge_capacity_max'],all_individual_edges_le_060=replay.get('all_individual_edges_le_060',False),scope='Data/localRN only,80% usable M2-M7 capacity. Actual global clock/reset traffic and RC qualification OPEN.')
  packetpath.write_text(json.dumps(packet,indent=1)+'\n')
  reqpath=r/'binding_packet/rc_budget_inputs_required.json';req=json.load(open(reqpath));req.update(status='OPEN actual production source delivery and operating/RC inputs; final ETMs available',missing_relay_exports=[],pending_jobs_source=None,actual_final_relay_binding=ref(binding),actual_mapped_reset_recovery_removal_evidence=ref(mapped),reset_exporter_label_policy='Raw reset ETM setup/hold labels retained. Actual mapped cell Liberty and routed reports establish recovery/removal check kind; no inferred source delivery.');reqpath.write_text(json.dumps(req,indent=1)+'\n')
  print(json.dumps({'pairs':len(pairs),'final_pin_rebind':True,'actual_pair_budget':None,'production_driver_bound':False}))

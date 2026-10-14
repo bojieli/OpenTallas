@@ -55,7 +55,7 @@ def replay(path):
  full=[float((U[0].sum(axis=0)/C[0].sum(axis=0)).max()),float((U[1].sum(axis=1)/C[1].sum(axis=1)).max())];wins=[]
  for i,axis in enumerate([0,1]):
   a=np.apply_along_axis(lambda x:np.convolve(x,np.ones(5),'valid'),axis,U[i]);b=np.apply_along_axis(lambda x:np.convolve(x,np.ones(5),'valid'),axis,C[i]);wins.append(float((a/b).max()))
- edge=[float((U[i]/C[i]).max()) for i in range(2)];audit=dict(schema='opentallas.hrow_route_replay.v1',artifact_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),groups=len(d['routes']),full_cut_max=full,window54um_cut_max=wins,edge_capacity_max=edge,pass_=max(full+wins)<=.6 and max(edge)<=1.0,connectivity_and_normal_escapes_pass=True)
+ edge=[float((U[i]/C[i]).max()) for i in range(2)];audit=dict(schema='opentallas.hrow_route_replay.v1',artifact_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),groups=len(d['routes']),full_cut_max=full,window54um_cut_max=wins,edge_capacity_max=edge,pass_=max(full+wins)<=.6 and max(edge)<=d.get('edge_limit',1.0),edge_limit=d.get('edge_limit',1.0),full_and_window_cut_limit=.6,all_individual_edges_le_060=max(edge)<=.6,connectivity_and_normal_escapes_pass=True)
  lengths=dict(schema='opentallas.hrow_route_length_diagnostic.v1',groups_over500=len(over),bits_over500=sum(counts.values()),classes_over500=dict(counts),exact_pairs=sum(r['bits'] for r in d['routes']),actual_rc_budget_status='OPEN actual production clock/reset delivery, operating load/slew and routed wire RC budgets unassigned;500um geometric diagnostic only',worst_polyline_um=round(worst,4),over_budget_groups=over)
  return audit,lengths
 if __name__=='__main__':

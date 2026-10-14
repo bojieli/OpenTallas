@@ -129,7 +129,7 @@ class Plan:
   return fe.Plan.check_cuts(self)
 def main():
  global OUT
- ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path);ap.add_argument('--placements',type=Path);ap.add_argument('--cuts',action='store_true');ap.add_argument('--ut',type=int,choices=[1,2],default=1);ap.add_argument('--distributed-reset',action='store_true');ap.add_argument('--edge-cuts',action='store_true');ap.add_argument('--max-grid-wire-um',type=float);a=ap.parse_args();
+ ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path);ap.add_argument('--placements',type=Path);ap.add_argument('--cuts',action='store_true');ap.add_argument('--ut',type=int,choices=[1,2],default=1);ap.add_argument('--distributed-reset',action='store_true');ap.add_argument('--edge-cuts',action='store_true');ap.add_argument('--max-grid-wire-um',type=float);ap.add_argument('--edge-limit',type=float,default=1.0);ap.add_argument('--route-chunk-bits',type=int,default=8);a=ap.parse_args();
  if a.out:OUT=a.out
  OUT.mkdir(parents=True,exist_ok=True)
  p=Plan(a.ut)
@@ -143,7 +143,7 @@ def main():
  bad,rows=p.evaluate();cuts=p.cut_check() if a.cuts else None
  if a.edge_cuts:
   import s81_ph_hrow_route_cuts as RC
-  cuts=RC.check(p,W,H,dump_path=OUT/'grid_routes.json.gz',wire_limit_um=a.max_grid_wire_um)
+  cuts=RC.check(p,W,H,dump_path=OUT/'grid_routes.json.gz',wire_limit_um=a.max_grid_wire_um,edge_limit=a.edge_limit,chunk=a.route_chunk_bits)
  source=ROOT/'rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv'
  graph={'clock':dict(source_port='ck',drivers=[],sinks=[dict(instance=n,pin='ck',point_um=list(p.pin(n,'ck')[:2])) for n in p.inst],rtl_net='ck',physical_source_binding=None,status='No adopted native die clock/reset ABI; source ck is a real RTL port, physical driver not assigned'), 'asynchronous_reset':dict(source_port='rst',sinks=[dict(instance=n,pin='rst',point_um=list(p.pin(n,'rst')[:2])) for n,z in p.inst.items() if 'rst' in MP[z['master']]['pins']]),'relay_reset':dict(driver='g_hrst/u_rs.rn',sinks=[n+'.rn' for n,z in p.inst.items() if z['master'].startswith('dsfd_hrow_r')],buffer_tree=None)}
  res=dict(schema='opentallas.s81_hrow_native_candidate.v1',outline_um=[W,H],rtl_source=str(source.relative_to(ROOT)),rtl_sha256=digest(source),relay_rtl_sha256=digest(ROOT/'rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv'),parameters=dict(HARD_RELAYS=1,CQ=3,WK=7,P=2,UT=a.ut,DISTRIBUTED_RST=int(a.distributed_reset)),relay_bits=12660+6237*(a.ut-1),reset_sync_bits=(2*(24+3*(a.ut-1)) if a.distributed_reset else 2),instances=p.inst,masters={m:{k:v for k,v in z.items() if k!='pins'} for m,z in MP.items()},placement_violations=bad,hops=rows,connectivity_edges=p.edges,cuts=cuts,clock_reset_graph=graph,unmodelled=['Assigned parent boundary pins and external hops','Physical die clock source, insertion, phase and skew','Physical reset driver and buffer-tree placement','Actual per-pair operating slew/load/wire RC and clock delivery','Constant f_pid/f_bid and cd[0] tie-cell placements'],pass_=False,cut_scope='Explicit grid-edge A* candidate routes using actual landing cells and face-normal escape segments; maximum8-bit groups,10.8um grid,full/local54um cuts,M2-M7. Per-pair500um is routed geometric screening only, not extracted RC/timing.',status='OPEN diagnostic candidate; no parent closure or valid physical clock graph claimed')
