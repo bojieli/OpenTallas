@@ -219,3 +219,25 @@ candidate. The pE2/L14/L14b and NG256 HC gate use the final scripts. The
 `--su-sched` replay itself remains unmeasured; only its in-order model was
 regenerated. Generated controller source files in `sources.sha256` are generated
 artifacts, rather than missing authored source.
+
+## Registered landing and schedule gate (r8)
+
+The FD16 landing wrapper captures every incoming face bus and registers every
+outgoing request/response bus. Fresh NG256 positives are exact at L0/L2 for
+330 NORM rows, 640 H_STORE rows and 640 payload flits; the landing mutation
+corrupts all 640 output flits and all 330 NORM rows. `r8_landing_schedule_gate.json`
+binds source af72194a9 and the actual ot-run exit0.
+
+At PGAP600, the same binary with the original SU order takes adjusted xfer
+8533/17439 cycles; the searched order takes8210/16831. This isolates scheduling
+savings of323/608 cycles in the candidate bench. SU itself is still behavioral
+at program durations; this is not an accepted native cost or full die price
+qualification. Static GAIN initialization and early COEF/H_LOAD readiness must
+be proved in the steady-token native program: the artificial payload gap allows
+setup to finish before landing and is not a property of the production link.
+
+The watermark8 hand-off in this layer bench has a stall-free producer and a
+measured19-row lead. The native dispatcher adds committed-row checks, because
+watermark8 alone cannot protect reads if the producer later stalls. Its separate
+real VM/hop and landing fallback/reuse component gates are supporting component
+proofs, while full native lowering and physical adoption remain pending.
