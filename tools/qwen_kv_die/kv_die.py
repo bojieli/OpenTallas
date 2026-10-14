@@ -157,7 +157,8 @@ SPLIT_HEAD = (734.4, 855.36)
 SPLIT_FRAMES = dict(qkd_seq=(604.8, 475.2), qkd_lnk=(777.6, 129.6), qkd_embgw=(172.8, 216.0), qkd_ahub=(1175.04, 760.32))
 BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink', file='rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink.sv',
     ports=dict(rf=['r_v', 'r_d', 'r_cr'], tf=['t_v', 't_d', 't_cr'],
-               lx=['x3_v', 'x3_tag', 'x3_d', 'sd', 'kvd', 'ar_cr'], lr=['ar_v', 'ar_d', 'ds', 'pw', 'x3_cr'],
+               # bit order = the sequencer cluster's: r_x3_d = {v, tag, d} (d at bit 0), t_ar_d = {v, d 519}
+               lx=['x3_d', 'x3_tag', 'x3_v', 'sd', 'kvd', 'ar_cr'], lr=['ar_d', 'ar_v', 'ds', 'pw', 'x3_cr'],
                gq=['ea_v', 'ea_kind', 'ea_addr', 'ea_cr'], gr=['eq_v', 'eq_d'], d2df=['d2d_fault', 'd2d_cause'], flt=['fault'],
                ck=['clk'], rst_n=['rst_n']),
     classed={})
@@ -173,6 +174,25 @@ def _set_geometry(split):
     TILE_Y = dict(h0=0.0, h1=HEAD[1] + GY, c=2 * (HEAD[1] + GY), h2=2 * (HEAD[1] + GY) + ECTL[1] + GY,
                   h3=3 * (HEAD[1] + GY) + ECTL[1] + GY)
     FRAMES = dict(_BASE['FRAMES'], **(SPLIT_FRAMES if split else {}))
+    for k_, v_ in (SPLIT_BINDINGS if split else _BASE_BINDINGS).items():
+        BINDINGS[k_] = v_
+
+
+# split die masters bind to the RTL the split actually instantiates (NO STUBS, owner 08:05 PT): the hierarchical head
+# cluster, the merged-die sequencer cluster qkd_seq (native HEADS 1 / Q_FP32 1 profile = its parameters)
+_BASE_BINDINGS = {k: BINDINGS[k] for k in ('qkd_rhead', 'qkd_seq')}
+SPLIT_BINDINGS = dict(
+    qkd_rhead=dict(module='ot_qwen_nearhbm_head_hs', file='rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv',
+                   ports=dict(ti=['c_in', 'row_in', 'lt_in', 'q_valid_in', 'q_beat_in', 'q_data_in'], e=['e_in'],
+                              s=['sc_d', 'sc_f', 'g_f'], nb=['nb_d'], ck=['clk'], rst_n=['rst_n']),
+                   classed={'hid': 'by_design: die-top strap (tie cells), the head index of this tile'}),
+    qkd_seq=dict(module='qkd_seq', file='rtl/physical/ot_qwen_kv_centre_slots.sv', parameters=dict(HEADS=1, Q_FP32=1),
+                 ports=dict(lx=['r_x3_d', 'r_sd', 'r_kvd', 't_ar_cr'], lr=['t_ar_d', 't_ds', 't_pw', 'r_x3_cr'],
+                            **{f'aq_{q}': [f'aq_{q}'] for q in STACKS}, **{f'kvn_{q}': [f'kvn_{q}_d', f'kvn_{q}_cr'] for q in STACKS},
+                            **{f'kc_{q}': [f'kc_{q}'] for q in STACKS}, **{f'af_{q}': [f'af_{q}'] for q in STACKS},
+                            **{f'mf_{q}': [f'mf_{q}'] for q in STACKS},
+                            ar=['ar'], hf=['hf'], hs=['hs'], hc=['hc'], tk=['tk'], kst=['kst'], ck=['ck'], rst_n=['rst_n']),
+                 classed={}))
 
 
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
@@ -384,6 +404,10 @@ def _write_tiles(m, add):
                 # Shift the column88.56um to fit the lowest leaf inside the die.
                 if side == 'E':
                     cdc.x -= 183.72-cdc.w # grow inward, preserve controller-side gap
+                if m['geo'].get('split'):
+                    # kvs1 real case: the bound qkd_cdc_wleaf view (183.6, its own pin residues) snapped 0.216 um toward the
+                    # controller strip, which then snapped onto the PHY: keep 2.16 um of slack on the controller side
+                    cdc.x += 2.16 if side == 'W' else -2.16
                 cdc.w = cdc.h = 183.72
                 cdc.y += 88.56
                 lw = 129.6 if m['geo'].get('kv_wq_wide') else 86.4
@@ -569,11 +593,14 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     gh_ = 4 * RENG[1] + 3 * GY
     # 2 x CHAN of relay channel above and below each group: the S | N groups leave a 518-um channel between them (the
     # col-1 engines' KV rows krq / krs and the centre words cross the W / E stack walls there)
-    sp = up(max(stack_h, gh_ + 4 * CHAN), GY) if split else stack_h
-    band_shift = {'S': up((sp - stack_h) / 2, GY), 'N': up((sp - stack_h) / 2, GY) + (sp - stack_h)}
+    # every shift is a multiple of 43.2 um (= 900 / 675 / 540 tracks of M4-5 / M6-7 / M8-9 and 160 rows): a shifted band
+    # keeps the legal origin residues of its hard macros (kvs1 real case: phy_WN MY had no legal origin at a GY shift)
+    LAT = 43.2
+    sp = (stack_h + up(max(0.0, gh_ + 4 * CHAN - stack_h), LAT)) if split else stack_h
+    band_shift = {'S': up((sp - stack_h) / 2, LAT), 'N': up((sp - stack_h) / 2, LAT) + (sp - stack_h)}
     # split: the S engine groups reach down to the die edge, where the host SerDes PHY (2,400 wide, wider than the centre
     # column) sits: lift everything above it by d0
-    d0 = up(max(0.0, SERDES[2] + GY + 2 * CHAN - (edge_chan + (sp - gh_) / 2)), GY) if split else 0.0
+    d0 = up(max(0.0, SERDES[2] + GY + 2 * CHAN - (edge_chan + (sp - gh_) / 2)), LAT) if split else 0.0
     band_shift = {k: v + d0 for k, v in band_shift.items()}
     Hk = up(2 * (MARGIN+edge_chan) + 2 * sp + GY + d0, GY)
     # x layout (W half; E mirrors)
@@ -621,9 +648,13 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             ex = gx if col == 0 else gx + RENG[0] + ASTK_W + 2 * GX
             ey = gy + (e % 4) * (RENG[1] + GY)
             o_up, o_dn = ('R0', 'MX') if col == 0 else ('MY', 'R180')
+            # split (kvs1 real case: 'qkd_rhead MX y has no legal origin'): the closed head_hs view has horizontal pins on
+            # M4 AND M6, which no y-mirrored origin can put on both track grids -> v1 places every head unflipped in y
+            # (R0 / MY); the heads below the control tile then face it with their N (output) face: element-queue item
+            hd_dn = o_up if split else o_dn
             for h in range(4):
                 add(f'head_{st}_{e}_{h}', 'qkd_rhead', ex, ey + TILE_Y[f'h{h}'], HEAD[0] - SHAVE, HEAD[1] - SHAVE,
-                    o_dn if h < 2 else o_up, 'row_engine', 'attn')
+                    hd_dn if h < 2 else o_up, 'row_engine', 'attn')
             add(f'ectl_{st}_{e}', 'qkd_ectl', ex, ey + TILE_Y['c'], ECTL[0] - SHAVE, ECTL[1] - SHAVE,
                 o_up, 'row_engine', 'attn')
     # centre column: N edge stack, hub, S edge host
@@ -746,8 +777,8 @@ def _buses(m, T, r):
     else:
         add(('gq', 'kvn', W + 2, [('seq', 'gq'), ('embgw', 'gq')]))
         add(('gr', 'kvn', W + 2, [('embgw', 'gr'), ('seq', 'gr')]))
-    add(('hc', 'kvn', W + 2, [('host', 'hc'), ('seq', 'hc')]))
-    add(('tk', 'kvn', W + 2, [('seq', 'tk'), ('host', 'tk')]))
+    add(('hc', 'kvn', 182 if split else W + 2, [('host', 'hc'), ('seq', 'hc')]))      # split: the merged sequencer's hc / tk levels
+    add(('tk', 'kvn', 93 if split else W + 2, [('seq', 'tk'), ('host', 'tk')]))
     add(('host_fdi', 'd2d_fdi', FDI_SERDES, [('host', 'fdi'), ('serdes_host', 'fdi')]))
 
 
