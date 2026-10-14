@@ -21,6 +21,7 @@ module tb_qfd_band_lanes;
     parameter integer RDMEM = 0, BANR = 0;   // el1011-q-seq: DUT delay lines in SRAM (2 = one-edge-short mutant) / valid-only adder resets
     parameter integer NBP = 6;               // bands: 6 (TP4, GT 6,144) or 3 (TP8, GT 3,072)
     parameter integer BL = 0;                // el1013-qwen-small-masters r3b: 1 = each band is the slot composition qfd_sp_band_lanes (16 x qfd_bl_lane); 2 = its lnk strap wrong
+    parameter integer CDLY = 2;              // CL=1: leaf c-tap delay of the cluster (1 = the hardened leaf, selects one edge late)
     parameter integer CL = 0;                // el1013-qwen-small-masters: 1 = the tree top is the die CLUSTER cell qfd_tt_up4 (NL 16, NBP 3, LNK 1:
                                              // its two pin stages ARE the one link relay stage; no u_l1..u_l4 delay on its links, sel undelayed)
     localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK - 8 * (13 - LG);   // qwen-tp8/spine: the upper has LG-11 levels
@@ -73,13 +74,49 @@ module tb_qfd_band_lanes;
         ot_qfd_band_upper #(.NL(NL), .NB(NB), .LNK(LNK), .MUT((MUT == 2 || MUT == 3 || MUT == 4) ? MUT : 0), .LG(LG)) u_up (
             .clk(clk), .rst_n(rst_n), .pw(pw_r), .pw_v(pv_r), .lf(bf_r), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
             .tt_ty(tt), .tt_use(tu), .tt_v(tvv), .fault(uf));
+    end else if (CL == 2) begin : g_w
+        // the slot without a parent: 4 leaves through the wires-only wrapper qfd_tt_up4_w, the die's fan-out of the
+        // selects / valids / faults and its OR of the leaf faults done here; link relays exactly as the flat build
+        initial if (NL != 16 || NB != 3) begin $display("FAIL qfd_band_lanes CL=2 needs NL 16, NBP 3"); $fatal(1); end
+        ot_hdc_delay #(.W(NB*NL*32), .D(LNK)) u_l1 (.clk(clk), .rst_n(rst_n), .d(pw), .q(pw_r));
+        ot_hdc_delay #(.W(2*NB), .D(LNK), .RESET(1)) u_l2 (.clk(clk), .rst_n(rst_n), .d({pv, bf}), .q({pv_r, bf_r}));
+        ot_hdc_delay #(.W(3*NL*32), .D(LNK)) u_l3 (.clk(clk), .rst_n(rst_n), .d(tt), .q(tt_r));
+        ot_hdc_delay #(.W(2), .D(LNK), .RESET(1)) u_l4 (.clk(clk), .rst_n(rst_n), .d({tu, tvv}), .q({tu_r, tv_r2}));
+        wire [4*384-1:0] wpw, wty;
+        wire [3:0] wtu, wtv, wfl;
+        genvar wl, wb, wj;
+        for (wl = 0; wl < 4; wl = wl + 1) begin : g_s
+            for (wb = 0; wb < 3; wb = wb + 1) begin : g_b
+                for (wj = 0; wj < 4; wj = wj + 1) begin : g_j
+                    assign wpw[384*wl + 32*(wb*4 + wj) +: 32] = pw_r[512*wb + 32*(4*wl + wj) +: 32];
+                    assign tt[32*(wb*16 + 4*wl + wj) +: 32] = wty[384*wl + 32*(wb*4 + wj) +: 32];
+                end
+            end
+        end
+        // CDLY 1 = the HARDENED leaf (LNK 0, DLY 1: tb LNK must be 0): the die's control tile delivers the selects one
+        // edge later (its output station), modelled by one flop on sel / tv.  CDLY 2: the leaf at the bench's own timing.
+        reg [2*(LG+1)-1:0] wsel_st;
+        always @(posedge clk or negedge rst_n) if (!rst_n) wsel_st <= {2*(LG+1){1'b0}}; else wsel_st <= {tv[LG:0], sel[LG:0]};
+        wire [2*(LG+1)-1:0] wsel = (CDLY == 1) ? wsel_st : {tv[LG:0], sel[LG:0]};
+        initial if (CDLY == 1 && LNK != 0) begin $display("FAIL qfd_band_lanes CL=2 CDLY=1 is the hard leaf: LNK 0"); $fatal(1); end
+        qfd_tt_up4_w #(.DLY(CDLY == 1 ? 1 : 2 + LNK), .LNK(LNK), .LMUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_up (
+            .ck({4{clk}}), .rst_n({4{rst_n}}), .pw_l(wpw), .pv_l({4{pv_r}}), .lf_l({4{bf_r}}),
+            .sel_l({4{wsel}}), .ty_l(wty), .tu_l(wtu), .tv_l(wtv), .flt_l(wfl));
+        assign tu = wtu[0]; assign tvv = wtv[0]; assign uf = |wfl;
     end else begin : g_cl
         // the cluster through its own die bundles; packing as documented in rtl/physical/ot_qwen_tt_up4_cluster.sv
         wire [1537:0] cty;
         initial if (NL != 16 || NB != 3 || LNK != 1) begin $display("FAIL qfd_band_lanes CL=1 needs NL 16, NBP 3, LNK 1"); $fatal(1); end
-        qfd_tt_up4 #(.NB(NB), .LG(LG), .DLY(2), .LMUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_up (
+        // CDLY = the cluster leaves' c-tap delay.  2: the selects reach the cluster with the band words (this bench's
+        // own timing).  1 = the HARDENED leaf (kit qfd_tt_up4_leaf, die lead's cell definition): the die's control tile
+        // delivers the selects one edge later (its output station), modelled here by one flop on sel / tv.
+        reg [2*(LG+1)-1:0] sel_st;
+        always @(posedge clk or negedge rst_n) if (!rst_n) sel_st <= {2*(LG+1){1'b0}}; else sel_st <= {tv[LG:0], sel[LG:0]};
+        wire [2*(LG+1)-1:0] sel_c = (CDLY == 1) ? sel_st : {tv[LG:0], sel[LG:0]};
+        initial if (CDLY != 1 && CDLY != 2) begin $display("FAIL qfd_band_lanes CDLY must be 1 or 2"); $fatal(1); end
+        qfd_tt_up4 #(.NB(NB), .LG(LG), .DLY(CDLY), .LMUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_up (
             .ck(clk), .rst_n(rst_n), .pw0({pv[0], pw[0*512 +: 512]}), .pw1({pv[1], pw[1*512 +: 512]}), .pw2({pv[2], pw[2*512 +: 512]}),
-            .lf0(bf[0]), .lf1(bf[1]), .lf2(bf[2]), .sel({tv[LG:0], sel[LG:0]}), .ty(cty), .flt(uf));
+            .lf0(bf[0]), .lf1(bf[1]), .lf2(bf[2]), .sel(sel_c), .ty(cty), .flt(uf));
         assign tt_r = cty[1535:0];
         assign tu_r = cty[1536];
         assign tv_r2 = cty[1537];

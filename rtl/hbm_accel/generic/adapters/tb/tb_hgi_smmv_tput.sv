@@ -19,7 +19,41 @@
 // record writes: A < 200,000 words, O >= 200,000).  +define+XQ=n: engine loads in flight.  +define+MUT_B8: BW8 mutant.
 // Per-record trace (cluster 0): xi = x stage (load issued / XR hit), xd = x done, is = SM issue done, a0 = real SM 0
 // done (arrive), pd = publication done.
+// XP (+define+XP, owner 10-13 redesign step 5): the x loader of every cluster is the NEW x plane ot_hgi_xp_load (wave
+// reader + feed-forward quantise / pack; block-dot AND BF16 x on the 8-lane slice group) and the real SMs take their x
+// writes from the registered spine ot_hgi_xp_spine (SM s taps stage s).  Needs WVM8 (the slice model).  Mutants:
+// MUT_WDROP (a wave never reaches the pack stage), MUT_BEAT (a beat never leaves), MUT_LANE (waves land one lane off).
+// +define+XSPD=n: n relay stages between the pack stage and SM 0 (placement: slice 7 - 17 mm from the SMs).
 module tb_hgi_smmv_tput;
+`ifndef XSPD
+`define XSPD 0
+`endif
+`ifndef XCR
+`define XCR 16
+`endif
+`ifndef SMMV_DE
+`define SMMV_DE 0
+`endif
+`ifdef MUT_DE
+    localparam integer MDE = 1;      // el1013: the start pass does not wait for the x (must FAIL: stale x under the op)
+`else
+    localparam integer MDE = 0;
+`endif
+`ifdef MUT_WDROP
+    localparam integer MWD = 1;
+`else
+    localparam integer MWD = 0;
+`endif
+`ifdef MUT_BEAT
+    localparam integer MBT = 1;
+`else
+    localparam integer MBT = 0;
+`endif
+`ifdef MUT_LANE
+    localparam integer MLN = 1;
+`else
+    localparam integer MLN = 0;
+`endif
 `ifdef MUT_ROW
     localparam integer MW = 1;
 `else
@@ -131,7 +165,7 @@ module tb_hgi_smmv_tput;
         wire [39:0] x_base, pub_base; wire [20:0] x_n; wire [3:0] x_p, pub_p; wire [31:0] x_stride, pub_stride;
         wire [1:0] x_space, x_fmt, pub_space; wire pub_bf16; wire [19:0] pub_m; wire [12:0] pub_q; wire [6:0] x_xb;
         wire l_en; wire [6:0] l_addr, l_grp; wire [2047:0] l_data;
-        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .MUT_XRS(MXR), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
+        ot_hgi_smmv #(.NSM(NSL), .W(`WIN), .XQ(`XQ), .MUT_SLOT(MS), .MUT_EARLY(ME), .MUT_XRS(MXR), .CR(CRB), .AD(`TB_AD), .MUT_CRDL(CRDL), .DE(`SMMV_DE), .MUT_DE(MDE)) u_a (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
             .rec_v(rec_v && rec_rdy), .rec_rdy(c_rdy[cl]),
             .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_b(cur[639:384]), .rec_o(cur[895:640]), .rec_n_a(cur[916:896]),
             .rec_n_b(cur[937:917]), .rec_done(c_done[cl]), .rec_fault(c_fault[cl]), .halted(c_halt[cl]), .x_v(x_v), .x_rdy(x_rdy),
@@ -141,7 +175,14 @@ module tb_hgi_smmv_tput;
             .pub_done(pub_done), .pub_fault(pub_fault), .sm_cmd(sm_cmd[cl*NSL*CW +: NSL*CW]), .sm_ret(sm_ret[cl*NSL*4 +: NSL*4]),
             .sm_cg_en(), .dbg_iss_seq(c_iss[cl*3 +: 3]), .sm_cr(rv[cl*NSL +: NSL]));
         wire rg_req; reg rg_gnt = 0; wire [32*16-1:0] wrq; reg [31:0] wrq_cr = 0; reg [32*257-1:0] wrr = 0;
-        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (.clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
+`ifdef XPT
+        ot_hgi_xp_load_t #(.NXC(NXC), .CR(`XCR), .XDD(`XSPD + 12), .MUT_WDROP(MWD), .MUT_BEAT(MBT), .MUT_LANE(MLN)) u_x (
+`elsif XP
+        ot_hgi_xp_load #(.NXC(NXC), .CR(`XCR), .XDD(`XSPD + 12), .MUT_WDROP(MWD), .MUT_BEAT(MBT), .MUT_LANE(MLN)) u_x (
+`else
+        ot_hgi_sm_xload #(.NXC(NXC), .BD(XB), .BW8(BW), .MUT_B8(MB8), .MUT_B8E(MB8E)) u_x (
+`endif
+            .clk(clk), .rst_n(rst_n), .x_v(x_v), .x_rdy(x_rdy), .x_base(x_base),
             .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space), .x_fmt(x_fmt), .x_xb(x_xb), .x_done(x_done),
             .x_fault(x_fault), .xw_en(l_en), .xw_addr(l_addr), .xw_grp(l_grp), .xw_data(l_data),
             .vmq(xq[cl*NXC*338 +: NXC*338]), .vmr(xr[cl*NXC*274 +: NXC*274]),
@@ -175,6 +216,18 @@ module tb_hgi_smmv_tput;
         if (cl == 0) begin : g_xw
             assign xw_en = l_en; assign xw_addr = l_addr; assign xw_grp = l_grp; assign xw_data = l_data;
         end
+        // +SMT=1: engine issue trace of cluster 0 (every change of the issue / publication pointers and the pending masks)
+        if (cl == 0) begin : g_et
+            integer smt_e; initial if (!$value$plusargs("SMT=%d", smt_e)) smt_e = 0;
+            reg [63:0] et_q = 0;
+            wire [63:0] et = {u_a.tail[3:0], u_a.xp[3:0], u_a.ip[3:0], u_a.rh[3:0], u_a.ppc[3:0], u_a.pdc[3:0], u_a.go, u_a.fq_v, u_a.fld_v, u_a.pub_v,
+                              u_a.st_pend[7:0], u_a.d_pend[7:0], u_a.e_xd[7:0], u_a.xn[1:0]} ^ {60'd0, u_a.dp[3:0]} ^ {59'd0, u_a.dgo, 4'd0};
+            always @(posedge clk) if (rst_n && smt_e != 0) begin
+                et_q <= et;
+                if (et != et_q) $display("SME %0d tail %0d xp %0d ip %0d rh %0d ppc %0d pdc %0d go %b fq %b fld %b pub_v %b st_pend %b d_pend %b e_xd %b xn %0d dp %0d dgo %b",
+                    cyc, u_a.tail, u_a.xp, u_a.ip, u_a.rh, u_a.ppc, u_a.pdc, u_a.go, u_a.fq_v, u_a.fld_v, u_a.pub_v, u_a.st_pend, u_a.d_pend, u_a.e_xd, u_a.xn, u_a.dp, u_a.dgo);
+            end
+        end
         ot_hgi_smmv_pub #(.NSM(NSL), .NPC(NPC), .W(`WIN), .MUT_ROW(MW)) u_p (.clk(clk), .rst_n(rst_n), .sm_base(5'(cl * NSL)),
             .pub_v(pub_v), .pub_rdy(pub_rdy),
             .pub_base(pub_base), .pub_stride(pub_stride), .pub_space(pub_space), .pub_m(pub_m), .pub_q(pub_q), .pub_p(pub_p), .pub_bf16(pub_bf16),
@@ -195,6 +248,23 @@ module tb_hgi_smmv_tput;
     end endgenerate
     ot_hgi_vm_unit #(.NC(NCL * (NXC + NPC) + 1)) u_vm (.clk(clk), .rst_n(rst_n), .cq({tq, pq, xq}), .cr({tr, pr, xr}), .status());
     integer lines_req [0:NREAL-1];
+    wire [NREAL-1:0] sxw_en; wire [NREAL*7-1:0] sxw_addr, sxw_grp; wire [NREAL*2048-1:0] sxw_data;
+`ifdef XP
+    wire [7:0] sp_en; wire [8*7-1:0] sp_addr, sp_grp; wire [8*2048-1:0] sp_data;
+`ifdef XPT
+    ot_hgi_xp_spine_t #(.NS(8), .PRE(`XSPD)) u_spine (
+`else
+    ot_hgi_xp_spine #(.NS(8), .PRE(`XSPD)) u_spine (
+`endif
+       .clk(clk), .rst(!rst_n), .i_en(xw_en), .i_addr(xw_addr), .i_grp(xw_grp), .i_data(xw_data),
+        .o_en(sp_en), .o_addr(sp_addr), .o_grp(sp_grp), .o_data(sp_data));
+    assign sxw_en = sp_en[NREAL-1:0]; assign sxw_addr = sp_addr[NREAL*7-1:0]; assign sxw_grp = sp_grp[NREAL*7-1:0];
+    assign sxw_data = sp_data[NREAL*2048-1:0];
+    integer n_beat = 0;
+    always @(posedge clk) if (rst_n && xw_en) n_beat = n_beat + 1;
+`else
+    assign sxw_en = {NREAL{xw_en}}; assign sxw_addr = {NREAL{xw_addr}}; assign sxw_grp = {NREAL{xw_grp}}; assign sxw_data = {NREAL{xw_data}};
+`endif
     wire [NREAL-1:0] arr_real;
     // record being issued (the engine's issue pointer advances once a record)
     integer rec_iss = 0; reg [2:0] iss_q = 0;
@@ -217,7 +287,7 @@ module tb_hgi_smmv_tput;
             .start_ready(start_ready), .op_rows(c[9:1]), .op_c(c[29:14]), .op_g(c[37:30]), .op_gs(c[38]),
             .op_fmt(c[40:39]), .op_xb(c[47:41]), .busy(busy), .d_valid(c[48]), .d_ready(d_ready), .d_base(c[80:49]),
             .d_lines(c[104:81]), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr), .req_tag(req_tag), .rsp_v(rsp_v),
-            .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data),
+            .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(sxw_en[s]), .xw_addr(sxw_addr[s*7 +: 7]), .xw_grp(sxw_grp[s*7 +: 7]), .xw_data(sxw_data[s*2048 +: 2048]),
             .rv(rv[s]), .rrow(rrow8), .rdata(rdata[s*256 +: 256]), .fault(fault_s), .arrive(arrive),
             .release_in(c[105]), .released(released));
         // HBM line model: in-order, ready at max(request + LAT, previous ready + LB x 32 / BW) (milli-cycles)
@@ -239,6 +309,32 @@ module tb_hgi_smmv_tput;
                 qh = qh + 1;
             end
             if (rst_n && fault_s) begin $display("ERR SM %0d fault", s); errors = errors + 1; end
+        end
+        // +SMT=1: event trace of real SM 0 (start / descriptor / first + last request and response / first row / arrive)
+        integer smt, n_rq = 0, n_rs = 0, n_rv = 0; reg arr_t = 0;
+        initial if (!$value$plusargs("SMT=%d", smt)) smt = 0;
+        always @(posedge clk) if (rst_n && smt != 0 && s == 0) begin
+            arr_t <= arrive;
+            if (c[0] && start_ready) $display("SMT %0d START rows %0d fmt %0d xb %0d | rq %0d rs %0d rv %0d busy %b", cyc, c[9:1], c[40:39], c[47:41], n_rq, n_rs, n_rv, busy);
+            if (c[48] && d_ready) $display("SMT %0d DESC lines %0d | rq %0d rs %0d", cyc, c[104:81], n_rq, n_rs);
+            if (arrive != arr_t) $display("SMT %0d ARRIVE | rq %0d rs %0d rv %0d", cyc, n_rq, n_rs, n_rv);
+            if (req_v) n_rq = n_rq + 1; if (rsp_v) n_rs = n_rs + 1; if (rv[s]) n_rv = n_rv + 1;
+            if (req_v && (n_rq % 8) == 0) $display("SMT %0d RQ %0d", cyc, n_rq);
+            if (rsp_v && (n_rs % 8) == 0) $display("SMT %0d RS %0d", cyc, n_rs);
+            if (rv[s]) $display("SMT %0d ROW %0d", cyc, n_rv);
+        end
+        if (s == 0) begin : g_it
+            integer n_adv = 0, n_wst = 0, n_hz = 0, n_nst = 0;
+            always @(posedge clk) if (rst_n && smt != 0) begin
+                if (u_sm.g_fp.u_fc.u_issue.adv) n_adv = n_adv + 1;
+                if (u_sm.g_fp.u_fc.u_issue.need_line && !u_sm.g_fp.u_fc.u_issue.w_valid) n_wst = n_wst + 1;
+                if (u_sm.g_fp.u_fc.u_issue.issuing && !u_sm.g_fp.u_fc.u_issue.my_turn) n_nst = n_nst + 1;
+                if (u_sm.g_fp.u_fc.u_issue.start_v && !u_sm.g_fp.u_fc.u_issue.launch) n_hz = n_hz + 1;
+                if (u_sm.g_fp.u_fc.u_issue.launch) $display("SMI %0d LAUNCH on %0d since %0d need %0d | adv %0d wstall %0d noturn %0d headwait %0d", cyc,
+                    u_sm.g_fp.u_fc.u_issue.on, u_sm.g_fp.u_fc.u_issue.since, u_sm.g_fp.u_fc.u_issue.need_q, n_adv, n_wst, n_nst, n_hz);
+                if (u_sm.g_fp.u_fc.u_issue.op_end) $display("SMI %0d OPEND | adv %0d wstall %0d noturn %0d headwait %0d", cyc, n_adv, n_wst, n_nst, n_hz);
+                if (u_sm.g_fp.u_fc.u_issue.head_done) $display("SMI %0d HEADDONE on %0d", cyc, u_sm.g_fp.u_fc.u_issue.on);
+            end
         end
     end endgenerate
 

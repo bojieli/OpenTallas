@@ -1,5 +1,5 @@
 {
- "name": "hgi_idx_tk2-r1-COMMIT",
+ "name": "hgi_idx_tk2-r1-171a475eb",
  "block": "ot_hgi_idx_tk2",
  "ref_tile": true,
  "owner": "Claude:el1013-hbm-redesign-idx",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-redesign-idx",
-  "commit": "COMMIT",
+  "commit": "171a475eb",
   "extra_paths": [
    "tools/hgi_unit_tput",
    "tools/hgi_sim",
@@ -101,7 +101,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_idx_tk2/hgi_idx_tk2-r1-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_idx_tk2/hgi_idx_tk2-r1-171a475eb"
   }
  ],
  "cycles_added": 0,

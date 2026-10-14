@@ -147,8 +147,12 @@ module ot_hgi_idx_ix2_pack (
     integer x;
     reg [17:0] a; reg [255:0] pd; reg [7:0] pm;          // word address of the next word, pending sector image / mask
     reg [511:0] nd; reg [15:0] nm; reg [3:0] wx;
-    assign rdy = !e_v || e_take;
-    assign empty = !e_v && pm == 8'd0;
+    // TWO places for an emitted sector (head e_*, second e2_*): rdy is flops only (!e2_v), so the lane arbitration
+    // (e_take) no longer runs into the link queues' go and this packer's word placement (10-13: that loop was a
+    // 15-level stage, pre-CTS -132 ps).  An emit only happens under rdy.
+    reg e2_v; reg [14:0] e2_sec; reg [255:0] e2_d; reg [7:0] e2_m;
+    assign rdy = !e2_v;
+    assign empty = !e_v && !e2_v && pm == 8'd0;
     always @* begin
         nd = {256'd0, pd}; nm = {8'd0, pm};
         for (x = 0; x < 8; x = x + 1) begin
@@ -160,13 +164,16 @@ module ot_hgi_idx_ix2_pack (
     always @(posedge clk) begin
         if (ld) a <= base;
         else if (in_v) a <= a + {14'd0, in_n};
-        if (emit) begin e_sec <= a[17:3]; e_d <= nd[255:0]; e_m <= nm[7:0]; end
+        if (e_v && e_take && e2_v) begin e_sec <= e2_sec; e_d <= e2_d; e_m <= e2_m; end
+        else if (emit && (!e_v || e_take)) begin e_sec <= a[17:3]; e_d <= nd[255:0]; e_m <= nm[7:0]; end
+        if (emit) begin e2_sec <= a[17:3]; e2_d <= nd[255:0]; e2_m <= nm[7:0]; end
         if (in_v || flush) pd <= emit ? nd[511:256] : nd[255:0];
     end
     always @(posedge clk or negedge rn)
-        if (!rn) begin e_v <= 1'b0; pm <= 8'd0; end
+        if (!rn) begin e_v <= 1'b0; e2_v <= 1'b0; pm <= 8'd0; end
         else begin
-            if (emit) e_v <= 1'b1; else if (e_take) e_v <= 1'b0;
+            if (emit) e_v <= 1'b1; else if (e_take) e_v <= e2_v;
+            if (e_take) e2_v <= 1'b0; else if (emit && e_v) e2_v <= 1'b1;
             if (ld) pm <= 8'd0;
             else if (in_v || flush) pm <= emit ? nm[15:8] : nm[7:0];
         end

@@ -41,4 +41,17 @@ class ClockSource(unittest.TestCase):
    with mock.patch.object(sys,'argv',argv),mock.patch.object(C.subprocess,'run',side_effect=run):C.main()
    j=json.loads(out.read_text());self.assertEqual(seen,['core_clk','hclk']);self.assertEqual(set(j['clock_measurements']),{'clk','hk[0]'})
    self.assertEqual(j['clock_measurements']['hk[0]']['tt']['boundary']['mean'],200)
+ def test_cts_all_clocks_uses_actual_multi_domain_sdc(self):
+  with tempfile.TemporaryDirectory() as td:
+   base=pathlib.Path(td);out=base/'insertion.json'
+   (base/'4_cts.sdc').write_text('create_clock -name core_clk -period 1026.6666 [get_ports {ck[0]}]\ncreate_clock -name str_clk -period 770.0000 [get_ports {cks[0]}]\n')
+   seen=[]
+   def run(cmd,check):
+    self.assertNotIn('--routed',cmd)
+    name=cmd[cmd.index('--clock')+1];seen.append(name)
+    pathlib.Path(cmd[cmd.index('--output')+1]).write_text(json.dumps({'clock':name,'tt':{'all':{'n':17460 if name=='str_clk' else 128,'min':100,'max':190 if name=='str_clk' else 120}}}))
+   argv=['ck_insertion.py','--base',td,'--all-clocks','--output',str(out)]
+   with mock.patch.object(sys,'argv',argv),mock.patch.object(C.subprocess,'run',side_effect=run):C.main()
+   j=json.loads(out.read_text());self.assertEqual(seen,['core_clk','str_clk']);self.assertEqual(set(j['clock_measurements']),{'ck[0]','cks[0]'})
+   self.assertIn('4_cts.sdc',j['clock_measurements']['cks[0]']['clock_mapping_basis'])
 if __name__=='__main__':unittest.main()
