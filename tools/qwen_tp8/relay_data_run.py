@@ -67,6 +67,20 @@ if '--case' in sys.argv:
     # r9: the chain-ready die case (real case + power abstracts + PDN r5, as `qwen_rom_fulldie_b3r2.py pdn --pdn-rev r5`)
     # of THIS build, so the audited plan and the routed die are one placement
     G.case_pdn(v, m, out / 'case', 63.64, 'r5')
+    # r10: pin directions of every die master as the bus list has them (driver first), for the placeholder Liberty
+    # views of the die STA (tools/qwen_tp8/die_sta_libs.py); a split bundle's 1-b _cr / _r part runs against its word
+    byi = {i.name: i for i in m['insts']}
+    split = m.get('port_split') or {}
+    dirs = {}
+    for bid, cl, bits, eps in m['buses']:
+        for k, (inst, port) in enumerate(eps):
+            mst, port = getattr(byi[inst], 'master', ''), port.lstrip('*')
+            d = 'output' if k == 0 else 'input'
+            dirs.setdefault(mst, {}).setdefault(port, d)
+            for sub, nb in (split.get(mst, {}).get(port) or []):
+                rev = nb == 1 and sub.endswith(('_cr', '_r'))
+                dirs[mst].setdefault(sub, ('input' if d == 'output' else 'output') if rev else d)
+    (out / 'case' / 'port_dirs.json').write_text(json.dumps(dirs, indent=0, sort_keys=True) + '\n')
 print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
                       unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'],
                       reset_over_500=len(rec['reset']['reset_named_over_500']), instances=rec['instances'],

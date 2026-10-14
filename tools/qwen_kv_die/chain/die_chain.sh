@@ -42,7 +42,7 @@ if [ -s $G/die_grt.spef ] && head -n 30 $G/die_grt.spef | awk '/^\*PORTS$/{p=1;n
   awk 'NR<=30 && /^\*PORTS$/ {next} {print}' $G/die_grt.spef > $G/die_grt.spef.np && mv $G/die_grt.spef.np $G/die_grt.spef
   say "SPEF: empty *PORTS section dropped (STA-1670)"
 fi
-for c in tt ff; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
+for c in ${OT_CORNERS:-tt ff}; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   [ -s $G/die_grt.spef ] || { say "STA $c: no die_grt.spef (GRT parasitics), not run"; continue; }
   ln -f $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/
   cp $R/libs/qfd_elements_$c.lib $D/libs/; [ -f $R/libs/qfd_etm_$c.lib ] && cp $R/libs/qfd_etm_$c.lib $R/libs/views.json $D/libs/; for f in $R/libs/qfd_etm_*_$c.lib; do [ -f "$f" ] && cp "$f" $D/libs/; done; [ -f $R/libs/views.json ] && cp $R/libs/views.json $D/libs/; [ -f $R/libs/ot_hbm3e_phy_$c.lib ] && cp $R/libs/ot_hbm3e_phy_$c.lib $D/libs/
