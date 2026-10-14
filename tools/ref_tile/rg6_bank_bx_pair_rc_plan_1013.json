@@ -235,7 +235,7 @@
     "clock": "Separate top clock source for each actual macro clk, same833.333period/waveform; ideal entry phi-R per actual per-corner R. Assert clock pin arrival+R=phi. Entry wires unmodeled and explicitly assumed: no parent physical clock proof. No asynchronous or false-path exceptions.",
     "constraints": "Setup reserve210 (potential deep), hold100 across all clocks, all selected rise/fall max/min checked. No nominal DATA top ports, so no unconstrained top DATA IO. Actual ETM clock/table source slew basis retained and documented.",
     "RC": "Freeze actual platform setRC.tcl/tech LEF/layer values and source hashes. Nominal platform placementRC only; identify M4-access/M5 wire model. Same declared nominal RC each cell corner; actual SS driver/capture models, no invented SS-wire coefficient.",
-    "oracles": "Report selected complete max/min paths and wire delay/cap; compare loaded macro CQ/setup model vs first-table-point zero-wire screen separately. First tablepoint is2.88fF, not zero actual load; use actual capture pin capacitance+wire cap in executable. Keep all negative results.",
+    "oracles": "Report selected complete max/min paths and wire delay/cap; compare loaded macro CQ/setup model vs first-table-point zero-wire screen separately. First tablepoint is1.44fF, not zero actual load; use actual capture pin capacitance+wire cap in executable. Keep all negative results.",
     "safety": "Copies of published libraries/LEFs; no sourcechild modifications, reroute, main edits, clock/reset/load waivers. Heavy job via ot-run only after plan review.",
     "static_pin_policy": {
       "bank_rst_n": "1 (inactive active-low reset; no reset exception)",
@@ -257,5 +257,24 @@
     "ff": 1.2256,
     "ss": 1.1551
   },
-  "load_model_note": "Capture input cap is below first output table point2.88fF before wire cap. Actual model lookup may extrapolate; report actual wire+pin cap and lookup result instead of assuming firstpoint is exactzero-wire load. No external80fF benchmark imposed or removed from published models."
+  "load_model_note": "Runtime net load includes both the published launch output pin cap and capture input cap, plus nominal wire cap. Actual cap-only sums exceed first1.44fF point in every corner, so no below-first-point extrapolation. Report runtime cap and lookup separately from firstpoint screen. The unrelated SN table2.88fF context does not apply here.",
+  "actual_launch_output_pin_capacitance_fF": {
+    "tt": 0.4221,
+    "ff": 0.4221,
+    "ss": 0.4221
+  },
+  "bank_output_table_axis_fF": [
+    1.44,
+    2.88,
+    5.76,
+    11.52,
+    23.04,
+    46.08,
+    92.16
+  ],
+  "actual_cap_only_net_load_fF": {
+    "tt": 1.605,
+    "ff": 1.6477,
+    "ss": 1.5772
+  }
 }
