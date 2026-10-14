@@ -19,6 +19,7 @@ module dsfd_mtp_hrow_td #(
     parameter integer FWD_Q = 6, parameter integer RET_Q = 6,
     parameter integer CQ = 3, parameter integer WK = 7, parameter integer P = 2,
     parameter integer HARD_RELAYS = 0,  // opt-in fixed masters: preserves every original relay edge/reset bit
+    parameter integer DISTRIBUTED_RST = 0, // default-off local two-edge release; global ck/rst delivery still required
     parameter integer UT = 1         // die relay stages on the U-turn hop (cbe bank 4 -> cbw bank 5), w / r / d alike
 ) (
     input  wire           ck, rst,
@@ -32,11 +33,16 @@ module dsfd_mtp_hrow_td #(
 );
     localparam integer WD = 2 * CQ + 1 - WK;
     initial if (CQ < 1 || WD < 0) $fatal(1, "hrow_td: CQ >= 1 and WK <= 2 CQ + 1");
+    initial if (DISTRIBUTED_RST != 0 && HARD_RELAYS == 0) $fatal(1, "distributed reset requires fixed hard relays");
     wire rn;
-    generate if (HARD_RELAYS != 0) begin : g_hrst
+    generate if (HARD_RELAYS != 0 && DISTRIBUTED_RST == 0) begin : g_hrst
         dsfd_die_rstsync u_rs (.ck(ck), .rst(rst), .rn(rn));
-    end else begin : g_rst
+    end else if (HARD_RELAYS == 0) begin : g_rst
         ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn));
+    end else begin : g_drst
+        // No central registered rn fanout: each fixed relay samples the same original rst and ck.
+        // Identical two-flop conditioners release on the same second edge in the ideal-clock model.
+        assign rn = 1'b0;
     end endgenerate
     wire [514:0] fin [0:2];
     assign fin[0] = f_hp0; assign fin[1] = f_hp1; assign fin[2] = f_hp2;
@@ -50,7 +56,11 @@ module dsfd_mtp_hrow_td #(
             wire [2078:0] q [0:UT];
             assign q[0]={ud,ur,uw};
             for(genvar ri=0; ri<UT; ri=ri+1) begin : g_r
-                dsfd_hrow_r2079 u_r(.ck(ck),.rn(rn),.i(q[ri]),.o(q[ri+1]));
+                wire lrn;
+                if (DISTRIBUTED_RST != 0) begin : g_rst
+                    dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(lrn));
+                end else assign lrn=rn;
+                dsfd_hrow_r2079 u_r(.ck(ck),.rn(lrn),.i(q[ri]),.o(q[ri+1]));
             end
             assign {cd[5],cr[5],cw[5]}=q[UT];
         end else begin : g_ut
@@ -64,14 +74,26 @@ module dsfd_mtp_hrow_td #(
             wire [22:0] eq[0:CQ-1]; wire [14:0] rq[0:CQ];
             assign eq[0]={ifl[gp],ev[gp]}; assign rq[0]=rc[gp];
             for(genvar ri=0; ri<CQ-1; ri=ri+1) begin : g_ev
-                dsfd_hrow_r23 u_r(.ck(ck),.rn(rn),.i(eq[ri]),.o(eq[ri+1]));
+                wire lrn;
+                if (DISTRIBUTED_RST != 0) begin : g_rst
+                    dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(lrn));
+                end else assign lrn=rn;
+                dsfd_hrow_r23 u_r(.ck(ck),.rn(lrn),.i(eq[ri]),.o(eq[ri+1]));
             end
             for(genvar ri=0; ri<CQ; ri=ri+1) begin : g_rc
-                dsfd_hrow_r15 u_r(.ck(ck),.rn(rn),.i(rq[ri]),.o(rq[ri+1]));
+                wire lrn;
+                if (DISTRIBUTED_RST != 0) begin : g_rst
+                    dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(lrn));
+                end else assign lrn=rn;
+                dsfd_hrow_r15 u_r(.ck(ck),.rn(lrn),.i(rq[ri]),.o(rq[ri+1]));
             end
             assign {iflh[gp],evh[gp]}=eq[CQ-1]; assign cr[0]=rq[CQ];
             // Default WD0 has no state. Other parameter sets retain their exact existing write-delay line.
-            ot_dsrom_mtp_hrow_rly #(.W(1039),.N(WD)) u_wd(.clk(ck),.rst_n(rn),.i(wc),.o(cw[0]));
+            wire wrn;
+            if (DISTRIBUTED_RST != 0 && WD > 0) begin : g_wdrst
+                dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(wrn));
+            end else assign wrn=rn;
+            ot_dsrom_mtp_hrow_rly #(.W(1039),.N(WD)) u_wd(.clk(ck),.rst_n(wrn),.i(wc),.o(cw[0]));
         end else begin : g_ev
         ot_dsrom_mtp_hrow_rly #(.W(21), .N(CQ - 1)) u_ev (.clk(ck), .rst_n(rn), .i(ev[gp]), .o(evh[gp]));
         ot_dsrom_mtp_hrow_rly #(.W(2), .N(CQ - 1)) u_if (.clk(ck), .rst_n(rn), .i(ifl[gp]), .o(iflh[gp]));
@@ -94,7 +116,11 @@ module dsfd_mtp_hrow_td #(
         if (HARD_RELAYS != 0) begin : g_hrp
             wire [1024:0] q[0:P]; assign q[0]=cd[10];
             for(genvar ri=0; ri<P; ri=ri+1) begin : g_r
-                dsfd_hrow_r1025 u_r(.ck(ck),.rn(rn),.i(q[ri]),.o(q[ri+1]));
+                wire lrn;
+                if (DISTRIBUTED_RST != 0) begin : g_rst
+                    dsfd_die_rstsync u_rs(.ck(ck),.rst(rst),.rn(lrn));
+                end else assign lrn=rn;
+                dsfd_hrow_r1025 u_r(.ck(ck),.rn(lrn),.i(q[ri]),.o(q[ri+1]));
             end
             assign pph[gp]=q[P];
         end else begin : g_rp

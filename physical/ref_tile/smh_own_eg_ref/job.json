@@ -1,14 +1,14 @@
 {
- "name": "smh_own_eg_ref-own3-aa4728383",
+ "name": "smh_own_eg_ref-own3-8bbf85191",
  "block": "ot_smh_own_eg",
  "ref_tile": true,
  "owner": "Codex:hbm_vm_sm_2240",
- "purpose": "Actual retained SM tile ownlogic995Q+ICG, exact flat-parent cut/gating bench+mutant; separate physical ownleaf candidate with explicit pending compactslot request Own3 runner prints actual exact/mutant runtime output into supervised bench log; own2 rc0 positive was hidden by stdout redirection, no RTL change.",
+ "purpose": "Actual retained SM tile ownlogic995Q+ICG, exact flat-parent cut/gating bench+mutant; separate physical ownleaf candidate with explicit pending compactslot request Own3 runner prints actual exact/mutant runtime output into supervised bench log; own2 rc0 positive was hidden by stdout redirection, no RTL change. Fresh exact pre-route source receipt resolves refused aa472 submit binding.",
  "threads": 8,
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/hbm-vm-sm-2240",
-  "commit": "aa4728383",
+  "commit": "8bbf85191",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm_own_logic"
   ]
@@ -91,7 +91,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smh_own_eg_ref/smh_own_eg_ref-own3-aa4728383"
+   "to": "results/rtl/ref_tile/smh_own_eg_ref/smh_own_eg_ref-own3-8bbf85191"
   }
  ],
  "cycles_added": 0,

@@ -568,7 +568,22 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
     return buf.getvalue()
 
 
+def absent_working_inputs(seeds):
+    # The archive is made from the working tree, not git show.  A sparse checkout
+    # can contain the hook but omit a committed helper that the hook sources.
+    # Check those transitive inputs before choosing a host or shipping a run.
+    seen, _, soft = referenced_closure(sorted(seeds), SB.git_head(ROOT))
+    overlaid = {p for p in SHIP_HELPERS if (DAEMON_TREE / p).is_file()}
+    return sorted(p for p in seen - soft - overlaid if not (ROOT / p).is_file())
+
+
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
+    fp = json.loads((kd / "floorplan.json").read_text())
+    absent = absent_working_inputs(set(fp["referenced"]))
+    if absent:
+        g.add("FAIL", "sources", f"{len(absent)} committed input(s) absent from the working-tree archive: {absent[:8]}",
+              "materialize the referenced files in the sparse checkout before rerunning the gate")
+        return
     if host == "auto":
         picked = subprocess.run(["ot-run", "--mem", str(mem), "--pick"], capture_output=True, text=True)
         if picked.returncode or not picked.stdout.strip():
@@ -579,7 +594,6 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         auto = True
     else:
         auto = False
-    fp = json.loads((kd / "floorplan.json").read_text())
     ref = set(fp["referenced"])
     # Ship the same transitive Tcl/shell dependencies checked by the local gate.
     # A custom PRE_GLOBAL_PLACE hook may source helpers outside its own folder.

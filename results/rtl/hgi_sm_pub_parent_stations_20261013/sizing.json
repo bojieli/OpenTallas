@@ -13,20 +13,22 @@
   "stream_depth": 3,
   "arrival_entries_per_SM": 32,
   "station_instances": {
-    "cmd": 1,
+    "cmd_quiet": 1,
     "cmd_relay": 3,
-    "vmmerge": 4,
-    "returns": 8,
+    "vmcore": 4,
+    "vmport": 4,
+    "return_d1": 20,
     "credit": 8,
-    "egress": 1,
-    "reset": 1
+    "stream_edge": 2,
+    "reset": 1,
+    "reset_hop": 11
   },
   "added_cycles": 0,
-  "added_state_bits": 0,
+  "added_state_bits": 12,
   "qualification": "unqualified until exactness, production throughput, physical and die pins pass",
   "slice_prefix_sha256": "6cce6b903219505b6f55b494d5a460a613e8800b5d4862591e333103e8bc063a",
   "credit_bits_per_station": 4,
-  "clock_entries": 41,
+  "clock_entries": 69,
   "MACs_per_cycle": 0,
   "memory_bytes_per_cycle": 0,
   "boundary_bits_per_cycle": {
@@ -35,7 +37,7 @@
     "VM_requests": 1352,
     "STREAM": 52
   },
-  "physical_area_status": "station synthesis and routed measurements pending",
+  "physical_area_status": "13 initial station types and STREAM edge CLOSED; split VM R3 + commandquiet + reset hop jobs submitted; composed parent not yet routed",
   "slice_outline_um": [
     332.64,
     328.32
@@ -46,7 +48,7 @@
   "station_wire_reach_um": {
     "command_relay": 26.6
   },
-  "parent_pin_binding_status": "actual closed slice LEF positions extracted; station paths unqualified",
+  "parent_pin_binding_status": "Every actual production parent child connection synthesized and audited net-to-LEF: 69 children, geometry candidate all directed edges <=500um and channels >=20um; VM core pending actual repaired view",
   "STREAM_target_words_per_cycle": 1,
   "STREAM_budget_cycles_per_1024_words": 1126,
   "STREAM_measured_cycles_per_1024_words": {
@@ -96,5 +98,6 @@
     ],
     "physical_added_state_bits": 12,
     "slice_reset_entries": 8
-  }
+  },
+  "cold_reset_max_added_cycles": 4
 }
