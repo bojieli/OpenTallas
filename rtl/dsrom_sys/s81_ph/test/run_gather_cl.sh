@@ -58,6 +58,10 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
   done
   wait
 } | sort | tee $OUT/verdicts.log
+if [ -n "${RAW:-}" ]; then   # raw negative for the closure loop (expect=fail): ONE mutant mode, exit 1 when its run fails in the bench
+  if grep -q "RESULT FAIL" $OUT/verdicts.log && ! grep -q "aborted" $OUT/verdicts.log; then echo "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED" | tee -a $OUT/verdicts.log; exit 1; fi
+  echo "GATHER_CL_NEGATIVE NOT_DETECTED" | tee -a $OUT/verdicts.log; exit 0
+fi
 bad=$(awk '{ w=""; for (i=1;i<=NF;i++) if ($i ~ /^want=/) w=substr($i,6); sub(":","",w); r=""; for (i=1;i<=NF;i++) if ($i=="RESULT") r=$(i+1); if (r!=w) print }' $OUT/verdicts.log | wc -l)
 n=$(wc -l < $OUT/verdicts.log)
 if [ "$bad" -eq 0 ] && [ "$n" -ge 3 ]; then echo "GATHER_CL_GATE PASS ($n runs)" | tee -a $OUT/verdicts.log
