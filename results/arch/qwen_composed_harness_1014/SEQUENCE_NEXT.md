@@ -55,9 +55,12 @@ response drain, but same-epoch stale stage replay discrimination is a separate
 gap. Collector cycles are isolated RTL counters, never summed into production
 clock throughput.
 
-The QVM adapter captures actual request tags into pending responses and returns
+The draft now explicitly requires the distinct
+Vot_qwen_tp8_native_services_frontend_native59 header/archive through FRONT59_OBJ.
+Old frontend sources cannot qualify the token path. The QVM adapter captures actual request tags into pending responses and returns
 them unchanged when the source frontend exposes TAG59 ports, with actual request
-and reply logs. The owner is building that source-exact fullTAG frontend.
+and reply logs. The strict observer requires all eight accepted requests and
+eight returned tags to match the actual central grant and decoder stage. The owner is building that source-exact fullTAG frontend.
 
 Next: bind successor allocator and fullTAG frontend, obtain genuine LV6 fullcore headers
 and archive, run layer0 from actual embedding VM then no-reset layer0→1 under

@@ -36,7 +36,8 @@ public:
   f.q_vm_rsp_v=0;f.attn_commit_valid=0;
   f.attn_vm_ready=reserved&&(!stalls||edge%5!=0);
   if(!responses.empty()&&responses.front().due<=edge){auto&r=responses.front();
-   f.q_vm_rsp_v=1;f.q_vm_rsp_epoch=r.epoch;f.q_vm_rsp_chunk=r.chunk;
+   f.q_vm_rsp_v=1;f.q_vm_rsp_chunk=r.chunk;
+   if constexpr(!HasQTag<Front>::value)f.q_vm_rsp_epoch=r.epoch;
    // Preserve the identity sampled with the actual accepted request. Never
    // replace an old pending response tag with the new live layer identity.
    if constexpr(HasQTag<Front>::value)f.q_vm_rsp_tag=r.accepted_request_tag;
@@ -48,7 +49,7 @@ public:
  }
  // Call after all low-phase model interfaces settle, before rising eval.
  template<class Front> void sample(Front& f){
-  if(f.q_vm_rsp_v){if(responses.empty())throw std::runtime_error("unowned Q VM response");responses.pop_front();++q_responses;if constexpr(HasQTag<Front>::value){++q_tag_returns;q_tag_events.push_back({edge,uint64_t(f.q_vm_rsp_tag),unsigned(f.q_vm_rsp_epoch),unsigned(f.q_vm_rsp_chunk),true});}}
+  if(f.q_vm_rsp_v){if(responses.empty())throw std::runtime_error("unowned Q VM response");responses.pop_front();++q_responses;if constexpr(HasQTag<Front>::value){++q_tag_returns;q_tag_events.push_back({edge,uint64_t(f.q_vm_rsp_tag),unsigned(uint64_t(f.q_vm_rsp_tag)>>43),unsigned(f.q_vm_rsp_chunk),true});}}
   if(f.attn_commit_valid){if(acks.empty())throw std::runtime_error("unowned attention ACK");acks.pop_front();++commit_acks;}
   if(f.q_vm_req_v&&f.q_vm_req_ready){
    if(!reserved||f.q_vm_req_epoch!=epoch||f.q_vm_req_chunk>7||

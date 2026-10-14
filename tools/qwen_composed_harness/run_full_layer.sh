@@ -20,7 +20,7 @@ if [[ -n "$plan" ]]; then
  [[ -z "$catalog" ]] # each faithful sequence reference contains its own operation catalog
 fi
 allocator=${ALLOCATOR_OBJ:-/srv/opentallas-scratch/codex/qwen-full-layer-sequence-1014/allocator0/library/obj}
-front=/srv/opentallas-scratch/codex/native-services-frontend-1014/library-v1/obj
+front=${FRONT59_OBJ:?fresh source-exact ENABLE_NATIVE1 frontend59 object directory}
 sector=/srv/opentallas-scratch/codex/native-services-frontend-1014/sector-library-v1/obj
 pc=/srv/opentallas-scratch/codex/qwen-native-hbm-pc-provider-1014/library_v2/obj
 vroot=/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator
@@ -36,7 +36,7 @@ assert record['source_stable']
 PY
 for input_path in src/* kernel/*; do if [[ -f "$input_path" ]]; then sha256sum "$input_path"; fi; done > "$output/source_inputs.sha256"
 sha256sum "$core_obj/Vot_hdc_core_vector_weight_native_candidate__ALL.a" \
- "$front/Vot_qwen_tp8_native_services_frontend__ALL.a" "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" \
+ "$front/Vot_qwen_tp8_native_services_frontend_native59__ALL.a" "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" \
  "$pc/Vqwen_native_hbm_pc_provider__ALL.a" "$allocator/Vot_qwen_tp8_token_epoch_allocator__ALL.a" "$collective_runtime" "$collective_exe" >> "$output/source_inputs.sha256"
 python3 - "$image" "$program" "$oracle" "$output" "$plan" <<'PYCODE'
 import hashlib,json,sys
@@ -74,7 +74,7 @@ PYCODE
 c++ -std=c++17 -O1 -pthread -I"$core_obj" -I"$allocator" -I"$front" -I"$sector" -I"$pc" -Ikernel -Isrc \
  -I"$vroot/include" -I"$vroot/include/vltstd" src/full_layer.cpp \
  "$core_obj/Vot_hdc_core_vector_weight_native_candidate__ALL.a" \
- "$front/Vot_qwen_tp8_native_services_frontend__ALL.a" "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" \
+ "$front/Vot_qwen_tp8_native_services_frontend_native59__ALL.a" "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" \
  "$pc/Vqwen_native_hbm_pc_provider__ALL.a" kernel/Vot_qwen_tp8_attention_service__ALL.a \
  "$allocator/Vot_qwen_tp8_token_epoch_allocator__ALL.a" \
  kernel/sim_hdc_v41x_fastfp_dpi.o kernel/sim_nhb_fp_lat_dpi.o \
@@ -98,14 +98,16 @@ printf '%s\n' "$run_status" > "$output/executable_status.txt"
 catalog_args=()
 if [[ -n "$catalog" ]]; then catalog_args=(--catalog "$catalog"); fi
 if [[ -z "$plan" ]]; then
- python3 src/verify_full_layer.py --oracle "$oracle" --actual "$output" --fields "$fields" "${catalog_args[@]}" > "$output/effects.log"
+ python3 src/verify_full_layer.py --oracle "$oracle" --actual "$output" --fields "$fields" --grant "$output/central_epoch_grant.json" "${catalog_args[@]}" > "$output/effects.log"
 else
+ : > "$output/effects.log"
  count=$(awk '!/^#/ && NF {n++} END {print n}' "$plan")
  while read -r layer epoch position layer_image layer_program layer_oracle; do
   [[ -z "$layer" || "$layer" == \#* ]] && continue
   actual_output="$output"
   if [[ "$count" != 1 ]]; then actual_output="$output/layer$layer"; fi
-  python3 src/verify_full_layer.py --oracle "$layer_oracle" --actual "$actual_output" --fields "$fields/layer$layer.json" > "$actual_output/effects.log"
+  python3 src/verify_full_layer.py --oracle "$layer_oracle" --actual "$actual_output" --fields "$fields/layer$layer.json" --grant "$output/central_epoch_grant.json" > "$actual_output/effects.log"
+  if [[ "$count" != 1 ]]; then cat "$actual_output/effects.log" >> "$output/effects.log"; fi
  done < "$plan"
 fi
 cat "$output/run.log" "$output/effects.log"

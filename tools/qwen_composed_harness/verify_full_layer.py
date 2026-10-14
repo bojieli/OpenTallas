@@ -9,8 +9,15 @@ import numpy as np
 def sha(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
-def verify(oracle, actual, catalog_path=None, fields_path=None):
+def verify(oracle, actual, catalog_path=None, fields_path=None, grant_path=None):
     oracle_report = json.loads((oracle / 'oracle.json').read_text())
+    if grant_path is None:
+        raise ValueError('native acceptance requires actual central held grant receipt')
+    grant = json.loads(grant_path.read_text())
+    if not grant['delivered'] or not grant['busy'] or grant['generation'] != 2 or grant['position'] != oracle_report['position']:
+        raise ValueError('actual central grant state/position differs')
+    expected_q_tag = ((grant['epoch'] << 43) | ((oracle_report.get('payload_layer', 0) + 1) << 37) |
+                      (grant['token'] << 19) | (grant['position'] << 6))
     if oracle_report.get('collective_reference_profile') != 'production_tp8_two_level':
         raise ValueError('acceptance requires production two-level TP8 reference')
     sidecar = json.loads(catalog_path.read_text()) if catalog_path else None
@@ -100,6 +107,16 @@ def verify(oracle, actual, catalog_path=None, fields_path=None):
             if (pc != expected_pc or word.lower() != source_words[pc] or
                 unit != (int(word, 16) & 3) or end != int(pc in (13, 21, 24))):
                 raise ValueError(f'rank {rank}: actual accepted FIFO-to-NEXT word/ownership differs at PC{expected_pc}')
+        q_observations = [line.split() for line in (actual / f'rank{rank}_QVM_tags.txt').read_text().splitlines()]
+        seen_q = set()
+        for edge, tag, epoch, chunk, response in q_observations:
+            identity = (int(chunk), int(response))
+            if (int(tag, 16) != expected_q_tag or int(epoch) != grant['epoch'] or
+                identity in seen_q or identity[0] not in range(8) or identity[1] not in (0, 1)):
+                raise ValueError('actual accepted Q request/reply TAG59 differs or repeats')
+            seen_q.add(identity)
+        if seen_q != {(chunk, direction) for chunk in range(8) for direction in (0, 1)}:
+            raise ValueError('missing actual accepted Q request/reply TAG59 observations')
         observed_fields = {}
         for line in (actual / f'rank{rank}_accepted_SU_descriptors.txt').read_text().splitlines():
             parts = list(map(int, line.split()))
@@ -190,6 +207,8 @@ def verify(oracle, actual, catalog_path=None, fields_path=None):
               'oracle_receipt_sha256': sha(oracle / 'oracle.json')}
     report['explicit_catalog_sha256'] = sha(catalog_path) if catalog_path else None
     report['resolved_field_catalog_sha256'] = sha(fields_path)
+    report['actual_held_grant_receipt_sha256'] = sha(grant_path)
+    report['actual_QVM_request_and_return_TAG59_observed'] = True
     report['actual_accepted_FIFO_to_NEXT_1024_bits_proved'] = True
     report['accepted_raw_IB379_context16_version32_proved'] = False
     (actual / 'defined_effect_receipt.json').write_text(json.dumps(report, indent=2) + '\n')
@@ -202,5 +221,6 @@ if __name__ == '__main__':
     p.add_argument('--actual', type=Path, required=True)
     p.add_argument('--catalog', type=Path)
     p.add_argument('--fields', type=Path, required=True)
+    p.add_argument('--grant', type=Path, required=True)
     a = p.parse_args()
-    raise SystemExit(0 if verify(a.oracle, a.actual, a.catalog, a.fields) else 1)
+    raise SystemExit(0 if verify(a.oracle, a.actual, a.catalog, a.fields, a.grant) else 1)

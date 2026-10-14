@@ -2,7 +2,7 @@
 // Expected vectors are observers; all collective inputs come from actual VM.
 #include "Vot_hdc_core_vector_weight_native_candidate.h"
 #include "Vot_hdc_core_vector_weight_native_candidate___024root.h"
-#include "Vot_qwen_tp8_native_services_frontend.h"
+#include "Vot_qwen_tp8_native_services_frontend_native59.h"
 #include "Vot_qwen_tp8_attention_service.h"
 #include "Vot_qwen_tp8_kv_sector_adapter.h"
 #include "rom_vm_adapter.hpp"
@@ -30,7 +30,7 @@ struct Rank {
  qwen_native::RomVmAdapter vm;
  RowBackend backend;
  Vot_hdc_core_vector_weight_native_candidate core;
- Vot_qwen_tp8_native_services_frontend front;
+ Vot_qwen_tp8_native_services_frontend_native59 front;
  Vot_qwen_tp8_attention_service kernel;
  Vot_qwen_tp8_kv_sector_adapter sector;
  VmReceiver receiver;KernelRows reads;SectorWrites writes;
@@ -48,7 +48,7 @@ struct Rank {
  kernel(&context,("rank"+std::to_string(r)+"_kernel").c_str()),sector(&context,("rank"+std::to_string(r)+"_sector").c_str()),
  receiver(vm.vm),reads(backend),writes(backend){
   core.clk=front.clk=kernel.clk=sector.clk=0;core.rst_n=front.rst_n=kernel.rst_n=sector.rst_n=0;
-  core.start=0;core.token=0;core.pos=layer.position;front.epoch=layer.epoch;front.layer=layer.number;front.pos=layer.position;front.epoch_begin=0;front.fused_program_capability=1;
+  core.start=0;core.token=0;core.pos=layer.position;front.epoch=layer.epoch;front.layer=layer.number;front.pos=layer.position;front.token=0;front.epoch_begin=0;front.fused_program_capability=1;
   enqueue_history();
  }
  void enqueue_history(){
@@ -173,6 +173,7 @@ static unsigned save_layer(std::array<std::unique_ptr<Rank>,8>&r,const Layer&lay
   if(x.raw_witnesses.size()!=25)throw std::runtime_error("missing actual FIFO-to-NEXT accepted witnesses");
   std::ofstream raw(output/("rank"+std::to_string(rank)+"_accepted_actual_words.txt"));
   for(auto&w:x.raw_witnesses){raw<<w.pc<<" "<<w.unit<<" "<<w.edge<<" "<<w.end<<" ";for(unsigned j=0;j<32;j++)raw<<std::hex<<std::setfill('0')<<std::setw(8)<<w.bits[31-j];raw<<std::dec<<"\n";}
+  if(x.receiver.q_tag_events.size()!=16)throw std::runtime_error("missing actual TAG59 QVM request/response observations");
   std::ofstream tags(output/("rank"+std::to_string(rank)+"_QVM_tags.txt"));for(auto&t:x.receiver.q_tag_events)tags<<t.edge<<" "<<std::hex<<t.tag<<std::dec<<" "<<t.epoch<<" "<<t.chunk<<" "<<t.response<<"\n";
   std::ofstream k(output/("rank"+std::to_string(rank)+"_KV.txt"));for(auto w:x.kv_commits)k<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.pc<<"\n";
   std::ofstream v(output/("rank"+std::to_string(rank)+"_VM_commits.txt"));for(auto w:x.vm.commits)v<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
@@ -185,11 +186,12 @@ static unsigned save_layer(std::array<std::unique_ptr<Rank>,8>&r,const Layer&lay
 static void save_head(std::array<std::unique_ptr<Rank>,8>&r,const fs::path&output){
  fs::create_directories(output);std::ofstream local(output/"local_argmax.txt");
  for(unsigned rank=0;rank<8;rank++){
-  auto&x=*r[rank];if(!x.core.done||x.vm.retired.size()!=1||x.rom_written!=0||x.kv_commits.size()!=0||unsigned(x.core.next_token)>=18992)throw std::runtime_error("invalid actual local head retirement");
+  auto&x=*r[rank];if(!x.core.done||x.vm.retired!=std::vector<unsigned>{unsigned(x.vm.program.size()-1)}||x.vm.accepted.size()+1!=x.vm.program.size()||x.raw_witnesses.size()!=x.vm.program.size()||x.rom_written!=0||x.kv_commits.size()!=0||unsigned(x.core.next_token)>=18992)throw std::runtime_error("invalid actual local head retirement");
   local<<rank<<" "<<unsigned(x.core.next_token)<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<x.core.next_val<<std::dec<<" "<<x.backend.core_edges-x.layer_begin_edge<<"\n";
   std::ofstream vm(output/("rank"+std::to_string(rank)+"_VM.hex"));for(auto v:x.vm.vm)vm<<std::hex<<std::setfill('0')<<std::setw(8)<<v<<"\n";
   std::ofstream commits(output/("rank"+std::to_string(rank)+"_operation_commits.txt"));for(auto w:x.effects)commits<<w.pc<<" "<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
   std::ofstream accepted(output/("rank"+std::to_string(rank)+"_accepted.txt"));for(auto op:x.vm.accepted)accepted<<op.global_pc<<" "<<op.unit<<" "<<op.edge<<"\n";
+  std::ofstream raw(output/("rank"+std::to_string(rank)+"_accepted_actual_words.txt"));for(auto&w:x.raw_witnesses){raw<<w.pc<<" "<<w.unit<<" "<<w.edge<<" "<<w.end<<" ";for(unsigned j=0;j<32;j++)raw<<std::hex<<std::setfill('0')<<std::setw(8)<<w.bits[31-j];raw<<std::dec<<"\n";}
  }
 }
 int main(int argc,char**argv){try{
@@ -205,7 +207,9 @@ int main(int argc,char**argv){try{
   bool launch=!running;for(auto&x:r)launch&=x->epoch_reserved&&x->backend.core_edges>=std::max(restart,x->start_edge);
   for(auto&x:r){x->token_grant_ready=epoch_owner.delivered;x->low(launch);}
   bool boot_done=true,grant_ready=true;for(auto&x:r){boot_done&=x->backend.hbm_edges>=8;grant_ready&=x->front.epoch_ready;}
-  epoch_owner.low(boot_done,grant_ready);for(auto&x:r)x->rise();epoch_owner.rise();if(launch){running=true;std::cerr<<"segment "<<segment<<" launched core "<<r[0]->backend.core_edges<<"\n";}
+  epoch_owner.low(boot_done,grant_ready);for(auto&x:r)x->rise();epoch_owner.rise();
+  if(epoch_owner.delivered)for(auto&x:r){x->front.token=epoch_owner.held_token;x->front.pos=epoch_owner.held_position;x->front.epoch=epoch_owner.held_epoch;}
+  if(launch){running=true;std::cerr<<"segment "<<segment<<" launched core "<<r[0]->backend.core_edges<<"\n";}
   bool all_done=running;for(auto&x:r)all_done&=x->core.done;
   if(all_done){std::cerr<<"segment "<<segment<<" completed core "<<r[0]->backend.core_edges<<"\n";
    if(head){save_head(r,fs::path(argv[6])/"head");finished=true;break;}
