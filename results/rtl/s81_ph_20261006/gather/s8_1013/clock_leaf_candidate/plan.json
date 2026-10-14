@@ -106,5 +106,23 @@
     "allperbit diepairs withfreshR andactualwire/phase",
     "current frozenv2 source/buffer/hook/bench matching",
     "no route/admission from WARNlabel; nativefalse untilactualgates"
-  ]
+  ],
+  "read_only_old_database_diagnostic": {
+    "rw": {
+      "original_immutable_database": "dsfd_gth_rw-20261014-040136/4_1_cts.odb",
+      "actual_macro_clock_leaves": 8,
+      "native_check_placement": "pass",
+      "max_BUF_Y_to_macro_CLK_um": 12.239,
+      "not_fresh_gate": true,
+      "timing_adoption": false
+    },
+    "re": {
+      "original_immutable_database": "dsfd_gth_re-20261014-040136/4_1_cts.odb",
+      "actual_macro_clock_leaves": 8,
+      "native_check_placement": "pass",
+      "max_BUF_Y_to_macro_CLK_um": 13.043,
+      "not_fresh_gate": true,
+      "timing_adoption": false
+    }
+  }
 }
