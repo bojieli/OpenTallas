@@ -220,5 +220,6 @@
   "views_to": "physical/ref_tile/qfd_su_lane_t_or/views",
   "record_to": "results/rtl/ref_tile/qfd_su_lane_t_or"
  },
- "hard_define": "OT_SU_LANE_HARD"
+ "hard_define": "OT_SU_LANE_HARD",
+ "structural_change": "New structure, mine (r6 q14-compute-elements, sole owner): the two failed ml15 routes were the FLAT 51,612-flop lane tile on one root; this is the lane CLUSTER over the four CLOSED hardened leaves (lane_h sp1 + sfu exp/rcp/rsq, main 943c39997) PLUS the compute-die lead's 07:27 option-1 parent output register stage (OREG=1: one kept flop per output pin, 303 parent flops, own reset register; +1 edge on lane outputs, read round trip unchanged via ot_hdc_vstream LOREG). 307 sinks on the cluster root (was 51,612)."
 }
