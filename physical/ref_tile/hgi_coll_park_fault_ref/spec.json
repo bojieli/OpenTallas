@@ -47,7 +47,8 @@
    "rtl/link",
    "rtl/lib",
    "rtl/model/hbm_pc40_native_sim_20261003",
-   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/hbm_coll_park_2240"
   ],
   "structural_change": "EQ4 park partition into independent ~7k-clock queue roots; unconditional payload capture, explicit occupancy flops and boolean room remove pop-to-macro arithmetic;32bitheadcontrolcopies. Oldflat22180root/1nsinsertion failedtwice.",
   "purpose": "Original-cycle overflow sticky aggregation station; separate root, incomingbank fault pins registered through stickyfault register; measuredinjectedbank fault inexactflat bench and MUT_FAULT shouldfail.",
@@ -72,6 +73,7 @@
    }
   ]
  },
+ "slot_change_request": "results/arch/hbm_coll_park_2240/slot_change_request.json",
  "params": {},
  "children": [],
  "inter": [],

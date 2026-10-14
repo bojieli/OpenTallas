@@ -42,11 +42,33 @@ module ot_hgi_coll_park #(
     input  wire [EQ-1:0]                pop,
     output wire                         ovf
 );
+`ifdef OT_COLL_PARK_HARD
+    initial if(EQ!=4 || DEL!=4 || PWT!=545 || PPK!=512 || MACRO!=2 || MUT_PARK!=0) $fatal(1,"Hard park contract requires EQ4 DEL4 PWT545 PPK512 MACRO2 no mutant");
+`endif
     wire [EQ*DEL-1:0] bank_ovf;
     genvar q;
     generate for(q=0;q<EQ;q=q+1) begin:g_q
+`ifdef OT_COLL_PARK_HARD
+        if(q==0) begin:g_h0
+          ot_hgi_coll_park_q0 u_q (.clk(clk_q[q]),.rst_n(rst_n),.pv(pv),.pq(pq),.ps(ps),.pd(pd),.hv(hv[q]),.hd(hd[q*PWT+:PWT]),.pop(pop[q]),.bank_ovf(bank_ovf[q*DEL+:DEL]));
+        end
+        else if(q==1) begin:g_h1
+          ot_hgi_coll_park_q1 u_q (.clk(clk_q[q]),.rst_n(rst_n),.pv(pv),.pq(pq),.ps(ps),.pd(pd),.hv(hv[q]),.hd(hd[q*PWT+:PWT]),.pop(pop[q]),.bank_ovf(bank_ovf[q*DEL+:DEL]));
+        end
+        else if(q==2) begin:g_h2
+          ot_hgi_coll_park_q2 u_q (.clk(clk_q[q]),.rst_n(rst_n),.pv(pv),.pq(pq),.ps(ps),.pd(pd),.hv(hv[q]),.hd(hd[q*PWT+:PWT]),.pop(pop[q]),.bank_ovf(bank_ovf[q*DEL+:DEL]));
+        end
+        else if(q==3) begin:g_h3
+          ot_hgi_coll_park_q3 u_q (.clk(clk_q[q]),.rst_n(rst_n),.pv(pv),.pq(pq),.ps(ps),.pd(pd),.hv(hv[q]),.hd(hd[q*PWT+:PWT]),.pop(pop[q]),.bank_ovf(bank_ovf[q*DEL+:DEL]));
+        end
+`else
         ot_hgi_coll_park_queue #(.EQ(EQ),.QID(q),.PPK(PPK),.DEL(DEL),.PWT(PWT),.MACRO(MACRO),.MUT_PARK(MUT_PARK)) u_q
         (.clk(clk_q[q]),.rst_n(rst_n),.pv(pv),.pq(pq),.ps(ps),.pd(pd),.hv(hv[q]),.hd(hd[q*PWT+:PWT]),.pop(pop[q]),.bank_ovf(bank_ovf[q*DEL+:DEL]));
+`endif
     end endgenerate
-    ot_hgi_coll_park_fault #(.N(EQ*DEL)) u_fault(.clk(clk),.rst_n(rst_n),.bank_ovf(bank_ovf),.ovf(ovf));
+`ifdef OT_COLL_PARK_HARD
+    ot_hgi_coll_park_fault u_fault
+`else
+    ot_hgi_coll_park_fault #(.N(EQ*DEL)) u_fault
+`endif(.clk(clk),.rst_n(rst_n),.bank_ovf(bank_ovf),.ovf(ovf));
 endmodule
