@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.be_pin_access_physical_repair_request.v1",
+  "status": "REQUESTED_NOT_LAUNCHED",
+  "top": "dsfd_vm_be_sl",
+  "source_module_byte_identical_to_closed_c15e2bf6a": true,
+  "outline_um": [
+    302.4,
+    92.88
+  ],
+  "actual_closed_route": {
+    "cap": "M7",
+    "OT_PK_FRAC": 0.5,
+    "OT_PK_ABOVE_ONLY": 1,
+    "source_epoch": "c15e2bf6a",
+    "libraries_unchanged": true
+  },
+  "actual_AP": {
+    "ap_original_m7": {
+      "record": "results/arch/s81_be_view_audit_1014/ap_original_m7/record.json",
+      "log_sha256": "5a4a6bc7d8b2edb3eed56c7a289d94571661f48f8aba37c196be8af453bffed3",
+      "failed_pins": [
+        "u2/bl_d[1000] (dsfd_vm_be_sl).",
+        "u3/bl_d[1000] (dsfd_vm_be_sl).",
+        "u1/cks[0] (dsfd_vm_be_sl)."
+      ]
+    },
+    "ap_selective_window_m7": {
+      "record": "results/arch/s81_be_view_audit_1014/ap_selective_window_m7/record.json",
+      "log_sha256": "f30723d5da41336bf96f4e9222ae0e7e1d151b1c5ab0c4781de7e1af39cbcd3e",
+      "failed_pins": [
+        "u2/bl_d[1000] (dsfd_vm_be_sl).",
+        "u3/bl_d[1000] (dsfd_vm_be_sl).",
+        "u0/bl_d[1000] (dsfd_vm_be_sl).",
+        "u1/bl_d[1000] (dsfd_vm_be_sl)."
+      ]
+    }
+  },
+  "rejected_export": "selectiveouterwindows alone passM7geometriclint but FAIL actualM2-M7 pin_access; notadmissible",
+  "physical_candidate": {
+    "required_cap": "M7 honestlegacyactualcap asparentrequested; nofakeM6label",
+    "pre_global_route": "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+    "post_detail_route": "samefile removesonlytemporaryownkeepoutobstructions",
+    "OT_PK_FRAC": 0,
+    "OT_PK_HALO": 0.072,
+    "OT_PK_ABOVE_ONLY": 1,
+    "protect": "fullphysicalpincolumnplus.072halo onlayerabove; preserveown-layer pinmetal/viaaccess",
+    "recipe": 2,
+    "hold_margin_ns": 0.03,
+    "source_RTL_change": false,
+    "latency_delta_cycles": 0,
+    "isolated_kit": "physical/s81_be_access_m7_candidate/request.json"
+  },
+  "clocks": {
+    "known_legacy_local_domains": {
+      "ck_period_ps": 1111.1,
+      "cks_period_ps": 833.325
+    },
+    "global_driver_R_phase": null,
+    "asynchronous_reset_driver_reference_clocks": null,
+    "requirement": "preserveactualrelatedclockdomains; referencecurrentactualdrivers; noSDC-onlyrelaxation orfalsepath"
+  },
+  "qualification": [
+    "actualroutedexport child_lintat truthfulM7 withoutskips; parentmustacceptactuallegacylayeruse",
+    "all4094pinaccess in4orientations actualM2-M7 mustPASS",
+    "SSsetup/FFhold atactualclockpolicy +15ps, DRC0",
+    "routedperclockboundaryR andactualperpairETMbudgets",
+    "currentexactsource/productionthroughput proofs remainvalid"
+  ],
+  "ownership": "rootownsadmittedphysicaljoblaunch; thisauditdoesnotduplicate existingroutes"
+}

@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / 'results/arch/s81_be_native_mc_placement_1014'
 W, OLD_H, H, Y, SIZE, PITCH = 1887.384, 136.08, 196.56, 117.72, 32.4, 64.8
 SL_PITCH = 475.2
+BE_LEF = BASE/'inputs/be_sl_c15e2bf6a.lef'
 def derive_configuration(ep1):
     src=(ROOT/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv').read_text()
     parent=src[src.index('module dsfd_sp_vm_m'):]
@@ -51,7 +52,7 @@ def lef(p):
 def build(bindings):
     pins={m:iop(BASE/'inputs'/f'{m}_iop.tcl') for m in
           ['dsfd_be_r55_m5','dsfd_die_r1_m5','dsfd_die_rstsync_m5']}
-    sl=lef(BASE/'inputs/be_sl_c15e2bf6a.lef')
+    sl=lef(BE_LEF)
     cells=[]
     def add(n,m,x,domain,bits):
         cells.append(dict(name=n,master=m,target_x=x,clock=domain,bits=bits))
@@ -69,8 +70,15 @@ def build(bindings):
     for c,k in zip(cells,cols):c.update(x=sites[k][0],y=sites[k][1],w=SIZE,h=SIZE,orient='R0')
     assert len(cells)==4*DIE_D+30 and sum(c['bits'] for c in cells)==4*55*DIE_D+32
     by={c['name']:c for c in cells}
+    endpoints={}
+    for slice_id in range(4):
+        for port,xy in sl.items():
+            point=(round(64.8+SL_PITCH*slice_id+xy[0],6),round(21.6+xy[1],6))
+            endpoints[point]=dict(instance=f'g_s[{slice_id}].u_sl',master='dsfd_vm_be_sl',pin=port,source_scope='c15e2bf6a actual ETM/LEF; current cap eligibility pending')
     def pin(n,p):
-        c=by[n];x,y=pins[c['master']][p];return [round(c['x']+x,6),round(c['y']+y,6)]
+        c=by[n];x,y=pins[c['master']][p];point=[round(c['x']+x,6),round(c['y']+y,6)]
+        endpoints[tuple(point)]=dict(instance=n,master=c['master'].removesuffix('_m5'),pin=p,logical_clock=c['clock'],source_scope='actual CTS pin; routed ETM pending')
+        return point
     pairs=[];pending=[]
     mc_source=(BASE/'inputs/bgl_mc_cc460927f.sv').read_text()
     actual_mc_ed=int(re.search(r'localparam integer ED = (\d+);',mc_source)[1])
@@ -79,7 +87,7 @@ def build(bindings):
     bgr=json.loads((BASE/'inputs/bgr_cc460927f_pin_request.json').read_text())
     provisional={'g_h[0].g_t[3].u_bg.'+v['pin']:dict(xy=[21.6+v['x_um'],H],launch_clock='ck_req_l7') for v in bgr['pins'] if v['pin'].startswith('f_')}
     def pair(net,a,b,klass):
-        pairs.append(dict(net=net,source=a,destination=b,kind=klass,
+        pairs.append(dict(net=net,source=a,destination=b,source_endpoint=endpoints.get(tuple(round(x,6) for x in a)),destination_endpoint=endpoints.get(tuple(round(x,6) for x in b)),kind=klass,
                      reach_um=round(abs(a[0]-b[0])+abs(a[1]-b[1]),6)))
     def external(net,dest,kind):
         v=bindings.get('pins',{}).get(net)
@@ -87,7 +95,7 @@ def build(bindings):
             pending.append(dict(net=net,destination=dest.copy(),kind=kind,reason='actual qualified source pin absent'))
             if net in provisional:
                 pair(net,provisional[net]['xy'].copy(),dest,kind)
-                pairs[-1].update(source_qualified=False,source_scope='cc460927f UNQUALIFIED pin request; leaf g_l[7].u_l at parentlocal(21.6,0)',candidate_launch_clock='ck_req_l7',production_launch_clock='ck')
+                pairs[-1].update(source_endpoint=dict(instance='g_h[0].g_t[3].u_bg.g_l[7].u_l',master='dsfd_vm_bgl28_mc',pin=net.split('.u_bg.')[1],logical_clock='ck_req_l7',source_scope='UNQUALIFIED cc460927f pin request'),source_qualified=False,source_scope='cc460927f UNQUALIFIED pin request; leaf g_l[7].u_l at parentlocal(21.6,0)',candidate_launch_clock='ck_req_l7',production_launch_clock='ck')
             return
         if not all(v.get(k) for k in ['instance','pin','source_sha256','view_sha256']):
             pending.append(dict(net=net,reason='source/view provenance absent'));return
@@ -129,9 +137,10 @@ def build(bindings):
     ia=np.array([owner(p['source']) for p in pairs]);ib=np.array([owner(p['destination']) for p in pairs])
     pa=np.array([p['source'] for p in pairs]);pb=np.array([p['destination'] for p in pairs])
     targets=np.array([[c['target_x']-SIZE/2,Y] for c in cells])
+    reach_limits=np.array([130 if p['kind']=='reset_sink' and p['net'].startswith('rns_') else 190 if p['kind']=='reset_sink' else 440 for p in pairs])
     def score(xx):
         shift=np.vstack([xx-origin,[0,0]]);reach=np.abs(pa+shift[ia]-pb-shift[ib]).sum(axis=1)
-        return float(np.square(np.maximum(reach-440,0)).sum()*10000+np.square(xx-targets).sum())
+        return float(np.square(np.maximum(reach-reach_limits,0)).sum()*10000+np.square(xx-targets).sum())
     best=score(slots)
     for sweep in range(12):
         changed=False
@@ -228,7 +237,7 @@ def build(bindings):
     cuts['worst_vertical_windows']=worst
     over=[p for p in pairs if p['reach_um']>500]
     return dict(schema='opentallas.be_native_placement_request.v1',status='requested_not_adopted',
-        source_commit='4beabe410d050e61103985cd44aa7725a1f141ae',candidate_pin_request_commit='cc460927f',MC_source_facts=dict(source_snapshot='results/arch/s81_be_native_mc_placement_1014/inputs/bgl_mc_cc460927f.sv',ED=actual_mc_ed,QD=QD,HL=QD+4+actual_mc_ed,HOP1=1,HHL=QD+3+actual_mc_ed,return_minus_forward_skew=MD,defines=['OT_VMBGL_HOP1'],CLOCK_SPLIT=1,source_integration='native MC parent notyetbuilt; plannedleafg_l[7].u_l'),selected_candidate_support='proven MC H1 meansforwardhop1, retainsEP2/ED3/HL11; noOT_VM28_EP1. Actualnativeparent sourceintegration pending',source_files={p:digest(ROOT/p) for p in ['rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv','rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv']},configuration=dict(NS=4,HARD_RELAYS=1,**CONFIG),production_default_configuration=derive_configuration(False),inputs={str(p.relative_to(ROOT)):digest(p) for p in sorted((BASE/'inputs').iterdir())},
+        selected_BE_LEF=dict(path=str(BE_LEF.relative_to(ROOT)),sha256=digest(BE_LEF),eligibility='capM6 stillINVALID; candidateM7 export requiresactualparentaccessprobe/acceptedlegacyviewcap'),source_commit='4beabe410d050e61103985cd44aa7725a1f141ae',candidate_pin_request_commit='cc460927f',MC_source_facts=dict(source_snapshot='results/arch/s81_be_native_mc_placement_1014/inputs/bgl_mc_cc460927f.sv',ED=actual_mc_ed,QD=QD,HL=QD+4+actual_mc_ed,HOP1=1,HHL=QD+3+actual_mc_ed,return_minus_forward_skew=MD,defines=['OT_VMBGL_HOP1'],CLOCK_SPLIT=1,source_integration='native MC parent notyetbuilt; plannedleafg_l[7].u_l'),selected_candidate_support='proven MC H1 meansforwardhop1, retainsEP2/ED3/HL11; noOT_VM28_EP1. Actualnativeparent sourceintegration pending',source_files={p:digest(ROOT/p) for p in ['rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv','rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv']},configuration=dict(NS=4,HARD_RELAYS=1,**CONFIG),production_default_configuration=derive_configuration(False),inputs={str(p.relative_to(ROOT)):digest(p) for p in sorted((BASE/'inputs').iterdir())},
         slot_request=dict(current_be_height_um=OLD_H,requested_be_height_um=H,delta_height_um=round(H-OLD_H,6),north_band_um=round(H-114.48,6),
             current_vm_outline_um=[1541.784,3952.776],superseded_h1_vm_request_um=[W,3970.056],requested_vm_outline_um=[W,round(3952.776+H-OLD_H,6)],move_bgq_fe_y_um=round(H-OLD_H,6),
             preserve='BE_SL y21.6 and MC EP2/MD12 six control stages; x64.8+475.2s perwidecandidate; no added latency',extra_height_over_h1_request_um=round(H-153.36,6),column_pitch_um=PITCH,face_channel_um=PITCH-SIZE,vertical_gap_um=10.8,rows=2,adopted=False),
@@ -248,9 +257,10 @@ def build(bindings):
         pass_=False)
 
 def main():
-    global H
-    ap=argparse.ArgumentParser();ap.add_argument('--be-height',type=float,default=196.56);ap.add_argument('--bindings',type=Path);ap.add_argument('--out',type=Path,default=BASE/'request.json');a=ap.parse_args()
+    global H,BE_LEF
+    ap=argparse.ArgumentParser();ap.add_argument('--be-lef',type=Path);ap.add_argument('--be-height',type=float,default=196.56);ap.add_argument('--bindings',type=Path);ap.add_argument('--out',type=Path,default=BASE/'request.json');a=ap.parse_args()
     H=a.be_height
+    if a.be_lef:BE_LEF=a.be_lef.resolve()
     d=build(json.loads(a.bindings.read_text()) if a.bindings else {})
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(d,indent=2)+'\n')
     print(json.dumps(dict(cells=len(d['cells']),ownstate=d['ownstate'],placement_violations=len(d['placement_violations']),

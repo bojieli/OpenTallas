@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.be_RTL_clock_binding.v1",
+  "status": "RTL_DOMAIN_BINDING_PROVEN_PHYSICAL_DRIVER_OPEN",
+  "source_file": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv",
+  "source_sha256": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
+  "witnesses": {
+    "serial_reset_root": {
+      "line": 1611,
+      "text": "dsfd_die_rstsync u_rs (.ck(clk), .rst(rst[0]), .rn(rn0));"
+    },
+    "stream_reset_root": {
+      "line": 1612,
+      "text": "dsfd_die_rstsync u_rss (.ck(cks[0]), .rst(rss[0]), .rn(rns0));"
+    },
+    "serial_reset_relay": {
+      "line": 1636,
+      "text": "dsfd_die_r1 u_c (.ck(clk)"
+    },
+    "stream_reset_relay": {
+      "line": 1637,
+      "text": "dsfd_die_r1 u_s (.ck(cks[0])"
+    },
+    "control_relay": {
+      "line": 1632,
+      "text": "dsfd_be_r55 u_r (.ck(clk)"
+    },
+    "ready_relay": {
+      "line": 1639,
+      "text": "dsfd_die_r1 u_ready (.ck(clk)"
+    }
+  },
+  "logical_domains": {
+    "serial": "clk = ck[0]",
+    "stream": "cks[0]"
+  },
+  "actual_physical_driver": {
+    "ck": null,
+    "cks": null
+  },
+  "actual_phase_or_R": {
+    "ck": null,
+    "cks": null
+  },
+  "asynchronous_reset_sources": {
+    "rst": {
+      "capture_clock": "ck[0]",
+      "driver_reference_clock": null
+    },
+    "rss": {
+      "capture_clock": "cks[0]",
+      "driver_reference_clock": null
+    }
+  },
+  "caution": "Actualresetdriverreferenceclockcannotbeinferredfromrootcaptureclock; actualclockdriver/R/phase remainunbound",
+  "reset_relay_launch": "u_s actualinputck=cks[0]; physicaldriver/Runbound"
+}

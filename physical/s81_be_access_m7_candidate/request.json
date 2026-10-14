@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.be_m7_access_successor_kit.v1",
+  "status": "PREPARED_NOT_LAUNCHED_NOT_ADOPTED",
+  "top": "dsfd_vm_be_sl",
+  "source_epoch": "currentRTL leaf+helpers byteidenticaltoc15e2bf6a",
+  "actual_route_cap": "M7",
+  "PG_top": "M7",
+  "parent_strap": "M8",
+  "parent_signal_max": "M7",
+  "outline_um": [
+    302.4,
+    92.88
+  ],
+  "source_file": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv",
+  "source_sha256": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
+  "structural_change": "physicalfull-depth above-layerpinwindows, inwardM5PGstripe offset1.296, existingreset-inputholdbuffers; noRTL/state/latencychange",
+  "pin_plan": "4094signalpinrectangles derived from actual closedc15e2bf6a LEF; isolateddirectory, not stalepublishedcontract_vm28 pins",
+  "clock_period_ps": {
+    "ck": 1111.1,
+    "cks": 833.325
+  },
+  "clock_policy": "actuallegacyratio3/4 retained;123ps route setupuncertainty/60ps signoff,25pshold; per-clockroutedreferencevirtuals; no blanketinputhold/reset exceptions",
+  "physical_keepout": {
+    "OT_PK_FRAC": 0,
+    "OT_PK_HALO": 0.072,
+    "OT_PK_ABOVE_ONLY": 1,
+    "remove_after_detail_route": true
+  },
+  "pin_PG_clearance": "firstM5stripeoffset0.300\u21921.296 keepsW/Efull-depthpinvia bandclear; M7PGoutline/pinsstanding",
+  "bench_binding": "physical/s81_be_access_m7_candidate/exact_gate_binding.json",
+  "admission": "launch.sh usesexistingroute_view admittedhostlauncher; rootownslaunch andmustfreezeSOURCE_COMMIT; no duplicatejoblaunched",
+  "slot_request": {
+    "legacy_view_cap": "M7",
+    "adopted": false,
+    "reason": "truthfulactualM7 successor; M6metadata cannotdescribeactualroute",
+    "parent_layers_must_reconcile": true
+  },
+  "qualification": [
+    "current-sourceexactnativegold/tp/observedmutantbinding",
+    "actual M2-M7 AP 4 orientations noDRT0073",
+    "childlintactualM7 withoutskips",
+    "SSsetup+15 FFhold+15 DRC0",
+    "routedclockreferenceperckandcks + actualglobaldriver/resetrefclk binding",
+    "parentfullpin/cut/sourcegraphproof"
+  ],
+  "old_CLOSEDchild_replaced": false,
+  "global_clock_or_reset_binding": false,
+  "kit_sha256": {
+    "physical/s81_be_access_m7_candidate/helper_overlay_plan.json": "4e84f3b8b17edeb4d38cd5582b97afc400a86b7923ae9b0edbcd08bad5f3ed5c",
+    "physical/s81_be_access_m7_candidate/io_place.tcl": "01c3be3810ecccb81a89777f0723cf1d276191c6f2e5deb5555a803891b1a1e1",
+    "physical/s81_be_access_m7_candidate/margin.sdc": "1587b64ab7e05344cd6c14a7acc62f6ab5e7fbc576c645e843306503c92d2d90",
+    "physical/s81_be_access_m7_candidate/full_depth_keepout.tcl": "7c0e1621e7f8d197fedb8cc7c79591e4523e1b00369377a4b10baaf8e2e176b1",
+    "physical/s81_be_access_m7_candidate/post_cts.tcl": "c4898d81a24e166939a26065e5b60f9af365d2d27534590a65f825c8bbcaaac3",
+    "physical/s81_be_access_m7_candidate/pdn.tcl": "a7cd1702729a1b3cc352daa0d22e1341405e499a46dbefe10aa54747e0e4028a",
+    "physical/s81_be_access_m7_candidate/exact_gate_binding.json": "e6568256779f66ee149676f674c3627d2fdd74c2d1cb5a8227a80f75b258889f",
+    "physical/s81_be_access_m7_candidate/ports.json": "2c3981b27bce974b07620cef8fe3c51a742fe0e999b12a3ac314100c891804b9",
+    "physical/s81_be_access_m7_candidate/launch.sh": "bff5d5efaa5a89b7fd8395a97ed8ff4ed459ffd8344b13e36426cfa59b687ad4"
+  },
+  "validation": {
+    "pin_identity_check": "results/arch/s81_be_view_audit_1014/kit_pin_identity_check.json",
+    "OpenROAD_SDC_syntax": "results/arch/s81_be_view_audit_1014/kit_sdc_syntax.log",
+    "full_physical_qualification": false
+  },
+  "helper_count": 46,
+  "helper_plan_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca"
+}

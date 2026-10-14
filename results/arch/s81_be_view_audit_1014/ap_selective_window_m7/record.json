@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.be_pin_access_probe.v1",
+  "lef_sha256": "c08a91fa6c67d26caeb7a4f511ffb1128e8c3a13e6f4c228d4ab67bc5307192c",
+  "station_generator_sha256": "a19dd7e77f993c36f4d75e8e031a567be9c60c99693d46e2cd93b75f73f20604",
+  "tcl_sha256": "a9e3f3ad911262c98cea2844f39636b887405bcf30605c6203549f6da229486c",
+  "image": "openroad/orfs:asap7lock",
+  "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+  "parent_signal_layers": "M2-M7",
+  "orientations": [
+    "R0",
+    "MX",
+    "MY",
+    "R180"
+  ],
+  "clock_or_route_qualification": false,
+  "headroom_meminfo": "MemTotal:       197661924 kB\nMemFree:         8237520 kB\nMemAvailable:   170578392 kB\nBuffers:        11329496 kB\nCached:         129318668 kB\nSwapCached:       136248 kB\nActive:         48229568 kB\nInactive:       112077532 kB\nActive(anon):   18369264 kB\nInactive(anon):  1316964 kB\nActive(file):   29860304 kB\nInactive(file): 110760568 kB\nUnevictable:       27736 kB\nMlocked:           27736 kB\nSwapTotal:       8388604 kB\nSwapFree:        4915260 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:             35140 kB\nWriteback:             0 kB\nAnonPages:      19669648 kB\nMapped:          1207284 kB\nShmem:             18240 kB\nKReclaimable:   23492940 kB\nSlab:           25600836 kB\nSReclaimable:   23492940 kB\nSUnreclaim:      2107896 kB\nKernelStack:       33392 kB\nPageTables:       174280 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    107219564 kB\nCommitted_AS:   70075868 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      118508 kB\nVmallocChunk:          0 kB\nPercpu:            41728 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nUnaccepted:            0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:    82873804 kB\nDirectMap2M:    116156416 kB\nDirectMap1G:     2097152 kB\n",
+  "threads": 4,
+  "elapsed_s": 0.9970004558563232,
+  "child_peak_rss_kb": 29184,
+  "returncode": 0,
+  "DRT0073": 5,
+  "OT_PA_DONE": false,
+  "pass_": false,
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "-u",
+    "1000:1000",
+    "-v",
+    "/home/ubuntu/wt/codex-s81-be-native-placement/results/arch/s81_be_view_audit_1014/ap_selective_window_m7:/work",
+    "openroad/orfs:asap7lock",
+    "bash",
+    "-c",
+    "cd /work && /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit pa.tcl"
+  ]
+}

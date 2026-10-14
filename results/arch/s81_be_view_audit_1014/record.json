@@ -1,0 +1,166 @@
+{
+  "schema": "opentallas.be_legacy_view_audit.v1",
+  "status": "REEXPORT_CANDIDATE_REJECTED_ACTUAL_PIN_ACCESS",
+  "source_epoch": "c15e2bf6a",
+  "source_modules": {
+    "dsfd_vm_be_sl": {
+      "route_source_sha256": "19b2f335d09e451419249eb6b89cdb2f6f760fcb8cf5e24c798e66c5b9855377",
+      "current_source_sha256": "19b2f335d09e451419249eb6b89cdb2f6f760fcb8cf5e24c798e66c5b9855377",
+      "byte_identical": true
+    },
+    "dsfd_vm_be_rcdc": {
+      "route_source_sha256": "e0fde89922a9cf405cd9cdfe36dd6496d0caff64c5b44175dbcf9c774bca255f",
+      "current_source_sha256": "e0fde89922a9cf405cd9cdfe36dd6496d0caff64c5b44175dbcf9c774bca255f",
+      "byte_identical": true
+    },
+    "dsfd_vm_be_kreg": {
+      "route_source_sha256": "5ef22131c293e40d69360fda44ee171ebe212019d8b1c22cf3ebdb62b9bb8889",
+      "current_source_sha256": "5ef22131c293e40d69360fda44ee171ebe212019d8b1c22cf3ebdb62b9bb8889",
+      "byte_identical": true
+    }
+  },
+  "source_closed_child_status": "preserved; TT21.72ps/FF18.68ps recorded by legacyverdict; no newSS/parentclosureclaim",
+  "route_actual_cap": "M7",
+  "route_arguments": "SRC=/srv/opentallas-data/claude/closure-loop/s81vm-besl4a-c15e2bf6a-tc-rd-pd45/src die=contract_vm28 master=dsfd_vm_be_sl top=rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv DW=302.4 DH=92.88 PD=0.45 MAXL=M7 SRCS=rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv rtl/common/ot_ratio_cdc_fifo.sv CLK=ck SDCX=physical/s81_ph_views/vm_master/be_sl_clock.sdc CTSA= --step-tcl PRE_GLOBAL_ROUTE=physical/redesign_ds/coll_split/pin_access_pregrt.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1\n",
+  "abstract_sha256": "085e5ead0cb0d25fb437b085838240dedc7a3cdfadfcb71c753f67f0c4067966",
+  "original_LEF_sha256": "cdab81772dca3007483e71c881374989cc6eb90d8c3ec69dd585cb3e429a3eb6",
+  "candidate_LEF_sha256": "c08a91fa6c67d26caeb7a4f511ffb1128e8c3a13e6f4c228d4ab67bc5307192c",
+  "unchanged_Liberty_sha256": {
+    "dsfd_vm_be_sl_tt.lib": "dea0704844467384199a3c21bb3e654dbb887c07883895f4397b2e9334ba99af",
+    "dsfd_vm_be_sl_ss.lib": "b83f271be4e80b17253d8c39a58c20e046a09fb79f2202baeba814f4cb2c36d9",
+    "dsfd_vm_be_sl_ff.lib": "a0bc6b1fe82aac0794e2c1c68827bc2a190f5707498306484d8b06322ecca63d"
+  },
+  "metal_union": {
+    "LVTN": {
+      "original_area_um2": 714.0555000000007,
+      "candidate_area_um2": 714.0555000000007,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "LVTP": {
+      "original_area_um2": 714.0554999999999,
+      "candidate_area_um2": 714.0554999999999,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "RVTN": {
+      "original_area_um2": 13166.104499999989,
+      "candidate_area_um2": 13166.104499999989,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "RVTP": {
+      "original_area_um2": 13166.104499999985,
+      "candidate_area_um2": 13166.104499999985,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "M1": {
+      "original_area_um2": 27765.76320000011,
+      "candidate_area_um2": 27765.76320000011,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "M2": {
+      "original_area_um2": 27896.920236000133,
+      "candidate_area_um2": 27896.920236000133,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "M3": {
+      "original_area_um2": 25566.97888799998,
+      "candidate_area_um2": 25566.97888799998,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "M4": {
+      "original_area_um2": 19708.993890000012,
+      "candidate_area_um2": 19708.993890000012,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "M5": {
+      "original_area_um2": 11605.659920000035,
+      "candidate_area_um2": 11605.659920000075,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "M6": {
+      "original_area_um2": 22178.96867400002,
+      "candidate_area_um2": 22178.96867400002,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 0.0
+    },
+    "M7": {
+      "original_area_um2": 15052.495569999986,
+      "candidate_area_um2": 20203.950867999978,
+      "erased_area_um2": 0.0,
+      "added_area_um2": 5151.455297999994
+    }
+  },
+  "original_metal_retained": true,
+  "pin_identities_preserved": true,
+  "pin_window_strategy": "onlyblockedpins;largestclearouterfraction .75/.5/.25",
+  "access_window_min_depth_um": 0.048,
+  "original_export_defects": {
+    "own_stub_pins": 14,
+    "open_M7_pockets": 2127,
+    "full_depth_above_OBS_overlaps": 1509
+  },
+  "candidate_m7_child_lint": "PASS",
+  "candidate_m6_child_lint": "FAIL",
+  "actual_M2_M7_pin_access": "FAIL",
+  "actual_AP_record": {
+    "schema": "opentallas.be_pin_access_probe.v1",
+    "lef_sha256": "c08a91fa6c67d26caeb7a4f511ffb1128e8c3a13e6f4c228d4ab67bc5307192c",
+    "station_generator_sha256": "a19dd7e77f993c36f4d75e8e031a567be9c60c99693d46e2cd93b75f73f20604",
+    "tcl_sha256": "a9e3f3ad911262c98cea2844f39636b887405bcf30605c6203549f6da229486c",
+    "image": "openroad/orfs:asap7lock",
+    "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+    "parent_signal_layers": "M2-M7",
+    "orientations": [
+      "R0",
+      "MX",
+      "MY",
+      "R180"
+    ],
+    "clock_or_route_qualification": false,
+    "headroom_meminfo": "MemTotal:       197661924 kB\nMemFree:         8237520 kB\nMemAvailable:   170578392 kB\nBuffers:        11329496 kB\nCached:         129318668 kB\nSwapCached:       136248 kB\nActive:         48229568 kB\nInactive:       112077532 kB\nActive(anon):   18369264 kB\nInactive(anon):  1316964 kB\nActive(file):   29860304 kB\nInactive(file): 110760568 kB\nUnevictable:       27736 kB\nMlocked:           27736 kB\nSwapTotal:       8388604 kB\nSwapFree:        4915260 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:             35140 kB\nWriteback:             0 kB\nAnonPages:      19669648 kB\nMapped:          1207284 kB\nShmem:             18240 kB\nKReclaimable:   23492940 kB\nSlab:           25600836 kB\nSReclaimable:   23492940 kB\nSUnreclaim:      2107896 kB\nKernelStack:       33392 kB\nPageTables:       174280 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    107219564 kB\nCommitted_AS:   70075868 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      118508 kB\nVmallocChunk:          0 kB\nPercpu:            41728 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nUnaccepted:            0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:    82873804 kB\nDirectMap2M:    116156416 kB\nDirectMap1G:     2097152 kB\n",
+    "threads": 4,
+    "elapsed_s": 0.9970004558563232,
+    "child_peak_rss_kb": 29184,
+    "returncode": 0,
+    "DRT0073": 5,
+    "OT_PA_DONE": false,
+    "pass_": false,
+    "command": [
+      "docker",
+      "run",
+      "--rm",
+      "-u",
+      "1000:1000",
+      "-v",
+      "/home/ubuntu/wt/codex-s81-be-native-placement/results/arch/s81_be_view_audit_1014/ap_selective_window_m7:/work",
+      "openroad/orfs:asap7lock",
+      "bash",
+      "-c",
+      "cd /work && /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit pa.tcl"
+    ]
+  },
+  "admissible": false,
+  "disposition": {
+    "export": "standardstub/pocket postprocess fixesstub/pockets; selectiveconservativewindowsexport passesgeometrylint but failsactualM2-M7PA; do notadopt",
+    "metadata": "actualM7 cap may behonestlyrecordedaslegacyviewcap; changinglabeltoM6wouldhideactualM7signals/PG",
+    "physical": "physicalabove-layerpin-depth/halo keepoutrepair/reroute orrawroute-backedalternateexport withactualPAproof needed. M6/M5cap requiresactualreroute; metadata/export cannotremoveabove-caproutedmetal",
+    "adoption": [
+      "actualparenttechnology/AP/DRCprobe MUST PASS; currentselectivewindowFAIL",
+      "die accepts truthfullegacyM7viewcap/strapM8 and recomposesavailablelayers",
+      "realperclockroutedR, actualglobalclock/resetsourcepins, SS/FFperpairbudgets",
+      "allparenttrafficcuts"
+    ]
+  },
+  "fail_records_preserved": true,
+  "globally_clock_bound": false,
+  "globally_reset_bound": false,
+  "pass_": false
+}
