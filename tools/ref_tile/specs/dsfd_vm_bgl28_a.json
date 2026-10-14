@@ -12,7 +12,7 @@
  ],
  "outline": {
   "w": 345.6,
-  "h": 77.76
+  "h": 90.72
  },
  "pins": {
   "N": [
@@ -47,76 +47,76 @@
  },
  "pin_ranges": {
   "i_v": [
-   2.4,
-   4.144
+   2.362,
+   3.71
   ],
   "f_v": [
-   2.4,
-   4.144
+   2.362,
+   3.71
   ],
   "i_we": [
-   4.144,
-   5.888
+   3.631,
+   4.991
   ],
   "f_we": [
-   4.144,
-   5.888
+   3.631,
+   4.991
   ],
   "i_row": [
-   5.888,
-   30.302
+   4.954,
+   23.198
   ],
   "f_row": [
-   5.888,
-   30.302
+   4.954,
+   23.198
   ],
   "i_mask": [
-   30.302,
-   37.277
+   23.143,
+   28.391
   ],
   "f_mask": [
-   30.302,
-   37.277
+   23.143,
+   28.391
   ],
   "i_d": [
-   37.277,
-   260.491
+   28.363,
+   259.502
   ],
   "f_d": [
-   37.277,
-   260.491
+   28.363,
+   259.502
   ],
   "r_v": [
-   260.49,
-   261.49
+   260.491,
+   261.491
   ],
   "o_v": [
-   260.49,
-   261.49
+   260.491,
+   261.491
   ],
   "r_d": [
-   261.49,
-   341.21
+   261.499,
+   341.231
   ],
   "o_d": [
-   261.49,
-   341.21
+   261.499,
+   341.231
   ],
   "r_f": [
-   341.21,
-   342.2
+   341.29,
+   342.131
   ],
   "o_f": [
-   341.21,
-   342.2
+   341.29,
+   342.131
   ],
   "r_o": [
-   342.2,
-   343.2
+   342.319,
+   343.103
   ],
   "o_o": [
-   342.2,
-   343.2
+   342.319,
+   343.103
   ]
  },
  "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_pins.tcl",
@@ -126,7 +126,7 @@
    "count": 1,
    "at": [
     85.536,
-    23.76
+    30.24
    ],
    "orient": "MY",
    "inst": "*u_m"
@@ -142,7 +142,7 @@
  "job": {
   "owner": "Claude:el1013-s81-bgq28",
   "branch": "claude/s81-bgq28-1013",
-  "tag": "r1",
+  "tag": "r2",
   "purpose": "el1013-s81-bgq28: one-bank VM leaf (x8 under dsfd_vm_bgq28h). 345.6 x 77.76 (SRAM >= 20 um from the N/S pin faces on the 2.16 lattice), M5 cap, N/S pins at the flat tile x/layer; whole-leaf macro cut 5,441 / 11,387 = 0.478.",
   "benches": [
    {
@@ -286,5 +286,5 @@
  },
  "layer_cap": "M5",
  "recipe": 2,
- "structural_change": "the flat 8-bank tile dsfd_vm_bgr (63,416 sinks on one root, 5,441 feed-through bits over an 8-macro column, GRT 20,000 markers) is replaced by 8 identical one-bank hard leaves dsfd_vm_bgl28, every N/S bit registered at both pin faces (leaf hop 2), one SRAM and one clock root of ~14.5k sinks a leaf, under a wires-only parent"
+ "structural_change": "the flat 8-bank tile dsfd_vm_bgr (63,416 sinks on one root, 5,441 feed-through bits over an 8-macro column, GRT 20,000 markers) is replaced by 8 identical one-bank hard leaves dsfd_vm_bgl28, every N/S bit registered at both pin faces (leaf hop 2), one SRAM and one clock root of ~14.5k sinks a leaf, under a wires-only parent || r2: after FLOORPLAN_MARGIN of r1 (util 67.1 %, N / S M3 13.2 b/um): leaf height 77.76 -> 90.72 (util 57 %, 30-um channels N and S of the SRAM), N / S pins rebalanced over M3 + M5 along the whole face (M3 was kept off the SRAM span for the flat tile's feed-throughs; a leaf has none): M3 11.1 / M5 10.4 b/um, x order kept, max shift 20.5 um"
 }
