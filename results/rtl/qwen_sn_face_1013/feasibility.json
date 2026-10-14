@@ -1,0 +1,166 @@
+{
+ "scope": "Four independent candidate face masters; no route job submitted",
+ "rtl_sha256": "5819146c78950e124ddd0492def7e0eafa8f5d84caf8c8d569d0fcfe7d5e2b62",
+ "masters": {
+  "sn_e0": {
+   "rows": 32,
+   "row_height_um": 0.27,
+   "die": [
+    0.0,
+    0.0,
+    129.6,
+    12.96
+   ],
+   "core": [
+    2.16,
+    2.16,
+    127.44,
+    10.8
+   ],
+   "signal_pins": 1025,
+   "pin_face_layer_errors": [],
+   "three_corner_boundary": {
+    "tt": {
+     "n": 512,
+     "mean": 104.1,
+     "min": 99.2,
+     "max": 109.5
+    },
+    "ff": {
+     "n": 512,
+     "mean": 85.0,
+     "min": 79.9,
+     "max": 90.1
+    },
+    "ss": {
+     "n": 512,
+     "mean": 136.3,
+     "min": 131.5,
+     "max": 142.4
+    }
+   },
+   "parasitics": "placement-estimated",
+   "scope": "Prototype actualsite/PG/pin placement/CTS evidence; no routed view or die-slot approval"
+  },
+  "ns_e0": {
+   "rows": 32,
+   "row_height_um": 0.27,
+   "die": [
+    0.0,
+    0.0,
+    129.6,
+    12.96
+   ],
+   "core": [
+    2.16,
+    2.16,
+    127.44,
+    10.8
+   ],
+   "signal_pins": 1025,
+   "pin_face_layer_errors": [],
+   "three_corner_boundary": {
+    "tt": {
+     "n": 512,
+     "mean": 103.5,
+     "min": 99.1,
+     "max": 107.8
+    },
+    "ff": {
+     "n": 512,
+     "mean": 84.5,
+     "min": 80.1,
+     "max": 89.0
+    },
+    "ss": {
+     "n": 512,
+     "mean": 135.3,
+     "min": 131.0,
+     "max": 139.5
+    }
+   },
+   "parasitics": "placement-estimated",
+   "scope": "Prototype actualsite/PG/pin placement/CTS evidence; no routed view or die-slot approval"
+  },
+  "sn_e1": {
+   "rows": 32,
+   "row_height_um": 0.27,
+   "die": [
+    0.0,
+    0.0,
+    129.6,
+    12.96
+   ],
+   "core": [
+    2.16,
+    2.16,
+    127.44,
+    10.8
+   ],
+   "signal_pins": 1026,
+   "pin_face_layer_errors": [],
+   "three_corner_boundary": {
+    "tt": {
+     "n": 516,
+     "mean": 105.7,
+     "min": 100.1,
+     "max": 110.2
+    },
+    "ff": {
+     "n": 516,
+     "mean": 86.4,
+     "min": 80.6,
+     "max": 91.0
+    },
+    "ss": {
+     "n": 516,
+     "mean": 138.4,
+     "min": 132.9,
+     "max": 142.6
+    }
+   },
+   "parasitics": "placement-estimated",
+   "scope": "Prototype actualsite/PG/pin placement/CTS evidence; no routed view or die-slot approval"
+  },
+  "ns_e1": {
+   "rows": 32,
+   "row_height_um": 0.27,
+   "die": [
+    0.0,
+    0.0,
+    129.6,
+    12.96
+   ],
+   "core": [
+    2.16,
+    2.16,
+    127.44,
+    10.8
+   ],
+   "signal_pins": 1026,
+   "pin_face_layer_errors": [],
+   "three_corner_boundary": {
+    "tt": {
+     "n": 516,
+     "mean": 105.3,
+     "min": 98.4,
+     "max": 110.3
+    },
+    "ff": {
+     "n": 516,
+     "mean": 85.9,
+     "min": 78.8,
+     "max": 91.0
+    },
+    "ss": {
+     "n": 516,
+     "mean": 138.1,
+     "min": 131.6,
+     "max": 143.1
+    }
+   },
+   "parasitics": "placement-estimated",
+   "scope": "Prototype actualsite/PG/pin placement/CTS evidence; no routed view or die-slot approval"
+  }
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "oflop",
+   "message": "N face 10.5 pins/um (q): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns = 10.17 um, more than 45% of the 8.6 um core behind the face (GRT-0116 class)",
+   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
+  },
+  {
+   "severity": "WARN",
+   "check": "oflop",
+   "message": "S face 10.5 pins/um (d): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns = 8.57 um, more than 45% of the 8.6 um core behind the face (GRT-0116 class)",
+   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 6 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_vm_face_sn_e0_20261013-210137.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_vm_face_sn_e0-20261013-210137",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 28 s (gate total 112 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 172 um2 + macros 0 in core 1082: util 16%",
+   "fix": "set \"std_area_um2\": 172 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_qfd_vm_face_sn_e0 cells 1,024 flops 512 depth 0.0 ps util 0.1586 reach 6.4 um (0.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 15.9% outside 45%-65% (std 172 + macro 0 um2 in 1082 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 131.5..142.4 ps (spread 10.9), boundary mean 136.3; tt insertion all 99.2..109.5 ps (spread 10.3), boundary mean 104.1; ff insertion all 79.9..90.1 ps (spread 10.2), boundary mean 85.0; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      300 paths, worst slack 289.9 ps (e.g. q[0])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.8994523448844234e-10 hold WNS 1.8490911579682745e-10",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 512 sinks on the largest root <= 15,000; measured TT insertion 109.5 ps, leaf spread 10.3 ps",
+   "fix": ""
+  }
+ ]
+}
