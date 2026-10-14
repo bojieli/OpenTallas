@@ -127,15 +127,15 @@ module tb_s81_hc_master;
         if (NT_DBG) begin : g_dbg
             always @(posedge sk) if (srs) begin : d
                 integer q;
-                if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.u_c0.nv_v)
-                    $display("NTDBG c=0 nv=%0d cyc=%0d", dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.u_c0.nvq, scyc);
+                if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.g_c[0].u_a.u_c.nv_v)
+                    $display("NTDBG c=0 nv=%0d cyc=%0d", dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.g_c[0].u_a.u_c.nvq, scyc);
                 for (q = 0; q < 2; q = q + 1) begin
-                    if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.u_c0.dlq[137 * q]) $display("NTDBG c=0 leaf q=%0d cyc=%0d", q, scyc);
-                    if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.u_c1.dlq[137 * q]) $display("NTDBG c=1 leaf q=%0d cyc=%0d", q, scyc);
-                    if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.u_c2.dlq[137 * q]) $display("NTDBG c=2 leaf q=%0d cyc=%0d", q, scyc);
+                    if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.g_c[0].u_a.u_c.dlq[73 * q]) $display("NTDBG c=0 leaf q=%0d cyc=%0d", q, scyc);
+                    if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.g_c[1].u_a.u_c.dlq[73 * q]) $display("NTDBG c=1 leaf q=%0d cyc=%0d", q, scyc);
+                    if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.g_c[2].u_a.u_c.dlq[73 * q]) $display("NTDBG c=2 leaf q=%0d cyc=%0d", q, scyc);
                 end
-                if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.u_c0.v_q) $display("NTDBG fire cyc=%0d", scyc);
-                if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.u_c0.e_miss) $display("NTDBG MISS cyc=%0d", scyc);
+                if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.g_c[0].u_a.u_c.v_q) $display("NTDBG fire cyc=%0d", scyc);
+                if (dut.g_hier.g_split.g_composed.u_tail.g_nt.u_bot.g_c[0].u_a.u_c.e_miss) $display("NTDBG MISS cyc=%0d", scyc);
             end
         end
     end else if (HIER && NTREE) begin : g_ntp0
