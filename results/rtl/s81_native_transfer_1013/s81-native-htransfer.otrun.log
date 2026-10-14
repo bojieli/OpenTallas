@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   122 GB (avail 381, growth 298, headroom 64, waiters 0/0 GB) load 103/128 running 37 disk 1161 GB 
+ot-run: ot-epyc4       admits  -312 GB (avail 513, growth 400, headroom 48, waiters 1/380 GB) load 82/128 running 27 disk 1284 GB 
+ot-run: ot-pve1        admits    79 GB (avail 195, growth 84, headroom 32, waiters 0/0 GB) load 95/28 running 20 disk 1322 GB 
+ot-run: ot-agidock128  admits   -68 GB (avail 56, growth 36, headroom 24, waiters 4/80 GB) load 27/64 running 9 disk 374 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-176023-1791945789 after 0 s
+TB_S81_HTRANSFER_VM qd=4 relay=0 stall=0 mut=0 native_bits=512 payload=640 beats=641 done=1 errors=0 faults=000 first_payload_cycles=25 completion_cycles=2255 maxpending=32 PASS
+TB_S81_HTRANSFER_VM qd=4 relay=8 stall=1 mut=0 native_bits=512 payload=640 beats=641 done=1 errors=0 faults=000 first_payload_cycles=36 completion_cycles=2271 maxpending=32 PASS
+TB_S81_HTRANSFER_VM qd=4 relay=0 stall=0 mut=1 native_bits=512 payload=640 beats=641 done=1 errors=633 faults=000 first_payload_cycles=25 completion_cycles=665 maxpending=14 FAIL
+TB_S81_HTRANSFER_VM qd=4 relay=0 stall=0 mut=2 native_bits=512 payload=640 beats=0 done=0 errors=1 faults=000 first_payload_cycles=0 completion_cycles=0 maxpending=0 FAIL
+HTRANSFER_VM_GATE PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-176023-1791945789): exit 0

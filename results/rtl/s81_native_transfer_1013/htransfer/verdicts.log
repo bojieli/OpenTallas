@@ -1,0 +1,4 @@
+TB_S81_HTRANSFER_VM qd=4 relay=0 stall=0 mut=0 native_bits=512 payload=640 beats=641 done=1 errors=0 faults=000 first_payload_cycles=25 completion_cycles=2255 maxpending=32 PASS
+TB_S81_HTRANSFER_VM qd=4 relay=8 stall=1 mut=0 native_bits=512 payload=640 beats=641 done=1 errors=0 faults=000 first_payload_cycles=36 completion_cycles=2271 maxpending=32 PASS
+TB_S81_HTRANSFER_VM qd=4 relay=0 stall=0 mut=1 native_bits=512 payload=640 beats=641 done=1 errors=633 faults=000 first_payload_cycles=25 completion_cycles=665 maxpending=14 FAIL
+TB_S81_HTRANSFER_VM qd=4 relay=0 stall=0 mut=2 native_bits=512 payload=640 beats=0 done=0 errors=1 faults=000 first_payload_cycles=0 completion_cycles=0 maxpending=0 FAIL

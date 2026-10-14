@@ -1,0 +1,6 @@
+ot-run: ot-epyc1tb     admits   -65 GB (avail 327, growth 318, headroom 64, waiters 1/10 GB) load 94/128 running 40 disk 1171 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/codex/s81-native-hland/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-native-hland/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-native-hland/src
+ot-run: -> ot-epyc1tb (will queue: admits -65 GB < 2 GB)
+ot-heavy: waiting for memory on ot-epyc1tb: need 2 GB, admissible -55 GB: available 327 GB, growth charged 318 GB, young 55 GB, headroom 64 GB, real floor 227 GB
