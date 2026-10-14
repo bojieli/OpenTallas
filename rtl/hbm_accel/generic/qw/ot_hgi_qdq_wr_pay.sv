@@ -16,9 +16,9 @@ module ot_hgi_qdq_wr_pay #(
     input  wire              qfault,
     input  wire              dfault,
     input  wire [511:0]      y,
-    output reg  [8*280-1:0]  wwq,
+    (* keep="true",dont_touch="true" *) output reg [8*280-1:0] wwq,
     input  wire [7:0]        wwq_cr,
-    output wire              wg_req,
+    (* keep="true",dont_touch="true" *) output reg wg_req,
     input  wire              wg_gnt,
     input  wire              i_act,
     output reg               o_wf,
@@ -38,7 +38,9 @@ module ot_hgi_qdq_wr_pay #(
     always @(posedge clk or negedge rr_n[0])
         if (!rr_n[0]) begin f_m_v <= 0; vo_f <= 0; df_f <= 0; f_act <= 0; f_bi <= 0; end
         else begin f_m_v <= m_v; vo_f <= vo; df_f <= dfault; f_act <= i_act; f_bi <= i_bad; end
-    assign wg_req = f_act;
+    // Same-edge output launch copy, with a separate reset region. The original
+    // f_act is the W-face input capture/private control; wg_req is its own N pin.
+    always @(posedge clk or negedge rr_n[2])if(!rr_n[2])wg_req<=0;else wg_req<=i_act;
     // fired-beat queue (one entry a beat in the decode or the result FIFO)
     reg [14:0] mq_o [0:OD-1]; reg [2:0] mq_n [0:OD-1]; reg mq_z [0:OD-1];
     reg [OW-1:0] mq_t, mq_h; reg [OW:0] infl;         // infl: fired beats not yet out of the decode

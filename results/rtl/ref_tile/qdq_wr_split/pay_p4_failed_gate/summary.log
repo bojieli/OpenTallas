@@ -1,0 +1,16 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 10.5 pins/um (wwq, wwq_cr, wg_req): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (y): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 9.1 pins/um (m_v, m, i_bad): recipe-2 hold stages take 3.05 um behind the face, the pin flops need gap 3.9 um and 12 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qdq_wr_pay_ref_20261014-044328.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qdq_wr_pay_ref_20261014-044328.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qdq_wr_pay_ref-20261014-044328
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 38 s (gate total 66 s)
+GATE FAIL io_place: IO placement failed: [ERROR PPL-0086] Pin group of size 32 was not assigned.  -> FIX: fix the pin plan / pin layers
+GATE INFO util: synthesized std area 3145 um2 + macros 13319 in core 30830: util 53%
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR PPL-0086] Pin group of size 32 was not assigned.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE WARN clock_rule: the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)  -> FIX: read the remote log (textbook lint line 'clock_roots')
+PRE_ROUTE_GATE: FAIL (2 fail, 2 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-qdq-write-completion-split/physical/ref_tile/qdq_wr_pay_ref/source_binding_history/d112347f41a94062bc2400212128005579478ef56e402a7388a446c694077fbf.json
+GATE: qdq_wr_pay_ref/gate_result.json written (exact staged source binding; commit it with the kit)
