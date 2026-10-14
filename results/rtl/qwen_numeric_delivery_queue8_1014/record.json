@@ -1,0 +1,26 @@
+{
+  "status": "ISOLATED_EIGHT_ENTRY_CAPACITY_COMPONENT_NO_PRODUCTION_CDC_OR_COST_ADOPTION",
+  "source_sha256": "f2913772d0f559d11941bdeaee16550c0aafcd935f8809857d55a64fa38ee07d",
+  "bench_sha256": "c302d15fc9b83b43189eca331fb9140ea0335febd7d611e13e9cb2a59ef2d7d5",
+  "storage_bits": 4808,
+  "pointer_and_sync_bits": 32,
+  "sticky_fault_bits": 1,
+  "cases": {
+    "positive": {
+      "exit": 0,
+      "source_sha256": "f2913772d0f559d11941bdeaee16550c0aafcd935f8809857d55a64fa38ee07d"
+    },
+    "all_query": {
+      "exit": 1,
+      "source_sha256": "1a8b83caa7159f0d89859bb7851f0ae6d8b8865ebc80b2b4224eb3e5f63853ec"
+    },
+    "truncate_sequence": {
+      "exit": 1,
+      "source_sha256": "88f99aeb8a5a387945057ffa46d3462a29f0a4c91f91413ab2e3cc4eab64e50a"
+    },
+    "stopped_credit_sync": {
+      "exit": 1,
+      "source_sha256": "8843fef5b29d114295a511d3aa942907596eaaae8bee4d79b4538903f39ded03"
+    }
+  }
+}
