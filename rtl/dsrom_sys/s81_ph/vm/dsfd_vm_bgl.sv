@@ -31,7 +31,10 @@ module dsfd_vm_bgl #(
     parameter integer CLOCK_SPLIT = 0,
     parameter integer BAL_PREFIX = 0,
     parameter integer PREHIT = 0,
-    parameter integer FAST4 = 0
+    parameter integer FAST4 = 0,
+    // Zero keeps the legacy compile-time selection. Two enables the explicit
+    // registered N-to-S successor; bank EP2/ED3 is independent of this hop.
+    parameter integer FORWARD_HOP = 0
 ) (
     input  wire [0:0]          ck,
     input  wire                ck_req,
@@ -70,10 +73,12 @@ module dsfd_vm_bgl #(
     localparam integer ED = 3;                     // = dsfd_vm_bgr EP 2
     localparam integer HL = QD + 4 + ED;
 `ifdef OT_VMBGL_HOP1
-    localparam integer HOP1 = 1;
+    localparam integer LEGACY_HOP1 = 1;
 `else
-    localparam integer HOP1 = 0;
+    localparam integer LEGACY_HOP1 = 0;
 `endif
+    localparam integer HOP1 = (FORWARD_HOP == 0) ? LEGACY_HOP1 : (FORWARD_HOP == 1);
+    initial if (FORWARD_HOP < 0 || FORWARD_HOP > 2) $error("FORWARD_HOP must be0,1,2");
     localparam integer HHL = HL - HOP1;
     localparam integer MW = DW / 32, NW = DW / 32;
     localparam integer OW = $clog2(QD) + 1;
@@ -84,6 +89,7 @@ module dsfd_vm_bgl #(
     // They retain the same period and every inter-root path remains timed.
     wire req_clk = CLOCK_SPLIT ? ck_req : clk;
     wire ret_clk = CLOCK_SPLIT ? ck_ret : clk;
+    wire forward_clk = (CLOCK_SPLIT && FORWARD_HOP == 2) ? req_clk : clk;
     reg [1:0] rst_req_s, rst_ret_s;
     always @(posedge req_clk or negedge rs[0])
         if (!rs[0]) rst_req_s <= 0; else rst_req_s <= {rst_req_s[0], 1'b1};
@@ -91,6 +97,7 @@ module dsfd_vm_bgl #(
         if (!rs[0]) rst_ret_s <= 0; else rst_ret_s <= {rst_ret_s[0], 1'b1};
     wire rst_req = CLOCK_SPLIT ? rst_req_s[1] : rst_i;
     wire rst_ret = CLOCK_SPLIT ? rst_ret_s[1] : rst_i;
+    wire rst_forward = (CLOCK_SPLIT && FORWARD_HOP == 2) ? rst_req : rst_i;
 
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs[0]) if (!rs[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
@@ -111,12 +118,12 @@ module dsfd_vm_bgl #(
     reg [NP*DW-1:0] rb0_d, rb1_d;
     always @(posedge req_clk or negedge rst_req)
         if (!rst_req) rb0_v <= {NP{1'b0}}; else rb0_v <= i_v;
-    always @(posedge clk or negedge rst_i)
-        if (!rst_i) rb1_v <= {NP{1'b0}}; else rb1_v <= rb0_v;
+    always @(posedge forward_clk or negedge rst_forward)
+        if (!rst_forward) rb1_v <= {NP{1'b0}}; else rb1_v <= rb0_v;
     always @(posedge req_clk) begin
         rb0_we <= i_we; rb0_row <= i_row; rb0_m <= i_mask; rb0_d <= i_d;
     end
-    always @(posedge clk) begin
+    always @(posedge forward_clk) begin
         rb1_we <= rb0_we; rb1_row <= rb0_row; rb1_m <= rb0_m; rb1_d <= rb0_d;
     end
 `ifdef OT_VMBGL_MUT_RELAY
@@ -590,7 +597,7 @@ module dsfd_vm_bgq28h (
 endmodule
 
 
-module dsfd_vm_bgl28_mc (
+module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0) (
     input wire ck, input wire ck_req, input wire ck_ret, input wire [0:0] rs, input wire [1:0] grp, input wire [2:0] bi,
     input  wire [27:0] i_v, input wire [27:0] i_we, input wire [28*14-1:0] i_row, input wire [28*4-1:0] i_mask,
     input  wire [28*128-1:0] i_d,
@@ -604,7 +611,7 @@ module dsfd_vm_bgl28_mc (
 `else
     localparam integer MACRO = 1;
 `endif
-    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1), .FAST4(1)) u (
+    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1), .FAST4(1), .FORWARD_HOP(FORWARD_HOP)) u (
         .ck(ck), .ck_req(ck_req), .ck_ret(ck_ret), .rs(rs), .grp(grp), .bi(bi), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
         .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));

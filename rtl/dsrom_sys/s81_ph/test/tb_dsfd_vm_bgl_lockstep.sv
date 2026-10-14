@@ -5,10 +5,10 @@
 // the request bus at the head of slice 0 of dsfd_sp_vm_m, recorded by the master gate's tp / gold cases built with
 // +define+OT_SPVM_BGTRACE; lines "cycle v we row mask d", idle cycles omitted).  PASS is refused without coverage.
 module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer NCYC = 200000, parameter integer GRP = 1,
-                                 parameter integer RATE = 8, parameter integer TRACE = 0);
+                                 parameter integer RATE = 8, parameter integer TRACE = 0, parameter integer MC_HOP = 0);
     localparam integer NP = 28, NPR = 10, RA = 14;
 `ifdef OT_VMBGL_HOP1
-    localparam integer DL = 2; // 8 one-cycle leaves versus the six-cycle flat reference.
+    localparam integer DL = (MC_HOP == 2) ? 10 : 2; // 8 one-cycle leaves versus the six-cycle flat reference.
 `else
     localparam integer DL = 10;
 `endif
@@ -22,7 +22,7 @@ module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer N
         .f_v(av), .f_we(awe), .f_row(arow), .f_mask(am), .f_d(ad), .r_v(10'd0), .r_d(1280'd0), .r_f(4'd0), .r_o(3'd0),
         .o_v(aov), .o_d(aod), .o_f(aof), .o_o(aoo));
 `ifdef OT_VMBGL_MC_PARENT
-    dsfd_vm_bgq28h_mc24 u_leaf (
+    dsfd_vm_bgq28h_mc24 #(.FORWARD_HOP(MC_HOP)) u_leaf (
         .ck_bank_l0(clk), .ck_bank_l1(clk), .ck_bank_l2(clk), .ck_bank_l3(clk), .ck_bank_l4(clk), .ck_bank_l5(clk), .ck_bank_l6(clk), .ck_bank_l7(clk), .ck_req_l0(clk), .ck_req_l1(clk), .ck_req_l2(clk), .ck_req_l3(clk), .ck_req_l4(clk), .ck_req_l5(clk), .ck_req_l6(clk), .ck_req_l7(clk), .ck_ret_l0(clk), .ck_ret_l1(clk), .ck_ret_l2(clk), .ck_ret_l3(clk), .ck_ret_l4(clk), .ck_ret_l5(clk), .ck_ret_l6(clk), .ck_ret_l7(clk),
 `elsif OT_VMBGL_ENTRIES
     dsfd_vm_bgq28h_pc u_leaf (

@@ -21,7 +21,7 @@ if [ "${C#trace}" != "$C" ]; then
   P="+trace=$(cd "$OUT/master" && pwd)/bg_trace.txt"
 fi
 $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style -j 8 --top-module tb_dsfd_vm_bgl_lockstep --Mdir "$OUT/obj_$C" \
-   +define+OT_VMBGL_FLOPMEM ${BGL_DEFINES:-} $A $R/$T/test/tb_dsfd_vm_bgl_lockstep.sv $R/$T/vm/dsfd_vm_bgl.sv $R/$T/vm/dsfd_vm_bgq28h_pc.sv $R/$T/vm/dsfd_vm_bgq28h_mc24.sv $R/$T/vm/dsfd_vm_bgq_sys.sv \
+   +define+OT_VMBGL_FLOPMEM ${BGL_DEFINES:-} ${BGL_ARGS:-} $A $R/$T/test/tb_dsfd_vm_bgl_lockstep.sv $R/$T/vm/dsfd_vm_bgl.sv $R/$T/vm/dsfd_vm_bgq28h_pc.sv $R/$T/vm/dsfd_vm_bgq28h_mc24.sv $R/$T/vm/dsfd_vm_bgq_sys.sv \
    > "$OUT/build_$C.log" 2>&1 || { echo "BGL_$C: BUILD_FAIL"; grep -m8 -i error "$OUT/build_$C.log"; exit 1; }
 "$OUT/obj_$C/Vtb_dsfd_vm_bgl_lockstep" $P > "$OUT/run_$C.log" 2>&1
 grep -E "^(RESULT|MISMATCH|COVERAGE|TRACE)" "$OUT/run_$C.log" | head -8
