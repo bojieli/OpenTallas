@@ -31,6 +31,20 @@ def _snap(v, x, g):
     return round(v.dn(x, g), 4)
 
 
+def _place_su_vm(put, cx, su_y):
+    """Keep the r21v registered SU/VM seam at its actual abutted pin faces.
+
+    The VM is wider than the SU. Leave one channel of positive face offset
+    inside the VM span; the E-side constant group still fits in that span.
+    put() snaps both origins and subtracts SHAVE from their outlines, leaving
+    the existing 24-nm contact gap and no additional RTL transport edge.
+    """
+    vm_x = cx - VM_WH[0] / 2
+    su = put('sp_su64_sfu', vm_x + CH, su_y, SU_WH)
+    vm = put('sp_vector_memory', vm_x, su.y - VM_WH[1], VM_WH)
+    return su, vm
+
+
 def place(v, m, G):
     by = {i.name: i for i in m['insts']}
     tiles = [i for i in m['insts'] if i.master == 'qfd_tile_nk']
@@ -87,7 +101,7 @@ def place(v, m, G):
     put('rs_bump', ph.x - 4.32 - by['rs_bump'].w - 4.32, ph.y - by['rs_bump'].h / 2)
     put('ckb_rom', ph.x - 4.32 - by['ckb_rom'].w - 4.32, ph.y + 30.0)
     # SU slot below the link, constant group E of it
-    su = put('sp_su64_sfu', xe, ad.y - CH - SU_WH[1], SU_WH)
+    su, vm = _place_su_vm(put, cx, ad.y - CH - SU_WH[1])
     gx = su.x + SU_WH[0] + CH
     cb = sorted((i for i in m['insts'] if i.master == 'qfd_su_cbuf_g'), key=lambda i: int(i.name.rsplit('_', 1)[1]))
     cr = sorted((i for i in m['insts'] if i.master == 'qfd_crom_g'), key=lambda i: int(i.name.rsplit('_', 1)[1]))
@@ -103,8 +117,8 @@ def place(v, m, G):
         put('seq_su', gx, yq - sq.h)
     if gx + 2 * (cr[0].w + 4.32) > x1 - CH + 1e-3 or (sq is not None and sq.y < su.y - 1e-3):
         raise SystemExit(f'split compute spine: constant group does not fit E of the SU (gx {gx:.1f}, x1 {x1:.1f})')
-    # VM envelope below the SU (S face of the SU = VM N face side: su_vm words cross one channel)
-    vm = put('sp_vector_memory', cx - VM_WH[0] / 2, su.y - CH - VM_WH[1], VM_WH)
+    # The VM was placed with the SU above: S(SU) and N(VM) are abutted,
+    # matching the existing zero-relay registered seam and its latency.
     # tree top below the VM, clock receiver + reset leaf at the die centre
     ct = put('tt_ctlm', cx - CTLM_WH[0] - 2.16, vm.y - CH - CTLM_WH[1], CTLM_WH)
     put('tt_up4_0', ct.x + CTLM_WH[0] + 4.32, ct.y + CTLM_WH[1] - UP4_WH[1], UP4_WH)
