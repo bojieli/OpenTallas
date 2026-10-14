@@ -85,6 +85,7 @@ proc ::ot_pin_place_auto {re depth} {
         if {![regexp $re [string map {"\\" ""} [$i getName]]]} { continue }
         set bt [::ot_flop_port $i]
         if {$bt eq ""} { incr skip; continue }
+        if {![regexp {^x_(oh|a)\[} [$bt getName]]} { continue }
         set bb [$bt getBBox]
         set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
         if {$px < 2 * $m0} { set e W } elseif {$px > $dw - 2 * $m0} { set e E } elseif {$py < 2 * $m0} { set e S } else { set e N }
@@ -200,11 +201,12 @@ proc ::ot_pin_place_auto {re depth} {
             }
         }
     }
+    if {$placed != 14} { error "PBB_XT: expected fourteen dedicated transit flops, placed $placed" }
     puts "ot_pin_place_auto $re: $placed flops at their pins (W [llength [dict get $E W]] E [llength [dict get $E E]] S [llength [dict get $E S]] N [llength [dict get $E N]]), $skip without a port"
 }
 # the 3_1 skip-io global placement left every std cell PLACED: free them so the pin strips are empty (3_3 re-places)
 foreach ot_i [$::ot_blk getInsts] {
     if {![[$ot_i getMaster] isBlock] && [$ot_i getPlacementStatus] eq "PLACED"} { $ot_i setPlacementStatus NONE }
 }
-ot_pin_place_auto {xt_(oh|a)_q} 8
+ot_pin_place_auto {.*} 8
 orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb
