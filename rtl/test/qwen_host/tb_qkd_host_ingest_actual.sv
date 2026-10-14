@@ -6,7 +6,7 @@ module tb_qkd_host_ingest_actual;
  reg ck=0;always #0.416667 ck=~ck;reg rst_n=0;
  reg[289:0]ing=0;wire ing_cr;wire[36863:0]ctrl_es,land_er_unused;wire[33407:0]land_er;
  wire[33407:0]ctrl_er;wire[127:0]cv,cw;wire mv,mf;wire[65:0]marker;wire[31:0]issued,landed;wire[3:0]cf;
- qkd_host_ingest_chain #(.MUT(MUT))dut(.ck_map(ck),.ck_sum(ck),.ck_station({128{ck}}),.ck_static({128{ck}}),.rst_n(rst_n),
+ qkd_host_ingest_chain #(.MUT(MUT))dut(.ck_map(ck),.ck_sum(ck),.ck_order(ck),.ck_station({128{ck}}),.ck_static({128{ck}}),.rst_n(rst_n),
  .ing(ing),.ing_cr(ing_cr),.land_es(36864'd0),.land_er(land_er),.ctrl_es(ctrl_es),.ctrl_er(ctrl_er),
  .completion_v(cv),.completion_we(cw^({128{event_mut!=0}}&(128'd1<<127))),.marker_v(mv),.marker(marker),.marker_cr(1'b0),.issued(issued),.landed(landed),.map_fault(mf),.chain_fault(cf));
  integer retired=0,physical=0;reg[511:0]seen=0;integer x,sec,expected_id;integer k,n=0,cyc=0,credit=8,sent=0,first=-1,last=-1;reg running=0,mark_sent=0;

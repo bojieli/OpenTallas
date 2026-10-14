@@ -510,7 +510,7 @@
     },
     {
       "master": "qkd_host_ingest_map",
-      "flop_bits": 4439,
+      "flop_bits": 4457,
       "instances_per_die": 1,
       "clock_entries": [
         "ck"
@@ -524,7 +524,10 @@
       "layer_cap": "M5",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
-      "source_sha256": "36a310d43df175fab68c93e69a598055f7b130459019ebb2a89fd364cef5f6e9",
+      "params": {
+        "ORDERED": 1
+      },
+      "source_sha256": "7c24db9e118846fc5ac3a8b75a22e4fa74b82fc502d93db47d8298c7f0840419",
       "ports": [
         {
           "name": "ck",
@@ -614,6 +617,27 @@
           "name": "landed",
           "direction": "output",
           "width": 32,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "ord_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "issue_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "issue_pc",
+          "direction": "output",
+          "width": 7,
           "registered_domain": "ck",
           "seam": "REGISTERED_OUTPUT"
         }
@@ -1352,7 +1376,7 @@
       "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv",
-      "source_sha256": "676ba8e9b401c00eb48dd4f44faaa7fd8a0e3d13a89ccc355eb46d588a545436",
+      "source_sha256": "0b980ad46a1ad2869c331ed7afae0e83184bca8f5f6fd3104a8c4bdf1e3ab129",
       "ports": [
         {
           "name": "ck",
@@ -1466,6 +1490,86 @@
           "name": "q",
           "direction": "output",
           "width": 18,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ]
+    },
+    {
+      "master": "qkd_host_commit_order",
+      "flop_bits": 4639,
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        129.6,
+        172.8
+      ],
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_commit_order.sv",
+      "storage": "control FFs,32 banks of8 destinations with registered8:1 read stages",
+      "limits": {
+        "global_outstanding": 256,
+        "per_PC_ACK_max_per_edge": 1,
+        "prefix_retire_max_per_edge": 1
+      },
+      "source_sha256": "67f4c981db6f72e4b00d5971a67e9bab334ca2260c8731966b689b78d145643a",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "issue_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "issue_pc",
+          "direction": "input",
+          "width": 7,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "acks",
+          "direction": "input",
+          "width": 128,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "prefix_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "prefix_count",
+          "direction": "output",
+          "width": 32,
           "registered_domain": "ck",
           "seam": "REGISTERED_OUTPUT"
         },
@@ -2911,14 +3015,14 @@
           "name": "fi",
           "direction": "input",
           "width": 1,
-          "registered_domain": "ck",
+          "registered_domain": "pll_hbm",
           "seam": "CAPTURED_INPUT"
         },
         {
           "name": "fo",
           "direction": "output",
           "width": 1,
-          "registered_domain": "ck",
+          "registered_domain": "pll_hbm",
           "seam": "REGISTERED_OUTPUT"
         },
         {
@@ -2961,6 +3065,12 @@
     {
       "source": "stack0.pc0.station.ao",
       "destination": "host.ack_sum.acks[0]",
+      "bits": 32,
+      "clock_family": "core"
+    },
+    {
+      "source": "stack0.pc0.station.ao",
+      "destination": "host.commit_order.acks[0]",
       "bits": 32,
       "clock_family": "core"
     },
@@ -6607,6 +6717,12 @@
       "clock_family": "core"
     },
     {
+      "source": "stack1.pc0.station.ao",
+      "destination": "host.commit_order.acks[1]",
+      "bits": 32,
+      "clock_family": "core"
+    },
+    {
       "source": "stack1.pc0.station.fo",
       "destination": "stack1.pc1.station.fi",
       "bits": 291,
@@ -10249,6 +10365,12 @@
       "clock_family": "core"
     },
     {
+      "source": "stack2.pc0.station.ao",
+      "destination": "host.commit_order.acks[2]",
+      "bits": 32,
+      "clock_family": "core"
+    },
+    {
       "source": "stack2.pc0.station.fo",
       "destination": "stack2.pc1.station.fi",
       "bits": 291,
@@ -13887,6 +14009,12 @@
     {
       "source": "stack3.pc0.station.ao",
       "destination": "host.ack_sum.acks[3]",
+      "bits": 32,
+      "clock_family": "core"
+    },
+    {
+      "source": "stack3.pc0.station.ao",
+      "destination": "host.commit_order.acks[3]",
       "bits": 32,
       "clock_family": "core"
     },
@@ -17551,8 +17679,26 @@
       "clock_family": "core"
     },
     {
-      "source": "host.ack_sum.ack_n",
+      "source": "host.map.issue_v/pc",
+      "destination": "host.commit_order.issue_v/pc",
+      "bits": 8,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.commit_order.prefix_v",
+      "destination": "host.map.ord_cr",
+      "bits": 1,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.commit_order.prefix_v+zero7",
       "destination": "host.map.ack_n",
+      "bits": 8,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.commit_order.prefix_v+zero7",
+      "destination": "host.visibility_fence.ack_n",
       "bits": 8,
       "clock_family": "core"
     },

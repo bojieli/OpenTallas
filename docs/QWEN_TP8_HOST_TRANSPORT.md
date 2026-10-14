@@ -55,8 +55,8 @@ ND1. Reset/boot link-up and boot-ok also need peer reporting.
 Prefill is the unchanged `ot_rom_host_ingest` class0 CSR / class1 descriptor /
 class2 payload stream. Its sector output is `{data256,addr32,we,v}` (290 bits).
 Its descriptor-done completion currently means the engine emitted sectors,
-not that HBM committed them. A visibility fence must count real write
-completion acknowledgments from controllers before forwarding fenced done.
+not that HBM committed them. A visibility fence must count the contiguous issue prefix of real write
+completions from controllers before forwarding fenced done.
 Returning a queue credit is not a write-completion ACK. Static commands use
 `qkd_ctrl_pc.es = {w_v,s_we,bank5,col5,row19,data256,v}`. Decode writes and
 embedding static traffic are already users of that physical port, requiring
@@ -128,10 +128,18 @@ logical lpc strap and returns its own credit in a32-bit per-stack chain. A
 single global stack credit pool cannot protect a hot PC and is insufficient.
 The historical ing530 contract must therefore change to actual291 forward and
 32 credit bits per stack, plus128 physical ACK events aggregated at the host.
-`ack_n[7:0]` counts up to128 actual host write ACKs in one core edge; it must
-come from host-owned physical column completion events, never queue credits.
+Raw `physical_ack_n[7:0]` counts up to128 host-owned physical column
+completion events per edge for diagnostics. Completions on different PCs may
+overtake each other, so this total cannot qualify an earlier descriptor.
+`qkd_host_commit_order` stores the PC of each admitted sector in a bounded
+256-entry issue queue and tracks ordered physical ACKs separately per PC. Only
+the contiguous retired issue prefix emits `prefix_v`; `ack_n[7:0]` is that pulse
+with seven zero bits. Prefix pulses return ordering credits to the mapper. The
+leaf uses control FFs and three registered read stages with at most8:1 selection.
+It has its own compensated core clock entry,4639 FFs, and an unverified
+129.6x172.8um outline request. Ghost ACKs, overflow and prefix wrap fault.
 
-`qkd_host_visibility_fence` uses that actual ack count in ck and a held
+`qkd_host_visibility_fence` uses that contiguous-prefix count in ck and a held
 snapshot toggle/ack CDC to clk_h, so multi-write increments cannot tear. It
 retains incoming descriptor-done64 in an8-entry FIFO and forwards it only when
 landed>=the descriptor's cumulative sector count. Host completion credits are
@@ -150,7 +158,8 @@ losing a pulse through OR. Every direction is two registered edges. One station
 plus one static arbiter belongs beside each controller, in logical-to-physical
 PC order from the die contract. A credit returned by that station is the
 arbiter's host_cr; its ACK is the arbiter's host_ack. The host reduces the four
-ACK vectors with a registered popcount into ack_n. Required production proof
+ACK vectors into the completion-order leaf; the separate registered popcount
+remains diagnostic. Required production proof
 includes the actual32-hop chains and relays, hot-PC backpressure, boot checksum,
 layer throughput and die timing. Short-loop component throughput is evidence
 about the mapper only, not the full physical chain.
@@ -234,7 +243,7 @@ All17 incoming AXI termination fields are sampled at the pin before control logi
 
 The original default quantizer route is diagnostic evidence only: child_lint reports40728 upper-metal obstructions conflicting with the M5 PG window. Its clk_i22490 sinks have no boundary registers, and all-sink mean512.6ps/spread107.8ps cannot supply a boundary clock reference. Native prefill changes the RTL and requires a new physically partitioned variant, actual PG/window correction, clock entries, assigned pins and a fresh timing/DRC proof.
 
-`qkd_host_ingest_chain` composes the mapper with four stacks of32 pin-registered stations and128 independent static-port arbiters. Each station and arbiter gets a child clock entry; the parent owns no flops or reductions. Reverse capacity-credit and actual commit vectors remain distinct. A separate registered ACK reduction leaf captures128 bits, counts four32-bit groups and registers the final8-bit count before the mapper. Exact512-sector composition checks every payload, bank/column/row and PC ownership, rejects any visibility count ahead of modeled retirement, and releases the marker only after512 commits. The missing-host-ACK ownership mutant stalls at508 visible writes.
+`qkd_host_ingest_chain` composes the mapper with four stacks of32 pin-registered stations and128 independent static-port arbiters. Each station and arbiter gets a child clock entry; the parent owns no flops or reductions. Reverse capacity-credit and actual commit vectors remain distinct. Separate clock entries serve the diagnostic ACK sum and the completion-order leaf. Only contiguous issue-prefix retirement reaches the mapper and visibility fence. Exact512-sector composition checks every payload, bank/column/row and PC ownership, rejects any visibility count ahead of modeled retirement, and releases the marker only after512 commits. The missing-host-ACK ownership mutant stalls at508 visible writes.
 
 This composition bench uses a scheduler model returning capacity after3 edges and retirement after17 core edges, so its measurements are diagnostic rather than the actual JEDEC controller price. Balanced sectors have573 launch intervals including variable forward depth; a far-PC127-only burst has17151 intervals because four credits traverse the long round trip. The hotspot remains functionally credit-safe but cannot establish production throughput. The original controller's actual WDONE17 **HBM-clock** deadline and exact JEDEC/PHY behavior were independently proved by the controller observer bench. Production trace composition with the actual controller, delivery clocks and immutable5105 reference remains required before cost acceptance.
 
@@ -243,3 +252,5 @@ The visibility fence now captures ACK8, input-valid/data64 and returned output-c
 `qkd_host_control_prompt` now supplies the production five-entry wires-only host/CSR/reset/controller/prompt composition. It fixes the full context shape and binds the actual prompt leaf's three-edge response explicitly; the generic fullcontrol default remains available for its modeled fixture. The host leaf therefore uses PB_READ_PIPE4, with the same measured4157 sinks as the former latency1 fixture. Prompt requests and q/fault responses use their own hardened leaf:71 logic FF plus one physical macro clock sink, with an unverified220.08x110.04um outline enclosing the actual174.744x70.470um macro. Exact FMT1 ring and actual macro-cell correction pass through the production wrapper; payload, shortened response latency and disabled correction mutants fail. The original host-control leaf source is imported unchanged from d8f2dd48d so these gates have a durable same-tree dependency.
 
 The static chain now also passes with all128 actual qkd_ctrl_pc_host controllers and their native core/HBM CDC, scheduler and17-HBM-edge retirement observers. All512 posted sectors preserve exact physical bank/column/open-row and independent SECDED PHY288 payloads. Balanced573 launch intervals end at marker cycle1023; the hotspot17748 intervals end at18279. Corrupting the farthest actual completion event's write polarity causes a chain fault, with issued310/landed184. These synthetic balanced/hotspot scenarios prove actual-controller composition; they do not replace the original production-prefill5105-cycle reference or qualify its throughput.
+
+The source-exact banked completion-order gate passes the original BF16 native provider, all128 actual controllers and independent PHY SECDED payload/map checks:2048 sectors in5310 core cycles against the immutable5105 reference (+4.016%). Independent issue-ordinal assertions verify every descriptor sees all its earlier writes retired. One-head and two-head edge fixtures pass864 and1728 sectors in3256 and5560 cycles respectively; these edge workloads are functional diagnostics. The premature-prefix mutant fails the actual-retirement assertion. The earlier5307-cycle cumulative-total result is rejected: a target256 descriptor escaped with actual contiguous prefix255 while total retirement was316. This checkpoint has no accepted cost row: full PHY/class input transport and native QM clock/PG/physical qualification remain required. The ordered mapper census is4457 FFs; its original standalone ORDERED0 component mode remains available for diagnostic benches.

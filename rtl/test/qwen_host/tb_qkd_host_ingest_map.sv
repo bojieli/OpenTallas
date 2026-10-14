@@ -4,7 +4,7 @@ module tb_qkd_host_ingest_map;
  reg ck=0;always #5 ck=~ck;
  reg rst_n=0;reg[289:0]ing=0;wire ing_cr;wire[1163:0]out;reg[127:0]out_cr=0;reg[7:0]ack_n=0;
  wire marker_v;wire[65:0]marker;reg marker_cr=0;wire fault;wire[31:0]issued,landed;
- qkd_host_ingest_map #(.MUT(MUT))dut(.*);
+ qkd_host_ingest_map #(.MUT(MUT))dut(.ord_cr(1'b0),.issue_v(),.issue_pc(),.*);
  integer checks=0,nout=0,cycles=0,first=-1,last=0;reg[31:0]addrq[0:255];reg[255:0]dq[0:255];
  reg[65:0]marker_expected=66'h0123456789abcdef0;
  function[255:0]pat(input integer k);begin for(integer j=0;j<8;j++)pat[j*32+:32]=32'(k)*32'h9e3779b9+32'(j);end endfunction

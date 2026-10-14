@@ -25,7 +25,7 @@ def ports(name,path):
    n=entry
   clk='ck'
   if name in ['qkd_host_if_pins','qkd_host_csr_pins','qkd_host_rst_pins','qkd_host_rx_pad']:clk='clk'
-  if name=='qkd_ctrl_pc_host' and n in ['ci','co','ki','ko','pi','po','hrst','pc','pll_hbm']:clk='pll_hbm'
+  if name=='qkd_ctrl_pc_host' and n in ['ci','co','ki','ko','pi','po','hrst','pc','pll_hbm','fi','fo']:clk='pll_hbm'
   if name=='qkd_host_visibility_fence' and n in ['in_v','in_d','in_cr','out_v','out_d','out_cr','landed_debug','fault']:clk='clk_h'
   special=n in ['ck','clk','pll_hbm','rst_n','rsi','hrst','por_n']
   out.append(dict(name=n,direction=direction,width=width,registered_domain=clk,seam='CLOCK_RESET' if special else ('CAPTURED_INPUT' if direction=='input' else 'REGISTERED_OUTPUT')))
@@ -46,7 +46,7 @@ def link(a,b,w,c):links.append(dict(source=a,destination=b,bits=w,clock_family=c
 for st in range(4):
  link(f'host.map.out[{st}]',f'stack{st}.pc0.station.fi',291,'core')
  link(f'stack{st}.pc0.station.co',f'host.map.out_cr[{st}]',32,'core')
- link(f'stack{st}.pc0.station.ao',f'host.ack_sum.acks[{st}]',32,'core')
+ link(f'stack{st}.pc0.station.ao',f'host.ack_sum.acks[{st}]',32,'core');link(f'stack{st}.pc0.station.ao',f'host.commit_order.acks[{st}]',32,'core')
  for pc in range(32):
   here=f'stack{st}.pc{pc}';
   if pc<31:
@@ -55,7 +55,7 @@ for st in range(4):
   link(here+'.station.host_es',here+'.static.host_es',288,'core');link(here+'.static.host_cr',here+'.station.host_cr',1,'core');link(here+'.static.host_ack',here+'.station.host_ack',1,'core');link(here+'.static.fault',here+'.station.host_fault',1,'core')
   link(here+'.emb_landing.es',here+'.static.land_es',288,'core');link(here+'.static.land_er',here+'.emb_landing.er',261,'core')
   link(here+'.static.ctrl_es',here+'.controller.es',288,'core');link(here+'.controller.er',here+'.static.ctrl_er',261,'core');link(here+'.controller.completion_v/we',here+'.static.completion_v/we',2,'core');link(here+'.KV_CDC.ho',here+'.controller.ci',319,'hbm');link(here+'.controller.co',here+'.KV_CDC.hi',294,'hbm');link(here+'.KCMD.pi',here+'.controller.ki',33,'hbm');link(here+'.controller.ko',here+'.KCMD.po',33,'hbm');link(here+'.controller.po',here+'.PHY.pi',328,'hbm');link(here+'.PHY.po',here+'.controller.pi',289,'hbm')
-link('host.HOST.pb_we/re','host.PROMPT.we/re',2,'core');link('host.HOST.pb_waddr[12:0]','host.PROMPT.waddr',13,'core');link('host.HOST.pb_raddr[12:0]','host.PROMPT.raddr',13,'core');link('host.HOST.pb_wdata','host.PROMPT.wdata',18,'core');link('host.PROMPT.q','host.HOST.pb_q',18,'core');link('host.PROMPT.fault','host.CTL.pb_fault',1,'core');link('host.ack_sum.ack_n','host.map.ack_n',8,'core')
+link('host.HOST.pb_we/re','host.PROMPT.we/re',2,'core');link('host.HOST.pb_waddr[12:0]','host.PROMPT.waddr',13,'core');link('host.HOST.pb_raddr[12:0]','host.PROMPT.raddr',13,'core');link('host.HOST.pb_wdata','host.PROMPT.wdata',18,'core');link('host.PROMPT.q','host.HOST.pb_q',18,'core');link('host.PROMPT.fault','host.CTL.pb_fault',1,'core');link('host.map.issue_v/pc','host.commit_order.issue_v/pc',8,'core');link('host.commit_order.prefix_v','host.map.ord_cr',1,'core');link('host.commit_order.prefix_v+zero7','host.map.ack_n',8,'core');link('host.commit_order.prefix_v+zero7','host.visibility_fence.ack_n',8,'core')
 link('host.QM.ing','host.map.ing',290,'core');link('host.map.ing_cr','host.QM.o_cr',1,'core')
 link('HOST_PHY.adapter.DATA1024','host.rx_pad.in_d',1024,'serdes')
 link('host.rx_pad.out_d','host.rx_CDC.i_d',546,'serdes');link('host.rx_CDC.o_d[527:0]','host.rx_class.rx_d',528,'core')
