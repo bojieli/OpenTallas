@@ -125,8 +125,27 @@ module ot_hbm_xp_aq_mul_pipe13 (
     // -- stage 3: the product, and the decision its top bit selects -----------
     wire [47:0] pa={16'd0,s2_pp0},pb={8'd0,s2_pp1,8'd0},pc={s2_pp2,16'd0};
     wire [47:0] ps=pa^pb^pc,pcarry=((pa&pb)|(pa&pc)|(pb&pc))<<1;
-    wire [47:0] s3_prod=ps+pcarry;
-    wire [24:0] s3_dec = s3_prod[47] ? s2_d47 : s2_d46;
+    // Six independent byte sums expose group generate/propagate.  The
+    // metadata leading-bit decision no longer waits for a 48-bit carry chain.
+    wire [8:0] byte_sum [0:5];
+    wire [5:0] bg,bp;
+    wire [6:0] bc;
+    assign bc[0]=1'b0;
+    for(genvar j=0;j<6;j=j+1)begin:product_byte
+        assign byte_sum[j]={1'b0,ps[j*8+:8]}+{1'b0,pcarry[j*8+:8]};
+        assign bg[j]=byte_sum[j][8];
+        assign bp[j]=&byte_sum[j][7:0];
+        assign s3_prod[j*8+:8]=byte_sum[j][7:0]+bc[j];
+    end
+    assign bc[1]=bg[0];
+    assign bc[2]=bg[1]|(bp[1]&bg[0]);
+    assign bc[3]=bg[2]|(bp[2]&bg[1])|(&bp[2:1]&bg[0]);
+    assign bc[4]=bg[3]|(bp[3]&bg[2])|(&bp[3:2]&bg[1])|(&bp[3:1]&bg[0]);
+    assign bc[5]=bg[4]|(bp[4]&bg[3])|(&bp[4:3]&bg[2])|(&bp[4:2]&bg[1])|(&bp[4:1]&bg[0]);
+    assign bc[6]=bg[5]|(bp[5]&bc[5]);
+    wire [47:0] s3_prod;
+    wire s3_top=byte_sum[5][7]^(bc[5]&(&byte_sum[5][6:0]));
+    wire [24:0] s3_dec = s3_top ? s2_d47 : s2_d46;
 
     reg        s3_v, s3_byp, s3_sign, s3_is_sub_q;
     reg [1:0]  s3_err;
