@@ -57,6 +57,11 @@ def main(request):
         rows[13312+i]=['S',ly,round(xg[3]-11.088+c,3),d]
     assert all(rows)
     capture['ports']['t_vm']=spec(rows)
+    capture['data_clock_bits'] = {
+        'f_gather': ['ck_g[%d]'%(i//848) if i<6784 else 'ck_c[0]' for i in range(6947)],
+        't_vm': ['ckv_x[%d]'%(i//832) if i<13312 else 'ckv_x[6]' for i in range(13376)],
+        't_cd': ['ckv_r[0]']*12,
+    }
     vm['ports']['f_capture']=spec([['N',ly,x,d] for _,ly,x,d in rows])
     capture['source']='tools/s81/capture_x8_assignment.py;68clock per-child capture; exact x8 output map'
     vm['source']='tools/s81/capture_x8_assignment.py;bitwise facing capture peer'

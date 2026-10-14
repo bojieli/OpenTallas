@@ -572,6 +572,9 @@ def interim_lib(cells, corner, pads=None):
         L.append(f' type (b{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1}; bit_to : 0; '
                  'downto : true; }')
     for name, area, ports in cells:
+        assigned = S._assigned_record(name) if hasattr(S, '_assigned_record') else None
+        clock_bits = (assigned or {}).get('data_clock_bits', {})
+        assigned_clocks = {p.split('[')[0] for pins in (assigned or {}).get('clock_entries', {}).values() for p in pins}
         ck = next((c for c in CLK_NAMES if c in ports and ports[c][0] == 'input'), None)
         rel = dict(next((v_ for m_, v_ in REL_CLK.items() if name.startswith(m_)), {}))
         if getattr(S, 'CFIFO_COLCK', False):
@@ -583,8 +586,22 @@ def interim_lib(cells, corner, pads=None):
             body = [head, f'   direction : {"input" if d == "input" else "output" if d == "output" else "inout"};']
             if d == 'input':
                 body.append('   capacitance : 1.0;')
-            if p == ck or (d == 'input' and (p in CLK_NAMES or p in rel.values())):     # every clock pin of a multi-clock glue master
+            if p == ck or (d == 'input' and (p in CLK_NAMES or p in rel.values() or p in assigned_clocks)):
                 body.append('   clock : true;')
+            elif p in clock_bits:
+                assert len(clock_bits[p]) == w, (name, p, 'clock attribution width')
+                for bit, rck in enumerate(clock_bits[p]):
+                    assert rck.split('[')[0] in assigned_clocks, (name, p, bit, rck)
+                    body.append(f'   pin ("{p}[{bit}]") {{')
+                    if d == 'input':
+                        for tt, v in (('setup_rising', k['su']), ('hold_rising', k['ho'])):
+                            body.append(f'    timing () {{ related_pin : "{rck}"; timing_type : {tt}; '
+                                        f'rise_constraint (scalar) {{ values ("{v}"); }} fall_constraint (scalar) {{ values ("{v}"); }} }}')
+                    elif d == 'output':
+                        body.append(f'    timing () {{ related_pin : "{rck}"; timing_type : rising_edge; '
+                                    f'cell_rise (scalar) {{ values ("{k["cq"]}"); }} cell_fall (scalar) {{ values ("{k["cq"]}"); }} '
+                                    'rise_transition (scalar) { values ("20"); } fall_transition (scalar) { values ("20"); } }')
+                    body.append('   }')
             elif ck and d == 'input':
                 rck = rel.get(p, ck)
                 pps = HOLD_PAD_FF if p in pads.get(name, ()) else 0.0
