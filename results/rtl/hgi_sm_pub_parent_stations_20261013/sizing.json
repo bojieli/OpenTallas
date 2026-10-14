@@ -37,7 +37,7 @@
     "VM_requests": 1352,
     "STREAM": 52
   },
-  "physical_area_status": "13 initial station types and STREAM edge CLOSED; split VM R3 + commandquiet + reset hop jobs submitted; composed parent not yet routed",
+  "physical_area_status": "All 13 actual parent child master types CLOSED, including coreR6 and portR5; actual parent route/footprint/price not yet qualified",
   "slice_outline_um": [
     332.64,
     328.32
@@ -48,7 +48,7 @@
   "station_wire_reach_um": {
     "command_relay": 26.6
   },
-  "parent_pin_binding_status": "Every actual production parent child connection synthesized and audited net-to-LEF: 69 children, geometry candidate all directed edges <=500um and channels >=20um; VM core pending actual repaired view",
+  "parent_pin_binding_status": "11335 unique physical pins, 8640 SM bits,8 explicitly assigned raw slice reset entries,69 own M7 clock pads; all real closed views and exact generated origins,5227directedconnections<=496.884um,zerochannels/trackfailures",
   "STREAM_target_words_per_cycle": 1,
   "STREAM_budget_cycles_per_1024_words": 1126,
   "STREAM_measured_cycles_per_1024_words": {
