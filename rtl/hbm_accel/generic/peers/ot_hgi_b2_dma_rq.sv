@@ -9,20 +9,6 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
  output wire [337:0] il_vmq, output wire il_active, input wire [273:0] vmr
 );
  reg m_done, m_fault, m_src, m_fence_rdy, m_fence_done;
- // Each actual MV input acceptance retains its completion owner until return.
- // MV's input skid can accept ahead of execution, so a single current-owner bit is insufficient.
- reg [1:0] owner_fifo[0:3]; reg [1:0] owner_h,owner_t; reg [2:0] owner_n;
- reg done_stream,done_last,source_stream;
- wire owner_pop=(pin_m_done||pin_m_fault)&&owner_n!=0;
- always @(posedge clk or negedge rn) begin
-   if(!rn)begin owner_h<=0;owner_t<=0;owner_n<=0;done_stream<=0;done_last<=0;source_stream<=0;end
-   else begin
-     done_stream<=owner_fifo[owner_h][1];done_last<=owner_fifo[owner_h][0];source_stream<=owner_fifo[owner_h][1];
-     owner_n<=owner_n+{2'd0,move_pop}-{2'd0,owner_pop};
-     if(move_pop)begin owner_fifo[owner_t]<=move_owner_head;owner_t<=owner_t+1'b1;end
-     if(owner_pop)owner_h<=owner_h+1'b1;
-   end
- end
  reg [273:0] vmr_q;
  wire [2:0] reset_region;
  ot_rst_relay #(.REGIONS(3)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(reset_region));
@@ -92,10 +78,10 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
     assign il_vmq = r_vmq; assign il_active = rd_act;
     wire f_rdy, f_done, f_fault;
     assign d_frdy = m_fence_rdy && b_quiet;
-    assign d_mv_rdy = !rd_act && !sq_act && (to_b ? (b_rdy && !m_pend) : (b_quiet && (to_f ? f_rdy : m_rdy)));
-    assign d_mv_done = f_done | (m_done && (!done_stream || done_last)) | b_done | sq_skd;
+    assign d_mv_rdy = !m_pend && !rd_act && !sq_act && (to_b ? (b_rdy && !m_pend) : (b_quiet && (to_f ? f_rdy : m_rdy)));
+    assign d_mv_done = f_done | (m_done && (!sq_act || sq_last)) | b_done | sq_skd;
     assign d_mv_fault = f_fault | m_fault | b_fault;
-    assign d_mv_src = (m_src && !source_stream) | b_src; assign d_mv_pdone = (m_done && (!done_stream || done_last)) | b_done | sq_skd; assign d_mv_fdone = f_done;
+    assign d_mv_src = (m_src && !sq_act) | b_src; assign d_mv_pdone = (m_done && (!sq_act || sq_last)) | b_done | sq_skd; assign d_mv_fdone = f_done;
     always @(posedge clk or negedge rn)
         if (!rn) begin m_pend <= 1'b0; b_own <= 1'b0; end
         else begin
@@ -109,7 +95,7 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
     assign ix_rdy_f = 1'b0; assign id_rdy_f = 1'b0;
     // hbm-fq/dma 10-11: with the KV engine the sector engine reads VM sources through the packet client (SVR2 0)
     // ---------------------------------------------------------------- stream command, I-list reader, row sequencer
-    assign d_is_rdy = !rd_act && !sq_act && m_rdy && b_quiet && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
+    assign d_is_rdy = !m_pend && !rd_act && !sq_act && m_rdy && b_quiet && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
     assign s_id_take = (FRONT != 0) ? (s_id_v && id_rdy_f) : (sq_act && !sq_wait && sq_ph == 3'd0 && s_id_v);
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
@@ -183,7 +169,7 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
                         sq_last <= sq_e + 20'd1 == sc[174:155];
                     end
                 end
-                if (sq_wait && m_done && done_stream) begin
+                if (sq_wait && m_done) begin
                     sq_wait <= 1'b0;
                     if (sq_last) sq_act <= 1'b0;
                 end
@@ -200,17 +186,18 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
 `endif
 
     assign d_fdone = m_fence_done;
+    // The record adapter has one posted-background reservation. Keep that actual
+    // reservation charged until completion before accepting another standalone
+    // or I-list record; current SQ row progression retains its existing handshake.
     // Two-entry skid: both payload slots are flops; head is the output pin register.
     // Source acceptance is local space, independent of the downstream ready pin.
     reg [1:0] move_n; reg [226:0] move_head, move_tail;
-    reg [1:0] move_owner_head,move_owner_tail;
-    wire [1:0] move_owner_in={sq_act,sq_act&&sq_last};
     wire m_rdy = move_n < 2;
-    wire move_push = (sq_act ? sq_mv_v : (d_mv_v && !to_f && !to_b && !rd_act && b_quiet)) && m_rdy;
-    wire move_pop = move_n != 0 && pin_m_rdy && owner_n<4;
+    wire move_push = (sq_act ? sq_mv_v : (d_mv_v && !m_pend && !to_f && !to_b && !rd_act && b_quiet)) && m_rdy;
+    wire move_pop = move_n != 0 && pin_m_rdy;
     wire [226:0] move_in = (sq_act ? sq_mv : d_mv) ^ ((MUT_SEAM == 1) ? (227'd1 << 206) : 227'd0);
     reg move_valid;
-    assign mover_v = move_valid && owner_n<4;
+    assign mover_v = move_valid;
     assign mover_cmd = move_head;
     always @(posedge clk or negedge rn) begin
        if (!rn) begin move_n <= 0; move_valid <= 0; end
@@ -218,14 +205,13 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
           move_valid <= (move_n + {1'b0,move_push} - {1'b0,move_pop}) != 0;
           case ({move_push,move_pop})
              2'b10: begin
-                if (move_n == 0) begin move_head <= move_in;move_owner_head<=move_owner_in;end
-                else begin move_tail <= move_in;move_owner_tail<=move_owner_in;end
+                if (move_n == 0) move_head <= move_in; else move_tail <= move_in;
                 move_n <= move_n + 1'b1;
              end
-             2'b01: begin move_head <= move_tail;move_owner_head<=move_owner_tail; move_n <= move_n - 1'b1; end
+             2'b01: begin move_head <= move_tail; move_n <= move_n - 1'b1; end
              2'b11: begin
-                if (move_n == 1) begin move_head <= move_in;move_owner_head<=move_owner_in;end
-                else begin move_head <= move_tail;move_owner_head<=move_owner_tail; move_tail <= move_in;move_owner_tail<=move_owner_in;end
+                if (move_n == 1) move_head <= move_in;
+                else begin move_head <= move_tail; move_tail <= move_in; end
              end
              default: begin end
           endcase
