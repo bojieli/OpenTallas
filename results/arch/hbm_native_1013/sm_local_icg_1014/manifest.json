@@ -1,0 +1,190 @@
+{
+  "status": "RTL_CANDIDATE_NOT_PHYSICALLY_QUALIFIED",
+  "records": [
+    {
+      "variant": "eg",
+      "master": "ot_smh_own_local_icg_eg",
+      "original_enable_bit": 8870,
+      "original_gated_bit": 7768,
+      "launch_cell": "$auto$ff.cc:337:slice$97",
+      "launch_D_bits": [
+        2658
+      ],
+      "raw_clock_bits": [
+        2
+      ],
+      "mirror_type": "DFFHQNx1_ASAP7_75t_R",
+      "mirror_count": 2,
+      "inverter_type": "INVx4_ASAP7_75t_R",
+      "critical_indices": [
+        4,
+        9,
+        10,
+        11
+      ],
+      "local_gate_count": 12,
+      "ports": [
+        {
+          "raw": "local_raw_0",
+          "gclk": "local_gclk_0",
+          "gate": "u_child_icg_0"
+        },
+        {
+          "raw": "local_raw_1",
+          "gclk": "local_gclk_1",
+          "gate": "u_child_icg_1"
+        },
+        {
+          "raw": "local_raw_2",
+          "gclk": "local_gclk_2",
+          "gate": "u_child_icg_2"
+        },
+        {
+          "raw": "local_raw_3",
+          "gclk": "local_gclk_3",
+          "gate": "u_child_icg_3"
+        },
+        {
+          "raw": "local_raw_4",
+          "gclk": "local_gclk_4",
+          "gate": "u_child_icg_4"
+        },
+        {
+          "raw": "local_raw_5",
+          "gclk": "local_gclk_5",
+          "gate": "u_child_icg_5"
+        },
+        {
+          "raw": "local_raw_6",
+          "gclk": "local_gclk_6",
+          "gate": "u_child_icg_6"
+        },
+        {
+          "raw": "local_raw_7",
+          "gclk": "local_gclk_7",
+          "gate": "u_child_icg_7"
+        },
+        {
+          "raw": "local_raw_8",
+          "gclk": "local_gclk_8",
+          "gate": "u_child_icg_8"
+        },
+        {
+          "raw": "local_raw_9",
+          "gclk": "local_gclk_9",
+          "gate": "u_child_icg_9"
+        },
+        {
+          "raw": "local_raw_10",
+          "gclk": "local_gclk_10",
+          "gate": "u_child_icg_10"
+        },
+        {
+          "raw": "local_raw_11",
+          "gclk": "local_gclk_11",
+          "gate": "u_child_icg_11"
+        }
+      ],
+      "source_split_sha256": "31823bd30658abc6d486ff2f4f8ff425b29a5b10cafa4479b7463dd2d7e0b3bd",
+      "logical_phase_and_latency": "UNCHANGED; all clocks common in exact functional bench; physical phi-R checks required separately"
+    },
+    {
+      "variant": "wg",
+      "master": "ot_smh_own_local_icg_wg",
+      "original_enable_bit": 8870,
+      "original_gated_bit": 7768,
+      "launch_cell": "$auto$ff.cc:337:slice$97",
+      "launch_D_bits": [
+        2658
+      ],
+      "raw_clock_bits": [
+        2
+      ],
+      "mirror_type": "DFFHQNx1_ASAP7_75t_R",
+      "mirror_count": 2,
+      "inverter_type": "INVx4_ASAP7_75t_R",
+      "critical_indices": [
+        4,
+        9,
+        10,
+        11
+      ],
+      "local_gate_count": 12,
+      "ports": [
+        {
+          "raw": "local_raw_0",
+          "gclk": "local_gclk_0",
+          "gate": "u_child_icg_0"
+        },
+        {
+          "raw": "local_raw_1",
+          "gclk": "local_gclk_1",
+          "gate": "u_child_icg_1"
+        },
+        {
+          "raw": "local_raw_2",
+          "gclk": "local_gclk_2",
+          "gate": "u_child_icg_2"
+        },
+        {
+          "raw": "local_raw_3",
+          "gclk": "local_gclk_3",
+          "gate": "u_child_icg_3"
+        },
+        {
+          "raw": "local_raw_4",
+          "gclk": "local_gclk_4",
+          "gate": "u_child_icg_4"
+        },
+        {
+          "raw": "local_raw_5",
+          "gclk": "local_gclk_5",
+          "gate": "u_child_icg_5"
+        },
+        {
+          "raw": "local_raw_6",
+          "gclk": "local_gclk_6",
+          "gate": "u_child_icg_6"
+        },
+        {
+          "raw": "local_raw_7",
+          "gclk": "local_gclk_7",
+          "gate": "u_child_icg_7"
+        },
+        {
+          "raw": "local_raw_8",
+          "gclk": "local_gclk_8",
+          "gate": "u_child_icg_8"
+        },
+        {
+          "raw": "local_raw_9",
+          "gclk": "local_gclk_9",
+          "gate": "u_child_icg_9"
+        },
+        {
+          "raw": "local_raw_10",
+          "gclk": "local_gclk_10",
+          "gate": "u_child_icg_10"
+        },
+        {
+          "raw": "local_raw_11",
+          "gclk": "local_gclk_11",
+          "gate": "u_child_icg_11"
+        }
+      ],
+      "source_split_sha256": "ff80f12645fe8d235b735b947000f0f4187c5e39f8a293b0aab9b86e422b8f2a",
+      "logical_phase_and_latency": "UNCHANGED; all clocks common in exact functional bench; physical phi-R checks required separately"
+    }
+  ],
+  "original_states_preserved": 995,
+  "added_mirror_flops": 2,
+  "gating_data_exceptions": [],
+  "required_physical_checks": [
+    "actual phi-R every gate RAW and child clock",
+    "gating setup+hold all3corners",
+    "real conditional pulse width",
+    "source slew recalibration",
+    "ordinary data TT FF DRC and registered seams",
+    "native pause/epoch/reset bit7768 semantics"
+  ]
+}
