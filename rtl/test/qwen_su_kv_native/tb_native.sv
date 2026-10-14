@@ -11,7 +11,7 @@ module tb_native;
  ot_qfd_su_kv_native_posted #(.ENABLE(1),.HEADS(HEADS),.MUT_LANE(MUT_LANE),.MUT_TAG(MUT_TAG),.MUT_MASK(MUT_MASK)) u(
  .clk(clk),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch_pos(epoch_pos),.issue_v(issue_v),.issue_kind(issue_kind),.issue_nout(issue_nout),.issue_nin(issue_nin),.kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_ready(ready),.drained(drained),.word_v(wv),.word_ready(wr),.word_tag(wt),.word_data(wd),.fault(ff),.fault_code(fc));
  ot_qfd_su_kv_native_credit #(.ENABLE(1)) c(.clk(clk),.rst_n(rst_n),.kv_v(wv),.kv_tag(wt),.kv_data(wd),.kv_ready(wr),.q_v(qv),.q_beat(qb),.q_data(qd),.q_ready(qr),.credit_return(cr),.x_v(xv),.x_tag(xt),.x_data(xd),.fault(cf));
- integer errors=0,total=0,nkv=0,nq=0,ep=0,cyc=0;
+ integer errors=0,total=0,nkv=0,nq=0,ep=0,cyc=0,zero_credit=0,kv_stall=0,q_stall=0;
  reg [7:0] tags=0;reg [31:0] qtags=0;
  function automatic [7:0] code(input integer k,input integer h,input integer d);
   integer x;begin x=(k*91+h*37+d+ep*17)%254;if(x>=127)x=x+1;code=x;end
@@ -33,6 +33,9 @@ module tb_native;
  always @(negedge clk)begin cr=returns[0];end
  always @(posedge clk)if(rst_n)begin
   cyc=cyc+1;returns=returns>>1;
+  if(c.credits==0)zero_credit=zero_credit+1;
+  if(wv&&!wr)kv_stall=kv_stall+1;
+  if(qv&&!qr)q_stall=q_stall+1;
   if(cyc%1000==0)$display("PROGRESS cycles%0d ep%0d ready%0d active%0d sent%h issued%h seen%0d ff%0d fc%h nq%0d nkv%0d credits%0d",cyc,ep,ready,u.active,u.sent,u.issued,$countones(u.seen),ff,fc,nq,nkv,c.credits);
   if(cyc>20000)begin $display("NATIVE_KV_FAIL no retirement within 40 epochs * (40 words + 80 credit latency + 16 producer stages) * 3 slack");$finish;end
   if(xv)begin
@@ -94,7 +97,8 @@ module tb_native;
    if(nkv!=4*HEADS||nq!=32||ff||cf)begin errors=errors+1;$display("epoch%0d nkv%0d nq%0d ff%0d fc%h cf%0d",ep,nkv,nq,ff,fc,cf);end
    repeat(2)step();
   end
-  if(errors==0)$display("NATIVE_KV_PASS heads=%0d epochs=40 uniqueKVbytes=%0d words=%0d cycles=%0d",HEADS,40*256*HEADS,total,cyc);
+  if(zero_credit==0)errors=errors+1;
+  if(errors==0)$display("NATIVE_KV_PASS heads=%0d epochs=40 uniqueKVbytes=%0d words=%0d cycles=%0d zero_credit=%0d kv_stall=%0d q_stall=%0d",HEADS,40*256*HEADS,total,cyc,zero_credit,kv_stall,q_stall);
   else $display("NATIVE_KV_FAIL data_errors=%0d",errors);
   $finish;
  end
