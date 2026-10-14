@@ -33,7 +33,10 @@ module ot_qwen_die_cdc_ch #(
     // AND-OR (stage 1: 8 region partial ORs of 16 entries, stage 2: their OR) into a 4-entry staging FIFO ahead of the
     // async FIFO.  A word is issued (credit returned) when the staging FIFO has room for it including the 2 in flight.
     // Cost: +2 wclk latency per word; full rate; order, values, credits and faults unchanged.
-    parameter integer RXP = 0
+    parameter integer RXP = 0,
+    // NativeTP8 opt-in: registered-read receive SRAM instead of32x546 flop store. Read the NEXT head each edge;
+    // a same-row write bypass supplies the just-written head. The FIFO sees identical words/credits on every edge.
+    parameter integer IBMEM = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -80,8 +83,31 @@ module ot_qwen_die_cdc_ch #(
     wire        x_wr = iv_q && !ib_full;
     wire [W-1:0] x_af_d;                  // RXP: staging-FIFO head -> async FIFO
     wire         x_af_v, x_af_pop;
+    wire [W-1:0] ib_head;
+    generate if (IBMEM != 0) begin : g_ib_mem
+        initial if (W != 546 || IBUF != 32 || RXP != 0) $error("IBMEM needs32x546/RXP0");
+        wire [IA-1:0] next_head = ir[IA-1:0] + (pop ? 1'b1 : 1'b0);
+        wire [W-1:0] mq;
+        reg bypass;
+        reg [W-1:0] bypass_data;
+        always @(posedge wclk or negedge wr_n)
+            if (!wr_n) bypass <= 1'b0;
+            else bypass <= x_wr && (iw[IA-1:0] == next_head);
+        always @(posedge wclk) if (x_wr && (iw[IA-1:0] == next_head)) bypass_data <= id_q;
+        ot_sram_1r1w_32x546_m1 u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(next_head),.rd_out(mq),
+            .w_ce_in(x_wr),.w_addr_in(iw[IA-1:0]),.wd_in(id_q),.w_mask_in({W{1'b1}}));
+`ifdef OT_CDC_IBMEM_MUT_NOBYPASS
+        assign ib_head = mq;
+`else
+        assign ib_head = bypass ? bypass_data : mq;
+`endif
+    end else begin : g_ib_reg
+        assign ib_head = ib[ir[IA-1:0]];
+    end endgenerate
     generate if (RXP == 0) begin : g_ibw
-        always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+        if (IBMEM == 0) begin : g_store
+            always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+        end
         assign x_issue = 1'b0; assign x_af_v = 1'b0; assign x_af_d = {W{1'b0}}; assign x_af_pop = 1'b0;
     end else begin : g_rxp
         localparam integer G  = 32;
@@ -173,14 +199,14 @@ module ot_qwen_die_cdc_ch #(
 `endif
     generate if (PIPE != 0 || AFW != 0) begin : g_afw
         ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0), .MEMM(MEMM)) u_af (
-            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS
         assign af_drained = (u_af.wr_bin == u_af.rd_bin);
 `endif
     end else begin : g_af
         ot_async_fifo #(.WIDTH(W), .DEPTH(AD)) u_af (
-            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib[ir[IA-1:0]]), .wr_overflow(),
+            .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS
         assign af_drained = (u_af.wr_bin == u_af.rd_bin);

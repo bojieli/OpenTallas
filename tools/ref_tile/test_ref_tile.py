@@ -40,6 +40,17 @@ class Gen(unittest.TestCase):
         for value in (0, -1, 33, True, 16.5, "16"):
             with self.assertRaises(RT.SpecError):
                 RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": value}))
+    def test_secondary_clock_is_declared_before_data_slew(self):
+        s = {"name": "two_root", "clock_port": "ck",
+             "sdc_extra": ["physical/qwen_romio_slots/qfd_coll_xfifo_native.sdc"]}
+        text = RT.gen_sdc(s, 770)
+        self.assertLess(text.index("create_clock -name ckd"),
+                        text.index("set_input_transition 150 [all_inputs -no_clocks]"))
+        # Source slew stays explicit, and data arrival tags are removed before
+        # measuring the secondary boundary reference in the extra SDC.
+        self.assertIn("set_input_transition 150 [get_ports ckd]", text)
+        self.assertLess(text.index("unset_input_delay -clock $ot_xf_refclk"),
+                        text.index("arrival_max_rise"))
 
     def test_pbst_kit(self):
         r = RT.gen(spec("nhb_pbst_ref"), write=False)

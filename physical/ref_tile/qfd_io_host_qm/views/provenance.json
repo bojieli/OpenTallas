@@ -142,16 +142,22 @@
   "original_inputs": {
     "6_final.odb": {
       "sha256": "753171601230eedc8523b8287fa33ae75b06154bc8d013bf5d526d2486ac0eb7",
-      "closed_archive": "Preserved original archive final/6_final.odb"
+      "closed_archive": "Preserved original archive final/6_final.odb",
+      "closed_archive_file": "/home/ubuntu/closed_archive/qfd_io_host/hing_qfd_qm-1ede799ad-div2-370x410-cl/final/6_final.odb.zst",
+      "hash_basis": "uncompressed file bytes"
     },
     "6_final.spef": {
       "sha256": "3e85c17bdfb2766eb0c668e58a3c69bb4792d16102e1593f04106f91e5f31fcb",
-      "closed_archive": "Preserved original archive final/6_final.spef"
+      "closed_archive": "Preserved original archive final/6_final.spef",
+      "closed_archive_file": "/home/ubuntu/closed_archive/qfd_io_host/hing_qfd_qm-1ede799ad-div2-370x410-cl/final/6_final.spef.zst",
+      "hash_basis": "uncompressed file bytes"
     },
     "6_final.sdc": {
       "sha256": "18345d4cbd8df11a3f8a28634dbe32e810af72e5724c3c4e1e98132584b2e74b",
       "file": "/home/ubuntu/closed-host-export-1013/stage/orfs/results/asap7/opentallas_qfd_io_host_qm_asap7_hing_hing_qfd_qm_1ede799ad_div2_370x410_cl/base/6_final.sdc",
-      "closed_archive": "Preserved original archive final/6_final.sdc"
+      "closed_archive": "Preserved original archive final/6_final.sdc",
+      "closed_archive_file": "/home/ubuntu/closed_archive/qfd_io_host/hing_qfd_qm-1ede799ad-div2-370x410-cl/final/6_final.sdc",
+      "hash_basis": "uncompressed file bytes"
     }
   },
   "original_bench_commands": [
@@ -178,5 +184,6 @@
       "source_commit": "1ede799adb3c2d7d64c3a2fd0a04f78139dee05b"
     }
   },
-  "bench_binding_scope": "Explicit original driver and route RTL input hashes plus archived PASS/four-mutant receipts; not claimed as a frozen transitive gate archive."
+  "bench_binding_scope": "Explicit original driver and route RTL input hashes plus archived PASS/four-mutant receipts; not claimed as a frozen transitive gate archive.",
+  "closed_archive_path": "/home/ubuntu/closed_archive/qfd_io_host/hing_qfd_qm-1ede799ad-div2-370x410-cl"
 }

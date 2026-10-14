@@ -5982,6 +5982,19 @@ def write_lefs(m, k, path):
                     wmap[p_] = len(sp_[1])
                     m.setdefault('unwired_rect_ports', []).append(f'{name}/{p_}')
         t, n = S.lef_text(mst, k, wmap)
+        if name in ('hfd_attn_half_lo', 'hfd_attn_half_hi'):
+            # Unpublished half placeholders reserve an explicit peripheral
+            # contact corridor: 192 nm contact depth plus 48 nm clearance.
+            # The full-outline OBS formerly covered every exact face pin.
+            # This is a pathfinding reservation, never a routed-view export.
+            margin = 0.240
+            head, obs = t.split('  OBS', 1)
+            for layer in range(4, mst.obs_top + 1):
+                old = f'LAYER M{layer} ;\n      RECT 0 0 {mst.w:.3f} {mst.h:.3f} ;'
+                new = (f'LAYER M{layer} ;\n      RECT {margin:.3f} {margin:.3f} '
+                       f'{mst.w - margin:.3f} {mst.h - margin:.3f} ;')
+                obs = obs.replace(old, new)
+            t = head + '  OBS' + obs
         txt.append(t.replace('tools/dsrom_s81_fulldie.py', 'tools/hbm_accel_die_fp.py'))
         npins += n
     Path(path).write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(txt) + 'END LIBRARY\n')

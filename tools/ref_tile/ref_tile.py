@@ -142,6 +142,8 @@ def pin_hook_wrapper(s: dict) -> bool:
 
 def gen_pin_hooks(s: dict) -> dict:
     if not pin_hook_wrapper(s):
+        if s.get("pin_hook_before_flops"):
+            raise SpecError("pin_hook_before_flops needs the recipe-2 pin-hook wrapper (io_flop_at_pins + inhold/outhold, recipe >= 2)")
         return {}
     hold = "leaf_iohold.tcl" if s.get("outhold") else "leaf_inhold.tcl"
     pre_gpl = ["# ref_tile PRE_GLOBAL_PLACE (kit recipe 2): the hold stages are inserted FIRM at the pins first, then every",
@@ -149,6 +151,14 @@ def gen_pin_hooks(s: dict) -> dict:
                "# one hook per step, so the two repo hooks are sourced from this kit file.",
                f"source /src/physical/dsrom_window_source/{hold}",
                f"source /src/{QDM}/io_flop_at_pins.tcl"]
+    # spec "pin_hook_before_flops": repo Tcl hooks sourced after the hold stages and BEFORE the pin flops are fixed
+    # (e.g. a relay master's bit-to-pin alignment); safe relative repo paths only, and they join the source-sync list.
+    for rel in s.get("pin_hook_before_flops", []):
+        if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
+            raise SpecError("pin_hook_before_flops must name safe relative repo Tcl files")
+        if not (ROOT / rel).is_file():
+            raise SpecError(f"missing pin hook: {rel}")
+        pre_gpl.insert(-1, f"source /src/{rel}")
     pre_dpl = ["# ref_tile PRE_DETAIL_PLACE (kit recipe 2): release the FIRM hold cells / drivers and the pin flops for DPL",
                "source /src/physical/dsrom_window_source/leaf_inhold_release.tcl",
                f"source /src/{QDM}/out_flop_release.tcl"]
@@ -186,8 +196,10 @@ def load_spec(path: str) -> dict:
         if s["kind"] != "cluster" or not isinstance(cps, list) or not cps or s["clock_port"] != cps[0]:
             raise SpecError('spec: "clock": "entries" needs kind cluster and "clock_ports" [one port per child clock pin] '
                             'with clock_port == clock_ports[0]')
-        if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", c) for c in cps):
-            raise SpecError("spec: clock_ports must be distinct scalar port names")
+        if len(set(cps)) != len(cps) or not all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*(?:\[\d+\])?", c) for c in cps):
+            raise SpecError("spec: clock_ports must be distinct scalar names or literal bus bits")
+        if s.get("clock_entry_domains") is not None:
+            clock_entry_constraints.domains(s)
     elif s.get("clock_ports"):
         raise SpecError('spec: "clock_ports" is only read with "clock": "entries"')
     if s["pins"] == "auto":   # inputs S, outputs N, clock + resets W (a starting plan; set real faces per the die contract)
@@ -742,8 +754,12 @@ def gen_sdc(s: dict, period_ps: float) -> str:
             f"set_input_delay {833.333 * fin:.3f} -clock core_clk [all_inputs -no_clocks]\n"
             f"set_output_delay {833.333 * fout:.3f} -clock core_clk [all_outputs]\n"
             "set_max_fanout 32 [current_design]\nset_load 80 [all_outputs]\n"
-            "set_input_transition 150 [all_inputs -no_clocks]\nset_max_transition 260 [current_design]\n"
-            + sdc_extra(s) + clock_entry_constraints.generate(s, ROOT))
+            "set_max_transition 260 [current_design]\n"
+            + sdc_extra(s)
+            # Extra SDC may declare secondary clocks. Data slew must exclude
+            # their sources; explicit source-clock transitions in extra SDC stand.
+            + "set_input_transition 150 [all_inputs -no_clocks]\n"
+            + clock_entry_constraints.generate(s, ROOT))
 
 
 def sdc_extra(s: dict) -> str:
@@ -849,6 +865,9 @@ def gen_hooks(s: dict, kd: str) -> dict:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
         files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())))
+    # Explicit clock adapters must wrap the established spine before the IO boundary wrapper.
+    # These are routed source dependencies, not post-generation hand edits.
+    pre_cts += [f"source /src/{f}" for f in s.get("pre_cts_extra", [])]
     pre_cts.append(f"source /src/{QDM}/pre_cts_skew.tcl")
     # spec "boundary_tcl": repo Tcl files that re-apply a second-domain boundary after every io_ref switch (post-CTS
     # wrapper, pre-GRT, post-DRT), so the route times those ports against their own propagated clock, not only sign-off
@@ -876,6 +895,13 @@ def gen_hooks(s: dict, kd: str) -> dict:
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
                 "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
                 f"source /src/{QDM}/post_plain.tcl"] + btcl
+    corridor = s.get("pin_access", {}).get("corridor")
+    if corridor:
+        for post, hook in ((0, pre_grt), (1, post_drt)):
+            cpins = ("set ::ot_smpub_corridor_pins {" + " ".join("{" + p + "}" for p in corridor['pins']) + "}") if corridor.get('pins') else f"set ::ot_smpub_corridor_pin {{{corridor['pin']}}}"
+            hook += [cpins,
+                     f"set ::ot_smpub_corridor_half {float(corridor.get('half_height_um', 0.864))}",
+                     f"set ::ot_smpub_corridor_post {post}", f"source /src/{corridor['script']}"]
     # Each stage's boundary reset must be followed by the complete domain-specific
     # boundary. In particular, POST_CTS must write a correct SDC for the next stage.
     post_plain = [f"source /src/{QDM}/post_plain.tcl"] + btcl
@@ -1102,7 +1128,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
@@ -1300,7 +1326,9 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             f"source /src/{s['orfs_vars']['POST_TAPCELL_TCL']}\n"
             "# then unplace the pins again: 3_2_place_iop re-sources io_tcl, and place_pins aborts in createIOGroup when\n"
             "# a pin group's (clk / reset) ports are already placed (smh_pt_e_ref_p40s gate, signal 6)\n"
-            "foreach bt [[ord::get_db_block] getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
+            "# signal ports only: POWER/GROUND BTerm pins (made by pdngen at 2_4) are never re-created by io_tcl or\n"
+            "# place_pins; a pinless VDD/VSS BTerm makes AntennaChecker::designIsPlaced() false -> ANT-0008 at 5_1_grt\n"
+            "foreach bt [[ord::get_db_block] getBTerms] { if {[$bt getSigType] in {POWER GROUND}} continue; foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n")
         # el1013-smh-r11 2026-10-13: this ORFS sources IO_CONSTRAINTS at 2_1_floorplan ONLY (floorplan.tcl), not at
         # 3_2_place_iop, so after the unplace above place_pins placed EVERY port by wirelength and the exact plan was lost
         # (smh_tile_eg_ref r10: 7,766 of 7,766 ports re-placed; clk / cgi on the W face, gin on the E face on M4, 50 of the
@@ -1310,14 +1338,14 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
             "# ref_tile: re-apply the exact abutment pin plan after place_pins (IO_CONSTRAINTS is sourced only at\n"
             "# 2_1_floorplan; the POST_TAPCELL hook unplaced the ports so place_pins could run) and save the stage result\n"
             "set ot_blk [ord::get_db_block]\n"
-            "foreach bt [$ot_blk getBTerms] { foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n"
+            "foreach bt [$ot_blk getBTerms] { if {[$bt getSigType] in {POWER GROUND}} continue; foreach bp [$bt getBPins] { odb::dbBPin_destroy $bp } }\n"
             f"source /src/{s['io_tcl']}\n"
             "set ot_n 0; set ot_miss {}\n"
             "foreach bt [$ot_blk getBTerms] {\n"
             "  if {[$bt getSigType] in {POWER GROUND}} continue\n"
             "  if {[llength [$bt getBPins]] == 0} { lappend ot_miss [$bt getName] } else { incr ot_n }\n"
             "}\n"
-            "if {[llength $ot_miss]} { error \"REF_TILE exact pin plan: [llength $ot_miss] ports left unplaced ([lrange $ot_miss 0 4])\" }\n"
+            "if {[llength $ot_miss]} { error \"REF_TILE exact pin plan: [llength $ot_miss] ports left unplaced ([lrange $ot_miss 0 4])\" }\n"            "foreach bt [$ot_blk getBTerms] { if {[$bt getSigType] in {POWER GROUND} && [llength [$bt getBPins]] == 0} { error \"REF_TILE power port [$bt getName] lost its pdn pin (ANT-0008 at grt)\" } }\n"
             "puts \"REF_TILE exact pin plan re-applied after place_pins: $ot_n ports\"\n"
             "orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb\n"
             "write_pin_placement $::env(RESULTS_DIR)/3_2_place_iop.tcl\n")

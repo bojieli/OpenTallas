@@ -39,6 +39,13 @@ def canonical_digest(entries):
     return hashlib.sha256(json.dumps(entries, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
+def overlay_module():
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "closure_loop"))
+    import helper_overlay
+    return helper_overlay
+
+
 def snapshot(data, root, start_commit, daemon, daemon_commit, helpers):
     """Read the completed bytes, resolving duplicate tar members as extraction does."""
     current, overlays = git_files(root, start_commit), git_files(daemon, daemon_commit)
@@ -64,18 +71,51 @@ def snapshot(data, root, start_commit, daemon, daemon_commit, helpers):
             "files": entries}
 
 
-def validate(binding, root, daemon, commit=None):
+def validate(binding, root, daemon, commit=None, route_overlay=True, frozen_recovery=False):
     """Match immutable staged contents against the requested route source and current tool overlay."""
     if not isinstance(binding, dict) or binding.get("schema") != SCHEMA:
         return False, "missing immutable source snapshot; legacy result is unqualified"
+    if frozen_recovery and not route_overlay:
+        return False, "frozen helper recovery requires executed overlay verification"
     entries = binding.get("files")
     if not entries or canonical_digest(entries) != binding.get("manifest_sha256"):
         return False, "source manifest missing or digest mismatch"
     tree = git_files(root, commit) if commit else None
+    effective = {}
+    if route_overlay:
+        HO = overlay_module()
+        frozen = binding.get("route_overlay_plan")
+        paths = None if frozen else [e["path"] for e in entries if e["source"] == "daemon_overlay"]
+        try:
+            if frozen_recovery:
+                receipt = binding.get("helper_recovery") or {}
+                executed = sorted(e["path"] for e in entries if e["source"] == "daemon_overlay")
+                if ((binding.get("recovery") or {}).get("kind") != "full_original_snapshot_verified"
+                        or not executed
+                        or not binding.get("remote_archive_verified")
+                        or receipt.get("status") != "verified_original_gate"
+                        or receipt.get("content_sha256") != (frozen or {}).get("content_sha256")
+                        or receipt.get("origin_main") != (frozen or {}).get("origin_main")
+                        or receipt.get("executed_paths") != executed
+                        or receipt.get("manifest_sha256") != binding["manifest_sha256"]):
+                    return False, "original gate executed-helper verification missing or mismatched"
+                effective = HO.committed_frozen_payloads(root, frozen)
+            else:
+                current, effective = HO.capture_plan(daemon, root, paths=paths)
+        except (OSError, ValueError, subprocess.SubprocessError) as ex:
+            return False, f"cannot resolve effective route helpers: {ex}"
+        if frozen and not frozen_recovery:
+            ok, why = HO.compare_plans(frozen, current)
+            if not ok:
+                return False, why
     for e in entries:
         p = Path(e["path"])
         if p.is_absolute() or ".." in p.parts:
             return False, "unsafe manifest path"
+        if e["source"] == "daemon_overlay" and route_overlay:
+            if hashlib.sha256(effective[str(p)]).hexdigest() != e["sha256"]:
+                return False, f"effective route overlay differs from staged snapshot: {p}"
+            continue
         if e["source"] == "daemon_overlay":
             f = daemon / p
         elif tree is not None:
@@ -90,7 +130,8 @@ def validate(binding, root, daemon, commit=None):
             return False, f"staged source missing: {p}"
         if hashlib.sha256(payload).hexdigest() != e["sha256"]:
             return False, f"route source differs from staged snapshot: {p}"
-    return True, "exact staged source and daemon overlay match"
+    return True, ("exact original source and committed executed helpers match; current helpers unchanged"
+                  if frozen_recovery else "exact staged source and daemon overlay match")
 
 
 def recover_verified_snapshot(binding, staged_root, log_bytes, script_bytes):
@@ -103,7 +144,7 @@ def recover_verified_snapshot(binding, staged_root, log_bytes, script_bytes):
     """
     import copy
     import re
-    ok, why = validate(binding, staged_root, staged_root)
+    ok, why = validate(binding, staged_root, staged_root, route_overlay=False)
     if not ok:
         raise ValueError(why)
     if hashlib.sha256(script_bytes).hexdigest() != binding.get("remote_script_sha256"):
