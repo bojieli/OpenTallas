@@ -9,6 +9,8 @@
 #include <cstdlib>
 static uint64_t bits(const uint32_t*v,int off,int n){uint64_t z=0;for(int i=0;i<n;i++)z|=uint64_t((v[(off+i)/32]>>((off+i)%32))&1)<<i;return z;}
 static void put(uint32_t*v,int off,int n,uint64_t z){for(int i=0;i<n;i++){uint32_t m=1u<<((off+i)%32);v[(off+i)/32]=(v[(off+i)/32]&~m)|(((z>>i)&1)?m:0);}}
+template<typename T>static uint64_t bits(const T&v,int o,int n){return (uint64_t(v)>>o)&((uint64_t(1)<<n)-1);}
+template<typename T>static void put(T&v,int o,int n,uint64_t z){uint64_t m=((uint64_t(1)<<n)-1)<<o;v=T((uint64_t(v)&~m)|((z<<o)&m));}
 template<size_t N>static uint64_t bits(const VlWide<N>&v,int o,int n){return bits(v.data(),o,n);}
 template<size_t N>static void put(VlWide<N>&v,int o,int n,uint64_t z){put(v.data(),o,n,z);}
 struct Return{int t,slot;uint64_t at;};
