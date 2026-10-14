@@ -1,0 +1,19 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: N face 10.5 pins/um (wwq, wwq_cr, wg_req): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (y): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 9.1 pins/um (m_v, m, i_bad): recipe-2 hold stages take 3.05 um behind the face, the pin flops need gap 3.9 um and 12 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qdq_wr_pay_ref_20261014-033210.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qdq_wr_pay_ref_20261014-033210.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qdq_wr_pay_ref-20261014-033210
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 34 s (gate total 208 s)
+GATE INFO util: synthesized std area 2983 um2 + macros 13319 in core 30830: util 53%
+GATE INFO textbook: PASS ot_hgi_qdq_wr_pay cells 24,421 flops 4,170 depth 380.1 ps util 0.5313 reach 123.1 um (0.4 s)
+GATE INFO cts_calibration: ss insertion all 343.6..472.9 ps (spread 129.3), boundary mean 391.8; tt insertion all 265.3..388.5 ps (spread 123.2), boundary mean 311.5; ff insertion all 208.9..334.7 ps (spread 125.8), boundary mean 260.8; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qdq_wr_pay_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      466 paths, worst slack 76.9 ps (e.g. u_od.g_esl.g_s[1].b0[73]$_DFFE_PP_/D)
+GATE INFO path_classes: reg->out        1 paths, worst slack 101.0 ps (e.g. wg_req)
+GATE INFO path_classes: setup WNS 7.690625913880922e-11 hold WNS 2.7026991755718655e-11
+GATE INFO clock_rule: root port:clk: 4,171 sinks on the largest root <= 15,000; measured TT insertion 388.5 ps, leaf spread 123.2 ps
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+GATE: qdq_wr_pay_ref/gate_result.json written (exact staged source binding; commit it with the kit)
