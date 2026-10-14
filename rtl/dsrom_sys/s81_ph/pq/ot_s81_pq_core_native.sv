@@ -103,12 +103,30 @@ module ot_s81_pq_core_native (
 `else
     genvar z;
     generate for (z = 0; z < 4; z = z + 1) begin : g_coverage
+`ifdef OT_PQ_IX_PIN_VARIANTS
+        if(z < 2) begin : g_l
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[1].rows_read &
+            g_ix[z].g_left.u_ix.u_native.g_read_group[1].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[1].g_bank[1].rows_read &
+            g_ix[z].g_left.u_ix.u_native.g_read_group[2].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[2].g_bank[1].rows_read &
+            g_ix[z].g_left.u_ix.u_native.g_read_group[3].g_bank[0].rows_read & g_ix[z].g_left.u_ix.u_native.g_read_group[3].g_bank[1].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].g_left.u_ix.u_native.g_read_group[0].g_bank[0].written;
+        end else begin : g_r
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].g_right.u_ix.u_native.g_read_group[0].g_bank[0].rows_read & g_ix[z].g_right.u_ix.u_native.g_read_group[0].g_bank[1].rows_read &
+            g_ix[z].g_right.u_ix.u_native.g_read_group[1].g_bank[0].rows_read & g_ix[z].g_right.u_ix.u_native.g_read_group[1].g_bank[1].rows_read &
+            g_ix[z].g_right.u_ix.u_native.g_read_group[2].g_bank[0].rows_read & g_ix[z].g_right.u_ix.u_native.g_read_group[2].g_bank[1].rows_read &
+            g_ix[z].g_right.u_ix.u_native.g_read_group[3].g_bank[0].rows_read & g_ix[z].g_right.u_ix.u_native.g_read_group[3].g_bank[1].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].g_right.u_ix.u_native.g_read_group[0].g_bank[0].written;
+        end
+`else
         assign ix_rows_read[96*z +: 96] =
             g_ix[z].u_ix.g_read_group[0].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[0].g_bank[1].rows_read &
             g_ix[z].u_ix.g_read_group[1].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[1].g_bank[1].rows_read &
             g_ix[z].u_ix.g_read_group[2].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[2].g_bank[1].rows_read &
             g_ix[z].u_ix.g_read_group[3].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[3].g_bank[1].rows_read;
         assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_read_group[0].g_bank[0].written;
+`endif
         assign qb_rows_read[96*z +: 96] = u_qb.g_bank[z].rows_read;
         assign qb_rows_written[96*z +: 96] = u_qb.g_bank[z].written;
     end endgenerate
@@ -129,9 +147,21 @@ module ot_s81_pq_core_native (
     wire [1023:0] bt_d;
     generate for (g = 0; g < 4; g = g + 1) begin : g_ix
         wire [255:0] d;
+`ifdef OT_PQ_IX_PIN_VARIANTS
+        if(g < 2) begin : g_left
+        ot_s81_pq_ix_left_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+            .bt_d(d), .fault(storage_fault[g]));
+        end else begin : g_right
+        ot_s81_pq_ix_right_native u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
+            .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
+            .bt_d(d), .fault(storage_fault[g]));
+        end
+`else
         ot_s81_pq_ix_sram u_ix (.clk(ck_ix[g]), .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
             .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
             .bt_d(d), .fault(storage_fault[g]));
+`endif
         genvar u;
         for (u = 0; u < 4; u = u + 1) begin : g_u
             assign bt_d[256*u + 64*g +: 64] = d[64*u +: 64];
