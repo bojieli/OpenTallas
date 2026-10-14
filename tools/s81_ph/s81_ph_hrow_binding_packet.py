@@ -66,6 +66,10 @@ def main():
   if side.exists():
    key='current_consumed_native207' if name=='native207_evidence.json' else 'current_consumed_native207_contract'
    packet[key]=json.loads(side.read_text());mapping[key]=json.loads(side.read_text())
+ intake=OUT/'final_relay_intake.json'
+ if intake.exists():
+  final=json.loads(intake.read_text());packet.update(status='OPEN production source ABI; 88-instance geometry historical pending large relay successors',final_relay_intake=ref(intake),missing_final_relay_timing_masters=list(final['large_master_status']),rc_budget_status=final['actual_per_pair_rc_budget_status'])
+  for ma,v in final['final_small_masters'].items():packet['master_evidence'][ma].update(status='CLOSED final relay views; historical CTS pin geometry retained separately; parent delivery/timing OPEN',final_view_record_commit=v['record_commit'],final_lef=v['final_lef'],insertion=v['insertion'],insertion_corners=v['insertion_corners'])
  packet['clock_reset_delivery_route_scope']='Data/localrn81363pairs only;88globalclockroots/61originalreset sinks require actualallocatorroutes, loads/skew and aggregatecapacity validation.'
  packet['source_binding_prerequisite']=dict(owner='root whole-native source integration',required_next='Commit actualproduction TD instance/physicaldie/realclock andresetproducer graph beforeallocator tap/phase assignment')
  for n,v in [('packet.json',packet),('physical_pins.json',pins),('allocator_request.json',request),('source_graph.json',graph),('replacement_mapping.json',mapping)]: (OUT/n).write_text(json.dumps(v,indent=1)+'\n')

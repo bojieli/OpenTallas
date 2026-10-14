@@ -1,0 +1,211 @@
+{
+ "schema": "opentallas.native_hrow_final_relay_intake.v1",
+ "status": "PARTIAL final ETM evidence; no parent route/timing qualification",
+ "historical_placement_commit": "5281a6feb",
+ "historical_candidate": {
+  "path": "results/arch/s81_hrow_native_placement_1013/candidate.json",
+  "sha256": "e7891c29ceda2efe759e23097bbaebb09f2ac1a3ddf70c146d658dc93cd777ac"
+ },
+ "large_master_status": {
+  "dsfd_hrow_r1025": "EARLY_FAIL_CONGESTION GRT0116; old129.6x129.6 CTS geometry historical; successor outline/pins pending",
+  "dsfd_hrow_r2079": "EARLY_FAIL_CONGESTION GRT0116; old129.6x129.6 CTS geometry historical; successor outline/pins pending"
+ },
+ "final_small_masters": {
+  "dsfd_die_rstsync": {
+   "record_commit": "626202850",
+   "source_commit": "06542a05c",
+   "status": "CLOSED leaf; historical parent placement not requalified",
+   "final_lef": {
+    "path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync.lef",
+    "sha256": "03f7519e06e8f756f42b28382bd72c263a031113b060a12fa783d1f7a0e4b5d3"
+   },
+   "abstract": {
+    "path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/abstract.json",
+    "sha256": "8be57a9773637b98ee76d843fc9e45de4629f3f0bd909bb05b1be24514aa729a"
+   },
+   "insertion": {
+    "path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/insertion.json",
+    "sha256": "7b64d9212a985afce40845b40b1f4d299cc0716b32a92bd8bc9481ad28d74c53"
+   },
+   "insertion_corners": {
+    "ss": {
+     "n": 2,
+     "mean": 58.4,
+     "min": 58.4,
+     "max": 58.5
+    },
+    "tt": {
+     "n": 2,
+     "mean": 42.0,
+     "min": 42.0,
+     "max": 42.1
+    },
+    "ff": {
+     "n": 2,
+     "mean": 32.3,
+     "min": 32.3,
+     "max": 32.4
+    }
+   },
+   "outline_um": [
+    32.4,
+    32.4
+   ],
+   "historical_cts_pin_evidence": {
+    "path": "results/arch/s81_hrow_native_placement_1013/pins/dsfd_die_rstsync/pins.json",
+    "sha256": "1dc32ac24c797572f36d24c301352364ba9cc291c366b8fd5b42db6522f05f1e"
+   },
+   "changed_pin_count": 1,
+   "pin_deltas": [
+    {
+     "pin": "rn",
+     "historical_cts_boxes": [
+      {
+       "layer": "M4",
+       "rect_um": [
+        32.316,
+        16.176,
+        32.4,
+        16.2
+       ]
+      }
+     ],
+     "final_lef_boxes": [
+      {
+       "layer": "M4",
+       "rect_um": [
+        32.316,
+        16.176,
+        32.4,
+        16.2
+       ]
+      },
+      {
+       "layer": "M4",
+       "rect_um": [
+        30.769,
+        16.176,
+        32.364,
+        16.2
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "dsfd_hrow_r15": {
+   "record_commit": "b4e5e2af3",
+   "source_commit": "06542a05c",
+   "status": "CLOSED leaf; historical parent placement not requalified",
+   "final_lef": {
+    "path": "physical/ref_tile/dsfd_hrow_r15_m5/views/dsfd_hrow_r15/dsfd_hrow_r15.lef",
+    "sha256": "759ac50813acb136aeafc795008705d43f4ff4bc695735508961ab100e9d67e4"
+   },
+   "abstract": {
+    "path": "physical/ref_tile/dsfd_hrow_r15_m5/views/dsfd_hrow_r15/abstract.json",
+    "sha256": "3bc078a6c7f118d531cc8d3b6ac39ed3568c678fed1c823f0e2c196c0ec4856b"
+   },
+   "insertion": {
+    "path": "physical/ref_tile/dsfd_hrow_r15_m5/views/dsfd_hrow_r15/insertion.json",
+    "sha256": "5d745b71278bc962c6687f1e496f18f73570b595aae91efb0866704d12324fa8"
+   },
+   "insertion_corners": {
+    "ss": {
+     "n": 15,
+     "mean": 60.8,
+     "min": 60.7,
+     "max": 60.9
+    },
+    "tt": {
+     "n": 15,
+     "mean": 42.9,
+     "min": 42.8,
+     "max": 43.2
+    },
+    "ff": {
+     "n": 15,
+     "mean": 32.5,
+     "min": 32.4,
+     "max": 32.8
+    }
+   },
+   "outline_um": [
+    32.4,
+    32.4
+   ],
+   "historical_cts_pin_evidence": {
+    "path": "results/arch/s81_hrow_native_placement_1013/pins/dsfd_hrow_r15/pins.json",
+    "sha256": "c5782dba4b7bcf6e5b6da7bfacd1dacbb35da11a6834f56800a98c7d98917d53"
+   },
+   "changed_pin_count": 0,
+   "pin_deltas": []
+  },
+  "dsfd_hrow_r23": {
+   "record_commit": "16f451be6",
+   "source_commit": "06542a05c",
+   "status": "CLOSED leaf; historical parent placement not requalified",
+   "final_lef": {
+    "path": "physical/ref_tile/dsfd_hrow_r23_m5/views/dsfd_hrow_r23/dsfd_hrow_r23.lef",
+    "sha256": "dd00f258b92778b9e224b6eba38c8b9eb60ba6d752aac3d754574e16c44ee63e"
+   },
+   "abstract": {
+    "path": "physical/ref_tile/dsfd_hrow_r23_m5/views/dsfd_hrow_r23/abstract.json",
+    "sha256": "190fbb74c03f2d4c5342ac9e810a5c00daada4470780a2239a88711a4efe7917"
+   },
+   "insertion": {
+    "path": "physical/ref_tile/dsfd_hrow_r23_m5/views/dsfd_hrow_r23/insertion.json",
+    "sha256": "daa98de1025d23bbfc779c28126ef994bafea6a1ab82a40b2651aece429c6b4e"
+   },
+   "insertion_corners": {
+    "ss": {
+     "n": 23,
+     "mean": 62.9,
+     "min": 62.7,
+     "max": 63.1
+    },
+    "tt": {
+     "n": 23,
+     "mean": 44.5,
+     "min": 44.2,
+     "max": 44.6
+    },
+    "ff": {
+     "n": 23,
+     "mean": 33.7,
+     "min": 33.5,
+     "max": 33.9
+    }
+   },
+   "outline_um": [
+    32.4,
+    32.4
+   ],
+   "historical_cts_pin_evidence": {
+    "path": "results/arch/s81_hrow_native_placement_1013/pins/dsfd_hrow_r23/pins.json",
+    "sha256": "1ec5c6fe4a2ace837d9a9523d75228b5a344756f3e317126de62b889fcea1052"
+   },
+   "changed_pin_count": 0,
+   "pin_deltas": []
+  }
+ },
+ "raw_timing_facts": {
+  "path": "results/arch/s81_hrow_native_placement_1013/binding_packet/available_final_ss_ff_timing_facts.json.gz",
+  "sha256": "12e23482536fc73ea88fe4cd98218720212481ba66381be21e71646493a13081"
+ },
+ "per_pair_partial_etm_mapping": {
+  "path": "results/arch/s81_hrow_native_placement_1013/binding_packet/partial_final_etm_pairs.json.gz",
+  "sha256": "853cc01a8657a1193c9a0b4b28bd030019c027dd6015c99247f3f3b41aefb1ea"
+ },
+ "pair_counts": {
+  "both_final_etms": 53415,
+  "missing_large_final_etm": 27948
+ },
+ "actual_per_pair_rc_budget_status": "OPEN; actual producer clock/refclk ABI and delivery absent, large ETMs absent",
+ "immutable_price": {
+  "relay_ff": 18897,
+  "reset_ff": 54,
+  "structural_ut_extra_edges": 1,
+  "full_unit_price": "PENDING actual parent measurement"
+ },
+ "source_binding_prerequisite": "Root must instantiate production TD and bind actual clock/reset producers before allocator delivery; native207 has no hrow instance"
+}
