@@ -49,6 +49,7 @@ module ot_s81ph_ret_root_s #(
 `else
     , parameter integer LOCAL_DECISIONS = 0
 `endif
+    , parameter integer RST_REG = 0          // 1: three registered reset regions (ctl / ev banks / adder), see below
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -76,6 +77,24 @@ module ot_s81ph_ret_root_s #(
             norm_step = {row, lo, kk, n};
         end
     endfunction
+    // ------------------------------------------------------------ reset regions (s81-gather 2026-10-14)
+    // RST_REG 1 (the hardened leaf): rst_n feeds three registered copies, each async-assert / sync-release on clk,
+    // so no reset net carries more than ~400 loads: rc_n = control + valids (~120), re_n = the S x 32 entry valids
+    // (256), ra_n = the adder pipeline (~300).  All three release on the SAME edge (one cycle after rst_n): the
+    // root is cycle-identical to RST_REG 0 shifted by that one cycle.  keep_hierarchy stops synthesis from merging
+    // the copies (same D / clock / reset) back into one net.  RST_REG 0 (benches of the root alone): rst_n direct.
+    wire rc_n, re_n, ra_n;
+    generate if (RST_REG) begin : g_rst
+`ifdef S81PH_MUT_RST_REGION
+        assign re_n = 1'b1;                  // MUTANT: the entry-valid region left out of the reset tree
+`else
+        (* keep_hierarchy = 1, dont_touch = 1 *) ot_s81ph_rst_stage u_re (.clk(clk), .rst_n(rst_n), .q(re_n));
+`endif
+        (* keep_hierarchy = 1, dont_touch = 1 *) ot_s81ph_rst_stage u_rc (.clk(clk), .rst_n(rst_n), .q(rc_n));
+        (* keep_hierarchy = 1, dont_touch = 1 *) ot_s81ph_rst_stage u_ra (.clk(clk), .rst_n(rst_n), .q(ra_n));
+    end else begin : g_rst_direct
+        assign rc_n = rst_n; assign re_n = rst_n; assign ra_n = rst_n;
+    end endgenerate
     localparam integer QW = $clog2(QD);
     localparam integer SW = (S > 1) ? $clog2(S) : 1;
     localparam integer LAT = 8;              // ot_fp32_add_rne_deep SPLIT 3'b111
@@ -84,7 +103,7 @@ module ot_s81ph_ret_root_s #(
 
     // ------------------------------------------------------------ P: normalised input (one norm iteration a stage)
     reg [NP-1:0] p_v; reg [31:0] p_t [0:NP-1]; reg [31:0] p_d [0:NP-1]; reg [NP-1:0] p_e;
-    always @(posedge clk or negedge rst_n) if (!rst_n) p_v <= {NP{1'b0}}; else p_v <= {p_v[NP-2:0], i_v};
+    always @(posedge clk or negedge rc_n) if (!rc_n) p_v <= {NP{1'b0}}; else p_v <= {p_v[NP-2:0], i_v};
     always @(posedge clk) begin
         p_t[0] <= norm_step(i_t); p_d[0] <= i_d; p_e[0] <= i_e;
         for (c = 1; c < NP; c = c + 1) begin p_t[c] <= norm_step(p_t[c-1]); p_d[c] <= p_d[c-1]; p_e[c] <= p_e[c-1]; end
@@ -124,8 +143,8 @@ module ot_s81ph_ret_root_s #(
 `else
     wire cr_ret = pf_pop;
 `endif
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge clk or negedge rc_n)
+        if (!rc_n) begin
             qw <= 0; qr <= 0; mc <= 0; mc_nz <= 1'b0; hv <= 1'b0; pv <= 1'b0;
             cr <= 3'd0; r1_v <= 1'b0; r2_v <= 1'b0; pf_wp <= 2'd0; pf_rp <= 2'd0; pf_n <= 3'd0; pf_nz <= 1'b0;
         end else begin
@@ -148,8 +167,8 @@ module ot_s81ph_ret_root_s #(
 `else
     wire q_hit = qwv_q && (qr == qwa_q);
 `endif
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin qwv_q <= 1'b0; qf_sel <= 1'b0; end
+    always @(posedge clk or negedge rc_n)
+        if (!rc_n) begin qwv_q <= 1'b0; qf_sel <= 1'b0; end
         else begin qwv_q <= wr_mem; if (rd_go) qf_sel <= q_hit; end
     always @(posedge clk) begin
         qwa_q <= qw; qwd_q <= {n_e, n_d, n_t};
@@ -180,7 +199,7 @@ module ot_s81ph_ret_root_s #(
         wire sv_D = dv[LAT-2];
 `endif
         (* keep_hierarchy = 1, dont_touch = 1 *)
-        ot_s81ph_candidate_valid u_sv (.clk(clk), .rst_n(rst_n), .d(sv_D), .q(cand_pick_sv));
+        ot_s81ph_candidate_valid u_sv (.clk(clk), .rst_n(rc_n), .d(sv_D), .q(cand_pick_sv));
         (* keep_hierarchy = 1, dont_touch = 1 *)
         ot_s81ph_heap_decode u_dtg (.t(dtg_last), .hot(pick_dtg_oh));
         (* keep_hierarchy = 1, dont_touch = 1 *)
@@ -245,7 +264,7 @@ module ot_s81ph_ret_root_s #(
     generate if (LOCAL_BANKS) begin : g_node_local
         always @(posedge clk) s2_h_oh <= cand_h_oh;
     end endgenerate
-    always @(posedge clk or negedge rst_n) if (!rst_n) s2_v <= 1'b0; else s2_v <= x_v;
+    always @(posedge clk or negedge rc_n) if (!rc_n) s2_v <= 1'b0; else s2_v <= x_v;
     always @(posedge clk) begin
         s2_t <= cand; s2_key <= x_key; s2_h <= x_h; s2_d <= x_d; s2_e <= x_e; s2_side <= x_lo[x_kk]; s2_bad <= x_bad;
         s2_cmp <= complete(cand);
@@ -312,8 +331,8 @@ module ot_s81ph_ret_root_s #(
 `else
     wire [SW+4:0] b_wa = {enc(slot_w), s2_h};
 `endif
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge clk or negedge rc_n)
+        if (!rc_n) begin
             if (!LOCAL_DECISIONS) sv_s <= {S{1'b0}}; p_use <= 1'b0; p_ins <= 1'b0; p_slot <= {S{1'b0}};
             if (!LOCAL_DECISIONS) for (k = 0; k < S; k = k + 1) scnt[k] <= 6'd0;
             a3_v <= 1'b0; a4_v <= 1'b0; add <= 1'b0; r_v <= 1'b0; fault <= 1'b0; e_two <= 1'b0; e_dup <= 1'b0;
@@ -347,8 +366,8 @@ module ot_s81ph_ret_root_s #(
             wire count_cur = v_fwd ? p_ins : (!is_new && s2_vh[bank]);
             wire [5:0] count_inc = scnt[bank] + 6'd1;
             wire [5:0] count_dec = scnt[bank] - 6'd1;
-            always @(posedge clk or negedge rst_n)
-                if (!rst_n) begin scnt[bank] <= 6'd0; sv_s[bank] <= 1'b0; end
+            always @(posedge clk or negedge rc_n)
+                if (!rc_n) begin scnt[bank] <= 6'd0; sv_s[bank] <= 1'b0; end
                 else if (count_use) begin
                     if (count_cur) begin
                         scnt[bank] <= count_dec;
@@ -367,13 +386,13 @@ module ot_s81ph_ret_root_s #(
             (* keep = 1 *) wire bank_use = slot_w[bank] && (LOCAL_DECISIONS ? ok : (dec_add || dec_ins));
             wire bank_cur = LOCAL_DECISIONS ? (v_fwd ? p_ins : (!is_new && s2_vh[bank])) : v_cur;
             for (node = 0; node < 32; node = node + 1) begin : g_node
-                always @(posedge clk or negedge rst_n)
-                    if (!rst_n) ev[bank][node] <= 1'b0;
+                always @(posedge clk or negedge re_n)
+                    if (!re_n) ev[bank][node] <= 1'b0;
                     else if (bank_use && s2_h_oh[node]) ev[bank][node] <= !bank_cur;
             end
         end else begin : g_legacy
-            always @(posedge clk or negedge rst_n)
-                if (!rst_n) ev[bank] <= 32'd0;
+            always @(posedge clk or negedge re_n)
+                if (!re_n) ev[bank] <= 32'd0;
                 else if (slot_w[bank]) begin
                     if (dec_ins) ev[bank][s2_h] <= 1'b1;
                     if (dec_add) ev[bank][s2_h] <= 1'b0;
@@ -405,10 +424,10 @@ module ot_s81ph_ret_root_s #(
 `else
     ot_fp32_add_rne_deep #(.SPLIT(3'b111), .KS(1)) u_add
 `endif
-       (.clk(clk), .rst_n(rst_n), .valid_in(add), .a(add_a), .b(add_b),
+       (.clk(clk), .rst_n(ra_n), .valid_in(add), .a(add_a), .b(add_b),
         .y(sum), .err(err), .valid_out(sv_add));
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin dv <= 0; sv <= 1'b0; end
+    always @(posedge clk or negedge rc_n)
+        if (!rc_n) begin dv <= 0; sv <= 1'b0; end
         else begin dv <= {dv[LAT-3:0], add}; sv <= dv[LAT-2]; end
     always @(posedge clk) begin
         // delay line stage j < 5 applies norm iteration j to the parent tag (5 iterations = norm)
@@ -425,7 +444,7 @@ module ot_s81ph_ret_root_s #(
         cv_lvl4 = 0, cv_bad = 0, cv_dup = 0;
     reg [S-1:0] ob_was;                      // slots that have been freed at least once
     initial ob_was = {S{1'b0}};
-    always @(posedge clk) if (rst_n) begin
+    always @(posedge clk) if (rc_n) begin
         ob_open = $countones(sv_s);
         if (ob_open > ob_open_pk) ob_open_pk = ob_open;
         if (mc > ob_q_pk) ob_q_pk = mc;
@@ -520,4 +539,10 @@ module ot_s81ph_root_ram #(
                 (KIND == 3 && (W != 34 || DEPTH != 256)))
         $fatal(1, "ot_s81ph_root_ram: KIND %0d does not match W %0d DEPTH %0d", KIND, W, DEPTH);
 `endif
+endmodule
+
+// One registered reset region copy: async assert, release on the next clk edge after rst_n rises.
+(* keep_hierarchy = 1, dont_touch = 1 *)
+module ot_s81ph_rst_stage(input wire clk, input wire rst_n, (* keep = 1, dont_touch = 1 *) output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= 1'b1;
 endmodule

@@ -193,6 +193,12 @@ module tb_s81ph_gather_cl;
                 rc = $fscanf(fd, "%h %h %h %h %h", a0, a1, a2, a3, a4);
                 if (a0 != 0) begin flush; if (a0 > 1) idle(a0 - 1); end
                 root = a1; n_v[root] = 1; n_t[root] = a2; n_d[root] = a3; n_e[root] = a4;
+            end else if (cmd == "R") begin
+                // Reset NOT at a drained boundary: partials are still waiting in both masters (orphan case).  Both
+                // must come out empty; a region left out of the cluster's reset tree keeps stale state.
+                armed=0;rst=0;rsv=0;f_vm=0;c_cmd=0;f_cd=0;tgl=0;
+                idle(10);rst=1;rsv=1;idle(80);armed=1;
+                $display("RESET with open partials after phase %0d",n_ph);
             end else if (cmd == "E") begin
                 flush; settle; status_check;
                 f_cd = {~tgl, 1'b0, ph}; tgl = ~tgl;            // the capture's phase-drained event

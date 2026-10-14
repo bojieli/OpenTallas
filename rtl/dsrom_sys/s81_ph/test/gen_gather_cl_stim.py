@@ -6,10 +6,13 @@
     gen_gather_cl_stim.py stress <seed> <out>     every root: random rows / tree cuts, <= 4 rows open (S = 8)
     gen_gather_cl_stim.py ovf <seed> <out>        root 37: S + 1 rows open at once (capacity fault), the others quiet rows
     gen_gather_cl_stim.py refuse <seed> <out>     one root never returns a row (coverage refusal)
+    gen_gather_cl_stim.py orphan <seed> <out>     every root: S rows each leave one (lo 0, k 1, n 3) partial waiting
+        (entry h = 8 of every slot), RESET with them open, then the stress phases (n = 3 rows use h = 8)
 
   P <phase>                           phase word (VM) + fld descriptor
   C <gap> <root> <tag> <data> <e>     gap 0 = same cycle as the previous C
   E                                   wait until quiet, then the capture's done event
+  R                                   reset both masters now (state not drained)
 """
 import argparse, json, random, sys
 from pathlib import Path
@@ -44,7 +47,12 @@ def main():
                     for p in tr[r]:
                         if p["phase"] == nm: ev += [(t, int(r), tg) for t, tg in p["events"]]
                 emit(f, rng, i + 1, ev)
-        elif a.case == "stress":
+        elif a.case in ("stress", "orphan"):
+            first = 1
+            if a.case == "orphan":
+                ev = [(1 + 8 * i + r % 7, r, G.tag(0, (4096 + 256 * i + 2 * r) & 0xFFFF, 0, 1, 3))
+                      for r in range(128) for i in range(a.S)]
+                emit(f, rng, 1, ev); f.write("R\n"); first = 2
             for ph in range(6):
                 ev = []
                 for r in range(128):
@@ -65,7 +73,7 @@ def main():
                     for tg in order:
                         t += 1 if burst else rng.randint(1, 3)
                         ev.append((t, r, tg))
-                emit(f, rng, ph + 1, ev)
+                emit(f, rng, ph + first, ev)
         elif a.case == "ovf":
             n = a.S + 1                                   # S + 1 rows open at once at root 37
             ev = [(i, 37, G.tag(0, 256 * i + 74, 0, 0, 2)) for i in range(n)]

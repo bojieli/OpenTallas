@@ -13,7 +13,8 @@
 //          column lands in slots 4 k .. 4 k + 3 of the bottom leaf = the capture bundle order
 //          slot = {e, pos3, row16, fp32 32, v}; valids are reset, data is not
 //   fo     <= fi | {busy, fault}: column status OR chain, southwards ({busy, fault} of these lanes and roots)
-//   rso    reset release chain (async assert passes through every leaf at once; release 2 cycles per leaf)
+//   rso    reset release chain (async assert passes through every leaf at once; release 3 cycles per leaf: two
+//          synchroniser stages + the registered region copy)
 // Two cell names, one RTL: dsfd_gth_rw (lanes enter on W, leave on E; the W half) and dsfd_gth_re (enter on E, leave
 // on W; the E half).  They differ only in the pin faces of their kits: every leaf is placed R0.
 // Latency, lane pin -> row at the column bottom, against the flat gather (pin register, root_blk input register,
@@ -38,10 +39,19 @@ module ot_s81ph_root_leaf #(
     output reg  [1:0]                 fo
 );
     reg [53*(NCI+NRT)-1:0] co_state;
-    reg [1:0] rst_s;                         // rst_s[1]: the margin SDC's rst_mcp2 cell name
+    // Registered reset tree (s81-gather 2026-10-14; the 10-13 leaf put 3,064 flops on rst_s[1]).  Every stage is
+    // async assert / release on ck:
+    //   stage 1  rs -> rst_s[0] -> rst_s[1]          (synchroniser; rst_s[1] drives 13 stage-2 flops only)
+    //   stage 2  one copy per region: rl (leaf lanes / chain / status, ~40 loads, also rso) and, per root, rc / re /
+    //            ra inside ot_s81ph_ret_root_s RST_REG 1 (control ~120, entry valids 256, adder ~300)
+    // Every region releases on the SAME edge (rst_s[1] + 1), so the leaf is cycle-identical to a single reset net,
+    // released one cycle later.  rso = the leaf region's copy: the next leaf (and the control strip's readiness)
+    // sees release only when every region of this leaf is out of reset.  Release down a column: 3 cycles a leaf.
+    reg [1:0] rst_s;
     always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
-    wire rl = rst_s[1];
-    assign rso = rst_s[1];
+    wire rl;
+    (* keep_hierarchy = 1, dont_touch = 1 *) ot_s81ph_rst_stage u_rl (.clk(ck), .rst_n(rst_s[1]), .q(rl));
+    assign rso = rl;
     // lanes: own slots captured (valid reset), the others passed on (valid reset)
     reg [NRT-1:0] lv; reg [68*NRT-1:0] lw;
     wire [NRT-1:0] rv, re, rf; wire [16*NRT-1:0] rrow, rbf; wire [3*NRT-1:0] rpos; wire [32*NRT-1:0] rfp;
@@ -110,7 +120,7 @@ module ot_s81ph_root_leaf #(
 `endif
     genvar g;
     generate for (g = 0; g < NRT; g = g + 1) begin : g_r
-        ot_s81ph_ret_root_s #(.S(S), .QD(128), .SRAM(SRAM)) u_root (.clk(ck), .rst_n(rl),
+        ot_s81ph_ret_root_s #(.S(S), .QD(128), .SRAM(SRAM), .RST_REG(1)) u_root (.clk(ck), .rst_n(rst_s[1]),
             .i_v(lv[g] & lw[68*g]), .i_t(lw[68*g + 1 +: 32]), .i_d(lw[68*g + 33 +: 32]), .i_e(lw[68*g + 65]),
             .r_v(rv[g]), .r_row(rrow[16*g +: 16]), .r_pos(rpos[3*g +: 3]), .r_fp32(rfp[32*g +: 32]),
             .r_bf16(rbf[16*g +: 16]), .r_e(re[g]), .fault(rf[g]));

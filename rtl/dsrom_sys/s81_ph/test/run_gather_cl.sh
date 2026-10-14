@@ -6,10 +6,11 @@
 # --trace-regions all), stress, and ovf (EXPECT 1: capacity fault, fail closed).  refuse: ovf stimulus with the
 # coverage demand -> REFUSED.  Mutants, each must FAIL: lanes of roots 0 / 1 swapped (S81PH_GTH_CL_MUT_LANE), chain
 # slots swapped in the leaf (S81PH_MUT_CHAIN), no entry forwarding in the root (S81PH_MUT_NOFWD), wrong phase on t_xgo
-# (S81PH_MUT_XGO), slot overflow not detected (S81PH_MUT_OVF, on ovf).  Verdict: GATHER_CL_GATE PASS|FAIL.
+# (S81PH_MUT_XGO), slot overflow not detected (S81PH_MUT_OVF, on ovf), the root entry-valid region left out of the registered reset tree (S81PH_MUT_RST_REGION,
+# on orphan: reset with open partials, then stress).  Verdict: GATHER_CL_GATE PASS|FAIL.
 set -u
 SRC=$1; OUT=$2; TRACE=${3:-}; LAYERS=${4:-"0 2 14"}
-VL=${VL:-verilator}; J=${J:-16}; MODES=${MODES:-"base lane chain nofwd xgo ovf"}
+VL=${VL:-verilator}; J=${J:-16}; MODES=${MODES:-"base lane chain nofwd xgo ovf rstreg"}
 LOCAL_DEF=""
 if [ "${LOCAL_BANKS:-0}" = 1 ]; then
  LOCAL_DEF="+define+S81PH_GTH_LOCAL_BANKS"
@@ -41,7 +42,7 @@ G="python3 $P/test/gen_gather_cl_stim.py"
 SS=${SS:-8}; SDEF="+define+S81PH_GTH_S=$SS"
 if [ "${CONTROL_STRIP:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_CONTROL_STRIP"; fi
 if [ "${DIE_CLOCKS:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_DIE_CLOCKS"; fi
-$G stress 3 $OUT/stress.txt; $G ovf 3 $OUT/ovf.txt --S $SS; $G refuse 3 $OUT/refuse.txt
+$G stress 3 $OUT/stress.txt; $G ovf 3 $OUT/ovf.txt --S $SS; $G refuse 3 $OUT/refuse.txt; $G orphan 3 $OUT/orphan.txt --S $SS
 REAL=""
 if [ -n "$TRACE" ]; then for L in $LAYERS; do $G real 0 $OUT/real_L$L.txt --trace $TRACE --layer $L && REAL="$REAL real_L$L"; done; fi
 build() {
@@ -56,7 +57,7 @@ run() { # mode case expect need want
 }
 for m in $MODES; do
   case $m in base) X="";; lane) X="+define+S81PH_GTH_CL_MUT_LANE";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
-    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; select) X="+define+S81PH_MUT_SELECT_PHASE";; early) X="+define+S81PH_GTH_MUT_EARLYSTART";; esac
+    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; select) X="+define+S81PH_MUT_SELECT_PHASE";; early) X="+define+S81PH_GTH_MUT_EARLYSTART";; rstreg) X="+define+S81PH_MUT_RST_REGION";; esac
   ( build $m "$X" ) &
 done
 wait
@@ -65,9 +66,10 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
   for m in $MODES; do
     case $m in
       base) for c in $REAL; do run base $c 0 1 PASS & done; run base stress 0 1 PASS & run base ovf 1 0 PASS &
-            run base refuse 0 1 REFUSED & ;;
+            run base refuse 0 1 REFUSED & run base orphan 0 0 PASS & ;;
       ovf)  run ovf ovf 1 0 FAIL & ;;
       early) run early stress 0 1 FAIL & ;;
+      rstreg) run rstreg orphan 0 0 FAIL & ;;   # entry valids out of the reset tree: stale after a reset with open partials
       lane|nofwd|heap|decision|own_co) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
       *)    run $m $FIRST 0 0 FAIL & ;;
     esac
