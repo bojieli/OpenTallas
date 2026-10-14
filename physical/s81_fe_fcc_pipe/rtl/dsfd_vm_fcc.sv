@@ -1,3 +1,7 @@
+module dsfd_vm_be_kreg #(parameter integer W = 1, parameter integer ID = 0) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+
 module dsfd_vm_fob #(parameter integer STALE = 0, parameter integer WEV = 1, parameter integer MV = 0,
                      parameter integer DF = 1, parameter integer DX = 0) (
     input  wire clk, input wire rn,

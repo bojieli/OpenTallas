@@ -1,8 +1,9 @@
 {
   "schema": "opentallas.s81.fcc-pipe-source.v1",
   "status": "UNALLOCATED_SOURCE_CANDIDATE",
-  "canonical_commit": "7d830b953e5a9a5b19f5d260b2d51bde7f305ea5",
+  "canonical_commit": "ff1bc711b81186089327b4daaea73f0b615fc384",
   "source_files": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "74c2b0684587683573d204bba5d6371c4a6a6900f90e434e25fc0e5ee1dad6bf",
     "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv": "cc49538e13cbc8be8d4b0e1d97add56619227275846d35f2c5c2f704afec86fa",
     "rtl/lib/ot_async_fifo.sv": "e091268202e1c6bcc18c8eb83304730c5a29bc10e0a6c52a4dcfc19c177e882e",
     "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
@@ -15,7 +16,7 @@
     "OT_SPVM_RESET_ACK",
     "OT_VMFE_MUT_FCC_PIPE_SELECT"
   ],
-  "derived_sha256": "d576c5c1f96ebb236b666eb999932d980fd57a10962bb9b74c2b8d31460ed9bb",
+  "derived_sha256": "b69aefc2da5b37d6bdeb558e9f0fcb6f372433e5737115bc560397cdb999fc86",
   "nominal_extra_ff": 1384,
   "new_outline_um": [
     181.44,
