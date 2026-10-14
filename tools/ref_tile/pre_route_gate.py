@@ -122,15 +122,24 @@ def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     # A spec with "defines" selects its interface by `ifdef (as synthesis and the kit lint do, ref_tile.py VERILOG_DEFINES):
     # run the real Verilog preprocessor with the same -DSYNTHESIS + spec defines, else the text parser takes the
     # `ifdef/`endif tokens for port names (HROW ACK candidates 066ec43c5).  No defines: the plain text parse, unchanged.
-    if defines:
+    # No spec defines but an `ifdef in the sources (a default-off port group in the header, dsfd_vm_be_sl
+    # OT_SPVM_RESET_ACK, s81-grpA r3): preprocess with -DSYNTHESIS alone, as synthesis does; if the preprocessor cannot
+    # run on these sources, keep the plain text parse (unchanged behaviour).
+    implicit = not defines and any("`ifdef" in tx or "`ifndef" in tx for tx in texts)
+    if defines or implicit:
         files = [root / f for f in sources if (root / f).exists()]
         inc = sorted({str(p.parent) for p in files})
         cmd = ["iverilog", "-g2012", "-E", "-o", "-", "-DSYNTHESIS"]
-        cmd += ["-D" + d for d in defines] + ["-I" + p for p in inc] + [str(p) for p in files]
-        run = subprocess.run(cmd, capture_output=True, text=True)
-        if run.returncode:
-            raise RT.SpecError("RTL port preprocessing failed: " + run.stderr[-2000:])
-        texts = [run.stdout]
+        cmd += ["-D" + d for d in (defines or [])] + ["-I" + p for p in inc] + [str(p) for p in files]
+        try:
+            run = subprocess.run(cmd, capture_output=True, text=True)
+        except FileNotFoundError:
+            run = None
+        if run is None or run.returncode:
+            if not implicit:
+                raise RT.SpecError("RTL port preprocessing failed: " + (run.stderr[-2000:] if run else "iverilog missing"))
+        else:
+            texts = [run.stdout]
     # a module named through a macro (`define X top ... module `X: dsfd_coll_cb / cbf) is not seen by the text parser
     texts = [re.sub(r"\bmodule\s+`(\w+)", lambda m: f"module {top}" if re.search(
         rf"`define\s+{m.group(1)}\s+{re.escape(top)}\b", tx) else m.group(0), tx) for tx in texts]
