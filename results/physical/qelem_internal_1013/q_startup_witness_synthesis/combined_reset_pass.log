@@ -1,0 +1,65 @@
+
+-- Running command `read_verilog -sv results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv; hierarchy -check -top ot_s81_q_reset_witness; proc; check; stat' --
+
+1. Executing Verilog-2005 frontend: results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv
+Parsing SystemVerilog input from `results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_q_reset_witness'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_s81_q_reset_witness
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_s81_q_reset_witness
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv:4$2 in module ot_s81_q_reset_witness.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_INIT pass (extract init attributes).
+
+3.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \actual_reset_n in `\ot_s81_q_reset_witness.$proc$results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv:4$2'.
+
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_s81_q_reset_witness.$proc$results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv:4$2'.
+     1/1: $0\live[1:0]
+
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_s81_q_reset_witness.\live' using process `\ot_s81_q_reset_witness.$proc$results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv:4$2'.
+  created $adff cell `$procdff$4' with positive edge clock and negative level reset.
+
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_s81_q_reset_witness.$proc$results/physical/qelem_internal_1013/q_startup_witness_synthesis/combined_actual_reset_witness.sv:4$2'.
+Cleaned up 0 empty switches.
+
+4. Executing CHECK pass (checking for obvious problems).
+checking module ot_s81_q_reset_witness..
+found and reported 0 problems.
+
+5. Printing statistics.
+
+=== ot_s81_q_reset_witness ===
+
+   Number of wires:                  9
+   Number of wire bits:             11
+   Number of public wires:           6
+   Number of public wire bits:       7
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  3
+     $adff                           1
+     $logic_and                      1
+     $logic_not                      1
+
