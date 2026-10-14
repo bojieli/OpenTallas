@@ -40,6 +40,7 @@ module ot_hgi_qdq_q #(
     parameter integer DEC3 = 1,     // decoder: 1 = ot_hgi_qw_dec3 (track B: dxl / dbq / daq tiles), 0 = ot_hgi_qw_dec (one tile)
     parameter integer SPANPIPE = 0, // opt-in: seven local span stages (+6 edges), exact 52-bit product
     parameter integer MUT = 0,
+    parameter integer FRONTFAST = 0, // opt-in new mixed frontend physical composition
     parameter integer FASTFIN = 0 // explicit native candidate; new views required
 ) (
     input  wire              clk,
@@ -58,7 +59,7 @@ module ot_hgi_qdq_q #(
     input  wire              wg_gnt
 );
 `ifdef OT_HARD_CHILDREN
-    initial if(FASTFIN!=0)$fatal(1,"FASTFIN requires source-matched new CORE/WR physical views; old closed hard children are not the candidate");
+    initial if(FASTFIN!=0 || FRONTFAST!=0)$fatal(1,"FASTFIN requires source-matched new CORE/WR physical views; old closed hard children are not the candidate");
 `endif
     wire s1_v, s3_v, nfault; wire [189:0] s3;
     wire [7:0] c_pop, e_push; wire [3:0] e_ovf; wire [8*256-1:0] hq; wire [3:0] lq_rst_n; wire dec_rst_n, asm_rst_n, wr_rst_n;
@@ -69,9 +70,16 @@ module ot_hgi_qdq_q #(
 `ifdef OT_HARD_CHILDREN
     ot_hgi_qdq_fr u_fr (
 `else
+    generate if(FRONTFAST!=0) begin:g_fast_front
+    ot_hgi_qdq_fr_mix #(.ONE_ROW(1)) u_fr (
+        .clk(clk), .rst_n(rst_n), .rec(rec), .s1_v(s1_v), .s3_v(s3_v), .s3(s3), .nfault(nfault));
+    end else begin:g_general_front
     ot_hgi_qdq_fr #(.SPANPIPE(SPANPIPE)) u_fr (
 `endif
         .clk(clk), .rst_n(rst_n), .rec(rec), .s1_v(s1_v), .s3_v(s3_v), .s3(s3), .nfault(nfault));
+`ifndef OT_HARD_CHILDREN
+    end endgenerate
+`endif
 `ifdef OT_HARD_CHILDREN
     ot_hgi_qdq_core u_core (
 `else
