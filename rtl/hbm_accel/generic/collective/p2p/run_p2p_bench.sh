@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # tb_hgi_coll_p2p: central (ot_hfd_coll_r25gq) vs four quadrant engines (ot_hfd_coll_q) on G real dies.
-# usage: run_p2p_bench.sh <outdir> <G> <tag> [plusargs...]; env DEFS="+define+MUT_Q ..." JOBS
+# usage: run_p2p_bench.sh <outdir> <G> <tag> [plusargs...]; env CASES="qwen grm" DEFS="+define+MUT_Q | +define+SPMD" VFLAGS JOBS
 set -uo pipefail
 ROOT=$(cd "$(dirname "$0")/../../../../.." && pwd); OUT=$(realpath -m "$1"); G=$2; TAG=$3; shift 3
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -14,8 +14,13 @@ SRC="rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv
  $C/p2p/tb_hgi_coll_p2p.sv"
 mkdir -p "$OUT"; cd "$ROOT"
 "$VL" --binary --timing -O2 -j ${JOBS:-16} -Wno-fatal -Wno-lint -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN \
-  -Irtl/hbm_accel/generic +define+G=$G ${DEFS:-} --top-module tb_hgi_coll_p2p --Mdir "$OUT/obj_$TAG" $SRC $C/p2p/f32add.c \
+  -Irtl/hbm_accel/generic +define+G=$G ${DEFS:-} ${VFLAGS:-} --top-module tb_hgi_coll_p2p --Mdir "$OUT/obj_$TAG" $SRC $C/p2p/f32add.c \
   > "$OUT/build_$TAG.log" 2>&1 || { tail -40 "$OUT/build_$TAG.log"; exit 2; }
-"$OUT/obj_$TAG/Vtb_hgi_coll_p2p" "$@" > "$OUT/run_$TAG.log" 2>&1; rc=$?
-tail -25 "$OUT/run_$TAG.log"; echo "RUN_RC=$rc"
-grep -q "^PASS HGI_COLL_P2P" "$OUT/run_$TAG.log"
+# CASES="qwen grm" runs every case on the one build (the plusargs apply to each)
+st=0
+for c in ${CASES:-qwen}; do
+  "$OUT/obj_$TAG/Vtb_hgi_coll_p2p" +CASE=$c "$@" > "$OUT/run_${TAG}_$c.log" 2>&1; rc=$?
+  echo "== $c rc=$rc"; grep -E "^(REC|SEQ|IMAGES|RED_CARRY|PASS|FAIL|FAULT|TIMEOUT|RC_|WDIFF|WCOUNT|GEXP|REXP|MIRROR)" "$OUT/run_${TAG}_$c.log" | head -40
+  grep -q "^PASS HGI_COLL_P2P" "$OUT/run_${TAG}_$c.log" || st=1
+done
+exit $st

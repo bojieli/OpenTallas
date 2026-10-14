@@ -245,11 +245,11 @@ module ot_hgi_coll_qep #(
     // gather the delivered flit {1, FF, src q, gi, data} becomes {1, lanes, src, w, data}: w = s_q + 16 (gi - q pf) the
     // O word offset, lanes = min(16, s_{q+1} - w) the valid words (the SU deliver writes words w .. w + lanes - 1)
     reg [31:0] gs_t [0:96];
-    always @(posedge clk) if (gs_we && PIPE == 0) gs_t[gs_wa] <= gs_wd;
+    always @(posedge clk) if (gs_we && (PIPE == 0 || !r_pipe)) gs_t[gs_wa] <= gs_wd;   // classic (non-pipelined) runs
     // PIPE: every sliced gather is pipelined; the record writes its slice table while setting it up, into the slot of
     // the NEXT epoch (free: the record waits for an open slot before it starts the table)
     reg [31:0] gs_p [0:EQ-1][0:96];
-    always @(posedge clk) if (PIPE != 0 && gs_we) gs_p[p_next % EQ][gs_wa] <= gs_wd;
+    always @(posedge clk) if (PIPE != 0 && gs_we && r_pipe) gs_p[p_next % EQ][gs_wa] <= gs_wd;
     reg [DEL-1:0] f_dv; reg [DEL*PWT-1:0] f_df; reg f_done;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin f_dv <= {DEL{1'b0}}; f_done <= 1'b0; end

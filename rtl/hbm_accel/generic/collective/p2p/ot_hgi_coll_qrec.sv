@@ -315,7 +315,15 @@ module ot_hgi_coll_qrec #(
                                 ep_pf <= MUT_PF ? n_a_q[15:0] : r_pfq;
                                 ep_a_base <= a_q[47:8] + {20'd0, r_lo, 4'd0};
                                 ep_o_base <= o_base_q + ((o_fmt_q == 3'd1) ? {21'd0, r_lo, 3'd0} : {20'd0, r_lo, 4'd0});
-                                st <= (r_pfq == 16'd0) ? S_NOOP : S_EPGO;
+                                // result gi offset per reduction group g (src = OG): g (pf - pf_q) (/ 2 for BF16); the
+                                // central result index of group g's owner J is (g NA + J) ROF, the quarter's (g NA + J) ROF_q
+                                ep_goff <= 1'b1; ep_gbase <= 8'd0; tq <= 8'd0; g_acc <= 16'd0;
+                                g_dlt <= (o_fmt_q == 3'd1) ? ((r_pf - r_pfq) >> 1) : (r_pf - r_pfq);
+                                begin : ng
+                                    reg [3:0] lg; lg = (dc_op == 6'd4) ? sub_gsz : dc_gsz;
+                                    sg <= (lg == 4'hF) ? 8'd12 : (8'd96 >> lg[1:0]);   // groups on the 96-rank fabric
+                                end
+                                st <= (r_pfq == 16'd0) ? S_NOOP : S_GTAB;
                             end
                         end else if (dc_op == 6'd1 && a_bits == 6'd32 && MUT_SLICE == 0) begin   // F3: sliced gather
                             if (n_a_q == 21'd0 || n_a_q > 21'd65535 || dc_g == 8'd0 || dc_g > 8'd96) begin rec_fault <= 1'b1; st <= S_HALT; end

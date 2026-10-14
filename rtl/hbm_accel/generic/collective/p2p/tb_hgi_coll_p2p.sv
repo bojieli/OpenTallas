@@ -25,6 +25,15 @@
 `define RLY 12
 `endif
 module tb_hgi_coll_p2p;
+`ifdef SPMD
+    // +define+SPMD: ONE real die (rank RR) of a 96-rank fabric; the 95 peers are replayed SPMD-lockstep by the switch
+    // (the tb_hgi_coll_pipe method): when the die sends flit m of a gather on link k, every peer p sends ITS flit m of
+    // the same gather on link k (LAT + p mod 5 later), its data read from p's A image through an independent model of
+    // the quarter split.  Gathers and ARGMAX only (no partials).
+    localparam integer NRK = 96, RR = 37;
+`else
+    localparam integer NRK = `G, RR = 0;
+`endif
     localparam integer G = `G, NL = 9, INJ = 2, DEL = 4, LANES = 16, FW = 32 * LANES, PWT = FW + 33, RW = 280, RLY = `RLY;
     localparam integer MQ = `ifdef MUT_Q 1 `else 0 `endif;
     localparam integer MC = `ifdef MUT_CARRY 1 `else 0 `endif;
@@ -64,6 +73,7 @@ module tb_hgi_coll_p2p;
     // VM images (key = die << 40 | word address) and expected gather image
     bit [31:0] vmc [longint]; bit [31:0] vmp [longint]; int wcc [longint]; int wcp [longint];
     function automatic longint ky(input integer d, input longint a); ky = (longint'(d) << 40) | a; endfunction
+    function automatic integer did(input integer d); did = RR + d; endfunction
     function automatic [31:0] special(input integer r);
         case (r % 9)
             0: special = 32'h80000000; 1: special = 32'h7FC12345; 2: special = 32'hFF812345; 3: special = 32'h00000001;
@@ -76,7 +86,7 @@ module tb_hgi_coll_p2p;
         begin
             h = k * 1000003 + d * 7919 + w * 104729 + seed;
             if (r_op[k] == 3) aval = (w == 0) ? ((d % 5 == 2) ? 32'h40A00000 : 32'(32'h3F000000 + (d * 37 % 11) * 32'h100000))
-                                              : 32'((G - d) * 1000 + 7);
+                                              : 32'((NRK - d) * 1000 + 7);
             else if ((r_op[k] == 0 || r_op[k] == 4) && (h % 23 != 0)) begin      // reductions: finite normals mostly
                 x = 32'(h * 2654435761); x[30:23] = 8'(100 + (h % 50)); aval = x;
             end else aval = ((h % 3) == 0) ? special(h) : 32'(h * 2246822519);
@@ -204,9 +214,14 @@ module tb_hgi_coll_p2p;
                 x = txf[k*PWT +: PWT]; dst = integer'(x[FW+24 +: 8]); nflit[f] = nflit[f] + 1;
                 e.t = cyc + lat; e.f = x;
                 if (x[PWT-1] == 1'b0) begin                               // partial: unicast to its owner die
-                    if (dst >= G) $fatal(1, "SW_BAD_DST fab=%0d die=%0d dst=%0d", f, d, dst);
-                    eq[f][dst][k].push_back(e);
-                end else for (integer t = 0; t < G; t = t + 1) if (t != d) eq[f][t][k].push_back(e);   // multicast
+                    if (dst - RR >= G || dst < RR) $fatal(1, "SW_BAD_DST fab=%0d die=%0d dst=%0d", f, d, dst);
+                    eq[f][dst - RR][k].push_back(e);
+                end else begin
+                    for (integer t = 0; t < G; t = t + 1) if (t != d) eq[f][t][k].push_back(e);   // multicast
+`ifdef SPMD
+                    mirror(f, k, x);
+`endif
+                end
                 cin[f][d][k].push_back(cyc + cred);
             end
             if (cin[f][d][k].size() != 0 && cin[f][d][k][0] <= cyc) begin void'(cin[f][d][k].pop_front()); crr[k] = 1'b1; end
@@ -221,6 +236,64 @@ module tb_hgi_coll_p2p;
         if (f) begin p_rxv[d] <= rxv; p_rxf[d] <= rxf; p_crr[d] <= crr; end
         else begin c_rxv[d] <= rxv; c_rxf[d] <= rxf; c_crr[d] <= crr; end
     end
+`ifdef SPMD
+    // ---- independent model of the quarter split (the stub's own arithmetic, not the RTL's) ----------------------
+    function automatic integer flo(input integer a, input integer b); flo = a / b; endfunction
+    function automatic integer sl_s(input integer n, input integer p); sl_s = flo(p * n, NRK); endfunction
+    // engine e: 0 central, 1..4 quadrant e-1.  Words / flits of rank p's contribution to gather k.
+    function automatic integer e_start(input integer k, input integer e, input integer p);   // first word sent (sliced)
+        integer s0, ln; s0 = sl_s(r_n[k], p); ln = sl_s(r_n[k], p + 1) - s0;
+        e_start = (e == 0) ? s0 : s0 + flo((e - 1) * ln, 4);
+    endfunction
+    function automatic integer e_pf(input integer k, input integer e);
+        integer mx, rw;
+        if (r_op[k] == 3) e_pf = 1;
+        else if (r_afmt[k] == 0) begin
+            mx = 0;
+            for (integer p = 0; p < NRK; p = p + 1) begin : m_
+                integer s0, ln, a, b; s0 = sl_s(r_n[k], p); ln = sl_s(r_n[k], p + 1) - s0;
+                a = (e == 0) ? 0 : flo((e - 1) * ln, 4); b = (e == 0) ? ln : flo(e * ln, 4);
+                if (b - a > mx) mx = b - a;
+            end
+            e_pf = (mx + 15) / 16;
+        end else begin
+            rw = r_n[k] / 32;
+            e_pf = (e == 0) ? rw : flo(e * rw, 4) - flo((e - 1) * rw, 4);
+        end
+    endfunction
+    function automatic bit e_runs(input integer k, input integer e);
+        e_runs = (e == 0) || (r_op[k] == 3 ? e == 1 : e_pf(k, e) != 0);
+    endfunction
+    // per engine: the records it runs, flits sent of each (resolves a departure's gather by its epoch tag)
+    integer sent [0:4][0:MAXR-1];
+    initial for (integer e = 0; e < 5; e = e + 1) for (integer k = 0; k < MAXR; k = k + 1) sent[e][k] = 0;
+    task automatic mirror(input integer f, input integer lk, input [PWT-1:0] x);
+        integer e, k, gord, pf_, m, gi; bit pipe_; reg [PWT-1:0] y; ent_t en;
+        begin
+            e = f ? lq(lk) + 1 : 0; pipe_ = (x[FW+27 +: 5] == 5'b11110); k = -1; gord = 0;
+            for (integer i = 0; i < nrec && k < 0; i = i + 1) if (e_runs(i, e)) begin
+                if (r_op[i] == 1) begin
+                    if (pipe_ && (gord % 8) == integer'(x[FW+24 +: 3]) && sent[e][i] < e_pf(i, e)) k = i;
+                    gord = gord + 1;
+                end else if (!pipe_ && sent[e][i] < 1) k = i;
+            end
+            if (k < 0) $fatal(1, "MIRROR_NO_RECORD e=%0d dst=%h", e, x[FW+24 +: 8]);
+            pf_ = e_pf(k, e); gi = integer'(x[FW +: 16]); m = gi - RR * pf_; sent[e][k] = sent[e][k] + 1;
+            if (m < 0 || m >= pf_ || integer'(x[FW+16 +: 8]) != RR) $fatal(1, "MIRROR_BAD_DEPARTURE e=%0d rec=%0d gi=%0d pf=%0d", e, k, gi, pf_);
+            for (integer p = 0; p < NRK; p = p + 1) if (p != RR) begin
+                y = x; y[FW+16 +: 8] = 8'(p); y[FW +: 16] = 16'(p * pf_ + m);
+                for (integer j = 0; j < 16; j = j + 1) begin : wd
+                    integer w;
+                    if (r_op[k] == 3) w = j;
+                    else if (r_afmt[k] == 0) w = e_start(k, e, p) + 16 * m + j;
+                    else w = 16 * (((e == 0) ? 0 : flo((e - 1) * (r_n[k] / 32), 4)) + m) + j;
+                    y[32*j +: 32] = (w < ((r_afmt[k] == 1) ? r_n[k] / 2 : r_n[k])) ? aval(k, p, w) : 32'd0;
+                end
+                en.t = cyc + lat + (p % 5); en.f = y; eq[f][0][lk].push_back(en);
+            end
+        end
+    endtask
+`endif
     // ---------------------------------------------------------------------------------------------------------------
     // record issue (pulse when ready) and completion
     localparam integer RDL0 = 3, RDL1 = 9, RDL2 = 6, RDL3 = 14;     // P2P record relay delay per quadrant
@@ -232,13 +305,13 @@ module tb_hgi_coll_p2p;
     always @(posedge clk) if (rst_n) for (integer d = 0; d < G; d = d + 1) begin
         c_rec[d] <= '0;
         if (go_rec && ci[d] < nrec && c_ret[d][0] && c_rec[d][0] == 1'b0) begin
-            c_rec[d] <= mkrec(ci[d], d); if (d == 0) c_t0[ci[d]] = cyc; if (ci[d] == 0 && d == 0) c_first = cyc; ci[d] = ci[d] + 1;
+            c_rec[d] <= mkrec(ci[d], did(d)); if (d == 0) c_t0[ci[d]] = cyc; if (ci[d] == 0 && d == 0) c_first = cyc; ci[d] = ci[d] + 1;
         end
         if (c_ret[d][1]) begin if (d == 0) c_t1[cd[d]] = cyc; cd[d] = cd[d] + 1; c_last = cyc; end
         // P2P: the HOME engine's ret; the record reaches each quadrant RDLq edges later
         pdl[d][0] = '0;
         if (go_rec && pi_[d] < nrec && p_ret[d][0][0] && !rec_inflight(d)) begin
-            pdl[d][0] = mkrec(pi_[d], d); if (d == 0) p_t0[pi_[d]] = cyc; if (pi_[d] == 0 && d == 0) p_first = cyc; pi_[d] = pi_[d] + 1;
+            pdl[d][0] = mkrec(pi_[d], did(d)); if (d == 0) p_t0[pi_[d]] = cyc; if (pi_[d] == 0 && d == 0) p_first = cyc; pi_[d] = pi_[d] + 1;
         end
         for (integer i = 15; i > 0; i = i - 1) pdl[d][i] = pdl[d][i-1];
         p_rec[d][0] <= pdl[d][RDL0]; p_rec[d][1] <= pdl[d][RDL1]; p_rec[d][2] <= pdl[d][RDL2]; p_rec[d][3] <= pdl[d][RDL3];
@@ -313,16 +386,16 @@ module tb_hgi_coll_p2p;
             for (integer r = 0; r < nrec; r = r + 1) if (r_op[r] == 1) for (integer d = 0; d < G; d = d + 1) begin
                 if (r_afmt[r] == 0 || r_afmt[r] == 5) begin                       // sliced: s_q = floor(q n / G)
                     for (integer w = 0; w < r_n[r]; w = w + 1) begin : sl
-                        integer src; longint kk; src = (w * G + G - 1) / r_n[r];
-                        while (src > 0 && (src * r_n[r]) / G > w) src = src - 1;
-                        while (src + 1 < G && ((src + 1) * r_n[r]) / G <= w) src = src + 1;
+                        integer src; longint kk; src = (w * NRK + NRK - 1) / r_n[r];
+                        while (src > 0 && (src * r_n[r]) / NRK > w) src = src - 1;
+                        while (src + 1 < NRK && ((src + 1) * r_n[r]) / NRK <= w) src = src + 1;
                         kk = ky(d, r_o[r] + w);
                         if (!vmp.exists(kk) || vmp[kk] !== aval(r, src, w)) begin nexp = nexp + 1;
                             if (nexp < 6) $display("GEXP die=%0d rec=%0d w=%0d src=%0d got=%h want=%h", d, r, w, src, vmp.exists(kk) ? vmp[kk] : 0, aval(r, src, w)); end
                     end
                 end else begin
                     integer rw; rw = r_n[r] / 32 * 16;                               // BF16 row words
-                    for (integer s = 0; s < G; s = s + 1) for (integer w = 0; w < rw; w = w + 1) begin : wr
+                    for (integer s = 0; s < NRK; s = s + 1) for (integer w = 0; w < rw; w = w + 1) begin : wr
                         longint kk; kk = ky(d, r_o[r] + s * rw + w);
                         if (!vmp.exists(kk) || vmp[kk] !== aval(r, s, w)) begin nexp = nexp + 1;
                             if (nexp < 6) $display("REXP die=%0d rec=%0d src=%0d w=%0d", d, r, s, w); end
@@ -349,6 +422,13 @@ module tb_hgi_coll_p2p;
             addrec(0, 1280, 0, 1, 0);                  // uneven quarters (pf 80: 16 / 16 / 16 / 32)
             addrec(1, 1000, 0, 0, 0);                  // uneven sliced gather
             addrec(1, 96, 1, 1, 0);                    // whole row pf 3: quadrant SW gets no flit (no-op quarter)
+        end else if (tcase == "dsg") begin            // DS TP96 production gathers (SPMD single die)
+            addrec(1, 1280, 0, 0, 0); addrec(1, 512, 0, 0, 0); addrec(1, 5120, 0, 0, 0); addrec(1, 384, 0, 0, 0);
+            for (integer i = 0; i < 7; i = i + 1) addrec(1, 2304, 0, 0, 0);
+            addrec(1, 5120, 0, 0, 0); addrec(1, 2304, 0, 0, 0);
+            addrec(3, 2, 0, 5, 0);                     // ARGMAX_MERGE over the 96
+        end else if (tcase == "grm") begin            // DS hidden 5,120 GROUP_REDUCE_MCAST on an 8-die fabric: groups of 4 / 2
+            addrec(4, 5120, 0, 1, 4); addrec(4, 5120, 0, 0, 2); addrec(0, 5120, 0, 1, 0);
         end else if (tcase == "ds") begin             // DS TP96: the layer's sliced FP32 gathers + group-of-8 reduce-multicast
             // the layer's 13 FP32 gathers in tag order (tb_hgi_coll_pipe: qa 1,280, kvraw 512, y 5,120, gsc 384,
             // expert intermediates 7 x 2,304, yf 5,120, 2,304); priced (token_path_20261009 hbm_gen_ds) 3,991.2 cycles
@@ -364,10 +444,10 @@ module tb_hgi_coll_p2p;
             for (integer i = 0; i < 16; i = i + 1) pdl[d][i] = '0; end
         for (integer r = 0; r < nrec; r = r + 1) for (integer d = 0; d < G; d = d + 1) begin
             integer nw; nw = (r_afmt[r] == 1) ? r_n[r] / 2 : r_n[r];
-            for (integer w = 0; w < nw; w = w + 1) begin vmc[ky(d, r_a[r] + w)] = aval(r, d, w); vmp[ky(d, r_a[r] + w)] = aval(r, d, w); end
+            for (integer w = 0; w < nw; w = w + 1) begin vmc[ky(d, r_a[r] + w)] = aval(r, did(d), w); vmp[ky(d, r_a[r] + w)] = aval(r, did(d), w); end
         end
         repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
-        cfgb = {1'b0, 1'b1, 6'd46, 32'(G)}; @(negedge clk); cfgb = {1'b1, 1'b0, 6'd0, 32'd0}; @(negedge clk); cfgb = 0;
+        cfgb = {1'b0, 1'b1, 6'd46, 32'(NRK)}; @(negedge clk); cfgb = {1'b1, 1'b0, 6'd0, 32'd0}; @(negedge clk); cfgb = 0;
         repeat (8) @(negedge clk);
         go_rec = 1;
         begin : wait_all
