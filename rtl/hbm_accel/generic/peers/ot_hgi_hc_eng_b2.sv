@@ -331,6 +331,7 @@ module ot_hgi_hc_qst_b2 #(
     input wire [63:0] clk_sl,
     input wire [55:0] clk_chunk,
     input wire [7:0]clk_coeff,
+    input wire [7:0]clk_lane,input wire clk_cat,
     output wire [8*16-1:0]   wrq,
     input  wire [7:0]        wrq_cr,
     input  wire [8*257-1:0]  wrr,
@@ -359,7 +360,7 @@ module ot_hgi_hc_qst_b2 #(
         ot_hgi_hc_rly #(.W(139), .N(RLL)) u_dn (.clk(clk), .rst_n(rst_n), .v(dvl), .d(dd), .vq(lv), .q(ld));
         wire uv, ut, wd, fn, fl; wire [9:0] ux; wire [255:0] ud;
         ot_hgi_hc_lane_b2 #(.QID(QID), .CLOCKED(CLOCKED), .COEFFLEAF(COEFFLEAF), .LQ(LQ), .FD(FD), .HSL(HSL),
-            .MUT((MUT == 2 || (MUT >= 4 && MUT <= 8) || MUT == 13) ? MUT : 0)) u_l (.clk(clk), .rst_n(rst_n),
+            .MUT((MUT == 2 || (MUT >= 4 && MUT <= 8) || MUT == 13 || MUT == 15) ? MUT : 0)) u_l (.clk(CLOCKED?clk_lane[gl]:clk), .rst_n(rst_n),
             .clk_sl(clk_sl[gl*8+:8]), .clk_chunk(clk_chunk[gl*7+:7]), .clk_coeff(clk_coeff[gl]), .lid(5'(gl)), .wrq(wrq[gl*16 +: 16]), .wrq_cr(wrq_cr[gl]), .wrr(wrr[gl*257 +: 257]), .wwq(wwq[gl*280 +: 280]),
             .wwq_cr(wwq_cr[gl]), .wwq_done(wwq_done[gl]), .dn_v(lv), .dn_op(ld[138:136]), .dn_x(ld[135:128]),
             .dn_d(ld[127:0]), .up_v(uv), .up_t(ut), .up_x(ux), .up_d(ud), .wdone(wd), .fin(fn), .flt(fl));
@@ -376,7 +377,7 @@ module ot_hgi_hc_qst_b2 #(
     generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_ch
         assign ch[gl*42 +: 42] = {l_ux[gl*10 +: 10], l_ud[gl*256 +: 32]};
     end endgenerate
-    ot_hgi_hc_cat_b2 #(.NL(8), .P(2), .QD(32), .CD(CD), .MUT(MUT)) u_cat (.clk(clk), .rst_n(rst_n), .flush(c_job), .ep(ep),
+    ot_hgi_hc_cat_b2 #(.NL(8), .P(2), .QD(32), .CD(CD), .MUT(MUT)) u_cat (.clk(CLOCKED?clk_cat:clk), .rst_n(rst_n), .flush(c_job), .ep(ep),
         .ch_v(ch_v), .ch(ch), .ck_v(ck_v), .ck(ck), .ck_cr(ck_cr), .ovf(c_ovf));
     // scalar sectors: up to 4 slots land in any cycle; one a cycle goes up
     reg [255:0] sb [0:3]; reg [3:0] sp;
@@ -411,6 +412,7 @@ module ot_hgi_hc_ctl_b2 #(
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input wire clk_coll,
     input wire[19:0]clk_store,input wire[31:0]clk_scan,
     input wire[30:0]clk_block_add,clk_heap_add,
     input  wire              job_v_i,
@@ -499,7 +501,7 @@ module ot_hgi_hc_ctl_b2 #(
     // ---- the collector and the scalar tail: / D, + eps, rsqrt
     reg go_r; reg [1:0] ep;
     wire ss_v, c_flt; wire [31:0] ss; wire [15:0] c_stale;
-    ot_hgi_hc_coll_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.NQ(4), .P(2), .NB(NB), .CD(CD), .LA(LA), .MUT(MUT)) u_coll (.clk(clk), .rst_n(rst_n), .clr(go_r),
+    ot_hgi_hc_coll_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.NQ(4), .P(2), .NB(NB), .CD(CD), .LA(LA), .MUT(MUT)) u_coll (.clk(CLOCKED?clk_coll:clk), .rst_n(rst_n), .clr(go_r),
         .ep(ep), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.pk_v(k_v), .pk(k_d), .pk_cr(k_cr), .ss_v(ss_v), .ss(ss), .flt(c_flt), .n_stale(c_stale));
     reg [31:0] eps_r;
     reg ssv_q; reg [31:0] ss_q;
@@ -590,6 +592,8 @@ module ot_hgi_hc_eng_b2 #(
     input wire [255:0] clk_sl,
     input wire [223:0] clk_chunk,
     input wire [31:0]clk_coeff,
+    input wire [31:0]clk_lane,input wire [3:0]clk_qst,clk_cat,
+    input wire clk_ctl,clk_coll,
     input wire[19:0]clk_store,input wire[31:0]clk_scan,
     input wire[30:0]clk_block_add,clk_heap_add,
     input  wire              job_v,
@@ -612,14 +616,14 @@ module ot_hgi_hc_eng_b2 #(
 );
     wire [3:0] q_dn_v; wire [4*139-1:0] q_dn; wire [7:0] q_ck_v, q_ck_cr; wire [4*88-1:0] q_ck;
     wire [3:0] q_sc_v; wire [4*258-1:0] q_sc; wire [4*6-1:0] q_stat;
-    ot_hgi_hc_ctl_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.D(D), .RLQ(RLQ), .CD(CD), .MUT(MUT)) u_ctl (.clk(clk), .rst_n(rst_n), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.job_v_i(job_v),
+    ot_hgi_hc_ctl_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.D(D), .RLQ(RLQ), .CD(CD), .MUT(MUT)) u_ctl (.clk(CLOCKED?clk_ctl:clk), .rst_n(rst_n), .clk_coll(clk_coll), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.job_v_i(job_v),
         .job_rdy(job_rdy), .job_i(job), .g_rdy_i(g_rdy), .done(done), .fault(fault), .idle(idle), .rg_req(rg_req),
         .rg_gnt(rg_gnt), .wg_req(wg_req), .wg_gnt(wg_gnt), .q_dn_v(q_dn_v), .q_dn(q_dn), .q_ck_v(q_ck_v), .q_ck(q_ck),
         .q_ck_cr(q_ck_cr), .q_sc_v(q_sc_v), .q_sc(q_sc), .q_stat(q_stat));
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
-        ot_hgi_hc_qst_b2 #(.QID(gq), .CLOCKED(CLOCKED), .COEFFLEAF(COEFFLEAF), .LQ(LQ), .FD(FD), .HSL(HSL), .RLL(RLL), .CD(CD), .MUT(MUT)) u_q (.clk(clk),
-            .rst_n(rst_n), .clk_sl(clk_sl[gq*64+:64]), .clk_chunk(clk_chunk[gq*56+:56]), .clk_coeff(clk_coeff[gq*8+:8]), .wrq(wrq[gq*128 +: 128]), .wrq_cr(wrq_cr[gq*8 +: 8]), .wrr(wrr[gq*2056 +: 2056]),
+        ot_hgi_hc_qst_b2 #(.QID(gq), .CLOCKED(CLOCKED), .COEFFLEAF(COEFFLEAF), .LQ(LQ), .FD(FD), .HSL(HSL), .RLL(RLL), .CD(CD), .MUT(MUT)) u_q (.clk(CLOCKED?clk_qst[gq]:clk),
+            .rst_n(rst_n), .clk_sl(clk_sl[gq*64+:64]), .clk_chunk(clk_chunk[gq*56+:56]), .clk_coeff(clk_coeff[gq*8+:8]), .clk_lane(clk_lane[gq*8+:8]), .clk_cat(clk_cat[gq]), .wrq(wrq[gq*128 +: 128]), .wrq_cr(wrq_cr[gq*8 +: 8]), .wrr(wrr[gq*2056 +: 2056]),
             .wwq(wwq[gq*2240 +: 2240]), .wwq_cr(wwq_cr[gq*8 +: 8]), .wwq_done(wwq_done[gq*8 +: 8]),
             .dn_v(q_dn_v[gq]), .dn(q_dn[gq*139 +: 139]), .ck_v(q_ck_v[2*gq +: 2]), .ck(q_ck[gq*88 +: 88]),
             .ck_cr(q_ck_cr[2*gq +: 2]), .sc_v(q_sc_v[gq]), .sc(q_sc[gq*258 +: 258]), .stat(q_stat[gq*6 +: 6]));
