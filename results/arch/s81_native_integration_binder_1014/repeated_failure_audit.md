@@ -199,3 +199,13 @@ The fresh SS async recovery deficit of -34.34 ps also remains open, separately
 from data WNS. Neither stronger drive nor the independent numerical proof
 qualifies the full tile; real enable/reset cones and normal FF hold and
 recovery/removal checks still govern the next source-bound physical gate.
+
+The distinct Q startup candidate `1eb017b62`, archived in `964740c1f`, now
+proves the keepalive dependency at source level. Twelve witnesses sample actual
+raw/BX and per-half MA/MB reset groups; each is synchronized before reduction.
+The real gates remain enabled until all witnesses complete, with 48 nominal
+additional flip-flops and no added operation epochs. PQ1 withheld-GO startup,
+six stopped-clock reset epochs and a held genuine tree reset pass. The omitted
+tree contributor mutant fails, and all five existing PQ0 numerical cases pass.
+Full production PQ1 arithmetic/field-operation comparison, new physical ACK
+pins, source clock delivery and per-corner physical checks remain open.
