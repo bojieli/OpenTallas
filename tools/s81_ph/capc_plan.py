@@ -138,6 +138,7 @@ def build(assigned):
         if not port.startswith("ck"): continue
         group = serial_ports if port.startswith("ckv") else core_ports
         group.extend(port if port in scalars else f"{port}[{bit}]" for bit in range(count))
+    core_ports = ["ck_c"] + [port for port in core_ports if port != "ck_c"]
     if len(core_ports) != 50 or len(serial_ports) != 18:
         raise ValueError("capture requires exactly 50 core and 18 serial sources")
     # Production clock creation/compensation belongs to the versioned renderer.
