@@ -20,6 +20,12 @@ def main():
  binding=ROOT/'results/arch/s81_vmfe_misc_2240/relay_proofs/r4_final_binding/packet.json';packet.update(status='PARTIAL PASS actual final pin geometry/capacity/replay; actual production binding and per-pair timing budgets OPEN',actual_final_master_binding=dict(**ref(binding),record_commit='32ac456ae'),all_final_etm_pair_mapping=dict(**ref(pairfile),pairs=len(pairs)),rc_budget_status='All9 final SS/FF ETMs available; actual production clock/reset producer, delivery, operating load/slew and route RC OPEN.500um is geometric ceiling only.',placement_commit='Historical88 origins/orientations5281a6feb; fresh r4 contacts/routing. No global adoption.',actual_final_pin_pair_verification=replay)
  mapped=r/'reset_classification/mapped_reset_classification.json';reset=json.load(open(mapped));packet['actual_mapped_reset_classification']=ref(mapped)
  packet['large_relay_reset_evidence']={m:dict(active_reset_endpoints=[e['instance']+'.'+e['input_pin'] for e in reset['masters'][m]['sequential_endpoints']],routed_recovery_removal=reset['masters'][m]['routed_recovery_removal'],scope='Explicit mapped RESETN recovery/removal leaf checks; actual inter-master delivery and pulse-width qualification OPEN. Exporter labels unchanged.') for m in ['dsfd_hrow_r1025','dsfd_hrow_r2079']}
+ graphpath=r/'binding_packet/source_graph.json';graph=json.load(open(graphpath))
+ for link in graph['local_release']:
+  link['leaf_actual_recovery_removal_evidence']=ref(mapped)
+  link['physical_recovery_removal_status']='Actual destination leaf SS/FF checks available and positive. Inter-master source/capture clock delivery, RN wire RC and pulse width OPEN.'
+ graphpath.write_text(json.dumps(graph,indent=1)+'\n')
+ packet['source_graph']=ref(graphpath)
  packetpath.write_text(json.dumps(packet,indent=1)+'\n')
  reqpath=r/'binding_packet/rc_budget_inputs_required.json';req=json.load(open(reqpath));req.update(status='OPEN actual production source delivery and operating/RC inputs; final ETMs available',missing_relay_exports=[],pending_jobs_source=None,actual_final_relay_binding=ref(binding),actual_mapped_reset_recovery_removal_evidence=ref(mapped),reset_exporter_label_policy='Raw reset ETM setup/hold labels retained. Actual mapped cell Liberty and routed reports establish recovery/removal check kind; no inferred source delivery.');reqpath.write_text(json.dumps(req,indent=1)+'\n')
  print(json.dumps({'pairs':len(pairs),'final_pin_rebind':True,'actual_pair_budget':None,'production_driver_bound':False}))
