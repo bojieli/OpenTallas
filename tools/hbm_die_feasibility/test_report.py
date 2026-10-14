@@ -49,6 +49,15 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(d['hc_summary']['per_reservation_used_envelope_um'],[1231.2,470.88])
         self.assertFalse(d['private_pin_binding_qualified'])
 
+    def test_full_sfu_prototype_preserves_selected_master_and_is_not_grant(self):
+        d=json.loads((REPORT.parent/'sfu_full_geometry_prototype.json').read_text())
+        self.assertEqual(d['master_count'],36)
+        self.assertEqual(sum(r['master']=='ot_su12_sfu' for r in d['children']),16)
+        self.assertEqual(d['selected_body_LEF_sha256'],'414fdd99a70a45fdb7c73440a7dabc9d4699d7c84c2be1a4dcf3d5902e4de9f3')
+        self.assertEqual(d['nearest_ring_clearance_um'],1.44)
+        self.assertTrue(all(not r['assigned'] and not r['existing_child_overlap']['count'] and not r['forbidden_corridor_overlap'] for r in d['children']))
+        self.assertFalse(d['source_quarter_to_SW_proven'])
+
     def test_full_sfu_competition_does_not_grant_clear_trial_row(self):
         d=json.loads((REPORT.parent/'sfu_legacy_overlay.json').read_text())
         self.assertEqual(d['full_quarter_area_screen']['body_count'],16)
