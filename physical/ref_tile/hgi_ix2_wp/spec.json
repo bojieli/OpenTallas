@@ -59,7 +59,7 @@
   "owner": "Codex:el1013-hbm-redesign-idx",
   "branch": "claude/hbm-redesign-idx",
   "tag": "r3-corridor",
-  "purpose": "IDX.INDEX redesign (owner 10-13) ix2 leaf wp: four sector packers + 8 write lanes (2,258 b on the 388.8 um S face = 0.56 of 10.3 slots/um; the flat adapter failed PPL at 1.03); M5 leaf, every pin a flop, one clock root; cluster production die e2e L24 1,158 (1.072x) exact, token 1.217x, e2e loss 0.282 %",
+  "purpose": "IDX.INDEX ix2 WP structural output-hold corridor repair after r2 GRT132 overflow. Same finite landing-credit/cache-head RTL and259.2x75.6 outline; M5, identical hold circuits, physically disjoint rows before launch-flop planning. Exact ix2 equivalence plus failing head mutant; actual native throughput proof remains separate and in flight. No price or timing relaxation.",
   "extra_paths": [
    "tools/hgi_unit_tput"
   ],

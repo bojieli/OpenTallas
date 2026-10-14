@@ -1,5 +1,5 @@
 {
- "verdict": "FAIL",
+ "verdict": "WARN",
  "items": [
   {
    "severity": "WARN",
@@ -22,25 +22,25 @@
   {
    "severity": "INFO",
    "check": "remote",
-   "message": "ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission",
+   "message": "ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission",
    "fix": ""
   },
   {
    "severity": "INFO",
    "check": "source_binding",
-   "message": "immutable shipping manifest /tmp/ref_gate_hgi_ix2_wp_20261013-224858.source_snapshot.json",
+   "message": "immutable shipping manifest /tmp/ref_gate_hgi_ix2_wp_20261013-225328.source_snapshot.json",
    "fix": ""
   },
   {
    "severity": "INFO",
    "check": "remote",
-   "message": "remote log /tmp/ref_gate_hgi_ix2_wp_20261013-224858.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hgi_ix2_wp-20261013-224858",
+   "message": "remote log /tmp/ref_gate_hgi_ix2_wp_20261013-225328.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hgi_ix2_wp-20261013-225328",
    "fix": ""
   },
   {
    "severity": "INFO",
    "check": "remote",
-   "message": "synth + floorplan + PDN OK on ot-epyc4 in 166 s (gate total 217 s)",
+   "message": "synth + floorplan + PDN OK on ot-epyc1tb in 93 s (gate total 1067 s)",
    "fix": ""
   },
   {
@@ -52,7 +52,7 @@
   {
    "severity": "INFO",
    "check": "textbook",
-   "message": "WARN ot_hgi_idx_ix2_wp cells 51,274 flops 8,529 depth 568.4 ps util 0.3532 reach 92.6 um (1.6 s)",
+   "message": "WARN ot_hgi_idx_ix2_wp cells 51,274 flops 8,529 depth 568.4 ps util 0.3532 reach 92.6 um (1.0 s)",
    "fix": ""
   },
   {
@@ -62,21 +62,45 @@
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   },
   {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR ODB-0359] Attempt to change the origin of FIRM instance ot_ohdrv_01379_0",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 300.4..330.8 ps (spread 30.4), boundary mean 314.8; tt insertion all 232.1..258.2 ps (spread 26.1), boundary mean 243.9; ff insertion all 189.7..213.4 ps (spread 23.7), boundary mean 200.1; macro_clk flag False",
+   "fix": ""
   },
   {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hgi_ix2_wp/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      452 paths, worst slack 41.9 ps (e.g. wwq[147]$_DFFE_PP_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg         2 paths, worst slack 398.0 ps (e.g. rn$_DFF_PN0_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 4.1871062173015616e-11 hold WNS 2.6466162594829257e-11",
    "fix": ""
   },
   {
    "severity": "INFO",
    "check": "clock_rule",
-   "message": "root port:clk: 8,529 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)",
+   "message": "root port:clk: 8,529 sinks on the largest root <= 15,000; measured TT insertion 258.2 ps, leaf spread 26.1 ps",
    "fix": ""
   }
  ]
