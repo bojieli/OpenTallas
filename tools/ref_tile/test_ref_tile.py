@@ -128,6 +128,16 @@ class Abut(unittest.TestCase):
         h = RT.read_view_lef(self.V)["H"]
         self.assertEqual(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)]), [])
 
+    def test_at_exact_is_not_snapped(self):
+        h = RT.read_view_lef(self.V)["H"]
+        s = {"kind": "tile", "pins": {"S": ["ck"]}, "children": [],
+             "macros": [{"view": self.V, "count": 1, "at": [99.792, 99.36], "at_exact": True},
+                        {"view": self.V, "count": 1, "at": [99.792, round(99.36 + h + 0.024, 3)], "at_exact": True}]}
+        bl = RT.place_blocks(s, 400.0, 400.0, RT.blocks_of(s))
+        self.assertEqual([b["y"] for b in bl], [99.36, round(99.36 + h + 0.024, 3)])
+        self.assertEqual([b["offtrack"] for b in bl], [bl[0]["offtrack"]] * 2)      # same residue on every track grid
+        self.assertEqual([m for sev, chk, m, _ in RT.floorplan_checks(s, 400.0, 400.0, bl, None) if chk == "channel"], [])
+
     def test_gap_and_side_by_side_still_fail(self):
         m = RT.read_view_lef(self.V)
         self.assertEqual(len(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + m["H"] + 5.0)])), 1)
