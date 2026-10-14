@@ -54,7 +54,8 @@ module ot_qfd_vm_xline_t #(
     parameter integer ND = 14,
     parameter [ND*8-1:0] DSET = {8'd96, 8'd64, 8'd48, 8'd32, 8'd24, 8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0},
     parameter integer MEREG = 1,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer SELECT_ONLY = 0
 ) (
     input  wire                        clk,
     input  wire                        me_e,
@@ -65,6 +66,7 @@ module ot_qfd_vm_xline_t #(
     input  wire [3:0]                  c_sp,
     input  wire                        o_v,     // x_q capture: the parent's co_v / co_sp
     input  wire [3:0]                  o_sp,
+    output wire [(1<<SMAX)-1:0]        line_data,
     output reg  [(1<<SMAX)-1:0]        q        // x_q plane, one engine edge after the flat x_q
 );
     localparam integer BEAT = (NRB - 1) * 16;
@@ -100,11 +102,12 @@ module ot_qfd_vm_xline_t #(
     // (per-entry generate scopes, one procedural if-chain, straight-line vector loops); a group module has 128 entries
     // and elaborates in seconds, NG = 16 parameterisations.  Same expressions, same flops, same edges.
     wire [NX-1:0] line;
+    assign line_data = line;
     wire [NX-1:0] qw;
     genvar gg;
     generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_grp
         localparam integer NE = (NX - gg * GE < GE) ? (NX - gg * GE) : GE;
-        ot_qfd_vm_xline_grp #(.NRB(NRB), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET), .BASE(gg * GE), .NE(NE), .MUT(MUT)) u_g (
+        ot_qfd_vm_xline_grp #(.NRB(NRB), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET), .BASE(gg * GE), .NE(NE), .MUT(MUT), .NO_Q(SELECT_ONLY)) u_g (
             .clk(clk), .me(me[gg]), .pd(pd), .pv(pv[gg]), .pdd(pdd[gg*ND +: ND]), .pj(pj[gg*LB +: LB]), .psp(psp[gg*4 +: 4]),
             .ov(ov[gg]), .osp(osp[gg*4 +: 4]), .line_all(line), .line(line[gg*GE +: NE]), .q(qw[gg*GE +: NE]));
     end endgenerate
@@ -122,7 +125,8 @@ module ot_qfd_vm_xline_grp #(
     parameter [ND*8-1:0] DSET = {8'd96, 8'd64, 8'd48, 8'd32, 8'd24, 8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0},
     parameter integer BASE = 0,
     parameter integer NE = 128,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer NO_Q = 0
 ) (
     input  wire                     clk,
     input  wire                     me,
@@ -157,7 +161,7 @@ module ot_qfd_vm_xline_grp #(
     always @(posedge clk) begin
         for (e = 0; e < NE; e = e + 1) begin
             if (me && pv && anyhit[e] && ((BASE + e) < (1 << psp) || MUT == 2)) line[e] <= pick[e];
-            if (me && ov) q[e] <= qn[e];
+            if (NO_Q == 0 && me && ov) q[e] <= qn[e];
         end
     end
 endmodule
