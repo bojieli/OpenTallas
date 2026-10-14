@@ -101,8 +101,9 @@
     "3": "HOST"
   },
   "cpp_fixture_sources": {
-    "rtl/test/qwen_host/include/qkd_host_board_router_fixture.hpp": "1870c8f9cbd16c6f9d251fa38072b06bec8976efd8f1e391260ed40873e8ca10",
-    "rtl/test/qwen_host/tb_qkd_host_board_router_fixture.cpp": "c29cb096f1302fcc2a8293ef17d5220155bd1da9cc4e3549723f7b6a9dcfab0a",
+    "rtl/test/qwen_host/include/qkd_host_board_router_fixture.hpp": "eb6944b75790d7b1d40ef1806d459e718178c700153a2b076ddc91b70382e18c",
+    "rtl/test/qwen_host/tb_qkd_host_board_router_fixture.cpp": "fa1b710b8d77f98744c236232ad1be12405fd9d7dea6bf7b17539c7052d98459",
     "tools/qwen_host/board_router_fixture_gate.sh": "3fad320e66e7f8119c398011740ab6816bdd7e71d8f92a7240ccadd0da6be705"
-  }
+  },
+  "rank_binding": "physical/qkd_host_integration/host_rank_binding.json"
 }

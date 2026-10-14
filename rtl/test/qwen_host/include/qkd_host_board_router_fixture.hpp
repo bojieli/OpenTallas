@@ -14,6 +14,17 @@ namespace qkd_host_fixture {
 using Payload = std::array<uint32_t,16>;
 using Word528 = std::array<uint32_t,17>;
 using Flit1043 = std::array<uint32_t,33>;
+// Explicit new HOST binding: physical CTRL role2*PKG+DIE. Native collective
+// rank4*DIE+PKG is a different namespace; no field/array label alias.
+inline unsigned host_to_native(unsigned host_id) {
+ if(host_id>=8)throw std::runtime_error("invalid physical HOST ID");
+ return 4*(host_id%2)+host_id/2;
+}
+inline unsigned native_to_host(unsigned native_rank) {
+ if(native_rank>=8)throw std::runtime_error("invalid native TP8 rank");
+ return 2*(native_rank%4)+native_rank/4;
+}
+
 inline Word528 packet(unsigned cls,const Payload& p) {
  if(cls>15) throw std::runtime_error("invalid class528 class");
  Word528 w{};for(unsigned i=0;i<16;++i)w[i]=p[i];w[16]=cls<<12;return w;

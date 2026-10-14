@@ -9,6 +9,11 @@ void check(bool ok,const char* why){if(!ok)throw std::runtime_error(why);}
 int main(){try {
  Router router;std::array<Pins,8> b{},h{};std::array<Pins*,8> bp{},hp{};
  for(unsigned i=0;i<8;++i){bp[i]=&b[i];hp[i]=&h[i];}
+ const unsigned expected[8]={0,4,1,5,2,6,3,7};
+ std::array<uint32_t,8> host_values{},native_values{};
+ for(unsigned id=0;id<8;++id){host_values[id]=0x90+id;native_values[host_to_native(id)]=host_values[id];check(host_to_native(id)==expected[id]&&native_to_host(host_to_native(id))==id,"physicalHOST/native rank bijection");}
+ for(unsigned rank=0;rank<8;++rank)check(native_values[rank]==host_values[native_to_host(rank)],"nonuniform rank-owned operands permuted explicitly");
+
  Payload status1{},status2{};status1[0]=0x01010121;status2[0]=0x01020121;
  b[1].core_rx_v=b[2].core_rx_v=true;b[1].core_rx_d=packet(1,status1);b[2].core_rx_d=packet(1,status2);
  router.sample_core(bp);router.drive_core(bp);
