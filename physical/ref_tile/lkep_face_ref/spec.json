@@ -31,7 +31,8 @@
    "locked"
   ],
   "E": [
-   "f_lk"
+   "f_lk_rx",
+   "f_lk_tx"
   ],
   "S": [
    "clk",
@@ -51,11 +52,11 @@
   "macro_halo_um": 5.4
  },
  "clock": "spine",
- "structural_change": "Move exact original hfd_lk_ep wrapper face registers into one independent hard clock root; preserve existing three relay edges each direction and all original session/reset/status edges. Parent wrapper now wires-only at face; shared endpoint core/PHY glue is still unclosed and must split separately. Actual original-wrapper fullbus comparator and valid-flit RTL mutant; no timing/gate relaxation. Requested outline is pin-limited, not approved die slot.",
+ "structural_change": "Move exact original hfd_lk_ep wrapper face registers into one independent hard clock root; preserve existing three relay edges each direction and all original session/reset/status edges. Parent wrapper now wires-only at face; shared endpoint core/PHY glue is still unclosed and must split separately. Actual original-wrapper fullbus comparator and valid-flit RTL mutant; no timing/gate relaxation. Requested outline is pin-limited, not approved die slot. Actual predecessor GRT failed twice RSZ-0074 on inout f_lk[9]. Split the hard leaf mixed-direction f_lk bus into 571 explicit inputs and 549 explicit outputs; parent retains the same external inout pin contract and exact behavior. No physical leaf tristate/inout ports remain.",
  "job": {
   "owner": "Codex:hbm_dma_lkep_2240",
   "branch": "codex/hbm-dma-mv-repair-2240",
-  "tag": "face1",
+  "tag": "face2dir",
   "views_to": "physical/ref_tile/lkep_face_ref/views",
   "record_to": "results/rtl/ref_tile/lkep_face_ref",
   "purpose": "New endpoint face hard leaf preserving existing wrapper latency; parent actual shared glue, PHY path, assigned pins, compensated clocks and full endpoint rate remain required. Face-only exact original-wrapper comparator is not full endpoint qualification.",

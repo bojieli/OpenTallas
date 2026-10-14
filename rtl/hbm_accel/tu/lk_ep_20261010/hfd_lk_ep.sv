@@ -15,6 +15,9 @@
 module hfd_lk_ep #(parameter integer HARD_CLOCKS=0, parameter integer MUT_FACE=0)(
     input wire [0:0] clk, input wire [0:0] clk_face,
     inout wire [1119:0] f_lk, inout wire [973:0] phy, input wire [0:0] rst_n);
+    wire [548:0] face_tx;
+    assign f_lk[1093:547] = face_tx[546:0];
+    assign f_lk[1119:1118] = face_tx[548:547];
     wire face_clock = HARD_CLOCKS != 0 ? clk_face[0] : clk[0];
     wire t_v_s,r_cr_s,t_cr,r_v,fault,locked;
     wire [544:0] t_f_s,r_flit; wire [23:0] session; wire [486:0] x_tx;
@@ -23,7 +26,7 @@ module hfd_lk_ep #(parameter integer HARD_CLOCKS=0, parameter integer MUT_FACE=0
 `else
     hfd_lk_ep_face #(.MUT_FACE(MUT_FACE)) u_face(
 `endif
-.clk(face_clock), .rst_n(rst_n[0]), .f_lk(f_lk), .core_t_v(t_v_s),
+.clk(face_clock), .rst_n(rst_n[0]), .f_lk_rx({f_lk[1117:1094],f_lk[546:0]}), .f_lk_tx(face_tx), .core_t_v(t_v_s),
         .core_t_flit(t_f_s), .core_r_cr(r_cr_s), .core_session(session),
         .t_cr(t_cr), .r_v(r_v), .r_flit(r_flit), .fault(fault), .locked(locked));
     ot_hbm_lk_ep #(.NS(3), .LW(487), .TXQ(32), .FCR(256)) u (.clk(clk), .rst_n(rst_n), .session(session),
