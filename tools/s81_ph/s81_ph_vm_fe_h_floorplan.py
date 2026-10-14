@@ -24,6 +24,7 @@ fcn / fcc / fcw have face-level kits only: their pins are planned here by face o
 import argparse, importlib.util, json, re, sys
 from pathlib import Path
 import numpy as np
+import hashlib
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools' / 'hier_contract'))
@@ -79,6 +80,7 @@ def master_pins():
 
 MP = master_pins()
 PIN_RECEIPTS = {}
+NATIVE_CANDIDATE_CAPS = {}
 
 
 def load_actual_master_pins(directory):
@@ -88,7 +90,22 @@ def load_actual_master_pins(directory):
         if master not in MP:
             raise ValueError(f'unknown FE master: {master}')
         rec = json.loads(f.read_text()); w,h = rec['outline_um']
-        if abs(w-MP[master][0]) > .001 or abs(h-MP[master][1]) > .001:
+        request = rec.get('source_candidate_request')
+        if request:
+            rp = ROOT / request['path']
+            if hashlib.sha256(rp.read_bytes()).hexdigest() != request['sha256']:
+                raise ValueError(f'{master}: source candidate receipt changed')
+            rq = json.loads(rp.read_text())
+            shape = rq.get('new_outline_um', rq.get('outline_um'))
+            if rq.get('status') != 'UNALLOCATED_SOURCE_CANDIDATE' or shape != [w,h]:
+                raise ValueError(f'{master}: actual pins do not match explicit unallocated request')
+            cap = rq.get('new_layer_cap')
+            if cap:
+                layers = {box['layer'] for p in rec['pins'].values() for box in p['boxes']}
+                if any(int(x[1:]) > int(cap[1:]) for x in layers if re.fullmatch(r'M\d+',x)):
+                    raise ValueError(f'{master}: actual pin metal exceeds requested cap {cap}')
+                NATIVE_CANDIDATE_CAPS[master] = cap
+        elif abs(w-MP[master][0]) > .001 or abs(h-MP[master][1]) > .001:
             raise ValueError(f'{master}: actual outline {w,h} differs from selected kit {MP[master][:2]}')
         pins = {}
         for name, v in rec['pins'].items():
@@ -98,6 +115,9 @@ def load_actual_master_pins(directory):
             pins[name]=(x,y,face,box['layer'])
         MP[master]=(w,h,pins,True)
         PIN_RECEIPTS[master]={k:rec.get(k) for k in ('schema','odb_source','odb_sha256','status')}
+        if request:
+            PIN_RECEIPTS[master]['source_candidate_request'] = request
+            PIN_RECEIPTS[master]['native_parent_adopted'] = False
 
 
 
@@ -338,7 +358,7 @@ class Plan:
         nx, ny = int(np.ceil(W / G)), int(np.ceil(H / G))
         capH, capV = np.full((ny, nx), H_FREE * G * USABLE), np.full((ny, nx), V_FREE * G * USABLE)
         for n, (x0, y0, x1, y1, m) in self.rects().items():
-            hl, vl = (0.0, 0.0) if m == 'dsfd_vm_fsr' else (H_LEAF, V_LEAF)
+            hl, vl = (0.0, 0.0) if m == 'dsfd_vm_fsr' and NATIVE_CANDIDATE_CAPS.get(m) != 'M5' else (H_LEAF, V_LEAF)
             for iy in range(max(int(y0 // G), 0), min(int(np.ceil(y1 / G)), ny)):
                 for ix in range(max(int(x0 // G), 0), min(int(np.ceil(x1 / G)), nx)):
                     f = max(0.0, min(x1, (ix + 1) * G) - max(x0, ix * G)) * max(0.0, min(y1, (iy + 1) * G) - max(y0, iy * G)) / (G * G)
