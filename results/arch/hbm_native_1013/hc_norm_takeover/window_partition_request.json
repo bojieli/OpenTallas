@@ -1,8 +1,8 @@
 {
   "schema": "opentallas.slot_partition_request.v1",
-  "state": "RTL_CANDIDATE",
+  "state": "MEASURED_CTS_CANDIDATE_NO_ASSIGNED_PINS",
   "source_sha256": {
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win_partitioned.sv": "1a8d824dbd81b750e0205b3787bd017d326b58df05b7f3166767fc58846e6981"
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win_partitioned.sv": "6d56ec1f7ef02914bc2c83c8f76a388cd1ab0c5f853922329a68bf1e51df2a46"
   },
   "replaces": "Unclosed ot_hgi_hc_win flat controller+4SRAM window",
   "reason": "Actual compact CTS boundary spread~101ps / all103.1ps exceeds80ps tile budget despite only2759root sinks; require structural local-memory/data roots",
@@ -18,7 +18,7 @@
   "clocks_per_window": 5,
   "macro_count_unchanged": "128 actual128x256 SRAMS total on die; one per sectorleaf",
   "memory_sector_contract": {
-    "inputs": "clk,rst_n,live,hr_v/tag11/beat2/data_lo128/data_hi128,read_v/addr7",
+    "inputs": "clk,rst_n,live,sid2,hr_v/tag11/beat2/data_lo128/data_hi128,read_v/addr7",
     "outputs": "ROM valid,data_lo128/data_hi128,fault",
     "states": "Pin-flopped response/read descriptors and data;1SRAM;rawcapture and masked output;localcontrol reset; no whole-window clock root"
   },
@@ -27,7 +27,7 @@
     "outputs": "Registered HBMrequest;registered readrequest/address and activation;ready/fault",
     "states": "Original window request/valid/duplicate/fault logic, data path removed; bounded one request seat"
   },
-  "outline": "All child outlines pending actual synth/CTS and die-assigned pins. Prior whole-window256.176x151.2 is superseded as a physical master, retained failure evidence.",
+  "outline": "Actual synthesized/CTS child outlines below; no route or pin grant. Parent is wires only.",
   "read_latency": "6edges from inputrequest to ROMoutput in equal-clock composition; parentSYS memory/latency parameters must be updated and case15remeasured",
   "scope": "All4SYSwindows\u00d72banks\u00d74quarters; preservesdata/beat/tag/word ownership and mathematicalfunction",
   "gates": [
@@ -36,5 +36,50 @@
     "Eachleaf ownroot insertion/spread",
     "SYSunit exact18records/693words and MP/POST/XL mutants",
     "Measured case15 cycles<=594; no acceptedcostrow"
-  ]
+  ],
+  "source_commit": "f043c49f6",
+  "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
+  "contract_version": 12,
+  "contract_sha256": "f1c9332f12fd679b53f9536f8fd94265a8d028be31bba7d494793f5d5a504f94",
+  "geometry_adoption": false,
+  "measured_children": {
+    "ot_hgi_hc_win_ctl": {
+      "outline_um": [
+        30.24,
+        25.92
+      ],
+      "std_area_um2": 315,
+      "clock_sinks": 461,
+      "tt_boundary_mean_ps": 100.2,
+      "tt_all_spread_ps": 6.0,
+      "inputs_bits_including_clock_reset": 148,
+      "outputs_bits": 61,
+      "evidence": "window_ctl_remote_gate.json",
+      "verdict": "WARN: S-face pin density requires assigned-pin repair"
+    },
+    "ot_hgi_hc_win_sector": {
+      "outline_um": [
+        140.832,
+        88.56
+      ],
+      "std_area_um2": 285,
+      "sram_area_um2": 3894,
+      "clock_sinks": 799,
+      "tt_boundary_mean_ps": 175.6,
+      "tt_all_spread_ps": 34.7,
+      "inputs_bits_including_clock_reset": 284,
+      "outputs_bits": 258,
+      "evidence": "window_sector_remote_gate.json",
+      "verdict": "WARN: 36% utilization; minimum20um macro margins constrain compaction"
+    }
+  },
+  "assigned_pins": null,
+  "equal_clock_scalar_evidence": {
+    "source": "f043c49f6",
+    "state": "FOUR_GATES_RUNNING",
+    "case15_observed_cycles": 540,
+    "reference_cycles": 540,
+    "ratio": 1.0,
+    "scope": "SYS/QPAIR component with generic32-bank VM backing; not whole layer"
+  }
 }
