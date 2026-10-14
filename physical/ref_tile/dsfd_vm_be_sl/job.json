@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_be_sl-r5-e3d8d04aa",
+ "name": "dsfd_vm_be_sl-r5-21672a82e",
  "block": "dsfd_vm_be_sl",
  "ref_tile": true,
  "owner": "Claude:el1011-ds-vm/be",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "main",
-  "commit": "e3d8d04aa"
+  "commit": "21672a82e"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r5-e3d8d04aa"
+   "to": "results/rtl/ref_tile/dsfd_vm_be_sl/dsfd_vm_be_sl-r5-21672a82e"
   }
  ],
  "cycles_added": 0,
@@ -103,5 +103,6 @@
   "launch_ps": 186.9,
   "capture_ps": 246.0,
   "fix": "10 inputs over 190 (worst o_v[5] 246.0): single capture flop at each input pin, HB2 pad; plus targeted HB1 hold stage on the 12 ratio-CDC str->core crossing flops"
- }
+ },
+ "structural_change": "r5 vs r1-r4 (same RTL, TT +8.88 / FF -9.13 at r4): recipe 2 = one capture flop at each of the 10 input pins over the 190 ps native capture budget (native pin audit o_v[5] 246.0) with HB2 pads, plus one dont_touch HB1 hold stage on the D of the 12 str_clk->core_clk ratio-FIFO crossing flops (u_rc{0,1}.rp_w / r_st_w: the r4 FF misses) and CTS sink clustering 16 / 40 um"
 }
