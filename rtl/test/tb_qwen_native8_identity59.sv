@@ -10,7 +10,7 @@ module tb_qwen_native8_identity59;
   wire [7:0] vm_addr,vm_wa;
   wire [511:0] cd,vm_wd;
   wire [58:0] ct; reg [58:0] rt=0; reg [15:0] epoch=16'd17;reg [5:0] stage=6'd1;
-  reg [63:0] desc_q=0;
+  reg [63:0] desc_q=0; reg sweep_mode=0; integer sweep_token=0,sweep_bad=0,sweep_wait=0;
   reg [511:0] vm_q=0,rd=0;
   reg core_done=0,cr=0,rv=0,rl=0;
   ot_qwen_tp_seq_w12_vrl_native59 #(.N(8),.NW(18),.RB(3),.CRED(32),.VRL(1)) dut (
@@ -23,7 +23,7 @@ module tb_qwen_native8_identity59;
     .r_valid(rv),.r_data(rd),.r_last(rl),.r_rank(3'd0),.r_err(1'b0));
   always @(posedge clk) begin
     core_done<=core_start;
-    if(desc_re) desc_q<=(desc_addr==0)?(64'd1|(64'd128<<10)):0;
+    if(desc_re) desc_q<=(sweep_mode||desc_addr!=0)?0:(64'd1|(64'd128<<10));
     if(vm_re) vm_q<={{504{1'b0}},vm_addr};
   end
   integer sent=0,acked=0,received=0,writes=0,stall=0,cyc=0,bad=0,frames=0,full_events=0;
@@ -77,6 +77,17 @@ module tb_qwen_native8_identity59;
       if(MUT==0)begin
         token=65537;pos=7935;stage=2;frame(1);
         rst_n=0;repeat(4)@(negedge clk);rst_n=1;token=1;pos=8191;epoch=18;stage=37;frame(2);
+        sweep_mode=1;
+        for(sweep_token=0;sweep_token<151936;sweep_token=sweep_token+1)begin
+          @(negedge clk);token=18'(sweep_token);pos=(sweep_token%2)?8191:7935;stage=6'(sweep_token%38);epoch=16'd19;start=1;
+          @(negedge clk);start=0;
+          if(ct!=={epoch,stage,token,pos[12:0],6'd0})sweep_bad=sweep_bad+1;
+          sweep_wait=0;
+          while(!done&&sweep_wait<100)begin @(negedge clk);sweep_wait=sweep_wait+1;end
+          if(!done||fault)sweep_bad=sweep_bad+1;
+        end
+        if(sweep_bad!=0)bad=bad+sweep_bad;
+        $display("VOCAB_NATIVE59 actual_start_captures=%0d stage_count=38 positions=8191,7935 bad=%0d",sweep_token,sweep_bad);
       end
     end else if(MUT==6)begin
       rt=59'd0;rv=1;@(negedge clk);rv=0;

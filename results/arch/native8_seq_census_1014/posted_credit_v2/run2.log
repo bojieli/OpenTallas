@@ -1,0 +1,9 @@
+FRAME id=0 sent=128 acked=128 received=128 writes=128 depleted_edges=128 cycles=588 credit=32 faults=0
+FRAME id=1 sent=128 acked=128 received=128 writes=128 depleted_edges=128 cycles=588 credit=32 faults=0
+FRAME id=2 sent=128 acked=128 received=128 writes=128 depleted_edges=128 cycles=588 credit=32 faults=0
+GAP extra_credit_after_reset accepted credit=33 fault=0
+PASS POSTED_C32 frames=3 full_windows=3 prolonged_stall_edges=384
+- rtl/test/tb_qwen_native8_posted_credit.sv:79: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.001 s; speed 3.043 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
