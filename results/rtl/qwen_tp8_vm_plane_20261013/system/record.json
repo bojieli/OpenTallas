@@ -4,17 +4,17 @@
  "ok": true,
  "not_ok_because": [],
  "bench": "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv (top tb_qfd_vm_bv_ports): bench shape ELEMS 16384 / SW 8, and the PRODUCTION shape (runs with production_shape true: ELEMS 177808, SW 64, NRB 64, SMAX 11, 14 strides)",
- "host": "ot-epyc1tb",
+ "host": "regular-crane",
  "launcher": "ot-heavy --mem <ot_heavy_mem_gb> per run, all runs in parallel",
  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
  "runner": "tools/qwen_tp8/vm_plane_sysbench.sh",
  "driver": "tools/qwen_tp8/vm_plane_sysbench_set.py",
- "source_commit": "c2b762fc4eef08c5604ad52452cb21db84a5f553",
+ "source_commit": "b0e8a0f58f84a54369f3e6de327db9c6e420f392",
  "sources_clean_at_commit": true,
  "remote_tree_matches_sha256": true,
  "sources_sha256": {
   "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv": "b73293e19ca8ce4e45770f3fcbb78cb020b40682e13bc41a461e16651e18ee12",
-  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "4588181725125100a8ebe822f01ee2574a08035b69961a43b4a739476df45c81",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "e8cc62d896270e78ed65c81c888958e885be50623fff552658e84b2c8d37123d",
   "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
   "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": "19866082e9cd8fc21da0f9f29cfbc82c5f5ab9bc1fc88719b8e84def7f9bcfad",
   "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": "58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17",
@@ -24,7 +24,7 @@
   "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv": "02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989",
   "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv": "17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421",
   "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv": "993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac",
-  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "3ac5f08c333063c9986dca0860bd599bb0f71f54436a6d5d6b004d747b061a37"
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv": "f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647"
  },
  "runner_sha256": "d056192f11c7be67b371b33d53c621d00a6ee87eea2865d6a790b1a631d29faf",
  "summary": {
@@ -151,9 +151,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6308,
-   "wall_s": 0.85,
-   "build_s": 22,
+   "maxrss_kb": 5252,
+   "wall_s": 2.71,
+   "build_s": 87,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -193,9 +193,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6336,
-   "wall_s": 2.91,
-   "build_s": 28,
+   "maxrss_kb": 6288,
+   "wall_s": 3.26,
+   "build_s": 116,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -235,9 +235,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6380,
-   "wall_s": 2.61,
-   "build_s": 34,
+   "maxrss_kb": 6228,
+   "wall_s": 3.63,
+   "build_s": 111,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -277,9 +277,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6296,
-   "wall_s": 2.78,
-   "build_s": 30,
+   "maxrss_kb": 6232,
+   "wall_s": 3.86,
+   "build_s": 106,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -319,9 +319,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 7404,
-   "wall_s": 2.35,
-   "build_s": 32,
+   "maxrss_kb": 6356,
+   "wall_s": 3.13,
+   "build_s": 106,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -361,9 +361,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6344,
-   "wall_s": 2.83,
-   "build_s": 34,
+   "maxrss_kb": 6356,
+   "wall_s": 6.17,
+   "build_s": 105,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -403,9 +403,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6396,
-   "wall_s": 2.69,
-   "build_s": 37,
+   "maxrss_kb": 7360,
+   "wall_s": 3.44,
+   "build_s": 107,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -443,9 +443,9 @@
     "landed": "1612/1612",
     "su_reads": "60170"
    },
-   "maxrss_kb": 6308,
-   "wall_s": 3.03,
-   "build_s": 34,
+   "maxrss_kb": 6356,
+   "wall_s": 3.8,
+   "build_s": 117,
    "expected_counts": null,
    "ok": true,
    "scratch_match": true
@@ -475,9 +475,9 @@
     "landed": "1612/1612",
     "su_reads": "60170"
    },
-   "maxrss_kb": 7524,
-   "wall_s": 2.44,
-   "build_s": 35,
+   "maxrss_kb": 6288,
+   "wall_s": 5.91,
+   "build_s": 104,
    "expected_counts": null,
    "ok": true,
    "scratch_match": true
@@ -509,9 +509,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6468,
-   "wall_s": 3.04,
-   "build_s": 34,
+   "maxrss_kb": 7408,
+   "wall_s": 3.35,
+   "build_s": 94,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -558,8 +558,8 @@
     "su_reads": "60170"
    },
    "maxrss_kb": 6276,
-   "wall_s": 2.68,
-   "build_s": 32,
+   "wall_s": 3.68,
+   "build_s": 115,
    "expected_counts": null,
    "ok": true,
    "scratch_match": true
@@ -589,9 +589,9 @@
     "landed": "1612/1612",
     "su_reads": "60170"
    },
-   "maxrss_kb": 7524,
-   "wall_s": 2.07,
-   "build_s": 38,
+   "maxrss_kb": 6228,
+   "wall_s": 3.19,
+   "build_s": 114,
    "expected_counts": null,
    "ok": true,
    "scratch_match": true
@@ -623,9 +623,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6352,
-   "wall_s": 2.28,
-   "build_s": 29,
+   "maxrss_kb": 6340,
+   "wall_s": 3.37,
+   "build_s": 107,
    "expected_counts": null,
    "ok": null
   },
@@ -656,9 +656,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6300,
-   "wall_s": 3.31,
-   "build_s": 30,
+   "maxrss_kb": 6264,
+   "wall_s": 4.06,
+   "build_s": 100,
    "expected_counts": {
     "NRB": 64,
     "SW": 8,
@@ -698,9 +698,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 7376,
-   "wall_s": 3.53,
-   "build_s": 26,
+   "maxrss_kb": 7288,
+   "wall_s": 5.43,
+   "build_s": 109,
    "expected_counts": {
     "NRB": 64,
     "SW": 8,
@@ -740,9 +740,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 10844,
-   "wall_s": 7.05,
-   "build_s": 74,
+   "maxrss_kb": 10588,
+   "wall_s": 10.67,
+   "build_s": 165,
    "expected_counts": {
     "NRB": 64,
     "SW": 8,
@@ -780,9 +780,9 @@
     "landed": "1615/1615",
     "su_reads": "60379"
    },
-   "maxrss_kb": 10684,
-   "wall_s": 6.67,
-   "build_s": 70,
+   "maxrss_kb": 10428,
+   "wall_s": 11.0,
+   "build_s": 159,
    "expected_counts": null,
    "ok": true,
    "scratch_match": false
@@ -812,9 +812,9 @@
     "landed": "1615/1615",
     "su_reads": "60379"
    },
-   "maxrss_kb": 11000,
-   "wall_s": 7.81,
-   "build_s": 77,
+   "maxrss_kb": 9876,
+   "wall_s": 10.12,
+   "build_s": 161,
    "expected_counts": null,
    "ok": true,
    "scratch_match": false
@@ -846,9 +846,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 7320,
-   "wall_s": 4.02,
-   "build_s": 35,
+   "maxrss_kb": 7276,
+   "wall_s": 5.02,
+   "build_s": 109,
    "expected_counts": {
     "NRB": 64,
     "SW": 8,
@@ -888,9 +888,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 9912,
-   "wall_s": 8.57,
-   "build_s": 89,
+   "maxrss_kb": 10028,
+   "wall_s": 11.52,
+   "build_s": 176,
    "expected_counts": {
     "NRB": 64,
     "SW": 8,
@@ -930,9 +930,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 7460,
-   "wall_s": 2.23,
-   "build_s": 31,
+   "maxrss_kb": 6332,
+   "wall_s": 3.21,
+   "build_s": 103,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -980,9 +980,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6400,
-   "wall_s": 5.35,
-   "build_s": 31,
+   "maxrss_kb": 6324,
+   "wall_s": 8.02,
+   "build_s": 113,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -1030,9 +1030,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 7484,
-   "wall_s": 2.31,
-   "build_s": 27,
+   "maxrss_kb": 6328,
+   "wall_s": 3.05,
+   "build_s": 106,
    "expected_counts": null,
    "ok": true
   },
@@ -1063,9 +1063,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 7296,
-   "wall_s": 2.46,
-   "build_s": 34,
+   "maxrss_kb": 6304,
+   "wall_s": 3.18,
+   "build_s": 108,
    "expected_counts": null,
    "ok": true
   },
@@ -1096,9 +1096,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 7424,
-   "wall_s": 2.65,
-   "build_s": 27,
+   "maxrss_kb": 6368,
+   "wall_s": 3.4,
+   "build_s": 110,
    "expected_counts": null,
    "ok": true
   },
@@ -1129,9 +1129,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6304,
-   "wall_s": 2.3,
-   "build_s": 31,
+   "maxrss_kb": 6292,
+   "wall_s": 3.96,
+   "build_s": 116,
    "expected_counts": null,
    "ok": true,
    "wq_expected": {
@@ -1169,9 +1169,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6344,
-   "wall_s": 1.32,
-   "build_s": 21,
+   "maxrss_kb": 5288,
+   "wall_s": 3.82,
+   "build_s": 76,
    "expected_counts": {
     "NRB": 16,
     "SW": 8,
@@ -1216,9 +1216,9 @@
     "landed": "1588/1588",
     "su_reads": "61149"
    },
-   "maxrss_kb": 6344,
-   "wall_s": 1.26,
-   "build_s": 20,
+   "maxrss_kb": 5328,
+   "wall_s": 11.96,
+   "build_s": 76,
    "expected_counts": null,
    "ok": true,
    "scratch_match": true,
@@ -1256,9 +1256,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 5212,
-   "wall_s": 1.31,
-   "build_s": 25,
+   "maxrss_kb": 5252,
+   "wall_s": 1.82,
+   "build_s": 99,
    "expected_counts": null,
    "ok": true,
    "wq_expected": {
@@ -1296,9 +1296,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6256,
-   "wall_s": 6.45,
-   "build_s": 34,
+   "maxrss_kb": 5248,
+   "wall_s": 7.02,
+   "build_s": 113,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1342,9 +1342,9 @@
     "landed": "1636/1636",
     "su_reads": "60386"
    },
-   "maxrss_kb": 6372,
-   "wall_s": 1.9,
-   "build_s": 21,
+   "maxrss_kb": 6260,
+   "wall_s": 1.66,
+   "build_s": 89,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null,
@@ -1380,9 +1380,9 @@
     "landed": "1625/1625",
     "su_reads": "60318"
    },
-   "maxrss_kb": 5324,
-   "wall_s": 1.14,
-   "build_s": 24,
+   "maxrss_kb": 5268,
+   "wall_s": 8.96,
+   "build_s": 69,
    "expected_counts": null,
    "ok": true,
    "scratch_match": true,
@@ -1420,9 +1420,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6264,
-   "wall_s": 3.18,
-   "build_s": 33,
+   "maxrss_kb": 6292,
+   "wall_s": 3.13,
+   "build_s": 113,
    "expected_counts": null,
    "ok": true
   },
@@ -1453,9 +1453,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6440,
-   "wall_s": 2.82,
-   "build_s": 32,
+   "maxrss_kb": 6476,
+   "wall_s": 3.41,
+   "build_s": 106,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1496,9 +1496,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6244,
-   "wall_s": 5.02,
-   "build_s": 30,
+   "maxrss_kb": 6352,
+   "wall_s": 8.23,
+   "build_s": 113,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1539,9 +1539,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6312,
-   "wall_s": 7.14,
-   "build_s": 35,
+   "maxrss_kb": 6468,
+   "wall_s": 7.61,
+   "build_s": 109,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1582,9 +1582,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6308,
-   "wall_s": 5.51,
-   "build_s": 37,
+   "maxrss_kb": 6268,
+   "wall_s": 7.5,
+   "build_s": 108,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1625,9 +1625,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6416,
-   "wall_s": 5.2,
-   "build_s": 33,
+   "maxrss_kb": 6372,
+   "wall_s": 7.84,
+   "build_s": 109,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1675,9 +1675,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6412,
-   "wall_s": 6.82,
-   "build_s": 33,
+   "maxrss_kb": 6284,
+   "wall_s": 10.63,
+   "build_s": 112,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1718,9 +1718,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6448,
-   "wall_s": 6.12,
-   "build_s": 32,
+   "maxrss_kb": 6424,
+   "wall_s": 6.95,
+   "build_s": 118,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1761,9 +1761,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6340,
-   "wall_s": 3.04,
-   "build_s": 32,
+   "maxrss_kb": 7428,
+   "wall_s": 3.09,
+   "build_s": 102,
    "expected_counts": null,
    "ok": true
   },
@@ -1794,9 +1794,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6268,
-   "wall_s": 6.78,
-   "build_s": 31,
+   "maxrss_kb": 6272,
+   "wall_s": 8.15,
+   "build_s": 101,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -1837,9 +1837,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6420,
-   "wall_s": 6.58,
-   "build_s": 35,
+   "maxrss_kb": 6292,
+   "wall_s": 7.96,
+   "build_s": 106,
    "expected_counts": null,
    "ok": null
   },
@@ -1868,9 +1868,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6368,
-   "wall_s": 6.29,
-   "build_s": 33,
+   "maxrss_kb": 6272,
+   "wall_s": 7.18,
+   "build_s": 109,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -1900,9 +1900,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6568,
-   "wall_s": 6.64,
-   "build_s": 36,
+   "maxrss_kb": 6356,
+   "wall_s": 7.48,
+   "build_s": 114,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -1932,9 +1932,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6316,
-   "wall_s": 6.17,
-   "build_s": 37,
+   "maxrss_kb": 6444,
+   "wall_s": 8.13,
+   "build_s": 103,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -1964,9 +1964,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 7356,
-   "wall_s": 6.33,
-   "build_s": 30,
+   "maxrss_kb": 7384,
+   "wall_s": 9.77,
+   "build_s": 113,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -1996,9 +1996,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6452,
-   "wall_s": 6.98,
-   "build_s": 34,
+   "maxrss_kb": 6352,
+   "wall_s": 8.41,
+   "build_s": 114,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2028,9 +2028,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6256,
-   "wall_s": 5.88,
-   "build_s": 34,
+   "maxrss_kb": 6260,
+   "wall_s": 9.98,
+   "build_s": 113,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2060,9 +2060,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6432,
-   "wall_s": 6.49,
-   "build_s": 39,
+   "maxrss_kb": 6236,
+   "wall_s": 13.49,
+   "build_s": 93,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2092,9 +2092,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6364,
-   "wall_s": 6.59,
-   "build_s": 37,
+   "maxrss_kb": 6396,
+   "wall_s": 7.09,
+   "build_s": 110,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2126,9 +2126,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 10644,
-   "wall_s": 9.7,
-   "build_s": 84,
+   "maxrss_kb": 10600,
+   "wall_s": 11.13,
+   "build_s": 173,
    "expected_counts": null,
    "ok": true
   },
@@ -2159,9 +2159,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 10464,
-   "wall_s": 15.38,
-   "build_s": 56,
+   "maxrss_kb": 10448,
+   "wall_s": 15.64,
+   "build_s": 141,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -2200,9 +2200,9 @@
     "landed": "1643/1643",
     "su_reads": "60451"
    },
-   "maxrss_kb": 10684,
-   "wall_s": 15.27,
-   "build_s": 70,
+   "maxrss_kb": 10692,
+   "wall_s": 15.23,
+   "build_s": 135,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2232,9 +2232,9 @@
     "landed": "1643/1643",
     "su_reads": "60451"
    },
-   "maxrss_kb": 10184,
-   "wall_s": 12.07,
-   "build_s": 66,
+   "maxrss_kb": 9644,
+   "wall_s": 15.75,
+   "build_s": 144,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2266,9 +2266,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 20504,
-   "wall_s": 17.22,
-   "build_s": 344,
+   "maxrss_kb": 20104,
+   "wall_s": 15.41,
+   "build_s": 350,
    "expected_counts": null,
    "ok": true,
    "wq_expected": {
@@ -2305,9 +2305,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 22904,
-   "wall_s": 118.91,
-   "build_s": 109,
+   "maxrss_kb": 23048,
+   "wall_s": 102.14,
+   "build_s": 226,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -2354,9 +2354,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 22904,
-   "wall_s": 112.35,
-   "build_s": 105,
+   "maxrss_kb": 22920,
+   "wall_s": 99.93,
+   "build_s": 222,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -2401,9 +2401,9 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 23520,
-   "wall_s": 103.32,
-   "build_s": 123,
+   "maxrss_kb": 22844,
+   "wall_s": 95.21,
+   "build_s": 241,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
@@ -2447,9 +2447,9 @@
     "landed": "2074/2074",
     "su_reads": "60747"
    },
-   "maxrss_kb": 22712,
-   "wall_s": 115.0,
-   "build_s": 118,
+   "maxrss_kb": 22792,
+   "wall_s": 101.17,
+   "build_s": 225,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2479,9 +2479,9 @@
     "landed": "2074/2074",
     "su_reads": "60747"
    },
-   "maxrss_kb": 22788,
-   "wall_s": 113.15,
-   "build_s": 111,
+   "maxrss_kb": 23648,
+   "wall_s": 97.7,
+   "build_s": 235,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2511,9 +2511,9 @@
     "landed": "2074/2074",
     "su_reads": "60747"
    },
-   "maxrss_kb": 23564,
-   "wall_s": 108.05,
-   "build_s": 112,
+   "maxrss_kb": 23048,
+   "wall_s": 103.84,
+   "build_s": 219,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2543,9 +2543,9 @@
     "landed": "2074/2074",
     "su_reads": "60747"
    },
-   "maxrss_kb": 23468,
-   "wall_s": 130.32,
-   "build_s": 111,
+   "maxrss_kb": 23884,
+   "wall_s": 96.02,
+   "build_s": 240,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2575,9 +2575,9 @@
     "landed": "2074/2074",
     "su_reads": "60747"
    },
-   "maxrss_kb": 23592,
-   "wall_s": 128.63,
-   "build_s": 141,
+   "maxrss_kb": 23608,
+   "wall_s": 96.7,
+   "build_s": 242,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2607,9 +2607,9 @@
     "landed": "2074/2074",
     "su_reads": "60747"
    },
-   "maxrss_kb": 23468,
-   "wall_s": 125.7,
-   "build_s": 148,
+   "maxrss_kb": 23672,
+   "wall_s": 97.62,
+   "build_s": 238,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2639,9 +2639,9 @@
     "landed": "2104/2104",
     "su_reads": "60810"
    },
-   "maxrss_kb": 23284,
-   "wall_s": 115.64,
-   "build_s": 111,
+   "maxrss_kb": 23648,
+   "wall_s": 100.69,
+   "build_s": 216,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null,
@@ -2654,8 +2654,8 @@
   },
   {
    "name": "plan_r21",
-   "what": "PLAN XPR 12 / XTK 6 / XMK 2 / XQR 2, r21: XVM 38",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=7 -GRV=2 -GRO=1 -GVL=15 -GXVM=38 -GXPR=12 -GXTK=6 -GXMK=2 -GXLO=1 -GXQR=2",
+   "what": "PLAN XPR 12 / XTK 7 / XMK 2 / XQR 2, r21: XVM 38",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=7 -GRV=2 -GRO=1 -GVL=15 -GXVM=38 -GXPR=12 -GXTK=7 -GXMK=2 -GXLO=1 -GXQR=2",
    "extra_verilator_args": "",
    "production_shape": false,
    "runner": "vm_plane_sysbench.sh",
@@ -2679,18 +2679,18 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6424,
-   "wall_s": 4.66,
-   "build_s": 27,
+   "maxrss_kb": 6288,
+   "wall_s": 8.7,
+   "build_s": 110,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
-    "XTK": 6,
+    "XTK": 7,
     "XMK": 2,
     "XLO": 1,
     "XQR": 2
    },
-   "tree_line": "TREE XTK=6 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=390 me_toggles=2600 me_t_checks=40255 pctl_changes=4225 xline_changes=2682",
+   "tree_line": "TREE XTK=7 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=406 me_toggles=2600 me_t_checks=40255 pctl_changes=4225 xline_changes=2682",
    "tree_ok": true,
    "same_counts_as": "mw3_bp_r21",
    "same_counts_ok": true
@@ -2698,7 +2698,7 @@
   {
    "name": "plan_s3",
    "what": "PLAN parameters, RV 1 RO 2 SEED 3: XVM 37",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=3 -GVL=15 -GXPR=12 -GXVM=37 -GXTK=6 -GXMK=2 -GXLO=1 -GXQR=2",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=3 -GVL=15 -GXPR=12 -GXVM=37 -GXTK=7 -GXMK=2 -GXLO=1 -GXQR=2",
    "extra_verilator_args": "",
    "production_shape": false,
    "runner": "vm_plane_sysbench.sh",
@@ -2722,18 +2722,18 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 6400,
-   "wall_s": 4.66,
-   "build_s": 25,
+   "maxrss_kb": 6280,
+   "wall_s": 7.42,
+   "build_s": 109,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
-    "XTK": 6,
+    "XTK": 7,
     "XMK": 2,
     "XLO": 1,
     "XQR": 2
    },
-   "tree_line": "TREE XTK=6 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=390 me_toggles=2586 me_t_checks=40225 pctl_changes=4466 xline_changes=2850",
+   "tree_line": "TREE XTK=7 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=406 me_toggles=2586 me_t_checks=40225 pctl_changes=4466 xline_changes=2850",
    "tree_ok": true,
    "same_counts_as": "mw3_bp_s3",
    "same_counts_ok": true
@@ -2741,7 +2741,7 @@
   {
    "name": "plan_r21_m6",
    "what": "PLAN parameters, mutant: one relay free-runs",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=7 -GRV=2 -GRO=1 -GVL=15 -GXVM=38 -GXPR=12 -GMUT=6 -GXTK=6 -GXMK=2 -GXLO=1 -GXQR=2",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=7 -GRV=2 -GRO=1 -GVL=15 -GXVM=38 -GXPR=12 -GMUT=6 -GXTK=7 -GXMK=2 -GXLO=1 -GXQR=2",
    "extra_verilator_args": "",
    "production_shape": false,
    "runner": "vm_plane_sysbench.sh",
@@ -2763,9 +2763,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 7420,
-   "wall_s": 4.8,
-   "build_s": 28,
+   "maxrss_kb": 6332,
+   "wall_s": 8.73,
+   "build_s": 104,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2773,7 +2773,7 @@
   {
    "name": "plan_r21_m8",
    "what": "PLAN parameters, mutant: a plane-control tree node (last level) is transparent",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=7 -GRV=2 -GRO=1 -GVL=15 -GXVM=38 -GXPR=12 -GMUT=8 -GXTK=6 -GXMK=2 -GXLO=1 -GXQR=2",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=7 -GRV=2 -GRO=1 -GVL=15 -GXVM=38 -GXPR=12 -GMUT=8 -GXTK=7 -GXMK=2 -GXLO=1 -GXQR=2",
    "extra_verilator_args": "",
    "production_shape": false,
    "runner": "vm_plane_sysbench.sh",
@@ -2795,9 +2795,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6364,
-   "wall_s": 4.68,
-   "build_s": 27,
+   "maxrss_kb": 6480,
+   "wall_s": 7.62,
+   "build_s": 112,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2805,7 +2805,7 @@
   {
    "name": "plan_r21_m12",
    "what": "PLAN parameters, mutant: a line-control tree node (last level) is transparent",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=7 -GRV=2 -GRO=1 -GVL=15 -GXVM=38 -GXPR=12 -GMUT=12 -GXTK=6 -GXMK=2 -GXLO=1 -GXQR=2",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=7 -GRV=2 -GRO=1 -GVL=15 -GXVM=38 -GXPR=12 -GMUT=12 -GXTK=7 -GXMK=2 -GXLO=1 -GXQR=2",
    "extra_verilator_args": "",
    "production_shape": false,
    "runner": "vm_plane_sysbench.sh",
@@ -2827,9 +2827,9 @@
     "landed": "1620/1620",
     "su_reads": "60325"
    },
-   "maxrss_kb": 6364,
-   "wall_s": 5.0,
-   "build_s": 29,
+   "maxrss_kb": 6316,
+   "wall_s": 7.03,
+   "build_s": 114,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2837,7 +2837,7 @@
   {
    "name": "plan_n64_rl",
    "what": "PLAN parameters, NRB=64, region_leaf tile: XVM 37",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GNRB=64 -GXVM=37 -GXPR=12 -GXTK=6 -GXMK=2 -GXLO=1 -GXQR=2",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GNRB=64 -GXVM=37 -GXPR=12 -GXTK=7 -GXMK=2 -GXLO=1 -GXQR=2",
    "extra_verilator_args": "+define+OT_QFD_VM_TILE_MOD=ot_qfd_vm_region_leaf rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv",
    "production_shape": false,
    "runner": "vm_plane_sysbench.sh",
@@ -2861,26 +2861,26 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 9912,
-   "wall_s": 10.46,
-   "build_s": 49,
+   "maxrss_kb": 9760,
+   "wall_s": 16.86,
+   "build_s": 144,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
-    "XTK": 6,
+    "XTK": 7,
     "XMK": 2,
     "XLO": 1,
     "XQR": 2
    },
-   "tree_line": "TREE XTK=6 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=972 me_toggles=2630 me_t_checks=40271 pctl_changes=3976 xline_changes=2987",
+   "tree_line": "TREE XTK=7 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=988 me_toggles=2630 me_t_checks=40271 pctl_changes=3976 xline_changes=2987",
    "tree_ok": true,
    "same_counts_as": "mw3_n64_bp_rq",
    "same_counts_ok": true
   },
   {
    "name": "plan_prod",
-   "what": "PRODUCTION shape at the PLAN parameters (XPR 12, XTK 6): XVM 40",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GXPR=12 -GXVM=40 -GXTK=6",
+   "what": "PRODUCTION shape at the PLAN parameters (XPR 12, XTK 7): XVM 40",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GXPR=12 -GXVM=40 -GXTK=7",
    "extra_verilator_args": "",
    "production_shape": true,
    "runner": "vm_plane_sysbench_prod.sh 1",
@@ -2904,18 +2904,18 @@
     "cycles": 40000
    },
    "fail_counts": null,
-   "maxrss_kb": 18536,
-   "wall_s": 128.19,
-   "build_s": 110,
+   "maxrss_kb": 18636,
+   "wall_s": 100.01,
+   "build_s": 221,
    "expected_counts": null,
    "ok": true,
    "tree_expected": {
-    "XTK": 6,
+    "XTK": 7,
     "XMK": 2,
     "XLO": 1,
     "XQR": 2
    },
-   "tree_line": "TREE XTK=6 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=1224 me_toggles=3160 me_t_checks=40255 pctl_changes=5616 xline_changes=2428",
+   "tree_line": "TREE XTK=7 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=1240 me_toggles=3160 me_t_checks=40255 pctl_changes=5616 xline_changes=2428",
    "tree_ok": true,
    "wq_expected": {
     "model_overflow": 0,
@@ -2929,7 +2929,7 @@
   {
    "name": "plan_prod_m6",
    "what": "PRODUCTION shape, PLAN parameters, mutant: one x relay free-runs",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GXPR=12 -GXVM=40 -GXTK=6 -GMUT=6",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GXPR=12 -GXVM=40 -GXTK=7 -GMUT=6",
    "extra_verilator_args": "",
    "production_shape": true,
    "runner": "vm_plane_sysbench_prod.sh 1",
@@ -2951,9 +2951,9 @@
     "landed": "2074/2074",
     "su_reads": "60747"
    },
-   "maxrss_kb": 18468,
-   "wall_s": 114.52,
-   "build_s": 107,
+   "maxrss_kb": 17856,
+   "wall_s": 98.58,
+   "build_s": 237,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null
@@ -2961,7 +2961,7 @@
   {
    "name": "plan_prod_m8",
    "what": "PRODUCTION shape, PLAN parameters, mutant: a plane-control tree node is transparent",
-   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GXPR=12 -GXVM=40 -GXTK=6 -GMUT=8",
+   "args": "-GCYCLES=40000 -GTSR=1 -GXQT=1 -GMEE=1 -GVMT=1 -GXPR=12 -GXVM=40 -GXTK=7 -GMUT=8",
    "extra_verilator_args": "",
    "production_shape": true,
    "runner": "vm_plane_sysbench_prod.sh 1",
@@ -2983,9 +2983,9 @@
     "landed": "2074/2074",
     "su_reads": "60747"
    },
-   "maxrss_kb": 17904,
-   "wall_s": 111.32,
-   "build_s": 109,
+   "maxrss_kb": 17980,
+   "wall_s": 98.84,
+   "build_s": 236,
    "expected_counts": null,
    "ok": true,
    "scratch_match": null

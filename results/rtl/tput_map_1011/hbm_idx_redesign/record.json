@@ -1,0 +1,83 @@
+{
+ "schema": "opentallas.tput-class-bench.v1",
+ "owner": "el1013-hbm-redesign-idx",
+ "date": "2026-10-13",
+ "notes": "Two classes. IDX.TOPK: tb_hgi_idx_tput (unit + real HGI VM) on the production route.top6 records. IDX.INDEX: die end-to-end tb_hgi_e2e (REAL_IDX, IDX_IXW 3 = ix2, NATIVE, FLAT 40 KLAT 40 VLAT 6), dispatch -> retire of index_frame on the staged DS layer vectors; every VM word the record writes is compared with the golden.",
+ "entries": [
+  {
+   "class": "IDX.TOPK",
+   "model": "DS AR 1M (HBM)",
+   "elements": [
+    "ot_hgi_idx_tk2"
+   ],
+   "exact": true,
+   "production_shape": "route.top6: n 384, k 6, ascending ids; 9 records of the unit throughput vectors (6 on tk2)",
+   "source_commit": "171a475eb (branch claude/hbm-redesign-idx)",
+   "bench": "bash tools/hgi_unit_tput/run_idx_tk2.sh <out>  (IDX_TK2 GATE PASS: tput t0 PASS, t1 / t2 FAIL; CF-TOPK k0 / k1 PASS, k0m1-3 FAIL; 96 directed-random PASS, MUT_TK2 1 / 2 / 3 FAIL 35 / 45 / 73 vectors)",
+   "host": "ot-epyc1tb (ot-heavy --mem 64)",
+   "price": {
+    "cycles": 283.008,
+    "per": "record"
+   },
+   "measured": {
+    "cycles": 173.5,
+    "words_checked": 3171
+   },
+   "ratio": 0.613,
+   "open": [
+    "k > 8 and non-unit inner stride stay on the old engine",
+    "no die top sets TK2: the die e2e route.top6 still measures the old default reader (1,267 cycles)",
+    "physical: job hgi_idx_tk2-r1-171a475eb submitted, not closed"
+   ]
+  },
+  {
+   "class": "IDX.INDEX",
+   "model": "DS AR 1M (HBM)",
+   "elements": [
+    "ot_hgi_idx_ix2",
+    "ot_hgi_idx_ix2_lane",
+    "ot_hgi_idx_ix2_kp",
+    "ot_hgi_idx_ix2_ks",
+    "ot_hgi_idx_ix2_qa",
+    "ot_hgi_idx_ix2_pk",
+    "ot_hgi_idx_ix2_wp",
+    "ot_hgi_idx_ix2_ct"
+   ],
+   "exact": true,
+   "source_commit": "a9135c386 (branch claude/hbm-redesign-idx)",
+   "host": "ot-epyc4:/srv/opentallas-scratch2/claude/idx-redesign-1013/out/{BASE,MUT2} (ot-heavy --mem 140)",
+   "price": {
+    "L24": 1080.0,
+    "L20": 1212.0,
+    "L2": 658.9,
+    "token": 7513.6,
+    "per": "record; token = 4 x L24 + L20 + 3 x L2"
+   },
+   "measured": {
+    "L24": 1158,
+    "L20": 1872,
+    "L2": 880,
+    "token": 9144,
+    "L24_ratio": 1.072,
+    "L20_ratio": 1.545,
+    "L2_ratio": 1.336,
+    "words_checked": {
+     "L24": 1024,
+     "L20": 3756,
+     "L2": 1024
+    },
+    "mutant": "MUT2 on L24: FAIL, 136 mismatches"
+   },
+   "ratio": 1.217,
+   "l20_vector_note": "The staged ds_L20 vector (10-11 03:53) holds the D candidate table value-descending (the pre-1011 rule); tools/hgi_sim/machine.py u_idx_index defines D = every owned block in ascending block id, which is what the hardware writes. With the SAME 1,366 (id, value) pairs of record 21 re-ordered by block id in vmw.bin / vm_final.bin (nothing else touched) the same binary gives HGI_E2E PASS, 3,756 / 3,756 words, final VM mismatch 0 (out/BASE/ds_L20r2). On the staged vector it shows 2,717 mismatches. A re-export of the layer by the DS exporter is owed.",
+   "where_the_excess_is": "after the last query block the unchanged selector side (hfd_idx_sel / scorers) takes L24 841, L20 1,460, L2 629 cycles; ix2's front is 217-230 cycles (price content 268). L2 and L20 cannot reach 1.10x by the adapter alone.",
+   "e2e_loss_pct": 0.282,
+   "e2e_src": "tools/throughput/accepted_cost.py compute r25gq --unit IDX.INDEX --op IDX.INDEX --price 7513.6 --measured 9144 (8 records a token)",
+   "open": [
+    "L2 1.336x and L20 1.545x over the 1.10x limit: selector-side redesign or an accepted-cost row (0.282 % measured-model loss)",
+    "ix2 is wires + 15 leaf instances with per-instance parameters (lane index): not yet in hardened-once tile form, no kits",
+    "ix2 equivalence gate (run_ix2_equiv.sh) re-run with the fixed exit status still queued"
+   ]
+  }
+ ]
+}

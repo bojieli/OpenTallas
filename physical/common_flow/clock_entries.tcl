@@ -1,0 +1,49 @@
+# clock_entries.tcl -- PRE_CTS hook of a ref_tile cluster with "clock": "entries" (2026-10-13, die clock delivery rule).
+#
+# A WIRES-ONLY cluster has no register of its own, so it has no tree to build: every hard child takes its clock from
+# its OWN port on the cluster face (RTL: port -> child clock pin, one net, one sink).  The die delivers phi - R_i at
+# entry i, R_i = entry wire + the child's routed boundary insertion (views/<child>/insertion.json), so no child waits
+# for the slowest one and the cluster adds no insertion of its own (a spine over 9 children measured 1.5 - 2.3 ns).
+#
+# Source it FIRST in pre_cts.tcl (the io_ref wrappers wrap this one).  It replaces clock_tree_synthesis by a check:
+# every clock source port must drive exactly one hard-child clock pin and nothing else; a clock port that reaches a
+# standard-cell register is an ERROR (that register belongs in a leaf).  Long entry wires (> OT_ENTRY_WIRE_MAX_UM,
+# default 60) are reported: put the entry pin at the child's clock pin.
+if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""} {
+  rename clock_tree_synthesis ot_ce_cts_orig
+  proc clock_tree_synthesis {args} {
+    set block [ord::get_db_block]
+    set lim [expr {[info exists ::env(OT_ENTRY_WIRE_MAX_UM)] ? $::env(OT_ENTRY_WIRE_MAX_UM) : 60.0}]
+    set dbu [expr {double([$block getDbUnitsPerMicron])}]
+    set n 0; set bad 0; set far 0
+    foreach clk [all_clocks] {
+      foreach src [get_property $clk sources] {
+        set pname [get_full_name $src]
+        set bt [$block findBTerm $pname]
+        if {$bt eq "NULL"} { puts "OT_ENTRIES ERROR: clock source $pname is not a top port"; incr bad; continue }
+        set net [$bt getNet]
+        set sinks {}
+        foreach it [$net getITerms] { if {[$it isInputSignal]} { lappend sinks $it } }
+        if {[llength $sinks] != 1} {
+          puts "OT_ENTRIES ERROR: clock entry $pname drives [llength $sinks] pins (one hard-child clock pin per entry)"
+          incr bad; continue
+        }
+        set it [lindex $sinks 0]
+        set inst [$it getInst]
+        if {![[$inst getMaster] isBlock]} {
+          puts "OT_ENTRIES ERROR: clock entry $pname drives [$inst getName]/[[$it getMTerm] getName] ([[$inst getMaster] getName]): not a hard child (a cluster register belongs in a leaf)"
+          incr bad; continue
+        }
+        set pb [$bt getBBox]; set ib [$it getBBox]
+        set d [expr {(abs(([$pb xMin] + [$pb xMax]) / 2 - ([$ib xMin] + [$ib xMax]) / 2)
+                      + abs(([$pb yMin] + [$pb yMax]) / 2 - ([$ib yMin] + [$ib yMax]) / 2)) / $dbu}]
+        if {$d > $lim} { incr far }
+        puts [format "OT_ENTRIES entry %s -> %s/%s (%s) wire %.1f um%s" $pname [$inst getName] [[$it getMTerm] getName] \
+                  [[$inst getMaster] getName] $d [expr {$d > $lim ? " LONG" : ""}]]
+        incr n
+      }
+    }
+    if {$bad} { error "OT_ENTRIES: $bad clock entries are not port -> one hard-child clock pin" }
+    puts "OT_ENTRIES done: $n clock entries, no tree built, $far entry wires over $lim um"
+  }
+}

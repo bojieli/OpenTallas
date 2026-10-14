@@ -17,13 +17,14 @@
 // leaves to the keep tile under KC credits only if a flag is set; A sectors leave on ab_d with a_v under QC = 2 credits
 // of the query tile (its two sector slots of this lane; a_cr returns one).
 // Every pin lands in a flop, every output leaves a flop; payload registers carry no reset.
+// HARDENED ONCE, x8: the lane index is the pin strap lid (tied by the parent, registered here), not a parameter.
 module ot_hgi_idx_ix2_lane #(
-    parameter integer LN = 0,
     parameter integer LQ = 10,
     parameter integer KC = 4
 ) (
     input  wire         clk,
     input  wire         rst_n,
+    input  wire [2:0]   lid,            // lane index strap (constant)
     input  wire         start,          // frame start pulse (ct)
     input  wire         run,            // frame running (ct)
     input  wire         keep_en_i,
@@ -50,7 +51,7 @@ module ot_hgi_idx_ix2_lane #(
 );
     localparam [1:0] P_B = 2'd0, P_C = 2'd1, P_A = 2'd2, P_E = 2'd3;
     localparam [1:0] K_B = 2'd0, K_CI = 2'd1, K_CV = 2'd2, K_A = 2'd3;
-    localparam [2:0] L3 = LN[2:0];
+    reg [2:0] L3; always @(posedge clk) L3 <= lid;
     localparam integer CB = $clog2(LQ) + 1;
     integer p;
     reg rs1, rn;

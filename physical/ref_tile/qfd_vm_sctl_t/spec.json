@@ -51,14 +51,15 @@
   "period_ps": 770,
   "threads": 8,
   "peak_ram_gb": 16,
+  "m5_pg_pitch": 2.7,
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:qwen_tp8_vm_plan",
   "branch": "claude/qwen-tp8-vm-phys",
-  "tag": "sc1",
-  "purpose": "Qwen TP8 VM SU-bank control leaf (6 per region, 48 per die): reset relay, the SU bank's pin flops + NRI relays, SU answer tag chain; 82 flops, one root. Bench = region-leaf miter + the two sctl mutants.",
+  "tag": "sc2",
+  "purpose": "Qwen TP8 VM SU-bank control leaf (6 per region, 48 per die): reset relay, the SU bank's pin flops + NRI relays, SU answer tag chain; 82 flops, one root. Bench = region-leaf miter + the two sctl mutants. Second cut: M5 PG stripes at 2.7 um (the first route closed TT/FF/DRC but its view failed child_lint (b): two stripes per net spanned 42 % of the narrow tile).",
   "views_to": "physical/ref_tile/qfd_vm_sctl_t/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_sctl_t",
   "cycles_added": 0,
@@ -101,7 +102,8 @@
      "verilator"
     ]
    }
-  ]
+  ],
+  "structural_change": "M5 PG stripe pitch 5.4 -> 2.7 um so that the PG pins of the narrow M5-capped tile span > 50 % of its width (child_lint (b)); logic, outline and pins unchanged"
  },
  "macros": [],
  "children": [],

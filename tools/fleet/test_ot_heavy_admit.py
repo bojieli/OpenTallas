@@ -31,6 +31,17 @@ class Admit(unittest.TestCase):
     def test_classify_matches_between_argv_forms(self):
         self.assertEqual(R.classify(["bash", "/tmp/ref_gate_vm_cp_fe0_cx_20261013-035404.sh"]), "ref_gate_vm_cp_fe#_cx_#-#.sh")
 
+    def test_books_selftest(self):          # v6: charge per unit, the 25 % rule, the floor, the two hosts as measured
+        self.assertEqual(R.selftest(), 0)
+
+    def test_books_follow_available_memory(self):
+        # a busy host: 26 units, half of them old; the growth charged stays within 15 % of RAM
+        rows = [dict(unit=f"u{i}", res=64, active=True, file="", file_age=0, req=64.0, now=12.0, obs=14.0,
+                     age=200.0 + 400 * i, cls="?") for i in range(26)]
+        b = R.books(rows, 1133, 600, {})
+        self.assertLessEqual(b["grow"], 0.15 * 1133)
+        self.assertGreaterEqual(R.admissible(1133, 600, b, 64, 226.6), 300)
+
 
 if __name__ == "__main__":
     unittest.main()

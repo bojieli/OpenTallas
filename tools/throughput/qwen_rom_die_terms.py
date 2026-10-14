@@ -13,7 +13,11 @@ building it at the priced station / stage counts:
                        the KV-die head group bench HEAD_HS_TPUT, its own vehicle
 
     qwen_rom_die_terms.py --runs DIR --out results/rtl/qwen_layer_tput_1013/die_terms.json
-DIR/<name>/result.json for name in qA_r22k_ml10, qB_dierelay, qC_all_ml10, qD_all_ml15, qE_all_ml10_mut.
+DIR/<name>/result.json for name in qA_r22k_ml10, qB_dierelay, qC_all_ml10, qD_all_ml15, qE_all_ml10_mut and, round 5,
+qF_all_ml15_x16 / qG_all_ml15_x14 (qD + the VM x read at +16 / +14 edges: QROM_XVM 17 / 15 with QROM_BD 93 / 91, the
+whole TP4-vehicle composition in ONE run) and qH_all_ml15_x16_mut (qF with --comp 0 on L0, must fail).
+Track B (one die type, KV merged): the attention term is the merged-die sequencer layer step (1,794 cycles, bench
+physical/qwen_kv_centre/seq_layer_bench.sh), not the two-die head group bench (1,847).
 Nothing is re-priced: every figure is measured / the committed price.
 """
 from __future__ import annotations
@@ -28,6 +32,11 @@ sys.path.insert(0, str(ROOT / "tools" / "throughput"))
 import accepted_cost as AC  # noqa: E402
 
 REC = ROOT / "results/rtl/qwen_layer_tput_1013/record.json"
+# the merged-die KV sequencer layer step, cluster == flat, 14 / 14 exact, 5 mutants fail (closure-loop bench of the
+# qkd_seq cluster leaves at dbf8a21da; span = launch descriptor sent -> last RES word at the VM face, context 8,192:
+# the span of the priced 1,816 and of the two-die gate's 1,842)
+KV_SEQ = ROOT / "results/closure_loop/runner_fixes_1013_pm/qkd_seq_layer_count/qkd_seq_core-kc2-dbf8a21da.original_exact.log"
+KV_PRICE, KV_TWO_DIE, TILE_ATTN = 1816, 1842, 1550
 QUAL = 1.10
 ME_OPS, LINKS = 4, 2                      # ME ops and all-reduces a layer
 R21 = dict(bd=(41, 77), tree=(20, 21), tws=(38, 93), ord=(7, 10), link=(46, 72))
@@ -65,7 +74,8 @@ def main():
     in_vehicle = ME_OPS * (per_me - (R21["tree"][1] - R21["tree"][0])) + LINKS * (R21["link"][1] - R21["link"][0])   # 428
 
     runs = {}
-    for name in ("qA_r22k_ml10", "qB_dierelay", "qC_all_ml10", "qD_all_ml15", "qE_all_ml10_mut"):
+    for name in ("qA_r22k_ml10", "qB_dierelay", "qC_all_ml10", "qD_all_ml15", "qE_all_ml10_mut",
+                 "qF_all_ml15_x16", "qG_all_ml15_x14", "qH_all_ml15_x16_mut"):
         p = a.runs / name / "result.json"
         if p.exists():
             r = J(p)
@@ -108,6 +118,19 @@ def main():
                    kv_end="relayed by the coordinator: KV-end production gate 1,842 cycles against the 1,997 limit (1.10 x 1,816) = 1.014 of "
                           "the price; the figure is not in a stream log this stream could find: grade 'relayed'")
 
+    # track B: the merged-die sequencer step, read from the committed bench log
+    seq = None
+    if KV_SEQ.exists():
+        import re
+        m = re.search(r"PASS qkd_seq_layer (\w+) runs=(\d+) exact=(\d+) step_8192=(\d+)", KV_SEQ.read_text())
+        if m:
+            seq = dict(measured=int(m.group(4)), price=KV_PRICE, ratio=round(int(m.group(4)) / KV_PRICE, 4), two_die=KV_TWO_DIE,
+                       dut=m.group(1), runs=int(m.group(2)), exact=int(m.group(3)), evidence=str(KV_SEQ.relative_to(ROOT)),
+                       qualified=bool(int(m.group(2)) == int(m.group(3)) and int(m.group(4)) / KV_PRICE <= QUAL),
+                       note="merged-die KV sequencer (track B, no D2D adapters, no link 7): same span and KV-side stage counts "
+                            "(ROM_ST 28, QX 29, RX 28, KVL 34) as the two-die gate; under its price, no accepted-cost row")
+    kv_swap["merged_sequencer"] = seq or dict(status="NOT FOUND")
+
     # composed production layer at TP4: measured die composition + the attention swap at its measured KV-die figure
     comp = None
     qc = L1("qC_all_ml10")
@@ -126,6 +149,31 @@ def main():
             comp["su_ml15"] = dict(layer_delta=qd - qc, l0_delta=runs["qD_all_ml15"]["stage_cycles"]["L0"] - runs["qC_all_ml10"]["stage_cycles"]["L0"],
                                    composed_layer=composed + qd - qc, ratio=round((composed + qd - qc) / prod, 4),
                                    token=token(composed + qd - qc - prod))
+
+    # round 5: track B composition (merged sequencer) and the one-run measurement of every vehicle-settable term
+    if comp is not None and seq is not None:
+        prod = rec["layer"]["price"]["production_layer"]
+        kvm = seq["measured"] - TILE_ATTN
+
+        def one(layer, l0=None):
+            c = layer + kvm + comp["still_priced"]
+            return dict(composed_layer=c, ratio=round(c / prod, 4), qualified=bool(c / prod <= QUAL),
+                        token=token(c - prod, None if l0 is None else l0 + kvm + comp["still_priced"] - (rec["layer"]["all_layers"]["L0"]["priced"] + prod - base["L1"])))
+        tb = dict(kv_attention_swap_measured=kvm, kv_attention_swap_priced=P_KV, issue_plus_die=one(L1("qC_all_ml10")))
+        if L1("qD_all_ml15") is not None:
+            tb["issue_plus_die_su_ml15"] = one(L1("qD_all_ml15"))
+        for name, key, edges in (("qF_all_ml15_x16", "all_terms_vm_x16", 16), ("qG_all_ml15_x14", "all_terms_vm_x14", 14)):
+            if L1(name) is not None:
+                r = runs[name]
+                tb[key] = dict(run=name, exact=r["exact"], layer_x=r["layer_x"], kv=r["kv"], stage_cycles=r["stage_cycles"],
+                               what=f"issue relays + die relays + SU ML 15 + VM x read +{edges} edges in ONE exact run of the TP4 vehicle",
+                               vm_x_read_delta=dict(L1=L1(name) - L1("qD_all_ml15"), L0=r["stage_cycles"]["L0"] - runs["qD_all_ml15"]["stage_cycles"]["L0"],
+                                                    alone_on_s22ml7=dict(L1=6 * edges, L0=5 * edges)) if L1("qD_all_ml15") is not None else None,
+                               **one(L1(name), r["stage_cycles"]["L0"]))
+        mh = runs.get("qH_all_ml15_x16_mut")
+        if mh:
+            tb["all_terms_mutant"] = dict(what="qF built with --comp 0, L0", exact=mh["exact"], layer_x=mh["layer_x"], fails_as_required=not mh["exact"])
+        comp["track_b_merged_kv"] = tb
 
     hand = dict(
         vm_x_read=dict(unit="VM.XREAD (TP8 bit-plane VM x transport)", x_read_edges="XPR + XQR + 3 - RO (XPR 10 / XQR 2: +14 at RO 1; plan XPR >= 12: +16)",
@@ -169,12 +217,36 @@ def main():
                  "s22ml7 vehicle lacks) with no new fixture.  It does NOT cover TP 8 itself (rank count, 8-way all-reduce, TP8 floorplan "
                  "stage counts, bit-plane VM other than through the XVM / BD probes)")
 
+    tp8["unmeasured_after_this_record"] = [
+        "the 8-rank shape itself: 8-way all-reduce (allreduce1 / allreduce2 are 2,100 of the 6,835 priced cycles, measured at N 4), "
+        "8-rank weight partition (768 / 512 / 768 rows a die) and its golden: no fixture, no 8-die harness",
+        "the TP8 floorplan's relay stage counts (bd / tree / tws / ord / link per bus): this record measures the r21 TP4 counts",
+        "the merged-die attention INSIDE the layer simulation: the vehicle runs the tile attention (1,550 of its 5,480 cycles); the "
+        "merged sequencer is measured on its own vehicle and added (this is why record.json says 57.5 %: 3,930 of the 6,835 "
+        "production cycles are the same RTL function in the vehicle; with the die-term runs 4,981 = 72.9 %; with the sequencer "
+        "bench 6,797 = 99.4 % of the priced cycles have a measurement on SOME vehicle; 38 stay priced)",
+        "the bit-plane vector memory in the layer simulation (measured as an x-read latency, QROM_XVM / QROM_BD, and on its own "
+        "system bench: XVM 38 = +14 at XPR 10 / XQR 2); the placed XPR is not final",
+        "the hardened qfd_* / qkd_* tiles composed (no simulation composes them), head on the die composition (3,048 on the stationed core)"]
+    tp8["closes_with_the_die_leads_relay_count"] = (
+        "the die lead posts the TP8 case's stage counts per bus class (relay_token_cost of tools/qwen_rom_fulldie_b3r2.py on the "
+        "final relay plan: bd = head chain + corridor + tap, tree, tws, ord, link) -> ONE run of results/rtl/qwen_layer_tput_1013/"
+        "die_terms/qjob.sh with QROM_BD / QROM_TWS / QROM_ORD / QROM_LAT at those counts (+ QROM_XVM = 1 + XPR + XQR + 3 - RO, "
+        "QROM_BD += the same), --su-ml 15, ~2.5 h on ot-epyc1tb: the measured layer at the TP8 die's relay depth, exact against the "
+        "TP4 golden.  That closes the relay and VM-latency share of the TP8 layer; it does NOT close the 8-rank all-reduce (needs "
+        "the N 8 collective bench at production FIFOs against its own price) or the 8-rank golden.  Pair-check candidates so far: "
+        "spine_local +2 x 217 ME ops, stack_local +2 x 72 link traversals = at most +939 cycles a token (0.43 %), "
+        "results/arch/pinreg_audit_1013/pairs/qwen_rom_tp8.md")
+    scope = dict(vehicle="TP4 cycle-reference core at stated station/stage counts; no native TP8 vehicle exists",
+                 measured_fraction="fraction of priced cycle subtotal represented by reference measurements, not physical or eight-rank functional coverage",
+                 cost_status="analytic graph composition of measured layer deltas on the committed token path; ledger rows qwen_rom DIE.RELAY and VM.XREAD (PROPOSED)")
+
     out = dict(schema="opentallas.qwen_layer_die_terms.v1", source_sha=a.sha, base_record=str(REC.relative_to(ROOT)),
                base_layer=dict(vehicle="s22ml7", stage_cycles=base, priced=base["L1"]),
                priced_terms=dict(issue_relays_r22k=P_ISSUE, die_relays_430um=P_DIE, die_relays_in_vehicle=in_vehicle,
                                  kv_die_attention_swap=P_KV, r21_stage_counts=R21),
                runs=runs, terms=terms, mutant=mutant, kv_attention_swap=kv_swap, composed_production_layer=comp,
-               handoffs=hand, tp8_vehicle=tp8,
+               handoffs=hand, tp8_vehicle=tp8, measurement_scope=scope,
                registry=dict(issue_relays=dict(elements="^(qfd_sp_tree_top|qfd_tt_)", ratio=terms["issue_relays"].get("ratio")),
                              die_relays=dict(elements="^(qfd_rly|qfd_lst_)", ratio=terms["die_relays"].get("ratio"))))
     a.out.write_text(json.dumps(out, indent=1) + "\n")

@@ -8,7 +8,7 @@ n=$1; tr=$2; more=$3
 D="112'h6040302018100c08060403020100"
 G="-GELEMS=177808 -GNRB=64 -GSW=64 -GSMIN=7 -GSMAX=11 -GBMAX=8 -GND=14 -GDSET=$D -GCRB=16 -GXRN=32768 -GSEED=5 -GRV=1 -GRO=1 -GVL=14 -GXPR=10"
 if [ "$tr" = 1 ]; then G="$G -GXVM=38 -GXTK=3 -GXMK=2 -GXLO=1 -GXQR=2"; else G="$G -GXVM=34 -GMWD=3"; fi
-# a parameter given again in <more> REPLACES the default above (the PLAN runs: -GXPR=12 -GXVM=40 -GXTK=6)
+# a parameter given again in <more> REPLACES the default above (the PLAN runs: -GXPR=12 -GXVM=40 -GXTK=7)
 for k in XPR XVM XTK XMK XQR; do
   case " $more " in *" -G$k="*) G=$(echo "$G" | sed "s/-G$k=[^ ]*//") ;; esac
 done

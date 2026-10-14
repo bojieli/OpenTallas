@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ot-heavy-reconcile v4: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
+"""ot-heavy-reconcile v6: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
 
 ot-heavy charges every running job `reservation - current use` of future growth.  This pass (cron, every 5 min, all
 hosts) lowers a reservation to ceil(max(peak * 1.25, peak + 4 GB)) once the job is provably past its memory peak:
@@ -32,7 +32,33 @@ FAST_S = 3 min of flat RSS whatever runs inside (their class key carries the ele
 unproved class and kept its 24 GB for the whole gate); restored at RSS > 80 % of the charge.  SEED: a ref_gate_* request
 whose own class has no measurement is charged 10 GB at admission (the family measures 0.6-7.3 GB).  cron: every 2 min.
 
+v6 (owner 2026-10-13 17:55, "books far from reality, in opposite directions on the two big hosts"): ONE arithmetic,
+books(), for admission (`ot-heavy` calls --gate), for placement (--free, read by ot-run) and for --units.  Before, --free
+charged every unit `reservation - use` (EPYC1: 900 GB of growth against 592 GB available, "free -382 GB") while ot-heavy
+capped the same growth from the observed peak and went on admitting, and a unit younger than 5 min was charged its whole
+request (EPYC4: three 70 GB builds held 720 GB and a 48 GB job queued at 806 GB available); ot-heavy-trim, which was to
+lower those, never ran from cron (no XDG_RUNTIME_DIR, so every unit looked inactive) and is retired.  The rule:
+  charge(unit) = what it can still grow into = min(target, ceiling) - memory it holds now
+    now      memory it holds (scope cgroup + its docker containers)
+    target   age >= 30 min: now + max(now/4, 2 GB);  >= 5 min: now + max(now/2, 4 GB);  never above 1.1 x the measured
+             peak of its class + 2 GB while it is below that peak;  younger than 5 min: now + 8 GB when the host is in
+             PLENTY, else its expected size (1.1 x class peak, or half the request when the class is not measured)
+             (the margin follows what the unit holds NOW, not its peak: a build that peaked at 57 GB in Verilator and
+             runs its simulation at 4 GB was charged as if it would take the 57 GB again, 5 x 70 GB on EPYC1)
+    ceiling  its MemoryMax (the request); the reservation file when reconcile lowered it and RSS is below 80 % of it
+    PLENTY   MemAvailable - (expected size not yet taken by the units younger than 5 min) >= 35 % of RAM
+  admit(RES) iff MemAvailable - RES >= FLOOR (20 % of RAM, the safety stop) and either
+    books:  MemAvailable - sum(charge) - HEADROOM >= RES, or
+    real:   MemAvailable - young >= 25 % of RAM and MemAvailable - young - RES >= FLOOR   (young = expected size not yet
+            taken by units younger than 5 min: the only memory MemAvailable cannot show yet)
+  so no request waits while more than 25 % of RAM is really available unless it does not fit above the floor.
+A reservation whose scope is gone is charged for 20 s only (was 120 s: every finished 12-16 GB docker step of the loop
+stayed on the books for two minutes).
+
 usage: ot-heavy-reconcile [--dry-run] [--verbose]     one pass
+       ot-heavy-reconcile --units                      table: request, charge, growth, now, peak, class peak, age per unit
+       ot-heavy-reconcile --gate MEM -- CMD...         "OK|NO <charged GB> <class> | <arithmetic>" (ot-heavy, under its lock)
+       ot-heavy-reconcile --selftest                   the charge and admission rules on synthetic units
        ot-heavy-reconcile --free [DIR]                 JSON: memory free after reservations, waiters, disk (for ot-run)
        ot-heavy-reconcile --sizes                      print the learned table
        ot-heavy-reconcile --size MEM -- CMD...         print a warning line if MEM > 2x the measured peak of CMD's class
@@ -273,6 +299,7 @@ def rebuild_sizes(st):
     rows += [(s["cls"], s["peak"], s["launch"], "live") for s in st.values() if s.get("cls") and s.get("age", 0) > 1800]
     rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak")]
     for cls, peak, req, kind in rows:
+        peak = min(peak, req) if req > 0 else peak     # a unit cannot have held more than its MemoryMax (v6)
         e = t.setdefault(cls, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
         e["n" if kind == "done" else kind] += 1
         e["peak_gb"] = round(max(e["peak_gb"], peak), 1)
@@ -342,7 +369,10 @@ def main():
         if s.get("cls") in ("cd", "?"):
             s["cls"] = None
         s["cls"] = s.get("cls") or (classify(cmd.split() if cmd else ps[0]["argv"]) if (cmd or ps) else "?")
-        s["peak"] = round(max(s.get("peak", 0), cgpeak / GB, hwm / GB), 2)
+        # v6: the cgroup peak is the measurement; the sum of the live processes' VmHWM (peaks at different times, shared
+        # pages counted per process) read 105 GB for builds whose cgroup never passed 57 GB and went into the class table
+        s["peak"] = round(max(s.get("cgpeak", 0), cgpeak / GB), 2) if cgpeak else round(max(s.get("peak", 0), hwm / GB), 2)
+        s["cgpeak"] = s["peak"] if cgpeak else s.get("cgpeak", 0)
         s["age"] = NOW - s.get("first", NOW)
         if not DRY:
             open(f"{D}/.use.{unit}.tmp", "w").write(f"{cuse // GB}\n")
@@ -431,36 +461,231 @@ def main():
         log(f"pass freed {freed} GB of reservation on {os.uname().nodename}")
 
 
-def free(path):
-    """the admission arithmetic of ot-heavy, for ot-run"""
-    avail = next(int(ln.split()[1]) >> 20 for ln in open("/proc/meminfo") if ln.startswith("MemAvailable"))
-    head = int((re.search(r"^HEADROOM_GB=(\d+)", rd("/etc/ot-heavy.conf"), re.M) or [0, 32])[1])
-    grow = reserved = running = 0
+def meminfo():
+    d = {}
+    for ln in open("/proc/meminfo"):
+        k, v = ln.split(":")
+        if k in ("MemTotal", "MemAvailable"):
+            d[k] = int(v.split()[0]) / 1048576
+    return d["MemTotal"], d["MemAvailable"]
+
+
+def fast_cg(unit):
+    """the scope's cgroup directory without asking systemd (a dozen file reads instead of one D-Bus call per unit)"""
+    hit = glob.glob(f"/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/*/{unit}.scope")
+    return hit[0] if hit else scope_cg(unit)
+
+
+def read_units():
+    """one row per reservation file: what the unit holds, what it peaked at, how old it is, what it may take"""
+    try:
+        st = json.load(open(STATE))
+    except (OSError, ValueError):
+        st = {}
+    rows = []
     for f in glob.glob(f"{D}/res.*"):
         try:
             unit, m = rd(f).split()
-        except ValueError:
+            m = int(m)
+            mt = os.path.getmtime(f)
+        except (ValueError, OSError):
             continue
-        cg = scope_cg(unit)
-        if not cg:
+        meta = rd(f"{D}/meta.{unit}").split()          # written by ot-heavy v8: request GB, class
+        s = st.get(unit, {})
+        cg = fast_cg(unit)
+        if not cg:                                     # not started yet, or finished
+            rows.append(dict(unit=unit, res=m, active=False, file=f, file_age=NOW - mt, req=m, now=0.0, obs=0.0, age=0.0,
+                             cls=meta[1] if len(meta) > 1 else s.get("cls")))
             continue
-        running += 1
-        reserved += int(m)
-        grow += max(0, int(m) - (num(cg + "/memory.current") >> 30) - num(f"{D}/use.{unit}"))
-    table, wait, req = sizes(), [], []
+        cur = num(cg + "/memory.current") / GB + num(f"{D}/use.{unit}")
+        mx = rd(cg + "/memory.max").strip()
+        req = int(mx) / GB if mx.isdigit() else float(max(m, s.get("launch", 0), int(meta[0]) if meta[:1] and meta[0].isdigit() else 0))
+        try:
+            age = NOW - os.path.getmtime(cg)           # a scope's cgroup directory is created when it starts
+        except OSError:
+            age = 0.0
+        rows.append(dict(unit=unit, res=m, active=True, file=f, req=req, now=cur, age=max(0.0, age),
+                         obs=max(cur, num(cg + "/memory.peak") / GB),
+                         cls=s.get("cls") or (meta[1] if len(meta) > 1 else None)))
+    return rows
+
+
+YOUNG_S, MID_S, PLENTY, REAL_OK, FLOOR, GONE_S = 300, 1800, 0.35, 0.25, 0.20, 20
+
+
+def class_peak(cls, table):
+    e = table.get(cls) if cls and cls not in ("?", "cd") else None
+    return e["peak_gb"] if e and e["n"] + e.get("proved", 0) >= 1 and e["peak_gb"] > 0 else None
+
+
+def books(rows, total, avail, table):
+    """the charge of every unit (r['grow'], GB it may still take) and the host sums; see the module text for the rule"""
+    young = 0.0
+    for r in rows:
+        r["cp"] = class_peak(r.get("cls"), table)
+        if not r["active"]:                            # admitted a moment ago and not started yet: its whole charge
+            r["exp"] = r["res"] if r["file_age"] <= GONE_S else 0.0
+            young += r["exp"]
+            continue
+        r["ceil"] = min(r["req"], r["res"]) if r["now"] < 0.8 * r["res"] else r["req"]
+        if r["age"] < YOUNG_S:
+            exp = max(1.1 * r["cp"], r["now"] + 4) if r["cp"] else max(r["req"] / 2, r["now"] + 4)
+            r["exp"] = max(0.0, min(exp, r["ceil"]) - r["now"])
+            young += r["exp"]
+    plenty = avail - young >= PLENTY * total
+    for r in rows:
+        if not r["active"]:
+            r["grow"] = r["exp"]
+            continue
+        now = r["now"]
+        if r["age"] >= MID_S:
+            tgt = now + max(now / 4, 2)
+        elif r["age"] >= YOUNG_S:
+            tgt = now + max(now / 2, 4)
+        else:
+            tgt = now + 8 if plenty else now + r["exp"]
+        if r["cp"] and now <= r["cp"] and r["age"] >= YOUNG_S:
+            tgt = min(tgt, max(1.1 * r["cp"] + 2, now + 2))
+        r["grow"] = max(0.0, min(tgt, r["ceil"]) - r["now"])
+    return dict(grow=sum(r["grow"] for r in rows), young=young, plenty=plenty,
+                used=sum(r["now"] for r in rows), reserved=sum(r["res"] for r in rows if r["active"]),
+                running=sum(1 for r in rows if r["active"]), fresh=sum(1 for r in rows if r["active"] and r["age"] < 90))
+
+
+def headroom():
+    return int((re.search(r"^HEADROOM_GB=(\d+)", rd("/etc/ot-heavy.conf"), re.M) or [0, 32])[1])
+
+
+def floor_gb(total):
+    try:
+        return float(os.environ["REAL_FLOOR_GB"])
+    except (KeyError, ValueError):
+        return FLOOR * total
+
+
+def admissible(total, avail, b, head, floor):
+    """the largest charge the host admits now (GB, may be negative)"""
+    by_books = avail - b["grow"] - head
+    by_real = avail - b["young"] - floor if avail - b["young"] >= REAL_OK * total else -1e9
+    return min(avail - floor, max(by_books, by_real))
+
+
+def gate(mem, argv):
+    """ot-heavy asks under its admission lock: may this request start now, and at what charge"""
+    cls = classify(argv)
+    table = sizes()
+    a = admit_size(mem, cls, table)
+    res, note = (a[0], a[1]) if a and a[0] < mem else (mem, "")
+    total, avail = meminfo()
+    rows = read_units()
+    for r in rows:                                     # finished long ago: drop the reservation and its side files
+        if not r["active"] and r["file_age"] > 120:
+            for p in (r["file"], f"{D}/meta.{r['unit']}", f"{D}/orig.{r['unit']}"):
+                try:
+                    os.unlink(p)
+                except OSError:
+                    pass
+    b = books(rows, total, avail, table)
+    head, floor = headroom(), floor_gb(total)
+    can = admissible(total, avail, b, head, floor)
+    print(f"{'OK' if can >= res else 'NO'} {res} {cls} | need {res} GB, admissible {can:.0f} GB: available {avail:.0f} GB, "
+          f"growth charged {b['grow']:.0f} GB, young {b['young']:.0f} GB, headroom {head} GB, real floor {floor:.0f} GB"
+          + (f"; {note}" if note else ""))
+
+
+def waiters(table):
+    wait, req = [], []
     for a in (rd(f"/proc/{p}/cmdline").split("\0")[:-1] for p in os.listdir("/proc") if p.isdigit()):
-        if len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:4] and "--" in a:
+        if len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a:
             m = int(a[a.index("--mem") + 1])
-            req.append(m)                                # charged like ot-heavy v4 will charge it
+            req.append(m)                                # charged like ot-heavy will charge it
             wait.append((admit_size(m, classify(a[a.index("--") + 1:]), table) or [m])[0])
+    return wait, req
+
+
+def free(path):
+    """the admission arithmetic of ot-heavy (the same books()), for ot-run"""
+    total, avail = meminfo()
+    table = sizes()
+    rows = read_units()
+    b = books(rows, total, avail, table)
+    head, floor = headroom(), floor_gb(total)
+    can = admissible(total, avail, b, head, floor)
+    wait, req = waiters(table)
     try:
         v = os.statvfs(path)
         disk = v.f_bavail * v.f_frsize >> 30
     except OSError:
         disk = -1
-    print(json.dumps(dict(host=os.uname().nodename, avail_gb=avail, reserved_gb=reserved, growth_gb=grow, headroom_gb=head,
-                          load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=running, waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
-                          free_gb=avail - grow - head - sum(wait))))
+    print(json.dumps(dict(host=os.uname().nodename, total_gb=round(total), avail_gb=round(avail), used_gb=round(b["used"]),
+                          charged_gb=round(b["used"] + b["grow"]), reserved_gb=b["reserved"], growth_gb=round(b["grow"]),
+                          young_gb=round(b["young"]), plenty=b["plenty"], headroom_gb=head, floor_gb=round(floor),
+                          load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
+                          fresh=b["fresh"], waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
+                          admit_gb=round(can), free_gb=round(can) - sum(wait))))
+
+
+def units():
+    total, avail = meminfo()
+    rows = read_units()
+    b = books(rows, total, avail, sizes())
+    la = launches()
+    print(f"{'unit':34s} {'req':>5s} {'res':>5s} {'charge':>6s} {'grow':>5s} {'now':>5s} {'peak':>5s} {'clspk':>5s} {'age_s':>7s}  class | command")
+    for r in sorted(rows, key=lambda r: -r["grow"]):
+        cp = f"{r['cp']:.0f}" if r.get("cp") else "-"
+        print(f"{r['unit']:34s} {r['req']:5.0f} {r['res']:5d} {r['now'] + r['grow']:6.0f} {r['grow']:5.0f} {r['now']:5.0f} "
+              f"{r['obs']:5.0f} {cp:>5s} {r['age']:7.0f}  {'' if r['active'] else '(not running) '}{r.get('cls') or '?'} | "
+              f"{la.get(r['unit'], (0, ''))[1][:90]}")
+    head, floor = headroom(), floor_gb(total)
+    print(f"host {os.uname().nodename}: RAM {total:.0f} GB, MemAvailable {avail:.0f} GB ({100 * avail / total:.0f} %), units hold "
+          f"{b['used']:.0f} GB, growth charged {b['grow']:.0f} GB (young {b['young']:.0f} GB, plenty={b['plenty']}), reservations "
+          f"{b['reserved']} GB, headroom {head} GB, floor {floor:.0f} GB -> admissible {admissible(total, avail, b, head, floor):.0f} GB")
+
+
+def selftest():
+    T = 1000.0
+    u = lambda **k: dict(dict(unit="u", res=100, active=True, file="", file_age=0, req=100.0, now=10.0, obs=10.0, age=60.0, cls="c"), **k)
+    tab = {"c": dict(n=1, proved=0, peak_gb=40.0), "x": dict(n=0, proved=0, peak_gb=9.0)}
+    bad, n = [], [0]
+
+    def chk(name, got, want):
+        n[0] += 1
+        if abs(got - want) > 0.01:
+            bad.append(f"{name}: got {got:.2f}, want {want:.2f}")
+    one = lambda avail, **k: books([u(**k)], T, avail, tab)["grow"]
+    chk("young, plenty: obs + 8", one(800), 8)
+    chk("young, not plenty, class measured: 1.1 x class peak", one(300), 34)
+    chk("young, not plenty, class unknown: half the request", one(300, cls="x"), 40)
+    chk("5-30 min: now/2, at least 4", one(300, age=600, now=30.0, obs=30.0), 15)
+    chk("5-30 min small: 4 GB", one(300, age=600, now=2.0, obs=2.0), 4)
+    chk(">= 30 min: now/4", one(300, age=4000, now=60.0, obs=60.0, cls="x"), 15)
+    chk("class bound below the age rule", one(300, age=600, now=38.0, obs=38.0), 8)
+    chk("past its peak: charged from what it holds now", one(300, age=4000, now=10.0, obs=50.0, cls="x"), 2.5)
+    chk("never above the request", one(300, age=600, now=95.0, obs=95.0, cls="x"), 5)
+    chk("a lowered reservation bounds the charge", one(300, age=600, now=30.0, obs=30.0, res=40, cls="x"), 10)
+    chk("... not once RSS passed 80 % of it", one(300, age=600, now=30.0, obs=30.0, res=32, cls="x"), 15)
+    chk("admitted, not started: its charge", one(800, active=False, res=64, file_age=3), 64)
+    chk("gone for 30 s: nothing", one(800, active=False, res=64, file_age=30), 0)
+    # the two hosts as measured 2026-10-13 17:47 (GB)
+    e4 = [u(req=200.0, res=200, now=70.0, obs=70.0, age=196, cls="x"), u(req=200.0, res=200, now=70.0, obs=70.0, age=194, cls="x"),
+          u(req=320.0, res=320, now=70.0, obs=70.0, age=192, cls="x")]
+    b = books(e4, 1133, 806, tab)
+    chk("EPYC4 17:47: three young 70 GB builds, growth", b["grow"], 24)
+    chk("EPYC4 17:47: admissible", admissible(1133, 806, b, 48, 226.6), 579.4)   # the floor binds, not the books
+    e1 = [u(req=110.0, res=110, now=42.0, obs=57.0, age=963, cls="x") for _ in range(6)]
+    b = books(e1, 1133, 592, tab)
+    chk("EPYC1 17:47: six 110 GB requests at 42 GB (peak 57), growth", b["grow"], 6 * 21)
+    # admission: floor always; books or the 25 % rule
+    b0 = dict(grow=500.0, young=0.0)
+    chk("25 % really available admits whatever the books say", admissible(T, 400, b0, 50, 200), 200)
+    chk("below 25 %: the books decide", admissible(T, 240, dict(grow=30.0, young=0.0), 50, 200), 40)
+    chk("the floor is the stop", admissible(T, 210, dict(grow=0.0, young=0.0), 0, 200), 10)
+    chk("young units are not yet in MemAvailable", admissible(T, 400, dict(grow=160.0, young=160.0), 50, 200), 190)
+    chk("a burst cannot spend the same memory twice", admissible(T, 400, dict(grow=300.0, young=300.0), 50, 200), 50)
+    for m in bad:
+        print("FAIL " + m)
+    print(f"ot-heavy-reconcile selftest: {'FAIL' if bad else 'PASS'} ({n[0]} checks)")
+    return 1 if bad else 0
 
 
 if __name__ == "__main__":
@@ -474,6 +699,12 @@ if __name__ == "__main__":
         if e and e["n"] + e["live"] and mem > 2 * max(e["peak_gb"], 2):
             print(f"WARN request {mem}G is {mem / max(e['peak_gb'], 0.1):.1f}x the measured peak {e['peak_gb']}G of class "
                   f"'{cls}' (n={e['n']}+{e['live']} live); --mem {e['suggest_gb']} is enough")
+    elif sys.argv[1:2] == ["--gate"]:
+        gate(int(sys.argv[2]), sys.argv[4:])
+    elif "--units" in sys.argv:
+        units()
+    elif "--selftest" in sys.argv:
+        sys.exit(selftest())
     elif "--free" in sys.argv:
         i = sys.argv.index("--free")
         free(sys.argv[i + 1] if len(sys.argv) > i + 1 else "/")

@@ -1,20 +1,20 @@
 {
- "name": "qfd_vm_xpad2_t-xd1-COMMIT",
+ "name": "qfd_vm_xpad2_t-xd2-422b0e7ba",
  "block": "ot_qfd_vm_xpad2_t",
  "ref_tile": true,
  "owner": "Claude:qwen_tp8_vm_plan",
- "purpose": "Qwen TP8 VM x-lane PAD leaf: two me-enabled stages of 512 b (1,024 flops + 8 me replicas, one root) in the relay tile footprint, for the equalisation stages of the lanes (half of the padded relay depth). Bench = leaf bench against a behavioural 2-deep me shift + 2 mutants.",
+ "purpose": "Qwen TP8 VM x-lane PAD leaf: two me-enabled stages of 480 b (960 flops + 8 me replicas, one root; 512 b was 60.7 % dense in this footprint: refused at the floorplan margin) in the relay tile footprint, for the equalisation stages of the lanes (half of the padded relay depth). Bench = leaf bench against a behavioural 2-deep me shift + 2 mutants.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-tp8-vm-phys",
-  "commit": "COMMIT"
+  "commit": "422b0e7ba"
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_vm_xpad2_t #(.W(512), .MEREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_vm_xpad2_t #(.W(480), .MEREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -24,7 +24,7 @@
    },
    {
     "name": "pd_ok",
-    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xpad2  --Mdir {RUN}/bench/pd_ok rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/pd_ok.build.log 2>&1 && {RUN}/bench/pd_ok/Vtb_qfd_vm_xpad2 > {RUN}/bench/pd_ok.log 2>&1; tail -3 {RUN}/bench/pd_ok.log; grep -q '^PASS qfd_vm_xpad2' {RUN}/bench/pd_ok.log",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xpad2 -GW=480  --Mdir {RUN}/bench/pd_ok rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/pd_ok.build.log 2>&1 && {RUN}/bench/pd_ok/Vtb_qfd_vm_xpad2 > {RUN}/bench/pd_ok.log 2>&1; tail -3 {RUN}/bench/pd_ok.log; grep -q '^PASS qfd_vm_xpad2' {RUN}/bench/pd_ok.log",
     "expect": "pass",
     "threads": 2,
     "peak_ram_gb": 4,
@@ -34,7 +34,7 @@
    },
    {
     "name": "pd_mut1",
-    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xpad2 -GMUT=1 --Mdir {RUN}/bench/pd_mut1 rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/pd_mut1.build.log 2>&1 && {RUN}/bench/pd_mut1/Vtb_qfd_vm_xpad2 > {RUN}/bench/pd_mut1.log 2>&1; tail -3 {RUN}/bench/pd_mut1.log; grep -q '^PASS qfd_vm_xpad2' {RUN}/bench/pd_mut1.log",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xpad2 -GW=480 -GMUT=1 --Mdir {RUN}/bench/pd_mut1 rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/pd_mut1.build.log 2>&1 && {RUN}/bench/pd_mut1/Vtb_qfd_vm_xpad2 > {RUN}/bench/pd_mut1.log 2>&1; tail -3 {RUN}/bench/pd_mut1.log; grep -q '^PASS qfd_vm_xpad2' {RUN}/bench/pd_mut1.log",
     "expect": "fail",
     "threads": 2,
     "peak_ram_gb": 4,
@@ -44,7 +44,7 @@
    },
    {
     "name": "pd_mut2",
-    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xpad2 -GMUT=2 --Mdir {RUN}/bench/pd_mut2 rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/pd_mut2.build.log 2>&1 && {RUN}/bench/pd_mut2/Vtb_qfd_vm_xpad2 > {RUN}/bench/pd_mut2.log 2>&1; tail -3 {RUN}/bench/pd_mut2.log; grep -q '^PASS qfd_vm_xpad2' {RUN}/bench/pd_mut2.log",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xpad2 -GW=480 -GMUT=2 --Mdir {RUN}/bench/pd_mut2 rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/pd_mut2.build.log 2>&1 && {RUN}/bench/pd_mut2/Vtb_qfd_vm_xpad2 > {RUN}/bench/pd_mut2.log 2>&1; tail -3 {RUN}/bench/pd_mut2.log; grep -q '^PASS qfd_vm_xpad2' {RUN}/bench/pd_mut2.log",
     "expect": "fail",
     "threads": 2,
     "peak_ram_gb": 4,
@@ -101,7 +101,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_xpad2_t/qfd_vm_xpad2_t-xd1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_xpad2_t/qfd_vm_xpad2_t-xd2-422b0e7ba"
   }
  ],
  "cycles_added": 0,

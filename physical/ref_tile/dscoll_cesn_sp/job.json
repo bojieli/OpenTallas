@@ -1,5 +1,5 @@
 {
- "name": "dscoll_cesn_sp-sp1-COMMIT",
+ "name": "dscoll_cesn_sp-sp1-d4bed2783",
  "block": "dsfd_coll_cesn",
  "ref_tile": true,
  "owner": "Claude:s81-cesn-1013",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/s81-cesn-1013",
-  "commit": "COMMIT",
+  "commit": "d4bed27837fbff2eb58ad1d1d68d803d1e41b494",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/lib",
@@ -235,7 +235,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_cesn_sp/dscoll_cesn_sp-sp1-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_cesn_sp/dscoll_cesn_sp-sp1-d4bed2783"
   }
  ],
  "cycles_added": 0,

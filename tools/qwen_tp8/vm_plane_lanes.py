@@ -24,7 +24,7 @@ from pathlib import Path
 import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'results/arch/qwen_tp8_1012'))
 import cuts as C
-LIM = 0.60; TERM_BAY = 51.0; TILE_W = 17.28
+LIM = 0.60; TERM_BAY = 51.0; TILE_W = 17.28; PAD2_W = 480; PAD2_WIDE = 640
 
 
 def by_layer(ax, cp, lo, hi, blocks, cap5):
@@ -47,7 +47,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('plan'); ap.add_argument('out'); ap.add_argument('--ser', type=int, default=1)
     ap.add_argument('--pad-density', type=int, default=1); ap.add_argument('--label', default=''); ap.add_argument('--wcong', type=float, default=0.3); ap.add_argument('--bcong', type=float, default=0.2)
     ap.add_argument('--debug', action='store_true'); ap.add_argument('--slack', type=int, default=0); ap.add_argument('--hopw', type=float, default=0.25); ap.add_argument('--passes', type=int, default=12)
-    ap.add_argument('--pad-reserve', type=float, default=128.0); ap.add_argument('--save-routes', default=''); ap.add_argument('--load-routes', default=''); ap.add_argument('--repair', type=int, default=3); ap.add_argument('--pf0', type=float, default=0.5); ap.add_argument('--pfg', type=float, default=1.6); ap.add_argument('--hf', type=float, default=0.3)
+    ap.add_argument('--relay-w', type=int, default=1); ap.add_argument('--pad-reserve', type=float, default=128.0); ap.add_argument('--save-routes', default=''); ap.add_argument('--load-routes', default=''); ap.add_argument('--repair', type=int, default=3); ap.add_argument('--pf0', type=float, default=0.5); ap.add_argument('--pfg', type=float, default=1.6); ap.add_argument('--hf', type=float, default=0.3); ap.add_argument('--pad-flow', type=int, default=0); ap.add_argument('--pad-wide', type=int, default=0); ap.add_argument('--pad-prio', type=int, default=0)
     a = ap.parse_args(); d = json.loads(Path(a.net).read_text()); p = json.loads(Path(a.plan).read_text())
     ch = p['children']; bays = p['x_relay_bays']; pins = p['real_pins']; LB = 8 // a.ser
     old = [i for i in d['insts'] if i['n'] not in p['geometry']['removed'] and not i['m'].startswith(('qfd_rly', 'qkd_rly'))]
@@ -78,12 +78,15 @@ def main():
     regof = {c['n']: c['region'] for c in ch if c['m'] == 'ot_qfd_vm_xfifo8_t'}
     jobs = [dict(name=f'{s}>p{q}', A=S[s], Q=K[q, regof[s] // 4, regof[s] % 4], bits=LB) for s in S for q in range(32)]
     P = np.round(np.array(P), 3); N = len(P); AL = np.concatenate((np.zeros(NB), np.array(AL)))
+    padrow = [bool(b_.get('padrow')) for b_ in bays] + [False] * (N - NB); PADROW = any(padrow); KSET = set(K.values()); SSET = set(S.values())
     def est(u, v, dist):
         if u < NB and v < NB:
-            # relay tile: d on its W face, q on its E face.  West -> east: the pins face each other (centre distance less one
-            # tile width); east -> west and inside one strip: the wire wraps one tile (width + two channels)
+            # relay tile ot_qfd_vm_xrelay_t: d on its W face, q on its E face.  West -> east: the pins face each other (centre
+            # distance less one tile width).  East -> west: the same with the mirrored-pin kit qfd_vm_xrelay_w (same module, d
+            # on E, q on W; --relay-w 1), else the wire wraps one tile.  Inside one strip the wire wraps one tile either way.
             dx = float(P[v, 0] - P[u, 0]); dy = abs(float(P[v, 1] - P[u, 1]))
-            return (dx - TILE_W if dx > 30.0 else abs(dx) + TILE_W + 8.64) + dy
+            if abs(dx) <= 30.0: return abs(dx) + TILE_W + 8.64 + dy
+            return (abs(dx) - TILE_W if dx > 0 or a.relay_w else abs(dx) + TILE_W + 8.64) + dy
         return float(dist) + float(AL[u]) + float(AL[v]) + (TERM_BAY if (u >= NB) != (v >= NB) else 0.0)
     # ---- cut bookkeeping (booking line per interval between consecutive node coordinates, two overlapping 260-um windows) ----
     ccache = {}; used = collections.defaultdict(int)
@@ -109,6 +112,10 @@ def main():
         for v in np.nonzero((dist <= 500.0) & (dist > 0))[0]:
             v = int(v)
             if u >= NB and v >= NB: continue                         # never terminal to terminal: at least one relay per lane
+            # VM3 pad rows: a column face is entered ONLY from a pad-row bay (the last stage of every lane sits at its consumer);
+            # an x FIFO never drives a pad-row bay directly (the pad row is not a through route for sources)
+            if PADROW and ((u in KSET and not padrow[v]) or (v in KSET and not padrow[u])): continue
+            if PADROW and ((u in SSET and v < NB and padrow[v]) or (v in SSET and u < NB and padrow[u])): continue
             if est(u, v, float(dist[v])) <= 500.0: E[u].append((v, float(dist[v]), lkeys(u, v, True), lkeys(u, v, False)))
     # ---- hop lower bounds (static graph, no capacity): the common depth D is set by the farthest lane, every other lane is
     #      padded to D anyway, so it may spend its slack on a detour: a lane is routed with at most D + slack relay stages ----
@@ -229,20 +236,25 @@ def main():
     padload = collections.defaultdict(float); padat = {}
     def spare(b): return cap[b] - nused[b] - padload[b]
     yb0 = y0b = p['slot']['region_origins']['4'][1] - p['plane_band']['band_um']; yb1 = p['slot']['region_origins']['4'][1]
-    landing = [(yb0 - 230.0 < P[v, 1] < yb1 + 230.0) for v in range(NB)]                # the two node rows on either side of the band
-    def charge(nst): return (nst // 2 + nst % 2) if a.pad_density == 2 else nst            # tile-slot units of nst pad stages in one bay
+    landing = [(yb0 - 230.0 < P[v, 1] < yb1 + 230.0) and not PADROW for v in range(NB)]                # the two node rows on either side of the band (no penalty once the pad rows take the landing)
+    # tile-slot units (x lane bits) of nst pad stages in one bay.  A pair sits in ot_qfd_vm_xpad2_t: 2 x 480 b per tile slot (the
+    # 512-b pair was 60.7 % dense), so a pair costs 512 / 480 of a relay's share; an odd stage is one relay
+    # --pad-wide 1 (VM3): in a bay of >= 3 tile slots the pad pairs sit in the TWO-SLOT pad leaf (ot_qfd_vm_xpad2_t W 1,280 in
+    # 38.88 x 97.2: no inner margin / channel, 640 b a slot instead of 480); bays of 1 or 2 slots keep the one-slot leaf
+    padw = [(PAD2_WIDE if (a.pad_wide and bays[b_]['tiles'] >= 3) else PAD2_W) for b_ in range(NB)]
+    def charge(nst, b_): return ((nst // 2) * (512.0 / padw[b_]) + nst % 2) if a.pad_density == 2 else nst
     def pad_simple(i):
         path = sol[i][0]; bits = jobs[i]['bits']; rem_ = depth - (len(path) - 1); via = [v for _, v, _ in path[:-1]]; at = collections.Counter()
         while rem_ > 0:
             # pads keep out of the bays next to the band (every lane must land or start there) and leave each bay a reserve
             # for the relays of the lanes still to be re-routed
-            b = max(via, key=lambda n: spare(n) - (charge(at[n] + 1) - charge(at[n])) * bits - (1e6 if landing[n] else 0.0))
-            add = (charge(at[b] + 1) - charge(at[b])) * bits
+            b = max(via, key=lambda n: spare(n) - (charge(at[n] + 1, n) - charge(at[n], n)) * bits - (1e6 if landing[n] else 0.0))
+            add = (charge(at[b] + 1, b) - charge(at[b], b)) * bits
             if spare(b) - a.pad_reserve < add: break
             padload[b] += add; at[b] += 1; rem_ -= 1
         padat[i] = at; return rem_
     def unpad(i):
-        for b, n in padat.pop(i, {}).items(): padload[b] -= charge(n) * jobs[i]['bits']
+        for b, n in padat.pop(i, {}).items(): padload[b] -= charge(n, b) * jobs[i]['bits']
     pad_failed = []
     def layered(i, ban, bank=frozenset()):
         """exactly `depth` stages from the lane's x FIFO to its column face: state (node, stages used, stayed?).  A move enters
@@ -259,7 +271,7 @@ def main():
                 while st in prev: seq.append(prev[st][1]); st = prev[st][0]
                 return seq[::-1]
             if f == 0 and u not in ban:
-                room = int((spare(u) - bits) // bits) * a.pad_density                       # pad stages this bay can still take for the lane
+                room = int((spare(u) - bits) // (bits * (512.0 / padw[u] if a.pad_density == 2 else 1.0))) * a.pad_density   # pad stages this bay can still take for the lane
                 for m in range(1, min(depth - k, room) + 1):
                     if k + m + hd.get(u, INF) - 1 > depth: break
                     st = (u, k + m, 1); cs = c + (1.2 if landing[u] else 0.15) * m
@@ -281,7 +293,36 @@ def main():
                 if nc < cost.get(st, float('inf')): cost[st] = nc; prev[st] = ((u, k, f), ('move', u, v, fh)); heapq.heappush(heap, (nc, k2, v, 0))
         if a.debug and len(pad_failed) < 6: print('  layered none', j['name'], 'states', len(best), dict(why), 'maxk', max((k_ for _, k_, _ in best), default=0), file=sys.stderr)
         return None
-    todo2 = [i for i in sorted(sol, key=lambda i: -len(sol[i][0])) if pad_simple(i) > 0]; todo2.sort(key=lambda i: len(sol[i][0]))
+    def pad_flow():
+        """pass 1 as ONE transportation problem (--pad-flow 1): lanes -> the bays of their own routed paths, min cost flow.  The
+        greedy pass let the long lanes (many bays to choose from) fill the centre bays that the short lanes (one or two bays
+        on the path, ten or eleven pads to place) have no alternative to.  Unit = one pad PAIR (2 stages in ot_qfd_vm_xpad2_t,
+        bits * 512 / 480 of bay room); an odd last stage is booked as a whole unit here (conservative) and charged exactly
+        (one relay share) in padload.  A bay next to the band costs more (lanes land there)."""
+        import networkx as nx
+        G = nx.DiGraph(); unit = {}; need = {}
+        for i in sol:
+            path = sol[i][0]; n = depth - (len(path) - 1)
+            if n <= 0: padat[i] = collections.Counter(); continue
+            need[i] = n; G.add_edge('s', ('l', i), capacity=(n + 1) // 2, weight=0)
+            for b in {v for _, v, _ in path[:-1]}: G.add_edge(('l', i), ('b', b), capacity=(n + 1) // 2, weight=(0 if padrow[b] else 6 if landing[b] else 1) + (a.pad_prio * (len(path) - 1) if a.pad_prio else 0))
+        for b in range(NB):
+            if ('b', b) in G: G.add_edge(('b', b), 't', capacity=max(0, int((spare(b) - a.pad_reserve) // (jobs[0]['bits'] * 512.0 / padw[b]))), weight=0)
+        fl = nx.max_flow_min_cost(G, 's', 't'); left = {}
+        for i, n in need.items():
+            at = collections.Counter(); rem_ = n
+            for (_, b), u in sorted(fl[('l', i)].items(), key=lambda kv: -kv[1]):
+                st = min(2 * u, rem_)
+                if st > 0: at[b] += st; rem_ -= st
+            padat[i] = at
+            for b, k in at.items(): padload[b] += charge(k, b) * jobs[i]['bits']
+            if rem_ > 0: left[i] = rem_
+        return left
+    if a.pad_flow:
+        left = pad_flow(); todo2 = sorted(left, key=lambda i: len(sol[i][0]))
+        print('pad_flow', json.dumps(dict(lanes_left=len(left), stages_left=sum(left.values()))), file=sys.stderr, flush=True)
+    else:
+        todo2 = [i for i in sorted(sol, key=lambda i: -len(sol[i][0])) if pad_simple(i) > 0]; todo2.sort(key=lambda i: len(sol[i][0]))
     for i in todo2:
         old = sol[i]; bits = jobs[i]['bits']; unpad(i); place(i, old[0], -1); ban = set(); bank = set(); okk = False
         for _ in range(10):
@@ -293,17 +334,18 @@ def main():
             visits = collections.Counter(v for _, v, _ in path[:-1]); dem = collections.Counter()
             for u, v, hf in path:
                 for x in lkeys(u, v, hf): dem[x] += bits
-            over_b = [b for b in set(visits) | set(stays) if spare(b) < (visits[b] + charge(stays[b])) * bits]
+            over_b = [b for b in set(visits) | set(stays) if spare(b) < (visits[b] + charge(stays[b], b)) * bits]
             over_k = [x for x, n in dem.items() if used[x] + n > capof(x) + 1e-6]
             if over_b or over_k:                                     # the walk used one bay / one window more than once: keep it off both
                 ban |= set(over_b); bank |= set(over_k); continue
             sol[i] = (path, place(i, path, +1)); padat[i] = stays
-            for b, n in stays.items(): padload[b] += charge(n) * bits
+            for b, n in stays.items(): padload[b] += charge(n, b) * bits
             okk = True; rerouted_for_pads += 1; break
         if not okk:
             sol[i] = (old[0], place(i, old[0], +1)); left = pad_simple(i); pad_fail += left; pad_failed.append((jobs[i]['name'], len(old[0]) - 1, left))
     pad_bits = sum(n * jobs[i]['bits'] for i, at in padat.items() for n in at.values())
     pad_tiles2 = sum((n // 2) * jobs[i]['bits'] for i, at in padat.items() for n in at.values()) if a.pad_density == 2 else 0
+    pad_wide_bits = sum((n // 2) * jobs[i]['bits'] for i, at in padat.items() for b_, n in at.items() if padw[b_] == PAD2_WIDE) if a.pad_density == 2 else 0
     inserted = rerouted_for_pads
     relay_bits = sum(nused.values())
     done = []; fail = [j for i, j in enumerate(jobs) if i not in sol]; legs = []
@@ -347,12 +389,15 @@ def main():
     allst = [h_ for v in done for h_ in v['stage_um']]
     stage_audit = dict(rule='every stage (register pin -> wire -> register pin) <= 500 um, estimated pin to pin', stages=len(allst), max_um=max(allst, default=0),
                        over_500=int(sum(h_ > 500 for h_ in allst)), over_450=int(sum(h_ > 450 for h_ in allst)),
-                       allowance_um=dict(xfifo8_xo=float(xw), plane=float(AL[-1]), bay_facing_terminal=TERM_BAY, bay_to_bay='west -> east: - one tile width; east -> west or same strip: + tile width + 8.64'))
+                       allowance_um=dict(xfifo8_xo=float(xw), plane=float(AL[-1]), bay_facing_terminal=TERM_BAY, bay_to_bay='strip to strip: - one tile width (pins face each other; westward lanes use the mirrored-pin relay kit qfd_vm_xrelay_w)' if a.relay_w else 'west -> east: - one tile width; east -> west: + tile width + 8.64', same_strip='+ tile width + 8.64'))
     capb = sum(cap[:NB]); spare = capb - relay_bits - sum(padload.values())
+    padrow_rep = dict(bays=sum(padrow), tiles=sum(bays[b_]['tiles'] for b_ in range(NB) if padrow[b_]), relay_bits=sum(nused[b_] for b_ in range(NB) if padrow[b_]), pad_load_bits=round(sum(padload[b_] for b_ in range(NB) if padrow[b_])),
+                      fullest=[round((nused[b_] + padload[b_]) / cap[b_], 3) for b_ in sorted((b_ for b_ in range(NB) if padrow[b_]), key=lambda b_: -(nused[b_] + padload[b_]) / cap[b_])[:6]],
+                      strip_fill=round(sum(nused[b_] + padload[b_] for b_ in range(NB) if not padrow[b_]) / max(1, sum(cap[b_] for b_ in range(NB) if not padrow[b_])), 4)) if PADROW else None
     hist = collections.Counter(v['relay_stages'] for v in done)
     ok = not fail and (not worst or worst[0]['util'] <= LIM) and pad_fail == 0 and max(c['util'] for c in coarse) <= LIM and stage_audit['over_500'] == 0
     bayfill = sorted(((nused[v] + padload[v]) / cap[v] for v in range(NB)), reverse=True)
-    rep = dict(status='PLANE_LANES_V2', owner='claude/qwen-tp8-vm-phys', label=a.label, options=dict(ser=a.ser, pad_density=a.pad_density, slack=a.slack, plan=p['options']), router=dict(kind='negotiated congestion (rip-up and re-route), hop-bounded: every lane <= min depth of the farthest lane + slack', depth_target=DT, passes=passes, repair=dict(rounds=a.repair, repaired=repaired, unrepaired=unrepaired), unreachable=unreach[:20]),
+    rep = dict(status='PLANE_LANES_V2', owner='claude/qwen-tp8-vm-phys', label=a.label, pad_rows=padrow_rep, options=dict(ser=a.ser, pad_density=a.pad_density, slack=a.slack, relay_w=a.relay_w, plan=p['options']), router=dict(kind='negotiated congestion (rip-up and re-route), hop-bounded: every lane <= min depth of the farthest lane + slack', depth_target=DT, passes=passes, repair=dict(rounds=a.repair, repaired=repaired, unrepaired=unrepaired), unreachable=unreach[:20]),
         inputs={str(v): hashlib.sha256(Path(v).read_bytes()).hexdigest() for v in (a.net, a.plan, __file__)},
         verdict='PASS_PLAN_LEVEL' if ok else 'REJECT', limit=LIM, lanes_requested=len(jobs), lanes_routed=len(done), lanes_failed=len(fail),
         bits_requested=sum(j['bits'] for j in jobs), bits_routed=sum(v['bits'] for v in done), lane_bits=LB,
@@ -360,7 +405,7 @@ def main():
         stage_audit=stage_audit, coarse_cuts=coarse, fine_worst=worst[:12], fine_worst_by_axis=worst_by_axis,
         relay=dict(leaf='ot_qfd_vm_xrelay_t (512 b, me-enabled)', bay_tiles=capb // 512, bay_capacity_bits=capb, routed_relay_bits=relay_bits, pad_bits=pad_bits,
                    pad_density=a.pad_density, pad_stages_unplaced=pad_fail, lanes_rerouted_for_pads=inserted, lanes_padded_on_path=len(sol) - len(todo2), lanes_short_of_depth=len(pad_failed), short_sample=pad_failed[:40], spare_bits=round(spare), fill=round(1 - spare / capb, 4),
-                   tiles_needed=math.ceil((relay_bits + sum(padload.values())) / 512), pad2_tiles=math.ceil(pad_tiles2 / 512), fullest_bays=[round(v, 3) for v in bayfill[:8]]),
+                   tiles_needed=math.ceil((relay_bits + sum(padload.values())) / 512), pad2_tiles=math.ceil((pad_tiles2 - pad_wide_bits) / PAD2_W), pad2_bits_per_tile=PAD2_W, pad2_wide_leaves=math.ceil(pad_wide_bits / PAD2_WIDE / 2), pad2_wide_bits_per_leaf=2 * PAD2_WIDE, pad_wide=a.pad_wide, fullest_bays=[round(v, 3) for v in bayfill[:8]]),
         failed_sample=[j['name'] for j in fail[:12]], failed_by_sink=dict(collections.Counter(j['name'].split('>')[1] for j in fail).most_common(40)),
         route_um=dict(total_bit_mm=round(sum(v['bits'] * v['route_um'] for v in done) / 1e3), max=max((v['route_um'] for v in done), default=0),
                       max_detour=max((round(v['route_um'] - v['lower_um'], 1) for v in done), default=0)),

@@ -37,7 +37,7 @@
 //  be_jl_loff        32   dbq_loff           (FE)
 //  be_jl_pos         20   dbq_pos            (AU; FE uses only pos == 0 for the predicate: it registers be_jl_pos == 0)
 //  be_jl_token       18   dbq_token          (AU)
-//  FE on jl RX: kern_off, then img_l/img_ha/img_hb, then img_q (3 edges); fe_kz (level, TX) = (kern_off == 0).
+//  FE on jl RX: kern_off (2 edges), then img_l/img_ha/img_hb, then img_q (4 edges); fe_kz (level, TX) = (kern_off == 0).
 //  AU on jl RX: pos/pos1/token copies load, tbc <= 0 (au_tbl_ok drops the next cycle).
 //  BE: stays in S_DB for JL_WAIT cycles after the be_jl_v decision cycle, then db_bad uses fe_kz_r; S_DB2, S_DB3 as flat.
 // ---------------------------------------------------------------- S5b  BE -> FE, AU: job control
@@ -82,7 +82,7 @@
 //  alloc +1 (header) / +2 (FENCE, LOOP-from-VM); raw item +1; AU result +3 (S1 +1, S3 +2); re-injection +4 + INJ_WAIT;
 //  job start +JL_WAIT; q_cnt < QD seen by FE 2 cycles late (credit).
 localparam integer SEAM_INJ_WAIT = 2;   // min safe: last FE item reaches A0 2 cycles after hold TX rises; S4 takes 2
-localparam integer SEAM_JL_WAIT  = 6;   // jl TX 1 + RX 1 + kern_off 1 + kz TX 1 + kz RX 1 + 1 margin
+localparam integer SEAM_JL_WAIT  = 6;   // jl TX 1 + RX 1 + kern_off 2 (table select, add) + kz TX 1 + kz RX 1: exact, no spare edge (lockstep gate: 6 PASS, 5 FAIL); unchanged, so the closed BE (26d458185) stands
 // mutants (each must FAIL the lockstep bench):
 //  OT_HGI_SEQ_MUT_SEAM_CRED  FE: q_cred initialised to QD + 1            (dropped-credit class: queue overrun)
 //  OT_HGI_SEQ_MUT_SEAM_QPOP  FE: every 2nd be_qpop_r ignored              (dropped credit: decode stalls)

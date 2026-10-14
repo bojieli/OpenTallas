@@ -13,7 +13,7 @@
  "clock_port": "clk",
  "reset_ports": [],
  "outline": {
-  "w": 8.64,
+  "w": 12.96,
   "h": 8.64
  },
  "layer_cap": "M5",
@@ -38,13 +38,14 @@
   "pd": 0.5,
   "period_ps": 770,
   "threads": 8,
-  "peak_ram_gb": 16
+  "peak_ram_gb": 16,
+  "m5_pg_pitch": 2.7
  },
  "job": {
   "owner": "Claude:qwen_tp8_vm_plan",
   "branch": "claude/qwen-tp8-vm-phys",
-  "tag": "fm1",
-  "purpose": "Qwen TP8 VM registered fan-out leaf: me tree node (free-running): me_en_t -> every x leaf's me_e in two levels. Register at the pin, no logic. Bench = xtree leaf miter + the tree-stage mutant.",
+  "tag": "fm3",
+  "purpose": "Qwen TP8 VM registered fan-out leaf: me tree node (free-running): me_en_t -> every x leaf's me_e in two levels. Register at the pin, no logic. Bench = xtree leaf miter + the tree-stage mutant. Second cut: M5 PG stripes at 2.7 um (the first route closed TT/FF/DRC but its view failed child_lint (b): two stripes per net spanned 42 % of the narrow tile).",
   "views_to": "physical/ref_tile/qfd_vm_fan_me/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_fan_me",
   "cycles_added": 0,
@@ -77,6 +78,7 @@
      "verilator"
     ]
    }
-  ]
+  ],
+  "structural_change": "outline 8.64 -> 12.96 um wide (height 8.64 kept) with the 2.7-um M5 PG pitch: four stripes per net span 62 % of the tile as on the closed 12.96-um bctl_t / sctl_t / fan_pc / fan_lc views (8.64 um held two stripes: 31 %, child_lint (b), twice); logic and pins unchanged"
  }
 }

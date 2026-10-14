@@ -5,11 +5,10 @@
 // golden: ot_hgi_idx_index[_w], tools/hgi_sim/machine.py u_idx_index).  This module is wires only; the leaves are
 //   u_ln[0..7] ot_hgi_idx_ix2_lane  read lanes (physical tiles: lanes 0-3 / 4-7), static per-lane B -> C -> A walk
 //   u_kp[0..1] ot_hgi_idx_ix2_kp    keep walk a lane quad: divider-free block -> (owner, ordinal)
-//   u_ks       ot_hgi_idx_ix2_ks    keep bitmaps and kin beats
 //   u_qa       ot_hgi_idx_ix2_qa    head weights and query blocks
 //   u_pk       ot_hgi_idx_ix2_pk    top-k / candidate beat FIFOs and compaction
 //   u_wp       ot_hgi_idx_ix2_wp    sector packers and write lanes
-//   u_ct       ot_hgi_idx_ix2_ct    operand check, frame FSM, fs, done / fault
+//   u_kc       ot_hgi_idx_ix2_kc    ONE leaf: frame control ct (operand check, FSM, fs, done / fault) + keep bitmaps ks
 // Differences to the reference contract: keep_en faults unless C.stride is a multiple of 64 words (reference: 32);
 // NL must be 8; DL is unused (the landing FIFOs are 4 deep and need no reservation).  MUT 3 = keep divide mutant.
 module ot_hgi_idx_ix2 #(
@@ -61,7 +60,7 @@ module ot_hgi_idx_ix2 #(
     generate
         if (NL != 8) begin : g_nl  ot_hgi_idx_ix2_needs_NL_8 u_bad (); end
         for (g = 0; g < 8; g = g + 1) begin : g_ln
-            ot_hgi_idx_ix2_lane #(.LN(g), .LQ(LQ)) u_ln (.clk(clk), .rst_n(rst_n), .start(start), .run(run),
+            ot_hgi_idx_ix2_lane #(.LQ(LQ)) u_ln (.clk(clk), .rst_n(rst_n), .lid(3'(g)), .start(start), .run(run),
                 .keep_en_i(keep_en_i), .rank_i(rank_i), .a_base_i(a_base_i), .b_base_i(b_base_i), .c_base_i(c_base_i),
                 .c_stride_i(c_stride_i), .c_n_i(c_n_i), .wrq(wrq[g*16 +: 16]), .wrq_cr(wrq_cr[g]), .wrr(wrr[g*257 +: 257]),
                 .rg_gnt(rg_gnt), .ab_d(ab_d[g*256 +: 256]), .b_v(b_v[g]), .a_v(a_v[g]), .a_cr(a_cr[g]),
@@ -74,8 +73,6 @@ module ot_hgi_idx_ix2 #(
                 .ks_v(ks_v[g]), .ks_ord(ks_ord[g*11 +: 11]));
         end
     endgenerate
-    ot_hgi_idx_ix2_ks u_ks (.clk(clk), .rst_n(rst_n), .start(start), .run(run), .keep_en_i(keep_en_i), .ks_v(ks_v),
-        .ks_ord(ks_ord), .c_done(c_done), .kin(kin), .kin_sent(kin_sent));
     ot_hgi_idx_ix2_qa #(.MUT(MUT)) u_qa (.clk(clk), .rst_n(rst_n), .start(start), .run(run), .keep_en_i(keep_en_i),
         .a_base_i(a_base_i), .b_base_i(b_base_i), .ab_d(ab_d), .b_v(b_v), .a_v(a_v), .a_cr(a_cr),
         .kin_sent(kin_sent), .qbr(qbr), .qb(qb), .qa_done(qa_done), .qa_bad(qa_bad));
@@ -86,9 +83,10 @@ module ot_hgi_idx_ix2 #(
         .o_base_i(o_base_i), .r_base_i(r_base_i), .d_base_i(d_base_i), .d_stride_i(d_stride_i),
         .t_v(t_v), .t_n(t_n), .t_o(t_o), .t_r(t_r), .t_cr(t_cr), .d_v(d_v), .d_n(d_n), .d_p(d_p), .d_cr(d_cr),
         .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .wg_req(wg_req), .wg_gnt(wg_gnt), .wp_idle(wp_idle));
-    ot_hgi_idx_ix2_ct u_ct (.clk(clk), .rst_n(rst_n), .go_i(go_i), .k_i(k_i), .cand_en_i(cand_en_i), .keep_en_i(keep_en_i),
+    ot_hgi_idx_ix2_kc u_kc (.clk(clk), .rst_n(rst_n), .go_i(go_i), .k_i(k_i), .cand_en_i(cand_en_i), .keep_en_i(keep_en_i),
         .n_i(n_i), .rank_i(rank_i), .pos_i(pos_i), .a_lo_i(a_base_i[2:0]), .cs_lo_i(c_stride_i[5:0]), .ev(ev),
         .ln_idle(ln_idle), .qa_done(qa_done), .qa_bad(qa_bad), .pk_done(pk_done), .pk_bad(pk_bad), .wp_idle(wp_idle),
-        .start(start), .run(run), .flush(flush), .fs(fs), .rg_req(rg_req), .done(done), .fault(fault));
+        .start(start), .run(run), .flush(flush), .fs(fs), .rg_req(rg_req), .done(done), .fault(fault),
+        .ks_v(ks_v), .ks_ord(ks_ord), .c_done(c_done), .kin(kin), .kin_sent(kin_sent));
 endmodule
 `default_nettype wire

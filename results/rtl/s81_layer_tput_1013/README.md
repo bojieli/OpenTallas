@@ -117,3 +117,98 @@ predates the hardened tiles; none prints cycles against its token-path nodes at 
 cheapest vehicle for each. The cheapest common step is to replace the behavioural engines of `tb_s81_die_layer` on
 ports 1 (SU slab), 4 (svc) and 5 / 6 (select, collector) with the real masters, and to drive the field port with the
 stage program's phase shapes.
+
+## Round 5 (10-13 evening): ledger decisions and the measured VM read latency
+
+Runs added (ot-epyc1tb, `ot-run`, main 2974cb067 + the `LVM` bench parameter; `runs/lvm10`, `lvm30`, `lvm54`,
+`lvm54_mhc`; `record.json` `vm_read_measured`): the production shape with `--coef-split` at three read latencies of the
+bench's behavioural VM.
+
+| Run | VM read latency | L0 | L2 | Delta | Verdict |
+|---|---:|---:|---:|---:|---|
+| `lvm10` | 10 (bench default) | 8,823 | 17,737 | | PASS, reproduces `shier` on current main |
+| `lvm30` | +20 (bgq28 leaf hop 1) | 8,883 | 17,797 | +60 / +60 | PASS |
+| `lvm54` | +44 (leaf hop 2 with the front-end hierarchy) | 8,962 | 17,874 | +139 / +137 | PASS |
+| `lvm54_mhc` | +44, HC mutant | | | | FAIL as required |
+
+Three VM read round trips of the HC master are serial in a layer: H_LOAD at the layer entry and the COEF-a in front of
+each NORM. COEF-b and the boot GAIN loads take the latency too but are off the critical chain. On every layer of the
+token that is 0.29 % AR at +20 and 0.67 % AR at +44 (0.22 % / 0.51 % MTP). This is the HC share only: the SU slab, svc
+and select engines are behavioural in this bench and the field has its own capture path, so the field and SU share of
+the VM read cost (4.49 % at +44, 2.50 % at +24) is still a model on the token path.
+
+The SU slab gate was re-run at main 2974cb067 under Verilator (`results/rtl/ref_tile/s81su_full_gate_2974cb067`):
+positive exact at 3,149 cycles, mutant 5 fails, job cycles identical to the 9e37b21b2 record.
+
+| Unit | Priced | Measured | Ratio | End-to-end loss | Ledger |
+|---|---:|---:|---:|---:|---|
+| MTP p2.core_transaction | 5,467 | 6,092 | 1.114 | 0.159 % MTP | accepted |
+| SU.HC_POST | 112.9 | 287 | 2.542 | 1.653 % | accepted |
+| SU.HC_PRE_NORM (hierarchical slab) | 329.9 | 713 | 2.161 | 3.566 % | proposed |
+| SU.QB | 80 | 167 | 2.088 | 0.418 % | accepted (coordinator 10-13) |
+| SU.SW | 191 | 353 | 1.848 | 0.776 % | accepted (coordinator 10-13) |
+| SU.SO | 244.9 | 303 | 1.237 | 0.280 % | accepted (coordinator 10-13) |
+| HC.H_XFER (H_STORE + H_LOAD per h transfer) | none | 723 | | 3.453 % at 41 transfers | proposed, removal named |
+| HC.COEF (before each NORM) | none | 17 | | 0.164 % | proposed |
+| SU.KV | 283 | 357 | 1.261 | 0 (off the critical path, slack 512.7) | no row |
+| SU.QN | 288 | 301 | 1.045 | | qualifies |
+| SU.SE (max + exp + den nodes, mapping to confirm) | 495.2 | 387 and 466 | 0.94 | | under price |
+| Collective, split lane slices | 3,014 | 3,021 | 1.002 | | qualifies |
+| Field X broadcast, +1 column relay (hop gate) | 183.6 | 184.6 | 1.005 | 0.034 % | qualifies, no row |
+| VM read, leaf hop 2 + front end (+44) | 41 | 85 | 2.07 | 0.67 % HC share measured; 4.49 % with field + SU, 6.02 % every VM-fed class (model) | NOT entered |
+
+Ledger total: accepted 3.286 % + proposed 7.183 % = 10.469 % of 15 %.
+
+What is not entered and why:
+
+- VM read at leaf hop 2. The all-class reading is over the 5 % unit limit and, with it, the design would stand at about
+  15 %. Structural fix: the bgq28 leaf hop goes 2 to 1 (+24: 2.50 %), and the VM issues the next op's operand stream on
+  the producer's row-completion event, which hides the read round trip behind the producer's tail.
+- HC.H_XFER is entered at the 41 layer-boundary transfers the layer run measures. Every stage hop carries the
+  40,976-byte h payload; if the 17 placed mid-layer hops also store and load, the cost is 4.82 %, and on all 120 stage
+  hops of the mapping about 9.5 %. The structural removal makes the count irrelevant: stream H_LOAD on the rows as the
+  hop delivers them and cut H_STORE through to the link.
+- The die's v16 plan lengthens the field round trip at the farthest frame from 183 to 188 cycles: at most 0.17 % on the
+  290 critical field phases, inside 1.10 as a ratio. The hub command and done buses (sequencer to SU 31, SU done 32 in
+  v16) have no priced stage count to compare against; they are unmeasured.
+- The front-end S3 change is cycle-exact (0 cycles, not +1). The done flag relay adds one stream cycle a done and did
+  not show at the stream-clock done output of the production case (94 = 94).
+
+Still without a production-shape measurement: the SU nodes attn.sink, attn.q_rope, ffn.bias and ffn.softplus_sqrt
+(616.8 priced cycles a layer, 2.98 % of the token), and the field, svc, head and select families listed below.
+
+Order of the structural fixes by what they return: H_LOAD / H_STORE streaming (3.45 %, and the hop-count exposure),
+the hierarchical NORM chains (3.57 %: the flat engine meets the price at 0.71x), VM read prefetch with leaf hop 1
+(2.5 to 4.5 %), SU job overlap in the slab control (1.47 %).
+
+## Round 6 candidate scope (Codex takeover, 10-13 evening)
+
+The exact source and raw measurements are preserved in `runs/r6_*` and `r6_scope.json`.
+These measurements establish HC candidate exactness, output flit checks, and cycle
+deltas at production HC width NG256. They do not qualify the complete production
+die layer: the VM and SU/service/select/coefficient engines are behavioural, the
+Engram path is behavioural, and production PHY/FEC/board and die relay stages are
+not present. Any token-path replay using these durations is a modelled share,
+not measured end-to-end tok/s. No accepted-cost row is added by this record.
+
+PIPE-only saves 419/421 layer cycles. PIPE plus landing stream and watermark
+hand-off saves 942/938 cycles to the final flit at L0/L2, with 640/640 exact flits,
+zero early reads and at least 19 rows of writer lead. At LVM54 and PGAP600 the
+stream path passes at adjusted xfer8569/17475; the PGAP400 run fell back to VM
+and is excluded from streaming latency comparisons. Engram L14 never enters the
+landing stream and remains a separate VM-path observation. The original PIPE
+parameter defaults are zero; production default-on and pin-safe landing changes
+are separate candidates requiring fresh gates and physical adoption.
+
+The `r6_pD` batch contains only negative controls: its aggregate gate prints FAIL
+because the harness requires a positive case. Both individual actual mutant
+cases fail as expected. The aggregate FAIL is retained and classified, never
+promoted to a full positive gate. The NG64 PD0 mutant is reduced-shape evidence;
+a fresh NG256 PD0 mutation is running before default-on adoption.
+
+The immutable AR graph has 80 HC POST nodes in 41 changed-h groups, while the
+MTP graph has 86 in 44 groups. This establishes the graph/program requirement
+for changed-h transfers, not a measured deployed H_LOAD/H_STORE count: native
+stage schedules for the full 120-stage allocation are still owed. Hop-only stages
+can forward landing rows without an HC copy; gratuitous H_LOAD/H_STORE jobs
+there would create extra serial work that is absent from the price.

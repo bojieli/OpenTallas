@@ -14,7 +14,8 @@
    "mut_drain": "HGI_SEQ FAIL 4 (cases 6 and 7 = the drained cases: SM.MATVEC descriptor 1 base 0x41800000 / 0x40000000 vs 0x43800000 / 0x5f800000 = stale ids)",
    "cp_mut_drain": "HGI_SEQ FAIL 4",
    "stale_table": "HGI_SEQ FAIL 8 (SEQ_STALE, as required)",
-   "mut_wait": "HGI_SEQ FAIL 1538"
+   "mut_wait": "HGI_SEQ FAIL 1538",
+   "unchanged_rtl_on_the_new_vectors": "HGI_SEQ FAIL 4 (main 9ff18dd9b ot_hgi_seq.sv: the two drained cases; every other case passes)"
   },
   "split_lockstep": "split_lockstep_gate.json: GATE PASS, 161 programs, 28,251 transactions bit-exact vs the flat; 6 corruptions and 9 mutants FAIL (OT_HGI_SEQ_MUT_DRAIN: set 0 case 6 mode 1 dispatch mismatch)",
   "cp_fetch_flat": {
@@ -23,10 +24,18 @@
    "price": 31831,
    "ratio": 0.835,
    "exact": "HGI_SEQ_DIE PASS dispatches=3923"
-  }
+  },
+  "cp_fetch_split": {
+   "cycles_to_last_dispatch": 31899,
+   "before": 30341,
+   "price": 31831,
+   "ratio": 1.002,
+   "exact": "HGI_SEQ_DIE PASS dispatches=3923 (CPF_DEFS=-DOT_HGI_SEQ_SPLIT)"
+  },
+  "cp_fetch_note": "tools/tput_map_1011/run_cp_fetch.sh <out> 1 0 160 1 (DS AR 1M G25 rank-0 token): the drain rule costs +1,322 cycles flat (+5.2 %) and +1,558 split (+5.1 %): an indexed entry behind a waiting record is resolved after that record's units drain (VM read + AU re-injection then show at the head). Both stay within the 31,831 price x 1.10."
  },
  "open": [
-  "SEQ_DS (tb_hgi_seq +define+SEQ_DS, vectors of 2026-10-09) fails on the UNCHANGED sequencer too (unit / header mismatches from dispatch 266): stale vectors, not this change",
+  "SEQ_DS (tb_hgi_seq +define+SEQ_DS, vectors of 2026-10-09): HGI_SEQ FAIL 2743 on the UNCHANGED sequencer and FAIL 2743 on the fixed one (unit / header mismatches from dispatch 266): stale vectors, not this change",
   "hgi_seq_be-s1-26d458185 is CLOSED on the old resolver: BE needs a re-route (rtl_change)"
  ]
 }

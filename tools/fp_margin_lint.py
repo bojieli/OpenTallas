@@ -50,7 +50,8 @@ from collections import defaultdict
 from pathlib import Path
 
 THRESHOLDS = {
-    "util_max": 0.60,             # (std + macro) / core
+    "util_max": 0.60,             # (std + macro) / core; cluster: std / (core - macro)
+    "cluster_macro_frac": 0.50,   # macros >= this share of the core = cluster of hardened children
     "util_hold_max": 0.65,        # ... + hold-buffer allowance
     "hold_buf_per_flop": 1.0,     # BUFx2 per flop (HM-50 mm repair on back-to-back flop arrays: 1-2.2 per flop)
     # signal pins / um / (edge, layer) over a 100 um window.  Calibrated 2026-10-08: hbm_vm8 seam 20.8 (3,166 bits on
@@ -472,7 +473,23 @@ def lint(dump, th=None):
     util_h = (std + macro_area + hold) / core_area if core_area > 0 else 0.0
     met.update(core_um2=round(core_area, 1), std_um2=round(std, 1), macro_um2=round(macro_area, 1), flops=int(flops),
                hold_allow_um2=round(hold, 1), util=round(util, 4), util_hold=round(util_h, 4), n_macros=len(macros))
-    if util > T["util_max"]:
+    # A cluster of hardened children (macros cover most of the core) is judged on the area the macros leave free:
+    # its own cells go in the channels, and channel width is checked by the sliver / channel rules below.  The flat
+    # rule (std + macro) / core refused wires-only parents at 65-86% although their own cells filled < 5% of the
+    # channels (qfd_tile_nk r5, engram cluster, 2026-10-13).
+    free_area = core_area - macro_area
+    cluster = core_area > 0 and macro_area / core_area >= T.get("cluster_macro_frac", 0.50)
+    if cluster:
+        util_f = std / free_area if free_area > 0 else 9.99
+        util_fh = (std + hold) / free_area if free_area > 0 else 9.99
+        met.update(cluster=True, free_um2=round(free_area, 1), util_free=round(util_f, 4), util_free_hold=round(util_fh, 4))
+        if util_f > T["util_max"]:
+            fails.append(("util", f"cluster free-area utilisation {util_f:.1%} > {T['util_max']:.0%} (std {std:.0f} um2 in "
+                                  f"{free_area:.0f} um2 left by {len(macros)} macros): widen the channels"))
+        elif util_fh > T["util_hold_max"]:
+            fails.append(("util", f"cluster free-area utilisation {util_fh:.1%} with the hold-buffer allowance > "
+                                  f"{T['util_hold_max']:.0%}: widen the channels"))
+    elif util > T["util_max"]:
         fails.append(("util", f"utilisation {util:.1%} > {T['util_max']:.0%} (std {std:.0f} + macro {macro_area:.0f} um2 "
                               f"in {core_area:.0f} um2): grow the outline to <= 55-60%"))
     elif util_h > T["util_hold_max"]:
