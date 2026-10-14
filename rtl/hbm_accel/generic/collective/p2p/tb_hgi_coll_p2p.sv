@@ -38,6 +38,7 @@ module tb_hgi_coll_p2p;
     localparam integer MQ = `ifdef MUT_Q 1 `else 0 `endif;
     localparam integer MC = `ifdef MUT_CARRY 1 `else 0 `endif;
     localparam integer MO = `ifdef MUT_ORDER 1 `else 0 `endif;
+    localparam integer TKQ = `ifdef TKMQ3 1 `else 0 `endif;   // +define+TKMQ3: the SW master with its die TOPK sink (KMAX 2,048)
     import "DPI-C" function int unsigned f32add(input int unsigned a, input int unsigned b);
     reg clk = 0, rst_n = 0;
     always #0.4166665 clk = ~clk;
@@ -134,19 +135,34 @@ module tb_hgi_coll_p2p;
             .rgx_c_rsp(32'd0), .rgx_xw(), .rgx_xwa(2'd0));
         for (genvar q = 0; q < 4; q = q + 1) begin : g_q
             localparam integer NP = (q == 0) ? 3 : 2, B = (q == 0) ? 0 : (q == 1) ? 3 : (q == 2) ? 5 : 7;
-            ot_hfd_coll_q #(.NPT(NP), .MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n), .qid(2'(q)),
-                .hgi_rec(p_rec[d][q]), .hgi_recx(554'd0), .hgi_ret(p_ret[d][q]), .hgi_cfg(cfgb), .hgi_vmaddr(), .hgi_inj_addr(p_ia[d][q]),
-                .inj_idx(p_ii[d][q]), .inj_rd(p_ir[d][q]), .inj_d(p_iq[d][q]), .del_valid(p_dv[d][q]), .del_flit(p_df[d][q]),
-                .hgi_del_obase(p_dob[d][q]), .fault(p_flt[d][q]), .stat_credit_stall(),
-                .lk_tx_v(p_txv[d][B +: NP]), .lk_tx_flit(p_txf[d][B*PWT +: NP*PWT]), .lk_rx_credit(p_rxc[d][B +: NP]),
-                .lk_rx_v(p_rxv[d][B +: NP]), .lk_rx_flit(p_rxf[d][B*PWT +: NP*PWT]), .lk_sw_cr(p_crr[d][B +: NP]),
-                .lk_session(), .lk_fault({NP{1'b0}}), .lk_locked({NP{1'b1}}), .lk_status(),
-                .pr_cw_i(p_cwi[d][q]), .pr_cw_o(p_cwo[d][q]), .pr_ccw_i(p_ccwi[d][q]), .pr_ccw_o(p_ccwo[d][q]),
-                .rc_v(rc_v[d][q]), .rc_rdy(rc_rdy[d][q]), .rc_tag(rc_tag[d][q]), .rc_mode(rc_mode[d][q]), .rc_d(rc_d[d][q]),
-                .rr_v(rr_v[d][q]), .rr_tag(rr_tag[d][q]), .rr_d(rr_d[d][q]),
-                .tk_w_v(), .tk_w_addr(), .tk_w_mask(), .tk_w_data(), .tk_w_rdy(1'b1),
-                .rgx_xq(), .rgx_xr(514'd0), .rgx_vmq(), .rgx_vmr(274'd0), .rgx_c_req(), .rgx_c_gnt(1'b0), .rgx_c_q(), .rgx_c_cr(32'd0),
-                .rgx_c_rsp(32'd0), .rgx_xw(), .rgx_xwa(2'd0));
+            // the die masters: SW = ot_hfd_coll_q3 (HOME, QSOLO), SE / NW / NE = ot_hfd_coll_q2 (strap qid)
+            if (q == 0) begin : g_m3
+                ot_hfd_coll_q3 #(.TKM(TKQ), .MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n),
+                    .hgi_rec(p_rec[d][q]), .hgi_recx(554'd0), .hgi_ret(p_ret[d][q]), .hgi_cfg(cfgb), .hgi_vmaddr(), .hgi_inj_addr(p_ia[d][q]),
+                    .inj_idx(p_ii[d][q]), .inj_rd(p_ir[d][q]), .inj_d(p_iq[d][q]), .del_valid(p_dv[d][q]), .del_flit(p_df[d][q]),
+                    .hgi_del_obase(p_dob[d][q]), .fault(p_flt[d][q]), .stat_credit_stall(),
+                    .lk_tx_v(p_txv[d][B +: NP]), .lk_tx_flit(p_txf[d][B*PWT +: NP*PWT]), .lk_rx_credit(p_rxc[d][B +: NP]),
+                    .lk_rx_v(p_rxv[d][B +: NP]), .lk_rx_flit(p_rxf[d][B*PWT +: NP*PWT]), .lk_sw_cr(p_crr[d][B +: NP]),
+                    .lk_session(), .lk_fault({NP{1'b0}}), .lk_locked({NP{1'b1}}), .lk_status(),
+                    .pr_cw_i(p_cwi[d][q]), .pr_cw_o(p_cwo[d][q]), .pr_ccw_i(p_ccwi[d][q]), .pr_ccw_o(p_ccwo[d][q]),
+                    .rc_v(rc_v[d][q]), .rc_rdy(rc_rdy[d][q]), .rc_tag(rc_tag[d][q]), .rc_mode(rc_mode[d][q]), .rc_d(rc_d[d][q]),
+                    .rr_v(rr_v[d][q]), .rr_tag(rr_tag[d][q]), .rr_d(rr_d[d][q]),
+                    .tk_w_v(), .tk_w_addr(), .tk_w_mask(), .tk_w_data(), .tk_w_rdy(1'b1),
+                    .rgx_xq(), .rgx_xr(514'd0), .rgx_vmq(), .rgx_vmr(274'd0), .rgx_c_req(), .rgx_c_gnt(1'b0), .rgx_c_q(), .rgx_c_cr(32'd0),
+                    .rgx_c_rsp(32'd0), .rgx_xw(), .rgx_xwa(2'd0));
+            end else begin : g_m2
+                ot_hfd_coll_q2 #(.MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n), .qid(2'(q)),
+                    .hgi_rec(p_rec[d][q]), .hgi_cfg(cfgb), .hgi_vmaddr(), .hgi_inj_addr(p_ia[d][q]),
+                    .inj_idx(p_ii[d][q]), .inj_rd(p_ir[d][q]), .inj_d(p_iq[d][q]), .del_valid(p_dv[d][q]), .del_flit(p_df[d][q]),
+                    .hgi_del_obase(p_dob[d][q]), .fault(p_flt[d][q]), .stat_credit_stall(),
+                    .lk_tx_v(p_txv[d][B +: NP]), .lk_tx_flit(p_txf[d][B*PWT +: NP*PWT]), .lk_rx_credit(p_rxc[d][B +: NP]),
+                    .lk_rx_v(p_rxv[d][B +: NP]), .lk_rx_flit(p_rxf[d][B*PWT +: NP*PWT]), .lk_sw_cr(p_crr[d][B +: NP]),
+                    .lk_session(), .lk_fault({NP{1'b0}}), .lk_locked({NP{1'b1}}), .lk_status(),
+                    .pr_cw_i(p_cwi[d][q]), .pr_cw_o(p_cwo[d][q]), .pr_ccw_i(p_ccwi[d][q]), .pr_ccw_o(p_ccwo[d][q]),
+                    .rc_v(rc_v[d][q]), .rc_rdy(rc_rdy[d][q]), .rc_tag(rc_tag[d][q]), .rc_mode(rc_mode[d][q]), .rc_d(rc_d[d][q]),
+                    .rr_v(rr_v[d][q]), .rr_tag(rr_tag[d][q]), .rr_d(rr_d[d][q]));
+                assign p_ret[d][q] = 3'b000;
+            end
             // ring hops q -> CW successor, q -> CW predecessor (CCW): RLY relay registers each
             reg [RW-1:0] dcw [0:RLY-1]; reg [RW-1:0] dccw [0:RLY-1];
             always @(posedge clk) begin

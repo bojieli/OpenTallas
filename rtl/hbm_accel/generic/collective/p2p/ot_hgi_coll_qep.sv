@@ -16,6 +16,7 @@
 // module for the spec-generated wrapper (coll_hgi/rtl/spec.json).
 module ot_hgi_coll_qep #(
     parameter integer QSOLO = 0,       // quadrant running ARGMAX / TOPK / ROW_GATHER whole
+    parameter integer SOLO_CAP = 1,    // 0: never the QSOLO quadrant (ot_hgi_coll_qrec)
     parameter integer MUT_Q = 0,       // bench mutant: wrong quadrant quarter
     parameter integer NOG = 12,       // 12 x 8 = the 96-rank TU fabric (DS TP96: rank = die mod 96)
     parameter integer PFMAX = 512,    // F4 (hgi-e2e): flits per contributor (Qwen all-reduce 256, DS gathers 80 / 144 / 320); was the PSG default 64
@@ -155,7 +156,7 @@ module ot_hgi_coll_qep #(
     wire ep_fault;
     wire [31:0] cfg_w46;
     ot_hgi_cfg_rx #(.W0(46), .NW(1), .RST(32'd96)) u_cfg (.clk(clk), .rst_n(rst_n), .bus(hgi_cfg), .act(cfg_w46));
-    ot_hgi_coll_qrec #(.QSOLO(QSOLO), .MUT_Q(MUT_Q), .PIPE(PIPE), .RGXHW(RGXHW), .RFMT(RFMT), .TKM(TKM), .TKM_KMAX(TKM_KMAX)) u_rec (.clk(clk), .rst_n(rst_n), .cfg_coll_group_size(cfg_w46[7:0]), .cfg_die_id(hgi_rec[967:960]), .qid(qid),
+    ot_hgi_coll_qrec #(.QSOLO(QSOLO), .SOLO_CAP(SOLO_CAP), .MUT_Q(MUT_Q), .PIPE(PIPE), .RGXHW(RGXHW), .RFMT(RFMT), .TKM(TKM), .TKM_KMAX(TKM_KMAX)) u_rec (.clk(clk), .rst_n(rst_n), .cfg_coll_group_size(cfg_w46[7:0]), .cfg_die_id(hgi_rec[967:960]), .qid(qid),
         .rec_v(hgi_rec[0]), .rec_rdy(rec_rdy), .rec_hdr(hgi_rec[128:1]), .rec_a(hgi_rec[384:129]),
         .rec_o(hgi_rec[640:385]), .rec_i(hgi_rec[896:641]), .rec_n_a(hgi_rec[917:897]), .rec_n_o(hgi_rec[938:918]),
         .rec_n_i(hgi_rec[959:939]), .rec_done(rec_done), .rec_fault(rec_fault),

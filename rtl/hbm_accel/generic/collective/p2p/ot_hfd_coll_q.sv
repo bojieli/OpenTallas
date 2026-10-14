@@ -29,6 +29,7 @@ module ot_hfd_coll_q #(
     parameter integer RQD = 2,              // record queue depth a quadrant
     parameter integer HOME = 0,
     parameter integer QSOLO = 0,
+    parameter integer SOLO_CAP = 1,         // 0: never QSOLO (NPT-2 master): no RGX lanes, no whole ops
     parameter integer TKM = 0,              // 1: the TOPK_MERGE sink (QSOLO master only)
     parameter integer TKM_KMAX = 2048,
     parameter integer RW = 280,
@@ -127,7 +128,7 @@ module ot_hfd_coll_q #(
     wire [1:0] rg_hq_v, rg_hq_rdy, rg_hr_v; wire [69:0] rg_hq_addr; wire [15:0] rg_hq_tag, rg_hr_tag;
     wire [DEL-1:0] rg_w_v, rg_w_rdy; wire [DEL*40-1:0] rg_w_addr; wire [DEL*FW-1:0] rg_w_data;
     wire [93:0] rowfmt_o;
-    ot_hgi_coll_qep #(.QSOLO(QSOLO), .MUT_Q(MUT_Q), .NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1),
+    ot_hgi_coll_qep #(.QSOLO(QSOLO), .SOLO_CAP(SOLO_CAP), .MUT_Q(MUT_Q), .NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1),
                       .RGXHW(1), .RFMT(0), .TKM(TKM), .TKM_KMAX(TKM_KMAX), .INJ(INJ), .DEL(DEL), .LANES(LANES)) u_ep (
         .clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .qid(qid_q), .rank(8'd0), .pf(16'd0), .go(1'b0),
         .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_q({{(3*INJ*FW){1'b0}}, inj_d}),
@@ -141,15 +142,23 @@ module ot_hfd_coll_q #(
         .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy),
         .hgi_recx(hd[RQW-1 -: 554]), .hgi_inj_addr(hgi_inj_addr),
         .tk_w_v(tk_w_v), .tk_w_addr(tk_w_addr), .tk_w_mask(tk_w_mask), .tk_w_data(tk_w_data), .tk_w_rdy(tk_w_rdy));
-    ot_hgi_coll_rgx_hbm u_rh (.clk(clk), .rst_n(rst_n),
-        .rg_hq_v(rg_hq_v), .rg_hq_rdy(rg_hq_rdy), .rg_hq_addr(rg_hq_addr), .rg_hq_tag(rg_hq_tag),
-        .rg_hr_v(rg_hr_v), .rg_hr_tag(rg_hr_tag), .rg_hr_data(rg_hr_data),
-        .rg_lq_v(rg_lq_v), .rg_lq_rdy(rg_lq_rdy), .rg_lq_addr(rg_lq_addr), .rg_lr_v(rg_lr_v), .rg_lr_data(rg_lr_data),
-        .xq(rgx_xq), .xr(rgx_xr), .vmq(rgx_vmq), .vmr(rgx_vmr));
-    ot_hgi_coll_rgx_snk #(.DEL(DEL), .FW(FW), .LQ(RGX_LQ)) u_rs (.clk(clk), .rst_n(rst_n),
-        .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy),
-        .c_req(rgx_c_req), .c_gnt(rgx_c_gnt), .c_q(rgx_c_q), .c_cr(rgx_c_cr), .c_rsp(rgx_c_rsp),
-        .xw(rgx_xw), .xwa(rgx_xwa), .fault(snk_fault));
+    generate if (SOLO_CAP != 0) begin : g_rgx
+        ot_hgi_coll_rgx_hbm u_rh (.clk(clk), .rst_n(rst_n),
+            .rg_hq_v(rg_hq_v), .rg_hq_rdy(rg_hq_rdy), .rg_hq_addr(rg_hq_addr), .rg_hq_tag(rg_hq_tag),
+            .rg_hr_v(rg_hr_v), .rg_hr_tag(rg_hr_tag), .rg_hr_data(rg_hr_data),
+            .rg_lq_v(rg_lq_v), .rg_lq_rdy(rg_lq_rdy), .rg_lq_addr(rg_lq_addr), .rg_lr_v(rg_lr_v), .rg_lr_data(rg_lr_data),
+            .xq(rgx_xq), .xr(rgx_xr), .vmq(rgx_vmq), .vmr(rgx_vmr));
+        ot_hgi_coll_rgx_snk #(.DEL(DEL), .FW(FW), .LQ(RGX_LQ)) u_rs (.clk(clk), .rst_n(rst_n),
+            .rg_w_v(rg_w_v), .rg_w_addr(rg_w_addr), .rg_w_vm(rg_w_vm), .rg_w_data(rg_w_data), .rg_w_rdy(rg_w_rdy),
+            .c_req(rgx_c_req), .c_gnt(rgx_c_gnt), .c_q(rgx_c_q), .c_cr(rgx_c_cr), .c_rsp(rgx_c_rsp),
+            .xw(rgx_xw), .xwa(rgx_xwa), .fault(snk_fault));
+    end else begin : g_norgx
+        // never QSOLO: the body issues no RGX request (qrec solo = 0), so the memory lanes do not exist on this master
+        assign rg_hq_rdy = 2'b00; assign rg_hr_v = 2'b00; assign rg_hr_tag = 16'd0; assign rg_hr_data = 512'd0;
+        assign rg_lq_rdy = 1'b0; assign rg_lr_v = 1'b0; assign rg_lr_data = 512'd0; assign rg_w_rdy = {DEL{1'b0}};
+        assign snk_fault = 1'b0;
+        assign rgx_xq = 76'd0; assign rgx_vmq = 338'd0; assign rgx_c_req = 1'b0; assign rgx_c_q = '0; assign rgx_xw = '0;
+    end endgenerate
     wire [31:0] sess_w;
     ot_hgi_cfg_rx #(.W0(SESSION_W0), .NW(1), .RST(32'd0)) u_sess (.clk(clk), .rst_n(rst_n), .bus(hgi_cfg), .act(sess_w));
     always @(posedge clk) lk_session <= {NPT{sess_w[23:0]}};
