@@ -464,7 +464,7 @@ module dsfd_capt_x #(
                 wire [67:0] words;
                 (* keep_hierarchy *) dsfd_capt_hold_slice u_store
                     (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
-                     .pop(wr), .hw(hw), .read_next(2'd0), .read0(), .read1(), .din(din[off +: 17]), .words(words));
+                     .pop(wr), .hw(hw), .rs_s(1'b0), .read_next(2'd0), .read0(), .read1(), .din(din[off +: 17]), .words(words));
                 for (genvar bank = 0; bank < 4; bank = bank + 1)
                     assign h[bank][off +: 17] = words[17*bank +: 17];
             end
@@ -531,9 +531,9 @@ module dsfd_capt_row_local #(parameter integer LD = 4) (
             for (genvar off = 0; off < 51; off = off + 8) begin : g_slice
                 localparam integer SW = (51-off < 8) ? 51-off : 8;
                 wire [4*SW-1:0] words;
-                (* keep_hierarchy *) dsfd_capt_hold_slice #(.W(SW), .LOCAL_COUNT(1), .LOCAL_READ(1)) u_store
+                (* keep_hierarchy *) dsfd_capt_hold_slice #(.W(SW), .LOCAL_COUNT(1), .LOCAL_READ(1), .LOCAL_RESET(1)) u_store
                     (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
-                     .pop(wr), .hw(hw), .read_next(hr + npop[1:0]),
+                     .pop(wr), .hw(hw), .rs_s(rs_s), .read_next(hr + npop[1:0]),
                      .read0(hold0[off +: SW]), .read1(hold1[off +: SW]),
                      .din(din[off +: SW]), .words(words));
                 for (genvar bank = 0; bank < 4; bank = bank + 1)
@@ -554,21 +554,33 @@ endmodule
 
 // Local hold-buffer slices retain independent write-enable cones at the same
 // write edge. Storage contents, address and reset gating match the flat bank.
-module dsfd_capt_hold_slice #(parameter integer W = 17, parameter integer LOCAL_COUNT = 0, parameter integer LOCAL_READ = 0) (
-    input wire ck, rs_n, valid, ready, pop,
+module dsfd_capt_hold_slice #(parameter integer W = 17, parameter integer LOCAL_COUNT = 0, parameter integer LOCAL_READ = 0, parameter integer LOCAL_RESET = 0) (
+    input wire ck, rs_n, rs_s, valid, ready, pop,
     input wire [1:0] hw, read_next,
     input wire [W-1:0] din,
     output wire [W-1:0] read0, read1,
     output wire [4*W-1:0] words
 );
+    wire reset_n;
+    generate if (LOCAL_RESET) begin : g_reset
+        // Same upstream synchronizer, same release edge as the row rs_n.
+        // Local copies drive only this slice; they add no reset epoch.
+        (* keep *) reg local_reset_n;
+        always @(posedge ck or negedge rs_s)
+            if (!rs_s) local_reset_n <= 1'b0;
+            else local_reset_n <= 1'b1;
+        assign reset_n = local_reset_n;
+    end else begin : g_row_reset
+        assign reset_n = rs_n;
+    end endgenerate
     reg [W-1:0] h [0:3];
     wire accept_ready;
     generate if (LOCAL_READ) begin : g_read
         // Same update edge/epoch as hr. Each small memory slice retains its
         // selector locally rather than driving a whole-row pointer mux.
         (* keep *) reg [3:0] sel_n;
-        always @(posedge ck or negedge rs_n)
-            if (!rs_n) sel_n <= 4'b1110;
+        always @(posedge ck or negedge reset_n)
+            if (!reset_n) sel_n <= 4'b1110;
             else sel_n <= ~(4'b0001 << read_next);
         assign read0 = (h[0] & {W{!sel_n[0]}}) |
                        (h[1] & {W{!sel_n[1]}}) |
@@ -589,8 +601,8 @@ module dsfd_capt_hold_slice #(parameter integer W = 17, parameter integer LOCAL_
         wire [2:0] remove = (!pop || count == 0) ? 3'd0 :
                            (count == 1) ? 3'd1 : 3'd2;
         assign accept_ready = !count[2] || (pop && !count[1]);
-        always @(posedge ck or negedge rs_n)
-            if (!rs_n) count <= 3'd0;
+        always @(posedge ck or negedge reset_n)
+            if (!reset_n) count <= 3'd0;
             else count <= count - remove + ((valid && accept_ready) ? 3'd1 : 3'd0);
     end else begin : g_external_count
         assign accept_ready = ready;
@@ -598,13 +610,13 @@ module dsfd_capt_hold_slice #(parameter integer W = 17, parameter integer LOCAL_
     // Same write epoch/address as hw: reset selects bank0, every accepted
     // row rotates one bank. Negative storage exposes the native QN mask.
     (* keep *) reg [3:0] bank_n;
-    always @(posedge ck or negedge rs_n)
-        if (!rs_n) bank_n <= 4'b1110;
+    always @(posedge ck or negedge reset_n)
+        if (!reset_n) bank_n <= 4'b1110;
         else if (valid && accept_ready) bank_n <= {bank_n[2:0], bank_n[3]};
     genvar bank;
     generate for (bank = 0; bank < 4; bank = bank + 1) begin : g_bank
         always @(posedge ck)
-            if (rs_n && valid && accept_ready && !bank_n[bank]) h[bank] <= din;
+            if (reset_n && valid && accept_ready && !bank_n[bank]) h[bank] <= din;
         assign words[W*bank +: W] = h[bank];
     end endgenerate
 endmodule
