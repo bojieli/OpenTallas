@@ -1,0 +1,18 @@
+{
+  "simulation_unit": "oth-ubuntu-2204148-1791976875",
+  "stale_tag_unit": "oth-ubuntu-2206404-1791976923",
+  "census_unit": "oth-ubuntu-2208964-1791976942",
+  "preserved_compile_diagnostic_unit": "oth-ubuntu-2202754-1791976864",
+  "compile_diagnostic": "fixture used reserved SystemVerilog identifier untyped; corrected to nonquery_count, no RTL change",
+  "initial_late_tag_case": "bit corruption of identity, frozen source hash retained separately",
+  "fresh_late_tag_case": "actual previous-base identity register substituted for current word identity",
+  "component_words_per_scene": 192,
+  "query_words": 128,
+  "nonquery_words": 64,
+  "depth8_interval": 191,
+  "depth2_interval": 286,
+  "minimum_produce_to_pop_base_edges": 2,
+  "Q_depth2": 1208,
+  "Q_depth8": 4820,
+  "scope": "Default-off component only. Source metadata streaming top, actual arithmetic/ledger, physical clock phase/gating/status, real HOST token/provider and native throughput remain unbound."
+}

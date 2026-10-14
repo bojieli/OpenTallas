@@ -1,0 +1,357 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv ot_qwen_numeric_stream_queue.sv; chparam -set ENABLE 1 -set DEPTH 2 ot_qwen_numeric_stream_queue; hierarchy -top ot_qwen_numeric_stream_queue; proc; opt; memory_map; opt; write_json census2.json; stat' --
+
+1. Executing Verilog-2005 frontend: ot_qwen_numeric_stream_queue.sv
+Parsing SystemVerilog input from `ot_qwen_numeric_stream_queue.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_numeric_stream_queue'.
+Successfully finished Verilog frontend.
+Parameter \ENABLE = 1
+Parameter \DEPTH = 2
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_numeric_stream_queue'.
+Parameter \ENABLE = 1
+Parameter \DEPTH = 2
+Generating RTLIL representation for module `$paramod$5cb1447a6eb2b356bfde85629b8518398cf22255\ot_qwen_numeric_stream_queue'.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_numeric_stream_queue
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_numeric_stream_queue
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+Cleaned up 1 empty switch.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 4 switch rules as full_case in process $proc$ot_qwen_numeric_stream_queue.sv:31$28 in module ot_qwen_numeric_stream_queue.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 3 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~7 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+     1/17: $4$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_EN[600:0]$49
+     2/17: $4$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_DATA[600:0]$48
+     3/17: $4$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_ADDR[0:0]$47
+     4/17: $3$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_EN[600:0]$43
+     5/17: $3$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_DATA[600:0]$42
+     6/17: $3$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_ADDR[0:0]$41
+     7/17: $2$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_EN[600:0]$38
+     8/17: $2$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_DATA[600:0]$37
+     9/17: $2$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_ADDR[0:0]$36
+    10/17: $0\output_step[0:0]
+    11/17: $1$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_EN[600:0]$35
+    12/17: $1$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_DATA[600:0]$34
+    13/17: $1$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_ADDR[0:0]$33
+    14/17: $0\tail[0:0]
+    15/17: $0\head[0:0]
+    16/17: $0\count[1:0]
+    17/17: $0\fault[0:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qwen_numeric_stream_queue.\fault' using process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+  created $dff cell `$procdff$159' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_stream_queue.\output_step' using process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+  created $dff cell `$procdff$160' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_stream_queue.\count' using process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+  created $dff cell `$procdff$161' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_stream_queue.\head' using process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+  created $dff cell `$procdff$162' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_stream_queue.\tail' using process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+  created $dff cell `$procdff$163' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_stream_queue.$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_ADDR' using process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+  created $dff cell `$procdff$164' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_stream_queue.$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_DATA' using process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+  created $dff cell `$procdff$165' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_stream_queue.$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_EN' using process `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+  created $dff cell `$procdff$166' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 7 empty switches in `\ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+Removing empty process `ot_qwen_numeric_stream_queue.$proc$ot_qwen_numeric_stream_queue.sv:31$28'.
+Cleaned up 7 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_stream_queue.
+<suppressed ~20 debug messages>
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_stream_queue.
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 70 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 69 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 68 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_stream_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$111.
+    dead port 2/2 on $mux $procmux$108.
+    dead port 2/2 on $mux $procmux$105.
+    dead port 2/2 on $mux $procmux$102.
+    dead port 2/2 on $mux $procmux$96.
+    dead port 2/2 on $mux $procmux$90.
+    dead port 2/2 on $mux $procmux$84.
+    dead port 2/2 on $mux $procmux$81.
+    dead port 2/2 on $mux $procmux$75.
+    dead port 2/2 on $mux $procmux$72.
+    dead port 2/2 on $mux $procmux$66.
+    dead port 2/2 on $mux $procmux$63.
+Removed 12 multiplexer ports.
+<suppressed ~47 debug messages>
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_stream_queue.
+    Consolidated identical input bits for $mux cell $procmux$61:
+      Old ports: A=601'1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111, B=601'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, Y=$procmux$61_Y
+      New ports: A=1'1, B=1'0, Y=$procmux$61_Y [0]
+      New connections: $procmux$61_Y [600:1] = { $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] $procmux$61_Y [0] }
+  Optimizing cells in module \ot_qwen_numeric_stream_queue.
+    Consolidated identical input bits for $mux cell $procmux$87:
+      Old ports: A=601'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=$4$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_EN[600:0]$49, Y=$procmux$87_Y
+      New ports: A=1'0, B=$procmux$61_Y [0], Y=$procmux$87_Y [0]
+      New connections: $procmux$87_Y [600:1] = { $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] $procmux$87_Y [0] }
+  Optimizing cells in module \ot_qwen_numeric_stream_queue.
+    Consolidated identical input bits for $mux cell $procmux$117:
+      Old ports: A=601'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=$2$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_EN[600:0]$38, Y=$procmux$117_Y
+      New ports: A=1'0, B=$procmux$87_Y [0], Y=$procmux$117_Y [0]
+      New connections: $procmux$117_Y [600:1] = { $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] $procmux$117_Y [0] }
+  Optimizing cells in module \ot_qwen_numeric_stream_queue.
+Performed a total of 3 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 56 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$159 ($dff) from module ot_qwen_numeric_stream_queue (D = $procmux$154_Y, Q = \fault, rval = 1'0).
+Adding SRST signal on $procdff$160 ($dff) from module ot_qwen_numeric_stream_queue (D = \core_output_step, Q = \output_step, rval = 1'0).
+Adding SRST signal on $procdff$161 ($dff) from module ot_qwen_numeric_stream_queue (D = $procmux$140_Y, Q = \count, rval = 2'00).
+Adding EN signal on $auto$ff.cc:337:slice$170 ($sdff) from module ot_qwen_numeric_stream_queue (D = $procmux$140_Y, Q = \count).
+Adding SRST signal on $procdff$162 ($dff) from module ot_qwen_numeric_stream_queue (D = $procmux$134_Y, Q = \head, rval = 1'0).
+Adding EN signal on $auto$ff.cc:337:slice$178 ($sdff) from module ot_qwen_numeric_stream_queue (D = $ternary$ot_qwen_numeric_stream_queue.sv:43$55_Y, Q = \head).
+Adding SRST signal on $procdff$163 ($dff) from module ot_qwen_numeric_stream_queue (D = $procmux$129_Y, Q = \tail, rval = 1'0).
+Adding EN signal on $auto$ff.cc:337:slice$180 ($sdff) from module ot_qwen_numeric_stream_queue (D = $ternary$ot_qwen_numeric_stream_queue.sv:40$52_Y, Q = \tail).
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_stream_queue..
+Removed 12 unused cells and 86 unused wires.
+<suppressed ~13 debug messages>
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_stream_queue.
+<suppressed ~1 debug messages>
+
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_stream_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~26 debug messages>
+
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_stream_queue.
+Performed a total of 0 changes.
+
+5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 49 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+Removed a total of 0 cells.
+
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_stream_queue..
+
+5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_stream_queue.
+
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory \entries in module \ot_qwen_numeric_stream_queue:
+  created 2 $dff cells and 0 static cells of width 601.
+  read interface: 0 $dff and 1 $mux cells.
+  write interface: 2 write mux blocks.
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_stream_queue.
+<suppressed ~2 debug messages>
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 55 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_stream_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~38 debug messages>
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_stream_queue.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 55 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_stream_queue..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_stream_queue.
+
+7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_stream_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~38 debug messages>
+
+7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_stream_queue.
+Performed a total of 0 changes.
+
+7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 55 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+Removed a total of 0 cells.
+
+7.13. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $memory\entries[0]$186 ($dff) from module ot_qwen_numeric_stream_queue (D = $0$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_DATA[600:0]$30, Q = \entries[0]).
+Adding EN signal on $memory\entries[1]$188 ($dff) from module ot_qwen_numeric_stream_queue (D = $0$memwr$\entries$ot_qwen_numeric_stream_queue.sv:39$15_DATA[600:0]$30, Q = \entries[1]).
+
+7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_stream_queue..
+Removed 2 unused cells and 2 unused wires.
+<suppressed ~3 debug messages>
+
+7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_stream_queue.
+
+7.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_stream_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~28 debug messages>
+
+7.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_stream_queue.
+Performed a total of 0 changes.
+
+7.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_stream_queue'.
+Computing hashes of 53 cells of `\ot_qwen_numeric_stream_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_stream_queue'.
+Removed a total of 0 cells.
+
+7.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_stream_queue..
+
+7.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_stream_queue.
+
+7.23. Finished fast OPT passes. (There is nothing left to do.)
+
+8. Executing JSON backend.
+
+9. Printing statistics.
+
+=== ot_qwen_numeric_stream_queue ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       64 wires
+     6095 wire bits
+       23 public wires
+     2419 public wire bits
+       15 ports
+     1210 port bits
+       53 cells
+        4   $add
+        2   $and
+        2   $dffe
+        3   $eq
+        7   $logic_and
+        3   $logic_not
+        1   $lt
+       16   $mux
+        2   $ne
+        2   $not
+        1   $pmux
+        2   $reduce_and
+        2   $reduce_bool
+        2   $sdff
+        3   $sdffe
+        1   $sub
+
+End of script. Logfile hash: ecc0e1caab, time: 0.05s, user: 0.05s, system: 0.00s, MEM: 29.93 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 25% 5x opt_clean (0 sec), 16% 5x opt_dff (0 sec), ...

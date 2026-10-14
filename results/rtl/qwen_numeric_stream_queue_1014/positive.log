@@ -1,0 +1,10 @@
+STREAM reset flushed queued old words and accepted fresh nonquery
+STREAM depth=8 stall=0 words=192 query_retire=128 nonquery=64 posts=192 interval=191 first_pop_delta=2 peak=1 paused=2 last_pop=194
+STREAM depth=2 stall=0 words=192 query_retire=128 nonquery=64 posts=192 interval=286 first_pop_delta=2 peak=1 paused=97 last_pop=289
+STREAM depth=8 stall=1 words=192 query_retire=128 nonquery=64 posts=192 interval=351 first_pop_delta=35 peak=8 paused=167 last_pop=359
+STREAM depth=2 stall=1 words=192 query_retire=128 nonquery=64 posts=192 interval=495 first_pop_delta=35 peak=2 paused=306 last_pop=498
+PASS streaming queue words/tags/pop-only-retire/full stalls/reset
+- /srv/opentallas-scratch/codex/qwen-numeric-stream-1014/tb_qwen_numeric_stream_queue.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.000 s; speed 11.775 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
