@@ -10,7 +10,7 @@
 //   images); RPS 0 (silicon): the hardened leaf ot_qwen_tile_rpair, which owns its two macros.
 //   CMUT (bench mutants of THIS wiring, each must fail the exact bench): 1 = bank row 0's relay word with its two
 //   column halves swapped; 2 = lane-slice leaves 0 and 1 fed each other's transmit rung; 3 = lane-slice leaves 2 and 3
-//   returning each other's results; 4 = the node's t_vd one bank-row request bit (ce of row 0) instead of the valid.
+//   returning each other's results; 4 = invert the node fault seam (observed by the assembled array fault checker).
 module ot_qwen_tile_kids #(
     parameter integer CODE_BANKS = 5,
     parameter integer RPS = 0,
@@ -78,6 +78,8 @@ module ot_qwen_tile_kids #(
             assign cx_lq[73*GR +: 73] = {tf, lf, t};
         end
     endgenerate
-    ot_qwen_tile_node u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va), .y(n_y), .vy(n_vy), .fault(cx_nfault),
-                              .t_d(cx_td), .t_vd((CMUT == 4) ? cx_rreq[0] : cx_tvd), .t_out(t_out), .t_vout(t_vout));
+    wire node_fault;
+    assign cx_nfault = (CMUT == 4) ? ~node_fault : node_fault;
+    ot_qwen_tile_node u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va), .y(n_y), .vy(n_vy), .fault(node_fault),
+                              .t_d(cx_td), .t_vd(cx_tvd), .t_out(t_out), .t_vout(t_vout));
 endmodule
