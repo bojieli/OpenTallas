@@ -22,8 +22,9 @@ foreach ot_bl [$ot_sb_b getBlockages] {
   set x0 [$ot_r xMin]; set y0 [$ot_r yMin]; set x1 [$ot_r xMax]; set y1 [$ot_r yMax]
   foreach ot_p $ot_sb_pins {
     lassign $ot_p ot_nm px py
-    # a pin strictly inside the gap rows (a pin on the blockage edge has its cells legalised beside it)
-    if {$px <= $x0 || $px >= $x1 || $py <= $y0 || $py >= $y1} { continue }
+    # the pin shape sits on the child's face = the blockage edge: a pin within 1 um of the blocked seam counts
+    set ot_e $ot_sb_u
+    if {$px < $x0 - $ot_e || $px > $x1 + $ot_e || $py < $y0 - $ot_e || $py > $y1 + $ot_e} { continue }
     odb::dbBlockage_destroy $ot_bl
     if {($x1 - $x0) < ($y1 - $y0)} {
       if {$py - $ot_sb_h > $y0} { odb::dbBlockage_create $ot_sb_b $x0 $y0 $x1 [expr {$py - $ot_sb_h}] }

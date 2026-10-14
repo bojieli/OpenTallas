@@ -63,7 +63,7 @@ def main():
         # sliver_block_engc.tcl; util is (std + macro) / core, and this cluster is 8 hard children + 37 clock entry
         # cells (16 um2 of standard cells in 73,300 um2 of free floor = 0.02 %), so the 60 % placement-room limit has
         # nothing to protect here; the channel (cut) check stays on
-        "fp_lint": {"set": {"util_max": 0.88},
+        "fp_lint": {"set": {"util_max": 0.88, "util_hold_max": 0.88},
                     "why": "all-tile cluster in the 1188 x 432 contract slot: macro 438,609 um2 of 511,933 um2 (85.7 %), "
                            "standard cells 16 um2 (the clock entry chains); child-to-child seams < 12 um hard-blocked"},
         "cycles_added": 0,
