@@ -1,0 +1,54 @@
+{
+  "fv_i": {
+    "bits": 7,
+    "min_capture_ps": 192.82208000000003,
+    "max_capture_ps": 544.34652,
+    "worst_bits": [
+      "fv_i[2]",
+      "fv_i[4]",
+      "fv_i[3]",
+      "fv_i[5]",
+      "fv_i[0]",
+      "fv_i[6]",
+      "fv_i[1]"
+    ]
+  },
+  "fd_i": {
+    "bits": 1128,
+    "min_capture_ps": 151.83117000000004,
+    "max_capture_ps": 215.51574000000005,
+    "worst_bits": [
+      "fd_i[850]",
+      "fd_i[910]",
+      "fd_i[654]",
+      "fd_i[744]",
+      "fd_i[933]",
+      "fd_i[900]",
+      "fd_i[85]",
+      "fd_i[1118]"
+    ]
+  },
+  "n_y": {
+    "bits": 2560,
+    "min_capture_ps": 154.64440000000002,
+    "max_capture_ps": 217.65673000000004,
+    "worst_bits": [
+      "n_y[638]",
+      "n_y[564]",
+      "n_y[2341]",
+      "n_y[637]",
+      "n_y[2538]",
+      "n_y[744]",
+      "n_y[768]",
+      "n_y[2327]"
+    ]
+  },
+  "n_yacc": {
+    "bits": 1,
+    "min_capture_ps": 196.17166000000003,
+    "max_capture_ps": 196.17166000000003,
+    "worst_bits": [
+      "n_yacc"
+    ]
+  }
+}

@@ -21,10 +21,14 @@ original = gate.tile_edit
 
 def edit(srcs, obj, probes, tmut):
     srcs = original(srcs,obj,probes,tmut)
+    native = gate.ROOT/'rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_hc_comb_native.sv'
+    srcs.append(native)
     for i, path in enumerate(srcs):
         if path.name != 'dsfd_sp_hc.sv':
             continue
         text = path.read_text()
+        assert text.count('ot_s81_hc_comb #(')==1
+        text=text.replace('ot_s81_hc_comb #(', 'dsfd_sp_hc_comb_native #(',1)
         old = '.DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN),'
         assert text.count(old)==1
         text=text.replace(old,'.DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN), .PHYS_CLK(1),')
@@ -35,6 +39,8 @@ def edit(srcs, obj, probes, tmut):
         text=text[:pos]+text[pos:].replace(') u_cb (',f') u_cb (\n        .sk_leaf({clock}),',1)
         dest=obj/'native_dsfd_sp_hc.sv';dest.write_text(text);srcs[i]=dest
         manifest=dict(mode=mode, source=str(path), source_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                      actual_parent_master='dsfd_sp_hc_comb_native',
+                      actual_parent_source_sha256=hashlib.sha256(native.read_bytes()).hexdigest(),
                       edited_sha256=hashlib.sha256(text.encode()).hexdigest(),
                       clock_connections=clock,actual_comb_parameter_PHYS_CLK=1,
                       scope='functional common ideal boundary phase only; real clocks require phi-R per child',
