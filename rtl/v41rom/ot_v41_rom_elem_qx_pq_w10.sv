@@ -166,6 +166,7 @@
 //                            (a row with bit 15 set is an idle half: that macro emits no partial for it)
 // ---------------------------------------------------------------------------
 module ot_v41_rom_elem_qx_pq_w10 #(
+    parameter integer QCG = 0, // opt-in genuine per-group clock gates, unchanged operation epochs
     parameter integer QH = 0, // opt-in actual lane-pair source extraction; no independent-clock admission implied
     parameter integer NSEG = 8,
     parameter integer NCH = 16,
@@ -698,14 +699,19 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // enable's launch): a clone of the clock gate for this load group, with its own kept copy of the registered enable
     // (same next state z_d, same reset), so each ICG drives a smaller subtree and sits nearer its enable register.  The
     // copies equal u_z every cycle (QP_CHECK); simulation keeps one gated clock (the clones are identical gates).
-    if (QM >= 6 && QZ != 0 && CG != 0) begin : g_cgbx
+    if ((QM >= 6 || QCG != 0) && QZ != 0 && CG != 0) begin : g_cgbx
         wire zc;
+        (* keep = QCG != 0, dont_touch = QCG != 0 *)
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_zc (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zc));
+        if (QCG != 0) begin : g_native_gate
+            ot_hdc_cg u_cg (.clk(clk), .en(zc), .gclk(gclk_bx));
+        end else begin : g_legacy_gate
 `ifdef SYNTHESIS
         ot_hdc_cg u_cg (.clk(clk), .en(zc), .gclk(gclk_bx));
 `else
         assign gclk_bx = gclk;
 `endif
+        end
 `ifdef QP_CHECK
         always @(negedge clk) if (rst_n_pin && zc !== cg_en_g) begin
             $display("QM6_CHECK FAIL: clock-gate clone enable %b != %b at %t", zc, cg_en_g, $time); $fatal(1);
@@ -2012,14 +2018,24 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // enable's launch): a clone of the clock gate for this load group, with its own kept copy of the registered enable
     // (same next state z_d, same reset), so each ICG drives a smaller subtree and sits nearer its enable register.  The
     // copies equal u_z every cycle (QP_CHECK); simulation keeps one gated clock (the clones are identical gates).
-    if (QM >= 6 && QZ != 0 && CG != 0) begin : g_cgma
+    if ((QM >= 6 || QCG != 0) && QZ != 0 && CG != 0) begin : g_cgma
         wire zc;
+        (* keep = QCG != 0, dont_touch = QCG != 0 *)
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_zc (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zc));
+        if (QCG != 0) begin : g_native_gate
+`ifdef S81_QCG_MUTANT_HALF0_GATE
+            wire native_en = mb == 0 ? !zc : zc;
+`else
+            wire native_en = zc;
+`endif
+            ot_hdc_cg u_cg (.clk(clk), .en(native_en), .gclk(gclk_ma));
+        end else begin : g_legacy_gate
 `ifdef SYNTHESIS
         ot_hdc_cg u_cg (.clk(clk), .en(zc), .gclk(gclk_ma));
 `else
         assign gclk_ma = gclk;
 `endif
+        end
 `ifdef QP_CHECK
         always @(negedge clk) if (rst_n_pin && zc !== cg_en_g) begin
             $display("QM6_CHECK FAIL: clock-gate clone enable %b != %b at %t", zc, cg_en_g, $time); $fatal(1);
@@ -2032,14 +2048,19 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // enable's launch): a clone of the clock gate for this load group, with its own kept copy of the registered enable
     // (same next state z_d, same reset), so each ICG drives a smaller subtree and sits nearer its enable register.  The
     // copies equal u_z every cycle (QP_CHECK); simulation keeps one gated clock (the clones are identical gates).
-    if (QM >= 6 && QZ != 0 && CG != 0) begin : g_cgmb
+    if ((QM >= 6 || QCG != 0) && QZ != 0 && CG != 0) begin : g_cgmb
         wire zc;
+        (* keep = QCG != 0, dont_touch = QCG != 0 *)
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_zc (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(zc));
+        if (QCG != 0) begin : g_native_gate
+            ot_hdc_cg u_cg (.clk(clk), .en(zc), .gclk(gclk_mb));
+        end else begin : g_legacy_gate
 `ifdef SYNTHESIS
         ot_hdc_cg u_cg (.clk(clk), .en(zc), .gclk(gclk_mb));
 `else
         assign gclk_mb = gclk;
 `endif
+        end
 `ifdef QP_CHECK
         always @(negedge clk) if (rst_n_pin && zc !== cg_en_g) begin
             $display("QM6_CHECK FAIL: clock-gate clone enable %b != %b at %t", zc, cg_en_g, $time); $fatal(1);
