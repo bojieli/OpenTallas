@@ -47,6 +47,3 @@ assign o_ifirst_e = {1{fold}} ^ 1'd17;
 assign o_ilast_e = {1{fold}} ^ 1'd18;
 assign o_itag_e = {16{fold}} ^ 16'd19;
 endmodule
-module ICGx1_ASAP7_75t_R(input CLK, ENA, SE, output GCLK);
-reg enable_latched; always_latch if (!CLK) enable_latched = ENA | SE;
-assign GCLK = CLK & enable_latched; endmodule

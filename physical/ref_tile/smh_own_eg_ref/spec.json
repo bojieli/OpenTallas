@@ -3,16 +3,16 @@
  "top": "ot_smh_own_eg",
  "kind": "tile",
  "sources": [
-  "results/arch/hbm_native_1013/sm_own_logic/eg_own.sv"
+  "results/arch/hbm_native_1013/sm_own_logic/eg_retention_asap7.sv"
  ],
  "params": {},
  "clock_port": "cut_2",
  "reset_ports": [
   "cut_3"
  ],
- "std_area_um2": 348.28704,
+ "std_area_um2": 355.30002,
  "outline": {
-  "w": 72.576,
+  "w": 73.44,
   "h": 73.44
  },
  "util": 0.52,
@@ -657,12 +657,12 @@
  "layer_cap": "M5",
  "signal_max_layer": "M5",
  "pg_layer": "M5",
- "structural_change": "Extract actual995Q+ICG retained state from r16 into own-root leaf; twelve CLOSED hard children keep their views and receive replicated negative-level ICGs from retained registered enable in separately tracked parent. No cycles or arithmetic changed.",
+ "structural_change": "Extract actual995Q+ICG retained state from r16 into own-root leaf; twelve CLOSED hard children keep their views and receive replicated negative-level ICGs from retained registered enable in separately tracked parent. No cycles or arithmetic changed. Own2 directly maps all995 source flip-flops before constant/merge simplification and preserves their Q nets; actual mapped-ASIC ownleaf bench+observed mutant passes against flat source.",
  "slot_change_request": {
   "parent": "native SM compact tile",
   "kind": "slot_partition",
   "outline_um": [
-   72.576,
+   73.44,
    73.44
   ],
   "source": "results/arch/hbm_native_1013/sm_own_logic/extraction.json",
@@ -671,7 +671,7 @@
  "job": {
   "owner": "Codex:hbm_vm_sm_2240",
   "branch": "codex/hbm-vm-sm-2240",
-  "tag": "own1",
+  "tag": "own2",
   "purpose": "Actual retained SM tile ownlogic995Q+ICG, exact flat-parent cut/gating bench+mutant; separate physical ownleaf candidate with explicit pending compactslot request",
   "extra_paths": [
    "results/arch/hbm_native_1013/sm_own_logic"

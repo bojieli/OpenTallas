@@ -43,8 +43,19 @@ def extract(design, variant):
     # root. The original ICG stays in the own leaf and clocks its own state.
     cut = sorted((inside & outside) | {gate_enable_bit})
     ports = {f'cut_{b}': {'direction': 'output' if b in drivers else 'input', 'bits': [b]} for b in cut}
+    # Keep source wire attributes, especially explicit kept register copies.
+    # Dropping them leaves the Boolean graph intact but loses physical state
+    # retention when synthesis removes individually unused vector bits.
+    netnames = {}
+    for name, net in original['netnames'].items():
+        bits = [b for b in net['bits'] if not isinstance(b, int) or b in inside]
+        if not any(isinstance(b, int) for b in bits):
+            continue
+        row = copy.deepcopy(net)
+        row['bits'] = bits
+        netnames[name] = row
     leaf = {'attributes': {'keep_hierarchy': '1'}, 'ports': ports, 'cells': copy.deepcopy(own),
-            'netnames': {f'n{b}': {'hide_name': 0, 'bits': [b], 'attributes': {}} for b in sorted(inside)}}
+            'netnames': netnames}
     leaf_name = 'ot_smh_own_' + variant
     parent = copy.deepcopy(original)
     parent['cells'] = copy.deepcopy(hard)
@@ -148,7 +159,7 @@ def main():
         (out / (variant + '_write.ys')).write_text(
             f'read_json {out.relative_to(ROOT)}/{variant}_own.json\n'
             f'hierarchy -check -top {row["own_master"]}\n'
-            f'write_verilog -noattr {out.relative_to(ROOT)}/{variant}_own.sv\n'
+            f'write_verilog {out.relative_to(ROOT)}/{variant}_own.sv\n'
             'synth -top ' + row['own_master'] + '\nstat\n')
     write(out / 'extraction.json', {'schema': 'opentallas.smh.own_logic_cut.v1', 'rows': rows,
           'status': 'EXACT_CIRCUIT_EXTRACTION_PHYSICAL_AND_BEHAVIOURAL_GATES_OPEN'})

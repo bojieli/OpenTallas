@@ -170,30 +170,23 @@
       "timing_closed": false,
       "throughput_measured": false,
       "behavioural_cycles": 4096,
-      "behavioural_mutant_mismatches": 2012,
+      "initial_warmup_cycles": 32,
+      "behavioural_mutant_mismatches": 2016,
       "verilator": "5.050",
-      "behavioural_scope": "Real retained995Q+ICG versus flat pinned parent, samephase twelve replicated negative-level ICGs driven by retained ENA register. Identical deterministic hardchild surrogates; arithmetic and asynchronous physicalphase not qualified.",
-      "mapped_std_area_um2": 348.28704,
-      "mapped_libs": "ASAP7 RVT TT AO/OA/SIMPLE/INVBUF/SEQ",
-      "mapped_tool": "Yosys0.67 openroad/orfs:asap7lock",
+      "behavioural_scope": "Actual995-ASIC-flop leaf using real Liberty-derived zero-delay models vs pinned flat parent; twelve replicated ICGs tested at same raw phase; hard arithmetic surrogate interiors identical.",
+      "mapped_std_area_um2": 355.30002,
+      "mapped_physical_flops": 995,
+      "mapped_ICGs": 1,
       "slot_partition_request": {
         "outline_um": [
-          72.576,
+          73.44,
           73.44
         ],
-        "status": "CANDIDATE_PENDING_PLACEMENT_CTS_AND_DIE_ASSIGNMENT",
-        "std_utilization": 0.06534488795518208,
-        "clock_entry": "cut_2 raw clk",
-        "reset_entry": "cut_3",
+        "status": "PENDING_PHYSICAL_PLACEMENT_AND_SEAMS",
+        "clock_entry": "cut_2",
         "generated_clock_output": "cut_7768",
         "registered_enable_output": "cut_8870",
-        "extra_child_clock_entries": 12,
-        "placement_owner": "/root/hbm_die_repair_2240",
-        "preserve_closed_12_children": true,
-        "worst_pin_density_b_per_um": 4.847494553376906,
-        "seam_reach_measured": false,
-        "PG_phase_measured": false,
-        "CTS_measured": false
+        "explicit_child_ICGs": 12
       }
     },
     {
@@ -365,30 +358,23 @@
       "timing_closed": false,
       "throughput_measured": false,
       "behavioural_cycles": 4096,
-      "behavioural_mutant_mismatches": 2012,
+      "initial_warmup_cycles": 32,
+      "behavioural_mutant_mismatches": 2016,
       "verilator": "5.050",
-      "behavioural_scope": "Real retained995Q+ICG versus flat pinned parent, samephase twelve replicated negative-level ICGs driven by retained ENA register. Identical deterministic hardchild surrogates; arithmetic and asynchronous physicalphase not qualified.",
-      "mapped_std_area_um2": 348.28704,
-      "mapped_libs": "ASAP7 RVT TT AO/OA/SIMPLE/INVBUF/SEQ",
-      "mapped_tool": "Yosys0.67 openroad/orfs:asap7lock",
+      "behavioural_scope": "Actual995-ASIC-flop leaf using real Liberty-derived zero-delay models vs pinned flat parent; twelve replicated ICGs tested at same raw phase; hard arithmetic surrogate interiors identical.",
+      "mapped_std_area_um2": 355.30002,
+      "mapped_physical_flops": 995,
+      "mapped_ICGs": 1,
       "slot_partition_request": {
         "outline_um": [
-          72.576,
+          73.44,
           73.44
         ],
-        "status": "CANDIDATE_PENDING_PLACEMENT_CTS_AND_DIE_ASSIGNMENT",
-        "std_utilization": 0.06534488795518208,
-        "clock_entry": "cut_2 raw clk",
-        "reset_entry": "cut_3",
+        "status": "PENDING_PHYSICAL_PLACEMENT_AND_SEAMS",
+        "clock_entry": "cut_2",
         "generated_clock_output": "cut_7768",
         "registered_enable_output": "cut_8870",
-        "extra_child_clock_entries": 12,
-        "placement_owner": "/root/hbm_die_repair_2240",
-        "preserve_closed_12_children": true,
-        "worst_pin_density_b_per_um": 4.847494553376906,
-        "seam_reach_measured": false,
-        "PG_phase_measured": false,
-        "CTS_measured": false
+        "explicit_child_ICGs": 12
       }
     }
   ],

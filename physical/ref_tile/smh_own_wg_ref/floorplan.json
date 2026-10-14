@@ -16,7 +16,7 @@
   71.28
  ],
  "why": "spec outline",
- "std_area_um2": 348.28704,
+ "std_area_um2": 355.30002,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -661,12 +661,12 @@
   [
    "WARN",
    "util",
-   "utilisation 7% outside 45%-60% (std 348 + macro 0 in core 4778 um2)",
+   "utilisation 7% outside 45%-60% (std 355 + macro 0 in core 4778 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
  "referenced": [
-  "results/arch/hbm_native_1013/sm_own_logic/wg_own.sv",
+  "results/arch/hbm_native_1013/sm_own_logic/wg_retention_asap7.sv",
   "physical/ref_tile/smh_own_wg_ref/kit.env",
   "physical/ref_tile/smh_own_wg_ref/clock.sdc",
   "physical/ref_tile/smh_own_wg_ref/signoff.sdc",

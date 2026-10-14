@@ -17,18 +17,18 @@ Graph expansion reproduces all 131 original cells, their parameters, connections
 and original boundary ports exactly for the common-clock decomposition. EG/WG
 cycle benches also execute the separate twelve-root ICG candidate against the
 original flat parent. With all raw roots tied to the original raw clock, both
-pass 4,096 cycles with zero mismatches, including a second reset interval and
+pass 4,096 compared cycles after 32 initial warmup cycles with zero mismatches, including a second reset interval and
 random traffic on every boundary input. An internal tie-zero of the retained
-`cgo` output is a runnable negative: both variants report 2,012 mismatches and
-abort. These runs use Verilator 5.050. The twelve hard arithmetic interiors use
+`cgo` output is a runnable negative: both variants report 2,016 mismatches and
+abort. These runs use Verilator 5.050. The mapped own leaf uses actual Liberty-derived zero-delay cell models. The twelve hard arithmetic interiors use
 identical explicit deterministic surrogates on both sides; the bench qualifies
 retained state, gating and cut wiring only. It does not establish hard-leaf
 arithmetic or physical behavior with different clock phases.
 
 An ASIC synthesis against the real ASAP7 RVT TT AO/OA/SIMPLE/INVBUF/SEQ libraries
-maps each own leaf to 348.287040 square micrometers of cells, including its ICG.
-Of this, 286.759440 is sequential area. The logs and mapped netlists are retained.
-The `72.576 x 73.44` outline in `extraction.json` is a partition request, not an
+maps each own leaf to 355.300020 square micrometers of cells, including its ICG.
+Of this, 292.591440 is sequential area. The logs and mapped netlists are retained.
+The `73.44 x 73.44` outline in `extraction.json` is a partition request, not an
 assigned die slot. Pin density is below 4.9 bits per micrometer on the proposed
 input face. Placement, pin-register distance, clock insertion/spread, PG phase,
 all actual seam cuts/reach, TT/FF/DRC, and native production throughput remain
@@ -40,3 +40,11 @@ The emitted `eg_run.sh`/`wg_run.sh` run the positive by default and the negative
 with argument `mut`. `map_asap7.sh` performs the mapped sizing run. Execute heavy
 builds through `ot-run` using measured memory; these benches used 4 GB and four
 threads, and sizing used 2 GB and one thread.
+
+The first full-synthesis sizing candidate reduced995sourceQbits to975physicalflops.
+Its CTS record is preserved as diagnostic_975_gate.json. The retained candidate
+maps directly before constant/merge simplification, with kept Q nodes, and
+contains995actualstandard-cellflipflops (967DFFHQN +28DFFASRHQN) plus oneICG.
+This mapped netlist itself passes the flat-parent cycle bench and observed
+mutant. Its physical source is eg_retention_asap7.sv; WG has the same functional
+cell/parameter/connection graph, proved in eg_wg_graph_identity.json.
