@@ -9,7 +9,6 @@ set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
 set_output_delay 166.667 -clock core_clk [all_outputs]
 set_max_fanout 32 [current_design]
 set_load 80 [all_outputs]
-set_input_transition 150 [all_inputs -no_clocks]
 set_max_transition 260 [current_design]
 # ---- sdc_extra physical/s81_ph_views/gather/gth_ser_ref.sdc
 # s81-gather, copy of physical/s81_ph_views/mtp/wfc_ser_ref of el1013-s81-wfcstg with the control leaf's serial ports (reference tile flow, spec "sdc_extra"): the SERIAL 0.9 GHz clock of the sp_wfc two-domain blocks
@@ -50,3 +49,4 @@ if {[llength $ot_sb_ref]} {
   if {[llength $ot_sb_si]} { set_input_delay $ot_sb_io -clock ser_clk $ot_sb_si }
   if {[llength $ot_sb_so]} { set_output_delay $ot_sb_io -clock ser_clk $ot_sb_so }
 }
+set_input_transition 150 [all_inputs -no_clocks]
