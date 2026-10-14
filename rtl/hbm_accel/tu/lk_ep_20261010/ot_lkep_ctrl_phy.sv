@@ -174,9 +174,29 @@ module ot_lkep_ctrl_phy #(
         else drop <= (|sd_t) || (c_v && (c_sub >= NS)) || (p_v && !p_ok);
 
     // ---------------------------------------------------------------- status (tile status registers)
-    integer v;
-    reg [31:0] rep_sum;
-    always @(*) begin rep_sum = 0; for (v = 0; v < NS; v = v + 1) rep_sum = rep_sum + rp_t[v]; end
+    // Three counters sum on the original status capture edge. Carry-save
+    // reduction and parallel prefix avoid two serial ripple additions.
+    function automatic [31:0] add32_prefix(input [31:0] a,input [31:0] b);
+      reg [31:0] p,g,base; integer d;
+      begin
+        base=a^b; p=base; g=a&b;
+        for(d=1;d<32;d=d*2) begin
+          g=g|(p&(g<<d));
+          p=p&((p<<d)|((32'h1<<d)-1));
+        end
+        add32_prefix=base^(g<<1);
+      end
+    endfunction
+    wire [31:0] rep_sum;
+    generate if(NS==3) begin:g_sum3
+      wire [31:0] sx=rp_t[0]^rp_t[1]^rp_t[2];
+      wire [31:0] sy=((rp_t[0]&rp_t[1])|(rp_t[0]&rp_t[2])|(rp_t[1]&rp_t[2]))<<1;
+      assign rep_sum=add32_prefix(sx,sy);
+    end else begin:g_sum_other
+      integer v; reg [31:0] sum;
+      always @(*) begin sum=0;for(v=0;v<NS;v=v+1) sum=sum+rp_t[v];end
+      assign rep_sum=sum;
+    end endgenerate
     always @(posedge clk or negedge rto)
         if (!rto) begin fault <= 1'b0; st_replays <= 0; st_drops <= 0; end
         else begin
