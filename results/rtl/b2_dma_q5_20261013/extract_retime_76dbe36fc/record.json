@@ -67,5 +67,13 @@
       "errors": 7
     }
   },
-  "mutants_launcher_exit": 0
+  "mutants_launcher_exit": 0,
+  "mapped_census": {
+    "dff_cells": 14871,
+    "added_vs_kv_pin": 197,
+    "under_15000": true,
+    "std_area_um2": 10470.5,
+    "total_instance_area_um2": 32408.4,
+    "count_command": "grep -c \"^[[:space:]]*DFF\" 1_2_yosys.v"
+  }
 }
