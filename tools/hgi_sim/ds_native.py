@@ -503,7 +503,8 @@ class Lower:
                     tag=tag or op["tag"], family="mv." + op["fn"]), rd or [],
                 [] if desc["O"].space == "STREAM" else [out], run and r1 > r0)
 
-        for op in ops:
+        stacked_slots = set()
+        for oi, op in enumerate(ops):
             self.cur_op = op
             k = op["kind"]
             if k == "local":
@@ -604,9 +605,9 @@ class Lower:
                                    lay.vm[f"e{i}.u"] - lay.vm["e0.u"] == i * sg for i in range(ns))
                         t = dict(a_min=1, imm3=f32u(m.limit), sfu=I.SFU_SILU, c_clip=1, e1=I.E1_MULC, e2=I.E2_MULB,
                                  rnd=1, dst=I.DST_VM)
-                        desc = dict(A=V("e0.g", r1 - r0, off=r0, m=ns, stride=sg),
+                        desc = dict(A=V("e0.g", r1 - r0, m=ns, stride=sg),
                                     B=V("route_w", r1 - r0, m=ns, stride=1, ibcast=1),
-                                    C=V("e0.u", r1 - r0, off=r0, m=ns, stride=sg),
+                                    C=V("e0.g", r1 - r0, off=r1-r0, m=ns, stride=sg),
                                     O=V("ea", r1 - r0, off=r0, m=ns, stride=2304))
                         su("swiglu", "swiglu", desc, [f"e{i}.{x}" for i in range(ns) for x in "gu"] + ["route_w"],
                            [f"ea.s{i}" for i in range(ns)], **t)
@@ -614,7 +615,7 @@ class Lower:
                     e = op["slot"]
                     r0, r1 = W.even(2304)[rank]
                     t = dict(a_min=1, imm3=f32u(m.limit), sfu=I.SFU_SILU, c_clip=1, e1=I.E1_MULC, rnd=1, dst=I.DST_VM)
-                    desc = dict(A=V(f"e{e}.g", r1 - r0, off=r0), C=V(f"e{e}.u", r1 - r0, off=r0),
+                    desc = dict(A=V(f"e{e}.g", r1 - r0), C=V(f"e{e}.g", r1 - r0, off=r1-r0),
                                 O=V("ea", r1 - r0, off=e * 2304 + r0))
                     if e < m.k_exp:
                         t["e2"] = I.E2_MULB
@@ -730,6 +731,35 @@ class Lower:
                     slot, mat = w
                     xin = f"ea.s{slot}" if mat == "w2" else x          # per-slot region names
                     xd = V("ea", 2304, off=slot * 2304) if mat == "w2" else V(x, op["k"])
+                    if mat == "w3" and slot in stacked_slots:
+                        continue                    # both matrices were emitted by the preceding w1
+                    if mat == "w1":
+                        peer = ops[oi + 1] if oi + 1 < len(ops) else {}
+                        if not (peer.get("kind") == "mv" and tuple(peer.get("w", ())) == (slot, "w3") and
+                                peer["rows"] == op["rows"] and peer["k"] == op["k"] and
+                                peer["fmt"] == fmt and peer["x"] == x):
+                            raise ValueError("stacked expert requires adjacent matching w1 / w3")
+                        # Each rank's [w1 rows; w3 rows] is contiguous in the physical image.
+                        # The checkpoint remains unchanged; _wrows maps this explicit row order.
+                        key = (f"{P}ffn.experts.w13" if slot < m.k_exp else
+                               f"{P}ffn.shared_experts.w13.weight")
+                        ent = self.W(key, 2 * op["n"], op["k"], fmt,
+                                     n_experts=m.n_exp if slot < m.k_exp else 1, lines=True)
+                        ent["row_order"] = "tp96_w1_w3_shards"
+                        ent["matrix_rows"] = op["n"]
+                        bd = MDesc(space="HBM", fmt=HFMT[fmt], base=ent["base"] + 2 * r0 * ent["rowbytes"],
+                                   n=op["k"], m=max(2 * (r1 - r0), 1), stride=ent["rowbytes"],
+                                   indexed=int(slot < m.k_exp), dyn_mul=ent["estride"] if slot < m.k_exp else 0)
+                        desc = dict(A=xd, B=bd, O=V(f"e{slot}.g", max(2 * (r1-r0), 1), fmt=out_fmt))
+                        if slot < m.k_exp:
+                            desc["I"] = U32V(lay.vm["rid"] + slot, 1)
+                        rec = Rec("SM", "MATVEC", param={"bf16":0,"fp8":1,"fp4":2}[fmt], desc=desc,
+                                  tag=f"expert slot {slot} w1+w3", family="mv.linear_q")
+                        add(rec, [xin, "rid"] if slot < m.k_exp else [xin],
+                            [f"e{slot}.g", f"e{slot}.u"], r1 > r0)
+                        rec.src = (L, op["id"], [peer["id"]])  # immutable price = both original ops
+                        stacked_slots.add(slot)
+                        continue
                     if slot < m.k_exp:          # routed: weight base through the router's id word (C3b)
                         mv(op, xd, (r0, r1), op["out"], op["n"], f"{P}ffn.experts.{mat}", fmt, out_fmt,
                            expert_slot=slot, rd=[xin, "rid"])
@@ -1235,6 +1265,28 @@ def ds_units(m, man, golib):
     def wrows(e, ex, r0, nrows, c0, ncols, L):
         key = e["key"].split("@c")[0]                 # a column-slice entry names its matrix + column offset
         c0 = c0 + e.get("col_off", 0)
+        if e.get("row_order") == "tp96_w1_w3_shards":
+            pieces = []
+            end = r0 + nrows
+            for lo, hi in W.even(e["matrix_rows"]):
+                for mat, start in (("w1", 2 * lo), ("w3", lo + hi)):
+                    a, z = max(r0, start), min(end, start + hi - lo)
+                    if a >= z:
+                        continue
+                    if e["experts"] > 1:
+                        name = f"{key.rsplit('.', 1)[0]}.{ex}.{mat}.weight"
+                    else:
+                        name = key.replace(".w13.weight", f".{mat}.weight")
+                    pieces.append(golib.wrows(name, lo + a - start, lo + z - start))
+            if not pieces:
+                raise ValueError(f"stacked expert row interval outside image: {r0}+{nrows}")
+            if isinstance(pieces[0], V_.Q8):
+                w = V_.Q8(np.concatenate([p.q for p in pieces]), np.concatenate([p.e for p in pieces]))
+            else:
+                w = np.concatenate(pieces)
+            if c0 or ncols != w.shape[1]:
+                w = (w.q[:, c0:c0+ncols], w.e) if isinstance(w, V_.Q8) else w[:, c0:c0+ncols]
+            return w
         if e["experts"] > 1:
             pre, mat = key.rsplit(".", 1)
             name = f"{pre}.{ex}.{mat}.weight"
@@ -1791,6 +1843,11 @@ def main():
             assert encode_program(dec) == b_
             for x, y in zip(dec, recs):
                 x.tag, x.family = y.tag, y.family
+                # Provenance and implicit model operands are compiler annotations,
+                # not ABI fields. Keep them attached after validating the wire image.
+                for attr in ("hc_row", "implicit"):
+                    if hasattr(y, attr):
+                        setattr(x, attr, getattr(y, attr))
             progs.append(dec)
             nbytes += len(b_)
             if r == 0 and a.program_out:
