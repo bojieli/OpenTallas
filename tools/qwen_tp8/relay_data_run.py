@@ -81,6 +81,54 @@ if '--case' in sys.argv:
                 rev = nb == 1 and sub.endswith(('_cr', '_r'))
                 dirs[mst].setdefault(sub, ('input' if d == 'output' else 'output') if rev else d)
     (out / 'case' / 'port_dirs.json').write_text(json.dumps(dirs, indent=0, sort_keys=True) + '\n')
+    # r10 (OWNER 2026-10-13 18:22, top-down pin assignment): one ASSIGNED pin file per die master that is not a relay /
+    # reset repeater, in the form the tile kits consume (ref_tile spec "pins" = ports per face in order along the face,
+    # "pin_ranges" = {port: [lo_um, hi_um]} from the face's W / S end, + layer, bits, bit 0 end, direction, die peer).
+    # Positions are the generator's own pin rectangles (the pins the relay plan, the cut scan and pin_align judged).
+    import re
+    M = v.masters(m, 1)
+    pw = v.port_widths(m, 1)
+    peer = {}
+    for bid, cl, bits, eps in m['buses']:
+        if cl in ('clock_trunk', 'reset') or len(eps) != 2:
+            continue
+        (ia, pa), (ib, pb) = eps
+        ma, mb = getattr(byi[ia], 'master', ''), getattr(byi[ib], 'master', '')
+        peer.setdefault((ma, pa.lstrip('*')), f'{mb}.{pb.lstrip("*")}')
+        peer.setdefault((mb, pb.lstrip('*')), f'{ma}.{pa.lstrip("*")}')
+    pdir = out / 'pins'
+    pdir.mkdir(exist_ok=True)
+    index = {}
+    for name, mst in sorted(M.items()):
+        if re.match(r'^(q[fk]d_rly|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
+            continue
+        g = {}
+        for nm, layer, r in v.pin_rects(mst, 1, {q: pw.get((name, q), 0) for q in mst.order}):
+            base, _, idx = nm.partition('[')
+            cx, cy = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
+            d = dict(W=cx, E=mst.w - cx, S=cy, N=mst.h - cy)
+            f = min(d, key=d.get)
+            q = g.setdefault(base, dict(face=f, layer=layer, pos=[], interior=d[f] > 1.0))
+            q['pos'].append((int(idx[:-1]) if idx else 0, round(cy if f in 'EW' else cx, 4)))
+        faces, rng, ports = {}, {}, {}
+        for base, q in g.items():
+            q['pos'].sort()
+            lo, hi = min(x for _, x in q['pos']), max(x for _, x in q['pos'])
+            ports[base] = dict(face=q['face'], layer=q['layer'], bits=len(q['pos']), range_um=[lo, hi],
+                               bit0_at='lo' if q['pos'][0][1] <= q['pos'][-1][1] else 'hi',
+                               direction=dirs.get(name, {}).get(base, 'input'), peer=peer.get((name, base)),
+                               **({'interior': True} if q['interior'] else {}))
+            if not q['interior']:
+                faces.setdefault(q['face'], []).append((lo, base))
+                rng[base] = [lo, hi]
+        rec_ = dict(schema='opentallas.qwen-tp8.assigned-pins.v1', master=name, outline=dict(w=mst.w, h=mst.h),
+                    instances=sum(1 for i in m['insts'] if getattr(i, 'master', '') == name),
+                    pins={f: [b_ for _, b_ in sorted(l)] for f, l in sorted(faces.items())}, pin_ranges=rng, ports=ports,
+                    note='assigned by the die generator (tools/qwen_tp8/relay_data_run.py --case); a real-view master '
+                         'lists its view pins')
+        (pdir / f'{name}.json').write_text(json.dumps(rec_, indent=1) + '\n')
+        index[name] = dict(instances=rec_['instances'], ports=len(ports), bits=sum(q_['bits'] for q_ in ports.values()))
+    (pdir / 'INDEX.json').write_text(json.dumps(index, indent=1) + '\n')
 print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
                       unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'],
                       reset_over_500=len(rec['reset']['reset_named_over_500']), instances=rec['instances'],
