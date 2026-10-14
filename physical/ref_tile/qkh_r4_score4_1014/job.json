@@ -1,5 +1,5 @@
 {
- "name": "qkh_r4_score4_1014-r4-COMMIT",
+ "name": "qkh_r4_score4_1014-r4-bd7e7285a",
  "block": "ot_qkh_head_score4_native",
  "ref_tile": true,
  "owner": "Codex:coordinator-kvsys-1014-pm",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex/coordinator-takeover-1014-pm",
-  "commit": "COMMIT",
+  "branch": "codex/head-r4-sourcebound-1014-pm",
+  "commit": "bd7e7285ab3c5b347eff8f801d77127d700f358c",
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
