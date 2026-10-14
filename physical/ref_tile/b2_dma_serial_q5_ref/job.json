@@ -1,5 +1,5 @@
 {
- "name": "b2_dma_serial_q5_ref-q5ncorner1-COMMIT",
+ "name": "b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc",
  "block": "ot_hgi_b2_dma_serial",
  "ref_tile": true,
  "owner": "Codex:hbm_dma_lkep_2240",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/hbm-dma-mv-repair-2240",
-  "commit": "COMMIT",
+  "commit": "7d874a5cc",
   "extra_paths": [
    "rtl/test/hbm_accel/b2_dma",
    "rtl/hbm_accel/generic/peers",
@@ -180,7 +180,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/b2_dma_serial_q5_ref/b2_dma_serial_q5_ref-q5ncorner1-COMMIT"
+   "to": "results/rtl/ref_tile/b2_dma_serial_q5_ref/b2_dma_serial_q5_ref-q5ncorner1-7d874a5cc"
   }
  ],
  "cycles_added": 0,
