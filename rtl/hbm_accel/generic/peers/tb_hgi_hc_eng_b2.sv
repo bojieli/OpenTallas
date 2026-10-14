@@ -45,8 +45,13 @@ module tb_hgi_hc_eng_b2;
     reg own = 0;                                     // 1: the engine drives the lanes; 0: the bench
     reg [32*16-1:0] t_rq = 0; reg [32*280-1:0] t_wq = 0;
     wire [32*16-1:0] rq = own ? e_rq : t_rq; wire [32*280-1:0] w2q = own ? e_wq : t_wq;
-    ot_hgi_hc_eng_b2 #(.D(HD), .LQ(LQ), .RLQ(`RLQV), .CD(`CDV), .MUT(`HMUT)) u_e (.clk(clk), .rst_n(rst_n), .job_v(job_v),
-        .job_rdy(job_rdy), .job(jw),
+`ifdef HC_CLOCKED
+    localparam integer BCLOCKED=1;
+`else
+    localparam integer BCLOCKED=0;
+`endif
+    ot_hgi_hc_eng_b2 #(.CLOCKED(BCLOCKED),.D(HD), .LQ(LQ), .RLQ(`RLQV), .CD(`CDV), .MUT(`HMUT)) u_e (.clk(clk), .rst_n(rst_n), .job_v(job_v),
+        .clk_sl({256{clk}}), .clk_chunk({224{clk}}), .job_rdy(job_rdy), .job(jw),
         .g_rdy(g_rdy), .done(e_done), .fault(e_fault), .idle(e_idle), .wrq(e_rq), .wrq_cr(own ? rq_cr : 32'd0),
         .wrr(own ? rr : '0), .wwq(e_wq), .wwq_cr(own ? w2_cr : 32'd0), .wwq_done(own ? w2_done : 32'd0),
         .rg_req(e_rg), .rg_gnt(1'b1), .wg_req(e_wg), .wg_gnt(1'b1));

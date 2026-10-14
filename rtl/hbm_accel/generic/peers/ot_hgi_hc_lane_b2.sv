@@ -11,12 +11,15 @@ module ot_hgi_hc_lane_b2 #(
     parameter integer LQ  = 32,
     parameter integer FD  = 64,
     parameter integer TD = 2 * LQ,            // bounded in-flight read associations, independent of return credits
+    parameter integer CLOCKED = 0,
     parameter integer HSL = 1,               // 1: the FP datapath as 8 hard element slices (ot_hgi_hc_lane_sl, own clock
                                              //    tree, registered in/out => +2 cycles); 0: flat (one 114k-flop clock root)
     parameter integer MUT = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
+    input wire [7:0] clk_sl,
+    input wire [6:0] clk_chunk,
     input  wire [4:0]    lid,
     // VM bank lane
     output reg  [15:0]   wrq,
@@ -204,7 +207,7 @@ module ot_hgi_hc_lane_b2 #(
                             wt[32*(4 + 4 + kk) +: 32], wt[32*(4 + 0 + kk) +: 32]};
         for (e = 0; e < 8; e = e + 1) begin : g_sl
             // hard child: no parameter overrides (its defaults are this lane's LM / LA / LMS / ML / AL)
-            ot_hgi_hc_lane_sl u_sl (.clk(clk), .rst_n(rst_n), .i_sw(sw),
+            ot_hgi_hc_lane_sl u_sl (.clk(CLOCKED?clk_sl[e]:clk), .rst_n(rst_n), .i_sw(sw),
                 .i_op({op[4][32*e +: 32], op[3][32*e +: 32], op[2][32*e +: 32], op[1][32*e +: 32], op[0][32*e +: 32]}),
                 .i_cf(cf5), .i_mx(mx_v), .i_pre(wt[127:0]), .i_xov(xo_v), .i_xo(xo[32*e +: 32]), .i_rh(rh),
                 .i_wov(vx[LMS]), .i_wo(wo[32*e +: 32]),
@@ -241,7 +244,7 @@ module ot_hgi_hc_lane_b2 #(
     generate for (k = 1; k < 8; k = k + 1) begin : g_ch
         wire [31:0] sd;
         ot_hdc_delay #(.W(32), .D(LA * (k - 1))) u_sd (.clk(clk), .rst_n(rp), .d(sq[32*k +: 32]), .q(sd));
-        ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rp, vs[LM + LA * (k - 1)], acc[k - 1], sd, acc[k], cf[k]);
+        ot_dsrom_qadd #(.LAT(LA)) u_a (CLOCKED?clk_chunk[k-1]:clk, rp, vs[LM + LA * (k - 1)], acc[k - 1], sd, acc[k], cf[k]);
     end endgenerate
     wire cs_v = vs[DS];
     wire [LMS+SX:0] vq;
