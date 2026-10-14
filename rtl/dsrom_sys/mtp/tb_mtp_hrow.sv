@@ -144,6 +144,9 @@ module tb_mtp_hrow;
     tb_hrow_relay #(.W(1025), .HOPS(QR)) u_qs (.clk(clk), .rst_n(rst_n), .i(t_vrs), .o(vrs_near));
 `ifdef OT_HROW_DIE
     dsfd_mtp_hrow_td #(.NW(NW)
+`ifdef OT_HROW_HARD_RELAYS
+           , .HARD_RELAYS(1)
+`endif
 `elsif OT_HROW_TILES
     dsfd_mtp_hrow_tc #(.NW(NW)
 `else
