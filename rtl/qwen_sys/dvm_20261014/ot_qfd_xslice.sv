@@ -252,18 +252,40 @@ module ot_qfd_xs_leaf #(
     output reg  [63:0]   q,
     output reg           q_bad
 );
+    function automatic integer ot_qfd_xs_nrep(input integer w, input integer ln, input integer lv);
+        integer loads;
+        begin
+            loads = w << (ln - 1 - lv);
+            ot_qfd_xs_nrep = (loads + 255) / 256;
+            if (ot_qfd_xs_nrep < 1) ot_qfd_xs_nrep = 1;
+        end
+    endfunction
+    function automatic integer ot_qfd_xs_mux_rep_sw(input integer w, input integer ln);
+        integer lv;
+        begin
+            ot_qfd_xs_mux_rep_sw = 0;
+            for (lv = 0; lv < ln; lv = lv + 1) ot_qfd_xs_mux_rep_sw = ot_qfd_xs_mux_rep_sw + ot_qfd_xs_nrep(w, ln, lv);
+        end
+    endfunction
+    function automatic integer ot_qfd_xs_soff(input integer w, input integer ln, input integer lv);
+        integer l;
+        begin
+            ot_qfd_xs_soff = 0;
+            for (l = 0; l < lv; l = l + 1) ot_qfd_xs_soff = ot_qfd_xs_soff + ot_qfd_xs_nrep(w, ln, l);
+        end
+    endfunction
+    localparam integer RSW = ot_qfd_xs_mux_rep_sw(17, 9);
     // pin registers
-    reg          wv, wep, cv, cep, rv, rt, rep;
+    reg          wv, wep, cv, cep, rv;
     reg [5:0]    woff;
     reg [63:0]   wm;
     reg [1023:0] wd;
     reg [NCH*8-1:0] wctl;
-    reg [27:0]   rp;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin wv <= 1'b0; cv <= 1'b0; rv <= 1'b0; end
         else begin wv <= w_v; cv <= c_v; rv <= r_v; end
     always @(posedge clk) begin
-        wep <= w_ep; woff <= w_off; wm <= w_m; wd <= w_d; wctl <= w_ctl; cep <= c_ep; rt <= r_t; rep <= r_ep; rp <= r_p;
+        wep <= w_ep; woff <= w_off; wm <= w_m; wd <= w_d; wctl <= w_ctl; cep <= c_ep;
     end
     assign wo_v = wv; assign wo_ep = wep; assign wo_off = woff; assign wo_m = wm; assign wo_d = wd;
     assign wo_ctl = {8'd0, wctl[NCH*8-1:8]};
@@ -292,13 +314,26 @@ module ot_qfd_xs_leaf #(
         assign mem_f[16*ge +: 16] = m;
         assign val_f[ge] = v;
     end endgenerate
-    // read: four elements of one tile's window through explicit 512:1 trees
+    // read: four elements of one tile's window through explicit 512:1 trees.  The select of each tree level is a
+    // REPLICATED pin register (one copy per <= 256 mux loads: 17 x 2^(8 - level) 2:1 muxes at level 0 .. 8 -> 17, 9,
+    // 5, 3, 2, 1, 1, 1, 1 copies), each copy driven by the input pin (gate 08:29: one select flop drove ~8,600 loads).
     wire [63:0] qq;
     wire [3:0]  vv;
     genvar gi;
     generate for (gi = 0; gi < 4; gi = gi + 1) begin : g_rd
-        wire [8:0] ix = {(MUT == 2) ? 1'b0 : rt, rep, rp[7*gi +: 7]};
-        ot_qfd_xs_mux #(.W(17), .LN(9)) u_m (.d(interleave(mem_f, val_f)), .s(ix), .q({vv[gi], qq[16*gi +: 16]}));
+        wire [8:0] ix_pin = {(MUT == 2) ? 1'b0 : r_t, r_ep, r_p[7*gi +: 7]};
+        wire [RSW-1:0] sr;
+        genvar lv, c;
+        for (lv = 0; lv < 9; lv = lv + 1) begin : g_lv
+            localparam integer NR = ot_qfd_xs_nrep(17, 9, lv);
+            localparam integer OF = ot_qfd_xs_soff(17, 9, lv);
+            for (c = 0; c < NR; c = c + 1) begin : g_c
+                (* keep *) reg f;
+                always @(posedge clk) f <= ix_pin[lv];
+                assign sr[OF + c] = f;
+            end
+        end
+        ot_qfd_xs_mux_rep #(.W(17), .LN(9), .SW(RSW)) u_m (.d(interleave(mem_f, val_f)), .s(sr), .q({vv[gi], qq[16*gi +: 16]}));
     end endgenerate
     wire bad = ~&vv;
     function automatic [512*17-1:0] interleave(input [8191:0] m, input [511:0] v);
@@ -670,6 +705,52 @@ module ot_qfd_xcst #(
         if (!rst_n) begin br_q <= 1'b0; tr_q <= 1'b0; ar_q <= 1'b0; end
         else begin br_q <= b_r; tr_q <= tap_r; ar_q <= br_q & tr_q; end
     assign a_r = ar_q;
+endmodule
+
+// Replicated-select mux tree: level lv (0 = the 2^(LN-1) muxes next to the data) takes nrep(lv) copies of select bit
+// lv; mux k of the level uses copy k * nrep / nodes, so no select copy drives more than ~256 mux bits.
+module ot_qfd_xs_mux_rep #(parameter integer W = 16, parameter integer LN = 9, parameter integer SW = 64) (
+    input  wire [(W << LN)-1:0] d,
+    input  wire [SW-1:0]        s,      // SW = ot_qfd_xs_mux_rep_sw(W, LN), checked below
+    output wire [W-1:0]         q
+);
+    function automatic integer ot_qfd_xs_nrep(input integer w, input integer ln, input integer lv);
+        integer loads;
+        begin
+            loads = w << (ln - 1 - lv);
+            ot_qfd_xs_nrep = (loads + 255) / 256;
+            if (ot_qfd_xs_nrep < 1) ot_qfd_xs_nrep = 1;
+        end
+    endfunction
+    function automatic integer ot_qfd_xs_mux_rep_sw(input integer w, input integer ln);
+        integer lv;
+        begin
+            ot_qfd_xs_mux_rep_sw = 0;
+            for (lv = 0; lv < ln; lv = lv + 1) ot_qfd_xs_mux_rep_sw = ot_qfd_xs_mux_rep_sw + ot_qfd_xs_nrep(w, ln, lv);
+        end
+    endfunction
+    function automatic integer ot_qfd_xs_soff(input integer w, input integer ln, input integer lv);
+        integer l;
+        begin
+            ot_qfd_xs_soff = 0;
+            for (l = 0; l < lv; l = l + 1) ot_qfd_xs_soff = ot_qfd_xs_soff + ot_qfd_xs_nrep(w, ln, l);
+        end
+    endfunction
+    genvar lv, k;
+    generate for (lv = 0; lv <= LN; lv = lv + 1) begin : g_l
+        wire [(W << (LN - lv))-1:0] n;
+        if (lv == 0) begin : g_in
+            assign n = d;
+        end else begin : g_mx
+            localparam integer NODES = 1 << (LN - lv);
+            localparam integer NR = ot_qfd_xs_nrep(W, LN, lv - 1);
+            localparam integer OFF = ot_qfd_xs_soff(W, LN, lv - 1);
+            for (k = 0; k < NODES; k = k + 1) begin : g_k
+                assign n[W*k +: W] = s[OFF + (k * NR) / NODES] ? g_l[lv-1].n[W*(2*k+1) +: W] : g_l[lv-1].n[W*(2*k) +: W];
+            end
+        end
+    end endgenerate
+    assign q = g_l[LN].n;
 endmodule
 
 // Explicit 2^LN : 1 mux tree of W-bit words (no runtime-indexed select for synthesis to re-share).
