@@ -21,7 +21,7 @@
 //     far tile; the closed final-rung tile ot_s81_hc_cntree (h2 tuple, unchanged master) takes the three chains'
 //     exports, and ot_s81_hc_cnrsq runs the scalar tail of ot_s81_hc_cseq (ot_dsrom_divc, + eps, ot_dsrom_rsqrt:
 //     the same modules, the same order: bit-exact by construction);
-//   * r leaves the bottom on a narrow registered lane NORTH (33 b: ot_s81_hc_ctfx_nt + ot_s81_hc_ctrn_nt N strip,
+//   * r leaves the bottom on a narrow registered lane NORTH (33 b: ot_s81_hc_ctfs_nt S strip + ot_s81_hc_ctfx_nt (r2),
 //     2 registers a hop) that REPLACES the bus r beat at every half-tile's broadcast source (ctfx_nt; the bus r of
 //     the old root path is masked).  The y rows still originate at the far tile and return on the closed row path;
 //     the r lane (2 a hop) outruns the row return (5 a hop), so every tile's y is in ybuf before its row passes.
@@ -29,7 +29,7 @@
 // Unchanged and still used: every ctnl / ctpl / ctra / ctrb / ctfn tile of the half-octets, the forward / return buses,
 // the column roots, the comb (cseq keeps its own norm tail: its sum and r are computed and discarded, the closed
 // tiles stand).  Changed masters (NEW names): ot_s81_hc_cth_nt (region wrapper, no route), ot_s81_hc_ctfx_nt,
-// ot_s81_hc_ctfs_nt, ot_s81_hc_ctrn_nt (strips, outlines = the closed strips'), new: ot_s81_hc_cncla / ot_s81_hc_cnclb (C = 0 / 1 / 2),
+// ot_s81_hc_ctfs_nt (strips; r2: ctfx_nt 25.92 tall, ctfs_nt = the closed ctfs outline; the closed ctrn is reused), new: ot_s81_hc_cncla / ot_s81_hc_cnclb (C = 0 / 1 / 2),
 // ot_s81_hc_cnrsq; reused at a new slot: ot_s81_hc_cntree (h2 tuple).
 // Faults (lane collision, missing / duplicate leaf at fire, tree / div / eps / rsqrt) are sticky in the bottom and
 // enter chain 0's far tile on the return valid word (bit S_RT + 2): crx x_f1 -> cseq fault code 1.
@@ -716,10 +716,10 @@ module ot_s81_hc_cth_nt #(
     wire [32:0]    ul_m;
     ot_s81_hc_ctfx_nt #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .LOCAL_EPOCH(CNL_PIN)) u_fx (
         .clk(clk), .rst_in(rst_c), .fv_in(fv_in), .fd_in(fd_in[FXW-1:0]), .fv(fv), .fdx(fdx),
-        .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_in), .ul_out(ul_m));
+        .tid(tid), .cs_n(cs[63:0]), .cs_s(cs[127:64]), .dl_in(dl_in), .dl_out(dl_m), .ul_in(ul_m), .ul_out(ul_out));
     ot_s81_hc_ctfs_nt #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .RLY(RLY)) u_fs (
         .clk(clk), .rst_in(rst_c), .rst_out(rst_out), .fvm(fvm), .fdm(fdm), .fv_out(fv_out), .fd_out(fd_out),
-        .dl_in(dl_m), .dl_out(dl_out));
+        .dl_in(dl_m), .dl_out(dl_out), .ul_in(ul_in), .ul_out(ul_m));
     wire [16*S_RT-1:0]  rq_q;
     wire                hs_run;
     wire [15:0]         hs_c;
@@ -835,11 +835,13 @@ module ot_s81_hc_cth_nt #(
         .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local[O_D-1:0]), .rv_in(rv_in),
         .rdh_in(rd_in[P_D-1:0]), .rdd_in(rd_in[RDW-1 -: 512 * SH + 128]), .rdm(rdm[RDW-1 -: 512 * SH]),
         .hrq_n(hqb_n), .hrq_s(hqb_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]));
-    ot_s81_hc_ctrn_nt #(.S_RT(S_RT), .RDW(RDW), .RLY(RLY)) u_rn (
-        .clk(clk), .rst_in(rst_c), .rvm(rvm), .rdm(rdm), .rv_out(rv_out), .rd_out(rd_out), .ul_in(ul_m), .ul_out(ul_out));
+    ot_s81_hc_ctrn #(.S_RT(S_RT), .RDW(RDW), .RLY(RLY)) u_rn (                   // the CLOSED return strip, unchanged
+        .clk(clk), .rst_in(rst_c), .rvm(rvm), .rdm(rdm), .rv_out(rv_out), .rd_out(rd_out));
 endmodule
 
-// ot_s81_hc_ctfs_nt: the closed ot_s81_hc_ctfs + one relay register of the partial lane (dl, N -> S).
+// ot_s81_hc_ctfs_nt: the closed ot_s81_hc_ctfs + one relay register of the partial lane (dl, N -> S) + one relay register
+// of the scale lane (ul, S -> N; r2: moved here from ctrn_nt so the closed ctrn stands and its thin strip does not grow:
+// hops ctfx_nt -> N face -> the tile above's ctfs_nt ~380 um, ctfs_nt -> its ctfx_nt ~335 um, both <= 500 um).
 module ot_s81_hc_ctfs_nt #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, RLY = 2
 ) (
@@ -851,7 +853,9 @@ module ot_s81_hc_ctfs_nt #(
     output reg  [S_RD+4:0]    fv_out,
     output reg  [FDW-1:0]     fd_out,
     input  wire [DLW-1:0]     dl_in,                 // NORM tree partial lane: relay south (pins N / S)
-    output reg  [DLW-1:0]     dl_out
+    output reg  [DLW-1:0]     dl_out,
+    input  wire [32:0]        ul_in,                 // NORM tree scale lane: relay north (pins S / N)
+    output reg  [32:0]        ul_out
 );
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, YW = NP * GS * 32;
     localparam integer FDD = (S_RD * 512 > YW) ? S_RD * 512 : YW;
@@ -870,29 +874,5 @@ module ot_s81_hc_ctfs_nt #(
     ot_hdc_delay #(.W(S_RD + 5), .D(RLY - 1), .RESET(1)) u_fvr (.clk(clk), .rst_n(rst_n), .d(fvm), .q(fvm_d));
     ot_hdc_delay #(.W(FDW), .D(RLY - 1)) u_fdr (.clk(clk), .rst_n(rst_n), .d(fdm), .q(fdm_d));
     always @(posedge clk or negedge rst_n) if (!rst_n) dl_out <= 0; else dl_out <= dl_in;
-endmodule
-
-// ot_s81_hc_ctrn_nt: the closed ot_s81_hc_ctrn + one relay register of the scale lane (ul, S -> N).
-module ot_s81_hc_ctrn_nt #(
-    parameter integer S_RT = 4, RDW = 2156, RLY = 2
-) (
-    input  wire               clk,
-    input  wire               rst_in,
-    input  wire [S_RT+3:0]    rvm,
-    input  wire [RDW-1:0]     rdm,
-    output reg  [S_RT+3:0]    rv_out,
-    output reg  [RDW-1:0]     rd_out,
-    input  wire [32:0]        ul_in,                 // NORM tree scale lane: relay north (pins S / N)
-    output reg  [32:0]        ul_out
-);
-    reg rr;                                              // regional reset relay: rst_in = ctfn's first stage
-    always @(posedge clk) rr <= rst_in;
-    wire rst_n = rr;
-    wire [S_RT+3:0] rv_out_d;
-    wire [RDW-1:0]  rd_out_d;
-    ot_hdc_delay #(.W(S_RT + 4), .D(RLY - 2), .RESET(1)) u_rvr (.clk(clk), .rst_n(rst_n), .d(rvm), .q(rv_out_d));
-    ot_hdc_delay #(.W(RDW), .D(RLY - 2)) u_rdr (.clk(clk), .rst_n(rst_n), .d(rdm), .q(rd_out_d));
-    always @(posedge clk or negedge rst_n) if (!rst_n) rv_out <= 0; else rv_out <= rv_out_d;
-    always @(posedge clk) rd_out <= rd_out_d;
     always @(posedge clk or negedge rst_n) if (!rst_n) ul_out <= 0; else ul_out <= ul_in;
 endmodule

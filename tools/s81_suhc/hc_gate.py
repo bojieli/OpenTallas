@@ -139,7 +139,6 @@ TILES.update({
     "ot_s81_hc_ctfx_nt": dict(src=_NT, routed=[dict(CHAIN_STEP=6)], mut=("o[SW * oct[0] +: SW] = {cs, si[2:0], oct, 1'b1};",
                                                          "o[SW * oct[0] +: SW] = {cs ^ (128'd1 << 29), si[2:0], oct, 1'b1};")),
     "ot_s81_hc_ctfs_nt": dict(src=_NT, routed=[{}], mut=("else dl_out <= dl_in;", "else dl_out <= dl_in ^ (275'd1 << 40);")),
-    "ot_s81_hc_ctrn_nt": dict(src=_NT, routed=[{}], mut=("else ul_out <= ul_in;", "else ul_out <= ul_in ^ 33'h0_0040_0000;")),
     "ot_s81_hc_cncla":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("pi <= {5'd0, i_q}; ex <= ex_w;", "pi <= {5'd0, i_q}; ex <= ex_w ^ (1 << 29);")),
     "ot_s81_hc_cnclb":   dict(src=_NT, routed=[dict(C=0), dict(C=1), dict(C=2)], mut=("always @(posedge sk) ex <= ex_w;", "always @(posedge sk) ex <= ex_w ^ (1 << 29);")),
     "ot_s81_hc_cnrsq":   dict(src=_NT, routed=[{}], mut=("fcq[O_RC + 16 * s +: 16] == 16'd1", "fcq[O_RC + 16 * s +: 16] == 16'd0")),
