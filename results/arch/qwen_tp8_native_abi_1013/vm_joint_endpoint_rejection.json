@@ -7,9 +7,8 @@
   "normalization": "o=O_child-R_child; s=S_child+R_child. Do not subtract R twice.",
   "launch_limit_ps": 220,
   "capture_limit_ps": 190,
-  "zero_wire_failing_output_pin_count": 53,
   "geometric_failing_output_pin_count": 688,
-  "meaning": "53 is a count of failing q pins, not a53ps output delay.",
+  "meaning": "53 is conservative producer-packet count including boundary-extrema addends.13 is actual O\u2212R first-loadpoint output violations for regional_to_bandstation. Neither number is a53ps outputdelay. Any intrinsic violation rejects assignment.",
   "stations": [
     {
       "station": "g1_exit1",
@@ -43,5 +42,45 @@
   "clock_wire": "Compensated separately percorner; never sum clock entry delay into DATA endpoint.",
   "needed": "Actual shallow ENGINE-qualified registered launch face/internal reach staging; no sourcefreeze orroute from rejectedWcandidate.",
   "adopted": false,
-  "qualified": false
+  "qualified": false,
+  "conservative_packet_zero_wire_over220_pin_count": 53,
+  "actual_first_loadpoint_zero_wire_over220_pin_count": 13,
+  "actual_ETM_audit": {
+    "commit": "f84ce9364",
+    "path": "tools/ref_tile/rg6_station_pin_audit_1013_summary.json",
+    "sha256": "1a7d51f12582635b981e77fd7040bbf59be21bce4b74be692f87fc8a37ed15ea",
+    "scope": "Actual per-bit ETM first-load-table-point normalization; candidate-only, no SS wire coefficient, no physical timing qualification. Both O-R/S+R direct and producer boundary-extrema extras independently checked.",
+    "regional_to_bandstation": {
+      "bits": 688,
+      "actual_first_loadpoint_TT_launch_gt220": 13,
+      "actual_first_loadpoint_TT_max_launch_ps": 224.54026,
+      "actual_first_loadpoint_TT_capture_gt190": 0,
+      "actual_first_loadpoint_TT_max_capture_ps": 133.44858,
+      "metrics": {
+        "TT_calibrated_0.76_setup_ps": {
+          "margin_ps": 53.504199999998946,
+          "lane": "vm_g3_b1_xf0>p11",
+          "bit": 4,
+          "length_um": 308.6760000000013,
+          "row_index": 1080
+        },
+        "FF_ideal_0.112_hold_ps": {
+          "margin_ps": 115.8731359999999,
+          "lane": "vm_g1_b3_xf1>p15",
+          "bit": 3,
+          "length_um": 207.887999999999,
+          "row_index": 1926
+        },
+        "actual_zero_wire_setup_ps": {
+          "margin_ps": 113.57679000000002,
+          "lane": "vm_g1_b3_xf1>p29",
+          "bit": 5,
+          "length_um": 248.59199999999691,
+          "row_index": 1834
+        }
+      },
+      "max_length_um": 308.6760000000013
+    },
+    "qualification": false
+  }
 }
