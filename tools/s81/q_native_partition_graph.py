@@ -13,7 +13,7 @@ from collections import defaultdict
 from pathlib import Path
 
 
-def extract(data, top):
+def extract(data, top, coalesce_containers=False):
     modules = data['modules']
     original = modules[top]
     aliases = defaultdict(set)
@@ -25,14 +25,22 @@ def extract(data, top):
 
     def owner(name):
         match = re.search(r'g_mac\[([01])\]', name)
+        if coalesce_containers:
+            return 'return_pair' if match else 'data_control'
         return 'return' + match[1] if match else 'control'
 
-    groups = {name: {} for name in ('control', 'return0', 'return1')}
+    group_names = ('data_control', 'return_pair') if coalesce_containers else ('control', 'return0', 'return1')
+    groups = {name: {} for name in group_names}
+    lane_names = []
     kept = {}
     assignment = {}
     for name, cell in original['cells'].items():
         if 'ot_s81_q_lane_pair_native' in cell['type']:
-            kept[name] = cell
+            lane_names.append(name)
+            if coalesce_containers:
+                groups['data_control'][name] = cell
+            else:
+                kept[name] = cell
             continue
         if 'MEMID' in cell.get('parameters', {}):
             group = owner(cell['parameters']['MEMID'])
@@ -45,7 +53,10 @@ def extract(data, top):
                     for bit in bits:
                         for alias in aliases.get(bit, ()):
                             ids.update(re.findall(r'g_mac\[([01])\]', alias))
-            group = 'return' + next(iter(ids)) if len(ids) == 1 else 'control'
+            if coalesce_containers:
+                group = 'return_pair' if len(ids) == 1 else 'data_control'
+            else:
+                group = 'return' + next(iter(ids)) if len(ids) == 1 else 'control'
         groups[group][name] = cell
         assignment[name] = group
 
@@ -133,6 +144,9 @@ def extract(data, top):
     assert recovered_memories == original.get('memories', {})
     return result, {'schema': 'opentallas.s81.q_native.source_graph_partition.v1',
                     'top': top, 'groups': receipts, 'kept_lanes': list(kept),
+                    'co_located_lanes': lane_names if coalesce_containers else [],
+                    'coalesced_containers': coalesce_containers,
+                    'added_operation_epochs': 0,
                     'exact_cell_connection_reconstruction': True,
                     'exact_memory_reconstruction': True,
                     'physical_admission': False,
@@ -145,9 +159,11 @@ def main():
     ap.add_argument('source', type=Path)
     ap.add_argument('output', type=Path)
     ap.add_argument('--top', default='ot_v41_rom_elem_q_qxpq_w10')
+    ap.add_argument('--coalesce-containers', action='store_true',
+                    help='Source-only co-location: control plus kept lanes, and both return groups. Clock output identities stay explicit.')
     args = ap.parse_args()
     raw = gzip.open(args.source, 'rb').read() if args.source.suffix == '.gz' else args.source.read_bytes()
-    result, receipt = extract(json.loads(raw), args.top)
+    result, receipt = extract(json.loads(raw), args.top, args.coalesce_containers)
     args.output.mkdir(parents=True, exist_ok=True)
     receipt['source_graph_sha256'] = hashlib.sha256(raw).hexdigest()
     (args.output / 'partitioned.json').write_text(json.dumps(result))
