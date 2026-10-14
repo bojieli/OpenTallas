@@ -1,0 +1,70 @@
+{
+  "status": "BENCHED_COMPONENT_NOT_INTEGRATED_NOT_ROUTED",
+  "source_commit": "2685dedbb",
+  "source_sha256": {
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv": "4a07c1012e003571f6fe263e06d72e757907c7eb683f29542cfc0fad99811c30",
+    "rtl/test/qwen_su_kv_native/tb_native.sv": "c52e8f79695cf6f3948969fbadfe7f9886107136b444a043b187a8b6ff1cc088",
+    "rtl/test/qwen_su_kv_native/run.sh": "f861b1c8b703a4fffe508daf36f4274e5d78a92baf114225bccbf2ac1dc6f4df"
+  },
+  "remote": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-450129-1791951381",
+    "exit": 0,
+    "directory": "/srv/opentallas-scratch/codex/qwen-su-kv-native-r10"
+  },
+  "native_candidate": {
+    "tp": 8,
+    "kv_heads": 1,
+    "query_heads": 4,
+    "head_dimensions": 128,
+    "kv_bytes_per_layer": 256,
+    "kv_flits_per_layer": 4,
+    "q_transport": "32x512 raw FP32 candidate; test Q payload is fixture, not actual VM reader",
+    "shared_credit_pool": 40,
+    "credit_consumptions_per_layer": 36,
+    "context_capacity": 8192,
+    "epochs": 40,
+    "kv_bytes_checked": 10240,
+    "words_checked": 1440,
+    "cycles": 2999
+  },
+  "historical_control": {
+    "heads": 2,
+    "epochs": 40,
+    "kv_bytes_checked": 20480,
+    "words_checked": 1600,
+    "cycles": 3278
+  },
+  "mutant_data_errors": {
+    "lane_swap": 160,
+    "half_tag_swap": 160,
+    "one_byte_mask_loss": 159
+  },
+  "rejected_faults": {
+    "wrong_position": 1,
+    "noncanonical_precision": 2,
+    "duplicate_byte": 8,
+    "wrong_op_shape": 32
+  },
+  "analytical_model": {
+    "posted_producer_bits_per_edge": 3648,
+    "encoded_kv_bytes_per_edge": 64,
+    "raw_input_face_register_bits": 3648,
+    "assembly_storage_bits_conservative": 4096,
+    "assembly_seen_bits": 512,
+    "boundary_output_bits": 524,
+    "max_qualified_published_roots": 0,
+    "clock_sink_bound_estimate": "approximately 9400 flops for formatter plus local credit sender; synthesis/CTS not measured",
+    "route_track_model": "524 output bits /12 bits per micron requires >=43.67 microns at full track occupancy; 0.60 target requires >=72.78 microns, before PG/keepout. Input must remain beside distributed SU producer, not one long 3648-bit die bus."
+  },
+  "limitations": [
+    "Default ENABLE=0; no source integration into SU acceptance/go_s yet",
+    "No actual pinned TP8 ROM instruction image consumed by bench; shape arguments are candidate profile",
+    "Issue-kind must derive from accepted real V/Klo/Khi instruction, not fetched PC",
+    "Receiver layer/position descriptor binding and remote committed fence remain composition requirements",
+    "No actual Q VM reader/arbitration integration; fixture Q tests shared transport only",
+    "No synthesis/CTS/SS/FF/GRT/pin contract qualification",
+    "No immutable-price or end-to-end throughput claim",
+    "HEADS2 is historical diagnostic only; no second head filled for TP8"
+  ]
+}

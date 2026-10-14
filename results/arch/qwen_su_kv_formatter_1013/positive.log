@@ -1,0 +1,4 @@
+PROGRESS cycles1000 ep13 ready1 active0 sentff issued7 seen256 ff0 fc00 nq11 nkv4 credits0
+PROGRESS cycles2000 ep26 ready1 active0 sentff issued7 seen256 ff0 fc00 nq24 nkv4 credits0
+NATIVE_KV_PASS heads=1 epochs=40 uniqueKVbytes=10240 words=1440 cycles=2999
+rtl/test/qwen_su_kv_native/tb_native.sv:99: $finish called at 30020000 (1ps)
