@@ -1,0 +1,12 @@
+{
+  "name": "dsfd_be_f16_m5-r1-585558587",
+  "immutable_source_commit": "585558587",
+  "source_branch": "codex/s81-fe-fault-source-trace",
+  "duplicate_f16_jobs": [],
+  "validate_pass": true,
+  "drop": "/tmp/claude-review-20261003/closure_jobs/dsfd_be_f16_m5-r1-585558587.json",
+  "hold_merge": "DIAGNOSTIC ONLY. New unallocated f16 master; no native parent adoption; N9 numerical proof, global source clocks, reset distribution and new consumer ACK remain open.",
+  "N9_native_proof_pending": true,
+  "parent_adopted": false,
+  "new_reset_consumer_ACK": false
+}
