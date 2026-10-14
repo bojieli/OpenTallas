@@ -79,6 +79,7 @@ module tb_s81_native_transfer_controller #(parameter integer MUT=0,STALL=0);
   end
   repeat(12000)@(negedge ck);
   if(messages!=2||loads!=2||stores!=2||cf||tf||mf||hstatus[0]||early)errors=errors+1;
+  $display("NATIVE_LANDING streamed_loads=%0d vm_fallback_loads=%0d",ctrl.g_htransfer.hboundary.stream_count,ctrl.g_htransfer.hboundary.vm_count);
   $display("TB_S81_NATIVE_TRANSFER_CONTROLLER mut=%0d stall=%0d messages=%0d accepted_loads=%0d accepted_stores=%0d jobs=%0d errors=%0d early=%0d faults=%b%b%b%b first=%0d last=%0d %s",MUT,STALL,messages,loads,stores,jobs,errors,early,cf,tf,mf,hstatus[0],first,last,errors==0?"PASS":"FAIL");$finish;
  end
 endmodule
