@@ -1,0 +1,36 @@
+{
+  "status": "PASS scoped actual-request counterexample and default-off repair, no physical parent adoption",
+  "parent_commit": "1ac31de60",
+  "unit": "oth-ubuntu-845109-1791963243",
+  "exit": 0,
+  "original_failure": {
+    "op": 5,
+    "core_edge": 1394,
+    "time_ns": 18076,
+    "old_request": "k0,j6 from xjs!=0 production operation",
+    "incoming_descriptor": "PC1 xjs0 offered, GO held externally",
+    "error": "actual CEXT2 arithmetic mismatch"
+  },
+  "repair_outputs": 680,
+  "repair_nonzero_requests": 684,
+  "raw_split_outputs": 936,
+  "raw_split_nonzero_requests": 876,
+  "reactive_misses": 143,
+  "storage_bits": 9569,
+  "extra_store_bits": 4640,
+  "read_seam_bits": 170,
+  "fill_seam_bits": 295,
+  "added_response_edges": 0,
+  "read_mode_scope": "reference production pre-update xjs_r capture in harness, not physical port export",
+  "context_version_scope": "harness descriptor fields, not production source allocator",
+  "unqualified": [
+    "actual production request mode/context/version export",
+    "snapshot/version retention and stale fill drain",
+    "registered physical admission/status",
+    "source/context/version fanout/pins/CTS",
+    "back-to-back accepted core GO arithmetic",
+    "parallel producer and all consumer ACK",
+    "native layer cost",
+    "149-bit root ABI"
+  ]
+}
