@@ -136,7 +136,13 @@
         "path": "results/arch/qwen_delivery_lifetime_1014/receipt.json",
         "sha256": "eb147d4cab8c62be3211c86890cdb53959369c64af886d7b667e7dc3128d8164"
       },
-      "status": "Default-off component seq40/count7 with16x48 real tile-query banks; two positive cases and10 observed failing mutants. Vector48 concurrent issue/retire events and49 outstanding requests tested. Exact generic census vector4370Q/bank +1985Q controller =71905Q field, 11094ports/bank. Scalar4322Q/bank =71137Q field. No mapped area, clock delivery, assigned pins or native field cost. Scalar768 acceptance reduction still requires actual spatial transport."
+      "status": "Default-off component seq40/count7 with16x48 real tile-query banks; two positive cases and10 observed failing mutants. Vector48 concurrent issue/retire events and49 outstanding requests tested. Exact generic census vector4370Q/bank +1985Q controller =71905Q field, 11094ports/bank. Scalar4322Q/bank =71137Q field. No mapped area, clock delivery, assigned pins or native field cost. Scalar768 acceptance reduction still requires actual spatial transport.",
+      "start_event_fence_successor": {
+        "commit": "20d3727f6",
+        "path": "results/arch/qwen_delivery_lifetime_1014/start_event_fence/receipt.json",
+        "sha256": "7ba4884e88bf481e5a5ee63515b500c782770ce304c3cbe2f1a6c5fe89b8c90b",
+        "status": "Default-off successor rejects begin simultaneous issue/retire/seal;14cases=2positives12observedmutants, admitted1GB1thread gate. No fresh successor census/CTS; f9 generic census remains old exact source."
+      }
     },
     {
       "name": "SU_writer_quiescence",
