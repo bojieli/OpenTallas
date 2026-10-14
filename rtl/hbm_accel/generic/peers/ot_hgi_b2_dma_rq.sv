@@ -73,12 +73,15 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
     reg [175:0] sc; reg sq_act, sq_last, sq_mv_v, sq_wait; reg [226:0] sq_mv; reg [19:0] sq_e;
     reg sq_p0v; reg [59:0] sq_p0; reg [2:0] sq_ph; reg [59:0] sq_p; reg [42:0] sq_lo, sq_hi; reg [31:0] sq_id;
     reg [34:0] sq_pp [0:3];
+    reg [30:0] sq_nlo [0:3], sq_nhi [0:3];
+    reg [28:0] sq_qp [0:15];
+    reg [31:0] sq_dw; // modulo32 destination: base + row_index * stride
     reg sq_skd;                                                 // B2: the stream's last row was another stack's (done pulse)
     localparam integer QS = (MUT_B2 == 1) ? (QID + 1) % 4 : QID;
     assign il_vmq = r_vmq; assign il_active = rd_act;
     wire f_rdy, f_done, f_fault;
     assign d_frdy = m_fence_rdy && b_quiet;
-    assign d_mv_rdy = !rd_act && !sq_act && (to_b ? (b_rdy && !m_pend) : (b_quiet && (to_f ? f_rdy : m_rdy)));
+    assign d_mv_rdy = !m_pend && !rd_act && !sq_act && (to_b ? (b_rdy && !m_pend) : (b_quiet && (to_f ? f_rdy : m_rdy)));
     assign d_mv_done = f_done | (m_done && (!sq_act || sq_last)) | b_done | sq_skd;
     assign d_mv_fault = f_fault | m_fault | b_fault;
     assign d_mv_src = (m_src && !sq_act) | b_src; assign d_mv_pdone = (m_done && (!sq_act || sq_last)) | b_done | sq_skd; assign d_mv_fdone = f_done;
@@ -95,7 +98,7 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
     assign ix_rdy_f = 1'b0; assign id_rdy_f = 1'b0;
     // hbm-fq/dma 10-11: with the KV engine the sector engine reads VM sources through the packet client (SVR2 0)
     // ---------------------------------------------------------------- stream command, I-list reader, row sequencer
-    assign d_is_rdy = !rd_act && !sq_act && m_rdy && b_quiet && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
+    assign d_is_rdy = !m_pend && !rd_act && !sq_act && m_rdy && b_quiet && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
     assign s_id_take = (FRONT != 0) ? (s_id_v && id_rdy_f) : (sq_act && !sq_wait && sq_ph == 3'd0 && s_id_v);
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
@@ -109,7 +112,7 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
                 sc <= d_is_cmd[175:0]; rd_act <= d_is_cmd[174:155] != 20'd0; rd_w <= d_is_cmd[207:176]; rd_left <= d_is_cmd[174:155]; u_e <= 20'd0;
                 if (FRONT != 0) begin ixf_v <= 1'b1; ixf_cmd <= d_is_cmd[175:0]; end
                 else begin
-                    sq_act <= d_is_cmd[174:155] != 20'd0; sq_e <= 20'd0; sq_p0v <= 1'b0; sq_wait <= 1'b0; sq_ph <= 3'd0; sq_last <= 1'b0;
+                    sq_act <= d_is_cmd[174:155] != 20'd0; sq_e <= 20'd0; sq_dw <= d_is_cmd[122:91]; sq_p0v <= 1'b0; sq_wait <= 1'b0; sq_ph <= 3'd0; sq_last <= 1'b0;
                 end
             end
             if (iss_go) begin
@@ -139,7 +142,22 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
             if (sq_act) begin
                 if (sq_ph == 3'd0 && !sq_wait && s_id_v) begin sq_id <= idf[idf_h]; sq_ph <= 3'd1; end
                 if (sq_ph == 3'd1) begin
-                    for (integer pp=0;pp<4;pp=pp+1) sq_pp[pp] <= {27'd0,sq_id[pp*8 +: 8]} * {8'd0,sc[69:43]};
+                    // Each two-bit product contains only one 29-bit add.
+                    // Two registered combine edges preserve the unsigned8x27 result.
+                    for (integer pp=0;pp<16;pp=pp+1)
+                        sq_qp[pp] <= {27'd0,sq_id[pp*2 +: 2]} * {2'd0,sc[69:43]};
+                    sq_ph <= 3'd6;
+                end
+                if (sq_ph == 3'd6) begin
+                    for (integer pp=0;pp<4;pp=pp+1) begin
+                        sq_nlo[pp] <= {2'd0,sq_qp[pp*4]} + {sq_qp[pp*4+1],2'd0};
+                        sq_nhi[pp] <= {2'd0,sq_qp[pp*4+2]} + {sq_qp[pp*4+3],2'd0};
+                    end
+                    sq_ph <= 3'd5;
+                end
+                if (sq_ph == 3'd5) begin
+                    for (integer pp=0;pp<4;pp=pp+1)
+                        sq_pp[pp] <= {4'd0,sq_nlo[pp]} + {sq_nhi[pp],4'd0};
                     sq_ph <= 3'd2;
                 end
                 if (sq_ph == 3'd2) begin
@@ -156,12 +174,12 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
                 end
                 if (sq_ph == 3'd4) begin : mvw
                     reg [59:0] a; reg [31:0] dw;
-                    a = {20'd0, sc[42:3]} + sq_p; dw = sc[122:91] + sq_e * sc[154:123];
+                    a = {20'd0, sc[42:3]} + sq_p; dw = sq_dw;
                     // move word {n 21, m 20, dst istride 16, dst stride 32, dst base 40, dst fmt 3, dst space 2,
                     //            src istride 16, src stride 32, src base 40, src fmt 3, src space 2}
                     sq_mv <= {sc[90:70], 20'd1, 16'd1, 32'd0, {8'd0, dw}, (sc[2:0] == 3'd5) ? 3'd5 : 3'd0, 2'd1,
                               16'd1, 32'd0, a[39:0], sc[2:0], 2'd0};
-                    sq_ph <= 3'd0; sq_e <= sq_e + 20'd1;
+                    sq_ph <= 3'd0; sq_e <= sq_e + 20'd1; sq_dw <= sq_dw + sc[154:123];
                     if (B2 != 0 && a[SBIT +: 2] != 2'(QS)) begin          // B2: another stack's row: skipped
                         if (sq_e + 20'd1 == sc[174:155]) begin sq_act <= 1'b0; sq_skd <= 1'b1; end
                     end else begin
@@ -186,11 +204,14 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
 `endif
 
     assign d_fdone = m_fence_done;
+    // The record adapter has one posted-background reservation. Keep that actual
+    // reservation charged until completion before accepting another standalone
+    // or I-list record; current SQ row progression retains its existing handshake.
     // Two-entry skid: both payload slots are flops; head is the output pin register.
     // Source acceptance is local space, independent of the downstream ready pin.
     reg [1:0] move_n; reg [226:0] move_head, move_tail;
     wire m_rdy = move_n < 2;
-    wire move_push = (sq_act ? sq_mv_v : (d_mv_v && !to_f && !to_b && !rd_act && b_quiet)) && m_rdy;
+    wire move_push = (sq_act ? sq_mv_v : (d_mv_v && !m_pend && !to_f && !to_b && !rd_act && b_quiet)) && m_rdy;
     wire move_pop = move_n != 0 && pin_m_rdy;
     wire [226:0] move_in = (sq_act ? sq_mv : d_mv) ^ ((MUT_SEAM == 1) ? (227'd1 << 206) : 227'd0);
     reg move_valid;

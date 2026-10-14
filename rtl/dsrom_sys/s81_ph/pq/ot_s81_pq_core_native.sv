@@ -10,9 +10,16 @@
 module ot_s81_pq_core_native (
     input wire ck_ctl, ck_qb, ck_fault,
     input wire [1:0] ck_aq,
+`ifdef OT_PQ_AQ_PHYS_SPLIT
+    input wire [15:0] ck_aq_aux,
+`endif
     input wire [3:0] ck_ix,
 `ifdef OT_PQ_IX_PHYS_SPLIT
+`ifdef OT_PQ_IX_BANK_SPLIT
+    input wire [31:0] ck_ix_read,
+`else
     input wire [15:0] ck_ix_read,
+`endif
 `endif
 `ifdef OT_PQ_BC_SLICED
     input wire [15:0] ck_bc,
@@ -107,6 +114,18 @@ module ot_s81_pq_core_native (
     genvar z;
     generate for (z = 0; z < 4; z = z + 1) begin : g_coverage
 `ifdef OT_PQ_IX_PHYS_SPLIT
+`ifdef OT_PQ_IX_BANK_SPLIT
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].u_ix.g_rg[0].g_bankpart[0].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[0].g_bankpart[1].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[1].g_bankpart[0].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[1].g_bankpart[1].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[2].g_bankpart[0].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[2].g_bankpart[1].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[3].g_bankpart[0].u_rb.g_bank[0].rows_read &
+            g_ix[z].u_ix.g_rg[3].g_bankpart[1].u_rb.g_bank[0].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_rg[0].g_bankpart[0].u_rb.g_bank[0].written;
+`else
         assign ix_rows_read[96*z +: 96] =
             g_ix[z].u_ix.g_rg[0].u_rg.g_bank[0].rows_read &
             g_ix[z].u_ix.g_rg[0].u_rg.g_bank[1].rows_read &
@@ -117,6 +136,7 @@ module ot_s81_pq_core_native (
             g_ix[z].u_ix.g_rg[3].u_rg.g_bank[0].rows_read &
             g_ix[z].u_ix.g_rg[3].u_rg.g_bank[1].rows_read;
         assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_rg[0].u_rg.g_bank[0].written;
+`endif
 `elsif OT_PQ_IX_PIN_VARIANTS
         if(z < 2) begin : g_l
         assign ix_rows_read[96*z +: 96] =
@@ -153,7 +173,12 @@ module ot_s81_pq_core_native (
 `endif
     genvar g;
     generate for (g = 0; g < 2; g = g + 1) begin : g_aq
-        ot_dsrom_aq12t u_aq (.clk(ck_aq[g]), .rst_n(rst_n), .v(aq_vin), .x(x_q[1024*g +: 1024]),
+`ifdef OT_PQ_AQ_PHYS_SPLIT
+        ot_s81_pq_aq_split_native u_aq (.clk(ck_aq[g]),.clk_mem(ck_aq_aux[8*g +: 4]),.clk_math(ck_aq_aux[8*g+4 +: 4]),
+`else
+        ot_dsrom_aq12t u_aq (.clk(ck_aq[g]),
+`endif
+            .rst_n(rst_n), .v(aq_vin), .x(x_q[1024*g +: 1024]),
             .vo(), .q(aq_q[256*g +: 256]), .e(aq_e[10*g +: 10]), .y(), .fault(aqf[g])
 `ifdef OT_PQ_AQ_SIDE_PARITY
             , .qp(aq_p[5*g +: 5])
@@ -173,7 +198,12 @@ module ot_s81_pq_core_native (
     generate for (g = 0; g < 4; g = g + 1) begin : g_ix
         wire [255:0] d;
 `ifdef OT_PQ_IX_PHYS_SPLIT
-        ot_s81_pq_ix_split_native u_ix (.clk(ck_ix[g]), .clk_read(ck_ix_read[4*g +: 4]),
+        ot_s81_pq_ix_split_native u_ix (.clk(ck_ix[g]),
+`ifdef OT_PQ_IX_BANK_SPLIT
+            .clk_read(ck_ix_read[8*g +: 8]),
+`else
+            .clk_read(ck_ix_read[4*g +: 4]),
+`endif
             .rst_n(rst_n), .consume(b_consume), .par(g >= 2),
             .xw(x_q[1024*(g % 2) +: 1024]), .ba_v(ba_v), .ba_blk(ba_blk), .h_hi(h_hi), .hw7(hw[7:1]),
             .bt_d(d), .fault(storage_fault[g]));
