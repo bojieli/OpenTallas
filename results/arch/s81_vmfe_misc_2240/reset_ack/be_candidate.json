@@ -45,5 +45,11 @@
     "new_leaf_ports_require_successor_views": true,
     "actual_source_driver_phase_RC": null,
     "current_closed_view_qualification": false
+  },
+  "default_preprocessed_equivalence": {
+    "baseline_commit": "55740b883",
+    "tool": "verilator -E -P with VM include directory; whitespace-normalized",
+    "identical": true,
+    "sha256": "8204277222d87c2e6122bc2751c6b88a149489dbeb089db28c8192e0617ba3df"
   }
 }
