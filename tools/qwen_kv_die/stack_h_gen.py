@@ -989,8 +989,55 @@ def ectl3(s):
     return s[:i] + s[i:].replace(a, b)
 
 
+def native_profile(s):
+    """Explicit default-off TP8 transport profile; golden Q rounding stays at consumption."""
+    header = """`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
+`ifndef KVD_Q_FP32
+`define KVD_Q_FP32 0
+`endif
+// TP8 is HEADS=1, Q_FP32=1: four query heads, one KV group.
+// FP32 transport rounds to BF16 RNE here, exactly decode_token_tp's matvec operand.
+// Existing HSUB/ECTL3 hard views need independent native body/parameter qualification.
+"""
+    s = s.replace('`timescale 1ns/1ps\n', '`timescale 1ns/1ps\n' + header, 1)
+    s = s.replace('8 * HD * 16 / 512', '4 * `KVD_HEADS * HD * (`KVD_Q_FP32 ? 32 : 16) / 512')
+    a=s.index('    // q rows of heads hid')
+    b=s.index('    // ---- S3 per 16-lane group',a)
+    q=s[a:b]
+    q=q.replace('localparam integer NB = HD * 16 / 512;', 'localparam integer QBW = `KVD_Q_FP32 ? 256 : 512;\n    localparam integer NB = HD * 16 / QBW;\n    wire [511:0] qc;\n    genvar qi;\n    generate if (`KVD_Q_FP32) begin : g_qfp32\n        for (qi=0; qi<16; qi=qi+1) begin : g_round\n            wire [31:0] x = qd2[32*qi +: 32];\n            assign qc[16*qi +: 16] = x[31:16] + (x[15] && (|x[14:0] || x[16]));\n        end\n        assign qc[511:256] = 256\'d0;\n    end else assign qc = qd2; endgenerate')
+    q=q.replace('(HD * 16) % 512', '(HD * 16) % QBW')
+    q=q.replace('[512*bi +: 512]', '[QBW*bi +: QBW]').replace('<= qd2;', '<= qc[QBW-1:0];')
+    q=q.replace('if (qv2 && qb2 == 6\'(NB * (4 +', 'if (`KVD_HEADS == 2 && qv2 && qb2 == 6\'(NB * (4 +')
+    q=q.replace('BO = 512 * bi', 'BO = QBW * bi').replace('BO + 512', 'BO + QBW').replace('qd2[A', 'qc[A')
+    q=q.replace('if (Z1 > A1)', 'if (`KVD_HEADS == 2 && Z1 > A1)')
+    s=s[:a]+q+s[b:]
+    for name in ('rg_g','c_g'):
+        s=s.replace(f'else if (!{name}) begin', f'else if (`KVD_HEADS == 2 && !{name}) begin')
+    s=s.replace("if (sg) run <= 1'b0; else sg <= 1'b1;", "if (sg || `KVD_HEADS == 1) run <= 1'b0; else sg <= 1'b1;")
+    s=s.replace("if (tg) run <= 1'b0;", "if (tg || `KVD_HEADS == 1) run <= 1'b0;")
+    s=s.replace("if (scnt1 == n_s) kdone[1] <= 1'b1;", "if (`KVD_HEADS == 2 && scnt1 == n_s) kdone[1] <= 1'b1;")
+    a = 'module ot_qwen_nearhbm_row_engine_h #('
+    i = s.index(a)
+    j = s.index('    wire [2*4-1:0]', i)
+    trap = """`ifdef KVD_HSUB
+    generate if (`KVD_Q_FP32) begin : g_native_hsub_unqualified
+        ot_qwen_native_FP32_head_subtiles_require_actual_profile u_refuse ();
+    end endgenerate
+`endif
+`ifdef KVD_ECTL3
+    generate if (`KVD_HEADS == 1) begin : g_native_ectl3_unqualified
+        ot_qwen_native_single_group_control_leaves_require_actual_profile u_refuse ();
+    end endgenerate
+`endif
+"""
+    s = s[:j] + trap + s[j:]
+    return s
+
+
 def main():
-    txt = ectl3(ectl_slot(generate()))
+    txt = native_profile(ectl3(ectl_slot(generate())))
     if '--check' in sys.argv:
         sys.exit(0 if DST.exists() and DST.read_text() == txt else 1)
     DST.write_text(txt)
