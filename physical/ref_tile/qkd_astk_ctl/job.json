@@ -1,5 +1,5 @@
 {
- "name": "qkd_astk_ctl-ks1-COMMIT",
+ "name": "qkd_astk_ctl-ks1-53707518d",
  "block": "qkd_astk_ctl",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-kvstrips",
@@ -8,16 +8,21 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1013-qwen-kvstrips",
-  "commit": "COMMIT",
+  "commit": "53707518d",
   "extra_paths": [
    "configs/hardware",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/qkd_astk_strip",
+   "physical/qwen_kv_die_phy",
    "results/asap7_physical/bitcell_density",
    "rtl/hdc",
+   "rtl/lib",
    "rtl/lib/ot_rst_relay.sv",
+   "rtl/proto",
    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/qwen_sys",
+   "rtl/test",
    "rtl/test/nearhbm",
    "rtl/test/qwen_kv_die",
    "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp",
@@ -26,6 +31,7 @@
    "tools/check_macro_track_alignment.py",
    "tools/mem_compiler",
    "tools/qwen_kv_die",
+   "tools/qwen_nearhbm_attn_ref.py",
    "tools/qwen_rom_fulldie.py"
   ]
  },
@@ -64,6 +70,18 @@
     ],
     "fail_regex": "^FAIL qkd_astk mutant 4 detected",
     "note": "MUT 4: the two halves of every P.V beat swapped at the port"
+   },
+   {
+    "name": "kvd_layer_step_k_exact",
+    "cmd": "STACK=k bash tools/qwen_kv_die/bench_gate.sh pos {RUN}/bench/layer",
+    "expect": "pass",
+    "threads": 32,
+    "peak_ram_gb": 160,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "\"exact_all\": true",
+    "note": "the layer-step campaign (ROM die <-> KV die link, 4 stacks of re-cut H engines, hub) with every stack's aggregator built from the five masters in the die wiring (ot_qwen_nearhbm_attn_stack_k, engines at KVD_ERL 3): 7 vectors x VM stall 0 / 1 bit-exact.  Measured before submit (ot-run, ot-epyc1tb): 129_tiny / 1_normal / 2048_wide / 8192_normal exact, step 8192 = 1,971 cycles (re-cut H aggregator 1,814: x 1.087)"
    }
   ],
   "calibrate": {
@@ -114,7 +132,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_astk_ctl/qkd_astk_ctl-ks1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_astk_ctl/qkd_astk_ctl-ks1-53707518d"
   }
  ],
  "cycles_added": 0,
