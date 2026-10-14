@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.native_dma_router.prebuild.v1",
+  "status": "MODEL BEFORE RTL; physical and throughput unqualified",
+  "legacy_semantics": "global sector15 preserved; legacy lane=S[4:0]",
+  "native_semantics": "main sec16={0,sector15}; native slice=S[14:13], bank=S[2:0]",
+  "production_request_bound": "CLOSED KV core occ[32] <=2 (ot_hgi_dma_kvw.sv issue condition); SVR2=0 sector mover uses packet",
+  "leaf_inventory": [
+    {
+      "master": "ot_hgi_dma_native_read_bank",
+      "replicas": 32,
+      "contenders": 4,
+      "input_fifo_entries_per_contender": 2,
+      "return_owner_ticket_fifo_entries": 8,
+      "estimated_flops": 600,
+      "native_credit_initial": 10,
+      "pins": "4 x request16, native rq17+credit1+return257, routed return260, four request credit pulses",
+      "rate": "one native sector/cycle/bank; round robin among four legacy lanes",
+      "latency_added_request_edges": 2,
+      "latency_added_return_edges": 2
+    },
+    {
+      "master": "ot_hgi_dma_native_read_join",
+      "replicas": 8,
+      "sources": 4,
+      "legacy_outputs": 4,
+      "reorder_slots_per_legacy_lane": 2,
+      "estimated_flops": 4300,
+      "latency_added_return_edges": 2,
+      "pins": "4 x routed return260, 4 x legacy return257,16 request-credit pulses in,4 credit pulses out"
+    }
+  ],
+  "returned_identity": "owner2 identifies legacy bank group; one-bit sequence ticket preserves two in-flight responses across slices, no tag/data bits repurposed",
+  "boundary_bits": {
+    "per_bank_request_in": 64,
+    "per_bank_native": 275,
+    "per_bank_return": 260,
+    "per_join_return_in": 1040,
+    "per_join_return_out": 1028
+  },
+  "channel_budget": "M5 cap, M4/M5 face pins; target final segment<=100um, stage<=500um; coordinates and hop counts requested from die owner",
+  "area_and_energy": "UNMEASURED; estimates are sizing only; no ledger/price credit",
+  "throughput": "UNMEASURED-vs-price; full production32lane KV+native8bank and BACK8lane benchmarks required"
+}
