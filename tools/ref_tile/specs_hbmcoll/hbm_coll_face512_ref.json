@@ -11,7 +11,7 @@
   "clock": "cts",
   "layer_cap": "M5",
   "outline": {
-    "w": 28.08,
+    "w": 32.4,
     "h": 84.24
   },
   "pins": {
@@ -28,11 +28,11 @@
     "threads": 8,
     "peak_ram_gb": 16
   },
-  "structural_change": "Measured2560sinks/std858um2 initial108x97.2 util9%. Compact pin-face rectangle25.92x86.4 core21.6x82.08 util48.4%, retain512ports eachW/E and recipe2 hold/pin hooks. 119 face leaves area0.2665mm2 before channels, inside0.718mm2 remaining afternineCLOSEDports; corebody and actual placement still owed. Actual recipe2 W/E pin-cell bands total22.76um; revisedcore23.76um accommodates both, stdutil45.2%, footprint0.2814mm2 for119leaves.",
+  "structural_change": "Actualr4 route FLOORPLAN_MARGIN: postpinhold std1142um2/core1899um2=60.1%, although raw synth858um2. GrowW28.08->32.4 withH84.24 unchanged; core2244um2 ->50.9% including284um2 realhold/pin cells. E/W recipe2 bands nowfit<45%coredepth. Same512bit5cycles/2560flops, no timingconstraintchange.",
   "job": {
     "owner": "Codex:coll_clusters2240",
     "branch": "codex/hbm-coll-clusters-2240",
-    "tag": "r2compact",
+    "tag": "r5padarea",
     "purpose": "Own-flop 512b hard face leaf preserves immutable hfd_coll five-cycle register chain with original cell comparator and early publication mutant",
     "extra_paths": [
       "rtl/hbm_accel/generic/collective/physical",
@@ -63,5 +63,5 @@
       }
     ]
   },
-  "std_area_um2": 858
+  "std_area_um2": 1142
 }
