@@ -1,3 +1,4 @@
+`include "dsfd_vm_reset_ack.svh"
 // ---------------------------------------------------------------------------------------------------------------
 // dsfd_vm_bgl (el1013-s81-bgq28, 2026-10-13): ONE bank of the VM bank tile as a hard leaf, replicated x8 under the
 // wires-only parent dsfd_vm_bgq28h.  Replaces the flat dsfd_vm_bgr tile (bgr28 spine r6: GRT 20,000 markers; 5,441
@@ -60,6 +61,9 @@ module dsfd_vm_bgl #(
     output wire [NPR*DW-1:0]   o_d,
     output wire [3:0]          o_f,
     output wire [$clog2(QD):0] o_o
+`ifdef OT_SPVM_RESET_ACK
+    ,output wire [2:0] reset_ack
+`endif
 );
     localparam integer GW = $clog2(NB / NBL);
     localparam integer LB = $clog2(NBL);
@@ -102,6 +106,13 @@ module dsfd_vm_bgl #(
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs[0]) if (!rs[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_i = rst_s[1];
+`ifdef OT_SPVM_RESET_ACK
+    // Actual external epoch request clears witnesses even with stopped roots.
+    // These leaves have no separate online protocol; rst_* gates real consumers.
+    dsfd_vm_reset_ack u_ack_bank (.clk(clk), .request_n(rs[0]), .local_release(rst_i), .consumer_live(rst_i), .ack(reset_ack[0]));
+    dsfd_vm_reset_ack u_ack_req (.clk(req_clk), .request_n(rs[0]), .local_release(rst_req), .consumer_live(rst_req), .ack(reset_ack[1]));
+    dsfd_vm_reset_ack u_ack_ret (.clk(ret_clk), .request_n(rs[0]), .local_release(rst_ret), .consumer_live(rst_ret), .ack(reset_ack[2]));
+`endif
     reg [BB-1:0] gidq;
 `ifdef OT_VMBGL_MUT_ID
     // MUTANT: leaf 1 answers as bank 0 (two leaves on one id, bank 1 unserved).  NOT bi ^ 1: that permutes the banks
@@ -605,6 +616,9 @@ module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0) (
     output wire [28*128-1:0] f_d,
     input  wire [9:0] r_v, input wire [10*128-1:0] r_d, input wire [3:0] r_f, input wire [2:0] r_o,
     output wire [9:0] o_v, output wire [10*128-1:0] o_d, output wire [3:0] o_f, output wire [2:0] o_o
+`ifdef OT_SPVM_RESET_ACK
+    ,output wire [2:0] reset_ack
+`endif
 );
 `ifdef OT_VMBGL_FLOPMEM
     localparam integer MACRO = 0;
@@ -614,5 +628,9 @@ module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0) (
     dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1), .FAST4(1), .FORWARD_HOP(FORWARD_HOP)) u (
         .ck(ck), .ck_req(ck_req), .ck_ret(ck_ret), .rs(rs), .grp(grp), .bi(bi), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
-        .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o));
+        .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o)
+`ifdef OT_SPVM_RESET_ACK
+        ,.reset_ack(reset_ack)
+`endif
+    );
 endmodule

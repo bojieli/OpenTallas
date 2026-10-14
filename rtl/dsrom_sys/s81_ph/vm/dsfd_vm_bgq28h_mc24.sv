@@ -10,6 +10,9 @@ module dsfd_vm_bgq28h_mc24 #(parameter integer FORWARD_HOP = 0) (
     output wire [28*128-1:0] f_d,
     input  wire [9:0] r_v, input wire [10*128-1:0] r_d, input wire [3:0] r_f, input wire [2:0] r_o,
     output wire [9:0] o_v, output wire [10*128-1:0] o_d, output wire [3:0] o_f, output wire [2:0] o_o
+`ifdef OT_SPVM_RESET_ACK
+    ,output wire [23:0] reset_ack
+`endif
 );
     wire [7:0] ck_req_leaf = {ck_req_l7,ck_req_l6,ck_req_l5,ck_req_l4,ck_req_l3,ck_req_l2,ck_req_l1,ck_req_l0};
     wire [7:0] ck_ret_leaf = {ck_ret_l7,ck_ret_l6,ck_ret_l5,ck_ret_l4,ck_ret_l3,ck_ret_l2,ck_ret_l1,ck_ret_l0};
@@ -33,7 +36,11 @@ module dsfd_vm_bgq28h_mc24 #(parameter integer FORWARD_HOP = 0) (
             .i_v(cv[k]), .i_we(cwe[k]), .i_row(crow[k]), .i_mask(cm[k]), .i_d(cd[k]),
             .f_v(cv[k+1]), .f_we(cwe[k+1]), .f_row(crow[k+1]), .f_mask(cm[k+1]), .f_d(cd[k+1]),
             .r_v(cov[k]), .r_d(cod[k]), .r_f(cof[k]), .r_o(coo[k]),
-            .o_v(cov[k+1]), .o_d(cod[k+1]), .o_f(cof[k+1]), .o_o(coo[k+1]));
+            .o_v(cov[k+1]), .o_d(cod[k+1]), .o_f(cof[k+1]), .o_o(coo[k+1])
+`ifdef OT_SPVM_RESET_ACK
+            ,.reset_ack(reset_ack[k*3 +: 3])
+`endif
+        );
     end endgenerate
     assign f_v = cv[NL]; assign f_we = cwe[NL]; assign f_row = crow[NL]; assign f_mask = cm[NL]; assign f_d = cd[NL];
     assign o_v = cov[NL]; assign o_d = cod[NL]; assign o_f = cof[NL]; assign o_o = coo[NL];
