@@ -24,11 +24,23 @@
       "KVD_HEADS=1",
       "KVD_Q_FP32=1"
     ],
-    "actual_pv_split": 512,
     "head_capture_exact_words": 128,
     "group_zero_only": true,
     "hsub_q_capture_exact_words": 128,
-    "hsub_orphan_half_mutant": "PASS observed sticky pack fault"
+    "hsub_orphan_half_mutant": "PASS observed sticky pack fault",
+    "legacy_stack_actual_pv_split": 512,
+    "native_parallel_pv_split": 256,
+    "native_feedback_bytes": 524288,
+    "native_pair_tree_profiles": "two pairs;128 residue trees reuse accumulation SRAM/adders",
+    "ectl3_control": {
+      "contexts": 4,
+      "cycle_compares": 3705,
+      "rows": 1005,
+      "vrows": 504,
+      "nodes": 6,
+      "mutant_A_mismatches": 2835,
+      "scope": "ENGINE_CONTROL_ONLY_FAKE_HEAD_RETURNS"
+    }
   },
   "remaining": [
     "Replace legacy PV512 accumulation with native PV256 ordered residue accumulation while retaining Z chunk128.",
