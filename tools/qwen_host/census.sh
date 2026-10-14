@@ -2,8 +2,11 @@
 set -euo pipefail
 cd "$(dirname "$0")/../..";out=${1:?out};mkdir -p "$out";out=$(cd "$out"&&pwd)
 y=${YOSYS:-$HOME/.local/opentallas-tools/yosys/bin/yosys};[[ -x "$y" ]]||y=$(command -v yosys)
-for top in qkd_host_rx_class qkd_host_tx_class qkd_host_rx_pad qkd_host_axi_packet qkd_host_ctrl_packet qkd_host_static_pc qkd_host_ingest_map qkd_host_ingest_station qkd_host_visibility_fence;do
+tops=(qkd_host_rx_class qkd_host_tx_class qkd_host_rx_pad qkd_host_axi_packet qkd_host_ctrl_packet qkd_host_static_pc qkd_host_ingest_map qkd_host_ingest_station qkd_host_visibility_fence qkd_host_ack_sum)
+if [[ $# -gt 1 ]];then tops=("${@:2}");fi
+for top in "${tops[@]}";do
  file=rtl/qwen_sys/host_20261013/$top.sv
+ [[ "$top" != qkd_host_ack_sum ]]||file=rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv
  opts="";case "$top" in qkd_host_ctrl_packet|qkd_host_rx_class) opts="chparam -set STRAPPED 1 $top;";;esac
  "$y" -Q -T -p "read_verilog -sv $file; $opts hierarchy -top $top; proc; opt; memory_map; opt; write_json $out/$top.json" > "$out/$top.log" 2>&1
 done

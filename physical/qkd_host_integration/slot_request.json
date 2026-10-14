@@ -182,6 +182,22 @@
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_rx_pad.sv",
       "sha256": "65ff55e2098209df69bbacf523cd1327ba3a8327b1a9393ba841c51db8ad5c82"
+    },
+    {
+      "master": "qkd_host_ack_sum",
+      "flop_bits": 160,
+      "role": "registered128local actualwriteACK pulse reduction",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        43.2,
+        64.8
+      ],
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv"
     }
   ],
   "existing_children": [
@@ -306,5 +322,46 @@
     "binding": "qkd_host_phy_cdc u_rx/u_tx",
     "slot_assignment": "DIE_LEAD_REQUIRED",
     "measured_existing_master_route": "qwen IO owner owns current W546 export; exact host placement not yet proven"
+  },
+  "static_chain_composition": {
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv",
+    "parent_flops": 0,
+    "clock_entries": {
+      "map": 1,
+      "ack_sum": 1,
+      "station": 128,
+      "static_arbiter": 128
+    },
+    "functional": "512 exact sector payload/map/PC ownership, marker after modeled retirement; missingACK mutant stalls508/512",
+    "balanced_launch_interval_ck": 573,
+    "hotPC127_launch_interval_ck": 17151,
+    "scheduler": "MODEL ONLY capacity3ck retirement17ck; actualcontroller WDONE17hclk separate bench",
+    "accepted_cost": false,
+    "required": "actual production native provider traces+controller+clock composition against5105 reference"
+  },
+  "pc_frame_candidate": {
+    "status": "UNVERIFIED_SOURCE_GEOMETRY_ONLY",
+    "existing_frame_um": [
+      247.512,
+      378
+    ],
+    "current_controller_um": [
+      246.24,
+      172.8
+    ],
+    "static_arbiter_offset_um": [
+      0,
+      194.4
+    ],
+    "station_offset_um": [
+      151.2,
+      194.4
+    ],
+    "combined_envelope_um": [
+      246.24,
+      367.2
+    ],
+    "reported_by": "qwen_split_feasibility",
+    "required": "nativecontroller variant width/clock gate plus actual pin/PG/channel assignment; dimensions alone do not qualify fit"
   }
 }
