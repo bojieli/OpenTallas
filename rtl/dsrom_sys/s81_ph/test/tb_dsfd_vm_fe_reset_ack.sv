@@ -2,7 +2,7 @@
 module tb_dsfd_vm_fe_reset_ack;
     reg ck=0, cks=0, clt_ck=0, fsr_ck=0;
     reg run_stream=1, run_clt=1, run_fsr=1;
-    reg rst=1, rss=1, rn_clt=1, rn_fsr=1;
+    reg rst=1, rss=1, rn_clt=1, rn_fsr=1, epoch_clt=1, epoch_fsr=1;
     wire [27:0] fv; wire [3583:0] fd; wire [3:0] cf;
     reg [27:0] iv=0; reg [3583:0] id=0;
     wire [3:0] cn_rdy; wire [15:0] cn_fault;
@@ -11,13 +11,13 @@ module tb_dsfd_vm_fe_reset_ack;
     dsfd_vm_clt u_clt (.ck(clt_ck),.rn(rn_clt),.sok(1'b1),.gid(4'd0),.f_c(832'd0),
         .w_v(),.w_row(),.w_m(),.w_d(),.flt(cf)
 `ifdef OT_SPVM_RESET_ACK
-        ,.rst_ack(clt_ack)
+        ,.reset_epoch_n(epoch_clt),.rst_ack(clt_ack)
 `endif
     );
     dsfd_vm_fsr u_fsr (.ck(fsr_ck),.rn(rn_fsr),.i_v(iv),.i_we(28'd0),.i_row(392'd0),.i_mask(112'd0),.i_d(id),.i_rf(4'd0),
         .o_v(fv),.o_we(),.o_row(),.o_mask(),.o_d(fd),.o_rf()
 `ifdef OT_SPVM_RESET_ACK
-        ,.rst_ack(fsr_ack)
+        ,.reset_epoch_n(epoch_fsr),.rst_ack(fsr_ack)
 `endif
     );
     dsfd_vm_fcn u_cn (.ck(ck),.rst(rst),.cks(cks),.rss(rss),.cv(1'b0),.cd(84'd0),.dv(),.dt(),
@@ -62,9 +62,9 @@ module tb_dsfd_vm_fe_reset_ack;
     endtask
 `endif
     initial begin
-        #1; rst=0;rss=0;rn_clt=0;rn_fsr=0;
+        #1; rst=0;rss=0;rn_clt=0;rn_fsr=0;epoch_clt=0;epoch_fsr=0;
         repeat(6) tick();
-        rst=1;rss=1;rn_clt=1;rn_fsr=1;run_clt=0;run_fsr=0;run_stream=0;
+        rst=1;rss=1;rn_clt=1;rn_fsr=1;epoch_clt=1;epoch_fsr=1;run_clt=0;run_fsr=0;run_stream=0;
         repeat(40) begin tick();
 `ifdef OT_SPVM_RESET_ACK
             require(!clt_ack && !fsr_ack,"stopped final consumer was replaced by upstream release");
@@ -82,20 +82,20 @@ module tb_dsfd_vm_fe_reset_ack;
         require(fv==iv && fd[31:0]==id[31:0],"FSR numerical/data behavior changed");
         // Miss an entire request assertion while the final consumer clocks stop.
         // Their rn_r/rn_q stay HIGH from the prior epoch; this is the stale-ACK trap.
-        run_clt=0;run_fsr=0;rn_clt=0;rn_fsr=0;#1;
+        run_clt=0;run_fsr=0;epoch_clt=0;epoch_fsr=0;#1;
 `ifdef OT_SPVM_RESET_ACK
         require(!clt_ack && !fsr_ack,"request assertion did not clear ACK with clock stopped");
 `endif
-        repeat(3) tick();rn_clt=1;rn_fsr=1;repeat(4) tick();run_clt=1;run_fsr=1;
+        repeat(3) tick();rn_clt=1;rn_fsr=1;epoch_clt=1;epoch_fsr=1;repeat(4) tick();run_clt=1;run_fsr=1;
         repeat(8) begin tick();
 `ifdef OT_SPVM_RESET_ACK
             require(!clt_ack && !fsr_ack,"reset not sampled: stale HIGH final rn falsely acknowledged");
 `endif
         end
         // A valid new request with running consumer clocks repairs the missing epoch.
-        rn_clt=0;rn_fsr=0;repeat(4) tick();
+        rn_clt=0;rn_fsr=0;epoch_clt=0;epoch_fsr=0;repeat(4) tick();
         require(fv==0 && u_clt.u_c.V==0,"actual consumer initialization was not performed");
-        rn_clt=1;rn_fsr=1;repeat(12) tick();
+        rn_clt=1;rn_fsr=1;epoch_clt=1;epoch_fsr=1;repeat(12) tick();
 `ifdef OT_SPVM_RESET_ACK
         await_all();
 `endif
