@@ -10,5 +10,11 @@
   "ratio": {
     "verdict": "PASS exact / FAIL mutant all five phases",
     "log": "ot-run: ot-epyc1tb     admits  -181 GB (avail 486, growth 403, headroom 64, waiters 5/200 GB) load 93/128 running 25 disk 1162 GB \not-run: ot-epyc4       admits  -544 GB (avail 403, growth 333, headroom 48, waiters 5/566 GB) load 142/128 running 23 disk 1268 GB \not-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-hend-negcap\not-run: ot-agidock128  admits    -6 GB (avail 79, growth 39, headroom 24, waiters 1/32 GB) load 19/64 running 7 disk 378 GB \not-run: -> ot-agidock128 (will queue: admits -6 GB < 6 GB)\not-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3120616-1791945005 after 1 s\nHEND_BENCH PASS kind=2 phase=10 sent=1984 received=1984 errors=0\nHEND_BENCH PASS kind=2 phase=200 sent=1984 received=1984 errors=0\nHEND_BENCH PASS kind=2 phase=416 sent=1984 received=1984 errors=0\nHEND_BENCH PASS kind=2 phase=600 sent=1984 received=1984 errors=0\nHEND_BENCH PASS kind=2 phase=820 sent=1984 received=1984 errors=0\nHEND_BENCH FAIL kind=2 phase=10 sent=1984 received=1984 errors=1984\nHEND_BENCH FAIL kind=2 phase=200 sent=1984 received=1984 errors=1984\nHEND_BENCH FAIL kind=2 phase=416 sent=1984 received=1984 errors=1984\nHEND_BENCH FAIL kind=2 phase=600 sent=1984 received=1984 errors=1984\nHEND_BENCH FAIL kind=2 phase=820 sent=1984 received=1984 errors=1984\not-run: RAN on ot-agidock128 (unit oth-ubuntu-3120616-1791945005): exit 0\n"
+  },
+  "source_sha256": {
+    "physical/s81_die_views/hend/negcap/bench_hend.sh": "53860ca9e7738840fb91ea88b57741bbef86111e2476678955756cc058de25ee",
+    "results/rtl/dsrom_s81_fulldie_20261004/v17_negcap/dsfd_hend.sv": "5d96ab454870f991b874e21c5faa4df8024f13f45e0612e4627d3055e519fb4b",
+    "rtl/common/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85",
+    "rtl/common/ot_ratio_cdc_fifo.sv": "b608b11a3e676f0a83ddfba49b6187b5991e2d443a4d1c5269274ee6587e8557"
   }
 }
