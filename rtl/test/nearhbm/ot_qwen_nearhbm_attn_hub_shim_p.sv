@@ -40,7 +40,37 @@ module ot_qwen_nearhbm_attn_hub #(
 `ifndef KVD_HPSRAM
 `define KVD_HPSRAM 0
 `endif
-`ifdef KVD_HUBT
+`ifdef KVD_HUBD
+    // el1014-qwen-kvsys-elements: the hub as die leaves (qkd_ahub_core + 13 hard tiles, rtl/hdc/nearhbm/ot_qkd_ahub_core.sv),
+    // die relay stages per net group from KVD_HUBD_* (defaults = the composition's defaults)
+`ifndef KVD_HUBD_ZW
+`define KVD_HUBD_ZW 0
+`endif
+`ifndef KVD_HUBD_ZR
+`define KVD_HUBD_ZR 0
+`endif
+`ifndef KVD_HUBD_RA
+`define KVD_HUBD_RA 0
+`endif
+`ifndef KVD_HUBD_SR
+`define KVD_HUBD_SR 1
+`endif
+`ifndef KVD_HUBD_PV
+`define KVD_HUBD_PV 0
+`endif
+`ifndef KVD_HUBD_Y
+`define KVD_HUBD_Y 0
+`endif
+`ifndef KVD_HUBD_RX
+`define KVD_HUBD_RX 1
+`endif
+`ifndef KVD_HUBD_PI
+`define KVD_HUBD_PI 0
+`endif
+    ot_qwen_nearhbm_attn_hub_d #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(`KVD_HUBD_ZW),
+        .ZR_RLY(`KVD_HUBD_ZR), .RA_RLY(`KVD_HUBD_RA), .SR_RLY(`KVD_HUBD_SR), .PV_RLY(`KVD_HUBD_PV), .Y_RLY(`KVD_HUBD_Y),
+        .RX_RLY(`KVD_HUBD_RX), .RY_RLY(`KVD_HUBD_RX), .PI_RLY(`KVD_HUBD_PI)) u_p (
+`elsif KVD_HUBT
     // el1011-q-kvd 2026-10-11: the hardened-tile hub (ot_qwen_nearhbm_attn_hub_t.sv)
     ot_qwen_nearhbm_attn_hub_t #(.HEADS(`KVD_HEADS), .HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW)) u_p (
 `else
