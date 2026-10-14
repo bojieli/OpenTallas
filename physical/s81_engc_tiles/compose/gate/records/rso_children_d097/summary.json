@@ -96,6 +96,36 @@
         }
       },
       "original_inputs_unchanged": true
+    },
+    "pbc": {
+      "closes_signoff": true,
+      "setup_tt_ps": 178.61,
+      "hold_ff_ps": 16.32,
+      "ss_sensitivity_ps": -67.93,
+      "drc": 0,
+      "chosen_eco_pass": 2,
+      "boundary_clock": {
+        "tt": {
+          "n": 606,
+          "mean": 375.9,
+          "min": 348.9,
+          "max": 409.2
+        },
+        "ff": {
+          "n": 606,
+          "mean": 301.6,
+          "min": 276.6,
+          "max": 332.2
+        },
+        "ss": {
+          "n": 606,
+          "mean": 501.9,
+          "min": 472.3,
+          "max": 538.9
+        }
+      },
+      "original_inputs_unchanged": true
     }
-  }
+  },
+  "clock_matching_edge_note": "IO TT ETM max rise265.48557 matches positive replay maximum265.5; separate fall max283.50858 must never substitute positive R. Minimum tree arcs are early/min, unlike replay late/max extrema."
 }
