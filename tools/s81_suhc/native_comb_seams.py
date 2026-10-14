@@ -30,8 +30,8 @@ def pins(leaf):
 
 def screen(plan, model_overrides=None, geometry_overrides=None):
     by = {x['instance']:x for x in plan['instances']}
-    geom = {k:pins(v) for k,v in by.items()}
-    table = {v['cell']:pinreg_pairs.extract(v['view']) for v in by.values()}
+    geom = {k:(geometry_overrides or {}).get(k) or pins(v) for k,v in by.items()}
+    table = {v['cell']:(model_overrides or {}).get(v['cell']) or pinreg_pairs.extract(v['view']) for v in by.values()}
     table.update(model_overrides or {})
     geom.update(geometry_overrides or {})
     assert all(table.values()), 'Missing measured timing view'
@@ -53,7 +53,7 @@ def screen(plan, model_overrides=None, geometry_overrides=None):
             return
         L=max(distances)
         r=pair_check.check(die,dict(a=(ai,by[ai]['cell'],ap),b=(bi,by[bi]['cell'],bp),um=L))
-        rows.append(dict(a=[ai,ap],b=[bi,bp],bits=len(distances),worst_manhattan_um=round(L,3),timing=r))
+        rows.append(dict(a=[ai,ap],b=[bi,bp],width=width,a_offset=ao,b_offset=bo,bits=len(distances),worst_manhattan_um=round(L,3),timing=r))
 
     for p,w in (('v',7),('d',1128)):
         seam('u_seq','c_f'+p,'u_pd.u_f8',p+'_i',w)
@@ -67,6 +67,7 @@ def screen(plan, model_overrides=None, geometry_overrides=None):
         ip={'crv_o':'v_i','cpi_o':'p_i','ex1_o':'e_i'}[p]
         seam('u_cr.u_core',p,'u_cr.g_meta.u_m',ip,w)
     seam('u_cr.g_meta.u_m','v_o','u_rx','c_rv',8)
+    seam('u_cr.g_meta.u_m','v_o[4]','u_nt','c_rvt')
     seam('u_cr.g_meta.u_m','p_o','u_nt','c_pi',8)
     seam('u_cr.g_meta.u_m','e_o','u_nt','c_ex',512)
     seam('u_seq','ngo','u_nt','ngo_i')
@@ -82,6 +83,10 @@ def screen(plan, model_overrides=None, geometry_overrides=None):
         aq=f'g_aq[{u}].u_caq'
         seam('u_rx','o_run',aq,'run')
         seam('u_rx','o_kind',aq,'kind',3)
+        seam('u_rx',f'o_rd[{u}]',aq,'t_u')
+        seam('u_rx','o_rd',aq,'iq',16,ao=36+16*u)
+        seam('u_rx','o_rd',aq,'iq',8,ao=4+8*u,bo=16)
+        seam('u_pd.u_r5','d_o',aq,'c_d',512,ao=108+512*u)
         seam('u_rx',f'o_rv[{u}]',aq,'rv_u')
         for a,b,w,off in (('vo','a_vo',None,u),('f','a_f',None,u),('e','a_e',10,u*10),('iqo','a_iq',24,u*24)):
             # Scalar lane destinations are explicitly indexed rather than
@@ -95,6 +100,7 @@ def screen(plan, model_overrides=None, geometry_overrides=None):
                 geometry_model='actual closed LEF first pin rectangle, Manhattan; routing can only add length',
                 timing_model='measured TT/FF worst bus arcs and insertion compensation; no placeholder sides',
                 seams=rows, fail_count=sum(r.get('timing',{}).get('status')=='fail' for r in rows),
+                hold_fail_count=sum(r.get('timing',{}).get('hold_ps') is not None and r['timing']['hold_ps']<0 for r in rows),
                 missing_count=sum(r.get('status')=='MISSING_PIN' for r in rows))
 
 

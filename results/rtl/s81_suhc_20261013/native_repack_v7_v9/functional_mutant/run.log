@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   667 GB (avail 894, growth 113, headroom 48, waiters 0/0 GB) load 74/128 running 15 disk 1150 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1181283-1791965640 after 0 s
+golden_L0_L2 20 jobs 1940 rows checks 8 [{'src': 'L0', 'attn_to_ffn_consistent': True}, {'src': 'L2', 'attn_to_ffn_consistent': True}]
+stress_0 20 jobs 1940 rows checks 0 [{'src': 'stress0', 'attn_to_ffn_consistent': None}, {'src': 'stress1', 'attn_to_ffn_consistent': None}]
+stress_1 20 jobs 1940 rows checks 0 [{'src': 'stress2', 'attn_to_ffn_consistent': None}, {'src': 'stress3', 'attn_to_ffn_consistent': None}]
+golden_L0_L2 FAIL 1940 / 1940 fault 0 cyc 40199
+stress_0 FAIL 1940 / 1940 fault 0 cyc 40199
+stress_1 FAIL 1940 / 1940 fault 0 cyc 40199
+RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_ph fail
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1181283-1791965640): exit 1

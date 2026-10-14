@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.s81.native_parent_functional_receipt.v1",
+  "source_commit": "8854cfa3d",
+  "exact": [
+    {
+      "chain": "golden_L0_L2",
+      "jobs": 20,
+      "cycles": 6388,
+      "errors": 0
+    },
+    {
+      "chain": "stress_0",
+      "jobs": 20,
+      "cycles": 6388,
+      "errors": 0
+    },
+    {
+      "chain": "stress_1",
+      "jobs": 20,
+      "cycles": 6388,
+      "errors": 0
+    }
+  ],
+  "mutant": [
+    {
+      "run": "golden_L0_L2",
+      "err_rows": 1940,
+      "rows": 1940,
+      "cycles": 40199,
+      "fault": 0
+    },
+    {
+      "run": "stress_0",
+      "err_rows": 1940,
+      "rows": 1940,
+      "cycles": 40199,
+      "fault": 0
+    },
+    {
+      "run": "stress_1",
+      "err_rows": 1940,
+      "rows": 1940,
+      "cycles": 40199,
+      "fault": 0
+    }
+  ],
+  "mutant_location": "inside actual named parent .sk(ck[3])\u2192constant0, all14 external caller clocks remain valid",
+  "baseline": "origin/codex/s81-hc-parent-1013@4eee22a67 native_named_parent_r2_0cb/exact.json",
+  "all60_job_pairs_identical": true,
+  "local_native_cycle_loss_percent": 0,
+  "scope": "same native R2 baseline; no zero delta claim versus original6392-source baseline, no physical clock or routed qualification",
+  "route_admission": false,
+  "price_ledger_claim": false
+}

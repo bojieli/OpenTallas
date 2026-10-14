@@ -1,0 +1,2277 @@
+{
+  "schema": "opentallas.s81.hc.native_comb_seam_screen.v1",
+  "status": "NOT_ADMITTED: provisional actual CTS successors with immutable closed peers; incomplete external/reset/source/chain joins",
+  "geometry_model": "actual closed LEF first pin rectangle, Manhattan; routing can only add length",
+  "timing_model": "measured TT/FF worst bus arcs and insertion compensation; no placeholder sides",
+  "seams": [
+    {
+      "a": [
+        "u_seq",
+        "c_fv"
+      ],
+      "b": [
+        "u_pd.u_f8",
+        "v_i"
+      ],
+      "width": 7,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 7,
+      "worst_manhattan_um": 117.738,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 234.8,
+        "s": 125.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 233.5,
+        "reach_um": 424.9,
+        "hold_ps": 69.6,
+        "l": 106.3,
+        "h": -50.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_f8",
+        "v_o"
+      ],
+      "b": [
+        "u_pd.u_f5r1",
+        "v_i"
+      ],
+      "width": 7,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 7,
+      "worst_manhattan_um": 8.832,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 144.8,
+        "s": 122.8,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 409.0,
+        "reach_um": 547.0,
+        "hold_ps": 54.2,
+        "l": 97.4,
+        "h": -55.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_f5r1",
+        "v_o"
+      ],
+      "b": [
+        "u_cf",
+        "fv_i"
+      ],
+      "width": 7,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 7,
+      "worst_manhattan_um": 562.968,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 174.4,
+        "s": 96.3,
+        "avail": 623.3,
+        "skew": 150.0,
+        "setup_ps": -75.2,
+        "reach_um": 464.0,
+        "hold_ps": 110.8,
+        "l": 123.0,
+        "h": -24.7,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "c_fd"
+      ],
+      "b": [
+        "u_pd.u_f8",
+        "d_i"
+      ],
+      "width": 1128,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1128,
+      "worst_manhattan_um": 146.586,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 250.2,
+        "s": 122.8,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 198.9,
+        "reach_um": 408.3,
+        "hold_ps": 40.6,
+        "l": 82.4,
+        "h": -41.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_f8",
+        "d_o"
+      ],
+      "b": [
+        "u_pd.u_f5r1",
+        "d_i"
+      ],
+      "width": 1128,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1128,
+      "worst_manhattan_um": 8.832,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 155.3,
+        "s": 126.8,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 394.5,
+        "reach_um": 527.9,
+        "hold_ps": 42.1,
+        "l": 84.8,
+        "h": -56.3,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_f5r1",
+        "d_o"
+      ],
+      "b": [
+        "u_cf",
+        "fd_i"
+      ],
+      "width": 1128,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1128,
+      "worst_manhattan_um": 987.692,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 176.2,
+        "s": 91.2,
+        "avail": 623.3,
+        "skew": 150.0,
+        "setup_ps": -394.7,
+        "reach_um": 468.3,
+        "hold_ps": 126.5,
+        "l": 106.0,
+        "h": -9.9,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_cr.u_core",
+        "crd_o"
+      ],
+      "b": [
+        "u_pd.u_f5r1",
+        "r_i"
+      ],
+      "width": 2156,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 2156,
+      "worst_manhattan_um": 597.764,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 264.1,
+        "s": 133.7,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -168.8,
+        "reach_um": 375.7,
+        "hold_ps": 81.4,
+        "l": 58.4,
+        "h": -56.1,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_f5r1",
+        "r_o"
+      ],
+      "b": [
+        "u_pd.u_r6",
+        "d_i"
+      ],
+      "width": 2156,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 2156,
+      "worst_manhattan_um": 678.249,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 213.7,
+        "s": 114.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -159.8,
+        "reach_um": 467.9,
+        "hold_ps": 130.7,
+        "l": 112.5,
+        "h": -42.2,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_r6",
+        "d_o"
+      ],
+      "b": [
+        "u_pd.u_r5",
+        "d_i"
+      ],
+      "width": 2156,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 2156,
+      "worst_manhattan_um": 261.168,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 153.7,
+        "s": 114.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 217.1,
+        "reach_um": 546.9,
+        "hold_ps": 58.0,
+        "l": 86.5,
+        "h": -42.2,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "u_rx",
+        "c_rd"
+      ],
+      "width": 108,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 108,
+      "worst_manhattan_um": 217.026,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 153.7,
+        "s": 102.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 262.1,
+        "reach_um": 561.9,
+        "hold_ps": 53.1,
+        "l": 86.5,
+        "h": -42.3,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_cr.u_core",
+        "crv_o"
+      ],
+      "b": [
+        "u_cr.g_meta.u_m",
+        "v_i"
+      ],
+      "width": 8,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 8,
+      "worst_manhattan_um": 395.658,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 136.8,
+        "s": 109.7,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 136.1,
+        "reach_um": 574.8,
+        "hold_ps": 79.8,
+        "l": 84.9,
+        "h": -50.6,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_cr.u_core",
+        "cpi_o"
+      ],
+      "b": [
+        "u_cr.g_meta.u_m",
+        "p_i"
+      ],
+      "width": 8,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 8,
+      "worst_manhattan_um": 392.874,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.7,
+        "s": 107.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 144.0,
+        "reach_um": 582.4,
+        "hold_ps": 83.0,
+        "l": 87.9,
+        "h": -51.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_cr.u_core",
+        "ex1_o"
+      ],
+      "b": [
+        "u_cr.g_meta.u_m",
+        "e_i"
+      ],
+      "width": 512,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 512,
+      "worst_manhattan_um": 447.306,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 150.9,
+        "s": 110.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 82.5,
+        "reach_um": 555.8,
+        "hold_ps": 70.2,
+        "l": 78.4,
+        "h": -41.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "v_o"
+      ],
+      "b": [
+        "u_rx",
+        "c_rv"
+      ],
+      "width": 8,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 8,
+      "worst_manhattan_um": 122.982,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.5,
+        "s": 108.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 348.4,
+        "reach_um": 581.4,
+        "hold_ps": 47.6,
+        "l": 89.5,
+        "h": -44.3,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "v_o[4]"
+      ],
+      "b": [
+        "u_nt",
+        "c_rvt"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 630.126,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.5,
+        "s": 109.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -38.3,
+        "reach_um": 579.8,
+        "hold_ps": 112.5,
+        "l": 89.5,
+        "h": -52.4,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "p_o"
+      ],
+      "b": [
+        "u_nt",
+        "c_pi"
+      ],
+      "width": 8,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 8,
+      "worst_manhattan_um": 633.006,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 140.3,
+        "s": 143.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -81.4,
+        "reach_um": 526.0,
+        "hold_ps": 119.6,
+        "l": 98.5,
+        "h": -50.2,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "e_o"
+      ],
+      "b": [
+        "u_nt",
+        "c_ex"
+      ],
+      "width": 512,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 512,
+      "worst_manhattan_um": 789.726,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 149.2,
+        "s": 221.5,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -287.6,
+        "reach_um": 411.4,
+        "hold_ps": 118.6,
+        "l": 86.8,
+        "h": -43.4,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "ngo"
+      ],
+      "b": [
+        "u_nt",
+        "ngo_i"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 940.26,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 222.8,
+        "s": 108.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -362.3,
+        "reach_um": 463.6,
+        "hold_ps": 222.8,
+        "l": 165.7,
+        "h": -51.8,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_nt",
+        "ss_v"
+      ],
+      "b": [
+        "u_seq",
+        "t_ssv"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 964.932,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 135.4,
+        "s": 101.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -286.6,
+        "reach_um": 587.8,
+        "hold_ps": 150.9,
+        "l": 95.5,
+        "h": -47.3,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_nt",
+        "ss"
+      ],
+      "b": [
+        "u_seq",
+        "t_ss"
+      ],
+      "width": 32,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 32,
+      "worst_manhattan_um": 964.932,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 140.0,
+        "s": 106.1,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -296.1,
+        "reach_um": 575.3,
+        "hold_ps": 146.5,
+        "l": 88.7,
+        "h": -49.7,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_nt",
+        "tflt"
+      ],
+      "b": [
+        "u_seq",
+        "t_flt"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 945.54,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 125.7,
+        "s": 94.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -255.3,
+        "reach_um": 609.6,
+        "hold_ps": 139.6,
+        "l": 89.0,
+        "h": -44.7,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "j_v"
+      ],
+      "b": [
+        "u_rx",
+        "j_v"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 714.3,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 155.2,
+        "s": 100.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -114.9,
+        "reach_um": 563.1,
+        "hold_ps": 137.6,
+        "l": 111.5,
+        "h": -46.1,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "kind"
+      ],
+      "b": [
+        "u_rx",
+        "j_kind"
+      ],
+      "width": 3,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 3,
+      "worst_manhattan_um": 714.684,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 185.7,
+        "s": 102.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -147.8,
+        "reach_um": 520.2,
+        "hold_ps": 148.9,
+        "l": 126.8,
+        "h": -42.1,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "base"
+      ],
+      "b": [
+        "u_rx",
+        "j_base"
+      ],
+      "width": 14,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 14,
+      "worst_manhattan_um": 654.684,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 240.0,
+        "s": 98.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -152.4,
+        "reach_um": 454.1,
+        "hold_ps": 97.3,
+        "l": 82.4,
+        "h": -41.6,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "f_q"
+      ],
+      "b": [
+        "u_rx",
+        "j_fq"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 729.66,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 251.7,
+        "s": 98.5,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -221.4,
+        "reach_um": 438.3,
+        "hold_ps": 215.7,
+        "l": 190.0,
+        "h": -44.0,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "f_y"
+      ],
+      "b": [
+        "u_rx",
+        "j_fy"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 729.66,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 213.8,
+        "s": 97.4,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -182.4,
+        "reach_um": 489.6,
+        "hold_ps": 185.6,
+        "l": 157.1,
+        "h": -46.8,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "j_end"
+      ],
+      "b": [
+        "u_rx",
+        "j_end"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 714.876,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 187.9,
+        "s": 94.9,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -142.8,
+        "reach_um": 527.0,
+        "hold_ps": 154.0,
+        "l": 134.0,
+        "h": -39.9,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "fault"
+      ],
+      "b": [
+        "u_rx",
+        "j_flt"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 714.588,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 225.7,
+        "s": 105.5,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -191.0,
+        "reach_um": 463.3,
+        "hold_ps": 200.0,
+        "l": 170.0,
+        "h": -50.0,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_seq",
+        "j_civ"
+      ],
+      "b": [
+        "u_rx",
+        "j_civ"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 714.876,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 188.6,
+        "s": 97.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -145.9,
+        "reach_um": 522.9,
+        "hold_ps": 153.3,
+        "l": 131.7,
+        "h": -41.5,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "x_wdone"
+      ],
+      "b": [
+        "u_seq",
+        "x_wdone"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 734.076,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 138.8,
+        "s": 151.4,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -164.8,
+        "reach_um": 517.3,
+        "hold_ps": 164.2,
+        "l": 95.8,
+        "h": -86.2,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "x_pob"
+      ],
+      "b": [
+        "u_seq",
+        "x_pob"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 734.076,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 145.7,
+        "s": 149.4,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -169.7,
+        "reach_um": 510.8,
+        "hold_ps": 172.3,
+        "l": 105.3,
+        "h": -84.8,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "x_f1"
+      ],
+      "b": [
+        "u_seq",
+        "x_f1"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 734.076,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 123.2,
+        "s": 112.1,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -109.9,
+        "reach_um": 589.5,
+        "hold_ps": 121.5,
+        "l": 84.0,
+        "h": -55.3,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "x_f4"
+      ],
+      "b": [
+        "u_seq",
+        "x_f4"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 734.076,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 149.1,
+        "s": 165.7,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": -189.4,
+        "reach_um": 484.9,
+        "hold_ps": 191.3,
+        "l": 108.4,
+        "h": -100.7,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_cf",
+        "yfl"
+      ],
+      "b": [
+        "u_seq",
+        "c_yfl"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 506.078,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 150.1,
+        "s": 95.7,
+        "avail": 623.3,
+        "skew": 150.0,
+        "setup_ps": -7.1,
+        "reach_um": 496.8,
+        "hold_ps": 108.0,
+        "l": 99.7,
+        "h": -51.6,
+        "status": "fail"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_run"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "run"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 237.228,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 164.2,
+        "s": 105.5,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 233.3,
+        "reach_um": 544.3,
+        "hold_ps": 96.3,
+        "l": 118.0,
+        "h": -51.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_kind"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "kind"
+      ],
+      "width": 3,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 3,
+      "worst_manhattan_um": 245.388,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 167.4,
+        "s": 100.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 229.4,
+        "reach_um": 547.3,
+        "hold_ps": 93.5,
+        "l": 115.3,
+        "h": -50.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd[0]"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "t_u"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 245.1,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 100.1,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 179.3,
+        "reach_um": 481.0,
+        "hold_ps": 59.9,
+        "l": 81.4,
+        "h": -51.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "iq"
+      ],
+      "width": 16,
+      "a_offset": 36,
+      "b_offset": 0,
+      "bits": 16,
+      "worst_manhattan_um": 245.292,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 105.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 173.9,
+        "reach_um": 474.1,
+        "hold_ps": 57.0,
+        "l": 81.4,
+        "h": -48.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "iq"
+      ],
+      "width": 8,
+      "a_offset": 4,
+      "b_offset": 16,
+      "bits": 8,
+      "worst_manhattan_um": 246.828,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 105.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 172.7,
+        "reach_um": 474.1,
+        "hold_ps": 57.1,
+        "l": 81.4,
+        "h": -48.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "c_d"
+      ],
+      "width": 512,
+      "a_offset": 108,
+      "b_offset": 0,
+      "bits": 512,
+      "worst_manhattan_um": 386.646,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 153.7,
+        "s": 111.8,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 124.0,
+        "reach_um": 549.8,
+        "hold_ps": 72.7,
+        "l": 86.5,
+        "h": -42.9,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rv[0]"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "rv_u"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 237.228,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 181.5,
+        "s": 105.7,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 215.8,
+        "reach_um": 521.2,
+        "hold_ps": 91.0,
+        "l": 112.6,
+        "h": -51.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[0].u_caq",
+        "vo"
+      ],
+      "b": [
+        "u_rx",
+        "a_vo[0]"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 404.616,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 178.0,
+        "s": 103.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 94.5,
+        "reach_um": 529.0,
+        "hold_ps": 124.8,
+        "l": 130.5,
+        "h": -49.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[0].u_caq",
+        "f"
+      ],
+      "b": [
+        "u_rx",
+        "a_f[0]"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 352.104,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.5,
+        "s": 103.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 179.0,
+        "reach_um": 587.7,
+        "hold_ps": 80.9,
+        "l": 89.7,
+        "h": -51.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[0].u_caq",
+        "e"
+      ],
+      "b": [
+        "u_rx",
+        "a_e"
+      ],
+      "width": 10,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 10,
+      "worst_manhattan_um": 359.208,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.1,
+        "s": 103.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 173.6,
+        "reach_um": 587.7,
+        "hold_ps": 74.0,
+        "l": 90.0,
+        "h": -43.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[0].u_caq",
+        "iqo"
+      ],
+      "b": [
+        "u_rx",
+        "a_iq"
+      ],
+      "width": 24,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 24,
+      "worst_manhattan_um": 406.92,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 149.4,
+        "s": 107.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 117.1,
+        "reach_um": 561.0,
+        "hold_ps": 76.4,
+        "l": 89.8,
+        "h": -41.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_run"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "run"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 118.428,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 164.2,
+        "s": 105.5,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 323.6,
+        "reach_um": 544.3,
+        "hold_ps": 83.0,
+        "l": 118.0,
+        "h": -51.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_kind"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "kind"
+      ],
+      "width": 3,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 3,
+      "worst_manhattan_um": 126.588,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 167.4,
+        "s": 100.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 319.7,
+        "reach_um": 547.3,
+        "hold_ps": 80.2,
+        "l": 115.3,
+        "h": -50.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd[1]"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "t_u"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 126.396,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 100.1,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 269.5,
+        "reach_um": 481.0,
+        "hold_ps": 46.6,
+        "l": 81.4,
+        "h": -51.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "iq"
+      ],
+      "width": 16,
+      "a_offset": 52,
+      "b_offset": 0,
+      "bits": 16,
+      "worst_manhattan_um": 131.1,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 105.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 260.7,
+        "reach_um": 474.1,
+        "hold_ps": 44.2,
+        "l": 81.4,
+        "h": -48.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "iq"
+      ],
+      "width": 8,
+      "a_offset": 12,
+      "b_offset": 16,
+      "bits": 8,
+      "worst_manhattan_um": 128.796,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 105.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 262.4,
+        "reach_um": 474.1,
+        "hold_ps": 43.9,
+        "l": 81.4,
+        "h": -48.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "c_d"
+      ],
+      "width": 512,
+      "a_offset": 620,
+      "b_offset": 0,
+      "bits": 512,
+      "worst_manhattan_um": 285.81,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 153.7,
+        "s": 111.8,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 200.6,
+        "reach_um": 549.8,
+        "hold_ps": 61.4,
+        "l": 86.5,
+        "h": -42.9,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rv[1]"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "rv_u"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 118.524,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 181.5,
+        "s": 105.7,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 306.1,
+        "reach_um": 521.2,
+        "hold_ps": 77.7,
+        "l": 112.6,
+        "h": -51.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[1].u_caq",
+        "vo"
+      ],
+      "b": [
+        "u_rx",
+        "a_vo[1]"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 285.912,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 178.0,
+        "s": 103.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 184.7,
+        "reach_um": 529.0,
+        "hold_ps": 111.5,
+        "l": 130.5,
+        "h": -49.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[1].u_caq",
+        "f"
+      ],
+      "b": [
+        "u_rx",
+        "a_f[1]"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 233.4,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.5,
+        "s": 103.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 269.2,
+        "reach_um": 587.7,
+        "hold_ps": 67.6,
+        "l": 89.7,
+        "h": -51.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[1].u_caq",
+        "e"
+      ],
+      "b": [
+        "u_rx",
+        "a_e"
+      ],
+      "width": 10,
+      "a_offset": 0,
+      "b_offset": 10,
+      "bits": 10,
+      "worst_manhattan_um": 241.368,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.1,
+        "s": 103.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 263.2,
+        "reach_um": 587.7,
+        "hold_ps": 60.8,
+        "l": 90.0,
+        "h": -43.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[1].u_caq",
+        "iqo"
+      ],
+      "b": [
+        "u_rx",
+        "a_iq"
+      ],
+      "width": 24,
+      "a_offset": 0,
+      "b_offset": 24,
+      "bits": 24,
+      "worst_manhattan_um": 290.424,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 149.4,
+        "s": 107.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 205.6,
+        "reach_um": 561.0,
+        "hold_ps": 63.3,
+        "l": 89.8,
+        "h": -41.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_run"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "run"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 234.9,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 164.2,
+        "s": 105.5,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 235.1,
+        "reach_um": 544.3,
+        "hold_ps": 96.0,
+        "l": 118.0,
+        "h": -51.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_kind"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "kind"
+      ],
+      "width": 3,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 3,
+      "worst_manhattan_um": 243.06,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 167.4,
+        "s": 100.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 231.2,
+        "reach_um": 547.3,
+        "hold_ps": 93.2,
+        "l": 115.3,
+        "h": -50.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd[2]"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "t_u"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 242.964,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 100.1,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 180.9,
+        "reach_um": 481.0,
+        "hold_ps": 59.6,
+        "l": 81.4,
+        "h": -51.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "iq"
+      ],
+      "width": 16,
+      "a_offset": 68,
+      "b_offset": 0,
+      "bits": 16,
+      "worst_manhattan_um": 249.108,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 105.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 171.0,
+        "reach_um": 474.1,
+        "hold_ps": 57.4,
+        "l": 81.4,
+        "h": -48.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "iq"
+      ],
+      "width": 8,
+      "a_offset": 20,
+      "b_offset": 16,
+      "bits": 8,
+      "worst_manhattan_um": 246.036,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 105.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 173.3,
+        "reach_um": 474.1,
+        "hold_ps": 57.1,
+        "l": 81.4,
+        "h": -48.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "c_d"
+      ],
+      "width": 512,
+      "a_offset": 1132,
+      "b_offset": 0,
+      "bits": 512,
+      "worst_manhattan_um": 509.682,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 153.7,
+        "s": 111.8,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 30.5,
+        "reach_um": 549.8,
+        "hold_ps": 86.5,
+        "l": 86.5,
+        "h": -42.9,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rv[2]"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "rv_u"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 235.092,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 181.5,
+        "s": 105.7,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 217.5,
+        "reach_um": 521.2,
+        "hold_ps": 90.7,
+        "l": 112.6,
+        "h": -51.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[2].u_caq",
+        "vo"
+      ],
+      "b": [
+        "u_rx",
+        "a_vo[2]"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 286.008,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 178.0,
+        "s": 103.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 184.7,
+        "reach_um": 529.0,
+        "hold_ps": 111.5,
+        "l": 130.5,
+        "h": -49.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[2].u_caq",
+        "f"
+      ],
+      "b": [
+        "u_rx",
+        "a_f[2]"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 233.496,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.5,
+        "s": 103.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 269.2,
+        "reach_um": 587.7,
+        "hold_ps": 67.7,
+        "l": 89.7,
+        "h": -51.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[2].u_caq",
+        "e"
+      ],
+      "b": [
+        "u_rx",
+        "a_e"
+      ],
+      "width": 10,
+      "a_offset": 0,
+      "b_offset": 20,
+      "bits": 10,
+      "worst_manhattan_um": 242.328,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.1,
+        "s": 103.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 262.5,
+        "reach_um": 587.7,
+        "hold_ps": 60.9,
+        "l": 90.0,
+        "h": -43.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[2].u_caq",
+        "iqo"
+      ],
+      "b": [
+        "u_rx",
+        "a_iq"
+      ],
+      "width": 24,
+      "a_offset": 0,
+      "b_offset": 48,
+      "bits": 24,
+      "worst_manhattan_um": 292.728,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 149.4,
+        "s": 107.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 203.9,
+        "reach_um": 561.0,
+        "hold_ps": 63.6,
+        "l": 89.8,
+        "h": -41.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_run"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "run"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 116.1,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 164.2,
+        "s": 105.5,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 325.4,
+        "reach_um": 544.3,
+        "hold_ps": 82.7,
+        "l": 118.0,
+        "h": -51.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_kind"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "kind"
+      ],
+      "width": 3,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 3,
+      "worst_manhattan_um": 124.26,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 167.4,
+        "s": 100.0,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 321.5,
+        "reach_um": 547.3,
+        "hold_ps": 79.9,
+        "l": 115.3,
+        "h": -50.7,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd[3]"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "t_u"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 124.26,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 100.1,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 271.1,
+        "reach_um": 481.0,
+        "hold_ps": 46.3,
+        "l": 81.4,
+        "h": -51.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "iq"
+      ],
+      "width": 16,
+      "a_offset": 84,
+      "b_offset": 0,
+      "bits": 16,
+      "worst_manhattan_um": 131.844,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 105.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 260.1,
+        "reach_um": 474.1,
+        "hold_ps": 44.3,
+        "l": 81.4,
+        "h": -48.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "iq"
+      ],
+      "width": 8,
+      "a_offset": 28,
+      "b_offset": 16,
+      "bits": 8,
+      "worst_manhattan_um": 121.86,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 217.7,
+        "s": 105.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 267.7,
+        "reach_um": 474.1,
+        "hold_ps": 43.1,
+        "l": 81.4,
+        "h": -48.1,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "c_d"
+      ],
+      "width": 512,
+      "a_offset": 1644,
+      "b_offset": 0,
+      "bits": 512,
+      "worst_manhattan_um": 346.018,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 153.7,
+        "s": 111.8,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 154.9,
+        "reach_um": 549.8,
+        "hold_ps": 68.2,
+        "l": 86.5,
+        "h": -42.9,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rv[3]"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "rv_u"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 116.388,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 181.5,
+        "s": 105.7,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 307.7,
+        "reach_um": 521.2,
+        "hold_ps": 77.4,
+        "l": 112.6,
+        "h": -51.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[3].u_caq",
+        "vo"
+      ],
+      "b": [
+        "u_rx",
+        "a_vo[3]"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 167.304,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 178.0,
+        "s": 103.3,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 274.9,
+        "reach_um": 529.0,
+        "hold_ps": 98.2,
+        "l": 130.5,
+        "h": -49.0,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[3].u_caq",
+        "f"
+      ],
+      "b": [
+        "u_rx",
+        "a_f[3]"
+      ],
+      "width": null,
+      "a_offset": 0,
+      "b_offset": 0,
+      "bits": 1,
+      "worst_manhattan_um": 114.792,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.5,
+        "s": 103.2,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 359.4,
+        "reach_um": 587.7,
+        "hold_ps": 54.4,
+        "l": 89.7,
+        "h": -51.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[3].u_caq",
+        "e"
+      ],
+      "b": [
+        "u_rx",
+        "a_e"
+      ],
+      "width": 10,
+      "a_offset": 0,
+      "b_offset": 30,
+      "bits": 10,
+      "worst_manhattan_um": 124.488,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 133.1,
+        "s": 103.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 352.0,
+        "reach_um": 587.7,
+        "hold_ps": 47.7,
+        "l": 90.0,
+        "h": -43.8,
+        "status": "pass"
+      }
+    },
+    {
+      "a": [
+        "g_aq[3].u_caq",
+        "iqo"
+      ],
+      "b": [
+        "u_rx",
+        "a_iq"
+      ],
+      "width": 24,
+      "a_offset": 0,
+      "b_offset": 72,
+      "bits": 24,
+      "worst_manhattan_um": 167.016,
+      "timing": {
+        "real": 2,
+        "model": "TREE",
+        "o": 149.4,
+        "s": 107.6,
+        "avail": 683.3,
+        "skew": 90.0,
+        "setup_ps": 299.4,
+        "reach_um": 561.0,
+        "hold_ps": 49.5,
+        "l": 89.8,
+        "h": -41.0,
+        "status": "pass"
+      }
+    }
+  ],
+  "fail_count": 24,
+  "hold_fail_count": 0,
+  "missing_count": 0,
+  "actual_successor_sources": {
+    "R2": "6aabed703",
+    "CCF": "e0cae3a4a"
+  }
+}

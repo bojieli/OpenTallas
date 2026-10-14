@@ -1,0 +1,14 @@
+{
+  "mode": 1,
+  "source": "/srv/opentallas-scratch/codex/s81-native-parent-8854cfa3d/rtl/dsrom_sys/s81_suhc/dsfd_sp_hc.sv",
+  "source_sha256": "214e4b7303f62caf0db2ae48bd8ce6b86e05dfda067a2ce69df048670669a77d",
+  "actual_parent_master": "dsfd_sp_hc_comb_native",
+  "actual_parent_source_sha256": "6a0c1133557d594905354f24a1905c26417ad6ef272507de17a58400d41ae22c",
+  "compiled_parent_source_sha256": "6a0c1133557d594905354f24a1905c26417ad6ef272507de17a58400d41ae22c",
+  "rtl_wiring_mutant": null,
+  "edited_sha256": "18ddbf92c3f288e73fdecf7eb168a8a6507b8e0aab3b826d40e5133f06776ba6",
+  "clock_connections": "{14{sk}}",
+  "actual_comb_parameter_PHYS_CLK": 1,
+  "scope": "functional common ideal boundary phase only; real clocks require phi-R per child",
+  "gate_driver_sha256": "266527533f71e7104ec5527dec93bf683f310cd50cc6531f5123bd56acd470cf"
+}

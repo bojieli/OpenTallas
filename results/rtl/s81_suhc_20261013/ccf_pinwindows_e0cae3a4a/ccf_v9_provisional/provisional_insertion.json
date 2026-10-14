@@ -1,0 +1,104 @@
+{
+  "schema": "opentallas.s81.hc.provisional_cts_port_screen.v1",
+  "status": "PROVISIONAL CTS ONLY; not routed, not qualified, not release evidence",
+  "base": "/srv/opentallas-scratch/claude/ref_gate/s81hc_ccfh2_ref-20261013-230828/routes/gate/work/orfs/results/asap7/opentallas_ot_s81_hc_ccf_asap7_ref_gate/base",
+  "db": "4_1_cts.odb",
+  "sdc": "4_cts.sdc",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated",
+  "cell": "ot_s81_hc_ccf",
+  "input_sha256": {
+    "4_1_cts.odb": "f3df70429621555af7d9b2b4afe5e8952868f0148141cb74b7d27bba5ed9767d",
+    "4_cts.sdc": "a0074fa12a17d56f340512c6bffeffac7f46fb3c35edb42dc0d03bb19b5b23bc"
+  },
+  "tt": {
+    "boundary": {
+      "n": 6370,
+      "mean": 640.2,
+      "min": 626.9,
+      "max": 658.4
+    },
+    "all": {
+      "n": 14195,
+      "mean": 640.3,
+      "min": 626.9,
+      "max": 658.4
+    }
+  },
+  "ff": {
+    "boundary": {
+      "n": 6370,
+      "mean": 521.5,
+      "min": 508.9,
+      "max": 536.8
+    },
+    "all": {
+      "n": 14195,
+      "mean": 519.7,
+      "min": 499.8,
+      "max": 536.8
+    }
+  },
+  "capture_ports": {
+    "n_yacc": {
+      "bits": 1,
+      "min_ps": 95.14366000000007,
+      "max_ps": 95.14366000000007,
+      "worst_bits": [
+        "n_yacc"
+      ]
+    },
+    "srs": {
+      "bits": 1,
+      "min_ps": 70.35570000000007,
+      "max_ps": 70.35570000000007,
+      "worst_bits": [
+        "srs"
+      ]
+    },
+    "fd_i": {
+      "bits": 1128,
+      "min_ps": 64.30706000000009,
+      "max_ps": 91.19249000000002,
+      "worst_bits": [
+        "fd_i[29]",
+        "fd_i[91]",
+        "fd_i[92]",
+        "fd_i[85]",
+        "fd_i[5]",
+        "fd_i[89]",
+        "fd_i[90]",
+        "fd_i[75]"
+      ]
+    },
+    "fv_i": {
+      "bits": 7,
+      "min_ps": 86.72112000000004,
+      "max_ps": 96.30571000000009,
+      "worst_bits": [
+        "fv_i[6]",
+        "fv_i[4]",
+        "fv_i[5]",
+        "fv_i[2]",
+        "fv_i[1]",
+        "fv_i[3]",
+        "fv_i[0]"
+      ]
+    },
+    "n_y": {
+      "bits": 2560,
+      "min_ps": 64.48320000000001,
+      "max_ps": 93.89580000000001,
+      "worst_bits": [
+        "n_y[272]",
+        "n_y[279]",
+        "n_y[266]",
+        "n_y[267]",
+        "n_y[271]",
+        "n_y[270]",
+        "n_y[269]",
+        "n_y[294]"
+      ]
+    }
+  }
+}
