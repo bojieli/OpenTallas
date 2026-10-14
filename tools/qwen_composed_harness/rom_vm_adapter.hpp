@@ -74,6 +74,23 @@ public:
         if(code.size()!=512)throw std::runtime_error("actual compact code bank must contain512words");
     }
     uint32_t load(unsigned addr)const{if(addr>=vm.size())throw std::runtime_error("VM read outside56816: "+std::to_string(addr));return vm[addr];}
+    // Caller must prove all DUT providers drained. Swap only backing ROM banks;
+    // retain every mutable VM bit, DUT register and monotonic edge counter.
+    void switch_banks(const std::string& image,const std::string& fused_program,
+                      size_t required_code_words=512,size_t required_program_words=25,
+                      size_t required_scale_words=0){
+        if(!writes.empty())throw std::runtime_error("ROM switch with unretired VM write snapshot");
+        auto new_program=read_hex<32>(fused_program);
+        auto new_code=read_hex<G*W/4>(image+"/matrix_int8.hex");
+        auto new_scales=read_hex<W/2>(image+"/matrix_scale_bf16.hex");
+        auto new_constants=read_hex<2>(image+"/crom.hex");
+        if(new_code.size()!=required_code_words||new_program.empty()||new_program.size()>4096||
+           (required_program_words&&new_program.size()!=required_program_words)||
+           (required_scale_words&&new_scales.size()!=required_scale_words))throw std::runtime_error("invalid actual backing bank shape");
+        program=std::move(new_program);code=std::move(new_code);scales=std::move(new_scales);constants=std::move(new_constants);
+        segment_base=0;pending=Response{};next=Response{};
+        accepted.clear();retired.clear();speculative_fetches.clear();commits.clear();
+    }
     void store(unsigned addr,uint32_t value,const char* port){if(addr>=vm.size())throw std::runtime_error("VM write outside56816: "+std::to_string(addr));writes.push_back({addr,value,port,edge});}
     template<class Model> void drive_responses(Model& m) {
         drive(m.prog_q,pending.program);drive(m.int8_wrom_q,pending.code);

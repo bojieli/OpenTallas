@@ -36,7 +36,8 @@ def generate(tools, program, output, position=255):
             for operand in ('a', 'b', 'c', 'd'):
                 f[f'{operand}_base'] += dynamic[f[f'{operand}_d']]
             fields[str(pc)] = {key: f[key] for key in KEYS}
-        ranks[str(rank)] = {'program_sha256': digest, 'resolved_SU_fields': fields}
+        ranks[str(rank)] = {'program_sha256': digest, 'resolved_SU_fields': fields,
+                            'source_program_words': [f'{int(word, 16):0256x}' for word in raw.decode().split()]}
     report = {'scope': 'SOURCE_DECODED_RESOLVED_FIELDS_NOT_ACCEPTED_RAW_IB', 'keys': KEYS,
               'position': position, 'dynamic': dynamic, 'ranks': ranks,
               'decoder_sha256': hashlib.sha256((tools / 'hdc_isa.py').read_bytes()).hexdigest()}
@@ -47,5 +48,6 @@ if __name__ == '__main__':
     p.add_argument('--tools', type=Path, required=True)
     p.add_argument('--program', type=Path, required=True)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--position', type=int, default=255, choices=range(8192))
     a = p.parse_args()
-    generate(a.tools, a.program, a.out)
+    generate(a.tools, a.program, a.out, a.position)

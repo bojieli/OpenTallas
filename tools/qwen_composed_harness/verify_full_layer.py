@@ -90,6 +90,16 @@ def verify(oracle, actual, catalog_path=None, fields_path=None):
         source_fields = resolved_fields['ranks'][str(rank)]
         if source_fields['program_sha256'] != oracle_report['ranks'][str(rank)]['lowered_program_sha256']:
             raise ValueError('resolved fields belong to a different input program')
+        raw_lines = (actual / f'rank{rank}_accepted_actual_words.txt').read_text().splitlines()
+        if len(raw_lines) != 25:
+            raise ValueError('actual FIFO-to-NEXT witness must cover all 25 accepted/END instructions')
+        source_words = source_fields['source_program_words']
+        for expected_pc, line in enumerate(raw_lines):
+            pc, unit, edge, end, word = line.split()
+            pc, unit, edge, end = map(int, (pc, unit, edge, end))
+            if (pc != expected_pc or word.lower() != source_words[pc] or
+                unit != (int(word, 16) & 3) or end != int(pc in (13, 21, 24))):
+                raise ValueError(f'rank {rank}: actual accepted FIFO-to-NEXT word/ownership differs at PC{expected_pc}')
         observed_fields = {}
         for line in (actual / f'rank{rank}_accepted_SU_descriptors.txt').read_text().splitlines():
             parts = list(map(int, line.split()))
@@ -180,6 +190,7 @@ def verify(oracle, actual, catalog_path=None, fields_path=None):
               'oracle_receipt_sha256': sha(oracle / 'oracle.json')}
     report['explicit_catalog_sha256'] = sha(catalog_path) if catalog_path else None
     report['resolved_field_catalog_sha256'] = sha(fields_path)
+    report['actual_accepted_FIFO_to_NEXT_1024_bits_proved'] = True
     report['accepted_raw_IB379_context16_version32_proved'] = False
     (actual / 'defined_effect_receipt.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report))
