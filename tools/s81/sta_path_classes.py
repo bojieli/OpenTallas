@@ -13,8 +13,8 @@ drv = {}
 for h in p['hops']:
     bus, cls, bits, si, sp, di, dp = h[:7]
     L = h[-1] if isinstance(h[-1], (int, float)) else None
-    dm = re.fullmatch(r'([^\[]+)\[(\d+):(\d+)\]', dp)
-    lo, hi = (int(dm[2]), int(dm[3])) if dm else (0, bits - 1)
+    dm = re.fullmatch(r'([^\[]+)\[(\d+)(?::(\d+))?\]', dp)
+    lo, hi = sorted((int(dm[2]), int(dm[3] or dm[2]))) if dm else (0, bits - 1)
     drv.setdefault((di, dp.split('[')[0]), []).append((lo, hi, si, sp.split('[')[0], cls, L, bus))
 cd = json.load(open(cdj))['tiles']
 view = lambda m: cd.get(m, {}).get('view', '?')
@@ -59,7 +59,7 @@ rows = []
 for k, a in agg.items():
     category = ('reset' if 'reset' in k[1] or k[3].split('.')[-1] in ('rst', 'rst_n', 'rs', 'rsv', 'rss') else
                 'clock' if k[1] in ('clock', 'clock_trunk', 'col_clock', 'fclk') else
-                'placeholder' if 'interim' in k[4] or '?' in k[4] else
+                'placeholder' if any(v in k[4].lower() for v in ('interim', 'placeholder', 'blackbox', '?')) else
                 'relay' if 'dsfd_rly_' in k[2] or 'dsfd_rly_' in k[3] else 'real_master_pair')
     rows.append(dict(category=category, group=k[0], cls=k[1], launch=k[2], capture=k[3], views=k[4], endpoints=a['n'], violators=a['viol'],
                      wns_ps=round(a['wns'], 1), tns_ns=round(a['tns'] / 1000, 1), len_max_um=round(a['Lmax'], 1),

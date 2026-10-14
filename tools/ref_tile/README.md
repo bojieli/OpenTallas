@@ -79,6 +79,23 @@ synthesis (time cap) + floorplan + PDN + IO placement on the host (ot-heavy, sma
 and the pin plan against the synthesized ports; `--cts` adds CTS, clock insertion spread (ck_insertion) and the worst
 setup path classes (in/reg/macro -> reg/out/macro). `--job SPEC` checks any loop spec's source-sync closure.
 
+Gate = route (2026-10-13, `tools/pin_fit.py`): the route's pin-placement settings have one source
+(`ref_tile.route_pin_settings`: `OT_PIN_GROUP_MAX` 32 unless `route.pin_balance` sets it, `pin_min_tracks`, pin layers;
+`ref_route.sh` applies the same group bound to the route, the floorplan smoke and `--cts`). Two local checks, also run
+at submit:
+- `pin_fit`: every `--pin-region` is cut into ordered groups of 32 and `place_pins` needs one 200-slot section on one
+  layer per group (six groups, 8 slots stranded), so a face filled above ~96 % of its slots FAILs here instead of in the
+  route at `[PPL-0093]` / `[PPL-0111]` / `[PPL-0086]` (qkd_seq_fan-kc2: 1,623 pins on 162 um, the 51st group of 23
+  pins). Port widths come from the top's header with the spec `params` applied; a header the parser cannot resolve is
+  not judged. Loop successors (`auto_react_parent`) are warned, not refused. Fix: disjoint `pin_ranges` +
+  `route.pin_balance`, or a longer edge / a second pin layer.
+- `oflop` (kit recipe 2): face density with the recipe's pin hold stages and flop columns. `io_flop_at_pins.tcl`
+  now derives the flop gap / columns per face from the FIRM hold cells (from 2 um of hold-stage depth, ~6 b/um:
+  10.4 b/um -> gap 4.5 um, 6 columns); `OT_OFLOP_GAP` set = exact, `OT_OFLOP_COLS` = minimum, `OT_OFLOP_AUTO=0` = no
+  derivation. WARN (never a refusal: the estimate assumes a stage and a flop on every port; it flags all 7 face
+  GRT-0116 routes of 10-12/13 but also 69 closed ones): a dense face on a source without the derivation and no explicit
+  gap, an explicit gap that stacks the flops on the stages, or a band deeper than 45 % of the core behind the face.
+
 Closure loop: at submit, a job with `"ref_tile": true` runs the local gate on its kit at the source commit (REFUSE on
 FAIL); every other job gets the source-sync check in WARN (mode file `~/.local/state/closure_loop/ref_gate.json`
 `{"mode": "warn"|"refuse"|"off", "other": "warn"|"refuse"|"off"}`).
@@ -134,3 +151,7 @@ EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec c
 ## Validation (2026-10-11)
 
 See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job names).
+
+For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host keeps the existing `ot-heavy` path.
+
+CTS gates measure every external clock from the actual CTS SDC. The measured clock exception uses the insertion and spread of the largest synthesized root's own source port. A secondary root cannot use the primary clock's measurement; an unmatched root has no measured exception.
