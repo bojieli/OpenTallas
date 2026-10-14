@@ -585,6 +585,11 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     import hashlib
     binding["remote_script_sha256"] = hashlib.sha256(sh.encode()).hexdigest()
     binding["tool_image_requested"] = "openroad/orfs:latest"
+    binding["remote_host"] = host
+    binding["remote_run"] = R
+    local_snapshot = Path(os.environ.get("TMPDIR", "/tmp")) / f"ref_gate_{spec['name']}_{ts}.source_snapshot.json"
+    local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
+    g.add("INFO", "source_binding", f"immutable shipping manifest {local_snapshot}")
     script = f"/tmp/ref_gate_{spec['name']}_{ts}.sh"
     t0 = time.time()
     up = subprocess.run(["ssh", host, f"cat > {script}"], input=sh.encode(), capture_output=True)
@@ -617,6 +622,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         return
     binding["remote_archive_verified"] = True
     binding["runtime_tool_provenance"] = re.findall(r"^GATE_TOOL_.*$", out, re.M)
+    local_snapshot.write_text(json.dumps(binding, indent=1) + "\n")
     if kv.get("GATE_FLOW_RC") != "0":
         why = "; ".join(errs[:4]) or "see gate_remote.log"
         stall = any(re.search(r"tim(ed)? ?out|TimeoutExpired|exceeded", e, re.I) for e in errs) or \
