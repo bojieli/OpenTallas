@@ -244,8 +244,10 @@ module ot_qfd_sp_vector_memory_bv #(
     wire [(1<<SMAX)*32-1:0] x_q;
     wire                    x_rdy;
     reg                     x_fault, x_hazard;
+`ifndef SYNTHESIS
     initial if (XPR != 0 || XTK != 0 || XMK != 0 || XLO != 0 || VMT == 0)
         $fatal(1, "ot_qfd_sp_vector_memory_bv OT_QFD_VM_NOX: needs VMT 1 and XPR / XTK / XMK / XLO 0");
+`endif
 `endif
     localparam integer RW = AW - 4;
     localparam integer NX = 1 << SMAX;

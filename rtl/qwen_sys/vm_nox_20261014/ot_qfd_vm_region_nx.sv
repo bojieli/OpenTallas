@@ -58,8 +58,10 @@ module ot_qfd_vm_region_nx #(
     output wire [511:0]              ro,
     output wire [NSU*NSB*512-1:0]    so
 );
+`ifndef SYNTHESIS
     initial if (NBK != 8 || NSB != 2 || NSU != 3 || NRI != 2 || NRX != 2 || NRS != 1)
         $fatal(1, "ot_qfd_vm_region_nx: unsupported leaf shape");
+`endif
     genvar g, c, j, h;
     // ---- copy-0 banks: control leaf + write-data relay -> bank -> bx relay (row read) ----
     wire [NBK-1:0]     rtg;
