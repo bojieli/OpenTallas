@@ -387,12 +387,16 @@ class Plan:
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--variant', default='B'); ap.add_argument('--height', type=float, default=695.52); ap.add_argument('--out', default=None)
+    ap.add_argument('--width', type=float, default=1520.064)
+    ap.add_argument('--fsr-pitch', type=float, default=388.8)
     ap.add_argument('--placements', help='replay a source-bound search placement JSON')
     ap.add_argument('--assigned-capture', help='actual die-lead VM per-bit capture assignment')
     a = ap.parse_args()
-    global H
+    global H, W
     H = a.height
+    W = a.width
     p = Plan(a.variant)
+    reposition(p, {f'fsr{i}': (a.fsr_pitch*i,p.inst[f'fsr{i}'][2]) for i in range(4)})
     if a.placements:
         proposed = json.loads(Path(a.placements).read_text())
         reposition(p, {n: (v['x'], v['y']) for n, v in proposed['instances'].items()},
