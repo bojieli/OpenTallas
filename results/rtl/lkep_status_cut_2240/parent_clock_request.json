@@ -6,73 +6,73 @@
   "endpoint_clock_entries": [
     {
       "port": "clk_sub[0]",
-      "consumer": "g_sub[0]/u_sub/u_rp",
+      "consumer": "g_t[0]/u_t/u_rp",
       "leaf": "retry",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[1]",
-      "consumer": "g_sub[0]/u_sub/u_ti",
+      "consumer": "g_t[0]/u_t/u_ti",
       "leaf": "ti",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[2]",
-      "consumer": "g_sub[0]/u_sub/u_ts",
+      "consumer": "g_t[0]/u_t/u_ts",
       "leaf": "ts",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[3]",
-      "consumer": "g_sub[0]/u_sub/u_rp",
+      "consumer": "g_t[0]/u_t/u_rp",
       "leaf": "rp",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[4]",
-      "consumer": "g_sub[1]/u_sub/u_rp",
+      "consumer": "g_t[1]/u_t/u_rp",
       "leaf": "retry",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[5]",
-      "consumer": "g_sub[1]/u_sub/u_ti",
+      "consumer": "g_t[1]/u_t/u_ti",
       "leaf": "ti",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[6]",
-      "consumer": "g_sub[1]/u_sub/u_ts",
+      "consumer": "g_t[1]/u_t/u_ts",
       "leaf": "ts",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[7]",
-      "consumer": "g_sub[1]/u_sub/u_rp",
+      "consumer": "g_t[1]/u_t/u_rp",
       "leaf": "rp",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[8]",
-      "consumer": "g_sub[2]/u_sub/u_rp",
+      "consumer": "g_t[2]/u_t/u_rp",
       "leaf": "retry",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[9]",
-      "consumer": "g_sub[2]/u_sub/u_ti",
+      "consumer": "g_t[2]/u_t/u_ti",
       "leaf": "ti",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[10]",
-      "consumer": "g_sub[2]/u_sub/u_ts",
+      "consumer": "g_t[2]/u_t/u_ts",
       "leaf": "ts",
       "proof": "actual direct clock connection; no data staging"
     },
     {
       "port": "clk_sub[11]",
-      "consumer": "g_sub[2]/u_sub/u_rp",
+      "consumer": "g_t[2]/u_t/u_rp",
       "leaf": "rp",
       "proof": "actual direct clock connection; no data staging"
     },
@@ -199,7 +199,13 @@
     "tt_boundary_mean_ps": 95.7,
     "spread_ps": 23.5,
     "job": "lkep_status_shared_ref-statuscut3-1fbe64bd5",
-    "native_qualified": false
+    "native_qualified": false,
+    "status": "CLOSED",
+    "record": "724a1795f",
+    "tt_setup_ps": 115.89,
+    "ff_hold_ps": 21.69,
+    "drc": 0,
+    "ss_sensitivity_ps": -77.09
   },
   "ctrl_data_leaf": {
     "source": "23cf210d9",

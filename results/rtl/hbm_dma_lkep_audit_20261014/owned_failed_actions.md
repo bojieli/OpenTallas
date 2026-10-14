@@ -26,3 +26,5 @@ Observed 2026-10-14T05:41:02.046437-07:00. The historical table above records it
 - SMPub R2 remains root-reserved main-first finite-clock helper publication dependency; no clock source Inf or guessed timing is accepted. Restore existing cancelled-before-compute R2 only after published helper clearance. Cancellation does not retire vmcore/vmport parent requirements.
 
 Observed 2026-10-14T05:45:29.380940-07:00: DMA B hold genuine a83 is CLOSED: TT +208.86 ps / FF +20.62 ps / DRC 0, record a916f9880. SS sensitivity −3.29 ps and unassigned native pins/context keep native release OPEN. A hold and prefix core continue route.a1. STATUS 1fbe is READY after collection, not yet claimed CLOSED.
+
+Observed 2026-10-14T05:46:35.457009-07:00: STATUS 1fbe is genuinely CLOSED, TT +115.89 ps / FF +21.69 ps / DRC 0, record 724a1795f. SS sensitivity −77.09 ps and explicit native parent hold remain. The actual source hierarchy is g_t[g]/u_t; clock inventory corrected to those literal instance names.
