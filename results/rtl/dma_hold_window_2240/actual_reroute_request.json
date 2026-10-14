@@ -1,0 +1,39 @@
+{
+  "original_closed_source": "d24a9898a",
+  "native_assignment": "current published v12 pin_request; assigned v13 pins absent; no final native fit claim",
+  "kind": "actual physical outline and pin-window change with classified PG/OBS defects",
+  "archive_policy": "preserve original CLOSED views and margins unchanged",
+  "a": {
+    "old_outline": [
+      145,
+      145
+    ],
+    "new_executed_outline": [
+      146.88,
+      146.88
+    ],
+    "old_M6_full_PG_stripes": 0,
+    "old_M7_OBS": 1042,
+    "old_blocked_above_pins": 1196,
+    "new_signal_PG_cap": "M5 full-length stripes and M6 parent strap",
+    "actual_CTS_setup_ps": 228.575,
+    "actual_CTS_hold_ps": 25.311
+  },
+  "b": {
+    "old_outline": [
+      160,
+      160
+    ],
+    "new_executed_outline": [
+      162,
+      162
+    ],
+    "old_M6_full_PG_stripes": 0,
+    "old_M7_OBS": 3408,
+    "old_blocked_above_pins": 123,
+    "new_signal_PG_cap": "M5 full-length stripes and M6 parent strap",
+    "actual_CTS_setup_ps": 228.291,
+    "actual_CTS_hold_ps": 26.337
+  },
+  "acceptance": "exact old NL16 module/full counted original MOVER benchmark + observed MUT5; positive measured CTS. Actual DRC/TT/FF/child-lint and native assigned-pin re-gate remain required."
+}
