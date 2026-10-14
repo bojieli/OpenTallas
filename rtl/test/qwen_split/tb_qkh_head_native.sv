@@ -17,8 +17,14 @@ module tb_qkh_head_native;
   ot_qwen_nearhbm_head_hs u_ref (.clk(clk),.rst_n(rst_n),.c_in(c),.row_in(row),
     .e_in(e),.lt_in(lt),.hid(hid),.q_valid_in(qv),.q_beat_in(qb),.q_data_in(qd),
     .sc_d(rsc),.sc_f(rsf),.g_f(rgf),.nb_d(rnb));
+`ifdef QKH_NATIVE_R3
+  ot_qkh_head_native_r3 #(.Q_FP32(1),.MUT(MUT)) u_dut
+    (.ck_front(clk),.ck_score(clk),.ck_kt(clk),.ck_stin({16{clk}}),.ck_stk({16{clk}}),
+     .ck_nb1({16{clk}}),.ck_nb2({16{clk}}),.ck_lane({16{clk}}),
+`else
   ot_qkh_head_native #(.Q_FP32(1),.MUT(MUT)) u_dut
     (.ck_front(clk),.ck_score(clk),.ck_kt(clk),.ck_stin({16{clk}}),.ck_stout({16{clk}}),.ck_lane({16{clk}}),
+`endif
      .rst_n(rst_n),.c_in(c),.row_in(row),.e_in(e),.lt_in(lt),.hid(hid),
      .q_valid_in(qv),.q_beat_in(qb),.q_data_in(qd),.sc_d(dsc),.sc_f(dsf),.g_f(dgf),.nb_d(dnb));
   integer cycles=0,checks=0,errors=0,resets=0;
