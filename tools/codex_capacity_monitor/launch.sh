@@ -23,8 +23,17 @@ if [[ -e "$MONITOR_STATE/STOP" ]]; then
   echo "STOP marker present; remove it explicitly before restarting monitor" >&2
   exit 3
 fi
-nohup flock -n "$MONITOR_STATE/launcher.lock" python3 -u "$MONITOR_DIR/monitor.py" \
+nohup setsid flock -n "$MONITOR_STATE/launcher.lock" python3 -u "$MONITOR_DIR/monitor.py" \
   --root-thread "$MONITOR_ROOT" --state-dir "$MONITOR_STATE" \
   --lock "$MONITOR_LOCK" --lock-since "$MONITOR_SINCE" "$@" \
   >> "$MONITOR_STATE/runtime.log" 2>&1 < /dev/null &
-echo "capacity monitor launcher pid=$! state=$MONITOR_STATE"
+MONITOR_LAUNCH_PID=$!
+for MONITOR_TRY in {1..50}; do
+  if [[ -s "$MONITOR_STATE/pid" ]]; then
+    echo "capacity monitor pid=$(cat "$MONITOR_STATE/pid") launcher=$MONITOR_LAUNCH_PID state=$MONITOR_STATE"
+    exit 0
+  fi
+  sleep 0.1
+done
+echo "capacity monitor failed to leave a verified pid; inspect $MONITOR_STATE/runtime.log" >&2
+exit 1
