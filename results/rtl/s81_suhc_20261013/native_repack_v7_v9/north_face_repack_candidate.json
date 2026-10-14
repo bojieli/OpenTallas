@@ -20,9 +20,8 @@
     575.992,
     851.04
   ],
-  "added_height_um": 176.48,
-  "routed_leaf_area_um2": 410880.72959999996,
-  "fill": 0.8736827694035433,
+  "added_height_um": 211.04,
+  "fill": 0.8339392474641674,
   "instances": [
     {
       "instance": "u_cf",
@@ -521,5 +520,17 @@
     "height_um": 34.56,
     "area_um2": 19906.28352,
     "area_percent": 4.232804232804233
+  },
+  "historical_routed_leaf_area_um2": 410880.72959999996,
+  "actual_leaf_outline_area_um2": 408790.5408,
+  "actual_leaf_outline_area_status": "measured closed peers and actual assigned successor outlines; CCF/R2 successors not routed",
+  "geometry_delta_vs_original_slot": {
+    "baseline_outline_um": [
+      575.992,
+      640
+    ],
+    "height_um": 211.04,
+    "area_um2": 121557.352,
+    "area_percent": 32.975
   }
 }

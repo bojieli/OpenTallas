@@ -21,8 +21,7 @@
     816.48
   ],
   "added_height_um": 176.48,
-  "routed_leaf_area_um2": 410880.72959999996,
-  "fill": 0.8736827694035433,
+  "fill": 0.8692382632298464,
   "instances": [
     {
       "instance": "u_cf",
@@ -516,5 +515,17 @@
     "wired independent child clocks including pad/meta hierarchy (current RTL shares sk)",
     "PIPE control RTL reroute and exact full production composition",
     "die real-view binding and release timing gates"
-  ]
+  ],
+  "historical_routed_leaf_area_um2": 410880.72959999996,
+  "actual_leaf_outline_area_um2": 408790.5408,
+  "actual_leaf_outline_area_status": "measured closed peers and actual assigned successor outlines; CCF/R2 successors not routed",
+  "geometry_delta_vs_original_slot": {
+    "baseline_outline_um": [
+      575.992,
+      640
+    ],
+    "height_um": 176.48,
+    "area_um2": 101651.068,
+    "area_percent": 27.574999999999996
+  }
 }
