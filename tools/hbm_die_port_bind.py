@@ -119,8 +119,8 @@ def main():
                 b = re.match(r'(\S+)\[(\d+)(?::(\d+))?\]$', n)
                 if b:
                     w += (abs(int(b.group(2)) - int(b.group(3))) + 1) if b.group(3) else 1
-                elif n.startswith("1'b"):
-                    w += 1
+                elif re.match(r"\d+'[bdh]", n):        # sized constant (a die strap): its declared width
+                    w += int(n.split("'")[0])
                 else:
                     w += wires.get(n, 1)
             dport[c.group(1)] = w
