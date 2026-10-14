@@ -1,0 +1,40 @@
+GRT_RC=0
+Design area 7568 um^2 65% utilization.
+M1                   0             0            0.00%             0 /  0 /  0
+M1         Vertical            0             0          0.00%
+M2              361293        135483           37.50%             0 /  0 /  0
+M2         Horizontal     507491        361293          28.81%
+M3              439377        179883           40.94%             0 /  0 /  0
+M3         Vertical       590793        439377          25.63%
+M4              337262         20596            6.11%             0 /  0 /  0
+M4         Horizontal     453098        337262          25.57%
+M5              325076         34055           10.48%             0 /  0 /  0
+M5         Vertical       437679        325076          25.73%
+Number of DEF vias:       0
+Number of components:     59242
+Number of layers:     21
+Number of macros:     212
+Number of nets:           57638
+Number of snets:          2
+Number of terminals:      590
+Number of track patterns: 32
+Number of viarulegen: 11
+Number of vias:       13
+OT_HOLD_GUARD chunk 1: hold ws 10.03 (+6.30) tns 0.0 (+0.0%) viol 0, 3 s
+OT_HOLD_GUARD start: hold ws 3.73 tns 0.0 viol 0 (margin 10, chunk 1000 it)
+QDM reference pin u_e.x_q[8]$_DFF_P_/CLK clock arrival max 177.165115 min 134.831039 skew 90 hold 50
+Repair setup and hold violations...
+Took 72 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+Total          1463008        370017           25.29%             0 /  0 /  0
+[INFO DRT-0164] Number of unique instances = 269.
+[INFO GRT-0096] Final congestion report:
+[INFO RSZ-0032] Inserted 13 hold buffers.
+[INFO RSZ-0046] Found 14 endpoints with hold violations.
+[INFO RSZ-0094] Found 142 endpoints with setup violations.
+[INFO RSZ-0094] Found 22 endpoints with setup violations.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+2_floorplan_final.rpt 3_detailed_place.rpt 3_global_place.rpt 3_resizer.rpt 4_cts_final.rpt 5_global_route.rpt grt_antennas.log synth_check.txt synth_stat.txt 0
+GRT_DONE
