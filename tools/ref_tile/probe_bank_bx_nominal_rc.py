@@ -109,6 +109,14 @@ proc sample {tag} {
     set p [lindex $paths 0]
     puts "PAIR_PATH $tag $kind slack=[get_property $p slack]"
   }
+  foreach edge {rise fall} {
+    foreach kind {max min} {
+      set command [list find_timing_paths -from [get_pins {bank/q[286]}] -${edge}_to [get_pins {bx/d[219]}] -path_delay $kind -group_path_count 1]
+      set paths [{*}$command]
+      if {[llength $paths]!=1} {error "missing selected $edge $kind actual macro path"}
+      puts "PAIR_EDGE $tag $edge $kind slack=[get_property [lindex $paths 0] slack]"
+    }
+  }
   report_checks -from [get_pins {bank/q[286]}] -to [get_pins {bx/d[219]}] -path_delay max -format full_clock_expanded -fields {slew cap input fanout} -digits 6
   report_checks -from [get_pins {bank/q[286]}] -to [get_pins {bx/d[219]}] -path_delay min -format full_clock_expanded -fields {slew cap input fanout} -digits 6
 }
