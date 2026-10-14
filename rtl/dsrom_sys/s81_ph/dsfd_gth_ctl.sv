@@ -80,7 +80,13 @@ module dsfd_gth_ctl #(parameter integer MUT = 0) (
     (* async_reg = "true" *) reg [2:0] tg_s;
     always @(posedge ck or negedge rs2_n) if (!rs2_n) tg_s <= 3'b000; else tg_s <= {tg_s[1:0], f_cd[11]};
     wire ev   = tg_s[2] ^ tg_s[1];
-    wire dn   = ev && fly && jv && !f_cd[10] && f_cd[9:0] == jd[16:7];
+    // Capture the stable bundled payload at its face pin. The toggle traverses
+    // tg_s before ev, so this adds no completion cycle for the bundled protocol.
+    (* keep = "true" *) reg [10:0] fcd_pin;
+    always @(posedge ck or negedge rs2_n)
+        if (!rs2_n) fcd_pin <= 11'd0;
+        else fcd_pin <= f_cd[10:0];
+    wire dn   = ev && fly && jv && !fcd_pin[10] && fcd_pin[9:0] == jd[16:7];
     wire dbad = ev && !dn;
     always @(posedge ck or negedge rs2_n)
         if (!rs2_n) begin swp <= 0; srp <= 0; sn <= 0; sf <= 1'b0; cqv <= 1'b0; t_xgo <= 11'd0; fly <= 1'b0; end
