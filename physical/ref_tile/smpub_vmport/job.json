@@ -1,5 +1,5 @@
 {
- "name": "smpub_vmport-r4-COMMIT",
+ "name": "smpub_vmport-r4-ef963d0a6",
  "block": "ot_hgi_sm_pub_vmport",
  "ref_tile": true,
  "owner": "Codex:sm_pub_parent",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/smpub-parent-1013",
-  "commit": "COMMIT",
+  "commit": "ef963d0a6",
   "extra_paths": [
    "rtl/hbm_accel/generic/adapters/tb/smpub_parent",
    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/smpub_vmport/smpub_vmport-r4-COMMIT"
+   "to": "results/rtl/ref_tile/smpub_vmport/smpub_vmport-r4-ef963d0a6"
   }
  ],
  "cycles_added": 0,
