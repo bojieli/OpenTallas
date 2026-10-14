@@ -52,14 +52,14 @@
           "TT_spread_ps": 4.2,
           "source": "7d84495f0",
           "actual_gates": "results/rtl/hbm_hc_b2_1013/chunk_store32/receipt.json",
-          "integration_source": "24b3831d7 opt-in STORELEAF1; actual native exact+scanmut jobs running"
+          "integration_source": "24b3831d7 opt-in STORELEAF1 native exactPASS4/6432 and scanmutFAIL1280; POST221/PRE508 cycles"
         },
         "remaining": "32lane own-state incl PRE buffers and7chunk adders/lane;4quarter station own-state;4concentrators;central ingress/selector/control;shared31chunk and19heap arithmetic nodes;scalarSYS control andSinkhorn",
         "explicit_clock_API": {
           "source": "24b3831d7",
           "accepted_SL_clock_pins": 256,
           "chunk_adder_clock_pins": 224,
-          "mode": "SL256/chunk224 API source81 exact+mutPASS. STORELEAF20+scan32+block31+heap31 newer native gates RUNNING; relatedequalclock logical proof only.",
+          "mode": "594declared/582active child entries tied to related equal logical clocks; actual native exact/mutant/cycle receipt results/rtl/hbm_hc_b2_1013/native_collector_stores/receipt.json. Physical phi-R and parent assembly remain unqualified.",
           "clock_entries_declared": 594,
           "heap_entries_pruned": 12
         },
@@ -68,22 +68,23 @@
           "new_mux2_count": 16,
           "closed_relay304_WE_count": 16,
           "mux_outline_um": [
-            60.48,
-            60.48
+            38.88,
+            38.88
           ],
           "mux_raw_std_area_um2": 296,
           "mux_clock_sinks": 797,
-          "TT_boundary_mean_ps": 90.1,
-          "TT_spread_ps": 6.8,
-          "status": "Large60.48frame clockWARN but actualCTSutil18.8%; actualpostholdarea measured, compact38.88frame probe next. The1716estimate fromGPLutil was not actualarea. No assignedpin/route/fit credit.",
-          "clock_evidence": "chunk_scan2_remote_gate2.json",
+          "TT_boundary_mean_ps": 101.3,
+          "TT_spread_ps": 7.0,
+          "status": "ClockCTS OK797sinks/spread7.0; raw synthutil25% WARN but actual mandatory pinhold+CTS area582.85/core1194.39=48.8%. No route/pin/slot/fit adoption.",
+          "clock_evidence": "chunk_scan2_remote_gate3.json",
           "transaction_proof": "results/rtl/hbm_hc_b2_1013/collector_stores2/receipt.json",
-          "mux_measured_postIOhold_std_area_um2": 570.69,
-          "mux_measured_postCTS_std_area_um2": 593.756,
+          "mux_measured_postIOhold_std_area_um2": 561.797,
+          "mux_measured_postCTS_std_area_um2": 582.85,
           "mux_compact_candidate_outline_um": [
             38.88,
             38.88
-          ]
+          ],
+          "mux_postCTS_utilization": 0.487988
         }
       }
     },
