@@ -1,0 +1,130 @@
+{
+  "name": "qdq_wr_pay_ref-p7-7edee9466",
+  "status": "EARLY_FAIL_CONGESTION",
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/qdq_wr_pay_ref-p7-7edee9466",
+  "reason": "global route finished with congestion (GRT-0116): qdq_wr_pay_ref_p7_7edee9466/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+  "benches": {
+    "bench_lint": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.136 MB sources in 9 modules, into 0.014 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.021 s (elab=0.004, cvt=0.010, bld=0.000); cpu 0.021 s on 1 threads; allocated 34.137 MB\nlint-ok\n",
+      "track": "parallel"
+    },
+    "bench_payload_sram_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PAY_LAUNCH_TRACE empty_mode=1 beats=1024 grant_delay=41 first=43 last=1066\nPAY_LAUNCH_TRACE empty_mode=1 beats=128 grant_delay=41 first=43 last=170\nPAY_LAUNCH_TRACE empty_mode=1 beats=128 grant_delay=0 first=27 last=154\nPAY_LAUNCH_TRACE empty_mode=1 beats=128 grant_delay=0 first=27 last=154\nPASS QDQ_WR_PAY words=45056 snapshots=352 metadata_wraps=18 counter_wraps=16 reset=1 real_macro=1 array_writes=1148 array_reads=1148 bypassed=256 fault_reset=1\nrtl/test/hbm_accel/generic/tb_hgi_qdq_wr_pay.sv:91: $finish called at 17020000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_payload_bit_mutant": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FATAL: rtl/test/hbm_accel/generic/tb_hgi_qdq_wr_pay.sv:48: PAY word/address mismatch lane3 item0\n       Time: 606000  Scope: tb_hgi_qdq_wr_pay.campaign\n",
+      "track": "parallel"
+    },
+    "bench_snapshot_count_mutant": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FATAL: rtl/test/hbm_accel/generic/tb_hgi_qdq_wr_pay.sv:55: PAY post-write snapshot mismatch lane0 got0 expected2\n       Time: 636000  Scope: tb_hgi_qdq_wr_pay.campaign\n",
+      "track": "parallel"
+    },
+    "bench_obligation_rail_mutant": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FATAL: rtl/test/hbm_accel/generic/tb_hgi_qdq_wr_pay.sv:44: unexpected PAY fault\n       Time: 176000  Scope: tb_hgi_qdq_wr_pay.campaign\n",
+      "track": "parallel"
+    }
+  },
+  "clock_rule": {
+    "evidence": {
+      "max_root_sinks": 4186,
+      "root": "port:clk",
+      "cts": true,
+      "tt_insertion_ps": 597.0,
+      "tt_spread_ps": 30.3,
+      "declared_clock": "spine",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "clk",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 1762,
+              "mean": 577.1,
+              "min": 568.1,
+              "max": 597.0
+            },
+            "all": {
+              "n": 4186,
+              "mean": 576.2,
+              "min": 566.7,
+              "max": 597.0
+            },
+            "errors": [],
+            "macros": {
+              "n": 1,
+              "nets": 1,
+              "max_per_net": 1,
+              "reg_mean": 576.2,
+              "max_slew": 13.9,
+              "max_late": -0.1,
+              "pins": [
+                {
+                  "pin": "u_od.g_tile[0].g_m0.u_m/clk",
+                  "arr": 576.1,
+                  "slew": 13.9,
+                  "late": -0.1,
+                  "net": "clkbuf_sp_L527_net"
+                }
+              ]
+            },
+            "macro_libs": 1
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "4,186 sinks on the largest root <= 15,000; measured TT insertion 597.0 ps, leaf spread 30.3 ps"
+    },
+    "sinks": 4186,
+    "ok": true,
+    "text": "4,186 sinks on the largest root <= 15,000; measured TT insertion 597.0 ps, leaf spread 30.3 ps",
+    "closed_stands": false,
+    "mode": "refuse"
+  },
+  "events": [
+    "2026-10-14T05:30:36-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qdq_wr_pay_ref-p7-7edee9466.json",
+    "2026-10-14T05:30:38-07:00 CLOSED-STANDS PASS: ot_hgi_qdq_wr_pay is CLOSED with a published view (qdq_wr_pay_ref-p3-94e699311-arg2 @ 94e699311); reroute_reason rtl_change: 1 of 4 RTL source file(s) differ from 94e699311: rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv (verified)",
+    "2026-10-14T05:30:38-07:00 MACRO_GRID WARN (refuse): MACRO_GRID WARN: physical/ref_tile/qdq_wr_pay_ref/place.tcl: not evaluated (ref_tile place: no unplaced instance of ot_sram_1r1w_64x512_m1_r2c2 matching 'u_od.g_tile[0].g_m0.u_m') || physical/ref_tile/qdq_wr_pay_ref/pre_gpl.tcl: not evaluated (INHOLD: HB4xp67_ASAP7_75t_R missing)",
+    "2026-10-14T05:30:41-07:00 CLOCK-RULE at submit: 4,186 sinks on the largest root <= 15,000; measured TT insertion 597.0 ps, leaf spread 30.3 ps",
+    "2026-10-14T05:30:41-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-14T05:30:52-07:00 benches run in parallel with calibrate/route (5 benches; spec bench_first opts out)",
+    "2026-10-14T05:31:11-07:00 git-mirror sync 7edee9466d1d via upstream in 2s + extract 12s; 2975 views / 5.4 GB hard-linked from the host view store",
+    "2026-10-14T05:31:12-07:00 source 7edee9466d1d synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/qdq_wr_pay_ref-p7-7edee9466/src",
+    "2026-10-14T05:31:12-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-14T05:31:15-07:00 launched route (attempt 1) on ot-agidock128",
+    "2026-10-14T05:31:50-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-14T05:31:51-07:00 bench track: launched bench_payload_sram_exact (bench_payload_sram_exact.a1b1) beside route",
+    "2026-10-14T05:32:49-07:00 bench track: bench_payload_sram_exact PASS (rc=0) work: [45056]",
+    "2026-10-14T05:32:49-07:00 bench track: launched bench_payload_bit_mutant (bench_payload_bit_mutant.a1b1) beside route",
+    "2026-10-14T05:33:50-07:00 bench track: bench_payload_bit_mutant FAIL as expected (rc=1) ",
+    "2026-10-14T05:33:50-07:00 bench track: launched bench_snapshot_count_mutant (bench_snapshot_count_mutant.a1b1) beside route",
+    "2026-10-14T05:34:54-07:00 bench track: bench_snapshot_count_mutant FAIL as expected (rc=1) ",
+    "2026-10-14T05:34:55-07:00 bench track: launched bench_obligation_rail_mutant (bench_obligation_rail_mutant.a1b1) beside route",
+    "2026-10-14T05:35:50-07:00 bench track: bench_obligation_rail_mutant FAIL as expected (rc=1) ",
+    "2026-10-14T05:42:52-07:00 TEXTBOOK-LINT route.a1: PASS ot_hgi_qdq_wr_pay cells 27,600 flops 4,185 depth 363.4 ps util 0.5557 reach 11.5 um (1.0 s) || INFO clock_roots max_root_sinks=4186 root=port:clk rule=PASS: 4,186 sinks on the largest root <= 15,000; measured TT insertion 597.0 ps, leaf spread 30.3 ps",
+    "2026-10-14T05:53:48-07:00 EARLY_FAIL_CONGESTION: global route finished with congestion (GRT-0116): qdq_wr_pay_ref_p7_7edee9466/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+    "2026-10-14T05:55:54-07:00 auto-react: block ot_hgi_qdq_wr_pay has a live or closed sibling job; no action"
+  ]
+}
