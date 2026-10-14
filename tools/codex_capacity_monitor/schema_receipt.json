@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.capacity_monitor.protocol_receipt.v1",
+  "cli_version": "0.162.1",
+  "root_thread": "01a1381f-2f38-7f93-ab66-b2037660efd3",
+  "root_identity_source": "explicit coordinator confirmation",
+  "direct_start_enabled": false,
+  "real_error_injected": false,
+  "default_control_socket": "/home/ubuntu/.codex/app-server-control/app-server-control.sock",
+  "connection_status": "absent socket; readonly probes failed before initialize",
+  "automatic_continuation_operational": false,
+  "generated_schema_hashes": {
+    "v2/ThreadReadResponse.json": "d8b6934897c959f589fdf33be4f750a81f46f075df77bedcaaa92e15ad80a2b1",
+    "v2/ThreadListParams.json": "5daf371b2852c409d4405c95f79cddb2d92a1ee89da808b2c5112ef16a57432c",
+    "v2/TurnStartParams.json": "062373a7dfc290b506e591bc5c2a35005211df27b3c60358cee3efed12859062",
+    "v2/TurnSteerParams.json": "99f7fdff8b090065b68f36420b70870b5eafed048c024b308230aaa02f15d891",
+    "v2/ErrorNotification.json": "63518d8faae38b8eb73518d59b113f77603d238dd0cf36260b4232f381f43f8c",
+    "v2/ThreadQueueListParams.json": "b4c889089eee8a0f785ff85e0128a4d3f347353870fa848221096a472223773b",
+    "v2/ThreadGoalGetResponse.json": "f610000963194731c96ce2b45e46722ca700f1b6ccc1fc55a2fd95e526018fd9"
+  }
+}
