@@ -161,20 +161,30 @@ module ot_qfd_xs_tap #(
     wire        hep = hit[1];
     wire        hrd = rnd[hep];
     wire [5:0]  off = w_a[5:0];
-    reg  [63:0]   r_m;
-    reg  [1023:0] r_d;
-    integer l, pp;
+    // round every lane to the consumer operand, then rotate lanes so that lane l lands at position (off + l) mod 64
+    reg  [1023:0] h_d;
+    integer l;
     reg [31:0] xe;
     reg        cy;
     always @* begin
-        for (pp = 0; pp < 64; pp = pp + 1) begin
-            l = (pp - off) & 63;
+        for (l = 0; l < 64; l = l + 1) begin
             xe = w_d[32*l +: 32];
             cy = (xe[15:0] > 16'h8000) || (xe[15:0] == 16'h8000 && xe[16]);
-            r_m[pp] = w_m[l];
-            r_d[16*pp +: 16] = (hrd && MUT != 1) ? (xe[31:16] + {15'd0, cy}) : xe[31:16];
+            h_d[16*l +: 16] = (hrd && MUT != 1) ? (xe[31:16] + {15'd0, cy}) : xe[31:16];
         end
     end
+    wire [1023:0] rd_s [0:6];
+    wire [63:0]   rm_s [0:6];
+    assign rd_s[0] = h_d;
+    assign rm_s[0] = w_m;
+    genvar rs;
+    generate for (rs = 0; rs < 6; rs = rs + 1) begin : g_rot
+        localparam integer K = 1 << rs;
+        assign rd_s[rs+1] = off[rs] ? {rd_s[rs][1023-16*K:0], rd_s[rs][1023 -: 16*K]} : rd_s[rs];
+        assign rm_s[rs+1] = off[rs] ? {rm_s[rs][63-K:0], rm_s[rs][63 -: K]} : rm_s[rs];
+    end endgenerate
+    wire [63:0]   r_m = rm_s[6];
+    wire [1023:0] r_d = rd_s[6];
     reg              e5_v, e5_ep;
     reg [BW-1:0]     e5_b;
     reg [5:0]        e5_off;
@@ -253,41 +263,45 @@ module ot_qfd_xs_leaf #(
     assign wo_v = wv; assign wo_ep = wep; assign wo_off = woff; assign wo_m = wm; assign wo_d = wd;
     assign wo_ctl = {8'd0, wctl[NCH*8-1:8]};
     assign co_v = cv; assign co_ep = cep;
-    // storage: index {tile, epoch, slot, position}
-    reg [15:0] mem [0:511];
-    reg [511:0] val;
-    integer t, p, i;
-    reg         hi_p, en, sl;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) val <= 512'd0;
-        else begin
-            if (cv) for (t = 0; t < 2; t = t + 1) for (p = 0; p < 128; p = p + 1) val[{t[0], cep, p[6:0]}] <= 1'b0;
-            if (wv) for (t = 0; t < 2; t = t + 1) for (p = 0; p < 64; p = p + 1) begin
-                hi_p = (p >= woff);
-                en = hi_p ? wctl[4*t + 1] : wctl[4*t + 3];
-                sl = hi_p ? wctl[4*t + 0] : wctl[4*t + 2];
-                if (en && wm[p]) val[{t[0], wep, sl, p[5:0]}] <= 1'b1;
-            end
+    // storage: entry e = {tile, epoch, slot, position} (9 bits), one 16-bit register + one valid flop each
+    wire [8191:0] mem_f;
+    wire [511:0]  val_f;
+    wire [63:0]   thermo;
+    genvar ge, gp;
+    generate for (gp = 0; gp < 64; gp = gp + 1) begin : g_th
+        assign thermo[gp] = (gp >= woff);
+    end endgenerate
+    generate for (ge = 0; ge < 512; ge = ge + 1) begin : g_e
+        localparam integer ET = ge >> 8, EE = (ge >> 7) & 1, ES = (ge >> 6) & 1, EP = ge & 63;
+        wire hi_p = thermo[EP];
+        wire en   = hi_p ? wctl[4*ET + 1] : wctl[4*ET + 3];
+        wire sl   = hi_p ? wctl[4*ET + 0] : wctl[4*ET + 2];
+        wire we   = wv && (wep == EE) && en && (sl == ES) && wm[EP];
+        reg [15:0] m;
+        reg        v;
+        always @(posedge clk) if (we) m <= wd[16*EP +: 16];
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) v <= 1'b0;
+            else if (cv && cep == EE) v <= 1'b0;
+            else if (we) v <= 1'b1;
+        assign mem_f[16*ge +: 16] = m;
+        assign val_f[ge] = v;
+    end endgenerate
+    // read: four elements of one tile's window through explicit 512:1 trees
+    wire [63:0] qq;
+    wire [3:0]  vv;
+    genvar gi;
+    generate for (gi = 0; gi < 4; gi = gi + 1) begin : g_rd
+        wire [8:0] ix = {(MUT == 2) ? 1'b0 : rt, rep, rp[7*gi +: 7]};
+        ot_qfd_xs_mux #(.W(17), .LN(9)) u_m (.d(interleave(mem_f, val_f)), .s(ix), .q({vv[gi], qq[16*gi +: 16]}));
+    end endgenerate
+    wire bad = ~&vv;
+    function automatic [512*17-1:0] interleave(input [8191:0] m, input [511:0] v);
+        integer k;
+        begin
+            for (k = 0; k < 512; k = k + 1) interleave[17*k +: 17] = {v[k], m[16*k +: 16]};
         end
-    always @(posedge clk)
-        if (wv) for (t = 0; t < 2; t = t + 1) for (p = 0; p < 64; p = p + 1) begin
-            hi_p = (p >= woff);
-            en = hi_p ? wctl[4*t + 1] : wctl[4*t + 3];
-            sl = hi_p ? wctl[4*t + 0] : wctl[4*t + 2];
-            if (en && wm[p]) mem[{t[0], wep, sl, p[5:0]}] <= wd[16*p +: 16];
-        end
-    // read: four elements of one tile's window
-    reg [8:0] ix;
-    reg       bad;
-    reg [63:0] qq;
-    always @* begin
-        bad = 1'b0; qq = 64'd0;
-        for (i = 0; i < 4; i = i + 1) begin
-            ix = {(MUT == 2) ? 1'b0 : rt, rep, rp[7*i +: 7]};
-            qq[16*i +: 16] = mem[ix];
-            if (!val[ix]) bad = 1'b1;
-        end
-    end
+    endfunction
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin q_v <= 1'b0; q_bad <= 1'b0; end
         else begin q_v <= rv; q_bad <= rv && bad; end
@@ -641,4 +655,24 @@ module ot_qfd_xcst #(
         if (!rst_n) begin br_q <= 1'b0; tr_q <= 1'b0; ar_q <= 1'b0; end
         else begin br_q <= b_r; tr_q <= tap_r; ar_q <= br_q & tr_q; end
     assign a_r = ar_q;
+endmodule
+
+// Explicit 2^LN : 1 mux tree of W-bit words (no runtime-indexed select for synthesis to re-share).
+module ot_qfd_xs_mux #(parameter integer W = 16, parameter integer LN = 9) (
+    input  wire [(W << LN)-1:0] d,
+    input  wire [LN-1:0]        s,
+    output wire [W-1:0]         q
+);
+    genvar lv, k;
+    generate for (lv = 0; lv <= LN; lv = lv + 1) begin : g_l
+        wire [(W << (LN - lv))-1:0] n;
+        if (lv == 0) begin : g_in
+            assign n = d;
+        end else begin : g_mx
+            for (k = 0; k < (1 << (LN - lv)); k = k + 1) begin : g_k
+                assign n[W*k +: W] = s[lv-1] ? g_l[lv-1].n[W*(2*k+1) +: W] : g_l[lv-1].n[W*(2*k) +: W];
+            end
+        end
+    end endgenerate
+    assign q = g_l[LN].n;
 endmodule
