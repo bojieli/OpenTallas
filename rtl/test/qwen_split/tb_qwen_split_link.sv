@@ -95,7 +95,8 @@ module tb_qwen_split_link;
             .r_v(kr_v), .r_d(kr_d), .r_cr(kr_cr), .t_v(kt_v), .t_d(kt_d), .t_cr(kt_cr),
             .x3_v(b_x3_v), .x3_tag(b_x3_tag), .x3_d(b_x3_d), .x3_cr(b_x3_cr), .sd(b_sd), .kvd(b_kvd),
             .ar_v(b_ar_v), .ar_d(b_ar_d), .ar_cr(b_ar_cr), .ds(b_ds), .pw(b_pw),
-            .ea_v(), .ea_kind(), .ea_addr(), .ea_cr(1'b0), .eq_v(1'b0), .eq_d(512'd0), .fault(faults_link[2]));
+            .ea_v(), .ea_kind(), .ea_addr(), .ea_cr(1'b0), .eq_v(1'b0), .eq_d(512'd0), .d2d_fault(faults_link[1]), .d2d_cause(k_fc),
+            .fault(faults_link[2]));
         // ---- KV/system die relays bridge <-> sequencer (K_ST stages each way) ----
         ot_hdc_delay #(.W(1),   .D(K_ST), .RESET(1)) u_k1 (.clk(clk), .rst_n(rst_n), .d(b_x3_v), .q(q_x3_v));
         ot_hdc_delay #(.W(523), .D(K_ST))            u_k2 (.clk(clk), .rst_n(rst_n), .d({b_x3_tag, b_x3_d}), .q({q_x3_tag, q_x3_d}));

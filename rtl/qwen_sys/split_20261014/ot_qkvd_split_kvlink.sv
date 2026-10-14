@@ -61,6 +61,9 @@ module ot_qkvd_split_kvlink #(
     input  wire            ea_cr,
     input  wire            eq_v,
     input  wire [511:0]    eq_d,
+    // the KV end's sticky fault + cause (link sequence / credit / overrun): folded into fault (-> host status)
+    input  wire            d2d_fault,
+    input  wire [4:0]      d2d_cause,
     output reg             fault
 );
     // ---- pin capture ----
@@ -106,7 +109,8 @@ module ot_qkvd_split_kvlink #(
     assign t_v = {sv, tv1, tv0};
     assign t_d = {{4'd3, 12'd0, 250'd0, sdat}, {16'd0, td1}, {9'd0, td0}};
     assign ar_cr = crq0;
-    reg f_ctl, f_ovr, f_emb;
+    reg f_ctl, f_ovr, f_emb, dfq;
+    always @(posedge clk or negedge rst_n) if (!rst_n) dfq <= 1'b0; else dfq <= d2d_fault;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
             x3_v <= 1'b0; x3_tag <= 11'd0; sd <= 56'd0; kvd <= 44'd0; ea_v <= 1'b0; ea_kind <= 1'b0; ea_addr <= 24'd0;
@@ -137,6 +141,6 @@ module ot_qkvd_split_kvlink #(
             // credits back to the KV end's die faces: CTL at once, the rest when the word leaves the bridge
             r_cr <= {epop, kpop, qpop, rv[0]};
             if ((rv[1] && qf && !qpop) || (rv[2] && kf && !kpop) || (rv[3] && ef && !epop)) f_ovr <= 1'b1;
-            fault <= f_ctl | f_ovr | f_emb | sfault;
+            fault <= f_ctl | f_ovr | f_emb | sfault | dfq;
         end
 endmodule
