@@ -1,0 +1,88 @@
+{
+  "status": "unqualified_opt_in",
+  "original_wr_snapshot": "85c81f4c2 preserved; no substitution of monolithic physical view",
+  "leaf_source_commit": "d536f983f",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv": "87deaef6499f70ca2404af1e538c05dac42ac1529d9948f5412cfbb869baf1a4",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_fin.sv": "9e276387090cc247cb0c29ac00f0749128950050b225b25cad8a5c4f06e19c68",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_split.sv": "07121edbfe4925ae61f162329efc34a79aa077a673f001b1eb13e49d4d082d1f"
+  },
+  "physical_binding": {
+    "parent": "ot_hgi_qdq_q_pin4",
+    "select_parameter": "WRSPLIT=1 (parent-owned integration)",
+    "pay_instance": "u_wr.u_pay",
+    "fin_instance": "u_wr.u_fin",
+    "clock_pins": [
+      "u_wr.u_pay.clk",
+      "u_wr.u_fin.clk"
+    ],
+    "delivery": "separate private same-rate roots, actual pins at phi-R",
+    "geometry": "unassigned; 259.2x125.28 PAY,86.4x86.4 FIN are proposals only",
+    "fault_aggregation": "pay_bad/fin_bad exposed; wrapper OR is real combinational parent logic and must be timed/captured"
+  },
+  "fin_f2_cts": {
+    "source_gate_commit": "de1974858",
+    "sinks": 1205,
+    "tt_boundary_mean_ps": 141.6,
+    "tt_boundary_min_ps": 129.2,
+    "tt_boundary_max_ps": 144.8,
+    "tt_all_spread_ps": 19.9,
+    "tt_setup_ps": 93.053,
+    "tt_hold_ps": 26.667,
+    "input_slack_ps": 224.4,
+    "output_slack_ps": 118.1,
+    "route_job": "qdq_wr_fin_ref-f2-de1974858",
+    "route_verdict": "pending"
+  },
+  "pay_p1_cts": {
+    "sinks": 4171,
+    "tt_boundary_mean_ps": 311.5,
+    "tt_spread_ps": 123.2,
+    "tt_setup_ps": 76.9,
+    "tt_hold_ps": 27.0,
+    "status": "boundary spread fails; do not qualify from count-only PASS"
+  },
+  "pay_p2_cts": {
+    "source": "85a0a4d05",
+    "actual_clock": "spine",
+    "status": "running; no RTL/data edge change"
+  },
+  "behavior": {
+    "fin_scoreboard_records": 866,
+    "counter_wraps": 48,
+    "max_pending": 16,
+    "warm_reset_pending": true,
+    "negative_controls": [
+      "fabricated ACK fails scoreboard",
+      "snapshot bit flip fails actual head invariant"
+    ],
+    "snapshot_admission_after_pay_launch_edges": 2,
+    "min_actual_CDC_ack_edges_measured": 8,
+    "actual_CDC_clock_periods_ps": [
+      833.333,
+      1111.111
+    ],
+    "actual_CDC_phases_ps": [
+      61,
+      487
+    ],
+    "CDC_vm_commit_extra_edges": 0,
+    "minimum_finish_pulse_spacing_edges": 2
+  },
+  "production_qualification": {
+    "immutable_price": 168,
+    "limit_integer_cycles": 184,
+    "words_required": 13312,
+    "quarters": 4,
+    "records": 32,
+    "native_test_status": "parent executing source-matched integration; no full-native qualification yet"
+  },
+  "required_release_checks": [
+    "TT>=0 FF>=0 DRC0 on both real leaf sources",
+    "routed registered launch<=220/capture<=190",
+    "all actual bit pairs phi-R, setup reach and H100",
+    "real parent slot pin cut<=0.60 and clock root binding",
+    "production exact + actual mutants + <=184 cycles at phases61/487",
+    "drain and ownership release evidence by native owner"
+  ]
+}
