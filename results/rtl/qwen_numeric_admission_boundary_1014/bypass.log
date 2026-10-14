@@ -1,0 +1,5 @@
+BOUNDARY_OFFER base=201 old_outstanding=46 numeric_delivered=17
+BOUNDARY_EARLY old_outstanding=47 old_numeric_v=1 queue=2
+[2066000] %Fatal: tb_qwen_numeric_admission_boundary.sv:100: Assertion failed in tb_qwen_numeric_admission_boundary: boundary actual new query mismatched old active ledger
+%Error: rtl/test/qwen_kv_die/tb_qwen_numeric_admission_boundary.sv:100: Verilog $stop
+Aborting...
