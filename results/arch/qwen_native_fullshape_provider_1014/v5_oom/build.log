@@ -1,0 +1,20 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v5/src/rtl/hdc/ot_hdc_core_vector_weight_native_candidate.sv:575:87: Instance has missing pin: 'obs_active'
+  575 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                       ^~~~
+                     /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v5/src/rtl/hdc/ot_hdc_vstream.sv:100:30: ... Location of port declaration
+  100 |     output wire              obs_active,
+      |                              ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v5/src/rtl/hdc/ot_hdc_core_vector_weight_native_candidate.sv:575:87: Instance has missing pin: 'obs_inflight'
+  575 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                       ^~~~
+                     /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v5/src/rtl/hdc/ot_hdc_vstream.sv:101:30: ... Location of port declaration
+  101 |     output wire [7:0]        obs_inflight
+      |                              ^~~~~~~~~~~~
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v5/src/rtl/hdc/ot_hdc_matvec.sv:740:22: Replication of more that --replication-limit 8192 is suspect: 49152
+                                                                                                                       : ... note: In instance 'ot_hdc_core_vector_weight_native_candidate.u_me.u_p'
+  740 |         r_mask = {G*W{1'b0}};
+      |                      ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.

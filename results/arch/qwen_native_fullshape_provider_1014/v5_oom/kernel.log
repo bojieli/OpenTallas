@@ -1,0 +1,130 @@
+[Wed Oct 14 00:13:39 2026] verilator_bin invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0
+[Wed Oct 14 00:13:39 2026] CPU: 111 UID: 1000 PID: 486639 Comm: verilator_bin Not tainted 7.0.0-38-generic #38-Ubuntu PREEMPT(lazy) 
+[Wed Oct 14 00:13:39 2026] Hardware name: Supermicro AS -1116CS-TN/H14SHM, BIOS 2.0 03/23/2026
+[Wed Oct 14 00:13:39 2026] Call Trace:
+[Wed Oct 14 00:13:39 2026]  <TASK>
+[Wed Oct 14 00:13:39 2026]  show_stack+0x49/0x60
+[Wed Oct 14 00:13:39 2026]  dump_stack_lvl+0x5f/0x90
+[Wed Oct 14 00:13:39 2026]  dump_stack+0x10/0x18
+[Wed Oct 14 00:13:39 2026]  dump_header+0x48/0x1c7
+[Wed Oct 14 00:13:39 2026]  oom_kill_process.cold+0x8/0xac
+[Wed Oct 14 00:13:39 2026]  out_of_memory+0xff/0x2b0
+[Wed Oct 14 00:13:39 2026]  mem_cgroup_out_of_memory+0xc8/0xe0
+[Wed Oct 14 00:13:39 2026]  try_charge_memcg+0x3c3/0x620
+[Wed Oct 14 00:13:39 2026]  charge_memcg+0x34/0x80
+[Wed Oct 14 00:13:39 2026]  __mem_cgroup_charge+0x2f/0xa0
+[Wed Oct 14 00:13:39 2026]  alloc_anon_folio+0x20c/0x4b0
+[Wed Oct 14 00:13:39 2026]  do_anonymous_page+0x14a/0x4d0
+[Wed Oct 14 00:13:39 2026]  ? __pte_offset_map+0x1c/0x130
+[Wed Oct 14 00:13:39 2026]  handle_pte_fault+0x1cb/0x1f0
+[Wed Oct 14 00:13:39 2026]  ? try_to_wake_up+0x242/0x8c0
+[Wed Oct 14 00:13:39 2026]  __handle_mm_fault+0x493/0x720
+[Wed Oct 14 00:13:39 2026]  handle_mm_fault+0xee/0x2e0
+[Wed Oct 14 00:13:39 2026]  do_user_addr_fault+0x2ee/0x830
+[Wed Oct 14 00:13:39 2026]  exc_page_fault+0x83/0x1e0
+[Wed Oct 14 00:13:39 2026]  asm_exc_page_fault+0x27/0x30
+[Wed Oct 14 00:13:39 2026] RIP: 0033:0x65531c8ecffc
+[Wed Oct 14 00:13:39 2026] Code: 31 db 4d 63 8c 86 7c 0a 00 00 48 c1 e1 0d 49 01 c8 4a 8d 04 09 49 39 c0 72 1e 0f 1f 40 00 48 89 ca 48 89 c1 4c 01 c8 83 c6 01 <48> 89 17 48 89 d7 49 39 c0 73 e9 48 63 de 31 c0 48 c7 02 00 00 00
+[Wed Oct 14 00:13:39 2026] RSP: 002b:00007ffeef917640 EFLAGS: 00010202
+[Wed Oct 14 00:13:39 2026] RAX: 000065b31b3c61e0 RBX: 0000000000000000 RCX: 000065b31b3c6140
+[Wed Oct 14 00:13:39 2026] RDX: 000065b31b3c60a0 RSI: 0000000000000002 RDI: 000065b31b3c6000
+[Wed Oct 14 00:13:39 2026] RBP: 000065531ce33160 R08: 000065b31b3c8000 R09: 00000000000000a0
+[Wed Oct 14 00:13:39 2026] R10: 00000000000000a0 R11: 000065b31b3c5f40 R12: 000065b3004929e0
+[Wed Oct 14 00:13:39 2026] R13: 000065531ccacbc0 R14: 000065531ce55d20 R15: 00007ffeef917718
+[Wed Oct 14 00:13:39 2026]  </TASK>
+[Wed Oct 14 00:13:39 2026] memory: usage 400556032kB, limit 400556032kB, failcnt 22
+[Wed Oct 14 00:13:39 2026] swap: usage 0kB, limit 0kB, failcnt 0
+[Wed Oct 14 00:13:39 2026] Memory cgroup stats for /user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-486583-1791958395.scope:
+[Wed Oct 14 00:13:39 2026] anon 409367068672
+[Wed Oct 14 00:13:39 2026] file 0
+[Wed Oct 14 00:13:39 2026] kernel 802308096
+[Wed Oct 14 00:13:39 2026] kernel_stack 163840
+[Wed Oct 14 00:13:39 2026] pagetables 801914880
+[Wed Oct 14 00:13:39 2026] sec_pagetables 0
+[Wed Oct 14 00:13:39 2026] percpu 6240
+[Wed Oct 14 00:13:39 2026] sock 0
+[Wed Oct 14 00:13:39 2026] vmalloc 0
+[Wed Oct 14 00:13:39 2026] shmem 0
+[Wed Oct 14 00:13:39 2026] zswap 0
+[Wed Oct 14 00:13:39 2026] zswapped 0
+[Wed Oct 14 00:13:39 2026] file_mapped 0
+[Wed Oct 14 00:13:39 2026] file_dirty 0
+[Wed Oct 14 00:13:39 2026] file_writeback 0
+[Wed Oct 14 00:13:39 2026] swapcached 0
+[Wed Oct 14 00:13:39 2026] anon_thp 0
+[Wed Oct 14 00:13:39 2026] file_thp 0
+[Wed Oct 14 00:13:39 2026] shmem_thp 0
+[Wed Oct 14 00:13:39 2026] inactive_anon 409366843392
+[Wed Oct 14 00:13:39 2026] active_anon 225280
+[Wed Oct 14 00:13:39 2026] inactive_file 0
+[Wed Oct 14 00:13:39 2026] active_file 0
+[Wed Oct 14 00:13:39 2026] unevictable 0
+[Wed Oct 14 00:13:39 2026] slab_reclaimable 8616
+[Wed Oct 14 00:13:39 2026] slab_unreclaimable 211368
+[Wed Oct 14 00:13:39 2026] slab 219984
+[Wed Oct 14 00:13:39 2026] hugetlb 0
+[Wed Oct 14 00:13:39 2026] workingset_refault_anon 0
+[Wed Oct 14 00:13:39 2026] workingset_refault_file 0
+[Wed Oct 14 00:13:39 2026] workingset_activate_anon 0
+[Wed Oct 14 00:13:39 2026] workingset_activate_file 0
+[Wed Oct 14 00:13:39 2026] workingset_restore_anon 0
+[Wed Oct 14 00:13:39 2026] workingset_restore_file 0
+[Wed Oct 14 00:13:39 2026] workingset_nodereclaim 0
+[Wed Oct 14 00:13:39 2026] pgdemote_kswapd 0
+[Wed Oct 14 00:13:39 2026] pgdemote_direct 0
+[Wed Oct 14 00:13:39 2026] pgdemote_khugepaged 0
+[Wed Oct 14 00:13:39 2026] pgdemote_proactive 0
+[Wed Oct 14 00:13:39 2026] pgpromote_success 0
+[Wed Oct 14 00:13:39 2026] pgscan 5
+[Wed Oct 14 00:13:39 2026] pgsteal 3
+[Wed Oct 14 00:13:39 2026] pswpin 0
+[Wed Oct 14 00:13:39 2026] pswpout 0
+[Wed Oct 14 00:13:39 2026] pgscan_kswapd 0
+[Wed Oct 14 00:13:39 2026] pgscan_direct 5
+[Wed Oct 14 00:13:39 2026] pgscan_khugepaged 0
+[Wed Oct 14 00:13:39 2026] pgscan_proactive 0
+[Wed Oct 14 00:13:39 2026] pgsteal_kswapd 0
+[Wed Oct 14 00:13:39 2026] pgsteal_direct 3
+[Wed Oct 14 00:13:39 2026] pgsteal_khugepaged 0
+[Wed Oct 14 00:13:39 2026] pgsteal_proactive 0
+[Wed Oct 14 00:13:39 2026] pgfault 100975087
+[Wed Oct 14 00:13:39 2026] pgmajfault 0
+[Wed Oct 14 00:13:39 2026] pgrefill 1
+[Wed Oct 14 00:13:39 2026] pgactivate 1
+[Wed Oct 14 00:13:39 2026] pgdeactivate 0
+[Wed Oct 14 00:13:39 2026] pglazyfree 0
+[Wed Oct 14 00:13:39 2026] pglazyfreed 0
+[Wed Oct 14 00:13:39 2026] swpin_zero 0
+[Wed Oct 14 00:13:39 2026] swpout_zero 0
+[Wed Oct 14 00:13:39 2026] zswpin 0
+[Wed Oct 14 00:13:39 2026] zswpout 0
+[Wed Oct 14 00:13:39 2026] zswpwb 0
+[Wed Oct 14 00:13:39 2026] thp_fault_alloc 0
+[Wed Oct 14 00:13:39 2026] thp_collapse_alloc 0
+[Wed Oct 14 00:13:39 2026] thp_swpout 0
+[Wed Oct 14 00:13:39 2026] thp_swpout_fallback 0
+[Wed Oct 14 00:13:39 2026] numa_pages_migrated 0
+[Wed Oct 14 00:13:39 2026] numa_pte_updates 0
+[Wed Oct 14 00:13:39 2026] numa_hint_faults 0
+[Wed Oct 14 00:13:39 2026] Memory cgroup min protection 0kB -- low protection 0kB
+[Wed Oct 14 00:13:39 2026] Tasks state (memory values in pages):
+[Wed Oct 14 00:13:39 2026] [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+[Wed Oct 14 00:13:39 2026] [ 486583]  1000 486583     8227     5347     2323     3024         0   102400        0             0 python3
+[Wed Oct 14 00:13:39 2026] [ 486635]  1000 486635     4681     3399     1799     1600         0    86016        0             0 perl
+[Wed Oct 14 00:13:39 2026] [ 486639]  1000 486639 100418413 99942831 99939010     3821         0 801701888        0             0 verilator_bin
+[Wed Oct 14 00:13:39 2026] oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=user.slice,mems_allowed=0,oom_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-486583-1791958395.scope,task_memcg=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-486583-1791958395.scope,task=verilator_bin,pid=486639,uid=1000
+[Wed Oct 14 00:13:39 2026] Memory cgroup out of memory: Killed process 486639 (verilator_bin) total-vm:401673652kB, anon-rss:399756040kB, file-rss:15284kB, shmem-rss:0kB, UID:1000 pgtables:782912kB oom_score_adj:0
+[Wed Oct 14 00:13:47 2026] docker0: port 6(vethbafc1e2) entered disabled state
+[Wed Oct 14 00:13:47 2026] veth4f7f11e: renamed from eth0
+[Wed Oct 14 00:13:47 2026] docker0: port 6(vethbafc1e2) entered disabled state
+[Wed Oct 14 00:13:47 2026] vethbafc1e2 (unregistering): left allmulticast mode
+[Wed Oct 14 00:13:47 2026] vethbafc1e2 (unregistering): left promiscuous mode
+[Wed Oct 14 00:13:47 2026] docker0: port 6(vethbafc1e2) entered disabled state
+[Wed Oct 14 00:13:47 2026] docker0: port 5(veth4729fdf) entered blocking state
+[Wed Oct 14 00:13:47 2026] docker0: port 5(veth4729fdf) entered disabled state
+[Wed Oct 14 00:13:47 2026] veth4729fdf: entered allmulticast mode
+[Wed Oct 14 00:13:47 2026] veth4729fdf: entered promiscuous mode
+[Wed Oct 14 00:13:47 2026] eth0: renamed from veth2cd6ae3
+[Wed Oct 14 00:13:47 2026] docker0: port 5(veth4729fdf) entered blocking state
+[Wed Oct 14 00:13:47 2026] docker0: port 5(veth4729fdf) entered forwarding state
+[Wed Oct 14 00:13:53 2026] oom_reaper: reaped process 486639 (verilator_bin), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
