@@ -1,0 +1,827 @@
+{
+ "schema": "opentallas.s81_vm_fe_h.floorplan.v1",
+ "agent": "el1013-s81-vmfe/B7",
+ "rtl": "FROZEN 763fb482a",
+ "variant": "B",
+ "outline": [
+  1520.064,
+  695.52
+ ],
+ "limits": {
+  "hop_um": 500.0,
+  "cut": 0.6,
+  "usable_tracks": 0.8
+ },
+ "instances": {
+  "c0s0r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 198.72,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s0r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 172.8,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s1r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 345.6,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s1r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 440.64,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s2r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 483.84,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s2r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 708.48,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s3r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 622.08,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s3r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 967.68,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s0r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 432.0,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s0r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 311.04,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s1r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 570.24,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s1r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 570.24,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s2r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 708.48,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s2r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 838.08,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s3r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 855.36,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s3r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 1105.92,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s0r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 656.64,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s0r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 440.64,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s1r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 794.88,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s1r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 708.48,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s2r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 941.76,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s2r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 967.68,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s3r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 1080.0,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s3r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 1235.52,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s0r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 881.28,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s0r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 570.24,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s1r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 1028.16,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s1r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 838.08,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s2r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 1166.4,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s2r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 1105.92,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s3r0": {
+   "master": "dsfd_vm_fxr",
+   "x": 1304.64,
+   "y": 250.56,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s3r1": {
+   "master": "dsfd_vm_fxr",
+   "x": 1365.12,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "clt0": {
+   "master": "dsfd_vm_clt",
+   "x": 115.2,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt1": {
+   "master": "dsfd_vm_clt",
+   "x": 195.84,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt10": {
+   "master": "dsfd_vm_clt",
+   "x": 921.6,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt11": {
+   "master": "dsfd_vm_clt",
+   "x": 1002.24,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt12": {
+   "master": "dsfd_vm_clt",
+   "x": 1082.88,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt13": {
+   "master": "dsfd_vm_clt",
+   "x": 1163.52,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt14": {
+   "master": "dsfd_vm_clt",
+   "x": 1244.16,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt15": {
+   "master": "dsfd_vm_clt",
+   "x": 1324.8,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt2": {
+   "master": "dsfd_vm_clt",
+   "x": 276.48,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt3": {
+   "master": "dsfd_vm_clt",
+   "x": 357.12,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt4": {
+   "master": "dsfd_vm_clt",
+   "x": 437.76,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt5": {
+   "master": "dsfd_vm_clt",
+   "x": 518.4,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt6": {
+   "master": "dsfd_vm_clt",
+   "x": 599.04,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt7": {
+   "master": "dsfd_vm_clt",
+   "x": 679.68,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt8": {
+   "master": "dsfd_vm_clt",
+   "x": 760.32,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "clt9": {
+   "master": "dsfd_vm_clt",
+   "x": 840.96,
+   "y": 414.72,
+   "w": 80.64,
+   "h": 267.84
+  },
+  "fcc": {
+   "master": "dsfd_vm_fcc",
+   "x": 936.0,
+   "y": 34.56,
+   "w": 181.44,
+   "h": 112.32
+  },
+  "fcn": {
+   "master": "dsfd_vm_fcn",
+   "x": 686.88,
+   "y": 95.04,
+   "w": 239.76,
+   "h": 51.84
+  },
+  "fcw": {
+   "master": "dsfd_vm_fcw",
+   "x": 698.4,
+   "y": 34.56,
+   "w": 151.2,
+   "h": 38.88
+  },
+  "fld": {
+   "master": "dsfd_vm_fld",
+   "x": 504.0,
+   "y": 34.56,
+   "w": 172.8,
+   "h": 69.12
+  },
+  "flt0": {
+   "master": "dsfd_vm_flt",
+   "x": 221.76,
+   "y": 259.2,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt1": {
+   "master": "dsfd_vm_flt",
+   "x": 544.32,
+   "y": 259.2,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt2": {
+   "master": "dsfd_vm_flt",
+   "x": 866.88,
+   "y": 259.2,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt3": {
+   "master": "dsfd_vm_flt",
+   "x": 1189.44,
+   "y": 259.2,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt4": {
+   "master": "dsfd_vm_flt",
+   "x": 221.76,
+   "y": 129.6,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt5": {
+   "master": "dsfd_vm_flt",
+   "x": 1189.44,
+   "y": 129.6,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt6": {
+   "master": "dsfd_vm_flt",
+   "x": 544.32,
+   "y": 129.6,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt7": {
+   "master": "dsfd_vm_flt",
+   "x": 866.88,
+   "y": 129.6,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt8": {
+   "master": "dsfd_vm_flt",
+   "x": 0.0,
+   "y": 43.2,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "flt9": {
+   "master": "dsfd_vm_flt",
+   "x": 1304.064,
+   "y": 43.2,
+   "w": 216.0,
+   "h": 129.6
+  },
+  "frm0": {
+   "master": "dsfd_vm_frm",
+   "x": 406.08,
+   "y": 198.72,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm1": {
+   "master": "dsfd_vm_frm",
+   "x": 570.24,
+   "y": 198.72,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm2": {
+   "master": "dsfd_vm_frm",
+   "x": 725.76,
+   "y": 198.72,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm3": {
+   "master": "dsfd_vm_frm",
+   "x": 889.92,
+   "y": 198.72,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm4": {
+   "master": "dsfd_vm_frm",
+   "x": 406.08,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm5": {
+   "master": "dsfd_vm_frm",
+   "x": 889.92,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm6": {
+   "master": "dsfd_vm_frm",
+   "x": 570.24,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm7": {
+   "master": "dsfd_vm_frm",
+   "x": 725.76,
+   "y": 129.6,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm8": {
+   "master": "dsfd_vm_frm",
+   "x": 293.76,
+   "y": 86.4,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "frm9": {
+   "master": "dsfd_vm_frm",
+   "x": 950.4,
+   "y": 86.4,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "fsr0": {
+   "master": "dsfd_vm_fsr",
+   "x": 0.0,
+   "y": 0.0,
+   "w": 345.6,
+   "h": 25.92
+  },
+  "fsr1": {
+   "master": "dsfd_vm_fsr",
+   "x": 388.8,
+   "y": 0.0,
+   "w": 345.6,
+   "h": 25.92
+  },
+  "fsr2": {
+   "master": "dsfd_vm_fsr",
+   "x": 777.6,
+   "y": 0.0,
+   "w": 345.6,
+   "h": 25.92
+  },
+  "fsr3": {
+   "master": "dsfd_vm_fsr",
+   "x": 1166.4,
+   "y": 0.0,
+   "w": 345.6,
+   "h": 25.92
+  },
+  "fxs0": {
+   "master": "dsfd_vm_fxs",
+   "x": 115.2,
+   "y": 388.8,
+   "w": 322.56,
+   "h": 19.44
+  },
+  "fxs1": {
+   "master": "dsfd_vm_fxs",
+   "x": 437.76,
+   "y": 388.8,
+   "w": 322.56,
+   "h": 19.44
+  },
+  "fxs2": {
+   "master": "dsfd_vm_fxs",
+   "x": 760.32,
+   "y": 388.8,
+   "w": 322.56,
+   "h": 19.44
+  },
+  "fxs3": {
+   "master": "dsfd_vm_fxs",
+   "x": 1082.88,
+   "y": 388.8,
+   "w": 322.56,
+   "h": 19.44
+  }
+ },
+ "masters_with_exact_pins": [
+  "dsfd_vm_clt",
+  "dsfd_vm_fld",
+  "dsfd_vm_flt",
+  "dsfd_vm_frm",
+  "dsfd_vm_fsr",
+  "dsfd_vm_fxa",
+  "dsfd_vm_fxb",
+  "dsfd_vm_fxr",
+  "dsfd_vm_fxs"
+ ],
+ "masters_with_planned_pins": [
+  "dsfd_vm_fcc",
+  "dsfd_vm_fcn",
+  "dsfd_vm_fcw"
+ ],
+ "placement_violations": [
+  "overlap flt8 / c0s0r1",
+  "overlap c0s0r0 / flt0",
+  "overlap c0s0r0 / flt4",
+  "overlap flt0 / c0s1r0",
+  "overlap flt0 / c1s0r0",
+  "overlap flt4 / c1s0r1",
+  "overlap flt4 / c0s1r0",
+  "overlap flt4 / frm0",
+  "overlap flt4 / frm4",
+  "overlap flt4 / c1s0r0",
+  "overlap frm4 / c2s0r1",
+  "overlap frm4 / c0s1r1",
+  "overlap c2s0r1 / c0s1r1",
+  "overlap flt1 / c1s1r0",
+  "overlap flt1 / c0s3r0",
+  "overlap flt1 / c2s0r0",
+  "overlap flt1 / c1s2r0",
+  "overlap flt6 / frm1",
+  "overlap flt6 / frm6",
+  "overlap flt6 / c3s0r1",
+  "overlap flt6 / c1s1r0",
+  "overlap flt6 / c1s1r1",
+  "overlap flt6 / c0s3r0",
+  "overlap flt6 / c2s0r0",
+  "overlap flt6 / fcn",
+  "overlap flt6 / c2s1r1",
+  "overlap flt6 / c0s2r1",
+  "overlap flt6 / c1s2r0",
+  "overlap flt6 / frm2",
+  "overlap flt6 / frm7",
+  "overlap frm6 / c3s0r1",
+  "overlap frm6 / c1s1r1",
+  "overlap c3s0r1 / c1s1r1",
+  "overlap c0s3r0 / c2s0r0",
+  "overlap fcn / c2s1r1",
+  "overlap fcn / c0s2r1",
+  "overlap fcn / frm7",
+  "overlap fcn / c3s1r1",
+  "overlap fcn / c1s2r1",
+  "overlap fcn / flt7",
+  "overlap fcn / frm5",
+  "overlap c2s1r1 / c0s2r1",
+  "overlap c2s1r1 / frm7",
+  "overlap c0s2r1 / frm7",
+  "overlap c3s1r1 / c1s2r1",
+  "overlap c3s1r1 / flt7",
+  "overlap c1s2r1 / flt7",
+  "overlap c1s3r0 / flt2",
+  "overlap c1s3r0 / flt7",
+  "overlap c1s3r0 / c3s0r0",
+  "overlap flt2 / c3s0r0",
+  "overlap flt2 / c2s2r0",
+  "overlap flt2 / c3s1r0",
+  "overlap flt2 / c2s3r0",
+  "overlap flt7 / c3s0r0",
+  "overlap flt7 / frm3",
+  "overlap flt7 / frm5",
+  "overlap flt7 / fcc",
+  "overlap flt7 / c2s2r0",
+  "overlap flt7 / c2s2r1",
+  "overlap flt7 / c0s3r1",
+  "overlap flt7 / c3s1r0",
+  "overlap flt7 / c2s3r0",
+  "overlap fcc / frm9",
+  "overlap fcc / c2s2r1",
+  "overlap fcc / c0s3r1",
+  "overlap fcc / c3s2r1",
+  "overlap fcc / c1s3r1",
+  "overlap c2s2r1 / c0s3r1",
+  "overlap c3s2r1 / c1s3r1",
+  "overlap c3s2r0 / flt3",
+  "overlap c3s2r0 / flt5",
+  "overlap flt3 / c3s3r0",
+  "overlap flt5 / c2s3r1",
+  "overlap flt5 / flt9",
+  "overlap flt5 / c3s3r0",
+  "overlap flt5 / c3s3r1",
+  "overlap flt9 / c3s3r1"
+ ],
+ "hops": {
+  "f_cap": {
+   "hops": 16,
+   "bits": 13312,
+   "len_max": 12.96,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "OK": 16
+   },
+   "worst": "FE.N -> clt0"
+  },
+  "clt.w->fxs": {
+   "hops": 16,
+   "bits": 8752,
+   "len_max": 6.48,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "OK": 16
+   },
+   "worst": "clt0 -> fxs0"
+  },
+  "s0->relay": {
+   "hops": 16,
+   "bits": 9408,
+   "len_max": 576.528,
+   "jog_max": 470.688,
+   "jog_cut_max": 0.1763,
+   "verdict": {
+    "WARN": 16
+   },
+   "worst": "fxs0 -> c0s3r0"
+  },
+  "relay->relay": {
+   "hops": 16,
+   "bits": 9408,
+   "len_max": 434.16,
+   "jog_max": 345.6,
+   "jog_cut_max": 0.2107,
+   "verdict": {
+    "WARN": 15,
+    "OK": 1
+   },
+   "worst": "c0s3r0 -> c0s3r1"
+  },
+  "relay->fsr": {
+   "hops": 16,
+   "bits": 9408,
+   "len_max": 607.041,
+   "jog_max": 503.361,
+   "jog_cut_max": 0.18,
+   "verdict": {
+    "WARN": 16
+   },
+   "worst": "c0s3r1 -> fsr3"
+  },
+  "m_*": {
+   "hops": 4,
+   "bits": 16592,
+   "len_max": 0.0,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "OK": 4
+   },
+   "worst": null
+  },
+  "lane word": {
+   "hops": 10,
+   "bits": 5170,
+   "len_max": 522.72,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "OK": 10
+   },
+   "worst": "FE.N -> flt8"
+  },
+  "flt.ret->frm": {
+   "hops": 10,
+   "bits": 5300,
+   "len_max": 418.227,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "WARN": 5,
+    "OK": 5
+   },
+   "worst": "flt3 -> frm3"
+  },
+  "frm.ret->fld": {
+   "hops": 10,
+   "bits": 5260,
+   "len_max": 497.952,
+   "jog_max": 385.707,
+   "jog_cut_max": 0.644,
+   "verdict": {
+    "WARN": 9,
+    "FAIL": 1
+   },
+   "worst": "frm9 -> fld"
+  },
+  "fxs.k->fcn": {
+   "hops": 4,
+   "bits": 512,
+   "len_max": 842.715,
+   "jog_max": 600.795,
+   "jog_cut_max": 0.0168,
+   "verdict": {
+    "WARN": 4
+   },
+   "worst": "fxs0 -> fcn"
+  }
+ },
+ "hops_over_limit": {
+  "s0->relay": 576.528,
+  "relay->fsr": 607.041,
+  "lane word": 522.72,
+  "fxs.k->fcn": 842.715
+ },
+ "pin_align_fail": {
+  "frm.ret->fld": 1
+ },
+ "cuts": {
+  "gcell_um": 10.8,
+  "window_um": 54.0,
+  "full_vertical_cut_max": [
+   1.422,
+   723.6
+  ],
+  "full_horizontal_cut_max": [
+   4900000000.0,
+   140.4
+  ],
+  "window_vertical_cut_max": 2228000000.0,
+  "window_horizontal_cut_max": 1706000000.0,
+  "gcells_over_0p60": 3619,
+  "gcells": 9165,
+  "gcell_max": [
+   256000000.0,
+   512000000.0
+  ]
+ },
+ "cuts_over_limit": [
+  "full_vertical_cut_max",
+  "full_horizontal_cut_max",
+  "window_vertical_cut_max",
+  "window_horizontal_cut_max"
+ ],
+ "not_modelled": [
+  "fcn / fcc / fcw bundle relays (fxa, fxb), fld slice words, arm / grant, fld / fcc / fcw counter copies, N-face words of fcc / fcw / fcn: hops NOT in this model yet"
+ ],
+ "pass": false
+}
