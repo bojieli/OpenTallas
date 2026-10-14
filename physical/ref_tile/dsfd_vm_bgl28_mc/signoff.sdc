@@ -175,8 +175,8 @@ proc ot_bgl_mc_mean {clock patterns} {
 }
 # Pin ownership is explicit. Request input/output share rb0; return input/output
 # use rt/so in H1. Bank input straps/reset reference bank rst/gidq clocks.
-set ot_mc_owners [list [list req_clk {i_v* i_we* i_row* i_mask* i_d*} {f_v* f_we* f_row* f_mask* f_d*} {*rb0*}] \
-    [list ret_clk {r_v* r_d* r_f* r_o*} {o_v* o_d* o_f* o_o*} {*rt_v* *rt_d* *so_f* *so_o*}] \
+set ot_mc_owners [list [list req_clk {i_v* i_we* i_row* i_mask* i_d*} {f_v* f_we* f_row* f_mask* f_d*} {u.f_v* u.f_we* u.f_row* u.f_mask* u.f_d*}] \
+    [list ret_clk {r_v* r_d* r_f* r_o*} {o_v* o_d* o_f* o_o*} {u.o_v* u.o_d* u.o_f* u.o_o*}] \
     [list core_clk {rs grp* bi*} {} {*gidq*}]]
 set ot_mc_post [expr {![info exists ::ot_ref_pre_cts] || !$::ot_ref_pre_cts}]
 set ot_mc_physical [get_clocks {core_clk req_clk ret_clk}]

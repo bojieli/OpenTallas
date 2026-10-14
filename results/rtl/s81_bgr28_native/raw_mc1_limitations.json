@@ -1,0 +1,22 @@
+{
+  "status": "UNQUALIFIED_DIAGNOSTIC",
+  "gate_result": "raw_gate_mc1.json",
+  "path_class_result": "ERROR missingmappedreference req_clk: Yosysnames rb0 as f_*; corrected in successor",
+  "raw_return_spread_ps": 107.9,
+  "late_pins": [
+    "u.rst_ret_s[0]$_DFF_PN0_/CLK",
+    "u.rst_ret_s[1]$_DFF_PN0_/CLK"
+  ],
+  "next_structural_fix": "Place return reset synchronizers beside actual S-face consumers; complete corrected mapped-pin per-root phi-R hook",
+  "physical_parent_mc24": {
+    "source": "b909b8ac2",
+    "exact": {
+      "ops": 700875,
+      "returned": 124712,
+      "errors": 0
+    },
+    "mutant_ID": {
+      "errors": 740
+    }
+  }
+}

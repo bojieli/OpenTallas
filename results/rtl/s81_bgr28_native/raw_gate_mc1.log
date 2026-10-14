@@ -1,0 +1,17 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['rs']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE INFO oflop: N face 10.5 pins/um (i_row): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (f_row): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsfd_vm_bgl28_mc_20261013-235221.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_vm_bgl28_mc_20261013-235221.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc-20261013-235221
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 79 s (gate total 682 s)
+GATE WARN util: synthesized std area 7650 um2 + macros 5178 in core 36952: util 35%  -> FIX: set "std_area_um2": 7650 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_vm_bgl28_mc cells 53,740 flops 12,901 depth 560.1 ps util 0.3477 reach 45.6 um (1.0 s)
+GATE WARN textbook.high_fanout: reset u.rst_s[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 400 loads (400 flops, e.g. u.d_v[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.util_channel: utilisation 34.8% outside 45%-65% (std 7671 + macro 5178 um2 in 36952 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 485.9..656.9 ps (spread 171.0), boundary mean 507.8; tt insertion all 369.3..521.6 ps (spread 152.3), boundary mean 387.4; ff insertion all 296.0..433.8 ps (spread 137.8), boundary mean 312.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.450 vs spec PD 0.45
+GATE INFO clock_rule: root port:ck: 7,457 sinks on the largest root <= 15,000; measured TT insertion 521.6 ps, leaf spread 152.3 ps
+PRE_ROUTE_GATE: WARN (0 fail, 4 warn)
+GATE: dsfd_vm_bgl28_mc/gate_result.json written (exact staged source binding; commit it with the kit)
