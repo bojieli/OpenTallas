@@ -1,5 +1,5 @@
 {
- "name": "sfu_lane_map_ref-m1-be5bd3d49",
+ "name": "sfu_lane_map_ref-m1-b622c064c",
  "block": "ot_hgi_sfu_lane_map",
  "ref_tile": true,
  "owner": "Codex:hbm_quant_sfu_2240",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/hbm-quant-sfu-2240",
-  "commit": "be5bd3d49"
+  "commit": "b622c064cae724828201f0ea181008c4f6ba5a71"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/sfu_lane_map_ref/sfu_lane_map_ref-m1-be5bd3d49"
+   "to": "results/rtl/ref_tile/sfu_lane_map_ref/sfu_lane_map_ref-m1-b622c064c"
   }
  ],
  "cycles_added": 0,
