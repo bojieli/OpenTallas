@@ -177,7 +177,7 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
     wire [7:0] rc; wire [15:0] cs; wire [162:0] tc;
 `ifdef S81PH_GTH_CONTROL_STRIP
     wire [23:0] tst_ctl; wire [15:0] cs_ctl; wire [7:0] rc_ctl; wire [162:0] tc_ctl; wire [11:0] fcd_ctl;
-    dsfd_gth_strip u_strip (.ck_r(ck_r), .rst(rst[0]), .tst_i(tst), .cs_i(cs), .rc_i(rc_ctl), .tc_i(tc_ctl), .fcd_i(f_cd),
+    dsfd_gth_strip u_strip (.ck_r(ck_r), .rst(rst[0]), .rsv(rsv[0]), .tst_i(tst), .cs_i(cs), .rc_i(rc_ctl), .tc_i(tc_ctl), .fcd_i(f_cd),
         .tst_o(tst_ctl), .cs_o(cs_ctl), .rc_o(rc), .tc_o(tc), .fcd_o(fcd_ctl));
 `else
     wire [23:0] tst_ctl = tst; wire [15:0] cs_ctl = cs; wire [7:0] rc_ctl; wire [162:0] tc_ctl; wire [11:0] fcd_ctl = f_cd;

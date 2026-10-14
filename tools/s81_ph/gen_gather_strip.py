@@ -1,10 +1,10 @@
 from pathlib import Path
 import json
 r=Path(__file__).resolve().parents[2];out=r/'rtl/dsrom_sys/s81_ph/dsfd_gth_strip.sv'
-s=['`timescale 1ns/1ps','// Gather control strip: 133 CLOSED one-cycle relay instances; parent contains wires only.', 'module dsfd_gth_strip(input wire [132:0] ck_r, input wire rst,', 'input wire [23:0] tst_i, input wire [15:0] cs_i, input wire [7:0] rc_i,', 'input wire [162:0] tc_i, input wire [11:0] fcd_i,', 'output wire [23:0] tst_o, output wire [15:0] cs_o, output wire [7:0] rc_o,', 'output wire [162:0] tc_o, output wire [11:0] fcd_o);']
+s=['`timescale 1ns/1ps','// Gather control strip: 133 CLOSED one-cycle relay instances; parent contains wires only.', 'module dsfd_gth_strip(input wire [132:0] ck_r, input wire rst, input wire rsv,', 'input wire [23:0] tst_i, input wire [15:0] cs_i, input wire [7:0] rc_i,', 'input wire [162:0] tc_i, input wire [11:0] fcd_i,', 'output wire [23:0] tst_o, output wire [15:0] cs_o, output wire [7:0] rc_o,', 'output wire [162:0] tc_o, output wire [11:0] fcd_o);']
 manifest=[]
 def inst(name,master,d,q,width,role,stage):
- idx=len(manifest);s.append(f'    {master} {name} (.ck(ck_r[{idx}]), .rs(rst), .i({d}), .o({q}));')
+ idx=len(manifest);s.append(f'    {master} {name} (.ck(ck_r[{idx}]), .rs({'rsv' if role=='f_cd' else 'rst'}), .i({d}), .o({q}));')
  manifest.append(dict(instance='u_strip.'+name,master=master,width=width,clock_index=idx,role=role,stage=stage,view='physical/ref_tile/s81_rly_'+master[9:].lower()+'/views/'+master))
 for bus,n in [('tst',12),('cs',8)]:
  for g in range(n):
@@ -25,4 +25,4 @@ inst('fcd','dsfd_rly_15_EN',"{3'b0, fcd_i}",'fcd_padded',15,'f_cd',0)
 s.extend(['    assign fcd_o = fcd_padded[11:0];','endmodule'])
 assert len(manifest)==133
 out.write_text('\n'.join(s)+'\n')
-(r/'tools/s81_ph/gather_strip_instances.json').write_text(json.dumps({'schema':'opentallas.s81.gather.strip_instances.v1','relay_cycles':{'tst':4,'cs':4,'rc':6,'tc':1,'f_cd':1,'f_vm':0,'c_cmd':0},'instances':manifest,'pending':['placed geometry and pair reach','exact full-shape benchmark','reset pin assignment','routed ctl view and insertion']},indent=2)+'\n')
+(r/'tools/s81_ph/gather_strip_instances.json').write_text(json.dumps({'schema':'opentallas.s81.gather.strip_instances.v1','relay_cycles':{'tst':4,'cs':4,'rc':6,'tc':1,'f_cd_serial':1,'f_vm':0,'c_cmd':0},'instances':manifest,'pending':['placed geometry and pair reach','exact full-shape benchmark','reset pin assignment','routed ctl view and insertion']},indent=2)+'\n')

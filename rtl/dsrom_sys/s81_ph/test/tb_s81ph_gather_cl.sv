@@ -28,7 +28,8 @@ module tb_s81ph_gather_cl;
     // tc transport is checked against the flat output delayed exactly one cycle.
     reg [11:0] fcd_reference = 0;
     reg [159:0] tf_control = 0;
-    always @(posedge ck) begin fcd_reference <= f_cd; tf_control <= tf[6943:6784]; end
+    always @(posedge ckv) fcd_reference <= f_cd;
+    always @(posedge ck) tf_control <= tf[6943:6784];
 `else
     wire [11:0] fcd_reference = f_cd;
     wire [159:0] tf_control = tf[6943:6784];
@@ -40,7 +41,7 @@ module tb_s81ph_gather_cl;
         .c_cmd(c_cmd), .c_done(df), .c_st(sf), .f_cd(fcd_reference), .t_xgo(xf));
     dsfd_sp_gather_c_cl u_c (
 `ifdef S81PH_GTH_CONTROL_STRIP
-        .ck_r({133{ck}}),
+        .ck_r({ckv, {132{ck}}}),
 `endif
 `ifdef S81PH_GTH_DIE_CLOCKS
         .ck_l({32{ck}}),

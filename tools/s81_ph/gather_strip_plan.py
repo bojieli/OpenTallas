@@ -29,7 +29,7 @@ def main():
   elif role.startswith('cs'):
    g=int(role[2:]);start=108+216*g;x,y=strip(start+(1640-start)*(j+1)/5)
   elif role.startswith('rc'):
-   g=int(role[2:]);target=(205.2+216*g) if g<7 else 1507.68
+   g=int(role[2:]);target=(205.2+216*g) if g<7 else 1501.2
    if j<4:x,y=strip(1640+(target-1640)*(j+1)/4)
    else:
     x,y=snap(target),snap(340+(j-4)*220+(20.736 if g==7 else 0));assert clear(x,y);taken.append((x,y,15.12,15.12))
@@ -37,7 +37,7 @@ def main():
   else:x,y=strip(1219.968)
   base=ROOT/v['view'];lp=base/(v['master']+'.lef');ip=base/'insertion.json';w,h,pp=lef(lp);ins=json.loads(ip.read_text());assert(w,h)==(15.12,15.12)
   clock=pp['ck'];ss=ins['ss']['boundary'];tt=ins['tt']['boundary']
-  children.append({**v,'origin_um':[round(x,3),round(y,3)],'outline_um':[w,h],'orient':'R0','lef':str(lp.relative_to(ROOT)),'lef_sha256':sha(lp),'insertion':str(ip.relative_to(ROOT)),'insertion_sha256':sha(ip),'pins':{n:{**p,'x':round(x+p['x'],3),'y':round(y+p['y'],3)} for n,p in pp.items()},'clock_entry':{'port':f"ck_r[{v['clock_index']}]",'child_pin':v['instance']+'/ck','location_um':[round(x+clock['x'],3),round(y+clock['y'],3)],'source_latency_ps':{'SS':-ss['mean'],'TT':-tt['mean']},'boundary_spread_ps':{'SS':ss['max']-ss['min'],'TT':tt['max']-tt['min']}}})
+  children.append({**v,'origin_um':[round(x,3),round(y,3)],'outline_um':[w,h],'orient':'R0','lef':str(lp.relative_to(ROOT)),'lef_sha256':sha(lp),'insertion':str(ip.relative_to(ROOT)),'insertion_sha256':sha(ip),'pins':{n:{**p,'x':round(x+p['x'],3),'y':round(y+p['y'],3)} for n,p in pp.items()},'clock_entry':{'port':f"ck_r[{v['clock_index']}]",'domain':'serial' if role=='f_cd' else 'stream','child_pin':v['instance']+'/ck','location_um':[round(x+clock['x'],3),round(y+clock['y'],3)],'source_latency_ps':{'SS':-ss['mean'],'TT':-tt['mean']},'boundary_spread_ps':{'SS':ss['max']-ss['min'],'TT':tt['max']-tt['min']}}})
  hops=[]
  for v in children:
   if v['stage']==0:continue
@@ -48,6 +48,6 @@ def main():
    hops.append({'source':prev['instance'],'sink':v['instance'],'bit':bit,'length_um':round(abs(sp['x']-dp['x'])+abs(sp['y']-dp['y']),3)})
  internal={'count':len(hops),'max_um':max(t['length_um'] for t in hops),'fail_over_500':[t for t in hops if t['length_um']>500]}
  # Do not substitute synthetic timing for missing ctl / root views.
- report={'schema':'opentallas.s81.gather.strip_plan.v1','assigned_parent_sha256':sha(assigned),'source_manifest_sha256':sha(ROOT/'tools/s81_ph/gather_strip_instances.json'),'outline_um':[1728,803.52],'ctl':{'origin_um':[1598.4,8.64],'outline_um':[129.6,43.2],'view_status':'PENDING_ROUTED_VIEW'},'relay_children':children,'relay_internal_hops':internal,'actual_relay_clocks':len(children),'total_child_clocks':32+2+len(children),'overlap_gate':'PASS','lattice_um':.576,'relay_latency_cycles':{'tst':4,'cs':4,'rc_release':6,'tc':1,'f_cd':1,'f_vm':0},'pending':['full source-hashed exact bench + mutants','actual assigned root child pins and routed insertion','ctl exact assigned pins + routed view','per-bit pair reach and hold from real endpoint timing','cut/PG/slot_fit/child_lint gates','native81 production binding and immutable throughput price'],'qualification':'OPEN'}
+ report={'schema':'opentallas.s81.gather.strip_plan.v1','assigned_parent_sha256':sha(assigned),'source_manifest_sha256':sha(ROOT/'tools/s81_ph/gather_strip_instances.json'),'outline_um':[1728,803.52],'ctl':{'origin_um':[1598.4,8.64],'outline_um':[129.6,43.2],'view_status':'PENDING_ROUTED_VIEW'},'relay_children':children,'relay_internal_hops':internal,'actual_relay_clocks':len(children),'total_child_clocks':32+2+len(children),'overlap_gate':'PASS','lattice_um':.576,'relay_latency_cycles':{'tst':4,'cs':4,'rc_release':6,'tc':1,'f_cd_serial':1,'f_vm':0},'pending':['full source-hashed exact bench + mutants','actual assigned root child pins and routed insertion','ctl exact assigned pins + routed view','per-bit pair reach and hold from real endpoint timing','cut/PG/slot_fit/child_lint gates','native81 production binding and immutable throughput price'],'qualification':'OPEN'}
  Path(a.out).write_text(json.dumps(report,indent=2)+'\n');print(f"STRIP_PLAN PASS placement {len(children)} real CLOSED relay views; qualification OPEN")
 if __name__=='__main__':main()
