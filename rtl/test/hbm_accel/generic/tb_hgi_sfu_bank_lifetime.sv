@@ -14,6 +14,21 @@ module tb_hgi_sfu_bank_lifetime;
  task reset;begin @(negedge clk);rst_n=0;repeat(3)tick();@(negedge clk);rst_n=1;repeat(4)tick();end endtask
  initial begin
   reset();lease();
+  // Fill both real identity queues. Returning queue credits alone cannot
+  // promise an eleventh identity while responses/committed ACKs still lag.
+  for(n=0;n<10;n++)begin
+   @(negedge clk);rd_v=1;wr_v=1;rd_sec=16'h4400+8*n;wr_sec=16'h4400+8*n;rd_tag=100+n;wr_tag=100+n;data={8{32'(n)}};
+   tick();if(!rq[16]||!wq[280])$fatal(1,"BURST_ACCEPT %0d",n);
+  end
+  @(negedge clk);rd_v=0;wr_v=0;repeat(2)tick();if(ready_r||ready_w)$fatal(1,"FULL_IDENTITY_READY");
+  for(n=0;n<10;n++)begin @(negedge clk);rc=1;wc=1;tick();end
+  @(negedge clk);rc=0;wc=0;repeat(3)tick();if(ready_r||ready_w)$fatal(1,"EARLY_CREDIT_OVERCOMMIT");
+  for(n=0;n<10;n++)begin
+   @(negedge clk);rr={1'b1,{8{32'(n)}}};done=1;tick();
+   if(n>0)begin if(!rv||!cv||rt!=99+n||ct!=99+n||rdata!={8{32'(n-1)}})$fatal(1,"BURST_ORDER");returns++;commits++;end
+  end
+  @(negedge clk);rr=0;done=0;tick();if(!rv||!cv||rt!=109||ct!=109||rdata!={8{32'd9}})$fatal(1,"BURST_LAST");returns++;commits++;
+  repeat(3)tick();if(!ready_r||!ready_w||fault)$fatal(1,"BURST_DRAIN");
   // More than six wraps of the actual ten-entry identity queues.
   for(n=0;n<67;n=n+1)begin
    @(negedge clk);rd_v=1;wr_v=1;rd_sec=16'h4000+8*n;wr_sec=16'h4000+8*n;rd_tag=n;wr_tag=n;data={8{32'(n)}};
@@ -33,8 +48,9 @@ module tb_hgi_sfu_bank_lifetime;
   repeat(8)begin tick();if(!owner)$fatal(1,"EARLY_OWNER_RELEASE before external path drain");end
   @(negedge clk);path_quiet=1;repeat(8)tick();if(owner||!idle||fault)$fatal(1,"FINAL_DRAIN");
   lease();@(negedge clk);rd_v=1;rd_sec=16'h4001;tick();if(rq[16])$fatal(1,"BAD_BANK_SENT");@(negedge clk);rd_v=0;repeat(8)tick();if(!fault)$fatal(1,"BAD_BANK_NOT_FAULTED");
-  reset();lease();@(negedge clk);fence=1;tick();@(negedge clk);fence=0;repeat(8)tick();if(owner||!idle||fault)$fatal(1,"WARM_RESET");
-  $display("PASS SFU bank lifetime checks=%0d returns=%0d commits=%0d LQ10 wraps=6 earlycredit_delayedACK_externaldrain=1 warm_reset=1 invalid_bank=1",checks,returns,commits+1);$finish;
+  reset();lease();@(negedge clk);path_quiet=0;grant=0;tick();if(!fault||!owner)$fatal(1,"GRANT_REVOKED_DURING_OWNER_LEASE");
+  @(negedge clk);grant=1;path_quiet=1;reset();lease();@(negedge clk);fence=1;tick();@(negedge clk);fence=0;repeat(8)tick();if(owner||!idle||fault)$fatal(1,"WARM_RESET");
+  $display("PASS SFU bank lifetime checks=%0d returns=%0d commits=%0d LQ10 full_identity_queue_no_credit_overcommit=1 wraps=7 earlycredit_delayedACK_externaldrain=1 warm_reset=1 invalid_bank=1 grant_loss_while_lease_held=1",checks,returns,commits+1);$finish;
  end
  initial begin #2000000;$fatal(1,"TIMEOUT");end
 endmodule

@@ -36,5 +36,10 @@
       1111.111
     ],
     "scope": "One main bank, group1 held by explicit test grant. No shared arbitration allocation, no mirror egress, no cache frame/sector assembly, no whole-quarter throughput or physical qualification"
+  },
+  "full_identity_gate": {
+    "result": "PASS533checks,77returns,78commits,7wraps; fullLQ10 read/write identities cannot overcommit on early credits; grantloss after acquiredlease detected even if local debt empty and externalpathquiet0",
+    "source_rule": "lease_seen distinguishes initial waiting-for-grant from forbidden revocation before owner_req release",
+    "native_replay": "Earlier held-grant bank/CDC oracle source retained in bank_native_manifest; new lease detection has no effect under continuously held grant, updated-source native replay required before source selection"
   }
 }

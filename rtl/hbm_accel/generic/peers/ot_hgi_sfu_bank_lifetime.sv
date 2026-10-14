@@ -16,7 +16,7 @@ module ot_hgi_sfu_bank_lifetime #(parameter integer LQ=10, MUT_EARLY_RELEASE=0)(
  output reg [255:0] result_data,
  output reg commit_v,output reg [15:0] commit_sec,commit_tag
 );
- reg fenced,g_q,quiet_q,rc_q,wc_q,done_q;reg [256:0] rr_q;
+ reg fenced,g_q,quiet_q,rc_q,wc_q,done_q,lease_seen;reg [256:0] rr_q;
  reg [31:0] rid[0:LQ-1],wid[0:LQ-1];
  reg [3:0] rh,rt,wh,wt;reg [4:0] rn,wn,rc,wc;
  wire ra=rd_v&&rd_ready,wa=wr_v&&wr_ready;
@@ -33,10 +33,11 @@ module ot_hgi_sfu_bank_lifetime #(parameter integer LQ=10, MUT_EARLY_RELEASE=0)(
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n)begin
    owner_req<=0;rd_ready<=0;wr_ready<=0;idle<=1;fault<=0;fenced<=0;
-   g_q<=0;quiet_q<=0;rc_q<=0;wc_q<=0;done_q<=0;rr_q<=0;
+   lease_seen<=0;g_q<=0;quiet_q<=0;rc_q<=0;wc_q<=0;done_q<=0;rr_q<=0;
    rq<=0;wq<=0;result_v<=0;commit_v<=0;result_sec<=0;result_tag<=0;result_data<=0;commit_sec<=0;commit_tag<=0;
    rh<=0;rt<=0;wh<=0;wt<=0;rn<=0;wn<=0;rc<=LQ;wc<=LQ;
   end else begin
+   if(!owner_req)lease_seen<=0;else if(grant)lease_seen<=1;
    g_q<=grant;quiet_q<=path_quiet;rc_q<=rq_credit;wc_q<=wq_credit;done_q<=wq_done;rr_q<=rr;
    rq<={rs,rd_sec};wq<={ws,wr_sec,wr_data,wr_mask};
    result_v<=rv;commit_v<=wv;
@@ -45,7 +46,7 @@ module ot_hgi_sfu_bank_lifetime #(parameter integer LQ=10, MUT_EARLY_RELEASE=0)(
    if(rv)begin {result_sec,result_tag}<=rid[rh];result_data<=rr_q[255:0];rh<=advance(rh);end
    if(wv)begin {commit_sec,commit_tag}<=wid[wh];wh<=advance(wh);end
    rn<=nrn[4:0];wn<=nwn[4:0];rc<=nrc[4:0];wc<=nwc[4:0];
-   if((ra&&!raddr)||(wa&&!waddr)||(rr_q[256]&&!rv)||(done_q&&!wv)||nrc>LQ||nwc>LQ||nrn>LQ||nwn>LQ||(owner_req&&!grant&&(rn!=0||wn!=0||rq[16]||wq[280]))) begin fault<=1;fenced<=1;end
+   if((ra&&!raddr)||(wa&&!waddr)||(rr_q[256]&&!rv)||(done_q&&!wv)||nrc>LQ||nwc>LQ||nrn>LQ||nwn>LQ||(owner_req&&lease_seen&&!grant)) begin fault<=1;fenced<=1;end
    if(begin_owner&&!owner_req&&debt_clear)begin owner_req<=1;fenced<=0;end
    if(fence&&owner_req)fenced<=1;
    if(owner_req&&fenced&&(MUT_EARLY_RELEASE?early_clear:debt_clear))begin owner_req<=0;fenced<=0;end
