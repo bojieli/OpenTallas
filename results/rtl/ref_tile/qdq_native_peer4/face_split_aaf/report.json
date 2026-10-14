@@ -1,0 +1,28 @@
+{
+  "source_commit": "aaf4341d7",
+  "native_common": "64fced1f9",
+  "configuration": {
+    "SPANPIPE": 1,
+    "FASTFIN": 1,
+    "FRONTFAST": 3,
+    "WRSPLIT": 1,
+    "DRAIN": 1
+  },
+  "exact_phases": [
+    61,
+    487
+  ],
+  "records": 32,
+  "words": 13312,
+  "wrong_words": 0,
+  "cycles": 184,
+  "immutable_price": 168,
+  "ratio": 1.0952380952380953,
+  "drain_scope": "all32client+VM obligations and4record ledgers zero under held permits/grants",
+  "mutants": {
+    "header": "observed fatal after0dones exit1",
+    "assembly": "11592of13312wordswrong exit1"
+  },
+  "physical_front_report": "results/arch/hbm_native_1013/qfront_1row/face_ff_final_report.json",
+  "remaining": "FIN rawACKP190 fails; capturedACK f5 recovery pending; CORE/PAY actualpins pending; absoluteparent/clocks/reset/record-returnpeers, release/globalmirror open"
+}
