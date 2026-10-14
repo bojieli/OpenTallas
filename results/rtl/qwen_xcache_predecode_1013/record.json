@@ -1,0 +1,40 @@
+{
+  "status": "PASS scoped local arithmetic/address/wiring evidence only",
+  "admission_host": "ot-epyc4",
+  "admission_unit": "oth-ubuntu-548653-1791959078",
+  "exit": 0,
+  "parent_source": "864dc3815",
+  "native_GT": 3072,
+  "native_positive": {
+    "ops": 6,
+    "outputs": 680,
+    "nonzero_request_edges": 684,
+    "reactive_cache_misses": 144
+  },
+  "raw_split_diagnostic": {
+    "ops": 22,
+    "outputs": 936,
+    "nonzero_request_edges": 876,
+    "reactive_cache_misses": 144
+  },
+  "cases": [
+    "positive",
+    "raw_split_diagnostic",
+    "row_mutant",
+    "extra_XL_edge_mutant",
+    "split_mask_mutant",
+    "stride16_mutant"
+  ],
+  "not_qualified": [
+    "Actual Qwen weights/VM operands/token outputs",
+    "Full native layer throughput",
+    "Global source load-step/core-step protocol",
+    "Instruction go persistence during stalls",
+    "Back-to-back instruction context overlap",
+    "VM freshness/version and reset drain",
+    "Cache CTS and complete die physical field cut"
+  ],
+  "source_provenance": "provenance.json",
+  "mutation_provenance": "*_provenance.json",
+  "split_mask_mutation": "i_split > xab -> i_split >= xab"
+}
