@@ -26,7 +26,7 @@ src=(rtl/test/hbm_idx_chunk_el/tb_hbm_idx_parent_owned_native.sv
  rtl/link/ot_fifo_sram_fwft.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
  physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
-"$vl" --hierarchical --binary --timing -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hbm_idx_parent_owned_native --Mdir "$out/obj" "${src[@]}" > "$out/build.log" 2>&1
+"$vl" --hierarchical --binary --timing -Irtl/common -j 4 -O1 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hbm_idx_parent_owned_native --Mdir "$out/obj" "${src[@]}" > "$out/build.log" 2>&1
 python3 tools/hbm_idx_die_bench.py prepare --work "$out/vectors" > "$out/vectors.log"
 (cd "$out/vectors" && "$out/obj/Vtb_hbm_idx_parent_owned_native") > "$out/run.log" 2>&1
 cat "$out/run.log"
