@@ -31,7 +31,7 @@ module tb_hgi_sv_native_write_owned;
   repeat(5)@(negedge clk);rst_n=1;repeat(4)@(negedge clk);
   for(integer t=0;t<6000;t++)begin
    legacy_q=0;legacy_q[8960]=(received<expected_total);
-   // Held all-SID ownership arrives after the real request. Never post before grant.
+   // Reserve eight honest ingress tickets before grants; native issue awaits its SID permit.
    if((|wreq)&&t>=8)begin wgrant=(t<10)?4'h1:(t<12)?4'h3:4'hf;wack=0;end
    if(legacy_grant||t<8)for(integer l=0;l<32;l++)if(sent[l]<quota(l)&&available[l]>0)begin
     legacy_q[l*280+:280]={1'b1,sector(l,sent[l]),pattern(l,sent[l]),mask(l,sent[l])};
