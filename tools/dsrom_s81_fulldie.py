@@ -6301,7 +6301,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                 m.setdefault('compact_bf_service_sites', {})[name] = dict(rect=[*pl,w,h], service=sv.name, corridor=face_)
             else:
                 raise RuntimeError(('no service-facing receiver site',name,'leaf_um',(w,h),'corridor',face_,
-                                    'service_rect',sv.rect))
+                                    'service_rect',sv.box()))
         assert pl, name
         return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
 
