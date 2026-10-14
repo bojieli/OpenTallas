@@ -1,0 +1,85 @@
+{
+  "name": "hbm_tkm_packer_ref2240",
+  "top": "ot_hgi_coll_tkm_packer",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_packer.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "clock": "cts",
+  "layer_cap": "M5",
+  "outline": {
+    "w": 151.2,
+    "h": 108
+  },
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "start",
+      "cfg_nout",
+      "cfg_obase",
+      "cfg_rbase",
+      "cfg_has_r",
+      "cell_v",
+      "cell_t",
+      "cell_slot",
+      "cell_last"
+    ],
+    "E": [
+      "w_rdy",
+      "w_v",
+      "w_addr",
+      "w_mask",
+      "w_data",
+      "queued",
+      "lines_pushed",
+      "empty"
+    ]
+  },
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 24
+  },
+  "hold_merge": true,
+  "structural_change": "Actual output-packer own root after 9306-root core failure. Capture cell/config pins, reserve every pending line, exact full40bit carry and partial-mask scoreboard; separately maintained next-address removes line9 to40bit-address path. DIAGNOSTIC CTS until physical ready/credit timing and fullshape are proven. No gate relaxation.",
+  "job": {
+    "owner": "Codex:coll_clusters2240",
+    "branch": "codex/hbm-coll-clusters-2240",
+    "tag": "r1ownroot",
+    "purpose": "Measured own-clock output-packer cut; immutable O/R fullpayload scoreboard and noid mutant",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/collective/tkm"
+    ],
+    "benches": [
+      {
+        "name": "packer_exact",
+        "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_packer.sh {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "PACKER PASS configurations=64 checked=6656",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "packer_noid",
+        "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_packer.sh {RUN}/bench/mut 1",
+        "expect": "fail",
+        "fail_regex": "PACKER FAIL payload",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ]
+  }
+}

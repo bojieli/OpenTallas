@@ -14,7 +14,7 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0)(
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
  wire rn=rr[0];
  reg start_q,cell_v_q,last_q; reg[1:0]slot_q; reg[339:0]cell_q;
- reg[12:0] nout_pin,nout_q,outn;reg[39:0]ob_pin,rb_pin,ob_q,rb_q;reg hr_pin,hr_q;
+ reg[12:0] nout_pin,nout_q,outn;reg[39:0]ob_pin,rb_pin,ob_q,rb_q,ob_next,rb_next;reg hr_pin,hr_q;
  reg[EW-1:0]lb[0:15];reg[9:0]lp;reg[8:0]line;
  reg[FW-1:0]lq_d[0:7];reg[39:0]lq_a[0:7];reg[15:0]lq_m[0:7];reg[3:0]lq_n;reg[2:0]lq_h,lq_t;
  wire lq_pop=(lq_n!=0)&&(!w_v||w_rdy);
@@ -42,7 +42,7 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0)(
  always @(posedge clk or negedge rn)begin
   if(!rn)begin
    w_v<=0;w_addr<=0;w_mask<=0;w_data<=0;
-   nout_q<=1;ob_q<=0;rb_q<=0;hr_q<=0;
+   nout_q<=1;ob_q<=0;rb_q<=0;ob_next<=0;rb_next<=0;hr_q<=0;
    outn<=0;line<=0;lp<=0;lq_n<=0;lq_h<=0;lq_t<=0;
   end else begin
             begin : pk
@@ -65,16 +65,16 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0)(
                             od_[32*i +: 32] = (13'(i) < cnt_) ? ((MUT == 1) ? e_[50:19] : ~e_[50:19]) : 32'd0;
                             rd_[32*i +: 32] = (13'(i) < cnt_) ? unkey(e_[82:51], e_[0]) : 32'd0;
                         end
-                        lq_d[t_] <= od_; lq_a[t_] <= ob_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1;
-                        if (hr_q) begin lq_d[t_] <= rd_; lq_a[t_] <= rb_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1; end
-                        line <= line + 9'd1; outn <= outn + cnt_; lp <= lp + 10'd1;
+                        lq_d[t_] <= od_; lq_a[t_] <= ob_next; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1;
+                        if (hr_q) begin lq_d[t_] <= rd_; lq_a[t_] <= rb_next; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1; end
+                        ob_next<=ob_next+40'd16;rb_next<=rb_next+40'd16;line <= line + 9'd1; outn <= outn + cnt_; lp <= lp + 10'd1;
                         for (i = 0; i < 16; i = i + 1) lb[i] <= {EW{1'b0}};
                     end
                 end
                 lq_n <= n_; lq_t <= t_;
             end
    if(start_q)begin
-    nout_q<=nout_pin;ob_q<=ob_pin;rb_q<=rb_pin;hr_q<=hr_pin;
+    nout_q<=nout_pin;ob_q<=ob_pin;rb_q<=rb_pin;ob_next<=ob_pin;rb_next<=rb_pin;hr_q<=hr_pin;
     outn<=0;line<=0;lp<=0;
     for(i=0;i<16;i=i+1)lb[i]<=0;
    end
