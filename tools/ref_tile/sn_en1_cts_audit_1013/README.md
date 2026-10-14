@@ -1,0 +1,11 @@
+Actual SN EN1 CTS diagnostic, 2026-10-14
+
+This is the recovered original 129.6 × 12.96 µm EN1 standalone prototype, measured for the proposed NORTH slot. It is unrouted and unqualified. The original 80 fF output load, 100 ps hold budget, prior-edge ME semantics, source clock slew and waveform remain unchanged. The positive standalone 833.333 ps gate does not establish the 220 ps compensated launch bound. No SOUTH-slot fit or parent adoption is claimed.
+
+`summary.json` binds the exact CTS ODB, saved SDC, executed signoff SDC, source archive, and receipts. `gate_result.json.gz` retains the complete source snapshot and gate report. Both per-pin packets normalize once using the measured per-corner boundary R; no extra R subtraction or boundary-extrema addback occurs.
+
+Two load contexts are deliberate. `loaded80` retains the benchmark 80 fF embedded in placement-estimated parasitics. Its first table point adds 2.88 fF. `base0` explicitly reestimates placement parasitics after setting external load to zero before export, then restores 80 fF. It describes a separate timing curve and is never a load-policy waiver. The first point of either table is 2.88 fF, not zero-load. ETM time and capacitance units are 1 ps and 1 fF. The TT same-DB load oracle restores the original arrival exactly.
+
+At the loaded80 first point, all 512 TT outputs exceed 220 ps; worst q[334] is 301.25682 ps after R subtraction. The base0 first point still has 326 outputs above 220 ps, with worst q[434] at 249.90916 ps. The original 80 fF TT DB path to q[334] arrives at 404.707458 ps, with 107.08 ps physical launch clock arrival. The output-only driver/hold chain and wire account for the delay. The feedback mux branches before these output hold cells, so moving hold cells onto a separate feedback branch would not address this measured structure. The flop is 27.384 µm in X from q[334].
+
+Raw recipes and completed ot-run receipts are retained for the source/clock/load oracle, geometry, and connectivity. The exact actual CTS DB remains on ot-epyc1tb at the gate root recorded in summary. The exported libraries and abstract LEF are diagnostic artifacts and are not published as CLOSED views. Actual SS inter-master wire remains open.

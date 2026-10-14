@@ -1,0 +1,7 @@
+ot-run: ot-epyc1tb     admits   399 GB (avail 626, growth 94, headroom 64, waiters 0/0 GB) load 63/128 running 16 disk 450 GB 
+ot-run: ot-epyc4       skipped: no /tmp/rg6-sn-cts-export
+ot-run: ot-pve1        skipped: no /tmp/rg6-sn-cts-export
+ot-run: ot-agidock128  skipped: no /tmp/rg6-sn-cts-export
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1323910-1791961260 after 0 s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1323910-1791961260): exit 0

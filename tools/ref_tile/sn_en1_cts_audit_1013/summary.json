@@ -1,0 +1,243 @@
+{
+  "scope": "UNQUALIFIED actual standalone CTS candidate; placement RC only; no route/CLOSED/adoption/S-slot-fit. Original 80 fF and H100 constraints unchanged.",
+  "gate_host": "ot-epyc1tb",
+  "gate_root": "/srv/opentallas-scratch/claude/ref_gate/qfd_vm_face_sn_e1-20261013-235426",
+  "actual_odb_sha256": "a30e161d06235f5d8eee9db85a5f7d1c29228ad1bbb2258cd3bf797d707220b1",
+  "actual_4cts_sdc_sha256": "ac6ab2950275c6910f19ba3dc1bd6343b5aea17aa117f0203638ee236e3fc2a4",
+  "executed_signoff_sdc_sha256": "3ca2bb0647a1f64fe5e62052cd78f21bb6bc4dbcf0df8e8fa723b95f12cb4d0a",
+  "source_archive_sha256": "a5d3e82482702302a5efea80e96ba7f45ef8171cb9120fc0d9c072cea4385dbd",
+  "source_manifest_sha256": "34cb814af593f0401d3ca1ae0663e51ed2faa87130968d279fb54be7c4c174ce",
+  "source_contract_commit": "05fc106df794194c967553384ce794c88764762b",
+  "source_clock": {
+    "input_transition_ps": 0,
+    "source_latency_ps": 0,
+    "period_ps": 833.333,
+    "waveform_ps": [
+      0,
+      416.6665
+    ]
+  },
+  "original_output_load_fF": 80,
+  "table_units": {
+    "time": "1ps",
+    "capacitance": "1fF",
+    "output_cap_axis_fF": [
+      2.88,
+      5.76,
+      11.52,
+      23.04,
+      46.08,
+      92.16,
+      184.32001
+    ]
+  },
+  "contexts": {
+    "loaded80": {
+      "tt": {
+        "R_ps": 105.7,
+        "q_max": [
+          "q[334]",
+          301.25682
+        ],
+        "q_gt220": 512,
+        "d_max": [
+          "d[370]",
+          107.36086
+        ],
+        "d_gt190": 0,
+        "me_e": {
+          "O_ps": null,
+          "o_ps": null,
+          "l_ps": null,
+          "S_ps": 23.70034,
+          "s_ps": 129.40034,
+          "h_ps": -65.44207
+        }
+      },
+      "ff": {
+        "R_ps": 86.4,
+        "q_max": [
+          "q[334]",
+          217.34124
+        ],
+        "q_gt220": 0,
+        "d_max": [
+          "d[370]",
+          77.72693000000001
+        ],
+        "d_gt190": 0,
+        "me_e": {
+          "O_ps": null,
+          "o_ps": null,
+          "l_ps": null,
+          "S_ps": 14.14373,
+          "s_ps": 100.54373000000001,
+          "h_ps": -44.641270000000006
+        }
+      },
+      "ss": {
+        "R_ps": 138.4,
+        "q_max": [
+          "q[334]",
+          455.49075000000005
+        ],
+        "q_gt220": 512,
+        "d_max": [
+          "d[379]",
+          152.70765
+        ],
+        "d_gt190": 0,
+        "me_e": {
+          "O_ps": null,
+          "o_ps": null,
+          "l_ps": null,
+          "S_ps": 50.25854,
+          "s_ps": 188.65854000000002,
+          "h_ps": -88.84366
+        }
+      }
+    },
+    "base0": {
+      "tt": {
+        "R_ps": 105.7,
+        "q_max": [
+          "q[434]",
+          249.90915999999999
+        ],
+        "q_gt220": 326,
+        "d_max": [
+          "d[370]",
+          107.36086
+        ],
+        "d_gt190": 0,
+        "me_e": {
+          "O_ps": null,
+          "o_ps": null,
+          "l_ps": null,
+          "S_ps": 23.70034,
+          "s_ps": 129.40034,
+          "h_ps": -65.44207
+        }
+      },
+      "ff": {
+        "R_ps": 86.4,
+        "q_max": [
+          "q[334]",
+          178.04589
+        ],
+        "q_gt220": 0,
+        "d_max": [
+          "d[370]",
+          77.72693000000001
+        ],
+        "d_gt190": 0,
+        "me_e": {
+          "O_ps": null,
+          "o_ps": null,
+          "l_ps": null,
+          "S_ps": 14.14373,
+          "s_ps": 100.54373000000001,
+          "h_ps": -44.641270000000006
+        }
+      },
+      "ss": {
+        "R_ps": 138.4,
+        "q_max": [
+          "q[334]",
+          377.54702
+        ],
+        "q_gt220": 512,
+        "d_max": [
+          "d[379]",
+          152.70765
+        ],
+        "d_gt190": 0,
+        "me_e": {
+          "O_ps": null,
+          "o_ps": null,
+          "l_ps": null,
+          "S_ps": 50.25854,
+          "s_ps": 188.65854000000002,
+          "h_ps": -88.84366
+        }
+      }
+    }
+  },
+  "tt_same_db_oracle": {
+    "pin": "q[334]",
+    "original_80fF_arrival_ps": 404.707458,
+    "base0_arrival_ps": 353.34848,
+    "base2_88fF_arrival_ps": 356.063202,
+    "restored80fF_arrival_ps": 404.707458,
+    "launch_clock_arrival_ps": 107.08,
+    "boundary_R_ps": 105.7,
+    "original_setup_slack_ps": 160.493091,
+    "original_hold_slack_ps": 28.331615
+  },
+  "branch_oracle": {
+    "driver": "_1738_/Y",
+    "feedback_input": "_3121_/A",
+    "output_branch_input": "ot_ohdrv_00260_0/A",
+    "hold_on_feedback": false,
+    "output_chain": [
+      "ot_ohdrv_00260_0",
+      "ot_outhold_00260_1",
+      "ot_ohdrv_00260_2",
+      "output774",
+      "place1268"
+    ],
+    "explanation": "The feedback mux branches before output hold cells. Branch isolation already exists."
+  },
+  "geometry_um": {
+    "q334_flop": [
+      119.988,
+      9.45
+    ],
+    "d334": [
+      88.092,
+      0.042
+    ],
+    "q334": [
+      92.604,
+      12.918
+    ],
+    "q334_flop_to_q_X": 27.384,
+    "d334_q334_X_difference": 4.512
+  },
+  "limits": [
+    "First table point is not zero external load. Placement RC retains benchmark cap until explicit reestimate.",
+    "Loaded80 ETM first table point adds 2.88 fF to embedded 80 fF baseline; DB oracle uses exact original 80 fF.",
+    "Base0 curve is diagnostic only. Original 80 fF must remain for gate/qualification.",
+    "No second R subtraction, boundary extrema addback, source slew change, hold waiver, or speculative ICG.",
+    "Actual SS inter-master wire remains OPEN."
+  ],
+  "artifact_sha256": {
+    "branch_oracle_tt.receipt.log": "73c5194bf244afecb99f319e1f9cbd97e8e06dd996a88b8ccf690fe60d79fa84",
+    "load_oracle_tt.tcl": "8013709e6ab8680f6f35822f3139706319f15321b9967302ded2685575083a3b",
+    "clean_run.receipt.log": "d20f3834c6adc712798e3a7d1c40579cf3c10ffe104b0f767ae0ba8d6aaed202",
+    "gate_result.json.gz": "cd258f0727f53706bd724ad8da1e857047cdbab2c3843b641e9086e85e26587a",
+    "export_tt.tcl": "cd138076c6074f8831e08cac1c5791002c98e1d270a0519af0bb75e654438059",
+    "normalized_pin_packet_base0.json.gz": "1c602ee85423373582a766224f1f2b7b116b941f678bdd6d0d212cad9d6d3c57",
+    "oracle_tt.receipt.log": "54341c9268f841f0ede8b580a8ad36f4704ecbd318fdd06f85fc43678d83cf3f",
+    "geometry_oracle_tt.receipt.log": "2e02d768af13c45407c32d59feb60f11ea85691cf7001e7806915b39984004fe",
+    "clean_export_tt.tcl": "45a184fe98121ae0d931c403ad0af31c52d072eeb5ecf575a4037acacd9ab9f3",
+    "export_ff.tcl": "fa26dadc23987556818b3f757297e4bd561e1f30733bfc6d8cac5878a7365c40",
+    "ot_qfd_vm_face_sn_e1.lef": "1bce6a4bc704c9ddd4910b120c22b9c8eba344f0f00d081ca07ff9466cd263ce",
+    "insertion.json": "f45adb4b3952bfd86f4841ac08c1015daaa438e9a356ec1302e4df5937c161c8",
+    "load_oracle_tt.receipt.log": "aba4c1049daf00554dd21c82841b31af64ac3dfab16e79c463a08ce366246539",
+    "geometry_oracle_tt.tcl": "05e9995fc2a70e83ee33342fcc2023a2f30e9803b8b1e35c39527a3c52bf0746",
+    "clean_export_ss.tcl": "f44ba5122d5b461a66a18d3c53f17807030256e231a19251cc79c53449a79169",
+    "clean_export_ff.tcl": "d61a4972a63644e8ab1c57bc18d734dd731791235bb6247f7743da23b1a587e9",
+    "normalized_pin_packet_loaded80.json.gz": "00f63bc9c43705cc2b7f88d43377f1b4979bb1dffee2e0c9715cb0239f552988",
+    "oracle_tt.tcl": "f9eff19b8239cfbd82c7d278f6a09d863484f9185625af16271bf7641aec4753",
+    "export_ss.tcl": "3f587b7d9c2ae180c8115db48d8d0077979cb002d75984575f86e61306b64075",
+    "run.log": "5e6db674a23264a1d274b2435d0ccd559167c833a39710bd21201ddb2365f909",
+    "branch_oracle_tt.tcl": "319ebb4825bf34524f99b780d6e22cb3f96beb2bc8d921ee89cea076a28f02a0",
+    "base0/ot_qfd_vm_face_sn_e1_ff.lib.gz": "e61a57e6cf0cea04a61dc4e009dbf3f1fb572ba32b8b2d962e0a02f10f0794c3",
+    "base0/ot_qfd_vm_face_sn_e1_tt.lib.gz": "a276211c2ab38e6c89e7d987a29724e025ab17e37994382ca06d0089765a6e00",
+    "base0/ot_qfd_vm_face_sn_e1_ss.lib.gz": "084a68e20e698c89ded078ba55d34e2339a66559c9836a97a28debafe4ab089b",
+    "loaded80/ot_qfd_vm_face_sn_e1_ff.lib.gz": "9658038744a707bc2ab532ff29b9e31a367ed1cda0b1b28f98b30cd007c2c32d",
+    "loaded80/ot_qfd_vm_face_sn_e1_tt.lib.gz": "4862d0f69330aabc78080e7439f1012e35271f8d0c5967c3a3c82d1619d5f79b",
+    "loaded80/ot_qfd_vm_face_sn_e1_ss.lib.gz": "7183832f3832fccff0c31169d68d5c91f9bd5540a8eeffd47a178b6dfc4fe8d9"
+  }
+}

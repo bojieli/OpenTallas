@@ -1,0 +1,59 @@
+ot-run: ot-epyc1tb     admits   573 GB (avail 800, growth 54, headroom 64, waiters 0/0 GB) load 39/128 running 14 disk 450 GB 
+ot-run: ot-epyc4       skipped: no /tmp/rg6-sn-cts-export
+ot-run: ot-pve1        skipped: no /tmp/rg6-sn-cts-export
+ot-run: ot-agidock128  skipped: no /tmp/rg6-sn-cts-export
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1374235-1791962334 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+QDM PINFLOP reference: 4 input pin flops, median arrival 108.534569 (range 106.242294 .. 109.729431)
+QDM reference pin g_me[1].me_r$_DFF_P_/CLK clock arrival max 108.534569 min 101.785202 skew 90 hold 50
+[WARNING STA-0441] set_input_delay relative to a clock defined on the same port/pin not allowed.
+[WARNING STA-0440] set_output_delay not allowed on power port 'VDD'.
+[WARNING STA-0440] set_output_delay not allowed on ground port 'VSS'.
+OT_IO_INTER 514 inputs 514 outputs at 150 ps
+SN_CTS_CONTEXT tt actual4_1_cts placementRC unqualified; original source SLEW/waveform/IO preserved
+SN_CTS_SLACK tt setup=1.60493091039271e-10 hold=2.8331614831955676e-11
+SN_GEOMETRY_BEGIN
+SN_GEOMETRY_DBU 1.0
+SN_GEOMETRY_INST _1738_ 120420 9720
+SN_GEOMETRY_INST _2334_ 35640 7830
+SN_GEOMETRY_INST q\[334\]$_DFFE_PP_ 119988 9450
+SN_GEOMETRY_INST ot_ohdrv_00260_0 92664 5940
+SN_GEOMETRY_INST ot_outhold_00260_1 92340 10260
+SN_GEOMETRY_INST ot_ohdrv_00260_2 91800 7830
+SN_GEOMETRY_INST ot_ohdrv_00334_0 77436 7020
+SN_GEOMETRY_INST ot_outhold_00334_1 76086 10530
+SN_GEOMETRY_INST ot_ohdrv_00334_2 75978 8640
+SN_GEOMETRY_INST input334 19116 2160
+SN_GEOMETRY_INST output774 91638 9720
+SN_GEOMETRY_INST place1268 91422 3240
+SN_GEOMETRY_INST place1334 95796 7290
+SN_GEOMETRY_PORT d[334] M5 88080 0 88104 84
+SN_GEOMETRY_PORT q[334] M5 92592 12876 92616 12960
+SN_GEOMETRY_PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1374235-1791962334): exit 0
