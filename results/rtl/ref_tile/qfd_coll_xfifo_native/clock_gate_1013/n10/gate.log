@@ -1,0 +1,20 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_coll_xfifo_native_20261013-230642.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_coll_xfifo_native_20261013-230642.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_xfifo_native-20261013-230642
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 48 s (gate total 442 s)
+GATE INFO util: synthesized std area 3703 um2 + macros 42129 in core 82581: util 55%
+GATE INFO textbook: PASS qfd_coll_xfifo_native cells 24,581 flops 8,293 depth 310.1 ps util 0.5558 reach 5.4 um (1.1 s)
+GATE INFO cts_calibration: ss insertion all 766.7..852.0 ps (spread 85.3), boundary mean 819.2; tt insertion all 599.2..629.7 ps (spread 30.5), boundary mean 609.6; ff insertion all 475.3..518.8 ps (spread 43.5), boundary mean 484.3; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55
+GATE INFO clock_spine: OT_SPINE iter 2 (fine) leaves 429 sinks 3364 cells 2427 leaf arrival 586.6..625.2 ps (spread 38.6) pad 64.9 / 8.8 ps
+GATE INFO clock_spine: OT_SPINE iter 3 (fine) leaves 429 sinks 3364 cells 2838 leaf arrival 601.9..628.6 ps (spread 26.7) pad 64.9 / 16.3 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_coll_xfifo_native/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      381 paths, worst slack 189.8 ps (e.g. u_port.u_sq.r_fault$_DFF_PN0_/D)
+GATE INFO path_classes: reg->out      418 paths, worst slack 223.2 ps (e.g. o_coll_seq_v)
+GATE INFO path_classes: in->reg       137 paths, worst slack 228.7 ps (e.g. u_port.red_q$_DFF_PN0_/D)
+GATE INFO path_classes: macro->reg      2 paths, worst slack 239.2 ps (e.g. u_port.u_sq.g_afw.u_af.wq_data[479]$_DFF_P_/D)
+GATE INFO path_classes: setup WNS 1.897695334207583e-10 hold WNS 1.1303957769825956e-11
+GATE INFO clock_rule: root port:ck: 4,908 sinks on the largest root <= 15,000; measured TT insertion 629.7 ps, leaf spread 30.5 ps
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/r3b-io/physical/ref_tile/qfd_coll_xfifo_native/source_binding_history/005c702feb4cb2a82f1336602e1aa6d731bc8a85bef0e046397985b68be810c7.json
+GATE: qfd_coll_xfifo_native/gate_result.json written (exact staged source binding; commit it with the kit)

@@ -1,0 +1,21 @@
+{
+  "source_revision": "853b139f3",
+  "gate": "PASS",
+  "corners_ps": {
+    "tt": {
+      "setup": 189.769533,
+      "hold": 11.303958
+    },
+    "ff": {
+      "setup": 303.070291,
+      "hold": 9.758805
+    },
+    "ss": {
+      "setup": -81.775142,
+      "hold": -7.637058
+    }
+  },
+  "qualified": false,
+  "route_submitted": false,
+  "remaining": "Global ir2 -> empty/pop -> shared next-pointer XOR -> nine local ir_c register groups. Extra copies load global next-state fanout; must localize counter feedback. SS hold also fails, preserved."
+}

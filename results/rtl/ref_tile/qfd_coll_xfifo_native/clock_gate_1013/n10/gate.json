@@ -1,0 +1,107 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_coll_xfifo_native_20261013-230642.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_coll_xfifo_native_20261013-230642.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_xfifo_native-20261013-230642",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 48 s (gate total 442 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 3703 um2 + macros 42129 in core 82581: util 55%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qfd_coll_xfifo_native cells 24,581 flops 8,293 depth 310.1 ps util 0.5558 reach 5.4 um (1.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 766.7..852.0 ps (spread 85.3), boundary mean 819.2; tt insertion all 599.2..629.7 ps (spread 30.5), boundary mean 609.6; ff insertion all 475.3..518.8 ps (spread 43.5), boundary mean 484.3; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.550 vs spec PD 0.55",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 2 (fine) leaves 429 sinks 3364 cells 2427 leaf arrival 586.6..625.2 ps (spread 38.6) pad 64.9 / 8.8 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 3 (fine) leaves 429 sinks 3364 cells 2838 leaf arrival 601.9..628.6 ps (spread 26.7) pad 64.9 / 16.3 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qfd_coll_xfifo_native/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      381 paths, worst slack 189.8 ps (e.g. u_port.u_sq.r_fault$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      418 paths, worst slack 223.2 ps (e.g. o_coll_seq_v)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg       137 paths, worst slack 228.7 ps (e.g. u_port.red_q$_DFF_PN0_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "macro->reg      2 paths, worst slack 239.2 ps (e.g. u_port.u_sq.g_afw.u_af.wq_data[479]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.897695334207583e-10 hold WNS 1.1303957769825956e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:ck: 4,908 sinks on the largest root <= 15,000; measured TT insertion 629.7 ps, leaf spread 30.5 ps",
+   "fix": ""
+  }
+ ]
+}
