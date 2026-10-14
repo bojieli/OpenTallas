@@ -22,7 +22,10 @@ module ot_hgi_sfu_lane_map #(parameter integer MUT_LANE=0) (
  reg [3:0] ls0,lvw0,j0;
  reg emit0,emit1,emit2;
  reg [79:0] meta1,meta2;
- ot_hdc_delay_ring #(.W(461),.D(4),.RING(3)) u_pass (.clk(clk),.rst_n(rst_n),.d(i_pass),.q(o_pass));
+ // ld is control, not retained payload: reset must not replay a ring slot.
+ reg [3:0] ld_pipe;
+ ot_hdc_delay_ring #(.W(460),.D(4),.RING(3)) u_pass (.clk(clk),.rst_n(rst_n),.d(i_pass[459:0]),.q(o_pass[459:0]));
+ assign o_pass[460]=ld_pipe[3];
  reg [23:0] term1[0:19],pair2[0:9];
  always @(posedge clk) begin
   terms0<=ld_terms; ov0<=i_o_v; iv0<=i_i_v; row0<=i_krow;
@@ -41,8 +44,8 @@ module ot_hgi_sfu_lane_map #(parameter integer MUT_LANE=0) (
    pair2[s*2+1]<=term1[s*4+2]+term1[s*4+3];
    o_ld_c[s*240+:240]<={216'd0,24'(pair2[s*2]+pair2[s*2+1])};
   end
-  if(!f_rst) begin emit0<=0;emit1<=0;emit2<=0;o_emit<=0;end
-  else begin emit0<=i_emit;emit1<=emit0 && (24'(j0)<(24'd1<<lvw0));emit2<=emit1;o_emit<=emit2;end
+  if(!f_rst) begin emit0<=0;emit1<=0;emit2<=0;o_emit<=0;ld_pipe<=0;end
+  else begin emit0<=i_emit;emit1<=emit0 && (24'(j0)<(24'd1<<lvw0));emit2<=emit1;o_emit<=emit2;ld_pipe<={ld_pipe[2:0],i_pass[460]};end
  end
 endmodule
 `default_nettype wire

@@ -34,6 +34,20 @@ module tb_hgi_sfu_lane_map #(parameter integer MUT=0);
     for(integer s=0;s<5;s=s+1)if(24'(ldc[s*240+:24]+ldc[s*240+48+:24])!==offsets[3][s*120+:24])errors++;
    end
   end
+  // Prime every retained ring slot, then warm-reset. Payload may survive,
+  // but the load strobe (pass[460]) must never replay a pre-reset operation.
+  @(negedge clk);pass='0;pass[460]=1;emit=1;
+  repeat(12) @(negedge clk);
+  rst_n=0;pass='0;emit=0;
+  repeat(8) @(negedge clk);
+  rst_n=1;
+  repeat(4) begin
+   @(posedge clk);#1;checks++;
+   if(mp[460]!==0 || me!==0) begin
+    errors++;$display("SFU_WARM_RESET stale load=%b emit=%b",mp[460],me);
+   end
+   @(negedge clk);
+  end
   if(errors)begin $display("SFU_LANE_MAP FAIL checks=%0d errors=%0d",checks,errors);$fatal(1,"fixed-lane mapping mismatch");end
   $display("SFU_LANE_MAP PASS checks=%0d errors=0",checks);$finish;
  end

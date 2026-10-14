@@ -61,7 +61,7 @@
  "job": {
   "owner": "Codex:hbm_quant_sfu_2240",
   "branch": "codex/hbm-quant-sfu-2240",
-  "tag": "m1",
+  "tag": "m2",
   "views_to": "physical/ref_tile/sfu_lane_map_ref/views",
   "record_to": "results/rtl/ref_tile/sfu_lane_map_ref",
   "purpose": "Required native control adapter for CLOSED SFU lane index5. Four registered edges, native controller must bind and measure their phase/cost; not full quarter qualification. All new data/PG M5. Shape is pin-bound: N1200bits/103.68um=11.57, W546/49.68=10.99.",
@@ -72,7 +72,7 @@
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 4,
-    "pass_regex": "SFU_LANE_MAP PASS checks=4092 errors=0"
+    "pass_regex": "SFU_LANE_MAP PASS checks=4096 errors=0"
    },
    {
     "name": "lane_index_mutant",
@@ -80,7 +80,7 @@
     "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 4,
-    "fail_regex": "SFU_LANE_MAP FAIL checks=4092 errors=24552"
+    "fail_regex": "SFU_LANE_MAP FAIL checks=4096 errors=24552"
    }
   ]
  },
@@ -96,5 +96,5 @@
   ],
   "reason": "Closed master fixes lane5; new per-index mapper must sit at each lane clock boundary. Native phase and geometry approval pending."
  },
- "structural_change": "Actual CLOSED SFU source hardcodes lane5. Per-instance mapper preserves arithmetic view and changes only lane-dependent loaded offsets, indices and lin mask; four explicit registered edges and ring-delayed passthrough. Source-dependent exact/mutant proof, no lane RTL reroute."
+ "structural_change": "Actual CLOSED SFU source hardcodes lane5. Per-instance mapper preserves arithmetic view and changes only lane-dependent loaded offsets, indices and lin mask; four explicit registered edges and ring-delayed passthrough. Source-dependent exact/mutant proof, no lane RTL reroute. Load strobe pass[460] uses resettable four-edge control delay; warm reset must not replay retained payload slots."
 }
