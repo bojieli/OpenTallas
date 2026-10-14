@@ -1,0 +1,15 @@
+{
+  "source_commit": "9c12f4d15db4635e7d1ba81fc3eb1634817b43c9",
+  "job": "dsfd_capt_x8_dual-v3-9c12f4d15",
+  "route_completed_rc": 0,
+  "drc": 0,
+  "status": "NEEDS_HUMAN",
+  "first_retained_helper_error_PT": "2026-10-14T01:07:05-07:00",
+  "tenth_helper_error_PT": "2026-10-14T01:15:31-07:00",
+  "state_updated_PT": "2026-10-14T01:16:29-07:00",
+  "cl_directory_mtime_PT": "2026-10-14T01:30:11.253268-07:00",
+  "cleanup_time_proven": false,
+  "cleanup_time_note": "Directory modification time is observable but not a deletion timestamp. No explicit V3 deep-release daemon line found. Raw absence observed at 02:09:29 PT.",
+  "qualification": "UNQUALIFIED: actual routed ODB/SPEF and source tree absent; no reviewed phase/export receipt can be reconstructed. Runtime frozen-helper recovery cannot recover missing databases.",
+  "action": "Preserve all surviving failure evidence; advance genuine structural successor, never reroute unchanged V3 solely for ingestion."
+}
