@@ -1,0 +1,22 @@
+{
+  "source_revision": "e5cd1f3e7",
+  "gate": "PASS",
+  "corners_ps": {
+    "tt": {
+      "setup": 216.496043,
+      "hold": 11.577073
+    },
+    "ff": {
+      "setup": 301.048464,
+      "hold": 9.726886
+    },
+    "ss": {
+      "setup": -68.592021,
+      "hold": -13.026025
+    }
+  },
+  "native_adoption_qualified": false,
+  "route_submitted": false,
+  "remaining": "SS sameCKD reset-conditioner Q to ready/pop to increment/Gray/full compare -68.59; local CQwrite-row -6.88. SS macro hold -13.03. No reset exception; source CKD slew150 unknown die bound/full native posted composition unproved.",
+  "scope": "Official gate TT/FF positive; SS remains measured sensitivity, no full SS claim. Probe attempts before CTS DB publication produced ORD0007 only and are retained separately."
+}
