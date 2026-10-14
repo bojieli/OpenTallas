@@ -165,8 +165,6 @@
       "B route weight with E2 MULB"
     ],
     "D": "unused",
-    "sectors_per_16lane_issue": 6,
-    "bytes_per_issue": 192,
     "balanced_VM_bytes_per_engine_edge": 192,
     "aligned_three_stream_bank_histogram": [
       3,
@@ -188,6 +186,10 @@
       3,
       3
     ],
-    "limits": "Ideal balanced reads alone saturate native8 x 256-bit bandwidth at 4:3 engine:VM edges. No headroom for shared-group competition; prefetch must cover measured native RTT and real frame/response ownership. No throughput claim."
+    "limits": "Three distinct dense nonreused streams saturate balanced native read capacity at4:3 clocks (192B/engineedge). Actual descriptor strides/broadcast flags and cache reuse can reduce demand; exact coalescing and measured production trace must determine pressure. No throughput claim.",
+    "dense_nonreused_stream_scenario_sectors_per_issue": 6,
+    "dense_nonreused_stream_scenario_bytes_per_issue": 192,
+    "descriptor_broadcast_rule": "Actual ot_hgi_su_record.sv:131 isi(d) returns0 when descriptor[5] broadcast is set; route-weight B can reuse one scalar/sector across16 lanes. Distinct dense3stream demand is a scenario, not universal GLU demand.",
+    "decoder_sha256": "e944833f899f7196ecd988aa7c48e48fc6406ffacc2fd060c1866f977290df8b"
   }
 }
