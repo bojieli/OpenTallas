@@ -11,7 +11,7 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "selected": "R3,KD3,XRT1,CCA1",
-      "active": "FSR actualM5port-major pins + talleroutline repack searchs11, fullreach/cuts; FCCPIPE/FCNcmdpipe trueclock physicalgate; fullFEACKsource282FFcollector graph; captureproducer dependency retained",
+      "active": "FSR actualM5port-major pins + talleroutline repack searchs11, fullreach/cuts; FCCPIPE/FCNcmdpipe trueclock physicalgate; 141consumerACKsignals/282nominalconsumer-witnessFF graph; controller separately requires282captureFF; captureproducer dependency retained",
       "open": "wholefieldallocation, actualper-pairsourceperiod/rootR/RC/resetrefclk/ACKportsphysical; fullreach\u2264pairbudget/500 andcuts\u2264.60 notpassed"
     },
     {
@@ -20,7 +20,7 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "old_tool_closed": "p5 b35448723 TT117.73 FF3.68 DRC0; SS\u2212174.19",
-      "active": "PIPE1 truepayload/heldselect/every-stepGraypublication +1384FF; exactgold42947/lockstep63966/0, wrongselect4errors; physicalgatep6r b78972786",
+      "active": "PIPE1 +1384nominalandactualCTSFF; sourceexact649efc5a0 RUNNING; actualstreamroot18684sinks measuredTT222.8/spread17.6, gate186.24/10.81; exactgold+observedmutants inpacket",
       "open": "CTSfinalmeasure, routeTTFFSS, actualsource-binding/latency/readiness/parentgeometry"
     },
     {
@@ -29,7 +29,7 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "old_terminal": "p4r c34727fcc TT\u22123.758771/FF21.75/DRC1; SS\u2212342.85",
-      "active": "actualdq_t\u2192commandqueue enablepath; onehot256FFprototype gold/TPpass mutant264errors butCTSsetup\u221225.7; stronger reservedslotCMDPIPE85FF/+1streamcandidate f42456482 exactgold/TP/mutant+physicalCTSgate running; cksWcontact repairsactualM5DRCpair",
+      "active": "FCNonehotprototype preserved; stronger reservedslotCMDPIPE nominal85FF/actualCTS+43FF,+1streamcandidate f42456482 exactgold42765checks/63966lockstep0,TP+1serialcompletion,mutant5actualerrors expectedFAIL; sourceexact99faef982 RUNNING",
       "open": "candidateproofs/finalCTS, actualSS/wiring/sourceclock/resetcontract"
     },
     {
@@ -47,7 +47,7 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "old_closed": "oldM6 345.6x25.92 stands",
-      "active": "same8293FF/twostages actualM5port-major 345.6x51.84 successor pm1r-f135bf060 RUNNING; actualCTSpins8300ports inpacket; parentrepacksearchs11",
+      "active": "NewM5port-major345.6x51.84 same8293FF/twostages successor CLOSED a1aac2369 TT280.81/FF19.10/SS164.66/DRC0; finalpins8300; parentstrictreachS12has0directhopviolations/2overlaps, fullcutreplay pending",
       "open": "newroute/actualfinalLEF, parentplacement/cuts/reach/clock andallocation"
     },
     {
