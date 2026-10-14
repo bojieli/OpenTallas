@@ -1,0 +1,292 @@
+{
+ "schema": "opentallas.vm-joint-station-clock-me-inventory.v1",
+ "status": "UNASSIGNED_PARENT_ENTRY_CLOCK_AND_ME_CONTRACT",
+ "candidate_sha256": "b48c892db9c1b54fc5ec775a99714b5440695211f0807faecbb27e1df3352bfe",
+ "actual_view_sha256": {
+  "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/insertion.json": "1c09aafeb0a3eabe4e941b3292d8c10acc387b1a5c85fdc79a1972c0e192f243",
+  "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w_ss.lib": "9013cd51f4be0f354437aaa927ced7db451217625a89644e43cfc3ffa1154918",
+  "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w_tt.lib": "a36ff0b5962b9e632051322520274ac5874b28f10180c437322fcd91d1893721",
+  "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w_ff.lib": "c0fdef9173d89b5c4b8e42b8b3a5d252af655876eb5b46ca06de6226e5b20702",
+  "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w.lef": "e44328bad38c54bf64fdf93de9f0c806685ce9292f104a05f8e2947d4ed43c4c"
+ },
+ "stations": [
+  {
+   "station": "g1_exit1",
+   "master": "ot_qfd_vm_xrelay_w",
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "at_um": [
+    15318.72,
+    17930.16
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ],
+   "orientation": "R0",
+   "clock_port": "ck_joint_exit0",
+   "clock_pin": "clk",
+   "me_port": "me_joint_exit0",
+   "me_pin": "me_e",
+   "actual_local_boundary_register_sinks": {
+    "tt": 516,
+    "ff": 516,
+    "ss": 516
+   },
+   "clock_root_sink_cap": 15000,
+   "pins": {
+    "clk": {
+     "layer": "M5",
+     "local_rect_um": [
+      3.984,
+      0.0,
+      4.008,
+      0.084
+     ],
+     "center_um": [
+      3.996,
+      0.042
+     ],
+     "absolute_center_um": [
+      15322.715999999999,
+      17930.202
+     ],
+     "provisional_parent_face": "N",
+     "provisional_face_point_um": [
+      15322.715999999999,
+      18131.04
+     ],
+     "minimum_parent_wire_um": 200.83799999999974,
+     "TT_wire_only_screen_ps": 152.6368799999998
+    },
+    "me_e": {
+     "layer": "M5",
+     "local_rect_um": [
+      4.08,
+      0.0,
+      4.104,
+      0.084
+     ],
+     "center_um": [
+      4.0920000000000005,
+      0.042
+     ],
+     "absolute_center_um": [
+      15322.812,
+      17930.202
+     ],
+     "provisional_parent_face": "N",
+     "provisional_face_point_um": [
+      15322.812,
+      18131.04
+     ],
+     "minimum_parent_wire_um": 200.83799999999974,
+     "TT_wire_only_screen_ps": 152.6368799999998
+    }
+   },
+   "clock_delivery_rule": "corner_phi - actual_child_boundary_R - measured_parent_entry_wire; no zero/missing-corner fallback",
+   "parent_entry_wire_delay_per_corner_ps": null,
+   "engine_rule": "MEREG1: me_e one CLOCK edge early; all ENGINE-controlled lane/issue/collector consumers must share exact adopted epoch",
+   "me_source_driver": null,
+   "me_full_endpoint_190ps_contract": "OPEN: confirm whether budget includes compensated child setup and obtain actual wire",
+   "PG": "Existing closedM7 localPG; parent/die M8/M9 exact phase/net mustbeaudited after actualplacedLEF/DEF; no phasequalification claim",
+   "corners": {
+    "tt": {
+     "reference": {
+      "n": 516,
+      "mean": 95.7,
+      "min": 90.0,
+      "max": 99.9
+     },
+     "me_metrics": {
+      "dir": "input",
+      "out": null,
+      "lmin": null,
+      "inp": 119.76414,
+      "hold": -77.92938000000001,
+      "comb": [],
+      "clk": [
+       "clk"
+      ]
+     }
+    },
+    "ff": {
+     "reference": {
+      "n": 516,
+      "mean": 77.6,
+      "min": 71.7,
+      "max": 81.9
+     },
+     "me_metrics": {
+      "dir": "input",
+      "out": null,
+      "lmin": null,
+      "inp": 83.83928999999999,
+      "hold": -58.499629999999996,
+      "comb": [],
+      "clk": [
+       "clk"
+      ]
+     }
+    },
+    "ss": {
+     "reference": {
+      "n": 516,
+      "mean": 127.3,
+      "min": 121.8,
+      "max": 131.4
+     },
+     "me_metrics": {
+      "dir": "input",
+      "out": null,
+      "lmin": null,
+      "inp": 180.06055,
+      "hold": -104.88059,
+      "comb": [],
+      "clk": [
+       "clk"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "station": "g1_exit2",
+   "master": "ot_qfd_vm_xrelay_w",
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "at_um": [
+    15418.08,
+    18029.52
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ],
+   "orientation": "R0",
+   "clock_port": "ck_joint_exit1",
+   "clock_pin": "clk",
+   "me_port": "me_joint_exit1",
+   "me_pin": "me_e",
+   "actual_local_boundary_register_sinks": {
+    "tt": 516,
+    "ff": 516,
+    "ss": 516
+   },
+   "clock_root_sink_cap": 15000,
+   "pins": {
+    "clk": {
+     "layer": "M5",
+     "local_rect_um": [
+      3.984,
+      0.0,
+      4.008,
+      0.084
+     ],
+     "center_um": [
+      3.996,
+      0.042
+     ],
+     "absolute_center_um": [
+      15422.076,
+      18029.562
+     ],
+     "provisional_parent_face": "N",
+     "provisional_face_point_um": [
+      15422.076,
+      18131.04
+     ],
+     "minimum_parent_wire_um": 101.47799999999916,
+     "TT_wire_only_screen_ps": 77.12327999999935
+    },
+    "me_e": {
+     "layer": "M5",
+     "local_rect_um": [
+      4.08,
+      0.0,
+      4.104,
+      0.084
+     ],
+     "center_um": [
+      4.0920000000000005,
+      0.042
+     ],
+     "absolute_center_um": [
+      15422.172,
+      18029.562
+     ],
+     "provisional_parent_face": "N",
+     "provisional_face_point_um": [
+      15422.172,
+      18131.04
+     ],
+     "minimum_parent_wire_um": 101.47799999999916,
+     "TT_wire_only_screen_ps": 77.12327999999935
+    }
+   },
+   "clock_delivery_rule": "corner_phi - actual_child_boundary_R - measured_parent_entry_wire; no zero/missing-corner fallback",
+   "parent_entry_wire_delay_per_corner_ps": null,
+   "engine_rule": "MEREG1: me_e one CLOCK edge early; all ENGINE-controlled lane/issue/collector consumers must share exact adopted epoch",
+   "me_source_driver": null,
+   "me_full_endpoint_190ps_contract": "OPEN: confirm whether budget includes compensated child setup and obtain actual wire",
+   "PG": "Existing closedM7 localPG; parent/die M8/M9 exact phase/net mustbeaudited after actualplacedLEF/DEF; no phasequalification claim",
+   "corners": {
+    "tt": {
+     "reference": {
+      "n": 516,
+      "mean": 95.7,
+      "min": 90.0,
+      "max": 99.9
+     },
+     "me_metrics": {
+      "dir": "input",
+      "out": null,
+      "lmin": null,
+      "inp": 119.76414,
+      "hold": -77.92938000000001,
+      "comb": [],
+      "clk": [
+       "clk"
+      ]
+     }
+    },
+    "ff": {
+     "reference": {
+      "n": 516,
+      "mean": 77.6,
+      "min": 71.7,
+      "max": 81.9
+     },
+     "me_metrics": {
+      "dir": "input",
+      "out": null,
+      "lmin": null,
+      "inp": 83.83928999999999,
+      "hold": -58.499629999999996,
+      "comb": [],
+      "clk": [
+       "clk"
+      ]
+     }
+    },
+    "ss": {
+     "reference": {
+      "n": 516,
+      "mean": 127.3,
+      "min": 121.8,
+      "max": 131.4
+     },
+     "me_metrics": {
+      "dir": "input",
+      "out": null,
+      "lmin": null,
+      "inp": 180.06055,
+      "hold": -104.88059,
+      "comb": [],
+      "clk": [
+       "clk"
+      ]
+     }
+    }
+   }
+  }
+ ]
+}

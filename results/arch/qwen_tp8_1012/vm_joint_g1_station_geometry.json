@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.vm-joint-regional-station-geometry.v1",
+ "status": "PASS_EXACT_CLOSED_LEF_BBOX_CHANNEL_ONLY",
+ "candidate_sha256": "b48c892db9c1b54fc5ec775a99714b5440695211f0807faecbb27e1df3352bfe",
+ "core_masters": 72,
+ "existing_lane_tiles": 80,
+ "new_stations": 2,
+ "minimum_required_channel_um": 2.16,
+ "source_LEF_sha256": {
+  "physical/ref_tile/qfd_vm_rr4_t/views/ot_qfd_vm_rr4_t/ot_qfd_vm_rr4_t.lef": "71dfa93c4318712499cd2e1dd16537ce9141979f4821cb92f60da6df6ebdd549",
+  "physical/ref_tile/qfd_vm_rr2_t/views/ot_qfd_vm_rr2_t/ot_qfd_vm_rr2_t.lef": "dfeef8730941c7dfff712ff161e971cf91346a2f86f531db9ad8d2fd11af856c",
+  "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t/ot_qwen_tree_delay2_t.lef": "408a0097b7e719879aec8d939c45c4d4090ae818ec68281ea5224d1559222ade",
+  "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t.lef": "c79b13f7c056921b359ee878738fb7dcf01a133bb5b7e3859db34d4c75bdd986",
+  "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t/ot_qfd_vm_bctl_t.lef": "3ba36cafc3dee6772e0724d07edf6685380047a38c8aa965094a9bbbc07b2fec",
+  "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t.lef": "9077b7e7aa5446a0464855e9ed339f706fed577e16de896a155d276328597498",
+  "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t/ot_qfd_vm_xfifo8_t.lef": "8c7d4cf5304127905a70980710125584d1749e18772049c4dac14590c411fb45",
+  "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t/ot_qfd_vm_su1024_t.lef": "a5412001f131fc25103d247908617296f566f5505a7fd63069c5e3e139922634",
+  "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t/ot_qfd_vm_su_t.lef": "6300ca86d6e7a56ebf657172332f933eecfd0cc1d666e37f867be7bfbc4eacb7",
+  "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t/ot_qfd_vm_sctl_t.lef": "1960b253c6a45ef4cc9be156e781a78e88a1b4eca8ba93cc83e7f4fcd83244cd",
+  "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t/ot_qfd_vm_xpad2_t.lef": "acc2e5b4932504eda7bfa19b425b1d9834b896e5b619ef29fab68d0438031e58",
+  "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t/ot_qfd_vm_xrelay_t.lef": "5b9c49d7b139b7196fa20e4920590dfcd08f18062be377f6e4421e8d6b35447e",
+  "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w.lef": "e44328bad38c54bf64fdf93de9f0c806685ce9292f104a05f8e2947d4ed43c4c"
+ },
+ "stations": [
+  {
+   "station": "g1_exit1",
+   "bbox_conflicts": [],
+   "minimum_separating_axis_gap_um": 17.280000000000655,
+   "minimum_region_edge_um": 103.68000000000029
+  },
+  {
+   "station": "g1_exit2",
+   "bbox_conflicts": [],
+   "minimum_separating_axis_gap_um": 2.1599999999998545,
+   "minimum_region_edge_um": 4.319999999999709
+  }
+ ],
+ "limitations": "No IOpinpacking, signal/PG/CTS/actual RC/coupling/SS wire/clock delivery/control epoch/cost qualification."
+}
