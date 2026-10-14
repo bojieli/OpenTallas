@@ -36,7 +36,8 @@ module ot_qwen_die_cdc_ch #(
     parameter integer RXP = 0,
     // NativeTP8 opt-in: registered-read receive SRAM instead of32x546 flop store. Read the NEXT head each edge;
     // a same-row write bypass supplies the just-written head. The FIFO sees identical words/credits on every edge.
-    parameter integer IBMEM = 0
+    parameter integer IBMEM = 0,
+    parameter integer WR_FREE = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -84,6 +85,7 @@ module ot_qwen_die_cdc_ch #(
     wire [W-1:0] x_af_d;                  // RXP: staging-FIFO head -> async FIFO
     wire         x_af_v, x_af_pop;
     wire [W-1:0] ib_head;
+    wire [W-1:0] ib_local_head;
     generate if (IBMEM != 0) begin : g_ib_mem
         initial if (W != 546 || IBUF != 32 || RXP != 0) $error("IBMEM needs32x546/RXP0");
         wire [IA-1:0] next_head = ir[IA-1:0] + (pop ? 1'b1 : 1'b0);
@@ -93,7 +95,7 @@ module ot_qwen_die_cdc_ch #(
         always @(posedge wclk or negedge wr_n)
             if (!wr_n) bypass <= 1'b0;
             else bypass <= x_wr && (iw[IA-1:0] == next_head);
-        always @(posedge wclk) if (x_wr && (iw[IA-1:0] == next_head)) bypass_data <= id_q;
+        always @(posedge wclk) if (WR_FREE != 0 || (x_wr && (iw[IA-1:0] == next_head))) bypass_data <= id_q;
         ot_sram_1r1w_32x546_m1 u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(next_head),.rd_out(mq),
             .w_ce_in(x_wr),.w_addr_in(iw[IA-1:0]),.wd_in(id_q),.w_mask_in({W{1'b1}}));
 `ifdef OT_CDC_IBMEM_MUT_NOBYPASS
@@ -102,11 +104,48 @@ module ot_qwen_die_cdc_ch #(
         assign ib_head = bypass ? bypass_data : mq;
 `endif
     end else begin : g_ib_reg
-        assign ib_head = ib[ir[IA-1:0]];
+        if (WR_FREE != 0 && RXP == 0) assign ib_head = ib_local_head;
+        else assign ib_head = ib[ir[IA-1:0]];
     end endgenerate
     generate if (RXP == 0) begin : g_ibw
         if (IBMEM == 0) begin : g_store
-            always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+            if (WR_FREE != 0) begin : g_local
+                // Current pointer/valid copies for each word slice. Each local
+                // counter advances on the SAME accepted write/pop as iw/ir;
+                // its feedback stays local rather than loading global next-state.
+                // Every bank write and head read preserves its old edge.
+                // Bound each write-enable and read-select fanout to 64 bits.
+                // Keep the wrap bits locally too: computing current full from
+                // current pointers avoids a pop->next-pointer->full register path.
+                localparam integer NS = (W + 63) / 64;
+                for (genvar s = 0; s < NS; s = s + 1) begin : g_slice
+                    localparam integer LO = s * 64;
+                    localparam integer SW = (W - LO < 64) ? W - LO : 64;
+                    (* keep *) reg [IA:0] iw_c, ir_c;
+                    (* keep *) reg iv_c;
+                    wire full_c = (iw_c[IA-1:0] == ir_c[IA-1:0]) && (iw_c[IA] != ir_c[IA]);
+                    always @(posedge wclk or negedge wr_n)
+                        if (!wr_n) begin iw_c <= 0; ir_c <= 0; iv_c <= 0; end
+                        else begin
+`ifdef OT_CDC_IBPTR_MUT_CURRENT
+                            // One-sided stale read pointer: moving both pointers
+                            // together can merely rotate the physical rows.
+                            iw_c <= iw_c + {{IA{1'b0}}, x_wr}; ir_c <= ir;
+`else
+                            iw_c <= iw_c + {{IA{1'b0}}, x_wr};
+                            ir_c <= ir_c + {{IA{1'b0}}, pop};
+`endif
+                            iv_c <= i_v_p;
+                        end
+                    for (genvar row = 0; row < IBUF; row = row + 1) begin : g_row
+                        always @(posedge wclk)
+                            if (iv_c && !full_c && iw_c[IA-1:0] == row) ib[row][LO +: SW] <= id_q[LO +: SW];
+                    end
+                    assign ib_local_head[LO +: SW] = ib[ir_c[IA-1:0]][LO +: SW];
+                end
+            end else begin : g_original
+                always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+            end
         end
         assign x_issue = 1'b0; assign x_af_v = 1'b0; assign x_af_d = {W{1'b0}}; assign x_af_pop = 1'b0;
     end else begin : g_rxp
@@ -198,7 +237,7 @@ module ot_qwen_die_cdc_ch #(
     wire         af_drained;              // bench view: both FIFO pointers equal (whichever FIFO is built)
 `endif
     generate if (PIPE != 0 || AFW != 0) begin : g_afw
-        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0), .MEMM(MEMM)) u_af (
+        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0), .MEMM(MEMM), .WR_FREE(WR_FREE)) u_af (
             .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
 `ifndef SYNTHESIS

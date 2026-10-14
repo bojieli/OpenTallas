@@ -1,0 +1,30 @@
+{
+  "candidate_only": true,
+  "master": "qfd_coll_xfifo_native",
+  "parent_slots": [
+    "io_collective",
+    "io_xfifo"
+  ],
+  "outline_um": [
+    259.2,
+    328.32
+  ],
+  "clock_entries": [
+    "ck",
+    "ckd"
+  ],
+  "requested_die_position": null,
+  "source_params": {
+    "IBMEM": 1,
+    "WR_FREE": 1
+  },
+  "abi": {
+    "wire_payload_bits": 546,
+    "local_return_bits": 517,
+    "N": 8,
+    "CR": 32,
+    "IBUF": 32,
+    "CQ_DEPTH": 256
+  },
+  "qualification": "Component pathfinding only. Parent count/placement/registered seam and actual source slew/full posted acceptance remain open. Preserve default internal reset conditioners; no EXT_RST adoption or timing exception; SS n11 failure remains real."
+}

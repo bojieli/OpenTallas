@@ -14,7 +14,10 @@
   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1_bb.v",
   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v"
  ],
- "params": {},
+ "params": {
+  "IBMEM": 1,
+  "WR_FREE": 1
+ },
  "clock_port": "ck",
  "reset_ports": [
   "rst_n"
@@ -156,8 +159,7 @@
   "OT_MEG_EXPECT": "3",
   "OT_MEG_BAND": "2.16",
   "OT_MEG_EDGES": "EW",
-  "OT_SPINE_PORT": "ckd",
-  "OT_SPINE_CTS_REST": "1"
+  "OT_SPINE_CTS_REST": "0"
  },
  "route": {
   "pd": 0.55,
@@ -177,27 +179,17 @@
   },
   "macro_halo_um": 5.4
  },
- "structural_change": "n1 gate REFUSED:CKD20,310flops,17,472ofthese are SQIBUF32x546; ir[1]17475loads. Actuallargest-root CKDTTmax506/spread99(scopedprobe), primaryCK458/spread93. n2 replaces ONLY synchronous SQreceive store with real32x5461R1WSRAM, lookahead head read+same-write bypass, preserving everyexternal valid/credit/data/fault edge; paired oldflopstore/newmacrostore bench verifies. SameCR32/ENG_IB32/LCR32/N8/CQ_AD256, no newcycles,no clock changes,no reprice. Rootcount expected<15000; coreIOreference nowCK-specific u_cq.g_ipr.pd, CKDreference remains domain-specific. 3SRAMs with2.16um M5edgeguards, OBSunchanged. n2 CK boundaryspread101.5ps is a defect; n3 uses explicit CTS sink clusters16/30um to balance the physical tree, unchanged clocks and RTL. n3 actualCK boundary69.7ps passes,CKD119.5ps fails; n4 uses existing balanced-spine on CKD only and existing OT_SPINE_CTS_REST1 for CK, no shared name collision or clock timing changes.",
+ "structural_change": "n1 gate REFUSED:CKD20,310flops,17,472ofthese are SQIBUF32x546; ir[1]17475loads. Actuallargest-root CKDTTmax506/spread99(scopedprobe), primaryCK458/spread93. n2 replaces ONLY synchronous SQreceive store with real32x5461R1WSRAM, lookahead head read+same-write bypass, preserving everyexternal valid/credit/data/fault edge; paired oldflopstore/newmacrostore bench verifies. SameCR32/ENG_IB32/LCR32/N8/CQ_AD256, no newcycles,no clock changes,no reprice. Rootcount expected<15000; coreIOreference nowCK-specific u_cq.g_ipr.pd, CKDreference remains domain-specific. 3SRAMs with2.16um M5edgeguards, OBSunchanged. n2 CK boundaryspread101.5ps is a defect; n3 uses explicit CTS sink clusters16/30um to balance the physical tree, unchanged clocks and RTL. n3 actualCK boundary69.7ps passes,CKD119.5ps fails; n4 uses existing balanced-spine on CKD only and existing OT_SPINE_CTS_REST1 for CK, no shared name collision or clock timing changes. n4 remainingTritonCTS failedODB0370 touching protectedCKDspine; n5 independently builds CK and CKD using existingspine with cumulative node IDs (no name collisions), explicit noCTSfallback and unchanged clockconstraints. n5 NULLcreate catches distinct L-leaf namespace collision; n6 cumulatively offsets BOTH branchN and leafL namespaces, preserving actual independentlybalanced rooted trees. n6 bothspines TTboundaryCK24.4/CKD26.3ps pass; QDMprimarySDC overwroteCKDports withcore_clk afterCTS, yielding invalidcrossdomainIOtiming. n7 explicitlyreapplies existingunchanged CKDSDC at every boundaryswitch; correctclockassociation, no period/delay/skewwaiver. n7 correctedactualSSsignoff reveals realCQir1/SQir3-to-widewq_data enable fanout, SS-217.1/-134ps. n8 opt-inWR_FREE captures wq_data everyedge while writevalid/address/pointers/memorywriteedge stayunchanged; exactpairedoriginalenabled/flopstore passes3000/17000, metadata512/2899,0edge mismatches and3mutants detected. Canonical secondary DATAclock tags explicitlyremoved beforearrivalmeasurement while150pssourceclocktransition retained; source-slew dieboundunknown, HOLD_MERGE. n9 actual n8 SS remaining SQ bypass-data feedback-enable -134.3ps and CQ write-row enable -103.7ps repaired by free bypass data capture and per-128-bit kept current pointer/valid/full copies. Copies capture next values on the same edge as original pointers; pipeline and memory write edges unchanged. Exact paired old enabled flop implementation remains oracle. Both-stale pointer mutant passed and is explicitly undetected; one-sided stale read-pointer mutant now fails 300 data/301 paired mismatches. Fresh effective 46-helper source binding required. n9 actual gate TT+213.77/FF+298.36 but SS-4.476 on 128-bit CQ read selector and -4.23 on global pop/future-full comparator to full-copy FF. n10 halves read selector and write control groups to64bits and captures complete current local pointers including wrap; derives current local full directly from these current pointers, removes registered future-full stage. Every pointer copy still captures next on the original pointer edge; no memory/protocol edge added. Fresh exact/META plus4mutants required. n10 actual TT+189.77/FF+303.07 but SS-81.78/-7.64, critical globalir2->empty/pop->shared next-pointer XOR output feeding9localcounter groups. n11 local counter feedback advances each kept slice counter on the same original x_wr/pop accepted edge, avoids shared next-pointer arithmetic drive; current local full remains derived from local current complete pointers. No addedprotocol/memoryedge, all native credits unchanged. Fresh exactpaired/META+4mutants andCTS required; old failed n10 archived.",
  "reroute_reason": {
-  "kind": "param_change",
-  "params": {
-   "WSQ": 546,
-   "WCQ": 517,
-   "N": 8,
-   "CR": 32,
-   "ENG_IB": 32,
-   "LCR": 32,
-   "CQ_AD": 256,
-   "PIPE": 2,
-   "MEMM": 1
-  }
+  "kind": "rtl_change",
+  "description": "Local per64bit counter feedback on original accepted x_wr/pop edges removes actual SS shared-next-pointer fanout; same native protocol and memory edges."
  },
- "slot_change_request": "Native collective-port leaf inside io_xfifo700.248x1563.816: proposed259.2x328.32 near(+423.36,+1190.16) next to10 nativeW546 link leaves. Native pin assignment from die tools pending; current closed TP4port request W sequencer,E engine adapted to native record widths. seq_su CRED32/postedacceptance composition still required; UNQUALIFIED until exact chain proof.",
+ "slot_change_request": "Actual259.2x328.32 candidate leaf, separate ck and ckd entries; no die coordinates assigned and no full io_collective/io_xfifo fit claim. Component route pathfinding authorized by coordinator. Existing internal reset conditioner contract preserved, no new reset exception or SS release.",
  "job": {
   "owner": "Codex:qwen_small/io",
-  "branch": "claude/el1013-qwen-r3b-io",
-  "tag": "n4",
-  "purpose": "Native TP8 local port credit reservation and posted-return macro leaf; qualifies only with seq_su CRED32 composition",
+  "branch": "claude/el1014-qwen-io-current",
+  "tag": "n12",
+  "purpose": "Native TP8 local546/517 dual-domain leaf pathfinding only; actual shape and clock entries requested in component_slot_request_1014.json; no parent-fit/SS release",
   "extra_paths": [
    "physical/qwen_romio_slots",
    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
@@ -261,17 +253,34 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "native_local_pointer_mutant",
+    "cmd": "bash physical/qwen_romio_slots/bench_coll_native.sh {RUN}/bench/pointer_mutant pointer_mutant",
+    "expect": "fail",
+    "fail_regex": "^FAIL native_coll_port sent=[1-9][0-9]* .*pair_mismatch=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
    }
   ],
   "views_to": "physical/ref_tile/qfd_coll_xfifo_native/views",
-  "record_to": "results/rtl/ref_tile/qfd_coll_xfifo_native"
+  "record_to": "results/rtl/ref_tile/qfd_coll_xfifo_native",
+  "hold_merge": "Native local component probe: real die CKD source-clock slew policy and full seq_su CRED32/native collective posted-acceptance composition are not qualified."
  },
  "boundary_tcl": [
+  "physical/qwen_romio_slots/qfd_coll_xfifo_native.sdc",
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
  "clock": "spine",
+ "pre_cts_extra": [
+  "physical/qwen_romio_slots/native_dual_spine.tcl"
+ ],
  "children": [],
  "inter": [],
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "component_slot_request": "results/rtl/ref_tile/qfd_coll_xfifo_native/component_slot_request_1014.json"
 }

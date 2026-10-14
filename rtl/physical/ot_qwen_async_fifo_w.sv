@@ -28,7 +28,11 @@ module ot_qwen_async_fifo_w #(
     // copy every rd_clk edge, so rd_data is the word popped at the previous edge -- exactly the RSEL2 rs_q stage -- and
     // goes straight to the consumer's capture flop.  The registered write stage and the one-edge-later pointer publish
     // are unchanged, so a word is in the array before the reader can see its pointer.
-    parameter integer MEMM = 0
+    parameter integer MEMM = 0,
+    // Native local port: data is meaningful only when registered write-valid
+    // is set. Free capture removes the wide write-enable fanout, without
+    // changing the valid/address/pointer or memory-write edge.
+    parameter integer WR_FREE = 0
 ) (
     input  wire             wr_clk,
     input  wire             wr_rst_n,
@@ -138,7 +142,7 @@ module ot_qwen_async_fifo_w #(
     reg [PTR_W-1:0] wr_gray_pub;
     integer wr_i;
     always @(posedge wr_clk) begin
-        if (wr_fire) wq_data <= wr_data;
+        if (WR_FREE != 0 || wr_fire) wq_data <= wr_data;
         if (MEMM == 0)
             for (wr_i = 0; wr_i < DEPTH; wr_i = wr_i + 1) if (wq_row[wr_i]) mem[wr_i] <= wq_data;
     end
