@@ -283,7 +283,13 @@ module tb_mtp_wave;
     dsfd_coll_p2_ep #(.FWD_C(P2FC), .RET_C(P2RC)) u_cpe (.ck(fclk), .rst(rst_n), .c_sv(a_sv), .c_sr(a_sr), .c_sd(a_sd),
         .t_sv(ce_sv), .t_sd(ce_sd), .f_sg(ce_sg), .f_ov(ce_ov), .f_od(ce_od), .t_og(ce_og), .c_ov(a_ov), .c_or(a_or), .c_od(a_od));
     wire v0_v, v0_g; wire [603:0] v0_d;
-    dsfd_vm_p2_ep u_vpe (.ck(fclk), .rst(rst_n), .c_l0v(l0_v), .c_l0r(l0_r), .c_l0d(l0w(p2_s0)), .t_l0v(v0_v), .t_l0d(v0_d), .f_l0g(v0_g));
+    // The VM endpoint receives unhandshaked memory returns, RL edges after
+    // an issue accepted by its registered credit. A held valid request is not
+    // itself a returned beat.
+    wire vm0_ret_v; wire [603:0] vm0_ret_d;
+    wv_vm_p2_returns #(.RL(4)) vm0_returns (.clk(fclk), .rst_n(rst_n),
+        .issue_v(l0_v), .issue_r(l0_r), .issue_d(l0w(p2_s0)), .ret_v(vm0_ret_v), .ret_d(vm0_ret_d));
+    dsfd_vm_p2_ep u_vpe (.ck(fclk), .rst(rst_n), .c_l0v(vm0_ret_v), .c_l0r(l0_r), .c_l0d(vm0_ret_d), .t_l0v(v0_v), .t_l0d(v0_d), .f_l0g(v0_g));
     wire q_l0v, q_l0g, q_l1v, q_l1g, q_sv, q_sg, q_ov, q_og, q_done, q_fault, q_corr; wire [603:0] q_l0d, q_l1d; wire [100:0] q_sd; wire [593:0] q_od;
     wv_relay #(.W(605), .N(P2FV)) r20 (.clk(fclk), .rst_n(rst_n), .d({v0_v, v0_d}), .q({q_l0v, q_l0d}));
     wv_relay #(.W(1), .N(P2RV)) r20g (.clk(fclk), .rst_n(rst_n), .d(q_l0g), .q(v0_g));
@@ -557,7 +563,10 @@ module wv_p2twin #(parameter integer LNK = 0) (input wire clk, rst_n, output reg
     integer tx_cyc [0:2];
     generate if (LNK) begin : g_lnk
         wire l0v, l0g, l1v, l1g, sv, sg, ov, og; wire [603:0] l0d, l1d; wire [100:0] sd; wire [593:0] od;
-        dsfd_vm_p2_ep vme (.ck(clk), .rst(rst_n), .c_l0v(c0_v), .c_l0r(c0_r), .c_l0d(l0w(s0)), .t_l0v(l0v), .t_l0d(l0d), .f_l0g(l0g));
+        wire vm_ret_v; wire [603:0] vm_ret_d;
+        wv_vm_p2_returns #(.RL(4)) vm_returns (.clk(clk), .rst_n(rst_n),
+            .issue_v(c0_v), .issue_r(c0_r), .issue_d(l0w(s0)), .ret_v(vm_ret_v), .ret_d(vm_ret_d));
+        dsfd_vm_p2_ep vme (.ck(clk), .rst(rst_n), .c_l0v(vm_ret_v), .c_l0r(c0_r), .c_l0d(vm_ret_d), .t_l0v(l0v), .t_l0d(l0d), .f_l0g(l0g));
         ot_dsrom_mtp_ltx_rc #(.W(604)) l1tx (.clk(clk), .rst_n(rst_n), .c_valid(c1_v), .c_ready(c1_r), .c_data(l1w(s1)),
             .l_valid(l1v), .l_ready(l1g), .l_data(l1d));
         dsfd_coll_p2_ep #(.FWD_C(0), .RET_C(0)) cle (.ck(clk), .rst(rst_n), .c_sv(cs_v), .c_sr(cs_r), .c_sd({IDN0 + starts, IDS}),
@@ -595,4 +604,24 @@ module wv_p2twin #(parameter integer LNK = 0) (input wire clk, rst_n, output reg
             if (received % 80 == 79) begin tx_cyc[received / 80] = cyc + 1 - t0; open <= 0; if (received / 80 == 2) done <= 1'b1; end
         end
     end
+endmodule
+
+// VM memory-return model for P2: every granted request produces exactly one
+// response after the endpoint's contracted RL cycles, even if credit drops.
+module wv_vm_p2_returns #(parameter integer RL = 4) (
+    input wire clk, rst_n, issue_v, issue_r,
+    input wire [603:0] issue_d,
+    output wire ret_v, output wire [603:0] ret_d
+);
+    reg [RL-1:0] valid_q;
+    reg [603:0] data_q [0:RL-1];
+    integer j;
+    always @(posedge clk) begin
+        if (!rst_n) valid_q <= 0;
+        else valid_q <= {valid_q[RL-2:0], issue_v && issue_r};
+        data_q[0] <= issue_d;
+        for (j = 1; j < RL; j = j + 1) data_q[j] <= data_q[j-1];
+    end
+    assign ret_v = valid_q[RL-1];
+    assign ret_d = data_q[RL-1];
 endmodule
