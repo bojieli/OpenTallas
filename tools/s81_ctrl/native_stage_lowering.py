@@ -105,6 +105,8 @@ def lower(request, directory, root=None):
                     m=matrices.get(tuple(key));require(m and m['stage']==stage['stage'],
                             'field fragment assigned to a different physical stage')
             if engine==2:
+                require(op.get('endpoint_codec')=='ot_s81_hc_cseq.arg24.v1',
+                        'HC port needs explicit cseq codec; capture and other native endpoint schemas cannot be inferred')
                 kind=(arg>>20)&7
                 require(kind<=5 and not arg&(1<<23), 'HC arg23 reserved for compiler slot rebasing')
                 require(kind!=5, 'GAIN reload is not a steady-token operation')

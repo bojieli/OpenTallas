@@ -20,7 +20,7 @@ class Lowering(unittest.TestCase):
         pins={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in self.binding.iterdir()}
         endpoint_sha=hashlib.sha256((self.root/'endpoint.sv').read_bytes()).hexdigest()
         def job(ident,engine,arg,**more):
-            return dict(source_id=ident,engine=engine,arg=arg,vm_inputs=[],endpoint_source='endpoint.sv',endpoint_source_sha256=endpoint_sha,**more)
+            return dict(source_id=ident,engine=engine,arg=arg,vm_inputs=[],endpoint_codec='ot_s81_hc_cseq.arg24.v1' if engine==2 else 'field_phase',endpoint_source='endpoint.sv',endpoint_source_sha256=endpoint_sha,**more)
         self.req={'allocation_sha256':pins,'candidate_only':True,'hc_hwords':640,'source_jobs':['field','load','store'],
                   'stages':[{'stage':0,'boot':[{'engine':2,'arg':5<<20}],
                       'operations':[job('load',2,0,h_region_base=0,h_region_rows=640),
@@ -34,6 +34,9 @@ class Lowering(unittest.TestCase):
         self.assertEqual(p['token'],[0x2800000,3,0x2900800]);self.assertEqual(p['boot'],[0x2500000])
         self.assertEqual(r['transfer_descriptor_counts'],{'hload':1,'hstore':1})
         self.assertIsNone(r['native_executed_transfer_count']);self.assertFalse(r['dispatch_eligible'])
+    def test_capture_opcode_is_not_a_cseq_load(self):
+        self.req['stages'][0]['operations'][0]['endpoint_codec']='ot_dsrom_hc_mean_capture'
+        with self.assertRaisesRegex(ValueError,'explicit cseq codec'):self.compile()
     def test_missing_real_stage_refused(self):
         self.req['stages'].pop()
         with self.assertRaisesRegex(ValueError,'every real stage'):self.compile()
