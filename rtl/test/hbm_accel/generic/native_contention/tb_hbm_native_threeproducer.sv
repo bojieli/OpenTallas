@@ -125,7 +125,7 @@ module tb_hbm_native_threeproducer;
       if(qfault||rfault||lfault||parent_fault||bank_status||su_ov)
         $fatal(1,"FATAL actual native hardware queue%h router%h lease%h vehicle%h status%h su%h",qfault,rfault,lfault,vehicle_fault,bank_status,su_ov);
     end
-    integer mirror_checked=0,mirror_posts=0,mirror_commits=0;
+    integer mirror_checked=0,mirror_posts=0,mirror_commits=0,mirror_macro_writes=0;
     integer parked_su_posts=0,owner_handoffs=0,su_owner_edges=0,quant_owner_edges=0,su_write_posts=0,su_write_commits=0,su_read_posts=0,su_read_replies=0;
     reg [11:0] previous_wowner=0;
     always @(posedge clk)if(rst_n)for(integer q=0;q<4;q++)for(integer b=0;b<8;b++)
@@ -154,6 +154,18 @@ module tb_hbm_native_threeproducer;
         end
       end
     end
+    for(genvar mq=0;mq<4;mq++)begin:mirror_trace
+      for(genvar mb=6;mb<8;mb++)begin:bank
+        always @(posedge vmclk)if(rst_n&&mirror_wave&&vehicle.vm.quad[mq].vm.g_bank[mb].u_bank.m_wC)begin
+          $display("THREEPRODUCER_MIRROR_MACRO time%0t q%0d bank%0d row%0d mask%h data%h globalbusy%h",$time,mq,mb,vehicle.vm.quad[mq].vm.g_bank[mb].u_bank.m_wa,vehicle.vm.quad[mq].vm.g_bank[mb].u_bank.m_mC,vehicle.vm.quad[mq].vm.g_bank[mb].u_bank.wdat,vehicle.mirror_busy);$fflush();
+          if(vehicle.vm.quad[mq].vm.g_bank[mb].u_bank.m_wa!=511||vehicle.vm.quad[mq].vm.g_bank[mb].u_bank.m_mC!=8'hff||vehicle.vm.quad[mq].vm.g_bank[mb].u_bank.wdat!==seed(0,4088+mb))$fatal(1,"THREEPRODUCER mirror actual macro pin mismatch q%0d bank%0d",mq,mb);
+          mirror_macro_writes++;
+        end
+      end
+      always @(posedge vmclk)if(rst_n&&mirror_wave&&(vehicle.vm.quad[mq].vm.ack01||vehicle.vm.quad[mq].vm.ack10))begin
+        $display("THREEPRODUCER_MIRROR_ACK time%0t q%0d CWack%b CCWack%b globalbusy%h",$time,mq,vehicle.vm.quad[mq].vm.ack01,vehicle.vm.quad[mq].vm.ack10,vehicle.mirror_busy);$fflush();
+      end
+    end
     task automatic su_run(input integer mode,input integer first,input integer last,input bit wr,input bit rd);
       integer start;
       begin
@@ -169,7 +181,7 @@ module tb_hbm_native_threeproducer;
           $display("THREEPRODUCER_PARKED_POSTS observed%0d before_grant retained_positive_requires_fullcommit",parked_su_posts);
         end
         while((wr && ((dr_seen&su_mask)!=su_mask||(drdn&su_mask)!=su_mask)) || (rd && ((st_seen&su_mask)!=su_mask||(stdn&su_mask)!=su_mask||read_count[0]!=(last-first+1)/8||read_count[1]!=(last-first+1)/8||read_count[2]!=(last-first+1)/8||read_count[3]!=(last-first+1)/8)))begin
-          @(negedge clk);if(cyc-start>100000)$fatal(1,"FATAL actual SU timeout mode%0d seen%h/%h done%h/%h count%0d/%0d/%0d/%0d",mode,st_seen,dr_seen,stdn,drdn,read_count[0],read_count[1],read_count[2],read_count[3]);
+          @(negedge clk);if(cyc-start>su_limit)$fatal(1,"FATAL actual SU timeout mode%0d seen%h/%h done%h/%h count%0d/%0d/%0d/%0d",mode,st_seen,dr_seen,stdn,drdn,read_count[0],read_count[1],read_count[2],read_count[3]);
         end
         $display("THREEPRODUCER_SU_DONE load%0d mode%0d cycle%0d",load_count,mode,cyc);$fflush();
       end
@@ -297,10 +309,39 @@ module tb_hbm_native_threeproducer;
             load_count++;
         end
     endtask
+    task finish_contract;
+      begin
+        if(quant_cycles*10>168*11)$display("THREEPRODUCER_QUANT_PRICE_FAIL cycles%0d immutable168 ratio%0.9f limit1.10",quant_cycles,quant_cycles/168.0);
+        else $display("THREEPRODUCER_QUANT_PRICE_PASS cycles%0d immutable168",quant_cycles);
+        // One real SU_h source posts mirrored beats; all four actual VM copies
+        // are checked through the real SU_h read path after global commit.
+        quant_seed=0;su_mask=4'b0001;su_mirror=4'b0001;mirror_wave=1;
+        su_run(0,32752,32767,1,0);
+        while(owner_w!=0)@(negedge clk);
+        mirror_wave=0;su_mirror=4'hf;su_mask=4'hf;
+        su_run(3,32752,32767,0,1);su_mirror=0;
+        if(mirror_posts!=2||mirror_commits!=2||mirror_checked!=8||mirror_macro_writes!=8)$fatal(1,"THREEPRODUCER mirror count posts%0d commits%0d checked%0d macros%0d",mirror_posts,mirror_commits,mirror_checked,mirror_macro_writes);
+        $display("THREEPRODUCER_GLOBAL_MIRROR PASS actual_source_posts2 global_commits2 destination_sectors8 words64");
+        for(integer waitdrain=0;su_cd!=32'hffffffff||su_vd!=32'hffffffff||quant_drained!=4'hf||drained!=4'hf||owner_r!=0||owner_w!=0;waitdrain++)begin
+          @(negedge clk);if(waitdrain>4000)$fatal(1,"THREEPRODUCER drain timeout SU%h/%h quant%h DMA%h owner%h/%h",su_cd,su_vd,quant_drained,drained,owner_r,owner_w);
+        end
+        if(parked_su_posts==0||owner_handoffs==0||quant_owner_edges==0||su_owner_edges==0)$fatal(1,"THREEPRODUCER missing posted/grant/handoff evidence parked%0d handoff%0d SU%0d quant%0d",parked_su_posts,owner_handoffs,su_owner_edges,quant_owner_edges);
+        if(su_write_posts!=su_write_commits||su_read_posts!=su_read_replies)$fatal(1,"THREEPRODUCER lost actual post W%0d/%0d R%0d/%0d",su_write_posts,su_write_commits,su_read_posts,su_read_replies);
+        $display("THREEPRODUCER_POST_RETENTION PASS write%0d commit%0d read%0d reply%0d parked%0d",su_write_posts,su_write_commits,su_read_posts,su_read_replies,parked_su_posts);
+        $display("THREEPRODUCER_DRAIN PASS parked_SU_posts%0d handoffs%0d SU_owner_edges%0d quant_owner_edges%0d two_group1_owners_DMA_DQ_only",parked_su_posts,owner_handoffs,su_owner_edges,quant_owner_edges);
+      end
+    endtask
+    integer su_limit=100000;
     integer load_count=0;
     initial begin
+        if($test$plusargs("SMOKE"))su_limit=10000;
         repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
         load(3'd0, 64'd8594136608, 64'd0, 12544, 0, 1, 128); // dispatch3 disjoint from all quant vectors
+        if($test$plusargs("SMOKE"))begin
+          finish_contract();
+          $display("THREEPRODUCER_SMOKE PASS actualSU actualQDQ32 actualDMA_dispatch3 quantwords13312 phase%0d production147_not_run",PHASE);
+          $finish;
+        end
         load(3'd4, 64'd4294967296, 64'd0, 0, 0, 1, 4096); // dispatch0
         load(3'd1, 64'd17186160640, 64'd0, 156672, 0, 1, 1536); // dispatch7
         load(3'd1, 64'd17190358016, 64'd0, 156672, 0, 1, 4096); // dispatch26
@@ -451,24 +492,10 @@ module tb_hbm_native_threeproducer;
         if(contention==0||scratch_checks!=147*32)$fatal(1,"FATAL actual contention missing cycles%0d scratch%0d",contention,scratch_checks);
         $display("ACTUAL_VM4 phase=%0d contention=%0d SU_scratch_sectors=%0d",PHASE,contention,scratch_checks);
         $display("THREEPRODUCER_DMA_EXACT PASS records=147 bytes=%0d cycles=%0d price=15674.320143998 ratio=%0.9f",tbytes,tcyc,tcyc/15674.320143998484);
+        if(tcyc>1.10*15674.320143998484)$display("THREEPRODUCER_DMA_PRICE_FAIL cycles%0d immutable15674.320143998 ratio%0.9f limit1.10",tcyc,tcyc/15674.320143998484);
         if($test$plusargs("CHECK_PRICE") && tcyc>1.10*15674.320143998484)
           $fatal(1,"FATAL QWEN_VM4_PRICE cycles=%0d immutable_price=15674.320143998 bound=1.10 ratio=%0.9f",tcyc,tcyc/15674.320143998484);
-        // One real SU_h source posts mirrored beats; all four actual VM copies
-        // are checked through the real SU_h read path after global commit.
-        quant_seed=0;su_mask=4'b0001;su_mirror=4'b0001;mirror_wave=1;
-        su_run(0,32752,32767,1,0);
-        while(owner_w!=0)@(negedge clk);
-        mirror_wave=0;su_mirror=0;su_mask=4'hf;
-        su_run(3,32752,32767,0,1);
-        if(mirror_posts!=2||mirror_commits!=2||mirror_checked!=8)$fatal(1,"THREEPRODUCER mirror count posts%0d commits%0d checked%0d",mirror_posts,mirror_commits,mirror_checked);
-        $display("THREEPRODUCER_GLOBAL_MIRROR PASS actual_source_posts2 global_commits2 destination_sectors8 words64");
-        for(integer waitdrain=0;su_cd!=32'hffffffff||su_vd!=32'hffffffff||quant_drained!=4'hf||drained!=4'hf||owner_r!=0||owner_w!=0;waitdrain++)begin
-          @(negedge clk);if(waitdrain>4000)$fatal(1,"THREEPRODUCER drain timeout SU%h/%h quant%h DMA%h owner%h/%h",su_cd,su_vd,quant_drained,drained,owner_r,owner_w);
-        end
-        if(parked_su_posts==0||owner_handoffs==0||quant_owner_edges==0||su_owner_edges==0)$fatal(1,"THREEPRODUCER missing posted/grant/handoff evidence parked%0d handoff%0d SU%0d quant%0d",parked_su_posts,owner_handoffs,su_owner_edges,quant_owner_edges);
-        if(su_write_posts!=su_write_commits||su_read_posts!=su_read_replies)$fatal(1,"THREEPRODUCER lost actual post W%0d/%0d R%0d/%0d",su_write_posts,su_write_commits,su_read_posts,su_read_replies);
-        $display("THREEPRODUCER_POST_RETENTION PASS write%0d commit%0d read%0d reply%0d parked%0d",su_write_posts,su_write_commits,su_read_posts,su_read_replies,parked_su_posts);
-        $display("THREEPRODUCER_DRAIN PASS parked_SU_posts%0d handoffs%0d SU_owner_edges%0d quant_owner_edges%0d two_group1_owners_DMA_DQ_only",parked_su_posts,owner_handoffs,su_owner_edges,quant_owner_edges);
+        finish_contract();
         $display("THREEPRODUCER_FUNCTIONAL PASS actualSU actualQDQ actualDMA records147+32 quantwords13312 phase%0d",PHASE);
         $finish;
     end

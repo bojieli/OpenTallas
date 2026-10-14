@@ -3,7 +3,7 @@
 Use through ot-run --mem 32 --threads 4; immutable prices are never rewritten.
 """
 import argparse,hashlib,json,os,pathlib,subprocess,sys
-ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='a76c2fede');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='a76c2fede');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');ap.add_argument('--smoke',action='store_true');a=ap.parse_args()
 root=pathlib.Path(__file__).resolve().parents[5];out=pathlib.Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 parent=a.parent;common='64fced1f9';quant='88b62f789';dma='4a49c18bc';vectors='7027d3ab1'
 graph={}
@@ -39,9 +39,12 @@ for name in ['recs.txt','meta.json']+[f'{kind}_{k}.hex' for kind in ['in','out']
  (vecdir/name).write_bytes(data);receipt.append({'path':'vectors/'+name,'source_commit':vectors,'sha256':hashlib.sha256(data).hexdigest()})
 (out/'sourcegraph.json').write_text(json.dumps({'parent':parent,'common':common,'quant':quant,'dma':dma,'vectors':vectors,'phase':a.phase,'mut':a.mut,'clocks_ps':{'engine':833.33325,'VM':1111.111},'immutable_prices':{'quant_per_quarter':168,'DMA147':15674.320143998484},'scope':'actual SU native_h stage/drain; actual quant qpin4; actual DMAfront DQ; DMA peer class2 unallocated, three-group1-owner/fullSUarithmetic not proven; actualSU mirror sweep in fixture','files':receipt},indent=2)+'\n')
 frozen_runner = r'''#!/usr/bin/env python3
-import json,pathlib,os,subprocess,sys
+import json,pathlib,os,subprocess,sys,hashlib
 out=pathlib.Path(__file__).resolve().parent
 meta=json.loads((out/'sourcegraph.json').read_text())
+for entry in meta['files']:
+ path=out/entry['path'] if entry['path'].startswith('vectors/') else out/'src'/entry['path']
+ if hashlib.sha256(path.read_bytes()).hexdigest()!=entry['sha256']:raise SystemExit(f"frozen source mismatch {entry['path']}")
 v=os.environ.get('VERILATOR',str(pathlib.Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
 src=[str(out/'src'/f['path']) for f in meta['files'] if not f['path'].startswith('vectors/')]
 cmd=[v,'--lint-only' if '--lint-only' in sys.argv else '--binary','--timing','-O2','-CFLAGS','-O0','-j','4','-Wno-fatal','-Wno-lint','-Wno-style','--top-module','tb_hbm_native_threeproducer',f"-GMUT={meta['mut']}",f"-GPHASE={meta['phase']}",'--Mdir',str(out/'obj'),'-o','sim']+src
@@ -49,7 +52,9 @@ cmd=[v,'--lint-only' if '--lint-only' in sys.argv else '--binary','--timing','-O
 with (out/'build.log').open('w') as f:rc=subprocess.call(cmd,stdout=f,stderr=subprocess.STDOUT)
 if rc:print((out/'build.log').read_text()[-7000:]);sys.exit(rc)
 if '--lint-only' in sys.argv:sys.exit(0)
-with (out/'run.log').open('w') as f:rc=subprocess.call([str(out/'obj'/'sim'),'+FULL',f'+QDIR={out/"vectors"}'],stdout=f,stderr=subprocess.STDOUT)
+runtime=[str(out/'obj'/'sim'),'+FULL',f'+QDIR={out/"vectors"}']+(['+SMOKE'] if '--smoke' in sys.argv else [])
+(out/'runtime-command.json').write_text(json.dumps(runtime,indent=2)+'\n')
+with (out/'run.log').open('w') as f:rc=subprocess.call(runtime,stdout=f,stderr=subprocess.STDOUT)
 print((out/'run.log').read_text()[-7000:]);sys.exit(rc)
 '''
 (out/'run_frozen.py').write_text(frozen_runner)
@@ -60,5 +65,7 @@ cmd=[v,'--lint-only' if a.lint_only else '--binary','--timing','-O2','-CFLAGS','
 with (out/'build.log').open('w') as f:rc=subprocess.call(cmd,stdout=f,stderr=subprocess.STDOUT)
 if rc:print((out/'build.log').read_text()[-7000:]);sys.exit(rc)
 if a.lint_only:sys.exit(0)
-with (out/'run.log').open('w') as f:rc=subprocess.call([str(out/'obj'/'sim'),'+FULL',f'+QDIR={vecdir}'],stdout=f,stderr=subprocess.STDOUT)
+runtime=[str(out/'obj'/'sim'),'+FULL',f'+QDIR={vecdir}']+(['+SMOKE'] if a.smoke else [])
+(out/'runtime-command.json').write_text(json.dumps(runtime,indent=2)+'\n')
+with (out/'run.log').open('w') as f:rc=subprocess.call(runtime,stdout=f,stderr=subprocess.STDOUT)
 print((out/'run.log').read_text()[-7000:]);sys.exit(rc)
