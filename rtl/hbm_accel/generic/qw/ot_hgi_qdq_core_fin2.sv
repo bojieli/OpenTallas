@@ -47,8 +47,8 @@ module ot_hgi_qdq_core_fin2 #(
     localparam integer QW = $clog2(RQ), SW = $clog2(NB), LW = $clog2(LD), CW = $clog2(LQ + 1);
     reg f_rst, f_rg; reg [7:0] f_rcr; reg f_aidle, f_widle;
     always @(posedge clk) begin f_rst <= rst_n; f_rg <= rg_gnt; f_rcr <= wrq_cr; f_aidle <= i_aidle; f_widle <= i_widle; end
-    wire [5:0] rr_n;                                  // 0 queue, 1 walk, 2 -> assembly leaf, 3 q_dep, 4-5 lane credits
-    ot_rst_relay #(.REGIONS(6)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
+    wire [6:0] rr_n;                                  // 0 queue, 1 walk, 2 -> assembly leaf, 3 q_dep, 4-5 lane credits
+    ot_rst_relay #(.REGIONS(7)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
     assign asm_rst_n = rr_n[2];
     // S3 pin flops (the front child's registered bundle, one edge later), accept strobe and sticky record fault
     reg s3_v, f_s1v, f_nf, f_fin, f_abad, f_wbad, f_fire; reg [7:0] f_pop;
@@ -144,16 +144,17 @@ module ot_hgi_qdq_core_fin2 #(
     (* keep=1 *) wire[RQ-1:0]rm0=hd_mask&{RQ{rt0}},rm1=hd_mask&{RQ{rt1}};
     (* keep=1 *) wire[RQ-1:0]qv_enq=q_v|(qt_mask&{RQ{s3_v}});
     (* keep=1 *) wire[RQ-1:0]qv0=qv_enq&~rm0,qv1=qv_enq&~rm1;
-    (* keep=1 *) wire[QW-1:0]hd0=hd+QW'(rt0),hd1=hd+QW'(rt1);
+    (* keep=1 *) wire[QW-1:0]hd_inc=hd+1'b1;
+    (* keep=1 *) wire[QW-1:0]hd0=rt0?hd_inc:hd,hd1=rt1?hd_inc:hd;
     (* keep=1 *) wire[QW:0]oc0=rt0?occ_dec:occ_inc,oc1=rt1?occ_dec:occ_inc;
     (* keep=1 *) wire[QW:0]fc0=rf0?fin_minus:fin_c,fc1=rf1?fin_c:fin_plus;
     (* keep=1 *) wire[2:0]ret0={rt0&&rt_fault||f_nf,rt0,rt0?ready_dec:ready_inc};
     (* keep=1 *) wire[2:0]ret1={rt1&&rt_fault||f_nf,rt1,rt1?ready_dec:ready_inc};
     generate if(FIN_BYPASS==2)begin:g_deferred_dep
-      always @(posedge clk or negedge rr_n[3])
-        if(!rr_n[3])dep_clear<='0;else dep_clear<=i_fin?rm1:rm0;
+      always @(posedge clk or negedge rr_n[6])
+        if(!rr_n[6])dep_clear<='0;else dep_clear<=i_fin?rm1:rm0;
 `ifndef SYNTHESIS
-      always @(posedge clk)if(rr_n[3])begin
+      always @(posedge clk)if(rr_n[3]&&rr_n[6])begin
         if(|(q_v&dep_clear))$fatal(1,"CORE_FIN2_LIVE_SLOT_REUSED_BEFORE_CLEAR");
         if(s3_v&&|(qt_mask&dep_clear))$fatal(1,"CORE_FIN2_ENQUEUE_SLOT_REUSED_BEFORE_CLEAR");
       end
