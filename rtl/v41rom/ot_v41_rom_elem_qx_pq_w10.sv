@@ -2244,9 +2244,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     wire l0_v, l1_v, l0_f, l1_f;
     wire [31:0] l0_y, l1_y;
     wire [TW-1:0] l0_t, l1_t;
-    if (QH != 0 && FAST != 0 && QPIPE != 0 && QM != 0) begin : g_lane_hardened
-        ot_s81_q_lane_pair_native #(.TW(TW), .QM(QM), .QS(QS), .QZ(QZ), .QZ_NS(QZ_NS)) u_lane (
-            .gclk_ma(gclk_ma), .rst_m(rst_m), .l_v0(l_v0), .l_v1(l_v1), .l_t(l_t), .l_xq0(l_xq0), .l_xq1(l_xq1), .l_xe0(l_xe0), .l_xe1(l_xe1), .w0q(w0q), .w1q(w1q), .we0(we0), .we1(we1), .lcap(lcap), .mz_fp4(mz_fp4), .l_fp4(l_fp4), .l0_v(l0_v), .l1_v(l1_v), .l0_f(l0_f), .l1_f(l1_f), .l0_y(l0_y), .l1_y(l1_y), .l0_t(l0_t), .l1_t(l1_t));
+    if (QH != 0 && FAST != 0 && QPIPE != 0 && QM == 5 && QS == 6) begin : g_lane_hardened
+        ot_s81_q_lane_pair_native #(.TW(TW)) u_lane (
+            .gclk_ma(gclk_ma), .rst_m(rst_m), .l_v0(l_v0), .l_v1(l_v1), .l_t(l_t), .l_xq0(l_xq0), .l_xq1(l_xq1), .l_xe0(l_xe0), .l_xe1(l_xe1), .w0q(w0q), .w1q(w1q), .we0(we0), .we1(we1), .l0_v(l0_v), .l1_v(l1_v), .l0_f(l0_f), .l1_f(l1_f), .l0_y(l0_y), .l1_y(l1_y), .l0_t(l0_t), .l1_t(l1_t));
     end else if (FAST != 0 && QPIPE != 0 && QM != 0) begin : g_l3
         // QM (margin-first, owner rule 2026-10-06): the 17-stage lane ot_v41_bterm5_w10 (+5 cycles, bit-identical)
         // QM >= 4: one more stage at the word mux output (capture -> bank / FP4-FP8 word select -> register), so the
@@ -2631,107 +2631,40 @@ module ot_v41_rom_elem_qx_pq_w10 #(
 `endif
 endmodule
 
-// Physical source leaf: preserves the existing g_l3 register edges and arithmetic.
-// Actual QS6 census: 12,763 clocked instances per macro's pair.
-// Parent wiring, independent root delivery, assigned geometry and closure remain owed.
+// Fixed production QS6/QM5 physical source leaf: every port is used in this shape.
+// The existing word-mux input register and both 17-stage lanes keep their edges.
+// Parent independent clock delivery and actual physical closure are still owed.
 (* keep_hierarchy = 1 *)
-module ot_s81_q_lane_pair_native #(parameter integer TW=16, QM=5, QS=6, QZ=1, QZ_NS=8)(
- input wire gclk_ma, rst_m, l_v0, l_v1, l_fp4,
+module ot_s81_q_lane_pair_native #(parameter integer TW=16)(
+ input wire gclk_ma, rst_m, l_v0, l_v1,
  input wire [TW-1:0] l_t,
  input wire [255:0] l_xq0,l_xq1,w0q,w1q,
  input wire [9:0] l_xe0,l_xe1,
  input wire signed [9:0] we0,we1,
- input wire [273:0] lcap,
- input wire [QZ_NS-1:0] mz_fp4,
  output wire l0_v,l1_v,l0_f,l1_f,
  output wire [31:0] l0_y,l1_y,
  output wire [TW-1:0] l0_t,l1_t
 );
- function automatic [255:0] nib(input [127:0] c);
-  integer i; begin nib=256'd0; for(i=0;i<32;i=i+1) nib[8*i +:4]=c[4*i +:4]; end
- endfunction
- generate
-        // QM (margin-first, owner rule 2026-10-06): the 17-stage lane ot_v41_bterm5_w10 (+5 cycles, bit-identical)
-        // QM >= 4: one more stage at the word mux output (capture -> bank / FP4-FP8 word select -> register), so the
-        // macro-to-lane crossing is two register-to-register hops (Z24b post-CTS: cap -> mux -> lane input -31 ps at 770)
-        wire              p_v0, p_v1;
-        wire [TW-1:0]     p_t;
-        wire [255:0]      p_xq0, p_xq1, p_w0q, p_w1q;
-        wire [9:0]        p_xe0, p_xe1;
-        wire signed [9:0] p_we0, p_we1;
-        // QM >= 6 (Z26a post-CTS at 770: FP4 select copy -> 32-bit word-mux slice -> r_w0q -34.9 ps, a long wire from
-        // the issue control's QZ_NS copies): the capture word, x operand and control registered once more (+1 lane
-        // cycle) with 32 kept copies of the FP4 select (one per lane, each driving its 8-bit mux slice), then the word
-        // mux in front of g_pl
-        wire              s_v0, s_v1;
-        wire [TW-1:0]     s_t;
-        wire [255:0]      s_xq0, s_xq1, s_w0q, s_w1q;
-        wire [9:0]        s_xe0, s_xe1;
-        wire signed [9:0] s_we0, s_we1;
-        if (QM >= 6) begin : g_p0
-            reg              r0_v0, r0_v1;
-            reg [TW-1:0]     r0_t;
-            reg [273:0]      r0_cap;
-            reg [255:0]      r0_xq0, r0_xq1;
-            reg [9:0]        r0_xe0, r0_xe1;
-            always @(posedge gclk_ma or negedge rst_m) if (!rst_m) begin r0_v0 <= 1'b0; r0_v1 <= 1'b0; end
-                                                       else begin r0_v0 <= l_v0; r0_v1 <= l_v1; end
-            always @(posedge gclk_ma) begin
-                r0_t <= l_t; r0_cap <= lcap; r0_xq0 <= l_xq0; r0_xq1 <= l_xq1; r0_xe0 <= l_xe0; r0_xe1 <= l_xe1;
-            end
-            wire [31:0] f4;
-            for (genvar fk = 0; fk < 32; fk = fk + 1) begin : g_f4
-`ifdef QM6_MUTANT_F4
-                // negative control: lane 5's FP4 select copy inverted
-                ot_v41_kreg #(.W(1)) u_f (.clk(gclk_ma), .arst_n(1'b1), .d(((QZ != 0) ? mz_fp4[(fk * QZ_NS) / 32] : l_fp4) ^ (fk == 5)), .q(f4[fk]));
-`else
-                ot_v41_kreg #(.W(1)) u_f (.clk(gclk_ma), .arst_n(1'b1), .d((QZ != 0) ? mz_fp4[(fk * QZ_NS) / 32] : l_fp4), .q(f4[fk]));
-`endif
-            end
-            wire [255:0] w0n = nib(r0_cap[127:0]);
-            for (genvar fk = 0; fk < 32; fk = fk + 1) begin : g_wm
-                assign s_w0q[8*fk +: 8] = f4[fk] ? w0n[8*fk +: 8] : r0_cap[8*fk +: 8];
-            end
-            wire [7:0] w0e6 = f4[0] ? r0_cap[135:128] : r0_cap[263:256];
-            assign s_w1q = nib(r0_cap[263:136]);
-            assign s_we0 = $signed({2'b00, w0e6}) - 10'sd127;
-            assign s_we1 = $signed({2'b00, r0_cap[271:264]}) - 10'sd127;
-            assign s_v0 = r0_v0; assign s_v1 = r0_v1; assign s_t = r0_t;
-            assign s_xq0 = r0_xq0; assign s_xq1 = r0_xq1; assign s_xe0 = r0_xe0; assign s_xe1 = r0_xe1;
-        end else begin : g_np0
-            assign s_v0 = l_v0; assign s_v1 = l_v1; assign s_t = l_t; assign s_xq0 = l_xq0; assign s_xq1 = l_xq1;
-            assign s_xe0 = l_xe0; assign s_xe1 = l_xe1; assign s_w0q = w0q; assign s_w1q = w1q;
-            assign s_we0 = we0; assign s_we1 = we1;
-        end
-        if (QM >= 4) begin : g_pl
-            reg              r_v0, r_v1;
-            reg [TW-1:0]     r_t;
-            reg [255:0]      r_xq0, r_xq1, r_w0q, r_w1q;
-            reg [9:0]        r_xe0, r_xe1;
-            reg signed [9:0] r_we0, r_we1;
-            always @(posedge gclk_ma or negedge rst_m) if (!rst_m) begin r_v0 <= 1'b0; r_v1 <= 1'b0; end
-                                                    else begin r_v0 <= s_v0; r_v1 <= s_v1; end
-            always @(posedge gclk_ma) begin
-                r_t <= s_t; r_xq0 <= s_xq0; r_xq1 <= s_xq1; r_xe0 <= s_xe0; r_xe1 <= s_xe1;
-                r_w0q <= s_w0q; r_w1q <= s_w1q; r_we0 <= s_we0; r_we1 <= s_we1;
-            end
-            assign p_v0 = r_v0; assign p_v1 = r_v1; assign p_t = r_t; assign p_xq0 = r_xq0; assign p_xq1 = r_xq1;
-            assign p_xe0 = r_xe0; assign p_xe1 = r_xe1; assign p_w0q = r_w0q; assign p_w1q = r_w1q;
-            assign p_we0 = r_we0; assign p_we1 = r_we1;
-        end else begin : g_npl
-            assign p_v0 = l_v0; assign p_v1 = l_v1; assign p_t = l_t; assign p_xq0 = l_xq0; assign p_xq1 = l_xq1;
-            assign p_xe0 = l_xe0; assign p_xe1 = l_xe1; assign p_w0q = w0q; assign p_w1q = w1q;
-            assign p_we0 = we0; assign p_we1 = we1;
-        end
+ reg r_v0,r_v1;
+ reg [TW-1:0] r_t;
+ reg [255:0] r_xq0,r_xq1,r_w0q,r_w1q;
+ reg [9:0] r_xe0,r_xe1;
+ reg signed [9:0] r_we0,r_we1;
+ always @(posedge gclk_ma or negedge rst_m) if (!rst_m) begin r_v0<=1'b0; r_v1<=1'b0; end
+  else begin r_v0<=l_v0; r_v1<=l_v1; end
+ always @(posedge gclk_ma) begin
+  r_t<=l_t; r_xq0<=l_xq0; r_xq1<=l_xq1; r_xe0<=l_xe0; r_xe1<=l_xe1;
+  r_w0q<=w0q; r_w1q<=w1q; r_we0<=we0; r_we1<=we1;
+ end
 `ifdef S81_QH_MUTANT_LANE0_VALID
-        wire lane0_valid = 1'b0;
+ wire lane0_valid=1'b0;
 `else
-        wire lane0_valid = p_v0;
+ wire lane0_valid=r_v0;
 `endif
-        ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS >= 3 ? 3 : QS)) u_l0 (.clk(gclk_ma), .rst_n(rst_m), .v(lane0_valid), .fp4(p_t[0]),
-            .xq(p_xq0), .xe(p_xe0), .wq(p_w0q), .we(p_we0), .tag(p_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS >= 3 ? 3 : QS)) u_l1 (.clk(gclk_ma), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
-            .xq(p_xq1), .xe(p_xe1), .wq(p_w1q), .we(p_we1), .tag(p_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
-
- endgenerate
+ ot_v41_bterm5_w10 #(.TW(TW),.FPC(32),.P0B(3)) u_l0
+  (.clk(gclk_ma),.rst_n(rst_m),.v(lane0_valid),.fp4(r_t[0]),.xq(r_xq0),.xe(r_xe0),
+   .wq(r_w0q),.we(r_we0),.tag(r_t),.ov(l0_v),.y(l0_y),.f(l0_f),.otag(l0_t));
+ ot_v41_bterm5_w10 #(.TW(TW),.P0B(3)) u_l1
+  (.clk(gclk_ma),.rst_n(rst_m),.v(r_v1),.fp4(1'b1),.xq(r_xq1),.xe(r_xe1),
+   .wq(r_w1q),.we(r_we1),.tag(r_t),.ov(l1_v),.y(l1_y),.f(l1_f),.otag(l1_t));
 endmodule
