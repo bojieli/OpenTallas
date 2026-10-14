@@ -331,6 +331,9 @@ EOS
 chmod +x $R/bin/docker; export PATH=$R/bin:$PATH
 cd $R/src && echo {COMMIT} > SOURCE_COMMIT
 T0=$(date +%s)
+# the gate builds the tree at the ROUTE's corner (ref_tile.py ROUTE_PREFIX: setup at TT, owner option B): a cluster spine
+# balanced at SS against the children's TT insertion targets measured a mixed-corner spread (dsfd_sp_pq_c, dscoll_ces0_sp)
+export OT_ORFS_CORNER_OVERRIDE=TC
 SRC=$R/src SYNTH_TIMEOUT={CAP} bash tools/ref_tile/ref_route.sh {KIT}/kit.env gate $R/routes floorplan; FRC=$?
 echo "GATE_FLOW_RC=$FRC GATE_FLOW_S=$(( $(date +%s) - T0 ))"
 C=$R/routes/gate/work/orfs; B=$(ls -d $C/results/asap7/*/base 2>/dev/null | head -1)

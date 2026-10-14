@@ -124,6 +124,24 @@ class Abut(unittest.TestCase):
         s = {"pins": {"S": ["ck"]}}
         return [m for sev, chk, m, _ in RT.floorplan_checks(s, 400.0, 400.0, blocks, None) if chk == "channel"]
 
+    def test_abut_plan_is_probe_only(self):
+        """abut_plan admits a planned narrow channel as WARN only on a probe cluster (job.hold_merge); without the
+        probe marker it FAILs itself and the 20-um channel rule still fires"""
+        w = RT.read_view_lef(self.V)["W"]
+        bl = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + w + 4.32, 100.0)]
+        ab = {"channel_um": 4.32, "edge_um": 20.0, "why": "lane bay probe"}
+        probe = {"kind": "cluster", "pins": {"S": ["ck"]}, "abut_plan": ab, "job": {"hold_merge": "probe"}}
+        r = RT.floorplan_checks(probe, 400.0, 400.0, bl, None)
+        self.assertEqual([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"], [])
+        self.assertEqual([sev for sev, c, _, _ in r if c == "abut_plan"], ["WARN"])
+        merge = {"kind": "cluster", "pins": {"S": ["ck"]}, "abut_plan": ab, "job": {}}
+        r = RT.floorplan_checks(merge, 400.0, 400.0, bl, None)
+        self.assertEqual([sev for sev, c, _, _ in r if c == "abut_plan"], ["FAIL"])
+        self.assertEqual(len([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"]), 1)
+        tight = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + w + 2.16, 100.0)]        # under the declared channel
+        r = RT.floorplan_checks(probe, 400.0, 400.0, tight, None)
+        self.assertEqual(len([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"]), 1)
+
     def test_stack_abutted(self):
         h = RT.read_view_lef(self.V)["H"]
         self.assertEqual(self.chan([self.blk(0, 100.0, 100.0), self.blk(1, 100.0, 100.0 + h + 0.024)]), [])

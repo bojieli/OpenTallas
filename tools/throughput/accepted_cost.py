@@ -16,6 +16,10 @@ its price and everything else left at price:
                                 record of the op instead).  An op the schedule overlaps costs 0.
   rate classes                  a credit / link class that moves W words a token at r words a cycle: W / r_measured
                                 - W / r_price cycles, added to the token when the class is on the critical path.
+  unpriced serial jobs          a job the token path does not hold at all (price 0) that the per-layer die run shows
+                                serial on the critical path: --price 0 --node-delta <cycles> on the nodes it delays.
+                                The row has no unit ratio (null); it is judged by its end-to-end loss alone and its
+                                structural removal is named in the note.
 
 A design with several workloads (s81: ar + mtp, r25gq: ds_ar + qwen_ar) is charged its worst workload per unit.
 
@@ -233,6 +237,8 @@ def compute(design, *, match=None, op=None, price=None, measured=None, ratio=Non
 
 
 def unit_ratio(price, measured, rate=False):
+    if not price:
+        return None                 # an unpriced serial job: there is no price to hold a ratio against
     return round((price / measured) if rate else (measured / price), 4)
 
 
@@ -308,7 +314,7 @@ def propose(led, row):
 
 def refusal(led, row, root=ROOT):
     """Why this row may not be marked accepted (None = it may)."""
-    if row["unit_ratio"] <= QUALIFY:
+    if row["unit_ratio"] is not None and row["unit_ratio"] <= QUALIFY:
         return f"unit ratio {row['unit_ratio']} is within {QUALIFY}: it qualifies, no acceptance is needed"
     if row["e2e_loss_pct"] > UNIT_LIMIT:
         return f"end-to-end loss {row['e2e_loss_pct']} % is over the {UNIT_LIMIT} % unit limit"
@@ -355,6 +361,8 @@ def check(led, root=ROOT):
             bad.append(f"unknown design {r['design']}")
         if r["status"] not in ("proposed", "accepted"):
             bad.append(f"{r['design']} {r['unit']}: status {r['status']!r}")
+        if r.get("unit_ratio") is None and r.get("price"):
+            bad.append(f"{r['design']} {r['unit']}: a priced row without a unit ratio")
         if abs(r["e2e_loss_pct"] - max(v["e2e_loss_pct"] for v in r["per_workload"].values())) > 1e-6:
             bad.append(f"{r['design']} {r['unit']}: e2e loss is not its worst workload")
     return bad
@@ -364,7 +372,8 @@ def table(led):
     out = ["| design | unit | measured | price | unit ratio | e2e loss % | binding workload | within 5 % | grade | status |",
            "|---|---|---|---|---|---|---|---|---|---|"]
     for r in led["rows"]:
-        out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price']} | {r['unit_ratio']} | "
+        out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price'] or 'unpriced'} | "
+                   f"{r['unit_ratio'] if r['unit_ratio'] is not None else '-'} | "
                    f"{r['e2e_loss_pct']:.3f} | {r['binding_workload']} | {'yes' if r['within_unit_limit'] else 'NO'} | "
                    f"{r['evidence_grade']} | {r['status']} |")
     out.append("")

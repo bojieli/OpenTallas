@@ -8,6 +8,39 @@
  "rows": [
   {
    "design": "qwen_rom",
+   "unit": "DIE.RELAY (r21 die relay stations as wire-stage counts: BD 41->77, TWS 38->93, ORD 7->10, link 339->365; increment a layer)",
+   "group": "DIE.RELAY",
+   "measured": 613.0,
+   "price": 428.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.4322,
+   "e2e_loss_pct": 2.601,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 256091.0,
+     "added_cycles": 6660.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6660.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 2.601
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/qwen_layer_tput_1013/die_terms.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-13",
+   "status": "proposed",
+   "note": "per-layer TP4 vehicle qB_dierelay (source 68dd9fcf7, exact 0/12 X 0/12 KV, compensation mutant qE fails with 16,384 X mismatches): L1 6,093 against the priced 5,908 = 1.0313 as a LAYER (qualifies per layer); the relay increment itself is 613 against 428 priced = 1.432x, +185 cycles on each of the 36 layers (L0 measured +92: charged 185, upper bound). Combined with the issue relays (qC 6,716 / 6,531 = 1.0283) the excess is the same 185: it is all in the die relays. The row counts that cost against the design total; nothing is re-priced. TP4 r21 stage counts: the TP8 floorplan's counts replace them when the die lead posts relay_token_cost for TP8 (pair check so far: +939 cycles a token at most, 0.43 %, spine_local / stack_local candidates)"
+  },
+  {
+   "design": "qwen_rom",
    "unit": "KV-end d2d credit class 6 (HCTL, 4 credits)",
    "group": "KV_END.class6",
    "measured": 0.4,
@@ -65,7 +98,101 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-13",
    "status": "proposed",
-   "note": "per-layer TP4 vehicle with QROM_XVM 17 / QROM_BD 57 (40 wire stages kept): L0 / L1 / L2 6,231 / 5,576 / 5,576 against 6,151 / 5,480 / 5,480, exact, compensation mutant fails; +96 cycles a layer (+80 on L0, +16 head bound) = 3,456 cycles a token. unit = the VM x-read latency on r21 (XVM 22 -> 38). +14 (XPR 10) measures 1.198 %, +10 0.859 %. Coordinator 10-13 12:25: acceptable; PROPOSED at the plan's upper value until the VM stream posts the placed XPR / XQR (asked in el1013-qwen-vm.log). TP4 reference composition, not a native TP8 run"
+   "note": "per-layer TP4 vehicle with QROM_XVM 17 / QROM_BD 57 (40 wire stages kept): L0 / L1 / L2 6,231 / 5,576 / 5,576 against 6,151 / 5,480 / 5,480, exact, compensation mutant fails; +96 cycles a layer (+80 on L0, +16 head bound) = 3,456 cycles a token. unit = the VM x-read latency on r21 (XVM 22 -> 38). +14 (XPR 10) measures 1.198 %, +10 0.859 %. Coordinator 10-13 12:25: acceptable; PROPOSED at the plan's upper value until the VM stream posts the placed XPR / XQR (asked in el1013-qwen-vm.log). TP4 reference composition, not a native TP8 run | VM4 10-13 18:50: XPR 12 is now a TILE-LEVEL placed number (results/arch/qwen_tp8_1012/vm_bay_tiles_claude.json: 4,096 / 4,096 lanes at depth 12 in whole closed tiles, 771 of 960 slots). XQR is NOT placed and cannot be in the v2 rectangle: the x output side as built (x_q 65,536 b, element-major, through 64 face leaves to ot_qfd_vm_xroot) needs 128 tile slots a stage and the band has 114 free, and die contract v5 holds no consumer for the 65,536 b (only the two 508-b head-root words). The row stays PROPOSED at +16 = the upper value while XQR <= 2; a plane-major x output without the face stage would be +13 / +14 (measured figure 1.198 % at +14). Open with the die lead (el1011-qwen-tp8.log VM4)"
+  },
+  {
+   "design": "s81",
+   "unit": "HC.COEF (coefficient-row load in front of each NORM, unpriced serial HC job)",
+   "group": "HC.COEF",
+   "measured": 17.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.164,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 830226.4,
+     "added_cycles": 1360.0,
+     "runs_per_token": 80,
+     "critical_runs": 80,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1360.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.164
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1179148.1,
+     "added_cycles": 1632.0,
+     "runs_per_token": 86,
+     "critical_runs": 86,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 1462.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 34.0,
+     "e2e_loss_pct": 0.138
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_layer_tput_1013/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-13",
+   "status": "proposed",
+   "note": "per-layer die run at production shape: COEF 17 cycles, serial in front of every NORM (hc_pre node), with the --coef-split program (COEF-a reads the previous block's pre row; COEF-b after the NORM is off the NORM's start). The die program and the coefficient producers' row map MUST be written as --coef-split: the single-COEF program of the first bench serialises the block's whole coefficient chain in front of its NORM (1,555-1,560 cycles, 11.7 % AR) and is not accepted"
+  },
+  {
+   "design": "s81",
+   "unit": "HC.H_XFER (H_STORE at the stage exit + H_LOAD at the stage entry, unpriced serial HC jobs, per h transfer)",
+   "group": "HC.H_XFER",
+   "measured": 723.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 3.453,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 858509.4,
+     "added_cycles": 29643.0,
+     "runs_per_token": 41,
+     "critical_runs": 41,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 29643.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 3.453
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1210774.1,
+     "added_cycles": 33258.0,
+     "runs_per_token": 41,
+     "critical_runs": 41,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 29643.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 723.0,
+     "e2e_loss_pct": 2.747
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/s81_layer_tput_1013/record.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-13",
+   "status": "proposed",
+   "note": "per-layer die run tb_s81_die_layer at production shape (NG 256, hierarchical HC slab, nominal link; L0 / L2 / L14 bit-exact, mut_hc + mut_coll fail): H_LOAD 336 + H_STORE 387 = 723 cycles, serial with the layer (H_LOAD starts when all 640 hidden rows landed and the NORM waits for it; H_STORE runs after the last POST and before the hop). The token path holds no node for them (the hop node is the link only). Counted on the 41 layer-boundary h transfers of a token (40 x substage_hop0 + head.hop). EXPOSURE: every stage hop carries the 40,976-B h payload; if the 17 placed mid-layer hops (substage_hop1) also store / load it is 4.816 % AR, and on all 120 stage hops of the mapping about 9.5 %: over the unit limit. STRUCTURAL REMOVAL (named, RTL): stream H_LOAD on the rows as the hop delivers them (the link takes 652 cycles for the payload, H_LOAD reads two rows a cycle) and cut H_STORE through to the link (POST results leave on the hop as they are written); both hide the job behind the hop that is already priced"
   },
   {
    "design": "s81",
@@ -764,20 +891,20 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 0,
-   "proposed_pct": 1.367,
-   "accepted_plus_proposed_pct": 1.367,
+   "proposed_pct": 3.968,
+   "accepted_plus_proposed_pct": 3.968,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 2,
+   "proposed_rows": 3,
    "headroom_pct": 15.0
   },
   "s81": {
    "accepted_pct": 3.286,
-   "proposed_pct": 3.566,
-   "accepted_plus_proposed_pct": 6.852,
+   "proposed_pct": 7.183,
+   "accepted_plus_proposed_pct": 10.469,
    "limit_pct": 15.0,
    "accepted_rows": 5,
-   "proposed_rows": 1,
+   "proposed_rows": 3,
    "headroom_pct": 11.714
   },
   "r25gq": {
