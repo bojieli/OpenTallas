@@ -43,7 +43,10 @@ module ot_s81_hc_ccf #(
     wire rs_n = rsr[1];
     localparam integer YB = $clog2(YD + FP);
     localparam integer YDC = 1 << YB;
-    assign ch_rst = rs_n;
+    // Keep the outgoing reset relay at its S-face pin rather than sharing the
+    // interior reset driver that fans out to the FIFO and transaction state.
+    // Both second-stage flops consume rsr[0], preserving the reset epoch.
+    ot_s81_hc_ccf_keep_ff u_reset_pin(.clk(sk),.rst_n(1'b1),.d(rsr[0]),.q(ch_rst));
     // One synthesis-preserved capture per face bit. Distributed local POST copies consume
     // this stage rather than the die port. The matching forward pad gives up one stage,
     // so chain issue, FIFO pop, return and completion keep their production cycle counts.
