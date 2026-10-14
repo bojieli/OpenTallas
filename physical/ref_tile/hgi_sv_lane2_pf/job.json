@@ -1,5 +1,5 @@
 {
- "name": "hgi_sv_lane2_pf-r2-prefetch-63c91fc76",
+ "name": "hgi_sv_lane2_pf-r2-prefetch-ad7cf4f74",
  "block": "ot_hgi_sv_lane2",
  "ref_tile": true,
  "owner": "Claude:el1013-hbm-redesign-suvop",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-redesign-suvop",
-  "commit": "63c91fc7653c9d509e692a0825ea63f1c4ba82a1",
+  "commit": "ad7cf4f74f4291b6260641135de8e7d565d3f757",
   "extra_paths": [
    "compiler",
    "results/arch/hgi_sim_20261009/conformance",
@@ -116,7 +116,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_sv_lane2_pf/hgi_sv_lane2_pf-r2-prefetch-63c91fc76"
+   "to": "results/rtl/ref_tile/hgi_sv_lane2_pf/hgi_sv_lane2_pf-r2-prefetch-ad7cf4f74"
   }
  ],
  "cycles_added": 0,
