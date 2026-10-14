@@ -1,14 +1,14 @@
 {
- "name": "qkd_astk_ep-ks1-53707518d",
+ "name": "qkd_astk_ep-ks2-COMMIT",
  "block": "qkd_astk_ep",
  "ref_tile": true,
- "owner": "Claude:el1013-qwen-kvstrips",
+ "owner": "Claude:el1014-qwen-kvsys-elements",
  "purpose": "Qwen ROM TP8 (track B) aggregator strip: one row engine's stack slice qkd_astk_ep (8 a strip): the qkd_ectl port (so / si), the engine's scores (2 x 256x128, one a pass, by {k, gam}), its e rows (4 x 64x128, one 512-b row a chunk), the chunk chain's adder stage (the golden's sequential chunk sum walks the slices j = 0..7, token-aligned), M, the command / e-row bus taps, the return chain (score count, running maximum), the column's lanes.  ~11.7k sinks.",
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
-  "branch": "claude/el1013-qwen-kvstrips",
-  "commit": "53707518d",
+  "branch": "claude/qwen-kvsys-el-1014",
+  "commit": "COMMIT",
   "extra_paths": [
    "configs/hardware",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -117,7 +117,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_astk_ep/qkd_astk_ep-ks1-53707518d"
+   "to": "results/rtl/ref_tile/qkd_astk_ep/qkd_astk_ep-ks2-COMMIT"
   }
  ],
  "cycles_added": 0,
