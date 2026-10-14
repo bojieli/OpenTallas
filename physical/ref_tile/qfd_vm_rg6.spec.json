@@ -1,0 +1,1935 @@
+{
+ "name": "qfd_vm_rg6",
+ "top": "ot_qfd_vm_rg6",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv",
+  "rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv",
+  "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv",
+  "rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv",
+  "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv",
+  "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv",
+  "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/physical/ot_qwen_tree_delay.sv",
+  "rtl/physical/ot_qwen_tree_delay_tiles.sv"
+ ],
+ "params": {},
+ "clock": "entries",
+ "clock_ports": [
+  "ck_c0",
+  "ck_c1",
+  "ck_c2",
+  "ck_c3",
+  "ck_c4",
+  "ck_c5",
+  "ck_c6",
+  "ck_c7",
+  "ck_c8",
+  "ck_c9",
+  "ck_c10",
+  "ck_c11",
+  "ck_c12",
+  "ck_c13",
+  "ck_c14",
+  "ck_c15",
+  "ck_c16",
+  "ck_c17",
+  "ck_c18",
+  "ck_c19",
+  "ck_c20",
+  "ck_c21",
+  "ck_c22",
+  "ck_c23",
+  "ck_c24",
+  "ck_c25",
+  "ck_c26",
+  "ck_c27",
+  "ck_c28",
+  "ck_c29",
+  "ck_c30",
+  "ck_c31",
+  "ck_c32",
+  "ck_c33",
+  "ck_c34",
+  "ck_c35",
+  "ck_c36",
+  "ck_c37",
+  "ck_c38",
+  "ck_c39",
+  "ck_c40",
+  "ck_c41",
+  "ck_c42",
+  "ck_c43",
+  "ck_c44",
+  "ck_c45",
+  "ck_c46",
+  "ck_c47",
+  "ck_c48",
+  "ck_c49",
+  "ck_c50",
+  "ck_c51",
+  "ck_c52",
+  "ck_c53",
+  "ck_c54",
+  "ck_c55",
+  "ck_c56",
+  "ck_c57",
+  "ck_c58",
+  "ck_c59",
+  "ck_c60",
+  "ck_c61",
+  "ck_c62",
+  "ck_c63",
+  "ck_c64",
+  "ck_c65",
+  "ck_c66",
+  "ck_c67",
+  "ck_c68",
+  "ck_c69",
+  "ck_c70",
+  "ck_c71",
+  "ck_t0",
+  "ck_t1",
+  "ck_t2",
+  "ck_t3",
+  "ck_t4",
+  "ck_t5",
+  "ck_t6",
+  "ck_t7",
+  "ck_t8",
+  "ck_t9",
+  "ck_t10",
+  "ck_t11",
+  "ck_t12",
+  "ck_t13",
+  "ck_t14",
+  "ck_t15",
+  "ck_t16",
+  "ck_t17",
+  "ck_t18",
+  "ck_t19",
+  "ck_t20",
+  "ck_t21",
+  "ck_t22",
+  "ck_t23",
+  "ck_t24",
+  "ck_t25",
+  "ck_t26",
+  "ck_t27",
+  "ck_t28",
+  "ck_t29",
+  "ck_t30",
+  "ck_t31",
+  "ck_t32",
+  "ck_t33",
+  "ck_t34",
+  "ck_t35",
+  "ck_t36",
+  "ck_t37",
+  "ck_t38",
+  "ck_t39",
+  "ck_t40",
+  "ck_t41",
+  "ck_t42",
+  "ck_t43",
+  "ck_t44",
+  "ck_t45",
+  "ck_t46",
+  "ck_t47",
+  "ck_t48",
+  "ck_t49",
+  "ck_t50",
+  "ck_t51",
+  "ck_t52",
+  "ck_t53",
+  "ck_t54",
+  "ck_t55",
+  "ck_t56",
+  "ck_t57",
+  "ck_t58",
+  "ck_t59",
+  "ck_t60",
+  "ck_t61",
+  "ck_t62",
+  "ck_t63",
+  "ck_t64",
+  "ck_t65",
+  "ck_t66",
+  "ck_t67",
+  "ck_t68",
+  "ck_t69",
+  "ck_t70",
+  "ck_t71",
+  "ck_t72",
+  "ck_t73",
+  "ck_t74",
+  "ck_t75",
+  "ck_t76"
+ ],
+ "clock_port": "ck_c0",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "hard_define": "OT_QFD_VM_HARD",
+ "defines": [
+  "OT_QFD_VM_HARD",
+  "OT_QFD_VM_DELAY1_MOD=ot_qwen_tree_delay1_t",
+  "OT_QFD_VM_DELAY2_MOD=ot_qwen_tree_delay2_t"
+ ],
+ "outline": {
+  "w": 1231.2,
+  "h": 1080.0,
+  "exact": true
+ },
+ "child_lattice_um": 2.16,
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_vm_rr4_t/views/ot_qfd_vm_rr4_t",
+   "count": 1,
+   "inst": "u_core.g_r4[0].u_r4",
+   "at": [
+    453.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_rr4_t/views/ot_qfd_vm_rr4_t",
+   "count": 1,
+   "inst": "u_core.g_r4[1].u_r4",
+   "at": [
+    902.88,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_rr2_t/views/ot_qfd_vm_rr2_t",
+   "count": 1,
+   "inst": "u_core.u_r2",
+   "at": [
+    779.76,
+    399.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[0].g_wd.u_wd",
+   "at": [
+    69.12,
+    71.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[0].u_bt",
+   "at": [
+    90.72,
+    10.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[0].u_bc",
+   "at": [
+    313.2,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[0].g_bx.u_bx",
+   "at": [
+    313.2,
+    71.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[0].u_fifo",
+   "at": [
+    328.32,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[1].u_fifo",
+   "at": [
+    328.32,
+    140.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[1].g_wd.u_wd",
+   "at": [
+    69.12,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[1].u_bt",
+   "at": [
+    90.72,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[1].u_bc",
+   "at": [
+    313.2,
+    228.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[1].g_bx.u_bx",
+   "at": [
+    313.2,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[2].u_fifo",
+   "at": [
+    328.32,
+    228.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[3].u_fifo",
+   "at": [
+    328.32,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[2].g_wd.u_wd",
+   "at": [
+    69.12,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[2].u_bt",
+   "at": [
+    90.72,
+    421.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[2].u_bc",
+   "at": [
+    313.2,
+    434.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[2].g_bx.u_bx",
+   "at": [
+    313.2,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[4].u_fifo",
+   "at": [
+    328.32,
+    434.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[5].u_fifo",
+   "at": [
+    328.32,
+    550.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[3].g_wd.u_wd",
+   "at": [
+    69.12,
+    686.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[3].u_bt",
+   "at": [
+    90.72,
+    626.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[3].u_bc",
+   "at": [
+    313.2,
+    639.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[3].g_bx.u_bx",
+   "at": [
+    313.2,
+    686.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[6].u_fifo",
+   "at": [
+    328.32,
+    639.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[7].u_fifo",
+   "at": [
+    328.32,
+    756.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[4].g_wd.u_wd",
+   "at": [
+    518.4,
+    71.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[4].u_bt",
+   "at": [
+    540.0,
+    10.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[4].u_bc",
+   "at": [
+    762.48,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[4].g_bx.u_bx",
+   "at": [
+    762.48,
+    71.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[8].u_fifo",
+   "at": [
+    777.6,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[9].u_fifo",
+   "at": [
+    777.6,
+    140.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[5].g_wd.u_wd",
+   "at": [
+    518.4,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[5].u_bt",
+   "at": [
+    540.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[5].u_bc",
+   "at": [
+    762.48,
+    228.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[5].g_bx.u_bx",
+   "at": [
+    762.48,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[10].u_fifo",
+   "at": [
+    777.6,
+    228.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[11].u_fifo",
+   "at": [
+    777.6,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[6].g_wd.u_wd",
+   "at": [
+    518.4,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[6].u_bt",
+   "at": [
+    540.0,
+    421.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[6].u_bc",
+   "at": [
+    762.48,
+    434.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[6].g_bx.u_bx",
+   "at": [
+    762.48,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[12].u_fifo",
+   "at": [
+    777.6,
+    434.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[13].u_fifo",
+   "at": [
+    777.6,
+    550.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[7].g_wd.u_wd",
+   "at": [
+    518.4,
+    686.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[7].u_bt",
+   "at": [
+    540.0,
+    626.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[7].u_bc",
+   "at": [
+    762.48,
+    639.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[7].g_bx.u_bx",
+   "at": [
+    762.48,
+    686.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[14].u_fifo",
+   "at": [
+    777.6,
+    639.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[15].u_fifo",
+   "at": [
+    777.6,
+    756.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t",
+   "count": 1,
+   "inst": "u_core.g_su_leaf[0].u_su",
+   "at": [
+    1134.0,
+    250.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t",
+   "count": 1,
+   "inst": "u_core.g_su_leaf[1].u_su",
+   "at": [
+    1134.0,
+    756.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t",
+   "count": 1,
+   "inst": "u_core.g_su_leaf[2].u_su",
+   "at": [
+    427.68,
+    1002.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[0].u_st",
+   "at": [
+    989.28,
+    10.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[0].g_sd.u_sd",
+   "at": [
+    967.68,
+    97.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[0].u_sc",
+   "at": [
+    967.68,
+    166.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[1].u_st",
+   "at": [
+    989.28,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[1].g_sd.u_sd",
+   "at": [
+    967.68,
+    362.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[1].u_sc",
+   "at": [
+    967.68,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[0].u_st",
+   "at": [
+    989.28,
+    516.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[0].g_sd.u_sd",
+   "at": [
+    967.68,
+    602.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[0].u_sc",
+   "at": [
+    967.68,
+    671.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[1].u_st",
+   "at": [
+    989.28,
+    781.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[1].g_sd.u_sd",
+   "at": [
+    967.68,
+    868.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[1].u_sc",
+   "at": [
+    967.68,
+    937.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[0].u_st",
+   "at": [
+    540.0,
+    831.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[0].g_sd.u_sd",
+   "at": [
+    518.4,
+    918.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[0].u_sc",
+   "at": [
+    518.4,
+    987.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[1].u_st",
+   "at": [
+    90.72,
+    831.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[1].g_sd.u_sd",
+   "at": [
+    69.12,
+    918.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[1].u_sc",
+   "at": [
+    69.12,
+    987.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_0_t0",
+   "at": [
+    4.32,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_0_t1",
+   "at": [
+    25.92,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_0_t2",
+   "at": [
+    47.52,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_1_t0",
+   "at": [
+    4.32,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_1_t1",
+   "at": [
+    25.92,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_1_t2",
+   "at": [
+    47.52,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_2_t0",
+   "at": [
+    4.32,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_2_t1",
+   "at": [
+    25.92,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_2_t2",
+   "at": [
+    47.52,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_3_t0",
+   "at": [
+    4.32,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_3_t1",
+   "at": [
+    25.92,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_3_t2",
+   "at": [
+    47.52,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_4_t0",
+   "at": [
+    4.32,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_4_t1",
+   "at": [
+    25.92,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_4_t2",
+   "at": [
+    47.52,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_5_t0",
+   "at": [
+    4.32,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_5_t1",
+   "at": [
+    25.92,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_5_t2",
+   "at": [
+    47.52,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_6_t0",
+   "at": [
+    4.32,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_6_t1",
+   "at": [
+    25.92,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_6_t2",
+   "at": [
+    47.52,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_7_t0",
+   "at": [
+    4.32,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_7_t1",
+   "at": [
+    25.92,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_7_t2",
+   "at": [
+    47.52,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_8_t0",
+   "at": [
+    4.32,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_8_t1",
+   "at": [
+    25.92,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_9_t0",
+   "at": [
+    4.32,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_9_t1",
+   "at": [
+    25.92,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_0_t0",
+   "at": [
+    453.6,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_0_t1",
+   "at": [
+    475.2,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_0_t2",
+   "at": [
+    496.8,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_1_t0",
+   "at": [
+    453.6,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_1_t1",
+   "at": [
+    475.2,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_1_t2",
+   "at": [
+    496.8,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_2_t0",
+   "at": [
+    475.2,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_2_t1",
+   "at": [
+    496.8,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_3_t0",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_3_t1",
+   "at": [
+    496.8,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_4_t0",
+   "at": [
+    475.2,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_4_t1",
+   "at": [
+    496.8,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_5_t0",
+   "at": [
+    475.2,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_5_t1",
+   "at": [
+    496.8,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_6_t0",
+   "at": [
+    453.6,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_6_t1",
+   "at": [
+    475.2,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_6_t2",
+   "at": [
+    496.8,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_7_t0",
+   "at": [
+    453.6,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_7_t1",
+   "at": [
+    475.2,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_7_t2",
+   "at": [
+    496.8,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_8_t0",
+   "at": [
+    453.6,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_8_t1",
+   "at": [
+    475.2,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_9_t0",
+   "at": [
+    453.6,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_9_t1",
+   "at": [
+    475.2,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_9_t2",
+   "at": [
+    496.8,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_0_t0",
+   "at": [
+    902.88,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_0_t1",
+   "at": [
+    924.48,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_0_t2",
+   "at": [
+    946.08,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_1_t0",
+   "at": [
+    902.88,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_1_t1",
+   "at": [
+    924.48,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_1_t2",
+   "at": [
+    946.08,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_2_t0",
+   "at": [
+    924.48,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_2_t1",
+   "at": [
+    946.08,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_3_t0",
+   "at": [
+    924.48,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_3_t1",
+   "at": [
+    946.08,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_4_t0",
+   "at": [
+    924.48,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sB_4_t1",
+   "at": [
+    946.08,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_5_t0",
+   "at": [
+    924.48,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sB_5_t1",
+   "at": [
+    946.08,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_6_t0",
+   "at": [
+    902.88,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_6_t1",
+   "at": [
+    924.48,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sB_6_t2",
+   "at": [
+    946.08,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_7_t0",
+   "at": [
+    902.88,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_7_t1",
+   "at": [
+    924.48,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_7_t2",
+   "at": [
+    946.08,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_8_t0",
+   "at": [
+    902.88,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_8_t1",
+   "at": [
+    924.48,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_9_t0",
+   "at": [
+    902.88,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sB_9_t1",
+   "at": [
+    924.48,
+    898.56
+   ],
+   "orient": "R0"
+  }
+ ],
+ "abut_plan": {
+  "channel_um": 2.16,
+  "edge_um": 2.16,
+  "why": "full region pilot routes every real core and lane tile at the accepted planned placement; measurement required before release"
+ },
+ "pins": {
+  "S": [
+   "rst_n",
+   "me_in",
+   "re",
+   "ra",
+   "we",
+   "wl",
+   "wm",
+   "wd",
+   "xv",
+   "rq",
+   "rqb",
+   "sre",
+   "sra",
+   "sv",
+   "swe",
+   "swl",
+   "swm",
+   "swd",
+   "pop",
+   "lane_me",
+   "ck_c0",
+   "ck_c1",
+   "ck_c2",
+   "ck_c3",
+   "ck_c4",
+   "ck_c5",
+   "ck_c6",
+   "ck_c7",
+   "ck_c8",
+   "ck_c9",
+   "ck_c10",
+   "ck_c11",
+   "ck_c12",
+   "ck_c13",
+   "ck_c14",
+   "ck_c15",
+   "ck_c16",
+   "ck_c17",
+   "ck_c18",
+   "ck_c19",
+   "ck_c20",
+   "ck_c21",
+   "ck_c22",
+   "ck_c23",
+   "ck_c24",
+   "ck_c25",
+   "ck_c26",
+   "ck_c27",
+   "ck_c28",
+   "ck_c29",
+   "ck_c30",
+   "ck_c31",
+   "ck_c32",
+   "ck_c33",
+   "ck_c34",
+   "ck_c35",
+   "ck_c36",
+   "ck_c37",
+   "ck_c38",
+   "ck_c39",
+   "ck_c40",
+   "ck_c41",
+   "ck_c42",
+   "ck_c43",
+   "ck_c44",
+   "ck_c45",
+   "ck_c46",
+   "ck_c47",
+   "ck_c48",
+   "ck_c49",
+   "ck_c50",
+   "ck_c51",
+   "ck_c52",
+   "ck_c53",
+   "ck_c54",
+   "ck_c55",
+   "ck_c56",
+   "ck_c57",
+   "ck_c58",
+   "ck_c59",
+   "ck_c60",
+   "ck_c61",
+   "ck_c62",
+   "ck_c63",
+   "ck_c64",
+   "ck_c65",
+   "ck_c66",
+   "ck_c67",
+   "ck_c68",
+   "ck_c69",
+   "ck_c70",
+   "ck_c71",
+   "ck_t0",
+   "ck_t1",
+   "ck_t2",
+   "ck_t3",
+   "ck_t4",
+   "ck_t5",
+   "ck_t6",
+   "ck_t7",
+   "ck_t8",
+   "ck_t9",
+   "ck_t10",
+   "ck_t11",
+   "ck_t12",
+   "ck_t13",
+   "ck_t14",
+   "ck_t15",
+   "ck_t16",
+   "ck_t17",
+   "ck_t18",
+   "ck_t19",
+   "ck_t20",
+   "ck_t21",
+   "ck_t22",
+   "ck_t23",
+   "ck_t24",
+   "ck_t25",
+   "ck_t26",
+   "ck_t27",
+   "ck_t28",
+   "ck_t29",
+   "ck_t30",
+   "ck_t31",
+   "ck_t32",
+   "ck_t33",
+   "ck_t34",
+   "ck_t35",
+   "ck_t36",
+   "ck_t37",
+   "ck_t38",
+   "ck_t39",
+   "ck_t40",
+   "ck_t41",
+   "ck_t42",
+   "ck_t43",
+   "ck_t44",
+   "ck_t45",
+   "ck_t46",
+   "ck_t47",
+   "ck_t48",
+   "ck_t49",
+   "ck_t50",
+   "ck_t51",
+   "ck_t52",
+   "ck_t53",
+   "ck_t54",
+   "ck_t55",
+   "ck_t56",
+   "ck_t57",
+   "ck_t58",
+   "ck_t59",
+   "ck_t60",
+   "ck_t61",
+   "ck_t62",
+   "ck_t63",
+   "ck_t64",
+   "ck_t65",
+   "ck_t66",
+   "ck_t67",
+   "ck_t68",
+   "ck_t69",
+   "ck_t70",
+   "ck_t71",
+   "ck_t72",
+   "ck_t73",
+   "ck_t74",
+   "ck_t75",
+   "ck_t76",
+   "q_s"
+  ],
+  "N": [
+   "ro",
+   "so",
+   "ovf"
+  ],
+  "W": [
+   "d_w",
+   "q_w"
+  ],
+  "E": [
+   "d_e",
+   "q_e"
+  ]
+ },
+ "inter": [
+  "*"
+ ],
+ "refglob": "*",
+ "signal_max_layer": "M9",
+ "pg_layer": "M7",
+ "layer_cap_grant": "el1011-qwen-tp8.log 19:11 rectangle M9 cluster grant; die M8/M9 PG only width.48 pitch9.091 core origin0",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 770,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "Codex:qwen_vm_region",
+  "branch": "codex/qwen-vm-rg6",
+  "tag": "rg6p1",
+  "hold_merge": "full region physical pilot until measured channel routing and assigned die pins are verified",
+  "purpose": "full rg6 core+all lane tiles, no sampled bays; exact flat reference core plus every region lane path with two mutants",
+  "extra_paths": [
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/vm_die_split_20261012",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "rtl/hdc",
+   "rtl/physical",
+   "results/arch/qwen_tp8_1012/vm_rg6.json"
+  ],
+  "benches": [
+   {
+    "name": "rg_ok",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_vm_rg6 -GSEED=1 --Mdir {RUN}/bench/rg_ok rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv > {RUN}/bench/rg_ok.build.log 2>&1 && {RUN}/bench/rg_ok/Vtb_qfd_vm_rg6 > {RUN}/bench/rg_ok.log 2>&1; tail -4 {RUN}/bench/rg_ok.log; grep -q \"^PASS qfd_vm_rg6\" {RUN}/bench/rg_ok.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg_mut_lane",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_vm_rg6 -GMUT=1 --Mdir {RUN}/bench/rg_mut_lane rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv > {RUN}/bench/rg_mut_lane.build.log 2>&1 && {RUN}/bench/rg_mut_lane/Vtb_qfd_vm_rg6 > {RUN}/bench/rg_mut_lane.log 2>&1; tail -4 {RUN}/bench/rg_mut_lane.log; grep -q \"^PASS qfd_vm_rg6\" {RUN}/bench/rg_mut_lane.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg_mut_core",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_vm_rg6 -GMUT=2 --Mdir {RUN}/bench/rg_mut_core rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv > {RUN}/bench/rg_mut_core.build.log 2>&1 && {RUN}/bench/rg_mut_core/Vtb_qfd_vm_rg6 > {RUN}/bench/rg_mut_core.log 2>&1; tail -4 {RUN}/bench/rg_mut_core.log; grep -q \"^PASS qfd_vm_rg6\" {RUN}/bench/rg_mut_core.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ }
+}

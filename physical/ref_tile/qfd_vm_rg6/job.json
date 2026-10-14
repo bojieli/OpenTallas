@@ -1,0 +1,137 @@
+{
+ "name": "qfd_vm_rg6-rg6p1-COMMIT",
+ "block": "ot_qfd_vm_rg6",
+ "ref_tile": true,
+ "owner": "Codex:qwen_vm_region",
+ "purpose": "full rg6 core+all lane tiles, no sampled bays; exact flat reference core plus every region lane path with two mutants",
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/qwen-vm-rg6",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/vm_die_split_20261012",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "rtl/hdc",
+   "rtl/physical",
+   "results/arch/qwen_tp8_1012/vm_rg6.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_vm_rg6 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QFD_VM_HARD -DOT_QFD_VM_DELAY1_MOD=ot_qwen_tree_delay1_t -DOT_QFD_VM_DELAY2_MOD=ot_qwen_tree_delay2_t --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv rtl/physical/ot_qwen_tree_delay_tiles.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg_ok",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_vm_rg6 -GSEED=1 --Mdir {RUN}/bench/rg_ok rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv > {RUN}/bench/rg_ok.build.log 2>&1 && {RUN}/bench/rg_ok/Vtb_qfd_vm_rg6 > {RUN}/bench/rg_ok.log 2>&1; tail -4 {RUN}/bench/rg_ok.log; grep -q \"^PASS qfd_vm_rg6\" {RUN}/bench/rg_ok.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg_mut_lane",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_vm_rg6 -GMUT=1 --Mdir {RUN}/bench/rg_mut_lane rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv > {RUN}/bench/rg_mut_lane.build.log 2>&1 && {RUN}/bench/rg_mut_lane/Vtb_qfd_vm_rg6 > {RUN}/bench/rg_mut_lane.log 2>&1; tail -4 {RUN}/bench/rg_mut_lane.log; grep -q \"^PASS qfd_vm_rg6\" {RUN}/bench/rg_mut_lane.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rg_mut_core",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_vm_rg6 -GMUT=2 --Mdir {RUN}/bench/rg_mut_core rtl/qwen_sys/vm_plane_20261013/region/tb_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/region/ot_qfd_vm_rg6.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv > {RUN}/bench/rg_mut_core.build.log 2>&1 && {RUN}/bench/rg_mut_core/Vtb_qfd_vm_rg6 > {RUN}/bench/rg_mut_core.log 2>&1; tail -4 {RUN}/bench/rg_mut_core.log; grep -q \"^PASS qfd_vm_rg6\" {RUN}/bench/rg_mut_core.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_vm_rg6/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_vm_rg6/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_vm_rg6 --out {RUN}/record/views/ot_qfd_vm_rg6 --macro-view physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t --macro-view physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t --macro-view physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t --macro-view physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t --macro-view physical/ref_tile/qfd_vm_rr2_t/views/ot_qfd_vm_rr2_t --macro-view physical/ref_tile/qfd_vm_rr4_t/views/ot_qfd_vm_rr4_t --macro-view physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t --macro-view physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t --macro-view physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t --macro-view physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t --macro-view physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t --macro-view physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t --macro-view physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_vm_rg6/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "physical/ref_tile/qfd_vm_rr2_t/views/ot_qfd_vm_rr2_t",
+   "physical/ref_tile/qfd_vm_rr4_t/views/ot_qfd_vm_rr4_t",
+   "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t",
+   "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_vm_rg6/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_vm_rg6/qfd_vm_rg6-rg6p1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "hold_merge": "full region physical pilot until measured channel routing and assigned die pins are verified"
+}
