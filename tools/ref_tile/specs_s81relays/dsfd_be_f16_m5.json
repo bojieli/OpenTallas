@@ -1,0 +1,47 @@
+{
+  "name": "dsfd_be_f16_m5",
+  "top": "dsfd_be_f16",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rn"
+  ],
+  "outline": {
+    "w": 32.4,
+    "h": 32.4,
+    "exact": true
+  },
+  "pins": {
+    "W": [
+      "ck",
+      "rn",
+      "i"
+    ],
+    "E": [
+      "o"
+    ],
+    "N": [],
+    "S": []
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "hold_margin_ns": 0.03
+  },
+  "recipe": 2,
+  "job": {
+    "owner": "Codex:s81_fe_fault_source_trace",
+    "branch": "codex/s81-fe-fault-source-trace",
+    "tag": "r1",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_ph/relays"
+    ],
+    "purpose": "Unallocated optional FE sticky-status relay:16 FF perstage on serial ck withsync reset rn; defaultSTAGES0; sixstages is FEbox geometric lowerboundonly. No physicalclock/sourcepin/adoption or data-returnlatencyclaim.",
+    "benched_by": "s81_be_fault_gate"
+  },
+  "structural_change": "New optional16-bit status register. One serialcycle each; sourceactualpin null; statuslatency explicitlypriced. Master outline32.4square provisional, not routed/admitted."
+}

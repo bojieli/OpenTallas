@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""Trace source-epoch RTL and conservative, unqualified FE fault distances."""
+import hashlib,json,math,re,subprocess
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2];OUT=ROOT/'results/arch/s81_fe_fault_relay_1014'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def main():
+ epoch='55740b883';paths=['rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv','rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv'];witness={}
+ for p in paths:
+  data=subprocess.check_output(['git','show',epoch+':'+p],cwd=ROOT);lines=data.decode().splitlines()
+  witness[p]={'epoch_sha256':hashlib.sha256(data).hexdigest(),'lines':[{'line':i+1,'text':s} for i,s in enumerate(lines) if any(v in s for v in ['fe_flt <=','assign fe_flt =','.fe_flt(gs ==','output reg  [15:0]','wire clk = ck[0]','dsfd_vm_fcn u_cn',' .fe_flt(fe_flt),','wire rn = rr_c'])]}
+ pins=json.load(open(OUT/'inputs/fcn_cts_pins.json'));candidate=json.load(open(OUT/'inputs/fe_candidate_s9.json'));fcn=candidate['instances']['fcn'];lef=(OUT/'inputs/be_target_unrouted.lef').read_text();pairs=[]
+ terms=['early','e_err | rbad (flat) / err_q (hard)','constant zero','ovf_cr','l_src_flt (flat) / sflt_q (hard)','rearm','ovf_pd','is_bad','clf[0]','clf[1]','clf[2]','clf[3]','cap_src_flt','ad_flt','ll_ovr (flat) / ovr_q (hard)','so_s[1] (flat) / so_q (hard)']
+ for i in range(16):
+  m=re.search(r'  PIN fe_flt\['+str(i)+r'\](.*?)  END fe_flt',lef,re.S);r=list(map(float,re.search(r'RECT\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)',m[1]).groups()));sink=[64.752+(r[0]+r[2])/2,21.6+(r[1]+r[3])/2]
+  # Box bound is minimum distance to any possible point inside the requested FE box.
+  box=[21.6,3121.2,21.6+1520.064,3121.2+889.92];lower=max(box[0]-sink[0],0,sink[0]-box[2])+max(box[1]-sink[1],0,sink[1]-box[3])
+  pr=pins['pins'][f'fe_flt[{i}]']['boxes'][0]['rect_um'];src=[21.6+fcn['x']+(pr[0]+pr[2])/2,3121.2+fcn['y']+(pr[1]+pr[3])/2];d=sum(abs(a-b) for a,b in zip(src,sink))
+  pairs.append(dict(bit=i,sticky_term=terms[i],rtl_source={'flat':f'u_fe.fe_flt[{i}] (dsfd_vm_fe)','hard_substitution':f'u_feh.u_cn.fe_flt[{i}] (dsfd_vm_fcn)','clock_port':'ck[0]','storage':'logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero'},sink=f'u_be.g_s[0].u_sl.fe_flt[{i}]',actual_source_pin_um=None,actual_source_clock_R_ps=None,actual_minimum_stage_count=None,requested_sink_contact_um=sink,requested_FE_box_lower_bound_um=round(lower,6),box_lower_bound_segments=math.ceil(lower/500),box_lower_bound_relay_stages=max(0,math.ceil(lower/500)-1),unadopted_s9_cts_source_um=src,unadopted_s9_manhattan_um=round(d,6),unadopted_s9_minimum_relay_stages=max(0,math.ceil(d/500)-1),qualified=False))
+ record=dict(schema='opentallas.s81.fe_fault_source_trace.v1',source_epoch=epoch,source_witness=witness,input_sha256={str(p.relative_to(ROOT)):sha(p) for p in (OUT/'inputs').iterdir()},source_view_status='OPEN: CTS-only fcn pin geometry 4edf0254, no qualified routed view, assignment or physical clock receipt',hard_selection='OT_SPVM_FE_H + OT_SPVM_FE_H_SUBST; default selects flat source',original_path='source fe_flt -> parent fe_flt -> u_be -> gs0.u_sl.fe_flt -> c_fe; outside r55 bundle',global_VM_origin_requested_um=[14036.112,12804.48],FE_origin_requested_um=[21.6,3121.2],BE_origin_requested_um=[64.752,21.6],allocator_lattice_status='OPEN',pairs=pairs,option=dict(default_stages=0,nominal_requested_stages=6,request_basis='minimum FE-box distance only, not route-feasible or source-qualified; s9 concrete candidate requires7–8 per bit, maximum8',requested_FF=96,serial_latency_cycles=6,nominal_serial_period_ps=1111.1,added_status_latency_ps=6666.6,added_data_return_latency_cycles=0,physical_adopted=False,placement='OPEN: no relay corridor admitted; 21.6um BGQ gaps cannot fit 32.4um cells plus20um W/E channels'),all_qualified=False)
+ (OUT/'trace.json').write_text(json.dumps(record,indent=2)+'\n');print('TRACE',min(p['requested_FE_box_lower_bound_um'] for p in pairs),max(p['requested_FE_box_lower_bound_um'] for p in pairs),'s9',max(p['unadopted_s9_manhattan_um'] for p in pairs))
+if __name__=='__main__':main()

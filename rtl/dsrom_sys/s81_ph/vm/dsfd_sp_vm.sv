@@ -1571,7 +1571,8 @@ module dsfd_vm_be #(
     parameter integer MD = 9,           // tile-3 f_* (request exit) -> o_* (read data) skew
     parameter integer XT = 2,           // control stages inside a slice tile
     parameter integer DR = 3,           // reset / status relay stages (each tile alike)
-    parameter integer HARD_RELAYS = 0    // opt-in fixed hard masters, exact same stages
+    parameter integer HARD_RELAYS = 0,   // opt-in fixed hard masters, exact same stages
+    parameter integer FE_FAULT_STAGES = 0 // opt-in status-only delay; no data-return latency
 ) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rst,
@@ -1614,6 +1615,9 @@ module dsfd_vm_be #(
         ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn0));
         ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns0));
     end endgenerate
+    wire [15:0] fe_fault_at_be;
+    dsfd_be_fault_path #(.STAGES(FE_FAULT_STAGES)) u_fault_path (
+        .ck(clk), .rn(rn0), .i(fe_flt), .o(fe_fault_at_be));
     wire [255:0] srq_d [0:NS-1]; wire [1:0] srq_v [0:NS-1]; wire [NS-1:0] vrv_s, c_l0v_s, t_p2c_s;
     wire [127:0] vrq_s [0:NS-1]; wire [16*128-1:0] bl_d [0:NS-1]; wire [15:0] bl_v [0:NS-1];
     wire [150:0] p2_s [0:NS-1]; wire [39:0] st [0:NS];
@@ -1660,7 +1664,7 @@ module dsfd_vm_be #(
             .ck(ck), .cks(cks), .rn_in(rnc[DR-1]), .rns_in(rns_[DR-1]),
             .o_v(o_v[10*gs +: 10]), .o_d(o_d[1280*gs +: 1280]), .o_f(o_f[4*gs +: 4]), .o_o(o_o[3*gs +: 3]),
             .f_vx(dvx[DIE_D-1]), .f_wex(dwx[DIE_D-1]), .f_mx(dmx[DIE_D-1]), .f_v5(dv5[DIE_D-1]), .f_we5(dw5[DIE_D-1]),
-            .f_m5s(dm5[DIE_D-1]), .c_l0r(rr), .fe_flt(gs == 0 ? fe_flt : 16'd0), .st_i(st[gs]), .st_o(st[gs+1]),
+            .f_m5s(dm5[DIE_D-1]), .c_l0r(rr), .fe_flt(gs == 0 ? fe_fault_at_be : 16'd0), .st_i(st[gs]), .st_o(st[gs+1]),
             .srq_d(srq_d[gs]), .srq_v(srq_v[gs]), .vrv(vrv_s[gs]), .vrq(vrq_s[gs]), .bl_d(bl_d[gs]), .bl_v(bl_v[gs]),
             .c_l0v(c_l0v_s[gs]), .c_l0d(p2_s[gs]), .t_p2c(t_p2c_s[gs]),
             .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs]));
@@ -1693,7 +1697,8 @@ module dsfd_sp_vm_m #(
     parameter integer NS = 4, parameter integer NSTG = 2, parameter integer QD = 4, parameter integer MACRO = 1,
     parameter integer VF = 13, parameter integer VR = 13, parameter integer NSLOT = 4, parameter integer P2D = 40,
     parameter integer CQD = 4, parameter integer LA = 12, parameter integer LTO = 16,
-    parameter integer NSVC = 1, parameter integer LD = 64, parameter integer NLP = 2, parameter integer LMACRO = 1
+    parameter integer NSVC = 1, parameter integer LD = 64, parameter integer NLP = 2, parameter integer LMACRO = 1,
+    parameter integer BE_FAULT_STAGES = 0
 ) (
     input  wire [0:0]    ck, input wire [0:0] rst, input wire [0:0] cks, input wire [0:0] rss,
     input  wire [0:0]    f_swv, input wire [526:0] f_swd, output wire [0:0] t_swg,
@@ -1803,7 +1808,7 @@ module dsfd_sp_vm_m #(
 `else
     localparam integer BEHR=0;
 `endif
-    dsfd_vm_be #(.NS(NS), .P2D(P2D), .MD(MD), .HARD_RELAYS(BEHR)) u_be (
+    dsfd_vm_be #(.NS(NS), .P2D(P2D), .MD(MD), .HARD_RELAYS(BEHR), .FE_FAULT_STAGES(BE_FAULT_STAGES)) u_be (
         .ck(ck), .rst(rst), .cks(cks), .rss(rss), .o_v(ov), .o_d(od), .o_f(of), .o_o(oo),
         .f_v5(f0v[5]), .f_we5(f0we[5]), .f_m5(f0d[5*128 +: 92]), .fe_flt(fe_flt),
         .f_vx({f0v[9], f0v[8], f0v[2], f0v[7], f0v[6]}), .f_wex({f0we[9], f0we[8], f0we[2], f0we[7], f0we[6]}),

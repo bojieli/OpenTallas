@@ -33,6 +33,7 @@ endmodule
 
 module tb_dsfd_sp_vm;
     parameter integer SEED = 1;
+    parameter integer BE_FAULT_STAGES = 0;
     parameter integer NCYC = 60000;
     parameter integer MODE = 0;
     parameter integer VF = 13, VR = 13, P2D = 40;
@@ -60,7 +61,7 @@ module tb_dsfd_sp_vm;
     reg vwe = 0, vre = 0, cv = 0, c_wr = 0, c_l0r = 0; reg [13:0] vwa = 0, vra = 0; reg [511:0] vwd = 0; reg [83:0] cd = 0;
     reg [NSVC*1027-1:0] f_svc = 0; reg [2099:0] f_coll = 0; reg [514:0] f_sel = 0, f_col = 0; reg [1025:0] f_hc = 0;
     reg [13375:0] f_cap = 0;
-    dsfd_sp_vm_m #(.MACRO(1), .VF(VF), .VR(VR), .P2D(P2D), .LA(LA), .NSVC(NSVC)) dut (
+    dsfd_sp_vm_m #(.MACRO(1), .VF(VF), .VR(VR), .P2D(P2D), .LA(LA), .NSVC(NSVC), .BE_FAULT_STAGES(BE_FAULT_STAGES)) dut (
         .ck(clk), .rst(rst_n), .cks(cks), .rss(rss_n),
         .f_swv(p_swv), .f_swd(p_swd), .t_swg(t_swg), .f_srv(p_srv), .f_srd(p_srd), .t_srg(t_srg),
         .t_ks(t_ks), .t_srq(t_srq), .t_err(t_err), .f_cap(f_cap),

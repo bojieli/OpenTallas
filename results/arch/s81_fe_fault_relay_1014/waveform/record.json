@@ -1,0 +1,30 @@
+{
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv": "40c5da4e6dcf01e79e1835bd4215ffc636fa935e03433c07a4f529602ab36e8d",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_fault_path.sv": "931df51b2ded285014ba38492a60c9d9e7c14ac2554d9f225c2fe960e5c517bf"
+  },
+  "cases": [
+    {
+      "case": "positive",
+      "expected": "pass",
+      "observed_exit": 0,
+      "ok": true,
+      "log_sha256": "6d9712557499134d57105293e6d0833e712a3153256d5c758f69b28b8946c53c"
+    },
+    {
+      "case": "mut_bypass",
+      "expected": "fail",
+      "observed_exit": 1,
+      "ok": true,
+      "log_sha256": "15753d652b427905df4f5e83d228b573944c6d865acf976f99e439ada966d754"
+    },
+    {
+      "case": "mut_wrong_stage",
+      "expected": "fail",
+      "observed_exit": 1,
+      "ok": true,
+      "log_sha256": "3aa6a165219a28b1d9517204173e3481be1a32406c72f565f1f2cfee23f310e1"
+    }
+  ],
+  "pass_": true
+}

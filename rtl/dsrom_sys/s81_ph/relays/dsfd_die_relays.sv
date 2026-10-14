@@ -45,3 +45,32 @@ module dsfd_hrow_r2079(input wire ck, rn, input wire [2078:0] i, output reg [207
     always @(posedge ck) o[1053:1040] <= i[1053:1040];
     always @(posedge ck) o[2078:1055] <= i[2078:1055];
 endmodule
+
+// Optional FE sticky-status transport. Clock/reset are the BE serial domain;
+// synchronous reset uses the existing BE die synchroniser, with no extra CDC.
+(* keep_hierarchy = "yes" *)
+module dsfd_be_f16(input wire ck, rn, input wire [15:0] i, output reg [15:0] o);
+    always @(posedge ck) if (!rn) o <= 16'd0; else o <= i;
+endmodule
+module dsfd_be_fault_path #(parameter integer STAGES = 0)(
+    input wire ck, rn, input wire [15:0] i, output wire [15:0] o
+);
+    initial if (STAGES < 0) $error("dsfd_be_fault_path: STAGES must be nonnegative");
+    wire [15:0] q [0:STAGES];
+    assign q[0] = i;
+    genvar s;
+    generate for (s = 0; s < STAGES; s = s + 1) begin : g_stage
+        dsfd_be_f16 u_r (.ck(ck), .rn(rn), .i(q[s]), .o(q[s+1]));
+    end endgenerate
+`ifdef OT_BE_FAULT_MUT_BYPASS
+    assign o = i;
+`elsif OT_BE_FAULT_MUT_WRONG_STAGE
+    generate if (STAGES > 0) begin : g_mut
+        assign o = q[STAGES-1];
+    end else begin : g_zero
+        assign o = i;
+    end endgenerate
+`else
+    assign o = q[STAGES];
+`endif
+endmodule

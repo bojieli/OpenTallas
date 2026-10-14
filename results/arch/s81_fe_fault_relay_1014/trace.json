@@ -1,0 +1,616 @@
+{
+  "schema": "opentallas.s81.fe_fault_source_trace.v1",
+  "source_epoch": "55740b883",
+  "source_witness": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": {
+      "epoch_sha256": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
+      "lines": [
+        {
+          "line": 97,
+          "text": "    output reg  [15:0]   w_m,"
+        },
+        {
+          "line": 360,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 518,
+          "text": "    output reg  [15:0]          fe_flt  // FE sticky fault vector (composition net to the BE)"
+        },
+        {
+          "line": 521,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 528,
+          "text": "    wire rn = rr_c[1];"
+        },
+        {
+          "line": 1131,
+          "text": "        if (!rn) fe_flt <= 16'd0;"
+        },
+        {
+          "line": 1132,
+          "text": "        else fe_flt <= fe_flt | {so_s[1], ll_ovr, ad_flt, cap_src_flt, clf, is_bad, ovf_pd, rearm, l_src_flt, ovf_cr, 1'b0,"
+        },
+        {
+          "line": 1329,
+          "text": "    output reg  [15:0]       bl_v,"
+        },
+        {
+          "line": 1344,
+          "text": "    wire clk = ck[0], sclk = cks[0];"
+        },
+        {
+          "line": 1607,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 1663,
+          "text": "            .f_m5s(dm5[DIE_D-1]), .c_l0r(rr), .fe_flt(gs == 0 ? fe_flt : 16'd0), .st_i(st[gs]), .st_o(st[gs+1]),"
+        },
+        {
+          "line": 1762,
+          "text": "    assign fe_flt = h_flt; assign t_swg = h_swg; assign t_srg = h_srg; assign t_ks = h_ks; assign dv = h_dv; assign dt = h_dt;"
+        },
+        {
+          "line": 1766,
+          "text": "    assign fe_flt = f_flt; assign t_swg = f_swg; assign t_srg = f_srg; assign t_ks = f_ks; assign dv = f_dv; assign dt = f_dt;"
+        },
+        {
+          "line": 1808,
+          "text": "        .f_v5(f0v[5]), .f_we5(f0we[5]), .f_m5(f0d[5*128 +: 92]), .fe_flt(fe_flt),"
+        }
+      ]
+    },
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv": {
+      "epoch_sha256": "6a564096256c0253de7ced686cd6e8e7800073f96efe9b41f5f08b5a91ca471a",
+      "lines": [
+        {
+          "line": 81,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 122,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 140,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 158,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 210,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 282,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 378,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 487,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 529,
+          "text": "    output reg  [15:0]   fe_flt,"
+        },
+        {
+          "line": 533,
+          "text": "    wire clk = ck[0];"
+        },
+        {
+          "line": 540,
+          "text": "    wire rn = rr_c[1];"
+        },
+        {
+          "line": 898,
+          "text": "        if (!rn) fe_flt <= 16'd0;"
+        },
+        {
+          "line": 899,
+          "text": "        else fe_flt <= fe_flt | {so_q, ovr_q, ad_flt, cap_src_flt, clf, is_bad, ovf_pd, rearm, sflt_q, ovf_cr, 1'b0, err_q, early};"
+        },
+        {
+          "line": 1025,
+          "text": "    dsfd_vm_fcn u_cn (.ck(ck), .rst(rst), .cks(cks), .rss(rss), .cv(cv), .cd(cd), .dv(dv), .dt(dt),"
+        },
+        {
+          "line": 1028,
+          "text": "        .s_o(s_cn), .x_o(x_cn), .arm_v(la_v), .arm_base(la_b), .rf_o(rf_w), .fe_flt(fe_flt), .rn_o(rn_cn));"
+        }
+      ]
+    }
+  },
+  "input_sha256": {
+    "results/arch/s81_fe_fault_relay_1014/inputs/fcn_cts_pins.json": "153c644b2e21bab73c77642d54f680bfab4d6aeeb534bea076fb3d2d10670e24",
+    "results/arch/s81_fe_fault_relay_1014/inputs/be_target_unrouted.lef": "a51a28b03e47e233ef12805eeb83eba4906475bffc4efc03ed87731aef6d2ad9",
+    "results/arch/s81_fe_fault_relay_1014/inputs/fe_candidate_s9.json": "af7b0a685fadd4e9e01f1d80594039f2e1bacd9a3a0f5122a6ba5b6e494fba75"
+  },
+  "source_view_status": "OPEN: CTS-only fcn pin geometry 4edf0254, no qualified routed view, assignment or physical clock receipt",
+  "hard_selection": "OT_SPVM_FE_H + OT_SPVM_FE_H_SUBST; default selects flat source",
+  "original_path": "source fe_flt -> parent fe_flt -> u_be -> gs0.u_sl.fe_flt -> c_fe; outside r55 bundle",
+  "global_VM_origin_requested_um": [
+    14036.112,
+    12804.48
+  ],
+  "FE_origin_requested_um": [
+    21.6,
+    3121.2
+  ],
+  "BE_origin_requested_um": [
+    64.752,
+    21.6
+  ],
+  "allocator_lattice_status": "OPEN",
+  "pairs": [
+    {
+      "bit": 0,
+      "sticky_term": "early",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[0] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[0] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[0]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        51.228
+      ],
+      "requested_FE_box_lower_bound_um": 3069.972,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        459.909,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3853.852,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 1,
+      "sticky_term": "e_err | rbad (flat) / err_q (hard)",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[1] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[1] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[1]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        51.612
+      ],
+      "requested_FE_box_lower_bound_um": 3069.588,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        471.357,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3864.916,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 2,
+      "sticky_term": "constant zero",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[2] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[2] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[2]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        51.996
+      ],
+      "requested_FE_box_lower_bound_um": 3069.204,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        482.769,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3875.944,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 3,
+      "sticky_term": "ovf_cr",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[3] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[3] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[3]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        52.38
+      ],
+      "requested_FE_box_lower_bound_um": 3068.82,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        494.18100000000004,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3886.972,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 4,
+      "sticky_term": "l_src_flt (flat) / sflt_q (hard)",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[4] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[4] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[4]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        52.764
+      ],
+      "requested_FE_box_lower_bound_um": 3068.436,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        505.593,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3898.0,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 5,
+      "sticky_term": "rearm",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[5] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[5] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[5]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        53.148
+      ],
+      "requested_FE_box_lower_bound_um": 3068.052,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        517.005,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3909.028,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 6,
+      "sticky_term": "ovf_pd",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[6] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[6] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[6]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        53.532000000000004
+      ],
+      "requested_FE_box_lower_bound_um": 3067.668,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        528.417,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3920.056,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 7,
+      "sticky_term": "is_bad",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[7] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[7] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[7]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        53.916000000000004
+      ],
+      "requested_FE_box_lower_bound_um": 3067.284,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        539.829,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3931.084,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 8,
+      "sticky_term": "clf[0]",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[8] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[8] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[8]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        54.300000000000004
+      ],
+      "requested_FE_box_lower_bound_um": 3066.9,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        551.277,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3942.148,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 9,
+      "sticky_term": "clf[1]",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[9] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[9] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[9]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        54.684000000000005
+      ],
+      "requested_FE_box_lower_bound_um": 3066.516,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        562.689,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3953.176,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 10,
+      "sticky_term": "clf[2]",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[10] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[10] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[10]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        55.068000000000005
+      ],
+      "requested_FE_box_lower_bound_um": 3066.132,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        574.101,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3964.204,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 11,
+      "sticky_term": "clf[3]",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[11] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[11] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[11]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        55.452000000000005
+      ],
+      "requested_FE_box_lower_bound_um": 3065.748,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        585.513,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3975.232,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 12,
+      "sticky_term": "cap_src_flt",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[12] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[12] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[12]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        55.836
+      ],
+      "requested_FE_box_lower_bound_um": 3065.364,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        596.925,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3986.26,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 13,
+      "sticky_term": "ad_flt",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[13] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[13] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[13]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        56.22
+      ],
+      "requested_FE_box_lower_bound_um": 3064.98,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        608.337,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 3997.288,
+      "unadopted_s9_minimum_relay_stages": 7,
+      "qualified": false
+    },
+    {
+      "bit": 14,
+      "sticky_term": "ll_ovr (flat) / ovr_q (hard)",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[14] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[14] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[14]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        56.604
+      ],
+      "requested_FE_box_lower_bound_um": 3064.596,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        619.749,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 4008.316,
+      "unadopted_s9_minimum_relay_stages": 8,
+      "qualified": false
+    },
+    {
+      "bit": 15,
+      "sticky_term": "so_s[1] (flat) / so_q (hard)",
+      "rtl_source": {
+        "flat": "u_fe.fe_flt[15] (dsfd_vm_fe)",
+        "hard_substitution": "u_feh.u_cn.fe_flt[15] (dsfd_vm_fcn)",
+        "clock_port": "ck[0]",
+        "storage": "logical posedge clk sticky register; mapped flop/master unknown; bit2 may optimize to tie zero"
+      },
+      "sink": "u_be.g_s[0].u_sl.fe_flt[15]",
+      "actual_source_pin_um": null,
+      "actual_source_clock_R_ps": null,
+      "actual_minimum_stage_count": null,
+      "requested_sink_contact_um": [
+        64.848,
+        56.988
+      ],
+      "requested_FE_box_lower_bound_um": 3064.212,
+      "box_lower_bound_segments": 7,
+      "box_lower_bound_relay_stages": 6,
+      "unadopted_s9_cts_source_um": [
+        631.197,
+        3510.019
+      ],
+      "unadopted_s9_manhattan_um": 4019.38,
+      "unadopted_s9_minimum_relay_stages": 8,
+      "qualified": false
+    }
+  ],
+  "option": {
+    "default_stages": 0,
+    "nominal_requested_stages": 6,
+    "request_basis": "minimum FE-box distance only, not route-feasible or source-qualified; s9 concrete candidate requires7\u20138 per bit, maximum8",
+    "requested_FF": 96,
+    "serial_latency_cycles": 6,
+    "nominal_serial_period_ps": 1111.1,
+    "added_status_latency_ps": 6666.6,
+    "added_data_return_latency_cycles": 0,
+    "physical_adopted": false,
+    "placement": "OPEN: no relay corridor admitted; 21.6um BGQ gaps cannot fit 32.4um cells plus20um W/E channels"
+  },
+  "all_qualified": false
+}
