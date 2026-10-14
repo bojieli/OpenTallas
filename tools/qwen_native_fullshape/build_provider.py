@@ -10,10 +10,10 @@ TOP = 'ot_hdc_core_vector_weight_native_candidate'
 NAMES = ('ot_hdc_delay','ot_hdc_fp32_mul_pipe','ot_hdc_fpu','ot_hdc_sfu','ot_hdc_sfu_q',
 'ot_hdc_reduce','ot_hdc_reduce_q','ot_hdc_matvec','ot_hdc_stream','ot_hdc_vstream_lane',
 'ot_hdc_vreduce','ot_hdc_vstream','ot_hdc_dyn_ttiles','ot_hdc_qwen_int8_arith',
-'ot_hdc_qwen_int8_embed_decode', TOP)
+'ot_hdc_qwen_int8_embed_decode','ot_hdc_fp32_add_lat','ot_hdc_fp32_mul_lat','ot_hdc_prefix', TOP)
 SOURCES = [*(ROOT/f'rtl/hdc/{n}.sv' for n in NAMES),
 ROOT/'rtl/proto/ot_fp32_add_rne_pipe.sv', ROOT/'rtl/proto/ot_fp32_mul_rne_pipe.sv',
-ROOT/'rtl/test/sim_hdc_v41x_fastfp_dpi.sv', ROOT/'rtl/test/sim_hdc_v41x_fastfp_wrap.sv',
+ROOT/'rtl/test/sim_hdc_v41x_fastfp_dpi.sv', ROOT/'rtl/test/sim_qwen_native_current_fastfp_wrap.sv',
 ROOT/'rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_me_provider_dispatch.sv']
 def main():
     p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True)

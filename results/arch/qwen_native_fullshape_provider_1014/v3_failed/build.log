@@ -1,0 +1,130 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_core_vector_weight_native_candidate.sv:575:87: Instance has missing pin: 'obs_active'
+  575 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                       ^~~~
+                     /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_vstream.sv:100:30: ... Location of port declaration
+  100 |     output wire              obs_active,
+      |                              ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_core_vector_weight_native_candidate.sv:575:87: Instance has missing pin: 'obs_inflight'
+  575 |     ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(G * W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8)) u_su (
+      |                                                                                       ^~~~
+                     /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_vstream.sv:101:30: ... Location of port declaration
+  101 |     output wire [7:0]        obs_inflight
+      |                              ^~~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:459:20: Parameter not found: 'L'
+  459 |     ot_hdc_qmul #(.L(LM)) m_half (clk, rst_n, v, x, 32'h3F000000, half, f[12]);    
+      |                    ^
+                                                                                                                    : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+                    ... For error description see https://verilator.org/warn/PINNOTFOUND?v=5.050
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:468:28: Parameter not found: 'L'
+  468 |             ot_hdc_qmul #(.L(LM)) m_yy (clk, rst_n, vd[1 + IT*k],             yi[k], yi[k], yy[k], f[4*k]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:469:28: Parameter not found: 'L'
+  469 |             ot_hdc_qmul #(.L(LM)) m_hm (clk, rst_n, vd[1 + IT*k + LM],        hd[k], yy[k], hm[k], f[4*k+1]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:470:28: Parameter not found: 'L'
+  470 |             ot_hdc_qadd #(.L(LA)) a_s  (clk, rst_n, vd[1 + IT*k + 2*LM],      32'h3FC00000, {~hm[k][31], hm[k][30:0]}, s[k], f[4*k+2]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+    7 | module ot_hdc_qadd (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:472:28: Parameter not found: 'L'
+  472 |             ot_hdc_qmul #(.L(LM)) m_y  (clk, rst_n, vd[1 + IT*k + 2*LM + LA], yd[k], s[k], yi[k+1], f[4*k+3]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:420:28: Parameter not found: 'L'
+  420 |             ot_hdc_qmul #(.L(LM)) m_m (clk, rst_n, vd[1 + IT*k], dd[k], yi[k], m[k], f[3*k]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:421:28: Parameter not found: 'L'
+  421 |             ot_hdc_qadd #(.L(LA)) a_s (clk, rst_n, vd[1 + IT*k + LM], 32'h40000000, {~m[k][31], m[k][30:0]}, s[k], f[3*k+1]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+    7 | module ot_hdc_qadd (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:423:28: Parameter not found: 'L'
+  423 |             ot_hdc_qmul #(.L(LM)) m_y (clk, rst_n, vd[1 + IT*k + LM + LA], yd[k], s[k], yi[k+1], f[3*k+2]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:329:20: Parameter not found: 'L'
+  329 |     ot_hdc_qmul #(.L(LM)) m_t (clk, rst_n, vd[1], xc, K_LOG2E, t, f[0]);    
+      |                    ^
+                                                                                                                    : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:350:20: Parameter not found: 'L'
+  350 |     ot_hdc_qadd #(.L(LA)) a_r1 (clk, rst_n, vd[T_K], xc_d, {~a_hi[31], a_hi[30:0]}, r1, f[1]);
+      |                    ^
+                                                                                                                    : ... Location of instance's module declaration
+    7 | module ot_hdc_qadd (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:352:20: Parameter not found: 'L'
+  352 |     ot_hdc_qadd #(.L(LA)) a_r  (clk, rst_n, vd[T_R1], r1, {~lo_d[31], lo_d[30:0]}, r, f[2]);
+      |                    ^
+                                                                                                                    : ... Location of instance's module declaration
+    7 | module ot_hdc_qadd (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:367:28: Parameter not found: 'L'
+  367 |             ot_hdc_qmul #(.L(LM)) u_m (clk, rst_n, vd[T_R + (LM + LA)*(k-1)], pa[k-1], rd[k-1], pm[k], hf[2*k-1]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_sfu_q.sv:368:28: Parameter not found: 'L'
+  368 |             ot_hdc_qadd #(.L(LA)) u_a (clk, rst_n, vd[T_R + (LM + LA)*(k-1) + LM], pm[k], poly(k), pa[k], hf[2*k]);
+      |                            ^
+                                                                                                                    : ... Location of instance's module declaration
+    7 | module ot_hdc_qadd (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_vstream_lane.sv:236:20: Parameter not found: 'L'
+  236 |     ot_hdc_qmul #(.L(LM)) u_ma (clk, rst_n, s3_v && s3_ma != MA_BYP, ma_x, ma_y, p_mul, fa);
+      |                    ^
+                                                                                                                           : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_vstream_lane.sv:237:20: Parameter not found: 'L'
+  237 |     ot_hdc_qmul #(.L(LM)) u_mb (clk, rst_n, s3_v && s3_mb != MB_OFF, mb_x, mb_y, q_mul, fb_);
+      |                    ^
+                                                                                                                           : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_vstream_lane.sv:261:20: Parameter not found: 'L'
+  261 |     ot_hdc_qadd #(.L(LA)) u_ad (clk, rst_n, v3[LM+1] && ad9 != AD_BYP, ad_x, ad_y, r_add, fad);
+      |                    ^
+                                                                                                                           : ... Location of instance's module declaration
+    7 | module ot_hdc_qadd (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_vstream_lane.sv:278:20: Parameter not found: 'L'
+  278 |     ot_hdc_qadd #(.L(LA)) u_e1 (clk, rst_n, vo_exp && cls == SFU_SIGM, y_exp, 32'h3F800000, e1, f_e1);
+      |                    ^
+                                                                                                                           : ... Location of instance's module declaration
+    7 | module ot_hdc_qadd (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_vstream_lane.sv:403:20: Parameter not found: 'L'
+  403 |     ot_hdc_qmul #(.L(LM)) u_mc (clk, rst_n, mc_v && mc_tail[TT-1], mc_x, mc_y, mc_out, fmc);
+      |                    ^
+                                                                                                                           : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v3/src/rtl/hdc/ot_hdc_vstream_lane.sv:421:20: Parameter not found: 'L'
+  421 |     ot_hdc_qmul #(.L(LM)) u_md (clk, rst_n, md_v && md_tail[TT-2], md_x, md_y, md_out, fmd);
+      |                    ^
+                                                                                                                           : ... Location of instance's module declaration
+   22 | module ot_hdc_qmul (
+      |        ^~~~~~~~~~~
+%Error: Exiting due to 19 error(s)
