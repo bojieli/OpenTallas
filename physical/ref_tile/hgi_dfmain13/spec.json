@@ -75,7 +75,7 @@
  },
  "std_area_um2": 30000,
  "util": 0.5,
- "structural_change": "source15 (c4938f903+a3dd28a6a): XS metadata lookahead captured with the controller's request/epoch station, two payload capture edges instead of three; private native 147 LOAD 17022/17023 cycles (1.08598/1.08604) vs source12 17169, mirror exact, BF16/queue/mirror mutants fatal. Fresh main13 kit for the changed fused main.",
+ "structural_change": "source16 (A3 10-14, after hgi_dfmain13-src15-1a9409837 EARLY_FAIL_SETUP post-CTS TT -410.1 ps / 4,062 endpoints: worst ls_b[2043] port -> 3 x ~100 um wire -> AOI221/OR5/OR4/OR5/OR4 64-way lane x quarter select -> 3 x ~100 um wire -> formatter.bk[3].p_s; gate had in->reg -127.7, 2,452 input cones > 3 levels, native capture far over 190 ps): xs_vm4 PREG=1 puts every ls bit in ONE unconditional pin flop ls_q, reads metadata from ls_q (same edge as the old meta_*), and folds select + conversion into the output register (p_s stage removed: 12,718 + 4,432 - 1,232 - 2,224 = ~13,694 sinks < 15k). Exact native 147 LOAD phase61 16,912 / phase487 16,913 cycles = 1.0790 (source15 17,022 = 1.0860); mirror PASS 20,480 words; BF16 609,364 errors / epoch / first_mask / reservation / mirror_loss mutants FATAL (EPYC4 Verilator 5.050).",
  "slot_change_request": {
   "reason": "Front has no accepted hard slot; replace324um core with8 SRAM lane leaves and standalone controller, preserve4XS leaves. Exact outlines await synth gate.",
   "prior_slot": "hgi_dfx_core",
@@ -90,10 +90,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:/root/hbm_dma_lkep_2240/front_split",
+  "owner": "Claude:hbm-groupA-1014 (A3)",
   "branch": "codex/hbm-front-leaves-1013",
-  "tag": "src15",
-  "purpose": "source15 (c4938f903+a3dd28a6a): XS metadata lookahead captured with the controller's request/epoch station, two payload capture edges instead of three; private native 147 LOAD 17022/17023 cycles (1.08598/1.08604) vs source12 17169, mirror exact, BF16/queue/mirror mutants fatal. Fresh main13 kit for the changed fused main.",
+  "tag": "src16",
+  "purpose": "source16 (A3 10-14, after hgi_dfmain13-src15-1a9409837 EARLY_FAIL_SETUP post-CTS TT -410.1 ps / 4,062 endpoints: worst ls_b[2043] port -> 3 x ~100 um wire -> AOI221/OR5/OR4/OR5/OR4 64-way lane x quarter select -> 3 x ~100 um wire -> formatter.bk[3].p_s; gate had in->reg -127.7, 2,452 input cones > 3 levels, native capture far over 190 ps): xs_vm4 PREG=1 puts every ls bit in ONE unconditional pin flop ls_q, reads metadata from ls_q (same edge as the old meta_*), and folds select + conversion into the output register (p_s stage removed: 12,718 + 4,432 - 1,232 - 2,224 = ~13,694 sinks < 15k). Exact native 147 LOAD phase61 16,912 / phase487 16,913 cycles = 1.0790 (source15 17,022 = 1.0860); mirror PASS 20,480 words; BF16 609,364 errors / epoch / first_mask / reservation / mirror_loss mutants FATAL (EPYC4 Verilator 5.050).",
   "benches": [
    {
     "name": "native_price61",
@@ -201,5 +201,10 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }
