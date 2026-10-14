@@ -1,5 +1,5 @@
 {
- "name": "dsfd_vm_bgl28_a-r2-COMMIT",
+ "name": "dsfd_vm_bgl28_a-r2-32b21aa3e",
  "block": "dsfd_vm_bgl28",
  "ref_tile": true,
  "owner": "Claude:el1013-s81-bgq28",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-bgq28-1013",
-  "commit": "COMMIT",
+  "commit": "32b21aa3e18fcc6449116942650f452a22dace33",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/lib",
@@ -208,7 +208,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_vm_bgl28_a/dsfd_vm_bgl28_a-r2-COMMIT"
+   "to": "results/rtl/ref_tile/dsfd_vm_bgl28_a/dsfd_vm_bgl28_a-r2-32b21aa3e"
   }
  ],
  "cycles_added": 0,
