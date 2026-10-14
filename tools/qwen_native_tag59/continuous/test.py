@@ -8,14 +8,23 @@ class Output(C.Structure):
  _fields_=[('data',(C.c_uint32*16)*8),('tag',C.c_uint64*8),('valid',C.c_uint8),('last',C.c_uint8),('err',C.c_uint8),('credit',C.c_uint8),('fault',C.c_uint8),('online',C.c_uint8),('drained',C.c_uint8),('rank',C.c_uint8*8),('fault_code',C.c_uint8*8),('credits',C.c_uint8*8),('cycle',C.c_uint64)]
 def words(p):return [tuple((int(s,16)>>(32*l))&0xffffffff for l in range(16)) for s in p.read_text().splitlines() if s.strip()]
 def identity(epoch,stage,token,pos,segment):return (epoch<<43)|(stage<<37)|(token<<19)|(pos<<6)|segment
-p=argparse.ArgumentParser();p.add_argument('--lib',type=Path,required=True);p.add_argument('--fixture',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
+p=argparse.ArgumentParser();p.add_argument('--lib',type=Path,required=True);p.add_argument('--fixture',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--split',action='store_true');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
 lib=C.CDLL(str(a.lib.resolve()));lib.native59_create.restype=C.c_void_p;lib.native59_destroy.argtypes=[C.c_void_p];lib.native59_tick.argtypes=[C.c_void_p,C.POINTER(Input),C.POINTER(Output)]
+lib.native59_sample.argtypes=lib.native59_tick.argtypes;lib.native59_advance.argtypes=[C.c_void_p]
 h=lib.native59_create();assert h
+assert lib.native59_advance(h)==-4
 ranks=[words(a.fixture/f'rank{r}.hex') for r in range(8)];gold=words(a.fixture/'expected.hex');credits=[32]*8
 cycles=0;observed=0;quiet_delays=[];resets=0;operations=[]
 def tick(i):
  global cycles
- o=Output();assert lib.native59_tick(h,C.byref(i),C.byref(o))==0
+ o=Output()
+ if a.split:
+  assert lib.native59_sample(h,C.byref(i),C.byref(o))==0
+  repeated=Output();assert lib.native59_sample(h,C.byref(i),C.byref(repeated))==0
+  assert bytes(o)==bytes(repeated), 'repeated sample changed pre-edge state'
+  assert lib.native59_advance(h)==0
+  assert lib.native59_advance(h)==-4
+ else:assert lib.native59_tick(h,C.byref(i),C.byref(o))==0
  cycles+=1
  for r in range(8):
   credits[r]+=bool(o.credit&(1<<r))-bool(i.valid&(1<<r))

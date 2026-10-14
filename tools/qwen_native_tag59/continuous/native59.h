@@ -19,6 +19,11 @@ void native59_destroy(void *handle);
 // Drive low phase, sample the signals consumed at this rising edge, then clock
 // the real RTL. Every call preserves all DUT state. Reset occurs only if rst_n=0.
 // An active tag with bits above58 set returns-3 without advancing the model.
+// Settle the low phase and sample without a rising edge. Repeated calls in one
+// cycle can settle connected models; only the first advances the half-period.
+int native59_sample(void *handle,const native59_input *input,native59_output *output);
+// Clock the last sampled input. Returns -4 if no sample is pending.
+int native59_advance(void *handle);
 int native59_tick(void *handle,const native59_input *input,native59_output *output);
 #ifdef __cplusplus
 }
