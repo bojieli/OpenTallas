@@ -60,5 +60,18 @@
     ],
     "tightened_sdc_sha256": "fdfc3e6de23c0df9915a71d88f399a42197958cf5eb33b071ad34046f3186373",
     "qualification": "tightened copied constraint export is diagnostic only; original CLOSED does not prove hold with these checks"
-  }
+  },
+  "tightened_actual_results": [
+    "DUAL_PATH ss cs max before=-129.927795 after=-349.927795 expected=-349.927795",
+    "DUAL_PATH ss cs min before=189.544159 after=99.544151 expected=99.54415900000001",
+    "DUAL_PATH ss sc max before=-205.352509 after=-405.352539 expected=-405.352509",
+    "DUAL_PATH ss sc min before=262.892334 after=152.892365 expected=152.892334",
+    "DUAL_REF ss a/ck[0] arrival=10.000000 R=449.8 phi=459.8",
+    "DUAL_REF ss b/ck[0] arrival=10.000000 R=449.8 phi=459.8",
+    "DUAL_REF ss a/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
+    "DUAL_REF ss b/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
+    "DUAL_PASS ss actual ETM both directions max/min; zero-wire API accounting only",
+    "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-170657-1791951875): exit 0"
+  ],
+  "tightened_actual_results_scope": "SS only currently, actual geometric model with1167 legacy data input-hold exceptions removed in copiedSDC; unqualified actual API diagnostic. TT/FF original models have nohold and were not run in this stronger probe."
 }

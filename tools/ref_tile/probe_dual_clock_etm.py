@@ -18,6 +18,7 @@ def main():
     p.add_argument('--fixture', required=True, type=Path)
     p.add_argument('--tool-root', required=True, type=Path)
     p.add_argument('--out', required=True, type=Path)
+    p.add_argument('--diagnostic-record', type=Path, help='Audit record for a tightened copied-SDC fixture; keep it with generated evidence')
     p.add_argument('--unmapped-input-mutant', action='store_true', help='Add an actual top data input absent from domain lists; API must reject it')
     p.add_argument('--zero-source-mutant', action='store_true', help='Erase source compensation after application; numerical oracle must reject it')
     p.add_argument('--setup-only-diagnostic', action='store_true', help='Explicitly unqualified diagnostic when actual ETM hold arcs are absent')
@@ -34,6 +35,10 @@ def main():
         shutil.copyfile(args.fixture / f'dsfd_wfc_vmx_{corner}.lib', view / f'dsfd_wfc_vmx_{corner}.lib')
     shutil.copyfile(args.fixture / 'dsfd_wfc_vmx.lef', view / 'dsfd_wfc_vmx.lef')
     provenance = {'scope': 'default VMX actual closed ETM accounting fixture only; not priced die qualification', 'source': str(args.fixture), 'sha256': {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in args.fixture.iterdir() if f.is_file() and f.suffix in ('.lib', '.json', '.lef')}}
+    if args.diagnostic_record:
+        provenance['tightened_copied_constraint_diagnostic'] = json.loads(args.diagnostic_record.read_text())
+        provenance['scope'] = 'UNQUALIFIED actual routed geometry ETM under tightened copied constraints; no CLOSED assertion'
+    provenance['clock_api_sha256'] = hashlib.sha256((args.tool_root / 'tools/ref_tile/clock_entry_constraints.py').read_bytes()).hexdigest()
     (args.out / 'provenance.json').write_text(json.dumps(provenance, indent=2))
     spec = {'clock': 'entries', 'clock_port': 'ac', 'clock_ports': ['ac', 'av', 'bc', 'bv'],
             'children': [{'view': 'dsfd_wfc_vmx', 'count': 2}],
@@ -108,6 +113,8 @@ report_checks -path_delay min -format full_clock_expanded -group_path_count 4
 puts "DUAL_PASS {corner} actual ETM both directions max/min; zero-wire API accounting only"
 exit
 '''
+        if args.diagnostic_record:
+            text = text.replace('actual ETM both directions max/min', 'UNQUALIFIED tightened-constraint actual ETM both directions max/min')
         if args.setup_only_diagnostic:
             text = text.replace('foreach kind {max min}', 'foreach kind {max}')
             text = text.replace('actual ETM both directions max/min', 'UNQUALIFIED actual ETM setup-only diagnostic; missing hold arcs')
