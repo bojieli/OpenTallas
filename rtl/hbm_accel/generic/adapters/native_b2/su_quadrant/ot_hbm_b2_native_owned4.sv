@@ -59,7 +59,7 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0)(
     .fault(fault[32+q*8+b]),.cdrained(cd[16+b]),.vdrained(vd[16+b]),.rready(rrdy[16+b]),.wready(wrdy[16+b]));
    assign dma_cdrained[q*8+b]=cd[16+b];assign dma_vdrained[q*8+b]=vd[16+b];
   end
-  ot_hbm_b2_peer_mux_q #(.MUT(MUT==1?1:0)) station(.clk(vclk),.rst_n(rst_n),.src_clk({dma_clk[q],quant_clk[q],su_clk[q]}),
+  ot_hbm_b2_peer_mux_q #(.MUT(MUT==1?1:0)) station(.clk(vclk),.rst_n(rst_n),.bank_clk({8{vclk}}),.src_clk({dma_clk[q],quant_clk[q],su_clk[q]}),
    .rreq({dma_rreq[q],qbusy[q]|quant_rec[q*683],su_rreq[q]}),.wreq({dma_wreq[q],qbusy[q]|quant_rec[q*683],su_wreq[q]}),
    .src_drained({dma_peer_drained[q]&&(&cd[16+:8]),quant_drained[q],su_drained[q]&&(&cd[0+:8])}),
    .lane_rready(rrdy),.lane_wready(wrdy),.lane_vdrained(vd),.src_rq(srq),.src_rcredit(src),.src_rr(srr),.src_wq(swq),.src_wcredit(swc),.src_done(sd),
