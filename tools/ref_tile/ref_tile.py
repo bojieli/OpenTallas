@@ -73,6 +73,14 @@ class SpecError(ValueError):
     pass
 
 
+def pin_group_max(s: dict) -> int:
+    """Bound ordered pin chunks without changing tracks, density or bit order."""
+    n = s.get("route", {}).get("pin_group_max", 32)
+    if isinstance(n, bool) or not isinstance(n, int) or not 1 <= n <= 32:
+        raise SpecError("route.pin_group_max must be an integer 1..32")
+    return n
+
+
 def snap_up(v: float, g: float) -> float:
     return round(math.ceil(v / g - 1e-9) * g, 4)
 
@@ -160,6 +168,7 @@ def load_spec(path: str) -> dict:
     s.setdefault("macros", [])
     s.setdefault("children", [])
     s.setdefault("route", {})
+    pin_group_max(s)
     s.setdefault("reset_ports", [])
     s.setdefault("inter", [])
     if s["kind"] == "cluster" and not s["children"]:
@@ -1008,6 +1017,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
         f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
+        *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
 
@@ -1130,7 +1140,7 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
             "calibrate": {"enabled": False, "reason": "ref_tile: boundary referenced in-run to the propagated tree "
                                                       "(io_ref_skew.sdc), as the Qwen die masters"},
             "route": {
-                "cmd": ROUTE_PREFIX + f"HM={hm} OT_MM_FF_SDC='{kd}/signoff.sdc' SRC={{SRC}} OT_PIN_GROUP_MAX=32 "
+                "cmd": ROUTE_PREFIX + f"HM={hm} OT_MM_FF_SDC='{kd}/signoff.sdc' SRC={{SRC}} OT_PIN_GROUP_MAX={pin_group_max(s)} "
                        f"bash tools/ref_tile/ref_route.sh {kd}/kit.env {{LABEL}} {{RUN}}/routes",
                 "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
                 "logs": ["{RUN}/routes/{LABEL}/flow.log"],
