@@ -42,7 +42,7 @@
  "job": {
   "owner": "Codex:sm_pub_parent",
   "branch": "codex/smpub-parent-1013",
-  "tag": "r4",
+  "tag": "r5",
   "purpose": "Real die-wire split of existing publication stages; original CLOSED merged master retained, every cycle preserved",
   "extra_paths": [
    "rtl/hbm_accel/generic/adapters/tb/smpub_parent",
@@ -71,11 +71,16 @@
   ],
   "views_to": "physical/ref_tile/smpub_vmport/views",
   "record_to": "results/rtl/ref_tile/smpub_vmport",
-  "structural_change": "Real M4 face stub crosses fixed full-height M5 PDN connection pad despite installed above-layer keepout; lift only offending n_v face pin to M5, preserving power mesh and all CLOSED child stands"
+  "structural_change": "M5 lifted face pin receives legal inside-die M5 track access (center inset36nm,96nm actual pad reaches face), and its M5 above-M4 keepout has a narrow1.728um routing corridor where it intersects; keepouts remain over every neighboring M4 pin; original R3 PG-stub and R4 maze failures preserved"
  },
  "io_tcl": "physical/hgi_sm_pub_parent_stations/vmport_pins.tcl",
  "pin_access": {
-  "frac": 0.0
+  "frac": 0.0,
+  "corridor": {
+   "pin": "n_v",
+   "half_height_um": 0.864,
+   "script": "physical/hgi_sm_pub_parent_stations/pin_corridor.tcl"
+  }
  },
  "orfs_vars": {
   "OT_PK_HALO": "6.48"
