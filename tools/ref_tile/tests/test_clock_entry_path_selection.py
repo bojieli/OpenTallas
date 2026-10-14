@@ -140,11 +140,28 @@ assert_equal $::finished 1
 
     def test_nonfinite_matching_arrivals_rejected(self):
         self.run_tcl(r'''
-set ::ot_ref_pre_cts 0
-set ::ot_ce_require_wire 1
-foreach value {Inf -Inf NaN} {
- set ::test_paths [list [list $value {1 WC ^max ot_entry_58 ^ (clock prop)}]]
- expect_missing
+foreach before_cts {0 1} {
+ set ::ot_ref_pre_cts $before_cts
+ foreach require_wire {0 1} {
+  set ::ot_ce_require_wire $require_wire
+  foreach value {Inf -Inf NaN} {
+   foreach with_finite_path {0 1} {
+    set ::test_paths {}
+    if {$with_finite_path} {
+     lappend ::test_paths {2.5e-13 {0 WC ^max ot_entry_58 ^ (clock prop)}}
+    }
+    lappend ::test_paths [list $value {1 WC ^max ot_entry_58 ^ (clock prop)}]
+    set ::finished 0
+    if {![catch {ot_ce_clock_wire pin ot_entry_58} message]} {
+     error "nonfinite matching path accepted preCTS=$before_cts require_wire=$require_wire value=$value"
+    }
+    if {![string match {*nonfinite*} [string tolower $message]]} {
+     error "nonfinite path did not produce explicit rejection: $message"
+    }
+    assert_equal $::finished 1
+   }
+  }
+ }
 }
 ''')
 
