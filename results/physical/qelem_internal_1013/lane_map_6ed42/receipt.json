@@ -1,0 +1,212 @@
+{
+  "schema": "opentallas.s81.q_lane.mapped_inventory.v1",
+  "source_commit": "6ed42d12c",
+  "top": "ot_s81_q_lane_pair_native",
+  "params": {
+    "TW": 16
+  },
+  "mapped_std_area_um2": 6587.15652,
+  "clock_sink_flop_cells": 13128,
+  "cells_by_type_hierarchical": {
+    "INVx1_ASAP7_75t_R": 7280,
+    "AND3x1_ASAP7_75t_R": 1384,
+    "NOR3xp33_ASAP7_75t_R": 837,
+    "NOR2xp33_ASAP7_75t_R": 3532,
+    "AOI21xp33_ASAP7_75t_R": 2816,
+    "OAI21xp33_ASAP7_75t_R": 3677,
+    "A2O1A1Ixp33_ASAP7_75t_R": 273,
+    "NAND2xp33_ASAP7_75t_R": 2116,
+    "O2A1O1Ixp33_ASAP7_75t_R": 94,
+    "OAI211xp5_ASAP7_75t_R": 164,
+    "OA211x2_ASAP7_75t_R": 26,
+    "A2O1A1O1Ixp25_ASAP7_75t_R": 78,
+    "AO21x1_ASAP7_75t_R": 462,
+    "AOI211xp5_ASAP7_75t_R": 138,
+    "OA21x2_ASAP7_75t_R": 1138,
+    "NAND3xp33_ASAP7_75t_R": 983,
+    "AOI31xp33_ASAP7_75t_R": 129,
+    "NOR4xp25_ASAP7_75t_R": 648,
+    "AND4x1_ASAP7_75t_R": 27,
+    "AND2x2_ASAP7_75t_R": 733,
+    "NOR5xp2_ASAP7_75t_R": 65,
+    "NAND5xp2_ASAP7_75t_R": 23,
+    "AND5x1_ASAP7_75t_R": 70,
+    "NAND4xp25_ASAP7_75t_R": 156,
+    "XNOR2xp5_ASAP7_75t_R": 3005,
+    "XOR2xp5_ASAP7_75t_R": 947,
+    "OR4x1_ASAP7_75t_R": 169,
+    "OR5x1_ASAP7_75t_R": 11,
+    "AOI22xp33_ASAP7_75t_R": 73,
+    "OR3x1_ASAP7_75t_R": 1144,
+    "OA22x2_ASAP7_75t_R": 128,
+    "OR2x2_ASAP7_75t_R": 290,
+    "MAJIxp5_ASAP7_75t_R": 1852,
+    "MAJx2_ASAP7_75t_R": 556,
+    "AO211x2_ASAP7_75t_R": 2,
+    "AOI221xp5_ASAP7_75t_R": 8,
+    "OAI32xp33_ASAP7_75t_R": 8,
+    "OAI31xp33_ASAP7_75t_R": 206,
+    "OAI22xp33_ASAP7_75t_R": 133,
+    "OAI311xp33_ASAP7_75t_R": 1,
+    "HB1xp67_ASAP7_75t_R": 86,
+    "DFFHQNx1_ASAP7_75t_R": 13086,
+    "DFFASRHQNx1_ASAP7_75t_R": 42,
+    "$scopeinfo": 18
+  },
+  "ports": {
+    "gclk_ma": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_m": {
+      "direction": "input",
+      "bits": 1
+    },
+    "l_v0": {
+      "direction": "input",
+      "bits": 1
+    },
+    "l_v1": {
+      "direction": "input",
+      "bits": 1
+    },
+    "l_t": {
+      "direction": "input",
+      "bits": 16
+    },
+    "l_xq0": {
+      "direction": "input",
+      "bits": 256
+    },
+    "l_xq1": {
+      "direction": "input",
+      "bits": 256
+    },
+    "w0q": {
+      "direction": "input",
+      "bits": 256
+    },
+    "w1q": {
+      "direction": "input",
+      "bits": 256
+    },
+    "l_xe0": {
+      "direction": "input",
+      "bits": 10
+    },
+    "l_xe1": {
+      "direction": "input",
+      "bits": 10
+    },
+    "we0": {
+      "direction": "input",
+      "bits": 10
+    },
+    "we1": {
+      "direction": "input",
+      "bits": 10
+    },
+    "l0_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "l1_v": {
+      "direction": "output",
+      "bits": 1
+    },
+    "l0_f": {
+      "direction": "output",
+      "bits": 1
+    },
+    "l1_f": {
+      "direction": "output",
+      "bits": 1
+    },
+    "l0_y": {
+      "direction": "output",
+      "bits": 32
+    },
+    "l1_y": {
+      "direction": "output",
+      "bits": 32
+    },
+    "l0_t": {
+      "direction": "output",
+      "bits": 16
+    },
+    "l1_t": {
+      "direction": "output",
+      "bits": 16
+    }
+  },
+  "physical_admission": false,
+  "qualification": "Area/count inventory only; CTS, assigned native pins, same-epoch actual independent-clock proof, SS/FF arcs and closed routed views are open",
+  "source_sha256": {
+    "rtl/v41rom/ot_v41_rom_elem_q_w10.sv": "5eace5ca4ee8d319fb0e8ef3ea6a38f9ba07e55a18c15bf6b2e5d02692a2861a",
+    "rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv": "83eea3416c455bd4c49d6043e997e8bd33e7a081556d51bfbb05983ad9976df5",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+    "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv": "cce28349aa1403737d2bf38a1da7f0c19472040772fdde0f29ff07a8ae10b9db",
+    "rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv": "981d0bf9f744887a8bed6c05ab21a6b5ee321699e5a5a9bfdd3a36ee7ae84f54",
+    "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv": "8132e6b8e1e4124e1a8c0b34e024200f2e7cd4b65a1bfea2b7c0510915f9e80b",
+    "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv": "920bfadb368e43c039a626426ac80935bd4af892c7636d372e4f94d3164f1769",
+    "rtl/v41rom/ot_v41_elem_pq_tags.sv": "ebb7c771a180813761a6f0fb690e59571924c4ed82633872645421089371fe58",
+    "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "rtl/v41rom/ot_v41_chain3.sv": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+    "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+    "rtl/v41rom/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+    "rtl/v41rom/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+    "rtl/v41rom/ot_v41_bterm3_w10.sv": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+    "rtl/v41rom/ot_v41_bterm4_w10.sv": "a5764f8816a6ef1df3cfc5532d4e936abe71999a1cfc9f5a3f206b9ea7929f28",
+    "rtl/v41rom/ot_v41_bterm5_w10.sv": "25911e00e68af26db3717374baa5672d06c7a898fa27ee0ad38baa4ae99d33f5",
+    "rtl/v41rom/ot_v41_segtree3.sv": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+    "rtl/v41rom/ot_v41_segtree4.sv": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+    "rtl/v41rom/ot_v41_segtree5.sv": "7b7c4fe4af2a5cab45678789372c1e34a55dfbd2d9bafd2243b3f752ca5a6d74",
+    "rtl/v41rom/ot_v41_segtree6.sv": "fe4b720228ab4730a7c2fef32943980d12b16b57432616b1f333c9e4bd623dfb",
+    "rtl/v41rom/ot_v41_chain4.sv": "6481fc8830e6d5d8ce433b9e52472260eeff8ed94f3f609e15b49263b77759f3",
+    "rtl/v41rom/ot_v41_fadd2.sv": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+  },
+  "tool_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "library_sha256": {
+    "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+    "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+    "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+    "merged.lib": "0e17d8d9aa8df5156cac87abedb9a6c7ea3d24d7ffa0e4993eebc203c7879c00",
+    "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+    "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+    "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+    "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7"
+  },
+  "log_sha256": {
+    "mapped.log": "bda8b5c0b7ffbec043b6c9d630b001dec66af0e9b12169b22ae2fabf301e0d96",
+    "generic.log": "efb929f18e2f60977aa13aa0d1a62e61422d8e89e83455045e7d20e5fde4bcc7"
+  },
+  "ot_unit": "oth-ubuntu-825898-1791963107",
+  "terminal_exit_code": 0,
+  "generic_netlist_sha256_gzip": "a829bbea4b4364c53b5e5f844ab6f014dda304c23c3e46eb19524471c9db2e14",
+  "mapped_netlist_sha256_gzip": "677dc6bb34ef82dac16cbfb7858c345e3cef681a69771c5b54af6268bd4612cf",
+  "five_group_context": {
+    "source_partition_request": "11ab82556 actual CTS census",
+    "control": 8084,
+    "lane_groups": 2,
+    "historical_per_lane_group": 12763,
+    "new_mapped_per_lane_group": 13128,
+    "historical_per_rom_return_group": 9821,
+    "rom_return_groups": 2,
+    "new_root_under15000": true,
+    "future_remaining_groups_not_mapped": true
+  }
+}

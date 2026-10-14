@@ -1,0 +1,6 @@
+read_json /srv/opentallas-scratch/codex/q-lane-map-6ed42/output/generic.json
+dffunmap
+dfflibmap -liberty /srv/opentallas-scratch/codex/q-lane-map-6ed42/libs/merged.lib
+abc -liberty /srv/opentallas-scratch/codex/q-lane-map-6ed42/libs/merged.lib
+stat -liberty /srv/opentallas-scratch/codex/q-lane-map-6ed42/libs/merged.lib
+write_json /srv/opentallas-scratch/codex/q-lane-map-6ed42/output/mapped.json
