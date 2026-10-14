@@ -1,0 +1,24 @@
+{
+  "status": "PASS differential only, not producer/global protocol adoption",
+  "split_source_commit": "fda6426b3",
+  "edges": 5006,
+  "hits": 495,
+  "misses": 2843,
+  "paused_edges": 1543,
+  "semantics": [
+    "load/core simultaneous",
+    "loader active while core paused",
+    "reset",
+    "clear preserves sticky fault",
+    "J normalization switch",
+    "full21-tag stale-slot collision"
+  ],
+  "sources": {
+    "rtl/physical/ot_qwen_xcache_indexed.sv": "3dee116caefbff4fbbad4e7e09404ced6f776fdf0421d28fa1cef1f51519c730",
+    "rtl/physical/ot_qwen_xcache_split32.sv": "a3561646dbc56381d6791bd1c2cd82b934e29eb91f63142f8aa033ace4baf5a6",
+    "rtl/test/qwen_kv_die/tb_qwen_xcache_split32.sv": "fc1cce29130ad3ca99ebc554d1f22245d06ccc1f3d792aeda505d8194abaa45f"
+  },
+  "mutant_sha256": "0841a1201fd30a9430c6d413c3af56f549694ddb05b28ceffe6bc03bf8e08da9",
+  "mutant": "tags[ri]==rt becomes tags[ri][4:0]==rt[4:0]",
+  "mutant_result": "observed differential mismatch edge3"
+}
