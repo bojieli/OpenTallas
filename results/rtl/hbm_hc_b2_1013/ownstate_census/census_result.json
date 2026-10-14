@@ -1,0 +1,58 @@
+{
+  "mapped_top": "$paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\\ot_hgi_hc_lane_b2",
+  "flipflops_by_clock": {
+    "clk[0]": 19500,
+    "clk_chunk[0]": 538,
+    "clk_chunk[1]": 538,
+    "clk_chunk[2]": 538,
+    "clk_chunk[3]": 538,
+    "clk_chunk[4]": 538,
+    "clk_chunk[5]": 538,
+    "clk_chunk[6]": 538
+  },
+  "total_own_flipflops": 23266,
+  "unclassified_ff": [],
+  "top_cell_types": [
+    [
+      "$_MUX_",
+      56166
+    ],
+    [
+      "$_DFFE_PP_",
+      11027
+    ],
+    [
+      "$_DFF_P_",
+      8898
+    ],
+    [
+      "$_AND_",
+      8546
+    ],
+    [
+      "$_OR_",
+      6070
+    ],
+    [
+      "$_SDFFE_PP0P_",
+      2560
+    ],
+    [
+      "$_XOR_",
+      2118
+    ],
+    [
+      "$_NOT_",
+      1724
+    ],
+    [
+      "$_DFF_PN0_",
+      428
+    ],
+    [
+      "$_SDFF_PP0_",
+      224
+    ]
+  ],
+  "scope": "Generic mapped own-state clockcount; accepted8SL roots and real SRAM internal clocks excluded; no outline,physicalclockspread,or timing claim"
+}

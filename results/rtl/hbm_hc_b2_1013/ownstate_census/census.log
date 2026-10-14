@@ -1,0 +1,1193 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `census.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_delay.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_fpu.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_fpu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fadd'.
+Generating RTLIL representation for module `\ot_hdc_fmul'.
+Generating RTLIL representation for module `\ot_hdc_bmul'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_fp32_mul_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_pipe'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/proto/ot_fp32_add_rne_pipe.sv
+Parsing SystemVerilog input from `rtl/proto/ot_fp32_add_rne_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\ot_fp32_add_rne_pipe'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_sfu.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_sfu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vline'.
+rtl/hdc/ot_hdc_sfu.sv:23: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Generating RTLIL representation for module `\ot_hdc_exp'.
+Generating RTLIL representation for module `\ot_hdc_recip'.
+Generating RTLIL representation for module `\ot_hdc_rsqrt'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksadd_k'.
+Generating RTLIL representation for module `\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_fastfp.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_fastfp.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksa'.
+Generating RTLIL representation for module `\ot_hdc_lzc32'.
+Generating RTLIL representation for module `\ot_hdc_mul24_rows'.
+Generating RTLIL representation for module `\ot_hdc_mul24_sum'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_fast'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_fast'.
+Generating RTLIL representation for module `\ot_hdc_qadd'.
+Generating RTLIL representation for module `\ot_hdc_qmul'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_fastfp_lat.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_fastfp_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_qmul_lat'.
+Generating RTLIL representation for module `\ot_hdc_qadd_lat'.
+Generating RTLIL representation for module `\ot_hdc_kadd'.
+Generating RTLIL representation for module `\ot_hdc_kge'.
+Generating RTLIL representation for module `\ot_hdc_kinc'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_fp32_mul_lat.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_fp32_mul_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat7'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat9'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat5i'.
+Generating RTLIL representation for module `\ot_hdc_mul_kcp48'.
+Generating RTLIL representation for module `\ot_hdc_mul24_rows_k'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_fp32_add_lat.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_fp32_add_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat'.
+Generating RTLIL representation for module `\ot_hdc_w11_cut'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat4i'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat3'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat7'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_fp32_f12.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_fp32_f12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_f12_cut'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12_l5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12_l6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5s'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12_l7'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12_l6r'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5x'.
+Generating RTLIL representation for module `\ot_hdc_f12_inreg'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l5i'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_f12_l6i'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv
+Parsing SystemVerilog input from `rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_vred_op'.
+Generating RTLIL representation for module `\ot_hdc_v41x_vsq'.
+Generating RTLIL representation for module `\ot_hdc_v41x_vec_red'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
+Parsing SystemVerilog input from `rtl/hdc/v41x/ot_hdc_v41x_sfu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_exp'.
+Generating RTLIL representation for module `\ot_hdc_v41x_rsqrt'.
+Generating RTLIL representation for module `\ot_hdc_v41x_fdiv'.
+Warning: Replacing memory \r_e with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:551
+Warning: Replacing memory \r_bad with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:550
+Warning: Replacing memory \r_zero with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:549
+Warning: Replacing memory \r_sign with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:548
+Warning: Replacing memory \r_mb3 with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:547
+Warning: Replacing memory \r_mb with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:546
+Warning: Replacing memory \r_q with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:545
+Warning: Replacing memory \r_rem with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:544
+Generating RTLIL representation for module `\ot_hdc_v41x_softplus'.
+Generating RTLIL representation for module `\ot_hdc_v41x_ins'.
+Warning: Replacing memory \g_line.r with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:770
+Warning: Replacing memory \g_line.rv with list of registers. See rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:765
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: rtl/hdc/v41/ot_hdc_fsqrt.sv
+Parsing SystemVerilog input from `rtl/hdc/v41/ot_hdc_fsqrt.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fsqrt'.
+Warning: Replacing memory \err_stage with list of registers. See rtl/hdc/v41/ot_hdc_fsqrt.sv:103
+Warning: Replacing memory \zero_stage with list of registers. See rtl/hdc/v41/ot_hdc_fsqrt.sv:102
+Warning: Replacing memory \half_stage with list of registers. See rtl/hdc/v41/ot_hdc_fsqrt.sv:101
+Warning: Replacing memory \rad_stage with list of registers. See rtl/hdc/v41/ot_hdc_fsqrt.sv:100
+Warning: Replacing memory \root_stage with list of registers. See rtl/hdc/v41/ot_hdc_fsqrt.sv:99
+Warning: Replacing memory \rem_stage with list of registers. See rtl/hdc/v41/ot_hdc_fsqrt.sv:98
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: rtl/hdc/v41/ot_hdc_fdiv.sv
+Parsing SystemVerilog input from `rtl/hdc/v41/ot_hdc_fdiv.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fdiv'.
+Warning: Replacing memory \r_e with list of registers. See rtl/hdc/v41/ot_hdc_fdiv.sv:101
+Warning: Replacing memory \r_bad with list of registers. See rtl/hdc/v41/ot_hdc_fdiv.sv:100
+Warning: Replacing memory \r_zero with list of registers. See rtl/hdc/v41/ot_hdc_fdiv.sv:99
+Warning: Replacing memory \r_sign with list of registers. See rtl/hdc/v41/ot_hdc_fdiv.sv:98
+Warning: Replacing memory \r_mb with list of registers. See rtl/hdc/v41/ot_hdc_fdiv.sv:97
+Warning: Replacing memory \r_q with list of registers. See rtl/hdc/v41/ot_hdc_fdiv.sv:96
+Warning: Replacing memory \r_rem with list of registers. See rtl/hdc/v41/ot_hdc_fdiv.sv:95
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: rtl/hdc/v41/ot_hdc_actquant.sv
+Parsing SystemVerilog input from `rtl/hdc/v41/ot_hdc_actquant.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_actquant'.
+Warning: Replacing memory \s10_g with list of registers. See rtl/hdc/v41/ot_hdc_actquant.sv:210
+Warning: Replacing memory \s10_c with list of registers. See rtl/hdc/v41/ot_hdc_actquant.sv:209
+Warning: Replacing memory \s9_rs with list of registers. See rtl/hdc/v41/ot_hdc_actquant.sv:181
+Warning: Replacing memory \s9_g with list of registers. See rtl/hdc/v41/ot_hdc_actquant.sv:179
+Warning: Replacing memory \s9_sig with list of registers. See rtl/hdc/v41/ot_hdc_actquant.sv:176
+Warning: Replacing memory \s2a_m with list of registers. See rtl/hdc/v41/ot_hdc_actquant.sv:108
+Warning: Replacing memory \s1_m with list of registers. See rtl/hdc/v41/ot_hdc_actquant.sv:95
+Warning: Replacing memory \t16 with list of registers. See rtl/hdc/v41/ot_hdc_actquant.sv:87
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: rtl/hdc/v41x/ot_dsrom_aq12.sv
+Parsing SystemVerilog input from `rtl/hdc/v41x/ot_dsrom_aq12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_aq12'.
+Warning: Replacing memory \s16_sub with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:180
+Warning: Replacing memory \s16_cn with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:178
+Warning: Replacing memory \s16_be with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:177
+Warning: Replacing memory \s16_g4 with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:176
+Warning: Replacing memory \s16_c with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:175
+Warning: Replacing memory \s15_g with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:155
+Warning: Replacing memory \s15_c with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:154
+Warning: Replacing memory \s14_g with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:142
+Warning: Replacing memory \s14_tq with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:139
+Warning: Replacing memory \s13_rs with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:121
+Warning: Replacing memory \s13_g with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:120
+Warning: Replacing memory \s13_sig with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:118
+Warning: Replacing memory \s12_sig with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:104
+Warning: Replacing memory \s12_dd with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:103
+Warning: Replacing memory \s12_ev with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:102
+Warning: Replacing memory \m4 with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:59
+Warning: Replacing memory \m3 with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:58
+Warning: Replacing memory \m2 with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:57
+Warning: Replacing memory \m1 with list of registers. See rtl/hdc/v41x/ot_dsrom_aq12.sv:56
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: rtl/hdc/v41x/ot_dsrom_divc.sv
+Parsing SystemVerilog input from `rtl/hdc/v41x/ot_dsrom_divc.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_divc'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv
+Parsing SystemVerilog input from `rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_fp32_add_f12_l6'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: rtl/hdc/v41x/ot_dsrom_su_add6.sv
+Parsing SystemVerilog input from `rtl/hdc/v41x/ot_dsrom_su_add6.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_f12_l6x'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: rtl/hdc/v41x/ot_dsrom_su_norm.sv
+Parsing SystemVerilog input from `rtl/hdc/v41x/ot_dsrom_su_norm.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_su_norm'.
+Generating RTLIL representation for module `\ot_dsrom_su_norm_mix'.
+Generating RTLIL representation for module `\ot_dsrom_rsqrt'.
+Generating RTLIL representation for module `\ot_dsrom_qadd'.
+Generating RTLIL representation for module `\ot_dsrom_su_norm_mem'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: rtl/hdc/v41x/ot_dsrom_su_hcpost.sv
+Parsing SystemVerilog input from `rtl/hdc/v41x/ot_dsrom_su_hcpost.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_su_hcpost_lane'.
+Generating RTLIL representation for module `\ot_dsrom_su_hcpost_wire'.
+Warning: Replacing memory \g_r.dl with list of registers. See rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:157
+Warning: Replacing memory \g_r.vl with list of registers. See rtl/hdc/v41x/ot_dsrom_su_hcpost.sv:150
+Generating RTLIL representation for module `\ot_dsrom_su_hcpost_group'.
+Generating RTLIL representation for module `\ot_dsrom_su_hcpost'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_hc_chunk_store32'.
+Warning: Replacing memory \store with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv:26
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_hc_chunk_scan2'.
+Generating RTLIL representation for module `\ot_hgi_hc_chunk_scan5'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: sl_bb.sv
+Parsing SystemVerilog input from `sl_bb.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_hc_lane_sl'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_hc_lane_b2'.
+Warning: Replacing memory \op with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv:168
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_hc_cat_b2'.
+Warning: Replacing memory \crd with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:83
+Warning: Replacing memory \rr with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:83
+Warning: Replacing memory \rp with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:82
+Warning: Replacing memory \wp with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:82, rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:77
+Warning: Replacing memory \pick with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:97, rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:66
+Generating RTLIL representation for module `\ot_hgi_hc_coll_b2'.
+Warning: Replacing memory \ir with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:291
+Warning: Replacing memory \iw with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:291, rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:159
+Warning: Replacing memory \id with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:158
+Warning: Replacing memory \tg with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:221, rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:150, rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:145
+Warning: Replacing memory \hd with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv:145
+Generating RTLIL representation for module `\ot_hgi_hc_qst_b2'.
+Generating RTLIL representation for module `\ot_hgi_hc_ctl_b2'.
+Generating RTLIL representation for module `\ot_hgi_hc_eng_b2'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `rtl/lib/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See rtl/lib/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: rtl/hbm_accel/die_glue/ot_hbm_rly.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/die_glue/ot_hbm_rly.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_rly'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: rtl/hbm_accel/die_glue/hbfd_rly_masters.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/die_glue/hbfd_rly_masters.sv' to AST representation.
+Generating RTLIL representation for module `\hbfd_rly_8_WE'.
+Generating RTLIL representation for module `\hbfd_rly_8_EW'.
+Generating RTLIL representation for module `\hbfd_rly_8_SN'.
+Generating RTLIL representation for module `\hbfd_rly_8_NS'.
+Generating RTLIL representation for module `\hbfd_rly_48_WE'.
+Generating RTLIL representation for module `\hbfd_rly_48_EW'.
+Generating RTLIL representation for module `\hbfd_rly_48_SN'.
+Generating RTLIL representation for module `\hbfd_rly_48_NS'.
+Generating RTLIL representation for module `\hbfd_rly_136_WE'.
+Generating RTLIL representation for module `\hbfd_rly_136_EW'.
+Generating RTLIL representation for module `\hbfd_rly_136_SN'.
+Generating RTLIL representation for module `\hbfd_rly_136_NS'.
+Generating RTLIL representation for module `\hbfd_rly_304_WE'.
+Generating RTLIL representation for module `\hbfd_rly_304_EW'.
+Generating RTLIL representation for module `\hbfd_rly_304_SN'.
+Generating RTLIL representation for module `\hbfd_rly_304_NS'.
+Generating RTLIL representation for module `\hbfd_rly_624_WE'.
+Generating RTLIL representation for module `\hbfd_rly_624_EW'.
+Generating RTLIL representation for module `\hbfd_rly_624_SN'.
+Generating RTLIL representation for module `\hbfd_rly_624_NS'.
+Generating RTLIL representation for module `\hbfd_rly_1136_WE'.
+Generating RTLIL representation for module `\hbfd_rly_1136_EW'.
+Generating RTLIL representation for module `\hbfd_rly_1136_SN'.
+Generating RTLIL representation for module `\hbfd_rly_1136_NS'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_vm_core'.
+Warning: Replacing memory \p2_raw with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:414
+Warning: Replacing memory \rhd with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:396
+Warning: Replacing memory \rf with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:392
+Warning: Replacing memory \p2_tag with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:376
+Warning: Replacing memory \pm_bank with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:374
+Warning: Replacing memory \pm_tag with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:374
+Warning: Replacing memory \p1_tag with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:370
+Warning: Replacing memory \p1_bank with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:370
+Warning: Replacing memory \rf_n with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:365
+Warning: Replacing memory \rf_t with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:392, rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:365
+Warning: Replacing memory \rf_h with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:365
+Warning: Replacing memory \ocnt with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:365
+Warning: Replacing memory \r2_raw with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:336
+Warning: Replacing memory \r2_g with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:325
+Warning: Replacing memory \rm_g with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:325
+Warning: Replacing memory \r1_g with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:325
+Warning: Replacing memory \m_wm with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:266
+Warning: Replacing memory \m_wd with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:265
+Warning: Replacing memory \m_wa with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:263
+Warning: Replacing memory \m_ra with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:260
+Warning: Replacing memory \gr_w with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:224
+Warning: Replacing memory \gr_r with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:224
+Warning: Replacing memory \w2_g with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:211
+Warning: Replacing memory \rl_g with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:211
+Warning: Replacing memory \c_wait with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:203
+Warning: Replacing memory \wb_lane with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv:175
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_vm_unit'.
+Warning: Replacing memory \aprr with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv:170
+Warning: Replacing memory \apcr with list of registers. See rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv:170
+Successfully finished Verilog frontend.
+
+33. Executing Verilog-2005 frontend: rtl/link/ot_fifo_sram_fwft.sv
+Parsing SystemVerilog input from `rtl/link/ot_fifo_sram_fwft.sv' to AST representation.
+Generating RTLIL representation for module `\ot_fifo_sram_fwft'.
+Successfully finished Verilog frontend.
+
+34. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_64x512_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+35. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_1024x256_m2_r2c2'.
+Successfully finished Verilog frontend.
+
+36. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_256x256_m2_r2c2'.
+Successfully finished Verilog frontend.
+
+37. Executing Verilog-2005 frontend: physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+Parsing SystemVerilog input from `physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Successfully finished Verilog frontend.
+
+38. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_bank'.
+Warning: Replacing memory \rqn with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:220
+Warning: Replacing memory \rqt with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:274, rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:220
+Warning: Replacing memory \rqh with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:220
+Warning: Replacing memory \wqn with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:219
+Warning: Replacing memory \wqt with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:272, rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:219
+Warning: Replacing memory \wqh with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:219
+Warning: Replacing memory \egc with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:217
+Warning: Replacing memory \r_head with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:188
+Warning: Replacing memory \w_head with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:179, rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv:178
+Successfully finished Verilog frontend.
+
+39. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_hub'.
+Warning: Replacing memory \e_dm with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:254
+Warning: Replacing memory \e_nr with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:254
+Warning: Replacing memory \e_nl with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:253
+Warning: Replacing memory \e_tag with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:251
+Warning: Replacing memory \e_d with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:251
+Warning: Replacing memory \e_wm with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:251
+Warning: Replacing memory \e_row with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:251
+Warning: Replacing memory \e_bank with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:250
+Warning: Replacing memory \e_we with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:250
+Warning: Replacing memory \seq.gb with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:235, rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:205
+Warning: Replacing memory \e_sr with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:201
+Warning: Replacing memory \e_sl with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:201
+Warning: Replacing memory \e_cnt with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:201
+Warning: Replacing memory \e_v with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:201
+Warning: Replacing memory \h1 with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:200
+Warning: Replacing memory \hp with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:233, rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:200
+Warning: Replacing memory \dp with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:200
+Warning: Replacing memory \tp with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:217, rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:200
+Warning: Replacing memory \pqc with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:198
+Warning: Replacing memory \gs_b2 with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:197
+Warning: Replacing memory \gs_b with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:197
+Warning: Replacing memory \dec with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:180, rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:179
+Warning: Replacing memory \cb with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:224, rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:147
+Warning: Replacing memory \rhd with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:76
+Warning: Replacing memory \rh with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:76
+Warning: Replacing memory \aw with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:75
+Warning: Replacing memory \rs_d with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv:69
+Successfully finished Verilog frontend.
+
+40. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_rstop'.
+Warning: Replacing memory \seq.np with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:223, rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:221
+Warning: Replacing memory \t_pend with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:162
+Warning: Replacing memory \t_v with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:162
+Warning: Replacing memory \xqc with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:161
+Warning: Replacing memory \gn with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:161
+Warning: Replacing memory \gt with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:244, rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:161
+Warning: Replacing memory \gh with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:161
+Warning: Replacing memory \outc with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:153
+Warning: Replacing memory \inn with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:153
+Warning: Replacing memory \it with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:239, rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:153
+Warning: Replacing memory \ih with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv:153
+Successfully finished Verilog frontend.
+
+41. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_rcl'.
+Warning: Replacing memory \ric with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv:46
+Warning: Replacing memory \rn with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv:46
+Warning: Replacing memory \rt with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv:72, rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv:46
+Warning: Replacing memory \rh with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv:46
+Successfully finished Verilog frontend.
+
+42. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/b2/ot_vms_star.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/b2/ot_vms_star.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_star'.
+Warning: Replacing memory \kc with list of registers. See rtl/hbm_accel/generic/vm/b2/ot_vms_star.sv:61
+Successfully finished Verilog frontend.
+
+43. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/b2/ot_vms_relay.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/b2/ot_vms_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_relay'.
+Successfully finished Verilog frontend.
+
+44. Executing Verilog-2005 frontend: rtl/hbm_accel/generic/vm/b2/ot_vms_slice.sv
+Parsing SystemVerilog input from `rtl/hbm_accel/generic/vm/b2/ot_vms_slice.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_slice'.
+Successfully finished Verilog frontend.
+Parameter \D = 1280
+Parameter \BANKS = 8
+Parameter \QID = 0
+Parameter \LQ = 10
+Parameter \FD = 64
+Parameter \TD = 20
+Parameter \CLOCKED = 1
+Parameter \HSL = 1
+Parameter \MUT = 0
+
+45. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_hc_lane_b2'.
+Parameter \D = 1280
+Parameter \BANKS = 8
+Parameter \QID = 0
+Parameter \LQ = 10
+Parameter \FD = 64
+Parameter \TD = 20
+Parameter \CLOCKED = 1
+Parameter \HSL = 1
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2'.
+Warning: Replacing memory \op with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv:168
+
+46. Executing HIERARCHY pass (managing design hierarchy).
+
+46.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_hc_lane_b2
+Used module:     \ot_rst_relay
+Used module:     \ot_hdc_vline
+Used module:     \ot_hdc_delay
+Used module:     \ot_fifo_sram_fwft
+Used module:     \ot_dsrom_qadd
+Used module:         \ot_hdc_qadd_lat
+Used module:             \ot_hdc_fp32_add_fast
+Used module:                 \ot_hdc_ksa
+Used module:                 \ot_hdc_lzc32
+Parameter \W = 24
+
+46.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksa'.
+Parameter \W = 24
+Generating RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000'.
+Parameter \W = 8
+
+46.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksa'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+Parameter \W = 28
+
+46.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksa'.
+Parameter \W = 28
+Generating RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+Parameter \W = 31
+
+46.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksa'.
+Parameter \W = 31
+Generating RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111'.
+Parameter \KEEP = 1
+Parameter \LAT = 4
+
+46.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_qadd_lat'.
+Parameter \KEEP = 1
+Parameter \LAT = 4
+Generating RTLIL representation for module `$paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat'.
+Parameter \REGIONS = 2
+
+46.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 2
+Generating RTLIL representation for module `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000010'.
+Warning: Replacing memory \relay_q with list of registers. See rtl/lib/ot_rst_relay.sv:42
+Parameter \D = 26
+
+46.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+Parameter \D = 26
+Generating RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000011010'.
+Parameter \W = 5
+Parameter \D = 5
+
+46.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 5
+Parameter \D = 5
+Generating RTLIL representation for module `$paramod$2e8d87c0222e0bc9a743d67a8074d5e1fcb9be5a\ot_hdc_delay'.
+Parameter \D = 6
+
+46.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Parameter \D = 47
+
+46.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+Parameter \D = 47
+Generating RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000101111'.
+Parameter \D = 8
+
+46.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+Parameter \D = 8
+Generating RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000001000'.
+Parameter \W = 271
+Parameter \DEPTH = 64
+Parameter \MACRO = 0
+Parameter \ESL = 64
+
+46.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_fifo_sram_fwft'.
+Parameter \W = 271
+Parameter \DEPTH = 64
+Parameter \MACRO = 0
+Parameter \ESL = 64
+Generating RTLIL representation for module `$paramod$2954b01c04b509d847a3055750380f3a52e62069\ot_fifo_sram_fwft'.
+Parameter \W = 32
+Parameter \D = 0
+
+46.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 32
+Parameter \D = 0
+Generating RTLIL representation for module `$paramod$e0ab5449d823ccc2334dbd83384827b5b32aad73\ot_hdc_delay'.
+Parameter \LAT = 6
+
+46.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_qadd'.
+Parameter \LAT = 6
+Generating RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 6
+
+46.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 32
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod$cf62013b1f910f84554a2d5337a99b87fa2314b1\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 12
+
+46.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 32
+Parameter \D = 12
+Generating RTLIL representation for module `$paramod$4a006920415146e5eba39a4873e34e18b61d9f00\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 18
+
+46.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 32
+Parameter \D = 18
+Generating RTLIL representation for module `$paramod$cbb140bd2da39cc9cac3669ecdca3f834e0b205c\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 24
+
+46.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 32
+Parameter \D = 24
+Generating RTLIL representation for module `$paramod$81293afaf18e5bd1771b29c1534e3fd67591d744\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 30
+
+46.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 32
+Parameter \D = 30
+Generating RTLIL representation for module `$paramod$10e8ac69be0ab0d2182bdb508009e06788e1bfe4\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 36
+
+46.21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 32
+Parameter \D = 36
+Generating RTLIL representation for module `$paramod$193f8d7eb587d5aa1fa4ea5bf2bba5d038c176f8\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Reprocessing module ot_hgi_hc_lane_b2 because instantiated module $paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110 has become available.
+Generating RTLIL representation for module `$paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2'.
+Warning: Replacing memory \op with list of registers. See rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv:168
+
+46.22. Analyzing design hierarchy..
+Top module:  $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2
+Used module:     \ot_dsrom_qadd
+Used module:         $paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat
+Used module:             \ot_hdc_fp32_add_lat4i
+Used module:                 \ot_hdc_fp32_add_lat
+Used module:                     \ot_hdc_w11_cut
+Used module:                     \ot_hdc_ksadd_k
+Used module:                     \ot_hdc_lzc32
+Used module:     \ot_hdc_delay
+Used module:     \ot_fifo_sram_fwft
+Used module:     \ot_hdc_vline
+Used module:     \ot_rst_relay
+Parameter \W = 71
+Parameter \CUT = 0
+Parameter \VB = 32'11111111111111111111111111111111
+
+46.23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut'.
+Parameter \W = 71
+Parameter \CUT = 0
+Parameter \VB = 32'11111111111111111111111111111111
+Generating RTLIL representation for module `$paramod$0af06bfb868252cb13b0f8c91ccf22d28a43a355\ot_hdc_w11_cut'.
+Parameter \W = 24
+
+46.24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+Parameter \W = 24
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011000'.
+Parameter \W = 8
+
+46.25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 108
+Parameter \CUT = 0
+Parameter \VB = 32'11111111111111111111111111111111
+
+46.26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut'.
+Parameter \W = 108
+Parameter \CUT = 0
+Parameter \VB = 32'11111111111111111111111111111111
+Generating RTLIL representation for module `$paramod$c8c0b24070951a03c74fd75bdb90ec84c4faba9f\ot_hdc_w11_cut'.
+Parameter \W = 102
+Parameter \CUT = 0
+Parameter \VB = 32'11111111111111111111111111111111
+
+46.27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut'.
+Parameter \W = 102
+Parameter \CUT = 0
+Parameter \VB = 32'11111111111111111111111111111111
+Generating RTLIL representation for module `$paramod$33f5d6a37e0368640852321dba56360a54a16ba5\ot_hdc_w11_cut'.
+Parameter \W = 28
+
+46.28. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+Parameter \W = 28
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100'.
+Parameter \W = 120
+Parameter \CUT = 0
+Parameter \VB = 32'11111111111111111111111111111111
+
+46.29. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut'.
+Parameter \W = 120
+Parameter \CUT = 0
+Parameter \VB = 32'11111111111111111111111111111111
+Generating RTLIL representation for module `$paramod$1b715d8186751a6bb14e61392ed5c3931af0f8fb\ot_hdc_w11_cut'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 31
+
+46.30. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+Parameter \W = 31
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011111'.
+Parameter \LAT = 4
+Parameter \CUTS = 1
+
+46.31. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 4
+Parameter \CUTS = 1
+Generating RTLIL representation for module `$paramod$a3c6ff8629d951f77e96bdffe304c9da945cfa73\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 36
+Found cached RTLIL representation for module `$paramod$193f8d7eb587d5aa1fa4ea5bf2bba5d038c176f8\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 30
+Found cached RTLIL representation for module `$paramod$10e8ac69be0ab0d2182bdb508009e06788e1bfe4\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 24
+Found cached RTLIL representation for module `$paramod$81293afaf18e5bd1771b29c1534e3fd67591d744\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 18
+Found cached RTLIL representation for module `$paramod$cbb140bd2da39cc9cac3669ecdca3f834e0b205c\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 12
+Found cached RTLIL representation for module `$paramod$4a006920415146e5eba39a4873e34e18b61d9f00\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 6
+Found cached RTLIL representation for module `$paramod$cf62013b1f910f84554a2d5337a99b87fa2314b1\ot_hdc_delay'.
+Parameter \LAT = 6
+Found cached RTLIL representation for module `$paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110'.
+Parameter \W = 32
+Parameter \D = 0
+Found cached RTLIL representation for module `$paramod$e0ab5449d823ccc2334dbd83384827b5b32aad73\ot_hdc_delay'.
+Parameter \W = 271
+Parameter \DEPTH = 64
+Parameter \MACRO = 0
+Parameter \ESL = 64
+Found cached RTLIL representation for module `$paramod$2954b01c04b509d847a3055750380f3a52e62069\ot_fifo_sram_fwft'.
+Parameter \D = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000001000'.
+Parameter \D = 47
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000101111'.
+Parameter \D = 6
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Parameter \W = 5
+Parameter \D = 5
+Found cached RTLIL representation for module `$paramod$2e8d87c0222e0bc9a743d67a8074d5e1fcb9be5a\ot_hdc_delay'.
+Parameter \D = 26
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000011010'.
+Parameter \REGIONS = 2
+Found cached RTLIL representation for module `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000010'.
+
+46.32. Analyzing design hierarchy..
+Top module:  $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2
+Used module:     $paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110
+Used module:         \ot_dsrom_fp32_add_f12_l6
+Used module:             \ot_hdc_fp32_add_f12
+Used module:                 \ot_hdc_f12_cut
+Used module:                 \ot_hdc_inc_k
+Used module:                 \ot_hdc_ksadd_k
+Used module:                 \ot_hdc_lzc32
+Used module:     $paramod$193f8d7eb587d5aa1fa4ea5bf2bba5d038c176f8\ot_hdc_delay
+Used module:     $paramod$10e8ac69be0ab0d2182bdb508009e06788e1bfe4\ot_hdc_delay
+Used module:     $paramod$81293afaf18e5bd1771b29c1534e3fd67591d744\ot_hdc_delay
+Used module:     $paramod$cbb140bd2da39cc9cac3669ecdca3f834e0b205c\ot_hdc_delay
+Used module:     $paramod$4a006920415146e5eba39a4873e34e18b61d9f00\ot_hdc_delay
+Used module:     $paramod$cf62013b1f910f84554a2d5337a99b87fa2314b1\ot_hdc_delay
+Used module:     $paramod$e0ab5449d823ccc2334dbd83384827b5b32aad73\ot_hdc_delay
+Used module:     $paramod$2954b01c04b509d847a3055750380f3a52e62069\ot_fifo_sram_fwft
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000101111
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+Used module:     $paramod$2e8d87c0222e0bc9a743d67a8074d5e1fcb9be5a\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000011010
+Used module:     $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000010
+Parameter \W = 71
+Parameter \CUT = 1
+
+46.33. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 71
+Parameter \CUT = 1
+Generating RTLIL representation for module `$paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut'.
+Parameter \W = 24
+
+46.34. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_inc_k'.
+Parameter \W = 24
+Generating RTLIL representation for module `$paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000'.
+Parameter \W = 73
+Parameter \CUT = 0
+
+46.35. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 73
+Parameter \CUT = 0
+Generating RTLIL representation for module `$paramod$c47d6f882a23aa46f585ea9f6ed90dc7cf2db1e8\ot_hdc_f12_cut'.
+Parameter \W = 8
+
+46.36. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_inc_k'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 108
+Parameter \CUT = 1
+
+46.37. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 108
+Parameter \CUT = 1
+Generating RTLIL representation for module `$paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut'.
+Parameter \W = 102
+Parameter \CUT = 0
+
+46.38. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 102
+Parameter \CUT = 0
+Generating RTLIL representation for module `$paramod$2252407fdad0777b81e39193bdbd2aec19e75d0e\ot_hdc_f12_cut'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100'.
+Parameter \W = 98
+Parameter \CUT = 1
+
+46.39. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 98
+Parameter \CUT = 1
+Generating RTLIL representation for module `$paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut'.
+Parameter \W = 6
+Parameter \CUT = 0
+
+46.40. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 6
+Parameter \CUT = 0
+Generating RTLIL representation for module `$paramod$219a85dfd7b2cc8445dbe1648d44d88c8a6603ff\ot_hdc_f12_cut'.
+Parameter \W = 120
+Parameter \CUT = 0
+
+46.41. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 120
+Parameter \CUT = 0
+Generating RTLIL representation for module `$paramod$776258f73bd7f1567db1a870e2e7d6677ab3fbef\ot_hdc_f12_cut'.
+Parameter \W = 23
+
+46.42. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k'.
+Parameter \W = 23
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111'.
+Parameter \W = 181
+Parameter \CUT = 0
+
+46.43. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 181
+Parameter \CUT = 0
+Generating RTLIL representation for module `$paramod$2f67968d3bd86192de6d372bff0774f877271041\ot_hdc_f12_cut'.
+Parameter \W = 6
+Parameter \CUT = 0
+Found cached RTLIL representation for module `$paramod$219a85dfd7b2cc8445dbe1648d44d88c8a6603ff\ot_hdc_f12_cut'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \CUTS = 7'1101011
+
+46.44. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_fp32_add_f12'.
+Parameter \CUTS = 7'1101011
+Generating RTLIL representation for module `$paramod\ot_hdc_fp32_add_f12\CUTS=7'1101011'.
+
+46.45. Analyzing design hierarchy..
+Top module:  $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2
+Used module:     $paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110
+Used module:         \ot_dsrom_fp32_add_f12_l6
+Used module:             $paramod\ot_hdc_fp32_add_f12\CUTS=7'1101011
+Used module:                 \ot_hdc_f12_cut
+Used module:                 \ot_hdc_inc_k
+Used module:                 \ot_hdc_ksadd_k
+Used module:                 \ot_hdc_lzc32
+Used module:     $paramod$193f8d7eb587d5aa1fa4ea5bf2bba5d038c176f8\ot_hdc_delay
+Used module:     $paramod$10e8ac69be0ab0d2182bdb508009e06788e1bfe4\ot_hdc_delay
+Used module:     $paramod$81293afaf18e5bd1771b29c1534e3fd67591d744\ot_hdc_delay
+Used module:     $paramod$cbb140bd2da39cc9cac3669ecdca3f834e0b205c\ot_hdc_delay
+Used module:     $paramod$4a006920415146e5eba39a4873e34e18b61d9f00\ot_hdc_delay
+Used module:     $paramod$cf62013b1f910f84554a2d5337a99b87fa2314b1\ot_hdc_delay
+Used module:     $paramod$e0ab5449d823ccc2334dbd83384827b5b32aad73\ot_hdc_delay
+Used module:     $paramod$2954b01c04b509d847a3055750380f3a52e62069\ot_fifo_sram_fwft
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000101111
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+Used module:     $paramod$2e8d87c0222e0bc9a743d67a8074d5e1fcb9be5a\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000011010
+Used module:     $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000010
+Parameter \W = 71
+Parameter \CUT = 1
+Found cached RTLIL representation for module `$paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000'.
+Parameter \W = 73
+Parameter \CUT = 0
+Found cached RTLIL representation for module `$paramod$c47d6f882a23aa46f585ea9f6ed90dc7cf2db1e8\ot_hdc_f12_cut'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 108
+Parameter \CUT = 1
+Found cached RTLIL representation for module `$paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut'.
+Parameter \W = 102
+Parameter \CUT = 0
+Found cached RTLIL representation for module `$paramod$2252407fdad0777b81e39193bdbd2aec19e75d0e\ot_hdc_f12_cut'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100'.
+Parameter \W = 98
+Parameter \CUT = 1
+Found cached RTLIL representation for module `$paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut'.
+Parameter \W = 6
+Parameter \CUT = 1
+
+46.46. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 6
+Parameter \CUT = 1
+Generating RTLIL representation for module `$paramod$8ff5a5dd3460007ddc1f9d1d4a143ba9fdbcef6e\ot_hdc_f12_cut'.
+Parameter \W = 120
+Parameter \CUT = 1
+
+46.47. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 120
+Parameter \CUT = 1
+Generating RTLIL representation for module `$paramod$951bb5d4264624ac0b78c01b5d047ccd5b49667f\ot_hdc_f12_cut'.
+Parameter \W = 23
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111'.
+Parameter \W = 181
+Parameter \CUT = 1
+
+46.48. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_f12_cut'.
+Parameter \W = 181
+Parameter \CUT = 1
+Generating RTLIL representation for module `$paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut'.
+Parameter \W = 6
+Parameter \CUT = 1
+Found cached RTLIL representation for module `$paramod$8ff5a5dd3460007ddc1f9d1d4a143ba9fdbcef6e\ot_hdc_f12_cut'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000'.
+
+46.49. Analyzing design hierarchy..
+Top module:  $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2
+Used module:     $paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110
+Used module:         \ot_dsrom_fp32_add_f12_l6
+Used module:             $paramod\ot_hdc_fp32_add_f12\CUTS=7'1101011
+Used module:                 $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+Used module:                 $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+Used module:                 $paramod$c47d6f882a23aa46f585ea9f6ed90dc7cf2db1e8\ot_hdc_f12_cut
+Used module:                 $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+Used module:                 $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+Used module:                 $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+Used module:                 \ot_hdc_lzc32
+Used module:                 $paramod$2252407fdad0777b81e39193bdbd2aec19e75d0e\ot_hdc_f12_cut
+Used module:                 $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+Used module:                 $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+Used module:                 $paramod$8ff5a5dd3460007ddc1f9d1d4a143ba9fdbcef6e\ot_hdc_f12_cut
+Used module:                 $paramod$951bb5d4264624ac0b78c01b5d047ccd5b49667f\ot_hdc_f12_cut
+Used module:                 $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+Used module:                 $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut
+Used module:     $paramod$193f8d7eb587d5aa1fa4ea5bf2bba5d038c176f8\ot_hdc_delay
+Used module:     $paramod$10e8ac69be0ab0d2182bdb508009e06788e1bfe4\ot_hdc_delay
+Used module:     $paramod$81293afaf18e5bd1771b29c1534e3fd67591d744\ot_hdc_delay
+Used module:     $paramod$cbb140bd2da39cc9cac3669ecdca3f834e0b205c\ot_hdc_delay
+Used module:     $paramod$4a006920415146e5eba39a4873e34e18b61d9f00\ot_hdc_delay
+Used module:     $paramod$cf62013b1f910f84554a2d5337a99b87fa2314b1\ot_hdc_delay
+Used module:     $paramod$e0ab5449d823ccc2334dbd83384827b5b32aad73\ot_hdc_delay
+Used module:     $paramod$2954b01c04b509d847a3055750380f3a52e62069\ot_fifo_sram_fwft
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000101111
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+Used module:     $paramod$2e8d87c0222e0bc9a743d67a8074d5e1fcb9be5a\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000011010
+Used module:     $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000010
+
+46.50. Analyzing design hierarchy..
+Top module:  $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2
+Used module:     $paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110
+Used module:         \ot_dsrom_fp32_add_f12_l6
+Used module:             $paramod\ot_hdc_fp32_add_f12\CUTS=7'1101011
+Used module:                 $paramod$c64fcd6716664b8fe8110aeac920293eccedb82d\ot_hdc_f12_cut
+Used module:                 $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000011000
+Used module:                 $paramod$c47d6f882a23aa46f585ea9f6ed90dc7cf2db1e8\ot_hdc_f12_cut
+Used module:                 $paramod\ot_hdc_inc_k\W=s32'00000000000000000000000000001000
+Used module:                 $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+Used module:                 $paramod$d35a3b2c72fa456783a7dc2680b51322778efdf9\ot_hdc_f12_cut
+Used module:                 \ot_hdc_lzc32
+Used module:                 $paramod$2252407fdad0777b81e39193bdbd2aec19e75d0e\ot_hdc_f12_cut
+Used module:                 $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+Used module:                 $paramod$5923866795b251c7ce68def5382929a0d3eda4ef\ot_hdc_f12_cut
+Used module:                 $paramod$8ff5a5dd3460007ddc1f9d1d4a143ba9fdbcef6e\ot_hdc_f12_cut
+Used module:                 $paramod$951bb5d4264624ac0b78c01b5d047ccd5b49667f\ot_hdc_f12_cut
+Used module:                 $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000010111
+Used module:                 $paramod$be70bb104adb80977a483e12b6cce2d8f379d2f2\ot_hdc_f12_cut
+Used module:     $paramod$193f8d7eb587d5aa1fa4ea5bf2bba5d038c176f8\ot_hdc_delay
+Used module:     $paramod$10e8ac69be0ab0d2182bdb508009e06788e1bfe4\ot_hdc_delay
+Used module:     $paramod$81293afaf18e5bd1771b29c1534e3fd67591d744\ot_hdc_delay
+Used module:     $paramod$cbb140bd2da39cc9cac3669ecdca3f834e0b205c\ot_hdc_delay
+Used module:     $paramod$4a006920415146e5eba39a4873e34e18b61d9f00\ot_hdc_delay
+Used module:     $paramod$cf62013b1f910f84554a2d5337a99b87fa2314b1\ot_hdc_delay
+Used module:     $paramod$e0ab5449d823ccc2334dbd83384827b5b32aad73\ot_hdc_delay
+Used module:     $paramod$2954b01c04b509d847a3055750380f3a52e62069\ot_fifo_sram_fwft
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000001000
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000101111
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+Used module:     $paramod$2e8d87c0222e0bc9a743d67a8074d5e1fcb9be5a\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000011010
+Used module:     $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000010
+Removing unused module `$paramod$2f67968d3bd86192de6d372bff0774f877271041\ot_hdc_f12_cut'.
+Removing unused module `$paramod$776258f73bd7f1567db1a870e2e7d6677ab3fbef\ot_hdc_f12_cut'.
+Removing unused module `$paramod$219a85dfd7b2cc8445dbe1648d44d88c8a6603ff\ot_hdc_f12_cut'.
+Removing unused module `$paramod$a3c6ff8629d951f77e96bdffe304c9da945cfa73\ot_hdc_fp32_add_lat'.
+Removing unused module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011111'.
+Removing unused module `$paramod$1b715d8186751a6bb14e61392ed5c3931af0f8fb\ot_hdc_w11_cut'.
+Removing unused module `$paramod$33f5d6a37e0368640852321dba56360a54a16ba5\ot_hdc_w11_cut'.
+Removing unused module `$paramod$c8c0b24070951a03c74fd75bdb90ec84c4faba9f\ot_hdc_w11_cut'.
+Removing unused module `$paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011000'.
+Removing unused module `$paramod$0af06bfb868252cb13b0f8c91ccf22d28a43a355\ot_hdc_w11_cut'.
+Removing unused module `$paramod$9fa7910d28110919750e228e754647a3bd0c49bf\ot_hdc_qadd_lat'.
+Removing unused module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111'.
+Removing unused module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100'.
+Removing unused module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+Removing unused module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000'.
+Removing unused module `\ot_vms_slice'.
+Removing unused module `\ot_vms_relay'.
+Removing unused module `\ot_vms_star'.
+Removing unused module `\ot_vms_rcl'.
+Removing unused module `\ot_vms_rstop'.
+Removing unused module `\ot_vms_hub'.
+Removing unused module `\ot_vms_bank'.
+Removing unused module `\ot_fifo_sram_fwft'.
+Removing unused module `\ot_hgi_vm_unit'.
+Removing unused module `\ot_hgi_vm_core'.
+Removing unused module `\hbfd_rly_1136_NS'.
+Removing unused module `\hbfd_rly_1136_SN'.
+Removing unused module `\hbfd_rly_1136_EW'.
+Removing unused module `\hbfd_rly_1136_WE'.
+Removing unused module `\hbfd_rly_624_NS'.
+Removing unused module `\hbfd_rly_624_SN'.
+Removing unused module `\hbfd_rly_624_EW'.
+Removing unused module `\hbfd_rly_624_WE'.
+Removing unused module `\hbfd_rly_304_NS'.
+Removing unused module `\hbfd_rly_304_SN'.
+Removing unused module `\hbfd_rly_304_EW'.
+Removing unused module `\hbfd_rly_304_WE'.
+Removing unused module `\hbfd_rly_136_NS'.
+Removing unused module `\hbfd_rly_136_SN'.
+Removing unused module `\hbfd_rly_136_EW'.
+Removing unused module `\hbfd_rly_136_WE'.
+Removing unused module `\hbfd_rly_48_NS'.
+Removing unused module `\hbfd_rly_48_SN'.
+Removing unused module `\hbfd_rly_48_EW'.
+Removing unused module `\hbfd_rly_48_WE'.
+Removing unused module `\hbfd_rly_8_NS'.
+Removing unused module `\hbfd_rly_8_SN'.
+Removing unused module `\hbfd_rly_8_EW'.
+Removing unused module `\hbfd_rly_8_WE'.
+Removing unused module `\ot_hbm_rly'.
+Removing unused module `\ot_rst_relay'.
+Removing unused module `\ot_hgi_hc_eng_b2'.
+Removing unused module `\ot_hgi_hc_ctl_b2'.
+Removing unused module `\ot_hgi_hc_qst_b2'.
+Removing unused module `\ot_hgi_hc_coll_b2'.
+Removing unused module `\ot_hgi_hc_cat_b2'.
+Removing unused module `\ot_hgi_hc_chunk_scan5'.
+Removing unused module `\ot_hgi_hc_chunk_scan2'.
+Removing unused module `\ot_hgi_hc_chunk_store32'.
+Removing unused module `\ot_dsrom_su_hcpost'.
+Removing unused module `\ot_dsrom_su_hcpost_group'.
+Removing unused module `\ot_dsrom_su_hcpost_wire'.
+Removing unused module `\ot_dsrom_su_hcpost_lane'.
+Removing unused module `\ot_dsrom_su_norm_mem'.
+Removing unused module `\ot_dsrom_qadd'.
+Removing unused module `\ot_dsrom_rsqrt'.
+Removing unused module `\ot_dsrom_su_norm_mix'.
+Removing unused module `\ot_dsrom_su_norm'.
+Removing unused module `\ot_hdc_fp32_add_f12_l6x'.
+Removing unused module `\ot_dsrom_divc'.
+Removing unused module `\ot_dsrom_aq12'.
+Removing unused module `\ot_hdc_actquant'.
+Removing unused module `\ot_hdc_fdiv'.
+Removing unused module `\ot_hdc_fsqrt'.
+Removing unused module `\ot_hdc_v41x_ins'.
+Removing unused module `\ot_hdc_v41x_softplus'.
+Removing unused module `\ot_hdc_v41x_fdiv'.
+Removing unused module `\ot_hdc_v41x_rsqrt'.
+Removing unused module `\ot_hdc_v41x_exp'.
+Removing unused module `\ot_hdc_v41x_vec_red'.
+Removing unused module `\ot_hdc_v41x_vsq'.
+Removing unused module `\ot_hdc_v41x_vred_op'.
+Removing unused module `\ot_hdc_fp32_mul_f12_l6i'.
+Removing unused module `\ot_hdc_fp32_add_f12_l5i'.
+Removing unused module `\ot_hdc_f12_inreg'.
+Removing unused module `\ot_hdc_fp32_add_f12_l5x'.
+Removing unused module `\ot_hdc_fp32_mul_f12_l6r'.
+Removing unused module `\ot_hdc_fp32_mul_f12_l7'.
+Removing unused module `\ot_hdc_fp32_add_f12_l5s'.
+Removing unused module `\ot_hdc_fp32_mul_f12_l6'.
+Removing unused module `\ot_hdc_fp32_mul_f12_l5'.
+Removing unused module `\ot_hdc_fp32_add_f12_l5'.
+Removing unused module `\ot_hdc_fp32_add_f12_l4'.
+Removing unused module `\ot_hdc_fp32_mul_f12'.
+Removing unused module `\ot_hdc_fp32_add_f12'.
+Removing unused module `\ot_hdc_f12_cut'.
+Removing unused module `\ot_hdc_fp32_add_lat7'.
+Removing unused module `\ot_hdc_fp32_add_lat6'.
+Removing unused module `\ot_hdc_fp32_add_lat5'.
+Removing unused module `\ot_hdc_fp32_add_lat4'.
+Removing unused module `\ot_hdc_fp32_add_lat3'.
+Removing unused module `\ot_hdc_fp32_add_lat4i'.
+Removing unused module `\ot_hdc_w11_cut'.
+Removing unused module `\ot_hdc_fp32_add_lat'.
+Removing unused module `\ot_hdc_mul24_rows_k'.
+Removing unused module `\ot_hdc_mul_kcp48'.
+Removing unused module `\ot_hdc_fp32_mul_lat5i'.
+Removing unused module `\ot_hdc_fp32_mul_lat9'.
+Removing unused module `\ot_hdc_fp32_mul_lat7'.
+Removing unused module `\ot_hdc_fp32_mul_lat6'.
+Removing unused module `\ot_hdc_fp32_mul_lat5'.
+Removing unused module `\ot_hdc_fp32_mul_lat4'.
+Removing unused module `\ot_hdc_fp32_mul_lat'.
+Removing unused module `\ot_hdc_kinc'.
+Removing unused module `\ot_hdc_kge'.
+Removing unused module `\ot_hdc_kadd'.
+Removing unused module `\ot_hdc_qadd_lat'.
+Removing unused module `\ot_hdc_qmul_lat'.
+Removing unused module `\ot_hdc_qmul'.
+Removing unused module `\ot_hdc_qadd'.
+Removing unused module `\ot_hdc_fp32_mul_fast'.
+Removing unused module `\ot_hdc_fp32_add_fast'.
+Removing unused module `\ot_hdc_mul24_sum'.
+Removing unused module `\ot_hdc_mul24_rows'.
+Removing unused module `\ot_hdc_ksa'.
+Removing unused module `\ot_hdc_inc_k'.
+Removing unused module `\ot_hdc_ksadd_k'.
+Removing unused module `\ot_hdc_rsqrt'.
+Removing unused module `\ot_hdc_recip'.
+Removing unused module `\ot_hdc_exp'.
+Removing unused module `\ot_hdc_vline'.
+Removing unused module `\ot_fp32_add_rne_pipe'.
+Removing unused module `\ot_hdc_fp32_mul_pipe'.
+Removing unused module `\ot_hdc_bmul'.
+Removing unused module `\ot_hdc_fmul'.
+Removing unused module `\ot_hdc_fadd'.
+Removing unused module `\ot_hdc_delay'.
+Removed 137 unused modules.
+Mapping positional arguments of cell $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2.g_ch[7].u_a ($paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110).
+Mapping positional arguments of cell $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2.g_ch[6].u_a ($paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110).
+Mapping positional arguments of cell $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2.g_ch[5].u_a ($paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110).
+Mapping positional arguments of cell $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2.g_ch[4].u_a ($paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110).
+Mapping positional arguments of cell $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2.g_ch[3].u_a ($paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110).
+Mapping positional arguments of cell $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2.g_ch[2].u_a ($paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110).
+Mapping positional arguments of cell $paramod$a84198b126b99b1ebc81e9a4a78238fab6e23568\ot_hgi_hc_lane_b2.g_ch[1].u_a ($paramod\ot_dsrom_qadd\LAT=s32'00000000000000000000000000000110).
+
+47. Executing SYNTH pass.
+
+47.1. Executing HIERARCHY pass (managing design hierarchy).
+ERROR: Module `ot_hgi_hc_lane_b2' not found!

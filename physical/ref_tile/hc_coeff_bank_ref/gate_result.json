@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hc_coeff_bank_ref",
- "verdict": "FAIL",
- "generated": "2026-10-14T02:32:06-0700",
+ "verdict": "WARN",
+ "generated": "2026-10-14T02:40:01-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "b18f4ed2be7e7cc53979f387765b06fc7b08bcf3",
+  "start_commit": "65882fe9b51c0b6e4048d25bdaed0028e58e57b8",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "8071bd290661358b3ffeb3b690b4bc3680306431f7b9a3f34da97c3784106aa8",
-  "manifest_sha256": "c7fdf0c428ffc860231893cfe901d6d53d246d97c452e4db1e7d0c4468526716",
+  "archive_sha256": "7864327c44627c9825f233bbb93c91501d07344656288acf844699c284e4c1b3",
+  "manifest_sha256": "b16bae90b170029f3f113fafae699cd3c6888967afab9cc7f36a88915745e670",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -17027,8 +17027,8 @@
    {
     "path": "physical/ref_tile/hc_coeff_bank_ref/floorplan.json",
     "kind": "file",
-    "sha256": "65aa426f07459db729aad0a9a952095e3fd22f347e98187550b33b56f2679ca5",
-    "git_blob": "a25de7e2c41038afe9a67ffd9395d40aa308b3cf",
+    "sha256": "ef8e766455e78fa233fc8c166fdd27859a7e8612fe4a016df1840929e3a4d6dc",
+    "git_blob": "4aff45cc02de9607aaee9a2057208ca4e2f1c59f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17043,8 +17043,8 @@
    {
     "path": "physical/ref_tile/hc_coeff_bank_ref/kit.env",
     "kind": "file",
-    "sha256": "c3e46f9d8c0b2f42a916e70729f6833a7563a08468ca9d6f2a61271b21a956fd",
-    "git_blob": "54d9b5f86ece4e8d65a03f14746fd4bf3dd53454",
+    "sha256": "c3989e0c5affea6b08702228747e903a4995235c028cfdfee08e09e7d9ae7b72",
+    "git_blob": "aafd59df6e95a991fc26ee127d756716d3b6993a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17147,8 +17147,8 @@
    {
     "path": "physical/ref_tile/hc_coeff_bank_ref/spec.json",
     "kind": "file",
-    "sha256": "9b2a13f3c92257f3e658e23cffc5eb7a8a004a90d93de88a380dee858fb32674",
-    "git_blob": "de42d038d809de40f76ffc3defd6e4be71e4edfc",
+    "sha256": "9db7a742486db5cc90bbe4333bb49ed847eef493c04c516317646b6929c69dc4",
+    "git_blob": "2984b9d70641f5c8086c590af4a7805d0180e384",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -84771,8 +84771,8 @@
    {
     "path": "tools/ref_tile/specs_hbm_hc/hc_coeff_bank_ref.json",
     "kind": "file",
-    "sha256": "e78afce75f56e608285e79a85bff8210354b922756521c313e81ab4cfbd5e8d3",
-    "git_blob": "8efadbc1c2db0eea1a819c98aaa725027aa695a8",
+    "sha256": "bc270c37c55e2ebb5df1a9479315496824368e967271b5e72cf116b4680732ad",
+    "git_blob": "74476f336f348ae367b2063e6f46b4e12462925a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -106083,7 +106083,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "268dc756d627ff9b5aef95e6216a0b00b0f852f6",
+   "origin_main": "77fd06f23a3ca5c26ca06b121f6c113914b3096c",
    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
    "files": [
     {
@@ -106456,11 +106456,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T02:31:27-0700",
-  "remote_script_sha256": "8b20133023ea123d50eb1bec0aa750eec4b6980c7fa9dee77edc4fa8a24a9478",
+  "captured": "2026-10-14T02:38:44-0700",
+  "remote_script_sha256": "5415a9da906ee937204f813b480ca6f8f49f511c9d3241f64b7b154868b7f771",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hc_coeff_bank_ref-20261014-023104",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hc_coeff_bank_ref-20261014-023821",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -106471,41 +106471,59 @@
   "max_root_sinks": 775,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 101.8,
+  "tt_spread_ps": 3.6,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
+  "clock_measurements": [
+   {
+    "source": "clk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 775,
+      "mean": 100.1,
+      "min": 98.2,
+      "max": 101.8
+     },
+     "all": {
+      "n": 775,
+      "mean": 100.1,
+      "min": 98.2,
+      "max": 101.8
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "775 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "775 sinks on the largest root <= 15,000; measured TT insertion 101.8 ps, leaf spread 3.6 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "utilisation 45% outside 45%-60% (std 300 + macro 0 in core 672 um2)",
+   "message": "utilisation 36% outside 45%-60% (std 427 + macro 0 in core 1194 um2)",
    "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   },
   {
    "severity": "WARN",
-   "check": "oflop",
-   "message": "E face 10.5 pins/um (coef2, coef3): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns = 12.18 um, more than 45% of the 25.9 um core behind the face (GRT-0116 class)",
-   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
-  },
-  {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+   "check": "util",
+   "message": "synthesized std area 427 um2 + macros 0 in core 1194: util 36%",
+   "fix": "set \"std_area_um2\": 427 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
-   "fix": ""
+   "check": "textbook.util_channel",
+   "message": "utilisation 35.8% outside 45%-65% (std 428 + macro 0 um2 in 1194 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
 }

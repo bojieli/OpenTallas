@@ -1,0 +1,48 @@
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv -DSYNTHESIS rtl/proto/ot_fp32_add_rne_pipe.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_sfu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fastfp.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fastfp_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_f12.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_fsqrt.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_fdiv.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_actquant.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_aq12.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_divc.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_su_add6.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_su_norm.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_su_hcpost.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv
+read_verilog -sv sl_bb.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv
+read_verilog -sv -DSYNTHESIS rtl/lib/ot_rst_relay.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/die_glue/ot_hbm_rly.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/die_glue/hbfd_rly_masters.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv
+read_verilog -sv -DSYNTHESIS rtl/link/ot_fifo_sram_fwft.sv
+read_verilog -sv -DSYNTHESIS physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v
+read_verilog -sv -DSYNTHESIS physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v
+read_verilog -sv -DSYNTHESIS physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v
+read_verilog -sv -DSYNTHESIS physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/b2/ot_vms_star.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/b2/ot_vms_relay.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/vm/b2/ot_vms_slice.sv
+chparam -set D 1280 -set BANKS 8 -set QID 0 -set LQ 10 -set FD 64 -set TD 20 -set HSL 1 -set CLOCKED 1 -set MUT 0 ot_hgi_hc_lane_b2
+hierarchy -top ot_hgi_hc_lane_b2
+synth -top ot_hgi_hc_lane_b2 -flatten -noabc
+write_json ownstate.json

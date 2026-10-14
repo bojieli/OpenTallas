@@ -12,9 +12,13 @@
     "m2": {
       "errors": 12,
       "sectors_checked": 0
+    },
+    "m7": {
+      "errors": 12,
+      "sectors_checked": 0
     }
   },
-  "live": "m7 PID3195995 last case3HANG200000; preserve until terminal",
+  "live": [],
   "cause": "Original ot_hgi_vm_unit RP8/W2=8 has zero RP/32 groups, so no read issue accepted. Corrected native proofs use actual4ot_vms_slice endpoints independently.",
   "compiled_source_binding": "Inherited binary; immutable compiled source hashes were not recorded by predecessor, no new claim",
   "ledger_eligible": false
