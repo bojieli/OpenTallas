@@ -394,14 +394,8 @@ module ot_hgi_b2_dma_mv #(
     reg [31:0] g_busy, g_hv; reg [7:0] g_slot [0:31]; reg [255:0] g_d [0:31]; reg [5:0] g_cr [0:31]; reg [4:0] g_rr;
     // pin flops (registered boundary: route lint 98f8152b3 counted 96 levels from c_gnt through the reader issue)
     reg g_gnt; reg [31:0] g_crp; reg [512:0] s_vr2q;
-    reg [512:0] group_q;
-    wire [512:0] group_next = {s_vr2q[512],s_vr2q[511:0] | kv_kq} ^ ((MUT_SEAM == 3 && |kv_kq) ? 513'd1 : 513'd0);
-    always @(posedge clk or negedge rn) begin
-       if (!rn) begin group_q[512] <= 0; for (integer b=0;b<32;b=b+1) group_q[b*16+15] <= 0; end
-       else begin group_q[512] <= group_next[512]; for (integer b=0;b<32;b=b+1) group_q[b*16+15] <= group_next[b*16+15]; end
-    end
-    always @(posedge clk) for (integer b=0;b<32;b=b+1) group_q[b*16 +: 15] <= group_next[b*16 +: 15];
-    assign vr2q = group_q;
+    // Registered source seam; masking/OR is captured in the independent group face.
+    assign vr2q = s_vr2q;
     always @(posedge clk or negedge rn) if (!rn) begin g_gnt <= 1'b0; g_crp <= 32'd0; end
                                         else begin g_gnt <= vr2r[8256]; g_crp <= vr2r[8255:8224]; end
     reg g_dv; reg [4:0] g_di;                               // the held response drained into the landing RAM this cycle
