@@ -19,6 +19,7 @@ if [[ -n "$plan" ]]; then
  [[ -n "$actual_initial_vm" && -f "$actual_initial_vm" ]]
  [[ -z "$catalog" ]] # each faithful sequence reference contains its own operation catalog
 fi
+allocator=${ALLOCATOR_OBJ:-/srv/opentallas-scratch/codex/qwen-full-layer-sequence-1014/allocator0/library/obj}
 front=/srv/opentallas-scratch/codex/native-services-frontend-1014/library-v1/obj
 sector=/srv/opentallas-scratch/codex/native-services-frontend-1014/sector-library-v1/obj
 pc=/srv/opentallas-scratch/codex/qwen-native-hbm-pc-provider-1014/library_v2/obj
@@ -36,7 +37,7 @@ PY
 for input_path in src/* kernel/*; do if [[ -f "$input_path" ]]; then sha256sum "$input_path"; fi; done > "$output/source_inputs.sha256"
 sha256sum "$core_obj/Vot_hdc_core_vector_weight_native_candidate__ALL.a" \
  "$front/Vot_qwen_tp8_native_services_frontend__ALL.a" "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" \
- "$pc/Vqwen_native_hbm_pc_provider__ALL.a" "$collective_runtime" "$collective_exe" >> "$output/source_inputs.sha256"
+ "$pc/Vqwen_native_hbm_pc_provider__ALL.a" "$allocator/Vot_qwen_tp8_token_epoch_allocator__ALL.a" "$collective_runtime" "$collective_exe" >> "$output/source_inputs.sha256"
 python3 - "$image" "$program" "$oracle" "$output" "$plan" <<'PYCODE'
 import hashlib,json,sys
 from pathlib import Path
@@ -70,11 +71,12 @@ for image,program,oracle in stages:
  pins[str(oracle/'oracle.json')]=hashlib.sha256((oracle/'oracle.json').read_bytes()).hexdigest()
 (out/'payload_inputs.json').write_text(json.dumps(pins,indent=2)+'\n')
 PYCODE
-c++ -std=c++17 -O1 -pthread -I"$core_obj" -I"$front" -I"$sector" -I"$pc" -Ikernel -Isrc \
+c++ -std=c++17 -O1 -pthread -I"$core_obj" -I"$allocator" -I"$front" -I"$sector" -I"$pc" -Ikernel -Isrc \
  -I"$vroot/include" -I"$vroot/include/vltstd" src/full_layer.cpp \
  "$core_obj/Vot_hdc_core_vector_weight_native_candidate__ALL.a" \
  "$front/Vot_qwen_tp8_native_services_frontend__ALL.a" "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" \
  "$pc/Vqwen_native_hbm_pc_provider__ALL.a" kernel/Vot_qwen_tp8_attention_service__ALL.a \
+ "$allocator/Vot_qwen_tp8_token_epoch_allocator__ALL.a" \
  kernel/sim_hdc_v41x_fastfp_dpi.o kernel/sim_nhb_fp_lat_dpi.o \
  "$vroot/include/verilated.cpp" "$vroot/include/verilated_threads.cpp" "$vroot/include/verilated_dpi.cpp" \
  -o "$output/full_layer" > "$output/link.log" 2>&1

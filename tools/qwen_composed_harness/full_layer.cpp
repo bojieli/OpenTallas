@@ -6,6 +6,7 @@
 #include "Vot_qwen_tp8_attention_service.h"
 #include "Vot_qwen_tp8_kv_sector_adapter.h"
 #include "rom_vm_adapter.hpp"
+#include "token_epoch_owner.hpp"
 #include "services_vm_adapter.hpp"
 #include "kernel_physical_rows.hpp"
 #include <filesystem>
@@ -39,7 +40,7 @@ struct Rank {
  struct RawWitness{unsigned pc,unit;uint64_t edge;bool end;qwen_native::HexWord<32> bits;};
  std::vector<RawWitness> raw_witnesses;qwen_native::HexWord<32> observer_next{};bool observer_next_valid=false;
  int su_owner=-1,rom_owner=-1;unsigned rom_written=0,rom_expected=0;
- bool epoch_reserved=false,head_stage=false;uint64_t start_edge=0;
+ bool epoch_reserved=false,head_stage=false,token_grant_ready=false;uint64_t start_edge=0;
  Rank(VerilatedContext&context,unsigned r,const Layer& layer,const std::string& initial_x)
  :rank(r),first_layer(layer.number),active(layer),ctx(context),vm(layer.image+"/die"+std::to_string(r),layer.program+"/die"+std::to_string(r)+"/program.hex",initial_x),
  backend(context,layer.position,"rank"+std::to_string(r)+"_pc_"),
@@ -95,7 +96,7 @@ struct Rank {
   core.rst_n=front.rst_n=kernel.rst_n=sector.rst_n=backend.hbm_edges>=8;
   core.start=start;front.epoch_begin=0;
   if(!epoch_reserved){WriteAck prior;while(backend.pop_write_ack(prior)){};}
-  if(!epoch_reserved&&backend.write_acks==prior_target&&front.epoch_ready){front.epoch_begin=1;receiver.reserve(active.epoch,active.number);epoch_reserved=true;start_edge=backend.core_edges+4;layer_begin_edge=backend.core_edges;}
+  if(token_grant_ready&&!epoch_reserved&&backend.write_acks==prior_target&&front.epoch_ready){front.epoch_begin=1;receiver.reserve(active.epoch,active.number);epoch_reserved=true;start_edge=backend.core_edges+4;layer_begin_edge=backend.core_edges;}
   if(!epoch_reserved){WriteAck a;while(backend.pop_write_ack(a)){}front.store_ack_v=0;sector.ack_v=0;}
   else writes.prepare_acks(sector,front);
   receiver.drive(front);reads.drive(kernel);vm.drive_responses(core);
@@ -141,14 +142,22 @@ struct Rank {
  void fall(){backend.core_edge(false);core.clk=front.clk=kernel.clk=sector.clk=0;core.eval();front.eval();kernel.eval();sector.eval();}
 };
 static void run_process(std::vector<std::string>args){std::vector<char*>v;for(auto&s:args)v.push_back(s.data());v.push_back(nullptr);pid_t p=fork();if(p<0)throw std::runtime_error("collective fork failed");if(!p){execv(v[0],v.data());_exit(127);}int status=0;if(waitpid(p,&status,0)!=p||!WIFEXITED(status)||WEXITSTATUS(status))throw std::runtime_error("actual production collective failed");}
-static uint64_t collective(std::array<std::unique_ptr<Rank>,8>&r,const std::string&runtime,const std::string&exe,const fs::path&out){
- fs::create_directories(out);std::vector<std::string>args={"/usr/bin/python3",runtime,"--exe",exe,"--words","256","--out",(out/"actual").string(),"--ranks"};
+static uint64_t collective(std::array<std::unique_ptr<Rank>,8>&r,const std::string&runtime,const std::string&exe,const fs::path&out,const TokenEpochOwner&owner,unsigned segment){
+ fs::create_directories(out);owner.identities(out/"accepted_identity.json",r[0]->active.number+1,segment);std::vector<std::string>args={"/usr/bin/python3",runtime,"--exe",exe,"--words","256","--identities",(out/"accepted_identity.json").string(),"--out",(out/"actual").string(),"--ranks"};
  for(unsigned rank=0;rank<8;rank++){auto p=out/("partial"+std::to_string(rank)+".hex");std::ofstream f(p);for(unsigned w=0;w<256;w++){for(unsigned j=0;j<16;j++)f<<std::hex<<std::setfill('0')<<std::setw(8)<<r[rank]->vm.vm[16*w+15-j];f<<"\n";}f.close();args.push_back(p.string());}
  run_process(args);
+ uint64_t first=UINT64_MAX,last=0;unsigned observations=0;
+ const uint64_t expected_tag=(uint64_t(owner.held_epoch)<<43)|(uint64_t(r[0]->active.number+1)<<37)|(uint64_t(owner.held_token)<<19)|(uint64_t(owner.held_position)<<6)|segment;
+ for(unsigned rank=0;rank<8;rank++){
+  std::ifstream log(out/"actual"/("rank"+std::to_string(rank)+".out"));std::string line;unsigned ordinal=0;
+  while(std::getline(log,line)){std::istringstream in(line);std::string data,tag;uint64_t msg,word,end,observed_rank,err,cycle;
+   if(!(in>>data>>msg>>word>>end>>observed_rank>>err>>cycle>>tag)||observed_rank>=8||err||msg!=0||word!=ordinal||end!=unsigned(ordinal==255)||std::stoull(tag,nullptr,16)!=expected_tag)throw std::runtime_error("invalid native59 actual collector observation");
+   first=std::min(first,cycle);last=std::max(last,cycle);++observations;++ordinal;
+  }
+  if(ordinal!=256)throw std::runtime_error("missing native59 output words for receiver");
+ }
+ if(observations!=2048||last<first)throw std::runtime_error("missing native59 collector cycle observations");
  for(unsigned rank=0;rank<8;rank++){auto data=qwen_native::read_hex<16>((out/"actual"/("rank"+std::to_string(rank)+".hex")).string());if(data.size()!=256)throw std::runtime_error("actual collective returned incorrect word count");for(unsigned w=0;w<256;w++)for(unsigned j=0;j<16;j++)r[rank]->vm.external_commit(16*w+j,data[w][j],"ACTUAL_TP8_COLLECTIVE");}
- std::ifstream log(out/"actual"/"run.log");std::string text((std::istreambuf_iterator<char>(log)),std::istreambuf_iterator<char>());std::smatch match;
- if(!std::regex_search(text,match,std::regex("first=([0-9]+) last=([0-9]+)")))throw std::runtime_error("missing genuine collector cycle observations");
- uint64_t first=std::stoull(match[1]),last=std::stoull(match[2]);if(last<first)throw std::runtime_error("invalid genuine collector cycle range");
  return last-first+1;
 }
 static fs::path layer_output(const Layer&layer,const fs::path&root,size_t count){return count==1?root:root/("layer"+std::to_string(layer.number));}
@@ -164,6 +173,7 @@ static unsigned save_layer(std::array<std::unique_ptr<Rank>,8>&r,const Layer&lay
   if(x.raw_witnesses.size()!=25)throw std::runtime_error("missing actual FIFO-to-NEXT accepted witnesses");
   std::ofstream raw(output/("rank"+std::to_string(rank)+"_accepted_actual_words.txt"));
   for(auto&w:x.raw_witnesses){raw<<w.pc<<" "<<w.unit<<" "<<w.edge<<" "<<w.end<<" ";for(unsigned j=0;j<32;j++)raw<<std::hex<<std::setfill('0')<<std::setw(8)<<w.bits[31-j];raw<<std::dec<<"\n";}
+  std::ofstream tags(output/("rank"+std::to_string(rank)+"_QVM_tags.txt"));for(auto&t:x.receiver.q_tag_events)tags<<t.edge<<" "<<std::hex<<t.tag<<std::dec<<" "<<t.epoch<<" "<<t.chunk<<" "<<t.response<<"\n";
   std::ofstream k(output/("rank"+std::to_string(rank)+"_KV.txt"));for(auto w:x.kv_commits)k<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.pc<<"\n";
   std::ofstream v(output/("rank"+std::to_string(rank)+"_VM_commits.txt"));for(auto w:x.vm.commits)v<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
   std::ofstream e(output/("rank"+std::to_string(rank)+"_operation_commits.txt"));for(auto w:x.effects)e<<w.pc<<" "<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
@@ -184,16 +194,18 @@ static void save_head(std::array<std::unique_ptr<Rank>,8>&r,const fs::path&outpu
 }
 int main(int argc,char**argv){try{
  if(argc!=7&&argc!=8&&argc!=9&&argc!=11)throw std::runtime_error("image program oracle collective_runtime collective_exe output [layer_plan [actual_initial_VM [head_image head_program]]] required");
- auto layers=argc>=8?read_plan(argv[7]):std::vector<Layer>{{0,17,255,argv[1],argv[2],argv[3]}};
+ auto layers=argc>=8?read_plan(argv[7]):std::vector<Layer>{{0,0,255,argv[1],argv[2],argv[3]}};
  if(layers.front().number!=0&&argc<9)throw std::runtime_error("nonzero standalone layer needs explicit actual initial VM input");
  std::string initial_vm=argc>=9?argv[8]:std::string(argv[3])+"/vm_x_fp32.hex";
- VerilatedContext ctx;ctx.threads(1);std::array<std::unique_ptr<Rank>,8>r;for(unsigned rank=0;rank<8;rank++)r[rank]=std::make_unique<Rank>(ctx,rank,layers[0],initial_vm);
+ VerilatedContext ctx;ctx.threads(1);TokenEpochOwner epoch_owner(ctx,layers[0].epoch,0,layers[0].position);std::array<std::unique_ptr<Rank>,8>r;for(unsigned rank=0;rank<8;rank++)r[rank]=std::make_unique<Rank>(ctx,rank,layers[0],initial_vm);
  uint64_t cn=553667,hn=512000;bool ch=false,hh=false;unsigned segment=0,layer_index=0;unsigned total_errors=0;bool running=false,finished=false,head=false;uint64_t restart=0;
  for(uint64_t events=0;uint64_t(events)<8000000ULL*(layers.size()+1)&&!finished;events++){
   bool core=cn<=hn;ctx.time(core?cn:hn);if(!core){hn+=512000;hh=!hh;for(auto&x:r)x->backend.hbm_edge(hh);continue;}cn+=416667;ch=!ch;
-  if(!ch){for(auto&x:r)x->fall();continue;}
+  if(!ch){for(auto&x:r)x->fall();epoch_owner.fall();continue;}
   bool launch=!running;for(auto&x:r)launch&=x->epoch_reserved&&x->backend.core_edges>=std::max(restart,x->start_edge);
-  for(auto&x:r)x->low(launch);for(auto&x:r)x->rise();if(launch){running=true;std::cerr<<"segment "<<segment<<" launched core "<<r[0]->backend.core_edges<<"\n";}
+  for(auto&x:r){x->token_grant_ready=epoch_owner.delivered;x->low(launch);}
+  bool boot_done=true,grant_ready=true;for(auto&x:r){boot_done&=x->backend.hbm_edges>=8;grant_ready&=x->front.epoch_ready;}
+  epoch_owner.low(boot_done,grant_ready);for(auto&x:r)x->rise();epoch_owner.rise();if(launch){running=true;std::cerr<<"segment "<<segment<<" launched core "<<r[0]->backend.core_edges<<"\n";}
   bool all_done=running;for(auto&x:r)all_done&=x->core.done;
   if(all_done){std::cerr<<"segment "<<segment<<" completed core "<<r[0]->backend.core_edges<<"\n";
    if(head){save_head(r,fs::path(argv[6])/"head");finished=true;break;}
@@ -207,10 +219,11 @@ int main(int argc,char**argv){try{
     }
     for(auto&x:r)x->switch_layer(layers[layer_index]);segment=0;running=false;restart=r[0]->backend.core_edges+2;continue;
    }
-   auto coll_cycles=collective(r,argv[4],argv[5],layer_output(layers[layer_index],argv[6],layers.size())/("collective"+std::to_string(segment)));for(auto&x:r)x->collector_cycles+=coll_cycles;
+   auto coll_cycles=collective(r,argv[4],argv[5],layer_output(layers[layer_index],argv[6],layers.size())/("collective"+std::to_string(segment)),epoch_owner,segment);for(auto&x:r)x->collector_cycles+=coll_cycles;
    ++segment;for(auto&x:r)x->vm.segment_base=segment==1?14:22;running=false;restart=r[0]->backend.core_edges+2;
   }
  }
  if(!finished)throw std::runtime_error("actual layer sequence timeout");
+ epoch_owner.save(fs::path(argv[6])/"central_epoch_grant.json");
  std::cout<<"{\"scope\":\"ACTUAL_EIGHT_RANK_LAYER_SEQUENCE_FUNCTIONAL_CANDIDATE\",\"layer_instruction_issues_per_rank\":22,\"layer_END_retirements_per_rank\":3,\"expected_X_words\":32768,\"errors\":"<<total_errors<<",\"past_cache_policy\":\"declared_synthetic_FP8_history_written_through_actual_controllers\",\"current_KV_policy\":\"actual_core_SU_writes_only\",\"executed_layers\":"<<layers.size()<<",\"layer_transitions_proved\":"<<(layers.size()>1?"true":"false")<<",\"local_head_executed\":"<<(head?"true":"false")<<",\"global18bit_token_proved\":false,\"physical_VM_proved\":false,\"throughput_qualified\":false}\n";return total_errors?1:0;
  }catch(const std::exception&e){std::cerr<<"FAIL "<<e.what()<<"\n";return 2;}}

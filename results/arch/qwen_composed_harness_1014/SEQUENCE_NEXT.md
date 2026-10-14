@@ -19,8 +19,10 @@ cycles,4096X writes and one SSX write, with same-DUT no-reset transitions and
 actual code/address-alias mutants. embedding_receipt.json preserves that scope.
 
 Faithful position0/context1 independent references refs/layer0 and refs/layer1
-use empty prior KV. first2_plan/layers.plan uses one constant token epoch17;
-input preflight unit2105765-1791970838 exited0. Initial actual embedding VM is
+use empty prior KV. first2_epoch0_plan/layers.plan uses one constant token epoch0;
+input preflight unit2154676-1791971456 exited0 and binds the upstream actual
+embedding receipt. The older epoch17 draft input pins are preserved as historical
+preflight only. Initial actual embedding VM is
 loaded once; each bank switch keeps the actual mutable VM and all DUT instances.
 No previous-layer or operation reference state is imported. The draft accepts
 one through36 contiguous layers and optional actual local head banks. Head
@@ -38,9 +40,14 @@ and delivery/lifetime proof remain unqualified.
 Fresh TAG59 collector source39b80fbbe passed its owner's actual component gates.
 The exact executable was staged at tag59/Vtb_coll_tp8_native59_provider,
 SHA45c444e0240138832e63b0108918f5f8f855bfb39db3b2cfe89e933605e4f67e;
-runtime.py is an exact source copy. Binding actual held-grant allocator identity
-and real caller drain/fence inputs is still pending parent API. Do not use
-historical TAG32 collector or label offered identity as allocator acceptance.
+runtime.py is an exact source copy. The draft now links one actual central allocator and gates all rank admission
+on its delivered held grant. Collector identities derive from that actual grant;
+actual returned tags/message/word/last/error/count are validated before VM
+commits. Its initial-grant adapter gate unit2159074 exited0 with epoch0, held
+until edge9 readiness. The acc7153 allocator library is historical
+initial-grant-only: the owner found a registered terminal producer hazard and
+is preparing a distinct successor. Terminal/HOST/link fence binding remains
+pending. Do not use historical TAG32 or acc7153 terminal acceptance.
 TAG59 tuple is epoch16/stage6/token18/position13/segment6; all decoder stages
 use the same token epoch, stage=L+1, segment0/1/2; head37/segment0. Q read port
 still has epoch/chunk without stage; normal bank transitions enforce complete
@@ -48,7 +55,11 @@ response drain, but same-epoch stale stage replay discrimination is a separate
 gap. Collector cycles are isolated RTL counters, never summed into production
 clock throughput.
 
-Next: finish actual allocator/TAG59 binding, obtain genuine LV6 fullcore headers
+The QVM adapter captures actual request tags into pending responses and returns
+them unchanged when the source frontend exposes TAG59 ports, with actual request
+and reply logs. The owner is building that source-exact fullTAG frontend.
+
+Next: bind successor allocator and fullTAG frontend, obtain genuine LV6 fullcore headers
 and archive, run layer0 from actual embedding VM then no-reset layer0→1 under
 admission with every observer. Continue36 layers and real head/global sequence
 only after actual milestones pass. Physical VM/timing/bandwidth/rate/cost and

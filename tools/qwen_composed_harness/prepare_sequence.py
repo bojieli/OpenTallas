@@ -18,7 +18,7 @@ def prepare(spec, output):
     pins, lines = {}, []
     previous = None
     position = request['position']
-    epoch = request.get('epoch', 17)
+    epoch = request.get('epoch', 0)
     if not 0 <= epoch <= 65535:
         raise ValueError('token epoch exceeds actual 16-bit identity')
     if not 0 <= position < 8192:
