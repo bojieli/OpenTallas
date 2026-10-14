@@ -52,7 +52,21 @@
       "qkd_seq_core_tp8",
       "qkd_seq_xs_tp8"
     ],
-    "master_names_status": "Requests only; new source, census, timing views and placement remain required."
+    "master_names_status": "Requests only; new source, census, timing views and placement remain required.",
+    "candidate_source_branch": "codex/kv-seq-tp8-1013",
+    "candidate_checkpoint": "331ffc8a9",
+    "physical_clock_entries_required": {
+      "core": 1,
+      "xs": 4,
+      "fan": 4,
+      "total": 9,
+      "status": "Candidate parent currently exports one ck; requested nine separate child entries before physical binding. Functional tie to one clock does not establish die delivery topology."
+    },
+    "candidate_parent_outline_um": [
+      604.8,
+      475.2
+    ],
+    "candidate_parent_outline_status": "Copied historical outline, not a measured native fit or closure"
   },
   "formatter_request": {
     "owner": "qwen_su_kv_formatter",
