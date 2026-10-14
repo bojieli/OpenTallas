@@ -362,6 +362,8 @@ module tb_hgi_dma_front_qwen_native6;
         load(3'd1, 64'd13040484352, 64'd0, 80640, 0, 1, 37984); // dispatch1158
         if (errs != 0) $fatal(1,"FATAL QWEN_LOAD errors=%0d",errs);
         $display("PASS QWEN_NATIVE_LOAD records=147 bytes=%0d cycles=%0d price=15674.320143998 ratio=%0.9f",tbytes,tcyc,tcyc/15674.320143998484);
+        if($test$plusargs("CHECK_PRICE") && tcyc>1.10*15674.320143998484)
+          $fatal(1,"FATAL QWEN_NATIVE_PRICE cycles=%0d immutable_price=15674.320143998 bound=1.10 ratio=%0.9f",tcyc,tcyc/15674.320143998484);
         $finish;
     end
 endmodule
