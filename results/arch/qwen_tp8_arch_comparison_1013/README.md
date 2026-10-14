@@ -43,3 +43,24 @@ Historical fallback SPEC records8ROM+8KV dies,32HBM stacks,2ROM+2KV+8stacks per 
 The present merged generator's earlier relay pathfinding reported8406additionalcycles per ARtoken (el1011-qwen-tp8.log line444), withhead_24 reduced25→10stages; this too is pathfinding evidence, not native priced-layer loss. Current indexed-cache production issue needs measured full-layer cycles and mutant coverage. Link framing/credits, D2D serialization, clock crossing, PHY shoreline/bump placement, package power/thermal/yield/cost, and separate system-slot ownership remain unknown. Apply the5%unit/15%design acceptance rules only to measured end-to-end loss; this analysis proposes no accepted-cost ledger entry.
 
 Validation: re-read both actual models, computed geometric frame unions and category sums, cross-checked768tile/768station counts, reproduced the reported die areas and illegal g5 axis, and computed capacity from the historical published track pitches/PDN derates. No heavy job was launched, no generated model was called qualified, and no architecture was adopted.
+
+## Metadata-bearing root ribbon candidate
+
+The die lead's candidate interface carries128payload+4phase+16epoch+1valid=149bits/root;32roots give4768pins, plus379commoninstruction=5147bits if concentrated on one horizontal cut. Forking to64halfendpoints gives8192payload+1344metadata=9536branchbits; with instruction crossing once,9915bits. Additional native selector/credits/reset/clock traffic is not yet included.
+
+The VM Sface y17051.04 and clk_rx top16966.776 leave an ideal84.264um gap. Its full width4838.4um may supply face pin positions; horizontal ribbon capacity depends on the84.264um height, not that width. At relay pin spacing.096um, source+instruction uses494.112um of face span (10.21%ofSface), but this does not demonstrate lateral routing capacity.
+
+Authoritative pitches in tools/hier_contract/pin_align.py:68-74 and cuts.py:19 are M4/M5=.048um,M6/M7=.064,M8/M9=.080. The .096relay pin pitch is2M4tracks, not the M8wire pitch. The supplied89.4401%usableM8 fraction is a scenario assumption from the die lead; the historical capacity tools use75%. Local actualPDN obstruction must justify89.4401%before signoff.
+
+| Horizontal option | Required height for5147bits at.60 | Bits admitted in84.264um |
+|---|---:|---:|
+| M8 single-wire.080,usable.894401 |767.292um|565.244|
+| M8 effective spacing.096,usable.894401 |920.750um|471.036|
+| literal2M8tracks.160,usable.894401 |1534.584um|282.622|
+| M8 single-wire.080,historicalusable.75 |915.022um|473.985|
+| open M6+M8,.75/.894401usable |374.620um|1157.725|
+| open M4+M6+M8,.50/.75/.894401usable |257.488um|1684.375|
+
+Even all three horizontal layers cannot carry the aggregated interface in the84um gap. Those extra-layer options exist only where actual channel ownership and LEFOBS allow; over an M7-capped tile onlyM8horizontal/M9vertical remain. M9 is not a second horizontal layer. None of these options permit transit through the allM1-M9VMwall.
+
+One truthful topology candidate is32spatially local source/fork regions, so no strip segment collects many root words. An ideal one-root149+commoninstruction379=528bit local segment uses.5605of singleM8 capacity with the assumed.894401fraction, leaving37.24admissiblebits. At the historical.75derate it fails.60:528exceeds473.985. Thus that illustrative allocation is not adopted pins, a route or a qualified design. It needs measuredPDN capacity or more local channel/layer capacity, explicit select/credit/reset/clock demand, source placements, and full native topology cuts/windows/STA. Avoiding a global choke requires actual localized sources or independently distributed access lanes; merely renaming32roots cannot remove traffic that an upstream shared source still must carry.
