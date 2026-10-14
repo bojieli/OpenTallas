@@ -198,8 +198,18 @@ def gate(manifest, receipts):
                     reasons.append(f'{corner}: endpoint coverage incomplete')
                 if cov.get('worst_ps') is None or not math.isfinite(cov['worst_ps']) or cov['worst_ps'] < 0:
                     reasons.append(f'{corner}: constrained endpoint slack missing or negative')
-                if r.get('structural_reg2reg_pairs') != 0 and (not paths.get('endpoints') or paths.get('worst_ps') is None or not math.isfinite(paths['worst_ps']) or paths['worst_ps'] < 0):
-                    reasons.append(f'{corner}: internal {mode} missing or negative')
+                if paths.get('endpoints', 0) > 0:
+                    # A returned path is authoritative, regardless of any graph
+                    # fanin API's incomplete inventory. Never hide negative STA.
+                    if paths.get('worst_ps') is None or not math.isfinite(paths['worst_ps']) or paths['worst_ps'] < 0:
+                        reasons.append(f'{corner}: internal {mode} negative or missing')
+                else:
+                    review = receipt.get('no_internal_reg2reg_review', {}).get(corner, {})
+                    if (paths.get('endpoints') != 0 or review.get('passed') is not True
+                            or not review.get('basis') or review.get('log_sha256') != r.get('log_sha256')
+                            or not receipt.get('routed_spec')
+                            or review.get('source_spec_sha256') != receipt['routed_spec'].get('sha256')):
+                        reasons.append(f'{corner}: no returned internal paths; explicit source-bound structural review required')
                 expected = leaf.get('expected_clocks_ps')
                 if not expected or set(expected) != set(r.get('clocks_ps', {})) or any(
                         not math.isclose(v, r['clocks_ps'].get(k, -1), abs_tol=0.01) for k, v in (expected or {}).items()):
