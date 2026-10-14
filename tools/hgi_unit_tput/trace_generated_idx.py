@@ -24,13 +24,18 @@ vals=', '.join('static_cast<unsigned long long>(topp->rootp->'+b+')' for a,b in 
 fmt='%llu,'+','.join('%llu' for a,b in watch)+'\\n'
 observe=f'\n        auto* r=topp->rootp;\n        if (r->tb_hgi_e2e__DOT__clk && r->tb_hgi_e2e__DOT__cyc!=lastcyc) {{\n            lastcyc=r->tb_hgi_e2e__DOT__cyc;\n            fprintf(phase, "{fmt}", static_cast<unsigned long long>(lastcyc), {vals});\n        }}\n'
 main=main.replace('        topp->eval();','        topp->eval();'+observe).replace('    topp->final();','    topp->final();\n    fclose(phase);')
-cpp=out/'trace_main.cpp';cpp.write_text(main)
+cpp=out/'trace_main.cpp';needs_compile=not (out/'trace_main.o').exists() or not cpp.exists() or cpp.read_text()!=main
+if needs_compile:cpp.write_text(main)
 mk=(obj/'Vtb_hgi_e2e.mk').read_text()
 ver=Path(re.search(r'^VERILATOR_ROOT\s*:?=\s*(.+)$',mk,re.M).group(1).strip())/'include'
-subprocess.run(['g++','-std=c++20','-Os','-pthread','-I'+str(ver),'-I'+str(ver/'vltstd'),'-I'+str(obj),'-c',str(cpp),'-o',str(out/'trace_main.o')],check=True)
+if needs_compile:subprocess.run(['g++','-std=c++20','-Os','-pthread','-I'+str(ver),'-I'+str(ver/'vltstd'),'-I'+str(obj),'-c',str(cpp),'-o',str(out/'trace_main.o')],check=True)
 objects=[obj/x for x in ['hgi_e2e_dpi.o','verilated.o','verilated_dpi.o','verilated_timing.o','verilated_threads.o','Vtb_hgi_e2e__ALL.a']]
-subprocess.run(['g++','-pthread',str(out/'trace_main.o'),*map(str,objects),'-latomic','-o',str(out/'tb_trace')],check=True)
-provenance={'obj':str(obj),'vector':str(vec),'observer_fields':[a for a,b in watch],'sha256':{str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in objects+[cpp,obj/'Vtb_hgi_e2e__main.cpp',obj/'Vtb_hgi_e2e___024root.h']}}
+# --binary amalgamates the original main into a model archive member.
+# Rename that unused entry point in a copy; preserve every RTL object byte.
+observed=out/'model_observed.a'
+subprocess.run(['objcopy','--redefine-sym','main=verilator_original_main',str(objects[-1]),str(observed)],check=True)
+subprocess.run(['g++','-pthread',str(out/'trace_main.o'),*map(str,objects[:-1]),str(observed),'-latomic','-o',str(out/'tb_trace')],check=True)
+provenance={'obj':str(obj),'vector':str(vec),'observer_fields':[a for a,b in watch],'sha256':{str(x):hashlib.sha256(x.read_bytes()).hexdigest() for x in objects+[observed,cpp,obj/'Vtb_hgi_e2e__main.cpp',obj/'Vtb_hgi_e2e___024root.h']}}
 (out/'provenance.json').write_text(json.dumps(provenance,indent=1)+'\n')
 with (out/'run.log').open('w') as f:rc=subprocess.run([str(out/'tb_trace'),'+DIR='+str(vec),'+OUT='+str(out/'e2e_records.txt')],cwd=out,stdout=f,stderr=subprocess.STDOUT).returncode
 raise SystemExit(rc)
