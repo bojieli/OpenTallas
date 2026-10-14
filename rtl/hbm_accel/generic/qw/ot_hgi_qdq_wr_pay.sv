@@ -47,6 +47,7 @@ module ot_hgi_qdq_wr_pay #(
     always @(posedge clk or negedge rr_n[2])if(!rr_n[2])wg_req_q<=0;else wg_req_q<=i_act;
     // fired-beat queue (one entry a beat in the decode or the result FIFO)
     reg [14:0] mq_o [0:OD-1]; reg [2:0] mq_n [0:OD-1]; reg mq_z [0:OD-1];
+    reg [3:0] mq_oh [0:OD-1];                          // p11: one-hot of the entry's sector[1:0], written with the entry
     reg [OW-1:0] mq_t, mq_h; reg [OW:0] infl;         // infl: fired beats not yet out of the decode
     wire od_hv, od_ovf; wire [511:0] od_head;
     reg bad, wg_ok;
@@ -61,6 +62,9 @@ module ot_hgi_qdq_wr_pay #(
     (* keep = 1 *) wire [18:0] mq_head0 = {mq_o[mq_h], mq_n[mq_h], mq_z[mq_h]};
     (* keep = 1 *) wire [18:0] mq_head1 = {mq_o[mq_h1], mq_n[mq_h1], mq_z[mq_h1]};
     wire [14:0] w_sec0 = mh_o; wire [2:0] w_n = mh_n;
+    (* keep = 1 *) wire [3:0] mq_oh0 = mq_oh[mq_h];
+    (* keep = 1 *) wire [3:0] mq_oh1 = mq_oh[mq_h1];
+    wire [12:0] mq_hp0 = mq_head0[18:6] + 13'd1, mq_hp1 = mq_head1[18:6] + 13'd1;
     reg [7:0] w_hit; reg w_cr_ok;
     always @* begin
         w_cr_ok = 1'b1;
@@ -70,10 +74,10 @@ module ot_hgi_qdq_wr_pay #(
         end
     end
     wire result_empty,tracker_bad;
+    wire re_nf,re_f; // p11: result_empty of the NEXT cycle without / with a fire this cycle (registered payload select)
     wire bypass_eligible=(EMPTY_BYPASS!=0)&&result_empty&&!od_hv&&vo_f&&!qf_f&&!df_f&&!f_bi&&!od_ovf;
     wire w_fire = wg_ok && !bad && !tracker_bad && (od_hv||bypass_eligible) && w_cr_ok;
     wire bypass_fire=w_fire&&!od_hv&&bypass_eligible;
-    wire [511:0] result_head=(EMPTY_BYPASS!=0)&&!od_hv?y_f:od_head;
     generate if(EMPTY_BYPASS!=0)begin:g_result_tracker
         // Accepted registered VO minus actual WWQ launches counts every SRAM,
         // prefetch-head and read-pending obligation. Complement rails refuse a
@@ -81,6 +85,8 @@ module ot_hgi_qdq_wr_pay #(
         (* keep="true",dont_touch="true" *) reg [OW:0] outstanding,outstanding_n;
         wire [OW:0] next_outstanding=outstanding+(OW+1)'(vo_f)-(OW+1)'(w_fire);
         assign tracker_bad=outstanding!=~outstanding_n;
+        wire [OW:0] ov=outstanding+(OW+1)'(vo_f);
+        assign re_nf=ov==0; assign re_f=ov==1;
         assign result_empty=(outstanding==0)&&!tracker_bad;
         always @(posedge clk or negedge rr_n[0])
             if(!rr_n[0])begin outstanding<=0;outstanding_n<='1;end
@@ -94,7 +100,7 @@ module ot_hgi_qdq_wr_pay #(
         end
 `endif
     end else begin:g_no_result_tracker
-        assign result_empty=1'b0;assign tracker_bad=1'b0;
+        assign result_empty=1'b0;assign tracker_bad=1'b0;assign re_nf=1'b0;assign re_f=1'b0;
     end endgenerate
     ot_fifo_sram_fwft #(.W(512), .DEPTH(OD), .MACRO(0), .ESL(128)) u_od (.clk(clk), .rst_n(rr_n[1]), .push(vo_f&&!bypass_fire),
         .wdata(y_f), .pop(w_fire), .hv(od_hv), .head(od_head), .ovf(od_ovf));
@@ -129,23 +135,45 @@ module ot_hgi_qdq_wr_pay #(
             end
         end
     end
+    localparam integer REP = 4;                        // kept select copies per lane (32 payload bits each)
+    (* keep="true",dont_touch="true" *) reg [8*REP*8-1:0] pl_sel;   // per lane/copy: [3:0] y_f sector, [7:4] od_head sector
+    (* keep="true",dont_touch="true" *) reg [7:0] pl_lt;
+    (* keep="true",dont_touch="true" *) reg [12:0] pl_hi, pl_hi1;
+    wire [3:0] pl_oh_n = w_fire ? mq_oh1 : mq_oh0;
+    wire pl_re_n = (EMPTY_BYPASS != 0) && (w_fire ? re_f : re_nf);
     // Address/payload flops are written separately from resettable valid strobes (no ALDFF feedback on payload bits).
     always @(posedge clk) begin
-        if (f_m_v) begin mq_o[mq_t] <= f_m[18:4]; mq_n[mq_t] <= f_m[3:1]; mq_z[mq_t] <= f_m[0]; end
+        if (f_m_v) begin mq_o[mq_t] <= f_m[18:4]; mq_n[mq_t] <= f_m[3:1]; mq_z[mq_t] <= f_m[0]; mq_oh[mq_t] <= 4'b0001 << f_m[5:4]; end
         {mh_o, mh_n, mh_z} <= ({19{!w_fire}} & mq_head0) | ({19{w_fire}} & mq_head1);
         snapshot <= snapshot_counts; // first registered launch, same edge as WWQ
-        // p10 (Claude 10-14, p9 route TT -137.85: SRAM head / bypass -> wwq 17 levels with w_fire, i.e. the credit / hit /
-        // bypass-eligibility cone, as the load enable of 2,232 payload flops): the payload is loaded EVERY edge from the
-        // registered head pointer (s from mh_o) and is only meaningful when the lane's valid bit (wwq[279], still
-        // w_fire && w_hit) is set; the fire cone now drives 8 valid flops, not the payload enables.  Same edge, no cycle.
+        // p10 (Claude 10-14): payload flops load every edge; the fire cone drives only the 8 valid bits.
+        // p11 (Claude group-B3 10-14, p10 route TT -94.77: u_od.oc / ESL oh_c / mh_o -> wwq 14-17 levels = the 512-wide
+        // od_hv ? od_head : y_f select and the per-lane sector decode of mh_o, both fanned out to 1,024 payload bits): every
+        // select of the payload is now a REGISTERED one-hot, loaded one edge early with the same next-state as mh_o
+        // (fire ? head+1 : head) and result_empty (outstanding + vo - fire == 0), REP kept copies per lane; the payload
+        // D input is an 8-way AND-OR of {y_f, od_head} sectors, the address a 2:1 of registered sector[14:2] / +1.
+        // Same edge, no cycle, identical wwq contents whenever a lane's valid bit is set.
+        for (integer b = 0; b < 8; b = b + 1) begin
+            for (integer g = 0; g < REP; g = g + 1)
+                for (integer j = 0; j < 4; j = j + 1) begin
+                    pl_sel[(b*REP+g)*8 + j]     <= pl_oh_n[(b-j)&3] &  pl_re_n;
+                    pl_sel[(b*REP+g)*8 + 4 + j] <= pl_oh_n[(b-j)&3] & !pl_re_n;
+                end
+            pl_lt[b] <= |(pl_oh_n & ~((4'd2 << (b&3)) - 4'd1));   // b[1:0] < sector[1:0]
+        end
+        pl_hi  <= w_fire ? mq_head1[18:6] : mq_head0[18:6];
+        pl_hi1 <= w_fire ? mq_hp1 : mq_hp0;
         for (integer b = 0; b < 8; b = b + 1) begin
             begin
-                reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));
-                // decoded constant-index sector select (one-hot AND-OR, no runtime part-select)
-                c = ({128{s == 2'd0}} & result_head[127:0]) | ({128{s == 2'd1}} & result_head[255:128]) |
-                    ({128{s == 2'd2}} & result_head[383:256]) | ({128{s == 2'd3}} & result_head[511:384]);
+                reg [255:0] d; reg [127:0] c;
+                for (integer i = 0; i < 128; i = i + 1) begin
+                    c[i] = 1'b0;
+                    for (integer j = 0; j < 4; j = j + 1)
+                        c[i] = c[i] | (pl_sel[(b*REP + i/(128/REP))*8 + j] & y_f[j*128 + i])
+                                    | (pl_sel[(b*REP + i/(128/REP))*8 + 4 + j] & od_head[j*128 + i]);
+                end
                 for (integer k = 0; k < 8; k = k + 1) d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};
-                wwq_q[b*280 +: 279] <= {15'(w_sec0 + 15'(s)), d, 8'hff};
+                wwq_q[b*280 +: 279] <= {(pl_lt[b] ? pl_hi1 : pl_hi), 2'(b), d, 8'hff};
             end
         end
     end
