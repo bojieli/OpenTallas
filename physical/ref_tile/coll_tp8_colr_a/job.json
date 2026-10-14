@@ -1,9 +1,9 @@
 {
- "name": "coll_tp8_colr_a-r1-COMMIT",
+ "name": "coll_tp8_colr_a-r2-COMMIT",
  "block": "ot_coll_tp8_col_tile_r",
  "ref_tile": true,
  "owner": "Claude:qwen-coll-io-1014",
- "purpose": "Qwen TP8 compute-die collective (qfd_io_collective) wrapper column leaf, registered-return redesign (qwen-coll-io 10-14, el1014-qwen-coll-io.log). 14 x 32x128 macros (wt3a plan + LQ/TQ to 128 words); 259.2 x 291.6, cap M5, recipe 1 + macro-edge M5 guard (the wt3a closure recipe). Composition benches: 8-rank TP8 golden ((P0+P1)+P2)+P3 with Pp = die0+die1, exact unit 9 cases + production 3 cases; mutants OT_TP8_MUT_OWNER / OT_TP8_MUT_GATHER / OT_TP8R_MUT_SEAM (the EQ write takes the live, un-aligned word) all fail.",
+ "purpose": "Qwen TP8 compute-die collective (qfd_io_collective) wrapper column leaf, registered-return redesign (qwen-coll-io 10-14, el1014-qwen-coll-io.log). 14 x 32x128 macros (wt3a plan + LQ/TQ to 128 words); 237.6 x 237.6 (r1 gate at 259.2 x 291.6: util 24 %, GPL-0305 divergence), cap M5, recipe 1 + macro-edge M5 guard (the wt3a closure recipe). Composition benches: 8-rank TP8 golden ((P0+P1)+P2)+P3 with Pp = die0+die1, exact unit 9 cases + production 3 cases; mutants OT_TP8_MUT_OWNER / OT_TP8_MUT_GATHER / OT_TP8R_MUT_SEAM (the EQ write takes the live, un-aligned word) all fail.",
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
@@ -132,7 +132,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_tp8_colr/coll_tp8_colr_a-r1-COMMIT"
+   "to": "results/rtl/ref_tile/coll_tp8_colr/coll_tp8_colr_a-r2-COMMIT"
   }
  ],
  "cycles_added": 0,

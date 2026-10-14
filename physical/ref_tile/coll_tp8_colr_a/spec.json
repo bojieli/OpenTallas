@@ -14,8 +14,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 259.2,
-  "h": 291.6
+  "w": 244.08,
+  "h": 237.6
  },
  "pins": {
   "E": [
@@ -65,8 +65,8 @@
    "count": 1,
    "inst": "*u_eq.g_m.g_k?0?.*u_m",
    "at": [
-    31.968,
-    54.0
+    23.76,
+    23.76
    ],
    "orient": "R0"
   },
@@ -75,8 +75,8 @@
    "count": 1,
    "inst": "*u_lq.g_m.g_k?0?.*u_m",
    "at": [
-    31.968,
-    95.04
+    23.76,
+    64.8
    ],
    "orient": "R0"
   },
@@ -85,8 +85,8 @@
    "count": 1,
    "inst": "*u_lq.g_m.g_k?1?.*u_m",
    "at": [
-    31.968,
-    136.08
+    23.76,
+    105.84
    ],
    "orient": "R0"
   },
@@ -95,8 +95,8 @@
    "count": 1,
    "inst": "*u_lq.g_m.g_k?2?.*u_m",
    "at": [
-    31.968,
-    177.12
+    23.76,
+    146.88
    ],
    "orient": "R0"
   },
@@ -105,48 +105,8 @@
    "count": 1,
    "inst": "*u_lq.g_m.g_k?3?.*u_m",
    "at": [
-    31.968,
-    218.16
-   ],
-   "orient": "R0"
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
-   "count": 1,
-   "inst": "*u_rq.g_m.g_k?0?.*u_m",
-   "at": [
-    103.68,
-    95.04
-   ],
-   "orient": "R0"
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
-   "count": 1,
-   "inst": "*u_tq.g_m.g_k?0?.*u_m",
-   "at": [
-    103.68,
-    136.08
-   ],
-   "orient": "R0"
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
-   "count": 1,
-   "inst": "*u_pq.g_m.g_k?1?.*u_m",
-   "at": [
-    103.68,
-    177.12
-   ],
-   "orient": "R0"
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
-   "count": 1,
-   "inst": "*u_tq.g_m.g_k?1?.*u_m",
-   "at": [
-    103.68,
-    218.16
+    23.76,
+    187.92
    ],
    "orient": "R0"
   },
@@ -155,38 +115,48 @@
    "count": 1,
    "inst": "*u_tq.g_m.g_k?2?.*u_m",
    "at": [
-    103.68,
-    54.0
+    95.472,
+    23.76
    ],
    "orient": "R0"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "count": 1,
-   "inst": "*u_lb.g_m.g_k?0?.*u_m",
+   "inst": "*u_rq.g_m.g_k?0?.*u_m",
    "at": [
-    175.392,
-    95.04
+    95.472,
+    64.8
    ],
    "orient": "R0"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "count": 1,
-   "inst": "*u_lb.g_m.g_k?1?.*u_m",
+   "inst": "*u_tq.g_m.g_k?0?.*u_m",
    "at": [
-    175.392,
-    136.08
+    95.472,
+    105.84
    ],
    "orient": "R0"
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "count": 1,
-   "inst": "*u_pq.g_m.g_k?0?.*u_m",
+   "inst": "*u_pq.g_m.g_k?1?.*u_m",
    "at": [
-    175.392,
-    177.12
+    95.472,
+    146.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_m.g_k?1?.*u_m",
+   "at": [
+    95.472,
+    187.92
    ],
    "orient": "R0"
   },
@@ -195,15 +165,45 @@
    "count": 1,
    "inst": "*u_tq.g_m.g_k?3?.*u_m",
    "at": [
-    175.392,
-    218.16
+    167.184,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lb.g_m.g_k?0?.*u_m",
+   "at": [
+    167.184,
+    64.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lb.g_m.g_k?1?.*u_m",
+   "at": [
+    167.184,
+    105.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_pq.g_m.g_k?0?.*u_m",
+   "at": [
+    167.184,
+    146.88
    ],
    "orient": "R0"
   }
  ],
  "refglob": "*",
  "route": {
-  "pd": 0.55,
+  "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 40,
   "macro_halo_um": 6.48
@@ -225,136 +225,136 @@
    24.0
   ],
   "eq_hd": [
-   44.0,
-   64.0
-  ],
-  "lq_wd": [
-   95.0,
-   125.0
-  ],
-  "tq_wd": [
-   170.0,
-   195.0
-  ],
-  "sr": [
-   200.0,
-   287.6
-  ],
-  "in_d": [
-   4.0,
-   24.0
-  ],
-  "dp_d": [
    24.0,
    44.0
   ],
-  "dr_d": [
-   44.0,
-   64.0
+  "lq_wd": [
+   62.0,
+   140.0
   ],
-  "sr_d": [
-   64.0,
-   124.0
-  ],
-  "up": [
-   130.0,
-   150.0
-  ],
-  "ur": [
+  "tq_wd": [
    150.0,
    170.0
   ],
+  "sr": [
+   175.0,
+   233.0
+  ],
+  "in_d": [
+   4.0,
+   22.0
+  ],
+  "dp_d": [
+   22.0,
+   40.0
+  ],
+  "dr_d": [
+   40.0,
+   58.0
+  ],
+  "sr_d": [
+   58.0,
+   108.0
+  ],
+  "up": [
+   110.0,
+   128.0
+  ],
+  "ur": [
+   128.0,
+   146.0
+  ],
   "od": [
-   170.0,
-   190.0
+   146.0,
+   164.0
   ],
   "sx": [
-   195.0,
-   287.6
+   166.0,
+   233.0
   ],
   "s_lo": [
-   20.0,
-   100.0
+   10.0,
+   80.0
   ],
   "s_hi": [
-   100.0,
-   180.0
+   80.0,
+   150.0
   ],
   "sum_d": [
-   180.0,
-   250.0
+   150.0,
+   225.0
   ],
   "lb_hd": [
    4.0,
-   40.0
+   34.0
   ],
   "pq_hd": [
-   40.0,
-   76.0
+   34.0,
+   64.0
   ],
   "lq_hd": [
-   76.0,
-   112.0
+   64.0,
+   94.0
   ],
   "tq_hd": [
-   112.0,
-   148.0
+   94.0,
+   124.0
   ],
   "rq_hd": [
-   148.0,
-   184.0
+   124.0,
+   154.0
   ],
   "clk": [
-   200.0,
-   200.4
+   160.0,
+   160.4
   ],
   "rst_n": [
-   204.0,
-   204.4
+   164.0,
+   164.4
   ],
   "die_s": [
-   208.0,
-   208.4
+   168.0,
+   168.4
   ],
   "meta_s": [
-   212.0,
-   212.4
+   172.0,
+   172.4
   ],
   "c_push": [
-   216.0,
-   220.0
+   176.0,
+   180.0
   ],
   "c_pop": [
-   222.0,
-   226.0
+   182.0,
+   186.0
   ],
   "c_hold": [
-   228.0,
-   228.4
+   188.0,
+   188.4
   ],
   "c_sel": [
-   230.0,
-   231.0
+   190.0,
+   191.0
   ],
   "c_takel": [
-   233.0,
-   233.4
+   193.0,
+   193.4
   ],
   "hv": [
-   236.0,
-   240.0
+   196.0,
+   200.0
   ],
   "ovf": [
-   242.0,
-   246.0
+   202.0,
+   206.0
   ]
  },
  "job": {
   "owner": "Claude:qwen-coll-io-1014",
   "branch": "claude/qwen-coll-io-1014",
-  "tag": "r1",
+  "tag": "r2",
   "structural_change": "NEW master (WT 2) after 29 failed qfd_io_collective routes: the WT 1 column leaf took every word in on W and out on E, so the pairing (heads -> lo/hi -> hl/hh/gh), EQ (heads/gh/fold-slice sum -> eq_wd), result (engine e_od -> lq_wd/tq_wd) and merger (heads -> m_d -> od) loops left the leaf and returned across 500-900 um into un-registered SRAM write pins. ot_coll_tp8_col_tile_r computes every pairing/gather/merger word INSIDE the leaf from its own heads (static die/meta straps), registers every externally fed write word (fold-slice sum, engine results) at its pin and writes it one edge later, and lands c_hold (512 loads from the port) in a pin flop with a pre-hold copy. Pins face their consumers: E link words, W engine, N pre-fold slices, S control + head meta. +1 edge on the reduce path and +1 on the result path (production AR256 496 vs 494 at LAT 40). Result queues sized to the board crossing: LQ 128 / TQ 128 (14 macros; the closed WT 1 leaf had 9) so that with the DEPTH 64 engine (ot_coll_col_tile_d64) the TP8 AR256 is ~953 cycles at LAT 339 instead of 1,683.",
-  "purpose": "Qwen TP8 compute-die collective (qfd_io_collective) wrapper column leaf, registered-return redesign (qwen-coll-io 10-14, el1014-qwen-coll-io.log). 14 x 32x128 macros (wt3a plan + LQ/TQ to 128 words); 259.2 x 291.6, cap M5, recipe 1 + macro-edge M5 guard (the wt3a closure recipe). Composition benches: 8-rank TP8 golden ((P0+P1)+P2)+P3 with Pp = die0+die1, exact unit 9 cases + production 3 cases; mutants OT_TP8_MUT_OWNER / OT_TP8_MUT_GATHER / OT_TP8R_MUT_SEAM (the EQ write takes the live, un-aligned word) all fail.",
+  "purpose": "Qwen TP8 compute-die collective (qfd_io_collective) wrapper column leaf, registered-return redesign (qwen-coll-io 10-14, el1014-qwen-coll-io.log). 14 x 32x128 macros (wt3a plan + LQ/TQ to 128 words); 237.6 x 237.6 (r1 gate at 259.2 x 291.6: util 24 %, GPL-0305 divergence), cap M5, recipe 1 + macro-edge M5 guard (the wt3a closure recipe). Composition benches: 8-rank TP8 golden ((P0+P1)+P2)+P3 with Pp = die0+die1, exact unit 9 cases + production 3 cases; mutants OT_TP8_MUT_OWNER / OT_TP8_MUT_GATHER / OT_TP8R_MUT_SEAM (the EQ write takes the live, un-aligned word) all fail.",
   "benches": [
    {
     "name": "tp8r_exact",
