@@ -12,7 +12,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 123.12,
+  "w": 131.76,
   "h": 144.72
  },
  "util": 0.52,
@@ -52,7 +52,7 @@
  "job": {
   "owner": "Claude:el1013-hbm-quant-split",
   "branch": "claude/hbm-quant-split-1013",
-  "tag": "w1",
+  "tag": "w2",
   "purpose": "WQ3 quant cluster read lane-group leaf (8 lanes, hardened once, x4 on the cluster W face): die-face pin flops (wrr 2,056 in, wrq 128 out), two read quads (flat), read relays stage 2, pair gather register gp 1,024 on the E face toward the data head.",
   "benched_by": "quant_wide_ov",
   "extra_paths": [
