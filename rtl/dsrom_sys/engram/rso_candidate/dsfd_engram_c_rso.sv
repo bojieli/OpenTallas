@@ -159,7 +159,7 @@ module dsfd_engram_c_rso #(
         .w_oh(w_oh), .w_a(w_a), .b1_d(b1_d), .x_d(x_d),
         .lk_hqv(lk_hqv), .lk_hqa(lk_hqa), .lk_hqt(lk_hqt), .t_hq(t_hq), .f_hr(f_hr), .lk_hr(lk_hr));
     // prefetch banks: band tile = bank 1 (+ write transit {bank 2, bank 0}); columns = bank 0, bank 2
-    ot_engc_t_pbb_rso u_pb1 (.ck(ck_pb1), .rst(rst_pb1_n), .rso(child_rso[3]), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
+    ot_engc_t_pbb_rso_xt u_pb1 (.ck(ck_pb1), .rst(rst_pb1_n), .rso(child_rso[3]), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
         .x_oh(x0_oh), .x_a(x0_a), .x_do(x0_d), .r_oh(r1_oh), .r_a(r1_a), .r_d(rd1));
     // One coherent transit step: never retime the write data without its
     // bank mask/address. It uses a normal soft-flop spine leaf, aligned with
