@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.quant_sfu.actual_inventory.v1",
-  "source": "aaf4341d7",
+  "source": "ccdd92c77",
   "current_required_contract": "r25gq v12; dielead owns new v13 actualassignment",
   "quant": {
     "master": "ot_hgi_qdq_q_pin4",
@@ -189,7 +189,7 @@
     ],
     "existing_overlap_pairs": [],
     "actual_native_proof": {
-      "source": "ffd1a0692",
+      "source": "90c0b7d64",
       "common_VM": "64fced1f9",
       "phases": [
         61,
@@ -203,15 +203,17 @@
       "all_quadrant_record_drains": 4,
       "mutants": "header0doneFAIL; assembly11592wrongFAIL",
       "scope": "heldgrants; release/globalmirror notqualified",
-      "physical_parent_fit": "OPEN"
+      "physical_parent_fit": "OPEN",
+      "clock_roots_per_quadrant": 14,
+      "physical_private_clock_scope": "softwaretied only; phi-R source/resetarrival unassigned"
     },
     "current_boundary_candidate": {
-      "source": "aaf4341d7",
+      "source": "ccdd92c77",
       "FRONTFAST": 3,
       "FASTFIN": 1,
       "WRSPLIT": 1,
       "DRAIN": 1,
-      "native_proof": "running unique faceaaf immutabletree; ffd FRONTFAST2 evidence retained",
+      "native_proof": "capturedACK FINf5 + protectedPAY EMPTY_BYPASS1 running uniqueactual14rootnativevehicle; bypass0comparisonrunning. Historical90 phases61/487184 retained.",
       "front": {
         "fast": {
           "master": "ot_hgi_qdq_fr_one_payload_face",
@@ -258,7 +260,8 @@
         "CTS_sinks": 4132,
         "R_TT_ps": 140.4,
         "spread_ps": 13.9,
-        "actual_pin_audit": "pending"
+        "actual_pin_audit": "pending",
+        "route": "n3-9875864dc RUNNING; n2-b415 REFUSED oldergate receipt atfixedcommit, preserved"
       },
       "PAY": {
         "master": "ot_hgi_qdq_wr_pay",
@@ -266,7 +269,7 @@
           259.2,
           125.28
         ],
-        "route": "p3-94e699311 baseTT31.57FF9.20DRC4 daemonfinishing",
+        "route": "p3 terminalNEEDS_RTL TT31.57FF9.20DRC4; genuinebypasssourceabc2 newCTS/routechildowned",
         "pin_audit": "pending"
       },
       "FIN": {
@@ -284,8 +287,12 @@
           54
         ],
         "f4_CTS": "1206sinks R110.4spread7.9",
-        "actual_slot": null
-      }
+        "actual_slot": null,
+        "f3_pin_defect": "all8ACKP241.5",
+        "f4_pin_defect": "all8ACKP249.2 andQfin233.7",
+        "f5_source": "00bbce3bd capturedACKonly; adds1logicalcompletionedge; CTS1200sinksR139.2spread24.2 setup114.2hold27.4 routeactive actualexportpending"
+      },
+      "PAYBYPASS": 1
     },
     "clock": "Each actualphysicalleaf needs separate phi-R delivery entry; softwarelogicalclk ties are not a physicalclocktree",
     "M6_PORT": "No newgrant claimed; CLOSEDdecoder M6 bodies stand",
@@ -298,7 +305,8 @@
       "production_qpin4_reset_driver": null,
       "production_qpin4_ret_peer": null,
       "required_action": "sourceowned native recorddispatch/reset/returnbinding and actual\u03c6-R clockpin positions before relocationgrant"
-    }
+    },
+    "clock_ABI": "results/arch/hbm_native_1013/uncovered_structural_2240/quant_leaf_clock_reset_abi.json"
   },
   "sfu": {
     "required_parent_outline_um": [
@@ -319,9 +327,10 @@
       "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_mapper_lane_actual_pairs.json"
     ],
     "source_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter",
-    "CTS_blocker": "sharedhelper3b78725cd rootserialpublication pending; cap0 currentlyinvalid beforecompute, no synth running"
+    "CTS_blocker": "CLEARED main e0f3be0b8 helperpublished; sourcebce07bf4c fouruniqueCTSGatesactive89315/23702/94902/58698",
+    "bank_lifetime_seam": "481checks67readidentities68committedwrites6LQ10wraps/externaldrain/invalidbank/warmresetPASS; realearlyreleasefaultFAIL beforeACK. Offcompositionmechanism, nativeCDCcachegrant stillopen."
   },
-  "OV_alternative": "Unselected WQ3; RFsharedregisteredpayload and4META source625 leafroutes; lgr/lgw existingM5facecut~.75 unsignedM6PORT alternative notaccepted; M5 taller/privateRQsource alternative modeling next, no invalidparentroute",
+  "OV_alternative": "UnselectedWQ3: OV3CLOSED butactualpin defects13d961bf7; noadoption. LGRreal3roots1433668d9 exact6casecampaign3328words184/168/3mutantfatal197c90e5f. M5taller/privateRQrequests rawcounts/unassigned; preserveclosedRQ/WQ bodies, noM6PORTgrant.",
   "live_handles": [
     {
       "job": "qdq_wr_ref-q8e-85c81f4c2",
