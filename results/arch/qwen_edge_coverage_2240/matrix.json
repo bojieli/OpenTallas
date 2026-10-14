@@ -8,10 +8,10 @@
     {
       "element": "qfd_link_adp512",
       "actual_owner": "Codex:qwen_edge_coverage_2240",
-      "state": "ACTIVE_CLOSED128_CHILD_DEFAULT_OFF_PROXY_CENSUS",
+      "state": "CLOSED_P12_PROFILE_PIN_AUDIT_NEW_TX_HEAD_REQUIRED",
       "current_source": "rtl/physical/ot_qfd_link_adp512_split.sv @2aa3e0423",
-      "evidence": "Leafcebc45086 CLOSED TT188.60 FF24.13 DRC0, actualboundaryTT41.8/FF41.4. Full1043 eight-root functionalproof passed, parent stillunqualified. Default-off78-root proxy realIBUF12/OCRED12+heads passedexact1500/stall3000/blocked3000/3resetepochs; 5observedmutants. Sustained1.000word/clk +16cycles vsbaseline. Freshgeneric66583sequentialbits max9275root +8SRAM; power/slots/unpriced.",
-      "next_action": "NewP12r_crcapturedprofile source795e0f2b9 positive rate1000/+16cycles blocked3000/reset3 and5mutants rerun. Fresh2965root clockgateTTboundary332.6/all28.0/setup175.50hold26.43, SB.validateTRUE; submitted qfd_link_adp128_p12-p12g2-aeaa5f66b withparentexact/rate/stall/reset+5mutants. Parent78rootphysicalplacement/PG/cornerpairs/power/pricing stillopen.",
+      "evidence": "Leafcebc45086 CLOSED TT188.60 FF24.13 DRC0, actualboundaryTT41.8/FF41.4. Full1043 eight-root functionalproof passed, parent stillunqualified. Default-off78-root proxy realIBUF12/OCRED12+heads passedexact1500/stall3000/blocked3000/3resetepochs; 5observedmutants. Sustained1.000word/clk +16cycles vsbaseline. Freshgeneric66583sequentialbits max9275root +8SRAM; power/slots/unpriced. 04eadee47 CLOSED TT128.42FF21.93DRC0, actualTT R326/spread24.0 FF260.9/sp19.1. FirstpointTT20TXflit O\u2212R>220 max240.95; allcapture<=164.82. Proxyparentnotqualified.",
+      "next_action": "RelocateexistingTX148capture into2clocknativeleaf, removeexternalTXstage withoutlogicalcyclechange; explicitphysicalclockports/R budgets needed. ExistingP12closedview preserved; entire78root placement/PG/phase/priceopen.",
       "historical_status_preserved": true,
       "registry_superseded": false
     },
@@ -28,10 +28,10 @@
     {
       "element": "qfd_su_cbuf",
       "actual_owner": "Codex:qwen_edge_coverage_2240",
-      "state": "ACTIVE_WIDER_BALANCED_NATIVE_L0_ROUTE",
+      "state": "CLOSED216_CLOCKREPAIR_NEW_REGISTERED_REQUESTHEAD_ACTIVE",
       "current_source": "rtl/physical/ot_qfd_su_cbuf_native_l0.sv @23e6b338c",
-      "evidence": "b0e3d0c98 CLOSED TT32.39 FF23.19 DRC0 but actualboundaryTT163.1>80 HOLD. Oldlegacybody preserved. New216x216 independentbalancedspine gate4104sinks/TTboundary437.3/all26.0/setup128.03hold14.60; source95a39a6a1 gatehelperbecamestale after56d7b5557, preserved; freshmergedtools gate required.",
-      "next_action": "Fresh frozenjob qfd_su_cbuf_native_l0_sp-l0sp3-0ee5fae18 producer26ea2130e gateSB.validateTRUE/all26.0/setup128.03hold14.60, slot_changeapproved216x216, intakeclosed_standsPASS/benchPASS/RUNNINGEPYC4. Mustverifyactualroutedboundary<=80 andallcorners/nativeprice; oldb0eclockdefect remainsHELD.",
+      "evidence": "b0e3d0c98 CLOSED TT32.39 FF23.19 DRC0 but actualboundaryTT163.1>80 HOLD. Oldlegacybody preserved. New216x216 independentbalancedspine gate4104sinks/TTboundary437.3/all26.0/setup128.03hold14.60; source95a39a6a1 gatehelperbecamestale after56d7b5557, preserved; freshmergedtools gate required. 98c34391e balanced216 CLOSED TT53.74FF16.64DRC0 boundary33.2/20.6, butactualTTfirstpointlaunch108fails; allTTcapture<=179.05. Newreqhead keepsCROM5, totalF_LAT12/newpinsFar11; exact38152 PASS, requestepoch6556/latency25088 mutantsFAIL, samefixture +4startupcycles. FullSW64actualpayload b5 compileactive.",
+      "next_action": "Freshreqhead216 CTS/costaudit, remainingCROMq bare217.79actualdriver/load/reach/phase required; no oldclosedviewalias ornativepriceadoption. Full8groupCROM5/SW64/VL7/MC6/ML15 composition active; statepartition acceptednative_service_glue.",
       "historical_status_preserved": true,
       "registry_superseded": false
     },
