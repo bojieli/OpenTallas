@@ -10,6 +10,7 @@
 #include <vector>
 #include <stdexcept>
 #include <algorithm>
+#include <unordered_map>
 namespace qwen_native {
 constexpr unsigned G=3072,W=16,SW=64,VM_WORDS=56816;
 template<size_t N> using HexWord=std::array<uint32_t,N>;
@@ -55,7 +56,7 @@ public:
     std::vector<uint32_t> vm;
     std::vector<Commit> commits;
     std::vector<Accepted> accepted;
-    std::vector<unsigned> retired;
+    std::vector<unsigned> retired, speculative_fetches;
     unsigned segment_base=0;uint64_t edge=0;
     std::vector<HexWord<32>> program;
     std::vector<HexWord<G*W/4>> code;
@@ -74,12 +75,14 @@ public:
     }
     uint32_t load(unsigned addr)const{if(addr>=vm.size())throw std::runtime_error("VM read outside56816: "+std::to_string(addr));return vm[addr];}
     void store(unsigned addr,uint32_t value,const char* port){if(addr>=vm.size())throw std::runtime_error("VM write outside56816: "+std::to_string(addr));writes.push_back({addr,value,port,edge});}
-    template<class Model> void begin_edge(Model& m) {
+    template<class Model> void drive_responses(Model& m) {
         drive(m.prog_q,pending.program);drive(m.int8_wrom_q,pending.code);
         drive(m.scale_q,pending.scales);drive(m.crom_q,pending.constants);
         drive(m.vx_q,pending.x);drive(m.va_q,pending.a);drive(m.vb_q,pending.b);drive(m.vc_q,pending.c);
+    }
+    template<class Model> void snapshot_edge(Model& m) {
         next=pending;writes.clear();
-        if(m.prog_re){unsigned pc=segment_base+m.prog_addr;if(pc>=program.size())throw std::runtime_error("program fetch outside actual image");next.program=program[pc];}
+        if(m.prog_re){unsigned pc=segment_base+m.prog_addr;if(pc>=4096)throw std::runtime_error("program fetch outside4096wordROM");if(pc>=program.size()){next.program.fill(0);speculative_fetches.push_back(pc);}else next.program=program[pc];}
         if(m.int8_wrom_re){if(m.int8_wrom_addr>=code.size())throw std::runtime_error("code read outside actual compact bank");next.code=code[m.int8_wrom_addr];}
         if(m.wrom_re)throw std::runtime_error("unprovided BF16 stream ROM read; no fabricated response");
         for(unsigned g=0;g<G;++g){
@@ -97,11 +100,16 @@ public:
         }
         if(m.vw_rd_we)store(m.vw_rd_addr,m.vw_rd_data,"REDUCER");
         if(m.vw_mx_we){unsigned a=m.vw_mx_addr*W;for(unsigned j=0;j<W;++j)if(m.vw_mx_mask&(1u<<j))store(a+j,m.vw_mx_data[j],"MAX");}
-        if(m.instruction_issue){unsigned pc=segment_base+m.instruction_pc;if(pc>=program.size())throw std::runtime_error("accepted PC outside image");accepted.push_back({pc,unsigned(m.instruction_unit),edge,program[pc]});}
+        if(m.instruction_issue){unsigned pc=segment_base+m.instruction_pc;if(pc>=program.size())throw std::runtime_error("accepted PC outside image");if(unsigned(m.instruction_unit)!=(program[pc][0]&3))throw std::runtime_error("accepted unit differs from pinned instruction");accepted.push_back({pc,unsigned(m.instruction_unit),edge,program[pc]});}
         if(m.end_retired)retired.push_back(segment_base+m.end_pc);
     }
+    // Convenience API requires clk=0. Production integration may instead call
+    // drive_responses(), eval all coupled models, then snapshot_edge() explicitly.
+    template<class Model> void begin_edge(Model& m){drive_responses(m);m.eval();snapshot_edge(m);}
     void commit_after_edge(){
-        for(size_t i=0;i<writes.size();++i){for(size_t j=0;j<i;++j)if(writes[i].address==writes[j].address && writes[i].value!=writes[j].value)throw std::runtime_error("conflicting same-edge VM writes");vm[writes[i].address]=writes[i].value;}
+        std::unordered_map<unsigned,uint32_t> seen;
+        for(const auto& w:writes){auto old=seen.emplace(w.address,w.value);if(!old.second && old.first->second!=w.value)throw std::runtime_error("conflicting same-edge VM writes");}
+        for(const auto& w:writes)vm[w.address]=w.value;
         commits.insert(commits.end(),writes.begin(),writes.end());pending=next;++edge;
     }
     // Collectives/native service commit actual result data here; caller supplies

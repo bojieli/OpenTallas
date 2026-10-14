@@ -1,0 +1,18 @@
+{
+  "scope": "ACTUAL_INPUT_IMAGE_PARSER_AND_MOCK_INTERFACE_MEMORY_SEMANTICS_ONLY",
+  "unit": "oth-ubuntu-471674-1791960527",
+  "exit": 0,
+  "model_arithmetic_tested": false,
+  "full_layer_exact": false,
+  "source_sha256": {
+    "tools/qwen_native_fullshape/rom_vm_adapter.hpp": "e7f35a2e3cad38f9890a6b5db72e5fa083b41d7eb0d417a481f3aa5a8b0d2425",
+    "tools/qwen_native_fullshape/check_adapter.cpp": "2bb88d0e3f4c5da2ac20aa4a14edc736b7c10c91f6ec732870e92b68fe953091"
+  },
+  "checks": [
+    "actual512codewords/816scale rows/541313constant rows/25instructions/56816VMwords",
+    "previousedge response from oldVM snapshot",
+    "actualacceptedPC14 sourceword/unit match",
+    "zero speculativeROMtail",
+    "conflicting sameedge VM writes mutant refused"
+  ]
+}
