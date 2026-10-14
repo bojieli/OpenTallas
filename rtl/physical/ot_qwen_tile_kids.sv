@@ -110,14 +110,11 @@ module ot_qwen_tile_kids #(
                               .t_d(node_td), .t_vd(cx_tvd), .t_out(t_out), .t_vout(t_vout));
 endmodule
 
-// The original XTX=2 rungs and LRR=1 reset relay, moved without adding an edge.
+// Last original XTX rung only: the control leaf retains the first rung and reset relay.
 module ot_qwen_tile_tx(input wire clk,input wire rst_n,input wire [389:0] d,output wire [390:0] q);
-    (* keep *) reg rst_q;
-    always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
-    wire [389:0] mid, out;
-    ot_qwen_tx_ff #(.W(390)) u_a (.clk(clk),.rst_n(rst_q),.d(d),.q(mid));
-    ot_qwen_tx_ff #(.W(390)) u_b (.clk(clk),.rst_n(rst_q),.d(mid),.q(out));
-    assign q = {rst_q,out};
+    wire [389:0] out;
+    ot_qwen_tx_ff #(.W(390)) u_r (.clk(clk),.rst_n(rst_n),.d(d),.q(out));
+    assign q = {rst_n,out};
 endmodule
 module ot_qwen_tile_rqr #(parameter integer NR=3)(input wire clk,input wire [NR*1024-1:0] d,output reg [1023:0] q);
     reg [1023:0] combined; integer i;
