@@ -70,6 +70,7 @@ def main():
     p.add_argument('--mutant',choices=sorted(MUTANTS),help='bench: a TP8 mutant that must FAIL (implies --negative)')
     p.add_argument('--variant',choices=sorted(VARIANTS),default='m3');a=p.parse_args()
     v=VARIANTS[a.variant]
+    if a.entry_mutant and not a.entries: p.error('--entry-mutant requires --entries')
     if a.mode=='model':
         from uarch_model import qwen_slab_m3_closure_model
         print(json.dumps(qwen_slab_m3_closure_model(),indent=2));return
@@ -91,9 +92,11 @@ def main():
         if proc.returncode: raise SystemExit(proc.returncode)
         proc=subprocess.run(['vvp',str(a.out/'bench.vvp')],capture_output=True,text=True)
         (a.out/'run.log').write_text(proc.stdout+proc.stderr)
-        pins={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in BENCH_SOURCES}
-        (a.out/'result.json').write_text(json.dumps(dict(returncode=proc.returncode,negative=a.negative,variant=a.variant,tp=a.tp,mutant=a.mutant,source_pins=pins),indent=2)+'\n')
+        evidence_sources=BENCH_SOURCES+(['rtl/physical/ot_qwen_slab_pg_entries.sv'] if a.entries else [])
+        pins={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in evidence_sources}
+        (a.out/'result.json').write_text(json.dumps(dict(returncode=proc.returncode,negative=a.negative,variant=a.variant,tp=a.tp,mutant=('scale_return_bits' if a.entry_mutant else a.mutant),entries=a.entries,source_pins=pins),indent=2)+'\n')
         print((proc.stdout+proc.stderr)[-1500:]);raise SystemExit(proc.returncode)
+    from uarch_model import qwen_slab_m3_closure_model
     cmd=command(a.out,a.name,a.threads,a.variant)
     (a.out/'recipe.json').write_text(json.dumps(dict(argv=cmd,variant=a.variant,model=qwen_slab_m3_closure_model()),indent=2)+'\n')
     with (a.out/'flow.log').open('w') as log: rc=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,cwd=ROOT).returncode
