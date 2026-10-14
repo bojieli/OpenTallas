@@ -164,6 +164,8 @@ rd = '\n'.join(f'read_liberty {x}' for x in libs)
 rd = f'if {{[file exists /work/libs/qfd_etm_{c}.lib]}} {{ read_liberty /work/libs/qfd_etm_{c}.lib }}\n' + rd
 # kv-die lead 2026-10-12 (die_iter_1012): per-view ETMs bound by tools/qwen_kv_die/bind_views.py (one lib per master)
 rd = f'foreach f [lsort [glob -nocomplain /work/libs/qfd_etm_*_{c}.lib]] {{ read_liberty $f }}\n' + rd
+summary = (f'report_checks -path_delay {mm} -group_path_count 3000000 -endpoint_path_count 1 -unique_paths_to_endpoint '
+           f'-format summary > /work/grt_{c}_summary.rpt') if (die == 'kv' or os.environ.get('OT_STA_SUMMARY')) else ''
 tcl = f"""proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag rss_mb=[expr {{$r/1024}}] t=[clock seconds]"; flush stdout }}
 proc step {{name body}} {{ set t0 [clock milliseconds]
@@ -185,6 +187,9 @@ if {{[catch {{read_spef /work/die_grt.spef}} err]}} {{ puts "OT_STEP_FAIL spef $
 {lat}{unc}
 step sta {{
   report_checks -path_delay {mm} -group_path_count 3000000 -endpoint_path_count 1 -unique_paths_to_endpoint -format end > /work/grt_{c}_ends.rpt
+  # qwen-split kvsys 10-14: startpoint of every endpoint's worst path (the classifier needs the LAUNCH instance; the end
+  # report alone left 429 k kvs1 endpoints 'unresolved_driver' on bundled / mixed-direction die nets)
+  {summary}
   report_checks -path_delay {mm} -group_path_count 5 -fields {{slew cap input_pins nets}} -digits 1 > /work/grt_{c}_paths.rpt
   report_tns; report_wns; report_worst_slack -{mm}
   report_check_types -max_slew -max_capacitance -violators > /work/grt_{c}_drv.rpt

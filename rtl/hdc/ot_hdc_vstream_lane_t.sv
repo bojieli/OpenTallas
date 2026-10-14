@@ -37,7 +37,16 @@ module ot_hdc_vstream_lane_t #(
     // write / result outputs leave 1 edge later; the 5 read requests also leave 1 edge later and the stream unit
     // (ot_hdc_vstream LOREG = 1) brings their answers back over ONE FEWER relay stage, so the head's read-to-data
     // alignment (ML + 2 + 2*RD, fixed in the closed head) is unchanged.  0 = the original wires-only cluster.
-    parameter integer OREG = 0
+    parameter integer OREG = 0,
+    // r7 2026-10-14 (native pin audit of the CLOSED OREG cluster qfd_su_lane_t_or-or1-2ae5f6ce3: capture FAIL, 665 input
+    // pins S + R 278..332 ps > 190 at the cluster R 715.8 -- the inputs went straight to the closed head's pins, whose
+    // own flops sit ~92 ps earlier than the cluster's boundary reference, plus the in-cluster wire): IREG = 1 registers
+    // every lane-cluster INPUT in this parent too (one fanout-1 kept flop per input pin; the four valid bits reset by the
+    // parent reset register), and the children's rst_n is the parent reset register (rst_n is a pin flop's async input
+    // only).  The cluster is then pin-registered on both faces.  Cost: the issue fields arrive 1 edge later (results
+    // +1 edge per op); the memory answers also arrive 1 edge later, and the stream unit (ot_hdc_vstream LIREG = 1)
+    // sends the five read requests over ONE FEWER relay stage, so the head's read-to-data alignment is unchanged.
+    parameter integer IREG = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -99,9 +108,51 @@ module ot_hdc_vstream_lane_t #(
                          h_vm_wdata, h_kv_wdata, h_l_out, h_l_red};
     wire [OVB-1:0] ov;
     wire [ODB-1:0] od;
+    wire rs;                                                       // the parent's reset register (async assert, registered deassert)
+    generate if (OREG != 0 || IREG != 0) begin : g_rs
+        reg rsr;
+        always @(posedge clk or negedge rst_n) if (!rst_n) rsr <= 1'b0; else rsr <= 1'b1;
+        assign rs = rsr;
+    end else begin : g_rs_none
+        assign rs = rst_n;
+    end endgenerate
+    wire rst_c = (IREG != 0) ? rs : rst_n;                         // the children's reset
+    // ---- IREG: input pin flops (valid bits reset by rs, data none) ----
+    localparam integer IVB = 4;
+    localparam integer IDB = NW + (NW + 1) + 9*AW + 6 + 8 + 3 + 64 + 3 + 3 + 3*32 + WR*16 + 64;
+    wire [IVB-1:0] pv = {emit0, live, i_last_r, accept};
+    wire [IDB-1:0] pd = {i, fin_th, cura0, curb0, curc0, curd0, rrow, asi, bsi, csi, dsi, asrc, bsrc, csrc, mc, md, redsq,
+                         ma, mb, dst, red, ad, imm1, imm2, cls, i_sfu, va_q, vb_q, vc_q, wrom_q, crom_q};
+    wire [IVB-1:0] iv;
+    wire [IDB-1:0] id;
+    generate if (IREG != 0) begin : g_ireg
+        (* keep *) reg [IVB-1:0] ivr;
+        (* keep *) reg [IDB-1:0] idr;
+        always @(posedge clk or negedge rs) if (!rs) ivr <= {IVB{1'b0}}; else ivr <= pv;
+        always @(posedge clk) idr <= pd;
+        assign iv = ivr;
+        assign id = idr;
+    end else begin : g_iwire
+        assign iv = pv;
+        assign id = pd;
+    end endgenerate
+    wire          c_emit0, c_live, c_ilast, c_accept;
+    wire [NW-1:0] c_i; wire [NW:0] c_fin_th;
+    wire [AW-1:0] c_cura, c_curb, c_curc, c_curd, c_rrow, c_asi, c_bsi, c_csi, c_dsi;
+    wire c_asrc, c_bsrc, c_csrc, c_mc, c_md, c_redsq;
+    wire [1:0] c_ma, c_mb, c_dst, c_red; wire [2:0] c_ad, c_cls, c_isfu; wire [31:0] c_imm1, c_imm2;
+    wire [31:0] c_va, c_vb, c_vc; wire [WR*16-1:0] c_wrom; wire [63:0] c_crom;
+    wire [31:0] c_va_r;
+`ifdef OT_IREG_MUT
+    assign c_va = va_q;      // bench mutant: the va answer bypasses its pin flop (one edge early: must FAIL)
+`else
+    assign c_va = c_va_r;
+`endif
+    assign {c_emit0, c_live, c_ilast, c_accept} = iv;
+    assign {c_i, c_fin_th, c_cura, c_curb, c_curc, c_curd, c_rrow, c_asi, c_bsi, c_csi, c_dsi, c_asrc, c_bsrc, c_csrc, c_mc,
+            c_md, c_redsq, c_ma, c_mb, c_dst, c_red, c_ad, c_imm1, c_imm2, c_cls, c_isfu, c_va_r, c_vb, c_vc, c_wrom,
+            c_crom} = id;
     generate if (OREG != 0) begin : g_oreg
-        reg rs;                                                    // the parent's reset register (async assert, registered deassert)
-        always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 1'b0; else rs <= 1'b1;
         (* keep *) reg [OVB-1:0] ovr;
         (* keep *) reg [ODB-1:0] odr;
         always @(posedge clk or negedge rs) if (!rs) ovr <= {OVB{1'b0}}; else ovr <= hv;
@@ -126,13 +177,14 @@ module ot_hdc_vstream_lane_t #(
 `else
     ot_hdc_vstream_lane_h #(.WR(WR), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .RD(RD), .QLA(QLA), .QLM(QLM)) u_head (
 `endif
-        .clk(clk), .rst_n(rst_n), .emit0(emit0), .live(live), .i(i), .fin_th(fin_th), .i_last_r(i_last_r),
-        .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
-        .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
-        .dst(dst), .red(red), .ad(ad), .imm1(imm1), .imm2(imm2), .cls(cls), .accept(accept), .i_sfu(i_sfu),
-        .va_re(h_va_re), .va_addr(h_va_addr), .va_q(va_q), .vb_re(h_vb_re), .vb_addr(h_vb_addr), .vb_q(vb_q), .vc_re(h_vc_re),
-        .vc_addr(h_vc_addr), .vc_q(vc_q), .wrom_re(h_wrom_re), .wrom_addr(h_wrom_addr), .wrom_q(wrom_q), .crom_re(h_crom_re),
-        .crom_addr(h_crom_addr), .crom_q(crom_q), .vm_we(h_vm_we), .vm_waddr(h_vm_waddr), .vm_wdata(h_vm_wdata),
+        .clk(clk), .rst_n(rst_c), .emit0(c_emit0), .live(c_live), .i(c_i), .fin_th(c_fin_th), .i_last_r(c_ilast),
+        .cura0(c_cura), .curb0(c_curb), .curc0(c_curc), .curd0(c_curd), .rrow(c_rrow), .asi(c_asi), .bsi(c_bsi),
+        .csi(c_csi), .dsi(c_dsi), .asrc(c_asrc), .bsrc(c_bsrc), .csrc(c_csrc), .mc(c_mc), .md(c_md), .redsq(c_redsq),
+        .ma(c_ma), .mb(c_mb), .dst(c_dst), .red(c_red), .ad(c_ad), .imm1(c_imm1), .imm2(c_imm2), .cls(c_cls),
+        .accept(c_accept), .i_sfu(c_isfu),
+        .va_re(h_va_re), .va_addr(h_va_addr), .va_q(c_va), .vb_re(h_vb_re), .vb_addr(h_vb_addr), .vb_q(c_vb), .vc_re(h_vc_re),
+        .vc_addr(h_vc_addr), .vc_q(c_vc), .wrom_re(h_wrom_re), .wrom_addr(h_wrom_addr), .wrom_q(c_wrom), .crom_re(h_crom_re),
+        .crom_addr(h_crom_addr), .crom_q(c_crom), .vm_we(h_vm_we), .vm_waddr(h_vm_waddr), .vm_wdata(h_vm_wdata),
         .kv_we(h_kv_we), .kv_waddr(h_kv_waddr), .kv_wdata(h_kv_wdata), .l_ov(h_l_ov), .l_out(h_l_out), .l_red(h_l_red),
         .l_redsq(h_l_redsq), .l_raddr(h_l_raddr), .l_last(h_l_last), .retire(h_retire), .l_fault(h_l_fault),
         .sx_exp_v(e_v), .sx_exp_x(e_x), .sy_exp_y(e_y), .sy_exp_vo(e_vo), .sy_exp_f(e_f), .sx_rcp_v(r_v),
@@ -143,19 +195,19 @@ module ot_hdc_vstream_lane_t #(
 `else
     ot_hdc_sfu_exp_t #(.LA(QLA), .LM(QLM)) u_exp (
 `endif
-        .clk(clk), .rst_n(rst_n), .v(e_v), .x(e_x), .y(e_y), .vo(e_vo), .fault(e_f));
+        .clk(clk), .rst_n(rst_c), .v(e_v), .x(e_x), .y(e_y), .vo(e_vo), .fault(e_f));
 `ifdef OT_SU_LANE_HARD
     ot_hdc_sfu_rcp_t u_rcp (
 `else
     ot_hdc_sfu_rcp_t #(.LA(QLA), .LM(QLM)) u_rcp (
 `endif
-        .clk(clk), .rst_n(rst_n), .v(r_v), .x(r_x), .y(r_y), .vo(r_vo), .fault(r_f));
+        .clk(clk), .rst_n(rst_c), .v(r_v), .x(r_x), .y(r_y), .vo(r_vo), .fault(r_f));
 `ifdef OT_SU_LANE_HARD
     ot_hdc_sfu_rsq_t u_rsq (
 `else
     ot_hdc_sfu_rsq_t #(.LA(QLA), .LM(QLM)) u_rsq (
 `endif
-        .clk(clk), .rst_n(rst_n), .v(q_v), .x(q_x), .y(q_y), .vo(q_vo), .fault(q_f));
+        .clk(clk), .rst_n(rst_c), .v(q_v), .x(q_x), .y(q_y), .vo(q_vo), .fault(q_f));
 endmodule
 
 // ---- the lane head (hard leaf of the lane cluster): the former flat tile body without the SFU pipelines ----

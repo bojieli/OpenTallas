@@ -1,5 +1,5 @@
 {
- "name": "qkd_astk_ep-ks2-8a9ae6449",
+ "name": "qkd_astk_ep-ks3-24a3e3d02",
  "block": "qkd_astk_ep",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -7,8 +7,8 @@
  "threads": 16,
  "peak_ram_gb": 64,
  "source": {
-  "branch": "claude/qwen-kvsys-el-1014",
-  "commit": "8a9ae6449",
+  "branch": "claude/qwen-kvsys-strip-1014",
+  "commit": "24a3e3d02",
   "extra_paths": [
    "configs/hardware",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -43,7 +43,7 @@
    },
    {
     "name": "qkd_astk_strip_exact",
-    "cmd": "bash physical/qkd_astk_strip/bench.sh {RUN}/bench/pos 0 1",
+    "cmd": "ASTK_DEFS='+define+KVD_HEADS=1 +define+KVD_Q_FP32=1 +define+KVD_ASTK_TP8' bash physical/qkd_astk_strip/bench.sh {RUN}/bench/pos 0 1",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 48,
@@ -55,7 +55,7 @@
    },
    {
     "name": "qkd_astk_ep_mutant",
-    "cmd": "bash physical/qkd_astk_strip/bench.sh {RUN}/bench/neg 2",
+    "cmd": "ASTK_DEFS='+define+KVD_HEADS=1 +define+KVD_Q_FP32=1 +define+KVD_ASTK_TP8' bash physical/qkd_astk_strip/bench.sh {RUN}/bench/neg 2",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 24,
@@ -117,7 +117,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_astk_ep/qkd_astk_ep-ks2-8a9ae6449"
+   "to": "results/rtl/ref_tile/qkd_astk_ep/qkd_astk_ep-ks3-24a3e3d02"
   }
  ],
  "cycles_added": 0,

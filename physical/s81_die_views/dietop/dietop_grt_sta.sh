@@ -27,6 +27,7 @@ source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 set_routing_layers -signal M4-M9 -clock M4-M9
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.146
+set_global_routing_layer_adjustment M8-M9 ${OT_M89_ADJ:-0.146}
 step grt { global_route -congestion_iterations $CI -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt }
 step guides { write_guides /work/route.guide }
 step ckpt_grt { write_db /work/ckpt_grt.odb }

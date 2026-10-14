@@ -141,5 +141,10 @@
    235.44
   ]
  },
- "slot_change_request": "results/arch/hbm_native_1013/xp_recovery_1014/sps_congestion_slot_request.json"
+ "slot_change_request": "results/arch/hbm_native_1013/xp_recovery_1014/sps_congestion_slot_request.json",
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }
