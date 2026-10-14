@@ -5,8 +5,9 @@ A die master is bound when a view directory holds <master>.lef (+ <master>_tt.li
   * the view's SIZE is the case macro's SIZE (+- 0.03 um), and
   * every port the die netlist connects on that master is a pin of the view, at least as wide.
 Then the case's MACRO block is REPLACED by the view's own MACRO text (so die_real_census.py sees the exact LEF) and the
-view's Liberty files are listed for the die STA.  Nothing is renamed and nothing is mapped: a master whose view
-differs is refused with the reason (outline, missing pin, narrower bus) and stays a generated frame.
+view's Liberty files are listed for the die STA. The two explicit cbuf/crom slot wrappers use identity-only
+case-local aliases with recorded source provenance; their pins and all timing groups remain unchanged. Other masters
+whose views differ are refused with the reason (outline, missing pin, narrower bus) and stays a generated frame.
 
 Reported per bound master: view pins the die leaves unconnected (inputs without a die net are an OPEN item, never tied
 here) and the largest move of a pin group's centroid between the generated frame and the view (the relay plan was
@@ -19,6 +20,7 @@ physical/qwen_die_masters/views/<master>, physical/qwen_missing_phy/tp8_1013/<ma
 """
 import argparse
 import collections
+import hashlib
 import json
 import re
 import shutil
@@ -26,6 +28,40 @@ from pathlib import Path
 
 SKIP_RE = re.compile(r'^(q[fk]d_rly|qfd_rst_rep)')
 PG = ('VDD', 'VSS', 'VDDM', 'VSSM')
+# Slot-name wrappers are identity renames only: pins, geometry and timing stay in the
+# CLOSED source view. tp8b_v5 emits the source RTL ports and preserves the clock pin clk.
+VIEW_ALIASES = {
+    'qfd_su_cbuf_g': ('ot_qfd_su_cbuf_g', 'physical/ref_tile/qfd_su_cbuf_g_m5/views/ot_qfd_su_cbuf_g'),
+    'qfd_crom_g': ('ot_qfd_crom_gr', 'physical/ref_tile/qfd_crom_g_m5/views/ot_qfd_crom_gr'),
+}
+
+
+def alias_view(root, case, master):
+    if master not in VIEW_ALIASES:
+        return None
+    source, directory = VIEW_ALIASES[master]
+    src = root / directory
+    required = [src / f'{source}.lef'] + [src / f'{source}_{c}.lib' for c in ('tt', 'ff', 'ss')] + [src / 'insertion.json']
+    if not all(p.exists() for p in required):
+        return None
+    out = (case / 'bound_views' / master).resolve()
+    out.mkdir(parents=True, exist_ok=True)
+    for p in required:
+        txt = p.read_text()
+        if p.suffix == '.lef':
+            txt = re.sub(rf'(?m)^(MACRO|END) {re.escape(source)}[ \t]*$', rf'\1 {master}', txt)
+        elif p.suffix == '.lib':
+            # Liberty cell identity changes; all timing/pin/clock groups stay byte-for-byte.
+            txt, n = re.subn(rf'(cell\s*\(\s*)"?{re.escape(source)}"?(\s*\))', rf'\1{master}\2', txt)
+            if n != 1:
+                raise ValueError(f'{p}: expected exactly one source cell, got {n}')
+        (out / p.name.replace(source, master)).write_text(txt)
+    provenance = dict(source_sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in required},
+                      source_master=source, slot_master=master, source_view=directory,
+                      pin_mapping='identity, all pins including clk', liberty_corners=['tt', 'ff', 'ss'],
+                      insertion='unchanged from closed source')
+    (out / 'alias_provenance.json').write_text(json.dumps(provenance, indent=1) + '\n')
+    return out
 
 
 def macros(text):
@@ -133,6 +169,10 @@ def main():
             continue
         vd = find_view(root, mst, explicit)
         if vd is None:
+            vd = alias_view(root, case, mst)
+            if vd is not None:
+                r['alias_provenance'] = json.loads((vd / 'alias_provenance.json').read_text())
+        if vd is None:
             r['reason'] = 'no view by this name'
             continue
         r['view'] = str(vd.relative_to(root)) if vd.is_absolute() and root in vd.parents else str(vd)
@@ -160,7 +200,7 @@ def main():
                     reverse=True)
         lay = sorted(f'{p} {"/".join(pg[p]["layers"])} -> {"/".join(pv[p]["layers"])}' for p in ports[mst]
                      if p in pg and pg[p]['layers'] != pv[p]['layers'])
-        libs = {c: str((vd / f'{mst}_{c}.lib').relative_to(root)) for c in ('tt', 'ff', 'ss') if (vd / f'{mst}_{c}.lib').exists()}
+        libs = {c: str((vd / f'{mst}_{c}.lib').relative_to(root)) if root in vd.parents else str(vd / f'{mst}_{c}.lib') for c in ('tt', 'ff', 'ss') if (vd / f'{mst}_{c}.lib').exists()}
         r.update(bound=True, pins=len(ports[mst]), inputs_without_die_net=open_in, outputs_without_die_net=open_out,
                  die_bus_narrower_than_view=wider, pin_centroid_move_um=mv[:4], pin_layer_changes=lay[:8], libs=libs,
                  insertion=(vd / 'insertion.json').exists(), pg_layers=sorted({l for p in PG if p in pv for l in pv[p]['layers']}))

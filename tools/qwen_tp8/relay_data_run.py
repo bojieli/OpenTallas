@@ -71,12 +71,21 @@ if '--case' in sys.argv:
     # views of the die STA (tools/qwen_tp8/die_sta_libs.py); a split bundle's 1-b _cr / _r part runs against its word
     byi = {i.name: i for i in m['insts']}
     split = m.get('port_split') or {}
+    join = m.get('port_join') or {}
+
+    def real_ports(master, port):
+        if port in join.get(master, {}):
+            return [join[master][port][0]]
+        return [pn for pn, nb in split.get(master, {}).get(port, ())] or [port]
+
     dirs = {}
     for bid, cl, bits, eps in m['buses']:
         for k, (inst, port) in enumerate(eps):
             mst, port = getattr(byi[inst], 'master', ''), port.lstrip('*')
             d = 'output' if k == 0 else 'input'
             dirs.setdefault(mst, {}).setdefault(port, d)
+            if port in join.get(mst, {}):
+                dirs[mst].setdefault(join[mst][port][0], d)
             for sub, nb in (split.get(mst, {}).get(port) or []):
                 rev = nb == 1 and sub.endswith(('_cr', '_r'))
                 dirs[mst].setdefault(sub, ('input' if d == 'output' else 'output') if rev else d)
@@ -94,11 +103,21 @@ if '--case' in sys.argv:
             continue
         (ia, pa), (ib, pb) = eps
         ma, mb = getattr(byi[ia], 'master', ''), getattr(byi[ib], 'master', '')
-        peer.setdefault((ma, pa.lstrip('*')), f'{mb}.{pb.lstrip("*")}')
-        peer.setdefault((mb, pb.lstrip('*')), f'{ma}.{pa.lstrip("*")}')
+        for mn, p, other, op in ((ma, pa, mb, pb), (mb, pb, ma, pa)):
+            for pn in real_ports(mn, p.lstrip('*')):
+                target = '|'.join(f'{other}.{q}' for q in real_ports(other, op.lstrip('*')))
+                key = (mn, pn)
+                if key in peer and target not in peer[key].split(';'):
+                    peer[key] += ';' + target
+                else:
+                    peer.setdefault(key, target)
     pdir = out / 'pins'
     pdir.mkdir(exist_ok=True)
     index = {}
+    # Pin assignments use the same exact RTL names emitted by the case, including
+    # cbuf/crom split bundles and the three-source joined head ti bus.
+    emit_saved = getattr(v, 'EMIT_SPLIT', False)
+    v.EMIT_SPLIT = True
     for name, mst in sorted(M.items()):
         if re.match(r'^(q[fk]d_rly|qfd_rst_rep)', name) or not any(getattr(i, 'master', '') == name for i in m['insts']):
             continue
@@ -128,6 +147,7 @@ if '--case' in sys.argv:
                          'lists its view pins')
         (pdir / f'{name}.json').write_text(json.dumps(rec_, indent=1) + '\n')
         index[name] = dict(instances=rec_['instances'], ports=len(ports), bits=sum(q_['bits'] for q_ in ports.values()))
+    v.EMIT_SPLIT = emit_saved
     (pdir / 'INDEX.json').write_text(json.dumps(index, indent=1) + '\n')
 print(json.dumps(dict(relays=r.get('relays'), max_pin_to_pin_um=r.get('max_pin_to_pin_um'), over_reach=len(r.get('over_reach') or []),
                       unrepaired=len(r.get('unrepaired') or []), worst_cut=rec['cuts']['worst'], build_s=rec['build_s'],

@@ -12,7 +12,7 @@ Called at the end of before_relays (after _tp8b_kv), i.e. on the final placement
   T12  qfd_sp_res_ser 777.6 x 518.4 + rst_n / me_en / fault
   T13  qfd_tt_up4 one cluster in tt_up4_0, tt_up4_1..3 removed, sel 26 b
   T14  the SU group (sp_su64_sfu, 8 cbuf_g, 8 crom_g, seq_su) follows the VM: SU abutted on the VM N face, the group
-       mirrored above it (placement mirrored, masters R0 with their N / S pin faces swapped: an MX master's M8 clock
+       mirrored above it (closed cbuf/crom masters MX; SU frame R0 with its N / S pin faces swapped: an MX master's M8 clock
        pins are not mirror-legal).  Cut reason: su_vm = 8,511 b; left at y 8.9-10.9 mm it needs 14.2 kb of vertical capacity at
        0.60 through the A|B channel (12.6 kb in all) for 6.3 mm, and every SU read pays ~15 stages each way
   T15  qfd_crom_g + 32.4 um N (194.376 x 550.776)
@@ -29,6 +29,7 @@ Emission (masters / LEF / netlist): port kind 'pins' (explicit positions), PORT_
 LSB first), TIES (constants: straps, chain ends, tap_r), PHY pin groups ('*dfi:<group>').
 """
 import math
+import copy
 import re
 import sys
 from pathlib import Path
@@ -65,6 +66,9 @@ VIEWS = {
     'qkd_kvwq_ctl_bin': 'physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin',
     'ot_qfd_serdes_112g_x12_phy': 'physical/qwen_missing_phy/tp8_1013/ot_qfd_serdes_112g_x12_phy',
     'qkd_rstseq': 'physical/ref_tile/qkd_rstseq/views/qkd_rstseq',
+    **{f'qkd_ectl_{q}': f'physical/ref_tile/qkd_ectl_{q}/views/qkd_ectl_{q}' for q in 'abc'},
+    'qfd_su_cbuf_g': 'physical/ref_tile/qfd_su_cbuf_g_m5/views/ot_qfd_su_cbuf_g',
+    'qfd_crom_g': 'physical/ref_tile/qfd_crom_g_m5/views/ot_qfd_crom_gr',
 }
 RSTSEQ_KV = 21.6
 # T22b (el1013-qwen-kvcentre r3, 10-13 14:05; coordinator: merged KV sequencer slot): cluster 604.8 x 475.2, centred in x
@@ -78,7 +82,7 @@ _VP = {}
 def view_pins(master):
     """(w, h, {pin name: (face, layer, position along the face)}) of a closed view's LEF, or None when it is absent"""
     if master not in _VP:
-        f = ROOT / VIEWS[master] / f'{master}.lef'
+        f = ROOT / VIEWS[master] / f'{Path(VIEWS[master]).name}.lef'
         if not f.exists():
             _VP[master] = None
             return None
@@ -120,7 +124,7 @@ def adopt_view(M, master, split, rec, pw=None):
         return
     done, kept = 0, []
     for p, sp in list(q.ports.items()):
-        if sp[0] not in ('face', 'pins'):
+        if sp[0] not in ('face', 'pins', 'area') or (sp[0] == 'area' and master not in ('qfd_su_cbuf_g', 'qfd_crom_g')):
             continue
         parts = split.get(master, {}).get(p) or [(p, (pw or {}).get((master, p)) or sp[1])]
         names = []
@@ -151,12 +155,27 @@ SPLIT = {
     # closed qkd_kvwq_ctl_bin-sl1-ecdaf6345 (rtl/physical/ot_qwen_kv_slot_wrappers.sv)
     'qkd_kvwq_ctl_bin': dict(kvn=[('kvn_d', 1047), ('kvn_cr', 1)]),
     'qfd_seq_su': dict(cd=[('cd_d', 547), ('cd_cr', 1)]),
+    'qfd_su_cbuf_g': dict(ck=[('clk', 1)], fa=[('f_re', 8), ('f_addr', 192), ('f_stage', 6)],
+        fq=[('f_q', 512), ('f_fault', 1)], ctl=[('stage', 6), ('tok_start', 1), ('tpos', 18)],
+        rdy=[('st_rdy', 1), ('st_rdy_stage', 6), ('fault', 1), ('fault_code', 2)],
+        sa=[('crom_re', 8), ('crom_addr', 192), ('crom_stage', 6)], sq=[('crom_q', 512)]),
+    'qfd_crom_g': dict(ck=[('clk', 1)], ra=[('crom_re', 8), ('crom_addr', 192), ('crom_stage', 6)],
+        rq=[('crom_q', 512), ('fault', 1)]),
     # T22b: the merged sequencer's credit pins stand beside their words (with the flow _d, against it _cr)
     'qkd_seq': dict(r_x3=[('r_x3_d', 524), ('r_x3_cr', 1)], t_ar=[('t_ar_d', 520), ('t_ar_cr', 1)],
                     **{f'kvn_{st}': [(f'kvn_{st}_d', 1047), (f'kvn_{st}_cr', 1)] for st in ('WS', 'WN', 'ES', 'EN')}),
     # T21: the host PHY abstract's own FDI pins (physical/qwen_missing_phy/tp8_1013, flit 1,043 b at RXD 512)
     'ot_qfd_serdes_112g_x12_phy': dict(fdi=[('tx_up', 1), ('tx_v', 1), ('tx_flit', 1043), ('rx_v', 1), ('rx_flit', 1043)]),
 }
+# A head's ti word is driven by three real leaves. No frame or logic joins these bits:
+# the die netlist connects each synthetic bus straight to these exact ti bits.
+JOIN = {'qkd_rhead': {
+    'ti_a': ('ti', list(range(4, 516))),
+    'ti_b': ('ti', list(range(516, 1028))),
+    'ti_cl': ('ti', list(range(4)) + list(range(1028, 1040))),
+    'ti_q': ('ti', list(range(1040, 1559))),
+}}
+
 # SEAM between two CLOSED views (r8 check, coordinator 10-13): qkd_kvwq_ctl_bin packs f<g>[292:0] = {f_v, f_d 256, f_sec
 # 24, f_lane 3, f_tag 9} and r<g>[1:0] = {r_v, r_bad} (MSB first), the leaf wrapper qkd_kvwq_leaf_s_w129_m takes c / n
 # [292:0] = {tag 9, lane 3, sec 24, d 256, v} and dn / dp[1:0] = {bad, v}: the field ORDER is reversed.  The die net keeps
@@ -170,6 +189,21 @@ PHY_REQ = (('req_v', 1), ('req_rdy', 1), ('req_we', 1), ('req_len', 5), ('req_ta
            ('req_wdata', 256))                                                                          # 311 b
 PC_PHY_Y = 175.92          # PC-leaf local y of the centre of its PHY slice (E face)
 STEP = 0.096
+
+
+def joined_expr(values):
+    """Exact per-bit join rendered as contiguous net slices (MSB first)."""
+    assert set(values) == set(range(max(values) + 1)), 'incomplete port join'
+    runs = []
+    for bit in range(max(values), -1, -1):
+        mm = re.fullmatch(r'(.*)\[(\d+)\]', values[bit])
+        assert mm, values[bit]
+        name, index = mm.group(1), int(mm.group(2))
+        if runs and runs[-1][0] == name and index == runs[-1][2] - 1:
+            runs[-1][2] = index
+        else:
+            runs.append([name, index, index])
+    return '{' + ', '.join(f'{nm}[{hi}:{lo}]' if hi != lo else f'{nm}[{hi}]' for nm, hi, lo in runs) + '}'
 
 
 def _snap(y):
@@ -274,6 +308,7 @@ def apply(v, m, G):
     pair = m.setdefault('bus_pair', {})
     split = m.setdefault('port_split', {})
     split.update({k: dict(q) for k, q in SPLIT.items()})
+    m['port_join'] = JOIN
     B = list(m['buses'])
 
     def drop_insts(names):
@@ -332,6 +367,14 @@ def apply(v, m, G):
         if i.master == 'qfd_crom_g':
             i.h = round(i.h + CROM_DH, 4)            # T15: grows N, away from the buffer rows
         i.x, i.y = round(i.x + dx, 4), round(su_new[1] + su.h + d, 4)
+        if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g'):
+            i.orient = 'MX'
+            g = int(i.name.rsplit('_', 1)[1])
+            if i.master == 'qfd_su_cbuf_g':
+                ties += [(i.name, 'grp', 3, g), (i.name, 'f_lat', 5, 8)]
+                # Final far-ROM latency is set after relay allocation from both legs (base tile = 8 edges).
+            else:
+                ties += [(i.name, 'crom_lb', 6, 8 * g)]
     su.x, su.y = su_new[0], su_new[1]
     v.SU_VM_NORTH = True
     v.WALL_AVOID = True          # r9: the VM region spans the spine: planned paths go round walls (_relays)
@@ -340,7 +383,10 @@ def apply(v, m, G):
     if ck is not None and bl is not None:
         # the clock receiver leaves the strip under the VM's centre relief bays for the W sub-column
         ck.x, ck.y = round(bl.x, 4), round(v.up(bl.y + bl.h + 43.2, v.GY), 4)
-    rec['vm'] = dict(old=old, envelope=VM_ENV, su=[su.x, su.y, 'R0, N / S pin faces swapped'], group=sorted(i.name for i in grp),
+    rec['real_rom_ports'] = dict(crom_strobe_to_q_edges=8, cbuf_far_latency='8 + outgoing relays + returning relays',
+                                 unconnected_outputs={'qfd_crom_g': ['fault_code[1:0]']},
+                                 clock_pin='ck die bundle -> clk real pin', orientation='MX')
+    rec['vm'] = dict(old=old, envelope=VM_ENV, su=[su.x, su.y, 'SU R0 with N/S swapped; closed cbuf/crom MX'], group=sorted(i.name for i in grp),
                      clk_rx=[ck.x, ck.y] if ck is not None else None)
 
     # ---------------------------------------------------------------- T12 res_ser cluster slot
@@ -558,6 +604,59 @@ def apply(v, m, G):
     B = nb
     rec['station_word'] = dict(pairs=npair, data_bits=DW, tap_r_tied_high=sum(1 for t in ties if t[1] == 'tap_r'))
 
+    # ---------------------------------------------------------------- Real ectl leaves (qkd_ectl3 exact wiring)
+    old_ec = {i.name: i for i in m['insts'] if i.master == 'qkd_ectl'}
+    leaves = {}
+    for nm, ec in old_ec.items():
+        _, st, eng = nm.split('_')
+        cfg = (int(eng) << 2) | ('WS', 'WN', 'ES', 'EN').index(st)
+        # Mirror the whole three-leaf row, preserving its local A|B|C order.
+        offset = 0.0
+        leaves[nm] = {}
+        for part, width in zip('abc', (254.88, 254.88, 138.24)):
+            x = ec.x + (648.0 - offset - width if ec.orient in ('MY', 'R180') else offset)
+            it = v.Inst(nm + '_' + part, 'qkd_ectl_' + part, round(x, 4), ec.y,
+                        width, 129.6, ec.orient, kind=ec.kind, region=ec.region, domain=ec.domain)
+            leaves[nm][part] = it.name
+            m['insts'].append(it)
+            ties.append((it.name, 'cfg', 5, cfg))
+            offset += width
+    nb = []
+    equal_groups = m.setdefault('relay_equal_groups', {})
+    for bid, cls, bits, eps in B:
+        src = [(i, p) for i, p in eps if i in old_ec]
+        if src and src[0][1] in ('t0', 't1'):
+            assert len(src) == 1 and bits == 1559, (bid, bits, src)
+            nm, t = src[0]
+            equal_groups[bid] = [bid + '_' + suffix for suffix in ('a', 'b', 'cl', 'q')]
+            for suffix, part, port, width in (('a', 'a', t + '_row', 512), ('b', 'b', t + '_row', 512),
+                                              ('cl', 'b', t + '_cl', 16), ('q', 'c', t + '_q', 519)):
+                ends = [(leaves[nm][part], port)] + [(i, 'ti_' + suffix) for i, p in eps if i != nm]
+                nb.append((bid + '_' + suffix, cls, width, ends))
+        else:
+            ends = []
+            for i, port in eps:
+                if i not in old_ec:
+                    ends.append((i, port))
+                elif port in ('ck', 'rst_n'):
+                    ends += [(leaves[i][q], port) for q in 'abc']
+                else:
+                    part = 'a' if port in ('rq', 'rs') else 'c'
+                    ends.append((leaves[i][part], port))
+            nb.append((bid, cls, bits, ends))
+    for nm, parts in leaves.items():
+        a, b, c = (parts[q] for q in 'abc')
+        for tag, width, ends in (('rs_ab', 513, [(a, 'rs_o'), (b, 'rs_i')]),
+                                 ('rvm_ab', 1, [(a, 'rvm_o'), (b, 'rvm_i')]),
+                                 ('x_ba', 52, [(b, 'x_o'), (a, 'x_i')]),
+                                 ('x_cb', 52, [(c, 'x_o'), (b, 'x_i')]),
+                                 ('rsv_bc', 1, [(b, 'rsv_o'), (c, 'rsv_i')])):
+            nb.append((nm + '_' + tag, 'stack_local', width, ends))
+    drop_insts(old_ec)
+    B = nb
+    rec['ectl_leaves'] = dict(slots=len(old_ec), leaves=3 * len(old_ec), cfg='{engine[2:0], stack[1:0]}',
+                             exact_reference='rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv:qkd_ectl3',
+                             head_word='{C.q[518:0], B.cl[15:4], B.row, A.row, B.cl[3:0]}')
     m['buses'] = B
 
     # ---------------------------------------------------------------- KV relays inside a moved / grown block are torn
@@ -829,7 +928,14 @@ def _wrap(v, m, G, peers):
         mst.face(port, bits, f, layer or lay(f), centre, pitch)
 
     def masters(model, k=1, port_bits=None):
-        M = base_m(model, k, port_bits)
+        # Legacy frame clock planning cannot mirror M8 pins; these two frames are
+        # replaced by closed M5 pins below, so construct their disposable frame R0.
+        frame_model = dict(model)
+        frame_model['insts'] = [copy.copy(i) if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g') else i for i in model['insts']]
+        for i in frame_model['insts']:
+            if i.master in ('qfd_su_cbuf_g', 'qfd_crom_g'):
+                i.orient = 'R0'
+        M = base_m(frame_model, k, port_bits)
         byi = {i.name: i for i in model['insts']}
         Master = type(next(iter(M.values())))
         # ---- T7 stations / heads / tile
@@ -986,6 +1092,13 @@ def _wrap(v, m, G, peers):
         if q is not None:
             add_face(q, 'rst_n', 1, 'N', 185.0, 1)
         M.pop('qfd_tt_up4_g', None)
+        # The closed ROM views own their pin plans. Static straps are die constants.
+        for mn, straps in (('qfd_su_cbuf_g', (('grp', 3), ('f_lat', 5))),
+                           ('qfd_crom_g', (('crom_lb', 6), ('fault_code', 2)))):
+            q = M.get(mn)
+            if q is not None:
+                for pn, width in straps:
+                    add_face(q, pn, width, 'N' if mn == 'qfd_crom_g' else 'S', 4.0 + width, 1)
         # ---- T16 control strip leaves
         cs = M.get('qkd_ctrl')
         note = 'KV control strip leaf (contract v5 T16, el1013-qwen-kvstrips 08:06)'
@@ -1059,7 +1172,7 @@ def _wrap(v, m, G, peers):
                     h.order.append(p)
             M[HOST_PHY[0]] = h
         # ---- T14: the mirrored group keeps R0; its N / S pin faces swap (same x)
-        for mn in ('qfd_su_cbuf_g', 'qfd_crom_g', 'qfd_sp_su64_sfu'):
+        for mn in ('qfd_sp_su64_sfu',):
             q = M.get(mn)
             if q is None:
                 continue
@@ -1134,6 +1247,37 @@ def _wrap(v, m, G, peers):
 
     def final(model, M, k=1):
         """the pin rules with the last word (also run again after every other pin-plan wrapper: v.V5_FINAL_MASTERS)"""
+        Master = type(next(iter(M.values())))
+        for mn in ('qkd_ectl_a', 'qkd_ectl_b', 'qkd_ectl_c'):
+            vp = view_pins(mn)
+            if vp is None:
+                raise RuntimeError(f'{mn}: real leaf view missing')
+            w, h, pp = vp
+            q = Master(mn, w, h, 5, 'Closed ectl leaf, exact qkd_ectl3 wiring')
+            names = {}
+            for pn, (face, layer, pos) in pp.items():
+                mm = re.fullmatch(r'(.*)\[(\d+)\]', pn)
+                base, bit = (mm.group(1), int(mm.group(2))) if mm else (pn, 0)
+                names.setdefault(base, {})[bit] = (face, layer, pos)
+            for pn, positions in names.items():
+                got = [positions[j] for j in range(max(positions) + 1)]
+                assert len({g[:2] for g in got}) == 1, (mn, pn)
+                q.ports[pn] = ('pins', len(got), got[0][0], got[0][1], [g[2] for g in got], 1)
+                q.order.append(pn)
+            M[mn] = q
+        M.pop('qkd_ectl', None)
+        q = M.get('qkd_rhead')
+        if q is not None and 'ti' in q.ports:
+            sp = q.ports.pop('ti')
+            q.order[:] = [p for p in q.order if p != 'ti']
+            assert sp[0] == 'face' and sp[1] == 1559, sp
+            ref = Master(q.name, q.w, q.h, q.obs_top, q.note)
+            ref.ports, ref.order = {'ti': sp}, ['ti']
+            rects = base_pr(ref, 1, {'ti': 1559})
+            positions = [(r[0] + r[2]) / 2 if sp[2] in 'NS' else (r[1] + r[3]) / 2 for _, _, r in rects]
+            for pn, (_, bits) in JOIN['qkd_rhead'].items():
+                q.ports[pn] = ('pins', len(bits), sp[2], sp[3], [round(positions[j], 4) for j in bits], 1)
+                q.order.append(pn)
         io_pairs(model, M)
         vrec = model.setdefault('tp8b_v5', {}).setdefault('views', {})
         if k == 1:
@@ -1185,16 +1329,39 @@ def _wrap(v, m, G, peers):
                 j = 0
                 for pn, nb in parts:
                     for b in range(nb):
-                        ren[f'{bundle}[{j}]'] = f'{pn}[{b}]'
+                        vp = view_pins(mst.name) if mst.name in VIEWS else None
+                        scalar = nb == 1 and vp is not None and pn in vp[2]
+                        ren[f'{bundle}[{j}]'] = pn if scalar else f'{pn}[{b}]'
                         j += 1
                 if j == 1:
                     ren[bundle] = parts[0][0]            # a 1-bit bundle emitted without an index
             out = [(ren.get(nm, nm), layer, r) for nm, layer, r in out]
+        if k == 1 and getattr(v, 'EMIT_SPLIT', False):
+            if mst.name in VIEWS:
+                vp = view_pins(mst.name)
+                if vp is not None:
+                    out = [(nm[:-3] if nm.endswith('[0]') and nm[:-3] in vp[2] else nm, layer, r) for nm, layer, r in out]
+            for pn, (real, bits) in JOIN.get(mst.name, {}).items():
+                ren = {f'{pn}[{j}]': f'{real}[{bit}]' for j, bit in enumerate(bits)}
+                out = [(ren.get(nm, nm), layer, r) for nm, layer, r in out]
         return out
 
     def write_netlist(model, k, path, top='qfd_die'):
+        stages = model.get('r21_stage_of', {})
+        for group, names in model.get('relay_equal_groups', {}).items():
+            depths = {name: max(0, stages.get(name, 1) - 1) for name in names}
+            if len(set(depths.values())) != 1:
+                raise RuntimeError(f'{group}: split head word has unequal added relay depths: {depths}; structural pads required')
+        for j, (inst, port, bits, val) in enumerate(ties):
+            if port == 'f_lat':
+                g = int(inst.rsplit('_', 1)[1])
+                val = 8 + max(0, stages.get(f'o4_cf_a_{g}', 1) - 1) + max(0, stages.get(f'o4_cf_q_{g}', 1) - 1)
+                if val > 31:
+                    raise RuntimeError(f'{inst}: measured far-ROM latency {val} exceeds f_lat[4:0]')
+                ties[j] = (inst, port, bits, val)
         byi = {it.name: it for it in model['insts']}
         conns = {it.name: [] for it in model['insts']}
+        joined = {}
         phyb = {}                                   # phy instance -> {pin base: {bit: expr}}
         V = [f'// tools/qwen_kv_die/tp8b_v5.py: die-level nets only (k = {k}); constants = straps, chain ends, tap_r',
              f'module {top} ();']
@@ -1221,7 +1388,15 @@ def _wrap(v, m, G, peers):
                     pn = port.lstrip('*')
                     parts = split.get(byi[inst].master, {}).get(pn) if k == 1 else None
                     perm = PERM.get(byi[inst].master, {}).get(pn) if k == 1 else None
-                    if perm:
+                    join = JOIN.get(byi[inst].master, {}).get(pn) if k == 1 else None
+                    if join:
+                        real, indexes = join
+                        assert len(indexes) == n, (inst, pn, n)
+                        vals = joined.setdefault((inst, real), {})
+                        for j, bit in enumerate(indexes):
+                            assert bit not in vals, (inst, real, bit)
+                            vals[bit] = f'{net}[{j}]'
+                    elif perm:
                         conns[inst].append(f'.{pn}({{' + ', '.join(
                             f'{net}[{hi}:{lo}]' if hi != lo else f'{net}[{hi}]' for hi, lo in perm) + '})')
                     elif parts:
@@ -1231,6 +1406,9 @@ def _wrap(v, m, G, peers):
                             j += nb
                     else:
                         conns[inst].append(f'.{pn}({net})')
+        for (inst, real), vals in joined.items():
+            assert set(vals) == set(range(max(vals) + 1)), (inst, real, 'incomplete join')
+            conns[inst].append(f'.{real}({joined_expr(vals)})')
         for inst, port, bits, val in ties:
             if inst in conns:
                 conns[inst].append(f".{port}({bits}'d{val})")
