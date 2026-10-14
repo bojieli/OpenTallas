@@ -1,0 +1,34 @@
+{
+  "kit_sha256": {
+    "physical/ref_tile/dsfd_be_f16_m5/kit.env": "a28bfc8802d2f537a7a5dc9df0c2f46864f417625690cdca7f981e2787e88ece",
+    "physical/ref_tile/dsfd_be_f16_m5/pre_cts.tcl": "103a4e4c541f0d2e10f10224fb13a2b6a1fbb5977cab7921420f9ceaaefb50fe",
+    "physical/ref_tile/dsfd_be_f16_m5/floorplan.json": "5e81f7f62c844e9fd37f33ceda37af479b4c5d7cb696e357b0f2036ad944593e",
+    "physical/ref_tile/dsfd_be_f16_m5/helper_overlay_plan.json": "85c2022663aaa1539a32188ceb66a506a7c43bf6085b41658488ef00b46a2742",
+    "physical/ref_tile/dsfd_be_f16_m5/spec.json": "4efd12719b1eb9ce8e73883606ff65d6fa69c18bc2fa78b61b446f74ef9f2319",
+    "physical/ref_tile/dsfd_be_f16_m5/post_fill.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/dsfd_be_f16_m5/clock.sdc": "e984b1af891892cce48e690963a91bfb2a458c4ab20d8d6fc7149928d0644dcb",
+    "physical/ref_tile/dsfd_be_f16_m5/pre_fill.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+    "physical/ref_tile/dsfd_be_f16_m5/post_grt.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/dsfd_be_f16_m5/pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+    "physical/ref_tile/dsfd_be_f16_m5/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/dsfd_be_f16_m5/pre_drt.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+    "physical/ref_tile/dsfd_be_f16_m5/pdn.tcl": "a39e7fffc866de7819980c607bd68578cff31242a5d0fc6beae22b9031c9834f",
+    "physical/ref_tile/dsfd_be_f16_m5/pre_gpl.tcl": "b6952b9c062c2190e6d0e5a9726245d0c79a99f59bc316ff466a7d6b8048d108",
+    "physical/ref_tile/dsfd_be_f16_m5/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
+    "physical/ref_tile/dsfd_be_f16_m5/post_drt.tcl": "29c5f064e6199f12cc166bbfc41ffd0f95d9f9c8e604d8788b707bddc06e1a49",
+    "physical/ref_tile/dsfd_be_f16_m5/signoff.sdc": "85c6b4770bfc10507fbf3e39b2fe4e4e9f0da3baeb63d74ddcdde69219f35bf5"
+  },
+  "outline_requested_um": [
+    32.4,
+    32.4
+  ],
+  "allocated": false,
+  "master": "dsfd_be_f16",
+  "requested_FF": 16,
+  "route_period_ps": 770,
+  "standalone_signoff_period_ps": 833.333,
+  "parent_serial_clock_bound": false,
+  "synchronous_rn_ordinary_setup_hold": true,
+  "N9_native_proof_pending": true,
+  "parent_adopted": false
+}

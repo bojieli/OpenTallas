@@ -1,0 +1,43 @@
+{
+  "source_commit": "7b72603a5",
+  "launch_binding": "Isolated RTL unchanged during compile and commit; initial driver loaded runner at7b72603a5; later runner additions do not modify these cases",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv": "40c5da4e6dcf01e79e1835bd4215ffc636fa935e03433c07a4f529602ab36e8d",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv": "c3e83f8027bc21794389c96c94e893a2143cfab1e445d1333e6ddf91cb971e07",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "3b51775693bcb22f3942e11938e1c771fcad1827982d4dcef67b7eed1914ad5c",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv": "990c783f6b446a002b22a93d0f9f017164d720dc97fb59250d9a8c708272a12f",
+    "rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv": "3585ce988a6169ac8cf1b287d7f2aefe2948b01f26a4d7de1458ba986ef822c2",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv": "7d1c01eed80cd2fa59746e5216d7c84ab2c5f5a692f8a8130a421fab1715b168",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
+    "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv": "08ae0f922a82d1ca82c6e9ef81a71a955e0b97b491341a094bd14163522181b6",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "611872cc885af05808aeaa1386602ad03b37339519d67991fda40e394a314ee8",
+    "rtl/lib/ot_async_fifo.sv": "ae6a81497e7575cf780cffca8486c3b5663a7a079d7fa3fed46d1dce5f5c23d7",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/common/ot_ratio_cdc_fifo.sv": "b608b11a3e676f0a83ddfba49b6187b5991e2d443a4d1c5269274ee6587e8557",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv": "6a564096256c0253de7ced686cd6e8e7800073f96efe9b41f5f08b5a91ca471a"
+  },
+  "cases": [
+    {
+      "case": "be_hard_h_gold_s1",
+      "pass_": true,
+      "log": "run_be_hard_h_gold_s1.log",
+      "sha256": "6207ea2016c82c678bfa8db806c1d27673fa733a1a5ede0ca23277a9d53bb50d"
+    },
+    {
+      "case": "be_hard_h_tp",
+      "pass_": true,
+      "log": "run_be_hard_h_tp.log",
+      "sha256": "bf19cad1b2955d3b28a4450961bdeac831f0afbaae0da56a39a43be67b825d8a"
+    },
+    {
+      "case": "fault6_be_hard_h_gold_s1",
+      "pass_": true,
+      "log": "run_fault6_be_hard_h_gold_s1.log",
+      "sha256": "6ffd030d30297eb6cc4ca11e09b9ff8575e67347cd6f7624bf9b922839883c53"
+    }
+  ],
+  "N9_pending": true,
+  "physical_adopted": false
+}
