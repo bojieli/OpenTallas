@@ -69,11 +69,30 @@ module ot_qfd_xs_tap #(
     input  wire [AW-1:0]     aw_a,
     input  wire [15:0]       aw_m,
     input  wire [16*32-1:0]  aw_d,
-    output wire [2+AW+2*XCW+4+NW+1 + 2+(AW-6)+6+64+1024 - 1:0] fo,
+    // go / ib of the tree top (tt_ctlm): {ib, go}; they leave in the head-row word at the fill data's stage
+    input  wire [3*NW+13*AW+13:0] gi,
+    // the two head roots (W / E), each driven by its own registers: {fill, ib, go}
+    output wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] hw,
+    output wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] he,
+    // the column faults, chained inward along each head row
+    input  wire              fw_i,
+    input  wire              fe_i,
     output reg               fault
 );
     localparam integer BW = AW - 6;
     localparam integer DESC = 2 + AW + 2 * XCW + 4 + NW + 1;
+    localparam integer IBW = 3 * NW + 13 * AW + 13;
+    localparam integer FW = DESC + 2 + BW + 6 + 64 + 1024;
+    // ---- go / ib: E1 pin register, E2, then the output stage with the fill (fill-before-go: a write accepted at an
+    //      edge before the go's leaves before or with it, except an attention beat queued behind an SU beat, which can
+    //      trail by <= 2 edges: the column head's FILL_LEAD) ----
+    reg              g1_v, g2_v;
+    reg [IBW-1:0]    g1_ib, g2_ib;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin g1_v <= 1'b0; g2_v <= 1'b0; end
+        else begin g1_v <= gi[0]; g2_v <= g1_v; end
+    always @(posedge clk) begin g1_ib <= gi[IBW:1]; g2_ib <= g1_ib; end
+    reg fwq, feq;
     // ---- E1: pin registers ----
     reg              p_v, p_rnd;
     reg [AW-1:0]     p_xb;
@@ -113,11 +132,11 @@ module ot_qfd_xs_tap #(
     reg  [AW-1:0]    lo [0:1];
     reg  [AW:0]      hi [0:1];
     reg  [1:0]       rnd;
-    reg  [DESC-1:0]  d_o;
+    reg  [DESC-1:0]  d_o [0:1];
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin ep_nx <= 1'b0; arm <= 2'b00; d_o <= {DESC{1'b0}}; end
+        if (!rst_n) begin ep_nx <= 1'b0; arm <= 2'b00; d_o[0] <= {DESC{1'b0}}; d_o[1] <= {DESC{1'b0}}; end
         else begin
-            d_o[0] <= 1'b0;
+            d_o[0][0] <= 1'b0; d_o[1][0] <= 1'b0;
             if (q_v) begin
                 // XPF transfers write ownership to the next image.  The previous
                 // epoch remains in the leaves for reads, but must no longer
@@ -129,7 +148,8 @@ module ot_qfd_xs_tap #(
                 hi[ep_nx] <= {1'b0, q_xb} + q_s1 + q_s2 + 1'b1;
                 rnd[ep_nx] <= q_rnd;
                 ep_nx <= ~ep_nx;
-                d_o <= {q_rnd, q_k, q_sp, q_xks, q_xcs, q_xb, ep_nx, 1'b1};
+                d_o[0] <= {q_rnd, q_k, q_sp, q_xks, q_xcs, q_xb, ep_nx, 1'b1};
+                d_o[1] <= {q_rnd, q_k, q_sp, q_xks, q_xcs, q_xb, ep_nx, 1'b1};
             end
         end
     // ---- writes: merge (SU first, attention return queued behind it), classify, round, rotate -> E2 out ----
@@ -188,44 +208,60 @@ module ot_qfd_xs_tap #(
     reg [63:0]       e4_m, e4_cy;
     reg [1023:0]     e4_h;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin e4_v <= 1'b0; fault <= 1'b0; end
+        if (!rst_n) begin e4_v <= 1'b0; fault <= 1'b0; fwq <= 1'b0; feq <= 1'b0; end
         else begin
             e4_v <= w_v && (hit != 2'b00);
-            if (q_ovf || (w_v && hit == 2'b11)) fault <= 1'b1;
+            fwq <= fw_i; feq <= fe_i;
+            if (q_ovf || (w_v && hit == 2'b11) || fwq || feq) fault <= 1'b1;
         end
     always @(posedge clk) begin
         e4_ep <= hep; e4_rnd <= hrd && (MUT != 1); e4_b <= w_a[AW-1:6]; e4_off <= off; e4_m <= w_m; e4_cy <= c_y; e4_h <= h_d;
     end
-    // E3: the consumer operand (RNE16 when the op rounds, else the high half)
-    reg              e5_v, e5_ep;
-    reg [BW-1:0]     e5_b;
-    reg [5:0]        e5_off;
-    reg [63:0]       e5_m;
-    reg [1023:0]     e5_d;
+    // E3: the consumer operand (RNE16 when the op rounds, else the high half), two kept copies (one per head root),
+    // with the descriptor d_o and go / ib of the same stage
+    wire [1023:0] e5_dn;
     integer k;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) e5_v <= 1'b0; else e5_v <= e4_v;
-    always @(posedge clk) begin
-        e5_ep <= e4_ep; e5_b <= e4_b; e5_off <= e4_off; e5_m <= e4_m;
-        for (k = 0; k < 64; k = k + 1) e5_d[16*k +: 16] <= e4_h[16*k +: 16] + {15'd0, e4_rnd & e4_cy[k]};
-    end
-    assign fo = {e5_d, e5_m, e5_off, e5_b, e5_ep, e5_v, d_o};
+    reg [1023:0] e5n;
+    always @* for (k = 0; k < 64; k = k + 1) e5n[16*k +: 16] = e4_h[16*k +: 16] + {15'd0, e4_rnd & e4_cy[k]};
+    assign e5_dn = e5n;
+    genvar gc;
+    generate for (gc = 0; gc < 2; gc = gc + 1) begin : g_root
+        (* keep *) reg              e5_v, e5_ep, g3_v;
+        (* keep *) reg [BW-1:0]     e5_b;
+        (* keep *) reg [5:0]        e5_off;
+        (* keep *) reg [63:0]       e5_m;
+        (* keep *) reg [1023:0]     e5_d;
+        (* keep *) reg [IBW-1:0]    g3_ib;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin e5_v <= 1'b0; g3_v <= 1'b0; end else begin e5_v <= e4_v; g3_v <= g2_v; end
+        always @(posedge clk) begin
+            e5_ep <= e4_ep; e5_b <= e4_b; e5_off <= e4_off; e5_m <= e4_m; e5_d <= e5_dn; g3_ib <= g2_ib;
+        end
+        wire [1+IBW+FW-1:0] w = {e5_d, e5_m, e5_off, e5_b, e5_ep, e5_v, d_o[gc], g3_ib, g3_v};
+        if (gc == 0) begin : g_w assign hw = w; end else begin : g_e assign he = w; end
+    end endgenerate
 endmodule
 
 // --------------------------------------------------------------------------------------------------------------------
-// ot_qfd_xs_leaf: x slice leaf, NTL = 2 tiles.  WRITE CHAIN: the column's leaves of one corridor half form a chain from
-// the head (cut analysis, el1014-qwen-dvm-build.log: a parallel fan of the 1,130-bit write word to 4 leaves is 1.4x the
-// column-gap tracks at 0.55; the chain carries ONE word per cut): the write word's pin registers are also the leaf's
-// write outputs wo_* (no extra flop), w_ctl carries NCH leaves' controls, the leaf takes bits [7:0] and forwards the
-// rest shifted down.  A leaf at chain depth d sees a write d edges after the first.  Reads are direct (one bus per leaf).
-// Every input is a pin register, the answer a pin register: a read
-// presented at edge R answers at edge R + 2 (q at the pins in the cycle after R + 2); a write presented at edge W is
-// readable by a read presented at edge >= W + 1 (both pass one pin register; the read of a same-edge write sees the
-// old value and its valid bit, never a torn word).
-//   w_ctl per tile {en_lo, s_lo, en_hi, s_hi}: positions p >= w_off go to beat slot s_hi when en_hi, positions
-//   p < w_off to slot s_lo when en_lo (ot_qfd_xhead computes them from the tile window).
-//   c_v / c_ep: clear the epoch's valid bits (epoch claimed by a new descriptor).
-//   r_p[i] (7 b): element i of the line at position r_p[i] of the tile's 128-element window (slot r_p[i][6]).
+// ot_qfd_xs_leaf: x slice leaf, NTL = 2 tiles (r3, el1014-qwen-dvm-build.log 16:15: shaped to the 64.8-um column slot).
+// STORAGE per tile and epoch: ONE 64-entry slot indexed by the element's position p = element mod 64 (a footprint of
+// <= 64 elements occupies distinct positions whatever its alignment); a footprint of 65 .. 128 elements (gate_up, S 128)
+// is POOLED by the column head over the two tiles of a pair that read the SAME quad (N station s / S station 7 - s:
+// beat W in tile A's slot, beat W + 1 in tile B's), so a column holds 2 x 16 x 64 elements, not 2 x 16 x 128.
+// WRITE CHAIN: the column's leaves of one corridor half form a chain from the head: the write word's pin registers are
+// also the leaf's write outputs wo_* (no extra flop), w_ctl carries NCH leaves' controls (CTW = 9 b a tile), the leaf
+// takes bits [17:0] and forwards the rest shifted down.  A leaf at chain depth d sees a write d edges after the first.
+// READS are direct (one bus per leaf) and SERIAL: ONE 128:1 x 17-b tree per tile reads one element an edge (the four
+// trees of 512:1 of r2 were ~60 % of the leaf); a line request presented at edge R reads element i at R + i and answers
+// at R + 4 (q at the pins in the cycle after R + 4); each tile is read once per tuple (IL = 8 edges), so its tree is
+// busy 4 edges of 8.  A write presented at edge W is readable by an element read at edge >= W + 1.
+//   w_ctl per tile {en, d[1:0], wo[5:0]}: the beat word (rotated: position p holds element 64*fb + p for p >= w_off,
+//   64*(fb + 1) + p for p < w_off) lands in the tile's slot at the positions whose beat is the tile's: tile window beat
+//   W, start position wo (positions p >= wo hold beat W, p < wo beat W + 1); d = fb - W (00: 0, 01: +1, 10: -1).
+//   c_v / c_ep: clear the epoch's valid bits (epoch claimed by a new descriptor; valid needs no reset: an epoch is
+//   always claimed before it is filled or read).
+//   r_p[i] (7 b) = {en, pos[5:0]}: element i of the line at slot position pos; a disabled element answers 0 (a pooled
+//   line is the OR of the two tiles' answers).  q_bad: an enabled element was not written in this epoch.
 // --------------------------------------------------------------------------------------------------------------------
 module ot_qfd_xs_leaf #(
     parameter integer NCH = 4,           // leaves in a chain
@@ -238,7 +274,7 @@ module ot_qfd_xs_leaf #(
     input  wire [5:0]    w_off,
     input  wire [63:0]   w_m,
     input  wire [1023:0] w_d,
-    input  wire [NCH*8-1:0] w_ctl,
+    input  wire [NCH*18-1:0] w_ctl,         // 2 tiles x CTW = 18 b a leaf
     input  wire          c_v,
     input  wire          c_ep,
     output wire          wo_v,
@@ -246,7 +282,7 @@ module ot_qfd_xs_leaf #(
     output wire [5:0]    wo_off,
     output wire [63:0]   wo_m,
     output wire [1023:0] wo_d,
-    output wire [NCH*8-1:0] wo_ctl,
+    output wire [NCH*18-1:0] wo_ctl,
     output wire          co_v,
     output wire          co_ep,
     input  wire          r_v,
@@ -279,92 +315,145 @@ module ot_qfd_xs_leaf #(
             for (l = 0; l < lv; l = l + 1) ot_qfd_xs_soff = ot_qfd_xs_soff + ot_qfd_xs_nrep(w, ln, l);
         end
     endfunction
-    localparam integer RSW = ot_qfd_xs_mux_rep_sw(17, 9);
-    // pin registers
-    reg          wv, wep, cv, cep, rv;
+    localparam integer CTW = 9;
+    localparam integer RSW = ot_qfd_xs_mux_rep_sw(17, 7);
+    // pin registers (only the control bits are reset; the write chain's pin registers are its outputs)
+    // (the read request's pins are registered per tile: its held request and its select registers)
+    reg          wv, cv;
+    reg          wep, cep;
     reg [5:0]    woff;
     reg [63:0]   wm;
     reg [1023:0] wd;
-    reg [NCH*8-1:0] wctl;
+    reg [NCH*2*CTW-1:0] wctl;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wv <= 1'b0; cv <= 1'b0; rv <= 1'b0; end
-        else begin wv <= w_v; cv <= c_v; rv <= r_v; end
+        if (!rst_n) begin wv <= 1'b0; cv <= 1'b0; end
+        else begin wv <= w_v; cv <= c_v; end
     always @(posedge clk) begin
         wep <= w_ep; woff <= w_off; wm <= w_m; wd <= w_d; wctl <= w_ctl; cep <= c_ep;
     end
     assign wo_v = wv; assign wo_ep = wep; assign wo_off = woff; assign wo_m = wm; assign wo_d = wd;
-    assign wo_ctl = {8'd0, wctl[NCH*8-1:8]};
+    assign wo_ctl = {{(2*CTW){1'b0}}, wctl[NCH*2*CTW-1:2*CTW]};
     assign co_v = cv; assign co_ep = cep;
-    // storage: entry e = {tile, epoch, slot, position} (9 bits), one 16-bit register + one valid flop each
-    wire [8191:0] mem_f;
-    wire [511:0]  val_f;
-    wire [63:0]   thermo;
-    genvar ge, gp;
-    generate for (gp = 0; gp < 64; gp = gp + 1) begin : g_th
-        assign thermo[gp] = (gp >= woff);
+    wire [63:0] tf;                                     // p >= w_off: the rotated beat word holds beat fb there
+    genvar gp;
+    generate for (gp = 0; gp < 64; gp = gp + 1) begin : g_tf
+        assign tf[gp] = (gp >= woff);
     end endgenerate
-    generate for (ge = 0; ge < 512; ge = ge + 1) begin : g_e
-        localparam integer ET = ge >> 8, EE = (ge >> 7) & 1, ES = (ge >> 6) & 1, EP = ge & 63;
-        wire hi_p = thermo[EP];
-        wire en   = hi_p ? wctl[4*ET + 1] : wctl[4*ET + 3];
-        wire sl   = hi_p ? wctl[4*ET + 0] : wctl[4*ET + 2];
-        wire we   = wv && (wep == EE) && en && (sl == ES) && wm[EP];
-        reg [15:0] m;
-        reg        v;
-        always @(posedge clk) if (we) m <= wd[16*EP +: 16];
+
+    // ---- per tile: storage, one serial read tree, line assembly ----
+    wire [16:0] tr [0:1];                               // the tree output {valid, data} of tile t
+    wire [1:0]  done;                                   // tile t's last element is in its select registers
+    wire [47:0] asm_d [0:1];
+    wire [2:0]  asm_v [0:1];                            // enabled-and-valid of elements 0 .. 2
+    wire [2:0]  asm_e [0:1];                            // enabled of elements 0 .. 2
+    wire [1:0]  l_en;                                   // element 3 enabled
+    wire [1:0]  coll;                                   // a request for a tile whose read is in flight
+    wire [2176*2-1:0] mem_all;                          // {valid, data} of every entry, tile 0 then tile 1
+    genvar gt, ge, lv, c;
+    generate for (gt = 0; gt < 2; gt = gt + 1) begin : g_t
+        wire        en  = wctl[CTW*gt + 8];
+        wire [1:0]  dd  = wctl[CTW*gt + 6 +: 2];
+        wire [5:0]  wo  = wctl[CTW*gt +: 6];
+        wire [63:0] tw;
+        for (ge = 0; ge < 64; ge = ge + 1) begin : g_tw
+            assign tw[ge] = (ge >= wo);
+        end
+        // storage: entry e = {epoch, position}
+        for (ge = 0; ge < 128; ge = ge + 1) begin : g_e
+            localparam integer EE = ge >> 6, EP = ge & 63;
+            wire cond = (dd == 2'b00) ? (tf[EP] == tw[EP]) : (dd == 2'b01) ? (tf[EP] && !tw[EP]) :
+                        (dd == 2'b10) ? (!tf[EP] && tw[EP]) : 1'b0;
+            wire we   = wv && (wep == EE) && en && cond && wm[EP];
+            reg [15:0] m;
+            reg        v;
+            always @(posedge clk) if (we) m <= wd[16*EP +: 16];
+            always @(posedge clk)
+                if (cv && cep == EE) v <= 1'b0;
+                else if (we) v <= 1'b1;
+            assign mem_all[2176*gt + 17*ge +: 17] = {v, m};
+        end
+        // sequencer: the request's element 0 loads the select registers from the pins; elements 1 .. 3 from the held
+        // request (this tile's held request hp / hep) on the next three edges
+        wire       req = r_v && (r_t == gt);              // from the pins
+        reg  [1:0] el;                                    // element index now in the select registers
+        reg        sv;                                    // select registers hold an element of a request
+        reg        hep;                                   // the held request (pin registers of this tile)
+        reg [27:0] hp;
+        always @(posedge clk) if (req) begin hep <= r_ep; hp <= r_p; end
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) v <= 1'b0;
-            else if (cv && cep == EE) v <= 1'b0;
-            else if (we) v <= 1'b1;
-        assign mem_f[16*ge +: 16] = m;
-        assign val_f[ge] = v;
-    end endgenerate
-    // read: four elements of one tile's window through explicit 512:1 trees.  The select of each tree level is a
-    // REPLICATED pin register (one copy per <= 256 mux loads: 17 x 2^(8 - level) 2:1 muxes at level 0 .. 8 -> 17, 9,
-    // 5, 3, 2, 1, 1, 1, 1 copies), each copy driven by the input pin (gate 08:29: one select flop drove ~8,600 loads).
-    wire [63:0] qq;
-    wire [3:0]  vv;
-    genvar gi;
-    generate for (gi = 0; gi < 4; gi = gi + 1) begin : g_rd
-        wire [8:0] ix_pin = {(MUT == 2) ? 1'b0 : r_t, r_ep, r_p[7*gi +: 7]};
+            if (!rst_n) begin sv <= 1'b0; el <= 2'd0; end
+            else if (req) begin sv <= 1'b1; el <= 2'd0; end
+            else if (sv) begin el <= el + 1'b1; if (el == 2'd3) sv <= 1'b0; end
+        assign coll[gt] = req && sv && (el != 2'd3);
+        assign done[gt] = sv && (el == 2'd3);
+        // next element's select: from the pins (new request) or the held request
+        wire [1:0] nel   = req ? 2'd0 : el + 1'b1;
+        wire [6:0] nsel  = req ? {r_ep, r_p[5:0]} : {hep, hp[7*nel +: 6]};
         wire [RSW-1:0] sr;
-        genvar lv, c;
-        for (lv = 0; lv < 9; lv = lv + 1) begin : g_lv
-            localparam integer NR = ot_qfd_xs_nrep(17, 9, lv);
-            localparam integer OF = ot_qfd_xs_soff(17, 9, lv);
+        for (lv = 0; lv < 7; lv = lv + 1) begin : g_lv
+            localparam integer NR = ot_qfd_xs_nrep(17, 7, lv);
+            localparam integer OF = ot_qfd_xs_soff(17, 7, lv);
             for (c = 0; c < NR; c = c + 1) begin : g_c
                 (* keep *) reg f;
-                always @(posedge clk) f <= ix_pin[lv];
+                always @(posedge clk) f <= nsel[lv];
                 assign sr[OF + c] = f;
             end
         end
-        ot_qfd_xs_mux_rep #(.W(17), .LN(9), .SW(RSW)) u_m (.d(interleave(mem_f, val_f)), .s(sr), .q({vv[gi], qq[16*gi +: 16]}));
+        localparam integer SRC = (MUT == 2 && gt == 1) ? 0 : gt;
+        ot_qfd_xs_mux_rep #(.W(17), .LN(7), .SW(RSW)) u_m (.d(mem_all[2176*SRC +: 2176]), .s(sr), .q(tr[gt]));
+        // assembly of elements 0 .. 2 (element 3 goes straight to the answer register)
+        reg [47:0] ad;
+        reg [2:0]  av, ae;
+        wire       een = hp[7*el + 6];                    // enable of the element in the select registers (held)
+        always @(posedge clk)
+            if (sv && el != 2'd3) begin
+                ad[16*el +: 16] <= een ? tr[gt][15:0] : 16'd0;
+                av[el] <= een && tr[gt][16];
+                ae[el] <= een;
+            end
+        assign asm_d[gt] = ad; assign asm_v[gt] = av; assign asm_e[gt] = ae;
+        assign l_en[gt] = hp[27];
     end endgenerate
-    wire bad = ~&vv;
-    function automatic [512*17-1:0] interleave(input [8191:0] m, input [511:0] v);
-        integer k;
-        begin
-            for (k = 0; k < 512; k = k + 1) interleave[17*k +: 17] = {v[k], m[16*k +: 16]};
-        end
-    endfunction
+    // A tile is requested once per tuple (the head's TDM): a request while its previous read is in flight is a
+    // collision and answers bad (fail-loud).  The two tiles' requests come on different edges, so they finish on
+    // different edges; both finishing together also answers bad.
+    wire       fin  = done[0] | done[1];
+    wire       ft   = done[1];
+    wire [15:0] l3  = l_en[ft] ? tr[ft][15:0] : 16'd0;
+    wire       bad3 = l_en[ft] && !tr[ft][16];
+    wire       badx = |(asm_e[ft] & ~asm_v[ft]);
+    reg        coll_q;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin q_v <= 1'b0; q_bad <= 1'b0; end
-        else begin q_v <= rv; q_bad <= rv && bad; end
-    always @(posedge clk) q <= qq;
+        if (!rst_n) begin q_v <= 1'b0; q_bad <= 1'b0; coll_q <= 1'b0; end
+        else begin
+            coll_q <= |coll;
+            q_v <= fin;
+            q_bad <= fin && (bad3 || badx || (done[0] && done[1]) || coll_q);
+        end
+    always @(posedge clk) q <= {l3, asm_d[ft]};
 endmodule
 
+
 // --------------------------------------------------------------------------------------------------------------------
-// ot_qfd_xhead: column head with the column's x slice control.
-//   Head-row word a_d / b_d (HW bits) = {fill (FW), ib (IBW), go}: b_d is the onward copy (one kept flop each).
-//   Corridor words n_d / s_d (CW bits) = {tag (8), xl (128), ib (IBW), go}: go / ib are the head-row go / ib DX + 1
-//   edges after they entered this head (DX extra edges against a plain column head; the slice reads of a tuple run
-//   ahead of the tiles by construction), xl = two quad lines (2 x 64 b BF16) of the corridor's tiles, tag =
-//   {vB, sB[2:0], vA, sA[2:0]} the station index each line is for.
-//   TDM: a corridor has NH tiles (station index s = 0 .. NH-1, s = 0 next to the head); tuple n of the op is sent on
-//   NH / 2 consecutive edges, edge e carrying stations e (line A) and e + NH/2 (line B): leaves e/2 and e/2 + NH/4
-//   (distinct leaves, one read port each).
-//   Rows: tile id tid0 + r, r = 0 .. 2*NH-1; rows 0 .. NH-1 are the N corridor (station r), NH .. 2NH-1 the S corridor
-//   (station r - NH); leaf j holds rows 2j, 2j+1.
+// ot_qfd_xhead: column head with the column's x slice control (r3, el1014-qwen-dvm-build.log).
+//   Head-row word a_d / b_d (HW bits) = {fill (FW), ib (IBW), go}, from the x tap (go and fill share ONE pipeline from
+//   the tap: a go is never ahead of a fill beat the tap emitted before it); b_d is the onward copy = the input pin
+//   registers themselves (in -> flop -> out across a 64.8-um tile).
+//   Corridor words n_d / s_d (CW bits) = {tag (8), xl (128), ib (IBW), go}: go / ib leave DX edges after they entered
+//   this head's pin registers; xl = two quad lines (2 x 64 b BF16) of the corridor's tiles, tag = {vB, sB[2:0], vA,
+//   sA[2:0]} the station index each line is for.
+//   tids: strap, the 2*NH tiles' reference ids (16 b each; rows 0 .. NH-1 = N stations 0 .. NH-1 outward, rows
+//   NH .. 2NH-1 = S stations 0 .. NH-1 outward): the die tree pairs tiles in morton order, so ids are not affine in the
+//   row (compute die lead 11:51, DIE_BUS_AUDIT row 5).
+//   fault_i: the next column's fault (outward neighbour), chained inward along the head row to the tap.
+//   STORAGE MODEL (ot_qfd_xs_leaf): one 64-position slot per tile and epoch.  A footprint fp = (TG-1)*xcs + (k-1)*xks + 1
+//   <= 64 lives in its own tile's slot at positions (wo + rel) mod 64 (any alignment); 64 < fp <= 128 is POOLED: tile
+//   pair (N station s, S station NH-1-s) must read the same quad (equal window start) at a 64-aligned start (checked,
+//   else FAULT): beat W in the N tile's slot, beat W + 1 in the S tile's, one read of both serves both corridors.
+//   TDM: tuple n is sent on NE = NH / 2 consecutive edges; N edge e carries stations e (A) and e + NE (B), S edge e
+//   carries stations NH-1-e (A) and NE-1-e (B), so a pooled pair travels on the same edge.  Reads are serial in the leaf
+//   (an element an edge): a line requested at TDM edge e answers 6 edges later (lr register, leaf select registers,
+//   four element reads); the read of tuple 0 leaves on the edge after the go's FILL_LEAD delay.
 // --------------------------------------------------------------------------------------------------------------------
 module ot_qfd_xhead #(
     parameter integer AW   = 24,
@@ -375,14 +464,15 @@ module ot_qfd_xhead #(
     parameter integer NH   = 8,          // tiles per corridor (half column)
     parameter integer SMIN = 7,
     parameter integer SMAX = 11,
-    parameter integer DX   = 9,          // five-edge fill lead + four-edge read-to-corridor launch
-    parameter integer FILL_LEAD = 5,     // includes the tap's two-entry attention-write queue and its E3 rounding stage
+    parameter integer DX   = 9,          // FILL_LEAD + 7 (lr register 1, leaf 5, corridor launch 1)
+    parameter integer FILL_LEAD = 2,     // the tap's two-entry attention-write queue (a queued beat can trail a go by 2)
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
-                                         // 4: the reads use the OTHER epoch (stale buffer)   -- both must FAIL
+                                         // 4: reads the other epoch (stale buffer); 6: pooled line without its B half
 ) (
     input  wire          ck,
     input  wire          rst_n,
-    input  wire [15:0]   tid0,
+    input  wire [16*2*NH-1:0] tids,
+    input  wire          fault_i,
     input  wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] a_d,
     output wire          a_r,
     output wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] b_d,
@@ -391,14 +481,13 @@ module ot_qfd_xhead #(
     input  wire          n_r,
     output wire [1+(3*NW+13*AW+13)+128+8-1:0] s_d,
     input  wire          s_r,
-    // leaves (NH: NH/2 in the N chain = rows 0 .. NH-1, NH/2 in the S chain): one write word per chain, its
-    // ctl field the chain's NH/2 leaves (leaf j of the chain at bits 8j); the two chains carry the same data
+    // leaf write chains (two: N leaves 0 .. NH/2-1, S leaves NH/2 .. NH-1), leaf read buses (one per leaf)
     output reg  [1:0]    lw_v,
     output reg  [1:0]    lw_ep,
     output reg  [2*6-1:0] lw_off,
     output reg  [2*64-1:0] lw_m,
     output reg  [2*1024-1:0] lw_d,
-    output reg  [NH*8-1:0] lw_ctl,
+    output reg  [NH*18-1:0] lw_ctl,
     output reg  [1:0]    lc_v,
     output reg  [1:0]    lc_ep,
     output reg  [NH-1:0] lr_v,
@@ -419,40 +508,38 @@ module ot_qfd_xhead #(
     localparam integer CW   = 1 + IBW + 128 + 8;
     localparam integer NR   = 2 * NH;            // rows (tiles) of the column
     localparam integer NE   = NH / 2;            // TDM edges a tuple
-    localparam integer NL   = NH;                // leaves
-    localparam integer LQ   = $clog2(1 << (SMAX - $clog2(TG)));   // bits of a quad index (S / TG <= 2^(SMAX - log2 TG))
+    localparam integer QD   = 6;                 // read issue -> answer usable (edges)
+    generate if (DX - FILL_LEAD != QD + 1) begin : g_bad_dx
+        initial $error("ot_qfd_xhead: DX must be FILL_LEAD + %0d", QD + 1);
+    end endgenerate
 
-    // ---- head row: onward copy, ready (as ot_qwen_die_station) ----
-    (* keep *) reg [HW-1:0] b_q;
-    always @(posedge ck) b_q <= a_d;
-    assign b_d = b_q;
-    reg br_q, nr_q, sr_q, ar_q;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin br_q <= 1'b0; nr_q <= 1'b0; sr_q <= 1'b0; ar_q <= 1'b0; end
-        else begin br_q <= b_r; nr_q <= n_r; sr_q <= s_r; ar_q <= br_q & nr_q & sr_q; end
-    assign a_r = ar_q;
-
-    // ---- input pin register of the local copy ----
+    // ---- input pin registers = the onward copy (head-row station), ready ----
     reg              g_pin;
     reg  [IBW-1:0]   ib_pin;
-    wire             g_q;
-    wire [IBW-1:0]   ib_q;
     reg  [FW-1:0]    f_q;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) g_pin <= 1'b0; else g_pin <= a_d[0];
     always @(posedge ck) begin ib_pin <= a_d[1 +: IBW]; f_q <= a_d[1 + IBW +: FW]; end
-    // Go travels directly along the head row; the last attention beat can still
-    // be queued behind an SU beat in the tap. Give that queue and the far leaf's
-    // write registers time to drain before launching reads. Instruction and
-    // reads move together; fill and all missing-element fault checks stay live.
-    ot_hdc_delay #(.W(1), .D(FILL_LEAD), .RESET(1)) u_fill_go (.clk(ck), .rst_n(rst_n), .d(g_pin), .q(g_q));
-    ot_hdc_delay #(.W(IBW), .D(FILL_LEAD)) u_fill_ib (.clk(ck), .rst_n(rst_n), .d(ib_pin), .q(ib_q));
+    assign b_d = {f_q, ib_pin, g_pin};
+    reg br_q, nr_q, sr_q, ar_q, fi_q;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin br_q <= 1'b0; nr_q <= 1'b0; sr_q <= 1'b0; ar_q <= 1'b0; fi_q <= 1'b0; end
+        else begin br_q <= b_r; nr_q <= n_r; sr_q <= s_r; ar_q <= br_q & nr_q & sr_q; fi_q <= fault_i; end
+    assign a_r = ar_q;
+    reg [16*NR-1:0] tid_q;                         // strap register (a constant tie at the die)
+    always @(posedge ck) tid_q <= tids;
 
-    // ---- go / ib to the corridors: DX more edges, then one kept output flop per corridor ----
-    wire              g_dx;
-    wire [IBW-1:0]    ib_dx;
-    ot_hdc_delay #(.W(1), .D(DX-FILL_LEAD), .RESET(1)) u_gdx (.clk(ck), .rst_n(rst_n), .d(g_q), .q(g_dx));
-    ot_hdc_delay #(.W(IBW), .D(DX-FILL_LEAD)) u_idx (.clk(ck), .rst_n(rst_n), .d(ib_q), .q(ib_dx));
+    // ---- go: FILL_LEAD edges (a queued attention beat and the far leaf's chain stages), then DX - FILL_LEAD to the
+    //      corridors; ib is HELD, not delayed: gos are >= IL - 1 = 7 edges apart (a go while busy and not on the
+    //      previous op's last edge faults), so a hold register per use replaces 9 x IBW delay flops ----
+    wire             g_q, g_dx;
+    ot_hdc_delay #(.W(1), .D(FILL_LEAD), .RESET(1)) u_fill_go (.clk(ck), .rst_n(rst_n), .d(g_pin), .q(g_q));
+    ot_hdc_delay #(.W(1), .D(DX - FILL_LEAD), .RESET(1)) u_gdx (.clk(ck), .rst_n(rst_n), .d(g_q), .q(g_dx));
+    reg  [IBW-1:0]   ib_q, ib_c;                   // ib of the go being checked / the go on its way to the corridors
+    always @(posedge ck) begin
+        if (g_pin) ib_q <= ib_pin;
+        if (g_q) ib_c <= ib_q;
+    end
 
     // ---- fill fields ----
     wire              d_v   = f_q[0];
@@ -478,31 +565,46 @@ module ot_qfd_xhead #(
     reg  [3:0]        e_sp  [0:1];
     reg  [NW-1:0]     e_k   [0:1];
     reg               e_rnd [0:1];
-    // tile windows: beat W and offset of the tile's first element, per epoch and row
+    reg               e_pool [0:1];
+    // tile windows: beat W and start position of the tile's slot, per epoch and row
     reg  [BW-1:0]     wb  [0:1][0:NR-1];
     reg  [5:0]        wo  [0:1][0:NR-1];
-    // descriptor pipeline: products (stage 1), windows (stage 2)
+    // descriptor pipeline: products + footprint (stage 1), windows + pool checks (stage 2)
     reg               dp_v, dp_ep;
     reg  [AW-1:0]     dp_xb;
     reg  [AW-1:0]     dp_pr [0:NR-1];
+    reg  [AW-1:0]     dp_fm;                        // footprint - 1
     integer r, e, i;
     reg  [SMAX:0]     qq;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) dp_v <= 1'b0; else dp_v <= d_v;
     always @(posedge ck) begin
         dp_ep <= d_ep; dp_xb <= d_xb;
+        dp_fm <= (TG - 1) * {{(AW-XCW){1'b0}}, d_xcs} + ({{(AW-NW){1'b0}}, d_k} - 1'b1) * {{(AW-XCW){1'b0}}, d_xks};
         for (r = 0; r < NR; r = r + 1) begin
             // quad q = (tile id) mod (S / TG); first chunk TG * q; product TG * q * xcs
-            qq = (tid0 + r) & ((({{SMAX{1'b0}}, 1'b1}) << (d_sp - $clog2(TG))) - 1'b1);
+            qq = tid_q[16*r +: 16] & ((({{SMAX{1'b0}}, 1'b1}) << (d_sp - $clog2(TG))) - 1'b1);
             dp_pr[r] <= (qq * TG) * d_xcs;
         end
     end
-    reg [AW-1:0] emin;
+    reg [AW-1:0] emin [0:NR-1];
+    reg          pool_n, pfault_n;
+    always @* begin
+        for (r = 0; r < NR; r = r + 1) emin[r] = dp_xb + dp_pr[r];
+        pool_n = (dp_fm >= 64);
+        pfault_n = (dp_fm >= 128);
+        if (pool_n)
+            for (r = 0; r < NH; r = r + 1)
+                if (emin[r] != emin[NH + NH - 1 - r] || emin[r][5:0] != 6'd0) pfault_n = 1'b1;
+    end
     always @(posedge ck)
-        if (dp_v) for (r = 0; r < NR; r = r + 1) begin
-            emin = dp_xb + dp_pr[r];
-            wb[dp_ep][r] <= emin[AW-1:6];
-            wo[dp_ep][r] <= emin[5:0];
+        if (dp_v) begin
+            e_pool[dp_ep] <= pool_n;
+            for (r = 0; r < NR; r = r + 1) begin
+                // pooled: the S tile of a pair holds beat W + 1
+                wb[dp_ep][r] <= emin[r][AW-1:6] + ((pool_n && r >= NH) ? 1'b1 : 1'b0);
+                wo[dp_ep][r] <= emin[r][5:0];
+            end
         end
 
     // ---- the beat arrives unrotated (lane l = element 64*fb + foff + l): rotate lanes to positions (foff + l) mod 64
@@ -520,19 +622,17 @@ module ot_qfd_xhead #(
     wire [1023:0] fd_r = rd_s[6];
     wire [63:0]   fm_r = rm_s[6];
 
-    // ---- data beat -> leaf write control (one edge), to the leaf pins ----
+    // ---- data beat -> leaf write control (one edge), to the leaf pins: per tile {en, d, wo} ----
     reg  [BW:0] dd;
-    reg  [NH*8-1:0] ctl;
+    reg  [NH*18-1:0] ctl;
     always @* begin
-        ctl = {(NH*8){1'b0}};
+        ctl = {(NH*18){1'b0}};
         for (r = 0; r < NR; r = r + 1) begin
             dd = {1'b0, fb} - {1'b0, wb[fep][r]};
-            // {en_lo, s_lo, en_hi, s_hi} at bit 4*(r & 1) of leaf r >> 1
-            ctl[8*(r >> 1) + 4*(r & 1) +: 4] = {
-                (dd == 0) || (dd == {(BW+1){1'b1}}),     // en_lo: p < off lands in beat fb + 1 = W (d = -1) or W + 1 (d = 0)
-                (dd == 0),                                // s_lo
-                (dd == 0) || (dd == 1),                   // en_hi: p >= off lands in beat fb = W (d = 0) or W + 1 (d = 1)
-                (dd == 1)};                               // s_hi
+            ctl[18*(r >> 1) + 9*(r & 1) +: 9] = {
+                (dd == 0) || (dd == 1) || (dd == {(BW+1){1'b1}}),                       // en
+                (dd == {(BW+1){1'b1}}) ? 2'b10 : (dd == 1) ? 2'b01 : 2'b00,            // d = fb - W
+                wo[fep][r]};
         end
     end
     always @(posedge ck or negedge rst_n)
@@ -568,55 +668,102 @@ module ot_qfd_xhead #(
                           (b_split == e_sp[ep_rd]) && (b_k == e_k[ep_rd]) && (b_round == e_rnd[ep_rd]) &&
                           (b_tiles != 0) && (b_k != 0);
     reg           f_pos;
-    reg  [AW:0]   pe;
+    reg  [AW:0]   rel;
+    reg  [5:0]    pos;
     reg  [NH*28-1:0] rp;
     reg  [NH-1:0] rv;
     reg  [NH-1:0] rt;
-    // the read of TDM edge 0 of tuple 0 leaves on the edge after the go's pin flop (positions from the descriptor)
+    // the read of TDM edge 0 of tuple 0 leaves on the edge after the go's FILL_LEAD delay (positions from the descriptor)
     wire          rd_now = g_q || busy;
     wire [2:0]    ph_now = g_q ? 3'd0 : ph;
     wire          rep_now = g_q ? ((MUT == 4) ? ~ep_rd : ep_rd) : rep;
+    wire          pool_now = e_pool[rep_now];
     wire [XCW-1:0] xcs_now = g_q ? e_xcs[ep_rd] : rxcs;
     wire [AW-1:0] kx_now = g_q ? {AW{1'b0}} : kx;
     wire          last = busy && (ph == IL - 1) && (k_i == k_last) && (rnd_left == 0);
-    integer s, ln;
+    integer s, ln, rr;
     always @* begin
         rp = {(NH*28){1'b0}}; rv = {NH{1'b0}}; rt = {NH{1'b0}}; f_pos = 1'b0;
         if (rd_now && ph_now < NE) begin
             for (s = 0; s < 4; s = s + 1) begin
-                // s: 0 N line A, 1 N line B, 2 S line A, 3 S line B
-                r = ((s >= 2) ? NH : 0) + ph_now + ((s & 1) ? NE : 0);
-                ln = r >> 1;
+                // s: 0 N line A (station e), 1 N line B (e + NE), 2 S line A (NH-1-e), 3 S line B (NE-1-e)
+                rr = (s == 0) ? ph_now : (s == 1) ? ph_now + NE : (s == 2) ? NH + NH - 1 - ph_now : NH + NE - 1 - ph_now;
+                ln = rr >> 1;
                 rv[ln] = 1'b1;
-                rt[ln] = r & 1;
+                rt[ln] = rr & 1;
                 for (i = 0; i < 4; i = i + 1) begin
-                    pe = {1'b0, {(AW-6){1'b0}}, wo[rep_now][r]} + i * xcs_now + kx_now;
-                    if (pe >= 128) f_pos = 1'b1;
-                    rp[28*ln + 7*i +: 7] = pe[6:0];
+                    rel = i * xcs_now + kx_now;
+                    if (!pool_now) begin
+                        // own slot: position (wo + rel) mod 64; a footprint <= 64 keeps rel < 64
+                        if (rel >= 64) f_pos = 1'b1;
+                        pos = wo[rep_now][rr] + rel[5:0];
+                        rp[28*ln + 7*i +: 7] = {1'b1, pos};
+                    end else begin
+                        // pooled: N tile (s < 2) holds rel 0 .. 63, S tile (s >= 2) rel 64 .. 127
+                        if (rel >= 128) f_pos = 1'b1;
+                        rp[28*ln + 7*i +: 7] = {(s < 2) ? !rel[6] : rel[6], rel[5:0]};
+                    end
                 end
             end
         end
     end
+    always @(posedge ck) begin lr_t <= rt; lr_ep <= {NH{rep_now}}; lr_p <= rp; end
+
+    // ---- answers -> corridor launch (the leaf q pins feed the corridor's output flops through one mux) ----
+    // the answer of a read issued at TDM edge e is usable QD edges later: carry the edge and the mode along
+    wire [2:0] phd;
+    wire       vd, pd;
+    ot_hdc_delay #(.W(3), .D(QD)) u_phd (.clk(ck), .rst_n(rst_n), .d(ph_now), .q(phd));
+    ot_hdc_delay #(.W(1), .D(QD), .RESET(1)) u_vd (.clk(ck), .rst_n(rst_n), .d(rd_now && ph_now < NE), .q(vd));
+    ot_hdc_delay #(.W(1), .D(QD)) u_pd (.clk(ck), .rst_n(rst_n), .d(pool_now), .q(pd));
+    reg [127:0] xn, xs;
+    reg [7:0]   tn, ts;
+    reg [2:0]   na, nb, sa, sb;
+    reg [63:0]  qna, qnb, qsa, qsb;
+    reg         miss;
+    always @* begin
+        xn = 128'd0; xs = 128'd0; tn = 8'd0; ts = 8'd0; miss = 1'b0;
+        na = phd; nb = phd + NE; sa = NH - 1 - phd; sb = NE - 1 - phd;
+        qna = lq[64*(na >> 1) +: 64];                 qnb = lq[64*(nb >> 1) +: 64];
+        qsa = lq[64*(NE + (sa >> 1)) +: 64];          qsb = lq[64*(NE + (sb >> 1)) +: 64];
+        if (vd) begin
+            miss = !lq_v[na >> 1] || !lq_v[nb >> 1] || !lq_v[NE + (sa >> 1)] || !lq_v[NE + (sb >> 1)];
+            if (pd) begin
+                xn = (MUT == 6) ? {qnb, qna} : {qnb | qsb, qna | qsa};
+                xs = xn;
+            end else begin
+                xn = {qnb, qna};
+                xs = {qsb, qsa};
+            end
+            if (MUT == 3) begin na = (na + 1'b1) & (NH - 1); nb = (nb + 1'b1) & (NH - 1); sa = (sa + 1'b1) & (NH - 1); sb = (sb + 1'b1) & (NH - 1); end
+            tn = {1'b1, nb, 1'b1, na};
+            ts = {1'b1, sb, 1'b1, sa};
+        end
+    end
+    reg flt;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin
-            st[0] <= 2'd0; st[1] <= 2'd0; ep_rd <= 1'b0; busy <= 1'b0; fault <= 1'b0; lr_v <= {NH{1'b0}};
-            ph <= 3'd0; rep <= 1'b0;
+            st[0] <= 2'd0; st[1] <= 2'd0; ep_rd <= 1'b0; busy <= 1'b0; flt <= 1'b0; lr_v <= {NH{1'b0}};
+            ph <= 3'd0; rep <= 1'b0; fault <= 1'b0;
         end else begin
             lr_v <= rv;
+            fault <= flt | fi_q;
             // descriptor: claim the epoch
             if (d_v) begin
-                if (st[d_ep] != 2'd0) fault <= 1'b1;
+                if (st[d_ep] != 2'd0) flt <= 1'b1;
                 st[d_ep] <= 2'd1;
                 e_xb[d_ep] <= d_xb; e_xcs[d_ep] <= d_xcs; e_xks[d_ep] <= d_xks; e_sp[d_ep] <= d_sp; e_k[d_ep] <= d_k;
                 e_rnd[d_ep] <= d_rnd;
-                if (d_sp < SMIN || d_sp > SMAX) fault <= 1'b1;
+                if (d_sp < SMIN || d_sp > SMAX) flt <= 1'b1;
             end
-            if (f_pos) fault <= 1'b1;
-            if (|lq_bad) fault <= 1'b1;
+            if (dp_v && pfault_n) flt <= 1'b1;
+            if (f_pos) flt <= 1'b1;
+            if (|lq_bad) flt <= 1'b1;
+            if (miss) flt <= 1'b1;                                          // a leaf did not answer its read
             // the go: consume the oldest filled epoch
             if (g_q) begin
                 if (busy && last) st[(MUT == 4) ? ~rep : rep] <= 2'd0;     // back to back: the previous op's last edge
-                if (!go_ok || (busy && !last)) fault <= 1'b1;
+                if (!go_ok || (busy && !last)) flt <= 1'b1;
                 else begin
                     st[ep_rd] <= 2'd2;
                     rep <= (MUT == 4) ? ~ep_rd : ep_rd;
@@ -638,32 +785,10 @@ module ot_qfd_xhead #(
                 end
             end
         end
-    always @(posedge ck) begin lr_t <= rt; lr_ep <= {NH{rep_now}}; lr_p <= rp; end
-
-    // ---- answers -> corridor launch (the leaf q pins feed the corridor's output flops through one mux) ----
-    // the answer of a read issued at TDM edge e arrives 3 edges later: carry the edge's station indices along
-    wire [2:0] phd;
-    wire       vd;
-    ot_hdc_delay #(.W(3), .D(3)) u_phd (.clk(ck), .rst_n(rst_n), .d(ph_now), .q(phd));
-    ot_hdc_delay #(.W(1), .D(3), .RESET(1)) u_vd (.clk(ck), .rst_n(rst_n), .d(rd_now && ph_now < NE), .q(vd));
-    reg [127:0] xn, xs;
-    reg [7:0]   tn, ts;
-    reg [2:0]   sa, sb;
-    always @* begin
-        xn = 128'd0; xs = 128'd0; tn = 8'd0; ts = 8'd0;
-        sa = (MUT == 3) ? (phd + 1'b1) & (NH - 1) : phd;
-        sb = (MUT == 3) ? (phd + NE + 1'b1) & (NH - 1) : phd + NE;
-        if (vd) begin
-            xn = {lq[64*((phd + NE) >> 1) +: 64], lq[64*(phd >> 1) +: 64]};
-            xs = {lq[64*(NE + ((phd + NE) >> 1)) +: 64], lq[64*(NE + (phd >> 1)) +: 64]};
-            tn = {1'b1, sb, 1'b1, sa};
-            ts = {1'b1, sb, 1'b1, sa};
-        end
-    end
     (* keep *) reg [CW-1:0] n_q, s_q;
     always @(posedge ck) begin
-        n_q <= {tn, xn, ib_dx, g_dx};
-        s_q <= {ts, xs, ib_dx, g_dx};
+        n_q <= {tn, xn, ib_c, g_dx};
+        s_q <= {ts, xs, ib_c, g_dx};
     end
     assign n_d = n_q;
     assign s_d = s_q;
@@ -687,9 +812,10 @@ module ot_qfd_xcst #(
     output wire          a_r,
     output wire [1+(3*NW+13*AW+13)+128+8-1:0] b_d,
     input  wire          b_r,
-    output wire [1+(3*NW+13*AW+13)+128-1:0] tap_d,
-    input  wire          tap_r
+    output wire [1+(3*NW+13*AW+13)+128-1:0] tap_d
 );
+    // (no tap ready: the tile takes its x / ib / go in lockstep and never back-pressures; r3 drops the port the die
+    //  tied to 1 -- DIE_BUS_AUDIT row 10)
     localparam integer IBW = 3 * NW + 13 * AW + 13;
     localparam integer CW  = 1 + IBW + 128 + 8;
     (* keep *) reg [CW-1:0] b_q;
@@ -720,10 +846,10 @@ module ot_qfd_xcst #(
         assign xo[32*i +: 32] = {hold[16*i +: 16], 16'h0000};
     end endgenerate
     assign tap_d = {xo, t_q};
-    reg br_q, tr_q, ar_q;
+    reg br_q, ar_q;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin br_q <= 1'b0; tr_q <= 1'b0; ar_q <= 1'b0; end
-        else begin br_q <= b_r; tr_q <= tap_r; ar_q <= br_q & tr_q; end
+        if (!rst_n) begin br_q <= 1'b0; ar_q <= 1'b0; end
+        else begin br_q <= b_r; ar_q <= br_q; end
     assign a_r = ar_q;
 endmodule
 

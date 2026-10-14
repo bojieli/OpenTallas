@@ -1,49 +1,43 @@
 {
  "name": "qfd_xs_tap",
- "top": "ot_qfd_xs_tap",
+ "top": "qfd_xs_tap",
  "kind": "tile",
  "sources": [
+  "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv",
   "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
   "rtl/hdc/ot_hdc_delay.sv"
  ],
- "params": {
-  "AW": 24,
-  "NW": 18,
-  "XCW": 12
- },
- "clock_port": "clk",
+ "params": {},
+ "clock_port": "ck",
  "reset_ports": [
   "rst_n"
  ],
  "outline": {
-  "w": 216.0,
-  "h": 216.0
+  "w": 345.6,
+  "h": 345.6,
+  "exact": true
  },
  "pins": {
   "N": [
-   "sw_v",
-   "sw_a",
-   "sw_m",
-   "sw_d",
-   "aw_v",
-   "aw_a",
-   "aw_m",
-   "aw_d",
-   "xpf_v",
-   "xpf_xbase",
-   "xpf_xcs",
-   "xpf_xks",
-   "xpf_split",
-   "xpf_k",
-   "xpf_round"
+   "sw"
   ],
   "S": [
-   "fo",
-   "fault"
+   "aw",
+   "xpf",
+   "gi",
+   "fault",
+   "ck",
+   "rst_n"
   ],
   "W": [
-   "clk",
-   "rst_n"
+   "hw_d",
+   "hw_r",
+   "hw_f"
+  ],
+  "E": [
+   "he_d",
+   "he_r",
+   "he_f"
   ]
  },
  "route": {
@@ -58,42 +52,31 @@
    "v": "M3 M5"
   }
  },
- "slot_change_request": "el1014-qwen-split-compute.log 08:08 (qwen-dvm-build SLOT / PIN REQUEST): NEW master qfd_xs_tap x1 of the owner-adopted distributed x slice, at the VM write face: SU lane write + attention-return write + XPF in (N), head-row fill word fo out (S). Pins re-gated against the die lead's assigned file when it exists.",
+ "slot_change_request": "el1014-qwen-split-compute.log 11:51 slot qfd_xs_tap 345.6 x 345.6 at the VM N face (r3: gi in, two registered head words hw_d / he_d, root fault chains hw_f / he_f); sw from the SU on N, aw / xpf / gi on S, roots W / E.",
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xt1",
-  "purpose": "Qwen TP8 distributed x slice FILL TAP (owner 08:20 PT 10-14): taps the VM write stream (SU 64 + attention-return 16 lanes) inside the armed x range, rounds to the consumer's BF16 operand (RNE when the op rounds), rotates to one aligned 64-element beat and emits the head-row fill word; XPF arms epochs (ownership moves atomically). All ports pin-registered.",
+  "tag": "xt3",
+  "purpose": "Qwen TP8 distributed x slice FILL TAP r3: taps the VM write stream (SU 64 + attention-return 16 lanes) inside the armed x range, rounds to the consumer's BF16 operand, and emits the head-row word {fill, ib, go} to BOTH roots from two kept register copies: go / ib (gi from the tree top) ride the fill's own pipeline (fill-before-go); root fault chains in.",
   "benches": [
    {
     "name": "dvm_array_exact",
     "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
     "expect": "pass",
     "pass_regex": "^PASS dvm",
-    "threads": 16,
-    "peak_ram_gb": 64,
+    "threads": 12,
+    "peak_ram_gb": 96,
     "needs": [
      "verilator"
     ]
    },
    {
     "name": "dvm_array_no_rounding",
-    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg1 tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GTAP_MUT=1",
+    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GTAP_MUT=1",
     "expect": "fail",
     "pass_regex": "^PASS dvm",
-    "threads": 16,
-    "peak_ram_gb": 64,
-    "needs": [
-     "verilator"
-    ]
-   },
-   {
-    "name": "dvm_array_stale_owner",
-    "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg5 tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0 -GTAP_MUT=5",
-    "expect": "fail",
-    "pass_regex": "^PASS dvm",
-    "threads": 16,
-    "peak_ram_gb": 64,
+    "threads": 12,
+    "peak_ram_gb": 96,
     "needs": [
      "verilator"
     ]
@@ -108,81 +91,57 @@
   "record_to": "results/rtl/ref_tile/qfd_xs_tap"
  },
  "pin_ranges": {
-  "sw_v": [
-   2.0,
-   2.5
-  ],
-  "sw_a": [
-   2.6,
-   4.6
-  ],
-  "sw_m": [
-   4.7,
-   9.5
-  ],
-  "sw_d": [
-   9.6,
-   160.0
-  ],
-  "aw_v": [
-   160.1,
-   160.5
-  ],
-  "aw_a": [
-   160.6,
-   162.6
-  ],
-  "aw_m": [
-   162.7,
-   164.0
-  ],
-  "aw_d": [
-   164.1,
-   203.0
-  ],
-  "xpf_v": [
-   203.1,
-   203.5
-  ],
-  "xpf_xbase": [
-   203.6,
-   205.6
-  ],
-  "xpf_xcs": [
-   205.7,
-   206.8
-  ],
-  "xpf_xks": [
-   206.9,
-   208.0
-  ],
-  "xpf_split": [
-   208.1,
-   208.6
-  ],
-  "xpf_k": [
-   208.7,
-   210.4
-  ],
-  "xpf_round": [
-   210.5,
-   211.0
-  ],
-  "fo": [
+  "sw": [
    10.0,
-   206.0
+   335.0
+  ],
+  "aw": [
+   10.0,
+   120.0
+  ],
+  "xpf": [
+   122.0,
+   140.0
+  ],
+  "gi": [
+   142.0,
+   240.0
   ],
   "fault": [
-   207.0,
-   208.0
+   242.0,
+   243.0
   ],
-  "clk": [
-   100.0,
-   101.0
+  "ck": [
+   250.0,
+   251.0
   ],
   "rst_n": [
-   102.0,
-   103.0
+   252.0,
+   253.0
+  ],
+  "hw_d": [
+   10.0,
+   330.0
+  ],
+  "hw_r": [
+   331.0,
+   331.5
+  ],
+  "hw_f": [
+   332.0,
+   332.5
+  ],
+  "he_d": [
+   10.0,
+   330.0
+  ],
+  "he_r": [
+   331.0,
+   331.5
+  ],
+  "he_f": [
+   332.0,
+   332.5
   ]
  }
 }

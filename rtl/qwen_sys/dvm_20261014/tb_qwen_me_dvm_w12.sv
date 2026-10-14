@@ -3,7 +3,8 @@
 //   ref  ot_qwen_me_array_w12 (central x network) fed by a vector-memory model with XVMR edges of x read latency,
 //        BD_ref = HB + NH + 3 + XVMR (head row HB, plain column head 1, corridor NH, tile IREG 1, plus the read);
 //   dvm  ot_qwen_me_array_dvm_w12: the same tiles / tree / spine, x from ot_qfd_xs_tap -> head row -> ot_qfd_xhead +
-//        ot_qfd_xs_leaf slices -> TDM on the corridor -> ot_qfd_xcst stations, BD = HB + DX + NH + 3.
+//        ot_qfd_xs_leaf slices -> TDM on the corridor -> ot_qfd_xcst stations, BD = 3 + HB + DX + NH + 3 (r3: go / ib
+//        pass the tap's three stages with the fill: XD = 3 + DX edges of x path on the instruction broadcast).
 // Every op has its OWN x image (value of element a for op n = xv(a + 4099 n): a slice that serves another epoch's
 // data, another tile's line or an unrounded operand is visible).  Before op n issues, the bench arms its x range on the
 // tap (XPF) and writes the whole range through the SU (64-lane, any alignment) and attention-return (16-lane) ports
@@ -18,7 +19,7 @@ module tb_qwen_me_dvm_w12;
     parameter integer NCOL = 2, NH = 8, TG = 4;
     parameter integer GT = NCOL * 2 * NH * TG;
     parameter integer SMIN = 4, SMAX = 7, TCUT = 3;
-    parameter integer HB = 3, DX = 9, XOFF = 3, XVMR = 12;
+    parameter integer HB = 3, DX = 9, FILL_LEAD = 2, TIDM = 1, XOFF = 3, XVMR = 12;
     parameter integer NOPS = 40, SEED = 1, GAP = 4, DROP = 0;
     // REUSE: 1 in REUSE ops starts INSIDE the previous op's x range (address reuse, as production: qkv / gate_up share
     // xbase 4096, o / down re-read the attention / act outputs): the previous epoch is still being read while this
@@ -29,7 +30,8 @@ module tb_qwen_me_dvm_w12;
     localparam integer W = 16, IL = 8, AW = 24, NW = 16, XCW = 12;
     localparam integer NT = GT / TG, NXC = 1 << SMAX;
     localparam integer BDR = HB + NH + 3 + XVMR;
-    localparam integer BDD = HB + DX + NH + 3;
+    localparam integer XD  = 3 + DX;                 // the x path's edges on the instruction broadcast
+    localparam integer BDD = HB + XD + NH + 3;
     localparam integer CB = 2;
 
     reg clk = 0, rst_n = 0;
@@ -128,7 +130,7 @@ module tb_qwen_me_dvm_w12;
     wire [AW-1:0] d_mx_addr; wire [W-1:0] d_mx_mask; wire [W*32-1:0] d_mx_data; wire [15:0] d_progress;
     wire [NT*TG*32-1:0] d_tile_xl;
     ot_qwen_me_array_dvm_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .XCW(XCW), .NCOL(NCOL), .NH(NH), .TG(TG), .GT(GT),
-        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .HB(HB), .HBF(HB), .DX(DX), .XOFF(XOFF), .CODE_BANKS(CB),
+        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .HB(HB), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .CODE_BANKS(CB),
         .TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT), .HEAD_MUT(HEAD_MUT)) u_dvm (
         .clk(clk), .rst_n(rst_n), .go(go), .ready(d_ready), .idle(d_idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc), .i_wbase(i_wbase), .i_ts(i_ts),
@@ -175,8 +177,8 @@ module tb_qwen_me_dvm_w12;
     // ---- per-tile operand check: s3_x[31:16] of every group, every cycle s3_v ----
     integer cyc = 0, errors = 0, opnd_checks = 0;
     genvar tt;
-    // the two arrays run DX - XVMR edges apart: compare the operand streams through a delay of the earlier one
-    localparam integer DOFF = (DX >= XVMR) ? DX - XVMR : XVMR - DX;
+    // the two arrays run XD - XVMR edges apart: compare the operand streams through a delay of the earlier one
+    localparam integer DOFF = (XD >= XVMR) ? XD - XVMR : XVMR - XD;
     generate for (tt = 0; tt < NT; tt = tt + 1) begin : g_op
         wire          rv = u_ref.g_tile[tt].u_t.u_me.s3_v;
         wire          dv = u_dvm.g_tile[tt].u_t.u_me.s3_v;
@@ -184,7 +186,7 @@ module tb_qwen_me_dvm_w12;
         wire [TG*32-1:0] dx = u_dvm.g_tile[tt].u_t.u_me.s3_x;
         wire          ev, lv;
         wire [TG*32-1:0] ex, lx;
-        if (DX >= XVMR) begin : g_rl
+        if (XD >= XVMR) begin : g_rl
             ot_hdc_delay #(.W(1), .D(DOFF), .RESET(1)) u_v (.clk(clk), .rst_n(rst_n), .d(rv), .q(ev));
             ot_hdc_delay #(.W(TG*32), .D(DOFF)) u_x (.clk(clk), .rst_n(rst_n), .d(rx), .q(ex));
             assign lv = dv; assign lx = dx;
@@ -257,6 +259,37 @@ module tb_qwen_me_dvm_w12;
     task automatic r(output integer v, input integer m);
         begin v = $urandom(seed) % m; seed = seed + 1; end
     endtask
+    // the fabric's tile id map (ot_qfd_xdvm_fabric.tid) and the pooled-pair rule of ot_qfd_xhead: a footprint over 64
+    // elements needs N station s and S station NH-1-s on the same quad, i.e. S / TG divides their id difference
+    function automatic integer tidb(input integer c, input integer r);
+        integer dr, bc, br, lbc, lbr, blk, z, p, i;
+        begin
+            if (TIDM == 0) tidb = c * 2 * NH + r;
+            else begin
+                dr = (r < NH) ? NH + r : NH - 1 - (r - NH);
+                bc = (NCOL >= 4) ? 4 : NCOL; br = (2 * NH >= 4) ? 4 : 2 * NH;
+                lbc = (bc >= 4) ? 2 : (bc >= 2) ? 1 : 0; lbr = (br >= 4) ? 2 : (br >= 2) ? 1 : 0;
+                blk = (c / bc) * (2 * NH / br) + dr / br;
+                z = 0; p = 0;
+                for (i = 0; i < 2; i = i + 1) begin
+                    if (i < lbc) begin z = z | (((c % bc) >> i) & 1) << p; p = p + 1; end
+                    if (i < lbr) begin z = z | (((dr % br) >> i) & 1) << p; p = p + 1; end
+                end
+                tidb = bc * br * blk + z;
+            end
+        end
+    endfunction
+    function automatic integer pool_ok(input integer spl);
+        integer c, s2, qm;
+        begin
+            pool_ok = (spl >= 2);
+            qm = (1 << spl) / TG;
+            for (c = 0; c < NCOL; c = c + 1)
+                for (s2 = 0; s2 < NH; s2 = s2 + 1)
+                    if ((tidb(c, s2) % qm) != (tidb(c, NH + NH - 1 - s2) % qm)) pool_ok = 0;
+        end
+    endfunction
+    integer pooled = 0;
     task automatic gen_op;
         integer t0, t1;
         begin
@@ -272,6 +305,12 @@ module tb_qwen_me_dvm_w12;
                 r(t0, 2); xks = 1 + t0; r(t0, 4); kc = 1 + t0; r(t0, 3); xcs = kc * xks + t0; r(t1, 60000); o_xbase = t1;
             end
             if (kc > 16 && (o_xbase % 64) != 0) o_xbase = o_xbase - (o_xbase % 64);
+            // a footprint over 64 (TG * kc) is pooled over a tile pair: pick a split whose pairs share their quad
+            if (TG * kc > 64) begin
+                while (!pool_ok(sp) && sp > SMIN) sp = sp - 1;
+                if (!pool_ok(sp)) begin kc = 16; xcs = kc; end      // no poolable split: a footprint of 64
+                else pooled = pooled + 1;
+            end
             // address reuse: start inside the previous op's range (any-alignment shapes only, kc <= 16)
             r(t0, REUSE);
             if (REUSE > 0 && t0 == 0 && p_lo >= 0 && mode != 1 && kc <= 16) begin
@@ -366,16 +405,16 @@ module tb_qwen_me_dvm_w12;
         if (namr != namd) begin $display("FAIL argmax change count %0d %0d", namr, namd); errors = errors + 1; end
         for (n = 0; n < namr && n < namd; n = n + 1)
             if (amr[n] !== amd[n]) begin if (errors < 20) $display("FAIL argmax event %0d", n); errors = errors + 1; end
-        if (first_ov_d - first_ov_r != DX - XVMR) begin
-            $display("FAIL first result dvm - ref = %0d, expected DX - XVMR = %0d", first_ov_d - first_ov_r, DX - XVMR);
+        if (first_ov_d - first_ov_r != XD - XVMR) begin
+            $display("FAIL first result dvm - ref = %0d, expected XD - XVMR = %0d", first_ov_d - first_ov_r, XD - XVMR);
             errors = errors + 1;
         end
         if (DROP) begin
             if (xf_seen) $display("PASS drop-detect NCOL=%0d NH=%0d GT=%0d dropped=%0d: x_fault raised (no silent stale read)", NCOL, NH, GT, dropped);
             else $display("FAIL drop-detect: a write was dropped and x_fault was NOT raised");
         end else if (errors == 0 && nqr > 0 && opnd_checks > 0)
-            $display("PASS dvm NCOL=%0d NH=%0d GT=%0d SMIN=%0d SMAX=%0d HB=%0d DX=%0d XOFF=%0d XVMR=%0d GAP=%0d ops=%0d cycles=%0d result_writes=%0d operand_checks=%0d fills=%0d sw_beats=%0d aw_beats=%0d bd_ref=%0d bd_dvm=%0d first_result_delta=%0d reused=%0d",
-                NCOL, NH, GT, SMIN, SMAX, HB, DX, XOFF, XVMR, GAP, ops, cyc, nqr, opnd_checks, fills, sw_beats, aw_beats, BDR, BDD, first_ov_d - first_ov_r, reused);
+            $display("PASS dvm NCOL=%0d NH=%0d GT=%0d SMIN=%0d SMAX=%0d HB=%0d DX=%0d XOFF=%0d XVMR=%0d GAP=%0d ops=%0d cycles=%0d result_writes=%0d operand_checks=%0d fills=%0d sw_beats=%0d aw_beats=%0d bd_ref=%0d bd_dvm=%0d first_result_delta=%0d reused=%0d pooled=%0d",
+                NCOL, NH, GT, SMIN, SMAX, HB, DX, XOFF, XVMR, GAP, ops, cyc, nqr, opnd_checks, fills, sw_beats, aw_beats, BDR, BDD, first_ov_d - first_ov_r, reused, pooled);
         else $display("FAIL errors=%0d writes=%0d operand_checks=%0d reused=%0d", errors, nqr, opnd_checks, reused);
         $finish;
     end

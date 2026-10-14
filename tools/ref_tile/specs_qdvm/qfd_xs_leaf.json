@@ -14,8 +14,9 @@
   "rst_n"
  ],
  "outline": {
-  "w": 108.0,
-  "h": 211.68
+  "w": 64.8,
+  "h": 120.96,
+  "exact": true
  },
  "pins": {
   "S": [
@@ -57,22 +58,131 @@
   "threads": 8,
   "peak_ram_gb": 32,
   "pin_h": "M4",
-  "pin_v": "M3 M5"
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
- "slot_change_request": "el1014-qwen-dvm-build.log / el1014-qwen-split-compute.log (qwen-dvm-build request): NEW master of the owner-adopted distributed x slice (HANDOFF 0x, 08:20 PT 10-14): 384 instances (8 per tile column, two write chains of 4 from the column head N / S, mirrored MX in the S chain), in the column gaps beside qfd_xcol; write chain in S / out N (1,130 b each, registered pass), direct read bus E (31 b in, 66 b out). Pins to be re-gated against the die lead's assigned pin file.",
+ "pin_ranges": {
+  "w_v": [
+   1.5,
+   1.8
+  ],
+  "w_ep": [
+   1.9,
+   2.2
+  ],
+  "w_off": [
+   2.3,
+   2.9
+  ],
+  "w_m": [
+   3.0,
+   7.0
+  ],
+  "w_d": [
+   7.1,
+   57.5
+  ],
+  "w_ctl": [
+   57.6,
+   62.6
+  ],
+  "c_v": [
+   62.7,
+   62.9
+  ],
+  "c_ep": [
+   63.0,
+   63.2
+  ],
+  "wo_v": [
+   1.5,
+   1.8
+  ],
+  "wo_ep": [
+   1.9,
+   2.2
+  ],
+  "wo_off": [
+   2.3,
+   2.9
+  ],
+  "wo_m": [
+   3.0,
+   7.0
+  ],
+  "wo_d": [
+   7.1,
+   57.5
+  ],
+  "wo_ctl": [
+   57.6,
+   62.6
+  ],
+  "co_v": [
+   62.7,
+   62.9
+  ],
+  "co_ep": [
+   63.0,
+   63.2
+  ],
+  "r_v": [
+   10.0,
+   11.0
+  ],
+  "r_t": [
+   11.2,
+   12.0
+  ],
+  "r_ep": [
+   12.2,
+   13.0
+  ],
+  "r_p": [
+   13.2,
+   40.0
+  ],
+  "q_v": [
+   42.0,
+   43.0
+  ],
+  "q": [
+   43.2,
+   105.0
+  ],
+  "q_bad": [
+   105.2,
+   106.0
+  ],
+  "clk": [
+   60.0,
+   61.0
+  ],
+  "rst_n": [
+   62.0,
+   63.0
+  ]
+ },
+ "pin_source": "chain faces N / S on identical ranges (abutted leaf-to-leaf, the same bit at the same x); read bus E",
+ "slot_change_request": "el1014-qwen-dvm-build.log 16:15 r3 / el1014-qwen-split-compute.log (DVM builder -> compute die lead): the column slot 64.8 x 1,313.28 holds a die-placed N-S STACK, not a hardened cluster (20-um child channels / edges cannot fit 64.8 um): 4 x qfd_xs_leaf 64.8 x 120.96 (N chain, R0) / qfd_xhead_e|w 64.8 x 345.6 / 4 x qfd_xs_leaf (S chain, MX), chain faces abutted pin to pin; pins re-gated against the die lead's assigned file when it exists.",
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
   "branch": "claude/qwen-dvm-1014",
-  "tag": "xl2",
-  "purpose": "Qwen TP8 compute die distributed x slice LEAF (owner 08:20 PT 10-14): 2 tiles x 2 epochs x 2 aligned 64-element beats of BF16 operands (RNE-rounded at the tap) + per-element valid; write chain pin-registered pass-through, 4-element window read (explicit 512:1 trees), answer pin flops. One clock root (~10.1k sinks). xl2: outline 108 x 211.68 (gate xl1 08:29: util 85 % at 108 x 129.6), read-select pin registers replicated per tree level (<= 256 mux loads per copy; xl1 select flops drove ~8,600 loads).",
+  "tag": "xl3",
+  "purpose": "Qwen TP8 distributed x slice LEAF r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): 2 tiles x 2 epochs x one 64-position slot of BF16 operands (+ per-element valid), footprints > 64 pooled over a tile pair by the column head; ONE 128:1 x 17-b serial read tree per tile (r2: four 512:1 trees, 2.7x the slot); write chain pin-registered pass-through (18-b control a leaf); answer pin flops at R + 4.",
   "benches": [
    {
     "name": "dvm_array_exact",
     "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/pos tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=40 -GSEED=3 -GGAP=0",
     "expect": "pass",
     "pass_regex": "^PASS dvm",
-    "threads": 16,
-    "peak_ram_gb": 64,
+    "threads": 12,
+    "peak_ram_gb": 96,
     "needs": [
      "verilator"
     ]
@@ -82,8 +192,8 @@
     "cmd": "bash rtl/qwen_sys/dvm_20261014/run_dvm.sh {RUN}/bench/neg tb_qwen_me_dvm_w12 -GNCOL=2 -GNH=8 -GSMIN=4 -GSMAX=7 -GNOPS=12 -GSEED=3 -GGAP=0 -GLEAF_MUT=2",
     "expect": "fail",
     "pass_regex": "^PASS dvm",
-    "threads": 16,
-    "peak_ram_gb": 64,
+    "threads": 12,
+    "peak_ram_gb": 96,
     "needs": [
      "verilator"
     ]
@@ -96,71 +206,5 @@
   ],
   "views_to": "physical/ref_tile/qfd_xs_leaf/views",
   "record_to": "results/rtl/ref_tile/qfd_xs_leaf"
- },
- "pin_ranges": {
-  "w_v": [
-   1.0,
-   1.6
-  ],
-  "wo_v": [
-   1.0,
-   1.6
-  ],
-  "w_ep": [
-   1.6,
-   2.2
-  ],
-  "wo_ep": [
-   1.6,
-   2.2
-  ],
-  "w_off": [
-   2.2,
-   3.8
-  ],
-  "wo_off": [
-   2.2,
-   3.8
-  ],
-  "w_m": [
-   3.8,
-   10.6
-  ],
-  "wo_m": [
-   3.8,
-   10.6
-  ],
-  "w_d": [
-   10.6,
-   100.6
-  ],
-  "wo_d": [
-   10.6,
-   100.6
-  ],
-  "w_ctl": [
-   100.6,
-   104.0
-  ],
-  "wo_ctl": [
-   100.6,
-   104.0
-  ],
-  "c_v": [
-   104.0,
-   105.0
-  ],
-  "co_v": [
-   104.0,
-   105.0
-  ],
-  "c_ep": [
-   105.0,
-   106.0
-  ],
-  "co_ep": [
-   105.0,
-   106.0
-  ]
  }
 }

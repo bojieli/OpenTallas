@@ -4,7 +4,7 @@
 // (its spine ot_qwen_me_spine_w12 at GT 3,072: the issue loop, x chunk port and quad-line network, fed by a central
 // read of XVMR edges).  No tile arithmetic here (the full-array exactness at reduced shape is tb_qwen_me_dvm_w12):
 // every tile's x pins are compared, every edge on which the reference network delivers a fresh x word to that tile,
-// with the dvm fabric's pins DX - XVMR edges later: the BF16 operand the tile multiplies (RNE16(x) when the op rounds,
+// with the dvm fabric's pins 3 + DX - XVMR edges later: the BF16 operand the tile multiplies (RNE16(x) when the op rounds,
 // x[31:16] when not) must equal the slice's 16 bits and the low half must be 0.
 // Ops: the decoded production TP8 weight ops (results/arch/qwen_tp8_native_dispatch_1014 actual_* die0: qkv k 8 S 512
 // xbase 4096; o_proj k 2 S 256 xbase 50672 rounds 3; gate_up k 32 S 128 xbase 4096; down k 6 S 256 xbase 55280
@@ -16,14 +16,14 @@ module tb_qfd_xdvm_prod;
     parameter integer NCOL = 48, NH = 8, TG = 4;
     parameter integer GT = NCOL * 2 * NH * TG;
     parameter integer SMIN = 7, SMAX = 11, TCUT = 3;
-    parameter integer HB = 3, DX = 9, XOFF = 3, XVMR = 12;
+    parameter integer HB = 3, DX = 9, FILL_LEAD = 2, TIDM = 1, XOFF = 3, XVMR = 12;
     parameter integer NLAYER = 2, NRAND = 6, SEED = 1, GAP = 4;
     parameter integer TAP_MUT = 0, LEAF_MUT = 0, HEAD_MUT = 0;
     localparam integer W = 16, IL = 8, AW = 24, NW = 16, XCW = 12;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, NXL = NXC / TG;
     localparam integer BDR = HB + NH + 3 + XVMR;
     localparam integer IBW = 3 * NW + 13 * AW + 13;
-    localparam integer DOFF = DX - XVMR;          // dvm minus ref (DX < XVMR: negative)
+    localparam integer DOFF = 3 + DX - XVMR;      // dvm minus ref (r3: + the tap's 3 stages on the go path)
 
     reg clk = 0, rst_n = 0;
     always #1 clk = ~clk;
@@ -110,7 +110,8 @@ module tb_qfd_xdvm_prod;
     wire [NT*TG*32-1:0] d_xl;
     wire             d_x_fault;
     ot_qfd_xdvm_fabric #(.AW(AW), .NW(NW), .XCW(XCW), .IL(IL), .NCOL(NCOL), .NH(NH), .TG(TG), .SMIN(SMIN), .SMAX(SMAX),
-        .HB(HB), .HBF(HB), .DX(DX), .XOFF(XOFF), .TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT), .HEAD_MUT(HEAD_MUT)) u_fab (
+        .HB(HB), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
+        .HEAD_MUT(HEAD_MUT)) u_fab (
         .clk(clk), .rst_n(rst_n), .go_acc(go && r_ready), .ib(ib),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
         .xpf_k(xpf_k), .xpf_round(xpf_round), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
