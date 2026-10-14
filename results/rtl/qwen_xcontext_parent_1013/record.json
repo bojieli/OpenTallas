@@ -1,0 +1,21 @@
+{
+  "status": "PASS actual cached-parent instruction mailbox binding only",
+  "parent_commit": "7cbe00c33",
+  "unit": "oth-ubuntu-571369-1791959307",
+  "host": "ot-epyc4",
+  "exit": 0,
+  "native_outputs": 680,
+  "native_nonzero_request_edges": 683,
+  "raw_split_outputs": 936,
+  "raw_split_nonzero_request_edges": 875,
+  "misses": 144,
+  "offer_pause_base_edges": 11,
+  "negative": "passthrough GO fails actual reference request/epoch oracle before arithmetic",
+  "qualification_limits": [
+    "dictionary not bound to actual VM/source32roots",
+    "synthetic operands",
+    "drained between instructions",
+    "simulation negedge combinational hit pause is not registered physical admission",
+    "no native cost or physical closure"
+  ]
+}

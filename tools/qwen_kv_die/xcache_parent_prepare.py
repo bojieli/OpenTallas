@@ -4,10 +4,10 @@ import argparse,hashlib,json,pathlib,subprocess,sys
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/qwen_kv_die'))
 from xcache_actual_tile_bench import PARENT_FILES
-p=argparse.ArgumentParser(description=__doc__);p.add_argument('--parent-commit',required=True);p.add_argument('--workdir',type=pathlib.Path,required=True);a=p.parse_args()
+p=argparse.ArgumentParser(description=__doc__);p.add_argument('--parent-commit',required=True);p.add_argument('--workdir',type=pathlib.Path,required=True);p.add_argument('--context-mailbox',action='store_true');a=p.parse_args()
 out=a.workdir.resolve();src=out/'src';src.mkdir(parents=True,exist_ok=True)
 parent=PARENT_FILES+['rtl/physical/ot_qwen_rom_tile_nkt.sv','rtl/physical/ot_qwen_tile_rpair.sv','rtl/physical/ot_qwen_tile_tp8_cached.sv','rtl/physical/ot_qwen_xcache_indexed.sv']
-local=['rtl/test/qwen_kv_die/tb_qwen_xcache_parent.sv']
+local=['rtl/test/qwen_kv_die/tb_qwen_xcache_parent.sv'] if not a.context_mailbox else ['rtl/test/qwen_kv_die/tb_qwen_xcontext_parent.sv','rtl/physical/ot_qwen_xcontext_protocol.sv']
 commit=subprocess.check_output(['git','rev-parse',a.parent_commit],cwd=ROOT,text=True).strip()
 manifest={'parent_commit':commit,'actual_tile_GT':3072,'NW':18,'CEXT':2,'ME_EXTRA':8,'physical_claim':False,'sources':{}}
 for f in parent+local:

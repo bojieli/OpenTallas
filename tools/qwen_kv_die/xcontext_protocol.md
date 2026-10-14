@@ -82,3 +82,25 @@ python3 run.py only through ot-run --mem 6 --threads 6. Actual-parent mailbox
 binding uses xcache_parent_prepare.py --parent-commit 7cbe00c33 --context-mailbox
 and xcontext_parent_gate.py. The parent fixture drains between instructions;
 back-to-back production arithmetic context overlap remains unproven.
+
+Actual-parent mailbox receipt
+-----------------------------
+
+The same default candidate mailbox is now bound to immutable cached parent
+7cbe00c33 and its real RPS0 ROM interface. The actual IB offer occurs during
+11 base edges when all25 child roots and the cache-response root are paused;
+the loader remains live. Native arithmetic680 outputs/683 request edges and
+raw-split diagnostic936 outputs/875 request edges pass. GO passthrough fails
+the independent actual reference request/epoch oracle before the first result.
+Final exact-source unit oth-ubuntu-571369-1791959307 completed exit0; artifacts
+are results/rtl/qwen_xcontext_parent_1013. An earlier gate correctly observed
+that failure but expected the later arithmetic failure string and returned1;
+only the expected failure classifier was corrected, with no mutant source fix.
+The final source was rebuilt after the token guard parameter addition.
+
+The fixture still uses a simulated falling-edge combinational hit admission
+gate, not a registered physical status/request/credit round trip. Actual
+registered lookup status, lookahead/credits before issue, face staging and
+response/pause latency must be derived and measured before adoption. It does
+not bind the dictionary to the actual32-root VM source or prove back-to-back
+arithmetic context overlap.
