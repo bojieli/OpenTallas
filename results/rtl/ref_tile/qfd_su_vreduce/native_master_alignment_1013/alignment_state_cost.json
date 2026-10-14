@@ -1,0 +1,20 @@
+{
+  "source": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_master_bv_acc.sv",
+  "SW": 64,
+  "IS": 1,
+  "OS": 1,
+  "CRX": 2,
+  "VL": 7,
+  "old_ML": 7,
+  "new_ML": 15,
+  "additional_declared_delay_state": {
+    "VM_payload": 49152,
+    "embedding_payload": 16384,
+    "CROM_payload": 32768,
+    "embedding_select": 512,
+    "VM_read_mask": 1536
+  },
+  "additional_declared_bits_total": 100352,
+  "eight_lane_group_bits": 12544,
+  "claim": "Declared RTL delay-state delta only, not mapped FF/area; no physical root/placement qualification. Includes CROM/embedding alignment rather than VM return alone."
+}

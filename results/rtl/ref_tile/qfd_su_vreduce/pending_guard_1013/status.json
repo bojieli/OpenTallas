@@ -1,0 +1,12 @@
+{
+  "scope": "actual streaming regional64 reducer + completion fence, not physical master",
+  "segments": 120,
+  "lane_values": 30528,
+  "latency_delta": 22,
+  "max_outstanding_completed_segments": 12,
+  "actual_tail_busy_gap_cycles_observed": 3,
+  "exact": "PASS RANexit0",
+  "accepted_last_mutant": "FALSE_IDLE_PENDING_OUTPUTS1 RANexit1 at70ns",
+  "first_probe": "same arithmetic passed, mistaken minimum10 gap assertion failed; preserved in first_probe",
+  "integration": "default-off RED_ENTRIES forwarding, unchanged ready/chaining; idle uses pending guard; full master/clock family still needs proof"
+}

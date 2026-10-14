@@ -1,0 +1,7 @@
+ot-run: ot-epyc4       admits   493 GB (avail 759, growth 218, headroom 48, waiters 0/0 GB) load 120/128 running 27 disk 1204 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-616146-1791960043 after 0 s
+PASS pending guard holes=3 maxpending=12
+PASS VRED segments=120 words=30528 sum=80 max=40 square=40 delta=22
+rtl/test/tb_hdc_vred_pending_actual.sv:63: $finish called at 13940000 (1ps)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-616146-1791960043): exit 0

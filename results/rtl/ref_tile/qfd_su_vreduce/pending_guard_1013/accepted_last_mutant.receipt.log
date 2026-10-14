@@ -1,0 +1,6 @@
+ot-run: ot-epyc4       admits   590 GB (avail 817, growth 157, headroom 48, waiters 0/0 GB) load 65/128 running 24 disk 1219 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-590321-1791959561 after 0 s
+FATAL: rtl/test/tb_hdc_vred_pending_actual.sv:25: FALSE_IDLE_PENDING_OUTPUTS 1
+       Time: 70000  Scope: tb_hdc_vred_pending_actual
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-590321-1791959561): exit 1

@@ -39,7 +39,8 @@ module ot_hdc_vstream #(
                                       // register and clock tree) behind RD relay stages each way (broadcast fields: one
                                       // kept relay copy per group of 8 lanes first); requires LOFF = 1.  Lanes see the
                                       // memories 2 + 2*RD edges later (their ML grows by that); outputs leave 1 + RD later.
-    parameter integer RD = 2          // LT: relay stages each way between the vstream ports / control and each lane tile
+    parameter integer RD = 2,         // LT: relay stages each way between the vstream ports / control and each lane tile
+    parameter integer RED_ENTRIES = 0 // opt-in functional regional64 reducer; physical top supplies nine distinct clocks
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -309,9 +310,25 @@ module ot_hdc_vstream #(
             rd_x[32*li +: 32] <= l_ov[li] ? l_out[32*li +: 32] : (l_red[1:0] == 2'd2) ? l_out[31:0] : 32'd0;
     end
     wire f_red;
+    generate if (RED_ENTRIES == 0) begin : g_red_original
     ot_hdc_vreduce #(.SW(SW), .LV(LV), .AW(AW)) u_red (.clk(clk), .rst_n(rst_c), .v_in(rd_v), .mx_in(rd_mx),
         .sq_in(rd_sq), .last_in(rd_last), .addr_in(rd_addr), .x_in(rd_x),
         .o_we(red_we), .o_addr(red_addr), .o_data(red_data), .busy(reducer_busy), .fault(f_red));
+    end else begin : g_red_entries
+        if (SW != 64 || LV != 7 || AW != 24) begin : g_bad_shape
+            OT_VRED_ENTRIES_REQUIRE_SW64_LV7_AW24 u_trap ();
+        end
+        wire tail_busy, tail_fault, guard_fault;
+        // Functional composition ties the physical parent's nine scalar entries. No physical-parent qualification.
+        qfd_su_vred_entries64 u_red (.ck_region0(clk),.ck_region1(clk),.ck_region2(clk),.ck_region3(clk),
+            .ck_region4(clk),.ck_region5(clk),.ck_region6(clk),.ck_region7(clk),.ck_tail(clk),.rst_n(rst_c),
+            .v_in(rd_v),.mx_in(rd_mx),.sq_in(rd_sq),.last_in(rd_last),.addr_in(rd_addr),.x_in(rd_x),
+            .o_we(red_we),.o_addr(red_addr),.o_data(red_data),.busy(tail_busy),.fault(tail_fault));
+        ot_hdc_vred_pending_guard #(.CW(NW+1)) u_pending (.clk(clk),.rst_n(rst_c),
+            .vector_v(rd_v),.vector_last(rd_last),.output_v(red_we),.tail_busy(tail_busy),
+            .busy(reducer_busy),.fault(guard_fault));
+        assign f_red=tail_fault||guard_fault;
+    end endgenerate
 
     // Element chaining in vectors: retirement is in order, so the latest
     // instruction has written (vectors retired - vectors emitted before it).
