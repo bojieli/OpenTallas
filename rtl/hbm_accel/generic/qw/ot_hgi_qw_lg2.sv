@@ -24,7 +24,11 @@ module ot_hgi_qw_lg2 (
     output wire [1023:0]    gp,
     output wire [7:0]       e_push, e_rcr, e_wcr, e_done
 );
-    ot_hgi_qw_lgr u_r (.clk(clk), .rst_n(rst_n), .wrr(wrr), .wrq(wrq), .wrq_cr(wrq_cr), .c_hit_r(c_hit_r),
+`ifdef OT_QW_LGR_ROOTS
+    ot_hgi_qw_lgr_roots u_r (.clk_io(clk),.clk_rq0(clk),.clk_rq1(clk),
+`else
+    ot_hgi_qw_lgr u_r (.clk(clk),
+`endif .rst_n(rst_n), .wrr(wrr), .wrq(wrq), .wrq_cr(wrq_cr), .c_hit_r(c_hit_r),
         .c_hit_p(c_hit_p), .c_rs(c_rs), .c_sl(c_sl), .gp(gp), .e_push(e_push), .e_rcr(e_rcr));
     ot_hgi_qw_lgw u_w (.clk(clk), .rst_n(rst_n), .wwq(wwq), .wwq_cr(wwq_cr), .wwq_done(wwq_done), .c_wv(c_wv),
         .c_wsec(c_wsec), .c_ws(c_ws), .c_wy(c_wy), .e_wcr(e_wcr), .e_done(e_done));

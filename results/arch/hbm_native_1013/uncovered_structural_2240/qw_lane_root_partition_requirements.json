@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.qw_lane_roots.v1",
+  "source": "ot_hgi_qw_lgr_roots.sv derived literal LGR body and unchanged RQ instances",
+  "selection": "unselected WQ3 OT_QW_LGR_ROOTS optin; native qpin4 untouched",
+  "closed_constituents": [
+    "2\u00d7ot_hgi_qw_rq perreadgroup",
+    "2\u00d7ot_hgi_qw_wq perwritegroup"
+  ],
+  "read_clock_roots": {
+    "outer_registers": {
+      "clk": "clk_io",
+      "FF_estimate": 3402
+    },
+    "RQ0": {
+      "clk": "clk_rq0",
+      "actual_closed_sinks": 6327
+    },
+    "RQ1": {
+      "clk": "clk_rq1",
+      "actual_closed_sinks": 6327
+    }
+  },
+  "old_flat_root_estimate": 16056,
+  "new_edges": 0,
+  "software_clock_test": "all3pins tied for sourceexact proof; actual clockdelivery unqualified",
+  "read_frame_request_um": [
+    131.76,
+    267.84
+  ],
+  "read_frame_outer_pin_rawcut": 0.39283154121863806,
+  "write_taller_request_um": [
+    47.52,
+    216
+  ],
+  "write_outer_pin_rawcut": 0.5013333333333333,
+  "parent_request_um": [
+    864,
+    1200
+  ],
+  "parent_shape_status": "unassigned alternative; old691/918highframe cannot contain4tallerreadgroups. No route submitted oninvalidenvelope.",
+  "pin_and_PG_status": "rawcounts only; actual perpin assignedshape/PG competition\u2264.60 and P190/Q220/perpairH100 stillrequired",
+  "M6_PORT_grant": false,
+  "behavior": "same F_Wrr/WRQ/control and gather register edges; unchanged FIFO state/RQ resetrelay; exactwholeWQ3campaign pending",
+  "open": [
+    "realouterregister frame extraction or rootclockgate",
+    "parentselection/absolutegeometry",
+    "native B2 source binding",
+    "actual assignedpins/clock/reset roots and cuts",
+    "real throughput andmutants"
+  ]
+}
