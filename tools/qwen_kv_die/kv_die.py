@@ -157,12 +157,14 @@ BINDINGS = dict(
 SPLIT_HEAD = (734.4, 855.36)
 # kvsys contract v1.1 (2026-10-14 PM, die lead): the head is the NATIVE wires-only parent ot_qkh_head_native (Codex decision
 # 09:04: 16 closed lane8 + ktree stand; front / 16 stations / score are new hardened leaves; 35 separate child clock entries).
-# Its slot is re-cut SHORT so the far head of each pair is one head height (+ gap) from its control tile with the bits
-# x-aligned (<= 504 um, no die relay): 993.6 x 475.2 (23 x 11 lattice steps of 43.2), area 0.4722 mm2 for ~0.333 mm2 of
-# leaves (16 lane8 129.6^2, ktree 151.2 x 97.2, front, 16 stations, score) = 0.71 fill.  Die-assigned pins are
-# mirror-legal (horizontal faces M4 only, vertical faces M5 only, clocks M4 W face), so heads below the control tile are MX
-# and face it with their input face again (TP4 orientation rule); the control tile is centred in the wider column.
-SPLIT_HEAD_V11 = (993.6, 475.2)
+# Its slot is re-cut SHORT so the far head of each pair is one head height + 2.16 from its control tile with the bits
+# x-aligned: 492.48 + 2 x 2.16 = 496.8 um <= 500 (no die relay, no latency change).  1080 x 492.48: a 3 x 6 lane_b grid
+# (129.6^2, column pitch 172.8, row pitch 151.2, rows from y 54) + the front band (y 0..54, front 648 x 21.6 under the
+# control tile's t span) + 16 stations (<= 32.4 x 32.4) in the 43.2 column gaps + ktree (cell + gap = 172.8 >= 151.2) and
+# score in the two free cells (top margin 6.48): 0.5319 mm2 for ~0.31 mm2 of leaves.  Die-assigned pins are mirror-legal (horizontal faces M4
+# only, vertical faces M5 only, clocks M4 W face), so heads below the control tile are MX and face it with their input
+# face again (TP4 orientation rule); the control tile is centred in the wider column.
+SPLIT_HEAD_V11 = (1080.0, 492.48)
 # per-child clock entries (die ports, each its own CTS sink, delivered at phi - R of that child): die port -> RTL port
 HEAD_CLK = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_t{i}' for i in range(16)] + [f'ck_l{i}' for i in range(16)])
 ECTL_CLK = ['ck_a', 'ck_b', 'ck_c']
@@ -607,7 +609,13 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
                         _PIN_HINT[(inst, port.lstrip('*'))] = pin_xy(it_, M[it_.master], port.lstrip('*'))
                     except (TypeError, KeyError):
                         pass
-        m = _build(**kw)
+        try:
+            m = _build(**kw)
+        except ValueError as e_:
+            # v1.1: a pin-hinted re-plan pass can corner a relay chain (af_WN at the astk top, head 492.48): keep the best
+            # earlier pass (its drawn pins and relay chains are consistent) and record why the re-plan stopped
+            best[1].setdefault('geo', {})['replan_stopped'] = str(e_)
+            break
     else:
         M = masters(m, 1)
         nv = pin_reach(m, M)['violations']
@@ -851,6 +859,7 @@ def _relays(m):
                 owner.setdefault((gx, gy), set()).add(it.name)
     occ = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
     rocc = {}
+    SP = dict(on=False)        # v1.1: set for a chain's retry: route around cells other chains' relays hold
 
     def free(x, y, w, h, gap=4.32, bgap=21.6):
         # keep-outs: 4.32 um to other relays, 21.6 um to block frames (the die placer snaps every origin to its
@@ -904,7 +913,9 @@ def _relays(m):
                 break
             for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                 q = (c[0] + d[0], c[1] + d[1])
-                if q not in prev and 0 <= q[0] < nx and 0 <= q[1] < ny and not owner.get(q):
+                # v1.1 (split): on a chain's retry it does not run through cells another chain's relays already hold, so
+                # it leaves the corridor where the relay spots ran out (head 492.48: af_WN / aq_WS at the N group top)
+                if q not in prev and 0 <= q[0] < nx and 0 <= q[1] < ny and not owner.get(q) and not (SP['on'] and q in rocc):
                     prev[q] = c
                     dq.append(q)
         if hit is None:
@@ -966,37 +977,84 @@ def _relays(m):
                     return d_ep(fb, a, pa)
                 return near_d(rect(by[a]), rect(by[b]))
             return d_ep(prev_pt, b, pb)
-        while remaining() > PIN_REACH:
-            got = None
-            # the farthest path point (from the previous chain point) with a free spot within reach
-            for idx in range(min(len(path) - 1, idx0 + int(PIN_REACH // G) + 2), idx0, -1):
-                px, py = path[idx]
-                for dx_, dy_ in offs:
-                    qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
-                    pin_a = (qx, qy + fh / 2)
-                    dd = d_ep(pin_a, a, pa) if prev_pt is None else abs(pin_a[0] - prev_pt[0]) + abs(pin_a[1] - prev_pt[1])
-                    if dd <= PIN_REACH and free(qx, qy, fw, fh):
-                        got = (qx, qy, idx)
+        st_ = dict(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0, path=path)
+        offs_wide = [(0, 0)] + [(i * G, j * G) for r_ in range(1, 11) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
+                                if max(abs(i), abs(j)) == r_]
+        mark = (len(nb), len(m['insts']))
+        cells_added = []
+
+        def remaining_():
+            if st_['prev_pt'] is None:
+                fa, fb = fixed_pin(a, pa), fixed_pin(b, pb)
+                if fa is not None:
+                    return d_ep(fa, b, pb)
+                if fb is not None:
+                    return d_ep(fb, a, pa)
+                return near_d(rect(by[a]), rect(by[b]))
+            return d_ep(st_['prev_pt'], b, pb)
+
+        def chain_():
+            path_ = st_['path']
+            while remaining_() > PIN_REACH:
+                got = None
+                prev_pt_, idx0_ = st_['prev_pt'], st_['idx0']
+                # the farthest path point (from the previous chain point) with a free spot within reach
+                for idx in range(min(len(path_) - 1, idx0_ + int(PIN_REACH // G) + 2), idx0_, -1):
+                    px, py = path_[idx]
+                    for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
+                        qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
+                        pin_a = (qx, qy + fh / 2)
+                        dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
+                        if dd <= PIN_REACH and free(qx, qy, fw, fh):
+                            got = (qx, qy, idx)
+                            break
+                    if got:
                         break
-                if got:
-                    break
-            if got is None:
-                raise ValueError(f'kv die relays: no spot for {bid} stage {k} after path index {idx0}')
-            nm = f'rly_{bid}_{k}'
-            it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, 'R0', kind='relay', region='relay')
-            m['insts'].append(it)
-            rly_ends[nm] = (a, b)
-            for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
-                for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
-                    rocc.setdefault((gx, gy), []).append((it.x, it.y, it.x + fw, it.y + fh))
-            nb.append((f'{bid}__r{k}' if k else bid, cl, bits, [prev_ep, (nm, 'a')]))
-            prev_ep, prev_pt, idx0, k = (nm, 'b'), (it.x + it.w, it.y + it.h / 2), got[2], k + 1
-        n = k
+                if got is None:
+                    raise ValueError(f'kv die relays: no spot for {bid} stage {st_["k"]} after path index {idx0_}')
+                nm = f'rly_{bid}_{st_["k"]}'
+                it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, 'R0', kind='relay', region='relay')
+                m['insts'].append(it)
+                rly_ends[nm] = (a, b)
+                for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
+                    for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
+                        r_ = (it.x, it.y, it.x + fw, it.y + fh)
+                        rocc.setdefault((gx, gy), []).append(r_)
+                        cells_added.append(((gx, gy), r_))
+                nb.append((f'{bid}__r{st_["k"]}' if st_['k'] else bid, cl, bits, [st_['prev_ep'], (nm, 'a')]))
+                st_.update(prev_ep=(nm, 'b'), prev_pt=(it.x + it.w, it.y + it.h / 2), idx0=got[2], k=st_['k'] + 1)
+
+        def rollback_():
+            for it_ in m['insts'][mark[1]:]:
+                rly_ends.pop(it_.name, None)
+            del m['insts'][mark[1]:]
+            del nb[mark[0]:]
+            for cell, r_ in cells_added:
+                rocc[cell].remove(r_)
+            cells_added.clear()
+            st_.update(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0)
+        for attempt in (0, 1):
+            try:
+                chain_()
+                break
+            except ValueError:
+                if attempt or not m['geo'].get('split'):
+                    raise
+                # v1.1 (split): the chain ran out of relay spots in a corridor other chains fill: re-route it around
+                # every cell those chains' relays hold and place it again
+                rollback_()
+                st_['wide'] = True        # and look for a relay spot up to 10 grid cells off the path (was 6)
+                SP['on'] = True
+                try:
+                    st_['path'] = route(a, b, pa, pb)
+                finally:
+                    SP['on'] = False
+        n = st_['k']
         stages[bid] = n
         if n == 0:
             nb.append((bid, cl, bits, eps))
             continue
-        nb.append((f'{bid}__r{n}', cl, bits, [prev_ep, (b, pb)]))
+        nb.append((f'{bid}__r{n}', cl, bits, [st_['prev_ep'], (b, pb)]))
     # el1011-q-kvd 2026-10-12 (region-DRT pilot, results/physical/die_region_drt_1012/README.md): a relay is a register
     # stage on the core clock, but its ck was on no bus, so the auto-pin pass never drew it -> qkd_rly_* LEF/odb masters
     # had only a/b, the element lib (pins from the LEF) carried no arcs, and the die STA could not time a single relay hop.
@@ -1203,8 +1261,8 @@ def masters(m, k=1, port_bits=None):
 # face; every head's ti lands on its control-facing face at the SAME x (the control tile is centred in the column, offset
 # EXO), so a far head's bits run straight over its near neighbour on M9 (one head height + gap, <= 504 um, no relay).
 ECTL_T_CX = 233.0
-ECTL_E_X = (470.0, 474.0)          # e0 / e1 (S face) and e2 / e3 (N face): a pair's two e words side by side
-ECTL_S_X = (490.0, 496.0)          # s0 / s1, s2 / s3
+ECTL_E_X = (470.0, 471.6)          # e0 / e1 (S face) and e2 / e3 (N face): a pair's two e words side by side
+ECTL_S_X = (490.0, 493.4)          # s0 / s1, s2 / s3
 ECTL_CK_X = (127.44, 382.32, 578.88)   # leaf A / B / C centres (254.88 | 254.88 | 138.24 x 129.6)
 
 
@@ -1452,6 +1510,33 @@ def pin_reach(m, M, reach=504.0, skip=('clock_trunk', 'reset', 'constant')):
     return dict(hops=n, reach_um=reach, violations=len(bad), worst=bad[:40])
 
 
+def stack_local_reach(m, M, reach=500.0):
+    """v1.1: the abutted / stack-local buses the relay planner never relays (ectl <-> heads tp / te / ts, heads -> astk nb,
+    astk <-> ectl eq / el): driver pin centre -> every load pin centre (spans are bit-aligned, so the centre distance is the
+    bit distance).  v1 had 192 far-head hops 505-963 um here."""
+    by = {i.name: i for i in m['insts']}
+    bad, n, worst = [], 0, 0.0
+    for bid, cl, bits, eps in m['buses']:
+        if cl != 'stack_local' or len(eps) < 2:
+            continue
+        try:
+            a = pin_xy(by[eps[0][0]], M[by[eps[0][0]].master], eps[0][1].lstrip('*'))
+        except (KeyError, TypeError):
+            continue
+        for inst, port in eps[1:]:
+            try:
+                b = pin_xy(by[inst], M[by[inst].master], port.lstrip('*'))
+            except (KeyError, TypeError):
+                continue
+            n += 1
+            d = abs(a[0] - b[0]) + abs(a[1] - b[1])
+            worst = max(worst, d)
+            if d > reach:
+                bad.append(dict(bus=bid, bits=bits, um=round(d, 1), a=f'{eps[0][0]}.{eps[0][1]}', b=f'{inst}.{port}'))
+    bad.sort(key=lambda r: -r['um'])
+    return dict(hops=n, reach_um=reach, violations=len(bad), max_um=round(worst, 1), worst=bad[:20])
+
+
 _BASE_PORT_WIDTHS = F.port_widths
 
 
@@ -1673,6 +1758,7 @@ def main(argv=None):
     rec['masters_abstract'] = {n: dict(w=round(mm.w, 3), h=round(mm.h, 3), ports=len(mm.order)) for n, mm in M.items()}
     rec['strict_ports'] = strict_ports(M)
     rec['pin_reach'] = pin_reach(m, M)   # qwen-1010/b: pin-to-pin register hops (SS reach 504 um)
+    rec['stack_local_reach'] = stack_local_reach(m, M)
     real_rows, real_status = real_pin_bindings(m)
     if a.kv_wq_leaf_s:
         rec['actual_pin_views'] = real_status
