@@ -32,6 +32,8 @@ module dsfd_sp_hc #(
     output wire                c_done_v,
     output wire [7:0]          c_done_tag,
     input  wire                inp,
+    output wire                head_valid, head_accept,
+    output wire [83:0]         head_d,
     input  wire                y_v,
     output wire                y_rdy,
     input  wire [NG*32-1:0]    y_d,
@@ -137,7 +139,8 @@ module dsfd_sp_hc #(
                      .MUT(MUT), .AMUT(AMUT), .HALF(HALF), .RLY(RLY), .RF(CSPLIT ? 5 : 1),
                      .DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN), .PIPE(PIPE), .PIPE_PD(PIPE_PD)) u_cb (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
-        .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
+        .n_done_tag(n_done_tag), .n_inp(n_inp),
+        .n_head_valid(head_valid), .n_head_d(head_d), .n_head_accept(head_accept), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
         .n_flt(n_flt), .n_online(n_online), .n_fcode(n_fcode), .n_yacc(n_yacc), .n_y(n_y), .n_ypop(n_ypop),
         .w_fv(w_fv), .w_fd(w_fd), .w_w(w_w), .w_rv(w_rv), .w_rd(w_rd), .w_ex(w_ex), .w_flt(w_flt),
         .e_fv(e_fv), .e_fd(e_fd), .e_w(e_w), .e_rv(e_rv), .e_rd(e_rd), .e_ex(e_ex), .e_flt(e_flt),
@@ -285,7 +288,15 @@ module dsfd_sp_hc #(
         .c_clk(cck), .c_rst_n(crs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v), .c_done_tag(c_done_tag),
         .fault(a_flt), .online(online),
         .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),
-        .e_done_v(d_v), .e_done_tag(d_t));
+        .e_done_v(d_v), .e_done_tag(d_t),
+        .e_head_valid(flat_hv), .e_head_d(flat_hd), .e_head_accept(flat_ha));
+    wire flat_hv, flat_ha; wire [83:0] flat_hd;
+    reg hvr, har; reg [83:0] hdr;
+    always @(posedge sk or negedge srs) begin
+        if (!srs) begin hvr <= 0; har <= 0; hdr <= 0; end
+        else begin hvr <= flat_hv; har <= flat_ha; hdr <= flat_hd; end
+    end
+    assign head_valid = hvr; assign head_accept = har; assign head_d = hdr;
     wire [31:0] jobs;
     wire        bsy;
     // pin flops: VM responses (fixed latency + 1, the core counts responses), y through a registered-ready skid

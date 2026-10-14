@@ -10,14 +10,14 @@ module ot_s81_htransfer_boundary #(
 )(
  input wire clk,rst_n,
  input wire land_v,input wire [13:0] land_a,input wire [511:0] land_d,
- input wire hc_head_valid,hc_head_slot,input wire [23:0] hc_head_arg,
+ input wire [85:0] hc_head, // dsfd_sp_hc_c t_head: {valid,accepted,descriptor84}
  input wire normal_inputs_present,
  output wire hc_inputs_present,
  input wire [S_RD-1:0] hc_rq_v,input wire [S_RD*14-1:0] hc_rq_row,
  output wire [S_RD-1:0] hc_rs_v,output wire [S_RD*512-1:0] hc_rs_d,
  output wire [S_RD-1:0] vm_rq_v,output wire [S_RD*14-1:0] vm_rq_row,
  input wire [S_RD-1:0] vm_rs_v,input wire [S_RD*512-1:0] vm_rs_d,
- input wire store_accept,store_slot,
+
  input wire [S_WR-1:0] commit_v,input wire [S_WR*14-1:0] commit_a,
  input wire [S_WR*16-1:0] commit_mask,
  output wire hop_go,
@@ -25,6 +25,10 @@ module ot_s81_htransfer_boundary #(
  output wire hop_vm_re,output wire [13:0] hop_vm_ra,
  output wire fault,output wire [3:0] fault_code
 );
+ wire hc_head_valid=hc_head[85], hc_head_slot=hc_head[83];
+ wire [23:0] hc_head_arg=hc_head[30:7];
+ wire store_accept=hc_head[84] && hc_head_arg[23:20]==1;
+ wire store_slot=hc_head_slot;
  wire landing_head=hc_head_valid && hc_head_arg[23:20]==0 &&
    hc_head_arg[13:0]==14'(RXB+(hc_head_slot?XW:0));
  // A landing H_LOAD may start at the HEADER. hland itself withholds responses

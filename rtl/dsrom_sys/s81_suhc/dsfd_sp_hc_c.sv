@@ -23,6 +23,8 @@ module dsfd_sp_hc_c #(
     output reg  [8:0]          c_done,
     output reg  [1:0]          c_st,
     input  wire [0:0]          f_inp,
+    // Pin-registered queue snapshot {valid, accepted, descriptor}; engine clock.
+    output wire [85:0]         t_head,
     input  wire                y_v,
     output wire                y_rdy,
     input  wire [NG*32-1:0]    y_d,
@@ -53,7 +55,7 @@ module dsfd_sp_hc_c #(
                  .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.PIPE(PIPE),.PIPE_PD(PIPE_PD)) u_hc (
         .t_tf0(t_tf0),.t_tf1(t_tf1),.t_tf2(t_tf2),.f_tr0(f_tr0),.f_tr1(f_tr1),.f_tr2(f_tr2),
         .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
-        .inp(f_inp[0]), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),
+        .inp(f_inp[0]), .head_valid(t_head[85]), .head_accept(t_head[84]), .head_d(t_head[83:0]), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),
         .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt), .online(onl), .fcode(fcode));
     always @(posedge ck[0] or negedge rn)
         if (!rn) begin c_done <= 9'd0; c_st <= 2'b00; end

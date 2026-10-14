@@ -37,6 +37,8 @@ module ot_s81_stage_seq #(
     parameter integer NOPS   = 128,                 // program entries
     parameter integer NENG   = 12,                  // engine ports
     parameter integer ARGW   = 24,
+    // Opt-in native HC program flag23 requests a per-job-slot H row base.
+    parameter integer HC_SLOT_REBASE = 0, HC_HWORDS = 640,
     parameter integer USER_W = 10,
     parameter integer NW     = 21,                  // position / token bits
     parameter integer QD     = 4,                   // engine-side command queue (credits) per port
@@ -78,6 +80,8 @@ module ot_s81_stage_seq #(
     localparam integer CB = $clog2(QD + 1);
 `ifndef SYNTHESIS
     initial begin
+        if (HC_SLOT_REBASE && (ARGW != 24 || HC_HWORDS < 1 || HC_HWORDS >= 16384))
+            $fatal(1, "native HC slot program needs arg24 and bounded H stride");
         if (NENG > 16 || NENG < 1) $fatal(1, "ot_s81_stage_seq: NENG in 1..16");
         if ((1 << FB) != FQ || FQ < 2) $fatal(1, "ot_s81_stage_seq: FQ a power of two >= 2");
         if (QD < 1) $fatal(1, "ot_s81_stage_seq: QD >= 1");
@@ -135,6 +139,17 @@ module ot_s81_stage_seq #(
     wire              fin    = iss_v && (ip == len_q) && f_free;      // the cursor's job is fully fetched
     wire              can_fetch = iss_v && (ip < len_q) && f_free && !(MUT == 1 && (prev_open || f_v));
 
+    function automatic [ARGW-1:0] native_arg(input integer engine, input bit slot, input [ARGW-1:0] arg);
+        reg [ARGW-1:0] result;
+        begin
+            result = arg;
+            if (HC_SLOT_REBASE && engine == 2 && arg[ARGW-1]) begin
+                result[ARGW-1] = 0;
+                result[13:0] = arg[13:0] + (slot ? 14'(HC_HWORDS) : 14'd0);
+            end
+            native_arg = result;
+        end
+    endfunction
     integer e, k;
     reg [NENG-1:0]    pop;                        // port FIFO -> command register
     always @(*) begin
@@ -191,12 +206,17 @@ module ot_s81_stage_seq #(
             for (e = 0; e < NENG; e = e + 1) begin
                 cmd_v[e] <= 1'b0;
                 if (pop[e]) begin
+                    if (HC_SLOT_REBASE && e == 2 && fq_d[e][fq_r[e]][ARGW-1] &&
+                        (fq_d[e][fq_r[e]][22:20] > 1 ||
+                         ({1'b0,fq_d[e][fq_r[e]][13:0]} + HC_HWORDS >= 16384))) begin
+                        fault <= 1; if (fault_code == 0) fault_code <= 5;
+                    end
                     cmd_v[e] <= 1'b1;
                     cmd_d[e*CMDW +: CMDW] <= {fq_d[e][fq_r[e]][FEW-1],
                                              js_u[fq_d[e][fq_r[e]][FEW-1]],
                                              js_p[fq_d[e][fq_r[e]][FEW-1]],
                                              js_t[fq_d[e][fq_r[e]][FEW-1]],
-                                             fq_d[e][fq_r[e]][ARGW-1:0],
+                                             native_arg(e, fq_d[e][fq_r[e]][FEW-1], fq_d[e][fq_r[e]][ARGW-1:0]),
                                              fq_d[e][fq_r[e]][ARGW +: OPW]};
                     fq_r[e] <= fq_r[e] + 1'b1;
                 end else if (fq_n[e] != 0) begin

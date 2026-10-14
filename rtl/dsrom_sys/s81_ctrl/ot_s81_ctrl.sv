@@ -36,6 +36,7 @@ module ot_s81_ctrl #(
     parameter integer SIDE_BASE= 8192,
     parameter integer SIDE_USH = 6,
     parameter integer NOPS     = 128,
+    parameter integer HC_SLOT_REBASE = 0,
     parameter integer NENG     = 12,
     parameter integer USE_VM_RVALID = 0, OUT_DEPTH = 4,
     parameter integer QD       = 8,
@@ -197,7 +198,8 @@ module ot_s81_ctrl #(
     // ---- stage program sequencer ----
     wire [NENG-1:0] s_cv; wire [NENG*CMDW-1:0] s_cd; wire [NENG-1:0] s_dv; wire [NENG*TAGW-1:0] s_dt;
     wire s_busy, s_f; wire [3:0] s_fc; wire [31:0] s_cmds, s_cs;
-    ot_s81_stage_seq #(.NOPS(NOPS), .NENG(NENG), .ARGW(ARGW), .USER_W(SUW), .NW(NW), .QD(QD)) u_seq (
+    ot_s81_stage_seq #(.NOPS(NOPS), .NENG(NENG), .ARGW(ARGW), .USER_W(SUW), .NW(NW), .QD(QD),
+        .HC_SLOT_REBASE(HC_SLOT_REBASE), .HC_HWORDS(XW)) u_seq (
         .clk(clk), .rst_n(rst_n), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d), .prog_len(prog_len),
         .job_v(j_v && j_r), .job_rdy(seq_ready), .job_user(j_u[SUW-1:0]), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
         .cmd_v(s_cv), .cmd_d(s_cd), .dn_v(s_dv), .dn_tag(s_dt), .busy(s_busy), .fault(s_f), .fault_code(s_fc),
