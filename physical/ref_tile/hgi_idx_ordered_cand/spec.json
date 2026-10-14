@@ -1,0 +1,100 @@
+{
+ "name": "hgi_idx_ordered_cand",
+ "top": "ot_hbm_idx_ordered_candidate",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_ordered_candidate.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv",
+  "rtl/link/ot_fifo_sram_fwft.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 432,
+  "h": 151.2
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 4
+  }
+ ],
+ "pins": {
+  "S": [
+   "si"
+  ],
+  "W": [
+   "ck",
+   "rst",
+   "fs"
+  ],
+  "N": [
+   "co",
+   "ev",
+   "co_quarter_last"
+  ],
+  "E": [
+   "coc",
+   "selector_ev"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "layer_cap": "M5",
+ "slot_change_request": "Codex 2026-10-13 additive native ordered candidate leaf, provisional432x151.2um outline with4 aligned256x256macros in2x2, nativeSI2440 onS (cut0.548),FS90+CK/RST W,CO72+EV2+quarterlastN, COC1+selector_ev2E. New slot and compensated clock entry required from HBM die lead; no existing leaf slot silently reused.",
+ "job": {
+  "owner": "Codex:el1013-hbm-redesign-idx",
+  "branch": "codex/idx-ordered-1013",
+  "tag": "r0",
+  "purpose": "Structural ascending global block-max candidate collector, native fixed2736-keyquarters;171 beats/quarter retained in256 SRAMlines. Closed native selector/scorers unchanged, original FS tocollector, candidatebit cleared onlyselector FS. Opt-in/unqualified pending native exact throughput and real views.",
+  "extra_paths": [
+   "tools/hgi_unit_tput",
+   "rtl/test/hbm_accel",
+   "results/rtl/idx_ordered_1013"
+  ],
+  "benches": [
+   {
+    "name": "ordered_exact",
+    "cmd": "bash tools/hgi_unit_tput/run_idx_ordered.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ordered_newest_mutant",
+    "cmd": "bash tools/hgi_unit_tput/run_idx_ordered.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_idx_ordered_cand/views",
+  "record_to": "results/rtl/idx_ordered_1013"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

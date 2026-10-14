@@ -63,7 +63,12 @@
     "slot_fit": false,
     "clock_roots": 1,
     "insertion_measured": false,
-    "compensated_clock_delivery_required": true
+    "compensated_clock_delivery_required": true,
+    "provisional_outline_um": [
+      432,
+      151.2
+    ],
+    "new_slot_request": "tools/ref_tile/specs_idx/hgi_idx_ordered_cand.json"
   },
   "adopted": false,
   "source_pins": {
@@ -82,8 +87,9 @@
       "2": 10742,
       "3": 11598
     },
-    "fault_cases": "added after source gate, pending rerun",
-    "production": "not launched yet",
-    "closed_selector_scorer_unchanged": true
+    "fault_cases": "4 observed; immutable small_fault_base.log",
+    "production": "BASE admitted EPYC1 PID755775 unitoth-ubuntu-755775-1791957292; MUT3 queued on EPYC1 localcodex-idx-ordered-e2e-mut3-1013",
+    "closed_selector_scorer_unchanged": true,
+    "bench_sha256": "f7bb2289e900ee92a0fc0dcd24f98053a85b1c099c34e4ab8ae73e90b3672eff"
   }
 }

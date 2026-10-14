@@ -1,0 +1,55 @@
+ORDERED frame1 n10944 beats684 cycles2212 first12
+ORDERED frame2 n0 beats4 cycles504 first13
+ORDERED frame3 n1 beats4 cycles504 first11
+ORDERED frame4 n8 beats4 cycles504 first11
+ORDERED frame5 n9 beats4 cycles504 first11
+ORDERED frame6 n15 beats4 cycles504 first11
+ORDERED frame7 n16 beats4 cycles504 first11
+ORDERED frame8 n17 beats5 cycles504 first11
+ORDERED frame9 n2735 beats174 cycles504 first11
+ORDERED frame10 n2736 beats174 cycles504 first12
+ORDERED frame11 n2737 beats174 cycles504 first11
+ORDERED frame12 n5473 beats344 cycles728 first11
+ORDERED frame13 n8209 beats514 cycles1104 first11
+ORDERED frame14 n10944 beats684 cycles1458 first11
+ORDERED frame15 n1495 beats97 cycles504 first11
+ORDERED frame16 n3072 beats194 cycles504 first11
+ORDERED frame17 n788 beats53 cycles504 first12
+ORDERED frame18 n3666 beats232 cycles504 first11
+ORDERED frame19 n5252 beats331 cycles708 first13
+ORDERED frame20 n4763 beats300 cycles640 first13
+ORDERED frame21 n6921 beats434 cycles932 first12
+ORDERED frame22 n5643 beats354 cycles731 first12
+ORDERED frame23 n4726 beats298 cycles630 first11
+ORDERED frame24 n952 beats63 cycles504 first11
+ORDERED frame25 n8279 beats518 cycles1115 first11
+ORDERED frame26 n3408 beats215 cycles504 first12
+ORDERED frame27 n2644 beats169 cycles504 first11
+ORDERED frame28 n2494 beats159 cycles504 first12
+ORDERED frame29 n1090 beats72 cycles504 first11
+ORDERED frame30 n4728 beats298 cycles641 first11
+ORDERED frame31 n10203 beats638 cycles1361 first11
+ORDERED frame32 n4783 beats301 cycles642 first11
+ORDERED frame33 n6636 beats416 cycles870 first11
+ORDERED frame34 n1141 beats75 cycles504 first11
+ORDERED frame35 n1816 beats117 cycles504 first13
+ORDERED frame36 n7323 beats459 cycles987 first11
+ORDERED frame37 n9624 beats602 cycles1260 first11
+ORDERED frame38 n6569 beats412 cycles895 first12
+ORDERED frame39 n3688 beats233 cycles504 first11
+ORDERED frame40 n352 beats25 cycles504 first12
+ORDERED frame41 n4597 beats290 cycles614 first11
+ORDERED frame42 n5250 beats331 cycles725 first11
+ORDERED frame43 n7913 beats496 cycles1058 first11
+ORDERED frame44 n4608 beats290 cycles618 first11
+ORDERED frame45 n4386 beats277 cycles597 first11
+ORDERED frame46 n1096 beats72 cycles504 first11
+ORDERED fault0 observed
+ORDERED fault1 observed
+ORDERED fault2 observed
+ORDERED fault3 observed
+ORDERED MUT=0 frames=46 words=22459 errors=0 PASS
+- rtl/test/hbm_accel/tb_hbm_idx_ordered_candidate.sv:146: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 331us; walltime 0.034 s; speed 9.604 ms/s
+- Verilator: cpu 0.034 s on 1 threads; allocated 8 MB
