@@ -18,61 +18,133 @@
    "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
    "count": 1,
    "at": [
-    77.75999999999999,
+    77.76,
     23.76
    ],
    "orient": "R0",
-   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp"
+   "inst": "u_kids.g_rb[3].g_hd.u_rp",
+   "legacy_inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_hd.u_rp",
+   "clock_entry": {
+    "port": "clk_rp[3]",
+    "face": "W",
+    "offset_candidate": 53.388,
+    "child_clock_xy": [
+     77.802,
+     53.388
+    ],
+    "parent_wire_horizontal_um": 77.802,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
    "count": 1,
    "at": [
-    77.75999999999999,
+    77.76,
     174.96
    ],
    "orient": "R0",
-   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp"
+   "inst": "u_kids.g_rb[4].g_hd.u_rp",
+   "legacy_inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_hd.u_rp",
+   "clock_entry": {
+    "port": "clk_rp[4]",
+    "face": "W",
+    "offset_candidate": 204.588,
+    "child_clock_xy": [
+     77.802,
+     204.588
+    ],
+    "parent_wire_horizontal_um": 77.802,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
    "count": 1,
    "at": [
-    77.75999999999999,
+    77.76,
     982.824
    ],
    "orient": "MX",
-   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp"
+   "inst": "u_kids.g_rb[0].g_hd.u_rp",
+   "legacy_inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_hd.u_rp",
+   "clock_entry": {
+    "port": "clk_rp[0]",
+    "face": "W",
+    "offset_candidate": 1082.796,
+    "child_clock_xy": [
+     77.802,
+     1082.796
+    ],
+    "parent_wire_horizontal_um": 77.802,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
    "count": 1,
    "at": [
-    77.75999999999999,
+    77.76,
     1134.024
    ],
    "orient": "MX",
-   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp"
+   "inst": "u_kids.g_rb[1].g_hd.u_rp",
+   "legacy_inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_hd.u_rp",
+   "clock_entry": {
+    "port": "clk_rp[1]",
+    "face": "W",
+    "offset_candidate": 1233.996,
+    "child_clock_xy": [
+     77.802,
+     1233.996
+    ],
+    "parent_wire_horizontal_um": 77.802,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair",
    "count": 1,
    "at": [
-    77.75999999999999,
+    77.76,
     1285.224
    ],
    "orient": "MX",
-   "inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp"
+   "inst": "u_kids.g_rb[2].g_hd.u_rp",
+   "legacy_inst": "u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_hd.u_rp",
+   "clock_entry": {
+    "port": "clk_rp[2]",
+    "face": "W",
+    "offset_candidate": 1385.196,
+    "child_clock_xy": [
+     77.802,
+     1385.196
+    ],
+    "parent_wire_horizontal_um": 77.802,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
    "count": 1,
    "at": [
-    77.75999999999999,
+    77.76,
     345.6
    ],
    "orient": "R0",
-   "inst": "u_tile.u_logic.g_ndh.u_node"
+   "inst": "u_kids.u_node",
+   "legacy_inst": "u_tile.u_logic.g_ndh.u_node",
+   "clock_entry": {
+    "port": "clk_node",
+    "face": "W",
+    "offset_candidate": 549.612,
+    "child_clock_xy": [
+     125.238,
+     549.612
+    ],
+    "parent_wire_horizontal_um": 125.238,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
@@ -82,7 +154,19 @@
     328.32
    ],
    "orient": "MY",
-   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh"
+   "inst": "u_kids.g_sl[0].u_lh",
+   "legacy_inst": "u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+   "clock_entry": {
+    "port": "clk_sl[0]",
+    "face": "W",
+    "offset_candidate": 391.308,
+    "child_clock_xy": [
+     159.018,
+     391.308
+    ],
+    "parent_wire_horizontal_um": 159.018,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
@@ -92,7 +176,19 @@
     328.32
    ],
    "orient": "R0",
-   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh"
+   "inst": "u_kids.g_sl[4].u_lh",
+   "legacy_inst": "u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+   "clock_entry": {
+    "port": "clk_sl[4]",
+    "face": "E",
+    "offset_candidate": 391.308,
+    "child_clock_xy": [
+     388.326,
+     391.308
+    ],
+    "parent_wire_horizontal_um": 11.274,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
@@ -102,7 +198,19 @@
     492.48
    ],
    "orient": "MY",
-   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh"
+   "inst": "u_kids.g_sl[1].u_lh",
+   "legacy_inst": "u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+   "clock_entry": {
+    "port": "clk_sl[1]",
+    "face": "W",
+    "offset_candidate": 555.468,
+    "child_clock_xy": [
+     159.018,
+     555.468
+    ],
+    "parent_wire_horizontal_um": 159.018,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
@@ -112,7 +220,19 @@
     492.48
    ],
    "orient": "R0",
-   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh"
+   "inst": "u_kids.g_sl[5].u_lh",
+   "legacy_inst": "u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+   "clock_entry": {
+    "port": "clk_sl[5]",
+    "face": "E",
+    "offset_candidate": 555.468,
+    "child_clock_xy": [
+     388.326,
+     555.468
+    ],
+    "parent_wire_horizontal_um": 11.274,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
@@ -122,7 +242,19 @@
     656.64
    ],
    "orient": "MY",
-   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh"
+   "inst": "u_kids.g_sl[2].u_lh",
+   "legacy_inst": "u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+   "clock_entry": {
+    "port": "clk_sl[2]",
+    "face": "W",
+    "offset_candidate": 719.628,
+    "child_clock_xy": [
+     159.018,
+     719.628
+    ],
+    "parent_wire_horizontal_um": 159.018,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
@@ -132,7 +264,19 @@
     656.64
    ],
    "orient": "R0",
-   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh"
+   "inst": "u_kids.g_sl[6].u_lh",
+   "legacy_inst": "u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+   "clock_entry": {
+    "port": "clk_sl[6]",
+    "face": "E",
+    "offset_candidate": 719.628,
+    "child_clock_xy": [
+     388.326,
+     719.628
+    ],
+    "parent_wire_horizontal_um": 11.274,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
@@ -142,7 +286,19 @@
     820.8
    ],
    "orient": "MY",
-   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh"
+   "inst": "u_kids.g_sl[3].u_lh",
+   "legacy_inst": "u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+   "clock_entry": {
+    "port": "clk_sl[3]",
+    "face": "W",
+    "offset_candidate": 883.788,
+    "child_clock_xy": [
+     159.018,
+     883.788
+    ],
+    "parent_wire_horizontal_um": 159.018,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
@@ -152,7 +308,19 @@
     820.8
    ],
    "orient": "R0",
-   "inst": "u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh"
+   "inst": "u_kids.g_sl[7].u_lh",
+   "legacy_inst": "u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+   "clock_entry": {
+    "port": "clk_sl[7]",
+    "face": "E",
+    "offset_candidate": 883.788,
+    "child_clock_xy": [
+     388.326,
+     883.788
+    ],
+    "parent_wire_horizontal_um": 11.274,
+    "final_clock_pin_assignment": "die lead must legalize and publish"
+   }
   },
   {
    "view": "physical/ref_tile/ot_qwen_tile_ctl_strip/views/ot_qwen_tile_ctl",
@@ -166,7 +334,14 @@
    "outline": [
     47.52,
     1404.0
-   ]
+   ],
+   "legacy_inst": "u_ctl",
+   "clock_entry": {
+    "port": "clk_ctl",
+    "face": "W",
+    "offset_candidate": 721.44,
+    "unmeasured": true
+   }
   }
  ],
  "rtl_top": "ot_qwen_rom_tile_nkt_mc",
