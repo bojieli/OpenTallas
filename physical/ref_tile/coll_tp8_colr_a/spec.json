@@ -93,10 +93,70 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "count": 1,
-   "inst": "*u_tq.g_m.g_k?0?.*u_m",
+   "inst": "*u_lq.g_m.g_k?2?.*u_m",
    "at": [
     31.968,
     177.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_lq.g_m.g_k?3?.*u_m",
+   "at": [
+    31.968,
+    218.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_rq.g_m.g_k?0?.*u_m",
+   "at": [
+    103.68,
+    95.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_m.g_k?0?.*u_m",
+   "at": [
+    103.68,
+    136.08
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_pq.g_m.g_k?1?.*u_m",
+   "at": [
+    103.68,
+    177.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_m.g_k?1?.*u_m",
+   "at": [
+    103.68,
+    218.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 1,
+   "inst": "*u_tq.g_m.g_k?2?.*u_m",
+   "at": [
+    103.68,
+    54.0
    ],
    "orient": "R0"
   },
@@ -133,20 +193,10 @@
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
    "count": 1,
-   "inst": "*u_pq.g_m.g_k?1?.*u_m",
+   "inst": "*u_tq.g_m.g_k?3?.*u_m",
    "at": [
-    103.68,
-    177.12
-   ],
-   "orient": "R0"
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
-   "count": 1,
-   "inst": "*u_rq.g_m.g_k?0?.*u_m",
-   "at": [
-    103.68,
-    95.04
+    175.392,
+    218.16
    ],
    "orient": "R0"
   }
@@ -162,7 +212,7 @@
  "inter": [],
  "orfs_vars": {
   "OT_MEG_MASTER": "ot_sram_1r1w_32x128_m1",
-  "OT_MEG_EXPECT": 9,
+  "OT_MEG_EXPECT": 14,
   "OT_MEG_BAND": "2.16",
   "OT_MEG_EDGES": "EW"
  },
@@ -303,8 +353,8 @@
   "owner": "Claude:qwen-coll-io-1014",
   "branch": "claude/qwen-coll-io-1014",
   "tag": "r1",
-  "structural_change": "NEW master (WT 2) after 29 failed qfd_io_collective routes: the WT 1 column leaf took every word in on W and out on E, so the pairing (heads -> lo/hi -> hl/hh/gh), EQ (heads/gh/fold-slice sum -> eq_wd), result (engine e_od -> lq_wd/tq_wd) and merger (heads -> m_d -> od) loops left the leaf and returned across 500-900 um into un-registered SRAM write pins. ot_coll_tp8_col_tile_r computes every pairing/gather/merger word INSIDE the leaf from its own heads (static die/meta straps), registers every externally fed write word (fold-slice sum, engine results) at its pin and writes it one edge later, and lands c_hold (512 loads from the port) in a pin flop with a pre-hold copy. Pins face their consumers: E link words, W engine, N pre-fold slices, S control + head meta. +1 edge on the reduce path and +1 on the result path (production AR256 496 vs 494 at LAT 40).",
-  "purpose": "Qwen TP8 compute-die collective (qfd_io_collective) wrapper column leaf, registered-return redesign (qwen-coll-io 10-14, el1014-qwen-coll-io.log). Same 9 x 32x128 macro plan as the closed wt3a leaf; 259.2 x 291.6, cap M5, recipe 1 + macro-edge M5 guard (the wt3a closure recipe). Composition benches: 8-rank TP8 golden ((P0+P1)+P2)+P3 with Pp = die0+die1, exact unit 9 cases + production 3 cases; mutants OT_TP8_MUT_OWNER / OT_TP8_MUT_GATHER / OT_TP8R_MUT_SEAM (the EQ write takes the live, un-aligned word) all fail.",
+  "structural_change": "NEW master (WT 2) after 29 failed qfd_io_collective routes: the WT 1 column leaf took every word in on W and out on E, so the pairing (heads -> lo/hi -> hl/hh/gh), EQ (heads/gh/fold-slice sum -> eq_wd), result (engine e_od -> lq_wd/tq_wd) and merger (heads -> m_d -> od) loops left the leaf and returned across 500-900 um into un-registered SRAM write pins. ot_coll_tp8_col_tile_r computes every pairing/gather/merger word INSIDE the leaf from its own heads (static die/meta straps), registers every externally fed write word (fold-slice sum, engine results) at its pin and writes it one edge later, and lands c_hold (512 loads from the port) in a pin flop with a pre-hold copy. Pins face their consumers: E link words, W engine, N pre-fold slices, S control + head meta. +1 edge on the reduce path and +1 on the result path (production AR256 496 vs 494 at LAT 40). Result queues sized to the board crossing: LQ 128 / TQ 128 (14 macros; the closed WT 1 leaf had 9) so that with the DEPTH 64 engine (ot_coll_col_tile_d64) the TP8 AR256 is ~953 cycles at LAT 339 instead of 1,683.",
+  "purpose": "Qwen TP8 compute-die collective (qfd_io_collective) wrapper column leaf, registered-return redesign (qwen-coll-io 10-14, el1014-qwen-coll-io.log). 14 x 32x128 macros (wt3a plan + LQ/TQ to 128 words); 259.2 x 291.6, cap M5, recipe 1 + macro-edge M5 guard (the wt3a closure recipe). Composition benches: 8-rank TP8 golden ((P0+P1)+P2)+P3 with Pp = die0+die1, exact unit 9 cases + production 3 cases; mutants OT_TP8_MUT_OWNER / OT_TP8_MUT_GATHER / OT_TP8R_MUT_SEAM (the EQ write takes the live, un-aligned word) all fail.",
   "benches": [
    {
     "name": "tp8r_exact",

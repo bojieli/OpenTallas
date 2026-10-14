@@ -37,9 +37,27 @@ puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 31.968 95.04 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_lq.g_m.g_k?1?.*u_m}]
 $i setOrient R0; $i setLocation [expr {round(31.968 * $dbu)}] [expr {round(136.08 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 31.968 136.08 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_tq.g_m.g_k?0?.*u_m}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_lq.g_m.g_k?2?.*u_m}]
 $i setOrient R0; $i setLocation [expr {round(31.968 * $dbu)}] [expr {round(177.12 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 31.968 177.12 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_lq.g_m.g_k?3?.*u_m}]
+$i setOrient R0; $i setLocation [expr {round(31.968 * $dbu)}] [expr {round(218.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 31.968 218.16 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_rq.g_m.g_k?0?.*u_m}]
+$i setOrient R0; $i setLocation [expr {round(103.68 * $dbu)}] [expr {round(95.04 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 103.68 95.04 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_tq.g_m.g_k?0?.*u_m}]
+$i setOrient R0; $i setLocation [expr {round(103.68 * $dbu)}] [expr {round(136.08 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 103.68 136.08 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_pq.g_m.g_k?1?.*u_m}]
+$i setOrient R0; $i setLocation [expr {round(103.68 * $dbu)}] [expr {round(177.12 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 103.68 177.12 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_tq.g_m.g_k?1?.*u_m}]
+$i setOrient R0; $i setLocation [expr {round(103.68 * $dbu)}] [expr {round(218.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 103.68 218.16 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_tq.g_m.g_k?2?.*u_m}]
+$i setOrient R0; $i setLocation [expr {round(103.68 * $dbu)}] [expr {round(54.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 103.68 54.0 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_lb.g_m.g_k?0?.*u_m}]
 $i setOrient R0; $i setLocation [expr {round(175.392 * $dbu)}] [expr {round(95.04 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 175.392 95.04 R0"
@@ -49,11 +67,8 @@ puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 175.392 136.08 R0"
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_pq.g_m.g_k?0?.*u_m}]
 $i setOrient R0; $i setLocation [expr {round(175.392 * $dbu)}] [expr {round(177.12 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 175.392 177.12 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_pq.g_m.g_k?1?.*u_m}]
-$i setOrient R0; $i setLocation [expr {round(103.68 * $dbu)}] [expr {round(177.12 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 103.68 177.12 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_rq.g_m.g_k?0?.*u_m}]
-$i setOrient R0; $i setLocation [expr {round(103.68 * $dbu)}] [expr {round(95.04 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 103.68 95.04 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_32x128_m1 {*u_tq.g_m.g_k?3?.*u_m}]
+$i setOrient R0; $i setLocation [expr {round(175.392 * $dbu)}] [expr {round(218.16 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_32x128_m1 at 175.392 218.16 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 9} { error "ref_tile place: expected 9 macros, netlist has $nb" }
+if {$nb != 14} { error "ref_tile place: expected 14 macros, netlist has $nb" }

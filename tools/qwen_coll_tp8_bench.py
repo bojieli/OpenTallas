@@ -36,7 +36,7 @@ def rand_f32(rng, n):
     return b.astype(np.uint32)
 SRC = [ROOT / p for p in (
     "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-    "rtl/rom/ot_rom_oneshot_die_m.sv", "rtl/rom/ot_coll_fold_slice.sv", "rtl/rom/ot_coll_rst_leaf.sv", "rtl/rom/ot_coll_col_tile.sv", "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v", "rtl/lib/ot_hdly.sv",
+    "rtl/rom/ot_rom_oneshot_die_m.sv", "rtl/rom/ot_coll_fold_slice.sv", "rtl/rom/ot_coll_rst_leaf.sv", "rtl/rom/ot_coll_col_tile.sv", "rtl/rom/ot_coll_col_tile_d64.sv", "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v", "rtl/lib/ot_hdly.sv",
     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
     "rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/rom/ot_coll_tp8_die.sv", "rtl/rom/ot_coll_tp8_col_tile.sv",
     "rtl/rom/ot_coll_tp8_col_tile_r.sv", "rtl/rom/ot_coll_link_end.sv", "rtl/test/tb_coll_tp8.sv")]
@@ -124,6 +124,8 @@ def main():
     ap.add_argument("--only", default=None, help="regex on case names")
     a = ap.parse_args()
     a.out = a.out.resolve()
+    if a.wrapper_columns == 2 and not a.eng:
+        a.eng = "EDEPTH=64,QLQD=128,QTQD=128"   # the WT 2 production shape (DEPTH 64 engine leaves, 128-word result queues)
     cases = PRODUCTION_CASES if a.production else UNIT_CASES
     if a.only:
         cases = [c for c in cases if re.search(a.only, c[0])]

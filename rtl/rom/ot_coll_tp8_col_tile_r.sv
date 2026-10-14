@@ -23,6 +23,9 @@
 //          the result path); every queue is reservation-managed by the parent, so no credit changes.
 //   c_hold (was 512 loads straight from the port) lands in one pin flop: the leaf copies lo/hi into a free-running
 //   pre-hold register every edge and commits it one edge later, with a bypass for the issue that follows at once.
+// Result reservations sized to the board crossing (qwen-coll-io 10-14 sweep): LQ 128 and TQ 128 words (4 macros
+// each; the WT 1 leaf had 64 / 32): the engine reserves one LQ/TQ word per reduce word at intake, so these depths bound
+// the words in flight across the board.  With the DEPTH 64 engine (ot_coll_col_tile_d64): AR256 953 at LAT 339.
 // Pins (kit): face P (to the pre-fold slices) s_lo, s_hi out / sum_d in; face E (to the engine) eq_hd out,
 // lq_wd / tq_wd in; the link / local words on the remaining faces, as the cluster floorplan assigns.
 // Straps (static, tied by the parent): die_s = DIE, meta_s = 1 on the meta column.
@@ -100,7 +103,7 @@ module ot_coll_tp8_col_tile_r (
     ot_coll_tp8_col_q #(.W(128),.D(64),.MEM(1)) u_lb(.clk(clk),.rst_n(rst_n),.push(c_push[0]),.pop(c_pop[0]),.wd(rl),.hd(lb_hd),.hv(hv[0]),.ovf(ovf[0]));
     ot_coll_tp8_col_q #(.W(128),.D(64),.MEM(1)) u_pq(.clk(clk),.rst_n(rst_n),.push(c_push[1]),.pop(c_pop[1]),.wd(dp),.hd(pq_hd),.hv(hv[1]),.ovf(ovf[1]));
     ot_coll_tp8_col_q #(.W(128),.D(32),.MEM(1)) u_eq(.clk(clk),.rst_n(rst_n),.push(push_q[0]),.pop(c_pop[2]),.wd(eq_w),.hd(eq_hd),.hv(hv[2]),.ovf(ovf[2]));
-    ot_coll_tp8_col_q #(.W(128),.D(64),.MEM(1)) u_lq(.clk(clk),.rst_n(rst_n),.push(push_q[1]),.pop(c_pop[3]),.wd(lqw_q),.hd(lq_hd),.hv(hv[3]),.ovf(ovf[3]));
-    ot_coll_tp8_col_q #(.W(128),.D(32),.MEM(1)) u_tq(.clk(clk),.rst_n(rst_n),.push(push_q[2]),.pop(c_pop[4]),.wd(tqw_q),.hd(tq_hd),.hv(hv[4]),.ovf(ovf[4]));
+    ot_coll_tp8_col_q #(.W(128),.D(128),.MEM(1)) u_lq(.clk(clk),.rst_n(rst_n),.push(push_q[1]),.pop(c_pop[3]),.wd(lqw_q),.hd(lq_hd),.hv(hv[3]),.ovf(ovf[3]));
+    ot_coll_tp8_col_q #(.W(128),.D(128),.MEM(1)) u_tq(.clk(clk),.rst_n(rst_n),.push(push_q[2]),.pop(c_pop[4]),.wd(tqw_q),.hd(tq_hd),.hv(hv[4]),.ovf(ovf[4]));
     ot_coll_tp8_col_q #(.W(128),.D(32),.MEM(1)) u_rq(.clk(clk),.rst_n(rst_n),.push(c_push[5]),.pop(c_pop[5]),.wd(dr),.hd(rq_hd),.hv(hv[5]),.ovf(ovf[5]));
 endmodule

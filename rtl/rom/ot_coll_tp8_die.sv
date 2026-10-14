@@ -436,8 +436,8 @@ module ot_coll_tp8_die #(
     // from their own queue heads (die strap), register every write word that comes from outside (fold-slice sum, meta,
     // engine results) at their pins and write it one edge later; the parent sends only 1-bit decisions.
     generate if (WT == 2) begin : g_wrapper_cols_r
-        initial if (FW != 512 || TAGW != 32 || LBD != 64 || PQD != 64 || EQD != 32 || LQD != 64 || TQD != 32 || RQD != 32 || QMEM != 1)
-            $error("WT requires the production 512b, 64/64/32/64/32/32 queue shape");
+        initial if (FW != 512 || TAGW != 32 || LBD != 64 || PQD != 64 || EQD != 32 || LQD != 128 || TQD != 128 || RQD != 32 || QMEM != 1)
+            $error("WT 2 requires the production 512b, LB/PQ/EQ/LQ/TQ/RQ 64/64/32/128/128/32 queue shape");
         wire [639:0] ind = {{(640-PW){1'b0}}, in_tag, in_mode, in_last, in_data};
         wire [639:0] dpd = {{(640-PW){1'b0}}, dp_rec};
         wire [639:0] drd = {{(640-RW){1'b0}}, dr_rec};
