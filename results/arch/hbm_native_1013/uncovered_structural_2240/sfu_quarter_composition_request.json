@@ -1,0 +1,1114 @@
+{
+  "schema": "opentallas.hbm_sfu_quarter_composition_request.v1",
+  "current_contract": "r25gq v12",
+  "quarter_master": "hfd_sfu",
+  "outline_um": [
+    2016.144,
+    1095.12
+  ],
+  "selected": false,
+  "physical_closed": false,
+  "replicas": 4,
+  "children": [
+    {
+      "name": "lane0",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 25.92,
+        "y": 86.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 0,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 51.84,
+          "y": 15.12,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane1",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 276.48,
+        "y": 86.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 1,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 302.40000000000003,
+          "y": 15.12,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane2",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 527.04,
+        "y": 86.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 2,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 552.9599999999999,
+          "y": 15.12,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane3",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 777.6,
+        "y": 86.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 3,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 803.52,
+          "y": 15.12,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane4",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 1028.16,
+        "y": 86.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 4,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 1054.0800000000002,
+          "y": 15.12,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane5",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 1278.72,
+        "y": 86.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 5,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 1304.64,
+          "y": 15.12,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane6",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 1529.28,
+        "y": 86.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 6,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 1555.2,
+          "y": 15.12,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane7",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 1779.84,
+        "y": 86.4,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 7,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 1805.76,
+          "y": 15.12,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane8",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 25.92,
+        "y": 509.76,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 8,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 51.84,
+          "y": 438.48,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane9",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 276.48,
+        "y": 509.76,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 9,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 302.40000000000003,
+          "y": 438.48,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane10",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 527.04,
+        "y": 509.76,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 10,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 552.9599999999999,
+          "y": 438.48,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane11",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 777.6,
+        "y": 509.76,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 11,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 803.52,
+          "y": 438.48,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane12",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 1028.16,
+        "y": 509.76,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 12,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 1054.0800000000002,
+          "y": 438.48,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane13",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 1278.72,
+        "y": 509.76,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 13,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 1304.64,
+          "y": 438.48,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane14",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 1529.28,
+        "y": 509.76,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 14,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 1555.2,
+          "y": 438.48,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    },
+    {
+      "name": "lane15",
+      "master": "ot_su12_sfu",
+      "origin": {
+        "x": 1779.84,
+        "y": 509.76,
+        "orient": "R0"
+      },
+      "outline": {
+        "w": 216.0,
+        "h": 330.48
+      },
+      "status": "CLOSED_STANDS",
+      "constant_lane_index": 5,
+      "required_native_index": 15,
+      "new_mapper": {
+        "master": "ot_hgi_sfu_lane_map",
+        "origin_proposal": {
+          "x": 1805.76,
+          "y": 438.48,
+          "orient": "R0"
+        },
+        "outline_um": [
+          103.68,
+          49.68
+        ],
+        "clock_entry": "independent phi-R",
+        "added_edges": 4,
+        "slot_approved": false
+      }
+    }
+  ],
+  "mapper_source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv",
+  "controller_required_params": {
+    "N": 16,
+    "M": 16,
+    "MLAT": 6,
+    "ALAT": 6,
+    "DDIV": 21,
+    "OPR": 1,
+    "CAPR": 1,
+    "GSH": 1,
+    "KIMM": 1,
+    "DENR": 1,
+    "SFUT": 0,
+    "DRING": 3
+  },
+  "closed_latency": {
+    "exp": 94,
+    "sigmoid_silu": 122
+  },
+  "metadata_SFUT2_conflict": "adds four cycles relative to the frozen master",
+  "mapper_pass_fields_MSB_first": [
+    [
+      "ld",
+      1
+    ],
+    [
+      "ld_bank",
+      1
+    ],
+    [
+      "bank",
+      1
+    ],
+    [
+      "no",
+      24
+    ],
+    [
+      "ni",
+      24
+    ],
+    [
+      "vb",
+      120
+    ],
+    [
+      "obase",
+      24
+    ],
+    [
+      "aibase",
+      24
+    ],
+    [
+      "aind",
+      2
+    ],
+    [
+      "gsh",
+      5
+    ],
+    [
+      "cpair",
+      1
+    ],
+    [
+      "dst",
+      2
+    ],
+    [
+      "srcs",
+      8
+    ],
+    [
+      "cx_arnd",
+      1
+    ],
+    [
+      "cx_arelu",
+      1
+    ],
+    [
+      "cx_amin",
+      1
+    ],
+    [
+      "cx_cclip",
+      1
+    ],
+    [
+      "cx_imm3",
+      32
+    ],
+    [
+      "cp_m1",
+      3
+    ],
+    [
+      "cp_imm1",
+      32
+    ],
+    [
+      "cm_m1",
+      3
+    ],
+    [
+      "cm_m2",
+      2
+    ],
+    [
+      "cm_qm",
+      3
+    ],
+    [
+      "cm_imm1",
+      32
+    ],
+    [
+      "ca_ad",
+      3
+    ],
+    [
+      "ca_imm2",
+      32
+    ],
+    [
+      "ci_sfu",
+      3
+    ],
+    [
+      "cs_sfu",
+      3
+    ],
+    [
+      "cs_e1",
+      3
+    ],
+    [
+      "cs_imm2",
+      32
+    ],
+    [
+      "ce_e2",
+      2
+    ],
+    [
+      "ce_imm1",
+      32
+    ],
+    [
+      "co_rnd",
+      1
+    ],
+    [
+      "co_dst",
+      2
+    ]
+  ],
+  "phase_required": "Four mapper edges must be reflected in actual controller emission, offset load lead, bank lifetime, retirement and operand/result alignment.",
+  "clock_required": "Deliver phi-R at each pin. Mapper R267.6 and closed lane boundary mean331.5 use cross-level SKEW150. Actual per-pair hold/reach L-H>=100um remains required.",
+  "local_VM": {
+    "lanes": 8,
+    "read_request_bits": 128,
+    "read_response_bits": 2056,
+    "write_request_bits": 2240,
+    "write_credit_done_bits": 16,
+    "credit_depth_max": 10,
+    "notes": "Keep actual station grant sidebands; SPEC defaultS3."
+  },
+  "stage_candidate": {
+    "response_FIFO": "Four CLOSED qdq_lq pairs, subject to literal port/reset/tag binding.",
+    "block_transform": "Eight physical-bank sectors ->64words ->eight256bit lane-pair lines, using real tagged readiness.",
+    "memory": "24-macro dense-contiguous candidate. Legal generic/strided descriptors still need proved mapping; never silently dropped.",
+    "source_open": true
+  },
+  "cache_geometry_candidate": [
+    {
+      "column": 0,
+      "outline_um": [
+        216,
+        209.52
+      ],
+      "origin_um": [
+        25.92,
+        861.84
+      ],
+      "macros": [
+        {
+          "name": "A",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            21.6
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "B",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            84.24000000000001
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "C",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            146.88
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        }
+      ],
+      "qualified": false
+    },
+    {
+      "column": 1,
+      "outline_um": [
+        216,
+        209.52
+      ],
+      "origin_um": [
+        276.48,
+        861.84
+      ],
+      "macros": [
+        {
+          "name": "A",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            21.6
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "B",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            84.24000000000001
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "C",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            146.88
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        }
+      ],
+      "qualified": false
+    },
+    {
+      "column": 2,
+      "outline_um": [
+        216,
+        209.52
+      ],
+      "origin_um": [
+        527.04,
+        861.84
+      ],
+      "macros": [
+        {
+          "name": "A",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            21.6
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "B",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            84.24000000000001
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "C",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            146.88
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        }
+      ],
+      "qualified": false
+    },
+    {
+      "column": 3,
+      "outline_um": [
+        216,
+        209.52
+      ],
+      "origin_um": [
+        777.6,
+        861.84
+      ],
+      "macros": [
+        {
+          "name": "A",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            21.6
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "B",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            84.24000000000001
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "C",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            146.88
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        }
+      ],
+      "qualified": false
+    },
+    {
+      "column": 4,
+      "outline_um": [
+        216,
+        209.52
+      ],
+      "origin_um": [
+        1028.16,
+        861.84
+      ],
+      "macros": [
+        {
+          "name": "A",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            21.6
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "B",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            84.24000000000001
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "C",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            146.88
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        }
+      ],
+      "qualified": false
+    },
+    {
+      "column": 5,
+      "outline_um": [
+        216,
+        209.52
+      ],
+      "origin_um": [
+        1278.72,
+        861.84
+      ],
+      "macros": [
+        {
+          "name": "A",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            21.6
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "B",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            84.24000000000001
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "C",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            146.88
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        }
+      ],
+      "qualified": false
+    },
+    {
+      "column": 6,
+      "outline_um": [
+        216,
+        209.52
+      ],
+      "origin_um": [
+        1529.2800000000002,
+        861.84
+      ],
+      "macros": [
+        {
+          "name": "A",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            21.6
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "B",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            84.24000000000001
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "C",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            146.88
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        }
+      ],
+      "qualified": false
+    },
+    {
+      "column": 7,
+      "outline_um": [
+        216,
+        209.52
+      ],
+      "origin_um": [
+        1779.8400000000001,
+        861.84
+      ],
+      "macros": [
+        {
+          "name": "A",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            21.6
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "B",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            84.24000000000001
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        },
+        {
+          "name": "C",
+          "cell": "ot_sram_1r1w_256x256_m2_r2c2",
+          "local_origin_um": [
+            21.6,
+            146.88
+          ],
+          "outline_um": [
+            172.8,
+            41.04
+          ]
+        }
+      ],
+      "qualified": false
+    }
+  ],
+  "missing_state": [
+    "record adapter/ownership head",
+    "c12 controller separated from arithmetic RTL",
+    "local8 collector/scatter",
+    "operand cache legal-descriptor mapping",
+    "actual stage/drain and bank ACK state",
+    "eight-lane O-only watermark and final retire guard"
+  ],
+  "watermark_required": {
+    "width": 20,
+    "tag": 4,
+    "prefix": 15,
+    "lanes": 8,
+    "tree_levels": 3,
+    "done_source": "Actual bank write_done for oldest outstanding O destination only.",
+    "tag_lifetime": "No recycle before final prefix and native consumer release.",
+    "mutant": "Issue-before-bank-done must detect stale consumer data."
+  },
+  "layer_conflict": "Slot grants childM6 but flags the closed M7 signal view invalid. Reconcile real parent access/obstructions, preserving the closed result; no invented grant.",
+  "release_gates": [
+    "actual16-lane arithmetic+mapper golden",
+    "full local8 backend and native SM consumer",
+    "registered phase and per-pair hold/reach",
+    "assigned pins and PG exclusion",
+    "bitcut<=0.60",
+    "unchanged production price; measured end-to-end acceptance ledger if applicable"
+  ]
+}
