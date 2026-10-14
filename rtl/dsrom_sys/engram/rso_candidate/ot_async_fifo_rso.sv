@@ -41,7 +41,11 @@ module ot_async_fifo_rso #(
         .clk(rd_clk), .async_rst_n(fifo_async_rst_n),
         .sync_rst_n(rd_domain_rst_n));
 
+`ifdef OT_ENGC_RSO_MUT_MISSING_FIFO_RD
+    assign rso = wr_domain_rst_n;
+`else
     assign rso = wr_domain_rst_n && rd_domain_rst_n;
+`endif
     reg [WIDTH-1:0] mem [0:DEPTH-1];
     reg [PTR_W-1:0] wr_bin, wr_gray;
     reg [PTR_W-1:0] rd_bin, rd_gray;

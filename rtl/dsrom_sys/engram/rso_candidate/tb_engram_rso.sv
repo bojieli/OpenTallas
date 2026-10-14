@@ -28,13 +28,20 @@ module tb_engram_rso;
         release dut.u_pb2.u_b.rs_q;
         step(24);
         if (rso !== 1) $fatal(1,"ACK FAIL: did not recover after final release restored");
+        force dut.u_io.u_ep.u_ad.u_cmd.u_fifo.rd_domain_rst_n = 1'b0;
+        step(4);
+        if (!dut.u_io.rn || !c_st[1]) $fatal(1,"ACK FAIL: fault did not isolate nested FIFO release");
+        if (rso !== 0) $fatal(1,"ACK FAIL: high with IO FIFO final release held low");
+        release dut.u_io.u_ep.u_ad.u_cmd.u_fifo.rd_domain_rst_n;
+        step(24);
+        if (rso !== 1) $fatal(1,"ACK FAIL: did not recover after FIFO release restored");
         rst_n=0; #1;
         if (rso !== 0) $fatal(1,"ACK FAIL: repeated reset assertion did not revoke ACK");
         ticking=0; #10; rst_n=1; #100;
         if (rso !== 0) $fatal(1,"ACK FAIL: repeated release without clocks");
         ticking=1; step(24);
         if (rso !== 1) $fatal(1,"ACK FAIL: repeated epoch not acknowledged");
-        $display("ENGRAM_RSO_ACK PASS: stopped clock, held final child, asynchronous assertion, repeated epoch");
+        $display("ENGRAM_RSO_ACK PASS: stopped clock, held final child, held nested FIFO, asynchronous assertion, repeated epoch");
         $finish;
     end
     initial begin #10000; $fatal(1,"ACK FAIL: timeout"); end
