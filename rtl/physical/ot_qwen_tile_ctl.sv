@@ -19,7 +19,7 @@ module ot_qwen_tile_ctl (
     output wire [95:0] cx_xaddr,
     output wire [20:0] cx_xepoch,
     output wire [69:0]   cx_rreq,
-    input  wire [1023:0] cx_rqr,
+    input  wire [2047:0] cx_rqr,
     output wire [3127:0] cx_ld,
     input  wire [71:0] cx_lerr,
     output wire          cx_tvd,

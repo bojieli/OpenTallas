@@ -30,7 +30,7 @@ module ot_qwen_tile_kids #(
     // control-leaf seams
     input  wire [CODE_BANKS*14-1:0]   cx_rreq,
     output wire [CODE_BANKS*1024-1:0] cx_rq,
-    output wire [1023:0] cx_rqr,
+    output wire [2047:0] cx_rqr,
     input  wire [8*391-1:0]  cx_ld,
     output wire [8*73-1:0]   cx_lq,
     input  wire [511:0]      cx_td,
@@ -100,9 +100,9 @@ module ot_qwen_tile_kids #(
         wire [1023:0] rs, rn;
         ot_qwen_tile_rqr #(.NR(SB)) u_s (.clk((MCLK != 0) ? clk_rqr[0] : clk), .d(cx_rq[1024*SB-1:0]), .q(rs));
         ot_qwen_tile_rqr #(.NR(CODE_BANKS-SB)) u_n (.clk((MCLK != 0) ? clk_rqr[1] : clk), .d(cx_rq[1024*CODE_BANKS-1:1024*SB]), .q(rn));
-        assign cx_rqr = rs | rn;
+        assign cx_rqr = {rn, rs};
     end else begin : g_return_unused
-        assign cx_rqr = 1024'd0;
+        assign cx_rqr = 2048'd0;
     end endgenerate
     wire node_fault;
     assign cx_nfault = (CMUT == 4) ? ~node_fault : node_fault;

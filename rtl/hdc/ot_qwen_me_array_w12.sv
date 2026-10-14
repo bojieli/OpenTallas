@@ -228,7 +228,7 @@ module ot_qwen_me_array_w12 #(
             wire            nvy_l, nvy_k, tvo_l, tvo_k;
             wire [((CTH != 0) ? CODE_BANKS * 14 : 1)-1:0]     cx_rreq;
             wire [((CTH != 0) ? CODE_BANKS * 64 * W : 1)-1:0] cx_rq;
-            wire [1023:0] cx_rqr;
+            wire [2047:0] cx_rqr;
             wire [((CTH != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (7 + TG * HIER * 32 + TG * 32) : 1)-1:0] cx_ld;
             wire [((CTH != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (HIER * 32 + TG * HIER + 1) : 1)-1:0]   cx_lq;
             wire [W*32-1:0] cx_td;
@@ -257,7 +257,7 @@ module ot_qwen_me_array_w12 #(
             end else begin : g_nokids
                 assign ny = ny_l; assign nvy = nvy_l;
                 assign lw[LT][t*W*32 +: W*32] = to_l; assign lvv[LT][t] = tvo_l;
-                assign cx_rq = 1'b0; assign cx_rqr = 1024'd0; assign cx_lq = 1'b0; assign cx_nfault = 1'b0;
+                assign cx_rq = 1'b0; assign cx_rqr = 2048'd0; assign cx_lq = 1'b0; assign cx_nfault = 1'b0;
             end
         end
     endgenerate

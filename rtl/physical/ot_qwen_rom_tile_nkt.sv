@@ -25,7 +25,7 @@ module ot_qwen_rom_tile_nkt #(
     wire [5119:0] cx_rq;
     wire [3127:0] cx_ld;
     wire [583:0]  cx_lq;
-    wire [1023:0] cx_rqr;
+    wire [2047:0] cx_rqr;
     wire [71:0] cx_lerr;
     genvar li;
     generate for(li=0;li<8;li=li+1) begin:g_lerr
@@ -73,7 +73,7 @@ module ot_qwen_rom_tile_nkt_mc #(
     wire [5119:0] cx_rq;
     wire [3127:0] cx_ld;
     wire [583:0]  cx_lq;
-    wire [1023:0] cx_rqr;
+    wire [2047:0] cx_rqr;
     wire [71:0] cx_lerr;
     genvar li;
     generate for(li=0;li<8;li=li+1) begin:g_lerr
