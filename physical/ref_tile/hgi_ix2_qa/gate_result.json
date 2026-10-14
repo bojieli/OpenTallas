@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "hgi_ix2_qa",
+ "verdict": "WARN",
+ "generated": "2026-10-13T18:11:08-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "00dc05bdf",
+ "clock": {
+  "max_root_sinks": 6378,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": 287.4,
+  "tt_spread_ps": 31.1,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "6,378 sinks on the largest root <= 15,000; measured TT insertion 287.4 ps, leaf spread 31.1 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "rtl",
+   "message": "runtime_partselect: 2 runtime-indexed part-select(s), 1,280 bits (2 >= 64 b; e.g. ot_hgi_idx_ix2_qa: in_d[{29'd0, bl}*256 + i*32 +: 16] (640 b), ot_hgi_idx_ix2_qa: in_d[{29'd0, bl}*256 + i*32 + 16 +: 16] (640 b)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory",
+   "fix": "decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net a_lo[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 7,283 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "663 input->register endpoint(s) > 3 levels (worst ab_d[455]->bz[4][6]$_DFFE_PP_/D 9 lv, ab_d[455]->bz[0][6]$_DFFE_PP_/D 9 lv, ab_d[423]->bz[4][5]$_DFFE_PP_/D 9 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  }
+ ]
+}

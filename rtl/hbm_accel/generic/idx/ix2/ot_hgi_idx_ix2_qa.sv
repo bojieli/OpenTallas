@@ -36,7 +36,15 @@ module ot_hgi_idx_ix2_qa #(
         if (!rn) begin st_q <= 1'b0; run_q <= 1'b0; ks_q <= 1'b0; qbr_q <= 1'b0; end
         else begin st_q <= start; run_q <= run; ks_q <= kin_sent; qbr_q <= qbr; end
     always @(posedge clk) begin keep_en <= keep_en_i; a_lo <= a_base_i[5:3]; b_lo <= b_base_i[5:0]; end
-    wire [7:0] bv_q = b_v; wire [2047:0] in_d = ab_d;            // B lands directly in the weight buffer
+    // pin flops of the 8 lane buses (10-13: B went through the head-weight select and A through the slot write
+    // enable straight from the pins: 663 input -> register endpoints of up to 9 levels).  A's 2 credits a lane are
+    // its two slots, so the one sector that may sit in the pin flop always has its slot.
+    reg [2047:0] in_d; reg [7:0] bv_q, av_q;
+    always @(posedge clk or negedge rn) if (!rn) begin bv_q <= 8'd0; av_q <= 8'd0; end else begin bv_q <= b_v; av_q <= a_v; end
+    always @(posedge clk) in_d <= ab_d;
+    // the block's quarter -> lane map: one kept copy of the frame constant a quarter (a_lo[0] drove 7,283 loads)
+    (* keep = 1 *) reg [1:0] ppq [0:3];
+    always @(posedge clk) if (st_q) for (i = 0; i < 4; i = i + 1) ppq[i] <= a_lo[1:0] + 2'(i);
     // ---------------------------------------------------------------- head weights
     reg [127:0] bh [0:4]; reg [7:0] bz [0:4]; reg [4:0] bgot; reg wts_ok; reg [15:0] wts [0:31];
     reg [2:0] bl; reg [5:0] bw; reg [7:0] nz; reg bad_w;
@@ -65,10 +73,10 @@ module ot_hgi_idx_ix2_qa #(
     wire send = run_q && wts_ok && !qa_bad && jn != 8'd128 && qcred != 3'd0 && (have & msk) == msk &&
                 (jn != 8'd127 || !keep_en || ks_q);
     always @(posedge clk) begin
-        for (l = 0; l < 8; l = l + 1) if (a_v[l]) sl[2*l + {31'd0, swp[l]}] <= ab_d[l*256 +: 256];
+        for (l = 0; l < 8; l = l + 1) if (av_q[l]) sl[2*l + {31'd0, swp[l]}] <= in_d[l*256 +: 256];
         if (send) begin
             for (i = 0; i < 4; i = i + 1) begin
-                pp = a_lo[1:0] + 2'(i); ln = {q0[pp] ^ jn[0], pp};
+                pp = ppq[i]; ln = {q0[pp] ^ jn[0], pp};
                 qb[8 + i*256 +: 256] <= sl[{ln, srp[ln]}];
             end
             qb[1047 -: 16] <= wts[(MUT == 1) ? jn[6:2] + 5'd1 : jn[6:2]];
@@ -87,8 +95,8 @@ module ot_hgi_idx_ix2_qa #(
             if (send) jn <= jn + 8'd1;
             qcred <= qcred + 3'(qbr_q) - 3'(send);
             for (l = 0; l < 8; l = l + 1) begin
-                scnt[l] <= scnt[l] + 2'(a_v[l]) - 2'(send && msk[l]);
-                if (a_v[l]) swp[l] <= !swp[l];
+                scnt[l] <= scnt[l] + 2'(av_q[l]) - 2'(send && msk[l]);
+                if (av_q[l]) swp[l] <= !swp[l];
                 if (send && msk[l]) srp[l] <= !srp[l];
             end
             for (r = 0; r < 5; r = r + 1) if (bv_q[3'(b_lo[5:3] + 3'(r))]) bgot[r] <= 1'b1;
