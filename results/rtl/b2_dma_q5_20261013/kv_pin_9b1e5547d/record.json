@@ -38,7 +38,7 @@
     862
   ],
   "throughput_price_status": "UNMEASURED-vs-price; no repricing or throughput qualification claimed",
-  "physical_status": "source-bound CTS admitted; synthesis/floorplan/PDN complete, placement running",
+  "physical_status": "pre-route CTS WARN: 0 fail,4 warn; TT pathfinding only; setup negative, not physical sign-off",
   "qualified": false,
   "mutants": {
     "1": {
@@ -85,5 +85,14 @@
     "remote_dir": "/srv/opentallas-scratch/claude/ref_gate/b2_dma_mv_q5_ref-20261013-230557",
     "source_commit": "9b1e5547d",
     "local_gate_session": 99756
+  },
+  "cts": {
+    "root_sinks": 14680,
+    "insertion_ps": 692.7,
+    "spread_ps": 30.6,
+    "setup_wns_ps": -240.5197152555,
+    "hold_wns_ps": 22.7226015781,
+    "gate": "physical/ref_tile/b2_dma_mv_q5_ref/gate_result.json",
+    "verdict": "WARN"
   }
 }
