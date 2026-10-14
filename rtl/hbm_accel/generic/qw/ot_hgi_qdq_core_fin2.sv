@@ -304,7 +304,8 @@ module ot_hgi_qdq_core_fin2 #(
     end
 endmodule
 
-// One raw select bit -> W next-state bits, each through one AO22 (y = s & a1 | ~s & a0) that synthesis keeps as a cell:
+// One raw select bit -> W next-state bits, each through one instantiated AO22 (y = s & a1 | ~s & a0): yosys never re-maps
+// an instantiated library cell (no instance attributes: OpenROAD link_design fails stoi on keep/dont_touch strings);
 // the select is the only logic between the input pin and the state flops (pin -> INV/AO22 -> D).
 module ot_qdq_fin_sel #(parameter integer W = 1) (
     input  wire         s,
@@ -314,10 +315,10 @@ module ot_qdq_fin_sel #(parameter integer W = 1) (
 );
 `ifdef SYNTHESIS
     wire sn;
-    (* keep="true",dont_touch="true" *) INVx2_ASAP7_75t_R u_sn (.A(s), .Y(sn));
+    INVx2_ASAP7_75t_R u_sn (.A(s), .Y(sn));
     genvar i;
     for (i = 0; i < W; i = i + 1) begin : g_b
-        (* keep="true",dont_touch="true" *) AO22x1_ASAP7_75t_R u_m (.A1(s), .A2(a1[i]), .B1(sn), .B2(a0[i]), .Y(y[i]));
+        AO22x1_ASAP7_75t_R u_m (.A1(s), .A2(a1[i]), .B1(sn), .B2(a0[i]), .Y(y[i]));
     end
 `else
     assign y = s ? a1 : a0;
