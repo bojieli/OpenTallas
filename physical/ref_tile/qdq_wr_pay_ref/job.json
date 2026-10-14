@@ -1,5 +1,5 @@
 {
- "name": "qdq_wr_pay_ref-p3-COMMIT",
+ "name": "qdq_wr_pay_ref-p3-94e699311",
  "block": "ot_hgi_qdq_wr_pay",
  "ref_tile": true,
  "owner": "Codex:qdq-write-completion-split",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex-qdq-write-completion-split",
-  "commit": "COMMIT"
+  "commit": "94e6993117b445fdcf4e0a55bff71b824efdf866"
  },
  "stages": {
   "bench": [
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qdq_wr_pay_ref/qdq_wr_pay_ref-p3-COMMIT"
+   "to": "results/rtl/ref_tile/qdq_wr_pay_ref/qdq_wr_pay_ref-p3-94e699311"
   }
  ],
  "cycles_added": 0,
