@@ -23,6 +23,10 @@ module tb_qfd_tt_ctlm_i_psram;
                                     // the exported gated clock); 0 = the earlier model (one edge late: its latency in engine edges then depends on
                                     // whether the previous edge clocked the engine -- a gap-dependent p_am alignment, not the design's)
     parameter integer TXRST = 1;    // el1011-q-seq TXN: the port model's reply pipeline is reset like the real port's valid line
+    // el1013-qwen-small-masters r3b: TXN coverage refusal.  COVMASK bit s = stream s must carry >= MINEV events on BOTH
+    // units over the run (else FAIL coverage): a transaction compare of streams that never fire is vacuous (the TP8 slot
+    // bench passed its mutant with events on streams 0-2 only).
+    parameter integer COVMASK = 0, MINEV = 1;
     parameter integer TXN = 0;      // el1011-q-seq: 1 = transaction-level compare (per-interface event streams, per reset window; MEREG 3 wakes +1)
     parameter integer PFMASK = 0;   // el1011-q-seq: 1 = p_f_e2 only while p_v_e2, scale_addr only while scale_re | scale_gre (valid/data): the
                                     //   port element registers it unconditionally but every use is behind raw_v / rv (valid/data contract)
@@ -328,7 +332,8 @@ module tb_qfd_tt_ctlm_i_psram;
     integer tlv, ttw = 0; integer tc0 [0:NS-1]; integer tc1 [0:NS-1]; integer tt0 = 0, tt1 = 0, tbad = 0, tw = 0, ts, tk;
     reg en0_q = 0, en1_q = 0, kv0_q = 0, kv1_q = 0, fin0_q = 0, fin1_q = 0;
     reg [23:0] acc0_q = 0, acc1_q = 0; reg [15:0] prg0_q = 0, prg1_q = 0; reg cf0_q = 0, cf1_q = 0;
-    initial for (ts = 0; ts < NS; ts = ts + 1) begin tc0[ts] = 0; tc1[ts] = 0; end
+    integer tcs0 [0:NS-1]; integer tcs1 [0:NS-1]; integer ncov = 0;
+    initial for (ts = 0; ts < NS; ts = ts + 1) begin tc0[ts] = 0; tc1[ts] = 0; tcs0[ts] = 0; tcs1[ts] = 0; end
     integer tcy0 [0:NS-1][0:ME-1]; integer tcy1 [0:NS-1][0:ME-1];
     task automatic tpush0(input integer s, input [2047:0] v); begin if (DBGTX == 2 && s == DBGS && tw == DBGW) $display("EV0 k=%0d c=%0d v=%h", tc0[s], cyc, v[63:0]); if (tc0[s] < ME) begin tq0[s][tc0[s]] = hv(v); tcy0[s][tc0[s]] = cyc; end tc0[s] = tc0[s] + 1; tt0 = tt0 + 1; end endtask
     task automatic tpush1(input integer s, input [2047:0] v); begin if (DBGTX == 2 && s == DBGS && tw == DBGW) $display("EV1 k=%0d c=%0d v=%h", tc1[s], cyc, v[63:0]); if (tc1[s] < ME) begin tq1[s][tc1[s]] = hv(v); tcy1[s][tc1[s]] = cyc; end tc1[s] = tc1[s] + 1; tt1 = tt1 + 1; end endtask
@@ -341,6 +346,7 @@ module tb_qfd_tt_ctlm_i_psram;
                     tbad = tbad + 1; if (tbad <= 5) $display("TXN MISMATCH window=%0d stream=%0d event=%0d", tw, s2, k2);
                     if (DBGTX != 0 && tbad <= 40) $display("TXN DBG w=%0d s=%0d k=%0d cyc0=%0d cyc1=%0d n0=%0d n1=%0d", tw, s2, k2, tcy0[s2][k2], tcy1[s2][k2], tc0[s2], tc1[s2]); end
                 if (DBGTX != 0) $display("TXN CNT w=%0d s=%0d n0=%0d n1=%0d", tw, s2, tc0[s2], tc1[s2]);
+                tcs0[s2] = tcs0[s2] + tc0[s2]; tcs1[s2] = tcs1[s2] + tc1[s2];
                 tc0[s2] = 0; tc1[s2] = 0;
             end
             tw = tw + 1;
@@ -485,6 +491,15 @@ module tb_qfd_tt_ctlm_i_psram;
         repeat (20) @(posedge clk);
         if (TXN != 0) twin;
         if (TXN != 0 && (tbad != 0 || tt1 * 5 < tt0 * 4)) bad = bad + 1 + tbad;
+        if (TXN != 0) begin
+            for (ts = 0; ts < NS; ts = ts + 1) if (COVMASK[ts]) begin
+                if (tcs0[ts] < MINEV || tcs1[ts] < MINEV) begin ncov = ncov + 1; $display("TXN COVERAGE stream=%0d u0=%0d u1=%0d (min %0d)", ts, tcs0[ts], tcs1[ts], MINEV); end
+            end
+            if (COVMASK != 0) $display("TXN STREAMS s0 kvd=%0d/%0d s1 argmax=%0d/%0d s2 acc=%0d/%0d s5 scale=%0d/%0d s6 xdesc=%0d/%0d s8 pword=%0d/%0d s9 ov=%0d/%0d s10 mx=%0d/%0d s19..23 tree=%0d/%0d %0d/%0d %0d/%0d %0d/%0d %0d/%0d",
+                tcs0[0], tcs1[0], tcs0[1], tcs1[1], tcs0[2], tcs1[2], tcs0[5], tcs1[5], tcs0[6], tcs1[6], tcs0[8], tcs1[8], tcs0[9], tcs1[9], tcs0[10], tcs1[10],
+                tcs0[19], tcs1[19], tcs0[20], tcs1[20], tcs0[21], tcs1[21], tcs0[22], tcs1[22], tcs0[23], tcs1[23]);
+            if (ncov != 0) begin bad = bad + ncov; $display("TXN COVERAGE REFUSED: %0d required streams below the floor", ncov); end
+        end
         if (TXN != 0) $display("TXN events u0=%0d u1=%0d windows=%0d mismatches=%0d", tt0, tt1, tw, tbad);
         $display("GOLD dyn_ttiles G=%0d checks=%0d bad=%0d (min %0d)", TBG, ngc, ngbad, MINGC);
         if (ngbad != 0 || ngc < MINGC) bad = bad + 1 + ngbad;
