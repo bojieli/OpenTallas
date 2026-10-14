@@ -192,10 +192,16 @@ module ot_s81_su_hctl #(
                 end
                 if (ph == 2 && (kind == K_RA || kind == K_RB || kind == K_QR)) begin
                     // one operand row a cycle (RA: one every XSUB cycles) on slot 0
-                    if (ri < nrow && (kind != K_RA || xs == 0)) begin
+                    if (kind == K_RB && ri < nrow) begin
+                        // RB pair issue (s81-romB2 2026-10-14): score row r on slot 0 and its bias row r on slot 1 in the
+                        // SAME cycle (the rows land together at the tile, which adds them at once): 2 rows a cycle
+                        rq_v[0] <= 1; rq_v[1] <= 1;
+                        rq_row[13:0] <= ibase + {1'b0, ri[13:1]};
+                        rq_row[27:14] <= ibase + {1'b0, ri[13:1]} + p0[14 +: 14];
+                        ri <= ri + 2;
+                    end else if (kind != K_RB && ri < nrow && (kind != K_RA || xs == 0)) begin
                         rq_v[0] <= 1;
-                        rq_row[13:0] <= (kind == K_RB) ? ibase + {1'b0, ri[13:1]} + (ri[0] ? p0[14 +: 14] : 14'd0) :
-                                        (kind == K_QR) ? ibase + {ri[13:2], 5'd0} + 14'd28 + {12'd0, ri[1:0]} : ibase + ri[13:0];
+                        rq_row[13:0] <= (kind == K_QR) ? ibase + {ri[13:2], 5'd0} + 14'd28 + {12'd0, ri[1:0]} : ibase + ri[13:0];
                         ri <= ri + 1;
                     end
                     xs <= (kind == K_RA && XSUB > 1) ? ((xs == XSUB - 1) ? 2'd0 : xs + 2'd1) : 2'd0;
@@ -238,4 +244,18 @@ module ot_s81_su_hctl #(
             end
         end
     end
+`ifdef SU_RX_TRACE
+    // cycle trace of the RA / RB / QR job phases (bench only)
+    reg [31:0] tr_cyc;
+    always @(posedge clk) begin
+        tr_cyc <= (!rst_n) ? 32'd0 : tr_cyc + 32'd1;
+        if (take && c_arg[23:20] >= K_RA) $display("RXTR hctl %0d take kind %0d", tr_cyc, c_arg[23:20]);
+        if (run && kind >= K_RA && ph == 3) $display("RXTR hctl %0d params_in", tr_cyc);
+        if (run && kind >= K_RA && ph == 2 && rq_v[0] && ri == 1) $display("RXTR hctl %0d first_operand_issued", tr_cyc);
+        if (run && kind >= K_RA && ph == 2 && rq_v[0] && ri >= nrow) $display("RXTR hctl %0d last_operand_issued nrow %0d", tr_cyc, nrow);
+        if (run && kind >= K_RA && ph == 2 && rs_n != 0 && rr == 0) $display("RXTR hctl %0d first_operand_back", tr_cyc);
+        if (run && kind >= K_RA && up_n != 0 && cw == 0) $display("RXTR hctl %0d first_write_seen", tr_cyc);
+        if (e_done_v && kind >= K_RA) $display("RXTR hctl %0d done nw %0d", tr_cyc, nw);
+    end
+`endif
 endmodule

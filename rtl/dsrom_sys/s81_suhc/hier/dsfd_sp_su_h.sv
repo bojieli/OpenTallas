@@ -54,7 +54,11 @@ module dsfd_sp_su_h #(
     parameter integer SRD = (S_RD >= 16) ? 2 : 1,
     // SM stop (spec v3): relay stations on every link between its masters (a stop ~1.3 x 1.0 mm: 2 for <= 500 um)
     parameter integer SRL = (S_RD >= 16) ? 2 : 1,
-    parameter integer NRC = (S_RD >= 16) ? 5 : 1
+    parameter integer NRC = (S_RD >= 16) ? 5 : 1,
+    // RXH 1 (s81-romB2 2026-10-14): the RA / RB / QR tile ot_s81_su_rxt sits at the SPINE HEAD beside the pin owners:
+    // it taps the stop-0 down register and its write slot (slot 0) merges at stop 0's up relay, instead of the far end
+    // of the ~2 x SRD x NTL cycle spines (measured hier RB 277 / QR 298 / RA 353 vs flat 69 / 115 / 168). 0 = far end.
+    parameter integer RXH = 1
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
@@ -363,6 +367,8 @@ module dsfd_sp_su_h #(
     // norm rungs: the group partial of tile t (TI 1) to its head (t - 1), the head's rstd back (registered relays)
     wire        xpv [0:NTL]; wire [7:0] xpi [0:NTL]; wire [31:0] xpd [0:NTL];   // tile t's outputs
     wire        xrv [0:NTL]; wire [31:0] xrd [0:NTL];
+    // RXH: the head-placed rxt's outputs, merged at stop 0
+    wire        rx_v, rx_fu, rx_fo, rx_alive; wire [13:0] rx_a; wire [15:0] rx_m; wire [511:0] rx_d;
     genvar t;
     generate for (t = 0; t < NTL; t = t + 1) begin : g_t
         localparam integer B1 = NQN, B2 = NQN + 1, B3 = B2 + NQB, B4 = B3 + NSWS, B5 = B4 + NSM;
@@ -643,10 +649,24 @@ module dsfd_sp_su_h #(
                 .o_rdy(o_rdy), .o_rjid(o_rjid));
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
         end else if (TK == 14) begin : g_rx
-            ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
-                .clk(sk), .rst_in(rst[t]), .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_jid_i(dji[t]), .dn_v_i(dv[t]),
-                .dn_d_i(dd[t]), .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive),
-                .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+            if (RXH != 0) begin : g_head
+                // spine-head tile: tap = stop 0's down register, write slot merged at stop 0 (rx_*); its own stop
+                // here relays the spines only
+                ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
+                    .clk(sk), .rst_in(rst[0]), .dn_st_i(dst[0]), .dn_kind_i(dkd[0]), .dn_jid_i(dji[0]), .dn_v_i(dv[0]),
+                    .dn_d_i(dd[0]), .o_v(rx_v), .o_a(rx_a), .o_m(rx_m), .o_d(rx_d), .o_fu(rx_fu), .o_fo(rx_fo),
+                    .o_alive(rx_alive), .o_den(), .o_rdy(), .o_rjid());
+                assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
+                assign o_fu = 1'b0; assign o_fo = 1'b0; assign o_alive = 1'b1; assign o_den = 1'b1; assign o_rdy = 1'b0;
+                assign o_rjid = 8'd0;
+            end else begin : g_tail
+                ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
+                    .clk(sk), .rst_in(rst[t]), .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_jid_i(dji[t]), .dn_v_i(dv[t]),
+                    .dn_d_i(dd[t]), .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive),
+                    .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+                assign rx_v = 1'b0; assign rx_a = 0; assign rx_m = 0; assign rx_d = 0;
+                assign rx_fu = 1'b0; assign rx_fo = 1'b0; assign rx_alive = 1'b1;
+            end
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
         end else begin : g_tl
             ot_s81_su_tile #(.TK(TK), .TI(TI), .NT(NT), .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H),
@@ -681,6 +701,8 @@ module dsfd_sp_su_h #(
                 if (s >= W0 && s < W0 + WS && o_v[s - W0]) begin
                     ua_q[14 * s +: 14] <= o_a[14 * (s - W0) +: 14]; um_q[16 * s +: 16] <= o_m[16 * (s - W0) +: 16];
                     ud_q[512 * s +: 512] <= o_d[512 * (s - W0) +: 512];
+                end else if (t == 0 && s == 0 && rx_v) begin
+                    ua_q[13:0] <= rx_a; um_q[15:0] <= rx_m; ud_q[511:0] <= rx_d;
                 end else begin
                     ua_q[14 * s +: 14] <= ua[t + 1][14 * s +: 14]; um_q[16 * s +: 16] <= um[t + 1][16 * s +: 16];
                     ud_q[512 * s +: 512] <= ud[t + 1][512 * s +: 512];
@@ -689,8 +711,9 @@ module dsfd_sp_su_h #(
         always @(posedge sk or negedge rst[t]) begin
             if (!rst[t]) begin uv_q <= 0; ufu_q <= 0; ufo_q <= 0; ual_q <= 0; ude_q <= 0; urd_q <= 0; urj_q <= 0; end
             else begin
-                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]);
-                ufu_q <= ufu[t + 1] || o_fu; ufo_q <= ufo[t + 1] || o_fo; ual_q <= ual[t + 1] && o_alive;
+                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && rx_v);
+                ufu_q <= ufu[t + 1] || o_fu || (t == 0 && rx_fu); ufo_q <= ufo[t + 1] || o_fo || (t == 0 && rx_fo);
+                ual_q <= ual[t + 1] && o_alive && (t != 0 || rx_alive);
                 ude_q <= ude[t + 1] && o_den; urd_q <= urd[t + 1] || o_rdy; urj_q <= o_rdy ? o_rjid : urj[t + 1];
             end
         end
