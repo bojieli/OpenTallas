@@ -7074,7 +7074,10 @@ def _assigned_physical_pins(Mx, ports):
             coords = [[spec['face'], spec['layer'], c, spec['depth']] for c in cs]
         rects = []
         for i, (face, layer, c, depth) in enumerate(coords):
-            assert layer in TRK and face in 'NSEW', (Mx.name, port, i)
+            # Explicit child pins include the M2/M3 access layers of M5
+            # leaves. TRK describes die channel allocation (M4 and above),
+            # not the technology's complete set of legal pin layers.
+            assert layer in ('M2', 'M3', *TRK) and face in 'NSEW', (Mx.name, port, i)
             assert 0.012 <= c <= (Mx.h if face in 'EW' else Mx.w) - 0.012, (Mx.name, port, i, c)
             rect = {'N': (c-.012, Mx.h-depth, c+.012, Mx.h), 'S': (c-.012, 0, c+.012, depth),
                     'W': (0, c-.012, depth, c+.012), 'E': (Mx.w-depth, c-.012, Mx.w, c+.012)}[face]
