@@ -14,7 +14,7 @@ module tb_native;
  integer errors=0,total=0,nkv=0,nq=0,ep=0,cyc=0;
  reg [7:0] tags=0;reg [31:0] qtags=0;
  function automatic [7:0] code(input integer k,input integer h,input integer d);
-  integer x;begin x=(k*91+h*37+d+ep*17)%254;if(x>=127)x=x+2;code=x;end
+  integer x;begin x=(k*91+h*37+d+ep*17)%254;if(x>=127)x=x+1;code=x;end
  endfunction
  function automatic [31:0] decode(input [7:0] b);
   reg [3:0] e;reg [2:0] m;begin e=b[6:3];m=b[2:0];
