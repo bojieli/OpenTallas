@@ -10,6 +10,7 @@ case "$CASE" in
   data_mutant) define=-DOT_NCOLL_NATIVE_MUT ;;
   reservation_mutant) define=-DOT_NCOLL_MUT_NOREFUND_CHECK ;;
   bypass_mutant) define=-DOT_CDC_IBMEM_MUT_NOBYPASS ;;
+  pointer_mutant) define=-DOT_CDC_IBPTR_MUT_CURRENT ;;
   narrow_rr_mutant) define=-DOT_NCOLL_MUT_NARROW_RR ;;
   *) exit 2 ;;
 esac

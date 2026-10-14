@@ -85,6 +85,7 @@ module ot_qwen_die_cdc_ch #(
     wire [W-1:0] x_af_d;                  // RXP: staging-FIFO head -> async FIFO
     wire         x_af_v, x_af_pop;
     wire [W-1:0] ib_head;
+    wire [W-1:0] ib_local_head;
     generate if (IBMEM != 0) begin : g_ib_mem
         initial if (W != 546 || IBUF != 32 || RXP != 0) $error("IBMEM needs32x546/RXP0");
         wire [IA-1:0] next_head = ir[IA-1:0] + (pop ? 1'b1 : 1'b0);
@@ -94,7 +95,7 @@ module ot_qwen_die_cdc_ch #(
         always @(posedge wclk or negedge wr_n)
             if (!wr_n) bypass <= 1'b0;
             else bypass <= x_wr && (iw[IA-1:0] == next_head);
-        always @(posedge wclk) if (x_wr && (iw[IA-1:0] == next_head)) bypass_data <= id_q;
+        always @(posedge wclk) if (WR_FREE != 0 || (x_wr && (iw[IA-1:0] == next_head))) bypass_data <= id_q;
         ot_sram_1r1w_32x546_m1 u_ib (.clk(wclk),.r_ce_in(1'b1),.r_addr_in(next_head),.rd_out(mq),
             .w_ce_in(x_wr),.w_addr_in(iw[IA-1:0]),.wd_in(id_q),.w_mask_in({W{1'b1}}));
 `ifdef OT_CDC_IBMEM_MUT_NOBYPASS
@@ -103,11 +104,44 @@ module ot_qwen_die_cdc_ch #(
         assign ib_head = bypass ? bypass_data : mq;
 `endif
     end else begin : g_ib_reg
-        assign ib_head = ib[ir[IA-1:0]];
+        if (WR_FREE != 0 && RXP == 0) assign ib_head = ib_local_head;
+        else assign ib_head = ib[ir[IA-1:0]];
     end endgenerate
     generate if (RXP == 0) begin : g_ibw
         if (IBMEM == 0) begin : g_store
-            always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+            if (WR_FREE != 0) begin : g_local
+                // Current pointer/valid/full copies for each word slice. The
+                // next pointer values are captured on the SAME edge as iw/ir,
+                // so every bank write and head read preserves its old edge.
+                // Bound each write-enable and read-select fanout to 128 bits.
+                localparam integer NS = (W + 127) / 128;
+                wire [IA:0] iw_next = iw + {{IA{1'b0}}, x_wr};
+                wire [IA:0] ir_next = ir + {{IA{1'b0}}, pop};
+                wire full_next = (iw_next[IA-1:0] == ir_next[IA-1:0]) && (iw_next[IA] != ir_next[IA]);
+                for (genvar s = 0; s < NS; s = s + 1) begin : g_slice
+                    localparam integer LO = s * 128;
+                    localparam integer SW = (W - LO < 128) ? W - LO : 128;
+                    (* keep *) reg [IA-1:0] iw_c, ir_c;
+                    (* keep *) reg iv_c, full_c;
+                    always @(posedge wclk or negedge wr_n)
+                        if (!wr_n) begin iw_c <= 0; ir_c <= 0; iv_c <= 0; full_c <= 0; end
+                        else begin
+`ifdef OT_CDC_IBPTR_MUT_CURRENT
+                            iw_c <= iw[IA-1:0]; ir_c <= ir[IA-1:0]; full_c <= ib_full;
+`else
+                            iw_c <= iw_next[IA-1:0]; ir_c <= ir_next[IA-1:0]; full_c <= full_next;
+`endif
+                            iv_c <= i_v_p;
+                        end
+                    for (genvar row = 0; row < IBUF; row = row + 1) begin : g_row
+                        always @(posedge wclk)
+                            if (iv_c && !full_c && iw_c == row) ib[row][LO +: SW] <= id_q[LO +: SW];
+                    end
+                    assign ib_local_head[LO +: SW] = ib[ir_c][LO +: SW];
+                end
+            end else begin : g_original
+                always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
+            end
         end
         assign x_issue = 1'b0; assign x_af_v = 1'b0; assign x_af_d = {W{1'b0}}; assign x_af_pop = 1'b0;
     end else begin : g_rxp
