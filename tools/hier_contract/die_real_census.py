@@ -49,7 +49,7 @@ import child_lint  # noqa: E402
 SCHEMA = "opentallas.die_real_census.v1"
 EXPORT_FIX = "abc334b14"          # view_export verdict replay (el1013-export-sdc.log); pinreg_audit.py uses the same mark
 CLASSES = ("real", "lef_only", "etm_only", "hard_macro", "placeholder")
-MACRO_RE = r"(asap7_memory_macros|_macros_v\d|pdie_macros|/hard_ip/|/phy/)"
+MACRO_RE = r"(asap7_memory_macros|_macros_v\d|pdie_macros|/hard_ip/|/phy/|qwen_missing_phy/)"
 VIEW_ROOTS = ("physical",)
 KEYWORDS = {"module", "endmodule", "input", "output", "inout", "wire", "assign", "reg", "logic", "supply0", "supply1",
             "tri", "parameter", "localparam", "always", "initial", "generate", "endgenerate", "function", "if", "else",
