@@ -72,7 +72,7 @@ module ot_hgi_qdq_wr_pay #(
         // Accepted registered VO minus actual WWQ launches counts every SRAM,
         // prefetch-head and read-pending obligation. Complement rails refuse a
         // shortcut if mutable tracking state disagrees; no raw VO/Y bypass.
-        (* keep="true" *) reg [OW:0] outstanding,outstanding_n;
+        (* keep="true",dont_touch="true" *) reg [OW:0] outstanding,outstanding_n;
         wire [OW:0] next_outstanding=outstanding+(OW+1)'(vo_f)-(OW+1)'(w_fire);
         assign tracker_bad=outstanding!=~outstanding_n;
         assign result_empty=(outstanding==0)&&!tracker_bad;
