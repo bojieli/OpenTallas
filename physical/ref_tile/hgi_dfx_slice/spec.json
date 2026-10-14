@@ -1,0 +1,91 @@
+{
+ "name": "hgi_dfx_slice",
+ "top": "ot_hgi_dma_front_xs",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv"
+ ],
+ "params": {
+  "NIN": 8,
+  "NBS": 8
+ },
+ "clock_port": "clk",
+ "reset_ports": [],
+ "pg_layer": "M6",
+ "macros": [],
+ "pins": {
+  "W": [
+   "xo",
+   "ls"
+  ],
+  "E": [
+   "wd"
+  ],
+  "S": [
+   "clk"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-hbm-dmafs",
+  "branch": "claude/el1011-hbm-dmafs",
+  "tag": "a",
+  "purpose": "el1011-hbm-dmafs two-level split of ot_hgi_dma_front (hold did not converge flat: 53.6k flops one root, sf net 7.6k loads): X2 crossbar SLICE tile, 8 banks, hardened once x4; pin flops in, output register at the face, format carried with the data",
+  "benches": [
+   {
+    "name": "xs_front_exact",
+    "cmd": "set -o pipefail; mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-CASEINCOMPLETE --top-module tb_hgi_dma_front -GNL=2 -GXP=1 -GXQ=1 -GXS=1 -GMUT=0 -Mdir {RUN}/bench/obj0 rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xsw.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv -j 4 > {RUN}/bench/build0.log 2>&1 && {RUN}/bench/obj0/Vtb_hgi_dma_front 2>&1 | tee {RUN}/bench/m0.log && grep -q 'PASS HGI_DMA_FRONT' {RUN}/bench/m0.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs_mut_bf16_mirror",
+    "cmd": "set -o pipefail; mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-CASEINCOMPLETE --top-module tb_hgi_dma_front -GNL=2 -GXP=1 -GXQ=1 -GXS=1 -GMUT=1 -Mdir {RUN}/bench/obj1 rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xsw.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv -j 4 > {RUN}/bench/build1.log 2>&1 && {RUN}/bench/obj1/Vtb_hgi_dma_front 2>&1 | tee {RUN}/bench/m1.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL|FATAL"
+   },
+   {
+    "name": "xs_mut_tag_early",
+    "cmd": "set -o pipefail; mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-CASEINCOMPLETE --top-module tb_hgi_dma_front -GNL=2 -GXP=1 -GXQ=1 -GXS=1 -GMUT=2 -Mdir {RUN}/bench/obj2 rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xsw.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv -j 4 > {RUN}/bench/build2.log 2>&1 && {RUN}/bench/obj2/Vtb_hgi_dma_front 2>&1 | tee {RUN}/bench/m2.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL|FATAL"
+   },
+   {
+    "name": "xs_mut_rebase",
+    "cmd": "set -o pipefail; mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-CASEINCOMPLETE --top-module tb_hgi_dma_front -GNL=2 -GXP=1 -GXQ=1 -GXS=1 -GMUT=5 -Mdir {RUN}/bench/obj5 rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xsw.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv -j 4 > {RUN}/bench/build5.log 2>&1 && {RUN}/bench/obj5/Vtb_hgi_dma_front 2>&1 | tee {RUN}/bench/m5.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL|FATAL"
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_dfx_slice/views",
+  "record_to": "results/rtl/ref_tile/hgi_dfx_slice"
+ },
+ "std_area_um2": 7073,
+ "util": 0.45,
+ "children": [],
+ "inter": []
+}

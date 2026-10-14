@@ -155,7 +155,7 @@ module ot_hgi_dma_front_core #(
     reg [31:0] ix_dp; reg [31:0] ix_ds;                     // the next row's VM word address, the row stride
     reg [1:0] ix_par;                                       // MUT 4
     reg i1_v; reg [31:0] i1_id;                             // id pin flop
-    reg i2_v; reg [42:0] i2_lo, i2_hi; reg [31:0] i2_dw;    // partial products, the row's VM word address
+    reg i2_v; reg [34:0] i2_p [0:3]; reg [31:0] i2_dw;     // four 8 x 27 partial products (gate: 16 x 27 in one cycle = 29 levels), the row's VM word address
     reg i3_v; reg [59:0] i3_p; reg [31:0] i3_dw;           // the product id x dyn_mul
     reg i4_v; reg [37:0] i4_a; reg [31:0] i4_dw;           // address
     reg ix_rb, ix_first; reg [59:0] ix_p0;                 // rebase: the first row's product
@@ -380,14 +380,14 @@ module ot_hgi_dma_front_core #(
             i1_v <= id_take; if (id_take) begin i1_id <= id; ids_left <= ids_left - 20'd1; end
             i2_v <= i1_v;
             if (i1_v) begin
-                i2_lo <= {16'd0, i1_id[15:0]} * {16'd0, ix_mul};
-                i2_hi <= (MUT == 3) ? 43'd0 : {16'd0, i1_id[31:16]} * {16'd0, ix_mul};
+                for (integer q = 0; q < 4; q = q + 1)
+                    i2_p[q] <= (MUT == 3 && q >= 2) ? 35'd0 : {27'd0, i1_id[q*8 +: 8]} * {8'd0, ix_mul};
                 i2_dw <= ix_dp;
                 ix_par <= ix_par + 2'd1;
                 if (MUT != 4 || ix_par[0]) ix_dp <= ix_dp + ix_ds;
             end
             i3_v <= i2_v;
-            if (i2_v) begin i3_p <= {17'd0, i2_lo} + ({17'd0, i2_hi} << 16); i3_dw <= i2_dw; end
+            if (i2_v) begin i3_p <= ({25'd0, i2_p[0]} + ({25'd0, i2_p[1]} << 8)) + (({25'd0, i2_p[2]} << 16) + ({25'd0, i2_p[3]} << 24)); i3_dw <= i2_dw; end
             i4_v <= i3_v;
             if (i3_v) begin : asum
                 reg [59:0] p0, sm;

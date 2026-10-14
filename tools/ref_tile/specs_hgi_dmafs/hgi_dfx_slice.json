@@ -13,10 +13,6 @@
  "reset_ports": [],
  "pg_layer": "M6",
  "macros": [],
- "outline": {
-  "w": 151.2,
-  "h": 151.2
- },
  "pins": {
   "W": [
    "xo",
@@ -87,5 +83,7 @@
   ],
   "views_to": "physical/ref_tile/hgi_dfx_slice/views",
   "record_to": "results/rtl/ref_tile/hgi_dfx_slice"
- }
+ },
+ "std_area_um2": 7073,
+ "util": 0.45
 }

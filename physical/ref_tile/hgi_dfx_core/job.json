@@ -1,0 +1,134 @@
+{
+ "name": "hgi_dfx_core-a-COMMIT",
+ "block": "ot_hgi_dma_front_core",
+ "ref_tile": true,
+ "owner": "Claude:el1011-hbm-dmafs",
+ "purpose": "el1011-hbm-dmafs two-level split of ot_hgi_dma_front: CORE tile (8 svc lanes + 8 SRAM FIFOs, X1 picks, R / id / tags / completion; registered seams to the 4 slice tiles)",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/el1011-hbm-dmafs",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_hgi_dma_front_core rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs_front_exact",
+    "cmd": "set -o pipefail; mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-CASEINCOMPLETE --top-module tb_hgi_dma_front -GNL=2 -GXP=1 -GXQ=1 -GXS=1 -GMUT=0 -Mdir {RUN}/bench/obj0 rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xsw.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv -j 4 > {RUN}/bench/build0.log 2>&1 && {RUN}/bench/obj0/Vtb_hgi_dma_front 2>&1 | tee {RUN}/bench/m0.log && grep -q 'PASS HGI_DMA_FRONT' {RUN}/bench/m0.log",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xs_mut_bf16_mirror",
+    "cmd": "set -o pipefail; mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-CASEINCOMPLETE --top-module tb_hgi_dma_front -GNL=2 -GXP=1 -GXQ=1 -GXS=1 -GMUT=1 -Mdir {RUN}/bench/obj1 rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xsw.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv -j 4 > {RUN}/bench/build1.log 2>&1 && {RUN}/bench/obj1/Vtb_hgi_dma_front 2>&1 | tee {RUN}/bench/m1.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL|FATAL"
+   },
+   {
+    "name": "xs_mut_tag_early",
+    "cmd": "set -o pipefail; mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-CASEINCOMPLETE --top-module tb_hgi_dma_front -GNL=2 -GXP=1 -GXQ=1 -GXS=1 -GMUT=2 -Mdir {RUN}/bench/obj2 rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xsw.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv -j 4 > {RUN}/bench/build2.log 2>&1 && {RUN}/bench/obj2/Vtb_hgi_dma_front 2>&1 | tee {RUN}/bench/m2.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL|FATAL"
+   },
+   {
+    "name": "xs_mut_rebase",
+    "cmd": "set -o pipefail; mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-CASEINCOMPLETE --top-module tb_hgi_dma_front -GNL=2 -GXP=1 -GXQ=1 -GXS=1 -GMUT=5 -Mdir {RUN}/bench/obj5 rtl/hbm_accel/generic/peers/ot_hgi_dma_front.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_core.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xs.sv rtl/hbm_accel/generic/peers/ot_hgi_dma_front_xsw.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/generic/peers/tb_hgi_dma_front.sv -j 4 > {RUN}/bench/build5.log 2>&1 && {RUN}/bench/obj5/Vtb_hgi_dma_front 2>&1 | tee {RUN}/bench/m5.log",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL|FATAL"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/hgi_dfx_core/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hgi_dfx_core/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hgi_dfx_core --out {RUN}/record/views/ot_hgi_dma_front_core --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hgi_dfx_core/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hgi_dfx_core/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hgi_dfx_core/hgi_dfx_core-a-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}
