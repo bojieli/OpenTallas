@@ -15,6 +15,7 @@
 // come out in the order they went in, with the last tag on the final beat.
 module tb_hbm_native_idx_owned #(
     parameter integer NS = 16,
+    parameter integer MUT = 0,
     parameter integer NK = 4,
     parameter integer IH = 32,
     parameter integer NB = 4,
@@ -76,7 +77,7 @@ module tb_hbm_native_idx_owned #(
     wire [W*IW-1:0]  o_index;
     wire             protocol_fault;
     wire [7:0] query_head_for_dut = ($test$plusargs("MUT_QUERY_HEAD") && ql_head == 8'd7) ? 8'd8 : ql_head;
-    ot_hbm_idx_array_owned_native #(.NS(NS)) dut (
+    ot_hbm_idx_array_owned_native #(.NS(NS),.MUT(MUT)) dut (
         .clk(clk),.clk_engine({NS{clk}}),.clk_meta({NS{clk}}),.clk_tail({NS{clk}}),.clk_chunk({(NS*4){clk}}),.clk_hslice(leaf_clocks), .rst_n(rst_n), .ql_v(ql_v), .ql_ready(ql_ready), .ql_head(query_head_for_dut),
         .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w),
         .i_valid(i_valid), .i_ready(i_ready), .i_last(i_last), .i_kv(i_kv), .i_ref(i_ref),
@@ -213,6 +214,8 @@ module tb_hbm_native_idx_owned #(
                     end
                 end
                 default: begin
+                    if (reset_count != 1) $fatal(1,"Missing actual warm reset");
+                    $display("NATIVE_READY cold_stop=64 warm_resets=%0d warm_stop=64",reset_count);
                     for (si = 0; si < NS; si = si + 1)
                         $display("V41XARRSLICE s=%0d checked=%0d errors=%0d", si, s_checked[si], s_errors[si]);
                     $display("V41XARR slots=%0d checked=%0d errors=%0d faults_expected_and_raised=%0d refused=%0d masked=%0d beats_in=%0d beats_out=%0d span=%0d in_stall=%0d out_stall=%0d lat_min=%0d lat_max=%0d tok_cycles=%0d cycles=%0d",
