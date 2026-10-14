@@ -46,7 +46,7 @@ def search(height, seed, sweeps):
             if ia<0 or ib<0:diff[:,0]=0
             reach=np.max(diff@signs.T+proj,axis=1)
             excess=np.maximum(reach-500,0)
-            value+=np.maximum(bits,1)*(excess**2)*.2
+            value+=max(bits,128)*(excess**2)*.2
             value+=reach*min(bits,64)*.002
         return value
     history=[]

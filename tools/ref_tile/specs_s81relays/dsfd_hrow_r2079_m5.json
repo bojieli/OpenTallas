@@ -10,7 +10,7 @@
     "rn"
   ],
   "outline": {
-    "w": 32.4,
+    "w": 129.6,
     "h": 129.6,
     "exact": true
   },
@@ -37,11 +37,11 @@
   "job": {
     "owner": "Codex:s81_vmfe_misc_2240",
     "branch": "codex/s81-vmfe-misc-2240",
-    "tag": "r1",
+    "tag": "r2",
     "extra_paths": [
       "rtl/dsrom_sys/s81_ph/relays"
     ],
     "purpose": "Exact fixed hard master of existing BE/hrow die-ownstate; no extra latency/rounding; default-off parent HARD_RELAYS. Physical demand bit count 2079, clock root<=2079. Sparse outline retains PG/pin-access pitch; actual placement/source clocks required in die integration."
   },
-  "structural_change": "Move existing die relay bits into fixed hardchildren, preserving every original stage and reset bit; pin flop at each boundary; no hidden ownstate or asynchronous falsepath.; both legal horizontal M2/M4 face layers distribute the full return/U-turn bus without increasing metal cap."
+  "structural_change": "Move existing die relay bits into fixed hardchildren, preserving every original stage and reset bit; pin flop at each boundary; no hidden ownstate or asynchronous falsepath.; both legal horizontal M2/M4 face layers distribute the full return/U-turn bus without increasing metal cap.; expand to129.6x129.6 to reserve measured pin hold/flop-placement area: narrow gate actual GPL utilization134%/252%, not RTL std area. No pin-density or clock relaxation."
 }
