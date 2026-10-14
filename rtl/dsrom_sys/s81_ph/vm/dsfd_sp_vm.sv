@@ -1,3 +1,6 @@
+`ifdef OT_SPVM_RESET_ACK
+`include "dsfd_vm_reset_ack.svh"
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
 // dsfd_sp_vm v2 -- the S81 layer-die VM master (s81-vm-1011 under ds-1010, 2026-10-11).  Serial (0.9 GHz) domain
@@ -356,6 +359,9 @@ module dsfd_vm_clt #(
     output wire [15:0]  w_m,
     output wire [511:0] w_d,
     output wire [3:0]   flt
+`ifdef OT_SPVM_RESET_ACK
+    , output wire rst_ack
+`endif
 );
     wire clk = ck[0];
     reg [831:0] cp; reg rn_r, sok_r; reg [3:0] gid_r;
@@ -380,6 +386,9 @@ module dsfd_vm_clt #(
 `endif
     dsfd_vm_cl #(.LA(LA), .LTO(LTO)) u_c (.clk(clk), .rn(rn_r), .gid(gid_r), .ev(lvx), .ea(la), .ed(ld), .slot_ok(sok_r),
         .w_v(w_v[0]), .w_row(w_row), .w_m(w_m), .w_d(w_d), .flt(flt));
+`ifdef OT_SPVM_RESET_ACK
+    dsfd_vm_reset_ack u_reset_ack (.clk(clk), .request_n(rn[0]), .local_release(rn_r), .consumer_live(1'b1), .ack(rst_ack));
+`endif
 endmodule
 
 // ================================================================================================ landing lane
@@ -1148,6 +1157,9 @@ module dsfd_vm_fsr (
     input  wire [3583:0] i_d,  input wire [3:0]   i_rf,
     output reg  [27:0]   o_v,  output reg [27:0]  o_we, output reg [391:0] o_row, output reg [111:0] o_mask,
     output reg  [3583:0] o_d,  output reg [3:0]   o_rf
+`ifdef OT_SPVM_RESET_ACK
+    , output wire rst_ack
+`endif
 );
     reg rn_q;
     reg [27:0] v1, we1; reg [391:0] row1; reg [111:0] m1; reg [3583:0] d1;
@@ -1158,6 +1170,9 @@ module dsfd_vm_fsr (
         o_we <= we1; o_row <= row1; o_mask <= m1; o_d <= d1;
         o_rf <= i_rf;
     end
+`ifdef OT_SPVM_RESET_ACK
+    dsfd_vm_reset_ack u_reset_ack (.clk(ck), .request_n(rn), .local_release(rn_q), .consumer_live(1'b1), .ack(rst_ack));
+`endif
 endmodule
 
 // ================================================================================================ back end

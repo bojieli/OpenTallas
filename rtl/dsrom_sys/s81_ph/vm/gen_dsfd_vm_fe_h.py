@@ -759,6 +759,67 @@ module dsfd_vm_fe_h (
 endmodule
 """.replace("@B4@", bundle(4)).replace("@B5@", bundle(5))
 out = HEAD.replace("@RELAYS@", RELAYS).replace("@PARENT@", PARENT.replace("@LAND@", LAND)).replace("@ARB@", ARB).replace("@CTRL@", CTRL).replace("@ADPT@", ADPT).replace("@CNT@", CNT)
+# Source-candidate ACK ABI is generated with the hierarchy, never patched into its output.
+# Macro undefined: original child ports/state/behavior remain unchanged.
+def reset_ack_interfaces(text):
+    text = '`ifdef OT_SPVM_RESET_ACK\n`include "dsfd_vm_reset_ack.svh"\n`endif\n' + text
+    def modify(name, ports, body='', transform=None):
+        nonlocal text
+        a=text.index('module '+name+' (');b=text.index('endmodule',a);part=text[a:b]
+        i=part.index('\n);');part=part[:i]+'\n`ifdef OT_SPVM_RESET_ACK\n    , '+ports+'\n`endif'+part[i:]
+        if transform:part=transform(part)
+        part+='`ifdef OT_SPVM_RESET_ACK\n'+body+'`endif\n' if body else ''
+        text=text[:a]+part+text[b:]
+    def ack(inst, clock, request, local, output, live="1'b1", n=1):
+        return f'    dsfd_vm_reset_ack #(.N({n})) {inst} (.clk({clock}), .request_n({request}), .local_release({local}), .consumer_live({live}), .ack({output}));\n'
+    for name in ['dsfd_vm_fxs','dsfd_vm_flt','dsfd_vm_fld','dsfd_vm_fxr','dsfd_vm_fxa','dsfd_vm_fxb']:
+        modify(name,'output wire rst_ack',ack('u_reset_ack','clk','rni','rn','rst_ack'))
+    def cw(part):
+        old=".m1_od(512'd0));";assert old in part
+        return part.replace(old,".m1_od(512'd0)\n`ifdef OT_SPVM_RESET_ACK\n        , .rst_ack(rst_ack[1])\n`endif\n        );")
+    modify('dsfd_vm_fcw','output wire [1:0] rst_ack',ack('u_reset_ack','clk','rni','rn','rst_ack[0]'),cw)
+    def cn(part):
+        old='.fault(ad_flt_c), .online(ad_on),';assert old in part
+        return part.replace(old,old+'\n`ifdef OT_SPVM_RESET_ACK\n        .rst_ack_c(rst_ack_s[1]), .rst_ack_e(rst_ack[1]),\n`endif')
+    modify('dsfd_vm_fcn','output wire [1:0] rst_ack, output wire [1:0] rst_ack_s',
+           ack('u_reset_ack','clk','rst[0]','rn','rst_ack[0]')+ack('u_stream_ack','cks[0]','rss[0]','rns','rst_ack_s[0]'),cn)
+    def cc(part):
+        old='wire [1:0] cw_rdy, cr_v, cw_live;';assert old in part
+        part=part.replace(old,'`ifdef OT_SPVM_RESET_ACK\n    wire [1:0] fifo_live_w, fifo_live_r;\n`endif\n    '+old)
+        for index in [0,1]:
+            old=f'.rd_data(cr_d{index}), .rd_underflow());';assert old in part
+            part=part.replace(old,f'.rd_data(cr_d{index}), .rd_underflow()\n`ifdef OT_SPVM_RESET_ACK\n            , .wr_reset_live(fifo_live_w[{index}]), .rd_reset_live(fifo_live_r[{index}])\n`endif\n            );')
+            old=f'.w_live(cw_live[{index}]), .r_live());';assert old in part
+            part=part.replace(old,f'.w_live(cw_live[{index}]), .r_live(\n`ifdef OT_SPVM_RESET_ACK\n            fifo_live_r[{index}]\n`endif\n            ));')
+        needle='        assign cw_live = 2\'b11;';assert needle in part
+        part=part.replace(needle,needle+'\n`ifdef OT_SPVM_RESET_ACK\n'+ack('u_cross_ack_r','clk','x_arn','xr_t','rst_ack[1]','&fifo_live_r',2)+ack('u_cross_ack_w','cks[0]','x_arn','xw_t','rst_ack_s[1]','&fifo_live_w',2)+'`endif')
+        needle='    end else begin : g_ncca';assert needle in part
+        part=part.replace(needle,needle+'\n`ifdef OT_SPVM_RESET_ACK\n        assign fifo_live_w = cw_live;\n'+ack('u_cross_ack_r','clk','rni','rn','rst_ack[1]','&fifo_live_r')+ack('u_cross_ack_w','cks[0]','rss[0]','rns','rst_ack_s[1]','&fifo_live_w')+'`endif')
+        return part
+    modify('dsfd_vm_fcc','output wire [1:0] rst_ack, output wire [1:0] rst_ack_s',
+           ack('u_reset_ack','clk','rni','rn','rst_ack[0]')+ack('u_stream_ack','cks[0]','rss[0]','rns','rst_ack_s[0]'),cc)
+    def parent(part):
+        def connect(marker,connection):
+            nonlocal part
+            assert marker in part,marker
+            part=part.replace(marker,marker[:-2]+'\n`ifdef OT_SPVM_RESET_ACK\n                , '+connection+'\n`endif\n                );')
+        connect('.flt(w_f[4*gj +: 4]));','.rst_ack(rst_ack[G])')
+        connect('.rn_o(rno));','.rst_ack(rst_ack[20+gi])')
+        connect('.rn_o(ll_rn[gi]));','.rst_ack(rst_ack[24+gi])')
+        connect('.rn_o(rn_ld));','.rst_ack(rst_ack[34])')
+        connect('.rn_o(rn_cc));','.rst_ack(rst_ack[39+:2]), .rst_ack_s(rst_ack_s[2+:2])')
+        connect('.rn_o(rn_cw));','.rst_ack(rst_ack[35+:2])')
+        connect('.rn_o(rn_cn));','.rst_ack(rst_ack[37+:2]), .rst_ack_s(rst_ack_s[0+:2])')
+        connect('.o_rf(m_rf[4*gs +: 4]));','.rst_ack(rst_ack[16+gs])')
+        # Every source-level generate variant drives the same unique bit.
+        for b in ['gb','4','5']:
+            marker=f'.rn_o({{xr1[(4*{b} + gs)*R + gr], xr0[(4*{b} + gs)*R + gr]}}));'
+            connect(marker,f'.rst_ack(rst_ack[41+(4*{b}+gs)*R+gr])')
+        return part
+    modify('dsfd_vm_fe_h','output wire [40+24*`VMFE_R:0] rst_ack, output wire [3:0] rst_ack_s',transform=parent)
+    return text
+out = reset_ack_interfaces(out)
+
 assert "@" not in out.replace("@(", "").replace("@*", ""), "unreplaced marker"
 open(os.path.join(D, "dsfd_vm_fe_h.sv"), "w").write(out)
 print("wrote dsfd_vm_fe_h.sv", len(out.splitlines()), "lines")
