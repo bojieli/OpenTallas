@@ -18,7 +18,7 @@ D="-DN=${N:-64} -DM=${M:-64} -DLV=${LV:-7} -DLWB=${LWB:-18}"
 SVF=""; [ -n "${SV:-}" ] && { D="$D -DSV"; SVF="${SVFILE:-rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv}"; }; [ -n "${MUTV:-}" ] && D="$D -DMUT_V=$MUTV"
 [ -n "${EP0:-}" ] && D="$D -DEP0=$EP0"   # ot_hgi_sv_unit: frame epoch after a scrub (14: the in-place sink wraps 15 -> 1)
 [ "${UNIT:-su}" = sfu ] && D="$D -DSFU"; [ -n "${WIDE:-}" ] && D="$D -DWIDE"; [ -n "${WIDE2:-}" ] && D="$D -DWIDE -DWIDE2"; [ -n "${MUTX:-}" ] && D="$D -DMUT_X=$MUTX"; [ -n "${XDBG:-}" ] && D="$D -DXDBG -DWDOG=20000"; [ -n "${SHARED:-}" ] && D="$D -DSHARED"; [ -n "${CHAIN:-}" ] && D="$D -DSHARED -DCHAIN"; [ -n "${ARBMUT:-}" ] && D="$D -DARBMUT"; [ -n "${RLY:-}" ] && D="$D -DRLY=$RLY"; [ -n "${LQ:-}" ] && D="$D -DLQ=$LQ"; [ -n "${LRLAT:-}" ] && D="$D -DLRLAT=$LRLAT"; [ -n "${MUTRV:-}" ] && D="$D -DMUT_RV=$MUTRV"; [ -n "${MUT:-}" ] && D="$D -D$MUT"; [ -n "${MUTW:-}" ] && D="$D -DMUT_W=$MUTW"
-L="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv
+L="rtl/lib/ot_rst_relay.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv
    rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv
    rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv
    rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv
