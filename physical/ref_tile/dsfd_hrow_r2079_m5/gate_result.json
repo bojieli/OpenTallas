@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsfd_hrow_r2079_m5",
- "verdict": "FAIL",
- "generated": "2026-10-14T02:05:18-0700",
+ "verdict": "WARN",
+ "generated": "2026-10-14T02:16:51-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "030255c4d2e8ba3e111b03fb6f773d9d97ad3aa0",
+  "start_commit": "55740b8837221de797e670ba82471774527466af",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "ffcefad9cebe8f0707769c90448d16fb339ce9852acc1d52d68032582e019496",
-  "manifest_sha256": "50c737eafe6deb3254bca92e89c13cfafdcde7c93f8d0dc9390dbda3a73deabf",
+  "archive_sha256": "0874860157c77f2a0d98b1b5c692b8dcb6605a4d5c3bd2d41db24d38d03db704",
+  "manifest_sha256": "2dc05716f9026d5551d48c02eecd218f366c35e7f73c09912e1b1be6a60aa5b8",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -17155,8 +17155,8 @@
    {
     "path": "physical/s81_ph_views/relay_master/hold_stagger.tcl",
     "kind": "file",
-    "sha256": "da09bd3287a407d25192801fa3df1697ed67d73d8cc93fd66939cef633c247ca",
-    "git_blob": "0f2e36922b3be414a4d089160ccf074ab3ae5063",
+    "sha256": "b6be689da70fa0a8e99df07023e8f81c1512ba6a83f961241eb4adbc4a55e8e8",
+    "git_blob": "c58d5eca1b7665badb0b80fa3ee84cdbeaa573e6",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -106027,7 +106027,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "258c5f40f460ef3a032d6a4564d0bad66e640b55",
+   "origin_main": "d380dba32a06213e470eb6cb0067f8f47797138b",
    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
    "files": [
     {
@@ -106400,11 +106400,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T02:04:30-0700",
-  "remote_script_sha256": "d7d5338035a29c2f1dd1b9bedcfaa7ac620d0a10c41d54e07635585087b7fe34",
+  "captured": "2026-10-14T02:14:44-0700",
+  "remote_script_sha256": "efed863b54d642ec4f32e30ce0d5ddbb2570bd802120ef526228128e473280ea",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_hrow_r2079_m5-20261014-020407",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_hrow_r2079_m5-20261014-021416",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -106415,16 +106415,40 @@
   "max_root_sinks": 2079,
   "root": "port:ck",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 118.6,
+  "tt_spread_ps": 11.1,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
+  "clock_measurements": [
+   {
+    "source": "ck",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 2079,
+      "mean": 114.2,
+      "min": 107.5,
+      "max": 118.6
+     },
+     "all": {
+      "n": 2079,
+      "mean": 114.2,
+      "min": 107.5,
+      "max": 118.6
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "2,079 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "2,079 sinks on the largest root <= 15,000; measured TT insertion 118.6 ps, leaf spread 11.1 ps"
  },
  "items": [
   {
@@ -106438,18 +106462,6 @@
    "check": "textbook.util_channel",
    "message": "utilisation 4.4% outside 45%-65% (std 698 + macro 0 um2 in 15695 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
-  },
-  {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR ODB-0359] Attempt to change the origin of FIRM instance ot_ohdrv_00000_0",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
-  },
-  {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
-   "fix": ""
   }
  ]
 }
