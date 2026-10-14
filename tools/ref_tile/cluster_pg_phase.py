@@ -40,6 +40,7 @@ def validate(root, reference, spec, grant):
         raise ValueError('PG phase needs the actual R0/N master placement in the die DEF')
     scale = float(units[1]); ox, oy = float(placement[1])/scale, float(placement[2])/scale
     w, h = child['W'], child['H']
+    tol = 1/scale+1e-9
     # Rectangles have layer,x0,y0,x1,y1. M8 is horizontal and M9 vertical.
     def stripes(view, layer, offset):
         out = []
@@ -55,7 +56,8 @@ def validate(root, reference, spec, grant):
                 cross = (oy, oy+h) if layer == 'M8' else (ox, ox+w)
                 if rr[axis+2] <= cross[0] or rr[axis] >= cross[1]: continue
                 length = max(0, min(rr[long_axis+2],span[1])-max(rr[long_axis],span[0]))
-                if length < .90*(span[1]-span[0]): continue
+                if length < (span[1]-span[0])-tol:
+                    raise ValueError(f'{layer} PG rail does not pass through the full placed cluster span')
                 out.append((identity, max(rr[axis],cross[0]), min(rr[axis+2],cross[1])))
         return sorted(set(out))
     counts = {}
@@ -65,7 +67,6 @@ def validate(root, reference, spec, grant):
             raise ValueError(f'{layer} phase audit lacks full-span die/cluster PG pin stripes')
         remaining = list(actual)
         # One database unit accommodates source/export quantization, no phase margin.
-        tol = 1/scale+1e-9
         for net, lo, hi in expected:
             match = next((i for i,(an,al,ah) in enumerate(remaining)
                           if an == net and abs(al-lo) <= tol and abs(ah-hi) <= tol), None)
