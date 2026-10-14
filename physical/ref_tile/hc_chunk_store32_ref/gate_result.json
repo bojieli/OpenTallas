@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hc_chunk_store32_ref",
- "verdict": "FAIL",
- "generated": "2026-10-14T00:37:20-0700",
- "host": "ot-epyc1tb",
+ "verdict": "PASS",
+ "generated": "2026-10-14T00:40:07-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "c4298e64b10959ef2f9472f0a040c5d1e20b2383",
+  "start_commit": "0fb434343c4b2f2121ec366149524a0f8efaf274",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "4523acac7d635b31bfeb616af33b0ed2b7fad9af3c71680ccd85cf357e604be8",
-  "manifest_sha256": "791c9e15912260fdfa7058a88b847b01c9f0e925d090e27ab35bc9d2956d38f9",
+  "archive_sha256": "12feca3d23c3273664fe3afc0197212237717803545014bad548041972a1f937",
+  "manifest_sha256": "0aa9a2cc4c02603007ad559890a0a2ad65aaf232444747a46ce833e73f57deb3",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -17027,8 +17027,8 @@
    {
     "path": "physical/ref_tile/hc_chunk_store32_ref/floorplan.json",
     "kind": "file",
-    "sha256": "1dcff614a6d60f1321ac80961c0dda16cca984763c4db3184e88038aa47f293c",
-    "git_blob": "2ec21744cc567f502fa10609d01eb09cdc3b3918",
+    "sha256": "21cb7add325c2e975d4daf601b903d847f88647543f5c7a57d6c34044b097839",
+    "git_blob": "cfbb39327db92dc98f8c410d098911e52a3fa0df",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17043,8 +17043,8 @@
    {
     "path": "physical/ref_tile/hc_chunk_store32_ref/kit.env",
     "kind": "file",
-    "sha256": "82abfff2b8faaf3a76349684be1ee097bce61c3f76ed991a066b2aa156d6433e",
-    "git_blob": "6dfc8e5f8da28ace84764afd42c0a9bdd10fab07",
+    "sha256": "14254c5364236683b1b2567c81a772dde5e355d1543d27dccb9a9e5d3c2378d9",
+    "git_blob": "505190c4061392ab8f9d9bec9ac1b3dd8142fe08",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17147,8 +17147,8 @@
    {
     "path": "physical/ref_tile/hc_chunk_store32_ref/spec.json",
     "kind": "file",
-    "sha256": "c2b5f44ef579086c6b6fc47d03d5836c7b4d6f3878921ee057dd0027dc5f9f05",
-    "git_blob": "58cf1fd31e58a7683effb2b70403a93cb662f272",
+    "sha256": "9897c0685c5d4fc69b3b70943c8f67e6209d31e368409f0be39683dafaeb9732",
+    "git_blob": "e79a3c06feca31baac1e7ab9439d42209b012e8b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -84739,8 +84739,8 @@
    {
     "path": "tools/ref_tile/specs_hbm_hc/hc_chunk_store32_ref.json",
     "kind": "file",
-    "sha256": "e73800cf1a0f55a1ffab3a5a83583d71979d612e91ff76c58d952ddb2fa6700c",
-    "git_blob": "94315a4a2bb14f6baa095d38afe328f0b51f9508",
+    "sha256": "88324c0bdd31203a491ff76fdb56b18e17bbe979b3cebe786764882257b1af8e",
+    "git_blob": "7fea22a1bf0562a01a1abeffc4e4156a3c223240",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -106424,11 +106424,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T00:36:27-0700",
-  "remote_script_sha256": "c2c189e9e50537189b641f4fb7330ea90979150aa38ce579b194f5d8be60fb69",
+  "captured": "2026-10-14T00:38:41-0700",
+  "remote_script_sha256": "ee9555204bfc3b78e8bd3062ff1d1912b611f8ac762dfdbc0e69d104b77f7771",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hc_chunk_store32_ref-20261014-003604",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hc_chunk_store32_ref-20261014-003818",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -106436,50 +106436,43 @@
   ]
  },
  "clock": {
-  "max_root_sinks": null,
-  "root": null,
+  "max_root_sinks": 1398,
+  "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 101.7,
+  "tt_spread_ps": 4.2,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
-  "verdict": "UNKNOWN",
-  "text": "clock sinks unknown; no measured clock tree (no --cts gate evidence)"
+  "clock_measurements": [
+   {
+    "source": "clk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 342,
+      "mean": 99.8,
+      "min": 98.2,
+      "max": 101.7
+     },
+     "all": {
+      "n": 1398,
+      "mean": 99.8,
+      "min": 97.5,
+      "max": 101.7
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
+  "verdict": "PASS",
+  "text": "1,398 sinks on the largest root <= 15,000; measured TT insertion 101.7 ps, leaf spread 4.2 ps"
  },
- "items": [
-  {
-   "severity": "FAIL",
-   "check": "io_place",
-   "message": "IO placement failed: [ERROR GPL-0301] Utilization 135.717 % exceeds 100%.",
-   "fix": "fix the pin plan / pin layers"
-  },
-  {
-   "severity": "FAIL",
-   "check": "util",
-   "message": "synthesized std area 1078 um2 + macros 0 in core 914: util 118%",
-   "fix": "set \"std_area_um2\": 1078 and drop 'outline' (gen sizes to util 0.52)"
-  },
-  {
-   "severity": "FAIL",
-   "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR GPL-0301] Utilization 135.717 % exceeds 100%.",
-   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
-  },
-  {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=2 ck_insertion rc=1",
-   "fix": ""
-  },
-  {
-   "severity": "WARN",
-   "check": "clock_rule",
-   "message": "the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)",
-   "fix": "read the remote log (textbook lint line 'clock_roots')"
-  }
- ]
+ "items": []
 }

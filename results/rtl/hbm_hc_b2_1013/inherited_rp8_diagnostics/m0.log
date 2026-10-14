@@ -1,0 +1,26 @@
+ERR bench lane traffic hung
+HANG st 3 ndone 0 nexp 2560 fin 0 scl 0 nsc 3
+ERR case 0:  HANG after 200000 cycles
+case 0:     HC_POST d 5120             200000 cycles
+ERR bench lane traffic hung
+ERR bench lane traffic hung
+HANG st 3 ndone 0 nexp 2560 fin 0 scl 0 nsc 3
+ERR case 1:  HANG after 200000 cycles
+case 1:     HC_POST d 5120             200000 cycles
+ERR bench lane traffic hung
+ERR bench lane traffic hung
+HANG st 3 ndone 0 nexp 640 fin 0 scl 0 nsc 1
+ERR case 2:  HANG after 200000 cycles
+case 2: HC_PRE_NORM d 5120             200000 cycles
+ERR bench lane traffic hung
+ERR bench lane traffic hung
+HANG st 3 ndone 0 nexp 640 fin 0 scl 0 nsc 1
+ERR case 3:  HANG after 200000 cycles
+case 3: HC_PRE_NORM d 5120             200000 cycles
+ERR bench lane traffic hung
+summary: 4 HC B2 engine cases, 0 sectors checked, 12 sector errors, stale chunks 0
+HGI_HC_ENG_B2 FAIL errors=12
+- rtl/hbm_accel/generic/peers/tb_hgi_hc_eng_b2.sv:139: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5ms; walltime 75764.785 s; speed 63.355 ns/s
+- Verilator: cpu 73897.422 s on 1 threads; allocated 283 MB

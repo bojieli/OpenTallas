@@ -1,0 +1,6 @@
+HC_CHUNK_STORE rows=2 scans=8 errors=64
+HC_CHUNK_STORE FAIL
+- rtl/hbm_accel/generic/peers/tb_hgi_hc_chunk_store32.sv:36: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 105ns; walltime 0.000 s; speed 1.334 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

@@ -1,0 +1,28 @@
+{
+  "source_commit": "7d84495f0",
+  "actual_source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv": "21a1d284d674cae7eb62ef6e2e69b532034e15316688f5f94690238f0f70e37a",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_chunk_store32.sv": "302339b6c770c50fd5be057ee7e854cbf2419a49ec7f85a5c452df68dce71999",
+    "rtl/hbm_accel/generic/peers/run_hc_chunk_store32.sh": "ae65549f2309bed5de631d6814a47416dd5a38f11a0d468fcdfbf4b9408ae8cc"
+  },
+  "matches_current": true,
+  "exact": {
+    "rows": 2,
+    "scans": 8,
+    "errors": 0
+  },
+  "data_mutant_errors": 64,
+  "duplicate_mutant_errors": 2,
+  "clock_probe": "results/arch/hbm_native_1013/hc_norm_takeover/chunk_store_remote_gate2.json",
+  "outline_um": [
+    51.84,
+    49.68
+  ],
+  "std_area_um2": 1078,
+  "sinks": 1398,
+  "TT_boundary_mean_ps": 99.8,
+  "TT_spread_ps": 4.2,
+  "scope": "Standalone local blockstore, not yet composed into native residual collector. No assigned die pins or slot, route or whole-layer ledger qualification.",
+  "ledger_eligible": false
+}
