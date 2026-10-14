@@ -150,3 +150,45 @@ foreach ot_i [$ot_cp_b getInsts] {
 }
 if {$ot_release_cells < 4} { error "ENGC coherent release registers missing" }
 puts "ENGC release place cells=$ot_release_cells near SINK release pin ($ot_x,$ot_y)"
+
+# The read return stage cuts each bank's long loaded launch wire. Its input
+# register/cone belongs at that actual bank output pin; placing it only at IO
+# would leave the expensive launch-to-long-wire hop before the new stage.
+proc ot_engc_read_source {seed} {
+  set pending [list $seed]; set seen [dict create]
+  while {[llength $pending]} {
+    set inst [lindex $pending 0]; set pending [lrange $pending 1 end]
+    if {[dict exists $seen [$inst getName]]} continue
+    dict set seen [$inst getName] 1
+    foreach pin [$inst getITerms] {
+      if {[$pin getIoType] ne "INPUT"} continue
+      if {[$inst getMaster] ne [$seed getMaster] || [[$pin getMTerm] getName] eq "D"} {
+        set net [$pin getNet]
+        if {$net eq "NULL" || $net eq ""} continue
+        set driver [$net getFirstOutput]
+        if {$driver eq "NULL" || $driver eq ""} continue
+        set source [$driver getInst]; set master [$source getMaster]
+        if {[$master isBlock]} {
+          if {[$source getName] ni {u_pb0 u_pb1 u_pb2}} continue
+          if {![string match {r_d*} [[$driver getMTerm] getName]]} continue
+          set bb [$driver getBBox]
+          return [list [expr {([$bb xMin]+[$bb xMax])/2}] [expr {([$bb yMin]+[$bb yMax])/2}]]
+        }
+        if {[regexp {^(INV|BUF|HB)} [$master getName]]} {lappend pending $source}
+      }
+    }
+  }
+  error "ENGC read return bank source not found: [$seed getName]"
+}
+set ot_read_cells 0
+foreach ot_i [$ot_cp_b getInsts] {
+  if {![string match *u_read_return_io* [$ot_i getName]]} continue
+  # Match only the kept state cells; anonymous transport cells are reached
+  # through the mapped output cone after the bank source is resolved.
+  if {[$ot_i findITerm D] eq "NULL"} continue
+  lassign [ot_engc_read_source $ot_i] ot_tx ot_ty
+  ot_engc_place_output_cone $ot_i $ot_tx $ot_ty
+  incr ot_read_cells
+}
+if {$ot_read_cells && $ot_read_cells != 576} {error "ENGC read return registers $ot_read_cells !=576"}
+puts "ENGC read return place registers=$ot_read_cells at actual bank read pins"
