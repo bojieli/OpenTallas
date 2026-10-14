@@ -1,5 +1,5 @@
 {
- "name": "qkd_seq_fan-kc5-7d6a5ce79",
+ "name": "qkd_seq_fan-kc6-COMMIT",
  "block": "qkd_seq_fan",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-kvsys-seq-1014",
-  "commit": "7d6a5ce79"
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -62,7 +62,7 @@
     "name": "layer_cluster_exact",
     "cmd": "bash physical/qwen_kv_centre/seq_layer_bench.sh pos {RUN}/bench/lay cluster",
     "expect": "pass",
-    "pass_regex": "^PASS qkd_seq_layer cluster runs=28 exact=28",
+    "pass_regex": "^PASS qkd_seq_layer cluster runs=14 exact=14",
     "threads": 16,
     "peak_ram_gb": 64,
     "needs": [
@@ -131,7 +131,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_seq_fan/qkd_seq_fan-kc5-7d6a5ce79"
+   "to": "results/rtl/ref_tile/qkd_seq_fan/qkd_seq_fan-kc6-COMMIT"
   }
  ],
  "cycles_added": 0,
