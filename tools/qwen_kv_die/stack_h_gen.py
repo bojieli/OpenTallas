@@ -997,6 +997,9 @@ def native_profile(s):
 `ifndef KVD_Q_FP32
 `define KVD_Q_FP32 0
 `endif
+`ifndef KVD_QK_ONLY
+`define KVD_QK_ONLY 0
+`endif
 // TP8 is HEADS=1, Q_FP32=1: four query heads, one KV group.
 // FP32 transport rounds to BF16 RNE here, exactly decode_token_tp's matvec operand.
 // Existing HSUB/ECTL3 hard views need independent native body/parameter qualification.
@@ -1018,7 +1021,18 @@ def native_profile(s):
     s=s.replace("if (sg) run <= 1'b0; else sg <= 1'b1;", "if (sg || `KVD_HEADS == 1) run <= 1'b0; else sg <= 1'b1;")
     s=s.replace("if (tg) run <= 1'b0;", "if (tg || `KVD_HEADS == 1) run <= 1'b0;")
     s=s.replace("if (scnt1 == n_s) kdone[1] <= 1'b1;", "if (`KVD_HEADS == 2 && scnt1 == n_s) kdone[1] <= 1'b1;")
-    return s
+    s=s.replace("rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0;", "if (`KVD_QK_ONLY) rg_run <= 1'b0;\n                    else begin rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0; end")
+    s=s.replace("c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; k_done <= 1'b1;", "k_done <= 1'b1;\n                        if (`KVD_QK_ONLY) c_fin <= 1'b1;\n                        else begin c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; end")
+    a=s.index('module ot_qwen_nearhbm_attn_stack_h #(')
+    sub=s[a:]
+    sub=sub.replace('    output wire [15:0]       ev ', "    input wire native_e_read,\n    input wire [10:0] native_e_addr,\n    output reg [63:0] native_e_data,\n    output wire [15:0] native_exp_done,\n    output wire native_score_done,\n    output wire [15:0]       ev ",1)
+    sub=sub.replace('    reg [63:0]  e_mem  [0:4095];', "    reg [63:0]  e_mem  [0:4095];\n    always @(posedge clk) if (native_e_read) native_e_data <= e_mem[{1'b0,native_e_addr}];")
+    sub=sub.replace('    reg  [31:0] exp_done;', '    reg  [31:0] exp_done;\n    assign native_exp_done = exp_done[15:0];\n    assign native_score_done = kdone[0];')
+    # A native empty stack completes its parent count before the three-leaf
+    # controller start has cleared previous maxima. Ownership, not stored flags,
+    # decides whether this stack contributes a max to the new frame.
+    sub=sub.replace('so_any <= sany[lsent[0]];', "so_any <= (!`KVD_QK_ONLY || n_s != 0) && sany[lsent[0]];")
+    return s[:a]+sub
 
 
 def main():

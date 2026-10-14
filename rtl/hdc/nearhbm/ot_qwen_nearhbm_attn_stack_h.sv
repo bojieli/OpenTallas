@@ -5,6 +5,9 @@
 `ifndef KVD_Q_FP32
 `define KVD_Q_FP32 0
 `endif
+`ifndef KVD_QK_ONLY
+`define KVD_QK_ONLY 0
+`endif
 // TP8 is HEADS=1, Q_FP32=1: four query heads, one KV group.
 // FP32 transport rounds to BF16 RNE here, exactly decode_token_tp's matvec operand.
 // Existing HSUB/ECTL3 hard views need independent native body/parameter qualification.
@@ -716,7 +719,8 @@ module ot_qwen_nearhbm_ectl_h #(
                 end else if (`KVD_HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_idx <= E;
                 end else begin
-                    rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0;
+                    if (`KVD_QK_ONLY) rg_run <= 1'b0;
+                    else begin rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0; end
                 end
             end else if (rg_run && rg_vph) begin
                 if (rg_gam < gmax) begin
@@ -849,7 +853,9 @@ module ot_qwen_nearhbm_ectl_h #(
                     end else if (`KVD_HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_idx <= E;
                     end else begin
-                        c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; k_done <= 1'b1;
+                        k_done <= 1'b1;
+                        if (`KVD_QK_ONLY) c_fin <= 1'b1;
+                        else begin c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; end
                     end
                 end else begin
                     if (c_gam < gmax) begin
@@ -1658,6 +1664,11 @@ module ot_qwen_nearhbm_attn_stack_h #(
     output wire [511:0]      pv_data,
     output wire [1:0]        pv_done,
     output wire              fault,
+    input wire native_e_read,
+    input wire [10:0] native_e_addr,
+    output reg [63:0] native_e_data,
+    output wire [15:0] native_exp_done,
+    output wire native_score_done,
     output wire [15:0]       ev                // cycle markers for the bench
 );
     localparam integer LN = 4 * HD;
@@ -1690,6 +1701,7 @@ module ot_qwen_nearhbm_attn_stack_h #(
     // memories: scores {g, idx} x 4 FP32, e {g, idx} x 4 BF16
     reg [127:0] sc_mem [0:4095];
     reg [63:0]  e_mem  [0:4095];
+    always @(posedge clk) if (native_e_read) native_e_data <= e_mem[{1'b0,native_e_addr}];
 
     // M from the hub
     reg [255:0] M;
@@ -1717,6 +1729,8 @@ module ot_qwen_nearhbm_attn_stack_h #(
     wire [LN*32/LFB*R-1:0] nb_data;
     reg  [R-1:0] nb_cr;
     reg  [31:0] exp_done;
+    assign native_exp_done = exp_done[15:0];
+    assign native_score_done = kdone[0];
     genvar e;
     generate for (e = 0; e < R; e = e + 1) begin : g_e
         wire rv, rvv, rg;
@@ -1881,7 +1895,7 @@ module ot_qwen_nearhbm_attn_stack_h #(
             if (start) begin lsent <= 2'b00; lh <= 0; end
             else if ((kdone[0] && !lsent[0]) || (kdone[1] && lsent[0] && !lsent[1])) begin
                 so_valid <= 1'b1; so_type <= 2'd0; so_g <= lsent[0]; so_hh <= lh[1:0]; so_k <= 0;
-                so_any <= sany[lsent[0]]; so_data <= smax[32*(4*lsent[0] + lh[1:0]) +: 32];
+                so_any <= (!`KVD_QK_ONLY || n_s != 0) && sany[lsent[0]]; so_data <= smax[32*(4*lsent[0] + lh[1:0]) +: 32];
                 if (lh == 3'd3) begin lh <= 0; lsent[lsent[0]] <= 1'b1; end else lh <= lh + 3'd1;
             end else if (zm_valid) begin
                 so_valid <= 1'b1; so_type <= zm_done ? 2'd2 : 2'd1; so_g <= zm_g; so_hh <= zm_hh; so_k <= zm_k;
