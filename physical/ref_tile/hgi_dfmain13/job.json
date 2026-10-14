@@ -1,5 +1,5 @@
 {
- "name": "hgi_dfmain13-src15-COMMIT",
+ "name": "hgi_dfmain13-src15-1a9409837",
  "block": "ot_hgi_dma_front_main13",
  "ref_tile": true,
  "owner": "Codex:/root/hbm_dma_lkep_2240/front_split",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "codex/hbm-front-leaves-1013",
-  "commit": "COMMIT",
+  "commit": "1a9409837",
   "extra_paths": [
    "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant",
    "rtl/hbm_accel/generic/vm/b2",
@@ -165,7 +165,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_dfmain13/hgi_dfmain13-src15-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_dfmain13/hgi_dfmain13-src15-1a9409837"
   }
  ],
  "cycles_added": 0,
