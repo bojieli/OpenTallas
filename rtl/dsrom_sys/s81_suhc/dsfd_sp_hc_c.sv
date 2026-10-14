@@ -13,7 +13,7 @@ module dsfd_sp_hc_c #(
     parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, S_RT = 4, HIER = 0, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, MUT = 0, AMUT = 0,
     // pass-through of the slab's remaining structural parameters (defaults = dsfd_sp_hc's own: no change unless set)
     parameter integer HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4,
-    parameter integer PIPE = 0, PIPE_PD = 40             // POST issue-order done (hierarchical slab; see ot_s81_hc_cseq)
+    parameter integer PIPE = 1, PIPE_PD = 40             // POST issue-order done (hierarchical slab; see ot_s81_hc_cseq)
 ) (
     output wire [TFW-1:0] t_tf0,t_tf1,t_tf2,
     input wire [TRW-1:0] f_tr0,f_tr1,f_tr2,

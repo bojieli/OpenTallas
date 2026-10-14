@@ -20,7 +20,7 @@
 module ot_s81_hc_cseq #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW,
-    parameter integer PIPE = 0, PD = 40
+    parameter integer PIPE = 1, PD = 40
 ) (
     input  wire                 cck, crs, sk, srs,
     input  wire                 n_cmd_v,
