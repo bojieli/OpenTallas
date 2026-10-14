@@ -1,0 +1,191 @@
+{
+  "schema": "s81.bgl28.balanced_mc24_numerical_evidence.v1",
+  "status": "EXACT_NUMERICAL_ONLY",
+  "source_commit": "63fc6964e",
+  "source_files": [
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv",
+      "git_blob": "1c33743c62f1dd3fbcaa13a3bf9a56a0c82a674a",
+      "sha256": "6850b068d911cb1a479cbc3f3c3751aed80137f41310cd78376ebbc8464b6cce"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq28h_mc24.sv",
+      "git_blob": "bd723fef81c128ed49a24a1b244d7995b2160513",
+      "sha256": "1143c72abf51f7032cd24776a149e63c0712220695eb004d5a60e6cb121a0c5d"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv",
+      "git_blob": "a9ebf739405a4b43e30c29031e71bb413f726092",
+      "sha256": "990c783f6b446a002b22a93d0f9f017164d720dc97fb59250d9a8c708272a12f"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bgl_lockstep.sv",
+      "git_blob": "dd46e6d9261c86253ef3cff531198c2a12535a19",
+      "sha256": "3236fc76f2507a797bed7c9dbfdced2307db590cf59d60df4cb83209b9f87a59"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh",
+      "git_blob": "42fe5250382715d0cd208120e6c9ff124611e6b3",
+      "sha256": "a96f8e57e3cdaf1a7b60e63be03258c481a79de93463562435e00c06a009c868"
+    }
+  ],
+  "source_archive_sha256": "01f29b8ab2e8cc17585d989264eed548fe7d95be682ec661a47f009f9e287c26",
+  "source_host": "ot-epyc4",
+  "actual_admission": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-826516-1791963110): exit0",
+  "clock_scope": "24 explicit clock entries tied only for numerical bench; physical source binding not qualified",
+  "microarchitecture": {
+    "NP": 28,
+    "NPR": 10,
+    "DW": 128,
+    "banks": 8,
+    "bank_EP": 2,
+    "bank_ED": 3,
+    "bank_HL": 11,
+    "forward_leaf_hop": 1,
+    "tile_hop": 8,
+    "output_forward_skew": 12,
+    "BE_MD": 12
+  },
+  "defines": [
+    "OT_VMBGL_HOP1",
+    "OT_VMBGL_MC_PARENT",
+    "OT_VMBGL_FLOPMEM"
+  ],
+  "cases": [
+    {
+      "case": "gold",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 200000,
+        "ops": 700875,
+        "own_reads": 31253,
+        "returned": 124712,
+        "same_cycle_same_bank_reads": 305,
+        "errors": 0
+      },
+      "log_sha256": "386b260a0353b94ab4e83f3ee2dd31ba3cd030bae3711104b22d6db319fb0654"
+    },
+    {
+      "case": "gold_s2",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 200000,
+        "ops": 700874,
+        "own_reads": 31147,
+        "returned": 124723,
+        "same_cycle_same_bank_reads": 292,
+        "errors": 0
+      },
+      "log_sha256": "e33918c92e4c258b1165cbd7af0ad0640d09fbd75e74e5b05d78712137edee21"
+    },
+    {
+      "case": "stress",
+      "expected": "PASS",
+      "verdict": "PASS",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 200000,
+        "ops": 1866279,
+        "own_reads": 83250,
+        "returned": 333854,
+        "same_cycle_same_bank_reads": 1919,
+        "errors": 0
+      },
+      "log_sha256": "978b11ba8e52af336eb7ef071ad8e583a8c47651ccd622d11dbef0d4da8ed586"
+    },
+    {
+      "case": "cov_refuse",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 300,
+        "ops": 1057,
+        "own_reads": 50,
+        "returned": 211,
+        "same_cycle_same_bank_reads": 0,
+        "errors": 0
+      },
+      "log_sha256": "9ca71b5450ec28bd5e5776aa99731040465467ff555ac094a7a03286ec74f7a2"
+    },
+    {
+      "case": "mut_RELAY",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 161886,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 219589
+      },
+      "log_sha256": "03f67f9846fc6cb249b1ce4e3ebc3a90c9bb7b47420493b1981f6e1291d24870"
+    },
+    {
+      "case": "mut_ID",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 740
+      },
+      "log_sha256": "2f8785250cdbd80343deed32459b395a97d47f47cb16a8819debdcd852c5582a"
+    },
+    {
+      "case": "mut_J0",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 62
+      },
+      "log_sha256": "f87b4bca5cef5dc398e0c246e5c96bb0db5d2419c99ed5658c2fd4769d8312dd"
+    },
+    {
+      "case": "mut_ORDER",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 82
+      },
+      "log_sha256": "8284e5d8b0256932da2372d7a6f2c801839eac7e0f63a6949e01d2ab815e7541"
+    },
+    {
+      "case": "mut_MASK",
+      "expected": "FAIL",
+      "verdict": "FAIL",
+      "expected_outcome_pass": true,
+      "counts": {
+        "cycles": 40000,
+        "ops": 140121,
+        "own_reads": 6241,
+        "returned": 25156,
+        "same_cycle_same_bank_reads": 63,
+        "errors": 5429
+      },
+      "log_sha256": "30571036af5b60825787d15c349e10afbf97adcc6c14e0e91730a722c7d90a6f"
+    }
+  ]
+}
