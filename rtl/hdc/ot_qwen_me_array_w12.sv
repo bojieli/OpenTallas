@@ -246,8 +246,8 @@ module ot_qwen_me_array_w12 #(
                 .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
             if (CTH != 0) begin : g_kids
                 wire [2*CODE_BANKS*13-1:0] krq;      // the rows' macro requests: the bench reads its images by rom_ce / rom_addr
-                ot_qwen_tile_kids #(.CODE_BANKS(CODE_BANKS), .RPS(1), .ROM_MUT(ROM_MUT), .TMUT(TMUT), .CMUT((t == 0) ? CMUT : 0)) u_k (
-                    .clk(clk), .rst_n(rst_n), .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq),
+                ot_qwen_tile_kids #(.CODE_BANKS(CODE_BANKS), .RPS(1), .ROM_MUT(ROM_MUT), .TMUT(TMUT), .CMUT((t == 0) ? CMUT : 0), .MCLK(1)) u_k (
+                    .clk(clk), .clk_rp({CODE_BANKS{clk}}), .clk_sl({8{clk}}), .clk_node(clk), .rst_n(rst_n), .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq),
                     .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
                     .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny_k), .n_vy(nvy_k), .t_out(to_k), .t_vout(tvo_k),
                     .rom_req_m(krq), .rom_rd(t_rom_rd[t*2*CODE_BANKS*266 +: 2*CODE_BANKS*266]));

@@ -16,9 +16,13 @@ module ot_qwen_tile_kids #(
     parameter integer RPS = 0,
     parameter integer ROM_MUT = 0,
     parameter integer TMUT = 0,
-    parameter integer CMUT = 0
+    parameter integer CMUT = 0,
+    parameter integer MCLK = 0
 ) (
     input  wire          clk,
+    input  wire [CODE_BANKS-1:0] clk_rp,
+    input  wire [7:0] clk_sl,
+    input  wire clk_node,
     input  wire          rst_n,
     // control-leaf seams
     input  wire [CODE_BANKS*14-1:0]   cx_rreq,
@@ -43,6 +47,7 @@ module ot_qwen_tile_kids #(
     genvar b, g;
     generate
         for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_rb
+            wire row_clk = (MCLK != 0) ? clk_rp[b] : clk;
             wire [1023:0] r_q;
             wire          ce_d  = cx_rreq[14*b];
             wire          any_d = cx_rreq[14*b + 1];
@@ -51,12 +56,12 @@ module ot_qwen_tile_kids #(
                 wire [25:0] rq;
                 ot_qwen_rpair_logic #(.PWB(256), .ROM_CAP2(1), .ROM_CAPX(2), .ROM_MUT(ROM_MUT),
                     .MUT3((TMUT == 3 && b == 0) ? 1 : 0), .MUT5((TMUT == 5 && b == 0) ? 1 : 0)) u_rp (
-                    .clk(clk), .rst_n(rst_n), .ce_d(ce_d), .any_d(any_d), .ad_d(ad_d), .req_m(rq),
+                    .clk(row_clk), .rst_n(rst_n), .ce_d(ce_d), .any_d(any_d), .ad_d(ad_d), .req_m(rq),
                     .rd({rom_rd[(CODE_BANKS + b)*266 +: 256], rom_rd[b*266 +: 256]}), .r_q(r_q));
                 assign rom_req_m[13*b +: 13] = rq[12:0];
                 assign rom_req_m[13*(CODE_BANKS+b) +: 13] = rq[25:13];
             end else begin : g_hd
-                ot_qwen_tile_rpair u_rp (.clk(clk), .rst_n(rst_n), .ce_d(ce_d), .any_d(any_d), .ad_d(ad_d), .r_q(r_q));
+                ot_qwen_tile_rpair u_rp (.clk(row_clk), .rst_n(rst_n), .ce_d(ce_d), .any_d(any_d), .ad_d(ad_d), .r_q(r_q));
                 assign rom_req_m[13*b +: 13] = 13'd0;
                 assign rom_req_m[13*(CODE_BANKS+b) +: 13] = 13'd0;
             end
@@ -73,13 +78,13 @@ module ot_qwen_tile_kids #(
             wire [63:0]  t;
             wire [7:0]   lf;
             wire         tf;
-            ot_qwen_tile_lsl u_lh (.clk(clk), .rst_n(ld[390]), .v_d(ld[389]), .first_d(ld[388]), .split_d(ld[387:384]),
+            ot_qwen_tile_lsl u_lh (.clk((MCLK != 0) ? clk_sl[g] : clk), .rst_n(ld[390]), .v_d(ld[389]), .first_d(ld[388]), .split_d(ld[387:384]),
                                    .w_d(ld[383:128]), .x_d(ld[127:0]), .t_out(t), .lfault(lf), .tfault(tf));
             assign cx_lq[73*GR +: 73] = {tf, lf, t};
         end
     endgenerate
     wire node_fault;
     assign cx_nfault = (CMUT == 4) ? ~node_fault : node_fault;
-    ot_qwen_tile_node u_node (.clk(clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va), .y(n_y), .vy(n_vy), .fault(node_fault),
+    ot_qwen_tile_node u_node (.clk((MCLK != 0) ? clk_node : clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va), .y(n_y), .vy(n_vy), .fault(node_fault),
                               .t_d(cx_td), .t_vd(cx_tvd), .t_out(t_out), .t_vout(t_vout));
 endmodule
