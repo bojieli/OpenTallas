@@ -50,6 +50,17 @@
     "pass_regex": "^PASS tt_ctlm_split strict_argmax",
     "threads": 4,
     "peak_ram_gb": 8
+   },
+   {
+    "name": "native_fault_epoch",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/strict_fault strict_fault",
+    "expect": "pass",
+    "pass_regex": "^PASS tt_ctlm_split strict_fault",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "calibrate": {

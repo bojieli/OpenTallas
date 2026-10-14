@@ -388,6 +388,17 @@
     "pass_regex": "^PASS tt_ctlm_split strict_argmax",
     "threads": 4,
     "peak_ram_gb": 8
+   },
+   {
+    "name": "native_fault_epoch",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/strict_fault strict_fault",
+    "expect": "pass",
+    "pass_regex": "^PASS tt_ctlm_split strict_fault",
+    "threads": 4,
+    "peak_ram_gb": 12,
+    "needs": [
+     "verilator"
+    ]
    }
   ]
  },
@@ -402,7 +413,7 @@
  "spine_through_icg": true,
  "local_clock_adapter": "physical/qfd_tt_ctlm_split/dual_clock_spine.tcl",
  "kit_generator": "tools/qwen_tt_split/gen_clock_kit.py",
- "clock_distribution_note": "Existing spine implementation twice with measured native ICG subtree insertion, no CTS remainder or new phase; head source/latency unchanged. One native ICG retained through actual route (OT_CG_EXCLUDE=u_cg.u_icg), no cloning. Primary data/reset cells remain movable and repairable; only clock buffers/nets and native ICG are protected. Provisional clock entry S213.12..214.56 lies in SRAM-column corridor201.528..226.8; all other pins unchanged. Leaf fanout32 reduces clock depth under the existing fanout32 bound. Requires fresh native ENA and both-domain proof.",
+ "clock_distribution_note": "Existing spine implementation twice with measured native ICG subtree insertion, no CTS remainder or new phase; head source/latency unchanged. One native ICG retained through actual route (OT_CG_EXCLUDE=u_cg.u_icg), no cloning. Primary data/reset cells remain movable and repairable; only clock buffers/nets and native ICG are protected. Provisional clock entry S213.12..214.56 lies in SRAM-column corridor201.528..226.8; all other pins unchanged. Leaf fanout32 reduces clock depth under the existing fanout32 bound. Requires fresh native ENA and both-domain proof. Successor keeps original GPL primary/ICG placement rather than primary-port packing, and the private predictor existing95-bit return station uses same leaf-local ec. Pre-edge enable/return epoch, strict full operation, explicit fault and native idle activity proofs are archived in physical/qfd_tt_ctlm_split/evidence/localret-native. Public head bytes unchanged; native ENA timing remains to be measured.",
  "children": [],
  "inter": [],
  "io_flop_at_pins": {
