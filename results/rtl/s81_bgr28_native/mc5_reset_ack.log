@@ -1,0 +1,21 @@
+ot-run: ot-epyc1tb     admits   610 GB (avail 837, growth 45, headroom 64, waiters 0/0 GB) load 40/128 running 8 disk 786 GB 
+ot-run: ot-epyc4       admits   468 GB (avail 695, growth 171, headroom 48, waiters 0/0 GB) load 61/128 running 17 disk 947 GB 
+ot-run: ot-pve1        admits   161 GB (avail 208, growth 6, headroom 32, waiters 0/0 GB) load 34/28 running 2 disk 1312 GB 
+ot-run: ot-agidock128  admits   -94 GB (avail 83, growth 7, headroom 24, waiters 2/152 GB) load 20/64 running 3 disk 259 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2827851-1791977753 after 0 s
+BANK_RESET_ACK PASS NP28 flatEP2 and native5roots; stopped domain reset pulse + missed conditioner
+- rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bank_reset_ack_mc5.sv:34: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 502ns; walltime 0.000 s; speed 8.281 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+MC5_ACK_CASE gold EXPECTED_OK
+[52000] %Fatal: tb_dsfd_vm_bank_reset_ack_mc5.sv:22: Assertion failed in tb_dsfd_vm_bank_reset_ack_mc5: missed conditioner was acknowledged
+%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bank_reset_ack_mc5.sv:22: Verilog $stop
+Aborting...
+MC5_ACK_CASE forward EXPECTED_OK
+[52000] %Fatal: tb_dsfd_vm_bank_reset_ack_mc5.sv:22: Assertion failed in tb_dsfd_vm_bank_reset_ack_mc5: missed conditioner was acknowledged
+%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_bank_reset_ack_mc5.sv:22: Verilog $stop
+Aborting...
+MC5_ACK_CASE no_witness EXPECTED_OK
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2827851-1791977753): exit 0

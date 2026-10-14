@@ -1,0 +1,38 @@
+{
+  "status": "SOURCE_CANDIDATE_PHYSICAL_ACK_VIEWS_OPEN",
+  "source_commit": "d1884acdc",
+  "cases": {
+    "gold_all_five_stopped_domains": "PASS",
+    "forward_helper_mutant": "EXPECTED_FAIL",
+    "no_witness_helper_mutant": "EXPECTED_FAIL"
+  },
+  "selected_flat_graph": {
+    "consumers": 16,
+    "ACK_FFs": 32
+  },
+  "unselected_MC40_graph": {
+    "leaves": 128,
+    "consumers": 640,
+    "ACK_FFs": 1280,
+    "output_conditioner_extra_FFs": 512,
+    "bank_history_conditioner_extra_FFs": 256
+  },
+  "per_leaf_ACK_order": [
+    "bank",
+    "request",
+    "return",
+    "forward_ports0..13",
+    "forward_ports14..27"
+  ],
+  "raw_epoch": "rs[0] upstream of all actual final conditioners",
+  "bank_final_release": [
+    "rst_i",
+    "rst_hist"
+  ],
+  "output_final_release": [
+    "g_output_reset[0].rst_out_b[1] complemented",
+    "g_output_reset[1].rst_out_b[1] complemented"
+  ],
+  "aggregate_parent_connection": "UNCONNECTED",
+  "log_sha256": "59692f7013abd3c87459409af1339630d09a8e7262a98649a69ac23d15a229f1"
+}
