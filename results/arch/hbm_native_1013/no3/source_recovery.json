@@ -78,12 +78,13 @@
     "GRANT_SEAT": 1,
     "HIER": 1
   },
-  "source_shadow_fix": "Remove real slice8/5 bodies from hard-parent source, then load actual five liberty children. Pass OT_STN_HARD before parsing snapshot station; main station body lacks HIER/GRANT_SEAT.",
+  "source_shadow_fix": "Pass OT_STN_HARD before parsing station snapshot; when binding actual liberty children, remove real slice8/5 module bodies before loading liberty. Authoritative origin/main source has HIER/GRANT_SEAT and all four snapshots match byte-for-byte; no source restoration needed.",
   "clock_rule": "Six independent roots at phi minus measured child boundary insertion; never flatten39k sinks into one tree.",
   "slot_assignment": null,
   "above_pin_obstruction_repaired": false,
   "parent_bit_exact_bench_current": false,
   "parent_routed": false,
   "requirement_complete": false,
-  "closed_children_preserved": true
+  "closed_children_preserved": true,
+  "main_verification": "Authoritative isolated origin/main git blobs; shared checkout working files are not source evidence."
 }
