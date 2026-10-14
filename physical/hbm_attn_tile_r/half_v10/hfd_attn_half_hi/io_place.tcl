@@ -1,4 +1,4 @@
-# hfd_attn_half_hi pins (v2): outline 1778.52 x 689.04; every pin on its pin bank
+# hfd_attn_half_hi pins (v2): outline 1778.52 x 689.04; every pin on its pin bank; routing-track contact repair 2026-10-13
 place_pin -pin_name {xp[0]} -layer M5 -location {733.9320 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {xp[1]} -layer M5 -location {734.1240 0.0960} -pin_size {0.0240 0.1920}
 place_pin -pin_name {xp[2]} -layer M5 -location {734.3160 0.0960} -pin_size {0.0240 0.1920}

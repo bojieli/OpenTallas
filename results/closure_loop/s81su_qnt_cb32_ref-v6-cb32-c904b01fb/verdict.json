@@ -45,6 +45,22 @@
    "ok": true,
    "tail": "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.098 MB sources in 21 modules, into 0.009 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.064 s (elab=0.006, cvt=0.052, bld=0.000); cpu 0.064 s on 1 threads; allocated 43.383 MB\nlint-ok\n",
    "track": "parallel"
+  },
+  "bench_s81su_tiles_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "track": "post_closure_source_bound",
+   "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/qnt_tiles/o/run_full_dpi_m0_a0_h_t0.json",
+   "tail": "RUN full_dpi_m0_a0_h_t0 pass err_rows [0, 0, 0]"
+  },
+  "bench_s81su_tiles_mutant_qnt": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "track": "post_closure_source_bound",
+   "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/qnt_tiles/o/tm_14/run_full_dpi_m0_a0_h_t14.json",
+   "tail": "SU_TILES_MUTANT 14 dsfd_su_t_qnt fail err_rows [1667, 1666, 1668]; all 21 class mutants fail"
   }
  },
  "no_bench_reason": "New CB32/CB16 control-bank mechanism qualifies on minimal full N256/S_RD16/NFI33 component against immutable69c124e5d QNT reference, all outputs/cycles; MUT6 copied-offset mutant must fail. Default SU composition full m0/m1/m5 evidence69c124e5d is preserved; no new latency or arithmetic order. Exact/mutant/source-matched price gates must pass before adoption.",
@@ -150,5 +166,38 @@
   "no_bench_reason": "New CB32/CB16 control-bank mechanism qualifies on minimal full N256/S_RD16/NFI33 component against immutable69c124e5d QNT reference, all outputs/cycles; MUT6 copied-offset mutant must fail. Default SU composition full m0/m1/m5 evidence69c124e5d is preserved; no new latency or arithmetic order. Exact/mutant/source-matched price gates must pass before adoption."
  },
  "io_budget": "link_budget_consistent (fixed split)",
- "rebudget": null
+ "rebudget": null,
+ "behavioral_binding": {
+  "schema": "rootpub.r2.behavioral_binding/1",
+  "bound_at": "2026-10-14T07:03:25-07:00",
+  "bound_by": "root publication r2 (claude/rootpub-r2-1014)",
+  "how": "composition gate run via ot-run on a git-archive snapshot of the job source commit (tools+rtl+memory macro models; nothing else changed)",
+  "host": "ot-epyc1tb",
+  "snapshot_root": "/srv/opentallas-scratch/claude/rootpub-r2/src_<commit>",
+  "gate": "s81su_tiles (routed-top slab gate, DPI float models: QNT holds no float primitive, so the DPI gate is its qualification per composition_gates.json)",
+  "source_commit": "c904b01fb",
+  "snapshot": "f6ff6785b tools+rtl (the gate commit; c904b01fb predates the tile-top tooling) + f503e4f85 tools/s81_suhc/su_tiles_gate.sh + the job's two QN sources from c904b01fb (the ONLY routed sources that differ from f6ff6785b)",
+  "routed_sources_sha256": {
+   "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_qn.sv": "052bb1062c979954b9c859e53b09adc1548592e187ec2b1eade69d22d68d453d",
+   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "e33c4f5eb2f69f513b2c5bc053f3c40b6f5864b74144c8a6f6f64b5f9d4dfe32"
+  },
+  "benches": {
+   "bench_s81su_tiles_exact": {
+    "expect": "pass",
+    "rc": 0,
+    "ok": true,
+    "track": "post_closure_source_bound",
+    "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/qnt_tiles/o/run_full_dpi_m0_a0_h_t0.json",
+    "tail": "RUN full_dpi_m0_a0_h_t0 pass err_rows [0, 0, 0]"
+   },
+   "bench_s81su_tiles_mutant_qnt": {
+    "expect": "fail",
+    "rc": 1,
+    "ok": true,
+    "track": "post_closure_source_bound",
+    "record": "results/rtl/ref_tile/rootpub_r2_bench_bindings_1014/qnt_tiles/o/tm_14/run_full_dpi_m0_a0_h_t14.json",
+    "tail": "SU_TILES_MUTANT 14 dsfd_su_t_qnt fail err_rows [1667, 1666, 1668]; all 21 class mutants fail"
+   }
+  }
+ }
 }

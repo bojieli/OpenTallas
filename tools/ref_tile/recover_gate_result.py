@@ -23,6 +23,8 @@ def main():
     ap.add_argument('--script', required=True, help='original remote execution script')
     ap.add_argument('--log', required=True, type=Path)
     ap.add_argument('--route-commit', required=True, help='explicit candidate source commit, never inferred from HEAD')
+    ap.add_argument('--frozen-helper-recovery', action='store_true',
+                    help='verify committed original helpers and actual staged bytes; recover original evidence only')
     ap.add_argument('--cts', action='store_true')
     ap.add_argument('--synth-cap', type=int, default=1800)
     a = ap.parse_args()
@@ -38,12 +40,30 @@ def main():
     if remote.returncode:
         ap.exit(1, 'Original snapshot verification failed: ' + remote.stderr[-1500:] + '\n')
     binding = json.loads(remote.stdout)
+    if a.frozen_helper_recovery:
+        HO = SB.overlay_module()
+        frozen = binding.get('route_overlay_plan')
+        try:
+            HO.committed_frozen_payloads(PG.ROOT, frozen)
+            paths = sorted(e['path'] for e in binding['files'] if e['source'] == 'daemon_overlay')
+            code = ('exec(' + repr(Path(HO.__file__).read_text()) + ')\n'
+                    'print(json.dumps(verify_staged_helpers(' + repr(a.run + '/src') + ','
+                    + repr(frozen) + ',' + repr(paths) + ')))\n')
+            check = subprocess.run(['ssh', a.host, 'python3 -'], input=code, capture_output=True, text=True)
+            if check.returncode:
+                raise ValueError(check.stderr[-1500:])
+            receipt = json.loads(check.stdout)
+            receipt['manifest_sha256'] = binding['manifest_sha256']
+            binding['helper_recovery'] = receipt
+        except (OSError, ValueError, TypeError, subprocess.SubprocessError) as ex:
+            ap.exit(1, 'Original executed helper verification failed: ' + str(ex) + '\n')
     g = PG.Gate()
     g.source_binding = binding
     g.remote_host = a.host
     job = json.loads((kd / 'job.json').read_text()) if (kd / 'job.json').exists() else None
     spec = PG.check_kit(g, kd, job, a.route_commit)
-    ok, why = SB.validate(binding, PG.ROOT, PG.DAEMON_TREE, a.route_commit)
+    ok, why = SB.validate(binding, PG.ROOT, PG.DAEMON_TREE, a.route_commit,
+                          frozen_recovery=a.frozen_helper_recovery)
     g.add('INFO' if ok else 'FAIL', 'source_binding', why,
           '' if ok else 'regenerate a fresh gate for the changed route source/tools')
     PG.analyse_remote(g, kd, spec, log.decode(errors='replace'), a.cts, binding, a.synth_cap, a.host)

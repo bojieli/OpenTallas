@@ -9,7 +9,6 @@ set_input_delay 166.667 -clock core_clk [all_inputs -no_clocks]
 set_output_delay 166.667 -clock core_clk [all_outputs]
 set_max_fanout 32 [current_design]
 set_load 80 [all_outputs]
-set_input_transition 150 [all_inputs -no_clocks]
 set_max_transition 260 [current_design]
 # ---- sdc_extra physical/s81_die_views/hend/negcap/dsfd_m2l_vr_512x1__hco_SW.sdc
 set ot_hend_setup [expr {[get_property [get_clocks core_clk] period] < 800.0 ? 123 : 60}]
@@ -72,3 +71,4 @@ foreach {c v} [list core_clk vclk $ot_w vw] {
 }
 
 }
+set_input_transition 150 [all_inputs -no_clocks]

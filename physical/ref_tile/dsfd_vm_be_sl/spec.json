@@ -196,13 +196,14 @@
    "group_max": 32,
    "h": "M4",
    "v": "M3 M5"
-  }
+  },
+  "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Claude:el1011-ds-vm/be",
   "branch": "main",
-  "tag": "r4",
-  "purpose": "el1011-ds-vm/besl r4: r3 71536bfc4 TT +7.85 / FF -6.57 = 9 endpoints, ALL str_clk->core_clk pointer/state hops (u_rc*.rp->rp_w, r_st->r_st_w): launch cks leaf 219.8 ps vs capture ck leaf 258.7 ps at FF (39 ps inter-tree skew vs 38 ps clk->Q; trees routed str EARLY by 10 TT / 18 FF because r3 balanced the all-register mean one-sided, stop at +12). Post-route hold ECO skipped exactly these (tight: setup +23.9 in the 208 ps 4:3 window) and buffered 9,314 others -> TT -2.36. Fix (tree, not ECO): be_sl_str_boundary.tcl balances on the CROSSING flops (pointer and storage hops weighted equally), two-sided, TT residual (-14,0] ps. No RTL / SDC / pin / outline change vs r3; the kit regenerates at the contract v13 slot cap M6 (coordinator grant 10-12 11:40; ref_tile refuses M5 against the slot), r3 was M5.",
+  "tag": "r5",
+  "purpose": "claude s81-grpA r3 / dsfd_vm_be_sl r5: (a) native pin audit 1014 (results/arch/native_pin_audit_1014/s81.json): the bound CLOSED view s81vm-besl-b235ed401 launches 186.9 / captures 246.0 ps (budget 220 / 190 at phi-R) -> kit recipe 2 (one dedicated launch flop per output pin via pin_reg_split, single capture flop at each input pin, HB2 pad, flops at pins); (b) r3 TT +7.85 / FF -6.57 and r4 TT +8.88 / FF -9.13: the only FF failures are the 9 str_clk->core_clk ratio-FIFO crossings (u_rc*.rp->rp_w, r_st->r_st_w; setup +23.9 in the 208 ps window, cks leaf ~39 ps early at FF) -> besl_xhold.tcl: one dont_touch HB1xp67 (~15 FF / ~20 TT ps) on the D of all 12 str->core crossing flops. No RTL / SDC / outline / pin-order change; slot cap M6 (contract grant).",
   "benches": [
    {
     "name": "exact_gold",
@@ -235,5 +236,26 @@
   "file": "results/arch/hier_contract_1011/s81.json",
   "slot": "sp_vm/u_be.g_s[0].u_sl"
  },
- "outhold": true
+ "outhold": true,
+ "recipe": 2,
+ "pin_hook_before_flops": [
+  "physical/s81_ph_views/vm_master/besl_xhold.tcl"
+ ],
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/native_pin_audit_1014/s81.json",
+  "cell": "dsfd_vm_be_sl",
+  "launch_ps": 186.9,
+  "capture_ps": 246.0,
+  "fix": "10 inputs over 190 (worst o_v[5] 246.0): single capture flop at each input pin, HB2 pad; plus targeted HB1 hold stage on the 12 ratio-CDC str->core crossing flops"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

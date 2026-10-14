@@ -92,6 +92,7 @@ module ot_hdc_kv_ingest #(
     //     sector assembly registered into a 4-entry output FIFO (E2): +2 edges, credit-issued, one sector a cycle.
     //   Completion (done) leaves with the last sector at the write port, as before.  QMUT (bench mutants, must FAIL):
     //   1 = K granules written to lane t ^ 1; 2 = the drain loads the OTHER slot's (stale) descriptor fields.
+    parameter integer NATIVE_ROWS=0, // Qwen merged native token-row K/V map, QPIPE2 only
     parameter integer QPIPE  = 0,
     parameter integer QMUT   = 0
 ) (
@@ -124,6 +125,8 @@ module ot_hdc_kv_ingest #(
     localparam integer LWP = (WPL > 1) ? $clog2(WPL) : 1;
     localparam integer NBW = 2 * 16 * WPL;         // words per bank (2 slots x 16 lanes)
     // QPIPE 2 macro corner-turn applies at the Qwen die geometry (16 words a lane per slot); other geometries keep QPIPE 1
+    initial if(NATIVE_ROWS&&(QPIPE<2||HDMAX!=128||KVHMAX!=2))
+        $fatal(1,"native ingest requires full32-macro QPIPE2 provider; descriptor may use1/2heads");
     localparam integer QP2 = (QPIPE >= 2 && BB == 256) ? 1 : 0;
 
     // -- descriptor queue ---------------------------------------------------------
@@ -751,7 +754,15 @@ module ot_hdc_kv_ingest #(
         wire [15:0]  vw1 = hw_word(qo_g, o_lhd, by1 & (o_hd - 16'd1));
         wire [15:0]  t0w = by0 >> o_lhd;
         wire [15:0]  t1w = by1 >> o_lhd;
-        wire [3:0]   kob = {qo_s[2:0], 1'b0};
+        wire [3:0] kob = {qo_s[2:0],1'b0};
+        // Original production descriptors use CTX8192,HD128,1/2 heads.
+        // a0 retains original K linear base: L*KVH*32768 + block*64.
+        wire[5:0] native_layer=(o_kvh==1)?od[36:31]:od[37:32];
+        wire[13:0] native_t={1'b0,od[30:22],4'd0}+14'(t0w[3:0]);
+        wire[31:0] native_addr={8'd0,native_layer,qo_v,qo_g[0],native_t[6],native_t[13:9],native_t[5:3],
+                             native_t[8:7],qo_s[1:0],native_t[2:0]};
+        wire native_last=qo_v&&(qo_g+8'd1>=o_kvh)&&(qo_s[1:0]==3)&&(t0w==o_thi-1'b1);
+
         if (QP2 != 0) begin : g_bm
             reg  [127:0] e1_vs0_r, e1_vs1_r;
             reg          s1_v_r, s2_v_r, fset_r, fslot_r;
@@ -805,8 +816,8 @@ module ot_hdc_kv_ingest #(
                         end
                 assign wk_any[gb] = wk_v; assign wv_any[gb] = wv_v;
                 // K: bank gb holds lane 9 (gb - kw) mod 16 of the drained word (9 is its own inverse mod 16)
-                wire [3:0] rkl = 4'd9 * (GB - rkw);
-                wire [3:0] rvl = (rbv0 == GB) ? t0w[3:0] : t1w[3:0];
+                wire[3:0]rvl=(rbv0==GB)?t0w[3:0]:t1w[3:0];
+                wire[3:0]rkl=NATIVE_ROWS?rvl:4'd9*(GB-rkw);
                 ot_sram_1r1w_32x128_m1 u_mk (.clk(clk), .r_ce_in(q_iss && !qo_v), .r_addr_in({qo_slot, rkl}), .rd_out(mko[gb]),
                     .w_ce_in(wk_v), .w_addr_in(wk_a), .wd_in(wk_d), .w_mask_in({128{1'b1}}));
                 ot_sram_1r1w_32x128_m1 u_mv (.clk(clk), .r_ce_in(q_iss && qo_v), .r_addr_in({qo_slot, rvl}), .rd_out(mvo[gb]),
@@ -821,10 +832,10 @@ module ot_hdc_kv_ingest #(
             reg  [3:0]   s1_t0, s1_t1, s2_t0, s2_t1, s1_kw, s2_kw, s1_kob, s2_kob, s1_b0, s1_b1, s2_b0, s2_b1;
             always @(posedge clk or negedge rst_n)
                 if (!rst_n) begin s1_v_r <= 1'b0; s2_v_r <= 1'b0; e1_v <= 1'b0; fset_r <= 1'b0; end
-                else begin s1_v_r <= q_iss; s2_v_r <= s1_v_r; e1_v <= s2_v_r; fset_r <= i1_v && i1_last; end
+                else begin s1_v_r <= q_iss&&(!NATIVE_ROWS||o_lane[t0w[3:0]]); s2_v_r <= s1_v_r; e1_v <= s2_v_r; fset_r <= i1_v && i1_last; end
             always @(posedge clk) fslot_r <= i1_slot;
             always @(posedge clk) if (q_iss) begin
-                s1_isv <= qo_v; s1_last <= q_wlast && od[7]; s1_tag <= od[15:8]; s1_a <= qo_hb + qo_s;
+                s1_isv <= qo_v; s1_last <= (NATIVE_ROWS?native_last:q_wlast)&&od[7]; s1_tag <= od[15:8]; s1_a <= NATIVE_ROWS?native_addr:qo_hb+qo_s;
                 s1_lane <= o_lane; s1_t0 <= t0w[3:0]; s1_t1 <= t1w[3:0]; s1_kw <= rkw; s1_kob <= kob; s1_b0 <= rbv0; s1_b1 <= rbv1;
             end
             always @(posedge clk) begin
@@ -838,8 +849,8 @@ module ot_hdc_kv_ingest #(
                     kb = 4'd9 * lq + s2_kw;
                     e1_kb[lq] <= {ck_q[kb][(s2_kob+1)*8 +: 8], ck_q[kb][s2_kob*8 +: 8]};
                 end
-                e1_vs0_r <= cv_q[s2_b0]; e1_vs1_r <= cv_q[s2_b1];
-                e1_isv <= s2_isv; e1_last <= s2_last; e1_tag <= s2_tag; e1_a <= s2_a;
+                e1_vs0_r <= (NATIVE_ROWS&&!s2_isv)?ck_q[s2_b0]:cv_q[s2_b0]; e1_vs1_r <= (NATIVE_ROWS&&!s2_isv)?ck_q[s2_b1]:cv_q[s2_b1];
+                e1_isv <= NATIVE_ROWS||s2_isv; e1_last <= s2_last; e1_tag <= s2_tag; e1_a <= s2_a;
                 e1_lane <= s2_lane; e1_t0 <= s2_t0; e1_t1 <= s2_t1;
             end
         end else begin : g_b1
