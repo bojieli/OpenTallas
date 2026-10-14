@@ -15,7 +15,7 @@
     "rtl/dsrom_sys/engram/dsfd_engram_c.sv": "906adc894c9764ac7f0821d8f2db98177bb1e0c795214ce1f87fc7751ccdafc3"
   },
   "new_source_sha256": {
-    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "682325609a51587449557fb4076c8826a404f4ec5a726d383e959b1c2bec5f1c",
+    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "311b9999665ce2e50b81e534f4e229e959ec61581d6f8b2560542393f0d05061",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_engine_adapter_rso.sv": "5ac1b628eff55eb35e480ea29255b5c5547b58eb6f80b3f5f50c33a2db52b584",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso.sv": "1f92e6dfc8327ec8612a1ea7bb9ec7cc15ce167424cecf0cf497600ccb698d2c",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_slab_ep_rso.sv": "598ae0b5912fac55018c48f92a22d8acc5164411aca3d117233cb178c830f9ed",
@@ -23,7 +23,8 @@
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_pbank_rso.sv": "ef6a6ecd73c0960ac68ec7fb3382a79e2dcafbdfa609b5a71320b5c0c86233c0",
     "rtl/dsrom_sys/engram/rso_candidate/ot_async_fifo_rso.sv": "5415d6ecbd5cdb483487bb803d82fb59e54c5dfc6087c12ec7e24412ee37e064",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_ws_rso.sv": "ee6bd78f177ea4aee89c858986544fd68e3c81fd657111d1131c66ed6a813ba1",
-    "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso_r1.sv": "e211fc1b20fdef72999b43e263f8c177783cffa83195b7df428df1100aa4e474"
+    "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso_r1.sv": "e211fc1b20fdef72999b43e263f8c177783cffa83195b7df428df1100aa4e474",
+    "rtl/dsrom_sys/engram/rso_candidate/ot_engc_pbank_rso_xt.sv": "9e95aee176bc7466b5d8cdde1b16e0231fd0aa0e70ef76533b099129af51bbdc"
   },
   "parent_conditions": [
     "u_rst_win.reset_pipe[1]",
@@ -88,5 +89,12 @@
     "data_pipeline_cycles": 1,
     "validation": "read13 exact/cost/ACK/return-skew PASS; read14 registered ACK exact and both final-state mutants PASS; new physical views/pins remain open",
     "ack_boundary": "rso_q registered actual adapter/FIFO final release; async rn assertion clears; adds one local ACK edge"
+  },
+  "pbb_transit_copy": {
+    "master": "ot_engc_t_pbb_rso_xt",
+    "extra_flops": 14,
+    "capture_edge": "same edge as original wa_p/woh_p",
+    "purpose": "dedicated near-port output copies without SRAM fanout",
+    "admission": false
   }
 }
