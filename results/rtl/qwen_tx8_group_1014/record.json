@@ -1,0 +1,22 @@
+{
+  "status": "PASS standalone differential only; newparent/nativegeometry/CTS qualification pending",
+  "source_commit": "fde2f03b2",
+  "cycles": 4096,
+  "core_edges": 2835,
+  "pauses": 1261,
+  "independent_lane_resets": 1130,
+  "comparison_bits": 3120,
+  "mutant": "reverse lower389 data/meta words between lane banks; preserve valid/reset for sensitivity",
+  "mutant_result": "FAIL observed mismatch cycle4",
+  "mutant_sha256": "36c81049ed1a21a0ceb291da8b35e4f48516aea944e3054d58d6a398b62a7de8",
+  "sources": {
+    "rtl/physical/ot_qwen_tile_tx8_capture.sv": "67799edcac2e7464156bdb727d281281d20d507256896d609ace79124089e1b1",
+    "rtl/physical/ot_qwen_tile_kids.sv": "bb234fa25bbb5d2d5a2cd32e72667eb8e186d146139af4c593e061a3fb9df5ab",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "54549feaea1f4be227226c356ec526269363043fdd1034414d4d8ff2dd995436",
+    "rtl/test/qwen_kv_die/tb_qwen_tx8_capture.sv": "d0d8a1010d93de5989a2acdfce2c897c780df80b90473a32cbb7d7ea03325dd6"
+  },
+  "clock_contract": "Same coherent coreedge only; loaderdomain independent; existing25-root native masterunchanged; newcore18 roots pluscache response1 =19 coherent entries +loader1 total20",
+  "new_parent": "ot_qwen_tile_tp8_cached_grouped",
+  "new_clock_port": "clk_tx_group replaces8 clk_tx entries for one3120FF child; everyotherentry unchanged",
+  "missing": "Context/versioncacheguard, registeredACK/lookahead source protocol stillOPEN; no149ABI, no CLOSED view adoption"
+}
