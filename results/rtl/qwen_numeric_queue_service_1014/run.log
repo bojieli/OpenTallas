@@ -1,0 +1,11 @@
+QUEUE_SERVICE depth=8 query=0 stall=0 words=128 first_produce=1 last_produce=128 first_consume=3 last_consume=130 produce_interval=127 earliest_post_pop_latency=2 peak=1
+QUEUE_SERVICE depth=2 query=0 stall=0 words=128 first_produce=1 last_produce=191 first_consume=3 last_consume=193 produce_interval=190 earliest_post_pop_latency=2 peak=1
+QUEUE_SERVICE depth=8 query=0 stall=1 words=128 first_produce=1 last_produce=211 first_consume=3 last_consume=218 produce_interval=210 earliest_post_pop_latency=2 peak=8
+QUEUE_SERVICE depth=2 query=0 stall=1 words=128 first_produce=1 last_produce=297 first_consume=3 last_consume=306 produce_interval=296 earliest_post_pop_latency=2 peak=2
+QUEUE_SERVICE depth=2 query=1 stall=0 words=128 first_produce=1 last_produce=382 first_consume=3 last_consume=384 produce_interval=381 earliest_post_pop_latency=2 peak=1
+QUEUE_SERVICE depth=8 query=1 stall=0 words=128 first_produce=1 last_produce=382 first_consume=3 last_consume=384 produce_interval=381 earliest_post_pop_latency=2 peak=1
+PASS source-bound queue service six scenes
+- tb_qwen_numeric_queue_service.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.000 s; speed 9.581 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

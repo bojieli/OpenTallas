@@ -1,0 +1,21 @@
+{
+  "source_commit": "b66fe0230",
+  "source_sha256": "6b61f0522c78bfb800359040fac6eb9534dcb89ce9e2f27855e76d9273324048",
+  "simulation_unit": "oth-ubuntu-2099637-1791975656",
+  "census_unit": "oth-ubuntu-2127275-1791976093",
+  "exit_codes": [
+    0,
+    0
+  ],
+  "scenes": 6,
+  "words_per_scene": 128,
+  "typed_depth2_and_depth8_interval_base_edges": 381,
+  "typed_intervals": 127,
+  "typed_service_words_per_base": 0.3333333333333333,
+  "untyped_depth8_interval_base_edges": 127,
+  "untyped_depth2_interval_base_edges": 190,
+  "earliest_produce_to_pop_base_edges": 2,
+  "Q_depth2": 1211,
+  "Q_depth8": 4829,
+  "scope": "Component-only same-phase live-base fixture. No native base/core ratio, arithmetic provider, CTS/area/pin or performance qualification."
+}

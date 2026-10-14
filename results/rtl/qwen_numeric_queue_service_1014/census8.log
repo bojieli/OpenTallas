@@ -1,0 +1,991 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Running command `read_verilog -sv ot_qwen_numeric_output_queue.sv; chparam -set ENABLE 1 -set DEPTH 8 ot_qwen_numeric_output_queue; hierarchy -top ot_qwen_numeric_output_queue; proc; opt; memory_map; opt; write_json census8.json; stat' --
+
+1. Executing Verilog-2005 frontend: ot_qwen_numeric_output_queue.sv
+Parsing SystemVerilog input from `ot_qwen_numeric_output_queue.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_numeric_output_queue'.
+Successfully finished Verilog frontend.
+Parameter \ENABLE = 1
+Parameter \DEPTH = 8
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qwen_numeric_output_queue'.
+Parameter \ENABLE = 1
+Parameter \DEPTH = 8
+Generating RTLIL representation for module `$paramod$6137a43ad7c630267b5f66848ce1657a6749dd97\ot_qwen_numeric_output_queue'.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_qwen_numeric_output_queue
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_qwen_numeric_output_queue
+Removed 0 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+Cleaned up 1 empty switch.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 6 switch rules as full_case in process $proc$ot_qwen_numeric_output_queue.sv:31$38 in module ot_qwen_numeric_output_queue.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 5 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~8 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+     1/22: $4$mem2bits$\entries$ot_qwen_numeric_output_queue.sv:44$23[601:0]$68
+     2/22: $3$mem2bits$\entries$ot_qwen_numeric_output_queue.sv:44$23[601:0]$67
+     3/22: $4$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_EN[601:0]$62
+     4/22: $4$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$61
+     5/22: $4$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_ADDR[2:0]$60
+     6/22: $3$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_EN[601:0]$56
+     7/22: $3$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$55
+     8/22: $3$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_ADDR[2:0]$54
+     9/22: $2$mem2bits$\entries$ot_qwen_numeric_output_queue.sv:44$23[601:0]$51
+    10/22: $2$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_EN[601:0]$50
+    11/22: $2$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$49
+    12/22: $2$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_ADDR[2:0]$48
+    13/22: $0\output_step[0:0]
+    14/22: $1$mem2bits$\entries$ot_qwen_numeric_output_queue.sv:44$23[601:0]$47
+    15/22: $1$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_EN[601:0]$46
+    16/22: $1$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$45
+    17/22: $1$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_ADDR[2:0]$44
+    18/22: $0\tail[2:0]
+    19/22: $0\head[2:0]
+    20/22: $0\count[3:0]
+    21/22: $0\fault[0:0]
+    22/22: $0\query_output_ack_toggle[0:0]
+Creating decoders for process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:27$76'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_qwen_numeric_output_queue.$mem2bits$\entries$ot_qwen_numeric_output_queue.sv:27$21' from process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:27$76'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qwen_numeric_output_queue.\query_output_ack_toggle' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$210' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.\fault' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$211' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.\output_step' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$212' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.\count' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$213' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.\head' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$214' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.\tail' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$215' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_ADDR' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$216' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$217' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_EN' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$218' with positive edge clock.
+Creating register for signal `\ot_qwen_numeric_output_queue.$mem2bits$\entries$ot_qwen_numeric_output_queue.sv:44$23' using process `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+  created $dff cell `$procdff$219' with positive edge clock.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 8 empty switches in `\ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+Removing empty process `ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:31$38'.
+Removing empty process `ot_qwen_numeric_output_queue.$proc$ot_qwen_numeric_output_queue.sv:27$76'.
+Cleaned up 8 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_output_queue.
+<suppressed ~23 debug messages>
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_output_queue.
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_output_queue'.
+Computing hashes of 89 cells of `\ot_qwen_numeric_output_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_output_queue'.
+Computing hashes of 87 cells of `\ot_qwen_numeric_output_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_output_queue'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_output_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$155.
+    dead port 2/2 on $mux $procmux$155.
+    dead port 2/2 on $mux $procmux$149.
+    dead port 2/2 on $mux $procmux$146.
+    dead port 2/2 on $mux $procmux$143.
+    dead port 1/2 on $mux $procmux$140.
+    dead port 2/2 on $mux $procmux$140.
+    dead port 2/2 on $mux $procmux$137.
+    dead port 2/2 on $mux $procmux$131.
+    dead port 2/2 on $mux $procmux$125.
+    dead port 2/2 on $mux $procmux$119.
+    dead port 2/2 on $mux $procmux$116.
+    dead port 2/2 on $mux $procmux$110.
+    dead port 2/2 on $mux $procmux$107.
+    dead port 2/2 on $mux $procmux$101.
+    dead port 2/2 on $mux $procmux$98.
+    dead port 1/2 on $mux $procmux$92.
+    dead port 2/2 on $mux $procmux$92.
+    dead port 1/2 on $mux $procmux$89.
+    dead port 2/2 on $mux $procmux$89.
+    dead port 1/2 on $mux $procmux$86.
+    dead port 2/2 on $mux $procmux$86.
+    dead port 1/2 on $mux $procmux$83.
+    dead port 2/2 on $mux $procmux$83.
+    dead port 1/2 on $mux $procmux$81.
+    dead port 2/2 on $mux $procmux$81.
+Removed 26 multiplexer ports.
+<suppressed ~52 debug messages>
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_output_queue.
+    Consolidated identical input bits for $mux cell $procmux$96:
+      Old ports: A=602'11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111, B=602'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, Y=$procmux$96_Y
+      New ports: A=1'1, B=1'0, Y=$procmux$96_Y [0]
+      New connections: $procmux$96_Y [601:1] = { $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] $procmux$96_Y [0] }
+  Optimizing cells in module \ot_qwen_numeric_output_queue.
+    Consolidated identical input bits for $mux cell $procmux$122:
+      Old ports: A=602'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=$4$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_EN[601:0]$62, Y=$procmux$122_Y
+      New ports: A=1'0, B=$procmux$96_Y [0], Y=$procmux$122_Y [0]
+      New connections: $procmux$122_Y [601:1] = { $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] $procmux$122_Y [0] }
+  Optimizing cells in module \ot_qwen_numeric_output_queue.
+    Consolidated identical input bits for $mux cell $procmux$158:
+      Old ports: A=602'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, B=$2$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_EN[601:0]$50, Y=$procmux$158_Y
+      New ports: A=1'0, B=$procmux$122_Y [0], Y=$procmux$158_Y [0]
+      New connections: $procmux$158_Y [601:1] = { $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] $procmux$158_Y [0] }
+  Optimizing cells in module \ot_qwen_numeric_output_queue.
+Performed a total of 3 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_output_queue'.
+Computing hashes of 68 cells of `\ot_qwen_numeric_output_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_output_queue'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$210 ($dff) from module ot_qwen_numeric_output_queue (D = $procmux$205_Y, Q = \query_output_ack_toggle, rval = 1'0).
+Adding EN signal on $auto$ff.cc:337:slice$221 ($sdff) from module ot_qwen_numeric_output_queue (D = $memrd$\entries$ot_qwen_numeric_output_queue.sv:44$69_DATA [0], Q = \query_output_ack_toggle).
+Adding SRST signal on $procdff$211 ($dff) from module ot_qwen_numeric_output_queue (D = $procmux$196_Y, Q = \fault, rval = 1'0).
+Adding SRST signal on $procdff$212 ($dff) from module ot_qwen_numeric_output_queue (D = \core_output_step, Q = \output_step, rval = 1'0).
+Adding SRST signal on $procdff$213 ($dff) from module ot_qwen_numeric_output_queue (D = $procmux$182_Y, Q = \count, rval = 4'0000).
+Adding EN signal on $auto$ff.cc:337:slice$227 ($sdff) from module ot_qwen_numeric_output_queue (D = $procmux$182_Y, Q = \count).
+Adding SRST signal on $procdff$214 ($dff) from module ot_qwen_numeric_output_queue (D = $procmux$176_Y, Q = \head, rval = 3'000).
+Adding EN signal on $auto$ff.cc:337:slice$235 ($sdff) from module ot_qwen_numeric_output_queue (D = $ternary$ot_qwen_numeric_output_queue.sv:45$72_Y, Q = \head).
+Adding SRST signal on $procdff$215 ($dff) from module ot_qwen_numeric_output_queue (D = $procmux$170_Y, Q = \tail, rval = 3'000).
+Adding EN signal on $auto$ff.cc:337:slice$237 ($sdff) from module ot_qwen_numeric_output_queue (D = $ternary$ot_qwen_numeric_output_queue.sv:40$66_Y, Q = \tail).
+Setting constant 1-bit at position 0 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 1 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 2 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 3 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 4 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 5 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 6 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 7 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 8 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 9 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 10 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 11 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 12 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 13 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 14 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 15 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 16 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 17 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 18 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 19 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 20 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 21 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 22 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 23 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 24 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 25 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 26 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 27 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 28 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 29 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 30 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 31 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 32 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 33 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 34 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 35 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 36 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 37 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 38 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 39 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 40 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 41 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 42 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 43 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 44 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 45 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 46 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 47 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 48 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 49 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 50 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 51 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 52 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 53 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 54 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 55 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 56 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 57 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 58 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 59 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 60 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 61 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 62 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 63 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 64 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 65 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 66 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 67 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 68 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 69 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 70 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 71 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 72 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 73 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 74 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 75 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 76 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 77 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 78 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 79 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 80 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 81 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 82 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 83 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 84 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 85 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 86 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 87 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 88 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 89 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 90 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 91 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 92 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 93 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 94 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 95 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 96 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 97 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 98 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 99 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 100 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 101 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 102 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 103 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 104 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 105 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 106 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 107 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 108 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 109 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 110 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 111 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 112 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 113 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 114 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 115 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 116 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 117 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 118 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 119 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 120 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 121 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 122 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 123 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 124 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 125 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 126 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 127 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 128 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 129 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 130 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 131 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 132 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 133 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 134 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 135 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 136 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 137 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 138 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 139 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 140 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 141 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 142 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 143 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 144 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 145 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 146 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 147 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 148 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 149 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 150 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 151 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 152 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 153 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 154 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 155 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 156 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 157 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 158 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 159 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 160 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 161 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 162 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 163 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 164 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 165 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 166 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 167 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 168 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 169 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 170 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 171 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 172 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 173 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 174 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 175 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 176 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 177 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 178 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 179 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 180 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 181 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 182 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 183 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 184 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 185 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 186 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 187 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 188 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 189 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 190 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 191 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 192 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 193 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 194 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 195 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 196 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 197 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 198 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 199 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 200 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 201 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 202 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 203 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 204 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 205 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 206 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 207 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 208 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 209 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 210 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 211 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 212 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 213 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 214 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 215 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 216 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 217 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 218 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 219 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 220 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 221 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 222 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 223 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 224 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 225 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 226 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 227 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 228 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 229 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 230 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 231 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 232 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 233 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 234 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 235 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 236 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 237 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 238 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 239 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 240 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 241 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 242 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 243 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 244 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 245 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 246 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 247 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 248 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 249 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 250 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 251 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 252 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 253 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 254 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 255 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 256 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 257 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 258 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 259 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 260 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 261 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 262 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 263 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 264 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 265 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 266 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 267 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 268 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 269 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 270 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 271 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 272 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 273 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 274 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 275 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 276 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 277 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 278 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 279 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 280 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 281 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 282 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 283 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 284 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 285 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 286 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 287 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 288 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 289 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 290 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 291 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 292 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 293 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 294 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 295 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 296 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 297 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 298 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 299 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 300 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 301 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 302 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 303 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 304 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 305 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 306 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 307 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 308 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 309 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 310 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 311 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 312 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 313 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 314 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 315 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 316 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 317 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 318 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 319 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 320 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 321 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 322 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 323 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 324 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 325 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 326 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 327 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 328 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 329 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 330 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 331 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 332 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 333 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 334 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 335 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 336 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 337 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 338 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 339 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 340 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 341 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 342 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 343 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 344 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 345 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 346 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 347 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 348 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 349 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 350 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 351 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 352 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 353 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 354 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 355 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 356 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 357 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 358 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 359 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 360 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 361 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 362 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 363 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 364 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 365 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 366 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 367 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 368 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 369 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 370 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 371 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 372 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 373 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 374 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 375 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 376 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 377 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 378 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 379 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 380 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 381 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 382 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 383 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 384 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 385 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 386 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 387 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 388 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 389 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 390 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 391 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 392 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 393 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 394 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 395 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 396 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 397 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 398 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 399 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 400 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 401 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 402 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 403 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 404 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 405 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 406 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 407 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 408 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 409 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 410 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 411 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 412 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 413 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 414 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 415 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 416 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 417 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 418 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 419 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 420 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 421 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 422 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 423 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 424 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 425 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 426 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 427 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 428 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 429 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 430 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 431 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 432 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 433 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 434 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 435 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 436 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 437 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 438 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 439 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 440 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 441 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 442 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 443 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 444 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 445 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 446 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 447 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 448 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 449 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 450 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 451 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 452 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 453 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 454 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 455 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 456 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 457 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 458 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 459 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 460 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 461 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 462 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 463 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 464 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 465 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 466 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 467 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 468 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 469 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 470 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 471 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 472 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 473 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 474 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 475 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 476 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 477 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 478 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 479 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 480 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 481 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 482 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 483 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 484 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 485 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 486 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 487 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 488 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 489 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 490 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 491 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 492 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 493 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 494 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 495 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 496 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 497 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 498 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 499 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 500 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 501 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 502 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 503 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 504 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 505 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 506 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 507 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 508 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 509 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 510 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 511 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 512 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 513 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 514 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 515 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 516 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 517 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 518 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 519 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 520 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 521 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 522 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 523 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 524 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 525 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 526 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 527 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 528 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 529 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 530 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 531 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 532 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 533 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 534 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 535 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 536 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 537 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 538 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 539 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 540 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 541 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 542 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 543 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 544 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 545 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 546 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 547 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 548 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 549 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 550 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 551 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 552 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 553 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 554 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 555 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 556 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 557 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 558 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 559 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 560 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 561 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 562 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 563 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 564 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 565 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 566 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 567 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 568 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 569 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 570 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 571 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 572 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 573 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 574 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 575 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 576 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 577 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 578 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 579 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 580 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 581 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 582 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 583 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 584 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 585 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 586 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 587 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 588 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 589 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 590 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 591 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 592 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 593 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 594 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 595 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 596 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 597 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 598 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 599 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 600 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+Setting constant 1-bit at position 601 on $procdff$219 ($dff) from module ot_qwen_numeric_output_queue.
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_output_queue..
+Removed 15 unused cells and 113 unused wires.
+<suppressed ~16 debug messages>
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_output_queue.
+<suppressed ~1 debug messages>
+
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_output_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~27 debug messages>
+
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_output_queue.
+Performed a total of 0 changes.
+
+5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_output_queue'.
+Computing hashes of 58 cells of `\ot_qwen_numeric_output_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_output_queue'.
+Removed a total of 0 cells.
+
+5.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_output_queue..
+
+5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_output_queue.
+
+5.16. Finished fast OPT passes. (There is nothing left to do.)
+
+6. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+Mapping memory \entries in module \ot_qwen_numeric_output_queue:
+  created 8 $dff cells and 0 static cells of width 602.
+  read interface: 0 $dff and 7 $mux cells.
+  write interface: 8 write mux blocks.
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_output_queue.
+<suppressed ~6 debug messages>
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_output_queue'.
+Computing hashes of 102 cells of `\ot_qwen_numeric_output_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_output_queue'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_output_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~83 debug messages>
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_output_queue.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_output_queue'.
+Computing hashes of 102 cells of `\ot_qwen_numeric_output_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_output_queue'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_output_queue..
+Removed 0 unused cells and 19 unused wires.
+<suppressed ~1 debug messages>
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_output_queue.
+
+7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_output_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~83 debug messages>
+
+7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_output_queue.
+Performed a total of 0 changes.
+
+7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_output_queue'.
+Computing hashes of 102 cells of `\ot_qwen_numeric_output_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_output_queue'.
+Removed a total of 0 cells.
+
+7.13. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $memory\entries[0]$243 ($dff) from module ot_qwen_numeric_output_queue (D = $0$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$40, Q = \entries[0]).
+Adding EN signal on $memory\entries[1]$245 ($dff) from module ot_qwen_numeric_output_queue (D = $0$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$40, Q = \entries[1]).
+Adding EN signal on $memory\entries[2]$247 ($dff) from module ot_qwen_numeric_output_queue (D = $0$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$40, Q = \entries[2]).
+Adding EN signal on $memory\entries[3]$249 ($dff) from module ot_qwen_numeric_output_queue (D = $0$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$40, Q = \entries[3]).
+Adding EN signal on $memory\entries[4]$251 ($dff) from module ot_qwen_numeric_output_queue (D = $0$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$40, Q = \entries[4]).
+Adding EN signal on $memory\entries[5]$253 ($dff) from module ot_qwen_numeric_output_queue (D = $0$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$40, Q = \entries[5]).
+Adding EN signal on $memory\entries[6]$255 ($dff) from module ot_qwen_numeric_output_queue (D = $0$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$40, Q = \entries[6]).
+Adding EN signal on $memory\entries[7]$257 ($dff) from module ot_qwen_numeric_output_queue (D = $0$memwr$\entries$ot_qwen_numeric_output_queue.sv:39$22_DATA[601:0]$40, Q = \entries[7]).
+
+7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_output_queue..
+Removed 8 unused cells and 8 unused wires.
+<suppressed ~9 debug messages>
+
+7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_output_queue.
+
+7.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+7.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qwen_numeric_output_queue..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~35 debug messages>
+
+7.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qwen_numeric_output_queue.
+Performed a total of 0 changes.
+
+7.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qwen_numeric_output_queue'.
+Computing hashes of 94 cells of `\ot_qwen_numeric_output_queue'.
+Finding duplicate cells in `\ot_qwen_numeric_output_queue'.
+Removed a total of 0 cells.
+
+7.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qwen_numeric_output_queue..
+
+7.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qwen_numeric_output_queue.
+
+7.23. Finished fast OPT passes. (There is nothing left to do.)
+
+8. Executing JSON backend.
+
+9. Printing statistics.
+
+=== ot_qwen_numeric_output_queue ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      106 wires
+    14121 wire bits
+       31 public wires
+     6089 public wire bits
+       16 ports
+     1259 port bits
+       94 cells
+        4   $add
+       20   $and
+        8   $dffe
+        5   $eq
+        9   $logic_and
+        4   $logic_not
+        1   $lt
+       23   $mux
+        3   $ne
+        4   $not
+        1   $pmux
+        3   $reduce_and
+        2   $reduce_bool
+        2   $sdff
+        4   $sdffe
+        1   $sub
+
+End of script. Logfile hash: 83800c6767, time: 0.09s, user: 0.09s, system: 0.01s, MEM: 37.27 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 29% 5x opt_clean (0 sec), 21% 5x opt_dff (0 sec), ...
