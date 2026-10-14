@@ -7811,7 +7811,7 @@ def r25gq_v13():
     return v
 
 
-V13_CONG = ''
+V13_CONG = 'results/arch/hbm_die_feasibility_1014/v13_win_grt/cong_r4.npy'   # PathFinder round 4 (best GRT: 136,189)
 
 
 def _lef_size(lef, macro):
