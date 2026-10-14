@@ -12,9 +12,14 @@ its price and everything else left at price:
                                 on the critical path and only its excess over its slack when it is overlapped.
   HBM die (r25gq)               the S2 command-processor schedule of the exact per-die program (the same one
                                 tools/throughput_budget/build.py prices), re-scheduled with the op at its measured
-                                ratio.  An op the schedule overlaps costs 0.
+                                ratio (--op-delta: with a fixed number of cycles added to every
+                                record of the op instead).  An op the schedule overlaps costs 0.
   rate classes                  a credit / link class that moves W words a token at r words a cycle: W / r_measured
                                 - W / r_price cycles, added to the token when the class is on the critical path.
+  unpriced serial jobs          a job the token path does not hold at all (price 0) that the per-layer die run shows
+                                serial on the critical path: --price 0 --node-delta <cycles> on the nodes it delays.
+                                The row has no unit ratio (null); it is judged by its end-to-end loss alone and its
+                                structural removal is named in the note.
 
 A design with several workloads (s81: ar + mtp, r25gq: ds_ar + qwen_ar) is charged its worst workload per unit.
 
@@ -177,18 +182,25 @@ def hbm_schedule(model):
         cf, pos = T.cost, 8191
     count = collections.Counter(f"{r.unit}.{r.op}" for r in recs)
 
-    def run(op=None, f=1.0):
+    def run(op=None, f=1.0, delta=0.0):
         def g(r, dyn, L):
             c = cf(r, dyn, L)
-            return (c[0] * f if f"{r.unit}.{r.op}" == op else c[0]), c[1], c[2]
+            return (c[0] * f + delta if f"{r.unit}.{r.op}" == op else c[0]), c[1], c[2]
         return T.schedule(recs, pos, "S2", cost_fn=g)["total_cycles"]
     return run, count
 
 
-def hbm_loss(run, count, op, ratio, base=None):
+def hbm_loss(run, count, op, ratio, base=None, delta=None):
+    """delta: a FIXED number of cycles added to every record of the op (a latency the op pays once a record whatever
+    its length, e.g. the VM8 x-load start-to-dispatch edges before every SM.MATVEC); the op's own cycles stay at price"""
     if not count.get(op):
         return None                 # the workload's program never issues this op
     base = run() if base is None else base
+    if delta is not None:
+        new = run(op, 1.0, delta)
+        return dict(model="S2 schedule, fixed cycles added to every record of the op", base_cycles=round(base, 1),
+                    cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=count[op],
+                    added_cycles_per_record=delta, e2e_loss_pct=round(loss_pct(base, new), 3))
     new = run(op, ratio)
     return dict(model="S2 schedule, op re-scheduled at its measured ratio", base_cycles=round(base, 1),
                 cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=count[op],
@@ -197,7 +209,7 @@ def hbm_loss(run, count, op, ratio, base=None):
 
 # ---------------------------------------------------------------------------------------------------------------
 def compute(design, *, match=None, op=None, price=None, measured=None, ratio=None, scale=False,
-            words_per_token=None, critical=True, workloads=None, node_delta=None):
+            words_per_token=None, critical=True, workloads=None, node_delta=None, op_delta=None):
     """-> {workload: composition result} for one unit of one design"""
     spec = DESIGNS[design]
     out = {}
@@ -216,7 +228,7 @@ def compute(design, *, match=None, op=None, price=None, measured=None, ratio=Non
                     raise
         else:
             run, count = hbm_schedule(name)
-            r = hbm_loss(run, count, op, ratio if ratio is not None else measured / price)
+            r = hbm_loss(run, count, op, ratio if ratio is not None else measured / price, delta=op_delta)
             if r:
                 out[wl] = r
     if not out:
@@ -225,6 +237,8 @@ def compute(design, *, match=None, op=None, price=None, measured=None, ratio=Non
 
 
 def unit_ratio(price, measured, rate=False):
+    if not price:
+        return None                 # an unpriced serial job: there is no price to hold a ratio against
     return round((price / measured) if rate else (measured / price), 4)
 
 
@@ -300,7 +314,7 @@ def propose(led, row):
 
 def refusal(led, row, root=ROOT):
     """Why this row may not be marked accepted (None = it may)."""
-    if row["unit_ratio"] <= QUALIFY:
+    if row["unit_ratio"] is not None and row["unit_ratio"] <= QUALIFY:
         return f"unit ratio {row['unit_ratio']} is within {QUALIFY}: it qualifies, no acceptance is needed"
     if row["e2e_loss_pct"] > UNIT_LIMIT:
         return f"end-to-end loss {row['e2e_loss_pct']} % is over the {UNIT_LIMIT} % unit limit"
@@ -347,6 +361,8 @@ def check(led, root=ROOT):
             bad.append(f"unknown design {r['design']}")
         if r["status"] not in ("proposed", "accepted"):
             bad.append(f"{r['design']} {r['unit']}: status {r['status']!r}")
+        if r.get("unit_ratio") is None and r.get("price"):
+            bad.append(f"{r['design']} {r['unit']}: a priced row without a unit ratio")
         if abs(r["e2e_loss_pct"] - max(v["e2e_loss_pct"] for v in r["per_workload"].values())) > 1e-6:
             bad.append(f"{r['design']} {r['unit']}: e2e loss is not its worst workload")
     return bad
@@ -356,7 +372,8 @@ def table(led):
     out = ["| design | unit | measured | price | unit ratio | e2e loss % | binding workload | within 5 % | grade | status |",
            "|---|---|---|---|---|---|---|---|---|---|"]
     for r in led["rows"]:
-        out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price']} | {r['unit_ratio']} | "
+        out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price'] or 'unpriced'} | "
+                   f"{r['unit_ratio'] if r['unit_ratio'] is not None else '-'} | "
                    f"{r['e2e_loss_pct']:.3f} | {r['binding_workload']} | {'yes' if r['within_unit_limit'] else 'NO'} | "
                    f"{r['evidence_grade']} | {r['status']} |")
     out.append("")
@@ -380,6 +397,8 @@ def main(argv=None):
         p.add_argument("--measured", type=float, required=True)
         p.add_argument("--scale", action="store_true", help="ROM: scale every matched node by measured / price")
         p.add_argument("--node-delta", type=float, help="ROM: cycles added to every matched node")
+        p.add_argument("--op-delta", type=float, help="HBM: cycles added to every record of --op (a fixed latency per "
+                                                      "record; --price / --measured then describe the unit itself)")
         p.add_argument("--group", help="rows that measure the same composition op share a group")
         p.add_argument("--words-per-token", type=float, help="rate class: price / measured are words a cycle")
         p.add_argument("--off-critical", action="store_true")
@@ -399,7 +418,7 @@ def main(argv=None):
             rate = a.words_per_token is not None
             per = compute(a.design, match=a.match, op=a.op, price=a.price, measured=a.measured, scale=a.scale,
                           words_per_token=a.words_per_token, critical=not a.off_critical, workloads=a.workload,
-                          node_delta=a.node_delta)
+                          node_delta=a.node_delta, op_delta=a.op_delta)
             row = make_row(a.design, a.unit, a.price, a.measured, per, a.evidence, a.grade, a.note, rate,
                            unit_of_measure="words/cycle" if rate else "cycles", group=a.group)
             if a.cmd == "propose":

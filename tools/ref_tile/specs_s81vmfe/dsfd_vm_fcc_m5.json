@@ -68,9 +68,9 @@
   "hold_margin_ns": 0.01
  },
  "job": {
-  "owner": "Claude:el1013-s81-vmfe/B5",
+  "owner": "Claude:el1013-s81-vmfe/B6",
   "branch": "claude/el1013-s81-vmfe",
-  "tag": "p1",
+  "tag": "p2",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/mtp",
@@ -84,11 +84,14 @@
    "physical/s81_ph_views/vm_master",
    "results/arch"
   ],
-  "benched_by": "s81_vm_fe_h_lockstep",
-  "purpose": "el1013-s81-vmfe/B5 dsfd_vm_fe_h leaf dsfd_vm_fcc at M5 (ctrl ratio CDC (cks -> ck), ports 3 / 4 order registers); RTL FROZEN 693940a56 (lockstep 9/9 bit-exact, 4 hierarchy mutants fail, pin-register check PASS); 19747 mapped flops, std 8043.17 um2 measured, outline 181.44 x 112.32.  ck signed off at 833.3 ps (VM serial clock is 1,111.1 ps: stricter). PIN FACES by data flow, bit-ordered ranges; the exact abutment plan waits for a passing parent floorplan (results/arch/s81_vm_fe_h_plan_1013.json: FAIL at 1,520.064 x 691.20, 8 of 10 lanes), so this route is first closure evidence of the leaf and is re-routed if its faces move."
+  "purpose": "el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf dsfd_vm_fcc at M5 (ctrl ratio CDC (cks -> ck), ports 3 / 4 order registers); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline 181.44 x 112.32; pin faces by data flow, bit-ordered ranges. TWO clocks at their TRUE periods: ck 1,111.1 ps / cks 833.3 ps (base = the stream clock), each domain referenced to its own propagated tree, inter-clock insertion balanced (fe_h_str_boundary.tcl). ",
+  "benched_by": "s81_vm_fe_h_lockstep"
  },
  "sdc_extra": [
   "physical/s81_ph_views/vm_master/fe_h_str_clock_ref.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_ph_views/vm_master/fe_h_str_boundary.tcl"
  ],
  "recipe": 1,
  "inhold": true,
