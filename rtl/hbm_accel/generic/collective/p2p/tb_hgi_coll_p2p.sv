@@ -469,6 +469,7 @@ module tb_hgi_coll_p2p;
             end
             if (t >= 4000000) begin $display("TIMEOUT central done=%0d p2p done=%0d of %0d", cd[0], pd[0], nrec); fails = fails + 1; end
         end
+        $display("DIAG central ep=%b multi=%b pipe=%b rec=%b state=%d", g_die[0].u_c.u_ep.ep_fault, g_die[0].u_c.u_ep.multi_err, g_die[0].u_c.u_ep.p_flt, g_die[0].u_c.u_ep.rec_fault, g_die[0].u_c.u_ep.u_rec.st);
         repeat (600) @(negedge clk);     // nothing may arrive late
         for (integer r = 0; r < nrec; r = r + 1)
             $display("REC %0d op=%0d n=%0d afmt=%0d ofmt=%0d | die0 issue->done central %0d p2p %0d cycles", r, r_op[r], r_n[r], r_afmt[r],
