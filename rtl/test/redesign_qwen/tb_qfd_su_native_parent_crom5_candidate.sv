@@ -178,10 +178,10 @@ module tb_qfd_su_native_parent_crom5_candidate;
     always @(posedge clk) if (rst_n) begin
         rre1 <= {r_vc_re, r_vb_re, r_su_va_re}; ra1 <= r_su_va_addr[0 +: AW];
         if (|rre1 && nrq < 2048) begin ra_s[nrq] = ra1; op_s[nrq] = ops; end
-        dre[0] <= {dut.vc_re, dut.vb_re, dut.s_va_re};
+        dre[0] <= {dut.u_su.vc_re, dut.u_su.vb_re, dut.u_su.s_va_re};
         for (dd2 = 1; dd2 <= MLT; dd2 = dd2 + 1) dre[dd2] <= dre[dd2-1];
         if (|rre1) begin if (nrq < 2048) begin rq_s[nrq] = {r_vc_q, r_vb_q, r_su_va_q}; rm_s[nrq] = rre1; end nrq = nrq + 1; end
-        if (|dre[MLT]) begin if (ndq < 2048) begin dq_s[ndq] = {dut.vcq_m, dut.vbq_m, dut.vaq_m}; dm_s[ndq] = dre[MLT]; end ndq = ndq + 1; end
+        if (|dre[MLT]) begin if (ndq < 2048) begin dq_s[ndq] = {dut.u_su.vcq_m, dut.u_su.vbq_m, dut.u_su.vaq_m}; dm_s[ndq] = dre[MLT]; end ndq = ndq + 1; end
     end
     // far constant ROM for the master: 1 + CRX edges after its (stationed) strobe
     integer c;
@@ -283,8 +283,8 @@ module tb_qfd_su_native_parent_crom5_candidate;
     integer cq;
     always @(posedge clk) if (rst_n) begin
         if (|ref0.l_ov) begin if (nlr < 4096) lo_r[nlr] = {ref0.l_ov, ref0.l_out}; nlr = nlr + 1; end
-        if (|dut.u_su.l_ov) begin if (nld < 4096) lo_d[nld] = {dut.u_su.l_ov, dut.u_su.l_out}; nld = nld + 1; end
-        rcre1 <= r_crom_re; dcre[0] <= dut.s_crom_re;
+        if (|dut.u_su.u_su.l_ov) begin if (nld < 4096) lo_d[nld] = {dut.u_su.u_su.l_ov, dut.u_su.u_su.l_out}; nld = nld + 1; end
+        rcre1 <= r_crom_re; dcre[0] <= dut.u_su.s_crom_re;
         for (cq = 1; cq <= MLT; cq = cq + 1) dcre[cq] <= dcre[cq-1];
         if (|rcre1) begin if (ncr < 4096) cr_r[ncr] = {rcre1, r_crom_q}; ncr = ncr + 1; end
         if (|dcre[MLT]) begin if (ncd < 4096) cr_d[ncd] = {dcre[MLT], dut.u_su.crq_q}; ncd = ncd + 1; end
