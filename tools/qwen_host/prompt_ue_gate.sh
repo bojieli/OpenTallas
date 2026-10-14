@@ -9,6 +9,10 @@ for MUT in 0 1;do
  vvp "$OUT/tb-$MUT" > "$OUT/run-$MUT.log" 2>&1
  RC=$?
  set -e
- if [[ $MUT == 0 ]];then [[ $RC == 0 ]]&&grep -q '^PASS' "$OUT/run-$MUT.log";else [[ $RC != 0 ]]&&grep -q 'UE corrupted prompt launched controller' "$OUT/run-$MUT.log";fi
+ if [[ $MUT == 0 ]];then
+   if [[ $RC != 0 ]] || ! grep -q '^PASS' "$OUT/run-$MUT.log";then cat "$OUT/run-$MUT.log";exit 1;fi
+  else
+   if [[ $RC == 0 ]] || ! grep -q 'UE corrupted prompt launched controller' "$OUT/run-$MUT.log";then cat "$OUT/run-$MUT.log";exit 1;fi
+  fi
  cat "$OUT/run-$MUT.log";rm "$OUT/tb-$MUT"
 done
