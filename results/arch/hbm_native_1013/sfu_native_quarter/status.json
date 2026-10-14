@@ -25,7 +25,7 @@
   "full_chunks": {
     "result": "PASS5337cyclechecks,2543valid,848collisions,3warmresets,all7depths",
     "negative_control": "drop valid at actual high139\u2192low138 interchunk crossing, FAILcycle39",
-    "scope": "W75 fullhorizon chronologicalcontrol-only proof; W60 samepatternnotyetelaborated; no clock/physical qualification"
+    "scope": "W75 andW60 fullhorizon chronologicalcontrol proofs pass, includingPIN_CAPTURE1 data/valid gates; STATUS_REG1 verifies original coll/busy +1edge atPIN_CAPTURE0; PIN1 composed status alignment open. No physical/native qualification."
   },
   "root_rule": "full-horizon payload75/60 \u00d7138 gives10350/8280FF perroot; plusvalid138 andcaptureregoptional; exactlyfourroots, slotsunassigned"
 }

@@ -91,5 +91,28 @@
     "interchunk_shift": "same high139\u2192low138 registered hop",
     "NONE": "rawregistered cwi bypasses these nonzero-depth leaves",
     "status": "coll/busy semantics with injection capture require separate controller/status alignment proof; captured variant bench checksdata/valid only"
+  },
+  "optional_registered_status": {
+    "parameter": "STATUS_REG=1, default0",
+    "extra_clock_sinks_per_root": 2,
+    "coll_busy_delay_edges": 1,
+    "data_valid_delay_edges": 0,
+    "first_capture_launch": "PIN_CAPTURE1 registers injection face; tail_r138 itself capture; r1 and rv1 launch; STATUS_REG1 launches col/busy registered",
+    "scope": "controller fault/idle/status alignment needs composed proof and pricing before selecting these physical parameters"
+  },
+  "leaf_proposals": {
+    "outline_um": [
+      216.0,
+      172.8
+    ],
+    "area_um2_each": 37324.8,
+    "total_four_leaf_area_um2": 149299.2,
+    "utilization_target": 0.52,
+    "inject_face": "S",
+    "chronological_tail_face": "W",
+    "output_stage1_face": "E",
+    "PG": "M5 default",
+    "slot_change_request": "UNASSIGNED native SFU quarter control pipe leaves; die owner must assign valid child rectangles/pins/clock roots before adoption",
+    "source_selection": "new chunk master PIN_CAPTURE1 STATUS_REG1; data/valid exact gates scoped; controller/status/side/cache binding stillopen"
   }
 }

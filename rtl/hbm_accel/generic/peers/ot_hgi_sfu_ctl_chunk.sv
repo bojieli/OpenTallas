@@ -3,7 +3,7 @@
 // Independent same-edge clock roots, not asynchronous domains. Unassigned physical leaf.
 module ot_hgi_sfu_ctl_chunk #(
  parameter integer W=75, OFFSET=0, STAGES=138,
- parameter integer MUT_BOUNDARY=0, PIN_CAPTURE=0
+ parameter integer MUT_BOUNDARY=0, PIN_CAPTURE=0, STATUS_REG=0
 )(
  input wire clk,rst_n,v,
  input wire [2:0] sfu,
@@ -46,7 +46,15 @@ module ot_hgi_sfu_ctl_chunk #(
  end
  assign q=r[1];assign vo=rv[1];
  // Data/valid pins are registered. coll/busy are status reductions: registered relay stillrequired physically.
- assign coll=|collision;assign busy=|rv;
+ generate if(STATUS_REG)begin:g_registered_status
+  reg c,b;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n)begin c<=1'b0;b<=1'b0;end
+   else begin c<=|collision;b<=|rv;end
+  assign coll=c;assign busy=b;
+ end else begin:g_legacy_status
+  assign coll=|collision;assign busy=|rv;
+ end endgenerate
  initial if((W!=75&&W!=60)||STAGES!=138||(OFFSET!=0&&OFFSET!=138))
   $fatal(1,"SFU chronological chunk requires75/60bit x138stage exact partitions");
 endmodule

@@ -1,0 +1,88 @@
+{
+  "name": "sfu_ctl75lo_ref",
+  "top": "ot_hgi_sfu_ctl_chunk",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_chunk.sv"
+  ],
+  "params": {
+    "W": 75,
+    "OFFSET": 0,
+    "STAGES": 138,
+    "MUT_BOUNDARY": 0,
+    "PIN_CAPTURE": 1,
+    "STATUS_REG": 1
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 216.0,
+    "h": 172.8
+  },
+  "util": 0.52,
+  "clock": "spine",
+  "recipe": 2,
+  "macros": [],
+  "pins": {
+    "W": [
+      "tail_d",
+      "tail_v"
+    ],
+    "E": [
+      "q",
+      "vo",
+      "coll",
+      "busy"
+    ],
+    "S": [
+      "d",
+      "v",
+      "sfu",
+      "clk",
+      "rst_n"
+    ],
+    "N": []
+  },
+  "io_flop_at_pins": {
+    "cols": 12,
+    "allow_none": true
+  },
+  "refglob": "*g_stage*",
+  "route": {
+    "pd": 0.45,
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "pin_min_tracks": 1
+  },
+  "job": {
+    "owner": "Codex:sfu_native_quarter",
+    "branch": "codex/sfu-native-quarter",
+    "tag": "c1",
+    "views_to": "physical/ref_tile/sfu_ctl75lo_ref/views",
+    "record_to": "results/rtl/ref_tile/sfu_ctl75lo_ref",
+    "purpose": "Actual c12 chronological S-control partition, payload75 \u00d7138 stages offset0. Registered injection capture decrements original depth by1, retaining exact data/valid waveform; registered status adds1edge, composed status alignment/price stillopen. Full276horizon remains; existing CLOSED SFU body/side/reducer stand. New leaf proposed216x172.8, no assigned native slot/grant, unselected until true fullquarter/cache/VM/throughput/physical integration.",
+    "benches": [
+      {
+        "name": "full_depth_exact",
+        "cmd": "WIDTH=75 STATUS_REG=1 PIN_CAPTURE=1 OUT={RUN}/exact bash tools/hgi_unit_tput/run_sfu_ctl_chunk.sh",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "pass_regex": "PASS SFU chronological chunks"
+      },
+      {
+        "name": "crossing_valid_mutant",
+        "cmd": "WIDTH=75 STATUS_REG=1 PIN_CAPTURE=1 MUT_BOUNDARY=1 OUT={RUN}/mutant bash tools/hgi_unit_tput/run_sfu_ctl_chunk.sh",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 4,
+        "fail_regex": "CHUNK_MISMATCH"
+      }
+    ]
+  },
+  "cycles_added": 0,
+  "structural_change": "Partition original276-stage variable insertion pipe into chronological138-stage chunks and75/60bit live-field groups, four separate roots with payload<=10350/8280FF. First capture at injection face uses compensateddepth-1; all data/valid/status exports registered. No original CLOSED source edited, no SDC relaxation.",
+  "slot_change_request": "UNASSIGNED SLOT CHANGE REQUEST r25gq v12 hfd_sfu: add real control pipe leaf sfu_ctl75lo_ref,216x172.8, Wtail/Elaunch/Sinjection, M5 PG. Proposed independently routed alternative; die-owner rectangles, cuts, clocks, hops and throughput contract remain OPEN."
+}
