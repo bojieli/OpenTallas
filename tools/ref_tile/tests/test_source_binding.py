@@ -140,6 +140,25 @@ class SourceBindingTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 SB.recover_verified_snapshot(binding, root, log, script)
 
+    def test_recovery_parser_never_clears_a_source_mismatch_failure(self):
+        with tempfile.TemporaryDirectory() as td:
+            kd = Path(td)
+            (kd / 'floorplan.json').write_text(json.dumps({'die': [0, 0, 80, 80], 'blocks': []}))
+            binding = {'commit': None, 'start_commit': 'original-commit', 'archive_sha256': 'a' * 64}
+            out = ('GATE_SOURCE_ARCHIVE_SHA256=' + 'a' * 64 + '\nGATE_FLOW_RC=0 GATE_FLOW_S=1\n'
+                   'GATE_IOP_RC=0\nGATE_CTS_RC=0\n'
+                   'GATE_TB textbook_lint: INFO clock_roots max_root_sinks=48000 root=port:clk\n'
+                   'GATE_CK tt insertion all 210.0..280.0 ps\n')
+            spec = {'kind': 'tile', 'clock_port': 'clk', 'route': {'pd': .5}}
+            g = PG.Gate()
+            g.source_binding = binding
+            g.add('FAIL', 'source_binding', 'candidate route source has changed')
+            PG.analyse_remote(g, kd, spec, out, True, binding, 10, 'original-host')
+            self.assertEqual(g.verdict, 'FAIL')
+            self.assertEqual(g.clock['tt_insertion_ps'], 280.)
+            self.assertEqual(binding['start_commit'], 'original-commit')
+            self.assertIsNone(binding['commit'])
+
     def test_remote_script_verifies_archive_before_extracting(self):
         script = PG.REMOTE_SH.format(R='/tmp/test', ARCHIVE_SHA256='a' * 64, COMMIT='snapshot-sha256:abc', CAP=1,
                                     KIT='kit', IMG='unused', RC='', TOP='test', CTS=0, PGM=1, CLK='clk')
