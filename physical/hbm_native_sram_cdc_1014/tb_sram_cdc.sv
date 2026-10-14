@@ -10,7 +10,7 @@ module tb_sram_cdc;
  initial begin #(PHASE);forever #(REVERSE?416.666625:555.5555) rclk=~rclk;end
  integer sent=0,received=0,wcycles=0,rcycles=0,first_accept=-1,first_read=-1,first_publish=-1,first_visible=-1;
  integer full_stalls=0,empty_stalls=0,freed_total=0,held_checks=0,issues=0,landings=0,ce_checks=0;
- integer phase_round=0;reg inj_done=0,credit_pause=0;reg held_valid=0;reg [W-1:0] held_data;
+ integer phase_round=0;reg inj_done=0,credit_pause=0,inj5=0;reg held_valid=0;reg [W-1:0] held_data;
  realtime accepted_at,visible_at;
  function automatic [W-1:0] payload(input integer n,input integer ep);
   reg [W-1:0] d;integer i;
@@ -20,16 +20,18 @@ module tb_sram_cdc;
  initial begin
   repeat(5)@(negedge wclk);wrst_n=1;rrst_n=1;
   if(MODE==8)begin
-   wait(dut.rb==1&&!dut.out_v&&!dut.rx_v);@(negedge rclk);
+   // registered landing pipeline: corrupt seq 1's landed slot in the cycle its fetch issues
+   wait(dut.rfp==1&&dut.rx_fetch);@(negedge rclk);
    dut.landed_slots[1][2]=~dut.landed_slots[1][2];dut.landed_slots[1][4]=~dut.landed_slots[1][4];
   end
   if(MODE==4)begin
-   wait(sent>=8);@(negedge wclk);wepoch=3;@(posedge wclk);#1;
+   wait(sent>=8);@(negedge wclk);wepoch=3;repeat(2)@(posedge wclk);#1;   // pin flop + registered fault: 2 edges
    if(!w_fault||!full)$fatal(1,"EARLY_EPOCH discarded pending payload");
    $display("SRAM_CDC_BOUNDARY PASS early epoch refuses pending obligations");$finish;
   end
   if(MODE==5)begin
-   wait(!empty);@(negedge rclk);dut.out_data[0]=~dut.out_data[0];#1;
+   // registered outputs: corruption of the held output register is reported at the next edge (re held low)
+   wait(!empty);@(negedge rclk);inj5=1;re=0;dut.out_data[0]=~dut.out_data[0];@(posedge rclk);#1;
    if(!r_fault||!empty)$fatal(1,"HELD_OUTPUT_PAYLOAD corruption escaped");
    $display("SRAM_CDC_BOUNDARY PASS protected held output payload");$finish;
   end
@@ -46,13 +48,13 @@ module tb_sram_cdc;
   if(freed_total!=TOTAL)$fatal(1,"second epoch credit total");
   if(MODE==1&&ce_checks!=2)$fatal(1,"single error correction was not observed twice: %0d",ce_checks);
   if(MODE==6)begin
-   @(negedge wclk);inj_done=1;dut.w_epoch[0]=~dut.w_epoch[0];#1;
+   @(negedge wclk);inj_done=1;dut.w_epoch[0]=~dut.w_epoch[0];@(posedge wclk);#1;
    if(!w_fault||!full)$fatal(1,"EPOCH_RAIL immediate corruption escaped");
    repeat(3)begin @(posedge wclk);#1;if(!w_fault||!full)$fatal(1,"EPOCH_RAIL_FAULT_CLEARED");end
    $display("SRAM_CDC_BOUNDARY PASS epoch rail fault persists without caller epoch change");$finish;
   end
   if(MODE==3)begin
-   @(negedge wclk);dut.fetch_n[0]=~dut.fetch_n[0];#1;
+   @(negedge wclk);dut.fetch_n[0]=~dut.fetch_n[0];@(posedge wclk);#1;
    if(!w_fault||!full)$fatal(1,"SOURCE_CONTROL_RAIL not fail closed");
    $display("SRAM_CDC_BOUNDARY PASS source control rail fail closed");
   end
@@ -88,14 +90,14 @@ module tb_sram_cdc;
  // Long initial and recurring stalls fill all eight source-held slots.
  always @(negedge rclk)begin
   if(rrst_n)begin
-   re=(rcycles>45)&&((rcycles%41)<24);
+   re=!inj5&&(rcycles>45)&&((rcycles%41)<24);
 
   end
  end
  always @(posedge rclk)if(rrst_n)begin
   rcycles=rcycles+1;
   if(dut.rx_v&&(|dut.decode_ce))ce_checks=ce_checks+1;
-  if(!empty)begin
+  if(!empty&&!inj5)begin
    if(first_visible<0)begin first_visible=rcycles;visible_at=$realtime;end
    if(rdata!==payload(received,repoch))$fatal(1,"PAYLOAD_MISMATCH W=%0d got=%h want=%h seq=%0d",W,rdata,payload(received,repoch),received);
    if(held_valid&&rdata!==held_data)$fatal(1,"HELD_SLOT_CHANGED");
