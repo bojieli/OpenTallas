@@ -434,6 +434,32 @@ def blocks_of(s: dict) -> list:
     return exp
 
 
+ABUT_UM = 0.1           # two macros this close in one axis (and overlapping in the other) are one abutted stack
+
+
+def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
+    """two MACROS stacked N-S with no cell row between them (0 <= gap <= ABUT_UM, overlapping in x) and no signal /
+    clock pin of either on the two touching faces (memory arrays with their pins on W / E: a bank of arrays).  Only R0;
+    hard children and side-by-side macros keep the channel rule (their touching faces carry pins / need straps)."""
+    if a["kind"] != "macro" or b["kind"] != "macro" or a.get("orient", "R0") != "R0" or b.get("orient", "R0") != "R0":
+        return False
+    if not (-1e-6 <= gy <= ABUT_UM + 1e-6 and gx < -1e-6):
+        return False
+    lo, hi = (a, b) if a["y"] < b["y"] else (b, a)
+    for blk, edge in ((lo, "top"), (hi, "bottom")):
+        if blk.get("_tm") is None:
+            blk["_tm"] = track_macro(blk["view"])
+        tm = blk["_tm"]
+        for pin in tm["pins"]:
+            if pin["use"] not in ("SIGNAL", "CLOCK"):
+                continue
+            for _layer, (x0, y0, x1, y1) in pin["rects"]:
+                on_w_e = x0 <= 200 or x1 >= tm["W"] - 200          # nm: a W / E face pin reaches the side edge
+                if (y1 >= tm["H"] - 200 if edge == "top" else y0 <= 200) and not on_w_e:
+                    return False
+    return True
+
+
 def on_track(b: dict, x: float, y: float) -> tuple[float, float, int]:
     """nearest origin to (x, y) that puts the block's signal pins on the asap7 tracks (DRT-0255 / 0418 / 0419)"""
     if b.get("_tm") is None:
@@ -528,9 +554,11 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gx = max(b["x"] - (a["x"] + a["w"]), a["x"] - (b["x"] + b["w"]))
             gy = max(b["y"] - (a["y"] + a["h"]), a["y"] - (b["y"] + b["h"]))
             gap = max(gx, gy)
+            if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
+                continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
-                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros or abut them deliberately (gap 0, no cells)"))
+                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0, no pin on the touching faces: abutted_stack)"))
     core = (x1c - x0c) * (y1c - y0c)
     mac = sum(b["w"] * b["h"] for b in blocks)
     if std_area:
