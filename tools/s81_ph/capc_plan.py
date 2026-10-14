@@ -75,7 +75,7 @@ def build(assigned):
     for g in range(8):
         add(V["g2"], f"*g_t?{g}?*u_g", XG[g], Y_G, "MX")
         for half in range(2):
-            add(V["x"], f"*g_t?{g}?*u_x{half}", XG[g] - 11.088 + 80.496 * half, Y_X, "MX")
+            add(V["x"], f"*g_t?{g}?*u_x{half}", XG[g] - 11.52 + 80.64 * half, Y_X, "MX")
     add(V["cd"], "u_cd", *CD)
     rel = {}                                             # relay instance -> (x, view)
     k = 0
