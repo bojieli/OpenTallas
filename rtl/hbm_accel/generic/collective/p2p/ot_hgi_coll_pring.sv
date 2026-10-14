@@ -119,7 +119,9 @@ module ot_hgi_coll_pring #(
 
     // ---- injection queues (one per direction) -----------------------------------------------------------------------
     localparam integer QD = 2 * NT + 4;
-    reg [RW-1:0] iq [0:1][0:QD-1]; reg [$clog2(QD):0] iq_n [0:1]; reg [$clog2(QD)-1:0] iq_h [0:1], iq_t [0:1];
+    reg [RW-1:0] iq [0:1][0:QD-1];
+    function automatic [$clog2(QD)-1:0] inc(input [$clog2(QD)-1:0] p); inc = (p == QD - 1) ? '0 : p + 1'b1; endfunction
+    reg [$clog2(QD):0] iq_n [0:1]; reg [$clog2(QD)-1:0] iq_h [0:1], iq_t [0:1];
     // CTRL counters (to HOME)
     reg [2:0] n_pop, n_done; reg f_sent;
 
@@ -173,12 +175,12 @@ module ot_hgi_coll_pring #(
                 else if (ao_s == 2'd1) begin                                              // final: local + broadcast
                     rr_v <= 1'b1; rr_tag <= ao_t; rr_d <= a_y; bz[ao_t] = 1'b0;
                     dir = 2'd0;
-                    iq[0][qt[0]] <= mk(K_RES, me, me, 2'd3, ao_t, 1'b0, 11'd0, a_y); qt[0] = qt[0] + 1'b1; qn[0] = qn[0] + 1'b1;
+                    iq[0][qt[0]] <= mk(K_RES, me, me, 2'd3, ao_t, 1'b0, 11'd0, a_y); qt[0] = inc(qt[0]); qn[0] = qn[0] + 1'b1;
                 end else begin                                                            // send on (serial / q1 tree)
                     reg [1:0] dq; dq = lp_m[ao_t] ? 2'd3 : nxt(me);
                     dir = is_ccw(me, dq) ? 2'd1 : 2'd0;
                     iq[dir][qt[dir]] <= mk(K_CARRY, me, dq, 2'd0, ao_t, lp_m[ao_t], 11'd0, a_y);
-                    qt[dir] = qt[dir] + 1'b1; qn[dir] = qn[dir] + 1'b1;
+                    qt[dir] = inc(qt[dir]); qn[dir] = qn[dir] + 1'b1;
                 end
             end
             // -- fold issue: at most one add (or one raw send) per edge, lowest ready tag first
@@ -189,7 +191,7 @@ module ot_hgi_coll_pring #(
                     if (me == first) begin                                                // send P0 raw
                         dir = is_ccw(me, nxt(me)) ? 2'd1 : 2'd0;
                         iq[dir][qt[dir]] <= mk(K_CARRY, me, nxt(me), 2'd0, 3'(i), 1'b0, 11'd0, lp_d[i]);
-                        qt[dir] = qt[dir] + 1'b1; qn[dir] = qn[dir] + 1'b1; lpv[i] = 1'b0; issued = 1'b1;
+                        qt[dir] = inc(qt[dir]); qn[dir] = qn[dir] + 1'b1; lpv[i] = 1'b0; issued = 1'b1;
                     end else if (cv[i][prv(me)] || MUT_CARRY != 0) begin
                         src_c = prv(me);
                         a_iv <= 1'b1; a_a <= (MUT_CARRY != 0) ? 256'd0 : c_d[i][src_c]; a_b <= lp_d[i]; a_it <= 3'(i);
@@ -202,7 +204,7 @@ module ot_hgi_coll_pring #(
                             reg [1:0] dq; dq = (me == 2'd0) ? 2'd1 : 2'd3;
                             dir = is_ccw(me, dq) ? 2'd1 : 2'd0;
                             iq[dir][qt[dir]] <= mk(K_CARRY, me, dq, 2'd0, 3'(i), 1'b1, 11'd0, lp_d[i]);
-                            qt[dir] = qt[dir] + 1'b1; qn[dir] = qn[dir] + 1'b1; lpv[i] = 1'b0; issued = 1'b1;
+                            qt[dir] = inc(qt[dir]); qn[dir] = qn[dir] + 1'b1; lpv[i] = 1'b0; issued = 1'b1;
                         end
                         2'd1: if (cv[i][0] || MUT_CARRY != 0) begin                       // P0 + P1 -> q3
                             a_iv <= 1'b1; a_a <= (MUT_CARRY != 0) ? 256'd0 : c_d[i][0]; a_b <= lp_d[i]; a_it <= 3'(i); a_is <= 2'd0;
@@ -231,7 +233,7 @@ module ot_hgi_coll_pring #(
                 // direction's queue is empty so CTRL never crowds out carries
                 if ((np != 0 || nd != 0 || (ev_fault && !f_sent)) && qn[dir] == 0) begin
                     iq[dir][qt[dir]] <= mk(K_CTRL, me, 2'(HOME), 2'd0, 3'd0, 1'b0, {8'd0, nd != 0, np != 0, ev_fault}, 256'd0);
-                    qt[dir] = qt[dir] + 1'b1; qn[dir] = qn[dir] + 1'b1;
+                    qt[dir] = inc(qt[dir]); qn[dir] = qn[dir] + 1'b1;
                     if (np != 0) np = np - 3'd1; if (nd != 0) nd = nd - 3'd1; if (ev_fault) f_sent <= 1'b1;
                 end
                 n_pop <= np; n_done <= nd;
@@ -242,7 +244,7 @@ module ot_hgi_coll_pring #(
                 if (fo[d][RW-1]) begin if (d == 0) cw_o <= fo[d]; else ccw_o <= fo[d]; end
                 else if (qn[d] != 0) begin
                     if (d == 0) cw_o <= iq[d][qh[d]]; else ccw_o <= iq[d][qh[d]];
-                    qh[d] = qh[d] + 1'b1; qn[d] = qn[d] - 1'b1;
+                    qh[d] = inc(qh[d]); qn[d] = qn[d] - 1'b1;
                 end else begin if (d == 0) cw_o <= '0; else ccw_o <= '0; end
                 if (qn[d] > QD) fault <= 1'b1;
             end

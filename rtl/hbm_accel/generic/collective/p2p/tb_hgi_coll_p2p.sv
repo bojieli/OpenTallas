@@ -24,6 +24,9 @@
 `ifndef RLY
 `define RLY 12
 `endif
+`define P2P_DUMP(E) $display("DUMP die=%0d q=%0d rq_n=%0d head=%b e_ret=%b ret=%b cr=%0d%0d%0d%0d dn=%0d/%0d/%0d/%0d e_fault=%b st=%0d p_open=%b p_next=%0d p_old=%0d iq=%0d/%0d npop=%0d ndone=%0d", \
+    d, q, E.rq_n, E.head_v, E.e_ret, E.hgi_ret, E.cr[0], E.cr[1], E.cr[2], E.cr[3], E.dn[0], E.dn[1], E.dn[2], E.dn[3], E.e_fault, \
+    E.u_ep.u_rec.st, E.u_ep.p_open, E.u_ep.p_next, E.u_ep.g_pipe.p_old, E.u_ring.iq_n[0], E.u_ring.iq_n[1], E.u_ring.n_pop, E.u_ring.n_done);
 module tb_hgi_coll_p2p;
 `ifdef SPMD
     // +define+SPMD: ONE real die (rank RR) of a 96-rank fabric; the 95 peers are replayed SPMD-lockstep by the switch
@@ -150,6 +153,9 @@ module tb_hgi_coll_p2p;
                     .tk_w_v(), .tk_w_addr(), .tk_w_mask(), .tk_w_data(), .tk_w_rdy(1'b1),
                     .rgx_xq(), .rgx_xr(514'd0), .rgx_vmq(), .rgx_vmr(274'd0), .rgx_c_req(), .rgx_c_gnt(1'b0), .rgx_c_q(), .rgx_c_cr(32'd0),
                     .rgx_c_rsp(32'd0), .rgx_xw(), .rgx_xwa(2'd0));
+                if (d < 4) begin : g_dump
+                    always @(posedge clk) if (dump_req) `P2P_DUMP(u_q.u_q)
+                end
             end else begin : g_m2
                 ot_hfd_coll_q2 #(.MUT_Q(MQ), .MUT_CARRY(MC), .MUT_ORDER(MO)) u_q (.clk(clk), .rst_n(rst_n), .qid(2'(q)),
                     .hgi_rec(p_rec[d][q]), .hgi_cfg(cfgb), .hgi_vmaddr(), .hgi_inj_addr(p_ia[d][q]),
@@ -162,6 +168,9 @@ module tb_hgi_coll_p2p;
                     .rc_v(rc_v[d][q]), .rc_rdy(rc_rdy[d][q]), .rc_tag(rc_tag[d][q]), .rc_mode(rc_mode[d][q]), .rc_d(rc_d[d][q]),
                     .rr_v(rr_v[d][q]), .rr_tag(rr_tag[d][q]), .rr_d(rr_d[d][q]));
                 assign p_ret[d][q] = 3'b000;
+                if (d < 4) begin : g_dump
+                    always @(posedge clk) if (dump_req) `P2P_DUMP(u_q.u_q)
+                end
             end
             // ring hops q -> CW successor, q -> CW predecessor (CCW): RLY relay registers each
             reg [RW-1:0] dcw [0:RLY-1]; reg [RW-1:0] dccw [0:RLY-1];
@@ -374,10 +383,13 @@ module tb_hgi_coll_p2p;
                 for (integer t = 0; t < 8; t = t + 1) for (integer qq = 3; qq >= 0; qq = qq - 1) begin
                     @(negedge clk);
                     for (integer d = 0; d < G; d = d + 1) for (integer q = 0; q < 4; q = q + 1) rc_v[d][q] = 0;
+                    // rc_rdy is per tag: present the tag first, let it settle, then check and submit
+                    for (integer d = 0; d < G; d = d + 1) rc_tag[d][(qq + d + t) % 4] = 3'(t);
+                    #0.05;
                     for (integer d = 0; d < G; d = d + 1) begin
                         integer q; q = (qq + d + t) % 4;
                         if (!rc_rdy[d][q]) $fatal(1, "RC_NOT_READY die=%0d q=%0d tag=%0d", d, q, t);
-                        rc_v[d][q] = 1; rc_tag[d][q] = 3'(t); rc_mode[d][q] = rc_mo[t]; rc_d[d][q] = rc_p[d][q][t];
+                        rc_v[d][q] = 1; rc_mode[d][q] = rc_mo[t]; rc_d[d][q] = rc_p[d][q][t];
                     end
                 end
                 @(negedge clk); for (integer d = 0; d < G; d = d + 1) for (integer q = 0; q < 4; q = q + 1) rc_v[d][q] = 0;
@@ -387,6 +399,24 @@ module tb_hgi_coll_p2p;
         end
     endtask
     // ---------------------------------------------------------------------------------------------------------------
+    // ---- progress / stall detector: no delivery, no link departure and no completion on a fabric for STALL cycles
+    // while it still has records outstanding -> dump every engine's state (dies 0-3) and fail
+    integer stall_lim; integer c_prog = 0, p_prog = 0; reg dump_req = 0; bit stalled = 0;
+    always @(posedge clk) if (rst_n && go_rec) begin
+        for (integer d = 0; d < G; d = d + 1) begin
+            if (c_dv[d] != 0 || c_txv[d] != 0 || c_ret[d][1] || c_rxv[d] != 0) c_prog = cyc;
+            if (p_txv[d] != 0 || p_rxv[d] != 0 || p_ret[d][0][1]) p_prog = cyc;
+            for (integer q = 0; q < 4; q = q + 1) if (p_dv[d][q] != 0) p_prog = cyc;
+        end
+        dump_req <= 1'b0;
+        if (!stalled && ((cyc - p_prog > stall_lim && pd[0] < nrec) || (cyc - c_prog > stall_lim && cd[0] < nrec))) begin
+            stalled = 1; dump_req <= 1'b1;
+            $display("STALL cyc=%0d central done=%0d (last progress %0d) p2p done=%0d (last progress %0d)", cyc, cd[0], c_prog, pd[0], p_prog);
+        end
+        if (cyc % 200000 == 0) begin $display("PROG cyc=%0d central done=%0d p2p done=%0d", cyc, cd[0], pd[0]); $fflush; end
+    end
+    always @(posedge clk) if (dump_req) for (integer d = 0; d < G && d < 4; d = d + 1)
+        $display("DUMP die=%0d central st=%0d ret=%b", d, (d == 0) ? g_die[0].u_c.u_ep.u_rec.st : 0, c_ret[d]);
     integer fails = 0;
     task automatic check_images;
         integer nw, ndiff, ncnt, nexp; longint k;
@@ -427,6 +457,7 @@ module tb_hgi_coll_p2p;
         if (!$value$plusargs("CRED=%d", cred)) cred = 137;
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
         if (!$value$plusargs("RC=%d", rcn)) rcn = 0;
+        if (!$value$plusargs("STALL=%d", stall_lim)) stall_lim = 40000;
         if (!$value$plusargs("CASE=%s", tcase)) tcase = "qwen";
         // record sequences (production shapes)
         if (tcase == "qwen") begin                     // Qwen3-8B TP8: hidden 4,096; G = 8
@@ -474,7 +505,7 @@ module tb_hgi_coll_p2p;
                     if (cd[d] < nrec || pd[d] < nrec) alldone = 0;
                     if (c_flt[d] || p_flt[d][0] || c_ret[d][2] || p_ret[d][0][2]) fl = 1;
                 end
-                if (alldone || fl) break;
+                if (alldone || fl || stalled) break;
                 @(negedge clk); t = t + 1;
             end
             if (fl) begin
@@ -483,6 +514,7 @@ module tb_hgi_coll_p2p;
                              p_flt[d][0], p_flt[d][1], p_flt[d][2], p_flt[d][3], p_ret[d][0], pd[d]);
                 fails = fails + 1;
             end
+            if (stalled) begin repeat (4) @(negedge clk); fails = fails + 1; end
             if (t >= 4000000) begin $display("TIMEOUT central done=%0d p2p done=%0d of %0d", cd[0], pd[0], nrec); fails = fails + 1; end
         end
         $display("DIAG central ep=%b multi=%b pipe=%b rec=%b state=%d", g_die[0].u_c.u_ep.ep_fault, g_die[0].u_c.u_ep.multi_err, g_die[0].u_c.u_ep.p_flt, g_die[0].u_c.u_ep.rec_fault, g_die[0].u_c.u_ep.u_rec.st);
