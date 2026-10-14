@@ -133,7 +133,7 @@
     "default": 59183,
     "not_judged": 9385
    },
-   "bits_over_pair_limit": 761,
+   "bits_over_pair_limit": 0,
    "candidates_bound_by_direction": [
     {
      "src": "ot_v41_rom_elem_q_qxpq_w10.ef",
@@ -458,24 +458,23 @@
   ],
   "bits_checked": 6135611,
   "bits_without_pin": 1729687,
-  "bits_over_limit": 761,
+  "bits_over_limit": 0,
   "bits_over_ss": 0,
   "max_um": 488.1,
   "verdict": "FAIL"
  },
  "pin_align": {
-  "verdict": "FAIL",
+  "verdict": "PASS",
   "bundles": 114061,
   "bits": 7865296,
   "by_verdict": {
-   "OK": 43660,
-   "WARN": 70396,
-   "FAIL": 5
+   "OK": 43655,
+   "WARN": 70406
   },
-  "jog_max": 400.512,
+  "jog_max": 252.72,
   "jog_over_warn": {
-   "bundles": 57313,
-   "bits": 1954484
+   "bundles": 57308,
+   "bits": 1951924
   },
   "order_not_preserved": {
    "bundles": 16258,

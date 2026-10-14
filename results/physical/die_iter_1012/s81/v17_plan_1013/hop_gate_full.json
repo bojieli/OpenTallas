@@ -10,7 +10,7 @@
    "default": 59183,
    "not_judged": 9385
   },
-  "bits_over_pair_limit": 761,
+  "bits_over_pair_limit": 0,
   "candidates_bound_by_direction": [
    {
     "src": "ot_v41_rom_elem_q_qxpq_w10.ef",
@@ -335,32 +335,9 @@
  ],
  "bits_checked": 6135611,
  "bits_without_pin": 1729687,
- "bits_over_limit": 761,
+ "bits_over_limit": 0,
  "bits_over_ss": 0,
  "max_um": 488.1,
  "verdict": "FAIL",
- "classes": [
-  {
-   "drv": "hr_E#.o",
-   "load": "f_hr_E#_o_#.di",
-   "cls": "local",
-   "limit_um": 92.9,
-   "bits_over_limit": 761,
-   "bits_over_ss": 0,
-   "max_um": 147.9,
-   "bus": "hr_E3_o_d0",
-   "example": [
-    "hr_E3",
-    "o[15]",
-    "f_hr_E3_o_1",
-    "di[15]",
-    [
-     16732,
-     17781,
-     16694,
-     17891
-    ]
-   ]
-  }
- ]
+ "classes": []
 }
