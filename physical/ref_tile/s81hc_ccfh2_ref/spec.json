@@ -115,7 +115,7 @@
   "benches_from": "tools/s81_suhc/hc_tile_benches_ccf.json",
   "owner": "Codex:s81_hc_ccf",
   "branch": "codex-s81-ccf-pinreg-1013",
-  "tag": "v7-fv-facecapture-spine",
+  "tag": "v8-fv-facecapture-minhold",
   "purpose": "FV pin capture isolates the die port from distributed POST replicas; FD retains its existing direct pin-capture flop. Pad FV depth4/FD5 transfers only the required control stage, preserving all output epochs with measured 14,196 sinks. Balanced clock spine repairs the measured 171 ps spread. Final actual hop audit is required.",
   "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
@@ -152,8 +152,9 @@
   "cols": 24
  },
  "clock": "spine",
+ "inhold": false,
+ "outhold": false,
+ "boundary_hold_experiment": "Keep all existing hold constraints and automatic repair; omit fixed HB4 input/output stages whose measured chains put FV at281ps and forward outputs at285ps. This is a physical candidate requiring fresh CTS and TT/FF pin-window proof, never a relaxed timing budget.",
  "children": [],
- "inter": [],
- "inhold": true,
- "outhold": true
+ "inter": []
 }
