@@ -1,0 +1,23 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 10.5 pins/um (lf_cmd, lf_status, rg_req): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO oflop: N face 10.5 pins/um (rec_v, rec_rdy, rec_hdr): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: S face 10.5 pins/um (go, ready, idle): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns (derived in the flow)
+GATE INFO oflop: W face 10.5 pins/um (clk, rst_n, vmq): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hgi_sv_head_slot_20261013-232705.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hgi_sv_head_slot_20261013-232705.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hgi_sv_head_slot-20261013-232705
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 267 s (gate total 853 s)
+GATE WARN util: synthesized std area 10102 um2 + macros 0 in core 44808: util 23%  -> FIX: set "std_area_um2": 10102 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hgi_sv_head cells 76,490 flops 9,755 depth 810.2 ps util 0.2296 reach 22.8 um (1.6 s)
+GATE WARN textbook.high_fanout: reset port rst_n: 4,038 loads (3,402 flops, e.g. a_big$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.logic_depth: reg->reg stage rk[2]$_DFFE_PN0P_ -> tb_lb[4][0]$_DFFE_PP_/D: ~810 ps estimated (22 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.util_channel: utilisation 23.0% outside 45%-65% (std 10290 + macro 0 um2 in 44808 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 318.2..361.6 ps (spread 43.4), boundary mean 334.6; tt insertion all 243.1..281.9 ps (spread 38.8), boundary mean 256.3; ff insertion all 197.4..233.4 ps (spread 36.0), boundary mean 208.9; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hgi_sv_head_slot/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      299 paths, worst slack -118.9 ps (e.g. tb_hi[2][16]$_DFFE_PP_/D)
+GATE INFO path_classes: in->reg       301 paths, worst slack -101.2 ps (e.g. jq_vsec[0][0]$_DFFE_PP_/D)
+GATE INFO path_classes: setup WNS -1.1885814554801755e-10 hold WNS 2.6637497763104534e-11
+GATE INFO clock_rule: root port:clk: 9,755 sinks on the largest root <= 15,000; measured TT insertion 281.9 ps, leaf spread 38.8 ps
+PRE_ROUTE_GATE: WARN (0 fail, 4 warn)
+GATE: hgi_sv_head_slot/gate_result.json written (exact staged source binding; commit it with the kit)

@@ -222,6 +222,11 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
         reg [4:0] d_off [0:1]; reg [8:0] d_k [0:1], d_rem [0:1]; reg [14:0] d_ll [0:1]; reg [9:0] d_rv [0:1];
         reg [DB:0] d_out [0:1]; reg [5:0] d_need [0:1];
         reg [QB-1:0] wcr; reg [5:0] wpend; reg [DD-1:0] dff; reg [DB:0] dfn;
+        // Local bank reads reserve local storage, never a remote VM credit. Four sectors cover the local
+        // read/pin pipeline; the eight VM credits are consumed only when a write enters the VM wire.
+        localparam integer PF = 4;
+        reg [1:0] pf_wp, pf_rp; reg [2:0] pf_n;
+        reg [255:0] pf_d [0:PF-1]; reg [7:0] pf_m [0:PF-1]; reg [9:0] pf_s [0:PF-1]; reg [PF-1:0] pf_slot;
         for (genvar q = 0; q < NSJ; q = q + 1) begin : g_sb
             assign ln_sbusy[g][q] = s_rem[q] != 9'd0 || s_out[q] != '0;
         end
@@ -236,9 +241,9 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                 for (integer q = 0; q < 2; q = q + 1) begin d_rem[q] <= 9'd0; d_out[q] <= '0; d_need[q] <= 6'd0; end
                 rr <= 3'd0; cr <= QB'(LQ); fn <= '0; wcr <= QB'(LQ); wpend <= 6'd0; dfn <= '0;
                 wrq_vf[g] <= 1'b0; lsw_v_f[g] <= 1'b0; lsw_scrub_f[g] <= 1'b0; ldr_v_f[g] <= 1'b0; wwq_vf[g] <= 1'b0;
-                ln_err[g] <= 1'b0; ln_shome[g] <= 1'b1; ln_dhome[g] <= 1'b1;
+                ln_err[g] <= 1'b0; ln_shome[g] <= 1'b1; ln_dhome[g] <= 1'b1; pf_wp <= 2'd0; pf_rp <= 2'd0; pf_n <= 3'd0;
             end else begin : ln
-                reg iss, land, found, sfound, dr, ret, wsend, wfree, c0, c1, di, ds, ok;
+                reg iss, land, found, sfound, dr, ret, wsend, wfree, c0, c1, di, ds, ps, enq, ok;
                 reg [2:0] qi, qq, lr, sq; reg [7:0] mk; reg [FB:0] wi; reg [DB:0] dwi;
                 iss = 1'b0; land = 1'b0; found = 1'b0; sfound = 1'b0; qi = 3'd0; sq = 3'd0;
                 wrq_vf[g] <= 1'b0; lsw_v_f[g] <= 1'b0; lsw_scrub_f[g] <= 1'b0; ldr_v_f[g] <= 1'b0; wwq_vf[g] <= 1'b0;
@@ -284,10 +289,10 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                 if (wrq_cr_q[g] && !iss && cr == QB'(LQ)) ln_err[g] <= 1'b1;      // credit overflow
                 ln_shome[g] <= (cr == QB'(LQ)) && (fn == '0);
                 // ================= DRAIN: one read an edge under the slot's frontier, slot 0 first
-                dr = 1'b0; ret = 1'b0; wsend = 1'b0; wfree = 1'b0; di = 1'b0;
+                dr = 1'b0; ret = 1'b0; wsend = 1'b0; wfree = 1'b0; di = 1'b0; enq = 1'b0; ps = pf_slot[pf_rp];
                 c0 = d_rem[0] != 9'd0 && ((MUT_V == 5) ? {d_k[0], d_off[0]} <= dfr_s[0] : {d_k[0], d_off[0]} < dfr_s[0]);
                 c1 = d_rem[1] != 9'd0 && ((MUT_V == 5) ? {d_k[1], d_off[1]} <= dfr_s[1] : {d_k[1], d_off[1]} < dfr_s[1]);
-                if (wcr != '0 && (c0 || c1)) begin
+                if ((MUT_V == 9 || (32'(pf_n) + 32'(dfn)) < PF) && (c0 || c1)) begin
                     dr = 1'b1; di = !c0;
                     ldr_v_f[g] <= 1'b1; ldr_sec_f[g] <= d_ll[di];
                     d_ll[di] <= d_ll[di] + 15'd32; d_k[di] <= d_k[di] + 9'd1; d_rem[di] <= d_rem[di] - 9'd1;
@@ -305,11 +310,19 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                         $display("SV leaf lane %0d CHK drain slot %0d vm sector %0d em %h want ep %0d", {lid_q, 1'(g)}, ds, {d_rv[ds], B}, ldr_em_q[g*12 +: 12], d_ep[ds]);
 `endif
                     if (mk != 8'd0) begin
-                        wsend = 1'b1; wwq_vf[g] <= 1'b1;
-                        wwq_sf[g] <= d_rv[ds]; wwq_df[g] <= ldr_d_q[g*256 +: 256]; wwq_mf[g] <= mk;
+                        enq = 1'b1;
+                        pf_d[pf_wp] <= ldr_d_q[g*256 +: 256]; pf_m[pf_wp] <= mk;
+                        pf_s[pf_wp] <= d_rv[ds]; pf_slot[pf_wp] <= ds; pf_wp <= pf_wp + 2'd1;
                     end else wfree = 1'b1;
                     d_rv[ds] <= d_rv[ds] + 10'd1;
                 end
+                if (pf_n != 3'd0 && wcr != '0) begin
+                    wsend = 1'b1; wwq_vf[g] <= 1'b1;
+                    wwq_sf[g] <= pf_s[pf_rp]; wwq_df[g] <= pf_d[pf_rp]; wwq_mf[g] <= pf_m[pf_rp];
+                    pf_rp <= pf_rp + 2'd1;
+                end
+                pf_n <= pf_n + 3'(enq) - 3'(wsend);
+                if (enq && pf_n == 3'(PF) && !wsend) ln_err[g] <= 1'b1;
                 dwi = dfn - (DB+1)'(ret);
                 for (integer k = 0; k < DD; k = k + 1) begin
                     if (dr && dwi == (DB+1)'(k)) dff[k] <= di;
@@ -317,15 +330,16 @@ module ot_hgi_sv_lane2 #(parameter integer LQ = 8, NSJ = 6, MUT_V = 0) (
                 end
                 dfn <= dfn + (DB+1)'(dr) - (DB+1)'(ret && dfn != '0);
                 for (integer q = 0; q < 2; q = q + 1) begin
-                    d_out[q] <= d_out[q] + (DB+1)'(dr && di == 1'(q)) - (DB+1)'(ret && ds == 1'(q));
+                    d_out[q] <= d_out[q] + (DB+1)'(dr && di == 1'(q)) - (DB+1)'(wsend && ps == 1'(q)) - (DB+1)'(wfree && ds == 1'(q));
                     // writes still owed to this slot: every write up to its last one must be done (done is in order)
-                    if (wsend && ds == 1'(q)) d_need[q] <= wpend + 6'd1 - 6'(wwq_done_q[g]);
+                    if (wsend && ps == 1'(q)) d_need[q] <= wpend + 6'd1 - 6'(wwq_done_q[g]);
                     else if (wwq_done_q[g] && d_need[q] != 6'd0) d_need[q] <= d_need[q] - 6'd1;
                 end
-                wcr <= wcr - QB'(dr) + QB'(wfree) + QB'(wwq_cr_q[g]);
+                wcr <= wcr - QB'(wsend) + QB'(wwq_cr_q[g]);
+                if (wwq_cr_q[g] && !wsend && wcr == QB'(LQ)) ln_err[g] <= 1'b1;
                 wpend <= wpend + 6'(wsend) - 6'(wwq_done_q[g]);
                 if (wpend == 6'd63 && wsend && !wwq_done_q[g]) ln_err[g] <= 1'b1;
-                ln_dhome[g] <= (wcr == QB'(LQ)) && (wpend == 6'd0) && (dfn == '0);
+                ln_dhome[g] <= (wcr == QB'(LQ)) && (wpend == 6'd0) && (dfn == '0) && (pf_n == 3'd0);
                 // ================= job load (the slot is idle: nothing above touched it)
                 if (ld_v && !ld_kind) begin
                     for (integer q = 0; q < NSJ; q = q + 1) if (ld_slot == 3'(q)) begin
@@ -474,7 +488,7 @@ endmodule
 // =====================================================================================================================
 /* verilator lint_off UNUSEDSIGNAL */
 /* verilator lint_off UNUSEDPARAM */
-module ot_hgi_sv_ctl #(
+module ot_hgi_sv_head #(
     parameter integer N = 16, M = 8, LV = 6,
     parameter integer LWB = 18,
     parameter integer PAYLOAD_RESET = 1,
@@ -720,10 +734,22 @@ module ot_hgi_sv_ctl #(
         m_badv[k] = c_used[k] && (c_base[k][23:18] != 6'd0 || pacc[k][39:18] != 22'd0 || mhi[k][18]);
     end
     reg [17:0] lo [0:5]; reg [17:0] hi [0:5]; reg [5:0] rv;
+    // Parallel with the existing classification edges: no allocation-side subtract/add chain.
+    // hi/lo already include the pair-mode alignment; these payload registers need no reset.
+    reg [17:0] alloc_span [0:5]; reg [18:0] alloc_ext [0:5];
+    reg [23:0] alloc_delta [0:5], fwd_delta [0:3]; reg [17:0] fwd_origin [0:3];
+    always @(posedge clk) begin
+        if (dstt == D_CL0) for (integer k = 0; k < 6; k = k + 1) begin
+            alloc_span[k] <= hi[k] - lo[k]; alloc_delta[k] <= c_base[k] - {6'd0, lo[k]};
+        end
+        if (dstt == D_CL1) for (integer k = 0; k < 6; k = k + 1) alloc_ext[k] <= {1'b0, alloc_span[k]} + {11'd0, lo[k][7:0]};
+        if (dstt == D_SK0) for (integer q = 0; q < 4; q = q + 1) fwd_origin[q] <= tb_lo[f_e[q]];
+        if (dstt == D_SK1) for (integer q = 0; q < 4; q = q + 1) fwd_delta[q] <= c_base[q] - {6'd0, fwd_origin[q]};
+    end
     reg [7:0] h_in [0:3]; reg [7:0] h_eq [0:3]; reg [7:0] h_ov [0:3]; reg [7:0] s_ov [0:1]; reg [7:0] s_ovs [0:1];
     reg [7:0] o_eq; reg [3:0] sv_s;
     reg [3:0] f_hit, f_ipc; reg [2:0] f_e [0:3]; reg ip_c, ip_on; reg [2:0] ip_e; reg [7:0] f_used;
-    reg [17:0] a_lo; reg [18:0] a_lb; reg [3:0] a_ep; reg a_stg, a_big, a_tw;
+    reg [23:0] a_delta; reg [18:0] a_lb; reg [3:0] a_ep; reg a_stg, a_big, a_tw;
     // ---- region table
     reg [7:0] tb_v, tb_fok, tb_live, tb_dense, tb_stg;
     reg [1:0] tb_kind [0:7]; reg [17:0] tb_lo [0:7]; reg [17:0] tb_hi [0:7]; reg [18:0] tb_lb [0:7]; reg [2:0] tb_own [0:7];
@@ -736,12 +762,12 @@ module ot_hgi_sv_ctl #(
     wire [1:0]  aq = rk[1:0];
     wire        cur_used = rv[rk];
     wire [17:0] cur_lo = lo[rk], cur_hi = hi[rk];
-    wire [17:0] span = cur_hi - cur_lo;
+    wire [17:0] span = alloc_span[rk];
     wire        a_large = span[17:15] != 3'd0;                                   // > 32,767 words: a dedicated frame
     // a region placed at its lo[7:0] offset in a dedicated frame: past 65,535 it runs on into the NEXT frame (the
     // local address space is contiguous): frames f and f + 1 are taken together, f + 1 as the TAIL of f (same epoch,
     // freed with f, no pins or table entries of its own).  More than two frames does not fit (capacity gap).
-    wire [18:0] ext = {1'b0, span} + {11'd0, cur_lo[7:0]};
+    wire [18:0] ext = alloc_ext[rk];
     wire        a_two = a_large && ext > 19'd65535;
     wire        too_big = ext > 19'd131071;
     wire [2:0]  fe = f_e[aq];
@@ -763,8 +789,10 @@ module ot_hgi_sv_ctl #(
     wire [2:0] ffr = a_two ? ffr2 : ffr1;               // the dedicated frame (pair) of a large region
     wire [1:0] ffn = ffr[1:0] + 2'd1;
     wire [3:0] ep_two = ((fr_ep[ffr2[1:0]] > fr_ep[ffr2[1:0] + 2'd1]) ? fr_ep[ffr2[1:0]] : fr_ep[ffr2[1:0] + 2'd1]) + 4'd1;
-    wire [7:0]  boff = cur_lo[7:0] - bp[7:0];
-    wire [16:0] lbk = bp + {9'd0, boff};                                          // lb == lo (mod 256 words)
+    // The old bp + ((lo - bp) mod 256) was an 8-bit subtract followed by a 17-bit add.
+    // Same modulo-2^17 address: preserve the requested low byte and advance one page on wrap.
+    wire [8:0] lb_page = bp[16:8] + 9'(cur_lo[7:0] < bp[7:0]);
+    wire [16:0] lbk = {lb_page, cur_lo[7:0]};                                    // lb == lo (mod 256 words)
     wire        fits = ({2'b00, lbk} + {1'b0, span}) <= 19'd65535;
     wire [16:0] bp_n = lbk + span[16:0] + 17'd9;                                  // + 1 + an 8-word gap: no shared sector
     wire        ra_ok = a_large ? ffr[2] : (open_v && fits);
@@ -964,7 +992,7 @@ module ot_hgi_sv_ctl #(
                     end else if (aa_fault) begin dfault <= 1'b1; dstt <= D_FAULT; end
                     else if (aa_go) begin
                         dstt <= D_AB; stallc <= 4'd0;
-                        a_stg <= is_src && !fw_ok; a_big <= a_large; a_lo <= cur_lo; a_tw <= ipnow ? ip_two : a_two;
+                        a_stg <= is_src && !fw_ok; a_big <= a_large; a_delta <= alloc_delta[rk]; a_tw <= ipnow ? ip_two : a_two;
                         if (ipnow) begin                                           // IN PLACE: e's local words, a new epoch
                             a_lb <= tb_lb[ip_e]; a_ep <= ip_ep; fr_ep[ip_f] <= ip_ep;
                             if (ip_two) begin fr_ep[ip_fn] <= ip_ep; if (ip_wrap) fr_wrap[ip_fn] <= 1'b1; end
@@ -982,7 +1010,7 @@ module ot_hgi_sv_ctl #(
                             tb_stg[vic] <= 1'b1; tb_kind[vic] <= K_RS; tb_lo[vic] <= cur_lo; tb_hi[vic] <= cur_hi;
                             tb_lb[vic] <= {1'b1, 10'd0, rfs[1:0], 3'd0, cur_lo[2:0]}; tb_own[vic] <= dslot;
                         end else if (fw_ok) begin                                  // FORWARD: e's local words, pinned
-                            a_lo <= tb_lo[fe];
+                            a_delta <= fwd_delta[aq];
                             a_lb <= (fw_rs && MUT_V == 6) ? (tb_lb[fe] ^ 19'h00040) : tb_lb[fe];
                             if (fw_rs) begin
                                 if (!sl_rpin[dslot][tb_lb[fe][7:6]] && MUT_V != 4) begin
@@ -1025,15 +1053,16 @@ module ot_hgi_sv_ctl #(
                         end
                     end
                 end
+                // Relocation is split across the existing A/B edges: A registers base - origin, B adds local base.
                 // ALLOC edge B: relocate the region's base, write the descriptors, push the stage job
                 D_AB: if (ab_go) begin
                     case (rk)
-                        3'd0: w[40 +: 24]  <= w[40 +: 24]  - {6'd0, a_lo} + {5'd0, a_lb};
-                        3'd1: w[138 +: 24] <= w[138 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
-                        3'd2: w[211 +: 24] <= w[211 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
-                        3'd3: w[284 +: 24] <= w[284 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
-                        3'd4: w[382 +: 24] <= w[382 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
-                        default: w[484 +: 24] <= w[484 +: 24] - {6'd0, a_lo} + {5'd0, a_lb};
+                        3'd0: w[40 +: 24]  <= a_delta + {5'd0, a_lb};
+                        3'd1: w[138 +: 24] <= a_delta + {5'd0, a_lb};
+                        3'd2: w[211 +: 24] <= a_delta + {5'd0, a_lb};
+                        3'd3: w[284 +: 24] <= a_delta + {5'd0, a_lb};
+                        3'd4: w[382 +: 24] <= a_delta + {5'd0, a_lb};
+                        default: w[484 +: 24] <= a_delta + {5'd0, a_lb};
                     endcase
                     if (rk == 3'd4) begin
                         sl_ov[dslot] <= 1'b1; sl_opin[dslot] <= 1'b1; sl_ovsec[dslot] <= cur_lo[17:3];
@@ -1602,7 +1631,7 @@ module ot_hgi_sv_unit #(
     wire [N*32-1:0] vm_wdata, kv_wdata; wire [NR-1:0] res_we; wire [NR*AW-1:0] res_addr; wire [NR*32-1:0] res_data;
     wire [7:0] cr_seq, cr_dseq, cr_rseq; wire [15:0] cr_cnt, emitted; wire de, dr, ds; wire [7:0] es, rsq, ss;
 
-    ot_hgi_sv_ctl #(.N(N), .M(M), .LV(LV), .LWB(LWB), .PAYLOAD_RESET(PAYLOAD_RESET), .GLU(GLU), .SLB(SLB), .LQ(LQ), .EP0(EP0),
+    ot_hgi_sv_head #(.N(N), .M(M), .LV(LV), .LWB(LWB), .PAYLOAD_RESET(PAYLOAD_RESET), .GLU(GLU), .SLB(SLB), .LQ(LQ), .EP0(EP0),
                     .MUT_V(MUT_V), .NSJ(NSJ)) u_ctl (
         .clk(clk), .rst_n(rst_n), .rec_v(rec_v), .rec_rdy(rec_rdy), .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a),
         .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o), .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a),
@@ -1709,3 +1738,68 @@ endmodule
 /* verilator lint_on UNUSEDPARAM */
 /* verilator lint_on UNUSEDSIGNAL */
 `default_nettype wire
+
+// Legacy source name; the die contract and physical kit publish ot_hgi_sv_head.
+module ot_hgi_sv_ctl #(
+    parameter integer N = 16, M = 8, LV = 6,
+    parameter integer LWB = 18,
+    parameter integer PAYLOAD_RESET = 1,
+    parameter integer GLU = 0,
+    parameter integer SLB = 16,
+    parameter integer LQ = 8,              // ONE constant = ot_hgi_vm_unit LQ (VM lane queue depth, power of two) = the credits a lane holds
+    parameter integer EP0 = 0,             // frame epoch after a scrub (bench: 14 makes the chain's in-place sink wrap 15 -> 1)
+    parameter integer MUT_V = 0,          // 3 in-place gate off, 4 forward reader takes no pin, 6 scalar bypass slot ^ 1, 7 tail frame keeps its old write epoch, 8 no EXT stream credit (the vec runs ahead of the stage)
+    parameter integer NSJ = 6
+) (
+    input  wire          clk,
+    input  wire          rst_n,
+    input  wire          rec_v,
+    output wire          rec_rdy,
+    input  wire [127:0]  rec_hdr,
+    input  wire [255:0]  rec_sut,
+    input  wire [255:0]  rec_a, rec_b, rec_c, rec_d, rec_o, rec_r, rec_i,
+    input  wire [20:0]   rec_n_a,
+    output wire           rec_done,
+    output wire           rec_fault,
+    output wire           halted,
+    output wire  [337:0]  vmq,
+    input  wire [273:0]  vmr,
+    input  wire          s0_v,
+    input  wire [19:0]   s0_idx,
+    input  wire [31:0]   s0_data,
+    output wire [522:0]  am_stream,
+    input  wire          am_rdy,
+    // the vec
+    output wire           go,
+    input  wire          ready,
+    input  wire          idle,
+    input  wire          vfault,
+    output wire [669:0]  wl,
+    output wire  [7:0]    x_seq,
+    output wire  [7:0]    x_dseq,
+    output wire  [15:0]   x_cnt,
+    input  wire [7:0]    cr_seq_i,
+    input  wire [7:0]    cr_dseq,
+    input  wire [15:0]   cr_cnt_i,
+    // the local memory
+    output wire  [15:0]   wep,
+    output wire  [3:0]    rf_clr,
+    output wire           rf_rv,
+    output wire  [4:0]    rf_rsec,
+    input  wire          rf_rrv,
+    input  wire [255:0]  rf_rd,
+    input  wire [7:0]    rf_rm,
+    input  wire          lm_err,
+    // shared lane groups
+    output wire           rg_req,
+    input  wire          rg_gnt,
+    output wire           wg_req,
+    input  wire          wg_gnt,
+    // the leaves: two registered copies of the cmd word (one a side: 4 near leaves each, which relay it to their far
+    // partner) and the 8 near leaves' status words (each already folded with its far partner's)
+    output wire [2*(83+NSJ)-1:0] lf_cmd,
+    input  wire [8*(NSJ+33)-1:0] lf_status,
+    output wire  [15:0]   walks                // non-dense O drains (frame walks) since reset
+);
+    ot_hgi_sv_head #(.N(N), .M(M), .LV(LV), .LWB(LWB), .PAYLOAD_RESET(PAYLOAD_RESET), .GLU(GLU), .SLB(SLB), .LQ(LQ), .EP0(EP0), .MUT_V(MUT_V), .NSJ(NSJ)) u_impl (.*);
+endmodule

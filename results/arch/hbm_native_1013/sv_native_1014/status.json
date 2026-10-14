@@ -1,0 +1,21 @@
+{
+  "SV_source_commit": "33fe61ec9",
+  "read_bridge_source_commit": "321a2a12b",
+  "parent_source_commit": "ba12d099a",
+  "read_variant": {
+    "LEGACY_SLOTS": 8,
+    "REQUIRE_GRANT": 0,
+    "HARD_CLOCKS": 1
+  },
+  "head_gate": {
+    "source": "deb53f1e1 frozen",
+    "sinks": 9755,
+    "TT_max_ps": 281.9,
+    "TT_spread_ps": 38.8,
+    "setup_ps": -118.9,
+    "hold_ps": 26.637
+  },
+  "native_composition_qualified": false,
+  "physical_qualified": false,
+  "ledger_eligible": false
+}
