@@ -44,3 +44,8 @@ not interchangeable release evidence; the real-scale GRT+STA remains pending.
 Collector logs: /tmp/claude-1000/hbmdie13/collect_v13_codex.log. Next: collect
 original FF clock completion, confirm preparation and both STA units start, then
 classify SS/TT/FF endpoints and update the stream's top table.
+
+After preserving these reports and the streaming spatial summary, generated
+failed-route inputs, pooled raw map and wirelength CSV were deleted from AGI.
+Its former149 MB GRT directory retains only8.6 MB of reports/logs/manifest.
+The existing EPYC1 STA case and live clock trees remain intact.
