@@ -410,6 +410,10 @@ def clock_delivery(lat, pin_master, masters, libs, by, vroot):
                 # r5 2026-10-14: a hard memory macro (cfg ROM ot_rom_4096x72_m8) has no clock tree inside its view: every
                 # liberty arc (clk -> rd_out, addr/ce setup / hold) is referenced to its clk pin, so R = 0 by construction
                 t.update(R_tt_ps=0.0, source='hard macro: liberty arcs referenced to the clock pin (no internal tree), R = 0')
+            if 'R_tt_ps' not in t and view == 'partitioned' and lp is None:
+                # r5 2026-10-14: a partitioned master without an assembled lib is timed by its interim pin-registered
+                # model (pin = flop) like any interim master: R = 0 is exact for that model (not an estimate of a view)
+                t.update(R_tt_ps=0.0, source='interim pin-registered model (partitioned, children not assembled): no internal insertion')
             if 'R_tt_ps' not in t:
                 t.update(R_tt_ps=0.0, source='interim pin-registered model (pin = flop): no internal insertion' if view == 'interim'
                          else 'UNMEASURED: routed view without insertion.json and without a clock_tree_path on this pin '
