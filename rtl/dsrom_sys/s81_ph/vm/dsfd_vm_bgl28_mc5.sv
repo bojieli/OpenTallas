@@ -5,7 +5,7 @@
 `ifdef OT_SPVM_RESET_ACK
 `include "dsfd_vm_reset_ack.svh"
 `endif
-module dsfd_vm_bgl28_mc5 (
+module dsfd_vm_bgl28_mc5 #(parameter integer FAST4_ONEHOT=0) (
     input wire ck, input wire ck_req, input wire ck_ret, input wire ck_fwd0, input wire ck_fwd1, input wire [0:0] rs, input wire [1:0] grp, input wire [2:0] bi,
     input  wire [27:0] i_v, input wire [27:0] i_we, input wire [28*14-1:0] i_row, input wire [28*4-1:0] i_mask,
     input  wire [28*128-1:0] i_d,
@@ -67,7 +67,7 @@ module dsfd_vm_bgl28_mc5 (
         assign f_mask=~qb_m;assign f_d=~qb_d;
     end endgenerate
     dsfd_vm_bgl #(.NP(28),.NPR(10),.NB(32),.NBL(8),.QD(4),.RQ(8),.MACRO(MACRO),.DW(128),
-        .CLOCK_SPLIT(1),.PREHIT(1),.FAST4(1),.FORWARD_HOP(1),.PIN_OUTPUT_COPY(1),
+        .CLOCK_SPLIT(1),.PREHIT(1),.FAST4(1),.FAST4_ONEHOT(FAST4_ONEHOT),.FORWARD_HOP(1),.PIN_OUTPUT_COPY(1),
         .FORWARD_PIN_OUTPUT_COPY(0),.RESET_FANOUT_SPLIT(1)) u (
         .ck(ck),.ck_req(ck_req),.ck_ret(ck_ret),.rs(rs),.grp(grp),.bi(bi),
         .i_v(i_v),.i_we(i_we),.i_row(i_row),.i_mask(i_mask),.i_d(i_d),

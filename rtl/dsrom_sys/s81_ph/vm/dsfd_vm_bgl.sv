@@ -35,6 +35,7 @@ module dsfd_vm_bgl #(
     parameter integer BAL_PREFIX = 0,
     parameter integer PREHIT = 0,
     parameter integer FAST4 = 0,
+    parameter integer FAST4_ONEHOT = 0,
     // Zero keeps the legacy compile-time selection. Two enables the explicit
     // registered N-to-S successor; bank EP2/ED3 is independent of this hop.
     parameter integer FORWARD_HOP = 0,
@@ -213,6 +214,7 @@ module dsfd_vm_bgl #(
                 hpair_q[2*hp +: 2] <= {1'b0, capture_order[2*hp]} +
                     ((2*hp+1 < NP) ? {1'b0, capture_order[2*hp+1]} : 2'b00);
         end
+    initial if (FAST4_ONEHOT && !FAST4) $error("FAST4_ONEHOT requires FAST4");
     initial if (FAST4 && (QD != 4 || !PREHIT)) $error("FAST4 requires QD4 and parallel input capture");
 `ifdef OT_VMBGL_MUT_HIT
     reg [NP-1:0] h_late;
@@ -272,6 +274,38 @@ module dsfd_vm_bgl #(
             count_state = tree[1];
         end
     endfunction
+    // Optional exact saturated 0..5 one-hot count convolution. Rank0..3
+    // selection uses direct bits, avoiding the measured serial XOR sum path.
+    // Pair counts and hits are captured on the original edge; no new state.
+    function automatic [5:0] count_state_onehot;
+        input [NP-1:0] hits;
+        input [2*PAIR_N-1:0] pairs;
+        input integer stop_pos;
+        reg [5:0] tree [1:2*PAIR_P2-1];
+        reg [5:0] a,b,c;
+        integer n,k,i,j;
+        begin
+            for(n=0;n<PAIR_P2;n=n+1) begin
+                tree[PAIR_P2+n]=6'b000001;
+                if(n<PAIR_N && 2*n+1<stop_pos)
+                    tree[PAIR_P2+n]={3'b000,pairs[2*n+1],pairs[2*n],!(|pairs[2*n+:2])};
+                else if(2*n<NP && 2*n<stop_pos)
+                    tree[PAIR_P2+n]={4'b0000,hits[2*n],!hits[2*n]};
+            end
+            for(n=PAIR_P2-1;n>0;n=n-1) begin
+                a=tree[2*n];b=tree[2*n+1];c=0;
+                for(k=0;k<5;k=k+1)
+                    for(i=0;i<=k;i=i+1) c[k]=c[k]|(a[i]&b[k-i]);
+                c[5]=a[5]|b[5];
+                for(i=0;i<5;i=i+1)
+                    for(j=0;j<5;j=j+1)
+                        if(i+j>=5) c[5]=c[5]|(a[i]&b[j]);
+                tree[n]=c;
+            end
+            count_state_onehot=tree[1];
+        end
+    endfunction
+    reg [5:0] fast_hot_prefix,fast_hot_total;
     reg [3:0] fast_prefix, fast_total;
     reg [NP-1:0] hit, ho;
     reg [CW-1:0] lpre [0:NP-1];
@@ -318,8 +352,20 @@ module dsfd_vm_bgl #(
 `else
                 sel_c[j2][i2] = ho[i2] && opre[i2] == j2;
 `endif
-        fast_prefix = 0; fast_total = 0;
-        if (FAST4) begin
+        fast_prefix = 0; fast_total = 0; fast_hot_prefix=0; fast_hot_total=0;
+        if (FAST4 && FAST4_ONEHOT) begin
+            fast_hot_total=count_state_onehot(ho,hpair_q,NP);
+            tot=fast_hot_total[5]?5:(fast_hot_total[4]?4:(fast_hot_total[3]?3:(fast_hot_total[2]?2:(fast_hot_total[1]?1:0))));
+            for(i2=0;i2<NP;i2=i2+1) begin
+                fast_hot_prefix=count_state_onehot(ho,hpair_q,i2);
+                for(j2=0;j2<QD;j2=j2+1)
+`ifdef OT_VMBGL_MUT_ORDER
+                    sel_c[j2][NP-1-i2]=ho[i2]&fast_hot_prefix[j2];
+`else
+                    sel_c[j2][i2]=ho[i2]&fast_hot_prefix[j2];
+`endif
+            end
+        end else if (FAST4) begin
             fast_total = count_state(ho, hpair_q, NP);
             tot = fast_total[3] ? 5 : (fast_total[2] ? 4 : fast_total[1:0]);
             for (i2 = 0; i2 < NP; i2 = i2 + 1) begin
