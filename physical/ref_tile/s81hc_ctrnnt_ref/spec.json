@@ -39,9 +39,9 @@
  "reset_ports": [],
  "outline": {
   "w": 576.72,
-  "h": 12.96
+  "h": 28.08
  },
- "why_floorplan": "drop-in for the closed ctrn N strip (576.72 x 12.96): ctrn (2,166 flops) + one 33-b relay register of the scale lane (ctfx_nt -> 365 um -> here -> 363 um -> the next tile's ctfx_nt)",
+ "why_floorplan": "drop-in for the closed ctrn N strip (576.72 x 12.96): ctrn (2,166 flops) + one 33-b relay register of the scale lane (ctfx_nt -> 365 um -> here -> 363 um -> the next tile's ctfx_nt) | r2 2026-10-14: h 12.96 -> 28.08: at 12.96 (core 8.64 um, 32 rows) the recipe-2 pin flops + pin hold stages of both ~1,500-2,200-pin N/S faces leave no legal rows (CTS gate DPL-0033: 3,462 fixed cells, 7,900 site-alignment / 445 overlap violations at 36.6% overall util); the passing sibling ctfs_nt is 25.92 ; ctrn_nt faces are denser (2,197 pins: oflop model needs 10.17 um behind N + 8.57 um behind S, <= 45% of core -> core >= 22.6 um). Slot change requested from the S81 die lead (cth_nt sub-layout).",
  "macros": [],
  "pins": {
   "N": [
@@ -73,11 +73,24 @@
   "owner": "Claude:el1014-s81-norm-tree",
   "branch": "claude/s81-norm-tree-1014",
   "tag": "v1",
-  "structural_change": "NORM tree variant",
+  "structural_change": "NORM tree variant r2: thin strip re-shaped (taller outline) after DPL-0033 at 12.96",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree (owner 10-14 ~06:55: NORM tree = PARALLEL default-off variant with NEW master names; replaces the serial-chain HC NORM only when all variant tiles close and the composition is exact): ot_s81_hc_ctrn_nt: the return out strip + the scale lane relay",
   "views_to": "physical/ref_tile/s81hc_ctrnnt_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_ctrnnt_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_ctrnnt_ref",
+  "benches": [
+   {
+    "name": "hc_ntree_tmut_ot_s81_hc_ctrn_nt",
+    "cmd": "bash tools/s81_suhc/hc_ntree_bench.sh {RUN}/bench/nt_tm 0 ot_s81_hc_ctrn_nt",
+    "expect": "fail",
+    "fail_regex": "^RUN ng256_dpi_m0_a0_hier3tail_cp1_cs6_ls1_nt67_tm-ot_s81_hc_ctrn_nt fail$",
+    "threads": 16,
+    "peak_ram_gb": 40,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
  },
  "params": {},
  "children": [],
@@ -89,5 +102,10 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }

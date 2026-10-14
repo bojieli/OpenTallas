@@ -7,13 +7,13 @@
   0,
   0,
   576.72,
-  12.96
+  25.92
  ],
  "core": [
   2.16,
   2.16,
   574.5600000000001,
-  10.8
+  23.76
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -112,6 +112,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/s81hc_ctfxnt_ref/pre_gpl.tcl",
-  "physical/ref_tile/s81hc_ctfxnt_ref/pre_dpl.tcl"
+  "physical/ref_tile/s81hc_ctfxnt_ref/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

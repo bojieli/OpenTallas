@@ -7,13 +7,13 @@
   0,
   0,
   576.72,
-  12.96
+  28.08
  ],
  "core": [
   2.16,
   2.16,
   574.5600000000001,
-  10.8
+  25.919999999999998
  ],
  "why": "spec outline",
  "std_area_um2": 760,
@@ -50,7 +50,7 @@
   [
    "WARN",
    "util",
-   "utilisation 15% outside 45%-60% (std 760 + macro 0 in core 4946 um2)",
+   "utilisation 6% outside 45%-60% (std 760 + macro 0 in core 13600 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
@@ -114,6 +114,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/s81hc_ctrnnt_ref/pre_gpl.tcl",
-  "physical/ref_tile/s81hc_ctrnnt_ref/pre_dpl.tcl"
+  "physical/ref_tile/s81hc_ctrnnt_ref/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }
