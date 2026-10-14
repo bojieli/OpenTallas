@@ -1,0 +1,158 @@
+{
+  "status": "PASS bounded real-module control comparison",
+  "source_commit": "bde6efa3e",
+  "source_manifest": {
+    "commit": "bde6efa3eae66e140a97606f5867231a95855047",
+    "files": [
+      {
+        "path": "rtl/lib/ot_rst_relay.sv",
+        "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+        "git_blob": "0259a926697bf544c4456016d1d475a2ae542e34"
+      },
+      {
+        "path": "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
+        "sha256": "2e42d8c75334158af4d518cfa0efa9179b660372dbd9f1ce6ecee9ac87192cc6",
+        "git_blob": "4794aa0ef565caba03882f0296ac3233f606957d"
+      },
+      {
+        "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_fr.sv",
+        "sha256": "1d2f97942cff7aaff682a9b9854da8d8e151002c84c7ce5d2220c70d7d7b377d",
+        "git_blob": "f0a01269e5a801e97d2f96e0367f60d65a9632d4"
+      },
+      {
+        "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core.sv",
+        "sha256": "a56bf7f2b592af5c1a8e4f0e2c20e49349f4e21b09c37d8882af3f292573c4ba",
+        "git_blob": "c838522b3af92b8f92d4ed14eb68dabbdd6c531b"
+      },
+      {
+        "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core_fin2.sv",
+        "sha256": "76f3cfb81dcc176cd423be92c112586c7c5e65a0330d87949a75f4b8d459d98a",
+        "git_blob": "d2d1f91613e62e3f146528d4b25ad35da5f55b79"
+      }
+    ]
+  },
+  "test_vehicle": {
+    "bench": "rtl/test/hbm_accel/generic/tb_hgi_qdq_core_fin2_oracle.sv",
+    "runner": "tools/hgi_unit_tput/run_qdq_core_fin2_oracle.sh",
+    "bench_sha256": "7dd6541aabd3ee8045d4d149ff5c7c9f3197efe79a2363d38db794c6b96c0a3b",
+    "runner_sha256": "a6446481562be311c389ea2795acc32de8f0326817cd6230ffea2fee06639712",
+    "corruption_bench": "rtl/test/hbm_accel/generic/tb_hgi_qdq_core_fin2_corruption.sv",
+    "corruption_bench_sha256": "38d3b4db83ae07cb73089fdb23264562282d2be02f52abe43e1c322a2bac66be",
+    "corruption_runner": "tools/hgi_unit_tput/run_qdq_core_fin2_corruption.sh",
+    "corruption_runner_sha256": "120b1a1ac30b4e8ac9e7f0d4d3b9776d339b6f51fdac37092ac8add690ae4e28"
+  },
+  "runs": [
+    {
+      "path": "results/arch/hbm_native_1013/core_fin2_oracle/r5/out-span1",
+      "execution_host_auto_selected": "ot-epyc4",
+      "unit": "oth-ubuntu-2657019-1791982222",
+      "result": "PASS",
+      "result_lines": [
+        "PASS CORE_FIN2_ORACLE span=1 epochs=8 admitted=1642 retired=1638 enqueues=1639 wraps=102 concurrent=8 min_reuse_age=99 RAW=103 WAR=255 WAW=357 rejected=204 multi=1325 credit_stall=24843 beat_stall=7025"
+      ],
+      "build_log_sha256": "29cf6290260a5e20c962af422fd0f56169ec32ac418152a77ff5427b1e233c14",
+      "sim_log_sha256": "320f2c9ebec9da1fd44ef613cb35fd851a1131599aa0114e28ce2fd96dd0bfbc"
+    },
+    {
+      "path": "results/arch/hbm_native_1013/core_fin2_oracle/r5/out-span0",
+      "execution_host_auto_selected": "ot-epyc4",
+      "unit": "oth-ubuntu-2660326-1791982249",
+      "result": "PASS",
+      "result_lines": [
+        "PASS CORE_FIN2_ORACLE span=0 epochs=8 admitted=1642 retired=1638 enqueues=1641 wraps=102 concurrent=8 min_reuse_age=11 RAW=103 WAR=306 WAW=511 rejected=204 multi=1326 credit_stall=24664 beat_stall=6848"
+      ],
+      "build_log_sha256": "32aaa3d4a1420a77034d3f21f0a0ed0cb8f066d11d600e0d59f131e380bfa6b5",
+      "sim_log_sha256": "f974e43ca1a4292ae547126c873481526ea46363fbee87422808389b746f6c09"
+    },
+    {
+      "path": "results/arch/hbm_native_1013/core_fin2_oracle/r5/out-mut2",
+      "execution_host_auto_selected": "ot-epyc4",
+      "unit": "oth-ubuntu-2660325-1791982249",
+      "result": "EXPECTED FAIL actual beat port mismatch",
+      "result_lines": [
+        "[30163000] %Fatal: tb_hgi_qdq_core_fin2_oracle.sv:40: Assertion failed in tb_hgi_qdq_core_fin2_oracle: CORE_FIN2_PORT_MISMATCH cycle=36210 ret=000/000 bp=9022210400/1022010501"
+      ],
+      "build_log_sha256": "5a0c711441c731c76a63d94413b642fbe9d60ae24f79ad8d4d0e823c414efb8e",
+      "sim_log_sha256": "a65be1fbd7343e019a9b5ea06c0d45371d45f4aad84931ca7b57550580b37f78"
+    },
+    {
+      "path": "results/arch/hbm_native_1013/core_fin2_oracle/r5/out-corruption",
+      "execution_host_auto_selected": "ot-epyc1tb",
+      "unit": "oth-ubuntu-3467226-1791982327",
+      "result": "PASS",
+      "result_lines": [
+        "PASS CORE_FIN2_CORRUPTION_CASE kind=0 pending_beats=1 pending_requests=4",
+        "PASS CORE_FIN2_CORRUPTION_CASE kind=1 pending_beats=1 pending_requests=4",
+        "PASS CORE_FIN2_CORRUPTION tests=2 recovery_issues=2"
+      ],
+      "build_log_sha256": "357cd6e655355159c9c792a67e800fe9b0741366fbea7ffc8f057036be498f2a",
+      "sim_log_sha256": "b658091e16835079e8fa697b223982532dc88cc6308e37faf2e51ea335f0cb82"
+    }
+  ],
+  "failures_preserved": [
+    {
+      "run": "r1/out-span1",
+      "kind": "coverage shortfall",
+      "detail": "No observed credit stalls; revised disjoint all-valid stimulus in r2."
+    }
+  ],
+  "scope_limit": "Finite admitted-record oracle, not an exhaustive formal proof, arithmetic golden comparison, physical timing gate, or native throughput qualification.",
+  "slot_reuse_evidence": {
+    "actual_admission": "Producer uses only baseline ret[0]; every cycle compares candidate ret[0].",
+    "independent_history": "Capture actual tail/enqueue and head/retire at CORE posedge; at negedge associate retirement pulse with old head and reject enqueue age <2 or concurrent same-slot reuse. History resets only with actual assembly reset relay.",
+    "span1_min_age_core_edges": 99,
+    "span0_min_age_core_edges": 11,
+    "wraps_each": 102,
+    "concurrent_enqueue_retire_each": 8,
+    "complementary_invariants": [
+      "No candidate q_v & dep_clear each live edge",
+      "All effective live q_dep rows equal baseline",
+      "Each enqueued effective mask equals independent FR range-ledger mask",
+      "No first issued beat starts before an older conflicting eligible record retires"
+    ]
+  },
+  "protocol": {
+    "period_ps": 833,
+    "front_phase_ps": 61,
+    "core_phase_ps": 487,
+    "records_per_clean_phase": [
+      512,
+      512,
+      512,
+      96
+    ],
+    "epochs": 8,
+    "warm_reset": "During three admitted long records with pending work; assert old valids absent after real staged reset.",
+    "fault_epochs": [
+      "real malformed record count nfault",
+      "ASM bad pulse with 3 admitted records",
+      "WR bad pulse with 3 admitted records"
+    ],
+    "services": "Per-lane FIFO responses/credits arise only from actual request valids. Pops/fire occur only after all response lanes of an actual beat exist. FIN arises only from consumption of an actual last beat, in FIFO order. Finite capacities 8192; no constant legal-service stubs."
+  },
+  "source_changes_under_test": [
+    "16-bit one-hot retire head with decoded observation hd",
+    "32-bit exact modulo32 finish credit ring with decoded observation fin_c",
+    "Invalid head/finish encoding blocks issue/load and raises fault",
+    "39 added state flops relative to binary head/finish counters"
+  ],
+  "unchanged_oracle": true,
+  "prior_proof_commits": [
+    "96fb3464f",
+    "239a7118f"
+  ],
+  "corruption_proof": {
+    "injections": [
+      "force actual head_oh=16'h0003",
+      "force actual finish_oh=32'h00000003"
+    ],
+    "precondition": "Live q_v/r_act/r_issue, one actual issued beat and four requests pending, real FR ready admission",
+    "instant": "Exactly two hot bits verified; encoding_bad set; r_issue/n_load zero",
+    "registered": "Eight next CORE edges: no bp_v or wrq valid, ret.fault set, no retirement, latched bad set",
+    "persistence": "Restore valid one-hot encoding: encoding_bad clears but bad remains and read issue/load stay blocked",
+    "recovery": "Each case resets through actual relay, verifies head/finish encoding=onehot0 and no stale valid/pending state, then admits real new record and observes real issued beat",
+    "service": "Finite observed request/beat counters; consumer deliberately pauses over bounded injection horizon; no unsolicited feedback and reset flushes pending work",
+    "cases_passed": 2,
+    "recovery_issues": 2
+  }
+}

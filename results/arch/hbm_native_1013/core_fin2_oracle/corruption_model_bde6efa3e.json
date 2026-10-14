@@ -1,0 +1,37 @@
+{
+  "source_commit": "bde6efa3e",
+  "production_changes": [],
+  "test_instances": {
+    "real_closed_FR_SPANPIPE1": 1,
+    "real_FIN2_CORE": 1
+  },
+  "encoding_state_bits": {
+    "head_onehot": 16,
+    "finish_credit_mod32_onehot": 32,
+    "old_binary_head": 4,
+    "old_binary_finish": 5,
+    "source_revision_added_FF": 39
+  },
+  "clock": {
+    "period_ps": 833,
+    "front_phase_ps": 61,
+    "core_phase_ps": 487
+  },
+  "test_cases": [
+    "multi-hot head 0x0003",
+    "multi-hot finish 0x00000003"
+  ],
+  "injection_precondition": "Actual ready-admitted legal multirow record; observe one real issued beat; at following CORE negedge actual r_issue still eligible and q_v live.",
+  "service": "Finite bounded pending request/beat counters; consumer stalls during short corruption observation; no unsolicited credit/pop/fire/FIN; actual counters determine idle.",
+  "checks": [
+    "Forced real state has exactly two hot bits",
+    "encoding_bad rises and immediate internal r_issue/n_load become zero",
+    "No registered bp or request valid on each subsequent edge",
+    "ret fault rises and no retirement pulse while invalid",
+    "Restore one-hot state but latched bad still prevents read issue/load",
+    "Actual staged warm reset clears fault and one-hot roots; ready-admit new real descriptor and observe fresh issue"
+  ],
+  "max_observation_cycles": 8,
+  "max_liveness_cycles": 256,
+  "scope": "fault containment test, no throughput/physical claim"
+}
