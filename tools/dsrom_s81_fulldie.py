@@ -7090,8 +7090,9 @@ def _assigned_physical_pins(Mx, ports):
             # not the technology's complete set of legal pin layers.
             assert layer in ('M2', 'M3', *TRK) and face in 'NSEW', (Mx.name, port, i)
             assert 0.012 <= c <= (Mx.h if face in 'EW' else Mx.w) - 0.012, (Mx.name, port, i, c)
-            rect = {'N': (c-.012, Mx.h-depth, c+.012, Mx.h), 'S': (c-.012, 0, c+.012, depth),
-                    'W': (0, c-.012, depth, c+.012), 'E': (Mx.w-depth, c-.012, Mx.w, c+.012)}[face]
+            half_width = .009 if layer in ('M2','M3') else .012
+            rect = {'N': (c-half_width, Mx.h-depth, c+half_width, Mx.h), 'S': (c-half_width, 0, c+half_width, depth),
+                    'W': (0, c-half_width, depth, c+half_width), 'E': (Mx.w-depth, c-half_width, Mx.w, c+half_width)}[face]
             rects.append((f'{port}[{i}]', layer, rect))
         Mx.ports[port] = ('rects', rects)
         if port not in Mx.order:

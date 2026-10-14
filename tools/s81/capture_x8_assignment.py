@@ -34,7 +34,11 @@ def main(request):
         for p,width in groups:
             rows=[]
             for i in range(width):
-                rows.append([face, 'M5' if n%2 == 0 else 'M3', round(5.004+(n//2)*.096,3),.192])
+                x = 5.004+(n//2)*.096
+                layer = 'M5' if n%2 == 0 else 'M3'
+                if layer == 'M3':
+                    x = .009+round((x-.009)/.036)*.036
+                rows.append([face,layer,round(x,3),.192])
                 n+=1
             ports[p]=spec(rows)
     for p,face,x in [('ck','S',55.02),('rst','S',55.212),('t_ho','S',55.404),('ckv','N',55.02),('rsv','N',55.212)]:

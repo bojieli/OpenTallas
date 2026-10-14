@@ -144,7 +144,8 @@ def tcl(path, scalar=()):
             rows = [(s['face'], s['layer'], c_, s['depth']) for c_ in cs_]
         for i, (face, layer, c, d) in enumerate(rows):
             x, y = {'W': (d / 2, c), 'E': (w - d / 2, c), 'S': (c, d / 2), 'N': (c, h - d / 2)}[face]
-            sz = (d, 0.024) if face in 'EW' else (0.024, d)
+            width = 0.018 if layer in ('M2','M3') else 0.024
+            sz = (d, width) if face in 'EW' else (width, d)
             nm = port if port in scalar else f'{port}[{i}]'
             print(f"place_pin -pin_name {{{nm}}} -layer {layer} -location {{{x:.3f} {y:.3f}}} -pin_size {{{sz[0]:.3f} {sz[1]:.3f}}} -force_to_die_boundary")
 
