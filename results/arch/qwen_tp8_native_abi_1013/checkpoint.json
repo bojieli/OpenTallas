@@ -57,7 +57,7 @@
   "formatter_request": {
     "owner": "qwen_su_kv_formatter",
     "candidate_source": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv",
-    "source_bound_candidate_commit": null,
+    "source_bound_candidate_commit": "e7720a19d",
     "registered_inputs": {
       "kv_we": 64,
       "kv_waddr": 1536,
@@ -85,7 +85,21 @@
       "output_bits": 524,
       "return_credit_bits": 1,
       "fault_bits": 1,
-      "status": "Separate local ready/valid leaf; coherent clock or exact CDC required."
+      "status": "Separate local ready/valid leaf; coherent clock or exact CDC required.",
+      "analytical_q_bits": 532,
+      "census_measured": false
+    },
+    "candidate_source_sha256": "dea18a2fc95179cb4aa17c7474b7e3b097f4d19d4e12f47568d39d01c1d9ee8c",
+    "census": {
+      "method": "Yosys proc;opt;stat;write_json, ENABLE1/HEADS1",
+      "state_q_bits": 6555,
+      "total_input_bits": 3709,
+      "total_output_bits": 535,
+      "tool_version": "Yosys0.52 fee39a3284c90249e1d9684cf6944ffbbcbb8f90",
+      "unit": "oth-ubuntu-462164-1791951677",
+      "exit_code": 0,
+      "receipt": "results/arch/qwen_su_kv_formatter_1013/receipt.json on codex/qwen-su-kv-format-1013",
+      "mapping_status": "Unmapped; arbitrary-lane-address scatter contains 130shiftx/194shift and1951genericmux cells. No physical area, CTS or SS proof."
     }
   },
   "open_gates": [
