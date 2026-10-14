@@ -80,6 +80,12 @@ module dsfd_engram_c_rso #(
     wire [17:0] jn; wire [15:0] wn;
     wire [5:0] w_oh, x0_oh, x0_pipe_oh, x1_oh, r0_oh, r1_oh, r2_oh; wire [7:0] w_a, x0_a, x0_pipe_a, x1_a, r0_a, r1_a, r2_a;
     wire [3:0] vrel_sk_pipe;
+    wire [575:0] read_return_pipe;
+`ifdef OT_ENGC_RSO_MUT_RETURN_SKEW
+    wire [575:0] read_to_io = {rd2w[63:0], rd1, rd0};
+`else
+    wire [575:0] read_to_io = read_return_pipe;
+`endif
     wire [255:0] b1_d, rd0, rd1, rd2w; wire [319:0] x_d, x0_d, x0_pipe_d; wire [63:0] x1_d;
 
     // ---------------- cluster clock entry (el1013-s81-engram 2026-10-13): the 8 hardened children have different
@@ -140,14 +146,14 @@ module dsfd_engram_c_rso #(
         .s_rdy(s_rdy_pipe), .s_perr(s_perr_pipe), .rdy_o(rdy_w), .perr_o(perr_w), .vrel_i(vrel_io), .vrel_o(vrel_sk),
         .jn_i(jn), .wn_o(wn), .jf_o(jf), .werr_i(werr_ws), .werr_o(werr_w));
 `ifdef SYNTHESIS
-    ot_engc_t_io_rso u_io (
+    ot_engc_t_io_rso_r1 u_io (
 `else
-    ot_engc_t_io_rso #(.MUT(MUT), .EPMUT(EPMUT)) u_io (
+    ot_engc_t_io_rso_r1 #(.MUT(MUT), .EPMUT(EPMUT)) u_io (
 `endif
         .ck(ck_io), .rst(rst_io_n), .rso(child_rso[1]), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cfg(f_cfg), .cfg_o(cfg_io),
         .f_vm(f_vm), .t_vm(t_vm), .rdy_i(rdy_w), .perr_i(perr_w), .vrel_o(vrel_io), .jn_o(jn), .wn_i(wn), .jf_i(jf),
         .werr_i(werr_w), .r0_oh(r0_oh), .r1_oh(r1_oh), .r2_oh(r2_oh), .r0_a(r0_a), .r1_a(r1_a), .r2_a(r2_a),
-        .rd0(rd0), .rd1(rd1), .rd2(rd2w[63:0]));
+        .rd0(read_to_io[255:0]), .rd1(read_to_io[511:256]), .rd2(read_to_io[575:512]));
     ot_engc_t_ws_rso u_ws (
         .ck(ck_ws), .rst(rst_ws_n), .rso(child_rso[2]), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .werr(werr_ws),
         .w_oh(w_oh), .w_a(w_a), .b1_d(b1_d), .x_d(x_d),
@@ -164,6 +170,11 @@ module dsfd_engram_c_rso #(
         .x_oh(x1_oh), .x_a(x1_a), .x_do(x1_d), .r_oh(r0_oh), .r_a(r0_a), .r_d(rd0));
     ot_engc_t_pbc_rso u_pb2 (.ck(ck_pb2), .rst(rst_pb2_n), .rso(child_rso[5]), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
         .x_oh(), .x_a(), .x_do(), .r_oh(r2_oh), .r_a(r2_a), .r_d(rd2w));
+
+    // Match the distinct IO R1 valid pipeline with a coherent return step.
+    // All bank data moves together; the IO valid-tag pipeline remains authoritative.
+    ot_engc_read_return_pipe u_read_return_io (.clk(ck[0]), .rst_n(rst_io_n),
+        .data_i({rd2w[63:0], rd1, rd0}), .data_o(read_return_pipe));
 
     // Carry the release event and its slot together across the long WIN-to-SINK
     // hop. This costs one slot-release cycle and never retimes only valid.
@@ -193,3 +204,12 @@ module dsfd_engram_c_rso #(
         .rel_v(vrel_sk_pipe[0]), .rel_slot(vrel_sk_pipe[3:1]));
 endmodule
 
+
+module ot_engc_read_return_pipe(input wire clk, rst_n, input wire [575:0] data_i,
+    output wire [575:0] data_o);
+    (* keep = "true", dont_touch = "true" *) reg [575:0] q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 576'b0;
+        else q <= data_i;
+    assign data_o = q;
+endmodule

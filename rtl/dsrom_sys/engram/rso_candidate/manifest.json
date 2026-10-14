@@ -15,14 +15,15 @@
     "rtl/dsrom_sys/engram/dsfd_engram_c.sv": "906adc894c9764ac7f0821d8f2db98177bb1e0c795214ce1f87fc7751ccdafc3"
   },
   "new_source_sha256": {
-    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "5e53ecd18d93f064ff94b8e90c7cec077d477b8ee96ae842aeed7cf9d70a72fc",
+    "rtl/dsrom_sys/engram/rso_candidate/dsfd_engram_c_rso.sv": "682325609a51587449557fb4076c8826a404f4ec5a726d383e959b1c2bec5f1c",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_engine_adapter_rso.sv": "5ac1b628eff55eb35e480ea29255b5c5547b58eb6f80b3f5f50c33a2db52b584",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso.sv": "1f92e6dfc8327ec8612a1ea7bb9ec7cc15ce167424cecf0cf497600ccb698d2c",
     "rtl/dsrom_sys/engram/rso_candidate/ot_s81_slab_ep_rso.sv": "598ae0b5912fac55018c48f92a22d8acc5164411aca3d117233cb178c830f9ed",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_win_rso.sv": "bac4ff13ea8aaca46ba90bba7dc8a9c8e5d9fef4b5978ffb5484582b31341c23",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_pbank_rso.sv": "ef6a6ecd73c0960ac68ec7fb3382a79e2dcafbdfa609b5a71320b5c0c86233c0",
     "rtl/dsrom_sys/engram/rso_candidate/ot_async_fifo_rso.sv": "5415d6ecbd5cdb483487bb803d82fb59e54c5dfc6087c12ec7e24412ee37e064",
-    "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_ws_rso.sv": "ee6bd78f177ea4aee89c858986544fd68e3c81fd657111d1131c66ed6a813ba1"
+    "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_ws_rso.sv": "ee6bd78f177ea4aee89c858986544fd68e3c81fd657111d1131c66ed6a813ba1",
+    "rtl/dsrom_sys/engram/rso_candidate/ot_engc_t_io_rso_r1.sv": "e459b0b6c35b2f65e4f6b219d3ad7c955670104c603f6621c16573738b8fe811"
   },
   "parent_conditions": [
     "u_rst_win.reset_pipe[1]",
@@ -73,6 +74,16 @@
     "status": 16,
     "write_transit": 334,
     "release": 4,
-    "total": 354
+    "total": 930,
+    "read_return": 576
+  },
+  "read_variant": {
+    "master": "ot_engc_t_io_rso_r1",
+    "old_master_preserved": "ot_engc_t_io and ot_engc_t_io_rso",
+    "valid_pipeline_bits": 10,
+    "read_latency_edges": 14,
+    "data_return_bits": 576,
+    "data_pipeline_cycles": 1,
+    "validation": "pending exact/cost and matched return-skew negative; no physical admission"
   }
 }
