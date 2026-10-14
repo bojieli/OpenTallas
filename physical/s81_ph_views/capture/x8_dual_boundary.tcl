@@ -42,6 +42,12 @@ if {[llength [info commands ::qdm_cts_orig]] && ![llength [info commands ::capx_
         ::capx_cts_inner {*}$args
         capx_apply_boundary
     }
+    # Generated boundary hooks source this file AFTER the current CTS call.
+    # Apply now when that tree already exists; a future wrapper alone would
+    # leave the first repair under the generic single-domain IO reference.
+    if {[get_property [get_clocks core_clk] is_propagated]} {
+        capx_apply_boundary
+    }
 } else {
     capx_apply_boundary
 }
