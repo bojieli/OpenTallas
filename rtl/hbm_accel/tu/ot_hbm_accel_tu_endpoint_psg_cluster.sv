@@ -101,6 +101,7 @@
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_tu_endpoint_psg_cluster #(
     parameter integer HARD_CLOCKS=1,
+    parameter integer COLUMN_HARD=0,
     parameter integer ENABLE = 0,
     parameter integer REARM = 0, // opt-in; production pclk must equal clk
     parameter integer RGX = 0,     // 1: ROW_GATHER hardware mode available (rgx pin, stream inject, K*F delivery set)
@@ -131,6 +132,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
     parameter integer PIPE   = 0    // hgi-unitrate: 1 = pipelined gather bypass (epoch-tagged multicast, see below)
 ) (
     input wire[NPT-1:0]port_clk,
+    input wire[NC-1:0]column_clk,
     input  wire                 clk,
     input  wire                 rst_n,
     input  wire                 pclk,            // this die's PHY (serializer) clock
@@ -424,15 +426,40 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
         reg cw_dupe;
         // operand slots: one array per contributor column with ONE write port (cw_*: one writer per column a cycle)
         wire [FW-1:0] opsel [0:NC-1];
+        wire [NC-1:0] column_reply;
+        wire issue_return;
+        wire column_pending;
+        wire [15:0] issue_index;
+        if(COLUMN_HARD)begin:g_issue_epoch
+            reg[3:0]iv;
+            reg[15:0]ix0,ix1,ix2,ix3;
+            always @(posedge clk)begin ix0<=16'(rptr);ix1<=ix0;ix2<=ix1;ix3<=ix2;end
+            always @(posedge clk or negedge rst_n)
+                if(!rst_n)iv<=0;else iv<={iv[2:0],issue};
+            assign column_pending=|iv;assign issue_return=iv[3];assign issue_index=ix3;
+        end else begin:g_original_epoch
+            assign column_pending=1'b0;assign issue_return=issue;assign issue_index=16'(rptr);
+        end
         for (genvar c = 0; c < NC; c = c + 1) begin : g_col
-            reg [FW-1:0] slot [0:OFMX-1];
-            always @(posedge clk) if (NC > 1 && cw_v[c]) slot[cw_fl[c]] <= cw_d[c];
-            assign opsel[c] = (c >= NA) ? {FW{1'b0}} : slot[rptr < OF ? rptr : 0];   // inactive columns: +0
+            if(COLUMN_HARD)begin:g_hard
+                wire[511:0]reply;
+                reg[3:0]inactive;
+                always @(posedge clk)inactive<={inactive[2:0],(c>=NA)};
+                ot_hcoll_operand_column512 u_column(.clk(column_clk[c]),.rst_n(rst_n),
+                    .w_v(NC>1&&cw_v[c]),.w_addr(6'(cw_fl[c])),.w_data(512'(cw_d[c])),
+                    .r_v(issue),.r_addr(6'(rptr<OF?rptr:0)),.rd_v(column_reply[c]),.rd_data(reply));
+                assign opsel[c]=inactive[3]?{FW{1'b0}}:FW'(reply);
+            end else begin:g_original
+                reg [FW-1:0] slot [0:OFMX-1];
+                always @(posedge clk) if (NC > 1 && cw_v[c]) slot[cw_fl[c]] <= cw_d[c];
+                assign opsel[c] = (c >= NA) ? {FW{1'b0}} : slot[rptr < OF ? rptr : 0];
+                assign column_reply[c]=issue;
+            end
         end
         for (genvar c = 0; c < NC; c = c + 1) begin : g_l0
             assign lvl[0][c] = opsel[c];
         end
-        assign lvv[0] = issue;
+        assign lvv[0] = COLUMN_HARD ? (&column_reply) : issue;
         for (genvar l = 1; l <= LV; l = l + 1) begin : g_lv
             localparam integer NN = NC >> l;
             wire [NN*LANES-1:0] vv;
@@ -448,7 +475,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
         end
         wire        ti_v;
         wire [15:0] ti_d;
-        (* keep_hierarchy *) ot_hcoll_shdelay #(.W(16), .D(LAT * LV)) u_tidx (.clk(clk), .rst_n(rst_n), .v_in(issue), .d_in(16'(rptr)),
+        (* keep_hierarchy *) ot_hcoll_shdelay #(.W(16), .D(LAT * LV)) u_tidx (.clk(clk), .rst_n(rst_n), .v_in(issue_return), .d_in(issue_index),
             .v_out(ti_v), .d_out(ti_d));
         function automatic [15:0] bf16(input [31:0] b);
             reg [32:0] s;
@@ -714,7 +741,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
                        inj_done && (NC==1 || (BYP && byp_sum==byp_sum_exp && byp_xor==byp_xor_exp) ||
                                  (!BYP && rptr>=OF && produced_count==ROF && own_count==ROF)) &&
                        {15'd0, tx_count}==expected_tx && {15'd0, delivery_count}==expected_delivery && rx_pending==0 &&
-                       (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !issue)
+                       (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !issue && !column_pending)
                         completed<=1;
 `ifdef OT_COLL_MUT_PREMATURE_DONE
                     if(k>=PF)completed<=1;

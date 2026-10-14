@@ -233,8 +233,8 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     reg  br_v; reg [BA-1:0] br_a; reg br_q, rd2_v; reg [4*EW-1:0] rd2;
     assign buf_w_v=bw_v;assign buf_w_addr=10'(bw_a);assign buf_w_data=bw_d;
     assign buf_r_v=br_v;assign buf_r_addr=10'(br_a);
-    reg[2:0]br_flight;
-    always @(posedge clk or negedge rn)if(!rn)br_flight<=0;else br_flight<={br_flight[1:0],br_v};
+    reg[3:0]br_flight;
+    always @(posedge clk or negedge rn)if(!rn)br_flight<=0;else br_flight<={br_flight[2:0],br_v};
     always @(posedge clk)rd2<=buf_rd_data;
     reg [BA:0] cnv, cap, rdn; reg [12:0] cneed; reg [3:0] qcnt; reg [3:0] wcnt;
     integer c, s, a, b, l, i;

@@ -1,0 +1,6 @@
+rtl/hbm_accel/tu/ot_hcoll_operand_column512.sv:18: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 12 bits, got 1.
+rtl/hbm_accel/tu/ot_hcoll_operand_column512.sv:18:        : Padding 11 high bits of the port.
+rtl/hbm_accel/tu/ot_hcoll_operand_column512.sv:18: warning: Port 10 (rr_addr) of ot_sram_1r1w_128x256_m1_r2c2 expects 12 bits, got 1.
+rtl/hbm_accel/tu/ot_hcoll_operand_column512.sv:18:        : Padding 11 high bits of the port.
+FATAL: rtl/hbm_accel/tu/tb_hcoll_operand_column512.sv:13: OPERAND_COLUMN FAIL full512 data checked=0
+       Time: 885000 Scope: tb_hcoll_operand_column512

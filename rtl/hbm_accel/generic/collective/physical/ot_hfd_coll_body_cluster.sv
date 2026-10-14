@@ -25,6 +25,7 @@ module ot_hfd_coll_body_cluster #(
 ) (
     input wire [3:0] child_clk,
     input wire[NPT-1:0]port_clk,
+    input wire[7:0]column_clk,
     input wire[3:0]park_clk_q,input wire park_fault_clk,
     input  wire                 clk,
     input  wire                 rst_n,
@@ -74,9 +75,9 @@ module ot_hfd_coll_body_cluster #(
     wire [31:0] rg_lq_addr; wire [511:0] rg_lr_data, rg_hr_data;
     wire [1:0] rg_hq_v, rg_hq_rdy, rg_hr_v; wire [69:0] rg_hq_addr; wire [15:0] rg_hq_tag, rg_hr_tag;
     wire [DEL-1:0] rg_w_v, rg_w_rdy; wire [DEL*40-1:0] rg_w_addr; wire [DEL*FW-1:0] rg_w_data;
-    ot_hgi_coll_ep_cluster #(.NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1), .RGXHW(1), .RFMT(0),
+    ot_hgi_coll_ep_cluster #(.COLUMN_HARD(1),.NPT(NPT), .SWCRED(SWCRED), .RXAW(8), .QAW(7), .TXAW(3), .PIPE(1), .RGXHW(1), .RFMT(0),
                      .INJ(INJ), .DEL(DEL), .LANES(LANES)) u_ep (
-        .port_clk(port_clk),.park_clk_q(park_clk_q),.park_fault_clk(park_fault_clk),.clk(child_clk[0]), .rst_n(rst_n), .pclk(child_clk[0]), .prst_n(rst_n), .rank(rank), .pf(pf), .go(go),
+        .column_clk(column_clk),.port_clk(port_clk),.park_clk_q(park_clk_q),.park_fault_clk(park_fault_clk),.clk(child_clk[0]), .rst_n(rst_n), .pclk(child_clk[0]), .prst_n(rst_n), .rank(rank), .pf(pf), .go(go),
         .inj_idx(inj_idx), .inj_rd(inj_rd), .inj_q(inj_q),
         .ph_tx_v(lk_tx_v), .ph_tx_flit(lk_tx_flit), .sw_cr_ret(lk_sw_cr), .ph_rx_v(lk_rx_v), .ph_rx_flit(lk_rx_flit),
         .rx_credit(lk_rx_credit), .del_valid(del_valid), .del_flit(del_flit), .fault(ep_fault),

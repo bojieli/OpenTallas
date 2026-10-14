@@ -3,15 +3,15 @@ module tb_hgi_coll_tkm_buffer;
  parameter MUT=0;
  reg clk=0;always #5 clk=~clk;reg rst_n=0,wv=0,rv=0;reg[9:0]wa,ra;reg[339:0]wd;
  wire dv;wire[339:0]dd;
- reg[339:0]gold[0:1023],expect0,expect1,expect2;reg[2:0]vpipe=0;
+ reg[339:0]gold[0:1023],expect0,expect1,expect2,expect3;reg[3:0]vpipe=0;
  integer i,j,checked=0,cycles=0;
  ot_hgi_coll_tkm_buffer #(.MUT(MUT))dut(.clk(clk),.rst_n(rst_n),.w_v(wv),.w_addr(wa),.w_data(wd),.r_v(rv),.r_addr(ra),.rd_v(dv),.rd_data(dd));
  always @(posedge clk)begin
-  cycles=cycles+1;vpipe<={vpipe[1:0],rv};
-  if(rv)expect0<=gold[ra];expect1<=expect0;expect2<=expect1;
-  if(cycles>16&&dv!==vpipe[2])$fatal(1,"BUFFER FAIL valid alignment");
+  cycles=cycles+1;vpipe<={vpipe[2:0],rv};
+  if(rv)expect0<=gold[ra];expect1<=expect0;expect2<=expect1;expect3<=expect2;
+  if(cycles>16&&dv!==vpipe[3])$fatal(1,"BUFFER FAIL valid alignment");
   if(cycles>16&&dv)begin
-   if(dd!==expect2)$fatal(1,"BUFFER FAIL full340 data checked=%0d",checked);
+   if(dd!==expect3)$fatal(1,"BUFFER FAIL full340 data checked=%0d",checked);
    checked=checked+1;
   end
   if(cycles>3000)$fatal(1,"BUFFER FAIL timeout");
