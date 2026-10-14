@@ -10,7 +10,10 @@ Optional --grt maps actual OpenROAD violation bboxes onto the same windows.
 import argparse, collections, hashlib, json, math, re
 from pathlib import Path
 from bind_real import macros, pins
+import os
 VM=(13284.,17051.04,18122.4,19597.68)
+if os.environ.get('OT_WINDOW_VM'):   # split compute die: the trimmed VM rectangle (conservatively still a full blockage)
+    VM=tuple(float(q) for q in os.environ['OT_WINDOW_VM'].split(','))
 PITCH={'H':[(.048,.5),(.064,.75),(.080,.75)],
        'V':[(.048,.5),(.064,.75),(.080,.75)]}
 
