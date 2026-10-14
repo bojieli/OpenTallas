@@ -71,12 +71,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Alternative WQ3 SRAM/control successor of failedOVwrite leafTT-52.19/FF-20.28DRC0 boundaryspread99.6ps. Removefour512-bit row outputcopies and640row-valid/slot/sectorregisters ontofour ownclock leaves. Store32-bitlane masks atmetaenqueue; independentlyreadcurrent/nextmetaheads andselectafterread. No added datapath edge; fullWQ3 exact184/168/all3mutants simulationPASS. Actualparentadoption/assignedpins/PG/cut/reach stillopen.",
+ "structural_change": "Shared512-bit registeredpayload release replaces four identicaloldROWcaptures atsameedge; separatefourMETAleaves retainvalid/slot/sector captureedge. No added edge. OriginalRFgate macro->out-44.1 is retained failed reference; newRFmustpass realTT/FF/DRC andregisteredreach.",
  "job": {
   "owner": "Codex:hbm_quant_sfu_2240",
   "branch": "codex/hbm-quant-sfu-2240",
-  "tag": "r1",
-  "purpose": "Alternative WQ3 SRAM/control successor of failedOVwrite leafTT-52.19/FF-20.28DRC0 boundaryspread99.6ps. Removefour512-bit row outputcopies and640row-valid/slot/sectorregisters ontofour ownclock leaves. Store32-bitlane masks atmetaenqueue; independentlyreadcurrent/nextmetaheads andselectafterread. No added datapath edge; fullWQ3 exact184/168/all3mutants simulationPASS. Actualparentadoption/assignedpins/PG/cut/reach stillopen.",
+  "tag": "r2",
+  "purpose": "Shared512-bit registeredpayload release replaces four identicaloldROWcaptures atsameedge; separatefourMETAleaves retainvalid/slot/sector captureedge. No added edge. OriginalRFgate macro->out-44.1 is retained failed reference; newRFmustpass realTT/FF/DRC andregisteredreach.",
   "benched_by": "quant_wide_ov",
   "extra_paths": [
    "rtl",

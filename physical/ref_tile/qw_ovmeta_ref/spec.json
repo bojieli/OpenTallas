@@ -1,0 +1,86 @@
+{
+ "name": "qw_ovmeta_ref",
+ "top": "ot_hgi_qw_ovmeta",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovmeta.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 34.56,
+  "h": 34.56
+ },
+ "util": 0.52,
+ "clock": "spine",
+ "recipe": 2,
+ "macros": [],
+ "pins": {
+  "E": [
+   "o_v",
+   "o_slot",
+   "o_sec"
+  ],
+  "W": [
+   "i_v",
+   "i_sec",
+   "i_n",
+   "row_j"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "refglob": "*o_sec*",
+ "route": {
+  "pd": 0.4,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 1,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:hbm_quant_sfu_2240",
+  "branch": "codex/hbm-quant-sfu-2240",
+  "tag": "r1",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ],
+  "views_to": "physical/ref_tile/qw_ovmeta_ref/views",
+  "record_to": "results/rtl/ref_tile/qw_ovmeta_ref",
+  "purpose": "Four existing160bit metadata stages isolated after sharingidentical512payload captureinsideRF, runtime2rowstrap capturesfirstedge. No newedge, allunselectedparentassignmentopen."
+ },
+ "cycles_added": 0,
+ "slot_change_request": {
+  "parent": "ot_hgi_quant_wide_ov",
+  "selected": false,
+  "replicas": 4,
+  "outline_um": [
+   34.56,
+   34.56
+  ],
+  "reason": "Existing metadata clock/state independentofRFsharedpayload capture. Assignedslots/pins/PG/cut/reach pending."
+ },
+ "structural_change": "Four existing160bit metadata stages isolated after sharingidentical512payload captureinsideRF, runtime2rowstrap capturesfirstedge. No newedge, allunselectedparentassignmentopen.",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true
+}
