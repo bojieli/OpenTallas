@@ -18,12 +18,13 @@ reg ck=0, fi=0, rs=1;
 reg [513:0] di=0;
 wire [514:0] o;
 `DUT dut(.ck(ck),.fi0(fi),.rs(rs),.di0(di[`DW-1:0]),.o(o));
-integer ph, ns=0, nr=0, err=0, launches=0;
+integer ph, ns=0, nr=0, err=0, launches=0, dense=0;
 reg [511:0] sent[0:16383];
 reg [513:0] cap=0;
 reg [511:0] w;
 initial begin
   if (!$value$plusargs("PH=%d",ph)) ph=0;
+  if (!$value$plusargs("DENSE=%d",dense)) dense=0;
   #(ph);
   if(KIND==2) #833.331; else #833.333;
   fi=1;
@@ -45,7 +46,7 @@ always @(posedge fi) begin
   else begin
     di[513:2]<=w;
     // R2L consumer is slower: send sparse words, no backpressure at this boundary.
-    di[1]<=di[0] && launches>60 && launches<8000 && ((launches % 4)==0);
+    di[1]<=di[0] && launches>60 && launches<8000 && (dense || (launches % 4)==0);
   end
 end
 always @(negedge fi) cap=di;
@@ -67,9 +68,15 @@ EOT
 if [ "$kind" = m2l_raw ]; then K=0; DW=512; elif [ "$kind" = m2l_vr ]; then K=1; DW=514; else K=2; DW=514; fi
 verilator --binary --timing -j 4 -O1 --x-assign unique --x-initial unique -Wno-fatal -Wno-lint -Wno-style --top-module tb -DDUT=$top -DDW=$DW -GKIND=$K "$O/tb.sv" "$G" rtl/common/ot_meso_fifo.sv rtl/common/ot_ratio_cdc_fifo.sv -Mdir "$O/obj" -o tb > "$O/build.log" 2>&1 || { tail -20 "$O/build.log"; exit 2; }
 fail=0
+# HEND_DENSE=1 (s81 grpA 10-14, meso VR only): also a back-to-back stream (a valid word on every forwarded cycle
+# after start-up) at every phase, so the ring's chunked every-cycle write and the no-backpressure output are
+# exercised at full rate, not only one word in four
+dl="0"; [ "${HEND_DENSE:-0}" = 1 ] && [ "$K" = 1 ] && dl="0 1"
+for dn in $dl; do
 for ph in 0 200 416 600 820; do
- "$O/obj/tb" +PH=$ph +verilator+rand+reset+2 +verilator+seed+$((ph+1)) > "$O/run_$ph.log" 2>&1
- grep HEND_BENCH "$O/run_$ph.log"
- grep -q 'HEND_BENCH PASS' "$O/run_$ph.log" || fail=1
+ "$O/obj/tb" +PH=$ph +DENSE=$dn +verilator+rand+reset+2 +verilator+seed+$((ph+1)) > "$O/run_${dn}_$ph.log" 2>&1
+ echo "dense=$dn $(grep HEND_BENCH "$O/run_${dn}_$ph.log")"
+ grep -q 'HEND_BENCH PASS' "$O/run_${dn}_$ph.log" || fail=1
+done
 done
 exit $fail
