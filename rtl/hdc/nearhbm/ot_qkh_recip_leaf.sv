@@ -16,7 +16,9 @@ module ot_qkh_recip_leaf (
    if (!rr[0]) vq <= 1'b0; else vq <= v;
  wire [31:0] cy;
  wire cv, cf;
- ot_qkh_recip_core u_core (.clk(clk), .rst_n(rst_n), .v(vq), .x(xq), .y(cy), .vo(cv), .fault(cf));
+ // kvsys-elements r2 2026-10-14 (native pin audit: rst_n capture 233.9 ps > 190): the core takes the local synchronised
+ // reset like every other flop here; the raw pin no longer fans into the core's reset tree.
+ ot_qkh_recip_core u_core (.clk(clk), .rst_n(rr[0]), .v(vq), .x(xq), .y(cy), .vo(cv), .fault(cf));
  always @(posedge clk) y <= cy;
  always @(posedge clk or negedge rr[0])
    if (!rr[0]) begin vo <= 1'b0; fault <= 1'b0; end

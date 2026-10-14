@@ -49,7 +49,7 @@ for c in ${OT_CORNERS:-tt ff}; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   # qwendie-1011: the die's CTS-measured clock arrivals (clock_plan.py record) when the run has one, else ideal
   CP=; [ -s $R/clock/plan.json ] && CP=$R/clock/plan.json
   python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl $CP
-  say "STA $c clock: ${CP:-ideal (no clock plan)}"
+  say "STA $c clock: ${OT_STA_CLOCKS:-${CP:-ideal (no clock plan)}}"
   $ADMIT $P4 -- $H/dietop_run.sh $D grt_$c.tcl 8 $((P4+60))
   say "STA $c: $(grep -E '^(wns|tns|worst slack)' $D/grt_$c.log | tr '\n' ' ')"
 done

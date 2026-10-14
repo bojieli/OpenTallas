@@ -3,16 +3,11 @@
  "rule": "master bound only when native_view_qualify.py says QUALIFIED, the export replayed the verdict SDC sequence (abc334b14) and the placer can place the real outline",
  "builder": "tools/s81/view_binding.py",
  "qualification": "results/arch/s81_native_20261013/qualification.json",
- "qualification_sha256": "1628b7914fa10b9c3f2324989c1c9d9e555e3f02b2a26d6a8e1651f77328d099",
+ "qualification_sha256": "bdc573deb5ab40df227aa0da9e0104a209240e24b2e7add5d4edba0c8ecc1411",
  "census": "results/physical/die_iter_1012/s81/real_view_census_20261013/c5_census.json",
  "placer_fit": {
-  "recipe": "results/physical/die_iter_1012/s81/s81_layer1_v16.opts",
-  "rejected": [
-   "dsfd_rly_266_SN",
-   "dsfd_rly_266_WE",
-   "dsfd_rly_283_SN",
-   "dsfd_rly_283_WE"
-  ]
+  "recipe": "results/physical/die_iter_1012/s81/s81_layer1_v19.opts",
+  "rejected": []
  },
  "bound": {
   "dsfd_rly_15_EN": {
@@ -66,6 +61,110 @@
     }
    },
    "instances_census": 918
+  },
+  "dsfd_rly_266_SN": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN",
+   "job": "s81_rly_266_sn-v1-05805dc84",
+   "job_commit": "05805dc84fe4a3096b70ae65efa00645799d8f28",
+   "export_fix": "verdict replay ok (TT 290.05750579180756 / FF 8.739016454928361 ps) for the files on disk",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN/dsfd_rly_266_SN.lef",
+     "sha256": "f9cfd238419a10643ea2d8f29b23f92363f9491ac0b2212ccac371f2297f1095"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN/dsfd_rly_266_SN_tt.lib",
+     "sha256": "516dea7584bf59449a72e6ceb284eb78cdbd2e91d2df558f47781945e24c0f77"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN/dsfd_rly_266_SN_ff.lib",
+     "sha256": "144d96f90fbbd3c0dc955ac866ded3622bf7ad5cb61b3cf75f81dcc1c7f041c9"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_266_sn/views/dsfd_rly_266_SN/dsfd_rly_266_SN_ss.lib",
+     "sha256": "c7c282348a9413db1f94b1d132cd0bc956228b887e043bbfe8a4bc889669cd11"
+    }
+   },
+   "instances_census": 640
+  },
+  "dsfd_rly_266_WE": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE",
+   "job": "s81_rly_266_we-v1-05805dc84",
+   "job_commit": "05805dc84fe4a3096b70ae65efa00645799d8f28",
+   "export_fix": "verdict replay ok (TT 283.5697787695324 / FF 7.5418143952177275 ps) for the files on disk",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE/dsfd_rly_266_WE.lef",
+     "sha256": "e98dfc0187cadb613b4eccf89b5e35efb7263d4649f65c693c2549253ecc53db"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE/dsfd_rly_266_WE_tt.lib",
+     "sha256": "3ff506a64c53cd6ec0866fffc7775414bf47916fc61f07c9d0b60995abf647d4"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE/dsfd_rly_266_WE_ff.lib",
+     "sha256": "421ccebdab0f2739bf57df018a1dce536692788653a7470009dad9c53b8a5ff4"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_266_we/views/dsfd_rly_266_WE/dsfd_rly_266_WE_ss.lib",
+     "sha256": "51f83b6f9773092679886b732f36890bacb67a1320ba0f27b5cd94441b54d87a"
+    }
+   },
+   "instances_census": 640
+  },
+  "dsfd_rly_283_SN": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN",
+   "job": "s81_rly_283_sn-v1-05805dc84",
+   "job_commit": "05805dc84fe4a3096b70ae65efa00645799d8f28",
+   "export_fix": "verdict replay ok (TT 291.4428143263592 / FF 8.154019126571654 ps) for the files on disk",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN/dsfd_rly_283_SN.lef",
+     "sha256": "00048f003762cac2831987915805d1c0e0e17412439486d483ec9322e46ec4f3"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN/dsfd_rly_283_SN_tt.lib",
+     "sha256": "0319381e7290870c693d26023001ebe607223c5d7416f65a19958bb5e0d35d6b"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN/dsfd_rly_283_SN_ff.lib",
+     "sha256": "5fb811e5003ba58dc6ebde2333cf8e410fb9c49688dd72798c8f80d22803dcd6"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN/dsfd_rly_283_SN_ss.lib",
+     "sha256": "ed78224a04a78c7de94211dd5240fb3c9b531f67bbf6e751f510f76b5f73e772"
+    }
+   },
+   "instances_census": 640
+  },
+  "dsfd_rly_283_WE": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE",
+   "job": "s81_rly_283_we-v1-05805dc84",
+   "job_commit": "05805dc84fe4a3096b70ae65efa00645799d8f28",
+   "export_fix": "verdict replay ok (TT 280.7173382635142 / FF 7.441013083475667 ps) for the files on disk",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE/dsfd_rly_283_WE.lef",
+     "sha256": "2adfbf5499390a053980a0032c60fac6b4ee3d4538d56dd48e854d4a68517ebc"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE/dsfd_rly_283_WE_tt.lib",
+     "sha256": "5a96ff17b4753a133605dac49e476ab3124ee2c33e95d5e3a91476154ca2ade4"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE/dsfd_rly_283_WE_ff.lib",
+     "sha256": "7f529ec2fced79b6fa6a693414194d99debb42c129667a1e77d99c5338866097"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE/dsfd_rly_283_WE_ss.lib",
+     "sha256": "d40551f9c82429cfe2c7789380009f49ab8eec9d15b7b057b7a8e2283ffa75d7"
+    }
+   },
+   "instances_census": 640
   },
   "dsfd_rly_2_ES": {
    "verdict": "QUALIFIED",

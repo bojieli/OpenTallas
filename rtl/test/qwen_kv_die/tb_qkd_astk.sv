@@ -1,3 +1,6 @@
+`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
 // el1013-qwen-kvstrips 2026-10-13: exact bench of the aggregator strip masters (qkd_astk_pv / _ep / _ex / _zn / _ctl in
@@ -97,7 +100,7 @@ module ot_qkd_astk_feng #(
                         gam <= 5'd0;
                         if (k == 4'd15) begin
                             k <= 4'd0;
-                            if (g) begin g <= 1'b0; rnd <= 1'b0; st <= VW; end else g <= 1'b1;
+                            if (g || `KVD_HEADS == 1) begin g <= 1'b0; rnd <= 1'b0; st <= VW; end else g <= 1'b1;   // native HEADS 1: one group
                         end else k <= k + 4'd1;
                     end else gam <= gam + 5'd1;
                 end
@@ -117,7 +120,7 @@ module ot_qkd_astk_feng #(
                 NW: begin
                     beat <= 2'd0;
                     if ({1'b0, vgam} >= gmax) begin          // skip
-                        if (rnd) begin rnd <= 1'b0; if (g) st <= FIN; else begin g <= 1'b1; st <= VW; end end
+                        if (rnd) begin rnd <= 1'b0; if (g || `KVD_HEADS == 1) st <= FIN; else begin g <= 1'b1; st <= VW; end end
                         else begin rnd <= 1'b1; st <= VW; end
                     end else if (wt != 4'd0) wt <= wt - 4'd1;
                     else if (cred != 2'd0) begin st <= NB; cred <= cred - 2'd1 + {1'b0, si[633]}; end
@@ -128,7 +131,7 @@ module ot_qkd_astk_feng #(
                         nb[1024*h_ + 32*c_ +: 32] <= fl({4'd2, g, vgam, 3'(E), 2'(h_), 5'(c_), beat, 11'd0});
                     beat <= beat + 2'd1;
                     if (beat == 2'd3) begin
-                        if (rnd) begin rnd <= 1'b0; if (g) st <= FIN; else begin g <= 1'b1; st <= VW; end end
+                        if (rnd) begin rnd <= 1'b0; if (g || `KVD_HEADS == 1) st <= FIN; else begin g <= 1'b1; st <= VW; end end
                         else begin rnd <= 1'b1; st <= VW; end
                     end
                 end
@@ -276,8 +279,10 @@ module tb_qkd_astk #(
     reg [1:0] fin;
     integer tl [0:15];
     integer ntl;
-    wire [1:0] fin_c = {(&e_done[1]) && g_d[1].u_o.n_pv == 64 && g_d[1].u_o.n_zd == 2 && g_d[1].u_o.n_lm == 8,
-                        (&e_done[0]) && g_d[0].u_o.n_pv == 64 && g_d[0].u_o.n_zd == 2 && g_d[0].u_o.n_lm == 8};
+    // kvsys-elements r2: the layer's completion counts follow the head profile (HEADS 2: 64 P.V beats / 2 Z done / 8 lmax;
+    // native TP8 HEADS 1: 32 / 1 / 4) -- the HEADS 2 constants made every native layer time out in gold and DUT alike.
+    wire [1:0] fin_c = {(&e_done[1]) && g_d[1].u_o.n_pv == 32*`KVD_HEADS && g_d[1].u_o.n_zd == `KVD_HEADS && g_d[1].u_o.n_lm == 4*`KVD_HEADS,
+                        (&e_done[0]) && g_d[0].u_o.n_pv == 32*`KVD_HEADS && g_d[0].u_o.n_zd == `KVD_HEADS && g_d[0].u_o.n_lm == 4*`KVD_HEADS};
     always @(posedge clk) begin
         cyc <= cyc + 1;
         if (fin_c[0] && !fin[0]) begin fin[0] <= 1'b1; tend[0] <= cyc; end

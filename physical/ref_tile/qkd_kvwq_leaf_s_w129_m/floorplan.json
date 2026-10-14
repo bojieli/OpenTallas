@@ -56,6 +56,11 @@
   "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/signoff.sdc",
   "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/pdn.tcl",
   "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/pre_cts.tcl",
+  "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/post_cts.tcl",
+  "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/post_grt.tcl",
+  "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/pre_drt.tcl",
+  "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/pre_fill.tcl",
+  "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/post_fill.tcl",
   "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/pre_grt.tcl",
   "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -74,6 +79,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/pre_gpl.tcl",
-  "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/pre_dpl.tcl"
+  "physical/ref_tile/qkd_kvwq_leaf_s_w129_m/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }
