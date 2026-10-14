@@ -1,0 +1,31 @@
+{
+  "qualified": false,
+  "r1": {
+    "actual_c12_control_proof": "PASS39193cyclechecks,1026emits,192descriptors,warmreset,unsupported reduction refused",
+    "physical_binding": "DIAGNOSTIC BCAST0/RET4. Superseded because CLOSED wrapper has b_q and LEAF1. No native/arithmetic/throughput qualification."
+  },
+  "r2": {
+    "result": "COMPILE_FAIL",
+    "reason": "Current c12 oracle passesSFUT0 to old frozen CLOSED lane without SFUT parameter. Preserved build.log; r3 uses frozen oracle."
+  },
+  "r3": {
+    "result": "RUNNING",
+    "source": "candidate5fd04161d + r3_manifest.sha256",
+    "actual_closed_body": "all frozen physical/ref_tile/sfu_lane_ring3_rt/src files; mapper/grid parentsource SHA pinnedmanifest",
+    "params": "BCAST1 RET5 metadata/payload0, mapper4+CLOSED b_q1+LEAF1",
+    "oracle": "original frozen c12 N16 actual arithmetic with one-edge memory responses",
+    "not_covered": [
+      "native VM1111.111 CDC",
+      "real local8 cache",
+      "production price",
+      "physical controller/quarter views",
+      "side/reduction functions"
+    ]
+  },
+  "full_chunks": {
+    "result": "PASS5337cyclechecks,2543valid,848collisions,3warmresets,all7depths",
+    "negative_control": "drop valid at actual high139\u2192low138 interchunk crossing, FAILcycle39",
+    "scope": "W75 fullhorizon chronologicalcontrol-only proof; W60 samepatternnotyetelaborated; no clock/physical qualification"
+  },
+  "root_rule": "full-horizon payload75/60 \u00d7138 gives10350/8280FF perroot; plusvalid138 andcaptureregoptional; exactlyfourroots, slotsunassigned"
+}

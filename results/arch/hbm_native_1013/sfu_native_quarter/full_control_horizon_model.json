@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.sfu.full_control_horizon_model.v1",
+  "qualified": false,
+  "full_S_horizon": 276,
+  "payload_partition": {
+    "future_op_bits": 75,
+    "retire_bits": 60,
+    "unused_cw_bits_removed": 55
+  },
+  "chunks": [
+    {
+      "global_stages": [
+        1,
+        138
+      ],
+      "future_data_ff": 10350,
+      "retire_data_ff": 8280
+    },
+    {
+      "global_stages": [
+        139,
+        276
+      ],
+      "future_data_ff": 10350,
+      "retire_data_ff": 8280
+    }
+  ],
+  "clock_roots": 4,
+  "local_stage_valid_ff_per_root": 138,
+  "zero_added_logical_edges": true,
+  "insertion_depths": {
+    "NONE": 0,
+    "SQRT": 35,
+    "RSQRT": 77,
+    "EXP": 94,
+    "SIGM_SILU": 122,
+    "EGATE": 158,
+    "SPSQRT": 276
+  },
+  "insertion_semantics": {
+    "stage_p": "r[p] <= selected_at_depth_p ? input_cwi : previous_r[p+1]",
+    "valid_p": "rv[p] <= selected_at_depth_p || previous_rv[p+1]",
+    "collision_p": "selected_at_depth_p && previous_rv[p+1]",
+    "last_stage": "r[276] zero unless inserted at276; nx_valid=0",
+    "low_chunk_inserts": [
+      35,
+      77,
+      94,
+      122
+    ],
+    "high_chunk_inserts": {
+      "158": "local20 global158",
+      "276": "local138 global276"
+    },
+    "inter_chunk": "high global139 registered launch \u2192 low global138 register at next edge, exactly original adjacent-stage shift",
+    "depth0": "original NONE bypass separate local registered cwi source to subsequent pipeline; not passed through hardened chunk output mux"
+  },
+  "per_bit_boundary": {
+    "future_hi_to_lo": 75,
+    "retire_hi_to_lo": 60,
+    "valid_hi_to_lo": 2,
+    "inject_source_future": 75,
+    "inject_source_retire": 60,
+    "inject_opcode_and_v_per_leaf": 4,
+    "requirement": "each crossing is existing chronological register Q\u2192D, phi-R compensated own roots, actual pins/setup190/launch220/H100/reach and \u2264.60 cut need routed audit"
+  },
+  "root_rule": "estimated payload+138valid <=15k each; exact CTS required, no declared-spine waiver",
+  "other_paths_retained": [
+    "side arithmetic source and its registered phase binding stillrequired",
+    "reducer source and retire data alignment stillrequired",
+    "full controller/setup clocks stillrequire split/sizing",
+    "actual local8 cache and shared-group ACK ownership remainsrequired"
+  ],
+  "new_slot_requests": "four controller pipe leaves unassigned; original CLOSED side/reducer views stand",
+  "throughput_price": "UNMEASURED; no performance credit until production composition",
+  "optional_pin_capture": {
+    "enabled_default": false,
+    "source": "PIN_CAPTURE=1",
+    "payload_input_registers_per_root": "75 or60 plus3opcode and1valid",
+    "depth_compensation": "register injection d/v/sfu once, then inject atoriginal global depth-1",
+    "low_global_injection": [
+      34,
+      76,
+      93,
+      121
+    ],
+    "high_global_injection": [
+      157,
+      275
+    ],
+    "interchunk_shift": "same high139\u2192low138 registered hop",
+    "NONE": "rawregistered cwi bypasses these nonzero-depth leaves",
+    "status": "coll/busy semantics with injection capture require separate controller/status alignment proof; captured variant bench checksdata/valid only"
+  }
+}
