@@ -16,7 +16,7 @@ module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
  ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk),.rst_n_in(f_rst),.rst_n(rr_n));
  always @(posedge clk or negedge rr_n[0])if(!rr_n[0])s_v<=0;else s_v<=snapshot_v;
  reg [63:0] sq[0:RQ-1];reg [QW-1:0] tail,head;reg [QW:0] count;
- reg [63:0] sh;reg [7:0] dc[0:7];reg [7:0] neg0,neg1,neg2;
+ reg [63:0] sh;reg has_snapshot;reg [7:0] dc[0:7];reg [7:0] neg0,neg1,neg2;
  wire [QW-1:0] head1=head+1'b1;
  (* keep=1 *) wire [63:0] hs0=sq[head],hs1=sq[head1];
  wire [7:0] raw_ack=MUT==1?8'hff:wwq_done;
@@ -25,7 +25,7 @@ module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
  (* keep=1 *) wire [7:0] bad_without_raw=(neg0&~ack)|(neg1&ack);
  (* keep=1 *) wire [7:0] bad_with_raw=(neg1&~ack)|(neg2&ack);
  wire [7:0] selected_neg=(bad_without_raw&~raw_ack)|(bad_with_raw&raw_ack);
- wire fin=(count!=0)&&!o_fin&&!(|selected_neg);
+ wire fin=has_snapshot&&!o_fin&&!(|selected_neg);
  // The registered finish pin is also the local queue-pop token next edge.
  // Raw ACKs never feed snapshot-head or comparison-flag registers.
  wire pop=o_fin;
@@ -50,11 +50,12 @@ module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
 `endif
  end
  always @(posedge clk or negedge rr_n[0])begin
-     if(!rr_n[0])begin tail<=0;head<=0;count<=0;o_fin<=0;o_bad<=0;o_idle<=0;end
+     if(!rr_n[0])begin tail<=0;head<=0;count<=0;has_snapshot<=0;o_fin<=0;o_bad<=0;o_idle<=0;end
      else begin
          if(s_v)tail<=tail+1'b1;
          if(pop)head<=head+1'b1;
          count<=count+(QW+1)'(s_v)-(QW+1)'(pop);
+         has_snapshot <= (count+(QW+1)'(s_v)-(QW+1)'(pop))!=0;
          o_fin<=fin;
          if(s_v&&count==(QW+1)'(RQ)&&!pop)o_bad<=1;
          o_idle<=count==0&&!s_v&&!snapshot_v;
@@ -65,6 +66,7 @@ module ot_hgi_qdq_wr_fin #(parameter integer RQ=16, MUT=0)(
      if(pushed_head)sh<=s;
      else sh<=pop?hs1:hs0;
 `ifndef SYNTHESIS
+     if(rr_n[0]&&has_snapshot!==(count!=0))$fatal(1,"FIN nonempty state mismatch");
      if(rr_n[0]&&count!=0&&sh!==sq[head])$fatal(1,"FIN head diverged");
 `endif
  end
