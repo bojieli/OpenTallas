@@ -1,0 +1,25 @@
+{
+  "expected_frozen_source": "bc2c93f92",
+  "actual": {
+    "ot-epyc1tb": {
+      "base": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/src",
+      "sha256": {
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv": "dd0cbe5a646218f947fb3707531123487629ea02957ca0a411a7c18a0d9dfcd5",
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_dual.sv": "1b2d6a5d23a5ddd02b3a4920eefd3e33df83e2ca2b45ca30d9b53f312d5c711e",
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv": "e794a0f61a6453617a3a3bc4d32a5857acce4cb49cc144e27ab96f8b59383cb6",
+        "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv": "0c04f172dd734074731bc05fbe50f8bc5f5d2e9981e43734e484e9e51c7898ca",
+        "tools/s81_ph/capc_bench.sh": "eb9eda775f9a1c5af84eb82c785be25c25b2279c3e8438332b5215bfc2011749"
+      }
+    },
+    "ot-agidock128": {
+      "base": "/srv/opentallas-scratch/claude/s81capture-bench-counter-b2b1fc71a",
+      "sha256": {
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv": "dd0cbe5a646218f947fb3707531123487629ea02957ca0a411a7c18a0d9dfcd5",
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_dual.sv": "1b2d6a5d23a5ddd02b3a4920eefd3e33df83e2ca2b45ca30d9b53f312d5c711e",
+        "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv": "e794a0f61a6453617a3a3bc4d32a5857acce4cb49cc144e27ab96f8b59383cb6",
+        "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv": "0c04f172dd734074731bc05fbe50f8bc5f5d2e9981e43734e484e9e51c7898ca",
+        "tools/s81_ph/capc_bench.sh": "eb9eda775f9a1c5af84eb82c785be25c25b2279c3e8438332b5215bfc2011749"
+      }
+    }
+  }
+}

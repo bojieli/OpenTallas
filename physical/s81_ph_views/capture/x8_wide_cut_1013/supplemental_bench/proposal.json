@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.capture.supplemental_bench_proposal.v1",
+  "qualification_status": "UNVALIDATED_OWNER_REVIEW_REQUIRED",
+  "job": "dsfd_capt_x8_dual-v2-bc2c93f92",
+  "frozen_route_source": "bc2c93f9283e5099cb77b06de663d27cfd5a3ff3",
+  "supplemental_bench_source": "b2b1fc71ab212b7b46b2a29d91faea5c1da8cc48",
+  "scope": "Supplemental bench evidence only; physical source and route unchanged",
+  "exact": {
+    "cases": 9,
+    "mismatches": 0,
+    "rc": 0
+  },
+  "mutant": {
+    "define": "S81PH_CAPC_MUT_KSWAP",
+    "cases": 1,
+    "mismatches": 121697,
+    "mismatching_roots": 128,
+    "timeouts": 0,
+    "rc": 1,
+    "actual_summary": "logs/bench/summary_mutant.txt"
+  },
+  "source_equality": "source_equality.json",
+  "actual_shipping_RTL_hashes": "actual_remote_RTL_hashes.json",
+  "actual_testbench_hashes": "actual_remote_testbench_hashes.json",
+  "specific_bench_diff": "bench_only.diff",
+  "superseded_defective_history": "invalid_old_mutant_termination.log",
+  "forbidden_qualification": "Neither superseded termination nor empty CAPC_BENCH FAIL output counts as a caught mutant",
+  "evidence_sha256": {
+    "actual_remote_RTL_hashes.json": "b316edf885ee1dea316ce62801f4ec97c9896127574c6107565df4800d16661f",
+    "actual_remote_testbench_hashes.json": "f18668f32bce2e5f91128203ab97f8f7f9111f727e2a6419b713ea6f356599aa",
+    "bench_only.diff": "f685ad44d15da397632b09a7897a0eb9397900898cbc08a12191b805e5e8c230",
+    "invalid_old_mutant_termination.log": "c71c6ed4fe267fbe51ad1bb921044b96b2631f8bbbf98c0b929981ac9c6ac89e",
+    "logs/bench/build_exact.log": "cbe93c612a44ad83639087c5da3675d5e45bf2b367cf69153e9a796ced429a8f",
+    "logs/bench/build_mutant.log": "8f8a654f3b732f2c4a14787aa1f7a8b26b252ecf97fe3b70bcdc9eb6f7ae40a7",
+    "logs/bench/run_exact_err.log": "69a4874d1ad2a2289cfa9d1e6d609a1dd195b62d12f047b174f2ad2988fc62d9",
+    "logs/bench/run_exact_mix.log": "688d7cfffaf2aee829716217be5b03bdd2a732dce782f9582d427b8693441489",
+    "logs/bench/run_exact_mix11.log": "92e1a661118f20df063728be0cec2dc7f95a3f737865e333129197de1944f098",
+    "logs/bench/run_exact_mix12.log": "421ec1f3845ea82226e078dbc963856fb3c53898843ae4cfc7ad3aa44503ab17",
+    "logs/bench/run_exact_mix13.log": "a788da0c7128d67d481cdac6483faf2cd3a2357b6fec632086b454c12b7ee70b",
+    "logs/bench/run_exact_over.log": "b94bfceb0ac403a1c1cd24c177b0ecd57c73a34bec8bc8841a8051d6fc20f072",
+    "logs/bench/run_exact_range.log": "18fd6277af441a189c26f7e4d9af587e808e3901089416ba843f4d62f3c7843e",
+    "logs/bench/run_exact_rreq.log": "149c5e1e9b119fb9c355ef76cc80e260a71cd79d694cf23746324b3ba9abe79b",
+    "logs/bench/run_exact_trace.log": "8571907223067f44718eb5e48d7b667110e38a7c276e86cea290ed0a2d54b0b3",
+    "logs/bench/run_mutant_mix.log": "fe402a3dc493705c23cfe41f034acc46e2428985d3a0f03770849e521c93f6d9",
+    "logs/bench/summary_exact.txt": "c6121f96b7d761d2ab66b488c8e13def55d941978dc17c49d9295f6b80d882de",
+    "logs/bench/summary_mutant.txt": "ecb713601a51596508bc210f5bf17a0f6d9f2a86a8181c938f50bdf47935eea4",
+    "logs/run.sh": "f581f8c48602068aeb2e4307b8df02b99d4baa094340bba5f7757e03b3c98904",
+    "ot_run.out": "f7b5c2ef7cf44efc1c2b558a1d0388fa7dd5bd4112b1adc3a2f1b359474491ae",
+    "source_equality.json": "029db7385abbcb28c5df74b7572a1d0a1e6924f8e0e15a7f60090b2251129027"
+  }
+}
