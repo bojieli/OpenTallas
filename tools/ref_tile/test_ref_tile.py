@@ -25,6 +25,22 @@ def spec(_ex, **kw):
 
 
 class Gen(unittest.TestCase):
+    def test_ordered_pin_group_limit_reaches_gate_and_route(self):
+        s = RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": 16}))
+        r = RT.gen(spec("nhb_pbst_ref", route={"pin_group_max": 16}), write=False)
+        blocks = RT.place_blocks(s, *r["outline"], RT.blocks_of(s))
+        env = RT.gen_env(s, "k", *r["outline"], RT.layer_contract(s, None), blocks)
+        self.assertIn("export OT_PIN_GROUP_MAX=16", env)
+        self.assertIn("PIN_MIN_TRACKS=2", env)
+        self.assertIn("OT_PIN_GROUP_MAX=16", RT.gen_job(s, "k", "deadbeef", blocks)["stages"]["route"]["cmd"])
+        s["route"].pop("pin_group_max")
+        self.assertEqual(RT.pin_group_max(s), 32)
+
+    def test_invalid_ordered_pin_group_limit_refused(self):
+        for value in (0, -1, 33, True, 16.5, "16"):
+            with self.assertRaises(RT.SpecError):
+                RT.load_spec(spec("nhb_pbst_ref", route={"pin_group_max": value}))
+
     def test_pbst_kit(self):
         r = RT.gen(spec("nhb_pbst_ref"), write=False)
         self.assertEqual([f for f in r["findings"] if f[0] == "FAIL"], [])
@@ -123,6 +139,24 @@ class Abut(unittest.TestCase):
     def chan(self, blocks):
         s = {"pins": {"S": ["ck"]}}
         return [m for sev, chk, m, _ in RT.floorplan_checks(s, 400.0, 400.0, blocks, None) if chk == "channel"]
+
+    def test_abut_plan_is_probe_only(self):
+        """abut_plan admits a planned narrow channel as WARN only on a probe cluster (job.hold_merge); without the
+        probe marker it FAILs itself and the 20-um channel rule still fires"""
+        w = RT.read_view_lef(self.V)["W"]
+        bl = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + w + 4.32, 100.0)]
+        ab = {"channel_um": 4.32, "edge_um": 20.0, "why": "lane bay probe"}
+        probe = {"kind": "cluster", "pins": {"S": ["ck"]}, "abut_plan": ab, "job": {"hold_merge": "probe"}}
+        r = RT.floorplan_checks(probe, 400.0, 400.0, bl, None)
+        self.assertEqual([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"], [])
+        self.assertEqual([sev for sev, c, _, _ in r if c == "abut_plan"], ["WARN"])
+        merge = {"kind": "cluster", "pins": {"S": ["ck"]}, "abut_plan": ab, "job": {}}
+        r = RT.floorplan_checks(merge, 400.0, 400.0, bl, None)
+        self.assertEqual([sev for sev, c, _, _ in r if c == "abut_plan"], ["FAIL"])
+        self.assertEqual(len([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"]), 1)
+        tight = [self.blk(0, 100.0, 100.0), self.blk(1, 100.0 + w + 2.16, 100.0)]        # under the declared channel
+        r = RT.floorplan_checks(probe, 400.0, 400.0, tight, None)
+        self.assertEqual(len([c for sev, c, _, _ in r if sev == "FAIL" and c == "channel"]), 1)
 
     def test_stack_abutted(self):
         h = RT.read_view_lef(self.V)["H"]

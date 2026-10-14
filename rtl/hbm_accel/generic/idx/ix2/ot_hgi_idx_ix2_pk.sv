@@ -38,11 +38,14 @@ module ot_hgi_idx_ix2_pk #(
         else begin st_q <= start; run_q <= run; to_v <= to[0]; co_v <= co[0]; tcr_q <= t_cr; dcr_q <= d_cr; end
     always @(posedge clk) begin cand_en <= cand_en_i; to_d <= to[611:1]; co_d <= co[71:1]; end
     reg [611:1] tf [0:7]; reg [2:0] tfh, tft; reg [3:0] tfn;
+    // four kept copies of the head pointer, one a quarter of the 611-b head word (10-13: one copy drove 4,874 loads)
+    (* keep = 1 *) reg [2:0] tfh_a, tfh_b, tfh_c, tfh_d;
     reg [71:1]  cf [0:7]; reg [2:0] cfh, cft; reg [3:0] cfn;
     reg hb, t1_v, to_last, co_last;
     reg [7:0] t1_lv; reg [19:0] t1_o [0:7]; reg [16:0] t1_r [0:7]; reg [2:0] t1_pf [0:7]; reg [3:0] t1_n;
     reg [2:0] tcred, dcred;
-    wire [611:1] th = tf[tfh]; wire [71:1] ch = cf[cfh];
+    wire [611:1] th_a = tf[tfh_a], th_b = tf[tfh_b], th_c = tf[tfh_c], th_d = tf[tfh_d];
+    wire [611:1] th = {th_d[611:459], th_c[458:306], th_b[305:153], th_a[152:1]}; wire [71:1] ch = cf[cfh];
     wire t2_ld = t1_v && (tcred != 3'd0 || tcr_q);
     wire t1_free = !t1_v || t2_ld;
     wire t_ld = run_q && tfn != 4'd0 && t1_free;
@@ -82,7 +85,7 @@ module ot_hgi_idx_ix2_pk #(
     end
     always @(posedge clk or negedge rn)
         if (!rn) begin
-            tfh <= 3'd0; tft <= 3'd0; tfn <= 4'd0; cfh <= 3'd0; cft <= 3'd0; cfn <= 4'd0; hb <= 1'b0; t1_v <= 1'b0;
+            tfh <= 3'd0; tfh_a <= 3'd0; tfh_b <= 3'd0; tfh_c <= 3'd0; tfh_d <= 3'd0; tft <= 3'd0; tfn <= 4'd0; cfh <= 3'd0; cft <= 3'd0; cfn <= 4'd0; hb <= 1'b0; t1_v <= 1'b0;
             to_last <= 1'b0; co_last <= 1'b0; tcred <= 3'd4; dcred <= 3'd4; toc <= 1'b0; coc <= 1'b0; t_v <= 1'b0; d_v <= 1'b0;
             pk_done <= 1'b0; pk_bad <= 1'b0;
         end else begin
@@ -93,14 +96,14 @@ module ot_hgi_idx_ix2_pk #(
             cfn <= cfn + {3'd0, co_v} - {3'd0, c_pop};
             if (run_q && ((to_v && tfn == 4'd8 && !t_pop) || (co_v && cfn == 4'd8 && !c_pop))) pk_bad <= 1'b1;
             if (t1_free) t1_v <= t_ld;
-            if (t_ld) begin hb <= !hb; if (hb) begin tfh <= tfh + 3'd1; if (th[1]) to_last <= 1'b1; end end
+            if (t_ld) begin hb <= !hb; if (hb) begin tfh <= tfh + 3'd1; tfh_a <= tfh_a + 3'd1; tfh_b <= tfh_b + 3'd1; tfh_c <= tfh_c + 3'd1; tfh_d <= tfh_d + 3'd1; if (th[1]) to_last <= 1'b1; end end
             if (c_pop) begin cfh <= cfh + 3'd1; if (ch[1]) co_last <= 1'b1; end
             tcred <= tcred + 3'(tcr_q) - 3'(t2_ld);
             dcred <= dcred + 3'(dcr_q) - 3'(c_pop);
             pk_done <= run_q && to_last && co_last && tfn == 4'd0 && cfn == 4'd0 && !t1_v && tcred == 3'd4 && dcred == 3'd4 &&
                        !to_v && !co_v;
             if (st_q) begin
-                tfh <= 3'd0; tft <= 3'd0; tfn <= 4'd0; cfh <= 3'd0; cft <= 3'd0; cfn <= 4'd0; hb <= 1'b0; t1_v <= 1'b0;
+                tfh <= 3'd0; tfh_a <= 3'd0; tfh_b <= 3'd0; tfh_c <= 3'd0; tfh_d <= 3'd0; tft <= 3'd0; tfn <= 4'd0; cfh <= 3'd0; cft <= 3'd0; cfn <= 4'd0; hb <= 1'b0; t1_v <= 1'b0;
                 to_last <= 1'b0; co_last <= !cand_en; tcred <= 3'd4; dcred <= 3'd4; pk_done <= 1'b0; pk_bad <= 1'b0;
             end
         end

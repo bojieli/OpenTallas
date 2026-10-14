@@ -85,7 +85,7 @@
  "job": {
   "owner": "Claude:el1013-qwen-kvstrips",
   "branch": "claude/el1013-qwen-kvstrips",
-  "tag": "ks1",
+  "tag": "ks2",
   "purpose": "Qwen ROM TP8 (track B) HBM controller strip leaf qkd_ctrl_kc: the kc stream-command crossing (core clock -> ot_async_fifo -> hclk, registered onto the tap chain of the 32 qkd_ctrl_pc leaves) and the end of the strip's fault chain (hclk -> core, kf).  One a strip, at its N end.",
   "extra_paths": [
    "physical/qkd_ctrl_strip",

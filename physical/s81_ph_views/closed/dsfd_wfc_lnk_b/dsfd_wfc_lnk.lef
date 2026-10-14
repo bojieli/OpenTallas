@@ -16,6 +16,10 @@ MACRO dsfd_wfc_lnk
       LAYER M5 ;
         RECT  3.216 0 3.24 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  3.216 0.144 3.432 0.235 ;
+    END
   END ck[0]
   PIN f_lid[0]
     DIRECTION INPUT ;
@@ -216,6 +220,10 @@ MACRO dsfd_wfc_lnk
       LAYER M4 ;
         RECT  0 49.632 0.192 49.656 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 49.632 0.133 49.656 ;
+    END
   END f_lid[121]
   PIN f_lid[122]
     DIRECTION INPUT ;
@@ -263,6 +271,10 @@ MACRO dsfd_wfc_lnk
     PORT
       LAYER M4 ;
         RECT  0 50.784 0.192 50.808 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 50.784 0.133 50.808 ;
     END
   END f_lid[127]
   PIN f_lid[128]
@@ -2608,6 +2620,10 @@ MACRO dsfd_wfc_lnk
       LAYER M4 ;
         RECT  0 101.472 0.192 101.496 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 101.472 0.133 101.496 ;
+    END
   END f_lid[391]
   PIN f_lid[392]
     DIRECTION INPUT ;
@@ -2655,6 +2671,10 @@ MACRO dsfd_wfc_lnk
     PORT
       LAYER M4 ;
         RECT  0 102.624 0.192 102.648 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 102.624 0.133 102.744 ;
     END
   END f_lid[397]
   PIN f_lid[398]
@@ -3688,6 +3708,10 @@ MACRO dsfd_wfc_lnk
       LAYER M4 ;
         RECT  0 124.704 0.192 124.728 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 124.704 0.156 124.824 ;
+    END
   END f_lid[512]
   PIN f_lid[51]
     DIRECTION INPUT ;
@@ -4128,6 +4152,10 @@ MACRO dsfd_wfc_lnk
       LAYER M4 ;
         RECT  0 7.536 0.192 7.56 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  0.025 7.536 0.248 7.656 ;
+    END
   END f_liv[0]
   PIN f_lor[0]
     DIRECTION INPUT ;
@@ -4136,6 +4164,10 @@ MACRO dsfd_wfc_lnk
       LAYER M4 ;
         RECT  215.808 143.568 216 143.592 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  214.981 143.568 215.82 143.592 ;
+    END
   END f_lor[0]
   PIN f_vc[0]
     DIRECTION INPUT ;
@@ -4143,6 +4175,10 @@ MACRO dsfd_wfc_lnk
     PORT
       LAYER M5 ;
         RECT  207.312 0 207.336 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  207.312 0.144 207.336 1.187 ;
     END
   END f_vc[0]
   PIN f_wig[0]
@@ -8272,6 +8308,10 @@ MACRO dsfd_wfc_lnk
       LAYER M5 ;
         RECT  6.432 0 6.456 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  6.432 0.144 6.456 0.517 ;
+    END
   END rst[0]
   PIN t_dw[0]
     DIRECTION OUTPUT ;
@@ -10311,6 +10351,10 @@ MACRO dsfd_wfc_lnk
     PORT
       LAYER M5 ;
         RECT  121.968 0 121.992 0.192 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  121.872 0.085 122.088 0.117 ;
     END
   END t_dw[329]
   PIN t_dw[32]
@@ -12384,6 +12428,10 @@ MACRO dsfd_wfc_lnk
       LAYER M5 ;
         RECT  212.688 0 212.712 0.192 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  212.688 0.144 212.712 0.227 ;
+    END
   END t_ft[0]
   PIN t_lir[0]
     DIRECTION OUTPUT ;
@@ -12391,6 +12439,10 @@ MACRO dsfd_wfc_lnk
     PORT
       LAYER M4 ;
         RECT  0 143.568 0.192 143.592 ;
+    END
+    PORT
+      LAYER M4 ;
+        RECT  0.156 143.568 0.248 143.592 ;
     END
   END t_lir[0]
   PIN t_lod[0]
@@ -16504,6 +16556,10 @@ MACRO dsfd_wfc_lnk
       LAYER M4 ;
         RECT  215.808 7.536 216 7.56 ;
     END
+    PORT
+      LAYER M4 ;
+        RECT  215.773 7.536 215.82 7.56 ;
+    END
   END t_lov[0]
   PIN t_wid[0]
     DIRECTION OUTPUT ;
@@ -20336,6 +20392,10 @@ MACRO dsfd_wfc_lnk
       LAYER M5 ;
         RECT  20.208 151.008 20.232 151.2 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  20.064 151.139 20.28 151.147 ;
+    END
   END t_wid[69]
   PIN t_wid[6]
     DIRECTION OUTPUT ;
@@ -20616,6 +20676,10 @@ MACRO dsfd_wfc_lnk
       LAYER M5 ;
         RECT  4.272 151.008 4.296 151.2 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  4.272 150.469 4.296 151.056 ;
+    END
   END t_wiv[0]
   PIN t_wog[0]
     DIRECTION OUTPUT ;
@@ -20623,6 +20687,14 @@ MACRO dsfd_wfc_lnk
     PORT
       LAYER M5 ;
         RECT  211.632 151.008 211.656 151.2 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  211.488 150.901 211.656 151.043 ;
+    END
+    PORT
+      LAYER M5 ;
+        RECT  211.632 151.043 211.656 151.056 ;
     END
   END t_wog[0]
   PIN VDD
@@ -33849,14 +33921,10 @@ MACRO dsfd_wfc_lnk
      RECT  0.025 92.832 0.092 93.432 ;
      RECT  0.025 104.736 0.097 105.336 ;
      RECT  0.025 41.568 0.133 42.168 ;
-     RECT  0.025 49.632 0.133 49.656 ;
-     RECT  0.025 50.784 0.133 50.808 ;
      RECT  0.025 52.896 0.133 53.496 ;
      RECT  0.085 54.912 0.133 56.856 ;
      RECT  0.125 88.128 0.133 88.152 ;
      RECT  0.092 92.832 0.133 93.912 ;
-     RECT  0.025 101.472 0.133 101.496 ;
-     RECT  0.025 102.624 0.133 102.744 ;
      RECT  0.025 26.976 0.156 27.576 ;
      RECT  0.025 29.664 0.156 30.264 ;
      RECT  0.025 32.352 0.156 33.528 ;
@@ -33890,10 +33958,7 @@ MACRO dsfd_wfc_lnk
      RECT  0.025 116.064 0.156 116.664 ;
      RECT  0.025 118.752 0.156 119.928 ;
      RECT  0.025 122.016 0.156 122.616 ;
-     RECT  0.025 124.704 0.156 124.824 ;
-     RECT  0.025 7.536 0.248 7.656 ;
      RECT  0.156 26.4 0.248 124.824 ;
-     RECT  0.156 143.568 0.248 143.592 ;
      RECT  0.248 0.528 0.352 150.672 ;
      RECT  0.352 0.798 0.544 150.402 ;
      RECT  0.544 77.856 0.605 97.848 ;
@@ -46049,9 +46114,7 @@ MACRO dsfd_wfc_lnk
      RECT  215.341 76.896 215.413 124.344 ;
      RECT  215.413 26.592 215.557 124.344 ;
      RECT  215.557 26.592 215.773 124.536 ;
-     RECT  215.773 7.536 215.82 7.56 ;
      RECT  215.773 26.4 215.82 124.728 ;
-     RECT  214.981 143.568 215.82 143.592 ;
      RECT  215.82 33.552 215.885 34.248 ;
      RECT  215.82 35.568 215.885 35.592 ;
      RECT  215.82 114.432 215.885 114.456 ;
@@ -46063,7 +46126,6 @@ MACRO dsfd_wfc_lnk
      RECT  121.872 0.037 121.896 0.085 ;
      RECT  155.664 0.037 155.688 0.085 ;
      RECT  71.232 0.053 71.256 0.117 ;
-     RECT  121.872 0.085 122.088 0.117 ;
      RECT  123.216 0.053 123.24 0.117 ;
      RECT  121.872 0.117 123.24 0.133 ;
      RECT  155.664 0.085 156.264 0.133 ;
@@ -46077,15 +46139,12 @@ MACRO dsfd_wfc_lnk
      RECT  126.096 0.085 126.12 0.144 ;
      RECT  155.664 0.133 156.84 0.144 ;
      RECT  58.8 0.144 157.128 0.227 ;
-     RECT  212.688 0.144 212.712 0.227 ;
-     RECT  3.216 0.144 3.432 0.235 ;
      RECT  68.976 0.227 79.56 0.275 ;
      RECT  84.384 0.227 157.128 0.363 ;
      RECT  84.384 0.363 121.896 0.371 ;
      RECT  73.536 0.275 79.56 0.467 ;
      RECT  123.312 0.363 157.128 0.491 ;
      RECT  124.08 0.491 157.128 0.515 ;
-     RECT  6.432 0.144 6.456 0.517 ;
      RECT  16.32 0.245 16.344 0.517 ;
      RECT  58.8 0.227 61.608 0.563 ;
      RECT  62.64 0.227 62.664 0.563 ;
@@ -46129,7 +46188,6 @@ MACRO dsfd_wfc_lnk
      RECT  128.112 0.755 155.784 0.995 ;
      RECT  16.32 0.787 16.752 1.187 ;
      RECT  88.752 0.947 120.072 1.187 ;
-     RECT  207.312 0.144 207.336 1.187 ;
      RECT  70.44 0.803 72.36 1.235 ;
      RECT  85.488 0.563 87.432 1.235 ;
      RECT  72.144 1.235 72.168 1.283 ;
@@ -56079,11 +56137,8 @@ MACRO dsfd_wfc_lnk
      RECT  5.64 150.413 5.76 150.683 ;
      RECT  108.24 150.413 108.36 150.683 ;
      RECT  210.84 149.931 211.152 150.683 ;
-     RECT  211.488 150.901 211.656 151.043 ;
-     RECT  4.272 150.469 4.296 151.056 ;
      RECT  6.96 150.517 105.816 151.056 ;
      RECT  110.112 150.469 208.968 151.056 ;
-     RECT  211.632 151.043 211.656 151.056 ;
      RECT  126.288 151.056 126.312 151.083 ;
      RECT  143.76 151.056 143.784 151.083 ;
      RECT  9.024 151.056 9.048 151.091 ;
@@ -56097,7 +56152,6 @@ MACRO dsfd_wfc_lnk
      RECT  19.776 151.056 20.28 151.139 ;
      RECT  24.384 151.056 25.272 151.139 ;
      RECT  141.456 151.091 141.48 151.139 ;
-     RECT  20.064 151.139 20.28 151.147 ;
      RECT  148.944 151.056 148.968 151.187 ;
      RECT  159.696 151.056 159.72 151.187 ;
     LAYER M6 ;

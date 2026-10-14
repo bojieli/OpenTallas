@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_fan_me-fm3-COMMIT",
+ "name": "qfd_vm_fan_me-fm3-03b5519e0",
  "block": "ot_qfd_vm_fan_t",
  "ref_tile": true,
  "owner": "Claude:qwen_tp8_vm_plan",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-tp8-vm-phys",
-  "commit": "COMMIT",
+  "commit": "03b5519e0",
   "extra_paths": [
    "rtl/qwen_sys/vm_me_20261008",
    "rtl/qwen_sys/vm_die_split_20261012",
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_fan_me/qfd_vm_fan_me-fm3-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_fan_me/qfd_vm_fan_me-fm3-03b5519e0"
   }
  ],
  "cycles_added": 0,

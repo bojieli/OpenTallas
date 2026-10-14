@@ -1,5 +1,5 @@
 {
- "name": "qkd_ctrl_pc-ks1-COMMIT",
+ "name": "qkd_ctrl_pc-ks2-fe58324a6",
  "block": "qkd_ctrl_pc",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-kvstrips",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1013-qwen-kvstrips",
-  "commit": "COMMIT",
+  "commit": "fe58324a6",
   "extra_paths": [
    "physical/qkd_ctrl_strip",
    "rtl/test/qwen_kv_die/tb_qkd_ctrl_pc.sv",
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_ctrl_pc/qkd_ctrl_pc-ks1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_ctrl_pc/qkd_ctrl_pc-ks2-fe58324a6"
   }
  ],
  "cycles_added": 0,

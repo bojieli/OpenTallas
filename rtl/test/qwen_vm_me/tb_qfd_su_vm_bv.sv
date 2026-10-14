@@ -19,6 +19,13 @@ module tb_qfd_su_vm_bv;
     parameter integer RTREE = 0;
     parameter integer LT = 0;
     parameter integer RD = 2;
+    // el1013-qwen-stalls: the memory under the master must answer at 1 + VL.  The flat banks answer at 1 + 7; the
+    // tiled banks (VMT = 1, RV / RO relays, in-tile relays) at 1 + 7 + SX (SX = 8 at RV = 1, RO = 2: production VL = 15).
+    // VL = 15 on the flat banks compared a 1 + 15 master with a 1 + 7 memory (qfd_su_lane_ml15 NEEDS_RTL: a bench
+    // configuration error, not RTL); the bench now builds the matching memory and refuses a VL the memory does not have.
+    parameter integer VMT = (VL > 7) ? 1 : 0;
+    parameter integer RV = 1;
+    parameter integer RO = 2;
     localparam integer AW = 24, NW = 18, VMN = 32768, HID = 4096;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
@@ -102,7 +109,7 @@ module tb_qfd_su_vm_bv;
     reg pw_v, pr_v; reg [AW-5:0] pw_row, pr_row; reg [511:0] pw_data;
     wire pr_rdy, pr_qv, m_xf, m_xh, m_wf, m_wh, m_ok; wire [511:0] pr_q; wire [15:0] m_land;
     ot_qfd_sp_vector_memory_bv #(.ELEMS(VMN), .NRB(16), .AW(AW), .SMIN(3), .SMAX(7), .XVM(12), .BMAX(4), .ND(9),
-        .DSET({8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0}), .SW(SW), .NSU(3), .NB(6), .MUT(VMUT)) vm (
+        .DSET({8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0}), .SW(SW), .NSU(3), .NB(6), .MUT(VMUT), .VMT(VMT), .RV(RV), .RO(RO)) vm (
         .clk(clk), .rst_n(rst_n), .me_en(1'b1), .x_dv(1'b0), .x_dc(24'd0), .x_dcs(24'd1), .x_dsp(4'd3), .x_q(),
         .x_rdy(), .x_fault(m_xf), .x_hazard(m_xh),
         .s_re0(d_re0), .s_re1(d_re1), .s_a0(d_a0), .s_a1(d_a1), .s_q(d_sq),
@@ -274,6 +281,7 @@ module tb_qfd_su_vm_bv;
     // master's idle leaves through its OS station and its go enters through IS, as the controller sees them
     integer lt_go = 0, r_lat = -1, d_lat = -1, r_sum = 0, d_sum = 0, lat_n = 0, d_min = 1 << 30, d_max = 0, r_min = 1 << 30, r_max = 0;
     initial begin
+        if (VL != 7 + vm.SX) begin $display("FAIL qfd_su_vm_bv CONFIG: master VL=%0d but the memory answers at 1 + %0d (VMT=%0d RV=%0d RO=%0d)", VL, 7 + vm.SX, VMT, RV, RO); $fatal(1); end
         seed = SEED; ops = 0; quiet = 0; bad = 0;
         for (hk = 0; hk < 7; hk = hk + 1) begin hr[hk] = 0; hd[hk] = 0; nr[hk] = 0; nd[hk] = 0; end
         vbad = 0; nwr = 0; nwd = 0; nrq = 0; ndq = 0; nre = 0; nde = 0; nlr = 0; nld = 0; ncr = 0; ncd = 0;
@@ -368,10 +376,13 @@ module tb_qfd_su_vm_bv;
         $display("SU_LAT ops=%0d ref_avg=%0d.%02d dut_avg=%0d.%02d delta_min=%0d delta_max=%0d ref_min=%0d ref_max=%0d (SW=%0d IS=%0d OS=%0d CRX=%0d VL=%0d)",
                  lat_n, r_sum / (lat_n ? lat_n : 1), (100 * r_sum / (lat_n ? lat_n : 1)) % 100, d_sum / (lat_n ? lat_n : 1),
                  (100 * d_sum / (lat_n ? lat_n : 1)) % 100, d_min, d_max, r_min, r_max, SW, IS, OS, CRX, VL);
-        if (vbad == 0 && bad == 0 && hbad == 0 && nr[4] > OPS && d_fault == r_fault && ops == OPS && !m_wf && !m_wh && !m_xf && !m_xh)
+        // vacuity floor on VM write events, in LANES (el1013: the old floor nr[4] > OPS was written at SW = 8, where an event is 8 lanes;
+        // at the production SW = 64 the same 120 ops make 76 events of 64 lanes = 4,864 lanes and every compare is exact, yet it printed FAIL):
+        // lanes written > 8 x OPS (one SW=8 row per op) and events > OPS / 2
+        if (vbad == 0 && bad == 0 && hbad == 0 && nr[4] * SW > OPS * 8 && nr[4] * 2 > OPS && d_fault == r_fault && ops == OPS && !m_wf && !m_wh && !m_xf && !m_xh)
             $display("PASS qfd_su_vm_bv SW=%0d IS=%0d OS=%0d CRX=%0d VL=%0d ops=%0d va/vb/vc/crom/vm/red/kv events %0d/%0d/%0d/%0d/%0d/%0d/%0d", SW, IS, OS, CRX, VL, ops, nr[0], nr[1], nr[2], nr[3], nr[4], nr[5], nr[6]);
         else
-            $display("FAIL qfd_su_vm_bv vm_answer_bad=%0d vm_mismatch=%0d port_streams_differing=%0d faults r%0d d%0d vm w_fault %0d w_hazard %0d ops=%0d", vbad, bad, hbad, r_fault, d_fault, m_wf, m_wh, ops);
+            $display("FAIL qfd_su_vm_bv vm_answer_bad=%0d vm_mismatch=%0d port_streams_differing=%0d faults r%0d d%0d vm w_fault %0d w_hazard %0d ops=%0d vm_write_events=%0d (floors: events x SW %0d > %0d lanes, events > %0d) x_fault %0d x_hazard %0d", vbad, bad, hbad, r_fault, d_fault, m_wf, m_wh, ops, nr[4], nr[4] * SW, OPS * 8, OPS / 2, m_xf, m_xh);
         $finish;
     end
 endmodule

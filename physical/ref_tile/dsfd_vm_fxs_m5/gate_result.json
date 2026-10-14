@@ -2,12 +2,12 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "dsfd_vm_fxs_m5",
  "verdict": "WARN",
- "generated": "2026-10-13T13:21:25-0700",
+ "generated": "2026-10-13T17:34:24-0700",
  "host": "ot-epyc4",
  "cts": true,
- "commit": "abbc001c0",
+ "commit": "d621c73fe",
  "clock": {
-  "max_root_sinks": 4690,
+  "max_root_sinks": 4674,
   "root": "port:ck[0]",
   "cts": true,
   "tt_insertion_ps": null,
@@ -19,7 +19,7 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "4,690 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "4,674 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
  },
  "items": [
   {
@@ -31,13 +31,13 @@
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 1653 um2 + macros 0 in core 4619: util 36%",
-   "fix": "set \"std_area_um2\": 1653 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 1647 um2 + macros 0 in core 4812: util 34%",
+   "fix": "set \"std_area_um2\": 1647 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 35.8% outside 45%-65% (std 1654 + macro 0 um2 in 4619 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 34.2% outside 45%-65% (std 1647 + macro 0 um2 in 4812 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   },
   {

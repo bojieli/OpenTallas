@@ -1762,7 +1762,15 @@ def case_real(m, work):
         (work / 'hop_gate.json').write_text(json.dumps(hg, indent=1) + '\n')
         print('OT_HOP_GATE %s max %.1f um bits>%g: %d bits>%g(SS): %d' % (hg['verdict'], hg['max_um'], HOP_GATE_UM,
               hg['bits_over_limit'], SS_REACH_UM, hg['bits_over_ss']), file=sys.stderr)
-        if hg['verdict'] != 'PASS':
+        hf_ = (hg.get('pair_check') or {}).get('hold_fail') or []
+        owed_ = [h_ for h_ in hf_ if h_['dst'].rsplit('.', 1)[0] not in (m.get('bound_views') or ())]
+        if hg['verdict'] != 'PASS' and not hg['bits_over_limit'] and hf_ and len(owed_) == len(hf_):
+            # s81-die v17: every forwarded hold race is on the CLOSED view of a capture master this die case does NOT bind
+            # (it is a placeholder here; its capture-edge re-route is on the contract's owed list): a tile defect that
+            # keeps the master unbound, not a property of this die plan.  A race on a BOUND view stops the generator.
+            print('OT_HOP_HOLD_OWED %d pairs on unbound capture masters: %s' % (len(hf_), ', '.join(
+                '%s %.1f' % (h_['dst'], h_['hold_ps']) for h_ in hf_)), file=sys.stderr)
+        elif hg['verdict'] != 'PASS':
             raise SystemExit(f'hop gate FAIL: {hg["bits_over_limit"]} bits over {HOP_GATE_UM} um (see {work}/hop_gate.json)')
     W, H = DIE
     # ot_mts::place rescans every placed macro per call (O(n^2): 8k of 24k instances in 31 min); the floorplan is
@@ -2765,6 +2773,7 @@ RSV_ALLOW = None               # the tag whose sites the relay being placed may 
 # right-lane bank / next station ran 517-713 um (768 g_xb / y_xb SS reach + 1,536 x0/x1 field mismatches: the x1 lane
 # took extra hop relays x0 did not).  The site sits on the station -> right bank / next-station path.  Default 0 = off.
 XB_RGAP = 0.0
+XB_RGAP_FIRST = False          # --xb-rgap-first (s81-die v17): the x relay site beside the slot station, the sequencer E of it
 CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
 COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
 COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
@@ -3475,6 +3484,14 @@ def build_r8(variant=None):
             if ln == 'R':
                 sx = x0 + LANE_W + R_CFGX
                 cx0, ro, so = sx + SEQ_WH[0] + 3.888, 'R0', 'MY'
+                rsx_ = cx0 - 3.888                       # --xb-rgap site: W edge (default: between sequencer and ROM 0)
+                if XB_RGAP and XB_RGAP_FIRST:
+                    # --xb-rgap-first (s81-die v17): slot station | x relay site | sequencer | ROMs.  The site stood E of
+                    # the sequencer, 64 um from the station: its relays (real views launch at o 222-229 ps: reach
+                    # 398-407 um) were 490 / 426 um from the next station's xai / xbi and 423-440 um from the left
+                    # bank.  Beside the station the same relays are 38 um closer to all three loads, and the
+                    # sequencer abuts ROM 0 again (its ROM nets no longer cross the site).
+                    rsx_, sx = sx - 3.888, sx + XB_RGAP
             else:
                 cx0, ro, so = x0 + 4.32, 'MY', 'R0'
                 sx = cx0 + (CFG_PER_PAIR - 1) * CFG_PITCH + rc['w'] + 3.888
@@ -3483,7 +3500,7 @@ def build_r8(variant=None):
                 RSV_RECTS.append((gx0 + XB_RGAP, sy + CFG_DY, cx0 + XB_RGAP + CFG_RGAP_AT * CFG_PITCH + CFG_RGAP,
                                   sy + CFG_DY + rc['h'], 'rt'))
             if XB_RGAP and ln == 'R':
-                RSV_RECTS.append((cx0 - 3.888 + 2.16, sy + CFG_DY, cx0 + XB_RGAP - 2.16, sy + CFG_DY + rc['h'], 'x'))
+                RSV_RECTS.append((rsx_ + 2.16, sy + CFG_DY, rsx_ + 3.888 + XB_RGAP - 2.16, sy + CFG_DY + rc['h'], 'x'))
             for j in range(CFG_PER_PAIR):
                 gx_ = (CFG_RGAP if (ln == 'R' and j >= CFG_RGAP_AT) else 0.0) + (XB_RGAP if ln == 'R' else 0.0)
                 insts.append(Inst(f'c{p}_{j}', rc['name'], cx0 + j * CFG_PITCH + gx_, sy + CFG_DY, rc['w'], rc['h'], ro,
@@ -4942,6 +4959,13 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
             groups.append((face, f'b{face.lower()}', ports))
     for face, tag, ports in groups:
         xc = sum(_q_port_xc(rq, q_) for q_ in ports) / len(ports)
+        if PIN_ALIGN:
+            # --pin-align: the bank stands under the EXTENT of its element pins (S bank: x0 / x1 / cfg / go pins span
+            # 226.1-284.6, the unweighted port-centroid mean put the 60.5-um bank at 213.8-274.3, 10 um short of x0)
+            xs_ = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for q_ in ports for n in real_ports_r8()[rq['name']][q_]
+                   if n in rq['pins']]
+            assert max(xs_) - min(xs_) <= 60.48 - SHAVE - 0.4, ('qbank narrower than its element pins', face, min(xs_), max(xs_))
+            xc = (min(xs_) + max(xs_)) / 2
         if mirror:
             xc = rq['w'] - xc
         w = 60.48
@@ -6647,6 +6671,11 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
         ry = g['ch_y'][t] + rowl + 15.0 + 50.0 * (i % 2)
         ly = lk.y + lk.h / 2
         lx = lk.x + lk.w if side == 'W' else lk.x
+        if PIN_ALIGN and not (LINK_SPLIT and lk.master == real_lef(SERDES_LEF)['name']):
+            # --pin-align: an un-split link macro (UCIe: 512 tx / rx pins over 823 um of its face) fans into ONE 25-um
+            # station pin group: up to 249 jog wires cross the gap between macro and station.  At the 5.5 / 8.6 um gap
+            # that is 1.43 / 0.92 of its tracks (FAIL); the end stations are aimed 26 um off the face (gap >= 14: <= 0.57).
+            lx += 26.0 if side == 'W' else -26.0      # the 36.7-um edge corridor starts 5 um off the face: +26 = gap >= 14
         if LINK_FIX:
             ly_t, ly_r = link_span_y(lk, 'tx'), link_span_y(lk, 'rx')
         else:
@@ -6806,6 +6835,108 @@ def _lay(M, face, ports, layer, start=None, gap=0.96, length=None, pitch=1):
 
 
 _LAY_K = [1]
+PIN_ALIGN = False               # --pin-align (s81-die v17): field-frame pins bit-aligned with their abutting peers
+FWD_NEGCAP = False              # --fwd-negcap (s81-die v17): forwarded-lane ENDS capture on the falling forwarded edge
+
+
+def _qbank_exact(m, Mx, it, face, ports):
+    """--pin-align: the element-side pins of a q bank at the EXACT x of the q element pin of the same bit (both M5, the
+    bank 2.4 um from the element face: every bit crosses straight).  The packed 1-track group centred on the bank was
+    up to 38.7 um beside its pin and interleaved against the element's field order (v16: 2,560 bundles, jog cut 2.5-3.6)."""
+    rq = real_lef(Q_LEF)
+    rp = real_ports_r8()[rq['name']]
+    e = m['_by']['e' + it.name[2:]]
+    assert it.orient == 'R0' and e.orient in ('R0', 'MY'), (it.name, it.orient, e.orient)
+    d_ = FACE_PIN_INSET
+    y0, y1 = (Mx.h - 0.192 - d_, Mx.h - d_) if face == 'N' else (d_, 0.192 + d_)
+    off = round(e.x - it.x, 3)
+    for o_ in m['insts']:           # one master: every instance must sit at the same offset from its element
+        if o_.master == it.master:
+            e2 = m['_by']['e' + o_.name[2:]]
+            assert round(e2.x - o_.x, 3) == off and e2.orient == e.orient, ('qbank offset differs', it.name, o_.name)
+    for p_, bits in ports:
+        nms = rp[p_[2:]]
+        assert len(nms) == bits, (it.master, p_, bits, len(nms))
+        rects = []
+        for i, n in enumerate(nms):
+            b = rq['pins'][n][1]
+            x = (b[0] + b[2]) / 2
+            x = off + (rq['w'] - x if e.orient == 'MY' else x)
+            assert 0.2 <= x <= Mx.w - 0.2, (it.master, p_, i, x)
+            rects.append((f'{p_}[{i}]', 'M5', (x - 0.012, y0, x + 0.012, y1)))
+        Mx.ports[p_] = ('rects', rects)
+        Mx.order.append(p_)
+
+
+_BV_SPAN = {}
+
+
+def _view_pin_span(m, o, port):
+    """(lo, hi, pitch in tracks) of instance o's pins of `port` along its N/S face, master frame: a bound view's LEF pins,
+    else the generated relay's centred 1-track group"""
+    if o.master in (m.get('bound_views') or ()):
+        k_ = (o.master, port)
+        if k_ not in _BV_SPAN:
+            t = bound_views()[o.master]['text']
+            xs = sorted((float(a) + float(c)) / 2 for a, c in re.findall(
+                r'PIN ' + re.escape(port) + r'(?:\[\d+\])?\s.*?RECT\s+([\d.]+)\s+[\d.]+\s+([\d.]+)\s+[\d.]+', t, re.S))
+            _BV_SPAN[k_] = (xs[0], xs[-1], max(1, round((xs[-1] - xs[0]) / max(1, len(xs) - 1) / 0.048))) if xs else None
+        return _BV_SPAN[k_]
+    return None
+
+
+def _abut_relay_fix(m, it, ports, face):
+    """--pin-align: {port: (centre, pitch)} for the ports of slot station `it` whose ONE load is a column relay standing
+    within 30 um of `face` with its in face toward the station: the station pins take the relay's pin x and pitch (v16:
+    sstn_e0c0sinf.xa / xb at 3 tracks beside 1-track relay pins 31-57 um off, 256 bundles FAIL; the relay order xa / xb
+    is swapped against the station's port order on that master)."""
+    out = {}
+    by = m['_by']
+    for p_, bits in ports:
+        pe = [(i_, q_) for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p_), []) for i_, q_ in eps_[1:]
+              if eps_[0][0] == it.name and i_ in by]
+        if len(pe) != 1 or by[pe[0][0]].kind != 'rly' or pe[0][1] != 'i':
+            continue
+        o = by[pe[0][0]]
+        fi = RLY_FACES.get(o.master, ('?', '?'))[0]
+        g_ = o.y - (it.y + it.h) if face == 'N' else it.y - (o.y + o.h)
+        if fi != dict(N='S', S='N')[face] or not (0.0 <= g_ <= 30.0) or o.orient != 'R0' or it.orient != 'R0':
+            continue
+        sp = _view_pin_span(m, o, 'i')
+        c_, pt_ = ((sp[0] + sp[1]) / 2, sp[2]) if sp else (o.w / 2, 1)
+        out[p_] = (o.x + c_ - it.x, pt_)
+    return out
+
+
+def _lay_fixed(Mx, face, ports, layer, pitch, fixed, gap=0.96):
+    """_lay with some ports pinned: `fixed` {port: (centre, pitch)} first, the others in order at `pitch` in the free
+    stretches of the face (left to right, stepping over the pinned groups)"""
+    p = TRK[layer][1]
+    L = Mx.h if face in 'EW' else Mx.w
+    sp = lambda b, pt: max(1, b) * p * pt
+    resv = []
+    for name, b in ports:
+        if name in fixed:
+            c_, pt_ = fixed[name]
+            w_ = sp(b, pt_)
+            assert 2 * p <= c_ - w_ / 2 and c_ + w_ / 2 <= L - 2 * p, (Mx.name, name, c_, w_, L)
+            assert all(c_ + w_ / 2 + gap <= r0 or c_ - w_ / 2 - gap >= r1 for r0, r1 in resv), (Mx.name, name, 'pinned groups overlap')
+            resv.append((c_ - w_ / 2, c_ + w_ / 2))
+    rest = [(n_, b) for n_, b in ports if n_ not in fixed]
+    tot = sum(sp(b, pitch) for _, b in rest) + gap * max(0, len(rest) - 1)
+    pos = max(2 * p + 0.2, (L - tot - sum(r1 - r0 + gap for r0, r1 in resv)) / 2)
+    placed = {}
+    for name, b in rest:
+        w_ = sp(b, pitch)
+        for r0, r1 in sorted(resv):
+            if pos < r1 + gap and pos + w_ > r0 - gap:
+                pos = r1 + gap
+        assert pos + w_ <= L - 2 * p, (Mx.name, face, name, 'no room beside the pinned groups')
+        placed[name] = (pos + w_ / 2, pitch)
+        pos += w_ + gap
+    for name, b in ports:           # port order kept (pin_rects / LEF order)
+        c_, pt_ = fixed[name] if name in fixed else placed[name]
+        Mx.face(name, b, face, layer, c_, pt_)
 
 
 def _peer_face(m, it, port):
@@ -6952,7 +7083,10 @@ def _faces_r8(m, Mx, it, ports):
         df = 'S' if ef == 'N' else 'N'
         el = [p_ for p_ in sorted(ports, key=_pnum) if p_[:2] in ('o_', 'e_')]
         dl = [p_ for p_ in sorted(ports, key=_pnum) if p_[:2] in ('i_', 'd_')]
-        _lay(Mx, ef, P_(el), 'M5', gap=0.0)
+        if PIN_ALIGN and _LAY_K[0] == 1:
+            _qbank_exact(m, Mx, it, ef, P_(el))
+        else:
+            _lay(Mx, ef, P_(el), 'M5', gap=0.0)
         _lay(Mx, df, P_(dl), 'M5', gap=0.0)
         _lay(Mx, 'W', P_(['ck', 'rs']), 'M4')
     elif kind == 'rly':
@@ -6967,9 +7101,20 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'E' if horiz else 'N', P_(['dq']), 'M4' if horiz else 'M5', gap=0.0)
         _lay(Mx, 'N' if horiz else 'W', P_(['ck']), 'M5' if horiz else 'M4')
     elif kind == 'sstn':
-        _lay(Mx, 'S', P_(['xai', 'xbi', 'cci', 'qt', 'so']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
-        _lay(Mx, 'N', P_(['e0', 'c0', 'cc', 'cct0', 'cct1', 'cct2', 'cct3', 'xa', 'xb', 'si', 'e1', 'c1']), 'M5',
-             pitch=3 if _LAY_K[0] == 1 else 2)
+        if XB_RGAP_FIRST and _LAY_K[0] == 1 and 'nf' not in ports:
+            # --xb-rgap-first: xai / xbi come from the previous slot's x relays, which stand beside that slot's station
+            # E edge: the two groups take the E end of the S face (xai outermost), cci / qt / so W of them
+            sl_ = P_(['cci', 'qt', 'so', 'xbi', 'xai'])
+            tot_ = sum(b_ * 0.144 for _, b_ in sl_) + 0.96 * (len(sl_) - 1)
+            _lay(Mx, 'S', sl_, 'M5', start=Mx.w - 0.6 - tot_, pitch=3)
+        else:
+            _lay(Mx, 'S', P_(['xai', 'xbi', 'cci', 'qt', 'so']), 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
+        nl_ = P_(['e0', 'c0', 'cc', 'cct0', 'cct1', 'cct2', 'cct3', 'xa', 'xb', 'si', 'e1', 'c1'])
+        fx_ = _abut_relay_fix(m, it, nl_, 'N') if PIN_ALIGN and _LAY_K[0] == 1 else {}
+        if fx_:
+            _lay_fixed(Mx, 'N', nl_, 'M5', 3, fx_)
+        else:
+            _lay(Mx, 'N', nl_, 'M5', pitch=3 if _LAY_K[0] == 1 else 2)
         _lay(Mx, 'W', P_(['ck', 'rs']), 'M4')
         _lay(Mx, 'E', P_(['nf']), 'M4')
     elif kind == 'node':
@@ -6979,8 +7124,20 @@ def _faces_r8(m, Mx, it, ports):
         nface = [s_ for s_, lf in (('b', lb),) if not lf] + ['fi'] + (['o'] if up_ else [])
         # S81-DIE region DRT (m221pq PQ root-row strip): 132 M5 Lef58EolKeepOut between adjacent 1-track node pins
         # (n_rt_* tree words): the N / S faces are laid at 2 tracks under --pq-place
-        _lay(Mx, 'S', P_(sface), 'M5', pitch=2 if PQ_PLACE else 1)
-        _lay(Mx, 'N', P_(nface), 'M5', pitch=2 if PQ_PLACE else 1)
+        if PIN_ALIGN:
+            # --pin-align: FIXED slots on both faces, so every abutted pair of the node stack (gap 0.312 um) meets bit for
+            # bit: child o <-> parent a / b at cA, the fault chain fo (S) <-> fi (N) at cF, a node's own o toward its
+            # relay at cB.  The centred per-face packing put each port where the OTHER ports of its face left it:
+            # o <-> a 1.06 um, o <-> b 4.70 um, fo <-> fi 3.65-7.30 um off (v16: 3,968 abutted bundles FAIL).
+            cA, cF, cB = Mx.w / 2 - 12.0, Mx.w / 2, Mx.w / 2 + 12.0
+            pt_ = 2 if PQ_PLACE else 1
+            for f_, lst_ in (('S', sface), ('N', nface)):
+                for s_, b_ in P_(lst_):
+                    c_ = cF if s_ in ('fo', 'fi') else cA if (s_ in ('a', 'b') or mst[10] == 'L') else cB
+                    Mx.face(s_, b_, f_, 'M5', c_, pt_)
+        else:
+            _lay(Mx, 'S', P_(sface), 'M5', pitch=2 if PQ_PLACE else 1)
+            _lay(Mx, 'N', P_(nface), 'M5', pitch=2 if PQ_PLACE else 1)
         _lay(Mx, 'E', P_(['clk', 'rst_n']), 'M4')
     elif kind == 'xstg':           # placed beside the band block: R0 east of it, MY west of it -> o faces the block
         _lay(Mx, 'W', P_(['o']), 'M4', gap=0.0)
@@ -7016,6 +7173,32 @@ def _faces_r8(m, Mx, it, ports):
             need = sum(max(1, math.ceil(b / K)) * K * 0.048 + max(0.144, 0.0576 * K) for _, b in lst) + 1.0
             if need > L:
                 raise ValueError(f'{Mx.name}: face {f} needs {need:.1f} um > {L:.1f}')
+            if PIN_ALIGN and K == 1:
+                # --pin-align: a port whose peers are all stations stands on the stations' pin group, the other ports of
+                # the face around it (v16: hr_E3.o packed first on a face it shares with 11 lane inputs, 110 um beside
+                # its first station f_hr_E3_o_1 across a 37.9-um gap: 761 jog wires, cut 0.64, 147.9 um pin to pin
+                # against the pair reach of 92.9 um)
+                fx_ = {}
+                for p1_, b1_ in lst:
+                    pe_ = {i_ for _b, _c, _w, eps_ in m['_nets_of'].get((it.name, p1_), []) for i_, _q in eps_
+                           if i_ != it.name and i_ in m['_by']}
+                    if b1_ >= 64 and pe_ and all(m['_by'][i_].kind in ('hstn', 'stn', 'xstg') for i_ in pe_) and \
+                            ports[p1_][0] == 'output':
+                        bw_ = b1_ * 0.048
+                        c_ = min(max(_peer_pos(m, it, p1_, f), bw_ / 2 + 0.4), L - bw_ / 2 - 0.4)
+                        if all(abs(c_ - c2_) >= (bw_ + ports[q_][1] * 0.048) / 2 + 0.3 for q_, (c2_, _p) in fx_.items()):
+                            fx_[p1_] = (c_, 1)
+                if fx_ and len(fx_) < len(lst):
+                    try:
+                        _lay_fixed(Mx, f, lst, 'M4' if f in 'EW' else 'M5', 1, fx_, gap=0.144)
+                        continue
+                    except AssertionError:
+                        for q_ in [q_ for q_, _b in lst if q_ in Mx.ports]:      # no room around the pinned port: packed as before
+                            del Mx.ports[q_]; Mx.order.remove(q_)
+                elif fx_:
+                    (p1_, (c_, _p)), = fx_.items()
+                    Mx.face(p1_, ports[p1_][1], f, 'M4' if f in 'EW' else 'M5', c_, 1)
+                    continue
             _lay(Mx, f, lst, 'M4' if f in 'EW' else 'M5', gap=0.0)
     elif kind == 'bf' and BF_HIER:   # dsfd_bf_front: x stream N, control S, column interfaces W / E (abutted)
         _lay(Mx, 'N', P_(['x0', 'x1']), 'M5', pitch=1)
@@ -7411,7 +7594,11 @@ def glue_rtl(m):
                      '    // every data output from a flop, the overrun check in the write domain (sticky, synchronised)',
                      '    assign co = ck;          // column clock-tree root (option C region root)',
                      '    assign rs = rsync;',
-                     '    reg [565:0] xi; always @(posedge xf[0]) xi <= xd;',
+                     ('    // --fwd-negcap: the lane station launches xd on the RISING edge of xf (it captures on negedge fi and\n'
+                      '    // forwards the inverted clock): xd is captured on the FALLING edge = a half-cycle path, as station ->\n'
+                      '    // station (posedge capture = the launch instant: full-cycle setup, zero-cycle hold, FF -206 ps)\n'
+                      '    reg [565:0] xi; always @(negedge xf[0]) xi <= xd;' if FWD_NEGCAP else
+                      '    reg [565:0] xi; always @(posedge xf[0]) xi <= xd;'),
                      f'    reg [1:0] sti; always @(posedge {rk}) sti <= st;',
                      '    wire xv, wl, rl, wf, rf_, wr; wire [563:0] xq;',
                      f'    ot_meso_fifo #(.W(564), .ENABLE(1\'b1){MESO_P()}) u_x (.wclk(xf[0]), .wrst_n(xi[0]), .w_v(xi[1]), .w_rdy(wr), '
@@ -7475,11 +7662,19 @@ def glue_rtl(m):
                 base, lv, fl = 0, [], []
                 for j, pw in enumerate(lanes):
                     vr = fmt == 'vr'
+                    dn_ = f'di{j}'
+                    if FWD_NEGCAP:
+                        # the lane's last station launches di on the RISING edge of fi (negedge capture + inverted
+                        # forward): a pin register on the FALLING edge makes the end a half-cycle hop like every station;
+                        # the FIFO write (posedge fi) then takes it half a cycle later = the same write edge as before
+                        dw_ = pw + 2 if vr else pw
+                        body.append(f'    reg [{dw_ - 1}:0] dq{j}; always @(negedge fi{j}[0]) dq{j} <= di{j};   // pin register, falling forwarded edge')
+                        dn_ = f'dq{j}'
                     if vr:
-                        wr, wv, wd = f'di{j}[0]', f'di{j}[1]', f'di{j}[{pw + 1}:2]'
+                        wr, wv, wd = f'{dn_}[0]', f'{dn_}[1]', f'{dn_}[{pw + 1}:2]'
                     else:
                         body.append(_sync(f'wrs{j}', f'fi{j}[0]', 'rs[0]'))
-                        wr, wv, wd = f'wrs{j}', "1'b1", f'di{j}[{pw - 1}:0]'
+                        wr, wv, wd = f'wrs{j}', "1'b1", f'{dn_}[{pw - 1}:0]'
                     body.append(f'    wire rv{j}, rl{j}, wf{j}, rf{j}; wire [{pw - 1}:0] rq{j};')
                     if kind == 'm2l':
                         body.append(f'    ot_meso_fifo #(.W({pw}), .ENABLE(1\'b1){MESO_P()}) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), '
@@ -7525,7 +7720,8 @@ def plan_record_r8(m):
     xs, rs = m.get('x_stages', {}), m.get('r_stages', {})
     mc = 4 if MESO_D8 else 2
     hf = m.get('hop_fix', {}).get('fwd_rt_add', 0)
-    hf += 2 if CFIFO_V2 else 0              # cfifo v2: xd pin register + output register
+    hf += (1 if FWD_NEGCAP else 2) if CFIFO_V2 else 0   # cfifo v2: xd pin register + output register (--fwd-negcap: the pin
+    #                                                     register is on the falling edge, the FIFO writes half a cycle later)
     rt = {r: xs.get(r, 0) + mc + (f['last_slot'] + 1) + 1 + f.get('ret_stages', 0) + rs.get(r, 0) + mc
           + f.get('bank_stages', 0) + f.get('relay_x', 0) + f.get('relay_ret', 0) + hf for r, f in fr.items()}
     far = max(rt, key=rt.get)
@@ -7782,6 +7978,13 @@ def die_options(ap):
                     'the HC corridor (facing the VM rows of order A) instead of the floor slot')
     ap.add_argument('--hop-r-hub', type=float, default=0.0, help='s81-die v16: hop-fix planner reach (um) of the hub-bus '
                     'bridges; default = --hop-r-cc')
+    ap.add_argument('--xb-rgap-first', action='store_true', help='s81-die v17: the --xb-rgap relay site stands beside the slot '
+                    'station (station | site | sequencer | ROMs) and the station takes xai / xbi at the E end of its S face')
+    ap.add_argument('--pin-align', action='store_true', help='s81-die v17: q-bank pins at the q element pin of the same bit, '
+                    'return-tree node pins in fixed slots (abutted stack bit-aligned), slot-station xa / xb on the pins of '
+                    'their abutting column relay (pin_align gate: 0 FAIL in the field frames)')
+    ap.add_argument('--fwd-negcap', action='store_true', help='s81-die v17 glue RTL: the ends of a forwarded lane (dsfd_cfifo xd, '
+                    'm2l / r2l end relays di<j>) capture on the falling forwarded-clock edge (half-cycle hop, as the stations)')
     ap.add_argument('--peer-pin-pos', action='store_true', help='s81-die v16: a slab port stands on the pin group of its '
                     'station / link-end peer (laid first), not on the peer outline centre')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
@@ -7879,6 +8082,11 @@ def apply_options(a):
     global WFC_PRICED, PEER_PIN_POS, HOP_R_HUB
     HOP_R_HUB = float(getattr(a, 'hop_r_hub', 0.0) or 0.0)
     PEER_PIN_POS = bool(getattr(a, 'peer_pin_pos', False))
+    global PIN_ALIGN, FWD_NEGCAP
+    PIN_ALIGN = bool(getattr(a, 'pin_align', False))
+    global XB_RGAP_FIRST
+    XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
+    FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
     assert not WFC_PRICED or (WFC_KIT and not getattr(a, 'wfc_crp', False)), '--wfc-priced: the --wfc-kit stage / source kit (not --wfc-crp)'
     global WFC_CRP, STAGE_SEQ
