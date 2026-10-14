@@ -95,3 +95,43 @@ clock-gating signal. Producer address/context binding, source freshness,
 clear/drain, registered global admission, physical leaf/master bindings and
 whole-layer throughput are still required. No complete native tile or die
 qualification is claimed by this composition.
+
+Fast address and actual cached-parent followup
+---------------------------------------------
+
+Immutable20bd00eaa fast-address source now passes the same native gate and
+raw split diagnostic with high24-bit wrap values xbase=FED123, xks=C7D8E9,
+xjs=ABCDE7 and xcs=FACE91. The slow canonical reference remains the independent
+full-address oracle. A split-mask off-by-one mutation and a16-bit stride clamp
+both fail request/epoch comparison; cache-row and extra-XL-edge mutants fail
+arithmetic. Evidence is results/rtl/qwen_xcache_fast_1013, admitted EPYC4 unit
+oth-ubuntu-319263-1791954435, exit0.
+
+Immutable7cbe00c33 adds a direct instantiation of ot_qwen_tile_tp8_cached,
+including its real RPS0 hard-ROM rpair interface and indexed cache imported
+from that same commit. The synchronous bench macro implements deterministic
+INT8 data on both sides. All25 production child clocks plus the cache response
+clock share one simulation enable; loader clock remains live. Native680-output
+and raw-split936-output gates pass. Adjacent-cache-row and actual parent
+x_response word-rotation mutations fail arithmetic. Evidence is
+results/rtl/qwen_xcache_parent_1013, admitted EPYC4 unit
+oth-ubuntu-330754-1791955589, exit0. This proves the candidate parent wiring
+under the stated simulation clock contract, and closes none of the global
+protocol, physical or native performance obligations above.
+
+Reproduction, inside an isolated checkout containing these files:
+
+```sh
+python3 tools/qwen_kv_die/xcache_actual_tile_bench.py --parent-commit 20bd00eaa --native-tp8 --prepare-only --workdir /tmp/xcache-fast
+cp tools/qwen_kv_die/xcache_fast_gate.py /tmp/xcache-fast/run.py
+python3 tools/qwen_kv_die/xcache_parent_prepare.py --parent-commit 7cbe00c33 --workdir /tmp/xcache-parent
+cp tools/qwen_kv_die/xcache_parent_gate.py /tmp/xcache-parent/run.py
+```
+
+Transfer each prepared directory to the admitted EPYC scratch directory, then
+run its run.py only through ot-run. Fast gate uses --mem48 --threads24; parent
+gate uses --mem32 --threads16. Each runner checks the expected failure reason
+and records exact mutant source hashes. Logs and manifests are archived;
+generated build directories are excluded. These fixtures use deterministic
+operands and drain between instructions; they do not supply whole-layer Qwen
+operands, golden token results or a qualified back-to-back instruction scheduler.

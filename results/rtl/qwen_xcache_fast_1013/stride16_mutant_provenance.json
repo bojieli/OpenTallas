@@ -1,0 +1,6 @@
+{
+  "mutation": "stride16_mutant",
+  "before": "(xcs_r << xab)",
+  "after": "((xcs_r & 24'h00FFFF) << xab)",
+  "sha256": "433751abc149193f2b20adeb59d677d180db1f8257e67c8c4ddacb64e4536981"
+}
