@@ -5,6 +5,8 @@
   "actual_internal_bus_joins": 74,
   "judged_bits": 13411,
   "noarc_bits": 2,
+  "physically_resolved_noarc_bits": 2,
+  "unresolved_noarc_bits": 0,
   "fail_bits": 0,
   "min_setup_ps": 90.8847,
   "min_hold_ps": 31.0819,
@@ -1194,11 +1196,5 @@
       "fail_bits": 0
     }
   ],
-  "route_admission": false,
-  "noarc_physical_proof": "noarc_physical_proofs.json",
-  "unresolved_noarc_bits": 0,
-  "constant_launch_bits": 1,
-  "unused_capture_bits": 1,
-  "all_actual_internal_source_joins_accounted": true,
-  "clock_relation_scope": "Conditional requested common phi with per-corner phi-R; actual named whole-field clock source graph remains pending"
+  "route_admission": false
 }

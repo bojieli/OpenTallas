@@ -10,7 +10,6 @@ import hashlib
 import json
 from pathlib import Path
 import native_comb_seams as S
-import native_actual_family_screen as F
 import sys
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/hier_contract'))
@@ -18,7 +17,7 @@ import pinreg_audit as A
 import pair_check as P
 
 
-def screen(plan, joins, manifest, out):
+def screen(plan, joins, manifest, out, proofs=None):
     leaves={l['instance']:l for l in plan['instances']};geometry={};metrics={};refs={}
     for name,l in leaves.items():
         if l.get('pin_assignment'):
@@ -65,16 +64,31 @@ def screen(plan, joins, manifest, out):
             rows.append(row);bucket.append(row)
         judged=[r for r in bucket if 'setup_ps' in r]
         groups.append({'a':join['a'],'b':join['b'],'bits':len(bucket),'judged_bits':len(judged),'noarc_bits':len(bucket)-len(judged),'min_setup_ps':min((r['setup_ps'] for r in judged),default=None),'min_hold_ps':min((r['hold_ps'] for r in judged if r['hold_ps'] is not None),default=None),'fail_bits':sum(r['status']=='fail' for r in bucket)})
+    proof_map={}
+    for proof in (proofs or {}).get('proofs',[]):
+        assert proof.get('source_odb_sha256') and len(proof['source_odb_sha256'])==64
+        proof_map[(tuple(proof['a']),tuple(proof['b']))]=proof
+    resolved=0
+    for row in rows:
+        if not row['status'].startswith('NOARC'):continue
+        proof=proof_map.get((tuple(row['a']),tuple(row['b'])))
+        if proof is None:continue
+        if proof['status']=='ACTUAL_CONSTANT_HIGH_LAUNCH':
+            assert row['launch_arc'] is None and proof['actual_output_driver']['master'].startswith('TIEHI')
+        elif proof['status']=='ACTUAL_UNUSED_CAPTURE':
+            assert row['capture_arc'] is None and proof['actual_input_iterm_loads']==0
+        else:raise AssertionError('Unsupported physical noarc proof')
+        row['status']=proof['status'];row['physical_proof']=proof;resolved+=1
     out.mkdir(parents=True,exist_ok=True)
     with gzip.open(out/'internal_actual_bit_rows.json.gz','wt') as f:json.dump(rows,f,separators=(',',':'))
     judged=[r for r in rows if 'setup_ps' in r]
     summary={'schema':'opentallas.s81.native_hc_actual_source_bit_screen.v1','status':'CONDITIONAL common-phi per-corner phi-R request only; full external/source/reset/routed checks remain',
              'actual_internal_bits':len(rows),'actual_internal_bus_joins':len(groups),'judged_bits':len(judged),
-             'noarc_bits':len(rows)-len(judged),'fail_bits':sum(r['status']=='fail' for r in rows),
+             'noarc_bits':len(rows)-len(judged),'physically_resolved_noarc_bits':resolved,'unresolved_noarc_bits':len(rows)-len(judged)-resolved,'fail_bits':sum(r['status']=='fail' for r in rows),
              'min_setup_ps':min(r['setup_ps'] for r in judged),'min_hold_ps':min(r['hold_ps'] for r in judged if r['hold_ps'] is not None),
              'groups':groups,'route_admission':False}
     (out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
     print(json.dumps({k:v for k,v in summary.items() if k!='groups'},indent=2))
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--plan',type=Path,required=True);p.add_argument('--joins',type=Path,required=True);p.add_argument('--manifest',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();screen(json.loads(a.plan.read_text()),json.loads(a.joins.read_text()),json.loads(a.manifest.read_text()),a.out)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--plan',type=Path,required=True);p.add_argument('--joins',type=Path,required=True);p.add_argument('--manifest',type=Path,required=True);p.add_argument('--proofs',type=Path);p.add_argument('--out',type=Path,required=True);a=p.parse_args();screen(json.loads(a.plan.read_text()),json.loads(a.joins.read_text()),json.loads(a.manifest.read_text()),a.out,json.loads(a.proofs.read_text()) if a.proofs else None)
