@@ -398,7 +398,7 @@ def clock_delivery(lat, pin_master, masters, libs, by, vroot):
                              spread_tt_ps=round(tt['max'] - tt['min'], 1), source='insertion.json boundary mean',
                              file=str(ij.relative_to(vroot)) if ij.is_relative_to(vroot) else str(ij))
             if 'R_tt_ps' not in t and view != 'interim':
-                pn = pin.split('/')[1].split('[')[0]
+                pn = pin.split('/')[1]
                 v = pin_insertion(mst, pn, libs)
                 if v:
                     t.update(R_tt_ps=round(v[2], 1), source='ESTIMATED: ETM min/max_clock_tree_path midrange over all sinks '
@@ -461,9 +461,32 @@ def pin_tree_insertion(lib, pin):
     if key not in _TREE_INS:
         t = Path(lib).read_text(errors='ignore') if lib and Path(lib).exists() else ''
         out = {}
-        pm = re.search(r'pin\(\s*"?%s(?:\[0\])?"?\s*\)\s*\{(.*?)\n    \}' % re.escape(pin), t, re.S)
+        names = [pin] if '[' in pin else [pin,pin+'[0]']
+        if pin.endswith('[0]'):
+            names.append(pin[:-3])
+        body = ''
+        for name in names:
+            pm = re.search(r'\bpin\s*\(\s*"?%s"?\s*\)\s*\{' % re.escape(name),t)
+            if not pm:
+                continue
+            start,depth = pm.end(),1
+            quoted,escaped = False,False
+            for end in range(start,len(t)):
+                ch=t[end]
+                if escaped:
+                    escaped=False
+                elif ch=='\\' and quoted:
+                    escaped=True
+                elif ch=='"':
+                    quoted=not quoted
+                elif not quoted:
+                    depth += (ch=='{')-(ch=='}')
+                    if depth==0:
+                        body=t[start:end]
+                        break
+            break
         for tm in re.finditer(r'timing_type\s*:\s*(min|max)_clock_tree_path\s*;.*?cell_rise\s*\([^)]*\)\s*\{[^}]*?values\(\s*"\s*([\d.]+)',
-                              pm.group(1) if pm else '', re.S):
+                              body, re.S):
             out[tm.group(1)] = float(tm.group(2))
         _TREE_INS[key] = out
     return _TREE_INS[key]
@@ -498,7 +521,7 @@ def sta_latency_lines(lat, pin_master, libs, corner, ci):
     """
     lines, correction = [], {}
     for pin, v in sorted(lat.items()):
-        mst, port = pin_master[pin], pin.split('/')[1].split('[')[0]
+        mst, port = pin_master[pin], pin.split('/')[1]
         lp = libs[corner].get(mst, (None,))[0]
         tree = pin_tree_insertion(lp, port) if lp else {}
         pins = f'[get_pins -quiet {{{pin} {pin}[0]}}]'
@@ -535,7 +558,7 @@ def balance_latency(lat, pin_master, masters, mi, libs=None, group=None, parts=N
     # (the colck cfifo) were already balanced per pin.
     pin_ins, per_pin = {}, {}
     for k_ in lat:
-        mst, pn = pin_master[k_], k_.split('/')[1].split('[')[0]
+        mst, pn = pin_master[k_], k_.split('/')[1]
         if masters.get(mst, {}).get('view', 'interim') != 'interim':
             if (mst, pn) not in per_pin:
                 per_pin[(mst, pn)] = pin_insertion(mst, pn, libs)
