@@ -48,7 +48,8 @@
       "u_ep.u_ad.u_cmd.u_fifo.wr_domain_rst_n",
       "u_ep.u_ad.u_cmd.u_fifo.rd_domain_rst_n",
       "u_ep.u_ad.u_done.u_fifo.wr_domain_rst_n",
-      "u_ep.u_ad.u_done.u_fifo.rd_domain_rst_n"
+      "u_ep.u_ad.u_done.u_fifo.rd_domain_rst_n",
+      "rso_q: registered conjunction of adapter/FIFO releases; async rn assertion clears"
     ]
   },
   "ideal_aligned_release_edges_only": {
@@ -85,7 +86,7 @@
     "read_latency_edges": 14,
     "data_return_bits": 576,
     "data_pipeline_cycles": 1,
-    "validation": "read13 exact/cost/ACK/return-skew passed before added registered ACK output; fresh ACK proof pending",
+    "validation": "read13 exact/cost/ACK/return-skew PASS; read14 registered ACK exact and both final-state mutants PASS; new physical views/pins remain open",
     "ack_boundary": "rso_q registered actual adapter/FIFO final release; async rn assertion clears; adds one local ACK edge"
   }
 }
