@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   698 GB (avail 925, growth 117, headroom 48, waiters 0/0 GB) load 23/128 running 18 disk 1166 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1137932-1791965115 after 0 s
+operand events ref 282 dut 282
+lane-out events 282 / 282, crom events 195 / 195
+SU_LAT ops=119 ref_avg=94.07 dut_avg=177.99 delta_min=36 delta_max=413 ref_min=22 ref_max=172 (SW=64 IS=1 OS=1 CRX=2 VL=7)
+SU_COMPONENT_CYCLES benchmark_cyc=212 accepted=120 samples=119 ref_sum=11195 dut_sum=21181
+PASS qfd_su_vm_bv SW=64 IS=1 OS=1 CRX=2 VL=7 ops=120 va/vb/vc/crom/vm/red/kv events 242/149/160/195/76/214/81
+- rtl/test/qwen_vm_me/tb_qfd_su_vm_bv_acc_align.sv:390: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 27us; walltime 699.458 s; speed 38.536 ns/s
+- Verilator: cpu 699.406 s on 1 threads; allocated 254 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1137932-1791965115): exit 0

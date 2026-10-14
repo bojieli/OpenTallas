@@ -67,5 +67,32 @@
     "runner_exit": 0
   },
   "benchmark_cyc_warning": "Printed benchmark_cyc=177 is the reused DRAIN loop index, not total cycles. Exact sampled latency sums are independently valid. No native program or total-cycle price claim.",
-  "qualification": "Actual accepted-command SU source-derived randomized memory/RAW comparison for default and two4lane alignment children. Synchronous functional clocks only. Full64/sixteen children+regional proof remains pending; separate standalone64 equation comparison+two mutants already preserved."
+  "qualification": "Actual source-derived accepted-command SW8 default/child and SW64 sixteen alignment children plus regional reducer/pending guard composition, real banked VM final memory/RAW comparison. Functional clocks tied only, no native27word image/weights execution, physical phase/slot/root/route qualification or accepted native price.",
+  "sw64_regional": {
+    "SW": 64,
+    "ALIGN_ENTRIES": 1,
+    "RED_ENTRIES": 1,
+    "ops": 120,
+    "accepted_ops": 120,
+    "events": [
+      242,
+      149,
+      160,
+      195,
+      76,
+      214,
+      81
+    ],
+    "operand_events": 282,
+    "lane_events": 282,
+    "sampled_ops": 119,
+    "ref_latency_sum": 11195,
+    "dut_latency_sum": 21181,
+    "ref_average_cycles": 94.07,
+    "dut_average_cycles": 177.99,
+    "delta_min": 36,
+    "delta_max": 413,
+    "runner_exit": 0,
+    "drain_loop_index_not_total": 212
+  }
 }
