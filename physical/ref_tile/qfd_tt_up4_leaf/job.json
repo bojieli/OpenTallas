@@ -1,5 +1,5 @@
 {
- "name": "qfd_tt_up4_leaf-lf1-COMMIT",
+ "name": "qfd_tt_up4_leaf-lf1-421afad00",
  "block": "ot_qfd_band_upper",
  "ref_tile": true,
  "owner": "Claude:el1013-qwen-small-masters",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/el1013-qwen-sm-r2",
-  "commit": "COMMIT",
+  "commit": "421afad00",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
@@ -158,7 +158,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tt_up4_tp8/qfd_tt_up4_leaf-lf1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tt_up4_tp8/qfd_tt_up4_leaf-lf1-421afad00"
   }
  ],
  "cycles_added": 0,
