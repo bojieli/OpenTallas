@@ -58,6 +58,93 @@ def hc_arg(kind, base, gsel=0, quant=0, yout=0):
     return (kind << 20) | (gsel << 18) | (yout << 15) | (quant << 14) | base
 
 
+def sched_est(n, a):
+    """duration estimate of a program node for the SU schedule search (bench shapes: measured where the engine is real)"""
+    if n['eng'] == 'hc':
+        kind = (n['arg'] >> 20) & 7
+        return {0: 20 if a.h_stream else 336, 1: 387, 2: 17, 3: 45, 4: 713, 5: 176}[kind]
+    if n['eng'] == 'fld':
+        return 125
+    if n['eng'] == 'coll':
+        return 452 if 'allreduce' in n['id'] else 100
+    return max(n['dur'], 1)
+
+
+def sched_sim(nodes, ports, a, land=641):
+    """in-order engines: every port runs its list in order, one job at a time; returns (start, end) or None (deadlock)"""
+    pos = {p: 0 for p in ports}
+    free = {p: 0 for p in ports}
+    st, en = {}, {}
+    left = sum(len(v) for v in ports.values())
+    while left:
+        moved = False
+        for p, lst in ports.items():
+            while pos[p] < len(lst):
+                n = nodes[lst[pos[p]]]
+                if any(q not in en for q in n['preds']):
+                    break
+                post = n['eng'] == 'hc' and ((n['arg'] >> 20) & 7) == 3
+                cp = [q for q in n['preds'] if nodes[q]['eng'] == 'coll'] if post else []
+                t = max([free[p]] + [en[q] for q in n['preds'] if q not in cp] + [st[q] + 40 for q in cp]
+                        + ([land] if not n['preds'] and n['eng'] != 'hc' else []))
+                e = (max([t] + [en[q] for q in cp]) if post else t) + sched_est(n, a)
+                st[n['id']], en[n['id']] = t, e
+                free[p] = e
+                pos[p] += 1
+                left -= 1
+                moved = True
+        if not moved:
+            return None
+    return st, en
+
+
+def su_schedule(nodes, a, sink):
+    """local search on the SU port's order (insertion moves); objective (layer end, sum of ends)"""
+    base = sorted(nodes.values(), key=lambda n: n['order'])
+    # the present program order: Kahn with the source order as the tie break
+    prog, done = [], set()
+    while len(prog) < len(base):
+        ready = [n for n in base if n['id'] not in done and all(q in done for q in n['preds'])]
+        n = min(ready, key=lambda x: x['order'])
+        prog.append(n['id']); done.add(n['id'])
+    ports = {}
+    for i in prog:
+        ports.setdefault(nodes[i]['port'], []).append(i)
+
+    def cost(ps):
+        r = sched_sim(nodes, ps, a)
+        return None if r is None else (r[1][sink], sum(r[1].values()))
+    best = cost(ports)
+    c0 = best
+    su = list(ports.get(1, []))
+    improved = True
+    while improved:
+        improved = False
+        for j in range(len(su)):
+            for i in range(len(su)):
+                if i == j:
+                    continue
+                t = list(su)
+                t.insert(i, t.pop(j))
+                c = cost({**ports, 1: t})
+                if c is not None and c < best:
+                    best, su, improved = c, t, True
+    ports[1] = su
+    st, _ = sched_sim(nodes, ports, a)
+    rank = {i: k for k, i in enumerate(sorted(prog, key=lambda i: (st[i], prog.index(i))))}
+    # the SU port keeps the searched order whatever the ties: its ranks are re-spread in that order
+    slots = sorted(rank[i] for i in su)
+    for k, i in enumerate(su):
+        rank[i] = slots[k]
+    for i in prog:
+        nodes[i]['order'] = rank[i]
+    return dict(layer_end_before=c0[0], layer_end_after=best[0], su_order_before=ports_before_su(prog, nodes), su_order_after=su)
+
+
+def ports_before_su(prog, nodes):
+    return [i for i in prog if nodes[i]['port'] == 1]
+
+
 def partition(y):
     """4 binary32 partials of each y word whose every subset sum is exact: significand bits dealt round-robin."""
     b = HG.u32(y).astype(np.int64)
@@ -105,6 +192,11 @@ def main():
                     'COEF-a is issued BEFORE the H_LOAD (its row is present at the job start, so its VM read hides '
                     'under the landing) and the H_LOAD carries no VM dependency; on an Engram layer eng.add writes the '
                     'post-Engram h to its own rows (EH_BASE) and the H_LOAD reads those through the VM as before')
+    ap.add_argument('--su-sched', action='store_true', help='order the SU port (an in-order, one-job engine) by a '
+                    'schedule search instead of the golden ASAP start order: the committed programs list SU jobs by '
+                    'their start on an engine of unlimited concurrency, so a critical SU job queues behind long '
+                    'off-critical ones (kv_rope_qdq before q_rope, the shared-expert jobs before swiglu).  The search '
+                    'simulates every in-order port with duration estimates and moves SU jobs while the layer end improves')
     ap.add_argument('--seed', type=int, default=11)
     ap.add_argument('--programs', type=Path, default=ROOT / 'results/rtl/s81_ctrl_20261008/programs')
     a = ap.parse_args()
@@ -240,6 +332,7 @@ def main():
         else:
             add(nm, o['port'], o['dur'], preds, eng=o['eng'], order=i)
     add(f'{L}.hc.h_store', HC_PORT, 0, [f'{L}.ffn.hc_post'], hc_arg(1, S_BASE), eng='hc', order=1e9)
+    sched = su_schedule(nodes, a, f'{L}.hc.h_store') if a.su_sched else None
     # Kahn, ties broken by the source program order
     prog, done = [], set()
     while len(prog) < len(nodes):
@@ -307,7 +400,7 @@ def main():
     meta = dict(layer=a.layer, ng=a.ng, ops=len(prog), field_phases=nph, coll_messages=msgs, coll_records=len(own),
                 y_words=len(ygold), exp_rows=len(run.exp), hstore_rows=nst, golden_checks_vs_pickle=4,
                 program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'], preds=o['preds']) for k, o in enumerate(prog)],
-                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream))
+                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream), su_sched=sched)
     if fx is not None:
         meta.update(chain_fixture_sha256=HG.sha(a.chain), chain_schema=fx['schema'], chain_checks=fx['checks'],
                     shard=fx['shard'], shard_sha256=fx['shard_sha256'], golden_checks_vs_pickle=0,
