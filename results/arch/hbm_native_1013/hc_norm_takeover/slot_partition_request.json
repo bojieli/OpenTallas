@@ -169,7 +169,7 @@
         }
       },
       "ownlogic_clock_API": {
-        "source_commit": "fe03391e3",
+        "source_commit": "8100796b3",
         "separate_lane_roots": 32,
         "quarter_roots": 4,
         "cat_roots": 4,
@@ -177,7 +177,19 @@
         "collector_roots": 1,
         "default": "CLOCKED0 retains legacy wiring",
         "status": "New actualnative exact/M15 running; independent ownstate census running; no physical master or assigned slot.",
-        "prior_gap": "6dbf2bc57 census isolated a single lane; its own clk was still shared in parent instantiation, so <=15000 lane count did not qualify the parent clock."
+        "prior_gap": "6dbf2bc57 census isolated a single lane; its own clk was still shared in parent instantiation, so <=15000 lane count did not qualify the parent clock.",
+        "quarter_link_roots": 4,
+        "total_child_clock_entries": 672,
+        "pruned_heap_entries": 12,
+        "control_ff": 11188,
+        "quarter_link_ff": 2952,
+        "quarter_ff": 6051,
+        "cat_ff": 10953,
+        "generic_state_count_only": true,
+        "collector_census_status": "RUNNING in SHARE pass; no verdict",
+        "prior_oversized_root_ff": 20566,
+        "split_total_ff": 22996,
+        "physical_area_note": "Four independently clocked command links cease common-clock cross-quarter register merging; generic state grows2430FF. No fit/cost credit."
       }
     },
     {

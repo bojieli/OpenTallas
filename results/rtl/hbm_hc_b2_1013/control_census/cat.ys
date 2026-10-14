@@ -1,3 +1,4 @@
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv
 read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_delay.sv
 read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fpu.sv
 read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_pipe.sv
