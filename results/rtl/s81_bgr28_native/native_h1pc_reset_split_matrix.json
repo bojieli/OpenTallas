@@ -1,0 +1,185 @@
+{
+  "status": "FUNCTIONAL_PROBE_PHYSICAL_CLOCK_DELIVERY_OPEN",
+  "owner_commit": "55740b8837221de797e670ba82471774527466af",
+  "successor_commit": "227effe76db8689c65644b9259b8490296145134",
+  "owner_parent_sha256": "c936211dc32f1a73b40e5f113bd498930adb68399e6625a35e42fb2705d2641a",
+  "probe_parent_sha256": "038c3b9bfd8ff7b34936bd28c8f96ded01e5277381b658c82fc51f9354c99f2f",
+  "only_parent_change": "NP28 BGR child replacement with MC24 (=24 roots, not NP24), H1, PIN_OUTPUT_COPY=1; all roots tied numerically",
+  "NP": 28,
+  "NPR": 10,
+  "children": 16,
+  "forward_hop_per_tile": 8,
+  "PIN_OUTPUT_COPY": 1,
+  "RESET_FANOUT_SPLIT": 1,
+  "bank_EP": 2,
+  "bank_ED": 3,
+  "BE_definition": "unchanged owner source, dynamic MD",
+  "physical_clock_delivery": "OPEN",
+  "files": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv": "a712e2e129d40655649bf4346ca7f17d4a861b25ffc14f05d6241ccab0da3860",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq28h_mc24.sv": "8c8e07277f447532dc73f36d148a18df533b3a0c796a4fbcd7a22454092dfce2"
+  },
+  "cases": {
+    "gold_s2": {
+      "case": "gold_s2",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=64000 checked=42242 mismatches_or_fails=0 phases=138 arm=138 p2rd=527 done=7160 rows_ready=72 starts=444 p2_words=12584 ctrl_reads=3145 el=194656/194656 cap_ops=11734 max_occ=3 mirror_max=3 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ]
+    },
+    "tp": {
+      "case": "tp",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=593 checked=462 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=13 rows_ready=1 starts=0 p2_words=128 ctrl_reads=32 el=7168/7168 cap_ops=448 max_occ=3 mirror_max=3 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1",
+        "THROUGHPUT mode=1 rows_per_root=56 positions=1 elements=7168 emit_cycles=44 (first 231 last 274) cap_ops=448 cap_write_span=43 landing_tail=20 (last element at the pins -> done) arm_to_done=94 p2_done=332 wfc_23pairs=138 x_ctrl=189 (serial cycles from t0 200)",
+        "PASS"
+      ],
+      "throughput": "THROUGHPUT mode=1 rows_per_root=56 positions=1 elements=7168 emit_cycles=44 (first 231 last 274) cap_ops=448 cap_write_span=43 landing_tail=20 (last element at the pins -> done) arm_to_done=94 p2_done=332 wfc_23pairs=138 x_ctrl=189 (serial cycles from t0 200)"
+    },
+    "burst_r128": {
+      "case": "burst_r128",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=647 checked=128 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=9 rows_ready=0 starts=0 p2_words=128 ctrl_reads=0 el=16384/16384 cap_ops=1024 max_occ=1 mirror_max=1 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "THROUGHPUT mode=2 rows_per_root=128 positions=1 elements=16384 emit_cycles=99 (first 231 last 329) cap_ops=1024 cap_write_span=97 landing_tail=19 (last element at the pins -> done) arm_to_done=148 p2_done=386 wfc_23pairs=11 x_ctrl=0 (serial cycles from t0 200)",
+        "PASS"
+      ],
+      "throughput": "THROUGHPUT mode=2 rows_per_root=128 positions=1 elements=16384 emit_cycles=99 (first 231 last 329) cap_ops=1024 cap_write_span=97 landing_tail=19 (last element at the pins -> done) arm_to_done=148 p2_done=386 wfc_23pairs=11 x_ctrl=0 (serial cycles from t0 200)"
+    },
+    "land_attn": {
+      "case": "land_attn",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=1583 checked=448 mismatches_or_fails=0 phases=0 arm=0 p2rd=4 done=40 rows_ready=0 starts=0 p2_words=448 ctrl_reads=0 el=19072/19072 cap_ops=0 max_occ=2 mirror_max=2 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ]
+    },
+    "land_hc": {
+      "case": "land_hc",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=628 checked=128 mismatches_or_fails=0 phases=0 arm=0 p2rd=1 done=10 rows_ready=0 starts=0 p2_words=128 ctrl_reads=0 el=2048/2048 cap_ops=0 max_occ=1 mirror_max=1 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ]
+    },
+    "land_bp": {
+      "case": "land_bp",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=1758 checked=448 mismatches_or_fails=0 phases=0 arm=0 p2rd=4 done=40 rows_ready=0 starts=0 p2_words=448 ctrl_reads=0 el=30336/30336 cap_ops=0 max_occ=2 mirror_max=2 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ]
+    },
+    "align_neg": {
+      "case": "align_neg",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "FAULT first at cyc 235: fe_flt 0000000100000000 fvec 00000000000000000000000000000000",
+        "ALIGN_FAULT raised (fe_flt 0000000100000000)",
+        "RESULT cyc=3001 checked=0 mismatches_or_fails=0 phases=0 arm=0 p2rd=0 done=2 rows_ready=0 starts=0 p2_words=0 ctrl_reads=0 el=0/2048 cap_ops=0 max_occ=0 mirror_max=0 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ]
+    },
+    "mut_dropw": {
+      "case": "mut_dropw",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "FAIL: capture elements landed 46300 of 46304 (unsent 0)",
+        "FAIL: 4 engine dones never arrived (first tag 202)",
+        "FAIL: 2 rows-ready missing",
+        "RESULT cyc=24000 checked=13092 mismatches_or_fails=3 phases=34 arm=34 p2rd=167 done=2194 rows_ready=18 starts=154 p2_words=3084 ctrl_reads=1096 el=46300/46304 cap_ops=2898 max_occ=2 mirror_max=2 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ]
+    },
+    "mut_early": {
+      "case": "mut_early",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "FAIL cyc 13857: EARLY_DONE slot 0 tag 35 with 1 region elements not landed (first 76366)",
+        "FAIL cyc 14439: EARLY_DONE slot 1 tag 106 with 1 region elements not landed (first 79546)",
+        "FAIL cyc 14573: EARLY_DONE slot 0 tag 131 with 1 region elements not landed (first 81634)",
+        "FAIL cyc 16836: EARLY_DONE slot 0 tag 158 with 1 region elements not landed (first 94025)",
+        "FAIL cyc 17868: EARLY_DONE slot 0 tag 11 with 1 region elements not landed (first 99264)",
+        "FAIL cyc 18206: EARLY_DONE slot 0 tag 52 with 1 region elements not landed (first 101396)",
+        "FAIL cyc 18782: EARLY_DONE slot 0 tag 105 with 1 region elements not landed (first 103062)",
+        "FAIL cyc 19397: EARLY_DONE slot 0 tag 168 with 1 region elements not landed (first 109287)",
+        "FAIL cyc 19608: EARLY_DONE slot 0 tag 189 with 1 region elements not landed (first 111386)",
+        "FAIL cyc 19731: EARLY_DONE slot 1 tag 206 with 1 region elements not landed (first 112685)",
+        "RESULT cyc=24000 checked=13939 mismatches_or_fails=21 phases=40 arm=40 p2rd=168 done=2234 rows_ready=19 starts=161 p2_words=4415 ctrl_reads=1039 el=69536/69536 cap_ops=4200 max_occ=3 mirror_max=3 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ]
+    },
+    "mut_noalign": {
+      "case": "mut_noalign",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "FAIL cyc 254: capture element 35063 not expected",
+        "FAIL cyc 254: capture element 35064 not expected",
+        "FAIL cyc 254: capture element 35065 not expected",
+        "FAIL cyc 254: capture element 35066 not expected",
+        "FAIL cyc 254: capture element 35067 not expected",
+        "FAIL cyc 254: capture element 35068 not expected",
+        "FAIL cyc 254: capture element 35069 not expected",
+        "FAIL cyc 254: capture element 35070 not expected",
+        "FAIL cyc 254: capture element 35071 not expected",
+        "FAIL: misaligned capture phase NOT flagged (fe_flt 0000000000000000)",
+        "RESULT cyc=3001 checked=0 mismatches_or_fails=2049 phases=0 arm=0 p2rd=0 done=2 rows_ready=0 starts=0 p2_words=0 ctrl_reads=0 el=2016/2048 cap_ops=128 max_occ=1 mirror_max=1 lat p0=-1 p1=-1 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ]
+    },
+    "mut_rlat": {
+      "case": "mut_rlat",
+      "expect": "fail",
+      "passed": false,
+      "ok": true,
+      "tail": [
+        "FAIL cyc 20193: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20268: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20276: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20285: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20299: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20336: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20344: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20361: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20384: P2 beat without ready 4 cycles earlier",
+        "FAIL cyc 20388: P2 beat without ready 4 cycles earlier",
+        "RESULT cyc=24000 checked=14461 mismatches_or_fails=615 phases=49 arm=49 p2rd=177 done=2403 rows_ready=29 starts=160 p2_words=4652 ctrl_reads=1040 el=70240/70240 cap_ops=4209 max_occ=3 mirror_max=3 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1",
+        "FAIL"
+      ]
+    },
+    "gold_s1": {
+      "case": "gold_s1",
+      "expect": "pass",
+      "passed": true,
+      "ok": true,
+      "tail": [
+        "RESULT cyc=64000 checked=42692 mismatches_or_fails=0 phases=132 arm=132 p2rd=509 done=7020 rows_ready=71 starts=474 p2_words=13222 ctrl_reads=3188 el=209504/209504 cap_ops=12510 max_occ=3 mirror_max=3 lat p0=49 p1=49 p2=-1 p4=-1 p6=-1 p7=-1",
+        "PASS"
+      ]
+    }
+  },
+  "case_count": 12,
+  "all_expected": true
+}
