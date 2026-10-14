@@ -48,5 +48,21 @@
     "actual assignedpins/clock/reset roots and cuts",
     "real throughput andmutants"
   ],
-  "write_taller_request_status": "output frame rawpin budget only, not complete LGW hardchildlayout. Must retain2CLOSEDWQ rectangles+ownregisterregion in valid assignedenvelope; no physicalroute yet."
+  "write_taller_request_status": "output frame rawpin budget only, not complete LGW hardchildlayout. Must retain2CLOSEDWQ rectangles+ownregisterregion in valid assignedenvelope; no physicalroute yet.",
+  "write_clock_roots": {
+    "outerIOcontrol": {
+      "clk": "clk_io",
+      "FF_estimate": 2946
+    },
+    "WQ0": {
+      "clk": "clk_wq0",
+      "actual_closed_sinks": 1187
+    },
+    "WQ1": {
+      "clk": "clk_wq1",
+      "actual_closed_sinks": 1187
+    }
+  },
+  "write_root_reason": "oldflat~5320 root already\u226415k. Separatepins preserve CLOSED WQ bodyclock entries while newouterframe solvesM5facewidth; no borrowed oneflatclockqualification.",
+  "behavior_write_roots": "newdefaultoff OT_QW_LGW_ROOTS wholeWQ3pairedread/write root campaignpending"
 }
