@@ -39,7 +39,7 @@
  },
  "outline": {
   "w": 172.8,
-  "h": 21.6
+  "h": 32.4
  },
  "job": {
   "owner": "Claude:el1013-hbm-redesign-smmv",
@@ -100,5 +100,6 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "why_floorplan": "Exact current-source CTS gate c8128f717 failed DPL-0033: opposite recipe2 pin/hold banks require8.57+10.17um behind S/N faces, exceeding old17.28um core height. Grow height21.6->32.4 (core28.08) to preserve real holds and pins with9.34um interior gap; width172.8 and all RTL/clocks/hold budgets unchanged. New die slot request; coordinates and final guide fit pending."
 }
