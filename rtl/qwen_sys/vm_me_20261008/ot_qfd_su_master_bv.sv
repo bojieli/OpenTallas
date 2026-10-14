@@ -36,7 +36,8 @@ module ot_qfd_sp_su64_sfu_bv #(
                                             // control and each of the 64 lanes inside ot_hdc_vstream), so the one rs flop
                                             // drives ~66 registers, not ~780k reset pins; every rs flop deasserts 1 edge later
     parameter integer LT = 0,               // ot_hdc_vstream LT: each lane a hardened tile (pin flops, own reset / clock tree)
-    parameter integer RD = 2                // ot_hdc_vstream RD: relay stages each way between the stream unit and a lane tile
+    parameter integer RD = 2,               // ot_hdc_vstream RD: relay stages each way between the stream unit and a lane tile
+    parameter integer LOREG = 0             // ot_hdc_vstream LOREG (r6 10-14): lane cluster output register stage
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -183,7 +184,7 @@ module ot_qfd_sp_su64_sfu_bv #(
     assign sw_a0 = vm_waddr[0 +: AW];
     assign sw_a1 = vm_waddr[AW +: AW];
     wire [15:0] s_progress, s_rows;
-    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LOFF(LOFF), .RTREE(RTREE), .LT(LT), .RD(RD)) u_su (
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LOFF(LOFF), .RTREE(RTREE), .LT(LT), .RD(RD), .LOREG(LOREG)) u_su (
         .clk(clk), .rst_n(rs), .go(go_s), .ready(s_ready), .idle(s_idle),
         .i_nout(q_nout), .i_nin(q_nin),
         .i_asrc(q_asrc), .i_abase(q_abase), .i_aso(q_aso), .i_asi(q_asi),

@@ -11,7 +11,7 @@ mkdir -p "$OUT"; cd "$ROOT"; rc=0; set -- ${@:-0 1 2 5}; single=$#
 for m in "$@"; do
   O=$OUT/obj_m$m
   "$VL" --binary --timing -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-DECLFILENAME -Wno-BLKSEQ -Wno-MULTIDRIVEN -O2 -j ${JOBS:-8} +define+MUT_V=$m ${LQ:+ +define+LQ=$LQ} \
-     --top-module tb_hgi_sv_leaf --Mdir "$O" -o tb rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv \
+     --top-module tb_hgi_sv_leaf --Mdir "$O" -o tb rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/peers/ot_hgi_sv_unit.sv \
      rtl/hbm_accel/generic/adapters/tb/tb_hgi_sv_leaf.sv > "$OUT/build_m$m.log" 2>&1 \
      || { tail -15 "$OUT/build_m$m.log"; echo "MUT_V $m: BUILD FAILED"; exit 2; }
   "$O/tb" > "$OUT/leaf_m$m.log" 2>&1 || true
