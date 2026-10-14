@@ -68,6 +68,8 @@ VIEWS = {
     'qkd_kvwq_ctl_bin': 'physical/ref_tile/qkd_kvwq_ctl_bin/views/qkd_kvwq_ctl_bin',
     'ot_qfd_serdes_112g_x12_phy': 'physical/qwen_missing_phy/tp8_1013/ot_qfd_serdes_112g_x12_phy',
     'qkd_rstseq': 'physical/ref_tile/qkd_rstseq/views/qkd_rstseq',
+    'qkd_ctrl_pc': 'physical/ref_tile/qkd_ctrl_pc/views/qkd_ctrl_pc',
+    'qkd_ctrl_kc': 'physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc',
 }
 RSTSEQ_KV = 21.6
 # T22b (el1013-qwen-kvcentre r3, 10-13 14:05; coordinator: merged KV sequencer slot): cluster 604.8 x 475.2, centred in x
@@ -450,6 +452,16 @@ def apply(v, m, G):
                               round(PC_H - S, 4), cs.orient, kind=cs.kind, region=cs.region, domain=cs.domain))
             v.PIN_POS_EXTRA[(ph.name, f'*dfi:{k}')] = (px, ph.y + gy[str(k)])
             ties.append((f'ctrlpc_{st}_{k}', 'pc', 5, k))
+        # Closed controller leaves occupy their actual outlines inside the inherited strip pitches.
+        for leaf in new:
+            view = view_pins(leaf.master)
+            if view is not None:
+                lw, lh = view[:2]
+                if lw > leaf.w + 0.03 or lh > leaf.h + 0.03:
+                    raise ValueError(f'controller closed view {leaf.master} does not fit strip slot')
+                if ph.x > cs.x:
+                    leaf.x = round(leaf.x + leaf.w - lw, 4)
+                leaf.w, leaf.h = lw, lh
         v.PIN_POS_EXTRA[(ph.name, '*dfi:req')] = (px, ph.y + gy['req'])
         # r10: the PHY's own clock / reset pins (real abstract, not re-pinned): the reset tree ended its branch at
         # the instance centre, 1.7 mm from the pin (pinreg audit of run g0: 4 reset nets over 500 um)
@@ -893,6 +905,12 @@ def _wrap(v, m, G, peers):
         M = base_m(model, k, port_bits)
         byi = {i.name: i for i in model['insts']}
         Master = type(next(iter(M.values())))
+        # Every real leaf master uses the same outline as its placed instance.
+        for mn in ('qkd_kvwq_ctl_bin', 'qkd_ctrl_pc', 'qkd_ctrl_kc'):
+            q = M.get(mn)
+            it = next((i for i in model['insts'] if i.master == mn), None)
+            if q is not None and it is not None:
+                q.w, q.h = it.w, it.h
         # ---- T7 stations / heads / tile
         for cell, faces in STATIONS.items():
             q = M.get(cell)
