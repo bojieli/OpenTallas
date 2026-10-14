@@ -76,7 +76,7 @@ module tb_qwen_xcache_actual_tile;
    if(rv) checks=checks+1;
   end
  end
- integer op,t,k,j,a,kc,tiles,sp,xjs,xb,nout;
+ integer op,t,k,j,a,kc,tiles,sp,xjs,xb,nout,xks,xcs;
  initial begin
 `ifdef XCACHE_TP8
   $readmemh("native_profiles.hex",native_ib);
@@ -94,8 +94,12 @@ module tb_qwen_xcache_actual_tile;
     5:begin tid=(TARGET_GT==3072)?703:1023;sp=7;kc=9;tiles=2;nout=4096;xjs=29;end
     default:begin tid=0;sp=op-6;kc=2;tiles=1;nout=128;xjs=5;end
    endcase
-   xb=4096+op*10000;j_repeat=(xjs==0);
-   ib={18'(nout),18'(tiles),18'(kc),1'b0,24'd0,24'(kc*8),24'd8,24'd1,24'(xb),24'd1,24'(xjs),24'(kc),3'd0,4'(sp),24'd0,1'b1,24'd0,24'd8,24'd1,1'b0,1'b1,1'b0,1'b0,24'd0};
+   xb=4096+op*10000;xks=1;xcs=kc;
+   if(op==5 || op>=6) begin
+    xb=24'hFED123;xks=24'hC7D8E9;xjs=24'hABCDE7;xcs=24'hFACE91;
+   end
+   j_repeat=(xjs==0);
+   ib={18'(nout),18'(tiles),18'(kc),1'b0,24'd0,24'(kc*8),24'd8,24'd1,24'(xb),24'(xks),24'(xjs),24'(xcs),3'd0,4'(sp),24'd0,1'b1,24'd0,24'd8,24'd1,1'b0,1'b1,1'b0,1'b0,24'd0};
 `ifdef XCACHE_TP8
    if(op<4) begin
     ib=native_ib[op];
@@ -104,7 +108,7 @@ module tb_qwen_xcache_actual_tile;
 `endif
    for(k=0;k<kc;k=k+1) for(j=0;j<(j_repeat?1:8);j=j+1) begin
     load_epoch={18'(k),3'(j)};
-    for(l=0;l<4;l=l+1) begin a=xb+((4*tid+l)&((1<<sp)-1))*kc+k+j*xjs;lx[32*l+:32]=xv(24'(a));end
+    for(l=0;l<4;l=l+1) begin a=xb+((4*tid+l)&((1<<sp)-1))*xcs+k*xks+j*xjs;lx[32*l+:32]=xv(24'(a));end
     lv=1;@(negedge clk);
    end
    lv=0;allow=1;repeat(8) @(negedge clk);go=1;@(negedge clk);go=0;
