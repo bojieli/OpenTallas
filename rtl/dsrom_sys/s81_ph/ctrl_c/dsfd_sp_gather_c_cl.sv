@@ -192,8 +192,8 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
 `else
     wire [47:0] rq_ck = {48{ck[0]}}; // behavioural compatibility, never a physical cluster tree
 `endif
-    // ---- lanes: leaf (g, k) takes lanes B + 16 c + 4 k .. + 3 (B = 0 W half / 64 E half, c = leaves from the outer
-    //      face: g on W, 7 - g on E).  c 0 / 1 direct, c 2 one relay (channel c0|c1), c 3 two relays (c0|c1, c1|c2).
+    // ---- lanes: leaf (g, k) takes the lanes of its roots 16 g + 4 k .. + 3 (c = leaves from its half's outer face:
+    //      g on W, 7 - g on E).  c 0 / 1 direct, c 2 one relay (channel c0|c1), c 3 two relays (c0|c1, c1|c2).
     // ---- results: leaf (g, k) -> t_capture[848 g + 212 k +: 212]; its st -> cs[8 g + 2 k +: 2] ({busy, fault}).
     //      k 0 / 1 direct, k 2 one relay (row channel 0|1), k 3 two relays (row channels 1|2, 0|1).
     wire [275:0] ln_W0_0_0 = lm[0 +: 276];
@@ -236,42 +236,42 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
     dsfd_rly_276_WE u_rq_W3_3_0 (.ck(rq_ck[10]), .rs(rst[0]), .i(ln_W3_3_0), .o(ln_W3_3_1));
     wire [275:0] ln_W3_3_2;
     dsfd_rly_276_WE u_rq_W3_3_1 (.ck(rq_ck[11]), .rs(rst[0]), .i(ln_W3_3_1), .o(ln_W3_3_2));
-    wire [275:0] ln_E0_0_0 = lm[4416 +: 276];
-    wire [275:0] ln_E0_1_0 = lm[5520 +: 276];
-    wire [275:0] ln_E0_2_0 = lm[6624 +: 276];
+    wire [275:0] ln_E0_0_0 = lm[7728 +: 276];
+    wire [275:0] ln_E0_1_0 = lm[6624 +: 276];
+    wire [275:0] ln_E0_2_0 = lm[5520 +: 276];
     wire [275:0] ln_E0_2_1;
     dsfd_rly_276_EW u_rq_E0_2_0 (.ck(rq_ck[12]), .rs(rst[0]), .i(ln_E0_2_0), .o(ln_E0_2_1));
-    wire [275:0] ln_E0_3_0 = lm[7728 +: 276];
+    wire [275:0] ln_E0_3_0 = lm[4416 +: 276];
     wire [275:0] ln_E0_3_1;
     dsfd_rly_276_EW u_rq_E0_3_0 (.ck(rq_ck[13]), .rs(rst[0]), .i(ln_E0_3_0), .o(ln_E0_3_1));
     wire [275:0] ln_E0_3_2;
     dsfd_rly_276_EW u_rq_E0_3_1 (.ck(rq_ck[14]), .rs(rst[0]), .i(ln_E0_3_1), .o(ln_E0_3_2));
-    wire [275:0] ln_E1_0_0 = lm[4692 +: 276];
-    wire [275:0] ln_E1_1_0 = lm[5796 +: 276];
-    wire [275:0] ln_E1_2_0 = lm[6900 +: 276];
+    wire [275:0] ln_E1_0_0 = lm[8004 +: 276];
+    wire [275:0] ln_E1_1_0 = lm[6900 +: 276];
+    wire [275:0] ln_E1_2_0 = lm[5796 +: 276];
     wire [275:0] ln_E1_2_1;
     dsfd_rly_276_EW u_rq_E1_2_0 (.ck(rq_ck[15]), .rs(rst[0]), .i(ln_E1_2_0), .o(ln_E1_2_1));
-    wire [275:0] ln_E1_3_0 = lm[8004 +: 276];
+    wire [275:0] ln_E1_3_0 = lm[4692 +: 276];
     wire [275:0] ln_E1_3_1;
     dsfd_rly_276_EW u_rq_E1_3_0 (.ck(rq_ck[16]), .rs(rst[0]), .i(ln_E1_3_0), .o(ln_E1_3_1));
     wire [275:0] ln_E1_3_2;
     dsfd_rly_276_EW u_rq_E1_3_1 (.ck(rq_ck[17]), .rs(rst[0]), .i(ln_E1_3_1), .o(ln_E1_3_2));
-    wire [275:0] ln_E2_0_0 = lm[4968 +: 276];
-    wire [275:0] ln_E2_1_0 = lm[6072 +: 276];
-    wire [275:0] ln_E2_2_0 = lm[7176 +: 276];
+    wire [275:0] ln_E2_0_0 = lm[8280 +: 276];
+    wire [275:0] ln_E2_1_0 = lm[7176 +: 276];
+    wire [275:0] ln_E2_2_0 = lm[6072 +: 276];
     wire [275:0] ln_E2_2_1;
     dsfd_rly_276_EW u_rq_E2_2_0 (.ck(rq_ck[18]), .rs(rst[0]), .i(ln_E2_2_0), .o(ln_E2_2_1));
-    wire [275:0] ln_E2_3_0 = lm[8280 +: 276];
+    wire [275:0] ln_E2_3_0 = lm[4968 +: 276];
     wire [275:0] ln_E2_3_1;
     dsfd_rly_276_EW u_rq_E2_3_0 (.ck(rq_ck[19]), .rs(rst[0]), .i(ln_E2_3_0), .o(ln_E2_3_1));
     wire [275:0] ln_E2_3_2;
     dsfd_rly_276_EW u_rq_E2_3_1 (.ck(rq_ck[20]), .rs(rst[0]), .i(ln_E2_3_1), .o(ln_E2_3_2));
-    wire [275:0] ln_E3_0_0 = lm[5244 +: 276];
-    wire [275:0] ln_E3_1_0 = lm[6348 +: 276];
-    wire [275:0] ln_E3_2_0 = lm[7452 +: 276];
+    wire [275:0] ln_E3_0_0 = lm[8556 +: 276];
+    wire [275:0] ln_E3_1_0 = lm[7452 +: 276];
+    wire [275:0] ln_E3_2_0 = lm[6348 +: 276];
     wire [275:0] ln_E3_2_1;
     dsfd_rly_276_EW u_rq_E3_2_0 (.ck(rq_ck[21]), .rs(rst[0]), .i(ln_E3_2_0), .o(ln_E3_2_1));
-    wire [275:0] ln_E3_3_0 = lm[8556 +: 276];
+    wire [275:0] ln_E3_3_0 = lm[5244 +: 276];
     wire [275:0] ln_E3_3_1;
     dsfd_rly_276_EW u_rq_E3_3_0 (.ck(rq_ck[22]), .rs(rst[0]), .i(ln_E3_3_0), .o(ln_E3_3_1));
     wire [275:0] ln_E3_3_2;

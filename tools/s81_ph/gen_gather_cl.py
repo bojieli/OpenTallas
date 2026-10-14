@@ -91,15 +91,16 @@ def text():
     a("`else")
     a("    wire [47:0] rq_ck = {48{ck[0]}}; // behavioural compatibility, never a physical cluster tree")
     a("`endif")
-    a("    // ---- lanes: leaf (g, k) takes lanes B + 16 c + 4 k .. + 3 (B = 0 W half / 64 E half, c = leaves from the outer")
-    a("    //      face: g on W, 7 - g on E).  c 0 / 1 direct, c 2 one relay (channel c0|c1), c 3 two relays (c0|c1, c1|c2).")
+    a("    // ---- lanes: leaf (g, k) takes the lanes of its roots 16 g + 4 k .. + 3 (c = leaves from its half's outer face:")
+    a("    //      g on W, 7 - g on E).  c 0 / 1 direct, c 2 one relay (channel c0|c1), c 3 two relays (c0|c1, c1|c2).")
     a("    // ---- results: leaf (g, k) -> t_capture[848 g + 212 k +: 212]; its st -> cs[8 g + 2 k +: 2] ({busy, fault}).")
     a("    //      k 0 / 1 direct, k 2 one relay (row channel 0|1), k 3 two relays (row channels 1|2, 0|1).")
     q = 0
     for h, (hn, m) in enumerate((("W", "dsfd_rly_276_WE"), ("E", "dsfd_rly_276_EW"))):
         for k in range(4):
             for c in range(4):
-                base = 64 * h + 16 * c + 4 * k
+                g = c if h == 0 else 7 - c          # lane of root r = ln[r]: leaf (g, k) takes roots 16 g + 4 k .. + 3
+                base = 16 * g + 4 * k
                 src = f"lm[{69 * base} +: 276]"
                 nm = f"ln_{hn}{k}_{c}"
                 a(f"    wire [275:0] {nm}_0 = {src};")
