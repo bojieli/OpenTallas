@@ -306,7 +306,7 @@ module ot_hgi_hc_coll_b2 #(
             end
             for (b = 0; b < NB; b = b + 1) full[b] <= STORELEAF?store_full[b]:&vld[32*b +: 32];
             if (fb_v&&(!STORELEAF||(!scan_active&&scan_flush==0))) fired[fb] <= 1'b1;
-            if ((|tf) || (|nf[NBP-1:1]) || (|store_fault) || (|hub_fault)) flt <= 1'b1;
+            if ((|tf) || (|nf[NBP-1:1]) || (STORELEAF&&scan_flush==0&&((|store_fault)||(|hub_fault)))) flt <= 1'b1;
             if (clr) begin
                 vld <= '0; full <= '0; fired <= '0; flt <= 1'b0;
                 kl <= {(DTB+1){1'b1}};       // everything in the block tree now is of the cleared row
