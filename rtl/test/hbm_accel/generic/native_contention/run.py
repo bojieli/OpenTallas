@@ -3,7 +3,7 @@
 Use through ot-run --mem 32 --threads 4; immutable prices are never rewritten.
 """
 import argparse,hashlib,json,os,pathlib,subprocess,sys
-ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='0ec722402');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='a76c2fede');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');a=ap.parse_args()
 root=pathlib.Path(__file__).resolve().parents[5];out=pathlib.Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 parent=a.parent;common='64fced1f9';quant='88b62f789';dma='4a49c18bc';vectors='7027d3ab1'
 graph={}
@@ -13,6 +13,7 @@ p='rtl/hbm_accel/generic/peers';q='rtl/hbm_accel/generic/adapters/native_b2/su_q
 add(dma,p,'ot_hgi_dma_front ot_hgi_dma_front_core6b ot_hgi_dma_front_ctrl6b ot_hgi_dma_front_lane2 ot_hgi_dma_front_xs_vm2 ot_hgi_dma_front_xsw6b ot_hgi_dma_ixpipe ot_hgi_dma_vm_queue ot_hgi_dma_vm_router ot_hgi_dma_vm_transport')
 add(parent,q,'ot_hgi_su_ctlw_native_q ot_hgi_su_ctlw_native_lane2 ot_hgi_su_ctlw_native_h ot_hbm_b2_lane_cdc_owned ot_hbm_b2_peer_lease_owned ot_hbm_b2_peer_mux_q ot_hbm_b2_native_owned4')
 add(common,q,'ot_hbm_b2_lane_cdc ot_hbm_b2_su_vm4')
+if parent!='0ec722402':add(parent,q,'ot_hbm_b2_mirror_commit ot_hbm_b2_su_vm4_mirror')
 add(common,'rtl/hbm_accel/generic/vm/b2','ot_vms_bank ot_vms_hub ot_vms_rstop ot_vms_rcl ot_vms_star ot_vms_relay ot_vms_slice')
 add(common,'rtl/hbm_accel/service','ot_hbm_accel_cdc_fifo_p2')
 add(parent,qw,'ot_hgi_qdq_native_peer4_owned')
@@ -36,7 +37,7 @@ vecdir=out/'vectors';vecdir.mkdir(exist_ok=True)
 for name in ['recs.txt','meta.json']+[f'{kind}_{k}.hex' for kind in ['in','out'] for k in range(8)]:
  path=f'results/rtl/ref_tile/qdq_native_peer4/vectors/{name}';data=subprocess.check_output(['git','show',f'{vectors}:{path}'],cwd=root)
  (vecdir/name).write_bytes(data);receipt.append({'path':'vectors/'+name,'source_commit':vectors,'sha256':hashlib.sha256(data).hexdigest()})
-(out/'sourcegraph.json').write_text(json.dumps({'parent':parent,'common':common,'quant':quant,'dma':dma,'vectors':vectors,'phase':a.phase,'mut':a.mut,'clocks_ps':{'engine':833.33325,'VM':1111.111},'immutable_prices':{'quant_per_quarter':168,'DMA147':15674.320143998484},'scope':'actual SU native_h stage/drain; actual quant qpin4; actual DMAfront DQ; DMA peer class2 unallocated, three-group1-owner/globalmirror/fullSUarithmetic not proven','files':receipt},indent=2)+'\n')
+(out/'sourcegraph.json').write_text(json.dumps({'parent':parent,'common':common,'quant':quant,'dma':dma,'vectors':vectors,'phase':a.phase,'mut':a.mut,'clocks_ps':{'engine':833.33325,'VM':1111.111},'immutable_prices':{'quant_per_quarter':168,'DMA147':15674.320143998484},'scope':'actual SU native_h stage/drain; actual quant qpin4; actual DMAfront DQ; DMA peer class2 unallocated, three-group1-owner/fullSUarithmetic not proven; actualSU mirror sweep in fixture','files':receipt},indent=2)+'\n')
 frozen_runner = r'''#!/usr/bin/env python3
 import json,pathlib,os,subprocess,sys
 out=pathlib.Path(__file__).resolve().parent
