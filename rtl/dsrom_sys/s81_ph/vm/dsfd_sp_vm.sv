@@ -1466,6 +1466,9 @@ module dsfd_vm_be_sl #(
 `ifdef OT_BE_RCDC_GRAY
     input wire raw_epoch_n,
 `endif
+`ifdef OT_BE_P2_SPLIT_ROOTS
+    input wire [1:0] ck_pf, // genuine independent serial clock entries; physical producers unbound
+`endif
     input  wire [0:0]        ck,
     input  wire [0:0]        cks,
     input  wire [0:0]        rn_in,
@@ -1676,21 +1679,46 @@ module dsfd_vm_be_sl #(
     wire [P2D-1:0] pr_oh = {{(P2D-1){1'b0}}, 1'b1} << ph_nx;
     genvar gp;
     generate for (gp = 0; gp < PC; gp = gp + 1) begin : g_pf
+`ifdef OT_BE_P2_SPLIT_ROOTS
+        wire pf_clk = ck_pf[gp];
+`else
+        wire pf_clk = clk;
+`endif
         localparam integer O = PCB * gp;
         localparam integer CWD = (gp == PC - 1) ? FW - PCB * (PC - 1) : PCB;
         wire [P2D-1:0] wo, ro; wire mvc, rqc, pec;
-        dsfd_vm_be_kreg #(.W(2*P2D + 3), .ID(64 + gp)) u_pc (.clk(clk), .d({pw_oh, pr_oh, mv_nx, rn_p && c_rdy, pn_nx != 0}),
+        dsfd_vm_be_kreg #(.W(2*P2D + 3), .ID(64 + gp)) u_pc (.clk(pf_clk), .d({pw_oh, pr_oh, mv_nx, rn_p && c_rdy, pn_nx != 0}),
             .q({wo, ro, mvc, rqc, pec}));
 `ifdef OT_SPVM_MUT_RLAT
         wire ldc = c_rdy && pec;
 `else
         wire ldc = rqc && pec;                             // = ld
 `endif
-        reg [CWD-1:0] pf [0:P2D-1]; reg [CWD-1:0] q;
-        always @(posedge clk) begin : p_w integer i;
-            for (i = 0; i < P2D; i = i + 1) if (mvc && wo[i]) pf[i] <= flit[O +: CWD];
+        wire [P2D-1:0] mvc_word;
+`ifdef OT_BE_P2_SPLIT_ROOTS
+        localparam integer MVC_WORDS = 3;
+        localparam integer MVC_COPIES = (P2D + MVC_WORDS - 1) / MVC_WORDS;
+        wire [MVC_COPIES-1:0] mvc_copy;
+        for (genvar mc = 0; mc < MVC_COPIES; mc = mc + 1) begin : g_mvc
+            // Independent kept registered copies, same cycle as legacy u_pc MVC.
+            dsfd_vm_be_kreg #(.W(1), .ID(4096 + 64*gp + mc)) u_mvc
+                (.clk(pf_clk), .d(mv_nx), .q(mvc_copy[mc]));
         end
-        always @(posedge clk) begin : p_r integer i; reg [CWD-1:0] a;
+        for (genvar mw = 0; mw < P2D; mw = mw + 1) begin : g_mvc_word
+`ifdef OT_BE_P2_MUT_MVC_EARLY
+            assign mvc_word[mw] = mv_nx; // observed negative control: destroys registered publication age
+`else
+            assign mvc_word[mw] = mvc_copy[mw/MVC_WORDS];
+`endif
+        end
+`else
+        assign mvc_word = {P2D{mvc}};
+`endif
+        reg [CWD-1:0] pf [0:P2D-1]; reg [CWD-1:0] q;
+        always @(posedge pf_clk) begin : p_w integer i;
+            for (i = 0; i < P2D; i = i + 1) if (mvc_word[i] && wo[i]) pf[i] <= flit[O +: CWD];
+        end
+        always @(posedge pf_clk) begin : p_r integer i; reg [CWD-1:0] a;
             a = {CWD{1'b0}};
             for (i = 0; i < P2D; i = i + 1) a = a | (pf[i] & {CWD{ro[i]}});
             if (ldc) q <= a;
@@ -1842,6 +1870,9 @@ module dsfd_vm_be #(
             end
         end
         dsfd_vm_be_sl u_sl (                // hard macro at its defaults (P2D 40, XT 2): no parameter overrides
+`ifdef OT_BE_P2_SPLIT_ROOTS
+            .ck_pf({2{clk}}), // functional serial hookup; physical producer/phase/root assignment remains a request
+`endif
             `ifdef OT_BE_RCDC_GRAY
             .raw_epoch_n(rst[0] & rss[0]),
             .cdc_rst_ack(cdc_rst_ack[2*gs +: 2]),.cdc_rst_ack_s(cdc_rst_ack_s[2*gs +: 2]),

@@ -1,0 +1,27 @@
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1332:23: Operator VAR 'DP' expects 4 bits on the Initial value, but Initial value's VARREF 'DEPTH' generates 32 bits.
+                                                                  : ... note: In instance 'dsfd_vm_be_sl.u_rc0.u_gray'
+ 1332 |     localparam [AW:0] DP = DEPTH;
+      |                       ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1333:25: Operator VAR 'HL' expects 2 bits on the Initial value, but Initial value's VARREF 'HOLD' generates 32 bits.
+                                                                  : ... note: In instance 'dsfd_vm_be_sl.u_rc0.u_gray'
+ 1333 |     localparam [CW-1:0] HL = HOLD;
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1674:58: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'pt' generates 6 bits.
+                                                                   : ... note: In instance 'dsfd_vm_be_sl'
+ 1674 |     wire [PB-1:0] pt_nx = !rn_p ? {PB{1'b0}} : mv ? ((pt == P2D - 1) ? {PB{1'b0}} : pt + 1'b1) : pt;
+      |                                                          ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1675:58: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ph' generates 6 bits.
+                                                                   : ... note: In instance 'dsfd_vm_be_sl'
+ 1675 |     wire [PB-1:0] ph_nx = !rn_p ? {PB{1'b0}} : ld ? ((ph == P2D - 1) ? {PB{1'b0}} : ph + 1'b1) : ph;
+      |                                                          ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv:1729:33: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'pn' generates 7 bits.
+                                                                   : ... note: In instance 'dsfd_vm_be_sl'
+ 1729 |             p_ovf_n <= mv && pn == P2D;
+      |                                 ^~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.215 MB sources in 25 modules, into 0.380 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.107 s (elab=0.018, cvt=0.059, bld=0.000); cpu 0.107 s on 1 threads; allocated 42.148 MB
