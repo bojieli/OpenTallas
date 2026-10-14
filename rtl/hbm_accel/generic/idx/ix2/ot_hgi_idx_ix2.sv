@@ -61,7 +61,7 @@ module ot_hgi_idx_ix2 #(
     generate
         if (NL != 8) begin : g_nl  ot_hgi_idx_ix2_needs_NL_8 u_bad (); end
         for (g = 0; g < 8; g = g + 1) begin : g_ln
-            ot_hgi_idx_ix2_lane #(.LN(g), .LQ(LQ)) u_ln (.clk(clk), .rst_n(rst_n), .start(start), .run(run),
+            ot_hgi_idx_ix2_lane #(.LQ(LQ)) u_ln (.clk(clk), .rst_n(rst_n), .lid(3'(g)), .start(start), .run(run),
                 .keep_en_i(keep_en_i), .rank_i(rank_i), .a_base_i(a_base_i), .b_base_i(b_base_i), .c_base_i(c_base_i),
                 .c_stride_i(c_stride_i), .c_n_i(c_n_i), .wrq(wrq[g*16 +: 16]), .wrq_cr(wrq_cr[g]), .wrr(wrr[g*257 +: 257]),
                 .rg_gnt(rg_gnt), .ab_d(ab_d[g*256 +: 256]), .b_v(b_v[g]), .a_v(a_v[g]), .a_cr(a_cr[g]),
