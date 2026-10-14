@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.vm-xcol-select.v1",
-  "status": "BENCHED_NOT_ROUTED",
+  "status": "BENCHED_CTS_GATE_PASSED_SUPERSEDED_BY_FIXED32ROOT_CANDIDATE",
   "latency_enabled_edges": 3,
   "enabled_by": "registered me_e",
   "root_words": 2,
@@ -66,5 +66,14 @@
     "ok.log",
     "prod.log",
     "seed2.log"
-  ]
+  ],
+  "cts_gate": {
+    "flops": 7912,
+    "std_area_um2": 8810,
+    "tt_insertion_max_ps": 216,
+    "tt_boundary_mean_ps": 207.5,
+    "tt_spread_ps": 21.5,
+    "pre_route_setup_ps": 163.87,
+    "pre_route_hold_ps": 21.16
+  }
 }
