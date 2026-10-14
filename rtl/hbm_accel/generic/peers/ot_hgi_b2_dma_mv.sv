@@ -101,7 +101,6 @@ module ot_hgi_b2_dma_mv #(
     output wire ser_k_rsp_we,
     output wire [255:0] ser_k_rsp_data,
     output wire ser_k_fault,
-    input wire [337:0] ser_vmq,
     output wire [273:0] ser_vmr,
     input wire kv_c_rdy, kv_idle_w, kv_creq, kv_src, kv_done,
     input wire [511:0] kv_kq, input wire [3:0] kv_wv, kv_wo,
@@ -110,7 +109,7 @@ module ot_hgi_b2_dma_mv #(
     output reg [31:0] kc_ds, kc_dst, output reg [17:0] kc_ns, output reg [19:0] kc_m,
     output wire kc_gnt, output reg [191:0] kc_cr,
     output wire [3:0] kc_wrdy,
-    input wire [1:0] qid, input wire il_active, input wire [337:0] il_vmq, output reg [273:0] il_vmr,
+    input wire [1:0] qid, output wire vm_serial_owner,
     input  wire          clk,
     input  wire          rst_n,
     input  wire          mv_v,
@@ -264,16 +263,7 @@ module ot_hgi_b2_dma_mv #(
     always @(posedge clk or negedge rn) if (!rn) kv_idle_q <= 1'b1; else kv_idle_q <= kv_idle_w;
     wire kv_idle = (KVW != 0) ? kv_idle_q && !kc_pending && !kc_v : 1'b1;
     reg [1:0] qid_q; always @(posedge clk) qid_q <= (MUT_SEAM == 6) ? qid + 2'd1 : qid;
-    // I-list ownership and packet payload cross the face together. The raw owner
-    // pin drives one flop; the registered owner selects both packet directions.
-    reg il_active_q; reg [337:0] il_vmq_q;
-    always @(posedge clk or negedge rn)
-      if (!rn) begin il_active_q <= 0; il_vmq_q[337] <= 0; end
-      else begin il_active_q <= il_active; il_vmq_q[337] <= il_vmq[337]; end
-    always @(posedge clk) il_vmq_q[336:0] <= il_vmq[336:0];
-    wire [273:0] vmr_local = il_active_q ? 274'd0 : vmr;
-    always @(posedge clk or negedge rn) if (!rn) il_vmr[273] <= 1'b0; else il_vmr[273] <= il_active_q && vmr[273];
-    always @(posedge clk) il_vmr[272:0] <= il_active_q ? (vmr[272:0] ^ ((MUT_SEAM == 2) ? 273'd1 : 273'd0)) : 273'd0;
+    wire [273:0] vmr_local = vmr; // already owned and registered by the packet-face leaf
     // B2: refused at the command station (fail-closed, no request): a linear HBM side starting on another stack (the KV
     // engine streams a move on its row-0 stack), a strided move with a STRIPE4 side (the serial engine addresses linearly)
     wire b2_bad = B2 != 0 && ((cm_q[1:0] == 2'd0 && cm_q[44:42] == 3'd0 && cm_q[41:40] != 2'(QID)) ||
@@ -288,20 +278,16 @@ module ot_hgi_b2_dma_mv #(
     wire s_mv_rdy, s_mv_done, s_mv_fault, s_fence_rdy, s_fence_done;
     wire s_kv, s_kwe; wire [36:0] s_ka;
     wire b2_kx;                                                         // B2: the serial engine's lane request is off stack QID
-    wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
+    wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr;
     reg  f_fault;
     assign command_ready = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
     wire pin_s_kv, pin_s_kwe, s_pin_ready; wire [36:0] pin_s_ka;
     wire [255:0] pin_s_kd; wire [31:0] pin_s_ks; wire [15:0] pin_s_kt;
-    wire [337:0] pin_s_vmq; reg [337:0] s_vmq_pin;
     wire [341:0] serial_head;
     ot_hgi_b2_dma_cmd_pin #(.W(342)) u_serial_kpin(.clk(clk), .rst_n(rn), .in_v(pin_s_kv),
       .in_data({pin_s_kwe,pin_s_ka,pin_s_kd,pin_s_ks,pin_s_kt}), .in_ready(s_pin_ready),
       .out_v(s_kv), .out_data(serial_head), .out_ready(ko_ld && sel_s && !b2_kx));
     assign {s_kwe,s_ka,s_kd,s_ks,s_kt}=serial_head;
-    always @(posedge clk or negedge rn) if (!rn) s_vmq_pin[337]<=0; else s_vmq_pin[337]<=pin_s_vmq[337];
-    always @(posedge clk) s_vmq_pin[336:0]<=pin_s_vmq[336:0];
-    assign s_vmq=s_vmq_pin;
     reg ser_go;
     always @(posedge clk or negedge rn) if (!rn) ser_go<=0; else ser_go<=cv_go && !fast_cmd && cm_q[94:93] != 2'd0;
     assign ser_mv_v = ser_go;
@@ -327,7 +313,7 @@ module ot_hgi_b2_dma_mv #(
         if (!rn) ser_k_fault_q <= 1'b0;
         else ser_k_fault_q <= (k_fault && sel_s) || b2_kx;
     assign ser_k_fault = ser_k_fault_q;
-    assign pin_s_vmq = ser_vmq;
+    assign vm_serial_owner = sel_s;
     assign ser_vmr = sel_s ? vr_q : 274'd0;
     reg fence_pending;
     wire fence_available = !busy_f && s_mv_rdy && s_fence_rdy && kv_idle && !cv_q && !command_valid;
@@ -1119,14 +1105,7 @@ module ot_hgi_b2_dma_mv #(
             ko_d <= sel_s ? s_kd : f_kd; ko_s <= sel_s ? s_ks : f_ks;
         end
     assign k_req_v = ko_v; assign k_req_we = ko_we; assign k_req_addr = ko_a; assign k_req_wdata = ko_d; assign k_req_wstrb = ko_s;
-    generate if (PX != 0) begin : g_vmo
-        reg [337:0] vmq_r;                                  // registered output (sel_s fanned out over 338 bits to the pins)
-        always @(posedge clk or negedge rn) if (!rn) vmq_r[337] <= 1'b0; else vmq_r[337] <= il_active_q ? il_vmq_q[337] : (sel_s ? s_vmq[337] : f_vmq[337]);
-        always @(posedge clk) vmq_r[336:0] <= il_active_q ? il_vmq_q[336:0] : (sel_s ? s_vmq[336:0] : f_vmq[336:0]);
-        assign vmq = vmq_r;
-    end else begin : g_vmc
-        assign vmq = sel_s ? s_vmq : f_vmq;
-    end endgenerate
+    assign vmq = f_vmq; // fast-engine registered producer; owner mux lives in independent packet face
     wire unused_ok = &{1'b0, s_kt, s_krr, s_fence_done};
 `ifndef SYNTHESIS
     // a refused move names itself (bench / e2e debugging)
