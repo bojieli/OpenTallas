@@ -134,7 +134,15 @@ plus one per hard-child or macro clock pin. A declared spine does not waive the 
 is hardened leaves with their own roots. CLOSED tiles are not re-judged.
 
 - The gate prints a `clock_rule` item for every kit, with the measured insertion and spread when `--cts` ran, and a
-  `--remote` run writes `<kit>/gate_result.json`. Commit that file with the kit: the submit gate reads it.
+  `--remote` run writes `<kit>/gate_result.json` v2. Commit that file with the kit: the submit gate reads it.
+  Its immutable source manifest binds the bytes actually shipped (generated kit, RTL, transitive hooks, macro views,
+  and effective daemon helper overlays), the archive SHA256 verified before remote extraction, and the generated
+  execution script. Start HEAD and daemon HEAD are provenance; `commit` is null when the effective contents do not
+  all match one commit. A later HEAD never changes the receipt's source identity. The remote adjacent
+  `<run>.source_snapshot.json` preserves the shipping manifest before execution; runtime image and environment
+  provenance appear in the completed receipt. Old receipts are preserved in `source_binding_history/` when replaced.
+  Legacy receipts or receipts whose contents differ from the submitted commit/current daemon overlay are refused
+  for unclosed tiles; regenerate their gate. CLOSED tiles continue to stand.
 - At submit a `ref_tile` job is REFUSED when the kit's gate result shows more than 15,000 sinks without passing
   numbers, or when the kit has no gate result and the block's latest synthesized design in the loop's history had more
   than 15,000 sinks.
