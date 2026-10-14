@@ -15,13 +15,17 @@ case $C in
   trace) A="-GTRACE=1"; MC=gold_s1_trace;; trace_tp) A="-GTRACE=2"; MC=tp_trace;; mut_*) A="+define+OT_VMBGL_${C/mut_/MUT_} -GNCYC=40000";; *) echo "BGL_$C: unknown case"; exit 2;;
 esac
 P=""
+MC5_SRCS=""
+if [[ "${BGL_DEFINES:-}" == *OT_VMBGL_MC40* ]]; then
+ MC5_SRCS="$R/$T/vm/dsfd_vm_bgl28_mc5.sv $R/$T/vm/dsfd_vm_bgq28h_mc40.sv"
+fi
 if [ "${C#trace}" != "$C" ]; then
   VERILATOR=$V python3 tools/s81_vm/s81_vm_gate.py one $MC --out "$OUT/master" > "$OUT/master.out" 2>&1 \
     || { echo "BGL_$C: BUILD_FAIL (master $MC)"; tail -5 "$OUT/master.out"; exit 1; }
   P="+trace=$(cd "$OUT/master" && pwd)/bg_trace.txt"
 fi
 $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style -j 8 -I$R/$T/vm --top-module tb_dsfd_vm_bgl_lockstep --Mdir "$OUT/obj_$C" \
-   +define+OT_VMBGL_FLOPMEM ${BGL_DEFINES:-} ${BGL_ARGS:-} $A $R/$T/test/tb_dsfd_vm_bgl_lockstep.sv $R/$T/vm/dsfd_vm_bgl.sv $R/$T/vm/dsfd_vm_bgq28h_pc.sv $R/$T/vm/dsfd_vm_bgq28h_mc24.sv $R/$T/vm/dsfd_vm_bgq_sys.sv \
+   +define+OT_VMBGL_FLOPMEM ${BGL_DEFINES:-} ${BGL_ARGS:-} $A $MC5_SRCS $R/$T/test/tb_dsfd_vm_bgl_lockstep.sv $R/$T/vm/dsfd_vm_bgl.sv $R/$T/vm/dsfd_vm_bgq28h_pc.sv $R/$T/vm/dsfd_vm_bgq28h_mc24.sv $R/$T/vm/dsfd_vm_bgq_sys.sv \
    > "$OUT/build_$C.log" 2>&1 || { echo "BGL_$C: BUILD_FAIL"; grep -m8 -i error "$OUT/build_$C.log"; exit 1; }
 "$OUT/obj_$C/Vtb_dsfd_vm_bgl_lockstep" $P > "$OUT/run_$C.log" 2>&1
 grep -E "^(RESULT|MISMATCH|COVERAGE|TRACE)" "$OUT/run_$C.log" | head -8

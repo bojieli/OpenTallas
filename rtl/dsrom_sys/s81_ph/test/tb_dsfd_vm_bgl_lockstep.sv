@@ -21,7 +21,10 @@ module tb_dsfd_vm_bgl_lockstep #(parameter integer SEED = 1, parameter integer N
         .ck(clk), .rs(rs), .grp(grp), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_m), .i_d(i_d),
         .f_v(av), .f_we(awe), .f_row(arow), .f_mask(am), .f_d(ad), .r_v(10'd0), .r_d(1280'd0), .r_f(4'd0), .r_o(3'd0),
         .o_v(aov), .o_d(aod), .o_f(aof), .o_o(aoo));
-`ifdef OT_VMBGL_MC_PARENT
+`ifdef OT_VMBGL_MC40
+    dsfd_vm_bgq28h_mc40 u_leaf (
+        .ck_bank_l0(clk),        .ck_bank_l1(clk),        .ck_bank_l2(clk),        .ck_bank_l3(clk),        .ck_bank_l4(clk),        .ck_bank_l5(clk),        .ck_bank_l6(clk),        .ck_bank_l7(clk),        .ck_req_l0(clk),        .ck_req_l1(clk),        .ck_req_l2(clk),        .ck_req_l3(clk),        .ck_req_l4(clk),        .ck_req_l5(clk),        .ck_req_l6(clk),        .ck_req_l7(clk),        .ck_ret_l0(clk),        .ck_ret_l1(clk),        .ck_ret_l2(clk),        .ck_ret_l3(clk),        .ck_ret_l4(clk),        .ck_ret_l5(clk),        .ck_ret_l6(clk),        .ck_ret_l7(clk),        .ck_fwd0_l0(clk),        .ck_fwd0_l1(clk),        .ck_fwd0_l2(clk),        .ck_fwd0_l3(clk),        .ck_fwd0_l4(clk),        .ck_fwd0_l5(clk),        .ck_fwd0_l6(clk),        .ck_fwd0_l7(clk),        .ck_fwd1_l0(clk),        .ck_fwd1_l1(clk),        .ck_fwd1_l2(clk),        .ck_fwd1_l3(clk),        .ck_fwd1_l4(clk),        .ck_fwd1_l5(clk),        .ck_fwd1_l6(clk),        .ck_fwd1_l7(clk),
+`elsif OT_VMBGL_MC_PARENT
     dsfd_vm_bgq28h_mc24 #(.FORWARD_HOP(MC_HOP), .PIN_OUTPUT_COPY(MC_PIN_COPY)) u_leaf (
         .ck_bank_l0(clk), .ck_bank_l1(clk), .ck_bank_l2(clk), .ck_bank_l3(clk), .ck_bank_l4(clk), .ck_bank_l5(clk), .ck_bank_l6(clk), .ck_bank_l7(clk), .ck_req_l0(clk), .ck_req_l1(clk), .ck_req_l2(clk), .ck_req_l3(clk), .ck_req_l4(clk), .ck_req_l5(clk), .ck_req_l6(clk), .ck_req_l7(clk), .ck_ret_l0(clk), .ck_ret_l1(clk), .ck_ret_l2(clk), .ck_ret_l3(clk), .ck_ret_l4(clk), .ck_ret_l5(clk), .ck_ret_l6(clk), .ck_ret_l7(clk),
 `elsif OT_VMBGL_ENTRIES

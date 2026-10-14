@@ -39,6 +39,9 @@ module dsfd_vm_bgl #(
     // registered N-to-S successor; bank EP2/ED3 is independent of this hop.
     parameter integer FORWARD_HOP = 0,
     parameter integer PIN_OUTPUT_COPY = 0,
+    // Optional forwarding-root wrapper supplies its own same-edge pin copies.
+    // Default follows the existing PIN_OUTPUT_COPY selection exactly.
+    parameter integer FORWARD_PIN_OUTPUT_COPY = PIN_OUTPUT_COPY,
     parameter integer RESET_FANOUT_SPLIT = 0
 ) (
     input  wire [0:0]          ck,
@@ -158,7 +161,7 @@ module dsfd_vm_bgl #(
 `else
     localparam integer PIN_HOP1 = HOP1;
 `endif
-    generate if (PIN_OUTPUT_COPY) begin : g_pin_copy
+    generate if (FORWARD_PIN_OUTPUT_COPY) begin : g_pin_copy
         // Output-only registered copies isolate bank E3 fanout. Complemented
         // storage lets the physical QN pin supply the true output directly.
         // Both choices preserve the selected one/two-cycle forwarding contract.
