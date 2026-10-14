@@ -353,9 +353,19 @@ module ot_coll_tp8_die_native59 #(
     wire          m_e    = take_l ? lq_hd[FW+1] : rq_hd[FW+1];
     wire          m_lst  = m_mode ? lq_hd[FW] : ((take_l ? lq_hd[FW] : rq_hd[FW]) && mc[0]);
     wire [2:0]    m_rank = m_mode ? {mc[2], lq_hd[FW+2 +: 2]} : 3'd0;
-    wire [TAGW-1:0] m_tag = take_l ? lq_hd[FW+5 +: TAGW] : rq_hd[FW+2 +: TAGW];
+`ifdef OT_NATIVE59_MUT_PEERID
+    // Bench-only actual return-path stale identity, after link queue receipt.
+    wire [TAGW-1:0] peer_identity = rq_hd[FW+2 +: TAGW] ^ (59'd1 << 43);
+`else
+    wire [TAGW-1:0] peer_identity = rq_hd[FW+2 +: TAGW];
+`endif
+    wire [TAGW-1:0] m_tag = take_l ? lq_hd[FW+5 +: TAGW] : peer_identity;
     wire [TAGW-1:0] active_tag = (mc == 0) ? lq_hd[FW+5 +: TAGW] : cur_tag;
+`ifdef OT_NATIVE59_MUT_NO_RETURN_CHECK
+    wire m_join_bad = 1'b0;
+`else
     wire m_join_bad = m_go && (m_tag != active_tag);
+`endif
     reg [TAGW-1:0] tag_q;
     assign out_tag = tag_q;
     initial if (TAGW != 59 || WT != 0 || CT != 0 || MEMM != 0 || QMEM != 0)
@@ -365,7 +375,7 @@ module ot_coll_tp8_die_native59 #(
     always @(posedge clk or negedge rs_m)
         if (!rs_m) begin ov_q <= 1'b0; mc <= 0; cur_mode <= 1'b0; end
         else begin
-            ov_q <= m_go && !m_join_bad;
+            ov_q <= m_go && !m_join_bad && !prot && !e_f && !m_e;
             if (m_go) begin
                 if (mc == 0) begin cur_mode <= m_mode; cur_tag <= active_tag; end
                 mc <= m_lst ? 16'd0 : mc + 16'd1;

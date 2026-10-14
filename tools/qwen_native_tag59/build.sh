@@ -14,7 +14,7 @@ sources=(rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_a
  rtl/rom/ot_rom_oneshot_allreduce.sv rtl/rom/ot_coll_tp8_die.sv rtl/rom/ot_coll_tp8_col_tile.sv rtl/rom/ot_rom_oneshot_die_native59.sv rtl/rom/ot_coll_tp8_die_native59.sv rtl/test/tb_coll_tp8_native59.sv)
 sha256sum "${sources[@]}" "$out/driver.cpp" > "$out/source_pins.sha256"
 "$v" --timescale-override 1ns/1fs --cc --exe --build -O1 -j 4 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-TIMESCALEMOD \
- --top-module tb_coll_tp8_native59 -GWT=0 -GLATU=14 -GLATS=40 -GBPC=3600 -GICR=32 --Mdir "$out/obj" \
+ ${NATIVE59_DEFINES:-} --top-module tb_coll_tp8_native59 -GWT=0 -GLATU=14 -GLATS=40 -GBPC=3600 -GICR=32 --Mdir "$out/obj" \
  "${sources[@]}" "$out/driver.cpp" -CFLAGS -O1 > "$out/build.log" 2>&1
 sha256sum "$out/obj/Vtb_coll_tp8_native59" > "$out/executable.sha256"
 echo "COLLECTIVE_PROVIDER_READY $out/obj/Vtb_coll_tp8_native59"

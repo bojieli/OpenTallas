@@ -60,6 +60,7 @@ module tb_coll_tp8_native59 #(
             identity={ep,stage,tok,pos,seg};
         end
     endfunction
+    integer identity_bad = 0;
     integer bad = 0, words_out = 0, first = -1, lastc = 0, errs = 0, done_n = 0;
     genvar g, j;
     generate
@@ -122,7 +123,7 @@ module tb_coll_tp8_native59 #(
             reg [FW-1:0] exp;
             always @(posedge clk) if (ov[g]) begin
                 if (otag[g*TAGW +: TAGW] !== identity(rm)) begin
-                    bad=bad+1;
+                    identity_bad=identity_bad+1; bad=bad+1;
                     if(bad<5) $display("IDENTITY die=%0d msg=%0d got=%h expected=%h",g,rm,otag[g*TAGW +: TAGW],identity(rm));
                 end
                 per = mode[rm] ? ND * WORDS : WORDS;
@@ -182,6 +183,15 @@ module tb_coll_tp8_native59 #(
     integer t;
     reg tagok;
     always @(posedge clk) begin
+`ifdef OT_NATIVE59_MUT_PEERID
+        if(cyc > 6000) begin
+            tagok=1'b1;
+            for(t=0;t<ND;t=t+1) if(!fc[t*5+4]) tagok=1'b0;
+            $display("STALE_PEER_IDENTITY fault=%b protocol_detected=%0d identity_escapes=%0d outputs=%0d",flt,tagok,identity_bad,words_out);
+            if(tagok && flt=={ND{1'b1}} && identity_bad==0) $display("PASS"); else $display("FAIL");
+            $finish;
+        end
+`endif
         if ((done_n == ND && INJECT < 0 && TAGBAD < 0) ||
             ((INJECT >= 0 || TAGBAD >= 0) && cyc > 4000 + 4 * LATS + NMSG * WORDS * 16)) begin
             $display("TP8COLL dies=%0d latu=%0d lats=%0d msgs=%0d words=%0d gap=%0d skew=%0d inject=%0d mismatches=%0d out_err=%0d fault=%b code=%b words_out=%0d first=%0d last=%0d",

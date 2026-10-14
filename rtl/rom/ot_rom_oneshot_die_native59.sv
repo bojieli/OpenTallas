@@ -484,13 +484,16 @@ module ot_rom_oneshot_die_native59 #(
         ork_q <= gov_m ? gor_m : {RB{1'b0}};
     end
     ot_hdly #(.W(FW + RB + 3), .N(HDLO)) u_hdly_out (.a({ov_q, od_q, ol_q, ork_q, oe_q}),
-        .y({out_valid, out_data, out_last, out_rank, out_err}));
+        .y({out_valid, out_data, out_last, out_rank, out_err_raw}));
 
     // Native59 identity follows the exact accepted operand groups, not input timing.
     // The original pop arbitration serializes gather after all older reduce outputs.
     localparam integer IDAB = $clog2(2*DEPTH + N*ADD_LAT + 8);
     localparam integer IDDEP = 1 << IDAB;
     reg [TAGW-1:0] identity_mem [0:IDDEP-1];
+    reg identity_bad_mem [0:IDDEP-1]; reg identity_bad_out;
+    wire out_err_raw;
+    assign out_err = out_err_raw || identity_bad_out;
     reg [IDAB-1:0] identity_wp, identity_rp;
     reg [IDAB:0] identity_count;
     reg [TAGW-1:0] identity_out;
@@ -499,15 +502,17 @@ module ot_rom_oneshot_die_native59 #(
     wire identity_result = red_out || gov_m;
     wire identity_pop = identity_result && (red_out || gor_m == N-1);
     always @(posedge clk or negedge rst_i) begin
-        if (!rst_i) begin identity_wp<=0; identity_rp<=0; identity_count<=0; identity_fault<=0; identity_out<=0; end
+        if (!rst_i) begin identity_wp<=0; identity_rp<=0; identity_count<=0; identity_fault<=0; identity_out<=0; identity_bad_out<=0; end
         else begin
             if (identity_push) begin
                 identity_mem[identity_wp] <= s0_t[0][TAGW:1];
+                identity_bad_mem[identity_wp] <= !agree;
                 identity_wp <= identity_wp + 1'b1;
                 if (identity_count == IDDEP && !identity_pop) identity_fault<=1;
             end
             if (identity_result) begin
                 identity_out <= identity_mem[identity_rp];
+                identity_bad_out <= identity_bad_mem[identity_rp];
                 if (identity_count == 0) identity_fault<=1;
             end
             if (identity_pop) identity_rp <= identity_rp + 1'b1;
