@@ -83,7 +83,7 @@ module ot_hgi_dma_native_read_owned_join #(
  always @(posedge clk or negedge rst_n)if(!rst_n)begin
   for(integer s=0;s<4;s++)pin_return[s*W+W-1]<=0;
   valid<=0;valid_n<='1;expected<=0;expected_n<='1;legacy_return[256]<=0;legacy_credit<=0;fault<=0;
- end else begin:join
+ end else begin:collect_returns
   reg [SLOTS-1:0] nv,incoming;reg pop;reg [TW-1:0] ticket;
   if(valid!=~valid_n||expected!=~expected_n)fault<=1;
   pop=valid[expected];legacy_return[256]<=pop;legacy_credit<=pop;
@@ -135,7 +135,7 @@ module ot_hgi_dma_native_read_owned #(
    assign replies[s*W+:W]=returns[(s*8+b)*W+:W];
   end
   for(genvar o=0;o<4;o++)begin:legacy_lane
-   ot_hgi_dma_native_read_owned_join #(.OWNER(o),.SLOTS(LEGACY_SLOTS),.MUT(MUT)) join(
+   ot_hgi_dma_native_read_owned_join #(.OWNER(o),.SLOTS(LEGACY_SLOTS),.MUT(MUT)) u_join(
     .clk(clocks[32+o*8+b]),.rst_n(rst_n),.routed_return(replies),
     .legacy_return(legacy_r[(o*8+b)*257+:257]),.legacy_credit(legacy_r[8224+o*8+b]),
     .drained(join_idle[o*8+b]),.fault(fault[32+o*8+b]));
