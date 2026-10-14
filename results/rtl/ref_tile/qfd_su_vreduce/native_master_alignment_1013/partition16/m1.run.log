@@ -1,0 +1,4 @@
+DIFF cycle=24 vm=1 crom=0 emb=0 select=0
+DIFF cycle=25 vm=1 crom=0 emb=0 select=0
+FATAL: rtl/test/qwen_vm_me/tb_qfd_su_align_entries64.sv:60: FAIL alignment checks=2976 errors=2976 resets=27 MUT=1
+       Time: 3000510  Scope: tb_qfd_su_align_entries64

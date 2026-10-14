@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   739 GB (avail 966, growth 82, headroom 48, waiters 0/0 GB) load 38/128 running 16 disk 1187 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-802295-1791962738 after 0 s
+PASS alignment checks=2976 resets=27 ML15 VL7 MC4 sixteen physical clock entries synchronously tested
+rtl/test/qwen_vm_me/tb_qfd_su_align_entries64.sv:61: $finish called at 3000510 (1ps)
+DIFF cycle=24 vm=1 crom=0 emb=0 select=0
+DIFF cycle=25 vm=1 crom=0 emb=0 select=0
+FATAL: rtl/test/qwen_vm_me/tb_qfd_su_align_entries64.sv:60: FAIL alignment checks=2976 errors=2976 resets=27 MUT=1
+       Time: 3000510  Scope: tb_qfd_su_align_entries64
+DIFF cycle=24 vm=1 crom=1 emb=1 select=1
+DIFF cycle=25 vm=1 crom=1 emb=1 select=1
+FATAL: rtl/test/qwen_vm_me/tb_qfd_su_align_entries64.sv:60: FAIL alignment checks=2976 errors=2976 resets=27 MUT=2
+       Time: 3000510  Scope: tb_qfd_su_align_entries64
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-802295-1791962738): exit 0
