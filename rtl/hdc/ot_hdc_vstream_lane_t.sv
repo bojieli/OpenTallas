@@ -30,7 +30,14 @@ module ot_hdc_vstream_lane_t #(
     // configuration (a parent instantiates the hard tile with no overrides): mul 5 (CSA tree | prefix add | round),
     // add 4 (prefix adds split from the alignment).  The tile's results are tagged; only the lane latency grows.
     parameter integer QLA  = 4,
-    parameter integer QLM  = 5
+    parameter integer QLM  = 5,
+    // r6 2026-10-14 (compute-die lead decision 07:27, option 1): OREG = 1 registers every lane-cluster OUTPUT in this
+    // parent (one fanout-1 kept flop per output pin, valid bits reset by the parent's own reset register), so the
+    // cluster's output launch no longer depends on where the closed head's N / S pins sit.  All 24 outputs: the 14
+    // write / result outputs leave 1 edge later; the 5 read requests also leave 1 edge later and the stream unit
+    // (ot_hdc_vstream LOREG = 1) brings their answers back over ONE FEWER relay stage, so the head's read-to-data
+    // alignment (ML + 2 + 2*RD, fixed in the closed head) is unchanged.  0 = the original wires-only cluster.
+    parameter integer OREG = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -78,7 +85,36 @@ module ot_hdc_vstream_lane_t #(
     output wire              retire,
     output wire              l_fault
 );
-    // wires only: no flop, no gate at this level.  Every child registers every pin (and its own reset).
+    // wires only at OREG = 0: no flop, no gate at this level.  Every child registers every pin (and its own reset).
+    wire              h_va_re, h_vb_re, h_vc_re, h_wrom_re, h_crom_re, h_vm_we, h_kv_we, h_l_ov, h_l_redsq, h_l_last,
+                      h_retire, h_l_fault;
+    wire [AW-1:0]     h_va_addr, h_vb_addr, h_vc_addr, h_wrom_addr, h_crom_addr, h_vm_waddr, h_kv_waddr, h_l_raddr;
+    wire [31:0]       h_vm_wdata, h_kv_wdata, h_l_out;
+    wire [1:0]        h_l_red;
+    localparam integer OVB = 12;                                   // valid bits (reset)
+    localparam integer ODB = 8*AW + 3*32 + 2;                      // data bits (no reset)
+    wire [OVB-1:0] hv = {h_va_re, h_vb_re, h_vc_re, h_wrom_re, h_crom_re, h_vm_we, h_kv_we, h_l_ov, h_l_redsq, h_l_last,
+                         h_retire, h_l_fault};
+    wire [ODB-1:0] hd = {h_va_addr, h_vb_addr, h_vc_addr, h_wrom_addr, h_crom_addr, h_vm_waddr, h_kv_waddr, h_l_raddr,
+                         h_vm_wdata, h_kv_wdata, h_l_out, h_l_red};
+    wire [OVB-1:0] ov;
+    wire [ODB-1:0] od;
+    generate if (OREG != 0) begin : g_oreg
+        reg rs;                                                    // the parent's reset register (async assert, registered deassert)
+        always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 1'b0; else rs <= 1'b1;
+        (* keep *) reg [OVB-1:0] ovr;
+        (* keep *) reg [ODB-1:0] odr;
+        always @(posedge clk or negedge rs) if (!rs) ovr <= {OVB{1'b0}}; else ovr <= hv;
+        always @(posedge clk) odr <= hd;
+        assign ov = ovr;
+        assign od = odr;
+    end else begin : g_wire
+        assign ov = hv;
+        assign od = hd;
+    end endgenerate
+    assign {va_re, vb_re, vc_re, wrom_re, crom_re, vm_we, kv_we, l_ov, l_redsq, l_last, retire, l_fault} = ov;
+    assign {va_addr, vb_addr, vc_addr, wrom_addr, crom_addr, vm_waddr, kv_waddr, l_raddr, vm_wdata, kv_wdata, l_out,
+            l_red} = od;
     wire        e_v, e_vo, e_f, r_v, r_vo, r_f, q_v, q_vo, q_f;
     wire [31:0] e_x, e_y, r_x, r_y, q_x, q_y;
 `ifdef OT_SU_LANE_HARD
@@ -94,11 +130,11 @@ module ot_hdc_vstream_lane_t #(
         .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
         .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
         .dst(dst), .red(red), .ad(ad), .imm1(imm1), .imm2(imm2), .cls(cls), .accept(accept), .i_sfu(i_sfu),
-        .va_re(va_re), .va_addr(va_addr), .va_q(va_q), .vb_re(vb_re), .vb_addr(vb_addr), .vb_q(vb_q), .vc_re(vc_re),
-        .vc_addr(vc_addr), .vc_q(vc_q), .wrom_re(wrom_re), .wrom_addr(wrom_addr), .wrom_q(wrom_q), .crom_re(crom_re),
-        .crom_addr(crom_addr), .crom_q(crom_q), .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata),
-        .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata), .l_ov(l_ov), .l_out(l_out), .l_red(l_red),
-        .l_redsq(l_redsq), .l_raddr(l_raddr), .l_last(l_last), .retire(retire), .l_fault(l_fault),
+        .va_re(h_va_re), .va_addr(h_va_addr), .va_q(va_q), .vb_re(h_vb_re), .vb_addr(h_vb_addr), .vb_q(vb_q), .vc_re(h_vc_re),
+        .vc_addr(h_vc_addr), .vc_q(vc_q), .wrom_re(h_wrom_re), .wrom_addr(h_wrom_addr), .wrom_q(wrom_q), .crom_re(h_crom_re),
+        .crom_addr(h_crom_addr), .crom_q(crom_q), .vm_we(h_vm_we), .vm_waddr(h_vm_waddr), .vm_wdata(h_vm_wdata),
+        .kv_we(h_kv_we), .kv_waddr(h_kv_waddr), .kv_wdata(h_kv_wdata), .l_ov(h_l_ov), .l_out(h_l_out), .l_red(h_l_red),
+        .l_redsq(h_l_redsq), .l_raddr(h_l_raddr), .l_last(h_l_last), .retire(h_retire), .l_fault(h_l_fault),
         .sx_exp_v(e_v), .sx_exp_x(e_x), .sy_exp_y(e_y), .sy_exp_vo(e_vo), .sy_exp_f(e_f), .sx_rcp_v(r_v),
         .sx_rcp_x(r_x), .sy_rcp_y(r_y), .sy_rcp_f(r_f), .sx_rsq_v(q_v), .sx_rsq_x(q_x), .sy_rsq_y(q_y),
         .sy_rsq_f(q_f));
