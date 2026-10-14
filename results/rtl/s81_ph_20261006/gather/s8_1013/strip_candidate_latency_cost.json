@@ -1,0 +1,77 @@
+{
+  "schema": "opentallas.s81.gather.candidate_latency_cost.v1",
+  "status": "UNMEASURED_PRODUCTION_COST",
+  "immutable_prices_changed": false,
+  "period_ps": {
+    "stream": 833.333,
+    "serial": 1111.111
+  },
+  "added_cycles": {
+    "tc": {
+      "domain": "stream",
+      "cycles": 1
+    },
+    "capture_completion_f_cd": {
+      "domain": "serial",
+      "cycles": 1
+    },
+    "tst_status": {
+      "domain": "stream",
+      "cycles": 4
+    },
+    "column_status_cs": {
+      "domain": "stream",
+      "cycles": 4
+    },
+    "rc_reset_release": {
+      "domain": "stream",
+      "cycles": 6
+    },
+    "t_xgo": {
+      "domain": "stream",
+      "cycles": 0
+    },
+    "c_cmd": {
+      "domain": "stream",
+      "cycles": 0
+    },
+    "f_vm": {
+      "domain": "serial",
+      "cycles": 0
+    }
+  },
+  "conditional_serialized_phase_round_trip": {
+    "additional_time_ps": 1944.444,
+    "average_stream_cycles": 2.3333333333333335,
+    "stream_edge_range": [
+      2,
+      3
+    ],
+    "assumption": "tc forward transport and serial capture completion are serialized on the causal phase path; overlap and fullnative scheduler must be measured"
+  },
+  "fixture_layers": {
+    "L2": {
+      "phases": 25,
+      "conditional_added_stream_edges": [
+        50,
+        75
+      ]
+    },
+    "L20": {
+      "phases": 24,
+      "conditional_added_stream_edges": [
+        48,
+        72
+      ]
+    }
+  },
+  "qualification_limits": [
+    "full bench adds matching completion transport to flat semantic reference; it is not a productiontok/s run",
+    "resetrelease cost applies at externalreset/restart; not asserted perfieldphase",
+    "status latency must enter fault/busy sequencing contract",
+    "native81 binding/PF ABI versus optional120 production binding remains unresolved"
+  ],
+  "measured_production_ratio": null,
+  "measured_end_to_end_toks_loss": null,
+  "ledger_acceptance": null
+}
