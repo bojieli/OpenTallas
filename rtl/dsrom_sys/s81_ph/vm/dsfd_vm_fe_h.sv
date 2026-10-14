@@ -81,7 +81,7 @@ module dsfd_vm_fxs (
     output reg  [3:0]    sok_o,
     output reg  [4:0]    rn_o           // [3:0] to its 4 dsfd_vm_clt, [4] onwards
 `ifdef OT_SPVM_RESET_ACK
-    , output wire rst_ack
+    , input wire reset_epoch_n, output wire rst_ack
 `endif
 );
     wire clk = ck[0];
@@ -103,7 +103,7 @@ module dsfd_vm_fxs (
             .i_m(w_m[16*gj +: 16]), .i_d(w_d[512*gj +: 512]), .s_o(s_o[588*gj +: 588]), .x_o(), .k_o(k_o[32*gj +: 32]));
     end endgenerate
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
+    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
 `endif
 endmodule
 
@@ -128,7 +128,7 @@ module dsfd_vm_fxr (
     output reg  [3:0]   o_v, output reg [583:0] o,
     output reg  [1:0]   rn_o
 `ifdef OT_SPVM_RESET_ACK
-    , output wire rst_ack
+    , input wire reset_epoch_n, output wire rst_ack
 `endif
 );
     wire clk = ck[0];
@@ -141,7 +141,7 @@ module dsfd_vm_fxr (
         if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
     end
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
+    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
 `endif
 endmodule
 // bundle 4: WFC write / read, ctrl A / B
@@ -152,7 +152,7 @@ module dsfd_vm_fxa (
     output reg  [3:0]   o_v, output reg [442:0] o,
     output reg  [1:0]   rn_o
 `ifdef OT_SPVM_RESET_ACK
-    , output wire rst_ack
+    , input wire reset_epoch_n, output wire rst_ack
 `endif
 );
     wire clk = ck[0];
@@ -165,7 +165,7 @@ module dsfd_vm_fxa (
         if (!rn) begin q_v <= 4'd0; o_v <= 4'd0; end else begin q_v <= i_v; o_v <= q_v; end
     end
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
+    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
 `endif
 endmodule
 // bundle 5: the six read ports, the two landing drain ports, rf, the slice-0 tags
@@ -176,7 +176,7 @@ module dsfd_vm_fxb (
     output reg  [7:0]   o_v, output reg [480:0] o,
     output reg  [1:0]   rn_o
 `ifdef OT_SPVM_RESET_ACK
-    , output wire rst_ack
+    , input wire reset_epoch_n, output wire rst_ack
 `endif
 );
     wire clk = ck[0];
@@ -189,7 +189,7 @@ module dsfd_vm_fxb (
         if (!rn) begin q_v <= 8'd0; o_v <= 8'd0; end else begin q_v <= i_v; o_v <= q_v; end
     end
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
+    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
 `endif
 endmodule
 
@@ -228,7 +228,7 @@ module dsfd_vm_flt (
     output reg          av, output reg [525:0] ret, output reg ok, output reg ovf, output reg sflt,
     output reg          rn_o
 `ifdef OT_SPVM_RESET_ACK
-    , output wire rst_ack
+    , input wire reset_epoch_n, output wire rst_ack
 `endif
 );
 `ifdef OT_SPVM_MUT_LSMALL
@@ -294,7 +294,7 @@ module dsfd_vm_flt (
         end
     end
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
+    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
 `endif
 endmodule
 
@@ -310,7 +310,7 @@ module dsfd_vm_fld (
     output reg           ovr_o, output reg sflt_o,
     output reg  [0:0]    rn_o           // to landing lane 0 (the lane chain)
 `ifdef OT_SPVM_RESET_ACK
-    , output wire rst_ack
+    , input wire reset_epoch_n, output wire rst_ack
 `endif
 );
     // LGL / LDL 1 here = this leaf's own stage of each relay (g_r[0] out pin, dd_r in pin); LSD = the full round trip
@@ -396,7 +396,7 @@ module dsfd_vm_fld (
         end
     end endgenerate
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
+    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack));
 `endif
 endmodule
 
@@ -485,7 +485,7 @@ module dsfd_vm_fcc (
     end else begin : g_ncca
 `ifdef OT_SPVM_RESET_ACK
         assign fifo_live_w = cw_live;
-    dsfd_vm_reset_ack #(.N(1)) u_cross_ack_r (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(&fifo_live_r), .ack(rst_ack[1]));
+    dsfd_vm_reset_ack #(.N(1)) u_cross_ack_r (.clk(clk), .request_n(rst[0]), .local_release(rn), .consumer_live(&fifo_live_r), .ack(rst_ack[1]));
     dsfd_vm_reset_ack #(.N(1)) u_cross_ack_w (.clk(cks[0]), .request_n(rss[0]), .local_release(rns), .consumer_live(&fifo_live_w), .ack(rst_ack_s[1]));
 `endif
         ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
@@ -541,7 +541,7 @@ module dsfd_vm_fcc (
         assign s_o[(2*gs)*144 +: 144] = fs0[144*gs +: 144]; assign s_o[(2*gs + 1)*144 +: 144] = fs1[144*gs +: 144];
     end endgenerate
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack[0]));
+    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rst[0]), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack[0]));
     dsfd_vm_reset_ack #(.N(1)) u_stream_ack (.clk(cks[0]), .request_n(rss[0]), .local_release(rns), .consumer_live(1'b1), .ack(rst_ack_s[0]));
 `endif
 endmodule
@@ -590,7 +590,7 @@ module dsfd_vm_fcw (
         assign s_o[159*gs +: 159] = {fs1[15*gs +: 15], fs0[144*gs +: 144]};
     end endgenerate
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rni), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack[0]));
+    dsfd_vm_reset_ack #(.N(1)) u_reset_ack (.clk(clk), .request_n(rst[0]), .local_release(rn), .consumer_live(1'b1), .ack(rst_ack[0]));
 `endif
 endmodule
 
@@ -1054,7 +1054,7 @@ module dsfd_vm_fe_h (
                 .w_v(w_v[gj]), .w_row(w_row[14*gj +: 14]), .w_m(w_m[16*gj +: 16]), .w_d(w_d[512*gj +: 512]),
                 .flt(w_f[4*gj +: 4])
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[G])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[G])
 `endif
                 );
             assign kall[32*(12 + G) +: 32] = ko[32*gj +: 32];
@@ -1062,7 +1062,7 @@ module dsfd_vm_fe_h (
         dsfd_vm_fxs u_x (.ck(ck), .rni(rn_cn[3 + gi]), .w_v(w_v), .w_row(w_row), .w_m(w_m), .w_d(w_d), .w_flt(w_f),
             .s_o(cap_so[2352*gi +: 2352]), .k_o(ko), .clf_o(clf[4*gi +: 4]), .sok_o(sok), .rn_o(rno)
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[20+gi])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[20+gi])
 `endif
                 );
         assign cap_rno[5*gi +: 5] = rno;
@@ -1091,7 +1091,7 @@ module dsfd_vm_fe_h (
             .g(ll_gx[gi]), .arm_v(la_vx[gi]), .arm_base(la_bx[14*gi +: 14]),
             .av(ll_av[gi]), .ret(ll_ret[526*gi +: 526]), .ok(ll_ok[gi]), .ovf(ll_ovf[gi]), .sflt(ll_sf[gi]), .rn_o(ll_rn[gi])
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[24+gi])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[24+gi])
 `endif
                 );
         // the lane's mid-hop relay tile (one stage on g / arm / ret / flags: the contract's LGL 3, LAL 3, LDL 3, LVX 1)
@@ -1112,7 +1112,7 @@ module dsfd_vm_fe_h (
     dsfd_vm_fld u_ld (.ck(ck), .rni(rn_cn[0]), .av(ll_avx), .ret(ll_retx), .ok(ll_okx[5:2]), .ovf(ll_ovfx), .sflt(ll_sfx),
         .g(ll_g), .s_o(s_ld), .k_o(k_ld), .t_cts(t_cts), .ovr_o(ovr_w), .sflt_o(sflt_w), .rn_o(rn_ld)
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[34])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[34])
 `endif
                 );
     // ---------------- central
@@ -1179,7 +1179,7 @@ module dsfd_vm_fe_h (
                     dsfd_vm_fxr u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(yv), .o(yp),
                         .rn_o({xr1[(4*gb + gs)*R + gr], xr0[(4*gb + gs)*R + gr]})
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[41+(4*gb+gs)*R+gr])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[41+(4*gb+gs)*R+gr])
 `endif
                 );
                     reg [146:0] sk; always @(posedge ck[0]) sk <= {xv[gr][0], xp[gr][145:0]};
@@ -1190,7 +1190,7 @@ module dsfd_vm_fe_h (
                     dsfd_vm_fxr u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
                         .rn_o({xr1[(4*gb + gs)*R + gr], xr0[(4*gb + gs)*R + gr]})
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[41+(4*gb+gs)*R+gr])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[41+(4*gb+gs)*R+gr])
 `endif
                 );
                 end
@@ -1238,7 +1238,7 @@ module dsfd_vm_fe_h (
                 dsfd_vm_fxa u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
                     .rn_o({xr1[(4*4 + gs)*R + gr], xr0[(4*4 + gs)*R + gr]})
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[41+(4*4+gs)*R+gr])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[41+(4*4+gs)*R+gr])
 `endif
                 );
             end
@@ -1325,7 +1325,7 @@ module dsfd_vm_fe_h (
                 dsfd_vm_fxb u_r (.ck(ck), .rni(rni_x), .i_v(xv[gr]), .i(xp[gr]), .o_v(xv[gr+1]), .o(xp[gr+1]),
                     .rn_o({xr1[(4*5 + gs)*R + gr], xr0[(4*5 + gs)*R + gr]})
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[41+(4*5+gs)*R+gr])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[41+(4*5+gs)*R+gr])
 `endif
                 );
             end
@@ -1337,7 +1337,7 @@ module dsfd_vm_fe_h (
             .o_v(m_v[28*gs +: 28]), .o_we(m_we[28*gs +: 28]), .o_row(m_row[392*gs +: 392]),
             .o_mask(m_mask[112*gs +: 112]), .o_d(m_d[3584*gs +: 3584]), .o_rf(m_rf[4*gs +: 4])
 `ifdef OT_SPVM_RESET_ACK
-                , .rst_ack(rst_ack[16+gs])
+                , .reset_epoch_n(rst[0]), .rst_ack(rst_ack[16+gs])
 `endif
                 );
     end endgenerate

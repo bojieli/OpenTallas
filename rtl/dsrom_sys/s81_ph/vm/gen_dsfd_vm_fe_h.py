@@ -773,11 +773,11 @@ def reset_ack_interfaces(text):
     def ack(inst, clock, request, local, output, live="1'b1", n=1):
         return f'    dsfd_vm_reset_ack #(.N({n})) {inst} (.clk({clock}), .request_n({request}), .local_release({local}), .consumer_live({live}), .ack({output}));\n'
     for name in ['dsfd_vm_fxs','dsfd_vm_flt','dsfd_vm_fld','dsfd_vm_fxr','dsfd_vm_fxa','dsfd_vm_fxb']:
-        modify(name,'output wire rst_ack',ack('u_reset_ack','clk','rni','rn','rst_ack'))
+        modify(name,'input wire reset_epoch_n, output wire rst_ack',ack('u_reset_ack','clk','reset_epoch_n','rn','rst_ack'))
     def cw(part):
         old=".m1_od(512'd0));";assert old in part
         return part.replace(old,".m1_od(512'd0)\n`ifdef OT_SPVM_RESET_ACK\n        , .rst_ack(rst_ack[1])\n`endif\n        );")
-    modify('dsfd_vm_fcw','output wire [1:0] rst_ack',ack('u_reset_ack','clk','rni','rn','rst_ack[0]'),cw)
+    modify('dsfd_vm_fcw','output wire [1:0] rst_ack',ack('u_reset_ack','clk','rst[0]','rn','rst_ack[0]'),cw)
     def cn(part):
         old='.fault(ad_flt_c), .online(ad_on),';assert old in part
         return part.replace(old,old+'\n`ifdef OT_SPVM_RESET_ACK\n        .rst_ack_c(rst_ack_s[1]), .rst_ack_e(rst_ack[1]),\n`endif')
@@ -794,27 +794,27 @@ def reset_ack_interfaces(text):
         needle='        assign cw_live = 2\'b11;';assert needle in part
         part=part.replace(needle,needle+'\n`ifdef OT_SPVM_RESET_ACK\n'+ack('u_cross_ack_r','clk','x_arn','xr_t','rst_ack[1]','&fifo_live_r',2)+ack('u_cross_ack_w','cks[0]','x_arn','xw_t','rst_ack_s[1]','&fifo_live_w',2)+'`endif')
         needle='    end else begin : g_ncca';assert needle in part
-        part=part.replace(needle,needle+'\n`ifdef OT_SPVM_RESET_ACK\n        assign fifo_live_w = cw_live;\n'+ack('u_cross_ack_r','clk','rni','rn','rst_ack[1]','&fifo_live_r')+ack('u_cross_ack_w','cks[0]','rss[0]','rns','rst_ack_s[1]','&fifo_live_w')+'`endif')
+        part=part.replace(needle,needle+'\n`ifdef OT_SPVM_RESET_ACK\n        assign fifo_live_w = cw_live;\n'+ack('u_cross_ack_r','clk','rst[0]','rn','rst_ack[1]','&fifo_live_r')+ack('u_cross_ack_w','cks[0]','rss[0]','rns','rst_ack_s[1]','&fifo_live_w')+'`endif')
         return part
     modify('dsfd_vm_fcc','output wire [1:0] rst_ack, output wire [1:0] rst_ack_s',
-           ack('u_reset_ack','clk','rni','rn','rst_ack[0]')+ack('u_stream_ack','cks[0]','rss[0]','rns','rst_ack_s[0]'),cc)
+           ack('u_reset_ack','clk','rst[0]','rn','rst_ack[0]')+ack('u_stream_ack','cks[0]','rss[0]','rns','rst_ack_s[0]'),cc)
     def parent(part):
         def connect(marker,connection):
             nonlocal part
             assert marker in part,marker
             part=part.replace(marker,marker[:-2]+'\n`ifdef OT_SPVM_RESET_ACK\n                , '+connection+'\n`endif\n                );')
-        connect('.flt(w_f[4*gj +: 4]));','.rst_ack(rst_ack[G])')
-        connect('.rn_o(rno));','.rst_ack(rst_ack[20+gi])')
-        connect('.rn_o(ll_rn[gi]));','.rst_ack(rst_ack[24+gi])')
-        connect('.rn_o(rn_ld));','.rst_ack(rst_ack[34])')
+        connect('.flt(w_f[4*gj +: 4]));','.reset_epoch_n(rst[0]), .rst_ack(rst_ack[G])')
+        connect('.rn_o(rno));','.reset_epoch_n(rst[0]), .rst_ack(rst_ack[20+gi])')
+        connect('.rn_o(ll_rn[gi]));','.reset_epoch_n(rst[0]), .rst_ack(rst_ack[24+gi])')
+        connect('.rn_o(rn_ld));','.reset_epoch_n(rst[0]), .rst_ack(rst_ack[34])')
         connect('.rn_o(rn_cc));','.rst_ack(rst_ack[39+:2]), .rst_ack_s(rst_ack_s[2+:2])')
         connect('.rn_o(rn_cw));','.rst_ack(rst_ack[35+:2])')
         connect('.rn_o(rn_cn));','.rst_ack(rst_ack[37+:2]), .rst_ack_s(rst_ack_s[0+:2])')
-        connect('.o_rf(m_rf[4*gs +: 4]));','.rst_ack(rst_ack[16+gs])')
+        connect('.o_rf(m_rf[4*gs +: 4]));','.reset_epoch_n(rst[0]), .rst_ack(rst_ack[16+gs])')
         # Every source-level generate variant drives the same unique bit.
         for b in ['gb','4','5']:
             marker=f'.rn_o({{xr1[(4*{b} + gs)*R + gr], xr0[(4*{b} + gs)*R + gr]}}));'
-            connect(marker,f'.rst_ack(rst_ack[41+(4*{b}+gs)*R+gr])')
+            connect(marker,f'.reset_epoch_n(rst[0]), .rst_ack(rst_ack[41+(4*{b}+gs)*R+gr])')
         return part
     modify('dsfd_vm_fe_h','output wire [40+24*`VMFE_R:0] rst_ack, output wire [3:0] rst_ack_s',transform=parent)
     return text

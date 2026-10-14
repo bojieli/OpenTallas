@@ -360,7 +360,7 @@ module dsfd_vm_clt #(
     output wire [511:0] w_d,
     output wire [3:0]   flt
 `ifdef OT_SPVM_RESET_ACK
-    , output wire rst_ack
+    , input wire reset_epoch_n, output wire rst_ack
 `endif
 );
     wire clk = ck[0];
@@ -387,7 +387,7 @@ module dsfd_vm_clt #(
     dsfd_vm_cl #(.LA(LA), .LTO(LTO)) u_c (.clk(clk), .rn(rn_r), .gid(gid_r), .ev(lvx), .ea(la), .ed(ld), .slot_ok(sok_r),
         .w_v(w_v[0]), .w_row(w_row), .w_m(w_m), .w_d(w_d), .flt(flt));
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack u_reset_ack (.clk(clk), .request_n(rn[0]), .local_release(rn_r), .consumer_live(1'b1), .ack(rst_ack));
+    dsfd_vm_reset_ack u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn_r), .consumer_live(1'b1), .ack(rst_ack));
 `endif
 endmodule
 
@@ -1158,7 +1158,7 @@ module dsfd_vm_fsr (
     output reg  [27:0]   o_v,  output reg [27:0]  o_we, output reg [391:0] o_row, output reg [111:0] o_mask,
     output reg  [3583:0] o_d,  output reg [3:0]   o_rf
 `ifdef OT_SPVM_RESET_ACK
-    , output wire rst_ack
+    , input wire reset_epoch_n, output wire rst_ack
 `endif
 );
     reg rn_q;
@@ -1171,7 +1171,7 @@ module dsfd_vm_fsr (
         o_rf <= i_rf;
     end
 `ifdef OT_SPVM_RESET_ACK
-    dsfd_vm_reset_ack u_reset_ack (.clk(ck), .request_n(rn), .local_release(rn_q), .consumer_live(1'b1), .ack(rst_ack));
+    dsfd_vm_reset_ack u_reset_ack (.clk(ck), .request_n(reset_epoch_n), .local_release(rn_q), .consumer_live(1'b1), .ack(rst_ack));
 `endif
 endmodule
 
