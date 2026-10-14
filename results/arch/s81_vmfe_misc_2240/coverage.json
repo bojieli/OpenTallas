@@ -107,19 +107,33 @@
       "state": "OPEN_NATIVE_COMPOSITION",
       "instances": 4,
       "ownstate": {
-        "per_slice": {
-          "rnc_bits": 3,
-          "rns_bits": 3,
-          "dvx_bits": 15,
-          "dwx_bits": 15,
-          "dmx_bits": 60,
-          "dv5_bits": 3,
-          "dw5_bits": 3,
-          "dm5_bits": 69,
-          "rr_bits": 1
+        "actual_parent_default": {
+          "source_module": "dsfd_sp_vm_m",
+          "QD": 4,
+          "EP": 2,
+          "ED": 3,
+          "MD": 12,
+          "KX": 4,
+          "XT": 2,
+          "DIE_D": 6,
+          "DR": 3,
+          "relay_bits": 1348,
+          "reset_synchroniser_bits": 4,
+          "hard_cells": 54
         },
-        "relay_total_bits": 688,
-        "additional": "u_rs,u_rss actual per-domain reset synchronisers; bit counts apply MD9/KX4/XT2/DR3. No glue omission."
+        "historical_standalone_default": {
+          "MD": 9,
+          "DIE_D": 3,
+          "relay_bits": 688,
+          "hard_cells": 42
+        },
+        "unselected_EP1_variant": {
+          "MD": 11,
+          "DIE_D": 5,
+          "relay_bits": 1128,
+          "hard_cells": 50
+        },
+        "formula": "4*(55*DIE_D+2*DR+1) relay bits; two 2FF reset syncs. Proven BGR H1 means forwarding hop1, preserves EP2/ED3/skew12. Do not infer EP1 from H1."
       },
       "clocks": {
         "ck_period_ps": 1111.111,
@@ -131,7 +145,7 @@
         "tt_ps": 36.0,
         "ff_ps": 16.53
       },
-      "note": "v4 has no standalone BE parent master. Its four hardchildren stand; 688 relay bits and reset synchronisers remain die state. Current c7 placeholder parent is not evidence of native closure."
+      "note": "Actual current dsfd_sp_vm_m and proven MC BGR preserve MD12 and six control stages. Hardening generic code already proves this actual 1348-bit relay composition. 688-bit MD9 and 1128-bit EP1 counts are historical/unselected. Four CLOSED BE_SL children alone do not qualify parent; actual source-view/cap audit and clock/reset drivers remain required."
     },
     {
       "element": "dsfd_vm_bgh",
