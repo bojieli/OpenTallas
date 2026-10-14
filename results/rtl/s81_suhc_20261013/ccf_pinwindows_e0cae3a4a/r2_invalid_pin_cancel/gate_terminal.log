@@ -1,0 +1,14 @@
+GATE WARN util: utilisation 28% outside 45%-60% (std 3590 + macro 0 in core 12728 um2)  -> FIX: resize the outline to util 0.50-0.55 (drop 'outline', set util)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-pve1 for 24 GB; inputs ship there before admission
+GATE INFO remote: remote log /tmp/ref_gate_s81hc_pad_fv4fd5r2_ref_20261013-230829.log; host dir ot-pve1:/srv/opentallas-scratch/claude/ref_gate/s81hc_pad_fv4fd5r2_ref-20261013-230829
+GATE INFO remote: synth + floorplan + PDN OK on ot-pve1 in 148 s (gate total 964 s)
+GATE WARN util: synthesized std area 3590 um2 + macros 0 in core 12728: util 28%  -> FIX: set "std_area_um2": 3590 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_s81_hc_pad_fv4fd5r2 cells 23,256 flops 9,982 depth 11.7 ps util 0.2821 reach 0.0 um (5.0 s)
+GATE WARN textbook.util_channel: utilisation 28.2% outside 45%-65% (std 3591 + macro 0 um2 in 12728 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=137 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.420 vs spec PD 0.42
+GATE INFO clock_rule: root port:sk: 9,982 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: FAIL (1 fail, 4 warn)
+GATE: s81hc_pad_fv4fd5r2_ref/gate_result.json written (clock evidence for the submit gate: commit it with the kit)

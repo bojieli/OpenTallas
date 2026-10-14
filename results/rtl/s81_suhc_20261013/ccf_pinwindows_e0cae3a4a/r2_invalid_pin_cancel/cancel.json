@@ -1,0 +1,10 @@
+{
+  "status": "CANCELLED BY OWNER: known invalid native M2 pins; not a numerical qualification failure",
+  "handle": 2332,
+  "host": "ot-pve1",
+  "directory": "/srv/opentallas-scratch/claude/ref_gate/s81hc_pad_fv4fd5r2_ref-20261013-230829",
+  "container": "830ebb3d1291",
+  "reason": "Retained previous checkpoint proves 1420 actual M2 pins outside die and reviewed assignment also has62 duplicate-center signal neighbor pairs. Preserve frozen source/logs; require fresh corrected-assignment gate.",
+  "qualification": false,
+  "route_allowed": false
+}
