@@ -114,5 +114,20 @@
     "PG": "M5 default",
     "slot_change_request": "UNASSIGNED native SFU quarter control pipe leaves; die owner must assign valid child rectangles/pins/clock roots before adoption",
     "source_selection": "new chunk master PIN_CAPTURE1 STATUS_REG1; data/valid exact gates scoped; controller/status/side/cache binding stillopen"
+  },
+  "composed_candidate": {
+    "selection": "SPLIT_S_PIPE default0",
+    "clock_inputs": [
+      "clk_s_ops_lo",
+      "clk_s_ops_hi",
+      "clk_s_meta_lo",
+      "clk_s_meta_hi"
+    ],
+    "insertion": "eachinjectfacecaptured1; eachchunkinjectsoriginaldepth-1; hightailzero lowtail=highregisteredstage139",
+    "payload_reconstruction": "75 future fields SFU/E1/IMM2/E2/IMM1/RND/DST plus60retiremeta, all55unused CWbitszero",
+    "depth0": "vi/SFU_NONE separateoriginalregisteredcwi bypass, subsequent E1 pipeline captures locally",
+    "physical_scope": "fresh leaf slots/pins/clockphi-R route open; wrapperselect and ensuing capture placement stillneedactualboundary proof",
+    "status": "PIN1 shifts insertion collision observation1edge; STATUS_REG1 adds1; generic no-collision issue protocol remainsrequired, fault/status integration open",
+    "functional_gate": "pending source-exact fullfrozen16lane arithmetic oracle inSPLIT1mode; default0 passesr3"
   }
 }

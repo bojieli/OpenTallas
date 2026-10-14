@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Actual arithmetic/control quarter candidate. Local8 cache/native VM endpoint remains external.
 // Clocks must carry the same logical engine edges at phi-R; separate roots are not async CDC.
-module ot_hgi_sfu_native_quarter #(parameter integer ENABLE_NATIVE=0)(
+module ot_hgi_sfu_native_quarter #(parameter integer ENABLE_NATIVE=0, SPLIT_S_PIPE=0)(
 
     input  wire              clk,
     input  wire              rst_n,
@@ -62,6 +62,7 @@ module ot_hgi_sfu_native_quarter #(parameter integer ENABLE_NATIVE=0)(
     output wire              dbg_res,        // this cycle: results of op dbg_sseq are written
     output wire [7:0]        dbg_sseq,
     output wire admission_fault,
+    input wire clk_s_ops_lo,clk_s_ops_hi,clk_s_meta_lo,clk_s_meta_hi,
     input wire [15:0] clk_lane, clk_map, rst_lane_n, rst_map_n,
     input wire [511:0] vi_q,
     input wire [2047:0] rd_q,
@@ -87,7 +88,7 @@ wire [383:0] l_vm_waddr,l_kv_waddr;
 wire [511:0] l_vm_wdata,l_kv_wdata,l_rox;
 wire [15:0] unused_side_v;
 wire [511:0] unused_side_x;
-ot_hgi_sfu_ctl_extract #(.ENABLE_NATIVE(ENABLE_NATIVE)) u_ctl (
+ot_hgi_sfu_ctl_extract #(.ENABLE_NATIVE(ENABLE_NATIVE),.SPLIT_S_PIPE(SPLIT_S_PIPE)) u_ctl (
 .clk(clk),
 .rst_n(rst_n),
 .go(go),
@@ -173,6 +174,7 @@ ot_hgi_sfu_ctl_extract #(.ENABLE_NATIVE(ENABLE_NATIVE)) u_ctl (
 .dbg_res(dbg_res),
 .dbg_sseq(dbg_sseq),
 .admission_fault(admission_fault),
+.clk_s_ops_lo(clk_s_ops_lo),.clk_s_ops_hi(clk_s_ops_hi),.clk_s_meta_lo(clk_s_meta_lo),.clk_s_meta_hi(clk_s_meta_hi),
 .grid_control(raw_control),.l_fault(lane_fault),.l_coll(lane_coll),.l_rov(l_rov),
 .l_vm_we(l_vm_we),.l_kv_we(l_kv_we),.l_vm_waddr(l_vm_waddr),.l_kv_waddr(l_kv_waddr),
 .l_vm_wdata(l_vm_wdata),.l_kv_wdata(l_kv_wdata),.l_rox(l_rox));

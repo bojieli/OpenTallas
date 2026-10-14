@@ -35,5 +35,18 @@
     "mutation": "OT_SFU_PHASE_MUTANT adds real1742bit control register edge to grid while retirement metadata remainsunshifted; checker reads actual shifted grid bus",
     "source": "r4_mut_manifest.sha256",
     "normal_source_relation": "default preprocessing retains direct raw_control\u2192control alias, same active graph as r3 source; strict production/native source gate stillpending"
+  },
+  "r5_four_root": {
+    "result": "COMPILING",
+    "source_manifest": "r5_split_manifest.sha256",
+    "selection": "SPLIT_S_PIPE1 explicit; default0 remainsmonolithic alternative",
+    "source_graph": "actual controllercwi registered outputs to4 chronological roots thenlive135bits reconstructedcws, existingE1/E2/out/retire unchanged",
+    "gate": "whole frozen16CLOSED lanes+16mapper realc12 phase/write oracle,192descriptors, warmreset",
+    "open": [
+      "new registered fault/busy timing integration",
+      "physical root/pins/slot/cut/hops",
+      "local8 cache/sectorpack/lease/ACK/native VMgroup1",
+      "production throughput"
+    ]
   }
 }

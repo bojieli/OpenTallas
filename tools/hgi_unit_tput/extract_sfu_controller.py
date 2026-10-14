@@ -40,3 +40,11 @@ s=s.replace('    // LV is bounded', '''    initial begin
     // LV is bounded''',1)
 out=r/'rtl/hbm_accel/generic/peers/ot_hgi_sfu_ctl_extract.sv';out.write_text('`timescale 1ns/1ps\n// Opt-in actual c12 controller extraction; not a native VM/cache qualification.\n// Original issue/setup/control pipes retained; no original CLOSED source edited.\n'+s+'\n')
 (r/'results/arch/hbm_native_1013/sfu_native_quarter/extraction.json').write_text(json.dumps({'source_sha256':hashlib.sha256(src.read_bytes()).hexdigest(),'candidate_sha256':hashlib.sha256(out.read_bytes()).hexdigest(),'changes':['module rename and exact physical defaults','ENABLE_NATIVE default0 and refuse reduction/side/unsupported destination','external real-lane interface','LN4 to LN10 zero-padding','RET5 metadata but RET0 payload because grid adds5 plus original LEAF1'],'control_fields':fields,'not_qualified':['controller clock synthesis/pins','local8 cache','native VM group','production throughput','arithmetic grid phase oracle']},indent=2)+'\n')
+
+import runpy
+runpy.run_path(str(r / "tools/hgi_unit_tput/split_sfu_controller.py"))
+record=r / "results/arch/hbm_native_1013/sfu_native_quarter/extraction.json"
+evidence=json.loads(record.read_text())
+evidence["candidate_sha256"]=hashlib.sha256(out.read_bytes()).hexdigest()
+evidence["changes"].append("SPLIT_S_PIPE default0 adds tested chronological75/60bit×138stage four-root alternative; source gate pending")
+record.write_text(json.dumps(evidence,indent=2)+"\n")

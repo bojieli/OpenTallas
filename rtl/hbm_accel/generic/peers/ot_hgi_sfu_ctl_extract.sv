@@ -3,6 +3,7 @@
 // Original issue/setup/control pipes retained; no original CLOSED source edited.
 module ot_hgi_sfu_ctl_extract #(
     parameter integer ENABLE_NATIVE = 0,
+    parameter integer SPLIT_S_PIPE = 0,
     parameter integer N  = 16,          // light lanes (elements a cycle), a power of two >= 8
     parameter integer M  = 16,          // SFU lanes, a power of two, 8 <= M <= N
     parameter integer LV = 6,           // reducer time levels, 1..7 (l_in is 3 bits; elaboration fails otherwise)
@@ -37,6 +38,7 @@ module ot_hgi_sfu_ctl_extract #(
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input wire clk_s_ops_lo,clk_s_ops_hi,clk_s_meta_lo,clk_s_meta_hi,
     input  wire              go,
     output wire              ready,
     output reg               idle,
@@ -1160,9 +1162,37 @@ module ot_hgi_sfu_ctl_extract #(
                         i_s == SFU_SIGM || i_s == SFU_SILU, i_s == SFU_EXP, i_s == SFU_NONE};
     wire [WC-1:0] cws;
     wire          vs, col_s;
+    generate if(SPLIT_S_PIPE==0)begin:g_legacy_s
     ot_hdc_v41x_ins #(.W(WC), .K(7), .DEPTHS({H_EG, H_SP, H_SQRT, H_RSQ, H_SIG, H_EXP, 16'd0}),
                       .DMAX(D_SP)) u_cs (.clk(clk), .rst_n(rst_n), .v(vi), .sel(s_sel), .d(cwi), .vo(vs), .q(cws),
                       .coll(col_s), .busy(bz_s));
+    end else begin:g_split_s
+        wire [74:0] ops_in={`CW_SFU(cwi),`CW_E1(cwi),`CW_IMM2(cwi),`CW_E2(cwi),`CW_IMM1(cwi),`CW_RND(cwi),`CW_DST(cwi)};
+        wire [74:0] ops_hi,ops_lo;
+        wire [59:0] meta_hi,meta_lo;
+        wire ohv,olv,mhv,mlv,ohc,olc,mhc,mlc,ohb,olb,mhb,mlb;
+        ot_hgi_sfu_ctl_chunk #(.W(75),.OFFSET(138),.PIN_CAPTURE(1),.STATUS_REG(1)) u_oph
+            (.clk(clk_s_ops_hi),.rst_n(rst_n),.v(vi),.sfu(i_s),.d(ops_in),.tail_d(75'd0),.tail_v(1'b0),.q(ops_hi),.vo(ohv),.coll(ohc),.busy(ohb));
+        ot_hgi_sfu_ctl_chunk #(.W(75),.OFFSET(0),.PIN_CAPTURE(1),.STATUS_REG(1)) u_opl
+            (.clk(clk_s_ops_lo),.rst_n(rst_n),.v(vi),.sfu(i_s),.d(ops_in),.tail_d(ops_hi),.tail_v(ohv),.q(ops_lo),.vo(olv),.coll(olc),.busy(olb));
+        ot_hgi_sfu_ctl_chunk #(.W(60),.OFFSET(138),.PIN_CAPTURE(1),.STATUS_REG(1)) u_mth
+            (.clk(clk_s_meta_hi),.rst_n(rst_n),.v(vi),.sfu(i_s),.d(cwi[59:0]),.tail_d(60'd0),.tail_v(1'b0),.q(meta_hi),.vo(mhv),.coll(mhc),.busy(mhb));
+        ot_hgi_sfu_ctl_chunk #(.W(60),.OFFSET(0),.PIN_CAPTURE(1),.STATUS_REG(1)) u_mtl
+            (.clk(clk_s_meta_lo),.rst_n(rst_n),.v(vi),.sfu(i_s),.d(cwi[59:0]),.tail_d(meta_hi),.tail_v(mhv),.q(meta_lo),.vo(mlv),.coll(mlc),.busy(mlb));
+        wire now=vi&&(i_s==SFU_NONE);
+        wire [74:0] ops=now?ops_in:ops_lo;
+        wire [59:0] meta=now?cwi[59:0]:meta_lo;
+        wire [2:0] fn,e1;
+        wire [31:0] imm2,imm1;
+        wire [1:0] e2,dst;
+        wire rnd;
+        assign {fn,e1,imm2,e2,imm1,rnd,dst}=ops;
+        assign cws={8'd0,4'd0,32'd0,3'd0,imm1,2'd0,3'd0,3'd0,imm2,fn,e1,e2,rnd,dst,meta};
+        assign vs=now||olv;
+        assign col_s=ohc||olc||mhc||mlc||(now&&olv);
+        assign bz_s=ohb||olb||mhb||mlb;
+        // Root data/valid edges unchanged. Registered status observation needs composed fault/idle qualification.
+    end endgenerate
     // E2 in (+MLAT: E1), OUT in (+2 MLAT), retire (+2 MLAT + 1)
     wire [WC-1:0] cwe, cwo, cwr;
     wire [2*MLAT+1+OPR:0] vsl;
