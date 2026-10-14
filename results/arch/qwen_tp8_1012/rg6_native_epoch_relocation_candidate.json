@@ -1,0 +1,5232 @@
+{
+ "schema": "opentallas.vm-native-epoch-relocation-candidate.v1",
+ "claim": "Proposedexistingclosedmasterrelocations ONLY, noRTLcyclechange. Boundingbox2.16channelcheck; requiresexactIOpinpacking, percornerETM internalwire budgets androute.",
+ "updates": {
+  "b0_ctl": [
+   69.12,
+   23.76
+  ],
+  "b1_ctl": [
+   69.12,
+   228.95999999999998
+  ],
+  "b2_ctl": [
+   69.12,
+   434.15999999999997
+  ],
+  "b3_ctl": [
+   69.12,
+   639.3599999999999
+  ],
+  "b4_in": [
+   518.4,
+   4.32
+  ],
+  "b5_in": [
+   518.4,
+   71.28
+  ],
+  "b6_in": [
+   518.4,
+   138.24
+  ],
+  "b7_in": [
+   518.4,
+   984.96
+  ],
+  "b5_ctl": [
+   762.48,
+   138.24
+  ],
+  "b6_ctl": [
+   762.48,
+   179.28
+  ],
+  "b7_ctl": [
+   779.76,
+   1034.64
+  ],
+  "su0_in": [
+   967.68,
+   88.56
+  ],
+  "su0_ctl": [
+   967.68,
+   6.48
+  ],
+  "su1_in": [
+   967.68,
+   155.52
+  ],
+  "su1_ctl": [
+   967.68,
+   47.52
+  ],
+  "su2_in": [
+   967.68,
+   937.44
+  ],
+  "su2_ctl": [
+   967.68,
+   1004.4
+  ],
+  "su3_ctl": [
+   1121.04,
+   1019.52
+  ],
+  "su4_ctl": [
+   779.76,
+   993.6
+  ]
+ },
+ "channel_defects": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/qfd_vm_rr4_t/views/ot_qfd_vm_rr4_t",
+   "count": 1,
+   "inst": "u_core.g_r4[0].u_r4",
+   "at": [
+    453.6,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_rr4_t/views/ot_qfd_vm_rr4_t",
+   "count": 1,
+   "inst": "u_core.g_r4[1].u_r4",
+   "at": [
+    902.88,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_rr2_t/views/ot_qfd_vm_rr2_t",
+   "count": 1,
+   "inst": "u_core.u_r2",
+   "at": [
+    779.76,
+    399.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[0].g_wd.u_wd",
+   "at": [
+    69.12,
+    71.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[0].u_bt",
+   "at": [
+    90.72,
+    10.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[0].u_bc",
+   "at": [
+    69.12,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[0].g_bx.u_bx",
+   "at": [
+    313.2,
+    71.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[0].u_fifo",
+   "at": [
+    328.32,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[1].u_fifo",
+   "at": [
+    328.32,
+    140.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[1].g_wd.u_wd",
+   "at": [
+    69.12,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[1].u_bt",
+   "at": [
+    90.72,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[1].u_bc",
+   "at": [
+    69.12,
+    228.95999999999998
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[1].g_bx.u_bx",
+   "at": [
+    313.2,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[2].u_fifo",
+   "at": [
+    328.32,
+    228.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[3].u_fifo",
+   "at": [
+    328.32,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[2].g_wd.u_wd",
+   "at": [
+    69.12,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[2].u_bt",
+   "at": [
+    90.72,
+    421.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[2].u_bc",
+   "at": [
+    69.12,
+    434.15999999999997
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[2].g_bx.u_bx",
+   "at": [
+    313.2,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[4].u_fifo",
+   "at": [
+    328.32,
+    434.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[5].u_fifo",
+   "at": [
+    328.32,
+    550.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[3].g_wd.u_wd",
+   "at": [
+    69.12,
+    686.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[3].u_bt",
+   "at": [
+    90.72,
+    626.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[3].u_bc",
+   "at": [
+    69.12,
+    639.3599999999999
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[3].g_bx.u_bx",
+   "at": [
+    313.2,
+    686.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[6].u_fifo",
+   "at": [
+    328.32,
+    639.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[7].u_fifo",
+   "at": [
+    328.32,
+    756.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[4].g_wd.u_wd",
+   "at": [
+    518.4,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[4].u_bt",
+   "at": [
+    540.0,
+    10.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[4].u_bc",
+   "at": [
+    762.48,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[4].g_bx.u_bx",
+   "at": [
+    762.48,
+    71.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[8].u_fifo",
+   "at": [
+    777.6,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[9].u_fifo",
+   "at": [
+    777.6,
+    140.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[5].g_wd.u_wd",
+   "at": [
+    518.4,
+    71.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[5].u_bt",
+   "at": [
+    540.0,
+    216.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[5].u_bc",
+   "at": [
+    762.48,
+    138.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[5].g_bx.u_bx",
+   "at": [
+    762.48,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[10].u_fifo",
+   "at": [
+    777.6,
+    228.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[11].u_fifo",
+   "at": [
+    777.6,
+    345.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[6].g_wd.u_wd",
+   "at": [
+    518.4,
+    138.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[6].u_bt",
+   "at": [
+    540.0,
+    421.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[6].u_bc",
+   "at": [
+    762.48,
+    179.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[6].g_bx.u_bx",
+   "at": [
+    762.48,
+    481.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[12].u_fifo",
+   "at": [
+    777.6,
+    434.16
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[13].u_fifo",
+   "at": [
+    777.6,
+    550.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_b[7].g_wd.u_wd",
+   "at": [
+    518.4,
+    984.96
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t",
+   "count": 1,
+   "inst": "u_core.g_b[7].u_bt",
+   "at": [
+    540.0,
+    626.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t",
+   "count": 1,
+   "inst": "u_core.g_b[7].u_bc",
+   "at": [
+    779.76,
+    1034.64
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t",
+   "count": 1,
+   "inst": "u_core.g_b[7].g_bx.u_bx",
+   "at": [
+    762.48,
+    686.88
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[14].u_fifo",
+   "at": [
+    777.6,
+    639.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t",
+   "count": 1,
+   "inst": "u_core.g_fifo16[15].u_fifo",
+   "at": [
+    777.6,
+    756.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t",
+   "count": 1,
+   "inst": "u_core.g_su_leaf[0].u_su",
+   "at": [
+    1134.0,
+    250.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t",
+   "count": 1,
+   "inst": "u_core.g_su_leaf[1].u_su",
+   "at": [
+    1134.0,
+    756.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t",
+   "count": 1,
+   "inst": "u_core.g_su_leaf[2].u_su",
+   "at": [
+    427.68,
+    1002.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[0].u_st",
+   "at": [
+    989.28,
+    10.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[0].g_sd.u_sd",
+   "at": [
+    967.68,
+    88.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[0].u_sc",
+   "at": [
+    967.68,
+    6.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[1].u_st",
+   "at": [
+    989.28,
+    276.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[1].g_sd.u_sd",
+   "at": [
+    967.68,
+    155.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[0].g_j[1].u_sc",
+   "at": [
+    967.68,
+    47.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[0].u_st",
+   "at": [
+    989.28,
+    516.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[0].g_sd.u_sd",
+   "at": [
+    967.68,
+    937.44
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[0].u_sc",
+   "at": [
+    967.68,
+    1004.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[1].u_st",
+   "at": [
+    989.28,
+    781.92
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[1].g_sd.u_sd",
+   "at": [
+    967.68,
+    868.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[1].g_j[1].u_sc",
+   "at": [
+    1121.04,
+    1019.52
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[0].u_st",
+   "at": [
+    540.0,
+    831.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[0].g_sd.u_sd",
+   "at": [
+    518.4,
+    918.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[0].u_sc",
+   "at": [
+    779.76,
+    993.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[1].u_st",
+   "at": [
+    90.72,
+    831.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[1].g_sd.u_sd",
+   "at": [
+    69.12,
+    918.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t",
+   "count": 1,
+   "inst": "u_core.g_c[2].g_j[1].u_sc",
+   "at": [
+    69.12,
+    987.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_0_t0",
+   "at": [
+    4.32,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_0_t1",
+   "at": [
+    25.92,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_0_t2",
+   "at": [
+    47.52,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_1_t0",
+   "at": [
+    4.32,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_1_t1",
+   "at": [
+    25.92,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_1_t2",
+   "at": [
+    47.52,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_2_t0",
+   "at": [
+    4.32,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_2_t1",
+   "at": [
+    25.92,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_2_t2",
+   "at": [
+    47.52,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_3_t0",
+   "at": [
+    4.32,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_3_t1",
+   "at": [
+    25.92,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_3_t2",
+   "at": [
+    47.52,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_4_t0",
+   "at": [
+    4.32,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_4_t1",
+   "at": [
+    25.92,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_4_t2",
+   "at": [
+    47.52,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_5_t0",
+   "at": [
+    4.32,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_5_t1",
+   "at": [
+    25.92,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_5_t2",
+   "at": [
+    47.52,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_6_t0",
+   "at": [
+    4.32,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_6_t1",
+   "at": [
+    25.92,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_6_t2",
+   "at": [
+    47.52,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_7_t0",
+   "at": [
+    4.32,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_7_t1",
+   "at": [
+    25.92,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_7_t2",
+   "at": [
+    47.52,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_8_t0",
+   "at": [
+    4.32,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_8_t1",
+   "at": [
+    25.92,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sW_9_t0",
+   "at": [
+    4.32,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sW_9_t1",
+   "at": [
+    25.92,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_0_t0",
+   "at": [
+    453.6,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_0_t1",
+   "at": [
+    475.2,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_0_t2",
+   "at": [
+    496.8,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_1_t0",
+   "at": [
+    453.6,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_1_t1",
+   "at": [
+    475.2,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_1_t2",
+   "at": [
+    496.8,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_2_t0",
+   "at": [
+    475.2,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_2_t1",
+   "at": [
+    496.8,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_3_t0",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_3_t1",
+   "at": [
+    496.8,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_4_t0",
+   "at": [
+    475.2,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_4_t1",
+   "at": [
+    496.8,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_5_t0",
+   "at": [
+    475.2,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_5_t1",
+   "at": [
+    496.8,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_6_t0",
+   "at": [
+    453.6,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_6_t1",
+   "at": [
+    475.2,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_6_t2",
+   "at": [
+    496.8,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_7_t0",
+   "at": [
+    453.6,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_7_t1",
+   "at": [
+    475.2,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_7_t2",
+   "at": [
+    496.8,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_8_t0",
+   "at": [
+    453.6,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_8_t1",
+   "at": [
+    475.2,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_9_t0",
+   "at": [
+    453.6,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sA_9_t1",
+   "at": [
+    475.2,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sA_9_t2",
+   "at": [
+    496.8,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_0_t0",
+   "at": [
+    902.88,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_0_t1",
+   "at": [
+    924.48,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_0_t2",
+   "at": [
+    946.08,
+    4.32
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_1_t0",
+   "at": [
+    902.88,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_1_t1",
+   "at": [
+    924.48,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_1_t2",
+   "at": [
+    946.08,
+    103.68
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_2_t0",
+   "at": [
+    924.48,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_2_t1",
+   "at": [
+    946.08,
+    203.04
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_3_t0",
+   "at": [
+    924.48,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_3_t1",
+   "at": [
+    946.08,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_4_t0",
+   "at": [
+    924.48,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sB_4_t1",
+   "at": [
+    946.08,
+    401.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_5_t0",
+   "at": [
+    924.48,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sB_5_t1",
+   "at": [
+    946.08,
+    501.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_6_t0",
+   "at": [
+    902.88,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_6_t1",
+   "at": [
+    924.48,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sB_6_t2",
+   "at": [
+    946.08,
+    600.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_7_t0",
+   "at": [
+    902.88,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_7_t1",
+   "at": [
+    924.48,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_7_t2",
+   "at": [
+    946.08,
+    699.84
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_8_t0",
+   "at": [
+    902.88,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_8_t1",
+   "at": [
+    924.48,
+    799.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+   "count": 1,
+   "inst": "u_vm_g6_sB_9_t0",
+   "at": [
+    902.88,
+    898.56
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "count": 1,
+   "inst": "u_vm_g6_sB_9_t1",
+   "at": [
+    924.48,
+    898.56
+   ],
+   "orient": "R0"
+  }
+ ],
+ "input_screen": [
+  {
+   "port": "re_b0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "re_b1",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.98,
+   "estimated_wire_ps": 56.2248,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "re_b2",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.98,
+   "estimated_wire_ps": 56.2248,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "re_b3",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.98,
+   "estimated_wire_ps": 56.2248,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "re_b4",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "re_b5",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "re_b6",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "re_b7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "ra_b0",
+   "bits": 8,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "ra_b1",
+   "bits": 8,
+   "best_face": "w",
+   "max_min_wire_um": 73.884,
+   "estimated_wire_ps": 56.15184,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "ra_b2",
+   "bits": 8,
+   "best_face": "w",
+   "max_min_wire_um": 73.884,
+   "estimated_wire_ps": 56.15184,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "ra_b3",
+   "bits": 8,
+   "best_face": "w",
+   "max_min_wire_um": 73.884,
+   "estimated_wire_ps": 56.15184,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "ra_b4",
+   "bits": 8,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "ra_b5",
+   "bits": 8,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "ra_b6",
+   "bits": 8,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "ra_b7",
+   "bits": 8,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "we_b0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "we_b1",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 74.172,
+   "estimated_wire_ps": 56.37072,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "we_b2",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 74.172,
+   "estimated_wire_ps": 56.37072,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "we_b3",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 74.172,
+   "estimated_wire_ps": 56.37072,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "we_b4",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "we_b5",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "we_b6",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "we_b7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "wl_b0",
+   "bits": 8,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "wl_b1",
+   "bits": 8,
+   "best_face": "w",
+   "max_min_wire_um": 74.94,
+   "estimated_wire_ps": 56.9544,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "wl_b2",
+   "bits": 8,
+   "best_face": "w",
+   "max_min_wire_um": 74.94,
+   "estimated_wire_ps": 56.9544,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "wl_b3",
+   "bits": 8,
+   "best_face": "w",
+   "max_min_wire_um": 74.94,
+   "estimated_wire_ps": 56.9544,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "wl_b4",
+   "bits": 8,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "wl_b5",
+   "bits": 8,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "wl_b6",
+   "bits": 8,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "wl_b7",
+   "bits": 8,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "wm_b0",
+   "bits": 16,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "wm_b1",
+   "bits": 16,
+   "best_face": "w",
+   "max_min_wire_um": 76.476,
+   "estimated_wire_ps": 58.12176,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "wm_b2",
+   "bits": 16,
+   "best_face": "w",
+   "max_min_wire_um": 76.476,
+   "estimated_wire_ps": 58.12176,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "wm_b3",
+   "bits": 16,
+   "best_face": "w",
+   "max_min_wire_um": 76.476,
+   "estimated_wire_ps": 58.12176,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "wm_b4",
+   "bits": 16,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "wm_b5",
+   "bits": 16,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "wm_b6",
+   "bits": 16,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "wm_b7",
+   "bits": 16,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "wd_b0",
+   "bits": 512,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_b0_in"
+  },
+  {
+   "port": "wd_b1",
+   "bits": 512,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_b1_in"
+  },
+  {
+   "port": "wd_b2",
+   "bits": 512,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_b2_in"
+  },
+  {
+   "port": "wd_b3",
+   "bits": 512,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_b3_in"
+  },
+  {
+   "port": "wd_b4",
+   "bits": 512,
+   "best_face": "s",
+   "max_min_wire_um": 62.172000000000004,
+   "estimated_wire_ps": 47.25072,
+   "child": "vm_g6_b4_in"
+  },
+  {
+   "port": "wd_b5",
+   "bits": 512,
+   "best_face": "s",
+   "max_min_wire_um": 129.132,
+   "estimated_wire_ps": 98.14032,
+   "child": "vm_g6_b5_in"
+  },
+  {
+   "port": "wd_b6",
+   "bits": 512,
+   "best_face": "s",
+   "max_min_wire_um": 196.092,
+   "estimated_wire_ps": 149.02992,
+   "child": "vm_g6_b6_in"
+  },
+  {
+   "port": "wd_b7",
+   "bits": 512,
+   "best_face": "n",
+   "max_min_wire_um": 87.77999999999997,
+   "estimated_wire_ps": 66.71279999999997,
+   "child": "vm_g6_b7_in"
+  },
+  {
+   "port": "sre_s0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 27.372,
+   "estimated_wire_ps": 20.80272,
+   "child": "vm_g6_su0_ctl"
+  },
+  {
+   "port": "sre_s1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 68.412,
+   "estimated_wire_ps": 51.993120000000005,
+   "child": "vm_g6_su1_ctl"
+  },
+  {
+   "port": "sre_s2",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 54.708000000000084,
+   "estimated_wire_ps": 41.578080000000064,
+   "child": "vm_g6_su2_ctl"
+  },
+  {
+   "port": "sre_s3",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 39.587999999999965,
+   "estimated_wire_ps": 30.086879999999972,
+   "child": "vm_g6_su3_ctl"
+  },
+  {
+   "port": "sre_s4",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 65.50799999999992,
+   "estimated_wire_ps": 49.78607999999994,
+   "child": "vm_g6_su4_ctl"
+  },
+  {
+   "port": "sre_s5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_su5_ctl"
+  },
+  {
+   "port": "sra_s0",
+   "bits": 10,
+   "best_face": "s",
+   "max_min_wire_um": 27.276,
+   "estimated_wire_ps": 20.72976,
+   "child": "vm_g6_su0_ctl"
+  },
+  {
+   "port": "sra_s1",
+   "bits": 10,
+   "best_face": "s",
+   "max_min_wire_um": 68.316,
+   "estimated_wire_ps": 51.92016,
+   "child": "vm_g6_su1_ctl"
+  },
+  {
+   "port": "sra_s2",
+   "bits": 10,
+   "best_face": "n",
+   "max_min_wire_um": 55.66800000000012,
+   "estimated_wire_ps": 42.30768000000009,
+   "child": "vm_g6_su2_ctl"
+  },
+  {
+   "port": "sra_s3",
+   "bits": 10,
+   "best_face": "n",
+   "max_min_wire_um": 40.548,
+   "estimated_wire_ps": 30.816480000000002,
+   "child": "vm_g6_su3_ctl"
+  },
+  {
+   "port": "sra_s4",
+   "bits": 10,
+   "best_face": "n",
+   "max_min_wire_um": 66.46799999999996,
+   "estimated_wire_ps": 50.51567999999997,
+   "child": "vm_g6_su4_ctl"
+  },
+  {
+   "port": "sra_s5",
+   "bits": 10,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_su5_ctl"
+  },
+  {
+   "port": "rst_b0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "rst_b1",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 74.07600000000001,
+   "estimated_wire_ps": 56.297760000000004,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "rst_b2",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 74.07600000000001,
+   "estimated_wire_ps": 56.297760000000004,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "rst_b3",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 74.07600000000001,
+   "estimated_wire_ps": 56.297760000000004,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "rst_b4",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "rst_b5",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "rst_b6",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "rst_b7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "rst_s0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 26.316,
+   "estimated_wire_ps": 20.00016,
+   "child": "vm_g6_su0_ctl"
+  },
+  {
+   "port": "rst_s1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 67.356,
+   "estimated_wire_ps": 51.19056,
+   "child": "vm_g6_su1_ctl"
+  },
+  {
+   "port": "rst_s2",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 55.764000000000124,
+   "estimated_wire_ps": 42.38064000000009,
+   "child": "vm_g6_su2_ctl"
+  },
+  {
+   "port": "rst_s3",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 40.644000000000005,
+   "estimated_wire_ps": 30.889440000000004,
+   "child": "vm_g6_su3_ctl"
+  },
+  {
+   "port": "rst_s4",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 66.56399999999996,
+   "estimated_wire_ps": 50.58863999999998,
+   "child": "vm_g6_su4_ctl"
+  },
+  {
+   "port": "rst_s5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_su5_ctl"
+  },
+  {
+   "port": "rst_r0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_rr4_0"
+  },
+  {
+   "port": "rst_r1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_rr4_1"
+  },
+  {
+   "port": "rst_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 412.524,
+   "estimated_wire_ps": 313.51824,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "me_b0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "me_b1",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.02000000000001,
+   "estimated_wire_ps": 55.49520000000001,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "me_b2",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.02000000000001,
+   "estimated_wire_ps": 55.49520000000001,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "me_b3",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.02000000000001,
+   "estimated_wire_ps": 55.49520000000001,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "me_b4",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "me_b5",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "me_b6",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "me_b7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "me_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 411.94800000000004,
+   "estimated_wire_ps": 313.08048,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "me_f0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 43.69200000000001,
+   "estimated_wire_ps": 33.205920000000006,
+   "child": "vm_g6_b0_xf0"
+  },
+  {
+   "port": "me_f1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 160.332,
+   "estimated_wire_ps": 121.85231999999999,
+   "child": "vm_g6_b0_xf1"
+  },
+  {
+   "port": "me_f2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 248.892,
+   "estimated_wire_ps": 189.15792,
+   "child": "vm_g6_b1_xf0"
+  },
+  {
+   "port": "me_f3",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 365.53200000000004,
+   "estimated_wire_ps": 277.80432,
+   "child": "vm_g6_b1_xf1"
+  },
+  {
+   "port": "me_f4",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 449.238,
+   "estimated_wire_ps": 341.42088,
+   "child": "vm_g6_b2_xf0"
+  },
+  {
+   "port": "me_f5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 449.238,
+   "estimated_wire_ps": 341.42088,
+   "child": "vm_g6_b2_xf1"
+  },
+  {
+   "port": "me_f6",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 420.70799999999997,
+   "estimated_wire_ps": 319.73807999999997,
+   "child": "vm_g6_b3_xf0"
+  },
+  {
+   "port": "me_f7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 304.068,
+   "estimated_wire_ps": 231.09168,
+   "child": "vm_g6_b3_xf1"
+  },
+  {
+   "port": "me_f8",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 43.69200000000001,
+   "estimated_wire_ps": 33.205920000000006,
+   "child": "vm_g6_b4_xf0"
+  },
+  {
+   "port": "me_f9",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 160.332,
+   "estimated_wire_ps": 121.85231999999999,
+   "child": "vm_g6_b4_xf1"
+  },
+  {
+   "port": "me_f10",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 248.892,
+   "estimated_wire_ps": 189.15792,
+   "child": "vm_g6_b5_xf0"
+  },
+  {
+   "port": "me_f11",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 332.682,
+   "estimated_wire_ps": 252.83832,
+   "child": "vm_g6_b5_xf1"
+  },
+  {
+   "port": "me_f12",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 332.682,
+   "estimated_wire_ps": 252.83832,
+   "child": "vm_g6_b6_xf0"
+  },
+  {
+   "port": "me_f13",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 332.682,
+   "estimated_wire_ps": 252.83832,
+   "child": "vm_g6_b6_xf1"
+  },
+  {
+   "port": "me_f14",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 332.682,
+   "estimated_wire_ps": 252.83832,
+   "child": "vm_g6_b7_xf0"
+  },
+  {
+   "port": "me_f15",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 304.068,
+   "estimated_wire_ps": 231.09168,
+   "child": "vm_g6_b7_xf1"
+  },
+  {
+   "port": "xv_b0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "xv_b1",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 76.572,
+   "estimated_wire_ps": 58.194720000000004,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "xv_b2",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 76.572,
+   "estimated_wire_ps": 58.194720000000004,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "xv_b3",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 76.572,
+   "estimated_wire_ps": 58.194720000000004,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "xv_b4",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "xv_b5",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "xv_b6",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "xv_b7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "xv_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 412.62,
+   "estimated_wire_ps": 313.5912,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "pop_b0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b0_ctl"
+  },
+  {
+   "port": "pop_b1",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.116,
+   "estimated_wire_ps": 55.56816,
+   "child": "vm_g6_b1_ctl"
+  },
+  {
+   "port": "pop_b2",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.116,
+   "estimated_wire_ps": 55.56816,
+   "child": "vm_g6_b2_ctl"
+  },
+  {
+   "port": "pop_b3",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 73.116,
+   "estimated_wire_ps": 55.56816,
+   "child": "vm_g6_b3_ctl"
+  },
+  {
+   "port": "pop_b4",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 23.802000000000003,
+   "estimated_wire_ps": 18.089520000000004,
+   "child": "vm_g6_b4_ctl"
+  },
+  {
+   "port": "pop_b5",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 138.282,
+   "estimated_wire_ps": 105.09432000000001,
+   "child": "vm_g6_b5_ctl"
+  },
+  {
+   "port": "pop_b6",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 179.322,
+   "estimated_wire_ps": 136.28472,
+   "child": "vm_g6_b6_ctl"
+  },
+  {
+   "port": "pop_b7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 45.317999999999984,
+   "estimated_wire_ps": 34.44167999999999,
+   "child": "vm_g6_b7_ctl"
+  },
+  {
+   "port": "pop_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 412.04400000000004,
+   "estimated_wire_ps": 313.15344000000005,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "sv_s0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 27.468,
+   "estimated_wire_ps": 20.87568,
+   "child": "vm_g6_su0_ctl"
+  },
+  {
+   "port": "sv_s1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 68.50800000000001,
+   "estimated_wire_ps": 52.06608000000001,
+   "child": "vm_g6_su1_ctl"
+  },
+  {
+   "port": "sv_s2",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 54.61200000000008,
+   "estimated_wire_ps": 41.50512000000006,
+   "child": "vm_g6_su2_ctl"
+  },
+  {
+   "port": "sv_s3",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 39.49199999999996,
+   "estimated_wire_ps": 30.01391999999997,
+   "child": "vm_g6_su3_ctl"
+  },
+  {
+   "port": "sv_s4",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 65.41200000000003,
+   "estimated_wire_ps": 49.713120000000025,
+   "child": "vm_g6_su4_ctl"
+  },
+  {
+   "port": "sv_s5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_su5_ctl"
+  },
+  {
+   "port": "swe_s0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 27.564,
+   "estimated_wire_ps": 20.94864,
+   "child": "vm_g6_su0_ctl"
+  },
+  {
+   "port": "swe_s1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 68.604,
+   "estimated_wire_ps": 52.13904,
+   "child": "vm_g6_su1_ctl"
+  },
+  {
+   "port": "swe_s2",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 54.516000000000076,
+   "estimated_wire_ps": 41.43216000000006,
+   "child": "vm_g6_su2_ctl"
+  },
+  {
+   "port": "swe_s3",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 39.39599999999996,
+   "estimated_wire_ps": 29.94095999999997,
+   "child": "vm_g6_su3_ctl"
+  },
+  {
+   "port": "swe_s4",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 65.31600000000003,
+   "estimated_wire_ps": 49.64016000000002,
+   "child": "vm_g6_su4_ctl"
+  },
+  {
+   "port": "swe_s5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_su5_ctl"
+  },
+  {
+   "port": "swl_s0",
+   "bits": 10,
+   "best_face": "s",
+   "max_min_wire_um": 28.524,
+   "estimated_wire_ps": 21.678240000000002,
+   "child": "vm_g6_su0_ctl"
+  },
+  {
+   "port": "swl_s1",
+   "bits": 10,
+   "best_face": "s",
+   "max_min_wire_um": 69.56400000000001,
+   "estimated_wire_ps": 52.868640000000006,
+   "child": "vm_g6_su1_ctl"
+  },
+  {
+   "port": "swl_s2",
+   "bits": 10,
+   "best_face": "n",
+   "max_min_wire_um": 54.42000000000007,
+   "estimated_wire_ps": 41.35920000000006,
+   "child": "vm_g6_su2_ctl"
+  },
+  {
+   "port": "swl_s3",
+   "bits": 10,
+   "best_face": "n",
+   "max_min_wire_um": 39.299999999999955,
+   "estimated_wire_ps": 29.867999999999967,
+   "child": "vm_g6_su3_ctl"
+  },
+  {
+   "port": "swl_s4",
+   "bits": 10,
+   "best_face": "n",
+   "max_min_wire_um": 65.22000000000003,
+   "estimated_wire_ps": 49.56720000000002,
+   "child": "vm_g6_su4_ctl"
+  },
+  {
+   "port": "swl_s5",
+   "bits": 10,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_su5_ctl"
+  },
+  {
+   "port": "swm_s0",
+   "bits": 16,
+   "best_face": "s",
+   "max_min_wire_um": 32.268,
+   "estimated_wire_ps": 24.523680000000002,
+   "child": "vm_g6_su0_ctl"
+  },
+  {
+   "port": "swm_s1",
+   "bits": 16,
+   "best_face": "s",
+   "max_min_wire_um": 73.308,
+   "estimated_wire_ps": 55.71408,
+   "child": "vm_g6_su1_ctl"
+  },
+  {
+   "port": "swm_s2",
+   "bits": 16,
+   "best_face": "n",
+   "max_min_wire_um": 53.460000000000036,
+   "estimated_wire_ps": 40.629600000000025,
+   "child": "vm_g6_su2_ctl"
+  },
+  {
+   "port": "swm_s3",
+   "bits": 16,
+   "best_face": "n",
+   "max_min_wire_um": 38.33999999999992,
+   "estimated_wire_ps": 29.138399999999937,
+   "child": "vm_g6_su3_ctl"
+  },
+  {
+   "port": "swm_s4",
+   "bits": 16,
+   "best_face": "n",
+   "max_min_wire_um": 64.25999999999999,
+   "estimated_wire_ps": 48.837599999999995,
+   "child": "vm_g6_su4_ctl"
+  },
+  {
+   "port": "swm_s5",
+   "bits": 16,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_su5_ctl"
+  },
+  {
+   "port": "swd_s0",
+   "bits": 512,
+   "best_face": "s",
+   "max_min_wire_um": 146.412,
+   "estimated_wire_ps": 111.27312,
+   "child": "vm_g6_su0_in"
+  },
+  {
+   "port": "swd_s1",
+   "bits": 512,
+   "best_face": "s",
+   "max_min_wire_um": 213.372,
+   "estimated_wire_ps": 162.16272,
+   "child": "vm_g6_su1_in"
+  },
+  {
+   "port": "swd_s2",
+   "bits": 512,
+   "best_face": "n",
+   "max_min_wire_um": 135.29999999999995,
+   "estimated_wire_ps": 102.82799999999996,
+   "child": "vm_g6_su2_in"
+  },
+  {
+   "port": "swd_s3",
+   "bits": 512,
+   "best_face": "n",
+   "max_min_wire_um": 204.41999999999996,
+   "estimated_wire_ps": 155.35919999999996,
+   "child": "vm_g6_su3_in"
+  },
+  {
+   "port": "swd_s4",
+   "bits": 512,
+   "best_face": "n",
+   "max_min_wire_um": 154.74,
+   "estimated_wire_ps": 117.6024,
+   "child": "vm_g6_su4_in"
+  },
+  {
+   "port": "swd_s5",
+   "bits": 512,
+   "best_face": "w",
+   "max_min_wire_um": 69.162,
+   "estimated_wire_ps": 52.563120000000005,
+   "child": "vm_g6_su5_in"
+  },
+  {
+   "port": "rq_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 412.14000000000004,
+   "estimated_wire_ps": 313.2264,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "rqb_r2",
+   "bits": 3,
+   "best_face": "s",
+   "max_min_wire_um": 412.428,
+   "estimated_wire_ps": 313.44528,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "rqb_r0",
+   "bits": 2,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_rr4_0"
+  },
+  {
+   "port": "rqb_r1",
+   "bits": 2,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_rr4_1"
+  },
+  {
+   "port": "me_vm_g6_sW_0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 4.362,
+   "estimated_wire_ps": 3.3151200000000003,
+   "child": "vm_g6_sW_0"
+  },
+  {
+   "port": "me_vm_g6_sW_1",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 51.612,
+   "estimated_wire_ps": 39.225120000000004,
+   "child": "vm_g6_sW_1"
+  },
+  {
+   "port": "me_vm_g6_sW_2",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 51.612,
+   "estimated_wire_ps": 39.225120000000004,
+   "child": "vm_g6_sW_2"
+  },
+  {
+   "port": "me_vm_g6_sW_3",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 51.612,
+   "estimated_wire_ps": 39.225120000000004,
+   "child": "vm_g6_sW_3"
+  },
+  {
+   "port": "me_vm_g6_sW_4",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 51.612,
+   "estimated_wire_ps": 39.225120000000004,
+   "child": "vm_g6_sW_4"
+  },
+  {
+   "port": "me_vm_g6_sW_5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 51.612,
+   "estimated_wire_ps": 39.225120000000004,
+   "child": "vm_g6_sW_5"
+  },
+  {
+   "port": "me_vm_g6_sW_6",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 51.612,
+   "estimated_wire_ps": 39.225120000000004,
+   "child": "vm_g6_sW_6"
+  },
+  {
+   "port": "me_vm_g6_sW_7",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 51.612,
+   "estimated_wire_ps": 39.225120000000004,
+   "child": "vm_g6_sW_7"
+  },
+  {
+   "port": "me_vm_g6_sW_8",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 30.012,
+   "estimated_wire_ps": 22.80912,
+   "child": "vm_g6_sW_8"
+  },
+  {
+   "port": "me_vm_g6_sW_9",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 30.012,
+   "estimated_wire_ps": 22.80912,
+   "child": "vm_g6_sW_9"
+  },
+  {
+   "port": "me_vm_g6_sA_0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 4.362,
+   "estimated_wire_ps": 3.3151200000000003,
+   "child": "vm_g6_sA_0"
+  },
+  {
+   "port": "me_vm_g6_sA_1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 103.72200000000001,
+   "estimated_wire_ps": 78.82872,
+   "child": "vm_g6_sA_1"
+  },
+  {
+   "port": "me_vm_g6_sA_2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 203.082,
+   "estimated_wire_ps": 154.34232,
+   "child": "vm_g6_sA_2"
+  },
+  {
+   "port": "me_vm_g6_sA_3",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_sA_3"
+  },
+  {
+   "port": "me_vm_g6_sA_4",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 401.80199999999996,
+   "estimated_wire_ps": 305.36951999999997,
+   "child": "vm_g6_sA_4"
+  },
+  {
+   "port": "me_vm_g6_sA_5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 500.892,
+   "estimated_wire_ps": 380.67792000000003,
+   "child": "vm_g6_sA_5"
+  },
+  {
+   "port": "me_vm_g6_sA_6",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 479.47799999999995,
+   "estimated_wire_ps": 364.40328,
+   "child": "vm_g6_sA_6"
+  },
+  {
+   "port": "me_vm_g6_sA_7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 380.11799999999994,
+   "estimated_wire_ps": 288.88967999999994,
+   "child": "vm_g6_sA_7"
+  },
+  {
+   "port": "me_vm_g6_sA_8",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 280.7579999999999,
+   "estimated_wire_ps": 213.37607999999994,
+   "child": "vm_g6_sA_8"
+  },
+  {
+   "port": "me_vm_g6_sA_9",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 181.39800000000002,
+   "estimated_wire_ps": 137.86248000000003,
+   "child": "vm_g6_sA_9"
+  },
+  {
+   "port": "me_vm_g6_sB_0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 4.362,
+   "estimated_wire_ps": 3.3151200000000003,
+   "child": "vm_g6_sB_0"
+  },
+  {
+   "port": "me_vm_g6_sB_1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 103.72200000000001,
+   "estimated_wire_ps": 78.82872,
+   "child": "vm_g6_sB_1"
+  },
+  {
+   "port": "me_vm_g6_sB_2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 203.082,
+   "estimated_wire_ps": 154.34232,
+   "child": "vm_g6_sB_2"
+  },
+  {
+   "port": "me_vm_g6_sB_3",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_sB_3"
+  },
+  {
+   "port": "me_vm_g6_sB_4",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 302.62800000000004,
+   "estimated_wire_ps": 229.99728000000005,
+   "child": "vm_g6_sB_4"
+  },
+  {
+   "port": "me_vm_g6_sB_5",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 302.62800000000004,
+   "estimated_wire_ps": 229.99728000000005,
+   "child": "vm_g6_sB_5"
+  },
+  {
+   "port": "me_vm_g6_sB_6",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 324.22800000000007,
+   "estimated_wire_ps": 246.41328000000004,
+   "child": "vm_g6_sB_6"
+  },
+  {
+   "port": "me_vm_g6_sB_7",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 324.22800000000007,
+   "estimated_wire_ps": 246.41328000000004,
+   "child": "vm_g6_sB_7"
+  },
+  {
+   "port": "me_vm_g6_sB_8",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 280.7579999999999,
+   "estimated_wire_ps": 213.37607999999994,
+   "child": "vm_g6_sB_8"
+  },
+  {
+   "port": "me_vm_g6_sB_9",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 181.39800000000002,
+   "estimated_wire_ps": 137.86248000000003,
+   "child": "vm_g6_sB_9"
+  }
+ ],
+ "screen_missing_pins": [],
+ "remaining_wire_only_gt190_bits": 36,
+ "remaining_wire_only_gt190_ports": [
+  {
+   "port": "rst_r0",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_rr4_0"
+  },
+  {
+   "port": "rst_r1",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_rr4_1"
+  },
+  {
+   "port": "rst_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 412.524,
+   "estimated_wire_ps": 313.51824,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "me_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 411.94800000000004,
+   "estimated_wire_ps": 313.08048,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "me_f3",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 365.53200000000004,
+   "estimated_wire_ps": 277.80432,
+   "child": "vm_g6_b1_xf1"
+  },
+  {
+   "port": "me_f4",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 449.238,
+   "estimated_wire_ps": 341.42088,
+   "child": "vm_g6_b2_xf0"
+  },
+  {
+   "port": "me_f5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 449.238,
+   "estimated_wire_ps": 341.42088,
+   "child": "vm_g6_b2_xf1"
+  },
+  {
+   "port": "me_f6",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 420.70799999999997,
+   "estimated_wire_ps": 319.73807999999997,
+   "child": "vm_g6_b3_xf0"
+  },
+  {
+   "port": "me_f7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 304.068,
+   "estimated_wire_ps": 231.09168,
+   "child": "vm_g6_b3_xf1"
+  },
+  {
+   "port": "me_f11",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 332.682,
+   "estimated_wire_ps": 252.83832,
+   "child": "vm_g6_b5_xf1"
+  },
+  {
+   "port": "me_f12",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 332.682,
+   "estimated_wire_ps": 252.83832,
+   "child": "vm_g6_b6_xf0"
+  },
+  {
+   "port": "me_f13",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 332.682,
+   "estimated_wire_ps": 252.83832,
+   "child": "vm_g6_b6_xf1"
+  },
+  {
+   "port": "me_f14",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 332.682,
+   "estimated_wire_ps": 252.83832,
+   "child": "vm_g6_b7_xf0"
+  },
+  {
+   "port": "me_f15",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 304.068,
+   "estimated_wire_ps": 231.09168,
+   "child": "vm_g6_b7_xf1"
+  },
+  {
+   "port": "xv_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 412.62,
+   "estimated_wire_ps": 313.5912,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "pop_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 412.04400000000004,
+   "estimated_wire_ps": 313.15344000000005,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "rq_r2",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 412.14000000000004,
+   "estimated_wire_ps": 313.2264,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "rqb_r2",
+   "bits": 3,
+   "best_face": "s",
+   "max_min_wire_um": 412.428,
+   "estimated_wire_ps": 313.44528,
+   "child": "vm_g6_rr2"
+  },
+  {
+   "port": "rqb_r0",
+   "bits": 2,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_rr4_0"
+  },
+  {
+   "port": "rqb_r1",
+   "bits": 2,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_rr4_1"
+  },
+  {
+   "port": "me_vm_g6_sA_3",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_sA_3"
+  },
+  {
+   "port": "me_vm_g6_sA_4",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 401.80199999999996,
+   "estimated_wire_ps": 305.36951999999997,
+   "child": "vm_g6_sA_4"
+  },
+  {
+   "port": "me_vm_g6_sA_5",
+   "bits": 1,
+   "best_face": "w",
+   "max_min_wire_um": 500.892,
+   "estimated_wire_ps": 380.67792000000003,
+   "child": "vm_g6_sA_5"
+  },
+  {
+   "port": "me_vm_g6_sA_6",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 479.47799999999995,
+   "estimated_wire_ps": 364.40328,
+   "child": "vm_g6_sA_6"
+  },
+  {
+   "port": "me_vm_g6_sA_7",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 380.11799999999994,
+   "estimated_wire_ps": 288.88967999999994,
+   "child": "vm_g6_sA_7"
+  },
+  {
+   "port": "me_vm_g6_sA_8",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 280.7579999999999,
+   "estimated_wire_ps": 213.37607999999994,
+   "child": "vm_g6_sA_8"
+  },
+  {
+   "port": "me_vm_g6_sB_3",
+   "bits": 1,
+   "best_face": "s",
+   "max_min_wire_um": 302.44199999999995,
+   "estimated_wire_ps": 229.85591999999997,
+   "child": "vm_g6_sB_3"
+  },
+  {
+   "port": "me_vm_g6_sB_4",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 302.62800000000004,
+   "estimated_wire_ps": 229.99728000000005,
+   "child": "vm_g6_sB_4"
+  },
+  {
+   "port": "me_vm_g6_sB_5",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 302.62800000000004,
+   "estimated_wire_ps": 229.99728000000005,
+   "child": "vm_g6_sB_5"
+  },
+  {
+   "port": "me_vm_g6_sB_6",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 324.22800000000007,
+   "estimated_wire_ps": 246.41328000000004,
+   "child": "vm_g6_sB_6"
+  },
+  {
+   "port": "me_vm_g6_sB_7",
+   "bits": 1,
+   "best_face": "e",
+   "max_min_wire_um": 324.22800000000007,
+   "estimated_wire_ps": 246.41328000000004,
+   "child": "vm_g6_sB_7"
+  },
+  {
+   "port": "me_vm_g6_sB_8",
+   "bits": 1,
+   "best_face": "n",
+   "max_min_wire_um": 280.7579999999999,
+   "estimated_wire_ps": 213.37607999999994,
+   "child": "vm_g6_sB_8"
+  }
+ ],
+ "internal_geometry_screen": [
+  {
+   "source": "b0_in",
+   "source_pin": "q",
+   "target": "b0",
+   "target_pin": "wd",
+   "bits": 512,
+   "maximum_manhattan_um": 82.26,
+   "mean_manhattan_um": 34.364625000000046,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "m_re",
+   "target": "b0",
+   "target_pin": "re",
+   "bits": 1,
+   "maximum_manhattan_um": 115.00800000000001,
+   "mean_manhattan_um": 115.00800000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "m_we",
+   "target": "b0",
+   "target_pin": "we",
+   "bits": 1,
+   "maximum_manhattan_um": 72.76799999999999,
+   "mean_manhattan_um": 72.76799999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "m_ra",
+   "target": "b0",
+   "target_pin": "ra",
+   "bits": 8,
+   "maximum_manhattan_um": 115.00800000000001,
+   "mean_manhattan_um": 115.00800000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "m_wl",
+   "target": "b0",
+   "target_pin": "wl",
+   "bits": 8,
+   "maximum_manhattan_um": 72.768,
+   "mean_manhattan_um": 72.76799999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "m_wm",
+   "target": "b0",
+   "target_pin": "wm",
+   "bits": 16,
+   "maximum_manhattan_um": 72.768,
+   "mean_manhattan_um": 70.944,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "rtg",
+   "target": "b0",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 100.91999999999999,
+   "mean_manhattan_um": 100.91999999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0",
+   "source_pin": "q",
+   "target": "b0_bx",
+   "target_pin": "d",
+   "bits": 512,
+   "maximum_manhattan_um": 62.19600000000001,
+   "mean_manhattan_um": 38.6279999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "rtg",
+   "target": "b0_xf0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 250.25999999999996,
+   "mean_manhattan_um": 250.25999999999996,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "pgw",
+   "target": "b0_xf0",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 368.06399999999996,
+   "mean_manhattan_um": 368.06399999999996,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "xg",
+   "target": "b0_xf0",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 367.96799999999996,
+   "mean_manhattan_um": 367.96799999999996,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_bx",
+   "source_pin": "q",
+   "target": "b0_xf0",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 180.26400000000004,
+   "mean_manhattan_um": 139.08000000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "rtg",
+   "target": "b0_xf1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 366.9,
+   "mean_manhattan_um": 366.9,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "pgw",
+   "target": "b0_xf1",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 484.70399999999995,
+   "mean_manhattan_um": 484.70399999999995,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_ctl",
+   "source_pin": "xg",
+   "target": "b0_xf1",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 484.608,
+   "mean_manhattan_um": 484.608,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_bx",
+   "source_pin": "q",
+   "target": "b0_xf1",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 130.78800000000004,
+   "mean_manhattan_um": 89.7960000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_in",
+   "source_pin": "q",
+   "target": "b1",
+   "target_pin": "wd",
+   "bits": 512,
+   "maximum_manhattan_um": 82.26000000000005,
+   "mean_manhattan_um": 34.364625000000046,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "m_re",
+   "target": "b1",
+   "target_pin": "re",
+   "bits": 1,
+   "maximum_manhattan_um": 115.00799999999998,
+   "mean_manhattan_um": 115.00799999999998,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "m_we",
+   "target": "b1",
+   "target_pin": "we",
+   "bits": 1,
+   "maximum_manhattan_um": 72.768,
+   "mean_manhattan_um": 72.768,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "m_ra",
+   "target": "b1",
+   "target_pin": "ra",
+   "bits": 8,
+   "maximum_manhattan_um": 115.00800000000004,
+   "mean_manhattan_um": 115.00800000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "m_wl",
+   "target": "b1",
+   "target_pin": "wl",
+   "bits": 8,
+   "maximum_manhattan_um": 72.768,
+   "mean_manhattan_um": 72.76800000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "m_wm",
+   "target": "b1",
+   "target_pin": "wm",
+   "bits": 16,
+   "maximum_manhattan_um": 72.76800000000006,
+   "mean_manhattan_um": 70.94400000000002,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "rtg",
+   "target": "b1",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 100.91999999999996,
+   "mean_manhattan_um": 100.91999999999996,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1",
+   "source_pin": "q",
+   "target": "b1_bx",
+   "target_pin": "d",
+   "bits": 512,
+   "maximum_manhattan_um": 62.196000000000026,
+   "mean_manhattan_um": 38.627999999999886,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "rtg",
+   "target": "b1_xf0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 250.26,
+   "mean_manhattan_um": 250.26,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "pgw",
+   "target": "b1_xf0",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 368.064,
+   "mean_manhattan_um": 368.064,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "xg",
+   "target": "b1_xf0",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 367.968,
+   "mean_manhattan_um": 367.968,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_bx",
+   "source_pin": "q",
+   "target": "b1_xf0",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 180.26400000000007,
+   "mean_manhattan_um": 139.08000000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "rtg",
+   "target": "b1_xf1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 366.90000000000003,
+   "mean_manhattan_um": 366.90000000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "pgw",
+   "target": "b1_xf1",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 484.70400000000006,
+   "mean_manhattan_um": 484.70400000000006,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_ctl",
+   "source_pin": "xg",
+   "target": "b1_xf1",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 484.60800000000006,
+   "mean_manhattan_um": 484.60800000000006,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_bx",
+   "source_pin": "q",
+   "target": "b1_xf1",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 130.788,
+   "mean_manhattan_um": 89.79600000000029,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_in",
+   "source_pin": "q",
+   "target": "b2",
+   "target_pin": "wd",
+   "bits": 512,
+   "maximum_manhattan_um": 82.26000000000005,
+   "mean_manhattan_um": 34.36462500000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "m_re",
+   "target": "b2",
+   "target_pin": "re",
+   "bits": 1,
+   "maximum_manhattan_um": 115.00800000000007,
+   "mean_manhattan_um": 115.00800000000007,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "m_we",
+   "target": "b2",
+   "target_pin": "we",
+   "bits": 1,
+   "maximum_manhattan_um": 72.76800000000006,
+   "mean_manhattan_um": 72.76800000000006,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "m_ra",
+   "target": "b2",
+   "target_pin": "ra",
+   "bits": 8,
+   "maximum_manhattan_um": 115.00800000000007,
+   "mean_manhattan_um": 115.00800000000002,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "m_wl",
+   "target": "b2",
+   "target_pin": "wl",
+   "bits": 8,
+   "maximum_manhattan_um": 72.76800000000006,
+   "mean_manhattan_um": 72.76800000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "m_wm",
+   "target": "b2",
+   "target_pin": "wm",
+   "bits": 16,
+   "maximum_manhattan_um": 72.76800000000006,
+   "mean_manhattan_um": 70.94400000000002,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "rtg",
+   "target": "b2",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 100.91999999999999,
+   "mean_manhattan_um": 100.91999999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2",
+   "source_pin": "q",
+   "target": "b2_bx",
+   "target_pin": "d",
+   "bits": 512,
+   "maximum_manhattan_um": 62.19600000000008,
+   "mean_manhattan_um": 38.6279999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "rtg",
+   "target": "b2_xf0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 250.26,
+   "mean_manhattan_um": 250.26,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "pgw",
+   "target": "b2_xf0",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 368.0640000000001,
+   "mean_manhattan_um": 368.0640000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "xg",
+   "target": "b2_xf0",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 367.9680000000001,
+   "mean_manhattan_um": 367.9680000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_bx",
+   "source_pin": "q",
+   "target": "b2_xf0",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 180.26400000000007,
+   "mean_manhattan_um": 139.08000000000007,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "rtg",
+   "target": "b2_xf1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 366.9,
+   "mean_manhattan_um": 366.9,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "pgw",
+   "target": "b2_xf1",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 484.704,
+   "mean_manhattan_um": 484.704,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_ctl",
+   "source_pin": "xg",
+   "target": "b2_xf1",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 484.608,
+   "mean_manhattan_um": 484.608,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_bx",
+   "source_pin": "q",
+   "target": "b2_xf1",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 130.788,
+   "mean_manhattan_um": 89.79600000000029,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_in",
+   "source_pin": "q",
+   "target": "b3",
+   "target_pin": "wd",
+   "bits": 512,
+   "maximum_manhattan_um": 82.2600000000001,
+   "mean_manhattan_um": 34.36462500000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "m_re",
+   "target": "b3",
+   "target_pin": "re",
+   "bits": 1,
+   "maximum_manhattan_um": 115.00800000000001,
+   "mean_manhattan_um": 115.00800000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "m_we",
+   "target": "b3",
+   "target_pin": "we",
+   "bits": 1,
+   "maximum_manhattan_um": 72.768,
+   "mean_manhattan_um": 72.768,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "m_ra",
+   "target": "b3",
+   "target_pin": "ra",
+   "bits": 8,
+   "maximum_manhattan_um": 115.00800000000012,
+   "mean_manhattan_um": 115.00800000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "m_wl",
+   "target": "b3",
+   "target_pin": "wl",
+   "bits": 8,
+   "maximum_manhattan_um": 72.76800000000011,
+   "mean_manhattan_um": 72.76800000000007,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "m_wm",
+   "target": "b3",
+   "target_pin": "wm",
+   "bits": 16,
+   "maximum_manhattan_um": 72.76800000000011,
+   "mean_manhattan_um": 70.94400000000013,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "rtg",
+   "target": "b3",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 100.91999999999987,
+   "mean_manhattan_um": 100.91999999999987,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3",
+   "source_pin": "q",
+   "target": "b3_bx",
+   "target_pin": "d",
+   "bits": 512,
+   "maximum_manhattan_um": 62.196000000000026,
+   "mean_manhattan_um": 38.6279999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "rtg",
+   "target": "b3_xf0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 250.2600000000001,
+   "mean_manhattan_um": 250.2600000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "pgw",
+   "target": "b3_xf0",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 368.06400000000014,
+   "mean_manhattan_um": 368.06400000000014,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "xg",
+   "target": "b3_xf0",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 367.96800000000013,
+   "mean_manhattan_um": 367.96800000000013,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_bx",
+   "source_pin": "q",
+   "target": "b3_xf0",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 180.264,
+   "mean_manhattan_um": 139.07999999999998,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "rtg",
+   "target": "b3_xf1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 366.9000000000001,
+   "mean_manhattan_um": 366.9000000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "pgw",
+   "target": "b3_xf1",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 484.7040000000001,
+   "mean_manhattan_um": 484.7040000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_ctl",
+   "source_pin": "xg",
+   "target": "b3_xf1",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 484.6080000000001,
+   "mean_manhattan_um": 484.6080000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_bx",
+   "source_pin": "q",
+   "target": "b3_xf1",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 130.78800000000012,
+   "mean_manhattan_um": 89.7960000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_in",
+   "source_pin": "q",
+   "target": "b4",
+   "target_pin": "wd",
+   "bits": 512,
+   "maximum_manhattan_um": 124.06800000000014,
+   "mean_manhattan_um": 73.18256250000077,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "m_re",
+   "target": "b4",
+   "target_pin": "re",
+   "bits": 1,
+   "maximum_manhattan_um": 315.88800000000003,
+   "mean_manhattan_um": 315.88800000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "m_we",
+   "target": "b4",
+   "target_pin": "we",
+   "bits": 1,
+   "maximum_manhattan_um": 273.648,
+   "mean_manhattan_um": 273.648,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "m_ra",
+   "target": "b4",
+   "target_pin": "ra",
+   "bits": 8,
+   "maximum_manhattan_um": 315.88800000000003,
+   "mean_manhattan_um": 315.888,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "m_wl",
+   "target": "b4",
+   "target_pin": "wl",
+   "bits": 8,
+   "maximum_manhattan_um": 273.648,
+   "mean_manhattan_um": 273.6480000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "m_wm",
+   "target": "b4",
+   "target_pin": "wm",
+   "bits": 16,
+   "maximum_manhattan_um": 273.648,
+   "mean_manhattan_um": 271.82400000000007,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "rtg",
+   "target": "b4",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 207.51600000000008,
+   "mean_manhattan_um": 207.51600000000008,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4",
+   "source_pin": "q",
+   "target": "b4_bx",
+   "target_pin": "d",
+   "bits": 512,
+   "maximum_manhattan_um": 62.196000000000126,
+   "mean_manhattan_um": 38.62800000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "rtg",
+   "target": "b4_xf0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 6.180000000000035,
+   "mean_manhattan_um": 6.180000000000035,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "pgw",
+   "target": "b4_xf0",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 123.984,
+   "mean_manhattan_um": 123.984,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "xg",
+   "target": "b4_xf0",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 123.888,
+   "mean_manhattan_um": 123.888,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_bx",
+   "source_pin": "q",
+   "target": "b4_xf0",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 180.26399999999992,
+   "mean_manhattan_um": 139.07999999999987,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "rtg",
+   "target": "b4_xf1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 122.82000000000004,
+   "mean_manhattan_um": 122.82000000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "pgw",
+   "target": "b4_xf1",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 240.624,
+   "mean_manhattan_um": 240.624,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_ctl",
+   "source_pin": "xg",
+   "target": "b4_xf1",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 240.52800000000002,
+   "mean_manhattan_um": 240.52800000000002,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b4_bx",
+   "source_pin": "q",
+   "target": "b4_xf1",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 130.788,
+   "mean_manhattan_um": 89.79600000000029,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_in",
+   "source_pin": "q",
+   "target": "b5",
+   "target_pin": "wd",
+   "bits": 512,
+   "maximum_manhattan_um": 262.30800000000016,
+   "mean_manhattan_um": 210.4455000000009,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "m_re",
+   "target": "b5",
+   "target_pin": "re",
+   "bits": 1,
+   "maximum_manhattan_um": 406.60799999999995,
+   "mean_manhattan_um": 406.60799999999995,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "m_we",
+   "target": "b5",
+   "target_pin": "we",
+   "bits": 1,
+   "maximum_manhattan_um": 364.368,
+   "mean_manhattan_um": 364.368,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "m_ra",
+   "target": "b5",
+   "target_pin": "ra",
+   "bits": 8,
+   "maximum_manhattan_um": 406.60800000000006,
+   "mean_manhattan_um": 406.60800000000006,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "m_wl",
+   "target": "b5",
+   "target_pin": "wl",
+   "bits": 8,
+   "maximum_manhattan_um": 364.368,
+   "mean_manhattan_um": 364.368,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "m_wm",
+   "target": "b5",
+   "target_pin": "wm",
+   "bits": 16,
+   "maximum_manhattan_um": 364.36800000000005,
+   "mean_manhattan_um": 362.54400000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "rtg",
+   "target": "b5",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 233.88000000000008,
+   "mean_manhattan_um": 233.88000000000008,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5",
+   "source_pin": "q",
+   "target": "b5_bx",
+   "target_pin": "d",
+   "bits": 512,
+   "maximum_manhattan_um": 62.19600000000014,
+   "mean_manhattan_um": 38.628,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "rtg",
+   "target": "b5_xf0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 96.90000000000003,
+   "mean_manhattan_um": 96.90000000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "pgw",
+   "target": "b5_xf0",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 214.704,
+   "mean_manhattan_um": 214.704,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "xg",
+   "target": "b5_xf0",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 214.608,
+   "mean_manhattan_um": 214.608,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_bx",
+   "source_pin": "q",
+   "target": "b5_xf0",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 180.26399999999995,
+   "mean_manhattan_um": 139.07999999999987,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "rtg",
+   "target": "b5_xf1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 213.54000000000008,
+   "mean_manhattan_um": 213.54000000000008,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "pgw",
+   "target": "b5_xf1",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 331.34400000000005,
+   "mean_manhattan_um": 331.34400000000005,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_ctl",
+   "source_pin": "xg",
+   "target": "b5_xf1",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 331.24800000000005,
+   "mean_manhattan_um": 331.24800000000005,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_bx",
+   "source_pin": "q",
+   "target": "b5_xf1",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 130.78799999999995,
+   "mean_manhattan_um": 89.79600000000025,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_in",
+   "source_pin": "q",
+   "target": "b6",
+   "target_pin": "wd",
+   "bits": 512,
+   "maximum_manhattan_um": 400.5480000000002,
+   "mean_manhattan_um": 348.6855000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "m_re",
+   "target": "b6",
+   "target_pin": "re",
+   "bits": 1,
+   "maximum_manhattan_um": 570.768,
+   "mean_manhattan_um": 570.768,
+   "screen_gt500_bits": 1
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "m_we",
+   "target": "b6",
+   "target_pin": "we",
+   "bits": 1,
+   "maximum_manhattan_um": 528.528,
+   "mean_manhattan_um": 528.528,
+   "screen_gt500_bits": 1
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "m_ra",
+   "target": "b6",
+   "target_pin": "ra",
+   "bits": 8,
+   "maximum_manhattan_um": 570.768,
+   "mean_manhattan_um": 570.768,
+   "screen_gt500_bits": 8
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "m_wl",
+   "target": "b6",
+   "target_pin": "wl",
+   "bits": 8,
+   "maximum_manhattan_um": 528.528,
+   "mean_manhattan_um": 528.5280000000001,
+   "screen_gt500_bits": 8
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "m_wm",
+   "target": "b6",
+   "target_pin": "wm",
+   "bits": 16,
+   "maximum_manhattan_um": 528.528,
+   "mean_manhattan_um": 526.7040000000002,
+   "screen_gt500_bits": 16
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "rtg",
+   "target": "b6",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 398.0400000000001,
+   "mean_manhattan_um": 398.0400000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6",
+   "source_pin": "q",
+   "target": "b6_bx",
+   "target_pin": "d",
+   "bits": 512,
+   "maximum_manhattan_um": 62.1960000000002,
+   "mean_manhattan_um": 38.62799999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "rtg",
+   "target": "b6_xf0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 261.06000000000006,
+   "mean_manhattan_um": 261.06000000000006,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "pgw",
+   "target": "b6_xf0",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 378.86400000000003,
+   "mean_manhattan_um": 378.86400000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "xg",
+   "target": "b6_xf0",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 378.76800000000003,
+   "mean_manhattan_um": 378.76800000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_bx",
+   "source_pin": "q",
+   "target": "b6_xf0",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 180.26399999999995,
+   "mean_manhattan_um": 139.07999999999987,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "rtg",
+   "target": "b6_xf1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 377.70000000000005,
+   "mean_manhattan_um": 377.70000000000005,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "pgw",
+   "target": "b6_xf1",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 495.50399999999996,
+   "mean_manhattan_um": 495.50399999999996,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_ctl",
+   "source_pin": "xg",
+   "target": "b6_xf1",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 495.408,
+   "mean_manhattan_um": 495.408,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_bx",
+   "source_pin": "q",
+   "target": "b6_xf1",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 130.78799999999995,
+   "mean_manhattan_um": 89.79600000000028,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_in",
+   "source_pin": "q",
+   "target": "b7",
+   "target_pin": "wd",
+   "bits": 512,
+   "maximum_manhattan_um": 380.34000000000026,
+   "mean_manhattan_um": 301.64249999999805,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "m_re",
+   "target": "b7",
+   "target_pin": "re",
+   "bits": 1,
+   "maximum_manhattan_um": 541.6320000000002,
+   "mean_manhattan_um": 541.6320000000002,
+   "screen_gt500_bits": 1
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "m_we",
+   "target": "b7",
+   "target_pin": "we",
+   "bits": 1,
+   "maximum_manhattan_um": 583.8720000000002,
+   "mean_manhattan_um": 583.8720000000002,
+   "screen_gt500_bits": 1
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "m_ra",
+   "target": "b7",
+   "target_pin": "ra",
+   "bits": 8,
+   "maximum_manhattan_um": 541.6320000000002,
+   "mean_manhattan_um": 541.6320000000001,
+   "screen_gt500_bits": 8
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "m_wl",
+   "target": "b7",
+   "target_pin": "wl",
+   "bits": 8,
+   "maximum_manhattan_um": 583.8720000000002,
+   "mean_manhattan_um": 583.8720000000002,
+   "screen_gt500_bits": 8
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "m_wm",
+   "target": "b7",
+   "target_pin": "wm",
+   "bits": 16,
+   "maximum_manhattan_um": 598.464,
+   "mean_manhattan_um": 585.6960000000003,
+   "screen_gt500_bits": 16
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "rtg",
+   "target": "b7",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 620.0760000000001,
+   "mean_manhattan_um": 620.0760000000001,
+   "screen_gt500_bits": 1
+  },
+  {
+   "source": "b7",
+   "source_pin": "q",
+   "target": "b7_bx",
+   "target_pin": "d",
+   "bits": 512,
+   "maximum_manhattan_um": 62.19600000000014,
+   "mean_manhattan_um": 38.627999999999986,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "rtg",
+   "target": "b7_xf0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 406.38,
+   "mean_manhattan_um": 406.38,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "pgw",
+   "target": "b7_xf0",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 500.2560000000001,
+   "mean_manhattan_um": 500.2560000000001,
+   "screen_gt500_bits": 1
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "xg",
+   "target": "b7_xf0",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 500.3520000000001,
+   "mean_manhattan_um": 500.3520000000001,
+   "screen_gt500_bits": 1
+  },
+  {
+   "source": "b7_bx",
+   "source_pin": "q",
+   "target": "b7_xf0",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 180.2639999999999,
+   "mean_manhattan_um": 139.07999999999987,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "rtg",
+   "target": "b7_xf1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 289.74,
+   "mean_manhattan_um": 289.74,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "pgw",
+   "target": "b7_xf1",
+   "target_pin": "pgw",
+   "bits": 1,
+   "maximum_manhattan_um": 383.6160000000001,
+   "mean_manhattan_um": 383.6160000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_ctl",
+   "source_pin": "xg",
+   "target": "b7_xf1",
+   "target_pin": "xg",
+   "bits": 1,
+   "maximum_manhattan_um": 383.7120000000001,
+   "mean_manhattan_um": 383.7120000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_bx",
+   "source_pin": "q",
+   "target": "b7_xf1",
+   "target_pin": "bx",
+   "bits": 256,
+   "maximum_manhattan_um": 130.788,
+   "mean_manhattan_um": 89.79600000000029,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_in",
+   "source_pin": "q",
+   "target": "su0",
+   "target_pin": "swd",
+   "bits": 512,
+   "maximum_manhattan_um": 102.03600000000013,
+   "mean_manhattan_um": 48.945000000000185,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_ctl",
+   "source_pin": "m_sre",
+   "target": "su0",
+   "target_pin": "sre",
+   "bits": 1,
+   "maximum_manhattan_um": 148.78800000000004,
+   "mean_manhattan_um": 148.78800000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_ctl",
+   "source_pin": "m_swe",
+   "target": "su0",
+   "target_pin": "swe",
+   "bits": 1,
+   "maximum_manhattan_um": 104.24400000000004,
+   "mean_manhattan_um": 104.24400000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_ctl",
+   "source_pin": "m_sra",
+   "target": "su0",
+   "target_pin": "sra",
+   "bits": 10,
+   "maximum_manhattan_um": 148.78800000000007,
+   "mean_manhattan_um": 148.78800000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_ctl",
+   "source_pin": "m_swl",
+   "target": "su0",
+   "target_pin": "swl",
+   "bits": 10,
+   "maximum_manhattan_um": 104.24400000000006,
+   "mean_manhattan_um": 104.24400000000006,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_ctl",
+   "source_pin": "m_swm",
+   "target": "su0",
+   "target_pin": "swm",
+   "bits": 16,
+   "maximum_manhattan_um": 104.24400000000006,
+   "mean_manhattan_um": 85.30800000000005,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_ctl",
+   "source_pin": "rtg",
+   "target": "su0",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 96.40800000000011,
+   "mean_manhattan_um": 96.40800000000011,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_ctl",
+   "source_pin": "rtg",
+   "target": "ans0",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 391.47599999999994,
+   "mean_manhattan_um": 391.47599999999994,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0_ctl",
+   "source_pin": "svc",
+   "target": "ans0",
+   "target_pin": "svc",
+   "bits": 1,
+   "maximum_manhattan_um": 476.06399999999996,
+   "mean_manhattan_um": 476.06399999999996,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su0",
+   "source_pin": "q",
+   "target": "ans0",
+   "target_pin": "sx",
+   "bits": 512,
+   "maximum_manhattan_um": 275.2559999999998,
+   "mean_manhattan_um": 194.37218749999988,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su1_in",
+   "source_pin": "q",
+   "target": "su1",
+   "target_pin": "swd",
+   "bits": 512,
+   "maximum_manhattan_um": 268.30800000000016,
+   "mean_manhattan_um": 197.89499999999978,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su1_ctl",
+   "source_pin": "m_sre",
+   "target": "su1",
+   "target_pin": "sre",
+   "bits": 1,
+   "maximum_manhattan_um": 373.42800000000005,
+   "mean_manhattan_um": 373.42800000000005,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su1_ctl",
+   "source_pin": "m_swe",
+   "target": "su1",
+   "target_pin": "swe",
+   "bits": 1,
+   "maximum_manhattan_um": 328.88400000000007,
+   "mean_manhattan_um": 328.88400000000007,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su1_ctl",
+   "source_pin": "m_sra",
+   "target": "su1",
+   "target_pin": "sra",
+   "bits": 10,
+   "maximum_manhattan_um": 373.4280000000001,
+   "mean_manhattan_um": 373.42800000000005,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su1_ctl",
+   "source_pin": "m_swl",
+   "target": "su1",
+   "target_pin": "swl",
+   "bits": 10,
+   "maximum_manhattan_um": 328.88400000000007,
+   "mean_manhattan_um": 328.884,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su1_ctl",
+   "source_pin": "m_swm",
+   "target": "su1",
+   "target_pin": "swm",
+   "bits": 16,
+   "maximum_manhattan_um": 328.8840000000001,
+   "mean_manhattan_um": 309.94800000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su1_ctl",
+   "source_pin": "rtg",
+   "target": "su1",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 285.6840000000001,
+   "mean_manhattan_um": 285.6840000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su1",
+   "source_pin": "q",
+   "target": "ans0",
+   "target_pin": "sx",
+   "bits": 512,
+   "maximum_manhattan_um": 254.9784999999998,
+   "mean_manhattan_um": 166.48987499999973,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2_in",
+   "source_pin": "q",
+   "target": "su2",
+   "target_pin": "swd",
+   "bits": 512,
+   "maximum_manhattan_um": 445.4760000000002,
+   "mean_manhattan_um": 353.0729999999993,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2_ctl",
+   "source_pin": "m_sre",
+   "target": "su2",
+   "target_pin": "sre",
+   "bits": 1,
+   "maximum_manhattan_um": 361.14,
+   "mean_manhattan_um": 361.14,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2_ctl",
+   "source_pin": "m_swe",
+   "target": "su2",
+   "target_pin": "swe",
+   "bits": 1,
+   "maximum_manhattan_um": 405.6840000000001,
+   "mean_manhattan_um": 405.6840000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2_ctl",
+   "source_pin": "m_sra",
+   "target": "su2",
+   "target_pin": "sra",
+   "bits": 10,
+   "maximum_manhattan_um": 361.14,
+   "mean_manhattan_um": 361.13999999999993,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2_ctl",
+   "source_pin": "m_swl",
+   "target": "su2",
+   "target_pin": "swl",
+   "bits": 10,
+   "maximum_manhattan_um": 405.6840000000001,
+   "mean_manhattan_um": 405.6840000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2_ctl",
+   "source_pin": "m_swm",
+   "target": "su2",
+   "target_pin": "swm",
+   "bits": 16,
+   "maximum_manhattan_um": 456.17999999999995,
+   "mean_manhattan_um": 424.6200000000001,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2_ctl",
+   "source_pin": "rtg",
+   "target": "su2",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 588.888,
+   "mean_manhattan_um": 588.888,
+   "screen_gt500_bits": 1
+  },
+  {
+   "source": "su2_ctl",
+   "source_pin": "rtg",
+   "target": "ans1",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 407.89199999999994,
+   "mean_manhattan_um": 407.89199999999994,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2_ctl",
+   "source_pin": "svc",
+   "target": "ans1",
+   "target_pin": "svc",
+   "bits": 1,
+   "maximum_manhattan_um": 495.9359999999999,
+   "mean_manhattan_um": 495.9359999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su2",
+   "source_pin": "q",
+   "target": "ans1",
+   "target_pin": "sx",
+   "bits": 512,
+   "maximum_manhattan_um": 275.25599999999986,
+   "mean_manhattan_um": 194.3721874999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su3_in",
+   "source_pin": "q",
+   "target": "su3",
+   "target_pin": "swd",
+   "bits": 512,
+   "maximum_manhattan_um": 110.67600000000027,
+   "mean_manhattan_um": 48.945000000000185,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su3_ctl",
+   "source_pin": "m_sre",
+   "target": "su3",
+   "target_pin": "sre",
+   "bits": 1,
+   "maximum_manhattan_um": 246.49199999999985,
+   "mean_manhattan_um": 246.49199999999985,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su3_ctl",
+   "source_pin": "m_swe",
+   "target": "su3",
+   "target_pin": "swe",
+   "bits": 1,
+   "maximum_manhattan_um": 291.03599999999983,
+   "mean_manhattan_um": 291.03599999999983,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su3_ctl",
+   "source_pin": "m_sra",
+   "target": "su3",
+   "target_pin": "sra",
+   "bits": 10,
+   "maximum_manhattan_um": 246.49199999999996,
+   "mean_manhattan_um": 246.49199999999988,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su3_ctl",
+   "source_pin": "m_swl",
+   "target": "su3",
+   "target_pin": "swl",
+   "bits": 10,
+   "maximum_manhattan_um": 291.03599999999983,
+   "mean_manhattan_um": 291.0359999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su3_ctl",
+   "source_pin": "m_swm",
+   "target": "su3",
+   "target_pin": "swm",
+   "bits": 16,
+   "maximum_manhattan_um": 341.5319999999999,
+   "mean_manhattan_um": 309.972,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su3_ctl",
+   "source_pin": "rtg",
+   "target": "su3",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 334.2359999999999,
+   "mean_manhattan_um": 334.2359999999999,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su3",
+   "source_pin": "q",
+   "target": "ans1",
+   "target_pin": "sx",
+   "bits": 512,
+   "maximum_manhattan_um": 254.9784999999997,
+   "mean_manhattan_um": 166.48987499999947,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_in",
+   "source_pin": "q",
+   "target": "su4",
+   "target_pin": "swd",
+   "bits": 512,
+   "maximum_manhattan_um": 110.67600000000016,
+   "mean_manhattan_um": 48.945000000000206,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_ctl",
+   "source_pin": "m_sre",
+   "target": "su4",
+   "target_pin": "sre",
+   "bits": 1,
+   "maximum_manhattan_um": 278.89200000000005,
+   "mean_manhattan_um": 278.89200000000005,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_ctl",
+   "source_pin": "m_swe",
+   "target": "su4",
+   "target_pin": "swe",
+   "bits": 1,
+   "maximum_manhattan_um": 323.43600000000004,
+   "mean_manhattan_um": 323.43600000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_ctl",
+   "source_pin": "m_sra",
+   "target": "su4",
+   "target_pin": "sra",
+   "bits": 10,
+   "maximum_manhattan_um": 278.89200000000005,
+   "mean_manhattan_um": 278.89199999999994,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_ctl",
+   "source_pin": "m_swl",
+   "target": "su4",
+   "target_pin": "swl",
+   "bits": 10,
+   "maximum_manhattan_um": 323.43600000000004,
+   "mean_manhattan_um": 323.43600000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_ctl",
+   "source_pin": "m_swm",
+   "target": "su4",
+   "target_pin": "swm",
+   "bits": 16,
+   "maximum_manhattan_um": 373.9319999999999,
+   "mean_manhattan_um": 342.37199999999984,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_ctl",
+   "source_pin": "rtg",
+   "target": "su4",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 366.63599999999997,
+   "mean_manhattan_um": 366.63599999999997,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_ctl",
+   "source_pin": "rtg",
+   "target": "ans2",
+   "target_pin": "rtg",
+   "bits": 1,
+   "maximum_manhattan_um": 367.548,
+   "mean_manhattan_um": 367.548,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4_ctl",
+   "source_pin": "svc",
+   "target": "ans2",
+   "target_pin": "svc",
+   "bits": 1,
+   "maximum_manhattan_um": 279.504,
+   "mean_manhattan_um": 279.504,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su4",
+   "source_pin": "q",
+   "target": "ans2",
+   "target_pin": "sx",
+   "bits": 512,
+   "maximum_manhattan_um": 463.1760000000001,
+   "mean_manhattan_um": 382.2921875,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su5_in",
+   "source_pin": "q",
+   "target": "su5",
+   "target_pin": "swd",
+   "bits": 512,
+   "maximum_manhattan_um": 110.67600000000004,
+   "mean_manhattan_um": 48.94500000000017,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su5_ctl",
+   "source_pin": "m_sre",
+   "target": "su5",
+   "target_pin": "sre",
+   "bits": 1,
+   "maximum_manhattan_um": 28.500000000000057,
+   "mean_manhattan_um": 28.500000000000057,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su5_ctl",
+   "source_pin": "m_swe",
+   "target": "su5",
+   "target_pin": "swe",
+   "bits": 1,
+   "maximum_manhattan_um": 73.04400000000004,
+   "mean_manhattan_um": 73.04400000000004,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su5_ctl",
+   "source_pin": "m_sra",
+   "target": "su5",
+   "target_pin": "sra",
+   "bits": 10,
+   "maximum_manhattan_um": 28.500000000000057,
+   "mean_manhattan_um": 28.499999999999954,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su5_ctl",
+   "source_pin": "m_swl",
+   "target": "su5",
+   "target_pin": "swl",
+   "bits": 10,
+   "maximum_manhattan_um": 73.04400000000004,
+   "mean_manhattan_um": 73.04400000000003,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su5_ctl",
+   "source_pin": "m_swm",
+   "target": "su5",
+   "target_pin": "swm",
+   "bits": 16,
+   "maximum_manhattan_um": 123.5399999999999,
+   "mean_manhattan_um": 91.97999999999993,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su5_ctl",
+   "source_pin": "rtg",
+   "target": "su5",
+   "target_pin": "rst_n",
+   "bits": 1,
+   "maximum_manhattan_um": 256.24799999999993,
+   "mean_manhattan_um": 256.24799999999993,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "su5",
+   "source_pin": "q",
+   "target": "ans2",
+   "target_pin": "sx",
+   "bits": 512,
+   "maximum_manhattan_um": 297.5880000000001,
+   "mean_manhattan_um": 222.3101250000006,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b0_bx",
+   "source_pin": "q",
+   "target": "rr4_0",
+   "target_pin": "bx",
+   "bits": 512,
+   "maximum_manhattan_um": 483.636,
+   "mean_manhattan_um": 426.85199999999844,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b1_bx",
+   "source_pin": "q",
+   "target": "rr4_0",
+   "target_pin": "bx",
+   "bits": 512,
+   "maximum_manhattan_um": 281.508,
+   "mean_manhattan_um": 218.10000000000042,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b2_bx",
+   "source_pin": "q",
+   "target": "rr4_0",
+   "target_pin": "bx",
+   "bits": 512,
+   "maximum_manhattan_um": 320.6280000000001,
+   "mean_manhattan_um": 239.5560000000002,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b3_bx",
+   "source_pin": "q",
+   "target": "rr4_0",
+   "target_pin": "bx",
+   "bits": 512,
+   "maximum_manhattan_um": 545.028,
+   "mean_manhattan_um": 426.70800000000276,
+   "screen_gt500_bits": 192
+  },
+  {
+   "source": "b4_bx",
+   "source_pin": "q",
+   "target": "rr4_1",
+   "target_pin": "bx",
+   "bits": 512,
+   "maximum_manhattan_um": 483.63599999999997,
+   "mean_manhattan_um": 426.85199999999844,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b5_bx",
+   "source_pin": "q",
+   "target": "rr4_1",
+   "target_pin": "bx",
+   "bits": 512,
+   "maximum_manhattan_um": 281.5079999999999,
+   "mean_manhattan_um": 218.10000000000042,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b6_bx",
+   "source_pin": "q",
+   "target": "rr4_1",
+   "target_pin": "bx",
+   "bits": 512,
+   "maximum_manhattan_um": 320.62800000000004,
+   "mean_manhattan_um": 239.5560000000002,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "b7_bx",
+   "source_pin": "q",
+   "target": "rr4_1",
+   "target_pin": "bx",
+   "bits": 512,
+   "maximum_manhattan_um": 545.028,
+   "mean_manhattan_um": 426.70800000000276,
+   "screen_gt500_bits": 192
+  },
+  {
+   "source": "rr4_0",
+   "source_pin": "t1",
+   "target": "rr2",
+   "target_pin": "t1a",
+   "bits": 512,
+   "maximum_manhattan_um": 461.95200000000006,
+   "mean_manhattan_um": 398.88292968749914,
+   "screen_gt500_bits": 0
+  },
+  {
+   "source": "rr4_1",
+   "source_pin": "t1",
+   "target": "rr2",
+   "target_pin": "t1b",
+   "bits": 512,
+   "maximum_manhattan_um": 145.16399999999993,
+   "mean_manhattan_um": 105.86849999999946,
+   "screen_gt500_bits": 0
+  }
+ ],
+ "internal_geometry_claim": "ActualclosedLEFpincenters Manhattanlowerbound ONLY, notroutedwire/percornerETMtimingproof. >500 islegacygeometric flag, notnew flatwirebudget."
+}

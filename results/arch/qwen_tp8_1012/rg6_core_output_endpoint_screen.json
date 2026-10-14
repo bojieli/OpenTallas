@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.vm-core-output-pin-screen.v1",
+ "claim": "ActualclosedLEFpincenters, continuousface minimumdistance and0.76ps/um screenonly; noIOpacking orroutedtimingproof.",
+ "rows": [
+  {
+   "port": "ro",
+   "bits": 512,
+   "face": "e",
+   "max_assigned_face_min_wire_um": 427.668,
+   "max_any_face_min_wire_um": 425.478,
+   "assigned_face_screen_impossible_bits": 512,
+   "any_face_screen_impossible_bits": 512
+  },
+  {
+   "port": "ovf",
+   "bits": 1,
+   "face": "e",
+   "max_assigned_face_min_wire_um": 383.89200000000005,
+   "max_any_face_min_wire_um": 383.89200000000005,
+   "assigned_face_screen_impossible_bits": 1,
+   "any_face_screen_impossible_bits": 1
+  },
+  {
+   "port": "so_s0",
+   "bits": 1024,
+   "face": "e",
+   "max_assigned_face_min_wire_um": 92.54700000000003,
+   "max_any_face_min_wire_um": 92.54700000000003,
+   "assigned_face_screen_impossible_bits": 0,
+   "any_face_screen_impossible_bits": 0
+  },
+  {
+   "port": "so_s1",
+   "bits": 1024,
+   "face": "e",
+   "max_assigned_face_min_wire_um": 92.54700000000003,
+   "max_any_face_min_wire_um": 92.54700000000003,
+   "assigned_face_screen_impossible_bits": 0,
+   "any_face_screen_impossible_bits": 0
+  },
+  {
+   "port": "so_s2",
+   "bits": 1024,
+   "face": "n",
+   "max_assigned_face_min_wire_um": 56.202,
+   "max_any_face_min_wire_um": 56.202,
+   "assigned_face_screen_impossible_bits": 0,
+   "any_face_screen_impossible_bits": 0
+  }
+ ]
+}

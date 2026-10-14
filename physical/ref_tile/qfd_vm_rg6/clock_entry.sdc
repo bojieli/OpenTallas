@@ -64,7 +64,9 @@ proc ot_ce_apply {} {
   # Every entry is synchronous and related. Reserve die skew on internal hops;
   # no asynchronous groups, false paths or ETM insertion add-back.
   set_clock_uncertainty -setup 150 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
-  set_clock_uncertainty -hold 75 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
+  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew.
+  # Tile-local25ps uncertainty is not the composed pair margin.
+  set_clock_uncertainty -hold 100 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
   if {[llength $lowclocks] && [llength $highclocks]} {
     set_clock_uncertainty -setup 210 -from $lowclocks -to $highclocks
     set_clock_uncertainty -setup 210 -from $highclocks -to $lowclocks
