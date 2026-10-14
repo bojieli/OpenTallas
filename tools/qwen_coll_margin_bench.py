@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_package_tp_campaign as C  # noqa: E402
 
 SRC = [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/hdc/ot_hdc_prefix.sv", ROOT / "rtl/hdc/ot_hdc_fastfp.sv", ROOT / "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-       ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/rom/ot_coll_fold_slice.sv", ROOT / "rtl/rom/ot_coll_rst_leaf.sv", ROOT / "rtl/lib/ot_hdly.sv", ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
+       ROOT / "rtl/rom/ot_rom_oneshot_die_m.sv", ROOT / "rtl/rom/ot_coll_fold_slice.sv", ROOT / "rtl/rom/ot_coll_rst_leaf.sv", ROOT / "rtl/rom/ot_coll_col_tile.sv", ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v", ROOT / "rtl/lib/ot_hdly.sv", ROOT / "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v", ROOT / "rtl/rom/ot_rom_oneshot_allreduce.sv",
        ROOT / "rtl/test/tb_rom_oneshot_allreduce.sv"]
 
 
@@ -51,8 +51,13 @@ def main():
                     help="throughput shape (owner 10-10 gate): Qwen3-8B TP4 all-reduce = 256 words of 16-lane FP32, 2 per "
                          "layer, argmax all-gather 1 word, DEPTH 32, no gaps/skew; priced against the engine-alone "
                          "reference in results/arch/qwen_coll_native_20261009/coll_cost.json (AR256 296 / 2x256 552 / argmax 24)")
+    ap.add_argument("--depth32", action="store_true",
+                    help="run every case at DEPTH 32 (the MEMM / CT production FIFO depth; MARGIN >= 6 datapath is "
+                         "only elaborated at DEPTH 32)")
     a = ap.parse_args()
     cases = PRODUCTION_CASES if a.production else C.UNIT_CASES
+    if a.depth32:
+        cases = [(c[0] + ("" if c[1] == 32 else "_d32"), 32) + tuple(c[2:]) for c in cases]
     a.out.mkdir(parents=True, exist_ok=True)
     exes = {d: build(a.out, d, a.margin, a.mutant, a.mutant_define) for d in sorted({c[1] for c in cases})}
     bad = []

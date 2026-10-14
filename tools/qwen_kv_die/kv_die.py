@@ -183,6 +183,61 @@ BINDINGS['qkd_kvwq_ctl_bin_h'] = copy.deepcopy(BINDINGS['qkd_kvwq_ctl_bin'])
 BINDINGS['qkd_kvwq_ctl_bin_h']['parameters'] = dict(FLANE_BINARY=1, HEAD_PIPE=1)
 BINDINGS['qkd_kvwq_leaf_s_w129_m'] = copy.deepcopy(BINDINGS['qkd_kvwq_leaf_s_w129'])
 
+# el1013-qwen-kvstrips 2026-10-13 (coordinator-accepted slot change): the controller strip qkd_ctrl / qkd_ctrl_n is 32
+# die slots of ONE hardened master qkd_ctrl_pc (PC k at strip y = 378 k, pc[4:0] strapped) + one qkd_ctrl_kc leaf at the
+# N end (strip y = 12,096); the PHY is re-pinned per PC (po / pi face the leaf).  The masters' ports ARE the die buses;
+# STRIP_FIELDS gives each bus's fields LSB first (the benches generate their offsets from it).
+STRIP_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv'
+STRIP_FIELDS = dict(
+    qkd_ctrl_pc=dict(
+        ci=[('h_cred', 3), ('h_wv', 1), ('h_wsec', 24), ('h_cv', 1), ('h_csec', 24), ('h_cdata', 256), ('h_ctag', 9),
+            ('h_fault', 1)],                                                   # = qkd_cdc_wleaf ho
+        co=[('h_lv', 1), ('h_lsec', 17), ('h_lrow', 8), ('h_ldata', 256), ('h_hand', 1), ('h_wcon', 1), ('h_av', 1),
+            ('h_atag', 9)],                                                    # = qkd_cdc_wleaf hi
+        es=[('s_v', 1), ('w_d', 256), ('s_row', 19), ('s_col', 5), ('s_bank', 5), ('s_we', 1), ('w_v', 1)],
+        er=[('e_v', 1), ('e_data', 256), ('e_ce', 1), ('e_ue', 1), ('s_credit', 1), ('fault_core', 1)],
+        po=[('row_v', 1), ('row_op', 3), ('row_bank', 5), ('row_row', 19), ('col_v', 1), ('col_we', 1),
+            ('col_bank', 5), ('col_col', 5), ('wd', 288)],
+        pi=[('r_v', 1), ('r_d', 288)], ki=[('k_v', 1), ('k_d', 32)], ko=[('k_v', 1), ('k_d', 32)]),
+    qkd_ctrl_kc=dict(kc=[('kc_v', 1), ('kc_d', 32)], ko=[('k_v', 1), ('k_d', 32)]))
+assert [f for f, _ in STRIP_FIELDS['qkd_ctrl_pc']['ci']] == BINDINGS['qkd_cdc_wleaf']['ports']['ho']
+assert [f for f, _ in STRIP_FIELDS['qkd_ctrl_pc']['co']] == BINDINGS['qkd_cdc_wleaf']['ports']['hi']
+BINDINGS['qkd_ctrl_pc'] = dict(module='qkd_ctrl_pc', file=STRIP_FILE,
+    ports=dict(ci=['ci'], co=['co'], es=['es'], er=['er'], po=['po'], pi=['pi'], ki=['ki'], ko=['ko'], fi=['fi'],
+               fo=['fo'], pc=['pc'], pll_hbm=['pll_hbm'], hrst=['hrst'], ck=['ck'], rsi=['rsi']), classed={})
+BINDINGS['qkd_ctrl_kc'] = dict(module='qkd_ctrl_kc', file=STRIP_FILE,
+    ports=dict(kc=['kc'], ko=['ko'], fi=['fi'], kf=['kf'], pll_hbm=['pll_hbm'], hrst=['hrst'], ck=['ck'],
+               rsi=['rsi']), classed={})
+
+# KV landing strip qkd_land / qkd_land_n -> 32 x qkd_land_pc (E half, one a PC slot) + 8 x qkd_land_grp (W half, one a row
+# engine beside its four PCs) + 1 x qkd_land_emb (N end).  Strip slot 4 i + q hosts logical PC {q, G(i)} (LAND_GROUP_ORDER:
+# i = 0 at the S end; every group then sits beside its engine's rq / rs pins).
+LAND_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_land_strip.sv'
+LAND_GROUP_ORDER = (4, 5, 0, 1, 2, 3, 6, 7)
+STRIP_FIELDS.update(
+    qkd_land_pc=dict(
+        li=[('l_v', 1), ('l_sec', 17), ('l_row', 8), ('l_data', 256)], lp=[('l_pop', 1)],          # = qkd_cdc_wleaf co
+        gw=[('v', 1), ('layer', 6), ('j', 10), ('data', 256)],
+        es=STRIP_FIELDS['qkd_ctrl_pc']['es'], er=STRIP_FIELDS['qkd_ctrl_pc']['er'],
+        dni=[('v', 1), ('kind', 1), ('bc', 1), ('pc', 5), ('side', 1), ('s_we', 1), ('w_v', 1), ('s_bank', 5),
+             ('s_col', 5), ('s_row', 19), ('w_d', 256), ('tag', 2)],
+        upi=[('v', 1), ('side', 1), ('tag', 2), ('e_data', 256), ('e_ce', 1), ('e_ue', 1)]),
+    qkd_land_grp=dict(
+        rq=[('req_valid', 1), ('req_v', 1), ('req_g', 1), ('req_t', 13)], rs=[('rsp_valid', 1), ('rsp_data', 1024)],
+        lt=[('lay_start', 1), ('lay_T', 14), ('lay_idx', 6)],
+        kn=[('kvw_v', 1), ('kvw_vg', 2), ('kvw_t', 14), ('kvw_layer', 6), ('kvw_d', 1024)]),
+    qkd_land_emb=dict(emf=[('i_v', 1), ('i_d', 523), ('pad', 5), ('o_cr', 1)], emr=[('o_v', 1), ('o_d', 523), ('pad', 5), ('i_cr', 1)]))
+assert [f for f, _ in STRIP_FIELDS['qkd_land_pc']['li']] + ['l_pop'] == BINDINGS['qkd_cdc_wleaf']['ports']['co']
+assert [f for f, _ in STRIP_FIELDS['qkd_land_grp']['rq']] == BINDINGS['qkd_ectl']['ports']['rq']
+BINDINGS['qkd_land_pc'] = dict(module='qkd_land_pc', file=LAND_FILE,
+    ports={k: [k] for k in ('li', 'lp', 'cf', 'gw', 'gc', 'es', 'er', 'dni', 'dno', 'upi', 'upo', 'cri', 'cro', 'fi', 'fo',
+                            'lpc', 'ck', 'rst_n')}, classed={})
+BINDINGS['qkd_land_grp'] = dict(module='qkd_land_grp', file=LAND_FILE,
+    ports={k: [k] for k in ('gw0', 'gw1', 'gw2', 'gw3', 'gc0', 'gc1', 'gc2', 'gc3', 'rq', 'rs', 'lt', 'kn', 'fi', 'fo', 'g',
+                            's', 'ck', 'rst_n')}, classed={})
+BINDINGS['qkd_land_emb'] = dict(module='qkd_land_emb', file=LAND_FILE,
+    ports={k: [k] for k in ('emf', 'emr', 'dno', 'upi', 'cri', 'fi', 'gfi', 'mf', 'st', 'ck', 'rst_n')}, classed={})
+
 
 def _write_tiles(m, add):
     """Opt-in candidate.  Closed ctl/leaf tiles; the explicit OR encoder remains unclosed.

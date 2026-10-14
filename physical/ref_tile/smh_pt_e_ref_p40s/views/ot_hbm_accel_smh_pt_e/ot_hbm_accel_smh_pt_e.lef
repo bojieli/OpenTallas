@@ -38696,6 +38696,10 @@ MACRO ot_hbm_accel_smh_pt_e
       LAYER M5 ;
         RECT  184.56 0 184.584 0.084 ;
     END
+    PORT
+      LAYER M5 ;
+        RECT  184.56 0.016 184.584 1.763 ;
+    END
   END rout[1627]
   PIN rout[1628]
     DIRECTION OUTPUT ;
@@ -83449,7 +83453,6 @@ MACRO ot_hbm_accel_smh_pt_e
     LAYER M5 ;
      RECT  7.632 0.016 9.768 1.763 ;
      RECT  10.992 0.016 11.4 1.763 ;
-     RECT  184.56 0.016 184.584 1.763 ;
      RECT  11.088 1.763 11.304 1.811 ;
      RECT  7.728 1.763 8.112 2.051 ;
      RECT  2.4 2.137 2.52 2.151 ;
