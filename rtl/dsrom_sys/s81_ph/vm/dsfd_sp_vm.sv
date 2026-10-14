@@ -1086,6 +1086,40 @@ module dsfd_vm_fe #(
         end
     end endgenerate
 `endif
+`ifdef OT_VMFE_FCN_K2_SPLIT
+    // Stage K2A (claude s81-grpA 10-14): routed SS k_pc -> k2_g was 19 levels / -283 ps at 1,111 ps. Register the
+    // masked pair sums of each 7-port group (k_ok folded) and every K2 input; stage K2 adds four 6-bit pair sums.
+    reg [5:0] ka_p [0:NSLOT*16-1]; reg [NSLOT-1:0] ka_hr;
+    reg ka_arm; reg [1:0] ka_s; reg [18:0] ka_need; reg [7:0] ka_tag; reg [9:0] ka_user; reg ka_ntf;
+    always @(posedge clk) begin : p_ka integer kk, g, q; reg [5:0] t0, t1; reg h;
+        for (kk = 0; kk < NSLOT; kk = kk + 1) begin
+            h = 1'b0;
+            for (g = 0; g < 4; g = g + 1)
+                for (q = 0; q < 4; q = q + 1) begin
+                    t0 = k_w[kk*NP + 7*g + 2*q] ? {1'b0, k_pc[5*(7*g + 2*q) +: 5]} : 6'd0;
+                    t1 = (q < 3 && k_w[kk*NP + 7*g + 2*q + 1]) ? {1'b0, k_pc[5*(7*g + 2*q + 1) +: 5]} : 6'd0;
+`ifdef OT_VMFE_FCN_K2_SPLIT_MUT
+                    if (g == 0 && q == 0 && t0 != 6'd0) t0 = t0 - 6'd1;   // MUTANT: port 0 counts one element short
+`endif
+                    ka_p[kk*16 + g*4 + q] <= k_ok[kk] ? t0 + t1 : 6'd0;
+                end
+            for (q = 0; q < NP; q = q + 1) if (k_r[kk*NP + q]) h = 1'b1;
+            ka_hr[kk] <= h && k_ok[kk];
+        end
+        if (!rn) ka_arm <= 1'b0; else ka_arm <= k_arm;
+        ka_s <= k_s; ka_need <= k_arg[18:0]; ka_tag <= k_tag; ka_user <= k_user; ka_ntf <= st_ntf[k_s];
+    end
+    always @(posedge clk) begin : p_k2 integer kk, g;
+        for (kk = 0; kk < NSLOT; kk = kk + 1) begin
+            for (g = 0; g < 4; g = g + 1)
+                k2_g[kk*4 + g] <= ({2'd0, ka_p[kk*16 + g*4]} + {2'd0, ka_p[kk*16 + g*4 + 1]})
+                                + ({2'd0, ka_p[kk*16 + g*4 + 2]} + {2'd0, ka_p[kk*16 + g*4 + 3]});
+            k2_hr[kk] <= ka_hr[kk];
+        end
+        if (!rn) k2_arm <= 1'b0; else k2_arm <= ka_arm;
+        k2_s <= ka_s; k2_need <= ka_need; k2_tag <= ka_tag; k2_user <= ka_user; k2_ntf <= ka_ntf;
+    end
+`else
     always @(posedge clk) begin : p_k2 integer kk, g, q; reg [7:0] a; reg h;
         for (kk = 0; kk < NSLOT; kk = kk + 1) begin
             h = 1'b0;
@@ -1104,6 +1138,7 @@ module dsfd_vm_fe #(
         if (!rn) k2_arm <= 1'b0; else k2_arm <= k_arm;
         k2_s <= k_s; k2_need <= k_arg[18:0]; k2_tag <= k_tag; k2_user <= k_user; k2_ntf <= st_ntf[k_s];
     end
+`endif
 `ifdef OT_VMFE_FCN_SUM_PIPE
     // Stage K3: reduce the four K2 groups before the wide count/compare.
     // ARM metadata and read hits advance with the same accepted operation.

@@ -1,8 +1,29 @@
 `ifdef OT_VMFE_FLD_PARALLEL_RANKS
 // Compute all six fixed priority rotations in parallel; select only the
 // resulting grants. This removes pointer-driven request muxes before pick2.
+`ifdef OT_VMFE_FLD_NZREG
+// claude s81-grpA 10-14: routed SS ll_ptr/lc -> pick2 -> grant -> lc (+/-1) -> lc!=0 was one loop of ~20 levels
+// (-269.51 ps at 833.333).  The request bit of each lane is now its own register, lc_nz == (lc != 0) every cycle,
+// computed from the registered count and this cycle's (av_r, ll_tk) by a 2-level AND-OR: the 7-bit add/sub and the
+// 7-input zero test leave the loop.  No cycle, no state meaning change (lc keeps its value; lc_nz is a copy).
+reg [NLL-1:0] lc_nz;
+always @(posedge clk) begin : p_lc_nz integer li;
+    if (!rn) lc_nz <= {NLL{1'b0}};
+    else for (li = 0; li < NLL; li = li + 1)
+`ifdef OT_VMFE_FLD_NZREG_MUT
+        lc_nz[li] <= (lc[li] > 7'd1) | ((lc[li] == 7'd1) & !ll_tk[li]) | ((lc[li] == 7'd0) & av_r[li]);   // MUTANT: drops av at 1
+`else
+        lc_nz[li] <= ((lc[li] > 7'd1) & !((lc[li] == 7'd127) & av_r[li] & !ll_tk[li]))
+                   | ((lc[li] == 7'd1) & (av_r[li] | !ll_tk[li]))
+                   | ((lc[li] == 7'd0) & av_r[li] & !ll_tk[li]);
+`endif
+end
+wire [5:0] priority_req={lc_nz[9],lc_nz[8],lc_nz[7],lc_nz[6],lc_nz[1],lc_nz[0]};
+wire [3:0] flow_req={lc_nz[5],lc_nz[4],lc_nz[3],lc_nz[2]};
+`else
 wire [5:0] priority_req={lc[9]!=0,lc[8]!=0,lc[7]!=0,lc[6]!=0,lc[1]!=0,lc[0]!=0};
 wire [3:0] flow_req={lc[5]!=0,lc[4]!=0,lc[3]!=0,lc[2]!=0};
+`endif
 wire [3:0] flow_first,flow_second;
 wire [35:0] ranks_first,ranks_second;
 genvar rank;
@@ -21,6 +42,32 @@ generate for(rank=0;rank<6;rank=rank+1) begin:g_fixed_rank
 end endgenerate
 dsfd_vm_fld_pick2 #(.N(4)) u_flow(.req(flow_req),.first(flow_first),.second(flow_second));
 reg [5:0] fixed_first,fixed_second;
+`ifdef OT_VMFE_FLD_RANKSEL_REG
+// claude s81-grpA 10-14: routed SS ll_ptr[1] -> (binary decode, fanout 13/11/9 x1 cells) -> rank mux -> g[4] -269.51 ps.
+// ll_ptr is a free-running counter: its rank decode is registered one edge early (rk_sel), the mux is AND-OR.
+reg [5:0] rk_sel;   // registered one-hot rank of the CURRENT ll_ptr (decoded from its next value one edge early)
+function automatic [5:0] rk_dec(input [3:0] p);
+ case(p) 0,10:rk_dec=6'b000001; 1,11:rk_dec=6'b000010; 7:rk_dec=6'b001000; 8:rk_dec=6'b010000; 9:rk_dec=6'b100000;
+  default:rk_dec=6'b000100; endcase
+endfunction
+always @(posedge clk) begin
+ if (!rn) rk_sel <= rk_dec(4'd0);
+ else rk_sel <= rk_dec((ll_ptr == NLL - 1) ? 4'd0 : ll_ptr + 4'd1);
+end
+always @* begin : p_rk integer k;
+  fixed_first=6'd0; fixed_second=6'd0;
+  for(k=0;k<6;k=k+1) begin
+`ifdef OT_VMFE_FLD_RANKSEL_MUT
+   if(k!=3) begin   // MUTANT: rank 3 (ll_ptr 7) never selected
+`else
+   begin
+`endif
+    fixed_first=fixed_first|(ranks_first[6*k+:6]&{6{rk_sel[k]}});
+    fixed_second=fixed_second|(ranks_second[6*k+:6]&{6{rk_sel[k]}});
+   end
+  end
+ end
+`else
 always @* begin
  case(ll_ptr)
   0,10:begin fixed_first=ranks_first[0+:6];fixed_second=ranks_second[0+:6];end
@@ -31,6 +78,7 @@ always @* begin
   default:begin fixed_first=ranks_first[12+:6];fixed_second=ranks_second[12+:6];end
  endcase
 end
+`endif
 wire[9:0] nonflow_first={fixed_first[5:2],4'b0,fixed_first[1:0]};
 wire[9:0] nonflow_second={fixed_second[5:2],4'b0,fixed_second[1:0]};
 `else

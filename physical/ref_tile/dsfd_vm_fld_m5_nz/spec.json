@@ -1,0 +1,92 @@
+{
+ "name": "dsfd_vm_fld_m5_nz",
+ "top": "dsfd_vm_fld",
+ "kind": "tile",
+ "sources": [
+  "physical/s81_fe_fld_nz/rtl/dsfd_vm_fld.sv"
+ ],
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "rtl/dsrom_sys/s81_ph/vm"
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rni"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 69.12
+ },
+ "pins": {
+  "N": [
+   "ret",
+   "av",
+   "ovf",
+   "sflt",
+   "g",
+   "ok"
+  ],
+  "S": [
+   "rni",
+   "ck",
+   "rn_o",
+   "ovr_o",
+   "sflt_o",
+   "t_cts"
+  ],
+  "W": [
+   "s_o",
+   "k_o"
+  ],
+  "E": []
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "pin_v": "M3 M5",
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:s81-grpA-1014",
+  "branch": "claude/s81-grpA-1014",
+  "tag": "p7",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/mtp",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/lib",
+   "rtl/common",
+   "tools/s81_vm",
+   "tools/s81_ph",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/s81_ph_views/vm_master",
+   "results/arch",
+   "physical/redesign_ds/coll_split",
+   "physical/s81_fe_fld_nz"
+  ],
+  "purpose": "Routed ranks-p6 (CLOSED TT+90.16/FF+18.67/DRC0) SS -269.51: the one-cycle loop lc -> (lc!=0) -> pick2 ranks -> ll_ptr select -> grant -> lc+av-tk. Structural cut: each lane's request is its own register lc_nz (== lc!=0 every cycle) updated by a 2-level AND-OR of the registered count decode and (av_r, ll_tk); the 7-bit add/sub and zero tests leave the loop. No cycle, same outline/pins/SDC.",
+  "benched_by": "s81_vm_fe_h_lockstep"
+ },
+ "structural_change": "Routed ranks-p6 (CLOSED TT+90.16/FF+18.67/DRC0) SS -269.51: the one-cycle loop lc -> (lc!=0) -> pick2 ranks -> ll_ptr select -> grant -> lc+av-tk. Structural cut: each lane's request is its own register lc_nz (== lc!=0 every cycle) updated by a 2-level AND-OR of the registered count decode and (av_r, ll_tk); the 7-bit add/sub and zero tests leave the loop. No cycle, same outline/pins/SDC.",
+ "recipe": 2,
+ "inhold": true,
+ "inhold_drv": "BUFx4f_ASAP7_75t_R",
+ "io_tcl": "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fld.tcl",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reroute_reason": {
+  "kind": "rtl_change"
+ },
+ "pin_access": {
+  "frac": 1.0
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "outhold": true
+}
