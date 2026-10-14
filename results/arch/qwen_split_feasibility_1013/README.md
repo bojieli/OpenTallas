@@ -1,0 +1,42 @@
+# Qwen TP8 split feasibility — candidate, not adoption
+
+The merged eight-die design remains the plan of record. This parallel study asks whether separate compute and KV/system dies offer a credible fallback. It establishes a partial geometric construction and traffic lower bound, not physical closure or accepted performance.
+
+## Why an apparently 55–60% floorplan became difficult
+
+The original F2 estimate (stream log 2026-10-12 07:34) was 31.17 × 25.78 mm, about 804 mm², with roughly 60% **modeled slot occupancy**. This was not placed standard-cell utilization. Empty area included required relay, bus, clock and power corridors. It was not a freely allocatable contiguous reserve.
+
+Actual hardened hierarchy increased the ROM tile request from 311.04 × 1296 µm to 362.88 × 1442.88 µm. The 2026-10-13 08:38 request explains the cause: a closed 311.04-µm-wide ROM-pair leaf needs edge access, each 1024-bit return row needs a channel, and the lane/node leaves must fit with legal spacing. Across 768 tiles, the request adds about 92.6 mm² before other growth. The latest 399.6-µm-wide candidate is larger still; at a 419.904-µm pitch it leaves only 20.304 µm beside the tile, while the station needs 52.68 µm, or 64.8 µm after the wider root format. This is a direct geometry contradiction.
+
+The independent window audit's actual g8 assembly has 501.264 mm² of non-relay hard-frame union in an 822.993 mm² die (60.907%): ROM tiles 314.717; stations 4.194; KV/HBM frames 120.431; IO 32.124; other ROM/shared-system frames 29.799. Its remaining 321.729 mm² includes 19.222 mm² of relay/reset frames. The g5 larger-tile trial increases tile area by 87.369 mm² while increasing die area by only 35.273 mm², consuming 52.096 mm² of former outside area. Its 26.0172-mm height exceeds the 26-mm limit. These are frame measurements, not standard-cell density.
+
+The VM is a separate local-routing problem: its current reservation is 4.8384 × 2.54664 mm (12.322 mm²). Moving that rectangle alone frees only 1.44% of the reticle area. Its band cut was already greater than 100% before root-gather/control traffic. Correct tile X delivery requires 32 × 128-bit roots plus tags; the former two-root representation did not implement the full array. The split should keep VM, SU and X delivery beside ROM compute; exporting that hot local network would create a much harder D2D bandwidth problem.
+
+## Constructive compute-field candidate
+
+`split_feasibility.py` generates 768 tile-request rectangles and 768 station allowances, checks every pair for overlap and checks the die outline. It uses the larger 399.6 × 1442.88-µm tile request, a 472.608-µm column pitch, 43.2-µm row channels, a 5.2-mm center reservation and a 1.963816-mm south IO/channel reservation. The result is **27.928384 × 25.741096 mm = 718.907214 mm²**, with zero overlaps/outside rectangles.
+
+This is a useful falsifiable partial construction. It proves tile/station rectangle packing with sizable width relief after removing KV shorelines. It does **not** place the center's native slab groups, VM, SU, control, IO, D2D interfaces or the tree/clock/reset relays. It does not prove that its row channels have enough actual routing tracks. Those remain explicit gates in the JSON. The tile and expanded station sizes are current requests/allowances, not claimed closed masters.
+
+## Partition and communication
+
+Keep the ROM field, VM, SU, tree, local X caches and compute collectives on the compute die. Move HBM PHYs/controllers, attention heads/aggregators, posted KV write/merge and host/prefill handling onto the KV/system die. The exact role of package control and collective PHYs must be assigned once, with explicit transport between dies.
+
+At TP8, under equal contiguous head ownership, one die owns 4 query heads and 1 KV head, with dimension 128. Per layer the minimum payload is:
+
+| Direction | Payload | Bytes | 512-bit words |
+|---|---|---:|---:|
+| Compute → system | 512 BF16 Q values and 256 FP8 new K/V values | 1280 | 20 |
+| System → compute | 512 FP32 attention-result values | 2048 | 32 |
+
+This excludes control, embedding, framing, arbitration and credit stalls; it is not an end-to-end latency estimate. Head ownership and bit widths must be checked against the actual TP8 wrapper, not only the model config.
+
+The historical TP4 split contract already keeps context-sized KV streams on the KV die and transports Q/new-KV/results. Its x64 PHY reference is 0.6047 mm² and 777.6 µm shoreline per endpoint, with a 777.6 × 518.4-µm adapter frame. Two endpoints add at least about 2.016 mm² per pair before bump keepout, buffers, clock/reset and routing. That older PHY and transport are not current TP8 physical qualifications. Historical latency numbers cannot be copied into the current ledger.
+
+The current KV/HBM hard frames occupy approximately 120.4 mm² in g8, before relay corridors, center/host functions and larger head requests. This is a lower bound, not a separate system-die outline. A fresh constructive system-die plan must preserve four-HBM placement, real PHY dimensions, 128 current head views and 96 controller subleaves. The former generator provides a starting topology, not a valid current layout.
+
+## Recommendation and decision gates
+
+Run this feasibility path in parallel, while the merged design continues. Do not adopt a split solely from the partial packing. Require a complete real-view placement on both dies, actual-pin cuts and reach, explicit clock/PG hierarchy, native finite-credit D2D exactness and measured incremental layer/token latency. Compare total silicon, PHY, packaging, HBM placement and power, then choose the better verified design.
+
+Increasing TP from 8 to 16 also shrinks each ROM field, but duplicates per-die interfaces/control and changes reduction and HBM ownership. It is a separate model/traffic/cost study, not the first fix for a demonstrable corridor/abstract mismatch. Neither TP16 nor the split eliminates the defective local X-delivery representation; that functional repair is required independently.
