@@ -31,8 +31,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--jobs", type=int, default=8)
-    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR"])
+    ap.add_argument("--mut", choices=["IX", "QB", "CONSUME", "BC", "AQPIN", "AQPAR", "AQMEM", "AQMAX"])
     ap.add_argument("--aq-pin", action="store_true")
+    ap.add_argument("--aq-split", action="store_true")
     ap.add_argument("--ix-pins", action="store_true")
     ap.add_argument("--ix-split", action="store_true")
     ap.add_argument("--ix-bank-split", action="store_true")
@@ -60,18 +61,20 @@ def main():
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_pin_variants.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_split_native.sv",
+            ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_aq_split_native.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv"])
         defs = ["+define+OT_PQ_ROM_PORTS", "+define+OT_PQ_BENCH_TELEMETRY"]
         if name == "dut" and a.aq_pin: defs += ["+define+OT_PQ_AQ_PIN_LAUNCH"]
         if name == "dut" and a.aq_parity: defs += ["+define+OT_PQ_AQ_SIDE_PARITY"]
         if name == "dut" and a.ix_split: defs += ["+define+OT_PQ_IX_PHYS_SPLIT"]
         if name == "dut" and a.ix_bank_split: defs += ["+define+OT_PQ_IX_BANK_SPLIT"]
+        if name == "dut" and a.aq_split: defs += ["+define+OT_PQ_AQ_PHYS_SPLIT"]
         if name == "dut" and a.ix_pins: defs += ["+define+OT_PQ_IX_PIN_VARIANTS"]
         if name == "dut" and a.bc_sliced: defs += ["+define+OT_PQ_BC_SLICED"]
         if name == "ref": defs += ["+define+OT_PQ_REFERENCE"]
         if name == "dut" and a.mut == "BC": defs += ["+define+OT_S81_PQ_BC_MUT_SLICE_K=" + str(a.bc_mut_slice)]
         if name == "dut" and a.mut:
-            defs += ["+define+OT_PQ_AQ_PARITY_MUT" if a.mut == "AQPAR" else "+define+OT_PQ_AQ_PIN_MUT_DELAY" if a.mut == "AQPIN" else "+define+OT_S81_PQ_BC_MUT_SLICE" if a.mut == "BC" else "+define+OT_S81_PQ_CTL_MUT_EARLY_CONSUME" if a.mut == "CONSUME"
+            defs += ["+define+OT_AQ12T_MUT_RA" if a.mut == "AQMEM" else "+define+OT_AQ12M_MUT_SEL" if a.mut == "AQMAX" else "+define+OT_PQ_AQ_PARITY_MUT" if a.mut == "AQPAR" else "+define+OT_PQ_AQ_PIN_MUT_DELAY" if a.mut == "AQPIN" else "+define+OT_S81_PQ_BC_MUT_SLICE" if a.mut == "BC" else "+define+OT_S81_PQ_CTL_MUT_EARLY_CONSUME" if a.mut == "CONSUME"
                      else "+define+OT_S81_PQ_" + a.mut + "_MUT_ROW"]
         md = w / name
         run([V,"--cc","-O2","-Wno-fatal","-Wno-lint","-Wno-style","--x-assign","0","--x-initial","0",
