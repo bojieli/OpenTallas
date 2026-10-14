@@ -93,7 +93,7 @@ module ot_hgi_dma_front_xs_vm4 #(
         end
         p_s<=selected;p_f<=f;p_s18<=sector;p_v<=x_v;
         w_v<=p_v;w_bad<=p_v&&p_s18>=18'd36864;
-        wl_d<={(MUT==8)?1'b0:(p_s18>=18'd32768&&p_s18<18'd36864),p_s18[14:0],conv(p_s,p_f,2'd0),p_s18>=18'd36864?8'h00:8'hff};
+        wl_d<={(MUT==8)?1'b0:(p_s18>=18'd32768&&p_s18<18'd36864),p_s18[14:0],conv(p_s,p_f,2'd0),p_s18>=18'd36864 ? 8'h00 : 8'hff};
       end
     end
 endmodule
