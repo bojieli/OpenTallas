@@ -428,6 +428,29 @@
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_qm_credit_pacer.sv",
       "sha256": "6c1e788ccd0cc5422f3e57d33c4db74fa8ca5dcf63abca7527489b6574a67c7f"
+    },
+    {
+      "master": "qkd_host_qm_ingress16_service",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_qm_ingress16_service.sv",
+      "sha256": "0d412d25537aad14ca9785e3feb74eba55931d3f7bdb96bf3e49b41f4fdf0c19",
+      "role": "DEFAULT_OFF warm epoch permission capture variant; alternative to originalING16 queue",
+      "instances_per_die": 0,
+      "candidate_instances_per_die": 1,
+      "params": {
+        "ENABLE_SERVICE": 1
+      },
+      "clock_entries": [
+        "ck"
+      ],
+      "flop_bits": 10304,
+      "outline_request_um": [
+        172.8,
+        216
+      ],
+      "outline_status": "UNVERIFIED_ALTERNATIVE_NOT_EXTRA_FOOTPRINT_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "mutually_exclusive_with": "qkd_host_qm_ingress16"
     }
   ],
   "existing_children": [
@@ -731,5 +754,19 @@
     "packet_to_qm_host": "UNRELATED_NO_DECLARED_RATIONAL_PHASE_SCHEDULER",
     "qm_internal_host_ingest_core": "Source original Gray FIFO CDC; actual physical synchronization still requires qualification",
     "no_historical_clk_i_alias": true
+  },
+  "service_guard_candidate": {
+    "source_revision": "290111b8e",
+    "source": "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv",
+    "flop_bits_coarse": 12561,
+    "clock_entries": [
+      "ck_guard"
+    ],
+    "period_ps": 833.3,
+    "typed_pin_bits": 479,
+    "outline_status": "PENDING_MAPPED_AREA_AND_PIN_CAPACITY",
+    "outline_placeholder633square": "WITHDRAWN_UNDERIVED_DO_NOT_RESERVE_OR_PRICE",
+    "default_off_protocol_scope": "CTRL service v2 ready153 epoch154:169, original21strict sources unchanged; exactglobalBEGIN/pendingACK/barrier candidate pending",
+    "qualification": "local162checks+4mutants only, globaltransport/fullservice/physical/tokenprice open"
   }
 }
