@@ -1,6 +1,6 @@
 import json,sys,hashlib
 from pathlib import Path
-p=Path(sys.argv[1]);design=json.loads(p.read_text());mods=design['modules'];top='ot_hdc_vstream_lane_h';counts={};modules={};mem=[];macros=[]
+p=Path(sys.argv[1]);design=json.loads(p.read_text());mods=design['modules'];top=sys.argv[5]if len(sys.argv)>5 else'ot_hdc_vstream_lane_h';counts={};modules={};mem=[];macros=[]
 portbits={b:n for n,r in mods[top]['ports'].items()for b in r['bits'] if n=='clk'}
 def walk(name,path,connections):
  m=mods[name];bind={}
@@ -18,6 +18,6 @@ def walk(name,path,connections):
    q=len(c['connections'].get('Q',[]));clock=c['connections'].get('C',c['connections'].get('CLK',[]));root=net(clock[0])if clock else'UNKNOWN_LATCH_CLOCK';counts[root]=counts.get(root,0)+q;modules[path]=modules.get(path,0)+q
   if t.startswith('$mem'):mem.append({'path':cp,'type':t,'params':c.get('parameters',{})})
 walk(top,top,{'clk':['clk']})
-r={'schema':'qwen-native-head-generic-retained-census-v1','top':top,'params':{'WR':16,'AW':24,'NW':18,'KV_FP8':1,'ML':15,'RD':2,'QLA':int(sys.argv[3]),'QLM':int(sys.argv[4]),'body_ML':21},'production_profile':sys.argv[3:5]==['4','5'],'flow':'Yosys0.68 synth-noabc-noshare; genericmapped FF census, no timing/power/physical qualification','clock_roots':counts,'total_FF_bits':sum(counts.values()),'hierarchy_FF_bits':modules,'unmapped_memory':mem,'real_macro_instances':macros,'design_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'root15k_rule_debt':any(n>15000 for n in counts.values()),'slots_PG_pins_phase':'UNASSIGNED','actual300_80':'not measured; no exception implied'}
+r={'schema':'qwen-native-head-generic-retained-census-v1','top':top,'params':{'WR':16,'AW':24,'NW':18,'KV_FP8':1,'ML':15,'RD':2,'QLA':int(sys.argv[3]),'QLM':int(sys.argv[4]),'body_ML':21 if top=='ot_hdc_vstream_lane_h'else None},'production_profile':sys.argv[3:5]==['4','5'],'flow':'Yosys0.68 synth-noabc-noshare; genericmapped FF census, no timing/power/physical qualification','clock_roots':counts,'total_FF_bits':sum(counts.values()),'hierarchy_FF_bits':modules,'unmapped_memory':mem,'real_macro_instances':macros,'design_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'root15k_rule_debt':any(n>15000 for n in counts.values()),'slots_PG_pins_phase':'UNASSIGNED','actual300_80':'not measured; no exception implied'}
 Path(sys.argv[2]).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps({k:r[k]for k in ['production_profile','params','clock_roots','total_FF_bits','root15k_rule_debt']}))
 assert not mem,'Unmapped memory prevents complete state census'
