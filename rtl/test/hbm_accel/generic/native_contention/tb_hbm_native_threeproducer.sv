@@ -97,10 +97,11 @@ module tb_hbm_native_threeproducer;
       .vm_rgrant(owner_r),.vm_wgrant(owner_w),.bank_status(bank_status),.fault(parent_fault));
 `ifdef SCALAR_VM
     wire [16*338-1:0] scalar_cq;wire [16*274-1:0] scalar_cr;
-    wire scalar_done;wire [11:0] scalar_hub_status;
+    wire scalar_done;wire [11:0] scalar_hub_status;reg scalar_go=0;
+    initial begin wait(quant_go);repeat(8)@(negedge vmclk);scalar_go=1;end
     wire [31:0] scalar_requests,scalar_responses,scalar_words,scalar_mirror_completions;
     reg [2047:0] scalar_mirror_seen=0;integer scalar_macro_writes=0,scalar_DQ_overlap=0,scalar_wide_overlap=0;
-    ot_native_scalar_stimulus #(.MUT(MUT)) scalar(.clk(vmclk),.rst_n(rst_n),.go(quant_go),.cq(scalar_cq),.cr(scalar_cr),
+    ot_native_scalar_stimulus #(.MUT(MUT)) scalar(.clk(vmclk),.rst_n(rst_n),.go(scalar_go),.cq(scalar_cq),.cr(scalar_cr),
       .hub_status(scalar_hub_status),.mirror_seen(scalar_mirror_seen),.done(scalar_done),.requests(scalar_requests),
       .responses(scalar_responses),.checked_words(scalar_words),.mirror_completions(scalar_mirror_completions));
     for(genvar sq=0;sq<4;sq++)begin:scalar_observe

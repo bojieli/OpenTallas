@@ -1,0 +1,16 @@
+THREEPRODUCER_SU_START load0 mode0 range0:65535 cycle8
+THREEPRODUCER_PARKED_POSTS observed224 before_grant retained_positive_requires_fullcommit
+THREEPRODUCER_SU_DONE load0 mode0 cycle2191
+THREEPRODUCER_SU_START load0 mode1 range65472:65535 cycle2211
+THREEPRODUCER_QUANT_RETIRE records32 cycles192 immutable_price168 ratio1.142857143
+THREEOWNER_DMA_STORE PASS base0 n64 rows4 stride65536 checked256 source39_peak_pending2
+THREEPRODUCER_SU_DONE load0 mode1 cycle2546
+THREEOWNER_DMA_STORE PASS base65528 n128 rows1 stride128 checked384 source39_peak_pending2
+THREEOWNER_DMA_STORE PASS base32768 n8 rows64 stride256 checked896 source39_peak_pending2
+THREEOWNER_DMA_STORE PASS base131008 n128 rows1 stride128 checked1024 source39_peak_pending2
+THREEOWNER_DMA_CORE PASS source39f276214 STORE4 FENCE4 native_requests128 words1024 peak_pending2
+SCALAR_VM_DOMAIN PASS hubs4 clients16 requests2304 responses2304 peak4_each main_and_mirror_golden_words12288 mirrored_completions256 all4_C_copies_before_response cycles3678 CDC_qualificationOPEN
+SCALAR_ACTUAL_BANKS mirror_C_writes1024 packet_DQ_contention_edges0 packet_wide_contention_edges71
+[5913338000] %Fatal: tb_hbm_native_threeproducer.sv:354: Assertion failed in tb_hbm_native_threeproducer.load: SCALAR actual packet/wide/DQ contention not observed
+%Error: /srv/opentallas-scratch/hbm-native-threeproducer-1014/r15p487/src/rtl/test/hbm_accel/generic/native_contention/tb_hbm_native_threeproducer.sv:354: Verilog $stop
+Aborting...

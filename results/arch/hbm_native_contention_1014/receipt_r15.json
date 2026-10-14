@@ -1,0 +1,18 @@
+{
+  "parent": "ddadedbe6",
+  "positive_result": "FAIL required actualPQ/DQbankcontention=0 bothphases; scalarservice2304/2304/12288words/1024Cwrites remains exact",
+  "observed_wide_contention_edges": {
+    "61": 69,
+    "487": 71
+  },
+  "negative_observed": {
+    "M31": "actual hub hs002 partial-wordbyte maskfault phase2"
+  },
+  "next": "delay directVM scalarlaunch8VMedges toalign actualPQbacklog with firstrealDQburst; preserve strictcontentionminimum and literalhealthyhub",
+  "qualification_open": [
+    "actualpacket/DQbankcontention",
+    "production C/Vpacketbridge/clientassignment",
+    "CP19/AP/upperrange/physicalphase",
+    "whole nativeprice"
+  ]
+}
