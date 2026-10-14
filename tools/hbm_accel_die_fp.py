@@ -6774,6 +6774,8 @@ def write_netlist(m, k, path, top='hfd_die'):
             hi = max(bits_)
             cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))
             parts.append(f'.{Q.esc(base)}({{{cat}}})')
+        for sp_, sv_ in ((m['variant'].get('die_straps') or {}).get(it.name) or {}).items():    # v14: identity straps
+            parts.append(f".{sp_}(2'd{sv_})")
         V.append(f'  {it.master} {it.name} (' + ', '.join(parts) + ');')
     V.append('endmodule\n')
     Path(path).write_text('\n'.join(V))
@@ -7885,6 +7887,9 @@ def r25gq_v14():
                       clients=tuple((c, t, 'NE' if c == 'hb_hc_eng' else q) for c, t, q in v['vm_b2']['clients']))
     # hb_hc_eng to the N spine band (x 14,304-18,689 / y 17,064-18,630; the preset y is before svc_ch_dh)
     v['hc_eng'] = dict(v['hc_eng'], xy=(14304.0, 17064.0 - 108.0))
+    # SFU (area v13: full leaf + cache 1.6688 mm2 > usable 1.4531): with hb_hc_eng out of the equator band the slot grows
+    # +216 um toward the equator (usable 1.8886, 13 % margin) instead of the v13 internal-corridor repair
+    v['sfu_h_add'] = 216.0
     dy_ = -4918.32      # VM8 union: 2,277 rows of 2.16 down, centred on the die y centre (11,990.16 .. 13,990.27)
     v['block_xy'] = {n_: (x_, y_ + dy_) for n_, (x_, y_) in dict(
         hb_vm_sw=(14736.384, 16908.48), hb_vm_se=(15436.224, 16908.48),

@@ -19,9 +19,10 @@ GLUE = ('dsfd_xstg', 'dsfd_lkck', 'dsfd_stn', 'dsfd_hstn', 'dsfd_qbank', 'dsfd_r
         'dsfd_sstn', 'dsfd_node', 'dsfd_cfifo', 'dsfd_rstg')
 
 
-def rtl_index():
+def rtl_index(extra=()):
     idx = {}
-    for p in sorted((ROOT / 'rtl').rglob('*.sv')) + sorted((ROOT / 'rtl').rglob('*.v')):
+    for p in sorted((ROOT / 'rtl').rglob('*.sv')) + sorted((ROOT / 'rtl').rglob('*.v')) + \
+            [q for d in extra for q in sorted(Path(d).rglob('*.sv'))]:
         if '/test/' in str(p) or '/tb' in p.name:
             continue
         try:
@@ -82,6 +83,8 @@ def evalw(w, params):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('die_v'); ap.add_argument('--out', required=True)
     ap.add_argument('--glue', default=','.join(GLUE), help='comma list of die-generated glue master prefixes')
+    ap.add_argument('--extra-rtl', action='append', default=[], help='more RTL dirs (the die kit\'s generated glue RTL)')
+    ap.add_argument('--check-glue', action='store_true', help='bind glue masters too (each needs its own RTL module)')
     a = ap.parse_args()
     glue = tuple(g for g in a.glue.split(',') if g)
     gcount = defaultdict(int)
@@ -93,11 +96,11 @@ def main():
                 wires[m.group(2)] = int(m.group(1)) + 1
         elif line.startswith('  ') and not line.startswith('  input') and '(' in line:
             mst = line.split()[0]
-            if mst.startswith(glue) or mst.startswith('ot_rom_') or mst == 'ot_s81_cfg7_seq':
+            if (mst.startswith(glue) and not a.check_glue) or mst.startswith('ot_rom_') or mst == 'ot_s81_cfg7_seq':
                 gcount[re.sub(r'\d+\w*$', '', mst)] += 1
                 continue
             insts.append(line)
-    idx = rtl_index()
+    idx = rtl_index(a.extra_rtl)
     rep = defaultdict(lambda: dict(instances=[], rtl=None))
     for line in insts:
         m = re.match(r'\s*(\S+)\s+(\S+)\s*\((.*)\);\s*$', line.rstrip())
@@ -127,7 +130,7 @@ def main():
             r['rtl'] = None
             continue
         params, ports = header(files[0].read_text(errors='replace'), mst)
-        r['rtl'] = str(files[0].relative_to(ROOT)); r['rtl_files'] = len(files)
+        r['rtl'] = str(files[0].relative_to(ROOT)) if files[0].is_relative_to(ROOT) else str(files[0]); r['rtl_files'] = len(files)
         if ports is None:
             r['rtl_header'] = 'unparsed'; continue
         miss_rtl = sorted(p for p in dport if p not in ports)
