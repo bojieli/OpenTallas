@@ -13,7 +13,7 @@
 # MEASURED arrival (STA, placement parasitics), OT_SPINE_ITERS rounds.  TritonCTS is not run for this clock.
 # Chain it FIRST in OT_CTS_FIX_HOOKS (it wraps clock_tree_synthesis; other hooks wrap it).  Knobs (env): OT_SPINE_PORT
 # (default ck[0]), OT_SPINE_MACRO_LEAF 0, OT_SPINE_SEG 150, OT_SPINE_BIN 60, OT_SPINE_LEAF_N 8, OT_SPINE_HALO 3, OT_SPINE_CELL BUFx24_ASAP7_75t_R,
-# OT_SPINE_ITERS 3.  Functional netlist unchanged (buffers only).
+# OT_SPINE_ITERS 3, OT_SPINE_SYM 0 (symmetric insertion-aware topology, see ot_sp_sym_build).  Functional netlist unchanged (buffers only).
 
 proc ot_sp_env {n d} { if {[info exists ::env($n)] && $::env($n) ne ""} { return $::env($n) }; return $d }
 
@@ -196,6 +196,110 @@ proc ot_sp_cmp {ax a b} {
   if {$va < $vb} { return -1 } elseif {$va > $vb} { return 1 }; return 0
 }
 
+# ---- OT_SPINE_SYM=1 (el1013-smh-r11 2026-10-13): symmetric, insertion-aware topology ------------------------------------
+# Why (SM tile cluster smh_tile_eg r10, 630 x 1,253 um, 979 sinks, 12 hard children with 196-526 ps of own insertion):
+# the count-bisection tree put one BUFx24 at every one of its 8 levels at the count-weighted centroid (zig-zag, 23 buffer
+# stages root to leaf) and made the slowest hard child (pt_w, 525.9 ps inside) a leaf at full depth: its pin arrived at
+# 1,317 ps, every other leaf was padded up to 1,843-1,901 ps with 2,073 delay cells (17-21 a leaf), and the pad chains
+# (cell delay) did not track the wire-dominated trunk at the fast corner: 28.8 ps spread at TT became 102 ps at FF.
+# What: (1) the flop leaves get a bisection tree whose nodes sit at the CENTRE of their leaves' bounding box (both
+# children see the same span) and whose short levels are collapsed into their parent (no buffer for an edge shorter
+# than OT_SPINE_SYM_MERGE um, fanout <= OT_SPINE_SYM_FAN); (2) a top buffer sits at the root (the ICG output); (3) each
+# leaf that carries its own insertion (kit dict ::ot_ref_child_ins / ::ot_sp_child_ins: master -> ps) taps the tree at
+# the nearest node that still lets it arrive no later than the latest flop leaf -- at the top buffer if none does -- so
+# the trunk a slow child sees is as short as its own insertion requires and the padding left is the true imbalance.
+proc ot_sp_split_bb {ids} {
+  if {[llength $ids] == 1} { return [lindex $ids 0] }
+  set xs {}; set ys {}
+  foreach i $ids { lassign [dict get $::ot_sp_pos $i] x y; lappend xs $x; lappend ys $y }
+  set x0 [tcl::mathfunc::min {*}$xs]; set x1 [tcl::mathfunc::max {*}$xs]
+  set y0 [tcl::mathfunc::min {*}$ys]; set y1 [tcl::mathfunc::max {*}$ys]
+  set ax [expr {$x1 - $x0 >= $y1 - $y0 ? 0 : 1}]
+  set srt [lsort -command [list ot_sp_cmp $ax] $ids]
+  set h [expr {[llength $srt] / 2}]
+  set a [ot_sp_split_bb [lrange $srt 0 [expr {$h - 1}]]]
+  set b [ot_sp_split_bb [lrange $srt $h end]]
+  set n "N[incr ::ot_sp_nn]"
+  set sw 0; foreach i $ids { incr sw [dict get $::ot_sp_cnt $i] }
+  dict set ::ot_sp_pos $n [ot_sp_free [expr {int(($x0 + $x1) / 2)}] [expr {int(($y0 + $y1) / 2)}]]
+  dict set ::ot_sp_cnt $n $sw
+  dict set ::ot_sp_kids $n [list $a $b]
+  return $n
+}
+proc ot_sp_dist {a b} {
+  lassign [dict get $::ot_sp_pos $a] ax ay; lassign [dict get $::ot_sp_pos $b] bx by
+  return [expr {abs($ax - $bx) + abs($ay - $by)}]
+}
+# splice out internal nodes closer than `merge` (dbu) to their parent while the parent's fanout stays <= fan
+proc ot_sp_collapse {n merge fan} {
+  if {![dict exists $::ot_sp_kids $n]} return
+  foreach k [dict get $::ot_sp_kids $n] { ot_sp_collapse $k $merge $fan }
+  set again 1
+  while {$again} {
+    set again 0; set kids [dict get $::ot_sp_kids $n]; set out {}
+    foreach k $kids {
+      if {!$again && [dict exists $::ot_sp_kids $k] && [ot_sp_dist $n $k] < $merge
+          && [llength $kids] - 1 + [llength [dict get $::ot_sp_kids $k]] <= $fan} {
+        lappend out {*}[dict get $::ot_sp_kids $k]
+        dict unset ::ot_sp_kids $k; dict unset ::ot_sp_pos $k; dict unset ::ot_sp_cnt $k
+        set again 1
+      } else { lappend out $k }
+    }
+    dict set ::ot_sp_kids $n $out
+  }
+}
+# estimated arrival (ps) at every node's buffer output: kw ps per dbu of trunk + kb ps per buffer
+proc ot_sp_est {n t kw kb} {
+  dict set ::ot_sp_est_t $n $t
+  if {![dict exists $::ot_sp_kids $n]} return
+  foreach k [dict get $::ot_sp_kids $n] { ot_sp_est $k [expr {$t + [ot_sp_dist $n $k] * $kw + $kb}] $kw $kb }
+}
+# ids: leaf ids; lins: leaf id -> own insertion (ps, absent / 0 for flop leaves); (rx, ry): the root point.  Returns the top node.
+proc ot_sp_sym_build {ids lins rx ry} {
+  set u $::ot_sp_dbu
+  set merge [expr {[ot_sp_env OT_SPINE_SYM_MERGE 40] * $u}]
+  set fan [ot_sp_env OT_SPINE_SYM_FAN 8]
+  set kb [ot_sp_env OT_SPINE_SYM_BUF_PS 45.0]
+  set kw [expr {[ot_sp_env OT_SPINE_SYM_WIRE_PS_UM 0.43] / double($u)}]
+  set late {}; set early {}
+  foreach i $ids { if {[dict exists $lins $i] && [dict get $lins $i] > 0} { lappend early $i } else { lappend late $i } }
+  if {![llength $late]} { set late $early; set early {} }
+  set sub [ot_sp_split_bb $late]
+  set top "N[incr ::ot_sp_nn]"
+  dict set ::ot_sp_pos $top [list $rx $ry]
+  set sw 0; foreach i $ids { incr sw [dict get $::ot_sp_cnt $i] }
+  dict set ::ot_sp_cnt $top $sw
+  dict set ::ot_sp_kids $top [list $sub]
+  ot_sp_collapse $top $merge $fan
+  set ::ot_sp_est_t [dict create]
+  ot_sp_est $top $kb $kw $kb
+  set latest 0.0
+  foreach i $late { set v [dict get $::ot_sp_est_t $i]; if {$v > $latest} { set latest $v } }
+  set ntop 0
+  # slowest child first: it takes the earliest tap it needs before the others are placed
+  foreach e [lsort -command [list ot_sp_cmp_ins $lins] $early] {
+    set o [dict get $lins $e]
+    set best ""; set bd 1e30; set fall ""; set ft 1e30
+    foreach n [dict keys $::ot_sp_kids] {
+      if {[llength [dict get $::ot_sp_kids $n]] >= $fan && $n ne $top} continue
+      set d [ot_sp_dist $n $e]
+      set t [expr {[dict get $::ot_sp_est_t $n] + $d * $kw + $kb}]
+      if {$t + $o <= $latest && $d < $bd} { set bd $d; set best $n }
+      if {$t < $ft} { set ft $t; set fall $n }
+    }
+    if {$best eq ""} { set best $fall; incr ntop }
+    dict lappend ::ot_sp_kids $best $e
+    dict set ::ot_sp_est_t $e [expr {[dict get $::ot_sp_est_t $best] + [ot_sp_dist $best $e] * $kw + $kb}]
+  }
+  puts [format "OT_SPINE sym: %d flop leaves, %d insertion leaves (%d on their earliest tap), %d tree nodes, estimated latest flop leaf %.0f ps" \
+          [llength $late] [llength $early] $ntop [dict size $::ot_sp_kids] $latest]
+  return $top
+}
+proc ot_sp_cmp_ins {lins a b} {
+  set va [dict get $lins $a]; set vb [dict get $lins $b]
+  if {$va > $vb} { return -1 } elseif {$va < $vb} { return 1 }; return 0
+}
+
 # build node n's buffer fed by innet from (px,py); recurse
 proc ot_sp_emit {n innet px py} {
   lassign [dict get $::ot_sp_pos $n] nx ny
@@ -216,8 +320,10 @@ proc ot_sp_emit {n innet px py} {
 # pad instances/nets.  No ODB reload: all surviving Tcl object handles stay valid.
 proc ot_sp_checkpoint {} {
   set inputs [dict create]
-  foreach n [dict keys $::ot_sp_members] {
+  # every node that can carry pads (leaves; all tree nodes under OT_SPINE_TREE_PAD)
+  foreach n [dict keys $::ot_sp_npad] {
     set b [$::ot_sp_blk findInst "clkbuf_sp_${n}"]
+    if {$b eq "NULL"} continue
     dict set inputs $n [[$b findITerm $::ot_sp_in] getNet]
   }
   return [dict create inputs $inputs insts $::ot_sp_insts nbuf $::ot_sp_nbuf npad $::ot_sp_npad used $::ot_sp_used]
@@ -271,6 +377,35 @@ proc ot_sp_pad {n count} {
   $ait connect $net
 }
 
+# Opt-in subtree-common padding (OT_SPINE_TREE_PAD=1).  Per-leaf padding spends one pad chain per leaf even when a whole
+# subtree is early by the same amount: qw_h3/qw_h3p (777.6 x 691.2 um, 4,05x leaves, 31,912 sinks) grew from 8,1xx to
+# 165,891 / 190,931 spine cells, the pads no longer found sites near their leaves, their wire delay overshot the measured
+# pad delay, and the latest arrival ran from 1,413 to 4,428 ps (spread 136 -> 1,200 ps, hold -764.7 ps).  Here the delay a
+# subtree needs in common (the minimum need of its leaves) is inserted ONCE at the subtree's node buffer and only the
+# remainder goes further down, so the pad count follows the tree imbalance, not the leaf count.
+proc ot_sp_tree_min {n need} {
+  if {[dict exists $::ot_sp_kids $n]} {
+    set m ""
+    foreach c [dict get $::ot_sp_kids $n] { set v [ot_sp_tree_min $c $need]; if {$m eq "" || $v < $m} { set m $v } }
+  } else {
+    set m [expr {[dict exists $need $n] ? max(0, [dict get $need $n]) : 0}]
+  }
+  dict set ::ot_sp_tmin $n $m
+  return $m
+}
+proc ot_sp_tree_apply {n above} {
+  set c [expr {[dict get $::ot_sp_tmin $n] - $above}]
+  if {$c > 0} { ot_sp_pad $n $c; incr ::ot_sp_tpads $c }
+  if {[dict exists $::ot_sp_kids $n]} {
+    foreach k [dict get $::ot_sp_kids $n] { ot_sp_tree_apply $k [dict get $::ot_sp_tmin $n] }
+  }
+}
+proc ot_sp_tree_pad {root need} {
+  set ::ot_sp_tmin [dict create]; set ::ot_sp_tpads 0
+  ot_sp_tree_min $root $need
+  ot_sp_tree_apply $root 0
+  return $::ot_sp_tpads
+}
 proc ot_sp_leaf_arrivals {} {
   estimate_parasitics -placement
   # build the timing graph for the new cells before reading pin properties (pinArrival on an un-graphed pin segfaults)
@@ -295,6 +430,14 @@ proc ot_clock_spine {} {
   set u $::ot_sp_dbu
   set port [ot_sp_env OT_SPINE_PORT {ck[0]}]
   set bt [$blk findBTerm $port]
+  # s81-spwfc 2026-10-13: a [0:0] clock port stays "ck[0]" in a wires-only cluster netlist and becomes "ck" in a
+  # flattened leaf; ref_tile passes the base name.  Try the other spelling before giving up (s81sp_capc_cl gate:
+  # "OT_SPINE skipped: no port ck", plain TritonCTS, insertion 1,507 ps).
+  if {$bt eq "NULL" || $bt eq ""} {
+    if {[regexp {^(.*)\[0\]$} $port -> base]} { set alt $base } else { set alt [format {%s[0]} $port] }
+    set bt2 [$blk findBTerm $alt]
+    if {$bt2 ne "NULL" && $bt2 ne ""} { puts "OT_SPINE port $port not found, using $alt"; set bt $bt2; set port $alt }
+  }
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
   set net0 [$bt getNet]
   # OT_SPINE_THROUGH_ICG=1 (el1011-hbm-smt 2026-10-12): the port clock enters ONE tile clock gate (ICG*, e.g. the SM tile's
@@ -318,6 +461,7 @@ proc ot_clock_spine {} {
       set i [$it getInst]
       if {![[$i getMaster] isBlock] && [lsearch -exact $::ot_sp_icg_move $i] < 0} { lappend ::ot_sp_icg_move $i }
     }
+    set ::ot_sp_icg_port $::ot_sp_icg_move
     # + their local logic (counter / enable cone): cells within 6 net hops over nets of fanout <= 16, capped at 400 cells
     set front $::ot_sp_icg_move
     for {set d 0} {$d < 6 && [llength $front]} {incr d} {
@@ -404,13 +548,22 @@ proc ot_clock_spine {} {
       set ::ot_sp_cw [[$i getMaster] getWidth]; set ::ot_sp_retry 0
       lassign [ot_sp_legal $qx $qy] lx ly
       if {[dict exists $::ot_sp_rowor $ly]} { $i setOrient [dict get $::ot_sp_rowor $ly] }
-      $i setLocation $lx $ly; $i setPlacementStatus FIRM
+      # Only the cells ON the port net (the ICG and its enable registers: their clock pins define the root) stay FIRM, and a
+      # FIRM cell is dont_touch: the resizer sizes a FIRM cell in place and the legaliser cannot move it or a FIRM
+      # neighbour (SM tile cluster eg r11 / wg r12: the cgi input buffer of the moved cone was sized up to BUFx12f by
+      # repair_timing over the abutting FIRM AND3 -> DPL-0033 at 4_1_cts in both tiles).  The enable cone itself is left
+      # movable (PLACED on the free sites found here), so any later sizing is legalised by detailed_placement.
+      $i setLocation $lx $ly
+      if {[lsearch -exact $::ot_sp_icg_port $i] >= 0} { $i setPlacementStatus FIRM; $i setDoNotTouch 1 } else { $i setPlacementStatus PLACED }
+    }
+    foreach i $::ot_sp_icg_move {
+      if {[$i getPlacementStatus] in {FIRM LOCKED} && ![$i isDoNotTouch]} { error "OT_SPINE: moved cell [$i getName] is fixed but resizable" }
     }
     set ::ot_sp_cw $cw0
     lassign [[$::ot_sp_icg findITerm GCLK] getAvgXY] ok gx gy
     if {!$ok} { lassign [$::ot_sp_icg getLocation] gx gy }
     set ::ot_sp_root_xy [list $gx $gy]
-    puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] port-net cells (ICG + enable regs) moved beside the clock pin"
+    puts "OT_SPINE through ICG: [llength $::ot_sp_icg_move] cells moved beside the clock pin ([llength $::ot_sp_icg_port] port-net cells FIRM + dont_touch, enable cone movable)"
   }
   # sinks -> bins -> leaves
   set bins [dict create]; set ns 0
@@ -428,6 +581,7 @@ proc ot_clock_spine {} {
     incr ns
   }
   set ::ot_sp_pos [dict create]; set ::ot_sp_cnt [dict create]; set ::ot_sp_members [dict create]; set nl 0
+  set ::ot_sp_kids [dict create]; set lins [dict create]
   foreach k [dict keys $bins] {
     set lst [lsort -real -index 1 [dict get $bins $k]]
     for {set s 0} {$s < [llength $lst]} {incr s $lmax} {
@@ -438,15 +592,29 @@ proc ot_clock_spine {} {
       dict set ::ot_sp_pos $id [ot_sp_free [expr {int($sx / [llength $grp])}] [expr {int($sy / [llength $grp])}]]
       dict set ::ot_sp_cnt $id [llength $grp]
       dict set ::ot_sp_members $id $its
+      # a leaf's own insertion = the largest child-insertion target among its sinks (kit dict, master -> ps)
+      foreach v {::ot_ref_child_ins ::ot_sp_child_ins} {
+        if {![info exists $v]} continue
+        foreach it $its {
+          set mn [[[$it getInst] getMaster] getName]
+          if {[dict exists [set $v] $mn] && (![dict exists $lins $id] || [dict get [set $v] $mn] > [dict get $lins $id])} { dict set lins $id [dict get [set $v] $mn] }
+        }
+      }
     }
   }
   if {$nl == 0} { puts "OT_SPINE skipped: $port drives no sinks"; return 0 }
-  set root [ot_sp_split [dict keys $::ot_sp_members]]
   set pb [$bt getBBox]
   set px [expr {([$pb xMin] + [$pb xMax]) / 2}]; set py [expr {([$pb yMin] + [$pb yMax]) / 2}]
   if {$::ot_sp_root_xy ne ""} { lassign $::ot_sp_root_xy px py }
+  if {[ot_sp_env OT_SPINE_SYM 0] eq "1"} {
+    set root [ot_sp_sym_build [dict keys $::ot_sp_members] $lins [expr {min(max($px, $::ot_sp_cx0), $::ot_sp_cx1 - $::ot_sp_cw)}] [expr {min(max($py, $::ot_sp_cy0), $::ot_sp_cy1 - $::ot_sp_rh)}]]
+  } else {
+    set root [ot_sp_split [dict keys $::ot_sp_members]]
+  }
   set ::ot_sp_leafnet [dict create]; set ::ot_sp_npad [dict create]
   foreach n [dict keys $::ot_sp_members] { dict set ::ot_sp_npad $n 0 }
+  set treepad [expr {[ot_sp_env OT_SPINE_TREE_PAD 0] eq "1"}]
+  if {$treepad} { foreach n [dict keys $::ot_sp_kids] { if {![dict exists $::ot_sp_npad $n]} { dict set ::ot_sp_npad $n 0 } } }
   ot_sp_emit $root $net0 [expr {min(max($px, $::ot_sp_cx0), $::ot_sp_cx1 - $::ot_sp_cw)}] [expr {min(max($py, $::ot_sp_cy0), $::ot_sp_cy1 - $::ot_sp_rh)}]
   set_propagated_clock [all_clocks]
   # equalise measured leaf arrivals with pad cells; the per-pad delay is learned from the previous round
@@ -481,12 +649,20 @@ proc ot_clock_spine {} {
     if {$mode eq "coarse" && $mx - $mn < 1.6 * $stage} { set mode fine; set ::ot_sp_pm $::ot_sp_pmf }
     set st [expr {$mode eq "coarse" ? $stage : $fstage}]
     set prev $a; set padded [dict create]
+    set need [dict create]
     dict for {n v} $a {
       set c [expr {int(floor(($mx - $v - 0.5 * $tol) / $st))}]
       # Small measured steps prevent a noisy fine-delay estimate from inserting
       # a long chain in one round.  Record the ACTUAL count for the next estimate.
       if {$safe} { set c [expr {min($c, $mode eq "fine" ? 1 : 3)}] }
-      if {$c > 0} { ot_sp_pad $n $c; dict set padded $n $c }
+      if {$c > 0} { dict set need $n $c; dict set padded $n $c }
+    }
+    if {$treepad} {
+      # a leaf's pads are the sum along its root path = its need, so the per-pad delay estimate above is unchanged
+      set np [ot_sp_tree_pad $root $need]
+      puts "OT_SPINE tree pad: [dict size $need] early leaves served by $np pad cells"
+    } else {
+      dict for {n c} $need { ot_sp_pad $n $c }
     }
     if {[dict size $padded] == 0} break
   }

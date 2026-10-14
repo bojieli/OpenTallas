@@ -1,14 +1,14 @@
 {
- "name": "s81hc_crrfw_ref-v1-COMMIT",
+ "name": "s81hc_crrfw_ref-v2-pinplan-f41de6496",
  "block": "ot_s81_hc_crootr_f",
  "ref_tile": true,
- "owner": "Claude:el1011-s81hc-crootr",
- "purpose": "[hc-crootr] crootr v2 4-tile split, C=0 (comb E): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootrw_ref (one 34.6k-sink root, hold WNS frozen -102 ps); pins every track (pin_min_tracks 1): the slab faces carry 8-11 pins/um (v1 crootr E face 9.75/um), 2-track slots run out (PPL-0111 at gate), 1-track slots put them at ~50%",
+ "owner": "Claude:s81hc-1013",
+ "purpose": "[hc-crootr] crootr v2 4-tile split, C=0 (comb E): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootrw_ref (one 34.6k-sink root, hold WNS frozen -102 ps); v2 pin plan (tools/s81_suhc/crr_pinplan.py, v1 FLOORPLAN_MARGIN 20 b/um on one layer): N/S buses over the full face on M5+M3 (5.2-5.4 b/um/layer), f_* on M4 at 180-368.4 (6.0); slot unchanged",
  "threads": 16,
  "peak_ram_gb": 40,
  "source": {
-  "branch": "claude/el1011-s81hc-crootr",
-  "commit": "COMMIT"
+  "branch": "claude/s81hc-1013",
+  "commit": "f41de6496"
  },
  "stages": {
   "bench": [
@@ -18,6 +18,28 @@
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_exact_ng64",
+    "cmd": "bash tools/s81_suhc/hc_gate_bench.sh {RUN}/bench/hc_m0 0",
+    "expect": "pass",
+    "pass_regex": "^RUN ng64_dpi_m0_a0_hier3tail_cp1_cs6_ls1 pass$",
+    "threads": 16,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_neg_m3",
+    "cmd": "bash tools/s81_suhc/hc_gate_bench.sh {RUN}/bench/hc_m3 3",
+    "expect": "fail",
+    "fail_regex": "^RUN ng64_dpi_m3_a0_hier3tail_cp1_cs6_ls1 fail$",
+    "threads": 16,
+    "peak_ram_gb": 24,
     "needs": [
      "verilator"
     ]
@@ -71,7 +93,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_crrfw_ref/s81hc_crrfw_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_crrfw_ref/s81hc_crrfw_ref-v2-pinplan-f41de6496"
   }
  ],
  "cycles_added": 0,

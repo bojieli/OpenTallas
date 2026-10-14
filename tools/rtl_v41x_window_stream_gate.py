@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 CHIP = ROOT / 'rtl/chip'
 NAMES = ['attn_desc_lifecycle', 'attn_row_merge', 'window_attn_source',
          'window_kv_prefetch', 'window_refill_schedule', 'window_row_codec',

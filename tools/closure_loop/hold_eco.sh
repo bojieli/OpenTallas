@@ -90,7 +90,29 @@ if [ -z "${ECO_PK:-}" ]; then
     done
   fi
 fi
-PK_ENV=(-e OT_ECO_PK=$ECO_PK)
+# MACRO-EDGE VIA GUARD (2026-10-13): a route whose hooks sourced physical/common_flow/macro_edge_via_guard.tcl gets the
+# same guard around the ECO's GRT/DRT (hold_eco.tcl OT_ECO_MEG, with the route's OT_MEG_* knobs).  ECO_MEG=0 opts out.
+if [ -z "${ECO_MEG:-}" ]; then
+  ECO_MEG=0
+  if [ -f "$RCFG" ]; then
+    for hk in $(sed -n 's/^export \(PRE_GLOBAL_ROUTE_TCL\|POST_DETAIL_ROUTE_TCL\) *= *//p' "$RCFG"); do
+      for hf in $(find "$(dirname "$RCFG")/.." -maxdepth 3 -name "$(basename "$hk")" 2>/dev/null); do
+        if grep -q 'macro_edge_via_guard' "$hf"; then ECO_MEG=1; fi
+        for sf in $(grep -o '/src/[^ ;"]*\.tcl' "$hf" | sed 's|^/src/||'); do   # one level down: a kit wrapper that sources it
+          if [ -f "$PWD/$sf" ] && grep -q 'macro_edge_via_guard' "$PWD/$sf"; then ECO_MEG=1; fi
+        done
+      done
+    done
+  fi
+fi
+echo "OT_ECO macro-edge via guard in the re-route: $ECO_MEG" | tee -a "$OUT/eco.log"
+PK_ENV=(-e OT_ECO_PK=$ECO_PK -e OT_ECO_MEG=$ECO_MEG)
+if [ "$ECO_MEG" = 1 ] && [ -f "$RCFG" ]; then
+  for v in OT_MEG_DEPTH_UM OT_MEG_PIN_UM; do
+    x=$(sed -n "s/^export $v *= *//p" "$RCFG" | tail -1)
+    if [ -n "$x" ]; then PK_ENV+=(-e "$v=$x"); fi
+  done
+fi
 if [ "$ECO_PK" = 1 ]; then
   for v in OT_PK_FRAC OT_PK_HALO OT_PK_FACES; do
     x=$( [ -f "$RCFG" ] && sed -n "s/^export $v *= *//p" "$RCFG" | tail -1 )
@@ -119,6 +141,11 @@ orun() {  # orun <log> <tcl> [docker -e args...]: openroad in the fleet image
     "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /cl/$tcl" > $log 2>&1
 }
 best=""; bestscore=-1e9
+# LEAST-BAD (2026-10-13, ot_qkvd_sbuf_m5-m5: both passes finished at FF -3.97 / -1.35 with DRC 4, every score -1e9, so the
+# script ended "no ECO pass produced a result" and the numbers were lost): a pass that finished its sign-off but is not
+# clean is remembered by rank (worst slack under the acceptance line - 1000 per DRC); when no pass is clean its
+# result.json / corner_sta.json are still written to <out> (chosen = least_bad) and the script exits 9 as before.
+lb=""; lbrank=-1e18
 for k in $(seq 1 ${PASSES:-2}); do
   P=$OUT/pass$k; EB=$P/orfs/results/asap7/$D/base; mkdir -p $EB
   seed_sdc
@@ -131,7 +158,7 @@ for k in $(seq 1 ${PASSES:-2}); do
       -e OT_CRIT_PS=$(awk "BEGIN{print ${SM:-40} + 20}")
     grep -q "OT_CORNER_EFF done" $P/corner_$c.log || { echo "corner $c session failed"; tail -20 $P/corner_$c.log; FAILED=1; break; }
   done
-  [ $FAILED = 0 ] || { [ -n "$best" ] && break; exit 9; }   # a later pass failing keeps the best earlier pass
+  [ $FAILED = 0 ] || { [ -n "$best$lb" ] && break; exit 9; }   # a later pass failing keeps the best earlier pass
   python3 $CLD/hold_eco_sdc.py $P/eff_ss.sdc $P/eff_ff.sdc $P/merged.sdc >> $OUT/eco.log
   EXP_SS=$(awk '/OT_CORNER_EFF ss ws_max/{printf "%.2f", $4*1e12}' $P/corner_ss.log)
   EXP_FF=$(awk '/OT_CORNER_EFF ff ws_max/{printf "%.2f", $6*1e12}' $P/corner_ff.log)
@@ -191,7 +218,9 @@ print(a if not prev else min(20.0, a + max(0.0, 1.5 * (hm - float(prev)))))")
   fi
   cat $L >> $OUT/eco.log
   if [ "${WINDOW_ONLY:-0}" = 1 ]; then grep "OT_WIN\|session" $L; exit 0; fi
-  grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best" ] && break; exit 9; }
+  # a route with wire above its layer cap is refused by hold_eco.tcl (it used to abort OpenROAD: rc=9 with no reason)
+  if grep -q "OT_ECO layer_cap_leak" $L; then grep "OT_ECO layer_cap_leak" $L | tee -a $OUT/eco.log; echo "ECO refused: route violates its layer cap (not an ECO candidate; regenerate the kit and re-route)"; exit 11; fi
+  grep -q "OT_ECO done" $L || { echo "ECO pass $k failed (no OT_ECO done)"; tail -20 $L; [ -n "$best$lb" ] && break; exit 9; }
   seed_sdc   # the ECO may have rewritten the base's SDC
   python3 $CSTA $CS_ARGS $SN --orfs-dir $P/orfs --output $P/corner_sta.json > $P/corner.log 2>&1 \
     || { echo "corner_sta failed"; tail $P/corner.log; exit 8; }
@@ -231,18 +260,31 @@ r = dict(ss_ps=su['worst_slack_ps'], tt_ps=su['worst_slack_ps'], ff_ps=cs['hold_
          **{'pass': k}, session=session, window=win[0] if win else None, route_strategy=route_strategy)
 ok = r['ss_ps'] is not None and r['ff_ps'] is not None
 r['score'] = min(r['ss_ps'] - acc_ss, r['ff_ps'] - acc_ff) if ok and r['drc'] == 0 and not r['errors'] else -1e9
+r['rank'] = (min(r['ss_ps'] - acc_ss, r['ff_ps'] - acc_ff) - 1000.0 * (r['drc'] if r['drc'] is not None else 1000)
+             - (1e6 if r['errors'] else 0)) if ok else -1e12
 json.dump(r, open(f'{p}/result.json', 'w'), indent=1); print('OT_PASS_RESULT', json.dumps(r))
 PY
   cat $P/result.json >> $OUT/eco.log
   sc=$(python3 -c "import json;print(json.load(open('$P/result.json'))['score'])")
-  if python3 -c "import sys; sys.exit(0 if $sc > $bestscore else 1)"; then best=$P; bestscore=$sc; fi
+  # Only acceptance-clean passes can become the installed best. Negative
+  # scores remain in lb as failure evidence and must return exit 9.
+  if python3 -c "import sys; sys.exit(0 if $sc >= 0 and $sc > $bestscore else 1)"; then best=$P; bestscore=$sc; fi
+  rk=$(python3 -c "import json;print(json.load(open('$P/result.json'))['rank'])")
+  if python3 -c "import sys; sys.exit(0 if $rk > $lbrank else 1)"; then lb=$P; lbrank=$rk; fi
   # done when the routed result meets the post-route goal (FF >= HM), not merely the acceptance line
   python3 -c "import json,sys; r=json.load(open('$P/result.json')); sys.exit(0 if r['score'] >= 0 and r['ff_ps'] >= float('${HM:-18}') else 1)" && break
   # the next pass restarts from the ORIGINAL route (its GRT guides intact) with a larger allowance: chaining passes on an
   # ECO'd db hit DRT-0218 'Guide is not connected to design' (capt_x, hfd_svc_SE_s6 pass 2)
   PREV_FF=$(python3 -c "import json;print(json.load(open('$P/result.json'))['ff_ps'])")
 done
-[ -n "$best" ] || { echo "no ECO pass produced a result"; exit 9; }
+if [ -z "$best" ]; then
+  [ -n "$lb" ] || { echo "no ECO pass produced a result"; exit 9; }
+  cp $lb/corner_sta.json $OUT/corner_sta.json
+  python3 -c "import json,sys; r=json.load(open(sys.argv[1])); r['chosen']='least_bad'; json.dump(r, open(sys.argv[2],'w'), indent=1)" $lb/result.json $OUT/result.json
+  echo "OT_ECO no clean pass; least-bad $(basename $lb) kept as evidence (not installed)" | tee -a $OUT/eco.log
+  cat $OUT/result.json
+  exit 9
+fi
 ln -sfn $(basename $best)/orfs $OUT/orfs
 cp $best/corner_sta.json $OUT/corner_sta.json
 cp $best/result.json $OUT/result.json

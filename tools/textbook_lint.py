@@ -53,7 +53,7 @@ from collections import defaultdict
 # seven closed blocks; 17 um macro channels in el1011 wfc_crp; 6-7 level skid-buffer input paths).
 THRESHOLDS = {
     # clock_domain: flops on one clock root
-    "clk_sinks_max": 15000,        # WARN
+    "clk_sinks_max": 15000,        # WARN (flops only; the hard line is CLK_ROOT_SINKS_MAX / clock_rule below)
     "clk_span_um": 600.0,          # WARN: outline side ...
     "clk_span_sinks": 8000,        # ... with this many flops on the root
     "clk_sinks_refuse": 110000,    # REFUSE (closed max 94,498; failing 124,633-147,062)
@@ -82,6 +82,93 @@ THRESHOLDS = {
     "util_max": 0.65,
     "channel_um": 20.0,
 }
+# MEASURED CLOCK RULE (owner decision 2026-10-13, stream el1013-rule-enforcement; supersedes the WARN-only 15k line and
+# the declared-spine waiver).  One place for the three numbers; pre_route_gate.py, the in-flow hook and the closure
+# loop all read them from here.
+#   <= CLK_ROOT_SINKS_MAX sinks on one clock root: pass.
+#   more: allowed ONLY with pre-route clock-tree evidence measured by `pre_route_gate.py <kit> --remote H --cts` on that
+#   kit (TT corner, recorded in <kit>/gate_result.json): insertion delay <= CLK_INSERTION_MAX_PS AND leaf arrival spread
+#   <= CLK_SPREAD_MAX_PS.  No evidence, or either number missed: REFUSED; the fix is hardened leaves with their own
+#   roots.  A declared spine passes only through the measured numbers.  CLOSED tiles are not re-judged.
+# Sinks of a root = flops + hard-child / macro clock pins (a hard child with its own clock pin is ONE sink, never its
+# internal flops); ICGs are tree cells, the flops behind them count on the ICG's root.
+CLK_ROOT_SINKS_MAX = 15000
+CLK_INSERTION_MAX_PS = 300.0
+CLK_SPREAD_MAX_PS = 80.0
+CLOCK_RULE_FIX = ("hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered "
+                  "seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as "
+                  "<kit>/gate_result.json")
+HARD_CHECKS = ("clock_sinks",)     # refused in every mode, never waivable by spec
+
+# CLOSED STANDS (owner decision 2026-10-12 19:00 "M5 cap narrowed", made a submit gate 2026-10-13; logic in
+# tools/closure_loop/closed_stands.py, enforced by the closure loop at submit).  A block (same top module, same parameter
+# set) with a CLOSED job whose view is published is NOT routed again: the closed tile stands.  A new route is admitted
+# only with spec "reroute_reason": {"kind": <one of CLOSED_STANDS_KINDS>, ...}:
+#   die_window    the tile sits under a die window that needs the tracks: "slot" (contract slot), "cut" (measured fine
+#                 cut, must be > DIE_WINDOW_CUT_MIN in the direction the freed layer serves) or "grt_overflow" (measured
+#                 die-GRT overflow over the tile, > 0), and "source" (the file the figure was read from; must exist)
+#   slot_change   outline / pin faces differ from the closed view: "contract" (name + version) or "slot_change_request"
+#   param_change  elaborated parameters differ: "params" lists them
+#   rtl_change    the block's RTL differs from the closed job's commit (the gate compares the source blobs itself)
+#   evidence_gap  the closed job lacks a behavioural bench + mutant or a routed verdict: "why_route" says why a route
+#                 (and not a bench bind / re-export) is needed
+#   pin_register  (owner 2026-10-13, die timing by construction: a tile with an unregistered face pin or a long
+#                 pin-to-flop wire is a defect to fix, not to waive) the closed view is a ranked violation of the
+#                 insertion-compensated pin-register audit (tools/hier_contract/pinreg_audit.py v2): "source" (the
+#                 audit JSON, must exist), "cell", and the measured "pair_cost_ps" (o + s of the view, must be >
+#                 PIN_REGISTER_PAIR_MAX_PS: no hop of any length closes against it) -- the die needs the tile re-placed
+#                 with its pin flops at the pins; "fix" says what the new kit changes (recipe 2 / RTL pin flops)
+# M5 is the default for NEW tiles only.  Loop successors (auto-react, near-miss finishing, -hs / -ls re-runs) of a job
+# that is not CLOSED are unaffected.
+#   native_launch (el1014-root-macro-edge 2026-10-14) a CLOSED view fails the native launch budget (TT launch >
+#                 PIN_LAUNCH_MAX_PS at phi - R) only because its kit predates the recipe-2 output stage (main 36de4b87f):
+#                 the same RTL and outline / pin faces re-kitted with that stage ("source" audit JSON, "cell",
+#                 "launch_ps"); written by tools/ref_tile/rekit_native_launch.py
+CLOSED_STANDS_KINDS = ("die_window", "slot_change", "param_change", "rtl_change", "evidence_gap", "pin_register",
+                       "native_launch")
+DIE_WINDOW_CUT_MIN = 0.6
+PIN_LAUNCH_MAX_PS = 220.0             # tile defect: first-load launch beyond phi - R (header 10-13 die clock rule)
+PIN_CAPTURE_MAX_PS = 190.0            # tile defect: setup at the pin plus R
+PIN_REGISTER_PAIR_MAX_PS = 683.3      # 833.3 - 60 - SKEW 90 (same clock level): o + s of one view above it leaves no wire
+CLOSED_STANDS_INSTEAD = ("a CLOSED tile stands (owner 10-12): do not route it again. Instead: bind the missing bench + "
+                         "mutant to the closed job (job \"benches_from\" / tools/ref_tile/composition_gates.json "
+                         "\"benched_by\"), re-export its view from the closed run (tools/ref_tile/ref_tile.py export), "
+                         "or wrap the closed view under the contract slot name. M5 is the default for NEW tiles only. "
+                         "A route that IS needed states it in the spec: \"reroute_reason\": {\"kind\": "
+                         "\"die_window\" (+ \"slot\", \"cut\" > 0.6 or \"grt_overflow\" > 0, \"source\" file) | "
+                         "\"slot_change\" (+ \"contract\" or \"slot_change_request\") | \"param_change\" (+ "
+                         "\"params\") | \"rtl_change\" (verified against the closed commit) | \"evidence_gap\" (+ "
+                         "\"why_route\") | \"pin_register\" (+ \"source\" audit JSON, \"cell\", \"pair_cost_ps\" > "
+                         "683.3, \"fix\") | \"native_launch\" (+ \"source\" audit JSON, \"cell\", \"launch_ps\" > 220; "
+                         "tools/ref_tile/rekit_native_launch.py)}")
+
+
+def clock_rule(max_sinks, evidence=None):
+    """The measured clock rule.  evidence: the kit gate result's "clock" record ({"max_root_sinks", "tt_insertion_ps",
+    "tt_spread_ps"}) or None.  Returns (ok, text); text always carries the measured numbers when they exist."""
+    ev = evidence if isinstance(evidence, dict) else {}
+    ins, spr, evn = ev.get("tt_insertion_ps"), ev.get("tt_spread_ps"), ev.get("max_root_sinks")
+    num = lambda x: isinstance(x, (int, float)) and not isinstance(x, bool)  # noqa: E731
+    meas = (f"measured TT insertion {ins:.1f} ps, leaf spread {spr:.1f} ps" if num(ins) and num(spr)
+            else "no measured clock tree (no --cts gate evidence)")
+    if max_sinks is None:
+        return True, f"clock sinks unknown; {meas}"
+    if max_sinks <= CLK_ROOT_SINKS_MAX:
+        return True, f"{max_sinks:,} sinks on the largest root <= {CLK_ROOT_SINKS_MAX:,}; {meas}"
+    head = f"{max_sinks:,} sinks on one clock root > {CLK_ROOT_SINKS_MAX:,}"
+    if not (num(ins) and num(spr)):
+        return False, f"{head}: {meas}"
+    if num(evn) and evn < 0.9 * max_sinks:
+        return False, (f"{head}: the kit's gate evidence was measured on a root of {evn:,} sinks, not this netlist "
+                       f"({meas}); re-run the --cts gate")
+    miss = ([f"insertion {ins:.1f} ps > {CLK_INSERTION_MAX_PS:.0f}"] if ins > CLK_INSERTION_MAX_PS else []) + \
+           ([f"spread {spr:.1f} ps > {CLK_SPREAD_MAX_PS:.0f}"] if spr > CLK_SPREAD_MAX_PS else [])
+    if miss:
+        return False, f"{head}: {meas}; " + " and ".join(miss)
+    return True, (f"{head}, allowed by evidence: {meas} (<= {CLK_INSERTION_MAX_PS:.0f} ps / "
+                  f"<= {CLK_SPREAD_MAX_PS:.0f} ps)")
+
+
 # checks whose refuse tier REFUSES in refuse mode; util_channel stays WARN (false positives on closed blocks)
 REFUSE_CHECKS = ("clock_domain", "high_fanout", "boundary", "logic_depth", "wire_reach")
 
@@ -603,6 +690,9 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
     M["clock_roots"] = [{"root": f"{r[0]}:{r[1]}", **s} for r, s in doms[:6]]
     hier = sum(1 for ci, k in enumerate(kind) if k == "macro" and not re.search(r"sram|rom|regfile|rf_", g.cells[ci][0], re.I))
     M["hier_subblocks"] = hier
+    big = max(doms, key=lambda kv: kv[1]["ff"] + kv[1]["macro_pins"], default=None)
+    M["clock_max_root_sinks"] = (big[1]["ff"] + big[1]["macro_pins"]) if big else 0
+    M["clock_max_root"] = f"{big[0][0]}:{big[0][1]}" if big else None
     bad = []
     for r, s in doms:
         n = s["ff"]
@@ -1011,16 +1101,32 @@ def util_findings(dump, T, F, M):
 
 
 # --------------------------------------------------------------------------------------------- verdict / CLI
-def verdict(res, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS):
+def verdict(res, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS, clock=None):
     """WARN: any finding (textbook tier).  REFUSE: mode refuse and a refuse-tier finding of a check in refuse_checks.
     res["would_refuse"] lists the refuse-tier checks whatever the mode (the WARN-phase evidence for the switch)."""
+    # measured clock rule (HARD_CHECKS): clock = {"enforce": bool, "evidence": {...}, "closed_stands": bool}.  Not in
+    # `waive`, not mode-dependent: enforce refuses, otherwise the finding is a WARN (the gate judges it after its CTS).
+    clock = clock or {}
+    n = res.get("metrics", {}).get("clock_max_root_sinks")
+    ok, text = clock_rule(n, clock.get("evidence"))
+    res["clock_rule"] = dict(max_root_sinks=n, root=res.get("metrics", {}).get("clock_max_root"), ok=ok, text=text,
+                             enforce=bool(clock.get("enforce")), closed_stands=bool(clock.get("closed_stands")),
+                             limits=dict(sinks=CLK_ROOT_SINKS_MAX, insertion_ps=CLK_INSERTION_MAX_PS,
+                                         spread_ps=CLK_SPREAD_MAX_PS))
+    hard = []
+    if not ok and not clock.get("closed_stands"):
+        res["findings"]["clock_sinks"] = [f"clock root {res['clock_rule']['root']}: {text}: {CLOCK_RULE_FIX}"]
+        if clock.get("enforce"):
+            hard = ["clock_sinks"]
+            res.setdefault("refuse", {})["clock_sinks"] = list(res["findings"]["clock_sinks"])
+    waive = [w for w in waive if w not in HARD_CHECKS]
     F = {k: v for k, v in res["findings"].items() if k not in waive}
-    RFt = {k: v for k, v in res.get("refuse", {}).items() if k not in waive and k in refuse_checks}
+    RFt = {k: v for k, v in res.get("refuse", {}).items() if k not in waive and k in refuse_checks and k not in hard}
     for k, v in RFt.items():                     # a refuse-tier item is always reported
         F.setdefault(k, list(v))
         res["findings"].setdefault(k, list(v))
     res["would_refuse"] = sorted(RFt)
-    refuse = sorted(RFt) if mode == "refuse" else []
+    refuse = (sorted(RFt) if mode == "refuse" else []) + hard
     res["waived"] = sorted(set(res["findings"]) & set(waive))
     res["verdict"] = "REFUSE" if refuse else ("WARN" if F else "PASS")
     res["refusing_checks"] = refuse
@@ -1028,7 +1134,7 @@ def verdict(res, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS):
     return res
 
 
-def run(netlist_path, dump_path, th=None, top=None, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS):
+def run(netlist_path, dump_path, th=None, top=None, mode="warn", waive=(), refuse_checks=REFUSE_CHECKS, clock=None):
     T = dict(THRESHOLDS, **(th or {}))
     t0 = time.time()
     with open(netlist_path, errors="replace") as f:
@@ -1046,7 +1152,7 @@ def run(netlist_path, dump_path, th=None, top=None, mode="warn", waive=(), refus
     res["netlist"] = netlist_path
     res["seconds"] = round(time.time() - t0, 1)
     res["thresholds"] = T
-    return verdict(res, mode, waive, refuse_checks)
+    return verdict(res, mode, waive, refuse_checks, clock)
 
 
 def parse_set(items):
@@ -1318,6 +1424,7 @@ def main(argv=None):
     if a.cmd == "rtl":
         return rtl_main(a)
     mode, th, waive, rc = a.mode, parse_set(a.set), list(a.waive), tuple(x for x in a.refuse_checks.split(",") if x)
+    clock = None
     if a.cfg:
         try:
             with open(a.cfg) as f:
@@ -1326,13 +1433,17 @@ def main(argv=None):
             th.update(cfg.get("set") or {})
             waive += list(cfg.get("waive") or [])
             rc = tuple(cfg.get("refuse_checks") or rc)
+            clock = cfg.get("clock") if isinstance(cfg.get("clock"), dict) else None
         except (OSError, ValueError) as ex:
             print(f"textbook_lint: cfg {a.cfg} unreadable ({ex}); defaults")
+    quiet = False
     if mode not in ("warn", "refuse"):
-        print("textbook_lint: disabled by cfg")
-        return 0
+        if not (clock or {}).get("enforce"):
+            print("textbook_lint: disabled by cfg")
+            return 0
+        mode, quiet = "warn", True      # lint off by spec: the measured clock rule (owner 2026-10-13) still applies
     try:
-        res = run(a.netlist, a.dump, th, a.top, mode, waive, rc)
+        res = run(a.netlist, a.dump, th, a.top, mode, waive, rc, clock)
     except Exception as ex:  # noqa: BLE001
         print(f"textbook_lint: tool error {type(ex).__name__}: {ex}")
         return 2
@@ -1342,7 +1453,12 @@ def main(argv=None):
     M = res["metrics"]
     print(f"textbook_lint: {res['verdict']} {res['top']} cells {res['cells']:,} flops {res['flops']:,} "
           f"depth {M.get('depth_ps')} ps util {M.get('util')} reach {M.get('reach_worst_um')} um ({res['seconds']} s)")
+    cr = res["clock_rule"]
+    print(f"textbook_lint: INFO clock_roots max_root_sinks={cr['max_root_sinks']} root={cr['root']} "
+          f"rule={'PASS' if cr['ok'] else ('CLOSED_STANDS' if cr['closed_stands'] else 'FAIL')}: {cr['text']}"[:600])
     for k, v in res["findings"].items():
+        if quiet and k not in HARD_CHECKS:
+            continue
         tag = "REFUSE" if k in res["refusing_checks"] else ("WAIVED" if k in res["waived"] else
                                                             ("WARN(refuse-tier)" if k in res["would_refuse"] else "WARN"))
         for line in v[:4]:

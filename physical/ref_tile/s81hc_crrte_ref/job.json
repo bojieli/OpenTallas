@@ -1,5 +1,5 @@
 {
- "name": "s81hc_crrte_ref-v1-COMMIT",
+ "name": "s81hc_crrte_ref-v1-d71bc15c1",
  "block": "ot_s81_hc_crootr_t",
  "ref_tile": true,
  "owner": "Claude:el1011-s81hc-crootr",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/el1011-s81hc-crootr",
-  "commit": "COMMIT"
+  "commit": "d71bc15c1"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_crrte_ref/s81hc_crrte_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_crrte_ref/s81hc_crrte_ref-v1-d71bc15c1"
   }
  ],
  "cycles_added": 0,

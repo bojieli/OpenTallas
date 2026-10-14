@@ -288,20 +288,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.10550");
+          values("83.23515");
         }
         fall_constraint(scalar) {
-          values("116.18914");
+          values("88.34583");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.92097");
+          values("-65.19768");
         }
         fall_constraint(scalar) {
-          values("-90.31239");
+          values("-62.21466");
         }
       }
     }
@@ -312,20 +312,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("113.99487");
+          values("93.31214");
         }
         fall_constraint(scalar) {
-          values("126.12866");
+          values("98.61546");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-95.90192");
+          values("-75.15443");
         }
         fall_constraint(scalar) {
-          values("-104.66552");
+          values("-76.78122");
         }
       }
     }
@@ -456,14 +456,14 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.54815");
+          values("89.79258");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-93.05574");
+          values("-72.29919");
         }
       }
     }
@@ -474,20 +474,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("115.11816");
+          values("94.35617");
         }
         fall_constraint(scalar) {
-          values("126.44184");
+          values("99.03447");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-96.60826");
+          values("-75.77640");
         }
         fall_constraint(scalar) {
-          values("-105.39465");
+          values("-77.56632");
         }
       }
     }
@@ -510,20 +510,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("84.40929");
+          values("63.37730");
         }
         fall_constraint(scalar) {
-          values("87.43066");
+          values("59.33487");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-67.40926");
+          values("-46.37424");
         }
         fall_constraint(scalar) {
-          values("-62.52209");
+          values("-34.40928");
         }
       }
     }
@@ -534,20 +534,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("86.76732");
+          values("65.83141");
         }
         fall_constraint(scalar) {
-          values("90.12122");
+          values("61.98989");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-69.50043");
+          values("-48.55313");
         }
         fall_constraint(scalar) {
-          values("-65.00025");
+          values("-36.84500");
         }
       }
     }
@@ -4654,20 +4654,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.67524");
+          values("74.27153");
         }
         fall_constraint(scalar) {
-          values("95.52673");
+          values("68.54852");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-38.95659");
+          values("-18.06162");
         }
         fall_constraint(scalar) {
-          values("-38.86267");
+          values("-11.43306");
         }
       }
     }
@@ -4678,20 +4678,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("91.91751");
+          values("71.37238");
         }
         fall_constraint(scalar) {
-          values("90.37701");
+          values("63.14994");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-27.03595");
+          values("-6.06330");
         }
         fall_constraint(scalar) {
-          values("-27.11964");
+          values("0.49238");
         }
       }
     }
@@ -4702,20 +4702,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("93.52782");
+          values("73.22670");
         }
         fall_constraint(scalar) {
-          values("91.92374");
+          values("65.10168");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-16.73122");
+          values("4.07052");
         }
         fall_constraint(scalar) {
-          values("-16.54892");
+          values("10.69810");
         }
       }
     }
@@ -4726,20 +4726,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("90.08423");
+          values("69.39915");
         }
         fall_constraint(scalar) {
-          values("89.23952");
+          values("62.25367");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-13.79896");
+          values("6.90600");
         }
         fall_constraint(scalar) {
-          values("-14.02357");
+          values("13.00867");
         }
       }
     }
@@ -4750,20 +4750,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.73723");
+          values("75.39932");
         }
         fall_constraint(scalar) {
-          values("94.98287");
+          values("68.05529");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-38.35489");
+          values("-17.53280");
         }
         fall_constraint(scalar) {
-          values("-38.26203");
+          values("-10.89292");
         }
       }
     }
@@ -4774,20 +4774,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("91.66305");
+          values("71.26646");
         }
         fall_constraint(scalar) {
-          values("90.21526");
+          values("63.13984");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-29.16671");
+          values("-8.32765");
         }
         fall_constraint(scalar) {
-          values("-29.21638");
+          values("-1.73593");
         }
       }
     }
@@ -4798,20 +4798,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.86317");
+          values("75.60342");
         }
         fall_constraint(scalar) {
-          values("94.56039");
+          values("67.77650");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-18.69603");
+          values("2.06086");
         }
         fall_constraint(scalar) {
-          values("-18.50814");
+          values("8.69783");
         }
       }
     }
@@ -4822,20 +4822,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.16324");
+          values("82.76432");
         }
         fall_constraint(scalar) {
-          values("102.90464");
+          values("76.13477");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-26.57695");
+          values("-5.99198");
         }
         fall_constraint(scalar) {
-          values("-27.36792");
+          values("-0.13068");
         }
       }
     }
@@ -4846,20 +4846,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.70482");
+          values("74.22979");
         }
         fall_constraint(scalar) {
-          values("95.59705");
+          values("68.50673");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-39.21994");
+          values("-18.25983");
         }
         fall_constraint(scalar) {
-          values("-39.18577");
+          values("-11.64752");
         }
       }
     }
@@ -4870,20 +4870,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("91.03551");
+          values("70.52005");
         }
         fall_constraint(scalar) {
-          values("89.46842");
+          values("62.28176");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-28.11123");
+          values("-7.15988");
         }
         fall_constraint(scalar) {
-          values("-28.17232");
+          values("-0.59137");
         }
       }
     }
@@ -4894,20 +4894,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("93.15283");
+          values("72.84412");
         }
         fall_constraint(scalar) {
-          values("91.47658");
+          values("64.63907");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-17.61676");
+          values("3.19257");
         }
         fall_constraint(scalar) {
-          values("-17.44151");
+          values("9.82051");
         }
       }
     }
@@ -4918,20 +4918,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.81028");
+          values("80.28931");
         }
         fall_constraint(scalar) {
-          values("100.56363");
+          values("73.67075");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-26.17005");
+          values("-5.43761");
         }
         fall_constraint(scalar) {
-          values("-26.91705");
+          values("0.45626");
         }
       }
     }
@@ -4942,20 +4942,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("93.47652");
+          values("73.09208");
         }
         fall_constraint(scalar) {
-          values("95.41773");
+          values("68.44604");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-39.23717");
+          values("-18.36615");
         }
         fall_constraint(scalar) {
-          values("-39.14735");
+          values("-11.73293");
         }
       }
     }
@@ -4966,20 +4966,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("93.05042");
+          values("72.56367");
         }
         fall_constraint(scalar) {
-          values("91.64482");
+          values("64.49926");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-26.83141");
+          values("-5.86778");
         }
         fall_constraint(scalar) {
-          values("-26.86948");
+          values("0.71319");
         }
       }
     }
@@ -4990,20 +4990,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.62976");
+          values("74.36548");
         }
         fall_constraint(scalar) {
-          values("93.10757");
+          values("66.33453");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-15.92157");
+          values("4.84855");
         }
         fall_constraint(scalar) {
-          values("-15.71866");
+          values("11.48216");
         }
       }
     }
@@ -5014,20 +5014,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.51754");
+          values("80.79350");
         }
         fall_constraint(scalar) {
-          values("100.61333");
+          values("73.51466");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-11.21601");
+          values("9.52270");
         }
         fall_constraint(scalar) {
-          values("-11.50930");
+          values("15.63301");
         }
       }
     }
@@ -5038,20 +5038,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("96.47586");
+          values("76.22159");
         }
         fall_constraint(scalar) {
-          values("98.35087");
+          values("71.32006");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-40.97741");
+          values("-20.29355");
         }
         fall_constraint(scalar) {
-          values("-40.56473");
+          values("-13.44312");
         }
       }
     }
@@ -5062,20 +5062,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("93.93731");
+          values("73.58189");
         }
         fall_constraint(scalar) {
-          values("91.67409");
+          values("64.36988");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-29.60449");
+          values("-8.86284");
         }
         fall_constraint(scalar) {
-          values("-29.33221");
+          values("-2.06358");
         }
       }
     }
@@ -5086,20 +5086,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.05193");
+          values("73.77214");
         }
         fall_constraint(scalar) {
-          values("91.84134");
+          values("64.69221");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-17.32002");
+          values("3.36471");
         }
         fall_constraint(scalar) {
-          values("-16.92783");
+          values("10.18629");
         }
       }
     }
@@ -5110,20 +5110,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.52563");
+          values("80.85350");
         }
         fall_constraint(scalar) {
-          values("101.28238");
+          values("74.22645");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-26.04561");
+          values("-5.75310");
         }
         fall_constraint(scalar) {
-          values("-25.55301");
+          values("1.72560");
         }
       }
     }
@@ -5134,20 +5134,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("97.96682");
+          values("77.76922");
         }
         fall_constraint(scalar) {
-          values("98.23380");
+          values("71.26865");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-40.86099");
+          values("-20.23120");
         }
         fall_constraint(scalar) {
-          values("-40.42894");
+          values("-13.37277");
         }
       }
     }
@@ -5158,20 +5158,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.01330");
+          values("73.73032");
         }
         fall_constraint(scalar) {
-          values("91.88257");
+          values("64.67112");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-32.11177");
+          values("-11.42779");
         }
         fall_constraint(scalar) {
-          values("-31.82609");
+          values("-4.61720");
         }
       }
     }
@@ -5182,20 +5182,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("96.35307");
+          values("76.09374");
         }
         fall_constraint(scalar) {
-          values("94.43349");
+          values("67.29594");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-19.24965");
+          values("1.40846");
         }
         fall_constraint(scalar) {
-          values("-18.86456");
+          values("8.23399");
         }
       }
     }
@@ -5206,20 +5206,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("91.72638");
+          values("71.07032");
         }
         fall_constraint(scalar) {
-          values("91.01405");
+          values("63.98872");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-15.47911");
+          values("5.18516");
         }
         fall_constraint(scalar) {
-          values("-14.49614");
+          values("12.55000");
         }
       }
     }
@@ -5230,20 +5230,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("97.06029");
+          values("76.77466");
         }
         fall_constraint(scalar) {
-          values("98.86322");
+          values("71.78090");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-41.86860");
+          values("-21.17039");
         }
         fall_constraint(scalar) {
-          values("-41.48634");
+          values("-14.32544");
         }
       }
     }
@@ -5254,20 +5254,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("93.03949");
+          values("72.66586");
         }
         fall_constraint(scalar) {
-          values("90.75882");
+          values("63.44662");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-30.67446");
+          values("-9.89500");
         }
         fall_constraint(scalar) {
-          values("-30.39955");
+          values("-3.09691");
         }
       }
     }
@@ -5278,20 +5278,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.33224");
+          values("74.07883");
         }
         fall_constraint(scalar) {
-          values("92.08810");
+          values("64.99359");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-18.97767");
+          values("1.70699");
         }
         fall_constraint(scalar) {
-          values("-18.55117");
+          values("8.52405");
         }
       }
     }
@@ -5302,20 +5302,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("90.18851");
+          values("69.50680");
         }
         fall_constraint(scalar) {
-          values("89.41259");
+          values("62.43363");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-15.83683");
+          values("4.87447");
         }
         fall_constraint(scalar) {
-          values("-14.72825");
+          values("12.28825");
         }
       }
     }
@@ -5326,20 +5326,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.41891");
+          values("75.19343");
         }
         fall_constraint(scalar) {
-          values("98.35714");
+          values("71.34621");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-41.43049");
+          values("-20.78513");
         }
         fall_constraint(scalar) {
-          values("-41.02274");
+          values("-13.92896");
         }
       }
     }
@@ -5350,20 +5350,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.00174");
+          values("74.68610");
         }
         fall_constraint(scalar) {
-          values("92.91083");
+          values("65.67317");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-29.31813");
+          values("-8.60319");
         }
         fall_constraint(scalar) {
-          values("-29.03504");
+          values("-1.79850");
         }
       }
     }
@@ -5374,20 +5374,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("84.75683");
+          values("67.51582");
         }
         fall_constraint(scalar) {
-          values("82.10300");
+          values("57.65904");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-5.60646");
+          values("11.94360");
         }
         fall_constraint(scalar) {
-          values("-4.93773");
+          values("19.32502");
         }
       }
     }
@@ -5398,20 +5398,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.90653");
+          values("84.15171");
         }
         fall_constraint(scalar) {
-          values("98.82154");
+          values("76.11140");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-10.34766");
+          values("5.28442");
         }
         fall_constraint(scalar) {
-          values("-8.92913");
+          values("13.95401");
         }
       }
     }
@@ -8091,20 +8091,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.51989");
+          values("81.80705");
         }
         fall_constraint(scalar) {
-          values("111.95621");
+          values("84.90802");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.90096");
+          values("-66.18749");
         }
         fall_constraint(scalar) {
-          values("-89.41998");
+          values("-62.34868");
         }
       }
     }
@@ -8115,20 +8115,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.45308");
+          values("81.72940");
         }
         fall_constraint(scalar) {
-          values("111.98167");
+          values("84.92399");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.86327");
+          values("-66.13788");
         }
         fall_constraint(scalar) {
-          values("-89.52815");
+          values("-62.44647");
         }
       }
     }
@@ -8144,20 +8144,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("116.49259");
+          values("95.72381");
         }
         fall_constraint(scalar) {
-          values("128.26366");
+          values("100.74102");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-97.70697");
+          values("-76.86541");
         }
         fall_constraint(scalar) {
-          values("-106.25833");
+          values("-78.35513");
         }
       }
     }
@@ -8168,20 +8168,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("115.56569");
+          values("94.70611");
         }
         fall_constraint(scalar) {
-          values("127.14120");
+          values("99.53336");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-96.52029");
+          values("-75.59707");
         }
         fall_constraint(scalar) {
-          values("-104.94034");
+          values("-77.01035");
         }
       }
     }
@@ -8192,20 +8192,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("115.31396");
+          values("94.49542");
         }
         fall_constraint(scalar) {
-          values("126.95158");
+          values("99.35751");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-96.25060");
+          values("-75.37290");
         }
         fall_constraint(scalar) {
-          values("-104.67422");
+          values("-76.73502");
         }
       }
     }
@@ -8221,20 +8221,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("97.33749");
+          values("85.45307");
         }
         fall_constraint(scalar) {
-          values("106.11006");
+          values("89.13943");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-81.70525");
+          values("-70.31140");
         }
         fall_constraint(scalar) {
-          values("-83.67708");
+          values("-67.86825");
         }
       }
     }
@@ -8245,20 +8245,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("91.42519");
+          values("80.78458");
         }
         fall_constraint(scalar) {
-          values("99.38874");
+          values("83.50984");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-75.81544");
+          values("-65.45921");
         }
         fall_constraint(scalar) {
-          values("-77.08592");
+          values("-62.40727");
         }
       }
     }
@@ -8269,20 +8269,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("84.89154");
+          values("75.26058");
         }
         fall_constraint(scalar) {
-          values("92.84098");
+          values("77.99151");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-69.63235");
+          values("-59.99383");
         }
         fall_constraint(scalar) {
-          values("-70.90321");
+          values("-56.59754");
         }
       }
     }
@@ -8293,20 +8293,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("78.75218");
+          values("62.80802");
         }
         fall_constraint(scalar) {
-          values("88.29604");
+          values("65.15678");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-62.72888");
+          values("-46.85734");
         }
         fall_constraint(scalar) {
-          values("-65.21783");
+          values("-42.25425");
         }
       }
     }
@@ -8317,20 +8317,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("77.60275");
+          values("60.02349");
         }
         fall_constraint(scalar) {
-          values("87.51142");
+          values("62.57270");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-61.64339");
+          values("-44.16554");
         }
         fall_constraint(scalar) {
-          values("-64.63673");
+          values("-39.84542");
         }
       }
     }
@@ -8341,20 +8341,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("82.04456");
+          values("64.52427");
         }
         fall_constraint(scalar) {
-          values("91.87630");
+          values("66.87846");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-65.98605");
+          values("-48.60192");
         }
         fall_constraint(scalar) {
-          values("-68.96112");
+          values("-44.09486");
         }
       }
     }
@@ -8365,20 +8365,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("78.66027");
+          values("69.65393");
         }
         fall_constraint(scalar) {
-          values("85.91653");
+          values("71.67447");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-63.37586");
+          values("-54.41016");
         }
         fall_constraint(scalar) {
-          values("-64.01806");
+          values("-50.29261");
         }
       }
     }
@@ -8389,20 +8389,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("76.94130");
+          values("60.41885");
         }
         fall_constraint(scalar) {
-          values("86.46719");
+          values("62.64570");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-60.91468");
+          values("-44.46806");
         }
         fall_constraint(scalar) {
-          values("-63.49028");
+          values("-39.78514");
         }
       }
     }
@@ -8413,20 +8413,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("86.96291");
+          values("69.18058");
         }
         fall_constraint(scalar) {
-          values("96.67861");
+          values("71.64940");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-70.74079");
+          values("-53.03777");
         }
         fall_constraint(scalar) {
-          values("-73.17152");
+          values("-48.29155");
         }
       }
     }
@@ -8437,20 +8437,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.21930");
+          values("89.34016");
         }
         fall_constraint(scalar) {
-          values("111.25301");
+          values("93.54847");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.17964");
+          values("-74.33572");
         }
         fall_constraint(scalar) {
-          values("-88.30817");
+          values("-72.12376");
         }
       }
     }
@@ -8461,20 +8461,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("84.23357");
+          values("74.65290");
         }
         fall_constraint(scalar) {
-          values("91.95371");
+          values("77.22874");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-68.87708");
+          values("-59.46897");
         }
         fall_constraint(scalar) {
-          values("-69.92838");
+          values("-55.88042");
         }
       }
     }
@@ -8485,20 +8485,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("80.58480");
+          values("71.56828");
         }
         fall_constraint(scalar) {
-          values("87.51467");
+          values("73.09359");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-65.43217");
+          values("-56.29934");
         }
         fall_constraint(scalar) {
-          values("-65.94373");
+          values("-52.23496");
         }
       }
     }
@@ -8509,20 +8509,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("80.44079");
+          values("71.24273");
         }
         fall_constraint(scalar) {
-          values("87.94733");
+          values("73.53944");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-65.17278");
+          values("-56.02145");
         }
         fall_constraint(scalar) {
-          values("-66.01858");
+          values("-52.11785");
         }
       }
     }
@@ -8533,20 +8533,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("78.01358");
+          values("69.06962");
         }
         fall_constraint(scalar) {
-          values("85.31873");
+          values("71.11787");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-62.79623");
+          values("-53.82866");
         }
         fall_constraint(scalar) {
-          values("-63.46662");
+          values("-49.70012");
         }
       }
     }
@@ -8557,20 +8557,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("86.81336");
+          values("76.95380");
         }
         fall_constraint(scalar) {
-          values("94.71310");
+          values("79.79064");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.39144");
+          values("-61.84278");
         }
         fall_constraint(scalar) {
-          values("-72.58688");
+          values("-58.45806");
         }
       }
     }
@@ -8581,20 +8581,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("81.51492");
+          values("64.84793");
         }
         fall_constraint(scalar) {
-          values("90.91136");
+          values("66.99716");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-65.42590");
+          values("-48.81765");
         }
         fall_constraint(scalar) {
-          values("-67.55328");
+          values("-43.77700");
         }
       }
     }
@@ -8605,20 +8605,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.46643");
+          values("70.69174");
         }
         fall_constraint(scalar) {
-          values("99.37843");
+          values("73.33795");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-73.34447");
+          values("-54.64178");
         }
         fall_constraint(scalar) {
-          values("-75.92616");
+          values("-50.02714");
         }
       }
     }
@@ -8629,20 +8629,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("92.10252");
+          values("81.24664");
         }
         fall_constraint(scalar) {
-          values("100.06712");
+          values("83.93914");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-76.25355");
+          values("-65.75668");
         }
         fall_constraint(scalar) {
-          values("-77.45564");
+          values("-62.73414");
         }
       }
     }
@@ -8653,20 +8653,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.44934");
+          values("75.60326");
         }
         fall_constraint(scalar) {
-          values("104.40640");
+          values("78.38817");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-78.14011");
+          values("-59.38242");
         }
         fall_constraint(scalar) {
-          values("-80.70235");
+          values("-54.80132");
         }
       }
     }
@@ -8682,20 +8682,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("106.58822");
+          values("92.92603");
         }
         fall_constraint(scalar) {
-          values("115.74078");
+          values("96.69656");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.61198");
+          values("-77.48965");
         }
         fall_constraint(scalar) {
-          values("-92.70849");
+          values("-75.62325");
         }
       }
     }
@@ -8706,20 +8706,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("79.82633");
+          values("70.81123");
         }
         fall_constraint(scalar) {
-          values("86.62620");
+          values("72.13244");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-64.20551");
+          values("-55.02584");
         }
         fall_constraint(scalar) {
-          values("-64.60522");
+          values("-50.94659");
         }
       }
     }
@@ -8730,20 +8730,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("82.01438");
+          values("63.35404");
         }
         fall_constraint(scalar) {
-          values("91.60772");
+          values("65.62154");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-66.05349");
+          values("-47.48610");
         }
         fall_constraint(scalar) {
-          values("-68.50979");
+          values("-42.67495");
         }
       }
     }
@@ -8754,20 +8754,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("81.75333");
+          values("72.51426");
         }
         fall_constraint(scalar) {
-          values("88.96421");
+          values("74.35519");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-66.11369");
+          values("-56.79129");
         }
         fall_constraint(scalar) {
-          values("-66.78807");
+          values("-52.92675");
         }
       }
     }
@@ -8778,20 +8778,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("85.16135");
+          values("68.97400");
         }
         fall_constraint(scalar) {
-          values("94.38044");
+          values("71.06865");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-69.05062");
+          values("-52.94306");
         }
         fall_constraint(scalar) {
-          values("-70.69635");
+          values("-47.51102");
         }
       }
     }
@@ -8802,20 +8802,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.31108");
+          values("89.55051");
         }
         fall_constraint(scalar) {
-          values("111.08255");
+          values("93.00122");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.35114");
+          values("-74.15438");
         }
         fall_constraint(scalar) {
-          values("-88.01814");
+          values("-71.91035");
         }
       }
     }
@@ -8826,20 +8826,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.75121");
+          values("90.83568");
         }
         fall_constraint(scalar) {
-          values("112.70812");
+          values("94.34304");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-87.90038");
+          values("-75.25967");
         }
         fall_constraint(scalar) {
-          values("-89.95604");
+          values("-73.26745");
         }
       }
     }
@@ -8850,20 +8850,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("75.02205");
+          values("58.61402");
         }
         fall_constraint(scalar) {
-          values("84.02470");
+          values("60.32760");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-59.09434");
+          values("-42.74860");
         }
         fall_constraint(scalar) {
-          values("-60.92310");
+          values("-37.35522");
         }
       }
     }
@@ -8874,20 +8874,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.05648");
+          values("91.15613");
         }
         fall_constraint(scalar) {
-          values("112.80544");
+          values("94.56111");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-88.12702");
+          values("-75.82461");
         }
         fall_constraint(scalar) {
-          values("-89.75435");
+          values("-73.62160");
         }
       }
     }
@@ -8898,20 +8898,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.04155");
+          values("90.10432");
         }
         fall_constraint(scalar) {
-          values("111.95655");
+          values("93.89307");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.98277");
+          values("-74.81116");
         }
         fall_constraint(scalar) {
-          values("-88.81137");
+          values("-72.61456");
         }
       }
     }
@@ -8922,20 +8922,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("88.69073");
+          values("71.36944");
         }
         fall_constraint(scalar) {
-          values("98.50640");
+          values("73.91975");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-72.35646");
+          values("-55.11465");
         }
         fall_constraint(scalar) {
-          values("-74.81043");
+          values("-50.35666");
         }
       }
     }
@@ -8946,20 +8946,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.29844");
+          values("87.07769");
         }
         fall_constraint(scalar) {
-          values("107.95506");
+          values("90.62375");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.26341");
+          values("-71.71867");
         }
         fall_constraint(scalar) {
-          values("-84.92970");
+          values("-69.23695");
         }
       }
     }
@@ -8970,20 +8970,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("87.42982");
+          values("69.04028");
         }
         fall_constraint(scalar) {
-          values("97.29286");
+          values("71.57204");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.29509");
+          values("-52.98289");
         }
         fall_constraint(scalar) {
-          values("-73.74252");
+          values("-48.17354");
         }
       }
     }
@@ -8994,20 +8994,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("91.50356");
+          values("73.10720");
         }
         fall_constraint(scalar) {
-          values("101.51160");
+          values("75.84941");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-75.17004");
+          values("-56.85441");
         }
         fall_constraint(scalar) {
-          values("-77.81535");
+          values("-52.28700");
         }
       }
     }
@@ -9018,20 +9018,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("91.07961");
+          values("71.84114");
         }
         fall_constraint(scalar) {
-          values("101.14096");
+          values("74.64086");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-74.80283");
+          values("-55.64351");
         }
         fall_constraint(scalar) {
-          values("-77.56965");
+          values("-51.20143");
         }
       }
     }
@@ -9042,20 +9042,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.17226");
+          values("78.97227");
         }
         fall_constraint(scalar) {
-          values("96.98068");
+          values("81.56307");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-73.37600");
+          values("-63.47335");
         }
         fall_constraint(scalar) {
-          values("-74.50169");
+          values("-60.21283");
         }
       }
     }
@@ -9066,20 +9066,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.88565");
+          values("84.53405");
         }
         fall_constraint(scalar) {
-          values("104.05237");
+          values("87.35606");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-79.89452");
+          values("-68.86243");
         }
         fall_constraint(scalar) {
-          values("-81.26516");
+          values("-66.08341");
         }
       }
     }
@@ -9090,20 +9090,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.13876");
+          values("83.13497");
         }
         fall_constraint(scalar) {
-          values("102.12457");
+          values("85.78333");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-78.13525");
+          values("-67.44440");
         }
         fall_constraint(scalar) {
-          values("-79.35365");
+          values("-64.49336");
         }
       }
     }
@@ -9114,20 +9114,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.10095");
+          values("87.13698");
         }
         fall_constraint(scalar) {
-          values("107.51413");
+          values("90.21375");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.01551");
+          values("-71.49709");
         }
         fall_constraint(scalar) {
-          values("-84.51196");
+          values("-68.94473");
         }
       }
     }
@@ -9143,20 +9143,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.69699");
+          values("83.83218");
         }
         fall_constraint(scalar) {
-          values("116.72952");
+          values("89.00644");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-87.06342");
+          values("-66.33319");
         }
         fall_constraint(scalar) {
-          values("-92.47337");
+          values("-64.44608");
         }
       }
     }
@@ -9167,20 +9167,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.71500");
+          values("79.21529");
         }
         fall_constraint(scalar) {
-          values("109.34493");
+          values("82.34269");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.02303");
+          values("-63.53992");
         }
         fall_constraint(scalar) {
-          values("-86.82286");
+          values("-59.80452");
         }
       }
     }
@@ -9191,20 +9191,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.89146");
+          values("88.12846");
         }
         fall_constraint(scalar) {
-          values("120.93346");
+          values("93.24824");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.50912");
+          values("-69.69980");
         }
         fall_constraint(scalar) {
-          values("-97.97649");
+          values("-69.97155");
         }
       }
     }
@@ -9215,20 +9215,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.13213");
+          values("87.26094");
         }
         fall_constraint(scalar) {
-          values("119.98465");
+          values("92.26842");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-89.66024");
+          values("-68.90569");
         }
         fall_constraint(scalar) {
-          values("-96.91158");
+          values("-68.88037");
         }
       }
     }
@@ -9239,20 +9239,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("112.83948");
+          values("93.04453");
         }
         fall_constraint(scalar) {
-          values("125.06568");
+          values("98.37697");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-94.74084");
+          values("-74.91529");
         }
         fall_constraint(scalar) {
-          values("-103.44451");
+          values("-76.39655");
         }
       }
     }
@@ -9263,20 +9263,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("113.24766");
+          values("93.77450");
         }
         fall_constraint(scalar) {
-          values("125.52856");
+          values("99.16775");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-95.23532");
+          values("-75.71944");
         }
         fall_constraint(scalar) {
-          values("-104.14930");
+          values("-77.40321");
         }
       }
     }
@@ -9292,20 +9292,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.59183");
+          values("79.88371");
         }
         fall_constraint(scalar) {
-          values("110.23595");
+          values("83.21139");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.22749");
+          values("-64.51089");
         }
         fall_constraint(scalar) {
-          values("-87.78017");
+          values("-60.72463");
         }
       }
     }
@@ -9316,20 +9316,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.23267");
+          values("79.56065");
         }
         fall_constraint(scalar) {
-          values("109.44248");
+          values("82.47215");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.81722");
+          values("-64.13388");
         }
         fall_constraint(scalar) {
-          values("-86.58293");
+          values("-59.57752");
         }
       }
     }
@@ -9340,20 +9340,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.64599");
+          values("78.01156");
         }
         fall_constraint(scalar) {
-          values("107.75455");
+          values("80.75474");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.30488");
+          values("-62.68320");
         }
         fall_constraint(scalar) {
-          values("-84.76321");
+          values("-57.74826");
         }
       }
     }
@@ -9364,20 +9364,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.67524");
+          values("78.98102");
         }
         fall_constraint(scalar) {
-          values("108.77920");
+          values("81.74569");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.20359");
+          values("-63.51297");
         }
         fall_constraint(scalar) {
-          values("-85.68829");
+          values("-58.63502");
         }
       }
     }
@@ -9388,20 +9388,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.89133");
+          values("79.20241");
         }
         fall_constraint(scalar) {
-          values("108.98414");
+          values("81.96487");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.42185");
+          values("-63.73095");
         }
         fall_constraint(scalar) {
-          values("-85.89516");
+          values("-58.85257");
         }
       }
     }
@@ -9412,20 +9412,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.77521");
+          values("79.10854");
         }
         fall_constraint(scalar) {
-          values("108.81008");
+          values("81.83475");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.39942");
+          values("-63.72519");
         }
         fall_constraint(scalar) {
-          values("-85.73012");
+          values("-58.72419");
         }
       }
     }
@@ -9436,20 +9436,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.74049");
+          values("81.03242");
         }
         fall_constraint(scalar) {
-          values("111.07032");
+          values("84.02293");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.10353");
+          values("-65.39732");
         }
         fall_constraint(scalar) {
-          values("-88.22173");
+          values("-61.15290");
         }
       }
     }
@@ -9460,20 +9460,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.37986");
+          values("81.69809");
         }
         fall_constraint(scalar) {
-          values("111.74228");
+          values("84.77234");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.83727");
+          values("-66.14097");
         }
         fall_constraint(scalar) {
-          values("-89.02444");
+          values("-62.01577");
         }
       }
     }
@@ -9484,20 +9484,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.54781");
+          values("78.89324");
         }
         fall_constraint(scalar) {
-          values("108.59385");
+          values("81.61238");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.16674");
+          values("-63.51030");
         }
         fall_constraint(scalar) {
-          values("-85.50985");
+          values("-58.50460");
         }
       }
     }
@@ -9508,20 +9508,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.11097");
+          values("78.41659");
         }
         fall_constraint(scalar) {
-          values("108.20368");
+          values("81.16457");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.75380");
+          values("-63.06587");
         }
         fall_constraint(scalar) {
-          values("-85.18214");
+          values("-58.12438");
         }
       }
     }
@@ -9532,20 +9532,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.22773");
+          values("77.53226");
         }
         fall_constraint(scalar) {
-          values("107.61438");
+          values("80.61035");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-82.93576");
+          values("-62.22997");
         }
         fall_constraint(scalar) {
-          values("-85.04129");
+          values("-58.00387");
         }
       }
     }
@@ -9556,20 +9556,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.47208");
+          values("80.78779");
         }
         fall_constraint(scalar) {
-          values("110.83025");
+          values("83.84908");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.95648");
+          values("-65.25874");
         }
         fall_constraint(scalar) {
-          values("-88.07173");
+          values("-61.05334");
         }
       }
     }
@@ -9580,20 +9580,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.96755");
+          values("78.29163");
         }
         fall_constraint(scalar) {
-          values("108.32194");
+          values("81.30262");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.68586");
+          values("-63.01679");
         }
         fall_constraint(scalar) {
-          values("-85.71397");
+          values("-58.67765");
         }
       }
     }
@@ -9604,20 +9604,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.59191");
+          values("80.90620");
         }
         fall_constraint(scalar) {
-          values("110.90208");
+          values("83.88120");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.87817");
+          values("-65.19330");
         }
         fall_constraint(scalar) {
-          values("-87.98458");
+          values("-60.94296");
         }
       }
     }
@@ -9628,20 +9628,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.78864");
+          values("79.10670");
         }
         fall_constraint(scalar) {
-          values("108.87534");
+          values("81.85942");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.42651");
+          values("-63.74567");
         }
         fall_constraint(scalar) {
-          values("-85.84827");
+          values("-58.81185");
         }
       }
     }
@@ -9652,20 +9652,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.96447");
+          values("81.30891");
         }
         fall_constraint(scalar) {
-          values("111.35841");
+          values("84.38221");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.36488");
+          values("-65.70741");
         }
         fall_constraint(scalar) {
-          values("-88.61050");
+          values("-61.60960");
         }
       }
     }
@@ -9676,20 +9676,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.45632");
+          values("78.80320");
         }
         fall_constraint(scalar) {
-          values("108.63534");
+          values("81.60842");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.98721");
+          values("-63.34664");
         }
         fall_constraint(scalar) {
-          values("-85.58878");
+          values("-58.54611");
         }
       }
     }
@@ -9700,20 +9700,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.68996");
+          values("79.00795");
         }
         fall_constraint(scalar) {
-          values("108.91374");
+          values("81.90323");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.34492");
+          values("-63.66241");
         }
         fall_constraint(scalar) {
-          values("-86.12894");
+          values("-59.09632");
         }
       }
     }
@@ -9724,20 +9724,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.53563");
+          values("77.95567");
         }
         fall_constraint(scalar) {
-          values("107.76106");
+          values("80.72272");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.01861");
+          values("-62.45414");
         }
         fall_constraint(scalar) {
-          values("-84.68290");
+          values("-57.62863");
         }
       }
     }
@@ -9753,20 +9753,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.06488");
+          values("78.38548");
         }
         fall_constraint(scalar) {
-          values("108.35759");
+          values("81.28745");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.71737");
+          values("-63.04768");
         }
         fall_constraint(scalar) {
-          values("-85.60429");
+          values("-58.51516");
         }
       }
     }
@@ -9777,20 +9777,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.74763");
+          values("81.04214");
         }
         fall_constraint(scalar) {
-          values("111.05978");
+          values("84.01698");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.11205");
+          values("-65.40819");
         }
         fall_constraint(scalar) {
-          values("-88.19355");
+          values("-61.12956");
         }
       }
     }
@@ -9801,20 +9801,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.26581");
+          values("79.58289");
         }
         fall_constraint(scalar) {
-          values("109.40967");
+          values("82.41379");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.89442");
+          values("-64.20451");
         }
         fall_constraint(scalar) {
-          values("-86.49554");
+          values("-59.46983");
         }
       }
     }
@@ -9825,20 +9825,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.04438");
+          values("79.39892");
         }
         fall_constraint(scalar) {
-          values("109.50366");
+          values("82.52773");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.60387");
+          values("-63.95848");
         }
         fall_constraint(scalar) {
-          values("-86.83441");
+          values("-59.83658");
         }
       }
     }
@@ -9849,20 +9849,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.74853");
+          values("80.07203");
         }
         fall_constraint(scalar) {
-          values("109.75404");
+          values("82.77596");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.38992");
+          values("-64.70327");
         }
         fall_constraint(scalar) {
-          values("-86.67794");
+          values("-59.66616");
         }
       }
     }
@@ -9873,20 +9873,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.34111");
+          values("79.64766");
         }
         fall_constraint(scalar) {
-          values("109.54633");
+          values("82.55184");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.89634");
+          values("-64.19051");
         }
         fall_constraint(scalar) {
-          values("-86.64438");
+          values("-59.61416");
         }
       }
     }
@@ -9897,20 +9897,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.50716");
+          values("77.82165");
         }
         fall_constraint(scalar) {
-          values("108.10191");
+          values("81.09566");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.16817");
+          values("-62.47625");
         }
         fall_constraint(scalar) {
-          values("-85.62688");
+          values("-58.59178");
         }
       }
     }
@@ -9921,20 +9921,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.11556");
+          values("80.44480");
         }
         fall_constraint(scalar) {
-          values("110.55213");
+          values("83.56381");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.51283");
+          values("-64.83822");
         }
         fall_constraint(scalar) {
-          values("-87.77888");
+          values("-60.76397");
         }
       }
     }
@@ -9945,20 +9945,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.99539");
+          values("79.31168");
         }
         fall_constraint(scalar) {
-          values("109.24571");
+          values("82.26521");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.57761");
+          values("-63.87922");
         }
         fall_constraint(scalar) {
-          values("-86.40783");
+          values("-59.39091");
         }
       }
     }
@@ -9969,20 +9969,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.12648");
+          values("80.49789");
         }
         fall_constraint(scalar) {
-          values("110.50373");
+          values("83.50798");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.42429");
+          values("-64.81123");
         }
         fall_constraint(scalar) {
-          values("-87.63290");
+          values("-60.62465");
         }
       }
     }
@@ -9993,20 +9993,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.36043");
+          values("78.72550");
         }
         fall_constraint(scalar) {
-          values("108.57704");
+          values("81.53417");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.82292");
+          values("-63.20150");
         }
         fall_constraint(scalar) {
-          values("-85.49141");
+          values("-58.43292");
         }
       }
     }
@@ -10017,20 +10017,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.90252");
+          values("78.24787");
         }
         fall_constraint(scalar) {
-          values("108.14283");
+          values("81.05343");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.37551");
+          values("-62.73018");
         }
         fall_constraint(scalar) {
-          values("-85.07836");
+          values("-57.96760");
         }
       }
     }
@@ -10041,20 +10041,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.98367");
+          values("78.38348");
         }
         fall_constraint(scalar) {
-          values("108.17211");
+          values("81.13049");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.45359");
+          values("-62.86873");
         }
         fall_constraint(scalar) {
-          values("-85.03632");
+          values("-57.98573");
         }
       }
     }
@@ -10065,20 +10065,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("101.33255");
+          values("80.63531");
         }
         fall_constraint(scalar) {
-          values("110.74105");
+          values("83.67963");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.68111");
+          values("-64.99208");
         }
         fall_constraint(scalar) {
-          values("-87.93269");
+          values("-60.85148");
         }
       }
     }
@@ -10089,20 +10089,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.69115");
+          values("79.09746");
         }
         fall_constraint(scalar) {
-          values("109.17078");
+          values("82.12110");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.09540");
+          values("-63.51361");
         }
         fall_constraint(scalar) {
-          values("-86.54707");
+          values("-59.47796");
         }
       }
     }
@@ -10113,20 +10113,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.40985");
+          values("79.80857");
         }
         fall_constraint(scalar) {
-          values("109.87904");
+          values("82.86565");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.83291");
+          values("-64.24507");
         }
         fall_constraint(scalar) {
-          values("-87.29012");
+          values("-60.26084");
         }
       }
     }
@@ -10137,20 +10137,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.58068");
+          values("77.97852");
         }
         fall_constraint(scalar) {
-          values("107.85284");
+          values("80.82001");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.07177");
+          values("-62.48537");
         }
         fall_constraint(scalar) {
-          values("-84.85014");
+          values("-57.80244");
         }
       }
     }
@@ -10161,20 +10161,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.16905");
+          values("89.52504");
         }
         fall_constraint(scalar) {
-          values("120.31821");
+          values("93.20341");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-94.97703");
+          values("-74.36991");
         }
         fall_constraint(scalar) {
-          values("-98.09317");
+          values("-70.99519");
         }
       }
     }
@@ -10185,20 +10185,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.65587");
+          values("90.00781");
         }
         fall_constraint(scalar) {
-          values("120.71928");
+          values("93.64233");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-95.52894");
+          values("-74.91122");
         }
         fall_constraint(scalar) {
-          values("-98.47100");
+          values("-71.40776");
         }
       }
     }
@@ -21672,20 +21672,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("57.39802");
+          values("44.63138");
         }
         fall_constraint(scalar) {
-          values("43.05038");
+          values("24.05302");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-37.99527");
+          values("-25.26807");
         }
         fall_constraint(scalar) {
-          values("-15.66429");
+          values("3.30658");
         }
       }
     }
@@ -21696,20 +21696,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("65.33805");
+          values("44.49005");
         }
         fall_constraint(scalar) {
-          values("68.83321");
+          values("41.14985");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-48.10144");
+          values("-27.26816");
         }
         fall_constraint(scalar) {
-          values("-43.64790");
+          values("-15.95730");
         }
       }
     }
@@ -22031,20 +22031,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("97.03922");
+          values("76.31784");
         }
         fall_constraint(scalar) {
-          values("103.80012");
+          values("75.75318");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-21.42286");
+          values("-0.63367");
         }
         fall_constraint(scalar) {
-          values("-15.53126");
+          values("12.37581");
         }
       }
     }
@@ -22055,20 +22055,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("107.07469");
+          values("89.67657");
         }
         fall_constraint(scalar) {
-          values("114.81368");
+          values("89.96211");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-81.27088");
+          values("-63.89210");
         }
         fall_constraint(scalar) {
-          values("-82.96957");
+          values("-58.24168");
         }
       }
     }
@@ -22079,20 +22079,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.58843");
+          values("84.17267");
         }
         fall_constraint(scalar) {
-          values("112.21593");
+          values("84.71893");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-87.26028");
+          values("-66.86002");
         }
         fall_constraint(scalar) {
-          values("-88.25132");
+          values("-60.71446");
         }
       }
     }
@@ -22103,20 +22103,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("107.85822");
+          values("87.29216");
         }
         fall_constraint(scalar) {
-          values("115.32707");
+          values("87.62540");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.58852");
+          values("-64.99466");
         }
         fall_constraint(scalar) {
-          values("-87.12376");
+          values("-59.38891");
         }
       }
     }
@@ -22127,20 +22127,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("107.88023");
+          values("87.25827");
         }
         fall_constraint(scalar) {
-          values("115.21644");
+          values("87.46728");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.91190");
+          values("-64.28851");
         }
         fall_constraint(scalar) {
-          values("-85.82598");
+          values("-58.04640");
         }
       }
     }
@@ -22151,20 +22151,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.99553");
+          values("88.54717");
         }
         fall_constraint(scalar) {
-          values("116.59122");
+          values("89.00748");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-88.33479");
+          values("-67.86762");
         }
         fall_constraint(scalar) {
-          values("-89.70841");
+          values("-62.11949");
         }
       }
     }
@@ -22175,20 +22175,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.48425");
+          values("87.94369");
         }
         fall_constraint(scalar) {
-          values("115.88038");
+          values("88.25533");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-87.83057");
+          values("-67.31002");
         }
         fall_constraint(scalar) {
-          values("-88.97007");
+          values("-61.32954");
         }
       }
     }
@@ -22199,20 +22199,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("105.86430");
+          values("85.46764");
         }
         fall_constraint(scalar) {
-          values("113.88780");
+          values("86.33105");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-87.27295");
+          values("-66.87908");
         }
         fall_constraint(scalar) {
-          values("-89.07635");
+          values("-61.56850");
         }
       }
     }
@@ -22223,20 +22223,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("106.73857");
+          values("86.16315");
         }
         fall_constraint(scalar) {
-          values("114.76875");
+          values("87.10520");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.00517");
+          values("-65.39851");
         }
         fall_constraint(scalar) {
-          values("-87.07224");
+          values("-59.32671");
         }
       }
     }
@@ -22247,20 +22247,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.89182");
+          values("84.40208");
         }
         fall_constraint(scalar) {
-          values("112.66543");
+          values("85.04745");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.81718");
+          values("-64.32967");
         }
         fall_constraint(scalar) {
-          values("-85.80228");
+          values("-58.16848");
         }
       }
     }
@@ -22271,20 +22271,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.72217");
+          values("83.22676");
         }
         fall_constraint(scalar) {
-          values("111.34115");
+          values("83.71633");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.81692");
+          values("-63.32283");
         }
         fall_constraint(scalar) {
-          values("-84.74243");
+          values("-57.05763");
         }
       }
     }
@@ -22295,20 +22295,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.86636");
+          values("83.20358");
         }
         fall_constraint(scalar) {
-          values("111.51349");
+          values("83.71098");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.44853");
+          values("-62.77171");
         }
         fall_constraint(scalar) {
-          values("-85.23909");
+          values("-57.40842");
         }
       }
     }
@@ -22319,20 +22319,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.62074");
+          values("81.93766");
         }
         fall_constraint(scalar) {
-          values("110.27673");
+          values("82.46227");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.61962");
+          values("-62.93825");
         }
         fall_constraint(scalar) {
-          values("-84.68098");
+          values("-56.82991");
         }
       }
     }
@@ -22343,20 +22343,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.68864");
+          values("81.71368");
         }
         fall_constraint(scalar) {
-          values("109.93294");
+          values("81.72972");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.98416");
+          values("-59.99016");
         }
         fall_constraint(scalar) {
-          values("-81.53504");
+          values("-53.29398");
         }
       }
     }
@@ -22367,20 +22367,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("98.76684");
+          values("77.98894");
         }
         fall_constraint(scalar) {
-          values("105.09242");
+          values("77.01300");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-74.38216");
+          values("-53.92238");
         }
         fall_constraint(scalar) {
-          values("-73.60486");
+          values("-46.01887");
         }
       }
     }
@@ -22391,20 +22391,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.17611");
+          values("79.61597");
         }
         fall_constraint(scalar) {
-          values("106.65178");
+          values("78.73811");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-74.84613");
+          values("-54.60064");
         }
         fall_constraint(scalar) {
-          values("-74.55311");
+          values("-47.12991");
         }
       }
     }
@@ -22415,20 +22415,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.63234");
+          values("79.16090");
         }
         fall_constraint(scalar) {
-          values("106.14790");
+          values("78.28811");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-74.18740");
+          values("-53.98462");
         }
         fall_constraint(scalar) {
-          values("-73.98599");
+          values("-46.59847");
         }
       }
     }
@@ -22439,20 +22439,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.79944");
+          values("83.00958");
         }
         fall_constraint(scalar) {
-          values("110.35821");
+          values("83.15499");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-75.30525");
+          values("-55.68362");
         }
         fall_constraint(scalar) {
-          values("-75.52866");
+          values("-48.53381");
         }
       }
     }
@@ -22495,20 +22495,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("109.89221");
+          values("89.24896");
         }
         fall_constraint(scalar) {
-          values("118.03604");
+          values("91.01652");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.37739");
+          values("-65.75034");
         }
         fall_constraint(scalar) {
-          values("-87.61559");
+          values("-60.58421");
         }
       }
     }
@@ -22519,20 +22519,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("106.28502");
+          values("85.64576");
         }
         fall_constraint(scalar) {
-          values("114.72875");
+          values("87.69029");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.94224");
+          values("-65.31628");
         }
         fall_constraint(scalar) {
-          values("-87.38573");
+          values("-60.33139");
         }
       }
     }
@@ -22543,20 +22543,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.97342");
+          values("84.48336");
         }
         fall_constraint(scalar) {
-          values("113.33163");
+          values("86.41333");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.76651");
+          values("-64.30064");
         }
         fall_constraint(scalar) {
-          values("-86.16380");
+          values("-59.23965");
         }
       }
     }
@@ -22567,20 +22567,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.60844");
+          values("83.93774");
         }
         fall_constraint(scalar) {
-          values("112.96823");
+          values("85.81863");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.77851");
+          values("-65.11858");
         }
         fall_constraint(scalar) {
-          values("-87.57822");
+          values("-60.40685");
         }
       }
     }
@@ -22591,20 +22591,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("105.21651");
+          values("84.56324");
         }
         fall_constraint(scalar) {
-          values("113.52042");
+          values("86.43315");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.85357");
+          values("-65.21474");
         }
         fall_constraint(scalar) {
-          values("-87.64430");
+          values("-60.54056");
         }
       }
     }
@@ -22615,20 +22615,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.39887");
+          values("83.83982");
         }
         fall_constraint(scalar) {
-          values("112.69914");
+          values("85.67097");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-82.45753");
+          values("-61.91691");
         }
         fall_constraint(scalar) {
-          values("-83.80939");
+          values("-56.75327");
         }
       }
     }
@@ -22639,20 +22639,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("109.06240");
+          values("88.46725");
         }
         fall_constraint(scalar) {
-          values("117.15223");
+          values("90.13223");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.16489");
+          values("-62.59318");
         }
         fall_constraint(scalar) {
-          values("-84.56295");
+          values("-57.53660");
         }
       }
     }
@@ -22663,20 +22663,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.75049");
+          values("80.18158");
         }
         fall_constraint(scalar) {
-          values("109.12038");
+          values("81.96156");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.51646");
+          values("-59.95379");
         }
         fall_constraint(scalar) {
-          values("-82.15740");
+          values("-54.98048");
         }
       }
     }
@@ -22687,20 +22687,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.40480");
+          values("89.67939");
         }
         fall_constraint(scalar) {
-          values("118.49137");
+          values("91.41421");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.92308");
+          values("-70.20612");
         }
         fall_constraint(scalar) {
-          values("-92.49478");
+          values("-65.39513");
         }
       }
     }
@@ -22711,20 +22711,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.47301");
+          values("87.77639");
         }
         fall_constraint(scalar) {
-          values("116.63434");
+          values("89.52702");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-89.76712");
+          values("-69.07796");
         }
         fall_constraint(scalar) {
-          values("-91.72749");
+          values("-64.59858");
         }
       }
     }
@@ -22735,20 +22735,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("106.33486");
+          values("85.74664");
         }
         fall_constraint(scalar) {
-          values("114.50274");
+          values("87.38680");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.05210");
+          values("-64.47896");
         }
         fall_constraint(scalar) {
-          values("-87.27327");
+          values("-60.13877");
         }
       }
     }
@@ -22759,20 +22759,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("107.48388");
+          values("86.91062");
         }
         fall_constraint(scalar) {
-          values("115.56928");
+          values("88.57085");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.87761");
+          values("-66.32543");
         }
         fall_constraint(scalar) {
-          values("-88.68826");
+          values("-61.68099");
         }
       }
     }
@@ -22783,20 +22783,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("109.78934");
+          values("89.09731");
         }
         fall_constraint(scalar) {
-          values("117.84214");
+          values("90.76986");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.68147");
+          values("-69.99828");
         }
         fall_constraint(scalar) {
-          values("-92.42894");
+          values("-65.33740");
         }
       }
     }
@@ -22807,20 +22807,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("106.22978");
+          values("85.57575");
         }
         fall_constraint(scalar) {
-          values("114.14421");
+          values("87.03792");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-87.37310");
+          values("-66.72871");
         }
         fall_constraint(scalar) {
-          values("-88.84748");
+          values("-61.70584");
         }
       }
     }
@@ -22831,20 +22831,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.30707");
+          values("87.65346");
         }
         fall_constraint(scalar) {
-          values("116.47963");
+          values("89.40411");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-88.21335");
+          values("-67.57162");
         }
         fall_constraint(scalar) {
-          values("-89.58904");
+          values("-62.49477");
         }
       }
     }
@@ -22855,20 +22855,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("105.73730");
+          values("85.09310");
         }
         fall_constraint(scalar) {
-          values("113.75395");
+          values("86.58801");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.88092");
+          values("-66.25001");
         }
         fall_constraint(scalar) {
-          values("-88.74509");
+          values("-61.55867");
         }
       }
     }
@@ -22879,20 +22879,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.38036");
+          values("87.67068");
         }
         fall_constraint(scalar) {
-          values("116.51785");
+          values("89.40650");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-89.53823");
+          values("-68.83923");
         }
         fall_constraint(scalar) {
-          values("-91.46595");
+          values("-64.33652");
         }
       }
     }
@@ -22903,20 +22903,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.26894");
+          values("79.58791");
         }
         fall_constraint(scalar) {
-          values("107.96304");
+          values("80.99268");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.54987");
+          values("-59.85423");
         }
         fall_constraint(scalar) {
-          values("-82.08313");
+          values("-55.07396");
         }
       }
     }
@@ -22927,20 +22927,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.44520");
+          values("79.76068");
         }
         fall_constraint(scalar) {
-          values("108.12521");
+          values("81.12877");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-81.10867");
+          values("-60.41642");
         }
         fall_constraint(scalar) {
-          values("-82.44195");
+          values("-55.41489");
         }
       }
     }
@@ -22951,20 +22951,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.92875");
+          values("79.25844");
         }
         fall_constraint(scalar) {
-          values("107.70956");
+          values("80.74722");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-67.98940");
+          values("-47.30601");
         }
         fall_constraint(scalar) {
-          values("-69.50227");
+          values("-42.50257");
         }
       }
     }
@@ -22975,20 +22975,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.40284");
+          values("87.73520");
         }
         fall_constraint(scalar) {
-          values("116.44958");
+          values("89.34612");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-89.48161");
+          values("-68.83039");
         }
         fall_constraint(scalar) {
-          values("-91.16969");
+          values("-64.05267");
         }
       }
     }
@@ -22999,20 +22999,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("109.31428");
+          values("88.62171");
         }
         fall_constraint(scalar) {
-          values("117.40262");
+          values("90.27684");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-89.76153");
+          values("-69.07823");
         }
         fall_constraint(scalar) {
-          values("-91.84573");
+          values("-64.69948");
         }
       }
     }
@@ -23023,20 +23023,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.32265");
+          values("78.63399");
         }
         fall_constraint(scalar) {
-          values("107.10768");
+          values("80.10026");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.21317");
+          values("-59.51771");
         }
         fall_constraint(scalar) {
-          values("-81.38283");
+          values("-54.34586");
         }
       }
     }
@@ -23047,20 +23047,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.48598");
+          values("89.78632");
         }
         fall_constraint(scalar) {
-          values("118.78909");
+          values("91.71004");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.93646");
+          values("-70.24510");
         }
         fall_constraint(scalar) {
-          values("-92.55322");
+          values("-65.45436");
         }
       }
     }
@@ -23071,20 +23071,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("109.27728");
+          values("90.13266");
         }
         fall_constraint(scalar) {
-          values("117.48982");
+          values("91.24914");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-92.32701");
+          values("-73.15297");
         }
         fall_constraint(scalar) {
-          values("-94.47295");
+          values("-68.09697");
         }
       }
     }
@@ -23095,20 +23095,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.60812");
+          values("87.37621");
         }
         fall_constraint(scalar) {
-          values("111.95840");
+          values("88.54716");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.18461");
+          values("-68.93825");
         }
         fall_constraint(scalar) {
-          values("-86.99408");
+          values("-63.49894");
         }
       }
     }
@@ -23119,20 +23119,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.59600");
+          values("86.86156");
         }
         fall_constraint(scalar) {
-          values("112.89065");
+          values("87.98177");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-88.00353");
+          values("-70.23888");
         }
         fall_constraint(scalar) {
-          values("-90.31985");
+          values("-65.30145");
         }
       }
     }
@@ -23143,20 +23143,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("100.87758");
+          values("85.06862");
         }
         fall_constraint(scalar) {
-          values("108.67242");
+          values("85.70473");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.66949");
+          values("-67.79635");
         }
         fall_constraint(scalar) {
-          values("-85.56715");
+          values("-62.46151");
         }
       }
     }
@@ -23167,20 +23167,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.32217");
+          values("91.54464");
         }
         fall_constraint(scalar) {
-          values("118.94453");
+          values("93.02925");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-93.20184");
+          values("-74.40348");
         }
         fall_constraint(scalar) {
-          values("-95.87354");
+          values("-69.84874");
         }
       }
     }
@@ -23191,20 +23191,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.41045");
+          values("89.69913");
         }
         fall_constraint(scalar) {
-          values("116.67151");
+          values("90.81527");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.73912");
+          values("-71.98351");
         }
         fall_constraint(scalar) {
-          values("-93.17252");
+          values("-67.18484");
         }
       }
     }
@@ -23215,20 +23215,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("105.26786");
+          values("88.27113");
         }
         fall_constraint(scalar) {
-          values("113.47165");
+          values("89.29578");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.55183");
+          values("-69.53838");
         }
         fall_constraint(scalar) {
-          values("-88.73525");
+          values("-64.45354");
         }
       }
     }
@@ -23239,20 +23239,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.97844");
+          values("86.30819");
         }
         fall_constraint(scalar) {
-          values("110.86680");
+          values("87.01948");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.35760");
+          values("-67.66325");
         }
         fall_constraint(scalar) {
-          values("-86.36452");
+          values("-62.40191");
         }
       }
     }
@@ -23263,20 +23263,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("105.66917");
+          values("88.47576");
         }
         fall_constraint(scalar) {
-          values("113.69308");
+          values("89.31824");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-88.14899");
+          values("-70.94254");
         }
         fall_constraint(scalar) {
-          values("-90.09924");
+          values("-65.62952");
         }
       }
     }
@@ -23287,20 +23287,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("106.20094");
+          values("89.06300");
         }
         fall_constraint(scalar) {
-          values("114.38258");
+          values("90.07496");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-88.30504");
+          values("-71.16229");
         }
         fall_constraint(scalar) {
-          values("-90.16228");
+          values("-65.77277");
         }
       }
     }
@@ -23311,20 +23311,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.15383");
+          values("86.57216");
         }
         fall_constraint(scalar) {
-          values("111.08724");
+          values("87.32533");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.03101");
+          values("-69.45584");
         }
         fall_constraint(scalar) {
-          values("-87.88921");
+          values("-64.04163");
         }
       }
     }
@@ -23335,20 +23335,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.58327");
+          values("89.13279");
         }
         fall_constraint(scalar) {
-          values("117.02971");
+          values("90.52376");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-91.76833");
+          values("-72.25841");
         }
         fall_constraint(scalar) {
-          values("-94.46611");
+          values("-67.81560");
         }
       }
     }
@@ -23359,20 +23359,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("106.59666");
+          values("89.28762");
         }
         fall_constraint(scalar) {
-          values("115.03900");
+          values("90.54557");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-88.11034");
+          values("-70.78483");
         }
         fall_constraint(scalar) {
-          values("-90.02137");
+          values("-65.42155");
         }
       }
     }
@@ -23383,20 +23383,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.66354");
+          values("87.65132");
         }
         fall_constraint(scalar) {
-          values("111.55064");
+          values("88.37672");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.54221");
+          values("-69.54689");
         }
         fall_constraint(scalar) {
-          values("-87.30441");
+          values("-64.07465");
         }
       }
     }
@@ -23612,20 +23612,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("105.56590");
+          values("88.11082");
         }
         fall_constraint(scalar) {
-          values("113.29654");
+          values("88.40138");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-79.82869");
+          values("-62.36284");
         }
         fall_constraint(scalar) {
-          values("-81.34446");
+          values("-56.54348");
         }
       }
     }
@@ -23636,20 +23636,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("107.46095");
+          values("88.94662");
         }
         fall_constraint(scalar) {
-          values("115.31142");
+          values("89.39451");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-81.80474");
+          values("-63.29629");
         }
         fall_constraint(scalar) {
-          values("-82.91001");
+          values("-57.02834");
         }
       }
     }
@@ -23660,20 +23660,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("107.26615");
+          values("88.82286");
         }
         fall_constraint(scalar) {
-          values("115.00244");
+          values("89.13985");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.59489");
+          values("-66.27715");
         }
         fall_constraint(scalar) {
-          values("-86.18255");
+          values("-60.38492");
         }
       }
     }
@@ -23684,20 +23684,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("109.29542");
+          values("90.60391");
         }
         fall_constraint(scalar) {
-          values("117.33506");
+          values("91.18120");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.19001");
+          values("-64.51218");
         }
         fall_constraint(scalar) {
-          values("-84.37288");
+          values("-58.38866");
         }
       }
     }
@@ -23708,20 +23708,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("111.92652");
+          values("92.35732");
         }
         fall_constraint(scalar) {
-          values("120.10133");
+          values("93.14357");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.18066");
+          values("-66.63049");
         }
         fall_constraint(scalar) {
-          values("-87.52048");
+          values("-60.74426");
         }
       }
     }
@@ -23732,20 +23732,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.54282");
+          values("90.74956");
         }
         fall_constraint(scalar) {
-          values("118.45592");
+          values("91.39510");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.71033");
+          values("-63.89918");
         }
         fall_constraint(scalar) {
-          values("-84.85247");
+          values("-57.75517");
         }
       }
     }
@@ -23756,20 +23756,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.74670");
+          values("91.27061");
         }
         fall_constraint(scalar) {
-          values("118.62993");
+          values("91.83301");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.05282");
+          values("-64.57592");
         }
         fall_constraint(scalar) {
-          values("-85.29092");
+          values("-58.56848");
         }
       }
     }
@@ -23780,20 +23780,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.03149");
+          values("90.50907");
         }
         fall_constraint(scalar) {
-          values("117.97855");
+          values("91.13927");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-84.68246");
+          values("-65.16534");
         }
         fall_constraint(scalar) {
-          values("-85.90096");
+          values("-59.14886");
         }
       }
     }
@@ -23804,20 +23804,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("110.04647");
+          values("90.82146");
         }
         fall_constraint(scalar) {
-          values("117.96397");
+          values("91.33003");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.55617");
+          values("-67.37521");
         }
         fall_constraint(scalar) {
-          values("-88.18313");
+          values("-61.73328");
         }
       }
     }
@@ -23828,20 +23828,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.83653");
+          values("91.11112");
         }
         fall_constraint(scalar) {
-          values("116.58177");
+          values("91.35501");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-81.99942");
+          values("-64.29356");
         }
         fall_constraint(scalar) {
-          values("-83.37222");
+          values("-58.33527");
         }
       }
     }
@@ -23852,20 +23852,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("106.42083");
+          values("88.28939");
         }
         fall_constraint(scalar) {
-          values("114.00943");
+          values("88.45872");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-82.56798");
+          values("-64.42626");
         }
         fall_constraint(scalar) {
-          values("-84.85267");
+          values("-59.28596");
         }
       }
     }
@@ -23876,20 +23876,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("111.83180");
+          values("92.55986");
         }
         fall_constraint(scalar) {
-          values("119.63966");
+          values("93.06015");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-85.67874");
+          values("-66.43171");
         }
         fall_constraint(scalar) {
-          values("-87.72285");
+          values("-61.15756");
         }
       }
     }
@@ -23900,20 +23900,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.24249");
+          values("90.49677");
         }
         fall_constraint(scalar) {
-          values("116.23156");
+          values("90.99411");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-82.86801");
+          values("-65.13541");
         }
         fall_constraint(scalar) {
-          values("-84.61579");
+          values("-59.55267");
         }
       }
     }
@@ -23924,20 +23924,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("108.01246");
+          values("90.78864");
         }
         fall_constraint(scalar) {
-          values("115.69813");
+          values("90.94624");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-79.66068");
+          values("-62.45075");
         }
         fall_constraint(scalar) {
-          values("-82.28087");
+          values("-57.74446");
         }
       }
     }
@@ -24150,20 +24150,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("96.89434");
+          values("75.84944");
         }
         fall_constraint(scalar) {
-          values("106.20399");
+          values("78.21921");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.07632");
+          values("-59.02708");
         }
         fall_constraint(scalar) {
-          values("-83.18027");
+          values("-55.18689");
         }
       }
     }
@@ -24174,20 +24174,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.58326");
+          values("74.51415");
         }
         fall_constraint(scalar) {
-          values("104.91183");
+          values("76.86853");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-78.81058");
+          values("-57.74015");
         }
         fall_constraint(scalar) {
-          values("-81.95645");
+          values("-53.90303");
         }
       }
     }
@@ -24198,20 +24198,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.92765");
+          values("74.87764");
         }
         fall_constraint(scalar) {
-          values("105.35059");
+          values("77.33134");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-79.19480");
+          values("-58.13800");
         }
         fall_constraint(scalar) {
-          values("-82.52507");
+          values("-54.49493");
         }
       }
     }
@@ -24222,20 +24222,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.50713");
+          values("73.40704");
         }
         fall_constraint(scalar) {
-          values("103.86405");
+          values("75.76700");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-77.73979");
+          values("-56.64589");
         }
         fall_constraint(scalar) {
-          values("-80.93171");
+          values("-52.81763");
         }
       }
     }
@@ -24246,20 +24246,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.44012");
+          values("73.35342");
         }
         fall_constraint(scalar) {
-          values("103.71918");
+          values("75.64175");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-77.77395");
+          values("-56.68752");
         }
         fall_constraint(scalar) {
-          values("-80.87258");
+          values("-52.78164");
         }
       }
     }
@@ -24270,20 +24270,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("96.11880");
+          values("75.08751");
         }
         fall_constraint(scalar) {
-          values("105.60770");
+          values("77.54199");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-79.38398");
+          values("-58.34838");
         }
         fall_constraint(scalar) {
-          values("-82.71540");
+          values("-54.63154");
         }
       }
     }
@@ -24294,20 +24294,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.41356");
+          values("73.29218");
         }
         fall_constraint(scalar) {
-          values("103.83949");
+          values("75.67155");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-77.84283");
+          values("-56.71961");
         }
         fall_constraint(scalar) {
-          values("-81.21634");
+          values("-53.04403");
         }
       }
     }
@@ -24318,20 +24318,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("91.18165");
+          values("70.22976");
         }
         fall_constraint(scalar) {
-          values("100.40962");
+          values("72.35081");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-74.53654");
+          values("-53.64494");
         }
         fall_constraint(scalar) {
-          values("-77.53101");
+          values("-49.53716");
         }
       }
     }
@@ -24342,20 +24342,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.04987");
+          values("75.59913");
         }
         fall_constraint(scalar) {
-          values("96.98814");
+          values("77.33481");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-73.35699");
+          values("-59.93381");
         }
         fall_constraint(scalar) {
-          values("-75.17383");
+          values("-55.51529");
         }
       }
     }
@@ -24366,20 +24366,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.78077");
+          values("75.78856");
         }
         fall_constraint(scalar) {
-          values("98.26050");
+          values("78.01270");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-74.33875");
+          values("-60.37779");
         }
         fall_constraint(scalar) {
-          values("-77.01698");
+          values("-56.76368");
         }
       }
     }
@@ -24390,20 +24390,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.35499");
+          values("76.03842");
         }
         fall_constraint(scalar) {
-          values("97.26294");
+          values("77.74369");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-73.36253");
+          values("-60.10421");
         }
         fall_constraint(scalar) {
-          values("-75.26720");
+          values("-55.77020");
         }
       }
     }
@@ -24414,20 +24414,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("93.31027");
+          values("78.79319");
         }
         fall_constraint(scalar) {
-          values("101.66411");
+          values("80.83595");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-77.39057");
+          values("-62.91896");
         }
         fall_constraint(scalar) {
-          values("-79.76656");
+          values("-58.94178");
         }
       }
     }
@@ -24438,20 +24438,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("85.95255");
+          values("73.36451");
         }
         fall_constraint(scalar) {
-          values("93.57061");
+          values("74.83794");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-70.11510");
+          values("-57.53188");
         }
         fall_constraint(scalar) {
-          values("-71.78426");
+          values("-53.01441");
         }
       }
     }
@@ -24462,20 +24462,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("97.19186");
+          values("81.49020");
         }
         fall_constraint(scalar) {
-          values("106.14978");
+          values("84.01108");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-81.31732");
+          values("-65.66042");
         }
         fall_constraint(scalar) {
-          values("-84.35278");
+          values("-62.21208");
         }
       }
     }
@@ -24486,20 +24486,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("96.66211");
+          values("81.14048");
         }
         fall_constraint(scalar) {
-          values("105.54063");
+          values("83.60034");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.80999");
+          values("-65.32885");
         }
         fall_constraint(scalar) {
-          values("-83.75303");
+          values("-61.80667");
         }
       }
     }
@@ -24510,20 +24510,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("87.76125");
+          values("74.87621");
         }
         fall_constraint(scalar) {
-          values("95.38558");
+          values("76.32394");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.57178");
+          values("-58.72990");
         }
         fall_constraint(scalar) {
-          values("-73.10577");
+          values("-54.04842");
         }
       }
     }
@@ -24534,20 +24534,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("87.17590");
+          values("74.30943");
         }
         fall_constraint(scalar) {
-          values("94.97144");
+          values("75.96158");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.57448");
+          values("-58.69537");
         }
         fall_constraint(scalar) {
-          values("-73.34082");
+          values("-54.28950");
         }
       }
     }
@@ -24558,20 +24558,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("85.41867");
+          values("72.88227");
         }
         fall_constraint(scalar) {
-          values("93.01017");
+          values("74.35237");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-69.76495");
+          values("-57.22454");
         }
         fall_constraint(scalar) {
-          values("-71.34042");
+          values("-52.64277");
         }
       }
     }
@@ -24582,20 +24582,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.69343");
+          values("76.27122");
         }
         fall_constraint(scalar) {
-          values("97.74967");
+          values("78.12846");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-73.85445");
+          values("-60.46495");
         }
         fall_constraint(scalar) {
-          values("-76.00729");
+          values("-56.38984");
         }
       }
     }
@@ -24606,20 +24606,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("80.84653");
+          values("69.29311");
         }
         fall_constraint(scalar) {
-          values("87.68090");
+          values("70.07481");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-64.97044");
+          values("-53.41461");
         }
         fall_constraint(scalar) {
-          values("-65.75005");
+          values("-48.10263");
         }
       }
     }
@@ -24630,20 +24630,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.80415");
+          values("76.35768");
         }
         fall_constraint(scalar) {
-          values("97.84538");
+          values("78.19797");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-73.97833");
+          values("-60.55692");
         }
         fall_constraint(scalar) {
-          values("-76.10381");
+          values("-56.45105");
         }
       }
     }
@@ -24654,20 +24654,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("90.44447");
+          values("76.83304");
         }
         fall_constraint(scalar) {
-          values("98.48046");
+          values("78.63068");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-74.31409");
+          values("-60.79904");
         }
         fall_constraint(scalar) {
-          values("-76.29337");
+          values("-56.50877");
         }
       }
     }
@@ -24678,20 +24678,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.99537");
+          values("76.25563");
         }
         fall_constraint(scalar) {
-          values("98.06727");
+          values("78.08984");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-74.14758");
+          values("-60.44888");
         }
         fall_constraint(scalar) {
-          values("-76.33967");
+          values("-56.36349");
         }
       }
     }
@@ -24702,20 +24702,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("81.44501");
+          values("69.69325");
         }
         fall_constraint(scalar) {
-          values("88.62511");
+          values("70.74703");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-65.51297");
+          values("-53.77272");
         }
         fall_constraint(scalar) {
-          values("-66.68576");
+          values("-48.78203");
         }
       }
     }
@@ -24726,20 +24726,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("87.51153");
+          values("74.47720");
         }
         fall_constraint(scalar) {
-          values("95.30634");
+          values("76.10877");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.83975");
+          values("-58.83821");
         }
         fall_constraint(scalar) {
-          values("-73.56641");
+          values("-54.36804");
         }
       }
     }
@@ -24750,20 +24750,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("79.55992");
+          values("68.08357");
         }
         fall_constraint(scalar) {
-          values("86.48214");
+          values("68.93977");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-63.60860");
+          values("-52.16582");
         }
         fall_constraint(scalar) {
-          values("-64.54236");
+          values("-46.99972");
         }
       }
     }
@@ -24774,20 +24774,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.63406");
+          values("80.22885");
         }
         fall_constraint(scalar) {
-          values("104.38077");
+          values("82.58994");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.03028");
+          values("-64.63680");
         }
         fall_constraint(scalar) {
-          values("-82.77727");
+          values("-60.97269");
         }
       }
     }
@@ -24798,20 +24798,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("87.29122");
+          values("74.31554");
         }
         fall_constraint(scalar) {
-          values("95.00263");
+          values("75.86392");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.45561");
+          values("-58.53079");
         }
         fall_constraint(scalar) {
-          values("-73.06637");
+          values("-53.94284");
         }
       }
     }
@@ -24822,20 +24822,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("87.90585");
+          values("74.97337");
         }
         fall_constraint(scalar) {
-          values("95.55651");
+          values("76.47298");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-72.07282");
+          values("-59.14297");
         }
         fall_constraint(scalar) {
-          values("-73.66927");
+          values("-54.56080");
         }
       }
     }
@@ -24846,20 +24846,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("86.82018");
+          values("73.99442");
         }
         fall_constraint(scalar) {
-          values("94.35236");
+          values("75.38303");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.00012");
+          values("-58.17632");
         }
         fall_constraint(scalar) {
-          values("-72.53128");
+          values("-53.52103");
         }
       }
     }
@@ -24870,20 +24870,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("87.79819");
+          values("74.84677");
         }
         fall_constraint(scalar) {
-          values("95.55804");
+          values("76.45361");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.96828");
+          values("-59.02930");
         }
         fall_constraint(scalar) {
-          values("-73.83671");
+          values("-54.71653");
         }
       }
     }
@@ -24894,20 +24894,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("87.11569");
+          values("74.29263");
         }
         fall_constraint(scalar) {
-          values("94.70490");
+          values("75.72842");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-71.22883");
+          values("-58.40837");
         }
         fall_constraint(scalar) {
-          values("-72.81609");
+          values("-53.79862");
         }
       }
     }
@@ -24918,20 +24918,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("86.29991");
+          values("72.90205");
         }
         fall_constraint(scalar) {
-          values("94.39556");
+          values("74.64742");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-70.51266");
+          values("-57.18785");
         }
         fall_constraint(scalar) {
-          values("-72.50181");
+          values("-52.79017");
         }
       }
     }
@@ -24942,20 +24942,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.10687");
+          values("75.27067");
         }
         fall_constraint(scalar) {
-          values("97.37512");
+          values("77.24389");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-73.47604");
+          values("-59.68895");
         }
         fall_constraint(scalar) {
-          values("-75.78777");
+          values("-55.66543");
         }
       }
     }
@@ -24966,20 +24966,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.75272");
+          values("84.99112");
         }
         fall_constraint(scalar) {
-          values("108.09109");
+          values("86.93681");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.11462");
+          values("-68.41910");
         }
         fall_constraint(scalar) {
-          values("-85.37107");
+          values("-64.23571");
         }
       }
     }
@@ -24990,20 +24990,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("102.58280");
+          values("86.80138");
         }
         fall_constraint(scalar) {
-          values("111.33727");
+          values("89.02362");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.00605");
+          values("-70.27579");
         }
         fall_constraint(scalar) {
-          values("-88.70824");
+          values("-66.39322");
         }
       }
     }
@@ -25014,20 +25014,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("99.37650");
+          values("82.70800");
         }
         fall_constraint(scalar) {
-          values("108.45313");
+          values("85.25201");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-83.30343");
+          values("-66.72545");
         }
         fall_constraint(scalar) {
-          values("-86.35492");
+          values("-63.18473");
         }
       }
     }
@@ -25038,20 +25038,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.48122");
+          values("79.52457");
         }
         fall_constraint(scalar) {
-          values("103.14201");
+          values("81.78755");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-78.50139");
+          values("-63.60598");
         }
         fall_constraint(scalar) {
-          values("-81.17503");
+          values("-59.83879");
         }
       }
     }
@@ -25062,20 +25062,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("97.14621");
+          values("83.15659");
         }
         fall_constraint(scalar) {
-          values("105.18943");
+          values("84.92702");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.67075");
+          values("-66.72132");
         }
         fall_constraint(scalar) {
-          values("-83.04191");
+          values("-62.77866");
         }
       }
     }
@@ -25086,20 +25086,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("96.48317");
+          values("82.91167");
         }
         fall_constraint(scalar) {
-          values("104.44468");
+          values("84.66338");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.00643");
+          values("-66.43947");
         }
         fall_constraint(scalar) {
-          values("-82.33392");
+          values("-62.53599");
         }
       }
     }
@@ -25110,20 +25110,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("89.01720");
+          values("76.88169");
         }
         fall_constraint(scalar) {
-          values("96.38029");
+          values("78.14914");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-72.53310");
+          values("-60.43583");
         }
         fall_constraint(scalar) {
-          values("-74.13279");
+          values("-55.90749");
         }
       }
     }
@@ -25134,20 +25134,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("103.07014");
+          values("87.27640");
         }
         fall_constraint(scalar) {
-          values("111.70145");
+          values("89.47388");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-86.60243");
+          values("-70.85499");
         }
         fall_constraint(scalar) {
-          values("-89.50796");
+          values("-67.28777");
         }
       }
     }
@@ -25158,20 +25158,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("94.05991");
+          values("80.94392");
         }
         fall_constraint(scalar) {
-          values("101.82750");
+          values("82.52814");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-77.48769");
+          values("-64.45388");
         }
         fall_constraint(scalar) {
-          values("-79.59592");
+          values("-60.34696");
         }
       }
     }
@@ -25182,20 +25182,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("92.71465");
+          values("79.86707");
         }
         fall_constraint(scalar) {
-          values("100.33560");
+          values("81.30472");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-76.09441");
+          values("-63.29604");
         }
         fall_constraint(scalar) {
-          values("-78.01885");
+          values("-58.99944");
         }
       }
     }
@@ -25206,20 +25206,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("97.12737");
+          values("83.14730");
         }
         fall_constraint(scalar) {
-          values("105.07446");
+          values("84.84216");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-80.67841");
+          values("-66.72910");
         }
         fall_constraint(scalar) {
-          values("-82.90237");
+          values("-62.67265");
         }
       }
     }
@@ -25230,20 +25230,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("95.09962");
+          values("81.34411");
         }
         fall_constraint(scalar) {
-          values("103.03270");
+          values("83.00645");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-78.76123");
+          values("-65.05138");
         }
         fall_constraint(scalar) {
-          values("-81.06166");
+          values("-61.04127");
         }
       }
     }
@@ -25254,20 +25254,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("104.02649");
+          values("87.77136");
         }
         fall_constraint(scalar) {
-          values("112.76746");
+          values("90.05697");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-87.54976");
+          values("-71.38264");
         }
         fall_constraint(scalar) {
-          values("-90.60803");
+          values("-67.93201");
         }
       }
     }
@@ -25278,20 +25278,20 @@ library (ot_pqc_t_ctl16_ff) {
         related_pin : "clk";
         timing_type : hold_rising;
         rise_constraint(scalar) {
-          values("107.84653");
+          values("87.16046");
         }
         fall_constraint(scalar) {
-          values("117.45342");
+          values("89.80659");
         }
       }
       timing() {
         related_pin : "clk";
         timing_type : setup_rising;
         rise_constraint(scalar) {
-          values("-90.71655");
+          values("-70.01221");
         }
         fall_constraint(scalar) {
-          values("-94.16748");
+          values("-66.55347");
         }
       }
     }

@@ -7,12 +7,12 @@ foreach i [$ot_blk getInsts] {
 }
 set sl [lsort -dictionary $sl]; set fm [lsort -dictionary $fm]
 if {[llength $sl] != 4 || [llength $fm] != 4} { puts "OT_ICH ERROR: slices [llength $sl] fifo macros [llength $fm] (want 4 / 4)"; exit 1 }
-# 2 x 2 slices around the central glue channel; site 0.054 / row 0.27 on-grid (left column at the pr2h MY x)
-foreach n $sl xy {{25.056 24.03} {25.056 228.15} {325.056 24.03} {325.056 228.15}} o {MY MY R0 R0} {
+# 2 x 2 slices around the central glue channel; snapped to the all-layer track grid (macro_grid_lint: every hard-child pin on a parent track) (left column at the pr2h MY x)
+foreach n $sl xy {{25.080 24.000} {25.080 228.096} {325.056 24.000} {325.056 228.096}} o {MY MY R0 R0} {
   place_macro -macro_name $n -location $xy -orientation $o
   puts "OT_ICC slice $n at $xy $o"
 }
-foreach n $fm xy {{75.006 432.27} {276.804 432.27} {75.006 537.3} {276.804 537.3}} {
+foreach n $fm xy {{75.006 432.288} {276.804 432.288} {75.006 537.312} {276.804 537.312}} {
   place_macro -macro_name $n -location $xy -orientation R0
   puts "OT_ICC fifo $n at $xy"
 }

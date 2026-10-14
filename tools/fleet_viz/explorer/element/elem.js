@@ -684,8 +684,8 @@ function tputHtml(E){
   const b = E.d.block, el = (T.elements || {})[b], cls = (T.classes || {})[b] || [], qr = T.qualify_ratio;
   const src = `<p class="note" style="margin-top:6px">${esc(T.path)} @ origin/main ${esc(T.commit || '')}${T.generated_utc ? ' · generated ' + esc(T.generated_utc) : ''}. Rule: ${esc(T.rule || '')}</p>`;
   if (!el) return `<div class="vbox"><span class="lbl unv">not in the budget</span> ${esc(T.path)} has no <code>elements["${esc(b)}"]</code> entry: this block is not on a priced token path yet, so it has no budget and no production-shape throughput bench.${src}</div>`;
-  const lab = st => st === 'QUALIFIED' ? 'ver' : st === 'UNQUALIFIED_NO_BENCH' ? 'unv' : 'bad';
-  const txt = st => st === 'UNQUALIFIED_NO_BENCH' ? 'UNQUALIFIED · no production-shape bench' : st;
+  const lab = st => st === 'QUALIFIED' ? 'ver' : (st === 'UNQUALIFIED_NO_BENCH' || st === 'UNMEASURED') ? 'unv' : 'bad';
+  const txt = st => st === 'UNQUALIFIED_NO_BENCH' ? 'UNQUALIFIED · no production-shape bench' : st === 'UNMEASURED' ? 'UNMEASURED · priced, no measured production ratio' : st;
   const L = el.limiting || {};
   const ops = (el.ops || []).map(o => `<div class="fact"><div class="fr"><span><code>${esc(o.op)}</code> · ${esc(o.model)}</span><b><span class="lbl ${lab(o.status)}">${esc(txt(o.status))}</span> ${o.ratio == null ? '' : 'ratio ' + fmt(o.ratio, 3)}</b></div>${o.owner && o.owner !== '-' ? `<div class="note" style="margin:2px 0 0">owner ${esc(o.owner)}</div>` : ''}<div class="src">${esc(o.src || 'no source recorded')}</div></div>`).join('');
   const cl = cls.map(c => `<tr><td class="m">${esc(c.model)} · ${esc(c.cls)}</td><td><span class="lbl ${lab(c.status)}">${esc(txt(c.status))}</span></td><td class="n">${fmt(c.critical_cycles_per_token, 1)}</td><td class="n">${fmt(100 * c.share, 1)} %</td><td class="n">${fmt(100 * c.measured_fraction, 2)} % of ${fmt(c.nodes, 0)}</td></tr>

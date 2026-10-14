@@ -36,6 +36,14 @@ module ot_hgi_smmv #(
     parameter integer MUT_SLOT = 0,
     parameter integer MUT_EARLY = 0,
     parameter integer MUT_XRS = 0,        // bx mutant: an X REUSE hit takes the PREVIOUS load's slot (stale x)
+    // el1013 redesign DE = 1 EARLY DESCRIPTORS: the descriptor pass (stations + per-SM descriptor / chunk handshakes) runs
+    // on its own in-order pointer dp as soon as a record is decoded, NOT behind its x load; the start pass (ip) follows
+    // when the x is in the store and sends only the start.  The SM fetches the record's weight lines (first HBM access
+    // ~110 cycles) under the x load and under the previous records' streams; the kernel consumes them in descriptor
+    // order when the op launches.  DE = 0: descriptor and start together after x (the 10-12 engine, unchanged).
+    // MUT_DE (bench): the start pass does not wait for the x (e_xd): the op launches on a stale / half-written x.
+    parameter integer DE = 0,
+    parameter integer MUT_DE = 0,
     // smmv-cr (2026-10-12) ROW CREDITS (track A ot_hgi_sm_record CR, with its DEADLOCK RULE; CR = 0 default: one
     // descriptor of the whole slice, as before).  CR = 1: SM s is described in chunks of CHE rows, a chunk leaves while
     // cr[s] >= n (cr = AD - rows described and not yet consumed by the pub, +1 per sm_cr[s] pulse).  The SM issues
@@ -153,13 +161,15 @@ module ot_hgi_smmv #(
     reg [23:0] e_lq [0:WA-1]; reg [30:0] e_ml [0:WA-1]; reg [31:0] e_l0 [0:WA-1];
     reg [6:0] e_xb [0:WA-1]; reg [7:0] e_rel [0:WA-1]; reg [WA-1:0] e_xd, e_xr;
     reg [NSM-1:0] e_act [0:WA-1]; reg [NSM*4-1:0] e_tgt [0:WA-1];
+    reg [SQ-1:0] dp;                                 // DE: descriptor-pass pointer (tail >= dp >= ip)
+    reg [NSM*13-1:0] e_rows [0:WA-1]; reg [WA-1:0] e_sd;   // DE: per-SM rows of the entry (start pass), stations done
     wire [SQ-1:0] nin = tail - rh;
     reg rdy_r;
     assign rec_rdy = rdy_r;
     function automatic [WI-1:0] ix(input [SQ-1:0] q); ix = q[WI-1:0]; endfunction
 
     // ================= x allocator / x stage =================
-    reg [7:0] used; reg [6:0] ap; reg [6:0] xbc, xbp; reg [1:0] xn; reg [SQ-1:0] xfq [0:1]; reg xfh, xft;
+    reg [7:0] used; reg [6:0] ap; reg [6:0] xbc, xbp; reg [1:0] xn; reg [SQ-1:0] xfq [0:3]; reg [1:0] xfh, xft;   // XQ <= 3 (xp 10-13: a third load in flight)
     // r2 (route r1-6e530654e: xp -> used -89 ps = e_g[xp] mux -> ap + nf compare -> wrap -> used + ws + nf compare ->
     // used update in one edge): the allocation is precomputed over two registered edges.  al_age restarts at every
     // event that changes xp / ap / used-upward / the window tail (x alloc, x hit, D3 commit); an allocation fires only at
@@ -185,6 +195,7 @@ module ot_hgi_smmv #(
     reg [NSM*CW-1:0] cmd_h;
     reg [NSM-1:0] st_pend, d_pend, rel, arr_prev; reg [NSM*4-1:0] iss_cnt, done_cnt;
     reg go, fld_v, fp_v, fq_v, fa_v;
+    reg dgo, sq_v; reg [NSM*13-1:0] srows_s; reg [NSM-1:0] sact_s; reg [1:0] fmt_d; reg [7:0] g_d;   // DE
     // station strap index sg_s = sm_base + s: static, so one kept register per station (no adder in the product path)
     // and the products are split over two edges (gate 10-12: smb_q -> slq_p was ONE 5 x 24 multiply, 28 levels ~1015 ps)
     (* keep *) reg [4:0] sgq [0:NSM-1];
@@ -234,11 +245,12 @@ module ot_hgi_smmv #(
     end
     always @(posedge clk)
         for (s = 0; s < NSM; s = s + 1)
-            cmd_h[s*CW +: CW] <= {rel[s], dl_s[s*24 +: 24], dbase_s[s*32 +: 32], d_n[s] & go & rst_i, xb_i,
-                                  fmt_i, 1'b1, g_i, 16'd8, rows_s[s*13 +: 13], st_n[s] & go & rst_i};
+            cmd_h[s*CW +: CW] <= {rel[s], dl_s[s*24 +: 24], dbase_s[s*32 +: 32], d_n[s] & ((DE != 0) ? dgo : go) & rst_i, xb_i,
+                                  fmt_i, 1'b1, g_i, 16'd8, (DE != 0) ? srows_s[s*13 +: 13] : rows_s[s*13 +: 13], st_n[s] & go & rst_i};
     assign sm_cmd = cmd_h;
     assign dbg_iss_seq = 3'(ip);
     reg pend0_r; always @(posedge clk) pend0_r <= (st_n == 0) && (d_n == 0);
+    reg pends_r, pendd_r; always @(posedge clk) begin pends_r <= (st_n == 0); pendd_r <= (d_n == 0); end   // DE: one a pass
     // retire condition of the head (registered reductions)
     reg hd_ok;
     always @(posedge clk) begin : hd
@@ -281,8 +293,8 @@ module ot_hgi_smmv #(
             d0_v <= 1'b0; d1_v <= 1'b0; d2_v <= 1'b0; dw_v <= 1'b0; dcnt <= 4'd0; al_age <= 2'd0; rdy_r <= 1'b0; halt_q <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
             // control only (pointers, valids, counters); datapath / field registers carry no reset (gate: rst fanout)
             tail <= 0; xp <= 0; ip <= 0; rh <= 0; ppc <= 0; pdc <= 0; e_xd <= 0; used <= 0; ap <= 0;
-            xn <= 2'd0; xfh <= 1'b0; xft <= 1'b0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0; fa_v <= 1'b0;
-            xo <= 0; xo_v <= 1'b0; st_pend <= 0; d_pend <= 0;
+            xn <= 2'd0; xfh <= 2'd0; xft <= 2'd0; x_v <= 1'b0; pub_v <= 1'b0; go <= 1'b0; fld_v <= 1'b0; fp_v <= 1'b0; fq_v <= 1'b0; fa_v <= 1'b0;
+            xo <= 0; xo_v <= 1'b0; st_pend <= 0; d_pend <= 0; dp <= 0; dgo <= 1'b0; sq_v <= 1'b0; e_sd <= 0;
             rel <= 0; arr_prev <= 0; iss_cnt <= 0; done_cnt <= 0; sm_cg_en <= 1'b0; rh_wait <= 1'b0;
             rr_nz <= 0; for (s = 0; s < NSM; s = s + 1) cr_s[s*CRW +: CRW] <= CRW'(AD);
         end else begin : main
@@ -321,7 +333,7 @@ module ot_hgi_smmv #(
                     e_a[ix(tail)] <= a2; e_o[ix(tail)] <= o2; e_na[ix(tail)] <= na2; e_f[ix(tail)] <= f2;
                     e_p[ix(tail)] <= p2; e_g[ix(tail)] <= g2; e_q[ix(tail)] <= q2; e_m[ix(tail)] <= m2;
                     e_lq[ix(tail)] <= lq2; e_ml[ix(tail)] <= ml2; e_l0[ix(tail)] <= qd2[31:0];
-                    e_xd[ix(tail)] <= 1'b0; e_xr[ix(tail)] <= xr2;
+                    e_xd[ix(tail)] <= 1'b0; e_xr[ix(tail)] <= xr2; e_sd[ix(tail)] <= 1'b0;
                     tail <= tail + 1'b1;
                 end
             end
@@ -346,14 +358,15 @@ module ot_hgi_smmv #(
                 else begin e_rel[ix(xp)] <= xo_nf; used_n = used_n + xo_nf; end
             end else if (x_ld_go) begin
                 xo <= xp; xo_v <= 1'b1; xo_nf <= nf; xk <= xkey(e_a[ix(xp)], e_na[ix(xp)], e_f[ix(xp)], e_p[ix(xp)]);
-                xp <= xp + 1'b1; xfq[xft] <= xp; xft <= !xft; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
+                xp <= xp + 1'b1; xfq[xft] <= xp; xft <= xft + 2'd1; x_v <= 1'b1; x_base <= e_a[ix(xp)][47:8]; x_n <= e_na[ix(xp)]; x_p <= e_p[ix(xp)];
                 x_stride <= e_a[ix(xp)][119:88]; x_space <= e_a[ix(xp)][1:0]; x_fmt <= e_f[ix(xp)]; x_xb <= a_st;
                 e_xb[ix(xp)] <= a_st; e_rel[ix(xp)] <= (MUT_SLOT != 0) ? 8'd0 : a_ws + nf; xbc <= a_st; xbp <= xbc;
                 if (MUT_SLOT == 0) begin used_n = used_n + a_ws + nf; ap <= a_st + nf[6:0]; end
             end
-            if (xn != 2'd0 && in_xd) begin e_xd[ix(xfq[xfh])] <= 1'b1; xfh <= !xfh; end
+            if (xn != 2'd0 && in_xd) begin e_xd[ix(xfq[xfh])] <= 1'b1; xfh <= xfh + 2'd1; end
             xn <= xn + (x_ld_go ? 2'd1 : 2'd0) - ((xn != 2'd0 && in_xd) ? 2'd1 : 2'd0);
             // ---- issue stage: fields (stations) one edge, then the start / descriptor handshakes of every active SM
+          if (DE == 0) begin : g_iss0
             if (!go && !fld_v && !fp_v && !fq_v && !fa_v && ip != xp && e_xd[ix(ip)] && ppc != ip && !halt_q) begin
                 fq_v <= 1'b1; scnt <= 4'd0;                      // edge 1: select the issue entry's fields
                 fmt_i <= e_f[ix(ip)]; g_i <= e_g[ix(ip)]; xb_i <= e_xb[ix(ip)];
@@ -384,6 +397,50 @@ module ot_hgi_smmv #(
                 end
                 if (pend0_r && st_pend == 0 && d_pend == 0 && rr_nz == 0) begin go <= 1'b0; ip <= ip + 1'b1; end
             end
+          end else begin : g_iss1
+            // ---- DE descriptor pass (pointer dp): stations, then the descriptor / chunk handshakes; not behind the x
+            if (!dgo && !fld_v && !fq_v && dp != tail && !(d2_v) && !halt_q) begin
+                fq_v <= 1'b1; scnt <= 4'd0;
+                fmt_d <= e_f[ix(dp)]; g_d <= e_g[ix(dp)];
+                f_m <= e_m[ix(dp)]; f_q <= e_q[ix(dp)]; f_lq <= e_lq[ix(dp)]; f_ml <= e_ml[ix(dp)]; f_l0 <= e_l0[ix(dp)];
+            end
+            if (fq_v) begin
+                if (scnt == 4'(SLAT)) begin
+                    fq_v <= 1'b0; fld_v <= 1'b1;
+                    for (s = 0; s < NSM; s = s + 1) begin
+                        act_s[s] <= st_act[s];
+                        rows_s[s*13 +: 13] <= st_rows[s*13 +: 13]; dl_s[s*24 +: 24] <= st_dl[s*24 +: 24];
+                        dbase_s[s*32 +: 32] <= st_db[s*32 +: 32];
+                    end
+                end else scnt <= scnt + 4'd1;
+            end
+            if (fld_v) begin
+                fld_v <= 1'b0; dgo <= 1'b1; d_pend <= (CR != 0) ? {NSM{1'b0}} : act_s;
+                e_act[ix(dp)] <= act_s; e_rows[ix(dp)] <= rows_s; e_sd[ix(dp)] <= 1'b1;
+                rr_s <= rows_s; lr_s <= dl_s; nb_s <= dbase_s; rr_nz <= (CR != 0) ? act_s : {NSM{1'b0}};
+                chl <= ((fmt_d == 2'd3) ? {14'd0, g_d, 2'b00} : {13'd0, g_d, 3'b000}) << LCH;
+            end
+            if (dgo) begin
+                for (s = 0; s < NSM; s = s + 1)
+                    if (d_pend[s] && cmd_h[s*CW + 48] && sm_ret[s*4 + 1]) d_pend[s] <= 1'b0;
+                if (pendd_r && d_pend == 0 && rr_nz == 0) begin dgo <= 1'b0; dp <= dp + 1'b1; end
+            end
+            // ---- DE start pass (pointer ip): the entry's stored per-SM rows, when its x is in the store
+            if (!go && !sq_v && ip != tail && e_sd[ix(ip)] && ip != xp && (MUT_DE != 0 || e_xd[ix(ip)]) && ppc != ip && !halt_q) begin
+                sq_v <= 1'b1; srows_s <= e_rows[ix(ip)]; sact_s <= e_act[ix(ip)];
+                fmt_i <= e_f[ix(ip)]; g_i <= e_g[ix(ip)]; xb_i <= e_xb[ix(ip)];
+            end
+            if (sq_v) begin
+                sq_v <= 1'b0; go <= 1'b1; st_pend <= sact_s;
+                for (s = 0; s < NSM; s = s + 1) e_tgt[ix(ip)][s*4 +: 4] <= iss_cnt[s*4 +: 4] + {3'd0, sact_s[s]};
+                for (s = 0; s < NSM; s = s + 1) iss_cnt[s*4 +: 4] <= iss_cnt[s*4 +: 4] + {3'd0, sact_s[s]};
+            end
+            if (go) begin
+                for (s = 0; s < NSM; s = s + 1)
+                    if (st_pend[s] && cmd_h[s*CW] && sm_ret[s*4 + 0]) st_pend[s] <= 1'b0;
+                if (pends_r && st_pend == 0) begin go <= 1'b0; ip <= ip + 1'b1; end
+            end
+          end
             // smmv-cr chunk issue, per SM (CR = 1): the chunk's fields land in the command registers while d_pend is
             // low, then d_pend shows it; credits -n at the issue, +1 per landed sm_cr pulse (always counted)
             if (CR != 0) begin : g_chunk
@@ -392,7 +449,7 @@ module ot_hgi_smmv #(
                     n  = (rr_s[s*13 +: 13] <= CHE) ? rr_s[s*13 +: 13] : 13'(CHE);
                     ln = (rr_s[s*13 +: 13] <= CHE) ? lr_s[s*24 +: 24] : chl;
                     c  = cr_s[s*CRW +: CRW];
-                    gk = go && !d_pend[s] && rr_nz[s] && ({{(32-CRW){1'b0}}, c} >= {19'd0, n});
+                    gk = ((DE != 0) ? dgo : go) && !d_pend[s] && rr_nz[s] && ({{(32-CRW){1'b0}}, c} >= {19'd0, n});
                     if (gk) begin
                         dbase_s[s*32 +: 32] <= nb_s[s*32 +: 32]; dl_s[s*24 +: 24] <= ln; d_pend[s] <= 1'b1;
                         nb_s[s*32 +: 32] <= nb_s[s*32 +: 32] + {8'd0, ln}; lr_s[s*24 +: 24] <= lr_s[s*24 +: 24] - ln;
@@ -468,7 +525,11 @@ module ot_hgi_smmv_pub #(
     reg [SQ-1:0] ct, chd;                                     // command tail / done head (SQ-b seq)
     reg [17:0] c_ob [0:WA-1]; reg [17:0] c_ost [0:WA-1]; reg [19:0] c_mm [0:WA-1]; reg [12:0] c_qq [0:WA-1];
     reg [3:0] c_pp [0:WA-1]; reg [WA-1:0] c_sm, c_bf;
-    assign pub_rdy = rst_n && ((ct - chd) < W);
+    // el1013: the occupancy is taken at SQ bits.  It was ((ct - chd) < W) with W a 32-b parameter: the subtraction ran at
+    // 32 bits, so after ct wrapped (the 17th command) it read as 2^32 - n and pub_rdy stayed low until chd wrapped too,
+    // i.e. until the queue was EMPTY -- the 17th record of every 16 waited for 7 retires (+176 cycles, L0 record 17).
+    wire [SQ-1:0] c_occ = ct - chd;
+    assign pub_rdy = rst_n && (c_occ < SQ'(W));
     function automatic [31:0] rb(input [31:0] x, input en);
         reg [31:0] r;
         begin

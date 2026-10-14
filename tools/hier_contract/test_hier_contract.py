@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests: child_lint (a-g), macro_grid_lint (mock-OpenDB placement), hier_submit (view discovery + mode)."""
+"""Unit tests: child_lint (a-h), abstract_pin_stub pocket closing, macro_grid_lint (mock-OpenDB placement), hier_submit (view discovery + mode)."""
 import json
 import sys
 import tempfile
@@ -147,6 +147,126 @@ class ChildLint(unittest.TestCase):
         c2 = {"die": "d", "version": 3, "slots": [dict(slot, view_cap=None)]}
         r = self.run_lint(lef(pg="M7"), contract=c2, slot="u_t")         # no recorded view cap: M7 view fails the M5 slot
         self.assertTrue({"c", "e"} <= self.checks(r), r["fails"])
+
+
+class Pockets(unittest.TestCase):
+    """abstract_pin_stub pocket closing + child_lint (h)"""
+    # two M5 blocks 0.5 um apart (pocket), M5 pin 'p' on the west face inside a 0.3-um slot, PG on M7 (not an obstacle)
+    OBS = [("M5", 6, 2, 8, 6), ("M5", 8.5, 2, 12, 6), ("M5", 0.3, 4.0, 3, 4.4), ("M5", 0.3, 4.7, 3, 5.2)]
+
+    def text(self, obs=None, sig=(("a", "M4", 5.0, 0.0), ("p", "M5", 0.0, 4.5))):
+        return lef(obs=self.OBS if obs is None else obs, sig=sig)
+
+    def close(self, text):
+        import abstract_pin_stub as APS
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "t.lef"
+            p.write_text(text)
+            self.assertEqual(APS.main([str(p), str(p)]), 0)
+            return p.read_text()
+
+    def lint_text(self, text, **kw):
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "tile.lef"
+            p.write_text(text)
+            return child_lint.lint(str(p), **kw)
+
+    def m5(self, text):
+        import abstract_pin_stub as APS
+        return APS.obs_rects(APS.split_lef(text)[1])["M5"]
+
+    def test_pocket_closed_boundary_and_pin_kept(self):
+        import abstract_pin_stub as APS
+        before = APS.find_pockets(self.text())
+        self.assertEqual(before["layer"], "M5")
+        self.assertIn((8.0, 2.0, 8.5, 6.0), before["rects"])
+        out = self.close(self.text())
+        self.assertIn("# OT_OBS_CLOSED layer=M5 d_um=1.536 added=", out)
+        self.assertIn((8.0, 2.0, 8.5, 6.0), self.m5(out))
+        self.assertEqual(APS.find_pockets(out)["rects"], [])
+        added = [r for r in self.m5(out) if r not in [o[1:] for o in self.OBS]]
+        # boundary gaps stay open: nothing left of the first obstacle column (x < 0.3) or right of the last (x > 12)
+        self.assertTrue(all(r[0] >= 0.3 and r[2] <= 12 for r in added), added)
+        # pin p (0..0.192, 4.5..4.524): no fill within one M5 pitch (0.048) of it, although its slot is 0.3 um wide
+        keep = (0 - 0.048, 4.5 - 0.048, 0.192 + 0.048, 4.524 + 0.048)
+        self.assertFalse([r for r in added if APS._ov(r, keep)])
+        # the 0.3-um slot between the two west bars IS closed away from the pin
+        self.assertTrue(any(r[1] >= 4.4 - 1e-9 and r[3] <= 4.7 + 1e-9 and r[2] > 2 for r in added), added)
+        self.assertEqual(self.close(out), out)  # idempotent
+
+    def test_wide_gap_and_single_obstacle_untouched(self):
+        import abstract_pin_stub as APS
+        self.assertEqual(APS.find_pockets(self.text(obs=[("M5", 2, 2, 4, 6), ("M5", 8, 2, 10, 6)]))["rects"], [])
+        self.assertEqual(APS.find_pockets(self.text(obs=[("M5", 2, 2, 4, 6)]))["rects"], [])
+
+    def test_pg_pin_rect_is_an_obstacle(self):
+        import abstract_pin_stub as APS
+        # PG stripes on M5 (y 1..1.3, 1.5..1.8, ...): an M5 OBS 0.4 um above the VSS stripe at 1.5..1.8 closes onto it
+        r = APS.find_pockets(lef(pg="M5", obs=[("M5", 6, 2.2, 8, 2.6)], sig=(("a", "M4", 5.0, 0.0),)))
+        self.assertIn((6.0, 1.8, 8.0, 2.2), r["rects"])
+
+    def test_disabled_writes_no_marker(self):
+        import os
+        os.environ["OT_OBS_CLOSE"] = "0"
+        try:
+            out = self.close(self.text())
+        finally:
+            del os.environ["OT_OBS_CLOSE"]
+        self.assertNotIn("OT_OBS_CLOSED", out)
+        self.assertEqual(sorted(self.m5(out)), sorted(o[1:] for o in self.OBS))
+
+    def test_lint_h_policy(self):
+        r = self.lint_text(self.text())
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertTrue(any(w.startswith("(h)") and "--strict-pockets" in w for w in r["warns"]), r["warns"])
+        r = self.lint_text(self.text(), strict_pockets=True)
+        self.assertEqual({f[1] for f in r["fails"]}, {"h"})
+        self.assertNotIn("h", {f[1] for f in self.lint_text(self.text(), strict_pockets=True, skip={"h"})["fails"]})
+        out = self.close(self.text())
+        r = self.lint_text(out, strict_pockets=True)
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
+        self.assertFalse([w for w in r["warns"] if w.startswith("(h)")])
+        self.assertEqual(r["info"]["pockets"]["count"], 0)
+        # a marked LEF that still has a pocket (edited after the export) FAILs without --strict-pockets
+        bad = out.replace("  OBS\n", "  OBS\n    LAYER M5 ;\n      RECT 14 2 15 6 ;\n      RECT 15.4 2 16 6 ;\n", 1)
+        self.assertEqual({f[1] for f in self.lint_text(bad)["fails"]}, {"h"})
+
+    def test_lint_h_fails_loudly_without_the_detector(self):
+        with tempfile.TemporaryDirectory() as td:
+            (Path(td) / "child_lint.py").write_text((HERE / "child_lint.py").read_text())
+            p = Path(td) / "tile.lef"
+            p.write_text(self.text())
+            import subprocess
+            for stale in (None, "import sys\nsrc, dst = sys.argv[1], sys.argv[2]\nopen(dst, 'w').write('clobbered')\n"):
+                if stale:
+                    (Path(td) / "abstract_pin_stub.py").write_text(stale)
+                cp = subprocess.run([sys.executable, str(Path(td) / "child_lint.py"), str(p), "--skip", "g"],
+                                    capture_output=True, text=True, cwd=td)
+                self.assertEqual(cp.returncode, 1, cp.stdout + cp.stderr)
+                self.assertIn("FAIL (h) pockets: detector unavailable", cp.stdout)
+                self.assertEqual(sorted(x.name for x in Path(td).iterdir() if x.suffix != ".pyc" and x.is_file()),
+                                 sorted(["child_lint.py", "tile.lef"] + (["abstract_pin_stub.py"] if stale else [])))
+
+    def test_real_hcp_lanes_pocket(self):
+        """hc_tile_xl-c4-550082537-hs: M6 pocket x 12.947..13.139, y 23.84..25.616 (the view as exported at 6a28f232b)"""
+        import abstract_pin_stub as APS
+        import subprocess
+        root = HERE.parents[1]
+        rel = "physical/ref_tile/hc_lanes_ref/views/ot_hdc_v41x_hcp_lanes/ot_hdc_v41x_hcp_lanes.lef"
+        cp = subprocess.run(["git", "-C", str(root), "show", f"f43c2d3cc:{rel}"], capture_output=True, text=True)
+        if cp.returncode != 0 or "MACRO" not in cp.stdout:
+            self.skipTest("pre-fix hcp_lanes view not reachable in this checkout")
+        P = (12.947, 23.84, 13.139, 25.616)
+        cov = lambda rs: any(a <= P[0] + 1e-9 and b <= P[1] + 1e-9 and c >= P[2] - 1e-9 and e >= P[3] - 1e-9 for a, b, c, e in rs)
+        before = APS.find_pockets(cp.stdout)
+        self.assertEqual((before["layer"], before["d_um"]), ("M6", 2.048))
+        self.assertTrue(cov(before["rects"]), "reported pocket not detected")
+        self.assertFalse(cov(APS.obs_rects(APS.split_lef(cp.stdout)[1])["M6"]))
+        out = self.close(cp.stdout)
+        self.assertTrue(cov(APS.obs_rects(APS.split_lef(out)[1])["M6"]), "reported pocket not covered")
+        self.assertEqual(APS.find_pockets(out)["rects"], [])
+        r = self.lint_text(out, strict_pockets=True, skip={"g"})
+        self.assertEqual(r["verdict"], "PASS", r["fails"])
 
 
 class FakeGit:

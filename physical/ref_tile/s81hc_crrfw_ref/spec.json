@@ -46,25 +46,17 @@
   "pin_min_tracks": 1
  },
  "job": {
-  "owner": "Claude:el1011-s81hc-crootr",
-  "branch": "claude/el1011-s81hc-crootr",
-  "tag": "v1",
-  "purpose": "[hc-crootr] crootr v2 4-tile split, C=0 (comb E): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootrw_ref (one 34.6k-sink root, hold WNS frozen -102 ps); pins every track (pin_min_tracks 1): the slab faces carry 8-11 pins/um (v1 crootr E face 9.75/um), 2-track slots run out (PPL-0111 at gate), 1-track slots put them at ~50%",
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
+  "owner": "Claude:s81hc-1013",
+  "branch": "claude/s81hc-1013",
+  "tag": "v2-pinplan",
+  "purpose": "[hc-crootr] crootr v2 4-tile split, C=0 (comb E): forward column (far face, full height): fd relays RF=5, y pin flop + mid-height y relay, chain output flop; 14.2k flops; replaces s81hc_crootrw_ref (one 34.6k-sink root, hold WNS frozen -102 ps); v2 pin plan (tools/s81_suhc/crr_pinplan.py, v1 FLOORPLAN_MARGIN 20 b/um on one layer): N/S buses over the full face on M5+M3 (5.2-5.4 b/um/layer), f_* on M4 at 180-368.4 (6.0); slot unchanged",
   "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_crrfw_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_crrfw_ref"
  },
  "inhold": true,
- "pin_ranges": {
-  "f_fv": [
-   180.0,
-   186.0
-  ],
-  "f_fd": [
-   187.0,
-   368.4
-  ]
- },
+ "io_tcl": "physical/s81_hc_pinplan/crrf_w.tcl",
  "children": [],
  "inter": []
 }

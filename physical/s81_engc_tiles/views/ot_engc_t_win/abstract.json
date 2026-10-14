@@ -1,6 +1,6 @@
 {
   "name": "ot_engc_t_win",
-  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/el1011-engc-win-a-109a69d35-tc-cl/routes/el1011_engc_win_a_109a69d35_tc_cl/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/el1011-engc-win-pke-a804fc09b-tc-cl/routes/el1011_engc_win_pke_a804fc09b_tc_cl/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -9,34 +9,14 @@
     "ff": {
       "returncode": 0,
       "done": true
-    },
-    "tt": {
-      "returncode": 0,
-      "done": true,
-      "ws": "OT_WS max 9.132328226968411e-11 min 4.6092379912821e-11",
-      "image": "openroad/orfs:asap7lock",
-      "command": [
-        "docker",
-        "run",
-        "--rm",
-        "-v",
-        "/srv/opentallas-data/claude/closure-loop/el1011-engc-win-a-109a69d35-tc-cl/routes/el1011_engc_win_a_109a69d35_tc_cl/work/orfs:/in:ro",
-        "-v",
-        "/srv/opentallas-data/claude/scratch-dsmisc-engc/vsrc/physical/s81_engc_tiles/views/ot_engc_t_win:/out",
-        "openroad/orfs:asap7lock",
-        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
-        "-no_init",
-        "-exit",
-        "/out/export_tt.tcl"
-      ]
     }
   },
   "macro_views": [],
   "files": {
-    "ot_engc_t_win.lef": "b75665b072d5811d2cc62640a6e6af8167fe0c3d8813bca14453e6be09eeac49",
-    "ot_engc_t_win_ff.lib": "81f533a0060405931c6ba5e59613a4c047f8041b0d20166ce6bc7e3fa78361b1",
-    "ot_engc_t_win_ss.lib": "a5c44cf8a84a95cdf7e2ac09aecfae0bb15bf6a635cb859d76d4873452a4b0e7",
-    "ot_engc_t_win_tt.lib": "349a71a855b506a480ca30cae37db501a2a9e6cda60fd9d781080f621d7cf922"
+    "ot_engc_t_win.lef": "36d9c10b83330c68bde8ff1dc1dc89cde3e86b55e8e3b2dc252f842fe7828dca",
+    "ot_engc_t_win_ff.lib": "e39bfd93f9131b9df5d456dd7276ac87432823c49a99ef33fd65a9d10bc79bd0",
+    "ot_engc_t_win_ss.lib": "bb31ea7cc9b131cb0f2bc843ca11949352ad9e7dd39bc980016ff330237129c3"
   },
-  "ok": true
+  "ok": true,
+  "pocket_normalization": "Own-M7 routing pockets closed; signal pins and liberty timing unchanged. Strict parent-on-own-top child lint required."
 }

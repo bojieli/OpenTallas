@@ -60,7 +60,10 @@
     "path": "/srv/opentallas-scratch/claude/s81-suhc/throughput-trace-3c",
     "admission_gb": 80,
     "reuse": "copied completed630MB Verilator objects and189MB immutable source snapshot; simulation-only cseq/ctpl event prints",
-    "status": "verified running MainPID2348856; existing golden_L0_L2 vectors"
+    "status": "COMPLETE: build154.9s allocated3698MB; corrected simulation40.3s allocated35MB, all20jobs20done0/1940errors/cycles6392PASS",
+    "initial_invalid_fixture_run": "Original script ran cwd=source although TB reads relative memory files. Invalid log preserved; process explicitly stopped and finished executable rerun cwd=existing golden fixture throughot-heavy2GB. No correctness/latency evidence inferred from invalid run.",
+    "completed_sim_unit": "codex-s81hc-post-trace-sim-3c",
+    "trace_record": "trace_summary.json"
   },
   "prices_changed": false,
   "actual_production_post_records": [

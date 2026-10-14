@@ -65,6 +65,7 @@
   "hold_margin_ns": 0.01
  },
  "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Claude:el1011-s81hc-ctile",
   "branch": "claude/el1011-s81hc-ctile",
   "tag": "v1",

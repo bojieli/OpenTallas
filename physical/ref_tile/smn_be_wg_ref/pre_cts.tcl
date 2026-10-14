@@ -3,3 +3,4 @@ source /src/physical/common_flow/clock_spine.tcl
 source /src/physical/ref_tile/smn_be_wg_ref/spine_ins.tcl
 source /src/physical/qwen_die_masters/pre_cts_skew.tcl
 source /src/results/arch/hbm_native_1013/sm/physical_specs/smn_be_keep_root_gate.tcl
+source /src/results/arch/hbm_native_1013/sm/physical_specs/smn_be_resize_legal.tcl

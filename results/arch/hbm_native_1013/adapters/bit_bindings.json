@@ -7,12 +7,16 @@
   "source_sha256": {
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_packet_mux.sv": "b727f3cb05ab0eda933f187c87536461ae1374ec338fe03fc0a248d01da34dfe",
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_packet_share.sv": "52e4dfd524bfab2946b41ebfa499d5a31f41250b52e652dedc268e428f90f42d",
-    "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_vm8_sm_sink.sv": "caebbaf8241dec9497cd334ec9c25b5dc7a0acf17815bb2e338be75d11ae38ee",
+    "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_vm8_sm_sink.sv": "11e95ba63a32684d267ad45d8b6710d40b2d8ed7f4c7f0f6d1760cb043885f31",
+    "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xload_command.sv": "7ecb76d38b186b562dae76bd36c6440565590da0b849df4c2681ed854c3e8b46",
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xread_aperture.sv": "ffcc456d563c3a4da210af8e22a81dd78414bde0555671c56e313803c19fd9e8",
     "rtl/hbm_accel/generic/adapters/native_b2/ot_hbm_b2_xwrite_aperture.sv": "bf2f883197c4520662955c49bd753d20430b1853a8a1646dc412a64e886f2c16",
-    "rtl/hbm_accel/generic/adapters/native_b2/run_boundary.sh": "e88ec2e3054ef5c4d17ca90379b21349b89aacabfdfc0c9c60d83e67215a85dc",
+    "rtl/hbm_accel/generic/adapters/native_b2/run_boundary.sh": "11755e6a47cc6ce3da4c0f38c5cde705d7682466f47b4324814c231d5bc487a8",
+    "rtl/hbm_accel/generic/adapters/native_b2/run_sinkpipe.sh": "126f2feaf79776e763f152ae170710652bb2e9d07caebb1757620c3bc9bbc5d4",
     "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_packet_mux.sv": "1186e8d9b40fa3b4b3b358d58968ee611d6b36f788dfb18a586aaf6f2b90d2f3",
-    "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_vm8_sm_sink.sv": "23f0392d02b7091cef9ecf02617573ae43fc01cc2c73388e37d280190c81f3cb",
+    "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_vm8_sm_sink.sv": "6c7aa56286463d8edb1541f4e5f133b95458c61e463e5049dd25e3e1aef51b8a",
+    "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_vm8_sm_sink_pipe.sv": "378b8aad9d9dca2291beaec8de24527c1a0e32e6619947043a316d0be85aeffe",
+    "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_xload_command.sv": "d70e5f9dcdce6c9f3e1e69be1a759d74babdc349ac08ac9a7fa68446c2e880fd",
     "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_xread_aperture.sv": "15ac936ec09aacfb45b2643ebbb353d53d26adaafd0b2284ec184c79b65bd3a3",
     "rtl/hbm_accel/generic/adapters/native_b2/tb_hbm_b2_xwrite_aperture.sv": "f85c6e2f6d5fd3d81744e369a8cdfaccebdd249e231eb059867e7e53dcd0ab7d"
   },
@@ -34,10 +38,11 @@
     "VM8 native producer with this explicit ABI and192bit owners",
     "VM8 CP root port replacement exposing typed owner/ACK instead of cfg shift",
     "actual quant/router NW-W consumers",
-    "selected xload command aperture validator and retained lease",
+    "actual dispatcher hookup to validated xload command/aperture lease",
     "all NC4 packet-client allocations across xload/publication/other users",
     "SM rv/rrow/rdata publication pre-reservation at full production rate",
-    "real station/fork placement, clocks, cuts, genuine views and production price"
+    "real station/fork placement, clocks, cuts, genuine views and production price",
+    "pulse-only xload emitter to serialized VM8 producer admission/held beat; no direct unstalled binding"
   ],
   "bindings": [
     {
@@ -113164,6 +113169,1587 @@
       "destination": "vm8.tap_ACK_v",
       "source": "accepted_tap&&SM_sampling_edge_complete&&owner_lease_still_matches",
       "latency_edges": 2
+    },
+    {
+      "destination": "xload.x_n[0]",
+      "source": "held_cmd.n[0]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[1]",
+      "source": "held_cmd.n[1]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[2]",
+      "source": "held_cmd.n[2]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[3]",
+      "source": "held_cmd.n[3]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[4]",
+      "source": "held_cmd.n[4]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[5]",
+      "source": "held_cmd.n[5]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[6]",
+      "source": "held_cmd.n[6]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[7]",
+      "source": "held_cmd.n[7]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[8]",
+      "source": "held_cmd.n[8]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[9]",
+      "source": "held_cmd.n[9]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[10]",
+      "source": "held_cmd.n[10]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[11]",
+      "source": "held_cmd.n[11]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[12]",
+      "source": "held_cmd.n[12]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[13]",
+      "source": "held_cmd.n[13]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[14]",
+      "source": "held_cmd.n[14]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[15]",
+      "source": "held_cmd.n[15]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[16]",
+      "source": "held_cmd.n[16]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[17]",
+      "source": "held_cmd.n[17]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[18]",
+      "source": "held_cmd.n[18]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[19]",
+      "source": "held_cmd.n[19]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_n[20]",
+      "source": "held_cmd.n[20]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_p[0]",
+      "source": "held_cmd.p[0]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_p[1]",
+      "source": "held_cmd.p[1]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_p[2]",
+      "source": "held_cmd.p[2]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_p[3]",
+      "source": "held_cmd.p[3]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[0]",
+      "source": "held_cmd.stride[0]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[1]",
+      "source": "held_cmd.stride[1]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[2]",
+      "source": "held_cmd.stride[2]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[3]",
+      "source": "held_cmd.stride[3]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[4]",
+      "source": "held_cmd.stride[4]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[5]",
+      "source": "held_cmd.stride[5]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[6]",
+      "source": "held_cmd.stride[6]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[7]",
+      "source": "held_cmd.stride[7]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[8]",
+      "source": "held_cmd.stride[8]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[9]",
+      "source": "held_cmd.stride[9]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[10]",
+      "source": "held_cmd.stride[10]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[11]",
+      "source": "held_cmd.stride[11]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[12]",
+      "source": "held_cmd.stride[12]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[13]",
+      "source": "held_cmd.stride[13]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[14]",
+      "source": "held_cmd.stride[14]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[15]",
+      "source": "held_cmd.stride[15]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[16]",
+      "source": "held_cmd.stride[16]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[17]",
+      "source": "held_cmd.stride[17]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[18]",
+      "source": "held_cmd.stride[18]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[19]",
+      "source": "held_cmd.stride[19]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[20]",
+      "source": "held_cmd.stride[20]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[21]",
+      "source": "held_cmd.stride[21]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[22]",
+      "source": "held_cmd.stride[22]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[23]",
+      "source": "held_cmd.stride[23]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[24]",
+      "source": "held_cmd.stride[24]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[25]",
+      "source": "held_cmd.stride[25]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[26]",
+      "source": "held_cmd.stride[26]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[27]",
+      "source": "held_cmd.stride[27]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[28]",
+      "source": "held_cmd.stride[28]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[29]",
+      "source": "held_cmd.stride[29]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[30]",
+      "source": "held_cmd.stride[30]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_stride[31]",
+      "source": "held_cmd.stride[31]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_fmt[0]",
+      "source": "held_cmd.fmt[0]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_fmt[1]",
+      "source": "held_cmd.fmt[1]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_xb[0]",
+      "source": "held_cmd.xb[0]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_xb[1]",
+      "source": "held_cmd.xb[1]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_xb[2]",
+      "source": "held_cmd.xb[2]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_xb[3]",
+      "source": "held_cmd.xb[3]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_xb[4]",
+      "source": "held_cmd.xb[4]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_xb[5]",
+      "source": "held_cmd.xb[5]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_xb[6]",
+      "source": "held_cmd.xb[6]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[0]",
+      "source": "(held_global_word_base-held_aperture_word_base)[0]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[1]",
+      "source": "(held_global_word_base-held_aperture_word_base)[1]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[2]",
+      "source": "(held_global_word_base-held_aperture_word_base)[2]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[3]",
+      "source": "(held_global_word_base-held_aperture_word_base)[3]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[4]",
+      "source": "(held_global_word_base-held_aperture_word_base)[4]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[5]",
+      "source": "(held_global_word_base-held_aperture_word_base)[5]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[6]",
+      "source": "(held_global_word_base-held_aperture_word_base)[6]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[7]",
+      "source": "(held_global_word_base-held_aperture_word_base)[7]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[8]",
+      "source": "(held_global_word_base-held_aperture_word_base)[8]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[9]",
+      "source": "(held_global_word_base-held_aperture_word_base)[9]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[10]",
+      "source": "(held_global_word_base-held_aperture_word_base)[10]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[11]",
+      "source": "(held_global_word_base-held_aperture_word_base)[11]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[12]",
+      "source": "(held_global_word_base-held_aperture_word_base)[12]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[13]",
+      "source": "(held_global_word_base-held_aperture_word_base)[13]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[14]",
+      "source": "(held_global_word_base-held_aperture_word_base)[14]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[15]",
+      "source": "(held_global_word_base-held_aperture_word_base)[15]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[16]",
+      "source": "(held_global_word_base-held_aperture_word_base)[16]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[17]",
+      "source": "(held_global_word_base-held_aperture_word_base)[17]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[18]",
+      "source": "(held_global_word_base-held_aperture_word_base)[18]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[19]",
+      "source": "(held_global_word_base-held_aperture_word_base)[19]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[20]",
+      "source": "(held_global_word_base-held_aperture_word_base)[20]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[21]",
+      "source": "(held_global_word_base-held_aperture_word_base)[21]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[22]",
+      "source": "(held_global_word_base-held_aperture_word_base)[22]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[23]",
+      "source": "(held_global_word_base-held_aperture_word_base)[23]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[24]",
+      "source": "(held_global_word_base-held_aperture_word_base)[24]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[25]",
+      "source": "(held_global_word_base-held_aperture_word_base)[25]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[26]",
+      "source": "(held_global_word_base-held_aperture_word_base)[26]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[27]",
+      "source": "(held_global_word_base-held_aperture_word_base)[27]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[28]",
+      "source": "(held_global_word_base-held_aperture_word_base)[28]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[29]",
+      "source": "(held_global_word_base-held_aperture_word_base)[29]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[30]",
+      "source": "(held_global_word_base-held_aperture_word_base)[30]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[31]",
+      "source": "(held_global_word_base-held_aperture_word_base)[31]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[32]",
+      "source": "(held_global_word_base-held_aperture_word_base)[32]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[33]",
+      "source": "(held_global_word_base-held_aperture_word_base)[33]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[34]",
+      "source": "(held_global_word_base-held_aperture_word_base)[34]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[35]",
+      "source": "(held_global_word_base-held_aperture_word_base)[35]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[36]",
+      "source": "(held_global_word_base-held_aperture_word_base)[36]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[37]",
+      "source": "(held_global_word_base-held_aperture_word_base)[37]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[38]",
+      "source": "(held_global_word_base-held_aperture_word_base)[38]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "xload.x_base[39]",
+      "source": "(held_global_word_base-held_aperture_word_base)[39]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[0]",
+      "source": "held_cmd.owner[0]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[1]",
+      "source": "held_cmd.owner[1]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[2]",
+      "source": "held_cmd.owner[2]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[3]",
+      "source": "held_cmd.owner[3]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[4]",
+      "source": "held_cmd.owner[4]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[5]",
+      "source": "held_cmd.owner[5]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[6]",
+      "source": "held_cmd.owner[6]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[7]",
+      "source": "held_cmd.owner[7]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[8]",
+      "source": "held_cmd.owner[8]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[9]",
+      "source": "held_cmd.owner[9]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[10]",
+      "source": "held_cmd.owner[10]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[11]",
+      "source": "held_cmd.owner[11]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[12]",
+      "source": "held_cmd.owner[12]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[13]",
+      "source": "held_cmd.owner[13]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[14]",
+      "source": "held_cmd.owner[14]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[15]",
+      "source": "held_cmd.owner[15]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[16]",
+      "source": "held_cmd.owner[16]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[17]",
+      "source": "held_cmd.owner[17]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[18]",
+      "source": "held_cmd.owner[18]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[19]",
+      "source": "held_cmd.owner[19]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[20]",
+      "source": "held_cmd.owner[20]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[21]",
+      "source": "held_cmd.owner[21]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[22]",
+      "source": "held_cmd.owner[22]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[23]",
+      "source": "held_cmd.owner[23]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[24]",
+      "source": "held_cmd.owner[24]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[25]",
+      "source": "held_cmd.owner[25]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[26]",
+      "source": "held_cmd.owner[26]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[27]",
+      "source": "held_cmd.owner[27]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[28]",
+      "source": "held_cmd.owner[28]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[29]",
+      "source": "held_cmd.owner[29]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[30]",
+      "source": "held_cmd.owner[30]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[31]",
+      "source": "held_cmd.owner[31]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[32]",
+      "source": "held_cmd.owner[32]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[33]",
+      "source": "held_cmd.owner[33]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[34]",
+      "source": "held_cmd.owner[34]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[35]",
+      "source": "held_cmd.owner[35]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[36]",
+      "source": "held_cmd.owner[36]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[37]",
+      "source": "held_cmd.owner[37]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[38]",
+      "source": "held_cmd.owner[38]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[39]",
+      "source": "held_cmd.owner[39]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[40]",
+      "source": "held_cmd.owner[40]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[41]",
+      "source": "held_cmd.owner[41]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[42]",
+      "source": "held_cmd.owner[42]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[43]",
+      "source": "held_cmd.owner[43]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[44]",
+      "source": "held_cmd.owner[44]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[45]",
+      "source": "held_cmd.owner[45]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[46]",
+      "source": "held_cmd.owner[46]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[47]",
+      "source": "held_cmd.owner[47]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[48]",
+      "source": "held_cmd.owner[48]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[49]",
+      "source": "held_cmd.owner[49]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[50]",
+      "source": "held_cmd.owner[50]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[51]",
+      "source": "held_cmd.owner[51]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[52]",
+      "source": "held_cmd.owner[52]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[53]",
+      "source": "held_cmd.owner[53]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[54]",
+      "source": "held_cmd.owner[54]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[55]",
+      "source": "held_cmd.owner[55]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[56]",
+      "source": "held_cmd.owner[56]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[57]",
+      "source": "held_cmd.owner[57]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[58]",
+      "source": "held_cmd.owner[58]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[59]",
+      "source": "held_cmd.owner[59]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[60]",
+      "source": "held_cmd.owner[60]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[61]",
+      "source": "held_cmd.owner[61]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[62]",
+      "source": "held_cmd.owner[62]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[63]",
+      "source": "held_cmd.owner[63]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[64]",
+      "source": "held_cmd.owner[64]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[65]",
+      "source": "held_cmd.owner[65]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[66]",
+      "source": "held_cmd.owner[66]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[67]",
+      "source": "held_cmd.owner[67]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[68]",
+      "source": "held_cmd.owner[68]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[69]",
+      "source": "held_cmd.owner[69]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[70]",
+      "source": "held_cmd.owner[70]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[71]",
+      "source": "held_cmd.owner[71]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[72]",
+      "source": "held_cmd.owner[72]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[73]",
+      "source": "held_cmd.owner[73]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[74]",
+      "source": "held_cmd.owner[74]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[75]",
+      "source": "held_cmd.owner[75]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[76]",
+      "source": "held_cmd.owner[76]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[77]",
+      "source": "held_cmd.owner[77]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[78]",
+      "source": "held_cmd.owner[78]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[79]",
+      "source": "held_cmd.owner[79]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[80]",
+      "source": "held_cmd.owner[80]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[81]",
+      "source": "held_cmd.owner[81]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[82]",
+      "source": "held_cmd.owner[82]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[83]",
+      "source": "held_cmd.owner[83]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[84]",
+      "source": "held_cmd.owner[84]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[85]",
+      "source": "held_cmd.owner[85]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[86]",
+      "source": "held_cmd.owner[86]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[87]",
+      "source": "held_cmd.owner[87]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[88]",
+      "source": "held_cmd.owner[88]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[89]",
+      "source": "held_cmd.owner[89]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[90]",
+      "source": "held_cmd.owner[90]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[91]",
+      "source": "held_cmd.owner[91]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[92]",
+      "source": "held_cmd.owner[92]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[93]",
+      "source": "held_cmd.owner[93]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[94]",
+      "source": "held_cmd.owner[94]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[95]",
+      "source": "held_cmd.owner[95]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[96]",
+      "source": "held_cmd.owner[96]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[97]",
+      "source": "held_cmd.owner[97]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[98]",
+      "source": "held_cmd.owner[98]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[99]",
+      "source": "held_cmd.owner[99]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[100]",
+      "source": "held_cmd.owner[100]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[101]",
+      "source": "held_cmd.owner[101]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[102]",
+      "source": "held_cmd.owner[102]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[103]",
+      "source": "held_cmd.owner[103]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[104]",
+      "source": "held_cmd.owner[104]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[105]",
+      "source": "held_cmd.owner[105]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[106]",
+      "source": "held_cmd.owner[106]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[107]",
+      "source": "held_cmd.owner[107]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[108]",
+      "source": "held_cmd.owner[108]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[109]",
+      "source": "held_cmd.owner[109]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[110]",
+      "source": "held_cmd.owner[110]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[111]",
+      "source": "held_cmd.owner[111]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[112]",
+      "source": "held_cmd.owner[112]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[113]",
+      "source": "held_cmd.owner[113]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[114]",
+      "source": "held_cmd.owner[114]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[115]",
+      "source": "held_cmd.owner[115]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[116]",
+      "source": "held_cmd.owner[116]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[117]",
+      "source": "held_cmd.owner[117]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[118]",
+      "source": "held_cmd.owner[118]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[119]",
+      "source": "held_cmd.owner[119]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[120]",
+      "source": "held_cmd.owner[120]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[121]",
+      "source": "held_cmd.owner[121]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[122]",
+      "source": "held_cmd.owner[122]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[123]",
+      "source": "held_cmd.owner[123]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[124]",
+      "source": "held_cmd.owner[124]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[125]",
+      "source": "held_cmd.owner[125]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[126]",
+      "source": "held_cmd.owner[126]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[127]",
+      "source": "held_cmd.owner[127]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[128]",
+      "source": "held_cmd.owner[128]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[129]",
+      "source": "held_cmd.owner[129]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[130]",
+      "source": "held_cmd.owner[130]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[131]",
+      "source": "held_cmd.owner[131]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[132]",
+      "source": "held_cmd.owner[132]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[133]",
+      "source": "held_cmd.owner[133]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[134]",
+      "source": "held_cmd.owner[134]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[135]",
+      "source": "held_cmd.owner[135]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[136]",
+      "source": "held_cmd.owner[136]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[137]",
+      "source": "held_cmd.owner[137]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[138]",
+      "source": "held_cmd.owner[138]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[139]",
+      "source": "held_cmd.owner[139]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[140]",
+      "source": "held_cmd.owner[140]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[141]",
+      "source": "held_cmd.owner[141]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[142]",
+      "source": "held_cmd.owner[142]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[143]",
+      "source": "held_cmd.owner[143]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[144]",
+      "source": "held_cmd.owner[144]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[145]",
+      "source": "held_cmd.owner[145]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[146]",
+      "source": "held_cmd.owner[146]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[147]",
+      "source": "held_cmd.owner[147]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[148]",
+      "source": "held_cmd.owner[148]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[149]",
+      "source": "held_cmd.owner[149]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[150]",
+      "source": "held_cmd.owner[150]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[151]",
+      "source": "held_cmd.owner[151]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[152]",
+      "source": "held_cmd.owner[152]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[153]",
+      "source": "held_cmd.owner[153]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[154]",
+      "source": "held_cmd.owner[154]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[155]",
+      "source": "held_cmd.owner[155]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[156]",
+      "source": "held_cmd.owner[156]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[157]",
+      "source": "held_cmd.owner[157]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[158]",
+      "source": "held_cmd.owner[158]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[159]",
+      "source": "held_cmd.owner[159]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[160]",
+      "source": "held_cmd.owner[160]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[161]",
+      "source": "held_cmd.owner[161]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[162]",
+      "source": "held_cmd.owner[162]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[163]",
+      "source": "held_cmd.owner[163]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[164]",
+      "source": "held_cmd.owner[164]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[165]",
+      "source": "held_cmd.owner[165]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[166]",
+      "source": "held_cmd.owner[166]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[167]",
+      "source": "held_cmd.owner[167]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[168]",
+      "source": "held_cmd.owner[168]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[169]",
+      "source": "held_cmd.owner[169]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[170]",
+      "source": "held_cmd.owner[170]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[171]",
+      "source": "held_cmd.owner[171]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[172]",
+      "source": "held_cmd.owner[172]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[173]",
+      "source": "held_cmd.owner[173]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[174]",
+      "source": "held_cmd.owner[174]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[175]",
+      "source": "held_cmd.owner[175]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[176]",
+      "source": "held_cmd.owner[176]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[177]",
+      "source": "held_cmd.owner[177]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[178]",
+      "source": "held_cmd.owner[178]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[179]",
+      "source": "held_cmd.owner[179]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[180]",
+      "source": "held_cmd.owner[180]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[181]",
+      "source": "held_cmd.owner[181]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[182]",
+      "source": "held_cmd.owner[182]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[183]",
+      "source": "held_cmd.owner[183]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[184]",
+      "source": "held_cmd.owner[184]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[185]",
+      "source": "held_cmd.owner[185]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[186]",
+      "source": "held_cmd.owner[186]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[187]",
+      "source": "held_cmd.owner[187]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[188]",
+      "source": "held_cmd.owner[188]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[189]",
+      "source": "held_cmd.owner[189]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[190]",
+      "source": "held_cmd.owner[190]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "lease_owner[191]",
+      "source": "held_cmd.owner[191]",
+      "latency_edges": 1
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[0]",
+      "source": "vm8.tap_ticket[0]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[1]",
+      "source": "vm8.tap_ticket[1]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[2]",
+      "source": "vm8.tap_ticket[2]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[3]",
+      "source": "vm8.tap_ticket[3]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[4]",
+      "source": "vm8.tap_ticket[4]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[5]",
+      "source": "vm8.tap_ticket[5]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[6]",
+      "source": "vm8.tap_ticket[6]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[7]",
+      "source": "vm8.tap_ticket[7]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[8]",
+      "source": "vm8.tap_ticket[8]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[9]",
+      "source": "vm8.tap_ticket[9]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[10]",
+      "source": "vm8.tap_ticket[10]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[11]",
+      "source": "vm8.tap_ticket[11]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[12]",
+      "source": "vm8.tap_ticket[12]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[13]",
+      "source": "vm8.tap_ticket[13]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[14]",
+      "source": "vm8.tap_ticket[14]",
+      "latency_edges": 2
+    },
+    {
+      "destination": "vm8.tap_ACK_ticket[15]",
+      "source": "vm8.tap_ticket[15]",
+      "latency_edges": 2
     }
-  ]
+  ],
+  "pipelined_sink": {
+    "default_PIPE": 0,
+    "candidate_PIPE": 1,
+    "accepted_beats_per_edge": 1,
+    "ACK_edges_after_accept": 2,
+    "owner192": "opaque unchanged lease; no perbeat field reuse",
+    "dedicated_ticket16": "generation11 bank1 slot4; root allocator checks live collision/wrap/stale/duplicate/perreceiver issued",
+    "ACK_semantics": "native SM INPUT sampling; internal XSRAM commit/readback NOT established",
+    "physical_closed": false,
+    "production_memory_price_qualified": false
+  }
 }

@@ -41,6 +41,7 @@ CW_ST = 508                   # station data bits (509-bit word = 508 data + rea
 XVM, VL, PAM = 25, 15, 1      # contract element latencies: vm_grp x consumer 20 -> 25, SU master 11 -> 15 (q-sp 10-11
                               # 23:50, VM tile r5), ctlm p_am pin register +1 (q-seq / qwendie 10-11 22:33)
 XFIFO = 4                     # io_xfifo CDC edges each way (rom_r22ko4 collective_credit)
+TILE_SUBSET = False          # --tile-subset (qwen-tp8)
 NL = 3                        # tile_nk node pin -> n_y (TREE_LAT; uniform, so it cancels in leg alignment)
 M32 = 0xffffffff
 ONE = "1'b1"
@@ -185,6 +186,55 @@ def resolve_corridor(S):
             todo += [e.split('.')[0] for e in d['dst'] if slots[e.split('.')[0]]['master'] != 'qfd_tile_nk']
 
 
+def tree_pads(S, xvm=None):
+    """qwen-tp8: the relay pads that align every tree node's two legs, by the array bench's own static arrival model
+    (identical to gen_array --deskew).  Returns ({bus: pad relays}, legs misaligned before padding).  The die generator
+    (recipe tp8a, tree_pads) places these pads as real relays, so the netlist's tree is balanced and the bench passes
+    WITHOUT --deskew."""
+    resolve_corridor(S)
+    bus, slots = S['buses'], S['slots']
+    xvm = XVM if xvm is None else xvm
+    pb = {e: b for b, d in bus.items() for e in d['src'] + d['dst']}
+    inp = collections.defaultdict(list)
+    for b, d in bus.items():
+        if d['cls'] == 'clock':
+            continue
+        for e in d['dst']:
+            inp[e.split('.')[0]].append((b, e.split('.')[1]))
+    tiles = sorted([n for n, s in slots.items() if s['master'] == 'qfd_tile_nk'], key=lambda n: tuple(map(int, n.split('_')[1:])))
+    nodes = [t for t in tiles if 'n_a' in slots[t]['pins']]
+    Kib = bus['n_seq_ib']['K']
+
+    @functools.lru_cache(None)
+    def a_out(slot):
+        if slot == 'sp_vector_memory':
+            return Kib + xvm
+        b = inp[slot][0][0]
+        return a_out(bus[b]['src'][0].split('.')[0]) + bus[b]['K'] + 1
+    tbase = lambda t: a_out(bus[pb[f'{t}.tap']]['src'][0].split('.')[0]) + bus[pb[f'{t}.tap']]['K'] + 1
+    pads = {}
+
+    def leg(t, port, yf):
+        b = pb[f'{t}.{port}']
+        st, sp = bus[b]['src'][0].split('.')
+        return (tbase(st) if sp == 't_out' else yf(st)) + bus[b]['K'] + pads.get(b, 0)
+
+    @functools.lru_cache(None)
+    def y0(t):
+        return max(leg(t, 'n_a', y0), leg(t, 'n_b', y0)) + NL
+    mis = sum(1 for t in nodes if leg(t, 'n_a', y0) != leg(t, 'n_b', y0))
+
+    @functools.lru_cache(None)
+    def yp(t):
+        a, b = leg(t, 'n_a', yp), leg(t, 'n_b', yp)
+        if a != b:
+            pads[pb[f'{t}.n_a' if a < b else f'{t}.n_b']] = abs(a - b)
+        return max(a, b) + NL
+    for t in nodes:
+        yp(t)
+    return pads, mis, len(nodes)
+
+
 def gen_array(S, rec, out, deskew, mut):
     resolve_corridor(S)
     g = Gen(S, mut)
@@ -205,7 +255,11 @@ def gen_array(S, rec, out, deskew, mut):
             inp[e.split('.')[0]].append((b, e.split('.')[1]))
     tiles = sorted([n for n, s in slots.items() if s['master'] == 'qfd_tile_nk'], key=lambda n: tuple(map(int, n.split('_')[1:])))
     rtiles = sorted(Tf)
-    assert len(rtiles) == len(tiles), (len(rtiles), len(tiles))
+    if len(rtiles) != len(tiles):
+        # qwen-tp8: a die with fewer tiles than the recording (768 TP8 tiles vs the 1,536-tile TP4 record) takes the
+        # first len(tiles) recorded tile streams as its stimulus (the golden root sums are recomputed from them)
+        assert len(rtiles) > len(tiles) and TILE_SUBSET, (len(rtiles), len(tiles))
+        rtiles = rtiles[:len(tiles)]
     ri = {t: rtiles[i] for i, t in enumerate(tiles)}             # die slot (sorted c, r) -> recorded tile index
     nodes = [t for t in tiles if 'n_a' in slots[t]['pins']]
     Kib = bus['n_seq_ib']['K']
@@ -422,7 +476,7 @@ def gen_credit(S, rec, out, mut):
     xcr = sum(int(m.split(':')[1]) for m in mut if m.startswith('cr:'))
     lanes = [('coll', ['n_seq_coll', 'XF', 'n_seq_coll_x'], ['n_coll_seq', 'XF', 'n_coll_seq_x'])]
     lanes += [(f'cbuf{k}', [f'n_o4_cb_ctl_{k}'], [f'n_o4_cb_rdy_{k}']) for k in range(8)]
-    lanes += [(f'rs{k}', [f'n_rs_{k}'], [f'n_rc_{k}']) for k in range(6)]
+    lanes += [(f'rs{k}', [f'n_rs_{k}'], [f'n_rc_{k}']) for k in range(6) if f'n_rs_{k}' in S['buses']]   # TP8: 3 bands
     L += tb_head('qseam_credit_tb')
     hexfile(out, 'e_cyc', [c - t0 for c, _ in E], 8)
     hexfile(out, 'e_fp', [f for _, f in E], 8)
@@ -501,7 +555,10 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--deskew', action='store_true')
     ap.add_argument('--mut', action='append', default=[])
+    ap.add_argument('--tile-subset', action='store_true', help='qwen-tp8: map the die tiles onto the first N recorded tiles')
     a = ap.parse_args()
+    global TILE_SUBSET
+    TILE_SUBSET = a.tile_subset
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     S = json.load(open(a.seams))

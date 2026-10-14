@@ -1,14 +1,14 @@
 {
- "name": "qfd_embed_ingress_scale_m5-m5-e5e8e058b",
+ "name": "qfd_embed_ingress_scale_m5-m5p-COMMIT",
  "block": "ot_qwen_embedding_ingress_island",
  "ref_tile": true,
- "owner": "Claude:el1011-reroute-m5",
+ "owner": "Claude:q13-su",
  "purpose": "M5 re-route (reroute_batch.py) of closed qfd_embed_ingress_scale-0e025d03c (qfd_embed_ingress_scale, RTL 0e025d03c): same RTL, outline 15.12x15.12, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Codex:embedding-scale",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/el1011-reroute-m5",
-  "commit": "e5e8e058b"
+  "branch": "claude/q13-su",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -126,7 +126,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_embed_ingress_scale_m5/qfd_embed_ingress_scale_m5-m5-e5e8e058b"
+   "to": "results/rtl/ref_tile/qfd_embed_ingress_scale_m5/qfd_embed_ingress_scale_m5-m5p-COMMIT"
   }
  ],
  "cycles_added": 0,

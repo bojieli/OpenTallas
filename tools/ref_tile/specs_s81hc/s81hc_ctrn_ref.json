@@ -58,18 +58,23 @@
  },
  "refglob": "*",
  "route": {
-  "pd": 0.5,
+  "pd": 0.3,
   "threads": 8,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "pin_v": "M3 M5"
  },
  "job": {
-  "owner": "Claude:el1011-s81hc-ctile",
-  "branch": "claude/el1011-s81hc-ctile",
-  "tag": "v1",
-  "purpose": "s81-suhc HC half-octet column slot (576.72 x 768.96: the measured ~215k um2 std does not fit 572.4 under the 70% cap) as 30 hard tiles of 8 masters (N->S: ctrn | ctnl rows 0-1 | ctpl half 0 | centre band ctra, ctrb, ctfx, ctfn | ctpl half 1 | ctnl rows 2-3 | ctfs; ot_s81_hc_cth; every flop-to-flop stage <= ~400 um): ctrn",
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
+  "owner": "Claude:s81hc-1013",
+  "branch": "claude/s81hc-1013",
+  "tag": "v4-aligned-pins",
+  "purpose": "s81-suhc HC half-octet column slot (576.72 x 768.96: the measured ~215k um2 std does not fit 572.4 under the 70% cap) as 30 hard tiles of 8 masters (N->S: ctrn | ctnl rows 0-1 | ctpl half 0 | centre band ctra, ctrb, ctfx, ctfn | ctpl half 1 | ctnl rows 2-3 | ctfs; ot_s81_hc_cth; every flop-to-flop stage <= ~400 um): ctrn; v3: v2m DPL-0033 after 9,266 post-CTS hold buffers landed on cells GPL had packed to density 0.5 in the 8.64 um core (util 14.7% -> 36%, DPL-0011 45 cells): place density 0.30 (uniform spread over the 32 rows) and one planned hold buffer per input before GPL (inhold); slot unchanged; v4: bit-aligned N/S pin plan (physical/s81_hc_pinplan/ctrn.tcl): rvm/rdm[i] on S directly below rv_out/rd_out[i] on N on the same M5/M3 track over the full width, replacing the PPL 32-pin groups whose unaligned faces caused 7,300 horizontally overflowed gcells (v3 GRT-0116); every bit becomes a vertical feed-through",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctrn_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_ctrn_ref"
- }
+  "record_to": "results/rtl/ref_tile/s81hc_ctrn_ref",
+  "structural_change": "bit-aligned N/S pin plan (physical/s81_hc_pinplan/ctrn.tcl): rvm/rdm[i] on S directly below rv_out/rd_out[i] on N on the same M5/M3 track over the full width, replacing the PPL 32-pin groups whose unaligned faces caused 7,300 horizontally overflowed gcells (v3 GRT-0116); every bit becomes a vertical feed-through"
+ },
+ "inhold": true,
+ "io_tcl": "physical/s81_hc_pinplan/ctrn.tcl"
 }

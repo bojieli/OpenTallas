@@ -56,7 +56,8 @@ endmodule
 module ot_qkvd_fifo_sliced #(
     parameter integer W  = 528,
     parameter integer SW = 66,
-    parameter integer D  = 8
+    parameter integer D  = 8,
+    parameter integer PIQ = 0                // 1: pop registered once per slice (pin register; pop acts one cycle later)
 ) (
     input  wire          clk,
     input  wire [W/SW-1:0] rst_n,            // one reset copy per slice (relay regions)
@@ -72,8 +73,20 @@ module ot_qkvd_fifo_sliced #(
     wire [$clog2(D+1)-1:0] c [0:NS-1];
     genvar s;
     generate for (s = 0; s < NS; s = s + 1) begin : g_s
+        wire pop_e;
+        if (PIQ != 0) begin : g_piq
+            (* keep *) reg pop_q;
+            always @(posedge clk or negedge rst_n[s]) if (!rst_n[s]) pop_q <= 1'b0; else pop_q <= pop;
+`ifdef KVD_PIQMUT
+            assign pop_e = pop;            // mutant: pop pin not registered (acts a cycle early)
+`else
+            assign pop_e = pop_q;
+`endif
+        end else begin : g_npiq
+            assign pop_e = pop;
+        end
         (* keep_hierarchy *) ot_qkvd_fifo_sl #(.SW(SW), .D(D)) u_sl (.clk(clk), .rst_n(rst_n[s]), .push(push),
-            .din(din[SW*s +: SW]), .pop(pop), .dout(dout[SW*s +: SW]), .empty(e[s]), .count(c[s]));
+            .din(din[SW*s +: SW]), .pop(pop_e), .dout(dout[SW*s +: SW]), .empty(e[s]), .count(c[s]));
     end endgenerate
     assign empty = e[0];
     assign count = c[0];

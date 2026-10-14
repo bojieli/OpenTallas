@@ -1,21 +1,15 @@
 {
-  "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg.lef": {
-    "rc": 1,
+  "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg.lef": {
+    "rc": 0,
     "report": {
       "schema": "opentallas.hier_contract.child_lint.v1",
-      "lef": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg.lef",
-      "verdict": "FAIL",
-      "fails": [
-        "(a) bloat: one OBS rect covers 100% of the macro on M6 (>= PG layer M6); re-export WITHOUT -bloat_occupied_layers",
-        "(c) strap layer M7+ not clear: 1 OBS on M7, 0 signal pins, PG on - (child signals must stop below the parent strap layer, or own M6 as full PG stripes and leave M7 free)",
-        "(d) libs: ot_hbm_accel_smh_be_eg_tt.lib missing in results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg",
-        "(f) face-pin access: 526 of 526 face pins have OBS on the layer above over the pin (DRT-0073 class; e.g. cgi M5 (209.856,77.568), cgo M5 (210.336,77.568), clk M5 (107.856,77.568)); fix: physical/redesign_ds/coll_split/pin_access_pregrt.tcl (bf0080873): obstruct the adjacent layers over the outer face-pin column before GRT, remove after DRT"
-      ],
+      "lef": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg.lef",
+      "verdict": "PASS",
+      "fails": [],
       "warns": [
-        "(f) face-pin access: 526 of 526 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cgi M5 (0.000,0.108), cgo M5 (0.000,0.108), clk M5 (0.000,0.108))",
-        "(g) clock insertion: no TT lib (pass --libs) - parent CTS cannot see the tile's insertion delay"
+        "(f) face-pin access: 476 of 526 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cgi M5 (85.968,75.541), cgo M5 (85.968,75.541), clk M5 (85.968,75.541))"
       ],
-      "summary": "ot_hbm_accel_smh_be_eg 319.68 x 77.76: PG M6 VDD 9 stripes (99% spread, 100% cov) / VSS 9 stripes (98% spread, 100% cov); strap M7; face pins 526 blocked-above 526 blocked-same 0",
+      "summary": "ot_hbm_accel_smh_be_eg 319.68 x 77.76: PG M5 VDD 59 stripes (98% spread, 100% cov) / VSS 59 stripes (98% spread, 100% cov); strap M6; face pins 526 blocked-above 0 blocked-same 0; clock clk insertion 441 ps",
       "info": {
         "cell": "ot_hbm_accel_smh_be_eg",
         "W": 319.68,
@@ -23,52 +17,51 @@
         "pg": {
           "nets": {
             "VDD": {
-              "top_layer": "M6",
-              "stripes": 9,
-              "dir": "H",
-              "spread": 0.994,
+              "top_layer": "M5",
+              "stripes": 59,
+              "dir": "V",
+              "spread": 0.98,
               "coverage": 1.0,
-              "shapes_on_top": 9
+              "shapes_on_top": 59
             },
             "VSS": {
-              "top_layer": "M6",
-              "stripes": 9,
-              "dir": "H",
-              "spread": 0.984,
+              "top_layer": "M5",
+              "stripes": 59,
+              "dir": "V",
+              "spread": 0.98,
               "coverage": 1.0,
-              "shapes_on_top": 9
+              "shapes_on_top": 59
             }
           },
-          "top_layer": "M6",
+          "top_layer": "M5",
           "ok": true,
           "why": []
         },
-        "pg_layer": "M6",
-        "strap_layer": "M7",
-        "cap": "M6",
+        "pg_layer": "M5",
+        "strap_layer": "M6",
+        "cap": "M5",
         "face": {
           "face_pins": 526,
-          "blocked_above": 526,
-          "covered_below": 526,
-          "examples": [
-            "cgi M5 (209.856,77.568)",
-            "cgo M5 (210.336,77.568)",
-            "clk M5 (107.856,77.568)",
-            "gin[0] M5 (111.840,77.568)",
-            "gin[100] M5 (159.840,77.568)",
-            "gin[101] M5 (160.320,77.568)"
-          ],
+          "blocked_above": 0,
+          "covered_below": 59,
+          "examples": [],
           "blocked_same": 0,
           "same_examples": [],
-          "band_same": 526,
+          "band_same": 476,
           "band_examples": [
-            "cgi M5 (0.000,0.108)",
-            "cgo M5 (0.000,0.108)",
-            "clk M5 (0.000,0.108)",
-            "gin[0] M5 (0.000,0.108)",
-            "gin[100] M5 (0.000,0.108)",
-            "gin[101] M5 (0.000,0.108)"
+            "cgi M5 (85.968,75.541)",
+            "cgo M5 (85.968,75.541)",
+            "clk M5 (85.968,75.541)",
+            "gin[66] M5 (85.968,75.541)",
+            "gin[67] M5 (85.968,75.541)",
+            "gin[68] M5 (85.968,75.541)"
           ]
+        },
+        "clock_insertion": {
+          "clk": {
+            "max_ps": 441.19,
+            "min_ps": 2.7
+          }
         }
       }
     }

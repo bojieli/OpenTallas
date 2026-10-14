@@ -47,8 +47,10 @@
   "OT_FP_DATA_NORST",
   "OT_SMH_DRST0",
   "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
   "OT_SMH_HIER",
-  "OT_SMH_PTW_OHDLY"
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PRODUCTION_SHAPE"
  ],
  "clock_port": "clk",
  "reset_ports": [
@@ -81,7 +83,7 @@
    "inst": "*u_pte"
   },
   {
-   "view": "physical/ref_tile/smh_xs_ref_p40x/views/ot_hbm_accel_smh_xs",
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
    "count": 1,
    "at": [
     302.4,
@@ -131,7 +133,7 @@
    "inst": "*g_lf?0?.u_lh.u_tcc.u_h1"
   },
   {
-   "view": "physical/ref_tile/smh_xs_ref_p40x/views/ot_hbm_accel_smh_xs",
+   "view": "physical/ref_tile/smh_xs_ref_p45m/views/ot_hbm_accel_smh_xs",
    "count": 1,
    "at": [
     302.4,
@@ -206,6 +208,12 @@
   ]
  },
  "io_tcl": "physical/ref_tile_specs/smh/smh_tile_wg_ref_pins.tcl",
+ "orfs_vars": {
+  "OT_CG_EXCLUDE": "*u_cgt.u_cg.u_icg",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "POST_TAPCELL_TCL": "physical/ref_tile_specs/smh/smh_tile_wg_ref_strap_regions.tcl"
+ },
  "refglob": "*",
  "route": {
   "pd": 0.5,
@@ -213,34 +221,43 @@
   "peak_ram_gb": 96
  },
  "job": {
-  "owner": "Claude:el1011-hbm-smmv-b",
-  "branch": "claude/el1011-hbm-smt",
-  "tag": "r1",
-  "purpose": "[smmv-b/smt] ot_hbm_accel_smh_tile_wg: SM tile as ONE ref_tile cluster (owner contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles (pt_w p45h, pt_e p40s, xs p50, bdc p50, tcl p45, tct p45), floorplan re-derived from their LEFs on the 43.2-um lattice (630.72 x 1252.8, landing channels 58-60 um, cut 0.59), clock spine through the tile ICG, exact abutment pin plan. Benches: lockstep_enreg_xlk (exact, 8270 cycles with the gather relays) + mut_late32 / mut_hold0 must fail.",
+  "owner": "Claude:el1013-smh-r11",
+  "branch": "claude/el1013-smh-r11",
+  "tag": "r13",
+  "structural_change": "clock root rebuilt: only the tile ICG and its enable registers are fixed beside the clk pin and they are dont_touch; the ICG enable cone (input buffer of cgi + gates) is movable and legalised (r11/r12: cone cells FIRM yet resizable -> input2099 sized to BUFx12f over FIRM _0956_, DPL-0033 at CTS in both tiles; spine errors if a moved cell is fixed and resizable); wg station plan mirrors about the PLACED centre channel (x 259.2-302.4; reset 271.2, strap 283.0), every station window asserted clear of each child + halo at generation",
+  "purpose": "[smmv-b/smt] ot_hbm_accel_smh_tile_wg: SM tile as ONE ref_tile cluster (owner contract: harden once, step x16; wg = MY mirror) over the 12 closed ref_tile sub-tiles (pt_w p45h, pt_e p40s, xs p45m, bdc p50, tcl p45, tct p45), floorplan re-derived from their LEFs on the 43.2-um lattice (630.72 x 1252.8, landing channels 58-60 um, cut 0.59), clock spine through the tile ICG (symmetric insertion-aware topology), exact abutment pin plan re-applied after place_pins, rst_n pin flop + registered N-S reset tree (16 stations FFs, no reset on the raw clock: RSTEN 0 / RAWRST 0). Five registered regional static-strap stages per leaf (260 DFFs), zero data latency; production NC8 active8 RMAX4096 TAGW16 native-default lockstep exactness plus strap-offset/late32/hold0 mutants must fail.",
   "benches": [
    {
     "name": "lockstep_enreg_xlk",
     "expect": "pass",
     "pass_regex": "SMT_LOCKSTEP_PASS",
     "threads": 8,
-    "peak_ram_gb": 24,
-    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 4 --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_lockstep_enreg_xlk.json > {RUN}/b_lockstep_enreg_xlk.log 2>&1; rc=$?; cat {RUN}/b_lockstep_enreg_xlk.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && grep -q 'CG_LOCKSTEP mismatches 0 ' $W/*/runtime.log && grep -q '\"total_cycles\": 8270' {RUN}/b_lockstep_enreg_xlk.json && echo SMT_LOCKSTEP_PASS"
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PRODUCTION_SHAPE --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_lockstep_enreg_xlk.json > {RUN}/b_lockstep_enreg_xlk.log 2>&1; rc=$?; cat {RUN}/b_lockstep_enreg_xlk.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && grep -q 'CG_LOCKSTEP mismatches 0 ' $W/*/runtime.log && echo SMT_LOCKSTEP_PASS"
    },
    {
     "name": "mut_late32",
     "expect": "fail",
     "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
     "threads": 8,
-    "peak_ram_gb": 24,
-    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 4 --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --cg-mut-late --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_late32.json > {RUN}/b_mut_late32.log 2>&1; rc=$?; cat {RUN}/b_mut_late32.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PRODUCTION_SHAPE --cg-mut-late --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_late32.json > {RUN}/b_mut_late32.log 2>&1; rc=$?; cat {RUN}/b_mut_late32.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
    },
    {
     "name": "mut_hold0",
     "expect": "fail",
     "fail_regex": "CG_LOCKSTEP mismatches [1-9]",
     "threads": 8,
-    "peak_ram_gb": 24,
-    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 4 --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --cg-mut-hold0 --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_hold0.json > {RUN}/b_mut_hold0.log 2>&1; rc=$?; cat {RUN}/b_mut_hold0.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PRODUCTION_SHAPE --cg-mut-hold0 --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_hold0.json > {RUN}/b_mut_hold0.log 2>&1; rc=$?; cat {RUN}/b_mut_hold0.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; test $rc -eq 0 && ! grep -q 'CG_LOCKSTEP mismatches [1-9]' $W/*/runtime.log"
+   },
+   {
+    "name": "mut_strap_region",
+    "expect": "fail",
+    "fail_regex": "SMT_STRAP_MUTANT_KILLED",
+    "threads": 8,
+    "peak_ram_gb": 72,
+    "cmd": "W=$(mktemp -d /tmp/smtb.XXXXXX); python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --rmax 4096 --req-credit --smh --cg --define OT_SMH_CG_ENREG --define OT_SMH_XLK --define OT_FP_DATA_NORST --define OT_SMH_DRST0 --define OT_SMH_RSTRELAY --define OT_SMH_RSTPIN --define OT_SMH_HIER --define OT_SMH_PTW_OHDLY --define OT_SMH_PRODUCTION_SHAPE --define OT_SMH_MUT_STRAP_REGION --cg-gap 300 --build-jobs 8 --workdir $W --out {RUN}/b_mut_strap_region.json > {RUN}/b_mut_strap_region.log 2>&1; rc=$?; cat {RUN}/b_mut_strap_region.log | tail -5; grep -h CG_LOCKSTEP $W/*/runtime.log; python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x[\"timeout\"] is None and x[\"mismatching_ops\"] > 0; print(\"SMT_STRAP_MUTANT_KILLED\", x[\"mismatching_ops\"])' {RUN}/b_mut_strap_region.json; test $rc -eq 0"
    }
   ]
  },

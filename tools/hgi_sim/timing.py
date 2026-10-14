@@ -314,8 +314,11 @@ def cost(r, dyn, L, cfg=None):
         if op == "LOAD":
             a = r.desc["A"]
             _, n, m, _, _ = eff(a, dyn, L)
-            return first_access() + n * m * ESZ[a.fmt] / bw, ("measured" if "hbm.first_access" in MEAS
-                                                               else "estimate"), "DMA load"
+            # a native B2 group member (header parameter bit 0) streams from ONE stack: a quarter of the die's bytes
+            # a cycle (the four members run in parallel on their own stacks)
+            share = 4 if r.param & 1 else 1
+            return first_access() + n * m * ESZ[a.fmt] * share / bw, ("measured" if "hbm.first_access" in MEAS
+                                                                       else "estimate"), "DMA load"
         if op == "STORE":
             return cv("units", "DMA.store_latency"), "estimate", "posted KV store"
         return cv("units", "DMA.fence"), "estimate", "fence"

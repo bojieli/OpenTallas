@@ -81,7 +81,14 @@ module ot_rom_oneshot_die_m #(
     // is written this edge), so every consumer (u_txk / txrec_q / lpq) sees a flop and the long hop is wire only.
     // Same value every cycle as the combinational ib_head (cycle-exact; no latency).  FPIPE = 2 additionally registers
     // the tag-disagree and overflow fault conditions one edge (fault / fault_code[1..2] set one edge later).
-    parameter integer IBH     = 0
+    parameter integer IBH     = 0,
+    // CT = 1 (qwen-tp8/coll4 2026-10-12, MARGIN 9): the column datapath (IB, receive pin registers, FIFO bodies, heads,
+    // s0 operands, gather word, tx word) moves into five hardened ot_coll_col_tile leaves (rtl/rom/ot_coll_col_tile.sv),
+    // each a one-cycle-delayed replica of its 128-bit column driven by registered control from this engine; the engine
+    // keeps the control state machine, a 2-bit {mode, last} replica of source 0 for the pop decision, the fold slices and
+    // the output registers.  Needs PR 2, MEMM 1, FSL 1, IBH 1, TXK 1, N 4, DEPTH 32, IB 4, LANES 16, TAGW 32.
+    // +1 cycle on tx (tx_valid / tx_rec) and on the result path (out_*); the fault flags (agree) one edge later.
+    parameter integer CT      = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -109,7 +116,7 @@ module ot_rom_oneshot_die_m #(
     localparam integer DB = (DEPTH > 1) ? $clog2(DEPTH) : 1;
     localparam integer CB = $clog2(DEPTH + 1);
     localparam integer IA = (IB <= 2) ? 1 : $clog2(IB);
-    localparam integer DL = (N - 1) * ADD_LAT + ((FSL != 0) ? 2 : 0);   // FSL: + the slice seams
+    localparam integer DL = (N - 1) * ADD_LAT + ((FSL != 0) ? 2 : 0) + ((CT != 0) ? 1 : 0);   // FSL: + the slice seams; CT: + the tile replica edge
     integer r;
     // ---- PR = 2: per-region reset synchronisers (rst_n reaches only these) ------------------------------------------
     wire          rst_i;                 // control region
@@ -165,11 +172,13 @@ module ot_rom_oneshot_die_m #(
     end else begin : g_ibc
         assign ib_head = ib[ir[IA-1:0]];
     end endgenerate
-    reg          txv_q, icr_q;
+    wire         txv_q, icr_q;
     reg [PW-1:0] txrec_q;
     generate if (PR != 0) begin : g_txr
         always @(posedge clk) begin txrec_q <= ib_head; lpq <= ib_head; end   // tx_rec meaningful only with tx_valid
-        if (TXK != 0) begin : g_txk
+        if (CT != 0) begin : g_txct
+            // CT: tx_rec comes from the column tiles (assigned in g_ct)
+        end else if (TXK != 0) begin : g_txk
             // dedicated pin register in a keep_hierarchy leaf: synthesis cannot merge it with lpq
             (* keep_hierarchy *) ot_coll_pinreg #(.W(PW)) u_txk (.clk(clk), .d(ib_head), .q(tx_rec));
         end else begin : g_txm
@@ -181,14 +190,23 @@ module ot_rom_oneshot_die_m #(
         assign tx_rec = txrec_q;
         always @(*) begin lpv = 1'b0; lpq = {PW{1'b0}}; end
     end endgenerate
+    // tx_valid (tx face) and in_cr (in face) are logically the same register (<= fire), but their pins sit on
+    // different faces ~870 um apart: a single merged flop cannot reach both within one 500-um stage.  Each is
+    // its own pin register in a keep_hierarchy leaf (synthesis cannot merge them), placed at its own pin.
+    (* keep_hierarchy *) ot_coll_pinreg_r u_txv (.clk(clk), .rst_n(rst_i), .d(fire), .q(txv_q));
+    (* keep_hierarchy *) ot_coll_pinreg_r u_icr (.clk(clk), .rst_n(rst_i), .d(fire), .q(icr_q));
     always @(posedge clk or negedge rst_i)
-        if (!rst_i) begin txv_q <= 1'b0; icr_q <= 1'b0; iw <= 0; ir <= 0; end
+        if (!rst_i) begin iw <= 0; ir <= 0; end
         else begin
-            txv_q <= fire; icr_q <= fire;
             if (iv_q && !ib_full) iw <= iw + 1'b1;
             if (fire) ir <= ir + 1'b1;
         end
-    assign tx_valid = txv_q;
+    generate if (CT != 0) begin : g_txvd
+        // CT: the tiles' tx word is the engine's tx_rec one edge later; tx_valid follows it (own pin register leaf)
+        (* keep_hierarchy *) ot_coll_pinreg_r u_txv2 (.clk(clk), .rst_n(rst_i), .d(txv_q), .q(tx_valid));
+    end else begin : g_txvo
+        assign tx_valid = txv_q;
+    end endgenerate
     assign in_cr = icr_q;
     // ---- receive FIFOs with registered heads ----------------------------------------------------------------------
     reg [PW-1:0] mem [0:N*DEPTH-1];
@@ -198,7 +216,8 @@ module ot_rom_oneshot_die_m #(
     wire [N-1:0] push;
     wire [N*PW-1:0] push_rec;
     reg [1:0] m0ml [0:DEPTH-1];          // MEMM: source 0's {mode, last} bits at control timing (the body is a macro)
-    always @(posedge clk) if (push[0]) m0ml[wp[0]] <= push_rec[FW +: 2];
+    wire [1:0] ml0_rec;                  // source 0's {mode, last} at push timing (CT: from the 2-bit replica)
+    always @(posedge clk) if (push[0]) m0ml[wp[0]] <= (CT != 0) ? ml0_rec : push_rec[FW +: 2];
     generate for (g = 0; g < N; g = g + 1) begin : g_src
         if (g == RANK) begin : g_loc
             assign push[g] = (PR != 0) ? lpv : fire;
@@ -207,6 +226,23 @@ module ot_rom_oneshot_die_m #(
             assign push[g] = rxv_q[g];
             assign push_rec[g*PW +: PW] = rxr_q[g*PW +: PW];
         end
+    end endgenerate
+    // ---- CT: 2-bit {mode, last} replica of the column datapath for source 0 (the pop decision reads it via m0ml) ----
+    generate if (CT != 0) begin : g_mlr
+        reg [1:0] irec_ml, hq_ml, lpq_ml, rxr0_ml;
+        reg [1:0] ib_ml [0:IB-1];
+        wire [IA:0] ir_nxm = fire ? ir + 1'b1 : ir;
+        always @(posedge clk) begin
+            irec_ml <= {in_mode, in_last};
+            rxr0_ml <= rx_rec[FW +: 2];
+            if (iv_q && !ib_full) ib_ml[iw[IA-1:0]] <= irec_ml;
+            if (iv_q && !ib_full && (iw[IA-1:0] == ir_nxm[IA-1:0])) hq_ml <= irec_ml;
+            else hq_ml <= ib_ml[ir_nxm[IA-1:0]];
+            lpq_ml <= hq_ml;
+        end
+        assign ml0_rec = (RANK == 0) ? lpq_ml : rxr0_ml;
+    end else begin : g_mlo
+        assign ml0_rec = push_rec[FW +: 2];
     end endgenerate
     // ---- pop: a word index leaves every head at once ----------------------------------------------------------------
     reg          g_busy;
@@ -303,6 +339,14 @@ module ot_rom_oneshot_die_m #(
         initial if (N != 4 || ADD_LAT != 7) $error("ot_rom_oneshot_die_m FSL: the hardened ot_coll_fold_slice is N 4, ADD_LAT 7");
         localparam integer NS = FW / 128;
         wire [NS-1:0] sl_v, sl_e;
+        wire red_in_f;                   // CT: the tiles' s0 operands are one edge late; so is the fold's valid
+        if (CT != 0) begin : g_rid
+            reg rq;
+            always @(posedge clk or negedge rst_i) if (!rst_i) rq <= 1'b0; else rq <= red_in;
+            assign red_in_f = rq;
+        end else begin : g_rin
+            assign red_in_f = red_in;
+        end
         wire [FW-1:0] fsum;
         wire [N*FW-1:0] fsrc_f;
         genvar gs, gq;
@@ -316,7 +360,7 @@ module ot_rom_oneshot_die_m #(
             end
             (* keep_hierarchy *) ot_coll_fold_slice u_fs (   // hardened defaults N 4 / ADD_LAT 7 / SEAM 1 (no override: the
                                                            // parent takes the hardened macro master by name)
-                .clk(clk), .rst_n(rst_n), .red_in(red_in), .src(sd), .sum(fsum[gs*128 +: 128]),
+                .clk(clk), .rst_n(rst_n), .red_in(red_in_f), .src(sd), .sum(fsum[gs*128 +: 128]),
                 .v_out(sl_v[gs]), .e_out(sl_e[gs]));
         end
         assign sum[N-1] = fsum;
@@ -368,6 +412,7 @@ module ot_rom_oneshot_die_m #(
     // ---- all-gather --------------------------------------------------------------------------------------------------
     reg          go_v, go_last;
     reg [FW-1:0] go_d;
+    wire [FW-1:0] ct_go;                 // CT: the column tiles' gather word
     reg [RB-1:0] go_rank;
     reg          gc_v, gc_last;          // control-timed gather selection (PR = 2 reads s0_d one edge later)
     reg [RB-1:0] gc_idx;
@@ -396,7 +441,9 @@ module ot_rom_oneshot_die_m #(
         always @(posedge clk or negedge rst_i)
             if (!rst_i) begin go_v <= 1'b0; go_last <= 1'b0; go_rank <= 0; end
             else begin go_v <= gc_v; go_last <= gc_last; go_rank <= gc_idx; end
-        always @(posedge clk) go_d <= s0_d[gc_idx];
+        if (CT == 0) begin : g_god
+            always @(posedge clk) go_d <= s0_d[gc_idx];
+        end
     end else begin : g_go1
         // original timing: the selection and the data in the same edge
         reg [RB-1:0] gi;
@@ -416,11 +463,24 @@ module ot_rom_oneshot_die_m #(
     reg [RB-1:0] ork_q;
     always @(posedge clk or negedge rst_i)
         if (!rst_i) begin ov_q <= 1'b0; oe_q <= 1'b0; end
-        else begin ov_q <= red_out || go_v; oe_q <= red_out && serr[N-1]; end
+        else begin ov_q <= red_out || gov_m; oe_q <= red_out && serr[N-1]; end
+    // CT: the tiles' gather word (ct_go) is the engine's go_d one edge later; go_v / go_last / go_rank follow it
+    wire          gov_m, gol_m;
+    wire [FW-1:0] god_m;
+    wire [RB-1:0] gor_m;
+    generate if (CT != 0) begin : g_god2
+        reg gv2, gl2; reg [RB-1:0] gr2;
+        always @(posedge clk or negedge rst_i)
+            if (!rst_i) begin gv2 <= 1'b0; gl2 <= 1'b0; gr2 <= 0; end
+            else begin gv2 <= go_v; gl2 <= go_last; gr2 <= go_rank; end
+        assign gov_m = gv2; assign gol_m = gl2; assign gor_m = gr2; assign god_m = ct_go;
+    end else begin : g_god1
+        assign gov_m = go_v; assign gol_m = go_last; assign gor_m = go_rank; assign god_m = go_d;
+    end endgenerate
     always @(posedge clk) begin
-        od_q <= go_v ? go_d : sum[N-1];
-        ol_q <= go_v ? go_last : ldl[DL-1];
-        ork_q <= go_v ? go_rank : {RB{1'b0}};
+        od_q <= gov_m ? god_m : sum[N-1];
+        ol_q <= gov_m ? gol_m : ldl[DL-1];
+        ork_q <= gov_m ? gor_m : {RB{1'b0}};
     end
     ot_hdly #(.W(FW + RB + 3), .N(HDLO)) u_hdly_out (.a({ov_q, od_q, ol_q, ork_q, oe_q}),
         .y({out_valid, out_data, out_last, out_rank, out_err}));
@@ -444,13 +504,16 @@ module ot_rom_oneshot_die_m #(
         assign rerr_f = red_out && serr[N-1];
     end endgenerate
     wire agree_f, ovf_f;
+    reg  s0_vcd;                         // CT: the tag column's s0 tags are one edge late
+    always @(posedge clk or negedge rst_i) if (!rst_i) s0_vcd <= 1'b0; else s0_vcd <= s0_vc;
+    wire s0_vt = (CT != 0) ? s0_vcd : s0_vc;
     generate if (FPIPE >= 2) begin : g_fp2
         reg agq, ovq;
         always @(posedge clk or negedge rst_i)
-            if (!rst_i) begin agq <= 1'b0; ovq <= 1'b0; end else begin agq <= s0_vc && !agree; ovq <= ovf; end
+            if (!rst_i) begin agq <= 1'b0; ovq <= 1'b0; end else begin agq <= s0_vt && !agree; ovq <= ovf; end
         assign agree_f = agq; assign ovf_f = ovq;
     end else begin : g_fc2
-        assign agree_f = s0_vc && !agree; assign ovf_f = ovf;
+        assign agree_f = s0_vt && !agree; assign ovf_f = ovf;
     end endgenerate
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin fault <= 1'b0; fault_code <= 3'b0; end
@@ -529,6 +592,7 @@ module ot_rom_oneshot_die_m #(
         end
         localparam integer SLW = 128, NSL = (PW + SLW - 1) / SLW;
         wire [N*PW-1:0] s0f;
+        wire [N*16-1:0] l1all;           // CT: every source's level-1 image, to the column tiles
         genvar gr, gk;
         for (gr = 0; gr < N; gr = gr + 1) begin : g_r
             // level 1 (per source): the decision state, registered from its next state (same timing as hv)
@@ -537,6 +601,7 @@ module ot_rom_oneshot_die_m #(
             wire [5:0]  rp6 = rp_n[gr];
             assign l1d = {hv4, gb_n, pop, (pop ? hmode : s0_mode), hm_n, !iz_n, mnz_n[gr], rp6};
             (* keep_hierarchy *) ot_coll_dup16 u_l1 (.clk(clk), .arst_n(rst_k[gr]), .d(l1d), .q(l1q));
+            assign l1all[gr*16 +: 16] = l1q;
             wire [N-1:0] hvc = l1q[12 +: N];
             wire gbc = l1q[11], s0vc = l1q[10], s0mc = l1q[9], hmc = l1q[8], izc = !l1q[7], mnzc = l1q[6];
             wire [DB-1:0] rpc = l1q[DB-1:0];
@@ -544,7 +609,11 @@ module ot_rom_oneshot_die_m #(
             wire refk = mnzc && (!hvc[gr] || popk);
             wire [7:0] l2d = {popk, refk, l1q[5:0]};
             wire [PW-1:0] mrow_m;                         // MEMM: this source's FIFO body macro, read at level-1 timing
-            if (MEMM != 0) begin : g_mm
+            if (CT != 0) begin : g_mct
+                // CT: the FIFO bodies, heads and s0 operands live in the column tiles (g_ct below)
+                assign mrow_m = {PW{1'b0}};
+                assign hdf[gr*PW +: PW] = {PW{1'b0}};
+            end else if (MEMM != 0) begin : g_mm
                 initial if (DEPTH != 32 || PW != 546) $error("ot_rom_oneshot_die_m MEMM: macro is 32 x 546");
 `ifdef OT_ONESHOT_M_MEMM_MUTANT
                 wire [DB-1:0] mra = rpc + 1'b1;           // negative control: the macro reads the next slot
@@ -556,7 +625,7 @@ module ot_rom_oneshot_die_m #(
             end else begin : g_mf
                 assign mrow_m = {PW{1'b0}};
             end
-            for (gk = 0; gk < NSL; gk = gk + 1) begin : g_k
+            if (CT == 0) for (gk = 0; gk < NSL; gk = gk + 1) begin : g_k
                 localparam integer LO = gk * SLW;
                 localparam integer SW = (PW - LO < SLW) ? (PW - LO) : SLW;
                 // level 2 (per source, slice): {pop, refill, read index} one edge later
@@ -574,10 +643,57 @@ module ot_rom_oneshot_die_m #(
                 assign s0f[gr*PW + LO +: SW] = s0k;
             end
         end
+        if (CT != 0) begin : g_ct
+            initial if (N != 4 || (DEPTH != 32 && DEPTH != 64) || IB != 4 || FW != 512 || PW != 546 || MEMM == 0 || FSL == 0 || IBH == 0 || TXK == 0)
+                $error("ot_rom_oneshot_die_m CT: N 4, DEPTH 32 | 64 (ot_coll_col_tile_d64), IB 4, LANES 16, TAGW 32, MEMM 1, FSL 1, IBH 1, TXK 1");
+            localparam integer WB = (DEPTH == 64) ? 6 : 5;
+            localparam integer NC = (PW + 127) / 128;   // 5 columns: 4 data + 1 {tag, mode, last}
+            wire [PW-1:0] inrec = {in_tag, in_mode, in_last, in_data};
+            wire [N*WB-1:0] wpall;
+            for (gr = 0; gr < N; gr = gr + 1) begin : g_wp
+                assign wpall[gr*WB +: WB] = wp[gr];
+            end
+            for (gk = 0; gk < NC; gk = gk + 1) begin : g_c
+                localparam integer LO = gk * 128;
+                localparam integer SW = (PW - LO < 128) ? (PW - LO) : 128;
+                wire [127:0] ind;
+                wire [511:0] rxd, s0o;
+                wire [127:0] goo, txo;
+                if (SW < 128) begin : g_pad
+                    assign ind = {{(128 - SW){1'b0}}, inrec[LO +: SW]};
+                end else begin : g_full
+                    assign ind = inrec[LO +: 128];
+                end
+                for (gr = 0; gr < N; gr = gr + 1) begin : g_x
+                    if (SW < 128) begin : g_px
+                        assign rxd[gr*128 +: 128] = {{(128 - SW){1'b0}}, rx_rec[gr*PW + LO +: SW]};
+                    end else begin : g_fx
+                        assign rxd[gr*128 +: 128] = rx_rec[gr*PW + LO +: 128];
+                    end
+                    assign s0f[gr*PW + LO +: SW] = s0o[gr*128 +: SW];
+                end
+                if (DEPTH == 64) begin : g_d64
+                (* keep_hierarchy *) ot_coll_col_tile_d64 u_ct (.clk(clk), .rst_n(rst_n), .rank_oh(SELF),
+                    .in_d(ind), .rx_d(rxd), .c_ibw(iv_q && !ib_full), .c_iw(iw[1:0]), .c_fire(fire), .c_ir(ir[1:0]),
+                    .c_push(push), .c_wp(wpall), .c_l1(l1all), .c_gidx(gc_idx), .s0(s0o), .go(goo), .tx(txo));
+                end else begin : g_d32
+                (* keep_hierarchy *) ot_coll_col_tile u_ct (.clk(clk), .rst_n(rst_n), .rank_oh(SELF),
+                    .in_d(ind), .rx_d(rxd), .c_ibw(iv_q && !ib_full), .c_iw(iw[1:0]), .c_fire(fire), .c_ir(ir[1:0]),
+                    .c_push(push), .c_wp(wpall), .c_l1(l1all), .c_gidx(gc_idx), .s0(s0o), .go(goo), .tx(txo));
+                end
+                assign tx_rec[LO +: SW] = txo[SW-1:0];
+                if (gk < FW / 128) begin : g_go
+                    assign ct_go[LO +: 128] = goo;
+                end
+            end
+        end
         always @(*) for (r = 0; r < N; r = r + 1) begin
             s0_d[r] = s0f[r*PW +: FW];
             s0_t[r] = s0f[r*PW + PW - 1 -: TAGW + 1];
         end
+    end endgenerate
+    generate if (CT == 0) begin : g_nct
+        assign ct_go = {FW{1'b0}};
     end endgenerate
 endmodule
 
@@ -610,4 +726,8 @@ endmodule
 // identical interior register and the pin-anchoring hook can place it at its port.
 module ot_coll_pinreg #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
     always @(posedge clk) q <= d;
+endmodule
+// single-bit control pin register with async reset (kept as its own leaf so it is never merged with a twin)
+module ot_coll_pinreg_r (input wire clk, input wire rst_n, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
 endmodule

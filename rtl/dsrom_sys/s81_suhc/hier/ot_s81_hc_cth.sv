@@ -25,7 +25,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cth #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, WIN = 2, WOUT = 2, ML = 5, AL = 4,
-    parameter integer RLY = 2
+    parameter integer RLY = 2, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0
 ) (
     input  wire                       clk,
     input  wire                       rst_in,
@@ -48,10 +48,55 @@ module ot_s81_hc_cth #(
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FDW = O_D + FDD, FXW = O_D + S_RD * 512;
     localparam integer RDW = S_RT + 8 * S_RT + 16 * S_RT + 8 + 512 * S_RT;
 `ifndef SYNTHESIS
+    initial if (LANE_SPECIALIZE && !CNL_PIN) $fatal(1,"cth LANE_SPECIALIZE requires CNL_PIN");
     initial if (RLY < 2 || GS != 8) $fatal(1, "ot_s81_hc_cth: RLY >= 2 (the return merge takes a relay stage), GS 8");
 `endif
+
+    // Constant bit maps: HLOAD64-bit lane words, GAIN32-bit lane words, shared pre128.
+    function automatic integer lane_payload_width(input integer ln);
+        begin case(ln) 0:lane_payload_width=256; 1:lane_payload_width=288;
+              2:lane_payload_width=352; default:lane_payload_width=288; endcase end
+    endfunction
+    function automatic integer lane_payload_needed(input integer ln,input integer bitno);
+        integer g;
+        begin
+            lane_payload_needed=(bitno<128) ||
+                (bitno>=64*ln && bitno<64*ln+64) ||
+                (bitno>=64*(ln+4) && bitno<64*(ln+4)+64);
+            for(g=0;g<4;g=g+1)
+                if(bitno>=32*(ln+4*g) && bitno<32*(ln+4*g)+32)
+                    lane_payload_needed=1;
+        end
+    endfunction
+    function automatic integer lane_payload_rank(input integer ln,input integer bitno);
+        integer b;
+        begin lane_payload_rank=0;
+            for(b=0;b<bitno;b=b+1) lane_payload_rank=lane_payload_rank+lane_payload_needed(ln,b);
+        end
+    endfunction
+    function automatic integer lane_payload_index(input integer ln,input integer packedbit);
+        integer b,c;
+        begin lane_payload_index=0;c=0;
+            for(b=0;b<512;b=b+1) if(lane_payload_needed(ln,b)) begin
+                if(c==packedbit) lane_payload_index=b;
+                c=c+1;
+            end
+        end
+    endfunction
     wire [S_RD+4:0] fv;
     wire [FXW-1:0]  fdx;
+    wire [S_RD+4:0] fv_local;
+    wire [FXW-1:0] fdx_local;
+    generate if (CNL_PIN) begin : g_local_epoch
+        reg [S_RD+4:0] v;
+        reg [FXW-1:0] d;
+        always @(posedge clk or negedge rst_c)
+            if (!rst_c) v <= 0; else v <= fv;
+        always @(posedge clk) d <= fdx;
+        assign fv_local = v; assign fdx_local = d;
+    end else begin : g_legacy_epoch
+        assign fv_local = fv; assign fdx_local = fdx;
+    end endgenerate
     wire [S_RD+4:0] fvm;
     wire [FDW-1:0]  fdm;
     wire            rst_c;                     // ctfn's first reset stage -> one relay flop in every tile
@@ -76,7 +121,8 @@ module ot_s81_hc_cth #(
     generate for (j = 0; j < 4; j = j + 1) begin : g_b
         for (l = 0; l < 4; l = l + 1) begin : g_l
             localparam integer n = 4 * j + l;
-            ot_s81_hc_ctnl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY)) u_n (
+            if (!LANE_SPECIALIZE) begin : g_dynamic_lane
+            ot_s81_hc_ctnl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
                 .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fdx),
                 .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
                 .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
@@ -85,12 +131,67 @@ module ot_s81_hc_cth #(
                 .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
                 .sq_out(sq[32 * n +: 32]), .acc_out(acc[32 * n +: 32]), .cy_out(cyo[32 * n +: 32]),
                 .yb(yb[16 * n +: 16]), .flt(nflt[n]));
+            end else begin : g_fixed_lane
+                localparam integer P_BITS=lane_payload_width(l);
+                wire [O_D+S_RD*P_BITS-1:0] fd_lane;
+                assign fd_lane[O_D-1:0]=fdx[O_D-1:0];
+                for(genvar rp=0;rp<S_RD;rp=rp+1) begin : g_read_port
+                    for(genvar pb=0;pb<P_BITS;pb=pb+1) begin : g_payload
+                        localparam integer RAW_BIT=lane_payload_index(l,pb);
+                        assign fd_lane[O_D+rp*P_BITS+pb]=fdx[O_D+rp*512+RAW_BIT];
+                    end
+                end
+                if (l==0) begin : g_l0
+            ot_s81_hc_ctnl_l0 #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
+                .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fd_lane),
+                .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
+                .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
+                .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
+                .sq_out(sq[32 * n +: 32]), .acc_out(acc[32 * n +: 32]), .cy_out(cyo[32 * n +: 32]),
+                .yb(yb[16 * n +: 16]), .flt(nflt[n]));
+                end
+                else if (l==1) begin : g_l1
+            ot_s81_hc_ctnl_l1 #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
+                .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fd_lane),
+                .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
+                .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
+                .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
+                .sq_out(sq[32 * n +: 32]), .acc_out(acc[32 * n +: 32]), .cy_out(cyo[32 * n +: 32]),
+                .yb(yb[16 * n +: 16]), .flt(nflt[n]));
+                end
+                else if (l==2) begin : g_l2
+            ot_s81_hc_ctnl_l2 #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
+                .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fd_lane),
+                .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
+                .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
+                .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
+                .sq_out(sq[32 * n +: 32]), .acc_out(acc[32 * n +: 32]), .cy_out(cyo[32 * n +: 32]),
+                .yb(yb[16 * n +: 16]), .flt(nflt[n]));
+                end
+                else if (l==3) begin : g_l3
+            ot_s81_hc_ctnl_l3 #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .RLY(RLY), .PIN_STAGE(CNL_PIN), .CHAIN_STEP(CHAIN_STEP)) u_n (
+                .clk(clk), .rst_in(rst_c), .tid(tid), .bank(j[1:0]), .lane(l[1:0]), .last(last), .fv(fv), .fdx(fd_lane),
+                .wb_v(hov[2 * l]), .wb_en(pwb[2 * l]), .wb_hs(phs[2 * l]), .wb_ob(pob[16 * (2 * l) +: 16]),
+                .wb_d(hpo[64 * l +: 64]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
+                .hpr(hpr[64 * n +: 64]), .hrq(hrq[64 * S_RT * n +: 64 * S_RT]),
+                .cy_in(cy_in[32 * j +: 32]), .acc_in(l == 0 ? 32'd0 : acc[32 * (n > 0 ? n - 1 : 0) +: 32]),
+                .sqn_in(l == 3 ? 32'd0 : sq[32 * (n < 15 ? n + 1 : 15) +: 32]),
+                .sq_out(sq[32 * n +: 32]), .acc_out(acc[32 * n +: 32]), .cy_out(cyo[32 * n +: 32]),
+                .yb(yb[16 * n +: 16]), .flt(nflt[n]));
+                end
+            end
         end
         assign cy_out[32 * j +: 32] = cyo[32 * (4 * j + 2) +: 32];
     end endgenerate
     generate for (m = 0; m < 8; m = m + 1) begin : g_p
-        ot_s81_hc_ctpl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL)) u_p (
-            .clk(clk), .rst_in(rst_c), .grp(m[2:1]), .half(m[0]), .fv(fv), .fdx(fdx),
+        ot_s81_hc_ctpl #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .WIN(WIN), .WOUT(WOUT), .ML(ML), .AL(AL), .PIN_STAGE(1)) u_p (
+            .clk(clk), .rst_in(rst_c), .grp(m[2:1]), .half(m[0]), .fv(fv_local), .fdx(fdx_local),
             .hpr({hpr[64 * (12 + m / 2) +: 64], hpr[64 * (8 + m / 2) +: 64], hpr[64 * (4 + m / 2) +: 64], hpr[64 * (m / 2) +: 64]}),
             .hov(hov[m]), .pwb(pwb[m]), .phs(phs[m]), .pob(pob[16 * m +: 16]), .hpo(hpo[32 * m +: 32]),
             .hov_d(hov_d[m]), .hnz_d(hnz_d[m]), .pflt_d(pflt_d[m]));
@@ -109,15 +210,15 @@ module ot_s81_hc_cth #(
             assign hqb_s[64 * (SH * j + q) +: 64] = hrq[64 * S_RT * (j + 8) + 64 * (q + SH) +: 64];
         end
     end endgenerate
-    ot_s81_hc_ctra #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u_ra (
-        .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv), .fdx(fdx[O_D-1:0]), .rv_in(rv_in),
+    ot_s81_hc_ctra #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(CNL_PIN)) u_ra (
+        .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local[O_D-1:0]), .rv_in(rv_in),
         .rd_in(rd_in[WA-1:0]), .rvm(rvm), .rdm(rdm[WA-1:0]), .rq_q(rq_q), .hs_run(hs_run), .hs_c(hs_c),
         .hrq_n(hqa_n), .hrq_s(hqa_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]), .cs(cs),
         .nflt_n(nflt[7:0]), .nflt_s(nflt[15:8]), .hov_d(hov_d[0]),
         .hnz_n({hnz_d[6], hnz_d[4], hnz_d[2], hnz_d[0]}), .hnz_s({hnz_d[7], hnz_d[5], hnz_d[3], hnz_d[1]}),
         .pflt_n({pflt_d[6], pflt_d[4], pflt_d[2], pflt_d[0]}), .pflt_s({pflt_d[7], pflt_d[5], pflt_d[3], pflt_d[1]}));
-    ot_s81_hc_ctrb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u_rb (
-        .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv), .fdx(fdx[O_D-1:0]), .rv_in(rv_in),
+    ot_s81_hc_ctrb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(CNL_PIN)) u_rb (
+        .clk(clk), .rst_in(rst_c), .tid(tid), .last(last), .fv(fv_local), .fdx(fdx_local[O_D-1:0]), .rv_in(rv_in),
         .rdh_in(rd_in[P_D-1:0]), .rdd_in(rd_in[RDW-1 -: 512 * SH + 128]), .rdm(rdm[RDW-1 -: 512 * SH]),
         .hrq_n(hqb_n), .hrq_s(hqb_s), .yb_n(yb[0 +: 128]), .yb_s(yb[128 +: 128]));
     ot_s81_hc_ctrn #(.S_RT(S_RT), .RDW(RDW), .RLY(RLY)) u_rn (
@@ -217,7 +318,7 @@ endmodule
 
 // ------------------------------------------------------------------------------------------------ norm/scale sequencer
 module ot_s81_hc_ctq #(
-    parameter integer NG = 256, D = 5120, S_RD = 2, ML = 5, AL = 4
+    parameter integer NG = 256, D = 5120, S_RD = 2, ML = 5, AL = 4, CHAIN_STEP = AL
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -228,7 +329,7 @@ module ot_s81_hc_ctq #(
     output reg             mx_v,
     output wire            x_v,
     output wire [7:0]      xi,
-    output wire [ML+7*AL:0] vs,
+    output wire [ML+7*CHAIN_STEP:0] vs,
     output wire [7:0]      si,
     output reg  [31:0]     rh,
     output reg  [7:0]      sc_i,
@@ -240,7 +341,7 @@ module ot_s81_hc_ctq #(
     localparam integer O_NG = 5 + S_RD * 16 + 20, O_NV = O_NG + 6, O_R = O_NV + 8, O_D = O_R + 32 + 1;
     localparam integer FXW = O_D + S_RD * 512;
     localparam integer N = 4 * NG, NV = D / N, LM = ML, LA = AL;
-    localparam integer DM = LM + 3 * LA + 1, DS = LM + 7 * LA, DY = 2 * LM + 1;
+    localparam integer DM = LM + 3 * LA + 1, DS = LM + 7 * CHAIN_STEP, DY = 2 * LM + 1;
     // vector indices are < NV (5 at NG 256): the wait lines carry IW bits, not 8 (the root never sends nv_i >= NV)
     localparam integer IW = (NV > 1) ? $clog2(NV) : 1;
     wire ng_v = fv[S_RD+1], nv_v = fv[S_RD+2], r_v = fv[S_RD+3];
@@ -283,7 +384,7 @@ endmodule
 // delayed LA (kk + 3), fires vs[LM + LA (kk + 3)]; acc[0] = (far ? carry : own square) at lane 0, else acc_in.
 // Straps bank / lane / tid / last are pins captured in flops: one master for all 16 lanes of every sub-tile.
 module ot_s81_hc_ctnl #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, RLY = 2
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, RLY = 2, PIN_STAGE = 0, CHAIN_STEP = AL, FIXED_LANE = -1
 ) (
     input  wire                  clk,
     input  wire                  rst_in,
@@ -313,7 +414,39 @@ module ot_s81_hc_ctnl #(
     localparam integer O_RK = 0, O_RS = 2, O_RG = 3, O_RC = 5, O_PB = O_RC + S_RD * 16, O_NG = O_PB + 20,
                        O_NV = O_NG + 6, O_R = O_NV + 8, O_HS = O_R + 32, O_D = O_HS + 1, FXW = O_D + S_RD * 512;
     localparam integer GT = GS / 2, N = 4 * NG, NV = D / N, PPR = NG / 8, LM = ML, LA = AL;
-    localparam integer DS = LM + 7 * LA, DY = 2 * LM + 1;
+    localparam integer DS = LM + 7 * CHAIN_STEP, DY = 2 * LM + 1;
+
+    // Constant bit maps: HLOAD64-bit lane words, GAIN32-bit lane words, shared pre128.
+    function automatic integer lane_payload_width(input integer ln);
+        begin case(ln) 0:lane_payload_width=256; 1:lane_payload_width=288;
+              2:lane_payload_width=352; default:lane_payload_width=288; endcase end
+    endfunction
+    function automatic integer lane_payload_needed(input integer ln,input integer bitno);
+        integer g;
+        begin
+            lane_payload_needed=(bitno<128) ||
+                (bitno>=64*ln && bitno<64*ln+64) ||
+                (bitno>=64*(ln+4) && bitno<64*(ln+4)+64);
+            for(g=0;g<4;g=g+1)
+                if(bitno>=32*(ln+4*g) && bitno<32*(ln+4*g)+32)
+                    lane_payload_needed=1;
+        end
+    endfunction
+    function automatic integer lane_payload_rank(input integer ln,input integer bitno);
+        integer b;
+        begin lane_payload_rank=0;
+            for(b=0;b<bitno;b=b+1) lane_payload_rank=lane_payload_rank+lane_payload_needed(ln,b);
+        end
+    endfunction
+    function automatic integer lane_payload_index(input integer ln,input integer packedbit);
+        integer b,c;
+        begin lane_payload_index=0;c=0;
+            for(b=0;b<512;b=b+1) if(lane_payload_needed(ln,b)) begin
+                if(c==packedbit) lane_payload_index=b;
+                c=c+1;
+            end
+        end
+    endfunction
     function automatic [31:0] bf16(input [31:0] x);
         reg [32:0] s;
         begin s = {1'b0, x} + 33'h7FFF + {32'd0, x[16]}; bf16 = {s[31:16], 16'd0}; end
@@ -321,21 +454,62 @@ module ot_s81_hc_ctnl #(
     reg rr;                                              // regional reset relay: rst_in = ctfn's first stage
     always @(posedge clk) rr <= rst_in;
     wire rst_n = rr;
+    // Every dynamic command boundary is captured as a coherent transaction.
+    wire [S_RD+4:0] fvq;
+    wire [FXW-1:0] fdxq;
+    wire wb_vq, wb_enq, wb_hsq, hs_runq;
+    wire [15:0] wb_obq, hs_cq;
+    wire [63:0] wb_dq;
+    wire [16*S_RT-1:0] rq_qq;
+    generate if (PIN_STAGE) begin : g_pin
+        reg [S_RD+4:0] v;
+        wire [FXW-1:0] d;
+        for(genvar fb=0;fb<FXW;fb=fb+1) begin : g_fd
+            if(FIXED_LANE<0 || fb<O_D || lane_payload_needed(FIXED_LANE,(fb-O_D)%512)) begin : g_capture
+                reg q;
+                always @(posedge clk) q<=fdx[fb];
+                assign d[fb]=q;
+            end else begin : g_unused
+                assign d[fb]=1'b0;
+            end
+        end
+        reg wv;
+        reg [81:0] w;
+        reg [16*S_RT+16:0] r;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin v <= 0; wv <= 0; end
+            else begin v <= fv; wv <= wb_v; end
+        end
+        always @(posedge clk) begin
+            w <= {wb_en,wb_hs,wb_ob,wb_d};
+            r <= {rq_q,hs_run,hs_c};
+        end
+        assign fvq=v; assign fdxq=d;
+        assign wb_vq=wv;
+        assign {wb_enq,wb_hsq,wb_obq,wb_dq}=w;
+        assign {rq_qq,hs_runq,hs_cq}=r;
+    end else begin : g_nopin
+        assign fvq=fv; assign fdxq=fdx;
+        assign {wb_vq,wb_enq,wb_hsq,wb_obq,wb_dq}={wb_v,wb_en,wb_hs,wb_ob,wb_d};
+        assign {rq_qq,hs_runq,hs_cq}={rq_q,hs_run,hs_c};
+    end endgenerate
     reg [7:0] tq;
-    reg [1:0] bq, lq;
+    reg [1:0] bq, lq_cfg;
+    wire [1:0] lq=(FIXED_LANE>=0)?2'(FIXED_LANE):lq_cfg;
     reg       laq, hs_sl, farq, l0q, l3q;
     always @(posedge clk) begin
-        tq <= tid; bq <= bank; lq <= lane; laq <= last; farq <= tid[0]; l0q <= (lane == 2'd0); l3q <= (lane == 2'd3);
+        tq <= tid; bq <= bank; lq_cfg <= lane; laq <= last; farq <= tid[0]; l0q <= (FIXED_LANE>=0) ? (FIXED_LANE==0) : (lane==0);
+        l3q <= (FIXED_LANE>=0) ? (FIXED_LANE==3) : (lane==3);
     end
-    wire [S_RD-1:0] rd_v = fv[S_RD-1:0];
-    wire pb_v = fv[S_RD], nv_v = fv[S_RD+2], hs_v = fv[S_RD+4];
-    wire [1:0] rd_k = fdx[O_RK +: 2];
-    wire       rd_s = fdx[O_RS];
-    wire [1:0] rd_g = fdx[O_RG +: 2];
-    wire       pb_hs = fdx[O_PB + 2];
-    wire [15:0] pb_b = fdx[O_PB + 4 +: 16];
-    wire [7:0]  nv_i = fdx[O_NV +: 8];
-    always @(posedge clk) if (hs_v) hs_sl <= fdx[O_HS];
+    wire [S_RD-1:0] rd_v = fvq[S_RD-1:0];
+    wire pb_v = fvq[S_RD], nv_v = fvq[S_RD+2], hs_v = fvq[S_RD+4];
+    wire [1:0] rd_k = fdxq[O_RK +: 2];
+    wire       rd_s = fdxq[O_RS];
+    wire [1:0] rd_g = fdxq[O_RG +: 2];
+    wire       pb_hs = fdxq[O_PB + 2];
+    wire [15:0] pb_b = fdxq[O_PB + 4 +: 16];
+    wire [7:0]  nv_i = fdxq[O_NV +: 8];
+    always @(posedge clk) if (hs_v) hs_sl <= fdxq[O_HS];
 
     reg [63:0]  hb [0:2*NV-1];                           // group lq of bank bq's h rows
     reg [31:0]  gt [0:4*NV-1];                           // lane gain words
@@ -345,29 +519,29 @@ module ot_s81_hc_ctnl #(
         for (s = 0; s < S_RD; s = s + 1)
             if (rd_v[s]) begin : one
                 reg [15:0] c, g0, l0, rb, g;
-                c = fdx[O_RC + 16 * s +: 16];
+                c = fdxq[O_RC + 16 * s +: 16];
                 if (rd_k == 2'd0) begin
                     rb = c / PPR; g0 = c % PPR;
                     for (k = 0; k < 8; k = k + 1)
                         if (g0 * (8 / GT) + k / GT == tq && rb % 4 == bq && k % GT == lq)
-                            hb[rd_s * NV + rb / 4] <= fdx[O_D + 512 * s + 64 * k +: 64];
+                            hb[rd_s * NV + rb / 4] <= fdxq[O_D + 512 * s + 64 * k +: 64];
                 end else if (rd_k == 2'd1) begin
                     l0 = (16 * c) % N;
                     g = (l0 % NG) / GT;
                     for (k = 0; k < 16; k = k + 1)
                         if (g + k / GT == tq && l0 / NG == bq && k % GT == lq)
-                            gt[rd_g * NV + (16 * c) / N] <= fdx[O_D + 512 * s + 32 * k +: 32];
+                            gt[rd_g * NV + (16 * c) / N] <= fdxq[O_D + 512 * s + 32 * k +: 32];
                 end else if (rd_k == 2'd2) begin
-                    if (c != 0) cf_pre[rd_s] <= fdx[O_D + 512 * s +: 128];
+                    if (c != 0) cf_pre[rd_s] <= fdxq[O_D + 512 * s +: 128];
                 end
             end
-        if (wb_v && wb_en && wb_ob % 4 == bq) hb[wb_hs * NV + wb_ob / 4] <= wb_d;
+        if (wb_vq && wb_enq && wb_obq % 4 == bq) hb[wb_hsq * NV + wb_obq / 4] <= wb_dq;
     end
     always @(posedge clk) if (pb_v) hpr <= (pb_b % 4 == bq) ? hb[pb_hs * NV + pb_b / 4] : 64'd0;
     always @(posedge clk) begin : rdh
         reg [15:0] qx, b;
         for (s = 0; s < S_RT; s = s + 1) begin
-            qx = laq ? hs_c + s : rq_q[16 * s +: 16];
+            qx = laq ? hs_cq + s : rq_qq[16 * s +: 16];
             b = (8 * qx) / NG;
             hrq[64 * s +: 64] <= (b % 4 == bq) ? hb[hs_sl * NV + b / 4] : 64'd0;
         end
@@ -379,7 +553,7 @@ module ot_s81_hc_ctnl #(
     wire [DS:0] vs;
     wire [DY:0] vy;
     wire [31:0] rh;
-    ot_s81_hc_ctq #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL)) u_q (.clk(clk), .rst_n(rst_n), .fv(fv), .fdx(fdx),
+    ot_s81_hc_ctq #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP)) u_q (.clk(clk), .rst_n(rst_n), .fv(fvq), .fdx(fdxq),
         .n_hs(n_hs), .n_cs(n_cs), .n_gs(n_gs), .mx_v(mx_v), .x_v(x_v), .xi(xi), .vs(vs), .si(si), .rh(rh), .sc_i(sc_i),
         .b_v(b_v), .vy(vy), .wi(wi), .yi(yi));
     reg [63:0] mx_h;
@@ -400,30 +574,56 @@ module ot_s81_hc_ctnl #(
     always @(posedge clk) yr <= bf16(qq);
     assign yb = yr[31:16];
     assign sq_out = sq;
-    // chain adder kk = lq: ONE tapped delay line (the half is a static strap, so near and far never both run): its input
-    // is the next lane's square (near, taps LA lq) or the own square (far, taps LA (lq + 3)).  Same operand, same cycle
-    // as two separate lines (2 LA + 6 LA stages); 6 LA stages.
-    reg  [31:0] dl [1:6*LA];
-    integer t;
-    always @(posedge clk) begin
-        dl[1] <= farq ? sq : sqn_in; for (t = 2; t <= 6 * LA; t = t + 1) dl[t] <= dl[t - 1];
-    end
-    reg [31:0] dn, df;
-    reg        fire;
-    always @(*) begin
-        case (lq) 2'd0: dn = sqn_in; 2'd1: dn = dl[LA]; 2'd2: dn = dl[2 * LA]; default: dn = 32'd0; endcase
-        case (lq) 2'd0: df = dl[3 * LA]; 2'd1: df = dl[4 * LA]; 2'd2: df = dl[5 * LA]; default: df = dl[6 * LA]; endcase
-        case (lq) 2'd0: fire = farq ? vs[LM + 3 * LA] : vs[LM];
-                  2'd1: fire = farq ? vs[LM + 4 * LA] : vs[LM + LA];
-                  2'd2: fire = farq ? vs[LM + 5 * LA] : vs[LM + 2 * LA];
-                  default: fire = farq ? vs[LM + 6 * LA] : 1'b0; endcase
-    end
+    // Registered chain ingress plus the five-cut exact adder: effective step 1+5=6.
+    // All raw sources share the ingress edge, including local square and octet carry.
     wire [31:0] cyd;
-    reg  [31:0] cyq;
+    reg [31:0] cyq;
     always @(posedge clk) cyq <= cy_in;
     ot_hdc_delay #(.W(32), .D(RLY)) u_cy (.clk(clk), .rst_n(rst_n), .d(cyq), .q(cyd));
-    wire [31:0] acc_a = l0q ? (farq ? cyd : sq) : acc_in;
-    ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rst_n, fire, acc_a, farq ? df : dn, acc_out, f[4]);
+    wire [31:0] aq, nq, oq, cq;
+    generate if (PIN_STAGE) begin : g_chain_pin
+        reg [31:0] ar,nr,orr,cr;
+        always @(posedge clk) begin ar<=acc_in; nr<=sqn_in; orr<=sq; cr<=cyd; end
+        assign aq=ar; assign nq=nr; assign oq=orr; assign cq=cr;
+    end else begin : g_chain_nopin
+        assign aq=acc_in; assign nq=sqn_in; assign oq=sq; assign cq=cyd;
+    end endgenerate
+    reg [31:0] dl [1:6*CHAIN_STEP];
+    integer t;
+    always @(posedge clk) begin
+        dl[1] <= farq ? oq : nq;
+        for (t=2;t<=6*CHAIN_STEP;t=t+1) dl[t]<=dl[t-1];
+    end
+    reg [31:0] dn,df;
+    reg fire;
+    always @(*) begin
+        case(lq) 0:dn=nq; 1:dn=dl[CHAIN_STEP]; 2:dn=dl[2*CHAIN_STEP]; default:dn=0; endcase
+        case(lq) 0:df=dl[3*CHAIN_STEP]; 1:df=dl[4*CHAIN_STEP];
+                 2:df=dl[5*CHAIN_STEP]; default:df=dl[6*CHAIN_STEP]; endcase
+        case(lq) 0:fire=farq ? vs[LM+3*CHAIN_STEP] : vs[LM];
+                 1:fire=farq ? vs[LM+4*CHAIN_STEP] : vs[LM+CHAIN_STEP];
+                 2:fire=farq ? vs[LM+5*CHAIN_STEP] : vs[LM+2*CHAIN_STEP];
+                 default:fire=farq ? vs[LM+6*CHAIN_STEP] : 1'b0; endcase
+    end
+    wire [31:0] acc_a=l0q ? (farq ? cq : oq) : aq;
+    generate if (PIN_STAGE) begin : g_chain6
+        reg fire_q;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n) fire_q<=0; else fire_q<=fire;
+        wire [1:0] err;
+        wire vo;
+        ot_hdc_fp32_add_f12_l5x u_a
+            (.clk(clk),.rst_n(rst_n),.valid_in(fire_q),.a(acc_a),.b(farq?df:dn),
+             .y(acc_out),.err(err),.valid_out(vo));
+        assign f[4]=vo && (err!=0);
+    end else begin : g_chain_legacy
+        ot_dsrom_qadd #(.LAT(LA)) u_a (clk,rst_n,fire,acc_a,farq?df:dn,acc_out,f[4]);
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (FIXED_LANE>=4 || (FIXED_LANE>=0 && GS!=8)) $fatal(1,"ctnl FIXED_LANE requires0..3/GS8");
+    initial if (PIN_STAGE && CHAIN_STEP != 6)
+        $fatal(1,"ctnl PIN_STAGE requires CHAIN_STEP=6");
+`endif
     always @(posedge clk) cy_out <= acc_out;
     always @(posedge clk or negedge rst_n) if (!rst_n) flt <= 1'b0; else flt <= |f;
 endmodule
@@ -615,13 +815,24 @@ module ot_s81_hc_ctpl #(
         else begin hov_d <= hov; hnz_d <= hov & nz; pflt_d <= |l_f; end
 endmodule
 
+// Keep this module in SYNTH_KEEP_MODULES so per-word control replicas do not merge.
+module ot_s81_hc_ctpl_ctl_ff (
+    input wire clk, rst_n,
+    input wire [2:0] d,
+    output reg [2:0] q
+);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 0; else q <= d;
+endmodule
+
+
 // ------------------------------------------------------------------------------------------------ return bus tiles
 // ctrs (S strip): rv / rd pin flops, the far tile's originated slots, the merge stage (ybuf, psb, the banks' hrq) and
 // the norm/scale sequencer copy.  ctrn (N strip): the RLY - 2 relay stages and the out flops.  rdm -> (relay | out) is
 // the one cross-slot stage (wire only); rd_out at the N face abuts the previous slot's S face.  Same registers as the
 // single strip ctr: pin, origination, merge, RLY - 2 relays, out.
 module ot_s81_hc_ctrs #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -646,7 +857,7 @@ module ot_s81_hc_ctrs #(
     localparam integer O_HS = 5 + S_RD * 16 + 20 + 6 + 8 + 32, O_D = O_HS + 1, FXW = O_D + S_RD * 512;
     localparam integer NS = NG / GS, NP = (NS + NCOL - 1) / NCOL, GT = GS / 2, N = 4 * NG, NV = D / N, NT = 4 * GT;
     localparam integer NR = D / NG, HROWS = NR * NG / 8, YROWS = N / 32, LM = ML, LA = AL;
-    localparam integer DS = LM + 7 * LA, DY = 2 * LM + 1;
+    localparam integer DS = LM + 7 * CHAIN_STEP, DY = 2 * LM + 1;
     localparam integer P_T = 0, P_I = S_RT, P_Q = P_I + 8 * S_RT, P_PI = P_Q + 16 * S_RT, P_D = P_PI + 8,
                        RDW = P_D + 512 * S_RT;
     reg rr;                                              // regional reset relay: rst_in = ctfn's first stage
@@ -663,7 +874,7 @@ module ot_s81_hc_ctrs #(
     wire [DS:0] vs;
     wire [DY:0] vy;
     wire [31:0] rh;
-    ot_s81_hc_ctq #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL)) u_q (.clk(clk), .rst_n(rst_n), .fv(fv), .fdx(fdx),
+    ot_s81_hc_ctq #(.NG(NG), .D(D), .S_RD(S_RD), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP)) u_q (.clk(clk), .rst_n(rst_n), .fv(fv), .fdx(fdx),
         .n_hs(n_hs), .n_cs(n_cs), .n_gs(n_gs), .mx_v(mx_v), .x_v(x_v), .xi(xi), .vs(vs), .si(si), .rh(rh), .sc_i(sc_i),
         .b_v(b_v), .vy(vy), .wi(wi), .yi(yi));
     integer s, k, qd, q;
@@ -714,6 +925,17 @@ module ot_s81_hc_ctrs #(
     // stage 1: pin flops; stage 2: the far tile's originated slots; stage 3: merge; then 2 + RLY - 3 relays + out
     reg [S_RT+3:0] rvq, rv2;
     reg [RDW-1:0]  rdq, rd2;
+    wire [S_RT+3:0] rv_merge;
+    wire [RDW-1:0] rd_merge;
+    generate if (READ_STAGE) begin : g_read_relay
+        reg [S_RT+3:0] v;
+        reg [RDW-1:0] d;
+        always @(posedge clk or negedge rst_n) if (!rst_n) v<=0; else v<=rv2;
+        always @(posedge clk) d<=rd2;
+        assign rv_merge=v; assign rd_merge=d;
+    end else begin : g_read_legacy
+        assign rv_merge=rv2; assign rd_merge=rd2;
+    end endgenerate
     assign rq_q = rdq[P_Q +: 16 * S_RT];
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin rvq <= 0; rv2 <= 0; rvm <= 0; end
@@ -724,10 +946,10 @@ module ot_s81_hc_ctrs #(
             rv2[S_RT+1]   <= !lq && rvq[S_RT+1];
             rv2[S_RT+2]   <= rvq[S_RT+2];
             rv2[S_RT+3]   <= rvq[S_RT+3];
-            rvm[S_RT:0]   <= rv2[S_RT:0];
-            rvm[S_RT+1]   <= rv2[S_RT+1] | (lq && hov_d);
-            rvm[S_RT+2]   <= rv2[S_RT+2] | (|pflt_d) | (|nflt);
-            rvm[S_RT+3]   <= rv2[S_RT+3] | (|hnz_d);
+            rvm[S_RT:0]   <= rv_merge[S_RT:0];
+            rvm[S_RT+1]   <= rv_merge[S_RT+1] | (lq && hov_d);
+            rvm[S_RT+2]   <= rv_merge[S_RT+2] | (|pflt_d) | (|nflt);
+            rvm[S_RT+3]   <= rv_merge[S_RT+3] | (|hnz_d);
         end
     always @(posedge clk) begin : orig
         reg [RDW-1:0] o;
@@ -745,13 +967,13 @@ module ot_s81_hc_ctrs #(
                                                 hrq[64 * S_RT * (8 + ll) + 64 * ss +: 64] | hrq[64 * S_RT * (12 + ll) + 64 * ss +: 64];
     always @(posedge clk) begin : mrg
         reg [RDW-1:0] o;
-        o = rd2;
-        if (rv2[S_RT] && farq) begin                                     // the far half owns the octet's slot
+        o = rd_merge;
+        if (rv_merge[S_RT] && farq) begin                                     // the far half owns the octet's slot
             if (NP > 1) o[P_D + 128 +: (NP > 1 ? NP - 1 : 1) * 128] = o[P_D +: (NP > 1 ? NP - 1 : 1) * 128];
             o[P_D +: 128] = psb[o[P_PI +: 8]];
         end
         for (s = 0; s < S_RT; s = s + 1)
-            if (rv2[s]) begin : sl
+            if (rv_merge[s]) begin : sl
                 reg [7:0] vi;
                 reg [15:0] qx, g, g0, b;
                 reg [NT*16-1:0] yr;
@@ -783,7 +1005,7 @@ endmodule
 // the far tile's 128-bit psb insert shifts into its first slot.  fdx: only the control word (bits < O_D) is read.
 // Lanes n < 8 (rows above the band) drive the *_n ports on the N face, n >= 8 the *_s ports on the S face.
 module ot_s81_hc_ctra #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -820,7 +1042,7 @@ module ot_s81_hc_ctra #(
     end endgenerate
     wire [7:0] hnz = {hnz_s[3], hnz_n[3], hnz_s[2], hnz_n[2], hnz_s[1], hnz_n[1], hnz_s[0], hnz_n[0]};
     wire [7:0] pfl = {pflt_s[3], pflt_n[3], pflt_s[2], pflt_n[2], pflt_s[1], pflt_n[1], pflt_s[0], pflt_n[0]};
-    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u (
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE)) u (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx({{(FXW - O_D){1'b0}}, fdx}),
         .rv_in(rv_in), .rd_in({{(RDW - WA){1'b0}}, rd_in}), .rvm(rvm), .rdm(rdm_w), .rq_q(rq_q), .hs_run(hs_run),
         .hs_c(hs_c), .hrq(hrq), .yb({yb_s, yb_n}), .cs(cs), .nflt({nflt_s, nflt_n}), .hov_d(hov_d), .hnz_d(hnz),
@@ -829,7 +1051,7 @@ module ot_s81_hc_ctra #(
 endmodule
 
 module ot_s81_hc_ctrb #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -858,7 +1080,7 @@ module ot_s81_hc_ctrb #(
             assign hrq[64 * S_RT * (n + 8) + 64 * (q + SH) +: 64] = hrq_s[64 * (SH * n + q) +: 64];
         end
     end endgenerate
-    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL)) u (
+    ot_s81_hc_ctrs #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_RT(S_RT), .ML(ML), .AL(AL), .CHAIN_STEP(CHAIN_STEP), .READ_STAGE(READ_STAGE)) u (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv), .fdx({{(FXW - O_D){1'b0}}, fdx}),
         .rv_in(rv_in), .rd_in({rdd_in, {(512 * SH - 128){1'b0}}, rdh_in}), .rvm(), .rdm(rdm_w), .rq_q(), .hs_run(),
         .hs_c(), .hrq(hrq), .yb({yb_s, yb_n}), .cs(128'd0), .nflt(16'd0), .hov_d(1'b0), .hnz_d(8'd0), .pflt_d(8'd0));
@@ -886,12 +1108,331 @@ module ot_s81_hc_ctrn #(
     always @(posedge clk) rd_out <= rd_out_d;
 endmodule
 
-
-module ot_s81_hc_ctpl_ctl_ff (
-    input wire clk, rst_n,
-    input wire [2:0] d,
-    output reg [2:0] q
+// Fixed lane-position hard masters: packed command payload is a static wire gather.
+module ot_s81_hc_ctnl_l0 #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, RLY = 2, PIN_STAGE = 1, CHAIN_STEP = 6
+) (
+    input  wire                  clk,
+    input  wire                  rst_in,
+    input  wire [7:0]            tid,
+    input  wire [1:0]            bank,
+    input  wire [1:0]            lane,
+    input  wire                  last,
+    input  wire [S_RD+4:0]       fv,
+    input  wire [FXW-1:0]        fdx,
+    input  wire                  wb_v, wb_en, wb_hs,  // hc_post write back (ctpl flops)
+    input  wire [15:0]           wb_ob,
+    input  wire [63:0]           wb_d,                // group lq's 4 hc_post outputs, BF16
+    input  wire [16*S_RT-1:0]    rq_q,                // return pin flops (ctr): row field
+    input  wire                  hs_run,
+    input  wire [15:0]           hs_c,
+    output reg  [63:0]           hpr,                 // hc_post row read, group lq (zero unless this bank)
+    output reg  [64*S_RT-1:0]    hrq,                 // return h row reads, group lq (zero unless this bank)
+    input  wire [31:0]           cy_in,               // octet carry (lane 0)
+    input  wire [31:0]           acc_in,              // chain: previous lane's adder output
+    input  wire [31:0]           sqn_in,              // chain: next lane's square
+    output wire [31:0]           sq_out,
+    output wire [31:0]           acc_out,
+    output reg  [31:0]           cy_out,              // registered acc_out (the octet carry at lane 2)
+    output wire [15:0]           yb,
+    output reg                   flt
 );
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) q <= 0; else q <= d;
+    localparam integer O_D=72+16*S_RD, P_BITS=256, FXW=O_D+S_RD*P_BITS,
+                       FULL_FXW=O_D+S_RD*512;
+
+    // Constant bit maps: HLOAD64-bit lane words, GAIN32-bit lane words, shared pre128.
+    function automatic integer lane_payload_width(input integer ln);
+        begin case(ln) 0:lane_payload_width=256; 1:lane_payload_width=288;
+              2:lane_payload_width=352; default:lane_payload_width=288; endcase end
+    endfunction
+    function automatic integer lane_payload_needed(input integer ln,input integer bitno);
+        integer g;
+        begin
+            lane_payload_needed=(bitno<128) ||
+                (bitno>=64*ln && bitno<64*ln+64) ||
+                (bitno>=64*(ln+4) && bitno<64*(ln+4)+64);
+            for(g=0;g<4;g=g+1)
+                if(bitno>=32*(ln+4*g) && bitno<32*(ln+4*g)+32)
+                    lane_payload_needed=1;
+        end
+    endfunction
+    function automatic integer lane_payload_rank(input integer ln,input integer bitno);
+        integer b;
+        begin lane_payload_rank=0;
+            for(b=0;b<bitno;b=b+1) lane_payload_rank=lane_payload_rank+lane_payload_needed(ln,b);
+        end
+    endfunction
+    function automatic integer lane_payload_index(input integer ln,input integer packedbit);
+        integer b,c;
+        begin lane_payload_index=0;c=0;
+            for(b=0;b<512;b=b+1) if(lane_payload_needed(ln,b)) begin
+                if(c==packedbit) lane_payload_index=b;
+                c=c+1;
+            end
+        end
+    endfunction
+    wire [FULL_FXW-1:0] fdx_full;
+    assign fdx_full[O_D-1:0]=fdx[O_D-1:0];
+    for(genvar rp=0;rp<S_RD;rp=rp+1) begin : g_read_port
+        for(genvar b=0;b<512;b=b+1) begin : g_expand
+            if(lane_payload_needed(0,b)) begin : g_keep
+                localparam integer PBIT=lane_payload_rank(0,b);
+                assign fdx_full[O_D+rp*512+b]=fdx[O_D+rp*P_BITS+PBIT];
+            end else begin : g_unused
+                assign fdx_full[O_D+rp*512+b]=1'b0;
+            end
+        end
+    end
+    ot_s81_hc_ctnl #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
+        .ML(ML),.AL(AL),.RLY(RLY),.PIN_STAGE(PIN_STAGE),.CHAIN_STEP(CHAIN_STEP),.FIXED_LANE(0)) u_core
+        (.fdx(fdx_full),.*);
+`ifndef SYNTHESIS
+    always @(posedge clk) if(rst_in && lane!=2'd0) $error("fixed HC lane0 identity mismatch");
+`endif
+endmodule
+
+module ot_s81_hc_ctnl_l1 #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, RLY = 2, PIN_STAGE = 1, CHAIN_STEP = 6
+) (
+    input  wire                  clk,
+    input  wire                  rst_in,
+    input  wire [7:0]            tid,
+    input  wire [1:0]            bank,
+    input  wire [1:0]            lane,
+    input  wire                  last,
+    input  wire [S_RD+4:0]       fv,
+    input  wire [FXW-1:0]        fdx,
+    input  wire                  wb_v, wb_en, wb_hs,  // hc_post write back (ctpl flops)
+    input  wire [15:0]           wb_ob,
+    input  wire [63:0]           wb_d,                // group lq's 4 hc_post outputs, BF16
+    input  wire [16*S_RT-1:0]    rq_q,                // return pin flops (ctr): row field
+    input  wire                  hs_run,
+    input  wire [15:0]           hs_c,
+    output reg  [63:0]           hpr,                 // hc_post row read, group lq (zero unless this bank)
+    output reg  [64*S_RT-1:0]    hrq,                 // return h row reads, group lq (zero unless this bank)
+    input  wire [31:0]           cy_in,               // octet carry (lane 0)
+    input  wire [31:0]           acc_in,              // chain: previous lane's adder output
+    input  wire [31:0]           sqn_in,              // chain: next lane's square
+    output wire [31:0]           sq_out,
+    output wire [31:0]           acc_out,
+    output reg  [31:0]           cy_out,              // registered acc_out (the octet carry at lane 2)
+    output wire [15:0]           yb,
+    output reg                   flt
+);
+    localparam integer O_D=72+16*S_RD, P_BITS=288, FXW=O_D+S_RD*P_BITS,
+                       FULL_FXW=O_D+S_RD*512;
+
+    // Constant bit maps: HLOAD64-bit lane words, GAIN32-bit lane words, shared pre128.
+    function automatic integer lane_payload_width(input integer ln);
+        begin case(ln) 0:lane_payload_width=256; 1:lane_payload_width=288;
+              2:lane_payload_width=352; default:lane_payload_width=288; endcase end
+    endfunction
+    function automatic integer lane_payload_needed(input integer ln,input integer bitno);
+        integer g;
+        begin
+            lane_payload_needed=(bitno<128) ||
+                (bitno>=64*ln && bitno<64*ln+64) ||
+                (bitno>=64*(ln+4) && bitno<64*(ln+4)+64);
+            for(g=0;g<4;g=g+1)
+                if(bitno>=32*(ln+4*g) && bitno<32*(ln+4*g)+32)
+                    lane_payload_needed=1;
+        end
+    endfunction
+    function automatic integer lane_payload_rank(input integer ln,input integer bitno);
+        integer b;
+        begin lane_payload_rank=0;
+            for(b=0;b<bitno;b=b+1) lane_payload_rank=lane_payload_rank+lane_payload_needed(ln,b);
+        end
+    endfunction
+    function automatic integer lane_payload_index(input integer ln,input integer packedbit);
+        integer b,c;
+        begin lane_payload_index=0;c=0;
+            for(b=0;b<512;b=b+1) if(lane_payload_needed(ln,b)) begin
+                if(c==packedbit) lane_payload_index=b;
+                c=c+1;
+            end
+        end
+    endfunction
+    wire [FULL_FXW-1:0] fdx_full;
+    assign fdx_full[O_D-1:0]=fdx[O_D-1:0];
+    for(genvar rp=0;rp<S_RD;rp=rp+1) begin : g_read_port
+        for(genvar b=0;b<512;b=b+1) begin : g_expand
+            if(lane_payload_needed(1,b)) begin : g_keep
+                localparam integer PBIT=lane_payload_rank(1,b);
+                assign fdx_full[O_D+rp*512+b]=fdx[O_D+rp*P_BITS+PBIT];
+            end else begin : g_unused
+                assign fdx_full[O_D+rp*512+b]=1'b0;
+            end
+        end
+    end
+    ot_s81_hc_ctnl #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
+        .ML(ML),.AL(AL),.RLY(RLY),.PIN_STAGE(PIN_STAGE),.CHAIN_STEP(CHAIN_STEP),.FIXED_LANE(1)) u_core
+        (.fdx(fdx_full),.*);
+`ifndef SYNTHESIS
+    always @(posedge clk) if(rst_in && lane!=2'd1) $error("fixed HC lane1 identity mismatch");
+`endif
+endmodule
+
+module ot_s81_hc_ctnl_l2 #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, RLY = 2, PIN_STAGE = 1, CHAIN_STEP = 6
+) (
+    input  wire                  clk,
+    input  wire                  rst_in,
+    input  wire [7:0]            tid,
+    input  wire [1:0]            bank,
+    input  wire [1:0]            lane,
+    input  wire                  last,
+    input  wire [S_RD+4:0]       fv,
+    input  wire [FXW-1:0]        fdx,
+    input  wire                  wb_v, wb_en, wb_hs,  // hc_post write back (ctpl flops)
+    input  wire [15:0]           wb_ob,
+    input  wire [63:0]           wb_d,                // group lq's 4 hc_post outputs, BF16
+    input  wire [16*S_RT-1:0]    rq_q,                // return pin flops (ctr): row field
+    input  wire                  hs_run,
+    input  wire [15:0]           hs_c,
+    output reg  [63:0]           hpr,                 // hc_post row read, group lq (zero unless this bank)
+    output reg  [64*S_RT-1:0]    hrq,                 // return h row reads, group lq (zero unless this bank)
+    input  wire [31:0]           cy_in,               // octet carry (lane 0)
+    input  wire [31:0]           acc_in,              // chain: previous lane's adder output
+    input  wire [31:0]           sqn_in,              // chain: next lane's square
+    output wire [31:0]           sq_out,
+    output wire [31:0]           acc_out,
+    output reg  [31:0]           cy_out,              // registered acc_out (the octet carry at lane 2)
+    output wire [15:0]           yb,
+    output reg                   flt
+);
+    localparam integer O_D=72+16*S_RD, P_BITS=352, FXW=O_D+S_RD*P_BITS,
+                       FULL_FXW=O_D+S_RD*512;
+
+    // Constant bit maps: HLOAD64-bit lane words, GAIN32-bit lane words, shared pre128.
+    function automatic integer lane_payload_width(input integer ln);
+        begin case(ln) 0:lane_payload_width=256; 1:lane_payload_width=288;
+              2:lane_payload_width=352; default:lane_payload_width=288; endcase end
+    endfunction
+    function automatic integer lane_payload_needed(input integer ln,input integer bitno);
+        integer g;
+        begin
+            lane_payload_needed=(bitno<128) ||
+                (bitno>=64*ln && bitno<64*ln+64) ||
+                (bitno>=64*(ln+4) && bitno<64*(ln+4)+64);
+            for(g=0;g<4;g=g+1)
+                if(bitno>=32*(ln+4*g) && bitno<32*(ln+4*g)+32)
+                    lane_payload_needed=1;
+        end
+    endfunction
+    function automatic integer lane_payload_rank(input integer ln,input integer bitno);
+        integer b;
+        begin lane_payload_rank=0;
+            for(b=0;b<bitno;b=b+1) lane_payload_rank=lane_payload_rank+lane_payload_needed(ln,b);
+        end
+    endfunction
+    function automatic integer lane_payload_index(input integer ln,input integer packedbit);
+        integer b,c;
+        begin lane_payload_index=0;c=0;
+            for(b=0;b<512;b=b+1) if(lane_payload_needed(ln,b)) begin
+                if(c==packedbit) lane_payload_index=b;
+                c=c+1;
+            end
+        end
+    endfunction
+    wire [FULL_FXW-1:0] fdx_full;
+    assign fdx_full[O_D-1:0]=fdx[O_D-1:0];
+    for(genvar rp=0;rp<S_RD;rp=rp+1) begin : g_read_port
+        for(genvar b=0;b<512;b=b+1) begin : g_expand
+            if(lane_payload_needed(2,b)) begin : g_keep
+                localparam integer PBIT=lane_payload_rank(2,b);
+                assign fdx_full[O_D+rp*512+b]=fdx[O_D+rp*P_BITS+PBIT];
+            end else begin : g_unused
+                assign fdx_full[O_D+rp*512+b]=1'b0;
+            end
+        end
+    end
+    ot_s81_hc_ctnl #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
+        .ML(ML),.AL(AL),.RLY(RLY),.PIN_STAGE(PIN_STAGE),.CHAIN_STEP(CHAIN_STEP),.FIXED_LANE(2)) u_core
+        (.fdx(fdx_full),.*);
+`ifndef SYNTHESIS
+    always @(posedge clk) if(rst_in && lane!=2'd2) $error("fixed HC lane2 identity mismatch");
+`endif
+endmodule
+
+module ot_s81_hc_ctnl_l3 #(
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, RLY = 2, PIN_STAGE = 1, CHAIN_STEP = 6
+) (
+    input  wire                  clk,
+    input  wire                  rst_in,
+    input  wire [7:0]            tid,
+    input  wire [1:0]            bank,
+    input  wire [1:0]            lane,
+    input  wire                  last,
+    input  wire [S_RD+4:0]       fv,
+    input  wire [FXW-1:0]        fdx,
+    input  wire                  wb_v, wb_en, wb_hs,  // hc_post write back (ctpl flops)
+    input  wire [15:0]           wb_ob,
+    input  wire [63:0]           wb_d,                // group lq's 4 hc_post outputs, BF16
+    input  wire [16*S_RT-1:0]    rq_q,                // return pin flops (ctr): row field
+    input  wire                  hs_run,
+    input  wire [15:0]           hs_c,
+    output reg  [63:0]           hpr,                 // hc_post row read, group lq (zero unless this bank)
+    output reg  [64*S_RT-1:0]    hrq,                 // return h row reads, group lq (zero unless this bank)
+    input  wire [31:0]           cy_in,               // octet carry (lane 0)
+    input  wire [31:0]           acc_in,              // chain: previous lane's adder output
+    input  wire [31:0]           sqn_in,              // chain: next lane's square
+    output wire [31:0]           sq_out,
+    output wire [31:0]           acc_out,
+    output reg  [31:0]           cy_out,              // registered acc_out (the octet carry at lane 2)
+    output wire [15:0]           yb,
+    output reg                   flt
+);
+    localparam integer O_D=72+16*S_RD, P_BITS=288, FXW=O_D+S_RD*P_BITS,
+                       FULL_FXW=O_D+S_RD*512;
+
+    // Constant bit maps: HLOAD64-bit lane words, GAIN32-bit lane words, shared pre128.
+    function automatic integer lane_payload_width(input integer ln);
+        begin case(ln) 0:lane_payload_width=256; 1:lane_payload_width=288;
+              2:lane_payload_width=352; default:lane_payload_width=288; endcase end
+    endfunction
+    function automatic integer lane_payload_needed(input integer ln,input integer bitno);
+        integer g;
+        begin
+            lane_payload_needed=(bitno<128) ||
+                (bitno>=64*ln && bitno<64*ln+64) ||
+                (bitno>=64*(ln+4) && bitno<64*(ln+4)+64);
+            for(g=0;g<4;g=g+1)
+                if(bitno>=32*(ln+4*g) && bitno<32*(ln+4*g)+32)
+                    lane_payload_needed=1;
+        end
+    endfunction
+    function automatic integer lane_payload_rank(input integer ln,input integer bitno);
+        integer b;
+        begin lane_payload_rank=0;
+            for(b=0;b<bitno;b=b+1) lane_payload_rank=lane_payload_rank+lane_payload_needed(ln,b);
+        end
+    endfunction
+    function automatic integer lane_payload_index(input integer ln,input integer packedbit);
+        integer b,c;
+        begin lane_payload_index=0;c=0;
+            for(b=0;b<512;b=b+1) if(lane_payload_needed(ln,b)) begin
+                if(c==packedbit) lane_payload_index=b;
+                c=c+1;
+            end
+        end
+    endfunction
+    wire [FULL_FXW-1:0] fdx_full;
+    assign fdx_full[O_D-1:0]=fdx[O_D-1:0];
+    for(genvar rp=0;rp<S_RD;rp=rp+1) begin : g_read_port
+        for(genvar b=0;b<512;b=b+1) begin : g_expand
+            if(lane_payload_needed(3,b)) begin : g_keep
+                localparam integer PBIT=lane_payload_rank(3,b);
+                assign fdx_full[O_D+rp*512+b]=fdx[O_D+rp*P_BITS+PBIT];
+            end else begin : g_unused
+                assign fdx_full[O_D+rp*512+b]=1'b0;
+            end
+        end
+    end
+    ot_s81_hc_ctnl #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),
+        .ML(ML),.AL(AL),.RLY(RLY),.PIN_STAGE(PIN_STAGE),.CHAIN_STEP(CHAIN_STEP),.FIXED_LANE(3)) u_core
+        (.fdx(fdx_full),.*);
+`ifndef SYNTHESIS
+    always @(posedge clk) if(rst_in && lane!=2'd3) $error("fixed HC lane3 identity mismatch");
+`endif
 endmodule

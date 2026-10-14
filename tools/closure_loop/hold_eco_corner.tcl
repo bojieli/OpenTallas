@@ -34,6 +34,10 @@ read_sdc $::env(OT_SDC)
 if {[file exists [envd OT_SPEF ""]]} { read_spef $::env(OT_SPEF) }
 set_propagated_clock [all_clocks]
 foreach s [envd OT_POST_SDC ""] { read_sdc $s }
+# Post-SDCs execute in the global Tcl scope.  Archived io_ref_routed.sdc
+# iterates with `c`, so recover the requested scene before reporting it and
+# deciding whether to export the setup protection files.
+set c $::env(OT_CORNER)
 puts "OT_CORNER_EFF $c ws_max [sta::worst_slack_cmd max] ws_min [sta::worst_slack_cmd min]"
 write_sdc -no_timestamp $::env(OT_EFF)
 # SS session: data the FF-only ECO session needs to protect setup (hold_eco.tcl OT_SESSION=ff)

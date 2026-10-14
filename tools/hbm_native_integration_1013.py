@@ -56,7 +56,7 @@ def overlaps(rows):
     return found
 
 
-def compose(outdir):
+def compose(outdir, attention_shift_um=436.32, track_legal=False, variant='r25gqn_v12_native_component_prototype'):
     data = {key: json.loads((ROOT / value).read_text()) for key, value in COMPONENTS.items()}
     rows, regions, maps = [], [], []
     names = set()
@@ -113,28 +113,86 @@ def compose(outdir):
         for index in range(8):
             add('sm', f'hb_sm_{quarter}_{index}', qx + (index % 2) * 6156.0,
                 qy + (index // 2) * 2646.0)
-            ax = qx + 12333.6 + (index % 2) * 1821.744
+            ax = qx + 12333.6 + attention_shift_um + (index % 2) * 1821.744
             ay = qy + (index // 2) * 2008.8
             add('lo', f'hb_attn_{quarter}_{index}_lo', ax, ay)
             add('hi', f'hb_attn_{quarter}_{index}_hi', ax, ay + 1285.2)
-        add('vm', f'hb_vms_{quarter}', qx + 12333.6, qy + 9007.2)
+        add('vm', f'hb_vms_{quarter}', qx + 12333.6 + attention_shift_um, qy + 9007.2)
         reservations.append({'instance': f'UNRESOLVED_HC_{quarter}',
                              'xy_um': [qx + 43.2, qy + 10800], 'w_um': 1356.48,
                              'h_um': 756, 'placed_instance': False,
                              'reason': 'Two SYS1 banks and residual LL8/reducer direct-leaf bindings/real views pending; reservation is not coverage.'})
+    vm8_path='results/arch/hbm_native_1013/vm8/geometry_component.json'
+    vm8=json.loads((ROOT/vm8_path).read_text())
+    # One union region, beside the south-west VMS assembly, below neither ring band.
+    vm8_origin=[round(13608.0+attention_shift_um-136.08,6),8229.6]
+    regions.append(dict(instance='hb_vm8_union',component='vm8_geometry_only',xy_um=vm8_origin,
+                        w_um=vm8['outline_um'][0]+0.048,h_um=vm8['outline_um'][1],bookkeeping_region_only=True,
+                        inherited_outline_um=vm8['outline_um'],integration_grid_extent_adjustment_um=[0.048,0.0]))
+    for child in vm8['children']:
+        row=dict(child);logical='hb_vm8_union/'+child['instance']
+        row.update(instance=physical_name(logical),logical_instance=logical,parent='die',
+                   component_namespace='hb_vm8_union',component_child=child['instance'],
+                   xy_um=[round(round((vm8_origin[a]+child['xy_um'][a])/GRID[a])*GRID[a],6) for a in [0,1]])
+        raw=[vm8_origin[a]+child['xy_um'][a] for a in [0,1]]
+        delta=[round(row['xy_um'][a]-raw[a],6) for a in [0,1]]
+        if any(abs(v)>1e-7 for v in delta):
+            grid_corrections.append({'instance':row['instance'],'delta_um':delta,'inherited_xy_um':raw})
+            row['integration_grid_correction_um']=delta
+        if row['instance'] in names:raise ValueError('VM8 instance collision')
+        names.add(row['instance']);rows.append(row)
+    track_shifts, track_unsolved = [], []
+    if track_legal:
+        import hbm_native_pin_track_audit_1013 as tracks
+        lefs, solved = {}, {}
+        for row in rows:
+            if not row.get('view_lef'):
+                continue
+            ox, oy = tracks.nm(row['xy_um'][0]), tracks.nm(row['xy_um'][1])
+            key = (row['view_lef'], row['orientation'], ox % 1728, oy % 8640)
+            if key not in solved:
+                if row['view_lef'] not in lefs:
+                    lefs[row['view_lef']] = tracks.parse(ROOT / row['view_lef'])
+                w, h, pins = lefs[row['view_lef']]
+                nx, ny = tracks.legal_origin(pins, row['orientation'], w, h, ox, oy)
+                solved[key] = (None if nx is None else nx - ox, None if ny is None else ny - oy)
+            dx, dy = solved[key]
+            if dx is None or dy is None:
+                track_unsolved.append({'instance': row['instance'], 'master': row['logical_module'],
+                                       'orientation': row['orientation'], 'axis_without_solution':
+                                       [a for a, v in zip('xy', (dx, dy)) if v is None]})
+                continue
+            if dx or dy:
+                row['pre_track_xy_um'] = list(row['xy_um'])
+                row['xy_um'] = [round((ox + dx) / 1000, 6), round((oy + dy) / 1000, 6)]
+                row['track_legal_shift_nm'] = [dx, dy]
+                track_shifts.append((row['logical_module'], row['orientation'], dx, dy))
+    corridors=[dict(name='ring_S_1100',direction='H',layer='M6',rect_um=[21.6,11721.6,32962.688,12821.6],keep_clear_new_devices=True),
+               dict(name='ring_N_1100',direction='H',layer='M6',rect_um=[21.6,24703.2,32962.688,25803.2],keep_clear_new_devices=True)]
+    device_columns=[]
+    for quarter,qx,qy in [('SW',21.6,21.6),('SE',16513.632,21.6),('NW',21.6,13003.2),('NE',16513.632,13003.2)]:
+        device_columns.append(dict(name='ring_device_'+quarter,rect_um=[qx+12169.44,qy,qx+12333.6+attention_shift_um,qy+10692.0],
+                                   device_width_um=270.0,device_height_um=380.16,
+                                   directed_lane_count=2,lane_width_um=(12333.6+attention_shift_um-12169.44)/2,
+                                   nominal_forward_wire_segment_um=500.0,closed_view_available=False))
+    def box_hits(box,row):
+        a,b,c,d=box;x,y,X,Y=rect(row)
+        return min(c,X)>max(a,x)+1e-7 and min(d,Y)>max(b,y)+1e-7
+    corridor_device_hits=[{'corridor':c['name'],'instance':r['instance']} for c in corridors for r in rows if box_hits(c['rect_um'],r)]
+    column_device_hits=[{'column':c['name'],'instance':r['instance']} for c in device_columns for r in rows if box_hits(c['rect_um'],r)]
     collisions = overlaps(rows)
     outside = [r['instance'] for r in rows if rect(r)[0] < 0 or rect(r)[1] < 0
                or rect(r)[2] > DIE[0] or rect(r)[3] > DIE[1]]
-    offgrid = [r['instance'] for r in rows if any(abs(v / g - round(v / g)) > 1e-5
+    offgrid = [r['instance'] for r in rows if 'track_legal_shift_nm' not in r and any(abs(v / g - round(v / g)) > 1e-5
                for v,g in zip(r['xy_um'], GRID))]
     reserved_collisions = overlaps(rows + reservations)
     boundary_bits = sum(sum(p['width'] for p in m['boundary_ports'].values()) for m in maps)
-    gate = {'cross_component_source_netlist': False, 'native_hc_leaf_map': False,
+    gate = {'native_idx_control_integration':False, 'cross_component_source_netlist': False, 'native_hc_leaf_map': False,
             'all_child_closure': False, 'full_die_registered_seam_sta': False,
             'native_exact_mutant_throughput': False, 'native_pdn_ir': False,
             'signal_grt_drt': False, 'fixed_phy_service_station_integration': False, 'native_vm8_xload_integration': False}
     candidate = {'schema': 'opentallas.hbm.native_die_candidate.v1',
-                 'variant': 'r25gqn_v12_native_component_prototype', 'die_um': list(DIE),
+                 'variant': variant, 'die_um': list(DIE),
                  'placement_grid_um': list(GRID), 'closed': False,
                  'final_signoff_eligible': False, 'hard_parent_created': False,
                  'coverage': {'sm': 32, 'native_sm_tile_clusters': 512,
@@ -145,15 +203,23 @@ def compose(outdir):
                               'hc': 'unresolved',
                               'fixed_phy_service_stations': 'not yet integrated',
                               'vm8': {'required_union_regions':1,'required_total_tiles':25,'logical_quarter_views':4,
-                                      'unique_kits':19,'placed':False,
+                                      'unique_kits':19,'geometry_children_placed':25,'native_pin_bindings_closed':False,
                                       'contract':'results/arch/hbm_b2_1012/SPEC.md',
                                       'planning':'results/physical/vm8_codex_1013/inventory.json'}},
                  'component_regions': regions, 'children': rows,
                  'functional_namespace_maps': maps, 'unresolved_regions': reservations,
                  'qualification_gates': gate,
-                 'unresolved': ['Cross-component SM/attention/HC-to-native-VM port bridge must come from source, not old opaque bundle aliases.',
+                 'attention_vm_shift_um':attention_shift_um,
+                 'routing_corridor_reservations':corridors,
+                 'ring_device_column_reservations':device_columns,
+                 'vm8_geometry_source':{'path':vm8_path,'sha256':sha(ROOT/vm8_path),'native_bindings_valid':False},
+                 'view_extraction_uncertainties':['Shared FF interface clock-reference extraction order under source audit; use actual re-exported model hashes when available, no invented min-delay corrections.'],
+                 'typed_adapter_bindings':{'path':'results/arch/hbm_native_1013/adapters/bit_bindings.json','sha256':sha(ROOT/'results/arch/hbm_native_1013/adapters/bit_bindings.json'),'actual_global_join_closed':False},
+                 'ring_cut_study':{'path':'results/arch/hbm_native_ring_cut_1013/study.json','sha256':sha(ROOT/'results/arch/hbm_native_ring_cut_1013/study.json'),'must_recompute_after_geometry_change':True,'native_parent_pg_export_closed':False},
+                 'unresolved': ['Native SM weight req_addr32 is HBM160-byte line service, not VM; activation/publication VM service plus typed owner192/ACK192 joins need actual composed adapters.',
                      'SM FC_HIER changes interface latency by two cycles; exact/mutant and throughput gate pending.',
                      'SM and VM internal long seams require protocol-preserving registered transport and timing proof.',
+                     'Native IDX IXW1 control requires real source/geometry/leaf views; SW slot5 xload tap widths137/2249 are current, old129/2241 is ineligible.',
                      'Native HC two SYS1 banks/quarter plus LL8 local and central reducer map pending.',
                      'B2 retains VM8 for SM xload hb_vm_q: one current VM8 union region (25 total direct tiles/19 kits across four logical quarters) require native source pin/geometry mapping; do not omit or replace by guessed VMS aliases.',
                      'Real PHY, service, stations, clocks/reset and their nets must be integrated before full-die route.',
@@ -171,9 +237,22 @@ def compose(outdir):
                'explicit_inherited_origin_grid_corrections': grid_corrections,
                'offgrid_count': len(offgrid), 'offgrid': offgrid[:30],
                'hc_reservation_overlap_count': len(reserved_collisions),
-               'placement_subset_pass': not (collisions or outside or offgrid or reserved_collisions),
+               'vm8_packed_hop_endpoint_upper_bound_after_grid_um':497.568,
+               'vm8_actual_per_bit_route_proof':False,
+               'ring_band_device_collision_count':len(corridor_device_hits),
+               'ring_device_column_collision_count':len(column_device_hits),
+               'placement_subset_pass': not (collisions or outside or offgrid or reserved_collisions or corridor_device_hits or column_device_hits),
                'full_die_placement_pass': False,
                'missing_lef_children':sum(not r.get('view_lef') for r in rows),
+               'track_legalisation': {'applied': track_legal,
+                   'rule': 'every signal/clock pin of a real-LEF child has an on-track RECT at its die origin; nearest origin within +-288 nm x / +-96 nm y',
+                   'shifted_instances': len(track_shifts),
+                   'shift_classes': [dict(master=k[0], orientation=k[1], shift_nm=[k[2], k[3]], instances=v)
+                                     for k, v in sorted(collections.Counter(track_shifts).items())],
+                   'unsolved_instances': len(track_unsolved),
+                   'unsolved_classes': [dict(master=k[0], orientation=k[1], axes=list(k[2]), instances=v) for k, v in sorted(
+                       collections.Counter((u['master'], u['orientation'], tuple(u['axis_without_solution'])) for u in track_unsolved).items())],
+                   'geometry_only_children_not_audited': sum(not r.get('view_lef') for r in rows)},
                'missing_tt_children': sum(not r.get('view_lib',{}).get('tt') for r in rows),
                'qualification_gates': gate}
     if not receipt['placement_subset_pass']:
@@ -237,4 +316,10 @@ def compose(outdir):
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, default=ROOT/'results/arch/hbm_native_1013/die_v12')
-    compose(parser.parse_args().out)
+    parser.add_argument('--attention-shift-um',type=float,default=436.32)
+    parser.add_argument('--track-legal',action='store_true',help='move each real-LEF child to its nearest pin-on-track origin (v13)')
+    parser.add_argument('--variant',default='r25gqn_v12_native_component_prototype')
+    args=parser.parse_args()
+    import sys
+    sys.path.insert(0,str(Path(__file__).resolve().parent))
+    compose(args.out,args.attention_shift_um,args.track_legal,args.variant)

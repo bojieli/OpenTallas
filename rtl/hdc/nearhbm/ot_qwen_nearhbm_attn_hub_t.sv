@@ -22,7 +22,9 @@ module ot_qwen_nearhbm_attn_hub_t #(
     parameter integer HD = 128,
     parameter integer ADD_LAT = 7,
     parameter integer MUL_LAT = 6,
-    parameter integer ZW = 4
+    parameter integer ZW = 4,
+    // Number of four-query-head groups: historical TP4=2, native TP8=1.
+    parameter integer HEADS = 2
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -49,6 +51,14 @@ module ot_qwen_nearhbm_attn_hub_t #(
     output reg           fault,
     output reg  [7:0]    ev
 );
+`ifndef SYNTHESIS
+    initial begin
+        if (HEADS != 1 && HEADS != 2) $fatal(1, "attention hub HEADS must be 1 or 2");
+    end
+`endif
+    // Keep the interface stable; a one-group profile never accepts dummy group 1.
+    wire [3:0] si_active = si_valid & ((HEADS == 1) ? ~si_g : 4'b1111);
+    wire [3:0] pi_active = pi_valid & ((HEADS == 1) ? ~pi_g : 4'b1111);
     localparam integer NBEAT = 4 * HD / 16;
     localparam integer BPH = HD / 16;
     integer sd_, s_, s2_, s3_, i_, e4_;
@@ -57,7 +67,16 @@ module ot_qwen_nearhbm_attn_hub_t #(
     endfunction
     // reset: 0 input stage, 1 max, 2 Z control, 4 P control, 5 tag, 6 recip, 7 outputs (one relay, one copy each)
     wire [7:0] rl;
+`ifdef QKH_RECIP_LEAF
+    // q13 hardened form (1,175 x 760 um cluster): the rst_n port drives only the pin synchroniser of ot_rst_pipe; the 8
+    // control regions and the 12 hard tiles (rc: 0-3 zh, 4-7 pbst, 8-11 pvlg) each get their own 2-stage flop chain.
+    // q13 route: port -> tile rst_n pins -722 ps and port -> relay recovery -611 ps (raw port net across the cluster).
+    wire [11:0] rc;
+    ot_rst_pipe #(.REGIONS(20), .STAGES(2)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n({rc, rl}));
+`else
+    wire [11:0] rc = {12{rst_n}};
     ot_rst_relay #(.REGIONS(8), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
+`endif
 
     // ---- boundary input registers (_b) and decode stage (_c); pi_data goes straight to the beat-store tiles --------
     reg          start_b;
@@ -66,7 +85,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
     reg [3:0]    pig_b;
     always @(posedge clk or negedge rl[0])
         if (!rl[0]) begin start_b <= 1'b0; siv_b <= 4'd0; piv_b <= 4'd0; end
-        else begin start_b <= start; siv_b <= si_valid; piv_b <= pi_valid; end
+        else begin start_b <= start; siv_b <= si_active; piv_b <= pi_active; end
     always @(posedge clk) begin
         sit_b <= si_type; sig_b <= si_g; sih_b <= si_hh; sik_b <= si_k; sia_b <= si_any; sid_b <= si_data; pig_b <= pi_g;
     end
@@ -95,7 +114,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
     reg [7:0]  lany;
     reg [4:0]  lcnt0, lcnt1;
     reg [1:0]  msent;
-    wire       mg = msent[0];
+    wire       mg = (HEADS == 1) ? 1'b0 : msent[0];
     reg [2:0]  mh;
     wire       mready = !msent[mg] && (mg ? (lcnt1 == 5'd16) : (lcnt0 == 5'd16));
     reg        ma_v, mb_v;
@@ -181,7 +200,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
         for (ge = 0; ge < 128; ge = ge + 1) begin : g_we      // {g, k, sd} of head gh = zs_we[{g, gh, k, sd}]
             assign we_h[ge] = zs_we[{ge[6], gh[1:0], ge[5:0]}];
         end
-        ot_nhb_zh u_zh (.clk(clk), .rst_n(rst_n), .start(start_c), .zs_we(we_h), .sid(sid_c), .ziv(ziv), .zg(zg), .zp(zp),
+        ot_nhb_zh u_zh (.clk(clk), .rst_n(rc[gh]), .start(start_c), .zs_we(we_h), .sid(sid_c), .ziv(ziv), .zg(zg), .zp(zp),
                         .root(zroot[64*gh +: 64]), .zerr(zerr[4*gh +: 4]));
     end endgenerate
     // reciprocal: issue (rv0 / ra0) delayed 3 cycles to the root read (tile +2, root register +1)
@@ -191,8 +210,33 @@ module ot_qwen_nearhbm_attn_hub_t #(
     reg [2:0]  rh;
     wire [31:0] ry;
     wire        rvo, rfault;
+`ifdef QKH_RECIP_LEAF
+    // Hardened leaf adds two registered boundary cycles (+4 seam relay cycles below). rcnt advances
+    // on rvo, so result identity remains unchanged; no fixed reciprocal latency used.
+    // q13 physical spec: the leaf sits in its own east column of the cluster (up to ~860 um from the
+    // west zh roots and from the rz consumers), so both directions carry two relay registers
+    // (<= ~430 um per stage). Valid relays reset on rl[6]; data relays are unreset.
+    (* keep *) reg        rxv_a, rxv_b;
+    (* keep *) reg [31:0] rxd_a, rxd_b;
+    wire [31:0] ry_l;
+    wire        rvo_l, rfault_l;
+    (* keep *) reg        ryv_a, ryv_b, ryf_a, ryf_b;
+    (* keep *) reg [31:0] ryd_a, ryd_b;
+    always @(posedge clk or negedge rl[6])
+        if (!rl[6]) begin rxv_a <= 1'b0; rxv_b <= 1'b0; ryv_a <= 1'b0; ryv_b <= 1'b0; end
+        else begin rxv_a <= rv1; rxv_b <= rxv_a; ryv_a <= rvo_l; ryv_b <= ryv_a; end
+    always @(posedge clk) begin
+        rxd_a <= rx; rxd_b <= rxd_a;
+        ryd_a <= ry_l; ryd_b <= ryd_a; ryf_a <= rfault_l; ryf_b <= ryf_a;
+    end
+    assign ry = ryd_b;
+    assign rvo = ryv_b;
+    assign rfault = ryf_b;
+    ot_qkh_recip_leaf u_recip (.clk(clk), .rst_n(rl[6]), .v(rxv_b), .x(rxd_b), .y(ry_l), .vo(rvo_l), .fault(rfault_l));
+`else
     ot_qwen_nearhbm_recip_p #(.LA(7), .LM(7)) u_recip (.clk(clk), .rst_n(rl[6]), .v(rv1), .x(rx), .y(ry), .vo(rvo),
                                                      .fault(rfault));
+`endif
     reg [2:0]  rcnt;
     reg [31:0] rz [0:7];
     reg [1:0]  rz_ok;
@@ -227,7 +271,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
                              + ((siv_c[3] && sit_c[7:6] == 2 && sig_c[3]) ? 1 : 0);
                 if (!zrun && !zwait_recip) begin
                     if (!zdone_tree[0] && zdc0 == 3'd4) begin zrun <= 1'b1; zg <= 1'b0; zl <= 3'd1; zp <= 0; zwt <= 0; end
-                    else if (zdone_tree[0] && !zdone_tree[1] && zdc1 == 3'd4) begin
+                    else if (HEADS == 2 && zdone_tree[0] && !zdone_tree[1] && zdc1 == 3'd4) begin
                         zrun <= 1'b1; zg <= 1'b1; zl <= 3'd1; zp <= 0; zwt <= 0;
                     end
                 end else if (zrun) begin
@@ -265,7 +309,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
         else begin
             for (s_ = 0; s_ < 4; s_ = s_ + 1) if (piv_c[s_]) pc[{pig_c[s_], s_[1:0]}] <= pc[{pig_c[s_], s_[1:0]}] + 6'd1;
             if (p_ready) begin
-                if (pp == NBEAT - 1) begin pp <= 0; pdone[pg] <= 1'b1; pg <= 1'b1; end
+                if (pp == NBEAT - 1) begin pp <= 0; pdone[pg] <= 1'b1; pg <= (HEADS == 2); end
                 else pp <= pp + 6'd1;
             end
         end
@@ -277,7 +321,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
     wire [2047:0] sr;
     genvar gs, gl;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
-        ot_nhb_pbst u_pbst (.clk(clk), .rst_n(rst_n), .pv(pi_valid[gs]), .pgi(pi_g[gs]), .pbeat(pi_beat[6*gs +: 6]),
+        ot_nhb_pbst u_pbst (.clk(clk), .rst_n(rc[4 + gs]), .pv(pi_active[gs]), .pgi(pi_g[gs]), .pbeat(pi_beat[6*gs +: 6]),
                             .pdata(pi_data[512*gs +: 512]), .ra({pg, pp[4:0]}), .sr(sr[512*gs +: 512]));
     end endgenerate
     wire [5:0]   phh6 = pp / BPH;
@@ -293,7 +337,7 @@ module ot_qwen_nearhbm_attn_hub_t #(
     always @(posedge clk) begin sr_r <= sr; rz_r <= rz_d; end
     wire [511:0] y_o;
     generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_pv
-        ot_nhb_pvlg u_pv (.clk(clk), .rst_n(rst_n), .v(pr3),
+        ot_nhb_pvlg u_pv (.clk(clk), .rst_n(rc[8 + gl]), .v(pr3),
             .s0(sr_r[0    + 128*gl +: 128]), .s1(sr_r[512  + 128*gl +: 128]),
             .s2(sr_r[1024 + 128*gl +: 128]), .s3(sr_r[1536 + 128*gl +: 128]),
             .rz(rz_r), .y(y_o[128*gl +: 128]), .pf(pf[4*gl +: 4]));

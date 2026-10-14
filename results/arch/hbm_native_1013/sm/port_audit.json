@@ -34,27 +34,34 @@
     ],
     "source_commit": "49b00f711ce5613322f3c0d011f109c78894d1de",
     "source_expected_bits": 526,
-    "view_source_commit": "80412d770a255770fe64f82549b07abf36699096",
-    "record_job": "hbm_smh_be_eg_cg-80412d770-tc-np-r2-tcfix-cl",
+    "view_source_commit": "49b00f711",
+    "record_job": "smn_be_eg_ref-r2-b9a29ac93",
     "closed": false,
     "note": "Exact physical pin census is necessary; recorded default parameter/define/dependency provenance and production arithmetic remain separate gates.",
     "lef": {
-      "path": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg.lef",
+      "path": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg.lef",
       "missing": [],
       "extra": [],
       "direction_mismatch": {},
       "pass": true
     },
     "lib": {
+      "tt": {
+        "path": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_tt.lib",
+        "missing": [],
+        "extra": [],
+        "direction_mismatch": {},
+        "pass": true
+      },
       "ff": {
-        "path": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ff.lib",
+        "path": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ff.lib",
         "missing": [],
         "extra": [],
         "direction_mismatch": {},
         "pass": true
       },
       "ss": {
-        "path": "results/arch/hbm_native_1013/sm/inherited_views/ot_hbm_accel_smh_be_eg/ot_hbm_accel_smh_be_eg_ss.lib",
+        "path": "results/arch/hbm_native_1013/sm/be_eg_r2_physical_candidate/ot_hbm_accel_smh_be_eg_ss.lib",
         "missing": [],
         "extra": [],
         "direction_mismatch": {},
@@ -62,7 +69,7 @@
       }
     },
     "status": "PORT_BITS_MATCH_NATIVE_DEFAULTS",
-    "all_corners_present": false
+    "all_corners_present": true
   },
   "ot_hbm_accel_smh_tile_wg": {
     "logical_module": "ot_hbm_accel_smh_tile_wg",

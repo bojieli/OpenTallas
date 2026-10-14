@@ -2194,11 +2194,30 @@ module ot_hbm_accel_smh_tile #(
 `ifndef SYNTHESIS
     initial if (RPT != 2 || SUB != 4) $error("OT_SMH_HIER: built for RPT 2, SUB 4");
 `endif
+    // per-consumer resets: g1 / g2 / go = leaf j's own-row gather relays (at the leaf, mid-tile, at the S-edge gout pins),
+    // p1 / p2 / p3 = the pass-through G1 lanes (N edge, mid-tile, S edge), ptw / pte / lh = the hard children
+    wire [RPT-1:0] r_g1, r_g2, r_go, r_lh;
+    wire r_p1, r_p2, r_p3, r_ptw, r_pte;
+`ifdef OT_SMH_RSTPIN
+    // el1013-smh-r11 OT_SMH_RSTPIN (SM tile cluster r10 CTS diagnosis B1): the rst_n PORT lands in ONE pin flop on the tile
+    // clock and nothing else; a registered tree (ot_hbm_accel_smh_rst_tree, <= ~350 um a stage, uniform depth 5) carries it
+    // to the north leaf, the pass-through band and the south leaf, and each band's final copies reset only that band.
+    // Leaf 0 is the north leaf, leaf 1 the south leaf (floorplan); the gather relays take the copy of the band they sit in.
+    wire rt_gn, rt_lhn, rt_gm, rt_ptw, rt_pte, rt_gs, rt_lhs;
+    ot_hbm_accel_smh_rst_tree u_rt (.clk(clk), .rst_n(rst_n), .gn(rt_gn), .lhn(rt_lhn), .gm(rt_gm), .ptw(rt_ptw),
+                                    .pte(rt_pte), .gs(rt_gs), .lhs(rt_lhs));
+    assign r_g1 = {rt_gs, rt_gn}; assign r_g2 = {rt_gs, rt_gm}; assign r_go = {rt_gs, rt_gs};
+    assign r_lh = {rt_lhs, rt_lhn};
+    assign r_p1 = rt_gn; assign r_p2 = rt_gm; assign r_p3 = rt_gs; assign r_ptw = rt_ptw; assign r_pte = rt_pte;
+`else
     wire [RPT+1:0] rr;
 `ifdef OT_SMH_RSTRELAY
     ot_rst_relay #(.REGIONS(RPT + 2)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
 `else
     assign rr = {(RPT + 2){rst_n}};
+`endif
+    assign r_g1 = rr[RPT-1:0]; assign r_g2 = rr[RPT-1:0]; assign r_go = rr[RPT-1:0]; assign r_lh = {RPT{rst_n}};
+    assign r_p1 = rr[RPT+1]; assign r_p2 = rr[RPT+1]; assign r_p3 = rr[RPT+1]; assign r_ptw = rst_n; assign r_pte = rst_n;
 `endif
     wire [BBW-1:0] bk1_n, bk1_s, bm;
     wire [NBEAT-1:0] ohl1_n, ohl1_s;
@@ -2208,48 +2227,48 @@ module ot_hbm_accel_smh_tile #(
 `ifndef SYNTHESIS
         #(.TAGW(TAGW), .NBEAT(NBEAT))
 `endif
-        u_ptw (.clk(clk), .rst_a(rst_n), .rin(rin), .bin(bin), .rpm(rpm), .bm(bm), .rl1_n(rl1_n),
+        u_ptw (.clk(clk), .rst_a(r_ptw), .rin(rin), .bin(bin), .rpm(rpm), .bm(bm), .rl1_n(rl1_n),
         .bk1_n(bk1_n), .ohl1_n(ohl1_n), .rl1_s(rl1_s), .bk1_s(bk1_s), .ohl1_s(ohl1_s));
     ot_hbm_accel_smh_pt_e
 `ifndef SYNTHESIS
         #(.TAGW(TAGW), .NBEAT(NBEAT))
 `endif
-        u_pte (.clk(clk), .rst_a(rst_n), .rpm(rpm), .bm(bm), .rout(rout), .bout(bout));
+        u_pte (.clk(clk), .rst_a(r_pte), .rpm(rpm), .bm(bm), .rout(rout), .bout(bout));
     genvar j, ln;
     generate for (j = 0; j < RPT; j = j + 1) begin : g_lf
         wire gv, gf; wire [31:0] gy; wire [TAGW-1:0] gt;
         ot_hbm_accel_smh_leafh #(.LBS(LBS), .LSB(LSB), .IL(IL), .TAGW(TAGW), .XD(XD), .NBEAT(NBEAT), .TCK(TCK),
                                  .NMG(NMG), .A1B(A1B), .A2B(A2B)) u_lh (
-            .clk(clk), .rst_n(rst_n), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
+            .clk(clk), .rst_n(r_lh[j]), .xs_a1(xs_a1[j*A1B +: A1B]), .xs_g1(xs_g1[j*5 +: 5]),
             .xs_a2(xs_a2[j*A2B +: A2B]), .xs_g2(xs_g2[j*5 +: 5]), .rl1(j == 0 ? rl1_n : rl1_s),
             .bk1(j == 0 ? bk1_n : bk1_s), .ohl1(j == 0 ? ohl1_n : ohl1_s), .gv(gv), .gf(gf), .gy(gy), .gt(gt));
         // (physical spec round 3) the hierarchical tile is 1,080 um tall: leaf 0's result travels ~1,000 um to the
         // S-edge gout pins -> two relay registers on EVERY own-row lane of every tile (uniform: the back end's deskew
         // is unchanged; +2 cycles on every result), <= ~360 um of wire per stage
         wire [GLW-1:0] g1, g2;
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_grv1 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d({gv, gf}), .q(g1[GLW-2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_grd1 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d({gy, gt}), .q(g1[0 +: GLW-2]));
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_grv2 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(g1[GLW-2 +: 2]), .q(g2[GLW-2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_grd2 (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(g1[0 +: GLW-2]), .q(g2[0 +: GLW-2]));
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_gov (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(g2[GLW-2 +: 2]),
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_grv1 (.clk(clk), .rst_n(r_g1[j]), .en(1'b1), .d({gv, gf}), .q(g1[GLW-2 +: 2]));
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_grd1 (.clk(clk), .rst_n(r_g1[j]), .en(1'b1), .d({gy, gt}), .q(g1[0 +: GLW-2]));
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_grv2 (.clk(clk), .rst_n(r_g2[j]), .en(1'b1), .d(g1[GLW-2 +: 2]), .q(g2[GLW-2 +: 2]));
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_grd2 (.clk(clk), .rst_n(r_g2[j]), .en(1'b1), .d(g1[0 +: GLW-2]), .q(g2[0 +: GLW-2]));
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_gov (.clk(clk), .rst_n(r_go[j]), .en(1'b1), .d(g2[GLW-2 +: 2]),
             .q(gout[(RPT-1-j)*GLW + GLW - 2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_god (.clk(clk), .rst_n(rr[j]), .en(1'b1), .d(g2[0 +: GLW-2]),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_god (.clk(clk), .rst_n(r_go[j]), .en(1'b1), .d(g2[0 +: GLW-2]),
             .q(gout[(RPT-1-j)*GLW +: GLW-2]));
     end
     for (ln = RPT; ln < SUB; ln = ln + 1) begin : g_gl
         wire [GLW-1:0] gm;
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v (.clk(clk), .rst_n(r_p1), .en(1'b1),
             .d(gin[(ln-RPT)*GLW + GLW - 2 +: 2]), .q(gm[GLW-2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d (.clk(clk), .rst_n(r_p1), .en(1'b1),
             .d(gin[(ln-RPT)*GLW +: GLW-2]), .q(gm[0 +: GLW-2]));
         wire [GLW-1:0] gn;                    // (round 5) a third register: 510 um is more than two spans
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v2 (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v2 (.clk(clk), .rst_n(r_p2), .en(1'b1),
             .d(gm[GLW-2 +: 2]), .q(gn[GLW-2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d2 (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d2 (.clk(clk), .rst_n(r_p2), .en(1'b1),
             .d(gm[0 +: GLW-2]), .q(gn[0 +: GLW-2]));
-        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v3 (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(2), .RST(1)) u_v3 (.clk(clk), .rst_n(r_p3), .en(1'b1),
             .d(gn[GLW-2 +: 2]), .q(gout[ln*GLW + GLW - 2 +: 2]));
-        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d3 (.clk(clk), .rst_n(rr[RPT+1]), .en(1'b1),
+        ot_hbm_accel_smh_kreg #(.W(GLW-2)) u_d3 (.clk(clk), .rst_n(r_p3), .en(1'b1),
             .d(gn[0 +: GLW-2]), .q(gout[ln*GLW +: GLW-2]));
     end endgenerate
 `else
@@ -2811,19 +2830,30 @@ module ot_hbm_accel_smh_leafh #(
     wire iv_b, iv_f, ifirst, ilast, ifp4, ifirst_e, ilast_e;
     wire [TAGW-1:0] itag, itag_e;
     wire [LBS*266+LSB*16-1:0] iw, ix;
-    ot_hbm_accel_smh_xs `OT_SMH_HPN u_xs (.clk(clk), .rst_a(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
+`ifdef OT_SMH_RSTPIN
+    // el1013-smh-r11: the leaf band's reset copy lands in one kept register per consumer (x store, block-dot column, the
+    // three BF16 column tiles, the G1 select), each beside its consumer's rst_a pin
+    (* keep *) reg [3:0] rq;
+    always @(posedge clk) rq <= {4{rst_n}};
+    wire r_xs = rq[0], r_bdc = rq[1], r_tcc = rq[2], r_g = rq[3];
+`else
+    wire r_xs = rst_n, r_bdc = rst_n, r_tcc = rst_n, r_g = rst_n;
+`endif
+    ot_hbm_accel_smh_xs `OT_SMH_HPN u_xs (.clk(clk), .rst_a(r_xs), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2),
         .rl1(rl1), .bk1(bk1), .ohl1(ohl1), .o_iv_b(iv_b), .o_iv_f(iv_f), .o_ifirst(ifirst), .o_ilast(ilast),
         .o_ifp4(ifp4), .o_itag(itag), .o_iw(iw), .o_ix(ix), .o_ifirst_e(ifirst_e), .o_ilast_e(ilast_e), .o_itag_e(itag_e));
     wire bov, bfault, fov, ffault;
     wire [31:0] by, fy;
     wire [TAGW-1:0] btag, ftag;
-    ot_hbm_accel_smh_bdc `OT_SMH_HP u_bdc (.clk(clk), .rst_a(rst_n), .i_v(iv_b), .i_first(ifirst), .i_last(ilast), .i_fp4(ifp4),
+    ot_hbm_accel_smh_bdc `OT_SMH_HP u_bdc (.clk(clk), .rst_a(r_bdc), .i_v(iv_b), .i_first(ifirst), .i_last(ilast), .i_fp4(ifp4),
         .i_tag(itag), .i_w(iw[0 +: LBS*266]), .i_x(ix[0 +: LBS*266]), .ov(bov), .y(by), .otag(btag), .fault(bfault));
-    ot_hbm_accel_smh_tcc `OT_SMH_HP u_tcc (.clk(clk), .rst_a(rst_n), .i_v(iv_f), .i_first(ifirst_e), .i_last(ilast_e), .i_tag(itag_e),
+    ot_hbm_accel_smh_tcc `OT_SMH_HP u_tcc (.clk(clk), .rst_a(r_tcc), .i_v(iv_f), .i_first(ifirst_e), .i_last(ilast_e), .i_tag(itag_e),
         .i_w(iw[LBS*266 +: LSB*16]), .i_x(ix[LBS*266 +: LSB*16]), .ov(fov), .y(fy), .otag(ftag), .fault(ffault));
     // G1: select by the producing column, registered (was the leaf's last stage)
     wire g_n;
-`ifdef OT_SMH_RSTRELAY
+`ifdef OT_SMH_RSTPIN
+    assign g_n = r_g;
+`elsif OT_SMH_RSTRELAY
     ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(g_n));
 `else
     assign g_n = rst_n;
@@ -3281,10 +3311,35 @@ module ot_hbm_accel_smh_tile_g #(
     output wire [SUB*(2+32+TAGW)-1:0]                          gout
 );
     wire gclk;
-    ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE), .ENREG(ENREG)) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
+    // el1013-smh-r11 OT_SMH_RSTPIN: no reset on the raw clock (RSTEN 0, RAWRST 0); the wake holds the gate open in reset
+    // (cg_en is high in reset: ot_hgi_sm_leaf resets it to 1 and each tile forwards it one raw register a hop), and the
+    // reset itself enters the gated tile through its pin flop (ot_hbm_accel_smh_rst_tree).
+    // RESET CONTRACT of the gated tile: rst_n low for >= 32 clk edges with cgi high (hops + pin flop + tree + child relays);
+    // the tile's state leaves reset 9 edges after the port (tree 5/6 + child relay 3), inside the HOLD = 64 open window.
+    ot_cg_tile #(.HOLD(HOLD), .MUT_LATE(MUT_LATE), .ENREG(ENREG)
+`ifdef OT_SMH_RSTPIN
+                 , .RSTEN(0), .RAWRST(0)
+`endif
+                 ) u_cgt (.clk(clk), .rst_n(rst_n), .cgi(cgi), .cgo(cgo), .gclk(gclk));
+    // Static slice positions settle while reset holds the tile gate open.
+    // Five regional stations avoid a raw north-face wire crossing the cluster.
+    localparam integer STRAPW = A1B + 5 + A2B + 5;
+    wire [RPT*A1B-1:0] sx_a1;
+    wire [RPT*5-1:0] sx_g1, sx_g2;
+    wire [RPT*A2B-1:0] sx_a2;
+    genvar sr;
+    generate for (sr = 0; sr < RPT; sr = sr + 1) begin : g_strap
+        wire [STRAPW-1:0] d = {xs_g2[sr*5 +: 5], xs_a2[sr*A2B +: A2B],
+                                  xs_g1[sr*5 +: 5], xs_a1[sr*A1B +: A1B]};
+        wire [STRAPW-1:0] q;
+        ot_hbm_accel_smh_strap_region #(.W(STRAPW),
+            .MUT(`ifdef OT_SMH_MUT_STRAP_REGION (sr == 1) `else 0 `endif)) u_sr (.clk(gclk), .d(d), .q(q));
+        assign {sx_g2[sr*5 +: 5], sx_a2[sr*A2B +: A2B],
+                sx_g1[sr*5 +: 5], sx_a1[sr*A1B +: A1B]} = q;
+    end endgenerate
     ot_hbm_accel_smh_tile #(.SUB(SUB), .RPT(RPT), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW), .XD(XD),
                             .NBEAT(NBEAT), .TCK(TCK), .NMG(NMG), .A1B(A1B), .A2B(A2B), .PT4(PT4)) u (
-        .clk(gclk), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2), .rin(rin), .bin(bin),
+        .clk(gclk), .rst_n(rst_n), .xs_a1(sx_a1), .xs_g1(sx_g1), .xs_a2(sx_a2), .xs_g2(sx_g2), .rin(rin), .bin(bin),
         .rout(rout), .bout(bout), .gin(gin), .gout(gout));
 endmodule
 module ot_hbm_accel_smh_be_g #(
@@ -3347,4 +3402,49 @@ module ot_hbm_accel_smh_result_valid #(
     wire partial_valid = (|valids) && !all_valid;
     assign row_valid = ENABLE ? all_valid : valids[0];
     assign fault_event = ENABLE ? ((|(faults & valids)) | partial_valid) : (|faults);
+endmodule
+
+// Static configuration only: reset keeps the cluster gate open for startup; no data-path cycle added.
+// ---------------------------------------------------------------------------
+// el1013-smh-r11 (2026-10-13) ot_hbm_accel_smh_rst_tree: the hierarchical SM tile's registered reset distribution.
+// Why (r10 CTS diagnosis B1): one rst_n pin on the N face fanned combinationally over a 630 x 1,253 um tile in one cycle
+// (-> the ICG ENA -2,360 ps over ~1,200 um and 897 ps of buffers; -> u_rr / the children's rst_a 400-800 ps).
+// What: p0 = the pin flop (the port's ONLY load); a trunk of plain registers on the tile clock runs N -> S, one station a
+// band (physical spec: stations fixed in the landing channels, <= ~350 um a stage); every output is a kept register at
+// depth 5 from the port, so all bands assert and release on the same edge:
+//   north (leaf 0):  p0 -> n1 -> n2 -> n3 -> {gn, lhn}
+//   mid (pt_w/pt_e): p0 -> t1 -> m2 -> m3 -> {gm, ptw, pte}
+//   south (leaf 1):  p0 -> t1 -> t2 -> s3 -> {gs, lhs}
+// No reset on these registers (they ARE the reset); assertion and release are both synchronous, the children keep their
+// own asynchronous-assert / 3-edge-release relay behind rst_a.  Active low throughout.
+// ---------------------------------------------------------------------------
+module ot_hbm_accel_smh_rst_tree (
+    input  wire clk, input wire rst_n,
+    output wire gn, output wire lhn, output wire gm, output wire ptw, output wire pte, output wire gs, output wire lhs
+);
+    (* keep *) reg p0, n1, n2, n3, t1, t2, m2, m3, s3;
+    (* keep *) reg f_gn, f_lhn, f_gm, f_ptw, f_pte, f_gs, f_lhs;
+    always @(posedge clk) begin
+        p0 <= rst_n;
+        n1 <= p0; n2 <= n1; n3 <= n2;
+        t1 <= p0; t2 <= t1;
+        m2 <= t1; m3 <= m2;
+        s3 <= t2;
+        f_gn <= n3; f_lhn <= n3;
+        f_gm <= m3; f_ptw <= m3; f_pte <= m3;
+        f_gs <= s3; f_lhs <= s3;
+    end
+    assign gn = f_gn; assign lhn = f_lhn; assign gm = f_gm; assign ptw = f_ptw; assign pte = f_pte;
+    assign gs = f_gs; assign lhs = f_lhs;
+endmodule
+
+module ot_hbm_accel_smh_strap_region #(parameter integer W = 26, parameter integer MUT = 0) (
+    input wire clk, input wire [W-1:0] d, output wire [W-1:0] q
+);
+    (* keep *) reg [W-1:0] s0, s1, s2, s3, s4;
+    always @(posedge clk) begin
+        s0 <= d; s1 <= s0; s2 <= s1; s3 <= s2; s4 <= s3;
+    end
+    // Negative control corrupts one offset bit at the final regional station.
+    assign q = s4 ^ {{(W-1){1'b0}}, (MUT != 0)};
 endmodule

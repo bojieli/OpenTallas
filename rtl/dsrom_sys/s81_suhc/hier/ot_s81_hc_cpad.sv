@@ -7,7 +7,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cpad #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW
+    parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW, RET_EXTRA = 0
 ) (
     input  wire                 sk, srs,
     input  wire [RDW-1:0]       crd_i,
@@ -32,7 +32,7 @@ module ot_s81_hc_cpad #(
     localparam integer HOP = 2 + RLY;                             // registers a sub-tile hop (each bus)
     localparam integer PAD = HOP * (NP - L1) * (HALF ? 2 : 1);    // the centre chain is short by NP - L1 octets
     localparam integer FP = 2 + RF + PAD;                         // forward: send + capture + RF + padding
-    localparam integer RP = RT + 2 + PAD;                         // return: relay + send + capture + padding
+    localparam integer RP = RT + 2 + PAD + RET_EXTRA * (NP - L1) * (HALF ? 2 : 1);                         // return: relay + send + capture + padding
     reg [1:0] rsr;                                                // tile-local reset relay (2 flops at the pin)
     always @(posedge sk) rsr <= {rsr[0], srs};
     wire rs_n = rsr[1];

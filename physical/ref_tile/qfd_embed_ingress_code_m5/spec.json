@@ -39,12 +39,13 @@
  "route": {
   "pd": 0.55,
   "threads": 8,
-  "peak_ram_gb": 16
+  "peak_ram_gb": 16,
+  "m5_pg_pitch": 2.7
  },
  "job": {
-  "owner": "Claude:el1011-reroute-m5",
-  "branch": "claude/el1011-reroute-m5",
-  "tag": "m5",
+  "owner": "Claude:q13-su",
+  "branch": "claude/q13-su",
+  "tag": "m5p",
   "purpose": "M5 re-route (reroute_batch.py) of closed qfd_embed_ingress_code-0e025d03c (qfd_embed_ingress_code, RTL 0e025d03c): same RTL, outline 15.12x15.12, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Codex:embedding-scale",
   "benches": [
    {

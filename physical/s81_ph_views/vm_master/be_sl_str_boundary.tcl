@@ -20,18 +20,40 @@ proc ot_besl_str_boundary {} {
   read_sdc $::ot_besl_sdc
   puts "BE_SL str_clk boundary re-applied after io_ref switch"
 }
+# r4 (2026-10-13, el1011-ds-vm/besl): CROSSING-REFERENCED, TWO-SIDED balance.  r3 routed TT +7.85 / FF -6.57: all 9
+# failing endpoints are str_clk -> core_clk pointer / state hops (u_rc*.rp -> rp_w, r_st -> r_st_w; launch cks leaf
+# 219.8 ps, capture ck leaf 258.7 ps at FF = 39 ps inter-tree skew against a 38 ps clk->Q).  r3 balanced the mean over
+# ALL registers of each clock and stopped as soon as str was within +12 ps EARLY (one-sided), which routed str early by
+# 10 ps TT / 18 ps FF: the wrong sign for every str -> core hop.  The reference is now the crossing flops themselves,
+# pointer hops and storage hops weighted equally (12 + 12 pointer flops must not be averaged away by 2,048 mem/sh
+# flops), and the chain stops at the first stage that brings core - str to <= OT_BESL_BAL_TOL (0 ps; FF ran 8 ps earlier than TT in r3): with a ~12 ps
+# stage the TT residual is (-14, 0] ps, i.e. about (-4, +9] at FF.
 proc ot_besl_ins_mean {clk} {
   catch {sta::worst_slack_cmd max}
-  set s 0.0; set n 0
+  if {$clk eq "core_clk"} {
+    set ptr {\.(rp_w|r_st_w|wp_pub|w_st)\[}; set sto {\.mem\[}
+  } else {
+    set ptr {\.(rp|r_st|wp_r|w_st_r)\[}; set sto {\.sh\[}
+  }
+  set sp 0.0; set np 0; set ss 0.0; set ns 0; set sa 0.0; set na 0
   foreach p [all_registers -clock $clk -clock_pins] {
     set a [get_property $p arrival_max_rise]
-    if {[string is double -strict $a] && abs($a) < 1e5} { set s [expr {$s + $a}]; incr n }
+    if {![string is double -strict $a] || abs($a) >= 1e5} { continue }
+    set sa [expr {$sa + $a}]; incr na
+    set nm [get_full_name $p]
+    if {![regexp {u_rc[01]} $nm]} { continue }
+    if {[regexp $ptr $nm]} { set sp [expr {$sp + $a}]; incr np } elseif {[regexp $sto $nm]} { set ss [expr {$ss + $a}]; incr ns }
   }
-  if {$n == 0} { return "" }
-  return [expr {$s / $n}]
+  if {$na == 0} { return "" }
+  if {$np > 0 && $ns > 0} {
+    puts [format "BE_SL clk balance ref %s: crossing pointer %.1f (n %d) storage %.1f (n %d) all %.1f (n %d)" $clk [expr {$sp/$np}] $np [expr {$ss/$ns}] $ns [expr {$sa/$na}] $na]
+    return [expr {0.5 * ($sp / $np + $ss / $ns)}]
+  }
+  puts "BE_SL clk balance ref $clk: no crossing flops matched (pointer $np storage $ns); all-register mean"
+  return [expr {$sa / $na}]
 }
 proc ot_besl_clk_balance {} {
-  set tol [expr {[info exists ::env(OT_BESL_BAL_TOL)] ? $::env(OT_BESL_BAL_TOL) : 12.0}]
+  set tol [expr {[info exists ::env(OT_BESL_BAL_TOL)] ? $::env(OT_BESL_BAL_TOL) : 0.0}]
   set blk [ord::get_db_block]
   set db [ord::get_db]
   set bt [$blk findBTerm cks]

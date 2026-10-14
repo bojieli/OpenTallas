@@ -888,16 +888,28 @@ module ot_hgi_seq #(
         en_um[qa*16 +: 16] <= 16'd1 << all_hdr[qa*128 + H_UNIT +: 4];
         en_w[qa*16 +: 16] <= all_hdr[qa*128 + H_WAIT +: 16];
     end
-    reg ir_cv, sblk; reg [QB-1:0] ir_ce, se; reg [15:0] om, ir_cm, ir_cw; integer si, sj;
+    // v2.5 (drain rule, HGI-1 4.1 / 4.3): the compiler drops a wait bit a record would need when an OLDER record already
+    // waits for that unit ("since that unit last drained": in order, the older record's wait drains it for both).  The
+    // head sees that drain; a resolver ahead of the head does not, unless it also honours the wait masks of the older
+    // queued entries (ow).  Without ow the I table of an indexed reader behind e.g. a DMA.FENCE that waits for IDX was
+    // read while IDX.TOPK was still running (DS route.gather: stale ids, a wrong effective base).
+    reg ir_cv, sblk; reg [QB-1:0] ir_ce, se; reg [15:0] om, ow, ir_cm, ir_cw; integer si, sj;
     always @* begin
-        ir_cv = 1'b0; ir_ce = {QB{1'b0}}; ir_cm = 16'd0; ir_cw = 16'd0; sblk = 1'b0; om = 16'd0;
+        ir_cv = 1'b0; ir_ce = {QB{1'b0}}; ir_cm = 16'd0; ir_cw = 16'd0; sblk = 1'b0; om = 16'd0; ow = 16'd0;
         for (si = 0; si < QD; si = si + 1) begin
             se = qh + si[QB-1:0];
             if (si < q_cnt && !sblk && !ir_cv)
                 for (sj = 0; sj < QD; sj = sj + 1) if (se == sj[QB-1:0]) begin
                     if (en_blk[sj]) sblk = 1'b1;
-                    else if (en_pend[sj]) begin ir_cv = 1'b1; ir_ce = se; ir_cm = om; ir_cw = en_w[sj*16 +: 16]; end
-                    else if (en_disp[sj]) om = om | en_um[sj*16 +: 16];
+                    else if (en_pend[sj]) begin ir_cv = 1'b1; ir_ce = se; ir_cm = om; ir_cw = en_w[sj*16 +: 16] | ow; end
+                    else begin
+`ifdef OT_HGI_SEQ_MUT_DRAIN
+                        ow = 16'd0;                           // NEGATIVE CONTROL: older waits ignored (the v2.1 .. v2.4 rule)
+`else
+                        ow = ow | en_w[sj*16 +: 16];
+`endif
+                        if (en_disp[sj]) om = om | en_um[sj*16 +: 16];
+                    end
                 end
         end
     end

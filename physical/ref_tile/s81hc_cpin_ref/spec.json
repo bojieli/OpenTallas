@@ -75,6 +75,7 @@
   "physical/s81_ph_views/hc_hier/cck_cpin_ref.sdc"
  ],
  "job": {
+  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Claude:s81-suhc-hier-1011",
   "branch": "claude/el1011-s81hc-cpin",
   "tag": "v2",

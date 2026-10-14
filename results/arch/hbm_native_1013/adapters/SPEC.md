@@ -101,3 +101,58 @@ The service-ready mux above is internal to this bridge; directly connecting
 an unstalled native vmq pulse to its req_r would be a data-loss bug. A producer
 fifth request before a response faults, never silently overruns. No producer
 may release its transaction allocation based on queue dequeue or hub credit.
+
+## Retained xload command aperture (next prebuild step)
+
+A command seat validates GLOBAL WORD base40 / stride32 / n21 / p4 / space2
+before translating to the legacy LOCAL WORD aperture. Owned slice window is
+[sid*65536,(sid+1)*65536); mirror is[262144,294912). Require p1..8, n>0,
+base/stride8-word alignment, spaceVM1, stride<=65536words and the complete
+span base+(p-1)*stride+n within one window. Reject cross-window commands,
+high-bit aliases, and mirror overflow; P8*K7168=57344 does NOT fit mirror32k.
+Native block-dot n must be32-aligned; output fragment-slot allocation must
+also fit the actual128-address store (BF16 groups ceil(n/512), FP8 ceil(n/1024),
+FP4 ceil(n/2048); groups*8+x_xb<=128).
+
+One command seat captures payload (~115bits), sid/mirror and full owner192;
+state tracks SEND then RUN then DRAIN. The lease is retained until native
+x_done AND packet/wide/VM8 completion returns home. No next command changes
+an aperture while old traffic is in flight. This adds a registered command
+edge and serializes command leases (cost must be charged, not hidden).
+Fits one local M5/M4 station: <400 clock sinks, <=500um reach, command+owner
+~320bits/500um cut ratio0.0342; reset only state/valid, no payload reset.
+Caller must obtain real lane-burst and SM publication reservations before
+command acceptance; this seat does not invent those allocations. No changes
+to golden arithmetic/layout, no global barrier, no queue or response omitted.
+
+## Pipelined native sink, prebuild 2026-10-13
+
+The default sink remains PIPE0 (one outstanding, one beat/3edges). Opt-in
+PIPE1 accepts one beat/edge and retains two local stages: xw launch then
+boundary-sampling ACK. Add explicit tap_ticket16 / tap_ACK_ticket16 alongside
+UNMODIFIED opaque owner192. The root service allocator owns32live entries
+(16/bank); ticket={generation11,bank1,slot4}, checked for collision and wrap
+reuse. Root matches BOTH owner and ticket and rejects duplicate/stale/per-face
+unissued ACKs. The sink never repurposes any of the192owner bits. No published
+source field map for those bits exists; a constant command owner alone cannot
+identify multiple concurrent beats.
+
+At acceptance edge t the sink registers payload+owner+ticket and launch mask;
+at t+1 the real native SM input samples that xw pulse and the sink launches
+matching owner/ticket ACK; the root observes the registered ACK at t+2. This is
+SM-boundary acceptance, NOT x-SRAM readback. Selected SM front_n has internal
+wl/wm/w0 and branch pipelines; its source-defined commit/launch safety remains
+a separate gate and must be priced before engine start. Permission and owner
+lease remain installed through the sampling edge and final ACK drain.
+
+The additional state is two16-bit ticket registers; one sink's payload+owner
+and controls remain below2500sinks, localM5signal/PG, M4/M5faces, independently
+buffered localclock/coldreset. No added payload reset. The forwarding channel
+is2063+192+16+valid/ready, reverse192+16+ACK, total2482bits: on500um M4 with
+9375usabletracks ratio0.26475. Every extra physical relay must preserve ticket,
+owner and valid together and be priced in the32-ticket release window. The
+flat eight-SM fork is still refused; real local stations/cuts are required.
+PIPE1 boundary throughput target1664beats in1664accept edges (plus2drain);
+positive gate checks every native sampling/ACK edge and equal-owner distinct
+tickets, and payload/ticket/early-ACK mutants must fail. Production native
+root memory/SMstore price and physical closure remain OPEN.

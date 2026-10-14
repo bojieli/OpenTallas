@@ -1,6 +1,6 @@
 {
   "name": "dsfd_engram_lkp",
-  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/el1013-engram-lkp-pk-9c5094e02-tc/routes/el1013_engram_lkp_pk_9c5094e02_tc/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/el1013-engram-lkp-pk-9c5094e02-tc/routes/el1013_engram_lkp_pk_9c5094e02_tc/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/view:/out",
+        "/srv/opentallas-scratch2/claude/closure-loop/el1013-engram-lkp-pk-9c5094e02-tc/routes/el1013_engram_lkp_pk_9c5094e02_tc/view:/out",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/abs_eco:/tmp",
+        "/srv/opentallas-scratch2/claude/closure-loop/el1013-engram-lkp-pk-9c5094e02-tc/routes/el1013_engram_lkp_pk_9c5094e02_tc/abs_eco:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/work/orfs:/in:ro",
+        "/srv/opentallas-scratch2/claude/closure-loop/el1013-engram-lkp-pk-9c5094e02-tc/routes/el1013_engram_lkp_pk_9c5094e02_tc/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/view:/out",
+        "/srv/opentallas-scratch2/claude/closure-loop/el1013-engram-lkp-pk-9c5094e02-tc/routes/el1013_engram_lkp_pk_9c5094e02_tc/view:/out",
         "-v",
-        "/srv/opentallas-data/claude/closure-loop/engram_lkp_crcmat2_a-b17ee03d4-tc/routes/engram_lkp_crcmat2_a_b17ee03d4_tc/abs_eco:/tmp",
+        "/srv/opentallas-scratch2/claude/closure-loop/el1013-engram-lkp-pk-9c5094e02-tc/routes/el1013_engram_lkp_pk_9c5094e02_tc/abs_eco:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -49,9 +49,9 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_engram_lkp.lef": "06e8e08de07cec18fa2abe9235eaee1d6cc4d63a4d792eb987f09bcb4b0abfce",
-    "dsfd_engram_lkp_ff.lib": "adb3f2f1d119286d7b389cfe378a82f619eb08d52e7b4ca137d6b313ad80782f",
-    "dsfd_engram_lkp_ss.lib": "2d288f766fe1f3195b266238d4e3788a1133a3af41020752fbf39fe55c2a3854"
+    "dsfd_engram_lkp.lef": "84bb0067a9212770b7d8f5d707fd3ce62fd77153bf3c6d7e4ec725f54a7a7544",
+    "dsfd_engram_lkp_ff.lib": "47965d47d72c761911eee364bcf492772d134361acd0fdbc23f5757061d95118",
+    "dsfd_engram_lkp_ss.lib": "08a5abf5721aebb611f68d9619b5059251bac2f5bc4032270dfde13653218c23"
   },
   "ok": true
 }

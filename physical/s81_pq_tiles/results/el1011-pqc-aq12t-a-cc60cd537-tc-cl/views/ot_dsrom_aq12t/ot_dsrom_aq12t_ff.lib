@@ -59,7 +59,7 @@ library (ot_dsrom_aq12t_ff) {
   }
 
   cell ("ot_dsrom_aq12t") {
-    area : 9360.249 
+    area : 24903.938 
     is_macro_cell : true;
     pin("clk") {
       direction : input;
@@ -82,7 +82,7 @@ library (ot_dsrom_aq12t_ff) {
           values("307.20102");
         }
         cell_fall(scalar) {
-          values("325.58398");
+          values("325.58405");
         }
       }
     }
