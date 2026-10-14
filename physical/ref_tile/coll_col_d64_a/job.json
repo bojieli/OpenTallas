@@ -1,5 +1,5 @@
 {
- "name": "coll_col_d64_a-d1-COMMIT",
+ "name": "coll_col_d64_a-d1-e42e26f27",
  "block": "ot_coll_col_tile_d64",
  "ref_tile": true,
  "owner": "Claude:qwen-coll-io-1014",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "claude/qwen-coll-io-1014",
-  "commit": "COMMIT",
+  "commit": "e42e26f27",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/qwen_coll_cx"
@@ -121,7 +121,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/coll_col_d64/coll_col_d64_a-d1-COMMIT"
+   "to": "results/rtl/ref_tile/coll_col_d64/coll_col_d64_a-d1-e42e26f27"
   }
  ],
  "cycles_added": 0,
