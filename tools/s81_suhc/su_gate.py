@@ -244,13 +244,12 @@ class Run:
         self.expect(out, rows_of(V.sqrt(V.softplus(x))))
 
     def rb(self, sc, bias):
-        """ffn.bias: scores + bias (golden add), bias rows resident in the VM (descriptor word 4)"""
+        """ffn.bias: scores + bias (golden add); the layer's bias rows sit directly after the score rows"""
         import hdc_golden_v41 as V
         sc, bias = np.asarray(sc, F), np.asarray(bias, F)
-        a = self.put(rows_of(sc))
-        b = self.put(rows_of(bias))
+        a = self.put(rows_of(sc) + rows_of(bias))
         out = self.alloc(len(sc) // 16)
-        self.job("RB", 0, self.desc(out, a, len(sc) // 16, 0, b))
+        self.job("RB", 0, self.desc(out, a, len(sc) // 16))
         self.expect(out, rows_of(V.add(sc, bias)))
 
     def qr(self, q, cos, sin):

@@ -29,8 +29,9 @@
 // 5.. 5+NSW-1 routing weights (SW, one per vector).  Parameter rows after it: KV / SO cos (2 rows) + sin (2 rows);
 // SE sink (SM_H words).
 // RA / RB / QR (one operand beat = every operand row of the job): count = rows (RA, RB) / q heads (QR).
-//   RA rows ibase .. +count-1 -> result rows out_base .. (binary32 r);  RB scores ibase .., bias rows from word 4 (bias
-//   base, layer constant rows resident in the VM) -> out_base .. (binary32 scores + bias);  QR the 4 rope rows of each
+//   RA rows ibase .. +count-1 -> result rows out_base .. (binary32 r);  RB count score rows from ibase followed by count
+//   bias rows (the compiler places the layer's bias constant directly after the router all-gather's output region) ->
+//   out_base .. (binary32 scores + bias);  QR the 4 rope rows of each
 //   head (head h: rows ibase + 32 h + 28 .. 31, the last 64 of its 512) -> the same offsets from out_base (out_base =
 //   in_base rotates in place); parameter rows cos (2) + sin (2) as KV / SO.
 // Operand rows (from in_base, beat-major: each engine beat is RPB consecutive rows):
@@ -184,11 +185,9 @@ module ot_s81_su_core #(
     ot_s81_su_rx #(.BR(BMAX), .RAL(RAL), .LM(LM), .LA(LA), .MUT(XMUT)) u_rx (
         .clk(clk), .rst_n(rst_n), .start(rx_st), .knd(kind[1:0]), .nr(nrow), .bt(be), .cos_t({prow[2], prow[1]}),
         .sin_t({prow[4], prow[3]}), .o_v(rx_ov), .o_i(rx_oi), .o_d(rx_od), .fault(rx_f));
-    // operand row address of operand row i (RB: the bias rows follow the scores; QR: the head's 4 rope rows)
-    wire [13:0] bbase = prow[0][128 +: 14];
-    function automatic [13:0] oaddr(input [3:0] k, input [15:0] i, input [15:0] c, input [13:0] ib, input [13:0] bb_);
+    // operand row address of operand row i (QR: the head's 4 rope rows; RB: scores then bias, contiguous)
+    function automatic [13:0] oaddr(input [3:0] k, input [15:0] i, input [13:0] ib);
         case (k)
-            K_RB: oaddr = (i < c) ? ib + i[13:0] : bb_ + i[13:0] - c[13:0];
             K_QR: oaddr = ib + {i[13:2], 5'd0} + 14'd28 + {12'd0, i[1:0]};
             default: oaddr = ib + i[13:0];
         endcase
@@ -289,7 +288,7 @@ module ot_s81_su_core #(
                     if ((kind != K_QN && kind != K_KV) || go_pend == 16'hFFFF) begin
                         for (s = 0; s < S_RD; s = s + 1)
                             if (ri + s < nrow) begin
-                                rq_v[s] <= 1; rq_row[14 * s +: 14] <= oaddr(kind, ri + s, cnt, ibase, bbase);
+                                rq_v[s] <= 1; rq_row[14 * s +: 14] <= oaddr(kind, ri + s, ibase);
                             end
                         ri <= ri + S_RD;
                     end
