@@ -18,9 +18,12 @@
 // order across and within requests), else oldest-first in order.  GAP: percent
 // of cycles with no response; STALL: percent of cycles hq_ready is low.
 // Content: global row r of layer l = tools/hdc_v41_engram_shipped.row_bytes
-// (word j = splitmix64(l << 40 | r << 6 | j)), scale byte at 256, CRC-32/MPEG-2
-// of bytes 0..256 at 257..260 (little-endian), 0 at 261..263, 0xEE between
-// columns.  ERR=1 flips one bit of atom 2 of row 0 of every 7th window of rank
+// (word j = splitmix64(l << 40 | r << 6 | j)), the 8 block exponents (one per 32
+// columns, the released layout) at 256..263 (block k from word 32 + k),
+// CRC-32/MPEG-2 of bytes 0..263 at 264..267 (little-endian), 0 at 268..271
+// (272-B rows, F13 2026-10-14), 0xEE between columns.  +REAL=<file> (optional):
+// lines "l row <264-byte hex, byte 0 = least significant>" replace the content of
+// those rows (the released checkpoint rows of a real token).  ERR=1 flips one bit of atom 2 of row 0 of every 7th window of rank
 // 0's engines (window index mod 7 == 3): the bench reports those as poisoned.
 // All-gather: engine r -> sink d is an in-order pipelined link (up to 128 in flight) of AGLAT +
 // random(0..AGJIT) cycles (LOCLAT for d == r); a row status rides the same
@@ -68,10 +71,10 @@ module tb_dsrom_engram_lookup #(parameter integer NSLOT = 2, parameter integer P
             crcb = x;
         end
     endfunction
-    function automatic [7:0] scale_of(input [63:0] key);
+    function automatic [7:0] scale_of(input [63:0] key, input integer k);
         reg [63:0] w;
         begin
-            w = smix(key | 64'd32);
+            w = smix(key | (64'd32 + k));
             scale_of = w[8] ? w[7:0] : 8'd107 + (w[7:0] % 41);
         end
     endfunction
@@ -85,7 +88,8 @@ module tb_dsrom_engram_lookup #(parameter integer NSLOT = 2, parameter integer P
                 w = smix(key | i);
                 for (b = 0; b < 8; b = b + 1) c = crcb(c, w[8*b +: 8]);
             end
-            row_crc = crcb(c, scale_of(key));
+            for (i = 0; i < 8; i = i + 1) c = crcb(c, scale_of(key, i));
+            row_crc = c;
         end
     endfunction
     function automatic [63:0] colbase(input integer l, input integer r, input integer j);
@@ -94,31 +98,42 @@ module tb_dsrom_engram_lookup #(parameter integer NSLOT = 2, parameter integer P
         begin
             acc = 0;
             for (i = 0; i < j; i = i + 1) begin
-                sz = ENG_PRIME[QW*(l*ENG_COLS + r*CPR + i) +: QW] * 64'd264;
+                sz = ENG_PRIME[QW*(l*ENG_COLS + r*CPR + i) +: QW] * 64'd272;
                 acc = acc + ((sz + 31) & ~64'd31);
             end
             colbase = acc;
         end
     endfunction
+    // real rows (+REAL): key {layer index 8 b, global row 56 b} -> 264 bytes, and their CRC
+    reg [2111:0] realrow [longint unsigned];
+    reg [31:0]   realcrc [longint unsigned];
     // one byte of engine (l, r)'s region
     reg [63:0] cbt [0:NE-1][0:CPR];
     function automatic [7:0] byte_at(input integer l, input integer r, input [63:0] a);
         integer j, c;
-        reg [63:0] off, res, bi, grow, key, w, q;
+        reg [63:0] off, res, bi, grow, key, w, q, rk;
+        reg [2111:0] rr;
         reg [31:0] cr;
         begin
             byte_at = 8'hEE;
             for (j = 0; j < CPR; j = j + 1) begin
                 c = l * ENG_COLS + r * CPR + j;
                 q = ENG_PRIME[QW*c +: QW];
-                if (a >= cbt[l*NR + r][j] && a < cbt[l*NR + r][j] + q * 264) begin
+                if (a >= cbt[l*NR + r][j] && a < cbt[l*NR + r][j] + q * 272) begin
                     off = a - cbt[l*NR + r][j];
-                    res = off / 264; bi = off % 264;
+                    res = off / 272; bi = off % 272;
                     grow = res + ENG_OFFSET[RW*c +: RW];
                     key = ({56'd0, l[7:0]} << 40) | (grow << 6);
-                    if (bi < 256) begin w = smix(key | (bi >> 3)); byte_at = w[8*(bi % 8) +: 8]; end
-                    else if (bi == 256) byte_at = scale_of(key);
-                    else if (bi <= 260) begin cr = row_crc(key); byte_at = cr[8*(bi - 257) +: 8]; end
+                    rk = {l[7:0], grow[55:0]};
+                    if (realrow.exists(rk)) begin
+                        rr = realrow[rk];
+                        if (bi < 264) byte_at = rr[8*bi +: 8];
+                        else if (bi < 268) begin cr = realcrc[rk]; byte_at = cr[8*(bi - 264) +: 8]; end
+                        else byte_at = 8'd0;
+                    end
+                    else if (bi < 256) begin w = smix(key | (bi >> 3)); byte_at = w[8*(bi % 8) +: 8]; end
+                    else if (bi < 264) byte_at = scale_of(key, bi - 256);
+                    else if (bi < 268) begin cr = row_crc(key); byte_at = cr[8*(bi - 264) +: 8]; end
                     else byte_at = 8'd0;
                 end
             end
@@ -219,6 +234,24 @@ module tb_dsrom_engram_lookup #(parameter integer NSLOT = 2, parameter integer P
         if (!$value$plusargs("ERR=%d", ERR)) ERR = 0;
         for (l = 0; l < NL; l = l + 1) for (r = 0; r < NR; r = r + 1) for (j = 0; j <= CPR; j = j + 1)
             cbt[l*NR + r][j] = colbase(l, r, j);
+        if ($value$plusargs("REAL=%s", path)) begin : ldreal
+            integer rf, rl, nreal, bb;
+            reg [63:0] rrow;
+            reg [2111:0] rdat;
+            reg [31:0] rc32;
+            rf = $fopen(path, "r");
+            if (rf == 0) begin $display("cannot open REAL rows"); $finish; end
+            nreal = 0;
+            while ($fscanf(rf, "%d %d %h", rl, rrow, rdat) == 3) begin
+                rc32 = 32'hFFFFFFFF;
+                for (bb = 0; bb < 264; bb = bb + 1) rc32 = crcb(rc32, rdat[8*bb +: 8]);
+                realrow[{rl[7:0], rrow[55:0]}] = rdat;
+                realcrc[{rl[7:0], rrow[55:0]}] = rc32;
+                nreal = nreal + 1;
+            end
+            $fclose(rf);
+            $display("REAL rows loaded %0d", nreal);
+        end
         fd = $fopen(path, "r");
         if (fd == 0) begin $display("cannot open vectors"); $finish; end
         rc = 1;

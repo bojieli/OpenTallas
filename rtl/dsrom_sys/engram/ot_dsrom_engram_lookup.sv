@@ -9,8 +9,8 @@
 // offsets, region column bases) and the 6 columns of the hash output.
 //
 // PLACEMENT OF THE TABLES (why HBM, why by column).  Layer L's table is 24 hash
-// columns of ~16.0 M rows of 264 B (256 E4M3 codes, 1 UE8M0 scale, 7 bytes we
-// own).  Rank r of the home stage holds columns r*CPR .. r*CPR+CPR-1 (CPR = 6,
+// columns of ~16.0 M rows of 272 B (the RELEASED row: 256 E4M3 codes + 8 UE8M0
+// exponents, one per 32 columns; then 8 bytes we own: CRC-32 + 4 pad).  Rank r of the home stage holds columns r*CPR .. r*CPR+CPR-1 (CPR = 6,
 // 25.35 GB) in a load-once region of its own HBM3E stacks.  Every token reads
 // exactly ONE row of every column, so each rank reads exactly CPR rows a token:
 // the column split is perfectly balanced by construction and needs no hashing
@@ -22,23 +22,28 @@
 //   1. HASH: the shipped hash unit (ot_hdc_engram_hash_shipped, II 1, latency
 //      12) is fed the window oldest first, in_first on the oldest, so its 4th
 //      output is the window's hash -- no per-user state on this die.
-//   2. ADDRESS: residue = row - offset[c]; byte = BASE + colbase[j] + residue*264
+//   2. ADDRESS: residue = row - offset[c]; byte = BASE + colbase[j] + residue*272
 //      (two registered adds); atom = byte >> 5.  Column bases are 32-B aligned
-//      and 264 = 8 mod 32, so a row starts at byte 0/8/16/24 of an atom and
-//      always spans exactly 9 atoms.
+//      and 272 = 16 mod 32, so a row starts at byte 0/16 of an atom and always
+//      spans exactly 9 atoms (ROWSTRIPE: 288-B rows, byte 0, 9 atoms).
+//      F13 (s81-functional-token 2026-10-14): the 264-B row of the first
+//      version held ONE scale (byte 256) and its CRC in bytes 257..260 -- the
+//      released table's bytes 257..263 are the other seven block exponents
+//      (layers.{1,14}.engram.embed.scale [rows, 8]); 45 of the 1M token's 48
+//      rows have non-uniform block exponents.
 //   3. REQUEST: CPR requests (atom, len 9, tag j) to the HBM controller port,
 //      valid/ready.  Responses are 32-B atoms tagged {row j, atom index}; they
 //      may arrive in any order and interleaved.  hr_ready is constant 1: a
 //      request is only issued into a row buffer that is reserved for it.
 //   4. EMIT: rows are emitted in column order once complete, 8 beats each:
-//      beat k = codes 32k..32k+31 at [255:0], the row's scale byte at [263:256]
-//      on EVERY beat (the sink keeps no per-row state).  Two register stages
+//      beat k = codes 32k..32k+31 at [255:0], the exponent of THAT 32-column
+//      block (row byte 256 + k) at [263:256] (the sink keeps no per-row state).  Two register stages
 //      (atom select, byte shift) feed a 4-entry output FIFO; a beat is only
 //      started when the FIFO has room for everything in flight (no stall path
 //      through the select / shift registers).
-//   5. INTEGRITY: bytes 257..260 of a stored row hold CRC-32/MPEG-2 (poly
+//   5. INTEGRITY: bytes 264..267 of a stored row hold CRC-32/MPEG-2 (poly
 //      04C11DB7, init FFFFFFFF, MSB first, no reflection, no xorout) over the
-//      256 codes and the scale byte, written at table load.  The engine checks
+//      256 codes and the 8 exponent bytes (row bytes 0..263), written at table load.  The engine checks
 //      it on emission and sends one status per row (st_valid, st_bad) after
 //      the row's last beat; the sink counts 24 statuses before a slot is ready
 //      and poisons it on any bad one; fault is sticky.  A wrong address, a bad alignment and a
@@ -128,7 +133,7 @@ module ot_dsrom_engram_lookup #(
         begin
             acc = 64'd0;
             for (i = 0; i < j; i = i + 1) begin
-                sz = ENG_PRIME[QW*(l*ENG_COLS + rk*CPR + i) +: QW] * (ROWSTRIPE ? 64'd288 : 64'd264);
+                sz = ENG_PRIME[QW*(l*ENG_COLS + rk*CPR + i) +: QW] * (ROWSTRIPE ? 64'd288 : 64'd272);
                 acc = acc + ((sz + 64'd31) & ~64'd31);
             end
             col_base = acc;
@@ -179,7 +184,7 @@ module ot_dsrom_engram_lookup #(
     // ---- address ----------------------------------------------------------------------
     reg [QW-1:0]  res  [0:CPR-1];
     reg [ABW-1:0] r256 [0:CPR-1];
-    reg [ABW-1:0] r8   [0:CPR-1];
+    reg [ABW-1:0] r8   [0:CPR-1];            // residue*16 (272-B rows) / residue*32 (ROWSTRIPE 288-B rows) + column base
     reg [ABW-1:0] baddr[0:CPR-1];
     reg [1:0]     acnt;                      // address pipeline step
     // straps registered (static after reset); one-hot of {layer, rank} selects the column constants
@@ -223,7 +228,7 @@ module ot_dsrom_engram_lookup #(
                 if (hdone) res[gj] <= lr[QW-1:0];
                 if (st == S_ADDR && acnt == 2'd0) begin
                     r256[gj] <= {{(ABW-QW-8){1'b0}}, res[gj], 8'd0};
-                    r8[gj]   <= (ROWSTRIPE ? {{(ABW-QW-5){1'b0}},res[gj],5'd0} : {{(ABW-QW-3){1'b0}},res[gj],3'd0}) + cb_q;
+                    r8[gj]   <= (ROWSTRIPE ? {{(ABW-QW-5){1'b0}},res[gj],5'd0} : {{(ABW-QW-4){1'b0}},res[gj],4'd0}) + cb_q;
                 end
                 if (st == S_ADDR && acnt == 2'd1) baddr[gj] <= r256[gj] + r8[gj];
             end
@@ -233,7 +238,7 @@ module ot_dsrom_engram_lookup #(
     // ---- row buffers ------------------------------------------------------------------
     reg [255:0] rb [0:CPR-1][0:ATOMS-1];
     reg [3:0]   rcnt [0:CPR-1];
-    reg [1:0]   roff [0:CPR-1];             // row start within its first atom, in 8-byte units
+    reg [1:0]   roff [0:CPR-1];             // row start within its first atom, in 8-byte units (0 / 2)
     integer j;
     always @(posedge clk) if (hr_valid) rb[hr_tag][hr_idx] <= hr_data;
 
@@ -369,7 +374,8 @@ module ot_dsrom_engram_lookup #(
     endgenerate
     // E2: byte shift
     reg [255:0] e2_d;
-    reg [7:0]   e2_scale;
+    reg [7:0]   e2_scale;                   // this beat's block exponent (row byte 256 + k)
+    reg [63:0]  e2_sc8;                     // all 8 block exponents (row bytes 256..263, byte 256 at [7:0]) for the CRC
     reg [31:0]  e2_crc;
     reg [2:0]   e2_j, e2_k;
     wire [511:0] e1_cat = {e1_hi, e1_lo};
@@ -380,8 +386,13 @@ module ot_dsrom_engram_lookup #(
     end
     always @(posedge clk) if (e1_v) begin
         e2_d <= e1_cat[{e1_off, 6'd0} +: 256];
-        e2_scale <= e1_a8s[7:0];
-        e2_crc <= e1_a8s[39:8];             // bytes 257..260, byte 257 = crc[7:0]
+`ifdef OT_ENGRAM_MUT_ONESCALE
+        e2_scale <= e1_a8s[7:0];            // NEGATIVE CONTROL ONLY: the pre-F13 one-exponent decode (block 0's on every beat)
+`else
+        e2_scale <= e1_a8s[{e1_k, 3'd0} +: 8];
+`endif
+        e2_sc8 <= e1_a8s[63:0];
+        e2_crc <= e1_a8s[95:64];            // bytes 264..267, byte 264 = crc[7:0]
         e2_j <= e1_j; e2_k <= e1_k; e2_s <= e1_s;
     end
 
@@ -413,7 +424,7 @@ module ot_dsrom_engram_lookup #(
     assign o_valid = ov;
     assign {o_col, o_beat, o_slot, o_data} = od;
 
-    // ---- CRC-32/MPEG-2 over the 256 codes and the scale byte --------------------------
+    // ---- CRC-32/MPEG-2 over the 256 codes and the 8 exponent bytes ----------------------
     function automatic [31:0] crc_byte(input [31:0] c, input [7:0] b);
         integer i;
         reg [31:0] x;
@@ -422,6 +433,15 @@ module ot_dsrom_engram_lookup #(
             for (i = 7; i >= 0; i = i - 1)
                 x = {x[30:0], 1'b0} ^ ((x[31] ^ b[i]) ? POLY : 32'd0);
             crc_byte = x;
+        end
+    endfunction
+    function automatic [31:0] crc_sc8(input [31:0] c, input [63:0] s);   // the 8 exponent bytes, byte 256 first
+        integer i;
+        reg [31:0] x;
+        begin
+            x = c;
+            for (i = 0; i < 8; i = i + 1) x = crc_byte(x, s[8*i +: 8]);
+            crc_sc8 = x;
         end
     endfunction
     function automatic [31:0] crc_beat(input [31:0] c, input [255:0] d);
@@ -436,11 +456,11 @@ module ot_dsrom_engram_lookup #(
     // ---- CRCMAT: constant GF(2) columns and the per-output-bit masks ------------------------
     wire [31:0] m_dcol [0:255];              // crc_beat(0, e_i)
     wire [31:0] m_scol [0:31];               // crc_beat(e_k, 0)
-    wire [31:0] m_bcol [0:7];                // crc_byte(0, e_i)
-    wire [31:0] m_fcol [0:31];               // crc_byte(e_k, 0)
+    wire [31:0] m_bcol [0:63];               // crc_sc8(0, e_i)
+    wire [31:0] m_fcol [0:31];               // crc_sc8(e_k, 0)
     wire [255:0] m_dmask [0:31];
     wire [31:0]  m_smask [0:31], m_fmask [0:31];
-    wire [7:0]   m_bmask [0:31];
+    wire [63:0]  m_bmask [0:31];
     genvar gmi, gmj;
     generate
         for (gmi = 0; gmi < 256; gmi = gmi + 1) begin : g_mdc
@@ -449,11 +469,11 @@ module ot_dsrom_engram_lookup #(
         end
         for (gmi = 0; gmi < 32; gmi = gmi + 1) begin : g_msc
             localparam [31:0] C = crc_beat(32'd1 << gmi, 256'd0);
-            localparam [31:0] F = crc_byte(32'd1 << gmi, 8'd0);
+            localparam [31:0] F = crc_sc8(32'd1 << gmi, 64'd0);
             assign m_scol[gmi] = C; assign m_fcol[gmi] = F;
         end
-        for (gmi = 0; gmi < 8; gmi = gmi + 1) begin : g_mbc
-            localparam [31:0] C = crc_byte(32'd0, 8'd1 << gmi);
+        for (gmi = 0; gmi < 64; gmi = gmi + 1) begin : g_mbc
+            localparam [31:0] C = crc_sc8(32'd0, 64'd1 << gmi);
             assign m_bcol[gmi] = C;
         end
         for (gmj = 0; gmj < 32; gmj = gmj + 1) begin : g_mm
@@ -464,25 +484,25 @@ module ot_dsrom_engram_lookup #(
                 assign m_smask[gmj][gmi] = m_scol[gmi][gmj];
                 assign m_fmask[gmj][gmi] = m_fcol[gmi][gmj];
             end
-            for (gmi = 0; gmi < 8; gmi = gmi + 1) begin : g_b
+            for (gmi = 0; gmi < 64; gmi = gmi + 1) begin : g_b
                 assign m_bmask[gmj][gmi] = m_bcol[gmi][gmj];
             end
         end
     endgenerate
     reg [31:0] crc;
     reg        e3_last;
-    wire [31:0] mx_d, mx_s, mx_f;            // crc_beat(0, e2_d), crc_beat(crc, 0), crc_byte(crc, e3_scale)
-    reg  [7:0]  e3_scale;
+    wire [31:0] mx_d, mx_s, mx_f;            // crc_beat(0, e2_d), crc_beat(crc, 0), crc_sc8(crc, e3_sc8)
+    reg  [63:0] e3_sc8;
     generate
         for (gmj = 0; gmj < 32; gmj = gmj + 1) begin : g_mx
             assign mx_d[gmj] = ^(e2_d & m_dmask[gmj]);
             assign mx_s[gmj] = ^(crc & m_smask[gmj]);
-            assign mx_f[gmj] = (^(crc & m_fmask[gmj])) ^ (^(e3_scale & m_bmask[gmj]));
+            assign mx_f[gmj] = (^(crc & m_fmask[gmj])) ^ (^(e3_sc8 & m_bmask[gmj]));
         end
     endgenerate
     wire [31:0] beat_d = (CRCMAT != 0) ? mx_d : crc_beat(32'd0, e2_d);
     wire [31:0] beat_s = (CRCMAT != 0) ? mx_s : crc_beat(crc, 256'd0);
-    wire [31:0] fold   = (CRCMAT != 0) ? mx_f : crc_byte(crc, e3_scale);
+    wire [31:0] fold   = (CRCMAT != 0) ? mx_f : crc_sc8(crc, e3_sc8);
     reg [31:0] e3_exp;
     generate
         if (PIPE == 0) begin : g_crc0
@@ -495,12 +515,12 @@ module ot_dsrom_engram_lookup #(
                                                    : crc_beat((e2_k == 3'd0) ? 32'hFFFFFFFF : crc, e2_d);
                 end
             end
-            always @(posedge clk) if (e2_v && e2_k == 3'd7) begin e3_scale <= e2_scale; e3_exp <= e2_crc; e3_s <= e2_s; end
+            always @(posedge clk) if (e2_v && e2_k == 3'd7) begin e3_sc8 <= e2_sc8; e3_exp <= e2_crc; e3_s <= e2_s; end
         end else begin : g_crc1
             // stage a: data term; stage b: state term ^ data term
             reg [31:0] ga;
             reg        a_v, a_first, a_last;
-            reg [7:0]  a_scale;
+            reg [63:0] a_sc8;
             reg [31:0] a_exp;
             reg [SLW-1:0] a_s;
             always @(posedge clk or negedge rst_n) begin
@@ -516,12 +536,12 @@ module ot_dsrom_engram_lookup #(
             always @(posedge clk) if (e2_v) begin
                 ga <= beat_d;
                 a_first <= (e2_k == 3'd0);
-                a_scale <= e2_scale; a_exp <= e2_crc; a_s <= e2_s;
+                a_sc8 <= e2_sc8; a_exp <= e2_crc; a_s <= e2_s;
             end
-            always @(posedge clk) if (a_last) begin e3_scale <= a_scale; e3_exp <= a_exp; e3_s <= a_s; end
+            always @(posedge clk) if (a_last) begin e3_sc8 <= a_sc8; e3_exp <= a_exp; e3_s <= a_s; end
         end
     endgenerate
-    // final: fold the scale byte and compare
+    // final: fold the 8 exponent bytes and compare
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st_valid <= 1'b0; st_slot <= {SLW{1'b0}}; st_bad <= 1'b0; fault <= 1'b0;
