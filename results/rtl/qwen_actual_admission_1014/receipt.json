@@ -1,0 +1,32 @@
+{
+  "parent_commit": "709403507",
+  "unit": "oth-ubuntu-1409142-1791968323",
+  "exit": 0,
+  "positive": {
+    "acceptances": 3,
+    "query_edges": 24,
+    "output_edges": 24,
+    "coherent_edges": 698,
+    "paused_base_edges": 17,
+    "payload_checks": 694
+  },
+  "mutants": [
+    "pending_guard_removed",
+    "duplicate_guard_removed",
+    "all_admission_guards_bypassed"
+  ],
+  "missing_rom_first_attempt_unit": "oth-ubuntu-1406035-1791968265",
+  "scope": "actual post-IREG acceptance and callback lifetime only; no numerical arithmetic oracle/global delivery/CDC/retirement/seal/performance qualification",
+  "seam_added_core_edges": 0,
+  "ack_and_fence_delay": "test stimuli, not production measured cost",
+  "files": {
+    "duplicate_mutant.log": "fb9077d0cc800e6ec944c9c8f79f3da88b579f79c4b0c053fa74059a910757ab",
+    "bypass_mutant.log": "629d6063605436a0af2979eb2cd740e4cf2d1e8fd41060bf20042f8da62342fe",
+    "bypass_mutant_build.log": "39fd72dd9f54171436fc73a3503e32798a43b3f683aaad215ea3eb2aa46043e8",
+    "positive.log": "b882e95933ffd30664c70ac0d1b63c9de5c7ab12f08c80969a40b12fdbb5ec31",
+    "duplicate_mutant_build.log": "756437ddaae1a0171002f33a680a6f365310bba162adaa43f32490b1fa234a8b",
+    "pending_mutant.log": "629d6063605436a0af2979eb2cd740e4cf2d1e8fd41060bf20042f8da62342fe",
+    "pending_mutant_build.log": "d8d9e9c73148f6a0acd2592a3c248840ac958b1249be7d0aa10f52d987b57eed",
+    "positive_build.log": "d626e899170ff1754adbb4e9f57c60857852ab02074a4bef7883984a322b1ff8"
+  }
+}

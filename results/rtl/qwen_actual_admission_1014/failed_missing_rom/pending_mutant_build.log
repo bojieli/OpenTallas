@@ -1,0 +1,17 @@
+%Error-MODMISSING: rtl/physical/ot_qwen_tile_rpair.sv:20:5: Cannot find file containing module: 'ot_rom_4096x266_m8'
+   20 |     ot_rom_4096x266_m8 u_rom0 (.clk(clk), .ce_in(req_m[12]), .addr_in(req_m[11:0]), .rd_out(rd0));
+      |     ^~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_rom_4096x266_m8
+                        ot_rom_4096x266_m8.v
+                        ot_rom_4096x266_m8.sv
+                        /srv/opentallas-scratch/codex/qwen-actual-admission-1014/obj_pending_mutant/ot_rom_4096x266_m8
+                        /srv/opentallas-scratch/codex/qwen-actual-admission-1014/obj_pending_mutant/ot_rom_4096x266_m8.v
+                        /srv/opentallas-scratch/codex/qwen-actual-admission-1014/obj_pending_mutant/ot_rom_4096x266_m8.sv
+                   ... With current working directory '/srv/opentallas-scratch/codex/qwen-actual-admission-1014/src_pending_mutant'
+%Error-MODMISSING: rtl/physical/ot_qwen_tile_rpair.sv:21:5: Cannot find file containing module: 'ot_rom_4096x266_m8'
+   21 |     ot_rom_4096x266_m8 u_rom1 (.clk(clk), .ce_in(req_m[25]), .addr_in(req_m[24:13]), .rd_out(rd1));
+      |     ^~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 2 error(s)
