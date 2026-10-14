@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.qwen.vm-band-full-endpoint-screen.v1",
+ "qualification": false,
+ "status": "REJECTED_NATIVE_FULL_BOUNDARY_INTERFACE_NO_ROUTE",
+ "launch_limit_ps": 220,
+ "capture_limit_ps": 190,
+ "normalization": "pinreg_audit metrics alreadyO-R/S+R; only measured boundaryspread adjustment added. Clockentrywire is compensated separately, not datawire.",
+ "native_seam_bits": 32768,
+ "native_seam_stats": {
+  "launch220_TT_lower_bound_margin_ps": {
+   "failed": 32752,
+   "worst_ps": -295.7536799999986
+  },
+  "capture190_TT_lower_bound_margin_ps": {
+   "failed": 852,
+   "worst_ps": -213.3397200000006
+  }
+ },
+ "native_intrinsic": {
+  "launch_over220": 2776,
+  "capture_over190": 0
+ },
+ "pointroot_input_bits": 32768,
+ "pointroot_stats": {
+  "intrinsic_launch220_margin_ps": {
+   "failed": 3061,
+   "worst_ps": -11.601839999999982
+  },
+  "intrinsic_capture190_margin_ps": {
+   "failed": 0,
+   "worst_ps": 9.16516999999996
+  },
+  "pair_TT_margin_ps": {
+   "failed": 2832,
+   "worst_ps": -69.2549
+  },
+  "pair_deep210_margin_ps": {
+   "failed": 10323,
+   "worst_ps": -129.2549
+  }
+ },
+ "pointroot_source": "eeb5c1dc5 heldpointviewdiagnostic; snapshotroutedviewpending",
+ "source_hashes": {
+  "results/arch/qwen_tp8_1012/vm_band_boundary_packet_codex.json": "6e6817101b4fb39885f100ad588da2d094d96bf87fff3fb951770f681c0e807a",
+  "results/arch/qwen_tp8_1012/vm_band_paths_closed_station_candidate_codex.json": "f4e9660dea909ef511e35c645df20697512feb3680b653690967478db1c07818"
+ },
+ "detail": {
+  "path": "results/arch/qwen_tp8_1012/vm_band_endpoint_screen_codex.details.json.gz",
+  "sha256": "c3577718d94c7ebe3c8b10e072aba42dc6c4595b1745716082d241f8e9c0c393"
+ },
+ "candidate_rejection": {
+  "regional_first_stage_packet": "b48c892d",
+  "rejection_source": "4c14ae277 vm_joint_g1_station_endpoint_screen.json",
+  "intrinsic_bad_outputs": 53,
+  "all688_Nface_launch220_fail": true,
+  "interpretation": "ChosenW,E joint688screens/geometry remain necessarytests only; fullinterface rejection prevents freezing/adopting/rerouting."
+ },
+ "pending": [
+  "Actual source/bandassigned boundarypins andendpointbudgetplanes; closest-face projection onlynecessarylowerbound.",
+  "ENGINE-qualified shallow S/Nclosedviews orotherphysicallyjustified endpoints; no clockRdoublecredit.",
+  "Actual M8/M9/bufferingrecipe SS endpointRC/hold, fullclock/control/loader protocol, combinedcuts."
+ ]
+}

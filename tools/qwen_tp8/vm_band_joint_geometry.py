@@ -6,7 +6,7 @@ from vm_bay_cluster import VIEW
 from vm_band_pair import timing
 ROOT=Path(__file__).resolve().parents[2];A=ROOT/'results/arch/qwen_tp8_1012'
 def main():
- comp=json.loads((A/'vm_band_composition_codex.json').read_text());jf=A/'vm_band_joint_staging_codex.json';joint=json.loads(jf.read_text());chosen=next(a for a in joint['alternatives']if a['all688_bits_necessary_screens_pass']);rp=A/'vm_band_paths_closed_station_candidate_codex.json';r=json.loads(rp.read_text());edges=json.load(gzip.open(ROOT/r['all_bit_details']['path'],'rt'))['edges'];x0,y0=comp['origin_um'];W,H=comp['outline_um'];pool=json.loads((A/'vm_band_boundary_packet_codex.json').read_text())['spare_slots'];children=comp['children'];moves={};new=[]
+ comp=json.loads((A/'vm_band_composition_codex.json').read_text());jf=A/'vm_band_joint_staging_codex.json';joint=json.loads(jf.read_text());chosen=next(a for a in joint['alternatives']if a['all688_bits_necessary_screens_pass']and a['relay_kinds']==joint['selected_relay_kinds']);rp=A/'vm_band_paths_closed_station_candidate_codex.json';r=json.loads(rp.read_text());edges=json.load(gzip.open(ROOT/r['all_bit_details']['path'],'rt'))['edges'];x0,y0=comp['origin_um'];W,H=comp['outline_um'];pool=json.loads((A/'vm_band_boundary_packet_codex.json').read_text())['spare_slots'];children=comp['children'];moves={};new=[]
  for move in joint['prerequisite_whole_tile_relocations']:
   ch=next(c for c in children if c.get('bay')==move['bay']and c['slot']==move['logical_slot']);dest=next(s for s in pool if s['bay']==move['to_bay']and s['slot']==move['physical_slot']);nx,ny=dest['at'];dx=nx-x0-ch['at'][0];dy=ny-y0-ch['at'][1];moves[move['bay'],move['logical_slot']]=(dx,dy);ch['at']=[nx-x0,ny-y0];ch['candidate_destination']=dest
  for i,stage in enumerate(chosen['stages']):
@@ -34,7 +34,7 @@ def main():
    if gap<2.16-1e-6:failures.append(dict(a=c['inst'],b=d['inst'],gap_um=gap))
  outside=[c['inst']for c in children if min(c['at'])<0 or c['at'][0]+c['outline_um'][0]>W+1e-6 or c['at'][1]+c['outline_um'][1]>H+1e-6]
  out=dict(schema='opentallas.qwen.vm-band-joint-geometry-necessary-gate.v1',qualification=False,status='NECESSARY_GEOMETRY_AND_RELOCATION_PASS'if not failures and not outside and all(min(e['TT_deep210_setup_ps'],e['SS_zero_wire_setup_ps'],e['FF_H100_ideal_wire_ps'])>0 and e['length_um']<=500 for e in affected)else 'FAIL',
-  selected_joint_alternative=chosen['assignment'],selected_relay_kinds=chosen['relay_kinds'],source_joint_sha256=hashlib.sha256(jf.read_bytes()).hexdigest(),
+  full_interface_adoption_gate=joint.get('full_interface_adoption_gate',dict(status='ACTUAL_ENDPOINT_CONTRACT_PENDING')),selected_joint_alternative=chosen['assignment'],selected_relay_kinds=chosen['relay_kinds'],source_joint_sha256=hashlib.sha256(jf.read_bytes()).hexdigest(),
   candidate_children=children,preserved_original_children=302,added_band_tiles=2,all_child_pair_checks=checks,minimum_channel_um=minchannels,geometry_failures=failures,outside_children=outside,
   relocated_affected_edges=len(affected),relocated_corner_worst={key:min(e[key]for e in affected)for key in ('TT_deep210_setup_ps','SS_zero_wire_setup_ps','FF_H100_ideal_wire_ps')},relocated_edges=affected,
   scope='Two whole relocated existing tiles and two added bandrelays only; original302 plus2band; regional2newtiles checked byregionworker. All4096originalstages/indexorder unchanged. Added688paths separately jointstaging matched.',

@@ -99,7 +99,7 @@ def main():
                 A=pin(path[-1],'q',bit),B=[x0+c['at'][0]+cp['x'],y0+c['at'][1]+cp['y']]))
     if args.joint_staging:
         assert args.joint_geometry and args.regional_stations
-        joint=json.loads(args.joint_staging.read_text());selected=next(v for v in joint['alternatives']if v['all688_bits_necessary_screens_pass'])
+        joint=json.loads(args.joint_staging.read_text());selected=next(v for v in joint['alternatives']if v['all688_bits_necessary_screens_pass']and v['relay_kinds']==joint['selected_relay_kinds'])
         regional=json.loads(args.regional_stations.read_text());regionalbits={e['lane']+'|'+str(e['bit']):(st,e)for st in regional['stations']for lane in st['matches']for e in lane['bits']}
         hot={(e['lane'],e['bit'])for st in selected['stages']for e in st['bits']}
         edges=[e for e in edges if not(e['kind']=='regional_boundary_lower_bound' and (e['lane'],e['bit'])in hot)]

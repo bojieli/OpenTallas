@@ -7,6 +7,14 @@
  "setup_reserve_ps": 210,
  "FF_hold_tree_margin_ps": 100,
  "passing_alternative_count": 4,
+ "selected_relay_kinds": [
+  "W",
+  "E"
+ ],
+ "selected_assignment": [
+  0,
+  1
+ ],
  "alternatives": [
   {
    "all688_bits_necessary_screens_pass": true,
@@ -262523,6 +262531,15 @@
    ]
   }
  ],
+ "full_interface_adoption_gate": {
+  "status": "REJECTED_NO_FREEZE_NO_ROUTE",
+  "source_commit": "4c14ae277 knownW512candidate rejection",
+  "launch_limit_ps": 220,
+  "capture_limit_ps": 190,
+  "regional_assigned_zero_wire_bad_outputs": 53,
+  "regional_Nface_launch_fail_bits": 688,
+  "scope": "Pair/geometrynecessaryPASS cannotqualify fullhierarchicalendpointcontract. No clockRdoublecredit; actualfaceXjog/RC pending."
+ },
  "prerequisite_whole_tile_relocations": [
   {
    "bay": "vm_pad_13_S0",

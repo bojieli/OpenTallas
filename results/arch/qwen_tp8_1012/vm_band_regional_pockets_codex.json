@@ -1,0 +1,464 @@
+{
+ "schema": "opentallas.qwen.vm-regional-export-pocket-census.v1",
+ "qualification": false,
+ "assigned": false,
+ "regional_transport_contract_adopted": false,
+ "status": "CANDIDATE_GEOMETRY_SCENARIO_OWNER_RESERVATIONS_PENDING",
+ "source_inputs": {
+  "results/arch/qwen_tp8_1012/vm_leaf_plan_claude.json": "4bdcb1bedf37ad79393d1d2d236331117af2a7bae841ff4c3e55636166e2ee78",
+  "results/arch/qwen_tp8_1012/vm_bay_tiles_claude.json": "c30a0e30f9733809447f29960e12e8b61bf045df99d5f40e6cd34e8662710675",
+  "results/arch/qwen_tp8_1012/vm_band_joint_region_candidate_input_codex.json": "b48c892db9c1b54fc5ec775a99714b5440695211f0807faecbb27e1df3352bfe"
+ },
+ "adopted_core_override": {
+  "name": "vm_g6_b6_in",
+  "absolute_at_um": [
+   16200,
+   18863.28
+  ],
+  "authority": "regionpilot vm_rg6.json d612de244; native19/fullrepack unadopted"
+ },
+ "full_preserved_core_children": 576,
+ "full_preserved_region_lane_children": 501,
+ "proposed_reserved_joint_relays": 2,
+ "footprint_um": [
+  17.28,
+  97.2
+ ],
+ "lattice_um": 2.16,
+ "minimum_channel_um": 2.16,
+ "regions": [
+  {
+   "region": 0,
+   "origin_um": [
+    13284.0,
+    17051.04
+   ],
+   "outline_um": [
+    1166.4,
+    1080.0
+   ],
+   "existing_core_children": 72,
+   "existing_lane_children": 43,
+   "proposed_reserved_joint_relays": 0,
+   "legal_candidate_lattice_origins": 7994,
+   "greedy_nonoverlap_candidate_P2_footprints": 44,
+   "greedy_candidate_state_bits": 42240,
+   "virtual_reservation_scenario": true
+  },
+  {
+   "region": 1,
+   "origin_um": [
+    14450.4,
+    17051.04
+   ],
+   "outline_um": [
+    1231.2,
+    1080.0
+   ],
+   "existing_core_children": 72,
+   "existing_lane_children": 80,
+   "proposed_reserved_joint_relays": 2,
+   "legal_candidate_lattice_origins": 6055,
+   "greedy_nonoverlap_candidate_P2_footprints": 35,
+   "greedy_candidate_state_bits": 33600,
+   "virtual_reservation_scenario": true
+  },
+  {
+   "region": 2,
+   "origin_um": [
+    15681.6,
+    17051.04
+   ],
+   "outline_um": [
+    1231.2,
+    1080.0
+   ],
+   "existing_core_children": 72,
+   "existing_lane_children": 81,
+   "proposed_reserved_joint_relays": 0,
+   "legal_candidate_lattice_origins": 6611,
+   "greedy_nonoverlap_candidate_P2_footprints": 36,
+   "greedy_candidate_state_bits": 34560,
+   "virtual_reservation_scenario": true
+  },
+  {
+   "region": 3,
+   "origin_um": [
+    16912.8,
+    17051.04
+   ],
+   "outline_um": [
+    1166.4,
+    1080.0
+   ],
+   "existing_core_children": 72,
+   "existing_lane_children": 53,
+   "proposed_reserved_joint_relays": 0,
+   "legal_candidate_lattice_origins": 6639,
+   "greedy_nonoverlap_candidate_P2_footprints": 38,
+   "greedy_candidate_state_bits": 36480,
+   "virtual_reservation_scenario": true
+  },
+  {
+   "region": 4,
+   "origin_um": [
+    13284.0,
+    18517.68
+   ],
+   "outline_um": [
+    1166.4,
+    1080.0
+   ],
+   "existing_core_children": 72,
+   "existing_lane_children": 43,
+   "proposed_reserved_joint_relays": 0,
+   "legal_candidate_lattice_origins": 10220,
+   "greedy_nonoverlap_candidate_P2_footprints": 46,
+   "greedy_candidate_state_bits": 44160,
+   "virtual_reservation_scenario": true
+  },
+  {
+   "region": 5,
+   "origin_um": [
+    14450.4,
+    18517.68
+   ],
+   "outline_um": [
+    1231.2,
+    1080.0
+   ],
+   "existing_core_children": 72,
+   "existing_lane_children": 73,
+   "proposed_reserved_joint_relays": 0,
+   "legal_candidate_lattice_origins": 9989,
+   "greedy_nonoverlap_candidate_P2_footprints": 47,
+   "greedy_candidate_state_bits": 45120,
+   "virtual_reservation_scenario": true
+  },
+  {
+   "region": 6,
+   "origin_um": [
+    15681.6,
+    18517.68
+   ],
+   "outline_um": [
+    1231.2,
+    1080.0
+   ],
+   "existing_core_children": 72,
+   "existing_lane_children": 77,
+   "proposed_reserved_joint_relays": 0,
+   "legal_candidate_lattice_origins": 9308,
+   "greedy_nonoverlap_candidate_P2_footprints": 43,
+   "greedy_candidate_state_bits": 41280,
+   "virtual_reservation_scenario": true
+  },
+  {
+   "region": 7,
+   "origin_um": [
+    16912.8,
+    18517.68
+   ],
+   "outline_um": [
+    1166.4,
+    1080.0
+   ],
+   "existing_core_children": 72,
+   "existing_lane_children": 51,
+   "proposed_reserved_joint_relays": 0,
+   "legal_candidate_lattice_origins": 7704,
+   "greedy_nonoverlap_candidate_P2_footprints": 36,
+   "greedy_candidate_state_bits": 34560,
+   "virtual_reservation_scenario": true
+  }
+ ],
+ "total_greedy_candidate_footprints": 325,
+ "detail": {
+  "path": "results/arch/qwen_tp8_1012/vm_band_regional_pockets_codex.details.json.gz",
+  "sha256": "f0de026c2a720fd065de715494139436aac2032dd5c547ce3e1b8132354fbc38"
+ },
+ "reservations": {
+  "owner": "parent qwen_vm",
+  "adopted_actual_reservations": "PENDING",
+  "scenario_boxes": [
+   {
+    "name": "old_PC_LC_control_ribbon_scenario",
+    "bbox": [
+     13284.0,
+     18083.52,
+     18122.4,
+     18131.04
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_0_broad_scenario",
+    "bbox": [
+     13725.449999999999,
+     17169.62,
+     13811.85,
+     17256.02
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_1_broad_scenario",
+    "bbox": [
+     14774.31,
+     17284.329999999998,
+     14860.710000000001,
+     17370.73
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_2_broad_scenario",
+    "bbox": [
+     15669.41,
+     17307.63,
+     15755.810000000001,
+     17394.030000000002
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_3_broad_scenario",
+    "bbox": [
+     16578.94,
+     17301.91,
+     16665.34,
+     17388.31
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_4_broad_scenario",
+    "bbox": [
+     17647.04,
+     17285.809999999998,
+     17733.440000000002,
+     17372.21
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_5_broad_scenario",
+    "bbox": [
+     13679.609999999999,
+     17736.07,
+     13766.01,
+     17822.47
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_6_broad_scenario",
+    "bbox": [
+     14327.55,
+     17920.59,
+     14413.95,
+     18006.99
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_7_broad_scenario",
+    "bbox": [
+     15712.58,
+     17543.93,
+     15798.980000000001,
+     17630.33
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_8_broad_scenario",
+    "bbox": [
+     17525.37,
+     17627.42,
+     17611.77,
+     17713.82
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_9_broad_scenario",
+    "bbox": [
+     13460.09,
+     18267.0,
+     13546.490000000002,
+     18353.4
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_10_broad_scenario",
+    "bbox": [
+     15147.539999999999,
+     18108.579999999998,
+     15233.94,
+     18194.98
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_11_broad_scenario",
+    "bbox": [
+     16050.07,
+     18173.579999999998,
+     16136.470000000001,
+     18259.98
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_12_broad_scenario",
+    "bbox": [
+     16948.0,
+     18101.29,
+     17034.4,
+     18187.690000000002
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_13_broad_scenario",
+    "bbox": [
+     17731.399999999998,
+     18229.86,
+     17817.8,
+     18316.260000000002
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_14_broad_scenario",
+    "bbox": [
+     14366.939999999999,
+     18383.04,
+     14453.34,
+     18469.440000000002
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_15_broad_scenario",
+    "bbox": [
+     15472.439999999999,
+     18499.5,
+     15558.84,
+     18585.9
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_16_broad_scenario",
+    "bbox": [
+     16590.19,
+     18566.829999999998,
+     16676.59,
+     18653.23
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_17_broad_scenario",
+    "bbox": [
+     17372.01,
+     18583.29,
+     17458.41,
+     18669.690000000002
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_18_broad_scenario",
+    "bbox": [
+     13740.099999999999,
+     18747.52,
+     13826.5,
+     18833.920000000002
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_19_broad_scenario",
+    "bbox": [
+     14782.73,
+     18936.66,
+     14869.130000000001,
+     19023.06
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_20_broad_scenario",
+    "bbox": [
+     15776.06,
+     19009.21,
+     15862.460000000001,
+     19095.61
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_21_broad_scenario",
+    "bbox": [
+     17792.71,
+     19049.16,
+     17879.11,
+     19135.56
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_22_broad_scenario",
+    "bbox": [
+     13656.33,
+     19225.87,
+     13742.730000000001,
+     19312.27
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_23_broad_scenario",
+    "bbox": [
+     16554.0,
+     19233.18,
+     16640.4,
+     19319.58
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_24_broad_scenario",
+    "bbox": [
+     15086.519999999999,
+     19373.04,
+     15172.92,
+     19459.440000000002
+    ],
+    "kind": "unassigned_virtual_reservation"
+   },
+   {
+    "name": "ME_centroid_25_broad_scenario",
+    "bbox": [
+     17321.04,
+     19373.04,
+     17407.440000000002,
+     19459.440000000002
+    ],
+    "kind": "unassigned_virtual_reservation"
+   }
+  ],
+  "scope": "Broad26MEcentroid boxes plus entire oldlowerrowcontrolribbon. These are assumedexclusions, NOT a complete actualparent controlplacement receipt."
+ },
+ "transport_requirements": [
+  "No rawpocketcount becomes assignedslotwithoutowner regionaltransportcontract andactualreservationaudit.",
+  "Intermediate actualpin paths\u2264min500,pairreach; source/ME/loadstep/tag domains andphaseepoch aligned understalls.",
+  "RegionM9 abstracts andallrealmacroOBS need actualboundaryport/access/recap beforeVM-owned crossregionrootexportroute.",
+  "Bind everyplacedclockphi-R ownentry, localPGM7/actualdieM8M9, fullcombinedcut/SSwire/hold.",
+  "Thisgeometryonlyscenario doesnotclose perroot23/39footprintlowerbound into a realpathnetwork."
+ ]
+}

@@ -2,15 +2,24 @@
  "schema": "opentallas.qwen.vm-band-joint-geometry-necessary-gate.v1",
  "qualification": false,
  "status": "NECESSARY_GEOMETRY_AND_RELOCATION_PASS",
+ "full_interface_adoption_gate": {
+  "status": "REJECTED_NO_FREEZE_NO_ROUTE",
+  "source_commit": "4c14ae277 knownW512candidate rejection",
+  "launch_limit_ps": 220,
+  "capture_limit_ps": 190,
+  "regional_assigned_zero_wire_bad_outputs": 53,
+  "regional_Nface_launch_fail_bits": 688,
+  "scope": "Pair/geometrynecessaryPASS cannotqualify fullhierarchicalendpointcontract. No clockRdoublecredit; actualfaceXjog/RC pending."
+ },
  "selected_joint_alternative": [
   0,
   1
  ],
  "selected_relay_kinds": [
-  "E",
+  "W",
   "E"
  ],
- "source_joint_sha256": "88d5b3bac57248d448562a90e54328d6bed0b6836f5e7e940b32fe51afc75f00",
+ "source_joint_sha256": "94d79c65cf0cec34affc88e7b4dd35a1d43b92b8469dee762e6f4f7100fa31eb",
  "candidate_children": [
   {
    "inst": "u_t0",
@@ -5886,7 +5895,7 @@
   },
   {
    "inst": "candidate_band_exit1",
-   "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
    "at": [
     1952.6399999999994,
     4.319999999999709

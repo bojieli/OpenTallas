@@ -41,7 +41,7 @@
   "closed_column_input": 495.492,
   "closed_tile_to_closed_tile": 497.388,
   "candidate_joint_region_input": 272.292,
-  "candidate_joint_band_input": 332.592,
+  "candidate_joint_band_input": 308.676,
   "candidate_joint_band_output": 338.724,
   "candidate_station_control": 374.58
  },
@@ -1487,9 +1487,9 @@
      15234.0,
      15494.0
     ],
-    "demand_bits": 2429,
+    "demand_bits": 2417,
     "capacity_tracks": 5929.48,
-    "ratio": 0.409648,
+    "ratio": 0.407624,
     "layer_capacity": {
      "M9": 2180.102574,
      "M7": 3046.875,
@@ -4961,9 +4961,9 @@
      18131.04,
      18391.04
     ],
-    "demand_bits": 3296,
+    "demand_bits": 3784,
     "capacity_tracks": 5294.48,
-    "ratio": 0.622535,
+    "ratio": 0.714707,
     "layer_capacity": {
      "M8": 2180.102574,
      "M6": 3046.875,
@@ -4993,9 +4993,9 @@
      18131.04,
      18391.04
     ],
-    "demand_bits": 3274,
+    "demand_bits": 3762,
     "capacity_tracks": 5294.48,
-    "ratio": 0.61838,
+    "ratio": 0.710552,
     "layer_capacity": {
      "M8": 2180.102574,
      "M6": 3046.875,
@@ -5025,9 +5025,9 @@
      18131.04,
      18391.04
     ],
-    "demand_bits": 3251,
+    "demand_bits": 3739,
     "capacity_tracks": 5294.48,
-    "ratio": 0.614036,
+    "ratio": 0.706208,
     "layer_capacity": {
      "M8": 2180.102574,
      "M6": 3046.875,
@@ -5057,9 +5057,9 @@
      18131.04,
      18391.04
     ],
-    "demand_bits": 3232,
+    "demand_bits": 3720,
     "capacity_tracks": 5294.48,
-    "ratio": 0.610447,
+    "ratio": 0.702619,
     "layer_capacity": {
      "M8": 2180.102574,
      "M6": 3046.875,
@@ -5089,9 +5089,9 @@
      18131.04,
      18391.04
     ],
-    "demand_bits": 3250,
+    "demand_bits": 3738,
     "capacity_tracks": 5294.48,
-    "ratio": 0.613847,
+    "ratio": 0.706019,
     "layer_capacity": {
      "M8": 2180.102574,
      "M6": 3046.875,
@@ -5105,9 +5105,9 @@
      18131.04,
      18391.04
     ],
-    "demand_bits": 3272,
+    "demand_bits": 3760,
     "capacity_tracks": 5294.48,
-    "ratio": 0.618002,
+    "ratio": 0.710174,
     "layer_capacity": {
      "M8": 2180.102574,
      "M6": 3046.875,
@@ -5121,9 +5121,9 @@
      18131.04,
      18391.04
     ],
-    "demand_bits": 3295,
+    "demand_bits": 3783,
     "capacity_tracks": 5294.48,
-    "ratio": 0.622347,
+    "ratio": 0.714518,
     "layer_capacity": {
      "M8": 2180.102574,
      "M6": 3046.875,
@@ -15043,8 +15043,8 @@
  ],
  "root_payload_coverage": 0,
  "joint_candidate_inputs": {
-  "results/arch/qwen_tp8_1012/vm_band_joint_geometry_codex.json": "3566fbd94fdd1e17988abd0937395e92284baae22a6f56e914b3bdd17248984b",
-  "results/arch/qwen_tp8_1012/vm_band_joint_staging_codex.json": "88d5b3bac57248d448562a90e54328d6bed0b6836f5e7e940b32fe51afc75f00",
+  "results/arch/qwen_tp8_1012/vm_band_joint_geometry_codex.json": "c9caf41dbbceba70b99b041ef6defbd419f1a592ac9fcc050fa2966e8a86e5fd",
+  "results/arch/qwen_tp8_1012/vm_band_joint_staging_codex.json": "94d79c65cf0cec34affc88e7b4dd35a1d43b92b8469dee762e6f4f7100fa31eb",
   "results/arch/qwen_tp8_1012/vm_band_joint_region_candidate_input_codex.json": "b48c892db9c1b54fc5ec775a99714b5440695211f0807faecbb27e1df3352bfe"
  },
  "candidate_controls": {
@@ -15054,7 +15054,22 @@
  },
  "all_bit_details": {
   "path": "results/arch/qwen_tp8_1012/vm_band_paths_joint_candidate_codex.details.json.gz",
-  "sha256": "127f22481a0f540d8dafe743e39b406e0159d8fe494c3a610d4df45fe0296baf"
+  "sha256": "3a5e221fbb06a9797160264c88aaa942048b6513c034bd5a12ddb0f19d1d2689"
  },
- "over500_count": 4784
+ "over500_count": 4784,
+ "joint_candidate_original_generation_metadata_refs": {
+  "results/arch/qwen_tp8_1012/vm_band_joint_geometry_codex.json": "c956d4df68871a55ad63d454587d5b5d2b69a205f50d1d24e5a5d0d33eca74f8",
+  "results/arch/qwen_tp8_1012/vm_band_joint_staging_codex.json": "001ac8bb798d97d13a010d800e28017277273974a9987de8c7d5359eefee7ff4",
+  "results/arch/qwen_tp8_1012/vm_band_joint_region_candidate_input_codex.json": "b48c892db9c1b54fc5ec775a99714b5440695211f0807faecbb27e1df3352bfe"
+ },
+ "metadata_only_update": "Sourcejointstaging/geometry adoptionclassification changedtofull220/190 rejection; selectedW,E pinmap/placements/allbitpathdetails andcuts unchanged.",
+ "full_interface_adoption_gate": {
+  "status": "REJECTED_NO_FREEZE_NO_ROUTE",
+  "source_commit": "4c14ae277 knownW512candidate rejection",
+  "launch_limit_ps": 220,
+  "capture_limit_ps": 190,
+  "regional_assigned_zero_wire_bad_outputs": 53,
+  "regional_Nface_launch_fail_bits": 688,
+  "scope": "Pair/geometrynecessaryPASS cannotqualify fullhierarchicalendpointcontract. No clockRdoublecredit; actualfaceXjog/RC pending."
+ }
 }
