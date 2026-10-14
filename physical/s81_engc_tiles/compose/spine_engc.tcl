@@ -7,6 +7,7 @@ source /src/physical/common_flow/clock_spine.tcl
 set ::ot_engc_ck_target [dict create u_win 181.8 u_io 280.5 u_ws 297.1 u_pb1 461.6 u_pb0 453.8 u_pb2 453.8 u_lkp 366.7 u_sink 282.0]
 set ::ot_engc_ck_offset [dict create u_win -30 u_io 0 u_ws -30 u_pb1 10 u_pb0 -10 u_pb2 0 u_lkp 0 u_sink 0]
 proc ot_sp_leaf_arrivals {} {
+  ot_engc_attach_local_clocks
   estimate_parasitics -placement
   sta::find_timing_paths -path_delay max -group_path_count 1
   set a [dict create]
@@ -35,7 +36,9 @@ proc clock_tree_synthesis {args} {
   set b [ord::get_db_block]; set reconnect {}
   foreach child {win io ws pb1 pb0 pb2 lkp sink} {
     foreach i [$b getInsts] {
-      if {![string match *u_rst_${child}* [$i getName]]} continue
+      set belongs [string match *u_rst_${child}* [$i getName]]
+      if {$child eq "win" && [string match *u_status_win* [$i getName]]} { set belongs 1 }
+      if {!$belongs} continue
       foreach it [$i getITerms] {
         set mt [$it getMTerm]
         if {[$mt getSigType] ne "CLOCK" && [$mt getName] ni {CLK CK CP}} continue
@@ -44,21 +47,40 @@ proc clock_tree_synthesis {args} {
       }
     }
   }
-  if {[llength $reconnect] < 16} { error "ENGC reset sync clocks missing: [llength $reconnect] < 16" }
+  if {[llength $reconnect] != 32} { error "ENGC local clocks missing: [llength $reconnect] !=32" }
+  set ::ot_engc_pending_clocks $reconnect
+  set ::ot_engc_clocks_attached 0
   ot_engc_spine_cts {*}$args
-  foreach row $reconnect {
+  if {!$::ot_engc_clocks_attached} { error "ENGC local clocks were not loaded during spine balancing" }
+  estimate_parasitics -placement
+}
+# Called on the FIRST arrival measurement: the tree exists, and the macro-only
+# bins are fixed. Attach local flop loads BEFORE padding/equalisation, so clock
+# delays include those loads rather than changing after the balance was solved.
+proc ot_engc_attach_local_clocks {} {
+  if {![info exists ::ot_engc_pending_clocks] || $::ot_engc_clocks_attached} { return }
+  set b [ord::get_db_block]
+  foreach row $::ot_engc_pending_clocks {
     lassign $row child it
     set macro [$b findInst u_$child]
     set net [[$macro findITerm ck] getNet]
     if {$net eq "NULL"} { error "ENGC macro clock disconnected: $child" }
     # Spine completion protects its leaf nets; open only this branch while
-    # adding the two local reset clocks, then restore the same protection.
+    # adding the local reset/status clocks, then restore the same protection.
     $net setDoNotTouch 0
     [$it getInst] setDoNotTouch 0
     $it connect $net
+    # A spine rollback must restore these local clocks with the same leaf.
+    dict for {leaf leafnet} $::ot_sp_leafnet {
+      if {$leafnet ne $net} continue
+      if {[lsearch -exact [dict get $::ot_sp_members $leaf] $it] < 0} {
+        dict lappend ::ot_sp_members $leaf $it
+        dict incr ::ot_sp_cnt $leaf 1
+      }
+    }
     [$it getInst] setDoNotTouch 1
     $net setDoNotTouch 1
-    puts "ENGC reset clock [[$it getInst] getName]/[[$it getMTerm] getName] = u_${child}/ck net [$net getName]"
+    puts "ENGC local clock [[$it getInst] getName]/[[$it getMTerm] getName] = u_${child}/ck net [$net getName]"
   }
-  estimate_parasitics -placement
+  set ::ot_engc_clocks_attached 1
 }

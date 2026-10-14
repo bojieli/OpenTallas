@@ -43,3 +43,19 @@ foreach ot_child {win io ws pb1 pb0 pb2 lkp sink} {
   if {$ot_found == 0} { error "ENGC reset conditioner absent: $ot_child" }
   puts "ENGC reset place $ot_child cells=$ot_found near ($ot_x,$ot_y)"
 }
+
+set ot_win [$ot_cp_b findInst u_win]
+set ot_status_pin [$ot_win findITerm {s_rdy[0]}]
+if {$ot_status_pin eq "NULL"} { error "ENGC WIN status pin absent" }
+set ot_bb [$ot_status_pin getBBox]
+set ot_x [expr {([$ot_bb xMin]+[$ot_bb xMax])/2}]
+set ot_y [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
+set ot_status_cells 0
+foreach ot_i [$ot_cp_b getInsts] {
+  if {![string match *u_status_win* [$ot_i getName]]} continue
+  $ot_i setLocation $ot_x $ot_y
+  $ot_i setPlacementStatus PLACED
+  incr ot_status_cells
+}
+if {$ot_status_cells < 16} { error "ENGC status stage cells missing" }
+puts "ENGC status place cells=$ot_status_cells near WIN ready pin ($ot_x,$ot_y)"

@@ -65,7 +65,7 @@ module dsfd_engram_c #(
     wire [67:0] lk_wid; wire [3:0] lk_rel, vrel_io, vrel_sk; wire [2:0] cfg_io, cfg_lk;
     wire lk_fault, lk_ov, lk_stv, lk_stb, lk_hqv; wire [4:0] lk_oc; wire [2:0] lk_ob, lk_os, lk_sts, lk_hqt;
     wire [263:0] lk_od; wire [30:0] lk_hqa; wire [264:0] lk_hr;
-    wire [7:0] s_rdy, s_perr, rdy_w, perr_w; wire s_we; wire [10:0] s_wa; wire [511:0] s_wd;
+    wire [7:0] s_rdy, s_perr, s_rdy_pipe, s_perr_pipe, rdy_w, perr_w; wire s_we; wire [10:0] s_wa; wire [511:0] s_wd;
     wire [17:0] jn; wire [15:0] wn;
     wire [5:0] w_oh, x0_oh, x1_oh, r0_oh, r1_oh, r2_oh; wire [7:0] w_a, x0_a, x1_a, r0_a, r1_a, r2_a;
     wire [255:0] b1_d, rd0, rd1, rd2w; wire [319:0] x_d, x0_d; wire [63:0] x1_d;
@@ -114,13 +114,18 @@ module dsfd_engram_c #(
     wire rst_sink_n;
     ot_engc_reset_sync u_rst_sink (.clk(ck_sink), .async_rst_n(rst[0]), .sync_rst_n(rst_sink_n));
 
+    // Break the proven WIN<->SINK timing cycle at the returning status face.
+    // Ready and parity-error belong to the same completed write and move together.
+    ot_engc_status_pipe u_status_win (.clk(ck_win), .rst_n(rst_win_n),
+        .rdy_i(s_rdy), .perr_i(s_perr), .rdy_o(s_rdy_pipe), .perr_o(s_perr_pipe));
+
     ot_engc_t_win u_win (
         .ck(ck_win), .rst(rst_win_n), .f_win(f_win), .t_collective(t_collective[0]),
         .lk_wv(lk_wv), .lk_wid(lk_wid), .lk_wcred(lk_wcred), .lk_rel(lk_rel),
         .lk_ov(lk_ov), .lk_stv(lk_stv), .lk_stb(lk_stb), .lk_fault(lk_fault), .lk_oc(lk_oc), .lk_ob(lk_ob), .lk_os(lk_os),
         .lk_sts(lk_sts), .lk_od(lk_od), .t_ag(t_ag), .f_agc(f_agc[0]), .lk_ocred(lk_ocred),
         .cfg_i(cfg_io), .cfg_o(cfg_lk), .rn_lk(rn_lk), .rn_sk(rn_sk),
-        .s_rdy(s_rdy), .s_perr(s_perr), .rdy_o(rdy_w), .perr_o(perr_w), .vrel_i(vrel_io), .vrel_o(vrel_sk),
+        .s_rdy(s_rdy_pipe), .s_perr(s_perr_pipe), .rdy_o(rdy_w), .perr_o(perr_w), .vrel_i(vrel_io), .vrel_o(vrel_sk),
         .jn_i(jn), .wn_o(wn), .jf_o(jf), .werr_i(werr_ws), .werr_o(werr_w));
 `ifdef SYNTHESIS
     ot_engc_t_io u_io (
@@ -191,4 +196,14 @@ module ot_engc_reset_sync(input wire clk, input wire async_rst_n, output wire sy
         if (!async_rst_n) reset_pipe <= 2'b00;
         else reset_pipe <= {reset_pipe[0], 1'b1};
     assign sync_rst_n = reset_pipe[1];
+endmodule
+
+module ot_engc_status_pipe(input wire clk, rst_n, input wire [7:0] rdy_i, perr_i,
+    output wire [7:0] rdy_o, perr_o);
+    (* keep = "true", dont_touch = "true" *) reg [7:0] rdy_q, perr_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rdy_q <= 8'b0; perr_q <= 8'b0; end
+        else begin rdy_q <= rdy_i; perr_q <= perr_i; end
+    assign rdy_o = rdy_q;
+    assign perr_o = perr_q;
 endmodule
