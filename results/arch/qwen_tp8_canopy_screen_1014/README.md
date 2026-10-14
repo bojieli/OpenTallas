@@ -22,6 +22,8 @@ Each conditional response is screened independently; request109 and common instr
 |154|5308|1055.057 um|534|643|
 |233|7836|1557.541 um|613|722|
 
+For the 149-bit case, the earlier historical capacity model used 0.75 alone and required915.200 um. The current screen removes nominal PG metal **and** retains0.75 remaining capacity, requiring1023.255 um. The earlier PG-only0.894401 model required767.441 um. These are three explicitly different assumptions; none changes the0.60 cut limit or reprices throughput.
+
 The aggregate requirements fail the existing 84.264 um strip. They include the remaining0.75 factor in addition to core PG metal removal, unlike earlier PG-only scenarios. Extra horizontal M6 cannot rescue this through the actual M7-capped frames. M9 is vertical, and the VM wall excludes all layers.
 
 ## Concrete partial repack and its finite limits
