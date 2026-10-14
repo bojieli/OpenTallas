@@ -95,5 +95,38 @@
         "Aborting..."
       ]
     }
+  },
+  "profile": {
+    "source": "652d6b6ca",
+    "cycles": 20464,
+    "source_active_cycles": 20611,
+    "pure_source_credit_block_cycles": 4337,
+    "credit_block_candidate_cycles": 28084,
+    "request_idle_phase_cycles": 192,
+    "queue_full_cycles": 0,
+    "router_idle_with_pending_head": 0,
+    "ticket_full_cycles": 0,
+    "maximum_fifo_occupancy": 6,
+    "maximum_held_heads": 4,
+    "maximum_tickets": 6,
+    "HBM_accepted_sectors32B": 38230,
+    "HBM_accepted_source_bytes": 1223360,
+    "HBM_queued_lane_cycles": 37698,
+    "HBM_credit_blocked_lane_cycles": 37698,
+    "HBM_model_offer_ceiling_srcB_per_source_cycle": 256,
+    "destination_write_grants": 76700,
+    "source_packet_stages_equal": 76700,
+    "observed_bottleneck": "Protected source reservation10 exhausted while rawFIFO16 remains<=6; destination grants everypendinghead."
+  },
+  "ceiling": {
+    "native_vm_bank_write_bytes": 32,
+    "native_vm_banks_per_destination": 8,
+    "VM_edges_per_source_edge": 0.75,
+    "max_native_destination_bytes_per_source_cycle": 192,
+    "minimum_data_only_cycles": 12783.333333333334,
+    "immutable_bound_cycles": 17241.752158398333,
+    "required_destination_bytes_per_cycle": 142.35212160873567,
+    "required_source_bytes_per_cycle": 70.95334562062536,
+    "measured_source_bytes_per_cycle": 59.78107896794371
   }
 }
