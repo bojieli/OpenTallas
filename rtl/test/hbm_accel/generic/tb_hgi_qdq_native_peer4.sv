@@ -2,7 +2,7 @@
 // Production QDQ records/golden from tb_hgi_qdq_q_tput on four actual native B2
 // slices and protected group1 CDC. DMA preload and group0 exact readback are real
 // native interfaces. Group leases remain held throughout; release is not proven.
-module tb_hgi_qdq_native_peer4 #(parameter integer MUT=0,PHASE=61,FASTFIN=0,FRONTFAST=0);
+module tb_hgi_qdq_native_peer4 #(parameter integer MUT=0,PHASE=61,FASTFIN=0,FRONTFAST=0,DRAIN=0);
  reg [3:0] cclk=0;always #416.6665 cclk=~cclk;
  wire clk=cclk[0];reg vclk=0;integer phase_run=PHASE;
  initial begin void'($value$plusargs("PHASE=%d",phase_run));#(phase_run);forever #555.5555 vclk=~vclk;end
@@ -15,11 +15,21 @@ module tb_hgi_qdq_native_peer4 #(parameter integer MUT=0,PHASE=61,FASTFIN=0,FRON
  reg [32*16-1:0] check_rq=0;wire [32*257-1:0] check_rr;
  reg [32*281-1:0] dma_q=0;wire [31:0] dma_done;
  wire [32*18-1:0] bank_status;
+ wire [31:0] cdrained,vdrained;wire [3:0] qdrained;
+ generate if(DRAIN==0)begin:g_original
+ assign cdrained=0;assign vdrained=0;assign qdrained=0;
  ot_hgi_qdq_native_peer4 #(.MUT_QDQ(MUT==2?1:0),.FASTFIN(FASTFIN),.FRONTFAST(FRONTFAST)) endpoint(
   .cclk(cclk),.vclk(vclk),.rst_n(rst_n),.permit(q_owned),.mirror(4'b0),.rec(rec),.ret(ret),
   .rg_req(rg_req),.wg_req(wg_req),.rg_gnt(q_owned),.wg_gnt(q_owned),
   .peer_rq(peer_rq),.peer_rq_credit(peer_rc),.peer_rr(peer_rr),
   .peer_wq(peer_wq),.peer_wq_credit(peer_wc),.peer_wq_done(peer_done),.adapter_fault(adapter_fault));
+ end else begin:g_drained
+ ot_hgi_qdq_native_peer4_drain #(.MUT_QDQ(MUT==2?1:0),.FASTFIN(FASTFIN),.FRONTFAST(FRONTFAST)) endpoint(
+  .cclk(cclk),.vclk(vclk),.rst_n(rst_n),.permit(q_owned),.mirror(4'b0),.rec(rec),.ret(ret),
+  .rg_req(rg_req),.wg_req(wg_req),.rg_gnt(q_owned),.wg_gnt(q_owned),
+  .peer_rq(peer_rq),.peer_rq_credit(peer_rc),.peer_rr(peer_rr),
+  .peer_wq(peer_wq),.peer_wq_credit(peer_wc),.peer_wq_done(peer_done),.adapter_fault(adapter_fault),.cdrained(cdrained),.vdrained(vdrained),.qdrained(qdrained));
+ end endgenerate
  ot_hbm_b2_su_vm4 vehicle(.cclk(cclk),.vclk(vclk),.rst_n(rst_n),.permit(4'hf),.mirror(4'b0),
   .crq(check_rq),.crq_credit(),.crr(check_rr),.cwq('0),.cwq_credit(),.cwq_done(),
   .peer_rq(peer_rq),.peer_rq_credit(peer_rc),.peer_rr(peer_rr),
@@ -105,6 +115,12 @@ module tb_hgi_qdq_native_peer4 #(parameter integer MUT=0,PHASE=61,FASTFIN=0,FRON
    @(negedge clk); for(integer quad=0;quad<4;quad=quad+1)rec[quad*683]=0;
   end
   while (nretq[0]<nrec || nretq[1]<nrec || nretq[2]<nrec || nretq[3]<nrec) begin @(negedge clk); if (cyc - t0 > 200000) $fatal(1, "FATAL: liveness (%0d dones)", nret); end
+  if(DRAIN!=0)begin
+   for(integer dq=0;cdrained!=32'hffffffff||vdrained!=32'hffffffff||qdrained!=4'hf;dq=dq+1)begin
+    @(negedge clk);if(dq>2000)$fatal(1,"FATAL actual quant drain timedout c%h v%h q%h",cdrained,vdrained,qdrained);
+   end
+   $display("NATIVE_QDQ_DRAIN PASS lanes32 quadrants4 source_and_VM_obligations_zero");
+  end
   for(integer quad=0;quad<4;quad=quad+1)
   for (k = 0; k < nrec; k = k + 1) begin
    bk = bad; fn = $sformatf("%s/out_%0d.hex", dir, k); $readmemh(fn, gout, 0, n[k] / 8 - 1);

@@ -36,7 +36,7 @@ module ot_hgi_qdq_native_peer4_drain #(parameter integer MUT_QDQ=0, MUT_CDC=0, F
     if(rec_pending!=~rec_pending_n||next_pending>32)ledger_fault<=1;
     rec_pending<=next_pending[5:0];rec_pending_n<=~next_pending[5:0];
    end
-  assign qdrained[q]=(&cdrained[q*8+:8])&&!ledger_fault&&rec_pending==0&&rec_pending==~rec_pending_n&&!accepted&&!ret[q*3+1]&&!rg_req[q]&&!wg_req[q];
+  assign qdrained[q]=!(|adapter_fault[q*8+:8])&&(&cdrained[q*8+:8])&&!ledger_fault&&rec_pending==0&&rec_pending==~rec_pending_n&&!accepted&&!ret[q*3+1]&&!rg_req[q]&&!wg_req[q];
   // qpin4 preserves the actual q8 LQ10 credit counts and LD16 storage.
   // Record format, descriptor/shape validation and fault retirement stay in FR.
   // Physical FR/CORE hard-child defaults are SPANPIPE1. The software qpin4
