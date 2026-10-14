@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.vm-registered-interface-cycle-model.v1",
+ "status": "BEHAVIORAL_CANDIDATE_ONLY",
+ "region": 6,
+ "core_leaves": 72,
+ "lane_tiles": 77,
+ "segments": 1091,
+ "core_command_input_added_clock_edges": 1,
+ "core_output_added_clock_edges": 1,
+ "async_reset_policy": "direct existing reset ports; no new reset register",
+ "engine_qualifier": "previous uniformly delayed me: original raw me two CLOCK edges before execution",
+ "external_lane_segment_added_engine_edges": 2,
+ "local_source_segment_added_engine_edges": 1,
+ "new_boundary_data_regs": 24700,
+ "mutants": {
+  "1": "original lane stage bypass",
+  "2": "original core row selection defect",
+  "3": "core command input CLOCK stage bypass",
+  "4": "face ENGINE enable uses raw early me",
+  "5": "external ENGINE entry stage bypass"
+ },
+ "physical_warning": "No physical masters/slots/IOpinmapping/setup/hold/CTS/PG/route assigned to model FFs. Global4..10ENGINE crossing delta needs equalization and throughput measurement. Not production RTL."
+}
