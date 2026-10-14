@@ -84,3 +84,44 @@ then reads through real ECC and CDC. The core has an 833334-fs period with
 early credits. Actual two-bit read-codeword corruption and a wrong ACK ownership
 consumer must cause observed payload and identity assertion failures. This is
 one-PC functional proof, not full-layer qualification or timing signoff.
+
+## Actual 128-PC row backend
+
+`row_backend.hpp` defines `RowBackend(context, current_token_position)`. It
+instantiates the same compiled PC class 128 times, each with independent backing
+and actual controller state. Its group-zero native map follows source94b28c9ce
+and sector adapter99e529864: stack=position[8:7], PC=8*quarter+position[2:0],
+row=64+layer, with the original native sector-derived bank and column.
+`QuarterIdentity` holds epoch/layer/position/kind and dimension-quarter0..3.
+
+- `enqueue_mapped_quarter(identity, data32, observed_physical)` validates the
+  actual sector-adapter output coordinates against the identity, then queues a
+  host write. `enqueue_quarter` computes the same coordinates directly.
+- `pop_write_ack` returns the original quarter identity only after actual
+  `host_ack`, the recorded physical write identity and WDONE17 visibility check.
+  Feed this event to the sector adapter's ACK inputs. Four internal early host
+  credits govern command posting separately; early credits never produce this
+  completion event.
+- `request_row(identity)` creates four real landing reads. `pop_row` exposes the
+  128-byte row only after all four actual `land_er` returns. Current-token reads
+  are refused until all four matching epoch/identity writes were acknowledged.
+- `declare_prior_quarter(identity, supplied_ECC288)` explicitly seeds a declared
+  prior DRAM image. It refuses current/future positions. There is no automatic
+  cache oracle. `begin_token` advances position after outstanding operations
+  drain; newly written same-identity quarters invalidate prior ACK state.
+- `core_edge(high)` and `hbm_edge(high)` implement independent pre-edge sampling,
+  actual model evaluation and post-edge updates. Set the shared context's time
+  before each call; calls must alternate rising/falling edges. A parent can join
+  these hooks with other RTL models. Alternatively `next_event_fs` and
+  `advance_one_event` provide the reference 833334-fs core, 1024000-fs HBM
+  scheduler. All controllers receive reset release at HBM edge8 and traffic
+  starts no earlier than edge160.
+
+The targeted gate uses 24 actual current-token writes/ACKs for K and V at
+layers0/17/35, position8191. A separately declared 128-quarter prior image
+exercises actual read traffic through every one of the 128 controllers. In
+all it reads152 quarters and assembles38 rows, with4096 independent mapping
+checks. Prior preload uses the gate's explicit ECC image initializer; current
+payloads always take the real RTL host-write path. Physical codeword corruption
+and incorrect sector-adapter coordinates produce observed failures. This tests
+backend integration and addresses, not production kernel execution or cost.

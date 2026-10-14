@@ -10,7 +10,7 @@ struct RowIdentity {uint32_t epoch,layer,pos,kind;};
 struct QuarterIdentity {RowIdentity row;unsigned q;};
 struct Physical {unsigned stack,pc,bank,col,row;unsigned index()const{return 32*stack+pc;}uint64_t address()const{return key(row,bank,col);}};
 inline Physical native_map(const QuarterIdentity& id){
- auto r=id.row;if(r.layer>=36||r.pos>=8192||r.kind>1||id.q>=4)throw std::runtime_error("native KV identity out of bounds");
+ auto r=id.row;if(r.epoch>65535||r.layer>=36||r.pos>=8192||r.kind>1||id.q>=4)throw std::runtime_error("native KV identity out of bounds");
  unsigned sec=(r.layer<<11)|(r.kind<<10)|(((r.pos>>6)&1)<<8)|((r.pos>>9)<<3)|((r.pos>>3)&7);
  unsigned j=((sec>>8)&7)<<7|(sec&127);
  return {(r.pos>>7)&3,id.q*8+(r.pos&7),((j>>7)<<2)|(j&3),(j>>2)&31,64+r.layer};
@@ -95,7 +95,8 @@ class RowBackend {
   }
  }
  uint64_t enqueue_mapped_quarter(const QuarterIdentity&id,const Quarter&data,const Physical&observed){
-  auto p=native_map(id);if(p.index()!=observed.index()||p.address()!=observed.address())throw std::runtime_error("sector adapter physical mapping mismatch");
+  auto p=native_map(id);if(observed.stack>=4||observed.pc>=32||observed.bank>=32||observed.col>=32||observed.row>=524288)throw std::runtime_error("sector adapter physical field out of bounds");
+  if(p.index()!=observed.index()||p.address()!=observed.address())throw std::runtime_error("sector adapter physical mapping mismatch");
   return enqueue_quarter(id,data);
  }
  uint64_t enqueue_quarter(const QuarterIdentity& id,const Quarter& data){
