@@ -54,4 +54,25 @@ class ClockSource(unittest.TestCase):
    with mock.patch.object(sys,'argv',argv),mock.patch.object(C.subprocess,'run',side_effect=run):C.main()
    j=json.loads(out.read_text());self.assertEqual(seen,['core_clk','str_clk']);self.assertEqual(set(j['clock_measurements']),{'ck[0]','cks[0]'})
    self.assertIn('4_cts.sdc',j['clock_measurements']['cks[0]']['clock_mapping_basis'])
+class FailedReplay(unittest.TestCase):
+ def test_partial_arrivals_do_not_hide_failed_sta(self):
+  with tempfile.TemporaryDirectory() as td:
+   base=pathlib.Path(td);(base/'4_1_cts.odb').touch();(base/'4_cts.sdc').touch()
+   result=subprocess.CompletedProcess([],1,'OT_CK 1 100\n[ERROR] missing macro root','')
+   argv=['ck_insertion.py','--base',td,'--output',str(base/'out.json')]
+   with mock.patch.object(sys,'argv',argv),mock.patch.object(C.subprocess,'run',return_value=result):
+    with self.assertRaisesRegex(SystemExit,'clock insertion replay failed'):C.main()
+   self.assertFalse((base/'out.json').exists())
+
+class MacroClockScope(unittest.TestCase):
+ def probe(self,owners,selected='ckd'):
+  script='proc get_property {p prop} {return {'+owners+'}}\nproc get_full_name {p} {return $p}\n'+C.MACRO_CLOCK_SCOPE_TCL+'\nif {[catch {puts "OWNED [ot_ck_macro_owned macro/clk '+selected+']"} e]} {puts stderr $e;exit 1}\n'
+  return subprocess.run(['tclsh'],input=script,text=True,capture_output=True)
+ def test_selected_and_other_roots_are_distinct(self):
+  for owners,expected in [('ckd',1),('core_clk',0),('ckd ckd',1)]:
+   r=self.probe(owners);self.assertEqual(r.returncode,0,r.stderr);self.assertIn('OWNED '+str(expected),r.stdout)
+ def test_missing_and_ambiguous_macro_roots_fail(self):
+  for owners in ('','ckd core_clk'):
+   r=self.probe(owners);self.assertNotEqual(r.returncode,0);self.assertIn('requires one timing clock',r.stderr)
+
 if __name__=='__main__':unittest.main()

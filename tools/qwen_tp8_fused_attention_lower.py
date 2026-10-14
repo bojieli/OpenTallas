@@ -12,6 +12,11 @@ from qwen_tp8_native_dispatch_audit import audit
 
 def lower(profile, image):
     original = audit(profile, image)
+    return lower_validated(profile, original)
+
+
+def lower_validated(profile, original):
+    """Lower a separately validated source image; callers must prove its bits."""
     fields = [row['encoded_fields'].copy() for row in original['instructions']]
     vm = profile['vm_map']
     removed = set(range(11, 16))

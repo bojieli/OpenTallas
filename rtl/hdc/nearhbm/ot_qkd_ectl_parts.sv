@@ -5,6 +5,9 @@
 `ifndef KVD_Q_FP32
 `define KVD_Q_FP32 0
 `endif
+`ifndef KVD_QK_ONLY
+`define KVD_QK_ONLY 0
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // q13-kvleaves 2026-10-13: the near-HBM row-engine control cell qkd_ectl as THREE die leaves (A | B | C, west to east).
 // The one-tile form (qkd_ectl_slot-q13r3: 648 x 129.6 um, 14,806 sinks on one root, TritonCTS insertion 357..538 ps /
@@ -323,7 +326,8 @@ module ot_qkd_ectl_part #(
                 end else if (`KVD_HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_idx <= E;
                 end else begin
-                    rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0;
+                    if (`KVD_QK_ONLY) rg_run <= 1'b0;
+                    else begin rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0; end
                 end
             end else if (rg_run && rg_vph) begin
                 if (rg_gam < gmax) begin
@@ -448,7 +452,9 @@ module ot_qkd_ectl_part #(
                     end else if (`KVD_HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_idx <= E;
                     end else begin
-                        c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; k_done <= 1'b1;
+                        k_done <= 1'b1;
+                        if (`KVD_QK_ONLY) c_fin <= 1'b1;
+                        else begin c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; end
                     end
                 end else begin
                     if (c_gam < gmax) begin

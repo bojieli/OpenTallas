@@ -10,6 +10,11 @@ from elements import Elements, change_key, qualification_text, ts
 class Describer:
     def get(self, *args): return ''
     def save(self): pass
+    def info(self, *args): return {}
+
+
+class Flow:
+    def annotate(self, *args): return {}
 
 
 class RegistryTest(unittest.TestCase):
@@ -19,7 +24,7 @@ class RegistryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             model = Elements.__new__(Elements)
             model.repo = pathlib.Path(td)
-            model.desc = Describer(); model.area = {}
+            model.flow = Flow(); model.desc = Describer(); model.area = {}
             model.revoked_path = model.repo / 'revoked'; model.superseded_path = model.repo / 'superseded'
             model.option_b = lambda: ({}, {})
             model.revoked_jobs = lambda: {}
@@ -68,7 +73,7 @@ class RegistryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             model = Elements.__new__(Elements)
             model.repo = pathlib.Path(td); model.log = print
-            model.desc = Describer(); model.area = {}
+            model.flow = Flow(); model.desc = Describer(); model.area = {}
             model.option_b = lambda: ({}, {}); model.revoked_jobs = lambda: {}; model.superseded = lambda: {}
             model.registry = lambda: ({}, [])
             model.overrides_path = model.repo / 'overrides.json'; model.ovk = (None, {})
@@ -104,6 +109,8 @@ class RegistryTest(unittest.TestCase):
             model.superseded = lambda: {'ot_hbm_x': dict(by='ot_hbm_x_wide1036', reason='t')}
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertEqual(rows['ot_hbm_x_wide1036']['category'], 'first trial in flight')   # unfolded, still open
+            self.assertEqual(rows['ot_hbm_x']['category'], 'superseded')
+            self.assertTrue(rows['ot_hbm_x']['supersession_source_evidence_missing'])
             model.superseded = lambda: {}
             rows = {r['element']: r for r in model.compute()['rows']}
             self.assertTrue(rows['hfd_tap']['category'].startswith('closed'))   # every instance closed
@@ -115,7 +122,7 @@ class SupersededInstanceFoldTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             model = Elements.__new__(Elements)
             model.repo = pathlib.Path(td)
-            model.desc = Describer(); model.area = {}
+            model.flow = Flow(); model.desc = Describer(); model.area = {}
             model.option_b = lambda: ({}, {})
             model.revoked_jobs = lambda: {}
             model.superseded = lambda: {'parent_elem': dict(by='child_blk', reason='adopted')}
@@ -135,7 +142,7 @@ class ThroughputGateTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             model = Elements.__new__(Elements)
             model.repo = pathlib.Path(td); model.log = lambda *a: None; model.tpk = (None, {})
-            model.desc = Describer(); model.area = {}
+            model.flow = Flow(); model.desc = Describer(); model.area = {}
             model.option_b = lambda: ({}, {})
             model.revoked_jobs = lambda: {}
             model.superseded = lambda: {}

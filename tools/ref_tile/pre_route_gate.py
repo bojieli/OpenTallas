@@ -112,13 +112,25 @@ def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
     return max(0.0, chip_area - logical)
 
 
-def rtl_ports(sources, top, root=None, dirs=False):
+def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     root = root or ROOT
     texts = []
     for f in sources:
         p = root / f
         if p.exists():
             texts.append(p.read_text(errors="replace"))
+    # A spec with "defines" selects its interface by `ifdef (as synthesis and the kit lint do, ref_tile.py VERILOG_DEFINES):
+    # run the real Verilog preprocessor with the same -DSYNTHESIS + spec defines, else the text parser takes the
+    # `ifdef/`endif tokens for port names (HROW ACK candidates 066ec43c5).  No defines: the plain text parse, unchanged.
+    if defines:
+        files = [root / f for f in sources if (root / f).exists()]
+        inc = sorted({str(p.parent) for p in files})
+        cmd = ["iverilog", "-g2012", "-E", "-o", "-", "-DSYNTHESIS"]
+        cmd += ["-D" + d for d in defines] + ["-I" + p for p in inc] + [str(p) for p in files]
+        run = subprocess.run(cmd, capture_output=True, text=True)
+        if run.returncode:
+            raise RT.SpecError("RTL port preprocessing failed: " + run.stderr[-2000:])
+        texts = [run.stdout]
     # a module named through a macro (`define X top ... module `X: dsfd_coll_cb / cbf) is not seen by the text parser
     texts = [re.sub(r"\bmodule\s+`(\w+)", lambda m: f"module {top}" if re.search(
         rf"`define\s+{m.group(1)}\s+{re.escape(top)}\b", tx) else m.group(0), tx) for tx in texts]
@@ -440,12 +452,12 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if re.search(r"define_pdn_grid[^\n]*-macro", pdn) and "ot_ref_present" not in pdn:
         g.add("FAIL", "pdn", "macro grid without a present-master guard (PDN-0217)", "re-run gen")
     # pins vs RTL
-    ports = rtl_ports(spec["sources"], spec["top"])
+    ports = rtl_ports(spec["sources"], spec["top"], defines=spec.get("defines"))
     check_pins(g, spec, ports)
     # pin plan vs the ROUTE's pin placement (same settings as the route: one source of truth), recipe-2 pin-flop spread
     plan = check_pin_fit(g, spec, strict_widths(spec["sources"], spec["top"], spec.get("params")), fresh["outline"])
     tcl = ROOT / OFLOP_TCL
-    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True), fresh["outline"],
+    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True, defines=spec.get("defines")), fresh["outline"],
                 tcl.read_text(errors="replace") if tcl.is_file() else None)
     # RTL lint
     files = [str(ROOT / f) for f in spec["sources"] if (ROOT / f).exists()]
@@ -568,7 +580,22 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
     return buf.getvalue()
 
 
+def absent_working_inputs(seeds):
+    # The archive is made from the working tree, not git show.  A sparse checkout
+    # can contain the hook but omit a committed helper that the hook sources.
+    # Check those transitive inputs before choosing a host or shipping a run.
+    seen, _, soft = referenced_closure(sorted(seeds), SB.git_head(ROOT))
+    overlaid = {p for p in SHIP_HELPERS if (DAEMON_TREE / p).is_file()}
+    return sorted(p for p in seen - soft - overlaid if not (ROOT / p).is_file())
+
+
 def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bool):
+    fp = json.loads((kd / "floorplan.json").read_text())
+    absent = absent_working_inputs(set(fp["referenced"]))
+    if absent:
+        g.add("FAIL", "sources", f"{len(absent)} committed input(s) absent from the working-tree archive: {absent[:8]}",
+              "materialize the referenced files in the sparse checkout before rerunning the gate")
+        return
     if host == "auto":
         picked = subprocess.run(["ot-run", "--mem", str(mem), "--pick"], capture_output=True, text=True)
         if picked.returncode or not picked.stdout.strip():
@@ -579,7 +606,6 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
         auto = True
     else:
         auto = False
-    fp = json.loads((kd / "floorplan.json").read_text())
     ref = set(fp["referenced"])
     # Ship the same transitive Tcl/shell dependencies checked by the local gate.
     # A custom PRE_GLOBAL_PLACE hook may source helpers outside its own folder.
@@ -598,7 +624,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
-    sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=cap, KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
+    sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     import hashlib
@@ -652,7 +678,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     if kv.get("GATE_FLOW_RC") != "0":
         why = "; ".join(errs[:4]) or "see gate_remote.log"
         stall = any(re.search(r"tim(ed)? ?out|TimeoutExpired|exceeded", e, re.I) for e in errs) or \
-            int(kv.get("GATE_FLOW_S", 0)) >= cap
+            (cap > 0 and int(kv.get("GATE_FLOW_S", 0)) >= cap)
         g.add("FAIL", "synth_smoke" if stall else "floorplan_run",
               (f"ORFS synthesis did not finish within {cap} s (yosys SHARE / ABC stall class): " if stall else
                "synthesis + floorplan + PDN failed: ") + why[:600],
@@ -842,7 +868,7 @@ def main(argv=None) -> int:
     ap.add_argument("--commit", help="check source paths at this commit (default: working tree)")
     ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (auto: ot-run admission and placement)")
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
-    ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700)")
+    ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700; <=0 means unlimited)")
     ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
     ap.add_argument("--json")
     a = ap.parse_args(argv)

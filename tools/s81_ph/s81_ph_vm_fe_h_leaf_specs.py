@@ -90,12 +90,18 @@ def emit(pins, w, h, title):
     return '\n'.join(L) + '\n'
 
 
+# dsfd_vm_clt at M5 with RT 1: synthesized 11,062 um2 (the clt8a RTL: ~10,000).  At the closed view's 80.64 x 230.04 the
+# ref_tile core is 17,227 um2 = 64.3 % at synthesis, 72.9 % after CTS, DPL-0033 (gate 20261013-173329): the width is the
+# f_cap lane pitch and cannot grow, so the tile grows in HEIGHT to 55 % (core 76.32 x 263.52): +37.8 um of FE height.
+CLT_W, CLT_H = 80.64, 267.84
+
+
 def clt_pins():
     """dsfd_vm_clt at M5 (S3): f_c in bit order on N, the capture word in bit order on S, both on M5 + M3 CLEAR of the kit's M5
     PG stripes.  The closed clt8a view had every pin on M5 at a 0.096 pitch (its PG was M6): an M5-capped tile cannot keep
     that row (the stripes at 0.300 / 0.492 + 5.4 k would short 2 pins in 56), so the FE N-face f_cap pins follow THIS plan
     (slot statement in el1011-s81die.log)."""
-    w, h = 80.64, 230.04
+    w, h = CLT_W, CLT_H
     return plan(w, h, {'N': [v('f_c', 0, 832)],
                        'S': [['w_v'] + v('w_row', 0, 14) + v('w_m', 0, 16) + v('w_d', 0, 512) + v('flt', 0, 4) + ['sok', 'rn', 'ck'] + v('gid', 0, 4)]})
 
@@ -162,7 +168,7 @@ fxb_in, fxb_out = relay_groups(FXB, tags=list(range(369, 481)))
 fxb_in += ['i[368]']; fxb_out += ['o[368]']
 # leaf: (outline, pins by face (spec), reset ports, exact plan faces or None, pin ranges, route extras, what)
 L = {
- 'clt': ((80.64, 230.04), {'N': ['f_c'], 'S': ['w_v', 'w_row', 'w_m', 'w_d', 'flt', 'ck', 'rn', 'sok', 'gid']}, ['rn'], 'clt', {}, {'pd': 0.4, 'pin_v': 'M3 M5', 'peak_ram_gb': 32}, 
+ 'clt': ((CLT_W, CLT_H), {'N': ['f_c'], 'S': ['w_v', 'w_row', 'w_m', 'w_d', 'flt', 'ck', 'rn', 'sok', 'gid']}, ['rn'], 'clt', {}, {'pd': 0.4, 'pin_v': 'M3 M5', 'peak_ram_gb': 32}, 
          'capture lane, RT 1 (S3: match / touch terms from registers; bit- and cycle-exact to the closed clt8a RTL)'),
  'fxs': ((322.56, 19.44), {'N': ['w_v', 'w_row', 'w_m', 'w_d', 'w_flt', 'sok_o'], 'S': ['s_o', 'k_o'], 'W': ['ck', 'rni'], 'E': ['clf_o', 'rn_o']}, ['rni'],
          fxs_plan, {}, {'pin_v': 'M3 M5'},
@@ -187,8 +193,8 @@ L = {
                    'W': [(v('ret', 0, 526) + ['av', 'ok', 'ovf', 'sflt', 'g', 'arm_v'] + v('arm_base', 0, 14), 8.0, 121.0),
                          (['rni', 'rn_o', 'ck'] + v('stride', 0, 3) + v('off', 0, 2), 122.0, 126.0)]}, {}, {'peak_ram_gb': 32},
          'landing lane: 64 x 512 SRAM + row relay; producer word in on N, return word + control on the side face towards its relay tile (W, or E mirrored MY)'),
- 'fcc': ((181.44, 112.32), {'N': ['vwe', 'vwa', 'vwd', 'vre', 'vra', 'cks', 'rss'], 'S': ['s_o'], 'E': ['k_o', 'so_o', 'rn_o'], 'W': ['ck', 'rni']}, ['rni', 'rss'],
-         None, {'vwd': [20.0, 160.0], 's_o': [2.4, 179.0]}, {'peak_ram_gb': 48, 'threads': 16}, 'ctrl ratio CDC (cks -> ck), ports 3 / 4 order registers'),
+ 'fcc': ((181.44, 129.6), {'N': ['vwe', 'vwa', 'vwd', 'vre', 'vra', 'cks', 'rss', 'rst'], 'S': ['s_o'], 'E': ['k_o', 'so_o', 'rn_o'], 'W': ['ck', 'rni']}, ['rni', 'rss', 'rst'],
+         None, {'vwd': [20.0, 160.0], 's_o': [2.4, 179.0]}, {'peak_ram_gb': 48, 'threads': 16}, 'ctrl VM crossing cks -> ck as a real two-clock CDC (2 x ot_async_fifo 527 x 16, Gray pointers through 2-flop synchronisers; B8), ports 3 / 4 order registers'),
  'fcw': ((151.2, 38.88), {'N': ['f_swv', 'f_swd', 't_swg', 'f_srv', 'f_srd', 't_srg', 't_ks', 'rst'], 'S': ['s_o'], 'E': ['k_o', 'err_o', 'rn_o'], 'W': ['ck', 'rni']},
          ['rni', 'rst'], None, {'f_swd': [10.0, 130.0], 's_o': [2.4, 148.8]}, DENSE, 'WFC endpoint without the dead write queue, ports 0 / 1 order registers'),
  'fcn': ((239.76, 51.84), {'N': ['cv', 'cd', 'dv', 'dt', 'f_cq', 'c_wv', 'c_wd', 'c_wr', 't_rdy', 'rst', 'rss', 'cks', 'k_i', 'clf_i'],
@@ -196,63 +202,78 @@ L = {
          None, {'k_i': [2.4, 150.0], 's_o': [2.4, 120.0], 'x_o': [122.0, 160.0]}, {**DENSE, 'peak_ram_gb': 48},
          'central: command decode, counter K, done mux, ports 2 / 5 .. 9 order registers, reset root; dv / dt on a stream pin register'),
 }
-STRUCT = {'fld': 'bit-sliced pin plan (lanes bit-major on N / S, drained words on W / E) on a 172.8 x 69.12 outline: no word crosses the core sideways (p1 lane-major face groups: GRT congestion 10,019 markers)',
+STRUCT = {'fcc': 'B8, coordinator decision 10-13 (b): the ctrl VM crossing is rebuilt as a real two-clock CDC (2 x ot_async_fifo 527 x 16 EXT_RST: storage written and held in the stream domain, Gray pointers through 2-flop synchronisers, entry read only after the synchronised pointer; one reset synchroniser a domain on rst & rss + a registered stage). p1 (3 routes): ot_ratio_cdc_fifo rewrote the read-domain shadow sh[] from mem[] every cycle = 8,432 flop -> flop arcs between two independent clock trees (hold -46 .. -56 ps stalled; at the true periods setup -140.7 ps and 2,039 stalled hold arcs)',
+          'fcn': 'B8, coordinator decision 10-13 (a): engine adapter XRT 1 = one reset synchroniser a clock domain on the pin-level AND rst & rss, then a registered reset tree (3 kept copies a domain); its two ot_async_fifo build no conditioner (EXT_RST), so no flop of one domain reaches a reset pin of the other (gate 172927: recovery -334.3 ps on u_er.reset_pipe -> wr_reset_conditioner); KD 3 pre-stages for the own ports / ARM ops',
+          'fld': 'bit-sliced pin plan (lanes bit-major on N / S, drained words on W / E) on a 172.8 x 69.12 outline: no word crosses the core sideways (p1 lane-major face groups: GRT congestion 10,019 markers)',
           'fxs': 'outline 322.56 x 19.44 = the clt quad, clt words straight N -> S per lane (p1: slice-major S pins, every lane word crossed the core, GRT-0116)'}
 CLOSED_BEFORE = {'clt': 'the closed clt8a view is M6; S3 re-routes it at M5 with the RT 1 match stage (die window sp_vm/u_fe: M6 over the clt row is the parent\'s)',
                  'fxr': 'p1-dcf82afbe closed the 592-b tile; S2 trims it to the 588 non-constant bits', 'fcw': 'p1-dcf82afbe closed with 1,184 s_o pins; S2: 636'}
 TWO = ('fcc', 'fcn')
-mods = TL.rtl_modules([(ROOT / SRC[0]).read_text(errors='replace'), (ROOT / SRC[1]).read_text(errors='replace')])
-out = ROOT / 'tools/ref_tile/specs_s81vmfe'; out.mkdir(parents=True, exist_ok=True)
-pdir = ROOT / VMM / 'fe_h_pins'; pdir.mkdir(parents=True, exist_ok=True)
-only = sys.argv[1:]
-for leaf, ((w, h), pins, rst, exact, rng, rx, what) in L.items():
-    if only and leaf not in only: continue
-    top = f'dsfd_vm_{leaf}'
-    ports = TL.module_port_dirs(mods[top]); named = [p for f in pins.values() for p in f]
-    assert sorted(named) == sorted(ports), (leaf, sorted(set(ports) ^ set(named)))
-    s = {'name': f'{top}_m5', 'top': top, 'kind': 'tile', 'sources': SRC + ([f'{SRAM}/ot_sram_1r1w_64x512_m1_r2c2_bb.v'] if leaf == 'flt' else []),
-         'orfs_vars': {'VERILOG_INCLUDE_DIRS': 'rtl/dsrom_sys/s81_ph/vm'}, 'clock_port': 'ck', 'reset_ports': rst,
-         'outline': {'w': w, 'h': h, **({'exact': True} if leaf in ('clt', 'fxs') else {})}, 'pins': pins, 'pin_ranges': rng,
-         'macros': [{'view': SRAM, 'count': 1, 'at': [22.464, 25.92]}] if leaf == 'flt' else [],
-         'route': {'pd': 0.5, 'threads': 8, 'peak_ram_gb': 24, 'hold_margin_ns': 0.03 if leaf == 'flt' else 0.01, **rx},
-         'job': {'owner': 'Claude:el1013-s81-vmfe/B6', 'branch': 'claude/el1013-s81-vmfe', 'tag': 'p2', 'extra_paths': EXTRA,
-                 'purpose': f'el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf {top} at M5 ({what}); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only '
-                            f'non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline {w} x {h}; '
-                            + ('EXACT pin plan (io_tcl, bit-ordered by data flow). ' if exact else 'pin faces by data flow, bit-ordered ranges. ')
-                            + ('TWO clocks at their TRUE periods: ck 1,111.1 ps / cks 833.3 ps (base = the stream clock), each domain referenced to its '
-                               'own propagated tree, inter-clock insertion balanced (fe_h_str_boundary.tcl). ' if leaf in TWO else
-                               'ck signed off at 833.3 ps (the VM serial clock is 1,111.1 ps: stricter). ')}}
-    if leaf == 'clt':
-        s['job']['benches'] = [
-            {'name': 'exact_clrt', 'cmd': 'python3 tools/s81_vm/cl_rt_bench.py exact --out {RUN}/bench/clrt --ncyc 2000000', 'expect': 'pass',
-             'pass_regex': 'CLRT_exact: PASS \\(expect pass\\) -> OK', 'min_count_regex': 'CLRT cycles=(\\d+)', 'threads': 4, 'peak_ram_gb': 8, 'needs': ['verilator']},
-            {'name': 'mutant_clrt', 'cmd': 'python3 tools/s81_vm/cl_rt_bench.py mutant --out {RUN}/bench/clrt --ncyc 400000', 'expect': 'fail',
-             'fail_regex': 'CLRT_mutant: FAIL \\(expect fail\\) -> OK', 'threads': 4, 'peak_ram_gb': 8, 'needs': ['verilator']},
-            {'name': 'exact_gold', 'cmd': 'python3 tools/s81_vm/s81_vm_gate.py one gold_s1 --out {RUN}/bench/gold_s1', 'expect': 'pass',
-             'pass_regex': 'SPVM_gold_s1: PASS', 'min_count_regex': 'checked=(\\d+)', 'threads': 8, 'peak_ram_gb': 24, 'needs': ['verilator']}]
-    else:
-        s['job']['benched_by'] = 's81_vm_fe_h_lockstep'
-    if leaf in CLOSED_BEFORE:
-        s['reroute_reason'] = {'kind': 'rtl_change', 'why': CLOSED_BEFORE[leaf]}
-    if leaf in STRUCT:
-        s['structural_change'] = STRUCT[leaf]
-    if leaf in TWO:
-        s['sdc_extra'] = [f'{VMM}/fe_h_str_clock_ref.sdc']; s['boundary_tcl'] = [f'{VMM}/fe_h_str_boundary.tcl']
-    if leaf == 'flt':
-        s['recipe'] = 2
-    else:
-        s.update(recipe=1, inhold=True, inhold_drv='BUFx4f_ASAP7_75t_R')
-    if exact:
-        pl = clt_pins() if exact == 'clt' else exact(w, h) if callable(exact) else plan(w, h, exact)
-        got = sorted({re.sub(r'\[\d+\]$', '', nm) for _, nm, _, _ in pl})
-        assert got == sorted(ports), (leaf, sorted(set(got) ^ set(ports)))
-        nb = {p: 0 for p in ports}
-        for _, nm, _, _ in pl: nb[re.sub(r'\[\d+\]$', '', nm)] += 1
-        (pdir / f'{top}.tcl').write_text(emit(pl, w, h, f'{top} {w} x {h}: exact pin plan (el1013-s81-vmfe/B6)'))
-        s['io_tcl'] = f'{VMM}/fe_h_pins/{top}.tcl'; s.pop('pin_ranges')
-        dens = {}
-        for f, nm, lay, pos in pl: dens[(f, lay)] = dens.get((f, lay), 0) + 1
-        print(top, (w, h), 'exact pins', len(pl), {f'{k[0]}/{k[1]}': n for k, n in sorted(dens.items())})
-    else:
-        print(top, (w, h), 'face ranges', {f: len(x) for f, x in pins.items()})
-    (out / f'{top}_m5.json').write_text(json.dumps(s, indent=1) + '\n')
+def leaf_plan(leaf):
+    """(w, h, [(face, pin name, layer, position along the face)]) of a leaf with an exact pin plan; None otherwise"""
+    (w, h), pins, rst, exact, rng, rx, what = L[leaf]
+    if not exact: return w, h, None
+    return w, h, (clt_pins() if exact == 'clt' else exact(w, h) if callable(exact) else plan(w, h, exact))
+
+
+def main(argv):
+    mods = TL.rtl_modules([(ROOT / SRC[0]).read_text(errors='replace'), (ROOT / SRC[1]).read_text(errors='replace')])
+    out = ROOT / 'tools/ref_tile/specs_s81vmfe'; out.mkdir(parents=True, exist_ok=True)
+    pdir = ROOT / VMM / 'fe_h_pins'; pdir.mkdir(parents=True, exist_ok=True)
+    only = argv
+    for leaf, ((w, h), pins, rst, exact, rng, rx, what) in L.items():
+        if only and leaf not in only: continue
+        top = f'dsfd_vm_{leaf}'
+        ports = TL.module_port_dirs(mods[top]); named = [p for f in pins.values() for p in f]
+        assert sorted(named) == sorted(ports), (leaf, sorted(set(ports) ^ set(named)))
+        s = {'name': f'{top}_m5', 'top': top, 'kind': 'tile', 'sources': SRC + ([f'{SRAM}/ot_sram_1r1w_64x512_m1_r2c2_bb.v'] if leaf == 'flt' else []),
+             'orfs_vars': {'VERILOG_INCLUDE_DIRS': 'rtl/dsrom_sys/s81_ph/vm'}, 'clock_port': 'ck', 'reset_ports': rst,
+             'outline': {'w': w, 'h': h, **({'exact': True} if leaf in ('clt', 'fxs') else {})}, 'pins': pins, 'pin_ranges': rng,
+             'macros': [{'view': SRAM, 'count': 1, 'at': [22.464, 25.92]}] if leaf == 'flt' else [],
+             'route': {'pd': 0.5, 'threads': 8, 'peak_ram_gb': 24, 'hold_margin_ns': 0.03 if leaf == 'flt' else 0.01, **rx},
+             'job': {'owner': 'Claude:el1013-s81-vmfe/B8' if leaf in TWO else 'Claude:el1013-s81-vmfe/B6', 'branch': 'claude/el1013-s81-vmfe',
+                     'tag': 'p3' if leaf in TWO else 'p2', 'extra_paths': EXTRA,
+                     'purpose': f'el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf {top} at M5 ({what}); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only '
+                                f'non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline {w} x {h}; '
+                                + ('EXACT pin plan (io_tcl, bit-ordered by data flow). ' if exact else 'pin faces by data flow, bit-ordered ranges. ')
+                                + ('TWO clocks at their TRUE periods: ck 1,111.1 ps / cks 833.3 ps (base = the stream clock), each domain referenced to its '
+                                   'own propagated tree, inter-clock insertion balanced (fe_h_str_boundary.tcl). ' if leaf in TWO else
+                                   'ck signed off at 833.3 ps (the VM serial clock is 1,111.1 ps: stricter). ')}}
+        if leaf == 'clt':
+            s['job']['benches'] = [
+                {'name': 'exact_clrt', 'cmd': 'python3 tools/s81_vm/cl_rt_bench.py exact --out {RUN}/bench/clrt --ncyc 2000000', 'expect': 'pass',
+                 'pass_regex': 'CLRT_exact: PASS \\(expect pass\\) -> OK', 'min_count_regex': 'CLRT cycles=(\\d+)', 'threads': 4, 'peak_ram_gb': 8, 'needs': ['verilator']},
+                {'name': 'mutant_clrt', 'cmd': 'python3 tools/s81_vm/cl_rt_bench.py mutant --out {RUN}/bench/clrt --ncyc 400000', 'expect': 'fail',
+                 'fail_regex': 'CLRT_mutant: FAIL \\(expect fail\\) -> OK', 'threads': 4, 'peak_ram_gb': 8, 'needs': ['verilator']},
+                {'name': 'exact_gold', 'cmd': 'python3 tools/s81_vm/s81_vm_gate.py one gold_s1 --out {RUN}/bench/gold_s1', 'expect': 'pass',
+                 'pass_regex': 'SPVM_gold_s1: PASS', 'min_count_regex': 'checked=(\\d+)', 'threads': 8, 'peak_ram_gb': 24, 'needs': ['verilator']}]
+        else:
+            s['job']['benched_by'] = 's81_vm_fe_h_lockstep'
+        if leaf in CLOSED_BEFORE:
+            s['reroute_reason'] = {'kind': 'rtl_change', 'why': CLOSED_BEFORE[leaf]}
+        if leaf in STRUCT:
+            s['structural_change'] = STRUCT[leaf]
+        if leaf in TWO:
+            s['sdc_extra'] = [f'{VMM}/fe_h_str_clock_ref.sdc']; s['boundary_tcl'] = [f'{VMM}/fe_h_str_boundary.tcl']
+        if leaf == 'flt':
+            s['recipe'] = 2
+        else:
+            s.update(recipe=1, inhold=True, inhold_drv='BUFx4f_ASAP7_75t_R')
+        if exact:
+            pl = clt_pins() if exact == 'clt' else exact(w, h) if callable(exact) else plan(w, h, exact)
+            got = sorted({re.sub(r'\[\d+\]$', '', nm) for _, nm, _, _ in pl})
+            assert got == sorted(ports), (leaf, sorted(set(got) ^ set(ports)))
+            nb = {p: 0 for p in ports}
+            for _, nm, _, _ in pl: nb[re.sub(r'\[\d+\]$', '', nm)] += 1
+            (pdir / f'{top}.tcl').write_text(emit(pl, w, h, f'{top} {w} x {h}: exact pin plan (el1013-s81-vmfe/B6)'))
+            s['io_tcl'] = f'{VMM}/fe_h_pins/{top}.tcl'; s.pop('pin_ranges')
+            dens = {}
+            for f, nm, lay, pos in pl: dens[(f, lay)] = dens.get((f, lay), 0) + 1
+            print(top, (w, h), 'exact pins', len(pl), {f'{k[0]}/{k[1]}': n for k, n in sorted(dens.items())})
+        else:
+            print(top, (w, h), 'face ranges', {f: len(x) for f, x in pins.items()})
+        (out / f'{top}_m5.json').write_text(json.dumps(s, indent=1) + '\n')
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

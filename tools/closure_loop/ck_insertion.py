@@ -110,6 +110,20 @@ foreach c [all_clocks] {
 """
 
 
+MACRO_CLOCK_SCOPE_TCL = r"""
+proc ot_ck_macro_owned {p selected} {
+  set owners {}
+  foreach c [get_property $p clocks] { lappend owners [get_full_name $c] }
+  set owners [lsort -unique $owners]
+  if {[llength $owners] != 1} {
+    error "CK_INSERTION: macro clock pin '[get_full_name $p]' requires one timing clock, found $owners"
+  }
+  puts "OT_MC_SOURCE [get_full_name $p] [lindex $owners 0]"
+  return [expr {[lindex $owners 0] eq [get_full_name $selected]}]
+}
+"""
+
+
 def tcl(corner, db, sdc, routed, clock, mlibs=()):
     C = corner.upper()
     ml = "\n".join(f"read_liberty {l}" for l in mlibs)
@@ -130,6 +144,7 @@ set din [all_inputs -no_clocks]
 if {{[llength $din]}} {{ foreach pe [find_timing_paths -path_delay max -from $din -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe endpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }} }}
 foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe startpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }}
 {ACTIVE_TCL}
+{MACRO_CLOCK_SCOPE_TCL}
 set ot_ck_clk [lindex $ot_ck_selected 0]
 dict for {{i cp}} $regs {{
   set a [ot_ck_arr [get_pins $cp] $ot_ck_clk]
@@ -143,10 +158,11 @@ foreach inst [[ord::get_db_block] getInsts] {{
     if {{$n eq "NULL" || $n eq ""}} continue
     if {{[[$it getMTerm] getSigType] ne "CLOCK" && [$n getSigType] ne "CLOCK"}} continue
     set p [get_pins -quiet "[$inst getName]/[[$it getMTerm] getName]"]
-    if {{![llength $p]}} continue
+    if {{[llength $p] != 1}} {{ error "CK_INSERTION: unresolved macro clock pin [$inst getName]/[[$it getMTerm] getName]" }}
+    if {{![ot_ck_macro_owned $p $ot_ck_clk]}} continue
     set a [ot_ck_arr $p $ot_ck_clk]
     set sl [get_property $p slew_max_rise]
-    if {{$a eq "" || $a eq "INF" || $a eq "-INF" || ![string is double -strict $sl]}} continue
+    if {{![string is double -strict $a] || ![string is double -strict $sl]}} {{ error "CK_INSERTION: missing macro clock arrival/slew [get_full_name $p]" }}
     puts "OT_MC [get_full_name $p] $a $sl [$n getName]"
   }}
 }}
@@ -282,10 +298,13 @@ def main():
         with tempfile.TemporaryDirectory() as td:
             (Path(td) / "s.tcl").write_text(tcl(corner, db, sdc, a.routed, a.clock, mlibs))
             mnt = ["-v", f"{sroot}:/src:ro"] if sroot else []
-            out = subprocess.run(["docker", "run", "--rm", "-v", f"{base}:/base:ro", "-v", f"{td}:/t:ro", *mnt, a.image,
+            result = subprocess.run(["docker", "run", "--rm", "-v", f"{base}:/base:ro", "-v", f"{td}:/t:ro", *mnt, a.image,
                                   "bash", "-lc",
                                   "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /t/s.tcl"],
-                                 capture_output=True, text=True).stdout
+                                 capture_output=True, text=True)
+            out = result.stdout
+            if result.returncode:
+                raise SystemExit(f"{corner}: clock insertion replay failed ({result.returncode})\n{out[-1500:]}\n{result.stderr[-1500:]}")
         b, al = [], []
         for m in re.finditer(r"^OT_CK (\d) (\S+)", out, re.M):
             x = float(m[2])

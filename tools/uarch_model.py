@@ -16096,3 +16096,36 @@ def hbm_sm_pub_parent_stations_model():
     none are inferred from a slice route or credited as timing closure here.
     """
     return json.loads((ROOT / 'results/rtl/hgi_sm_pub_parent_stations_20261013/sizing.json').read_text())
+
+
+def hbm_qdq_ordered_one_row_front_model():
+    """Unassigned fast/general frontend slots; immutable 168-cycle price."""
+    return {"price_cycles": 168, "fast_front_edges": 4,
+            "general_front_extra_edges": 1, "records_per_cycle": 1,
+            "retire_slots": 16, "retire_payload_bits": 16 * 190,
+            "retire_ready_bits": 16, "tag_pipeline_bits": 8 * 4,
+            "fast_s2_boundary_bits": 333, "general_boundary_bits": 191,
+            "retire_output_bits": 192, "memory_bytes_per_cycle": 0,
+            "macs_per_cycle": 0,
+            "slot_requests_um": [(129.6, 71.28), (172.8, 103.68)],
+            "parent_pin_clock_pg_status": "unassigned; no native qualification"}
+
+
+def hbm_qdq_pin_capture_front_model():
+    """S2 emits final payload; early metadata preserves four-edge ordered fast return."""
+    return {"price_cycles": 168, "fast_edges": 4, "general_extra_edges": 2,
+            "records_per_cycle": 1, "slots": 16, "max_inflight_bound": 9,
+            "payload_slot_bits": 3040, "first_capture_payload_bits": 380,
+            "first_capture_control_bits": 3, "fast_launch_bits": 190,
+            "memory_bytes_per_cycle": 0, "macs_per_cycle": 0,
+            "replicas": 4, "slot_requests_um": [(129.6,71.28),(172.8,103.68)],
+            "pin_budget_status": "must measure P190/Q220 and actual per-pair L-H100"}
+
+
+def hbm_qdq_dedicated_face_ff_model():
+    """Repair measured payload139 Q224.6 with independent same-edge launch FFs."""
+    return {"immutable_price":168,"fast_edges":4,"general_extra_edges":2,
+            "launch_FFs":190,"estimated_extra_FFs":32,"estimated_extra_std_um2":24,
+            "clock_sink_estimate":823,"replicas":4,"shape_um":[129.6,71.28],
+            "launch_bits_per_cycle":190,"MACs_per_cycle":0,"memory_bytes_per_cycle":0,
+            "default_off":True,"actual_pin_requirement":"P190/Q220 and per-pairL-H100"}
