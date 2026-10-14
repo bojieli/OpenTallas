@@ -26,13 +26,15 @@ int main(int argc,char**argv){
  if(!load(d))return 2;int ctx=kv.size()/2;
  Vot_qwen_tp8_attention_service t;uint64_t cy=0;auto tick=[&](){t.clk=0;t.eval();t.clk=1;t.eval();cy++;};
  t.rst_n=0;t.request_valid=0;t.q_valid=0;t.k_rsp_valid=0;t.v_rsp_valid=0;t.k_req_ready=0;t.v_req_ready=0;t.result_ready=0;t.fused_program_capability=1;
- for(int i=0;i<8;i++)tick();t.rst_n=1;for(int i=0;i<80;i++)tick();
- bool stalls=mode=="stalls";bool mutant=mode!="steady"&&mode!="stalls"&&mode!="restart";
+ for(int i=0;i<8;i++)tick();t.rst_n=1;for(int i=0;i<(mode=="coldboot"?0:80);i++)tick();
+ bool stalls=mode=="stalls";bool mutant=mode!="steady"&&mode!="stalls"&&mode!="restart"&&mode!="coldboot";
  unsigned outputs=0,errors=0,epochs=0;uint64_t kcount=0,vcount=0,first=cy;bool changed=false;
  for(int round=0;round<(mode=="restart"?2:1);round++){
   if(round&&argc>3){if(!load(argv[3]))return 2;ctx=kv.size()/2;}
   int epoch=17+round,layer=6+round;
-  t.request_epoch=epoch;t.request_layer=layer;t.request_position=ctx-1-(mode=="context");t.fused_program_capability=mode!="capability";t.request_valid=1;tick();t.request_valid=0;
+  t.request_epoch=epoch;t.request_layer=layer;t.request_position=ctx-1-(mode=="context");t.fused_program_capability=mode!="capability";t.request_valid=1;
+  bool took=false;for(int wait=0;wait<200&&!took&&!t.fault;wait++){t.clk=0;t.eval();took=t.request_ready;tick();}
+  t.request_valid=0;
   const uint64_t frame_k=kcount,frame_v=vcount;
   bool qheld=false,result_held=false;unsigned held_beat=0,held_epoch=0,held_layer=0;
   uint32_t held_data[16]={0};uint32_t khold=0;unsigned vhold=0;uint16_t kt_hold[32]={0},vt_hold[4]={0};unsigned vs_hold[4]={0};
