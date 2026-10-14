@@ -318,7 +318,7 @@ endmodule
 // ---- one quarter: 8 LOCAL8 lanes on the quarter's VM slice, the chunk concentrator, scalar return, status
 module ot_hgi_hc_qst_b2 #(
     parameter integer QID = 0,
-    parameter integer CLOCKED = 0,
+    parameter integer CLOCKED = 0, COEFFLEAF=0,
     parameter integer LQ  = 32,
     parameter integer FD  = 64,
     parameter integer HSL = 1,
@@ -358,7 +358,7 @@ module ot_hgi_hc_qst_b2 #(
         wire lv; wire [138:0] ld;
         ot_hgi_hc_rly #(.W(139), .N(RLL)) u_dn (.clk(clk), .rst_n(rst_n), .v(dvl), .d(dd), .vq(lv), .q(ld));
         wire uv, ut, wd, fn, fl; wire [9:0] ux; wire [255:0] ud;
-        ot_hgi_hc_lane_b2 #(.QID(QID), .CLOCKED(CLOCKED), .LQ(LQ), .FD(FD), .HSL(HSL),
+        ot_hgi_hc_lane_b2 #(.QID(QID), .CLOCKED(CLOCKED), .COEFFLEAF(COEFFLEAF), .LQ(LQ), .FD(FD), .HSL(HSL),
             .MUT((MUT == 2 || (MUT >= 4 && MUT <= 8) || MUT == 13) ? MUT : 0)) u_l (.clk(clk), .rst_n(rst_n),
             .clk_sl(clk_sl[gl*8+:8]), .clk_chunk(clk_chunk[gl*7+:7]), .clk_coeff(clk_coeff[gl]), .lid(5'(gl)), .wrq(wrq[gl*16 +: 16]), .wrq_cr(wrq_cr[gl]), .wrr(wrr[gl*257 +: 257]), .wwq(wwq[gl*280 +: 280]),
             .wwq_cr(wwq_cr[gl]), .wwq_done(wwq_done[gl]), .dn_v(lv), .dn_op(ld[138:136]), .dn_x(ld[135:128]),
@@ -575,7 +575,7 @@ endmodule
 // ---- the B2 engine: VM lanes quarter-major (lane 8 q + b = bank b of slice q)
 module ot_hgi_hc_eng_b2 #(
     parameter integer D   = 5120,
-    parameter integer CLOCKED = 0,
+    parameter integer CLOCKED = 0, COEFFLEAF=0,
     parameter integer STORELEAF = 0,
     parameter integer LQ  = 32,
     parameter integer FD  = 64,
@@ -618,7 +618,7 @@ module ot_hgi_hc_eng_b2 #(
         .q_ck_cr(q_ck_cr), .q_sc_v(q_sc_v), .q_sc(q_sc), .q_stat(q_stat));
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
-        ot_hgi_hc_qst_b2 #(.QID(gq), .CLOCKED(CLOCKED), .LQ(LQ), .FD(FD), .HSL(HSL), .RLL(RLL), .CD(CD), .MUT(MUT)) u_q (.clk(clk),
+        ot_hgi_hc_qst_b2 #(.QID(gq), .CLOCKED(CLOCKED), .COEFFLEAF(COEFFLEAF), .LQ(LQ), .FD(FD), .HSL(HSL), .RLL(RLL), .CD(CD), .MUT(MUT)) u_q (.clk(clk),
             .rst_n(rst_n), .clk_sl(clk_sl[gq*64+:64]), .clk_chunk(clk_chunk[gq*56+:56]), .clk_coeff(clk_coeff[gq*8+:8]), .wrq(wrq[gq*128 +: 128]), .wrq_cr(wrq_cr[gq*8 +: 8]), .wrr(wrr[gq*2056 +: 2056]),
             .wwq(wwq[gq*2240 +: 2240]), .wwq_cr(wwq_cr[gq*8 +: 8]), .wwq_done(wwq_done[gq*8 +: 8]),
             .dn_v(q_dn_v[gq]), .dn(q_dn[gq*139 +: 139]), .ck_v(q_ck_v[2*gq +: 2]), .ck(q_ck[gq*88 +: 88]),

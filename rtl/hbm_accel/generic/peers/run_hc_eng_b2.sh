@@ -15,7 +15,7 @@ SRC="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.
    rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_fsqrt.sv
    rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/v41x/ot_dsrom_aq12.sv rtl/hdc/v41x/ot_dsrom_divc.sv
    rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_norm.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv
-   rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/hbm_accel/die_glue/hbfd_rly_masters.sv
+   rtl/hbm_accel/generic/peers/ot_hgi_hc_coeff_bank.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/hbm_accel/die_glue/hbfd_rly_masters.sv
    rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv rtl/link/ot_fifo_sram_fwft.sv
    physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
    physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v

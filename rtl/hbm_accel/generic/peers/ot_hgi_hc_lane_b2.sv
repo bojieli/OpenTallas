@@ -12,6 +12,7 @@ module ot_hgi_hc_lane_b2 #(
     parameter integer FD  = 64,
     parameter integer TD = 2 * LQ,            // bounded in-flight read associations, independent of return credits
     parameter integer CLOCKED = 0,
+    parameter integer COEFFLEAF = 0,
     parameter integer HSL = 1,               // 1: the FP datapath as 8 hard element slices (ot_hgi_hc_lane_sl, own clock
                                              //    tree, registered in/out => +2 cycles); 0: flat (one 114k-flop clock root)
     parameter integer MUT = 0
@@ -69,7 +70,7 @@ module ot_hgi_hc_lane_b2 #(
 
     // ---- job registers
     reg post, run, g_ok, r_ok; reg [14:0] a_s, b_s, o_s; reg [9:0] u;      // u = this lane's first sector of a row
-    reg [639:0] wt;                          // scalar words 0..19
+    wire [639:0] wt;                          // scalar words 0..19
     reg [31:0] rh;                           // rstd
     reg scp; reg [7:0] scx;                  // a scalar read pending
     // el1011-hbm-fused GPK: HC_PRE_NORM gain PACKED lane-local (BF16, compiler layout): packed sector u + 32 k of this
@@ -107,8 +108,20 @@ module ot_hgi_hc_lane_b2 #(
 
     // Coefficients form a bounded independent640-bit local root. Related
     // compensated clocks preserve the original update edge and arithmetic.
-    always @(posedge (CLOCKED?clk_coeff:clk))
-        if(c_wgt)wt[128*dx_q[2:0]+:128]<=dd_q;
+    generate if(COEFFLEAF)begin:g_coeff_leaf
+      if(MUT==15)begin:g_mut
+        ot_hgi_hc_coeff_bank_assoc_mut u_coeff(.clk(CLOCKED?clk_coeff:clk),.rst_n(rst_n),.wr_v(c_wgt),
+          .wr_index(dx_q[2:0]),.wr_data(dd_q),.coef0(wt[127:0]),.coef1(wt[255:128]),
+          .coef2(wt[383:256]),.coef3(wt[511:384]),.coef4(wt[639:512]));
+      end else begin:g_exact
+        ot_hgi_hc_coeff_bank u_coeff(.clk(CLOCKED?clk_coeff:clk),.rst_n(rst_n),.wr_v(c_wgt),
+          .wr_index(dx_q[2:0]),.wr_data(dd_q),.coef0(wt[127:0]),.coef1(wt[255:128]),
+          .coef2(wt[383:256]),.coef3(wt[511:384]),.coef4(wt[639:512]));
+      end
+    end else begin:g_coeff_legacy
+      reg[639:0]r;assign wt=r;
+      always @(posedge (CLOCKED?clk_coeff:clk))if(c_wgt)r[128*dx_q[2:0]+:128]<=dd_q;
+    end endgenerate
 
     // ---- read issue: scalar | HC_POST 5 a sector | PRE phase A 4 a sector, phase B 1 a sector (the gain)
     reg [QB-1:0] cr;
