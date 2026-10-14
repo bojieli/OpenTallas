@@ -63,6 +63,7 @@ module ot_qwen_rom_rt_die_w12_stream4_tagged_ar #(
     parameter integer TCUT = 7,
     parameter integer BD = 1,
     parameter integer XVM = 0,
+    parameter integer XHI = 0,   // qwen-vm-fallback 1014: 1 = x reads return {x[31:16], 16'h0} (VM XHP 1)
     parameter integer NWS = 0,
     parameter integer TWS = 0,
     parameter integer ORD = 0,
@@ -306,7 +307,7 @@ module ot_qwen_rom_rt_die_w12_stream4_tagged_ar #(
         if (me_clk_en) begin
             rq = 0;
             for (vi = 0; vi < NXC; vi = vi + 1)
-                if (vx_re[vi]) begin a = vx_addr[vi*24 +: 24]; rq[vi*32 +: 32] = (a < VM_ELEMS) ? vm[a] : 32'd0; end
+                if (vx_re[vi]) begin a = vx_addr[vi*24 +: 24]; rq[vi*32 +: 32] = ((a < VM_ELEMS) ? vm[a] : 32'd0) & ((XHI == 2) ? 32'hFFFE0000 : (XHI != 0) ? 32'hFFFF0000 : 32'hFFFFFFFF); end
             if (XVM == 0) begin
                 for (vi = 0; vi < NXC; vi = vi + 1) if (vx_re[vi]) vx_q[vi*32 +: 32] <= rq[vi*32 +: 32];
             end else begin

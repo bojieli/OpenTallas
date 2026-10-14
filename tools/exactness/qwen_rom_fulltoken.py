@@ -93,6 +93,9 @@ if os.environ.get("QROM_XVM"):
     _xvm = int(os.environ["QROM_XVM"])
     DIE = [f"-GXVM={_xvm}" if g == "-GXVM=1" else g for g in DIE]
     LINK_DEFINES = [f"-DXVMD={_xvm}" if g == "-DXVMD=1" else g for g in LINK_DEFINES]
+# qwen-vm-fallback 1014: QROM_XHI=1 = the VM half-plane x transport (x reads keep bits 31:16 only), a measurement knob
+if os.environ.get("QROM_XHI") in ("1", "2"):
+    DIE = DIE + ["-GXHI=" + os.environ["QROM_XHI"]]
 if os.environ.get("QROM_BD"):
     DIE = [f"-GBD={int(os.environ['QROM_BD'])}" if g == "-GBD=41" else g for g in DIE]
 # rom-layer-tput 10-13: the die's other wire-stage counts, to put the PRICED r21 die relays (results/rtl/

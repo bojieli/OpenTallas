@@ -149,11 +149,16 @@ class Plan:
         # VM3 pad rows: one bay row of pad / relay tiles on each face of the column row (pad_rows per side).  Every lane lands
         # through the bay of its column face, so the equalisation stages sit at the consumer and the strips hold relays only
         th = s['ot_qfd_vm_xrelay_t'][1]; npt = int((pitch - 4.32 + SGAP) // (TW + SGAP)); bw = G(npt * TW + (npt - 1) * SGAP)
+        while bw > PW and npt > 1 and (self.EW - 8.64 - bw) / max(1, NPL - 1) < bw + 2.16:      # spread bays must not touch
+            npt -= 1; bw = G(npt * TW + (npt - 1) * SGAP)
         for p in range(NPL if self.pad_rows else 0):
             cx = X0 + 4.32 + pitch * p
+            # pad bays spread evenly over the envelope width (each within a column pitch of its column): inside the envelope,
+            # never overlapping (32 planes: identical to the centred placement because the bay is narrower than the leaf)
+            bx_ = G(cx + (PW - bw) / 2 // 2.16 * 2.16) if bw <= PW else G(X0 + 4.32 + (p * (self.EW - 8.64 - bw) / max(1, NPL - 1)) // 2.16 * 2.16)
             for k in range(self.pad_rows):
-                self.bays.append(dict(n=f'vm_pad_{P0 + p}_S{k}', x=G(cx + (PW - bw) / 2 // 2.16 * 2.16), y=G(yb - (k + 1) * (th + 2.16) + 2.16), w=bw, h=th, tiles=npt, region=-1, padrow=1, plane=P0 + p, face=0))
-                self.bays.append(dict(n=f'vm_pad_{P0 + p}_N{k}', x=G(cx + (PW - bw) / 2 // 2.16 * 2.16), y=G(yb + CB + k * (th + 2.16)), w=bw, h=th, tiles=npt, region=-1, padrow=1, plane=P0 + p, face=1))
+                self.bays.append(dict(n=f'vm_pad_{P0 + p}_S{k}', x=bx_, y=G(yb - (k + 1) * (th + 2.16) + 2.16), w=bw, h=th, tiles=npt, region=-1, padrow=1, plane=P0 + p, face=0))
+                self.bays.append(dict(n=f'vm_pad_{P0 + p}_N{k}', x=bx_, y=G(yb + CB + k * (th + 2.16)), w=bw, h=th, tiles=npt, region=-1, padrow=1, plane=P0 + p, face=1))
         for p in range(NPL):
             pl = A(f'vm_xcol_{P0 + p}', 'ot_qfd_vm_xcol_t', X0 + 4.32 + pitch * p, yb + 4.32, plane=P0 + p, region=-1)
             self.me.append((pl['n'], pl['x'], pl['y'] + PH / 2))
