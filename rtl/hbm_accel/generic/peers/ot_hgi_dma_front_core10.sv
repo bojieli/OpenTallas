@@ -100,13 +100,11 @@ module ot_hgi_dma_front_core10 #(
     input  wire [NS*NL*270-1:0]  dd,
     output wire [NS*NL-1:0]      dd_cr,
     // VM wide write port, NB lanes {v, sector 15, wdata 256, word mask 8}
-    output wire [NB*(2*NIN)-1:0]     xs_oh,          // seam -> slices: registered X1 pick per bank (one-hot over lanes)
-    output wire [2*NIN*277-1:0]    xs_ls,          // seam -> slices: lane buffers {fmt 3, sector 18, source 256}
-    output wire [NB-1:0]         xs_v,           // the VM lane valids (wl[b] = {xs_v[b], slice wd[b]})
     input  wire [NB-1:0]         wl_done,
     input  wire [NB-1:0]         wl_rdy
 );
     localparam integer NIN=NL;
+    wire [2*NIN*277-1:0] xs_ls;
     localparam integer QS=(MUT_B2==1)?(QID+1)%4:QID, LQ=(MUT_B2==2)?(QID+1)%4:QID;
     wire [50:0] local_dq;
     for (genvar s=0;s<NS;s=s+1) assign dq[s*51+:51] = s==LQ ? local_dq : 51'd0;

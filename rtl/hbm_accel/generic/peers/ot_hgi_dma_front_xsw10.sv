@@ -12,12 +12,11 @@ module ot_hgi_dma_front_xsw10 #(
  input wire lease_grant,output wire lease_busy,
  input wire [7:0] wl_credit,wl_done,output wire [7:0] issue_v,
  output wire [8*281-1:0] vm_packet,output wire [7:0] vm_bad);
- wire [8*2*NL-1:0] picks;wire [2*NL*277-1:0] sectors;wire [7:0] legacy_v,v;wire [8*280-1:0] wd;
  ot_hgi_dma_front_core10 #(.SOURCE_CAP(SOURCE_CAP),.REQ_IDLE(REQ_IDLE),.NS(4),.NL(NL),.SBIT(SBIT),.STACK_BYTES(STACK_BYTES),.NB(8),.LD(LD),
   .AP(0),.XP(1),.XQ(1),.QID(QID),.MUT(MUT),.MUT_B2(MUT_B2)) core(
   .clk(clk),.lane_clk(lane_clk),.rst_n(rst_n),.mv_v(mv_v),.mv_rdy(mv_rdy),.mv(mv),.mv_done(mv_done),.mv_fault(mv_fault),
   .ix_v(ix_v),.ix_rdy(ix_rdy),.ix_cmd(ix_cmd),.id_v(id_v),.id_rdy(id_rdy),.id(id),
-  .dq(dq),.dq_rdy(dq_rdy),.dd(dd),.dd_cr(dd_cr),.xs_oh(picks),.xs_ls(sectors),.xs_v(legacy_v),
+  .dq(dq),.dq_rdy(dq_rdy),.dd(dd),.dd_cr(dd_cr),
   .lease_grant(lease_grant),.lease_busy(lease_busy),.wl_done(wl_done),.wl_rdy(8'hff),.wl_credit(wl_credit),.vm_packet(vm_packet),.vm_bad(vm_bad),.issue_v(issue_v));
 endmodule
 `default_nettype wire
