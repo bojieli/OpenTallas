@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""el1013-s81-vmfe/B7: CONSTRUCTIVE floorplan of dsfd_vm_fe_h (RTL FROZEN 763fb482a: S2 + S3 + S5) and its checks.
+"""el1013-s81-vmfe/B7 + B8: CONSTRUCTIVE floorplan of dsfd_vm_fe_h and its checks.  B8: EVERY inter-leaf hop of the parent is
+modelled (the 6 bundle chains through VMFE_R relay tiles, lane word / return / grant / arm through dsfd_vm_frm, counter
+copies through u_kl / u_kr (VMFE_KD 3), status and fault wires, the reset tree, every FE boundary pin), a pin-landing cell
+is no longer a zero-capacity cut, and the E-W necessary condition (s81_ph_vm_fe_h_ew_bound.py) is printed with the verdict.
 
   python3 tools/s81_ph/s81_ph_vm_fe_h_floorplan.py [--variant A|B] [--out results/arch/s81_vm_fe_h_floorplan_1013.json]
   exit 0 only when every check passes.
@@ -29,6 +32,7 @@ _sp = importlib.util.spec_from_file_location('leaf_specs', ROOT / 'tools/s81_ph/
 LS = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(LS)
 
 W, H = 1520.064, 695.52
+R = int(re.search(r'`define VMFE_R\s+(\d+)', (ROOT / 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h_if.svh').read_text())[1])
 HOP_MAX, CUT_MAX, USABLE, G, WIN = 500.0, 0.60, 0.80, 10.8, 5
 TPU = {'M2': 7 / 0.270, 'M3': 1 / 0.036, 'M4': 1 / 0.048, 'M5': 1 / 0.048, 'M6': 1 / 0.064, 'M7': 1 / 0.064}
 H_FREE, V_FREE = TPU['M2'] / 2 + TPU['M4'] + TPU['M6'], TPU['M3'] / 2 + TPU['M5'] + 0.85 * TPU['M7']
@@ -86,7 +90,9 @@ class Plan:
 
     def pin(self, inst, pins):
         m, x, y = self.inst[inst]; mp = MP[m][2]
-        return [(x + mp[p][0], y + mp[p][1], mp[p][2], mp[p][3]) for p in pins]
+        def q(p):      # a 1-bit bus is planned under either spelling
+            return mp[p] if p in mp else mp[p[:-3]] if p.endswith('[0]') and p[:-3] in mp else mp[p + '[0]']
+        return [(x + q(p)[0], y + q(p)[1], q(p)[2], q(p)[3]) for p in pins]
 
     def hop(self, cls, a, pa, b, pb):
         assert len(pa) == len(pb), (cls, a, b, len(pa), len(pb))
@@ -129,6 +135,7 @@ class Plan:
         self.add('fld', 'dsfd_vm_fld', cx + 388.8, yb)
         self.add('fcc', 'dsfd_vm_fcc', cx + 820.8, yb)
         self.add('fcw', 'dsfd_vm_fcw', cx + 583.2, yb)
+        self.add('kl', 'dsfd_vm_frm', cx + 388.8, yb + 142.56); self.add('kr', 'dsfd_vm_frm', cx + 950.4, yb + 142.56)     # counter-copy relays
         # ---- lane relay tiles: on the way from the lane's W face to fld
         fx, fyc = self.inst['fld'][1] + 86.4, self.inst['fld'][2] + 34.56
         for i, (x, y) in enumerate(self.lanes):
@@ -143,34 +150,94 @@ class Plan:
             fw = v('w_v', j) + v('w_row', 14 * j, 14 * j + 14) + v('w_m', 16 * j, 16 * j + 16) + v('w_d', 512 * j, 512 * j + 512) + v('w_flt', 4 * j, 4 * j + 4)
             self.hop('clt.w->fxs', f'clt{g}', cw, f'fxs{b}', fw)
         fsr_port = lambda P: v('i_d', 128 * P, 128 * P + 128) + v('i_mask', 4 * P, 4 * P + 4) + v('i_row', 14 * P, 14 * P + 14) + v('i_v', P)
-        self.relays = []
+        self.relays = []; self.rst = []
         for s in range(4):
             for b in range(4):                           # capture bundles: fxs b -> fxr -> fxr -> fsr s
                 src = [x for j in range(4) for x in v('s_o', (4 * j + s) * 147, (4 * j + s) * 147 + 147)]
                 rin = [x for j in range(4) for x in v('i', 146 * j, 146 * j + 146) + v('i_v', j)]
                 rout = [x for j in range(4) for x in v('o', 146 * j, 146 * j + 146) + v('o_v', j)]
                 dst = [x for j in range(4) for x in fsr_port(12 + 4 * b + j)]
-                self.chain(f'c{b}s{s}', 'dsfd_vm_fxr', f'fxs{b}', src, rin, rout, f'fsr{s}', dst)
+                self.chain(f'c{b}s{s}', 'dsfd_vm_fxr', [(f'fxs{b}', src)], rin, rout, f'fsr{s}', dst)
             self.ext_hop('m_*', 'S', f'fsr{s}', [p for p in MP['dsfd_vm_fsr'][2] if p.startswith('o_')], drive_in=False)
+        # ---- bundle 4 (fcw ports 0, 1 + fcc ports 3, 4 -> fxa) and bundle 5 (fcn ports 2, 5 .. 9, rf, tags + fld ports 10, 11 -> fxb)
+        fs_d = lambda P, n=128: v('i_d', 128 * P, 128 * P + n)
+        fs_r = lambda P: v('i_row', 14 * P, 14 * P + 14)
+        for s in range(4):
+            wa = [(f'fcw', v('s_o', 159 * s, 159 * s + 143) + v('s_o', 159 * s + 143)), (f'fcw', v('s_o', 159 * s + 144, 159 * s + 158) + v('s_o', 159 * s + 158)),
+                  (f'fcc', v('s_o', 288 * s, 288 * s + 143) + v('s_o', 288 * s + 143)), (f'fcc', v('s_o', 288 * s + 144, 288 * s + 287) + v('s_o', 288 * s + 287))]
+            ri = v('i', 0, 143) + v('i_v', 0) + v('i', 143, 157) + v('i_v', 1) + v('i', 157, 300) + v('i_v', 2) + v('i', 300, 443) + v('i_v', 3)
+            ro = [x.replace('i', 'o', 1) for x in ri]
+            dst = fs_d(0) + fs_r(0) + v('i_we', 0) + v('i_v', 0) + fs_r(1) + v('i_v', 1) + fs_d(3) + fs_r(3) + v('i_we', 3) + v('i_v', 3) + fs_d(4) + fs_r(4) + v('i_we', 4) + v('i_v', 4)
+            self.chain(f'a{s}', 'dsfd_vm_fxa', wa, ri, ro, f'fsr{s}', dst)
+            wb = [('fcn', v('s_o', (6 * s + i) * 15, (6 * s + i) * 15 + 15)) for i in range(6)]
+            ri = [x for i in range(6) for x in v('i', 14 * i, 14 * i + 14) + v('i_v', i)]
+            dst = [x for P in (2, 5, 6, 7, 8, 9) for x in fs_r(P) + v('i_v', P)]
+            for j in range(2):
+                wb.append(('fld', v('s_o', (2 * s + j) * 143, (2 * s + j) * 143 + 143)))
+                ri += v('i', 84 + 142 * j, 84 + 142 * j + 142) + v('i_v', 6 + j); dst += fs_d(10 + j) + fs_r(10 + j) + v('i_v', 10 + j)
+            wb.append(('fcn', v('rf_o', s))); ri += v('i', 368); dst += v('i_rf', 3)
+            if s == 0:
+                wb.append(('fcn', v('x_o', 0, 112))); ri += v('i', 369, 481)
+                dst += fs_d(2, 4) + fs_d(5, 92) + fs_d(6, 4) + fs_d(7, 4) + fs_d(8, 4) + fs_d(9, 4)
+            ro = [x.replace('i', 'o', 1) for x in ri]
+            self.chain(f'b{s}', 'dsfd_vm_fxb', wb, ri, ro, f'fsr{s}', dst)
+        # ---- landing lanes: producer word, return + flags, grant, arm (all through the lane's dsfd_vm_frm)
         for i in range(10):
             self.ext_hop('lane word', 'N', f'flt{i}', ['p_v'] + v('p_t', 0, 2) + ['p_m'] + v('p_d', 0, 512) + ['p_flt'])
             self.hop('flt.ret->frm', f'flt{i}', v('ret', 0, 526) + ['av', 'ok', 'ovf', 'sflt'], f'frm{i}', v('r_i', 0, 526) + v('f_i', 0, 4))
-            self.hop('frm.ret->fld', f'frm{i}', v('r_o', 0, 526), 'fld', v('ret', 526 * i, 526 * i + 526))
+            self.hop('frm.ret->fld', f'frm{i}', v('r_o', 0, 526) + v('f_o', 0) + v('f_o', 2, 4), 'fld', v('ret', 526 * i, 526 * i + 526) + v('av', i) + v('ovf', i) + v('sflt', i))
+            if 2 <= i < 6: self.hop('frm.ret->fld', f'frm{i}', v('f_o', 1), 'fld', v('ok', i - 2))
+            self.hop('grant fld->frm', 'fld', v('g', i), f'frm{i}', ['g_i']); self.hop('grant frm->flt', f'frm{i}', ['g_o'], f'flt{i}', ['g'])
+            self.hop('arm fcn->frm', 'fcn', v('arm_base', 14 * i, 14 * i + 14) + v('arm_v', i), f'frm{i}', v('a_i', 0, 15))
+            self.hop('arm frm->flt', f'frm{i}', v('a_o', 0, 15), f'flt{i}', v('arm_base', 0, 14) + ['arm_v'])
+            self.hop('reset', 'fld' if i == 0 else f'flt{i - 1}', ['rn_o'] if i else v('rn_o', 0), f'flt{i}', ['rni'])
+        # ---- counter copies: source out pin -> u_kl / u_kr (dsfd_vm_frm r lane) -> fcn in pin (KD 3)
         for b in range(4):
-            self.hop('fxs.k->fcn', f'fxs{b}', v('k_o', 32 * 0, 128), 'fcn', v('k_i', 192 + 128 * b, 192 + 128 * b + 128))   # k_ext = {capture 16 x 32, k_ld, k_cc, k_cw}
+            kt, o = ('kl', 192 + 128 * b) if b < 2 else ('kr', 128 * (b - 2))
+            self.hop('k src->relay', f'fxs{b}', v('k_o', 0, 128), kt, v('r_i', o, o + 128))
+        for j, a in enumerate(('fcw', 'fcc', 'fld')): self.hop('k src->relay', a, v('k_o', 0, 64), 'kl', v('r_i', 64 * j, 64 * j + 64))
+        self.hop('k relay->fcn', 'kl', v('r_o', 0, 448), 'fcn', v('k_i', 0, 448)); self.hop('k relay->fcn', 'kr', v('r_o', 0, 256), 'fcn', v('k_i', 448, 704))
+        # ---- status / faults / reset tree (one wire each, same 500-um rule)
+        for b in range(4):
+            self.hop('status', f'fxs{b}', v('clf_o', 0, 4), 'fcn', v('clf_i', 4 * b, 4 * b + 4)); self.hop('reset', 'fcn', v('rn_o', 3 + b), f'fxs{b}', ['rni'])
+            for j in range(4): self.hop('reset', f'fxs{b}', v('rn_o', j) + v('sok_o', j), f'clt{4 * b + j}', ['rn', 'sok'])
+        self.hop('status', 'fcc', ['so_o'], 'fcn', ['so_i']); self.hop('status', 'fcw', ['err_o'], 'fcn', ['err_i'])
+        self.hop('status', 'fld', ['ovr_o', 'sflt_o'], 'fcn', ['ovr_i', 'sflt_i'])
+        for j, a in enumerate(('fld', 'fcc', 'fcw')): self.hop('reset', 'fcn', v('rn_o', j), a, ['rni'])
+        src_rn = {'c0': ('fxs0', v('rn_o', 4)), 'c1': ('fxs1', v('rn_o', 4)), 'c2': ('fxs2', v('rn_o', 4)), 'c3': ('fxs3', v('rn_o', 4)), 'a': ('fcw', v('rn_o', 0)), 'b': ('fcn', v('rn_o', 7))}
+        for bt in ('c0', 'c1', 'c2', 'c3', 'a', 'b'):
+            nm = lambda s_, r_: f'{bt}s{s_}r{r_}' if bt[0] == 'c' else f'{bt}{s_}r{r_}'
+            for s_ in range(4):
+                for r_ in range(R):
+                    if s_ == 0 and r_ == 0: self.hop('reset', src_rn[bt][0], src_rn[bt][1], nm(0, 0), ['rni'])
+                    elif s_ == 0: self.hop('reset', nm(0, r_ - 1), v('rn_o', 0), nm(0, r_), ['rni'])
+                    else: self.hop('reset', nm(s_ - 1, r_), v('rn_o', 1), nm(s_, r_), ['rni'])
+        # ---- FE boundary: client words on N straight above their leaf pins, status to the BE on S
+        self.ext_hop('client N', 'N', 'fcw', ['f_swv'] + v('f_swd', 0, 527) + ['f_srv'] + v('f_srd', 0, 31))
+        self.ext_hop('client N', 'N', 'fcw', ['t_swg', 't_srg'] + v('t_ks', 0, 53), drive_in=False)
+        self.ext_hop('client N', 'N', 'fcc', ['vwe'] + v('vwa', 0, 14) + v('vwd', 0, 512) + ['vre'] + v('vra', 0, 14))
+        self.ext_hop('client N', 'N', 'fcn', ['cv'] + v('cd', 0, 84) + v('f_cq', 0, 64) + ['c_wr'])
+        self.ext_hop('client N', 'N', 'fcn', ['dv'] + v('dt', 0, 8) + ['c_wv'] + v('c_wd', 0, 10) + v('t_rdy', 0, 4), drive_in=False)
+        self.ext_hop('client N', 'N', 'fld', v('t_cts', 0, 3), drive_in=False)
+        self.ext_hop('status S', 'S', 'fcn', v('fe_flt', 0, 16), drive_in=False); self.ext_hop('status S', 'S', 'fcn', ['f_p2c'])
 
-    def chain(self, tag, master, a, src, rin, rout, c, dst):
-        """source -> relay 0 -> relay 1 -> sink: the two relay tiles at 1/3 and 2/3 of the pin centroids, on the 8.64 lattice"""
-        A, C = self.pin(a, src), self.pin(c, dst)
-        ax, ay = np.mean([p[0] for p in A]), np.mean([p[1] for p in A]); cxx, cy = np.mean([p[0] for p in C]), np.mean([p[1] for p in C])
+    def chain(self, tag, master, srcs, rin, rout, c, dst):
+        """sources [(inst, pins)] -> R relay tiles -> sink: the tiles at (r + 1) / (R + 1) of the pin centroids, 8.64 lattice;
+        the LAST tile straight above the sink pins (its out pins are in the sink's port order)"""
+        A = [q for a, pp in srcs for q in self.pin(a, pp)]; C = self.pin(c, dst)
+        ax, ay = np.mean([q[0] for q in A]), np.mean([q[1] for q in A]); cxx, cy = np.mean([q[0] for q in C[:len(C) * 3 // 4]]), np.mean([q[1] for q in C])
         w, h = MP[master][0], MP[master][1]
-        for r in (0, 1):
-            f = (r + 1) / 3
-            x, y = ax + (cxx - ax) * f - w / 2, ay + (cy - ay) * f - h / 2
-            self.add(f'{tag}r{r}', master, round(x / 8.64) * 8.64, round(y / 8.64) * 8.64); self.relays.append(f'{tag}r{r}')
-        self.hop('s0->relay', a, src, f'{tag}r0', rin)
-        self.hop('relay->relay', f'{tag}r0', rout, f'{tag}r1', rin)
-        self.hop('relay->fsr', f'{tag}r1', rout, c, dst)
+        for r in range(R):
+            f = (r + 1) / R
+            x, y = ax + (cxx - ax) * f - w / 2, ay + (cy + 30.24 + h / 2 - ay) * f - h / 2
+            self.add(f'{tag}r{r}', master, round(x / 2.16) * 2.16, round(y / 8.64) * 8.64); self.relays.append(f'{tag}r{r}')
+        k = 0
+        for a, pp in srcs:
+            self.hop('s0->relay', a, pp, f'{tag}r0', rin[k:k + len(pp)]); k += len(pp)
+        for r in range(1, R): self.hop('relay->relay', f'{tag}r{r - 1}', rout, f'{tag}r{r}', rin)
+        self.hop('relay->fsr', f'{tag}r{R - 1}', rout[:len(dst)], c, dst)
+        # reset chain of the bundle (parent wiring): slice 0 along the chain, slices 1 .. 3 from the slice before
+        self.rst.append((tag, R))
 
     # ------------------------------------------------------------------------------------------------ checks
     def rects(self):
@@ -247,6 +314,10 @@ class Plan:
                 cands += [path(x0, y0, x1, y1, m, 'VH') for m in range(min(ax, bx), max(ax, bx) + 1, 4)]
                 best = min(cands, key=lambda c: cost(c, bits)); chosen[i] = best
                 for y, x, d in best: (useH if d == 'H' else useV)[y, x] += bits
+        # a cell with (almost) no parent track is a pin LANDING inside a leaf footprint (dsfd_vm_fsr carries no parent
+        # layer; a face pin is reached on the leaf's own pin layer): the wire ends there, it is not a cut (B7 reported 1e9)
+        okH, okV = capH > 0.05 * H_FREE * G * USABLE, capV > 0.05 * V_FREE * G * USABLE
+        useH, useV = np.where(okH, useH, 0.0), np.where(okV, useV, 0.0); capH, capV = np.where(okH, capH, 0.0), np.where(okV, capV, 0.0)
         rH, rV = useH / np.maximum(capH, 1e-6), useV / np.maximum(capV, 1e-6)
         full_v = useH.sum(axis=0) / np.maximum(capH.sum(axis=0), 1e-6)      # vertical cut at column ix: H wires / H tracks
         full_h = useV.sum(axis=1) / np.maximum(capV.sum(axis=1), 1e-6)
@@ -270,19 +341,27 @@ def main():
     pa_fail = {c: r['verdict'].get('FAIL', 0) for c, r in hops.items() if r['verdict'].get('FAIL')}
     cut_bad = [k for k in ('full_vertical_cut_max', 'full_horizontal_cut_max') if cuts[k][0] > CUT_MAX] + \
               [k for k in ('window_vertical_cut_max', 'window_horizontal_cut_max') if cuts[k] > CUT_MAX]
-    not_planned = ['fcn / fcc / fcw bundle relays (fxa, fxb), fld slice words, arm / grant, fld / fcc / fcw counter copies, N-face words of fcc / fcw / fcn: hops NOT in this model yet']
-    res = {'schema': 'opentallas.s81_vm_fe_h.floorplan.v1', 'agent': 'el1013-s81-vmfe/B7', 'rtl': 'FROZEN 763fb482a', 'variant': a.variant,
+    not_planned = []
+    ew = None
+    try:
+        r = json.loads((ROOT / 'results/arch/s81_vm_fe_h_ew_bound_1013.json').read_text())
+        ew = {'frozen_structure_best_bound': min(c['bound'] for c in r['cases'] if c['case'].startswith('frozen')), 'no_lane_bound': r['no_lane_in_slot_bound'], 'limit': r['limit'],
+              'record': 'results/arch/s81_vm_fe_h_ew_bound_1013.json'}
+    except Exception:
+        pass
+    res = {'schema': 'opentallas.s81_vm_fe_h.floorplan.v1', 'agent': 'el1013-s81-vmfe/B8', 'rtl': 'B8 (R 3, KD 3, XRT 1, CCA 1)', 'variant': a.variant,
            'outline': [W, H], 'limits': {'hop_um': HOP_MAX, 'cut': CUT_MAX, 'usable_tracks': USABLE},
            'instances': {n: {'master': m, 'x': x, 'y': y, 'w': MP[m][0], 'h': MP[m][1]} for n, (m, x, y) in sorted(p.inst.items())},
            'masters_with_exact_pins': sorted(m for m, v in MP.items() if v[3]), 'masters_with_planned_pins': sorted(m for m, v in MP.items() if not v[3]),
            'placement_violations': place, 'hops': hops, 'hops_over_limit': over, 'pin_align_fail': pa_fail, 'cuts': cuts, 'cuts_over_limit': cut_bad,
-           'not_modelled': not_planned,
+           'not_modelled': not_planned, 'relay_tiles_in_series': R, 'ew_necessary_condition': ew,
            'pass': bool(not place and not over and not pa_fail and not cut_bad and not not_planned)}
     print(f'variant {a.variant}: {len(p.inst)} instances, {len(p.hops)} hops, {sum(len(h[3]) for h in p.hops)} bits')
     print('placement violations', len(place), place[:6])
     for c, r in hops.items(): print(f'  {c:14s} hops {r["hops"]:3d} bits {r["bits"]:6d} len max {r["len_max"]:7.1f} ({r["worst"]}) jog max {r["jog_max"]:6.1f} jog cut {r["jog_cut_max"]:.2f} {r["verdict"]}')
     print('cuts', cuts)
     print('FLOORPLAN:', 'PASS' if res['pass'] else f'FAIL (placement {len(place)}, hop classes over {list(over)}, pin_align FAIL {pa_fail}, cuts {cut_bad}, not modelled {len(not_planned)})')
+    if ew: print(f"E-W necessary condition (s81_ph_vm_fe_h_ew_bound.py): best bound of ANY placement of the frozen structure {ew['frozen_structure_best_bound']} > {ew['limit']} => no placement passes; with no lane in the slot {ew['no_lane_bound']}")
     if a.out: (ROOT / a.out).write_text(json.dumps(res, indent=1) + '\n')
     return 0 if res['pass'] else 1
 

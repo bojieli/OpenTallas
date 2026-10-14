@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.s81_vm_fe_h.floorplan.v1",
- "agent": "el1013-s81-vmfe/B7",
- "rtl": "FROZEN 763fb482a",
+ "agent": "el1013-s81-vmfe/B8",
+ "rtl": "B8 (R 3, KD 3, XRT 1, CCA 1)",
  "variant": "B",
  "outline": [
   1520.064,
@@ -13,227 +13,507 @@
   "usable_tracks": 0.8
  },
  "instances": {
+  "a0r0": {
+   "master": "dsfd_vm_fxa",
+   "x": 583.2,
+   "y": 34.56,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a0r1": {
+   "master": "dsfd_vm_fxa",
+   "x": 313.2,
+   "y": 43.2,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a0r2": {
+   "master": "dsfd_vm_fxa",
+   "x": 43.2,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a1r0": {
+   "master": "dsfd_vm_fxa",
+   "x": 740.88,
+   "y": 34.56,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a1r1": {
+   "master": "dsfd_vm_fxa",
+   "x": 585.36,
+   "y": 43.2,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a1r2": {
+   "master": "dsfd_vm_fxa",
+   "x": 432.0,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a2r0": {
+   "master": "dsfd_vm_fxa",
+   "x": 898.56,
+   "y": 34.56,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a2r1": {
+   "master": "dsfd_vm_fxa",
+   "x": 859.68,
+   "y": 43.2,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a2r2": {
+   "master": "dsfd_vm_fxa",
+   "x": 820.8,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a3r0": {
+   "master": "dsfd_vm_fxa",
+   "x": 1054.08,
+   "y": 34.56,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a3r1": {
+   "master": "dsfd_vm_fxa",
+   "x": 1131.84,
+   "y": 43.2,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "a3r2": {
+   "master": "dsfd_vm_fxa",
+   "x": 1209.6,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b0r0": {
+   "master": "dsfd_vm_fxb",
+   "x": 457.92,
+   "y": 60.48,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b0r1": {
+   "master": "dsfd_vm_fxb",
+   "x": 306.72,
+   "y": 60.48,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b0r2": {
+   "master": "dsfd_vm_fxb",
+   "x": 155.52,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b1r0": {
+   "master": "dsfd_vm_fxb",
+   "x": 548.64,
+   "y": 69.12,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b1r1": {
+   "master": "dsfd_vm_fxb",
+   "x": 552.96,
+   "y": 60.48,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b1r2": {
+   "master": "dsfd_vm_fxb",
+   "x": 557.28,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b2r0": {
+   "master": "dsfd_vm_fxb",
+   "x": 771.12,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b2r1": {
+   "master": "dsfd_vm_fxb",
+   "x": 859.68,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b2r2": {
+   "master": "dsfd_vm_fxb",
+   "x": 946.08,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b3r0": {
+   "master": "dsfd_vm_fxb",
+   "x": 907.2,
+   "y": 69.12,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b3r1": {
+   "master": "dsfd_vm_fxb",
+   "x": 1121.04,
+   "y": 60.48,
+   "w": 43.2,
+   "h": 25.92
+  },
+  "b3r2": {
+   "master": "dsfd_vm_fxb",
+   "x": 1334.88,
+   "y": 51.84,
+   "w": 43.2,
+   "h": 25.92
+  },
   "c0s0r0": {
    "master": "dsfd_vm_fxr",
    "x": 198.72,
-   "y": 250.56,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c0s0r1": {
    "master": "dsfd_vm_fxr",
    "x": 172.8,
-   "y": 129.6,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s0r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 144.72,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c0s1r0": {
    "master": "dsfd_vm_fxr",
-   "x": 345.6,
-   "y": 250.56,
+   "x": 341.28,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c0s1r1": {
    "master": "dsfd_vm_fxr",
-   "x": 440.64,
-   "y": 129.6,
+   "x": 436.32,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s1r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 533.52,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c0s2r0": {
    "master": "dsfd_vm_fxr",
-   "x": 483.84,
-   "y": 250.56,
+   "x": 481.68,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c0s2r1": {
    "master": "dsfd_vm_fxr",
-   "x": 708.48,
-   "y": 129.6,
+   "x": 702.0,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s2r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 922.32,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c0s3r0": {
    "master": "dsfd_vm_fxr",
-   "x": 622.08,
-   "y": 250.56,
+   "x": 624.24,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c0s3r1": {
    "master": "dsfd_vm_fxr",
    "x": 967.68,
-   "y": 129.6,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c0s3r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 1311.12,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c1s0r0": {
    "master": "dsfd_vm_fxr",
-   "x": 432.0,
-   "y": 250.56,
+   "x": 425.52,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c1s0r1": {
    "master": "dsfd_vm_fxr",
-   "x": 311.04,
-   "y": 129.6,
+   "x": 304.56,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s0r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 183.6,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c1s1r0": {
    "master": "dsfd_vm_fxr",
-   "x": 570.24,
-   "y": 250.56,
+   "x": 568.08,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c1s1r1": {
    "master": "dsfd_vm_fxr",
    "x": 570.24,
-   "y": 129.6,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s1r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 572.4,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c1s2r0": {
    "master": "dsfd_vm_fxr",
-   "x": 708.48,
-   "y": 250.56,
+   "x": 710.64,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c1s2r1": {
    "master": "dsfd_vm_fxr",
-   "x": 838.08,
-   "y": 129.6,
+   "x": 835.92,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s2r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 961.2,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c1s3r0": {
    "master": "dsfd_vm_fxr",
-   "x": 855.36,
-   "y": 250.56,
+   "x": 851.04,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c1s3r1": {
    "master": "dsfd_vm_fxr",
-   "x": 1105.92,
-   "y": 129.6,
+   "x": 1099.44,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c1s3r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 1350.0,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c2s0r0": {
    "master": "dsfd_vm_fxr",
-   "x": 656.64,
-   "y": 250.56,
+   "x": 654.48,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c2s0r1": {
    "master": "dsfd_vm_fxr",
-   "x": 440.64,
-   "y": 129.6,
+   "x": 436.32,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s0r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 220.32,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c2s1r0": {
    "master": "dsfd_vm_fxr",
    "x": 794.88,
-   "y": 250.56,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c2s1r1": {
    "master": "dsfd_vm_fxr",
-   "x": 708.48,
-   "y": 129.6,
+   "x": 702.0,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s1r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 609.12,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c2s2r0": {
    "master": "dsfd_vm_fxr",
-   "x": 941.76,
-   "y": 250.56,
+   "x": 937.44,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c2s2r1": {
    "master": "dsfd_vm_fxr",
    "x": 967.68,
-   "y": 129.6,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s2r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 997.92,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c2s3r0": {
    "master": "dsfd_vm_fxr",
-   "x": 1080.0,
-   "y": 250.56,
+   "x": 1077.84,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c2s3r1": {
    "master": "dsfd_vm_fxr",
-   "x": 1235.52,
-   "y": 129.6,
+   "x": 1233.36,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c2s3r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 1386.72,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c3s0r0": {
    "master": "dsfd_vm_fxr",
    "x": 881.28,
-   "y": 250.56,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c3s0r1": {
    "master": "dsfd_vm_fxr",
    "x": 570.24,
-   "y": 129.6,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s0r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 257.04,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c3s1r0": {
    "master": "dsfd_vm_fxr",
-   "x": 1028.16,
-   "y": 250.56,
+   "x": 1023.84,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c3s1r1": {
    "master": "dsfd_vm_fxr",
-   "x": 838.08,
-   "y": 129.6,
+   "x": 835.92,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s1r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 645.84,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c3s2r0": {
    "master": "dsfd_vm_fxr",
-   "x": 1166.4,
-   "y": 250.56,
+   "x": 1164.24,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c3s2r1": {
    "master": "dsfd_vm_fxr",
-   "x": 1105.92,
-   "y": 129.6,
+   "x": 1099.44,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s2r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 1034.64,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
   "c3s3r0": {
    "master": "dsfd_vm_fxr",
-   "x": 1304.64,
-   "y": 250.56,
+   "x": 1306.8,
+   "y": 267.84,
    "w": 43.2,
    "h": 32.4
   },
   "c3s3r1": {
    "master": "dsfd_vm_fxr",
    "x": 1365.12,
-   "y": 129.6,
+   "y": 164.16,
+   "w": 43.2,
+   "h": 32.4
+  },
+  "c3s3r2": {
+   "master": "dsfd_vm_fxr",
+   "x": 1423.44,
+   "y": 60.48,
    "w": 43.2,
    "h": 32.4
   },
@@ -572,6 +852,20 @@
    "y": 388.8,
    "w": 322.56,
    "h": 19.44
+  },
+  "kl": {
+   "master": "dsfd_vm_frm",
+   "x": 504.0,
+   "y": 177.12,
+   "w": 43.2,
+   "h": 19.44
+  },
+  "kr": {
+   "master": "dsfd_vm_frm",
+   "x": 1065.6,
+   "y": 177.12,
+   "w": 43.2,
+   "h": 19.44
   }
  },
  "masters_with_exact_pins": [
@@ -591,19 +885,42 @@
   "dsfd_vm_fcw"
  ],
  "placement_violations": [
+  "overlap flt8 / a0r2",
+  "overlap flt8 / c0s0r2",
+  "overlap flt8 / b0r2",
   "overlap flt8 / c0s0r1",
+  "overlap flt8 / c1s0r2",
+  "overlap c0s0r2 / b0r2",
+  "overlap c0s0r2 / c1s0r2",
+  "overlap b0r2 / c1s0r2",
+  "overlap c1s0r2 / c2s0r2",
   "overlap c0s0r0 / flt0",
-  "overlap c0s0r0 / flt4",
+  "overlap c2s0r2 / c3s0r2",
   "overlap flt0 / c0s1r0",
   "overlap flt0 / c1s0r0",
   "overlap flt4 / c1s0r1",
-  "overlap flt4 / c0s1r0",
   "overlap flt4 / frm0",
   "overlap flt4 / frm4",
-  "overlap flt4 / c1s0r0",
-  "overlap frm4 / c2s0r1",
-  "overlap frm4 / c0s1r1",
+  "overlap flt4 / c2s0r1",
+  "overlap flt4 / c0s1r1",
+  "overlap c3s0r2 / frm8",
+  "overlap b0r1 / a0r1",
+  "overlap a1r2 / b0r0",
   "overlap c2s0r1 / c0s1r1",
+  "overlap fld / c0s1r2",
+  "overlap fld / b1r0",
+  "overlap fld / b1r1",
+  "overlap fld / b1r2",
+  "overlap fld / c1s1r2",
+  "overlap fld / a0r0",
+  "overlap fld / a1r1",
+  "overlap fld / c2s1r2",
+  "overlap fld / c3s1r2",
+  "overlap kl / flt6",
+  "overlap c0s1r2 / b1r0",
+  "overlap c0s1r2 / b1r1",
+  "overlap c0s1r2 / b1r2",
+  "overlap c0s1r2 / c1s1r2",
   "overlap flt1 / c1s1r0",
   "overlap flt1 / c0s3r0",
   "overlap flt1 / c2s0r0",
@@ -611,64 +928,95 @@
   "overlap flt6 / frm1",
   "overlap flt6 / frm6",
   "overlap flt6 / c3s0r1",
-  "overlap flt6 / c1s1r0",
   "overlap flt6 / c1s1r1",
-  "overlap flt6 / c0s3r0",
-  "overlap flt6 / c2s0r0",
   "overlap flt6 / fcn",
   "overlap flt6 / c2s1r1",
   "overlap flt6 / c0s2r1",
-  "overlap flt6 / c1s2r0",
   "overlap flt6 / frm2",
   "overlap flt6 / frm7",
-  "overlap frm6 / c3s0r1",
-  "overlap frm6 / c1s1r1",
+  "overlap b1r0 / b1r1",
+  "overlap b1r0 / b1r2",
+  "overlap b1r0 / c1s1r2",
+  "overlap b1r1 / b1r2",
+  "overlap b1r1 / c1s1r2",
+  "overlap b1r1 / a1r1",
+  "overlap b1r2 / c1s1r2",
+  "overlap b1r2 / a0r0",
+  "overlap b1r2 / a1r1",
   "overlap c3s0r1 / c1s1r1",
+  "overlap c1s1r2 / a1r1",
+  "overlap c1s1r2 / c2s1r2",
+  "overlap a0r0 / a1r1",
+  "overlap a1r1 / c2s1r2",
+  "overlap c2s1r2 / c3s1r2",
   "overlap c0s3r0 / c2s0r0",
-  "overlap fcn / c2s1r1",
-  "overlap fcn / c0s2r1",
   "overlap fcn / frm7",
-  "overlap fcn / c3s1r1",
-  "overlap fcn / c1s2r1",
   "overlap fcn / flt7",
   "overlap fcn / frm5",
+  "overlap fcw / a1r0",
+  "overlap fcw / b2r0",
+  "overlap fcw / a2r2",
   "overlap c2s1r1 / c0s2r1",
-  "overlap c2s1r1 / frm7",
-  "overlap c0s2r1 / frm7",
+  "overlap a1r0 / b2r0",
+  "overlap a2r2 / a2r1",
+  "overlap a2r2 / b2r1",
   "overlap c3s1r1 / c1s2r1",
   "overlap c3s1r1 / flt7",
   "overlap c1s2r1 / flt7",
   "overlap c1s3r0 / flt2",
-  "overlap c1s3r0 / flt7",
   "overlap c1s3r0 / c3s0r0",
+  "overlap a2r1 / b2r1",
+  "overlap a2r1 / a2r0",
+  "overlap b2r1 / a2r0",
   "overlap flt2 / c3s0r0",
   "overlap flt2 / c2s2r0",
   "overlap flt2 / c3s1r0",
   "overlap flt2 / c2s3r0",
-  "overlap flt7 / c3s0r0",
   "overlap flt7 / frm3",
   "overlap flt7 / frm5",
   "overlap flt7 / fcc",
-  "overlap flt7 / c2s2r0",
   "overlap flt7 / c2s2r1",
   "overlap flt7 / c0s3r1",
-  "overlap flt7 / c3s1r0",
-  "overlap flt7 / c2s3r0",
+  "overlap flt7 / kr",
+  "overlap a2r0 / fcc",
+  "overlap b3r0 / c0s2r2",
+  "overlap b3r0 / fcc",
+  "overlap b3r0 / b2r2",
+  "overlap c0s2r2 / fcc",
+  "overlap c0s2r2 / b2r2",
+  "overlap c0s2r2 / frm9",
+  "overlap c0s2r2 / c1s2r2",
+  "overlap fcc / b2r2",
   "overlap fcc / frm9",
-  "overlap fcc / c2s2r1",
-  "overlap fcc / c0s3r1",
-  "overlap fcc / c3s2r1",
-  "overlap fcc / c1s3r1",
+  "overlap fcc / c1s2r2",
+  "overlap fcc / c2s2r2",
+  "overlap fcc / c3s2r2",
+  "overlap fcc / a3r0",
+  "overlap b2r2 / c1s2r2",
+  "overlap frm9 / c1s2r2",
+  "overlap c1s2r2 / c2s2r2",
   "overlap c2s2r1 / c0s3r1",
+  "overlap c2s2r2 / c3s2r2",
+  "overlap kr / c3s2r1",
+  "overlap kr / c1s3r1",
   "overlap c3s2r1 / c1s3r1",
+  "overlap b3r1 / a3r1",
   "overlap c3s2r0 / flt3",
-  "overlap c3s2r0 / flt5",
   "overlap flt3 / c3s3r0",
   "overlap flt5 / c2s3r1",
   "overlap flt5 / flt9",
-  "overlap flt5 / c3s3r0",
   "overlap flt5 / c3s3r1",
-  "overlap flt9 / c3s3r1"
+  "overlap flt9 / c0s3r2",
+  "overlap flt9 / b3r2",
+  "overlap flt9 / c1s3r2",
+  "overlap flt9 / c3s3r1",
+  "overlap flt9 / c2s3r2",
+  "overlap flt9 / c3s3r2",
+  "overlap c0s3r2 / b3r2",
+  "overlap c0s3r2 / c1s3r2",
+  "overlap b3r2 / c1s3r2",
+  "overlap c1s3r2 / c2s3r2",
+  "overlap c2s3r2 / c3s3r2"
  ],
  "hops": {
   "f_cap": {
@@ -694,38 +1042,40 @@
    "worst": "clt0 -> fxs0"
   },
   "s0->relay": {
-   "hops": 16,
-   "bits": 9408,
-   "len_max": 576.528,
-   "jog_max": 470.688,
-   "jog_cut_max": 0.1763,
+   "hops": 69,
+   "bits": 12816,
+   "len_max": 561.408,
+   "jog_max": 472.848,
+   "jog_cut_max": 0.4114,
    "verdict": {
-    "WARN": 16
+    "WARN": 52,
+    "FAIL": 14,
+    "OK": 3
    },
    "worst": "fxs0 -> c0s3r0"
   },
   "relay->relay": {
-   "hops": 16,
-   "bits": 9408,
-   "len_max": 434.16,
-   "jog_max": 345.6,
-   "jog_cut_max": 0.2107,
+   "hops": 48,
+   "bits": 25632,
+   "len_max": 414.72,
+   "jog_max": 343.44,
+   "jog_cut_max": 0.2618,
    "verdict": {
-    "WARN": 15,
-    "OK": 1
+    "WARN": 46,
+    "OK": 2
    },
    "worst": "c0s3r0 -> c0s3r1"
   },
   "relay->fsr": {
-   "hops": 16,
-   "bits": 9408,
-   "len_max": 607.041,
-   "jog_max": 503.361,
-   "jog_cut_max": 0.18,
+   "hops": 24,
+   "bits": 12816,
+   "len_max": 289.173,
+   "jog_max": 263.253,
+   "jog_cut_max": 0.4506,
    "verdict": {
-    "WARN": 16
+    "WARN": 24
    },
-   "worst": "c0s3r1 -> fsr3"
+   "worst": "a0r2 -> fsr0"
   },
   "m_*": {
    "hops": 4,
@@ -762,56 +1112,165 @@
    "worst": "flt3 -> frm3"
   },
   "frm.ret->fld": {
-   "hops": 10,
-   "bits": 5260,
+   "hops": 14,
+   "bits": 5294,
    "len_max": 497.952,
    "jog_max": 385.707,
-   "jog_cut_max": 0.644,
+   "jog_cut_max": 0.6477,
    "verdict": {
-    "WARN": 9,
+    "WARN": 13,
     "FAIL": 1
    },
    "worst": "frm9 -> fld"
   },
-  "fxs.k->fcn": {
-   "hops": 4,
-   "bits": 512,
-   "len_max": 842.715,
-   "jog_max": 600.795,
-   "jog_cut_max": 0.0168,
+  "grant fld->frm": {
+   "hops": 10,
+   "bits": 10,
+   "len_max": 391.965,
+   "jog_max": 255.675,
+   "jog_cut_max": 0.0012,
    "verdict": {
-    "WARN": 4
+    "WARN": 10
+   },
+   "worst": "fld -> frm8"
+  },
+  "grant frm->flt": {
+   "hops": 10,
+   "bits": 10,
+   "len_max": 418.416,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "WARN": 5,
+    "OK": 5
+   },
+   "worst": "frm3 -> flt3"
+  },
+  "arm fcn->frm": {
+   "hops": 10,
+   "bits": 150,
+   "len_max": 642.48,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "WARN": 8,
+    "OK": 2
+   },
+   "worst": "fcn -> frm8"
+  },
+  "arm frm->flt": {
+   "hops": 10,
+   "bits": 150,
+   "len_max": 420.528,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "WARN": 5,
+    "OK": 5
+   },
+   "worst": "frm3 -> flt3"
+  },
+  "reset": {
+   "hops": 105,
+   "bits": 121,
+   "len_max": 1304.64,
+   "jog_max": 250.944,
+   "jog_cut_max": 0.0034,
+   "verdict": {
+    "WARN": 35,
+    "OK": 70
+   },
+   "worst": "flt8 -> flt9"
+  },
+  "k src->relay": {
+   "hops": 7,
+   "bits": 704,
+   "len_max": 765.672,
+   "jog_max": 330.723,
+   "jog_cut_max": 0.0211,
+   "verdict": {
+    "WARN": 7
+   },
+   "worst": "fcc -> kl"
+  },
+  "k relay->fcn": {
+   "hops": 2,
+   "bits": 704,
+   "len_max": 345.171,
+   "jog_max": 314.931,
+   "jog_cut_max": 0.4702,
+   "verdict": {
+    "WARN": 2
+   },
+   "worst": "kl -> fcn"
+  },
+  "status": {
+   "hops": 7,
+   "bits": 20,
+   "len_max": 732.504,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "OK": 2,
+    "WARN": 5
    },
    "worst": "fxs0 -> fcn"
+  },
+  "client N": {
+   "hops": 6,
+   "bits": 1334,
+   "len_max": 660.96,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "OK": 5,
+    "WARN": 1
+   },
+   "worst": "fld -> FE.N"
+  },
+  "status S": {
+   "hops": 2,
+   "bits": 17,
+   "len_max": 95.04,
+   "jog_max": 0.0,
+   "jog_cut_max": 0.0,
+   "verdict": {
+    "OK": 2
+   },
+   "worst": "fcn -> FE.S"
   }
  },
  "hops_over_limit": {
-  "s0->relay": 576.528,
-  "relay->fsr": 607.041,
+  "s0->relay": 561.408,
   "lane word": 522.72,
-  "fxs.k->fcn": 842.715
+  "arm fcn->frm": 642.48,
+  "reset": 1304.64,
+  "k src->relay": 765.672,
+  "status": 732.504,
+  "client N": 660.96
  },
  "pin_align_fail": {
+  "s0->relay": 14,
   "frm.ret->fld": 1
  },
  "cuts": {
   "gcell_um": 10.8,
   "window_um": 54.0,
   "full_vertical_cut_max": [
-   1.422,
-   723.6
+   1.129,
+   907.2
   ],
   "full_horizontal_cut_max": [
-   4900000000.0,
-   140.4
+   0.856,
+   43.2
   ],
-  "window_vertical_cut_max": 2228000000.0,
-  "window_horizontal_cut_max": 1706000000.0,
-  "gcells_over_0p60": 3619,
+  "window_vertical_cut_max": 17.24,
+  "window_horizontal_cut_max": 10.521,
+  "gcells_over_0p60": 3396,
   "gcells": 9165,
   "gcell_max": [
-   256000000.0,
-   512000000.0
+   36.814,
+   10.521
   ]
  },
  "cuts_over_limit": [
@@ -820,8 +1279,13 @@
   "window_vertical_cut_max",
   "window_horizontal_cut_max"
  ],
- "not_modelled": [
-  "fcn / fcc / fcw bundle relays (fxa, fxb), fld slice words, arm / grant, fld / fcc / fcw counter copies, N-face words of fcc / fcw / fcn: hops NOT in this model yet"
- ],
+ "not_modelled": [],
+ "relay_tiles_in_series": 3,
+ "ew_necessary_condition": {
+  "frozen_structure_best_bound": 0.653,
+  "no_lane_bound": 0.533,
+  "limit": 0.6,
+  "record": "results/arch/s81_vm_fe_h_ew_bound_1013.json"
+ },
  "pass": false
 }
