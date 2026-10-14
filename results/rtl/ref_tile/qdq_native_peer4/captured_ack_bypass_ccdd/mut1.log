@@ -1,0 +1,20 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/hbmqs2240-nativeq4-bypassccdd
+ot-run: ot-epyc4       admits   498 GB (avail 725, growth 173, headroom 48, waiters 0/0 GB) load 51/128 running 18 disk 915 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbmqs2240-nativeq4-bypassccdd
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbmqs2240-nativeq4-bypassccdd
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2366356-1791978364 after 0 s
+b2/ot_vms_bank.sv: OK
+b2/ot_vms_hub.sv: OK
+b2/ot_vms_rstop.sv: OK
+b2/ot_vms_rcl.sv: OK
+b2/ot_vms_star.sv: OK
+b2/ot_vms_relay.sv: OK
+b2/ot_vms_slice.sv: OK
+ot_hbm_b2_lane_cdc.sv: OK
+ot_hbm_b2_su_vm4.sv: OK
+ot_hbm_accel_cdc_fifo_p2.sv: OK
+[9265841000] %Fatal: tb_hgi_qdq_native_peer4.sv:78: Assertion failed in tb_hgi_qdq_native_peer4.unnamedblk1: FATAL quadrant0 fault after0 dones MUT1
+%Error: rtl/test/hbm_accel/generic/tb_hgi_qdq_native_peer4.sv:78: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2366356-1791978364): exit 1

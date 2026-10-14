@@ -1,0 +1,48 @@
+{
+  "source_commit": "ccdd92c77",
+  "native_common": "64fced1f9",
+  "configuration": {
+    "SPANPIPE": 1,
+    "FASTFIN": 1,
+    "FRONTFAST": 3,
+    "WRSPLIT": 1,
+    "PAYBYPASS": 1,
+    "DRAIN": 1,
+    "LEAFCLOCK": 1
+  },
+  "actual_subsources": {
+    "FIN": "00bbce3bd capturedACKonly",
+    "PAY": "abc2fbd46 protectedemptyresultbypass, firsty_f/vo_f capturepreserved"
+  },
+  "exact": [
+    {
+      "phase": 61,
+      "records": 32,
+      "words": 13312,
+      "cycles": 184,
+      "wrong": 0
+    },
+    {
+      "phase": 487,
+      "records": 32,
+      "words": 13312,
+      "cycles": 183,
+      "wrong": 0
+    }
+  ],
+  "immutable_price": 168,
+  "maximum_integer_cycles": 184,
+  "comparison_bypass0": {
+    "phase": 61,
+    "words": 13312,
+    "wrong": 0,
+    "cycles": 185,
+    "verdict": "observed NATIVE_QDQ_PRICE_MISS exit1"
+  },
+  "real_mutants": {
+    "header": "actualfatal0dones exit1",
+    "assembly": "actual11592of13312wrong exit1"
+  },
+  "drains": "all32client+VM obligations and4record ledgerszero eachphase; heldgrants only",
+  "limits": "No absolutephysicalquarter/clockreset/CP-return sourcebinding, lease release/globalmirror claim. FirstcaptureFIN/PAY actualexport audit remainsopen; keeperphysicalsource variant mustgetitsownmatchednativeproof."
+}
