@@ -34,6 +34,21 @@ class Lowering(unittest.TestCase):
         self.assertEqual(p['token'],[0x2800000,3,0x2900800]);self.assertEqual(p['boot'],[0x2500000])
         self.assertEqual(r['transfer_descriptor_counts'],{'hload':1,'hstore':1})
         self.assertIsNone(r['native_executed_transfer_count']);self.assertFalse(r['dispatch_eligible'])
+    def add_post(self):
+        ops=self.req['stages'][0]['operations']
+        post=dict(ops[0],source_id='post',arg=3<<20,vm_inputs=[])
+        self.req['source_jobs'].append('post')
+        field=ops[1]
+        field['vm_inputs']=[{'producer_source_id':'post','materializer_source_id':'store','base':2048,'rows':640}]
+        self.req['stages'][0]['operations']=[ops[0],post,ops[2],field]
+    def test_post_spill_before_vm_reader(self):
+        self.add_post();self.assertEqual(self.compile()['transfer_descriptor_counts']['hstore'],1)
+    def test_post_vm_without_materializer_refused(self):
+        self.add_post();self.req['stages'][0]['operations'][-1]['vm_inputs'][0]['materializer_source_id']='missing'
+        with self.assertRaisesRegex(ValueError,'no actual materialization'):self.compile()
+    def test_late_post_spill_refused(self):
+        self.add_post();ops=self.req['stages'][0]['operations'];ops[2],ops[3]=ops[3],ops[2]
+        with self.assertRaisesRegex(ValueError,'ordered H_STORE'):self.compile()
     def test_capture_opcode_is_not_a_cseq_load(self):
         self.req['stages'][0]['operations'][0]['endpoint_codec']='ot_dsrom_hc_mean_capture'
         with self.assertRaisesRegex(ValueError,'explicit cseq codec'):self.compile()
