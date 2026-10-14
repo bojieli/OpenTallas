@@ -24,7 +24,14 @@ def main():
  def strip(x):
   cells=[(abs(xx-x)+abs(y-25.92)*.1,xx,y) for y in (8.64,25.92,43.2) for xx in (snap(8.64+17.28*j) for j in range(92)) if clear(xx,y)]
   _,x,y=min(cells);taken.append((x,y,15.12,15.12));return x,y
- for v in sorted(inst,key=lambda v:(0 if v['role'].startswith('rc') else 1,v['clock_index'])):
+ def priority(v):
+  role=v['role']
+  if role.startswith('rc'):return (0,v['clock_index'])
+  if role in ('tc','f_cd'):return (1,v['clock_index'])
+  if role.startswith('tst') and int(role[3:])>=6:return (2,v['clock_index'])
+  if role.startswith('cs'):return (3,-int(role[2:])*10+v['stage'])
+  return (4,v['clock_index'])
+ for v in sorted(inst,key=priority):
   role=v['role'];j=v['stage']
   if role.startswith('tst'):
    g=int(role[3:]);start=0 if g<6 else 1728;x,y=strip(start+(1640-start)*(j+1)/5)

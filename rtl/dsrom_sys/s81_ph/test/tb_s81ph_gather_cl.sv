@@ -117,7 +117,7 @@ module tb_s81ph_gather_cl;
         end
     end
     // ---------------- driver
-    integer fd, rc, root, n_ph = 0, quiet;
+    integer fd, rc, root, n_ph = 0, quiet, restart = 0;
     reg [8*8-1:0] cmd; reg [63:0] a0, a1, a2, a3, a4;
     reg [NR-1:0] n_v; reg [31:0] n_t [0:NR-1]; reg [31:0] n_d [0:NR-1]; reg [NR-1:0] n_e;
     reg [9:0] ph; reg tgl = 0;
@@ -142,6 +142,7 @@ module tb_s81ph_gather_cl;
         if (!$value$plusargs("STIM=%s", stim)) $fatal(1, "+STIM");
         if (!$value$plusargs("EXPECT=%d", expect_)) expect_ = 0;
         if (!$value$plusargs("NEED=%d", need)) need = 0;
+        if (!$value$plusargs("RESTART=%d", restart)) restart = 0;
         fd = $fopen(stim, "r");
         if (fd == 0) $fatal(1, "cannot open %s", stim);
         idle(10); rst = 1; rsv = 1; idle(80); armed = 1;
@@ -162,6 +163,13 @@ module tb_s81ph_gather_cl;
                 root = a1; n_v[root] = 1; n_t[root] = a2; n_d[root] = a3; n_e[root] = a4;
             end else if (cmd == "E") begin
                 flush; settle; status_check;
+                if (restart && n_ph % 2 == 0) begin
+                    // Restart only at the documented drained boundary; clear both domains.
+                    // Subsequent field commands/rows must still match after the priced rc6 release.
+                    armed=0;rst=0;rsv=0;f_vm=0;c_cmd=0;f_cd=0;tgl=0;
+                    idle(10);rst=1;rsv=1;idle(80);armed=1;
+                    $display("RESTART drained boundary after phase %0d",n_ph);
+                end
                 f_cd = {~tgl, 1'b0, ph}; tgl = ~tgl;            // the capture's phase-drained event
                 idle(40);
                 n_ph = n_ph + 1;

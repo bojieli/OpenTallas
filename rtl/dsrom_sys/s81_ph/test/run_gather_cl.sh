@@ -36,7 +36,7 @@ build() {
       +define+S81PH_GTH_CL_NAME=dsfd_sp_gather_c_cl $SDEF --top-module tb_s81ph_gather_cl $2 --Mdir $OUT/obj_$1 -o sim $FILES > $OUT/build_$1.log 2>&1
 }
 run() { # mode case expect need want
-  $OUT/obj_$1/sim +STIM=$OUT/$2.txt +EXPECT=$3 +NEED=$4 > $OUT/run_$1_$2.log 2>&1
+  $OUT/obj_$1/sim +STIM=$OUT/$2.txt +EXPECT=$3 +NEED=$4 +RESTART=${RESTART:-0} > $OUT/run_$1_$2.log 2>&1
   res=$(grep -h '^RESULT' $OUT/run_$1_$2.log | tail -1)
   [ -z "$res" ] && res="RESULT FAIL (aborted: $(grep -h -m1 -i 'error' $OUT/run_$1_$2.log $OUT/build_$1.log | cut -c1-120))"
   echo "$1 $2 expect=$3 need=$4 want=$5: $res | $(grep -h '^SUMMARY' $OUT/run_$1_$2.log | tail -1)"
