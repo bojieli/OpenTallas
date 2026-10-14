@@ -4615,7 +4615,17 @@ def buses_r8(m):
                 for c in range(ncol):
                     r = _frame_of(m, half, t, c)
                     ih = min(range(len(sts_h)), key=lambda i_: abs((sts_h[i_][0].x + sts_h[i_][0].w / 2) - xs_[c]))
-                    _add_tap(m, sts_h[ih][0], 0, (f'cf{r}', 'xf', 'xd'))
+                    if CFIFO_FALL:     # r6: the cfifo's xf = the station's non-inverted clock copy fn0 (falling-edge launch)
+                        st_ = sts_h[ih][0]
+                        _add_tap(m, st_, 0, (f'cf{r}', None, 'xd'))
+                        fb = [i_ for i_, b_ in enumerate(m['buses']) if b_[3][0] == (st_.name, 'fn0')]
+                        if fb:
+                            b_ = m['buses'][fb[0]]
+                            m['buses'][fb[0]] = (b_[0], b_[1], b_[2], b_[3] + [(f'cf{r}', 'xf')])
+                        else:
+                            m['buses'].append((f'{st_.name}_tn0', 'fclk', 1, [(st_.name, 'fn0'), (f'cf{r}', 'xf')]))
+                    else:
+                        _add_tap(m, sts_h[ih][0], 0, (f'cf{r}', 'xf', 'xd'))
                     m.setdefault('x_stages', {})[r] = kv + ih + 1
     # ---------------- return trunks: per tier-half one multi-lane chain (one lane per column) -> gather end block
     for half in 'WE':
@@ -6515,13 +6525,15 @@ def _add_tap(m, st_inst, lane, sink):
     fo, do = f'fo{lane}', f'do{lane}'
     for i, (bid, cls, bits, eps) in enumerate(m['buses']):
         if eps[0] == (st_inst.name, fo):
-            m['buses'][i] = (bid, cls, bits, eps + [(sink[0], sink[1])])
+            if sink[1] is not None:
+                m['buses'][i] = (bid, cls, bits, eps + [(sink[0], sink[1])])
         elif eps[0] == (st_inst.name, do):
             m['buses'][i] = (bid, cls, bits, eps + [(sink[0], sink[2])])
             break
     else:
         lw = int(st_inst.master.split('_')[2].split('x')[0])
-        m['buses'].append((f'{st_inst.name}_tf{lane}', 'fclk', 1, [(st_inst.name, fo), (sink[0], sink[1])]))
+        if sink[1] is not None:
+            m['buses'].append((f'{st_inst.name}_tf{lane}', 'fclk', 1, [(st_inst.name, fo), (sink[0], sink[1])]))
         m['buses'].append((f'{st_inst.name}_td{lane}', 'lane', lw, [(st_inst.name, do), (sink[0], sink[2])]))
 
 
@@ -7318,6 +7330,11 @@ _LAY_K = [1]
 PIN_ALIGN = False               # --pin-align (s81-die v17): field-frame pins bit-aligned with their abutting peers
 HEND_VR_NOBP = False            # --hend-vr-nobp (s81 grpA 10-14): wide (>= 512 b) m2l VR lane ends take NOBP + WCHK
 FWD_NEGCAP = False              # --fwd-negcap (s81-die v17): forwarded-lane ENDS capture on the falling forwarded edge
+CFIFO_FALL = False              # --cfifo-fall-launch (s81-die r6 2026-10-14, cfifo edge decision (i)): the CLOSED colck cfifo
+                                #   captures xd on the RISING xf edge; the x-lane station that taps it forwards a NON-inverted
+                                #   copy of its input clock (port fn<j> = fi<j> through two clock inverters) as that cfifo's xf,
+                                #   so xd (launched on negedge fi) changes on the FALLING xf edge: a half-cycle source-synchronous
+                                #   hop (hold ~ T/2) instead of the rising/rising race (FF -189..-206); the tile is untouched
 
 
 def _qbank_exact(m, Mx, it, face, ports):
@@ -8029,6 +8046,9 @@ def glue_rtl(m):
         elif mst.startswith('dsfd_stn'):
             n = len([p_ for p_ in ports if p_.startswith('fi')])
             for j in range(n):
+                if f'fn{j}' in ports:   # --cfifo-fall-launch: non-inverted forwarded-clock copy for a rising-capture cfifo
+                    body.append(f'    wire fnb{j}; ot_fwd_clk_inv u_fn{j}a (.a(fi{j}[0]), .y(fnb{j})); '
+                                f'ot_fwd_clk_inv u_fn{j}b (.a(fnb{j}), .y(fn{j}[0]));')
                 w = ports[f'di{j}'][1]
                 ns = math.ceil(w / 512)
                 for s in range(ns):
@@ -8136,7 +8156,7 @@ def glue_rtl(m):
                      ('    // --fwd-negcap: the lane station launches xd on the RISING edge of xf (it captures on negedge fi and\n'
                       '    // forwards the inverted clock): xd is captured on the FALLING edge = a half-cycle path, as station ->\n'
                       '    // station (posedge capture = the launch instant: full-cycle setup, zero-cycle hold, FF -206 ps)\n'
-                      '    reg [565:0] xi; always @(negedge xf[0]) xi <= xd;' if FWD_NEGCAP else
+                      '    reg [565:0] xi; always @(negedge xf[0]) xi <= xd;' if FWD_NEGCAP and not CFIFO_FALL else
                       '    reg [565:0] xi; always @(posedge xf[0]) xi <= xd;'),
                      f'    reg [1:0] sti; always @(posedge {rk}) sti <= st;',
                      '    wire xv, wl, rl, wf, rf_, wr; wire [563:0] xq;',
@@ -8553,6 +8573,9 @@ def die_options(ap):
                     'return-tree node pins in fixed slots (abutted stack bit-aligned), slot-station xa / xb on the pins of '
                     'their abutting column relay (pin_align gate: 0 FAIL in the field frames)')
     ap.add_argument('--hend-vr-nobp', action='store_true', help='s81 grpA 10-14: wide (>= 512 b) m2l VR hub ends: ot_meso_fifo NOBP + WCHK (r_rdy is tied 1; the negedge pin register no longer fans out to every ring write enable in half a cycle); same words / cycles')
+    ap.add_argument('--cfifo-fall-launch', action='store_true', help='s81-die r6: the x-lane station that taps a cfifo '
+                    'forwards a non-inverted clock copy (fn0) as its xf: xd launches on the falling xf edge, the closed colck '
+                    'cfifo captures on the rising one (half-cycle source-synchronous hop)')
     ap.add_argument('--fwd-negcap', action='store_true', help='s81-die v17 glue RTL: the ends of a forwarded lane (dsfd_cfifo xd, '
                     'm2l / r2l end relays di<j>) capture on the falling forwarded-clock edge (half-cycle hop, as the stations)')
     ap.add_argument('--peer-pin-pos', action='store_true', help='s81-die v16: a slab port stands on the pin group of its '
@@ -8676,9 +8699,11 @@ def apply_options(a):
     HOP_ITER = int(getattr(a, 'hop_iter', 0) or 0)
     assert not X_SITE_PAIR or XB_RGAP_FIRST, '--x-site-pair needs --xb-rgap-first (and --xb-rgap)'
     FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
+    global CFIFO_FALL
+    CFIFO_FALL = bool(getattr(a, 'cfifo_fall_launch', False))
     HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
-    global RTL_BIND, HC_T_FWD, HC_T_RET, HOST_CF_BITS, HOST_TC_BITS, HC_RTL_WIDTHS
+    global RTL_BIND, HOST_CF_BITS, HOST_TC_BITS   # HC_T_FWD / HC_T_RET / HC_RTL_WIDTHS declared global above (r6: was a SyntaxError)
     RTL_BIND = bool(getattr(a, 'rtl_bind', False))
     if RTL_BIND:
         # F6: the collective <-> layer-die host channel at dsfd_host_c's RTL widths: collective -> host {t_cr, h_cls 2,
