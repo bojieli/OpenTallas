@@ -30,6 +30,7 @@
   "threads": 8,
   "peak_ram_gb": 16,
   "hold_margin_ns": 0.03,
+  "pin_v": "M3 M5",
   "macro_halo_um": 5.4
  },
  "structural_change": "Die decision 10-14 06:36 (el1013-s81-engram.log): the Engram parent's own state (930 data + 16 reset flops) is hardened into leaves so the parent holds no flop: three same-edge return relay leaves at the bank source pins (256/256/64) and one control leaf beside IO_R1 (8 conditioners, status/transit/release pipes, registered ACK). Parent dsfd_engram_c_hl, rtl/dsrom_sys/engram/rso_candidate/{dsfd_engram_c_hl,ot_engc_hl_leaves}.sv.",
@@ -37,7 +38,7 @@
   "name": "s81engc_rr256",
   "reason": "NEW leaf (die decision 10-14 06:36): slot + die-assigned pins requested in el1011-s81die.log; provisional faces until the v18+ pin file",
   "outline": [
-   25.92,
+   34.56,
    12.96
   ],
   "pin_faces": {
@@ -95,7 +96,7 @@
   ]
  },
  "outline": {
-  "w": 25.92,
+  "w": 34.56,
   "h": 12.96
  },
  "why_floorplan": "pin-limited relay/control leaf: face length set by the bus at <= 6-10 b/um/layer, not by area",
