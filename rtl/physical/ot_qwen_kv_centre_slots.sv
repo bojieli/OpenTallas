@@ -29,6 +29,9 @@
 // OT_QKD_SEQ_MUT (bench only): the parent swaps two store slices on the E copies of the q word.
 // OT_QKD_RSTSEQ_MUT (bench only): the quadrant resets follow the die reset instead of the HBM reset.
 // ---------------------------------------------------------------------------------------------------------------------
+`ifndef OT_QKD_SEQ_CORE_MUTN
+`define OT_QKD_SEQ_CORE_MUTN 0   // bench-only mutant select of the core's body (el1014: native TP8 core mutant bench)
+`endif
 module qkd_seq_core #(parameter integer HEADS=2, Q_FP32=0) (
     input  wire          ck,
     input  wire          rst_n,
@@ -67,7 +70,7 @@ module qkd_seq_core #(parameter integer HEADS=2, Q_FP32=0) (
 );
     wire rr;
     ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_n), .rst_n(rr));
-    ot_qkvd_seq_m_ctl #(.HEADS(HEADS), .Q_FP32(Q_FP32), .XS(40), .KD(8), .KWC(4), .OCR_AR(64), .NS(38), .KDESC(1), .KD_PMID(0), .KD_PTOK(0), .MUT(0)) u_body (
+    ot_qkvd_seq_m_ctl #(.HEADS(HEADS), .Q_FP32(Q_FP32), .XS(40), .KD(8), .KWC(4), .OCR_AR(64), .NS(38), .KDESC(1), .KD_PMID(0), .KD_PTOK(0), .MUT(`OT_QKD_SEQ_CORE_MUTN)) u_body (
         .clk(ck), .rst_n(rr), .x3_v(x3_v), .x3_tag(x3_tag), .x3_cr(x3_cr), .sd(r_sd), .kvd(r_kvd),
         .ar_v(t_ar_d[519]), .ar_d(t_ar_d[518:0]), .ar_cr(t_ar_cr), .ds(t_ds), .pw(t_pw),
         .s_qpop(s_qpop), .s_kpop(s_kpop), .s_kidx(s_kidx), .s_kwgo(s_kwgo),
