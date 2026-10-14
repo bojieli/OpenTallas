@@ -279,6 +279,14 @@ def place(v, m, G):
     # die link at the N edge (centred on the E sub-area): PHY on the edge, adapter under it, bump + reset sync W of it
     ph = put('ucie_kv', cx - 777.6 / 2, top - 777.6)
     ad = put('d2d_rom', ph.x, ph.y - 4.32 - by['d2d_rom'].h)
+    # C9 (compute lead r3): both link masters MIRRORED about x (MX).  The PHY abstract has its FDI / clk / rst on the N
+    # face and the adapter its FDI on the S face: at R0 under a PHY on the N die edge the FDI faced the die edge and the
+    # 1,099-b FDI took 4 relays (C3 d2d_fdi 5 stages: the FDI must abut, no logic between macro pins and adapter flops),
+    # and the adapter's SU / VM / sequencer faces (x3, ea, eq, ar, dc, dh) faced the PHY (x3 4 stages, dh 13).  MX puts
+    # the FDI faces together across the 4.32-um gap and the adapter's word faces toward the SU below.
+    if os.environ.get('OT_SPLIT_LINK_MX', '1') != '0':
+        ph.orient = ad.orient = 'MX'
+        rec['link_orient'] = 'MX'
     put('rs_bump', ph.x - 4.32 - by['rs_bump'].w - 4.32, ph.y - by['rs_bump'].h / 2)
     put('ckb_rom', ph.x - 4.32 - by['ckb_rom'].w - 4.32, ph.y + 30.0)
     # SU slot below the link, constant group E of it

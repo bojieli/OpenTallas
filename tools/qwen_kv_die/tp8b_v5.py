@@ -1405,6 +1405,15 @@ def _wrap(v, m, G, peers):
             for p in (() if dvm else ('xw', 'xe')):
                 d = n.ports[p + '_d']
                 n.ports[p + '_r'] = ('face', 1, d[2], d[3], round(d[4] + DW * 0.048 / 2 + 0.6, 4), 1)
+            # split compute C9 (compute lead r3): the attention-return word from the link adapter (N die edge) enters the
+            # trimmed VM on its N face at the E end, beyond the SU seam, the constant group and the x tap (one vertical
+            # run up the spine's E channel).  The peer-facing replan left it on the S face (C3: 22 relay stages around
+            # the VM / SU block; every stage is one cycle of the attention layer, LINK.md fit)
+            if SPLIT_COMPUTE and 'ar' in n.ports and _os.environ.get('OT_SPLIT_VM_AR_N', '1') != '0':
+                sp = n.ports['ar']
+                n.ports['ar'] = ('face', sp[1], 'N', 'M5', round(n.w - 100.0, 4), 1)
+                if 'ar_r' in n.ports:
+                    n.ports['ar_r'] = ('face', 1, 'N', 'M5', round(n.w - 100.0 + sp[1] * 0.048 / 2 + 0.6, 4), 1)
         for inst, mn, kw in (('seq_su', 'qfd_seq_su', {}),
                              ('sp_su64_sfu', 'qfd_sp_su64_sfu', dict(ports=('si', 'sd', 'acc', 'q', 'eq', 'ea', 'ecr'))),
                              ('tt_ctlm', 'qfd_tt_ctlm', None)):
