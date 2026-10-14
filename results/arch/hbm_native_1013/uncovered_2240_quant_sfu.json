@@ -18,7 +18,9 @@
       },
       "successor_owner": "/root/hbm_die_repair_2240",
       "successor_source": "a95a4adfc",
-      "status": "REAL_COMPONENT_RECEIPT_PARENT_GEOMETRY_OPEN"
+      "status": "REAL_COMPONENT_RECEIPT_PARENT_GEOMETRY_OPEN",
+      "geometry_owner": "/root/cluster_clock_delivery",
+      "proof": "Historicalcomponentreceiptstands; actualnativeattentionparent/sourcebindingandv13slot ownedattention+dielead, no parentclosure/cancellationcredit."
     },
     {
       "element": "hfd_attn_half_lo",
@@ -35,7 +37,9 @@
       },
       "successor_owner": "/root/hbm_die_repair_2240",
       "successor_source": "a95a4adfc",
-      "status": "REAL_COMPONENT_RECEIPT_PARENT_GEOMETRY_OPEN"
+      "status": "REAL_COMPONENT_RECEIPT_PARENT_GEOMETRY_OPEN",
+      "geometry_owner": "/root/cluster_clock_delivery",
+      "proof": "Historicalcomponentreceiptstands; actualnativeattentionparent/sourcebindingandv13slot ownedattention+dielead, no parentclosure/cancellationcredit."
     },
     {
       "element": "ot_hgi_qdq_wr",
@@ -50,7 +54,7 @@
         "status": "NEEDS_RTL",
         "text": "auto-react: no recipe; structural fix needed (noted in hgi-1010.log)"
       },
-      "successor_source": "170fb0969",
+      "successor_source": "ffd1a0692",
       "next_gate": "route TT>=0 FF>=0 DRC0; child lint; real insertion and per-pair reach after export",
       "behavior": {
         "exact_records": 8,
@@ -60,9 +64,12 @@
         "ratio": 1.0892857142857142,
         "mutant2_wrong": 2898
       },
-      "current_job": "qdq_wr_ref-q8e-85c81f4c2",
+      "current_job": [
+        "qdq_wr_pay_ref-p3-94e699311",
+        "qdq_wr_fin_ref-f3-25308c5de"
+      ],
       "source_commit": "85c81f4c29724a82d57342017f84e390c3313dcd",
-      "status": "AUTO_COMBO_ECO_UNQUALIFIED",
+      "status": "REAL_PAY_FIN_SPLIT_PARENT_PINS_OPEN",
       "pre_route": {
         "status": "PASS",
         "sinks": 5280,
@@ -78,7 +85,8 @@
         "ff_ps": -13.06,
         "drc": 0,
         "finishing": "automatic COMBO ECO; no hand variant"
-      }
+      },
+      "proof": "Originalq8e NEEDS_RTL preserved. GenuinePAY+FIN snapshot/actualACKsplit nativephases61/487PASS184; FINf2all8ACKP216.2fails; FINf3/f4actualexportpending. PAYdaemonfinishingnohandvariant."
     },
     {
       "element": "ot_hgi_su_ctlw",
@@ -105,8 +113,9 @@
         "ot_hgi_sv_lane2 x16",
         "ot_hgi_sv_lmem"
       ],
-      "successor_owner": "/root/hbm_idx_smmv_2240/suvop_collect",
-      "proof": "SV=1 selects redesign in run_su_prod.sh; same WIDE ports; old ctlw is not called by SV top. Native bankmacro/head/leaf composition and physical closure remain open, not qualified by historical ctlw bench."
+      "successor_owner": "/root/hbm_hc_norm",
+      "proof": "SVROW_NORM/head physicalsourcebinding ownedhc_norm; distinctnative_q controller LQ10 actual4B2pair proof ownedVM. CLOSEDctlwLQ8 stands. Noalias/historicalctlwbench nativeparentcredit.",
+      "native_controller_owner": "/root/hbm_vm_sm_2240"
     },
     {
       "element": "ot_hgi_su_ctlw_slice",
@@ -133,8 +142,9 @@
         "ot_hgi_sv_lane2 x16",
         "ot_hgi_sv_lmem"
       ],
-      "successor_owner": "/root/hbm_idx_smmv_2240/suvop_collect",
-      "proof": "SV=1 selects redesign in run_su_prod.sh; same WIDE ports; old ctlw is not called by SV top. Native bankmacro/head/leaf composition and physical closure remain open, not qualified by historical ctlw bench."
+      "successor_owner": "/root/hbm_hc_norm",
+      "proof": "SVROW_NORM/head physicalsourcebinding ownedhc_norm; distinctnative_q controller LQ10 actual4B2pair proof ownedVM. CLOSEDctlwLQ8 stands. Noalias/historicalctlwbench nativeparentcredit.",
+      "native_controller_owner": "/root/hbm_vm_sm_2240"
     },
     {
       "element": "hfd_sfu",
@@ -162,7 +172,11 @@
       "native_grid": "16 CLOSED lane5 bodies plus16 four-edge mappers; arithmetic only",
       "mapper_m1": "sfu_lane_map_ref-m1-b622c064c RUNNING OLD SOURCE; warm reset fails2 stale ld strobes",
       "mapper_m2": "routedTT+193.19FF+23.91DRC0, exact4096/mutant24552; collectpublicationpending; nativepin audit1outunregpass111q222.7; 26/657plannedpairsetupfails, allH100pass",
-      "mapper_pin_next": "Separate103.68x54 nativepin slotrequest allmapped542W/raw541E/coeff1200N/terms487S; actualpinsnativebodyW. Closedm2stands."
+      "mapper_pin_next": "Separate103.68x54 nativepin slotrequest allmapped542W/raw541E/coeff1200N/terms487S; actualpinsnativebodyW. Closedm2stands.",
+      "successor_source": "fbc154dfd",
+      "successor_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter",
+      "status": "REAL_FOUR_ROOT_FROZEN_WORD_PROOF_NATIVE_CACHE_PARENT_OPEN",
+      "proof": "Actual16frozenarith+16mapper+realc12split BS1RET5 PASS39193checks1026emits192desc15090words+warmreset. Full276wheel4private roots modeled. MapperoneQ222.7/26setup-pair defects remain; actualnewpinfacecitation unassigned. Sharedcap0helper publicationpending; nativecache/ACK/watermark/price open."
     },
     {
       "element": "ot_hbm_norm_engine_view",
@@ -208,7 +222,10 @@
       "native_successor": "343d86def ot_hgi_qdq_native_peer4 x4 actualendpoints/protected32CDC intoVM64fced1f9 group1",
       "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet.",
       "native_source": "62ed63ef6",
-      "status": "ACTUAL_SPAN1_NATIVE_PRICE_REPAIR_ACTIVE"
+      "status": "REAL_NATIVE_WORD_PRICE_PROOF_PARENT_GEOMETRY_OPEN",
+      "successor_source": "aaf4341d7",
+      "current_job": "qdq_core_fin_ref-n2-b415845f8",
+      "proof": "ffd WRSPLIT phases61/487 exact32records13312words184/168/all32clientVM+4recorddrains+2realmutants; aaf FRONTFAST3 phase61 PASS184. Assignedparent/productionCPresetreturnpeers/release/globalmirror remainopen."
     },
     {
       "element": "ot_hgi_quant_wide",
@@ -356,7 +373,10 @@
         "status": "UNSELECTED_ALTERNATIVE_RF_ROW_CTS_ACTIVE",
         "parent_slot": "UNASSIGNED",
         "M6_PORT_grants": "PROVISIONAL_NO_SIGNED_GRANT"
-      }
+      },
+      "selection_status": "UNSELECTED_WQ3_ALTERNATIVE_REQUIREDNESS_NOT_CANCELLED_AWAY",
+      "latest_structural_source": "625507b68",
+      "latest_physical_evidence": "OVg/OVr/META allCLOSED but actualpin defects recorded13d961bf7; noadoption. LGR/LGW M5oldfacecuts>.60 unassignedunsignedM6PORT, preserveCLOSEDRQ/WQ constituents; requiretaller/private-root genuineproposal."
     },
     {
       "element": "ot_hgi_qdq_q_pin4",
@@ -382,7 +402,10 @@
       "native_successor": "343d86def ot_hgi_qdq_native_peer4 x4 actualendpoints/protected32CDC intoVM64fced1f9 group1",
       "native_gate": "672643e4d production32records13312goldenwords driver, engine833.333VM1111.111 clocks, immutable168price/quarter; compiling/session5853; noresultyet.",
       "native_source": "62ed63ef6",
-      "status": "ACTUAL_SPAN1_NATIVE_PRICE_REPAIR_ACTIVE"
+      "status": "REAL_NATIVE_WORD_PRICE_PROOF_PARENT_GEOMETRY_OPEN",
+      "successor_source": "aaf4341d7",
+      "current_job": "qdq_core_fin_ref-n2-b415845f8",
+      "proof": "ffd WRSPLIT phases61/487 exact32records13312words184/168/all32clientVM+4recorddrains+2realmutants; aaf FRONTFAST3 phase61 PASS184. Assignedparent/productionCPresetreturnpeers/release/globalmirror remainopen."
     },
     {
       "element": "ot_hgi_qw_lgr",
@@ -399,7 +422,10 @@
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
       "source_branch": "claude/hbm-quant-split-1013",
-      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
+      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding",
+      "selection_status": "UNSELECTED_WQ3_ALTERNATIVE_REQUIREDNESS_NOT_CANCELLED_AWAY",
+      "latest_structural_source": "625507b68",
+      "latest_physical_evidence": "OVg/OVr/META allCLOSED but actualpin defects recorded13d961bf7; noadoption. LGR/LGW M5oldfacecuts>.60 unassignedunsignedM6PORT, preserveCLOSEDRQ/WQ constituents; requiretaller/private-root genuineproposal."
     },
     {
       "element": "ot_hgi_qw_lgw",
@@ -416,7 +442,10 @@
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
       "source_branch": "claude/hbm-quant-split-1013",
-      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
+      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding",
+      "selection_status": "UNSELECTED_WQ3_ALTERNATIVE_REQUIREDNESS_NOT_CANCELLED_AWAY",
+      "latest_structural_source": "625507b68",
+      "latest_physical_evidence": "OVg/OVr/META allCLOSED but actualpin defects recorded13d961bf7; noadoption. LGR/LGW M5oldfacecuts>.60 unassignedunsignedM6PORT, preserveCLOSEDRQ/WQ constituents; requiretaller/private-root genuineproposal."
     },
     {
       "element": "ot_su12_sfu_lanex",
@@ -432,7 +461,10 @@
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hbm_sfu_lanex-1dcd1efb6-tc-cl.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
       },
       "current_master": "ot_su12_sfu",
-      "proof": "r25gq v12 slots carry 64 ot_su12_sfu; hub_quarter_gen lane=ot_su12_sfu; no lanex binding. Historical alternative source unresolved, row retained."
+      "proof": "Actual16frozenarith+16mapper+realc12split BS1RET5 PASS39193checks1026emits192desc15090words+warmreset. Full276wheel4private roots modeled. MapperoneQ222.7/26setup-pair defects remain; actualnewpinfacecitation unassigned. Sharedcap0helper publicationpending; nativecache/ACK/watermark/price open.",
+      "successor_source": "fbc154dfd",
+      "successor_owner": "/root/hbm_quant_sfu_2240/sfu_native_quarter",
+      "status": "REAL_FOUR_ROOT_FROZEN_WORD_PROOF_NATIVE_CACHE_PARENT_OPEN"
     }
   ],
   "notes": {
