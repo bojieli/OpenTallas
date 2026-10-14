@@ -2,7 +2,10 @@
 // Opt-in integration seam for the split ME controller. This block provides
 // routing and status ownership only; providers must implement every ISA effect.
 // Default preserves the historical ROM path. Native admission requires a real
-// service exposing separate QK (S/M) and PV (ATT) operation contracts.
+// service and its exact program contract: separate QK/PV for the original
+// image, or the explicitly lowered fused request for the candidate image.
+// The integrating wrapper must bind native_contract_ready to that image's
+// verified capability, never merely to the presence of any attention kernel.
 module ot_qwen_tp8_me_provider_dispatch #(
     parameter integer NATIVE_ATTENTION = 0
 ) (
