@@ -1,0 +1,47 @@
+{
+  "enabled_by_default": false,
+  "physical_qualified": false,
+  "whole_token_qualified": false,
+  "runs": [
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2355984-1791973630",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "component1positive10observedmutants"
+    },
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-1980306-1791973732",
+      "mem_GB": 1,
+      "threads": 1,
+      "exit": 0,
+      "role": "default-off"
+    },
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-1980307-1791973732",
+      "mem_GB": 16,
+      "threads": 4,
+      "exit": 1,
+      "role": "preservedparserfailure -j4"
+    },
+    {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2361657-1791973756",
+      "mem_GB": 16,
+      "threads": 4,
+      "exit": 2,
+      "role": "preservedfixture readiness sampled before delta"
+    },
+    {
+      "host": "ot-epyc4",
+      "unit": "oth-ubuntu-1987448-1791973821",
+      "mem_GB": 16,
+      "threads": 4,
+      "exit": 0,
+      "role": "nativeROW64reads32ops2queries all512/provenance plus earlycapture mutant"
+    }
+  ]
+}
