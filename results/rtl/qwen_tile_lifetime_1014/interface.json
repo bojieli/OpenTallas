@@ -1,0 +1,51 @@
+{
+  "status": "DEFAULT_OFF_LOCAL_LIFETIME_CANDIDATE_PENDING_FULL_NATIVE_SOURCE_ARITHMETIC_DRAIN_GATE",
+  "top": "ot_qwen_tile_tp8_lifetime_candidate",
+  "clock_entries": 22,
+  "coherent_family_entries": 21,
+  "live_loader_entries": 1,
+  "added_logical_state": {
+    "lastissue_marker_control": 1,
+    "four_slot_local_drain": 225,
+    "node_lifetime_sideband": 784,
+    "sum_vs_event_parent": 1010
+  },
+  "node_input_extra_bits": {
+    "context_version_sequence": 64,
+    "producer_seal": 49,
+    "clear_context": 1,
+    "retire_ack": 1,
+    "accept_ack": 1
+  },
+  "arithmetic_drain_candidate": {
+    "lastissue_to_last_TOREG_valid_steps": 48,
+    "local_clear_steps": 49,
+    "derivation": "ME_EXTRA8+SD15+OD16+XDD2+8=49 to TOREG valid clear",
+    "actual_full_native_trace": "PENDING",
+    "timer_unit": "PASS registered-marker observed1edge later then48coherentsteps"
+  },
+  "node_latency": "Real fixed node input register1 plus valid delay8 =>9 capturestages; metadata aligned noarithmeticedgeadded",
+  "verification": {
+    "unit_positives": 2,
+    "negative_gates": 4,
+    "parent_lint": "PASS",
+    "node_arithmetic": "STUB_IN_UNIT_FIXTURE_ONLY_VALID_METADATA_QUALIFIED"
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "8968c8b6510cb5b84f6b5ba561ea86e0faf96fc522301e3ffd04aea520c478bd",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "d36a2a334b7bd3b89a010883d26fd38b90c060bcf6fc4f985c1c5d8d05a2a9d0",
+    "rtl/physical/ot_qwen_tile_ctl.sv": "3741bc52c2a5e04516285decdf0804e6e64ee86325ebf22afa9a461071d00fbf",
+    "rtl/physical/ot_qwen_tile_local_drain.sv": "3fd67bf46b44aae1cd1850bfc16a4ffe1a55feea0a07a87bc5a221527fa933d5",
+    "rtl/physical/ot_qwen_tile_node_lifetime.sv": "1c7e248b2817efc466f2bb0c8825d75205fe76ca766764f35f55018fa3ecfa08",
+    "rtl/physical/ot_qwen_tile_tp8_lifetime_candidate.sv": "b450271182c979787d258c8077b17c251c9efeb800f9744bc62e7aa00f703c69"
+  },
+  "open": [
+    "actualnative48/49trace underpausedcores/heldGO",
+    "actualeventparentfullarithmetic",
+    "allnewleafCTS/corners/assignedfaces",
+    "producerseal suppliedfromactualfieldtree source",
+    "realnodeoutputretirement acknowledgment",
+    "globalCCcredits/registeredadmission/CDC",
+    "source/operandreplaydrain/allrecipientseal"
+  ]
+}

@@ -300,6 +300,7 @@ module ot_qwen_w12_matvec_part #(
     output wire [15:0] accepted_op_context,
     output wire [31:0] accepted_vm_version,
     output reg op_accept,
+    output reg x_issue_last,
     input  wire [G*32-1:0]   x_q,
     // result words, one port per group
     output wire              ov,          // a result round-slot (whether or not written)
@@ -615,6 +616,12 @@ end else begin : g_issue_fast
         end
     end
 end endgenerate
+    // Last architectural issue, registered alongside the query's pre-update context.
+    // This is not a consumer/global retirement certificate.
+    always @(posedge clk or negedge rst_n) begin
+      if(!rst_n) x_issue_last<=1'b0;
+      else x_issue_last <= (XCONTEXT_EXPORT != 0) && active && t_last && k_last && j_last;
+    end
     // x reads (group g = GBASE + local: chunk c = g mod S).  With a
     // non-power-of-two GT, the final GT % S groups have no complete K-split
     // tile.  The O4 drafter FC uses G=6144, S=4096; only groups 0..4095 belong

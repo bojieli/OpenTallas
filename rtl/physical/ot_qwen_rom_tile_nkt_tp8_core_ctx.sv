@@ -29,7 +29,7 @@ module ot_qwen_rom_tile_nkt_tp8_core_ctx #(
     input wire [31:0] vm_version,
     output wire [15:0] cx_xcontext,
     output wire [31:0] cx_xversion,
-    output wire cx_op_accept,
+    output wire cx_op_accept,output wire cx_issue_last,
     output wire [15:0] cx_accepted_context,
     output wire [31:0] cx_accepted_version,
     output wire [378:0] cx_accepted_ib,
@@ -46,7 +46,7 @@ module ot_qwen_rom_tile_nkt_tp8_core_ctx #(
         assign cx_lerr[9*li+:9] = cx_lq[73*li+64+:9];
     end endgenerate
     wire          cx_tvd, cx_nfault;
-    ot_qwen_tile_ctl_tp8_ctx u_ctl (.clk(clk_ctl), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(x_response), .fault(fault), .cx_xre(cx_xre), .cx_xaddr(cx_xaddr), .cx_xepoch(cx_xepoch), .cx_xjrepeat(cx_xjrepeat), .op_context(op_context), .vm_version(vm_version), .cx_xcontext(cx_xcontext), .cx_xversion(cx_xversion), .cx_op_accept(cx_op_accept), .cx_accepted_context(cx_accepted_context), .cx_accepted_version(cx_accepted_version), .cx_core_idle(cx_core_idle), .cx_accepted_ib(cx_accepted_ib),
+    ot_qwen_tile_ctl_tp8_ctx u_ctl (.clk(clk_ctl), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(x_response), .fault(fault), .cx_xre(cx_xre), .cx_xaddr(cx_xaddr), .cx_xepoch(cx_xepoch), .cx_xjrepeat(cx_xjrepeat), .op_context(op_context), .vm_version(vm_version), .cx_xcontext(cx_xcontext), .cx_xversion(cx_xversion), .cx_op_accept(cx_op_accept),.cx_issue_last(cx_issue_last), .cx_accepted_context(cx_accepted_context), .cx_accepted_version(cx_accepted_version), .cx_core_idle(cx_core_idle), .cx_accepted_ib(cx_accepted_ib),
         .cx_rreq(cx_rreq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lerr(cx_lerr), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
     ot_qwen_tile_kids #(.CODE_BANKS(5), .RPS(0), .CMUT(CMUT), .MCLK(1), .SPLIT(1)) u_kids (.clk(clk_ctl), .clk_rp(clk_rp), .clk_sl(clk_sl), .clk_node(clk_node), .clk_tx(clk_tx), .clk_rqr(clk_rqr), .rst_n(rst_n),
         .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(512'd0), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
