@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.behavioral_bench.v1",
+  "collected_at": "2026-10-13T22:01:30.702284-07:00",
+  "source_revision": "2fecd50de",
+  "host": "ot-epyc4",
+  "command": "ot-run --mem2 --threads1 --dir /srv/opentallas-scratch/codex/qcollport-free-1013 -- bash physical/qwen_romio_slots/bench_coll_native.sh bench/meta_exact meta_exact",
+  "observed_exit": 0,
+  "verdict": "PASS native_coll_port messages=512 words=2899 cycles=3218 rank3 exact posted everybeat; data everybit0and1 pair_mismatch=0",
+  "source_sha256": {
+    "physical/qwen_romio_slots/bench_coll_native.sh": "f77d323c982e9471e7befa5497be94d7b0c65ca6e972530bb9d1b333db386cd4",
+    "rtl/test/tb_qfd_coll_xfifo_native.sv": "93f60959ef9358a691a4fcaa6bd9de514e284df374fef1f4ad80a8de13c89c44",
+    "rtl/physical/ot_qwen_coll_xfifo_native.sv": "7e4b40583479fb815362de5e30fdb11eae041a87cee8651773344365de5fad7e",
+    "rtl/physical/ot_qwen_die_coll_xfifo.sv": "00d1758d7660f4740ab29f113d33a22cae04e5f0cb78937a5188bb6c5d0819d9",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "a6ac11dffe1fce12069bc30a4ba6c7008d302f7c9f171569cccf4840971306c8",
+    "rtl/physical/ot_qwen_async_fifo_w.sv": "9dd6837d63a092e054859e3ad1058c8f132cdd61919a9f219e8cf5999a48df3b",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_hdly.sv": "8839e0bad5c7289180b736e93ca98d98aab25021d3ddf3a811963e0f52c6e574",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v": "c86e80340814833f88a8f0215aabd9bcf62b46755650d778758f126cfa225279",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v": "df1106d6ebda58f53513825922b9e1773434723c29303e1299604aec62154236",
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1.v": "319529641eec6c48c61b13987e5f30d62de641c4aa5e753282e3d9064d152499"
+  },
+  "scope": "Native receive SRAM + free write-data capture vs original flop receive store + original enabled data capture, every VALID data/control/fault edge identical; no added cycles, credits or N reduction. Full native sequence/collective discipline remains separate."
+}
