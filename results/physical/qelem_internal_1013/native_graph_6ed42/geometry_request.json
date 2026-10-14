@@ -1,0 +1,397 @@
+{
+  "schema": "opentallas.s81.q_native.geometry_request.v1",
+  "status": "UNASSIGNED_SOURCE_CANDIDATE",
+  "source_commit": "6ed42d12c",
+  "partition_commit": "5d3b46866",
+  "whole_die_outline_um": [
+    33000,
+    26000
+  ],
+  "candidate_parent_outline_um": [
+    552.384,
+    285.12
+  ],
+  "supersedes_old_wrapper_assumption": [
+    510.84,
+    207.36
+  ],
+  "source_added_epochs": 0,
+  "mapped_receipt_sha256": "ec65d4d2024e2db103d67bb57f38db6e0990837d341ce4358dbc31b3c69fa039",
+  "macro_LEF_sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+  "macro_size_um": [
+    125.28,
+    62.91
+  ],
+  "mandatory_macro_guard_um": 20,
+  "core_margin_um": 2.16,
+  "slots": [
+    {
+      "source_instance": "u_return0",
+      "module": "ot_s81_q_return0_native_graph",
+      "origin_um": [
+        0,
+        0
+      ],
+      "orient": "R0",
+      "outline_um": [
+        316.224,
+        129.6
+      ],
+      "mapped_std_area_um2": 5123.645279998953,
+      "actual_sinks": 9912,
+      "actual_ports": {
+        "clock_0": {
+          "direction": "input",
+          "width": 1
+        },
+        "clock_1": {
+          "direction": "input",
+          "width": 1
+        },
+        "in_bus": {
+          "direction": "input",
+          "width": 1250
+        },
+        "out_bus": {
+          "direction": "output",
+          "width": 2138
+        }
+      },
+      "actual_macros": {
+        "ot_rom_4096x274_m8": 2
+      },
+      "route_admission": false,
+      "macro_boxes_um": [
+        [
+          22.464,
+          22.464,
+          147.744,
+          85.374
+        ],
+        [
+          168.192,
+          22.464,
+          293.472,
+          85.374
+        ]
+      ],
+      "actual_macro_min_core_edge_um": 20.304,
+      "actual_macro_gap_um": 20.448000000000008,
+      "std_plus_macro_core_utilization": 0.5345155936574381
+    },
+    {
+      "source_instance": "u_return1",
+      "module": "ot_s81_q_return1_native_graph",
+      "origin_um": [
+        0,
+        155.52
+      ],
+      "orient": "R0",
+      "outline_um": [
+        316.224,
+        129.6
+      ],
+      "mapped_std_area_um2": 5124.155579998948,
+      "actual_sinks": 9912,
+      "actual_ports": {
+        "clock_0": {
+          "direction": "input",
+          "width": 1
+        },
+        "clock_1": {
+          "direction": "input",
+          "width": 1
+        },
+        "in_bus": {
+          "direction": "input",
+          "width": 1250
+        },
+        "out_bus": {
+          "direction": "output",
+          "width": 2138
+        }
+      },
+      "actual_macros": {
+        "ot_rom_4096x274_m8": 2
+      },
+      "route_admission": false,
+      "macro_boxes_um": [
+        [
+          22.464,
+          22.464,
+          147.744,
+          85.374
+        ],
+        [
+          168.192,
+          22.464,
+          293.472,
+          85.374
+        ]
+      ],
+      "actual_macro_min_core_edge_um": 20.304,
+      "actual_macro_gap_um": 20.448000000000008,
+      "std_plus_macro_core_utilization": 0.5345286530470644
+    },
+    {
+      "source_instance": "u_e.g_mac[0].g_lane_hardened.u_lane",
+      "module": "$paramod\\ot_s81_q_lane_pair_native\\TW=s32'00000000000000000000000000010001",
+      "origin_um": [
+        336.384,
+        0
+      ],
+      "orient": "R0",
+      "outline_um": [
+        216,
+        86.4
+      ],
+      "mapped_std_area_um2": 6586.660799997134,
+      "actual_sinks": 13149,
+      "actual_ports": {
+        "gclk_ma": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_m": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_v0": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_v1": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_t": {
+          "direction": "input",
+          "width": 17
+        },
+        "l_xq0": {
+          "direction": "input",
+          "width": 256
+        },
+        "l_xq1": {
+          "direction": "input",
+          "width": 256
+        },
+        "w0q": {
+          "direction": "input",
+          "width": 256
+        },
+        "w1q": {
+          "direction": "input",
+          "width": 256
+        },
+        "l_xe0": {
+          "direction": "input",
+          "width": 10
+        },
+        "l_xe1": {
+          "direction": "input",
+          "width": 10
+        },
+        "we0": {
+          "direction": "input",
+          "width": 10
+        },
+        "we1": {
+          "direction": "input",
+          "width": 10
+        },
+        "l0_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "l1_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "l0_f": {
+          "direction": "output",
+          "width": 1
+        },
+        "l1_f": {
+          "direction": "output",
+          "width": 1
+        },
+        "l0_y": {
+          "direction": "output",
+          "width": 32
+        },
+        "l1_y": {
+          "direction": "output",
+          "width": 32
+        },
+        "l0_t": {
+          "direction": "output",
+          "width": 17
+        },
+        "l1_t": {
+          "direction": "output",
+          "width": 17
+        }
+      },
+      "actual_macros": {},
+      "route_admission": false,
+      "std_core_utilization": 0.37909505907609703
+    },
+    {
+      "source_instance": "u_e.g_mac[1].g_lane_hardened.u_lane",
+      "module": "$paramod\\ot_s81_q_lane_pair_native\\TW=s32'00000000000000000000000000010001",
+      "origin_um": [
+        336.384,
+        112.32
+      ],
+      "orient": "R0",
+      "outline_um": [
+        216,
+        86.4
+      ],
+      "mapped_std_area_um2": 6586.660799997134,
+      "actual_sinks": 13149,
+      "actual_ports": {
+        "gclk_ma": {
+          "direction": "input",
+          "width": 1
+        },
+        "rst_m": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_v0": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_v1": {
+          "direction": "input",
+          "width": 1
+        },
+        "l_t": {
+          "direction": "input",
+          "width": 17
+        },
+        "l_xq0": {
+          "direction": "input",
+          "width": 256
+        },
+        "l_xq1": {
+          "direction": "input",
+          "width": 256
+        },
+        "w0q": {
+          "direction": "input",
+          "width": 256
+        },
+        "w1q": {
+          "direction": "input",
+          "width": 256
+        },
+        "l_xe0": {
+          "direction": "input",
+          "width": 10
+        },
+        "l_xe1": {
+          "direction": "input",
+          "width": 10
+        },
+        "we0": {
+          "direction": "input",
+          "width": 10
+        },
+        "we1": {
+          "direction": "input",
+          "width": 10
+        },
+        "l0_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "l1_v": {
+          "direction": "output",
+          "width": 1
+        },
+        "l0_f": {
+          "direction": "output",
+          "width": 1
+        },
+        "l1_f": {
+          "direction": "output",
+          "width": 1
+        },
+        "l0_y": {
+          "direction": "output",
+          "width": 32
+        },
+        "l1_y": {
+          "direction": "output",
+          "width": 32
+        },
+        "l0_t": {
+          "direction": "output",
+          "width": 17
+        },
+        "l1_t": {
+          "direction": "output",
+          "width": 17
+        }
+      },
+      "actual_macros": {},
+      "route_admission": false,
+      "std_core_utilization": 0.37909505907609703
+    },
+    {
+      "source_instance": "u_control",
+      "module": "ot_s81_q_control_native_graph",
+      "origin_um": [
+        336.384,
+        216
+      ],
+      "orient": "R0",
+      "outline_um": [
+        216,
+        69.12
+      ],
+      "mapped_std_area_um2": 4421.632859999152,
+      "actual_sinks": 8186,
+      "actual_ports": {
+        "clock_0": {
+          "direction": "input",
+          "width": 1
+        },
+        "in_bus": {
+          "direction": "input",
+          "width": 2843
+        },
+        "out_bus": {
+          "direction": "output",
+          "width": 1747
+        }
+      },
+      "actual_macros": {},
+      "route_admission": false,
+      "std_core_utilization": 0.32235012755095854
+    }
+  ],
+  "actual_clock_entry_count": 7,
+  "qualification": "Five actual masters with seven real clock entry ports: returns preserve raw and gated clocks separately. Not independently source-bound or physically qualified.",
+  "assigned_pins": null,
+  "bound_per_bit_die_reach": null,
+  "actual_corridor_cuts": null,
+  "physical_admission": false,
+  "geometry_checks": {
+    "child_origin_lattice_um": 0.576,
+    "overlap": 0,
+    "outside": 0,
+    "actual_ROM_guards": "PASS geometrically; native macro-pin track checker and final physical outlines remain required",
+    "aggregate_placement_is_not_die_reach_qualification": true
+  },
+  "next_actions": [
+    "Assign physical per-bit leaf pins from immutable original-wire/alias table.",
+    "Preserve actual gated/raw source clocks; never alias seven inputs as five independent roots.",
+    "Build source-bound Q leaf candidate kits and prove whole native PQ1 behavior.",
+    "Replan field operand corridors at fixed whole-die outline, allow explicit charged register epochs where required.",
+    "Screen real four failing operand families and corridor cuts before next whole die generation."
+  ]
+}
