@@ -11,7 +11,7 @@ import numpy as np
 import s81_ph_vm_fe_h_floorplan as F
 
 
-def search(height, seed, sweeps, assigned_capture=None, width=1520.064, fsr_pitch=388.8, control_weight=128, master_pins=None, initial_placements=None, strict_reach=False, pin_escape_margin=0.0):
+def search(height, seed, sweeps, assigned_capture=None, width=1520.064, fsr_pitch=388.8, control_weight=128, master_pins=None, initial_placements=None, strict_reach=False, pin_escape_margin=0.0, strict_placement=False):
     F.H = height
     F.W = width
     if master_pins: F.load_actual_master_pins(master_pins)
@@ -48,6 +48,7 @@ def search(height, seed, sweeps, assigned_capture=None, width=1520.064, fsr_pitc
         ry=np.minimum(candidates[:,1,None]+size[i,1],xy[None,:,1]+size[None,:,1]+gap)
         area=np.maximum(rx-lx,0)*np.maximum(ry-ly,0);area[:,i]=0
         value=area.sum(axis=1)*1000
+        if strict_placement:value+=(area>1e-6).sum(axis=1)*1e14
         for ia,ib,proj,bits,cls in incident[i]:
             da=xy[ia]-initial[ia] if ia>=0 else np.zeros(2)
             db=xy[ib]-initial[ib] if ib>=0 else np.zeros(2)
@@ -79,7 +80,7 @@ def search(height, seed, sweeps, assigned_capture=None, width=1520.064, fsr_pitc
     placements=p.check_place();hops=p.check_hops()
     return {'schema':'opentallas.s81_vm_fe_h.search.v1','variant':'A','height':height,'width':width,'fsr_pitch':fsr_pitch,'slot_adopted':False,'control_weight':control_weight,'seed':seed,'sweeps':sweeps,
             'derive_external_pins':True,'source_sha256':hashlib.sha256(F.SRC.encode()).hexdigest(),
-            'actual_capture_assignment':assigned_capture,'actual_pin_receipts':F.PIN_RECEIPTS,'initial_placements':initial_placements,'strict_reach_objective':strict_reach,'heuristic_pin_escape_reserve_um':pin_escape_margin,
+            'actual_capture_assignment':assigned_capture,'actual_pin_receipts':F.PIN_RECEIPTS,'initial_placements':initial_placements,'strict_reach_objective':strict_reach,'heuristic_pin_escape_reserve_um':pin_escape_margin,'strict_placement_objective':strict_placement,
             'placement_violations':placements,'hops_over_500':{k:v['len_max'] for k,v in hops.items() if v['len_max']>500},
             'history':history,'limits':{'hop_um':500,'cut':.60},'closure_claim':False,
             'required_followup':'Replay full cut and actual per-pair reach checker; assign native FE client pins and source clocks.',
@@ -90,4 +91,5 @@ if __name__=='__main__':
     ap.add_argument('--initial-placements',help='explicit source candidate placement; FSR anchors follow this request')
     ap.add_argument('--strict-reach',action='store_true',help='penalize every bit-pair reach violation before soft wire length; full replay remains required')
     ap.add_argument('--pin-escape-margin',type=float,default=0.0,help='reserve geometry margin in search only; exact normal-escape replay still determines reach')
-    a=ap.parse_args();r=search(a.height,a.seed,a.sweeps,a.assigned_capture,a.width,a.fsr_pitch,a.control_weight,a.master_pins,a.initial_placements,a.strict_reach,a.pin_escape_margin);Path(a.out).write_text(json.dumps(r,indent=2)+'\n');print('PLACEMENT_SEARCH',len(r['placement_violations']),'overlaps/outline;',r['hops_over_500']);
+    ap.add_argument('--strict-placement',action='store_true',help='reject macro overlap before wire penalties; still only a finite search')
+    a=ap.parse_args();r=search(a.height,a.seed,a.sweeps,a.assigned_capture,a.width,a.fsr_pitch,a.control_weight,a.master_pins,a.initial_placements,a.strict_reach,a.pin_escape_margin,a.strict_placement);Path(a.out).write_text(json.dumps(r,indent=2)+'\n');print('PLACEMENT_SEARCH',len(r['placement_violations']),'overlaps/outline;',r['hops_over_500']);
