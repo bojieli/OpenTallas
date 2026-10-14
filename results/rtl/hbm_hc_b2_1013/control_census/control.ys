@@ -1,0 +1,35 @@
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv -DSYNTHESIS rtl/proto/ot_fp32_add_rne_pipe.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_sfu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fastfp.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fastfp_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/ot_hdc_fp32_f12.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_fsqrt.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_fdiv.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41/ot_hdc_actquant.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_aq12.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_divc.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_su_add6.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_su_norm.sv
+read_verilog -sv -DSYNTHESIS rtl/hdc/v41x/ot_dsrom_su_hcpost.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv
+read_verilog -sv -DSYNTHESIS rtl/lib/ot_rst_relay.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/die_glue/ot_hbm_rly.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/die_glue/hbfd_rly_masters.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_hc_coeff_bank.sv
+blackbox ot_hgi_hc_coll_b2
+chparam -set STORELEAF 1 -set CLOCKED 1 -set D 5120 -set RLQ 6 -set CD 16 -set MUT 0 ot_hgi_hc_ctl_b2
+hierarchy -top ot_hgi_hc_ctl_b2
+synth -flatten -noabc
+write_json control.json
