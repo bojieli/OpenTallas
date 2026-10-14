@@ -92,12 +92,15 @@ module ot_hgi_qdq_wr #(
     always @* begin
         fin = sq_n != 0;
         for (integer b = 0; b < 8; b = b + 1) begin : cmp
-            reg [7:0] df0, df1;
-            // Two independent subtracts; the done bit selects their sign. No
-            // incrementer sits before the carry chain of the compare.
+            reg [7:0] df0, df1, df2;
+            // Committed ACKs: count plus the pending captured ACK and this
+            // edge's actual input ACK. The output register is the first capture
+            // for the early completion path. Select after independent carries.
             df0 = dcnt[b] - sh[b*8 +: 8];
             df1 = dcnt[b] - sh[b*8 +: 8] + 8'd1;
-            if (f_wdone[b] ? df1[7] : df0[7]) fin = 1'b0;
+            df2 = dcnt[b] - sh[b*8 +: 8] + 8'd2;
+            if ((f_wdone[b] && wwq_done[b]) ? df2[7] :
+                (f_wdone[b] || wwq_done[b]) ? df1[7] : df0[7]) fin = 1'b0;
         end
     end
     always @(posedge clk or negedge rr_n[0]) begin

@@ -27,7 +27,9 @@ module ot_hgi_qdq_native_peer4 #(parameter integer MUT_QDQ=0, MUT_CDC=0) (
   wire [7:0] rq_credit,wq_credit,wq_done;
   // qpin4 preserves the actual q8 LQ10 credit counts and LD16 storage.
   // Record format, descriptor/shape validation and fault retirement stay in FR.
-  ot_hgi_qdq_q_pin4 #(.MUT(MUT_QDQ)) endpoint(
+  // Physical FR/CORE hard-child defaults are SPANPIPE1. The software qpin4
+  // default0 is an unselected alternative and cannot qualify those real views.
+  ot_hgi_qdq_q_pin4 #(.SPANPIPE(1),.MUT(MUT_QDQ)) endpoint(
    .clk(cclk[q]),.rst_n(rst_n),.rec(rec[q*683+:683]),.ret(ret[q*3+:3]),
    .wrq(rq),.wrq_cr(rq_credit),
    .wrr_p0(rr[0+:514]),.wrr_p1(rr[514+:514]),

@@ -28,6 +28,16 @@ src=("${hdc[@]}" physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hb
      $B2/ot_vms_bank.sv $B2/ot_vms_hub.sv $B2/ot_vms_rstop.sv $B2/ot_vms_rcl.sv $B2/ot_vms_star.sv $B2/ot_vms_relay.sv $B2/ot_vms_slice.sv
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
      rtl/hbm_accel/generic/qw/ot_hgi_qdq_native_peer4.sv "$out/native_common/ot_hbm_b2_lane_cdc.sv" "$out/native_common/ot_hbm_b2_su_vm4.sv" "$out/native_common/ot_hbm_accel_cdc_fifo_p2.sv" rtl/test/hbm_accel/generic/tb_hgi_qdq_native_peer4.sv)
+# Optional immutable q8e baseline, to distinguish actual SPAN1 from old SPAN0 diagnostics.
+if [ -n "${QDQ_BASELINE_DIR:-}" ];then
+ (cd "$QDQ_BASELINE_DIR" && sha256sum -c manifest.sha256)
+ for i in "${!src[@]}";do
+  case "${src[$i]}" in
+   rtl/hbm_accel/generic/qw/ot_hgi_qdq_core.sv) src[$i]="$QDQ_BASELINE_DIR/ot_hgi_qdq_core.sv" ;;
+   rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr.sv) src[$i]="$QDQ_BASELINE_DIR/ot_hgi_qdq_wr.sv" ;;
+  esac
+ done
+fi
 m=${MUT:-0}
 "$VL" --binary --timing -O2 -CFLAGS -O0 -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT="$m" --top-module tb_hgi_qdq_native_peer4 -Mdir "$out/obj" -o sim "${src[@]}" > "$out/build.log" 2>&1 || { tail -30 "$out/build.log";exit 2; }
 set +e

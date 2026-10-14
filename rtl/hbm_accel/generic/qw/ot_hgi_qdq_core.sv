@@ -8,7 +8,7 @@
 //   out: ret, wrq, rg_req, the issued-beat bundle bp {lane 3, sectors 3, O sector 15, last 1, header 18} for the assembly
 //        leaf's beat queue (the lane round trip hides its two edges), o_act (-> the write leaf's wg_req), reset relay.
 // Retire: non-rejected records finish in queue order, so a count of finish pulses replaces the snapshot compare (which
-// lives beside the done pins in the write leaf); the pin flop is used as look-ahead (fin_c != 0 || f_fin).
+// lives beside the done pins in the write leaf); the first finish capture is fin_c / ret (fin_c != 0 || i_fin).
 // After a fault: the rest retires faulted once every leaf has been idle for 8 cycles (covers the seam transits).
 // MUT (bench): 2 = hazard masks ignored.
 module ot_hgi_qdq_core #(
@@ -49,13 +49,13 @@ module ot_hgi_qdq_core #(
     ot_rst_relay #(.REGIONS(6)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
     assign asm_rst_n = rr_n[2];
     // S3 pin flops (the front child's registered bundle, one edge later), accept strobe and sticky record fault
-    reg s3_v, f_s1v, f_nf, f_fin, f_abad, f_wbad, f_fire; reg [7:0] f_pop;
+    reg s3_v, f_s1v, f_nf, f_abad, f_wbad, f_fire; reg [7:0] f_pop;
     reg el3; reg [17:0] alo3, ahi3, olo3, ohi3; reg [14:0] as3, os3, rs3, ws3; reg [15:0] bpr3; reg [2:0] nsl3;
     reg [19:0] m3; reg [17:0] hd3;
     always @(posedge clk) begin {el3, alo3, ahi3, olo3, ohi3, as3, os3, rs3, ws3, bpr3, nsl3, m3, hd3} <= i_s3; f_nf <= i_nfault; end
     always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin s3_v <= 0; f_s1v <= 0; f_fin <= 0; f_abad <= 0; f_wbad <= 0; end
-        else begin s3_v <= i_s3_v; f_s1v <= i_s1_v; f_fin <= i_fin; f_abad <= i_abad; f_wbad <= i_wbad; end
+        if (!rr_n[0]) begin s3_v <= 0; f_s1v <= 0; f_abad <= 0; f_wbad <= 0; end
+        else begin s3_v <= i_s3_v; f_s1v <= i_s1_v; f_abad <= i_abad; f_wbad <= i_wbad; end
     always @(posedge clk or negedge rr_n[1])
         if (!rr_n[1]) begin f_fire <= 0; f_pop <= 0; end else begin f_fire <= i_fire; f_pop <= i_pop; end
     // ---------------------------------------------------------------- record queue
@@ -115,7 +115,9 @@ module ot_hgi_qdq_core #(
     // ---------------------------------------------------------------- retire (in record order)
     reg [3:0] qc;                                     // consecutive all-idle cycles (fault drain)
     wire drained = qc[3];
-    wire fin_av = fin_c != 0 || f_fin;
+    // The first capture of the registered WR finish pulse is the credit/retire
+    // boundary itself. No combinational finish output or CDC bypass is added.
+    wire fin_av = fin_c != 0 || i_fin;
     wire rt_ok = q_v[hd] && (q_rej[hd] || fin_av || (bad && drained));
     wire rt_fault = q_rej[hd] || bad;
     wire rt_fin = rt_ok && !q_rej[hd] && fin_av;
@@ -132,7 +134,7 @@ module ot_hgi_qdq_core #(
             if (s3_v) begin q_v[qt] <= 1'b1; q_rej[qt] <= !el3; qt <= qt + 1'b1; end
             if (n_load || n_skip) rp <= rp + 1'b1;
             if (rt_ok) begin q_v[hd] <= 1'b0; hd <= hd + 1'b1; end
-            fin_c <= fin_c + (QW+1)'(f_fin) - (QW+1)'(rt_fin);
+            fin_c <= fin_c + (QW+1)'(i_fin) - (QW+1)'(rt_fin);
             if (f_abad || f_wbad) bad <= 1'b1;
             qc <= (!bp_v && f_aidle && f_widle && b_used == 0) ? (qc[3] ? qc : qc + 4'd1) : 4'd0;
             occ <= occ + (QW+1)'(f_s1v) - (QW+1)'(rt_ok);
