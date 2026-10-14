@@ -21,6 +21,7 @@ SRC="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.
    physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
    physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
    physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+SRC="$SRC rtl/hbm_accel/generic/vm/b2/ot_vms_bank.sv rtl/hbm_accel/generic/vm/b2/ot_vms_hub.sv rtl/hbm_accel/generic/vm/b2/ot_vms_rstop.sv rtl/hbm_accel/generic/vm/b2/ot_vms_rcl.sv rtl/hbm_accel/generic/vm/b2/ot_vms_star.sv rtl/hbm_accel/generic/vm/b2/ot_vms_relay.sv rtl/hbm_accel/generic/vm/b2/ot_vms_slice.sv"
 "$VL" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-LATCH \
   ${XDEF:-} --top-module $TB -I"$OUT/vec" -Mdir "$OUT/obj${TAG:-}" $SRC rtl/hbm_accel/generic/peers/$TB.sv \
   -j ${J:-16} > "$OUT/build${TAG:-}.log" 2>&1 || { tail -30 "$OUT/build${TAG:-}.log"; exit 2; }

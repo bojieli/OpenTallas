@@ -10,7 +10,11 @@
 module tb_hgi_hc_eng_b2;
     `include "hc_sizes.svh"
 `ifndef LQV
+`ifdef HC_NATIVE
+ `define LQV 10
+`else
  `define LQV 32
+`endif
 `endif
 `ifndef HMUT
  `define HMUT 0
@@ -46,6 +50,56 @@ module tb_hgi_hc_eng_b2;
         .g_rdy(g_rdy), .done(e_done), .fault(e_fault), .idle(e_idle), .wrq(e_rq), .wrq_cr(own ? rq_cr : 32'd0),
         .wrr(own ? rr : '0), .wwq(e_wq), .wwq_cr(own ? w2_cr : 32'd0), .wwq_done(own ? w2_done : 32'd0),
         .rg_req(e_rg), .rg_gnt(1'b1), .wg_req(e_wg), .wg_gnt(1'b1));
+`ifdef HC_NATIVE
+    // Full native four-slice endpoints, production RG2/WG2 bank parameters,
+    // independent slice straps and closed-loop ring connections. Group1 and
+    // packet/DMA/COLL sources are idle in this isolated HC transaction gate.
+    wire [2223:0] cw_in[0:3], cw_out[0:3], ccw_in[0:3], ccw_out[0:3];
+    wire [1:0] cw_ic[0:3], cw_oc[0:3], ccw_ic[0:3], ccw_oc[0:3];
+    genvar nq, nb, nr;
+    generate for(nq=0;nq<4;nq=nq+1) begin:g_native_vm
+        wire [271:0] native_rq; wire [4495:0] native_wq;
+        wire [15:0] native_rc,native_wc,native_wd;wire[4111:0]native_rr;
+        wire [143:0] bank_status;wire[2:0]hub_status;wire[1:0]mirror_busy;
+        for(nb=0;nb<8;nb=nb+1)begin:g_lane
+            wire[15:0]lr=rq[(nq*8+nb)*16+:16];wire[279:0]lw=w2q[(nq*8+nb)*280+:280];
+            wire[16:0]rp[0:3];wire[280:0]wp[0:3];wire rc[0:3],wc[0:3];
+            wire[256:0]rs[0:3];wire wd[0:3];
+            assign rp[0]={lr[15],1'b0,2'(nq),lr[12:0]};
+            assign wp[0]={lw[279],1'b0,2'(nq),lw[276:264],lw[263:0]};
+            assign native_rq[nb*17+:17]=rp[3];assign rc[3]=native_rc[nb];
+            assign native_wq[nb*281+:281]=wp[3];assign wc[3]=native_wc[nb];
+            assign rs[0]=native_rr[nb*257+:257];assign wd[0]=native_wd[nb];
+            assign rq_cr[nq*8+nb]=rc[0];assign w2_cr[nq*8+nb]=wc[0];
+            assign rr[(nq*8+nb)*257+:257]=rs[3];assign w2_done[nq*8+nb]=wd[3];
+            for(nr=0;nr<3;nr=nr+1)begin:g_relay
+                ot_vms_relay #(.W(17),.C(1)) u_read(.clk(clk),.rst_n(rst_n),.f_in(rp[nr]),.f_out(rp[nr+1]),.cr_in(rc[nr+1]),.cr_out(rc[nr]));
+                ot_vms_relay #(.W(281),.C(1)) u_write(.clk(clk),.rst_n(rst_n),.f_in(wp[nr]),.f_out(wp[nr+1]),.cr_in(wc[nr+1]),.cr_out(wc[nr]));
+                ot_hdc_delay #(.W(257),.D(1),.RESET(1)) u_rsp(.clk(clk),.rst_n(rst_n),.d(rs[nr]),.q(rs[nr+1]));
+                ot_hdc_delay #(.W(1),.D(1),.RESET(1)) u_done(.clk(clk),.rst_n(rst_n),.d(wd[nr]),.q(wd[nr+1]));
+            end
+            always @(posedge clk)if(rst_n)begin
+                if(lr[15]&&(lr[14:13]!=0||lr[2:0]!=nb))$fatal(1,"HC native local read address invalid");
+                if(lw[279]&&(lw[278:277]!=0||lw[266:264]!=nb))$fatal(1,"HC native local write address invalid");
+            end
+        end
+        assign native_rq[271:136]='0;assign native_wq[4495:2248]='0;
+        ot_vms_slice #(.NC(4),.RG(2),.WG(2),.RRS(8'h33),.WRS(8'h33)) u_vm(
+            .clk(clk),.rst_n(rst_n),.sid(2'(nq)),.cq(1352'd0),.cr(),
+            .rq(native_rq),.rq_cr(native_rc),.rr(native_rr),.wq(native_wq),.wq_cr(native_wc),.wq_done(native_wd),
+            .dq(2248'd0),.dq_done(),.vcb(2130'd0),.vcb_cr(),.kq_done(),
+            .cw_in(cw_in[nq]),.cw_in_cr(cw_ic[nq]),.cw_out(cw_out[nq]),.cw_out_cr(cw_oc[nq]),
+            .ccw_in(ccw_in[nq]),.ccw_in_cr(ccw_ic[nq]),.ccw_out(ccw_out[nq]),.ccw_out_cr(ccw_oc[nq]),
+            .bank_status(bank_status),.hub_status(hub_status),.mirror_busy(mirror_busy));
+        ot_vms_relay #(.W(2224),.C(2)) u_cw(.clk(clk),.rst_n(rst_n),.f_in(cw_out[nq]),.f_out(cw_in[(nq+1)%4]),.cr_in(cw_ic[(nq+1)%4]),.cr_out(cw_oc[nq]));
+        ot_vms_relay #(.W(2224),.C(2)) u_ccw(.clk(clk),.rst_n(rst_n),.f_in(ccw_out[nq]),.f_out(ccw_in[(nq+3)%4]),.cr_in(ccw_ic[(nq+3)%4]),.cr_out(ccw_oc[nq]));
+        always @(posedge clk)if(rst_n && (hub_status != 0 || mirror_busy != 0))$fatal(1,"HC native slice unexpected fault or mirror traffic");
+        for(nb=0;nb<8;nb=nb+1)begin:g_status
+            always @(posedge clk)if(rst_n && bank_status[nb*18+17])$fatal(1,"HC native bank fault");
+        end
+    end endgenerate
+    initial if(LQ!=10)$fatal(1,"HC native relay3 uses actual 10-credit queues");
+`else
     // The golden VM core implements complete 32-bank lane groups. RP=8/W2=8 produces
     // zero groups (RP/32), so the original backing model never accepted a request.
     // Embed each local eight-bank slice in banks 0..7 of that unchanged core:
@@ -84,6 +138,8 @@ module tb_hgi_hc_eng_b2;
             .status(), .wq(280'd0), .wq_done(), .rq(nrq), .rq_cr(nrcr), .rr(nrr),
             .w2q(nwq), .w2q_cr(nwcr), .w2q_done(nwdn));
     end endgenerate
+
+`endif
 
     // ---- bench lane traffic: per-lane sector queues, LQ credits
     reg [270:0] wq_l [0:31][$]; reg [270:0] rq_l [0:31][$];     // writes {sec, data}; reads {sec, expected}

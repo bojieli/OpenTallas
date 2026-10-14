@@ -137,7 +137,10 @@ module ot_hgi_hc_lane_b2 #(
     always @(posedge clk) if (iss) tgq[tgw] <= scr_mine;
     always @(posedge clk or negedge rl)
         if (!rl) begin tgw <= '0; tgr <= '0; end
-        else begin if (iss) tgw <= tgw + 1'b1; if (rv_q) tgr <= tgr + 1'b1; end
+        else begin
+            if (iss) tgw <= (tgw == TB'(LQ - 1)) ? '0 : tgw + 1'b1;
+            if (rv_q) tgr <= (tgr == TB'(LQ - 1)) ? '0 : tgr + 1'b1;
+        end
     wire rsp = rv_q && !tg_h;                // a data response
     wire srsp = rv_q && tg_h;                // a scalar response
     // HC_POST ring: write slot 5 rgp + rt, consume group cgp

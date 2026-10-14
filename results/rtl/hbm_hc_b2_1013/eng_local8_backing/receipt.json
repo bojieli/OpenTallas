@@ -1,0 +1,30 @@
+{
+  "source_commit": "7103633eb",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "f44350897d0c6d771992d7dbe96f79e8aa667085225b0de57e40d598a7f76dec",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "53669c3a35a1089a4aadb1a73b6249a7f1f2dda0b6ebd2d551c0053a2f36aeab",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_eng_b2.sv": "30b65842e97f4cdc36cd936339c09bef6e6447b78f6877df0846768b5a5048c7",
+    "tools/hgi_adapters/hc_eng_bench.py": "5dd977ed6244c23f81b8eacb25f4ed669b63661d3a7d0e6862c928c1d06ff536",
+    "rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv": "3ae7055da9730b7ab30d423a48f619c5f19a688e46eec367eb138f81f8eba68d",
+    "rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv": "227124aef5f75f3d803b38b2098c95b7fea34679bcce89cb0cea200f87b350ad"
+  },
+  "exact_cases": 4,
+  "checked_sectors": 6432,
+  "errors": 0,
+  "mutant_bank_map_errors": 800,
+  "post_cycles": [
+    193,
+    193
+  ],
+  "pre_norm_cycles": [
+    453,
+    453
+  ],
+  "immutable_prices": {
+    "HC_POST": 222.7,
+    "HC_PRE_NORM": 649.4
+  },
+  "production_native_vm_endpoints": false,
+  "full_die_qualified": false,
+  "ledger_eligible": false
+}
