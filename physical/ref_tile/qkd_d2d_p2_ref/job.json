@@ -1,5 +1,5 @@
 {
- "name": "qkd_d2d_p2_ref-q17-COMMIT",
+ "name": "qkd_d2d_p2_ref-q17-8c51618df",
  "block": "ot_qkvd_kv_end",
  "ref_tile": true,
  "owner": "Claude:el1014-qwen-kvsys-elements",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 112,
  "source": {
   "branch": "claude/qwen-kvsys-seq-1014",
-  "commit": "COMMIT",
+  "commit": "8c51618df",
   "extra_paths": [
    "rtl/test/qwen_kv_die",
    "rtl/lib",
@@ -148,7 +148,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_d2d_p2_ref/qkd_d2d_p2_ref-q17-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_d2d_p2_ref/qkd_d2d_p2_ref-q17-8c51618df"
   }
  ],
  "cycles_added": 0,
