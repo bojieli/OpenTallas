@@ -191,6 +191,38 @@
         "physical/ref_tile/s81hc_cseqh2_ref/views/ot_s81_hc_cseq/ot_s81_hc_cseq_ff.lib": "96f91f8e20ba6116d219f0982f23b11c8456734e3ddd24ab9b012ab342c18fce",
         "physical/ref_tile/s81hc_cseqh2_ref/views/ot_s81_hc_cseq/ot_s81_hc_cseq_ss.lib": "0d727a0b5e338a322d387286d5afeebcb0b7631b6e7a3006eef5edfef1bcf557",
         "physical/ref_tile/s81hc_cseqh2_ref/views/ot_s81_hc_cseq/ot_s81_hc_cseq_tt.lib": "4a30765f11ba65127ae81705f8170614651d5756151457fa88d95b865f130256"
+      },
+      "additional_clock_boundaries": {
+        "cck": {
+          "parent_pin": "cck",
+          "clock": "c_clk",
+          "boundary_registers": 41,
+          "clock_delivery": {
+            "tt": {
+              "phi_minus_R_ps": -136.3,
+              "boundary_mean_ps": 136.3,
+              "min_ps": 132.9,
+              "max_ps": 139.7,
+              "spread_ps": 6.8
+            },
+            "ss": {
+              "phi_minus_R_ps": -180.7,
+              "boundary_mean_ps": 180.7,
+              "min_ps": 177.2,
+              "max_ps": 184.2,
+              "spread_ps": 7.0
+            },
+            "ff": {
+              "phi_minus_R_ps": -106.5,
+              "boundary_mean_ps": 106.5,
+              "min_ps": 103.2,
+              "max_ps": 109.8,
+              "spread_ps": 6.6
+            }
+          },
+          "evidence": "results/rtl/s81_suhc_20261013/native_repack_v7_v9/cseq_closed_clock_recovery/controller_boundary_references.json",
+          "status": "actual immutable closed route boundary measured; external controller source/relationship remains pending"
+        }
       }
     },
     {
@@ -681,7 +713,7 @@
   ],
   "clock_source_debt": [
     "14 physical die trunks must deliver per-corner phi-R at each exact sk child pin; no common entry phase",
-    "cseq cck controller domain source and crossing/reset timing remains external",
+    "cseq cck boundary reference recovered from immutable41actual face registers; controller source relation/phase distribution and crossing/reset timing remain external",
     "CCF SS boundary spread exceeds 80 ps and internal FF relay to SRAM wd hold\u22128.421 ps pending repair"
   ],
   "reset_source_debt": [

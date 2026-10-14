@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.s81.closed_cseq_controller_boundary_clock_recovery.v1",
+  "status": "MEASURED ORIGINAL CLOSED ROUTE, reference recovery only; published views untouched",
+  "original_route_source": "70eafa55c",
+  "clock": "c_clk",
+  "lib_clock_pin": "cck",
+  "boundary_basis": "Actual optimized immutable first capture cd_q30/cv_q1/crsr[0]1 plus nine n_done output flops traced through actual dedicated BUF/INV paths and verified selected c_clk; no all-register fallback",
+  "base": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_cseqh2_ref-v1-70eafa55c/routes/s81hc_cseqh2_ref_v1_70eafa55c/work/orfs/results/asap7/opentallas_ot_s81_hc_cseq_asap7_ref_s81hc_cseqh2_ref_v1_70eafa55c/base",
+  "db": "6_final.odb",
+  "sdc": "6_final.sdc",
+  "parasitics": "6_final.spef",
+  "method_sha256": "72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad",
+  "tt": {
+    "boundary": {
+      "n": 41,
+      "mean": 136.3,
+      "min": 132.9,
+      "max": 139.7
+    },
+    "all": {
+      "n": 855,
+      "mean": 137.4,
+      "min": 131.9,
+      "max": 144.2
+    }
+  },
+  "ss": {
+    "boundary": {
+      "n": 41,
+      "mean": 180.7,
+      "min": 177.2,
+      "max": 184.2
+    },
+    "all": {
+      "n": 855,
+      "mean": 182.2,
+      "min": 176.3,
+      "max": 189.3
+    }
+  },
+  "ff": {
+    "boundary": {
+      "n": 41,
+      "mean": 106.5,
+      "min": 103.2,
+      "max": 109.8
+    },
+    "all": {
+      "n": 855,
+      "mean": 107.2,
+      "min": 102.1,
+      "max": 114.0
+    }
+  }
+}

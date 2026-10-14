@@ -41,7 +41,40 @@
         "sk_leaf[12]",
         "sk_leaf[13]"
       ],
-      "delivery": "per-corner phi-R at each actual closed child sk pin; successor CTS requests provisional only"
+      "delivery": "per-corner phi-R at each actual closed child sk pin; successor CTS requests provisional only",
+      "auxiliary_ports": [
+        {
+          "parent_pin": "cck",
+          "child_instance": "u_seq",
+          "child_pin": "cck",
+          "clock": "c_clk",
+          "clock_delivery": {
+            "tt": {
+              "phi_minus_R_ps": -136.3,
+              "boundary_mean_ps": 136.3,
+              "min_ps": 132.9,
+              "max_ps": 139.7,
+              "spread_ps": 6.8
+            },
+            "ss": {
+              "phi_minus_R_ps": -180.7,
+              "boundary_mean_ps": 180.7,
+              "min_ps": 177.2,
+              "max_ps": 184.2,
+              "spread_ps": 7.0
+            },
+            "ff": {
+              "phi_minus_R_ps": -106.5,
+              "boundary_mean_ps": 106.5,
+              "min_ps": 103.2,
+              "max_ps": 109.8,
+              "spread_ps": 6.6
+            }
+          },
+          "source_binding_status": "PENDING actual controller clock-source/net relation; boundary R measured on immutable closed child route"
+        }
+      ],
+      "legacy_unused_input": "sk is unused when PHYS_CLK=1; cannot be substituted for fourteen child roots or cck"
     },
     "target_insertion_ps": 250.0,
     "version": 13,
@@ -290,7 +323,32 @@
           "entry_relative_to_phi_ps": -178.8,
           "boundary_spread_ps": 16.0
         }
-      }
+      },
+      "controller_clock_boundary": {
+        "tt": {
+          "phi_minus_R_ps": -136.3,
+          "boundary_mean_ps": 136.3,
+          "min_ps": 132.9,
+          "max_ps": 139.7,
+          "spread_ps": 6.8
+        },
+        "ss": {
+          "phi_minus_R_ps": -180.7,
+          "boundary_mean_ps": 180.7,
+          "min_ps": 177.2,
+          "max_ps": 184.2,
+          "spread_ps": 7.0
+        },
+        "ff": {
+          "phi_minus_R_ps": -106.5,
+          "boundary_mean_ps": 106.5,
+          "min_ps": 103.2,
+          "max_ps": 109.8,
+          "spread_ps": 6.6
+        }
+      },
+      "controller_clock_source_debt": "actual controller source/net relation and per-corner phase distribution remain unqualified",
+      "controller_boundary_registers": 41
     },
     {
       "name": "sp_hc_s/comb/u_cr.u_core",
