@@ -1,0 +1,15 @@
+{
+  "time": "2026-10-13T23:48:36.809098-07:00",
+  "pid": 4119778,
+  "method": "py-spy0.4.2 --nonblocking read-only",
+  "elapsed": "04:02:01",
+  "cpu_percent": 97.4,
+  "rss_kb": 515296,
+  "active_function": "bfs",
+  "line": 3064,
+  "repair_idx": "6573",
+  "plan": "{\"bid\": \"ts_WS_4_3\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WS_4_3\", \"s\"), (\"ectl_WS_4_c\", \"s3\")], ...}",
+  "reach": "403.648",
+  "prior_idx": "6566",
+  "progress": "Advanced7 repair plans since thirdsnapshot; slowfiniteBFS continues. Outputempty, originalsource/job unchanged. No duplicateorcancel."
+}
