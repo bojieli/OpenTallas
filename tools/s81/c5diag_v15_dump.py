@@ -60,6 +60,8 @@ def main():
     chk.update(lane_pins=m.get('lane_pins'), rly_face_reach=dict(n=len(m.get('rly_face_reach', [])),
                                                                  examples=m.get('rly_face_reach', [])[:10]))
     (work / 'plan_check.json').write_text(json.dumps(chk, indent=1, default=str) + '\n')
+    if os.environ.get('OT_S81_DUMP_GLUE'):      # the glue RTL of this die case (kits of re-built glue masters)
+        (work / 'dsfd_glue.sv').write_text(G.glue_rtl(m))
     # stage record for the layer-throughput stream: pin-to-pin register stages per hub bus + the field round trip
     import hub_stage_count as HS
     try:
