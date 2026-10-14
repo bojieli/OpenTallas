@@ -201,7 +201,17 @@
       "view": "physical/ref_tile/s81hc_cseqh2_ref/views/ot_s81_hc_cseq",
       "insertion_sha256": "ce6a5cdde9e5cc896bcc874eaae9d6865be2285caad566535263c28e3570112a",
       "clock_pin_connection": "sk_leaf[3]",
-      "physical_hierarchy": "u_cb.u_seq"
+      "physical_hierarchy": "u_cb.u_seq",
+      "clock_delivery_scope": "measured primary sk only; ancillary cck is a generated related clock whose current library reference is not measured insertion",
+      "ancillary_clock_delivery": {
+        "cck": {
+          "status": "UNMEASURED_FROM_CLOSED_ARTIFACT",
+          "parent_exposed_entry": false,
+          "tt_library_reference_ps": 134.67,
+          "library_reference_is_measured_insertion": false,
+          "required": "measure all clocks in immutable routed artifact before full per-domain timing qualification"
+        }
+      }
     },
     {
       "instance": "u_cr.u_core",
@@ -592,5 +602,6 @@
     "old_total": 12,
     "new_total": 12,
     "scope": "structural stage arithmetic; current named R2 exact/mutant gate still required"
-  }
+  },
+  "area_scope": "routed_leaf_area_um2 and fill describe the historical closed baseline bill only; successor CCF/pad and R6-to-R5 substitution do not yet have a complete closed revised area bill"
 }
