@@ -1,0 +1,44 @@
+{
+  "native_clocks_ps": {
+    "engine": 833.333,
+    "VM": 1111.111
+  },
+  "credits": 10,
+  "storage": {
+    "LD": 16,
+    "NB": 32,
+    "RQ": 16,
+    "OD": 64
+  },
+  "immutable_price_per_quarter": 168,
+  "actual_SPAN1_baseline": {
+    "cycles": 192,
+    "words": 13312,
+    "quarters": 4,
+    "exact": true,
+    "qualified": false
+  },
+  "completion_candidate": {
+    "cycles": 190,
+    "exact": true,
+    "optin": "FASTFIN1 -> FIN_BYPASS1 and ACK_LOOKAHEAD1",
+    "default": "FASTFIN0 preserves closedcore/q8eWR behavior",
+    "edges_removed": 2,
+    "new_physical_views_required": [
+      "CORE FIN_BYPASS1",
+      "WR ACK_LOOKAHEAD1"
+    ],
+    "existing_views_stand": true
+  },
+  "required_integer_cycles_max": 184,
+  "front_candidate_owned": "qfront_native_1row: realone-row S2 plus16slot orderedretirement and CLOSEDgeneralSPAN1 fallback",
+  "front_target": {
+    "fast_S3_edges": 4,
+    "gain_cycles": 6,
+    "projected_cycles": 184,
+    "qualified": false,
+    "general_order_and_NF": "must be exact; no dropped/refused legalmultirows"
+  },
+  "physical": "unassigned newslots, ownroots, M5 and actualperpin clocks/cuts/reach/hold required",
+  "release": "no mainadoption before actualmaster-param exact+mutant/throughput/physical gates"
+}

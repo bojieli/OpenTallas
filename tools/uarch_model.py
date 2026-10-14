@@ -16164,3 +16164,72 @@ def hbm_sfu_fixed_lane_mapper_model():
         clock_rule='new root <=15000 sinks; actual CTS and boundary spread<=80 required',
         physical_closed=False, composed_bench=False, token_rate_credit=0,
         required='frozen closed source lane_id dependency equivalence plus actual16-lane GLU quarter exact/mutant gate')
+
+
+def hbm_quant_ov_sram_row_split_model():
+    """Existing row stages become four clock roots; WQ3 remains unselected."""
+    return {
+        'source_parent': 'ot_hgi_qw_ovw',
+        'successor': 'ot_hgi_qw_ovr plus4 ot_hgi_qw_ovrow',
+        'selected_native_v12': False,
+        'old_route': {'TT_ps': -52.19, 'FF_ps': -20.28, 'DRC': 0,
+                      'boundary_spread_TT_ps': 99.6},
+        'datapath_edges_added': 0,
+        'immutable_price': 168, 'measured_exact_cycles': 184,
+        'measured_words': 3328, 'price_ratio': 184 / 168,
+        'proof': 'WQ3 fullcampaign m0/sk/w3 exact; m1/w1/r2 simulation failures',
+        'state': {'old_measured_flops': 4508,
+                  'move_row_bits': 4 * (512 + 8 + 32 + 120),
+                  'add_enqueued_lane_mask_bits': 64 * 32,
+                  'add_constant_row_strap_bits': 4 * 2,
+                  'predicted_RF_flops': 4508 - 4 * (512 + 8 + 32 + 120) + 64 * 32,
+                  'predicted_ROW_flops': 512 + 8 + 32 + 120 + 2},
+        'leaves': {'RF': {'outline_um': [250.56, 177.12],
+                          'macro': 'one existing SRAM64x512; no ECC change',
+                          'capture_bytes_per_edge': 64,
+                          'output_bits': 512 + 1 + 15 + 3 + 1,
+                          'output_fanout': 4,
+                          'clock': 'own measuredroot, phi-R; <=15k or300/80'},
+                   'ROW': {'replicas': 4, 'outline_um': [43.2, 86.4],
+                           'payload_bytes_per_edge': 64,
+                           'input_bits': 512 + 1 + 15 + 3 + 2,
+                           'output_bits': 512 + 8 + 32 + 120,
+                           'W_data_pin_density_per_um': 512 / 86.4,
+                           'E_all_pin_density_per_um': 672 / 86.4,
+                           'narrow_width_reason': 'same existing data FF serves firstcapture and launch; physical Q/P audit required',
+                           'clock': 'separate root and actualinsertion perrow'}},
+        'parent': {'outline_request_um': [864, 691.2],
+                   'selected': False,
+                   'RF_origin_um': [380.16, 120.96],
+                   'ROW_origin_proposals_um': [[528, 15.12], [582, 15.12],
+                                              [528, 308.88], [582, 308.88]],
+                   'unresolved': ['OVcontrol/head interference and all exactrectangles',
+                                  'assignedpins, PG/OBS reservations, cuts<=.60',
+                                  'eachRF-toROW and ROW-toLGW setup/hold receipt',
+                                  'nativeadoption absent; lgr/lgw M6PORT grants provisional']},
+        'structural_logic': 'metadata mask computed atenqueue; current/next head muxes independent, fire selects afterward',
+    }
+
+
+def hbm_quant_native_completion_front_model():
+    """Actual closed SPAN1 hierarchy; candidate leaves cannot reuse old views."""
+    return {
+        'native_clocks_ps': {'engine': 833.333, 'VM': 1111.111},
+        'credits': 10, 'storage': {'LD': 16, 'NB': 32, 'RQ': 16, 'OD': 64},
+        'immutable_price_per_quarter': 168,
+        'actual_SPAN1_baseline': {'cycles': 192, 'words': 13312, 'quarters': 4,
+                                 'exact': True, 'qualified': False},
+        'completion_candidate': {'cycles': 190, 'exact': True,
+                                 'optin': 'FASTFIN1 -> FIN_BYPASS1 and ACK_LOOKAHEAD1',
+                                 'default': 'FASTFIN0 preserves closedcore/q8eWR behavior',
+                                 'edges_removed': 2,
+                                 'new_physical_views_required': ['CORE FIN_BYPASS1', 'WR ACK_LOOKAHEAD1'],
+                                 'existing_views_stand': True},
+        'required_integer_cycles_max': 184,
+        'front_candidate_owned': 'qfront_native_1row: realone-row S2 plus16slot orderedretirement and CLOSEDgeneralSPAN1 fallback',
+        'front_target': {'fast_S3_edges': 4, 'gain_cycles': 6,
+                         'projected_cycles': 184, 'qualified': False,
+                         'general_order_and_NF': 'must be exact; no dropped/refused legalmultirows'},
+        'physical': 'unassigned newslots, ownroots, M5 and actualperpin clocks/cuts/reach/hold required',
+        'release': 'no mainadoption before actualmaster-param exact+mutant/throughput/physical gates',
+    }

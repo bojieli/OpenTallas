@@ -1,0 +1,111 @@
+{
+ "name": "qw_ovr_ref",
+ "top": "ot_hgi_qw_ovr",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovr.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 250.56,
+  "h": 177.12
+ },
+ "util": 0.52,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_od"
+  }
+ ],
+ "pins": {
+  "W": [
+   "row_y",
+   "wm_v",
+   "wm_sec",
+   "wm_n",
+   "row_rst_n"
+  ],
+  "E": [
+   "d_vo",
+   "d_f",
+   "d_df",
+   "d_y"
+  ],
+  "S": [
+   "c_mw_v",
+   "c_mw_a",
+   "c_mw_sec",
+   "c_mw_n",
+   "c_wg",
+   "d_wf",
+   "d_bad",
+   "clk",
+   "rst_n"
+  ],
+  "N": [
+   "l_wcr0",
+   "l_wcr1",
+   "l_wcr2",
+   "l_wcr3"
+  ]
+ },
+ "refglob": "*yc*",
+ "io_flop_at_pins": {
+  "cols": 12,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 1,
+  "pin_balance": {
+   "group_max": 1
+  }
+ },
+ "structural_change": "Alternative WQ3 SRAM/control successor of failedOVwrite leafTT-52.19/FF-20.28DRC0 boundaryspread99.6ps. Removefour512-bit row outputcopies and640row-valid/slot/sectorregisters ontofour ownclock leaves. Store32-bitlane masks atmetaenqueue; independentlyreadcurrent/nextmetaheads andselectafterread. No added datapath edge; fullWQ3 exact184/168/all3mutants simulationPASS. Actualparentadoption/assignedpins/PG/cut/reach stillopen.",
+ "job": {
+  "owner": "Codex:hbm_quant_sfu_2240",
+  "branch": "codex/hbm-quant-sfu-2240",
+  "tag": "r1",
+  "purpose": "Alternative WQ3 SRAM/control successor of failedOVwrite leafTT-52.19/FF-20.28DRC0 boundaryspread99.6ps. Removefour512-bit row outputcopies and640row-valid/slot/sectorregisters ontofour ownclock leaves. Store32-bitlane masks atmetaenqueue; independentlyreadcurrent/nextmetaheads andselectafterread. No added datapath edge; fullWQ3 exact184/168/all3mutants simulationPASS. Actualparentadoption/assignedpins/PG/cut/reach stillopen.",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ],
+  "views_to": "physical/ref_tile/qw_ovr_ref/views",
+  "record_to": "results/rtl/ref_tile/qw_ovr_ref"
+ },
+ "orfs_vars": {
+  "OT_MEG_MASTER": "ot_sram_1r1w_64x512_m1_r2c2",
+  "OT_MEG_EXPECT": 1,
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ],
+ "pin_ranges": {},
+ "why_floorplan": "cluster centre (216, 259.2), 259.2 x 172.8: W face = gather pin registers of rows 1 / 2 (facing, 71 um), S / N faces west = rows 0 / 3 (<= 440 um), E face = decoder x (dxl W face 43 um away) and the write beat of rows 1 / 2, S / N faces east = the write beat of rows 0 / 3 (<= ~510 um to the write leaves at x 730), S face = decode result y from daq's S pins and the control seam; pins on every track (4,096 gather pins: 0.57 of the W face, <= 0.67 elsewhere); w2: explicit balanced pin placement (pin_balance, a disjoint range for every port): w1 crashed twice at IO placement in the route (PPL-0086: the route's 32-pin ordered groups did not fit the N face; the gate's placement does not form those groups and had passed)",
+ "clock": "spine",
+ "recipe": 2,
+ "slot_change_request": {
+  "parent": "ot_hgi_quant_wide_ov",
+  "selected": false,
+  "outline_um": [
+   250.56,
+   177.12
+  ],
+  "reason": "Realstate partition SRAM/control vsfour existing rowstages; oldOVwrite routefailed, unselectedparent864x691.2."
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "name": "qw_ovrow_ref",
+ "top": "ot_hgi_qw_ovrow",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/qw/ot_hgi_qw_ovrow.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 43.2,
+  "h": 86.4
+ },
+ "util": 0.52,
+ "clock": "spine",
+ "recipe": 2,
+ "macros": [],
+ "pins": {
+  "W": [
+   "i_y"
+  ],
+  "E": [
+   "o_y",
+   "o_v",
+   "o_slot",
+   "o_sec"
+  ],
+  "S": [
+   "i_v",
+   "i_sec",
+   "i_n",
+   "row_j",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "refglob": "*o_y*",
+ "route": {
+  "pd": 0.4,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 1,
+  "pin_balance": {
+   "group_max": 1
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:hbm_quant_sfu_2240",
+  "branch": "codex/hbm-quant-sfu-2240",
+  "tag": "r1",
+  "benched_by": "quant_wide_ov",
+  "extra_paths": [
+   "rtl",
+   "compiler",
+   "physical/hbm_accel_die_views",
+   "physical/asap7_memory_macros",
+   "tools/hgi_unit_tput"
+  ],
+  "views_to": "physical/ref_tile/qw_ovrow_ref/views",
+  "record_to": "results/rtl/ref_tile/qw_ovrow_ref",
+  "purpose": "Oneof4existing OVrow registerstages separatedfrom SRAM/control clockroot. 674statebits:512resultpayload+8valid+32slot+120sector+2constantrowstrap. Exactedge preserved, 32lane sector/mask mapping unchanged; runtime rowstrap permits one sharedbody forrows0..3. New M5 leaf, unselectedWQ3 parent slots/pins/hops open."
+ },
+ "cycles_added": 0,
+ "slot_change_request": {
+  "parent": "ot_hgi_quant_wide_ov",
+  "selected": false,
+  "replicas": 4,
+  "outline_um": [
+   43.2,
+   86.4
+  ],
+  "origin_proposals_um": [
+   [
+    528,
+    15.12
+   ],
+   [
+    582,
+    15.12
+   ],
+   [
+    528,
+    308.88
+   ],
+   [
+    582,
+    308.88
+   ]
+  ],
+  "reason": "PreserveWCY/WV/WS/WSEC outputedge while splittingclockroot; placeabove/belowRF beforeexistingLGWrowcopies. Actualguides/clock/pins/cut/reachpending. 10.8um provisionalhalo; OVcontrol/head interference and all assignedgeometry stillunverified."
+ },
+ "structural_change": "Existing wc_y/wv1/ws1/wsec1 moved to4clockseparatedrealrowleaves; no new payloadedge, no arithmeticchange. First rawpayload capture is existingo_yFF; narrow43.2um supports bothinput/outputpinregistration.",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true
+}
