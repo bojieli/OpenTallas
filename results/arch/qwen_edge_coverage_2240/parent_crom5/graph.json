@@ -223,8 +223,10 @@
     "RSQ": 64,
     "reduce_region": 8,
     "reduce_tail": 1,
-    "total": 356,
-    "status": "typed candidate census pending; no inherited CLOSED clock/fanout/phase claim"
+    "total": 373,
+    "status": "356 consumer/cache/stage-control entries plus17 remaining native59 retained-state roots, actual census/phase remains pending",
+    "native59_station": 1,
+    "native59_program_bank": 16
   },
   "leaf_requests": {
     "cbuf_each_outline": [
@@ -244,7 +246,29 @@
     "owner": "qwen_native_dispatch + qwen_small + native_service_glue",
     "ABI": "epoch16/stage6/token18/position13/segment6 TAG59",
     "ready_reverse": "scalarready1/stage6/position18 via IS1",
-    "binding": "UNBOUND to this full random-op SU fixture; actual38-stage program and descriptor lifecycle proof required"
+    "binding": "UNBOUND to this full random-op SU fixture; actual38-stage program and descriptor lifecycle proof required",
+    "source_branch": "codex/native8-seq-census-1014",
+    "source_commit": "99c817714",
+    "helper_commit": "c0e0fc0c4",
+    "module": "rtl/physical/ot_qfd_seq_su_bi_native8_tag59_candidate.sv",
+    "partition": "rtl/physical/ot_qfd_native59_retained_partition_candidate.sv",
+    "evidence": "results/arch/native8_seq_census_1014/native59_c0e0fc0c4/evidence.json",
+    "retained_state_census": {
+      "control": 12606,
+      "station": 3536,
+      "program_banks": 16,
+      "program_bank_each": 4160,
+      "total_generic_FF": 82702,
+      "roots": 18,
+      "physical_qualification": false
+    },
+    "native_transport": {
+      "ingress_peer_bits": 573,
+      "peer_return_bits": 573,
+      "local_return_bits": 576,
+      "source_owner": "qwen_small"
+    },
+    "TAG32_views": "preserved; no alias"
   },
   "live_evidence": {
     "full_original_reducer": [
