@@ -23,12 +23,29 @@ module tb_s81ph_gather_cl;
     localparam integer NC [0:5] = '{10, 11, 11, 11, 11, 10};
     reg [760:0] tp [0:11];
     reg [511:0] f_vm = 0; reg [84:0] c_cmd = 0; reg [11:0] f_cd = 0;
+    `ifdef S81PH_GTH_CONTROL_STRIP
+    // Exact flat semantic reference observes the same priced completion transport.
+    // tc transport is checked against the flat output delayed exactly one cycle.
+    reg [84:0] cmd_reference = 0;
+    always @(posedge ck) cmd_reference <= c_cmd;
+    reg [11:0] fcd_reference = 0;
+    reg [159:0] tf_control = 0;
+    always @(posedge ckv) fcd_reference <= f_cd;
+    always @(posedge ck) tf_control <= tf[6943:6784];
+`else
+    wire [84:0] cmd_reference = c_cmd;
+    wire [11:0] fcd_reference = f_cd;
+    wire [159:0] tf_control = tf[6943:6784];
+`endif
     wire [6946:0] tf, tc; wire [8:0] df, dc; wire [1:0] sf, sc; wire [10:0] xf, xc;
     dsfd_sp_gather_c u_f (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_vm(f_vm), .t_capture(tf),
         .rW0(tp[0][691:0]), .rW1(tp[1][760:0]), .rW2(tp[2][760:0]), .rW3(tp[3][760:0]), .rW4(tp[4][760:0]), .rW5(tp[5][691:0]),
         .rE0(tp[6][691:0]), .rE1(tp[7][760:0]), .rE2(tp[8][760:0]), .rE3(tp[9][760:0]), .rE4(tp[10][760:0]), .rE5(tp[11][691:0]),
-        .c_cmd(c_cmd), .c_done(df), .c_st(sf), .f_cd(f_cd), .t_xgo(xf));
+        .c_cmd(cmd_reference), .c_done(df), .c_st(sf), .f_cd(fcd_reference), .t_xgo(xf));
     dsfd_sp_gather_c_cl u_c (
+`ifdef S81PH_GTH_CONTROL_STRIP
+        .ck_r({ckv, {132{ck}}}),
+`endif
 `ifdef S81PH_GTH_DIE_CLOCKS
         .ck_l({32{ck}}),
 `endif
@@ -92,10 +109,20 @@ module tb_s81ph_gather_cl;
                     else if (frow[{k[6:0], tc[53*k + 33 +: 19], 1'b0}] !== tc[53*k + 1 +: 32]) bad_before_fault = bad_before_fault + 1;
                 end
             end
-            if (tf[6943:6784] !== tc[6943:6784] || xf !== xc || df !== dc || sf !== sc) begin
+            if (((!early_cmd || n_ph!=0) && (tf_control !== tc[6943:6784] || xf !== xc)) || df !== dc || sf !== sc) begin
                 ctl_mism = ctl_mism + 1; if (first_bad < 0) first_bad = cyc;
-                if (ctl_mism < 6) $display("CTL MISMATCH cycle %0d: lane %b xgo %h/%h done %h/%h st %b/%b", cyc, tf[6943:6784] !== tc[6943:6784], xf, xc, df, dc, sf, sc);
+                if (ctl_mism < 6) $display("CTL MISMATCH cycle %0d: lane %b xgo %h/%h done %h/%h st %b/%b", cyc, tf_control !== tc[6943:6784], xf, xc, df, dc, sf, sc);
             end
+            `ifdef S81PH_GTH_CONTROL_STRIP
+            if(xc[10] && {u_c.rs_a[35],u_c.rs_a[30],u_c.rs_a[25],u_c.rs_a[20],u_c.rs_a[15],u_c.rs_a[10],u_c.rs_a[5],u_c.rs_a[0]} !== 8'hFF)begin
+                ready_errors=ready_errors+1;$display("EARLY ISSUE before actual bottom rso, cycle %0d",cyc);
+            end
+`endif
+            if(early_cmd && n_ph==0)begin
+                if(xc[10] && xc[9:0]!==ph)$fatal(1,"startup wrong phase tag");
+                if(tc[6784] && tc[6785+49 +: 10]!==ph)$fatal(1,"startup wrong control payload");
+            end
+            if(tf[6784])ctl_words_f=ctl_words_f+1;
             if (xc[10]) n_xgo = n_xgo + 1;
             if (dc[8]) n_done = n_done + 1;
             if (tc[6784]) n_ctl = n_ctl + 1;
@@ -103,7 +130,8 @@ module tb_s81ph_gather_cl;
         end
     end
     // ---------------- driver
-    integer fd, rc, root, n_ph = 0, quiet;
+    integer fd, rc, root, n_ph = 0, quiet, restart = 0, early_cmd = 0, reset_phase = 0;
+    integer ready_errors = 0, early_accepted = 0, ctl_words_f = 0;
     reg [8*8-1:0] cmd; reg [63:0] a0, a1, a2, a3, a4;
     reg [NR-1:0] n_v; reg [31:0] n_t [0:NR-1]; reg [31:0] n_d [0:NR-1]; reg [NR-1:0] n_e;
     reg [9:0] ph; reg tgl = 0;
@@ -128,9 +156,23 @@ module tb_s81ph_gather_cl;
         if (!$value$plusargs("STIM=%s", stim)) $fatal(1, "+STIM");
         if (!$value$plusargs("EXPECT=%d", expect_)) expect_ = 0;
         if (!$value$plusargs("NEED=%d", need)) need = 0;
+        if (!$value$plusargs("RESTART=%d", restart)) restart = 0;
+        if (!$value$plusargs("EARLY_CMD=%d", early_cmd)) early_cmd=0;
+        if (!$value$plusargs("RESET_PHASE=%d", reset_phase)) reset_phase=0;
         fd = $fopen(stim, "r");
         if (fd == 0) $fatal(1, "cannot open %s", stim);
-        idle(10); rst = 1; rsv = 1; idle(80); armed = 1;
+        if(early_cmd)begin
+            rc=$fscanf(fd,"%s %h",cmd,a0);if(cmd!="P")$fatal(1,"early command needs initial phase");ph=a0[9:0];
+            $fclose(fd);fd=$fopen(stim,"r");
+        end
+        idle(10);#reset_phase;rst=1;rsv=1;
+        if(early_cmd)begin
+            if(early_cmd>1)begin repeat(early_cmd-1)@(posedge ck);#0.1;end
+            c_cmd={1'b1,1'b0,66'd0,ph,7'd0};@(posedge ck);#0.1;c_cmd=0;
+            early_accepted=1;
+            wait(u_c.u_ctl.c_rdy); // public serial phase input starts only after its FIFO can accept
+        end else idle(80);
+        armed=1;
         while (!$feof(fd)) begin
             rc = $fscanf(fd, "%s", cmd);
             if (rc != 1) break;
@@ -139,9 +181,14 @@ module tb_s81ph_gather_cl;
                 @(negedge ckv);
                 f_vm = 0; f_vm[0] = 1; f_vm[159:1] = {100'd0, ph, 47'd0 + n_ph, 2'b00};
                 @(negedge ckv); f_vm[0] = 0;
-                idle(30);
-                c_cmd = {1'b1, 1'b0, 66'd0, ph, n_ph[6:0]}; @(negedge ck); c_cmd = 0;
-                idle(40);
+                if(early_cmd && n_ph==0)begin
+                    while(!xc[10])@(negedge ck); // rows launch at the candidate's real start
+                    @(negedge ck);
+                end else begin
+                    idle(30);
+                    c_cmd = {1'b1, 1'b0, 66'd0, ph, n_ph[6:0]}; @(negedge ck); c_cmd = 0;
+                    idle(40);
+                end
             end else if (cmd == "C") begin
                 rc = $fscanf(fd, "%h %h %h %h %h", a0, a1, a2, a3, a4);
                 if (a0 != 0) begin flush; if (a0 > 1) idle(a0 - 1); end
@@ -151,15 +198,24 @@ module tb_s81ph_gather_cl;
                 f_cd = {~tgl, 1'b0, ph}; tgl = ~tgl;            // the capture's phase-drained event
                 idle(40);
                 n_ph = n_ph + 1;
+                if (restart && expect_ == 0 && n_ph % 2 == 0) begin
+                    // Restart only at the documented drained boundary; clear both domains.
+                    // Subsequent field commands/rows must still match after the priced rc6 release.
+                    armed=0;rst=0;rsv=0;f_vm=0;c_cmd=0;f_cd=0;tgl=0;
+                    idle(10);rst=1;rsv=1;idle(80);armed=1;
+                    $display("RESTART drained boundary after phase %0d",n_ph);
+                end
+
             end
         end
         idle(300); status_check;
+        $display("READY_SUMMARY errors=%0d early_command=%0d ctl_words_flat=%0d",ready_errors,early_accepted,ctl_words_f);
         $display("SUMMARY phases=%0d rows_flat=%0d rows_cluster=%0d row_mismatch=%0d ctl_mismatch=%0d status_mismatch=%0d first=%0d roots_with_rows=%0d xgo=%0d done=%0d ctl_words=%0d busy_seen=%0d fault_flat=%b fault_cluster=%b bad_before_fault=%0d shift=c+k-2",
                  n_ph, rows_f, rows_c, row_mism, ctl_mism, st_mism, first_bad, $countones(got), n_xgo, n_done, n_ctl, busy_seen, tf[6944], tc[6944], bad_before_fault);
-        if (need != 0 && !($countones(got) == NR && n_xgo > 0 && n_done > 0 && busy_seen))
+        if (need != 0 && !($countones(got) == NR && n_xgo == n_ph && n_done == n_ph && n_ctl >= n_ph && n_ph > 0 && busy_seen))
             $display("RESULT REFUSED coverage: roots %0d/128 xgo %0d done %0d busy %0d", $countones(got), n_xgo, n_done, busy_seen);
-        else if (expect_ == 0 && row_mism == 0 && ctl_mism == 0 && st_mism == 0 && rows_f == rows_c && rows_f > 0 && !tf[6944] && !tc[6944]) $display("RESULT PASS");
-        else if (expect_ == 1 && tc[6944] && !tf[6944] && bad_before_fault == 0 && ctl_mism == 0) $display("RESULT PASS");
+        else if (expect_ == 0 && row_mism == 0 && ctl_mism == 0 && st_mism == 0 && ready_errors == 0 && ctl_words_f == n_ctl && rows_f == rows_c && rows_f > 0 && !tf[6944] && !tc[6944]) $display("RESULT PASS");
+        else if (expect_ == 1 && ready_errors == 0 && tc[6944] && !tf[6944] && bad_before_fault == 0 && ctl_mism == 0) $display("RESULT PASS");
         else $display("RESULT FAIL");
         $finish;
     end

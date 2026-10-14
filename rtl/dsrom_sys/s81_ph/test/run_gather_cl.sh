@@ -27,7 +27,7 @@ FILES="$SRC/rtl/lib/ot_reset_sync.sv $SRC/rtl/lib/ot_async_fifo.sv $SRC/rtl/comm
  $C/ot_s81_engine_adapter.sv $C/ot_s81_slab_ep.sv
  $P/ot_s81ph_ret_root_p.sv $P/ot_s81ph_root_blk.sv $P/ot_s81ph_root_tile.sv $P/ot_s81ph_gather.sv $P/dsfd_sp_gather.sv
  $P/ctrl_c/dsfd_sp_gather_c.sv
- $P/ot_s81ph_ret_root_s.sv $P/ot_s81ph_root_leaf.sv $P/dsfd_gth_ctl.sv $P/ctrl_c/dsfd_sp_gather_c_cl.sv
+ $P/ot_s81ph_ret_root_s.sv $P/ot_s81ph_root_leaf.sv $P/dsfd_gth_ctl.sv $P/dsfd_gth_strip.sv $SRC/rtl/dsrom_sys/s81_glue/ot_s81_rly.sv $SRC/rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv $P/ctrl_c/dsfd_sp_gather_c_cl.sv
  $M/ot_sram_1r1w_128x66_m1_r2c2/ot_sram_1r1w_128x66_m1_r2c2.v $M/ot_sram_1r1w_256x34_m2_r2c2/ot_sram_1r1w_256x34_m2_r2c2.v
  $M/ot_sram_1r1w_512x34_m4_r2c2/ot_sram_1r1w_512x34_m4_r2c2.v
  $P/test/tb_s81ph_gather_cl.sv"
@@ -35,6 +35,7 @@ python3 $SRC/tools/s81_ph/gen_gather_cl.py --check || { echo "GATHER_CL_GATE FAI
 sha256sum $FILES $P/test/gen_gather_cl_stim.py $P/test/gen_root_stim.py $TRACE > $OUT/sources.sha256
 G="python3 $P/test/gen_gather_cl_stim.py"
 SS=${SS:-8}; SDEF="+define+S81PH_GTH_S=$SS"
+if [ "${CONTROL_STRIP:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_CONTROL_STRIP"; fi
 if [ "${DIE_CLOCKS:-0}" = 1 ]; then SDEF="$SDEF +define+S81PH_GTH_DIE_CLOCKS"; fi
 $G stress 3 $OUT/stress.txt; $G ovf 3 $OUT/ovf.txt --S $SS; $G refuse 3 $OUT/refuse.txt
 REAL=""
@@ -44,14 +45,14 @@ build() {
       +define+S81PH_GTH_CL_NAME=dsfd_sp_gather_c_cl $SDEF $LOCAL_DEF --top-module tb_s81ph_gather_cl $2 --Mdir $OUT/obj_$1 -o sim $FILES > $OUT/build_$1.log 2>&1
 }
 run() { # mode case expect need want
-  $OUT/obj_$1/sim +STIM=$OUT/$2.txt +EXPECT=$3 +NEED=$4 > $OUT/run_$1_$2.log 2>&1
+  $OUT/obj_$1/sim +STIM=$OUT/$2.txt +EXPECT=$3 +NEED=$4 +RESTART=${RESTART:-0} +EARLY_CMD=${EARLY_CMD:-0} +RESET_PHASE=${RESET_PHASE:-0} > $OUT/run_$1_$2.log 2>&1
   res=$(grep -h '^RESULT' $OUT/run_$1_$2.log | tail -1)
   [ -z "$res" ] && res="RESULT FAIL (aborted: $(grep -h -m1 -i 'error' $OUT/run_$1_$2.log $OUT/build_$1.log | cut -c1-120))"
   echo "$1 $2 expect=$3 need=$4 want=$5: $res | $(grep -h '^SUMMARY' $OUT/run_$1_$2.log | tail -1)"
 }
 for m in $MODES; do
   case $m in base) X="";; lane) X="+define+S81PH_GTH_CL_MUT_LANE";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
-    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; esac
+    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; decision) X="+define+S81PH_MUT_DECISION_PHASE";; own_co) X="+define+S81PH_MUT_OWN_CO_PHASE";; early) X="+define+S81PH_GTH_MUT_EARLYSTART";; esac
   ( build $m "$X" ) &
 done
 wait
@@ -62,6 +63,7 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
       base) for c in $REAL; do run base $c 0 1 PASS & done; run base stress 0 1 PASS & run base ovf 1 0 PASS &
             run base refuse 0 1 REFUSED & ;;
       ovf)  run ovf ovf 1 0 FAIL & ;;
+      early) run early stress 0 1 FAIL & ;;
       lane|nofwd|heap|decision|own_co) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
       *)    run $m $FIRST 0 0 FAIL & ;;
     esac
