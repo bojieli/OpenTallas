@@ -23,7 +23,7 @@
     "rtl/dsrom_sys/engram/tiles/ot_engc_pbank.sv": "e6956a55e008f12d2df42bd1d44b92a78dbe26378405bbfb2977dc63709b5194",
     "rtl/dsrom_sys/engram/dsfd_engram_c.sv": "906adc894c9764ac7f0821d8f2db98177bb1e0c795214ce1f87fc7751ccdafc3",
     "physical/s81_engc_tiles/compose/ck_entry_place.tcl": "cfdd4431e90128109b70ae6009cba14204ada726a1ac75071e716ccfbeb0c06f",
-    "rtl/dsrom_sys/engram/rso_candidate/manifest.json": "1171a9dbed5d3cbe5b93d09ad67994c6b179f357df672a603080cebc2ab62d21",
+    "rtl/dsrom_sys/engram/rso_candidate/manifest.json": "58832054a93808d610d26bb35551e22e26e66b01d5376ab9b0b3606824a1d720",
     "rtl/dsrom_sys/engram/rso_candidate/ot_engc_pbank_rso_xt.sv": "9e95aee176bc7466b5d8cdde1b16e0231fd0aa0e70ef76533b099129af51bbdc"
   },
   "source_only": true,
@@ -5938,5 +5938,61 @@
     "extra_child_flops": 14,
     "native_slots": null,
     "closed_views": null
-  }
+  },
+  "standalone_closed_view_candidates": {
+    "ot_engc_t_io_rso_r1": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_io_rso_r1",
+      "source_commit": "d097bf87c003a0c96d5aeff0eab800fd83fac7ac",
+      "file_sha256": {
+        "ot_engc_t_io_rso_r1.lef": "f70c4540ac94a961312a02212096d206ffc830f06106a229c2a3c9fa334626db",
+        "ot_engc_t_io_rso_r1_ff.lib": "cbd302f143cc35085cc6fc45e5f9675903a384432a8928fb8c17bbd693ebe477",
+        "ot_engc_t_io_rso_r1_ss.lib": "f8ee1537bb9c327513deffd5057402d68b6fbce362ed14a8abbbe28013ff46dc",
+        "ot_engc_t_io_rso_r1_tt.lib": "349d3dec259d22516aaa4158b896e5f761a29c97862f85271c4960d060b9d8af"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    },
+    "ot_engc_t_win_rso": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_win_rso",
+      "source_commit": "d097bf87c003a0c96d5aeff0eab800fd83fac7ac",
+      "file_sha256": {
+        "ot_engc_t_win_rso.lef": "3ab7395e6d309d01f972027b08341a45931fe6742c590a796de638a3920624b0",
+        "ot_engc_t_win_rso_ff.lib": "fe64022793d9871779d408ae240dafe22039f737e39fc1c8e5769a4ca4041d00",
+        "ot_engc_t_win_rso_ss.lib": "f8a75001bcf6b079be29059705bc2f5f22986c3ec0bbc0acd1d9b3a86dd84271",
+        "ot_engc_t_win_rso_tt.lib": "d247e4b13c2e0182ff6e96f28d74588d139b79b28efccb1e0a585f48bb19d0a2"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    },
+    "ot_engc_t_ws_rso": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_ws_rso",
+      "source_commit": "d097bf87c003a0c96d5aeff0eab800fd83fac7ac",
+      "file_sha256": {
+        "ot_engc_t_ws_rso.lef": "30438db8979e56b76614571b38c011e14f1e3bc78e58280dc4ccf917417df3f3",
+        "ot_engc_t_ws_rso_ff.lib": "5457ca62c591ee865fe1a71644b8ba9b1a0de672e53b1e9f831c3e8f2edd21f4",
+        "ot_engc_t_ws_rso_ss.lib": "c7c1d399d36b2b8d02a7d2300c27ece46bdf82a21a636eee3ba0fb9e2233e656",
+        "ot_engc_t_ws_rso_tt.lib": "4609dc8c309d33488fe25ed2897ebb8afc5de766984d09906fcca9c812ff2f2c"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    },
+    "ot_engc_t_pbc_rso": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_pbc_rso",
+      "source_commit": "d097bf87c003a0c96d5aeff0eab800fd83fac7ac",
+      "file_sha256": {
+        "ot_engc_t_pbc_rso.lef": "68cf438be017df2e4581b9a6f042367e72450e1cd4787845927ce4abdbadefea",
+        "ot_engc_t_pbc_rso_ff.lib": "25932d2b4199780a333b183389b98e6557fa7a5e2f6c43022df1b08f1111c83c",
+        "ot_engc_t_pbc_rso_ss.lib": "aa59077458880174663d28fe82a2556bafe83dbb1b2c82320c90ae6d7ae8efa4",
+        "ot_engc_t_pbc_rso_tt.lib": "5f9c5639acd437743fe93ff4ca0e58ff2f8e951cf1916a145a76f8624b38deec"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    }
+  },
+  "physical_binding_open": [
+    "ot_engc_t_pbb_rso_xt unclosed",
+    "parent ordinary ownstate has no native leaf slots",
+    "native actual clock/reset producer physical driver/phase proof",
+    "native per-bit slot pin assignment and loaded paired endpoint closure"
+  ]
 }

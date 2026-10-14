@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.s81.engram.rso_source_candidate.v1",
   "admission": false,
-  "reason": "New rso master variants have no closed physical views, actual rso pins or native source/clock binding. Existing closed masters remain unchanged.",
+  "reason": "Four distinct RSO masters have independent standalone source0 TT/FF/DRC closure and strict abstract views; distinct PBB_XT and parent remain unclosed. Native source/driver/phase, actual slot pins and ownstate leaf binding remain open.",
   "parent": "dsfd_engram_c_rso",
   "output": "rso = AND14 explicit release_states",
   "original_source_sha256": {
@@ -96,5 +96,55 @@
     "capture_edge": "same edge as original wa_p/woh_p",
     "purpose": "dedicated near-port output copies without SRAM fanout",
     "admission": false
+  },
+  "standalone_closed_view_candidates": {
+    "ot_engc_t_io_rso_r1": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_io_rso_r1",
+      "source_commit": "d097bf87c003a0c96d5aeff0eab800fd83fac7ac",
+      "file_sha256": {
+        "ot_engc_t_io_rso_r1.lef": "f70c4540ac94a961312a02212096d206ffc830f06106a229c2a3c9fa334626db",
+        "ot_engc_t_io_rso_r1_ff.lib": "cbd302f143cc35085cc6fc45e5f9675903a384432a8928fb8c17bbd693ebe477",
+        "ot_engc_t_io_rso_r1_ss.lib": "f8ee1537bb9c327513deffd5057402d68b6fbce362ed14a8abbbe28013ff46dc",
+        "ot_engc_t_io_rso_r1_tt.lib": "349d3dec259d22516aaa4158b896e5f761a29c97862f85271c4960d060b9d8af"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    },
+    "ot_engc_t_win_rso": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_win_rso",
+      "source_commit": "d097bf87c003a0c96d5aeff0eab800fd83fac7ac",
+      "file_sha256": {
+        "ot_engc_t_win_rso.lef": "3ab7395e6d309d01f972027b08341a45931fe6742c590a796de638a3920624b0",
+        "ot_engc_t_win_rso_ff.lib": "fe64022793d9871779d408ae240dafe22039f737e39fc1c8e5769a4ca4041d00",
+        "ot_engc_t_win_rso_ss.lib": "f8a75001bcf6b079be29059705bc2f5f22986c3ec0bbc0acd1d9b3a86dd84271",
+        "ot_engc_t_win_rso_tt.lib": "d247e4b13c2e0182ff6e96f28d74588d139b79b28efccb1e0a585f48bb19d0a2"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    },
+    "ot_engc_t_ws_rso": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_ws_rso",
+      "source_commit": "d097bf87c003a0c96d5aeff0eab800fd83fac7ac",
+      "file_sha256": {
+        "ot_engc_t_ws_rso.lef": "30438db8979e56b76614571b38c011e14f1e3bc78e58280dc4ccf917417df3f3",
+        "ot_engc_t_ws_rso_ff.lib": "5457ca62c591ee865fe1a71644b8ba9b1a0de672e53b1e9f831c3e8f2edd21f4",
+        "ot_engc_t_ws_rso_ss.lib": "c7c1d399d36b2b8d02a7d2300c27ece46bdf82a21a636eee3ba0fb9e2233e656",
+        "ot_engc_t_ws_rso_tt.lib": "4609dc8c309d33488fe25ed2897ebb8afc5de766984d09906fcca9c812ff2f2c"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    },
+    "ot_engc_t_pbc_rso": {
+      "view_directory": "physical/s81_engc_tiles/rso_views/ot_engc_t_pbc_rso",
+      "source_commit": "d097bf87c003a0c96d5aeff0eab800fd83fac7ac",
+      "file_sha256": {
+        "ot_engc_t_pbc_rso.lef": "68cf438be017df2e4581b9a6f042367e72450e1cd4787845927ce4abdbadefea",
+        "ot_engc_t_pbc_rso_ff.lib": "25932d2b4199780a333b183389b98e6557fa7a5e2f6c43022df1b08f1111c83c",
+        "ot_engc_t_pbc_rso_ss.lib": "aa59077458880174663d28fe82a2556bafe83dbb1b2c82320c90ae6d7ae8efa4",
+        "ot_engc_t_pbc_rso_tt.lib": "5f9c5639acd437743fe93ff4ca0e58ff2f8e951cf1916a145a76f8624b38deec"
+      },
+      "strict_pocket_lint": "PASS",
+      "native_admission": false
+    }
   }
 }
