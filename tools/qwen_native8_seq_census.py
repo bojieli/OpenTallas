@@ -105,7 +105,10 @@ def main():
     assert count == 1
     profile = a.out / 'native8_profile.sv'
     profile.write_text(specialized)
+    icg = a.out / 'icg_abi_only.v'
+    icg.write_text('(* blackbox *) module ICGx1_ASAP7_75t_R(input CLK,ENA,SE,output GCLK); endmodule\n')
     script = 'read_verilog -defer -sv -D SYNTHESIS ' + ' '.join([str(profile), *SOURCES[1:]]) + '\n'
+    script += 'read_verilog -lib ' + str(icg) + '\n'
     script += 'read_verilog -lib -sv ' + MACRO + '\n'
     script += 'hierarchy -check -top ' + TOP + '\n'
     script += 'proc\nopt\nmemory_dff\nmemory_collect\nopt_clean\n'
@@ -123,6 +126,8 @@ def main():
               'census_script_sha256': sha(__file__), 'yosys_script_sha256': sha(yp),
               'analysis_profile_sha256': sha(profile),
               'analysis_profile_transform': 'Only PSRAM parameter default specialized; all original body bytes and other native8 defaults preserved.',
+              'icg_abi_only_sha256': sha(icg),
+              'icg_characterized': False,
               'retained': census(a.out / 'retained.json'),
               'mapped': census(a.out / 'mapped.json'),
               'physical_qualified': False, 'slots_assigned': False,
