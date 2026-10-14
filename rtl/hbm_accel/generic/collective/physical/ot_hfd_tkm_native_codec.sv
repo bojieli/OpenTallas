@@ -52,8 +52,9 @@ endmodule
 // that ready/credit binding is pending for the native40/545/8-slot interface.
 module ot_hfd_tkm_write_tx(
  input wire clk,rst_n,w_v,input wire[39:0]w_addr,input wire[15:0]w_mask,input wire[511:0]w_data,
- output wire w_rdy,output reg[544:0]packet,input wire packet_rdy
+ output wire w_rdy,output wire[544:0]packet,input wire packet_rdy
 );
+ reg packet_valid;reg[543:0]packet_payload;assign packet={packet_valid,packet_payload};
  reg[39:0]addr[0:1];reg[15:0]mask[0:1];reg[511:0]data[0:1];
  reg[1:0]count;reg head,tail,header_sent;
  wire take_in=w_v&&w_rdy;
@@ -61,15 +62,20 @@ module ot_hfd_tkm_write_tx(
  wire retire=take_out&&header_sent;
  assign w_rdy=count<2;
  always @(posedge clk)if(take_in)begin addr[tail]<=w_addr;mask[tail]<=w_mask;data[tail]<=w_data;end
+ always @(posedge clk)if(take_out)begin
+  if(!header_sent)packet_payload<={1'b1,31'd0,456'd0,mask[head],addr[head]};
+  else packet_payload<={1'b0,31'd0,data[head]};
+ end
  always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin packet<=0;count<=0;head<=0;tail<=0;header_sent<=0;end
+  if(!rst_n)begin packet_valid<=0;count<=0;head<=0;tail<=0;header_sent<=0;end
   else begin
    count<=count+2'(take_in)-2'(retire);
    if(take_in)tail<=!tail;
-   if(packet[544]&&packet_rdy)packet<=0;
+   if(packet_valid&&packet_rdy)packet_valid<=0;
    if(take_out)begin
-    if(!header_sent)begin packet<={1'b1,1'b1,31'd0,456'd0,mask[head],addr[head]};header_sent<=1;end
-    else begin packet<={1'b1,1'b0,31'd0,data[head]};header_sent<=0;head<=!head;end
+    packet_valid<=1;
+    if(!header_sent)begin header_sent<=1;end
+    else begin header_sent<=0;head<=!head;end
    end
   end
 

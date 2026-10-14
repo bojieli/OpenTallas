@@ -65,5 +65,21 @@
     "Bind assigned slot pins and clock entries",
     "Run exact+mutants at source commit and actual fullshape native price gate",
     "Measured CTS+TT/FF/DRC0+childlint for new leaves"
-  ]
+  ],
+  "credit_completion": {
+    "status": "PROPOSED_NOT_ADOPTED",
+    "word": "f_cfg {commit0,valid0,index6=62,data32}",
+    "data_fields": {
+      "3:0": "DEL reservation bitmap (all native545 DEL payload bits preserved)",
+      "7:4": "whole-write lease grant count; one lease covers header+data",
+      "8": "one actual sink-accepted write acknowledgement"
+    },
+    "queue_capacity": 8,
+    "startup": "After six configuration words and local reset release, publish initial grant8 with admission closed until consumed; serialize next configuration only after prior actual-sink-ACK completion. Credit events must not be dropped under config mux.",
+    "done": "wait every admitted write acknowledged at real sink, including entries still in codec TX and native flight; never local w_rdy alone",
+    "source": "rtl/hbm_accel/generic/collective/physical/ot_hfd_tkm_native_output_leaf.sv",
+    "destination": "ot_hfd_tkm_write_credit_rx in ot_hfd_tkm_native_codec.sv",
+    "bench": "NATIVE_OUTPUT exact 16 O/R writes,256words with full40b carry/masks/negativezero + IDmutant; native credit64writes1024words + earlycompletionmutant",
+    "physical": "Packer and source encoder/lease controller share one delivered own-flop root. Native control40 captured; internal ready never crosses hard boundary. Requires measuredCTS and actual price/clock/die binding."
+  }
 }
