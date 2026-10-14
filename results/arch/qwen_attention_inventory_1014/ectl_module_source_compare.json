@@ -1,0 +1,74 @@
+[
+  {
+    "module": "ot_qkd_ectl_part",
+    "historical7eb_module_sha256": "0c361292a14b0e1a568fba528915ead49808967c53391186bfac93ed786aee85",
+    "native_f460_module_sha256": "37b307a19b3e85bac24815b780ee728e47a45a6462c0154655271c96428f7ac7",
+    "equal": false,
+    "native_compile_defines": [
+      "KVD_HEADS=1",
+      "KVD_Q_FP32=1",
+      "KVD_QK_ONLY=1",
+      "KVD_ECTL3"
+    ]
+  },
+  {
+    "module": "qkd_ectl_a",
+    "historical7eb_module_sha256": "6732551283a9a454c38d6c13d76c499bef41e2285c5f72ee0f96a390d1dcb505",
+    "native_f460_module_sha256": "6732551283a9a454c38d6c13d76c499bef41e2285c5f72ee0f96a390d1dcb505",
+    "equal": true,
+    "native_compile_defines": [
+      "KVD_HEADS=1",
+      "KVD_Q_FP32=1",
+      "KVD_QK_ONLY=1",
+      "KVD_ECTL3"
+    ]
+  },
+  {
+    "module": "qkd_ectl_b",
+    "historical7eb_module_sha256": "3fab2e3e75cebaad0c46ffc6f78067b189c57e43016c7daba2fc704d53ecffd7",
+    "native_f460_module_sha256": "3fab2e3e75cebaad0c46ffc6f78067b189c57e43016c7daba2fc704d53ecffd7",
+    "equal": true,
+    "native_compile_defines": [
+      "KVD_HEADS=1",
+      "KVD_Q_FP32=1",
+      "KVD_QK_ONLY=1",
+      "KVD_ECTL3"
+    ]
+  },
+  {
+    "module": "qkd_ectl_c",
+    "historical7eb_module_sha256": "76c3e7740ff3a3cc8d6947191b5eb41e8a868bf95119a8c3360046b217537d6a",
+    "native_f460_module_sha256": "76c3e7740ff3a3cc8d6947191b5eb41e8a868bf95119a8c3360046b217537d6a",
+    "equal": true,
+    "native_compile_defines": [
+      "KVD_HEADS=1",
+      "KVD_Q_FP32=1",
+      "KVD_QK_ONLY=1",
+      "KVD_ECTL3"
+    ]
+  },
+  {
+    "module": "qkd_ectl3",
+    "historical7eb_module_sha256": "cb6bf1b80ead01d2d2f1a161316c2d72f52cb7e12caf47a8420fc9764431627d",
+    "native_f460_module_sha256": "cb6bf1b80ead01d2d2f1a161316c2d72f52cb7e12caf47a8420fc9764431627d",
+    "equal": true,
+    "native_compile_defines": [
+      "KVD_HEADS=1",
+      "KVD_Q_FP32=1",
+      "KVD_QK_ONLY=1",
+      "KVD_ECTL3"
+    ]
+  },
+  {
+    "module": "ot_qkd_ectl3_h",
+    "historical7eb_module_sha256": "cb524e54badb3cc7aeb0befe48d2663b47333b3734595521dd247b9403792473",
+    "native_f460_module_sha256": "cb524e54badb3cc7aeb0befe48d2663b47333b3734595521dd247b9403792473",
+    "equal": true,
+    "native_compile_defines": [
+      "KVD_HEADS=1",
+      "KVD_Q_FP32=1",
+      "KVD_QK_ONLY=1",
+      "KVD_ECTL3"
+    ]
+  }
+]
