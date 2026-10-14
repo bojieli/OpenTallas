@@ -927,6 +927,92 @@ module dsfd_coll_cess #(parameter integer S = 0, parameter integer PTW = (S == 0
 `endif
 `endif
 endmodule
+// Wires-only independent clock entries. Each port directly drives one unchanged hardened leaf.
+module dsfd_coll_cess_pc #(parameter integer S = 0, parameter integer PTW = (S == 0) ? 169 : 129, parameter integer BW = (S == 0) ? 563 : 512) (
+    input wire ck_x1, ck_x2, ck_x3, ck_core, ck_l0, ck_l1, ck_l2, ck_l3, ck_o, ck_pt, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*PTW-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [BW-1:0] bw_d,
+    output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i);
+    wire [3:0] ck_lane = {ck_l3,ck_l2,ck_l1,ck_l0};
+    wire [2:0] ck_x = {ck_x3,ck_x2,ck_x1};
+    wire ln_v; wire [511:0] ln_d; wire [127:0] ln_y; wire [3:0] ln_yv, ln_pe; wire [7:0] ln_ye;
+    wire [7:0] cx_v, cx_cr; wire [8*163-1:0] cx_d;
+    wire [4:0] cp_v, cp_cr; wire [5*PTW-1:0] cp_d;
+    wire ow_v; wire [511:0] ow_d; wire [50:0] ow_h; wire [562:0] ob_d;
+    assign cx_v[1:0] = 2'b00; assign cx_d[2*163-1:0] = {2*163{1'b0}}; assign xl_cr[1:0] = 2'b00;
+    genvar g;
+    generate
+        for (g = 0; g < 4; g = g + 1) begin : g_ln
+            dsfd_coll_cesl u_l (.ck(ck_lane[g]), .rs(rs), .e_en(e_en), .i_v(ln_v),
+                .i_d({ln_d[3*128 + 32*g +: 32], ln_d[2*128 + 32*g +: 32], ln_d[128 + 32*g +: 32], ln_d[32*g +: 32]}),
+                .o_y(ln_y[32*g +: 32]), .o_yv(ln_yv[g]), .o_ye(ln_ye[2*g +: 2]), .o_pe(ln_pe[g]));
+        end
+        for (g = 1; g < 4; g = g + 1) begin : g_x
+            dsfd_coll_cesx u_x (.ck(ck_x[g-1]), .rs(rs), .e_en(e_en), .i_v(xl_v[2*g +: 2]), .i_d(xl_d[2*g*163 +: 2*163]),
+                .i_cr(xl_cr[2*g +: 2]), .o_v(cx_v[2*g +: 2]), .o_d(cx_d[2*g*163 +: 2*163]), .o_cr(cx_cr[2*g +: 2]));
+        end
+        if (S == 0) begin : g_0
+            dsfd_coll_cesp0 u_p (.ck(ck_pt), .rs(rs), .i_v(pt_v), .i_d(pt_d), .i_cr(pt_cr), .o_v(cp_v), .o_d(cp_d), .o_cr(cp_cr));
+            dsfd_coll_cesc0 u_c (.ck(ck_core), .rs(rs), .e_en(e_en), .rank_i(rank_i), .qp(qp), .fv_i(fv_i), .q_v(q_v), .q_d(q_d),
+                .q_cr(q_cr), .xl_v(cx_v), .xl_d(cx_d), .xl_cr(cx_cr), .tx_v(tx_v), .tx_d(tx_d), .tx_rdy(tx_rdy), .cr_i(cr_i),
+                .cr_o(cr_o), .pt_v(cp_v), .pt_d(cp_d), .pt_cr(cp_cr), .bw_cr(bw_cr), .ow_v(ow_v), .ow_d(ow_d), .ow_h(ow_h), .lf(lf),
+                .pe_o(pe_o), .ln_v(ln_v), .ln_d(ln_d), .ln_y(ln_y), .ln_yv(ln_yv), .ln_ye(ln_ye), .ln_pe(ln_pe));
+            dsfd_coll_ceso u_o (.ck(ck_o), .rs(rs), .i_v(ow_v), .i_d(ow_d), .i_h(ow_h), .pe_i(pe_i), .bw_v(bw_v), .bw_d(ob_d));
+            assign bw_d = ob_d;
+        end else begin : g_n
+            dsfd_coll_cespn u_p (.ck(ck_pt), .rs(rs), .i_v(pt_v), .i_d(pt_d), .i_cr(pt_cr), .o_v(cp_v), .o_d(cp_d), .o_cr(cp_cr));
+            dsfd_coll_cescn u_c (.ck(ck_core), .rs(rs), .e_en(e_en), .rank_i(rank_i), .qp(qp), .fv_i(fv_i), .q_v(q_v), .q_d(q_d),
+                .q_cr(q_cr), .xl_v(cx_v), .xl_d(cx_d), .xl_cr(cx_cr), .tx_v(tx_v), .tx_d(tx_d), .tx_rdy(tx_rdy), .cr_i(cr_i),
+                .cr_o(cr_o), .pt_v(cp_v), .pt_d(cp_d), .pt_cr(cp_cr), .bw_cr(bw_cr), .ow_v(ow_v), .ow_d(ow_d), .lf(lf),
+                .pe_o(pe_o), .ln_v(ln_v), .ln_d(ln_d), .ln_y(ln_y), .ln_yv(ln_yv), .ln_ye(ln_ye), .ln_pe(ln_pe));
+            assign ow_h = 51'd0;
+            dsfd_coll_ceso u_o (.ck(ck_o), .rs(rs), .i_v(ow_v), .i_d(ow_d), .i_h(ow_h), .pe_i(3'd0), .bw_v(bw_v), .bw_d(ob_d));
+            assign bw_d = ob_d[562:51];
+            wire unused_pe = &{1'b0, pe_i, ob_d[50:0]};
+        end
+    endgenerate
+    wire unused_ok = &{1'b0, cx_cr[1:0]};
+`ifdef OT_S81PH_COLL_CES_SPLIT
+`ifdef VERILATOR
+    // bench-only seam coverage (see package s81ph_ces_cov); blocking adds: many parents count in one time step
+    localparam integer K = (S == 0) ? 0 : 1;
+    initial s81ph_ces_cov::inst[K] = s81ph_ces_cov::inst[K] + 1;
+    always @(posedge ck_core) begin
+        if (ln_v) s81ph_ces_cov::ln[K] = s81ph_ces_cov::ln[K] + 1;
+        for (integer i = 0; i < 4; i = i + 1) if (ln_yv[i]) s81ph_ces_cov::lny[K] = s81ph_ces_cov::lny[K] + 1;
+        for (integer i = 1; i < 4; i = i + 1) begin
+            if (cx_v[2*i] || cx_v[2*i+1]) s81ph_ces_cov::xl[K][i] = s81ph_ces_cov::xl[K][i] + 1;
+            if (xl_v[2*i] || xl_v[2*i+1]) s81ph_ces_cov::xli[K][i] = s81ph_ces_cov::xli[K][i] + 1;
+        end
+        for (integer i = 0; i < 5; i = i + 1) begin
+            if (cp_v[i]) s81ph_ces_cov::pt[K][i] = s81ph_ces_cov::pt[K][i] + 1;
+            if (pt_v[i]) s81ph_ces_cov::pti[K][i] = s81ph_ces_cov::pti[K][i] + 1;
+        end
+        if (ow_v) s81ph_ces_cov::ow[K] = s81ph_ces_cov::ow[K] + 1;
+        if (bw_v) s81ph_ces_cov::bw[K] = s81ph_ces_cov::bw[K] + 1;
+    end
+`endif
+`endif
+endmodule
+
+module dsfd_coll_ces0_pc (input wire ck_x1, ck_x2, ck_x3, ck_core, ck_l0, ck_l1, ck_l2, ck_l3, ck_o, ck_pt, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [562:0] bw_d,
+    output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i);
+    dsfd_coll_cess_pc #(.S(0)) u (.*);
+endmodule
+module dsfd_coll_cesn_pc (input wire ck_x1, ck_x2, ck_x3, ck_core, ck_l0, ck_l1, ck_l2, ck_l3, ck_o, ck_pt, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
+    input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
+    input wire [8*163-1:0] xl_d, output wire [7:0] xl_cr, output wire [3:1] tx_v, output wire [162:0] tx_d,
+    input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
+    input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [511:0] bw_d,
+    output wire [1:0] lf, output wire pe_o);
+    dsfd_coll_cess_pc #(.S(1)) u (.*, .pe_i(3'd0));
+endmodule
 // ---- route masters of the lane-slice: OT_S81PH_COLL_CES_SPLIT selects the split structure for BOTH (one define, so no
 // committed configuration can mix seam latencies); without it both are the flat slices (the closed ces0 view).
 `ifdef OT_S81PH_COLL_CES_SPLIT
@@ -936,7 +1022,11 @@ module dsfd_coll_ces0 (input wire ck, input wire rs, input wire e_en, input wire
     input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
     input wire [5*169-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [562:0] bw_d,
     output wire [1:0] lf, output wire pe_o, input wire [3:1] pe_i);
+`ifdef OT_S81PH_COLL_CES_ENTRIES
+    dsfd_coll_cess_pc #(.S(0)) u (.ck_x1(ck), .ck_x2(ck), .ck_x3(ck), .ck_core(ck), .ck_l0(ck), .ck_l1(ck), .ck_l2(ck), .ck_l3(ck), .ck_o(ck), .ck_pt(ck), .*);
+`else
     dsfd_coll_cess #(.S(0)) u (.*);
+`endif
 endmodule
 module dsfd_coll_cesn (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
     input wire [7:0] fv_i, input wire q_v, input wire [161:0] q_d, output wire q_cr, input wire [7:0] xl_v,
@@ -944,7 +1034,11 @@ module dsfd_coll_cesn (input wire ck, input wire rs, input wire e_en, input wire
     input wire [3:1] tx_rdy, input wire [7:2] cr_i, output wire [7:2] cr_o, input wire [4:0] pt_v,
     input wire [5*129-1:0] pt_d, output wire [4:0] pt_cr, input wire bw_cr, output wire bw_v, output wire [511:0] bw_d,
     output wire [1:0] lf, output wire pe_o);
+`ifdef OT_S81PH_COLL_CES_ENTRIES
+    dsfd_coll_cess_pc #(.S(1)) u (.ck_x1(ck), .ck_x2(ck), .ck_x3(ck), .ck_core(ck), .ck_l0(ck), .ck_l1(ck), .ck_l2(ck), .ck_l3(ck), .ck_o(ck), .ck_pt(ck), .*, .pe_i(3'd0));
+`else
     dsfd_coll_cess #(.S(1)) u (.*, .pe_i(3'd0));
+`endif
 endmodule
 `else
 module dsfd_coll_ces0 (input wire ck, input wire rs, input wire e_en, input wire [1:0] rank_i, input wire [5:0] qp,
