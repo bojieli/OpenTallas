@@ -19,6 +19,6 @@ module ot_hgi_qdq_wr_split #(parameter integer LQ=10,OD=64,RQ=16)(
  .o_wf(o_wf),.snapshot_v(snapshot_v),.snapshot(snapshot),.o_bad(pay_bad),.o_idle(o_idle));
  ot_hgi_qdq_wr_fin #(.RQ(RQ)) u_fin(.clk(clk_fin),.rst_n(rst_n),.snapshot_v(snapshot_v),.snapshot(snapshot),
  .wwq_done(wwq_done),.o_fin(o_fin),.o_bad(fin_bad),.o_idle(fin_idle));
- assign o_bad=pay_bad|fin_bad; // wrapper is wires only; physical consumers capture leaf pins separately
+ assign o_bad=pay_bad|fin_bad; // explicit parent OR gate; physical consumers capture separate leaf pins
 endmodule
 `default_nettype wire
