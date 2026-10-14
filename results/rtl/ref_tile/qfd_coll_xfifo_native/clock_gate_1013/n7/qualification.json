@@ -1,0 +1,32 @@
+{
+  "qualification": "NOT_SUBMITTABLE",
+  "source_commit": "1d79dc78a",
+  "host": "ot-epyc4",
+  "frozen_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_xfifo_native-20261013-214050",
+  "canonical_clock_rule": "PASS4846",
+  "TT_boundary_spread_ps": {
+    "ck": 24.4,
+    "ckd": 26.3
+  },
+  "actual_signoff_probes": {
+    "tt": {
+      "setup_ps": 112.2925086249893,
+      "hold_ps": 15.6864521372313,
+      "RANexit0": true,
+      "script_sha256": "63a92599758f65c3aef959e81322f88bacb7b641b68163626c180da3f0f16755"
+    },
+    "ss": {
+      "setup_ps": -217.08101982653716,
+      "hold_ps": 13.590517600192698,
+      "RANexit0": true,
+      "script_sha256": "7ea93505c06bd131dc6e90c67a1c075242a23d5a73ed02fd1b6e14e86d92ec46"
+    },
+    "ff": {
+      "setup_ps": 185.28456546818006,
+      "hold_ps": 9.813344581388606,
+      "RANexit0": true,
+      "script_sha256": "99f34f6581e67197be89a747a1bcd17b825cf130aeda495716e69be5e8c829be"
+    }
+  },
+  "reason": "SS internal write-data enable fanout fails; next opt-in free capture removes common wide enable without changing memory-write valid/edge. Root owns source-clock DATA-delay consistency audit; explicit source slew preserved."
+}
