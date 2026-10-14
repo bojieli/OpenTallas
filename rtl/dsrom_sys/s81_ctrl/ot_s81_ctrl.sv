@@ -37,6 +37,7 @@ module ot_s81_ctrl #(
     parameter integer SIDE_USH = 6,
     parameter integer NOPS     = 128,
     parameter integer HC_SLOT_REBASE = 0,
+    parameter integer H_TRANSFER = 0, HC_S_RD = 2, HC_S_WR = 8,
     parameter integer NENG     = 12,
     parameter integer USE_VM_RVALID = 0, OUT_DEPTH = 4,
     parameter integer QD       = 8,
@@ -96,6 +97,23 @@ module ot_s81_ctrl #(
     output wire [VWA-1:0]        vm_raddr,
     input  wire [FLIT-1:0]       vm_rq,
     input wire vm_rvalid,
+    // Opt-in native HC transfer seams, all on this stream clock.
+    input wire [85:0] hc_queue_head,
+    input wire hc_normal_inputs_present,
+    output wire hc_inputs_present,
+    input wire [HC_S_RD-1:0] hc_vm_rq_v,
+    input wire [HC_S_RD*14-1:0] hc_vm_rq_row,
+    output wire [HC_S_RD-1:0] hc_vm_rs_v,
+    output wire [HC_S_RD*512-1:0] hc_vm_rs_d,
+    output wire [HC_S_RD-1:0] transfer_vm_rq_v,
+    output wire [HC_S_RD*14-1:0] transfer_vm_rq_row,
+    input wire [HC_S_RD-1:0] transfer_vm_rs_v,
+    input wire [HC_S_RD*512-1:0] transfer_vm_rs_d,
+    input wire [HC_S_WR-1:0] hc_commit_v,
+    input wire [HC_S_WR*14-1:0] hc_commit_row,
+    input wire [HC_S_WR*16-1:0] hc_commit_mask,
+    output wire transfer_fault,
+    output wire [3:0] transfer_fault_code,
     // HEAD: the head root's argmax of the step
     input  wire                  am_v,
     input  wire [NW-1:0]         am_pos,
@@ -204,6 +222,27 @@ module ot_s81_ctrl #(
         .job_v(j_v && j_r), .job_rdy(seq_ready), .job_user(j_u[SUW-1:0]), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
         .cmd_v(s_cv), .cmd_d(s_cd), .dn_v(s_dv), .dn_tag(s_dt), .busy(s_busy), .fault(s_f), .fault_code(s_fc),
         .st_jobs(st_jobs), .st_cmds(s_cmds), .st_credit_stall(s_cs));
+    // The real package write bus tees to landing; committed VM writes arm
+    // cut-through. The hop's actual read requests are checked row by row.
+    wire hop_re_raw; wire [VWA-1:0] hop_ra_raw; wire transfer_go;
+    generate if(H_TRANSFER) begin : g_htransfer
+        initial if(ROLE!=1 || HOP_TX!=1 || !USE_VM_RVALID || !HC_SLOT_REBASE || FLIT!=512 || VWA!=14)
+            $fatal(1,"native H transfer requires layer/internal hop, valid VM returns and explicit slot lowering");
+        ot_s81_htransfer_boundary #(.XW(XW),.RXB(RXB),.TXB(TXB),.S_RD(HC_S_RD),.S_WR(HC_S_WR)) hboundary(
+            .clk(clk),.rst_n(rst_n),.land_v(vm_we),.land_a(vm_waddr),.land_d(vm_wdata),
+            .hc_head(hc_queue_head),.normal_inputs_present(hc_normal_inputs_present),.hc_inputs_present(hc_inputs_present),
+            .hc_rq_v(hc_vm_rq_v),.hc_rq_row(hc_vm_rq_row),.hc_rs_v(hc_vm_rs_v),.hc_rs_d(hc_vm_rs_d),
+            .vm_rq_v(transfer_vm_rq_v),.vm_rq_row(transfer_vm_rq_row),.vm_rs_v(transfer_vm_rs_v),.vm_rs_d(transfer_vm_rs_d),
+            .commit_v(hc_commit_v),.commit_a(hc_commit_row),.commit_mask(hc_commit_mask),.hop_go(transfer_go),
+            .hop_re(hop_re_raw),.hop_ra(hop_ra_raw),.hop_vm_re(vm_re),.hop_vm_ra(vm_raddr),
+            .fault(transfer_fault),.fault_code(transfer_fault_code));
+    end else begin : g_nohtransfer
+        assign vm_re=hop_re_raw;assign vm_raddr=hop_ra_raw;assign transfer_go=0;
+        assign hc_inputs_present=hc_normal_inputs_present;
+        assign transfer_vm_rq_v=hc_vm_rq_v;assign transfer_vm_rq_row=hc_vm_rq_row;
+        assign hc_vm_rs_v=transfer_vm_rs_v;assign hc_vm_rs_d=transfer_vm_rs_d;
+        assign transfer_fault=0;assign transfer_fault_code=0;
+    end endgenerate
     // ---- hop port ----
     wire h_dv; wire [OPW:0] h_dt; wire h_f; wire [3:0] h_fc; wire [31:0] h_msgs;
     wire r_v, r_stop; wire [NW-1:0] r_tok; wire [31:0] r_val;
@@ -226,15 +265,15 @@ module ot_s81_ctrl #(
         .clk(clk), .rst_n(rst_n), .cmd_v(s_cv[ENG_HOP]), .cmd_d(s_cd[ENG_HOP*CMDW +: CMDW]), .dn_v(h_dv), .dn_tag(h_dt),
         .win_ctx_v(native_win_v),.win_ctx_slot(native_win_slot),.win_ctx_user(native_win_user),
         .win_ctx_pos(native_win_pos),.win_ctx_tok(native_win_tok),.win_ctx_ids(native_win_ids),.win_ctx_dead(native_win_dead),
-        .go(hop_go || (ROLE == 2 && r_v)), .res_v(r_v || rh_v || ROLE != 2), .res_tok(r_v ? r_tok : rh_tok),
+        .go((H_TRANSFER ? transfer_go : hop_go) || (ROLE == 2 && r_v)), .res_v(r_v || rh_v || ROLE != 2), .res_tok(r_v ? r_tok : rh_tok),
         .res_val(r_v ? r_val : rh_val), .res_stop(r_v ? r_stop : rh_stop),
         .run_eosen(run_eosen), .run_eos(run_eos), .run_maxl(run_maxl),
-        .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq), .vm_rvalid(vm_rvalid),
+        .vm_re(hop_re_raw), .vm_raddr(hop_ra_raw), .vm_rq(vm_rq), .vm_rvalid(vm_rvalid),
         .out_valid(out_valid), .out_ready(out_ready), .out_data(out_data), .out_last(out_last),
         .fault(h_f), .fault_code(h_fc), .st_msgs(h_msgs));
     end else begin : g_nohop
         assign h_dv = 1'b0; assign h_dt = 0; assign h_f = 1'b0; assign h_fc = 4'd0; assign h_msgs = 0;
-        assign vm_re = 1'b0; assign vm_raddr = 0; assign out_valid = 1'b0; assign out_data = 0; assign out_last = 1'b0;
+        assign hop_re_raw = 1'b0; assign hop_ra_raw = 0; assign out_valid = 1'b0; assign out_data = 0; assign out_last = 1'b0;
     end endgenerate
     genvar e;
     generate for (e = 0; e < NENG; e = e + 1) begin : g_port
@@ -257,6 +296,6 @@ module ot_s81_ctrl #(
         .stuck(stuck), .stuck_snap(snap), .stuck_cycle(scyc), .idle_run(idle_run), .idle_max(idle_max),
         .trace_valid(tv), .trace_ready(1'b1), .trace_data(tdat), .trace_drops(tdrop));
     assign stuck_snap = snap;
-    assign fault = s_f || h_f || p_f || g_f || hq_f || producer_fault;
+    assign fault = s_f || h_f || p_f || g_f || hq_f || producer_fault || transfer_fault;
     assign fault_vec = {s_fc, h_fc, producer_fault ? 4'd10 : p_fc, g_fc};
 endmodule
