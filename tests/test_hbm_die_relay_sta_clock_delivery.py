@@ -103,3 +103,28 @@ def test_tt_fallback_normalizes_against_bound_ss_model(tmp_path):
     }''')
     trees = S.view_clock_trees(tmp_path, 'tile')
     assert trees['tt'] == trees['ss'] == {'ck': {'min': 40, 'max': 60}}
+
+
+def test_unmeasured_insertion_conservative_pairs_stay_synchronous():
+    out = evaluate({'a/ck': sink('a'), 'u/ck': sink('u', level='unmeasured'),
+                    'e/ck': sink('e', level='early_tap'),
+                    'v/ck': sink('v', domain='clk_serial', level='unmeasured')})
+    for a, b in [('clk_stream', 'clk_stream__unmeasured'),
+                 ('clk_stream__unmeasured', 'clk_stream'),
+                 ('clk_stream__unmeasured', 'clk_stream__unmeasured'),
+                 ('clk_stream__early_tap', 'clk_stream__unmeasured'),
+                 ('clk_stream__unmeasured', 'clk_stream__early_tap')]:
+        assert f'UNCERTAINTY -setup -from {a} -to {b} 0.210' in out
+        assert f'FALSEPATH -from {a} -to {b}' not in out
+    assert 'FALSEPATH -from clk_stream__unmeasured -to clk_serial__unmeasured' in out
+
+
+def test_unmeasured_delivery_record_exposes_missing_R(tmp_path):
+    sinks = {'u/ck': sink('u')}
+    record = S.delivery_record(tmp_path, sinks)
+    tile = record['tiles']['tile']
+    assert tile['level'] == 'unmeasured'
+    assert tile['missing_R_evidence'] is True
+    assert tile['hop_skew_ps'] == 150
+    assert record['summary']['unmeasured'] == ['tile']
+    assert sinks['u/ck']['level'] == 'unmeasured'
