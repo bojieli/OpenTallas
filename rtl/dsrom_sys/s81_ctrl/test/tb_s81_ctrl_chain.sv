@@ -20,6 +20,7 @@
 // MUT=1 (SOURCE ignores STOP): must FAIL.
 module tb_s81_ctrl_chain;
     parameter integer MUT = 0;
+    parameter integer STARTUP_TEST = 0, STARTUP_MUT = 0;
     localparam integer NW = 21, NENG = 12, NOPS = 16, OPW = 4, ARGW = 24, SUW = 10;
     localparam integer CMDW = 1 + SUW + 2 * NW + ARGW + OPW, TAGW = 1 + OPW;
     localparam integer XW = 8, VWA = 12, RXB = 0, TXB = 1024, SIDE_TXB = 2048, SIDE_BASE = 3072, SIDE_USH = 4;
@@ -72,11 +73,24 @@ module tb_s81_ctrl_chain;
         localparam integer SLO = (g == 0) ? 3 : (g == 1) ? 1 : 2;
         localparam [15:0] TM = (g == 0) ? 16'h0004 : 16'h000A;
         wire [OPW:0] plen = np[g];
+        reg [1:0] startup_released = 0;
+        wire startup_ok;
+        ot_s81_startup_barrier #(.N(2), .MUT_EARLY(STARTUP_MUT)) u_startup (
+            .clk(clk), .reset_n(rst_n), .released(startup_released), .ready(startup_ok));
+        initial begin
+            wait (rst_n);
+            repeat (200 + 500*g) @(negedge clk); startup_released[0] = 1;
+            repeat (100) @(negedge clk); startup_released[1] = 1;
+        end
+        always @(negedge clk) if (STARTUP_TEST && rst_n && !(&startup_released)) begin
+            if (u.j_v && u.j_r) $fatal(1, "STARTUP_EARLY die=%0d operation admitted before actual child acknowledgments", g);
+            if (|c_v[g*NENG +: NENG]) $fatal(1, "STARTUP_EARLY die=%0d engine command before child acknowledgments", g);
+        end
         ot_s81_ctrl #(.ROLE(ROLE), .MY_ID(g + 1), .NW(NW), .MAXU(MAXU), .VWA(VWA), .XW(XW), .RXB(RXB), .TXB(TXB),
             .SIDE_TXB(SIDE_TXB), .SIDE_RXB(0), .SIDE_BASE(SIDE_BASE), .SIDE_USH(SIDE_USH), .NOPS(NOPS), .NENG(NENG),
             .QD(8), .SRC_LO(SLO), .SRC_HI(SLO), .TYPE_MASK(TM), .LEN_SIDE_MAX(4), .PMAX(8), .CQ_DEPTH(64), .WDOG(200000),
-            .STUCK(50000), .MUT(MUT)) u (
-            .clk(clk), .rst_n(rst_n), .pw_v(pw_v && pw_sel[g]), .pw_a(pw_a), .pw_d(pw_d), .prog_len(plen),
+            .STUCK(50000), .MUT(MUT), .STARTUP_BARRIER(STARTUP_TEST)) u (
+            .clk(clk), .rst_n(rst_n), .startup_ready(startup_ok), .pw_v(pw_v && pw_sel[g]), .pw_a(pw_a), .pw_d(pw_d), .prog_len(plen),
             .cfg_users_static(12'(MAXU)),
             .in_valid(li_v[g]), .in_ready(li_r[g]), .in_data(li_d[g*512 +: 512]), .in_last(li_l[g]),
             .out_valid(o_v[g]), .out_ready(o_r[g]), .out_data(o_d[g*512 +: 512]), .out_last(o_l[g]),

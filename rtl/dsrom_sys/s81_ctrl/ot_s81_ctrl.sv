@@ -22,6 +22,7 @@
 // ---------------------------------------------------------------------------
 module ot_s81_ctrl #(
     parameter integer WINDOW_CONTEXT = 0,
+    parameter integer STARTUP_BARRIER = 0,
     parameter integer ROLE     = 0,          // 0 layer, 1 SOURCE (stage 0), 2 HEAD root
     parameter integer MY_ID    = 0,
     parameter integer FLIT     = 512,
@@ -57,6 +58,7 @@ module ot_s81_ctrl #(
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
+    input  wire                  startup_ready,
     input wire source_token_dead,
     input wire eng_rb_v,
     input wire [11:0] eng_rb_user,
@@ -164,7 +166,10 @@ module ot_s81_ctrl #(
     always @(posedge clk or negedge rst_n)
         if(!rst_n) window_slot<=0;
         else if(j_v && j_r) window_slot<=!window_slot;
-    assign j_r=seq_ready && (!WINDOW_CONTEXT || !SOURCE || producer_ready);
+    // Program/config traffic may arrive during startup. Only operation admission waits
+    // for the actual reset-release acknowledgments; an accepted message remains queued.
+    assign j_r=seq_ready && (!WINDOW_CONTEXT || !SOURCE || producer_ready)
+               && (STARTUP_BARRIER == 0 || startup_ready);
     generate if(WINDOW_CONTEXT && SOURCE) begin:g_window_source
         ot_dsrom_engram_lead_producer u_lead(.clk(clk),.rst_n(rst_n),
             .t_v(j_v && j_r),.t_ready(producer_ready),.t_user(j_u),.t_pos(j_p),.t_tok(j_t),
