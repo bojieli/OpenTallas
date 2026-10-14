@@ -115,7 +115,7 @@
   "benches_from": "tools/s81_suhc/hc_tile_benches_ccf.json",
   "owner": "Codex:s81_hc_ccf",
   "branch": "codex-s81-ccf-pinreg-1013",
-  "tag": "v6-facecapture-m5",
+  "tag": "v6-facecapture-m5-spine",
   "purpose": "Kept first-stage fv/fd face capture isolates fv_i from distributed pop replicas. One forward stage transfers from pad_f5r1 to the new pad_f4r1 leaf; chain issue and completion latency unchanged.",
   "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
@@ -140,7 +140,7 @@
   "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff"
  },
  "io_tcl": "physical/s81_hc_pinplan/ccf.tcl",
- "structural_change": "Kept first-stage fv/fd face capture isolates fv_i from distributed pop replicas. One forward stage transfers from pad_f5r1 to the new pad_f4r1 leaf; chain issue and completion latency unchanged.",
+ "structural_change": "Kept first-stage fv/fd face capture isolates fv_i from distributed pop replicas. One forward stage transfers from pad_f5r1 to the new pad_f4r1 leaf; chain issue and completion latency unchanged. Clock replaced with balanced spine: closed control boundary mean539.1ps and spread171.2ps cannot carry the new >15000-sink root; candidate must prove <=300ps insertion and <=80ps spread before route.",
  "recipe": 2,
  "boundary_tcl": [
   "physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl"
@@ -151,6 +151,7 @@
  "io_flop_at_pins": {
   "cols": 24
  },
+ "clock": "spine",
  "children": [],
  "inter": [],
  "inhold": true,
