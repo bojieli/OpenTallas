@@ -309,5 +309,15 @@
     "admission": "External actualnative59 controller must bind joined ready/stage/position. No automaticgo gating, no writerlease qualification.",
     "cache_master": "qfd_su_cbuf_native_l0_p13_l12_h2",
     "far_response": "11pin_edges/internal12, CROM5"
+  },
+  "writer_observation_successor_request": {
+    "source": "rtl/physical/ot_qfd_native_crom5_su64_writer_parent_candidate.sv",
+    "sha256": "a9fe8e829289b2b893c544d48d813314d80dcc66ad8b1ac7270fd8d0d4deef7b",
+    "observation_source": "ot_qfd_sp_su64_crom5_writer_observe_candidate",
+    "authoritative_predicate": "64e16e88d futurestrobesonly",
+    "extra_state": "1coreFF/1statusedge; clockentrycount355 unchanged",
+    "cache_master": "qfd_su_cbuf_native_l0_p13_l12_r2; +1resetreleaseedge",
+    "lease": "UNBOUND: callerblocksnewgo beforeobservation; actualVM andKV postedcompletion/fence requireexternalrealproducer. No defaultreadytie.",
+    "qualification": "NEW SOURCE CANDIDATE ONLY, oldf054positive preserved; native59/actualpostedcompletion composition notproved"
   }
 }
