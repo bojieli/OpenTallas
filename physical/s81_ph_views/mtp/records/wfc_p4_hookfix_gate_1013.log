@@ -1,0 +1,20 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['ck', 'ckv', 'rst', 'rsv', 't_vc', 'f_pf']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE INFO oflop: E face 9.8 pins/um (t_swd): recipe-2 hold stages take 3.29 um behind the face, the pin flops need gap 4.2 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 32 GB; inputs ship there before admission
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_wfc_vmx_p_20261013-211154.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/dsfd_wfc_vmx_p-20261013-211154
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 92 s (gate total 1178 s)
+GATE WARN util: synthesized std area 14385 um2 + macros 48987 in core 153237: util 41%  -> FIX: set "std_area_um2": 14385 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_wfc_vmx_p cells 105,580 flops 26,426 depth 435.1 ps util 0.4142 reach 368.3 um (1.8 s)
+GATE WARN textbook.high_fanout: net _126121_/Y (OR4x1_ASAP7_75t_R): 3,043 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.util_channel: utilisation 41.4% outside 45%-65% (std 14491 + macro 48987 um2 in 153237 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 775.5..931.1 ps (spread 155.6), boundary mean 881.4; tt insertion all 566.9..705.2 ps (spread 138.3), boundary mean 664.7; ff insertion all 442.4..570.6 ps (spread 128.2), boundary mean 536.6; macro_clk flag True
+GATE INFO density: effective global-placement target density 0.480 vs spec PD 0.48
+GATE INFO path_classes: reg->out      300 paths, worst slack -174.7 ps (e.g. t_ft[3])
+GATE INFO path_classes: reg->reg      319 paths, worst slack -5.5 ps (e.g. u_vw.u_f2s.w_st_r[0]$_DFF_P_/D)
+GATE INFO path_classes: in->reg         4 paths, worst slack 310.6 ps (e.g. u_hep.hep_rst_sync[0]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -1.7473489322128444e-10 hold WNS -2.430348144955019e-10
+GATE INFO clock_rule: root port:ckv[0]: 14,589 sinks on the largest root <= 15,000; measured TT insertion 493.4 ps, leaf spread 132.5 ps
+PRE_ROUTE_GATE: WARN (0 fail, 4 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/el1013-s81-wfcstg/physical/ref_tile/dsfd_wfc_vmx_p/source_binding_history/2d629a190d0945327a782adff9c972ab7d8cee0600b750e7a40639b6097f0e71.json
+GATE: dsfd_wfc_vmx_p/gate_result.json written (exact staged source binding; commit it with the kit)
