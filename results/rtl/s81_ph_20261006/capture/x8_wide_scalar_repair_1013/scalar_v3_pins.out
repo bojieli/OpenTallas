@@ -1,0 +1,18 @@
+ot-run: ot-epyc1tb     admits  -123 GB (avail 430, growth 273, headroom 64, waiters 1/299 GB) load 143/128 running 33 disk 1037 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261013-225353
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261013-225353
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261013-225353
+ot-run: -> ot-epyc1tb (will queue: admits -123 GB < 8 GB)
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-827596-1791957708 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+PIN_RECT ck[0] M5 114.0 0.0 114.024 0.192
+PIN_RECT ckv[0] M5 114.0 135.888 114.024 136.08
+PIN_RECT f_w[1] M3 8.028 0.0 8.046 0.192
+PIN_RECT f_w[248] M5 61.584 0.0 61.608 0.192
+PIN_RECT rst[0] M5 114.192 0.0 114.216 0.192
+PIN_RECT rsv[0] M5 114.192 135.888 114.216 136.08
+PIN_RECT t_ho[0] M5 114.384 0.0 114.408 0.192
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-827596-1791957708): exit 0
