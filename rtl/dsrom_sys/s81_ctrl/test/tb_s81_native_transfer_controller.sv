@@ -65,7 +65,7 @@ module tb_s81_native_transfer_controller #(parameter integer MUT=0,STALL=0);
   @(negedge ck);iv=0;il=0;
  endtask
  initial begin
-  repeat(6)@(negedge ck);rst=1;repeat(15)@(negedge ck);
+  repeat(6)@(negedge ck);rst=1;repeat(128)@(negedge ck);
   pw=1;pa=0;pd=MUT==1?28'h2000000:28'h2800000;@(negedge ck);pa=1;pd=MUT==1?28'h2101800:28'h2901800;
   @(negedge ck);pa=2;pd=28'h7000121;@(negedge ck);pw=0;repeat(6)@(negedge ck);
   for(integer user=0;user<2;user=user+1)begin
@@ -79,6 +79,13 @@ module tb_s81_native_transfer_controller #(parameter integer MUT=0,STALL=0);
   end
   repeat(12000)@(negedge ck);
   if(messages!=2||loads!=2||stores!=2||cf||tf||mf||hstatus[0]||early)errors=errors+1;
+  $display("NATIVE_DEBUG seq_run=%0d kind=%0d issue=%0d returned=%0d hland_active=%0d mode=%0d requested=%0d delivered=%0d landed=%0d slot=%0d fresh=%0d live=%0d fifo=%0d",
+   hc.u_hc.g_hier.u_cb.u_seq.run,hc.u_hc.g_hier.u_cb.u_seq.kind,hc.u_hc.g_hier.u_cb.u_seq.ci,hc.u_hc.g_hier.u_cb.u_seq.cr,
+   ctrl.g_htransfer.hboundary.landing.u_core.c_act,ctrl.g_htransfer.hboundary.landing.u_core.c_mode,
+   ctrl.g_htransfer.hboundary.landing.u_core.c_req,ctrl.g_htransfer.hboundary.landing.u_core.c_del,
+   ctrl.g_htransfer.hboundary.landing.u_core.l_cnt,ctrl.g_htransfer.hboundary.landing.u_core.l_slot,
+   ctrl.g_htransfer.hboundary.landing.u_core.fresh,ctrl.g_htransfer.hboundary.landing.u_core.l_live,
+   ctrl.g_htransfer.hboundary.landing.u_core.n);
   $display("NATIVE_LANDING streamed_loads=%0d vm_fallback_loads=%0d",ctrl.g_htransfer.hboundary.stream_count,ctrl.g_htransfer.hboundary.vm_count);
   $display("TB_S81_NATIVE_TRANSFER_CONTROLLER mut=%0d stall=%0d messages=%0d accepted_loads=%0d accepted_stores=%0d jobs=%0d errors=%0d early=%0d faults=%b%b%b%b first=%0d last=%0d %s",MUT,STALL,messages,loads,stores,jobs,errors,early,cf,tf,mf,hstatus[0],first,last,errors==0?"PASS":"FAIL");$finish;
  end
