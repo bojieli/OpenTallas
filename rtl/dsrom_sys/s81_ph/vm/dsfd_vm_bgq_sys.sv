@@ -1,3 +1,6 @@
+`ifdef OT_SPVM_RESET_ACK
+`include "dsfd_vm_reset_ack.svh"
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
 // dsfd_vm_bgq (SYSTOLIC successor) -- redesign-ds 2026-10-09, OWNER rule "structural alternatives from established
@@ -628,6 +631,9 @@ module dsfd_vm_bgr #(
     output wire [NPR*DW-1:0]    o_d,
     output reg  [3:0]          o_f,
     output reg  [$clog2(QD):0] o_o
+`ifdef OT_SPVM_RESET_ACK
+    ,output wire reset_ack
+`endif
 );
     localparam integer GW = $clog2(NB / NBL);
     localparam integer BB = $clog2(NB);
@@ -651,6 +657,10 @@ module dsfd_vm_bgr #(
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs[0]) if (!rs[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_i = rst_s[1];
+`ifdef OT_SPVM_RESET_ACK
+    dsfd_vm_reset_ack u_ack (.clk(clk), .request_n(rs[0]), .local_release(rst_i), .consumer_live(rst_i), .ack(reset_ack));
+`endif
+
     reg [GW-1:0] grp_q;
     always @(posedge clk) grp_q <= grp;
 

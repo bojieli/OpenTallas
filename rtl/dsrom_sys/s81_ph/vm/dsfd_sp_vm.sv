@@ -1,5 +1,6 @@
 `ifdef OT_SPVM_RESET_ACK
 `include "dsfd_vm_reset_ack.svh"
+`include "dsfd_vm_fe_h_if.svh"
 `endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
@@ -1785,7 +1786,19 @@ module dsfd_sp_vm_m #(
     output wire [NSLOT-1:0] t_rdy,
     output wire [0:0]    c_l0v, output wire [603:0] c_l0d, input wire [0:0] c_l0r,
     output wire [0:0]    flt, output wire [31:0] fvec, output wire [2:0] max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , output wire [40+24*`VMFE_R:0] fe_rst_ack
+    , output wire [3:0] fe_rst_ack_s
+    , output wire [NS-1:0] be_rst_ack, be_rst_ack_s
+    , output wire [NS*4-1:0] bank_rst_ack
+`endif
 );
+`ifdef OT_SPVM_RESET_ACK
+`ifndef OT_SPVM_FE_H_SUBST
+    initial $error("VM reset ACK candidate requires actual selected FE_H_SUBST consumers");
+    assign fe_rst_ack = '0; assign fe_rst_ack_s = '0;
+`endif
+`endif
     localparam integer NP = 28, NPR = 10, NT = 4, RA = 14, OW = 3;
     // el1011-ds-vm/bgq28: the hard tile's enqueue pipeline (EP, = dsfd_vm_bgq28) adds ED = EP + 1 cycles to every op
 `ifdef OT_VM28_EP1
@@ -1829,7 +1842,11 @@ module dsfd_sp_vm_m #(
         .t_srg(h_srg), .t_ks(h_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
         .cv(cv), .cd(cd), .dv(h_dv), .dt(h_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(h_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
         .c_wv(h_cwv), .c_wd(h_cwd), .c_wr(c_wr), .t_rdy(h_rdy), .f_p2c(p2c),
-        .m_v(hmv), .m_we(hmwe), .m_row(hmrow), .m_mask(hmm), .m_d(hmd), .m_rf(hmrf), .fe_flt(h_flt));
+        .m_v(hmv), .m_we(hmwe), .m_row(hmrow), .m_mask(hmm), .m_d(hmd), .m_rf(hmrf), .fe_flt(h_flt)
+`ifdef OT_SPVM_RESET_ACK
+        , .rst_ack(fe_rst_ack), .rst_ack_s(fe_rst_ack_s)
+`endif
+        );
 `endif
 `ifdef OT_SPVM_FE_H_SUBST
     assign mv = hmv; assign mwe = hmwe; assign mrow = hmrow; assign mm = hmm; assign md = hmd; assign mrf = hmrf;
@@ -1864,7 +1881,11 @@ module dsfd_sp_vm_m #(
                 .i_v(cv_[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cm[t]), .i_d(cd_[t]),
                 .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),
                 .r_v(cov[t]), .r_d(cod[t]), .r_f(cof[t]), .r_o(coo[t]),
-                .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1]));
+                .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1])
+`ifdef OT_SPVM_RESET_ACK
+                , .reset_ack(bank_rst_ack[4*h+t])
+`endif
+                );
         end
         assign ov[h*NPR +: NPR] = cov[NT]; assign od[h*NPR*128 +: NPR*128] = cod[NT]; assign of[h*4 +: 4] = cof[NT];
         assign oo[h*3 +: 3] = coo[NT];
@@ -1883,5 +1904,9 @@ module dsfd_sp_vm_m #(
         .f_vx({f0v[9], f0v[8], f0v[2], f0v[7], f0v[6]}), .f_wex({f0we[9], f0we[8], f0we[2], f0we[7], f0we[6]}),
         .f_mx({f0d[9*128 +: 4], f0d[8*128 +: 4], f0d[2*128 +: 4], f0d[7*128 +: 4], f0d[6*128 +: 4]}),
         .t_srq(t_srq), .t_err(t_err), .vrv(vrv), .vrq(vrq), .t_bl(t_bl),
-        .c_l0v(c_l0v), .c_l0d(c_l0d), .c_l0r(c_l0r), .t_p2c(p2c), .flt(flt), .fvec(fvec), .max_occ(max_occ));
+        .c_l0v(c_l0v), .c_l0d(c_l0d), .c_l0r(c_l0r), .t_p2c(p2c), .flt(flt), .fvec(fvec), .max_occ(max_occ)
+`ifdef OT_SPVM_RESET_ACK
+        , .rst_ack(be_rst_ack), .rst_ack_s(be_rst_ack_s)
+`endif
+        );
 endmodule
