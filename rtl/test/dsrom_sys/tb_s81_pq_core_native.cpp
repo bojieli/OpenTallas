@@ -33,11 +33,13 @@ static uint32_t bits(const uint32_t* p,int bit,int n) {
 int main(int argc,char**argv) {
     Verilated::commandArgs(argc,argv);
     uint64_t compared=0,qbeats=0,bbeats=0,reads=0,counts=0,qualified_q=0,qualified_b=0,speculative_q=0,speculative_b=0;
+    unsigned kmin=16383,kmax=0,phmin=511,phmax=0,saddrmax=0;
+    uint64_t aq_requests=0,aq0_results=0,aq1_results=0;
     for(int test=0;test<4;test++) {
         Vref r;Vdut d;Stim s;
         int fam=test&1,np=(test>>1),phase=257+test*37;
         uint64_t prom[1024]={},srom[2048]={};
-        int nb=192,base=test*256;
+        int nb=192,base=test*512;
         prom[2*phase]=uint64_t(fam)|(6144ull<<1)|(uint64_t(nb)<<14)|(uint64_t(base)<<30)|(32ull<<46);
         prom[2*phase+1]=0;
         for(int k=0;k<nb;k++) {
@@ -58,6 +60,8 @@ int main(int argc,char**argv) {
         std::deque<Return> returns;
         int issued=0,seen_go=0,last_issue=-100,idles=0;
         bool finished=false;
+        unsigned tagmask=0;
+        bool ring_written[2][128]={},ring_read[2][128]={};
         for(int c=0;c<30000;c++) {
             s.reset=c>=16;s.go=0;s.rv=0;
             std::memset(s.ga,0,sizeof(s.ga));
@@ -85,6 +89,16 @@ int main(int argc,char**argv) {
             pa0=r.rom_pa0;pa1=r.rom_pa1;sa=r.rom_sa;
             if(c>=32) {
                 compared++;
+                if(d.rom_sa>saddrmax)saddrmax=d.rom_sa;
+                if(d.observed_load_active) {
+                    if(d.observed_k<kmin)kmin=d.observed_k;
+                    if(d.observed_k>kmax)kmax=d.observed_k;
+                    if(d.observed_k!=6144){std::printf("PQ_NATIVE_CORE FAIL runtime K=%u\n",unsigned(d.observed_k));return 1;}
+                }
+                if(s.go){if(s.ph<phmin)phmin=s.ph;if(s.ph>phmax)phmax=s.ph;}
+                aq_requests+=d.aq_request;aq0_results+=d.aq_results&1;aq1_results+=(d.aq_results>>1)&1;
+                ring_written[0][d.aq0_write_row]=true;ring_written[1][d.aq1_write_row]=true;
+                ring_read[0][d.aq0_read_row]=true;ring_read[1][d.aq1_read_row]=true;
                 qualified_q+=(d.read_consumed&1)!=0;qualified_b+=(d.read_consumed&2)!=0;
                 speculative_q+=(d.read_speculative&1)!=0;speculative_b+=(d.read_speculative&2)!=0;
                 bool mismatch=r.ready!=d.ready||r.idle!=d.idle||r.x_re!=d.x_re||r.x_addr!=d.x_addr||r.fault!=d.fault
@@ -105,6 +119,7 @@ int main(int argc,char**argv) {
                 if(bits(r.f_bus.data(),1063,1))bbeats++;
                 if(bits(r.f_bus.data(),1619,1)) {
                     seen_go++;int tag=bits(r.f_bus.data(),1616,2);
+                    tagmask|=1u<<tag;
                     returns.push_back({c+40,tag,32*(np+1)});
                 }
                 if(issued==4&&seen_go==4&&r.idle&&pending.empty()&&returns.empty())idles++;else idles=0;
@@ -112,11 +127,26 @@ int main(int argc,char**argv) {
             }
         }
         if(!finished){std::printf("PQ_NATIVE_CORE FAIL test=%d did not retire seen_go=%d issued=%d\n",test,seen_go,issued);return 1;}
+        if(tagmask!=15){std::printf("PQ_NATIVE_CORE FAIL tag coverage mask=%u\n",tagmask);return 1;}
+        for(int i=0;i<12;i++) {
+            auto wr=fam?d.ix_rows_written[i]:d.qb_rows_written[i];
+            auto rd=fam?d.ix_rows_read[i]:d.qb_rows_read[i];
+            if(wr!=0xffffffffu||rd!=0xffffffffu) {
+                std::printf("PQ_NATIVE_CORE FAIL full storage rows test=%d bitmap_word=%d written=%08x read=%08x\n",test,i,wr,rd);return 1;
+            }
+        }
+        for(int a=0;a<2;a++)for(int row=0;row<128;row++)
+            if(!ring_written[a][row]||!ring_read[a][row]){std::printf("PQ_NATIVE_CORE FAIL AQ ring row coverage\n");return 1;}
     }
     if(!qbeats||!bbeats||reads<1536||counts!=768||!qualified_q||!qualified_b||!speculative_q||!speculative_b){std::printf("PQ_NATIVE_CORE FAIL coverage q=%llu bf=%llu reads=%llu counts=%llu\n",
         (unsigned long long)qbeats,(unsigned long long)bbeats,(unsigned long long)reads,(unsigned long long)counts);return 1;}
-    std::printf("PQ_NATIVE_CORE PASS compared=%llu q=%llu bf=%llu reads=%llu counts=%llu consumed_q=%llu consumed_b=%llu speculative_q=%llu speculative_b=%llu KMAX=6144 PHW=9 SAW=11 R=128 macros=36 return_groups=12\n",
+    if(kmin!=6144||kmax!=6144||phmin<256||saddrmax<1024||aq_requests!=1152||aq0_results!=1152||aq1_results!=1152) {
+        std::printf("PQ_NATIVE_CORE FAIL runtime coverage K=%u..%u PH=%u..%u AQ=%llu/%llu/%llu\n",kmin,kmax,phmin,phmax,
+            (unsigned long long)aq_requests,(unsigned long long)aq0_results,(unsigned long long)aq1_results);return 1;
+    }
+    std::printf("PQ_NATIVE_CORE PASS compared=%llu q=%llu bf=%llu reads=%llu counts=%llu consumed_q=%llu consumed_b=%llu speculative_q=%llu speculative_b=%llu KMIN=%u KMAX=%u PHMIN=%u PHMAX=%u SADDRMAX=%u positions=1,2 tags=0,1,2,3 IX_rows=96_per_macro_both_parities QB_rows=96_per_bank AQ_lanes=32x2 AQ_ring_rows=128 AQ_valid=%llu PHW=9 SAW=11 R=128 operand_macros=36 total_macros=44 return_groups=12\n",
         (unsigned long long)compared,(unsigned long long)qbeats,(unsigned long long)bbeats,(unsigned long long)reads,(unsigned long long)counts,
-        (unsigned long long)qualified_q,(unsigned long long)qualified_b,(unsigned long long)speculative_q,(unsigned long long)speculative_b);
+        (unsigned long long)qualified_q,(unsigned long long)qualified_b,(unsigned long long)speculative_q,(unsigned long long)speculative_b,
+        kmin,kmax,phmin,phmax,saddrmax,(unsigned long long)aq_requests);
     return 0;
 }

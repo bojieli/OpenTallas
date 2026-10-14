@@ -34,6 +34,12 @@ module ot_s81_pq_core_native (
     input wire [47:0] rom_sq
 `ifdef OT_PQ_BENCH_TELEMETRY
     , output wire [1:0] read_consumed, read_speculative
+    , output wire [13:0] observed_k
+    , output wire observed_load_active
+    , output wire [383:0] ix_rows_read, ix_rows_written, qb_rows_read, qb_rows_written
+    , output wire [6:0] aq0_write_row, aq1_write_row, aq0_read_row, aq1_read_row
+    , output wire aq_request
+    , output wire [1:0] aq_results
 `endif
 );
     wire aq_vin, ba_v;
@@ -67,6 +73,30 @@ module ot_s81_pq_core_native (
     assign read_consumed = {b_consume, q_consume};
     assign read_speculative = {u_ctl.hw[0] && u_ctl.h_fam && !b_consume,
                               u_ctl.hw[0] && !u_ctl.h_fam && !q_consume};
+    assign observed_k = u_ctl.ld_kk;
+    assign observed_load_active = u_ctl.ld_run;
+    assign aq_request = aq_vin;
+    assign aq_results = {g_aq[1].u_aq.vo, g_aq[0].u_aq.vo};
+    assign aq0_write_row = g_aq[0].u_aq.r_wp;
+    assign aq1_write_row = g_aq[1].u_aq.r_wp;
+    assign aq0_read_row = g_aq[0].u_aq.r_rp;
+    assign aq1_read_row = g_aq[1].u_aq.r_rp;
+`ifdef OT_PQ_REFERENCE
+    assign ix_rows_read = 0; assign ix_rows_written = 0;
+    assign qb_rows_read = 0; assign qb_rows_written = 0;
+`else
+    genvar z;
+    generate for (z = 0; z < 4; z = z + 1) begin : g_coverage
+        assign ix_rows_read[96*z +: 96] =
+            g_ix[z].u_ix.g_read_group[0].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[0].g_bank[1].rows_read &
+            g_ix[z].u_ix.g_read_group[1].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[1].g_bank[1].rows_read &
+            g_ix[z].u_ix.g_read_group[2].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[2].g_bank[1].rows_read &
+            g_ix[z].u_ix.g_read_group[3].g_bank[0].rows_read & g_ix[z].u_ix.g_read_group[3].g_bank[1].rows_read;
+        assign ix_rows_written[96*z +: 96] = g_ix[z].u_ix.g_read_group[0].g_bank[0].written;
+        assign qb_rows_read[96*z +: 96] = u_qb.g_bank[z].rows_read;
+        assign qb_rows_written[96*z +: 96] = u_qb.g_bank[z].written;
+    end endgenerate
+`endif
 `endif
     wire [511:0] aq_q;
     wire [19:0] aq_e;

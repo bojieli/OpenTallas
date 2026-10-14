@@ -96,6 +96,12 @@ module ot_s81_pq_ix_sram #(
             wire [6:0] ra = row[6:0];
 `endif
             wire re = p1_bg[2*gu + gp] && consume_1;
+`ifdef OT_PQ_BENCH_TELEMETRY
+            reg [95:0] rows_read;
+            always @(posedge clk or negedge rst_l[0])
+                if (!rst_l[0]) rows_read <= 0;
+                else if (re && ra < 96) rows_read[ra] <= 1'b1;
+`endif
             wire [255:0] rd;
             wire [255:0] wd = bw_d[256*gp +: 256];
             ot_sram_1r1w_128x256_m1_r2c2 u_mem (

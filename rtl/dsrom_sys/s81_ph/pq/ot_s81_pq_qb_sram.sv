@@ -75,6 +75,12 @@ module ot_s81_pq_qb_sram (
 `else
         wire [6:0] ra = r0 ? row0 : row1;
 `endif
+`ifdef OT_PQ_BENCH_TELEMETRY
+        reg [95:0] rows_read;
+        always @(posedge clk or negedge rst_l[0])
+            if (!rst_l[0]) rows_read <= 0;
+            else if (re && ra < 96) rows_read[ra] <= 1'b1;
+`endif
         ot_sram_1r1w_128x256_m1_r2c2 u_mem (
             .clk(clk), .r_ce_in(re), .r_addr_in(ra), .rd_out(rd[b]),
             .w_ce_in(we), .w_addr_in(wa), .wd_in(wd), .w_mask_in({256{1'b1}}),

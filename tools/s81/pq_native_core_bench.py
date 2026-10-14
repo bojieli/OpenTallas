@@ -53,6 +53,7 @@ def main():
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv",
             ROOT / "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv"])
         defs = ["+define+OT_PQ_ROM_PORTS", "+define+OT_PQ_BENCH_TELEMETRY"]
+        if name == "ref": defs += ["+define+OT_PQ_REFERENCE"]
         if name == "dut" and a.mut:
             defs += ["+define+OT_S81_PQ_CTL_MUT_EARLY_CONSUME" if a.mut == "CONSUME"
                      else "+define+OT_S81_PQ_" + a.mut + "_MUT_ROW"]

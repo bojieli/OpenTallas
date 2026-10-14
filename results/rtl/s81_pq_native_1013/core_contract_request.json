@@ -1,7 +1,7 @@
 {
  "schema": "s81-pq-native-core-contract-request-v1",
  "source": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv",
- "sha256": "4cc50b81da418fff651f7c00e9e0a321917e1ffc9e554015fd82096113d41ed8",
+ "sha256": "b7009327fa075f0980a9c876085cf062736887573f7c50e6b6ecd55a809be2c6",
  "parameters": {
   "PHW": 9,
   "SAW": 11,
@@ -203,12 +203,18 @@
   {
    "instance": "g_aq[0].u_aq",
    "master": "ot_dsrom_aq12t",
-   "clock": "ck_aq[0]"
+   "clock": "ck_aq[0]",
+   "macros": 4,
+   "kind": "128-deep quantiser delay rings",
+   "quant_lanes": 32
   },
   {
    "instance": "g_aq[1].u_aq",
    "master": "ot_dsrom_aq12t",
-   "clock": "ck_aq[1]"
+   "clock": "ck_aq[1]",
+   "macros": 4,
+   "kind": "128-deep quantiser delay rings",
+   "quant_lanes": 32
   },
   {
    "instance": "g_bc[0].u_rel",
@@ -245,5 +251,8 @@
  },
  "release": false,
  "physical_qualification": "NOT SUBMITTED: inherited ctl/AQ pin stages and AQ spread remain structural defects; new SRAM leaves need their assigned pin files and CTS gates",
- "distributed_returns": "12 groups with region counts[10,11,11,11,11,10] perhalf; no R128 return flops in the core"
+ "distributed_returns": "12 groups with region counts[10,11,11,11,11,10] perhalf; no R128 return flops in the core",
+ "operand_storage_macros": 36,
+ "quantiser_ring_macros": 8,
+ "total_macros": 44
 }
