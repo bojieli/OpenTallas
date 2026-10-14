@@ -34,7 +34,7 @@
  },
  "std_area_um2": 9533,
  "util": 0.5,
- "structural_change": "Actual original native formatter route FLOORPLAN_MARGIN: W/M4 20bits/um over100um exceeds12. Real inputbus split into two separately assigned pin faces (same exact conversion/pipeline); requested233.28square derived from2216/2240bits perface plus face margins. No pin-density waiver, no clock change.",
+ "structural_change": "Actual original native formatter route FLOORPLAN_MARGIN: W/M4 20bits/um over100um exceeds12. Real inputbus split into two separately assigned pin faces (same exact conversion/pipeline); requested233.28square derived from2216/2240bits perface plus face margins. No pin-density waiver, no clock change. Actual split-port route still clustered at minimum1track: W18.5/S18.2/E14.4bits/um. Set actual PPL spacing2tracks (about0.096um) to limit each face to about10.4pins/um, below unchanged12bound; same233.28outline and1.2GHz.",
  "slot_change_request": {
   "reason": "Actual input pin-density failure, not a timing finishing variant: split4432bit data seam onto W/S, outputsE and selectN; actual pin-budget outline233.28square awaits CTS/route/die adoption.",
   "prior_slot": "hgi_dfx_core",
@@ -45,13 +45,13 @@
   "threads": 8,
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
-  "pin_min_tracks": 1,
+  "pin_min_tracks": 2,
   "macro_halo_um": 5.4
  },
  "job": {
   "owner": "Codex:/root/hbm_dma_lkep_2240/front_split",
   "branch": "codex/hbm-front-leaves-1013",
-  "tag": "vm2",
+  "tag": "vm2p",
   "purpose": "Real native inputface split after actual20b/um pin-density failure; exact same five capture stages, actual pin/die request awaiting gate.",
   "benches": [
    {

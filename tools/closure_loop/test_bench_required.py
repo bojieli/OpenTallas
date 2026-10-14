@@ -80,8 +80,12 @@ class BenchRequired(unittest.TestCase):
             names = [b["name"] for b in j["spec"]["stages"]["bench"]]
             self.assertTrue(set(cl.gate_bench_names(gate)) <= set(names))
             keys = [s["key"] for s in cl.stage_list(j["spec"]) if s["kind"] == "bench"]
-            self.assertIn(cl.bench_key(f"{gate}_exact"), keys)
-            self.assertIn(cl.bench_key(f"{gate}_mutant"), keys)
+            # every gate bench becomes a stage, whatever the gate names them (exact / mutant / mutants / wire_mutant ...):
+            # at least one positive and one negative among them (composition_gates.json is the source, not this test)
+            gb = (cl.composition_gates()[gate].get("benches") or [])
+            for x in gb:
+                self.assertIn(cl.bench_key(f"{gate}_{x['name']}"), keys, gate)
+            self.assertTrue(any(x.get("expect") == "pass" for x in gb) and any(x.get("expect") == "fail" for x in gb), gate)
             self.assertEqual(sp["stages"]["bench"], [LINT])        # the submitted spec is not modified
         self.assertGreaterEqual(len(cl.composition_gates()), 3)
 
@@ -144,7 +148,10 @@ class BenchRequired(unittest.TestCase):
         b = saved["benched-b"]
         self.assertEqual(b["status"], "QUEUED")
         self.assertEqual(b["spec_submitted"], srcs[1][1])
-        self.assertIn(f"{gate}_mutant", [x["name"] for x in b["spec"]["stages"]["bench"]])
+        got = [x["name"] for x in b["spec"]["stages"]["bench"]]
+        self.assertTrue(set(cl.gate_bench_names(gate)) <= set(got))
+        neg = [x["name"] for x in cl.composition_gates()[gate]["benches"] if x.get("expect") == "fail"]
+        self.assertTrue(neg and all(f"{gate}_{n}" in got for n in neg))
         self.assertNotIn("live-d", saved)
 
     def test_submit_and_guard_agree(self):

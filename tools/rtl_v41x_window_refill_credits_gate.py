@@ -3,9 +3,18 @@ import hashlib
 import json
 import re
 import subprocess
+import importlib.util
 import tempfile
 from pathlib import Path
-from tools.rtl_v41x_window_stream_gate import ROOT, SOURCES
+
+# Load the sibling stream gate from THIS file's invoked (logical) directory, never via sys.path / a resolved symlink:
+# a bench overlay whose tools/ links into another snapshot must hash and compile the overlay's RTL (fc64b8c6d).
+_STREAM = Path(__file__).absolute().parent / 'rtl_v41x_window_stream_gate.py'
+_spec = importlib.util.spec_from_file_location('_rtl_v41x_window_stream_gate_sibling', str(_STREAM))
+_stream = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_stream)
+ROOT, SOURCES = _stream.ROOT, _stream.SOURCES
+assert ROOT == Path(__file__).absolute().parents[1], (ROOT, __file__)
 BENCH = ROOT/'rtl/test/tb_window_refill_credits.sv'
 OUT = ROOT/'results/rtl/v41x_window_refill_credits.json'
 

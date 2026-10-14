@@ -65,39 +65,99 @@ module dsfd_engram_c #(
     wire [67:0] lk_wid; wire [3:0] lk_rel, vrel_io, vrel_sk; wire [2:0] cfg_io, cfg_lk;
     wire lk_fault, lk_ov, lk_stv, lk_stb, lk_hqv; wire [4:0] lk_oc; wire [2:0] lk_ob, lk_os, lk_sts, lk_hqt;
     wire [263:0] lk_od; wire [30:0] lk_hqa; wire [264:0] lk_hr;
-    wire [7:0] s_rdy, s_perr, rdy_w, perr_w; wire s_we; wire [10:0] s_wa; wire [511:0] s_wd;
+    wire [7:0] s_rdy, s_perr, s_rdy_pipe, s_perr_pipe, rdy_w, perr_w; wire s_we; wire [10:0] s_wa; wire [511:0] s_wd;
     wire [17:0] jn; wire [15:0] wn;
-    wire [5:0] w_oh, x0_oh, x1_oh, r0_oh, r1_oh, r2_oh; wire [7:0] w_a, x0_a, x1_a, r0_a, r1_a, r2_a;
-    wire [255:0] b1_d, rd0, rd1, rd2w; wire [319:0] x_d, x0_d; wire [63:0] x1_d;
+    wire [5:0] w_oh, x0_oh, x0_pipe_oh, x1_oh, r0_oh, r1_oh, r2_oh; wire [7:0] w_a, x0_a, x0_pipe_a, x1_a, r0_a, r1_a, r2_a;
+    wire [3:0] vrel_sk_pipe;
+    wire [255:0] b1_d, rd0, rd1, rd2w; wire [319:0] x_d, x0_d, x0_pipe_d; wire [63:0] x1_d;
+
+    // ---------------- cluster clock entry (el1013-s81-engram 2026-10-13): the 8 hardened children have different
+    // internal clock insertion (TT max_clock_tree_path of the installed views: win 182, io 281, sink 294, ws 297,
+    // lkp 365, pbc 454, pbb 462 ps) and the top tree reaches their 8 clock pins at different times (CTS-stop runs,
+    // el1013-s81-engram.log).  The top tree cannot see inside the children, so each child's clock enters through
+    // ot_engc_ck_entry: N kept HB4xp67 delay cells + one BUFx12 pin driver, placed at the child's clock pin
+    // (physical/s81_engc_tiles/compose/ck_entry_{keep,place}.tcl).  N = (latest child - this child) / stage delay,
+    // "child" = top-tree arrival + internal insertion, so every child's flops see the clock at the same time
+    // (pin arrival + insertion spread <= 80 ps, measured in the CTS-stop gate).  A wire in simulation.
+    // 2026-10-13 (after CTS-stop runs g3..g8): the entry chains are EMPTY and the children hang on the ck port net itself.
+    // TritonCTS re-drew the top tree at every floorplan or chain-count change (child pin arrivals moved +-100 ps, so the
+    // counts never held); the cluster clock is now the pre-placed balanced spine (physical/common_flow/clock_spine.tcl,
+    // one leaf per child clock pin) padded to per-child targets (physical/s81_engc_tiles/compose/spine_engc.tcl).
+    localparam integer CKN_WIN = 0, CKN_IO = 0, CKN_SINK = 0, CKN_WS = 0, CKN_LKP = 0, CKN_PB0 = 0, CKN_PB1 = 0, CKN_PB2 = 0;
+    wire ck_win, ck_io, ck_sink, ck_ws, ck_lkp, ck_pb0, ck_pb2, ck_pb1;
+    ot_engc_ck_entry #(.N(CKN_WIN))  u_hdly_ck_win  (.a(ck[0]), .y(ck_win));
+    ot_engc_ck_entry #(.N(CKN_IO))   u_hdly_ck_io   (.a(ck[0]), .y(ck_io));
+    ot_engc_ck_entry #(.N(CKN_SINK)) u_hdly_ck_sink (.a(ck[0]), .y(ck_sink));
+    ot_engc_ck_entry #(.N(CKN_WS))   u_hdly_ck_ws   (.a(ck[0]), .y(ck_ws));
+    ot_engc_ck_entry #(.N(CKN_LKP))  u_hdly_ck_lkp  (.a(ck[0]), .y(ck_lkp));
+    ot_engc_ck_entry #(.N(CKN_PB0))  u_hdly_ck_pb0  (.a(ck[0]), .y(ck_pb0));
+    ot_engc_ck_entry #(.N(CKN_PB2))  u_hdly_ck_pb2  (.a(ck[0]), .y(ck_pb2));
+    ot_engc_ck_entry #(.N(CKN_PB1))  u_hdly_ck_pb1  (.a(ck[0]), .y(ck_pb1));
+
+    // Condition the asynchronous die reset at EACH child's actual clock branch.
+    // A reset released in WIN's clock domain cannot condition LKP/SINK's delayed clock.
+    // The two-stage conditioners are placed at the corresponding macro reset pins;
+    // stage-to-stage and final stage-to-child reset timing remain ordinary checks.
+    wire rst_win_n;
+    ot_engc_reset_sync u_rst_win (.clk(ck_win), .async_rst_n(rst[0]), .sync_rst_n(rst_win_n));
+    wire rst_io_n;
+    ot_engc_reset_sync u_rst_io (.clk(ck_io), .async_rst_n(rst[0]), .sync_rst_n(rst_io_n));
+    wire rst_ws_n;
+    ot_engc_reset_sync u_rst_ws (.clk(ck_ws), .async_rst_n(rst[0]), .sync_rst_n(rst_ws_n));
+    wire rst_pb1_n;
+    ot_engc_reset_sync u_rst_pb1 (.clk(ck_pb1), .async_rst_n(rst[0]), .sync_rst_n(rst_pb1_n));
+    wire rst_pb0_n;
+    ot_engc_reset_sync u_rst_pb0 (.clk(ck_pb0), .async_rst_n(rst[0]), .sync_rst_n(rst_pb0_n));
+    wire rst_pb2_n;
+    ot_engc_reset_sync u_rst_pb2 (.clk(ck_pb2), .async_rst_n(rst[0]), .sync_rst_n(rst_pb2_n));
+    wire rst_lkp_n;
+    ot_engc_reset_sync u_rst_lkp (.clk(ck_lkp), .async_rst_n(rst[0]), .sync_rst_n(rst_lkp_n));
+    wire rst_sink_n;
+    ot_engc_reset_sync u_rst_sink (.clk(ck_sink), .async_rst_n(rst[0]), .sync_rst_n(rst_sink_n));
+
+    // Break the proven WIN<->SINK timing cycle at the returning status face.
+    // Ready and parity-error belong to the same completed write and move together.
+    ot_engc_status_pipe u_status_win (.clk(ck[0]), .rst_n(rst_win_n),
+        .rdy_i(s_rdy), .perr_i(s_perr), .rdy_o(s_rdy_pipe), .perr_o(s_perr_pipe));
 
     ot_engc_t_win u_win (
-        .ck(ck[0]), .rst(rst[0]), .f_win(f_win), .t_collective(t_collective[0]),
+        .ck(ck_win), .rst(rst_win_n), .f_win(f_win), .t_collective(t_collective[0]),
         .lk_wv(lk_wv), .lk_wid(lk_wid), .lk_wcred(lk_wcred), .lk_rel(lk_rel),
         .lk_ov(lk_ov), .lk_stv(lk_stv), .lk_stb(lk_stb), .lk_fault(lk_fault), .lk_oc(lk_oc), .lk_ob(lk_ob), .lk_os(lk_os),
         .lk_sts(lk_sts), .lk_od(lk_od), .t_ag(t_ag), .f_agc(f_agc[0]), .lk_ocred(lk_ocred),
         .cfg_i(cfg_io), .cfg_o(cfg_lk), .rn_lk(rn_lk), .rn_sk(rn_sk),
-        .s_rdy(s_rdy), .s_perr(s_perr), .rdy_o(rdy_w), .perr_o(perr_w), .vrel_i(vrel_io), .vrel_o(vrel_sk),
+        .s_rdy(s_rdy_pipe), .s_perr(s_perr_pipe), .rdy_o(rdy_w), .perr_o(perr_w), .vrel_i(vrel_io), .vrel_o(vrel_sk),
         .jn_i(jn), .wn_o(wn), .jf_o(jf), .werr_i(werr_ws), .werr_o(werr_w));
 `ifdef SYNTHESIS
     ot_engc_t_io u_io (
 `else
     ot_engc_t_io #(.MUT(MUT), .EPMUT(EPMUT)) u_io (
 `endif
-        .ck(ck[0]), .rst(rst[0]), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cfg(f_cfg), .cfg_o(cfg_io),
+        .ck(ck_io), .rst(rst_io_n), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cfg(f_cfg), .cfg_o(cfg_io),
         .f_vm(f_vm), .t_vm(t_vm), .rdy_i(rdy_w), .perr_i(perr_w), .vrel_o(vrel_io), .jn_o(jn), .wn_i(wn), .jf_i(jf),
         .werr_i(werr_w), .r0_oh(r0_oh), .r1_oh(r1_oh), .r2_oh(r2_oh), .r0_a(r0_a), .r1_a(r1_a), .r2_a(r2_a),
         .rd0(rd0), .rd1(rd1), .rd2(rd2w[63:0]));
     ot_engc_t_ws u_ws (
-        .ck(ck[0]), .rst(rst[0]), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .werr(werr_ws),
+        .ck(ck_ws), .rst(rst_ws_n), .wr_v(s_we), .wr_addr(s_wa), .wr_data(s_wd), .werr(werr_ws),
         .w_oh(w_oh), .w_a(w_a), .b1_d(b1_d), .x_d(x_d),
         .lk_hqv(lk_hqv), .lk_hqa(lk_hqa), .lk_hqt(lk_hqt), .t_hq(t_hq), .f_hr(f_hr), .lk_hr(lk_hr));
     // prefetch banks: band tile = bank 1 (+ write transit {bank 2, bank 0}); columns = bank 0, bank 2
-    ot_engc_t_pbb u_pb1 (.ck(ck[0]), .rst(rst[0]), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
+    ot_engc_t_pbb u_pb1 (.ck(ck_pb1), .rst(rst_pb1_n), .w_oh(w_oh), .w_a(w_a), .w_d(b1_d), .x_d(x_d),
         .x_oh(x0_oh), .x_a(x0_a), .x_do(x0_d), .r_oh(r1_oh), .r_a(r1_a), .r_d(rd1));
-    ot_engc_t_pbc u_pb0 (.ck(ck[0]), .rst(rst[0]), .w_oh(x0_oh), .w_a(x0_a), .w_d(x0_d[255:0]), .x_d(x0_d[319:256]),
+    // One coherent transit step: never retime the write data without its
+    // bank mask/address. It uses a normal soft-flop spine leaf, aligned with
+    // functional child clock edges rather than a child's earlier boundary pin.
+    ot_engc_xtrans_pipe u_xtrans_pb0 (.clk(ck[0]), .rst_n(rst_pb0_n),
+        .oh_i(x0_oh), .a_i(x0_a), .d_i(x0_d), .oh_o(x0_pipe_oh), .a_o(x0_pipe_a), .d_o(x0_pipe_d));
+    ot_engc_t_pbc u_pb0 (.ck(ck_pb0), .rst(rst_pb0_n), .w_oh(x0_pipe_oh), .w_a(x0_pipe_a), .w_d(x0_pipe_d[255:0]), .x_d(x0_pipe_d[319:256]),
         .x_oh(x1_oh), .x_a(x1_a), .x_do(x1_d), .r_oh(r0_oh), .r_a(r0_a), .r_d(rd0));
-    ot_engc_t_pbc u_pb2 (.ck(ck[0]), .rst(rst[0]), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
+    ot_engc_t_pbc u_pb2 (.ck(ck_pb2), .rst(rst_pb2_n), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
         .x_oh(), .x_a(), .x_do(), .r_oh(r2_oh), .r_a(r2_a), .r_d(rd2w));
+
+    // Carry the release event and its slot together across the long WIN-to-SINK
+    // hop. This costs one slot-release cycle and never retimes only valid.
+    ot_engc_release_pipe u_release_sink (.clk(ck[0]), .rst_n(rst_sink_n),
+        .release_i(vrel_sk), .release_o(vrel_sk_pipe));
 
     // ---------------- closed leaves (in synthesis: hardened views, built at exactly these parameter values)
 `ifdef SYNTHESIS
@@ -105,7 +165,7 @@ module dsfd_engram_c #(
 `else
     dsfd_engram_lkp #(.PIPE(PIPE), .NSLOT(NSLOT), .HQ_CRED(8), .O_CRED(16), .SLW(SLW)) u_lkp (
 `endif
-        .ck(ck[0]), .rst_n(rn_lk), .cfg_layer(cfg_lk[0]), .cfg_rank(cfg_lk[2:1]),
+        .ck(ck_lkp), .rst_n(rst_lkp_n), .cfg_layer(cfg_lk[0]), .cfg_rank(cfg_lk[2:1]),
         .win_v(lk_wv), .win_ids(lk_wid), .win_cred(lk_wcred), .rel(lk_rel),
         .hq_v(lk_hqv), .hq_atom(lk_hqa), .hq_tag(lk_hqt), .hq_cred(lk_hr[0]),
         .hr_v(lk_hr[1]), .hr_tag(lk_hr[4:2]), .hr_idx(lk_hr[8:5]), .hr_d(lk_hr[264:9]),
@@ -116,8 +176,64 @@ module dsfd_engram_c #(
 `else
     dsfd_engram_sink #(.PIN_CAPTURE(SINK_PIN), .NSLOT(NSLOT), .SLW(SLW)) u_sink (
 `endif
-        .ck(ck[0]), .rst_n(rn_sk), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
+        .ck(ck_sink), .rst_n(rst_sink_n), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
         .in_slot(f_ai[47:36]), .in_d(f_ai[1103:48]), .st_v(f_ai[1107:1104]), .st_slot(f_ai[1119:1108]),
         .st_bad(f_ai[1123:1120]), .wr_en(s_we), .wr_addr(s_wa), .wr_data(s_wd), .rdy(s_rdy), .perr(s_perr),
-        .rel_v(vrel_sk[0]), .rel_slot(vrel_sk[3:1]));
+        .rel_v(vrel_sk_pipe[0]), .rel_slot(vrel_sk_pipe[3:1]));
+endmodule
+
+// One child's clock entry: N delay cells (ot_hdly) and the pin driver (an HB4xp67 cannot drive a child's clock pin:
+// 190-237 ps slew at TT in CTS-stop run c5).  Identity in simulation.
+module ot_engc_ck_entry #(parameter integer N = 0) (input wire a, output wire y);
+    wire d;
+    ot_hdly #(.W(1), .N(N)) u_dly (.a(a), .y(d));
+    generate if (N > 0) begin : g_drv
+`ifdef SYNTHESIS
+        (* keep *) BUFx12_ASAP7_75t_R u_drv (.A(d), .Y(y));
+`else
+        assign y = d;
+`endif
+    end else begin : g_w
+        assign y = a;          // N = 0: a wire (the spine's leaf buffer drives the child clock pin)
+    end endgenerate
+endmodule
+
+// Kept two-stage local release conditioner. The parent clock aliases are
+// logically equal before physical clock-branch assignment; the canonicalize
+// keep-register hook must preserve every physical domain's two flops.
+module ot_engc_reset_sync(input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    (* keep = "true", dont_touch = "true", async_reg = "true" *) reg [1:0] reset_pipe;
+    always @(posedge clk or negedge async_rst_n)
+        if (!async_rst_n) reset_pipe <= 2'b00;
+        else reset_pipe <= {reset_pipe[0], 1'b1};
+    assign sync_rst_n = reset_pipe[1];
+endmodule
+
+module ot_engc_status_pipe(input wire clk, rst_n, input wire [7:0] rdy_i, perr_i,
+    output wire [7:0] rdy_o, perr_o);
+    (* keep = "true", dont_touch = "true" *) reg [7:0] rdy_q, perr_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rdy_q <= 8'b0; perr_q <= 8'b0; end
+        else begin rdy_q <= rdy_i; perr_q <= perr_i; end
+    assign rdy_o = rdy_q;
+    assign perr_o = perr_q;
+endmodule
+
+module ot_engc_xtrans_pipe(input wire clk, rst_n, input wire [5:0] oh_i,
+    input wire [7:0] a_i, input wire [319:0] d_i,
+    output wire [5:0] oh_o, output wire [7:0] a_o, output wire [319:0] d_o);
+    (* keep = "true", dont_touch = "true" *) reg [333:0] q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 334'b0;
+        else q <= {oh_i, a_i, d_i};
+    assign {oh_o, a_o, d_o} = q;
+endmodule
+
+module ot_engc_release_pipe(input wire clk, rst_n, input wire [3:0] release_i,
+    output wire [3:0] release_o);
+    (* keep = "true", dont_touch = "true" *) reg [3:0] q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 4'b0;
+        else q <= release_i;
+    assign release_o = q;
 endmodule

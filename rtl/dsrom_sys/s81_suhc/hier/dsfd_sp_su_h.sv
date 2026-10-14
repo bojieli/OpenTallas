@@ -21,7 +21,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_sp_su_h #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16, SM_NVMAX = 40,
-    parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, OQ = 1024, MUT = 0, AMUT = 0,
+    parameter integer S_RD = 16, S_WR = 16, LM = 5, LA = 4, OQ = 1024, MUT = 0, AMUT = 0, XMUT = 0,
     // lane-group tiles (production: QN 2 x 128 lanes, KV 2 x 256 lanes, QB 4 x 8 blocks, SW 8 x 128 lanes, SM 8 x 2
     // heads; pin owners 4 x (4 read + 4 write slots); every tile <= ~600 x 600 um)
     // QN (el1011-s81su-qn, spec v3): a tap (2 data halves) + NQE = QN_N / 8 norm engines + a reduce + NQQ = QN_N / 32
@@ -78,7 +78,7 @@ module dsfd_sp_su_h #(
     localparam integer NQB = 1 + NPB;                  // QB stops: the tap, then the engines
     localparam integer NQN = 1 + NQQ;                  // QN stops: the tap, then the quant engines
     localparam integer NSWS = 1 + NSWQ;                // SW stops: the tap, then the quant engines
-    localparam integer NTL = NQN + 1 + NQB + NSWS + NSM;
+    localparam integer NTL = NQN + 1 + NQB + NSWS + NSM + 1;   // + the RA / RB / QR stop (die item F1)
     localparam integer SLPE = (SW_W / (8 * S_RD) > 16) ? 16 : (SW_W / (8 * S_RD) < 1) ? 1 : SW_W / (8 * S_RD);
     localparam integer SL = 2 * NSWQ, SNPS = (SW_W / 16) / SL, SEPR = 16 / SLPE, SNCH = SL * SEPR, SNE = SNCH * SNPS;
     // SW tap -> lane engines, lane chains -> quant engines
@@ -365,14 +365,15 @@ module dsfd_sp_su_h #(
     wire        xrv [0:NTL]; wire [31:0] xrd [0:NTL];
     genvar t;
     generate for (t = 0; t < NTL; t = t + 1) begin : g_t
-        localparam integer B1 = NQN, B2 = NQN + 1, B3 = B2 + NQB, B4 = B3 + NSWS;
+        localparam integer B1 = NQN, B2 = NQN + 1, B3 = B2 + NQB, B4 = B3 + NSWS, B5 = B4 + NSM;
         // TK 2: the QB tap (no write slots), TK 5: QB engine TI (slots 2 TI, 2 TI + 1)
         // TK 6: the QN tap (no write slots), TK 7: QN quant engine TI (slot TI), TK 8: the KV stop (tap + all S_WR slots)
         // TK 12: the SW tap (no write slots), TK 13: SW quant engine TI (the QB master; slots 2 TI, 2 TI + 1)
-        localparam integer TK = (t == 0) ? 6 : (t < B1) ? 7 : (t < B2) ? 8 : (t == B2) ? 2 : (t < B3) ? 5 : (t == B3) ? 12 : (t < B4) ? 13 : 4;
-        localparam integer TI = (t < B1) ? (t == 0 ? 0 : t - 1) : (t < B2) ? t - B1 : (t < B3) ? (t == B2 ? 0 : t - B2 - 1) : (t < B4) ? (t == B3 ? 0 : t - B3 - 1) : t - B4;
-        localparam integer NT = (t < B1) ? NQQ : (t < B2) ? 1 : (t < B3) ? NPB : (t < B4) ? NSWQ : NSM;
-        localparam integer WS = (TK == 2 || TK == 6 || TK == 12) ? 0 : (TK == 7) ? 1 : (TK == 8) ? S_WR : S_WR / NT, W0 = TI * WS;
+        // TK 14: the RA / RB / QR tile ot_s81_su_rxt (the last stop; one write slot, slot 0)
+        localparam integer TK = (t == 0) ? 6 : (t < B1) ? 7 : (t < B2) ? 8 : (t == B2) ? 2 : (t < B3) ? 5 : (t == B3) ? 12 : (t < B4) ? 13 : (t < B5) ? 4 : 14;
+        localparam integer TI = (t < B1) ? (t == 0 ? 0 : t - 1) : (t < B2) ? t - B1 : (t < B3) ? (t == B2 ? 0 : t - B2 - 1) : (t < B4) ? (t == B3 ? 0 : t - B3 - 1) : (t < B5) ? t - B4 : 0;
+        localparam integer NT = (t < B1) ? NQQ : (t < B2) ? 1 : (t < B3) ? NPB : (t < B4) ? NSWQ : (t < B5) ? NSM : 1;
+        localparam integer WS = (TK == 2 || TK == 6 || TK == 12) ? 0 : (TK == 7 || TK == 14) ? 1 : (TK == 8) ? S_WR : S_WR / NT, W0 = TI * WS;
         localparam integer WSX = (WS > 0) ? WS : 1;
         wire [WSX-1:0] o_v; wire [WSX*14-1:0] o_a; wire [WSX*16-1:0] o_m; wire [WSX*512-1:0] o_d;
         wire o_fu, o_fo, o_alive, o_den, o_rdy; wire [7:0] o_rjid;
@@ -640,6 +641,12 @@ module dsfd_sp_su_h #(
                 .nx_o_v(snxv[TI]), .nx_o_q(snxq[TI]), .nx_o_e(snxe[TI]),
                 .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive), .o_den(o_den),
                 .o_rdy(o_rdy), .o_rjid(o_rjid));
+            assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
+        end else if (TK == 14) begin : g_rx
+            ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
+                .clk(sk), .rst_in(rst[t]), .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_jid_i(dji[t]), .dn_v_i(dv[t]),
+                .dn_d_i(dd[t]), .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive),
+                .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
             assign xpv[t] = 1'b0; assign xpi[t] = 8'd0; assign xpd[t] = 32'd0; assign xrv[t] = 1'b0; assign xrd[t] = 32'd0;
         end else begin : g_tl
             ot_s81_su_tile #(.TK(TK), .TI(TI), .NT(NT), .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H),

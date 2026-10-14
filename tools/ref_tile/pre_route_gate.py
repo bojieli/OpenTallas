@@ -112,13 +112,34 @@ def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
     return max(0.0, chip_area - logical)
 
 
-def rtl_ports(sources, top, root=None, dirs=False):
+def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     root = root or ROOT
     texts = []
     for f in sources:
         p = root / f
         if p.exists():
             texts.append(p.read_text(errors="replace"))
+    # A spec with "defines" selects its interface by `ifdef (as synthesis and the kit lint do, ref_tile.py VERILOG_DEFINES):
+    # run the real Verilog preprocessor with the same -DSYNTHESIS + spec defines, else the text parser takes the
+    # `ifdef/`endif tokens for port names (HROW ACK candidates 066ec43c5).  No defines: the plain text parse, unchanged.
+    # No spec defines but an `ifdef in the sources (a default-off port group in the header, dsfd_vm_be_sl
+    # OT_SPVM_RESET_ACK, s81-grpA r3): preprocess with -DSYNTHESIS alone, as synthesis does; if the preprocessor cannot
+    # run on these sources, keep the plain text parse (unchanged behaviour).
+    implicit = not defines and any("`ifdef" in tx or "`ifndef" in tx for tx in texts)
+    if defines or implicit:
+        files = [root / f for f in sources if (root / f).exists()]
+        inc = sorted({str(p.parent) for p in files})
+        cmd = ["iverilog", "-g2012", "-E", "-o", "-", "-DSYNTHESIS"]
+        cmd += ["-D" + d for d in (defines or [])] + ["-I" + p for p in inc] + [str(p) for p in files]
+        try:
+            run = subprocess.run(cmd, capture_output=True, text=True)
+        except FileNotFoundError:
+            run = None
+        if run is None or run.returncode:
+            if not implicit:
+                raise RT.SpecError("RTL port preprocessing failed: " + (run.stderr[-2000:] if run else "iverilog missing"))
+        else:
+            texts = [run.stdout]
     # a module named through a macro (`define X top ... module `X: dsfd_coll_cb / cbf) is not seen by the text parser
     texts = [re.sub(r"\bmodule\s+`(\w+)", lambda m: f"module {top}" if re.search(
         rf"`define\s+{m.group(1)}\s+{re.escape(top)}\b", tx) else m.group(0), tx) for tx in texts]
@@ -440,12 +461,12 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if re.search(r"define_pdn_grid[^\n]*-macro", pdn) and "ot_ref_present" not in pdn:
         g.add("FAIL", "pdn", "macro grid without a present-master guard (PDN-0217)", "re-run gen")
     # pins vs RTL
-    ports = rtl_ports(spec["sources"], spec["top"])
+    ports = rtl_ports(spec["sources"], spec["top"], defines=spec.get("defines"))
     check_pins(g, spec, ports)
     # pin plan vs the ROUTE's pin placement (same settings as the route: one source of truth), recipe-2 pin-flop spread
     plan = check_pin_fit(g, spec, strict_widths(spec["sources"], spec["top"], spec.get("params")), fresh["outline"])
     tcl = ROOT / OFLOP_TCL
-    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True), fresh["outline"],
+    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True, defines=spec.get("defines")), fresh["outline"],
                 tcl.read_text(errors="replace") if tcl.is_file() else None)
     # RTL lint
     files = [str(ROOT / f) for f in spec["sources"] if (ROOT / f).exists()]
@@ -531,7 +552,7 @@ if [ "{CTS}" = 1 ]; then
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
   grep -h "^global_placement -density\|Placement target density" $R/cts.log | head -2 | sed 's/^/GATE_GPLD /'
-  python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
+  python3 tools/closure_loop/ck_insertion.py --base $B --all-clocks --raw-source --output $R/ck.json > $R/ck.log 2>&1; echo "GATE_CK_RC=$?"
   python3 -c "import json;d=json.load(open('$R/ck.json'));print('GATE_CK '+'; '.join(c+' insertion all '+str(d[c]['all']['min'])+'..'+str(d[c]['all']['max'])+' ps (spread '+str(round(d[c]['all']['max']-d[c]['all']['min'],1))+'), boundary mean '+str(d[c]['boundary']['mean']) for c in ('ss','tt','ff') if isinstance(d.get(c),dict) and d[c].get('all'))+'; macro_clk flag '+str((d.get('macro_clk') or {{}}).get('flag')))" 2>/dev/null
   python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt')}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
@@ -612,7 +633,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     binding["captured"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     g.source_binding = binding
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
-    sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=cap, KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
+    sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     import hashlib
@@ -666,7 +687,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     if kv.get("GATE_FLOW_RC") != "0":
         why = "; ".join(errs[:4]) or "see gate_remote.log"
         stall = any(re.search(r"tim(ed)? ?out|TimeoutExpired|exceeded", e, re.I) for e in errs) or \
-            int(kv.get("GATE_FLOW_S", 0)) >= cap
+            (cap > 0 and int(kv.get("GATE_FLOW_S", 0)) >= cap)
         g.add("FAIL", "synth_smoke" if stall else "floorplan_run",
               (f"ORFS synthesis did not finish within {cap} s (yosys SHARE / ABC stall class): " if stall else
                "synthesis + floorplan + PDN failed: ") + why[:600],
@@ -856,7 +877,7 @@ def main(argv=None) -> int:
     ap.add_argument("--commit", help="check source paths at this commit (default: working tree)")
     ap.add_argument("--remote", help="fleet host for the synthesis / floorplan / textbook run (auto: ot-run admission and placement)")
     ap.add_argument("--cts", action="store_true", help="with --remote: continue through CTS, report insertion + paths")
-    ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700)")
+    ap.add_argument("--synth-cap", type=int, default=2700, help="synthesis time cap, s (default 2700; <=0 means unlimited)")
     ap.add_argument("--mem", type=int, default=24, help="ot-heavy GB (< 32 = small slot, no big-slot wait)")
     ap.add_argument("--json")
     a = ap.parse_args(argv)
@@ -944,7 +965,10 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          + ([sp["contract"]["file"]] if sp.get("contract") else [])
          # job.benches_from too (flowfix 10-13): gen_job reads the shared bench template, and without it the whole gate
          # went SKIP "gate error FileNotFoundError" for every kit that has one (all s81hc_cry* / ctr* kits of 10-13)
-         + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else []))
+         + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else [])
+         # cluster M8/M9 grant (VM6 10-14): ref_tile reads it at ROOT; without it every granted cluster (qfd_vm_rg* /
+         # qfd_vm_band and their probes) was REFUSED "cluster layer grant source must be an existing repository file"
+         + ([sp["cluster_layer_grant"]["source"]] if (sp.get("cluster_layer_grant") or {}).get("source") else []))
 
 
 def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:

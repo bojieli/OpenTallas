@@ -1,4 +1,49 @@
 `timescale 1ns/1ps
+// Pin-registered H landing leaf. Incoming landing/read/response pins are captured
+// before any decode or mux; outgoing request and response buses leave flops.
+// A 16-row FIFO bounds its storage at 8192 bits. The HC consumes at up to two
+// rows/cycle while the hop lands at one; a late consumer safely falls back to VM.
+// Fault and counter pins come directly from their core flops.
+module ot_s81_hc_hland #(
+    parameter integer S_RD=2, XW=640, RXB=0, VWA=14, FD=16, MUT=0
+) (
+    input wire clk, rst_n,
+    input wire lw_v, input wire [VWA-1:0] lw_a, input wire [511:0] lw_d,
+    input wire [S_RD-1:0] h_rq_v, input wire [S_RD*VWA-1:0] h_rq_row,
+    output reg [S_RD-1:0] h_rs_v, output reg [S_RD*512-1:0] h_rs_d,
+    output reg [S_RD-1:0] v_rq_v, output reg [S_RD*VWA-1:0] v_rq_row,
+    input wire [S_RD-1:0] v_rs_v, input wire [S_RD*512-1:0] v_rs_d,
+    output wire fault, output wire [3:0] fault_code,
+    output wire [31:0] st_stream, st_vm
+);
+    reg lv;
+    reg [VWA-1:0] la;
+    reg [511:0] ld;
+    reg [S_RD-1:0] hrv, vrv;
+    reg [S_RD*VWA-1:0] hra;
+    reg [S_RD*512-1:0] vrd;
+    wire [S_RD-1:0] hsv, vqv;
+    wire [S_RD*512-1:0] hsd;
+    wire [S_RD*VWA-1:0] vqa;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin
+            lv<=0; hrv<=0; vrv<=0; h_rs_v<=0; v_rq_v<=0;
+        end else begin
+            lv<=lw_v; hrv<=h_rq_v; vrv<=v_rs_v;
+            h_rs_v<=hsv; v_rq_v<=vqv;
+        end
+    always @(posedge clk) begin
+        la<=lw_a; ld<=lw_d; hra<=h_rq_row; vrd<=v_rs_d;
+        h_rs_d<=hsd; v_rq_row<=vqa;
+    end
+    ot_s81_hc_hland_core #(.S_RD(S_RD),.XW(XW),.RXB(RXB),.VWA(VWA),.FD(FD),.MUT(MUT)) u_core (
+        .clk(clk),.rst_n(rst_n),.lw_v(lv),.lw_a(la),.lw_d(ld),
+        .h_rq_v(hrv),.h_rq_row(hra),.h_rs_v(hsv),.h_rs_d(hsd),
+        .v_rq_v(vqv),.v_rq_row(vqa),.v_rs_v(vrv),.v_rs_d(vrd),
+        .fault(fault),.fault_code(fault_code),.st_stream(st_stream),.st_vm(st_vm));
+endmodule
+
+`timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
 // ot_s81_hc_hland (rom-layer-tput, 2026-10-13): the H landing streamer of the S81 HC master.
 //
@@ -29,14 +74,14 @@
 // 3 landing rows out of order, 4 an H request for a slot while another slot's load is being served.
 // MUT (bench negative control, 0 in silicon): 1 = requests for the landing rows go to the VM at once (no stream, no
 // hold): an H_LOAD taken while the payload lands then reads rows that have not landed.
-// Production note: the FIFO is FD x 512 b (FD 64: one ot_sram_1r1w_64x512 per read slot, rows interleaved, or flops).
+// Production note: the FIFO is FD x 512 b (FD 16: 8192 storage bits; the wrapper adds pin captures).
 // ---------------------------------------------------------------------------------------------------------------------
-module ot_s81_hc_hland #(
+module ot_s81_hc_hland_core #(
     parameter integer S_RD = 2,
     parameter integer XW   = 640,          // rows of an h payload
     parameter integer RXB  = 0,            // landing base row (slot 0)
     parameter integer VWA  = 14,
-    parameter integer FD   = 64,           // FIFO rows
+    parameter integer FD   = 16,           // FIFO rows
     parameter integer MUT  = 0
 ) (
     input  wire                   clk,

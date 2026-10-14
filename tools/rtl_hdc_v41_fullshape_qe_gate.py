@@ -14,7 +14,7 @@ import tempfile
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import hdc_golden_v41 as G  # noqa: E402
 import rtl_hdc_v41_blockdot_campaign as B  # noqa: E402
