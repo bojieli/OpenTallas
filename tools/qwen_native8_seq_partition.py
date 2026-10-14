@@ -50,14 +50,63 @@ def generate():
     assign p_write_data = pw_d2;
 '''
     body = body[:start] + replacement + body[end:]
+    # Keep the original IS/OS edges, but harden their state under a separate
+    # clock pin. This removes3415 station FF bits from the control root.
+    station_pattern = re.compile(r'ot_hdc_delay\s+#\([^;]+?\)\s+u_[io]_[^;]+?;', re.S)
+    stations = station_pattern.findall(body)
+    assert len(stations) > 60
+    raw_inputs = set(re.findall(r'\binput\s+wire\s+(?:\[[^\]]+\]\s*)?(\w+)', ports))
+    raw_outputs = set(names) - raw_inputs
+    widths = {}
+    for typ, width, declaration in re.findall(r'\b(input\s+wire|output\s+wire|wire|reg)\s+(\[[^\]]+\]\s*)?([^;\n]+);',
+                                             body + '\n' + ports.replace(',\n', ';\n') + ';'):
+        for item in declaration.split(','):
+            match = re.match(r'\s*(\w+)', item)
+            if match:
+                widths[match[1]] = width or ''
+    # Port lines have trailing comments; parse those separately as authoritative.
+    for width, name in re.findall(r'\b(?:input|output)\s+wire\s+(\[[^\]]+\]\s*)?(\w+)', ports):
+        widths[name] = width or ''
+    for name in widths:
+        for key, value in PARAMS.items():
+            widths[name] = re.sub(r'\b' + key + r'\b', str(value), widths[name])
+    dvars, qvars = set(), set()
+    for st in stations:
+        for pin, target in [('d', dvars), ('q', qvars)]:
+            expression = re.search(r'\.' + pin + r'\(([^()]*)\)', st).group(1)
+            target.update(n for n in re.findall(r'\b\w+\b', expression) if n in widths)
+    io_to_control = sorted(qvars - raw_outputs)
+    control_to_io = sorted(dvars - raw_inputs - set(io_to_control))
+    cross = set(io_to_control + control_to_io)
+    assert len(cross) > 70
+    body = station_pattern.sub('', body)
+
+    def remove_cross_wires(match):
+        width, declaration = match.groups()
+        remaining = [item for item in declaration.split(',')
+                     if re.match(r'\s*(\w+)', item).group(1) not in cross]
+        return 'wire ' + (width or '') + ','.join(remaining) + ';' if remaining else ''
+
+    body = re.sub(r'\bwire\s+(\[[^\]]+\]\s*)?([^;]+);', remove_cross_wires, body)
+    crossing_ports = [('%s wire %s%s' % ('input' if n in io_to_control else 'output', widths[n], n))
+                      for n in sorted(cross)]
+    control_ports = '    input wire clk, input wire rst_n,\n    ' + ',\n    '.join(crossing_ports)
     extra = '''    input wire [1023:0] prog_q,
     output wire p_read_valid, output wire [11:0] p_read_addr,
     output wire [63:0] p_write_rows, output wire [15:0] p_write_words,
     output wire [63:0] p_write_data'''
     control = ('(* keep_hierarchy = "yes" *) module ot_qfd_native8_control_state_leaf (\n' +
-               ports + ',\n' + extra + '\n);\n' +
+               control_ports + ',\n' + extra + '\n);\n' +
                '    localparam integer ' + ', '.join('%s=%d' % p for p in PARAMS.items()) + ';\n' +
                body + 'endmodule\n')
+    io_ports = ports + ',\n    ' + ',\n    '.join(
+        '%s wire %s%s' % ('output' if n in io_to_control else 'input', widths[n], n) for n in sorted(cross))
+    io_body = '\n'.join(stations).replace('rsv[3]', 'rs').replace('rsv[4]', 'rs').replace('rsv[5]', 'rs').replace('rsv[6]', 'rs')
+    assert 'rsv[' not in io_body
+    io = ('(* keep_hierarchy = "yes" *) module ot_qfd_native8_station_leaf (\n' + io_ports + '\n);\n' +
+          '    localparam integer ' + ', '.join('%s=%d' % p for p in PARAMS.items()) + ';\n' +
+          '    wire rs; ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk),.rst_n(rst_n),.rst_q(rs));\n' +
+          io_body + '\nendmodule\n')
     bank = '''(* keep_hierarchy = "yes" *) module ot_qfd_native8_program_lane_leaf (
     input wire clk, input wire read_valid, input wire [11:0] read_addr,
     input wire [63:0] write_rows, input wire write_word, input wire [63:0] write_data,
@@ -72,17 +121,22 @@ def generate():
     end
 endmodule
 '''
-    parent_ports = ports.replace('input  wire clk,', 'input wire clk_control,\n    input wire [15:0] clk_program,', 1)
+    parent_ports = ports.replace('input  wire clk,', 'input wire clk_control, input wire clk_station,\n    input wire [15:0] clk_program,', 1)
     assert parent_ports != ports
-    connections = ',\n        '.join('.%s(%s)' % (n, 'clk_control' if n == 'clk' else n) for n in names)
+    connections = ',\n        '.join('.%s(%s)' % (n, 'clk_station' if n == 'clk' else n) for n in names)
+    cross_connections = ',\n        '.join('.%s(%s)' % (n, n) for n in sorted(cross))
+    cross_wires = '\n'.join('    wire %s%s;' % (widths[n], n) for n in sorted(cross))
     parent = ('module ot_qfd_native8_retained_partition_candidate (\n' + parent_ports + '\n);\n' +
-              '''    wire [1023:0] prog_q;
+              cross_wires + '\n' + '''    wire [1023:0] prog_q;
     wire p_read_valid; wire [11:0] p_read_addr;
     wire [63:0] p_write_rows, p_write_data; wire [15:0] p_write_words;
     ot_qfd_native8_control_state_leaf u_control (
-        ''' + connections + ''',
+        .clk(clk_control), .rst_n(rst_n),
+        ''' + cross_connections + ''',
         .prog_q(prog_q), .p_read_valid(p_read_valid), .p_read_addr(p_read_addr),
         .p_write_rows(p_write_rows), .p_write_words(p_write_words), .p_write_data(p_write_data));
+    ot_qfd_native8_station_leaf u_station (
+        ''' + connections + ',\n        ' + cross_connections + ''');
     genvar lane;
     generate for (lane=0; lane<16; lane=lane+1) begin : g_program
         ot_qfd_native8_program_lane_leaf u_bank (
@@ -103,15 +157,16 @@ endmodule
                        'ot_qfd_native8_retained_partition_candidate u1 (', tb)
     assert count == 1
     begin = tb.index('ot_qfd_native8_retained_partition_candidate u1 (')
-    tail = tb[begin:].replace('.clk(clk)', '.clk_control(clk), .clk_program({16{clk}})', 1)
+    tail = tb[begin:].replace('.clk(clk)', '.clk_control(clk), .clk_station(clk), .clk_program({16{clk}})', 1)
     tb = tb[:begin] + tail
     for name in ('u_seq', 'q_r_rank', 'u_ctrl'):
         tb = tb.replace('u1.' + name, 'u1.u_control.' + name)
+    tb = tb.replace('u1.u_control.q_r_rank', 'u1.u_station.q_r_rank')
     tb = ('// Retained-program partition vs original native8 flop-store reference.\n'
           '// Candidate is fixed-profile; inherited U1_* parameters are not adopted.\n'
           '// Rank input truncation and temporary late-bank-read source mutation are negatives.\n'
           '// Common-phase adapter only; no physical or actual checkpoint-program qualification.\n' + tb)
-    return header + control + bank + parent, tb
+    return header + control + io + bank + parent, tb
 
 
 def main():

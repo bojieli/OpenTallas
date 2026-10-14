@@ -221,7 +221,7 @@ module tb_qfd_native8_retained_partition;
         .su_prog_o(su_prog_o_0),
         .su_rows_o(su_rows_o_0));
     ot_qfd_native8_retained_partition_candidate u1 (
-        .clk_control(clk), .clk_program({16{clk}}), .rst_n(rst_n),
+        .clk_control(clk), .clk_station(clk), .clk_program({16{clk}}), .rst_n(rst_n),
         .h_start(h_start),
         .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
         .tp_token(tp_token),
@@ -399,8 +399,8 @@ module tb_qfd_native8_retained_partition;
       if(rst_n && rank_warm>10) begin
        if(u0.u_seq.c_cred>32 || u1.u_control.u_seq.c_cred>32)credit_bad=credit_bad+1;
        if(c_valid_0)posted_sent=posted_sent+1;
-       if(u1.u_control.q_r_rank !== rank_prev)rank_bad=rank_bad+1;
-       if(u1.u_control.q_r_rank[2])rank_high=rank_high+1;
+       if(u1.u_station.q_r_rank !== rank_prev)rank_bad=rank_bad+1;
+       if(u1.u_station.q_r_rank[2])rank_high=rank_high+1;
       end
     end
     always @(posedge clk) if (rst_n) begin

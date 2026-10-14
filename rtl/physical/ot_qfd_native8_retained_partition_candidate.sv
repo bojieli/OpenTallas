@@ -3,121 +3,118 @@
 // Program read-address/data mux pin registration and native tag ABI remain explicit gaps.
 // No CROM5 or VL adoption; functional bench uses a common-phase clock adapter.
 (* keep_hierarchy = "yes" *) module ot_qfd_native8_control_state_leaf (
-    input  wire clk,
-    input  wire rst_n,
-    input  wire [1-1:0] h_start,
-    input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs
-    input  wire [1-1:0] cb_st_rdy,        // constant buffer: stage cb_st_rdy_stage resident
-    input  wire [5:0] cb_st_rdy_stage,
-    output wire [5:0] cb_stage,           // to every constant-buffer group: the stage the SU runs
-    output wire [1-1:0] cb_tok_start,
-    output wire [18-1:0] cb_tpos,
-    input  wire [18-1:0] tp_token,
-    input  wire [18-1:0] tp_pos,
-    input  wire [1-1:0] kv_write_drained,
-    input  wire [512-1:0] vm_rq,
-    input  wire [1-1:0] c_ready,
-    input  wire [1-1:0] r_valid,
-    input  wire [512-1:0] r_data,
-    input  wire [1-1:0] r_last,
-    input  wire [3-1:0] r_rank,
-    input  wire [1-1:0] r_err,
-    input  wire [1-1:0] pw_v,
-    input  wire [10-1:0] pw_addr,
-    input  wire [64-1:0] pw_data,
-    input  wire [1-1:0] dw_v,
-    input  wire [3-1:0] dw_addr,
-    input  wire [64-1:0] dw_data,
-    input  wire [1-1:0] pi_su_rt_active,
-    input  wire [8-1:0] pi_su_rt_inflight,
-    input  wire [1-1:0] pi_su_ready,
-    input  wire [1-1:0] pi_su_idle,
-    input  wire [1-1:0] pi_su_wrom_re,
-    input  wire [24-1:0] pi_su_wrom_addr,
-    input  wire [64-1:0] pi_su_kv_we,
-    input  wire [16-1:0] pi_su_progress,
-    input  wire [16-1:0] pi_su_progress_rows,
-    input  wire [1-1:0] pi_su_fault,
-    input  wire [24-1:0] x_oacc,
-    input  wire [1-1:0] x_oidle,
-    input  wire [16-1:0] x_oprog,
-    input  wire [1-1:0] x_ofin,
-    input  wire [18-1:0] x_fidx,
-    input  wire [32-1:0] x_fval,
-    input  wire [24-1:0] pi_su_acc,
-    output wire [1-1:0] s_done,
-    output wire [18-1:0] seq_ntok,
-    output wire [32-1:0] seq_nval,
-    output wire [1-1:0] s_fault,
-    output wire [1-1:0] core_fault,
-    output wire [1-1:0] coll_busy,
-    output wire [1-1:0] kv_write_flush,
-    output wire [1-1:0] vm_re,
-    output wire [8-1:0] vm_raddr,
-    output wire [1-1:0] vm_we,
-    output wire [8-1:0] vm_waddr,
-    output wire [512-1:0] vm_wdata,
-    output wire [1-1:0] c_valid,
-    output wire [512-1:0] c_data,
-    output wire [1-1:0] c_last,
-    output wire [1-1:0] c_mode,
-    output wire [32-1:0] c_tag,
-    output wire [1-1:0] rom_fault,
-    output wire [1-1:0] su_asrc,
-    output wire [18-1:0] su_tok,
-    output wire [1-1:0] po_su_go,
-    output wire [18-1:0] po_su_i_nout,
-    output wire [18-1:0] po_su_i_nin,
-    output wire [1-1:0] po_su_i_asrc,
-    output wire [24-1:0] po_su_i_abase,
-    output wire [24-1:0] po_su_i_aso,
-    output wire [24-1:0] po_su_i_asi,
-    output wire [1-1:0] po_su_i_bsrc,
-    output wire [24-1:0] po_su_i_bbase,
-    output wire [24-1:0] po_su_i_bso,
-    output wire [24-1:0] po_su_i_bsi,
-    output wire [1-1:0] po_su_i_csrc,
-    output wire [24-1:0] po_su_i_cbase,
-    output wire [24-1:0] po_su_i_cso,
-    output wire [24-1:0] po_su_i_csi,
-    output wire [2-1:0] po_su_i_ma,
-    output wire [2-1:0] po_su_i_mb,
-    output wire [3-1:0] po_su_i_ad,
-    output wire [3-1:0] po_su_i_sfu,
-    output wire [1-1:0] po_su_i_mc,
-    output wire [1-1:0] po_su_i_md,
-    output wire [2-1:0] po_su_i_dst,
-    output wire [24-1:0] po_su_i_dbase,
-    output wire [24-1:0] po_su_i_dso,
-    output wire [24-1:0] po_su_i_dsi,
-    output wire [2-1:0] po_su_i_red,
-    output wire [1-1:0] po_su_i_redsq,
-    output wire [24-1:0] po_su_i_rbase,
-    output wire [24-1:0] po_su_i_rso,
-    output wire [32-1:0] po_su_i_imm1,
-    output wire [32-1:0] po_su_i_imm2,
-    output wire [1-1:0] me_start_o,
-    output wire [18-1:0] me_token_o,
-    output wire [18-1:0] me_pos_o,
-    output wire [12-1:0] me_prog_base_o,
-    output wire [24-1:0] su_acc_o,
-    output wire [1-1:0] su_idle_o,
-    output wire [16-1:0] su_prog_o,
-    output wire [16-1:0] su_rows_o,
-    output wire [1-1:0] kvd_v,
-    output wire [24-1:0] kvd_wbase,
-    output wire [24-1:0] kvd_ts,
-    output wire [24-1:0] kvd_ks,
-    output wire [24-1:0] kvd_js,
-    output wire [24-1:0] kvd_wcs,
-    output wire [4-1:0] kvd_split,
-    output wire [3-1:0] kvd_jsh,
-    output wire [18-1:0] kvd_tiles,
-    output wire [18-1:0] kvd_k,
-    output wire [18-1:0] kvd_nout,
-    output wire [1-1:0] kvd_kindk,
-    output wire [18-1:0] kvd_pos
-,
+    input wire clk, input wire rst_n,
+    output wire [512-1:0] b_c_data,
+    output wire [1-1:0] b_c_last,
+    output wire [1-1:0] b_c_mode,
+    output wire [32-1:0] b_c_tag,
+    output wire [1-1:0] b_c_valid,
+    output wire [1-1:0] b_coll_busy,
+    output wire [1-1:0] b_core_fault,
+    output wire [1-1:0] b_kv_write_flush,
+    output wire [24-1:0] b_kvd_js,
+    output wire [3-1:0] b_kvd_jsh,
+    output wire [18-1:0] b_kvd_k,
+    output wire [1-1:0] b_kvd_kindk,
+    output wire [24-1:0] b_kvd_ks,
+    output wire [18-1:0] b_kvd_nout,
+    output wire [18-1:0] b_kvd_pos,
+    output wire [4-1:0] b_kvd_split,
+    output wire [18-1:0] b_kvd_tiles,
+    output wire [24-1:0] b_kvd_ts,
+    output wire [1-1:0] b_kvd_v,
+    output wire [24-1:0] b_kvd_wbase,
+    output wire [24-1:0] b_kvd_wcs,
+    output wire [18-1:0] b_me_pos_o,
+    output wire [12-1:0] b_me_prog_base_o,
+    output wire [1-1:0] b_me_start_o,
+    output wire [18-1:0] b_me_token_o,
+    output wire [1-1:0] b_po_su_go,
+    output wire [24-1:0] b_po_su_i_abase,
+    output wire [3-1:0] b_po_su_i_ad,
+    output wire [24-1:0] b_po_su_i_asi,
+    output wire [24-1:0] b_po_su_i_aso,
+    output wire [1-1:0] b_po_su_i_asrc,
+    output wire [24-1:0] b_po_su_i_bbase,
+    output wire [24-1:0] b_po_su_i_bsi,
+    output wire [24-1:0] b_po_su_i_bso,
+    output wire [1-1:0] b_po_su_i_bsrc,
+    output wire [24-1:0] b_po_su_i_cbase,
+    output wire [24-1:0] b_po_su_i_csi,
+    output wire [24-1:0] b_po_su_i_cso,
+    output wire [1-1:0] b_po_su_i_csrc,
+    output wire [24-1:0] b_po_su_i_dbase,
+    output wire [24-1:0] b_po_su_i_dsi,
+    output wire [24-1:0] b_po_su_i_dso,
+    output wire [2-1:0] b_po_su_i_dst,
+    output wire [32-1:0] b_po_su_i_imm1,
+    output wire [32-1:0] b_po_su_i_imm2,
+    output wire [2-1:0] b_po_su_i_ma,
+    output wire [2-1:0] b_po_su_i_mb,
+    output wire [1-1:0] b_po_su_i_mc,
+    output wire [1-1:0] b_po_su_i_md,
+    output wire [18-1:0] b_po_su_i_nin,
+    output wire [18-1:0] b_po_su_i_nout,
+    output wire [24-1:0] b_po_su_i_rbase,
+    output wire [2-1:0] b_po_su_i_red,
+    output wire [1-1:0] b_po_su_i_redsq,
+    output wire [24-1:0] b_po_su_i_rso,
+    output wire [3-1:0] b_po_su_i_sfu,
+    output wire [1-1:0] b_rom_fault,
+    output wire [1-1:0] b_s_done,
+    output wire [1-1:0] b_s_fault,
+    output wire [18-1:0] b_seq_ntok,
+    output wire [32-1:0] b_seq_nval,
+    output wire [24-1:0] b_su_acc_o,
+    output wire [1-1:0] b_su_asrc,
+    output wire [1-1:0] b_su_idle_o,
+    output wire [16-1:0] b_su_prog_o,
+    output wire [16-1:0] b_su_rows_o,
+    output wire [18-1:0] b_su_tok,
+    output wire [8-1:0] b_vm_raddr,
+    output wire [1-1:0] b_vm_re,
+    output wire [8-1:0] b_vm_waddr,
+    output wire [512-1:0] b_vm_wdata,
+    output wire [1-1:0] b_vm_we,
+    input wire [1-1:0] q_c_ready,
+    input wire q_cb_st_rdy,
+    input wire [5:0] q_cb_st_rdy_stage,
+    input wire [3-1:0] q_dw_addr,
+    input wire [64-1:0] q_dw_data,
+    input wire [1-1:0] q_dw_v,
+    input wire [1-1:0] q_h_start,
+    input wire [1-1:0] q_kv_write_drained,
+    input wire [24-1:0] q_pi_su_acc,
+    input wire [1-1:0] q_pi_su_fault,
+    input wire [1-1:0] q_pi_su_idle,
+    input wire [64-1:0] q_pi_su_kv_we,
+    input wire [16-1:0] q_pi_su_progress,
+    input wire [16-1:0] q_pi_su_progress_rows,
+    input wire [1-1:0] q_pi_su_ready,
+    input wire [1-1:0] q_pi_su_rt_active,
+    input wire [8-1:0] q_pi_su_rt_inflight,
+    input wire [24-1:0] q_pi_su_wrom_addr,
+    input wire [1-1:0] q_pi_su_wrom_re,
+    input wire [10-1:0] q_pw_addr,
+    input wire [64-1:0] q_pw_data,
+    input wire [1-1:0] q_pw_v,
+    input wire [512-1:0] q_r_data,
+    input wire [1-1:0] q_r_err,
+    input wire [1-1:0] q_r_last,
+    input wire [3-1:0] q_r_rank,
+    input wire [1-1:0] q_r_valid,
+    input wire [5:0] q_stage_in,
+    input wire [18-1:0] q_tp_pos,
+    input wire [18-1:0] q_tp_token,
+    input wire [512-1:0] q_vm_rq,
+    input wire [18-1:0] q_x_fidx,
+    input wire [32-1:0] q_x_fval,
+    input wire [24-1:0] q_x_oacc,
+    input wire [1-1:0] q_x_ofin,
+    input wire [1-1:0] q_x_oidle,
+    input wire [16-1:0] q_x_oprog,
+    output wire [5:0] sg_stage,
+    output wire sg_tok,
     input wire [1023:0] prog_q,
     output wire p_read_valid, output wire [11:0] p_read_addr,
     output wire [63:0] p_write_rows, output wire [15:0] p_write_words,
@@ -139,218 +136,218 @@
     end else begin : g_rr0
         assign rsv = {8{rs}};
     end endgenerate
-    wire [1-1:0] q_h_start;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_h_start (.clk(clk), .rst_n(rsv[5]), .d(h_start), .q(q_h_start));
-    wire [NW-1:0] q_tp_token;
-    ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_token (.clk(clk), .rst_n(rsv[5]), .d(tp_token), .q(q_tp_token));
-    wire [NW-1:0] q_tp_pos;
-    ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_pos (.clk(clk), .rst_n(rsv[5]), .d(tp_pos), .q(q_tp_pos));
-    wire [1-1:0] q_kv_write_drained;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_kv_write_drained (.clk(clk), .rst_n(rsv[5]), .d(kv_write_drained), .q(q_kv_write_drained));
-    wire [512-1:0] q_vm_rq;
-    ot_hdc_delay #(.W(512), .D(IS)) u_i_vm_rq (.clk(clk), .rst_n(rsv[5]), .d(vm_rq), .q(q_vm_rq));
-    wire [1-1:0] q_c_ready;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_c_ready (.clk(clk), .rst_n(rsv[5]), .d(c_ready), .q(q_c_ready));
-    wire [1-1:0] q_r_valid;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_valid (.clk(clk), .rst_n(rsv[5]), .d(r_valid), .q(q_r_valid));
-    wire [512-1:0] q_r_data;
-    ot_hdc_delay #(.W(512), .D(IS)) u_i_r_data (.clk(clk), .rst_n(rsv[5]), .d(r_data), .q(q_r_data));
-    wire [1-1:0] q_r_last;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_last (.clk(clk), .rst_n(rsv[5]), .d(r_last), .q(q_r_last));
-    wire [RB-1:0] q_r_rank;
-    ot_hdc_delay #(.W(RB), .D(IS)) u_i_r_rank (.clk(clk), .rst_n(rsv[5]), .d(r_rank), .q(q_r_rank));
-    wire [1-1:0] q_r_err;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_err (.clk(clk), .rst_n(rsv[5]), .d(r_err), .q(q_r_err));
-    wire [1-1:0] q_pw_v;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pw_v (.clk(clk), .rst_n(rsv[5]), .d(pw_v), .q(q_pw_v));
-    wire [10-1:0] q_pw_addr;
-    ot_hdc_delay #(.W(10), .D(IS)) u_i_pw_addr (.clk(clk), .rst_n(rsv[5]), .d(pw_addr), .q(q_pw_addr));
-    wire [64-1:0] q_pw_data;
-    ot_hdc_delay #(.W(64), .D(IS)) u_i_pw_data (.clk(clk), .rst_n(rsv[5]), .d(pw_data), .q(q_pw_data));
-    wire [1-1:0] q_dw_v;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_dw_v (.clk(clk), .rst_n(rsv[5]), .d(dw_v), .q(q_dw_v));
-    wire [3-1:0] q_dw_addr;
-    ot_hdc_delay #(.W(3), .D(IS)) u_i_dw_addr (.clk(clk), .rst_n(rsv[5]), .d(dw_addr), .q(q_dw_addr));
-    wire [64-1:0] q_dw_data;
-    ot_hdc_delay #(.W(64), .D(IS)) u_i_dw_data (.clk(clk), .rst_n(rsv[5]), .d(dw_data), .q(q_dw_data));
-    wire [1-1:0] q_pi_su_rt_active;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_rt_active (.clk(clk), .rst_n(rsv[3]), .d(pi_su_rt_active), .q(q_pi_su_rt_active));
-    wire [8-1:0] q_pi_su_rt_inflight;
-    ot_hdc_delay #(.W(8), .D(IS)) u_i_pi_su_rt_inflight (.clk(clk), .rst_n(rsv[3]), .d(pi_su_rt_inflight), .q(q_pi_su_rt_inflight));
-    wire [1-1:0] q_pi_su_ready;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_ready (.clk(clk), .rst_n(rsv[3]), .d(pi_su_ready), .q(q_pi_su_ready));
-    wire [1-1:0] q_pi_su_idle;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_idle (.clk(clk), .rst_n(rsv[3]), .d(pi_su_idle), .q(q_pi_su_idle));
-    wire [1-1:0] q_pi_su_wrom_re;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_wrom_re (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_re), .q(q_pi_su_wrom_re));
-    wire [AW-1:0] q_pi_su_wrom_addr;
-    ot_hdc_delay #(.W(AW), .D(IS)) u_i_pi_su_wrom_addr (.clk(clk), .rst_n(rsv[3]), .d(pi_su_wrom_addr), .q(q_pi_su_wrom_addr));
-    wire [SW-1:0] q_pi_su_kv_we;
-    ot_hdc_delay #(.W(SW), .D(IS)) u_i_pi_su_kv_we (.clk(clk), .rst_n(rsv[3]), .d(pi_su_kv_we), .q(q_pi_su_kv_we));
-    wire [16-1:0] q_pi_su_progress;
-    ot_hdc_delay #(.W(16), .D(IS), .RESET(1)) u_i_pi_su_progress (.clk(clk), .rst_n(rsv[3]), .d(pi_su_progress), .q(q_pi_su_progress));
-    wire [16-1:0] q_pi_su_progress_rows;
-    ot_hdc_delay #(.W(16), .D(IS), .RESET(1)) u_i_pi_su_progress_rows (.clk(clk), .rst_n(rsv[3]), .d(pi_su_progress_rows), .q(q_pi_su_progress_rows));
-    wire [1-1:0] q_pi_su_fault;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_fault (.clk(clk), .rst_n(rsv[3]), .d(pi_su_fault), .q(q_pi_su_fault));
-    wire [24-1:0] q_x_oacc;
-    ot_hdc_delay #(.W(24), .D(IS)) u_i_x_oacc (.clk(clk), .rst_n(rsv[4]), .d(x_oacc), .q(q_x_oacc));
-    wire [1-1:0] q_x_oidle;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_x_oidle (.clk(clk), .rst_n(rsv[4]), .d(x_oidle), .q(q_x_oidle));
-    wire [16-1:0] q_x_oprog;
-    ot_hdc_delay #(.W(16), .D(IS)) u_i_x_oprog (.clk(clk), .rst_n(rsv[4]), .d(x_oprog), .q(q_x_oprog));
-    wire [1-1:0] q_x_ofin;
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_x_ofin (.clk(clk), .rst_n(rsv[4]), .d(x_ofin), .q(q_x_ofin));
-    wire [NW-1:0] q_x_fidx;
-    ot_hdc_delay #(.W(NW), .D(IS)) u_i_x_fidx (.clk(clk), .rst_n(rsv[4]), .d(x_fidx), .q(q_x_fidx));
-    wire [32-1:0] q_x_fval;
-    ot_hdc_delay #(.W(32), .D(IS)) u_i_x_fval (.clk(clk), .rst_n(rsv[4]), .d(x_fval), .q(q_x_fval));
-    wire [24-1:0] q_pi_su_acc;
-    ot_hdc_delay #(.W(24), .D(IS), .RESET(1)) u_i_pi_su_acc (.clk(clk), .rst_n(rsv[3]), .d(pi_su_acc), .q(q_pi_su_acc));
-    wire [1-1:0] b_s_done;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_s_done (.clk(clk), .rst_n(rsv[6]), .d(b_s_done), .q(s_done));
-    wire [NW-1:0] b_seq_ntok;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_seq_ntok (.clk(clk), .rst_n(rsv[6]), .d(b_seq_ntok), .q(seq_ntok));
-    wire [32-1:0] b_seq_nval;
-    ot_hdc_delay #(.W(32), .D(OS)) u_o_seq_nval (.clk(clk), .rst_n(rsv[6]), .d(b_seq_nval), .q(seq_nval));
-    wire [1-1:0] b_s_fault;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_s_fault (.clk(clk), .rst_n(rsv[6]), .d(b_s_fault), .q(s_fault));
-    wire [1-1:0] b_core_fault;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_core_fault (.clk(clk), .rst_n(rsv[6]), .d(b_core_fault), .q(core_fault));
-    wire [1-1:0] b_coll_busy;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_coll_busy (.clk(clk), .rst_n(rsv[6]), .d(b_coll_busy), .q(coll_busy));
-    wire [1-1:0] b_kv_write_flush;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kv_write_flush (.clk(clk), .rst_n(rsv[5]), .d(b_kv_write_flush), .q(kv_write_flush));
-    wire [1-1:0] b_vm_re;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_re (.clk(clk), .rst_n(rsv[6]), .d(b_vm_re), .q(vm_re));
-    wire [8-1:0] b_vm_raddr;
-    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_raddr), .q(vm_raddr));
-    wire [1-1:0] b_vm_we;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_we (.clk(clk), .rst_n(rsv[6]), .d(b_vm_we), .q(vm_we));
-    wire [8-1:0] b_vm_waddr;
-    ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_waddr (.clk(clk), .rst_n(rsv[6]), .d(b_vm_waddr), .q(vm_waddr));
-    wire [512-1:0] b_vm_wdata;
-    ot_hdc_delay #(.W(512), .D(OS)) u_o_vm_wdata (.clk(clk), .rst_n(rsv[6]), .d(b_vm_wdata), .q(vm_wdata));
-    wire [1-1:0] b_c_valid;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_valid (.clk(clk), .rst_n(rsv[6]), .d(b_c_valid), .q(c_valid));
-    wire [512-1:0] b_c_data;
-    ot_hdc_delay #(.W(512), .D(OS)) u_o_c_data (.clk(clk), .rst_n(rsv[6]), .d(b_c_data), .q(c_data));
-    wire [1-1:0] b_c_last;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_last (.clk(clk), .rst_n(rsv[6]), .d(b_c_last), .q(c_last));
-    wire [1-1:0] b_c_mode;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_mode (.clk(clk), .rst_n(rsv[6]), .d(b_c_mode), .q(c_mode));
-    wire [32-1:0] b_c_tag;
-    ot_hdc_delay #(.W(32), .D(OS)) u_o_c_tag (.clk(clk), .rst_n(rsv[6]), .d(b_c_tag), .q(c_tag));
-    wire [1-1:0] b_rom_fault;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_rom_fault (.clk(clk), .rst_n(rsv[6]), .d(b_rom_fault), .q(rom_fault));
-    wire [1-1:0] b_su_asrc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_su_asrc (.clk(clk), .rst_n(rsv[3]), .d(b_su_asrc), .q(su_asrc));
-    wire [NW-1:0] b_su_tok;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_su_tok (.clk(clk), .rst_n(rsv[3]), .d(b_su_tok), .q(su_tok));
-    wire [1-1:0] b_po_su_go;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_go (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_go), .q(po_su_go));
-    wire [NW-1:0] b_po_su_i_nout;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_po_su_i_nout (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_nout), .q(po_su_i_nout));
-    wire [NW-1:0] b_po_su_i_nin;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_po_su_i_nin (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_nin), .q(po_su_i_nin));
-    wire [1-1:0] b_po_su_i_asrc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_asrc (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_asrc), .q(po_su_i_asrc));
-    wire [AW-1:0] b_po_su_i_abase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_abase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_abase), .q(po_su_i_abase));
-    wire [AW-1:0] b_po_su_i_aso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_aso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_aso), .q(po_su_i_aso));
-    wire [AW-1:0] b_po_su_i_asi;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_asi (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_asi), .q(po_su_i_asi));
-    wire [1-1:0] b_po_su_i_bsrc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_bsrc (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_bsrc), .q(po_su_i_bsrc));
-    wire [AW-1:0] b_po_su_i_bbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bbase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_bbase), .q(po_su_i_bbase));
-    wire [AW-1:0] b_po_su_i_bso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_bso), .q(po_su_i_bso));
-    wire [AW-1:0] b_po_su_i_bsi;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bsi (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_bsi), .q(po_su_i_bsi));
-    wire [1-1:0] b_po_su_i_csrc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_csrc (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_csrc), .q(po_su_i_csrc));
-    wire [AW-1:0] b_po_su_i_cbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_cbase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_cbase), .q(po_su_i_cbase));
-    wire [AW-1:0] b_po_su_i_cso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_cso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_cso), .q(po_su_i_cso));
-    wire [AW-1:0] b_po_su_i_csi;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_csi (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_csi), .q(po_su_i_csi));
-    wire [2-1:0] b_po_su_i_ma;
-    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_ma (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_ma), .q(po_su_i_ma));
-    wire [2-1:0] b_po_su_i_mb;
-    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_mb (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_mb), .q(po_su_i_mb));
-    wire [3-1:0] b_po_su_i_ad;
-    ot_hdc_delay #(.W(3), .D(OS)) u_o_po_su_i_ad (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_ad), .q(po_su_i_ad));
-    wire [3-1:0] b_po_su_i_sfu;
-    ot_hdc_delay #(.W(3), .D(OS)) u_o_po_su_i_sfu (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_sfu), .q(po_su_i_sfu));
-    wire [1-1:0] b_po_su_i_mc;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_mc (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_mc), .q(po_su_i_mc));
-    wire [1-1:0] b_po_su_i_md;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_md (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_md), .q(po_su_i_md));
-    wire [2-1:0] b_po_su_i_dst;
-    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_dst (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_dst), .q(po_su_i_dst));
-    wire [AW-1:0] b_po_su_i_dbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dbase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_dbase), .q(po_su_i_dbase));
-    wire [AW-1:0] b_po_su_i_dso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_dso), .q(po_su_i_dso));
-    wire [AW-1:0] b_po_su_i_dsi;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dsi (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_dsi), .q(po_su_i_dsi));
-    wire [2-1:0] b_po_su_i_red;
-    ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_red (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_red), .q(po_su_i_red));
-    wire [1-1:0] b_po_su_i_redsq;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_redsq (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_redsq), .q(po_su_i_redsq));
-    wire [AW-1:0] b_po_su_i_rbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_rbase (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_rbase), .q(po_su_i_rbase));
-    wire [AW-1:0] b_po_su_i_rso;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_rso (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_rso), .q(po_su_i_rso));
-    wire [32-1:0] b_po_su_i_imm1;
-    ot_hdc_delay #(.W(32), .D(OS)) u_o_po_su_i_imm1 (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_imm1), .q(po_su_i_imm1));
-    wire [32-1:0] b_po_su_i_imm2;
-    ot_hdc_delay #(.W(32), .D(OS)) u_o_po_su_i_imm2 (.clk(clk), .rst_n(rsv[3]), .d(b_po_su_i_imm2), .q(po_su_i_imm2));
-    wire [1-1:0] b_me_start_o;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_me_start_o (.clk(clk), .rst_n(rsv[4]), .d(b_me_start_o), .q(me_start_o));
-    wire [NW-1:0] b_me_token_o;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_me_token_o (.clk(clk), .rst_n(rsv[4]), .d(b_me_token_o), .q(me_token_o));
-    wire [NW-1:0] b_me_pos_o;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_me_pos_o (.clk(clk), .rst_n(rsv[4]), .d(b_me_pos_o), .q(me_pos_o));
-    wire [12-1:0] b_me_prog_base_o;
-    ot_hdc_delay #(.W(12), .D(OS)) u_o_me_prog_base_o (.clk(clk), .rst_n(rsv[4]), .d(b_me_prog_base_o), .q(me_prog_base_o));
-    wire [24-1:0] b_su_acc_o;
-    ot_hdc_delay #(.W(24), .D(OS), .RESET(1)) u_o_su_acc_o (.clk(clk), .rst_n(rsv[4]), .d(b_su_acc_o), .q(su_acc_o));
-    wire [1-1:0] b_su_idle_o;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_su_idle_o (.clk(clk), .rst_n(rsv[4]), .d(b_su_idle_o), .q(su_idle_o));
-    wire [16-1:0] b_su_prog_o;
-    ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_prog_o (.clk(clk), .rst_n(rsv[4]), .d(b_su_prog_o), .q(su_prog_o));
-    wire [16-1:0] b_su_rows_o;
-    wire [1-1:0] b_kvd_v;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_v (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_v), .q(kvd_v));
-    wire [AW-1:0] b_kvd_wbase;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wbase (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_wbase), .q(kvd_wbase));
-    wire [AW-1:0] b_kvd_ts;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ts (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_ts), .q(kvd_ts));
-    wire [AW-1:0] b_kvd_ks;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ks (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_ks), .q(kvd_ks));
-    wire [AW-1:0] b_kvd_js;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_js (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_js), .q(kvd_js));
-    wire [AW-1:0] b_kvd_wcs;
-    ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wcs (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_wcs), .q(kvd_wcs));
-    wire [4-1:0] b_kvd_split;
-    ot_hdc_delay #(.W(4), .D(OS)) u_o_kvd_split (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_split), .q(kvd_split));
-    wire [3-1:0] b_kvd_jsh;
-    ot_hdc_delay #(.W(3), .D(OS)) u_o_kvd_jsh (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_jsh), .q(kvd_jsh));
-    wire [NW-1:0] b_kvd_tiles;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_tiles (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_tiles), .q(kvd_tiles));
-    wire [NW-1:0] b_kvd_k;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_k (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_k), .q(kvd_k));
-    wire [NW-1:0] b_kvd_nout;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_nout (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_nout), .q(kvd_nout));
-    wire [1-1:0] b_kvd_kindk;
-    ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_kindk (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_kindk), .q(kvd_kindk));
-    wire [NW-1:0] b_kvd_pos;
-    ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_pos (.clk(clk), .rst_n(rsv[5]), .d(b_kvd_pos), .q(kvd_pos));
-    ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_rows_o (.clk(clk), .rst_n(rsv[4]), .d(b_su_rows_o), .q(su_rows_o));
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     wire s_su_ready, s_su_idle; wire [15:0] s_su_progress, s_su_progress_rows; reg [NW-1:0] tok_l; wire es_re_w;
         ot_qfd_issue_shell #(.RT_ME(0), .RT_SU(RT), .COMP(1)) u_shell (.clk(clk), .rst_n(rsv[7]),
         .me_go(1'b0), .su_go(b_po_su_go), .me_en(1'b1), .su_sfu(b_po_su_i_sfu), .me_amax(1'b0),
@@ -570,14 +567,14 @@
         .o_fin(),
         .o_fidx(),
         .o_fval());
-    wire [5:0] q_stage_in, q_cb_st_rdy_stage; wire q_cb_st_rdy;
-    ot_hdc_delay #(.W(12), .D(IS)) u_i_cbs (.clk(clk), .rst_n(rsv[6]), .d({stage_in, cb_st_rdy_stage}), .q({q_stage_in, q_cb_st_rdy_stage}));
-    ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rsv[6]), .d(cb_st_rdy), .q(q_cb_st_rdy));
-    wire sg_go, sg_tok; wire [NW-1:0] sg_token, sg_pos; wire [5:0] sg_stage;
+     
+    
+    
+    wire sg_go; wire [NW-1:0] sg_token, sg_pos; 
     ot_qfd_stage_gate #(.SW_(6), .NW(NW)) u_sgate (.clk(clk), .rst_n(rsv[7]), .h_start(q_h_start), .stage(q_stage_in),
         .token(q_tp_token), .pos(q_tp_pos), .st_rdy(q_cb_st_rdy), .st_rdy_stage(q_cb_st_rdy_stage), .go(sg_go),
         .go_token(sg_token), .go_pos(sg_pos), .cur_stage(sg_stage), .tok_start(sg_tok));
-    ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rsv[6]), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
+    
     ot_qwen_tp_seq_w12_vrl #(.VRL(IS + OS + 1 + 2 * RLY), .CRED(CRED), .N(D), .NW(NW), .PAW(PAW), .VWA(8), .DAW(6), .FW(512), .TAGW(32),
         .QWEN_FULLSHAPE(1), .ENABLE_AR256(1), .RMUT(RRG >= 2 ? 1 : 0)) u_seq (
         .clk(clk), .rst_n(rsv[0]), .rst_nw(rsv[1]), .start(sg_go), .token(sg_token), .pos(sg_pos), .done(b_s_done),
@@ -597,6 +594,346 @@
     assign b_su_prog_o = q_pi_su_progress;
     assign b_su_rows_o = q_pi_su_progress_rows;
 endmodule
+(* keep_hierarchy = "yes" *) module ot_qfd_native8_station_leaf (
+    input  wire clk,
+    input  wire rst_n,
+    input  wire [1-1:0] h_start,
+    input  wire [5:0] stage_in,           // the stage (layer / HEAD) this start runs
+    input  wire [1-1:0] cb_st_rdy,        // constant buffer: stage cb_st_rdy_stage resident
+    input  wire [5:0] cb_st_rdy_stage,
+    output wire [5:0] cb_stage,           // to every constant-buffer group: the stage the SU runs
+    output wire [1-1:0] cb_tok_start,
+    output wire [18-1:0] cb_tpos,
+    input  wire [18-1:0] tp_token,
+    input  wire [18-1:0] tp_pos,
+    input  wire [1-1:0] kv_write_drained,
+    input  wire [512-1:0] vm_rq,
+    input  wire [1-1:0] c_ready,
+    input  wire [1-1:0] r_valid,
+    input  wire [512-1:0] r_data,
+    input  wire [1-1:0] r_last,
+    input  wire [3-1:0] r_rank,
+    input  wire [1-1:0] r_err,
+    input  wire [1-1:0] pw_v,
+    input  wire [10-1:0] pw_addr,
+    input  wire [64-1:0] pw_data,
+    input  wire [1-1:0] dw_v,
+    input  wire [3-1:0] dw_addr,
+    input  wire [64-1:0] dw_data,
+    input  wire [1-1:0] pi_su_rt_active,
+    input  wire [8-1:0] pi_su_rt_inflight,
+    input  wire [1-1:0] pi_su_ready,
+    input  wire [1-1:0] pi_su_idle,
+    input  wire [1-1:0] pi_su_wrom_re,
+    input  wire [24-1:0] pi_su_wrom_addr,
+    input  wire [64-1:0] pi_su_kv_we,
+    input  wire [16-1:0] pi_su_progress,
+    input  wire [16-1:0] pi_su_progress_rows,
+    input  wire [1-1:0] pi_su_fault,
+    input  wire [24-1:0] x_oacc,
+    input  wire [1-1:0] x_oidle,
+    input  wire [16-1:0] x_oprog,
+    input  wire [1-1:0] x_ofin,
+    input  wire [18-1:0] x_fidx,
+    input  wire [32-1:0] x_fval,
+    input  wire [24-1:0] pi_su_acc,
+    output wire [1-1:0] s_done,
+    output wire [18-1:0] seq_ntok,
+    output wire [32-1:0] seq_nval,
+    output wire [1-1:0] s_fault,
+    output wire [1-1:0] core_fault,
+    output wire [1-1:0] coll_busy,
+    output wire [1-1:0] kv_write_flush,
+    output wire [1-1:0] vm_re,
+    output wire [8-1:0] vm_raddr,
+    output wire [1-1:0] vm_we,
+    output wire [8-1:0] vm_waddr,
+    output wire [512-1:0] vm_wdata,
+    output wire [1-1:0] c_valid,
+    output wire [512-1:0] c_data,
+    output wire [1-1:0] c_last,
+    output wire [1-1:0] c_mode,
+    output wire [32-1:0] c_tag,
+    output wire [1-1:0] rom_fault,
+    output wire [1-1:0] su_asrc,
+    output wire [18-1:0] su_tok,
+    output wire [1-1:0] po_su_go,
+    output wire [18-1:0] po_su_i_nout,
+    output wire [18-1:0] po_su_i_nin,
+    output wire [1-1:0] po_su_i_asrc,
+    output wire [24-1:0] po_su_i_abase,
+    output wire [24-1:0] po_su_i_aso,
+    output wire [24-1:0] po_su_i_asi,
+    output wire [1-1:0] po_su_i_bsrc,
+    output wire [24-1:0] po_su_i_bbase,
+    output wire [24-1:0] po_su_i_bso,
+    output wire [24-1:0] po_su_i_bsi,
+    output wire [1-1:0] po_su_i_csrc,
+    output wire [24-1:0] po_su_i_cbase,
+    output wire [24-1:0] po_su_i_cso,
+    output wire [24-1:0] po_su_i_csi,
+    output wire [2-1:0] po_su_i_ma,
+    output wire [2-1:0] po_su_i_mb,
+    output wire [3-1:0] po_su_i_ad,
+    output wire [3-1:0] po_su_i_sfu,
+    output wire [1-1:0] po_su_i_mc,
+    output wire [1-1:0] po_su_i_md,
+    output wire [2-1:0] po_su_i_dst,
+    output wire [24-1:0] po_su_i_dbase,
+    output wire [24-1:0] po_su_i_dso,
+    output wire [24-1:0] po_su_i_dsi,
+    output wire [2-1:0] po_su_i_red,
+    output wire [1-1:0] po_su_i_redsq,
+    output wire [24-1:0] po_su_i_rbase,
+    output wire [24-1:0] po_su_i_rso,
+    output wire [32-1:0] po_su_i_imm1,
+    output wire [32-1:0] po_su_i_imm2,
+    output wire [1-1:0] me_start_o,
+    output wire [18-1:0] me_token_o,
+    output wire [18-1:0] me_pos_o,
+    output wire [12-1:0] me_prog_base_o,
+    output wire [24-1:0] su_acc_o,
+    output wire [1-1:0] su_idle_o,
+    output wire [16-1:0] su_prog_o,
+    output wire [16-1:0] su_rows_o,
+    output wire [1-1:0] kvd_v,
+    output wire [24-1:0] kvd_wbase,
+    output wire [24-1:0] kvd_ts,
+    output wire [24-1:0] kvd_ks,
+    output wire [24-1:0] kvd_js,
+    output wire [24-1:0] kvd_wcs,
+    output wire [4-1:0] kvd_split,
+    output wire [3-1:0] kvd_jsh,
+    output wire [18-1:0] kvd_tiles,
+    output wire [18-1:0] kvd_k,
+    output wire [18-1:0] kvd_nout,
+    output wire [1-1:0] kvd_kindk,
+    output wire [18-1:0] kvd_pos
+,
+    input wire [512-1:0] b_c_data,
+    input wire [1-1:0] b_c_last,
+    input wire [1-1:0] b_c_mode,
+    input wire [32-1:0] b_c_tag,
+    input wire [1-1:0] b_c_valid,
+    input wire [1-1:0] b_coll_busy,
+    input wire [1-1:0] b_core_fault,
+    input wire [1-1:0] b_kv_write_flush,
+    input wire [24-1:0] b_kvd_js,
+    input wire [3-1:0] b_kvd_jsh,
+    input wire [18-1:0] b_kvd_k,
+    input wire [1-1:0] b_kvd_kindk,
+    input wire [24-1:0] b_kvd_ks,
+    input wire [18-1:0] b_kvd_nout,
+    input wire [18-1:0] b_kvd_pos,
+    input wire [4-1:0] b_kvd_split,
+    input wire [18-1:0] b_kvd_tiles,
+    input wire [24-1:0] b_kvd_ts,
+    input wire [1-1:0] b_kvd_v,
+    input wire [24-1:0] b_kvd_wbase,
+    input wire [24-1:0] b_kvd_wcs,
+    input wire [18-1:0] b_me_pos_o,
+    input wire [12-1:0] b_me_prog_base_o,
+    input wire [1-1:0] b_me_start_o,
+    input wire [18-1:0] b_me_token_o,
+    input wire [1-1:0] b_po_su_go,
+    input wire [24-1:0] b_po_su_i_abase,
+    input wire [3-1:0] b_po_su_i_ad,
+    input wire [24-1:0] b_po_su_i_asi,
+    input wire [24-1:0] b_po_su_i_aso,
+    input wire [1-1:0] b_po_su_i_asrc,
+    input wire [24-1:0] b_po_su_i_bbase,
+    input wire [24-1:0] b_po_su_i_bsi,
+    input wire [24-1:0] b_po_su_i_bso,
+    input wire [1-1:0] b_po_su_i_bsrc,
+    input wire [24-1:0] b_po_su_i_cbase,
+    input wire [24-1:0] b_po_su_i_csi,
+    input wire [24-1:0] b_po_su_i_cso,
+    input wire [1-1:0] b_po_su_i_csrc,
+    input wire [24-1:0] b_po_su_i_dbase,
+    input wire [24-1:0] b_po_su_i_dsi,
+    input wire [24-1:0] b_po_su_i_dso,
+    input wire [2-1:0] b_po_su_i_dst,
+    input wire [32-1:0] b_po_su_i_imm1,
+    input wire [32-1:0] b_po_su_i_imm2,
+    input wire [2-1:0] b_po_su_i_ma,
+    input wire [2-1:0] b_po_su_i_mb,
+    input wire [1-1:0] b_po_su_i_mc,
+    input wire [1-1:0] b_po_su_i_md,
+    input wire [18-1:0] b_po_su_i_nin,
+    input wire [18-1:0] b_po_su_i_nout,
+    input wire [24-1:0] b_po_su_i_rbase,
+    input wire [2-1:0] b_po_su_i_red,
+    input wire [1-1:0] b_po_su_i_redsq,
+    input wire [24-1:0] b_po_su_i_rso,
+    input wire [3-1:0] b_po_su_i_sfu,
+    input wire [1-1:0] b_rom_fault,
+    input wire [1-1:0] b_s_done,
+    input wire [1-1:0] b_s_fault,
+    input wire [18-1:0] b_seq_ntok,
+    input wire [32-1:0] b_seq_nval,
+    input wire [24-1:0] b_su_acc_o,
+    input wire [1-1:0] b_su_asrc,
+    input wire [1-1:0] b_su_idle_o,
+    input wire [16-1:0] b_su_prog_o,
+    input wire [16-1:0] b_su_rows_o,
+    input wire [18-1:0] b_su_tok,
+    input wire [8-1:0] b_vm_raddr,
+    input wire [1-1:0] b_vm_re,
+    input wire [8-1:0] b_vm_waddr,
+    input wire [512-1:0] b_vm_wdata,
+    input wire [1-1:0] b_vm_we,
+    output wire [1-1:0] q_c_ready,
+    output wire q_cb_st_rdy,
+    output wire [5:0] q_cb_st_rdy_stage,
+    output wire [3-1:0] q_dw_addr,
+    output wire [64-1:0] q_dw_data,
+    output wire [1-1:0] q_dw_v,
+    output wire [1-1:0] q_h_start,
+    output wire [1-1:0] q_kv_write_drained,
+    output wire [24-1:0] q_pi_su_acc,
+    output wire [1-1:0] q_pi_su_fault,
+    output wire [1-1:0] q_pi_su_idle,
+    output wire [64-1:0] q_pi_su_kv_we,
+    output wire [16-1:0] q_pi_su_progress,
+    output wire [16-1:0] q_pi_su_progress_rows,
+    output wire [1-1:0] q_pi_su_ready,
+    output wire [1-1:0] q_pi_su_rt_active,
+    output wire [8-1:0] q_pi_su_rt_inflight,
+    output wire [24-1:0] q_pi_su_wrom_addr,
+    output wire [1-1:0] q_pi_su_wrom_re,
+    output wire [10-1:0] q_pw_addr,
+    output wire [64-1:0] q_pw_data,
+    output wire [1-1:0] q_pw_v,
+    output wire [512-1:0] q_r_data,
+    output wire [1-1:0] q_r_err,
+    output wire [1-1:0] q_r_last,
+    output wire [3-1:0] q_r_rank,
+    output wire [1-1:0] q_r_valid,
+    output wire [5:0] q_stage_in,
+    output wire [18-1:0] q_tp_pos,
+    output wire [18-1:0] q_tp_token,
+    output wire [512-1:0] q_vm_rq,
+    output wire [18-1:0] q_x_fidx,
+    output wire [32-1:0] q_x_fval,
+    output wire [24-1:0] q_x_oacc,
+    output wire [1-1:0] q_x_ofin,
+    output wire [1-1:0] q_x_oidle,
+    output wire [16-1:0] q_x_oprog,
+    input wire [5:0] sg_stage,
+    input wire sg_tok
+);
+    localparam integer W=16, G=3072, AW=24, NW=18, PAW=12, SW=64, LV=7, D=8, SMIN=7, SMAX=11, TCUT=7, IS=1, OS=1, RT=4, RLY=0, CRED=32, RRG=0, PCUT=0, OLAG=0, PSRAM=0, PMUT=0, HQ2=0, RB=3;
+    wire rs; ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk),.rst_n(rst_n),.rst_q(rs));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_h_start (.clk(clk), .rst_n(rs), .d(h_start), .q(q_h_start));
+ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_token (.clk(clk), .rst_n(rs), .d(tp_token), .q(q_tp_token));
+ot_hdc_delay #(.W(NW), .D(IS)) u_i_tp_pos (.clk(clk), .rst_n(rs), .d(tp_pos), .q(q_tp_pos));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_kv_write_drained (.clk(clk), .rst_n(rs), .d(kv_write_drained), .q(q_kv_write_drained));
+ot_hdc_delay #(.W(512), .D(IS)) u_i_vm_rq (.clk(clk), .rst_n(rs), .d(vm_rq), .q(q_vm_rq));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_c_ready (.clk(clk), .rst_n(rs), .d(c_ready), .q(q_c_ready));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_valid (.clk(clk), .rst_n(rs), .d(r_valid), .q(q_r_valid));
+ot_hdc_delay #(.W(512), .D(IS)) u_i_r_data (.clk(clk), .rst_n(rs), .d(r_data), .q(q_r_data));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_last (.clk(clk), .rst_n(rs), .d(r_last), .q(q_r_last));
+ot_hdc_delay #(.W(RB), .D(IS)) u_i_r_rank (.clk(clk), .rst_n(rs), .d(r_rank), .q(q_r_rank));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_r_err (.clk(clk), .rst_n(rs), .d(r_err), .q(q_r_err));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pw_v (.clk(clk), .rst_n(rs), .d(pw_v), .q(q_pw_v));
+ot_hdc_delay #(.W(10), .D(IS)) u_i_pw_addr (.clk(clk), .rst_n(rs), .d(pw_addr), .q(q_pw_addr));
+ot_hdc_delay #(.W(64), .D(IS)) u_i_pw_data (.clk(clk), .rst_n(rs), .d(pw_data), .q(q_pw_data));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_dw_v (.clk(clk), .rst_n(rs), .d(dw_v), .q(q_dw_v));
+ot_hdc_delay #(.W(3), .D(IS)) u_i_dw_addr (.clk(clk), .rst_n(rs), .d(dw_addr), .q(q_dw_addr));
+ot_hdc_delay #(.W(64), .D(IS)) u_i_dw_data (.clk(clk), .rst_n(rs), .d(dw_data), .q(q_dw_data));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_rt_active (.clk(clk), .rst_n(rs), .d(pi_su_rt_active), .q(q_pi_su_rt_active));
+ot_hdc_delay #(.W(8), .D(IS)) u_i_pi_su_rt_inflight (.clk(clk), .rst_n(rs), .d(pi_su_rt_inflight), .q(q_pi_su_rt_inflight));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_ready (.clk(clk), .rst_n(rs), .d(pi_su_ready), .q(q_pi_su_ready));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_idle (.clk(clk), .rst_n(rs), .d(pi_su_idle), .q(q_pi_su_idle));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_wrom_re (.clk(clk), .rst_n(rs), .d(pi_su_wrom_re), .q(q_pi_su_wrom_re));
+ot_hdc_delay #(.W(AW), .D(IS)) u_i_pi_su_wrom_addr (.clk(clk), .rst_n(rs), .d(pi_su_wrom_addr), .q(q_pi_su_wrom_addr));
+ot_hdc_delay #(.W(SW), .D(IS)) u_i_pi_su_kv_we (.clk(clk), .rst_n(rs), .d(pi_su_kv_we), .q(q_pi_su_kv_we));
+ot_hdc_delay #(.W(16), .D(IS), .RESET(1)) u_i_pi_su_progress (.clk(clk), .rst_n(rs), .d(pi_su_progress), .q(q_pi_su_progress));
+ot_hdc_delay #(.W(16), .D(IS), .RESET(1)) u_i_pi_su_progress_rows (.clk(clk), .rst_n(rs), .d(pi_su_progress_rows), .q(q_pi_su_progress_rows));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_pi_su_fault (.clk(clk), .rst_n(rs), .d(pi_su_fault), .q(q_pi_su_fault));
+ot_hdc_delay #(.W(24), .D(IS)) u_i_x_oacc (.clk(clk), .rst_n(rs), .d(x_oacc), .q(q_x_oacc));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_x_oidle (.clk(clk), .rst_n(rs), .d(x_oidle), .q(q_x_oidle));
+ot_hdc_delay #(.W(16), .D(IS)) u_i_x_oprog (.clk(clk), .rst_n(rs), .d(x_oprog), .q(q_x_oprog));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_x_ofin (.clk(clk), .rst_n(rs), .d(x_ofin), .q(q_x_ofin));
+ot_hdc_delay #(.W(NW), .D(IS)) u_i_x_fidx (.clk(clk), .rst_n(rs), .d(x_fidx), .q(q_x_fidx));
+ot_hdc_delay #(.W(32), .D(IS)) u_i_x_fval (.clk(clk), .rst_n(rs), .d(x_fval), .q(q_x_fval));
+ot_hdc_delay #(.W(24), .D(IS), .RESET(1)) u_i_pi_su_acc (.clk(clk), .rst_n(rs), .d(pi_su_acc), .q(q_pi_su_acc));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_s_done (.clk(clk), .rst_n(rs), .d(b_s_done), .q(s_done));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_seq_ntok (.clk(clk), .rst_n(rs), .d(b_seq_ntok), .q(seq_ntok));
+ot_hdc_delay #(.W(32), .D(OS)) u_o_seq_nval (.clk(clk), .rst_n(rs), .d(b_seq_nval), .q(seq_nval));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_s_fault (.clk(clk), .rst_n(rs), .d(b_s_fault), .q(s_fault));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_core_fault (.clk(clk), .rst_n(rs), .d(b_core_fault), .q(core_fault));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_coll_busy (.clk(clk), .rst_n(rs), .d(b_coll_busy), .q(coll_busy));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kv_write_flush (.clk(clk), .rst_n(rs), .d(b_kv_write_flush), .q(kv_write_flush));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_re (.clk(clk), .rst_n(rs), .d(b_vm_re), .q(vm_re));
+ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_raddr (.clk(clk), .rst_n(rs), .d(b_vm_raddr), .q(vm_raddr));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_vm_we (.clk(clk), .rst_n(rs), .d(b_vm_we), .q(vm_we));
+ot_hdc_delay #(.W(8), .D(OS)) u_o_vm_waddr (.clk(clk), .rst_n(rs), .d(b_vm_waddr), .q(vm_waddr));
+ot_hdc_delay #(.W(512), .D(OS)) u_o_vm_wdata (.clk(clk), .rst_n(rs), .d(b_vm_wdata), .q(vm_wdata));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_valid (.clk(clk), .rst_n(rs), .d(b_c_valid), .q(c_valid));
+ot_hdc_delay #(.W(512), .D(OS)) u_o_c_data (.clk(clk), .rst_n(rs), .d(b_c_data), .q(c_data));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_last (.clk(clk), .rst_n(rs), .d(b_c_last), .q(c_last));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_c_mode (.clk(clk), .rst_n(rs), .d(b_c_mode), .q(c_mode));
+ot_hdc_delay #(.W(32), .D(OS)) u_o_c_tag (.clk(clk), .rst_n(rs), .d(b_c_tag), .q(c_tag));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_rom_fault (.clk(clk), .rst_n(rs), .d(b_rom_fault), .q(rom_fault));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_su_asrc (.clk(clk), .rst_n(rs), .d(b_su_asrc), .q(su_asrc));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_su_tok (.clk(clk), .rst_n(rs), .d(b_su_tok), .q(su_tok));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_go (.clk(clk), .rst_n(rs), .d(b_po_su_go), .q(po_su_go));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_po_su_i_nout (.clk(clk), .rst_n(rs), .d(b_po_su_i_nout), .q(po_su_i_nout));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_po_su_i_nin (.clk(clk), .rst_n(rs), .d(b_po_su_i_nin), .q(po_su_i_nin));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_asrc (.clk(clk), .rst_n(rs), .d(b_po_su_i_asrc), .q(po_su_i_asrc));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_abase (.clk(clk), .rst_n(rs), .d(b_po_su_i_abase), .q(po_su_i_abase));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_aso (.clk(clk), .rst_n(rs), .d(b_po_su_i_aso), .q(po_su_i_aso));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_asi (.clk(clk), .rst_n(rs), .d(b_po_su_i_asi), .q(po_su_i_asi));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_bsrc (.clk(clk), .rst_n(rs), .d(b_po_su_i_bsrc), .q(po_su_i_bsrc));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bbase (.clk(clk), .rst_n(rs), .d(b_po_su_i_bbase), .q(po_su_i_bbase));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bso (.clk(clk), .rst_n(rs), .d(b_po_su_i_bso), .q(po_su_i_bso));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_bsi (.clk(clk), .rst_n(rs), .d(b_po_su_i_bsi), .q(po_su_i_bsi));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_csrc (.clk(clk), .rst_n(rs), .d(b_po_su_i_csrc), .q(po_su_i_csrc));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_cbase (.clk(clk), .rst_n(rs), .d(b_po_su_i_cbase), .q(po_su_i_cbase));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_cso (.clk(clk), .rst_n(rs), .d(b_po_su_i_cso), .q(po_su_i_cso));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_csi (.clk(clk), .rst_n(rs), .d(b_po_su_i_csi), .q(po_su_i_csi));
+ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_ma (.clk(clk), .rst_n(rs), .d(b_po_su_i_ma), .q(po_su_i_ma));
+ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_mb (.clk(clk), .rst_n(rs), .d(b_po_su_i_mb), .q(po_su_i_mb));
+ot_hdc_delay #(.W(3), .D(OS)) u_o_po_su_i_ad (.clk(clk), .rst_n(rs), .d(b_po_su_i_ad), .q(po_su_i_ad));
+ot_hdc_delay #(.W(3), .D(OS)) u_o_po_su_i_sfu (.clk(clk), .rst_n(rs), .d(b_po_su_i_sfu), .q(po_su_i_sfu));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_mc (.clk(clk), .rst_n(rs), .d(b_po_su_i_mc), .q(po_su_i_mc));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_md (.clk(clk), .rst_n(rs), .d(b_po_su_i_md), .q(po_su_i_md));
+ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_dst (.clk(clk), .rst_n(rs), .d(b_po_su_i_dst), .q(po_su_i_dst));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dbase (.clk(clk), .rst_n(rs), .d(b_po_su_i_dbase), .q(po_su_i_dbase));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dso (.clk(clk), .rst_n(rs), .d(b_po_su_i_dso), .q(po_su_i_dso));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_dsi (.clk(clk), .rst_n(rs), .d(b_po_su_i_dsi), .q(po_su_i_dsi));
+ot_hdc_delay #(.W(2), .D(OS)) u_o_po_su_i_red (.clk(clk), .rst_n(rs), .d(b_po_su_i_red), .q(po_su_i_red));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_po_su_i_redsq (.clk(clk), .rst_n(rs), .d(b_po_su_i_redsq), .q(po_su_i_redsq));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_rbase (.clk(clk), .rst_n(rs), .d(b_po_su_i_rbase), .q(po_su_i_rbase));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_po_su_i_rso (.clk(clk), .rst_n(rs), .d(b_po_su_i_rso), .q(po_su_i_rso));
+ot_hdc_delay #(.W(32), .D(OS)) u_o_po_su_i_imm1 (.clk(clk), .rst_n(rs), .d(b_po_su_i_imm1), .q(po_su_i_imm1));
+ot_hdc_delay #(.W(32), .D(OS)) u_o_po_su_i_imm2 (.clk(clk), .rst_n(rs), .d(b_po_su_i_imm2), .q(po_su_i_imm2));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_me_start_o (.clk(clk), .rst_n(rs), .d(b_me_start_o), .q(me_start_o));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_me_token_o (.clk(clk), .rst_n(rs), .d(b_me_token_o), .q(me_token_o));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_me_pos_o (.clk(clk), .rst_n(rs), .d(b_me_pos_o), .q(me_pos_o));
+ot_hdc_delay #(.W(12), .D(OS)) u_o_me_prog_base_o (.clk(clk), .rst_n(rs), .d(b_me_prog_base_o), .q(me_prog_base_o));
+ot_hdc_delay #(.W(24), .D(OS), .RESET(1)) u_o_su_acc_o (.clk(clk), .rst_n(rs), .d(b_su_acc_o), .q(su_acc_o));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_su_idle_o (.clk(clk), .rst_n(rs), .d(b_su_idle_o), .q(su_idle_o));
+ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_prog_o (.clk(clk), .rst_n(rs), .d(b_su_prog_o), .q(su_prog_o));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_v (.clk(clk), .rst_n(rs), .d(b_kvd_v), .q(kvd_v));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wbase (.clk(clk), .rst_n(rs), .d(b_kvd_wbase), .q(kvd_wbase));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ts (.clk(clk), .rst_n(rs), .d(b_kvd_ts), .q(kvd_ts));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_ks (.clk(clk), .rst_n(rs), .d(b_kvd_ks), .q(kvd_ks));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_js (.clk(clk), .rst_n(rs), .d(b_kvd_js), .q(kvd_js));
+ot_hdc_delay #(.W(AW), .D(OS)) u_o_kvd_wcs (.clk(clk), .rst_n(rs), .d(b_kvd_wcs), .q(kvd_wcs));
+ot_hdc_delay #(.W(4), .D(OS)) u_o_kvd_split (.clk(clk), .rst_n(rs), .d(b_kvd_split), .q(kvd_split));
+ot_hdc_delay #(.W(3), .D(OS)) u_o_kvd_jsh (.clk(clk), .rst_n(rs), .d(b_kvd_jsh), .q(kvd_jsh));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_tiles (.clk(clk), .rst_n(rs), .d(b_kvd_tiles), .q(kvd_tiles));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_k (.clk(clk), .rst_n(rs), .d(b_kvd_k), .q(kvd_k));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_nout (.clk(clk), .rst_n(rs), .d(b_kvd_nout), .q(kvd_nout));
+ot_hdc_delay #(.W(1), .D(OS), .RESET(1)) u_o_kvd_kindk (.clk(clk), .rst_n(rs), .d(b_kvd_kindk), .q(kvd_kindk));
+ot_hdc_delay #(.W(NW), .D(OS)) u_o_kvd_pos (.clk(clk), .rst_n(rs), .d(b_kvd_pos), .q(kvd_pos));
+ot_hdc_delay #(.W(16), .D(OS), .RESET(1)) u_o_su_rows_o (.clk(clk), .rst_n(rs), .d(b_su_rows_o), .q(su_rows_o));
+ot_hdc_delay #(.W(12), .D(IS)) u_i_cbs (.clk(clk), .rst_n(rs), .d({stage_in, cb_st_rdy_stage}), .q({q_stage_in, q_cb_st_rdy_stage}));
+ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_cbr (.clk(clk), .rst_n(rs), .d(cb_st_rdy), .q(q_cb_st_rdy));
+ot_hdc_delay #(.W(6 + 1 + NW), .D(OS)) u_o_cb (.clk(clk), .rst_n(rs), .d({sg_stage, sg_tok, q_tp_pos}), .q({cb_stage, cb_tok_start, cb_tpos}));
+endmodule
 (* keep_hierarchy = "yes" *) module ot_qfd_native8_program_lane_leaf (
     input wire clk, input wire read_valid, input wire [11:0] read_addr,
     input wire [63:0] write_rows, input wire write_word, input wire [63:0] write_data,
@@ -611,7 +948,7 @@ endmodule
     end
 endmodule
 module ot_qfd_native8_retained_partition_candidate (
-    input wire clk_control,
+    input wire clk_control, input wire clk_station,
     input wire [15:0] clk_program,
     input  wire rst_n,
     input  wire [1-1:0] h_start,
@@ -728,11 +1065,237 @@ module ot_qfd_native8_retained_partition_candidate (
     output wire [18-1:0] kvd_pos
 
 );
+    wire [512-1:0] b_c_data;
+    wire [1-1:0] b_c_last;
+    wire [1-1:0] b_c_mode;
+    wire [32-1:0] b_c_tag;
+    wire [1-1:0] b_c_valid;
+    wire [1-1:0] b_coll_busy;
+    wire [1-1:0] b_core_fault;
+    wire [1-1:0] b_kv_write_flush;
+    wire [24-1:0] b_kvd_js;
+    wire [3-1:0] b_kvd_jsh;
+    wire [18-1:0] b_kvd_k;
+    wire [1-1:0] b_kvd_kindk;
+    wire [24-1:0] b_kvd_ks;
+    wire [18-1:0] b_kvd_nout;
+    wire [18-1:0] b_kvd_pos;
+    wire [4-1:0] b_kvd_split;
+    wire [18-1:0] b_kvd_tiles;
+    wire [24-1:0] b_kvd_ts;
+    wire [1-1:0] b_kvd_v;
+    wire [24-1:0] b_kvd_wbase;
+    wire [24-1:0] b_kvd_wcs;
+    wire [18-1:0] b_me_pos_o;
+    wire [12-1:0] b_me_prog_base_o;
+    wire [1-1:0] b_me_start_o;
+    wire [18-1:0] b_me_token_o;
+    wire [1-1:0] b_po_su_go;
+    wire [24-1:0] b_po_su_i_abase;
+    wire [3-1:0] b_po_su_i_ad;
+    wire [24-1:0] b_po_su_i_asi;
+    wire [24-1:0] b_po_su_i_aso;
+    wire [1-1:0] b_po_su_i_asrc;
+    wire [24-1:0] b_po_su_i_bbase;
+    wire [24-1:0] b_po_su_i_bsi;
+    wire [24-1:0] b_po_su_i_bso;
+    wire [1-1:0] b_po_su_i_bsrc;
+    wire [24-1:0] b_po_su_i_cbase;
+    wire [24-1:0] b_po_su_i_csi;
+    wire [24-1:0] b_po_su_i_cso;
+    wire [1-1:0] b_po_su_i_csrc;
+    wire [24-1:0] b_po_su_i_dbase;
+    wire [24-1:0] b_po_su_i_dsi;
+    wire [24-1:0] b_po_su_i_dso;
+    wire [2-1:0] b_po_su_i_dst;
+    wire [32-1:0] b_po_su_i_imm1;
+    wire [32-1:0] b_po_su_i_imm2;
+    wire [2-1:0] b_po_su_i_ma;
+    wire [2-1:0] b_po_su_i_mb;
+    wire [1-1:0] b_po_su_i_mc;
+    wire [1-1:0] b_po_su_i_md;
+    wire [18-1:0] b_po_su_i_nin;
+    wire [18-1:0] b_po_su_i_nout;
+    wire [24-1:0] b_po_su_i_rbase;
+    wire [2-1:0] b_po_su_i_red;
+    wire [1-1:0] b_po_su_i_redsq;
+    wire [24-1:0] b_po_su_i_rso;
+    wire [3-1:0] b_po_su_i_sfu;
+    wire [1-1:0] b_rom_fault;
+    wire [1-1:0] b_s_done;
+    wire [1-1:0] b_s_fault;
+    wire [18-1:0] b_seq_ntok;
+    wire [32-1:0] b_seq_nval;
+    wire [24-1:0] b_su_acc_o;
+    wire [1-1:0] b_su_asrc;
+    wire [1-1:0] b_su_idle_o;
+    wire [16-1:0] b_su_prog_o;
+    wire [16-1:0] b_su_rows_o;
+    wire [18-1:0] b_su_tok;
+    wire [8-1:0] b_vm_raddr;
+    wire [1-1:0] b_vm_re;
+    wire [8-1:0] b_vm_waddr;
+    wire [512-1:0] b_vm_wdata;
+    wire [1-1:0] b_vm_we;
+    wire [1-1:0] q_c_ready;
+    wire q_cb_st_rdy;
+    wire [5:0] q_cb_st_rdy_stage;
+    wire [3-1:0] q_dw_addr;
+    wire [64-1:0] q_dw_data;
+    wire [1-1:0] q_dw_v;
+    wire [1-1:0] q_h_start;
+    wire [1-1:0] q_kv_write_drained;
+    wire [24-1:0] q_pi_su_acc;
+    wire [1-1:0] q_pi_su_fault;
+    wire [1-1:0] q_pi_su_idle;
+    wire [64-1:0] q_pi_su_kv_we;
+    wire [16-1:0] q_pi_su_progress;
+    wire [16-1:0] q_pi_su_progress_rows;
+    wire [1-1:0] q_pi_su_ready;
+    wire [1-1:0] q_pi_su_rt_active;
+    wire [8-1:0] q_pi_su_rt_inflight;
+    wire [24-1:0] q_pi_su_wrom_addr;
+    wire [1-1:0] q_pi_su_wrom_re;
+    wire [10-1:0] q_pw_addr;
+    wire [64-1:0] q_pw_data;
+    wire [1-1:0] q_pw_v;
+    wire [512-1:0] q_r_data;
+    wire [1-1:0] q_r_err;
+    wire [1-1:0] q_r_last;
+    wire [3-1:0] q_r_rank;
+    wire [1-1:0] q_r_valid;
+    wire [5:0] q_stage_in;
+    wire [18-1:0] q_tp_pos;
+    wire [18-1:0] q_tp_token;
+    wire [512-1:0] q_vm_rq;
+    wire [18-1:0] q_x_fidx;
+    wire [32-1:0] q_x_fval;
+    wire [24-1:0] q_x_oacc;
+    wire [1-1:0] q_x_ofin;
+    wire [1-1:0] q_x_oidle;
+    wire [16-1:0] q_x_oprog;
+    wire [5:0] sg_stage;
+    wire sg_tok;
     wire [1023:0] prog_q;
     wire p_read_valid; wire [11:0] p_read_addr;
     wire [63:0] p_write_rows, p_write_data; wire [15:0] p_write_words;
     ot_qfd_native8_control_state_leaf u_control (
-        .clk(clk_control),
+        .clk(clk_control), .rst_n(rst_n),
+        .b_c_data(b_c_data),
+        .b_c_last(b_c_last),
+        .b_c_mode(b_c_mode),
+        .b_c_tag(b_c_tag),
+        .b_c_valid(b_c_valid),
+        .b_coll_busy(b_coll_busy),
+        .b_core_fault(b_core_fault),
+        .b_kv_write_flush(b_kv_write_flush),
+        .b_kvd_js(b_kvd_js),
+        .b_kvd_jsh(b_kvd_jsh),
+        .b_kvd_k(b_kvd_k),
+        .b_kvd_kindk(b_kvd_kindk),
+        .b_kvd_ks(b_kvd_ks),
+        .b_kvd_nout(b_kvd_nout),
+        .b_kvd_pos(b_kvd_pos),
+        .b_kvd_split(b_kvd_split),
+        .b_kvd_tiles(b_kvd_tiles),
+        .b_kvd_ts(b_kvd_ts),
+        .b_kvd_v(b_kvd_v),
+        .b_kvd_wbase(b_kvd_wbase),
+        .b_kvd_wcs(b_kvd_wcs),
+        .b_me_pos_o(b_me_pos_o),
+        .b_me_prog_base_o(b_me_prog_base_o),
+        .b_me_start_o(b_me_start_o),
+        .b_me_token_o(b_me_token_o),
+        .b_po_su_go(b_po_su_go),
+        .b_po_su_i_abase(b_po_su_i_abase),
+        .b_po_su_i_ad(b_po_su_i_ad),
+        .b_po_su_i_asi(b_po_su_i_asi),
+        .b_po_su_i_aso(b_po_su_i_aso),
+        .b_po_su_i_asrc(b_po_su_i_asrc),
+        .b_po_su_i_bbase(b_po_su_i_bbase),
+        .b_po_su_i_bsi(b_po_su_i_bsi),
+        .b_po_su_i_bso(b_po_su_i_bso),
+        .b_po_su_i_bsrc(b_po_su_i_bsrc),
+        .b_po_su_i_cbase(b_po_su_i_cbase),
+        .b_po_su_i_csi(b_po_su_i_csi),
+        .b_po_su_i_cso(b_po_su_i_cso),
+        .b_po_su_i_csrc(b_po_su_i_csrc),
+        .b_po_su_i_dbase(b_po_su_i_dbase),
+        .b_po_su_i_dsi(b_po_su_i_dsi),
+        .b_po_su_i_dso(b_po_su_i_dso),
+        .b_po_su_i_dst(b_po_su_i_dst),
+        .b_po_su_i_imm1(b_po_su_i_imm1),
+        .b_po_su_i_imm2(b_po_su_i_imm2),
+        .b_po_su_i_ma(b_po_su_i_ma),
+        .b_po_su_i_mb(b_po_su_i_mb),
+        .b_po_su_i_mc(b_po_su_i_mc),
+        .b_po_su_i_md(b_po_su_i_md),
+        .b_po_su_i_nin(b_po_su_i_nin),
+        .b_po_su_i_nout(b_po_su_i_nout),
+        .b_po_su_i_rbase(b_po_su_i_rbase),
+        .b_po_su_i_red(b_po_su_i_red),
+        .b_po_su_i_redsq(b_po_su_i_redsq),
+        .b_po_su_i_rso(b_po_su_i_rso),
+        .b_po_su_i_sfu(b_po_su_i_sfu),
+        .b_rom_fault(b_rom_fault),
+        .b_s_done(b_s_done),
+        .b_s_fault(b_s_fault),
+        .b_seq_ntok(b_seq_ntok),
+        .b_seq_nval(b_seq_nval),
+        .b_su_acc_o(b_su_acc_o),
+        .b_su_asrc(b_su_asrc),
+        .b_su_idle_o(b_su_idle_o),
+        .b_su_prog_o(b_su_prog_o),
+        .b_su_rows_o(b_su_rows_o),
+        .b_su_tok(b_su_tok),
+        .b_vm_raddr(b_vm_raddr),
+        .b_vm_re(b_vm_re),
+        .b_vm_waddr(b_vm_waddr),
+        .b_vm_wdata(b_vm_wdata),
+        .b_vm_we(b_vm_we),
+        .q_c_ready(q_c_ready),
+        .q_cb_st_rdy(q_cb_st_rdy),
+        .q_cb_st_rdy_stage(q_cb_st_rdy_stage),
+        .q_dw_addr(q_dw_addr),
+        .q_dw_data(q_dw_data),
+        .q_dw_v(q_dw_v),
+        .q_h_start(q_h_start),
+        .q_kv_write_drained(q_kv_write_drained),
+        .q_pi_su_acc(q_pi_su_acc),
+        .q_pi_su_fault(q_pi_su_fault),
+        .q_pi_su_idle(q_pi_su_idle),
+        .q_pi_su_kv_we(q_pi_su_kv_we),
+        .q_pi_su_progress(q_pi_su_progress),
+        .q_pi_su_progress_rows(q_pi_su_progress_rows),
+        .q_pi_su_ready(q_pi_su_ready),
+        .q_pi_su_rt_active(q_pi_su_rt_active),
+        .q_pi_su_rt_inflight(q_pi_su_rt_inflight),
+        .q_pi_su_wrom_addr(q_pi_su_wrom_addr),
+        .q_pi_su_wrom_re(q_pi_su_wrom_re),
+        .q_pw_addr(q_pw_addr),
+        .q_pw_data(q_pw_data),
+        .q_pw_v(q_pw_v),
+        .q_r_data(q_r_data),
+        .q_r_err(q_r_err),
+        .q_r_last(q_r_last),
+        .q_r_rank(q_r_rank),
+        .q_r_valid(q_r_valid),
+        .q_stage_in(q_stage_in),
+        .q_tp_pos(q_tp_pos),
+        .q_tp_token(q_tp_token),
+        .q_vm_rq(q_vm_rq),
+        .q_x_fidx(q_x_fidx),
+        .q_x_fval(q_x_fval),
+        .q_x_oacc(q_x_oacc),
+        .q_x_ofin(q_x_ofin),
+        .q_x_oidle(q_x_oidle),
+        .q_x_oprog(q_x_oprog),
+        .sg_stage(sg_stage),
+        .sg_tok(sg_tok),
+        .prog_q(prog_q), .p_read_valid(p_read_valid), .p_read_addr(p_read_addr),
+        .p_write_rows(p_write_rows), .p_write_words(p_write_words), .p_write_data(p_write_data));
+    ot_qfd_native8_station_leaf u_station (
+        .clk(clk_station),
         .rst_n(rst_n),
         .h_start(h_start),
         .stage_in(stage_in),
@@ -846,8 +1409,117 @@ module ot_qfd_native8_retained_partition_candidate (
         .kvd_nout(kvd_nout),
         .kvd_kindk(kvd_kindk),
         .kvd_pos(kvd_pos),
-        .prog_q(prog_q), .p_read_valid(p_read_valid), .p_read_addr(p_read_addr),
-        .p_write_rows(p_write_rows), .p_write_words(p_write_words), .p_write_data(p_write_data));
+        .b_c_data(b_c_data),
+        .b_c_last(b_c_last),
+        .b_c_mode(b_c_mode),
+        .b_c_tag(b_c_tag),
+        .b_c_valid(b_c_valid),
+        .b_coll_busy(b_coll_busy),
+        .b_core_fault(b_core_fault),
+        .b_kv_write_flush(b_kv_write_flush),
+        .b_kvd_js(b_kvd_js),
+        .b_kvd_jsh(b_kvd_jsh),
+        .b_kvd_k(b_kvd_k),
+        .b_kvd_kindk(b_kvd_kindk),
+        .b_kvd_ks(b_kvd_ks),
+        .b_kvd_nout(b_kvd_nout),
+        .b_kvd_pos(b_kvd_pos),
+        .b_kvd_split(b_kvd_split),
+        .b_kvd_tiles(b_kvd_tiles),
+        .b_kvd_ts(b_kvd_ts),
+        .b_kvd_v(b_kvd_v),
+        .b_kvd_wbase(b_kvd_wbase),
+        .b_kvd_wcs(b_kvd_wcs),
+        .b_me_pos_o(b_me_pos_o),
+        .b_me_prog_base_o(b_me_prog_base_o),
+        .b_me_start_o(b_me_start_o),
+        .b_me_token_o(b_me_token_o),
+        .b_po_su_go(b_po_su_go),
+        .b_po_su_i_abase(b_po_su_i_abase),
+        .b_po_su_i_ad(b_po_su_i_ad),
+        .b_po_su_i_asi(b_po_su_i_asi),
+        .b_po_su_i_aso(b_po_su_i_aso),
+        .b_po_su_i_asrc(b_po_su_i_asrc),
+        .b_po_su_i_bbase(b_po_su_i_bbase),
+        .b_po_su_i_bsi(b_po_su_i_bsi),
+        .b_po_su_i_bso(b_po_su_i_bso),
+        .b_po_su_i_bsrc(b_po_su_i_bsrc),
+        .b_po_su_i_cbase(b_po_su_i_cbase),
+        .b_po_su_i_csi(b_po_su_i_csi),
+        .b_po_su_i_cso(b_po_su_i_cso),
+        .b_po_su_i_csrc(b_po_su_i_csrc),
+        .b_po_su_i_dbase(b_po_su_i_dbase),
+        .b_po_su_i_dsi(b_po_su_i_dsi),
+        .b_po_su_i_dso(b_po_su_i_dso),
+        .b_po_su_i_dst(b_po_su_i_dst),
+        .b_po_su_i_imm1(b_po_su_i_imm1),
+        .b_po_su_i_imm2(b_po_su_i_imm2),
+        .b_po_su_i_ma(b_po_su_i_ma),
+        .b_po_su_i_mb(b_po_su_i_mb),
+        .b_po_su_i_mc(b_po_su_i_mc),
+        .b_po_su_i_md(b_po_su_i_md),
+        .b_po_su_i_nin(b_po_su_i_nin),
+        .b_po_su_i_nout(b_po_su_i_nout),
+        .b_po_su_i_rbase(b_po_su_i_rbase),
+        .b_po_su_i_red(b_po_su_i_red),
+        .b_po_su_i_redsq(b_po_su_i_redsq),
+        .b_po_su_i_rso(b_po_su_i_rso),
+        .b_po_su_i_sfu(b_po_su_i_sfu),
+        .b_rom_fault(b_rom_fault),
+        .b_s_done(b_s_done),
+        .b_s_fault(b_s_fault),
+        .b_seq_ntok(b_seq_ntok),
+        .b_seq_nval(b_seq_nval),
+        .b_su_acc_o(b_su_acc_o),
+        .b_su_asrc(b_su_asrc),
+        .b_su_idle_o(b_su_idle_o),
+        .b_su_prog_o(b_su_prog_o),
+        .b_su_rows_o(b_su_rows_o),
+        .b_su_tok(b_su_tok),
+        .b_vm_raddr(b_vm_raddr),
+        .b_vm_re(b_vm_re),
+        .b_vm_waddr(b_vm_waddr),
+        .b_vm_wdata(b_vm_wdata),
+        .b_vm_we(b_vm_we),
+        .q_c_ready(q_c_ready),
+        .q_cb_st_rdy(q_cb_st_rdy),
+        .q_cb_st_rdy_stage(q_cb_st_rdy_stage),
+        .q_dw_addr(q_dw_addr),
+        .q_dw_data(q_dw_data),
+        .q_dw_v(q_dw_v),
+        .q_h_start(q_h_start),
+        .q_kv_write_drained(q_kv_write_drained),
+        .q_pi_su_acc(q_pi_su_acc),
+        .q_pi_su_fault(q_pi_su_fault),
+        .q_pi_su_idle(q_pi_su_idle),
+        .q_pi_su_kv_we(q_pi_su_kv_we),
+        .q_pi_su_progress(q_pi_su_progress),
+        .q_pi_su_progress_rows(q_pi_su_progress_rows),
+        .q_pi_su_ready(q_pi_su_ready),
+        .q_pi_su_rt_active(q_pi_su_rt_active),
+        .q_pi_su_rt_inflight(q_pi_su_rt_inflight),
+        .q_pi_su_wrom_addr(q_pi_su_wrom_addr),
+        .q_pi_su_wrom_re(q_pi_su_wrom_re),
+        .q_pw_addr(q_pw_addr),
+        .q_pw_data(q_pw_data),
+        .q_pw_v(q_pw_v),
+        .q_r_data(q_r_data),
+        .q_r_err(q_r_err),
+        .q_r_last(q_r_last),
+        .q_r_rank(q_r_rank),
+        .q_r_valid(q_r_valid),
+        .q_stage_in(q_stage_in),
+        .q_tp_pos(q_tp_pos),
+        .q_tp_token(q_tp_token),
+        .q_vm_rq(q_vm_rq),
+        .q_x_fidx(q_x_fidx),
+        .q_x_fval(q_x_fval),
+        .q_x_oacc(q_x_oacc),
+        .q_x_ofin(q_x_ofin),
+        .q_x_oidle(q_x_oidle),
+        .q_x_oprog(q_x_oprog),
+        .sg_stage(sg_stage),
+        .sg_tok(sg_tok));
     genvar lane;
     generate for (lane=0; lane<16; lane=lane+1) begin : g_program
         ot_qfd_native8_program_lane_leaf u_bank (
