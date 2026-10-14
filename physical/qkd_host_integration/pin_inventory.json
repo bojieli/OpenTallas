@@ -3,7 +3,7 @@
   "parent_fit": "UNPROVEN_NO_LEGACY_FRAME_FIT_ASSERTION",
   "prompt_leaf": {
     "master": "qkd_host_prompt_capture_pins",
-    "production_parent": "qkd_host_control_prompt_capture",
+    "production_parent": "qkd_host_control_prompt_capture_role",
     "data_latency_edges": 4,
     "fault_latency_edges": 5,
     "storage": "actual8192x18 SECDED physical1024x256 SRAM",
@@ -2957,7 +2957,7 @@
       "clock_entries": [
         "clk"
       ],
-      "instances_per_die": 1,
+      "instances_per_die": 0,
       "ports": [
         {
           "name": "clk",
@@ -3164,6 +3164,147 @@
         }
       ],
       "params": {}
+    },
+    {
+      "master": "qkd_host_rst_role_pins",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_rst_role_pins.sv",
+      "source_sha256": "fb1f5dbfe76a33e302cd35d5c488d72ca9c2e658364384bc2a18d45202f265b4",
+      "flop_bits": 240,
+      "outline_request_um": [
+        86.4,
+        86.4
+      ],
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "clock_entries": [
+        "clk"
+      ],
+      "instances_per_die": 1,
+      "ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "por_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "soft_rst",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "die_id",
+          "direction": "input",
+          "width": 3,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "link_up",
+          "direction": "input",
+          "width": 6,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "boot_done",
+          "direction": "input",
+          "width": 8,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "boot_ok",
+          "direction": "input",
+          "width": 8,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "host_rst_n",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "link_rst_n",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "hbm_rst_n",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "boot_go",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "die_rst_n",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "sys_ready",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "boot_fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "boot_state",
+          "direction": "output",
+          "width": 4,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "boot_err",
+          "direction": "output",
+          "width": 4,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "boot_cycles",
+          "direction": "output",
+          "width": 32,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "params": {
+        "NL": 6,
+        "ND": 8
+      },
+      "role": "genuine ND8 package reset on role0; genuine own-boot ND1 reset on peers; identity mutation fail closed"
     },
     {
       "master": "qfd_xf_ch546",
@@ -19584,6 +19725,83 @@
     "reported_by": "qwen_split_feasibility",
     "required": "nativecontroller variant width/clock gate plus actual pin/PG/channel assignment; dimensions alone do not qualify fit",
     "edge_clearance": "10.8um total vertical residual; generic20umedgechannel requires repack or actual alignedface/channelproof; no freepocketclaim"
+  },
+  "clock_contract": {
+    "source_commit": "1d5435003",
+    "source_hashes_file": "physical/qkd_host_integration/evidence/qm_partition/verdict.json",
+    "qm_roots": {
+      "ck": {
+        "period_ps": 833.3,
+        "family": "CORE833",
+        "ff": 350
+      },
+      "clk_h": {
+        "period_ps": 1000,
+        "family": "QM_HOST1000",
+        "ff": 8871
+      },
+      "clk_i": {
+        "period_ps": 1666.7,
+        "family": "ING600_SYNC_COMPENSATED",
+        "ff": 12725
+      },
+      "clk_i_bank[0]": {
+        "period_ps": 1666.7,
+        "family": "ING600_SYNC_COMPENSATED",
+        "ff": 4234,
+        "macro_clock_pins": 16
+      },
+      "clk_i_bank[1]": {
+        "period_ps": 1666.7,
+        "family": "ING600_SYNC_COMPENSATED",
+        "ff": 4234,
+        "macro_clock_pins": 16
+      },
+      "clk_i_out": {
+        "period_ps": 1666.7,
+        "family": "ING600_SYNC_COMPENSATED",
+        "ff": 2386
+      }
+    },
+    "cross_ingest_roots": "Actual registered seams, compensation and corner setup/hold required; no asynchronous false-path waiver",
+    "packet_to_qm_host": "UNRELATED_NO_DECLARED_RATIONAL_PHASE_SCHEDULER",
+    "qm_internal_host_ingest_core": "Source original Gray FIFO CDC; actual physical synchronization still requires qualification",
+    "no_historical_clk_i_alias": true
+  },
+  "qm_host_clock_seam": {
+    "packet_core_period_ps": 833.3,
+    "QM_host_period_ps": 1000,
+    "status": "UNRESOLVED_CDC_REQUIRED_OR_SOURCE_EXACT_NEW_HOST_CLOCK_TIMING_VARIANT",
+    "raw_bus_crossing_permitted": false,
+    "additional_dedicated_W546_CDC_if_profile_preserved": 2,
+    "additional_cdc_outline_um": [
+      90.72,
+      129.6
+    ],
+    "credit_station": "countedcredit/capacitybridge required; source/actualFF/clock/pins pending",
+    "collective_CDF_borrowed": 0,
+    "original_class_QM_functional_bench": "same1ns family; doesnotprove833\u21921000 assembly",
+    "total_HOST_dedicated_W546_CDC_if_profile_preserved": 4,
+    "capacity_bridge": {
+      "status": "SOURCE_AND_CENSUS_PENDING",
+      "forward_source_capacity": 16,
+      "forward_queue_words": 16,
+      "forward_word_bits": 514,
+      "forward_CDC_input_credits": 4,
+      "forward_CDC_output_credits": 4,
+      "QM_original_capacity": 16,
+      "credit_count_width": 5,
+      "count_termination": "QM-host local accumulator and one-credit-per-cycle pacer; no raw count bus crossing",
+      "reverse_completion_source_capacity": 4,
+      "reverse_CDC_input_credits": 4,
+      "reverse_CDC_output_credits": 4,
+      "new_clock_entries": [
+        "packet_queue_core833",
+        "QM_local_credit_pacer1000"
+      ],
+      "clock_entry_outline_census": "UNVERIFIED_PENDING",
+      "credit_meaning": "queue/CDC capacity only; actual HBM committed prefix remains separate"
+    }
   },
   "QM": "NEW SIX-ENTRY NATIVE RTL FUNCTIONAL PARTITION PROVEN; PHYSICAL PG/CTS/PINS OPEN; HISTORICAL VIEW FAIL NO REUSE"
 }
