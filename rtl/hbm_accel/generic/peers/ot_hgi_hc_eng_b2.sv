@@ -108,6 +108,7 @@ endmodule
 
 // ---- the finite central golden-order collector: NQ x P tagged chunk slots -> ss (the row's sum of squares)
 module ot_hgi_hc_coll_b2 #(
+    parameter integer STORELEAF=0, CLOCKED=0,
     parameter integer NQ  = 4,
     parameter integer P   = 2,
     parameter integer NB  = 20,              // 32-chunk blocks a row (D / 256)
@@ -117,6 +118,8 @@ module ot_hgi_hc_coll_b2 #(
 ) (
     input  wire               clk,
     input  wire               rst_n,
+    input wire[NB-1:0] clk_store,input wire[NQ-1:0] clk_scan,
+    input wire[30:0] clk_block_add,clk_heap_add,
     input  wire               clr,           // a new row: every chunk, block and heap node forgotten
     input  wire [1:0]         ep,            // the row's epoch (stable from clr)
     input  wire [NQ*P-1:0]    pk_v,
@@ -154,7 +157,7 @@ module ot_hgi_hc_coll_b2 #(
         for (s = 0; s < NS; s = s + 1) begin
             id[s] <= pk[s*44 +: 44];
             if (iv[s]) iq[s][iw[s][CB-1:0]] <= id[s];
-            if (wr[s]) st[tg[s]] <= hd[s][31:0];
+
         end
     end
     // ---- blocks: a block fires once, the cycle after its 32 leaves are all present
@@ -164,11 +167,63 @@ module ot_hgi_hc_coll_b2 #(
         fb_v = 1'b0; fb = '0;
         for (b = NB - 1; b >= 0; b = b - 1) if (full[b] && !fired[b]) begin fb_v = 1'b1; fb = BB'(b); end
     end
-    integer c2;
-    always @(posedge clk) if (fb_v) begin
-        for (c2 = 0; c2 < 32; c2 = c2 + 1) b0[32*c2 +: 32] <= st[32 * integer'(fb) + c2];
-        b0_i <= 6'(fb);
-    end
+    wire[NB-1:0]store_full,store_fault,scan_valid;
+    wire[NB*256-1:0]scan_data;
+    wire[NQ-1:0]hub_v,hub_fault;wire[NQ*256-1:0]hub_data;wire[NQ*7-1:0]hub_meta;
+    wire[6:0]land_tag;
+    reg scan_active;reg[1:0]scan_group;reg[4:0]scan_block;
+    reg[6:0]meta0,meta1;reg[3:0]scan_flush;
+    generate if(STORELEAF)begin:g_stores
+      initial if(NB!=20||NQ!=4||P!=2)$fatal(1,"HC local blockstore needs20blocks/4quarters/2slots");
+      for(genvar bs=0;bs<NB;bs++)begin:g_store
+        localparam integer Q=bs/5;
+        wire[1:0]wv={wr[Q*2+1]&&(tg[Q*2+1]>>5)==bs,wr[Q*2]&&(tg[Q*2]>>5)==bs};
+        ot_hgi_hc_chunk_store32 #(.MUT(MUT==12?2:0))u_store(
+          .clk(CLOCKED?clk_store[bs]:clk),.rst_n(rst_n),.clr(clr),.wr_v(wv),
+          .wr_tag({tg[Q*2+1][4:0],tg[Q*2][4:0]}),.wr_data({hd[Q*2+1][31:0],hd[Q*2][31:0]}),
+          .scan_v(scan_active&&scan_block==bs&&scan_flush==0),.scan_group(scan_group),
+          .scan_o_v(scan_valid[bs]),.scan_data(scan_data[bs*256+:256]),
+          .full(store_full[bs]),.fault(store_fault[bs]));
+      end
+      for(genvar q=0;q<NQ;q++)begin:g_hub
+        ot_hgi_hc_chunk_scan5 u_hub(.clk(CLOCKED?clk_scan[q]:clk),.rst_n(rst_n),.clr(clr),
+          .in_v(scan_valid[q*5+:5]),.in_data(scan_data[q*5*256+:5*256]),.in_meta(meta1),
+          .out_v(hub_v[q]),.out_data(hub_data[q*256+:256]),.out_meta(hub_meta[q*7+:7]),.fault(hub_fault[q]));
+      end
+      always @(posedge clk)begin meta0<={scan_block,scan_group};meta1<=meta0;end
+      reg[255:0]land_data;reg[6:0]land_meta;
+      always @*begin
+        land_data=0;land_meta=0;
+        for(integer q=0;q<NQ;q++)begin
+          land_data=land_data|(hub_data[q*256+:256]&{256{hub_v[q]}});
+          land_meta=land_meta|(hub_meta[q*7+:7]&{7{hub_v[q]}});
+        end
+      end
+      assign land_tag=land_meta;
+      // Four registered eight-chunk packets form the SAME32-leaf tree input.
+      // Only the final packet publishes b0; the golden association is unchanged.
+      for(genvar g=0;g<4;g++)begin:g_land
+        always @(posedge clk)if((|hub_v)&&land_meta[1:0]==g&&!clr&&scan_flush==0)
+          b0[g*256+:256]<=land_data;
+      end
+      always @(posedge clk)if((|hub_v)&&land_meta[1:0]==3&&!clr&&scan_flush==0)b0_i<={1'b0,land_meta[6:2]};
+      always @(posedge clk or negedge rst_n)begin
+        if(!rst_n)begin scan_active<=0;scan_group<=0;scan_block<=0;scan_flush<=0;end
+        else if(clr)begin scan_active<=0;scan_group<=0;scan_flush<=8;end
+        else begin
+          if(scan_flush!=0)scan_flush<=scan_flush-1;
+          if(!scan_active&&fb_v&&scan_flush==0)begin scan_active<=1;scan_group<=0;scan_block<=5'(fb);end
+          else if(scan_active)begin scan_group<=scan_group+1'b1;if(scan_group==3)scan_active<=0;end
+        end
+      end
+    end else begin:g_legacy_store
+      assign land_tag=0;assign store_full=0;assign store_fault=0;assign hub_v=0;assign hub_fault=0;assign hub_data=0;assign hub_meta=0;
+      always @(posedge clk)for(integer ws=0;ws<NS;ws++)if(wr[ws])st[tg[ws]]<=hd[ws][31:0];
+      always @(posedge clk)if(fb_v)begin
+        for(integer cc=0;cc<32;cc++)b0[32*cc+:32]<=st[32*integer'(fb)+cc];
+        b0_i<=6'(fb);
+      end
+    end endgenerate
     wire [31:0] tv [0:5][0:31]; wire [5:0] tf;
     localparam integer DTB = 5 * LA;
     wire [DTB:0] tvl;
@@ -184,7 +239,7 @@ module ot_hgi_hc_coll_b2 #(
         for (kt = 1; kt <= 5; kt = kt + 1) begin : g_tl
             wire [(32 >> kt)-1:0] f;
             for (c = 0; c < (32 >> kt); c = c + 1) begin : g_tn
-                ot_dsrom_qadd #(.LAT(LA)) u_a (clk, rst_n, tvl[LA * (kt - 1)], tv[kt - 1][2 * c], tv[kt - 1][2 * c + 1],
+                ot_dsrom_qadd #(.LAT(LA)) u_a (CLOCKED?clk_block_add[32-(32>>(kt-1))+c]:clk, rst_n, tvl[LA * (kt - 1)], tv[kt - 1][2 * c], tv[kt - 1][2 * c + 1],
                                                tv[kt][c], f[c]);
             end
             for (c = (32 >> kt); c < 32; c = c + 1) begin : g_tz assign tv[kt][c] = 32'd0; end
@@ -213,7 +268,7 @@ module ot_hgi_hc_coll_b2 #(
                 reg stt, vd, kn; reg [31:0] val; wire [LAV:0] av; wire [31:0] sm;
                 wire fire = nd[2 * n] && nd[2 * n + 1] && !stt && !clr;
                 ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rst_n), .v(fire), .vd(av));
-                ot_dsrom_qadd #(.LAT(LAV)) u_a (clk, rst_n, fire, nv[2 * n], nv[2 * n + 1], sm, nf[n]);
+                ot_dsrom_qadd #(.LAT(LAV)) u_a (CLOCKED?clk_heap_add[n-1]:clk, rst_n, fire, nv[2 * n], nv[2 * n + 1], sm, nf[n]);
                 wire land = av[LAV] && !kn && !clr;          // kn: the add in flight belongs to a cleared row
                 always @(posedge clk or negedge rst_n)
                     if (!rst_n) begin stt <= 1'b0; vd <= 1'b0; kn <= 1'b0; end
@@ -235,7 +290,9 @@ module ot_hgi_hc_coll_b2 #(
             iv <= '0; pk_cr <= '0; vld <= '0; full <= '0; fired <= '0; b0_v <= 1'b0; flt <= 1'b0; n_stale <= '0; kl <= '0;
             for (s = 0; s < NS; s = s + 1) begin iw[s] <= '0; ir[s] <= '0; end
         end else begin
-            iv <= pk_v; pk_cr <= tk; b0_v <= fb_v && !clr;
+            iv <= pk_v; pk_cr <= tk;
+            if(STORELEAF)b0_v <= (|hub_v)&&land_tag[1:0]==3&&!clr&&scan_flush==0;
+            else b0_v <= fb_v&&!clr;
             kl <= {kl[DTB-1:0], 1'b0};
             for (s = 0; s < NS; s = s + 1) begin
                 if (iv[s]) begin
@@ -247,9 +304,9 @@ module ot_hgi_hc_coll_b2 #(
                 if (bad[s]) flt <= 1'b1;
                 if (tk[s] && hd[s][43:42] != ep) n_stale <= n_stale + 1'b1;
             end
-            for (b = 0; b < NB; b = b + 1) full[b] <= &vld[32*b +: 32];
-            if (fb_v) fired[fb] <= 1'b1;
-            if ((|tf) || (|nf[NBP-1:1])) flt <= 1'b1;
+            for (b = 0; b < NB; b = b + 1) full[b] <= STORELEAF?store_full[b]:&vld[32*b +: 32];
+            if (fb_v&&(!STORELEAF||(!scan_active&&scan_flush==0))) fired[fb] <= 1'b1;
+            if ((|tf) || (|nf[NBP-1:1]) || (|store_fault) || (|hub_fault)) flt <= 1'b1;
             if (clr) begin
                 vld <= '0; full <= '0; fired <= '0; flt <= 1'b0;
                 kl <= {(DTB+1){1'b1}};       // everything in the block tree now is of the cleared row
