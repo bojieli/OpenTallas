@@ -9,13 +9,16 @@
       "snapshot_category": "needs redesign (no live job)",
       "die_used": true,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "REQUIRED_CURRENT_CONTRACT",
       "latest_snapshot": {
         "t": 1791852349.0,
         "job": "hbm_attn_half_hi_v9-e1687c7bf-tc-hm10-cl",
         "status": "CANCELLED",
         "text": "route bulk released (drive-resume disk cleanup, CANCELLED; MB before/after 2577 2577); kept 6_final.*, 5_2_route.odb, logs/reports/json"
-      }
+      },
+      "successor_owner": "/root/hbm_die_repair_2240",
+      "successor_source": "a95a4adfc",
+      "status": "REAL_COMPONENT_RECEIPT_PARENT_GEOMETRY_OPEN"
     },
     {
       "element": "hfd_attn_half_lo",
@@ -23,13 +26,16 @@
       "snapshot_category": "needs redesign (no live job)",
       "die_used": true,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "REQUIRED_CURRENT_CONTRACT",
       "latest_snapshot": {
         "t": 1791884892.0,
         "job": "hbm_attn_half_lo_v12b-316b5f181-tc-hm10-cl-lbref",
         "status": "REFUSED",
         "text": "route bulk released (drive-resume disk cleanup, REFUSED; MB before/after 1 1); kept 6_final.*, 5_2_route.odb, logs/reports/json"
-      }
+      },
+      "successor_owner": "/root/hbm_die_repair_2240",
+      "successor_source": "a95a4adfc",
+      "status": "REAL_COMPONENT_RECEIPT_PARENT_GEOMETRY_OPEN"
     },
     {
       "element": "ot_hgi_qdq_wr",
@@ -56,7 +62,7 @@
       },
       "current_job": "qdq_wr_ref-q8e-85c81f4c2",
       "source_commit": "85c81f4c29724a82d57342017f84e390c3313dcd",
-      "status": "SUBMITTED_UNQUALIFIED",
+      "status": "AUTO_COMBO_ECO_UNQUALIFIED",
       "pre_route": {
         "status": "PASS",
         "sinks": 5280,
@@ -66,6 +72,12 @@
         "setup_ps": 63.3,
         "hold_ps": 26.3,
         "depth_ps": 503.4
+      },
+      "last_route": {
+        "tt_ps": -14.95,
+        "ff_ps": -13.06,
+        "drc": 0,
+        "finishing": "automatic COMBO ECO; no hand variant"
       }
     },
     {
@@ -145,7 +157,11 @@
       ],
       "child_master": "ot_su12_sfu",
       "child_count_total": 64,
-      "open": "native quarter control/watermark composition"
+      "open": "SFUT0 native controller, headstate, local8 cache/real ACK/watermark actual SMconsumer, assigned pins/cut/reach/phase",
+      "requirements_file": "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_quarter_composition_request.json",
+      "native_grid": "16 CLOSED lane5 bodies plus16 four-edge mappers; arithmetic only",
+      "mapper_m1": "sfu_lane_map_ref-m1-b622c064c RUNNING OLD SOURCE; warm reset fails2 stale ld strobes",
+      "mapper_m2": "reset ld bit only; exact4096 PASS/mutant24552FAIL; CTS pending"
     },
     {
       "element": "ot_hbm_norm_engine_view",
@@ -159,7 +175,12 @@
         "job": "hbm-norm-mem1-keepfp-43dd4a6b6",
         "status": "CANCELLED",
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hbm-norm-mem1-keepfp-43dd4a6b6.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
-      }
+      },
+      "successor_owner": "/root/hbm_hc_norm",
+      "successor_source": "e71f1dde9",
+      "successor_top": "ot_hbm_norm_split_view_g8pc",
+      "status": "REQUIRED_NATIVE_COMPOSITION_OPEN",
+      "proof": "8 CLOSED gtile8;79 sum_nodes CTS646/TT101spread4.6 exact+mutant;72 CLOSEDrelays;7chunk3scalar2quant leaf/state open; no parentclosure"
     },
     {
       "element": "ot_hgi_qdq_q",
@@ -198,7 +219,15 @@
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
       "source_branch": "claude/hbm-quant-split-1013",
-      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
+      "open": "assignedpins/PG/cut<=.60/perpairL-H>=100; lgr/lgw signedM6PORT or newslot missing",
+      "structural_source": "c1080eae2",
+      "successor_children": [
+        "ot_hgi_qw_ovg:172.8x388.8 CTS5145TT534.4spread33.1",
+        "ot_hgi_qw_ovw:250.56x177.12 CTS4508TT474.8spread31.7",
+        "existing CLOSEDdecoder/lane"
+      ],
+      "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
+      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL"
     },
     {
       "element": "ot_hgi_quant_wide_h",
@@ -215,7 +244,15 @@
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
       "source_branch": "claude/hbm-quant-split-1013",
-      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
+      "open": "assignedpins/PG/cut<=.60/perpairL-H>=100; lgr/lgw signedM6PORT or newslot missing",
+      "structural_source": "c1080eae2",
+      "successor_children": [
+        "ot_hgi_qw_ovg:172.8x388.8 CTS5145TT534.4spread33.1",
+        "ot_hgi_qw_ovw:250.56x177.12 CTS4508TT474.8spread31.7",
+        "existing CLOSEDdecoder/lane"
+      ],
+      "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
+      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL"
     },
     {
       "element": "ot_hgi_quant_wide_ov",
@@ -232,7 +269,15 @@
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
       "source_branch": "claude/hbm-quant-split-1013",
-      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
+      "open": "assignedpins/PG/cut<=.60/perpairL-H>=100; lgr/lgw signedM6PORT or newslot missing",
+      "structural_source": "c1080eae2",
+      "successor_children": [
+        "ot_hgi_qw_ovg:172.8x388.8 CTS5145TT534.4spread33.1",
+        "ot_hgi_qw_ovw:250.56x177.12 CTS4508TT474.8spread31.7",
+        "existing CLOSEDdecoder/lane"
+      ],
+      "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
+      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL"
     },
     {
       "element": "ot_hgi_qw_ovd",
@@ -249,7 +294,15 @@
       },
       "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
       "source_branch": "claude/hbm-quant-split-1013",
-      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
+      "open": "assignedpins/PG/cut<=.60/perpairL-H>=100; lgr/lgw signedM6PORT or newslot missing",
+      "structural_source": "c1080eae2",
+      "successor_children": [
+        "ot_hgi_qw_ovg:172.8x388.8 CTS5145TT534.4spread33.1",
+        "ot_hgi_qw_ovw:250.56x177.12 CTS4508TT474.8spread31.7",
+        "existing CLOSEDdecoder/lane"
+      ],
+      "slot_change_request": "unselected WQ3parent864x691.2; not adopted nativev12",
+      "exact_gate": "OVsplit v5.050 exact3328words184/168=1.095x;sk222/w3control2319; m1/w1/r2 simulationFAIL"
     },
     {
       "element": "ot_hgi_qdq_q_pin4",
@@ -330,6 +383,7 @@
     "sfu": "hfd_sfu remains required: four quarters over 64 CLOSED ot_su12_sfu lanes. The legacy rtl_tiled_r25gq envelope has 11,818 input bits, 11,863 output bits, an 8,257-bit f_lgW_rdn bus and negedge clock-root lockups. It does not prove native B2 quarter closure. Watermark integration source d27cf80e6 measured a synthetic 32-producer / 8-consumer pair: 186 SFU cycles versus price 120 (1.55x), which is not native eight-lane production qualification. Native quarter control, watermark source, physical reach and timing remain open. No old envelope route was launched.",
     "ctlw": "Explicit successor source 7d0ad0538: SV=1 selects ot_hgi_sv_unit, containing sv_head, sixteen sv_lane2 leaves and sv_lmem. It replaces ctlw for the current SU.VOP redesign. Historical aliases remain recorded; the native physical and production gate belongs to suvop_collect and remains open.",
     "attention": "native real-child components replace physical half routes, source a95a4adfc; generator half_v10 remains placeholder and die_repair_2240 owns phase geometry, no duplicate edits.",
-    "norm": "gtile8 CLOSED, g8p native parent child origins from actual365.04sq view available; actual parent contract slot absent; old norm monolith not silently removed."
+    "norm": "gtile8 CLOSED, g8p native parent child origins from actual365.04sq view available; actual parent contract slot absent; old norm monolith not silently removed.",
+    "structural_continuation_1014": "Original mapper m1 warm-reset fails; m2 repaired source cannot reuse its gate/view. OV split leaves distinct; unselected parent alternative remains unapproved."
   }
 }
