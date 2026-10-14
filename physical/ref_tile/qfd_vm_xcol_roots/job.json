@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_xcol_roots-rt3-5fcf8be7a",
+ "name": "qfd_vm_xcol_roots-rt3-d49fc5849",
  "block": "ot_qfd_vm_xcol_roots",
  "ref_tile": true,
  "owner": "Codex:qwen_vm",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-tp8-vm-phys",
-  "commit": "5fcf8be7a",
+  "commit": "d49fc5849",
   "extra_paths": [
    "rtl/qwen_sys/vm_me_20261008",
    "rtl/qwen_sys/vm_die_split_20261012",
@@ -129,7 +129,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_xcol_roots/qfd_vm_xcol_roots-rt3-5fcf8be7a"
+   "to": "results/rtl/ref_tile/qfd_vm_xcol_roots/qfd_vm_xcol_roots-rt3-d49fc5849"
   }
  ],
  "cycles_added": 3,
