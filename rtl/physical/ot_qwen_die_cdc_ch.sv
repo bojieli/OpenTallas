@@ -113,33 +113,35 @@ module ot_qwen_die_cdc_ch #(
                 // Current pointer/valid/full copies for each word slice. The
                 // next pointer values are captured on the SAME edge as iw/ir,
                 // so every bank write and head read preserves its old edge.
-                // Bound each write-enable and read-select fanout to 128 bits.
-                localparam integer NS = (W + 127) / 128;
+                // Bound each write-enable and read-select fanout to 64 bits.
+                // Keep the wrap bits locally too: computing current full from
+                // current pointers avoids a pop->next-pointer->full register path.
+                localparam integer NS = (W + 63) / 64;
                 wire [IA:0] iw_next = iw + {{IA{1'b0}}, x_wr};
                 wire [IA:0] ir_next = ir + {{IA{1'b0}}, pop};
-                wire full_next = (iw_next[IA-1:0] == ir_next[IA-1:0]) && (iw_next[IA] != ir_next[IA]);
                 for (genvar s = 0; s < NS; s = s + 1) begin : g_slice
-                    localparam integer LO = s * 128;
-                    localparam integer SW = (W - LO < 128) ? W - LO : 128;
-                    (* keep *) reg [IA-1:0] iw_c, ir_c;
-                    (* keep *) reg iv_c, full_c;
+                    localparam integer LO = s * 64;
+                    localparam integer SW = (W - LO < 64) ? W - LO : 64;
+                    (* keep *) reg [IA:0] iw_c, ir_c;
+                    (* keep *) reg iv_c;
+                    wire full_c = (iw_c[IA-1:0] == ir_c[IA-1:0]) && (iw_c[IA] != ir_c[IA]);
                     always @(posedge wclk or negedge wr_n)
-                        if (!wr_n) begin iw_c <= 0; ir_c <= 0; iv_c <= 0; full_c <= 0; end
+                        if (!wr_n) begin iw_c <= 0; ir_c <= 0; iv_c <= 0; end
                         else begin
 `ifdef OT_CDC_IBPTR_MUT_CURRENT
                             // One-sided stale read pointer: moving both pointers
                             // together can merely rotate the physical rows.
-                            iw_c <= iw_next[IA-1:0]; ir_c <= ir[IA-1:0]; full_c <= full_next;
+                            iw_c <= iw_next; ir_c <= ir;
 `else
-                            iw_c <= iw_next[IA-1:0]; ir_c <= ir_next[IA-1:0]; full_c <= full_next;
+                            iw_c <= iw_next; ir_c <= ir_next;
 `endif
                             iv_c <= i_v_p;
                         end
                     for (genvar row = 0; row < IBUF; row = row + 1) begin : g_row
                         always @(posedge wclk)
-                            if (iv_c && !full_c && iw_c == row) ib[row][LO +: SW] <= id_q[LO +: SW];
+                            if (iv_c && !full_c && iw_c[IA-1:0] == row) ib[row][LO +: SW] <= id_q[LO +: SW];
                     end
-                    assign ib_local_head[LO +: SW] = ib[ir_c][LO +: SW];
+                    assign ib_local_head[LO +: SW] = ib[ir_c[IA-1:0]][LO +: SW];
                 end
             end else begin : g_original
                 always @(posedge wclk) if (x_wr) ib[iw[IA-1:0]] <= id_q;
