@@ -13,18 +13,7 @@
   "W": [
    "clk",
    "rst_n",
-   "sm_base",
-   "rec_v",
-   "rec_rdy",
-   "rec_hdr",
-   "rec_a",
-   "rec_b",
-   "rec_o",
-   "rec_n_a",
-   "rec_n_b",
-   "rec_done",
-   "rec_fault",
-   "halted"
+   "sm_base"
   ],
   "E": [
    "sm_cmd",
@@ -46,6 +35,17 @@
    "x_fault"
   ],
   "N": [
+   "rec_v",
+   "rec_rdy",
+   "rec_hdr",
+   "rec_a",
+   "rec_b",
+   "rec_o",
+   "rec_n_a",
+   "rec_n_b",
+   "rec_done",
+   "rec_fault",
+   "halted",
    "pub_v",
    "pub_rdy",
    "pub_base",
@@ -124,8 +124,8 @@
   "DE": 1
  },
  "outline": {
-  "w": 129.6,
-  "h": 129.6
+  "w": 108.0,
+  "h": 108.0
  },
  "reroute_reason": {
   "kind": "rtl_change",

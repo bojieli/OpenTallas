@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "hgi_smmv_eng_de",
+ "verdict": "WARN",
+ "generated": "2026-10-13T18:33:03-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "066b26cee",
+ "clock": {
+  "max_root_sinks": 8827,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": 205.4,
+  "tt_spread_ps": 14.1,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "8,827 sinks on the largest root <= 15,000; measured TT insertion 205.4 ps, leaf spread 14.1 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 6245 um2 + macros 0 in core 15695: util 40%",
+   "fix": "set \"std_area_um2\": 6245 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset rs[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 648 loads (188 flops, e.g. al_age[0]$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.logic_depth",
+   "message": "reg->reg stage xp[1]$_DFFE_PN0P_ -> used[6]$_DFF_PN0_/D: ~633 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage",
+   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 39.9% outside 45%-65% (std 6268 + macro 0 um2 in 15695 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ]
+}

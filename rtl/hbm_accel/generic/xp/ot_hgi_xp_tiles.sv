@@ -347,6 +347,10 @@ module ot_hgi_xp_buf #(parameter integer TW = 25, parameter integer MUT_LANE = 0
     reg t0_q, ti_q, w_v; reg [TW-1:0] w_t; reg [1023:0] w_d;
     reg [8191:0] fl; reg [1:0] st;                  // st 0 free, 1 filling, 2 complete (waiting / emitting)
     reg [6:0] mab; reg [1:0] mtp; reg mbf, mlc, have_tok, e_act; reg [2:0] ecnt;
+    // kept copies of the emit enable and the format bit, one a 1,024-b slice of the unit image (+ one for the beat
+    // register): one copy each drove 15,400 loads
+    (* keep = 1 *) reg [8:0] e_act_c; (* keep = 1 *) reg [8:0] mbf_c;
+    integer c;
     wire [2:0] elast = mbf ? 3'd7 : 3'd3;
     wire start = !e_act && (have_tok || ti_q) && st == 2'd2;
     integer j, t;
@@ -358,19 +362,22 @@ module ot_hgi_xp_buf #(parameter integer TW = 25, parameter integer MUT_LANE = 0
             ob_v <= 1'b1; ob_eop <= (ecnt == elast) && mlc;
             ob_addr <= mbf ? mab + {4'd0, ecnt} : mab + {4'd0, mtp, ecnt[1]};
             ob_grp <= mbf ? 7'd1 : {6'd0, ecnt[0]};
-            ob_d <= mbf ? {944'd0, fl[1023:0], 80'd0} : fl[2047:0];
-            fl <= mbf ? {1024'd0, fl[8191:1024]} : {2048'd0, fl[8191:2048]};
+            ob_d <= mbf_c[8] ? {944'd0, fl[1023:0], 80'd0} : fl[2047:0];
             if (ecnt == elast - 3'd2) tok_o <= 1'b1;                       // the next buffer may follow with no gap
-            if (ecnt == elast) begin st <= 2'd0; e_act <= 1'b0; ecnt <= 3'd0; end
+            if (ecnt == elast) begin st <= 2'd0; e_act <= 1'b0; e_act_c <= 9'd0; ecnt <= 3'd0; end
             else ecnt <= ecnt + 3'd1;
-        end else if (start) begin e_act <= 1'b1; ecnt <= 3'd0; end
+        end else if (start) begin e_act <= 1'b1; e_act_c <= 9'h1FF; ecnt <= 3'd0; end
+        // the unit image shifts a beat out while emitting (slice i by its own copies; before the buffer write below)
+        for (c = 0; c < 8; c = c + 1) if (e_act_c[c])
+            fl[1024*c +: 1024] <= mbf_c[c] ? ((c < 7) ? fl[(1024*(c+1)) % 8192 +: 1024] : 1024'd0)
+                                           : ((c < 6) ? fl[(1024*(c+2)) % 8192 +: 1024] : 1024'd0);
         if (ti_q) have_tok <= 1'b1;
         if (start) have_tok <= 1'b0;
         // buffer write (a unit's first wave opens the buffer cleared)
         if (w_v) begin
             if (w_t[0]) begin
                 if (st != 2'd0) fault <= 1'b1;
-                mab <= w_t[22:16]; mtp <= w_t[24:23]; mbf <= w_t[3]; mlc <= 1'b0;
+                mab <= w_t[22:16]; mtp <= w_t[24:23]; mbf <= w_t[3]; mbf_c <= {9{w_t[3]}}; mlc <= 1'b0;
             end else if (st != 2'd1) fault <= 1'b1;
             if (w_t[2]) mlc <= 1'b1;
             st <= w_t[1] ? 2'd2 : 2'd1;
@@ -388,7 +395,7 @@ module ot_hgi_xp_buf #(parameter integer TW = 25, parameter integer MUT_LANE = 0
         end
         if (rs) begin
             ti_q <= 1'b0; w_v <= 1'b0; e_act <= 1'b0; ecnt <= 3'd0; st <= 2'd0; ob_v <= 1'b0; ob_eop <= 1'b0; tok_o <= 1'b0;
-            have_tok <= t0_q; fault <= 1'b0; mbf <= 1'b0; mlc <= 1'b0;
+            have_tok <= t0_q; fault <= 1'b0; mbf <= 1'b0; mbf_c <= 9'd0; e_act_c <= 9'd0; mlc <= 1'b0;
         end
     end
 endmodule
