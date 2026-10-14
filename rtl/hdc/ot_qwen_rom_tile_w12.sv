@@ -125,6 +125,8 @@ module ot_qwen_rom_tile_logic_w12 #(
     // cx_nfault = its fault pin; n_a / n_b / n_va / n_y / n_vy / t_out / t_vout are wired pin <-> node by the parent).
     // Same registers, same edges as CEXT = 0: a pure re-hierarchy.
     parameter integer CEXT = 0,
+    // Local cache already supplies a one-edge registered VM response; bypass ONLY the XL pin register.
+    parameter integer XLOCAL = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
@@ -197,7 +199,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     reg  [TG*32-1:0] xl_q;
     wire             go_i  = IREG ? go_q : ib_go;
     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
-    wire [TG*32-1:0] xl_r  = IREG ? xl_q : xl;
+    wire [TG*32-1:0] xl_r  = (IREG && XLOCAL == 0) ? xl_q : xl;
     wire [TG*32-1:0] xl_i;
     ot_hdc_delay #(.W(TG*32), .D(ME_EXTRA)) u_xm (.clk(clk), .rst_n(rst_n), .d(xl_r), .q(xl_i));
     always @(posedge clk or negedge rst_n) begin

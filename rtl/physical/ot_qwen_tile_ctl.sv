@@ -7,7 +7,7 @@
 // on the cx_* ports) + the fault register of ot_qwen_rom_tile_nk.  Parameter-free top (the parent instantiates the
 // hardened leaf by this fixed name, as ot_qwen_tile_lsl / _rpair / _node).  Own clock root; seams are flop -> flop
 // except the group OR of the bank rows' relay words in front of the group registers.
-module ot_qwen_tile_ctl (
+module ot_qwen_tile_ctl #(parameter integer XLOCAL = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [15:0]   tile_id,
@@ -34,7 +34,7 @@ module ot_qwen_tile_ctl (
     ot_qwen_rom_tile_logic_w12 #(.NW(18), .GT(6144), .SMIN(7), .CODE_BANKS(5), .KV_LOCAL(0), .KV_VB(131072), .KV_NH(2),
         .MEM_EXTRA(1), .ACC_LAT(7), .TREE_LAT(7), .FAST_ISSUE(1), .KV_PREP(4), .MUL_LAT(8), .ROM_PIPE(1), .ROM_ARELAY(2),
         .ROM_CAP2(1), .ROM_CAPX(2), .LRST(3), .ARPB(1), .MPR(1), .HIER(2), .HIER_HARD(1), .TOREG(1), .TIDR(1), .LRR(1),
-        .RPH(2), .RQR(1), .XTX(2), .ANR(1), .BAW(12), .NDH(1), .BMUT(0), .CEXT(2)) u_logic (
+        .RPH(2), .RQR(1), .XTX(2), .ANR(1), .BAW(12), .NDH(1), .BMUT(0), .CEXT(2), .XLOCAL(XLOCAL)) u_logic (
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(), .t_vout(), .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tile_fault),
         .rom_ce(), .rom_addr(), .rom_addr_n(), .rom_addr_b(), .rom_req_m(), .rom_rd({2*5*266{1'b0}}),
