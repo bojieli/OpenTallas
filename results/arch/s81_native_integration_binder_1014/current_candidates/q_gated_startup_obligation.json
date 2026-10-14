@@ -5,11 +5,11 @@
   "source_path": "/home/ubuntu/wt/codex-s81-qelem-internal-repair-1013/rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
   "source_sha256": "8132e6b8e1e4124e1a8c0b34e024200f2e7cd4b65a1bfea2b7c0510915f9e80b",
   "source_instances": [
-    "g_qb.u_r",
+    "g_qb.rst_q (actual register)",
     "g_qz_cg.u_z",
     "g_cg.u_cg",
-    "g_mac[0].g_z_rst.u_rs",
-    "g_mac[1].g_z_rst.u_rs"
+    "g_mac[0].g_mz.u_rs",
+    "g_mac[1].g_mz.u_rs"
   ],
   "source_facts": [
     "QZ enable z_q asynchronously resets to one, then uses go_pin or released-reset operation activity",
