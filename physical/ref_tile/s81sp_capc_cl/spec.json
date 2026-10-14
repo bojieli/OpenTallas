@@ -6,6 +6,7 @@
   "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_c_cl.sv"
  ],
  "params": {},
+ "signal_max_layer": "M6",
  "clock_port": "ck_c",
  "reset_ports": [
   "rst",
@@ -443,7 +444,10 @@
    "ck_g",
    "ck_x",
    "ck_c",
-   "ck_s",
+   "ck_ka",
+   "ck_kb",
+   "ck_sb",
+   "ck_sn",
    "ckv_r"
   ],
   "S": [
@@ -463,7 +467,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "slot_change_request": "el1011-s81die.log 2026-10-13 17:58 PT [el1013 capture -> s81-die lead]: per-child clock entry pins (ck_g / ck_x / ck_c / ck_s on N, ckv_x / ckv_d on S, ckv_r on N) instead of one ck pin, t_cd on N at x ~915, outline 1728.0 x 561.6 on the 8.64-um cluster lattice, cluster layer rule (signals <= M6, PG M7), pin bundles in front of the child pins (physical/s81_ph_views/capture/capc_pins.tcl)",
+ "slot_change_request": "el1011-s81die.log 2026-10-13 17:58 PT [el1013 capture -> s81-die lead]: per-child clock entry pins (ck_g / ck_x / ck_c / ck_ka / ck_kb / ck_sb / ck_sn on N, ckv_x / ckv_d on S, ckv_r on N) instead of one ck pin, t_cd on N at x ~915, outline 1728.0 x 561.6 on the 8.64-um cluster lattice, cluster layer rule (signals <= M6, PG M7), pin bundles in front of the child pins (physical/s81_ph_views/capture/capc_pins.tcl)",
  "structural_change": "the cluster has no logic and no clock tree: 872 station flops -> closed die relay masters, DONE word -> leaf dsfd_capt_cd + one relay stage, one clock entry pin per child (the single-pin spine of the first cluster measured 1,222 ps insertion / 226 ps spread)",
  "why_floorplan": "1728.0 x 561.6 (contract v16 + 0.024). 8 columns at 172.8 pitch: dsfd_capt_x MX at y 43.2, dsfd_capt_g2 MX at y 336.96 (23.76 over the x row; 8.64 lower than v16 so the N channel is 62.6 um: a 15.12-um relay needs 55.2), control tile in the centre gap; 26 relays in one row at y 519.552 between the control tile's N-face pins and the g2 N-face pins (hops <= ~450 um each side), dsfd_capt_cd under the control tile with its relay beside it. Cluster wires: N channel 62.6 um (k buses 8 x 99 b + status, f_gather drops straight onto the g2 pins), g2 -> x abutting columns (832 b each over 23.8 um), t_vm straight down 43 um. Cut of the N channel W-E at the control tile: 4 x 101 b each way over ~4k M2 / M4 / M6 tracks: 0.10.",
  "job": {
