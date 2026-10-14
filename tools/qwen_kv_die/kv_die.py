@@ -180,12 +180,18 @@ def _set_geometry(split):
 
 # split die masters bind to the RTL the split actually instantiates (NO STUBS, owner 08:05 PT): the hierarchical head
 # cluster, the merged-die sequencer cluster qkd_seq (native HEADS 1 / Q_FP32 1 profile = its parameters)
-_BASE_BINDINGS = {k: BINDINGS[k] for k in ('qkd_rhead', 'qkd_seq')}
+_BASE_BINDINGS = {k: BINDINGS[k] for k in ('qkd_rhead', 'qkd_seq', 'qkd_ectl')}
 SPLIT_BINDINGS = dict(
     qkd_rhead=dict(module='ot_qwen_nearhbm_head_hs', file='rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv',
                    ports=dict(ti=['c_in', 'row_in', 'lt_in', 'q_valid_in', 'q_beat_in', 'q_data_in'], e=['e_in'],
                               s=['sc_d', 'sc_f', 'g_f'], nb=['nb_d'], ck=['clk'], rst_n=['rst_n']),
                    classed={'hid': 'by_design: die-top strap (tie cells), the head index of this tile'}),
+    # DRAFT binding only: ck is 3 bits in real RTL; the die clock model still
+    # exports one bit. Expand assigned clock pins and phi-R trees before binding.
+    qkd_ectl=dict(module='qkd_ectl3_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv',
+                  ports=dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'],
+                             s0=['s0'], s1=['s1'], s2=['s2'], s3=['s3'], rq=['rq'], rs=['rs'], ck=['ck'], rst_n=['rst_n']),
+                  classed={'cfg': 'by_design: die-top strap {engine 3, stack 2} (tie cells) per slot'}),
     qkd_seq=dict(module='qkd_seq', file='rtl/physical/ot_qwen_kv_centre_slots.sv', parameters=dict(HEADS=1, Q_FP32=1),
                  ports=dict(lx=['r_x3_d', 'r_sd', 'r_kvd', 't_ar_cr'], lr=['t_ar_d', 't_ds', 't_pw', 'r_x3_cr'],
                             **{f'aq_{q}': [f'aq_{q}'] for q in STACKS}, **{f'kvn_{q}': [f'kvn_{q}_d', f'kvn_{q}_cr'] for q in STACKS},
