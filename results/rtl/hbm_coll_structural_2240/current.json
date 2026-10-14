@@ -10,12 +10,13 @@
   "tkm": {
     "initial_quick": "BUILD FAIL hierarchy phase trace only, not an RTL arithmetic verdict; preserved log",
     "phase_alias_fix": "be32c0d01",
-    "exact": "RUNNING session17441 EPYC1 oth-ubuntu-735220-1791957012",
+    "exact": "exact2 terminated exit143; no arithmetic verdict; preserved. Replacement exact3 160GB RUNNING session pending parent log /tmp/tkm2240-exact3.otrun.log",
     "noid": "RUNNING session40431 ot-run; host in /tmp/tkm2240-noid.otrun.log",
     "seq_cts": "RUNNING session85321; immutable snapshot /tmp/ref_gate_hbm_tkm_seq_probe2240_20261013-225134.source_snapshot.json",
     "price": 2680.6,
     "limit": 2948.66,
-    "unresolved": "split further if measured root >15000 or physical clock/reach fails; harden actual group control/return stations and row turns; actual die clock/pin slots still owed"
+    "unresolved": "split further if measured root >15000 or physical clock/reach fails; harden actual group control/return stations and row turns; actual die clock/pin slots still owed",
+    "failure_reason": "remote termination cause unconfirmed; local lint expanded62GB and96GB exact2 ended143. No user kill of remote job."
   },
   "coll": {
     "face_roots": 119,
