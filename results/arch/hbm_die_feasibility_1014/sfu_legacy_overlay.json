@@ -232,5 +232,35 @@
       "reserved_corridor_overlap": [],
       "actual_pin_timing_proven": false
     }
-  ]
+  ],
+  "full_quarter_area_screen": {
+    "composition_request_revision": "c894d0324",
+    "composition_request_path": "results/arch/hbm_native_1013/uncovered_structural_2240/sfu_quarter_composition_request.json",
+    "composition_request_sha256": "b0ffc4fbab47b9376da925d70d3104b8519ac0d4c56d82dc6c53f38f1009122e",
+    "body_count": 16,
+    "body_outline_um": [
+      216,
+      330.48
+    ],
+    "mapper_count": 16,
+    "latest_mapper_request_um": [
+      103.68,
+      54
+    ],
+    "control_count": 4,
+    "control_outline_um": [
+      216,
+      172.8
+    ],
+    "body_area_um2": 1142138.8800000004,
+    "mapper_area_um2": 89579.52,
+    "control_area_um2": 149299.2,
+    "sum_leaf_area_um2": 1381017.6000000003,
+    "SW_remaining_area_excluding_corridors_um2": 1453075.3036800025,
+    "leaf_area_fraction_before_gutters_ownlogic_PG": 0.9504102068918854,
+    "full_rectangular_packing_proven": false,
+    "prior_control_row_competes_with_bodies": true,
+    "closed_body_stands": true,
+    "closed_body_deep_tap_binding_required": true
+  }
 }
