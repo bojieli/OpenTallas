@@ -4,6 +4,7 @@ module tb_qwen_xdelivery_init_barrier;
  wire offer_ready,acquire_v,dispatch_v,banks_begin,release_v,flush_req,fault;
  reg [378:0] offer_ib=379'h123;reg offer_mode=0;reg [3:0] offer_participants=4'b1111;
  reg [31:0] acquire_version=32'hc1234567;
+ wire [3:0] held_participants;
  wire [378:0] held_ib;wire held_mode;wire [15:0] held_context;wire [31:0] held_version;
  reg [1:0] accept_tile=0;reg [15:0] accept_context=0;reg [31:0] accept_version=32'hc1234567;reg [378:0] accept_ib=379'h123;
  reg [3:0] bank_init_participants=4'b1111;

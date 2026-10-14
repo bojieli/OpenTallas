@@ -12,6 +12,7 @@ module ot_qwen_xdelivery_lifetime_init_ctrl #(
   input wire [31:0] acquire_version,
   output reg [378:0] held_ib, output reg held_mode,
   output reg [TOKEN_W-1:0] held_context, output reg [31:0] held_version,
+  output wire [TILES-1:0] held_participants,
   output wire dispatch_v,
   input wire accept_v, input wire [$clog2(TILES)-1:0] accept_tile,
   input wire [TOKEN_W-1:0] accept_context, input wire [31:0] accept_version,
@@ -34,6 +35,7 @@ module ot_qwen_xdelivery_lifetime_init_ctrl #(
   reg [TOKEN_W-1:0] next_context;
   reg [BANKS-1:0] initialized;
   assign bank_init_ack={BANKS{ENABLE && state==INIT_WAIT && !fault}} & bank_init_v;
+  assign held_participants=participants;
   assign offer_ready=ENABLE && state==IDLE && !fault;
   assign acquire_v=ENABLE && state==ACQUIRE && !fault;
   assign dispatch_v=ENABLE && state==DISPATCH && !fault;
