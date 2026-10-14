@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.s81.qelem.physical_partition_request.v1",
+  "source_commit": "11ab82556",
+  "actual_cts_odb": "/srv/opentallas-scratch/codex/qelem-qs6-11ab-cts/attempt3/cts/work/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qxpq_w10_asap7_codex_qelem_qs6_ss_cts_1013/base/4_cts.odb",
+  "census_unit": "oth-ubuntu-295178-1791957024",
+  "clocked_instances": {
+    "control": 8084,
+    "lane0": 12763,
+    "lane1": 12763,
+    "rom_return0": 9821,
+    "rom_return1": 9821
+  },
+  "partition_status": "SOURCE_EXTRACTION_REQUIRED",
+  "physical_admission": false,
+  "existing_outline_um": [
+    510.84,
+    221.4
+  ],
+  "existing_pins": 741,
+  "proposed_logical_cycles_added": 0,
+  "notes": [
+    "Five groups classify actual clock-pin-bearing instances from existing CTS ODB; no clock alias or completed hardleaf claimed.",
+    "laneN contains actual g_l3 input registers and both bterm5 lanes; other g_mac state and two ROMs remain rom_returnN.",
+    "control includes existing operand/bank/restart pin/state registers; word restart fanout repair remains required.",
+    "Partition source modules, actual boundary source/sink flops and bus widths, clocks/reset ownership, placement packing, PG, exact public-pin parent wrapper, nativePQ1 proof and real five-leafCTS/SSFF all owed."
+  ]
+}
