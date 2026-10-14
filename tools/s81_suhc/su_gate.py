@@ -41,8 +41,8 @@ SHAPES = dict(reduced=dict(QN_N=64, KV_N=512, QB_NB=4, SW_W=64, SM_H=2, SM_LPH=1
 # the DS HBM SU case set the golden runs draw on: tools/dshbm_baseline_measure.py prep (snapshots sha256 cd0fc866...)
 # -> tools/dshbm_chain_levers.py prep (_il) -> prep2 (_ildr); recorded in results/rtl/hbm_su_fused_compiler_20261005/v2_ildr.json
 CASES_SHA256 = "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
-K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10)
-RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
+K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10, RW=11)
+RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_su.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
        "rtl/hdc/v41x/ot_dsrom_su_norm.sv", "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv", "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
@@ -178,7 +178,9 @@ class Run:
             rows += [pack(b[2], 16) for b in blk]
         self.expect(out, rows)
 
-    def sw(self, g, u, wv, lim):
+    def sw(self, g, u, wv, lim, weights_from_rw=False):
+        """weights_from_rw (s81-ftok r3, F11): the descriptor's routing-weight words start ZERO; an RW job writes them
+        (rw() below) before this job runs.  Returns the descriptor row."""
         import dsrom_su_swiglu as SG
         W = self.sh["SW_W"]
         nvec = len(g) // W
@@ -187,7 +189,9 @@ class Run:
             inter.append(g[v * W:(v + 1) * W]); inter.append(u[v * W:(v + 1) * W])
         a = self.put(rows_of(np.concatenate(inter)))
         out = self.alloc(nvec * (W // 64 + 1 + W // 32))
-        self.job("SW", 0, self.desc(out, a, nvec, int(u32([lim])[0]), 0, extra=list(u32(wv))))
+        drow = self.desc(out, a, nvec, int(u32([lim])[0]), 0, extra=[0] * len(wv) if weights_from_rw else list(u32(wv)))
+        self.sw_desc = (drow, [out, a, nvec, int(u32([lim])[0]), 0] + list(u32(wv)))
+        self.job("SW", 0, drow)
         act = SG.golden_swiglu(g, u, np.repeat(wv, W).astype(F), lim)
         q = aq(act)
         rows = []
@@ -268,6 +272,24 @@ class Run:
                 addrs.append(a + 32 * h + 28 + j); rows.append(rr[28 + j])
         self.expect_at(addrs, rows)
 
+    def rw(self, scores, ids, route_scale, target):
+        """ffn.weights (s81-ftok r3, die item F11): w_j = (scores[ids[j]] / (seqsum(scores[ids]) + 1e-20)) * route_scale,
+        written into words 5 .. 5+k-1 of the routed SW job's descriptor row `target` = (row, its full word list).
+        Operand rows: the ids row (word j = id j) directly followed by the score rows."""
+        import hdc_golden_v41 as V
+        sc = np.asarray(scores, F)
+        ids = [int(i) for i in ids]
+        tot = V.seqsum([sc[i] for i in ids])
+        den = V.add(tot, F(1e-20))
+        w = np.asarray([V.mul(V.div(sc[i], den), F(route_scale)) for i in ids], F)
+        a = self.put([pack(ids + [0] * (16 - len(ids)), 32)] + rows_of(sc))
+        self.job("RW", 0, self.desc(target[0], a, 1 + len(sc) // 16, int(u32([route_scale])[0]), 5, extra=[len(ids)]))
+        words = list(target[1])
+        words[5:5 + len(ids)] = list(u32(w))
+        words += [0] * (16 - len(words))
+        self.expect(target[0], [pack(words, 32)])
+        return w
+
     def write(self, d, meta):
         d.mkdir(parents=True, exist_ok=True)
         with open(d / "vm.mem", "w") as f:
@@ -328,6 +350,22 @@ def build_run(sh, rng, gold=None):
     g[:8] = [0.0, -0.0, lim, -lim, 87.0, -87.0, -100.0, 1e-40]
     wv = np.array([0.37, 1.0, 2.5, 0.0], F)                    # 1.0: the shared expert, exact
     r.sw(g, u, wv, lim)
+    # die item F11 (RW): a routed SW whose routing weights an RW job writes into its descriptor first
+    nsc = 384 if sh["S_RD"] >= 16 else 128
+    scr = np.abs(rng.standard_normal(nsc) * rng.choice([0.01, 1.0, 3.0], nsc)).astype(F)
+    rid = sorted(int(i) for i in rng.choice(nsc, 4, replace=False))
+    import hdc_golden_v41 as V
+    tot = V.seqsum([scr[i] for i in rid]); den = V.add(tot, F(1e-20))
+    wv2 = np.asarray([V.mul(V.div(scr[i], den), F(2.5)) for i in rid], F)
+    g2, u2 = g[:4 * W].copy(), u[:4 * W].copy()
+    r.sw(g2, u2, wv2, lim, weights_from_rw=True)
+    sw_job = r.prog.pop()                                     # issue order: RW first, then its SW
+    jx = r.jexp.pop(len(r.prog), None)
+    w_rw = r.rw(scr, rid, F(2.5), r.sw_desc)
+    assert np.array_equal(u32(w_rw), u32(wv2))
+    r.prog.append((sw_job & ~0x7F) | len(r.prog))
+    if jx is not None:
+        r.jexp[len(r.prog) - 1] = jx
     Hh = sh["SM_H"]
     for T in (128, 640):
         s_raw = (rng.normal(0, 1, (Hh, T)) * rng.choice([1, 30, 1e3], (Hh, T))).astype(F)
@@ -459,7 +497,8 @@ def main():
     p.add_argument("--tiles", action="store_true", help="the slab built from the ROUTED tile tops dsfd_su_t_<x> (su_tile_tops.py)")
     p.add_argument("--lvm", type=int, default=0, help="VM read latency of the bench VM (tb LVM; 0 = the bench default 10): "
                    "measures how many serial VM read round trips a job class holds")
-    p.add_argument("--xmut", type=int, default=0, help="ot_s81_su_rx negative control (1 RA sp, 2 RB no bias, 3 QR inverse)")
+    p.add_argument("--xmut", type=int, default=0, help="ot_s81_su_rx negative control (1 RA sp, 2 RB no bias, 3 QR inverse, "
+                   "4 RW no route_scale)")
     p.add_argument("--tmut", type=int, default=0, help="with --tiles: output mutant of tile class K (+tmut=K, no rebuild)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
