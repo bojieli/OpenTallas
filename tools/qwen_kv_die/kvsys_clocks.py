@@ -66,6 +66,16 @@ def main(argv=None):
                 per.setdefault(c, {})[f'{dps[0]}[0]'] = rr
         leaves[mst] = per
         src[mst] = dict(view=r['view'], R_ps={c: v for c, v in per.items()})
+    # pin names as the case LEFs draw them: generated frames / bound views 'p[0]', the real PHY abstract scalar 'clk'
+    lefpins = {}
+    for f in [a.case / 'elements.lef'] + sorted(a.case.glob('phy*.lef')):
+        cur = None
+        for ln in open(f):
+            t = ln.split()
+            if t[:1] == ['MACRO']:
+                cur = t[1]
+            elif t[:1] == ['PIN'] and cur:
+                lefpins.setdefault(cur, set()).add(t[1])
     txt = (a.case / 'die.v').read_text()
     doms, sinks = {}, 0
     for m in re.finditer(r'^\s+(\w+) (\S+) \((.*?)\);', txt, re.M):
@@ -76,7 +86,7 @@ def main(argv=None):
             port, net = p.group(1).lstrip('\\').strip(), p.group(2).strip()
             if not net.startswith(('n_clk_core_', 'n_clk_hbm_')) or port.startswith('pll'):
                 continue          # pll_* = the clock SOURCE pins (PLL / HBM controller PLL outputs), not sinks
-            pin = f'{port}[0]'
+            pin = port if port in lefpins.get(mst, ()) else f'{port}[0]'
             if mst in src:
                 if pin not in leaves[mst].get('tt', {}):
                     raise ValueError(f'{inst}/{pin}: bound view {mst} has no measured clock pin {pin}')
