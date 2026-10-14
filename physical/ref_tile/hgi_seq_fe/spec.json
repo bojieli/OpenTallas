@@ -174,6 +174,7 @@
   "pair_cost_ps": 752.3,
   "fix": "every FE seam pin on the track of the closed AU / BE pin it meets (io_tcl: 759 pins, seam hops 58-222 um -> 4.3 / 10.8 um, 63 um for the 87 BE pins above the FE top edge), pin flops at those pins, and the boundary registers on a balanced clock spine (boundary spread 105.2 ps > 80 in the s3 view)"
  },
+ "slot_change_request": "el1011-hbmdie.log 2026-10-13 [el1013-hbm-seq-split -> HBM die lead] SLOT_CHANGE_REQUEST hb_cmdproc/u_seq.u_fe: clock insertion target 300 -> 450 ps (measured spine 434.4..466.1 ps, spread 31.7), seam pin offsets on the AU / BE pin tracks; outline, faces, layers unchanged",
  "recipe": 2,
  "io_flop_at_pins": {
   "cols": 4,
