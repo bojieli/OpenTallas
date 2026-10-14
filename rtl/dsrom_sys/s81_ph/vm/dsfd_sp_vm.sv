@@ -1048,12 +1048,32 @@ module dsfd_vm_fe #(
     // still lands at k_arm.  Effect: slot completion / done / rows-ready one serial cycle later, same order of events.
     reg [7:0] k2_g [0:NSLOT*4-1]; reg [NSLOT-1:0] k2_hr;
     reg k2_arm; reg [1:0] k2_s; reg [18:0] k2_need; reg [7:0] k2_tag; reg [9:0] k2_user; reg k2_ntf;
+`ifdef OT_VMFE_FCN_BALANCED_GROUP_SUM
+    // Mask before the balanced seven-input tree; the original accumulation is
+    // eight bits and seven unsigned five-bit terms cannot exceed217.
+    wire [4:0] k_group_term [0:NSLOT*NP-1];
+    genvar sum_slot,sum_port;
+    generate for(sum_slot=0;sum_slot<NSLOT;sum_slot=sum_slot+1) begin:g_sum_slot
+        for(sum_port=0;sum_port<NP;sum_port=sum_port+1) begin:g_sum_port
+`ifdef OT_VMFE_FCN_BALANCED_SUM_MUT
+            assign k_group_term[sum_slot*NP+sum_port] =
+                (k_pc[5*sum_port+:5] ^ (sum_port==0 ? 5'd1 : 5'd0)) & {5{k_w[sum_slot*NP+sum_port]}};
+`else
+            assign k_group_term[sum_slot*NP+sum_port] = k_pc[5*sum_port+:5] & {5{k_w[sum_slot*NP+sum_port]}};
+`endif
+        end
+    end endgenerate
+`endif
     always @(posedge clk) begin : p_k2 integer kk, g, q; reg [7:0] a; reg h;
         for (kk = 0; kk < NSLOT; kk = kk + 1) begin
             h = 1'b0;
             for (g = 0; g < 4; g = g + 1) begin
                 a = 8'd0;
+`ifdef OT_VMFE_FCN_BALANCED_GROUP_SUM
+                a = (({3'd0,k_group_term[kk*NP+7*g+0]}+{3'd0,k_group_term[kk*NP+7*g+1]})+({3'd0,k_group_term[kk*NP+7*g+2]}+{3'd0,k_group_term[kk*NP+7*g+3]})) + (({3'd0,k_group_term[kk*NP+7*g+4]}+{3'd0,k_group_term[kk*NP+7*g+5]})+{3'd0,k_group_term[kk*NP+7*g+6]});
+`else
                 for (q = 7 * g; q < 7 * g + 7; q = q + 1) if (k_w[kk*NP + q]) a = a + {3'd0, k_pc[5*q +: 5]};
+`endif
                 k2_g[kk*4 + g] <= k_ok[kk] ? a : 8'd0;
             end
             for (q = 0; q < NP; q = q + 1) if (k_r[kk*NP + q]) h = 1'b1;
