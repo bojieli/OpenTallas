@@ -305,13 +305,15 @@
     "host_cdc_pairs": 1,
     "host_cdc_W": 546,
     "borrow_collective_xf_leaves": false,
-    "fit": "UNPROVEN_NEW_HOST_ADAPTER_SLOT_REQUIRED"
+    "fit": "UNPROVEN_NEW_HOST_ADAPTER_SLOT_REQUIRED",
+    "instances_per_die": 1,
+    "physical_mapping": "HOST_PHY adapter mandatory per die physical type; board/control attachment and exact candidate placement pending"
   },
   "dedicated_host_cdc": {
     "master": "qfd_xf_ch546 equivalent ot_qwen_die_cdc_ch W546 PIPE2",
     "count": 2,
     "outline_um": [
-      86.4,
+      90.72,
       129.6
     ],
     "per_instance_clock_entries": [
@@ -321,7 +323,7 @@
     "native_collective_instances_borrowed": 0,
     "binding": "qkd_host_phy_cdc u_rx/u_tx",
     "slot_assignment": "DIE_LEAD_REQUIRED",
-    "measured_existing_master_route": "qwen IO owner owns current W546 export; exact host placement not yet proven"
+    "measured_existing_master_route": "IOowner qfd_xf_ch546 n2 gatePASS submitted source560d99bef actual90.72x129.6; hostinstance placement notproven"
   },
   "static_chain_composition": {
     "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv",
@@ -362,6 +364,7 @@
       367.2
     ],
     "reported_by": "qwen_split_feasibility",
-    "required": "nativecontroller variant width/clock gate plus actual pin/PG/channel assignment; dimensions alone do not qualify fit"
+    "required": "nativecontroller variant width/clock gate plus actual pin/PG/channel assignment; dimensions alone do not qualify fit",
+    "edge_clearance": "10.8um total vertical residual; generic20umedgechannel requires repack or actual alignedface/channelproof; no freepocketclaim"
   }
 }

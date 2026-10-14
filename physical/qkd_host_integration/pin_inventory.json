@@ -2465,10 +2465,11 @@
         "PIPE": 2
       },
       "outline_request_um": [
-        86.4,
+        90.72,
         129.6
       ],
-      "outline_status": "EXISTING_NATIVE_LEAF_VIEW_HOST_INSTANCE_PLACEMENT_UNPROVEN",
+      "outline_status": "IO_N2_GATE_PASS_SUBMITTED_HOST_INSTANCE_PLACEMENT_UNPROVEN",
+      "source_revision": "560d99bef",
       "clock_entries": [
         "wck",
         "rck"
@@ -2659,6 +2660,8 @@
           "seam": "REGISTERED_OUTPUT"
         }
       ],
+      "instances_per_die": 1,
+      "physical_mapping": "One required HOST_PHY adapter per same-die physical type; runtime board/control attachment and candidate placement pending",
       "outline_request_um": [
         237.6,
         777.6
@@ -18757,7 +18760,8 @@
       367.2
     ],
     "reported_by": "qwen_split_feasibility",
-    "required": "nativecontroller variant width/clock gate plus actual pin/PG/channel assignment; dimensions alone do not qualify fit"
+    "required": "nativecontroller variant width/clock gate plus actual pin/PG/channel assignment; dimensions alone do not qualify fit",
+    "edge_clearance": "10.8um total vertical residual; generic20umedgechannel requires repack or actual alignedface/channelproof; no freepocketclaim"
   },
   "QM": "NEW NATIVE RTL VIEW AND CLK_I PARTITION REQUIRED; HISTORICAL CHILD_LINT FAIL AND NO BOUNDARY CLK_I REF"
 }
