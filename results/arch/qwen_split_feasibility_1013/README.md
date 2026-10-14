@@ -62,3 +62,9 @@ The compute-local defects remain relevant to both architectures. Current VM regi
 ## Why TP16 is not a drop-in alternative
 
 The pinned Qwen3-8B config has 32 query heads and **8 KV heads**, each dimension 128. TP8 naturally owns four Q heads and one complete KV head per die. TP16 can own two Q heads per die, but it cannot own one-half of a KV head without a new partitioning mechanism. It must either replicate a KV head across two TP partners, serve those partners from a shared KV owner, or split the head dimension and introduce the required cross-partition attention reduction. Therefore a halved ROM field does not establish halved KV cache, HBM PHY, attention traffic or controller area. A TP16 study must account for the actual ownership mechanism and collective latency instead of simply dividing every current block by two.
+
+## Concrete provisional host-static sites
+
+The current closed controller-PC outline is 246.24 × 172.8 µm, smaller than the inherited 247.512 × 378-µm frame. For each of 128 PCs, placing the requested 129.6 × 172.8-µm static arbiter at (0,194.4) relative to the PC, and the requested 86.4-µm-square station at (151.2,194.4), gives a combined 246.24 × 367.2-µm envelope. All 128 combinations fit their old frames with no overlap, so these requested host sites need not enlarge the shorelines if their actual implementations retain those outlines. This opportunity applies to the merged plan as well as the split.
+
+The new static/station outlines remain requests. The host-observer controller variant must also retain the closed PC's outline after adding its actual pins. Source hashes and request snapshots are included, but actual pin orientation, PG phase, clock/root and native saturation/ACK proofs are still gates. This geometric result must not be presented as placed or routed host logic.
