@@ -1,5 +1,6 @@
 {
   "format": "unqualified_candidate",
   "qualifies_source_binding": false,
-  "note": "P4 structural compact layout has no CTS receipt yet. Historical p3 v1 receipts preserved in mtp/records; none qualifies this candidate."
+  "qualified_physical": false,
+  "note": "P4 source-verified CTS completed but fails setup/hold and boundary spread. Exact failed receipt preserved in physical/s81_ph_views/mtp/records/wfc_p4_hookfix_gate_unqualified_1013.json. The root-balance metric needs common-corner/source-phase correction; no qualifying receipt permits this candidate to route."
 }
