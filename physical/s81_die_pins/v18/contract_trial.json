@@ -7629,11 +7629,11 @@
    "kind": "element",
    "parent": "s81_layer1",
    "outline": {
-    "w": 1520.184,
+    "w": 1541.784,
     "h": 3952.776
    },
    "origin": {
-    "x": 14046.912,
+    "x": 14036.112000000001,
     "y": 13413.6,
     "orient": "R0"
    },
@@ -9246,16 +9246,16 @@
   },
   {
    "name": "sp_vm/g_h[0].g_t[0].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 0.0,
-    "y": 2002.32,
+    "y": 2313.3599999999997,
     "orient": "R0"
    },
    "io_budget": {
@@ -9274,7 +9274,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9401,16 +9401,16 @@
   },
   {
    "name": "sp_vm/g_h[0].g_t[1].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 0.0,
-    "y": 1380.24,
+    "y": 1587.6,
     "orient": "R0"
    },
    "io_budget": {
@@ -9429,7 +9429,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9556,16 +9556,16 @@
   },
   {
    "name": "sp_vm/g_h[0].g_t[2].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 0.0,
-    "y": 758.16,
+    "y": 861.84,
     "orient": "R0"
    },
    "io_budget": {
@@ -9584,7 +9584,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9711,12 +9711,12 @@
   },
   {
    "name": "sp_vm/g_h[0].g_t[3].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 0.0,
@@ -9739,7 +9739,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -9866,16 +9866,16 @@
   },
   {
    "name": "sp_vm/g_h[1].g_t[0].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 388.8,
-    "y": 2002.32,
+    "y": 2313.3599999999997,
     "orient": "R0"
    },
    "io_budget": {
@@ -9894,7 +9894,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -10021,16 +10021,16 @@
   },
   {
    "name": "sp_vm/g_h[1].g_t[1].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 388.8,
-    "y": 1380.24,
+    "y": 1587.6,
     "orient": "R0"
    },
    "io_budget": {
@@ -10049,7 +10049,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -10176,16 +10176,16 @@
   },
   {
    "name": "sp_vm/g_h[1].g_t[2].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 388.8,
-    "y": 758.16,
+    "y": 861.84,
     "orient": "R0"
    },
    "io_budget": {
@@ -10204,7 +10204,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -10331,12 +10331,12 @@
   },
   {
    "name": "sp_vm/g_h[1].g_t[3].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 388.8,
@@ -10359,7 +10359,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -10486,16 +10486,16 @@
   },
   {
    "name": "sp_vm/g_h[2].g_t[0].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 777.6,
-    "y": 2002.32,
+    "y": 2313.3599999999997,
     "orient": "R0"
    },
    "io_budget": {
@@ -10514,7 +10514,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -10641,16 +10641,16 @@
   },
   {
    "name": "sp_vm/g_h[2].g_t[1].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 777.6,
-    "y": 1380.24,
+    "y": 1587.6,
     "orient": "R0"
    },
    "io_budget": {
@@ -10669,7 +10669,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -10796,16 +10796,16 @@
   },
   {
    "name": "sp_vm/g_h[2].g_t[2].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 777.6,
-    "y": 758.16,
+    "y": 861.84,
     "orient": "R0"
    },
    "io_budget": {
@@ -10824,7 +10824,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -10951,12 +10951,12 @@
   },
   {
    "name": "sp_vm/g_h[2].g_t[3].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 777.6,
@@ -10979,7 +10979,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -11106,16 +11106,16 @@
   },
   {
    "name": "sp_vm/g_h[3].g_t[0].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 1166.4,
-    "y": 2002.32,
+    "y": 2313.3599999999997,
     "orient": "R0"
    },
    "io_budget": {
@@ -11134,7 +11134,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -11261,16 +11261,16 @@
   },
   {
    "name": "sp_vm/g_h[3].g_t[1].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 1166.4,
-    "y": 1380.24,
+    "y": 1587.6,
     "orient": "R0"
    },
    "io_budget": {
@@ -11289,7 +11289,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -11416,16 +11416,16 @@
   },
   {
    "name": "sp_vm/g_h[3].g_t[2].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 1166.4,
-    "y": 758.16,
+    "y": 861.84,
     "orient": "R0"
    },
    "io_budget": {
@@ -11444,7 +11444,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -11571,12 +11571,12 @@
   },
   {
    "name": "sp_vm/g_h[3].g_t[3].u_bg",
-   "cell": "dsfd_vm_bgq28",
+   "cell": "dsfd_vm_bgq28h",
    "kind": "parent",
    "parent": "sp_vm",
    "outline": {
-    "w": 345.6,
-    "h": 622.08
+    "w": 367.2,
+    "h": 725.76
    },
    "origin": {
     "x": 1166.4,
@@ -11599,7 +11599,7 @@
    "pg_layer": "M6",
    "strap_layer": "M7",
    "signal_max_layer": "M6",
-   "notes": "v16 (s81-bgq28 07:58, coordinator: slot grows, shared gate not overridden): 345.6 x 622.08 = 8 x 77.76 leaves (the SRAM stays >= 20 um from the N / S pin faces: 74.06 um minimum, 77.76 on the 2.16 lattice; the coordinator's 592.5 = 8 x 74.06 is off the lattice). Width, N / S pin x and layers, W pins ck / rs / grp, M5 cap unchanged; the flat 63,416-sink tile is retired. Tile hop 6 -> 16 cycles (timing only, o_* -> f_* skew unchanged). Clock spine buffers + 3 tie cells a leaf inside the existing 43.2 um W channel. | v15 and earlier: v11 bgq28 v4 (el1011-ds-vm/bgq28, RTL dsfd_vm_bgr): N/S face pins on vertical M3/M5 in disjoint x ranges (was o_* M6 x [89.6,279.6] interleaved with i_d); outline 345.6 x 500.04 and PX 388.8 unchanged. v4 (el1011-ds-vm 10-12): tile signal pins <= M6 -- the 3,782 former M7 N/S pins keep face and x on M6 (0.064 x 0.32, tools/s81_ph/s81_ph_vm_master_tiles.py); M7 = tile PG only, M8 parent straps. v2 ",
+   "notes": "v18 actual eightM5leafcluster;21.6Wstrap, leafheight90.72;actualclockroots and nativepin binding owed",
    "layer_rule": "cluster_child",
    "view_layers": {
     "pg_layer": "M7",
@@ -11734,7 +11734,7 @@
     "h": 92.88
    },
    "origin": {
-    "x": 43.2,
+    "x": 64.80000000000001,
     "y": 21.6,
     "orient": "R0"
    },
@@ -11951,7 +11951,7 @@
     "h": 92.88
    },
    "origin": {
-    "x": 432.0,
+    "x": 453.6,
     "y": 21.6,
     "orient": "R0"
    },
@@ -12168,7 +12168,7 @@
     "h": 92.88
    },
    "origin": {
-    "x": 820.8,
+    "x": 842.4,
     "y": 21.6,
     "orient": "R0"
    },
@@ -12385,7 +12385,7 @@
     "h": 92.88
    },
    "origin": {
-    "x": 1209.6,
+    "x": 1231.1999999999998,
     "y": 21.6,
     "orient": "R0"
    },
@@ -12616,11 +12616,11 @@
    "parent": "sp_vm",
    "outline": {
     "w": 1520.064,
-    "h": 695.52
+    "h": 889.92
    },
    "origin": {
-    "x": 0.0,
-    "y": 2646.0,
+    "x": 21.6,
+    "y": 3060.7200000000003,
     "orient": "R0"
    },
    "assembly": "cluster",
@@ -15098,6 +15098,18 @@
    "parent_growth_um": 176.48,
    "status": "GEOMETRY_TRIAL_ONLY:23setupseamsFAIL;ccf structuralrepair required;NO timing qualification",
    "source_commit": "4330719a9"
+  },
+  "vm_actual_children": {
+   "bgq_um": [
+    367.2,
+    725.76
+   ],
+   "fe_um": [
+    1520.064,
+    889.92
+   ],
+   "vm_width_growth_um": 21.6,
+   "status": "GEOMETRY_TRIAL;VMFEconstructive placement remainsOPEN;actualpinbinding owed"
   }
  }
 }
