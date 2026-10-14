@@ -215,7 +215,7 @@ module tb_dsfd_engram_c #(parameter integer NSLOT = 8, parameter integer PIPE = 
     endgenerate
 
     initial begin : load
-        reg [8*512-1:0] path;
+        reg [8*512-1:0] path, rpath;
         integer l, r, j;
         if (!$value$plusargs("VEC=%s", path)) path = "engram_lookup_vectors.txt";
         if (!$value$plusargs("LAT=%d", LAT)) LAT = 240;
@@ -232,12 +232,12 @@ module tb_dsfd_engram_c #(parameter integer NSLOT = 8, parameter integer PIPE = 
         if (!$value$plusargs("ERR=%d", ERR)) ERR = 0;
         for (l = 0; l < NL; l = l + 1) for (r = 0; r < NR; r = r + 1) for (j = 0; j <= CPR; j = j + 1)
             cbt[l*NR + r][j] = colbase(l, r, j);
-        if ($value$plusargs("REAL=%s", path)) begin : ldreal
+        if ($value$plusargs("REAL=%s", rpath)) begin : ldreal
             integer rf, rl, nreal, bb;
             reg [63:0] rrow;
             reg [2111:0] rdat;
             reg [31:0] rc32;
-            rf = $fopen(path, "r");
+            rf = $fopen(rpath, "r");
             if (rf == 0) begin $display("cannot open REAL rows"); $finish; end
             nreal = 0;
             while ($fscanf(rf, "%d %d %h", rl, rrow, rdat) == 3) begin
