@@ -1,0 +1,1064 @@
+THREEPRODUCER_SU_START load0 mode0 range0:65535 cycle8
+THREEPRODUCER_PARKED_POSTS observed224 before_grant retained_positive_requires_fullcommit
+THREEPRODUCER_SU_DONE load0 mode0 cycle2190
+THREEPRODUCER_SU_START load0 mode1 range65472:65535 cycle2210
+THREEPRODUCER_QUANT_RETIRE records32 cycles192 immutable_price168 ratio1.142857143
+THREEOWNER_DMA_STORE PASS base0 n64 rows4 stride65536 checked256 source39_peak_pending2
+THREEPRODUCER_SU_DONE load0 mode1 cycle2544
+THREEOWNER_DMA_STORE PASS base65528 n128 rows1 stride128 checked384 source39_peak_pending2
+THREEOWNER_DMA_STORE PASS base32768 n8 rows64 stride256 checked896 source39_peak_pending2
+THREEOWNER_DMA_STORE PASS base131008 n128 rows1 stride128 checked1024 source39_peak_pending2
+THREEOWNER_DMA_CORE PASS source39f276214 STORE4 FENCE4 native_requests128 words1024 peak_pending2
+THREEPRODUCER_SU_START load0 mode2 range0:65535 cycle4085
+THREEPRODUCER_SU_DONE load0 mode2 cycle5977
+LOAD f 0 m 1 n 128: 32 cycles, 16.0 destination B / cycle, 16.0 source B / cycle = 0.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_QUANT_EXACT PASS records32 words13312 cycles192 immutable_price168
+THREEPRODUCER_SU_START load1 mode0 range0:65535 cycle5977
+THREEPRODUCER_SU_DONE load1 mode0 cycle8152
+THREEPRODUCER_SU_START load1 mode1 range65472:65535 cycle8173
+THREEPRODUCER_SU_DONE load1 mode1 cycle8276
+THREEPRODUCER_SU_START load1 mode2 range0:65535 cycle8276
+THREEPRODUCER_SU_DONE load1 mode2 cycle10169
+LOAD f 4 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 35.3 source B / cycle = 1.1 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load2 mode0 range0:65535 cycle10169
+THREEPRODUCER_SU_DONE load2 mode0 cycle12344
+THREEPRODUCER_SU_START load2 mode1 range65472:65535 cycle12365
+THREEPRODUCER_SU_DONE load2 mode1 cycle12414
+THREEPRODUCER_SU_START load2 mode2 range0:65535 cycle12414
+THREEPRODUCER_SU_DONE load2 mode2 cycle14306
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load3 mode0 range0:65535 cycle14306
+THREEPRODUCER_SU_DONE load3 mode0 cycle16480
+THREEPRODUCER_SU_START load3 mode1 range65472:65535 cycle16501
+THREEPRODUCER_SU_DONE load3 mode1 cycle16604
+THREEPRODUCER_SU_START load3 mode2 range0:65535 cycle16604
+THREEPRODUCER_SU_DONE load3 mode2 cycle18497
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load4 mode0 range0:65535 cycle18497
+THREEPRODUCER_SU_DONE load4 mode0 cycle20672
+THREEPRODUCER_SU_START load4 mode1 range65472:65535 cycle20693
+THREEPRODUCER_SU_DONE load4 mode1 cycle20838
+THREEPRODUCER_SU_START load4 mode2 range0:65535 cycle20838
+THREEPRODUCER_SU_DONE load4 mode2 cycle22730
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load5 mode0 range0:65535 cycle22730
+THREEPRODUCER_SU_DONE load5 mode0 cycle24904
+THREEPRODUCER_SU_START load5 mode1 range65472:65535 cycle24925
+THREEPRODUCER_SU_DONE load5 mode1 cycle25028
+THREEPRODUCER_SU_START load5 mode2 range0:65535 cycle25028
+THREEPRODUCER_SU_DONE load5 mode2 cycle26921
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load6 mode0 range0:65535 cycle26921
+THREEPRODUCER_SU_DONE load6 mode0 cycle29096
+THREEPRODUCER_SU_START load6 mode1 range65472:65535 cycle29117
+THREEPRODUCER_SU_DONE load6 mode1 cycle29166
+THREEPRODUCER_SU_START load6 mode2 range0:65535 cycle29166
+THREEPRODUCER_SU_DONE load6 mode2 cycle31058
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load7 mode0 range0:65535 cycle31058
+THREEPRODUCER_SU_DONE load7 mode0 cycle33232
+THREEPRODUCER_SU_START load7 mode1 range65472:65535 cycle33253
+THREEPRODUCER_SU_DONE load7 mode1 cycle33356
+THREEPRODUCER_SU_START load7 mode2 range0:65535 cycle33356
+THREEPRODUCER_SU_DONE load7 mode2 cycle35249
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load8 mode0 range0:65535 cycle35249
+THREEPRODUCER_SU_DONE load8 mode0 cycle37424
+THREEPRODUCER_SU_START load8 mode1 range65472:65535 cycle37445
+THREEPRODUCER_SU_DONE load8 mode1 cycle37590
+THREEPRODUCER_SU_START load8 mode2 range0:65535 cycle37590
+THREEPRODUCER_SU_DONE load8 mode2 cycle39482
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load9 mode0 range0:65535 cycle39482
+THREEPRODUCER_SU_DONE load9 mode0 cycle41656
+THREEPRODUCER_SU_START load9 mode1 range65472:65535 cycle41677
+THREEPRODUCER_SU_DONE load9 mode1 cycle41780
+THREEPRODUCER_SU_START load9 mode2 range0:65535 cycle41780
+THREEPRODUCER_SU_DONE load9 mode2 cycle43673
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load10 mode0 range0:65535 cycle43673
+THREEPRODUCER_SU_DONE load10 mode0 cycle45848
+THREEPRODUCER_SU_START load10 mode1 range65472:65535 cycle45869
+THREEPRODUCER_SU_DONE load10 mode1 cycle45918
+THREEPRODUCER_SU_START load10 mode2 range0:65535 cycle45918
+THREEPRODUCER_SU_DONE load10 mode2 cycle47810
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load11 mode0 range0:65535 cycle47810
+THREEPRODUCER_SU_DONE load11 mode0 cycle49984
+THREEPRODUCER_SU_START load11 mode1 range65472:65535 cycle50005
+THREEPRODUCER_SU_DONE load11 mode1 cycle50108
+THREEPRODUCER_SU_START load11 mode2 range0:65535 cycle50108
+THREEPRODUCER_SU_DONE load11 mode2 cycle52001
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load12 mode0 range0:65535 cycle52001
+THREEPRODUCER_SU_DONE load12 mode0 cycle54176
+THREEPRODUCER_SU_START load12 mode1 range65472:65535 cycle54197
+THREEPRODUCER_SU_DONE load12 mode1 cycle54342
+THREEPRODUCER_SU_START load12 mode2 range0:65535 cycle54342
+THREEPRODUCER_SU_DONE load12 mode2 cycle56234
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load13 mode0 range0:65535 cycle56234
+THREEPRODUCER_SU_DONE load13 mode0 cycle58408
+THREEPRODUCER_SU_START load13 mode1 range65472:65535 cycle58429
+THREEPRODUCER_SU_DONE load13 mode1 cycle58532
+THREEPRODUCER_SU_START load13 mode2 range0:65535 cycle58532
+THREEPRODUCER_SU_DONE load13 mode2 cycle60425
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load14 mode0 range0:65535 cycle60425
+THREEPRODUCER_SU_DONE load14 mode0 cycle62600
+THREEPRODUCER_SU_START load14 mode1 range65472:65535 cycle62621
+THREEPRODUCER_SU_DONE load14 mode1 cycle62670
+THREEPRODUCER_SU_START load14 mode2 range0:65535 cycle62670
+THREEPRODUCER_SU_DONE load14 mode2 cycle64562
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load15 mode0 range0:65535 cycle64562
+THREEPRODUCER_SU_DONE load15 mode0 cycle66736
+THREEPRODUCER_SU_START load15 mode1 range65472:65535 cycle66757
+THREEPRODUCER_SU_DONE load15 mode1 cycle66860
+THREEPRODUCER_SU_START load15 mode2 range0:65535 cycle66860
+THREEPRODUCER_SU_DONE load15 mode2 cycle68753
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load16 mode0 range0:65535 cycle68753
+THREEPRODUCER_SU_DONE load16 mode0 cycle70928
+THREEPRODUCER_SU_START load16 mode1 range65472:65535 cycle70949
+THREEPRODUCER_SU_DONE load16 mode1 cycle71094
+THREEPRODUCER_SU_START load16 mode2 range0:65535 cycle71094
+THREEPRODUCER_SU_DONE load16 mode2 cycle72986
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load17 mode0 range0:65535 cycle72986
+THREEPRODUCER_SU_DONE load17 mode0 cycle75160
+THREEPRODUCER_SU_START load17 mode1 range65472:65535 cycle75181
+THREEPRODUCER_SU_DONE load17 mode1 cycle75284
+THREEPRODUCER_SU_START load17 mode2 range0:65535 cycle75284
+THREEPRODUCER_SU_DONE load17 mode2 cycle77177
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load18 mode0 range0:65535 cycle77177
+THREEPRODUCER_SU_DONE load18 mode0 cycle79352
+THREEPRODUCER_SU_START load18 mode1 range65472:65535 cycle79373
+THREEPRODUCER_SU_DONE load18 mode1 cycle79422
+THREEPRODUCER_SU_START load18 mode2 range0:65535 cycle79422
+THREEPRODUCER_SU_DONE load18 mode2 cycle81314
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load19 mode0 range0:65535 cycle81314
+THREEPRODUCER_SU_DONE load19 mode0 cycle83488
+THREEPRODUCER_SU_START load19 mode1 range65472:65535 cycle83509
+THREEPRODUCER_SU_DONE load19 mode1 cycle83612
+THREEPRODUCER_SU_START load19 mode2 range0:65535 cycle83612
+THREEPRODUCER_SU_DONE load19 mode2 cycle85505
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load20 mode0 range0:65535 cycle85505
+THREEPRODUCER_SU_DONE load20 mode0 cycle87680
+THREEPRODUCER_SU_START load20 mode1 range65472:65535 cycle87701
+THREEPRODUCER_SU_DONE load20 mode1 cycle87846
+THREEPRODUCER_SU_START load20 mode2 range0:65535 cycle87846
+THREEPRODUCER_SU_DONE load20 mode2 cycle89738
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load21 mode0 range0:65535 cycle89738
+THREEPRODUCER_SU_DONE load21 mode0 cycle91912
+THREEPRODUCER_SU_START load21 mode1 range65472:65535 cycle91933
+THREEPRODUCER_SU_DONE load21 mode1 cycle92036
+THREEPRODUCER_SU_START load21 mode2 range0:65535 cycle92036
+THREEPRODUCER_SU_DONE load21 mode2 cycle93929
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load22 mode0 range0:65535 cycle93929
+THREEPRODUCER_SU_DONE load22 mode0 cycle96104
+THREEPRODUCER_SU_START load22 mode1 range65472:65535 cycle96125
+THREEPRODUCER_SU_DONE load22 mode1 cycle96174
+THREEPRODUCER_SU_START load22 mode2 range0:65535 cycle96174
+THREEPRODUCER_SU_DONE load22 mode2 cycle98066
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load23 mode0 range0:65535 cycle98066
+THREEPRODUCER_SU_DONE load23 mode0 cycle100240
+THREEPRODUCER_SU_START load23 mode1 range65472:65535 cycle100261
+THREEPRODUCER_SU_DONE load23 mode1 cycle100364
+THREEPRODUCER_SU_START load23 mode2 range0:65535 cycle100364
+THREEPRODUCER_SU_DONE load23 mode2 cycle102257
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load24 mode0 range0:65535 cycle102257
+THREEPRODUCER_SU_DONE load24 mode0 cycle104432
+THREEPRODUCER_SU_START load24 mode1 range65472:65535 cycle104453
+THREEPRODUCER_SU_DONE load24 mode1 cycle104598
+THREEPRODUCER_SU_START load24 mode2 range0:65535 cycle104598
+THREEPRODUCER_SU_DONE load24 mode2 cycle106490
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load25 mode0 range0:65535 cycle106490
+THREEPRODUCER_SU_DONE load25 mode0 cycle108664
+THREEPRODUCER_SU_START load25 mode1 range65472:65535 cycle108685
+THREEPRODUCER_SU_DONE load25 mode1 cycle108788
+THREEPRODUCER_SU_START load25 mode2 range0:65535 cycle108788
+THREEPRODUCER_SU_DONE load25 mode2 cycle110681
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load26 mode0 range0:65535 cycle110681
+THREEPRODUCER_SU_DONE load26 mode0 cycle112856
+THREEPRODUCER_SU_START load26 mode1 range65472:65535 cycle112877
+THREEPRODUCER_SU_DONE load26 mode1 cycle112926
+THREEPRODUCER_SU_START load26 mode2 range0:65535 cycle112926
+THREEPRODUCER_SU_DONE load26 mode2 cycle114818
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load27 mode0 range0:65535 cycle114818
+THREEPRODUCER_SU_DONE load27 mode0 cycle116992
+THREEPRODUCER_SU_START load27 mode1 range65472:65535 cycle117013
+THREEPRODUCER_SU_DONE load27 mode1 cycle117116
+THREEPRODUCER_SU_START load27 mode2 range0:65535 cycle117116
+THREEPRODUCER_SU_DONE load27 mode2 cycle119009
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load28 mode0 range0:65535 cycle119009
+THREEPRODUCER_SU_DONE load28 mode0 cycle121184
+THREEPRODUCER_SU_START load28 mode1 range65472:65535 cycle121205
+THREEPRODUCER_SU_DONE load28 mode1 cycle121350
+THREEPRODUCER_SU_START load28 mode2 range0:65535 cycle121350
+THREEPRODUCER_SU_DONE load28 mode2 cycle123242
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load29 mode0 range0:65535 cycle123242
+THREEPRODUCER_SU_DONE load29 mode0 cycle125416
+THREEPRODUCER_SU_START load29 mode1 range65472:65535 cycle125437
+THREEPRODUCER_SU_DONE load29 mode1 cycle125540
+THREEPRODUCER_SU_START load29 mode2 range0:65535 cycle125540
+THREEPRODUCER_SU_DONE load29 mode2 cycle127433
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load30 mode0 range0:65535 cycle127433
+THREEPRODUCER_SU_DONE load30 mode0 cycle129608
+THREEPRODUCER_SU_START load30 mode1 range65472:65535 cycle129629
+THREEPRODUCER_SU_DONE load30 mode1 cycle129678
+THREEPRODUCER_SU_START load30 mode2 range0:65535 cycle129678
+THREEPRODUCER_SU_DONE load30 mode2 cycle131570
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load31 mode0 range0:65535 cycle131570
+THREEPRODUCER_SU_DONE load31 mode0 cycle133744
+THREEPRODUCER_SU_START load31 mode1 range65472:65535 cycle133765
+THREEPRODUCER_SU_DONE load31 mode1 cycle133868
+THREEPRODUCER_SU_START load31 mode2 range0:65535 cycle133868
+THREEPRODUCER_SU_DONE load31 mode2 cycle135761
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load32 mode0 range0:65535 cycle135761
+THREEPRODUCER_SU_DONE load32 mode0 cycle137936
+THREEPRODUCER_SU_START load32 mode1 range65472:65535 cycle137957
+THREEPRODUCER_SU_DONE load32 mode1 cycle138102
+THREEPRODUCER_SU_START load32 mode2 range0:65535 cycle138102
+THREEPRODUCER_SU_DONE load32 mode2 cycle139994
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load33 mode0 range0:65535 cycle139994
+THREEPRODUCER_SU_DONE load33 mode0 cycle142168
+THREEPRODUCER_SU_START load33 mode1 range65472:65535 cycle142189
+THREEPRODUCER_SU_DONE load33 mode1 cycle142292
+THREEPRODUCER_SU_START load33 mode2 range0:65535 cycle142292
+THREEPRODUCER_SU_DONE load33 mode2 cycle144185
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load34 mode0 range0:65535 cycle144185
+THREEPRODUCER_SU_DONE load34 mode0 cycle146360
+THREEPRODUCER_SU_START load34 mode1 range65472:65535 cycle146381
+THREEPRODUCER_SU_DONE load34 mode1 cycle146430
+THREEPRODUCER_SU_START load34 mode2 range0:65535 cycle146430
+THREEPRODUCER_SU_DONE load34 mode2 cycle148322
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load35 mode0 range0:65535 cycle148322
+THREEPRODUCER_SU_DONE load35 mode0 cycle150496
+THREEPRODUCER_SU_START load35 mode1 range65472:65535 cycle150517
+THREEPRODUCER_SU_DONE load35 mode1 cycle150620
+THREEPRODUCER_SU_START load35 mode2 range0:65535 cycle150620
+THREEPRODUCER_SU_DONE load35 mode2 cycle152513
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load36 mode0 range0:65535 cycle152513
+THREEPRODUCER_SU_DONE load36 mode0 cycle154688
+THREEPRODUCER_SU_START load36 mode1 range65472:65535 cycle154709
+THREEPRODUCER_SU_DONE load36 mode1 cycle154854
+THREEPRODUCER_SU_START load36 mode2 range0:65535 cycle154854
+THREEPRODUCER_SU_DONE load36 mode2 cycle156746
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load37 mode0 range0:65535 cycle156746
+THREEPRODUCER_SU_DONE load37 mode0 cycle158920
+THREEPRODUCER_SU_START load37 mode1 range65472:65535 cycle158941
+THREEPRODUCER_SU_DONE load37 mode1 cycle159044
+THREEPRODUCER_SU_START load37 mode2 range0:65535 cycle159044
+THREEPRODUCER_SU_DONE load37 mode2 cycle160937
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load38 mode0 range0:65535 cycle160937
+THREEPRODUCER_SU_DONE load38 mode0 cycle163112
+THREEPRODUCER_SU_START load38 mode1 range65472:65535 cycle163133
+THREEPRODUCER_SU_DONE load38 mode1 cycle163182
+THREEPRODUCER_SU_START load38 mode2 range0:65535 cycle163182
+THREEPRODUCER_SU_DONE load38 mode2 cycle165074
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load39 mode0 range0:65535 cycle165074
+THREEPRODUCER_SU_DONE load39 mode0 cycle167248
+THREEPRODUCER_SU_START load39 mode1 range65472:65535 cycle167269
+THREEPRODUCER_SU_DONE load39 mode1 cycle167372
+THREEPRODUCER_SU_START load39 mode2 range0:65535 cycle167372
+THREEPRODUCER_SU_DONE load39 mode2 cycle169265
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load40 mode0 range0:65535 cycle169265
+THREEPRODUCER_SU_DONE load40 mode0 cycle171440
+THREEPRODUCER_SU_START load40 mode1 range65472:65535 cycle171461
+THREEPRODUCER_SU_DONE load40 mode1 cycle171606
+THREEPRODUCER_SU_START load40 mode2 range0:65535 cycle171606
+THREEPRODUCER_SU_DONE load40 mode2 cycle173498
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load41 mode0 range0:65535 cycle173498
+THREEPRODUCER_SU_DONE load41 mode0 cycle175672
+THREEPRODUCER_SU_START load41 mode1 range65472:65535 cycle175693
+THREEPRODUCER_SU_DONE load41 mode1 cycle175796
+THREEPRODUCER_SU_START load41 mode2 range0:65535 cycle175796
+THREEPRODUCER_SU_DONE load41 mode2 cycle177689
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load42 mode0 range0:65535 cycle177689
+THREEPRODUCER_SU_DONE load42 mode0 cycle179864
+THREEPRODUCER_SU_START load42 mode1 range65472:65535 cycle179885
+THREEPRODUCER_SU_DONE load42 mode1 cycle179934
+THREEPRODUCER_SU_START load42 mode2 range0:65535 cycle179934
+THREEPRODUCER_SU_DONE load42 mode2 cycle181826
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load43 mode0 range0:65535 cycle181826
+THREEPRODUCER_SU_DONE load43 mode0 cycle184000
+THREEPRODUCER_SU_START load43 mode1 range65472:65535 cycle184021
+THREEPRODUCER_SU_DONE load43 mode1 cycle184124
+THREEPRODUCER_SU_START load43 mode2 range0:65535 cycle184124
+THREEPRODUCER_SU_DONE load43 mode2 cycle186017
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load44 mode0 range0:65535 cycle186017
+THREEPRODUCER_SU_DONE load44 mode0 cycle188192
+THREEPRODUCER_SU_START load44 mode1 range65472:65535 cycle188213
+THREEPRODUCER_SU_DONE load44 mode1 cycle188358
+THREEPRODUCER_SU_START load44 mode2 range0:65535 cycle188358
+THREEPRODUCER_SU_DONE load44 mode2 cycle190250
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load45 mode0 range0:65535 cycle190250
+THREEPRODUCER_SU_DONE load45 mode0 cycle192424
+THREEPRODUCER_SU_START load45 mode1 range65472:65535 cycle192445
+THREEPRODUCER_SU_DONE load45 mode1 cycle192548
+THREEPRODUCER_SU_START load45 mode2 range0:65535 cycle192548
+THREEPRODUCER_SU_DONE load45 mode2 cycle194441
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load46 mode0 range0:65535 cycle194441
+THREEPRODUCER_SU_DONE load46 mode0 cycle196616
+THREEPRODUCER_SU_START load46 mode1 range65472:65535 cycle196637
+THREEPRODUCER_SU_DONE load46 mode1 cycle196686
+THREEPRODUCER_SU_START load46 mode2 range0:65535 cycle196686
+THREEPRODUCER_SU_DONE load46 mode2 cycle198578
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load47 mode0 range0:65535 cycle198578
+THREEPRODUCER_SU_DONE load47 mode0 cycle200752
+THREEPRODUCER_SU_START load47 mode1 range65472:65535 cycle200773
+THREEPRODUCER_SU_DONE load47 mode1 cycle200876
+THREEPRODUCER_SU_START load47 mode2 range0:65535 cycle200876
+THREEPRODUCER_SU_DONE load47 mode2 cycle202769
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load48 mode0 range0:65535 cycle202769
+THREEPRODUCER_SU_DONE load48 mode0 cycle204944
+THREEPRODUCER_SU_START load48 mode1 range65472:65535 cycle204965
+THREEPRODUCER_SU_DONE load48 mode1 cycle205110
+THREEPRODUCER_SU_START load48 mode2 range0:65535 cycle205110
+THREEPRODUCER_SU_DONE load48 mode2 cycle207002
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load49 mode0 range0:65535 cycle207002
+THREEPRODUCER_SU_DONE load49 mode0 cycle209176
+THREEPRODUCER_SU_START load49 mode1 range65472:65535 cycle209197
+THREEPRODUCER_SU_DONE load49 mode1 cycle209300
+THREEPRODUCER_SU_START load49 mode2 range0:65535 cycle209300
+THREEPRODUCER_SU_DONE load49 mode2 cycle211193
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load50 mode0 range0:65535 cycle211193
+THREEPRODUCER_SU_DONE load50 mode0 cycle213368
+THREEPRODUCER_SU_START load50 mode1 range65472:65535 cycle213389
+THREEPRODUCER_SU_DONE load50 mode1 cycle213438
+THREEPRODUCER_SU_START load50 mode2 range0:65535 cycle213438
+THREEPRODUCER_SU_DONE load50 mode2 cycle215330
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load51 mode0 range0:65535 cycle215330
+THREEPRODUCER_SU_DONE load51 mode0 cycle217504
+THREEPRODUCER_SU_START load51 mode1 range65472:65535 cycle217525
+THREEPRODUCER_SU_DONE load51 mode1 cycle217628
+THREEPRODUCER_SU_START load51 mode2 range0:65535 cycle217628
+THREEPRODUCER_SU_DONE load51 mode2 cycle219521
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load52 mode0 range0:65535 cycle219521
+THREEPRODUCER_SU_DONE load52 mode0 cycle221696
+THREEPRODUCER_SU_START load52 mode1 range65472:65535 cycle221717
+THREEPRODUCER_SU_DONE load52 mode1 cycle221862
+THREEPRODUCER_SU_START load52 mode2 range0:65535 cycle221862
+THREEPRODUCER_SU_DONE load52 mode2 cycle223754
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load53 mode0 range0:65535 cycle223754
+THREEPRODUCER_SU_DONE load53 mode0 cycle225928
+THREEPRODUCER_SU_START load53 mode1 range65472:65535 cycle225949
+THREEPRODUCER_SU_DONE load53 mode1 cycle226052
+THREEPRODUCER_SU_START load53 mode2 range0:65535 cycle226052
+THREEPRODUCER_SU_DONE load53 mode2 cycle227945
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load54 mode0 range0:65535 cycle227945
+THREEPRODUCER_SU_DONE load54 mode0 cycle230120
+THREEPRODUCER_SU_START load54 mode1 range65472:65535 cycle230141
+THREEPRODUCER_SU_DONE load54 mode1 cycle230190
+THREEPRODUCER_SU_START load54 mode2 range0:65535 cycle230190
+THREEPRODUCER_SU_DONE load54 mode2 cycle232082
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load55 mode0 range0:65535 cycle232082
+THREEPRODUCER_SU_DONE load55 mode0 cycle234256
+THREEPRODUCER_SU_START load55 mode1 range65472:65535 cycle234277
+THREEPRODUCER_SU_DONE load55 mode1 cycle234380
+THREEPRODUCER_SU_START load55 mode2 range0:65535 cycle234380
+THREEPRODUCER_SU_DONE load55 mode2 cycle236273
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load56 mode0 range0:65535 cycle236273
+THREEPRODUCER_SU_DONE load56 mode0 cycle238448
+THREEPRODUCER_SU_START load56 mode1 range65472:65535 cycle238469
+THREEPRODUCER_SU_DONE load56 mode1 cycle238614
+THREEPRODUCER_SU_START load56 mode2 range0:65535 cycle238614
+THREEPRODUCER_SU_DONE load56 mode2 cycle240506
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load57 mode0 range0:65535 cycle240506
+THREEPRODUCER_SU_DONE load57 mode0 cycle242680
+THREEPRODUCER_SU_START load57 mode1 range65472:65535 cycle242701
+THREEPRODUCER_SU_DONE load57 mode1 cycle242804
+THREEPRODUCER_SU_START load57 mode2 range0:65535 cycle242804
+THREEPRODUCER_SU_DONE load57 mode2 cycle244697
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load58 mode0 range0:65535 cycle244697
+THREEPRODUCER_SU_DONE load58 mode0 cycle246872
+THREEPRODUCER_SU_START load58 mode1 range65472:65535 cycle246893
+THREEPRODUCER_SU_DONE load58 mode1 cycle246942
+THREEPRODUCER_SU_START load58 mode2 range0:65535 cycle246942
+THREEPRODUCER_SU_DONE load58 mode2 cycle248834
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load59 mode0 range0:65535 cycle248834
+THREEPRODUCER_SU_DONE load59 mode0 cycle251008
+THREEPRODUCER_SU_START load59 mode1 range65472:65535 cycle251029
+THREEPRODUCER_SU_DONE load59 mode1 cycle251132
+THREEPRODUCER_SU_START load59 mode2 range0:65535 cycle251132
+THREEPRODUCER_SU_DONE load59 mode2 cycle253025
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load60 mode0 range0:65535 cycle253025
+THREEPRODUCER_SU_DONE load60 mode0 cycle255200
+THREEPRODUCER_SU_START load60 mode1 range65472:65535 cycle255221
+THREEPRODUCER_SU_DONE load60 mode1 cycle255366
+THREEPRODUCER_SU_START load60 mode2 range0:65535 cycle255366
+THREEPRODUCER_SU_DONE load60 mode2 cycle257258
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load61 mode0 range0:65535 cycle257258
+THREEPRODUCER_SU_DONE load61 mode0 cycle259432
+THREEPRODUCER_SU_START load61 mode1 range65472:65535 cycle259453
+THREEPRODUCER_SU_DONE load61 mode1 cycle259556
+THREEPRODUCER_SU_START load61 mode2 range0:65535 cycle259556
+THREEPRODUCER_SU_DONE load61 mode2 cycle261449
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load62 mode0 range0:65535 cycle261449
+THREEPRODUCER_SU_DONE load62 mode0 cycle263624
+THREEPRODUCER_SU_START load62 mode1 range65472:65535 cycle263645
+THREEPRODUCER_SU_DONE load62 mode1 cycle263694
+THREEPRODUCER_SU_START load62 mode2 range0:65535 cycle263694
+THREEPRODUCER_SU_DONE load62 mode2 cycle265586
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load63 mode0 range0:65535 cycle265586
+THREEPRODUCER_SU_DONE load63 mode0 cycle267760
+THREEPRODUCER_SU_START load63 mode1 range65472:65535 cycle267781
+THREEPRODUCER_SU_DONE load63 mode1 cycle267884
+THREEPRODUCER_SU_START load63 mode2 range0:65535 cycle267884
+THREEPRODUCER_SU_DONE load63 mode2 cycle269777
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load64 mode0 range0:65535 cycle269777
+THREEPRODUCER_SU_DONE load64 mode0 cycle271952
+THREEPRODUCER_SU_START load64 mode1 range65472:65535 cycle271973
+THREEPRODUCER_SU_DONE load64 mode1 cycle272118
+THREEPRODUCER_SU_START load64 mode2 range0:65535 cycle272118
+THREEPRODUCER_SU_DONE load64 mode2 cycle274010
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load65 mode0 range0:65535 cycle274010
+THREEPRODUCER_SU_DONE load65 mode0 cycle276184
+THREEPRODUCER_SU_START load65 mode1 range65472:65535 cycle276205
+THREEPRODUCER_SU_DONE load65 mode1 cycle276308
+THREEPRODUCER_SU_START load65 mode2 range0:65535 cycle276308
+THREEPRODUCER_SU_DONE load65 mode2 cycle278201
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load66 mode0 range0:65535 cycle278201
+THREEPRODUCER_SU_DONE load66 mode0 cycle280376
+THREEPRODUCER_SU_START load66 mode1 range65472:65535 cycle280397
+THREEPRODUCER_SU_DONE load66 mode1 cycle280446
+THREEPRODUCER_SU_START load66 mode2 range0:65535 cycle280446
+THREEPRODUCER_SU_DONE load66 mode2 cycle282338
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load67 mode0 range0:65535 cycle282338
+THREEPRODUCER_SU_DONE load67 mode0 cycle284512
+THREEPRODUCER_SU_START load67 mode1 range65472:65535 cycle284533
+THREEPRODUCER_SU_DONE load67 mode1 cycle284636
+THREEPRODUCER_SU_START load67 mode2 range0:65535 cycle284636
+THREEPRODUCER_SU_DONE load67 mode2 cycle286529
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load68 mode0 range0:65535 cycle286529
+THREEPRODUCER_SU_DONE load68 mode0 cycle288704
+THREEPRODUCER_SU_START load68 mode1 range65472:65535 cycle288725
+THREEPRODUCER_SU_DONE load68 mode1 cycle288870
+THREEPRODUCER_SU_START load68 mode2 range0:65535 cycle288870
+THREEPRODUCER_SU_DONE load68 mode2 cycle290762
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load69 mode0 range0:65535 cycle290762
+THREEPRODUCER_SU_DONE load69 mode0 cycle292936
+THREEPRODUCER_SU_START load69 mode1 range65472:65535 cycle292957
+THREEPRODUCER_SU_DONE load69 mode1 cycle293060
+THREEPRODUCER_SU_START load69 mode2 range0:65535 cycle293060
+THREEPRODUCER_SU_DONE load69 mode2 cycle294953
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load70 mode0 range0:65535 cycle294953
+THREEPRODUCER_SU_DONE load70 mode0 cycle297128
+THREEPRODUCER_SU_START load70 mode1 range65472:65535 cycle297149
+THREEPRODUCER_SU_DONE load70 mode1 cycle297198
+THREEPRODUCER_SU_START load70 mode2 range0:65535 cycle297198
+THREEPRODUCER_SU_DONE load70 mode2 cycle299090
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load71 mode0 range0:65535 cycle299090
+THREEPRODUCER_SU_DONE load71 mode0 cycle301264
+THREEPRODUCER_SU_START load71 mode1 range65472:65535 cycle301285
+THREEPRODUCER_SU_DONE load71 mode1 cycle301388
+THREEPRODUCER_SU_START load71 mode2 range0:65535 cycle301388
+THREEPRODUCER_SU_DONE load71 mode2 cycle303281
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load72 mode0 range0:65535 cycle303281
+THREEPRODUCER_SU_DONE load72 mode0 cycle305456
+THREEPRODUCER_SU_START load72 mode1 range65472:65535 cycle305477
+THREEPRODUCER_SU_DONE load72 mode1 cycle305622
+THREEPRODUCER_SU_START load72 mode2 range0:65535 cycle305622
+THREEPRODUCER_SU_DONE load72 mode2 cycle307514
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load73 mode0 range0:65535 cycle307514
+THREEPRODUCER_SU_DONE load73 mode0 cycle309688
+THREEPRODUCER_SU_START load73 mode1 range65472:65535 cycle309709
+THREEPRODUCER_SU_DONE load73 mode1 cycle309812
+THREEPRODUCER_SU_START load73 mode2 range0:65535 cycle309812
+THREEPRODUCER_SU_DONE load73 mode2 cycle311705
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load74 mode0 range0:65535 cycle311705
+THREEPRODUCER_SU_DONE load74 mode0 cycle313880
+THREEPRODUCER_SU_START load74 mode1 range65472:65535 cycle313901
+THREEPRODUCER_SU_DONE load74 mode1 cycle313950
+THREEPRODUCER_SU_START load74 mode2 range0:65535 cycle313950
+THREEPRODUCER_SU_DONE load74 mode2 cycle315842
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load75 mode0 range0:65535 cycle315842
+THREEPRODUCER_SU_DONE load75 mode0 cycle318016
+THREEPRODUCER_SU_START load75 mode1 range65472:65535 cycle318037
+THREEPRODUCER_SU_DONE load75 mode1 cycle318140
+THREEPRODUCER_SU_START load75 mode2 range0:65535 cycle318140
+THREEPRODUCER_SU_DONE load75 mode2 cycle320033
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load76 mode0 range0:65535 cycle320033
+THREEPRODUCER_SU_DONE load76 mode0 cycle322208
+THREEPRODUCER_SU_START load76 mode1 range65472:65535 cycle322229
+THREEPRODUCER_SU_DONE load76 mode1 cycle322374
+THREEPRODUCER_SU_START load76 mode2 range0:65535 cycle322374
+THREEPRODUCER_SU_DONE load76 mode2 cycle324266
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load77 mode0 range0:65535 cycle324266
+THREEPRODUCER_SU_DONE load77 mode0 cycle326440
+THREEPRODUCER_SU_START load77 mode1 range65472:65535 cycle326461
+THREEPRODUCER_SU_DONE load77 mode1 cycle326564
+THREEPRODUCER_SU_START load77 mode2 range0:65535 cycle326564
+THREEPRODUCER_SU_DONE load77 mode2 cycle328457
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load78 mode0 range0:65535 cycle328457
+THREEPRODUCER_SU_DONE load78 mode0 cycle330632
+THREEPRODUCER_SU_START load78 mode1 range65472:65535 cycle330653
+THREEPRODUCER_SU_DONE load78 mode1 cycle330702
+THREEPRODUCER_SU_START load78 mode2 range0:65535 cycle330702
+THREEPRODUCER_SU_DONE load78 mode2 cycle332594
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load79 mode0 range0:65535 cycle332594
+THREEPRODUCER_SU_DONE load79 mode0 cycle334768
+THREEPRODUCER_SU_START load79 mode1 range65472:65535 cycle334789
+THREEPRODUCER_SU_DONE load79 mode1 cycle334892
+THREEPRODUCER_SU_START load79 mode2 range0:65535 cycle334892
+THREEPRODUCER_SU_DONE load79 mode2 cycle336785
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load80 mode0 range0:65535 cycle336785
+THREEPRODUCER_SU_DONE load80 mode0 cycle338960
+THREEPRODUCER_SU_START load80 mode1 range65472:65535 cycle338981
+THREEPRODUCER_SU_DONE load80 mode1 cycle339126
+THREEPRODUCER_SU_START load80 mode2 range0:65535 cycle339126
+THREEPRODUCER_SU_DONE load80 mode2 cycle341018
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load81 mode0 range0:65535 cycle341018
+THREEPRODUCER_SU_DONE load81 mode0 cycle343192
+THREEPRODUCER_SU_START load81 mode1 range65472:65535 cycle343213
+THREEPRODUCER_SU_DONE load81 mode1 cycle343316
+THREEPRODUCER_SU_START load81 mode2 range0:65535 cycle343316
+THREEPRODUCER_SU_DONE load81 mode2 cycle345209
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load82 mode0 range0:65535 cycle345209
+THREEPRODUCER_SU_DONE load82 mode0 cycle347384
+THREEPRODUCER_SU_START load82 mode1 range65472:65535 cycle347405
+THREEPRODUCER_SU_DONE load82 mode1 cycle347454
+THREEPRODUCER_SU_START load82 mode2 range0:65535 cycle347454
+THREEPRODUCER_SU_DONE load82 mode2 cycle349346
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load83 mode0 range0:65535 cycle349346
+THREEPRODUCER_SU_DONE load83 mode0 cycle351520
+THREEPRODUCER_SU_START load83 mode1 range65472:65535 cycle351541
+THREEPRODUCER_SU_DONE load83 mode1 cycle351644
+THREEPRODUCER_SU_START load83 mode2 range0:65535 cycle351644
+THREEPRODUCER_SU_DONE load83 mode2 cycle353537
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load84 mode0 range0:65535 cycle353537
+THREEPRODUCER_SU_DONE load84 mode0 cycle355712
+THREEPRODUCER_SU_START load84 mode1 range65472:65535 cycle355733
+THREEPRODUCER_SU_DONE load84 mode1 cycle355878
+THREEPRODUCER_SU_START load84 mode2 range0:65535 cycle355878
+THREEPRODUCER_SU_DONE load84 mode2 cycle357770
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load85 mode0 range0:65535 cycle357770
+THREEPRODUCER_SU_DONE load85 mode0 cycle359944
+THREEPRODUCER_SU_START load85 mode1 range65472:65535 cycle359965
+THREEPRODUCER_SU_DONE load85 mode1 cycle360068
+THREEPRODUCER_SU_START load85 mode2 range0:65535 cycle360068
+THREEPRODUCER_SU_DONE load85 mode2 cycle361961
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load86 mode0 range0:65535 cycle361961
+THREEPRODUCER_SU_DONE load86 mode0 cycle364136
+THREEPRODUCER_SU_START load86 mode1 range65472:65535 cycle364157
+THREEPRODUCER_SU_DONE load86 mode1 cycle364206
+THREEPRODUCER_SU_START load86 mode2 range0:65535 cycle364206
+THREEPRODUCER_SU_DONE load86 mode2 cycle366098
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load87 mode0 range0:65535 cycle366098
+THREEPRODUCER_SU_DONE load87 mode0 cycle368272
+THREEPRODUCER_SU_START load87 mode1 range65472:65535 cycle368293
+THREEPRODUCER_SU_DONE load87 mode1 cycle368396
+THREEPRODUCER_SU_START load87 mode2 range0:65535 cycle368396
+THREEPRODUCER_SU_DONE load87 mode2 cycle370289
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load88 mode0 range0:65535 cycle370289
+THREEPRODUCER_SU_DONE load88 mode0 cycle372464
+THREEPRODUCER_SU_START load88 mode1 range65472:65535 cycle372485
+THREEPRODUCER_SU_DONE load88 mode1 cycle372630
+THREEPRODUCER_SU_START load88 mode2 range0:65535 cycle372630
+THREEPRODUCER_SU_DONE load88 mode2 cycle374522
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load89 mode0 range0:65535 cycle374522
+THREEPRODUCER_SU_DONE load89 mode0 cycle376696
+THREEPRODUCER_SU_START load89 mode1 range65472:65535 cycle376717
+THREEPRODUCER_SU_DONE load89 mode1 cycle376820
+THREEPRODUCER_SU_START load89 mode2 range0:65535 cycle376820
+THREEPRODUCER_SU_DONE load89 mode2 cycle378713
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load90 mode0 range0:65535 cycle378713
+THREEPRODUCER_SU_DONE load90 mode0 cycle380888
+THREEPRODUCER_SU_START load90 mode1 range65472:65535 cycle380909
+THREEPRODUCER_SU_DONE load90 mode1 cycle380958
+THREEPRODUCER_SU_START load90 mode2 range0:65535 cycle380958
+THREEPRODUCER_SU_DONE load90 mode2 cycle382850
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load91 mode0 range0:65535 cycle382850
+THREEPRODUCER_SU_DONE load91 mode0 cycle385024
+THREEPRODUCER_SU_START load91 mode1 range65472:65535 cycle385045
+THREEPRODUCER_SU_DONE load91 mode1 cycle385148
+THREEPRODUCER_SU_START load91 mode2 range0:65535 cycle385148
+THREEPRODUCER_SU_DONE load91 mode2 cycle387041
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load92 mode0 range0:65535 cycle387041
+THREEPRODUCER_SU_DONE load92 mode0 cycle389216
+THREEPRODUCER_SU_START load92 mode1 range65472:65535 cycle389237
+THREEPRODUCER_SU_DONE load92 mode1 cycle389382
+THREEPRODUCER_SU_START load92 mode2 range0:65535 cycle389382
+THREEPRODUCER_SU_DONE load92 mode2 cycle391274
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load93 mode0 range0:65535 cycle391274
+THREEPRODUCER_SU_DONE load93 mode0 cycle393448
+THREEPRODUCER_SU_START load93 mode1 range65472:65535 cycle393469
+THREEPRODUCER_SU_DONE load93 mode1 cycle393572
+THREEPRODUCER_SU_START load93 mode2 range0:65535 cycle393572
+THREEPRODUCER_SU_DONE load93 mode2 cycle395465
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load94 mode0 range0:65535 cycle395465
+THREEPRODUCER_SU_DONE load94 mode0 cycle397640
+THREEPRODUCER_SU_START load94 mode1 range65472:65535 cycle397661
+THREEPRODUCER_SU_DONE load94 mode1 cycle397710
+THREEPRODUCER_SU_START load94 mode2 range0:65535 cycle397710
+THREEPRODUCER_SU_DONE load94 mode2 cycle399602
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load95 mode0 range0:65535 cycle399602
+THREEPRODUCER_SU_DONE load95 mode0 cycle401776
+THREEPRODUCER_SU_START load95 mode1 range65472:65535 cycle401797
+THREEPRODUCER_SU_DONE load95 mode1 cycle401900
+THREEPRODUCER_SU_START load95 mode2 range0:65535 cycle401900
+THREEPRODUCER_SU_DONE load95 mode2 cycle403793
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load96 mode0 range0:65535 cycle403793
+THREEPRODUCER_SU_DONE load96 mode0 cycle405968
+THREEPRODUCER_SU_START load96 mode1 range65472:65535 cycle405989
+THREEPRODUCER_SU_DONE load96 mode1 cycle406134
+THREEPRODUCER_SU_START load96 mode2 range0:65535 cycle406134
+THREEPRODUCER_SU_DONE load96 mode2 cycle408026
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load97 mode0 range0:65535 cycle408026
+THREEPRODUCER_SU_DONE load97 mode0 cycle410200
+THREEPRODUCER_SU_START load97 mode1 range65472:65535 cycle410221
+THREEPRODUCER_SU_DONE load97 mode1 cycle410324
+THREEPRODUCER_SU_START load97 mode2 range0:65535 cycle410324
+THREEPRODUCER_SU_DONE load97 mode2 cycle412217
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load98 mode0 range0:65535 cycle412217
+THREEPRODUCER_SU_DONE load98 mode0 cycle414392
+THREEPRODUCER_SU_START load98 mode1 range65472:65535 cycle414413
+THREEPRODUCER_SU_DONE load98 mode1 cycle414462
+THREEPRODUCER_SU_START load98 mode2 range0:65535 cycle414462
+THREEPRODUCER_SU_DONE load98 mode2 cycle416354
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load99 mode0 range0:65535 cycle416354
+THREEPRODUCER_SU_DONE load99 mode0 cycle418528
+THREEPRODUCER_SU_START load99 mode1 range65472:65535 cycle418549
+THREEPRODUCER_SU_DONE load99 mode1 cycle418652
+THREEPRODUCER_SU_START load99 mode2 range0:65535 cycle418652
+THREEPRODUCER_SU_DONE load99 mode2 cycle420545
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load100 mode0 range0:65535 cycle420545
+THREEPRODUCER_SU_DONE load100 mode0 cycle422720
+THREEPRODUCER_SU_START load100 mode1 range65472:65535 cycle422741
+THREEPRODUCER_SU_DONE load100 mode1 cycle422886
+THREEPRODUCER_SU_START load100 mode2 range0:65535 cycle422886
+THREEPRODUCER_SU_DONE load100 mode2 cycle424778
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load101 mode0 range0:65535 cycle424778
+THREEPRODUCER_SU_DONE load101 mode0 cycle426952
+THREEPRODUCER_SU_START load101 mode1 range65472:65535 cycle426973
+THREEPRODUCER_SU_DONE load101 mode1 cycle427076
+THREEPRODUCER_SU_START load101 mode2 range0:65535 cycle427076
+THREEPRODUCER_SU_DONE load101 mode2 cycle428969
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load102 mode0 range0:65535 cycle428969
+THREEPRODUCER_SU_DONE load102 mode0 cycle431144
+THREEPRODUCER_SU_START load102 mode1 range65472:65535 cycle431165
+THREEPRODUCER_SU_DONE load102 mode1 cycle431214
+THREEPRODUCER_SU_START load102 mode2 range0:65535 cycle431214
+THREEPRODUCER_SU_DONE load102 mode2 cycle433106
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load103 mode0 range0:65535 cycle433106
+THREEPRODUCER_SU_DONE load103 mode0 cycle435280
+THREEPRODUCER_SU_START load103 mode1 range65472:65535 cycle435301
+THREEPRODUCER_SU_DONE load103 mode1 cycle435404
+THREEPRODUCER_SU_START load103 mode2 range0:65535 cycle435404
+THREEPRODUCER_SU_DONE load103 mode2 cycle437297
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load104 mode0 range0:65535 cycle437297
+THREEPRODUCER_SU_DONE load104 mode0 cycle439472
+THREEPRODUCER_SU_START load104 mode1 range65472:65535 cycle439493
+THREEPRODUCER_SU_DONE load104 mode1 cycle439638
+THREEPRODUCER_SU_START load104 mode2 range0:65535 cycle439638
+THREEPRODUCER_SU_DONE load104 mode2 cycle441530
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load105 mode0 range0:65535 cycle441530
+THREEPRODUCER_SU_DONE load105 mode0 cycle443704
+THREEPRODUCER_SU_START load105 mode1 range65472:65535 cycle443725
+THREEPRODUCER_SU_DONE load105 mode1 cycle443828
+THREEPRODUCER_SU_START load105 mode2 range0:65535 cycle443828
+THREEPRODUCER_SU_DONE load105 mode2 cycle445721
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load106 mode0 range0:65535 cycle445721
+THREEPRODUCER_SU_DONE load106 mode0 cycle447896
+THREEPRODUCER_SU_START load106 mode1 range65472:65535 cycle447917
+THREEPRODUCER_SU_DONE load106 mode1 cycle447966
+THREEPRODUCER_SU_START load106 mode2 range0:65535 cycle447966
+THREEPRODUCER_SU_DONE load106 mode2 cycle449858
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load107 mode0 range0:65535 cycle449858
+THREEPRODUCER_SU_DONE load107 mode0 cycle452032
+THREEPRODUCER_SU_START load107 mode1 range65472:65535 cycle452053
+THREEPRODUCER_SU_DONE load107 mode1 cycle452156
+THREEPRODUCER_SU_START load107 mode2 range0:65535 cycle452156
+THREEPRODUCER_SU_DONE load107 mode2 cycle454049
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load108 mode0 range0:65535 cycle454049
+THREEPRODUCER_SU_DONE load108 mode0 cycle456224
+THREEPRODUCER_SU_START load108 mode1 range65472:65535 cycle456245
+THREEPRODUCER_SU_DONE load108 mode1 cycle456390
+THREEPRODUCER_SU_START load108 mode2 range0:65535 cycle456390
+THREEPRODUCER_SU_DONE load108 mode2 cycle458282
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load109 mode0 range0:65535 cycle458282
+THREEPRODUCER_SU_DONE load109 mode0 cycle460456
+THREEPRODUCER_SU_START load109 mode1 range65472:65535 cycle460477
+THREEPRODUCER_SU_DONE load109 mode1 cycle460580
+THREEPRODUCER_SU_START load109 mode2 range0:65535 cycle460580
+THREEPRODUCER_SU_DONE load109 mode2 cycle462473
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load110 mode0 range0:65535 cycle462473
+THREEPRODUCER_SU_DONE load110 mode0 cycle464648
+THREEPRODUCER_SU_START load110 mode1 range65472:65535 cycle464669
+THREEPRODUCER_SU_DONE load110 mode1 cycle464718
+THREEPRODUCER_SU_START load110 mode2 range0:65535 cycle464718
+THREEPRODUCER_SU_DONE load110 mode2 cycle466610
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load111 mode0 range0:65535 cycle466610
+THREEPRODUCER_SU_DONE load111 mode0 cycle468784
+THREEPRODUCER_SU_START load111 mode1 range65472:65535 cycle468805
+THREEPRODUCER_SU_DONE load111 mode1 cycle468908
+THREEPRODUCER_SU_START load111 mode2 range0:65535 cycle468908
+THREEPRODUCER_SU_DONE load111 mode2 cycle470801
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load112 mode0 range0:65535 cycle470801
+THREEPRODUCER_SU_DONE load112 mode0 cycle472976
+THREEPRODUCER_SU_START load112 mode1 range65472:65535 cycle472997
+THREEPRODUCER_SU_DONE load112 mode1 cycle473142
+THREEPRODUCER_SU_START load112 mode2 range0:65535 cycle473142
+THREEPRODUCER_SU_DONE load112 mode2 cycle475034
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load113 mode0 range0:65535 cycle475034
+THREEPRODUCER_SU_DONE load113 mode0 cycle477208
+THREEPRODUCER_SU_START load113 mode1 range65472:65535 cycle477229
+THREEPRODUCER_SU_DONE load113 mode1 cycle477332
+THREEPRODUCER_SU_START load113 mode2 range0:65535 cycle477332
+THREEPRODUCER_SU_DONE load113 mode2 cycle479225
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load114 mode0 range0:65535 cycle479225
+THREEPRODUCER_SU_DONE load114 mode0 cycle481400
+THREEPRODUCER_SU_START load114 mode1 range65472:65535 cycle481421
+THREEPRODUCER_SU_DONE load114 mode1 cycle481470
+THREEPRODUCER_SU_START load114 mode2 range0:65535 cycle481470
+THREEPRODUCER_SU_DONE load114 mode2 cycle483362
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load115 mode0 range0:65535 cycle483362
+THREEPRODUCER_SU_DONE load115 mode0 cycle485536
+THREEPRODUCER_SU_START load115 mode1 range65472:65535 cycle485557
+THREEPRODUCER_SU_DONE load115 mode1 cycle485660
+THREEPRODUCER_SU_START load115 mode2 range0:65535 cycle485660
+THREEPRODUCER_SU_DONE load115 mode2 cycle487553
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load116 mode0 range0:65535 cycle487553
+THREEPRODUCER_SU_DONE load116 mode0 cycle489728
+THREEPRODUCER_SU_START load116 mode1 range65472:65535 cycle489749
+THREEPRODUCER_SU_DONE load116 mode1 cycle489894
+THREEPRODUCER_SU_START load116 mode2 range0:65535 cycle489894
+THREEPRODUCER_SU_DONE load116 mode2 cycle491786
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load117 mode0 range0:65535 cycle491786
+THREEPRODUCER_SU_DONE load117 mode0 cycle493960
+THREEPRODUCER_SU_START load117 mode1 range65472:65535 cycle493981
+THREEPRODUCER_SU_DONE load117 mode1 cycle494084
+THREEPRODUCER_SU_START load117 mode2 range0:65535 cycle494084
+THREEPRODUCER_SU_DONE load117 mode2 cycle495977
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load118 mode0 range0:65535 cycle495977
+THREEPRODUCER_SU_DONE load118 mode0 cycle498152
+THREEPRODUCER_SU_START load118 mode1 range65472:65535 cycle498173
+THREEPRODUCER_SU_DONE load118 mode1 cycle498222
+THREEPRODUCER_SU_START load118 mode2 range0:65535 cycle498222
+THREEPRODUCER_SU_DONE load118 mode2 cycle500114
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load119 mode0 range0:65535 cycle500114
+THREEPRODUCER_SU_DONE load119 mode0 cycle502288
+THREEPRODUCER_SU_START load119 mode1 range65472:65535 cycle502309
+THREEPRODUCER_SU_DONE load119 mode1 cycle502412
+THREEPRODUCER_SU_START load119 mode2 range0:65535 cycle502412
+THREEPRODUCER_SU_DONE load119 mode2 cycle504305
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load120 mode0 range0:65535 cycle504305
+THREEPRODUCER_SU_DONE load120 mode0 cycle506480
+THREEPRODUCER_SU_START load120 mode1 range65472:65535 cycle506501
+THREEPRODUCER_SU_DONE load120 mode1 cycle506646
+THREEPRODUCER_SU_START load120 mode2 range0:65535 cycle506646
+THREEPRODUCER_SU_DONE load120 mode2 cycle508538
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load121 mode0 range0:65535 cycle508538
+THREEPRODUCER_SU_DONE load121 mode0 cycle510712
+THREEPRODUCER_SU_START load121 mode1 range65472:65535 cycle510733
+THREEPRODUCER_SU_DONE load121 mode1 cycle510836
+THREEPRODUCER_SU_START load121 mode2 range0:65535 cycle510836
+THREEPRODUCER_SU_DONE load121 mode2 cycle512729
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load122 mode0 range0:65535 cycle512729
+THREEPRODUCER_SU_DONE load122 mode0 cycle514904
+THREEPRODUCER_SU_START load122 mode1 range65472:65535 cycle514925
+THREEPRODUCER_SU_DONE load122 mode1 cycle514974
+THREEPRODUCER_SU_START load122 mode2 range0:65535 cycle514974
+THREEPRODUCER_SU_DONE load122 mode2 cycle516866
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load123 mode0 range0:65535 cycle516866
+THREEPRODUCER_SU_DONE load123 mode0 cycle519040
+THREEPRODUCER_SU_START load123 mode1 range65472:65535 cycle519061
+THREEPRODUCER_SU_DONE load123 mode1 cycle519164
+THREEPRODUCER_SU_START load123 mode2 range0:65535 cycle519164
+THREEPRODUCER_SU_DONE load123 mode2 cycle521057
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load124 mode0 range0:65535 cycle521057
+THREEPRODUCER_SU_DONE load124 mode0 cycle523232
+THREEPRODUCER_SU_START load124 mode1 range65472:65535 cycle523253
+THREEPRODUCER_SU_DONE load124 mode1 cycle523398
+THREEPRODUCER_SU_START load124 mode2 range0:65535 cycle523398
+THREEPRODUCER_SU_DONE load124 mode2 cycle525290
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load125 mode0 range0:65535 cycle525290
+THREEPRODUCER_SU_DONE load125 mode0 cycle527464
+THREEPRODUCER_SU_START load125 mode1 range65472:65535 cycle527485
+THREEPRODUCER_SU_DONE load125 mode1 cycle527588
+THREEPRODUCER_SU_START load125 mode2 range0:65535 cycle527588
+THREEPRODUCER_SU_DONE load125 mode2 cycle529481
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load126 mode0 range0:65535 cycle529481
+THREEPRODUCER_SU_DONE load126 mode0 cycle531656
+THREEPRODUCER_SU_START load126 mode1 range65472:65535 cycle531677
+THREEPRODUCER_SU_DONE load126 mode1 cycle531726
+THREEPRODUCER_SU_START load126 mode2 range0:65535 cycle531726
+THREEPRODUCER_SU_DONE load126 mode2 cycle533618
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load127 mode0 range0:65535 cycle533618
+THREEPRODUCER_SU_DONE load127 mode0 cycle535792
+THREEPRODUCER_SU_START load127 mode1 range65472:65535 cycle535813
+THREEPRODUCER_SU_DONE load127 mode1 cycle535916
+THREEPRODUCER_SU_START load127 mode2 range0:65535 cycle535916
+THREEPRODUCER_SU_DONE load127 mode2 cycle537809
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load128 mode0 range0:65535 cycle537809
+THREEPRODUCER_SU_DONE load128 mode0 cycle539984
+THREEPRODUCER_SU_START load128 mode1 range65472:65535 cycle540005
+THREEPRODUCER_SU_DONE load128 mode1 cycle540150
+THREEPRODUCER_SU_START load128 mode2 range0:65535 cycle540150
+THREEPRODUCER_SU_DONE load128 mode2 cycle542042
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load129 mode0 range0:65535 cycle542042
+THREEPRODUCER_SU_DONE load129 mode0 cycle544216
+THREEPRODUCER_SU_START load129 mode1 range65472:65535 cycle544237
+THREEPRODUCER_SU_DONE load129 mode1 cycle544340
+THREEPRODUCER_SU_START load129 mode2 range0:65535 cycle544340
+THREEPRODUCER_SU_DONE load129 mode2 cycle546233
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load130 mode0 range0:65535 cycle546233
+THREEPRODUCER_SU_DONE load130 mode0 cycle548408
+THREEPRODUCER_SU_START load130 mode1 range65472:65535 cycle548429
+THREEPRODUCER_SU_DONE load130 mode1 cycle548478
+THREEPRODUCER_SU_START load130 mode2 range0:65535 cycle548478
+THREEPRODUCER_SU_DONE load130 mode2 cycle550370
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load131 mode0 range0:65535 cycle550370
+THREEPRODUCER_SU_DONE load131 mode0 cycle552544
+THREEPRODUCER_SU_START load131 mode1 range65472:65535 cycle552565
+THREEPRODUCER_SU_DONE load131 mode1 cycle552668
+THREEPRODUCER_SU_START load131 mode2 range0:65535 cycle552668
+THREEPRODUCER_SU_DONE load131 mode2 cycle554561
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load132 mode0 range0:65535 cycle554561
+THREEPRODUCER_SU_DONE load132 mode0 cycle556736
+THREEPRODUCER_SU_START load132 mode1 range65472:65535 cycle556757
+THREEPRODUCER_SU_DONE load132 mode1 cycle556902
+THREEPRODUCER_SU_START load132 mode2 range0:65535 cycle556902
+THREEPRODUCER_SU_DONE load132 mode2 cycle558794
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load133 mode0 range0:65535 cycle558794
+THREEPRODUCER_SU_DONE load133 mode0 cycle560968
+THREEPRODUCER_SU_START load133 mode1 range65472:65535 cycle560989
+THREEPRODUCER_SU_DONE load133 mode1 cycle561092
+THREEPRODUCER_SU_START load133 mode2 range0:65535 cycle561092
+THREEPRODUCER_SU_DONE load133 mode2 cycle562985
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load134 mode0 range0:65535 cycle562985
+THREEPRODUCER_SU_DONE load134 mode0 cycle565160
+THREEPRODUCER_SU_START load134 mode1 range65472:65535 cycle565181
+THREEPRODUCER_SU_DONE load134 mode1 cycle565230
+THREEPRODUCER_SU_START load134 mode2 range0:65535 cycle565230
+THREEPRODUCER_SU_DONE load134 mode2 cycle567122
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load135 mode0 range0:65535 cycle567122
+THREEPRODUCER_SU_DONE load135 mode0 cycle569296
+THREEPRODUCER_SU_START load135 mode1 range65472:65535 cycle569317
+THREEPRODUCER_SU_DONE load135 mode1 cycle569420
+THREEPRODUCER_SU_START load135 mode2 range0:65535 cycle569420
+THREEPRODUCER_SU_DONE load135 mode2 cycle571313
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load136 mode0 range0:65535 cycle571313
+THREEPRODUCER_SU_DONE load136 mode0 cycle573488
+THREEPRODUCER_SU_START load136 mode1 range65472:65535 cycle573509
+THREEPRODUCER_SU_DONE load136 mode1 cycle573654
+THREEPRODUCER_SU_START load136 mode2 range0:65535 cycle573654
+THREEPRODUCER_SU_DONE load136 mode2 cycle575546
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load137 mode0 range0:65535 cycle575546
+THREEPRODUCER_SU_DONE load137 mode0 cycle577720
+THREEPRODUCER_SU_START load137 mode1 range65472:65535 cycle577741
+THREEPRODUCER_SU_DONE load137 mode1 cycle577844
+THREEPRODUCER_SU_START load137 mode2 range0:65535 cycle577844
+THREEPRODUCER_SU_DONE load137 mode2 cycle579737
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load138 mode0 range0:65535 cycle579737
+THREEPRODUCER_SU_DONE load138 mode0 cycle581912
+THREEPRODUCER_SU_START load138 mode1 range65472:65535 cycle581933
+THREEPRODUCER_SU_DONE load138 mode1 cycle581982
+THREEPRODUCER_SU_START load138 mode2 range0:65535 cycle581982
+THREEPRODUCER_SU_DONE load138 mode2 cycle583874
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load139 mode0 range0:65535 cycle583874
+THREEPRODUCER_SU_DONE load139 mode0 cycle586048
+THREEPRODUCER_SU_START load139 mode1 range65472:65535 cycle586069
+THREEPRODUCER_SU_DONE load139 mode1 cycle586172
+THREEPRODUCER_SU_START load139 mode2 range0:65535 cycle586172
+THREEPRODUCER_SU_DONE load139 mode2 cycle588065
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load140 mode0 range0:65535 cycle588065
+THREEPRODUCER_SU_DONE load140 mode0 cycle590240
+THREEPRODUCER_SU_START load140 mode1 range65472:65535 cycle590261
+THREEPRODUCER_SU_DONE load140 mode1 cycle590406
+THREEPRODUCER_SU_START load140 mode2 range0:65535 cycle590406
+THREEPRODUCER_SU_DONE load140 mode2 cycle592298
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load141 mode0 range0:65535 cycle592298
+THREEPRODUCER_SU_DONE load141 mode0 cycle594472
+THREEPRODUCER_SU_START load141 mode1 range65472:65535 cycle594493
+THREEPRODUCER_SU_DONE load141 mode1 cycle594596
+THREEPRODUCER_SU_START load141 mode2 range0:65535 cycle594596
+THREEPRODUCER_SU_DONE load141 mode2 cycle596489
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load142 mode0 range0:65535 cycle596489
+THREEPRODUCER_SU_DONE load142 mode0 cycle598664
+THREEPRODUCER_SU_START load142 mode1 range65472:65535 cycle598685
+THREEPRODUCER_SU_DONE load142 mode1 cycle598734
+THREEPRODUCER_SU_START load142 mode2 range0:65535 cycle598734
+THREEPRODUCER_SU_DONE load142 mode2 cycle600626
+LOAD f 1 m 1 n 1536: 62 cycles, 99.1 destination B / cycle, 49.5 source B / cycle = 1.6 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load143 mode0 range0:65535 cycle600626
+THREEPRODUCER_SU_DONE load143 mode0 cycle602800
+THREEPRODUCER_SU_START load143 mode1 range65472:65535 cycle602821
+THREEPRODUCER_SU_DONE load143 mode1 cycle602924
+THREEPRODUCER_SU_START load143 mode2 range0:65535 cycle602924
+THREEPRODUCER_SU_DONE load143 mode2 cycle604817
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load144 mode0 range0:65535 cycle604817
+THREEPRODUCER_SU_DONE load144 mode0 cycle606992
+THREEPRODUCER_SU_START load144 mode1 range65472:65535 cycle607013
+THREEPRODUCER_SU_DONE load144 mode1 cycle607158
+THREEPRODUCER_SU_START load144 mode2 range0:65535 cycle607158
+THREEPRODUCER_SU_DONE load144 mode2 cycle609050
+LOAD f 1 m 1 n 6144: 158 cycles, 155.5 destination B / cycle, 77.8 source B / cycle = 2.5 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load145 mode0 range0:65535 cycle609050
+THREEPRODUCER_SU_DONE load145 mode0 cycle611224
+THREEPRODUCER_SU_START load145 mode1 range65472:65535 cycle611245
+THREEPRODUCER_SU_DONE load145 mode1 cycle611348
+THREEPRODUCER_SU_START load145 mode2 range0:65535 cycle611348
+THREEPRODUCER_SU_DONE load145 mode2 cycle613241
+LOAD f 1 m 1 n 4096: 116 cycles, 141.2 destination B / cycle, 70.6 source B / cycle = 2.2 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+THREEPRODUCER_SU_START load146 mode0 range0:65535 cycle613241
+THREEPRODUCER_SU_DONE load146 mode0 cycle615416
+THREEPRODUCER_SU_START load146 mode1 range65472:65535 cycle615437
+THREEPRODUCER_SU_DONE load146 mode1 cycle616246
+THREEPRODUCER_SU_START load146 mode2 range0:65535 cycle616246
+THREEPRODUCER_SU_DONE load146 mode2 cycle618138
+LOAD f 1 m 1 n 37984: 822 cycles, 184.8 destination B / cycle, 92.4 source B / cycle = 2.9 % of 3.80 TB/s at 1.2 GHz (3,166.7 B / cycle)
+ACTUAL_VM4 phase=61 contention=61500 SU_scratch_sectors=4704
+THREEPRODUCER_DMA_EXACT PASS records=147 bytes=2454400 cycles=17242 price=15674.320143998 ratio=1.100015812
+THREEPRODUCER_DMA_PRICE_FAIL cycles17242 immutable15674.320143998 ratio1.100015812 limit1.10
+THREEPRODUCER_QUANT_PRICE_FAIL cycles192 immutable168 ratio1.142857143 limit1.10
+THREEPRODUCER_SU_START load147 mode0 range32752:32767 cycle618144
+THREEPRODUCER_MIRROR_MACRO time515138745000 q0 bank6 row511 maskff dataa5a57ff7a5a57ff6a5a57ff5a5a57ff4a5a57ff3a5a57ff2a5a57ff1a5a57ff0 globalbusy00
+THREEPRODUCER_MIRROR_MACRO time515138745000 q0 bank7 row511 maskff dataa5a57fffa5a57ffea5a57ffda5a57ffca5a57ffba5a57ffaa5a57ff9a5a57ff8 globalbusy00
+THREEPRODUCER_MIRROR_MACRO time515152079000 q1 bank6 row511 maskff dataa5a57ff7a5a57ff6a5a57ff5a5a57ff4a5a57ff3a5a57ff2a5a57ff1a5a57ff0 globalbusy03
+THREEPRODUCER_MIRROR_MACRO time515152079000 q1 bank7 row511 maskff dataa5a57fffa5a57ffea5a57ffda5a57ffca5a57ffba5a57ffaa5a57ff9a5a57ff8 globalbusy03
+THREEPRODUCER_MIRROR_MACRO time515152079000 q3 bank6 row511 maskff dataa5a57ff7a5a57ff6a5a57ff5a5a57ff4a5a57ff3a5a57ff2a5a57ff1a5a57ff0 globalbusy03
+THREEPRODUCER_MIRROR_MACRO time515152079000 q3 bank7 row511 maskff dataa5a57fffa5a57ffea5a57ffda5a57ffca5a57ffba5a57ffaa5a57ff9a5a57ff8 globalbusy03
+THREEPRODUCER_MIRROR_MACRO time515158745000 q2 bank6 row511 maskff dataa5a57ff7a5a57ff6a5a57ff5a5a57ff4a5a57ff3a5a57ff2a5a57ff1a5a57ff0 globalbusy03
+THREEPRODUCER_MIRROR_MACRO time515158745000 q2 bank7 row511 maskff dataa5a57fffa5a57ffea5a57ffda5a57ffca5a57ffba5a57ffaa5a57ff9a5a57ff8 globalbusy03
+THREEPRODUCER_MIRROR_ACK time515165412000 q0 CWack1 CCWack1 globalbusy03
+THREEPRODUCER_MIRROR_ACK time515178745000 q0 CWack0 CCWack1 globalbusy01
+THREEPRODUCER_SU_DONE load147 mode0 cycle618226
+THREEPRODUCER_SU_START load147 mode3 range32752:32767 cycle618232
+THREEPRODUCER_SU_DONE load147 mode3 cycle618265
+THREEPRODUCER_GLOBAL_MIRROR PASS actual_source_posts2 global_commits2 destination_sectors8 words64
+THREEOWNER_READ_HANDOFF PASS actual_q10_source39 requests128 goldenwords1024 all4_three_owner_maskfff handoffs16 DMA_owner_edges4872 source_peak_pending2 truthful_capacity32
+THREEPRODUCER_POST_RETENTION PASS write4821602 commit4821602 read4821608 reply4821608 parked9698
+THREEPRODUCER_DRAIN PASS parked_SU_posts9698 handoffs8 SU_owner_edges978612 quant_owner_edges580 three_group1_R_owners_actual_DMAcore_and_separate_frontDQ
+THREEPRODUCER_FUNCTIONAL PASS actualSU actualQDQ actualDMA records147+32 quantwords13312 phase61
+- /srv/opentallas-scratch/hbm-native-threeproducer-1014/r13p61/src/rtl/test/hbm_accel/generic/native_contention/tb_hbm_native_threeproducer.sv:555: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 515us; walltime 2328.192 s; speed 221.299 ns/s
+- Verilator: cpu 2328.071 s on 1 threads; allocated 50 MB

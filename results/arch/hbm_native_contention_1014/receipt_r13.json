@@ -1,0 +1,1855 @@
+{
+  "parent": "ba12d099a",
+  "VM_NC": 4,
+  "clock_binding": "HARD station/VM/CDC/commit nominal same-frequency clocks plus global reset; physical qualification OPEN",
+  "front": "552786d9c",
+  "quant": "88b62f789",
+  "DMA_read_core": "39f276214",
+  "fixture_source_commit": "197aaf984",
+  "immutable_DMA_price": 15674.320143998484,
+  "immutable_quant_price": 168,
+  "ratio_limit": 1.1,
+  "strict_DMA_cycle_bound": 17241.752158398333,
+  "DMA_cycles_over_bound": 0.24784160166746005,
+  "standalone_front12_cycles": 17169,
+  "observed_shared_cycle_increase": 73,
+  "price_result": "FAIL at both phases; no rounding, repricing, or standalone inheritance",
+  "scope": "actual147 unchanged QwenLOAD shapes with ix/id idle; actual32 quant records/13312words; actualq10 STORE4/FENCE4/native128reads1024goldwords; actualSU_h stage/drain, three read owners and separate frontDQ; actual all4 Cmirror",
+  "qualification_open": [
+    "whole native production price",
+    "quant owned price",
+    "full SU arithmetic/lmem integration",
+    "whole production DMAcore workload on native bridge",
+    "indexed LOAD coverage in shared vehicle",
+    "physical bridge clock/reset/placement/CTS/timing/DRC"
+  ],
+  "jobs": [
+    {
+      "job": "r13p61",
+      "phase": 61,
+      "unit": "oth-ubuntu-3037075-1791978458",
+      "exit": 0,
+      "functional": "PASS",
+      "DMA_cycles": 17242,
+      "DMA_ratio": 1.10001581195225,
+      "DMA_price": "FAIL",
+      "quant_cycles": 192,
+      "quant_ratio": 1.1428571428571428,
+      "quant_price": "FAIL",
+      "native_VM_word_readbacks": 38535168,
+      "write_posts_and_commits": 4821602,
+      "read_requests_and_replies": 4821608,
+      "parked_posts": 9698,
+      "bank_contention_edges": 61500,
+      "SU_scratch_sectors": 4704,
+      "q10_native_reads": 128,
+      "q10_golden_words": 1024,
+      "three_owner_mask": "fff",
+      "read_handoffs": 16,
+      "mirror_source_posts": 2,
+      "mirror_global_commits": 2,
+      "mirror_macro_writes": 8,
+      "mirror_golden_words": 64,
+      "final": "real C/V/credit/ticket/lease ACK drains and owners zero",
+      "log_sha256": "638e3ccc8cd8d66b6b32fef0ffebe7705648d7be924ff2920fa0350036c25a9e",
+      "LOAD_cycles": [
+        {
+          "format": 0,
+          "rows": 1,
+          "words_per_row": 128,
+          "cycles": 32
+        },
+        {
+          "format": 4,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 37984,
+          "cycles": 822
+        }
+      ]
+    },
+    {
+      "job": "r13p487",
+      "phase": 487,
+      "unit": "oth-ubuntu-3037076-1791978458",
+      "exit": 0,
+      "functional": "PASS",
+      "DMA_cycles": 17242,
+      "DMA_ratio": 1.10001581195225,
+      "DMA_price": "FAIL",
+      "quant_cycles": 192,
+      "quant_ratio": 1.1428571428571428,
+      "quant_price": "FAIL",
+      "native_VM_word_readbacks": 38535168,
+      "write_posts_and_commits": 4821602,
+      "read_requests_and_replies": 4821608,
+      "parked_posts": 9698,
+      "bank_contention_edges": 61500,
+      "SU_scratch_sectors": 4704,
+      "q10_native_reads": 128,
+      "q10_golden_words": 1024,
+      "three_owner_mask": "fff",
+      "read_handoffs": 16,
+      "mirror_source_posts": 2,
+      "mirror_global_commits": 2,
+      "mirror_macro_writes": 8,
+      "mirror_golden_words": 64,
+      "final": "real C/V/credit/ticket/lease ACK drains and owners zero",
+      "log_sha256": "09a06294e8ad7c48761bd97d5c44a30382a21badb767b6280f95b12bb4dd6de5",
+      "LOAD_cycles": [
+        {
+          "format": 0,
+          "rows": 1,
+          "words_per_row": 128,
+          "cycles": 32
+        },
+        {
+          "format": 4,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 1536,
+          "cycles": 62
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 6144,
+          "cycles": 158
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 4096,
+          "cycles": 116
+        },
+        {
+          "format": 1,
+          "rows": 1,
+          "words_per_row": 37984,
+          "cycles": 822
+        }
+      ]
+    }
+  ],
+  "next_job": "frontend owner compare per-LOAD actual shared17242 vs standalone17169 and repair source contract; preserve all provider/registered cuts and immutable budgets; rerun distinct source-bound shared actual147 + ticket/owner/aperture gates"
+}
