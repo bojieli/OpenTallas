@@ -12,7 +12,7 @@ Results are 32 ascending registered 512-bit FP32 beats. A producer holds each be
 
 The functional harness uses actual Q/K/V input rows and canonical golden outputs. The full-width build uses the existing simulation-only FP32 add/multiply and fast-FP DPI stand-ins with their RTL latency/valid pipelines; it exercises the actual H/SFU/control/transport/SRAM/tree ordering rather than compiling every bit-level FPU instance. This is functional arithmetic evidence with that explicit substitution, and does not prove every full-width bit-level FPU instance or any physical timing. Its response model has a synthetic latency and intentionally does not qualify HBM bandwidth, physical routing, clock trees, workload rates, or a full token. The common-clock adapter also does not qualify the independent clock entries' delivery.
 
-Build/run only under measured `ot-run` admission (initial requested class 32 GB, eight build threads):
+Build/run only under measured `ot-run` admission (measured full-width peak 30.6 GiB, current request 48 GB and eight build threads). The build uses `-O1` for C++ compilation; this avoids the very long compilation of the initial `-Os` unity objects:
 
 ```
 bash tools/qwen_tp8_attention_service_build.sh obj
@@ -23,3 +23,9 @@ obj/Vtb vectors/full restart vectors/different_frame
 ```
 
 The optional second directory in restart mode must contain an independently generated frame to test actual stale-state protection. The small-context PV implementation explicitly clears all 128 retained residues before each frame, adding 128 initialization edges; its operator proof alone does not qualify the composed small-context service. Live source archives are immutable, and the initial full8192 build used the pre-small-context version; subsequent suites use separate directories and source receipts.
+
+The `593c88424` integrated suite passed single-frame arithmetic but failed a different-input 8192-to-1 restart without reset (500 second-frame word errors, no hardware fault). A read-only trace of the same DUT showed that empty stacks could emit retained local maxima before their child controllers cleared their previous flags. The native successor gates the maximum's presence bit by actual stack token ownership (`n_s != 0`). Resetting between frames would hide this defect and cannot qualify reuse across layers. The corrected successor, including the registered result interface, requires its own numerical and restart receipts.
+
+For one frame, the functional service accepts context-length K rows and context-length V rows, each containing 128 useful bytes. At context 8192 that is 2,097,152 useful read bytes and 32 output beats containing 2,048 FP32 result bytes. Those are logical payload counts. The external read assembler must separately account for the actual mapped 32-byte sectors, controller requests, and physical traffic; the functional latency model establishes none of those timing or bandwidth costs.
+
+`tb_qwen_tp8_k_request_adapter.cpp` independently exercises all 128 retained requests across a 1000-cycle external request stall, overlapping ordered request/response retirement, and a fresh frame. Its fault cases cover a 129th request, a busy restart, unsolicited response, wrong token order, epoch, layer, and request type. A temporary capacity-127 source mutant must fail the capacity test. This is adapter mechanism evidence; the composed H service still needs its own proofs.
