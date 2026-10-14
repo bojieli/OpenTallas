@@ -7,7 +7,7 @@
       "successor": "ot_hbm_idx_score_cut_native, four actual NS4/NK4 scorers",
       "source_commit": "987dcdb69",
       "evidence": "cut_proof_987dcdb69 + cut_mutants_987dcdb69 + cut_edab82fb5",
-      "current_action": "Fresh measured leaf CTS passes actual15335-sink >15k exception: TT206.4ps/spread25.5ps; source-bound standalone route QUEUED ot_hbm_idx_hslice_ready_native_c0-ready0-9a6274356. Full scorer/die slot still open.",
+      "current_action": "Fresh15335-sink actual CTS exception passes TT206.4/spread25.5. First route stopped solely for redirected-negative-log observer error, actual assertion preserved. Corrected ready0log-5300bde80 route RUNNING AGI; lint/full2048 ready positive and real stopped-leaf false-ready negative all accepted. Full scorer/die slot still open.",
       "retired": false
     },
     {
