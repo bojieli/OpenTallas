@@ -1,0 +1,95 @@
+{
+ "name": "qdq_wr_fin_ref",
+ "top": "ot_hgi_qdq_wr_fin",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_fin.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 86.4
+ },
+ "util": 0.48,
+ "pins": {
+  "N": [
+   "wwq_done"
+  ],
+  "W": [
+   "snapshot",
+   "snapshot_v"
+  ],
+  "S": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "o_fin",
+   "o_bad",
+   "o_idle"
+  ]
+ },
+ "refglob": "*sh*",
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "cts_sink": {
+   "size": 12,
+   "diameter_um": 20
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "structural_change": "New private completion root decouples payload/SRAM clock and long finish-to-head feedback; real registered posted snapshots, committed ACKs only",
+ "job": {
+  "owner": "Codex:qdq-write-completion-split",
+  "branch": "codex-qdq-write-completion-split",
+  "tag": "f1",
+  "views_to": "physical/ref_tile/qdq_wr_fin_ref/views",
+  "record_to": "results/rtl/ref_tile/qdq_wr_fin_ref",
+  "purpose": "Opt-in completion-only leaf; standalone scoreboard does not qualify actual native production price or parent geometry. Native actual4 gate required before adoption.",
+  "benches": [
+   {
+    "name": "posted_snapshot_exact",
+    "cmd": "MUT=0 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "pass_regex": "PASS QDQ_WR_FIN records=802",
+    "min_count_regex": "records=([1-9][0-9]*)"
+   },
+   {
+    "name": "fabricated_ack_mutant",
+    "cmd": "MUT=1 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m1",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "FIN scoreboard mismatch"
+   },
+   {
+    "name": "snapshot_mutant",
+    "cmd": "MUT=2 bash tools/hgi_unit_tput/run_qdq_wr_fin.sh {RUN}/fin_m2",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "FIN head diverged"
+   }
+  ]
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "inhold": true,
+ "outhold": true
+}
