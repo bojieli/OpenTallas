@@ -266,7 +266,9 @@ json.dump(r, open(f'{p}/result.json', 'w'), indent=1); print('OT_PASS_RESULT', j
 PY
   cat $P/result.json >> $OUT/eco.log
   sc=$(python3 -c "import json;print(json.load(open('$P/result.json'))['score'])")
-  if python3 -c "import sys; sys.exit(0 if $sc > $bestscore else 1)"; then best=$P; bestscore=$sc; fi
+  # Only acceptance-clean passes can become the installed best. Negative
+  # scores remain in lb as failure evidence and must return exit 9.
+  if python3 -c "import sys; sys.exit(0 if $sc >= 0 and $sc > $bestscore else 1)"; then best=$P; bestscore=$sc; fi
   rk=$(python3 -c "import json;print(json.load(open('$P/result.json'))['rank'])")
   if python3 -c "import sys; sys.exit(0 if $rk > $lbrank else 1)"; then lb=$P; lbrank=$rk; fi
   # done when the routed result meets the post-route goal (FF >= HM), not merely the acceptance line
