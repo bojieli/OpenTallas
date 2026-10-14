@@ -39,7 +39,7 @@ int main(int argc,char**argv){
    t.clk=0;t.eval();t.q_valid=qb<32&&(!stalls||cy%7!=0);t.q_beat=qb;
    for(int j=0;j<16;j++)t.q_data[j]=q[qb<32?qb*16+j:j];
    if(mode=="q_order"&&qb==7)t.q_beat=6;
-   if(mode=="precision"&&qb==3)t.q_data[0]^=0x01000000;
+   if(mode=="precision")for(int j=0;j<16;j++)t.q_data[j]&=0xffff0000u; // wrong early BF16 truncation replaces lossless FP32 transport
    t.k_req_ready=0;for(int i=0;i<32;i++)if(!stalls||(cy+i)%11!=0)t.k_req_ready|=1u<<i;
    t.v_req_ready=0;for(int i=0;i<4;i++)if(!stalls||(cy+i)%13!=0)t.v_req_ready|=1u<<i;
    t.result_ready=!stalls||cy%5!=0;t.k_rsp_valid=0;t.v_rsp_valid=0;
