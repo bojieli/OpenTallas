@@ -1,7 +1,7 @@
 // Candidate executed-layer harness. No fixture QR/current-KV writes exist here.
 // Expected vectors are observers; all collective inputs come from actual VM.
 #include "Vot_hdc_core_vector_weight_native_candidate.h"
-#include "Vot_hdc_core_vector_weight_native_candidate___024root.h"
+#include "core_instruction_probe.hpp"
 #include "Vot_qwen_tp8_native_services_frontend_native59.h"
 #include "Vot_qwen_tp8_attention_service.h"
 #include "Vot_qwen_tp8_kv_sector_adapter.h"
@@ -96,7 +96,7 @@ struct Rank {
   core.rst_n=front.rst_n=kernel.rst_n=sector.rst_n=backend.hbm_edges>=8;
   core.start=start;front.epoch_begin=0;
   if(!epoch_reserved){WriteAck prior;while(backend.pop_write_ack(prior)){};}
-  if(token_grant_ready&&!epoch_reserved&&backend.write_acks==prior_target&&front.epoch_ready){front.epoch_begin=1;receiver.reserve(active.epoch,active.number);epoch_reserved=true;start_edge=backend.core_edges+4;layer_begin_edge=backend.core_edges;}
+  if(token_grant_ready&&!epoch_reserved&&backend.write_acks==prior_target&&front.epoch_ready){front.epoch_begin=1;receiver.reserve(active.epoch,active.number,unsigned(front.token),active.position);epoch_reserved=true;start_edge=backend.core_edges+4;layer_begin_edge=backend.core_edges;}
   if(!epoch_reserved){WriteAck a;while(backend.pop_write_ack(a)){}front.store_ack_v=0;sector.ack_v=0;}
   else writes.prepare_acks(sector,front);
   receiver.drive(front);reads.drive(kernel);vm.drive_responses(core);
@@ -107,19 +107,16 @@ struct Rank {
   if(!stable)throw std::runtime_error("actual core/frontend interfaces did not settle");
   // Read-only witness of the actual FIFO word captured by NEXT. Sample old
   // NEXT ownership before a simultaneous load replaces it on this rising edge.
-  auto&root=*core.rootp;
+  auto actual_instruction=read_actual_core_instruction_face(core);
   if(!core.rst_n)observer_next_valid=false;
   else {
    if(core.instruction_issue||core.end_retired){
     unsigned pc=vm.segment_base+(core.end_retired?core.end_pc:core.instruction_pc);
-    if(!observer_next_valid||!root.ot_hdc_core_vector_weight_native_candidate__DOT__nx_v||pc>=vm.program.size()||observer_next!=vm.program[pc])
+    if(!observer_next_valid||!actual_instruction.nx_valid||pc>=vm.program.size()||observer_next!=vm.program[pc])
      throw std::runtime_error("actual FIFO-to-NEXT accepted raw instruction differs from pinned source");
     raw_witnesses.push_back({pc,unsigned(core.end_retired?0:core.instruction_unit),vm.edge,bool(core.end_retired),observer_next});
    }
-   if(root.ot_hdc_core_vector_weight_native_candidate__DOT__load){
-    auto&actual=root.ot_hdc_core_vector_weight_native_candidate__DOT__fq[root.ot_hdc_core_vector_weight_native_candidate__DOT__fq_rd];
-    for(unsigned w=0;w<32;w++)observer_next[w]=actual[w];observer_next_valid=true;
-   }
+   if(actual_instruction.load){observer_next=actual_instruction.actual_fifo_word;observer_next_valid=true;}
   }
   vm.snapshot_edge(core);receiver.sample(front);writes.sample(sector);reads.sample(kernel);
   // Sample the old owner's registered write faces BEFORE accepting a new
@@ -175,6 +172,8 @@ static unsigned save_layer(std::array<std::unique_ptr<Rank>,8>&r,const Layer&lay
   for(auto&w:x.raw_witnesses){raw<<w.pc<<" "<<w.unit<<" "<<w.edge<<" "<<w.end<<" ";for(unsigned j=0;j<32;j++)raw<<std::hex<<std::setfill('0')<<std::setw(8)<<w.bits[31-j];raw<<std::dec<<"\n";}
   if(x.receiver.q_tag_events.size()!=16)throw std::runtime_error("missing actual TAG59 QVM request/response observations");
   std::ofstream tags(output/("rank"+std::to_string(rank)+"_QVM_tags.txt"));for(auto&t:x.receiver.q_tag_events)tags<<t.edge<<" "<<std::hex<<t.tag<<std::dec<<" "<<t.epoch<<" "<<t.chunk<<" "<<t.response<<"\n";
+  if(x.receiver.attn_tag_events.size()!=64)throw std::runtime_error("missing actual ATT write/ACK TAG59 observations");
+  std::ofstream att_tags(output/("rank"+std::to_string(rank)+"_ATTN_tags.txt"));for(auto&t:x.receiver.attn_tag_events)att_tags<<t.edge<<" "<<std::hex<<t.tag<<std::dec<<" "<<t.address<<" "<<t.beat<<" "<<t.ack<<"\n";
   std::ofstream k(output/("rank"+std::to_string(rank)+"_KV.txt"));for(auto w:x.kv_commits)k<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.pc<<"\n";
   std::ofstream v(output/("rank"+std::to_string(rank)+"_VM_commits.txt"));for(auto w:x.vm.commits)v<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
   std::ofstream e(output/("rank"+std::to_string(rank)+"_operation_commits.txt"));for(auto w:x.effects)e<<w.pc<<" "<<w.address<<" "<<std::hex<<std::setfill('0')<<std::setw(8)<<w.value<<std::dec<<" "<<w.edge<<" "<<w.port<<"\n";
@@ -195,10 +194,9 @@ static void save_head(std::array<std::unique_ptr<Rank>,8>&r,const fs::path&outpu
  }
 }
 int main(int argc,char**argv){try{
- if(argc!=7&&argc!=8&&argc!=9&&argc!=11)throw std::runtime_error("image program oracle collective_runtime collective_exe output [layer_plan [actual_initial_VM [head_image head_program]]] required");
- auto layers=argc>=8?read_plan(argv[7]):std::vector<Layer>{{0,0,255,argv[1],argv[2],argv[3]}};
- if(layers.front().number!=0&&argc<9)throw std::runtime_error("nonzero standalone layer needs explicit actual initial VM input");
- std::string initial_vm=argc>=9?argv[8]:std::string(argv[3])+"/vm_x_fp32.hex";
+ if(argc!=9&&argc!=11)throw std::runtime_error("image program oracle collective_runtime collective_exe output layer_plan actual_initial_VM [head_image head_program] required");
+ auto layers=read_plan(argv[7]);
+ std::string initial_vm=argv[8];
  VerilatedContext ctx;ctx.threads(1);TokenEpochOwner epoch_owner(ctx,layers[0].epoch,0,layers[0].position);std::array<std::unique_ptr<Rank>,8>r;for(unsigned rank=0;rank<8;rank++)r[rank]=std::make_unique<Rank>(ctx,rank,layers[0],initial_vm);
  uint64_t cn=553667,hn=512000;bool ch=false,hh=false;unsigned segment=0,layer_index=0;unsigned total_errors=0;bool running=false,finished=false,head=false;uint64_t restart=0;
  for(uint64_t events=0;uint64_t(events)<8000000ULL*(layers.size()+1)&&!finished;events++){
@@ -229,5 +227,5 @@ int main(int argc,char**argv){try{
  }
  if(!finished)throw std::runtime_error("actual layer sequence timeout");
  epoch_owner.save(fs::path(argv[6])/"central_epoch_grant.json");
- std::cout<<"{\"scope\":\"ACTUAL_EIGHT_RANK_LAYER_SEQUENCE_FUNCTIONAL_CANDIDATE\",\"layer_instruction_issues_per_rank\":22,\"layer_END_retirements_per_rank\":3,\"expected_X_words\":32768,\"errors\":"<<total_errors<<",\"past_cache_policy\":\"declared_synthetic_FP8_history_written_through_actual_controllers\",\"current_KV_policy\":\"actual_core_SU_writes_only\",\"executed_layers\":"<<layers.size()<<",\"layer_transitions_proved\":"<<(layers.size()>1?"true":"false")<<",\"local_head_executed\":"<<(head?"true":"false")<<",\"global18bit_token_proved\":false,\"physical_VM_proved\":false,\"throughput_qualified\":false}\n";return total_errors?1:0;
+ std::cout<<"{\"scope\":\"ACTUAL_EIGHT_RANK_LAYER_SEQUENCE_FUNCTIONAL_CANDIDATE\",\"layer_instruction_issues_per_rank\":22,\"layer_END_retirements_per_rank\":3,\"expected_X_words\":32768,\"errors\":"<<total_errors<<",\"past_cache_policy\":\""<<(layers[0].position==0?"empty_cache_cold_token":"declared_fixture_FP8_history_written_through_actual_controllers")<<"\",\"current_KV_policy\":\"actual_core_SU_writes_only\",\"executed_layers\":"<<layers.size()<<",\"layer_transitions_proved\":"<<(layers.size()>1?"true":"false")<<",\"local_head_executed\":"<<(head?"true":"false")<<",\"global18bit_token_proved\":false,\"actual_HOST_cohort_bound\":false,\"collective_producer_helper_bound\":false,\"whole_token_qualified\":false,\"physical_VM_proved\":false,\"throughput_qualified\":false}\n";return total_errors?1:0;
  }catch(const std::exception&e){std::cerr<<"FAIL "<<e.what()<<"\n";return 2;}}

@@ -10,9 +10,10 @@ collective_runtime=${5:?actual collective runtime.py}
 collective_exe=${6:?actual collective RTL executable}
 output=${7:?fresh output directory}
 catalog=${8:-}
+probe=${CORE_INSTRUCTION_PROBE:?actual generated-root read-only probe object file}
 fields=${9:?independently resolved SU field catalog or sequence catalog directory}
-plan=${10:-}
-actual_initial_vm=${11:-}
+plan=${10:?validated actual layer plan required}
+actual_initial_vm=${11:?actual RTL embedding VM export required}
 head_image=${12:-}
 head_program=${13:-}
 if [[ -n "$plan" ]]; then
@@ -37,7 +38,7 @@ PY
 for input_path in src/* kernel/*; do if [[ -f "$input_path" ]]; then sha256sum "$input_path"; fi; done > "$output/source_inputs.sha256"
 sha256sum "$core_obj/Vot_hdc_core_vector_weight_native_candidate__ALL.a" \
  "$front/Vot_qwen_tp8_native_services_frontend_native59__ALL.a" "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" \
- "$pc/Vqwen_native_hbm_pc_provider__ALL.a" "$allocator/Vot_qwen_tp8_token_epoch_allocator__ALL.a" "$collective_runtime" "$collective_exe" >> "$output/source_inputs.sha256"
+ "$probe" "$pc/Vqwen_native_hbm_pc_provider__ALL.a" "$allocator/Vot_qwen_tp8_token_epoch_allocator__ALL.a" "$collective_runtime" "$collective_exe" >> "$output/source_inputs.sha256"
 python3 - "$image" "$program" "$oracle" "$output" "$plan" <<'PYCODE'
 import hashlib,json,sys
 from pathlib import Path
@@ -72,7 +73,7 @@ for image,program,oracle in stages:
 (out/'payload_inputs.json').write_text(json.dumps(pins,indent=2)+'\n')
 PYCODE
 c++ -std=c++17 -O1 -pthread -I"$core_obj" -I"$allocator" -I"$front" -I"$sector" -I"$pc" -Ikernel -Isrc \
- -I"$vroot/include" -I"$vroot/include/vltstd" src/full_layer.cpp \
+ -I"$vroot/include" -I"$vroot/include/vltstd" src/full_layer.cpp "$probe" \
  "$core_obj/Vot_hdc_core_vector_weight_native_candidate__ALL.a" \
  "$front/Vot_qwen_tp8_native_services_frontend_native59__ALL.a" "$sector/Vot_qwen_tp8_kv_sector_adapter__ALL.a" \
  "$pc/Vqwen_native_hbm_pc_provider__ALL.a" kernel/Vot_qwen_tp8_attention_service__ALL.a \

@@ -67,8 +67,12 @@ stalls512, same-epoch0 two-frame1024 exact, with no reset between frames.
 Current K mutation512errors, actual old-layer ACK fault, and real saved old
 QVM packet replay fault were observed. See front59_component/receipt.json.
 Q/SU inputs remain explicit fixtures; no whole-layer/Xcarry/allocator/HOST or
-physical/rate proof is added. The owner is building distinct v2 full ATT write
-and commit TAG59 surfaces; v1 receipts remain immutable Q-only evidence.
+physical/rate proof is added. Distinct v2 mapped gate2407343 exited0 with2048 exact positive outputs and
+seven detected mutants. Real old VM ACK replay plus token/position/segment
+ACK bit mutants all followed one actual current VM write and left the actual
+RTL bridge counter0 before/after fault. See front59_v2_component/receipt.json;
+v1 remains immutable Q-only evidence. External ACK offered count includes
+rejected packets and is never called an accepted consumer count in fault cases.
 
 Metadata-complete TAG59 collector source2c146d6f9 binarycca72bb0…97eae5 is
 staged separately at tag59_metadata; v1 binary45c444e0 is historical.
@@ -78,3 +82,18 @@ and archive, run layer0 from actual embedding VM then no-reset layer0→1 under
 admission with every observer. Continue36 layers and real head/global sequence
 only after actual milestones pass. Physical VM/timing/bandwidth/rate/cost and
 production cached weight path remain outside this functional proof.
+
+Genuine LV6 public-header full driver syntax passed unit2495497. The generated
+root header is1.46GB: raw instruction access is isolated in a read-only probe
+compiled using the model's genuine existing PCH, with invalid-PCH a hard failure.
+Probe compile is pending unit/session receipt, no actual full-layer run claimed.
+The native driver requires explicit actual initial VM and layer plan; the old
+reference-X fallback is removed. Direct C++ collective input stamping/output
+commits are staged arithmetic only until actual Vot_qwen_native59 producer
+read/window and returned-tag/VRL-write paths bind. Persistent final collector
+17b326454 libnative59.so SHA1cf97fd3…33910 is the next binding milestone;
+use one handle across73 operations, actual credits/drain and no intermediate
+reset. Actual all8 HOST endpoint acceptance through corrected cohort25acd620e
+must gate core starts and collective delivery; local allocator grant alone
+is insufficient. Actual HOST/cohort, helper VRL writes, global head and whole
+token qualification remain false in the draft.

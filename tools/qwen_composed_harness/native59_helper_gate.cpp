@@ -9,7 +9,7 @@ int main(int argc,char**argv){try{
  if(argc!=3&&argc!=4)throw std::runtime_error("persistent_so actual_segment_bank required");
  VerilatedContext ctx;ctx.threads(1);Native59Helpers link(ctx,argv[1]);link.banks(argv[2]);if(argc==4)link.mutate_first_actual_return_tag(std::stoul(argv[3]));
  std::array<std::unique_ptr<Fixture>,8>r;for(auto&x:r)x=std::make_unique<Fixture>();
- for(unsigned edge=0;edge<8;edge++){ctx.time(edge*833334ULL);link.low(r,false,false,0,1,0,0);link.rise();link.fall();}
+ for(unsigned edge=0;edge<8;edge++){ctx.time(edge*833334ULL);link.low(r,false,false,0,1,0,0);link.rise(r);link.fall();}
  unsigned outputs=0;
  for(unsigned frame=0;frame<2;frame++){
   for(unsigned rank=0;rank<8;rank++){r[rank]->core.done=0;std::fill(r[rank]->vm.vm.begin(),r[rank]->vm.vm.end(),bits(float((rank+1)*(frame+1))));}
@@ -18,7 +18,7 @@ int main(int argc,char**argv){try{
    ctx.timeInc(833334);bool begin=!begun&&link.ready();
    link.low(r,true,begin,0,frame+1,0,0);if(begin)begun=true;
    std::array<bool,8> start{};for(unsigned rank=0;rank<8;rank++)start[rank]=link.rank(rank).core_start;
-   try{link.rise();}catch(const std::exception&){if(argc==4&&link.mutation_applied()&&link.rank(0).fault&&link.writes[0]==0){std::cout<<"DETECTED_ACTUAL_RETURN_TAG_MUTANT bit="<<argv[3]<<" rank0_VM_writes=0 helper_fault=1\n";return 0;}throw;}for(unsigned rank=0;rank<8;rank++)if(start[rank])r[rank]->core.done=1;
+   try{link.rise(r);}catch(const std::exception&){if(argc==4&&link.mutation_applied()&&link.rank(0).fault&&link.writes[0]==0){std::cout<<"DETECTED_ACTUAL_RETURN_TAG_MUTANT bit="<<argv[3]<<" rank0_VM_writes=0 helper_fault=1\n";return 0;}throw;}for(unsigned rank=0;rank<8;rank++)if(start[rank])r[rank]->core.done=1;
    link.fall();finished=begun&&edge>4&&link.drained();for(unsigned rank=0;rank<8;rank++)finished&=link.rank(rank).done;
   }
   if(!finished)throw std::runtime_error("actual helper/collector timeout");

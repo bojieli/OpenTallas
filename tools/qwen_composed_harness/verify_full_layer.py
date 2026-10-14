@@ -117,6 +117,19 @@ def verify(oracle, actual, catalog_path=None, fields_path=None, grant_path=None)
             seen_q.add(identity)
         if seen_q != {(chunk, direction) for chunk in range(8) for direction in (0, 1)}:
             raise ValueError('missing actual accepted Q request/reply TAG59 observations')
+        attn_events = [line.split() for line in (actual / f'rank{rank}_ATTN_tags.txt').read_text().splitlines()]
+        seen_attn = {}
+        for edge, tag, address, beat, ack in attn_events:
+            edge, address, beat, ack = map(int, (edge, address, beat, ack))
+            identity = (beat, ack)
+            if (int(tag, 16) != expected_q_tag or address != 50672 + 16 * beat or
+                beat not in range(32) or ack not in (0, 1) or identity in seen_attn):
+                raise ValueError('actual ATT write/delayed ACK TAG59/address differs or repeats')
+            seen_attn[identity] = edge
+        if set(seen_attn) != {(beat, direction) for beat in range(32) for direction in (0, 1)}:
+            raise ValueError('missing actual ATT write/delayed ACK TAG59 observations')
+        if any(seen_attn[(beat, 1)] <= seen_attn[(beat, 0)] for beat in range(32)):
+            raise ValueError('ATT ACK preceded its actual addressed write/store edge')
         observed_fields = {}
         for line in (actual / f'rank{rank}_accepted_SU_descriptors.txt').read_text().splitlines():
             parts = list(map(int, line.split()))
@@ -209,6 +222,7 @@ def verify(oracle, actual, catalog_path=None, fields_path=None, grant_path=None)
     report['resolved_field_catalog_sha256'] = sha(fields_path)
     report['actual_held_grant_receipt_sha256'] = sha(grant_path)
     report['actual_QVM_request_and_return_TAG59_observed'] = True
+    report['actual_ATT_write_and_delayed_ACK_TAG59_observed'] = True
     report['actual_accepted_FIFO_to_NEXT_1024_bits_proved'] = True
     report['accepted_raw_IB379_context16_version32_proved'] = False
     (actual / 'defined_effect_receipt.json').write_text(json.dumps(report, indent=2) + '\n')

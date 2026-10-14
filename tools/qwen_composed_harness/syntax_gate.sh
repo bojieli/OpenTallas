@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 mkdir -p out
-core=${CORE_OBJ:-/srv/opentallas-scratch/codex/qwen-fullshape-provider-1014/v6_600/full_g3072_su64/obj}
+core=${CORE_OBJ:-/srv/opentallas-scratch/codex/qwen-full-layer-sequence-1014/generated_lv6_headers}
 allocator=${ALLOCATOR_OBJ:-/srv/opentallas-scratch/codex/qwen-full-layer-sequence-1014/allocator_v5_0/library/obj}
 front=${FRONT59_OBJ:?fresh source-exact ENABLE_NATIVE1 frontend59 object directory}
 sector=/srv/opentallas-scratch/codex/native-services-frontend-1014/sector-library-v1/obj

@@ -19,6 +19,8 @@ class Native59Helpers {
  std::array<std::vector<uint64_t>,8> descriptors;
  struct Pending {bool desc=false,vm=false;uint64_t descriptor=0;std::array<uint32_t,16> word{};};
  std::array<Pending,8> pending;
+ struct Posted {bool valid=false;unsigned address=0;std::array<uint32_t,16>data{};};
+ std::array<Posted,8> posted;
  native59_input offered{};native59_output observed{};
  bool sampled=false;uint64_t edges=0;int return_bit=-1;bool mutated=false;
 public:
@@ -64,12 +66,16 @@ public:
    if(p.desc){if(h.desc_addr>=descriptors[rank].size())throw std::runtime_error("helper actual descriptor address out of range");p.descriptor=descriptors[rank][h.desc_addr];}
    if(p.vm){unsigned base=16*unsigned(h.vm_raddr);if(base+16>r[rank]->vm.vm.size())throw std::runtime_error("actual helper VM read bounds");for(unsigned j=0;j<16;j++)p.word[j]=r[rank]->vm.vm[base+j];++reads[rank];}
    // vm_we/data are registered faces from the preceding edge, like core writes.
-   if(h.vm_we){unsigned base=16*unsigned(h.vm_waddr);for(unsigned j=0;j<16;j++)r[rank]->vm.external_commit(base+j,h.vm_wdata[j],"ACTUAL_NATIVE59_HELPER");++writes[rank];}
+   auto&post=posted[rank];post.valid=h.vm_we;post.address=16*unsigned(h.vm_waddr);if(post.valid)for(unsigned j=0;j<16;j++)post.data[j]=h.vm_wdata[j];
    sent[rank]+=bool((offered.valid>>rank)&1);received[rank]+=bool((observed.valid>>rank)&1);
   }
   sampled=true;
  }
- void rise(){if(!sampled)throw std::runtime_error("helper rise without frozen low phase");if(advance(collector))throw std::runtime_error("collector rise failed");for(auto&h:helper){h->clk=1;h->eval();if(h->fault)throw std::runtime_error("actual helper return rejected");}sampled=false;++edges;}
+ template<class Ranks>void rise(Ranks&r){if(!sampled)throw std::runtime_error("helper rise without frozen low phase");if(advance(collector))throw std::runtime_error("collector rise failed");for(auto&h:helper){h->clk=1;h->eval();}
+  // Commit the frozen pre-edge write faces only after every read snapshot and
+  // helper/collector edge. A later return fault cannot erase an earlier write.
+  for(unsigned rank=0;rank<8;rank++)if(posted[rank].valid){auto&post=posted[rank];for(unsigned j=0;j<16;j++)r[rank]->vm.external_commit(post.address+j,post.data[j],"ACTUAL_NATIVE59_HELPER");++writes[rank];}
+  sampled=false;++edges;for(auto&h:helper)if(h->fault)throw std::runtime_error("actual helper return rejected");}
  void fall(){for(auto&h:helper){h->clk=0;h->eval();}}
  bool ready()const{return observed.online==255&&!observed.fault;}
  bool drained()const{return observed.drained==255&&!observed.fault;}
