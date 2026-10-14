@@ -30,14 +30,14 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
  wire [3:0] smeta,qmeta,scfg_fault,qcfg_fault,qquiet;wire [31:0] squiet;wire [11:0] qret_raw;
  wire [4*683-1:0] qrec_admitted;
  for(genvar z=0;z<4;z=z+1)begin:aperture
-  reg sa,san,sm,smn,sf,qa,qan,qm,qmn,qf;
+  reg sa,san,sm,smn,sf,ss,ssn,qa,qan,qm,qmn,qf;
   wire [7:0] sv;
   for(genvar b=0;b<8;b=b+1)begin:posted
    assign sv[b]=SU_NATIVE_RAW?(su_native_rq[(z*8+b)*17+16]||su_native_wq[(z*8+b)*281+280]):(su_rq[(z*8+b)*16+15]||su_wq[(z*8+b)*280+279]);
   end
   wire svalid=|sv;
   wire sstart=su_rreq[z]||su_wreq[z]||!su_drained[z]||svalid;
-  wire sreleased=(&squiet[z*8+:8])&&su_rack[z]&&su_wack[z]&&!su_rgrant[z]&&!su_wgrant[z];
+  wire sreleased=(!sstart||ss)&&(&squiet[z*8+:8])&&su_rack[z]&&su_wack[z]&&!su_rgrant[z]&&!su_wgrant[z];
   wire qreleased=qquiet[z]&&qrack[z]&&qwack[z]&&!qrg[z]&&!qwg[z];
   wire qallow=!qa||qreleased||quant_mirror[z]==qm;
   wire qaccept=qrec_admitted[z*683]&&qret_raw[z*3];
@@ -47,11 +47,12 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
   assign qrec_admitted[z*683]=quant_rec[z*683]&&qallow&&!qf;
   assign quant_ret[z*3]=qret_raw[z*3]&&qallow&&!qf;
   assign quant_ret[z*3+1]=qret_raw[z*3+1];assign quant_ret[z*3+2]=qret_raw[z*3+2]|qf;
-  always @(posedge su_clk[z] or negedge rst_n)if(!rst_n)begin sa<=0;san<=1;sm<=0;smn<=1;sf<=0;end
+  always @(posedge su_clk[z] or negedge rst_n)if(!rst_n)begin sa<=0;san<=1;sm<=0;smn<=1;sf<=0;ss<=0;ssn<=1;end
   else begin
-   if(sa!=~san||sm!=~smn||sa&&!sreleased&&!SU_NATIVE_RAW&&su_mirror[z]!=sm)sf<=1;
-   if((!sa||sreleased)&&sstart)begin sa<=1;san<=0;sm<=su_mirror[z];smn<=~su_mirror[z];end
-   else if(sa&&sreleased&&!sstart)begin sa<=0;san<=1;end
+   if(sa!=~san||sm!=~smn||ss!=~ssn||sa&&!sreleased&&!SU_NATIVE_RAW&&su_mirror[z]!=sm)sf<=1;
+   if((!sa||sreleased)&&sstart)begin sa<=1;san<=0;sm<=su_mirror[z];smn<=~su_mirror[z];ss<=0;ssn<=1;end
+   else if(sa&&sreleased&&!sstart)begin sa<=0;san<=1;ss<=0;ssn<=1;end
+   else if(sa&&(su_rgrant[z]||su_wgrant[z]))begin ss<=1;ssn<=0;end
   end
   always @(posedge quant_clk[z] or negedge rst_n)if(!rst_n)begin qa<=0;qan<=1;qm<=0;qmn<=1;qf<=0;end
   else begin
