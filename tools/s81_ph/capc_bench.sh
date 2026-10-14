@@ -26,7 +26,7 @@ module dsfd_sp_capture (input wire [0:0] ck, input wire [0:0] rst, input wire [0
     wire [13375:0] rv; wire [11:0] rc, dc;
     capc_ref u_ref (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_gather(f_gather), .t_vm(rv), .t_cd(rc));
     // the cluster: one clock entry per child (all the same clock here), t_cd one serial cycle after the reference
-    dsfd_sp_capture_c u_dut (.ck_g({8{ck[0]}}), .ck_x({8{ck[0]}}), .ck_c(ck[0]), .ck_s({9{ck[0]}}), .rst(rst),
+    dsfd_sp_capture_c u_dut (.ck_g({8{ck[0]}}), .ck_x({8{ck[0]}}), .ck_c(ck[0]), .ck_ka({8{ck[0]}}), .ck_kb({8{ck[0]}}), .ck_sb({8{ck[0]}}), .ck_sn(ck[0]), .rst(rst),
         .ckv_x({8{ckv[0]}}), .ckv_d(ckv[0]), .ckv_r(ckv[0]), .rsv(rsv), .f_gather(f_gather), .t_vm(t_vm), .t_cd(dc));
     integer mm = 0, tg = 0, nw = 0; reg tq = 1'b0; reg [1:0] live = 2'b00; reg [11:0] rc_q = 12'd0;
     always @(posedge ckv[0]) if (rsv[0]) begin

@@ -12,7 +12,7 @@
 // The first cluster (3fdc48de9) kept the 872 station flops and the DONE word as flat cluster flops under one
 // clock pin at the NE corner: its balanced spine measured TT insertion 1,222 ps max, spread 226 ps, boundary mean
 // ~1,029 ps (2,102 buffers for 889 sinks over 1.7 mm).  Here every child has its OWN clock entry pin on the cluster
-// face next to it (ck_g / ck_x / ck_c / ck_s, ckv_x / ckv_d / ckv_r): the die delivers the clock at each pin at phi - R of
+// face next to it (ck_g / ck_x / ck_c / ck_ka / ck_kb / ck_sb / ck_sn, ckv_x / ckv_d / ckv_r): the die delivers the clock at each pin at phi - R of
 // that child (R = the child's routed insertion: g2 208 ps, x 269, ctl 90, relays 32..62, die clock delivery rule
 // 10-13), so the cluster adds a wire and no tree.
 // Ports and behaviour are those of ctrl_c/dsfd_sp_capture_c.sv built with S81PH_CAP_SAFE (dsfd_sp_capture CORE 3 =
@@ -25,7 +25,8 @@ module dsfd_sp_capture_c (
     input wire [7:0] ck_g,                   // clock entry of dsfd_capt_g2 [g]
     input wire [7:0] ck_x,                   // clock entry of dsfd_capt_x [g] (stream side)
     input wire       ck_c,                   // clock entry of dsfd_capt_ctl
-    input wire [8:0] ck_s,                   // clock entry of the station relays of group g; [8]: the status-word relay
+    input wire [7:0] ck_ka, ck_kb, ck_sb,    // separate entry for each hardened station relay
+    input wire       ck_sn,                 // status-word relay entry
     input wire [0:0] rst,
     input wire [7:0] ckv_x,                  // serial clock entry of dsfd_capt_x [g]
     input wire       ckv_d,                  // serial clock entry of dsfd_capt_cd (S face, under the control tile)
@@ -45,7 +46,7 @@ module dsfd_sp_capture_c (
     wire [NT*KB-1:0] k_w = k_c;
 `endif
     wire [67:0] nd_o;
-    dsfd_rly_68_EW u_sn (.ck(ck_s[8]), .rs(rst[0]), .i({sn_c[3:0], sn_c}), .o(nd_o));
+    dsfd_rly_68_EW u_sn (.ck(ck_sn), .rs(rst[0]), .i({sn_c[3:0], sn_c}), .o(nd_o));
     assign nd = nd_o[63:0];
     genvar g;
     generate for (g = 0; g < NT; g = g + 1) begin : g_t
@@ -55,15 +56,15 @@ module dsfd_sp_capture_c (
         if (g == NT / 2 - 1) begin : g_sn assign sn_g = nd; end else begin : g_z assign sn_g = 64'd0; end
         if (g < NT / 2) begin : g_w                      // W half: ctl -> group runs E -> W
             wire [67:0] oa; wire [53:0] ob;
-            dsfd_rly_68_EW u_ka (.ck(ck_s[g]), .rs(rst[0]), .i(kg[67:0]), .o(oa));
-            dsfd_rly_54_EW u_kb (.ck(ck_s[g]), .rs(rst[0]), .i({kg[22:0], kg[98:68]}), .o(ob));
-            dsfd_rly_2_WE  u_sb (.ck(ck_s[g]), .rs(rst[0]), .i(st[2 * g +: 2]), .o(sd[2 * g +: 2]));
+            dsfd_rly_68_EW u_ka (.ck(ck_ka[g]), .rs(rst[0]), .i(kg[67:0]), .o(oa));
+            dsfd_rly_54_EW u_kb (.ck(ck_kb[g]), .rs(rst[0]), .i({kg[22:0], kg[98:68]}), .o(ob));
+            dsfd_rly_2_WE  u_sb (.ck(ck_sb[g]), .rs(rst[0]), .i(st[2 * g +: 2]), .o(sd[2 * g +: 2]));
             assign kd[KB * g +: KB] = {ob[30:0], oa};
         end else begin : g_e                             // E half: ctl -> group runs W -> E
             wire [62:0] oa, ob;
-            dsfd_rly_63_WE u_ka (.ck(ck_s[g]), .rs(rst[0]), .i(kg[62:0]), .o(oa));
-            dsfd_rly_63_WE u_kb (.ck(ck_s[g]), .rs(rst[0]), .i({kg[26:0], kg[98:63]}), .o(ob));
-            dsfd_rly_2_EW  u_sb (.ck(ck_s[g]), .rs(rst[0]), .i(st[2 * g +: 2]), .o(sd[2 * g +: 2]));
+            dsfd_rly_63_WE u_ka (.ck(ck_ka[g]), .rs(rst[0]), .i(kg[62:0]), .o(oa));
+            dsfd_rly_63_WE u_kb (.ck(ck_kb[g]), .rs(rst[0]), .i({kg[26:0], kg[98:63]}), .o(ob));
+            dsfd_rly_2_EW  u_sb (.ck(ck_sb[g]), .rs(rst[0]), .i(st[2 * g +: 2]), .o(sd[2 * g +: 2]));
             assign kd[KB * g +: KB] = {ob[35:0], oa};
         end
         dsfd_capt_g2 u_g (.ck(ck_g[g]), .rst(rst), .f_row(f_gather[53 * 16 * g +: 53 * 16]), .f_k(kd[KB * g +: KB]),
