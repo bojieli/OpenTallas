@@ -1,0 +1,9 @@
+TREE XTK=3 XMK=2 XMF=16 XLO=1 XQR=2 me_consumers=310 me_toggles=2600 me_t_checks=40255 pctl_changes=4225 xline_changes=2687
+WQ SQD=4 max_waiting mx=2 rd=1 seq=2 waits=158 model_overflow=0 dut_overflow=0 WDIR=0
+XHP kept_planes=16..31 compared_edges_with_nonzero_reference_low_halves=39959
+FAIL qfd_vm_bv_ports x=39959 su=0 row=0 land=0 image=0 faults x0 xh0 w0 wh0 ser000000 landed=1620/1620 su_reads=60325
+- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:507: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 41us; walltime 3.941 s; speed 10.483 us/s
+- Verilator: cpu 3.926 s on 1 threads; allocated 10 MB
+maxrss_kb=6344 wall=3.94

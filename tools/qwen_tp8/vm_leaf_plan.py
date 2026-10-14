@@ -282,6 +282,7 @@ def main():
     global Y0
     ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('out'); ap.add_argument('--strip-cols', default='2', help='tile columns of the relay strips: one number, or one per region column (e.g. 3,4,4,3)'); ap.add_argument('--band-relays', type=int, default=0); ap.add_argument('--pad-rows', type=int, default=0, help='pad / relay bay rows on each face of the column row'); ap.add_argument('--grow-south', type=float, default=0.0, help='move the envelope origin south by this many um (keeps the N face)')
     ap.add_argument('--region-spec', default='')
+    ap.add_argument('--alt-slots', type=int, default=0, help='1 = relay tiles in every other bay slot (one full face per channel)')
     ap.add_argument('--planes', type=int, default=32, choices=(16, 32), help='bit planes transported: 32 = every plane; 16 = FALLBACK XHP 1 (planes 16 .. 31 only)')
     ap.add_argument('--size', action='append', default=[], help='MODULE=WxH: what-if outline of a leaf (recorded in the report)')
     a = ap.parse_args(); d = json.loads(Path(a.net).read_text())
@@ -290,6 +291,12 @@ def main():
     a.strip_cols = [int(v) for v in a.strip_cols.split(',')]; a.strip_cols = a.strip_cols * 4 if len(a.strip_cols) == 1 else a.strip_cols
     Y0 = G(Y0 - a.grow_south)                                   # VM3: the envelope grows to the south (its N face and the SU abutment stay)
     pl = Plan(a.strip_cols, a.band_relays, a.pad_rows, a.planes).build(); ch, bays, size = pl.ch, pl.bays, pl.size
+    # FALLBACK 2026-10-14 --alt-slots 1 (VM6 channel rule, el1013-qwen-vm.log 07:04): a 4.32-um channel between two relay tiles
+    # carries two full 512-b faces of unrelated lanes (1,024 escapes: infeasible by construction).  Tiles take every OTHER
+    # slot of a bay (slot pitch 43.2 um): every channel has at most one full face.  'slots' keeps the bay's slot count.
+    for b in bays:
+        b['slots'] = b['tiles']; b['slot_pitch'] = 2 * (TW + SGAP) if a.alt_slots else TW + SGAP
+        if a.alt_slots: b['tiles'] = (b['tiles'] + 1) // 2
     gone = ('sp_vector_memory', 'sp_su64_sfu'); rly = ('qfd_rly', 'qkd_rly')
     old = [i for i in d['insts'] if i['n'] not in gone and not i['m'].startswith(rly)]
     relays = [i for i in d['insts'] if i['m'].startswith(rly)]
@@ -306,7 +313,7 @@ def main():
     spine = (cols[j] + tl[0]['w'], cols[j + 1])
     cnt = collections.Counter(c['m'] for c in ch); area = {m: round(n * size[m][0] * size[m][1] / 1e6, 4) for m, n in cnt.items()}
     relay_tiles = sum(b['tiles'] for b in bays)
-    me_sinks = pl.me + [(f"{b['n']}_t{k}", b['x'] + k * (TW + SGAP) + TW / 2, b['y']) for b in bays for k in range(b['tiles'])]
+    me_sinks = pl.me + [(f"{b['n']}_t{k}", b['x'] + k * b['slot_pitch'] + TW / 2, b['y']) for b in bays for k in range(b['tiles'])]
     met = me_tree(me_sinks)
     roots = {m: dict(instances=n, sinks_per_root=SINKS.get(m), new_leaf=m in NEW and not m.startswith('ot_qwen_tree'), size_from=SIZE_SRC.get(m, 'closed view LEF')) for m, n in cnt.items()}
     roots['ot_qfd_vm_xrelay_t'] = dict(instances_max=relay_tiles, sinks_per_root=SINKS['ot_qfd_vm_xrelay_t'], new_leaf=True, size_from=SIZE_SRC['ot_qfd_vm_xrelay_t'])
@@ -319,7 +326,7 @@ def main():
         o['over_500'] += s_['est_um'] > 500; o['over_400'] += s_['est_um'] > 400
     seam_bad = {k: v['over_500'] for k, v in sk.items() if v['over_500']}
     ok = not hard and near == 0 and not peer and offgrid == 0 and inside and min(xs) > spine[0] + 20 and max(xs) < spine[1] - 20 and not any(ov(a_, su64, 20.0) for a_ in objs) and pl.band['fits']
-    rep = dict(status='LEAF_PLAN_V2', owner='claude/qwen-tp8-vm-phys', options=dict(strip_cols=a.strip_cols, band_relays=a.band_relays, pad_rows=a.pad_rows, grow_south=a.grow_south, what_if_sizes=a.size, planes=a.planes),
+    rep = dict(status='LEAF_PLAN_V2', owner='claude/qwen-tp8-vm-phys', options=dict(strip_cols=a.strip_cols, band_relays=a.band_relays, pad_rows=a.pad_rows, grow_south=a.grow_south, what_if_sizes=a.size, planes=a.planes, alt_slots=a.alt_slots),
         verdict='PASS' if ok and not seam_bad and met['level1_max_wire_um'] <= 500 and met['level0_max_wire_um'] <= 500 else 'REJECT', kit_gates=GATE,
         region_seams=dict(rule='leaf register -> wire <= 500 um -> leaf register.  centroid = L1 between the two pin-group centroids (real LEF pins of the closed views, face centres of the new leaves); est = centroid + a quarter of the two pin spans (the worst bit of a bus whose pins are spread along both faces)',
                           seams=dict(sk), violating=seam_bad),
