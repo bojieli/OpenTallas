@@ -238,6 +238,25 @@ def region_spec(pl, seams, r=0):
         bench='results/rtl/qwen_tp8_vm_plane_20261013/region_leaf_miter/record.json (3 PASS, 12 mutants FAIL); system: results/rtl/qwen_tp8_vm_plane_20261013/system/record.json')
 
 
+def control_trees(pl):
+    """the two control fan trees (plane control W 20, line control W 28; RTL ot_qfd_vm_fantree, XTK levels, engine-enabled,
+    tapped XTK entries early: + 0 edges) as a CHAIN OF STATIONS along the column row: one station (one fan_pc + one fan_lc
+    tile per level it holds) in the free top of every relay strip of the lower regions (y 1,000 .. 1,075 of the region, above
+    the last relay node), the root at the station nearest the row centre.  A station at chain distance k from the root
+    registers the word at level k + 1 and holds the pad levels up to K, so every column leaf sees it on the same edge."""
+    st = sorted({round(b['x'], 2) for b in pl.bays if b['region'] < 4 and b['n'].endswith('_0')}); ys = Y0 + RH - 43.2
+    xc = X0 + pl.EW / 2; root = min(range(len(st)), key=lambda k: abs(st[k] - xc)); hops = [round(st[k + 1] - st[k], 1) for k in range(len(st) - 1)]
+    cols = [c for c in pl.ch if c['m'] == 'ot_qfd_vm_xcol_t']; reach = []
+    for c in cols:
+        k = min(range(len(st)), key=lambda k: abs(st[k] - c['x'])); reach.append((abs(st[k] - c['x']) + abs(c['y'] + c['h'] / 2 - ys), abs(k - root) + 1))
+    K = max(abs(k - root) for k in range(len(st))) + 1
+    nodes = sum(K - abs(k - root) for k in range(len(st)))          # registered stages held per tree (level k + 1 .. K at station k)
+    return dict(stations=len(st), station_x_um=st, station_y_um=round(ys, 2), root_station=root, levels_K=K, XTK=K, max_station_hop_um=max(hops), max_station_to_column_um=round(max(r[0] for r in reach), 1),
+                fan_tiles_per_tree=nodes, fan_tiles=dict(qfd_vm_fan_pc=nodes, qfd_vm_fan_lc=nodes), rule_ok=max(hops) <= 500 and max(r[0] for r in reach) <= 500,
+                rtl_limit='XTK <= 6: the line-control word is tapped from a 7-entry pipeline (stg) in ot_qfd_sp_vector_memory_bv',
+                root='the parent schedule logic (seam queue) has no physical owner yet: its control words enter at the root station')
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('out'); ap.add_argument('--strip-cols', default='2', help='tile columns of the relay strips: one number, or one per region column (e.g. 3,4,4,3)'); ap.add_argument('--band-relays', type=int, default=0)
     ap.add_argument('--region-spec', default='')
@@ -280,7 +299,7 @@ def main():
         verdict='PASS' if ok and not seam_bad and met['level1_max_wire_um'] <= 500 and met['level0_max_wire_um'] <= 500 else 'REJECT', kit_gates=GATE,
         region_seams=dict(rule='leaf register -> wire <= 500 um -> leaf register.  centroid = L1 between the two pin-group centroids (real LEF pins of the closed views, face centres of the new leaves); est = centroid + a quarter of the two pin spans (the worst bit of a bus whose pins are spread along both faces)',
                           seams=dict(sk), violating=seam_bad),
-        me_tree=met, plane_band=pl.band,
+        me_tree=met, control_trees=control_trees(pl), plane_band=pl.band,
         inputs={str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [a.net, __file__] + [str(ROOT / v) for v in VIEW.values()] + [str(ROOT / 'physical/ref_tile' / k / f) for k in KIT.values() for f in ('floorplan.json', 'gate_result.json') if (ROOT / 'physical/ref_tile' / k / f).exists()]},
         slot=dict(shape=f'4 x 2 regions, widths {[g_["RW"] for g_ in pl.geo]} x {RH} um (relay strips sW / sA / sB of {a.strip_cols} tile columns per region column) + {pl.BAND} um band (one row of 32 bit-plane column leaves) between the rows; region r at column r % 4, row r // 4',
                   origin_um=[X0, Y0], size_um=[pl.EW, round(2 * RH + pl.BAND, 3)], area_mm2=round(pl.EW * (2 * RH + pl.BAND) / 1e6, 4), spine_x_um=[round(spine[0], 3), round(spine[1], 3)],
@@ -300,6 +319,7 @@ def main():
     Path(a.out).write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps({k: rep[k] for k in ('verdict', 'options', 'plane_band', 'slot', 'geometry', 'leaf_count', 'x_relay_bay_tiles', 'max_sinks_per_root')}, default=str)[:3000])
     print('region_ports', json.dumps({k: {m: v[m] for m in ('leaf_pins_per_net', 'die_relay_endpoints_per_net', 'max_wire_um') if m in v} for k, v in rspec['ports'].items()})); print('region_cuts', json.dumps(rspec['own_cut_demand']))
+    print('control_trees', json.dumps({k: v for k, v in rep['control_trees'].items() if k != 'station_x_um'}))
     print('seams', json.dumps(dict(sk))); print('me', json.dumps({k: v for k, v in met.items() if k != 'slot_me_pins'}))
 
 if __name__ == '__main__': main()

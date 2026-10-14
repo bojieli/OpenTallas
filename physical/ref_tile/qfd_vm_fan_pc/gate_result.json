@@ -2,16 +2,16 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "qfd_vm_fan_pc",
  "verdict": "WARN",
- "generated": "2026-10-13T13:11:30-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-13T17:34:53-0700",
+ "host": "ot-epyc4",
  "cts": true,
- "commit": "00326cdcb",
+ "commit": "2cb084863",
  "clock": {
   "max_root_sinks": 21,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": null,
-  "tt_spread_ps": null,
+  "tt_insertion_ps": 52.9,
+  "tt_spread_ps": 0.3,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -19,7 +19,7 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "21 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "21 sinks on the largest root <= 15,000; measured TT insertion 52.9 ps, leaf spread 0.3 ps"
  },
  "items": [
   {
@@ -39,12 +39,6 @@
    "check": "textbook.util_channel",
    "message": "utilisation 11.6% outside 45%-65% (std 13 + macro 0 um2 in 112 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
-  },
-  {
-   "severity": "WARN",
-   "check": "cts_calibration",
-   "message": "CTS rc=0 ck_insertion rc=1",
-   "fix": ""
   }
  ]
 }
