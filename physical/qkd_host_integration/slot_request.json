@@ -447,6 +447,20 @@
       "ratio": 1.040156709108717,
       "status": "SOURCE_EXACT_BANKED_PREFIX_CHECKED_PASS; premature-prefix mutant fails; one-head864/two-head1728 edge pass; PHY/class and nativeQM physical clock/PG qualification remain pending",
       "accepted_cost": false
+    },
+    "full_transport_gate": {
+      "status": "FUNCTIONAL_PASS_THROUGHPUT_FAIL_NO_ACCEPTED_COST",
+      "fixed_reference": 5105,
+      "normalized_data1024_corecycles": 7463,
+      "actual_fdi1043_corecycles": 70543,
+      "oneway_PHY_FDI_cycles": 223,
+      "adapter_source": "2aa3e0423 NG8/W1024/RXD512/SRAM1/PINREG1",
+      "ingest_application_credits": 16,
+      "reason": "applicationcredit16 acrossphysicalRTT starvesnativeinput; no fullHOSTqualification",
+      "onehead_edge_sectors": 864,
+      "onehead_edge_cycles": 30503,
+      "klane_mutant": "fails independent BF16\u2192native sector source check",
+      "accepted_cost": false
     }
   },
   "pc_frame_candidate": {
