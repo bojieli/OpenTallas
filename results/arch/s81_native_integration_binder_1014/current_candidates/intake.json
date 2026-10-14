@@ -58,6 +58,20 @@
       "source_path": "results/rtl/s81_pq_native_1013/qb_split_0320/receipt.json",
       "sha256": "9853b158167c15fdca1282657388bb925a309c2b6e77a0d26f2a20f26d649cd6",
       "local_path": "results/arch/s81_native_integration_binder_1014/current_candidates/pq_77root_qonly_request.json"
+    },
+    {
+      "name": "hrow_r4_strict",
+      "commit": "aa2a246aee38b391b5e18a50bc8a092ec004a600",
+      "source_path": "results/arch/s81_hrow_native_placement_1013/r4_edge60_chunk4/binding_packet/packet.json",
+      "sha256": "eabdd67def12fb55a3656c1f8032444e1df6b6f6e4b14c00cf38693ed2259d3b",
+      "local_path": "results/arch/s81_native_integration_binder_1014/current_candidates/hrow_r4_strict.json"
+    },
+    {
+      "name": "hrow_r4_allocator",
+      "commit": "aa2a246aee38b391b5e18a50bc8a092ec004a600",
+      "source_path": "results/arch/s81_hrow_native_placement_1013/r4_edge60_chunk4/binding_packet/allocator_request.json",
+      "sha256": "5a598ffcd5f22a3f5152b5eff256b0c8d79d4a4ee8c9a77082c75f8dcdd6e2e3",
+      "local_path": "results/arch/s81_native_integration_binder_1014/current_candidates/hrow_r4_allocator.json"
     }
   ],
   "remaining": [
