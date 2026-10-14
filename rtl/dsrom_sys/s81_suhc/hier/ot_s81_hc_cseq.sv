@@ -28,6 +28,9 @@ module ot_s81_hc_cseq #(
     output wire                 n_done_v,
     output wire [7:0]           n_done_tag,
     input  wire                 n_inp,
+    // Engine-clock queued head; acceptance is the original e_v && e_r.
+    output reg                  n_head_valid, n_head_accept,
+    output reg  [83:0]          n_head_d,
     output reg  [S_RD-1:0]      n_rq_v,
     output reg  [S_RD*14-1:0]   n_rq_row,
     input  wire [S_RD-1:0]      n_rs_v,
@@ -91,6 +94,13 @@ module ot_s81_hc_cseq #(
 
     // ---------------------------------------------------------------- adapter
     wire e_v, e_r, a_flt, online;
+    wire head_valid, head_accept;
+    wire [83:0] head_d;
+    // A snapshot at the physical face; accepted and descriptor share one edge.
+    always @(posedge sk or negedge rs_n) begin
+        if (!rs_n) begin n_head_valid <= 0; n_head_accept <= 0; n_head_d <= 0; end
+        else begin n_head_valid <= head_valid; n_head_accept <= head_accept; n_head_d <= head_d; end
+    end
     wire [83:0] e_d;
     reg         d_v;
     reg  [7:0]  d_t;
@@ -108,7 +118,8 @@ module ot_s81_hc_cseq #(
         .c_clk(cck), .c_rst_n(crs_n), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(cdv), .c_done_tag(cdt),
         .fault(a_flt), .online(online),
         .e_clk(sk), .e_rst_n(srs), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_inputs_present(inp_q),
-        .e_done_v(dd[8]), .e_done_tag(dd[7:0]));
+        .e_done_v(dd[8]), .e_done_tag(dd[7:0]),
+        .e_head_valid(head_valid), .e_head_d(head_d), .e_head_accept(head_accept));
     reg       dv_q;
     reg [7:0] dt_q;
     always @(posedge cck or negedge crs_n) if (!crs_n) dv_q <= 1'b0; else dv_q <= cdv;

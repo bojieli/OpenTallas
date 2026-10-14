@@ -33,7 +33,9 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0)(
  output reg c_done_v,output reg[7:0] c_done_tag,output wire fault,output wire online,
  input wire e_clk,e_rst_n,output wire e_cmd_v,output wire[83:0] e_cmd_d,
  input wire e_cmd_ready,input wire e_inputs_present,
- input wire e_done_v,input wire[7:0] e_done_tag
+ input wire e_done_v,input wire[7:0] e_done_tag,
+ // Registered oldest queued descriptor, visible before input gating.
+ output wire e_head_valid,output wire [83:0] e_head_d,output wire e_head_accept
 );
  localparam integer CW=$clog2(QD+1);
  wire arst_n=c_rst_n&&e_rst_n;
@@ -62,6 +64,9 @@ module ot_s81_engine_adapter #(parameter integer QD=8, MUT=0)(
  // the command leaves the CDC FIFO into a register first (+1 cycle); the pending lookup starts from that register
  reg rv; reg[83:0] rq;
  wire[7:0] etag={rq[83],rq[6:0]};
+ assign e_head_valid=rv;
+ assign e_head_d=rq;
+ assign e_head_accept=take;
  assign e_cmd_d=rq;
  assign e_cmd_v=rv&&e_inputs_present&&!epending[etag]&&(eused<QD);
  wire take=e_cmd_v&&e_cmd_ready;

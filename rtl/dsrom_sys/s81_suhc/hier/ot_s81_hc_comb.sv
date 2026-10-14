@@ -32,6 +32,9 @@ module ot_s81_hc_comb #(
     output wire                 n_done_v,
     output wire [7:0]           n_done_tag,
     input  wire                 n_inp,
+    // Engine-clock queued head; acceptance is the original e_v && e_r.
+    output wire                 n_head_valid, n_head_accept,
+    output wire [83:0]          n_head_d,
     output wire [S_RD-1:0]      n_rq_v,
     output wire [S_RD*14-1:0]   n_rq_row,
     input  wire [S_RD-1:0]      n_rs_v,
@@ -158,7 +161,8 @@ module ot_s81_hc_comb #(
         .PIPE(PIPE), .PD(PIPE_PD)) u_seq (
 `endif
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
-        .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
+        .n_done_tag(n_done_tag), .n_inp(n_inp),
+        .n_head_valid(n_head_valid), .n_head_d(n_head_d), .n_head_accept(n_head_accept), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
         .n_flt(n_flt), .n_online(n_online), .n_fcode(n_fcode), .n_yacc(n_yacc), .n_ypop(n_ypop),
         .w_flt(w_flt), .e_flt(e_flt), .w_fv(w_fv), .e_fv(e_fv), .c_fv(c_fv), .w_fd(w_fd), .e_fd(e_fd), .c_fd(c_fd),
         .ngo(ngo), .t_ssv(t_ssv), .t_ss(t_ss), .t_flt(t_flt),
