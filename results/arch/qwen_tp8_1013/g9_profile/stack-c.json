@@ -1,0 +1,1512 @@
+[
+  {
+    "pid": 4119778,
+    "thread_id": 139765959877120,
+    "thread_name": "MainThread",
+    "os_thread_id": 4119778,
+    "active": true,
+    "owns_gil": true,
+    "frames": [
+      {
+        "name": "bfs",
+        "filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_rom_fulldie_b3r2.py",
+        "module": null,
+        "short_filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_rom_fulldie_b3r2.py",
+        "line": 3064,
+        "locals": [
+          {
+            "name": "De",
+            "addr": 139765808636592,
+            "arg": true,
+            "repr": "430.208"
+          },
+          {
+            "name": "mono",
+            "addr": 11045056,
+            "arg": true,
+            "repr": "False"
+          },
+          {
+            "name": "i",
+            "addr": 139763051546352,
+            "arg": false,
+            "repr": "236315"
+          },
+          {
+            "name": "start",
+            "addr": 139763055024512,
+            "arg": false,
+            "repr": "[64581, 64582, 64580, 64589, 64583, 64588, 64586, 64585, 64587, 64584, 64591, 64590]"
+          },
+          {
+            "name": "par",
+            "addr": 139765815343104,
+            "arg": false,
+            "repr": "{64581: -1, 64582: -1, 64580: -1, 64589: -1, 64583: -1, 64588: -1, 64586: -1, 64585: -1, 64587: -1, 64584: -1, ...}"
+          },
+          {
+            "name": "front",
+            "addr": 139765811983040,
+            "arg": false,
+            "repr": "[410991, 410571, 16748, 412011, 415085, 410572, 410698, 410992, 17401, 416105, 379942, 382534, 384262, 386935, 388717, ...]"
+          },
+          {
+            "name": "hit",
+            "addr": 11044496,
+            "arg": false,
+            "repr": "None"
+          },
+          {
+            "name": "nxt",
+            "addr": 139765813054592,
+            "arg": false,
+            "repr": "[415101, 17414, 414810, 416121, 18066, 419323, 419322, 397912, 398980, 400078, 401176, 402274, 403397, 404520, 414298, ...]"
+          },
+          {
+            "name": "nb",
+            "addr": 139763051217216,
+            "arg": false,
+            "repr": "[226780, 227275, 227276, 227277, 227770, 227771, 227772, 227773, 227774, 228265, 228266, 228267, 228268, 228269, 228270, ...]"
+          },
+          {
+            "name": "j",
+            "addr": 139763023145392,
+            "arg": false,
+            "repr": "250194"
+          }
+        ],
+        "is_entry": false,
+        "is_shim_entry": false
+      },
+      {
+        "name": "repair",
+        "filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_rom_fulldie_b3r2.py",
+        "module": null,
+        "short_filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_rom_fulldie_b3r2.py",
+        "line": 3160,
+        "locals": [
+          {
+            "name": "idx",
+            "addr": 139765823195728,
+            "arg": true,
+            "repr": "6566"
+          },
+          {
+            "name": "pl",
+            "addr": 139765778587392,
+            "arg": true,
+            "repr": "{\"bid\": \"ts_WS_1_0\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WS_1_0\", \"s\"), (\"ectl_WS_1_c\", \"s0\")], \"P0\": (...), ...}"
+          },
+          {
+            "name": "gaps",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "hs",
+            "addr": 139765808493184,
+            "arg": false,
+            "repr": "[404.4599999999996, 280.8000000000002, 117.93600000000038, 204.33599999999933, 1029.044470588234]"
+          },
+          {
+            "name": "own",
+            "addr": 139763055024320,
+            "arg": false,
+            "repr": "[(1899.936, 5592.24, 1952.6399999999999, 5622.4800000000005), (1899.936, 5873.04, 1952.6399999999999, ...), ...]"
+          },
+          {
+            "name": "r_",
+            "addr": 11044496,
+            "arg": false,
+            "repr": "None"
+          },
+          {
+            "name": "near_r",
+            "addr": 139765893173488,
+            "arg": false,
+            "repr": "300"
+          },
+          {
+            "name": "arcp",
+            "addr": 139765826223440,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc46c7d50>"
+          },
+          {
+            "name": "s0_",
+            "addr": 139765781822512,
+            "arg": false,
+            "repr": "1376.6004705882337"
+          },
+          {
+            "name": "xa_",
+            "addr": 139765778534864,
+            "arg": false,
+            "repr": "1935.288"
+          },
+          {
+            "name": "ya_",
+            "addr": 139765778688048,
+            "arg": false,
+            "repr": "5918.495999999999"
+          },
+          {
+            "name": "xb_",
+            "addr": 139765782361552,
+            "arg": false,
+            "repr": "2605.292470588235"
+          },
+          {
+            "name": "yb_",
+            "addr": 139765778688048,
+            "arg": false,
+            "repr": "5918.495999999999"
+          },
+          {
+            "name": "qx",
+            "addr": 139765826223536,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc46c7db0>"
+          },
+          {
+            "name": "qy",
+            "addr": 139765797109904,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc2b04090>"
+          },
+          {
+            "name": "dd",
+            "addr": 139765826223920,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc46c7f30>"
+          },
+          {
+            "name": "better",
+            "addr": 139765826222960,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc46c7b70>"
+          },
+          {
+            "name": "neard",
+            "addr": 139765826221328,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc46c7510>"
+          },
+          {
+            "name": "dP1_arc",
+            "addr": 139765826223344,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc46c7cf0>"
+          },
+          {
+            "name": "dP1_free",
+            "addr": 139765826223248,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc46c7c90>"
+          },
+          {
+            "name": "near_cons",
+            "addr": 139765826222864,
+            "arg": false,
+            "repr": "<numpy.ndarray at 0x7f1dc46c7b10>"
+          },
+          {
+            "name": "bfs",
+            "addr": 139765826290960,
+            "arg": false,
+            "repr": "<function at 0x7f1dc46d8510>"
+          },
+          {
+            "name": "chain_of",
+            "addr": 139765826291136,
+            "arg": false,
+            "repr": "<function at 0x7f1dc46d85c0>"
+          },
+          {
+            "name": "need",
+            "addr": 11120192,
+            "arg": false,
+            "repr": "True"
+          },
+          {
+            "name": "found",
+            "addr": 11044496,
+            "arg": false,
+            "repr": "None"
+          },
+          {
+            "name": "why",
+            "addr": 139765849667232,
+            "arg": false,
+            "repr": "\"span 0-4 of 4, start 12, visited 34, sites 578490, D 430, De 430, corridor None, load 1.0, end sites 0 / free 0 / reached 0...\""
+          },
+          {
+            "name": "tries",
+            "addr": 139765808493888,
+            "arg": false,
+            "repr": "[(430.208, True), (430.208, False), (403.648, True), (403.648, False)]"
+          },
+          {
+            "name": "unbooked",
+            "addr": 11120192,
+            "arg": false,
+            "repr": "True"
+          },
+          {
+            "name": "radii",
+            "addr": 139765807092928,
+            "arg": false,
+            "repr": "[300, 600, 1200, 2400, None]"
+          },
+          {
+            "name": "off",
+            "addr": 11045056,
+            "arg": false,
+            "repr": "False"
+          },
+          {
+            "name": "fallback",
+            "addr": 11044496,
+            "arg": false,
+            "repr": "None"
+          },
+          {
+            "name": "nfr",
+            "addr": 11370192,
+            "arg": false,
+            "repr": "4"
+          },
+          {
+            "name": "hp_",
+            "addr": 139765808144704,
+            "arg": false,
+            "repr": "[378.11999999999944, 250.58399999999983, 126.57600000000025, 174.11999999999898, 1002.7044705882338]"
+          },
+          {
+            "name": "hc_",
+            "addr": 139765807088832,
+            "arg": false,
+            "repr": "[404.4599999999996, 280.8000000000002, 117.93600000000038, 204.33599999999933, 1029.044470588234]"
+          },
+          {
+            "name": "badk",
+            "addr": 139765807504128,
+            "arg": false,
+            "repr": "[4]"
+          },
+          {
+            "name": "spans_",
+            "addr": 139763069184768,
+            "arg": false,
+            "repr": "[(0, 4)]"
+          },
+          {
+            "name": "lims",
+            "addr": 139765808438336,
+            "arg": false,
+            "repr": "[1, 1.0344827586206897, None]"
+          },
+          {
+            "name": "hop_fits",
+            "addr": 139765826292192,
+            "arg": false,
+            "repr": "<function at 0x7f1dc46d89e0>"
+          },
+          {
+            "name": "_overlap",
+            "addr": 139765826291840,
+            "arg": false,
+            "repr": "<function at 0x7f1dc46d8880>"
+          },
+          {
+            "name": "_rm_rect",
+            "addr": 139765826291664,
+            "arg": false,
+            "repr": "<function at 0x7f1dc46d87d0>"
+          },
+          {
+            "name": "P0_",
+            "addr": 139765778949888,
+            "arg": false,
+            "repr": "(2179.4519999999998, 5456.064)"
+          },
+          {
+            "name": "P1_",
+            "addr": 139765778669952,
+            "arg": false,
+            "repr": "(2605.292470588235, 5918.495999999999)"
+          },
+          {
+            "name": "a_",
+            "addr": 11370064,
+            "arg": false,
+            "repr": "0"
+          },
+          {
+            "name": "b_",
+            "addr": 11370192,
+            "arg": false,
+            "repr": "4"
+          },
+          {
+            "name": "pre_",
+            "addr": 139765807092864,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "suf_",
+            "addr": 139765811558144,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "kept_",
+            "addr": 139765820083520,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "lim",
+            "addr": 139765893169904,
+            "arg": false,
+            "repr": "1"
+          },
+          {
+            "name": "De",
+            "addr": 139765808636592,
+            "arg": false,
+            "repr": "430.208"
+          },
+          {
+            "name": "mono",
+            "addr": 11045056,
+            "arg": false,
+            "repr": "False"
+          },
+          {
+            "name": "hit",
+            "addr": 11044496,
+            "arg": false,
+            "repr": "None"
+          },
+          {
+            "name": "start",
+            "addr": 139765808469952,
+            "arg": false,
+            "repr": "[64581, 64582, 64580, 64589, 64583, 64588, 64586, 64585, 64587, 64584, 64591, 64590]"
+          },
+          {
+            "name": "_e",
+            "addr": 139763069176576,
+            "arg": false,
+            "repr": "[]"
+          }
+        ],
+        "is_entry": false,
+        "is_shim_entry": false
+      },
+      {
+        "name": "_relays",
+        "filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_rom_fulldie_b3r2.py",
+        "module": null,
+        "short_filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_rom_fulldie_b3r2.py",
+        "line": 3330,
+        "locals": [
+          {
+            "name": "v",
+            "addr": 139765901249264,
+            "arg": true,
+            "repr": "<cell at 0x7f1dc8e54af0>"
+          },
+          {
+            "name": "m",
+            "addr": 139765903053472,
+            "arg": true,
+            "repr": "<cell at 0x7f1dc900d2a0>"
+          },
+          {
+            "name": "pitch",
+            "addr": 139765903052992,
+            "arg": true,
+            "repr": "<cell at 0x7f1dc900d0c0>"
+          },
+          {
+            "name": "pos",
+            "addr": 139765903784272,
+            "arg": false,
+            "repr": "<function at 0x7f1dc90bf950>"
+          },
+          {
+            "name": "r",
+            "addr": 139765903053040,
+            "arg": false,
+            "repr": "<cell at 0x7f1dc900d0f0>"
+          },
+          {
+            "name": "it",
+            "addr": 139765825186032,
+            "arg": false,
+            "repr": "<Inst at 0x7f1dc45ca8f0>"
+          },
+          {
+            "name": "x_",
+            "addr": 139765903828816,
+            "arg": false,
+            "repr": "17224.976"
+          },
+          {
+            "name": "b_",
+            "addr": 139765893170256,
+            "arg": false,
+            "repr": "2500"
+          },
+          {
+            "name": "e_rot",
+            "addr": 139765900538048,
+            "arg": false,
+            "repr": "[0]"
+          },
+          {
+            "name": "ry",
+            "addr": 139765900538112,
+            "arg": false,
+            "repr": "[2067.12, 3650.4, 5136.48, 6622.56, 8108.64, 9594.72, 11080.8, 12566.88, 14052.96, 15539.04, 17025.12, 18511.2, ...]"
+          },
+          {
+            "name": "HCAP",
+            "addr": 139765906275888,
+            "arg": false,
+            "repr": "1400"
+          },
+          {
+            "name": "GCAP",
+            "addr": 139765906272176,
+            "arg": false,
+            "repr": "4000"
+          },
+          {
+            "name": "VCAP",
+            "addr": 139765906276112,
+            "arg": false,
+            "repr": "1800"
+          },
+          {
+            "name": "hload",
+            "addr": 139765901017856,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1c300>"
+          },
+          {
+            "name": "_sys",
+            "addr": 139765952943888,
+            "arg": false,
+            "repr": "<module at 0x7f1dcbfa1710>"
+          },
+          {
+            "name": "_cdir",
+            "addr": 139765825515936,
+            "arg": false,
+            "repr": "\"/home/ubuntu/scratch-tp8-r10/g9/src/results/arch/qwen_tp8_1012\""
+          },
+          {
+            "name": "_cm0",
+            "addr": 139765949486864,
+            "arg": false,
+            "repr": "\"asbuilt\""
+          },
+          {
+            "name": "_cp0",
+            "addr": 11435248,
+            "arg": false,
+            "repr": "\"A\""
+          },
+          {
+            "name": "_np",
+            "addr": 139765949856912,
+            "arg": false,
+            "repr": "<module at 0x7f1dcbcafc90>"
+          },
+          {
+            "name": "_is_tile",
+            "addr": 139765901020320,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1cca0>"
+          },
+          {
+            "name": "poly_of",
+            "addr": 139765901021552,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1d170>"
+          },
+          {
+            "name": "region_of",
+            "addr": 139765901021904,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1d2d0>"
+          },
+          {
+            "name": "ck_add",
+            "addr": 139765783290880,
+            "arg": false,
+            "repr": "{}"
+          },
+          {
+            "name": "stats",
+            "addr": 139765783290944,
+            "arg": false,
+            "repr": "{}"
+          },
+          {
+            "name": "B",
+            "addr": 139765900538560,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "fck_drop",
+            "addr": 139765902605920,
+            "arg": false,
+            "repr": "<set at 0x7f1dc8f9fe60>"
+          },
+          {
+            "name": "fck_new",
+            "addr": 139765900538944,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "insts",
+            "addr": 139765900538368,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "worst",
+            "addr": 139765900538688,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "spill",
+            "addr": 139765900538880,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "stage_of",
+            "addr": 139765783291008,
+            "arg": false,
+            "repr": "{}"
+          },
+          {
+            "name": "buses",
+            "addr": 139765900538816,
+            "arg": false,
+            "repr": "[(2304, (\"head_23\", \"head_chain\", 508, [(\"sp_vector_memory\", \"xw_d\"), (\"h_23\", \"e_d\")])), (2305, (\"head_23_rdy\", ...)), ...]"
+          },
+          {
+            "name": "keep",
+            "addr": 139765783291136,
+            "arg": false,
+            "repr": "{2305: [(\"head_23_rdy\", \"head_chain\", 1, [(\"h_23\", \"e_r\"), (\"sp_vector_memory\", \"xw_r\")])], 2306: [...], 2307: [(...)], ...}"
+          },
+          {
+            "name": "tpads",
+            "addr": 139765783291200,
+            "arg": false,
+            "repr": "{}"
+          },
+          {
+            "name": "pre_pads",
+            "addr": 139765783291264,
+            "arg": false,
+            "repr": "{}"
+          },
+          {
+            "name": "pre_far",
+            "addr": 139765783291328,
+            "arg": false,
+            "repr": "{}"
+          },
+          {
+            "name": "idx",
+            "addr": 139765823195728,
+            "arg": false,
+            "repr": "6566"
+          },
+          {
+            "name": "bid",
+            "addr": 139765903053568,
+            "arg": false,
+            "repr": "<cell at 0x7f1dc900d300>"
+          },
+          {
+            "name": "cl",
+            "addr": 139765903050544,
+            "arg": false,
+            "repr": "<cell at 0x7f1dc900c730>"
+          },
+          {
+            "name": "bits",
+            "addr": 11370096,
+            "arg": false,
+            "repr": "1"
+          },
+          {
+            "name": "eps",
+            "addr": 139765903053184,
+            "arg": false,
+            "repr": "<cell at 0x7f1dc900d180>"
+          },
+          {
+            "name": "q",
+            "addr": 139765898420992,
+            "arg": false,
+            "repr": "[(27116.640000000003, 21658.788), (27116.640000000003, 22141.98475)]"
+          },
+          {
+            "name": "jog_bad",
+            "addr": 139765901023312,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1d850>"
+          },
+          {
+            "name": "replace_frames",
+            "addr": 139765901024368,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1dc70>"
+          },
+          {
+            "name": "pair",
+            "addr": 139765805268928,
+            "arg": false,
+            "repr": "{\"ucie_tx_x\": \"ucie_tx_x_cr\", \"serdes_tx_x\": \"serdes_tx_x_cr\", \"ucie_rx\": \"ucie_rx_cr\", \"serdes_rx\": \"serdes_rx_cr\", ...}"
+          },
+          {
+            "name": "j_",
+            "addr": 11370352,
+            "arg": false,
+            "repr": "9"
+          },
+          {
+            "name": "rev_idx",
+            "addr": 139765783291584,
+            "arg": false,
+            "repr": "{\"cor_0_7_rdy\": 1, \"cor_0_6_rdy\": 3, \"cor_0_5_rdy\": 5, \"cor_0_4_rdy\": 7, \"cor_0_3_rdy\": 9, \"cor_0_2_rdy\": 11, ...}"
+          },
+          {
+            "name": "feedback",
+            "addr": 139765805268864,
+            "arg": false,
+            "repr": "[(\"bword_0\", 529, 527, False), (\"bword_1\", 529, 527, False), (\"bword_2\", 527, 525, False), (\"bword_4\", 521, 518, False), ...]"
+          },
+          {
+            "name": "_only",
+            "addr": 11446480,
+            "arg": false,
+            "repr": "()"
+          },
+          {
+            "name": "skip_cl",
+            "addr": 11120192,
+            "arg": false,
+            "repr": "True"
+          },
+          {
+            "name": "d",
+            "addr": 139765779016880,
+            "arg": false,
+            "repr": "3085.5840000000003"
+          },
+          {
+            "name": "terminal",
+            "addr": 139765783510976,
+            "arg": false,
+            "repr": "{(\"h_0\", \"s_d\"): 452.7, (\"s_0_7\", \"a_d\"): 477.7, (\"s_0_7\", \"a_r\"): 463.8, (\"s_0_7\", \"b_d\"): 448.6, ...}"
+          },
+          {
+            "name": "direct_limit",
+            "addr": 139765779736784,
+            "arg": false,
+            "repr": "401.4"
+          },
+          {
+            "name": "path",
+            "addr": 139765779372672,
+            "arg": false,
+            "repr": "[(1216.5, 9869.136), (1216.5, 7132.224), (1565.172, 7132.224)]"
+          },
+          {
+            "name": "span1",
+            "addr": 139765779014000,
+            "arg": false,
+            "repr": "4.096"
+          },
+          {
+            "name": "span2",
+            "addr": 139765779020336,
+            "arg": false,
+            "repr": "4.192"
+          },
+          {
+            "name": "_chain",
+            "addr": 139765901025072,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1df30>"
+          },
+          {
+            "name": "frames",
+            "addr": 139765779372608,
+            "arg": false,
+            "repr": "[(1276.128, 9491.04, 52.68, 30.215999999999998), (1293.408, 9007.2, 52.68, 30.215999999999998), ...]"
+          },
+          {
+            "name": "_bad",
+            "addr": 139765901025600,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1e140>"
+          },
+          {
+            "name": "_try_n",
+            "addr": 11370064,
+            "arg": false,
+            "repr": "0"
+          },
+          {
+            "name": "pts_",
+            "addr": 139765790952192,
+            "arg": false,
+            "repr": "[(26908.846125, 20655.904749999998), (27116.628000000004, 20876.388), (27116.628000000004, 21297.588), (...), (...), ...]"
+          },
+          {
+            "name": "ax_",
+            "addr": 139765790930544,
+            "arg": false,
+            "repr": "27116.628000000004"
+          },
+          {
+            "name": "ay_",
+            "addr": 139765790930576,
+            "arg": false,
+            "repr": "23757.828"
+          },
+          {
+            "name": "bx_",
+            "addr": 139765790930416,
+            "arg": false,
+            "repr": "27511.476000000006"
+          },
+          {
+            "name": "by_",
+            "addr": 139765790930640,
+            "arg": false,
+            "repr": "23695.188000000002"
+          },
+          {
+            "name": "box",
+            "addr": 139765790388800,
+            "arg": false,
+            "repr": "(27056.628000000004, 23635.188000000002, 27571.476000000006, 23817.828)"
+          },
+          {
+            "name": "ph",
+            "addr": 139765790120960,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "xa_",
+            "addr": 139765783049168,
+            "arg": false,
+            "repr": "27116.640000000003"
+          },
+          {
+            "name": "ya_",
+            "addr": 139765898401616,
+            "arg": false,
+            "repr": "23628.064749999998"
+          },
+          {
+            "name": "xb_",
+            "addr": 139765790924176,
+            "arg": false,
+            "repr": "27689.302125"
+          },
+          {
+            "name": "yb_",
+            "addr": 139765898401616,
+            "arg": false,
+            "repr": "23628.064749999998"
+          },
+          {
+            "name": "xa2",
+            "addr": 139765783049168,
+            "arg": false,
+            "repr": "27116.640000000003"
+          },
+          {
+            "name": "xb2",
+            "addr": 139765898403024,
+            "arg": false,
+            "repr": "27571.476000000006"
+          },
+          {
+            "name": "ya2",
+            "addr": 139765898411504,
+            "arg": false,
+            "repr": "23635.188000000002"
+          },
+          {
+            "name": "yb2",
+            "addr": 139765898401616,
+            "arg": false,
+            "repr": "23628.064749999998"
+          },
+          {
+            "name": "path2",
+            "addr": 139765898935744,
+            "arg": false,
+            "repr": "[(27698.542125, 22141.98475), (27511.488000000005, 22141.98475), (27511.488000000005, 20655.904749999998), (...)]"
+          },
+          {
+            "name": "frames2",
+            "addr": 139765898416064,
+            "arg": false,
+            "repr": "[(27485.136000000006, 21885.12, 52.68, 30.215999999999998), (27485.136000000006, 21463.92, 52.68, 30.215999999999998), ...]"
+          },
+          {
+            "name": "ok2",
+            "addr": 11120192,
+            "arg": false,
+            "repr": "True"
+          },
+          {
+            "name": "cp_",
+            "addr": 139765779372544,
+            "arg": false,
+            "repr": "[(1216.5, 9869.136), (1216.5, 9506.148000000001), (1302.4679999999998, 9506.148000000001), (1302.4679999999998, ...), ...]"
+          },
+          {
+            "name": "r_",
+            "addr": 139765796632944,
+            "arg": false,
+            "repr": "(28758.24, 22144.32, 28896.480000000003, 22273.92)"
+          },
+          {
+            "name": "gx",
+            "addr": 11373744,
+            "arg": false,
+            "repr": "115"
+          },
+          {
+            "name": "gy",
+            "addr": 11372912,
+            "arg": false,
+            "repr": "89"
+          },
+          {
+            "name": "unrepaired",
+            "addr": 139765796603072,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "needs_repair",
+            "addr": 139765901024896,
+            "arg": false,
+            "repr": "<function at 0x7f1dc8e1de80>"
+          },
+          {
+            "name": "repair",
+            "addr": 139765850022032,
+            "arg": false,
+            "repr": "<function at 0x7f1dc5d7a090>"
+          },
+          {
+            "name": "rip_log",
+            "addr": 139765796603328,
+            "arg": false,
+            "repr": "[(\"te_EN_0_0\", [\"emr_ES\", \"ap_EN\", \"am_EN\", \"krq_EN_4\", \"krs_EN_4\"], False, []), (\"te_EN_0_3\", [\"krq_EN_5\", ...], ...), ...]"
+          },
+          {
+            "name": "gap_tier",
+            "addr": 139765796603392,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "retry_log",
+            "addr": 139765796603456,
+            "arg": false,
+            "repr": "[]"
+          },
+          {
+            "name": "_bad_pts",
+            "addr": 139765850022208,
+            "arg": false,
+            "repr": "<function at 0x7f1dc5d7a140>"
+          },
+          {
+            "name": "_lift",
+            "addr": 139765826255184,
+            "arg": false,
+            "repr": "<function at 0x7f1dc46cf950>"
+          },
+          {
+            "name": "_settle",
+            "addr": 139765826290608,
+            "arg": false,
+            "repr": "<function at 0x7f1dc46d83b0>"
+          },
+          {
+            "name": "pl",
+            "addr": 139765778587392,
+            "arg": false,
+            "repr": "{\"bid\": \"ts_WS_1_0\", \"cl\": \"stack_local\", \"bits\": 34, \"eps\": [(\"head_WS_1_0\", \"s\"), (\"ectl_WS_1_c\", \"s0\")], \"P0\": (...), ...}"
+          },
+          {
+            "name": "work",
+            "addr": 139763041404992,
+            "arg": false,
+            "repr": "[6567, 6568, 6569, 6570, 6571, 6572, 6573, 6574, 6575, 6576, 6577, 6578, 6579, 6604, 6605, 6607, 6608, 6609, 6611, 6612, ...]"
+          },
+          {
+            "name": "ripped",
+            "addr": 139765850078816,
+            "arg": false,
+            "repr": "<set at 0x7f1dc5d87e60>"
+          },
+          {
+            "name": "rounds",
+            "addr": 11371344,
+            "arg": false,
+            "repr": "40"
+          },
+          {
+            "name": "_ok1",
+            "addr": 11045056,
+            "arg": false,
+            "repr": "False"
+          },
+          {
+            "name": "vict",
+            "addr": 139763041414208,
+            "arg": false,
+            "repr": "[5479, 5861, 5873]"
+          },
+          {
+            "name": "lifted",
+            "addr": 139765819902336,
+            "arg": false,
+            "repr": "{5479: [(1663.2, 23133.6, 52.68, 30.215999999999998), (1663.2, 22723.2, 52.68, 30.215999999999998), ...], 5861: [...], ...}"
+          },
+          {
+            "name": "ok_",
+            "addr": 11045056,
+            "arg": false,
+            "repr": "False"
+          },
+          {
+            "name": "redo",
+            "addr": 139763041408000,
+            "arg": false,
+            "repr": "[]"
+          }
+        ],
+        "is_entry": false,
+        "is_shim_entry": false
+      },
+      {
+        "name": "selected",
+        "filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_rom_fulldie_b3r2.py",
+        "module": null,
+        "short_filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_rom_fulldie_b3r2.py",
+        "line": 1101,
+        "locals": [
+          {
+            "name": "enabled",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "band",
+            "addr": 11045056,
+            "arg": true,
+            "repr": "False"
+          },
+          {
+            "name": "area_pins",
+            "addr": 11045056,
+            "arg": true,
+            "repr": "False"
+          },
+          {
+            "name": "b3r3",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "widen_um",
+            "addr": 139765893170960,
+            "arg": true,
+            "repr": "500"
+          },
+          {
+            "name": "spread",
+            "addr": 11045056,
+            "arg": true,
+            "repr": "False"
+          },
+          {
+            "name": "b3r6",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "tree_cols",
+            "addr": 11370256,
+            "arg": true,
+            "repr": "6"
+          },
+          {
+            "name": "bw_align",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "east_mirror",
+            "addr": 11045056,
+            "arg": true,
+            "repr": "False"
+          },
+          {
+            "name": "bw_edge",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "io_faces",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "bw_edge_inner",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "bw_sp",
+            "addr": 11376464,
+            "arg": true,
+            "repr": "200"
+          },
+          {
+            "name": "bw_x",
+            "addr": 139765893170480,
+            "arg": true,
+            "repr": "20"
+          },
+          {
+            "name": "edge_gap",
+            "addr": 139765893170032,
+            "arg": true,
+            "repr": "0"
+          },
+          {
+            "name": "slab_obs_top",
+            "addr": 11370288,
+            "arg": true,
+            "repr": "7"
+          },
+          {
+            "name": "m6_strip",
+            "addr": 11371344,
+            "arg": true,
+            "repr": "40"
+          },
+          {
+            "name": "slab_group_h",
+            "addr": 139765951643152,
+            "arg": true,
+            "repr": "455.76"
+          },
+          {
+            "name": "cdc",
+            "addr": 139765902569984,
+            "arg": true,
+            "repr": "{\"w\": 183.048, \"h\": 183.048, \"per_stack\": 32, \"hbm_bits\": 613, \"core_bits\": 585}"
+          },
+          {
+            "name": "slab_pg",
+            "addr": 11044496,
+            "arg": true,
+            "repr": "None"
+          },
+          {
+            "name": "slab_w_per_mm2",
+            "addr": 139765893171184,
+            "arg": true,
+            "repr": "0.646"
+          },
+          {
+            "name": "strip_span",
+            "addr": 11045056,
+            "arg": true,
+            "repr": "False"
+          },
+          {
+            "name": "r18",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "r19",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "tree_interleave",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "corr_m9_adj",
+            "addr": 11044496,
+            "arg": true,
+            "repr": "None"
+          },
+          {
+            "name": "corr_um",
+            "addr": 11044496,
+            "arg": true,
+            "repr": "None"
+          },
+          {
+            "name": "bw_wp",
+            "addr": 11370064,
+            "arg": true,
+            "repr": "0"
+          },
+          {
+            "name": "su_core_clock",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "slab_bw_m8",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "relay_pitch",
+            "addr": 139765951643344,
+            "arg": true,
+            "repr": "430.56"
+          },
+          {
+            "name": "io_chan",
+            "addr": 139765893170032,
+            "arg": true,
+            "repr": "0"
+          },
+          {
+            "name": "su_vm_abut",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "rtl_finish",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "vm_me",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "tt_h",
+            "addr": 139765951643088,
+            "arg": true,
+            "repr": "3732.48"
+          },
+          {
+            "name": "bl_h",
+            "addr": 139765893170032,
+            "arg": true,
+            "repr": "0"
+          },
+          {
+            "name": "strict_ports",
+            "addr": 11045056,
+            "arg": true,
+            "repr": "False"
+          },
+          {
+            "name": "rtl_bound_masters",
+            "addr": 11044496,
+            "arg": true,
+            "repr": "None"
+          },
+          {
+            "name": "port_exemptions",
+            "addr": 11044496,
+            "arg": true,
+            "repr": "None"
+          },
+          {
+            "name": "emb_hbm",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "before_relays",
+            "addr": 139765902336672,
+            "arg": true,
+            "repr": "<function at 0x7f1dc8f5e2a0>"
+          },
+          {
+            "name": "seam_free",
+            "addr": 11120192,
+            "arg": true,
+            "repr": "True"
+          },
+          {
+            "name": "station_word",
+            "addr": 139765951640080,
+            "arg": true,
+            "repr": "509"
+          },
+          {
+            "name": "tp8",
+            "addr": 139765906432384,
+            "arg": true,
+            "repr": "{\"bands\": 3, \"ch_rows\": (1, 15), \"row_gap\": 168.48, \"tile_body\": 311.04, \"tile_h\": 1317.6, \"spine_gap\": 171.936, ...}"
+          },
+          {
+            "name": "spec",
+            "addr": 139765905213072,
+            "arg": false,
+            "repr": "<ModuleSpec at 0x7f1dc921c690>"
+          },
+          {
+            "name": "old_vch",
+            "addr": 139765905146768,
+            "arg": false,
+            "repr": "174.096"
+          },
+          {
+            "name": "st_extra_um2",
+            "addr": 139765905162096,
+            "arg": false,
+            "repr": "1788.5931978798583"
+          },
+          {
+            "name": "st_extra_h",
+            "addr": 139765905153392,
+            "arg": false,
+            "repr": "34.56"
+          },
+          {
+            "name": "sf_extra_h",
+            "addr": 139765905147344,
+            "arg": false,
+            "repr": "17.28"
+          },
+          {
+            "name": "bw_mm2",
+            "addr": 139765905149424,
+            "arg": false,
+            "repr": "0.07462897526501766"
+          },
+          {
+            "name": "m",
+            "addr": 139765902852288,
+            "arg": false,
+            "repr": "{\"die\": {\"w\": 31785.696, \"h\": 25891.92, \"mm2\": 822.993, \"budget_mm2\": 858, \"margin_mm2\": 35.007}, ...}"
+          },
+          {
+            "name": "w0",
+            "addr": 139765905135952,
+            "arg": false,
+            "repr": "1300.752"
+          },
+          {
+            "name": "w",
+            "addr": 139765905135984,
+            "arg": false,
+            "repr": "1815.264"
+          },
+          {
+            "name": "it",
+            "addr": 139765901672512,
+            "arg": false,
+            "repr": "<Inst at 0x7f1dc8ebc040>"
+          },
+          {
+            "name": "groups",
+            "addr": 139765903181312,
+            "arg": false,
+            "repr": "{...}"
+          },
+          {
+            "name": "by",
+            "addr": 139765902587904,
+            "arg": false,
+            "repr": "{\"t_0_0\": <Inst at 0x7f1dc914d460>, \"s_0_0\": <Inst at 0x7f1dc914d4d0>, \"t_0_1\": <Inst at 0x7f1dc914d540>, ...}"
+          },
+          {
+            "name": "ry",
+            "addr": 139765902086400,
+            "arg": false,
+            "repr": "{...}"
+          },
+          {
+            "name": "rx",
+            "addr": 139765902587136,
+            "arg": false,
+            "repr": "{...}"
+          },
+          {
+            "name": "bid",
+            "addr": 139765906816960,
+            "arg": false,
+            "repr": "\"crom_q\""
+          },
+          {
+            "name": "cl",
+            "addr": 139765949489792,
+            "arg": false,
+            "repr": "\"crom\""
+          },
+          {
+            "name": "bits",
+            "addr": 139765893173968,
+            "arg": false,
+            "repr": "4096"
+          },
+          {
+            "name": "eps",
+            "addr": 139765904247168,
+            "arg": false,
+            "repr": "[(\"sp_constants_sequencer\", \"cq\"), (\"sp_su64_sfu\", \"cq\")]"
+          },
+          {
+            "name": "root",
+            "addr": 139765899458192,
+            "arg": false,
+            "repr": "\"t_47_14\""
+          },
+          {
+            "name": "_",
+            "addr": 139765907938912,
+            "arg": false,
+            "repr": "\"n_y\""
+          },
+          {
+            "name": "slab",
+            "addr": 139765901012592,
+            "arg": false,
+            "repr": "\"sp_port_tiles_2_f1\""
+          },
+          {
+            "name": "pin",
+            "addr": 139765903051920,
+            "arg": false,
+            "repr": "\"bw15\""
+          },
+          {
+            "name": "_bm",
+            "addr": 139765903783920,
+            "arg": false,
+            "repr": "<function at 0x7f1dc90bf7f0>"
+          },
+          {
+            "name": "_mfinal",
+            "addr": 139765903784096,
+            "arg": false,
+            "repr": "<function at 0x7f1dc90bf8a0>"
+          }
+        ],
+        "is_entry": false,
+        "is_shim_entry": false
+      },
+      {
+        "name": "load_qwen",
+        "filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/die_top_lint.py",
+        "module": null,
+        "short_filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/die_top_lint.py",
+        "line": 224,
+        "locals": [
+          {
+            "name": "importlib",
+            "addr": 139765905065840,
+            "arg": false,
+            "repr": "<module at 0x7f1dc91f8770>"
+          },
+          {
+            "name": "src",
+            "addr": 139765929681920,
+            "arg": false,
+            "repr": "{\"root\": <PosixPath at 0x7f1dcbc52ea0>, \"ref\": None, \"commit\": None, \"overlay\": []}"
+          },
+          {
+            "name": "saved",
+            "addr": 139765893025792,
+            "arg": false,
+            "repr": "{\"qwen_rom_fulldie\": <module at 0x7f1dc9459530>, \"qwen_rom_fulldie_pg_r3\": <module at 0x7f1dc91f9300>, ...}"
+          },
+          {
+            "name": "B",
+            "addr": 139765905069840,
+            "arg": false,
+            "repr": "<module at 0x7f1dc91f9710>"
+          },
+          {
+            "name": "r",
+            "addr": 139765923729472,
+            "arg": false,
+            "repr": "{\"b3r3\": True, \"b3r6\": True, \"tree_cols\": 6, \"bw_align\": True, \"bw_edge\": True, \"io_faces\": True, \"bw_edge_inner\": True, ...}"
+          },
+          {
+            "name": "cdc",
+            "addr": 139765949300464,
+            "arg": false,
+            "repr": "\"183.048,183.048\""
+          }
+        ],
+        "is_entry": false,
+        "is_shim_entry": false
+      },
+      {
+        "name": "<module>",
+        "filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_tp8/relay_data_run.py",
+        "module": null,
+        "short_filename": "/home/ubuntu/scratch-tp8-r10/g9/src/tools/qwen_tp8/relay_data_run.py",
+        "line": 16,
+        "locals": [],
+        "is_entry": false,
+        "is_shim_entry": true
+      }
+    ],
+    "process_info": null
+  }
+]
