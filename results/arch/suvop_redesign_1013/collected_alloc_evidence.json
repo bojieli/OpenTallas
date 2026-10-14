@@ -24,8 +24,9 @@
       "LQ": 8,
       "service_cycles": 1939,
       "ratio": 1.2525839793281655,
-      "exact": "CASE0 PASS; auxiliary still live PID2806977",
-      "qualified": false
+      "exact": "FULL PASS",
+      "qualified": false,
+      "log": "/home/ubuntu/claude-takeover-20261007/suvop-codex-evidence/qwen-alloc-n512-lq8.log"
     },
     {
       "model": "qwen",
@@ -34,9 +35,10 @@
       "LQ": 16,
       "service_cycles": 1660,
       "ratio": 1.0723514211886305,
-      "exact": "CASE0 PASS; auxiliary still live PID2806979",
+      "exact": "FULL PASS",
       "qualified": false,
-      "purpose": "matched VM/SU queue diagnostic; physical adoption pending"
+      "purpose": "matched VM/SU queue diagnostic; physical adoption pending",
+      "log": "/home/ubuntu/claude-takeover-20261007/suvop-codex-evidence/qwen-alloc-n512-lq16.log"
     }
   ],
   "reduced_shape": {
@@ -61,5 +63,41 @@
     "repair_CTS_PID": 3235087
   },
   "native_composition_gap": "VM owner reports native B2 ot_vms_bank LQ=4+2*RRS/WRS; default RRS=WRS=3 gives10, current ctlw clientsLQ8. Monolithic matchedLQ16 needs native bankRRS/WRS6 + actual6 relay stages and parameter-set views; diagnostic cannot qualify current B2 die.",
-  "next_required_mutant3": "Final sink replacement can hide corruption of predecessor drain. Need directed in-place transform with external observation of predecessor drain data/coverage at retirement, using real VM write traffic and independently generated golden predecessor values; whole-chain final-only compare is insufficient."
+  "next_required_mutant3": "Final sink replacement can hide corruption of predecessor drain. Need directed in-place transform with external observation of predecessor drain data/coverage at retirement, using real VM write traffic and independently generated golden predecessor values; whole-chain final-only compare is insufficient.",
+  "vehicle": "tb_hgi_su_prod SV+CHAIN, real golden ot_hgi_vm_unit/vec RTL; native B2 ot_vms_bank composition remains required",
+  "prefetch_successor": {
+    "rtl_commit": "7d0ad0538",
+    "stress_bench_commit": "9e1f84e0a",
+    "clock_gate_commit": "63c91fc76",
+    "LQ": 8,
+    "local_prefetch_per_lane": 4,
+    "native_VM_credits_unchanged": true,
+    "exact_stress": "PASS",
+    "MUT9": "FAIL35",
+    "MUT1_2_5": "FAIL",
+    "source_slot": "95.04 x 103.68, v12 FIT64",
+    "CTS": {
+      "sinks": 6384,
+      "insertion_ps": 171.1,
+      "spread_ps": 20.2,
+      "setup_ps": 117.9,
+      "hold_ps": 18.6
+    },
+    "route_job": "hgi_sv_lane2_pf-r2-prefetch-63c91fc76",
+    "status": "SUBMITTED, unclosed"
+  },
+  "live_latest_proofs": {
+    "q_pf64": 3266612,
+    "d_pf64": 3266613,
+    "q_pf64_m6": 3266614,
+    "q_pf512": 3266615,
+    "d_pf512": 3266616,
+    "q_traffic512_rly16": 3289225,
+    "q_traffic512_rly16_m3": 3289226,
+    "pf_fwd_direct64": 3300169,
+    "pf_fwd_direct64_m4": 3300170,
+    "pf_two_direct64": 3300171,
+    "pf_two_direct64_m7": 3300172
+  },
+  "traffic_observer": "34c6e1b77: independently model-generated masked per-record VM write golden and once-only actual SU VM pin traffic matcher, retains overwritten predecessor outputs. Positive and MUT3 RLY16 pair are directed exactness only; release topology/queue remains unchanged."
 }
