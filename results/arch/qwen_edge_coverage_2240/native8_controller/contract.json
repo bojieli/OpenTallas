@@ -1,0 +1,47 @@
+{
+  "schema": "ot.qwen.native8.constants.contract.v1",
+  "owner": "Codex:qwen_edge_coverage_2240",
+  "status": "FUNCTIONAL_CANDIDATE_NOT_NATIVE_PARENT_QUALIFICATION",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_seq_su_bi_native8_candidate.sv": "d4fcfff07bbeb45ad40a659034172ba348d6fe3763ed45b777fd16cdc46d3db7",
+    "rtl/test/tb_qfd_seq_su_native8_candidate.sv": "85737a4225fc783e8079f5c14e9eaa55fed78a0077d3ea2b1f77b56541fb5cfb",
+    "physical/qwen_native_cbuf/bench_native8_controller.sh": "501f6286bbef986a440f549c47f266cb5dc9787dcb79e3e8339dce5762028d66"
+  },
+  "new_controller": {
+    "module": "ot_qfd_seq_su_bi_native8_candidate",
+    "GT": 3072,
+    "D": 8,
+    "rank_bits": 3,
+    "CRED": 32,
+    "default_generic_old_source_preserved": true
+  },
+  "differential_proof": {
+    "stimulus": "Random bootloaded1024bit instructions/descriptors, PSRAMvsflop reference, periodicreset400cycles; exactpublicoutputs andcapturedprogram words. RealpostedCcreditreturnsONLYonc_valid, count<=32. Typed3bit inputstation independent history comparesall3bits. Not actualcheckpoint layer program or faultfreeproductionring.",
+    "cycles": 20997,
+    "program_reads": 539,
+    "loads": 150,
+    "core_done": 1036,
+    "coll_cycles": 786,
+    "vm_writes": 400,
+    "receipts": [
+      "ot-runEPYC4 unit1119270-1791964932 PASS",
+      "ranktruncate2bitmut unit1119278-1791964932 FAIL",
+      "lateprogramreadmut unit1119269-1791964932 FAIL"
+    ]
+  },
+  "physical_native_CROM_seam": {
+    "actual_functional_provider": "ot_hdc_core_vector_weight_native_candidate -> ot_hdc_vstream SW64",
+    "read_lanes": 64,
+    "address_bits_per_lane": 24,
+    "data_bits_per_lane": 64,
+    "current_direct_ROM_latency_edges": 1,
+    "native_cbuf_latency_edges": 5,
+    "physical_cbuf_groups": 8,
+    "lanes_each_group": 8,
+    "total_bits_response_per_cycle": 4096,
+    "native_profile": "layer0 QKR10/NWIN138 HEAD36reserved, actualHEADpayloadunproven",
+    "producer_admission": "TOK_STAGE/ST_READY typed actualproducer lowering notimplemented/proven bydispatch stream",
+    "native_qualification": "Need actualprogram handshake plusrealphysical readlatency5, resetepochs/stall pipeline, exactstagepayload/nativepricebeforeparentbinding."
+  },
+  "new_physical_profile_needs": "Actual pin/slot requirements, countedclock partition/physicalstateleaf, N8rank517b localreturn binding/CRED32protocol. No oldCLOSED N4/CRED0/sourcealias."
+}

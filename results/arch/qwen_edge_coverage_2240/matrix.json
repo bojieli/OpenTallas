@@ -11,7 +11,7 @@
       "state": "ACTIVE_CLOSED128_CHILD_DEFAULT_OFF_PROXY_CENSUS",
       "current_source": "rtl/physical/ot_qfd_link_adp512_split.sv @2aa3e0423",
       "evidence": "Leafcebc45086 CLOSED TT188.60 FF24.13 DRC0, actualboundaryTT41.8/FF41.4. Full1043 eight-root functionalproof passed, parent stillunqualified. Default-off78-root proxy realIBUF12/OCRED12+heads passedexact1500/stall3000/blocked3000/3resetepochs; 5observedmutants. Sustained1.000word/clk +16cycles vsbaseline. Generic66575sequentialbits max9275root +8SRAM; power/slots/unpriced.",
-      "next_action": "Publish newproxyparameter/physicalcensus with78separateroots; actual perpin/corner clockphase/reach/PG/slots pending. Hostelasticpad5 owner acceptedexternalR5; neither842.4simpleparent nor1360.8proxy outlinefitqualified.",
+      "next_action": "NewP12r_crcapturedprofile source795e0f2b9 positive rate1000/+16cycles blocked3000/reset3 and5mutants rerun. Fresh2965root clockgateTTboundary332.6/all28.0/setup175.50hold26.43, SB.validateTRUE; submitted qfd_link_adp128_p12-p12g2-aeaa5f66b withparentexact/rate/stall/reset+5mutants. Parent78rootphysicalplacement/PG/cornerpairs/power/pricing stillopen.",
       "historical_status_preserved": true,
       "registry_superseded": false
     },
@@ -28,10 +28,10 @@
     {
       "element": "qfd_su_cbuf",
       "actual_owner": "Codex:qwen_edge_coverage_2240",
-      "state": "HELD_CLOSED_NATIVE_L0_CLOCK_DEFECT_ACTIVE216_SPINE",
+      "state": "ACTIVE_WIDER_BALANCED_NATIVE_L0_ROUTE",
       "current_source": "rtl/physical/ot_qfd_su_cbuf_native_l0.sv @23e6b338c",
       "evidence": "b0e3d0c98 CLOSED TT32.39 FF23.19 DRC0 but actualboundaryTT163.1>80 HOLD. Oldlegacybody preserved. New216x216 independentbalancedspine gate4104sinks/TTboundary437.3/all26.0/setup128.03hold14.60; source95a39a6a1 gatehelperbecamestale after56d7b5557, preserved; freshmergedtools gate required.",
-      "next_action": "Actualapproved216x216slot_change, 8groups +21.6um each; newgate afterlatestmain effectivehelper drift. Needrouted<=80 andactualallcorners pinrefs; actualnativeparent price/head36/fullmodel remainunqualified.",
+      "next_action": "Fresh frozenjob qfd_su_cbuf_native_l0_sp-l0sp3-0ee5fae18 producer26ea2130e gateSB.validateTRUE/all26.0/setup128.03hold14.60, slot_changeapproved216x216, intakeclosed_standsPASS/benchPASS/RUNNINGEPYC4. Mustverifyactualroutedboundary<=80 andallcorners/nativeprice; oldb0eclockdefect remainsHELD.",
       "historical_status_preserved": true,
       "registry_superseded": false
     },
@@ -68,9 +68,9 @@
     {
       "element": "qfd_sp_constants_sequencer_nc",
       "actual_owner": "Codex:qwen_edge_coverage_2240",
-      "state": "ACTIVE_SUCCESSOR_AUDIT",
+      "state": "ACTIVE_NATIVE8_RANK_SOURCE_AND_FUNCTIONAL_GATES",
       "current_source": "tools/qwen_missing/emit_partition.py legacy ->qfd_seq_su/current native dispatch",
-      "evidence": "NativecollectiveCRED32posteddiscipline remainsqwen_small/rootdependency; actualseqCDF546 forward andCQ517 return; oldCRED0readywrapper is insufficient Native_dispatch confirmed actualfunctionalprovider bypassesphysicalcontroller/cbuf:64nonstallableCROM requests24bitaddr/64bitdata with1edge ROM; cbufneeds5edges. NoN8/CRED32/TOK_STAGE producerscheme implemented/proven.",
+      "evidence": "NativecollectiveCRED32posteddiscipline remainsqwen_small/rootdependency; actualseqCDF546 forward andCQ517 return; oldCRED0readywrapper is insufficient Native_dispatch confirmed actualfunctionalprovider bypassesphysicalcontroller/cbuf:64nonstallableCROM requests24bitaddr/64bitdata with1edge ROM; cbufneeds5edges. NoN8/CRED32/TOK_STAGE producerscheme implemented/proven. Separate ot_qfd_seq_su_bi_native8_candidate G3072/D8/CRED32/RB3 fixes legacyfixed2bitrank. PSRAMdifferential539reads/150loads/1036core_done/786COLL/400VMwrites, boundedposted32credit andactual3bitrankstationhistory PASS. ranktruncate andlateprogram mutantsFAIL. Actualnativecheckpoint program/5edgeCROM/fullparent/physicalstateleaf stillrequired.",
       "next_action": "Edgeowns newnativephysicalconstantstreamseam: proveactualSUproducer64request mapping/readlatency5/stageadmission/postedN8CRED32 or implementsource-pinnedintegration; functional1edge directROM cannot alias oldCLOSED controller. Rootnotified noacceptedhandoff.",
       "historical_status_preserved": true,
       "registry_superseded": false

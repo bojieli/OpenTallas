@@ -7,6 +7,8 @@
 // match on every cycle; the run must issue >= MINRD program reads.  PMUT = 1 (read one edge late) must FAIL.
 // fe-h: U1_HQ2 = 1 (two-word FIFO head, register-only fill enable) must also match; U1_HQ2 = 2 (overwrite mutant) must FAIL.
 module tb_qfd_seq_su_native8_candidate;
+    parameter integer RANKMUT=0;
+    integer credit_bad=0,posted_sent=0;integer rank_bad=0,rank_high=0,rank_warm=0;reg[2:0] rank_prev=0;
     parameter integer NCYC = 20000, SEED = 1, PMUT = 0, MINRD = 50;
     parameter integer U1_PSRAM = 1, U1_HQ2 = 0;
     parameter integer U1_OLAG = 0;                  // el1011-q-seq: lagged other-unit counter (2 = mutant)
@@ -226,7 +228,7 @@ module tb_qfd_seq_su_native8_candidate;
         .r_valid(r_valid),
         .r_data(r_data),
         .r_last(r_last),
-        .r_rank(r_rank),
+        .r_rank(RANKMUT ? {1'b0,r_rank[1:0]} : r_rank),
         .r_err(r_err),
         .pw_v(pw_v),
         .pw_addr(pw_addr),
@@ -371,7 +373,7 @@ module tb_qfd_seq_su_native8_candidate;
             rand_inputs;
             // status inputs follow the ICUT contract (a unit's ready / idle / drained never fall without its own go; the
             // other unit's accepted-op count only climbs), else the controllers' own ICUT assertion fires on the stimulus
-            pi_su_ready = 1; pi_su_idle = 1; kv_write_drained = 1; x_oidle = 1; c_ready = 1; pi_su_rt_active = 0;
+            pi_su_ready = 1; pi_su_idle = 1; kv_write_drained = 1; x_oidle = 1; c_ready = ((i%400)>10) ? c_valid_0 : 0; pi_su_rt_active = 0;
             pi_su_rt_inflight = 0;
             x_oacc = 24'd0;                          // the other unit never advances: ME ops without a dependency skip
             if (PCOV != 0) begin xp = ((i % 400) == 0) ? 16'd0 : xp + 16'(($random(seed) & 7) == 0); x_oprog = xp; end
@@ -381,9 +383,21 @@ module tb_qfd_seq_su_native8_candidate;
         end
         @(negedge clk); h_start = 0;
         repeat (20) @(posedge clk);
-        if (bad == 0 && nrd >= MINRD && nvw >= MINVW) $display("PASS seq_su_bi_psram cycles=%0d program_reads=%0d loads=%0d core_done=%0d cwait=%0d coll=%0d vm_writes=%0d chase_eq=%0d", cyc, nrd, nld, ncd, ncw, ncol, nvw, nceq);
+        if (bad == 0 && credit_bad==0 && posted_sent>0 && rank_bad==0 && rank_high>100 && nrd >= MINRD && nvw >= MINVW) $display("PASS seq_su_bi_psram cycles=%0d program_reads=%0d loads=%0d core_done=%0d cwait=%0d coll=%0d vm_writes=%0d chase_eq=%0d", cyc, nrd, nld, ncd, ncw, ncol, nvw, nceq);
         else $display("FAIL seq_su_bi_psram mismatches=%0d program_reads=%0d (min %0d) loads=%0d core_done=%0d cwait=%0d coll=%0d vm_writes=%0d (min %0d)", bad, nrd, MINRD, nld, ncd, ncw, ncol, nvw, MINVW);
+        $display("POSTED_ABI native8 overflow=%0d sent=%0d initial_credit=32",credit_bad,posted_sent);
+        $display("RANK_ABI native8 mismatches=%0d high_rank_samples=%0d",rank_bad,rank_high);
         $finish;
+    end
+    always @(posedge clk) begin
+      rank_prev <= r_rank;
+      if(!rst_n)rank_warm<=0;else rank_warm<=rank_warm+1;
+      if(rst_n && rank_warm>10) begin
+       if(u0.u_seq.c_cred>32 || u1.u_seq.c_cred>32)credit_bad=credit_bad+1;
+       if(c_valid_0)posted_sent=posted_sent+1;
+       if(u1.q_r_rank !== rank_prev)rank_bad=rank_bad+1;
+       if(u1.q_r_rank[2])rank_high=rank_high+1;
+      end
     end
     always @(posedge clk) if (rst_n) begin
         cyc = cyc + 1;
