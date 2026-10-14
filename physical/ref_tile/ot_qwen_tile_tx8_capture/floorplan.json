@@ -1,0 +1,74 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "ot_qwen_tile_tx8_capture",
+ "top": "ot_qwen_tile_tx8_capture",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  77.76,
+  86.4
+ ],
+ "core": [
+  2.16,
+  2.16,
+  75.60000000000001,
+  84.24000000000001
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "ANY": [
+   "clk",
+   "rst_n",
+   "d",
+   "q"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/physical/ot_qwen_tile_tx8_capture.sv",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/kit.env",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/clock.sdc",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/signoff.sdc",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/pdn.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/pre_cts.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/post_cts.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/post_grt.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/pre_drt.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/pre_fill.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/post_fill.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/pre_grt.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/pre_gpl.tcl",
+  "physical/ref_tile/ot_qwen_tile_tx8_capture/pre_dpl.tcl"
+ ]
+}

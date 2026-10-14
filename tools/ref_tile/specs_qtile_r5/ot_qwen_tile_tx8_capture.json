@@ -1,0 +1,46 @@
+{
+  "name": "ot_qwen_tile_tx8_capture",
+  "top": "ot_qwen_tile_tx8_capture",
+  "kind": "tile",
+  "sources": [
+    "rtl/physical/ot_qwen_tile_tx8_capture.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 77.76,
+    "h": 86.4
+  },
+  "pins": {
+    "ANY": [
+      "clk",
+      "rst_n",
+      "d",
+      "q"
+    ]
+  },
+  "inter": [],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "pin_h": "M4",
+    "pin_v": "M5",
+    "pin_balance": {
+      "group_max": 32,
+      "h": "M4",
+      "v": "M5"
+    },
+    "pin_min_tracks": 1
+  },
+  "std_area_um2_measured": 2000,
+  "job": {
+    "owner": "Codex:q23-tile",
+    "branch": "claude/q14-tile-parent",
+    "tag": "group1",
+    "purpose": "Default-off grouped3120FF finalTX leaf, samecoherentcoreedge/valid-onlyasyncreset, no loaderdomainmerge. Standalone differential and actualparentproof required; ANYpin probe, no closedmasteralias."
+  },
+  "structural_change": "Separate live-loader indexed storage and coherent-core response into fixed single-root leaves; no extra response edge."
+}
