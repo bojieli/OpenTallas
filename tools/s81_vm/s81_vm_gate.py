@@ -12,7 +12,8 @@ import argparse, json, re, subprocess, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SRCS = ['rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv', 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv',
-        'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv', 'rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv',
+        'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv', 'rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv',
+        'rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv',
         'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv', 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv',
         'rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv', 'rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv',
         'rtl/lib/ot_async_fifo.sv', 'rtl/lib/ot_reset_sync.sv', 'rtl/common/ot_ratio_cdc_fifo.sv',
@@ -41,6 +42,16 @@ CASES = {
     'mut_lsmall': dict(params=dict(MODE=4), defines=['OT_SPVM_MUT_LSMALL'], expect='fail'),
     'mut_np16': dict(params=dict(MODE=2, BROWS=128, BNP=0, BSKEW=3), defines=['OT_SPVM_MUT_NP16'], expect='fail'),
     'mut_rlat': dict(params=dict(SEED=1, NCYC=20000), defines=['OT_SPVM_MUT_RLAT'], expect='fail'),
+    # el1013-s81-bgq28: the bank tile as 8 one-bank leaves (dsfd_vm_bgq28h, hop 16) in the master
+    'bgl_gold_s1': dict(params=dict(SEED=1), defines=['OT_SPVM_BGL'], expect='pass'),
+    'bgl_gold_s2': dict(params=dict(SEED=2), defines=['OT_SPVM_BGL'], expect='pass'),
+    'bgl_tp': dict(params=dict(MODE=1, TP_ROWS=56), defines=['OT_SPVM_BGL'], expect='pass'),
+    'bgl_burst_r128': dict(params=dict(MODE=2, BROWS=128, BNP=0, BSKEW=3), defines=['OT_SPVM_BGL'], expect='pass'),
+    'bgl_mut_stale': dict(params=dict(SEED=1, NCYC=20000), defines=['OT_SPVM_BGL', 'OT_SPVM_MUT_STALE'], expect='fail'),
+    'bgl_mut_id': dict(params=dict(SEED=1, NCYC=20000), defines=['OT_SPVM_BGL', 'OT_VMBGL_MUT_ID'], expect='fail'),
+    # production request trace of slice 0 (bg_trace.txt in the run directory), replayed by tb_dsfd_vm_bgl_lockstep
+    'tp_trace': dict(params=dict(MODE=1, TP_ROWS=56), defines=['OT_SPVM_BGTRACE'], expect='pass'),
+    'gold_s1_trace': dict(params=dict(SEED=1), defines=['OT_SPVM_BGTRACE'], expect='pass'),
 }
 # ---- hierarchy dsfd_vm_fe_h (el1013-s81-vmfe): flat reference at the hierarchy's stage counts (ref_*), lockstep with the
 # hierarchy as a shadow (lk_*: every FE output bit-exact every cycle), hierarchy-only mutants (must break lockstep) and
@@ -48,6 +59,8 @@ CASES = {
 REF = ['OT_SPVM_REF_FRL']; LK = REF + ['OT_SPVM_FE_H']; SUB = LK + ['OT_SPVM_FE_H_SUBST']
 LOCK_SET = ['gold_s1', 'gold_s2', 'tp', 'burst_r128', 'burst_r128_np2', 'land_attn', 'land_hc', 'land_bp', 'align_neg']
 _base = dict(CASES)
+for _bgl_case in ['bgl_gold_s1','bgl_gold_s2','bgl_tp','bgl_burst_r128','bgl_mut_stale','bgl_mut_id']:
+    CASES['h1_' + _bgl_case] = dict(CASES[_bgl_case], defines=CASES[_bgl_case]['defines'] + ['OT_VMBGL_HOP1'])
 CASES['ref_gold_s1'] = dict(_base['gold_s1'], defines=REF)
 CASES['ref_tp'] = dict(_base['tp'], defines=REF)
 CASES['ref_land_attn'] = dict(_base['land_attn'], defines=REF)
@@ -110,7 +123,7 @@ def one(name, out):
     if rc:
         print(f'SPVM_{name}: BUILD_FAIL'); print('\n'.join([l for l in blog.splitlines() if 'rror' in l][:20]))
         return dict(case=name, ok=False, build_fail=True)
-    r = subprocess.run([str(exe)], capture_output=True, text=True)
+    r = subprocess.run([str(exe)], capture_output=True, text=True, cwd=out)   # cwd: bg_trace.txt of the *_trace cases
     log = r.stdout + r.stderr
     (out / f'run_{name}.log').write_text(log)
     keep = [l for l in log.splitlines() if l.startswith(('RESULT', 'THROUGHPUT', 'PASS', 'FAIL', 'MISMATCH', 'FAULT', 'MIRROR', '%Error', 'ALIGN', 'LOCKSTEP'))
@@ -135,7 +148,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('mode', choices=['one', 'all', 'set', 'cover']); ap.add_argument('case', nargs='?'); ap.add_argument('--out', required=True)
     a = ap.parse_args()
-    out = Path(a.out)
+    out = Path(a.out).resolve()
     if a.mode == 'one':
         r = one(a.case, out)
         sys.exit(0 if r['ok'] else 1)
