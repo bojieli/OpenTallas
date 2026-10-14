@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Candidate-placement ABI inventory; all sizes remain unverified requests."""
-import ast,hashlib,json,re
+import ast,hashlib,json,re,subprocess
 from pathlib import Path
 root=Path(__file__).resolve().parents[2]
 base=root/'rtl/qwen_sys/host_20261013'
@@ -12,7 +12,7 @@ def value(s,context=None):
  assert all(isinstance(x,allowed) for x in ast.walk(tree)),s
  return int(eval(compile(tree,'port width','eval'),{'__builtins__':{}},params if context is None else context))
 def ports(name,path):
- s=re.sub(r'//[^\n]*|/\*.*?\*/','',path.read_text(),flags=re.S)
+ s=re.sub(r'//[^\n]*|/\*.*?\*/','',path.read_text() if isinstance(path,Path) else path,flags=re.S)
  m=re.search(r'\bmodule\s+'+name+r'\b',s);assert m,name
  h=s[m.end():s.index(');',m.end())];h=h[h.index('input'):]
  out=[];direction=None;width=1;local_params=dict(params)
@@ -44,7 +44,10 @@ for name,count,wh in [('qkd_host_if_pins',4157,[129.6,172.8]),('qkd_host_csr_pin
 p=base/'qkd_host_rst_role_pins.sv';masters.append(dict(master='qkd_host_rst_role_pins',source=str(p.relative_to(root)),source_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),flop_bits=240,outline_request_um=[86.4,86.4],outline_status='UNVERIFIED_REQUEST_NOT_ROUTED',clock_entries=['clk'],instances_per_die=1,ports=ports('qkd_host_rst_role_pins',p),params={'NL':6,'ND':8},role='genuine ND8 package reset on role0; genuine own-boot ND1 reset on peers; identity mutation fail closed'))
 # Existing CDC master binds actual W546 PIPE2 behavior; view/placement owner IO.
 masters.append(dict(master='qfd_xf_ch546',source='rtl/physical/ot_qwen_die_cdc_ch.sv',params={'W':546,'PIPE':2},outline_request_um=[90.72,129.6],outline_status='IO_N2_GATE_PASS_SUBMITTED_HOST_INSTANCE_PLACEMENT_UNPROVEN',source_revision='560d99bef',clock_entries=['wck','rck'],instances_per_die=4,instance_roles=['PHY_RX','PHY_TX','QM_INGRESS','QM_COMPLETION'],ports=[dict(name=n,direction=d,width=w,registered_domain=c,seam=t) for n,d,w,c,t in [('wck','input',1,'wck','CLOCK'),('rck','input',1,'rck','CLOCK'),('rst_n','input',1,'both','RESET'),('i_v','input',1,'wck','CAPTURED_INPUT'),('i_d','input',546,'wck','CAPTURED_INPUT'),('i_cr','output',1,'wck','REGISTERED_OUTPUT'),('w_fault','output',1,'wck','REGISTERED_OUTPUT'),('o_v','output',1,'rck','REGISTERED_OUTPUT'),('o_d','output',546,'rck','REGISTERED_OUTPUT'),('o_cr','input',1,'rck','CAPTURED_INPUT'),('r_fault','output',1,'rck','REGISTERED_OUTPUT')]]))
-p=Path('/home/ubuntu/wt/r3b-io/rtl/physical/ot_qwen_romio_slots.sv');masters.append(dict(master='qfd_link_adp512',source='rtl/physical/ot_qwen_romio_slots.sv',source_checkout=str(p.parent.parent.parent),source_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),ports=ports('qfd_link_adp512',p),instances_per_die=1,physical_mapping='One required HOST_PHY adapter per same-die physical type; runtime board/control attachment and candidate placement pending',outline_request_um=[237.6,777.6],outline_status='EXISTING_LIVE_JOB_GEOMETRY_HOST_SLOT_UNPROVEN',clock_entries=['ck'],actual_body_params={'W':1024,'RXD':512,'NG':8,'PINREG':1},flop_census='IO_OWNER_MEASURED_REPORT_REQUIRED'))
+p=Path('/home/ubuntu/wt/r3b-io/rtl/physical/ot_qwen_romio_slots.sv');masters.append(dict(master='qfd_link_adp512',source='rtl/physical/ot_qwen_romio_slots.sv',source_checkout=str(p.parent.parent.parent),source_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),ports=ports('qfd_link_adp512',p),instances_per_die=0,physical_mapping='One required HOST_PHY adapter per same-die physical type; runtime board/control attachment and candidate placement pending',outline_request_um=[237.6,777.6],outline_status='EXISTING_LIVE_JOB_GEOMETRY_HOST_SLOT_UNPROVEN',clock_entries=['ck'],actual_body_params={'W':1024,'RXD':512,'NG':8,'PINREG':1},flop_census='IO_OWNER_MEASURED_REPORT_REQUIRED'))
+adapter_revision='0d401fc0b';adapter_source='rtl/physical/ot_qfd_link_adp512_split.sv';adapter_body=subprocess.check_output(['git','show',adapter_revision+':'+adapter_source],cwd=root).decode();adapter_request=json.loads((root/'physical/qkd_host_integration/evidence/adapter8_request.json').read_text())
+masters.append(dict(master='qfd_link_adp512_split',source=adapter_source,source_revision=adapter_revision,source_sha256=hashlib.sha256(adapter_body.encode()).hexdigest(),ports=ports('qfd_link_adp512_split',adapter_body),instances_per_die=1,parent_flops=0,outline_request_um=[237.6,842.4],outline_status='DIE_ACCEPTED_GEOMETRY_REQUEST_ONLY_PARENT_UNQUALIFIED',clock_entries=[f'ck[{k}]' for k in range(8)],children=adapter_request['children'],external_TX_credits=4,external_RX_credits=5,physical_parent_qualified=False))
+masters.append(dict(master='qfd_link_adp128',source=adapter_source,source_revision=adapter_revision,source_sha256=hashlib.sha256(adapter_body.encode()).hexdigest(),ports=ports('qfd_link_adp128',adapter_body),instances_per_die=8,outline_actual_um=[237.6,86.4],outline_status='CLOSED_LEAF_ONLY_PARENT_DISTRIBUTION_UNQUALIFIED',clock_entries=['ck'],macro_clock_pins=1,actual_mapped_clock_sinks=1933,flop_census='GENERIC_FF_CENSUS_PENDING_MAPPED_CLOCK_SINKS_DISTINCT',physical_evidence_source='physical/qkd_host_integration/evidence/adapter8_request.json',closed_record='cebc45086'))
 p=base/'qkd_ctrl_pc_host.sv';masters.append(dict(master='qkd_ctrl_pc_host',source=str(p.relative_to(root)),source_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),instances_per_die=128,clock_entries=['ck','pll_hbm'],outline_request_um=[246.24,172.8],outline_status='VARIANT_UNVERIFIED_OLD_CONTROLLER_GEOMETRY_ONLY',ports=ports('qkd_ctrl_pc_host',p)))
 links=[]
 def link(a,b,w,c):links.append(dict(source=a,destination=b,bits=w,clock_family=c))

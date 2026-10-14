@@ -3667,7 +3667,7 @@
           "seam": "REGISTERED_OUTPUT"
         }
       ],
-      "instances_per_die": 1,
+      "instances_per_die": 0,
       "physical_mapping": "One required HOST_PHY adapter per same-die physical type; runtime board/control attachment and candidate placement pending",
       "outline_request_um": [
         237.6,
@@ -3684,6 +3684,958 @@
         "PINREG": 1
       },
       "flop_census": "IO_OWNER_MEASURED_REPORT_REQUIRED"
+    },
+    {
+      "master": "qfd_link_adp512_split",
+      "source": "rtl/physical/ot_qfd_link_adp512_split.sv",
+      "source_revision": "0d401fc0b",
+      "source_sha256": "8be3cedde8628ae73e7db2d6452d079e660acc4703dbc1721af23d05cb543443",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 8,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "c_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "c_d",
+          "direction": "input",
+          "width": 1024,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "c_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_d",
+          "direction": "output",
+          "width": 1024,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "tx_up",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "tx_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_flit",
+          "direction": "output",
+          "width": 1043,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "rx_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_flit",
+          "direction": "input",
+          "width": 1043,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "instances_per_die": 1,
+      "parent_flops": 0,
+      "outline_request_um": [
+        237.6,
+        842.4
+      ],
+      "outline_status": "DIE_ACCEPTED_GEOMETRY_REQUEST_ONLY_PARENT_UNQUALIFIED",
+      "clock_entries": [
+        "ck[0]",
+        "ck[1]",
+        "ck[2]",
+        "ck[3]",
+        "ck[4]",
+        "ck[5]",
+        "ck[6]",
+        "ck[7]"
+      ],
+      "children": [
+        {
+          "instance": "g_slice[0].u_slice",
+          "master": "qfd_link_adp128",
+          "at_um": [
+            0,
+            0
+          ],
+          "outline_um": [
+            237.6,
+            86.4
+          ],
+          "clock_entry": "ck[0]",
+          "payload_range": [
+            0,
+            127
+          ],
+          "flit_payload_range": [
+            18,
+            145
+          ],
+          "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+          "pins": {
+            "S": {
+              "c_v": [
+                8,
+                8.4
+              ],
+              "c_d": [
+                9,
+                105
+              ],
+              "c_cr": [
+                106,
+                106.4
+              ],
+              "r_v": [
+                120,
+                120.4
+              ],
+              "r_d": [
+                121,
+                217
+              ],
+              "r_cr": [
+                218,
+                218.4
+              ]
+            },
+            "E": {
+              "tx_up": [
+                2,
+                2.4
+              ],
+              "tx_v": [
+                3,
+                3.4
+              ],
+              "tx_flit": [
+                4,
+                34
+              ],
+              "rx_v": [
+                35,
+                35.4
+              ],
+              "rx_flit": [
+                36,
+                66
+              ]
+            },
+            "W": {
+              "ck": [
+                40,
+                40.4
+              ],
+              "rst_n": [
+                44,
+                44.4
+              ],
+              "fault": [
+                48,
+                48.4
+              ]
+            }
+          },
+          "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+          "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+        },
+        {
+          "instance": "g_slice[1].u_slice",
+          "master": "qfd_link_adp128",
+          "at_um": [
+            0,
+            108
+          ],
+          "outline_um": [
+            237.6,
+            86.4
+          ],
+          "clock_entry": "ck[1]",
+          "payload_range": [
+            128,
+            255
+          ],
+          "flit_payload_range": [
+            146,
+            273
+          ],
+          "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+          "pins": {
+            "S": {
+              "c_v": [
+                8,
+                8.4
+              ],
+              "c_d": [
+                9,
+                105
+              ],
+              "c_cr": [
+                106,
+                106.4
+              ],
+              "r_v": [
+                120,
+                120.4
+              ],
+              "r_d": [
+                121,
+                217
+              ],
+              "r_cr": [
+                218,
+                218.4
+              ]
+            },
+            "E": {
+              "tx_up": [
+                2,
+                2.4
+              ],
+              "tx_v": [
+                3,
+                3.4
+              ],
+              "tx_flit": [
+                4,
+                34
+              ],
+              "rx_v": [
+                35,
+                35.4
+              ],
+              "rx_flit": [
+                36,
+                66
+              ]
+            },
+            "W": {
+              "ck": [
+                40,
+                40.4
+              ],
+              "rst_n": [
+                44,
+                44.4
+              ],
+              "fault": [
+                48,
+                48.4
+              ]
+            }
+          },
+          "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+          "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+        },
+        {
+          "instance": "g_slice[2].u_slice",
+          "master": "qfd_link_adp128",
+          "at_um": [
+            0,
+            216
+          ],
+          "outline_um": [
+            237.6,
+            86.4
+          ],
+          "clock_entry": "ck[2]",
+          "payload_range": [
+            256,
+            383
+          ],
+          "flit_payload_range": [
+            274,
+            401
+          ],
+          "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+          "pins": {
+            "S": {
+              "c_v": [
+                8,
+                8.4
+              ],
+              "c_d": [
+                9,
+                105
+              ],
+              "c_cr": [
+                106,
+                106.4
+              ],
+              "r_v": [
+                120,
+                120.4
+              ],
+              "r_d": [
+                121,
+                217
+              ],
+              "r_cr": [
+                218,
+                218.4
+              ]
+            },
+            "E": {
+              "tx_up": [
+                2,
+                2.4
+              ],
+              "tx_v": [
+                3,
+                3.4
+              ],
+              "tx_flit": [
+                4,
+                34
+              ],
+              "rx_v": [
+                35,
+                35.4
+              ],
+              "rx_flit": [
+                36,
+                66
+              ]
+            },
+            "W": {
+              "ck": [
+                40,
+                40.4
+              ],
+              "rst_n": [
+                44,
+                44.4
+              ],
+              "fault": [
+                48,
+                48.4
+              ]
+            }
+          },
+          "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+          "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+        },
+        {
+          "instance": "g_slice[3].u_slice",
+          "master": "qfd_link_adp128",
+          "at_um": [
+            0,
+            324
+          ],
+          "outline_um": [
+            237.6,
+            86.4
+          ],
+          "clock_entry": "ck[3]",
+          "payload_range": [
+            384,
+            511
+          ],
+          "flit_payload_range": [
+            402,
+            529
+          ],
+          "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+          "pins": {
+            "S": {
+              "c_v": [
+                8,
+                8.4
+              ],
+              "c_d": [
+                9,
+                105
+              ],
+              "c_cr": [
+                106,
+                106.4
+              ],
+              "r_v": [
+                120,
+                120.4
+              ],
+              "r_d": [
+                121,
+                217
+              ],
+              "r_cr": [
+                218,
+                218.4
+              ]
+            },
+            "E": {
+              "tx_up": [
+                2,
+                2.4
+              ],
+              "tx_v": [
+                3,
+                3.4
+              ],
+              "tx_flit": [
+                4,
+                34
+              ],
+              "rx_v": [
+                35,
+                35.4
+              ],
+              "rx_flit": [
+                36,
+                66
+              ]
+            },
+            "W": {
+              "ck": [
+                40,
+                40.4
+              ],
+              "rst_n": [
+                44,
+                44.4
+              ],
+              "fault": [
+                48,
+                48.4
+              ]
+            }
+          },
+          "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+          "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+        },
+        {
+          "instance": "g_slice[4].u_slice",
+          "master": "qfd_link_adp128",
+          "at_um": [
+            0,
+            432
+          ],
+          "outline_um": [
+            237.6,
+            86.4
+          ],
+          "clock_entry": "ck[4]",
+          "payload_range": [
+            512,
+            639
+          ],
+          "flit_payload_range": [
+            530,
+            657
+          ],
+          "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+          "pins": {
+            "S": {
+              "c_v": [
+                8,
+                8.4
+              ],
+              "c_d": [
+                9,
+                105
+              ],
+              "c_cr": [
+                106,
+                106.4
+              ],
+              "r_v": [
+                120,
+                120.4
+              ],
+              "r_d": [
+                121,
+                217
+              ],
+              "r_cr": [
+                218,
+                218.4
+              ]
+            },
+            "E": {
+              "tx_up": [
+                2,
+                2.4
+              ],
+              "tx_v": [
+                3,
+                3.4
+              ],
+              "tx_flit": [
+                4,
+                34
+              ],
+              "rx_v": [
+                35,
+                35.4
+              ],
+              "rx_flit": [
+                36,
+                66
+              ]
+            },
+            "W": {
+              "ck": [
+                40,
+                40.4
+              ],
+              "rst_n": [
+                44,
+                44.4
+              ],
+              "fault": [
+                48,
+                48.4
+              ]
+            }
+          },
+          "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+          "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+        },
+        {
+          "instance": "g_slice[5].u_slice",
+          "master": "qfd_link_adp128",
+          "at_um": [
+            0,
+            540
+          ],
+          "outline_um": [
+            237.6,
+            86.4
+          ],
+          "clock_entry": "ck[5]",
+          "payload_range": [
+            640,
+            767
+          ],
+          "flit_payload_range": [
+            658,
+            785
+          ],
+          "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+          "pins": {
+            "S": {
+              "c_v": [
+                8,
+                8.4
+              ],
+              "c_d": [
+                9,
+                105
+              ],
+              "c_cr": [
+                106,
+                106.4
+              ],
+              "r_v": [
+                120,
+                120.4
+              ],
+              "r_d": [
+                121,
+                217
+              ],
+              "r_cr": [
+                218,
+                218.4
+              ]
+            },
+            "E": {
+              "tx_up": [
+                2,
+                2.4
+              ],
+              "tx_v": [
+                3,
+                3.4
+              ],
+              "tx_flit": [
+                4,
+                34
+              ],
+              "rx_v": [
+                35,
+                35.4
+              ],
+              "rx_flit": [
+                36,
+                66
+              ]
+            },
+            "W": {
+              "ck": [
+                40,
+                40.4
+              ],
+              "rst_n": [
+                44,
+                44.4
+              ],
+              "fault": [
+                48,
+                48.4
+              ]
+            }
+          },
+          "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+          "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+        },
+        {
+          "instance": "g_slice[6].u_slice",
+          "master": "qfd_link_adp128",
+          "at_um": [
+            0,
+            648
+          ],
+          "outline_um": [
+            237.6,
+            86.4
+          ],
+          "clock_entry": "ck[6]",
+          "payload_range": [
+            768,
+            895
+          ],
+          "flit_payload_range": [
+            786,
+            913
+          ],
+          "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+          "pins": {
+            "S": {
+              "c_v": [
+                8,
+                8.4
+              ],
+              "c_d": [
+                9,
+                105
+              ],
+              "c_cr": [
+                106,
+                106.4
+              ],
+              "r_v": [
+                120,
+                120.4
+              ],
+              "r_d": [
+                121,
+                217
+              ],
+              "r_cr": [
+                218,
+                218.4
+              ]
+            },
+            "E": {
+              "tx_up": [
+                2,
+                2.4
+              ],
+              "tx_v": [
+                3,
+                3.4
+              ],
+              "tx_flit": [
+                4,
+                34
+              ],
+              "rx_v": [
+                35,
+                35.4
+              ],
+              "rx_flit": [
+                36,
+                66
+              ]
+            },
+            "W": {
+              "ck": [
+                40,
+                40.4
+              ],
+              "rst_n": [
+                44,
+                44.4
+              ],
+              "fault": [
+                48,
+                48.4
+              ]
+            }
+          },
+          "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+          "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+        },
+        {
+          "instance": "g_slice[7].u_slice",
+          "master": "qfd_link_adp128",
+          "at_um": [
+            0,
+            756
+          ],
+          "outline_um": [
+            237.6,
+            86.4
+          ],
+          "clock_entry": "ck[7]",
+          "payload_range": [
+            896,
+            1023
+          ],
+          "flit_payload_range": [
+            914,
+            1041
+          ],
+          "local_header": "{payload_valid,credit_return10,sequence8} all19bitsexactduplicated",
+          "pins": {
+            "S": {
+              "c_v": [
+                8,
+                8.4
+              ],
+              "c_d": [
+                9,
+                105
+              ],
+              "c_cr": [
+                106,
+                106.4
+              ],
+              "r_v": [
+                120,
+                120.4
+              ],
+              "r_d": [
+                121,
+                217
+              ],
+              "r_cr": [
+                218,
+                218.4
+              ]
+            },
+            "E": {
+              "tx_up": [
+                2,
+                2.4
+              ],
+              "tx_v": [
+                3,
+                3.4
+              ],
+              "tx_flit": [
+                4,
+                34
+              ],
+              "rx_v": [
+                35,
+                35.4
+              ],
+              "rx_flit": [
+                36,
+                66
+              ]
+            },
+            "W": {
+              "ck": [
+                40,
+                40.4
+              ],
+              "rst_n": [
+                44,
+                44.4
+              ],
+              "fault": [
+                48,
+                48.4
+              ]
+            }
+          },
+          "pin_ranges_status": "CANDIDATE_NOT_ROUTED_PINFILE",
+          "clock": "independent leaf entry; actualR245.5 TT exploratory, phi-minusR actualroutedRmandatory"
+        }
+      ],
+      "external_TX_credits": 4,
+      "external_RX_credits": 5,
+      "physical_parent_qualified": false
+    },
+    {
+      "master": "qfd_link_adp128",
+      "source": "rtl/physical/ot_qfd_link_adp512_split.sv",
+      "source_revision": "0d401fc0b",
+      "source_sha256": "8be3cedde8628ae73e7db2d6452d079e660acc4703dbc1721af23d05cb543443",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "c_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "c_d",
+          "direction": "input",
+          "width": 128,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "c_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_d",
+          "direction": "output",
+          "width": 128,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "r_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "tx_up",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "tx_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "tx_flit",
+          "direction": "output",
+          "width": 147,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "rx_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "rx_flit",
+          "direction": "input",
+          "width": 147,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "instances_per_die": 8,
+      "outline_actual_um": [
+        237.6,
+        86.4
+      ],
+      "outline_status": "CLOSED_LEAF_ONLY_PARENT_DISTRIBUTION_UNQUALIFIED",
+      "clock_entries": [
+        "ck"
+      ],
+      "macro_clock_pins": 1,
+      "actual_mapped_clock_sinks": 1933,
+      "flop_census": "GENERIC_FF_CENSUS_PENDING_MAPPED_CLOCK_SINKS_DISTINCT",
+      "physical_evidence_source": "physical/qkd_host_integration/evidence/adapter8_request.json",
+      "closed_record": "cebc45086"
     },
     {
       "master": "qkd_ctrl_pc_host",
