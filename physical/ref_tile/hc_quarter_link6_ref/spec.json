@@ -1,0 +1,75 @@
+{
+ "name": "hc_quarter_link6_ref",
+ "top": "ot_hgi_hc_quarter_link6",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_hc_quarter_link6.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 64.8
+ },
+ "std_area_um2": 1400,
+ "area_basis": "Unmeasured planning estimate1400um2 for2982shiftstate plus reset tree; no area/outline qualification before actual synth/CTS. Private clock probe only, no actualassignedpins or route.",
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "dn_i",
+   "ck_i",
+   "fb_i"
+  ],
+  "S": [
+   "sc_i"
+  ],
+  "N": [
+   "dn_o",
+   "ck_o",
+   "fb_o"
+  ],
+  "E": [
+   "sc_o"
+  ]
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:hbm_hc_norm",
+  "branch": "codex/hbm-hc-norm-takeover-1013",
+  "tag": "qseam",
+  "purpose": "Four fixedsix-edge quarter links; separate2982sink roots, relatedclocks; measuredsourcebinding/pins pending",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/peers",
+   "rtl/hbm_accel/die_glue",
+   "rtl/lib"
+  ],
+  "benches": [],
+  "views_to": "physical/ref_tile/hc_quarter_link6_ref/views",
+  "record_to": "results/rtl/ref_tile/hc_quarter_link6_ref"
+ },
+ "slot_change_request": {
+  "request": "results/arch/hbm_native_1013/hc_norm_takeover/slot_partition_request.json",
+  "reason": "Four new native quarter link leaves; v12 does not assign master slots/pins; privateproof only"
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}
