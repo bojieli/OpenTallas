@@ -27,6 +27,7 @@ NVMe run roots (hosts.json), one route per (block, source commit), it never kill
     closure_loop.py validate <job.json>        # check a spec before dropping it
     closure_loop.py submit-recheck --since ISO [--requeue] [--log F]   # re-judge FLOORPLAN_MARGIN jobs at submit
     closure_loop.py retry <name>               # human: re-queue a NEEDS_HUMAN job from its failed stage
+                                               #   FLOORPLAN_MARGIN: re-lints with the current tools first; requeued if it passes
     closure_loop.py retry-eco <name> [--why]   # human: re-run the hold ECO (current rev) on a hold-only NEEDS_RTL job
     closure_loop.py ioref-rejudge <name>       # human: re-judge a NEEDS_RTL job at its ROUTED clock insertion (no re-route)
     closure_loop.py rebudget-rejudge <name> --rb budget_rbN --sdc F [--dry]   # re-judge under a re-derived die-link IO budget
@@ -2408,6 +2409,7 @@ def verdict_macros(j):
 #   local not any main version (daemon-only edit) -> local, with an OVERLAY-DRIFT alert (shared-tool rule: land it on main)
 # overlay_drift_check() logs every differing helper (and the in-process imports) at startup and hourly.
 OVERLAY_CHECK_EXTRA = ("tools/textbook_lint.py", "tools/fp_margin_lint.py", "tools/ref_tile/pre_route_gate.py",
+                       "tools/pin_fit.py", "tools/ref_tile/ref_tile.py",
                        "tools/closure_loop/submit_lint.py", "tools/closure_loop/macro_views.py")
 _OVL = {"head": None, "head_at": 0.0, "hist": {}, "said": set(), "check_at": 0.0}
 
@@ -7788,12 +7790,85 @@ def cmd_submit_recheck(a):
         append_locked(Path(a.log), "".join(f"{now_iso()} [lint-at-submit recheck] {x}\n" for x in out))
 
 
+# RETRY OF A FLOORPLAN_MARGIN JOB (flowfix 2026-10-13).  A job the floorplan / textbook lint stopped could not be retried
+# after the LINT was fixed (qfd_sp_res_ser-c1: the cluster utilisation rule changed, the job had to be re-dropped under a
+# new name).  `retry` now re-runs both lints with the CURRENT tools (origin/main's fp_margin_lint.py / textbook_lint.py,
+# as the loop ships them) on the geometry dump and synthesis netlist the stopped stage left on its host, with the job's
+# own thresholds (spec fp_lint / textbook_lint) and the current loop mode.  PASS -> the job is requeued from the stopped
+# stage and its block@commit route slot is released (it spent no route); FAIL -> it stays FLOORPLAN_MARGIN and the new
+# lint text is printed.  No dump left (run released / deleted): refused unless --force (the stage then starts over and
+# the in-flow lint, shipped from main, judges again).
+FP_RELINT_TOOLS = ("tools/fp_margin_lint.py", "tools/textbook_lint.py")
+
+
+def fp_margin_relint(j):
+    """(verdict, text): PASS | FAIL | ERROR | NODUMP for a FLOORPLAN_MARGIN job, judged with the current lint tools"""
+    import base64
+    host, run, tag_ = j.get("host"), j.get("run"), j.get("stage_tag") or "retry"
+    if not host or not run:
+        return "NODUMP", "the job has no host / run directory"
+    d = f"{run}/cl/fplint/{tag_}/relint"
+    script = f"set -u\nD={shlex.quote(d)}; rm -rf $D; mkdir -p $D || exit 9\n"
+    for rel in FP_RELINT_TOOLS:
+        try:
+            data = _ovl_resolve(rel)[0]
+        except Exception:  # noqa: BLE001  (resolver / git trouble: the daemon tree's copy)
+            data = (HERE.parents[1] / rel).read_bytes()
+        script += f"base64 -d > $D/{Path(rel).name} <<'OT_B64_EOF'\n{base64.encodebytes(data).decode()}OT_B64_EOF\n"
+    cfg = textbook_cfg(j)
+    script += (
+        f"printf '%s\\n' {shlex.quote(json.dumps(cfg))} > $D/textbook_cfg.json\n"
+        f"DUMP=$(find {shlex.quote(run)} -name fp_margin_lint_dump.json -not -path '*/relint/*' -printf '%T@ %p\\n' "
+        f"2>/dev/null | sort -n | tail -1 | cut -d' ' -f2-)\n"
+        "[ -n \"$DUMP\" ] || { echo RELINT_NODUMP; exit 0; }\n"
+        "echo \"RELINT_DUMP=$DUMP\"\n"
+        f"python3 $D/fp_margin_lint.py check \"$DUMP\" --out $D/fp_margin_lint.json {gate_args(j['spec'].get('fp_lint', True))} 2>&1; "
+        "echo \"RELINT_FP_RC=$?\"\n")
+    if cfg.get("mode") != "off":
+        script += (
+            "RD=$(dirname \"$DUMP\"); RES=${RD/\\/reports\\//\\/results\\/}; NET=\n"
+            "for f in $RES/1_2_yosys.v $RES/1_synth.v $RD/textbook_netlist.v; do [ -s $f ] && { NET=$f; break; }; done\n"
+            "if [ -n \"$NET\" ]; then timeout 1800 python3 $D/textbook_lint.py check --netlist $NET --dump \"$DUMP\" "
+            "--out $D/textbook_lint.json --cfg $D/textbook_cfg.json 2>&1; echo \"RELINT_TB_RC=$?\"; "
+            "else echo RELINT_TB_RC=nonetlist; fi\n")
+    try:
+        r = ssh(host, script, timeout=2400)
+    except Exception as ex:  # noqa: BLE001
+        return "ERROR", f"{host} not reachable: {type(ex).__name__}: {str(ex)[:160]}"
+    out = r.stdout or ""
+    if "RELINT_NODUMP" in out:
+        return "NODUMP", f"no fp_margin_lint_dump.json under {host}:{run} (run released or deleted)"
+    kv = dict(re.findall(r"^(RELINT_[A-Z_]+)=(\S+)", out, re.M))
+    lines = [ln for ln in out.splitlines() if ln.startswith(("fp_margin_lint:", "FLOORPLAN_MARGIN:", "TEXTBOOK_LINT:",
+                                                             "textbook_lint: REFUSE"))]
+    fp_rc, tb_rc = kv.get("RELINT_FP_RC"), kv.get("RELINT_TB_RC", "0")
+    fails = [ln for ln in lines if ln.startswith(("FLOORPLAN_MARGIN:", "TEXTBOOK_LINT:"))]
+    if fp_rc == "3" or tb_rc == "3":
+        return "FAIL", " || ".join(fails or lines)[:1500]
+    if fp_rc != "0" or tb_rc not in ("0", "nonetlist"):
+        return "ERROR", (f"lint tool error (fp rc {fp_rc}, textbook rc {tb_rc}; rc {r.returncode}): "
+                         + (out[-400:] or (r.stderr or "")[-400:]).replace("\n", " | "))
+    head = next((ln for ln in lines if ln.startswith("fp_margin_lint:")), "fp_margin_lint: PASS")
+    return "PASS", head[:300] + ("" if tb_rc == "0" else "; textbook lint not re-run (no netlist kept)" if cfg.get("mode") != "off" else "")
+
+
 @locked_job_command
 def cmd_retry(a):
     j = load_job(a.name)
-    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET", "PREROUTE_MARGIN", *EARLY_FAIL):
-        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET / PREROUTE_MARGIN / EARLY_FAIL_* jobs "
-                 f"can be retried")
+    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET", "PREROUTE_MARGIN", "FLOORPLAN_MARGIN", *EARLY_FAIL):
+        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET / PREROUTE_MARGIN / FLOORPLAN_MARGIN / "
+                 f"EARLY_FAIL_* jobs can be retried")
+    if j["status"] == "FLOORPLAN_MARGIN":
+        v, text = fp_margin_relint(j)
+        if v == "FAIL":
+            sys.exit(f"{a.name}: still FLOORPLAN_MARGIN with the current lint, not requeued: {text}")
+        if v == "ERROR" or (v == "NODUMP" and not getattr(a, "force", False)):
+            sys.exit(f"{a.name}: floorplan lint not re-run ({text}); not requeued"
+                     + (" -- `retry --force` starts the stage over (the in-flow lint, shipped from main, judges again)"
+                        if v == "NODUMP" else ""))
+        release_route_key(j)      # it stopped before global placement: its requeue is not a second route of the key
+        event(j, "human retry of FLOORPLAN_MARGIN: " + (f"lint re-run with the current tools PASS ({text})" if v == "PASS"
+                                                        else f"--force, {text}"))
     if j["status"] == "NEEDS_BUDGET" and j.get("budget"):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
@@ -8206,6 +8281,7 @@ def main():
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r.add_argument("--keep-resume", action="store_true", help="keep a pending checkpoint resume / HOLD-STOP caps")
+    r.add_argument("--force", action="store_true", help="FLOORPLAN_MARGIN job whose lint dump is gone: requeue anyway")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")

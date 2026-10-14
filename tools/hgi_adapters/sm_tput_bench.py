@@ -118,6 +118,13 @@ def main():
     ap.add_argument('--match', help='--program: keep only records whose tag matches this regex')
     ap.add_argument('--only', type=int, default=0, help='first N records only (smoke)')
     ap.add_argument('--no-xr', action='store_true', help='smmv 3a: never reuse x (every record loads its own x: the before)')
+    ap.add_argument('--fuse', action='store_true',
+                    help='el1013 smmv redesign, COMPILER SHAPE: an expert slot\'s w1 and w3 (same x, same format, same K, '
+                         'adjacent records) become ONE record [w1; w3] of M1 + M2 rows, price = the two prices added '
+                         '(never re-priced).  Why: the SM kernel interleaves IL = 8 (row, group) items; a one-row FP4 '
+                         'K5120 op fills 3 of the 8 phases, so two one-row ops cost 2 x 70 issue cycles where the '
+                         'stacked op (2 rows = 6 phases) costs 70.  The weight image must hold [w1_e; w3_e] contiguous '
+                         'per expert (one indexed B descriptor); results are row-wise identical.')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     out = Path(a.out)
@@ -129,6 +136,25 @@ def main():
     if a.match:
         import re
         recs_in = [r for r in recs_in if re.search(a.match, r['tag'])]
+    if a.fuse:
+        fused, i = [], 0
+        same = ('fmt', 'K', 'P', 'akey', 'o_bf16', 'indexed', 'src_stride', 'layer', 'o_space')
+        while i < len(recs_in):
+            r = recs_in[i]
+            n = recs_in[i + 1] if i + 1 < len(recs_in) else None
+            if (n and r['tag'].endswith(' w1') and n['tag'] == r['tag'][:-3] + ' w3'
+                    and all(r.get(k) == n.get(k) for k in same)):
+                f = dict(r)
+                f.update(tag=r['tag'][:-3] + ' w1+w3', M=r['M'] + n['M'], cost=round(r['cost'] + n['cost'], 1),
+                         cost_how=f"fused [w1; w3]: {r['cost']} ({r['cost_how']}) + {n['cost']} ({n['cost_how']})",
+                         fused_from=[r['tag'], n['tag']], fused_M=[r['M'], n['M']])
+                fused.append(f)
+                i += 2
+            else:
+                fused.append(r)
+                i += 1
+        src += f"; --fuse: {len(recs_in) - len(fused)} w1/w3 pairs stacked (prices added)"
+        recs_in = fused
     if a.only:
         recs_in = recs_in[:a.only]
     rng = np.random.default_rng(1010)

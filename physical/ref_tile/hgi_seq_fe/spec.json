@@ -122,11 +122,11 @@
  "boundary_tcl": [
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
- "structural_change": "hgi_seq flat (25,081 sinks on one root; v25s/v26s/v27a/v27b all failed FF hold on short reg->reg hops across spine leaves) is replaced by three hardened children with their own clock roots and reset synchronisers under a wires-only parent: five registered valid/credit seams, queue-full -> FE credit counter, injector stall -> registered hold; s2 (s1 983266320 NEEDS_RTL TT -59.64 on 28 endpoints, all be_jl_kernel_r -> kern_off, FF +15.24, DRC 0; every other class met 770 ps): the job-load kernel offset is computed in two edges (kernel-table select registered, then zero test / 32-b add), inside the unchanged SEAM_JL_WAIT 6 (it had one spare edge; lockstep gate PASS at 6 and FAIL at 5, so the closed BE view is unchanged; CP.FETCH 30,340 cycles = 0.953x of price); s3 (s2 031099211 NEEDS_RTL TT -55.21 on 50 endpoints, all g_ring rb_qq -> bank select x 256 -> word select -> FIFO entry select -> fqv, 14-15 levels launched 106 ps late beside the ring macros; FF -8.88 on md_k -> md_k_r): the selected ring sector is registered once more before the word FIFO (read pipe 3 -> 4 edges; the reader is credit-based, lockstep gate PASS, CP.FETCH 30,341 cycles = 0.953x)",
+ "structural_change": "hgi_seq flat (25,081 sinks on one root; v25s/v26s/v27a/v27b all failed FF hold on short reg->reg hops across spine leaves) is replaced by three hardened children with their own clock roots and reset synchronisers under a wires-only parent: five registered valid/credit seams, queue-full -> FE credit counter, injector stall -> registered hold; s2 (s1 983266320 NEEDS_RTL TT -59.64 on 28 endpoints, all be_jl_kernel_r -> kern_off, FF +15.24, DRC 0; every other class met 770 ps): the job-load kernel offset is computed in two edges (kernel-table select registered, then zero test / 32-b add), inside the unchanged SEAM_JL_WAIT 6 (it had one spare edge; lockstep gate PASS at 6 and FAIL at 5, so the closed BE view is unchanged; CP.FETCH 30,340 cycles = 0.953x of price); s3 (s2 031099211 NEEDS_RTL TT -55.21 on 50 endpoints, all g_ring rb_qq -> bank select x 256 -> word select -> FIFO entry select -> fqv, 14-15 levels launched 106 ps late beside the ring macros; FF -8.88 on md_k -> md_k_r): the selected ring sector is registered once more before the word FIFO (read pipe 3 -> 4 edges; the reader is credit-based, lockstep gate PASS, CP.FETCH 30,341 cycles = 0.953x); s4 (s3 2d9d65aad CLOSED TT +61.64 / FF +20.32 / DRC 0, but its view fails the die clock rule: o 409.8 ps (fe_s1_idx) + s 342.5 ps (f_req_rdy) = 752.3 > 683.3, boundary clock spread 105.2 ps > 80, 121 output bits launched > 220 ps after the boundary clock; of the 74 seam buses between the three die-placed leaves 4 (36 bits, fe_s1_idx / fe_s1_dmul / fe_s1_dsel -> AU, be_jl_entry -> FE) miss o + 0.76 L + s <= 623.3 ps by 2-49 ps because the placer-ordered pins put 136-183 um between tiles 4.3 / 10.8 um apart): FE pins by io_tcl on the tracks of the closed AU S-face and BE W-face pins, and the leaf clock on the pre-placed balanced spine (two ring SRAMs their own leaves) instead of TritonCTS; RTL, outline, faces, cycles and benches unchanged",
  "job": {
   "owner": "Claude:el1013-hbm-seq-split",
   "branch": "claude/hbm-seq-split-1013",
-  "tag": "s3",
+  "tag": "s4",
   "extra_paths": [
    "rtl/hbm_accel/generic",
    "tools/run_hgi_seq_split.py",
@@ -135,7 +135,9 @@
    "tools/hgi_seq_conformance.py",
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "tools/run_hgi_seq_g24.py",
-   "tools/hbm_generic_iface.py"
+   "tools/hbm_generic_iface.py",
+   "physical/hbm_accel_die_views/seq",
+   "results/arch/pinreg_audit_1013"
   ],
   "purpose": "FE child of the hgi_seq split: fetch FIFO, 64 KB ring, reader, lazy FIFO, parser, loops, image address; ~4.65k flops + 2 macro clock pins on its own root. Ring macros RE-PLACED (not the v26s place.tcl): R0 at x 22.464, y 23.76 / 116.64, >= 20 um to every core edge, 22.4 um channel, halo 5.4 um, temporary M5 keepout over the macro pin-edge bands (macro_edge_m5_guard: the v26s DRC was an M4 spacing short at the u_ring1 pin edge, a VIA45 dropped next to a 24 nm M4 pin stub)",
   "benches": [
@@ -163,6 +165,16 @@
    }
   ]
  },
+ "io_tcl": "physical/hbm_accel_die_views/seq/hgi_seq_fe_pins.tcl",
+ "clock": "spine",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/pinreg_audit_1013/r25gq_hgi_seq_leaves.json",
+  "cell": "ot_hgi_seq_fe",
+  "pair_cost_ps": 752.3,
+  "fix": "every FE seam pin on the track of the closed AU / BE pin it meets (io_tcl: 759 pins, seam hops 58-222 um -> 4.3 / 10.8 um, 63 um for the 87 BE pins above the FE top edge), pin flops at those pins, and the boundary registers on a balanced clock spine (boundary spread 105.2 ps > 80 in the s3 view)"
+ },
+ "slot_change_request": "el1011-hbmdie.log 2026-10-13 [el1013-hbm-seq-split -> HBM die lead] SLOT_CHANGE_REQUEST hb_cmdproc/u_seq.u_fe: clock insertion target 300 -> 450 ps (measured spine 434.4..466.1 ps, spread 31.7), seam pin offsets on the AU / BE pin tracks; outline, faces, layers unchanged",
  "recipe": 2,
  "io_flop_at_pins": {
   "cols": 4,

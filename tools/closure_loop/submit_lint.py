@@ -46,6 +46,11 @@ except Exception:  # noqa: BLE001  (shipped without tools/: keep the documented 
     FP_THRESHOLDS = {"pin_density_max": 12.0, "pin_density_target": 6.0, "pin_density_window_um": 100.0,
                      "util_max": 0.60}
 
+try:
+    import pin_fit as PF  # noqa: E402  (tools/pin_fit.py: the route's pin-placement model, shared with the ref_tile gate)
+except Exception:  # noqa: BLE001
+    PF = None
+
 # ASAP7 routing pitches (um) of the IO layers (fp_margin_lint calibration; 1/0.048 = 20.8 b/um, 1/0.064 = 15.6 b/um)
 PITCH = {"M2": 0.036, "M3": 0.036, "M4": 0.048, "M5": 0.048, "M6": 0.064, "M7": 0.064, "M8": 0.08, "M9": 0.08}
 SPREAD = {"PIN_H": "M4 M6", "PIN_V": "M5 M7"}           # approved two-layer spread (route_master be5b56d78, DQ1/DQ2)
@@ -423,13 +428,21 @@ def density(plan: dict, layers: dict, tracks: float, group_max: int = 0, balance
         if not total:
             continue
         avg = total / (len(ls) * max(length[edge], window))
-        grp, gwhy, nofit = 0.0, "", []
+        grp, gwhy, nofit, ppl = 0.0, "", [], []
         for r in regs:
             span = (r["range_um"][1] - r["range_um"][0]) if r.get("range_um") else length[edge]
             if r["n"] and not balance and \
                     all(r["n"] * tracks * PITCH.get(lay, 0.048) > span for lay in ls) and not group_max:
                 nofit.append(f"{r['regex']} {r['n']} pins need {r['n'] * tracks * PITCH.get(ls[-1], 0.048):.0f} um "
                              f"> {span:.0f} um")
+        if not balance and group_max and PF is not None:
+            # GATE = ROUTE (flowfix 2026-10-13): ordered groups of OT_PIN_GROUP_MAX need one place_pins section each;
+            # a face filled to ~96 % of its slots strands the last group (PPL-0093, tools/pin_fit.py)
+            for r in regs:
+                lo, hi = r["range_um"] if r.get("range_um") else (0.0, length[edge])
+                f = PF.region_fit(r["n"], lo, hi, length[edge], ls, tracks, group_max)
+                if not f["fits"]:
+                    ppl.append(f"{r['regex']} {f['why']}")
         if not balance:
             for r in regs:
                 chunk = min(r["n"], group_max) if group_max else r["n"]
@@ -459,7 +472,8 @@ def density(plan: dict, layers: dict, tracks: float, group_max: int = 0, balance
             avg = max(avg, peak / (len(ls) * window))
         est = max(grp, avg)
         why = gwhy if grp >= avg else f"{total:.0f} pins over {length[edge]:.0f} um x {len(ls)} layer(s)"
-        out[edge] = {"est": round(est, 2), "layers": ls, "why": why, "pins": round(total), "nofit": nofit}
+        out[edge] = {"est": round(est, 2), "layers": ls, "why": why, "pins": round(total), "nofit": nofit + ppl,
+                     "ppl": ppl}
     return out
 
 
@@ -676,6 +690,12 @@ def _pin_check(spec: dict, git: Git, util_db: dict | None = None, force: bool = 
     res["est"] = {EDGES[e]: v["est"] for e, v in est.items()}
     msgs, verdict = [], "PASS"
     fails = _fails(est, limit)
+    # GATE = ROUTE (flowfix 2026-10-13): a plan the route's ordered pin groups cannot place fails like a density failure
+    # (the approved pin_balance fix places pin by pin; else REFUSED with the fix named)
+    ppl = [f"{EDGES[e]}: {x}" for e, v in est.items() for x in v.get("ppl", [])]
+    if ppl:
+        fails = fails + [f"PPL-0093 pin groups do not fit ({p})" for p in ppl[:3]]
+        res["ppl_nofit"] = ppl[:6]
     # drive-0849 (2026-10-09): an ordered --pin-region group larger than an IO-placer section (PPL "Slots per section 200")
     # is placed in FALLBACK mode and then fails PPL-0107 "Invalid pin placement" at 3_2_place_iop although its density
     # passes (hgi_coll_row_formatter c130/c180 1024/512 pins, hgi_ehash_ds a/b 768/768/256, qfd_coll_xfifo a/b, 4 routes x 2
@@ -695,7 +715,8 @@ def _pin_check(spec: dict, git: Git, util_db: dict | None = None, force: bool = 
             verdict = "REFUSE"
             msgs.append(f"pin density > {limit} b/um/layer at submit ({'; '.join(fails)}); no approved automatic fix "
                         f"passes ({why_not}). A --pin-region is one ordered group packed on ONE layer at the slot "
-                        f"pitch, so more layers alone cannot dilute it. Fix: a longer edge / split the pin group")
+                        f"pitch, so more layers alone cannot dilute it. Fix: a longer edge / split the pin group"
+                        + (f" / {PF.FIX_TEXT}" if ppl else ""))
         else:
             verdict = "PASS"
     # utilisation, where a measurement of the same synthesis input exists

@@ -40,10 +40,12 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `inter`, `refglob`, `io_budget {in,out}` | die-context IO (io_ref_skew.sdc), 0.2 / 0.2 T default |
 | `abut_plan {channel_um, edge_um, why}` | PROBE cluster only (kind cluster + `job.hold_merge`): hard tiles at a planned channel narrower than 20 um, routed to measure it; gaps >= `channel_um` and tile-edge distances >= `edge_um` are WARN `abut_plan` instead of FAIL `channel` / `macro_edge`. A block that can merge always obeys the 20-um rule |
 | `forwarded_clock` | cluster with a forwarded-clock subtree (keeps the forwarding inverter, own root) |
-| `clock`, `clock_ports` | cluster clock form: `spine` (default: pre-placed balanced spine, child-insertion leaf targets), `cts` (TritonCTS), or `entries` for a WIRES-ONLY cluster: no tree, `clock_ports` lists one scalar port per hard-child clock pin (RTL wires port -> child clock pin; `clock_port` = the first), each planned at its child in `pins` / `pin_ranges`; `physical/common_flow/clock_entries.tcl` replaces CTS by the one-port-one-child-pin check, and `tools/ref_tile/wires_only_ioref.py` (list its output in `sdc_extra` + `boundary_tcl`, with `child_clock_ref: boundary`) models the die's delivery phi - R_i as a per-port source latency (R_i = entry wire + the child's routed boundary insertion; log lines `OT_WC entry ...`) |
+| `clock`, `clock_ports` | `spine` builds a balanced parent tree; `cts` uses TritonCTS. A wires-only `entries` parent takes one top port per actual hard-child clock pin. Generation automatically creates related per-entry clocks and a virtual IO clock, binds every pin to routed `insertion.json` boundary min/mean/max at TT/FF/SS, and remeasures entry wires after clearing source latency. Delivery is phi minus entry-wire delay minus child reference; ETM arcs are unchanged. Coverage or missing clock data fails. Entry clocks are explicitly propagated before measuring; actual bound Liberty names select TT/FF/SS, because a WC scene may contain TT libraries. Route-boundary/signoff zero wire arrivals require physical source/pin coincidence within 0.001 um; missing parasitics cannot qualify. Same-level internal setup reserves 60+90 ps; cross-level (TT R above 300 ps) reserves 60+150 ps; internal hold reserves H1 50+50=100 ps. Its own flops belong in hardened leaves. Obsolete TT-only `wires_only_ioref` entry hooks are replaced automatically; the spine helper remains supported. `probe_clock_entries.py` provides an actual-ETM all-entry calibration probe; zero-wire calibration proves accounting, while routed parasitics and child clock checks remain required for closure. |
 | `spine_through_icg` | cluster whose clock port enters ONE tile clock gate (ICG) that clocks the rest (SM tile `ot_cg_tile`): the spine is built on the ICG output net (`OT_SPINE_THROUGH_ICG=1`, log `OT_SPINE through ICG`) |
 | `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v, pin_balance}` | route knobs (770 ps over-constraint); `pin_balance: true` places pins uniformly over each face region alternating the pin_h / pin_v layers per 32-pin chunk (OT_PIN_BALANCE_H/V) for dense faces |
 | `job {owner, branch, tag, purpose, benches, benched_by, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields; `benches` / `benched_by`: see "Behavioural bench at submit" |
+
+Extra SDC files that measure a soft clock tree must honor `::ot_ref_pre_cts`: it is 1 in the initial route SDC and 0 at signoff and after CTS. Create every real and virtual domain, uncertainty, and crossing constraint in both stages; defer propagation and virtual-clock insertion measurement until the buffered tree exists. A `boundary_tcl` hook restores those domains after every boundary reset. Signoff propagates all clocks again after extra files recreate them.
 
 ## What the kit does by construction (pitfall -> mechanism)
 
@@ -78,6 +80,23 @@ line per finding and `PRE_ROUTE_GATE: PASS|WARN|FAIL`. Local checks take seconds
 synthesis (time cap) + floorplan + PDN + IO placement on the host (ot-heavy, small slot), then the netlist textbook lint
 and the pin plan against the synthesized ports; `--cts` adds CTS, clock insertion spread (ck_insertion) and the worst
 setup path classes (in/reg/macro -> reg/out/macro). `--job SPEC` checks any loop spec's source-sync closure.
+
+Gate = route (2026-10-13, `tools/pin_fit.py`): the route's pin-placement settings have one source
+(`ref_tile.route_pin_settings`: `OT_PIN_GROUP_MAX` 32 unless `route.pin_balance` sets it, `pin_min_tracks`, pin layers;
+`ref_route.sh` applies the same group bound to the route, the floorplan smoke and `--cts`). Two local checks, also run
+at submit:
+- `pin_fit`: every `--pin-region` is cut into ordered groups of 32 and `place_pins` needs one 200-slot section on one
+  layer per group (six groups, 8 slots stranded), so a face filled above ~96 % of its slots FAILs here instead of in the
+  route at `[PPL-0093]` / `[PPL-0111]` / `[PPL-0086]` (qkd_seq_fan-kc2: 1,623 pins on 162 um, the 51st group of 23
+  pins). Port widths come from the top's header with the spec `params` applied; a header the parser cannot resolve is
+  not judged. Loop successors (`auto_react_parent`) are warned, not refused. Fix: disjoint `pin_ranges` +
+  `route.pin_balance`, or a longer edge / a second pin layer.
+- `oflop` (kit recipe 2): face density with the recipe's pin hold stages and flop columns. `io_flop_at_pins.tcl`
+  now derives the flop gap / columns per face from the FIRM hold cells (from 2 um of hold-stage depth, ~6 b/um:
+  10.4 b/um -> gap 4.5 um, 6 columns); `OT_OFLOP_GAP` set = exact, `OT_OFLOP_COLS` = minimum, `OT_OFLOP_AUTO=0` = no
+  derivation. WARN (never a refusal: the estimate assumes a stage and a flop on every port; it flags all 7 face
+  GRT-0116 routes of 10-12/13 but also 69 closed ones): a dense face on a source without the derivation and no explicit
+  gap, an explicit gap that stacks the flops on the stages, or a band deeper than 45 % of the core behind the face.
 
 Closure loop: at submit, a job with `"ref_tile": true` runs the local gate on its kit at the source commit (REFUSE on
 FAIL); every other job gets the source-sync check in WARN (mode file `~/.local/state/closure_loop/ref_gate.json`
@@ -117,7 +136,15 @@ plus one per hard-child or macro clock pin. A declared spine does not waive the 
 is hardened leaves with their own roots. CLOSED tiles are not re-judged.
 
 - The gate prints a `clock_rule` item for every kit, with the measured insertion and spread when `--cts` ran, and a
-  `--remote` run writes `<kit>/gate_result.json`. Commit that file with the kit: the submit gate reads it.
+  `--remote` run writes `<kit>/gate_result.json` v2. Commit that file with the kit: the submit gate reads it.
+  Its immutable source manifest binds the bytes actually shipped (generated kit, RTL, transitive hooks, macro views,
+  and effective daemon helper overlays), the archive SHA256 verified before remote extraction, and the generated
+  execution script. Start HEAD and daemon HEAD are provenance; `commit` is null when the effective contents do not
+  all match one commit. A later HEAD never changes the receipt's source identity. The remote adjacent
+  `<run>.source_snapshot.json` preserves the shipping manifest before execution; runtime image and environment
+  provenance appear in the completed receipt. Old receipts are preserved in `source_binding_history/` when replaced.
+  Legacy receipts or receipts whose contents differ from the submitted commit/current daemon overlay are refused
+  for unclosed tiles; regenerate their gate. CLOSED tiles continue to stand.
 - At submit a `ref_tile` job is REFUSED when the kit's gate result shows more than 15,000 sinks without passing
   numbers, or when the kit has no gate result and the block's latest synthesized design in the loop's history had more
   than 15,000 sinks.
@@ -134,3 +161,7 @@ EARLY_FAIL_*, or a NEEDS_HUMAN route crash) takes a new job only when the spec c
 ## Validation (2026-10-11)
 
 See /home/ubuntu/claude-takeover-20261007/ref-flow-1011.log (cases, numbers, job names).
+
+For a fleet-selected synthesis or CTS gate, use `--remote auto`. The gate asks `ot-run --pick` for a host with measured headroom, ships the inputs there, then runs through `ot-run --hosts <chosen>` with one resource reservation. An explicit host keeps the existing `ot-heavy` path.
+
+CTS gates measure every external clock from the actual CTS SDC. The measured clock exception uses the insertion and spread of the largest synthesized root's own source port. A secondary root cannot use the primary clock's measurement; an unmatched root has no measured exception.
