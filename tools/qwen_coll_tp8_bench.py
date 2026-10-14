@@ -39,7 +39,7 @@ SRC = [ROOT / p for p in (
     "rtl/rom/ot_rom_oneshot_die_m.sv", "rtl/rom/ot_coll_fold_slice.sv", "rtl/rom/ot_coll_rst_leaf.sv", "rtl/rom/ot_coll_col_tile.sv", "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v", "rtl/lib/ot_hdly.sv",
     "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
     "rtl/rom/ot_rom_oneshot_allreduce.sv", "rtl/rom/ot_coll_tp8_die.sv", "rtl/rom/ot_coll_tp8_col_tile.sv",
-    "rtl/rom/ot_coll_link_end.sv", "rtl/test/tb_coll_tp8.sv")]
+    "rtl/rom/ot_coll_tp8_col_tile_r.sv", "rtl/rom/ot_coll_link_end.sv", "rtl/test/tb_coll_tp8.sv")]
 RES = re.compile(r"TP8COLL dies=8 latu=(\d+) lats=(\d+) msgs=(\d+) words=(\d+) gap=(\d+) skew=(\d+) inject=(-?\d+) "
                  r"mismatches=(\d+) out_err=(\d+) fault=(\d+) code=(\d+) words_out=(\d+) first=(-?\d+) last=(\d+)")
 

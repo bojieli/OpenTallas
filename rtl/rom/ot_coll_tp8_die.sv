@@ -37,7 +37,9 @@ module ot_coll_tp8_die #(
     parameter integer MEMM    = 1,
     parameter integer FSL     = 1,
     parameter integer IBH     = 1,
-    parameter integer WT      = 0,       // opt-in wrapper column leaves, unchanged edge timing
+    parameter integer WT      = 0,       // opt-in wrapper column leaves: 1 = ot_coll_tp8_col_tile (unchanged edge timing),
+                                         // 2 = ot_coll_tp8_col_tile_r (registered returns, qwen-coll-io 10-14: EQ/LQ/TQ
+                                         //     writes +1 edge, no data word leaves a leaf to come back)
     parameter integer CT      = 1,       // qwen-tp8/coll4: engine column datapath in hardened ot_coll_col_tile leaves
     parameter integer ICR     = 32,      // credits held by the die's sequencer (<= LBD, <= PQD)
     parameter integer LBD     = 64,      // local partial buffer (words), 32 * k with QMEM 1
@@ -181,8 +183,11 @@ module ot_coll_tp8_die #(
 `else
     localparam integer HELD = (DIE == 0);          // die 0 owns the even word (held), die 1 the odd word (current)
 `endif
-    wire [FW-1:0] s_lo = HELD ? hl_lo : lo;
-    wire [FW-1:0] s_hi = HELD ? hl_hi : hi;
+    wire [FW-1:0] s_lo, s_hi;
+    generate if (WT != 2) begin : g_slo
+        assign s_lo = HELD ? hl_lo : lo;
+        assign s_hi = HELD ? hl_hi : hi;
+    end endgenerate
     genvar gs;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_pf
         (* keep_hierarchy *) ot_coll_fold_slice u_fs (   // the hardened N 4 / ADD_LAT 7 / SEAM 1 master, no override
@@ -367,7 +372,7 @@ module ot_coll_tp8_die #(
     // WT factors the existing register/queue datapath into five 128-bit leaves.
     // Metadata occupies the fifth column; every leaf advances on the identical
     // original push/pop decisions, so word identity and timing are unchanged.
-    generate if (WT != 0) begin : g_wrapper_cols
+    generate if (WT == 1) begin : g_wrapper_cols
         initial if (FW != 512 || TAGW != 32 || LBD != 64 || PQD != 64 || EQD != 32 || LQD != 64 || TQD != 32 || RQD != 32 || QMEM != 1)
             $error("WT requires the production 512b, 64/64/32/64/32/32 queue shape");
         wire [639:0] ind = {{(640-PW){1'b0}}, in_tag, in_mode, in_last, in_data};
@@ -417,6 +422,59 @@ module ot_coll_tp8_die #(
         assign ir_q=irc[PW-1:0]; assign rl_d=rlc[PW-1:0]; assign uprec_q=upc[PW-1:0]; assign dpr_q=dpc[PW-1:0];
         assign hl_lo=hlc[FW-1:0]; assign hl_hi=hhc[FW-1:0]; assign gh_w=ghc[PW-1:0];
         assign urrec_q=urc[RW-1:0]; assign drr_q=drc[RW-1:0]; assign od_q=odc[FW-1:0];
+        for (genvar j=0;j<3;j=j+1) begin : g_sx
+            assign srr_q[j*PW +: PW]=srr[j*640 +: PW];
+            assign sxrec_q[j*PW +: PW]=sxr[j*640 +: PW];
+        end
+        assign lb_hd=lbh[PW-1:0]; assign pq_hd=pqh[PW-1:0]; assign eq_hd=eqh[PW-1:0];
+        assign lq_hd=lqh[LW-1:0]; assign tq_hd=tqh[RW-1:0]; assign rq_hd=rqh[RW-1:0];
+        assign {rq_hv,tq_hv,lq_hv,eq_hv,pq_hv,lb_hv}=hv[5:0];
+        assign {rq_ovf,tq_ovf,lq_ovf,eq_ovf,pq_ovf,lb_ovf}=ovf[5:0];
+    end endgenerate
+
+    // WT 2 (qwen-coll-io 2026-10-14): registered-return leaves.  The leaves compute the pairing / gather / merger words
+    // from their own queue heads (die strap), register every write word that comes from outside (fold-slice sum, meta,
+    // engine results) at their pins and write it one edge later; the parent sends only 1-bit decisions.
+    generate if (WT == 2) begin : g_wrapper_cols_r
+        initial if (FW != 512 || TAGW != 32 || LBD != 64 || PQD != 64 || EQD != 32 || LQD != 64 || TQD != 32 || RQD != 32 || QMEM != 1)
+            $error("WT requires the production 512b, 64/64/32/64/32/32 queue shape");
+        wire [639:0] ind = {{(640-PW){1'b0}}, in_tag, in_mode, in_last, in_data};
+        wire [639:0] dpd = {{(640-PW){1'b0}}, dp_rec};
+        wire [639:0] drd = {{(640-RW){1'b0}}, dr_rec};
+        wire [639:0] smd = {94'd0, ml_tag[SL-1], 1'b0, ml_last[SL-1], sl_sum_f};
+        wire [639:0] lwc = {{(640-LW){1'b0}}, mf_hd, e_or, e_oe, e_ol, e_od};
+        wire [639:0] tw = {{(640-RW){1'b0}}, e_oe, e_ol, e_od};
+        wire [639:0] et = {{(640-PW){1'b0}}, e_txr};
+        wire [1919:0] srp;
+        for (genvar j=0;j<3;j=j+1) begin : g_pad_sr
+            assign srp[j*640 +: 640] = {{(640-PW){1'b0}}, sr_rec[j*PW +: PW]};
+        end
+        wire [639:0] upc, urc, odc, slo, shi;
+        wire [639:0] lbh, pqh, eqh, lqh, tqh, rqh;
+        wire [1919:0] srr, sxr;
+        wire [29:0] hv, ovf;
+        for (genvar c=0;c<5;c=c+1) begin : g_col
+            wire [383:0] sri = {srp[1280+c*128 +: 128],srp[640+c*128 +: 128],srp[c*128 +: 128]};
+            wire [383:0] sro,sxo;
+            ot_coll_tp8_col_tile_r u_wc (.clk(clk),.rst_n(rst_n),.die_s(DIE[0]),.meta_s(c == 4),
+                .in_d(ind[c*128 +: 128]),.dp_d(dpd[c*128 +: 128]),.dr_d(drd[c*128 +: 128]),.sr_d(sri),
+                .sum_d(smd[c*128 +: 128]),.lq_wd(lwc[c*128 +: 128]),.tq_wd(tw[c*128 +: 128]),
+                .e_tx(et[c*128 +: 128]),
+                .c_push({drv_q,e_ov&&!mf_hd,e_ov,eq_push,dpv_q,rl_v}),
+                .c_pop({rq_pop,tq_pop,lq_pop,eq_pop,pair_pop,pair_pop}),.c_hold(pr_red&&!wpar),
+                .c_sel({sl_tail,pr_gat}),.c_takel(take_l),
+                .up(upc[c*128 +: 128]),.ur(urc[c*128 +: 128]),.od(odc[c*128 +: 128]),
+                .sr(sro),.sx(sxo),.s_lo(slo[c*128 +: 128]),.s_hi(shi[c*128 +: 128]),
+                .lb_hd(lbh[c*128 +: 128]),.pq_hd(pqh[c*128 +: 128]),.eq_hd(eqh[c*128 +: 128]),
+                .lq_hd(lqh[c*128 +: 128]),.tq_hd(tqh[c*128 +: 128]),.rq_hd(rqh[c*128 +: 128]),
+                .hv(hv[c*6 +: 6]),.ovf(ovf[c*6 +: 6]));
+            for (genvar j=0;j<3;j=j+1) begin : g_unpad_sr
+                assign srr[j*640+c*128 +: 128] = sro[j*128 +: 128];
+                assign sxr[j*640+c*128 +: 128] = sxo[j*128 +: 128];
+            end
+        end
+        assign uprec_q=upc[PW-1:0]; assign urrec_q=urc[RW-1:0]; assign od_q=odc[FW-1:0];
+        assign s_lo=slo[FW-1:0]; assign s_hi=shi[FW-1:0];
         for (genvar j=0;j<3;j=j+1) begin : g_sx
             assign srr_q[j*PW +: PW]=srr[j*640 +: PW];
             assign sxrec_q[j*PW +: PW]=sxr[j*640 +: PW];
