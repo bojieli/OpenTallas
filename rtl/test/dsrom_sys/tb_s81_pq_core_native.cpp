@@ -26,7 +26,7 @@ template<class M> void tick(M& m) {
     if constexpr(requires {m.ck_ix_read;}) m.ck_ix_read=0;
     m.eval();
     m.ck_ctl=m.ck_qb=m.ck_fault=1;m.ck_aq=3;m.ck_ix=15;m.ck_bc=(sizeof(m.ck_bc)>1 ? 65535 : 15);
-    if constexpr(requires {m.ck_ix_read;}) m.ck_ix_read=65535;
+    if constexpr(requires {m.ck_ix_read;}) m.ck_ix_read=0xffffffffU;
     m.eval();
 }
 static uint32_t bits(const uint32_t* p,int bit,int n) {

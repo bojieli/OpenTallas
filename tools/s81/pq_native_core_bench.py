@@ -35,10 +35,11 @@ def main():
     ap.add_argument("--aq-pin", action="store_true")
     ap.add_argument("--ix-pins", action="store_true")
     ap.add_argument("--ix-split", action="store_true")
+    ap.add_argument("--ix-bank-split", action="store_true")
     ap.add_argument("--aq-parity", action="store_true")
     ap.add_argument("--bc-sliced", action="store_true")
     ap.add_argument("--bc-mut-slice", type=int, choices=range(4), default=0)
-    a = ap.parse_args(); w = a.work.resolve(); w.mkdir(parents=True, exist_ok=True)
+    a = ap.parse_args(); a.ix_split = a.ix_split or a.ix_bank_split; w = a.work.resolve(); w.mkdir(parents=True, exist_ok=True)
     src = CORE.read_text()
     ref = src.replace("module ot_s81_pq_core_native", "module ot_s81_pq_core_ref", 1)
     ref = ref.replace("ot_s81_pq_qb_sram u_qb", "ot_v41_pqc_qb #(.KMAX(6144)) u_qb")
@@ -64,6 +65,7 @@ def main():
         if name == "dut" and a.aq_pin: defs += ["+define+OT_PQ_AQ_PIN_LAUNCH"]
         if name == "dut" and a.aq_parity: defs += ["+define+OT_PQ_AQ_SIDE_PARITY"]
         if name == "dut" and a.ix_split: defs += ["+define+OT_PQ_IX_PHYS_SPLIT"]
+        if name == "dut" and a.ix_bank_split: defs += ["+define+OT_PQ_IX_BANK_SPLIT"]
         if name == "dut" and a.ix_pins: defs += ["+define+OT_PQ_IX_PIN_VARIANTS"]
         if name == "dut" and a.bc_sliced: defs += ["+define+OT_PQ_BC_SLICED"]
         if name == "ref": defs += ["+define+OT_PQ_REFERENCE"]
