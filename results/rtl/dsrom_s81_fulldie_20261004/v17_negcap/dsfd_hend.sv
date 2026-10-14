@@ -211,7 +211,7 @@ module dsfd_m2l_vr_512x1__hco_SW (
     wire rsl = rsl_q[1];
     reg [513:0] dq0; always @(negedge fi0[0]) dq0 <= di0;   // pin register, falling forwarded edge
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16), .NOBP(1'b1), .WCHK(1'b1)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -226,7 +226,7 @@ module dsfd_m2l_vr_512x1__hix_SW (
     wire rsl = rsl_q[1];
     reg [513:0] dq0; always @(negedge fi0[0]) dq0 <= di0;   // pin register, falling forwarded edge
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16), .NOBP(1'b1), .WCHK(1'b1)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -241,7 +241,7 @@ module dsfd_m2l_vr_512x1__hqe_SW (
     wire rsl = rsl_q[1];
     reg [513:0] dq0; always @(negedge fi0[0]) dq0 <= di0;   // pin register, falling forwarded edge
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
-    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
+    ot_meso_fifo #(.W(512), .ENABLE(1'b1), .DEPTH(8), .OFFSET(4), .GUARD_LO(1), .GUARD_HI(7), .CREDITS(16), .NOBP(1'b1), .WCHK(1'b1)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0), .w_fault(wf0), .r_fault(rf0));
     assign o[512:0] = {rq0, rv0};
     assign o[514:513] = {wf0 | rf0, rl0};   // {fault, live}
 endmodule
@@ -1258,7 +1258,7 @@ module dsfd_r2l_vr_512x1__hcol (
     wire [514:0] o_d;
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
     assign wf0 = 1'b0; assign rf0 = 1'b0;
-    ot_ratio_cdc_fifo #(.W(512)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0));
+    ot_ratio_cdc_fifo #(.W(512), .WALL(1'b1)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0));
     assign o_d[512:0] = {rq0, rv0};
     assign o_d[514:513] = {wf0 | rf0, rl0};   // {fault, live}
     reg [514:0] o_q; always @(posedge ck[0]) o_q <= o_d;   // output pin flop
@@ -1277,7 +1277,7 @@ module dsfd_r2l_vr_512x1__hsel (
     wire [514:0] o_d;
     wire rv0, rl0, wf0, rf0; wire [511:0] rq0;
     assign wf0 = 1'b0; assign rf0 = 1'b0;
-    ot_ratio_cdc_fifo #(.W(512)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0));
+    ot_ratio_cdc_fifo #(.W(512), .WALL(1'b1)) u_0 (.wclk(fi0[0]), .wrst_n(dq0[0]), .w_v(dq0[1]), .w_rdy(), .w_d(dq0[513:2]), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv0), .r_rdy(1'b1), .r_d(rq0), .w_live(), .r_live(rl0));
     assign o_d[512:0] = {rq0, rv0};
     assign o_d[514:513] = {wf0 | rf0, rl0};   // {fault, live}
     reg [514:0] o_q; always @(posedge ck[0]) o_q <= o_d;   // output pin flop

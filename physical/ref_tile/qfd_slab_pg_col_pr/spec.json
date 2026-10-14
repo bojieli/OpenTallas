@@ -44,9 +44,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:q14-edge-r3",
-  "branch": "claude/q14-edge-r3",
-  "tag": "pr1",
+  "owner": "Claude:q14-r6-compute",
+  "branch": "claude/q14-r6-compute",
+  "tag": "pr3",
   "purpose": "slab col native pin-register successor: m5 launch <= 220 / cid capture <= 190 at phi-R.",
   "extra_paths": [
    "src",
@@ -137,14 +137,16 @@
  "orfs_vars": {
   "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Closed col_mga 9991f8339 per-pin screen (die lead 8f20ee74b): all 256 m5 launch > 220 (331.4 TT), cid capture 197.9. Routed STA m5[10]: m5 flop far from its pin (QN 80 ps into 17 fF, INV 55 ps) + TWO HB4 outhold stages (135 ps). Fix: recipe 2 pin flops anchored at the N face (io_flop_at_pins), single HB2 pad, and cid registered at its pin (CID_REG=1, static strap, 0 cycles). Balanced clock spine (TritonCTS gate showed leaf spread 101.6 ps > 80 native boundary rule).",
+ "structural_change": "pr2 c7a7edfdb CLOSED TT +144.64 / FF +5.87 / DRC 0 but FAILS the native pin audit: TT R 425.0, 158 m5 launch > 220 (max m5[211] 254.1; FF 0 bad). Routed netlist of m5[211]: DFFHQN -> hold BUF -> INV -> BUFx4f -> HB2 -> hold BUF -> BUFx4f -> hold BUF -> output BUF: the recipe pad plus FOUR route hold-repair BUFx2 per output, put there by the global hold margin 60 ps raised in pr2 for the internal reg->reg misses. pr3: hold margin back to 30 (recipe default); the internal misses are covered by pr2's other change (21 pin-flop columns with 4.5-um gaps = hold-cell room at the face, absent in pr1). Same RTL, outline, pins, guard, clock.",
  "reroute_reason": {
   "kind": "pin_register",
   "source": "results/rtl/qwen_edge_pin_audit_1014/slab_pin_budget_summary_8f20ee74b.json",
   "cell": "ot_qwen_slab_pg_col",
   "launch_ps": 331.38,
   "capture_ps": 197.91,
-  "fix": "recipe-2 pin flops at the m5 face, HB2 pad instead of 2x HB4, cid pin register (CID_REG=1)"
+  "fix": "recipe-2 pin flops at the m5 face, HB2 pad instead of 2x HB4, cid pin register (CID_REG=1); pr3: hold margin 30 (pr2 margin 60 over-padded every m5 output by 4 hold BUFs: launch 254)"
  },
- "clock": "spine"
+ "clock": "spine",
+ "keep_pin_regs": true,
+ "pin_reg_split": true
 }

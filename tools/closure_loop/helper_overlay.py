@@ -132,7 +132,7 @@ def frozen_rows(plan):
         raise ValueError("malformed frozen helper plan") from ex
 
 
-def committed_frozen_payloads(repo, plan):
+def committed_frozen_payloads(repo, plan, only=None):
     """Recover only bytes committed at each original path in the recorded tree.
 
     Git records the executable bit; the plan records the full transported POSIX
@@ -160,6 +160,8 @@ def committed_frozen_payloads(repo, plan):
             entries[path.decode()] = meta.decode().split()
     payloads = {}
     for row in rows:
+        if only is not None and row["path"] not in only:
+            continue
         mode, kind, blob = entries.get(row["path"], (None, None, None))
         if kind != "blob" or mode not in ("100644", "100755") or blob != row["git_blob"]:
             raise ValueError(f"frozen helper committed tree mismatch: {row['path']}")
@@ -170,6 +172,66 @@ def committed_frozen_payloads(repo, plan):
             raise ValueError(f"frozen helper committed bytes missing or tampered: {row['path']}")
         payloads[row["path"]] = data.stdout
     return payloads
+
+
+def store_payloads(store, plan, payloads):
+    """Keep every frozen helper byte-string in a content-addressed store (one file per sha256).
+
+    The store lives in the loop's state directory (~/.local/state/closure_loop/frozen_helpers), which no run-root,
+    scratch or worktree cleanup touches; run directories (where helpers execute) are disposable copies of it.
+    """
+    store = Path(store)
+    store.mkdir(parents=True, exist_ok=True)
+    for row in frozen_rows(plan):
+        data = payloads[row["path"]]
+        if hashlib.sha256(data).hexdigest() != row["sha256"] or blob_id(data) != row["git_blob"]:
+            raise ValueError(f"frozen helper payload differs from plan: {row['path']}")
+        dest = store / row["sha256"]
+        if dest.exists() and hashlib.sha256(dest.read_bytes()).hexdigest() == row["sha256"]:
+            continue
+        tmp = store / f".{row['sha256']}.{os.getpid()}.tmp"
+        tmp.write_bytes(data)
+        os.replace(tmp, dest)
+
+
+def stored_frozen_payloads(store, plan, only=None):
+    """Recover the exact frozen bytes from the content store; every file re-verified against the plan."""
+    payloads = {}
+    for row in frozen_rows(plan):
+        if only is not None and row["path"] not in only:
+            continue
+        try:
+            data = (Path(store) / row["sha256"]).read_bytes()
+        except OSError as ex:
+            raise ValueError(f"frozen helper not in content store: {row['path']}") from ex
+        if hashlib.sha256(data).hexdigest() != row["sha256"] or blob_id(data) != row["git_blob"]:
+            raise ValueError(f"frozen helper content store bytes tampered: {row['path']}")
+        payloads[row["path"]] = data
+    return payloads
+
+
+UNCOMMITTED_RESOLUTIONS = ("daemon_only", "not_on_main", "no_git")
+
+
+def recover_frozen_payloads(repo, store, plan):
+    """Exact frozen bytes for a reinstall.  Returns (payloads, source).
+
+    Rows frozen from committed main (resolution same/stale) come ONLY from the plan's committed origin tree, so a
+    forged origin or a tree mismatch still refuses.  Rows that were legally uncommitted when frozen (daemon_only /
+    not_on_main / no_git) come from the content-addressed store.  Every byte is verified (sha256 + git blob id)
+    against the job's frozen plan, so a reinstall is identical to the original install or it does not happen.
+    """
+    rows = frozen_rows(plan)
+    resolution = {f.get("path"): f.get("resolution") for f in plan.get("files", []) if isinstance(f, dict)}
+    loose = {r["path"] for r in rows if resolution.get(r["path"]) in UNCOMMITTED_RESOLUTIONS}
+    if not loose:
+        return committed_frozen_payloads(repo, plan), "committed_origin"
+    if store is None:
+        raise ValueError("uncommitted frozen helpers need the content store")
+    committed = {r["path"] for r in rows} - loose
+    payloads = committed_frozen_payloads(repo, plan, only=committed) if committed else {}
+    payloads.update(stored_frozen_payloads(store, plan, only=loose))
+    return payloads, ("committed_origin+content_store" if committed else "content_store")
 
 
 def verify_installed_plan(directory, plan):

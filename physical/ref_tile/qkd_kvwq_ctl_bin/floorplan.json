@@ -58,11 +58,17 @@
  "referenced": [
   "rtl/physical/ot_qwen_kv_slot_wrappers.sv",
   "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_wq_ctl_binary.sv",
+  "rtl/lib/ot_rst_relay.sv",
   "physical/ref_tile/qkd_kvwq_ctl_bin/kit.env",
   "physical/ref_tile/qkd_kvwq_ctl_bin/clock.sdc",
   "physical/ref_tile/qkd_kvwq_ctl_bin/signoff.sdc",
   "physical/ref_tile/qkd_kvwq_ctl_bin/pdn.tcl",
   "physical/ref_tile/qkd_kvwq_ctl_bin/pre_cts.tcl",
+  "physical/ref_tile/qkd_kvwq_ctl_bin/post_cts.tcl",
+  "physical/ref_tile/qkd_kvwq_ctl_bin/post_grt.tcl",
+  "physical/ref_tile/qkd_kvwq_ctl_bin/pre_drt.tcl",
+  "physical/ref_tile/qkd_kvwq_ctl_bin/pre_fill.tcl",
+  "physical/ref_tile/qkd_kvwq_ctl_bin/post_fill.tcl",
   "physical/ref_tile/qkd_kvwq_ctl_bin/pre_grt.tcl",
   "physical/ref_tile/qkd_kvwq_ctl_bin/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -81,6 +87,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/qkd_kvwq_ctl_bin/pre_gpl.tcl",
-  "physical/ref_tile/qkd_kvwq_ctl_bin/pre_dpl.tcl"
+  "physical/ref_tile/qkd_kvwq_ctl_bin/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

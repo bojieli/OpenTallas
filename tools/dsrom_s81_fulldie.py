@@ -6837,6 +6837,7 @@ def _lay(M, face, ports, layer, start=None, gap=0.96, length=None, pitch=1):
 
 _LAY_K = [1]
 PIN_ALIGN = False               # --pin-align (s81-die v17): field-frame pins bit-aligned with their abutting peers
+HEND_VR_NOBP = False            # --hend-vr-nobp (s81 grpA 10-14): wide (>= 512 b) m2l VR lane ends take NOBP + WCHK
 FWD_NEGCAP = False              # --fwd-negcap (s81-die v17): forwarded-lane ENDS capture on the falling forwarded edge
 
 
@@ -7682,12 +7683,22 @@ def glue_rtl(m):
                         wr, wv, wd = f'wrs{j}', "1'b1", f'{dn_}[{pw - 1}:0]'
                     body.append(f'    wire rv{j}, rl{j}, wf{j}, rf{j}; wire [{pw - 1}:0] rq{j};')
                     if kind == 'm2l':
-                        body.append(f'    ot_meso_fifo #(.W({pw}), .ENABLE(1\'b1){MESO_P()}) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), '
+                        # --hend-vr-nobp (s81 grpA 2026-10-14, hco/hix/hqe_SW TT -91.65/-53.85 + GRT congestion): a wide VR
+                        # lane end has r_rdy tied 1, so the 16 x W receive buffer is dead logic the netlist cannot prove
+                        # dead (cnt -> empty -> o_d mux) -> NOBP; and the negedge pin register's valid / reset bits fan
+                        # out to all DEPTH x W ring write enables in HALF a cycle -> WCHK (64-bit chunks written every
+                        # cycle from a registered one-hot slot copy; validity stays in the slot v bits). Same words,
+                        # same cycles (both proven in ot_meso_fifo, used by the HBM stations).
+                        xp = ", .NOBP(1'b1), .WCHK(1'b1)" if (HEND_VR_NOBP and vr and pw >= 512 and pw % 64 == 0) else ''
+                        body.append(f'    ot_meso_fifo #(.W({pw}), .ENABLE(1\'b1){MESO_P()}{xp}) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), '
                                     f'.w_v({wv}), .w_rdy(), .w_d({wd}), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv{j}), '
                                     f'.r_rdy(1\'b1), .r_d(rq{j}), .w_live(), .r_live(rl{j}), .w_fault(wf{j}), .r_fault(rf{j}));')
                     else:
                         body.append(f'    assign wf{j} = 1\'b0; assign rf{j} = 1\'b0;')
-                        body.append(f'    ot_ratio_cdc_fifo #(.W({pw})) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), .w_v({wv}), '
+                        # --hend-vr-nobp (s81 grpA r3 2026-10-14, hcol / hsel TT -25.78: negedge pin register -> w_fire ->
+                        # DEPTH x W ratio-FIFO write enables in half a cycle): wide VR r2l ends write the FIFO always (WALL)
+                        wa = ", .WALL(1'b1)" if (HEND_VR_NOBP and vr and pw >= 512) else ''
+                        body.append(f'    ot_ratio_cdc_fifo #(.W({pw}){wa}) u_{j} (.wclk(fi{j}[0]), .wrst_n({wr}), .w_v({wv}), '
                                     f'.w_rdy(), .w_d({wd}), .rclk(ck[0]), .rrst_n(rsl), .r_v(rv{j}), .r_rdy(1\'b1), '
                                     f'.r_d(rq{j}), .w_live(), .r_live(rl{j}));')
                     pr = HEND_PINREG and kind == 'r2l'
@@ -7988,6 +7999,7 @@ def die_options(ap):
     ap.add_argument('--pin-align', action='store_true', help='s81-die v17: q-bank pins at the q element pin of the same bit, '
                     'return-tree node pins in fixed slots (abutted stack bit-aligned), slot-station xa / xb on the pins of '
                     'their abutting column relay (pin_align gate: 0 FAIL in the field frames)')
+    ap.add_argument('--hend-vr-nobp', action='store_true', help='s81 grpA 10-14: wide (>= 512 b) m2l VR hub ends: ot_meso_fifo NOBP + WCHK (r_rdy is tied 1; the negedge pin register no longer fans out to every ring write enable in half a cycle); same words / cycles')
     ap.add_argument('--fwd-negcap', action='store_true', help='s81-die v17 glue RTL: the ends of a forwarded lane (dsfd_cfifo xd, '
                     'm2l / r2l end relays di<j>) capture on the falling forwarded-clock edge (half-cycle hop, as the stations)')
     ap.add_argument('--peer-pin-pos', action='store_true', help='s81-die v16: a slab port stands on the pin group of its '
@@ -8087,11 +8099,12 @@ def apply_options(a):
     global WFC_PRICED, PEER_PIN_POS, HOP_R_HUB
     HOP_R_HUB = float(getattr(a, 'hop_r_hub', 0.0) or 0.0)
     PEER_PIN_POS = bool(getattr(a, 'peer_pin_pos', False))
-    global PIN_ALIGN, FWD_NEGCAP
+    global PIN_ALIGN, FWD_NEGCAP, HEND_VR_NOBP
     PIN_ALIGN = bool(getattr(a, 'pin_align', False))
     global XB_RGAP_FIRST
     XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
     FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
+    HEND_VR_NOBP = bool(getattr(a, 'hend_vr_nobp', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
     assert not WFC_PRICED or (WFC_KIT and not getattr(a, 'wfc_crp', False)), '--wfc-priced: the --wfc-kit stage / source kit (not --wfc-crp)'
     global WFC_CRP, STAGE_SEQ

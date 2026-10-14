@@ -26,20 +26,24 @@ module ot_s81_su_rxe #(
     parameter integer RAL = 16,             // RA lanes (16, 8 or 4)
     parameter integer LM  = 5,
     parameter integer LA  = 4,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer QW  = 1               // QR rows a cycle (2: a second QR lane set takes rope row i_j + 1 on i_b)
 ) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              i_v,
     input  wire [1:0]        i_k,            // 0 RA, 1 RB, 2 QR
     input  wire [511:0]      i_x,
-    input  wire [511:0]      i_b,
+    input  wire [511:0]      i_b,            // RB: the bias row; QR (QW 2, i_v2): the head's next rope row
+    input  wire              i_v2,           // QR (QW 2): i_b carries rope row i_j + 1 in this cycle
     input  wire [1:0]        i_j,
     output wire              i_rdy,
     input  wire [32*32-1:0]  cos_t,
     input  wire [32*32-1:0]  sin_t,
     output reg               o_v,
     output reg  [511:0]      o_d,
+    output reg               o_v2,           // QR (QW 2): the second row's result, same cycle as o_v
+    output reg  [511:0]      o_d2,
     output reg               fault
 );
     localparam integer SUB = 16 / RAL;      // RA issue cycles a row
@@ -117,39 +121,57 @@ module ot_s81_su_rxe #(
     always @(posedge clk) rb_o <= rb_y;
 
     // ------------------------------------------------------------------ QR: forward RoPE of one row (8 pairs), 16 lanes
+    // (QW 2: a second lane set, the head's next rope row on i_b, same pipeline)
     wire iss_q = i_v && i_k == 2'd2;
-    wire [511:0] qr_y; wire [15:0] qr_f;
-    wire [DQ:0] vq;
+    wire iss_q2 = iss_q && i_v2 && (QW > 1);
+    wire [511:0] qr_y, qr_y2; wire [15:0] qr_f, qr_f2;
+    wire [DQ:0] vq, vq2;
     ot_hdc_vline #(.D(DQ)) u_vq (.clk(clk), .rst_n(rst_n), .v(iss_q), .vd(vq));
+    genvar r;
     generate
-        for (l = 0; l < 16; l = l + 1) begin : g_qr
-            localparam integer ODD = l % 2;
-            wire [4:0]  kk = {i_j, 3'd0} + (l / 2);
-            wire [31:0] cc = cos_t[32 * kk +: 32], sn = sin_t[32 * kk +: 32];
-            wire [31:0] mine = i_x[32 * l +: 32], pair = i_x[32 * (ODD ? l - 1 : l + 1) +: 32];
-            // forward: a' = a*c + (-(b*s)), b' = b*c + a*s; MUT 3: the inverse (a*c + b*s, b*c - a*s)
-            wire [31:0] sg = ((ODD != 0) ^ (MUT == 3)) ? sn : {~sn[31], sn[30:0]};
-            wire [31:0] pp, qq, rs;
-            wire f0, f1, f2;
-            ot_hdc_qmul_lat #(LMR) u_p (clk, rst_n, iss_q, mine, cc, pp, f0);
-            ot_hdc_qmul_lat #(LMR) u_q (clk, rst_n, iss_q, pair, sg, qq, f1);
-            ot_dsrom_qadd #(.LAT(LAR)) u_a (clk, rst_n, vq[LMR], pp, qq, rs, f2);
-            assign qr_y[32 * l +: 32] = rs;
-            assign qr_f[l] = f0 | f1 | f2;   // each unit's fault is gated by its own valid out
+        for (r = 0; r < QW; r = r + 1) begin : g_qw
+            wire [511:0] xr = (r == 0) ? i_x : i_b;
+            wire [1:0]   jr = i_j + r;
+            wire         ir = (r == 0) ? iss_q : iss_q2;
+            wire [DQ:0]  vr;
+            if (r == 0) begin : g_v0 assign vr = vq; end
+            else begin : g_v1 ot_hdc_vline #(.D(DQ)) u_vq2 (.clk(clk), .rst_n(rst_n), .v(iss_q2), .vd(vr)); end
+            wire [511:0] yr; wire [15:0] fr;
+            for (l = 0; l < 16; l = l + 1) begin : g_qr
+                localparam integer ODD = l % 2;
+                wire [4:0]  kk = {jr, 3'd0} + (l / 2);
+                wire [31:0] cc = cos_t[32 * kk +: 32], sn = sin_t[32 * kk +: 32];
+                wire [31:0] mine = xr[32 * l +: 32], pair = xr[32 * (ODD ? l - 1 : l + 1) +: 32];
+                // forward: a' = a*c + (-(b*s)), b' = b*c + a*s; MUT 3: the inverse (a*c + b*s, b*c - a*s)
+                wire [31:0] sg = ((ODD != 0) ^ (MUT == 3)) ? sn : {~sn[31], sn[30:0]};
+                wire [31:0] pp, qq, rs;
+                wire f0, f1, f2;
+                ot_hdc_qmul_lat #(LMR) u_p (clk, rst_n, ir, mine, cc, pp, f0);
+                ot_hdc_qmul_lat #(LMR) u_q (clk, rst_n, ir, pair, sg, qq, f1);
+                ot_dsrom_qadd #(.LAT(LAR)) u_a (clk, rst_n, vr[LMR], pp, qq, rs, f2);
+                assign yr[32 * l +: 32] = rs;
+                assign fr[l] = f0 | f1 | f2;   // each unit's fault is gated by its own valid out
+            end
+            if (r == 0) begin : g_o0 assign qr_y = yr; assign qr_f = fr; end
+            else begin : g_o1 assign qr_y2 = yr; assign qr_f2 = fr; assign vq2 = vr; end
         end
+        if (QW < 2) begin : g_q1 assign qr_y2 = 512'd0; assign qr_f2 = 16'd0; assign vq2 = 0; end
     endgenerate
-    reg [511:0] qr_o;
-    always @(posedge clk) for (g = 0; g < 16; g = g + 1) qr_o[32 * g +: 32] <= bf16(qr_y[32 * g +: 32]);
+    reg [511:0] qr_o, qr_o2;
+    always @(posedge clk) for (g = 0; g < 16; g = g + 1) begin
+        qr_o[32 * g +: 32] <= bf16(qr_y[32 * g +: 32]); qr_o2[32 * g +: 32] <= bf16(qr_y2[32 * g +: 32]);
+    end
 
     // ------------------------------------------------------------------ result row (one job kind runs at a time)
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin o_v <= 0; fault <= 0; end
+        if (!rst_n) begin o_v <= 0; o_v2 <= 0; fault <= 0; end
         else begin
             o_v <= ra_ov | vb[DB] | vq[DQ];
-            if (|(ra_vo & ra_f) || |rb_f || |qr_f) fault <= 1;
+            o_v2 <= vq2[DQ];
+            if (|(ra_vo & ra_f) || |rb_f || |qr_f || |qr_f2) fault <= 1;
         end
     end
-    always @(posedge clk) o_d <= ra_ov ? ra_row : vb[DB] ? rb_o : qr_o;
+    always @(posedge clk) begin o_d <= ra_ov ? ra_row : vb[DB] ? rb_o : qr_o; o_d2 <= qr_o2; end
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -194,5 +216,6 @@ module ot_s81_su_rx #(
     always @(posedge clk or negedge rst_n) if (!rst_n) o_i <= 0; else if (start) o_i <= 0; else if (o_v) o_i <= o_i + 1;
     ot_s81_su_rxe #(.RAL(RAL), .LM(LM), .LA(LA), .MUT(MUT)) u_e (
         .clk(clk), .rst_n(rst_n), .i_v(iss), .i_k(k), .i_x(bt[512 * ri +: 512]), .i_b(bt[512 * (ri + n) +: 512]),
-        .i_j(ri[1:0]), .i_rdy(rdy), .cos_t(cos_t), .sin_t(sin_t), .o_v(o_v), .o_d(o_d), .fault(fault));
+        .i_v2(1'b0), .i_j(ri[1:0]), .i_rdy(rdy), .cos_t(cos_t), .sin_t(sin_t), .o_v(o_v), .o_d(o_d), .o_v2(), .o_d2(),
+        .fault(fault));
 endmodule
