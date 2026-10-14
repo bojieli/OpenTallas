@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Literal private CTS Bterm screen; distances are Manhattan geometry, not measured RC."""
-import argparse,hashlib,json
+import argparse,hashlib,json,math
 from pathlib import Path
 
 
 def center(shapes):
     if len(shapes)!=1: raise ValueError('single literal signal shape required')
     layer,r=shapes[0]
+    if len(r)!=4 or not all(math.isfinite(float(v)) for v in r) or r[2]<r[0] or r[3]<r[1]:
+        raise ValueError('nonfinite or invalid literal pin rectangle')
     if not layer.startswith('M') or int(layer[1:])>5: raise ValueError('ungranted above-M5 signal pin')
     return layer,[(r[0]+r[2])/2,(r[1]+r[3])/2]
 

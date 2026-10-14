@@ -13,6 +13,9 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(center([['M4',[0,0,0.084,0.024]]]),('M4',[0.042,0.012]))
         with self.assertRaises(ValueError): center([['M6',[0,0,1,1]]])
         with self.assertRaises(ValueError): center([])
+        with self.assertRaises(ValueError): center([['M4',[0,0,float('inf'),1]]])
+        with self.assertRaises(ValueError): center([['M4',[0,0,float('nan'),1]]])
+        with self.assertRaises(ValueError): center([['M4',[3,0,2,1]]])
         with self.assertRaises(ValueError): center([['M4',[0,0,1,1]],['M4',[2,2,3,3]]])
 
     def test_literal_screen_covers_all_internal_bits_without_rc_credit(self):
@@ -45,6 +48,14 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(d['all_13_source_blobs_verified'],13)
         self.assertEqual(d['hc_summary']['per_reservation_used_envelope_um'],[1231.2,470.88])
         self.assertFalse(d['private_pin_binding_qualified'])
+
+    def test_full_sfu_competition_does_not_grant_clear_trial_row(self):
+        d=json.loads((REPORT.parent/'sfu_legacy_overlay.json').read_text())
+        self.assertEqual(d['full_quarter_area_screen']['body_count'],16)
+        self.assertGreater(d['full_quarter_area_screen']['leaf_area_fraction_before_gutters_ownlogic_PG'],0.95)
+        self.assertFalse(d['full_quarter_area_screen']['full_rectangular_packing_proven'])
+        self.assertTrue(d['full_quarter_area_screen']['closed_body_stands'])
+        self.assertTrue(all(not r['assigned'] for r in d['SW_geometry_only_control_row']))
 
     def test_actual_rejections_remain_quantified(self):
         d=json.loads(REPORT.read_text())
