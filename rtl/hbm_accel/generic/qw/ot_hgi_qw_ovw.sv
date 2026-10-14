@@ -37,9 +37,10 @@ module ot_hgi_qw_ovw #(
       .c_mw_v(c_mw_v),.c_mw_a(c_mw_a),.c_mw_sec(c_mw_sec),.c_mw_n(c_mw_n),.c_wg(c_wg),
       .d_wf(d_wf),.d_bad(d_bad),.d_vo(d_vo),.d_f(d_f),.d_df(d_df),.d_y(d_y),
       .row_rst_n(row_rst_n),.wm_v(wm_v),.wm_sec(wm_sec),.wm_n(wm_n),.row_y(row_y));
-    ot_hgi_qw_ovrow u_row0(.clk(clk),.rst_n(row_rst_n),.row_j(2'd0),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.i_y(row_y),.o_v(l_wv0),.o_slot(l_ws0),.o_sec(l_wsec0),.o_y(l_wy0));
-    ot_hgi_qw_ovrow u_row1(.clk(clk),.rst_n(row_rst_n),.row_j(2'd1),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.i_y(row_y),.o_v(l_wv1),.o_slot(l_ws1),.o_sec(l_wsec1),.o_y(l_wy1));
-    ot_hgi_qw_ovrow u_row2(.clk(clk),.rst_n(row_rst_n),.row_j(2'd2),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.i_y(row_y),.o_v(l_wv2),.o_slot(l_ws2),.o_sec(l_wsec2),.o_y(l_wy2));
-    ot_hgi_qw_ovrow u_row3(.clk(clk),.rst_n(row_rst_n),.row_j(2'd3),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.i_y(row_y),.o_v(l_wv3),.o_slot(l_ws3),.o_sec(l_wsec3),.o_y(l_wy3));
+    ot_hgi_qw_ovmeta u_row0(.clk(clk),.rst_n(row_rst_n),.row_j(2'd0),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.o_v(l_wv0),.o_slot(l_ws0),.o_sec(l_wsec0));
+    ot_hgi_qw_ovmeta u_row1(.clk(clk),.rst_n(row_rst_n),.row_j(2'd1),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.o_v(l_wv1),.o_slot(l_ws1),.o_sec(l_wsec1));
+    ot_hgi_qw_ovmeta u_row2(.clk(clk),.rst_n(row_rst_n),.row_j(2'd2),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.o_v(l_wv2),.o_slot(l_ws2),.o_sec(l_wsec2));
+    ot_hgi_qw_ovmeta u_row3(.clk(clk),.rst_n(row_rst_n),.row_j(2'd3),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.o_v(l_wv3),.o_slot(l_ws3),.o_sec(l_wsec3));
+    assign l_wy0=row_y;assign l_wy1=row_y;assign l_wy2=row_y;assign l_wy3=row_y;
 endmodule
 `default_nettype wire

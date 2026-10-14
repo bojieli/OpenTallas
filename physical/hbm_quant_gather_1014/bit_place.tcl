@@ -12,6 +12,12 @@ set gxstep [$site getWidth];set gystep [$site getHeight]
 set gbasey [$gc yMin];set gminx [$gc xMin];set gmaxx [$gc xMax];set gmaxy [$gc yMax]
 set gnrow [expr {int(($gmaxy-$gbasey)/$gystep)}]
 array set gocc {}
+array set ::gorient {}
+foreach gr $rows {
+ lassign [$gr getOrigin] rx ry
+ set ri [expr {int(round(($ry-$gbasey)/double($gystep)))}]
+ set ::gorient($ri) [$gr getOrient]
+}
 proc g_reserve {rect} {
  upvar #0 gocc occ gbasey by gystep sy
  set lo [expr {int(floor(([$rect yMin]-$by)/double($sy)))}]
@@ -61,7 +67,8 @@ proc g_place {inst tx ty} {
      }
     }
     if {$end==$x} {
-     $inst setOrient R0
+     if {![info exists ::gorient($r)]} {error "GATHER_BIT: missing actual site row $r"}
+     $inst setOrient $::gorient($r)
      $inst setLocation $x [expr {$by+$r*$sy}]
      $inst setPlacementStatus FIRM
      g_reserve [$inst getBBox]

@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.ov.shared_capture.v1",
+  "trigger": "RF CTS macro->out slack -44.1ps: raw macro read output is not acceptable release boundary",
+  "candidate": "Move existing four identical512bit row captures into single512bit RF output capture; retain four separate metadata captures, no extra edge",
+  "edges_added": 0,
+  "payload_FF_removed": 2048,
+  "payload_FF_added": 512,
+  "net_FF_delta": -1536,
+  "RF_gate_base_sinks": 4087,
+  "RF_predicted_sinks": 4599,
+  "metadata_leaf_FF": 162,
+  "replicas": 4,
+  "registered_boundaries": "RF d_y firstcapture yc unchanged; row_y now512outputFF; META i_v/sec/n into existingvalid/slot/sec FF; no payloadport onMETA",
+  "parent": "unselected alternative; sharedregisteredpayload fanout4 requires real assignedpins perbit setup andH100 hold; allCLOCKspatial relation open",
+  "immutable_price": 168,
+  "last_exact_cycles": 184,
+  "M6_PORT": "no grant claimed"
+}

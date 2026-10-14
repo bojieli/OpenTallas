@@ -24,7 +24,7 @@ module ot_hgi_qw_ovr #(
     input  wire [511:0]      d_y,
     output wire row_rst_n,
     output reg wm_v, output reg [14:0] wm_sec, output reg [2:0] wm_n,
-    output wire [511:0] row_y
+    output reg [511:0] row_y
 );
     localparam integer OD = 64, OW = 6;         // = SRAM words
     localparam integer CW = $clog2(LQ + 1);
@@ -93,7 +93,7 @@ module ot_hgi_qw_ovr #(
         .w_ce_in(yc_v), .w_addr_in(od_t), .wd_in(yc), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     // Macro output and existing metadata stage -> four real row capture leaves.
-    assign row_y=od_rd;
+    always @(posedge clk)row_y<=od_rd; // same old row capture edge, shared before fanout4
     assign row_rst_n=rr_n[1];
     always @(posedge clk)begin wm_sec<=rf_sec;wm_n<=rf_n;end
     always @(posedge clk or negedge rr_n[1])
