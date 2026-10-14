@@ -3823,7 +3823,13 @@ def build_r8(variant=None):
     regions.append(dict(name='hc_corridor', kind='channel', rect=[x_spe, c0, x_fe, c1]))
     for it in insts:
         if it.region == 'spine':
-            assert it.y >= band + SPINE_GAP and it.y + it.h <= H - band - SPINE_GAP, (it.name, it.y, it.y + it.h)
+            # A south-grown SU uses the centre of the south band, while PHY,
+            # control and service tiles occupy its shoreline columns. It must
+            # remain inside the die and pass the actual-instance overlap gate;
+            # requiring the entire centre to stay above the shoreline band
+            # would reject the explicitly reserved south extension itself.
+            floor_ = EDGE if HUB_SOUTH_SHIFT and it.name == 'sp_su_s' else band + SPINE_GAP
+            assert it.y >= floor_ and it.y + it.h <= H - band - SPINE_GAP, (it.name, it.y, it.y + it.h)
     # ---- bands (as r7)
     rp = real_lef(PHY_LEF)
     phys, ctrls, svcs = {}, {}, {}
@@ -6581,6 +6587,9 @@ def _ctrl_band_lanes(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, stri
 
 def _hub_at(P, name, master, w, h, slab, side, y, cor):
     """an end / start block beside a hub slab: side 'W' in the S14 W channel, 'E' in the VCH"""
+    assigned = _assigned_record(master + '__' + name)
+    if assigned and assigned.get('outline_change_request'):
+        w, h = assigned['outline_um']
     x = slab.x - w / 2 - 6.0 if side == 'W' else slab.x + slab.w + w / 2 + 6.0
     pl = P.near(x, y, w, h, [cor['s14W'] if side == 'W' else cor['vch']], horiz=False, span=1800.0, rows=6)
     if not pl and name.startswith('he_h_'):
