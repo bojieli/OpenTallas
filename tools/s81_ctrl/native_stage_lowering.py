@@ -44,7 +44,8 @@ def load_binding(directory, pins):
     return count, matrices
 
 
-def lower(request, directory):
+def lower(request, directory, root=None):
+    root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
     count, matrices = load_binding(directory, request['allocation_sha256'])
     stages = request['stages']
     require(len(stages) == count and {s['stage'] for s in stages} == set(range(count)),
@@ -67,8 +68,11 @@ def lower(request, directory):
             seen.add(ident);engine,arg=op['engine'],op['arg']
             require(type(engine) is int and 0<=engine<12 and type(arg) is int and 0<=arg<1<<24,
                     'real engine/arg24 contract required')
-            require(op.get('endpoint_source_sha256') and len(op['endpoint_source_sha256'])==64,
-                    'native endpoint argument must pin its source contract')
+            rel=op.get('endpoint_source')
+            require(isinstance(rel,str) and not Path(rel).is_absolute() and '..' not in Path(rel).parts,
+                    'native endpoint argument needs a repository source contract')
+            require(sha(root/rel)==op.get('endpoint_source_sha256'),
+                    'native endpoint source contract changed')
             if engine==0:
                 require(type(op.get('field_phase')) is int and arg==op['field_phase'],
                         'field argument must be actual emitted CFG phase')
