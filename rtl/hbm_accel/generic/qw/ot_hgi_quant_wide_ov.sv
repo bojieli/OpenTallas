@@ -2,7 +2,7 @@
 `default_nettype none
 // Opt-in record-overlap quant cluster, WIRES-ONLY parent (el1013-hbm-quant-split, 2026-10-13).
 // The flat cluster had 38,353 flops + 20 macro clock pins on one root and failed the clock rule three times.
-// Now: 1 x ot_hgi_qw_ovc (control head: descriptors, scheduler, read issue, retirement) + 1 x ot_hgi_qw_ovd (data
+// Now: 1 x ot_hgi_qw_ovc (control head: descriptors, scheduler, read issue, retirement) + ot_hgi_qw_ovg (gather) + ot_hgi_qw_ovs (result SRAM / write side; were one data leaf ot_hgi_qw_ovd) (data
 // head: gather tail, result capture, result SRAM, write side) + the decoder tiles + 4 x ot_hgi_qw_lg2 (lane-group leaf,
 // 8 lanes each, hardened once), each with its own clock root.  No register, gate or reset logic here.
 // Cycle-exact with the flat cluster: each former two-stage relay is now head register -> wire -> leaf register.
@@ -50,21 +50,25 @@ module ot_hgi_quant_wide_ov #(
         .l_hit_p(l_hit_p), .l_rs(l_rs), .l_sl(l_sl), .l_push(l_push), .l_rcr(l_rcr), .l_done(l_done),
         .d_rst_n(d_rst_n), .c_gv(c_gv), .c_gh(c_gh), .c_mw_v(c_mw_v), .c_mw_a(c_mw_a), .c_mw_sec(c_mw_sec),
         .c_mw_n(c_mw_n), .c_wg(c_wg), .d_wf(d_wf), .d_bad(d_bad), .rg_req(rg_req), .rg_gnt(rg_gnt), .wg_req(wg_req), .wg_gnt(wg_gnt));
-`ifdef OT_HARD_CHILDREN
-    ot_hgi_qw_ovd u_d (
-`else
-    ot_hgi_qw_ovd #(.LQ(LQ)) u_d (
-`endif
+    // data head = two seam-free leaves (Claude hbm-group-B r2 10-14): gather ovg (no macro) + result SRAM / write side ovs
+    ot_hgi_qw_ovg u_dg (
         .clk(clk), .rst_n(d_rst_n),
         .l_gp0(l_gp[0 +: 1024]), .l_gp1(l_gp[1024 +: 1024]), .l_gp2(l_gp[2048 +: 1024]), .l_gp3(l_gp[3072 +: 1024]),
+        .c_gv(c_gv), .c_gh(c_gh), .x_v(x_v), .x_hd(x_hd), .x(x));
+`ifdef OT_HARD_CHILDREN
+    ot_hgi_qw_ovs u_d (
+`else
+    ot_hgi_qw_ovs #(.LQ(LQ)) u_d (
+`endif
+        .clk(clk), .rst_n(d_rst_n),
         .l_wcr0(l_wcr[0 +: 8]), .l_wcr1(l_wcr[8 +: 8]), .l_wcr2(l_wcr[16 +: 8]), .l_wcr3(l_wcr[24 +: 8]),
         .l_wv0(l_wv[0 +: 8]), .l_wv1(l_wv[8 +: 8]), .l_wv2(l_wv[16 +: 8]), .l_wv3(l_wv[24 +: 8]),
         .l_wsec0(l_wsec[0 +: 120]), .l_wsec1(l_wsec[120 +: 120]), .l_wsec2(l_wsec[240 +: 120]), .l_wsec3(l_wsec[360 +: 120]),
         .l_ws0(l_ws[0 +: 32]), .l_ws1(l_ws[32 +: 32]), .l_ws2(l_ws[64 +: 32]), .l_ws3(l_ws[96 +: 32]),
         .l_wy0(l_wy[0 +: 512]), .l_wy1(l_wy[512 +: 512]), .l_wy2(l_wy[1024 +: 512]), .l_wy3(l_wy[1536 +: 512]),
-        .c_gv(c_gv), .c_gh(c_gh), .c_mw_v(c_mw_v), .c_mw_a(c_mw_a), .c_mw_sec(c_mw_sec),
-        .c_mw_n(c_mw_n), .c_wg(c_wg), .d_wf(d_wf), .d_bad(d_bad), .dec_rst_n(dec_rst_n), .x_v(x_v), .x_hd(x_hd),
-        .x(x), .d_vo(d_vo), .d_f(d_f), .d_df(d_df), .d_y(d_y));
+        .c_mw_v(c_mw_v), .c_mw_a(c_mw_a), .c_mw_sec(c_mw_sec),
+        .c_mw_n(c_mw_n), .c_wg(c_wg), .d_wf(d_wf), .d_bad(d_bad), .dec_rst_n(dec_rst_n),
+        .d_vo(d_vo), .d_f(d_f), .d_df(d_df), .d_y(d_y));
     generate if (DEC3 != 0) begin : g_d3
         ot_hgi_qw_dec3 u_dec (.clk(clk), .rst_n(dec_rst_n), .v(x_v), .header(beat_header), .x(x), .vo(d_vo), .y(d_y),
             .fault(d_f), .decode_fault(d_df));

@@ -8,22 +8,49 @@
 // The decoder tiles (ot_hgi_qw_dec3 / ot_hgi_qw_dec) are children of the wires-only parent: lx / launch / gh6 are this
 // leaf's output registers, yc / yc_v / yc_f / yc_df its input registers (the same registers as in the one-head RTL).
 // Seam with the control head ot_hgi_qw_ovc: see that file.  No datapath cycle is added.
-module ot_hgi_qw_ovd #(
+// ovd split (Claude hbm-group-B r2, 2026-10-14): the data head ot_hgi_qw_ovd held TWO independent flows -- the gather
+// (4 x 1,024-b lane-group pin registers -> OR4 -> decoder x, W/N/S-west -> E) and the result side (yc -> 64 x 512 SRAM ->
+// write beats to the four lane-group rows).  They share no signal (only clk / rst_n), but the SRAM sat between the gather
+// pins and x: its M2-M4 block left two ~44-um channels for >= 1,600 b (cut 0.75 > 0.60, qw_ovd_ref-w2 GRT 17,243 markers,
+// el1013-hbm-quant-split 06:46).  The leaf is therefore two leaves with NO seam between them: ot_hgi_qw_ovg (gather, no
+// macro) and ot_hgi_qw_ovs (result SRAM + write side).  Each pin-flops rst_n into its own relay of the same depth, so both
+// release on the same edge as the one-leaf RTL (x_v / the write side / dec_rst_n unchanged).  No cycle is added or removed;
+// every register is the one of the one-leaf RTL.
+module ot_hgi_qw_ovg (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [1023:0]     l_gp0, l_gp1, l_gp2, l_gp3,
+    input  wire              c_gv,
+    input  wire [17:0]       c_gh,
+    output reg               x_v,
+    output reg  [17:0]       x_hd,
+    output reg  [1023:0]     x
+);
+    reg f_rst; always @(posedge clk) f_rst <= rst_n;
+    wire [0:0] rr_n;
+    ot_rst_relay #(.REGIONS(1)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
+    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) x_v <= 0; else x_v <= c_gv;   // x_v = the one-head 'launch'
+    always @(posedge clk) x_hd <= c_gh;                                                   // x_hd = gh[6]
+    reg [1023:0] gpf [0:3];
+    always @(posedge clk) begin
+        gpf[0] <= l_gp0; gpf[1] <= l_gp1; gpf[2] <= l_gp2; gpf[3] <= l_gp3;
+        x <= (gpf[0] | gpf[1]) | (gpf[2] | gpf[3]);
+    end
+endmodule
+
+module ot_hgi_qw_ovs #(
     parameter integer LQ = 16
 ) (
     input  wire          clk,
     input  wire          rst_n,
     // lane-group leaves
     // lane-group leaves, one port set a leaf row (each on the face toward its row; the write data has one kept copy a row)
-    input  wire [1023:0]     l_gp0, l_gp1, l_gp2, l_gp3,
     input  wire [7:0]        l_wcr0, l_wcr1, l_wcr2, l_wcr3,
     output wire [7:0]        l_wv0, l_wv1, l_wv2, l_wv3,
     output wire [8*15-1:0]   l_wsec0, l_wsec1, l_wsec2, l_wsec3,
     output wire [8*4-1:0]    l_ws0, l_ws1, l_ws2, l_ws3,
     output wire [511:0]      l_wy0, l_wy1, l_wy2, l_wy3,
     // control head
-    input  wire              c_gv,
-    input  wire [17:0]       c_gh,
     input  wire              c_mw_v,
     input  wire [5:0]        c_mw_a,
     input  wire [14:0]       c_mw_sec,
@@ -33,9 +60,6 @@ module ot_hgi_qw_ovd #(
     output reg               d_bad,
     // decoder tiles (parent level)
     output wire              dec_rst_n,
-    output reg               x_v,
-    output reg  [17:0]       x_hd,
-    output reg  [1023:0]     x,
     input  wire              d_vo,
     input  wire              d_f,
     input  wire              d_df,
@@ -54,15 +78,9 @@ module ot_hgi_qw_ovd #(
     // ---------------------------------------------------------------- seam RX from the control head
     reg wg_ok, mw_v; reg [OW-1:0] mw_a; reg [14:0] mw_sec; reg [2:0] mw_n;
     always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin wg_ok <= 0; mw_v <= 0; x_v <= 0; end
-        else begin wg_ok <= c_wg; mw_v <= c_mw_v; x_v <= c_gv; end       // x_v = the one-head 'launch'
-    always @(posedge clk) begin mw_a <= c_mw_a; mw_sec <= c_mw_sec; mw_n <= c_mw_n; x_hd <= c_gh; end   // x_hd = gh[6]
-    // ---------------------------------------------------------------- gather tail: one pure pin register a leaf, then OR4
-    reg [1023:0] gpf [0:3];
-    always @(posedge clk) begin
-        gpf[0] <= l_gp0; gpf[1] <= l_gp1; gpf[2] <= l_gp2; gpf[3] <= l_gp3;
-        x <= (gpf[0] | gpf[1]) | (gpf[2] | gpf[3]);
-    end
+        if (!rr_n[0]) begin wg_ok <= 0; mw_v <= 0; end
+        else begin wg_ok <= c_wg; mw_v <= c_mw_v; end
+    always @(posedge clk) begin mw_a <= c_mw_a; mw_sec <= c_mw_sec; mw_n <= c_mw_n; end
     // ---------------------------------------------------------------- result capture, SRAM FIFO
     reg yc_v, yc_f, yc_df; reg [511:0] yc;
     always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin yc_v <= 0; yc_f <= 0; yc_df <= 0; end
@@ -133,6 +151,6 @@ module ot_hgi_qw_ovd #(
     assign {l_ws3, l_ws2, l_ws1, l_ws0} = ws_f;
     assign {l_wsec3, l_wsec2, l_wsec1, l_wsec0} = wsec_f;
     assign l_wy0 = wc_y[0]; assign l_wy1 = wc_y[1]; assign l_wy2 = wc_y[2]; assign l_wy3 = wc_y[3];
-    initial if ((LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_qw_ovd: LQ");
+    initial if ((LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_qw_ovs: LQ");
 endmodule
 `default_nettype wire
