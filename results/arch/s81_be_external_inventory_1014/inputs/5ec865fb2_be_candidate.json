@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.s81.vm-be-reset-ack-candidate.v1",
+  "status": "SOURCE_CANDIDATE_FUNCTIONAL_PASS_PHYSICAL_OPEN",
+  "enable_macro": "OT_SPVM_RESET_ACK",
+  "default_numerical_behavior": "unchanged; macro undefined adds no ports/state",
+  "source_sha256": "f15f6ca231c0fce105715eb5eea239bb3fe2d5cd702892c156064f11fd7f5451",
+  "tb_sha256": "1313ebcd5732e248190106ba37353ee22d23ce3b4f3538ae71c56c3f4449d0b8",
+  "exports": {
+    "dsfd_vm_be.rst_ack": "4 serial-domain registered leaf ACKs",
+    "dsfd_vm_be.rst_ack_s": "4 stream-domain registered leaf ACKs"
+  },
+  "serial_evidence": [
+    "rn_i",
+    "rn_x",
+    "rn_c",
+    "rn_p",
+    "rn_w",
+    "u_rc0.w_live",
+    "u_rc1.w_live"
+  ],
+  "stream_evidence": [
+    "rns",
+    "u_rc0.r_live",
+    "u_rc1.r_live"
+  ],
+  "added_state": {
+    "per_slice": 4,
+    "all_four_slices": 16
+  },
+  "test": {
+    "positive": "BE_RESET_ACK_PASS",
+    "mutant_macro": "OT_SPVM_MUT_ACK_MIRROR",
+    "mutant_exit": 134,
+    "observed_assertion": "Stopped serial consumer acknowledged unsampled reset",
+    "fleet": "ot-epyc4",
+    "memory_gb": 8
+  },
+  "semantics": [
+    "Witness requires consumer clock to sample final local reset LOW on release before later HIGH ACK. Unsampled short reset is not acknowledged and requires a new complete sampled epoch.",
+    "ACK is traffic/occupancy independent and cannot use t_rdy or a fixed counter.",
+    "Existing real CDC rendezvous remains required; opposite-domain stopped clock blocks complete startup.",
+    "Controller must mask both reset requests during epochs and synchronize each ACK separately before reduction. No independent partial-reset admission claim."
+  ],
+  "physical": {
+    "new_leaf_ports_require_successor_views": true,
+    "actual_source_driver_phase_RC": null,
+    "current_closed_view_qualification": false
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.be_pinface_diagnostic_launch.v1",
-  "status": "RUNNING",
+  "status": "EARLY_FAIL_HOLD",
   "name": "s81be-access-Efaces-slot48-5b6ab0a5b",
   "source_branch": "codex/s81-be-native-placement",
   "source_commit": "5b6ab0a5b72a4cabc4b67c262811fa174cf93430",
@@ -56,5 +56,9 @@
     "host": "ot-epyc1tb",
     "run": "/srv/opentallas/claude/closure-loop/s81be-access-Efaces-slot48-5b6ab0a5b",
     "mutation": false
-  }
+  },
+  "rejected": true,
+  "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -65.0 ps (start -88.56), 9050 it / 20184 buffers, 15184 endpoints in margin, 0.2 h in step, HM guard present",
+  "failure_record": "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/launch/failure/record.json",
+  "final_routed_view_qualified": false
 }

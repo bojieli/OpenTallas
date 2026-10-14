@@ -57,7 +57,7 @@
     "physical/s81_be_access_m7_candidate/pdn.tcl": "a7cd1702729a1b3cc352daa0d22e1341405e499a46dbefe10aa54747e0e4028a",
     "physical/s81_be_access_m7_candidate/exact_gate_binding.json": "e6568256779f66ee149676f674c3627d2fdd74c2d1cb5a8227a80f75b258889f",
     "physical/s81_be_access_m7_candidate/ports.json": "4ee30b2488a295add74cf2ada572cea9c4909fa9822869f2da0dbedbdadde9ee",
-    "physical/s81_be_access_m7_candidate/launch.sh": "9b2867163020fa357cbc81df795e8555f0be0bb3522859bcfb01a797b39fb188",
+    "physical/s81_be_access_m7_candidate/launch.sh": "16f2bd840b1dd2d4e641c474d702233c995dc0def84621d78cb58cf06d7f7ca6",
     "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/request.json": "a0cc3a73d3dae76cdb4a652d38fcf00df70e14dc6c1e37ce1076cf406fb1a09f",
     "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/target_contacts_unrouted.lef": "a51a28b03e47e233ef12805eeb83eba4906475bffc4efc03ed87731aef6d2ad9"
   },
@@ -73,5 +73,6 @@
   "global_VM_origin_requested_um": [
     14036.112,
     12804.48
-  ]
+  ],
+  "diagnostic_snapshot_policy": "Official ORFS CTS_SNAPSHOTS=1; preserve pre-repair actual CTS ODB/SDC. No SDC, virtual reference, input/output delay, setup/hold margin, or correlation change."
 }

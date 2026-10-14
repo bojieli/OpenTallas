@@ -1,0 +1,235 @@
+[
+  {
+    "master": "dsfd_be_r55",
+    "view_commit": "a54b70d51574221f17d63dd669e197d0b6dcba53",
+    "paths": {
+      "dsfd_be_r55.lef": {
+        "git_path": "physical/ref_tile/dsfd_be_r55_m5/views/dsfd_be_r55/dsfd_be_r55.lef",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_be_r55_dsfd_be_r55.lef",
+        "sha256": "33fbdfaee75acba7e59f356a77fae9444427a2a304dc85f5b8dd9c78551584a6"
+      },
+      "dsfd_be_r55_tt.lib": {
+        "git_path": "physical/ref_tile/dsfd_be_r55_m5/views/dsfd_be_r55/dsfd_be_r55_tt.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_be_r55_dsfd_be_r55_tt.lib",
+        "sha256": "1c8ae6f58ac5a42703738ea5bbb4ff6484e0a92a9dbc4382bbd2430fd3383176"
+      },
+      "dsfd_be_r55_ss.lib": {
+        "git_path": "physical/ref_tile/dsfd_be_r55_m5/views/dsfd_be_r55/dsfd_be_r55_ss.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_be_r55_dsfd_be_r55_ss.lib",
+        "sha256": "198824fbc1d309a9c23011a0b4c51d9d41136a51fdea8b86aed77778de2058a2"
+      },
+      "dsfd_be_r55_ff.lib": {
+        "git_path": "physical/ref_tile/dsfd_be_r55_m5/views/dsfd_be_r55/dsfd_be_r55_ff.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_be_r55_dsfd_be_r55_ff.lib",
+        "sha256": "e9faf391282d896c71159f7ae29edfbdd260587d13ca03ffdc375ba9160da66d"
+      },
+      "abstract.json": {
+        "git_path": "physical/ref_tile/dsfd_be_r55_m5/views/dsfd_be_r55/abstract.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_be_r55_abstract.json",
+        "sha256": "09b0b37e3799308bba40ef0ad2965ef3540601b4db60b9f6c88a682315c2bf42"
+      },
+      "insertion.json": {
+        "git_path": "physical/ref_tile/dsfd_be_r55_m5/views/dsfd_be_r55/insertion.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_be_r55_insertion.json",
+        "sha256": "2292d51c99baba1ee52e6f4d94b84c80a25cb9dc407ff1f85e5653a16110793f"
+      },
+      "child_lint.json": {
+        "git_path": "physical/ref_tile/dsfd_be_r55_m5/views/dsfd_be_r55/child_lint.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_be_r55_child_lint.json",
+        "sha256": "f3c5a73026ed44198adef7261fc4fb1e1d9828b22994517dfb7da2e7704e617a"
+      }
+    },
+    "export_source_final_odb": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_be_r55_m5-r1-06542a05c/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_dsfd_be_r55_asap7_ref_dsfd_be_r55_m5_r1_06542a05c/base/6_final.odb": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_be_r55_m5-r1-06542a05c/routes/dsfd_be_r55_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_be_r55_asap7_ref_dsfd_be_r55_m5_r1_06542a05c/base/6_final.odb",
+        "sha256": "41ab3c384f70f87d65420c96e5f036b5c94cd05f742804d133385506d583baa2"
+      },
+      "/work/results/asap7/opentallas_dsfd_be_r55_asap7_ref_dsfd_be_r55_m5_r1_06542a05c/base/6_final.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_be_r55_m5-r1-06542a05c/routes/dsfd_be_r55_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_be_r55_asap7_ref_dsfd_be_r55_m5_r1_06542a05c/base/6_final.sdc",
+        "sha256": "2ffa8d3c6c8a349da9f61fff844457eefc78e947d931a18726ca7449fec880aa"
+      },
+      "/work/results/asap7/opentallas_dsfd_be_r55_asap7_ref_dsfd_be_r55_m5_r1_06542a05c/base/6_final.spef": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_be_r55_m5-r1-06542a05c/routes/dsfd_be_r55_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_be_r55_asap7_ref_dsfd_be_r55_m5_r1_06542a05c/base/6_final.spef",
+        "sha256": "8558eed968603de302d8ea9e8e206639de967faa6aa568a80c8c1fa4ce3ff6b0"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_be_r55_m5-r1-06542a05c/routes/dsfd_be_r55_m5_r1_06542a05c/work/orfs/w18_extra.sdc",
+        "sha256": "98029a89ed71ff73636fd9964619895cbebeb1807ca0b9785c9e6e34d7347960"
+      }
+    },
+    "routed_export_checked": true
+  },
+  {
+    "master": "dsfd_die_r1",
+    "view_commit": "c0d1a75bf7ad8384101e1113c2f3e9b9da550a58",
+    "paths": {
+      "dsfd_die_r1.lef": {
+        "git_path": "physical/ref_tile/dsfd_die_r1_m5/views/dsfd_die_r1/dsfd_die_r1.lef",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_r1_dsfd_die_r1.lef",
+        "sha256": "a0f7ddb91aa186fdb3819cbcbe7ede3bd34045914cd9e0987abff0a851e0a6ae"
+      },
+      "dsfd_die_r1_tt.lib": {
+        "git_path": "physical/ref_tile/dsfd_die_r1_m5/views/dsfd_die_r1/dsfd_die_r1_tt.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_r1_dsfd_die_r1_tt.lib",
+        "sha256": "82b03b11469486063e086e1c6fa60f7bfa231393b11bb7840072df784ed5ffe9"
+      },
+      "dsfd_die_r1_ss.lib": {
+        "git_path": "physical/ref_tile/dsfd_die_r1_m5/views/dsfd_die_r1/dsfd_die_r1_ss.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_r1_dsfd_die_r1_ss.lib",
+        "sha256": "9d807a85b5e5f88bfe44ea6b8dc0f60a0ac96b4c0cb2d2429eac541057df9387"
+      },
+      "dsfd_die_r1_ff.lib": {
+        "git_path": "physical/ref_tile/dsfd_die_r1_m5/views/dsfd_die_r1/dsfd_die_r1_ff.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_r1_dsfd_die_r1_ff.lib",
+        "sha256": "1c712d98be8845c995c20ff12ef33c71d8bef9f83054c3ea53c1c8b52b44cb1a"
+      },
+      "abstract.json": {
+        "git_path": "physical/ref_tile/dsfd_die_r1_m5/views/dsfd_die_r1/abstract.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_r1_abstract.json",
+        "sha256": "56ff21d5266126f30977c54b3f6be09810cb5467f00f82d062b5cdd0e2205bc9"
+      },
+      "insertion.json": {
+        "git_path": "physical/ref_tile/dsfd_die_r1_m5/views/dsfd_die_r1/insertion.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_r1_insertion.json",
+        "sha256": "871b4a0a4a6903319ec30f329aa4edcb71a41a0e90809c4c3615c81315886281"
+      },
+      "child_lint.json": {
+        "git_path": "physical/ref_tile/dsfd_die_r1_m5/views/dsfd_die_r1/child_lint.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_r1_child_lint.json",
+        "sha256": "9d34fbaf781727e42f8f0fc0847459a0bae49db908d56fae7777f9bafe903fae"
+      }
+    },
+    "export_source_final_odb": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_die_r1_m5-r1-06542a05c/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_dsfd_die_r1_asap7_ref_dsfd_die_r1_m5_r1_06542a05c/base/6_final.odb": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_die_r1_m5-r1-06542a05c/routes/dsfd_die_r1_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_die_r1_asap7_ref_dsfd_die_r1_m5_r1_06542a05c/base/6_final.odb",
+        "sha256": "32f7516219b9c805d5cefe67f37dce7479f6310f3abe4446f8f6e34fbe9e1b80"
+      },
+      "/work/results/asap7/opentallas_dsfd_die_r1_asap7_ref_dsfd_die_r1_m5_r1_06542a05c/base/6_final.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_die_r1_m5-r1-06542a05c/routes/dsfd_die_r1_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_die_r1_asap7_ref_dsfd_die_r1_m5_r1_06542a05c/base/6_final.sdc",
+        "sha256": "ce6b32882b0e79e2b9242c29c3d540f13e2a155c9569a3aca61366c5def0fad2"
+      },
+      "/work/results/asap7/opentallas_dsfd_die_r1_asap7_ref_dsfd_die_r1_m5_r1_06542a05c/base/6_final.spef": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_die_r1_m5-r1-06542a05c/routes/dsfd_die_r1_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_die_r1_asap7_ref_dsfd_die_r1_m5_r1_06542a05c/base/6_final.spef",
+        "sha256": "c778f0c68e50107c7d0813b7b143d024fcb829c26fbae6fb01467fd77f82a2e5"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/dsfd_die_r1_m5-r1-06542a05c/routes/dsfd_die_r1_m5_r1_06542a05c/work/orfs/w18_extra.sdc",
+        "sha256": "eb0a1e98db2ead7c8bbbfe3c37bb7b1196db4d7030ad07fdd31ee6de33e17dfd"
+      }
+    },
+    "routed_export_checked": true
+  },
+  {
+    "master": "dsfd_die_rstsync",
+    "view_commit": "6262028506bccd11f609bd3a8bf34551faf59d09",
+    "paths": {
+      "dsfd_die_rstsync.lef": {
+        "git_path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync.lef",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_rstsync_dsfd_die_rstsync.lef",
+        "sha256": "03f7519e06e8f756f42b28382bd72c263a031113b060a12fa783d1f7a0e4b5d3"
+      },
+      "dsfd_die_rstsync_tt.lib": {
+        "git_path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync_tt.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_rstsync_dsfd_die_rstsync_tt.lib",
+        "sha256": "2058091bc62f48bcb1ebdfc866564b0d89e71018a375f3132f229b62c267ccda"
+      },
+      "dsfd_die_rstsync_ss.lib": {
+        "git_path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync_ss.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_rstsync_dsfd_die_rstsync_ss.lib",
+        "sha256": "9d43eee71822e3da4a5d40af09490f1956afa2626090b0928f11dffe9408ab57"
+      },
+      "dsfd_die_rstsync_ff.lib": {
+        "git_path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/dsfd_die_rstsync_ff.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_rstsync_dsfd_die_rstsync_ff.lib",
+        "sha256": "a0e0a3d63b84f8b3bf77feb208189c4ded4d68b92746911680bf8e32d15ace50"
+      },
+      "abstract.json": {
+        "git_path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/abstract.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_rstsync_abstract.json",
+        "sha256": "8be57a9773637b98ee76d843fc9e45de4629f3f0bd909bb05b1be24514aa729a"
+      },
+      "insertion.json": {
+        "git_path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/insertion.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_rstsync_insertion.json",
+        "sha256": "7b64d9212a985afce40845b40b1f4d299cc0716b32a92bd8bc9481ad28d74c53"
+      },
+      "child_lint.json": {
+        "git_path": "physical/ref_tile/dsfd_die_rstsync_m5/views/dsfd_die_rstsync/child_lint.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_die_rstsync_child_lint.json",
+        "sha256": "f86beaaa047840dd264107f6fb1819d11167f82910c34f2477cfa88db53b45f2"
+      }
+    },
+    "export_source_final_odb": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_die_rstsync_m5-r1-06542a05c/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_dsfd_die_rstsync_asap7_ref_dsfd_die_rstsync_m5_r1_06542a05c/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_die_rstsync_m5-r1-06542a05c/routes/dsfd_die_rstsync_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_die_rstsync_asap7_ref_dsfd_die_rstsync_m5_r1_06542a05c/base/6_final.odb",
+        "sha256": "4c8c76ff39df4b1abcf86357f0abf1da11cb0309f74301705bb99b943eea822a"
+      },
+      "/work/results/asap7/opentallas_dsfd_die_rstsync_asap7_ref_dsfd_die_rstsync_m5_r1_06542a05c/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_die_rstsync_m5-r1-06542a05c/routes/dsfd_die_rstsync_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_die_rstsync_asap7_ref_dsfd_die_rstsync_m5_r1_06542a05c/base/6_final.sdc",
+        "sha256": "00dde78305204cc7e4e33d317a743724ebe0dac5ce907baa29833569434caff3"
+      },
+      "/work/results/asap7/opentallas_dsfd_die_rstsync_asap7_ref_dsfd_die_rstsync_m5_r1_06542a05c/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_die_rstsync_m5-r1-06542a05c/routes/dsfd_die_rstsync_m5_r1_06542a05c/work/orfs/results/asap7/opentallas_dsfd_die_rstsync_asap7_ref_dsfd_die_rstsync_m5_r1_06542a05c/base/6_final.spef",
+        "sha256": "5d0a7b0243a39a54db1fb347f2231835faf6a71567136bdc969263cd455ccc17"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_die_rstsync_m5-r1-06542a05c/routes/dsfd_die_rstsync_m5_r1_06542a05c/work/orfs/w18_extra.sdc",
+        "sha256": "8b26853bb3da54d10e418102d29c99b7d6970f374c36aac4ff7010152fb70c61"
+      }
+    },
+    "routed_export_checked": true
+  },
+  {
+    "master": "dsfd_vm_be_sl",
+    "closed_job": "s81vm-besl4a-c15e2bf6a-tc-rd-pd45",
+    "legacy_source_commit": "c15e2bf6a",
+    "old_CLOSED_stands": true,
+    "ACK_successor_qualified": false,
+    "M6_native_eligibility": false,
+    "actual_cap": "M7",
+    "paths": {
+      "dsfd_vm_be_sl.lef": {
+        "source_path": "physical/s81_ph_views/vm_master/routes/s81vm-besl4-c15e2bf6a-tc-rd-pd45/dsfd_vm_be_sl/dsfd_vm_be_sl.lef",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_vm_be_sl_dsfd_vm_be_sl.lef",
+        "sha256": "cdab81772dca3007483e71c881374989cc6eb90d8c3ec69dd585cb3e429a3eb6"
+      },
+      "dsfd_vm_be_sl_tt.lib": {
+        "source_path": "physical/s81_ph_views/vm_master/routes/s81vm-besl4-c15e2bf6a-tc-rd-pd45/dsfd_vm_be_sl/dsfd_vm_be_sl_tt.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_vm_be_sl_dsfd_vm_be_sl_tt.lib",
+        "sha256": "dea0704844467384199a3c21bb3e654dbb887c07883895f4397b2e9334ba99af"
+      },
+      "dsfd_vm_be_sl_ss.lib": {
+        "source_path": "physical/s81_ph_views/vm_master/routes/s81vm-besl4-c15e2bf6a-tc-rd-pd45/dsfd_vm_be_sl/dsfd_vm_be_sl_ss.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_vm_be_sl_dsfd_vm_be_sl_ss.lib",
+        "sha256": "b83f271be4e80b17253d8c39a58c20e046a09fb79f2202baeba814f4cb2c36d9"
+      },
+      "dsfd_vm_be_sl_ff.lib": {
+        "source_path": "physical/s81_ph_views/vm_master/routes/s81vm-besl4-c15e2bf6a-tc-rd-pd45/dsfd_vm_be_sl/dsfd_vm_be_sl_ff.lib",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_vm_be_sl_dsfd_vm_be_sl_ff.lib",
+        "sha256": "a0bc6b1fe82aac0794e2c1c68827bc2a190f5707498306484d8b06322ecca63d"
+      },
+      "abstract.json": {
+        "source_path": "physical/s81_ph_views/vm_master/routes/s81vm-besl4-c15e2bf6a-tc-rd-pd45/dsfd_vm_be_sl/abstract.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_vm_be_sl_abstract.json",
+        "sha256": "085e5ead0cb0d25fb437b085838240dedc7a3cdfadfcb71c753f67f0c4067966"
+      },
+      "corner_sta.json": {
+        "source_path": "physical/s81_ph_views/vm_master/routes/s81vm-besl4-c15e2bf6a-tc-rd-pd45/dsfd_vm_be_sl/corner_sta.json",
+        "snapshot": "results/arch/s81_be_external_inventory_1014/closed_views/dsfd_vm_be_sl_corner_sta.json",
+        "sha256": "024d0ecb9a45addea966cc576caeb1b507794b16e41cca75a48ef1a22317d0ba"
+      }
+    }
+  }
+]

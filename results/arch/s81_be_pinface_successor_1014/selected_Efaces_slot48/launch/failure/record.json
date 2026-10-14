@@ -1,0 +1,78 @@
+{
+  "schema": "opentallas.be_access_diagnostic_rejection.v1",
+  "status": "EARLY_FAIL_HOLD",
+  "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -65.0 ps (start -88.56), 9050 it / 20184 buffers, 15184 endpoints in margin, 0.2 h in step, HM guard present",
+  "source_commit": "5b6ab0a5b72a4cabc4b67c262811fa174cf93430",
+  "source_branch": "codex/s81-be-native-placement",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas/claude/closure-loop/s81be-access-Efaces-slot48-5b6ab0a5b",
+  "helper_verification": {
+    "status": "verified_original",
+    "origin_main": "2cb44dc18f7a45698b5f2c1947e4fc0b7b9cafb8",
+    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
+    "files": 46,
+    "verified_at": "2026-10-14T02:19:04-07:00",
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas/claude/closure-loop/s81be-access-Efaces-slot48-5b6ab0a5b",
+    "mutation": false
+  },
+  "benches": {
+    "bench_existing_native_evidence_source_binding": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "BE_ACCESS_REQUIRED_CHECKS_PASS\n",
+      "track": "parallel"
+    },
+    "bench_target_contacts_four_orientations": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "{\"elapsed_s\": 4.669416666030884, \"returncode\": 0, \"DRT0073\": 0, \"OT_PA_DONE\": true, \"pass_\": true}\n",
+      "track": "parallel"
+    },
+    "bench_target_contacts_actual_global_slots": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "{\"elapsed_s\": 3.870112180709839, \"returncode\": 0, \"DRT0073\": 0, \"OT_PA_DONE\": true, \"pass_\": true}\n",
+      "track": "parallel"
+    }
+  },
+  "source_files": {
+    "run.log": {
+      "snapshot": "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/launch/failure/run.log",
+      "sha256": "dba2e5cb6516c78ea89e29f07e9323166b311e3a0ff72e86f81e92f901aaa6c2"
+    },
+    "args": {
+      "snapshot": "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/launch/failure/args",
+      "sha256": "40b686ceb1879b00204c20bd06b22a4c8f93b44d544412c7b565eb5020943d41"
+    },
+    "SOURCE_COMMIT": {
+      "snapshot": "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/launch/failure/SOURCE_COMMIT",
+      "sha256": "094ad2504b9fb0feb83a3acabeaa30906a0a4ec7e0bbb5f1ba6a320e94e896ca"
+    },
+    "work/orfs/logs/asap7/opentallas_dsfd_vm_be_sl_asap7_s81ph_s81be_access_Efaces_slot48_5b6ab0a5b/base/4_1_cts.tmp.log": {
+      "snapshot": "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/launch/failure/4_1_cts.tmp.log",
+      "sha256": "7aa8f097b127d94e9c49b175d2b464df0fb51a0edc3bdee7863b98b8a05ff654"
+    },
+    "work/orfs/results/asap7/opentallas_dsfd_vm_be_sl_asap7_s81ph_s81be_access_Efaces_slot48_5b6ab0a5b/base/3_2_place_iop.tcl": {
+      "snapshot": "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/launch/failure/3_2_place_iop.tcl",
+      "sha256": "18444a4eb6bba0310c5c247d185a4d5089c641b3e1db97b768a800efd2644eeb"
+    },
+    "work/orfs/results/asap7/opentallas_dsfd_vm_be_sl_asap7_s81ph_s81be_access_Efaces_slot48_5b6ab0a5b/base/3_place.sdc": {
+      "snapshot": "results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/launch/failure/3_place.sdc",
+      "sha256": "be15bd9262cc9acd6f2e2e12607ca24f9a36a2d4b11865e7df5fa92d551c235b"
+    }
+  },
+  "recorded_UTC": "2026-10-14T09:48:38.697650+00:00",
+  "final_routed_view_exists": false,
+  "final_SS_setup_ps": null,
+  "final_FF_hold_ps": null,
+  "final_DRC": null,
+  "final_routed_AP_pass": null,
+  "old_CLOSED_replaced": false,
+  "native_parent_adopted": false,
+  "ACK_successor_qualified": false,
+  "fallback_to_old_ACK": false
+}

@@ -16,4 +16,5 @@ export SRCS="rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv rtl/dsrom_sys/mtp/dsfd_v
 bash "$SRC/physical/s81_ph_views/common/route_view.sh" "$label" be_access_m7_candidate dsfd_vm_be_sl rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv \
     --step-tcl PRE_GLOBAL_PLACE="physical/s81_ph_views/vm_master/besl_rhold.tcl" \
     --step-tcl POST_DETAIL_ROUTE="$kit/full_depth_keepout.tcl" \
-    --orfs-var OT_RHOLD_N=2
+    --orfs-var OT_RHOLD_N=2 \
+    --orfs-var CTS_SNAPSHOTS=1
