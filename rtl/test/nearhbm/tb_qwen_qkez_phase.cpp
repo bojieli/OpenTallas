@@ -107,8 +107,8 @@ int main(int argc, char** argv) {
     std::vector<int> got(NH * HD, 0);
     int nout = 0;
     auto readhex=[&](const char* name){std::vector<uint32_t> v; std::ifstream f(dir+"/"+name);std::string l;while(f>>l)v.push_back(strtoul(l.c_str(),0,16));return v;};
-    auto gs=readhex("score.hex"), ge=readhex("exp_bf16.hex"), gm=readhex("max.hex"), gz=readhex("denom.hex");
-    if(gs.size()!=4*T || ge.size()!=4*T || gm.size()!=4 || gz.size()!=4) return 2;
+    auto gs=readhex("score.hex"), ge=readhex("exp_bf16.hex"), gm=readhex("max.hex"), gz=readhex("denom.hex"),gr=readhex("recip.hex");
+    if(gs.size()!=4*T || ge.size()!=4*T || gm.size()!=4 || gz.size()!=4 || gr.size()!=4) return 2;
     std::vector<int> cs(4*T),ce(4*T),cm(4),cz(4);
     std::vector<uint32_t> as(4*T),ae(4*T),am(4),az(4),arz(4);
     int ns=0,ne=0,nm=0,nz=0,nrz=0,wrong=0,tagerr=0;
@@ -174,7 +174,7 @@ int main(int argc, char** argv) {
         }
         if(top->dbg_m_v){if(top->dbg_m_g)tagerr++;check(cm,gm,top->dbg_m_h,top->dbg_m_d,nm);}
         if(top->dbg_z_v){check(cz,gz,top->dbg_z_h,top->dbg_z_d,nz);zlast=now;}
-        if(top->dbg_rz_ready && !nrz){for(int h=0;h<4;h++)arz[h]=gbits(top->dbg_rz_d,32*h,32);nrz=4;}
+        if(top->dbg_rz_ready && !nrz){for(int h=0;h<4;h++){arz[h]=gbits(top->dbg_rz_d,32*h,32);if(arz[h]!=gr[h])wrong++;}nrz=4;}
         // requests issued at this edge
         for (int x = 0; x < 4 * R; x++)
             if (gbits(top->req_valid, x, 1)) {
