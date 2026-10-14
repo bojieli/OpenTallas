@@ -1,0 +1,5 @@
+PASS ARGMAX59 mutant=1 actual_row0=132944 local_row=18991 global_token=0 rank_returns=8 fault=1
+- rtl/test/tb_qwen_native59_argmax.sv:38: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 19ns; walltime 0.000 s; speed 542.392 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

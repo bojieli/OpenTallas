@@ -1,0 +1,160 @@
+{
+  "schema": "native59-controller-retained-state-evidence-v1",
+  "source_commit": "c0e0fc0c4",
+  "fleet_host": "ot-epyc4",
+  "fleet_stage": "/srv/opentallas-scratch/codex/native59-c0e0fc0c4",
+  "fleet_unit": "oth-ubuntu-1649441-1791970273",
+  "actual_exit": 0,
+  "archive_sha256": "692f203bf2fa24eaa04117e9248e78ca6a236dfb869d41d5be414c5d7b28056e",
+  "source_sha256": {
+    "rtl/physical/ot_qfd_seq_su_bi_native8_tag59_candidate.sv": "f948f7af33e39946884dfd685f40ef778095601cdef180fc3590e15e47b305ce",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv": "84fbd3975bf4ccbe436f3864057fcf42e89b9f1f6fa6bfd62e6ebe4447d40597",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
+    "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv": "f7c420676f57d6b377b89cd52da7d78f9332e2a7d762dca039565076c5a49dfa",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv": "0fe1d499dad8a137f237b66077e499e40a50ec8e259ea04c77e7eae3fe248207",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/physical/ot_qwen_tp_seq_w12_vrl_native59.sv": "ee1e6b76dd86c17f806aea9a62d748bdf915a6880985b30da5e63942730c8f3f",
+    "rtl/physical/ot_qfd_stage_gate_native_epoch.sv": "c4fc53b4c22ca29dddf0b7d26bc78412253f67f47743379ba6fdc29926ec40e7",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "rtl/physical/ot_qfd_native59_retained_partition_candidate.sv": "7a43c339f90b65998bd294bd9454fcc684e04b3c070930bb58138f7e13d37a74"
+  },
+  "identity_layout": {
+    "epoch": [
+      58,
+      43
+    ],
+    "stage": [
+      42,
+      37
+    ],
+    "token": [
+      36,
+      19
+    ],
+    "position": [
+      18,
+      6
+    ],
+    "segment": [
+      5,
+      0
+    ]
+  },
+  "functional": {
+    "helper_positive_frames": 3,
+    "helper_words_per_frame": 128,
+    "actual_helper_vm_writes": 384,
+    "depleted_credit_edges": 384,
+    "all_vocab_start_captures": 151936,
+    "stage_values": 38,
+    "positions": [
+      8191,
+      7935
+    ],
+    "identity_mutation_fields": [
+      "epoch",
+      "stage",
+      "token_top_bit",
+      "position_bit8",
+      "segment"
+    ],
+    "reject_before_write_mutations": [
+      "outside_coll",
+      "extra_reset_credit",
+      "poison_r_err",
+      "bad_last"
+    ],
+    "mutant_vm_writes": 0,
+    "mutant_rx_advancement": 0,
+    "argmax_positive_global_token": 151935,
+    "argmax_actual_row0": 132944,
+    "argmax_actual_local_row": 18991,
+    "argmax_rank_truncation": {
+      "fault": true,
+      "done": false,
+      "next_token": 0,
+      "rx_k": 7
+    },
+    "partition_cycles": 20997,
+    "partition_program_reads": 401,
+    "partition_loads": 86,
+    "partition_vm_writes": 101,
+    "partition_posted_sent": 66,
+    "partition_rank_mutant_detected": 4840,
+    "partition_late_bank_mismatches": 19926
+  },
+  "generic_clock_ff_bits": {
+    "clk_program[0]": 4160,
+    "clk_program[10]": 4160,
+    "clk_program[11]": 4160,
+    "clk_program[12]": 4160,
+    "clk_program[13]": 4160,
+    "clk_program[14]": 4160,
+    "clk_program[15]": 4160,
+    "clk_program[1]": 4160,
+    "clk_program[2]": 4160,
+    "clk_program[3]": 4160,
+    "clk_program[4]": 4160,
+    "clk_program[5]": 4160,
+    "clk_program[6]": 4160,
+    "clk_program[7]": 4160,
+    "clk_program[8]": 4160,
+    "clk_program[9]": 4160,
+    "clk_control": 12606,
+    "clk_station": 3536
+  },
+  "generic_total_ff_bits": 82702,
+  "retained_state_partition": {
+    "control_leaf": "ot_qfd_native59_control_state_leaf",
+    "station_leaf": "ot_qfd_native59_station_leaf",
+    "program_leaf": "ot_qfd_native59_program_lane_leaf",
+    "program_leaf_count": 16,
+    "parent": "ot_qfd_native59_retained_partition_candidate",
+    "parent_wires_only": true
+  },
+  "qualification": {
+    "physical": false,
+    "slots_assigned": false,
+    "mapped_sink_or_cts": false,
+    "independent_clock_timing": false,
+    "actual_checkpoint_program": false,
+    "production_ring": false,
+    "actual_host_allocator": false,
+    "stage0_cbuf_composition": false
+  },
+  "remaining_gaps": [
+    "Physical bank read mux/address faces need pin registration/path timing; no assigned slots or CTS entries.",
+    "All proof clocks share common phase. Generic FF count is not technology-mapped clock sink count.",
+    "Actual HOST shared token epoch allocator, warm-reset retention, no-wrap/drain fence and stage manifest belong to dispatch/HOST.",
+    "Untagged credits while outstanding require actual drain/reset fence; cap32 cannot identify delayed old ACK.",
+    "Actual new59 transport/group poison and all8-group tagged cbuf are sibling proofs and need concrete composition.",
+    "Partition fixture exercises stage1 control with valid token/position ranges and shaped fixture returns; no arbitrary layer resume or production program claim."
+  ],
+  "supersedes_helper_only": [
+    "f2b3e8bec"
+  ],
+  "artifacts": {
+    "ar_run0.log": "8dd073d9d4f7d7d4520c1d07494dda9309208cae4905b52a37d000d6e82ed9c4",
+    "id_run9.log": "690dd6658c29474f84987a9835b480b7949c33fa4415597b29e7b47dfa9cba0c",
+    "id_run1.log": "50856b2e27aa65f354ee9ed7f2e1e3ebf2507eb81b6dddb2efa5edfa1ed146a8",
+    "id_run5.log": "583db687da2f62dd5ecfeb694756c3c99765dd72fe5ee4059c330ddda3e1102e",
+    "ar_run1.log": "db1274cf7dc61d1d4ff7cef2a0da969344d4197cf2a50205277a75503788b34c",
+    "id_run6.log": "cd4f83d7b2954e3d4666e718243153c68edbbab3fb1b14698c3734f83a116153",
+    "id_run0.log": "de550134bbe844a7ea54fffbe6e181d38b843c3e2f63fd6a4f99d2fa8d23c667",
+    "id_run8.log": "3dc01ae04bb842ee0381ceb8769c1882f73f60eeccbda63d141e7d91d3e06892",
+    "partition_positive.log": "7b72181139d8c05ce6b4af122eebf15c32e9ada951248530f23b456009da4fc9",
+    "id_run4.log": "27e86f25734ac6fa371b6055dbb6d53261a8969523fc6faf743d396ed3266e85",
+    "census.json": "e3092d97c130d123d52434cf6431754c74b2dd5151fa61303dafffa9c6b4167b",
+    "partition_late.log": "c9457313c5720903045f8840a7e43b2e49b419f41531c16f6015f2bae1c11f69",
+    "id_run7.log": "9f2a6a74bf27fb27c9fd8070d796c6de1c2e9758142e8e53059762e20a44610e",
+    "id_run3.log": "62eff5e4fe413ecf5af642c29bd27fb1c67ffd430fee8ff928a238a2c896d50d",
+    "source_binary.sha256": "5a28dc48504dbf87e6e2c2c3071c500688f140c2d5d51f3684e2fedcd9b4eee8",
+    "partition_rank.log": "acd8282c985e3c5440984f1624f2683456e39aa4d46b8ee456bc9b523511fbf4",
+    "id_run2.log": "ab79a0441009e8b10a26a2ad23a9f47a430ef207fe8a3d184c66b8631645888f"
+  }
+}

@@ -1,0 +1,6 @@
+FRAME id=0 sent=128 acked=128 received=1 writes=0 depleted_edges=128 cycles=456 credit=32 faults=1
+PASS NATIVE59 mutant=1 frames=1 full_windows=1 fault=1 writes=0
+- rtl/test/tb_qwen_native8_identity59.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 495ns; walltime 0.000 s; speed 2.450 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

@@ -1,0 +1,7 @@
+FAIL seq_su_bi_psram mismatches=0 program_reads=401 (min 50) loads=86 core_done=18105 cwait=1031 coll=17875 vm_writes=101 (min 100)
+POSTED_ABI native8 overflow=0 sent=66 initial_credit=32
+RANK_ABI native8 mismatches=4840 high_rank_samples=0
+- rtl/test/tb_qfd_native59_retained_partition.sv:400: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.057 s; speed 370.410 us/s
+- Verilator: cpu 0.057 s on 1 threads; allocated 8 MB
