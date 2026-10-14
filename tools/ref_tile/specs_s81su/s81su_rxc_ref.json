@@ -22,7 +22,6 @@
  "reset_ports": [
   "rst"
  ],
- "util": 0.6,
  "pins": {
   "N": [
    "ck",
@@ -83,5 +82,9 @@
   "views_to": "physical/ref_tile/s81su_rxc_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_rxc_ref"
  },
- "std_area_um2": 30000
+ "std_area_um2": 30000,
+ "outline": {
+  "w": 388.8,
+  "h": 388.8
+ }
 }

@@ -6,16 +6,16 @@
  "die": [
   0,
   0,
-  228.96,
-  228.96
+  388.8,
+  388.8
  ],
  "core": [
   2.16,
   2.16,
-  226.8,
-  226.8
+  386.64,
+  386.64
  ],
- "why": "util 0.6 of std 30000 + macros 0 um2",
+ "why": "spec outline",
  "std_area_um2": 30000,
  "layer_contract": {
   "children": {},
@@ -72,7 +72,14 @@
  },
  "clock_port": "ck",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 20% outside 45%-60% (std 30000 + macro 0 in core 147825 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv",
   "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv",
