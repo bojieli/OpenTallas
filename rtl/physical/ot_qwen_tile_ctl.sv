@@ -167,7 +167,7 @@ module ot_qwen_tile_ctl_tp8_ctx (
     output wire [31:0] cx_xversion,
     input wire query_ack_toggle,
     output wire [39:0] cx_query_seq,
-    output wire cx_query_toggle,cx_query_credit,cx_query_fault,
+    output wire cx_query_toggle,cx_query_credit,cx_query_fault,cx_query_issue_v,
     input wire accept_ack_toggle,accept_transport_fence,
     output wire cx_accept_toggle,cx_admission_fault,
     output wire cx_op_accept,output wire cx_issue_last,
@@ -197,7 +197,7 @@ module ot_qwen_tile_ctl_tp8_ctx (
         .rom_ce(), .rom_addr(), .rom_addr_n(), .rom_addr_b(), .rom_req_m(), .rom_rd({2*5*266{1'b0}}),
         .kvs_r_ce(), .kvs_r_addr(), .kvs_rd(512'd0), .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}),
         .cx_xre(cx_xre), .cx_xaddr(cx_xaddr), .cx_xepoch(cx_xepoch), .cx_xjrepeat(cx_xjrepeat), .op_context(op_context), .vm_version(vm_version), .cx_xcontext(cx_xcontext), .cx_xversion(cx_xversion), .query_ack_toggle(query_ack_toggle),
- .cx_query_seq(cx_query_seq),.cx_query_toggle(cx_query_toggle),.cx_query_credit(cx_query_credit),.cx_query_fault(cx_query_fault),
+ .cx_query_seq(cx_query_seq),.cx_query_toggle(cx_query_toggle),.cx_query_credit(cx_query_credit),.cx_query_fault(cx_query_fault),.cx_query_issue_v(cx_query_issue_v),
  .accept_ack_toggle(accept_ack_toggle),.accept_transport_fence(accept_transport_fence),
  .cx_accept_toggle(cx_accept_toggle),.cx_admission_fault(cx_admission_fault),.cx_op_accept(cx_op_accept),.cx_issue_last(cx_issue_last), .cx_accepted_context(cx_accepted_context), .cx_accepted_version(cx_accepted_version), .cx_core_idle(cx_core_idle), .cx_accepted_ib(cx_accepted_ib),
         .cx_rreq(cx_rreq), .cx_rq(5120'd0), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));

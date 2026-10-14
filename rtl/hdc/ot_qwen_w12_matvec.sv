@@ -303,7 +303,7 @@ module ot_qwen_w12_matvec_part #(
     output reg x_issue_last,
     input wire i_query_ack_toggle,
     output wire [39:0] x_query_seq,
-    output wire x_query_toggle,x_query_credit,x_query_fault,
+    output wire x_query_toggle,x_query_credit,x_query_fault,x_query_issue_v,
     input  wire [G*32-1:0]   x_q,
     // result words, one port per group
     output wire              ov,          // a result round-slot (whether or not written)
@@ -643,7 +643,7 @@ end endgenerate
       // Fixed nativeFAST1/NW18/IL8 executes at most2^39queries/op;
       //40bits avoids an arithmetic-drain deadlock from rollover clock stopping.
       reg [39:0] next_sequence,issued_sequence;
-      reg toggle,credit_fault;
+      reg toggle,credit_fault,issued_valid;
       wire [G-1:0] next_read;
       genvar qi;
       for(qi=0;qi<G;qi=qi+1)begin:g_mask
@@ -653,20 +653,21 @@ end endgenerate
       assign x_query_credit=acked;
       assign x_query_seq=issued_sequence;
       assign x_query_toggle=toggle;
-      assign x_query_fault=credit_fault;
+      assign x_query_fault=credit_fault;assign x_query_issue_v=issued_valid;
       always @(posedge clk or negedge rst_n)begin
-       if(!rst_n)begin next_sequence<=0;issued_sequence<=0;toggle<=0;credit_fault<=0;end
+       if(!rst_n)begin next_sequence<=0;issued_sequence<=0;toggle<=0;credit_fault<=0;issued_valid<=0;end
        else begin
+        issued_valid<=0;
         if(go&&ready)next_sequence<=0;
         if(|next_read)begin
          if(!x_query_credit)credit_fault<=1;
-         else begin issued_sequence<=next_sequence;next_sequence<=next_sequence+1'b1;toggle<=!toggle;end
+         else begin issued_sequence<=next_sequence;next_sequence<=next_sequence+1'b1;toggle<=!toggle;issued_valid<=1;end
         end
        end
       end
     end else begin:g_no_query_identity
       assign x_query_seq=40'd0;assign x_query_toggle=1'b0;
-      assign x_query_credit=1'b1;assign x_query_fault=1'b0;
+      assign x_query_credit=1'b1;assign x_query_fault=1'b0;assign x_query_issue_v=1'b0;
     end endgenerate
     wire [G*AW-1:0] x_fast_addr;
     genvar xag, xab;

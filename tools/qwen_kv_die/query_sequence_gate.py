@@ -3,21 +3,21 @@
 import argparse,hashlib,json,pathlib,subprocess,tempfile
 p=argparse.ArgumentParser();p.add_argument('--out',type=pathlib.Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
 rtl=pathlib.Path('rtl/hdc/ot_qwen_w12_matvec.sv');s=rtl.read_text();start=s.index('    generate if(XCONTEXT_EXPORT != 0)begin:g_query_identity');end=s.index('    end endgenerate',start)+len('    end endgenerate');block=s[start:end]
-header='''module query_fixture(input wire clk,rst_n,active,go,ready,i_query_ack_toggle,input wire[31:0]gb,input wire[3:0]split_r,output wire[39:0]x_query_seq,output wire x_query_toggle,x_query_credit,x_query_fault);
+header='''module query_fixture(input wire clk,rst_n,active,go,ready,i_query_ack_toggle,input wire[31:0]gb,input wire[3:0]split_r,output wire[39:0]x_query_seq,output wire x_query_toggle,x_query_credit,x_query_fault,x_query_issue_v);
 localparam G=4,NPX=4,GT=3072,XCONTEXT_EXPORT=1;
 '''
 bench='''`timescale 1ns/1ps
 module tb;
-reg clk=0,rst_n=0,active=0,go=0,ready=0,i_query_ack_toggle=0;reg[31:0]gb=0;reg[3:0]split_r=7;wire[39:0]x_query_seq;wire x_query_toggle,x_query_credit,x_query_fault;
+reg clk=0,rst_n=0,active=0,go=0,ready=0,i_query_ack_toggle=0;reg[31:0]gb=0;reg[3:0]split_r=7;wire[39:0]x_query_seq;wire x_query_toggle,x_query_credit,x_query_fault,x_query_issue_v;
 query_fixture dut(.*);
 task step;begin #2;clk=1;#2;clk=0;#2;end endtask
 initial begin
 #1;rst_n=1;#1;rst_n=0;#1;rst_n=1;
 go=1;repeat(3)step();if(x_query_toggle)$fatal(1,"offer created query");ready=1;step();go=0;ready=0;active=1;
-step();if(x_query_seq!==0||x_query_toggle!==1||x_query_credit)$fatal(1,"actual first issue identity");
+step();if(x_query_seq!==0||x_query_toggle!==1||x_query_credit||!x_query_issue_v)$fatal(1,"actual first issue identity");
 #120;if(x_query_seq!==0||x_query_toggle!==1)$fatal(1,"pause duplicated level");
 i_query_ack_toggle=1;step();if(x_query_seq!==1||x_query_toggle!==0)$fatal(1,"next real issue not unique");
-active=0;repeat(60)step();if(x_query_seq!==1||x_query_toggle!==0||x_query_fault)$fatal(1,"arithmetic drain invented queries");
+active=0;repeat(60)step();if(x_query_seq!==1||x_query_toggle!==0||x_query_fault||x_query_issue_v)$fatal(1,"arithmetic drain invented queries");
 i_query_ack_toggle=0;dut.g_query_identity.next_sequence=40'h00ffffffff;active=1;step();if(x_query_seq!==40'h00ffffffff)$fatal(1,"32bit boundary issue");i_query_ack_toggle=x_query_toggle;step();if(x_query_seq!==40'h0100000000)$fatal(1,"sequence truncated32");
 i_query_ack_toggle=x_query_toggle;dut.g_query_identity.next_sequence=40'h7fffffffff;step();if(x_query_seq!==40'h7fffffffff||dut.g_query_identity.next_sequence!==40'h8000000000)$fatal(1,"sourcebound2to39 wrapped");
 active=0;i_query_ack_toggle=x_query_toggle;go=1;ready=1;step();go=0;ready=0;active=1;step();if(x_query_seq!==0||x_query_fault)$fatal(1,"acceptedop notresetnamespace");

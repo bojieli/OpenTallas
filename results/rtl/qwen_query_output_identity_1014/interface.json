@@ -1,0 +1,59 @@
+{
+  "status": "DISTINCT_ALLOCATED_QUERY_OUTPUT_IDENTITY_UNIT_LINT_ONLY_FULL_NUMERIC_BINDING_PENDING",
+  "top": "ot_qwen_tile_tp8_output_identity",
+  "clock_entries": 23,
+  "coherent_entries": 22,
+  "loader_entries": 1,
+  "source_ports": {
+    "cx_query_issue_v": "actualquery allocation samegenerationedge asseq/toggle, notsampledreadv",
+    "cx_query_seq": 40,
+    "cx_xcontext": 16,
+    "cx_xversion": 32
+  },
+  "output_ports": {
+    "query_output_ack_toggle": "input, liveconsumer accepts matchingnumericword/event once",
+    "query_output_credit": "output, falsemustpausewholeCC includingrealnode",
+    "query_output_toggle": "output togglesonactualnumericproducingedge46",
+    "query_output_tuple": {
+      "width": 88,
+      "order": [
+        "context16",
+        "version32",
+        "currentquerysequence40"
+      ]
+    },
+    "clk_query_output_identity": "newactualcoherentleafentry"
+  },
+  "logical_FF": {
+    "pipeline_data": 3960,
+    "pipeline_valid": 45,
+    "mailbox_tuple": 88,
+    "toggle": 1,
+    "fault": 1,
+    "sum": 4095,
+    "production_allocated_valid": 1
+  },
+  "numeric_latency_source": {
+    "final_TOREG_steps": 46,
+    "clear_steps": 47,
+    "chosen_local_drain_steps": 49,
+    "extra_after_clear": 2,
+    "source_reason": "ot_hdc_vline vd[0]=wirev, notareg; ME8+fourSsteps4+SD15+OD16+XTD2+TOREG1=46",
+    "measured_reference": "workerimmutableb64622sourceprofiles, preserving failedborrowed48assert"
+  },
+  "retirement_scope": "query arithmetic-produced + actualnumericconsumerACK; node/global source/replay andfutureproducer seals independent",
+  "open": [
+    "fullactualnumeric88field/masked936/872fixture",
+    "23rootallnewclockface/corner/CTS",
+    "liveconsumertransportACKregisteredface/CDC",
+    "queuednativeeventRTT/throughput",
+    "nodeactualproducer/globalallrecipientseal"
+  ],
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "716763723d149e7af61c83258258f653d4c706ba32ac9adc7bb3cdec8c6ecc40",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "a2de60bea2718b727c13fc3320262b5f37637e77383dc6327edb6fe8c6a739d4",
+    "rtl/physical/ot_qwen_tile_ctl.sv": "bdb9b9e104013d6cc0a3008a453a8adc03161d71864d4fadc0543dfbd5d1a1d2",
+    "rtl/physical/ot_qwen_tile_query_output_identity.sv": "d020806006842471ea66d3b46d792551b5073b38ac7f070ea1979a1ccc3826f2",
+    "rtl/physical/ot_qwen_tile_tp8_output_identity.sv": "c4db3786de468a64eb41c953d37c1a2e2335094514eab839a756a8bac0d02fbb"
+  }
+}

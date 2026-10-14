@@ -1,0 +1,23 @@
+{
+  "status": "OUTPUT_IDENTITY_MAILBOX_UNIT_ONLY_FULL_NATIVE_BINDING_PENDING",
+  "source_sha256": "d020806006842471ea66d3b46d792551b5073b38ac7f070ea1979a1ccc3826f2",
+  "bench_sha256": "f902ad818fce12daf42d97d25937489f5287e1f7341171a97cd23744decb24b6",
+  "cases": {
+    "positive": {
+      "exit": 0,
+      "source_sha256": "d020806006842471ea66d3b46d792551b5073b38ac7f070ea1979a1ccc3826f2"
+    },
+    "early_output": {
+      "exit": 1,
+      "source_sha256": "7dde5da65c9c312f31e1cff217dd507394f587e0e2024bb058f588e901892ba1"
+    },
+    "forced_allocated": {
+      "exit": 1,
+      "source_sha256": "b79f53bcbee6f809d6e91dd0d1e5e7a10a1cb72a723d2f5e30102a055c2e7da1"
+    },
+    "truncated32": {
+      "exit": 1,
+      "source_sha256": "ddccca739d7e5de184430e7679a4aa85ceccafe6ad7147c8920b17178380a4ac"
+    }
+  }
+}

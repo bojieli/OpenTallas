@@ -1,0 +1,98 @@
+%Warning-MODDUP: rtl/physical/bb/ot_qwen_tile_node_bb.v:4:8: Duplicate declaration of module: 'ot_qwen_tile_node'
+    4 | module ot_qwen_tile_node (
+      |        ^~~~~~~~~~~~~~~~~
+                 rtl/physical/ot_qwen_tile_node.sv:18:8: ... Location of original declaration
+   18 | module ot_qwen_tile_node (
+      |        ^~~~~~~~~~~~~~~~~
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1785:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_ctl.u_logic.u_me.__Vcellout__g_hier.g_sl[0].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1787:77: ... Location of first driving block
+ 1787 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1788:27: ... Location of other driving block
+ 1788 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1785:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_ctl.u_logic.u_me.__Vcellout__g_hier.g_sl[1].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1787:77: ... Location of first driving block
+ 1787 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1788:27: ... Location of other driving block
+ 1788 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1785:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_ctl.u_logic.u_me.__Vcellout__g_hier.g_sl[2].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1787:77: ... Location of first driving block
+ 1787 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1788:27: ... Location of other driving block
+ 1788 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1785:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_ctl.u_logic.u_me.__Vcellout__g_hier.g_sl[3].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1787:77: ... Location of first driving block
+ 1787 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1788:27: ... Location of other driving block
+ 1788 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1785:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_ctl.u_logic.u_me.__Vcellout__g_hier.g_sl[4].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1787:77: ... Location of first driving block
+ 1787 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1788:27: ... Location of other driving block
+ 1788 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1785:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_ctl.u_logic.u_me.__Vcellout__g_hier.g_sl[5].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1787:77: ... Location of first driving block
+ 1787 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1788:27: ... Location of other driving block
+ 1788 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1785:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_ctl.u_logic.u_me.__Vcellout__g_hier.g_sl[6].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1787:77: ... Location of first driving block
+ 1787 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1788:27: ... Location of other driving block
+ 1788 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1785:25: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_ctl.u_logic.u_me.__Vcellout__g_hier.g_sl[7].g_hx.g_tx_external.g_r[0].u_tx__q'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1787:77: ... Location of first driving block
+ 1787 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1788:27: ... Location of other driving block
+ 1788 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/physical/ot_qwen_tile_kids_grouped.sv:53:30: Signal has multiple driving blocks with different clocking: 'ot_qwen_tile_tp8_output_identity.u_core.u_kids.tx_group_q'
+                      rtl/physical/ot_qwen_tile_tx8_capture.sv:12:38: ... Location of first driving block
+   12 |    if(!rst_n[i])q[390*i+389]<=0;else q[390*i+389]<=d[390*i+389];
+      |                                      ^
+                      rtl/physical/ot_qwen_tile_tx8_capture.sv:10:25: ... Location of other driving block
+   10 |   always @(posedge clk) q[390*i+:389]<=d[390*i+:389];
+      |                         ^
+%Warning-UNOPTFLAT: rtl/lib/ot_rst_relay.sv:36:64: Signal unoptimizable: Feedback to clock or circular logic: 'ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.u_rr.relay_q'
+   36 |     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
+      |                                                                ^~~~~~~
+%Warning-UNOPTFLAT: rtl/physical/ot_qwen_tile_kids_grouped.sv:54:16: Signal unoptimizable: Feedback to clock or circular logic: 'ot_qwen_tile_tp8_output_identity.u_core.u_kids.tx_group_reset'
+   54 |     wire [7:0] tx_group_reset;
+      |                ^~~~~~~~~~~~~~
+                    rtl/physical/ot_qwen_tile_kids_grouped.sv:54:16:      Example path: ot_qwen_tile_tp8_output_identity.u_core.u_kids.tx_group_reset
+                    rtl/physical/ot_qwen_tile_tx8_capture.sv:11:40:      Example path: ASSIGNW
+                    rtl/physical/ot_qwen_tile_tx8_capture.sv:11:40:      Example path: ot_qwen_tile_tp8_output_identity.u_core.u_kids.g_grouped_tx.u_tx.g_bank[0].__Vsenitemexpr1
+                    rtl/physical/ot_qwen_tile_tx8_capture.sv:11:3:      Example path: ACTIVE
+                    rtl/physical/ot_qwen_tile_tx8_capture.sv:11:3:      Example path: ALWAYS
+                    rtl/physical/ot_qwen_tile_kids_grouped.sv:54:16:      Example path: ot_qwen_tile_tp8_output_identity.u_core.u_kids.tx_group_reset
+                    rtl/physical/ot_qwen_tile_kids_grouped.sv:94:42:      Example path: ASSIGNW
+                    rtl/physical/ot_qwen_tile_kids_grouped.sv:54:16:      Example path: ot_qwen_tile_tp8_output_identity.u_core.u_kids.tx_group_reset
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.g_add[0].u_add.g_l.u.g_nr.u.u_rnd.g'
+                                                  : ... In instance ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.g_add[0].u_add.g_l.u
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.g_add[0].u_add.g_l.u.g_nr.u.u_rnd.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.g_add[0].u_add.g_l.u.g_nr.u.u_rnd.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Feedback to clock or circular logic: 'ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.g_add[0].u_add.g_l.u.g_nr.u.u_rnd.p'
+                                                  : ... In instance ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.g_add[0].u_add.g_l.u
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.g_add[0].u_add.g_l.u.g_nr.u.u_rnd.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_qwen_tile_tp8_output_identity.u_core.u_kids.u_node.g_add[0].u_add.g_l.u.g_nr.u.u_rnd.p
