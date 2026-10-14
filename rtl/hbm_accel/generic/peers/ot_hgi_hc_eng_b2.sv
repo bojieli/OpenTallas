@@ -330,6 +330,7 @@ module ot_hgi_hc_qst_b2 #(
     input  wire              rst_n,
     input wire [63:0] clk_sl,
     input wire [55:0] clk_chunk,
+    input wire [7:0]clk_coeff,
     output wire [8*16-1:0]   wrq,
     input  wire [7:0]        wrq_cr,
     input  wire [8*257-1:0]  wrr,
@@ -359,7 +360,7 @@ module ot_hgi_hc_qst_b2 #(
         wire uv, ut, wd, fn, fl; wire [9:0] ux; wire [255:0] ud;
         ot_hgi_hc_lane_b2 #(.QID(QID), .CLOCKED(CLOCKED), .LQ(LQ), .FD(FD), .HSL(HSL),
             .MUT((MUT == 2 || (MUT >= 4 && MUT <= 8) || MUT == 13) ? MUT : 0)) u_l (.clk(clk), .rst_n(rst_n),
-            .clk_sl(clk_sl[gl*8+:8]), .clk_chunk(clk_chunk[gl*7+:7]), .lid(5'(gl)), .wrq(wrq[gl*16 +: 16]), .wrq_cr(wrq_cr[gl]), .wrr(wrr[gl*257 +: 257]), .wwq(wwq[gl*280 +: 280]),
+            .clk_sl(clk_sl[gl*8+:8]), .clk_chunk(clk_chunk[gl*7+:7]), .clk_coeff(clk_coeff[gl]), .lid(5'(gl)), .wrq(wrq[gl*16 +: 16]), .wrq_cr(wrq_cr[gl]), .wrr(wrr[gl*257 +: 257]), .wwq(wwq[gl*280 +: 280]),
             .wwq_cr(wwq_cr[gl]), .wwq_done(wwq_done[gl]), .dn_v(lv), .dn_op(ld[138:136]), .dn_x(ld[135:128]),
             .dn_d(ld[127:0]), .up_v(uv), .up_t(ut), .up_x(ux), .up_d(ud), .wdone(wd), .fin(fn), .flt(fl));
         wire [2:0] sq;
@@ -588,6 +589,7 @@ module ot_hgi_hc_eng_b2 #(
     input  wire              rst_n,
     input wire [255:0] clk_sl,
     input wire [223:0] clk_chunk,
+    input wire [31:0]clk_coeff,
     input wire[19:0]clk_store,input wire[31:0]clk_scan,
     input wire[30:0]clk_block_add,clk_heap_add,
     input  wire              job_v,
@@ -617,7 +619,7 @@ module ot_hgi_hc_eng_b2 #(
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
         ot_hgi_hc_qst_b2 #(.QID(gq), .CLOCKED(CLOCKED), .LQ(LQ), .FD(FD), .HSL(HSL), .RLL(RLL), .CD(CD), .MUT(MUT)) u_q (.clk(clk),
-            .rst_n(rst_n), .clk_sl(clk_sl[gq*64+:64]), .clk_chunk(clk_chunk[gq*56+:56]), .wrq(wrq[gq*128 +: 128]), .wrq_cr(wrq_cr[gq*8 +: 8]), .wrr(wrr[gq*2056 +: 2056]),
+            .rst_n(rst_n), .clk_sl(clk_sl[gq*64+:64]), .clk_chunk(clk_chunk[gq*56+:56]), .clk_coeff(clk_coeff[gq*8+:8]), .wrq(wrq[gq*128 +: 128]), .wrq_cr(wrq_cr[gq*8 +: 8]), .wrr(wrr[gq*2056 +: 2056]),
             .wwq(wwq[gq*2240 +: 2240]), .wwq_cr(wwq_cr[gq*8 +: 8]), .wwq_done(wwq_done[gq*8 +: 8]),
             .dn_v(q_dn_v[gq]), .dn(q_dn[gq*139 +: 139]), .ck_v(q_ck_v[2*gq +: 2]), .ck(q_ck[gq*88 +: 88]),
             .ck_cr(q_ck_cr[2*gq +: 2]), .sc_v(q_sc_v[gq]), .sc(q_sc[gq*258 +: 258]), .stat(q_stat[gq*6 +: 6]));

@@ -20,6 +20,7 @@ module ot_hgi_hc_lane_b2 #(
     input  wire          rst_n,
     input wire [7:0] clk_sl,
     input wire [6:0] clk_chunk,
+    input wire clk_coeff,
     input  wire [4:0]    lid,
     // VM bank lane
     output reg  [15:0]   wrq,
@@ -101,9 +102,13 @@ module ot_hgi_hc_lane_b2 #(
     always @(posedge clk) begin
         if (c_job) begin post <= dd_q[45]; pk <= dd_q[46] && !dd_q[45]; a_s <= dd_q[14:0]; b_s <= dd_q[29:15]; o_s <= dd_q[44:30];
                          u <= (MUT == 13) ? 10'((lid_q - dd_q[4:0]) & 5'd31) : 10'((lid_q - dd_q[$clog2(BANKS)-1:0]) & (BANKS-1)); end
-        if (c_wgt) wt[128*dx_q[2:0] +: 128] <= dd_q;
         if (c_rstd) rh <= dd_q[31:0];
     end
+
+    // Coefficients form a bounded independent640-bit local root. Related
+    // compensated clocks preserve the original update edge and arithmetic.
+    always @(posedge (CLOCKED?clk_coeff:clk))
+        if(c_wgt)wt[128*dx_q[2:0]+:128]<=dd_q;
 
     // ---- read issue: scalar | HC_POST 5 a sector | PRE phase A 4 a sector, phase B 1 a sector (the gain)
     reg [QB-1:0] cr;
@@ -243,7 +248,7 @@ module ot_hgi_hc_lane_b2 #(
     genvar k;
     generate for (k = 1; k < 8; k = k + 1) begin : g_ch
         wire [31:0] sd;
-        ot_hdc_delay #(.W(32), .D(LA * (k - 1))) u_sd (.clk(clk), .rst_n(rp), .d(sq[32*k +: 32]), .q(sd));
+        ot_hdc_delay #(.W(32), .D(LA * (k - 1))) u_sd (.clk(CLOCKED?clk_chunk[k-1]:clk), .rst_n(rp), .d(sq[32*k +: 32]), .q(sd));
         ot_dsrom_qadd #(.LAT(LA)) u_a (CLOCKED?clk_chunk[k-1]:clk, rp, vs[LM + LA * (k - 1)], acc[k - 1], sd, acc[k], cf[k]);
     end endgenerate
     wire cs_v = vs[DS];
