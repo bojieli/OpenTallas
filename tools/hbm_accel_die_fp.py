@@ -815,7 +815,14 @@ def build_r25gq(variant):
         s = B[f'idx_score_{q}']
         h_ = up(s.h * V['idx_score_frac'], GY) if not V.get('idx_score_slot') else V['idx_score_slot'][1]
         x_ = s.x + V['idx_score_dx'] if q[1] == 'W' else s.x - V['idx_score_dx']
-        add(s.name, s.name, x_, s.y if q[0] == 'S' else s.y + s.h - h_, h=h_,
+        y_ = s.y if q[0] == 'S' else s.y + s.h - h_
+        if V.get('idx_score_box'):      # hbmdie 10-14 v13: native IDX leaf+macro area 38.169 mm2 vs 4 x 5.292 slots
+            ib_ = V['idx_score_box']    # (lower bound, no glue): each scorer takes its corner band (bottom edge kept)
+            add(s.name, s.name, dn(ib_['x'][q[1]], GX), y_, w=up(ib_['w'], GX), h=up(ib_['h'], GY),
+                master=V['idx_score_slot'][0] if V.get('idx_score_slot') else None)
+            rmap[s.name] = s.name
+            continue
+        add(s.name, s.name, x_, y_, h=h_,
             master=V['idx_score_slot'][0] if V.get('idx_score_slot') else None)
         rmap[s.name] = s.name
     # ---- spine column: re-stacked (quant | HGI VM | CP abutting), VM8 halves, centred on the hub band
@@ -902,7 +909,7 @@ def build_r25gq(variant):
         th_lo, th_hi = recs_t['lo']['h_um'], recs_t['hi']['h_um']
         tp = th_lo + th_hi
         at_h = V['attn_rows'] * tp + (V['attn_rows'] - 1) * V['attn_row_gap']
-    sfu_h = up(B['hb_sfu_SW'].w * B['hb_sfu_SW'].h * V['sfu_frac'] / su_w, GY)
+    sfu_h = up(B['hb_sfu_SW'].w * B['hb_sfu_SW'].h * V['sfu_frac'] / su_w + V.get('sfu_h_add', 0.0), GY)
     hc_h = up(V['hc_wh'][1], GY) if V.get('hc_wh') else up(V['hc_mm2'] * 1e6 / ix_w, GY)
     assert su_h + V['sfu_gap'] + sfu_h <= qh, ('SU + SFU column overflows', su_h + V['sfu_gap'] + sfu_h, qh)
     for q in ('SW', 'SE', 'NW', 'NE'):
@@ -7788,7 +7795,23 @@ def r25gq_v13():
     v['vm8_union'] = True
     v['child_slots'] = dict(v['child_slots'])
     v['child_slots']['hfd_quant'] = list(v['child_slots']['hfd_quant']) + qdq_children(v['child_slots']['hfd_quant'][0]['xy'])
+    # hbmdie 10-14 (window check FAIL on v13: 86 / 21 / 4 windows, worst V 1.351 at x 14.3 / y 15.3 mm): PathFinder
+    # history cost from tools/hbm_r25gq_windows.py --cost-out of the previous round (OT_HBMDIE_CONG overrides the
+    # committed round while iterating)
+    # hbmdie 10-14 area re-plan (results/arch/hbm_die_feasibility_1014/area_v13_1014.md): native IDX scorer = the
+    # free corner band W of the serdes / E of the SM group (2,965 x 4,374 um = 12.97 mm2 vs leaf+macro 9.54 mm2 a
+    # scorer, bottom edge kept, the band below the lk_ep rows / above them in the N); SFU + 108 um tall (full leaf +
+    # cache 1.6688 mm2 > usable 1.4531: +0.2157 mm2 = 108 um x 2,016 um) into the hub's E-W crossing band
+    if os.environ.get('OT_HBMDIE_V13_AREA', '1') == '1':
+        v['idx_score_box'] = dict(w=2965.0, h=4374.0, x=dict(W=11175.0, E=17981.6))
+        v['sfu_h_add'] = 108.0
+    c_ = os.environ.get('OT_HBMDIE_CONG', V13_CONG)
+    if c_:
+        v['cong'] = c_
     return v
+
+
+V13_CONG = ''
 
 
 def _lef_size(lef, macro):
