@@ -558,6 +558,10 @@ module ot_hgi_sv_ctl #(
             for (integer i = 3; i >= 0; i = i - 1) if (m[i]) ff4 = {1'b1, 2'(i)};
         end
     endfunction
+    // nibble x 24: four gated shifted addends (written out: a '*' of zero-extended operands synthesised 26 levels deep)
+    function automatic [27:0] nib24(input [3:0] n, input [23:0] x);
+        nib24 = (({28{n[0]}} & {4'd0, x}) + ({28{n[1]}} & {3'd0, x, 1'd0})) + (({28{n[2]}} & {2'd0, x, 2'd0}) + ({28{n[3]}} & {1'd0, x, 3'd0}));
+    endfunction
     function automatic ovl18(input [17:0] a0, input [17:0] a1, input [17:0] b0, input [17:0] b1);
         ovl18 = (a0 <= b1) && (b0 <= a1);
     endfunction
@@ -890,8 +894,8 @@ module ot_hgi_sv_ctl #(
                 D_MUL: begin
                     for (integer k = 0; k < 6; k = k + 1) begin
                         for (integer h = 0; h < 4; h = h + 1) begin
-                            pn[k][h]     <= {24'd0, m_a[k][4*h +: 4]} * {4'd0, c_so[k]};
-                            pn[k][4 + h] <= {24'd0, m_c[k][4*h +: 4]} * {4'd0, c_si[k]};
+                            pn[k][h]     <= nib24(m_a[k][4*h +: 4], c_so[k]);
+                            pn[k][4 + h] <= nib24(m_c[k][4*h +: 4], c_si[k]);
                         end
                         pq0[k] <= {4'd0, pn[k][0]} + {pn[k][1], 4'd0}; pq1[k] <= {4'd0, pn[k][2]} + {pn[k][3], 4'd0};
                         pq2[k] <= {4'd0, pn[k][4]} + {pn[k][5], 4'd0}; pq3[k] <= {4'd0, pn[k][6]} + {pn[k][7], 4'd0};
