@@ -18,7 +18,7 @@ module tb_qwen_me_dvm_w12;
     parameter integer NCOL = 2, NH = 8, TG = 4;
     parameter integer GT = NCOL * 2 * NH * TG;
     parameter integer SMIN = 4, SMAX = 7, TCUT = 3;
-    parameter integer HB = 3, DX = 8, XOFF = 3, XVMR = 12;
+    parameter integer HB = 3, DX = 9, XOFF = 3, XVMR = 12;
     parameter integer NOPS = 40, SEED = 1, GAP = 4, DROP = 0;
     // REUSE: 1 in REUSE ops starts INSIDE the previous op's x range (address reuse, as production: qkv / gate_up share
     // xbase 4096, o / down re-read the attention / act outputs): the previous epoch is still being read while this
