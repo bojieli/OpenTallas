@@ -1,5 +1,5 @@
 {
- "name": "lkep_face_ref-face1-COMMIT",
+ "name": "lkep_face_ref-face1-b1b181818",
  "block": "hfd_lk_ep_face",
  "ref_tile": true,
  "owner": "Codex:hbm_dma_lkep_2240",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/hbm-dma-mv-repair-2240",
-  "commit": "COMMIT",
+  "commit": "b1b181818",
   "extra_paths": [
    "rtl/hbm_accel/tu/lk_ep_20261010"
   ]
@@ -90,7 +90,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/lkep_face_ref/lkep_face_ref-face1-COMMIT"
+   "to": "results/rtl/ref_tile/lkep_face_ref/lkep_face_ref-face1-b1b181818"
   }
  ],
  "cycles_added": 0,
