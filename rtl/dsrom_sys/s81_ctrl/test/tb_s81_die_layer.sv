@@ -54,7 +54,11 @@ module tb_s81_die_layer;
     // 0 none, 1 go at the H_STORE done (store and forward), 2 cut-through: go when HWM rows of the H_STORE have been
     // written (the die's form: the VM ARMN of the hand-off slot armed at HWM rows), 3 negative control: go at the
     // H_STORE take.  Checked: every flit = the golden layer output row, no row read before it was written.
-    parameter integer PIPE = 0, PIPE_PD = 40, HST = 0, HLMUT = 0, HTX = 0, HWM = 8;
+    // PGAP: idle cycles between the HIDDEN header and its first payload flit (a legal link gap).  The bench program holds
+    // the HC's two boot GAIN loads (352 cycles) in front of the layer; with PGAP >= 400 they are over before the payload
+    // lands, which is the production condition of a stage entry (HC idle, gain sets loaded at boot).  The h transfer
+    // record then counts the layer from the cycle before the first payload flit (layer_adj / xfer_adj).
+    parameter integer PIPE = 0, PIPE_PD = 40, HST = 0, HLMUT = 0, HTX = 0, HWM = 8, PGAP = 0;
     localparam integer S_RD = 2, S_WR = 8, H_BASE = 0, G_BASE = 1280, GROWS = 320, C_BASE = 2560, S_BASE = 6144;
     string dir;
 `ifdef TB_SEQC
@@ -560,13 +564,13 @@ module tb_s81_die_layer;
     reg [511:0] gs [0:XW-1];             // golden layer output rows by index
     reg         gs_ok [0:XW-1];
     integer t_hgo = -1, t_hx0 = -1, t_hx1 = -1, tx_ok = 0, tx_bad = 0, tx_early = 0, tx_n = 0, swr = 0, t_sw0 = -1,
-            t_land1 = -1, tx_lead_min = 1 << 30, tx_rd = 0, hst_take = -1;
+            t_land1 = -1, tx_lead_min = 1 << 30, tx_rd = 0, hst_take = -1, t_pay0 = -1;
     reg  hx_cmd = 0, hx_go = 0, hx_go_done = 0;
     wire hx_re, hx_ov, hx_ol, hx_dn, hx_flt; wire [13:0] hx_ra; reg [511:0] hx_rq = 0; wire [511:0] hx_od;
     wire [7:0] hx_dt; wire [3:0] hx_fc;
     generate if (HTX != 0) begin : g_htx
         ot_s81_hop_tx #(.WINDOW_CONTEXT(0), .MY_ID(2), .FLIT(512), .NW(21), .USER_W(12), .VWA(14), .XW(XW), .TXB(S_BASE),
-                        .CMDW(84), .OPW(7), .ARGW(24), .SUW(10), .USE_VM_RVALID(0), .OUT_DEPTH(4), .QD(8)) u_tx (
+                        .CMDW(84), .OPW(7), .ARGW(24), .SUW(10), .USE_VM_RVALID(0), .OUT_DEPTH(8), .QD(8)) u_tx (
             .clk(ck), .rst_n(rst), .win_ctx_v(1'b0), .win_ctx_slot(1'b0), .win_ctx_user(12'd0), .win_ctx_pos(21'd0),
             .win_ctx_tok(21'd0), .win_ctx_ids(68'd0), .win_ctx_dead(1'b0),
             .cmd_v(hx_cmd), .cmd_d({1'b0, 10'd0, 21'd0, 21'd1000, {8'd0, 12'd3, 4'd1}, 7'd0}), .dn_v(hx_dn), .dn_tag(hx_dt),
@@ -598,7 +602,7 @@ module tb_s81_die_layer;
             hx_rq <= vm[hx_ra];
             if (!vm_ok[hx_ra]) begin tx_early = tx_early + 1; if (tx_early < 4) $display("ERR hop TX read row %0d before it was written (cyc %0d)", hx_ra, cyc); end
             tx_rd = tx_rd + 1;
-            if (swr - tx_rd < tx_lead_min) tx_lead_min = swr - tx_rd;
+            if (swr < XW && swr - tx_rd < tx_lead_min) tx_lead_min = swr - tx_rd;   // rows written ahead of the reader while the store runs
         end
         if (hx_ov) begin
             if (tx_n == 0) t_hx0 = cyc;
@@ -727,6 +731,8 @@ module tb_s81_die_layer;
         hdr = 0; hdr[11:0] = 2; hdr[23:12] = 1; hdr[27:24] = 1; hdr[39:28] = XW; hdr[51:40] = 0; hdr[72:52] = 0;
         hdr[146:126] = 1000;
         send_flit(hdr, 1'b0);
+        i_v = 0; repeat (PGAP) @(negedge ck);
+        t_pay0 = cyc;
         for (w = 0; w < XW; w = w + 1) send_flit(payload[w], w == XW - 1);
         i_v = 0; i_l = 0;
 `endif
@@ -780,9 +786,11 @@ module tb_s81_die_layer;
                  JOBS, t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
                  y_ok, NY * JOBS, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);
         // h transfer record (rom-layer-tput 2026-10-13)
-        $display("XFER PIPE=%0d HST=%0d HLMUT=%0d HTX=%0d HWM=%0d LVM=%0d | landing last row %0d (header %0d) hland stream=%0d vm=%0d | H_STORE take %0d first row written %0d rows %0d done %0d | hop go %0d first flit %0d last flit %0d flits %0d exact %0d/%0d bad %0d early_reads %0d min_lead_rows %0d | xfer_cycles=%0d (header -> last hand-off flit)",
+        $display("XFER PIPE=%0d HST=%0d HLMUT=%0d HTX=%0d HWM=%0d LVM=%0d | landing last row %0d (header %0d) hland stream=%0d vm=%0d | H_STORE take %0d first row written %0d rows %0d done %0d | hop go %0d first flit %0d last flit %0d flits %0d exact %0d/%0d bad %0d early_reads %0d min_lead_rows %0d | xfer_cycles=%0d (header -> last hand-off flit) | PGAP=%0d first payload flit %0d layer_adj=%0d xfer_adj=%0d (from the cycle before the first payload flit)",
                  PIPE, HST, HLMUT, HTX, HWM, LVM, t_land1, t_layer0, hl_ns, hl_nv, hst_take, t_sw0, swr, t_hstore, t_hgo, t_hx0, t_hx1, tx_n, tx_ok, XW, tx_bad, tx_early,
-                 (tx_rd > 0) ? tx_lead_min : 0, (t_hx1 >= 0) ? t_hx1 - t_layer0 : -1);
+                 (tx_lead_min < (1 << 30)) ? tx_lead_min : -1, (t_hx1 >= 0) ? t_hx1 - t_layer0 : -1,
+                 PGAP, t_pay0, (t_pay0 >= 0) ? t_hstore - (t_pay0 - 1) : t_hstore - t_layer0,
+                 (t_hx1 >= 0) ? t_hx1 - ((t_pay0 >= 0) ? t_pay0 - 1 : t_layer0) : -1);
         if (HTX != 0 && !(tx_ok == XW && tx_bad == 0 && tx_early == 0 && tx_n == XW + 1 && t_hx1 >= 0)) begin
             errors = errors + 1; $display("ERR stage hand-off: %0d/%0d flits exact, %0d bad, %0d early reads, %0d flits", tx_ok, XW, tx_bad, tx_early, tx_n); end
         if (bad == 0 && errors == 0 && jdn == JOBS && ndone == JOBS * nop && !ref_fault && !dst[3] && !flt && gst_f == 0 && !u_g.sf &&
