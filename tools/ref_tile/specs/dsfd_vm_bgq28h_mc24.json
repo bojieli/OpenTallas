@@ -1,0 +1,366 @@
+{
+ "name": "dsfd_vm_bgq28h_mc24",
+ "top": "dsfd_vm_bgq28h_mc24",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq28h_mc24.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v"
+ ],
+ "clock_port": "ck_bank_l0",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 453.6,
+  "h": 725.76
+ },
+ "child_lattice_um": 8.64,
+ "children": [
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_mc/views/dsfd_vm_bgl28_mc",
+   "count": 1,
+   "inst": "*g_l?0?.u_l",
+   "at": [
+    21.6,
+    635.04
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_mc/views/dsfd_vm_bgl28_mc",
+   "count": 1,
+   "inst": "*g_l?1?.u_l",
+   "at": [
+    21.6,
+    544.32
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_mc/views/dsfd_vm_bgl28_mc",
+   "count": 1,
+   "inst": "*g_l?2?.u_l",
+   "at": [
+    21.6,
+    453.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_mc/views/dsfd_vm_bgl28_mc",
+   "count": 1,
+   "inst": "*g_l?3?.u_l",
+   "at": [
+    21.6,
+    362.88
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_mc/views/dsfd_vm_bgl28_mc",
+   "count": 1,
+   "inst": "*g_l?4?.u_l",
+   "at": [
+    21.6,
+    272.16
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_mc/views/dsfd_vm_bgl28_mc",
+   "count": 1,
+   "inst": "*g_l?5?.u_l",
+   "at": [
+    21.6,
+    181.44
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_mc/views/dsfd_vm_bgl28_mc",
+   "count": 1,
+   "inst": "*g_l?6?.u_l",
+   "at": [
+    21.6,
+    90.72
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsfd_vm_bgl28_mc/views/dsfd_vm_bgl28_mc",
+   "count": 1,
+   "inst": "*g_l?7?.u_l",
+   "at": [
+    21.6,
+    0.0
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "i_v",
+   "i_we",
+   "i_row",
+   "i_mask",
+   "i_d",
+   "r_v",
+   "r_d",
+   "r_f",
+   "r_o"
+  ],
+  "S": [
+   "f_v",
+   "f_we",
+   "f_row",
+   "f_mask",
+   "f_d",
+   "o_v",
+   "o_d",
+   "o_f",
+   "o_o"
+  ],
+  "W": [
+   "rs",
+   "grp",
+   "ck_bank_l0",
+   "ck_req_l0",
+   "ck_ret_l0",
+   "ck_bank_l1",
+   "ck_req_l1",
+   "ck_ret_l1",
+   "ck_bank_l2",
+   "ck_req_l2",
+   "ck_ret_l2",
+   "ck_bank_l3",
+   "ck_req_l3",
+   "ck_ret_l3",
+   "ck_bank_l4",
+   "ck_req_l4",
+   "ck_ret_l4",
+   "ck_bank_l5",
+   "ck_req_l5",
+   "ck_ret_l5",
+   "ck_bank_l6",
+   "ck_req_l6",
+   "ck_ret_l6",
+   "ck_bank_l7",
+   "ck_req_l7",
+   "ck_ret_l7"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/ref_tile_specs/ds_vm/dsfd_vm_bgq28h_mc24_pins.tcl",
+ "route": {
+  "pd": 0.3,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_v": "M3 M5",
+  "pin_h": "M4"
+ },
+ "structural_change": "Replace unqualified single-root bank parent with24actualentryroots over8MCleaves; request453.6x725.76parent and475.2columnpitch. No internal state moved into wires-only parent and no clock exceptions. Generation must refuse until each child has raw routedETMs andperclock SS/TT/FF insertion refs.",
+ "why_floorplan": "Preserve assigned367.2x725.76 slot, eight345.6x90.72 bank leaves atx21.6; W strap carries bank ties and eight short independent clock entry wires.",
+ "open_points": [
+  "UNQUALIFIED: waiting for CLOSED HOP1 child views, exact PC parent gates and routed per-entry R; production activation remains pending."
+ ],
+ "job": {
+  "owner": "Codex:bgr28_native_closure",
+  "branch": "codex/s81-bgr28-native",
+  "tag": "mc24",
+  "purpose": "UNQUALIFIED: 24 actual child clock entries; waits for raw CLOSED MC child ETMs and per-root corner insertion metadata.",
+  "benches": [
+   {
+    "name": "exact_gold",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold gold",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_gold_s2",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold_s2 gold_s2",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold_s2: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_stress",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/stress stress",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_stress: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "neg_relay",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_RELAY mut_RELAY",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_RELAY: FAIL"
+   },
+   {
+    "name": "neg_id",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ID mut_ID",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ID: FAIL"
+   },
+   {
+    "name": "neg_j0",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_J0 mut_J0",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_J0: FAIL"
+   },
+   {
+    "name": "neg_order",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ORDER mut_ORDER",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ORDER: FAIL"
+   },
+   {
+    "name": "neg_mask",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_MASK mut_MASK",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_MASK: FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsfd_vm_bgq28h_mc24/views",
+  "record_to": "results/rtl/ref_tile/dsfd_vm_bgq28h_mc24",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/common",
+   "tools/s81_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile_specs/ds_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+  ]
+ },
+ "clock": "entries",
+ "clock_ports": [
+  "ck_bank_l0",
+  "ck_req_l0",
+  "ck_ret_l0",
+  "ck_bank_l1",
+  "ck_req_l1",
+  "ck_ret_l1",
+  "ck_bank_l2",
+  "ck_req_l2",
+  "ck_ret_l2",
+  "ck_bank_l3",
+  "ck_req_l3",
+  "ck_ret_l3",
+  "ck_bank_l4",
+  "ck_req_l4",
+  "ck_ret_l4",
+  "ck_bank_l5",
+  "ck_req_l5",
+  "ck_ret_l5",
+  "ck_bank_l6",
+  "ck_req_l6",
+  "ck_ret_l6",
+  "ck_bank_l7",
+  "ck_req_l7",
+  "ck_ret_l7"
+ ],
+ "defines": [
+  "OT_VMBGL_HOP1"
+ ],
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Distinct faceclock ports replace scalar clock spine; same HOP1 leaves and data stages"
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_bank_l0",
+    "ck_req_l0",
+    "ck_ret_l0",
+    "ck_bank_l1",
+    "ck_req_l1",
+    "ck_ret_l1",
+    "ck_bank_l2",
+    "ck_req_l2",
+    "ck_ret_l2",
+    "ck_bank_l3",
+    "ck_req_l3",
+    "ck_ret_l3",
+    "ck_bank_l4",
+    "ck_req_l4",
+    "ck_ret_l4",
+    "ck_bank_l5",
+    "ck_req_l5",
+    "ck_ret_l5",
+    "ck_bank_l6",
+    "ck_req_l6",
+    "ck_ret_l6",
+    "ck_bank_l7",
+    "ck_req_l7",
+    "ck_ret_l7"
+   ],
+   "inputs": [
+    "*"
+   ],
+   "outputs": [
+    "*"
+   ]
+  }
+ },
+ "slot_change_request": {
+  "name": "s81-bgq-h1-east-bay-2250",
+  "old_outline": [
+   345.6,
+   90.72
+  ],
+  "new_outline": [
+   432,
+   90.72
+  ],
+  "parent_outline": [
+   453.6,
+   725.76
+  ],
+  "source": "tools/ref_tile/specs/dsfd_vm_bgq28h_mc24.json",
+  "reason": "actual20kflatGRTcongestion and96202cells in oldslot; SRAM servicebay keeps dense relay pins free",
+  "vm_outline_request_um": [
+   1887.384,
+   3970.056
+  ]
+ }
+}
