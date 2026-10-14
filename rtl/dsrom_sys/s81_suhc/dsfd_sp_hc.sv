@@ -20,7 +20,8 @@ module dsfd_sp_hc #(
     // 0: existing chain; 1: expose upper seam to die stations + dsfd_sp_hc_t;
     // 2: compose upper/stations/tail for transaction-level exactness (never harden this wrapper).
     parameter integer TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = AL, LANE_SPECIALIZE = 0,
-    parameter integer RLY = HALF ? 2 : 1                 // sub-tile relays a hop
+    parameter integer RLY = HALF ? 2 : 1,                // sub-tile relays a hop
+    parameter integer PIPE = 0, PIPE_PD = 40             // HIER: POST issue-order done (ot_s81_hc_cseq PIPE / PD)
 ) (
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
     input  wire [TRW-1:0] f_tr0, f_tr1, f_tr2,
@@ -134,7 +135,7 @@ module dsfd_sp_hc #(
     wire [NE2*32-1:0] e_ex;
     ot_s81_hc_comb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
                      .MUT(MUT), .AMUT(AMUT), .HALF(HALF), .RLY(RLY), .RF(CSPLIT ? 5 : 1),
-                     .DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN)) u_cb (
+                     .DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN), .PIPE(PIPE), .PIPE_PD(PIPE_PD)) u_cb (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
         .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
         .n_flt(n_flt), .n_online(n_online), .n_fcode(n_fcode), .n_yacc(n_yacc), .n_y(n_y), .n_ypop(n_ypop),

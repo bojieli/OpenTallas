@@ -10,10 +10,17 @@
 // HSTORE / NORM end on the writer's count (ot_s81_hc_crx wdone); POST counts the return's outbound events (forwarded
 // by crx).  The done pulse still waits DW cycles before the adapter (the last write leaves before its done).
 // MUT (bench negative controls, 0 in silicon) as ot_s81_hc_hroot; AMUT is the adapter's.
+// PIPE = 1 (rom-layer-tput 2026-10-13, POST issue-order done): a POST ends PD cycles after its LAST y beat left on the
+// forward bus instead of after the last write-back event has come back over the return chain.  The chains are
+// fixed-latency pulse buses and every tile applies forward events in issue order, so a job issued behind the POST
+// (COEF, NORM, H_STORE) reaches each tile after that tile's last hc_post write-back as long as PD >= the tile's
+// beat -> write-back latency (26-27 cycles; PD 40).  The return's outbound events are still counted (pob_out, fault
+// code 6 on an event nobody issued); late hnz / pflt flags stay sticky faults as before.  PIPE 0: unchanged.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cseq #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW
+    parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW,
+    parameter integer PIPE = 0, PD = 40
 ) (
     input  wire                 cck, crs, sk, srs,
     input  wire                 n_cmd_v,
@@ -162,6 +169,8 @@ module ot_s81_hc_cseq #(
     reg  [FVW-1:0]     fv;
     reg  [FSW-1:0]     fd;
     reg  [3:0]         fault_code;
+    reg  [7:0]         pdc;                 // PIPE: cycles since the POST's last beat was issued
+    reg  [15:0]        pob_out;             // PIPE: write-back events issued and not yet returned
     assign e_r = !run && !fault;
     wire take = e_v && e_r;
     wire [23:0] c_arg = e_d[30:7];
@@ -173,6 +182,7 @@ module ot_s81_hc_cseq #(
             run <= 1'b0; kind <= 0; jslot <= 0; jtag <= 0; base <= 0; gsel <= 0; f_q <= 0; f_y <= 0; st0 <= 0;
             d_v <= 1'b0; d_t <= 0; fault <= 1'b0; fault_code <= 0;
             ci <= 0; cr <= 0; post_ob <= 0; rq_v <= 0; fv <= 0; ngo <= 1'b0; j_v <= 1'b0; j_end <= 1'b0; j_civ <= 1'b0;
+            pdc <= 0; pob_out <= 0;
         end else begin
             d_v <= 1'b0; rq_v <= 0; fv <= 0; ngo <= 1'b0; j_v <= 1'b0; j_end <= 1'b0;
             j_civ <= (ci == NV + 1);
@@ -184,7 +194,7 @@ module ot_s81_hc_cseq #(
             if (take) begin
                 run <= 1'b1; kind <= c_arg[22:20]; jslot <= e_d[83]; jtag <= {e_d[83], e_d[6:0]};
                 base <= c_arg[13:0]; gsel <= c_arg[19:18]; f_q <= c_arg[14]; f_y <= c_arg[15]; st0 <= 1'b0;
-                ci <= 0; cr <= 0; post_ob <= 0; j_v <= 1'b1;
+                ci <= 0; cr <= 0; post_ob <= 0; j_v <= 1'b1; pdc <= 0;
                 if (c_arg[23] || c_arg[22:20] > 3'd5 || (c_arg[22:20] == K_NORM && !c_arg[14] && !c_arg[15])) begin
                     fault <= 1'b1; fault_code <= 4'd3;
                 end
@@ -194,6 +204,14 @@ module ot_s81_hc_cseq #(
                 run <= 1'b0; d_v <= 1'b1; d_t <= (MUT == 5) ? (jtag ^ 8'h01) : jtag; j_end <= 1'b1;
             end
             if (rr_v) begin fv[S_RD + 3] <= 1'b1; fd[O_R +: 32] <= rr_; end
+            if (PIPE != 0) begin
+                // outstanding write-back events: + 1 a beat issued (with write-back), - 1 an event returned
+                pob_out <= pob_out + ((run && !fault && kind == K_POST && y_take) ? 16'd1 : 16'd0)
+                                   - (pob_q ? 16'd1 : 16'd0);
+                if (pob_q && pob_out == 0 && !(run && kind == K_POST && y_take)) begin
+                    fault <= 1'b1; if (!fault) fault_code <= 4'd6;
+                end
+            end
             if (run && !fault) begin
                 case (kind)
                 K_HLOAD, K_COEF, K_GAIN: begin
@@ -228,7 +246,14 @@ module ot_s81_hc_cseq #(
                         fd[O_PB + 4 +: 16] <= ci;
                         ci <= ci + 1;
                     end
-                    if (pob_q) begin
+                    if (PIPE != 0) begin
+                        // issue-order done: every beat is on the forward bus and PD cycles have passed
+                        if (ci == NR) begin
+                            if (pdc >= PD) begin
+                                run <= 1'b0; d_v <= 1'b1; d_t <= (MUT == 5) ? (jtag ^ 8'h01) : jtag; j_end <= 1'b1;
+                            end else pdc <= pdc + 8'd1;
+                        end
+                    end else if (pob_q) begin
                         post_ob <= post_ob + 1;
                         if (post_ob + 1 == NR - ((MUT == 4) ? 1 : 0)) begin
                             run <= 1'b0; d_v <= 1'b1; d_t <= (MUT == 5) ? (jtag ^ 8'h01) : jtag; j_end <= 1'b1;

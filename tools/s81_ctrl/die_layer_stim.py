@@ -46,6 +46,7 @@ import hc_gate as HG  # noqa: E402
 
 D = HG.D
 G_BASE, C_BASE, O_BASE, S_BASE, H_BASE = 1280, 2560, 3072, 6144, 0
+EH_BASE = 8192                                           # --h-stream: the post-Engram h rows (Engram layers)
 HX_PORT, HC_PORT, COLL_PORT = 9, 2, 3
 GATHER_REC = {'router_allgather': 4, 'a_allgather': 12, 'rows_allgather': 64, 'idx.topk_merge': 8}
 SU_IN_NORM = {'attn': ['quant'], 'ffn': ['norm.scale', 'quant']}
@@ -100,6 +101,10 @@ def main():
                     'hc.pre_post, as the priced token path has it), COEF-b after the NORM reads the block\'s own '
                     'post / combine rows before the POST.  Same RTL, same golden; without it the single COEF waits '
                     'for this block\'s whole coefficient chain (fn .. sinkhorn) before the NORM can start')
+    ap.add_argument('--h-stream', action='store_true', help='program for the H landing streamer (tb HST=1): the attn '
+                    'COEF-a is issued BEFORE the H_LOAD (its row is present at the job start, so its VM read hides '
+                    'under the landing) and the H_LOAD carries no VM dependency; on an Engram layer eng.add writes the '
+                    'post-Engram h to its own rows (EH_BASE) and the H_LOAD reads those through the VM as before')
     ap.add_argument('--seed', type=int, default=11)
     ap.add_argument('--programs', type=Path, default=ROOT / 'results/rtl/s81_ctrl_20261008/programs')
     a = ap.parse_args()
@@ -169,7 +174,7 @@ def main():
     assert bool(eng_ops) == (eng_rows is not None), (a.layer, eng_ops, 'Engram ops need an Engram chain fixture')
     if eng_ops:
         for q, row in enumerate(eng_rows):
-            coef[H_BASE + q] = row
+            coef[(EH_BASE if a.h_stream else H_BASE) + q] = row
     nodes = {}
 
     def add(name, port, dur, preds, arg=None, cmsg=-1, wrow=-1, eng='', order=0.0):
@@ -179,7 +184,8 @@ def main():
     L = a.layer
     add(f'{L}.hc.gain_attn', HC_PORT, 0, [], hc_arg(5, G_BASE, gsel=0), eng='hc', order=-3)
     add(f'{L}.hc.gain_ffn', HC_PORT, 0, [], hc_arg(5, G_BASE + HG.GROWS, gsel=1), eng='hc', order=-2)
-    add(f'{L}.hc.h_load', HC_PORT, 0, [f'{L}.eng.add'] if eng_ops else [], hc_arg(0, H_BASE), eng='hc',
+    hl_base = EH_BASE if (a.h_stream and eng_ops) else H_BASE
+    add(f'{L}.hc.h_load', HC_PORT, 0, [f'{L}.eng.add'] if eng_ops else [], hc_arg(0, hl_base), eng='hc',
         order=([o['id'] for o in src].index(f'{L}.eng.add') + 0.5 if eng_ops else -1))
     alias = {f'{L}.{blk}.{s}': f'{L}.{blk}.hc_pre' for blk in SU_IN_NORM for s in SU_IN_NORM[blk]}
     names = {o['id'] for o in src}
@@ -190,7 +196,7 @@ def main():
         if blk == 'eng':               # behavioural Engram (port 10): eng.add lands the golden post-Engram h rows
             assert o['port'] == ENG_PORT and o['eng'] == 'eng', o
             add(nm, ENG_PORT, o['dur'], [p for p in o['preds_id'] if p in names],
-                wrow=(H_BASE if nm == f'{L}.eng.add' else -1), eng='eng', order=i)
+                wrow=(hl_base if nm == f'{L}.eng.add' else -1), eng='eng', order=i)
             continue
         b = 0 if blk == 'attn' else 1
         tail = nm.split('.', 2)[2]
@@ -208,9 +214,10 @@ def main():
                     if b:
                         add(f'{L}.attn.hc.pre_fwd', HX_PORT, 1, [f'{L}.attn.hc.pre_post'], wrow=E_BASE + 2 * b + 1,
                             eng='hcx', order=[x['id'] for x in src].index(f'{L}.attn.hc.pre_post') + 0.25)
-                    add(f'{L}.{blk}.hc.coef_a', HC_PORT, 0, cpre + ([f'{L}.hc.h_load'] if not b else []),
-                        hc_arg(2, E_BASE + 2 * b), eng='hc', order=i - 0.5)
-                    add(nm, HC_PORT, o['dur'], preds + [f'{L}.{blk}.hc.coef_a'],
+                    early = a.h_stream and not b and not eng_ops      # attn COEF-a ahead of the H_LOAD
+                    add(f'{L}.{blk}.hc.coef_a', HC_PORT, 0, cpre + ([f'{L}.hc.h_load'] if not b and not early else []),
+                        hc_arg(2, E_BASE + 2 * b), eng='hc', order=(-1.5 if early else i - 0.5))
+                    add(nm, HC_PORT, o['dur'], preds + [f'{L}.{blk}.hc.coef_a'] + ([f'{L}.hc.h_load'] if early else []),
                         hc_arg(4, O_BASE + 512 * b, gsel=b, quant=1, yout=b), eng='hc', order=i)
                     add(f'{L}.{blk}.hc.coef', HC_PORT, 0, [f'{L}.{blk}.hc.pre_post', f'{L}.{blk}.hc.sinkhorn', nm],
                         hc_arg(2, C_BASE + 2 * b), eng='hc', order=i + 0.25)
@@ -300,7 +307,7 @@ def main():
     meta = dict(layer=a.layer, ng=a.ng, ops=len(prog), field_phases=nph, coll_messages=msgs, coll_records=len(own),
                 y_words=len(ygold), exp_rows=len(run.exp), hstore_rows=nst, golden_checks_vs_pickle=4,
                 program=[dict(k=k, id=o['id'], port=o['port'], eng=o['eng'], preds=o['preds']) for k, o in enumerate(prog)],
-                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split))
+                cases_sha256=HG.sha(a.cases), coef_split=bool(a.coef_split), h_stream=bool(a.h_stream))
     if fx is not None:
         meta.update(chain_fixture_sha256=HG.sha(a.chain), chain_schema=fx['schema'], chain_checks=fx['checks'],
                     shard=fx['shard'], shard_sha256=fx['shard_sha256'], golden_checks_vs_pickle=0,
