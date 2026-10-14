@@ -4325,7 +4325,12 @@ def bench_track(j, fleet, stl):
     if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
         return True
     tr = j.setdefault("btrack", {})
-    for st in bench_stages(stl):
+    # A relocation can invalidate an earlier artifact receipt while a later
+    # bench is already running. Poll that bench before a pending predecessor;
+    # otherwise the one-at-a-time guard prevents its completion being collected.
+    ordered = sorted(bench_stages(stl),
+                     key=lambda st: tr.get(st["key"], {}).get("state") != "running")
+    for st in ordered:
         k = st["key"]
         if k in j["benches"]:
             continue
