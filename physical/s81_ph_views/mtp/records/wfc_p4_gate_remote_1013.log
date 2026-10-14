@@ -1,0 +1,24 @@
+GATE_SOURCE_ARCHIVE_SHA256=e6b75c147507743bce6b8c14efe93a53f5d2656f9f9da5ca0282a0507de61c6b
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=97
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN dsfd_wfc_vmx_p cells 105,580 flops 26,426 depth 435.1 ps util 0.4142 reach 368.3 um (1.8 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=14589 root=port:ckv[0] rule=PASS: 14,589 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN high_fanout: net _126121_/Y (OR4x1_ASAP7_75t_R): 3,043 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+GATE_TB textbook_lint: WARN util_channel: utilisation 41.4% outside 45%-65% (std 14491 + macro 48987 um2 in 153237 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"ck": [null, true], "ckv": [null, true], "rst": [null, true], "rsv": [null, true], "f_vw": [null, true], "f_cs": [null, true], "f_vr": [null, true], "t_vq": [null, true], "t_cd": [null, true], "t_vc": [null, true], "f_pf": [null, true], "f_lf": [null, true], "t_swv": [null, true], "t_swd": [null, true], "f_swr": [null, true], "f_swa": [null, true], "t_srv": [null, true], "t_srd": [null, true], "f_srr": [null, true], "f_srq": [null, true], "t_ks": [null, true], "f_kd": [null, true], "t_hep": [null, true], "t_ft": [null, true]}
+GATE_AREA    Chip area for module '\dsfd_wfc_vmx_p': 63372.010040
+GATE_CTS_RC=137
+GATE_GPLD global_placement -density 0.48 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.4800
+GATE_CK_RC=1
+GATE_DONE
+
+--- stderr
+ot-run: ot-epyc1tb     admits   576 GB (avail 802, growth 64, headroom 64, waiters 0/0 GB) load 34/128 running 14 disk 1152 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: request 32G is charged 12G (class 'ref_gate_dsfd_wfc_vmx_p_#-#.sh' measured peak 3.1G, n=4+0 proved); the cap stays 32G
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-367315-1791950270 after 0 s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-367315-1791950270): exit 0
