@@ -6649,7 +6649,12 @@
           "direction": "output",
           "width": 294,
           "registered_domain": "pll_hbm",
-          "seam": "REGISTERED_OUTPUT"
+          "seam": "MIXED_REGISTERED_AND_COMBINATIONAL_PHYSICAL_FIX_PENDING",
+          "registration_by_bits": {
+            "293:1": "DIRECT_HBM_FF_GENERIC_CENSUS",
+            "0": "THREE_GENERIC_COMBINATIONAL_CELLS_FROM_HBM_STATE_UNQUALIFIED"
+          },
+          "evidence_revision": "81e04cdf8"
         },
         {
           "name": "es",

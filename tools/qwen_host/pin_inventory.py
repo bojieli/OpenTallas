@@ -34,6 +34,8 @@ def ports(name,path):
   special=n in ['ck','clk','pll_hbm','rst_n','rsi','hrst','por_n','clk_h','clk_i','clk_i_bank','clk_i_out','ck_guard']
   if name=='qkd_host_native_qm' and n in ['i_rv','i_rd']:clk='UNUSED_RMW_DISABLED_ZERO_TIE'
   out.append(dict(name=n,direction=direction,width=width,registered_domain=clk,seam='UNUSED_ZERO_TIE' if clk=='UNUSED_RMW_DISABLED_ZERO_TIE' else ('CLOCK_RESET' if special else ('CAPTURED_INPUT' if direction=='input' else 'REGISTERED_OUTPUT'))))
+  if name=='qkd_ctrl_pc_host' and n=='co':
+   out[-1].update(seam='MIXED_REGISTERED_AND_COMBINATIONAL_PHYSICAL_FIX_PENDING',registration_by_bits={'293:1':'DIRECT_HBM_FF_GENERIC_CENSUS','0':'THREE_GENERIC_COMBINATIONAL_CELLS_FROM_HBM_STATE_UNQUALIFIED'},evidence_revision='81e04cdf8')
  return out
 masters=[]
 for x in slot['children']:
