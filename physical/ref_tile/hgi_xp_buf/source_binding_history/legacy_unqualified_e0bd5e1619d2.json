@@ -1,0 +1,36 @@
+{
+  "qualification_status": "unqualified_previous_source_binding",
+  "reason": "Actual loop intake refused legacy/unverified source binding; fresh CTS required",
+  "original_gate": {
+    "schema": "opentallas.ref_tile.gate_result.v1",
+    "kit": "hgi_xp_buf",
+    "verdict": "WARN",
+    "generated": "2026-10-13T20:10:35-0700",
+    "host": "ot-pve1",
+    "cts": true,
+    "commit": "fdbaa40f3",
+    "clock": {
+      "max_root_sinks": 11333,
+      "root": "port:clk",
+      "cts": true,
+      "tt_insertion_ps": 245.7,
+      "tt_spread_ps": 22.6,
+      "declared_clock": null,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "verdict": "PASS",
+      "text": "11,333 sinks on the largest root <= 15,000; measured TT insertion 245.7 ps, leaf spread 22.6 ps"
+    },
+    "items": [
+      {
+        "severity": "WARN",
+        "check": "textbook.high_fanout",
+        "message": "net mbf_c[8]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R): 3,048 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+        "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+      }
+    ]
+  }
+}

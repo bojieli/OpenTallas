@@ -1,0 +1,36 @@
+{
+  "qualification_status": "unqualified_previous_source_binding",
+  "reason": "Actual loop intake refused legacy/unverified source binding; fresh CTS required",
+  "original_gate": {
+    "schema": "opentallas.ref_tile.gate_result.v1",
+    "kit": "hgi_xp_rdc",
+    "verdict": "WARN",
+    "generated": "2026-10-13T21:03:13-0700",
+    "host": "ot-pve1",
+    "cts": true,
+    "commit": "fdbaa40f3",
+    "clock": {
+      "max_root_sinks": 1786,
+      "root": "port:clk",
+      "cts": true,
+      "tt_insertion_ps": 106.0,
+      "tt_spread_ps": 6.8,
+      "declared_clock": null,
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "verdict": "PASS",
+      "text": "1,786 sinks on the largest root <= 15,000; measured TT insertion 106.0 ps, leaf spread 6.8 ps"
+    },
+    "items": [
+      {
+        "severity": "WARN",
+        "check": "textbook.high_fanout",
+        "message": "reset rst$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 292 loads (0 flops, e.g. None) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+        "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+      }
+    ]
+  }
+}
