@@ -25,12 +25,17 @@ module ot_qwen_rom_tile_nkt #(
     wire [5119:0] cx_rq;
     wire [3127:0] cx_ld;
     wire [583:0]  cx_lq;
-    wire [511:0]  cx_td;
+    wire [1023:0] cx_rqr;
+    wire [71:0] cx_lerr;
+    genvar li;
+    generate for(li=0;li<8;li=li+1) begin:g_lerr
+        assign cx_lerr[9*li+:9] = cx_lq[73*li+64+:9];
+    end endgenerate
     wire          cx_tvd, cx_nfault;
     ot_qwen_tile_ctl u_ctl (.clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .fault(fault),
-        .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
-    ot_qwen_tile_kids #(.CODE_BANKS(5), .RPS(0), .CMUT(CMUT), .MCLK(1)) u_kids (.clk(clk), .clk_rp({5{clk}}), .clk_sl({8{clk}}), .clk_node(clk), .rst_n(rst_n),
-        .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
+        .cx_rreq(cx_rreq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lerr(cx_lerr), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
+    ot_qwen_tile_kids #(.CODE_BANKS(5), .RPS(0), .CMUT(CMUT), .MCLK(1), .SPLIT(1)) u_kids (.clk(clk), .clk_rp({5{clk}}), .clk_sl({8{clk}}), .clk_node(clk), .clk_tx({8{clk}}), .clk_rqr({2{clk}}), .rst_n(rst_n),
+        .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(512'd0), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
         .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .t_out(t_out), .t_vout(t_vout),
         .rom_req_m(), .rom_rd({2*5*266{1'b0}}));
 endmodule
@@ -48,6 +53,8 @@ module ot_qwen_rom_tile_nkt_mc #(
     input wire [4:0] clk_rp,
     input wire [7:0] clk_sl,
     input wire clk_node,
+    input wire [7:0] clk_tx,
+    input wire [1:0] clk_rqr,
     input  wire              rst_n,
     input  wire [15:0]       tile_id,
     input  wire              ib_go,
@@ -66,12 +73,17 @@ module ot_qwen_rom_tile_nkt_mc #(
     wire [5119:0] cx_rq;
     wire [3127:0] cx_ld;
     wire [583:0]  cx_lq;
-    wire [511:0]  cx_td;
+    wire [1023:0] cx_rqr;
+    wire [71:0] cx_lerr;
+    genvar li;
+    generate for(li=0;li<8;li=li+1) begin:g_lerr
+        assign cx_lerr[9*li+:9] = cx_lq[73*li+64+:9];
+    end endgenerate
     wire          cx_tvd, cx_nfault;
     ot_qwen_tile_ctl u_ctl (.clk(clk_ctl), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .fault(fault),
-        .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
-    ot_qwen_tile_kids #(.CODE_BANKS(5), .RPS(0), .CMUT(CMUT), .MCLK(1)) u_kids (.clk(clk_ctl), .clk_rp(clk_rp), .clk_sl(clk_sl), .clk_node(clk_node), .rst_n(rst_n),
-        .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
+        .cx_rreq(cx_rreq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lerr(cx_lerr), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
+    ot_qwen_tile_kids #(.CODE_BANKS(5), .RPS(0), .CMUT(CMUT), .MCLK(1), .SPLIT(1)) u_kids (.clk(clk_ctl), .clk_rp(clk_rp), .clk_sl(clk_sl), .clk_node(clk_node), .clk_tx(clk_tx), .clk_rqr(clk_rqr), .rst_n(rst_n),
+        .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(512'd0), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
         .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .t_out(t_out), .t_vout(t_vout),
         .rom_req_m(), .rom_rd({2*5*266{1'b0}}));
 endmodule

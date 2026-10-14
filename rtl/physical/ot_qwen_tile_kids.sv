@@ -17,16 +17,20 @@ module ot_qwen_tile_kids #(
     parameter integer ROM_MUT = 0,
     parameter integer TMUT = 0,
     parameter integer CMUT = 0,
-    parameter integer MCLK = 0
+    parameter integer MCLK = 0,
+    parameter integer SPLIT = 0
 ) (
     input  wire          clk,
     input  wire [CODE_BANKS-1:0] clk_rp,
     input  wire [7:0] clk_sl,
     input  wire clk_node,
+    input wire [7:0] clk_tx,
+    input wire [1:0] clk_rqr,
     input  wire          rst_n,
     // control-leaf seams
     input  wire [CODE_BANKS*14-1:0]   cx_rreq,
     output wire [CODE_BANKS*1024-1:0] cx_rq,
+    output wire [1023:0] cx_rqr,
     input  wire [8*391-1:0]  cx_ld,
     output wire [8*73-1:0]   cx_lq,
     input  wire [511:0]      cx_td,
@@ -44,6 +48,7 @@ module ot_qwen_tile_kids #(
     output wire [2*CODE_BANKS*13-1:0]  rom_req_m,
     input  wire [2*CODE_BANKS*266-1:0] rom_rd
 );
+    wire [511:0] node_td;
     genvar b, g;
     generate
         for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_rb
@@ -74,17 +79,54 @@ module ot_qwen_tile_kids #(
         for (g = 0; g < 8; g = g + 1) begin : g_sl
             localparam integer GS = (CMUT == 2 && g < 2) ? (1 - g) : g;      // transmit source
             localparam integer GR = (CMUT == 3 && (g == 2 || g == 3)) ? (5 - g) : g;   // result destination
-            wire [390:0] ld = {cx_ld[391*g + 390], cx_ld[391*GS +: 390]};     // the reset relay is never swapped
+            wire [390:0] raw_ld = {cx_ld[391*g + 390], cx_ld[391*GS +: 390]};
+            wire [390:0] ld;
+            if (SPLIT != 0) begin : g_tx_leaf
+                ot_qwen_tile_tx u_tx (.clk((MCLK != 0) ? clk_tx[g] : clk), .rst_n(raw_ld[390]), .d(raw_ld[389:0]), .q(ld));
+            end else begin : g_tx_wire
+                assign ld = raw_ld;
+            end
             wire [63:0]  t;
             wire [7:0]   lf;
             wire         tf;
             ot_qwen_tile_lsl u_lh (.clk((MCLK != 0) ? clk_sl[g] : clk), .rst_n(ld[390]), .v_d(ld[389]), .first_d(ld[388]), .split_d(ld[387:384]),
                                    .w_d(ld[383:128]), .x_d(ld[127:0]), .t_out(t), .lfault(lf), .tfault(tf));
             assign cx_lq[73*GR +: 73] = {tf, lf, t};
+            assign node_td[64*GR +: 64] = t;
         end
     endgenerate
+    generate if (SPLIT != 0) begin : g_return_leaves
+        localparam integer SB = (CODE_BANKS+1)/2;
+        wire [1023:0] rs, rn;
+        ot_qwen_tile_rqr #(.NR(SB)) u_s (.clk((MCLK != 0) ? clk_rqr[0] : clk), .d(cx_rq[1024*SB-1:0]), .q(rs));
+        ot_qwen_tile_rqr #(.NR(CODE_BANKS-SB)) u_n (.clk((MCLK != 0) ? clk_rqr[1] : clk), .d(cx_rq[1024*CODE_BANKS-1:1024*SB]), .q(rn));
+        assign cx_rqr = rs | rn;
+    end else begin : g_return_unused
+        assign cx_rqr = 1024'd0;
+    end endgenerate
     wire node_fault;
     assign cx_nfault = (CMUT == 4) ? ~node_fault : node_fault;
     ot_qwen_tile_node u_node (.clk((MCLK != 0) ? clk_node : clk), .rst_n(rst_n), .a(n_a), .b(n_b), .va(n_va), .y(n_y), .vy(n_vy), .fault(node_fault),
-                              .t_d(cx_td), .t_vd(cx_tvd), .t_out(t_out), .t_vout(t_vout));
+                              .t_d(node_td), .t_vd(cx_tvd), .t_out(t_out), .t_vout(t_vout));
+endmodule
+
+// The original XTX=2 rungs and LRR=1 reset relay, moved without adding an edge.
+module ot_qwen_tile_tx(input wire clk,input wire rst_n,input wire [389:0] d,output wire [390:0] q);
+    (* keep *) reg rst_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
+    wire [389:0] mid, out;
+    ot_qwen_tx_ff #(.W(390)) u_a (.clk(clk),.rst_n(rst_q),.d(d),.q(mid));
+    ot_qwen_tx_ff #(.W(390)) u_b (.clk(clk),.rst_n(rst_q),.d(mid),.q(out));
+    assign q = {rst_q,out};
+endmodule
+module ot_qwen_tile_rqr #(parameter integer NR=3)(input wire clk,input wire [NR*1024-1:0] d,output reg [1023:0] q);
+    reg [1023:0] combined; integer i;
+    always @* begin combined=1024'd0; for(i=0;i<NR;i=i+1) combined=combined|d[1024*i+:1024]; end
+    always @(posedge clk) q <= combined;
+endmodule
+module ot_qwen_tile_rqr_s(input wire clk,input wire [3071:0] d,output wire [1023:0] q);
+    ot_qwen_tile_rqr #(.NR(3)) u_r (.clk(clk),.d(d),.q(q));
+endmodule
+module ot_qwen_tile_rqr_n(input wire clk,input wire [2047:0] d,output wire [1023:0] q);
+    ot_qwen_tile_rqr #(.NR(2)) u_r (.clk(clk),.d(d),.q(q));
 endmodule

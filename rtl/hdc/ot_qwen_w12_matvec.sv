@@ -856,7 +856,7 @@ end endgenerate
                 //: LRR: one reset relay flop per leaf (asynchronous assert, release one edge later), so the tile reset port
                 //: drives 8 relay flops instead of every leaf's relays across the frame
                 wire rst_l;
-                if (LRR != 0) begin : g_lrr
+                if (LRR != 0 && LEXT != 2) begin : g_lrr
                     (* keep *) reg rq;
                     always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
                     assign rst_l = rq;
@@ -870,7 +870,10 @@ end endgenerate
                 localparam integer XW = 1 + 1 + 4 + G * HIER * 32 + G * 32;
                 wire [XW-1:0] tx_d = {s2_v, s2_first, s2_tag[TW-6 -: 4], w_in, s3x_d[G*32-1:0]};
                 wire [XW-1:0] tx_q;
-                if (XTX > 0) begin : g_tx
+                if (LEXT == 2) begin : g_tx_external
+                    // Pure re-hierarchy: the two existing transmit rungs live in the TX leaf.
+                    assign tx_q = tx_d;
+                end else if (XTX > 0) begin : g_tx
                     wire [XW*(XTX+1)-1:0] tc;
                     assign tc[XW-1:0] = tx_d;
                     genvar rr;

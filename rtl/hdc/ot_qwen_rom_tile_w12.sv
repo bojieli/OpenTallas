@@ -178,6 +178,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     // CEXT seams (width 1 and unused when CEXT = 0)
     output wire [((CEXT != 0) ? CODE_BANKS * 14 : 1)-1:0]     cx_rreq,
     input  wire [((CEXT != 0) ? CODE_BANKS * 64 * W : 1)-1:0] cx_rq,
+    input wire [64*W-1:0] cx_rqr,
     output wire [((CEXT != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (7 + TG * HIER * 32 + TG * 32) : 1)-1:0] cx_ld,
     input  wire [((CEXT != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (HIER * 32 + TG * HIER + 1) : 1)-1:0]   cx_lq,
     output wire [W*32-1:0]   cx_td,
@@ -523,7 +524,10 @@ module ot_qwen_rom_tile_logic_w12 #(
                 assign rw[b+1]  = (RQR != 0 && b >= SB) ? rw[b] : (rw[b] | r_q);     // RQR: the south group only
                 assign rwn[b+1] = (RQR != 0 && b >= SB) ? (rwn[b] | r_q) : rwn[b];   // RQR: the north group
             end
-            if (RQR != 0) begin : g_rqr
+            if (RQR != 0 && CEXT == 2) begin : g_rqr_external
+                // N/S group capture registers are independent hardened return leaves.
+                assign wrom_q = cx_rqr;
+            end else if (RQR != 0) begin : g_rqr
                 (* keep *) reg [2*2*PWB-1:0] gs_q, gn_q;
                 always @(posedge clk) begin gs_q <= rw[CODE_BANKS]; gn_q <= rwn[CODE_BANKS]; end
                 assign wrom_q = gs_q | gn_q;

@@ -228,6 +228,7 @@ module ot_qwen_me_array_w12 #(
             wire            nvy_l, nvy_k, tvo_l, tvo_k;
             wire [((CTH != 0) ? CODE_BANKS * 14 : 1)-1:0]     cx_rreq;
             wire [((CTH != 0) ? CODE_BANKS * 64 * W : 1)-1:0] cx_rq;
+            wire [1023:0] cx_rqr;
             wire [((CTH != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (7 + TG * HIER * 32 + TG * 32) : 1)-1:0] cx_ld;
             wire [((CTH != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (HIER * 32 + TG * HIER + 1) : 1)-1:0]   cx_lq;
             wire [W*32-1:0] cx_td;
@@ -243,11 +244,11 @@ module ot_qwen_me_array_w12 #(
                 .rom_rd(t_rom_rd[t*2*CODE_BANKS*266 +: 2*CODE_BANKS*266]),
                 .kvs_r_ce(), .kvs_r_addr(), .kvs_rd({TG*W*8{1'b0}}),
                 .kv_re(t_kv_re[t]), .kv_addr(t_kv_addr[t*TG*AW +: TG*AW]), .kv_q(kvq),
-                .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
+                .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
             if (CTH != 0) begin : g_kids
                 wire [2*CODE_BANKS*13-1:0] krq;      // the rows' macro requests: the bench reads its images by rom_ce / rom_addr
-                ot_qwen_tile_kids #(.CODE_BANKS(CODE_BANKS), .RPS(1), .ROM_MUT(ROM_MUT), .TMUT(TMUT), .CMUT((t == 0) ? CMUT : 0), .MCLK(1)) u_k (
-                    .clk(clk), .clk_rp({CODE_BANKS{clk}}), .clk_sl({8{clk}}), .clk_node(clk), .rst_n(rst_n), .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq),
+                ot_qwen_tile_kids #(.CODE_BANKS(CODE_BANKS), .RPS(1), .ROM_MUT(ROM_MUT), .TMUT(TMUT), .CMUT((t == 0) ? CMUT : 0), .MCLK(1), .SPLIT(CTH == 2)) u_k (
+                    .clk(clk), .clk_rp({CODE_BANKS{clk}}), .clk_sl({8{clk}}), .clk_node(clk), .clk_tx({8{clk}}), .clk_rqr({2{clk}}), .rst_n(rst_n), .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lq(cx_lq),
                     .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
                     .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny_k), .n_vy(nvy_k), .t_out(to_k), .t_vout(tvo_k),
                     .rom_req_m(krq), .rom_rd(t_rom_rd[t*2*CODE_BANKS*266 +: 2*CODE_BANKS*266]));
@@ -256,7 +257,7 @@ module ot_qwen_me_array_w12 #(
             end else begin : g_nokids
                 assign ny = ny_l; assign nvy = nvy_l;
                 assign lw[LT][t*W*32 +: W*32] = to_l; assign lvv[LT][t] = tvo_l;
-                assign cx_rq = 1'b0; assign cx_lq = 1'b0; assign cx_nfault = 1'b0;
+                assign cx_rq = 1'b0; assign cx_rqr = 1024'd0; assign cx_lq = 1'b0; assign cx_nfault = 1'b0;
             end
         end
     endgenerate
