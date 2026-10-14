@@ -38,15 +38,16 @@
  "job": {
   "owner": "Codex:s81_vmfe_misc_2240",
   "branch": "codex/s81-vmfe-misc-2240",
-  "tag": "r3",
+  "tag": "r4",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph/relays"
   ],
-  "purpose": "Exact fixed hard master of existing BE/hrow die-ownstate; no extra latency/rounding; default-off parent HARD_RELAYS. Physical demand bit count 1025, clock root<=2079. Sparse outline retains PG/pin-access pitch; actual placement/source clocks required in die integration. r3 physicaloutput hold-strip redistribution afteractualr2 GRT0116; noRTL/stagechange.",
+  "purpose": "Exact fixed hard master of existing BE/hrow die-ownstate; no extra latency/rounding; default-off parent HARD_RELAYS. Physical demand bit count 1025, clock root<=2079. Sparse outline retains PG/pin-access pitch; actual placement/source clocks required in die integration. r3 physicaloutput hold-strip redistribution afteractualr2 GRT0116; noRTL/stagechange. r4 actualr3GRT central crossing repair: match each E bitpin y/layer to corresponding W input; sameoutline/net/state/stages.",
   "benched_by": "s81_hrow_hard_relays"
  },
- "structural_change": "Move existing die relay bits into fixed hardchildren, preserving every original stage and reset bit; pin flop at each boundary; no hidden ownstate or asynchronous falsepath.; both legal horizontal M2/M4 face layers distribute the full return/U-turn bus without increasing metal cap.; expand to129.6x129.6 to reserve measured pin hold/flop-placement area: narrow gate actual GPL utilization134%/252%, not RTL std area. No pin-density or clock relaxation. r3: actualr2 GRT0116 localizedeast output hold strips; redistribute SAME existingBUF/HB4/BUF cells into3eight-column bands andkeepflopsbehindthem (gap34.56). Same129.6sq/pinfaces/stages/trueperiod, no relaxed layercapacity/clock.",
+ "structural_change": "Move existing die relay bits into fixed hardchildren, preserving every original stage and reset bit; pin flop at each boundary; no hidden ownstate or asynchronous falsepath.; both legal horizontal M2/M4 face layers distribute the full return/U-turn bus without increasing metal cap.; expand to129.6x129.6 to reserve measured pin hold/flop-placement area: narrow gate actual GPL utilization134%/252%, not RTL std area. No pin-density or clock relaxation. r3: actualr2 GRT0116 localizedeast output hold strips; redistribute SAME existingBUF/HB4/BUF cells into3eight-column bands andkeepflopsbehindthem (gap34.56). Same129.6sq/pinfaces/stages/trueperiod, no relaxed layercapacity/clock. r4 actualsamebitW/E independentpinallocation mismatch up53.928um: actualtrackpair alignment repair, same129.6outline/ports/faces/cycles.",
  "pin_hook_before_flops": [
+  "physical/s81_ph_views/relay_master/bit_pin_align.tcl",
   "physical/s81_ph_views/relay_master/hold_stagger.tcl"
  ],
  "io_flop_at_pins": {
