@@ -21,8 +21,8 @@ module tb;
     w_t_i=0;w_t_i[0]=(wave==0);w_t_i[1]=(wave==7);w_t_i[2]=frame[2];w_t_i[3]=frame[0];w_t_i[4]=1;w_t_i[5]=1;w_t_i[8:6]=3'(wave);w_t_i[22:16]=7'(frame);w_t_i[24:23]=frame[1:0];
     for(integer word=0;word<32;word++)w_d_i[word*32+:32]=32'(frame*104729+wave*65537+word*257);
    end
-   @(negedge clk);w_v_i=0;w_t_i=0;tok_i=0;
-   repeat(24)@(negedge clk);
+   @(negedge clk);w_v_i=0;w_t_i=0;tok_i=1;
+   @(negedge clk);tok_i=0;repeat(23)@(negedge clk);
    if(frame%31==30)begin rst_n=0;repeat(5)@(negedge clk);rst_n=1;repeat(5)@(negedge clk);end
   end
   repeat(40)@(negedge clk);
