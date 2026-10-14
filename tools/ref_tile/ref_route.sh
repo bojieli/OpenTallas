@@ -15,8 +15,17 @@ SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
 OT_ENV_PD=${PD:-}; OT_ENV_NC=${NC:-}
 source $KITENV
 [ -n "$OT_ENV_PD" ] && PD=$OT_ENV_PD; [ -n "$OT_ENV_NC" ] && NC=$OT_ENV_NC
+# PIN GROUPS (flowfix 2026-10-13): every run of this script -- the route, the gate's floorplan smoke and its --cts run --
+# chunks the --pin-region groups alike.  The job's route command set OT_PIN_GROUP_MAX=32 and the gate did not, so a
+# full face passed the gate as one group and died in the route at 3_2_place_iop (PPL-0093: qkd_seq_fan-kc2, ...).
+# The kit.env's own `export OT_PIN_GROUP_MAX=` (route.pin_balance) wins, then the caller's, then the route default
+# (tools/pin_fit.py ROUTE_PIN_GROUP_MAX; test_pin_fit.py keeps the two equal).
+export OT_PIN_GROUP_MAX=${OT_PIN_GROUP_MAX:-32}
 K=${KIT#/src/}
 D=/src/physical/qwen_die_masters
+hook() {
+  if [ -f "$K/$1.tcl" ]; then printf '%s' "$K/$1.tcl"; else printf '%s' "physical/qwen_die_masters/$2.tcl"; fi
+}
 S=(); for f in $SRCS; do S+=(--source $f); done
 M=(); for m in "${MACROS[@]}"; do M+=(--macro $m); done
 SO=(); [ -n "$STOP" ] && SO=(--pnr-stop-after $STOP)
@@ -34,10 +43,10 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@
   --orfs-var NUM_CORES=${NC:-8} --orfs-var SDC_FILE=$KIT/clock.sdc --orfs-var QDM_SDC_DIR=$D \
   --orfs-var "PLACE_PINS_ARGS=-min_distance ${PIN_MIN_TRACKS:-2} -min_distance_in_tracks" \
   --orfs-var "IO_PLACER_H=$PIN_H" --orfs-var "IO_PLACER_V=$PIN_V" \
-  --step-tcl PRE_CTS=$K/pre_cts.tcl --step-tcl POST_CTS=physical/qwen_die_masters/post_plain.tcl \
-  --step-tcl PRE_GLOBAL_ROUTE=$K/pre_grt.tcl --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
-  --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=$K/post_drt.tcl \
-  --step-tcl PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl \
+  --step-tcl PRE_CTS=$K/pre_cts.tcl --step-tcl POST_CTS=$(hook post_cts post_plain) \
+  --step-tcl PRE_GLOBAL_ROUTE=$K/pre_grt.tcl --step-tcl POST_GLOBAL_ROUTE=$(hook post_grt post_plain) \
+  --step-tcl PRE_DETAIL_ROUTE=$(hook pre_drt pre_ref_skew) --step-tcl POST_DETAIL_ROUTE=$K/post_drt.tcl \
+  --step-tcl PRE_FILLCELL=$(hook pre_fill pre_ref_skew) --step-tcl POST_FILLCELL=$(hook post_fill post_plain) \
   --orfs-var "CTS_ARGS=${CTSA:--sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75}" \
   --orfs-var OT_IO_SKEW=90 --orfs-var OT_IO_HOLD_SKEW=50 --orfs-var "OT_REF_GLOB=$REFGLOB" \
   --orfs-var "OT_IO_INTER=$INTER" --orfs-var OT_IO_SKEW_INTER=150 "${SO[@]}" \

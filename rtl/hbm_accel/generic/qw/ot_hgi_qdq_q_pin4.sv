@@ -15,16 +15,16 @@ module ot_hgi_qdq_q_pin4 #(
     input  wire              clk,
     input  wire              rst_n,
     input  wire [682:0]      rec,          // {n_O, n_A, desc_O, desc_A, header, valid} (hgi_die_dispatch 'quant')
-    output reg  [2:0]        ret,          // {fault, done, ready}
-    output reg  [8*16-1:0]   wrq,
+    output wire [2:0]        ret,          // {fault, done, ready}
+    output wire [8*16-1:0]   wrq,
     input  wire [7:0]        wrq_cr,
     input wire [513:0] wrr_p0, wrr_p1, wrr_p2, wrr_p3,
-    output reg  [8*280-1:0]  wwq,
+    output wire [8*280-1:0]  wwq,
     input  wire [7:0]        wwq_cr,
     input  wire [7:0]        wwq_done,
-    output reg               rg_req,
+    output wire              rg_req,
     input  wire              rg_gnt,
-    output reg               wg_req,
+    output wire              wg_req,
     input  wire              wg_gnt
 );
     ot_hgi_qdq_q #(.LQ(LQ), .LD(LD), .NB(NB), .OD(OD), .RQ(RQ), .DEC3(DEC3), .SPANPIPE(SPANPIPE), .MUT(MUT)) u_qdq (

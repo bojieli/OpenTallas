@@ -53,7 +53,7 @@ REMEDY = {
     "lint": "tools/hier_contract/child_lint.py PASS on the committed LEF + libs (pin access from above, PG, clock pins)",
     "clock": "FF ETM with clock pins that all carry min/max_clock_tree_path",
     "scalar": "scalar clock pins where the contract's clock_pin_rules ask for them",
-    "thr": "registry throughput gate QUALIFIED (production-shape bench within 1.10x of the simulator price)",
+    "thr": "registry throughput not a MEASURED failure; unmeasured ROM units ride the per-layer die run (owner 2026-10-13, release gate)",
     "current": "the view exported from the registry's adopted (best) closure of the master",
     "export_fix": "re-export after main abc334b14 so abstract.json records verdict.check tt/ff ok for the files on disk",
     "placer_fit": "the generator must place the master at its real outline (see BINDING.md, placer assumptions), or the "

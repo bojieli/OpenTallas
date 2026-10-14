@@ -84,6 +84,14 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     // RHOLD (el1011-ds-coll 2026-10-11, opt-in; 0 = byte-identical): reduce pops wait while red_hold is high (the
     // consumer has no reserved output slot for another reduce word; slow-VM-drain overflow fix), out_rpop = a reduce pop
     parameter integer RHOLD    = 0,
+    // LSEAM (s81-cesn 2026-10-13, opt-in, PAIRWISE N 4 ADD_LAT 3 only; 0 = byte-identical): the ONE seam-latency switch of
+    // the split lane-slice (dsfd_coll_ces SEAM).  The pairwise FP32 lanes live OUTSIDE the engine in hardened lane leaves
+    // (dsfd_coll_cesl): s0_d / red_in leave on ln_v / ln_d into the leaf's pin flops, the sum returns on ln_y / ln_yv /
+    // ln_ye / ln_pe and lands in flops here, so the reduce path is 2 * ADD_LAT + 2 cycles (ldl follows).  Nothing counts
+    // cycles on that path: inflight (pop_red +1, red_out -1) and the consumer's reserved slots are counts.
+    // XF_D: landing depth of the EXTF queues u_pr (their sender is then a relay leaf with XF_D credits).
+    parameter integer LSEAM    = 0,
+    parameter integer XF_D     = PULL_D,
     parameter integer FW       = 32 * LANES,
     parameter integer PW       = FW + 3 + TAGW, // {tag, mode, last, par, data}
     parameter integer RB       = (N > 1) ? $clog2(N) : 1
@@ -130,12 +138,19 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     output wire              out_rpop,
     input  wire [2*N-1:0]    xl_v,
     input  wire [2*N*PW-1:0] xl_d,
-    output wire [2*N-1:0]    xl_cr
+    output wire [2*N-1:0]    xl_cr,
+    // LSEAM: lane seam (ln_d = {s0_d[3], s0_d[2], s0_d[1], s0_d[0]}; ln_pe = the first-level adders' error, aligned to ln_ye)
+    output wire              ln_v,
+    output wire [N*FW-1:0]   ln_d,
+    input  wire [FW-1:0]     ln_y,
+    input  wire [LANES-1:0]  ln_yv,
+    input  wire [2*LANES-1:0] ln_ye,
+    input  wire [LANES-1:0]  ln_pe
 );
     localparam integer PD = DEPTH / 2;                  // words per (source, parity) FIFO
     localparam integer DB = (PD > 1) ? $clog2(PD) : 1;
     localparam integer CB = $clog2(PD + 1);
-    localparam integer DL = ((PAIRWISE != 0 && N == 4) ? 2 : (N - 1)) * ADD_LAT;
+    localparam integer DL = ((PAIRWISE != 0 && N == 4) ? 2 : (N - 1)) * ADD_LAT + ((LSEAM != 0) ? 2 : 0);
     localparam integer E  = N / GW;                     // gather beats per index
     localparam integer EB = (E > 1) ? $clog2(E) : 1;
     localparam integer MYPKG = RANK / PKG_DIES;
@@ -196,7 +211,7 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
                     if (PULL != 0 && EXTF != 0 && g != RANK) begin : g_xf
                         // external FIFO: only the landing queue is here
                         wire pq_ = (PCOPY != 0) ? (pop_k[g*PSL] && ppar_k[g*PSL] == q) : (pop && ppar == q);
-                        ot_link_credit_rx #(.W(PW), .DEPTH(PULL_D), .OREG(0), .WFREE(LQW)) u_pr (.clk(clk), .rst_n(rst_n),
+                        ot_link_credit_rx #(.W(PW), .DEPTH(XF_D), .OREG(0), .WFREE(LQW)) u_pr (.clk(clk), .rst_n(rst_n),
                             .l_valid(xl_v[F]), .l_data(xl_d[F*PW +: PW]), .l_credit(xl_cr[F]), .o_valid(hvf[F]), .o_ready(pq_),
                             .o_data(hd[F]), .fault());
                     end else if (PULL != 0) begin : g_pull
@@ -363,7 +378,68 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) ldl <= 0;
         else ldl <= {ldl[DL-2:0], s0_last};
-    generate if (PAIRWISE != 0 && N == 4) begin : g_pairwise
+    // Dedicated seam launch flops capture the exact same head and enable as
+    // s0_d, in the same cycle. The reset is physically distinct from the internal
+    // unreset head register, so synthesis cannot merge the two owners. Payload
+    // is consumed only with ln_v; adding reset changes no valid epoch or latency.
+`ifdef OT_S81_CES_LNPIN
+    generate for (g = 0; g < N; g = g + 1) begin : g_ln_pin
+        (* keep = 1 *) reg [FW-1:0] d;
+        if (PULL != 0 && PCOPY != 0 && PSL == 1) begin : g_one
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) d <= 0;
+                else if (pop_k[g]) d <= head[g][FW-1:0];
+        end else if (PULL != 0 && PCOPY != 0) begin : g_sliced
+            localparam integer SW = FW / PSL;
+            genvar sl;
+            for (sl = 0; sl < PSL; sl = sl + 1) begin : g_sl
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) d[SW*sl +: SW] <= 0;
+                    else if (pop_k[g*PSL+sl])
+                        d[SW*sl +: SW] <= ppar_k[g*PSL+sl]
+                            ? hd[2*g+1][SW*sl +: SW] : hd[2*g][SW*sl +: SW];
+            end
+        end else begin : g_shared
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) d <= 0;
+                else if (pop) d <= head[g][FW-1:0];
+        end
+`ifndef SYNTHESIS
+        always @(negedge clk) if (rst_n && ln_v && d !== s0_d[g])
+            $fatal(1, "CES dedicated seam register diverged at valid epoch");
+`endif
+`ifdef OT_S81_CES_MUT_LNPIN
+        assign ln_d[g*FW +: FW] = d ^ {{(FW-1){1'b0}}, 1'b1};
+`else
+        assign ln_d[g*FW +: FW] = d;
+`endif
+    end endgenerate
+`else
+    generate for (g = 0; g < N; g = g + 1) begin : g_lnd
+        assign ln_d[g*FW +: FW] = s0_d[g];
+    end endgenerate
+`endif
+    // LSEAM: ln_v leaves its OWN flop (register at the pin): lnv_q == s0_v && !s0_mode on every cycle (same enable, the
+    // next value of that product: s0_v <= pop, s0_mode <= head_mode on a pop).  LSEAM 0: the port is unused.
+    reg lnv_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) lnv_q <= 1'b0;
+        else if (!g_stall) lnv_q <= pop && !head_mode;
+    assign ln_v = (LSEAM != 0) ? lnv_q : red_in;
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && LSEAM != 0 && lnv_q !== red_in) begin
+        $display("TB_S81PH_COLL_SYS FAIL lane-seam valid flop differs from s0_v && !s0_mode"); $fatal(1, "LSEAM ln_v"); end
+`endif
+    generate if (LSEAM != 0) begin : g_seam
+        // landing flops of the lane leaves' output flops (pin flop both ends)
+        reg [FW-1:0] y_q; reg [LANES-1:0] yv_q, pe_q; reg [2*LANES-1:0] ye_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) yv_q <= 0; else yv_q <= ln_yv;
+        always @(posedge clk) begin y_q <= ln_y; ye_q <= ln_ye; pe_q <= ln_pe; end
+        assign red_data = y_q;
+        assign red_out = yv_q[0];
+        assign red_err = (|ye_q) || (|pe_q);
+        initial if (!(PAIRWISE != 0 && N == 4 && ADD_LAT == 3 && FPLAT == 0)) $fatal(1, "LSEAM needs PAIRWISE, N 4, ADD_LAT 3");
+    end else if (PAIRWISE != 0 && N == 4) begin : g_pairwise
         wire [FW-1:0] ab, cd, y;
         wire [LANES-1:0] av, cv, yv;
         wire [2*LANES-1:0] ae, ce, ye;

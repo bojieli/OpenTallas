@@ -7,7 +7,8 @@ each master it names has a closed LEF + ETM view.  Usage: tree_delay_bind.py <le
 """
 import argparse, collections, json
 
-OUTLINE = {1: (28.08, 64.8), 8: (86.4, 108.0), 21: (129.6, 259.2)}       # um, the kits submitted at bf10180f4
+OUTLINE = {1: (10.8, 64.8), 2: (17.28, 64.8), 3: (21.6, 64.8), 4: (28.08, 64.8), 8: (49.68, 64.8), 16: (92.88, 64.8),
+           21: (129.6, 259.2)}     # um: ot_qwen_tree_delay<N>_t kits (baaa52fff, util ~0.52); 21 = the bf10180f4 outline
 FLOP_UM2 = 209.0 / 512                                                   # measured d1 gate: 209 um2 std for 512 flops
 RELAY_FRAME = 52.68 * 30.216                                             # existing single-cycle 512-bit relay frame
 
@@ -25,7 +26,7 @@ def split(k, depths):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('ledger'); ap.add_argument('out'); ap.add_argument('--depths', default='1,8,21')
+    ap.add_argument('ledger'); ap.add_argument('out'); ap.add_argument('--depths', default='1,2,3,4,8,16')
     a = ap.parse_args()
     led = json.load(open(a.ledger))
     depths = sorted(int(x) for x in a.depths.split(','))
@@ -33,7 +34,7 @@ def main():
     for bus, p in led['proposed_pads'].items():
         k = p['extra_cycles']
         need[k] += 1
-        legs[bus] = dict(extra_cycles=k, tiles=split(k, depths), source=p['source'], destination=p['destination'])
+        legs[bus] = dict(extra_cycles=k, tiles=split(k, depths), masters=[f'ot_qwen_tree_delay{d}_t' for d in split(k, depths)], source=p['source'], destination=p['destination'])
         inst.update(legs[bus]['tiles'])
     cyc = sum(k * n for k, n in need.items())
     area = sum(OUTLINE[d][0] * OUTLINE[d][1] * n for d, n in inst.items() if d in OUTLINE)

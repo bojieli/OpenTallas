@@ -64,7 +64,9 @@ def spread(names, layers, lo, hi):
         j = nxt[L]
         while j + 1 < len(t) and abs(t[j + 1] - want) <= abs(t[j] - want):
             j += 1
-        if j >= len(t):
+        left = (n - i + len(layers) - 1) // len(layers)        # pins of this layer still to place, this one included
+        j = min(j, len(t) - left)                              # a PG stripe at the band end: keep a track for each
+        if j < nxt[L]:
             raise SystemExit(f"out of {L} tracks in [{lo}, {hi}] at {nm}")
         out.append((nm, L, t[j]))
         nxt[L] = j + 1
@@ -169,6 +171,90 @@ def ctrn_plan():
     return txt, chk, len(pins)
 
 
+def ccf_plan(lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef"):
+    """ot_s81_hc_ccf (410.4 x 542.16, five 64x512 y-FIFO macros in one column at x 118.8 .. 290.1): v1-v3 left N / S to
+    PPL over the full faces on M5, also above the macro column; every one of the 10.5k-13.2k GRT markers of v3 lay over
+    or at the edges of the column (x 100-300) and none in the two ~115 um channels, because ~3,700 signals cross every
+    horizontal cut and only M5 passes over the macros (M1-M4 OBS).  All macro pins are on the macro W / E edges (M4):
+    rd_out[511:0] and wd_in[265:0] on one edge, wd_in[511:266] on the other.  v4: macros 1 and 3 are mirrored (MY), so
+    the read buses leave 3 west / 2 east, and NO pin sits over the column: each bit's N / S pin is over the channel on
+    the side of its macro pin, in slice bands of one order on both faces (a slice's n_y bits, the fd_i bits its ch_fd
+    flops mux with, and its ch_fd bits share a band), M5 + M3."""
+    import re
+    global W
+    keep, W = W, 410.4
+    H = 542.16
+    t = Path(lef).read_text()
+    west = set()                                  # wd_in bits on the R0 west edge (with rd_out)
+    for nm, body in re.findall(r"PIN wd_in\[(\d+)\]\n(.*?)END wd_in", t, re.S):
+        if float(re.search(r"RECT ([\d.]+)", body)[1]) < 1.0:
+            west.add(int(nm))
+    assert len(west) == 266, len(west)
+    YS1, NF = 2560, 5
+    rd_side = lambda f: "W" if f % 2 == 0 else "E"      # R0: read bus west; MY (slices 1, 3): east
+    oth = lambda c: "E" if c == "W" else "W"
+    def n_group(f, c):
+        """N pins of slice f that belong over channel c, in bit order"""
+        g = []
+        for i in range(512):
+            if c == rd_side(f) and f < 2:
+                g.append(f"fd_i[{O_D + 512 * f + i}]")
+            if (c == rd_side(f)) == (i in west):
+                g.append(f"n_y[{512 * f + i}]")
+        return g
+    s_group = lambda f: [f"ch_fd[{O_D + 512 * f + i}]" for i in range(512)]
+    ctl_n = ["n_yacc", "yfl"] + bits("fv_i", FVW) + [f"fd_i[{i}]" for i in range(O_D)]
+    ctl_s = ["ch_rst"] + bits("ch_fv", FVW) + [f"ch_fd[{i}]" for i in range(O_D)] + [f"ch_fd[{i}]" for i in range(O_D + YS1, FDW)]
+    # bands from the tile edge towards the column; the W-channel order is mirrored into the E channel
+    order = {"W": [0, 2, 4, 1, 3], "E": [1, 3, 0, 2, 4]}
+    chan = {"W": (MARGIN, 113.2), "E": (295.7, W - MARGIN)}   # clear of the 5.4 um macro halo
+    # v5 (v4 GRT-0116: all 1,040 markers at the S face, y 2-8, x 0-120 = the W channel, V capacity 21 / usage 22-24 per
+    # gcell: 3 x 512 ch_fd pins at 13.8 /um with their out-hold chains behind them; the E channel at 12.4 /um and the N
+    # face at 16 /um of plain inputs had none).  The S pins of each side now also use 47 um of the 30 um band under the
+    # macro column: W side 9.7 /um, E side 8.8 /um; ~450 nets a side run laterally under the column edge (H band ~1,000
+    # derated tracks).  The N face is unchanged.
+    schan = {"W": (MARGIN, 160.0), "E": (250.4, W - MARGIN)}
+    pins = []
+    for c in "WE":
+        ng = [n_group(f, c) for f in order[c]]
+        sg = [s_group(f) for f in order[c] if rd_side(f) == c]
+        if c == "E":
+            ng, sg = [ctl_n] + ng[::-1], [ctl_s] + sg[::-1]
+            ng, sg = ng[::-1], sg[::-1]           # E channel: column side first in x, control at the tile edge
+        lo, hi = chan[c]
+        pins += face_plan("N", ng, H, ["M5", "M3"], lo=lo, hi=hi) + face_plan("S", sg, H, ["M5", "M3"], lo=schan[c][0], hi=schan[c][1])
+    pins += [("W", "sk", "M4", round(0.012 + 0.048 * round((H / 2 - 0.78) / 0.048), 3)),
+             ("W", "srs", "M4", round(0.012 + 0.048 * round((H / 2 + 0.78) / 0.048), 3))]
+    names = [p[1] for p in pins]
+    want = (set(ctl_n) | set(ctl_s) | {f"n_y[{i}]" for i in range(YS1)} | {f"fd_i[{i}]" for i in range(FSW)}
+            | {f"ch_fd[{i}]" for i in range(FDW)} | {"sk", "srs"})
+    assert len(names) == len(set(names)) and set(names) == want, (len(names), len(want), sorted(want ^ set(names))[:6])
+    txt = emit(pins, H, "S81 HC ccf: N pins channel-only, S pins over the channels + 47 um under the macro column (v5), slice bands, M5+M3")
+    chk = check(pins, H, "ccf")
+    W = keep
+    return txt, chk, len(pins)
+
+
+def cryys_plan():
+    """ot_s81_hc_cryys (32.4 x 300.24 y slice leaf, r8): y_s[i] on N exactly above p_y[i] on S, same layer and track,
+    M5 + M3 alternating over x 2.16 .. 27.9 (256 b, 5.0 b/um/layer); sk / srs / yacc / p_req / p_flt on S at the E end
+    (M5).  Every bit is a vertical feed-through through its own pipeline (yp -> yp2 -> store -> rq -> b -> p_y): the leaf
+    has no horizontal bus."""
+    global W
+    keep, W = W, 32.4
+    H = 300.24
+    top = face_plan("N", [bits("y_s", 256)], H, ["M5", "M3"], lo=MARGIN, hi=27.9)
+    pins = top + [("S", f"p_y[{i}]", L, x) for i, (_, _, L, x) in enumerate(top)]
+    ctl = tracks("M5", 28.2, W - MARGIN)
+    pins += [("S", nm, "M5", ctl[4 * i]) for i, nm in enumerate(["sk", "srs", "yacc", "p_req", "p_flt"])]
+    names = [p[1] for p in pins]
+    assert len(names) == len(set(names)) == 2 * 256 + 5
+    txt = emit(pins, H, "S81 HC cryys: bit-aligned N/S feed-through pin plan (p_y[i] under y_s[i]), M5+M3; control on S at the E end")
+    chk = check(pins, H, "cryys")
+    W = keep
+    return txt, chk, len(pins)
+
+
 def main():
     out = Path(sys.argv[1] if len(sys.argv) > 1 else "physical/s81_hc_pinplan")
     for side, mirror in (("e", False), ("w", True)):
@@ -180,6 +266,12 @@ def main():
     txt, chk, n = ctrn_plan()
     print("ctrn", n, chk)
     (out / "ctrn.tcl").write_text(txt)
+    txt, chk, n = cryys_plan()
+    print("cryys", n, chk)
+    (out / "cryys.tcl").write_text(txt)
+    txt, chk, n = ccf_plan()
+    print("ccf", n, chk)
+    (out / "ccf.tcl").write_text(txt)
 
 
 if __name__ == "__main__":

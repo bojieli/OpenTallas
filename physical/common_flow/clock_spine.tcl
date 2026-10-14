@@ -430,6 +430,14 @@ proc ot_clock_spine {} {
   set u $::ot_sp_dbu
   set port [ot_sp_env OT_SPINE_PORT {ck[0]}]
   set bt [$blk findBTerm $port]
+  # s81-spwfc 2026-10-13: a [0:0] clock port stays "ck[0]" in a wires-only cluster netlist and becomes "ck" in a
+  # flattened leaf; ref_tile passes the base name.  Try the other spelling before giving up (s81sp_capc_cl gate:
+  # "OT_SPINE skipped: no port ck", plain TritonCTS, insertion 1,507 ps).
+  if {$bt eq "NULL" || $bt eq ""} {
+    if {[regexp {^(.*)\[0\]$} $port -> base]} { set alt $base } else { set alt [format {%s[0]} $port] }
+    set bt2 [$blk findBTerm $alt]
+    if {$bt2 ne "NULL" && $bt2 ne ""} { puts "OT_SPINE port $port not found, using $alt"; set bt $bt2; set port $alt }
+  }
   if {$bt eq "NULL" || $bt eq ""} { puts "OT_SPINE skipped: no port $port"; return 0 }
   set net0 [$bt getNet]
   # OT_SPINE_THROUGH_ICG=1 (el1011-hbm-smt 2026-10-12): the port clock enters ONE tile clock gate (ICG*, e.g. the SM tile's

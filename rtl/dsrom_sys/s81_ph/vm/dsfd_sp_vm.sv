@@ -1,3 +1,10 @@
+`ifdef OT_VMFE_FLD_PARALLEL_ARB
+`include "dsfd_vm_fld_pick2.svh"
+`endif
+`ifdef OT_SPVM_RESET_ACK
+`include "dsfd_vm_reset_ack.svh"
+`include "dsfd_vm_fe_h_if.svh"
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
 // dsfd_sp_vm v2 -- the S81 layer-die VM master (s81-vm-1011 under ds-1010, 2026-10-11).  Serial (0.9 GHz) domain
@@ -82,7 +89,9 @@
 module dsfd_vm_cl #(
     parameter integer LA = 12,          // row entries
     parameter integer LTO = 16,         // partial-row timeout (cycles since last element)
-    parameter integer WQ = 2            // write queue depth
+    parameter integer WQ = 2,           // write queue depth
+    parameter integer RT = 1            // 1 (the hard view): match / touch terms formed from registers (see "RT" below); 0: the v3
+                                        // expressions.  BIT-EXACT and cycle-exact to each other (bench tb_dsfd_vm_cl_rt)
 ) (
     input  wire          clk, rn,       // rn: this lane's relayed reset (control only)
     input  wire [3:0]    gid,           // lane index (static strap, registered by dsfd_vm_clt): one hard view serves all 16 lanes
@@ -139,15 +148,69 @@ module dsfd_vm_cl #(
     reg [15:0] s2_ld, s2_b, s2_ms; reg [9:0] s2_k [0:15]; reg [31:0] s2_d [0:15]; reg [15:0] s2_fol [0:15];
     reg [LA-1:0] s2_hS [0:15]; reg [15:0] s2_hB [0:15]; reg [OB-1:0] s2_mo [0:15];
     reg [LA-1:0] a_hS [0:15]; reg [15:0] a_hB [0:15]; reg [15:0] a_ms; reg [OB-1:0] a_mo [0:15]; reg [LA-1:0] touchA;
+    // RT (el1013-s81-vmfe/B6, S3: the M5 route of dsfd_vm_clt missed setup by 113 ps on KEY -> compare -> touchA -> cand ->
+    // vic -> allocate -> AGE / KEY / s3_ev, 24-26 levels).  The tag compare of the batch in A and both touch vectors are
+    // formed ONE CYCLE AHEAD from the pin-registered keys and re-based on the only state that can change in between:
+    //   KEY[e] at t = b_al[e] at t-1 ? the key of the leader that allocated e (s2_k[j], b_ent[j][e]) : KEY[e] at t-1
+    //   p_eqS[k][e] = KEY[e] == key k     p_eqB[k][j] = s2_k[j] == key k     (C1 cycle, registered)
+    //   a_hS[k][e]  = s1_ld[k] & V[e] & (alP[e] ? |(p_eqB[k] & ent_p[.][e]) : p_eqS[k][e])            (= the v3 compare)
+    //   touchA[e]   = V[e] & (alP[e] ? |(p_xB & ent_p[.][e]) : p_tS[e])       p_tS / p_xB = OR over the accepted elements
+    //                 (every accepted element carries its leader's key, so the OR over elements = the OR over leaders)
+    //   touchB[e]   = p_tAS[e] | |(p_yB & ent_p[.][e])       p_tAS = OR of the state hits of leaders with no B hit, p_yB =
+    //                 OR of a_hB, both registered in A
+    // An allocated entry has exactly one leader in ent_p (free entries are not valid and a victim is untouched by B).
+    // No latency, no behaviour change: cand -> vic now starts 6-7 levels after registers.
+    reg [LA-1:0] alP, p_tS, p_tAS; reg [15:0] p_xB, p_yB;
+    reg [LA-1:0] p_eqS [0:15]; reg [15:0] p_eqB [0:15];
+    reg [LA-1:0] ent_p [0:15];          // entry of each leader of the previous B batch
+    reg [15:0] entc [0:LA-1];           // ent_p by entry
+    reg [LA-1:0] b_al;
+    always @* begin : p_ec integer e, j;
+        for (e = 0; e < LA; e = e + 1) for (j = 0; j < 16; j = j + 1) entc[e][j] = ent_p[j][e];
+    end
+    always @(posedge clk) begin : p_pre integer k, e, j; reg [LA-1:0] t; reg [15:0] x; reg [9:0] kk;
+        t = {LA{1'b0}}; x = 16'd0;
+        for (k = 0; k < 16; k = k + 1) begin
+            kk = ea[19*k + 8 +: 10];
+            for (e = 0; e < LA; e = e + 1) begin
+                p_eqS[k][e] <= KEY[e] == kk;
+                if (rn && d_ok[k] && KEY[e] == kk) t[e] = 1'b1;
+            end
+            for (j = 0; j < 16; j = j + 1) begin
+                p_eqB[k][j] <= s2_k[j] == kk;
+                if (rn && d_ok[k] && s2_k[j] == kk) x[j] = 1'b1;
+            end
+        end
+        p_tS <= t; p_xB <= x; alP <= b_al;
+    end
+`ifndef SYNTHESIS
+    integer cov_fw = 0, cov_ev = 0;      // bench cover: forwarded touch of a just-allocated entry; evictions
+`endif
     always @* begin : p_a integer k, e, j; reg [OB-1:0] c;
         touchA = {LA{1'b0}}; c = {OB{1'b0}};
         for (k = 0; k < 16; k = k + 1) begin
-            for (e = 0; e < LA; e = e + 1) a_hS[k][e] = s1_ld[k] && V[e] && KEY[e] == s1_k[k];
+            for (e = 0; e < LA; e = e + 1)
+                if (RT != 0) a_hS[k][e] = s1_ld[k] && V[e] && (alP[e] ? |(p_eqB[k] & entc[e]) : p_eqS[k][e]);
+                else a_hS[k][e] = s1_ld[k] && V[e] && KEY[e] == s1_k[k];
             for (j = 0; j < 16; j = j + 1) a_hB[k][j] = s1_ld[k] && s2_ld[j] && s2_k[j] == s1_k[k];
             a_ms[k] = s1_ld[k] && a_hS[k] == {LA{1'b0}} && a_hB[k] == 16'd0;
             a_mo[k] = c; c = c + {{(OB-1){1'b0}}, a_ms[k]};
             touchA = touchA | a_hS[k];
         end
+        if (RT != 0) for (e = 0; e < LA; e = e + 1)
+`ifdef OT_SPVM_MUT_CLRT
+            touchA[e] = V[e] && p_tS[e];     // MUTANT: the touch of a just-allocated entry is not forwarded
+`else
+            touchA[e] = V[e] && (alP[e] ? |(p_xB & entc[e]) : p_tS[e]);
+`endif
+    end
+    always @(posedge clk) begin : p_pb integer k; reg [LA-1:0] t; reg [15:0] y;
+        t = {LA{1'b0}}; y = 16'd0;
+        for (k = 0; k < 16; k = k + 1) begin
+            if (a_hB[k] == 16'd0) t = t | a_hS[k];
+            y = y | a_hB[k];
+        end
+        if (!rn) begin p_tAS <= {LA{1'b0}}; p_yB <= 16'd0; end else begin p_tAS <= t; p_yB <= y; end
     end
     always @(posedge clk) begin : p_s2 integer k;
         for (k = 0; k < 16; k = k + 1) begin
@@ -158,9 +221,8 @@ module dsfd_vm_cl #(
         if (!rn) s2_ld <= 16'd0; else s2_ld <= s1_ld;
     end
     // ------------------------------------------------------------------ B: allocate / evict
-    reg [LA-1:0] ent_p [0:15];          // entry of each leader of the previous B batch
     reg [LA-1:0] b_ent [0:15];          // entry of each leader of this batch (0: dropped)
-    reg [LA-1:0] touchB, b_al, b_ev, vic, cand, fr;
+    reg [LA-1:0] touchB, b_ev, vic, cand, fr;
     reg [9:0]    b_ak [0:LA-1];
     reg          b_fal2;
     reg [OB-1:0] fo [0:LA-1]; reg [OB-1:0] nf;
@@ -181,6 +243,7 @@ module dsfd_vm_cl #(
             b_ent[k] = s2_ld[k] ? h : {LA{1'b0}};
             touchB = touchB | b_ent[k];
         end
+        if (RT != 0) for (e = 0; e < LA; e = e + 1) touchB[e] = p_tAS[e] || |(p_yB & entc[e]);
         cand = V & ~touchB & ~touchA;
         for (e = 0; e < LA; e = e + 1) vic[e] = cand[e] && ((older[e] | ~cand) == {LA{1'b1}});
         b_al = {LA{1'b0}}; b_ev = {LA{1'b0}}; b_fal2 = 1'b0;
@@ -213,6 +276,10 @@ module dsfd_vm_cl #(
         end
         if (!rn) begin V <= {LA{1'b0}}; s3_al <= {LA{1'b0}}; end
         else begin V <= b_al | touchB | (V & ~freeM); s3_al <= b_al; end
+`ifndef SYNTHESIS
+        if (rn && b_ev != {LA{1'b0}}) cov_ev = cov_ev + 1;
+        for (e = 0; e < LA; e = e + 1) if (rn && V[e] && alP[e] && |(p_xB & entc[e])) cov_fw = cov_fw + 1;
+`endif
     end
     // ------------------------------------------------------------------ M: merge + move
     reg [LA-1:0] el [0:15];             // entry of element k (its leader's)
@@ -296,6 +363,9 @@ module dsfd_vm_clt #(
     output wire [15:0]  w_m,
     output wire [511:0] w_d,
     output wire [3:0]   flt
+`ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, output wire rst_ack
+`endif
 );
     wire clk = ck[0];
     reg [831:0] cp; reg rn_r, sok_r; reg [3:0] gid_r;
@@ -320,6 +390,9 @@ module dsfd_vm_clt #(
 `endif
     dsfd_vm_cl #(.LA(LA), .LTO(LTO)) u_c (.clk(clk), .rn(rn_r), .gid(gid_r), .ev(lvx), .ea(la), .ed(ld), .slot_ok(sok_r),
         .w_v(w_v[0]), .w_row(w_row), .w_m(w_m), .w_d(w_d), .flt(flt));
+`ifdef OT_SPVM_RESET_ACK
+    dsfd_vm_reset_ack u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn_r), .consumer_live(1'b1), .ack(rst_ack));
+`endif
 endmodule
 
 // ================================================================================================ landing lane
@@ -410,7 +483,12 @@ module dsfd_vm_fe #(
     parameter integer KD = 1,           // relay stages order register -> completion counter (ARM ops delayed alike)
     parameter integer LAL = 2,          // landing input / LARM relay stages
     parameter integer LGL = 2,          // landing grant relay stages (arbiter -> lane)
-    parameter integer LDL = 2           // landing data relay stages (lane -> drain mux)
+    parameter integer LDL = 2,          // landing data relay stages (lane -> drain mux)
+    parameter integer DVR = 0,          // 1: engine done dv / dt leave a pin register (stream domain, +1 stream cycle on every done)
+    parameter integer LVX = 0,          // extra relay stages lane -> drain on the written-row flag o_av and on room_ok (ok)
+    parameter integer XRT = 0,          // 1: engine adapter with one reset synchroniser a domain + registered reset tree (no cross-domain reset arc)
+    parameter integer CCA = 0           // 1: the ctrl VM crossing is a REAL two-clock CDC (Gray pointers through 2-flop synchronisers,
+                                        // ot_async_fifo DEPTH 16) instead of the related-clock ot_ratio_cdc_fifo: +2 serial cycles an op
 ) (
     input  wire [0:0]    ck,            // serial clock / reset
     input  wire [0:0]    rst,
@@ -517,10 +595,45 @@ module dsfd_vm_fe #(
     wire [526:0] sw_d1 = (s_f && s_tg) ? s_fd : s_ro;
     always @(posedge cks[0]) if (!rns) s_tg <= 1'b0; else if (s_f && !s_s) s_tg <= ~s_tg;
     wire [1:0] cw_rdy, cr_v, cw_live; wire [526:0] cr_d0, cr_d1; reg [1:0] cr_take; reg s_ovf;
-    ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
-        .rclk(clk), .rrst_n(rn), .r_v(cr_v[0]), .r_rdy(cr_take[0]), .r_d(cr_d0), .w_live(cw_live[0]), .r_live());
-    ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc1 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[1]), .w_rdy(cw_rdy[1]), .w_d(sw_d1),
-        .rclk(clk), .rrst_n(rn), .r_v(cr_v[1]), .r_rdy(cr_take[1]), .r_d(cr_d1), .w_live(cw_live[1]), .r_live());
+    generate if (CCA != 0) begin : g_cca
+        // el1013-s81-vmfe/B8 (coordinator decision 10-13 (b)): with ot_ratio_cdc_fifo every storage bit crossed EVERY read
+        // cycle (mem[i] (cks tree) -> sh[i] (ck tree), 2 x 8 x 527 flop -> flop arcs) and had to meet the 277.8-ps window AND
+        // the coincident-edge hold between two independently built clock trees: -140.7 ps setup, 2,039 stalled hold arcs.
+        // Here the storage is written and held in the stream domain only (its write register s_wd / s_wa is same-domain),
+        // the pointers cross Gray-coded through 2-flop synchronisers, and an entry is read (mem -> read mux -> the serial
+        // order register) only after the synchronised pointer has published it, >= 2 serial cycles after it was written:
+        // the only cross-clock arcs are pointer / online -> first synchroniser flop and stable storage -> order register
+        // (max-delay, datapath only).  Reset: one synchroniser a domain on the pin-level AND of both asynchronous resets
+        // (an assertion of either flushes both sides), then one registered stage; no cross-domain reset arc.
+        wire x_arn = rst[0] & rss[0];
+        wire xw0, xr0; wire [1:0] xr_v;
+        ot_reset_sync u_xw (.clk(cks[0]), .async_rst_n(x_arn), .sync_rst_n(xw0));
+        ot_reset_sync u_xr (.clk(clk), .async_rst_n(x_arn), .sync_rst_n(xr0));
+        (* keep = 1 *) reg [1:0] xw_t; (* keep = 1 *) reg [1:0] xr_t;
+        always @(posedge cks[0] or negedge xw0) if (!xw0) xw_t <= 2'b00; else xw_t <= 2'b11;
+        always @(posedge clk or negedge xr0) if (!xr0) xr_t <= 2'b00; else xr_t <= 2'b11;
+        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+`ifdef OT_VMFE_FCC_PIPE
+            , .FIFO_PIPE(1)
+`endif
+            ) u_cc0 (.wr_clk(cks[0]), .wr_rst_n(xw_t[0]), .wr_valid(sw_v[0]),
+            .wr_ready(cw_rdy[0]), .wr_data(sw_d0), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[0]), .rd_valid(xr_v[0]),
+            .rd_ready(cr_take[0]), .rd_data(cr_d0), .rd_underflow());
+        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+`ifdef OT_VMFE_FCC_PIPE
+            , .FIFO_PIPE(1)
+`endif
+            ) u_cc1 (.wr_clk(cks[0]), .wr_rst_n(xw_t[1]), .wr_valid(sw_v[1]),
+            .wr_ready(cw_rdy[1]), .wr_data(sw_d1), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[1]), .rd_valid(xr_v[1]),
+            .rd_ready(cr_take[1]), .rd_data(cr_d1), .rd_underflow());
+        assign cr_v = rn ? xr_v : 2'b00;        // nothing is popped while the serial order registers are in reset
+        assign cw_live = 2'b11;
+    end else begin : g_ncca
+        ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
+            .rclk(clk), .rrst_n(rn), .r_v(cr_v[0]), .r_rdy(cr_take[0]), .r_d(cr_d0), .w_live(cw_live[0]), .r_live());
+        ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc1 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[1]), .w_rdy(cw_rdy[1]), .w_d(sw_d1),
+            .rclk(clk), .rrst_n(rn), .r_v(cr_v[1]), .r_rdy(cr_take[1]), .r_d(cr_d1), .w_live(cw_live[1]), .r_live());
+    end endgenerate
     always @(posedge cks[0]) if (!rns) s_ovf <= 1'b0;
         else if ((sw_v[0] && !cw_rdy[0]) || (sw_v[1] && !cw_rdy[1])) s_ovf <= 1'b1;   // incl. ops before the crossing is up
     // serial side: pop in alternation order, <= 2 a cycle: first -> lane A (p3), second -> lane B (p4)
@@ -548,15 +661,35 @@ module dsfd_vm_fe #(
     always @(posedge clk) if (!rn) a_p2c <= 1'b0; else a_p2c <= f_p2c[0];
 
     // ---------------------------------------------------------------- engine adapter (stream c side, serial e side)
-    wire ad_v, ad_r; wire [83:0] ad_d; wire ad_flt, ad_on;
+    wire ad_v, ad_r; wire [83:0] ad_d; wire ad_flt_c, ad_on; wire ad_flt;
+    // XRT 1 (B8): the adapter's fault is a STREAM-domain level (cf || ef_c2) read by the serial fault register: it crosses
+    // through a stream register and a 2-flop synchroniser (sticky, so +3 cycles on a fault that is already fatal)
+    generate if (XRT != 0) begin : g_afs
+        reg ad_flt_q; (* async_reg = "true" *) reg [1:0] ad_flt_s;
+        always @(posedge cks[0]) ad_flt_q <= ad_flt_c;
+        always @(posedge clk) ad_flt_s <= {ad_flt_s[0], ad_flt_q};
+        assign ad_flt = ad_flt_s[1];
+    end else begin : g_nafs
+        assign ad_flt = ad_flt_c;
+    end endgenerate
     reg ed_v; reg [7:0] ed_t;
     // engine command pin flops (el1011-ds-vm/fe6): cv / cd enter a register at the pin (stream domain, +1 stream cycle on
     // every command alike) so the adapter's tag lookup (cd -> cpending[tag] -> admit -> u_cmd, 14 levels) starts at a flop
     reg cv_p; reg [83:0] cd_p;
     always @(posedge cks[0]) begin if (!rns) cv_p <= 1'b0; else cv_p <= cv[0]; cd_p <= cd; end
-    ot_s81_engine_adapter #(.QD(8)) u_ad (
-        .c_clk(cks[0]), .c_rst_n(rss[0]), .c_cmd_v(cv_p), .c_cmd_d(cd_p), .c_done_v(dv[0]), .c_done_tag(dt),
-        .fault(ad_flt), .online(ad_on),
+    // engine done pin flops (el1013-s81-vmfe/B6, DVR 1 = the hard leaf dsfd_vm_fcn): the adapter's done register sits in its
+    // tag logic (enable, asynchronous clear, 280-load reset), not at the face; dv / dt leave their own stream-domain register
+    wire ad_dv; wire [7:0] ad_dt;
+    generate if (DVR != 0) begin : g_dvr
+        reg dv_q; reg [7:0] dt_q;
+        always @(posedge cks[0]) begin if (!rns) dv_q <= 1'b0; else dv_q <= ad_dv; dt_q <= ad_dt; end
+        assign dv[0] = dv_q; assign dt = dt_q;
+    end else begin : g_ndvr
+        assign dv[0] = ad_dv; assign dt = ad_dt;
+    end endgenerate
+    ot_s81_engine_adapter #(.QD(8), .XRT(XRT)) u_ad (
+        .c_clk(cks[0]), .c_rst_n(rss[0]), .c_cmd_v(cv_p), .c_cmd_d(cd_p), .c_done_v(ad_dv), .c_done_tag(ad_dt),
+        .fault(ad_flt_c), .online(ad_on),
         .e_clk(clk), .e_rst_n(rst[0]), .e_cmd_v(ad_v), .e_cmd_d(ad_d), .e_cmd_ready(ad_r), .e_inputs_present(1'b1),
         .e_done_v(ed_v), .e_done_tag(ed_t));
     wire [2:0] vop = ad_d[30:28];       // arg[23:21]
@@ -671,15 +804,31 @@ module dsfd_vm_fe #(
 `endif
         (* keep = 1 *) reg [1:0] rr_ll;
         always @(posedge clk) rr_ll <= {rr_ll[0], rn0};
-        // room flag padded by the relay latency added in v3 (8 -> 16 rows)
-        dsfd_vm_ll #(.DEPTH(DP), .MACRO(LMACRO), .STRIDE(ST), .OFF(OF), .AL(LAL), .RTH(16)) u_ll (.clk(clk), .rn(rr_ll[1]),
+        // room flag padded by the relay latency added in v3 (8 -> 16 rows at LAL 2; +1 row per further input stage:
+        // a row in the LAL relay is in flight and not yet counted when room_ok is formed)
+        dsfd_vm_ll #(.DEPTH(DP), .MACRO(LMACRO), .STRIDE(ST), .OFF(OF), .AL(LAL), .RTH(14 + LAL + LVX)) u_ll (.clk(clk), .rn(rr_ll[1]),
             .in_v(ll_iv[gll]), .in_d(ll_id[512*gll +: 512]), .arm_v(ll_arm[gll]), .arm_base(arg[13:0]),
             .o_av(ll_av[gll]), .g(g_r[LGL-1][gll]), .o_v(ll_ov_v[gll]), .o_row(ll_or[14*gll +: 14]), .o_d(ll_od[512*gll +: 512]),
             .room_ok(ll_ok[gll]), .ovf(ll_ov[gll]));
     end endgenerate
+    // LVX (el1013-s81-vmfe/B6): the written-row flags and the collective room flags cross LVX more stages on their way to
+    // the drain (hierarchy: one mid-hop relay tile dsfd_vm_frv a lane); the room threshold grows by one row a stage
+    reg [NLL-1:0] av_x [0:((LVX > 0) ? LVX : 1)-1]; reg [3:0] ok_x [0:((LVX > 0) ? LVX : 1)-1];
+    always @(posedge clk) begin : p_lvx integer i;
+        if (!rn) for (i = 0; i < ((LVX > 0) ? LVX : 1); i = i + 1) begin av_x[i] <= {NLL{1'b0}}; ok_x[i] <= 4'd0; end
+        else begin
+            av_x[0] <= ll_av; ok_x[0] <= ll_ok[2*NSVC +: 4];
+            for (i = 1; i < LVX; i = i + 1) begin av_x[i] <= av_x[i-1]; ok_x[i] <= ok_x[i-1]; end
+        end
+    end
+    wire [NLL-1:0] ll_avd = (LVX == 0) ? ll_av : av_x[((LVX > 0) ? LVX : 1)-1];
+    wire [3:0] ll_okd = (LVX == 0) ? ll_ok[2*NSVC +: 4] : ok_x[((LVX > 0) ? LVX : 1)-1];
     reg [6:0] lc [0:NLL-1];             // rows written and not yet granted, per lane
     reg [$clog2(NLL)-1:0] ll_ptr; reg [NLP-1:0] lp_v; reg [NLP*14-1:0] lp_row; reg [NLP*512-1:0] lp_d;
     reg [NLP-1:0] lsel_v; reg [$clog2(NLL)-1:0] lsel [0:NLP-1];
+`ifdef OT_VMFE_FLD_PARALLEL_ARB
+`include "dsfd_vm_fld_parallel_arb.svh"
+`else
     always @* begin : p_l562 integer li, lj, lk;
         ll_tk = {NLL{1'b0}}; lsel_v = {NLP{1'b0}};
         for (lk = 0; lk < NLP; lk = lk + 1) lsel[lk] = {$clog2(NLL){1'b0}};
@@ -696,6 +845,7 @@ module dsfd_vm_fe #(
             if (lc[lj] != 7'd0 && lk < NLP) begin ll_tk[lj] = 1'b1; lsel_v[lk] = 1'b1; lsel[lk] = lj; lk = lk + 1; end
         end
     end
+`endif
     reg [NLL-1:0] sd_oh [0:NLP-1][0:LSD-1]; reg [NLP-1:0] sd_v [0:LSD-1];
     always @(posedge clk) begin : p_l578 integer lk, li, i; reg [511:0] dsel; reg [13:0] rsel;
         if (!rn) begin
@@ -705,7 +855,7 @@ module dsfd_vm_fe #(
             for (i = 0; i < LSD; i = i + 1) sd_v[i] <= {NLP{1'b0}};
         end else begin
             ll_ptr <= (ll_ptr == NLL - 1) ? 0 : ll_ptr + 1'b1;
-            av_r <= ll_av;
+            av_r <= ll_avd;
             for (li = 0; li < NLL; li = li + 1) lc[li] <= lc[li] + {6'd0, av_r[li]} - {6'd0, ll_tk[li]};
             g_r[0] <= ll_tk;
             for (i = 1; i < LGL; i = i + 1) g_r[i] <= g_r[i-1];
@@ -727,7 +877,7 @@ module dsfd_vm_fe #(
     end
     // collective flow control: room for >= 16 rows (8 + the v3 relay latency) on every word lane, relayed one stage
     reg cts_ok;
-    always @(posedge clk) if (!rn) cts_ok <= 1'b0; else cts_ok <= &ll_ok[2*NSVC +: 4];
+    always @(posedge clk) if (!rn) cts_ok <= 1'b0; else cts_ok <= &ll_okd;
     always @(posedge clk) if (!rn) t_cts <= 3'd0; else t_cts <= {1'b0, 1'b1, cts_ok};
     reg ll_ovr;
     always @(posedge clk) if (!rn) ll_ovr <= 1'b0; else ll_ovr <= |ll_ov;
@@ -788,9 +938,20 @@ module dsfd_vm_fe #(
     // dsfd_vm_fsr (pin flop + output flop, FRL 2 fixed) sitting directly above bgq column s at the S face.  The valid copy
     // folds the synchronous reset into its D (rn ? c_vv : 0, as before); the tile's valid reset is its pin-flopped rn, fed
     // from a kept per-slice copy of rn0 so the tile sees rr_c[1] exactly.  m_rf is registered inside the tile (was here).
+`ifdef OT_SPVM_REF_FRL
+    // LOCKSTEP REFERENCE of the hierarchy dsfd_vm_fe_h (el1013-s81-vmfe): FRL - 2 behavioural relay stages between the
+    // stage-0 register and the hard dsfd_vm_fsr (= the R dsfd_vm_fxr tiles, 2 flops each); m_rf sees |fe_flt FRL - 1
+    // cycles later (fcn out flop + the same relay chain).  Simulation reference only, never a physical view.
+    localparam integer FRX = FRL - 2;
+    if (FRL < 2) begin : g_frl
+        dsfd_vm_fsr_hard_frl_mismatch u_err ();
+    end
+`else
+    localparam integer FRX = 0;
     if (FRL != 2) begin : g_frl
         dsfd_vm_fsr_hard_frl_mismatch u_err ();    // elaboration error: the hardened dsfd_vm_fsr is FRL 2 (two stages)
     end
+`endif
     integer s;
     genvar gsl, gp;
     generate for (gsl = 0; gsl < NS; gsl = gsl + 1) begin : g_sl
@@ -805,11 +966,25 @@ module dsfd_vm_fe #(
         (* keep = 1 *) reg rr_f;
         always @(posedge clk) rr_f <= rn0;
         reg [3:0] rf_d;
-        always @* rf_d = {|fe_flt, 3'b000};
+        wire [W0-1:0] s0x;
+        if (FRX == 0) begin : g_nx
+            always @* rf_d = {|fe_flt, 3'b000};
+            assign s0x = s0;
+        end else begin : g_x                // reference relay (OT_SPVM_REF_FRL only)
+            reg [W0-1:0] xq [0:FRX-1]; reg [FRX:0] xrf; reg rr_x; integer xi;
+            always @(posedge clk) begin
+                rr_x <= rr_f;
+                xq[0] <= s0; for (xi = 1; xi < FRX; xi = xi + 1) xq[xi] <= xq[xi-1];
+                if (!rr_x) for (xi = 0; xi < FRX; xi = xi + 1) xq[xi][W0-1 -: NP] <= {NP{1'b0}};
+                xrf <= {xrf[FRX-1:0], |fe_flt};
+            end
+            always @* rf_d = {xrf[FRX], 3'b000};
+            assign s0x = xq[FRX-1];
+        end
         // hard child: NO parameter overrides (one view for all 4 slices)
         dsfd_vm_fsr u_fr (.ck(clk), .rn(rr_f),
-            .i_v(s0[W0-1 -: NP]), .i_we(s0[W0-NP-1 -: NP]), .i_row(s0[W0-2*NP-1 -: NP*RA]), .i_mask(s0[NP*128 +: NP*4]),
-            .i_d(s0[0 +: NP*128]), .i_rf(rf_d),
+            .i_v(s0x[W0-1 -: NP]), .i_we(s0x[W0-NP-1 -: NP]), .i_row(s0x[W0-2*NP-1 -: NP*RA]), .i_mask(s0x[NP*128 +: NP*4]),
+            .i_d(s0x[0 +: NP*128]), .i_rf(rf_d),
             .o_v(m_v[gsl*NP +: NP]), .o_we(m_we[gsl*NP +: NP]), .o_row(m_row[gsl*NP*RA +: NP*RA]),
             .o_mask(m_mask[gsl*NP*4 +: NP*4]), .o_d(m_d[gsl*NP*128 +: NP*128]), .o_rf(m_rf[gsl*4 +: 4]));
     end endgenerate
@@ -887,12 +1062,37 @@ module dsfd_vm_fe #(
         if (!rn) k2_arm <= 1'b0; else k2_arm <= k_arm;
         k2_s <= k_s; k2_need <= k_arg[18:0]; k2_tag <= k_tag; k2_user <= k_user; k2_ntf <= st_ntf[k_s];
     end
+`ifdef OT_VMFE_FCN_SUM_PIPE
+    // Stage K3: reduce the four K2 groups before the wide count/compare.
+    // ARM metadata and read hits advance with the same accepted operation.
+    reg [9:0] k3_inc [0:NSLOT-1]; reg [NSLOT-1:0] k3_hr;
+    reg k3_arm; reg [1:0] k3_s; reg [18:0] k3_need; reg [7:0] k3_tag;
+    reg [9:0] k3_user; reg k3_ntf;
+    always @(posedge clk) begin : p_k3 integer kk;
+        for (kk = 0; kk < NSLOT; kk = kk + 1)
+            k3_inc[kk] <= ({2'd0, k2_g[kk*4]} + {2'd0, k2_g[kk*4+1]})
+                         + ({2'd0, k2_g[kk*4+2]} + {2'd0, k2_g[kk*4+3]});
+        k3_hr <= k2_hr;
+        if (!rn) k3_arm <= 1'b0; else k3_arm <= k2_arm;
+        k3_s <= k2_s; k3_need <= k2_need; k3_tag <= k2_tag;
+        k3_user <= k2_user; k3_ntf <= k2_ntf;
+    end
+`endif
     reg [9:0] inc [0:NSLOT-1];
     reg [NSLOT-1:0] hit_r, cmpl;
     always @* begin : p_l691 integer kk;
         for (kk = 0; kk < NSLOT; kk = kk + 1) begin
+`ifdef OT_VMFE_FCN_SUM_PIPE
+`ifdef OT_VMFE_FCN_SUM_PIPE_MUT
+            inc[kk] = k3_inc[kk] ^ 10'd1;
+`else
+            inc[kk] = k3_inc[kk];
+`endif
+            hit_r[kk] = k3_hr[kk];
+`else
             inc[kk] = ({2'd0, k2_g[kk*4]} + {2'd0, k2_g[kk*4 + 1]}) + ({2'd0, k2_g[kk*4 + 2]} + {2'd0, k2_g[kk*4 + 3]});
             hit_r[kk] = k2_hr[kk];
+`endif
 `ifdef OT_SPVM_MUT_EARLY
             cmpl[kk] = sl_arm[kk] && sl_cnt[kk] + inc[kk] + 19'd1 >= sl_need[kk];   // MUTANT: one element early
 `else
@@ -941,11 +1141,19 @@ module dsfd_vm_fe #(
             if (k_armb) begin st_base[k_s] <= k_arg[13:0]; st_ntf[k_s] <= k_arg[18]; end
             if (k_armr) st_n[k_s] <= k_arg[14:0];
             if (k_arm) begin sl_base[k_s] <= st_base[k_s]; sl_n[k_s] <= st_n[k_s]; end   // range half: stage K compares
+`ifdef OT_VMFE_FCN_SUM_PIPE
+            if (k3_arm) begin                                                            // counter half: with the K2 sums
+                if (sl_arm[k3_s] || sl_dp[k3_s] || sl_rp[k3_s]) rearm <= 1'b1;
+                sl_arm[k3_s] <= 1'b1; t_rdy[k3_s] <= 1'b0; sl_ntf[k3_s] <= k3_ntf; sl_user[k3_s] <= k3_user;
+                sl_need[k3_s] <= k3_need; sl_cnt[k3_s] <= 19'd0; sl_tag[k3_s] <= k3_tag;
+            end
+`else
             if (k2_arm) begin                                                            // counter half: with the K2 sums
                 if (sl_arm[k2_s] || sl_dp[k2_s] || sl_rp[k2_s]) rearm <= 1'b1;
                 sl_arm[k2_s] <= 1'b1; t_rdy[k2_s] <= 1'b0; sl_ntf[k2_s] <= k2_ntf; sl_user[k2_s] <= k2_user;
                 sl_need[k2_s] <= k2_need; sl_cnt[k2_s] <= 19'd0; sl_tag[k2_s] <= k2_tag;
             end
+`endif
             // engine done output (one a cycle)
             ed_v <= d_slot || d_p2 || d_x || d_imm;
             ed_t <= d_slot ? dsel_tag : d_p2 ? pd_q[pd_h] : d_x ? x_tag[xsel] : imm_t;
@@ -998,6 +1206,9 @@ module dsfd_vm_fsr (
     input  wire [3583:0] i_d,  input wire [3:0]   i_rf,
     output reg  [27:0]   o_v,  output reg [27:0]  o_we, output reg [391:0] o_row, output reg [111:0] o_mask,
     output reg  [3583:0] o_d,  output reg [3:0]   o_rf
+`ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, output wire rst_ack
+`endif
 );
     reg rn_q;
     reg [27:0] v1, we1; reg [391:0] row1; reg [111:0] m1; reg [3583:0] d1;
@@ -1008,6 +1219,9 @@ module dsfd_vm_fsr (
         o_we <= we1; o_row <= row1; o_mask <= m1; o_d <= d1;
         o_rf <= i_rf;
     end
+`ifdef OT_SPVM_RESET_ACK
+    dsfd_vm_reset_ack u_reset_ack (.clk(ck), .request_n(reset_epoch_n), .local_release(rn_q), .consumer_live(1'b1), .ack(rst_ack));
+`endif
 endmodule
 
 // ================================================================================================ back end
@@ -1047,6 +1261,9 @@ module dsfd_vm_be_rcdc #(
     output reg           o_v,
     output wire [W-1:0]  o_d,
     output wire [NC-1:0] o_vc
+`ifdef OT_SPVM_RESET_ACK
+    , output wire w_online, r_online
+`endif
 );
     localparam integer AW = $clog2(DEPTH);
     localparam integer CW = $clog2(HOLD + 1);
@@ -1061,6 +1278,11 @@ module dsfd_vm_be_rcdc #(
     always @(posedge wclk) begin rp_w <= rp; r_st_w <= r_st; end
     wire w_live = (w_st == S_RUN) && (r_st_w != S_DOWN);
     assign w_rdy = wrst_n && w_live && ((wp - rp_w) != DP);
+`ifdef OT_SPVM_RESET_ACK
+    // Export actual rendezvous state, independent of FIFO occupancy or traffic.
+    assign w_online = wrst_n && w_live;
+    assign r_online = rrst_n && r_live;
+`endif
     wire w_fire = w_v && w_rdy;
     reg [AW:0] wp_nx;
     always @* begin
@@ -1184,6 +1406,10 @@ module dsfd_vm_be_sl #(
     output reg  [0:0]        flt,
     output reg  [31:0]       fvec,
     output reg  [2:0]        max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, reset_epoch_s_n
+    , output reg rst_ack, rst_ack_s
+`endif
 );
     localparam integer KX = 4;          // in-tile alignment relays after the control pin flops (DIE_D + 1 + KX + XT = MD + 1)
     reg [4:0] sflt;                     // this cycle {x_col, x_mis, r_ovf, p_mis, p_ovf}
@@ -1199,6 +1425,37 @@ module dsfd_vm_be_sl #(
     dsfd_vm_be_kreg #(.W(1), .ID(4)) u_rn_p (.clk(clk), .d(rn_in[0]), .q(rn_p));
     dsfd_vm_be_kreg #(.W(1), .ID(5)) u_rn_w (.clk(clk), .d(rn_in[0]), .q(rn_w));
     dsfd_vm_be_kreg #(.W(1), .ID(6)) u_rns (.clk(sclk), .d(rns_in[0]), .q(rns));
+`ifdef OT_SPVM_RESET_ACK
+    wire [1:0] cdc_w_online, cdc_r_online;
+    reg ack_reset_seen, ack_reset_seen_s;
+`ifdef OT_SPVM_MUT_ACK_EPOCH_FORWARD
+    wire ack_epoch_n = rn_in[0], ack_epoch_s_n = rns_in[0];
+`else
+    wire ack_epoch_n = reset_epoch_n, ack_epoch_s_n = reset_epoch_s_n;
+`endif
+    wire all_local_rn = rn_i && rn_x && rn_c && rn_p && rn_w;
+    wire no_local_rn = !(rn_i || rn_x || rn_c || rn_p || rn_w);
+`ifdef OT_SPVM_MUT_ACK_MIRROR
+    always @* begin rst_ack = rn_in[0]; rst_ack_s = rns_in[0]; end
+`else
+    // Witness reset at the real consumer clock; a stopped clock cannot acknowledge
+    // a reset pulse it never sampled. ACK state adds no datapath admission logic.
+    always @(posedge clk or negedge ack_epoch_n) begin
+        if (!ack_epoch_n) begin ack_reset_seen <= 1'b0; rst_ack <= 1'b0; end
+        else begin
+            if (no_local_rn) ack_reset_seen <= 1'b1;
+            rst_ack <= ack_reset_seen && all_local_rn && (&cdc_w_online);
+        end
+    end
+    always @(posedge sclk or negedge ack_epoch_s_n) begin
+        if (!ack_epoch_s_n) begin ack_reset_seen_s <= 1'b0; rst_ack_s <= 1'b0; end
+        else begin
+            if (!rns) ack_reset_seen_s <= 1'b1;
+            rst_ack_s <= ack_reset_seen_s && rns && (&cdc_r_online);
+        end
+    end
+`endif
+`endif
     // ---------------------------------------------------------------- pin flops (stage 0)
     reg [NP-1:0] q_v; reg [NP*128-1:0] q_d; reg [3:0] q_f; reg [2:0] q_o;
     always @(posedge clk) begin
@@ -1305,10 +1562,18 @@ module dsfd_vm_be_sl #(
     wire [1:0] rtk = {rr_v[1] && rr_nx, rr_v[0] && !rr_nx};
     dsfd_vm_be_rcdc #(.W(128), .DEPTH(8), .HOLD(2), .NC(NC), .IDB(100)) u_rc0 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[0]),
         .w_rdy(rw_rdy[0]), .w_d(wq_d0), .rclk(sclk), .rrst_n(rns), .r_v(rr_v[0]), .r_rdy(rtk[0]),
-        .o_v(o_vr[0]), .o_d(o_d0), .o_vc(o_vc0));
+        .o_v(o_vr[0]), .o_d(o_d0), .o_vc(o_vc0)
+`ifdef OT_SPVM_RESET_ACK
+        , .w_online(cdc_w_online[0]), .r_online(cdc_r_online[0])
+`endif
+        );
     dsfd_vm_be_rcdc #(.W(128), .DEPTH(8), .HOLD(2), .NC(NC), .IDB(200)) u_rc1 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[1]),
         .w_rdy(rw_rdy[1]), .w_d(wq_d1), .rclk(sclk), .rrst_n(rns), .r_v(rr_v[1]), .r_rdy(rtk[1]),
-        .o_v(o_vr[1]), .o_d(o_d1), .o_vc(o_vc1));
+        .o_v(o_vr[1]), .o_d(o_d1), .o_vc(o_vc1)
+`ifdef OT_SPVM_RESET_ACK
+        , .w_online(cdc_w_online[1]), .r_online(cdc_r_online[1])
+`endif
+        );
     always @(posedge sclk) begin : p_vr integer c;
         if (!rns) begin rr_nx <= 1'b0; vrv <= 1'b0; end
         else begin
@@ -1420,7 +1685,8 @@ module dsfd_vm_be #(
     parameter integer P2D = 40,         // P2 flit FIFO depth (the FE reader's credits)
     parameter integer MD = 9,           // tile-3 f_* (request exit) -> o_* (read data) skew
     parameter integer XT = 2,           // control stages inside a slice tile
-    parameter integer DR = 3            // reset / status relay stages (each tile alike)
+    parameter integer DR = 3,           // reset / status relay stages (each tile alike)
+    parameter integer HARD_RELAYS = 0    // opt-in fixed hard masters, exact same stages
 ) (
     input  wire [0:0]          ck,
     input  wire [0:0]          rst,
@@ -1449,6 +1715,9 @@ module dsfd_vm_be #(
     output reg  [0:0]          flt,
     output reg  [31:0]         fvec,
     output reg  [2:0]          max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , output wire [NS-1:0] rst_ack, rst_ack_s
+`endif
 );
     localparam integer KX = 4;          // dsfd_vm_be_sl in-tile alignment relays
     localparam integer DIE_D = MD - KX - XT;   // die control relay stages (DIE_D + 1 + KX + XT = MD + 1, as v3's 1 + R + XT)
@@ -1456,8 +1725,13 @@ module dsfd_vm_be #(
     wire clk = ck[0];
     wire rn0, rns0;
     // die glue: reset synchronisers (one each, at the die), equal-length relays to every slice
-    ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn0));
-    ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns0));
+    generate if (HARD_RELAYS != 0) begin : g_hrst
+        dsfd_die_rstsync u_rs (.ck(clk), .rst(rst[0]), .rn(rn0));
+        dsfd_die_rstsync u_rss (.ck(cks[0]), .rst(rss[0]), .rn(rns0));
+    end else begin : g_rst
+        ot_dsrom_mtp_rstsync u_rs (.clk(clk), .rst_n_async(rst[0]), .rst_n(rn0));
+        ot_dsrom_mtp_rstsync u_rss (.clk(cks[0]), .rst_n_async(rss[0]), .rst_n(rns0));
+    end endgenerate
     wire [255:0] srq_d [0:NS-1]; wire [1:0] srq_v [0:NS-1]; wire [NS-1:0] vrv_s, c_l0v_s, t_p2c_s;
     wire [127:0] vrq_s [0:NS-1]; wire [16*128-1:0] bl_d [0:NS-1]; wire [15:0] bl_v [0:NS-1];
     wire [150:0] p2_s [0:NS-1]; wire [39:0] st [0:NS];
@@ -1466,18 +1740,40 @@ module dsfd_vm_be #(
     genvar gs, gl;
     generate for (gs = 0; gs < NS; gs = gs + 1) begin : g_s
         // die-top relays (behavioural): DR reset stages, DIE_D control stages, 1 c_l0r stage, all equal per slice
-        reg [DR-1:0] rnc, rns_;
-        reg [4:0] dvx [0:DIE_D-1]; reg [4:0] dwx [0:DIE_D-1]; reg [19:0] dmx [0:DIE_D-1];
-        reg dv5 [0:DIE_D-1]; reg dw5 [0:DIE_D-1]; reg [22:0] dm5 [0:DIE_D-1]; reg rr;
+        wire [DR-1:0] rnc, rns_;
+        wire [4:0] dvx [0:DIE_D-1]; wire [4:0] dwx [0:DIE_D-1]; wire [19:0] dmx [0:DIE_D-1];
+        wire dv5 [0:DIE_D-1]; wire dw5 [0:DIE_D-1]; wire [22:0] dm5 [0:DIE_D-1]; wire rr;
+        if (HARD_RELAYS != 0) begin : g_hard
+            wire [54:0] ctl [0:DIE_D];
+            assign ctl[0] = {f_vx, f_wex, f_mx, f_v5[0], f_we5[0], f_m5[23*gs +: 23]};
+            for (genvar ri=0; ri<DIE_D; ri=ri+1) begin : g_ctl
+                dsfd_be_r55 u_r (.ck(clk), .i(ctl[ri]), .o(ctl[ri+1]));
+                assign {dvx[ri],dwx[ri],dmx[ri],dv5[ri],dw5[ri],dm5[ri]}=ctl[ri+1];
+            end
+            for (genvar ri=0; ri<DR; ri=ri+1) begin : g_rst
+                dsfd_die_r1 u_c (.ck(clk), .i(ri==0 ? rn0 : rnc[ri==0 ? 0 : ri-1]), .o(rnc[ri]));
+                dsfd_die_r1 u_s (.ck(cks[0]), .i(ri==0 ? rns0 : rns_[ri==0 ? 0 : ri-1]), .o(rns_[ri]));
+            end
+            dsfd_die_r1 u_ready (.ck(clk), .i(c_l0r[0]), .o(rr));
+        end else begin : g_flat
+        reg [DR-1:0] rnc_q, rns_q;
+        reg [4:0] dvx_q [0:DIE_D-1]; reg [4:0] dwx_q [0:DIE_D-1]; reg [19:0] dmx_q [0:DIE_D-1];
+        reg dv5_q [0:DIE_D-1]; reg dw5_q [0:DIE_D-1]; reg [22:0] dm5_q [0:DIE_D-1]; reg rr_q;
         always @(posedge clk) begin : p_rl integer i;
-            rnc <= {rnc[DR-2:0], rn0};
-            rr <= c_l0r[0];
-            dvx[0] <= f_vx; dwx[0] <= f_wex; dmx[0] <= f_mx; dv5[0] <= f_v5[0]; dw5[0] <= f_we5[0]; dm5[0] <= f_m5[23*gs +: 23];
+            rnc_q <= {rnc_q[DR-2:0], rn0};
+            rr_q <= c_l0r[0];
+            dvx_q[0] <= f_vx; dwx_q[0] <= f_wex; dmx_q[0] <= f_mx; dv5_q[0] <= f_v5[0]; dw5_q[0] <= f_we5[0]; dm5_q[0] <= f_m5[23*gs +: 23];
             for (i = 1; i < DIE_D; i = i + 1) begin
-                dvx[i] <= dvx[i-1]; dwx[i] <= dwx[i-1]; dmx[i] <= dmx[i-1]; dv5[i] <= dv5[i-1]; dw5[i] <= dw5[i-1]; dm5[i] <= dm5[i-1];
+                dvx_q[i] <= dvx_q[i-1]; dwx_q[i] <= dwx_q[i-1]; dmx_q[i] <= dmx_q[i-1]; dv5_q[i] <= dv5_q[i-1]; dw5_q[i] <= dw5_q[i-1]; dm5_q[i] <= dm5_q[i-1];
             end
         end
-        always @(posedge cks[0]) rns_ <= {rns_[DR-2:0], rns0};
+        always @(posedge cks[0]) rns_q <= {rns_q[DR-2:0], rns0};
+            assign rnc=rnc_q; assign rns_=rns_q; assign rr=rr_q;
+            for (genvar ri=0; ri<DIE_D; ri=ri+1) begin : g_o
+                assign dvx[ri]=dvx_q[ri]; assign dwx[ri]=dwx_q[ri]; assign dmx[ri]=dmx_q[ri];
+                assign dv5[ri]=dv5_q[ri]; assign dw5[ri]=dw5_q[ri]; assign dm5[ri]=dm5_q[ri];
+            end
+        end
         dsfd_vm_be_sl u_sl (                // hard macro at its defaults (P2D 40, XT 2): no parameter overrides
             .ck(ck), .cks(cks), .rn_in(rnc[DR-1]), .rns_in(rns_[DR-1]),
             .o_v(o_v[10*gs +: 10]), .o_d(o_d[1280*gs +: 1280]), .o_f(o_f[4*gs +: 4]), .o_o(o_o[3*gs +: 3]),
@@ -1485,7 +1781,12 @@ module dsfd_vm_be #(
             .f_m5s(dm5[DIE_D-1]), .c_l0r(rr), .fe_flt(gs == 0 ? fe_flt : 16'd0), .st_i(st[gs]), .st_o(st[gs+1]),
             .srq_d(srq_d[gs]), .srq_v(srq_v[gs]), .vrv(vrv_s[gs]), .vrq(vrq_s[gs]), .bl_d(bl_d[gs]), .bl_v(bl_v[gs]),
             .c_l0v(c_l0v_s[gs]), .c_l0d(p2_s[gs]), .t_p2c(t_p2c_s[gs]),
-            .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs]));
+            .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs])
+`ifdef OT_SPVM_RESET_ACK
+            , .reset_epoch_n(rst[0]), .reset_epoch_s_n(rss[0])
+            , .rst_ack(rst_ack[gs]), .rst_ack_s(rst_ack_s[gs])
+`endif
+            );
         // this slice's bits of every response (S-FACE CONTRACT v3/v4: at this tile's x range)
         assign t_srq[128*gs +: 128] = srq_d[gs][127:0];
         assign t_srq[513 + 128*gs +: 128] = srq_d[gs][255:128];
@@ -1533,7 +1834,19 @@ module dsfd_sp_vm_m #(
     output wire [NSLOT-1:0] t_rdy,
     output wire [0:0]    c_l0v, output wire [603:0] c_l0d, input wire [0:0] c_l0r,
     output wire [0:0]    flt, output wire [31:0] fvec, output wire [2:0] max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , output wire [40+24*`VMFE_R:0] fe_rst_ack
+    , output wire [3:0] fe_rst_ack_s
+    , output wire [NS-1:0] be_rst_ack, be_rst_ack_s
+    , output wire [NS*4-1:0] bank_rst_ack
+`endif
 );
+`ifdef OT_SPVM_RESET_ACK
+`ifndef OT_SPVM_FE_H_SUBST
+    initial $error("VM reset ACK candidate requires actual selected FE_H_SUBST consumers");
+    assign fe_rst_ack = '0; assign fe_rst_ack_s = '0;
+`endif
+`endif
     localparam integer NP = 28, NPR = 10, NT = 4, RA = 14, OW = 3;
     // el1011-ds-vm/bgq28: the hard tile's enqueue pipeline (EP, = dsfd_vm_bgq28) adds ED = EP + 1 cycles to every op
 `ifdef OT_VM28_EP1
@@ -1542,19 +1855,56 @@ module dsfd_sp_vm_m #(
     localparam integer EP = 2;
 `endif
     localparam integer ED = (EP == 0) ? 0 : EP + 1;
-    localparam integer FRL = 2;         // el1011-ds-vm/fe: FE order register -> slice pin relay stages (shifts f_* and o_*
+`ifdef OT_SPVM_REF_FRL
+    `include "dsfd_vm_fe_h_if.svh"
+    // the hierarchy's stage counts (lockstep reference)
+    localparam integer FRL = `VMFE_FRL, FKD = `VMFE_KD, FLDL = `VMFE_LDL, FLGL = `VMFE_LGL, FLAL = `VMFE_LAL, FDVR = `VMFE_DVR, FLVX = `VMFE_LVX, FXRT = `VMFE_XRT, FCCA = `VMFE_CCA;
+`else
+    localparam integer FRL = 2, FKD = 1, FLDL = 2, FLGL = 2, FLAL = 2, FDVR = 0, FLVX = 0, FXRT = 0, FCCA = 0;
+`endif
+                                        // el1011-ds-vm/fe: FE order register -> slice pin relay stages (shifts f_* and o_*
                                         // alike: MD, the tile-3 f_* -> o_* skew, is unchanged)
     localparam integer MD = 4 * NSTG + QD + 9 - 4 * (NSTG + 1) + ED;
     wire [NS*NP-1:0] mv, mwe; wire [NS*NP*RA-1:0] mrow; wire [NS*NP*4-1:0] mm; wire [NS*NP*128-1:0] md;
     wire [NS*4-1:0] mrf; wire [15:0] fe_flt;
     wire p2c;
+    wire [NS*NP-1:0] fmv, fmwe; wire [NS*NP*RA-1:0] fmrow; wire [NS*NP*4-1:0] fmm; wire [NS*NP*128-1:0] fmd;
+    wire [NS*4-1:0] fmrf; wire [15:0] f_flt;
+    wire [0:0] f_swg, f_srg, f_dv, f_cwv; wire [52:0] f_ks; wire [7:0] f_dt; wire [2:0] f_cts; wire [9:0] f_cwd; wire [NSLOT-1:0] f_rdy;
     dsfd_vm_fe #(.NS(NS), .VF(VF), .VR(VR), .NSLOT(NSLOT), .P2D(P2D), .CQD(CQD), .LA(LA), .LTO(LTO), .NSVC(NSVC), .LD(LD),
-                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL)) u_fe (
-        .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(t_swg), .f_srv(f_srv), .f_srd(f_srd),
-        .t_srg(t_srg), .t_ks(t_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
-        .cv(cv), .cd(cd), .dv(dv), .dt(dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(t_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
-        .c_wv(c_wv), .c_wd(c_wd), .c_wr(c_wr), .t_rdy(t_rdy), .f_p2c(p2c),
-        .m_v(mv), .m_we(mwe), .m_row(mrow), .m_mask(mm), .m_d(md), .m_rf(mrf), .fe_flt(fe_flt));
+                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LAL(FLAL), .LGL(FLGL), .LDL(FLDL), .DVR(FDVR), .LVX(FLVX), .XRT(FXRT), .CCA(FCCA)) u_fe (
+        .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(f_swg), .f_srv(f_srv), .f_srd(f_srd),
+        .t_srg(f_srg), .t_ks(f_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
+        .cv(cv), .cd(cd), .dv(f_dv), .dt(f_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(f_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
+        .c_wv(f_cwv), .c_wd(f_cwd), .c_wr(c_wr), .t_rdy(f_rdy), .f_p2c(p2c),
+        .m_v(fmv), .m_we(fmwe), .m_row(fmrow), .m_mask(fmm), .m_d(fmd), .m_rf(fmrf), .fe_flt(f_flt));
+`ifdef OT_SPVM_FE_H
+    // The hierarchy dsfd_vm_fe_h on the SAME FE inputs.  OT_SPVM_FE_H alone: shadow (the flat reference drives the system);
+    // with OT_SPVM_FE_H_SUBST: SUBSTITUTED (the hierarchy drives every FE output; the flat instance stays as the bench's order-register probe
+    // and lockstep reference).  Needs OT_SPVM_REF_FRL (same stage counts).
+    wire [NS*NP-1:0] hmv, hmwe; wire [NS*NP*RA-1:0] hmrow; wire [NS*NP*4-1:0] hmm; wire [NS*NP*128-1:0] hmd;
+    wire [NS*4-1:0] hmrf; wire [15:0] h_flt;
+    wire [0:0] h_swg, h_srg, h_dv, h_cwv; wire [52:0] h_ks; wire [7:0] h_dt; wire [2:0] h_cts; wire [9:0] h_cwd; wire [3:0] h_rdy;
+    dsfd_vm_fe_h u_feh (
+        .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(h_swg), .f_srv(f_srv), .f_srd(f_srd),
+        .t_srg(h_srg), .t_ks(h_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
+        .cv(cv), .cd(cd), .dv(h_dv), .dt(h_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(h_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
+        .c_wv(h_cwv), .c_wd(h_cwd), .c_wr(c_wr), .t_rdy(h_rdy), .f_p2c(p2c),
+        .m_v(hmv), .m_we(hmwe), .m_row(hmrow), .m_mask(hmm), .m_d(hmd), .m_rf(hmrf), .fe_flt(h_flt)
+`ifdef OT_SPVM_RESET_ACK
+        , .rst_ack(fe_rst_ack), .rst_ack_s(fe_rst_ack_s)
+`endif
+        );
+`endif
+`ifdef OT_SPVM_FE_H_SUBST
+    assign mv = hmv; assign mwe = hmwe; assign mrow = hmrow; assign mm = hmm; assign md = hmd; assign mrf = hmrf;
+    assign fe_flt = h_flt; assign t_swg = h_swg; assign t_srg = h_srg; assign t_ks = h_ks; assign dv = h_dv; assign dt = h_dt;
+    assign t_cts = h_cts; assign c_wv = h_cwv; assign c_wd = h_cwd; assign t_rdy = h_rdy;
+`else
+    assign mv = fmv; assign mwe = fmwe; assign mrow = fmrow; assign mm = fmm; assign md = fmd; assign mrf = fmrf;
+    assign fe_flt = f_flt; assign t_swg = f_swg; assign t_srg = f_srg; assign t_ks = f_ks; assign dv = f_dv; assign dt = f_dt;
+    assign t_cts = f_cts; assign c_wv = f_cwv; assign c_wd = f_cwd; assign t_rdy = f_rdy;
+`endif
     wire [NS*NPR-1:0] ov; wire [NS*NPR*128-1:0] od; wire [NS*4-1:0] of; wire [NS*3-1:0] oo;
     wire [NP-1:0] f0v, f0we; wire [NP*128-1:0] f0d;
     genvar h, t;
@@ -1571,6 +1921,17 @@ module dsfd_sp_vm_m #(
         assign coo[0] = {OW{1'b0}};
         for (t = 0; t < NT; t = t + 1) begin : g_t
             wire [1:0] gid = t;
+`ifdef OT_SPVM_BGL
+            // el1013-s81-bgq28: 8 one-bank leaves dsfd_vm_bgl28 under the wires-only dsfd_vm_bgq28h (hop 16, same
+            // o_* -> f_* skew HL + 1, so MD and the BE are unchanged).  Fixed parameters: QD 4, EP 2.
+            initial if (QD != 4 || EP != 2) $error("dsfd_sp_vm_m: dsfd_vm_bgq28h is QD 4 / EP 2");
+            dsfd_vm_bgq28h u_bg (
+                .ck(ck), .rs(rst), .grp(gid),
+                .i_v(cv_[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cm[t]), .i_d(cd_[t]),
+                .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),
+                .r_v(cov[t]), .r_d(cod[t]), .r_f(cof[t]), .r_o(coo[t]),
+                .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1]));
+`else
             // = dsfd_vm_bgq28 (the hard tile) at the default parameters
             // v4 (el1011-ds-vm/bgq28 2026-10-12): dsfd_vm_bgr, 4 bank-pair stages + 2-stage control lead (hop 6); its
             // o_* -> f_* skew is HL + 1 = QD + 5 + ED, the MD below (NSTG-independent), so the BE is unchanged
@@ -1579,7 +1940,23 @@ module dsfd_sp_vm_m #(
                 .i_v(cv_[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cm[t]), .i_d(cd_[t]),
                 .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),
                 .r_v(cov[t]), .r_d(cod[t]), .r_f(cof[t]), .r_o(coo[t]),
-                .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1]));
+                .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1])
+`ifdef OT_SPVM_RESET_ACK
+                , .reset_ack(bank_rst_ack[4*h+t])
+`endif
+                );
+`endif
+`ifdef OT_SPVM_BGTRACE
+            // simulation only: the production request trace at the head of slice 0 (replayed by tb_dsfd_vm_bgl_lockstep)
+            if (h == 0 && t == 0) begin : g_tr
+                integer fd, cy;
+                initial begin fd = $fopen("bg_trace.txt", "w"); cy = 0; end
+                always @(posedge ck[0]) begin
+                    cy <= cy + 1;
+                    if (|cv_[0]) $fwrite(fd, "%0d %h %h %h %h %h\n", cy, cv_[0], cwe[0], crow[0], cm[0], cd_[0]);
+                end
+            end
+`endif
         end
         assign ov[h*NPR +: NPR] = cov[NT]; assign od[h*NPR*128 +: NPR*128] = cod[NT]; assign of[h*4 +: 4] = cof[NT];
         assign oo[h*3 +: 3] = coo[NT];
@@ -1587,11 +1964,20 @@ module dsfd_sp_vm_m #(
             assign f0v = cv_[NT]; assign f0we = cwe[NT]; assign f0d = cd_[NT];
         end
     end endgenerate
-    dsfd_vm_be #(.NS(NS), .P2D(P2D), .MD(MD)) u_be (
+`ifdef OT_SPVM_BE_HARD_RELAYS
+    localparam integer BEHR=1;
+`else
+    localparam integer BEHR=0;
+`endif
+    dsfd_vm_be #(.NS(NS), .P2D(P2D), .MD(MD), .HARD_RELAYS(BEHR)) u_be (
         .ck(ck), .rst(rst), .cks(cks), .rss(rss), .o_v(ov), .o_d(od), .o_f(of), .o_o(oo),
         .f_v5(f0v[5]), .f_we5(f0we[5]), .f_m5(f0d[5*128 +: 92]), .fe_flt(fe_flt),
         .f_vx({f0v[9], f0v[8], f0v[2], f0v[7], f0v[6]}), .f_wex({f0we[9], f0we[8], f0we[2], f0we[7], f0we[6]}),
         .f_mx({f0d[9*128 +: 4], f0d[8*128 +: 4], f0d[2*128 +: 4], f0d[7*128 +: 4], f0d[6*128 +: 4]}),
         .t_srq(t_srq), .t_err(t_err), .vrv(vrv), .vrq(vrq), .t_bl(t_bl),
-        .c_l0v(c_l0v), .c_l0d(c_l0d), .c_l0r(c_l0r), .t_p2c(p2c), .flt(flt), .fvec(fvec), .max_occ(max_occ));
+        .c_l0v(c_l0v), .c_l0d(c_l0d), .c_l0r(c_l0r), .t_p2c(p2c), .flt(flt), .fvec(fvec), .max_occ(max_occ)
+`ifdef OT_SPVM_RESET_ACK
+        , .rst_ack(be_rst_ack), .rst_ack_s(be_rst_ack_s)
+`endif
+        );
 endmodule

@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 // The production records have m=1. Exercise the row/stride product over its full field widths,
 // including maximal products and VM-range rejection, and compare every front field at its added latency.
+// q8: the front is the hardened child u_fr; its registered seam to the core (s3_v and the S3 bundle) is
+// compared too, at the same +6.  Mutant: +define+OT_QDQ_SPAN_MUT (ot_hgi_qdq_fr drops the top partial product) must FAIL.
 module tb_hgi_qdq_span_equiv;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; reg [682:0] rec = 0;
@@ -8,11 +10,11 @@ module tb_hgi_qdq_span_equiv;
         .wrq_cr(8'd0), .wrr(2056'd0), .wwq_cr(8'd0), .wwq_done(8'd0), .rg_gnt(1'b0), .wg_gnt(1'b0));
     ot_hgi_qdq_q #(.SPANPIPE(1)) staged (.clk(clk), .rst_n(rst_n), .rec(rec),
         .wrq_cr(8'd0), .wrr(2056'd0), .wwq_cr(8'd0), .wwq_done(8'd0), .rg_gnt(1'b0), .wg_gnt(1'b0));
-    reg [334:0] expected [0:5];
-    wire [334:0] ref_fields = {legacy.fld2, legacy.fast2, legacy.same2, legacy.aend2, legacy.oend2,
-        legacy.ab2, legacy.ob2, legacy.n2, legacy.m2, legacy.ars2, legacy.ors2, legacy.hd2};
-    wire [334:0] new_fields = {staged.fld2, staged.fast2, staged.same2, staged.aend2, staged.oend2,
-        staged.ab2, staged.ob2, staged.n2, staged.m2, staged.ars2, staged.ors2, staged.hd2};
+    reg [525:0] expected [0:5];
+    wire [525:0] ref_fields = {legacy.u_fr.s3_v, legacy.u_fr.s3, legacy.u_fr.fld2, legacy.u_fr.fast2, legacy.u_fr.same2, legacy.u_fr.aend2, legacy.u_fr.oend2,
+        legacy.u_fr.ab2, legacy.u_fr.ob2, legacy.u_fr.n2, legacy.u_fr.m2, legacy.u_fr.ars2, legacy.u_fr.ors2, legacy.u_fr.hd2};
+    wire [525:0] new_fields = {staged.u_fr.s3_v, staged.u_fr.s3, staged.u_fr.fld2, staged.u_fr.fast2, staged.u_fr.same2, staged.u_fr.aend2, staged.u_fr.oend2,
+        staged.u_fr.ab2, staged.u_fr.ob2, staged.u_fr.n2, staged.u_fr.m2, staged.u_fr.ars2, staged.u_fr.ors2, staged.u_fr.hd2};
     integer cycles = 0, checked = 0, k;
     always @(negedge clk) begin
         if (cycles > 20) begin

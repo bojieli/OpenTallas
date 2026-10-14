@@ -524,7 +524,10 @@ module ot_qwen_slab_pg_col #(
     parameter integer AW = 24,
     parameter integer BPC = 4,
     parameter integer S5_CTL = 1,
-    parameter integer SCALE_PAIR = 1
+    parameter integer SCALE_PAIR = 1,
+    // CID_REG (q14 2026-10-14): register the column-id strap at its pin; cid then reaches the bank decode from a pin
+    // flop (native capture of the closed col_mga view: cid[0] 197.9 ps > 190).  cid is a static strap: no cycle cost.
+    parameter integer CID_REG = 1
 ) (
     input  wire          clk,
     input  wire          gre1,
@@ -534,6 +537,14 @@ module ot_qwen_slab_pg_col #(
 );
     wire          gre2;
     wire [AW-1:0] addr2;
+    wire [3:0]    cid_e;
+    generate if (CID_REG != 0) begin : g_cidq
+        reg [3:0] cid_q;
+        always @(posedge clk) cid_q <= cid;
+        assign cid_e = cid_q;
+    end else begin : g_cidw
+        assign cid_e = cid;
+    end endgenerate
     ot_qwen_slab_pg_rcopy #(.AW(AW)) u_r2 (.clk(clk), .gre(gre1), .addr(addr1), .gre_q(gre2), .addr_q(addr2));
     wire [255:0] cor [0:BPC];
     wire [255:0] bterm [0:BPC-1];
@@ -547,7 +558,7 @@ module ot_qwen_slab_pg_col #(
             reg         ce3_q;
             reg  [11:0] a3_q;
             always @(posedge clk) begin
-                ce3_q <= gre2 && (addr2[AW-1:12] == ({{(AW-16){1'b0}}, cid} * BPC + BB));
+                ce3_q <= gre2 && (addr2[AW-1:12] == ({{(AW-16){1'b0}}, cid_e} * BPC + BB));
                 a3_q  <= addr2[11:0];
             end
             assign ce3 = ce3_q; assign a3 = a3_q;

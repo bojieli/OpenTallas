@@ -9,7 +9,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_ccr #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW, RET_EXTRA = 0
+    // Defaults = the PRODUCTION (HIER3, CSPLIT) core tuple the hard view s81hc_ccrh2_ref was routed at (HALF 1, RLY 2,
+    // RF 4, DW 6, RET_EXTRA 0): the hard-pad parent (ot_s81_hc_ccr_align under OT_S81_HC_PAD_HARD) instantiates this
+    // module with no parameters, so the defaults ARE the hard configuration.  (Until s81hc-1013 r6 they were the
+    // retired HIER1 tuple HALF 0 / RLY 1 / RF 1 / DW 5, and the hard-pad composition ran to TMAX.)
+    parameter integer MUT = 0, AMUT = 0, RF = 4, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 0
 ) (
     input  wire                 sk, srs,
     input  wire [RVW-1:0]       ch_rv,

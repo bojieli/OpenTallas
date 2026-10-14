@@ -26,41 +26,62 @@
  },
  "depths": [
   1,
+  2,
+  3,
+  4,
   8,
-  21
+  16
  ],
  "instances_by_depth": {
-  "1": 794,
-  "8": 130,
-  "21": 1
+  "1": 409,
+  "2": 10,
+  "3": 38,
+  "4": 64,
+  "8": 114,
+  "16": 9
  },
- "instances": 925,
+ "instances": 644,
  "outline_um": {
   "1": [
+   10.8,
+   64.8
+  ],
+  "2": [
+   17.28,
+   64.8
+  ],
+  "3": [
+   21.6,
+   64.8
+  ],
+  "4": [
    28.08,
    64.8
   ],
   "8": [
-   86.4,
-   108.0
+   49.68,
+   64.8
   ],
-  "21": [
-   129.6,
-   259.2
+  "16": [
+   92.88,
+   64.8
   ]
  },
  "area_um2": {
-  "submitted_outlines": 2691398.0,
+  "submitted_outlines": 888236.9,
   "relay_frames_1855": 2952749.8,
   "std_cells_only": 387695.0,
   "at_util_0p52": 745567.3
  },
- "max_tiles_on_one_leg": 8,
+ "max_tiles_on_one_leg": 3,
  "leg_binding": {
   "n_tree_0_0_0b": {
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_0.t_out",
    "destination": "t_0_0.n_b"
@@ -70,6 +91,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_1_1.t_out",
    "destination": "t_0_1.n_b"
   },
@@ -77,6 +101,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_2.t_out",
    "destination": "t_0_2.n_b"
@@ -86,6 +113,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_1_3.t_out",
    "destination": "t_0_3.n_b"
   },
@@ -93,6 +123,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_4.t_out",
    "destination": "t_0_4.n_b"
@@ -102,6 +135,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_1_5.t_out",
    "destination": "t_0_5.n_b"
   },
@@ -109,6 +145,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_6.t_out",
    "destination": "t_0_6.n_b"
@@ -118,6 +157,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_1_7.t_out",
    "destination": "t_0_7.n_b"
   },
@@ -125,6 +167,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_8.t_out",
    "destination": "t_0_8.n_b"
@@ -134,6 +179,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_1_9.t_out",
    "destination": "t_0_9.n_b"
   },
@@ -141,6 +189,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_10.t_out",
    "destination": "t_0_10.n_b"
@@ -150,6 +201,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_1_11.t_out",
    "destination": "t_0_11.n_b"
   },
@@ -157,6 +211,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_12.t_out",
    "destination": "t_0_12.n_b"
@@ -166,6 +223,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_1_13.t_out",
    "destination": "t_0_13.n_b"
   },
@@ -173,6 +233,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_14.t_out",
    "destination": "t_0_14.n_b"
@@ -182,6 +245,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_1_15.t_out",
    "destination": "t_0_15.n_b"
   },
@@ -189,6 +255,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_0.t_out",
    "destination": "t_2_0.n_b"
@@ -198,6 +267,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_3_1.t_out",
    "destination": "t_2_1.n_b"
   },
@@ -205,6 +277,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_0.n_y",
    "destination": "t_1_1.n_b"
@@ -214,6 +289,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_3_2.t_out",
    "destination": "t_2_2.n_b"
   },
@@ -221,6 +299,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_3.t_out",
    "destination": "t_2_3.n_b"
@@ -230,6 +311,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_3_4.t_out",
    "destination": "t_2_4.n_b"
   },
@@ -237,6 +321,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_5.t_out",
    "destination": "t_2_5.n_b"
@@ -246,6 +333,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_3_6.t_out",
    "destination": "t_2_6.n_b"
   },
@@ -253,6 +343,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_7.t_out",
    "destination": "t_2_7.n_b"
@@ -262,6 +355,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_0_8.n_y",
    "destination": "t_1_8.n_a"
   },
@@ -269,6 +365,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_8.t_out",
    "destination": "t_2_8.n_b"
@@ -278,6 +377,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_3_9.t_out",
    "destination": "t_2_9.n_b"
   },
@@ -285,6 +387,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_2_8.n_y",
    "destination": "t_3_8.n_a"
@@ -294,6 +399,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_0_10.n_y",
    "destination": "t_1_10.n_a"
   },
@@ -301,6 +409,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_10.t_out",
    "destination": "t_2_10.n_b"
@@ -310,6 +421,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_3_11.t_out",
    "destination": "t_2_11.n_b"
   },
@@ -318,15 +432,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_2_10.n_y",
    "destination": "t_3_10.n_a"
   },
   "n_tree_2_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_1_10.n_y",
    "destination": "t_1_11.n_a"
@@ -336,6 +454,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_0_12.n_y",
    "destination": "t_1_12.n_a"
   },
@@ -343,6 +464,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_12.t_out",
    "destination": "t_2_12.n_b"
@@ -352,6 +476,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_3_13.t_out",
    "destination": "t_2_13.n_b"
   },
@@ -359,6 +486,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_2_12.n_y",
    "destination": "t_3_12.n_a"
@@ -368,6 +498,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_0_14.n_y",
    "destination": "t_1_14.n_a"
   },
@@ -375,6 +508,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_3_14.t_out",
    "destination": "t_2_14.n_b"
@@ -384,6 +520,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_3_15.t_out",
    "destination": "t_2_15.n_b"
   },
@@ -392,15 +531,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_2_14.n_y",
    "destination": "t_3_14.n_a"
   },
   "n_tree_3_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_1_14.n_y",
    "destination": "t_1_15.n_a"
@@ -408,9 +551,10 @@
   "n_tree_0_3_0b": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_1_3.n_y",
    "destination": "t_3_1.n_b"
@@ -418,9 +562,10 @@
   "n_tree_1_3_0b": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_1_7.n_y",
    "destination": "t_3_5.n_b"
@@ -428,9 +573,12 @@
   "n_tree_2_3_0a": {
    "extra_cycles": 17,
    "tiles": [
-    8,
-    8,
+    16,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_1_9.n_y",
    "destination": "t_3_9.n_a"
@@ -439,13 +587,13 @@
    "extra_cycles": 15,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_1_13.n_y",
    "destination": "t_3_13.n_a"
@@ -455,6 +603,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_5_0.t_out",
    "destination": "t_4_0.n_b"
   },
@@ -462,6 +613,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_1.t_out",
    "destination": "t_4_1.n_b"
@@ -471,6 +625,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_5_2.t_out",
    "destination": "t_4_2.n_b"
   },
@@ -478,6 +635,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_3.t_out",
    "destination": "t_4_3.n_b"
@@ -487,6 +647,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_5_4.t_out",
    "destination": "t_4_4.n_b"
   },
@@ -494,6 +657,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_5.t_out",
    "destination": "t_4_5.n_b"
@@ -503,6 +669,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_5_6.t_out",
    "destination": "t_4_6.n_b"
   },
@@ -510,6 +679,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_7.t_out",
    "destination": "t_4_7.n_b"
@@ -519,6 +691,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_5_8.t_out",
    "destination": "t_4_8.n_b"
   },
@@ -526,6 +701,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_9.t_out",
    "destination": "t_4_9.n_b"
@@ -535,6 +713,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_5_10.t_out",
    "destination": "t_4_10.n_b"
   },
@@ -542,6 +723,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_11.t_out",
    "destination": "t_4_11.n_b"
@@ -551,6 +735,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_5_12.t_out",
    "destination": "t_4_12.n_b"
   },
@@ -558,6 +745,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_13.t_out",
    "destination": "t_4_13.n_b"
@@ -567,6 +757,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_5_14.t_out",
    "destination": "t_4_14.n_b"
   },
@@ -574,6 +767,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_15.t_out",
    "destination": "t_4_15.n_b"
@@ -583,6 +779,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_4_1.n_y",
    "destination": "t_5_1.n_a"
   },
@@ -590,6 +789,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_7_1.t_out",
    "destination": "t_6_1.n_b"
@@ -599,6 +801,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_0.t_out",
    "destination": "t_6_0.n_b"
   },
@@ -606,6 +811,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_6_1.n_y",
    "destination": "t_7_1.n_a"
@@ -615,6 +823,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_4_3.n_y",
    "destination": "t_5_3.n_a"
   },
@@ -622,6 +833,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_7_3.t_out",
    "destination": "t_6_3.n_b"
@@ -631,6 +845,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_2.t_out",
    "destination": "t_6_2.n_b"
   },
@@ -639,15 +856,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_6_3.n_y",
    "destination": "t_7_3.n_a"
   },
   "n_tree_4_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_5_3.n_y",
    "destination": "t_5_2.n_a"
@@ -657,6 +878,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_4_5.n_y",
    "destination": "t_5_5.n_a"
   },
@@ -664,6 +888,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_7_5.t_out",
    "destination": "t_6_5.n_b"
@@ -673,6 +900,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_4.t_out",
    "destination": "t_6_4.n_b"
   },
@@ -680,6 +910,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_6_5.n_y",
    "destination": "t_7_5.n_a"
@@ -689,6 +922,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_4_7.n_y",
    "destination": "t_5_7.n_a"
   },
@@ -696,6 +932,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_7_7.t_out",
    "destination": "t_6_7.n_b"
@@ -705,6 +944,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_6.t_out",
    "destination": "t_6_6.n_b"
   },
@@ -712,6 +954,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_6_7.n_y",
    "destination": "t_7_7.n_a"
@@ -721,6 +966,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_9.t_out",
    "destination": "t_6_9.n_b"
   },
@@ -728,6 +976,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_7_8.t_out",
    "destination": "t_6_8.n_b"
@@ -737,6 +988,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_11.t_out",
    "destination": "t_6_11.n_b"
   },
@@ -744,6 +998,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_7_10.t_out",
    "destination": "t_6_10.n_b"
@@ -753,6 +1010,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_13.t_out",
    "destination": "t_6_13.n_b"
   },
@@ -760,6 +1020,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_7_12.t_out",
    "destination": "t_6_12.n_b"
@@ -769,6 +1032,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_15.t_out",
    "destination": "t_6_15.n_b"
   },
@@ -777,14 +1043,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_7_14.t_out",
    "destination": "t_6_14.n_b"
   },
   "n_tree_4_3_0a": {
    "extra_cycles": 2,
    "tiles": [
-    1,
-    1
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_5_0.n_y",
    "destination": "t_7_0.n_a"
@@ -792,10 +1063,10 @@
   "n_tree_5_3_0b": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_5_6.n_y",
    "destination": "t_7_4.n_b"
@@ -804,10 +1075,11 @@
    "extra_cycles": 12,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_5_8.n_y",
    "destination": "t_7_8.n_a"
@@ -816,11 +1088,13 @@
    "extra_cycles": 13,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_5_12.n_y",
    "destination": "t_7_12.n_a"
@@ -830,6 +1104,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_9_0.t_out",
    "destination": "t_8_0.n_b"
   },
@@ -837,6 +1114,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_1.t_out",
    "destination": "t_8_1.n_b"
@@ -846,6 +1126,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_9_2.t_out",
    "destination": "t_8_2.n_b"
   },
@@ -853,6 +1136,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_3.t_out",
    "destination": "t_8_3.n_b"
@@ -862,6 +1148,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_9_4.t_out",
    "destination": "t_8_4.n_b"
   },
@@ -869,6 +1158,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_5.t_out",
    "destination": "t_8_5.n_b"
@@ -878,6 +1170,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_9_6.t_out",
    "destination": "t_8_6.n_b"
   },
@@ -885,6 +1180,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_7.t_out",
    "destination": "t_8_7.n_b"
@@ -894,6 +1192,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_9_8.t_out",
    "destination": "t_8_8.n_b"
   },
@@ -901,6 +1202,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_9.t_out",
    "destination": "t_8_9.n_b"
@@ -910,6 +1214,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_9_10.t_out",
    "destination": "t_8_10.n_b"
   },
@@ -917,6 +1224,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_11.t_out",
    "destination": "t_8_11.n_b"
@@ -926,6 +1236,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_9_12.t_out",
    "destination": "t_8_12.n_b"
   },
@@ -933,6 +1246,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_13.t_out",
    "destination": "t_8_13.n_b"
@@ -942,6 +1258,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_9_14.t_out",
    "destination": "t_8_14.n_b"
   },
@@ -949,6 +1268,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_15.t_out",
    "destination": "t_8_15.n_b"
@@ -958,6 +1280,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_0.t_out",
    "destination": "t_10_0.n_b"
   },
@@ -966,15 +1291,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_1.t_out",
    "destination": "t_10_1.n_b"
   },
   "n_tree_8_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_9_0.n_y",
    "destination": "t_9_1.n_a"
@@ -984,6 +1313,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_2.t_out",
    "destination": "t_10_2.n_b"
   },
@@ -991,6 +1323,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_11_3.t_out",
    "destination": "t_10_3.n_b"
@@ -1000,6 +1335,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_4.t_out",
    "destination": "t_10_4.n_b"
   },
@@ -1007,6 +1345,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_11_5.t_out",
    "destination": "t_10_5.n_b"
@@ -1016,6 +1357,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_6.t_out",
    "destination": "t_10_6.n_b"
   },
@@ -1023,6 +1367,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_11_7.t_out",
    "destination": "t_10_7.n_b"
@@ -1032,6 +1379,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_8_8.n_y",
    "destination": "t_9_8.n_a"
   },
@@ -1039,6 +1389,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_11_8.t_out",
    "destination": "t_10_8.n_b"
@@ -1048,6 +1401,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_9.t_out",
    "destination": "t_10_9.n_b"
   },
@@ -1055,6 +1411,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_10_8.n_y",
    "destination": "t_11_8.n_a"
@@ -1064,6 +1423,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_8_10.n_y",
    "destination": "t_9_10.n_a"
   },
@@ -1071,6 +1433,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_11_10.t_out",
    "destination": "t_10_10.n_b"
@@ -1080,6 +1445,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_11.t_out",
    "destination": "t_10_11.n_b"
   },
@@ -1087,6 +1455,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_10_10.n_y",
    "destination": "t_11_10.n_a"
@@ -1096,6 +1467,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_8_12.n_y",
    "destination": "t_9_12.n_a"
   },
@@ -1103,6 +1477,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_11_12.t_out",
    "destination": "t_10_12.n_b"
@@ -1112,6 +1489,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_13.t_out",
    "destination": "t_10_13.n_b"
   },
@@ -1119,6 +1499,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_10_12.n_y",
    "destination": "t_11_12.n_a"
@@ -1128,6 +1511,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_8_14.n_y",
    "destination": "t_9_14.n_a"
   },
@@ -1135,6 +1521,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_11_14.t_out",
    "destination": "t_10_14.n_b"
@@ -1144,6 +1533,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_11_15.t_out",
    "destination": "t_10_15.n_b"
   },
@@ -1152,13 +1544,23 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_10_14.n_y",
    "destination": "t_11_14.n_a"
   },
   "n_tree_8_3_0a": {
    "extra_cycles": 21,
    "tiles": [
-    21
+    16,
+    4,
+    1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_9_3.n_y",
    "destination": "t_11_3.n_a"
@@ -1166,10 +1568,12 @@
   "n_tree_9_3_0a": {
    "extra_cycles": 18,
    "tiles": [
-    8,
-    8,
-    1,
-    1
+    16,
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t",
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_9_7.n_y",
    "destination": "t_11_7.n_a"
@@ -1179,6 +1583,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_13_0.t_out",
    "destination": "t_12_0.n_b"
   },
@@ -1186,6 +1593,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_13_1.t_out",
    "destination": "t_12_1.n_b"
@@ -1195,6 +1605,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_13_2.t_out",
    "destination": "t_12_2.n_b"
   },
@@ -1202,6 +1615,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_13_3.t_out",
    "destination": "t_12_3.n_b"
@@ -1211,6 +1627,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_13_4.t_out",
    "destination": "t_12_4.n_b"
   },
@@ -1218,6 +1637,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_13_5.t_out",
    "destination": "t_12_5.n_b"
@@ -1227,6 +1649,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_13_6.t_out",
    "destination": "t_12_6.n_b"
   },
@@ -1234,6 +1659,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_13_7.t_out",
    "destination": "t_12_7.n_b"
@@ -1243,6 +1671,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_13_8.t_out",
    "destination": "t_12_8.n_b"
   },
@@ -1250,6 +1681,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_13_9.t_out",
    "destination": "t_12_9.n_b"
@@ -1259,6 +1693,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_13_10.t_out",
    "destination": "t_12_10.n_b"
   },
@@ -1266,6 +1703,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_13_11.t_out",
    "destination": "t_12_11.n_b"
@@ -1275,6 +1715,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_13_12.t_out",
    "destination": "t_12_12.n_b"
   },
@@ -1282,6 +1725,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_13_13.t_out",
    "destination": "t_12_13.n_b"
@@ -1291,6 +1737,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_13_14.t_out",
    "destination": "t_12_14.n_b"
   },
@@ -1298,6 +1747,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_13_15.t_out",
    "destination": "t_12_15.n_b"
@@ -1307,6 +1759,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_12_1.n_y",
    "destination": "t_13_1.n_a"
   },
@@ -1314,6 +1769,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_15_1.t_out",
    "destination": "t_14_1.n_b"
@@ -1323,6 +1781,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_0.t_out",
    "destination": "t_14_0.n_b"
   },
@@ -1331,15 +1792,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_14_1.n_y",
    "destination": "t_15_1.n_a"
   },
   "n_tree_12_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_13_1.n_y",
    "destination": "t_13_0.n_a"
@@ -1349,6 +1814,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_12_3.n_y",
    "destination": "t_13_3.n_a"
   },
@@ -1356,6 +1824,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_15_3.t_out",
    "destination": "t_14_3.n_b"
@@ -1365,6 +1836,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_2.t_out",
    "destination": "t_14_2.n_b"
   },
@@ -1373,15 +1847,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_14_3.n_y",
    "destination": "t_15_3.n_a"
   },
   "n_tree_12_2_0a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_13_3.n_y",
    "destination": "t_13_2.n_a"
@@ -1391,6 +1869,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_12_5.n_y",
    "destination": "t_13_5.n_a"
   },
@@ -1398,6 +1879,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_15_5.t_out",
    "destination": "t_14_5.n_b"
@@ -1407,6 +1891,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_4.t_out",
    "destination": "t_14_4.n_b"
   },
@@ -1414,6 +1901,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_14_5.n_y",
    "destination": "t_15_5.n_a"
@@ -1423,6 +1913,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_12_7.n_y",
    "destination": "t_13_7.n_a"
   },
@@ -1430,6 +1923,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_15_7.t_out",
    "destination": "t_14_7.n_b"
@@ -1439,6 +1935,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_6.t_out",
    "destination": "t_14_6.n_b"
   },
@@ -1447,15 +1946,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_14_7.n_y",
    "destination": "t_15_7.n_a"
   },
   "n_tree_13_2_0a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_13_7.n_y",
    "destination": "t_13_6.n_a"
@@ -1465,6 +1968,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_9.t_out",
    "destination": "t_14_9.n_b"
   },
@@ -1472,6 +1978,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_15_8.t_out",
    "destination": "t_14_8.n_b"
@@ -1481,6 +1990,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_11.t_out",
    "destination": "t_14_11.n_b"
   },
@@ -1489,15 +2001,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_10.t_out",
    "destination": "t_14_10.n_b"
   },
   "n_tree_14_2_0a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_13_11.n_y",
    "destination": "t_13_10.n_a"
@@ -1507,6 +2023,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_13.t_out",
    "destination": "t_14_13.n_b"
   },
@@ -1514,6 +2033,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_15_12.t_out",
    "destination": "t_14_12.n_b"
@@ -1523,6 +2045,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_15.t_out",
    "destination": "t_14_15.n_b"
   },
@@ -1531,15 +2056,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_15_14.t_out",
    "destination": "t_14_14.n_b"
   },
   "n_tree_15_2_0a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_13_15.n_y",
    "destination": "t_13_14.n_a"
@@ -1547,8 +2076,10 @@
   "n_tree_12_3_0a": {
    "extra_cycles": 16,
    "tiles": [
-    8,
-    8
+    16
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t"
    ],
    "source": "t_13_2.n_y",
    "destination": "t_15_2.n_a"
@@ -1557,10 +2088,11 @@
    "extra_cycles": 12,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_13_6.n_y",
    "destination": "t_15_6.n_a"
@@ -1568,9 +2100,10 @@
   "n_tree_14_3_0b": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_13_8.n_y",
    "destination": "t_15_10.n_b"
@@ -1578,9 +2111,10 @@
   "n_tree_15_3_0b": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_13_12.n_y",
    "destination": "t_15_14.n_b"
@@ -1590,6 +2124,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_17_0.t_out",
    "destination": "t_16_0.n_b"
   },
@@ -1597,6 +2134,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_1.t_out",
    "destination": "t_16_1.n_b"
@@ -1606,6 +2146,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_17_2.t_out",
    "destination": "t_16_2.n_b"
   },
@@ -1613,6 +2156,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_3.t_out",
    "destination": "t_16_3.n_b"
@@ -1622,6 +2168,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_17_4.t_out",
    "destination": "t_16_4.n_b"
   },
@@ -1629,6 +2178,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_5.t_out",
    "destination": "t_16_5.n_b"
@@ -1638,6 +2190,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_17_6.t_out",
    "destination": "t_16_6.n_b"
   },
@@ -1645,6 +2200,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_7.t_out",
    "destination": "t_16_7.n_b"
@@ -1654,6 +2212,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_17_8.t_out",
    "destination": "t_16_8.n_b"
   },
@@ -1661,6 +2222,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_9.t_out",
    "destination": "t_16_9.n_b"
@@ -1670,6 +2234,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_17_10.t_out",
    "destination": "t_16_10.n_b"
   },
@@ -1677,6 +2244,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_11.t_out",
    "destination": "t_16_11.n_b"
@@ -1686,6 +2256,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_17_12.t_out",
    "destination": "t_16_12.n_b"
   },
@@ -1693,6 +2266,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_13.t_out",
    "destination": "t_16_13.n_b"
@@ -1702,6 +2278,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_17_14.t_out",
    "destination": "t_16_14.n_b"
   },
@@ -1709,6 +2288,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_15.t_out",
    "destination": "t_16_15.n_b"
@@ -1718,6 +2300,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_0.t_out",
    "destination": "t_18_0.n_b"
   },
@@ -1726,15 +2311,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_1.t_out",
    "destination": "t_18_1.n_b"
   },
   "n_tree_16_2_0a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_17_0.n_y",
    "destination": "t_17_1.n_a"
@@ -1744,6 +2333,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_2.t_out",
    "destination": "t_18_2.n_b"
   },
@@ -1751,6 +2343,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_19_3.t_out",
    "destination": "t_18_3.n_b"
@@ -1760,6 +2355,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_4.t_out",
    "destination": "t_18_4.n_b"
   },
@@ -1767,6 +2365,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_19_5.t_out",
    "destination": "t_18_5.n_b"
@@ -1776,6 +2377,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_6.t_out",
    "destination": "t_18_6.n_b"
   },
@@ -1783,6 +2387,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_19_7.t_out",
    "destination": "t_18_7.n_b"
@@ -1792,6 +2399,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_16_8.n_y",
    "destination": "t_17_8.n_a"
   },
@@ -1799,6 +2409,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_19_8.t_out",
    "destination": "t_18_8.n_b"
@@ -1808,6 +2421,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_9.t_out",
    "destination": "t_18_9.n_b"
   },
@@ -1815,6 +2431,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_18_8.n_y",
    "destination": "t_19_8.n_a"
@@ -1824,6 +2443,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_16_10.n_y",
    "destination": "t_17_10.n_a"
   },
@@ -1831,6 +2453,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_19_10.t_out",
    "destination": "t_18_10.n_b"
@@ -1840,6 +2465,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_11.t_out",
    "destination": "t_18_11.n_b"
   },
@@ -1847,6 +2475,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_18_10.n_y",
    "destination": "t_19_10.n_a"
@@ -1856,6 +2487,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_16_12.n_y",
    "destination": "t_17_12.n_a"
   },
@@ -1863,6 +2497,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_19_12.t_out",
    "destination": "t_18_12.n_b"
@@ -1872,6 +2509,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_13.t_out",
    "destination": "t_18_13.n_b"
   },
@@ -1879,6 +2519,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_18_12.n_y",
    "destination": "t_19_12.n_a"
@@ -1888,6 +2531,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_16_14.n_y",
    "destination": "t_17_14.n_a"
   },
@@ -1895,6 +2541,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_19_14.t_out",
    "destination": "t_18_14.n_b"
@@ -1904,6 +2553,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_19_15.t_out",
    "destination": "t_18_15.n_b"
   },
@@ -1912,15 +2564,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_18_14.n_y",
    "destination": "t_19_14.n_a"
   },
   "n_tree_19_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_17_14.n_y",
    "destination": "t_17_15.n_a"
@@ -1928,11 +2584,12 @@
   "n_tree_16_3_0b": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_3.n_y",
    "destination": "t_19_1.n_b"
@@ -1941,13 +2598,13 @@
    "extra_cycles": 15,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_17_9.n_y",
    "destination": "t_19_9.n_a"
@@ -1955,9 +2612,12 @@
   "n_tree_19_3_0a": {
    "extra_cycles": 17,
    "tiles": [
-    8,
-    8,
+    16,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_17_13.n_y",
    "destination": "t_19_13.n_a"
@@ -1967,6 +2627,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_0.t_out",
    "destination": "t_20_0.n_b"
   },
@@ -1974,6 +2637,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_21_1.t_out",
    "destination": "t_20_1.n_b"
@@ -1983,6 +2649,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_2.t_out",
    "destination": "t_20_2.n_b"
   },
@@ -1990,6 +2659,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_21_3.t_out",
    "destination": "t_20_3.n_b"
@@ -1999,6 +2671,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_4.t_out",
    "destination": "t_20_4.n_b"
   },
@@ -2006,6 +2681,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_21_5.t_out",
    "destination": "t_20_5.n_b"
@@ -2015,6 +2693,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_6.t_out",
    "destination": "t_20_6.n_b"
   },
@@ -2022,6 +2703,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_21_7.t_out",
    "destination": "t_20_7.n_b"
@@ -2031,6 +2715,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_8.t_out",
    "destination": "t_20_8.n_b"
   },
@@ -2038,6 +2725,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_21_9.t_out",
    "destination": "t_20_9.n_b"
@@ -2047,6 +2737,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_10.t_out",
    "destination": "t_20_10.n_b"
   },
@@ -2054,6 +2747,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_21_11.t_out",
    "destination": "t_20_11.n_b"
@@ -2063,6 +2759,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_12.t_out",
    "destination": "t_20_12.n_b"
   },
@@ -2070,6 +2769,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_21_13.t_out",
    "destination": "t_20_13.n_b"
@@ -2079,6 +2781,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_14.t_out",
    "destination": "t_20_14.n_b"
   },
@@ -2086,6 +2791,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_21_15.t_out",
    "destination": "t_20_15.n_b"
@@ -2095,6 +2803,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_20_1.n_y",
    "destination": "t_21_1.n_a"
   },
@@ -2102,6 +2813,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_23_1.t_out",
    "destination": "t_22_1.n_b"
@@ -2111,6 +2825,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_0.t_out",
    "destination": "t_22_0.n_b"
   },
@@ -2119,15 +2836,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_22_1.n_y",
    "destination": "t_23_1.n_a"
   },
   "n_tree_20_2_0a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_21_1.n_y",
    "destination": "t_21_0.n_a"
@@ -2137,6 +2858,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_20_3.n_y",
    "destination": "t_21_3.n_a"
   },
@@ -2144,6 +2868,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_23_3.t_out",
    "destination": "t_22_3.n_b"
@@ -2153,6 +2880,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_2.t_out",
    "destination": "t_22_2.n_b"
   },
@@ -2160,6 +2890,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_22_3.n_y",
    "destination": "t_23_3.n_a"
@@ -2169,6 +2902,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_3.n_y",
    "destination": "t_21_2.n_a"
   },
@@ -2176,6 +2912,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_20_5.n_y",
    "destination": "t_21_5.n_a"
@@ -2185,6 +2924,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_5.t_out",
    "destination": "t_22_5.n_b"
   },
@@ -2192,6 +2934,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_23_4.t_out",
    "destination": "t_22_4.n_b"
@@ -2201,15 +2946,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_22_5.n_y",
    "destination": "t_23_5.n_a"
   },
   "n_tree_21_2_0a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_21_5.n_y",
    "destination": "t_21_4.n_a"
@@ -2219,6 +2968,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_20_7.n_y",
    "destination": "t_21_7.n_a"
   },
@@ -2226,6 +2978,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_23_7.t_out",
    "destination": "t_22_7.n_b"
@@ -2235,6 +2990,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_6.t_out",
    "destination": "t_22_6.n_b"
   },
@@ -2243,15 +3001,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_22_7.n_y",
    "destination": "t_23_7.n_a"
   },
   "n_tree_21_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_21_7.n_y",
    "destination": "t_21_6.n_a"
@@ -2261,6 +3023,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_9.t_out",
    "destination": "t_22_9.n_b"
   },
@@ -2269,6 +3034,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_8.t_out",
    "destination": "t_22_8.n_b"
   },
@@ -2276,8 +3044,11 @@
    "extra_cycles": 10,
    "tiles": [
     8,
-    1,
-    1
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_21_9.n_y",
    "destination": "t_21_8.n_a"
@@ -2287,6 +3058,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_11.t_out",
    "destination": "t_22_11.n_b"
   },
@@ -2295,15 +3069,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_10.t_out",
    "destination": "t_22_10.n_b"
   },
   "n_tree_22_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_21_11.n_y",
    "destination": "t_21_10.n_a"
@@ -2313,6 +3091,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_13.t_out",
    "destination": "t_22_13.n_b"
   },
@@ -2320,6 +3101,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_23_12.t_out",
    "destination": "t_22_12.n_b"
@@ -2330,6 +3114,10 @@
     8,
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_21_13.n_y",
    "destination": "t_21_12.n_a"
   },
@@ -2337,6 +3125,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_23_15.t_out",
    "destination": "t_22_15.n_b"
@@ -2346,14 +3137,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_23_14.t_out",
    "destination": "t_22_14.n_b"
   },
   "n_tree_20_3_0b": {
    "extra_cycles": 2,
    "tiles": [
-    1,
-    1
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_21_2.n_y",
    "destination": "t_23_0.n_b"
@@ -2363,16 +3159,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_21_8.n_y",
    "destination": "t_23_8.n_a"
   },
   "n_tree_23_3_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_21_12.n_y",
    "destination": "t_23_12.n_a"
@@ -2382,6 +3181,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_0.t_out",
    "destination": "t_24_0.n_a"
   },
@@ -2389,6 +3191,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_24_1.t_out",
    "destination": "t_24_1.n_a"
@@ -2398,6 +3203,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_2.t_out",
    "destination": "t_24_2.n_a"
   },
@@ -2405,6 +3213,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_24_3.t_out",
    "destination": "t_24_3.n_a"
@@ -2414,6 +3225,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_4.t_out",
    "destination": "t_24_4.n_a"
   },
@@ -2421,6 +3235,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_24_5.t_out",
    "destination": "t_24_5.n_a"
@@ -2430,6 +3247,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_6.t_out",
    "destination": "t_24_6.n_a"
   },
@@ -2437,6 +3257,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_24_7.t_out",
    "destination": "t_24_7.n_a"
@@ -2446,6 +3269,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_8.t_out",
    "destination": "t_24_8.n_a"
   },
@@ -2453,6 +3279,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_24_9.t_out",
    "destination": "t_24_9.n_a"
@@ -2462,6 +3291,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_10.t_out",
    "destination": "t_24_10.n_a"
   },
@@ -2469,6 +3301,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_24_11.t_out",
    "destination": "t_24_11.n_a"
@@ -2478,6 +3313,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_12.t_out",
    "destination": "t_24_12.n_a"
   },
@@ -2485,6 +3323,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_24_13.t_out",
    "destination": "t_24_13.n_a"
@@ -2494,6 +3335,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_14.t_out",
    "destination": "t_24_14.n_a"
   },
@@ -2501,6 +3345,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_24_15.t_out",
    "destination": "t_24_15.n_a"
@@ -2510,6 +3357,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_0.t_out",
    "destination": "t_26_0.n_a"
   },
@@ -2518,16 +3368,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_1.t_out",
    "destination": "t_26_1.n_a"
   },
   "n_tree_24_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_25_0.n_y",
    "destination": "t_25_1.n_a"
@@ -2535,8 +3388,10 @@
   "n_tree_24_1_0a": {
    "extra_cycles": 2,
    "tiles": [
-    1,
-    1
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_24_2.n_y",
    "destination": "t_25_2.n_a"
@@ -2546,6 +3401,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_2.t_out",
    "destination": "t_26_2.n_a"
   },
@@ -2554,17 +3412,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_3.t_out",
    "destination": "t_26_3.n_a"
   },
   "n_tree_24_2_0a": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_25_2.n_y",
    "destination": "t_25_3.n_a"
@@ -2574,6 +3436,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_4.t_out",
    "destination": "t_26_4.n_a"
   },
@@ -2582,16 +3447,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_5.t_out",
    "destination": "t_26_5.n_a"
   },
   "n_tree_25_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_25_4.n_y",
    "destination": "t_25_5.n_a"
@@ -2601,6 +3469,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_6.t_out",
    "destination": "t_26_6.n_a"
   },
@@ -2609,17 +3480,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_7.t_out",
    "destination": "t_26_7.n_a"
   },
   "n_tree_25_1_2a": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_26_6.n_y",
    "destination": "t_27_6.n_a"
@@ -2627,13 +3502,12 @@
   "n_tree_25_2_0a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_25_6.n_y",
    "destination": "t_25_7.n_a"
@@ -2642,8 +3516,11 @@
    "extra_cycles": 10,
    "tiles": [
     8,
-    1,
-    1
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_24_8.n_y",
    "destination": "t_25_8.n_a"
@@ -2653,6 +3530,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_8.t_out",
    "destination": "t_26_8.n_a"
   },
@@ -2660,6 +3540,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_26_9.t_out",
    "destination": "t_26_9.n_a"
@@ -2669,14 +3552,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_26_8.n_y",
    "destination": "t_27_8.n_a"
   },
   "n_tree_26_2_2a": {
    "extra_cycles": 2,
    "tiles": [
-    1,
-    1
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_25_8.n_y",
    "destination": "t_25_9.n_a"
@@ -2686,6 +3574,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_24_10.n_y",
    "destination": "t_25_10.n_a"
   },
@@ -2693,6 +3584,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_26_10.t_out",
    "destination": "t_26_10.n_a"
@@ -2702,6 +3596,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_11.t_out",
    "destination": "t_26_11.n_a"
   },
@@ -2710,6 +3607,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_26_10.n_y",
    "destination": "t_27_10.n_a"
   },
@@ -2717,6 +3617,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_25_10.n_y",
    "destination": "t_25_11.n_a"
@@ -2727,6 +3630,10 @@
     8,
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_24_12.n_y",
    "destination": "t_25_12.n_a"
   },
@@ -2734,6 +3641,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_26_12.t_out",
    "destination": "t_26_12.n_a"
@@ -2743,6 +3653,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_13.t_out",
    "destination": "t_26_13.n_a"
   },
@@ -2751,6 +3664,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_26_12.n_y",
    "destination": "t_27_12.n_a"
   },
@@ -2758,11 +3674,13 @@
    "extra_cycles": 13,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_25_12.n_y",
    "destination": "t_25_13.n_a"
@@ -2772,6 +3690,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_24_14.n_y",
    "destination": "t_25_14.n_a"
   },
@@ -2779,6 +3700,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_26_14.t_out",
    "destination": "t_26_14.n_a"
@@ -2788,6 +3712,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_26_15.t_out",
    "destination": "t_26_15.n_a"
   },
@@ -2796,16 +3723,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_26_14.n_y",
    "destination": "t_27_14.n_a"
   },
   "n_tree_27_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_25_14.n_y",
    "destination": "t_25_15.n_a"
@@ -2813,11 +3743,12 @@
   "n_tree_24_3_0a": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_25_3.n_y",
    "destination": "t_27_3.n_a"
@@ -2826,10 +3757,11 @@
    "extra_cycles": 12,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_25_7.n_y",
    "destination": "t_27_7.n_a"
@@ -2840,6 +3772,10 @@
     8,
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_25_15.n_y",
    "destination": "t_27_15.n_a"
   },
@@ -2847,6 +3783,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_28_0.t_out",
    "destination": "t_28_0.n_a"
@@ -2856,6 +3795,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_28_1.t_out",
    "destination": "t_28_1.n_a"
   },
@@ -2863,6 +3805,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_28_2.t_out",
    "destination": "t_28_2.n_a"
@@ -2872,6 +3817,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_28_3.t_out",
    "destination": "t_28_3.n_a"
   },
@@ -2879,6 +3827,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_28_4.t_out",
    "destination": "t_28_4.n_a"
@@ -2888,6 +3839,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_28_5.t_out",
    "destination": "t_28_5.n_a"
   },
@@ -2895,6 +3849,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_28_6.t_out",
    "destination": "t_28_6.n_a"
@@ -2904,6 +3861,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_28_7.t_out",
    "destination": "t_28_7.n_a"
   },
@@ -2911,6 +3871,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_28_8.t_out",
    "destination": "t_28_8.n_a"
@@ -2920,6 +3883,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_28_9.t_out",
    "destination": "t_28_9.n_a"
   },
@@ -2927,6 +3893,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_28_10.t_out",
    "destination": "t_28_10.n_a"
@@ -2936,6 +3905,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_28_11.t_out",
    "destination": "t_28_11.n_a"
   },
@@ -2943,6 +3915,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_28_12.t_out",
    "destination": "t_28_12.n_a"
@@ -2952,6 +3927,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_28_13.t_out",
    "destination": "t_28_13.n_a"
   },
@@ -2959,6 +3937,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_28_14.t_out",
    "destination": "t_28_14.n_a"
@@ -2968,6 +3949,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_28_15.t_out",
    "destination": "t_28_15.n_a"
   },
@@ -2975,6 +3959,9 @@
    "extra_cycles": 8,
    "tiles": [
     8
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
    ],
    "source": "t_28_1.n_y",
    "destination": "t_29_1.n_a"
@@ -2984,6 +3971,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_1.t_out",
    "destination": "t_30_1.n_a"
   },
@@ -2991,6 +3981,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_30_0.t_out",
    "destination": "t_30_0.n_a"
@@ -3000,17 +3993,21 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_30_1.n_y",
    "destination": "t_31_1.n_a"
   },
   "n_tree_28_2_2a": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_29_1.n_y",
    "destination": "t_29_0.n_a"
@@ -3020,6 +4017,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_28_3.n_y",
    "destination": "t_29_3.n_a"
   },
@@ -3027,6 +4027,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_30_3.t_out",
    "destination": "t_30_3.n_a"
@@ -3036,6 +4039,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_2.t_out",
    "destination": "t_30_2.n_a"
   },
@@ -3044,17 +4050,21 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_30_3.n_y",
    "destination": "t_31_3.n_a"
   },
   "n_tree_28_2_0a": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_29_3.n_y",
    "destination": "t_29_2.n_a"
@@ -3064,6 +4074,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_28_5.n_y",
    "destination": "t_29_5.n_a"
   },
@@ -3071,6 +4084,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_30_5.t_out",
    "destination": "t_30_5.n_a"
@@ -3080,6 +4096,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_4.t_out",
    "destination": "t_30_4.n_a"
   },
@@ -3088,16 +4107,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_30_5.n_y",
    "destination": "t_31_5.n_a"
   },
   "n_tree_29_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_29_5.n_y",
    "destination": "t_29_4.n_a"
@@ -3107,6 +4129,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_28_7.n_y",
    "destination": "t_29_7.n_a"
   },
@@ -3114,6 +4139,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_30_7.t_out",
    "destination": "t_30_7.n_a"
@@ -3123,6 +4151,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_6.t_out",
    "destination": "t_30_6.n_a"
   },
@@ -3131,19 +4162,21 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_30_7.n_y",
    "destination": "t_31_7.n_a"
   },
   "n_tree_29_2_0a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_29_7.n_y",
    "destination": "t_29_6.n_a"
@@ -3153,6 +4186,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_9.t_out",
    "destination": "t_30_9.n_a"
   },
@@ -3161,16 +4197,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_8.t_out",
    "destination": "t_30_8.n_a"
   },
   "n_tree_30_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_29_9.n_y",
    "destination": "t_29_8.n_a"
@@ -3180,6 +4219,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_11.t_out",
    "destination": "t_30_11.n_a"
   },
@@ -3188,17 +4230,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_10.t_out",
    "destination": "t_30_10.n_a"
   },
   "n_tree_30_2_0a": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_29_11.n_y",
    "destination": "t_29_10.n_a"
@@ -3208,6 +4254,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_13.t_out",
    "destination": "t_30_13.n_a"
   },
@@ -3216,19 +4265,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_12.t_out",
    "destination": "t_30_12.n_a"
   },
   "n_tree_31_2_2a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_29_13.n_y",
    "destination": "t_29_12.n_a"
@@ -3238,6 +4289,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_15.t_out",
    "destination": "t_30_15.n_a"
   },
@@ -3246,16 +4300,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_30_14.t_out",
    "destination": "t_30_14.n_a"
   },
   "n_tree_31_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_29_15.n_y",
    "destination": "t_29_14.n_a"
@@ -3264,13 +4321,13 @@
    "extra_cycles": 15,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_29_2.n_y",
    "destination": "t_31_2.n_a"
@@ -3279,11 +4336,13 @@
    "extra_cycles": 13,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_29_6.n_y",
    "destination": "t_31_6.n_a"
@@ -3291,8 +4350,10 @@
   "n_tree_30_3_0b": {
    "extra_cycles": 2,
    "tiles": [
-    1,
-    1
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_29_8.n_y",
    "destination": "t_31_10.n_b"
@@ -3302,6 +4363,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_29_12.n_y",
    "destination": "t_31_14.n_b"
   },
@@ -3309,6 +4373,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_32_0.t_out",
    "destination": "t_32_0.n_a"
@@ -3318,6 +4385,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_32_1.t_out",
    "destination": "t_32_1.n_a"
   },
@@ -3325,6 +4395,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_32_2.t_out",
    "destination": "t_32_2.n_a"
@@ -3334,6 +4407,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_32_3.t_out",
    "destination": "t_32_3.n_a"
   },
@@ -3341,6 +4417,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_32_4.t_out",
    "destination": "t_32_4.n_a"
@@ -3350,6 +4429,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_32_5.t_out",
    "destination": "t_32_5.n_a"
   },
@@ -3357,6 +4439,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_32_6.t_out",
    "destination": "t_32_6.n_a"
@@ -3366,6 +4451,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_32_7.t_out",
    "destination": "t_32_7.n_a"
   },
@@ -3373,6 +4461,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_32_8.t_out",
    "destination": "t_32_8.n_a"
@@ -3382,6 +4473,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_32_9.t_out",
    "destination": "t_32_9.n_a"
   },
@@ -3389,6 +4483,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_32_10.t_out",
    "destination": "t_32_10.n_a"
@@ -3398,6 +4495,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_32_11.t_out",
    "destination": "t_32_11.n_a"
   },
@@ -3405,6 +4505,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_32_12.t_out",
    "destination": "t_32_12.n_a"
@@ -3414,6 +4517,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_32_13.t_out",
    "destination": "t_32_13.n_a"
   },
@@ -3421,6 +4527,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_32_14.t_out",
    "destination": "t_32_14.n_a"
@@ -3430,6 +4539,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_32_15.t_out",
    "destination": "t_32_15.n_a"
   },
@@ -3437,6 +4549,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_34_0.t_out",
    "destination": "t_34_0.n_a"
@@ -3446,19 +4561,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_1.t_out",
    "destination": "t_34_1.n_a"
   },
   "n_tree_32_2_0a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_33_0.n_y",
    "destination": "t_33_1.n_a"
@@ -3468,6 +4585,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_2.t_out",
    "destination": "t_34_2.n_a"
   },
@@ -3476,19 +4596,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_3.t_out",
    "destination": "t_34_3.n_a"
   },
   "n_tree_32_2_2a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_33_2.n_y",
    "destination": "t_33_3.n_a"
@@ -3498,6 +4620,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_4.t_out",
    "destination": "t_34_4.n_a"
   },
@@ -3506,16 +4631,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_5.t_out",
    "destination": "t_34_5.n_a"
   },
   "n_tree_33_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_33_4.n_y",
    "destination": "t_33_5.n_a"
@@ -3525,6 +4653,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_6.t_out",
    "destination": "t_34_6.n_a"
   },
@@ -3533,16 +4664,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_7.t_out",
    "destination": "t_34_7.n_a"
   },
   "n_tree_33_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_33_6.n_y",
    "destination": "t_33_7.n_a"
@@ -3552,6 +4686,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_32_8.n_y",
    "destination": "t_33_8.n_a"
   },
@@ -3559,6 +4696,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_34_8.t_out",
    "destination": "t_34_8.n_a"
@@ -3568,6 +4708,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_9.t_out",
    "destination": "t_34_9.n_a"
   },
@@ -3576,16 +4719,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_34_8.n_y",
    "destination": "t_35_8.n_a"
   },
   "n_tree_34_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_33_8.n_y",
    "destination": "t_33_9.n_a"
@@ -3595,6 +4741,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_32_10.n_y",
    "destination": "t_33_10.n_a"
   },
@@ -3602,6 +4751,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_34_10.t_out",
    "destination": "t_34_10.n_a"
@@ -3611,6 +4763,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_11.t_out",
    "destination": "t_34_11.n_a"
   },
@@ -3619,16 +4774,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_34_10.n_y",
    "destination": "t_35_10.n_a"
   },
   "n_tree_34_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_33_10.n_y",
    "destination": "t_33_11.n_a"
@@ -3638,6 +4796,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_32_12.n_y",
    "destination": "t_33_12.n_a"
   },
@@ -3645,6 +4806,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_34_12.t_out",
    "destination": "t_34_12.n_a"
@@ -3654,6 +4818,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_13.t_out",
    "destination": "t_34_13.n_a"
   },
@@ -3662,16 +4829,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_34_12.n_y",
    "destination": "t_35_12.n_a"
   },
   "n_tree_35_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_33_12.n_y",
    "destination": "t_33_13.n_a"
@@ -3681,6 +4851,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_32_14.n_y",
    "destination": "t_33_14.n_a"
   },
@@ -3688,6 +4861,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_34_14.t_out",
    "destination": "t_34_14.n_a"
@@ -3697,6 +4873,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_34_15.t_out",
    "destination": "t_34_15.n_a"
   },
@@ -3705,19 +4884,21 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_34_14.n_y",
    "destination": "t_35_14.n_a"
   },
   "n_tree_35_2_2a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_33_14.n_y",
    "destination": "t_33_15.n_a"
@@ -3725,11 +4906,12 @@
   "n_tree_32_3_0b": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_33_3.n_y",
    "destination": "t_35_1.n_b"
@@ -3737,8 +4919,10 @@
   "n_tree_34_3_0a": {
    "extra_cycles": 16,
    "tiles": [
-    8,
-    8
+    16
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t"
    ],
    "source": "t_33_9.n_y",
    "destination": "t_35_9.n_a"
@@ -3746,9 +4930,12 @@
   "n_tree_35_3_0a": {
    "extra_cycles": 17,
    "tiles": [
-    8,
-    8,
+    16,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_33_13.n_y",
    "destination": "t_35_13.n_a"
@@ -3758,6 +4945,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_36_0.t_out",
    "destination": "t_36_0.n_a"
   },
@@ -3765,6 +4955,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_36_1.t_out",
    "destination": "t_36_1.n_a"
@@ -3774,6 +4967,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_36_2.t_out",
    "destination": "t_36_2.n_a"
   },
@@ -3781,6 +4977,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_36_3.t_out",
    "destination": "t_36_3.n_a"
@@ -3790,6 +4989,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_36_4.t_out",
    "destination": "t_36_4.n_a"
   },
@@ -3797,6 +4999,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_36_5.t_out",
    "destination": "t_36_5.n_a"
@@ -3806,6 +5011,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_36_6.t_out",
    "destination": "t_36_6.n_a"
   },
@@ -3813,6 +5021,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_36_7.t_out",
    "destination": "t_36_7.n_a"
@@ -3822,6 +5033,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_36_8.t_out",
    "destination": "t_36_8.n_a"
   },
@@ -3829,6 +5043,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_36_9.t_out",
    "destination": "t_36_9.n_a"
@@ -3838,6 +5055,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_36_10.t_out",
    "destination": "t_36_10.n_a"
   },
@@ -3845,6 +5065,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_36_11.t_out",
    "destination": "t_36_11.n_a"
@@ -3854,6 +5077,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_36_12.t_out",
    "destination": "t_36_12.n_a"
   },
@@ -3861,6 +5087,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_36_13.t_out",
    "destination": "t_36_13.n_a"
@@ -3870,6 +5099,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_36_14.t_out",
    "destination": "t_36_14.n_a"
   },
@@ -3877,6 +5109,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_36_15.t_out",
    "destination": "t_36_15.n_a"
@@ -3886,6 +5121,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_36_1.n_y",
    "destination": "t_37_1.n_a"
   },
@@ -3893,6 +5131,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_38_1.t_out",
    "destination": "t_38_1.n_a"
@@ -3902,6 +5143,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_0.t_out",
    "destination": "t_38_0.n_a"
   },
@@ -3910,16 +5154,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_38_1.n_y",
    "destination": "t_39_1.n_a"
   },
   "n_tree_36_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_37_1.n_y",
    "destination": "t_37_0.n_a"
@@ -3929,6 +5176,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_36_3.n_y",
    "destination": "t_37_3.n_a"
   },
@@ -3936,6 +5186,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_38_3.t_out",
    "destination": "t_38_3.n_a"
@@ -3945,6 +5198,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_2.t_out",
    "destination": "t_38_2.n_a"
   },
@@ -3953,16 +5209,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_38_3.n_y",
    "destination": "t_39_3.n_a"
   },
   "n_tree_36_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_37_3.n_y",
    "destination": "t_37_2.n_a"
@@ -3972,6 +5231,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_36_5.n_y",
    "destination": "t_37_5.n_a"
   },
@@ -3979,6 +5241,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_38_5.t_out",
    "destination": "t_38_5.n_a"
@@ -3988,6 +5253,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_4.t_out",
    "destination": "t_38_4.n_a"
   },
@@ -3996,16 +5264,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_38_5.n_y",
    "destination": "t_39_5.n_a"
   },
   "n_tree_37_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_37_5.n_y",
    "destination": "t_37_4.n_a"
@@ -4015,6 +5286,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_36_7.n_y",
    "destination": "t_37_7.n_a"
   },
@@ -4022,6 +5296,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_38_7.t_out",
    "destination": "t_38_7.n_a"
@@ -4031,6 +5308,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_6.t_out",
    "destination": "t_38_6.n_a"
   },
@@ -4039,16 +5319,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_38_7.n_y",
    "destination": "t_39_7.n_a"
   },
   "n_tree_37_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_37_7.n_y",
    "destination": "t_37_6.n_a"
@@ -4058,6 +5341,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_9.t_out",
    "destination": "t_38_9.n_a"
   },
@@ -4066,16 +5352,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_8.t_out",
    "destination": "t_38_8.n_a"
   },
   "n_tree_38_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_37_9.n_y",
    "destination": "t_37_8.n_a"
@@ -4085,6 +5374,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_11.t_out",
    "destination": "t_38_11.n_a"
   },
@@ -4093,16 +5385,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_10.t_out",
    "destination": "t_38_10.n_a"
   },
   "n_tree_38_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_37_11.n_y",
    "destination": "t_37_10.n_a"
@@ -4112,6 +5407,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_13.t_out",
    "destination": "t_38_13.n_a"
   },
@@ -4120,16 +5418,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_12.t_out",
    "destination": "t_38_12.n_a"
   },
   "n_tree_39_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_37_13.n_y",
    "destination": "t_37_12.n_a"
@@ -4139,6 +5440,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_15.t_out",
    "destination": "t_38_15.n_a"
   },
@@ -4147,19 +5451,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_38_14.t_out",
    "destination": "t_38_14.n_a"
   },
   "n_tree_39_2_2a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_37_15.n_y",
    "destination": "t_37_14.n_a"
@@ -4167,9 +5473,10 @@
   "n_tree_36_3_0b": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_37_2.n_y",
    "destination": "t_39_0.n_b"
@@ -4177,11 +5484,12 @@
   "n_tree_37_3_0b": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_37_6.n_y",
    "destination": "t_39_4.n_b"
@@ -4190,13 +5498,13 @@
    "extra_cycles": 15,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_37_8.n_y",
    "destination": "t_39_8.n_a"
@@ -4204,11 +5512,12 @@
   "n_tree_39_3_0a": {
    "extra_cycles": 19,
    "tiles": [
-    8,
-    8,
-    1,
-    1,
-    1
+    16,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_37_12.n_y",
    "destination": "t_39_12.n_a"
@@ -4218,6 +5527,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_40_0.t_out",
    "destination": "t_40_0.n_a"
   },
@@ -4225,6 +5537,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_40_1.t_out",
    "destination": "t_40_1.n_a"
@@ -4234,6 +5549,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_40_2.t_out",
    "destination": "t_40_2.n_a"
   },
@@ -4241,6 +5559,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_40_3.t_out",
    "destination": "t_40_3.n_a"
@@ -4250,6 +5571,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_40_4.t_out",
    "destination": "t_40_4.n_a"
   },
@@ -4257,6 +5581,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_40_5.t_out",
    "destination": "t_40_5.n_a"
@@ -4266,6 +5593,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_40_6.t_out",
    "destination": "t_40_6.n_a"
   },
@@ -4273,6 +5603,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_40_7.t_out",
    "destination": "t_40_7.n_a"
@@ -4282,6 +5615,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_40_8.t_out",
    "destination": "t_40_8.n_a"
   },
@@ -4289,6 +5625,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_40_9.t_out",
    "destination": "t_40_9.n_a"
@@ -4298,6 +5637,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_40_10.t_out",
    "destination": "t_40_10.n_a"
   },
@@ -4305,6 +5647,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_40_11.t_out",
    "destination": "t_40_11.n_a"
@@ -4314,6 +5659,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_40_12.t_out",
    "destination": "t_40_12.n_a"
   },
@@ -4321,6 +5669,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_40_13.t_out",
    "destination": "t_40_13.n_a"
@@ -4330,6 +5681,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_40_14.t_out",
    "destination": "t_40_14.n_a"
   },
@@ -4337,6 +5691,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_40_15.t_out",
    "destination": "t_40_15.n_a"
@@ -4346,6 +5703,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_0.t_out",
    "destination": "t_42_0.n_a"
   },
@@ -4354,15 +5714,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_1.t_out",
    "destination": "t_42_1.n_a"
   },
   "n_tree_40_2_2a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_41_0.n_y",
    "destination": "t_41_1.n_a"
@@ -4372,6 +5736,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_2.t_out",
    "destination": "t_42_2.n_a"
   },
@@ -4380,19 +5747,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_3.t_out",
    "destination": "t_42_3.n_a"
   },
   "n_tree_40_2_0a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_41_2.n_y",
    "destination": "t_41_3.n_a"
@@ -4402,6 +5771,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_4.t_out",
    "destination": "t_42_4.n_a"
   },
@@ -4410,16 +5782,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_5.t_out",
    "destination": "t_42_5.n_a"
   },
   "n_tree_41_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_41_4.n_y",
    "destination": "t_41_5.n_a"
@@ -4429,6 +5804,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_6.t_out",
    "destination": "t_42_6.n_a"
   },
@@ -4437,19 +5815,21 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_7.t_out",
    "destination": "t_42_7.n_a"
   },
   "n_tree_41_2_0a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_41_6.n_y",
    "destination": "t_41_7.n_a"
@@ -4459,6 +5839,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_40_8.n_y",
    "destination": "t_41_8.n_a"
   },
@@ -4466,6 +5849,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_42_8.t_out",
    "destination": "t_42_8.n_a"
@@ -4475,6 +5861,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_9.t_out",
    "destination": "t_42_9.n_a"
   },
@@ -4483,16 +5872,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_42_8.n_y",
    "destination": "t_43_8.n_a"
   },
   "n_tree_42_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_41_8.n_y",
    "destination": "t_41_9.n_a"
@@ -4502,6 +5894,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_40_10.n_y",
    "destination": "t_41_10.n_a"
   },
@@ -4509,6 +5904,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_42_10.t_out",
    "destination": "t_42_10.n_a"
@@ -4518,6 +5916,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_11.t_out",
    "destination": "t_42_11.n_a"
   },
@@ -4526,19 +5927,21 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_42_10.n_y",
    "destination": "t_43_10.n_a"
   },
   "n_tree_42_2_0a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_41_10.n_y",
    "destination": "t_41_11.n_a"
@@ -4548,6 +5951,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_40_12.n_y",
    "destination": "t_41_12.n_a"
   },
@@ -4555,6 +5961,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_42_12.t_out",
    "destination": "t_42_12.n_a"
@@ -4564,6 +5973,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_13.t_out",
    "destination": "t_42_13.n_a"
   },
@@ -4572,16 +5984,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_42_12.n_y",
    "destination": "t_43_12.n_a"
   },
   "n_tree_43_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_41_12.n_y",
    "destination": "t_41_13.n_a"
@@ -4591,6 +6006,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_40_14.n_y",
    "destination": "t_41_14.n_a"
   },
@@ -4598,6 +6016,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_42_14.t_out",
    "destination": "t_42_14.n_a"
@@ -4607,6 +6028,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_42_15.t_out",
    "destination": "t_42_15.n_a"
   },
@@ -4615,19 +6039,21 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_42_14.n_y",
    "destination": "t_43_14.n_a"
   },
   "n_tree_43_2_0a": {
    "extra_cycles": 7,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_41_14.n_y",
    "destination": "t_41_15.n_a"
@@ -4637,6 +6063,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_41_3.n_y",
    "destination": "t_43_3.n_a"
   },
@@ -4644,12 +6073,13 @@
    "extra_cycles": 14,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
+    4,
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_41_7.n_y",
    "destination": "t_43_7.n_a"
@@ -4657,8 +6087,10 @@
   "n_tree_42_3_0b": {
    "extra_cycles": 2,
    "tiles": [
-    1,
-    1
+    2
+   ],
+   "masters": [
+    "ot_qwen_tree_delay2_t"
    ],
    "source": "t_41_9.n_y",
    "destination": "t_43_11.n_b"
@@ -4666,10 +6098,10 @@
   "n_tree_43_3_0b": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_41_13.n_y",
    "destination": "t_43_15.n_b"
@@ -4679,6 +6111,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_44_0.t_out",
    "destination": "t_44_0.n_a"
   },
@@ -4686,6 +6121,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_44_1.t_out",
    "destination": "t_44_1.n_a"
@@ -4695,6 +6133,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_44_2.t_out",
    "destination": "t_44_2.n_a"
   },
@@ -4702,6 +6143,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_44_3.t_out",
    "destination": "t_44_3.n_a"
@@ -4711,6 +6155,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_44_4.t_out",
    "destination": "t_44_4.n_a"
   },
@@ -4718,6 +6165,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_44_5.t_out",
    "destination": "t_44_5.n_a"
@@ -4727,6 +6177,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_44_6.t_out",
    "destination": "t_44_6.n_a"
   },
@@ -4734,6 +6187,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_44_7.t_out",
    "destination": "t_44_7.n_a"
@@ -4743,6 +6199,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_44_8.t_out",
    "destination": "t_44_8.n_a"
   },
@@ -4750,6 +6209,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_44_9.t_out",
    "destination": "t_44_9.n_a"
@@ -4759,6 +6221,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_44_10.t_out",
    "destination": "t_44_10.n_a"
   },
@@ -4766,6 +6231,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_44_11.t_out",
    "destination": "t_44_11.n_a"
@@ -4775,6 +6243,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_44_12.t_out",
    "destination": "t_44_12.n_a"
   },
@@ -4782,6 +6253,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_44_13.t_out",
    "destination": "t_44_13.n_a"
@@ -4791,6 +6265,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_44_14.t_out",
    "destination": "t_44_14.n_a"
   },
@@ -4798,6 +6275,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_44_15.t_out",
    "destination": "t_44_15.n_a"
@@ -4807,6 +6287,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_44_1.n_y",
    "destination": "t_45_1.n_a"
   },
@@ -4814,6 +6297,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_46_1.t_out",
    "destination": "t_46_1.n_a"
@@ -4823,6 +6309,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_0.t_out",
    "destination": "t_46_0.n_a"
   },
@@ -4831,16 +6320,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_46_1.n_y",
    "destination": "t_47_1.n_a"
   },
   "n_tree_44_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_45_1.n_y",
    "destination": "t_45_0.n_a"
@@ -4850,6 +6342,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_44_3.n_y",
    "destination": "t_45_3.n_a"
   },
@@ -4857,6 +6352,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_46_3.t_out",
    "destination": "t_46_3.n_a"
@@ -4866,6 +6364,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_2.t_out",
    "destination": "t_46_2.n_a"
   },
@@ -4874,15 +6375,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_46_3.n_y",
    "destination": "t_47_3.n_a"
   },
   "n_tree_44_2_0a": {
    "extra_cycles": 3,
    "tiles": [
-    1,
-    1,
-    1
+    3
+   ],
+   "masters": [
+    "ot_qwen_tree_delay3_t"
    ],
    "source": "t_45_3.n_y",
    "destination": "t_45_2.n_a"
@@ -4892,6 +6397,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_44_5.n_y",
    "destination": "t_45_5.n_a"
   },
@@ -4899,6 +6407,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_46_5.t_out",
    "destination": "t_46_5.n_a"
@@ -4908,6 +6419,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_4.t_out",
    "destination": "t_46_4.n_a"
   },
@@ -4916,16 +6430,19 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_46_5.n_y",
    "destination": "t_47_5.n_a"
   },
   "n_tree_45_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_45_5.n_y",
    "destination": "t_45_4.n_a"
@@ -4935,6 +6452,9 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_44_7.n_y",
    "destination": "t_45_7.n_a"
   },
@@ -4942,6 +6462,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_46_7.t_out",
    "destination": "t_46_7.n_a"
@@ -4951,6 +6474,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_6.t_out",
    "destination": "t_46_6.n_a"
   },
@@ -4959,17 +6485,21 @@
    "tiles": [
     8
    ],
+   "masters": [
+    "ot_qwen_tree_delay8_t"
+   ],
    "source": "t_46_7.n_y",
    "destination": "t_47_7.n_a"
   },
   "n_tree_45_2_0a": {
    "extra_cycles": 5,
    "tiles": [
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_45_7.n_y",
    "destination": "t_45_6.n_a"
@@ -4979,6 +6509,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_9.t_out",
    "destination": "t_46_9.n_a"
   },
@@ -4987,16 +6520,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_8.t_out",
    "destination": "t_46_8.n_a"
   },
   "n_tree_46_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_45_9.n_y",
    "destination": "t_45_8.n_a"
@@ -5006,6 +6542,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_11.t_out",
    "destination": "t_46_11.n_a"
   },
@@ -5014,16 +6553,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_10.t_out",
    "destination": "t_46_10.n_a"
   },
   "n_tree_46_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_45_11.n_y",
    "destination": "t_45_10.n_a"
@@ -5033,6 +6575,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_13.t_out",
    "destination": "t_46_13.n_a"
   },
@@ -5041,16 +6586,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_12.t_out",
    "destination": "t_46_12.n_a"
   },
   "n_tree_47_2_2a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_45_13.n_y",
    "destination": "t_45_12.n_a"
@@ -5060,6 +6608,9 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_15.t_out",
    "destination": "t_46_15.n_a"
   },
@@ -5068,16 +6619,19 @@
    "tiles": [
     1
    ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
+   ],
    "source": "t_46_14.t_out",
    "destination": "t_46_14.n_a"
   },
   "n_tree_47_2_0a": {
    "extra_cycles": 4,
    "tiles": [
-    1,
-    1,
-    1,
-    1
+    4
+   ],
+   "masters": [
+    "ot_qwen_tree_delay4_t"
    ],
    "source": "t_45_15.n_y",
    "destination": "t_45_14.n_a"
@@ -5085,8 +6639,10 @@
   "n_tree_44_3_0a": {
    "extra_cycles": 16,
    "tiles": [
-    8,
-    8
+    16
+   ],
+   "masters": [
+    "ot_qwen_tree_delay16_t"
    ],
    "source": "t_45_2.n_y",
    "destination": "t_47_2.n_a"
@@ -5095,11 +6651,13 @@
    "extra_cycles": 13,
    "tiles": [
     8,
-    1,
-    1,
-    1,
-    1,
+    4,
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay8_t",
+    "ot_qwen_tree_delay4_t",
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_45_6.n_y",
    "destination": "t_47_6.n_a"
@@ -5108,6 +6666,9 @@
    "extra_cycles": 1,
    "tiles": [
     1
+   ],
+   "masters": [
+    "ot_qwen_tree_delay1_t"
    ],
    "source": "t_45_8.n_y",
    "destination": "t_47_10.n_b"

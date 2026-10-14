@@ -23,7 +23,12 @@ sys.path.insert(0, str(Path(_g) / 'tools' if _g else ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
 
 CLK_NAMES = ('ck', 'clk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
-K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=32.0, su=10.0, ho=15.0))
+# s81-die 2026-10-13 (c6p STA by path class, results/physical/die_iter_1012/s81/c6p_sta_classes_1013): FF cq 32 ps against
+# hold 15 + die hold uncertainty 50 made EVERY short placeholder hop a hold violation (1,010,469 endpoints at >= -33.3 ps).
+# A pin-registered tile owes the contract minimum clk -> pin of 65 ps at FF (the relay kits build it: outhold
+# BUF-HB4-BUF); the placeholder carries that minimum, so a hop between placeholders is neutral (0 at zero wire) and a
+# placeholder launching into a REAL pin is judged against the real pin's hold with the contract launch.
+K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=65.0, su=10.0, ho=15.0))
 # s81-die-iter 2026-10-12 (FF hold, r4f SPEF: hco_SW -> xsco_SW -103.7, hr_W<n> -> f_hr_W<n>_o_1 -77.9, hl_W<n> ->
 # g_hl_W<n>_o_sp_collective_0 -77.6 ps): a closed end block (m2l / r2l / l2r, kind 'hend') is balanced on its MEAN clock
 # insertion, but its boundary output flops ride a shorter branch (~80 vs 152 ps), so its outputs launch ~70 ps early
@@ -38,6 +43,12 @@ HOLD_PAD_FF = 120.0
 PAD_NEAR_UM = 100.0
 PAD_SUFFIX = '__hp'
 REL_CLK = {'dsfd_xstg': {'i': 'cw'}}
+# s81-die 2026-10-13: the --cfifo-colck column FIFO is a TWO-domain master (lane write side on xf, column side on cr = its
+# column tree's return; ck only passes to co).  The single-clock placeholder timed its column side on the trunk ck and
+# the clock return cr as data: all of c6p's TT -1,426.8 ps (co -> cr 111 ep, relay -> st / ri 8,960 ep) and the 72,192 FF
+# endpoints at -519..-577 ps (xa / xb / cc launched 548 ps before the column relays' clock).  Inputs AND outputs of a
+# multi-clock glue master are related to the clock that captures / launches them (REL_CLK_COLCK applies with --cfifo-colck).
+REL_CLK_COLCK = {'dsfd_cfifo': dict(xd='xf', st='cr', ri='cr', xa='cr', xb='cr', cc='cr', rs='cr', rd='cr', rf='cr')}
 
 
 def hold_pad_sites(m):
@@ -279,6 +290,16 @@ def arcs_insertion(mst, view, mi, libpath=None, parts=None):
     """[ss, ff, tt] clock insertion carried INSIDE a view's arcs (closed: its routed measurement, else the calib.json
     boundary mean beside the lib; assembled: mean over its tiles); interim / partitioned / macro carry none"""
     if view == 'closed':
+        # DIE CLOCK DELIVERY RULE (owner 2026-10-13, el1013-pinreg-audit.log): R = the routed view's insertion.json
+        # <corner>.boundary.mean = the sign-off reference (io_ref_routed.sdc); it outranks measured_insertion.json (keyed
+        # by block name, may be another route of the block) and the calibrate value.
+        ij = libpath and Path(libpath).parent / 'insertion.json'
+        if ij and ij.exists():
+            j = json.loads(ij.read_text())
+            if all((j.get(c) or {}).get('boundary', {}).get('n') for c in ('ss', 'ff')):
+                ss, ff = j['ss']['boundary']['mean'], j['ff']['boundary']['mean']
+                tt = j['tt']['boundary']['mean'] if (j.get('tt') or {}).get('boundary', {}).get('n') else (ss + ff) / 2
+                return [ss, ff, tt]
         cj = libpath and Path(libpath).parent / 'calib.json'
         # ds-1010 2026-10-10: an ALTERNATE view of the block (e.g. views_colck/dsfd_cfifo, bound by --cfifo-colck) carries
         # its own route's insertion, not the default view's routed measurement in measured_insertion.json (keyed by block
@@ -336,6 +357,90 @@ def bf_front_tap(masters, lat, by, root=ROOT, compose=None):
         d = [lat[f0][i] - lat[c0][i] for i in (2, 1)]
         rec['closed_check_ps'] = dict(tt=round(d[0], 1), ff=round(d[1], 1))
     return rec
+
+
+LEVEL_R_PS = 300.0       # tiles with R <= 300 ps (TT) share one clock level (the owner clock rule's insertion cap)
+SKEW_SAME, SKEW_DEEP = 90.0, 150.0
+MAX_SPREAD_PS = 80.0
+
+
+def clock_delivery(lat, pin_master, masters, libs, by, vroot):
+    """DIE CLOCK DELIVERY RULE record + the deep-tile uncertainty lines (owner 2026-10-13 09:25; el1013-pinreg-audit.log;
+    tools/hier_contract/pinreg_audit.py v2).
+
+      entry   the die delivers the clock at tile X's clock pin at phi - R_X (balance_latency already does this: pin
+              latency = planned + D - in-arc insertion); R = insertion.json boundary mean of the BOUND view, else the
+              ETM min/max_clock_tree_path midrange (ESTIMATED), else 0 for an interim pin-registered master
+      levels  R_tt <= 300: the common level.  R_tt > 300: its own trunk tap, R - 300 earlier; every hop that touches it
+              is budgeted at SKEW 150 instead of 90 (OCV 2 x 5 % x R on the non-shared insertion)
+      spread  boundary max - min > 80 ps is a TILE defect (inside o + s, not compensatable): listed, never padded
+
+    Returns (record, {corner: tcl}) -- the tcl raises the setup uncertainty by SKEW_DEEP - SKEW_SAME on the clock pins of
+    the deep instances (their capture side; the launch side of a deep tile is judged per pair by pinreg_audit --case)."""
+    tiles, deep_pins = {}, []
+    for pin in sorted(lat):
+        mst = pin_master[pin]
+        t = tiles.get(mst)
+        if t is None:
+            r = masters.get(mst, {})
+            view = r.get('view', 'interim')
+            lp = libs['tt'].get(mst, libs['ss'].get(mst, (None,)))[0] if view != 'interim' else None
+            ij = lp and Path(lp).parent / 'insertion.json'
+            t = dict(view=view, instances=0, clock_pins=set())
+            if ij and ij.exists():
+                j = json.loads(ij.read_text())
+                b = {c: (j.get(c) or {}).get('boundary') or {} for c in ('ss', 'ff', 'tt')}
+                if b['tt'].get('n') or (b['ss'].get('n') and b['ff'].get('n')):
+                    tt = b['tt'] if b['tt'].get('n') else dict(mean=(b['ss']['mean'] + b['ff']['mean']) / 2,
+                                                              min=(b['ss']['min'] + b['ff']['min']) / 2,
+                                                              max=(b['ss']['max'] + b['ff']['max']) / 2)
+                    t.update(R_ps={c: round(b[c]['mean'], 1) for c in b if b[c].get('n')}, R_tt_ps=round(tt['mean'], 1),
+                             spread_tt_ps=round(tt['max'] - tt['min'], 1), source='insertion.json boundary mean',
+                             file=str(ij.relative_to(vroot)) if ij.is_relative_to(vroot) else str(ij))
+            if 'R_tt_ps' not in t and view != 'interim':
+                pn = pin.split('/')[1].split('[')[0]
+                v = pin_insertion(mst, pn, libs)
+                if v:
+                    t.update(R_tt_ps=round(v[2], 1), source='ESTIMATED: ETM min/max_clock_tree_path midrange over all sinks '
+                             '(no insertion.json: boundary spread unmeasured; run ck_insertion.py on the view)')
+                elif r.get('insertion_in_arcs_ps'):
+                    t.update(R_tt_ps=round(r['insertion_in_arcs_ps'][2], 1), source='ESTIMATED: measured_insertion.json / '
+                             'calib.json block mean (no insertion.json beside the bound lib)')
+            if 'R_tt_ps' not in t:
+                t.update(R_tt_ps=0.0, source='interim pin-registered model (pin = flop): no internal insertion' if view == 'interim'
+                         else 'UNMEASURED: routed view without insertion.json and without a clock_tree_path on this pin '
+                              '(taken as 0: run ck_insertion.py on the view)')
+            R = t['R_tt_ps']
+            t['level'] = 'common' if R <= LEVEL_R_PS else 'early_tap'
+            t['entry_offset_tt_ps'] = round(-R, 1)                       # required clock arrival at the pin relative to phi
+            t['tap_before_common_level_ps'] = round(max(0.0, R - LEVEL_R_PS), 1)
+            t['hop_skew_ps'] = SKEW_SAME if R <= LEVEL_R_PS else SKEW_DEEP
+            t['ocv_on_insertion_ps'] = round(2 * 0.05 * R, 1)
+            if t.get('spread_tt_ps', 0.0) > MAX_SPREAD_PS:
+                t['defect'] = f"boundary spread {t['spread_tt_ps']} ps > {MAX_SPREAD_PS:.0f} (tile defect, not compensatable)"
+            tiles[mst] = t
+        t['instances'] += 1
+        t['clock_pins'].add(pin.split('/')[1])
+        if t['level'] == 'early_tap':
+            deep_pins.append(pin)
+    for t in tiles.values():
+        t['clock_pins'] = sorted(t['clock_pins'])
+        t['instances'] = t['instances'] // max(1, len(t['clock_pins']))
+    deep = {m_: t for m_, t in tiles.items() if t['level'] == 'early_tap'}
+    rec = dict(rule='die clock delivery (owner 2026-10-13): clock at each tile clock pin at phi - R (insertion-compensated '
+                    'entry), never a common phase at the pins; R <= 300 ps one level, R > 300 an earlier trunk tap and SKEW '
+                    '150 on its hops; hop: o_A + 0.76 ps/um x L + s_B <= 833.3 - 60 - SKEW',
+               level_r_ps=LEVEL_R_PS, skew_ps=dict(same_level=SKEW_SAME, deep=SKEW_DEEP),
+               hop_budget_ps=dict(same_level=round(833.333 - 60 - SKEW_SAME, 1), deep=round(833.333 - 60 - SKEW_DEEP, 1)),
+               masters_common=sum(1 for t in tiles.values() if t['level'] == 'common'), masters_early_tap=len(deep),
+               early_tap={m_: dict(R_tt_ps=t['R_tt_ps'], tap_before_common_level_ps=t['tap_before_common_level_ps'],
+                                   instances=t['instances'], source=t['source']) for m_, t in sorted(deep.items())},
+               estimated_R=sorted(m_ for m_, t in tiles.items() if t['source'].startswith(('ESTIMATED', 'UNMEASURED'))),
+               spread_defects={m_: t['defect'] for m_, t in sorted(tiles.items()) if 'defect' in t},
+               deep_clock_pins=len(deep_pins), tiles=dict(sorted(tiles.items())),
+               sta='setup uncertainty + %.0f ps on the clock pins of the early-tap instances (capture side); launch side '
+                   'of a deep tile: pinreg_audit.py --case pair equation at SKEW 150' % (SKEW_DEEP - SKEW_SAME))
+    return rec, deep_pins
 
 
 def co_delay(lib):
@@ -468,23 +573,26 @@ def interim_lib(cells, corner, pads=None):
                  'downto : true; }')
     for name, area, ports in cells:
         ck = next((c for c in CLK_NAMES if c in ports and ports[c][0] == 'input'), None)
+        rel = dict(next((v_ for m_, v_ in REL_CLK.items() if name.startswith(m_)), {}))
+        if getattr(S, 'CFIFO_COLCK', False):
+            rel.update(next((v_ for m_, v_ in REL_CLK_COLCK.items() if name.startswith(m_)), {}))
+        rel = {p_: c_ for p_, c_ in rel.items() if c_ in ports and ports[c_][0] == 'input'}
         L.append(f' cell ({name}) {{ area : {area:.3f};')
         for p, (d, w) in sorted(ports.items()):
             head = f'  bus ({p}) {{ bus_type : b{w};'
             body = [head, f'   direction : {"input" if d == "input" else "output" if d == "output" else "inout"};']
             if d == 'input':
                 body.append('   capacitance : 1.0;')
-            if p == ck or (d == 'input' and p in CLK_NAMES):     # every clock pin of a multi-clock glue master
+            if p == ck or (d == 'input' and (p in CLK_NAMES or p in rel.values())):     # every clock pin of a multi-clock glue master
                 body.append('   clock : true;')
             elif ck and d == 'input':
-                rck = next((v_[p] for m_, v_ in REL_CLK.items() if name.startswith(m_) and p in v_), ck)
-                rck = rck if rck in ports else ck
+                rck = rel.get(p, ck)
                 pps = HOLD_PAD_FF if p in pads.get(name, ()) else 0.0
                 for tt, v in (('setup_rising', k['su'] + pps * PAD_SCALE[corner]), ('hold_rising', k['ho'] - pps)):
                     body.append(f'   timing () {{ related_pin : "{rck}"; timing_type : {tt}; '
                                 f'rise_constraint (scalar) {{ values ("{v}"); }} fall_constraint (scalar) {{ values ("{v}"); }} }}')
             elif ck and d == 'output':
-                body.append(f'   timing () {{ related_pin : "{ck}"; timing_type : rising_edge; '
+                body.append(f'   timing () {{ related_pin : "{rel.get(p, ck)}"; timing_type : rising_edge; '
                             f'cell_rise (scalar) {{ values ("{k["cq"]}"); }} cell_fall (scalar) {{ values ("{k["cq"]}"); }} '
                             'rise_transition (scalar) { values ("20"); } fall_transition (scalar) { values ("20"); } }')
             body.append('  }')
@@ -702,6 +810,11 @@ def main():
             (a.out / f'latency_{corner}.tcl').write_text(text)
             rec.setdefault('sta_etm_reference_compensation', {})[corner] = correction
         rec['tt_latency'] = 'estimate: mean of the CTS-validated SS and FF sink insertion'
+        rec['clock_delivery'], deep_pins = clock_delivery(lat, pin_master, rec['masters'], cls_, by, vroot)
+        (a.out / 'clock_delivery.json').write_text(json.dumps(rec['clock_delivery'], indent=1) + '\n')
+        (a.out / 'deep_uncertainty.tcl').write_text(''.join(
+            'set_clock_uncertainty -setup %.1f [get_pins -quiet {%s %s[0]}]\n' % (85.0 + SKEW_DEEP - SKEW_SAME, p_, p_)
+            for p_ in deep_pins))
         tap = bf_front_tap(rec['masters'], lat, by, a.views_root.resolve(), a.bf_compose)
         if tap:
             rec['bf_front_tap'] = tap
@@ -730,6 +843,7 @@ def main():
                         rec.setdefault('column_root_co_ps', {})[corner] = round(cod, 1)
                         T.append(f'set_clock_latency -source {lat[root][ci] + cod:.1f} [get_clocks {n_}]')
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
+              'if {[file exists /kit/deep_uncertainty.tcl]} { source /kit/deep_uncertainty.tcl }' if lat else '',
               'set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
               'set_false_path -through [get_nets -quiet {n_rst_* n_rs_col_* por_n}]',
               f'report_checks -path_delay {"min" if corner == "ff" else "max"} -group_path_count 200 -endpoint_path_count 1 '

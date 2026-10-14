@@ -12,9 +12,14 @@ its price and everything else left at price:
                                 on the critical path and only its excess over its slack when it is overlapped.
   HBM die (r25gq)               the S2 command-processor schedule of the exact per-die program (the same one
                                 tools/throughput_budget/build.py prices), re-scheduled with the op at its measured
-                                ratio.  An op the schedule overlaps costs 0.
+                                ratio (--op-delta: with a fixed number of cycles added to every
+                                record of the op instead).  An op the schedule overlaps costs 0.
   rate classes                  a credit / link class that moves W words a token at r words a cycle: W / r_measured
                                 - W / r_price cycles, added to the token when the class is on the critical path.
+  unpriced serial jobs          a job the token path does not hold at all (price 0) that the per-layer die run shows
+                                serial on the critical path: --price 0 --node-delta <cycles> on the nodes it delays.
+                                The row has no unit ratio (null); it is judged by its end-to-end loss alone and its
+                                structural removal is named in the note.
 
 A design with several workloads (s81: ar + mtp, r25gq: ds_ar + qwen_ar) is charged its worst workload per unit.
 
@@ -177,18 +182,25 @@ def hbm_schedule(model):
         cf, pos = T.cost, 8191
     count = collections.Counter(f"{r.unit}.{r.op}" for r in recs)
 
-    def run(op=None, f=1.0):
+    def run(op=None, f=1.0, delta=0.0):
         def g(r, dyn, L):
             c = cf(r, dyn, L)
-            return (c[0] * f if f"{r.unit}.{r.op}" == op else c[0]), c[1], c[2]
+            return (c[0] * f + delta if f"{r.unit}.{r.op}" == op else c[0]), c[1], c[2]
         return T.schedule(recs, pos, "S2", cost_fn=g)["total_cycles"]
     return run, count
 
 
-def hbm_loss(run, count, op, ratio, base=None):
+def hbm_loss(run, count, op, ratio, base=None, delta=None):
+    """delta: a FIXED number of cycles added to every record of the op (a latency the op pays once a record whatever
+    its length, e.g. the VM8 x-load start-to-dispatch edges before every SM.MATVEC); the op's own cycles stay at price"""
     if not count.get(op):
         return None                 # the workload's program never issues this op
     base = run() if base is None else base
+    if delta is not None:
+        new = run(op, 1.0, delta)
+        return dict(model="S2 schedule, fixed cycles added to every record of the op", base_cycles=round(base, 1),
+                    cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=count[op],
+                    added_cycles_per_record=delta, e2e_loss_pct=round(loss_pct(base, new), 3))
     new = run(op, ratio)
     return dict(model="S2 schedule, op re-scheduled at its measured ratio", base_cycles=round(base, 1),
                 cycles=round(new, 1), added_cycles=round(new - base, 1), program_records=count[op],
@@ -197,7 +209,7 @@ def hbm_loss(run, count, op, ratio, base=None):
 
 # ---------------------------------------------------------------------------------------------------------------
 def compute(design, *, match=None, op=None, price=None, measured=None, ratio=None, scale=False,
-            words_per_token=None, critical=True, workloads=None, node_delta=None):
+            words_per_token=None, critical=True, workloads=None, node_delta=None, op_delta=None):
     """-> {workload: composition result} for one unit of one design"""
     spec = DESIGNS[design]
     out = {}
@@ -216,7 +228,7 @@ def compute(design, *, match=None, op=None, price=None, measured=None, ratio=Non
                     raise
         else:
             run, count = hbm_schedule(name)
-            r = hbm_loss(run, count, op, ratio if ratio is not None else measured / price)
+            r = hbm_loss(run, count, op, ratio if ratio is not None else measured / price, delta=op_delta)
             if r:
                 out[wl] = r
     if not out:
@@ -225,6 +237,8 @@ def compute(design, *, match=None, op=None, price=None, measured=None, ratio=Non
 
 
 def unit_ratio(price, measured, rate=False):
+    if not price:
+        return None                 # an unpriced serial job: there is no price to hold a ratio against
     return round((price / measured) if rate else (measured / price), 4)
 
 
@@ -271,7 +285,9 @@ def totals(led):
         t[d] = dict(accepted_pct=round(acc, 3), proposed_pct=round(pro, 3), accepted_plus_proposed_pct=round(acc + pro, 3),
                     limit_pct=DESIGN_LIMIT, accepted_rows=sum(r["status"] == "accepted" for r in rows),
                     proposed_rows=sum(r["status"] == "proposed" for r in rows),
-                    headroom_pct=round(DESIGN_LIMIT - acc, 3))
+                    headroom_pct=round(DESIGN_LIMIT - acc, 3),
+                    owner_exception_rows=sum(bool(r.get("owner_exception")) for r in rows if r["status"] == "accepted"),
+                    over_limit_by_owner_exception=acc > DESIGN_LIMIT)
     return t
 
 
@@ -288,9 +304,14 @@ def find(led, design, unit):
     return None
 
 
-def propose(led, row):
+def propose(led, row, supersede_accepted=""):
+    """supersede_accepted: the decision (owner, date) that replaces an accepted row with a new measurement."""
     old = find(led, row["design"], row["unit"])
-    if old and old["status"] == "accepted":
+    if old and old["status"] == "accepted" and supersede_accepted:
+        row["supersedes"] = {k: old.get(k) for k in ("measured", "price", "unit_ratio", "e2e_loss_pct", "status",
+                                                        "accepted_date", "acceptance_note")}
+        row["supersedes"]["by"] = supersede_accepted
+    elif old and old["status"] == "accepted":
         raise LedgerError(f"{row['design']} {row['unit']} is already accepted; a new measurement needs a new decision")
     if old:
         led["rows"].remove(old)
@@ -298,15 +319,16 @@ def propose(led, row):
     return row
 
 
-def refusal(led, row, root=ROOT):
-    """Why this row may not be marked accepted (None = it may)."""
-    if row["unit_ratio"] <= QUALIFY:
+def refusal(led, row, root=ROOT, waive_limits=False):
+    """Why this row may not be marked accepted (None = it may). waive_limits (an OWNER exception) skips only the
+    5 %/unit and 15 %/design limits; the qualify and committed-bench rules still apply."""
+    if row["unit_ratio"] is not None and row["unit_ratio"] <= QUALIFY:
         return f"unit ratio {row['unit_ratio']} is within {QUALIFY}: it qualifies, no acceptance is needed"
-    if row["e2e_loss_pct"] > UNIT_LIMIT:
+    if row["e2e_loss_pct"] > UNIT_LIMIT and not waive_limits:
         return f"end-to-end loss {row['e2e_loss_pct']} % is over the {UNIT_LIMIT} % unit limit"
     acc = sum(r["e2e_loss_pct"] for r in led["rows"]
               if r["design"] == row["design"] and r["status"] == "accepted" and r is not row)
-    if acc + max(row["e2e_loss_pct"], 0.0) > DESIGN_LIMIT:
+    if acc + max(row["e2e_loss_pct"], 0.0) > DESIGN_LIMIT and not waive_limits:
         return (f"design total would be {acc + row['e2e_loss_pct']:.3f} %, over the {DESIGN_LIMIT} % limit "
                 f"({acc:.3f} % already accepted)")
     if row.get("evidence_grade") != "committed_bench":
@@ -317,15 +339,26 @@ def refusal(led, row, root=ROOT):
     return None
 
 
-def accept(led, design, unit, root=ROOT):
+def accept(led, design, unit, root=ROOT, note="", owner_exception=""):
+    """Mark a row accepted (the refusal rules apply). `note` records the decision (who, when, on what basis); an
+    already-accepted row only gets the note added, its accepted_date stays.
+    owner_exception: an explicit OWNER decision that accepts the row above the 5 %/unit or 15 %/design limit. It
+    waives only those two limits (a committed bench record is still required) and is written on the row; `check`
+    then reports the over-limit total as an owner exception instead of a violation."""
     row = find(led, design, unit)
     if row is None:
         raise LedgerError(f"no row {design} {unit}")
-    why = refusal(led, row, root)
-    if why:
-        raise LedgerError(f"REFUSED {design} {unit}: {why}")
-    row["status"] = "accepted"
-    row["accepted_date"] = datetime.date.today().isoformat()
+    if row["status"] != "accepted" or owner_exception:
+        why = refusal(led, row, root, waive_limits=bool(owner_exception))
+        if why:
+            raise LedgerError(f"REFUSED {design} {unit}: {why}")
+        if row["status"] != "accepted":
+            row["status"] = "accepted"
+            row["accepted_date"] = datetime.date.today().isoformat()
+    if owner_exception:
+        row["owner_exception"] = owner_exception
+    if note:
+        row["acceptance_note"] = note
     return row
 
 
@@ -335,10 +368,10 @@ def check(led, root=ROOT):
     for d in DESIGNS:
         acc = [r for r in led["rows"] if r["design"] == d and r["status"] == "accepted"]
         tot = sum(r["e2e_loss_pct"] for r in acc)
-        if tot > DESIGN_LIMIT:
+        if tot > DESIGN_LIMIT and not any(r.get("owner_exception") for r in acc):
             bad.append(f"{d}: accepted total {tot:.3f} % over {DESIGN_LIMIT} %")
         for r in acc:
-            if r["e2e_loss_pct"] > UNIT_LIMIT:
+            if r["e2e_loss_pct"] > UNIT_LIMIT and not r.get("owner_exception"):
                 bad.append(f"{d} {r['unit']}: accepted at {r['e2e_loss_pct']} % over {UNIT_LIMIT} %")
             if r.get("evidence_grade") != "committed_bench":
                 bad.append(f"{d} {r['unit']}: accepted without a committed bench record")
@@ -347,6 +380,8 @@ def check(led, root=ROOT):
             bad.append(f"unknown design {r['design']}")
         if r["status"] not in ("proposed", "accepted"):
             bad.append(f"{r['design']} {r['unit']}: status {r['status']!r}")
+        if r.get("unit_ratio") is None and r.get("price"):
+            bad.append(f"{r['design']} {r['unit']}: a priced row without a unit ratio")
         if abs(r["e2e_loss_pct"] - max(v["e2e_loss_pct"] for v in r["per_workload"].values())) > 1e-6:
             bad.append(f"{r['design']} {r['unit']}: e2e loss is not its worst workload")
     return bad
@@ -356,13 +391,15 @@ def table(led):
     out = ["| design | unit | measured | price | unit ratio | e2e loss % | binding workload | within 5 % | grade | status |",
            "|---|---|---|---|---|---|---|---|---|---|"]
     for r in led["rows"]:
-        out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price']} | {r['unit_ratio']} | "
+        out.append(f"| {r['design']} | {r['unit']} | {r['measured']} | {r['price'] or 'unpriced'} | "
+                   f"{r['unit_ratio'] if r['unit_ratio'] is not None else '-'} | "
                    f"{r['e2e_loss_pct']:.3f} | {r['binding_workload']} | {'yes' if r['within_unit_limit'] else 'NO'} | "
-                   f"{r['evidence_grade']} | {r['status']} |")
+                   f"{r['evidence_grade']} | {r['status']}{' (owner exception)' if r.get('owner_exception') else ''} |")
     out.append("")
     for d, t in totals(led).items():
         out.append(f"{d}: accepted {t['accepted_pct']} % + proposed {t['proposed_pct']} % = "
-                   f"{t['accepted_plus_proposed_pct']} % of {DESIGN_LIMIT} %")
+                   f"{t['accepted_plus_proposed_pct']} % of {DESIGN_LIMIT} %"
+                   + (" -- OVER THE LIMIT BY OWNER EXCEPTION" if t.get("over_limit_by_owner_exception") else ""))
     return "\n".join(out)
 
 
@@ -380,6 +417,8 @@ def main(argv=None):
         p.add_argument("--measured", type=float, required=True)
         p.add_argument("--scale", action="store_true", help="ROM: scale every matched node by measured / price")
         p.add_argument("--node-delta", type=float, help="ROM: cycles added to every matched node")
+        p.add_argument("--op-delta", type=float, help="HBM: cycles added to every record of --op (a fixed latency per "
+                                                      "record; --price / --measured then describe the unit itself)")
         p.add_argument("--group", help="rows that measure the same composition op share a group")
         p.add_argument("--words-per-token", type=float, help="rate class: price / measured are words a cycle")
         p.add_argument("--off-critical", action="store_true")
@@ -390,6 +429,8 @@ def main(argv=None):
     p = sub.add_parser("accept")
     p.add_argument("design", choices=DESIGNS)
     p.add_argument("unit")
+    p.add_argument("--note", default="", help="the acceptance decision: who, when, basis")
+    p.add_argument("--owner-exception", default="", help="OWNER decision accepting above the unit/design limit")
     sub.add_parser("table")
     sub.add_parser("check")
     a = ap.parse_args(argv)
@@ -399,7 +440,7 @@ def main(argv=None):
             rate = a.words_per_token is not None
             per = compute(a.design, match=a.match, op=a.op, price=a.price, measured=a.measured, scale=a.scale,
                           words_per_token=a.words_per_token, critical=not a.off_critical, workloads=a.workload,
-                          node_delta=a.node_delta)
+                          node_delta=a.node_delta, op_delta=a.op_delta)
             row = make_row(a.design, a.unit, a.price, a.measured, per, a.evidence, a.grade, a.note, rate,
                            unit_of_measure="words/cycle" if rate else "cycles", group=a.group)
             if a.cmd == "propose":
@@ -407,7 +448,7 @@ def main(argv=None):
                 save_ledger(led, a.ledger)
             print(json.dumps(row, indent=1))
         elif a.cmd == "accept":
-            accept(led, a.design, a.unit)
+            accept(led, a.design, a.unit, note=a.note, owner_exception=a.owner_exception)
             save_ledger(led, a.ledger)
             print(f"ACCEPTED {a.design} {a.unit}")
         elif a.cmd == "table":

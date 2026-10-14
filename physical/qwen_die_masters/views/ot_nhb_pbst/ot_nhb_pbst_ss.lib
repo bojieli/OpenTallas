@@ -59,7 +59,7 @@ library (ot_nhb_pbst_ss) {
   }
 
   cell ("ot_nhb_pbst") {
-    area : 1036.684 
+    area : 8826.569 
     is_macro_cell : true;
     pin("clk") {
       direction : input;
@@ -82,7 +82,7 @@ library (ot_nhb_pbst_ss) {
           values("288.53842");
         }
         cell_fall(scalar) {
-          values("316.62054");
+          values("317.44672");
         }
       }
     }

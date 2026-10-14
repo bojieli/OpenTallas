@@ -1,5 +1,5 @@
 {
- "name": "qkd_sbufp_ref-q15-COMMIT",
+ "name": "qkd_sbufp_ref-q15-f96961a79",
  "block": "ot_qkvd_sbufp",
  "ref_tile": true,
  "owner": "Claude:q13b-kvend",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q13b-kvend",
-  "commit": "COMMIT"
+  "commit": "f96961a79"
  },
  "stages": {
   "bench": [
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_sbufp_ref/qkd_sbufp_ref-q15-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_sbufp_ref/qkd_sbufp_ref-q15-f96961a79"
   }
  ],
  "cycles_added": 0,

@@ -45,7 +45,7 @@ library (ot_qkvd_sbuf_ff) {
   }
 
   cell ("ot_qkvd_sbuf") {
-    area : 5809.846 
+    area : 19127.264 
     is_macro_cell : true;
     pin("clk") {
       direction : input;

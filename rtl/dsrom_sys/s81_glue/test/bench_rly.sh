@@ -29,6 +29,6 @@ endmodule
 EOT
 DEF=""; [ "$mode" = mut ] && DEF="-DOT_S81_RLY_MUT"
 verilator --binary --timing -Wno-fatal -Wno-WIDTH $DEF --top-module tb -Mdir "$O/obj" -o tb \
-  "$O/tb.sv" rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
+  "$O/tb.sv" rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters*.sv > "$O/build.log" 2>&1 || { echo BUILD_FAILED; tail -5 "$O/build.log"; exit 2; }
 "$O/obj/tb" | tee "$O/bench.log" | grep RLY_BENCH
 grep -q 'RLY_BENCH PASS' "$O/bench.log"

@@ -85,12 +85,25 @@ COLL = ["-GN=4", "-GLANES=16", "-GTAGW=32", "-GDEPTH=256", "-GLAT=339", "-GBPC_N
 TILE = ["-GGT=6144", "-GNW=18", "-GSMIN=7", "-GCODE_BANKS=5", "-GMEM_EXTRA=1", "-GKV_VB=131072", "-GKV_NH=2"]
 LINK_DEFINES = ["-DGROUPS=6144", "-DCOUNTWIDTH=18", "-DSWIDTH=64", "-DSMAXB=11", "-DTCUTL=7", "-DNWSD=5", "-DXVMD=1",
                 "-DTPD=4", "-DCBANKS=5", "-DSMINV=7"]
-# rom-layer-tput 10-13: QROM_XVM=<n> builds the die with the VM x-read transport at n edges (published selection: 1);
-# a measurement knob for the per-layer cost of extra x-read stages (the TP8 bit-plane VM adds 10), never a release shape
+# rom-layer-tput 10-13: measurement knobs for the per-layer cost of extra VM x-read stages (the TP8 bit-plane VM adds 10),
+# never a release shape.  QROM_XVM=<n>: the VM's own extra x-read registers (published 1).  The x network is BD - XVM
+# stages, so XVM alone is absorbed by the broadcast budget (measured: 0 cycles at XVM 11 / BD 41); QROM_BD=<n> moves
+# the total (published 41) -- XVM 11 with BD 51 keeps the 40 wire stages and adds the 10 edges to every x read.
 if os.environ.get("QROM_XVM"):
     _xvm = int(os.environ["QROM_XVM"])
     DIE = [f"-GXVM={_xvm}" if g == "-GXVM=1" else g for g in DIE]
     LINK_DEFINES = [f"-DXVMD={_xvm}" if g == "-DXVMD=1" else g for g in LINK_DEFINES]
+if os.environ.get("QROM_BD"):
+    DIE = [f"-GBD={int(os.environ['QROM_BD'])}" if g == "-GBD=41" else g for g in DIE]
+# rom-layer-tput 10-13: the die's other wire-stage counts, to put the PRICED r21 die relays (results/rtl/
+# qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json: bd 41 -> 77, tws 38 -> 93, ord 7 -> 10, link 46 -> 72 =
+# +95 per ME op, +26 per link traversal) into the per-layer vehicle: QROM_TWS / QROM_ORD (die) and QROM_LAT (the
+# package link's latency, published 339).  Measurement knobs like QROM_XVM / QROM_BD, never a release shape.
+for _k, _d in (("TWS", 38), ("ORD", 7)):
+    if os.environ.get("QROM_" + _k):
+        DIE = [f"-G{_k}={int(os.environ['QROM_' + _k])}" if g == f"-G{_k}={_d}" else g for g in DIE]
+if os.environ.get("QROM_LAT"):
+    COLL = [f"-GLAT={int(os.environ['QROM_LAT'])}" if g == "-GLAT=339" else g for g in COLL]
 VFLAGS = ["--cc", "-O3", "-Wno-fatal", "-Wno-TIMESCALEMOD", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
           "-Wno-PINMISSING", "-Wno-LATCH", "-Wno-MULTIDRIVEN"]
 

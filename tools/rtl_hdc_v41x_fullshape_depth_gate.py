@@ -11,7 +11,7 @@ import subprocess
 import tempfile
 import time
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 RTL = [ROOT / p for p in (
     "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fpu.sv",
     "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/v41/ot_hdc_fdiv.sv",

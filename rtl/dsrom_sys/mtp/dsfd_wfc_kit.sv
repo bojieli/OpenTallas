@@ -210,17 +210,106 @@ endmodule
 module dsfd_wfc_hep #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
     input  wire clk, rst_n,
     input  wire [USER_W+2*NW:0] ks,          // the kit's stage start {start, user, token, pos}
+    output wire [USER_W+NW+EW:0] hep         // {v, user, pos, epoch}, FOUR edges after the start (was one)
+);
+    // el1013-s81-wfcstg 2026-10-13: the 2^USER_W x (NW + EW + 1) flop table (26.6k flops; as two 13.3k-flop banks the
+    // pre-route gate refused it: 72k cells, util 70 %, the user pin on 12,661 loads, CTS failed) is the die tile
+    // dsfd_wfc_hep_t below: one 1R1W SRAM macro + pin flops.  The start is registered once before the tile -- in the
+    // sp_wfc cluster that register is leaf dsfd_wfc_vmx_w's t_hks output (register -> wire -> register at the tile
+    // pin) -- so the kit and the cluster are the same function cycle for cycle: t_hep moves +3 serial cycles against
+    // the flop table.  The consumer dsfd_mtp_hrow_src only queues the event (valid-driven FIFO, the VM row read waits
+    // for the row's completion), so a constant delay changes nothing there (benches hep_* / posthep_* / prc_*).
+    reg [USER_W+NW:0] hq;
+    always @(posedge clk) hq <= {ks[USER_W+2*NW], ks[2*NW +: USER_W], ks[NW-1:0]};
+    dsfd_wfc_hep_t #(.NW(NW), .USER_W(USER_W), .EW(EW)) u_t (.ckv(clk), .rsv(rst_n), .f_hks(hq), .t_hep(hep));
+endmodule
+
+// dsfd_wfc_hep_t: the issue-epoch table as a die tile (ckv domain).  State per user {last pos NW, epoch EW} in ONE
+// ot_sram_1r1w_512x64_m4_r2c2 (physical/s81_ph_views/mtp/macros, tools/s81_ph/wfc_macros.py: 96.6 x 29.7 um; the catalog's
+// 512 x 128 is 174 um wide and half unused; two users a word: user[8:0] = address, user[9] = the 32-bit half, masked write) and a
+// seen bit per user in flops (the reset state; the array powers up random and is never read as valid before its
+// user's first start).  Pipeline, every port a register or the macro's own pin register:
+//   edge 1  pins {start, user, pos} -> pin flops s1 and, in parallel, the macro's read address / enable
+//   edge 2  rd_out (the user's half) -> register rw; s1 -> s2      (nothing but a 2:1 mux after the 420 ps macro access:
+//           the first gate run, compare straight after rd_out, read macro -> macro -197 ps before routing)
+//   edge 3  rw, or the result of the previous / second-previous start when it was the same user (their writes land
+//           on edge 3 of their own pipeline, i.e. after or on this start's read edge: read-before-write) -> compare /
+//           +1 -> output register t_hep and the masked write of {pos, epoch}; seen[user] <= 1
+// A user's first start reports epoch 0 (the value stored for it).
+// Mutants: OT_WFCHEP_MUT_STALE (the epoch never advances), OT_WFCHEP_MUT_NOFWD (no forwarding from the previous start),
+//          OT_WFCHEP_MUT_NOFWD2 (no forwarding from the second-previous start).
+module dsfd_wfc_hep_t #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
+    input  wire [0:0] ckv, rsv,
+    input  wire [USER_W+NW:0] f_hks,         // {start, user, pos}, from a flop
+    output wire [USER_W+NW+EW:0] t_hep       // {v, user, pos, epoch}, from a flop; 0 unless a start arrived 3 edges ago
+);
+    localparam integer HW = 32;              // one user's field in the 128-bit word
+    initial if (USER_W != 10 || NW + EW > HW) $fatal(1, "dsfd_wfc_hep_t: the 512 x 64 macro holds 1,024 users x <= 32 b");
+    wire clk = ckv[0];
+    wire f_st = f_hks[USER_W+NW]; wire [USER_W-1:0] f_u = f_hks[NW +: USER_W]; wire [NW-1:0] f_p = f_hks[NW-1:0];
+    // reset: a pin flop, then one kept copy per quarter of the seen bits (the raw pin drove 1,057 loads in the gate);
+    // the tile leaves reset 2 edges after the pin, long before a stage start can arrive
+    localparam integer NR = 4, QS = (1 << USER_W) / NR;
+    reg r0; (* keep *) reg [NR-1:0] rr; (* keep *) reg rc;
+    always @(posedge clk) begin r0 <= rsv[0]; rr <= {NR{r0}}; rc <= r0; end
+    reg s1_st, s2_st; reg [USER_W-1:0] s1_u, s2_u; reg [NW-1:0] s1_p, s2_p;       // s1: pin flops
+    wire [2*HW-1:0] rq;
+    reg [NW+EW-1:0] rw;
+    always @(posedge clk) begin
+        s1_st <= f_st && rc; s1_u <= f_u; s1_p <= f_p;
+        s2_st <= s1_st && rc; s2_u <= s1_u; s2_p <= s1_p;
+        rw <= s1_u[USER_W-1] ? rq[HW +: NW+EW] : rq[0 +: NW+EW];
+    end
+    reg [(1<<USER_W)-1:0] seen;
+    reg [USER_W+NW+EW:0] o, o2;                                             // output register and its delay: the forwarding sources
+`ifdef OT_WFCHEP_MUT_NOFWD
+    wire fwd = 1'b0;                                       // MUTANT: a back-to-back start reads the stale word
+`else
+    wire fwd = o[USER_W+NW+EW] && o[NW+EW +: USER_W] == s2_u;
+`endif
+`ifdef OT_WFCHEP_MUT_NOFWD2
+    wire fwd2 = 1'b0;                                      // MUTANT: a start two cycles behind reads the stale word
+`else
+    wire fwd2 = o2[USER_W+NW+EW] && o2[NW+EW +: USER_W] == s2_u;
+`endif
+    wire [NW-1:0] last = fwd ? o[EW +: NW] : fwd2 ? o2[EW +: NW] : rw[EW +: NW];
+    wire [EW-1:0] ep = fwd ? o[EW-1:0] : fwd2 ? o2[EW-1:0] : rw[EW-1:0];
+    wire sn = seen[s2_u];
+`ifdef OT_WFCHEP_MUT_STALE
+    wire rew = 1'b0;                                       // MUTANT: the epoch never advances (stale rows served)
+`else
+    wire rew = sn && s2_p <= last;
+`endif
+    wire [EW-1:0] e_n = !sn ? {EW{1'b0}} : rew ? ep + 1'b1 : ep;
+    always @(posedge clk) begin
+        o <= (rc && s2_st) ? {1'b1, s2_u, s2_p, e_n} : '0;
+        o2 <= rc ? o : '0;
+    end
+    integer qi;
+    always @(posedge clk) begin
+        if (s2_st) seen[s2_u] <= 1'b1;
+        for (qi = 0; qi < NR; qi = qi + 1) if (!rr[qi]) seen[qi*QS +: QS] <= {QS{1'b0}};
+    end
+    wire [HW-1:0] wh = HW'({s2_p, e_n});
+    ot_sram_1r1w_512x64_m4_r2c2 u_m (.clk(clk), .r_ce_in(f_st), .r_addr_in(f_u[8:0]), .rd_out(rq),
+        .w_ce_in(s2_st), .w_addr_in(s2_u[8:0]), .wd_in({wh, wh}),
+        .w_mask_in({{HW{s2_u[USER_W-1]}}, {HW{!s2_u[USER_W-1]}}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(12'd0));
+    assign t_hep = o;
+endmodule
+
+// reference model of dsfd_wfc_hep_t (the flop-table module, bench only; never instantiated on a die).  A user's first
+// start reports epoch 0 (el1013: it read the never-written ep[u] before, an X in simulation; 0 is what it stored).
+module dsfd_wfc_hep_flat #(parameter integer NW = 21, parameter integer USER_W = 10, parameter integer EW = 4) (
+    input  wire clk, rst_n,
+    input  wire [USER_W+2*NW:0] ks,          // the kit's stage start {start, user, token, pos}
     output reg  [USER_W+NW+EW:0] hep         // {v, user, pos, epoch}
 );
     localparam integer NU = 1 << USER_W;
     reg [NW-1:0] last [0:NU-1]; reg [EW-1:0] ep [0:NU-1]; reg [NU-1:0] seen;
     wire st = ks[USER_W+2*NW]; wire [USER_W-1:0] u = ks[2*NW +: USER_W]; wire [NW-1:0] p = ks[NW-1:0];
-`ifdef OT_WFCHEP_MUT_STALE
-    wire rew = 1'b0;                                       // MUTANT: the epoch never advances (stale rows served)
-`else
     wire rew = seen[u] && p <= last[u];
-`endif
-    wire [EW-1:0] e_n = rew ? ep[u] + 1'b1 : ep[u];
+    wire [EW-1:0] e_n = !seen[u] ? {EW{1'b0}} : rew ? ep[u] + 1'b1 : ep[u];
     always @(posedge clk) begin
         if (!rst_n) begin seen <= '0; hep <= '0; end
         else begin

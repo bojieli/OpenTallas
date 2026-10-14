@@ -15,7 +15,19 @@ W=$OUT/$lab
 # A label identifies immutable evidence. Retrying requires a fresh label; never
 # truncate the original log before run_abi3_physical rejects a frozen output.
 mkdir -p "$W"
-for evidence in physical.json run.log exit args SOURCE_COMMIT corner_sta.json corner.log export.log check.json work view; do
+# Closure-loop checkpoint resume (OT_CL_RESUME=1: host move, HOLD-STOP): the label's in-flight files (run.log, args,
+# SOURCE_COMMIT, work) are the checkpoint, not evidence; a finished result (exit, physical.json, sign-off, view) still
+# refuses.  Without this every resume of a route_view job died rc=73 (el1013-engram-sink-pk-9c5094e02-tc, 10-13).
+ev_list="physical.json run.log exit args SOURCE_COMMIT corner_sta.json corner.log export.log check.json work view"
+if [[ "${OT_CL_RESUME:-}" == 1 && ! -e "$W/exit" ]]; then
+    ev_list="physical.json exit corner_sta.json corner.log export.log check.json view"
+    if [[ -e "$W/SOURCE_COMMIT" ]] && ! cmp -s "$W/SOURCE_COMMIT" "$SRC/SOURCE_COMMIT"; then
+        echo "S81 route resume refused: $W/SOURCE_COMMIT differs from the source snapshot" >&2
+        exit 73
+    fi
+    [[ -e "$W/run.log" ]] && mv "$W/run.log" "$W/run.log.pre_resume.$(date +%s)"
+fi
+for evidence in $ev_list; do
     if [[ -e "$W/$evidence" ]]; then
         echo "S81 route refuses existing evidence: $W/$evidence; use a fresh label" >&2
         exit 73

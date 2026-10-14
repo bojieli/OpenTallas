@@ -38,6 +38,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import shlex
 import sys
@@ -146,10 +147,21 @@ QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=669.6, 
 # slot (column pitch 394.848 = slot + 83.8-um column channel; row gap 190.08), 3 compact bands of 16 blocks, the spine
 # widened to 4,589 um (KV-centre sub-column), KV-die halves 3.7 mm + 100-um channel on the W / E edges, all IO in one S
 # band under a 400-um IO word channel (qwen_rom_fulldie_b3r2._tp8b_f2)
-QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=190.08, tile_body=311.04, tile_h=1296.0,
+# r8 (coordinator DECISION 2026-10-13, tile growth): the tile slot grows 21.6 um (rpair 648 + kvl 108 + lsl 561.6 = 1,317.6)
+# and the row gap gives it back (190.08 -> 168.48): row pitch 1,486.08 and the die height (25,870.32 < 26.0 mm) are
+# unchanged; the tiles are M5-capped, so die M6 over the tile field carries horizontal buses (tile_m6: cuts.py
+# CLUSTER_PLAN 'M6'); relay sites stay in the row gaps / column corridors
+QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=168.48, tile_body=311.04, tile_h=1317.6,
                                        spine_gap=171.936, root_spread=True,
                                        f2=dict(cols=48, rows=16, col_pitch=394.848, spine_w=4589.0, kv_w=3700.0,
-                                               kv_ch=100.0, io_chan=480.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4)))
+                                               kv_ch=100.0, io_chan=480.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4, tile_m6=True, v5=True)))
+# r10 (coordinator 2026-10-13 18:30, q15 / q17 tile stream): the tile PARENT as submitted (qfd_tile_nk_r5-fp1-63e7ca004) is
+# 362.88 x 1,442.88.  OT_TP8_TILE="body,height,row_gap,col_pitch" builds the die with that slot (pathfinding variant: the
+# station corridor needs 52.68 um, so the column pitch grows with the body; the row pitch 1,486.08 is kept)
+if os.environ.get('OT_TP8_TILE'):
+    _tb, _th, _rg, _cp = (float(q) for q in os.environ['OT_TP8_TILE'].split(','))
+    QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg,
+                            f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp))
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
@@ -1242,9 +1254,11 @@ def real_lefs(die):
     return (S.Q_LEF, S.CFG_LEF, S.PHY_LEF, S.SERDES_LEF, S.UCIE_LEF) + ((S.HEAD_A_LEF, S.HEAD_B_LEF) if S.HEAD_BUNDLES else ())
 
 
-def pin_table(die, m, M, ports_w, real):
-    """(master, port) -> [(x, y)] master-frame pin centres in net-bit order."""
+def pin_table(die, m, M, ports_w, real, layers=None):
+    """(master, port) -> [(x, y)] master-frame pin centres in net-bit order.  layers (optional dict) is filled with
+    (master, port) -> the pin layer of the port."""
     tab = {}
+    layers = {} if layers is None else layers
     import qwen_rom_fulldie as QF
     prects = load_qwen()[0].pin_rects if die == 'qwen_rom' else QF.pin_rects if die == 'qwen_kv' else S.pin_rects
     for name, mst in M.items():
@@ -1257,6 +1271,7 @@ def pin_table(die, m, M, ports_w, real):
         for nm, ly, (a, b, c, d) in rects:
             base, i = _pin_base(nm)
             g[base][i] = ((a + c) / 2, (b + d) / 2)
+            layers[(name, base)] = ly
         for base, dd in g.items():
             tab[(name, base)] = [dd[i] for i in sorted(dd)]
     # real LEF macros
@@ -1270,6 +1285,7 @@ def pin_table(die, m, M, ports_w, real):
                 if pn in r['pins']:
                     a, b, c, d = r['pins'][pn][1]
                     pts.append(((a + c) / 2, (b + d) / 2))
+                    layers[(r['name'], port)] = r['pins'][pn][0]
                 else:
                     pts.append(None)
             tab[(r['name'], port)] = pts
@@ -2466,6 +2482,131 @@ def hbm_wrapper_ledgers(masters, root=None, generate=None):
                 wrappers_matching_spec=sum(r['wrapper_matches_spec'] for r in rows))
 
 
+def pin_align_record(die, m, M, ports_w, real, views=None, top=200):
+    """Pin ALIGNMENT of every die bundle (tools/hier_contract/pin_align.py; owner 2026-10-13): per driver -> load bundle
+    the jog along the shared direction, bit-order preservation and pin-to-pin length, on the generator's own pin table
+    (pin_table: generated abstracts + the real LEF macros).  views: {master: published LEF path}; a port whose bit pins
+    are all in that LEF (same names, same outline) takes the PUBLISHED pin positions instead of the generated ones.
+    WARN: jog > 20 um, bit order not preserved, u-turn.  FAIL: the jog alone takes > 0.60 of the channel's tracks."""
+    hc = str(ROOT / 'tools' / 'hier_contract')
+    if hc not in sys.path:
+        sys.path.insert(0, hc)
+    import pin_align as PA
+    lay = {}
+    tab = pin_table(die, m, M, ports_w, real, layers=lay)
+    dims = {it.master: (it.w, it.h) for it in m['insts']}
+    for rel in real_lefs(die):
+        r = S.real_lef(rel)
+        dims[r['name']] = (r['w'], r['h'])
+    ov = dict(masters=0, ports=0, ports_not_in_view=0, outline_differs=[])
+    for mst, path in sorted((views or {}).items()):
+        if mst not in dims or not Path(path).exists():
+            continue
+        vp = PA.read_pins([Path(path).read_text(errors='replace')], {mst}).get(mst)
+        if vp is None:
+            continue
+        if abs(vp[0] - dims[mst][0]) > 0.01 or abs(vp[1] - dims[mst][1]) > 0.01:
+            ov['outline_differs'].append(f'{mst} view {vp[0]:g} x {vp[1]:g} / die {dims[mst][0]:g} x {dims[mst][1]:g}')
+            continue
+        hit = 0
+        for (mm_, base), pts in list(tab.items()):
+            if mm_ != mst:
+                continue
+            nm = [f'{base}[{i}]' for i in range(len(pts))]
+            if len(pts) == 1 and nm[0] not in vp[2] and base in vp[2]:
+                nm = [base]
+            if all(n in vp[2] for n in nm):
+                tab[(mm_, base)] = [(vp[2][n][0], vp[2][n][1]) for n in nm]
+                lay[(mm_, base)] = vp[2][nm[0]][3]
+                hit += 1
+            else:
+                ov['ports_not_in_view'] += 1
+        ov['masters'] += bool(hit)
+        ov['ports'] += hit
+
+    def locate(it, port, bits):
+        key, lo = (it.master, port), 0
+        if key not in tab:
+            base, lo_, _hi = S.pslice(port)
+            key, lo = (it.master, base), lo_ or 0
+        pts = tab.get(key)
+        if pts is None:
+            return [None] * bits
+        w, h = dims.get(it.master, (it.w, it.h))
+        area = it.master in M and M[it.master].ports.get(key[1], ('',))[0] == 'area'
+        out = []
+        for q in pts[lo:lo + bits]:
+            if q is None:
+                out.append(None)
+                continue
+            x, y = q
+            f = None if area or min(x, w - x, y, h - y) > 1.0 else face_of(it, x, y, w, h)
+            out.append(to_die(it, x, y) + (f, lay.get(key)))
+        return out + [None] * (bits - len(out))
+    buses = [(b[0], b[1], b[2], [e for e in b[3] if e[0] != 'TOP']) for b in m['buses']]
+    rows = []
+    rec = PA.analyze_points(m['insts'], buses, locate, top=top, rows_out=rows)
+    rec.update(die=die, pin_source='generator pin table (tools/die_top_lint.py pin_table)', published_view_overlay=ov)
+    PIN_ALIGN_ROWS[:] = rows
+    return rec, PA
+
+
+PIN_ALIGN_ROWS = []       # every bundle row of the last pin_align_record (mode pin_align writes them beside the record)
+
+
+def run_pin_align(die, out, tag='', views_json=None):
+    """mode pin_align: build the die model, write <out>/<die><tag>_pin_align.json; exit code 1 on FAIL (gate mode fail)"""
+    m, pw, M, tool = build(die)
+    R8_ACTIVE[0] = die.startswith('s81r8')
+    GLUE_CASE[0] = None
+    if R8_ACTIVE[0]:          # as run_lint: the r8 glue masters are bound from the case's own glue RTL
+        out.mkdir(parents=True, exist_ok=True)
+        gp_ = (out / f'{die}{tag}_glue.sv').resolve()
+        gp_.write_text(S.glue_rtl(m))
+        GLUE_CASE[0] = str(gp_)
+    real = real_blocks(die, m)
+    views = {}
+    if views_json:
+        for r in json.loads(Path(views_json).read_text()).get('masters', []):
+            if r.get('view') and r.get('macro') and not r.get('error'):
+                p_ = ROOT / r['view'] / f"{r['macro']}.lef"
+                if p_.exists() and r['macro'] == r['master']:
+                    views[r['master']] = str(p_)
+    rec, PA = pin_align_record(die, m, M, pw, real, views)
+    rec.update(generator=tool, generator_tag=gen_tag(tool.split()[0], gen_root(die)),
+               qwen_recipe=QWEN_RECIPE if die == 'qwen_rom' else None, s81_opts=S81_OPTS if die.startswith('s81r8') else None,
+               instances=len(m['insts']), buses=len(m['buses']), die_um=list(getattr(S, 'DIE', ())) if die.startswith('s81') else
+               [m.get('die', {}).get('w'), m.get('die', {}).get('h')] if isinstance(m.get('die'), dict) else None)
+    out.mkdir(parents=True, exist_ok=True)
+    (out / f'{die}{tag}_pin_align.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
+    import gzip
+    with gzip.open(out / f'{die}{tag}_pin_align_rows.json.gz', 'wt') as fh:      # every bundle: re-judge / re-tabulate offline
+        json.dump([{k_: v_ for k_, v_ in r_.items() if k_ != 'why'} for r_ in PIN_ALIGN_ROWS], fh)
+    print(PA.line(rec))
+    return 1 if rec['verdict'] == 'FAIL' and PA.gate_mode() == 'fail' else 0
+
+
+def run_model(die, out, tag=''):
+    """mode model: the die model as the cut tools read it (results/arch/qwen_tp8_1012/cuts.py Net,
+    tools/hier_contract/legacy_layer_cuts.py): instances, buses by instance, and per master the OBS top layer the
+    generator assumes (generated abstract obs_top; real LEF macros: their own)"""
+    m, pw, M, tool = build(die)
+    obs = {n: getattr(mst, 'obs_top', None) for n, mst in M.items()}
+    for rel in real_lefs(die):
+        r = S.real_lef(rel)
+        obs[r['name']] = r['obs_top']
+    out.mkdir(parents=True, exist_ok=True)
+    rec = dict(die=die, generator=tool, generator_tag=gen_tag(tool.split()[0], gen_root(die)),
+               qwen_recipe=QWEN_RECIPE if die == 'qwen_rom' else None, s81_opts=S81_OPTS if die.startswith('s81r8') else None,
+               insts=[dict(n=i.name, m=i.master, x=round(i.x, 3), y=round(i.y, 3), w=round(i.w, 3), h=round(i.h, 3),
+                           orient=i.orient, kind=getattr(i, 'kind', '')) for i in m['insts']],
+               buses=[(str(b), c, bits, [e[0] for e in eps if e[0] != 'TOP']) for b, c, bits, eps in m['buses']],
+               masters_obs_top=obs)
+    (out / f'{die}{tag}_model.json').write_text(json.dumps(rec) + '\n')
+    print(json.dumps(dict(instances=len(rec['insts']), buses=len(rec['buses']), masters=len(obs))))
+    return 0
+
+
 def run_lint(die, out, top_fix=False, tag=''):
     m, pw, M, tool = build(die, top_fix)
     R8_ACTIVE[0] = die.startswith('s81r8')
@@ -2537,13 +2678,24 @@ def run_lint(die, out, top_fix=False, tag=''):
         verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved))
     if die == 'hbm':
         rec['wrapper_ledgers'] = hbm_wrapper_ledgers({it.master for it in m['insts']})
+    try:        # pin alignment of the die bundles (owner 2026-10-13); the full record: mode pin_align
+        pa_, PA_ = pin_align_record(die, mp, M, pw, real, top=40)
+        rec['physical']['pin_align'] = {k_: pa_[k_] for k_ in ('verdict', 'bundles', 'bits', 'by_verdict', 'by_kind', 'by_order',
+                                                                 'jog_over_warn', 'order_not_preserved', 'jog_max', 'jog_hist_um',
+                                                                 'bits_without_pin', 'classes_flagged')}
+        rec['physical']['pin_align']['classes'] = [c_ for c_ in pa_['classes'] if c_['worst'] != 'OK'][:40]
+        print(PA_.line(pa_), file=sys.stderr)
+    except Exception as ex:  # noqa: BLE001 - a lint record must not be lost to the alignment pass
+        rec['physical']['pin_align'] = dict(error=f'{type(ex).__name__}: {ex}')
     (out / f'{top}_lint.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
     return rec
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
+    ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum', 'pin_align', 'model'])
+    ap.add_argument('--pin-align-views', help='pin_align: tools/hier_contract/die_pin_audit.py <die>_masters.json; ports '
+                    'whose pins are in a published view take the view pin positions')
     ap.add_argument('--top')
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
@@ -2568,6 +2720,10 @@ def main(argv=None):
         (a.out / f'{a.top}_verilator_summary.json').write_text(json.dumps(s, indent=1) + '\n')
         print(json.dumps(s, indent=1))
         return 0
+    if a.mode == 'model':
+        return run_model(a.die, a.out, a.tag)
+    if a.mode == 'pin_align':
+        return run_pin_align(a.die, a.out, a.tag, a.pin_align_views)
     if a.mode == 'lint':
         rec = run_lint(a.die, a.out, a.top_fix, a.tag)
         print(json.dumps(rec['census']))
