@@ -136,6 +136,30 @@ die. The host `hc` / `tk` faces (one per token) would then cross instead of the 
 saving: about 38 x 91 = 3,460 cycles/token, about 1.7 %. It needs an RTL change in the closed `qkd_seq_core` leaf,
 plus a re-route.
 
+### 5b. v1b: real CRC / retry layer + the die-plan relay count (`link/measured.json` v1b_llr, `link/results_llr.txt`)
+
+The CRC / retry layer is now RTL: `rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv`, at both ends.
+
+| Item | Value |
+|---|---|
+| PHY flit | 583 b = 548 + lseq / dv / ack / nak / CRC-16 (fits the x64 raw 853 b/cycle) |
+| Replay | go-back-N, 64 deep |
+| Latency | +2 cycles per direction |
+| K_ST | 1 in the KV/system die plan v1 (`qkd_lnk` abuts `qkd_d2d`; `qkd_seq` one relay stage away) |
+| **Design point** C_ST 8 / K_ST 1 / PHY 5 | attention **1,030 = +65 cycles/layer**; step **+4,962 cycles/token** |
+| Token, on the SPEC B4 central basis | 206,858 cycles = **5,801.1 tok/s**: **-0.66 %** vs merged B4 central, **+3.49 %** vs track A central |
+| Linear fit | 965 + 47 + 2 x (C_ST + K_ST) + 2 x (PHY - 5) |
+
+Error injection: one PHY bit flip every 5,001 / 501 cycles per direction. Every case stays bit-exact, at +56 / +74
+cycles per layer.
+
+Recovery and mutants:
+
+- a dropped PHY flit is now replayed: PASS;
+- the CRC-ignored mutant fails (5 errors);
+- the nak-ignored mutant hangs, then fails on the watchdog;
+- Q-swap and V-tag mutants fail as before.
+
 ## 6. Open items (owner: this stream unless named)
 
 0. **Release blocker (no stubs):** CRC / retry / FEC digital layer as real RTL at both link ends, plus a re-measure.
