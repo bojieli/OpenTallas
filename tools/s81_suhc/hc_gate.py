@@ -92,7 +92,7 @@ _PADS, _CTH, _CRY = ("rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv", "rtl/
 TILES = {
     "ot_s81_hc_pad_f8":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
     "ot_s81_hc_pad_fv4fd5r2":  dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
-    "ot_s81_hc_pad_r6":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
+    # R2 production composition uses two existing R5 instances; historical R6 is not an active leaf.
     "ot_s81_hc_pad_r5":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
     "ot_s81_hc_pad_meta2": dict(src=_PADS, routed=[{}], mut=(".D(DEPTH),.RESET(1))u_v", ".D(DEPTH-1),.RESET(1))u_v")),
     "ot_s81_hc_ctnl_l0":   dict(src=_CTH, routed=[dict(PIN_STAGE=1, CHAIN_STEP=6)], mut=_CTNL_MUT),
