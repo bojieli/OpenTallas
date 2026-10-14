@@ -45,6 +45,12 @@ PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'      # tools/dsrom_s81_full
 VIA_OBS = 0.05                                             # tools/dsrom_s81_fulldie.py VIA_OBS
 GRT_M45 = 0.5                                              # tools/hbm_accel_die_fp.py R25GQ_V8 grt_m45
 SNAP = 8.64
+# 'die': the die-top convention above (no std-cell rows at the die top: M2/M3 closed, M6/M7 under die PG vias).
+# 'cluster' (Claude hbm-group-B 2026-10-14): the same children routed INSIDE a hardened wires-only cluster (ref_tile
+# layer contract: signals M2-M7 in the cluster's own channels, cluster PG = M7 stripes, M8/M9 die only) -- the model the
+# component's cut ledger (receipt cuts, M2..M7 in channels, 40 % reserve) assumed.  0.5 everywhere, M7 0.6 for its PG.
+PROFILES = {'die': {'M2': 1.0, 'M3': 1.0, 'M4': GRT_M45, 'M5': GRT_M45, 'M6': VIA_OBS, 'M7': VIA_OBS},
+            'cluster': {'M2': 0.5, 'M3': 0.5, 'M4': 0.5, 'M5': 0.5, 'M6': 0.5, 'M7': 0.6}}
 CLOCK_RESET_PORTS = {'clk', 'ck', 'rst_n', 'rst', 'rstn'}
 OUT = 'results/physical/hbm_native_v13_grt'
 
@@ -279,8 +285,7 @@ def cmd_gen(a):
 
     place = [f'fplace {c["instance"]} {c["xy_um"][0] - ox:.3f} {c["xy_um"][1] - oy:.3f} {c["orientation"]}'
              for c in rows]
-    adj = [f'set_global_routing_layer_adjustment {ln} {v:.4f}' for ln, v in
-           (('M2', 1.0), ('M3', 1.0), ('M4', GRT_M45), ('M5', GRT_M45), ('M6', VIA_OBS), ('M7', VIA_OBS))]
+    adj = [f'set_global_routing_layer_adjustment {ln} {v:.4f}' for ln, v in PROFILES[a.profile].items()]
     src = (ROOT / 'tools/dsrom_s81_fulldie.py').read_text()
     gtail = re.search(r'tcl \+= r"""\n(set blk \[ord::get_db_block\].*?mem done\n)"""', src, re.S).group(1)
     gtail = gtail.replace('foreach ln {M2 M3 M4 M5 M6 M7 M8 M9}', 'foreach ln {M2 M3 M4 M5 M6 M7}')
@@ -369,8 +374,7 @@ report_wire_length -net * -global_route -file /work/wirelength.csv
         missing_lef_pins=miss_rec,
         clock_reset_nets=[dict(net=n, bit=j, pins=len(b), boundary=hb) for n, j, b, hb in clockreset][:64],
         pin_name_convention='LEF BUSBITCHARS "[]": bus bit = port[i]; scalar port = port (no index)',
-        grt=dict(signal_layers='M2-M7', layer_adjustment=dict(M2=1.0, M3=1.0, M4=GRT_M45, M5=GRT_M45, M6=VIA_OBS,
-                                                               M7=VIA_OBS),
+        grt=dict(signal_layers='M2-M7', profile=a.profile, layer_adjustment=PROFILES[a.profile],
                  congestion_iterations=a.iters, tech='platform asap7_tech_1x_201209.lef + make_tracks.tcl (k = 1)',
                  block_blockage="each child's own LEF OBS (no region adjustment)", m8_m9='not used for signals'),
         lefs=lefs)
@@ -534,6 +538,7 @@ def main():
     g.add_argument('--work', required=True)
     g.add_argument('--margin', type=float, default=21.6)
     g.add_argument('--iters', type=int, default=50)
+    g.add_argument('--profile', choices=sorted(PROFILES), default='die')
     g.add_argument('--allow-missing', action='store_true', help='diagnostic only: do not refuse on absent LEF pins')
     g.set_defaults(fn=cmd_gen)
     c = sp.add_parser('collect')

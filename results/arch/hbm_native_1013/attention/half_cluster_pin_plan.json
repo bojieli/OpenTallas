@@ -1,0 +1,251 @@
+{
+ "lo": {
+  "faces": {
+   "N": [
+    "xp",
+    "xr",
+    "ck"
+   ],
+   "S": [
+    "ci",
+    "k",
+    "ks",
+    "ldk",
+    "kq",
+    "rst"
+   ],
+   "E": [
+    "q",
+    "ri"
+   ],
+   "W": [
+    "rf"
+   ]
+  },
+  "audit": {
+   "ci": {
+    "face": "S",
+    "bits": 1618,
+    "range": [
+     733.932,
+     1050.636
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 19.54
+   },
+   "k": {
+    "face": "S",
+    "bits": 1041,
+    "range": [
+     518.796,
+     721.596
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 19.54
+   },
+   "ks": {
+    "face": "S",
+    "bits": 1102,
+    "range": [
+     1181.485,
+     1319.015
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 138.92
+   },
+   "ldk": {
+    "face": "S",
+    "bits": 1,
+    "range": [
+     850.156,
+     850.28
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 431.72
+   },
+   "kq": {
+    "face": "S",
+    "bits": 2,
+    "range": [
+     1353.721,
+     1353.971
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 90.16
+   },
+   "q": {
+    "face": "E",
+    "bits": 582,
+    "range": [
+     20.22,
+     106.812
+    ],
+    "bits_on_other_faces": 130,
+    "max_child_pin_to_face_um": 121.06
+   },
+   "rf": {
+    "face": "W",
+    "bits": 1618,
+    "range": [
+     114.876,
+     432.444
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 19.97
+   },
+   "ri": {
+    "face": "E",
+    "bits": 1618,
+    "range": [
+     114.876,
+     432.444
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 20.16
+   },
+   "rst": {
+    "face": "S",
+    "bits": 1,
+    "range": [
+     1250.25,
+     1597.884
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 139.02
+   },
+   "xp": {
+    "face": "N",
+    "bits": 1619,
+    "range": [
+     733.932,
+     1050.828
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 20.62
+   },
+   "xr": {
+    "face": "N",
+    "bits": 272,
+    "range": [
+     30.204,
+     1744.812
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 20.62
+   }
+  },
+  "load": {
+   "N": {
+    "bits": 1892,
+    "face_um": 1778.52,
+    "bits_per_um": 1.06
+   },
+   "S": {
+    "bits": 3765,
+    "face_um": 1778.52,
+    "bits_per_um": 2.12
+   },
+   "E": {
+    "bits": 2200,
+    "face_um": 1263.6,
+    "bits_per_um": 1.74
+   },
+   "W": {
+    "bits": 1618,
+    "face_um": 1263.6,
+    "bits_per_um": 1.28
+   }
+  }
+ },
+ "hi": {
+  "faces": {
+   "N": [
+    "cf",
+    "ck"
+   ],
+   "S": [
+    "o",
+    "xp",
+    "xr"
+   ],
+   "E": [],
+   "W": [
+    "i"
+   ]
+  },
+  "audit": {
+   "cf": {
+    "face": "N",
+    "bits": 1618,
+    "range": [
+     733.932,
+     1050.636
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 20.62
+   },
+   "i": {
+    "face": "W",
+    "bits": 529,
+    "range": [
+     4.32,
+     105.696
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 1.82
+   },
+   "o": {
+    "face": "S",
+    "bits": 529,
+    "range": [
+     1577.162,
+     1643.182
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 86.36
+   },
+   "xp": {
+    "face": "S",
+    "bits": 1619,
+    "range": [
+     733.932,
+     1050.828
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 19.54
+   },
+   "xr": {
+    "face": "S",
+    "bits": 272,
+    "range": [
+     30.204,
+     1744.812
+    ],
+    "bits_on_other_faces": 0,
+    "max_child_pin_to_face_um": 19.54
+   }
+  },
+  "load": {
+   "N": {
+    "bits": 1619,
+    "face_um": 1778.52,
+    "bits_per_um": 0.91
+   },
+   "S": {
+    "bits": 2420,
+    "face_um": 1778.52,
+    "bits_per_um": 1.36
+   },
+   "E": {
+    "bits": 0,
+    "face_um": 689.04,
+    "bits_per_um": 0.0
+   },
+   "W": {
+    "bits": 529,
+    "face_um": 689.04,
+    "bits_per_um": 0.77
+   }
+  }
+ }
+}

@@ -1,0 +1,1018 @@
+{
+ "name": "hattn_half_lo_ref",
+ "top": "hfd_attn_half_lo",
+ "kind": "cluster",
+ "sources": [
+  "results/arch/hbm_native_1013/attention/lo.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 1778.52,
+  "h": 1263.6
+ },
+ "child_lattice_um": 0.432,
+ "children": [
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_lo_root",
+   "inst": "g_rt.u_rt",
+   "at": [
+    850.176,
+    300.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    800.064,
+    654.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    908.064,
+    654.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[0].g_c[2].g_sn.u_b",
+   "at": [
+    1016.064,
+    654.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    756.432,
+    827.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[1].g_c[1].g_sn.u_b",
+   "at": [
+    864.0,
+    827.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[1].g_c[2].g_sn.u_b",
+   "at": [
+    971.568,
+    827.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    733.536,
+    1231.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[2].g_c[1].g_sn.u_b",
+   "at": [
+    841.104,
+    1231.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_xpp.u_xpp.gn.g_s[2].g_c[2].g_sn.u_b",
+   "at": [
+    948.672,
+    1231.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_tile_m6h1q",
+   "inst": "g_y0.g_x[0].u_q",
+   "at": [
+    91.152,
+    678.24
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew136",
+   "inst": "g_y0.g_x[0].u_res.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    52.704,
+    946.08
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew136",
+   "inst": "g_y0.g_x[0].u_res.gn.g_s[1].g_c[0].g_ew.u_b",
+   "at": [
+    52.704,
+    980.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y0.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    29.808,
+    1231.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y0.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    632.88,
+    801.36
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y0.g_x[0].u_row.gn.g_s[0].g_c[1].g_ew.u_b",
+   "at": [
+    632.88,
+    907.2
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y0.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+   "at": [
+    632.88,
+    1015.2
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_tile_m6h1q",
+   "inst": "g_y0.g_x[1].u_q",
+   "at": [
+    1169.856,
+    678.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew136",
+   "inst": "g_y0.g_x[1].u_res.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    1711.152,
+    946.08
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew136",
+   "inst": "g_y0.g_x[1].u_res.gn.g_s[1].g_c[0].g_ew.u_b",
+   "at": [
+    1711.152,
+    980.64
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y0.g_x[1].u_res.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    1718.496,
+    1231.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y0.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    1131.408,
+    801.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y0.g_x[1].u_row.gn.g_s[0].g_c[1].g_ew.u_b",
+   "at": [
+    1131.408,
+    907.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y0.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+   "at": [
+    1131.408,
+    1015.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    800.064,
+    619.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    908.064,
+    619.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+   "at": [
+    1016.064,
+    619.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    800.064,
+    699.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[1].g_c[1].g_sn.u_b",
+   "at": [
+    908.064,
+    699.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[1].g_c[2].g_sn.u_b",
+   "at": [
+    1016.064,
+    699.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    839.808,
+    810.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[2].g_c[1].g_sn.u_b",
+   "at": [
+    839.808,
+    920.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y0.u_mid.gn.g_s[2].g_c[2].g_sn.u_b",
+   "at": [
+    839.808,
+    1030.32
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    619.92,
+    520.56
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    619.92,
+    552.96
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[0].g_c[2].g_sn.u_b",
+   "at": [
+    619.92,
+    587.52
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    572.4,
+    118.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[1].g_c[1].g_sn.u_b",
+   "at": [
+    572.4,
+    153.36
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[1].g_c[2].g_sn.u_b",
+   "at": [
+    572.4,
+    185.76
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    330.912,
+    110.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[2].g_c[1].g_sn.u_b",
+   "at": [
+    330.912,
+    144.72
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[2].g_c[2].g_sn.u_b",
+   "at": [
+    330.912,
+    177.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    113.616,
+    133.92
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[3].g_c[1].g_sn.u_b",
+   "at": [
+    113.616,
+    168.48
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fr.gn.g_s[3].g_c[2].g_sn.u_b",
+   "at": [
+    113.616,
+    203.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "u_fr.gn.g_s[4].g_c[0].g_ew.u_b",
+   "at": [
+    19.872,
+    114.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "u_fr.gn.g_s[4].g_c[1].g_ew.u_b",
+   "at": [
+    19.872,
+    222.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "u_fr.gn.g_s[4].g_c[2].g_ew.u_b",
+   "at": [
+    19.872,
+    330.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_ks_entry",
+   "inst": "u_kse",
+   "at": [
+    1250.208,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pc.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    733.536,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pc.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    841.104,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pc.gn.g_s[0].g_c[2].g_sn.u_b",
+   "at": [
+    948.672,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pc.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    660.096,
+    285.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pc.gn.g_s[1].g_c[1].g_sn.u_b",
+   "at": [
+    699.84,
+    250.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pc.gn.g_s[1].g_c[2].g_sn.u_b",
+   "at": [
+    740.016,
+    216.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pk.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    518.4,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pk.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    625.968,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pk.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    651.888,
+    54.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pk.gn.g_s[1].g_c[1].g_sn.u_b",
+   "at": [
+    651.888,
+    86.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pk.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    699.84,
+    200.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pk.gn.g_s[2].g_c[1].g_sn.u_b",
+   "at": [
+    699.84,
+    233.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pk.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    609.984,
+    440.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pk.gn.g_s[3].g_c[1].g_sn.u_b",
+   "at": [
+    609.984,
+    473.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    1369.872,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    1369.872,
+    54.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[0].g_c[2].g_sn.u_b",
+   "at": [
+    1369.872,
+    88.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    1295.136,
+    233.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[1].g_c[1].g_sn.u_b",
+   "at": [
+    1295.136,
+    300.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[1].g_c[2].g_sn.u_b",
+   "at": [
+    1295.136,
+    369.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    1169.856,
+    440.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[2].g_c[1].g_sn.u_b",
+   "at": [
+    1169.856,
+    473.04
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pks.gn.g_s[2].g_c[2].g_sn.u_b",
+   "at": [
+    1169.856,
+    507.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "u_pq.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    1746.576,
+    2.16
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pq.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    1449.792,
+    120.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pq.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    1130.112,
+    155.52
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pq.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    899.856,
+    205.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "u_pqx.u_hard.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    1590.192,
+    120.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "u_pqx.u_hard.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    1550.016,
+    155.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "u_pqx.u_hard.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    1159.92,
+    120.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "u_pqx.u_hard.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    899.856,
+    239.76
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "u_pr.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    1746.576,
+    114.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "u_pr.gn.g_s[0].g_c[1].g_ew.u_b",
+   "at": [
+    1746.576,
+    222.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "u_pr.gn.g_s[0].g_c[2].g_ew.u_b",
+   "at": [
+    1746.576,
+    330.48
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pr.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    1330.128,
+    174.96
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pr.gn.g_s[1].g_c[1].g_sn.u_b",
+   "at": [
+    1340.928,
+    203.04
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pr.gn.g_s[1].g_c[2].g_sn.u_b",
+   "at": [
+    1394.928,
+    257.04
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pr.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    1169.856,
+    300.24
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pr.gn.g_s[2].g_c[1].g_sn.u_b",
+   "at": [
+    1169.856,
+    334.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pr.gn.g_s[2].g_c[2].g_sn.u_b",
+   "at": [
+    1169.856,
+    367.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "N": [
+   "xp",
+   "xr",
+   "ck"
+  ],
+  "S": [
+   "ci",
+   "k",
+   "ks",
+   "ldk",
+   "kq",
+   "rst"
+  ],
+  "E": [
+   "q",
+   "ri"
+  ],
+  "W": [
+   "rf"
+  ]
+ },
+ "pin_ranges": {
+  "ci": [
+   733.932,
+   1050.636
+  ],
+  "k": [
+   518.796,
+   721.596
+  ],
+  "ks": [
+   1181.485,
+   1319.015
+  ],
+  "ldk": [
+   850.156,
+   850.28
+  ],
+  "kq": [
+   1353.721,
+   1353.971
+  ],
+  "q": [
+   20.22,
+   106.812
+  ],
+  "rf": [
+   114.876,
+   432.444
+  ],
+  "ri": [
+   114.876,
+   432.444
+  ],
+  "rst": [
+   1250.25,
+   1597.884
+  ],
+  "xp": [
+   733.932,
+   1050.828
+  ],
+  "xr": [
+   30.204,
+   1744.812
+  ],
+  "ck": [
+   889.116,
+   889.404
+  ]
+ },
+ "route": {
+  "pd": 0.3,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "pin_h": "M4"
+ },
+ "recipe": 2,
+ "structural_change": "the opaque half masters (hfd_attn_half_lo/hi: parent spine insertion 877-2577 ps, hi soft guard/merge -8.35 ns pre-route) are replaced by the native wires-only half: the CLOSED leaves (sn544/ew544/sn136/ew136 banks, m6h1q quads, lo_root / ks_entry / hi_merge glue) at the gated component placement a95a4adfc, no register or logic of the parent's own; every seam is child flop -> wire -> child flop (component max stage reach 495.0 / 473.2 um, cut 0.374 / 0.301).",
+ "slot_change_request": "none to outline/faces: r25gq v12 slot at_*_lo 1778.52 x 1263.6 hardened_cluster, ck entry N M7; pins were empty in the contract: plan derived from the child boundary bindings (posted to el1011-hbmdie.log)",
+ "why_floorplan": "outline = the contract slot = the native component outline; children at_exact from the component",
+ "job": {
+  "owner": "Claude:hbm-group-B-1014",
+  "branch": "claude/hbm-attn-half-cluster-1014",
+  "tag": "nat1",
+  "purpose": "native attention half lo: harden once (64 die instances = 32 lo + 32 hi) from CLOSED children; measures the real half seams/clock/route in place of the cancelled/refused hfd_attn_half_* routes",
+  "benches": [
+   {
+    "name": "attn_lockh_pos",
+    "cmd": "bash physical/hbm_attn_tile_r/half/run_lockh.sh {RUN}/lockh_pos pos -GCG=1 -GLNK=3 -GLNC=1 -GLNR=2 -GLPMID=3 -GLNFR=4 -GLNXP=3 -GXPX=2 -GLLDKR=16",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "attn_lockh_neg",
+    "cmd": "bash physical/hbm_attn_tile_r/half/run_lockh.sh {RUN}/lockh_neg neg -GCG=1 -GLNK=3 -GLNC=1 -GLNR=2 -GLPMID=3 -GLNFR=4 -GLNXP=3 -GXPX=2 -GLLDKR=16",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "notes": "generated by tools/hbm_attn_half_cluster_spec.py"
+ }
+}

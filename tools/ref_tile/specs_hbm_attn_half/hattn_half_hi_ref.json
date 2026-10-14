@@ -1,0 +1,636 @@
+{
+ "name": "hattn_half_hi_ref",
+ "top": "hfd_attn_half_hi",
+ "kind": "cluster",
+ "sources": [
+  "results/arch/hbm_native_1013/attention/hi.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 1778.52,
+  "h": 689.04
+ },
+ "child_lattice_um": 0.432,
+ "children": [
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_hi_merge",
+   "inst": "g_mt.u_mt",
+   "at": [
+    1569.888,
+    0.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_tile_m6h1q",
+   "inst": "g_y1.g_x[0].u_q",
+   "at": [
+    91.152,
+    105.84
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew136",
+   "inst": "g_y1.g_x[0].u_res.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    52.704,
+    371.52
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew136",
+   "inst": "g_y1.g_x[0].u_res.gn.g_s[1].g_c[0].g_ew.u_b",
+   "at": [
+    52.704,
+    339.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_res.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    44.496,
+    69.12
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_res.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    308.448,
+    54.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_res.gn.g_s[4].g_c[0].g_sn.u_b",
+   "at": [
+    585.792,
+    51.84
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_res.gn.g_s[5].g_c[0].g_sn.u_b",
+   "at": [
+    863.568,
+    54.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_res.gn.g_s[6].g_c[0].g_sn.u_b",
+   "at": [
+    1141.344,
+    49.68
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_res.gn.g_s[7].g_c[0].g_sn.u_b",
+   "at": [
+    1419.12,
+    49.68
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    632.88,
+    226.8
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[1].g_ew.u_b",
+   "at": [
+    632.88,
+    332.64
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y1.g_x[0].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+   "at": [
+    632.88,
+    440.64
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_xr.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    29.808,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_xr.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    352.08,
+    36.72
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_xr.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    688.176,
+    38.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_xr.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    1024.272,
+    54.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[0].u_xr.gn.g_s[4].g_c[0].g_sn.u_b",
+   "at": [
+    1360.368,
+    45.36
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_tile_m6h1q",
+   "inst": "g_y1.g_x[1].u_q",
+   "at": [
+    1169.856,
+    105.84
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew136",
+   "inst": "g_y1.g_x[1].u_res.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    1711.152,
+    371.52
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew136",
+   "inst": "g_y1.g_x[1].u_res.gn.g_s[1].g_c[0].g_ew.u_b",
+   "at": [
+    1711.152,
+    339.12
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_res.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    1703.376,
+    302.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_res.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    1703.376,
+    259.2
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_res.gn.g_s[4].g_c[0].g_sn.u_b",
+   "at": [
+    1703.376,
+    216.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_res.gn.g_s[5].g_c[0].g_sn.u_b",
+   "at": [
+    1703.376,
+    172.8
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_res.gn.g_s[6].g_c[0].g_sn.u_b",
+   "at": [
+    1703.376,
+    129.6
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_res.gn.g_s[7].g_c[0].g_sn.u_b",
+   "at": [
+    1703.376,
+    86.4
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    1131.408,
+    226.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[1].g_ew.u_b",
+   "at": [
+    1131.408,
+    332.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "g_y1.g_x[1].u_row.gn.g_s[0].g_c[2].g_ew.u_b",
+   "at": [
+    1131.408,
+    440.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_xr.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    1718.496,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_xr.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    1690.416,
+    34.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_xr.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    1688.688,
+    2.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_xr.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    1674.0,
+    66.96
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn136",
+   "inst": "g_y1.g_x[1].u_xr.gn.g_s[4].g_c[0].g_sn.u_b",
+   "at": [
+    1659.312,
+    34.56
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y1.u_mid.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    839.808,
+    250.56
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y1.u_mid.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    839.808,
+    360.72
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "g_y1.u_mid.gn.g_s[0].g_c[2].g_sn.u_b",
+   "at": [
+    895.104,
+    410.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fc.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    733.536,
+    339.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fc.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    841.104,
+    339.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fc.gn.g_s[0].g_c[2].g_sn.u_b",
+   "at": [
+    948.672,
+    339.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fc.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    733.536,
+    656.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fc.gn.g_s[1].g_c[1].g_sn.u_b",
+   "at": [
+    841.104,
+    656.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_fc.gn.g_s[1].g_c[2].g_sn.u_b",
+   "at": [
+    948.672,
+    656.64
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_ew544",
+   "inst": "u_pi.gn.g_s[0].g_c[0].g_ew.u_b",
+   "at": [
+    1.728,
+    2.16
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pi.gn.g_s[1].g_c[0].g_sn.u_b",
+   "at": [
+    193.968,
+    45.36
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pi.gn.g_s[2].g_c[0].g_sn.u_b",
+   "at": [
+    438.048,
+    45.36
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pi.gn.g_s[3].g_c[0].g_sn.u_b",
+   "at": [
+    682.128,
+    71.28
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pi.gn.g_s[4].g_c[0].g_sn.u_b",
+   "at": [
+    914.976,
+    54.0
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pi.gn.g_s[5].g_c[0].g_sn.u_b",
+   "at": [
+    1172.016,
+    47.52
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_pi.gn.g_s[6].g_c[0].g_sn.u_b",
+   "at": [
+    1413.936,
+    15.12
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_xin.gn.g_s[0].g_c[0].g_sn.u_b",
+   "at": [
+    733.536,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_xin.gn.g_s[0].g_c[1].g_sn.u_b",
+   "at": [
+    841.104,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/hbm_attn_half_cluster/views/ot_attn_bank_sn544",
+   "inst": "u_xin.gn.g_s[0].g_c[2].g_sn.u_b",
+   "at": [
+    948.672,
+    19.44
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "N": [
+   "cf",
+   "ck"
+  ],
+  "S": [
+   "o",
+   "xp",
+   "xr"
+  ],
+  "W": [
+   "i"
+  ]
+ },
+ "pin_ranges": {
+  "cf": [
+   733.932,
+   1050.636
+  ],
+  "i": [
+   4.32,
+   105.696
+  ],
+  "o": [
+   1577.162,
+   1643.182
+  ],
+  "xp": [
+   733.932,
+   1050.828
+  ],
+  "xr": [
+   30.204,
+   1744.812
+  ],
+  "ck": [
+   889.116,
+   889.404
+  ]
+ },
+ "route": {
+  "pd": 0.3,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "pin_h": "M4"
+ },
+ "recipe": 2,
+ "structural_change": "the opaque half masters (hfd_attn_half_lo/hi: parent spine insertion 877-2577 ps, hi soft guard/merge -8.35 ns pre-route) are replaced by the native wires-only half: the CLOSED leaves (sn544/ew544/sn136/ew136 banks, m6h1q quads, lo_root / ks_entry / hi_merge glue) at the gated component placement a95a4adfc, no register or logic of the parent's own; every seam is child flop -> wire -> child flop (component max stage reach 495.0 / 473.2 um, cut 0.374 / 0.301).",
+ "slot_change_request": "none to outline/faces: r25gq v12 slot at_*_hi 1778.52 x 689.04 hardened_cluster, ck entry N M7; pins were empty in the contract: plan derived from the child boundary bindings (posted to el1011-hbmdie.log)",
+ "why_floorplan": "outline = the contract slot = the native component outline; children at_exact from the component",
+ "job": {
+  "owner": "Claude:hbm-group-B-1014",
+  "branch": "claude/hbm-attn-half-cluster-1014",
+  "tag": "nat1",
+  "purpose": "native attention half hi: harden once (64 die instances = 32 lo + 32 hi) from CLOSED children; measures the real half seams/clock/route in place of the cancelled/refused hfd_attn_half_* routes",
+  "benches": [
+   {
+    "name": "attn_lockh_pos",
+    "cmd": "bash physical/hbm_attn_tile_r/half/run_lockh.sh {RUN}/lockh_pos pos -GCG=1 -GLNK=3 -GLNC=1 -GLNR=2 -GLPMID=3 -GLNFR=4 -GLNXP=3 -GXPX=2 -GLLDKR=16",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "attn_lockh_neg",
+    "cmd": "bash physical/hbm_attn_tile_r/half/run_lockh.sh {RUN}/lockh_neg neg -GCG=1 -GLNK=3 -GLNC=1 -GLNR=2 -GLPMID=3 -GLNFR=4 -GLNXP=3 -GXPX=2 -GLLDKR=16",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "notes": "generated by tools/hbm_attn_half_cluster_spec.py"
+ }
+}
