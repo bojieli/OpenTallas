@@ -89,7 +89,7 @@ module ot_qwen_rom_tile_nkt_mc #(
 endmodule
 
 // Native TP8 configuration ports are explicit; every tile_id must be bound by the die generator.
-module ot_qwen_rom_tile_nkt_tp8 #(
+module ot_qwen_rom_tile_nkt_tp8_core #(
     parameter integer CMUT = 0
 ) (
     input  wire              clk_ctl,
@@ -102,7 +102,7 @@ module ot_qwen_rom_tile_nkt_tp8 #(
     input  wire [15:0]       tile_id,
     input  wire              ib_go,
     input  wire [378:0]      ib,
-    input  wire [127:0]      xl,
+    input  wire [127:0]      x_response,
     output wire [511:0]      t_out,
     output wire              t_vout,
     input  wire [511:0]      n_a,
@@ -126,7 +126,7 @@ module ot_qwen_rom_tile_nkt_tp8 #(
         assign cx_lerr[9*li+:9] = cx_lq[73*li+64+:9];
     end endgenerate
     wire          cx_tvd, cx_nfault;
-    ot_qwen_tile_ctl_tp8 u_ctl (.clk(clk_ctl), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .fault(fault), .cx_xre(cx_xre), .cx_xaddr(cx_xaddr), .cx_xepoch(cx_xepoch),
+    ot_qwen_tile_ctl_tp8 u_ctl (.clk(clk_ctl), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(x_response), .fault(fault), .cx_xre(cx_xre), .cx_xaddr(cx_xaddr), .cx_xepoch(cx_xepoch),
         .cx_rreq(cx_rreq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lerr(cx_lerr), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
     ot_qwen_tile_kids #(.CODE_BANKS(5), .RPS(0), .CMUT(CMUT), .MCLK(1), .SPLIT(1)) u_kids (.clk(clk_ctl), .clk_rp(clk_rp), .clk_sl(clk_sl), .clk_node(clk_node), .clk_tx(clk_tx), .clk_rqr(clk_rqr), .rst_n(rst_n),
         .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_rqr(cx_rqr), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(512'd0), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),

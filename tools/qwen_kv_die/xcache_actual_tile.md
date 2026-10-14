@@ -75,3 +75,23 @@ drain; a full arithmetic barrier is not silently permitted. Also, a compute
 ib_go pulse travelling through live pure-delay stations can be lost while
 core_clk is paused. Instruction holding/buffering or coherent producer and
 corridor pause is required while a separate loader path remains live.
+
+Candidate parent composition
+----------------------------
+
+`rtl/physical/ot_qwen_tile_tp8_cached.sv` instantiates the fixed native core
+`ot_qwen_rom_tile_nkt_tp8_core` and the indexed cache as separate leaves.
+The core port is named `x_response` to state its registered local-response
+contract; an external raw XL broadcast does not meet that contract.
+The parent carries wires only and exposes separate core/cache faults.
+Verilator 5.050 lint with the closed rpair blackbox passed at this composition.
+This is structural wiring validation; the existing arithmetic seam evidence
+binds its recorded source, not this new parent instance.
+
+All 25 compute roots plus the cache response root must follow a coherent
+field-wide pause/resume protocol. The loader clock continues on misses.
+`cache_hit` is a local combinational lookup status, not an approved physical
+clock-gating signal. Producer address/context binding, source freshness,
+clear/drain, registered global admission, physical leaf/master bindings and
+whole-layer throughput are still required. No complete native tile or die
+qualification is claimed by this composition.
