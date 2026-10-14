@@ -52,6 +52,10 @@ def main():
     ap.add_argument("--rso-candidate", action="store_true", help="source-only reset ACK variants; no existing physical view binding")
     ap.add_argument("--return-skew-negative", action="store_true", help="omit the R1 return data step while retaining its valid delay")
     ap.add_argument("--neg", choices=[n for n, _ in NEG])
+    ap.add_argument("--top", default="dsfd_engram_c_rso", choices=["dsfd_engram_c_rso", "dsfd_engram_c_hl"],
+                    help="with --rso-candidate: the parent under test (dsfd_engram_c_hl = hardened-leaf form, no parent flop)")
+    ap.add_argument("--leaf-mut", choices=["OT_ENGC_HL_MUT_RR", "OT_ENGC_HL_MUT_CTL"],
+                    help="with --top dsfd_engram_c_hl: build the leaf negative control; exit 0 only when it FAILS the exact bench")
     a = ap.parse_args()
     if a.return_skew_negative and not a.rso_candidate:
         ap.error("--return-skew-negative requires --rso-candidate")
@@ -61,7 +65,7 @@ def main():
         SRC = SRC + sorted(p for p in (E / "rso_candidate").glob("*.sv") if not p.name.startswith("tb_"))
         original_tb = TB.read_text()
         TB = a.out.resolve() / "tb_dsfd_engram_c_rso.sv"
-        TB.write_text(re.sub(r"\bdsfd_engram_c\b", "dsfd_engram_c_rso", original_tb))
+        TB.write_text(re.sub(r"\bdsfd_engram_c\b", a.top, original_tb))
     t = C.ES.shipped_tables()
     ev = C.build_events(np.random.default_rng(20261008), 120 if a.quick else 600)
     wins = C.official_windows(ev)
@@ -72,6 +76,12 @@ def main():
         rec["classification"] = "FUNCTIONAL_FAIL_CAUGHT" if caught else "UNEXPECTED_RESULT"
         (a.out / "return_skew.json").write_text(json.dumps(rec, indent=2))
         print("ENGRAM_C_RETURN_SKEW", rec["classification"], "element_mismatches", rec.get("element_mismatches"))
+        return 0 if caught else 1
+    if a.leaf_mut:  # hardened-leaf negative control: element mismatches must appear
+        EXTRA_VL = ["-D" + a.leaf_mut]
+        rec = C.run_mode(build(a.out / "obj_leaf_mut", {}), a.out, t, ev, wins, "leaf_mut", STRESS, 200)
+        caught = not rec.get("pass")
+        print("ENGRAM_C_LEAF_MUT", a.leaf_mut, "FAIL as required" if caught else "MISSED", "element_mismatches", rec.get("element_mismatches"))
         return 0 if caught else 1
     if a.neg:      # negative-control bench: exit 1 when the mutant FAILS the bench (as required), 0 when missed
         g = dict(NEG)[a.neg]
