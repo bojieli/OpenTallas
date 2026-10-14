@@ -109,7 +109,7 @@ int main(int argc,char**argv) {
                     if(ra==rb)++qbsame;else++qbdiff;
                     if((((a>>3)&1)<<1|(a&1))!=(((b>>3)&1)<<1|(b&1)))++qbbankdiff;
                 }
-                bool mismatch=r.ready!=d.ready||r.idle!=d.idle||r.x_re!=d.x_re||r.x_addr!=d.x_addr||r.fault!=d.fault
+                bool mismatch=r.aq_results!=d.aq_results||r.ready!=d.ready||r.idle!=d.idle||r.x_re!=d.x_re||r.x_addr!=d.x_addr||r.fault!=d.fault
                     ||r.phase_cycles!=d.phase_cycles||r.ev_go!=d.ev_go||r.ev_end!=d.ev_end||r.ev_tag!=d.ev_tag
                     ||r.rom_pa0!=d.rom_pa0||r.rom_pa1!=d.rom_pa1||r.rom_sa!=d.rom_sa
                     ||std::memcmp(r.mdr_o.data(),d.mdr_o.data(),15*4);

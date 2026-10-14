@@ -206,7 +206,19 @@ module ot_s81_pq_ctl_native #(
     // v15: the two quantisers are T_AQ tiles (ot_dsrom_aq12t) in the spine wrapper
     localparam integer AQL = 29;
     wire [1:0] aq_f = aqf;
+`ifdef OT_PQ_AQ_PIN_LAUNCH
+    // Move AQ's first validity flop into the controller's launch pin owner.
+    // AQ removes exactly that validity stage locally, keeping every data epoch.
+    // Distinct async-reset owner avoids synthesis merging this pin launch
+    // with u_aqi's first metadata flop (that flop resets from rst_c).
+    reg aq_v_pin;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) aq_v_pin <= 0;
+        else aq_v_pin <= rst_c && rq_v && !rq_fam;
+    assign aq_vin = aq_v_pin;
+`else
     assign aq_vin = rq_v && !rq_fam;
+`endif
     // the qb / eb write and the `have` update are driven from the spine's own copy of the request, delayed to the
     // quantiser's output cycle, never from the quantiser's vo (v8: vo drove every qb row enable, a single flop with a
     // 4,096-flop cone, the SS critical class at R = 128):

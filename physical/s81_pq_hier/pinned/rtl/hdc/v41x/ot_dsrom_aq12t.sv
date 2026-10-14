@@ -29,7 +29,21 @@ module ot_dsrom_aq12t (
     integer i;
 
     wire [LATENCY:0] vl;
+`ifdef OT_PQ_AQ_PIN_LAUNCH
+`ifdef OT_PQ_AQ_PIN_MUT_DELAY
+    // Wrong relocation: retaining AQ's old stage delays valid by one cycle.
     ot_hdc_vline #(.D(LATENCY)) u_v (.clk(clk), .rst_n(rst_l), .v(v), .vd(vl));
+`else
+    // v is already registered by the controller at the same global edge at
+    // which s0_x captures. Remove only that first validity stage; all used
+    // vl[11] / vl[LATENCY-1] still match the original AQ on every cycle.
+    wire [LATENCY-1:0] v_pin;
+    ot_hdc_vline #(.D(LATENCY-1)) u_v (.clk(clk), .rst_n(rst_l), .v(v), .vd(v_pin));
+    assign vl = {v_pin, 1'b0};
+`endif
+`else
+    ot_hdc_vline #(.D(LATENCY)) u_v (.clk(clk), .rst_n(rst_l), .v(v), .vd(vl));
+`endif
     // register cycle k reads cycle k-1: s0_x at 1; elements wait to the max(fld, 1) stage at 22 (xg at 21: 20 registers)
     reg  [1023:0] s0_x;
     always @(posedge clk) s0_x <= x;
