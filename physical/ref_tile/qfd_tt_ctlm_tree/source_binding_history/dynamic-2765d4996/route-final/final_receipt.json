@@ -1,0 +1,41 @@
+{
+  "status": "UNQUALIFIED: FF hold and DRC fail; SS sensitivity fails",
+  "source_commit": "2984e0c5168a9c4a708b0ab3433a997a3a6f77b9",
+  "gate_start_commit": "2765d4996",
+  "odb_sha256": "f28f46175968d8eeea101e88fb85bd6c257656112ba800123826a0be9a83e554",
+  "spef_sha256": "966aba80b846b022c5277fa748f3085b9238f62f40fd98395ee13bd45d52adde",
+  "sdc_sha256": "d8314b83d5ab75139453f3e583ef0af2f46b51af440fdac441450a05918b09b5",
+  "tt_setup_ps": 12.58,
+  "ff_hold_ps": -8.12,
+  "ss_setup_sensitivity_ps": -266.62,
+  "drc_count": 5,
+  "native_ena_ps": {
+    "TT_setup": 43.07,
+    "FF_hold": 416.66,
+    "SS_setup_sensitivity": -265.17
+  },
+  "mapping": "clk -> core_clk; primary native shadow plus one u_cg.u_icg/GCLK engine tree; no cloned ICG",
+  "clock_domains": {
+    "TT": {
+      "primary_boundary_count": 234,
+      "primary_boundary_mean_ps": 685.901871,
+      "gated_boundary_count": 2107,
+      "gated_boundary_mean_ps": 705.071716,
+      "combined_boundary_mean_ps": 703.155550374199
+    },
+    "FF": {
+      "primary_boundary_count": 234,
+      "primary_boundary_mean_ps": 528.848365,
+      "gated_boundary_count": 2107,
+      "gated_boundary_mean_ps": 546.438207,
+      "combined_boundary_mean_ps": 544.6799741815464
+    },
+    "SS": {
+      "primary_boundary_count": 234,
+      "primary_boundary_mean_ps": 962.380625,
+      "gated_boundary_count": 2107,
+      "gated_boundary_mean_ps": 980.374129,
+      "combined_boundary_mean_ps": 978.5755472246905
+    }
+  }
+}

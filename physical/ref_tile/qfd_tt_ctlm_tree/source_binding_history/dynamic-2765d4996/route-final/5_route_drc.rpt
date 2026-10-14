@@ -1,0 +1,15 @@
+violation type: Short
+	srcs: net:net9290 inst:u_shadow.g_psram.g_m\[1\].u_pm
+	bbox = (30.3120, 204.0480) - (30.3710, 204.0720) on Layer M4
+violation type: Short
+	srcs: net:net19914 inst:u_shadow.g_psram.g_m\[0\].u_pm
+	bbox = (201.2530, 41.6160) - (201.4560, 41.6400) on Layer M4
+violation type: Short
+	srcs: net:net9766 inst:u_shadow.g_psram.g_m\[1\].u_pm
+	bbox = (201.3970, 150.9600) - (201.4560, 150.9840) on Layer M4
+violation type: Short
+	srcs: net:net9758 inst:u_shadow.g_psram.g_m\[1\].u_pm
+	bbox = (201.4450, 152.4960) - (201.4560, 152.5200) on Layer M4
+violation type: Metal Spacing
+	srcs: net:net19833 inst:u_shadow.g_psram.g_m\[1\].u_pm
+	bbox = (201.4560, 153.7440) - (201.4930, 153.7680) on Layer M4
