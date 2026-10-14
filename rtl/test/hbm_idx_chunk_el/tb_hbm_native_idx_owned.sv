@@ -13,7 +13,7 @@
 // and ORDY (1/16ths of cycles the source withholds a beat / the sink
 // refuses).  Every valid slot's score, fault and index is compared; beats must
 // come out in the order they went in, with the last tag on the final beat.
-module tb_hdc_v41x_idx_array #(
+module tb_hbm_native_idx_owned #(
     parameter integer NS = 2,
     parameter integer NK = 4,
     parameter integer IH = 32,
