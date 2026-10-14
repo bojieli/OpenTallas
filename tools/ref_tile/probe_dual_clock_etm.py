@@ -61,6 +61,7 @@ endmodule
     if args.zero_source_mutant:
         constraints += '\nforeach c [get_clocks ot_entry_*] {set_clock_latency -source 0 $c}\n'
     for corner in ('tt', 'ff', 'ss'):
+        margin = 210 if max(measured[pin]['tt']['boundary']['mean'] for pin in measured) > 300 else 150
         rc = measured['ck[0]'][corner]['boundary']['mean']
         rv = measured['ckv[0]'][corner]['boundary']['mean']
         text = f'''read_liberty /probe/dsfd_wfc_vmx/dsfd_wfc_vmx_{corner}.lib
@@ -87,10 +88,10 @@ foreach {{tag delta}} {{cs {rc-rv} sc {rv-rc}}} {{
   foreach kind {{max min}} {{
     set old [dict get $before $tag $kind]
     set now [dict get $after $tag $kind]
-    # No uncertainty in baseline; composed setup150/hold100 on same-level
-    # clocks. Source compensation shifts setup by Rlaunch-Rcapture and hold
+    # No uncertainty in baseline; composed setup60+90 (or60+150 if either TT root is deep)/hold100 on
+    # clock pairs. Source compensation shifts setup by Rlaunch-Rcapture and hold
     # by its negative. The ETM launch/check arcs stay exactly as exported.
-    set expected [expr {{$old + ($kind eq "max" ? $delta-150 : -$delta-100)}}]
+    set expected [expr {{$old + ($kind eq "max" ? $delta-{margin} : -$delta-100)}}]
     if {{abs($now-$expected)>0.03}} {{error "slack mismatch $tag $kind $now vs $expected"}}
     puts "DUAL_PATH {corner} $tag $kind before=$old after=$now expected=$expected"
   }}
