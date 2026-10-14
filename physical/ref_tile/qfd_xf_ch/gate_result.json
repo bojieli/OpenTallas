@@ -2,16 +2,16 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "qfd_xf_ch",
  "verdict": "WARN",
- "generated": "2026-10-13T18:39:10-0700",
- "host": "ot-agidock128",
+ "generated": "2026-10-13T19:38:29-0700",
+ "host": "ot-pve1",
  "cts": true,
- "commit": "23498a51d",
+ "commit": "b3039a345",
  "clock": {
   "max_root_sinks": 15405,
   "root": "port:wck",
   "cts": true,
-  "tt_insertion_ps": 229.1,
-  "tt_spread_ps": 16.6,
+  "tt_insertion_ps": 231.8,
+  "tt_spread_ps": 11.4,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -19,15 +19,9 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "15,405 sinks on one clock root > 15,000, allowed by evidence: measured TT insertion 229.1 ps, leaf spread 16.6 ps (<= 300 ps / <= 80 ps)"
+  "text": "15,405 sinks on one clock root > 15,000, allowed by evidence: measured TT insertion 231.8 ps, leaf spread 11.4 ps (<= 300 ps / <= 80 ps)"
  },
  "items": [
-  {
-   "severity": "WARN",
-   "check": "util",
-   "message": "synthesized std area 10869 um2 + macros 0 in core 28386: util 38%",
-   "fix": "set \"std_area_um2\": 10869 and drop 'outline' (gen sizes to util 0.52)"
-  },
   {
    "severity": "WARN",
    "check": "textbook.clock_domain",
@@ -39,12 +33,6 @@
    "check": "textbook.high_fanout",
    "message": "net u_ch.ir[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 4,099 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
    "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.util_channel",
-   "message": "utilisation 38.1% outside 45%-65% (std 10829 + macro 0 um2 in 28386 um2): shrink the outline (long wires / sparse placement)",
-   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
 }

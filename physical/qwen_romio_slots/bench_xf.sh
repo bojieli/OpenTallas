@@ -6,14 +6,14 @@
 #     ch_neg   the sender ignores credits: must FAIL
 #     ch_mut   OT_XF_MUT (two output data bits swapped in the cell): must FAIL
 set -u
-OUT=$1; CASE=$2
+OUT=$1; CASE=$2; WIDTH=${3:-1024}
 R=$(cd "$(dirname "$0")/../.." && pwd)
 mkdir -p "$OUT"
-T=tb_qfd_xf_ch; P=""; D=""
+T=tb_qfd_xf_ch; P="-Ptb_qfd_xf_ch.W=$WIDTH"; D=""
 case "$CASE" in
   ch) ;;
-  ch_fast) P="-P$T.HW=1.35 -P$T.HR=1.0" ;;
-  ch_neg)  P="-P$T.NEG=1" ;;
+  ch_fast) P="$P -P$T.HW=1.35 -P$T.HR=1.0" ;;
+  ch_neg)  P="$P -P$T.NEG=1" ;;
   ch_mut)  D="-DOT_XF_MUT" ;;
   *) echo "FAIL xfifo_slots $CASE unknown case"; exit 1 ;;
 esac

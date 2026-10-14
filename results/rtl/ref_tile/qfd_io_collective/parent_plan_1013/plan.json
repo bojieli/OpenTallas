@@ -135,11 +135,6 @@
       "next": "die lead switches native ports and publishes assigned file; slot wrapper consumes exact pin plan"
     },
     {
-      "requirement": "UCIe link representation",
-      "evidence": "existing u/ur each1024 cannot carry simultaneous TP8 partial546 +result514=1060 payload bits",
-      "next": "die lead chooses two actual VC bundles and channels or proves real serializer/vchannel adapter; no truncation"
-    },
-    {
       "requirement": "pin-registered internal control seams",
       "evidence": "corrected-child pinreg audit: wrapper c_pop capture residual453.5ps, input beyond boundary408.3ps; c_pop,c_push,c_hold,lq_wd affected289bits; wrapper outputs lq_hd,hv,rq_hd,eq_hd beyond boundary276.4ps for40bits; wrapper boundaryspread101.9ps",
       "next": "structural RTL/pin-flop pipeline with native exact+mutant regression; classify actual connected paths before routing; closed child reroute only with justified RTL/die-window reason"
@@ -155,5 +150,9 @@
       "next": "bind exact and mutant from throughput stream, slot_fit and CTS gate, measured layer comparison before qualification"
     }
   ],
-  "submission_policy": "NO job generated or dropped until assigned native pin file, legal child hierarchy and register seams exist; preserves every CLOSED child view"
+  "submission_policy": "NO job generated or dropped until assigned native pin file, legal child hierarchy and register seams exist; preserves every CLOSED child view",
+  "resolved_interfaces": {
+    "ucie": "die lead accepted independent native P546 and R514 both directions; W546CDC zero-pad32result,10leafpartition",
+    "record": "physical/qwen_romio_slots/xf_native_partition_1013.json"
+  }
 }
