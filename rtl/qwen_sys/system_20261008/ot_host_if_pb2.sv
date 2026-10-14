@@ -203,6 +203,7 @@ module ot_host_if_pb2 #(
     localparam [2:0] I_IDLE = 0, I_CLR = 1, I_RD = 2, I_WAIT = 3, I_GO = 4, I_RUN = 5, I_PB_WAIT = 6;
     reg [2:0]    i_st;
     reg          inflight;
+    reg [7:0] pb_wait_edges;
     localparam [1:0] B_IDLE = 0, B_RST = 1, B_RUN = 2;
     reg [1:0]    b_st;
     reg [1:0]    b_err;
@@ -395,7 +396,7 @@ module ot_host_if_pb2 #(
             pb_we <= 1'b0; pb_waddr <= 0; pb_wdata <= 0;
             d_st <= D_IDLE; dw <= 0; dsc0 <= 0; dsc1 <= 0; dsc2 <= 0; dsc3 <= 0; ev_ovf <= 1'b0; pr_i <= 0; pr_word <= 0; err_st <= 0;
             ev_w <= 0; ev_r <= 0; ev_n <= 0;
-            i_st <= I_IDLE; inflight <= 1'b0; rr <= 0; own_v <= 1'b0; own <= 0;
+            pb_wait_edges <= 0; i_st <= I_IDLE; inflight <= 1'b0; rr <= 0; own_v <= 1'b0; own <= 0;
             eng_start <= 1'b0; eng_token <= 0; eng_pos <= 0; eng_slot <= 0; kv_base <= 0; eng_clr_req <= 1'b0;
             b_st <= B_IDLE; b_err <= 0; b_cnt <= 0;
             arr_rst_n <= 1'b0; cfg_users <= 0; cfg_prompt_len <= 0; cfg_gen_len <= 0;
@@ -580,9 +581,11 @@ module ot_host_if_pb2 #(
                                 i_st <= I_RD;
                         end
                     I_CLR: if (eng_clr_ack) begin eng_clr_req <= 1'b0; i_st <= I_RD; end
-                    I_RD: i_st <= (PB_READ_PIPE && sl_pos[eng_slot] < sl_plen[eng_slot])
-                                      ? I_PB_WAIT : I_WAIT;
-                    I_PB_WAIT: i_st <= I_WAIT; // complete row/lane/valid capture before ECC
+                    I_RD: begin
+                        pb_wait_edges <= PB_READ_PIPE;
+                        i_st <= (PB_READ_PIPE && sl_pos[eng_slot] < sl_plen[eng_slot]) ? I_PB_WAIT : I_WAIT;
+                    end
+                    I_PB_WAIT: if(pb_wait_edges<=1) i_st<=I_WAIT; else pb_wait_edges<=pb_wait_edges-1'b1; // complete row/lane/valid capture before ECC
                     I_WAIT: begin
                         eng_pos <= sl_pos[eng_slot];
                         eng_token <= (sl_pos[eng_slot] < sl_plen[eng_slot]) ? pb_q : sl_tok[eng_slot];

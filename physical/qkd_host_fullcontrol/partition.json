@@ -5,7 +5,7 @@
   "leaves": [
     {
       "instance": "u_host",
-      "master": "ot_host_if_FMT1_NSLOT1_NW18_PLB13_CTX8192",
+      "master": "qkd_host_if_pins",
       "clock": "ck_host",
       "parameters": {
         "FMT": 1,
@@ -15,19 +15,20 @@
         "NW": 18,
         "PLB": 13,
         "CTX_MAX": 8192,
-        "PB_VALID_ONLY": 1
+        "PB_VALID_ONLY": 1,
+        "PB_READ_PIPE": 2
       },
       "slot_request": "die-lead assigned outline/pin file required; AXI host face meets packet plane; prompt face meets external prompt SRAM; req/res face meets u_pkg"
     },
     {
       "instance": "u_csr",
-      "master": "qkd_host_sys_csr",
+      "master": "qkd_host_csr_pins",
       "clock": "ck_csr",
       "slot_request": "new leaf requires die-assigned outline/pin file; BAR face meets packet plane, host split face meets u_host, raw diagnostic face meets CTRL plane"
     },
     {
       "instance": "u_rst",
-      "master": "ot_qwen_sys_rst_seq_ND8_NL6",
+      "master": "qkd_host_rst_pins",
       "clock": "ck_rst",
       "parameters": {
         "ND": 8,
@@ -37,12 +38,12 @@
     },
     {
       "instance": "u_pkg",
-      "master": "qkd_host_ctl",
+      "master": "qkd_host_ctl_pins",
       "clock": "ck_ctl",
       "parameters": {
         "ND": 8
       },
-      "slot_request": "reuse existing closed/accepted controller only after real view verification; req61/res120 tk744/hc182 interface"
+      "slot_request": "new ready input station RTL requires existing controller view ABI review and rtl_change gate; die-assigned pin file/outline required"
     },
     {
       "instance": "external_prompt",
@@ -74,10 +75,10 @@
     "1098": "rawkst bits79:64"
   },
   "measured_clock_census": {
-    "ck_host": 3334,
-    "ck_csr": 170,
-    "ck_rst": 80,
-    "ck_ctl": 1287
+    "ck_host": 4157,
+    "ck_csr": 1175,
+    "ck_rst": 103,
+    "ck_ctl": 1292
   },
   "census_evidence": "evidence/census.json"
 }
