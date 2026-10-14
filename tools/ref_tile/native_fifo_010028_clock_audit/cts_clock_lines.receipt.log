@@ -1,0 +1,13 @@
+28:clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size 16 -sink_clustering_max_diameter 30
+29:OT_SPINE iter 0 (coarse) leaves 624 sinks 4892 cells 1249 leaf arrival 437.3..607.6 ps (spread 170.3) pad 60.0 / 14.0 ps
+30:OT_SPINE iter 1 (coarse) leaves 624 sinks 4892 cells 2340 leaf arrival 535.9..608.8 ps (spread 72.8) pad 65.5 / 14.0 ps
+31:OT_SPINE iter 2 (fine) leaves 624 sinks 4892 cells 2808 leaf arrival 570.1..608.8 ps (spread 38.7) pad 65.5 / 3.0 ps
+32:OT_SPINE iter 3 (fine) leaves 624 sinks 4892 cells 4858 leaf arrival 591.5..707.2 ps (spread 115.8) pad 65.5 / 16.4 ps
+33:OT_SPINE iter 4 (fine) leaves 624 sinks 4892 cells 6740 leaf arrival 662.4..707.2 ps (spread 44.9) pad 65.5 / 16.3 ps
+34:OT_SPINE iter 5 (fine) leaves 624 sinks 4892 cells 6917 leaf arrival 678.5..707.2 ps (spread 28.7) pad 65.5 / 16.6 ps
+35:OT_SPINE legal: check_placement clean after 6917 spine cells
+36:OT_SPINE done port ck buffers 6917
+38:QDM reference pin u_port.u_cq.g_ipr.pd[441]$_DFF_P_/CLK clock arrival max 688.507080 min 522.936707 skew 90 hold 50
+41:QFD_COLL_NATIVE ckd reference u_port.u_sq.g_ipr.pd[245]$_DFF_P_/CLK of 547 pin flops: clock arrival max 8638.619141 min 6682.574707 skew 90 hold 50
+42:Took 20 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size 16 -sink_clustering_max_diameter 30
+1903:QFD_COLL_NATIVE ckd reference u_port.u_sq.g_ipr.pd[279]$_DFF_P_/CLK of 547 pin flops: clock arrival max 9127.445312 min 7054.462891 skew 90 hold 50

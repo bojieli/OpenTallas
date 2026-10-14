@@ -1,0 +1,79 @@
+{
+  "scope": "Read-only actual TT placement-RC replay of frozen nativeFIFO6f6c9d816; no source/helper/constraint edits, no reroute, no FF/SS/MM claim.",
+  "source_commit": "6f6c9d816508535a8ad7756a072b9a266969c32b",
+  "source_archive_sha256": "6a0fcd5fcf43ced74cadca46ef254f241c7696e6e79cca6ff6a014675f4891c5",
+  "root": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_xfifo_native-20261014-010028",
+  "host": "ot-epyc1tb",
+  "canonical_script_sha256": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
+  "canonical_matches_current_local_helper": true,
+  "clock_periods_ps": {
+    "core_clk": 833.333,
+    "ckd": 833.333
+  },
+  "units": {
+    "time": "1ps",
+    "capacitance": "1fF",
+    "resistance": "1kohm"
+  },
+  "CKD_source": {
+    "arrival_ps": 0,
+    "slew_ps": 150,
+    "DATA_tag_present": false
+  },
+  "CKD_actual_net": {
+    "name": "ckd",
+    "source_BTerms": 1,
+    "direct_DFF_sinks": 3361,
+    "direct_macro_sinks": 3,
+    "direct_buffer_inverter_sinks": 0,
+    "total_direct_sinks": 3364
+  },
+  "root_cause": "Recipe builds primary ck spine only, OT_SPINE_CTS_REST=0 suppresses CTS of remaining roots. CKD declared before CTS but remains unbuffered high-fanout net; source slew/data cleanup and units/period are correct.",
+  "reference_sample": {
+    "core_pin": "u_port.u_cq.g_ipr.pd[0]$_DFF_P_/CLK",
+    "core_CLK_max_ps": 691.599243,
+    "core_slew_max_ps": 16.383017,
+    "CKD_pin": "u_port.u_sq.g_ipr.pd[0]$_DFF_P_/CLK",
+    "CKD_CLK_max_ps": 9846.182617,
+    "CKD_slew_max_ps": 31361.658203
+  },
+  "worst_setup": {
+    "slack_ps": -9727.473633,
+    "launch": "u_port.u_sq.g_ib_mem.u_ib",
+    "capture": "u_port.u_sq.g_afw.u_af.wq_data[534]$_DFF_P_/D",
+    "launch_clock_ps": 9288.130859,
+    "launch_clock_slew_ps": 29592.677734,
+    "macro_CQ_ps": 6244.647461,
+    "data_arrival_ps": 15573.533203,
+    "capture_clock_network_delay_ps": 4656.12793,
+    "required_ps": 5846.05957
+  },
+  "worst_hold": {
+    "slack_ps": -8822.008789,
+    "launch": "u_port.u_sq.g_afw.u_af.wq_data[534]$_DFF_P_",
+    "capture": "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m",
+    "capture_clock_ps": 11383.745117,
+    "capture_clock_slew_ps": 36235.617188,
+    "data_arrival_ps": 6201.543457,
+    "required_ps": 15023.551758
+  },
+  "requested_next_step": "Owner/producer should recover a measured two-root clock topology while preserving150 source policy and all timing constraints. No zero-slew repair, latency waiver, alias, or same-commit route submission. Shared-helper freeze honored.",
+  "artifact_sha256": {
+    "run.receipt.log": "e280982433b7d63c361ab548b45f0899a3ee5155018d59f818919122771b6cb6",
+    "actual_db_sdc_sha256.receipt.txt": "fb83c39deaa49ba21f369d71f8e71164ee3cf8e55b20531207eb9c98e708fedd",
+    "executed_audit.sdc": "473c13778adbee2ee1479e521cf9796ccbc9a94d721c93a85da210d6f5d8145f",
+    "audit.receipt.log": "2de447b2ab554db07ffb7a6c9c4db5cac9a18a49c15473dbcf1c5748a2a2e7ea",
+    "executed_signoff.sdc": "4353a5d9ab34300e23f39b11fc5289f2318d3336a234dfe1ced86131e69cdac8",
+    "source_binding.json.gz": "7ca76d8a0fabfb9539c15dcb1f429aab8c436ee137cefc39d5eab785b8252059",
+    "pc.log": "8fd59f4c244a87c135828e5268f0e3e627223cdb65ea555c2cfaf195a616a16d",
+    "executed_clock.sdc": "7b81a6f54f50fe342c90a415f81826072fc6e905acd162b222ad5c5c30566da9",
+    "executed_path_classes.tcl": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
+    "executed_kit.env": "918d571927c0d22ad5956ec5a650809def2d7e3d57781809bfc71e947d506072",
+    "cts_clock_lines.receipt.log": "75abca56eb820cd139b52dfd64a9ecf7bf1c8a60b36e3252e47a41bd6a6e7d35",
+    "executed_clock_spine.tcl": "83dd567c1e182267e7d57293895c39864e3317fc837b70f38fa90fbd569b5734",
+    "ck.json": "b5361eedab504d63f29f0cd8f4578a467f2b4b757e9dfbe304bbbc8108bc318d",
+    "audit.tcl": "fae97eacb8307684dbb183165ccfd5aa48c6dd80bc2aab96449bdb61936ef681",
+    "executed_extra.sdc": "d13e15f4af8de6c99a2ac30cb47a65b0a41ee4e9a68150ecf35839083c739b17",
+    "run.sh": "c70a7f3e02f7467aa667b23117b563dcf1dfc2fa635384278550352a9e8644f3"
+  }
+}
