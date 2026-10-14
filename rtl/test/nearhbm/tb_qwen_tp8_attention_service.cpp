@@ -15,17 +15,23 @@ struct Return{int t,slot;uint64_t at;};
 int main(int argc,char**argv){
  if(argc<2)return 2;std::string d=argv[1],mode=argc>2?argv[2]:"steady";
  std::vector<uint32_t>q,gold;std::vector<std::vector<uint8_t>>kv;
- for(auto spec:{std::make_pair("q.hex",&q),std::make_pair("gold.hex",&gold)}){std::ifstream f(d+"/"+spec.first);std::string x;while(f>>x)spec.second->push_back(strtoul(x.c_str(),0,16));}
- std::ifstream f(d+"/kv.hex");std::string x;while(f>>x){if(x.size()!=256)return 2;std::vector<uint8_t>r(128);for(int j=0;j<128;j++)r[j]=strtoul(x.substr(2*(127-j),2).c_str(),0,16);kv.push_back(r);}
- int ctx=kv.size()/2;if(q.size()!=512||gold.size()!=512||kv.size()!=size_t(2*ctx)||ctx<1||ctx>8192)return 2;
+ auto load=[&](const std::string& path){
+  q.clear();gold.clear();kv.clear();
+  for(auto spec:{std::make_pair("q.hex",&q),std::make_pair("gold.hex",&gold)}){std::ifstream f(path+"/"+spec.first);std::string x;while(f>>x)spec.second->push_back(strtoul(x.c_str(),0,16));}
+  std::ifstream f(path+"/kv.hex");std::string x;while(f>>x){if(x.size()!=256)return false;std::vector<uint8_t>r(128);for(int j=0;j<128;j++)r[j]=strtoul(x.substr(2*(127-j),2).c_str(),0,16);kv.push_back(r);}
+  return q.size()==512&&gold.size()==512&&kv.size()%2==0&&kv.size()>=2&&kv.size()<=16384;
+ };
+ if(!load(d))return 2;int ctx=kv.size()/2;
  Vot_qwen_tp8_attention_service t;uint64_t cy=0;auto tick=[&](){t.clk=0;t.eval();t.clk=1;t.eval();cy++;};
  t.rst_n=0;t.request_valid=0;t.q_valid=0;t.k_rsp_valid=0;t.v_rsp_valid=0;t.k_req_ready=0;t.v_req_ready=0;t.result_ready=0;t.fused_program_capability=1;
  for(int i=0;i<8;i++)tick();t.rst_n=1;for(int i=0;i<80;i++)tick();
  bool stalls=mode=="stalls";bool mutant=mode!="steady"&&mode!="stalls"&&mode!="restart";
  unsigned outputs=0,errors=0,epochs=0;uint64_t kcount=0,vcount=0,first=cy;bool changed=false;
  for(int round=0;round<(mode=="restart"?2:1);round++){
+  if(round&&argc>3){if(!load(argv[3]))return 2;ctx=kv.size()/2;}
   int epoch=17+round,layer=6+round;
   t.request_epoch=epoch;t.request_layer=layer;t.request_position=ctx-1-(mode=="context");t.fused_program_capability=mode!="capability";t.request_valid=1;tick();t.request_valid=0;
+  const uint64_t frame_k=kcount,frame_v=vcount;
   int qb=0,ob=0;std::deque<Return>kq[32],vq[4];
   for(unsigned step=0;step<250000;step++){
    t.clk=0;t.eval();t.q_valid=qb<32&&(!stalls||cy%7!=0);t.q_beat=qb;
@@ -59,6 +65,7 @@ int main(int argc,char**argv){
    if(t.fault)break;
    if(t.result_done){epochs++;break;}
   }
+  if(!mutant&&(kcount-frame_k!=unsigned(ctx)||vcount-frame_v!=unsigned(ctx)))errors++;
   if(t.fault||ob!=32)break;for(int j=0;j<20;j++)tick();
  }
  bool observed=t.fault||errors>0;bool exact=!t.fault&&errors==0&&outputs==512*(mode=="restart"?2:1)&&epochs==(mode=="restart"?2:1);
