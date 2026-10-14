@@ -1755,6 +1755,9 @@ def _emb_hbm(v, m):
 
 # ------------------------------------------------------------------------------------------------ r21 die relays
 RELAY_SKIP = ('clock_trunk', 'reset', 'tap', 'kv_land', 'cdc_core', 'hbm_cdc', 'phy_dfi')
+# the standard corridor relay frame (52.68 x 30.24, faces at one track: 520 x 0.048 + 4 = 29 um of a 52.68-um face)
+# holds up to 520 b (split compute C7: 514-b tree words {fault, valid, 512}, 516-b DVM corridor word)
+RELAY_STD_BITS = 520
 RELAY_V_H = 30.24      # relay frame height with N/S faces only (vertical run): 512 flops + clock leaf, M1-M3
 RELAY_MAX_UM = 350.0   # owner fast rule 2026-10-06: every die wire > ~350 um gets relay registers ...
 RELAY_PITCH_UM = 300.0  # ... at a conservative ~300 um pitch
@@ -2593,7 +2596,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         """off-corridor relay frame: faces at one track; <= 512 b fits the 52.68 x 30.24 corridor relay, wider words
         take the face span (a link-spine relay is vertical flow only, N/S faces)."""
         span1 = bits * 0.048 + 4.0
-        if bits <= 512:
+        if bits <= RELAY_STD_BITS:
             return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
         w = max(v.up(span1, v.GX), v.CORR) - v.SHAVE
         if cl == 'link_spine' and span1 > BWP_H:
@@ -2835,7 +2838,9 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         d = abs(P0[0] - P1[0]) + abs(P0[1] - P1[1])
         terminal = getattr(v, 'TERMINAL_TIGHT', {})
         direct_limit = min(terminal.get(tuple(eps[0]), float('inf')), terminal.get(tuple(eps[-1]), float('inf')))
-        if d <= min(RELAY_REACH_OK if skip_cl else RMAX, direct_limit):
+        if _dbg and bid in _dbg:
+            print('DBG0', bid, cl, bits, eps, P0, P1, round(d, 1), GATE, P2P_REACH, skip_cl, direct_limit, flush=True)
+        if d <= min(RELAY_REACH_OK if (skip_cl or (GATE and P2P_REACH)) else RMAX, direct_limit):   # C7: pin to pin
             keep[idx] = [(bid, cl, bits, eps)]
             continue
         cur_bits[0] = bits
@@ -2843,16 +2848,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         span1 = bits * 0.048 + 4.0
         span2 = bits * 0.096 + 4.0
 
+        wide = span1 > v.CORR - v.SHAVE     # split compute C7: a word whose one-track face exceeds the corridor
+        #                                     (DVM head word 1,567 b) takes the off-corridor frame, placed off-corridor
+
         def frame(c, bits=bits, span1=span1, span2=span2):
-            if c[3] is not None:       # corridor lane: full corridor width, faces at 1 track up to 512 b
-                if bits <= 512:
+            if c[3] is not None and not wide:       # corridor lane: full corridor width, faces at 1 track up to 520 b
+                if bits <= RELAY_STD_BITS:
                     return v.CORR - v.SHAVE, RELAY_V_H - v.SHAVE
                 return v.CORR - v.SHAVE, max(v.up(min(span2, max(span1, BWP_H)), v.GY), BWP_H) - v.SHAVE
             return relay_frame(bits, cl)
 
         def _try(c, tol):
             w, h = frame(c)
-            sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, c[3], tol)
+            sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, None if wide else c[3], tol)
             return None if sp is None else (sp[0], sp[1], w, h)
         def _chain(path):
             cands, L = candidates(path)
@@ -4022,6 +4030,13 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             if N[p]['sinks']:
                 N[p]['outs'] = [[('sink', s) for s in N[p]['sinks']]]
                 ht[p] = 0
+                continue
+            if not N[p]['kids']:
+                # split compute C7: a trunk node left with neither sinks nor kids (its leaves were bridged to a
+                # neighbour cell) drives nothing: record it, no repeater level
+                N[p]['outs'] = []
+                ht[p] = 0
+                errors.append(dict(net=bid, kind='empty_node', at=[round(q, 1) for q in c_(p)]))
                 continue
             groups = []
             for k in sorted(N[p]['kids'], key=lambda k: -ht[k]):

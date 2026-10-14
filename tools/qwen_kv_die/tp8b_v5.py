@@ -1089,6 +1089,61 @@ def _wrap(v, m, G, peers):
                 if f == 'N':
                     q.ports['rst_n'] = ('pins', 1, 'N', 'M5', [sl[mid + 1]], 1)
                     q.order.append('rst_n')
+        # ---- split compute C7: distributed x slice masters (compute_spine._dvm instances; generated pins on the same
+        # 2-track slot grid as the station family, the die assigns them in OUT/pins)
+        if SPLIT_COMPUTE and _os.environ.get('OT_SPLIT_DVM', '1') != '0':
+            sys.path.insert(0, str(HERE.parent / 'qwen_split'))
+            import compute_spine as _CS
+            byi_ = {}
+            for i in model['insts']:
+                byi_.setdefault(i.master, i)
+
+            def mk_ports(q, spec):
+                for f, items in spec.items():
+                    L = q.w if f in 'NS' else q.h
+                    n = sum(b_ + 1 for _, b_ in items)
+                    sl = V4.band(L, n + 2)
+                    k_ = 1
+                    for nm, b_ in items:
+                        q.ports[nm + '_d' if b_ > 1 else nm] = ('pins', b_, f, lay(f), sl[k_:k_ + b_], 1)
+                        q.order.append(nm + '_d' if b_ > 1 else nm)
+                        k_ += b_
+                        if b_ > 1:
+                            q.ports[nm + '_r'] = ('pins', 1, f, lay(f), [sl[k_]], 1)
+                            q.order.append(nm + '_r')
+                        k_ += 1
+            for mn, flow in (('qfd_xcst_s', 'S'), ('qfd_xcst_n', 'N')):
+                it = byi_.get(mn)
+                if it is None:
+                    continue
+                q = Master(mn, it.w, it.h, 3, 'DVM corridor station (rtl/qwen_sys/dvm_20261014 ot_qfd_xslice_slots.sv)')
+                mk_ports(q, {'N': [('a', _CS.XCOR_D)], 'S': [('b', _CS.XCOR_D)], 'W': [('tap', DW)]})
+                q.ports['rst_n'] = ('pins', 1, 'E', 'M4', [V4.snap(q.h / 2)], 1)
+                q.order.append('rst_n')
+                M[mn] = q
+            for mn in ('qfd_xcol_w', 'qfd_xcol_e'):
+                it = byi_.get(mn)
+                if it is None:
+                    continue
+                q = Master(mn, it.w, it.h, 7, 'DVM column cluster: ot_qfd_xhead + 8 x qfd_xs_leaf (two write chains), M7 cap')
+                mk_ports(q, {'N': [('n', _CS.XCOR_D)], 'S': [('s', _CS.XCOR_D)], 'W': [('w', _CS.XHEAD_D)],
+                             'E': [('e', _CS.XHEAD_D)]})
+                q.ports['rst_n'] = ('pins', 1, 'N', 'M5', [V4.snap(q.w - 2.0)], 1)
+                q.ports['fault'] = ('pins', 1, 'S', 'M5', [V4.snap(q.w - 2.0)], 1)
+                q.order += ['rst_n', 'fault']
+                M[mn] = q
+            it = byi_.get('qfd_xs_tap')
+            if it is not None:
+                q = Master('qfd_xs_tap', it.w, it.h, 7, 'DVM x tap at the VM write face (ot_qfd_xs_tap + go/ib, two head words)')
+                mk_ports(q, {'W': [('sw', _CS.TAP_SW)], 'N': [('hw', _CS.XHEAD_D)], 'E': [('he', _CS.XHEAD_D)],
+                             'S': [('aw', _CS.TAP_AW), ('gi', _CS.TAP_GI), ('xpf', _CS.TAP_PF)]})
+                for nm in ('sw', 'aw', 'gi', 'xpf'):
+                    q.ports[nm] = q.ports.pop(nm + '_d'); q.ports.pop(nm + '_r')
+                    q.order[:] = [x for x in q.order if x not in (nm + '_d', nm + '_r')] + [nm]
+                q.ports['fault'] = ('pins', 1, 'E', 'M4', [V4.snap(2.0)], 1)
+                q.ports['rst_n'] = ('pins', 1, 'E', 'M4', [V4.snap(4.0)], 1)
+                q.order += ['fault', 'rst_n']
+                M['qfd_xs_tap'] = q
         t = M.get('qfd_tile_nk')
         if t is not None:
             sp = t.ports['tap']

@@ -22,6 +22,8 @@ import json
 import os
 
 CH = 86.4                       # relay channel between spine slots (two 30-um relay rows + spacing)
+CHE = 108.0                     # C7: spine EDGE channels (beside the tile fields): the E head root's last relay (1,567 b,
+                                # ~80-um frame) must stand within 490 um of xcol_24's W face across tile column 24
 PORT_WH = (1036.8, 2462.4)      # qfd_port_tiles_* slot: 2.553 mm2 >= the measured 2.536 mm2 need (blockers G7)
 RES_WH = (777.6, 518.4)
 LANES_WH = (777.6, 1131.84)
@@ -170,6 +172,10 @@ def _dvm(v, m, put, rec, vm, su, xt):
             n = XHEAD_D if n > 1 else n
             if any(i == 'xs_tap' for i, p in e):
                 roots[b] = e
+        elif b == 'rst_spine':
+            e = list(e) + [('xs_tap', 'rst_n')]
+        elif c == 'clock_trunk' and ('sp_vector_memory', 'ck') in e:
+            e = list(e) + [('xs_tap', 'ck')]
         elif b == 'tt_ib':
             e = [(i, p) if i != 'sp_vector_memory' else ('xs_tap', 'gi') for i, p in e]
         nb.append((b, c, n, e))
@@ -206,6 +212,10 @@ def _place_su_vm(put, cx, su_y):
 
 
 def place(v, m, G):
+    # C7: die timing by construction on the split die too.  The tp8b reach gate (pin-to-pin hop gate, load-aware span
+    # search, registered reset tree) was switched on only inside the merged die's KV surgery (_tp8b_kv), which the
+    # split compute die skips: C1..C6 ran WITHOUT it (C3: no reset tree, rst_field 52 mm unrelayed, no p2p record)
+    v.RELAY_REACH_GATE = True
     by = {i.name: i for i in m['insts']}
     tiles = [i for i in m['insts'] if i.master == 'qfd_tile_nk']
     xs = sorted({round(i.x, 4) for i in tiles})
@@ -233,8 +243,8 @@ def place(v, m, G):
     # 1.485 horizontal cut).  E column (C4, as the merged tp8b): the band's E-half slab port_tiles_<b>_f1 on the spine's E
     # edge at the band centroid, so the 24 E-field block words land without crossing the VM / SU sub-area (v1-a put
     # _f1 in the W sub-area: 24 x 512 b across the spine); only the band's one 512-b pfrag word crosses.
-    xa = x0 + CH
-    xf = x1 - CH - PORT_WH[0]
+    xa = x0 + CHE
+    xf = x1 - CHE - PORT_WH[0]
     dl = (PORT_WH[0] - LANES_WH[0]) / 2
     dr = (PORT_WH[0] - RES_WH[0]) / 2
     bands = getattr(v, 'BAND_BLOCKS', None) or {}
