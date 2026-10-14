@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsfd_capt_x8_dual",
  "verdict": "WARN",
- "generated": "2026-10-14T02:34:39-0700",
- "host": "ot-agidock128",
+ "generated": "2026-10-14T02:46:56-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "1aebeb1c7ca85d5400fa1bd02c1c00b714fdd07f",
+  "start_commit": "9572d83798a136adc784e3fd435e0da52e9948c9",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "bc97fffdcc784353848201ffcbecbd3f14aff38e30bf8ce26c4223292aa1ade1",
-  "manifest_sha256": "d7c402366b6bbc1d59b9c188bae1c6b3165e758604376938013d406f81fce1d8",
+  "archive_sha256": "5294f55b5e4b4d9d17ebdc0ce0fc9bf0665a9f86d358313499e0c5eb3c12f50f",
+  "manifest_sha256": "781da7127231d755606f0ef65e83627266e2892e1cebae6493674b5295f0548f",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -17723,8 +17723,8 @@
    {
     "path": "physical/ref_tile/dsfd_capt_x8_dual/job.json",
     "kind": "file",
-    "sha256": "e3f18d82031d8dcffd677261d4f6c0e303db666470814c43ee33d2fa8c9d3785",
-    "git_blob": "c5a5c923807e34006487f130698ebca163f80f84",
+    "sha256": "f42e556cde2b2025b186221d2bbae6eeb6cbad67fdcb5714efaebbf477085682",
+    "git_blob": "caf772958136a75202a61569becb4065aa171fb1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17835,8 +17835,8 @@
    {
     "path": "physical/ref_tile/dsfd_capt_x8_dual/spec.json",
     "kind": "file",
-    "sha256": "fbf542ecde26c603acd9d63d5219e7da08a18002493ab752d536506da9006c99",
-    "git_blob": "e8c9a272f3e1950c1a185bca052361154a39c20d",
+    "sha256": "505dc01fbf4ad451296bfce683cd0803b4f3139f7e265014e4225513bc895f1f",
+    "git_blob": "e3c474e667f98b18c64434f187353b3feb012bc0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -22979,8 +22979,8 @@
    {
     "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv",
     "kind": "file",
-    "sha256": "f4bf2534734e84a02261fdc80d9a33ccbd4a3ac382aa2751c2717cfbdb94381d",
-    "git_blob": "c10dbc573665e5b5ddebff851c34318427628940",
+    "sha256": "e929075fb5d1bcc2692d08963d84a395f0b90fedf2c1873135472c660728e7c1",
+    "git_blob": "ee3bc7fa28843ee37267e1228c1098aaa32cf376",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -110123,7 +110123,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "3e9030e0233b50fa558d3e2223f0d06ac2c41cf3",
+   "origin_main": "77fd06f23a3ca5c26ca06b121f6c113914b3096c",
    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
    "files": [
     {
@@ -110496,11 +110496,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T02:27:37-0700",
-  "remote_script_sha256": "a72cc1e5268850ce78f6a2d7872635dd1fbb17b655a9a0395c70873d2f1667b6",
+  "captured": "2026-10-14T02:42:09-0700",
+  "remote_script_sha256": "7ac37c3f2dfc657b7f3f8f12887c7334cc83ced257cefdbc112d0d1a6bc7fef7",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261014-022711",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261014-024144",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -110508,11 +110508,11 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 6368,
+  "max_root_sinks": 6424,
   "root": "port:ck[0]",
   "cts": true,
-  "tt_insertion_ps": 207.4,
-  "tt_spread_ps": 14.8,
+  "tt_insertion_ps": 203.9,
+  "tt_spread_ps": 11.3,
   "declared_clock": "cts",
   "limits": {
    "sinks": 15000,
@@ -110526,15 +110526,15 @@
     "tt": {
      "boundary": {
       "n": 483,
-      "mean": 200.0,
-      "min": 194.9,
-      "max": 206.4
+      "mean": 199.8,
+      "min": 196.2,
+      "max": 202.2
      },
      "all": {
-      "n": 6352,
-      "mean": 198.5,
+      "n": 6408,
+      "mean": 198.4,
       "min": 192.6,
-      "max": 207.4
+      "max": 203.9
      },
      "errors": [],
      "macros": null,
@@ -110547,15 +110547,15 @@
     "tt": {
      "boundary": {
       "n": 896,
-      "mean": 198.0,
-      "min": 188.8,
-      "max": 201.3
+      "mean": 195.5,
+      "min": 187.7,
+      "max": 200.6
      },
      "all": {
       "n": 4678,
-      "mean": 194.1,
-      "min": 186.0,
-      "max": 202.4
+      "mean": 192.7,
+      "min": 183.8,
+      "max": 201.0
      },
      "errors": [],
      "macros": null,
@@ -110565,7 +110565,7 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "6,368 sinks on the largest root <= 15,000; measured TT insertion 207.4 ps, leaf spread 14.8 ps"
+  "text": "6,424 sinks on the largest root <= 15,000; measured TT insertion 203.9 ps, leaf spread 11.3 ps"
  },
  "items": [
   {
@@ -110577,13 +110577,13 @@
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 5341 um2 + macros 0 in core 15653: util 34%",
-   "fix": "set \"std_area_um2\": 5341 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 5398 um2 + macros 0 in core 15653: util 34%",
+   "fix": "set \"std_area_um2\": 5398 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 34.2% outside 45%-65% (std 5349 + macro 0 um2 in 15653 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 34.6% outside 45%-65% (std 5411 + macro 0 um2 in 15653 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]

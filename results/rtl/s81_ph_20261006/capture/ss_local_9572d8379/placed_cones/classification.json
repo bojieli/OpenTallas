@@ -1,0 +1,49 @@
+{
+  "source_commit": "9572d8379",
+  "context": "Actual CTS database, placement estimated parasitics; raw source latency 0 for R calibration, then nominal related 833.333/1111.110667 ps with per-corner phi-R compensation. Setup60/hold25 ps unchanged. No timing exceptions added.",
+  "result": "PASS diagnostic all four SS max / FF min domain pairs",
+  "routed": false,
+  "native_qualified": false,
+  "paths": {
+    "ss_core_clk_core_clk": {
+      "slack_ps": 32.121471,
+      "start": "u_half.g_r[3].g_local_row.u_row/rs_n$_DFF_PN0_/QN",
+      "end": "u_half.g_r[3].g_local_row.u_row/g_local_store.g_slice[0].u_store/h[3][6]$_DFFE_PP_/D"
+    },
+    "ss_ser_clk_ser_clk": {
+      "slack_ps": 344.376862,
+      "start": "u_half.rsv_h[1]$_DFF_PN0_/QN",
+      "end": "u_half.t_st[44]$_DFFE_PN0P_/D"
+    },
+    "ss_core_clk_ser_clk": {
+      "slack_ps": 43.165138,
+      "start": "u_half.g_r[1].g_local_row.u_row/u_x.w_st[1]$_SDFFE_PN0P_/QN",
+      "end": "u_half.g_r[1].g_local_row.u_row/u_x.g_local_wstate.w_st_r_n[1]$_DFF_P_/D"
+    },
+    "ss_ser_clk_core_clk": {
+      "slack_ps": 17.430334,
+      "start": "u_half.u_s.r_st[0]$_SDFFE_PN0P_/QN",
+      "end": "u_half.u_s.r_st_w[0]$_DFF_P_/D"
+    },
+    "ff_core_clk_core_clk": {
+      "slack_ps": 10.930593,
+      "start": "u_half.rst_h[0]$_DFF_PN0_/QN",
+      "end": "u_half.t_ho$_DFF_PN0_/RESETN"
+    },
+    "ff_ser_clk_ser_clk": {
+      "slack_ps": 11.018339,
+      "start": "u_half.g_r[6].g_local_row.u_row/u_x.g_local_shadow.sh_n[2][16]$_DFF_P_/QN",
+      "end": "u_half.g_r[6].g_local_row.u_row/od[16]$_DFF_P_/D"
+    },
+    "ff_core_clk_ser_clk": {
+      "slack_ps": 6.230793,
+      "start": "u_half.g_r[4].g_local_row.u_row/u_x.mem[3][56]$_DFFE_PP_/QN",
+      "end": "u_half.g_r[4].g_local_row.u_row/u_x.g_local_shadow.sh_n[3][56]$_DFF_P_/D"
+    },
+    "ff_ser_clk_core_clk": {
+      "slack_ps": 14.355763,
+      "start": "u_half.g_r[6].g_local_row.u_row/u_x.rp[0]$_DFF_P_/QN",
+      "end": "u_half.g_r[6].g_local_row.u_row/u_x.rp_w[0]$_DFF_P_/D"
+    }
+  }
+}
