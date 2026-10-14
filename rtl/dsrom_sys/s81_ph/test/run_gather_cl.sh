@@ -68,7 +68,7 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
       base) for c in $REAL; do run base $c 0 1 PASS & done; run base stress 0 1 PASS & run base ovf 1 0 PASS &
             run base refuse 0 1 REFUSED & run base orphan 0 0 PASS & ;;
       ovf)  run ovf ovf 1 0 FAIL & ;;
-      early) EARLY_CMD=1 run early $FIRST 0 1 FAIL & ;;   # the early-start mutant is visible only with a command at startup
+      early) run early stress 0 1 FAIL & ;;
       rstreg) run rstreg orphan 0 0 FAIL & ;;   # entry valids out of the reset tree: stale after a reset with open partials
       lane|nofwd|heap|decision|own_co) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
       *)    run $m $FIRST 0 0 FAIL & ;;
