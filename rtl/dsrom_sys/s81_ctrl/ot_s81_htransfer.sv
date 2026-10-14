@@ -74,7 +74,7 @@ module ot_s81_htransfer #(
      if(store_slot) c1=0;else c0=0;
      // A new store may overlap queued reads of the OTHER job slot. Only
      // reusing the slot whose old reads remain queued violates ownership.
-     if(queued_h[store_slot]!=0 || (push_ok && push_h && push_slot==store_slot))begin
+     if(MUT!=2 && (queued_h[store_slot]!=0 || (push_ok && push_h && push_slot==store_slot)))begin
        fault<=1;fault_code<=4;
      end
      launched[store_slot]<=0;
