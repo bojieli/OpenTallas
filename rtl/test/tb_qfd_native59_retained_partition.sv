@@ -32,8 +32,8 @@ module tb_qfd_native59_retained_partition;
                                                   //   mostly AR with 1-8 words, so the sequencer runs the collective and writes vm_wdata                  // el1011-q-seq: minimum vm_wdata writes for a PASS (the AR receive path)
     reg [23:0] xacc = 0;
     reg  [1-1:0] h_start = 0;
-    reg  [NW-1:0] tp_token = 0;
-    reg  [NW-1:0] tp_pos = 0;
+    reg  [NW-1:0] tp_token = 0; tp_token=tp_token%151936;
+    reg  [NW-1:0] tp_pos = 0; tp_pos=tp_pos%8192;
     reg  [1-1:0] kv_write_drained = 0;
     reg  [512-1:0] vm_rq = 0;
     reg  [1-1:0] c_ready = 0;
@@ -318,8 +318,8 @@ module tb_qfd_native59_retained_partition;
         .su_rows_o(su_rows_o_1));
     task automatic rand_inputs;
         begin
-            tp_token = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed)};
-            tp_pos = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed)};
+            tp_token = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed)}; tp_token=tp_token%151936;
+            tp_pos = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed)}; tp_pos=tp_pos%8192;
             kv_write_drained = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed)};
             vm_rq = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed)};
             c_ready = {$random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed), $random(seed)};
