@@ -27,7 +27,8 @@ int main(int argc,char**argv){
      if(m.host_cr)++host_credit;
      if(m.host_ack){
       auto ix=acks+(ack_mut?1:0);
-      if(ix>=phy.written_keys.size()||phy.written_keys[ix]!=key(cmd[acks].row,cmd[acks].bank,cmd[acks].col))throw std::runtime_error("ACK physical write identity mismatch");++acks;
+      if(ix>=phy.written_keys.size()||phy.written_keys[ix]!=key(cmd[acks].row,cmd[acks].bank,cmd[acks].col))throw std::runtime_error("ACK physical write identity mismatch");
+      if(hbedges<phy.written_at[ix]+12)throw std::runtime_error("ACK before actual WDONE17 deadline");++acks;
      }
      if(bits(m.land_er.data(),259,1))++land_credit;
      if(bits(m.land_er.data(),0,1)){

@@ -27,7 +27,7 @@ class Backing {
  public:
  uint64_t h_edges=0,acts=0,pres=0,writes=0,reads=0,returns=0;
  std::map<uint64_t,Codeword> memory;
- std::vector<uint64_t> written_keys;
+ std::vector<uint64_t> written_keys, written_at;
  unsigned read_latency=14; // authoritative tb_qkd_ctrl_pc_host RL=14
  bool corrupt_read=false;
  // Call BEFORE HBM rising eval, sampling settled output pins. After evaluating
@@ -37,7 +37,7 @@ class Backing {
   if(!model.hrst){open.fill(false);wr.clear();rd.clear();return pi;}
   while(!wr.empty()&&wr.front().due==h_edges){
    Codeword w{};for(unsigned i=0;i<9;i++)w[i]=bits(model.po.data(),40+32*i,32);
-   memory[wr.front().address]=w;written_keys.push_back(wr.front().address);wr.pop_front();++writes;
+   memory[wr.front().address]=w;written_keys.push_back(wr.front().address);written_at.push_back(h_edges);wr.pop_front();++writes;
   }
   if(!rd.empty()&&rd.front().due==h_edges){
    auto w=rd.front().word;if(corrupt_read)w[0]^=0x28; // two real codeword data-bit errors

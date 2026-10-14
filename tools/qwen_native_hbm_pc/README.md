@@ -55,3 +55,32 @@ for every instance. The controller owns JEDEC scheduling and completion.
 Build completion only proves a usable library. Full-layer payload exactness,
 proper row-quarter ownership, all-return fences, fault mutants, composed timing,
 and actual throughput still require the parent multi-model integration.
+
+## Reusable actual PHY backing
+
+`actual_phy.hpp` supplies `qwen_actual_phy::Backing`. Its memory is indexed by
+`key(row, bank, col)` and stores nine 32-bit words copied from actual PHY write
+pins. No expected payload or encoder is present. `sample_hbm(model)` must run
+before the HBM rising `eval()`. Evaluate that edge, assign its returned ten-word
+packed `pi`, and evaluate again to reproduce the reference test's nonblocking
+PHY-return update. This matters: driving `pi` before that rising eval would
+advance read capture by one HBM edge. The adapter retains the row sampled at
+column issue, even if ACT/PRE later changes that bank before write capture.
+
+Read latency defaults to **14 HBM edges**, as in the authoritative controller
+bench `rtl/test/qwen_host/tb_qkd_ctrl_pc_host.sv`; write-data sampling is exactly
+five HBM edges after the WR column. Neither callback fabricates ACKs. Parent
+samples actual `host_ack` on core edges and binds its ordered ownership queue.
+`written_keys`, `written_at`, `writes`, `reads`, `returns`, `acts`, and `pres`
+provide counters for independent identity/visibility checks. Each PC instance
+requires its own backing object. Unwritten reads and columns on closed banks
+raise observable integration errors.
+
+`run_functional_gate.sh LIBRARY_ROOT OUTPUT` links the actual library and tests
+12 distinct 32-byte quarters over three rows, changing bank/column ownership,
+then reads through real ECC and CDC. The core has an 833334-fs period with
+137000-fs initial phase; HBM has a 1024000-fs period. It starts at PC31 after
+160 HBM edges and requires actual WDONE17-or-later host ACKs, independent of
+early credits. Actual two-bit read-codeword corruption and a wrong ACK ownership
+consumer must cause observed payload and identity assertion failures. This is
+one-PC functional proof, not full-layer qualification or timing signoff.
