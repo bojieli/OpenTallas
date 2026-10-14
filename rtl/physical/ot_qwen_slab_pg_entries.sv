@@ -1,5 +1,5 @@
 // Slab parent partition: existing parent registers in one core leaf; eight child clocks enter separately.
-// Functional cycles unchanged. Original slab module remains the independent reference.
+// Scale and multiplier return faces gain one capture clock each (+2 result clocks). Original slab module remains the independent reference.
 // Supports production W16/COLS4; clock entries must receive die phase phi minus each child insertion.
 module ot_qwen_slab_pg_core #(
     parameter integer W = 16,
@@ -216,9 +216,9 @@ module ot_qwen_slab_pg_core #(
     end
 
     // ---- tag line: cycle 3 -> multiplier time (cycle LEAD + 1) -> result time (+ MUL_LAT) -----------------
-    localparam integer KD = LEAD - 2;
+    localparam integer KD = LEAD - 2 + 1; // one clock at the scale-return capture face
     wire [KR-1:0] m_tag, r_tag;
-    localparam integer XL = MUL_LAT + IN_STAGE;   // multiplier input -> result
+    localparam integer XL = MUL_LAT + IN_STAGE + 1; // one clock at the multiplier-return capture face   // multiplier input -> result
     reg  [KD+XL:1] vline;
     always @(posedge clk) vline <= rs ? {vline[KD+XL-1:1], k_v} : {(KD+XL){1'b0}};
     // KD - 1 shared stages, then the last stage as per-lane copies (S3, timing only): each multiplier's valid and
@@ -237,12 +237,14 @@ module ot_qwen_slab_pg_core #(
     // HIER (qwen-tp8/slab3 2026-10-12): each macro column (R2 copy, 4 x R3 decode + ROM + C4 capture, the M5 merge)
     // is ONE hardened sub-tile ot_qwen_slab_pg_col (own pin-flop row, own local clock root), replicated COLS times;
     // its output m5 is registered at its face.  The bank index BK = c*BPC + b is now the column id on cid pins (tied).
+    reg [COLS*256-1:0] col_capture;
+    always @(posedge clk) col_capture <= col_m5;
     wire [255:0] colq [0:COLS-1];
     genvar c, b, si;
     assign core_gre1 = gre1;
     assign core_addr1 = addr1;
     generate for (c=0; c<COLS; c=c+1) begin : g_col_return
-        assign colq[c] = col_m5[256*c +: 256];
+        assign colq[c] = col_capture[256*c +: 256];
     end endgenerate
     wire [255:0] cacc [0:COLS];
     assign cacc[0] = 256'd0;
@@ -284,11 +286,21 @@ module ot_qwen_slab_pg_core #(
     assign core_rs0 = rs0;
     assign lane_v = l_vv;
     assign lane_ws = l_wsv;
-    assign lane_a = res_q;
+    reg [W*32-1:0] res_held;
+    always @(posedge clk) res_held <= res_q;
+    assign lane_a = res_held;
     assign lane_s = m6;
-    assign scaled = lane_y;
-    assign vov = lane_vo;
-    assign errv = lane_err;
+    reg [W*32-1:0] lane_y_capture;
+    reg [W-1:0] lane_vo_capture;
+    reg [2*W-1:0] lane_err_capture;
+    always @(posedge clk) begin
+        lane_y_capture <= lane_y;
+        lane_vo_capture <= lane_vo;
+        lane_err_capture <= lane_err;
+    end
+    assign scaled = lane_y_capture;
+    assign vov = lane_vo_capture;
+    assign errv = lane_err_capture;
     reg fault_q;
     always @(posedge clk) fault_q <= rs && (|mfault);
     assign fault = fault_q;

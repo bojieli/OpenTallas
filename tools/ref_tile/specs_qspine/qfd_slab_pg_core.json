@@ -132,7 +132,7 @@
   "views_to": "physical/ref_tile/qfd_slab_pg_core/views",
   "record_to": "results/rtl/ref_tile/qfd_slab_pg_core"
  },
- "structural_change": "Original slab parent gate6761ownflops sharedclockspine insertion1771.3/spread510.7 fails dieclock requirement. Existing parent request/tag/scale merge/argmax/output registers extracted unchanged into hardened core leaf. Four scale columns+four multiplier leaves retain ownroots; new parent onlywires andoneentry perchild. No latency change; exact original TP8 golden bench and scale-return bit-swap mutant prove extraction.",
+ "structural_change": "Original slab parent gate6761ownflops sharedclockspine insertion1771.3/spread510.7 fails dieclock requirement. Existing parent request/tag/scale merge/argmax/output registers extracted unchanged into hardened core leaf. Four scale columns+four multiplier leaves retain ownroots; new parent onlywires andoneentry perchild. No latency change; exact original TP8 golden bench and scale-return bit-swap mutant prove extraction. Core boundary correction: register all 1,024 scale-return bits and 512 data/16 valid/32 error multiplier-return bits at their input pins; delay residual operand, tags and valid stages accordingly. +2 result edges, unchanged values/order; avoids input lane_err four-level control path and column OR before a pin capture.",
  "slot_change_request": "Core leaf259.2x129.6 must beplaced in central172.8um slab bandwith21.6umchannelsabove/below; parent clocks oneentry percore+8children. Fullslab footprint777.6x691.2 exceeds8groups*1840.296 parentheight; exactdieportplacement redesign required before fullcluster route. GID47 coreonly currently; other47GID parameters require correspondingnamedcore views or runtime strap redesign, cannotbind thisview toallGIDs.",
  "macros": [],
  "inter": [],
@@ -341,7 +341,7 @@
    255.2
   ]
  },
- "refglob": "*u_core*",
+ "refglob": "*",
  "orfs_vars": {
   "OT_OFLOP_GAP": "4.5"
  }
