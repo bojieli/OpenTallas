@@ -1,0 +1,28 @@
+ERR case 0: retired with 0 of 2560 output writes landed
+case 0:     HC_POST d 5120             56 cycles
+ERR sector 0 lane 0: got 3f5777cf3de8e91a3f6f8f013fc3d59a3f9cd2e23fff3aafbf8fc5043f215daf expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 1: got 3efab6f6bffa1b82becc05e13ecf9c2d3f99e5d4bfe594d7c0341bc73fee12c6 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 2: got 402e8f56bf62047240928d9d4045d2f2bfc3e185bfda07b73fa60b28be9633c1 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 3: got 4009cb5c407df18abe47e99dbe91f30140155b5f3ff897f53f741cadbf8c3032 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 4: got bf3e7669bfdd5421bf9450243f09e0efc0877cb3bfde8e2f3fee5de4c00daa8e expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 5: got 3fa0f4f0bff87ab4bf6737a8bfe94f83c00e58573f95a40a40e488aabfad9346 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 6: got bd932ea0beb9c694bea92b13be1521c0bfe5fdee3fc72405bcbcd5bfbf7fef94 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 7: got bfca6614bf99aeb93fe3aacb40c4ee6c3fc914da407ffe0ac022cbd7bf676889 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 8: got 400a85d7bf848d75be8e8ecebf29c9673fda3cc4bf121ad9bf98edf63dc60904 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 9: got 3f0d38713fd69eb43ee57bc140a0b66340003128bd37a3b63db05df9c01b9578 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR sector 0 lane 10: got 3facccd9be80994c3ff4de2d40955b2c3fe860bcbfdc8891bef5cd53409ea595 expected 0000000000000000000000000000000000000000000000000000000000000000
+ERR bench lane traffic hung
+ERR case 1: retired with 0 of 2560 output writes landed
+case 1:     HC_POST d 5120             56 cycles
+ERR bench lane traffic hung
+ERR case 2: retired with 0 of 640 output writes landed
+case 2: HC_PRE_NORM d 5120             407 cycles
+ERR case 3: retired with 0 of 640 output writes landed
+case 3: HC_PRE_NORM d 5120             407 cycles
+protocol: early_gain_reads 0
+summary: 4 HC B2 engine cases, 7136 sectors checked, 6494 sector errors, stale chunks 0
+HGI_HC_ENG_B2 FAIL errors=6494
+- rtl/hbm_accel/generic/peers/tb_hgi_hc_eng_b2.sv:241: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 803us; walltime 12072.404 s; speed 66.514 ns/s
+- Verilator: cpu 12070.421 s on 1 threads; allocated 276 MB

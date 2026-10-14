@@ -1,0 +1,26 @@
+{
+  "source_commit": "43fb197fd",
+  "scope": "Final preserved long diagnostics; inherited until real terminal status. No rerun/cancellation. Exact source-bound counterpart retained in native_attempt2. Not physical/wholelayer qualification.",
+  "jobs": {
+    "m4": {
+      "host": "ot-epyc4",
+      "status": "TERMINAL_FAIL",
+      "cases": 4,
+      "sectors_checked": 7136,
+      "errors": 6494,
+      "mutation_qualification": "negative arithmetic/protocol diagnostic; preserved to actual termination",
+      "actual_hang": false
+    },
+    "m13": {
+      "host": "ot-epyc1tb",
+      "status": "TERMINAL_FAIL",
+      "cases": 4,
+      "sectors_checked": 6432,
+      "errors": 977,
+      "mutation_qualification": "negative arithmetic/protocol diagnostic; preserved to actual termination",
+      "actual_hang": true
+    }
+  },
+  "physical_qualified": false,
+  "ledger_eligible": false
+}

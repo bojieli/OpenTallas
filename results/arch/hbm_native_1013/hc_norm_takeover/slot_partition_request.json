@@ -1,11 +1,18 @@
 {
   "schema": "opentallas.slot_partition_request.v1",
-  "source_commit": "f7fad067c HC scalar;43fb197fd native residual;01f83170b norm node abort repair",
+  "source_commit": "f7fad067c scalar SYS;6dbf2bc57 actual native residual clocks;faac01895 coefficient leaf candidate;01f83170b norm abort",
   "source_sha256": {
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "e713a764858598d4a9c59ea7b328742a7c912a56de351fe5118ad2208cca9938",
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "1da6dbe69de3d2dfed2abda5105269a1d3b5eb131696f7eb19b46d36a9afbae9",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "1743b12ed63d765da0454e43e1127df9531edf85449d68f11e65cd78bac48cb4",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "1b47caa096f44100e4472dec0dfa531920db50f13af8634131b4a31a2d9fe0c5",
     "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "9119d052dec52368a11694abf479934f9f95eafaef0bd865c4af61370fbca554",
-    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "be6ab417e31a36500e04f1577b2978717134c45efa1acb7d84ea28f10cb1dfa9"
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "be6ab417e31a36500e04f1577b2978717134c45efa1acb7d84ea28f10cb1dfa9",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv": "21a1d284d674cae7eb62ef6e2e69b532034e15316688f5f94690238f0f70e37a",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv": "eeb730b3838be7abbf7f2485fb0f33de06592f6692b18f596852e871c51ba6f0",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_ll.sv": "5df326d47fe5f662e64804b51a1d90285dc367673642b6ba6ad359fc5b235955",
+    "rtl/hbm_accel/generic/peers/run_hc_eng_b2.sh": "607411e3cdbbbb26cc4619f33da8edfe7977e1458b83be23dd1fa80c95f9eb2b",
+    "tools/hgi_adapters/hc_eng_bench.py": "5dd977ed6244c23f81b8eacb25f4ed669b63661d3a7d0e6862c928c1d06ff536",
+    "tools/hgi_adapters/hc_coll_b2_bench.py": "8fac714c438fe5b8886a4a581a8f99bea868858ba816b3c3a3273dd417d80fc8",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_eng_b2.sv": "3c8d5e55009dd9f0737fb1c0bc95a201bd200c5f3361a1be573edf095860628f"
   },
   "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
   "contract_version": 12,
@@ -17,7 +24,7 @@
         "hfd_hc_eng",
         "hfd_hgi_hc interface formerly routed on hfd_hc quarters"
       ],
-      "slot_status": "NO_NATIVE_SLOT",
+      "slot_status": "UNASSIGNED: v12 maps only legacy HC tiles; private proofs do not grant new masters or die pins",
       "logical_composition": {
         "ot_hgi_hc_ctl_b2": 1,
         "ot_hgi_hc_qst_b2": 4,
@@ -85,6 +92,80 @@
             38.88
           ],
           "mux_postCTS_utilization": 0.487988
+        }
+      },
+      "native_clock_split_evidence": "results/rtl/hbm_hc_b2_1013/native_ownroots/receipt.json",
+      "ownstate_census": {
+        "source_commit": "6dbf2bc57",
+        "lane_parent_ff": 14828,
+        "coefficient_ff": 640,
+        "chunk_ff": [
+          538,
+          730,
+          922,
+          1114,
+          1306,
+          1498,
+          1690
+        ],
+        "generic_synthesis_only": true,
+        "physical_parent_qualified": false
+      },
+      "coefficient_leaf_candidate": {
+        "master": "ot_hgi_hc_coeff_bank",
+        "count": 32,
+        "source_commit": "faac01895",
+        "requested_outline_um": [
+          45.36,
+          45.36
+        ],
+        "slot_status": "UNASSIGNED",
+        "prior_probe": {
+          "outline_um": [
+            38.88,
+            38.88
+          ],
+          "std_area_after_cts_um2": 826.511,
+          "actual_core_util": 0.691992,
+          "sinks": 775,
+          "TT_boundary_mean_ps": 100.1,
+          "TT_spread_ps": 3.6
+        },
+        "expanded_probe_status": "COMPLETE clock PASS, rawutil WARN; actualpostCTS49.2%",
+        "native_exact_mutant_status": "RUNNING on ot-epyc4; do not infer qualification",
+        "clock_pins": [
+          "clk"
+        ],
+        "input_pins": [
+          "rst_n",
+          "wr_v",
+          "wr_index[2:0]",
+          "wr_data[127:0]"
+        ],
+        "output_pins": [
+          "coef0[127:0]",
+          "coef1[127:0]",
+          "coef2[127:0]",
+          "coef3[127:0]",
+          "coef4[127:0]"
+        ],
+        "measured_outline_um": [
+          45.36,
+          45.36
+        ],
+        "clock_evidence": {
+          "sinks": 775,
+          "TT_boundary_mean_ps": 103.9,
+          "TT_all_max_ps": 106.2,
+          "TT_spread_ps": 4.0,
+          "FF_boundary_mean_ps": 78.5,
+          "SS_boundary_mean_ps": 148.7,
+          "actual_postCTS_std_area_um2": 828.523,
+          "actual_core_util": 0.491915,
+          "setup_diagnostic_ps": 220.4,
+          "hold_diagnostic_ps": 27.88,
+          "probe": "coeff_bank_remote_gate3.json",
+          "actual_CTS_area": "coeff_bank_actual_cts.json"
         }
       }
     },
