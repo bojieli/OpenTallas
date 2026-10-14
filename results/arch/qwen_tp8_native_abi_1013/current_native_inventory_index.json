@@ -76,11 +76,17 @@
         "path": "results/arch/qwen_tp8_1012/vm_region_epoch_binding_candidate.json",
         "sha256": "b08448a63b051be22502597ecb11c90147f8cd4cf23d2bbfd0f81003700adfd4"
       },
-      "status": "Existing native region is data-only. Separate default-off ROW lease candidate9110 reserves immutable descriptor/version over entire operation; every read explicit accepted query. Integrated64 native reads pass, six protocol mutants plus earlycapture reject. Published seq16 candidate must be superseded by source-bound seq40 before composition. Production posted-write admission/drain, canonical request-mode binding, X/SU/32-source paths and physical interfaces remain open.",
+      "status": "Native region remains data-only. Separate source-bound lease9110seq16 is preserved; seq40/mode successor0292 supersedes only candidate protocol interface. Actual production source and posted-write/physical binding remain open.",
       "lease_candidate": {
         "commit": "9110bda97",
         "path": "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_producer_lease.sv",
         "sha256": "6c98b25ec8f4bae81c77a687491485720cd190591a7cd6a817ecd5411b279b34"
+      },
+      "lease_seq40_successor": {
+        "commit": "0292fb4f0",
+        "path": "results/rtl/qwen_vm_producer_seq40_1014/component/receipt.json",
+        "sha256": "ea679f6aff25075d5a3801d4283fb2ea20ec92306b0f89df30482e436ca2d956",
+        "status": "Distinct default-off canonical nativeIB379 xjs[179:156] mode and fullquery_seq40. Component32ops2queries1positive10observedmutants, defaultoff and actualnativeROW64reads512bits/provenance plus earlycapturemutant pass. Old9110 dependencies source-hashed, no viewalias. Real postedSUwriter admission/commit drain, X source/normalization/32roots, TAG59 sharedtoken and physicalinterface/census/nativecost remain unbound."
       }
     },
     {
