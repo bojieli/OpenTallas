@@ -70,6 +70,23 @@ for g in range(8):
   if k==0:
    for bit in range(848):link('capture_boundary',ep(g,k,f'co[{bit}]'),boundary('t_capture',848*g+bit))
 # Last-column lo is unused; internal li[1103:828] are tied zero. Top ci/fi are zero.
+bindings=[]
+for g in range(8):
+ for k in range(4):
+  kind='rw' if g<4 else 're'
+  for pin in masters[kind]:
+   base=pin.split('[')[0]; bit=int(pin.split('[')[1][:-1]) if '[' in pin else 0
+   usage='linked'
+   if base=='li' and g not in (0,7) and bit>=828:usage='constant_zero'
+   if base in ('ci','fi') and k==3:usage='constant_zero'
+   if base=='lo' and g in (3,4):usage='unused_output'
+   if base=='co' and k>0 and bit>=636:usage='unused_output'
+   if base=='rso' and k==0:usage='unused_output'
+   if base=='rs' and k==3:usage=f'control_strip_rc[{g}]'
+   if base=='fo' and k==0:usage=f'control_strip_cs[{2*g+bit}]'
+   bindings.append({**ep(g,k,pin),'usage':usage})
+assert len(bindings)==32*3423
+write('whole_leaf_port_bindings.json.gz',bindings)
 write('leaf_instances.json',instances);write('bit_links.json.gz',links)
 summary={kind:{'count':sum(x['kind']==kind for x in links),'max_manhattan_um':max(x['manhattan_um'] for x in links if x['kind']==kind)} for kind in sorted({x['kind'] for x in links})}
 write('proof.json',{'schema':'opentallas.s81.gather_leaf_pin_proof.v1','status':'PROPOSED_FOR_DIE_ACCEPTANCE' if not fail else 'FAIL','parent_assignment_sha256':sha(P/'parent_assignment.json'),'rtl_sha256':sha(rtl),'leaf_pins':{'rw':len(masters['rw']),'re':len(masters['re'])},'instances':32,'orientation':'R0','origin_lattice_um':.576,'pin_lattice_pitch_um':.048,'pin_lattice_offset_um':.012,'pg_rectangles_source':'preserved actual IOP ODB dump; route/LEF PG access remains required','failures':fail,'links':summary,'owed':['actual routed slew/clock/internal timing/TT+FF+DRC and child_lint','timing-aware per-bit hop reach from actual routed views','control strip rc/cs/tst/f_vm/f_cd/tc binding','f_vm[511:160] remain declared but unused in current RTL; parent bypass treatment belongs to die/control owner','clock phi-R_i compensation from actual routed insertion.json','native81/optional120 whole-operation PFABI binding']})
