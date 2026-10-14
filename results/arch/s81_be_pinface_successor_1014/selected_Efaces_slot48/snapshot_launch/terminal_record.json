@@ -1,0 +1,26 @@
+{
+  "status": "EARLY_FAIL_HOLD",
+  "reason": "4_1_cts hold repair past the buffer cap: 25973 buffers > 22837 (cap 100000, 76124 instances, WNS gain 0.0 ps / 2000 it); hold WNS now -65.0 ps (start -88.56), 11980 it / 25973 buffers, 15184 endpoints in margin, 0.2 h in step, HM guard present",
+  "source_commit": "a97e9260623532d282636d19880efb40cecfb065",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas/claude/closure-loop/s81be-access-cts-snapshot-a97e92606",
+  "helper_verification": {
+    "status": "verified_original",
+    "origin_main": "353cf1fa35c2aa139d891bc2af81b6857496ab42",
+    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
+    "files": 46,
+    "verified_at": "2026-10-14T03:21:09-07:00",
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas/claude/closure-loop/s81be-access-cts-snapshot-a97e92606",
+    "mutation": false
+  },
+  "snapshot_report": "path_report/receipt.json",
+  "final_routed_view": null,
+  "final_AP": null,
+  "final_SS_FF_signoff": null,
+  "final_DRC": null,
+  "rejected": true,
+  "old_CLOSED_replaced": false,
+  "constraints_changed": false,
+  "original_status25_source_root_unbound": true
+}
