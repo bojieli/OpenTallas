@@ -67,6 +67,7 @@ module ot_hgi_coll_tkm_seq_split #(
    .chain_valid(chain_valid),
    .chain_up(chain_up),
    .chain_clr(chain_clr),
+   .chain_conv(chain_conv),
    .chain_tt(chain_tt),
    .chain_tl(chain_tl),
    .chain_tau(chain_tau),

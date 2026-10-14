@@ -1,0 +1,25 @@
+PHASE 9 at 8
+PHASE 1 at 16
+PHASE 2 at 2889
+PHASE 3 at 2994
+PHASE 4 at 3511
+PHASE 5 at 3516
+PHASE 6 at 4029
+PHASE 7 at 4137
+PHASE 8 at 4656
+PHASE 0 at 4657
+FAIL O[0] = 00006721 golden 0000003d
+FAIL R[0] = 40820000 golden 3fc50000
+FAIL O[1] = 00006721 golden 00000126
+FAIL R[1] = 40820000 golden 3fd70000
+FAIL O[2] = 00006721 golden 000001f5
+FAIL R[2] = 40820000 golden 400b0000
+FAIL O[3] = 00006721 golden 000001fa
+FAIL R[3] = 40820000 golden 3fcb0000
+TKM G=96 n=341 M=0 k=2048 nout=2048 rank=60 R=1 CYCLES=4660 SURV=8754 INS=2346 SINK=4649
+TIMELINE first_delivery=83 last_delivery=2858 sink_credit_blocked_cycles=1745
+FAIL tb_hgi_coll_tkm /srv/opentallas-scratch/codex/tkmlanes2240/tkm2240-vec/g96_unequal_341_342 errors 4094
+- rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm.sv:208: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 118.800 s; speed 32.886 ns/s
+- Verilator: cpu 118.775 s on 1 threads; allocated 293 MB
