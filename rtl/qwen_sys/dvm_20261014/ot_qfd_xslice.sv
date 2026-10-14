@@ -335,7 +335,8 @@ module ot_qfd_xhead #(
     parameter integer NH   = 8,          // tiles per corridor (half column)
     parameter integer SMIN = 7,
     parameter integer SMAX = 11,
-    parameter integer DX   = 5,          // includes one edge for the chained write to become readable
+    parameter integer DX   = 8,          // four-edge fill lead + four-edge read-to-corridor launch
+    parameter integer FILL_LEAD = 4,     // includes the tap's two-entry attention-write queue
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
                                          // 4: the reads use the OTHER epoch (stale buffer)   -- both must FAIL
 ) (
@@ -400,17 +401,18 @@ module ot_qfd_xhead #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) g_pin <= 1'b0; else g_pin <= a_d[0];
     always @(posedge ck) begin ib_pin <= a_d[1 +: IBW]; f_q <= a_d[1 + IBW +: FW]; end
-    // The far leaf's final write and its first read otherwise reach its pin
-    // registers together when go immediately follows the producer's last beat.
-    // Delay both the read launch and instruction by one edge; fill is unchanged.
-    ot_hdc_delay #(.W(1), .D(1), .RESET(1)) u_fill_go (.clk(ck), .rst_n(rst_n), .d(g_pin), .q(g_q));
-    ot_hdc_delay #(.W(IBW), .D(1)) u_fill_ib (.clk(ck), .rst_n(rst_n), .d(ib_pin), .q(ib_q));
+    // Go travels directly along the head row; the last attention beat can still
+    // be queued behind an SU beat in the tap. Give that queue and the far leaf's
+    // write registers time to drain before launching reads. Instruction and
+    // reads move together; fill and all missing-element fault checks stay live.
+    ot_hdc_delay #(.W(1), .D(FILL_LEAD), .RESET(1)) u_fill_go (.clk(ck), .rst_n(rst_n), .d(g_pin), .q(g_q));
+    ot_hdc_delay #(.W(IBW), .D(FILL_LEAD)) u_fill_ib (.clk(ck), .rst_n(rst_n), .d(ib_pin), .q(ib_q));
 
     // ---- go / ib to the corridors: DX more edges, then one kept output flop per corridor ----
     wire              g_dx;
     wire [IBW-1:0]    ib_dx;
-    ot_hdc_delay #(.W(1), .D(DX-1), .RESET(1)) u_gdx (.clk(ck), .rst_n(rst_n), .d(g_q), .q(g_dx));
-    ot_hdc_delay #(.W(IBW), .D(DX-1)) u_idx (.clk(ck), .rst_n(rst_n), .d(ib_q), .q(ib_dx));
+    ot_hdc_delay #(.W(1), .D(DX-FILL_LEAD), .RESET(1)) u_gdx (.clk(ck), .rst_n(rst_n), .d(g_q), .q(g_dx));
+    ot_hdc_delay #(.W(IBW), .D(DX-FILL_LEAD)) u_idx (.clk(ck), .rst_n(rst_n), .d(ib_q), .q(ib_dx));
 
     // ---- fill fields ----
     wire              d_v   = f_q[0];
