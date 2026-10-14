@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_provider_top;
- parameter MUT_ROW=0,MUT_QBEAT=0,MUT_ACK=0,MUT_COMMIT=0,MUT_RSP=0;
+ parameter MUT_ROW=0,MUT_QBEAT=0,MUT_ACK=0,MUT_COMMIT=0,MUT_RSP=0,MUT_QRESTART=0;
  reg clk=0;always #5 clk=~clk;reg rst_n=0;
  reg start=0;reg [15:0] epoch=16'h1234;reg [17:0] pos=18'd15;
  wire qrstart,qreq,qready,qv,qdone,qfault;wire [15:0] re,qe;wire [2:0] rc;wire [23:0] a0,a1;wire [5:0] qb;wire [511:0] qd;
@@ -75,6 +75,7 @@ module tb_provider_top;
   if(MUT_RSP!=0)begin wait(qfault);repeat(4)step();if(qwords==0)$display("PROVIDER_Q_REJECT_PASS stale response no output");else $display("PROVIDER_Q_REJECT_FAIL");$finish;end
   wait(qwords==32);wait(ackcount==8);repeat(6)step();
   for(q=0;q<4;q=q+1)for(k=0;k<2;k=k+1)for(j=0;j<128;j=j+1)if(landing[q][k*128+j]!==bytecode(k,j))errors=errors+1;
+  if(MUT_QRESTART!=0)begin qs=1;step();qs=0;repeat(2)step();if(allfault)$display("PROVIDER_Q_RESTART_REJECT_PASS duplicate epoch");else $display("PROVIDER_Q_RESTART_REJECT_FAIL");$finish;end
   if(MUT_ACK!=0)begin if(pfault&&!commit)$display("PROVIDER_ACK_REJECT_PASS stale epoch no release");else $display("PROVIDER_ACK_REJECT_FAIL");end
   else if(errors==0&&commit&&!ff&&!pfault&&!qfault&&early==0)$display("PROVIDER_PASS Q32 KV2 four-quadrant backing writes1024bytes ACK8 cycles%0d",cycles);
   else $display("PROVIDER_FAIL data_errors%0d early%0d commit%0d ff%0d pf%0d qf%0d",errors,early,commit,ff,pfault,qfault);

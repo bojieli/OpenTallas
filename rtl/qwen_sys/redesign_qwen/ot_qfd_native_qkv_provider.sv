@@ -25,24 +25,24 @@ module ot_qfd_native_qkv_provider #(parameter integer ENABLE=0)(
  output wire q_v,input wire q_ready,output wire [5:0] q_beat,output wire [511:0] q_data,
  output wire [15:0] q_epoch,output wire q_emitted_done,output wire fault
 );
- reg reserved,admission_fault;reg [1:0] settling;reg [2:0] admitted;
+ reg reserved,admission_fault,q_started;reg [1:0] settling;reg [2:0] admitted;
  reg [15:0] held_epoch;wire fs,ps,qs,ff,pf,qf,word_v,word_ready;wire [10:0] word_tag;wire [511:0] word_data;wire [7:0] formatter_fault_code;
  assign fault=admission_fault||ff||pf||qf;
  assign epoch_ready=ENABLE!=0&&fs&&ps&&qs&&!fault;
  assign kv_admit_ready=ENABLE!=0&&reserved&&settling==0&&kv_issue_kind<3&&!admitted[kv_issue_kind]&&!fault&&!kv_committed;
- assign q_start_ready=ENABLE!=0&&reserved&&qs&&qr_vm_committed&&!fault;
+ assign q_start_ready=ENABLE!=0&&reserved&&!q_started&&qs&&qr_vm_committed&&!fault;
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin reserved<=0;admission_fault<=0;settling<=0;admitted<=0;held_epoch<=0;end
+  if(!rst_n)begin reserved<=0;admission_fault<=0;q_started<=0;settling<=0;admitted<=0;held_epoch<=0;end
   else if(ENABLE!=0)begin
    if(epoch_begin)begin
     if(!epoch_ready)admission_fault<=1;
-    else begin reserved<=1;settling<=2;admitted<=0;held_epoch<=epoch;end
+    else begin reserved<=1;q_started<=0;settling<=2;admitted<=0;held_epoch<=epoch;end
    end else if(settling!=0)settling<=settling-1'b1;
    if(kv_issue_accepted)begin
     if(!kv_admit_ready)admission_fault<=1;
     else admitted[kv_issue_kind]<=1;
    end
-   if(q_start&&!q_start_ready)admission_fault<=1;
+   if(q_start)begin if(!q_start_ready)admission_fault<=1;else q_started<=1;end
   end
  end
  ot_qfd_su_kv_native_posted #(.ENABLE(ENABLE),.HEADS(1)) u_formatter(
