@@ -1,7 +1,14 @@
 {
   "status": "UNVERIFIED_CANDIDATE_PLACEMENT_INPUT_NOT_DIE_CONTRACT",
   "parent_fit": "UNPROVEN_NO_LEGACY_FRAME_FIT_ASSERTION",
-  "prompt_leaf": "SOURCE_PENDING_HELPER: originalprompt combinational ECC output/request decode requires newcapturedrequest/registeredresponse pinleaf; macro8192x18storage physical1024x256, latency/outline/census pending actualbind bench",
+  "prompt_leaf": {
+    "master": "qkd_host_prompt_pins",
+    "production_parent": "qkd_host_control_prompt",
+    "data_latency_edges": 3,
+    "fault_latency_edges": 4,
+    "storage": "actual8192x18 SECDED physical1024x256 SRAM",
+    "physical_qualified": false
+  },
   "masters": [
     {
       "master": "qkd_host_axi_packet",
@@ -1378,6 +1385,100 @@
       ]
     },
     {
+      "master": "qkd_host_prompt_pins",
+      "flop_bits": 71,
+      "macro_clock_pins": 1,
+      "clock_sink_total": 72,
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        220.08,
+        110.04
+      ],
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_prompt_pins.sv",
+      "macro": {
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "outline_um": [
+          174.744,
+          70.47
+        ],
+        "count": 1,
+        "halo_um": 5.4
+      },
+      "data_latency_edges": 3,
+      "fault_latency_edges": 4,
+      "source_sha256": "0b57548cb6f1736fe2dad3c6d61fb647a7f4c14d2fd7f43f7f793ab26410ada5",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "we",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "re",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "waddr",
+          "direction": "input",
+          "width": 13,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "raddr",
+          "direction": "input",
+          "width": 13,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "wdata",
+          "direction": "input",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "q",
+          "direction": "output",
+          "width": 18,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ]
+    },
+    {
       "master": "qkd_host_if_pins",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_if_pins.sv",
       "source_sha256": "f989e311639e6b7c5e442f134fa62f769e0387c184a7084060269f50b73f720b",
@@ -1922,7 +2023,7 @@
         "KVW": 1024,
         "FMT": 1,
         "PB_VALID_ONLY": 1,
-        "PB_READ_PIPE": 2
+        "PB_READ_PIPE": 4
       }
     },
     {
@@ -17412,6 +17513,42 @@
       "destination": "stack3.pc31.controller.pi",
       "bits": 289,
       "clock_family": "hbm"
+    },
+    {
+      "source": "host.HOST.pb_we/re",
+      "destination": "host.PROMPT.we/re",
+      "bits": 2,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.pb_waddr[12:0]",
+      "destination": "host.PROMPT.waddr",
+      "bits": 13,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.pb_raddr[12:0]",
+      "destination": "host.PROMPT.raddr",
+      "bits": 13,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.HOST.pb_wdata",
+      "destination": "host.PROMPT.wdata",
+      "bits": 18,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.PROMPT.q",
+      "destination": "host.HOST.pb_q",
+      "bits": 18,
+      "clock_family": "core"
+    },
+    {
+      "source": "host.PROMPT.fault",
+      "destination": "host.CTL.pb_fault",
+      "bits": 1,
+      "clock_family": "core"
     },
     {
       "source": "host.ack_sum.ack_n",

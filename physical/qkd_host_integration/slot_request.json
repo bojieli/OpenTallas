@@ -201,6 +201,35 @@
       "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_chain.sv"
+    },
+    {
+      "master": "qkd_host_prompt_pins",
+      "flop_bits": 71,
+      "macro_clock_pins": 1,
+      "clock_sink_total": 72,
+      "role": "actual8192x18 SECDED physical1024x256 prompt with capturedrequest/registeredresponse",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        220.08,
+        110.04
+      ],
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_prompt_pins.sv",
+      "macro": {
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "outline_um": [
+          174.744,
+          70.47
+        ],
+        "count": 1,
+        "halo_um": 5.4
+      },
+      "data_latency_edges": 3,
+      "fault_latency_edges": 4
     }
   ],
   "existing_children": [
@@ -260,7 +289,8 @@
         "qkd_host_ctl_pins": 1292
       },
       "physical_status": "UNQUALIFIED: dimensions/pins/views required",
-      "functional": "actual FMT1 ring through class0/7 packet plane exact PASS; diagnostics/stale-done/FMT0 mutants FAIL"
+      "functional": "actual FMT1 ring through class0/7 packet plane exact PASS; diagnostics/stale-done/FMT0 mutants FAIL",
+      "production_prompt_bound_parent": "qkd_host_control_prompt fiveentries zeroFF, fixed PROMPT_READ_LATENCY3; hostPB_READ_PIPE4 census4157 unchanged"
     }
   ],
   "controller_variant": {
@@ -342,7 +372,21 @@
     "hotPC127_launch_interval_ck": 17151,
     "scheduler": "MODEL ONLY capacity3ck retirement17ck; actualcontroller WDONE17hclk separate bench",
     "accepted_cost": false,
-    "required": "actual production native provider traces+controller+clock composition against5105 reference"
+    "required": "actual production native provider traces+controller+clock composition against5105 reference",
+    "actual_controller_gate": {
+      "controller_instances": 128,
+      "actual_hbm_period_ns": 1.024,
+      "core_period_ns": 0.833334,
+      "sectors": 512,
+      "balanced_launch_interval_ck": 573,
+      "balanced_marker_cycle": 1023,
+      "hotPC127_launch_interval_ck": 17748,
+      "hotPC127_marker_cycle": 18279,
+      "payload": "actual PHY288 independently SECDED encoded original256 and exact bank/column/openrow",
+      "completion": "actual col->WDONE17hclk->asyncFIFO->core ordered retirement, not model",
+      "polarity_mutant": "actual completion input127 flipped; chain fault atissued310 landed184",
+      "production_price": "OPEN: production nativeprovider trace/full workload required; these syntheticbalanced/hot512scenarios are not5105 reference"
+    }
   },
   "pc_frame_candidate": {
     "status": "UNVERIFIED_SOURCE_GEOMETRY_ONLY",
