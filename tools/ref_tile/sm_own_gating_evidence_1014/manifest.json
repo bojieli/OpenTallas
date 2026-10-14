@@ -1,0 +1,8 @@
+{
+  "helper_sha256": "253ef0b1dd8a49a9cca991379023afff0f92c835f7e268261becb913632330fd",
+  "plan_sha256": "0f2276c834bfdeea7f4e26631d4881be3dba598bfb559a011d050ca2c5fc94e5",
+  "image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "mapping_assertions": "All12 parent RAW\u2192ICG CLK, OWN8870\u2192ENA, SE0, ICG GCLK\u2192assignedchildCLK verified exactly. Fixture names child_i/gate_i explicitly surrogate labels bound to original instances.",
+  "IO_policy": "Only13 actual clock sources at top; macro resetn/cut3 static1, other unusedDATA0, outputsunused. Isolated timingarc only; no native/functional proof.",
+  "clock_wire_policy": "Zero-parasitics ideal entries/ENA wires. Real ICG insertion and output slew computed from actual childcap; original child insertion anchor0 does not establish its conditional R at delivered nonzero GCLK slew."
+}

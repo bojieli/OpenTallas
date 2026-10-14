@@ -1,0 +1,35 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /probe/ot_smh_own_eg/ot_smh_own_eg.lef, created 1 library cells
+[WARNING STA-1212] /probe/ot_smh_own_eg/ot_smh_own_eg_tt.lib line 8536, timing group from output port.
+[WARNING STA-1212] /probe/ot_smh_own_eg/ot_smh_own_eg_tt.lib line 8556, timing group from output port.
+[INFO ODB-0227] LEF file: /probe/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /probe/ot_hbm_accel_smh_tcl/ot_hbm_accel_smh_tcl.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /probe/ot_hbm_accel_smh_tct/ot_hbm_accel_smh_tct.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /probe/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /probe/ot_hbm_accel_smh_pt_e/ot_hbm_accel_smh_pt_e.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /probe/ot_hbm_accel_smh_pt_w/ot_hbm_accel_smh_pt_w.lef, created 1 library cells
+Signal 11 received
+Stack trace:
+ 0# 0x0000000000F1C787 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# sta::Graph::pinVertices(sta::Pin const*, sta::Vertex*&, sta::Vertex*&) const in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 3# sta::Properties::pinArrival(sta::Pin const*, sta::RiseFallBoth const*, sta::MinMax const*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 4# sta::Properties::getProperty(sta::Pin const*, std::basic_string_view<char, std::char_traits<char> >) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 5# 0x00000000010C40FB in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 6# TclNRRunCallbacks in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 7# 0x000000000003E028 in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 8# Tcl_EvalEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 9# Tcl_Eval in /lib/x86_64-linux-gnu/libtcl8.6.so
+10# sta::sourceTclFile(char const*, bool, bool, Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+11# 0x0000000003E22810 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+12# ord::tclAppInit(Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+13# Tcl_MainEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+14# main in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+15# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+16# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+17# _start in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad

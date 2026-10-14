@@ -1,0 +1,12 @@
+set sm_gate_U(0) 150
+set sm_gate_U(1) 150
+set sm_gate_U(2) 150
+set sm_gate_U(3) 150
+set sm_gate_U(4) 210
+set sm_gate_U(5) 150
+set sm_gate_U(6) 150
+set sm_gate_U(7) 150
+set sm_gate_U(8) 150
+set sm_gate_U(9) 210
+set sm_gate_U(10) 210
+set sm_gate_U(11) 210

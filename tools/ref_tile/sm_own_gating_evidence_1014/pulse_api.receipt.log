@@ -1,0 +1,151 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+PULSE_COMMANDS ::sta::set_min_pulse_width_global ::sta::set_min_pulse_width_inst ::sta::report_min_pulse_width_checks ::sta::set_min_pulse_width_clk ::sta::set_min_pulse_width_pin ::sta::set_min_pulse_width
+PULSE_REPORT_PROC ::sta::report_check_types
+ global errorCode errorInfo; set redirect [parse_redirect_args args]; set code [catch { variable float_inf
+  variable group_path_count_max
+  variable path_options
+
+  parse_key_args "report_check_types" args  keys {-scenes -corner -net -max_count} flags {-violators -verbose -no_line_splits} 0
+
+  set violators [info exists flags(-violators)]
+  set verbose [info exists flags(-verbose)]
+  set nosplit [info exists flags(-no_line_splits)]
+
+  if { $verbose } {
+    set default_format "full"
+  } else {
+    set default_format "slack_only"
+  }
+  parse_report_path_options "report_check_types" args $default_format 0
+
+  set min_max "min_max"
+  if { [operating_condition_analysis_type] == "single" } {
+    set min_max "max"
+  }
+
+  set net "NULL"
+  if { [info exists keys(-net)] } {
+    set net [get_net_arg "-net" $keys(-net)]
+  }
+
+  set max_count 1
+  if { [info exists keys(-max_count)] } {
+    set max_count $keys(-max_count)
+    check_positive_integer "-max_count" $max_count
+  }
+
+  if { $args == {} } {
+    if { $min_max == "max" || $min_max == "min_max" } {
+      set setup 1
+      set recovery 1
+      set clk_gating_setup 1
+      set max_slew 1
+      set max_fanout 1
+      set max_capacitance 1
+    } else {
+      set setup 0
+      set recovery 0
+      set clk_gating_setup 0
+      set max_slew 0
+      set max_fanout 0
+      set max_capacitance 0
+    }
+    if { $min_max == "min" || $min_max == "min_max" } {
+      set hold 1
+      set removal 1
+      set clk_gating_hold 1
+      set min_slew 1
+      set min_fanout 1
+      set min_capacitance 1
+    } else {
+      set hold 0
+      set min_delay 0
+      set removal 0
+      set clk_gating_hold 0
+      set min_slew 0
+      set min_fanout 0
+      set min_capacitance 0
+    }
+    set min_pulse_width 1
+    set min_period 1
+    set max_skew 1
+  } else {
+    parse_key_args "report_check_types" args keys {}  flags {-max_delay -min_delay -recovery -removal  -clock_gating_setup -clock_gating_hold  -max_slew -min_slew  -max_fanout -min_fanout  -max_capacitance -min_capacitance  -min_pulse_width  -min_period -max_skew} 1
+
+    set setup [info exists flags(-max_delay)]
+    set hold [info exists flags(-min_delay)]
+    set recovery [info exists flags(-recovery)]
+    set removal [info exists flags(-removal)]
+    set clk_gating_setup [info exists flags(-clock_gating_setup)]
+    set clk_gating_hold [info exists flags(-clock_gating_hold)]
+    set max_slew [info exists flags(-max_slew)]
+    set min_slew [info exists flags(-min_slew)]
+    set max_fanout [info exists flags(-max_fanout)]
+    set min_fanout [info exists flags(-min_fanout)]
+    set max_capacitance [info exists flags(-max_capacitance)]
+    set min_capacitance [info exists flags(-min_capacitance)]
+    set min_pulse_width [info exists flags(-min_pulse_width)]
+    set min_period [info exists flags(-min_period)]
+    set max_skew [info exists flags(-max_skew)]
+    if { [operating_condition_analysis_type] == "single"  && (($setup && $hold)  || ($recovery && $removal)  || ($clk_gating_setup && $clk_gating_hold)) } {
+      sta_error 520 "analysis type single is not consistent with doing both setup/max and hold/min checks."
+    }
+  }
+  set scenes [parse_scenes_or_all keys]
+
+  if { $args != {} } {
+    sta_error 521 "positional arguments not supported."
+  }
+
+  if { $setup || $hold || $recovery || $removal  || $clk_gating_setup || $clk_gating_hold } {
+    if { ($setup && $hold)  || ($recovery && $removal)  || ($clk_gating_setup && $clk_gating_hold) } {
+      set path_min_max "min_max"
+    } elseif { $setup || $recovery || $clk_gating_setup } {
+      set path_min_max "max"
+    } elseif { $hold || $removal || $clk_gating_hold } {
+      set path_min_max "min"
+    }
+    if { $violators } {
+      set group_path_count $group_path_count_max
+      set slack_min [expr -$float_inf]
+      set slack_max 0.0
+    } else {
+      set group_path_count 1
+      set slack_min [expr -$float_inf]
+      set slack_max $float_inf
+    }
+
+    set path_ends [find_path_ends "NULL" {} "NULL" 0  $scenes $path_min_max $group_path_count 1 1 0  $slack_min $slack_max  0 {}  $setup $hold  $recovery $removal  $clk_goval  $clk_gating_setup $clk_gating_hold]
+    report_path_ends $path_ends
+  }
+
+  if { $max_slew } {
+    report_slew_checks $net $max_count $violators $verbose $scenes "max"
+  }
+  if { $min_slew } {
+    report_slew_checks $net $max_count $violators $verbose $scenes "min"
+  }
+  if { $max_fanout } {
+    report_fanout_checks $net $max_count $violators $verbose $scenes "max"
+  }
+  if { $min_fanout } {
+    report_fanout_checks $net $max_count $violators $verbose $scenes "min"
+  }
+  if { $max_capacitance } {
+    report_capacitance_checks $net $max_count $violators $verbose $scenes "max"
+  }
+  if { $min_capacitance } {
+    report_capacitance_checks $net $max_count $violators $verbose $scenes "min"
+  }
+  if { $min_pulse_width } {
+    report_min_pulse_width_checks $net $max_count $violators $verbose $scenes
+  }
+  if { $min_period } {
+    report_min_period_checks $net $max_count $violators $verbose $scenes
+  }
+  if { $max_skew } {
+    report_max_skew_checks $net $max_count $violators $verbose $scenes
+  } } ret ]; if {$redirect} { redirect_file_end }; if {$code == 1} {return -code $code -errorcode $errorCode -errorinfo $errorInfo $ret} else {return $ret} 
