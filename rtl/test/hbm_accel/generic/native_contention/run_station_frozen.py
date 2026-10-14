@@ -9,6 +9,11 @@ if hashlib.sha256(archive.read_bytes()).hexdigest()!=manifest['sha256']:raise Sy
 out=pathlib.Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 with tarfile.open(archive) as t:t.extractall(out,filter='data')
 job=out/('r12p61' if a.mode=='exact' else 'r12m10')
+graph=json.loads((job/'sourcegraph.json').read_text())
+bank='rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_peer_mux_lane.sv'
+expected=next(r['sha256'] for r in graph['files'] if r['path']==bank)
+if hashlib.sha256((root/bank).read_bytes()).hexdigest()!=expected:
+ raise SystemExit('actual route bank source differs from frozen three-owner bank')
 rc=subprocess.call([sys.executable,str(job/'run_frozen.py'),'--smoke'])
 log=(job/'run.log').read_text() if (job/'run.log').exists() else ''
 if a.mode=='owner':
