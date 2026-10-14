@@ -70,8 +70,9 @@ leaf-only36.691771mm2, before glue/channels/clock/reset. `request_graph.json`
 contains actual module logical ports, source hashes, instance/clock/macro lists,
 and requested geometry; it contains no assigned slots or physical driver ABI.
 The related old scorer slots overlap107 real current-v13 children and are not
-available grants. This candidate's numerical proof is separately admitted;
-the uncut baseline verdict is never copied to it.
+available grants. This candidate's numerical proof is separately terminal PASS in
+`cut_proof_987dcdb69`; five actual mutations are detected in
+`cut_mutants_987dcdb69`. The uncut baseline verdict is never copied to it.
 
 New-ready nominal leaf sink demand15,335 requires fresh physical measurement,
 partition or the actual allowed300/80 clock rule; old15,334-sink CLOSED evidence
