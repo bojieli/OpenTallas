@@ -137,9 +137,24 @@
     },
     {
       "element": "ot_hdc_v41x_idx_ksub_el",
-      "action": "required-source mapping requested from active IDX production owner",
-      "state": "PENDING_NATIVE_IDX_OWNER",
-      "note": "current main has no module/name idx_ksub; cancelled source9e9a8a8a7 is not adopted production evidence. No closure/supersession inferred from absence alone."
+      "action": "active IDX owner confirmed source-bound replacement",
+      "state": "RETIRED_IN_CURRENT_NATIVE_IDX_GRAPH",
+      "note": "Owner /root/hbm_idx_smmv_2240 confirmed current e2e->idxn->selector and four score_native->idx_array_l->chunk_l graph. Physical intended chunk_el uses CLOSED hslice; actual native parent physical composition remains OPEN. ksub retired only for this current graph; no blanket CLOSED claim.",
+      "replacement": [
+        "hfd_idx_sel_native_qend",
+        "hfd_idx_score_native",
+        "ot_hdc_v41x_idx_array_l",
+        "ot_hdc_v41x_idx_chunk_l"
+      ],
+      "replacement_source_commit": "4d838fa3f",
+      "replacement_source_paths": [
+        "rtl/hbm_accel/generic/e2e/tb_hgi_e2e.sv:394",
+        "rtl/hbm_accel/generic/e2e/hgi_e2e_idxn.sv:35",
+        "physical/index/rtl/hfd_idx_score_native.sv:14",
+        "physical/index/rtl/hfd_idx_score.sv:192",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_idx_chunk_el.sv:60"
+      ]
     },
     {
       "element": "dsfd_mtp_hrow",
