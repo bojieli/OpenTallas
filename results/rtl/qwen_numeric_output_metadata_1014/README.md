@@ -1,0 +1,9 @@
+# Distinct streaming numeric metadata
+
+New helper ot_qwen_tile_numeric_output_metadata exports numeric_tuple89={has_query1,context16,version32,queryseq40} registered on the SAME fixed native TOREG producing edge46. The unchanged node still produces the real512-bit word. Every math word receives its own accepted context/version; queryseq is zero when no query was allocated. This is a posted level, not a one-shot event. The downstream live queue must capture it with the corresponding actual producing output_step and actual t_vout, reserving capacity before that edge. It must not sample held levels repeatedly or retire non-query words.
+
+The helper has no publication mailbox, toggle or ACK credit. It therefore removes the measured one-pending output publication bottleneck without altering query-generation credit, which remains an independent admission limit. This does not claim native1word/CC or any unmeasured base/core ratio, physical clock phase, CDC, downstream acceptance or cost. Actual live-queue binding is owned by the delivery worker. Historical0c81/36f helper/parents remain unchanged.
+
+State is45×88 metadata +45 valid +89 output =4094 logical FF. Only valid45 and has_query1 reset; metadata4048 FF has no datapath reset. New parent ot_qwen_tile_tp8_numeric_stream retains23 roots, replacing only the coherent metadata leaf entry named clk_numeric_output_metadata; live loader remains separate. Output numeric_tuple is atomic at the actual producing edge. Registered physical faces, real assigned pins, CTS/outline and source/gate phase remain unqualified.
+
+Unit checks64 all-math identities and four allocated high40 query words, including adjacent query words and immediate pauses. Early-stage, forced allocation, stale non-query identity and sequence truncation mutants fail. Scoped parent lint passes. Full actual936-word/872-query queue/arithmetic binding is pending; no old mailbox receipt is relabeled as this source.

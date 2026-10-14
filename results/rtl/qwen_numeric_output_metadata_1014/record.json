@@ -1,0 +1,32 @@
+{
+  "status": "STREAMING_EVERY_MATH_METADATA_UNIT_ONLY_ACTUAL_QUEUE_BINDING_PENDING",
+  "source_sha256": "566c2f13020b8e467b528d6108761923b6583bea8d713e8cc5fdc694a2b63fc1",
+  "bench_sha256": "100609f36eda6ba3c51352ec24886991bd1fe699607f16ef835a157a1254de5a",
+  "cases": {
+    "positive": {
+      "exit": 0,
+      "source_sha256": "566c2f13020b8e467b528d6108761923b6583bea8d713e8cc5fdc694a2b63fc1"
+    },
+    "early_output": {
+      "exit": 1,
+      "source_sha256": "7df76ec6eafaefc56d72681427508c5c5cf8e3255940dcea90cf630bdb5f7220"
+    },
+    "forced_allocated": {
+      "exit": 1,
+      "source_sha256": "837f61f663214b3d7ca8d8f264fa287c9821e297fb29f5a1b6f8e87bcbc4b391"
+    },
+    "stale_nonquery": {
+      "exit": 1,
+      "source_sha256": "b34c0228662b4d46031718cbdd0eeb54d62b18cb7668bfc68fb897e11c563d92"
+    },
+    "truncated32": {
+      "exit": 1,
+      "source_sha256": "3eb54601e6324b6823935a2c5c076fa72c10446be3f866b2901ad1df477ad09c"
+    }
+  },
+  "logical_ff": 4094,
+  "reset_ff": 46,
+  "nonreset_ff": 4048,
+  "parent_lint": "PASS",
+  "parent_sha256": "babdc5bfc2a2a8fa9ffc0c46ac51848965591d3a596c53cdce4a3f438054e55d"
+}
