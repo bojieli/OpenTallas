@@ -388,5 +388,13 @@
     "peak_ram_gb": 8
    }
   ]
- }
+ },
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_MACRO_LEAF": "1",
+  "OT_SPINE_CTS_REST": "1"
+ },
+ "spine_through_icg": true
 }
