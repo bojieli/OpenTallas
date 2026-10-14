@@ -61,6 +61,7 @@ foreach wp_side {B T} {
             set wp_inset [expr {(3*$wp_lane+3-$wp_k)*$wp_row}]
             set wp_y [expr {$wp_side eq "B" ? [$wp_core yMin]+$wp_inset : [$wp_core yMax]-$wp_inset-$wp_row}]
             if {$wp_y < [$wp_core yMin] || $wp_y+$wp_row > [$wp_core yMax]} { error "WP hold corridor exceeds core" }
+            $wp_cell setPlacementStatus PLACED
             $wp_cell setLocation $wp_x $wp_y
             $wp_cell setPlacementStatus FIRM
             set wp_depth [expr {max($wp_depth,$wp_inset+$wp_row)}]
