@@ -4,7 +4,11 @@ r=Path.cwd().resolve();out=Path(sys.argv[1]).resolve();out.mkdir(parents=True,ex
 for x in ['w','x','head','gold']:shutil.copy2(r/f'results/rtl/dsrom_markov_row_20261008/{x}.hex',out/f'{x}.hex')
 src=[r/x for x in ['rtl/common/ot_prefix.sv','rtl/v41rom/ot_v41_bmul2.sv','rtl/v41rom/ot_dsrom_bmul3.sv','rtl/v41rom/ot_v41_fadd.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv','rtl/experimental/dsrom_markov_20261008/ot_s81_markov_k256_native.sv']]
 results=[]
-for kind,mut in [('exact',0),('join_mut',1),('delay_mut',0),('ctl_mut',0),('mul_mut',0),('pair_mut',0),('fold_mut',0)]+[(f'chunk{k}_mut',0)for k in range(8)]+[('fault',0)]:
+modes=[('exact',0),('join_mut',1),('delay_mut',0),('ctl_mut',0),('mul_mut',0),('pair_mut',0),('fold_mut',0)]+[(f'chunk{k}_mut',0)for k in range(8)]+[('fault',0)]
+if len(sys.argv)>2:
+ selected=sys.argv[2]+'_mut';modes=[m for m in modes if m[0]in ['exact','fault',selected]]
+ assert len(modes)==3,'unknown owned-master mode'
+for kind,mut in modes:
  oldname='tb_markov_fault'if kind=='fault'else'tb_markov_row'
  tb=(r/f'rtl/test/dsrom_markov_20261008/{oldname}.sv').read_text()
  header='ot_s81_markov_k256_native #(.MUTANT_FOLD('+('0'if kind=='fault'else'MUTANT')+')) dut('
@@ -35,3 +39,5 @@ for kind,mut in [('exact',0),('join_mut',1),('delay_mut',0),('ctl_mut',0),('mul_
  results.append({'kind':kind,'rc':p.returncode,'expected': 'pass'if positive else'functionalfail','ok':ok,'stdout':p.stdout[-600:]});print(results[-1],flush=True)
  if not ok:raise SystemExit(2)
 (out/'receipt.json').write_text(json.dumps({'native':'K256PINREG1CUT511SPLIT9,RING1exactlysameepochs asRING0','clocks':39,'results':results,'source_sha256':{str(p.relative_to(r)):hashlib.sha256(p.read_bytes()).hexdigest()for p in src},'scope':'48released/stress fullK rows+all3faultcases, every-cycle interface eq against unchanged nativePIN1 reference; physical views/parent integration still owed'},indent=2)+'\n')
+
+print('all_native_checks_PASS',flush=True)
