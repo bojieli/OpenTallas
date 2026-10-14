@@ -161,7 +161,7 @@
   "benches": [
    {
     "name": "su_lane_io_exact8",
-    "cmd": "bash physical/qwen_su_lane_ioeg/bench.sh su_lane_io_exact8 {RUN}/bench -GLOREG=1 -GLIREG=1 -GSEED=11",
+    "cmd": "bash physical/qwen_su_lane_oreg/bench.sh su_lane_io_exact8 {RUN}/bench -GLOREG=1 -GLIREG=1 -GSEED=11",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -172,7 +172,7 @@
    },
    {
     "name": "su_lane_io_s2",
-    "cmd": "bash physical/qwen_su_lane_ioeg/bench.sh su_lane_io_s2 {RUN}/bench -GLOREG=1 -GLIREG=1 -GIS=2 -GOS=2 -GCRX=3 -GSEED=12",
+    "cmd": "bash physical/qwen_su_lane_oreg/bench.sh su_lane_io_s2 {RUN}/bench -GLOREG=1 -GLIREG=1 -GIS=2 -GOS=2 -GCRX=3 -GSEED=12",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -205,7 +205,7 @@
    },
    {
     "name": "su_lane_io_cmut",
-    "cmd": "bash physical/qwen_su_lane_ioeg/bench.sh su_lane_io_cmut {RUN}/bench -GLOREG=1 -GLIREG=1 -GMUT=1",
+    "cmd": "bash physical/qwen_su_lane_oreg/bench.sh su_lane_io_cmut {RUN}/bench -GLOREG=1 -GLIREG=1 -GMUT=1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -216,7 +216,7 @@
    },
    {
     "name": "su_lane_io_prod64",
-    "cmd": "bash physical/qwen_su_lane_ioeg/bench.sh su_lane_io_prod64 {RUN}/bench -GLOREG=1 -GLIREG=1 -GSEED=11 -GSW=64",
+    "cmd": "bash physical/qwen_su_lane_oreg/bench.sh su_lane_io_prod64 {RUN}/bench -GLOREG=1 -GLIREG=1 -GSEED=11 -GSW=64",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 128,
