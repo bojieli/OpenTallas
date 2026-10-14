@@ -97,6 +97,7 @@ for _n in ('be_hard_h_gold_s1', 'be_hard_h_tp'):
     CASES['fault6_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=6))
     CASES['fault8_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=8))
     CASES['fault9_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=9))
+    CASES['fault10_' + _n] = dict(_c, params=dict(_c['params'], BE_FAULT_STAGES=10))
 
 def build(out, tag, defines, params):
     obj = out / f'obj_{tag}'
