@@ -52,7 +52,14 @@ proc ot_clock_spine {} {
   dict set ::ot_ref_child_ins $master $insertion
   try {
     if {![::ot_tt_spine_native]} {error "TT primary spine was not built"}
-    foreach i $primary_insts {$i setDoNotTouch 1}
+    foreach i $primary_insts {
+      if {[string match ICG* [[$i getMaster] getName]]} {
+        $i setDoNotTouch 1
+      } else {
+        $i setDoNotTouch 0
+        if {![[$i getMaster] isBlock]} {$i setPlacementStatus PLACED}
+      }
+    }
     puts "TT_DUAL_SPINE complete: independent primary and native-gated local trees"
   } finally {
     dict for {p body} $saved {proc $p [info args $p] $body}
