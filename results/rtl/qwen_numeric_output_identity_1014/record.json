@@ -1,0 +1,32 @@
+{
+  "status": "EVERY_MATH_IDENTITY_UNIT_ONLY_ACTUAL_NUMERIC_BINDING_PENDING",
+  "source_sha256": "f124749c60ce40cc014d85e046beefa7995840a425c52edc12fcfe52d290aff6",
+  "bench_sha256": "7e5c4208faec98d7f7f5ab9468e365b00724899a96b5b09469b7388195e15b17",
+  "cases": {
+    "positive": {
+      "exit": 0,
+      "source_sha256": "f124749c60ce40cc014d85e046beefa7995840a425c52edc12fcfe52d290aff6"
+    },
+    "early_output": {
+      "exit": 1,
+      "source_sha256": "9d3884d8d853a2e6b870f35e03ba8db88b869ca37da7b40fbbfd2c02bc076c04"
+    },
+    "forced_allocated": {
+      "exit": 1,
+      "source_sha256": "3b6edee0e97fc46eacf1a17e40b536136fd5a1e645c164b7c2e27c199198b033"
+    },
+    "stale_nonquery": {
+      "exit": 1,
+      "source_sha256": "2889a592ab4706071ac6fe2fb5cbad081e57724a689ba5c53cc7246af512a62b"
+    },
+    "truncated32": {
+      "exit": 1,
+      "source_sha256": "b9754c723f3f2d2f6468a2e8023400edeceb4c44e72be69a00f11e2aebefb465"
+    }
+  },
+  "logical_ff": 4143,
+  "parent_lint": "PASS (Verilator -Wno-fatal -Wno-TIMESCALEMOD; existing macro fixture)",
+  "generation_source_sha256": "716763723d149e7af61c83258258f653d4c706ba32ac9adc7bb3cdec8c6ecc40",
+  "source_assertion": "x_op_context/x_vm_version captured unconditionally from accepted registers in same pre-update x_epoch/x_addr always block",
+  "new_parent_sha256": "2ab5b7ce7fbe841ea6a5a570489d21ce1200779218b41227ade4e152f15e03b6"
+}
