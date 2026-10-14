@@ -1,0 +1,38 @@
+{
+  "source_commit": "ffd1a0692",
+  "native_common": "64fced1f9",
+  "configuration": {
+    "SPANPIPE": 1,
+    "FASTFIN": 1,
+    "FRONTFAST": 2,
+    "WRSPLIT": 1,
+    "DRAIN": 1
+  },
+  "exact": [
+    {
+      "phase": 61,
+      "records": 32,
+      "words": 13312,
+      "cycles": 184,
+      "price": 168,
+      "client_drains": 32,
+      "VM_drains": 32,
+      "quadrant_record_drains": 4
+    },
+    {
+      "phase": 487,
+      "records": 32,
+      "words": 13312,
+      "cycles": 184,
+      "price": 168,
+      "client_drains": 32,
+      "VM_drains": 32,
+      "quadrant_record_drains": 4
+    }
+  ],
+  "mutants": {
+    "header": "observed fatal quadrant0 after0 dones, exit1",
+    "assembly": "observed fatal 11592 of13312 words mismatch, exit1"
+  },
+  "scope": "Held grants and permits, real4B2 DMA preload/group0 readback. Ownership acquisition/release, global mirror completion and absolute physical placement remain open."
+}
