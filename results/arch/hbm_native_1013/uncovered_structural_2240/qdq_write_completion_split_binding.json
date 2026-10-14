@@ -1,11 +1,15 @@
 {
   "status": "unqualified_opt_in",
   "original_wr_snapshot": "85c81f4c2 preserved; no substitution of monolithic physical view",
-  "leaf_source_commit": "d536f983f",
+  "leaf_source_commit": {
+    "pay": "f8dbc1be6",
+    "fin": "f354e9c20",
+    "split": "abc2fbd46"
+  },
   "source_sha256": {
-    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv": "87deaef6499f70ca2404af1e538c05dac42ac1529d9948f5412cfbb869baf1a4",
-    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_fin.sv": "9e276387090cc247cb0c29ac00f0749128950050b225b25cad8a5c4f06e19c68",
-    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_split.sv": "07121edbfe4925ae61f162329efc34a79aa077a673f001b1eb13e49d4d082d1f"
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_pay.sv": "f1cdc6eccab99f3df5d7bdf44493911f01e5437e18c75645a454b11f4cad1460",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_fin.sv": "fb3d1c9586cf7828924a7b9600f22859375af210a699ac644a9518e27f18e9aa",
+    "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr_split.sv": "0dbbaf63c53cf51a25d8ee32772b878244f8a135eb00b66b25b339389338fac1"
   },
   "physical_binding": {
     "parent": "ot_hgi_qdq_q_pin4",
@@ -32,7 +36,7 @@
     "input_slack_ps": 224.4,
     "output_slack_ps": 118.1,
     "route_job": "qdq_wr_fin_ref-f2log-de1974858",
-    "route_verdict": "pending",
+    "route_verdict": "CLOSED but ACK P216.2 fails; preserved historical unqualified",
     "prior_job_failure": "qdq_wr_fin_ref-f2-de1974858 terminal daemon-stop: actual mutant failed correctly, runner did not print failure log to stdout"
   },
   "pay_p1_cts": {
@@ -87,7 +91,14 @@
     "words_required": 13312,
     "quarters": 4,
     "records": 32,
-    "native_test_status": "parent executing source-matched integration; no full-native qualification yet"
+    "native_test_status": "Parent ccdd92c77 capturedACK FINf5 + PAYabc EMPTY_BYPASS1 exact phases61/487 PASS; final f6/f8 matched integration pending",
+    "record_commit": "ff05f6c8f",
+    "phase_cycles": {
+      "61": 184,
+      "487": 183
+    },
+    "real_mutants": "header0done fatal; assembly11592wrong fatal",
+    "no_bypass_control": "Same FINf5/PAY source, EMPTY_BYPASS0 exact words185; PRICE_MISS"
   },
   "required_release_checks": [
     "TT>=0 FF>=0 DRC0 on both real leaf sources",
@@ -112,6 +123,44 @@
       0,
       112.284
     ],
-    "status": "unassigned alternative after PPL32packing failures; actualPG/pin audits required"
+    "status": "Exact2857 signal pins in p7 gate PASS; routed PG/pin audit pending; slot unassigned"
+  },
+  "fin_f6_route": {
+    "job": "qdq_wr_fin_ref-f6-c9ee48238",
+    "record_commit": "a59f26ed27488ce58a2ad118f5c116f3dd1a53eb",
+    "tt_ps": 73.91,
+    "ff_ps": 24.96,
+    "drc": 0,
+    "sinks": 1200,
+    "R_ps": 136.1,
+    "boundary_min_ps": 117.9,
+    "boundary_max_ps": 143.1,
+    "boundary_spread_ps": 25.2,
+    "max_Q_ps": 189.2,
+    "max_P_ps": 148.8,
+    "H100_margin_ps": 191.1,
+    "pin_flags": [],
+    "status": "Leaf P190/Q220 clean; actual parent geometry/pair qualification pending"
+  },
+  "pay_p3_route": {
+    "job": "qdq_wr_pay_ref-p3-94e699311-arg2",
+    "record_commit": "0bdf5168a205d6aa5a47e34c84859a7fd5013896",
+    "tt_ps": 39.94,
+    "ff_ps": 8.24,
+    "drc": 0,
+    "max_Q_ps": 307.6,
+    "out_unreg_bits": 23,
+    "status": "CLOSED but actual launch pins fail; preserved"
+  },
+  "pay_p7_cts": {
+    "job": "qdq_wr_pay_ref-p7-7edee9466",
+    "sinks": 4186,
+    "tt_all_min_ps": 566.7,
+    "tt_all_max_ps": 597.0,
+    "tt_all_spread_ps": 30.3,
+    "tt_boundary_mean_ps": 577.1,
+    "setup_ps": 60.6,
+    "hold_ps": 27.6,
+    "status": "Gate PASS; source-bound route running; pins unqualified"
   }
 }
