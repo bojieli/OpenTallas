@@ -12,7 +12,7 @@
 // The first cluster (3fdc48de9) kept the 872 station flops and the DONE word as flat cluster flops under one
 // clock pin at the NE corner: its balanced spine measured TT insertion 1,222 ps max, spread 226 ps, boundary mean
 // ~1,029 ps (2,102 buffers for 889 sinks over 1.7 mm).  Here every child has its OWN clock entry pin on the cluster
-// face next to it (ck_g / ck_x / ck_c / ck_s, ckv_x / ckv_d): the die delivers the clock at each pin at phi - R of
+// face next to it (ck_g / ck_x / ck_c / ck_s, ckv_x / ckv_d / ckv_r): the die delivers the clock at each pin at phi - R of
 // that child (R = the child's routed insertion: g2 208 ps, x 269, ctl 90, relays 32..62, die clock delivery rule
 // 10-13), so the cluster adds a wire and no tree.
 // Ports and behaviour are those of ctrl_c/dsfd_sp_capture_c.sv built with S81PH_CAP_SAFE (dsfd_sp_capture CORE 3 =
@@ -28,7 +28,8 @@ module dsfd_sp_capture_c (
     input wire [8:0] ck_s,                   // clock entry of the station relays of group g; [8]: the status-word relay
     input wire [0:0] rst,
     input wire [7:0] ckv_x,                  // serial clock entry of dsfd_capt_x [g]
-    input wire [1:0] ckv_d,                  // serial clock entry of [0] dsfd_capt_cd, [1] the t_cd relay
+    input wire       ckv_d,                  // serial clock entry of dsfd_capt_cd (S face, under the control tile)
+    input wire       ckv_r,                  // serial clock entry of the t_cd relay (N face)
     input wire [0:0] rsv,
     input wire [6946:0] f_gather,
     output wire [13375:0] t_vm,
@@ -73,7 +74,7 @@ module dsfd_sp_capture_c (
     wire [63:0] stw = stv[64 * (NT / 2 - 1) +: 64];   // the tile left of the control tile
     assign t_vm[13375:13312] = stw;
     wire [11:0] cd; wire [14:0] cd_o;
-    dsfd_capt_cd u_cd (.ckv(ckv_d[0]), .rsv(rsv[0]), .f_st(stw[13:0]), .t_cd(cd));
-    dsfd_rly_15_SN u_cr (.ck(ckv_d[1]), .rs(rsv[0]), .i({cd[2:0], cd}), .o(cd_o));
+    dsfd_capt_cd u_cd (.ckv(ckv_d), .rsv(rsv[0]), .f_st(stw[13:0]), .t_cd(cd));
+    dsfd_rly_15_SN u_cr (.ck(ckv_r), .rs(rsv[0]), .i({cd[2:0], cd}), .o(cd_o));
     assign t_cd = cd_o[11:0];
 endmodule
