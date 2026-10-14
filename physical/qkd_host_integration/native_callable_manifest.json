@@ -78,7 +78,8 @@
     "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
     "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
     "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
-    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa"
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "rtl/test/qwen_host/qkd_host_board_port_fixture.sv": "d215098c543ac7315b80329eafbf3d8235a7a05dd2f64e5c6a207c130e248879"
   },
   "elaboration": {
     "gate": "tools/qwen_host/token_service_elaborate.sh",
@@ -86,7 +87,7 @@
     "exit_code": 0,
     "proof_scope": "ELABORATION_ONLY"
   },
-  "recipe_sha256": "26ec08faecbc294b23aff28e878d72df3bc422fe88b1e632e6bc1ae609341993",
+  "recipe_sha256": "80d30c0b7c7e8628b9184064fb264e4456509a3cc75bb523370e59f68e0b61e1",
   "io_sources": {
     "rtl/physical/ot_qfd_link_adp512_split.sv": "8be3cedde8628ae73e7db2d6452d079e660acc4703dbc1721af23d05cb543443",
     "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv": "05d15a075003c65fb84248b671a1acec741e1b195c2562c62201ab2c6a520e0f",
