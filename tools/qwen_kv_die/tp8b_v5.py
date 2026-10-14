@@ -1209,8 +1209,9 @@ def _wrap(v, m, G, peers):
             net = f'n_{bid}'
             V.append(f'  wire [{n - 1}:0] {net};')
             for inst, port in eps:
-                if port.startswith('*dfi:') and k == 1:
-                    for i, (b, j) in enumerate(groups[port[5:]]):
+                if port.lstrip('*').startswith('dfi:') and byi[inst].master == 'ot_hbm3e_phy' and k == 1:
+                    # r10: the star is gone on some paths (run r10a: '.dfi:0(...)' in die.v, STA-0171)
+                    for i, (b, j) in enumerate(groups[port.lstrip('*')[4:]]):
                         phyb.setdefault(inst, {}).setdefault(b, {})[j] = f'{net}[{i}]'
                 elif port == '*dfi' and k == 1:
                     phy_all(inst, net)
