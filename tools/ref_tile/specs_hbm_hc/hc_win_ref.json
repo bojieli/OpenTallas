@@ -16,11 +16,11 @@
     "rst_n"
   ],
   "outline": {
-    "w": 273.024,
-    "h": 164.16
+    "w": 256.176,
+    "h": 151.2
   },
-  "std_area_um2": 3000,
-  "area_basis": "Temporary generator estimate; pre-route actual synthesis determines candidate fit, no slot acceptance",
+  "std_area_um2": 1152,
+  "area_basis": "Measured synthesis std area1152 at3d1d8ea53; fit tightened while retaining>=20um macro channels and face corridors",
   "pins": {
     "W": [
       "clk",
@@ -77,7 +77,7 @@
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "inst": "u_w.g_mac.g_s[1].u_m",
       "at": [
-        154.224,
+        139.104,
         23.76
       ],
       "at_exact": true
@@ -87,7 +87,7 @@
       "inst": "u_w.g_mac.g_s[2].u_m",
       "at": [
         23.328,
-        99.36
+        86.4
       ],
       "at_exact": true
     },
@@ -95,8 +95,8 @@
       "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "inst": "u_w.g_mac.g_s[3].u_m",
       "at": [
-        154.224,
-        99.36
+        139.104,
+        86.4
       ],
       "at_exact": true
     }

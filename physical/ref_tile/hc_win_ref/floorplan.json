@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  274.32,
-  164.16
+  257.04,
+  151.2
  ],
  "core": [
   2.16,
   2.16,
-  272.15999999999997,
-  162.0
+  254.88000000000002,
+  149.04
  ],
  "why": "spec outline",
- "std_area_um2": 3000,
+ "std_area_um2": 1152,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -91,7 +91,7 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_w.g_mac.g_s[1].u_m",
    "idx": 0,
-   "x": 154.224,
+   "x": 139.104,
    "y": 23.76,
    "w": 94.824,
    "h": 41.064,
@@ -105,7 +105,7 @@
    "inst": "u_w.g_mac.g_s[2].u_m",
    "idx": 0,
    "x": 23.328,
-   "y": 99.36,
+   "y": 86.4,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -117,22 +117,15 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "u_w.g_mac.g_s[3].u_m",
    "idx": 0,
-   "x": 154.224,
-   "y": 99.36,
+   "x": 139.104,
+   "y": 86.4,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "util",
-   "utilisation 43% outside 45%-60% (std 3000 + macro 15575 in core 43157 um2)",
-   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv",
