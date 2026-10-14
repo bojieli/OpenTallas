@@ -393,8 +393,10 @@
  "orfs_vars": {
   "OT_SPINE_SAFE_BALANCE": "1",
   "OT_SPINE_TREE_PAD": "1",
-  "OT_SPINE_MACRO_LEAF": "1",
-  "OT_SPINE_CTS_REST": "1"
+  "OT_SPINE_MACRO_LEAF": "1"
  },
- "spine_through_icg": true
+ "spine_through_icg": true,
+ "local_clock_adapter": "physical/qfd_tt_ctlm_split/dual_clock_spine.tcl",
+ "kit_generator": "tools/qwen_tt_split/gen_clock_kit.py",
+ "clock_distribution_note": "Existing spine implementation twice with measured native ICG subtree insertion, no CTS remainder or new phase; head source/latency unchanged."
 }
