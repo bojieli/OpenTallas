@@ -1,5 +1,5 @@
 {
- "name": "s81su_smd_u65_ref-v1-COMMIT",
+ "name": "s81su_smd_u65_ref-v1-6494b8a37",
  "block": "dsfd_su_t_smd",
  "ref_tile": true,
  "owner": "Claude:s81-suhc-r9",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/s81-suhc-r9",
-  "commit": "COMMIT"
+  "commit": "6494b8a37"
  },
  "stages": {
   "bench": [
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_smd_u65_ref/s81su_smd_u65_ref-v1-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_smd_u65_ref/s81su_smd_u65_ref-v1-6494b8a37"
   }
  ],
  "cycles_added": 0,
