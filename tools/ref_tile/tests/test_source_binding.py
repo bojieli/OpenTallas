@@ -108,7 +108,7 @@ class SourceBindingTest(unittest.TestCase):
             spec = {'name': 'probe', 'top': 'probe', 'kind': 'tile', 'clock_port': 'clk', 'route': {'pd': .5}}
             with patch.object(PG, 'ROOT', root), patch.object(PG, 'DAEMON_TREE', daemon), patch.object(PG, 'SHIP_HELPERS', ()), \
                     patch.object(PG, 'referenced_closure', return_value=({'kit/input.v'}, set(), set())), \
-                    patch.object(PG.subprocess, 'run', side_effect=run):
+                    patch.object(PG.subprocess, 'run', side_effect=run), patch.object(PG.HO, 'HELPERS', ()):
                 g = PG.Gate()
                 PG.remote(g, root / 'kit', spec, 'test-host', 10, 1, True)
                 self.assertTrue(g.source_binding['remote_archive_verified'])
