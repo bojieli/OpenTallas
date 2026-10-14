@@ -12844,7 +12844,10 @@
    "clock_entry": {
     "pin": "sk",
     "parent_net": "sk_leaf[0]",
-    "delivery": "phi - measured boundary R for THIS child, never common entry phase"
+    "delivery": "phi - measured boundary R for THIS child, never common entry phase",
+    "level": "early_tap",
+    "hop_skew_ps": 150.0,
+    "provisional_tt_phase_relative_to_phi_ps": -689.8
    },
    "status": "REFERENCE OLD PIN_CAPTURE0 VIEW; successor PIN_CAPTURE1 pending",
    "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_ccf.json",
@@ -12859,7 +12862,17 @@
    "parent": "sp_hc_s/comb",
    "kind": "tile",
    "physical_admission": false,
-   "contract_status": "candidate explicit child allocation; per-source physical timing gates remain open"
+   "contract_status": "candidate explicit child allocation; per-source physical timing gates remain open",
+   "pre_cts_clock_evidence": {
+    "boundary_mean_ps": 689.8,
+    "max_insertion_ps": 708.4,
+    "spread_ps": 32.1,
+    "sinks": 14196,
+    "source_commit": "3144b850c",
+    "scope": "completed CTS provisional; not routed view",
+    "ordinary_setup_ps": -149.58,
+    "ordinary_hold_ps": -123.32
+   }
   },
   {
    "name": "sp_hc_s/comb/u_pd.u_f5r1",
