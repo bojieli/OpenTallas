@@ -22,7 +22,9 @@ use the measured corresponding clock tree insertion through the original
 `bench_hend.sh pass|mut TOP KIND RUN` drives lane words on rising `fi0` and
 independently records expected falling-edge captures. It checks FIFO accepted
 transactions against every output word in order, including repeated data and
-absence of duplicate outputs. Five static phases cover launch/receive ordering.
+absence of duplicate outputs. Five static phases cover launch/receive ordering, including phase 0. The clocks use
+1 fs precision: meso 833.333 ps, ratio 833.331:1111.108 ps (exact 3:4), so
+the ratio phase-0 run includes repeated coincident divider edges.
 Raw masters continuously accept words; their live run retains at most 16 words
 in flight at the terminal sample. VR/ratio runs drain every accepted word.
 The mutant flips a data bit in the input capture register; compilation failures

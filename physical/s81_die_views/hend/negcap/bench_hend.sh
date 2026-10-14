@@ -11,7 +11,7 @@ if [ "$mode" = mut ]; then
   G=$O/mut.sv
 fi
 cat > "$O/tb.sv" <<'EOT'
-`timescale 1ps/1ps
+`timescale 1ps/1fs
 module tb;
 parameter integer KIND=0;
 reg ck=0, fi=0, rs=1;
@@ -22,8 +22,18 @@ integer ph, ns=0, nr=0, err=0, launches=0;
 reg [511:0] sent[0:16383];
 reg [513:0] cap=0;
 reg [511:0] w;
-initial begin if (!$value$plusargs("PH=%d",ph)) ph=10; #(ph); forever #416 fi=~fi; end
-initial forever begin if(KIND==2) #554 ck=~ck; else #416 ck=~ck; end
+initial begin
+  if (!$value$plusargs("PH=%d",ph)) ph=0;
+  #(ph);
+  if(KIND==2) #833.331; else #833.333;
+  fi=1;
+  forever begin if(KIND==2) #416.6655 fi=~fi; else #416.6665 fi=~fi; end
+end
+initial begin
+  if(KIND==2) #1111.108; else #833.333;
+  ck=1;
+  forever begin if(KIND==2) #555.554 ck=~ck; else #416.6665 ck=~ck; end
+end
 initial begin #100 rs=0; #20000 rs=1; #8000 di[0]=1; end
 always @(posedge fi) begin
   if (KIND==0) begin
@@ -57,8 +67,8 @@ EOT
 if [ "$kind" = m2l_raw ]; then K=0; DW=512; elif [ "$kind" = m2l_vr ]; then K=1; DW=514; else K=2; DW=514; fi
 verilator --binary --timing -j 4 -O1 --x-assign unique --x-initial unique -Wno-fatal -Wno-lint -Wno-style --top-module tb -DDUT=$top -DDW=$DW -GKIND=$K "$O/tb.sv" "$G" rtl/common/ot_meso_fifo.sv rtl/common/ot_ratio_cdc_fifo.sv -Mdir "$O/obj" -o tb > "$O/build.log" 2>&1 || { tail -20 "$O/build.log"; exit 2; }
 fail=0
-for ph in 10 200 416 600 820; do
- "$O/obj/tb" +PH=$ph +verilator+rand+reset+2 +verilator+seed+$ph > "$O/run_$ph.log" 2>&1
+for ph in 0 200 416 600 820; do
+ "$O/obj/tb" +PH=$ph +verilator+rand+reset+2 +verilator+seed+$((ph+1)) > "$O/run_$ph.log" 2>&1
  grep HEND_BENCH "$O/run_$ph.log"
  grep -q 'HEND_BENCH PASS' "$O/run_$ph.log" || fail=1
 done
