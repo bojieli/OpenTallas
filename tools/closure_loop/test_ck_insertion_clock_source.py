@@ -75,4 +75,26 @@ class MacroClockScope(unittest.TestCase):
   for owners in ('','ckd core_clk'):
    r=self.probe(owners);self.assertNotEqual(r.returncode,0);self.assertIn('requires one timing clock',r.stderr)
 
+class RawSource(unittest.TestCase):
+ """--raw-source publishes the physical tree from the clock pin: every clock with a source pin loses its source latency
+ (a compensated entry SDC pulled dsfd_vm_bgl28_mc5_h1pcs core to -12.5 ps against a physical 402.8 ps); virtual
+ clocks are untouched and the default (loop calibrate) keeps the SDC's own reference."""
+ def test_tcl_zeroes_only_clocks_with_sources_and_only_when_asked(self):
+  mock='proc all_clocks {} {return {core_clk vclk}}\nproc get_property {c p} {return [dict get {core_clk ck vclk {}} $c]}\nproc get_full_name {o} {return $o}\nproc set_clock_latency {args} {puts "LAT $args"}\n'
+  r=subprocess.run(['tclsh'],input=mock+C.RAW_SOURCE_TCL,text=True,capture_output=True)
+  self.assertEqual(r.returncode,0,r.stderr);self.assertIn('LAT -source 0 core_clk',r.stdout);self.assertNotIn('vclk',r.stdout)
+  self.assertIn('OT_CK_RAW_SOURCE core_clk',r.stdout)
+  self.assertIn(C.RAW_SOURCE_TCL.strip(),C.tcl('tt','6_final.odb','6_final.sdc',True,'ck',(),True))
+  self.assertNotIn('OT_CK_RAW_SOURCE',C.tcl('tt','6_final.odb','6_final.sdc',True,'ck'))
+ def test_all_clocks_forwards_raw_source(self):
+  with tempfile.TemporaryDirectory() as td:
+   base=pathlib.Path(td);out=base/'insertion.json'
+   (base/'6_final.sdc').write_text('create_clock -name core_clk -period 833 [get_ports {ck}]\ncreate_clock -name req_clk -period 833 [get_ports {ck_req}]\n')
+   seen=[]
+   def run(cmd,check):
+    seen.append('--raw-source' in cmd);pathlib.Path(cmd[cmd.index('--output')+1]).write_text(json.dumps({'clock':'x','tt':{}}))
+   argv=['ck_insertion.py','--base',td,'--routed','--all-clocks','--raw-source','--output',str(out)]
+   with mock.patch.object(sys,'argv',argv),mock.patch.object(C.subprocess,'run',side_effect=run):C.main()
+   self.assertEqual(seen,[True,True]);self.assertTrue(json.loads(out.read_text())['raw_source'])
+
 if __name__=='__main__':unittest.main()
