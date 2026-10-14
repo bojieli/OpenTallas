@@ -2486,8 +2486,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 out.append(q)
         return out
 
-    def poly_of(cl, P0, P1, bid=None, eps=None):
-        path = _poly0(cl, P0, P1, bid=bid, eps=eps)
+    def die_lane_path(path, bid):
         lane_window = (getattr(v, 'DIE_LANE_WINDOWS', {}) or {}).get(bid)
         if lane_window:
             lo, hi, xl = lane_window['y0'], lane_window['y1'], lane_window['x']
@@ -2499,6 +2498,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 else:
                     routed.append(b)
             path = [q for j, q in enumerate(routed) if not j or q != routed[j - 1]]
+        return path
+
+    def poly_of(cl, P0, P1, bid=None, eps=None):
+        path = die_lane_path(_poly0(cl, P0, P1, bid=bid, eps=eps), bid)
         if not getattr(v, 'WALL_AVOID', False) or cl == 'corridor':
             return path
         if cl.startswith('kvn') or cl == 'd2d_fdi' or (bid or '') in tight_stride:
@@ -2513,7 +2516,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     out_.append(b_)
             if ch_:
                 wall_log.append((bid, cl, cur_bits[0], 'leg', len(path), len(out_)))
-            return out_
+            return die_lane_path(out_, bid)
         hit = sum(_wall_hit(a_, b_) for a_, b_ in zip(path, path[1:]))
         if hit <= WALL_HIT or _inside_big(P0) or _inside_big(P1):
             return path
@@ -2521,7 +2524,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         L0 = sum(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) for a_, b_ in zip(path, path[1:]))
         L1 = sum(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) for a_, b_ in zip(alt, alt[1:])) if alt else None
         wall_log.append((bid, cl, cur_bits[0], round(hit), round(L0), None if L1 is None else round(L1)))
-        return alt or path
+        return die_lane_path(alt or path, bid)
 
     def candidates(path):
         """(arc, x, y, corr) points a relay may take along the path."""
