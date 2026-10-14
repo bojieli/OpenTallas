@@ -17,13 +17,14 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     input wire [84*((KMAX+63)/64)-1:0] chain_tau,
     input wire [((KMAX+63)/64)-1:0] chain_busy,
     input wire [DEL-1:0] lane_d0v,lane_d1v,
-    input wire [DEL-1:0] lane_permit,lane_fault,lane_dv,lane_fe,lane_ldv,
-    input wire[DEL*2040-1:0]lane_heads,input wire[DEL*24-1:0]lane_masks,input wire[DEL*8-1:0]lane_epochs,
+    input wire [DEL-1:0] lane_fault,lane_dv,lane_ldv,
+    input wire[2039:0]lane_heads0,lane_heads1,lane_heads2,lane_heads3,
+    input wire[23:0]lane_masks0,lane_masks1,lane_masks2,lane_masks3,
+    input wire[7:0]lane_epoch0,lane_epoch1,lane_epoch2,lane_epoch3,
+    input wire[1:0]lane_hn0,lane_hn1,lane_hn2,lane_hn3,
     output reg[DEL*8-1:0]lane_take_epochs,
-    input wire [DEL*680-1:0] lane_he,
     input wire [DEL*8-1:0] lane_nv_mask,
-    input wire [DEL*8-1:0] lane_hm,lane_dn,lane_occ,
-    input wire [DEL*2-1:0] lane_hn,
+    input wire [DEL*8-1:0] lane_occ,
     output reg [DEL*8-1:0] lane_take,
     output reg [DEL-1:0] lane_pop,
     output reg lane_live,
@@ -126,13 +127,17 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     always @(posedge clk or negedge rn)if(!rn)count_v<=0;else count_v<=lane_dv;
     always @(posedge clk)count_mask<=lane_nv_mask;
     wire [DEL-1:0] d2_v=count_v,d0_v=early0_pin,d1_v=early1_pin;
-    wire [DEL-1:0] fe=lane_fe,ld_v=landing_pin;
+    wire [DEL-1:0] ld_v=landing_pin;
     wire [7:0]occ[0:DEL-1];
     wire [679:0]st_e[0:DEL-1][0:2];
     wire [7:0]st_m[0:DEL-1][0:2],dn[0:DEL-1];
     wire [1:0]st_n[0:DEL-1];
     assign lane_tau=tau;
     assign lane_g=g_q;assign lane_gb=gb_q;assign lane_pf=pf_q;
+    wire[8159:0]lane_heads={lane_heads3,lane_heads2,lane_heads1,lane_heads0};
+    wire[95:0]lane_masks={lane_masks3,lane_masks2,lane_masks1,lane_masks0};
+    wire[31:0]lane_epochs={lane_epoch3,lane_epoch2,lane_epoch1,lane_epoch0};
+    wire[7:0]lane_hn={lane_hn3,lane_hn2,lane_hn1,lane_hn0};
     // Three head mirrors cover the registered command round trip without reusing a stale mask.
     reg[DEL*2040-1:0]head_pin;reg[DEL*24-1:0]mask_pin;
     reg[DEL*8-1:0]epoch_pin;reg[DEL*2-1:0]hn_pin;

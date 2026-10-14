@@ -7,9 +7,9 @@ module tb_hgi_coll_tkm_head_seam;
  integer base[0:3];reg[3:0]pop_pin;reg[31:0]epoch_pin;
  reg[1279:0]seen=0;integer checked=0,cycles=0,l,s,i,id,j;
  ot_hgi_coll_tkm_seq_lane_core #(.KMAX(64),.MUT(MUT))dut(.clk(clk),.rst_n(rst_n),.start(1'b0),
- .lane_heads(heads),.lane_masks(masks),.lane_epochs(epochs),.lane_hn(hn),.lane_take(take),.lane_pop(pop),.lane_take_epochs(cmd_epoch),
- .lane_d0v(4'b0),.lane_d1v(4'b0),.lane_dv(4'b0),.lane_permit(4'b0),.lane_fault(4'b0),.lane_fe(4'hf),.lane_ldv(4'b0),
- .lane_he(2720'b0),.lane_nv_mask(32'b0),.lane_hm(32'b0),.lane_dn(32'b0),.lane_occ(32'b0),
+ .lane_heads0(heads[0+:2040]),.lane_masks0(masks[0+:24]),.lane_epoch0(epochs[0+:8]),.lane_hn0(hn[0+:2]),.lane_heads1(heads[2040+:2040]),.lane_masks1(masks[24+:24]),.lane_epoch1(epochs[8+:8]),.lane_hn1(hn[2+:2]),.lane_heads2(heads[4080+:2040]),.lane_masks2(masks[48+:24]),.lane_epoch2(epochs[16+:8]),.lane_hn2(hn[4+:2]),.lane_heads3(heads[6120+:2040]),.lane_masks3(masks[72+:24]),.lane_epoch3(epochs[24+:8]),.lane_hn3(hn[6+:2]),.lane_take(take),.lane_pop(pop),.lane_take_epochs(cmd_epoch),
+ .lane_d0v(4'b0),.lane_d1v(4'b0),.lane_dv(4'b0),.lane_fault(4'b0),.lane_ldv(4'b0),
+ .lane_nv_mask(32'b0),.lane_occ(32'b0),
  .chain_up(340'b0),.chain_tau(84'b0),.chain_busy(1'b0),
  .cfg_n(12'd1),.cfg_k(13'd64),.cfg_g(8'd1),.cfg_gbase(8'd0),.cfg_pf(16'd1),.cfg_nout(13'd64),.cfg_obase(40'd0),.cfg_rbase(40'd0),.cfg_has_r(1'b0),
  .buf_rd_v(1'b0),.buf_rd_data(340'b0),.w_v(1'b0),.pack_empty(1'b1),.pack_queued(4'b0),.pack_lines(10'b0));

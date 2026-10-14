@@ -63,8 +63,8 @@ module ot_hgi_coll_tkm_seq_split #(
  .w_ack(1'b0),.w_seq(),.w_v(w_v),.w_addr(w_addr),.w_mask(w_mask),.w_data(w_data),.queued(pq),.lines_pushed(pl),.empty(pempty));
  assign del_permit=perm;
  ot_hgi_coll_tkm_seq_lane_core #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_core(
-   .lane_d0v(d0v),.lane_d1v(d1v),.lane_permit(perm),.lane_fault(ft),.lane_dv(dv),.lane_fe(fe),.lane_ldv(ldv),
-   .lane_heads(heads),.lane_masks(masks),.lane_epochs(epochs),.lane_take_epochs(take_epochs),.lane_nv_mask(nv_mask),.lane_he(he),.lane_hm(hm),.lane_dn(dn),.lane_occ(occ),.lane_hn(hn),.lane_take(take),.lane_pop(pop),
+   .lane_d0v(d0v),.lane_d1v(d1v),.lane_fault(ft),.lane_dv(dv),.lane_ldv(ldv),
+   .lane_heads0(heads[0+:2040]),.lane_masks0(masks[0+:24]),.lane_epoch0(epochs[0+:8]),.lane_hn0(hn[0+:2]),.lane_heads1(heads[2040+:2040]),.lane_masks1(masks[24+:24]),.lane_epoch1(epochs[8+:8]),.lane_hn1(hn[2+:2]),.lane_heads2(heads[4080+:2040]),.lane_masks2(masks[48+:24]),.lane_epoch2(epochs[16+:8]),.lane_hn2(hn[4+:2]),.lane_heads3(heads[6120+:2040]),.lane_masks3(masks[72+:24]),.lane_epoch3(epochs[24+:8]),.lane_hn3(hn[6+:2]),.lane_take_epochs(take_epochs),.lane_nv_mask(nv_mask),.lane_occ(occ),.lane_take(take),.lane_pop(pop),
    .lane_live(live),.lane_tau(tau),.lane_g(g),.lane_gb(gb),.lane_pf(pf),
    .chain_entry(chain_entry),
    .chain_valid(chain_valid),
