@@ -378,9 +378,47 @@ module ot_w15_rom_oneshot_die_px_acceptedpop #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) ldl <= 0;
         else ldl <= {ldl[DL-2:0], s0_last};
+    // Dedicated seam launch flops capture the exact same head and enable as
+    // s0_d, in the same cycle. The reset is physically distinct from the internal
+    // unreset head register, so synthesis cannot merge the two owners. Payload
+    // is consumed only with ln_v; adding reset changes no valid epoch or latency.
+`ifdef OT_S81_CES_LNPIN
+    generate for (g = 0; g < N; g = g + 1) begin : g_ln_pin
+        (* keep = 1 *) reg [FW-1:0] d;
+        if (PULL != 0 && PCOPY != 0 && PSL == 1) begin : g_one
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) d <= 0;
+                else if (pop_k[g]) d <= head[g][FW-1:0];
+        end else if (PULL != 0 && PCOPY != 0) begin : g_sliced
+            localparam integer SW = FW / PSL;
+            genvar sl;
+            for (sl = 0; sl < PSL; sl = sl + 1) begin : g_sl
+                always @(posedge clk or negedge rst_n)
+                    if (!rst_n) d[SW*sl +: SW] <= 0;
+                    else if (pop_k[g*PSL+sl])
+                        d[SW*sl +: SW] <= ppar_k[g*PSL+sl]
+                            ? hd[2*g+1][SW*sl +: SW] : hd[2*g][SW*sl +: SW];
+            end
+        end else begin : g_shared
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) d <= 0;
+                else if (pop) d <= head[g][FW-1:0];
+        end
+`ifndef SYNTHESIS
+        always @(negedge clk) if (rst_n && ln_v && d !== s0_d[g])
+            $fatal(1, "CES dedicated seam register diverged at valid epoch");
+`endif
+`ifdef OT_S81_CES_MUT_LNPIN
+        assign ln_d[g*FW +: FW] = d ^ {{(FW-1){1'b0}}, 1'b1};
+`else
+        assign ln_d[g*FW +: FW] = d;
+`endif
+    end endgenerate
+`else
     generate for (g = 0; g < N; g = g + 1) begin : g_lnd
         assign ln_d[g*FW +: FW] = s0_d[g];
     end endgenerate
+`endif
     // LSEAM: ln_v leaves its OWN flop (register at the pin): lnv_q == s0_v && !s0_mode on every cycle (same enable, the
     // next value of that product: s0_v <= pop, s0_mode <= head_mode on a pop).  LSEAM 0: the port is unused.
     reg lnv_q;

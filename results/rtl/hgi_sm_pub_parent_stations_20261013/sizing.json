@@ -58,5 +58,43 @@
     "fp32": 293,
     "bf16": 309
   },
-  "throughput_scope": "publication station composition with matching external response traces, not whole SM MATVEC throughput"
+  "throughput_scope": "publication station composition with matching external response traces, not whole SM MATVEC throughput",
+  "parent_die_wire_candidate": {
+    "outline_um": [
+      1814.4,
+      1296
+    ],
+    "slice_column_pitch_um": 432,
+    "VM_existing_stages_split": "n_p in local arbiter; vq_p/vq_v and va_q at real VM port station",
+    "STREAM_existing_stages_split": "r1_d/r1_v/agg_r at hop1; s0 data/valid at hop2 by die edge",
+    "added_cycles": 0,
+    "clock_entries": 69,
+    "physical_added_busy_flops": 1,
+    "prior_view_defect": "legacy W/E parent VM client1 output >500um; original grouped2stageSTREAM egress could not land both incoming and outer faces within the die hop bounds",
+    "qualification": "candidate prebuild; original13 CLOSED views unchanged; new3stationtypes need real routes+exact/mutant; parent context and actual external VM destinations remain required",
+    "return_stages": "20 single-hop CLOSED returnD1 copies replace the existing8 multi-hop return bundles; still1/2/3/4cycles per column",
+    "completion_guard": "drop redundant VM-valid: slice done requires last writeACK; existing return hops and LV+1 guard already follow it, verified by a live assertion in the cycle-exact bench",
+    "reset_hops": 11,
+    "additional_cold_reset_release_cycles_max": 4,
+    "reset_release_cycles_by_column": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "credit_release_cycles_by_column": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "earliest_go_cycles_by_column": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "physical_added_state_bits": 12,
+    "slice_reset_entries": 8
+  }
 }
