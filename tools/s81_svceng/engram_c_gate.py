@@ -44,12 +44,20 @@ def build(obj, g):
 
 
 def main():
+    global SRC, TB
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--rso-candidate", action="store_true", help="source-only reset ACK variants; no existing physical view binding")
     ap.add_argument("--neg", choices=[n for n, _ in NEG])
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
+    if a.rso_candidate:
+        import re
+        SRC = SRC + sorted(p for p in (E / "rso_candidate").glob("*.sv") if not p.name.startswith("tb_"))
+        original_tb = TB.read_text()
+        TB = a.out.resolve() / "tb_dsfd_engram_c_rso.sv"
+        TB.write_text(re.sub(r"\bdsfd_engram_c\b", "dsfd_engram_c_rso", original_tb))
     t = C.ES.shipped_tables()
     ev = C.build_events(np.random.default_rng(20261008), 120 if a.quick else 600)
     wins = C.official_windows(ev)
