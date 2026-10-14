@@ -151,7 +151,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
        lane_take_epochs[8*l+:8]<=consume_epoch[l];
        if(ins_live)begin
         if(sel_pop[l])begin consume_epoch[l]<=consume_epoch[l]+1'b1;consume_mask[l]<=0;end
-        else consume_mask[l]<=consume_mask[l]|sel_take[l];
+        else consume_mask[l]<=(MUT==5)?8'd0:(consume_mask[l]|sel_take[l]);
        end
       end
      end
