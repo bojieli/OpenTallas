@@ -117,6 +117,7 @@ def main():
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None, help="regex on case names")
     a = ap.parse_args()
+    a.out = a.out.resolve()
     cases = PRODUCTION_CASES if a.production else UNIT_CASES
     if a.only:
         cases = [c for c in cases if re.search(a.only, c[0])]
