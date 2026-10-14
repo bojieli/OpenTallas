@@ -1,0 +1,58 @@
+x loaded: 3904 sectors at cycle 27338 (LAT 104 BWX10 31667 W 8 NCL 4 BW8 1 XQ 3 XL 4/3/4)
+TPUT 0 disp 27339 ret 27687 service 348 xi 27359 xd 27580 is 27376 a0 27682 pd 27680
+TPUT 1 disp 27356 ret 27759 service 72 xi 27374 xd 27374 is 27394 a0 27754 pd 27752
+TPUT 2 disp 27373 ret 28112 service 353 xi 27393 xd 27620 is 27412 a0 28071 pd 28108
+TPUT 3 disp 27390 ret 28471 service 359 xi 27410 xd 27666 is 27430 a0 28427 pd 28465
+TPUT 4 disp 27407 ret 28638 service 167 xi 27583 xd 27896 is 27588 a0 28613 pd 28635
+TPUT 5 disp 27424 ret 28918 service 280 xi 28640 xd 28853 is 28645 a0 28913 pd 28911
+TPUT 6 disp 27441 ret 29078 service 160 xi 28643 xd 29015 is 28650 a0 29047 pd 29075
+TPUT 7 disp 27458 ret 29155 service 77 xi 28920 xd 29141 is 28925 a0 29124 pd 29152
+TPUT 8 disp 27688 ret 29227 service 72 xi 28921 xd 28921 is 28930 a0 29196 pd 29224
+TPUT 9 disp 27760 ret 29299 service 72 xi 28922 xd 28922 is 28935 a0 29268 pd 29296
+TPUT 10 disp 28113 ret 29371 service 72 xi 28923 xd 28923 is 28940 a0 29340 pd 29368
+TPUT 11 disp 28472 ret 29443 service 72 xi 28924 xd 28924 is 28945 a0 29412 pd 29440
+TPUT 12 disp 28639 ret 29515 service 72 xi 28925 xd 28925 is 28950 a0 29484 pd 29512
+TPUT 13 disp 28919 ret 29586 service 71 xi 28939 xd 29205 is 28956 a0 29555 pd 29583
+TPUT 14 disp 29079 ret 29652 service 66 xi 29099 xd 29272 is 29116 a0 29627 pd 29649
+TPUT 15 disp 29156 ret 29730 service 78 xi 29176 xd 29349 is 29193 a0 29699 pd 29727
+TPUT 16 disp 29228 ret 29796 service 66 xi 29248 xd 29421 is 29265 a0 29771 pd 29793
+TPUT 17 disp 29300 ret 29874 service 78 xi 29320 xd 29493 is 29337 a0 29843 pd 29871
+TPUT 18 disp 29372 ret 29940 service 66 xi 29392 xd 29565 is 29409 a0 29915 pd 29937
+TPUT 19 disp 29444 ret 30027 service 87 xi 29517 xd 29690 is 29522 a0 29996 pd 30024
+lines real SM0 1408 SM1 1408
+ERR O[200000] = c20f0000 expected c26f0000
+ERR O[200001] = c15e0000 expected c1f40000
+ERR O[200002] = c20f0000 expected c26f0000
+ERR O[200003] = c15e0000 expected c1f40000
+ERR O[200004] = c20f0000 expected c26f0000
+ERR O[200005] = c15e0000 expected c1f40000
+ERR O[200006] = c20f0000 expected c26f0000
+ERR O[200007] = c15e0000 expected c1f40000
+ERR O[200008] = c20f0000 expected c26f0000
+ERR O[200009] = c15e0000 expected c1f40000
+ERR O[200010] = c20f0000 expected c26f0000
+ERR O[200011] = c15e0000 expected c1f40000
+ERR O[200012] = c20f0000 expected c26f0000
+ERR O[201927] = 3fcd1c0d expected 3f3048ec
+ERR O[201928] = 3fc64240 expected 40b296d4
+ERR O[201929] = 3fcd1c0d expected 3f3048ec
+ERR O[201930] = 3fc64240 expected 40b296d4
+ERR O[201995] = 3e270000 expected c1ca0000
+ERR O[201996] = bde20000 expected c1b40000
+ERR O[201997] = 3e260000 expected c1320000
+ERR O[201998] = bfdf0000 expected 41200000
+ERR O[201999] = 3e270000 expected c1ca0000
+ERR O[202000] = bde20000 expected c1b40000
+ERR O[202001] = 3e260000 expected c1320000
+ERR O[202002] = bfdf0000 expected 41200000
+ERR O[202003] = 3e270000 expected c1ca0000
+ERR O[202004] = bde20000 expected c1b40000
+ERR O[202005] = 3e260000 expected c1320000
+ERR O[202006] = bfdf0000 expected 41200000
+ERR O[202007] = 3e270000 expected c1ca0000
+summary: 20 SM.MATVEC records (window 8, clusters 4), service sum 2688 cycles, 2318 result words checked
+HGI_SMMV_TPUT FAIL errors=209
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_smmv_tput.sv:490: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 64us; walltime 512.959 s; speed 125.515 ns/s
+- Verilator: cpu 512.852 s on 1 threads; allocated 85 MB

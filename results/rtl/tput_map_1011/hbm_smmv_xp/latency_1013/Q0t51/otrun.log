@@ -1,0 +1,11 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/claude/smmvxp/src6
+ot-run: ot-epyc4       admits  -358 GB (avail 447, growth 266, headroom 48, waiters 2/550 GB) load 148/128 running 28 disk 1285 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/smmvxp/src6
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/smmvxp/src6
+ot-run: -> ot-epyc4 (will queue: admits -358 GB < 90 GB)
+ot-heavy: admitted on regular-crane as oth-ubuntu-4097748-1791945372 after 0 s
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_smmv_tput.sv:490: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 98us; walltime 751.854 s; speed 130.281 ns/s
+- Verilator: cpu 751.836 s on 1 threads; allocated 120 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4097748-1791945372): exit 0

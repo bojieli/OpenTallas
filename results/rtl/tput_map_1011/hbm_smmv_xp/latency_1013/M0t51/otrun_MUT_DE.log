@@ -1,0 +1,5 @@
+ot-run: ot-epyc4       admits  -370 GB (avail 383, growth 315, headroom 48, waiters 6/390 GB) load 196/128 running 33 disk 1273 GB 
+ot-run: -> ot-epyc4 (will queue: admits -370 GB < 90 GB)
+ot-heavy: waiting for memory on regular-crane: need 90 GB, admissible 20 GB: available 383 GB, growth charged 315 GB, young 104 GB, headroom 48 GB, real floor 227 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-4029335-1791943956 after 361 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4029335-1791943956): exit 0

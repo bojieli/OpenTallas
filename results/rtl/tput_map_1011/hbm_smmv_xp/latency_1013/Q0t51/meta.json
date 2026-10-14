@@ -1,0 +1,94 @@
+{
+ "vehicle": "qwen",
+ "source": "hgi_sim.qwen_compiler.program(P8191, layer 0) + hgi_sim.timing.cost",
+ "records": [
+  {
+   "tag": "qkv",
+   "fmt": "INT8",
+   "M": 1536,
+   "K": 4096,
+   "P": 1,
+   "cost": 3419,
+   "cost_grade": "measured",
+   "cost_how": "SM 1536x4096 INT8: lines 3072 (+drain) vs stream 2483 (7.86 MB, transport 1.25) -> SM-bound",
+   "src_stride": 4096,
+   "XR": 0,
+   "XB": 0,
+   "Q": 48,
+   "LPR": 32,
+   "LB": 160,
+   "line_image_stride": 5120,
+   "rows_real": [
+    48,
+    48
+   ],
+   "x_load": "real"
+  },
+  {
+   "tag": "o",
+   "fmt": "INT8",
+   "M": 4096,
+   "K": 1024,
+   "P": 1,
+   "cost": 2395,
+   "cost_grade": "measured",
+   "cost_how": "SM 4096x1024 INT8: lines 2048 (+drain) vs stream 1656 (5.24 MB, transport 1.25) -> SM-bound",
+   "src_stride": 1024,
+   "XR": 0,
+   "XB": 64,
+   "Q": 128,
+   "LPR": 8,
+   "LB": 160,
+   "line_image_stride": 1280,
+   "rows_real": [
+    128,
+    128
+   ],
+   "x_load": "real"
+  },
+  {
+   "tag": "gu",
+   "fmt": "INT8",
+   "M": 6144,
+   "K": 4096,
+   "P": 1,
+   "cost": 12635,
+   "cost_grade": "measured",
+   "cost_how": "SM 6144x4096 INT8: lines 12288 (+drain) vs stream 9934 (31.46 MB, transport 1.25) -> SM-bound",
+   "src_stride": 4096,
+   "XR": 0,
+   "XB": 0,
+   "Q": 192,
+   "LPR": 32,
+   "LB": 160,
+   "line_image_stride": 5120,
+   "rows_real": [
+    192,
+    192
+   ],
+   "x_load": "real"
+  },
+  {
+   "tag": "down",
+   "fmt": "INT8",
+   "M": 4096,
+   "K": 3072,
+   "P": 1,
+   "cost": 6491,
+   "cost_grade": "measured",
+   "cost_how": "SM 4096x3072 INT8: lines 6144 (+drain) vs stream 4967 (15.73 MB, transport 1.25) -> SM-bound",
+   "src_stride": 3072,
+   "XR": 0,
+   "XB": 64,
+   "Q": 128,
+   "LPR": 24,
+   "LB": 160,
+   "line_image_stride": 3840,
+   "rows_real": [
+    128,
+    128
+   ],
+   "x_load": "real"
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.hbm_smmv.latency_evidence.v1",
   "source": "el1013-hbm-redesign-smmv.log + preserved authoritative run logs",
-  "adoption": "Stacked expert records adopted 2026-10-13 18:33 PT; compiler implementation 54a1a08b3 still requires full checkpoint validation",
+  "adoption": "Stacked expert records adopted; full checkpoint compiler proof CLOSED at compiler_stacked_1013, source125e122bc.",
   "price_cycles": {
     "L0": 2950.4,
     "L1": 3689.1
@@ -98,11 +98,80 @@
       "words_exact": 2584,
       "bench": "HGI_SMMV_TPUT PASS",
       "log_sha256": "552e42bae4ce01b775909155b58cfd8d81a257ccbbb7b47271dc506ec1cd70e4"
+    },
+    "Q0t51": {
+      "vehicle": "qwen",
+      "layer": 0,
+      "form": "final hardened leaves",
+      "source_commit": "0799ec858",
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "XSPD": 51,
+      "DE": 1,
+      "XQ": 3,
+      "WIN": 8,
+      "cycles": 24316,
+      "price": 24940,
+      "ratio": 0.9749799518845228,
+      "words_exact": 15872,
+      "records": 4,
+      "bench": "HGI_SMMV_TPUT PASS",
+      "log_sha256": "6ba4b60c6744452d842c37ae10cc3243669223e2a75b07507453bd00a3a8c4b4"
     }
   },
   "qualification_limits": [
     "RTL production-shape simulations, not routed tile or die qualification.",
-    "Final hardened-leaf U0/U1 positive PASS, six tiles mutants still building.",
-    "Production compiler full checkpoint proof compiler_stacked_1013 passes L0/L1 and kills matrix-order mutant; physical closure outstanding."
-  ]
+    "Final U0/U1 positives PASS and all six final-tiles mutants FAIL as required.",
+    "Qwen production-shape RTL PASS; shared bank-reader competition remains unmeasured.",
+    "Production compiler checkpoint proof CLOSED; physical TT/FF/DRC and final guide/slot/die closure remain outstanding."
+  ],
+  "mutants_final_tiles": {
+    "MUT_BEAT": {
+      "verdict": "FAIL expected",
+      "errors": 18,
+      "XSPD": 51,
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "log_sha256": "e62da09ed18fca44b6ae5833624021d6669d10e200737163ceb7e0f707028dad",
+      "ot_run": "RAN exit0; semantic verdict is bench FAIL"
+    },
+    "MUT_DE": {
+      "verdict": "FAIL expected",
+      "errors": 209,
+      "XSPD": 51,
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "log_sha256": "31c60a3a0ecccd9b21e1c0f24e7a3fea7d8fddb082a845a5cd9ad03813b60910",
+      "ot_run": "RAN exit0; semantic verdict is bench FAIL"
+    },
+    "MUT_EARLY": {
+      "verdict": "FAIL expected",
+      "errors": 1277,
+      "XSPD": 51,
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "log_sha256": "968ab5e2eb2510cfae1914c1a23ac145d00560f3ea7c8d9557809f6a827e9502",
+      "ot_run": "RAN exit0; semantic verdict is bench FAIL"
+    },
+    "MUT_LANE": {
+      "verdict": "FAIL expected",
+      "errors": 1290,
+      "XSPD": 51,
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "log_sha256": "912d9cf2223979a0c6a4a3c970e837b7deb864913fb8f9957e17ec4e734e1ac8",
+      "ot_run": "RAN exit0; semantic verdict is bench FAIL"
+    },
+    "MUT_WDROP": {
+      "verdict": "FAIL expected",
+      "errors": 16,
+      "XSPD": 51,
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "log_sha256": "18752194a508b28893a3228856387da59079d66a7169bcf74cc4977016b6be64",
+      "ot_run": "RAN exit0; semantic verdict is bench FAIL"
+    },
+    "MUT_XRS": {
+      "verdict": "FAIL expected",
+      "errors": 240,
+      "XSPD": 51,
+      "tiles_sha256": "b5c74e94b0262bf8dcce8a40f16fa208c717ac34ff345a90c65f5efc33d362d9",
+      "log_sha256": "f2abe3354169960cc44f3e38ec1ee601290f2c04455ca2f75321f1d13e458ad9",
+      "ot_run": "RAN exit0; semantic verdict is bench FAIL"
+    }
+  }
 }

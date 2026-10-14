@@ -1,0 +1,12 @@
+x loaded: 1536 sectors at cycle 10762 (LAT 104 BWX10 31667 W 8 NCL 4 BW8 1 XQ 3 XL 4/3/4)
+TPUT 0 disp 10763 ret 14218 service 3455 xi 10783 xd 10976 is 10983 a0 14192 pd 14214
+TPUT 1 disp 10780 ret 16281 service 2063 xi 10800 xd 10996 is 11003 a0 16250 pd 16272
+TPUT 2 disp 10797 ret 28588 service 12307 xi 14219 xd 14412 is 14419 a0 28560 pd 28582
+TPUT 3 disp 10814 ret 35079 service 6491 xi 28587 xd 28756 is 28763 a0 35048 pd 35070
+lines real SM0 11776 SM1 11776
+summary: 4 SM.MATVEC records (window 8, clusters 4), service sum 24316 cycles, 15872 result words checked
+HGI_SMMV_TPUT PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_smmv_tput.sv:490: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 98us; walltime 751.854 s; speed 130.281 ns/s
+- Verilator: cpu 751.836 s on 1 threads; allocated 120 MB
