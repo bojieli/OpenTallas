@@ -1,0 +1,106 @@
+{
+ "name": "ot_qwen_tile_ctl_tp8_narrow",
+ "top": "ot_qwen_tile_ctl_tp8",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_tile_ctl.sv",
+  "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+  "rtl/physical/ot_qwen_tile_node.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_qwen_me_array_w12.sv",
+  "rtl/hdc/ot_qwen_w12_matvec.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_matvec.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 47.52,
+  "h": 324.0
+ },
+ "pins": {
+  "ANY": [
+   "clk",
+   "rst_n",
+   "tile_id",
+   "ib_go",
+   "ib",
+   "xl",
+   "fault",
+   "cx_xre",
+   "cx_xaddr",
+   "cx_xepoch",
+   "cx_rreq",
+   "cx_rqr",
+   "cx_ld",
+   "cx_lerr",
+   "cx_tvd",
+   "cx_nfault"
+  ]
+ },
+ "inter": [
+  "cx_xre",
+  "cx_xaddr",
+  "cx_xepoch",
+  "cx_rreq",
+  "cx_rqr",
+  "cx_ld",
+  "cx_lerr",
+  "cx_tvd",
+  "cx_nfault"
+ ],
+ "refglob": "*u_wv*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M5"
+  },
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "std_area_um2_measured": 6328,
+ "job": {
+  "owner": "Codex:q20-tile",
+  "branch": "claude/q14-tile-parent",
+  "tag": "narrow1",
+  "purpose": "Default-off native control narrow-shape CTS sizing probe; actual fast-source GT3072; ANY pins unassigned, no slot or closure adoption."
+ },
+ "structural_change": "Remove512pure-lane-result pass-through; harden final TX rung8x390 and RQR2x1024 captures with own roots; expose actual registered X request/epoch.",
+ "native_domain": {
+  "GT": 3072,
+  "TG": 4,
+  "tiles": 768,
+  "program_candidate_commit": "14065c8c7",
+  "program_sha256": "120b42a583db68fb9faaa32d2076f1515d5c07e41787bf47533a1d230b4d1903",
+  "cache_response": "XLOCAL1;registeredreturnthenME_EXTRA8delay;instructionpinIREG1unchanged"
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}
