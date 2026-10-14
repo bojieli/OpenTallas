@@ -320,5 +320,5 @@
    }
   ]
  },
- "structural_change": "ks1 EARLY_FAIL_HOLD (-26.8 ps at the W-face strap pin flop sq_q[3], on a 66-ps-late last-level H-tree net of a tree rooted at the NE corner, x 160): the clock pin moves to N x 55.6-56.1 (above the macro column's W edge, between the ui/uo and do_/di lanes; no abutment lane moved). --cts gate ks2 (ot-epyc4): hold WNS +22.9 ps (ks1-class variants -7 .. -125), insertion 404.1 ps (438.8), spread 90.1 (109.1), setup +2.4."
+ "structural_change": "ks1 EARLY_FAIL_HOLD (-26.8 ps at the W-face strap pin flop sq_q[3], on a 66-ps-late last-level H-tree net of a tree rooted at the NE corner, x 160): the clock pin moves to N x 55.6-56.1 (above the macro column's W edge, between the ui/uo and do_/di lanes; no abutment lane moved); kit on recipe-2 pin defaults >= 36de4b87f (native pin budget). --cts gate ks2b (ot-epyc4): hold WNS +22.6 ps, setup +10.7, insertion 410.7 / spread 96.9 (ks1 438.8 / 109.1)."
 }
