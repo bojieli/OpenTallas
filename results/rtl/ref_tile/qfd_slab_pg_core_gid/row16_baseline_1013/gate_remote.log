@@ -1,0 +1,20 @@
+GATE_FLOW_RC=0 GATE_FLOW_S=34
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN ot_qwen_slab_pg_core cells 36,012 flops 8,981 depth 530.1 ps util 0.2407 reach 0.0 um (0.5 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=8981 root=port:clk rule=PASS: 8,981 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 24.1% outside 45%-65% (std 3777 + macro 0 um2 in 15695 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"gid": [null, true], "clk": [1, false], "rst_n": [1, false], "p_v": [1, false], "p_last": [1, false], "p_oen": [1, false], "p_amax": [1, false], "p_rmax": [1, false], "p_wsrc": [1, false], "p_mmode": [1, false], "p_split": [null, true], "p_nb": [null, true], "p_lb": [null, true], "p_nout": [null, true], "p_sbase": [null, true], "p_oa": [null, true], "p_ots": [null, true], "res_in": [null, true], "o_we": [1, false], "o_addr": [null, true], "o_mask": [null, true], "o_data": [null, true], "ov": [1, false], "am_tv": [1, false], "am_top": [null, true], "am_rmax": [1, false], "fault": [1, false], "core_gre1": [1, false], "core_addr1": [null, true], "col_m5": [null, true], "core_rs0": [1, false], "lane_v": [null, true], "lane_ws": [null, true], "lane_a": [null, true], "lane_s": [null, true], "lane_y": [null, true], "lane_vo": [null, true], "lane_err": [null, true]}
+GATE_AREA    Chip area for top module '\ot_qwen_slab_pg_core': 4770.459360
+GATE_CTS_RC=0
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 256.1..289.7 ps (spread 33.6), boundary mean 273.1; tt insertion all 197.6..228.7 ps (spread 31.1), boundary mean 212.6; ff insertion all 161.7..191.9 ps (spread 30.2), boundary mean 175.6; macro_clk flag False
+GATE_PC reg->reg       10 paths, worst slack 127.2 ps (e.g. d_gots[22]$_DFF_P_/D)
+GATE_PC reg->out      290 paths, worst slack 165.2 ps (e.g. o_data[259])
+GATE_PC setup WNS 1.2717987774024664e-10 hold WNS 6.022168874686429e-12
+GATE_DONE
+
+--- stderr
+ot-heavy: request 16G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_qfd_slab_pg_core_gid_#-#.sh' not measured yet)); the cap stays 16G
