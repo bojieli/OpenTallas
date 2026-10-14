@@ -110,12 +110,14 @@ int main(int argc, char** argv) {
     auto gs=readhex("score.hex"), ge=readhex("exp_bf16.hex"), gm=readhex("max.hex"), gz=readhex("denom.hex");
     if(gs.size()!=4*T || ge.size()!=4*T || gm.size()!=4 || gz.size()!=4) return 2;
     std::vector<int> cs(4*T),ce(4*T),cm(4),cz(4);
-    int ns=0,ne=0,nm=0,nz=0,wrong=0,tagerr=0;
+    std::vector<uint32_t> as(4*T),ae(4*T),am(4),az(4),arz(4);
+    int ns=0,ne=0,nm=0,nz=0,nrz=0,wrong=0,tagerr=0;
     int64_t scfirst=-1,sclast=-1,efirst=-1,elast=-1,zlast=-1;
     auto check=[&](std::vector<int>& seen,const std::vector<uint32_t>& expected,int idx,uint32_t actual,int& count){
         if(idx<0 || idx>=int(seen.size())){tagerr++;return;}
         if(seen[idx]++) tagerr++;
         count++;
+        (&seen==&cs?as:(&seen==&ce?ae:(&seen==&cm?am:az)))[idx]=actual;
         if(actual!=expected[idx]) { if(wrong<8) fprintf(stderr,"phase mismatch idx=%d got=%08x expected=%08x\n",idx,actual,expected[idx]);wrong++; }
     };
     // events
@@ -132,7 +134,7 @@ int main(int argc, char** argv) {
     // start + q beats (32 BF16 per beat)
     const int NQB = NH * HD * QW / 512;
     int qb = -1;
-    while (cyc - t0 < MAXC && !(ns==4*T && ne==4*T && nm==4 && nz==4)) {
+    while (cyc - t0 < MAXC && !(ns==4*T && ne==4*T && nm==4 && nz==4 && nrz==4)) {
         // inputs for this edge
         top->start = (qb == -1);
         top->q_valid = (qb >= 0 && qb < NQB && (!STALL || cyc % 7 != 3));
@@ -172,6 +174,7 @@ int main(int argc, char** argv) {
         }
         if(top->dbg_m_v){if(top->dbg_m_g)tagerr++;check(cm,gm,top->dbg_m_h,top->dbg_m_d,nm);}
         if(top->dbg_z_v){check(cz,gz,top->dbg_z_h,top->dbg_z_d,nz);zlast=now;}
+        if(top->dbg_rz_ready && !nrz){for(int h=0;h<4;h++)arz[h]=gbits(top->dbg_rz_d,32*h,32);nrz=4;}
         // requests issued at this edge
         for (int x = 0; x < 4 * R; x++)
             if (gbits(top->req_valid, x, 1)) {
@@ -218,7 +221,8 @@ int main(int argc, char** argv) {
     }
     int missing=0;
     for(auto* a:{&cs,&ce,&cm,&cz}) for(int n:*a) if(n!=1) missing++;
-    bool exact=wrong==0 && tagerr==0 && missing==0 && fault==0;
+    bool exact=wrong==0 && tagerr==0 && missing==0 && fault==0 && nrz==4;
+    if(argc>7){auto save=[&](const char* name,const std::vector<uint32_t>& data){std::ofstream f(std::string(argv[7])+"/"+name);for(uint32_t w:data){char line[16];snprintf(line,sizeof(line),"%08x\n",w);f<<line;}};save("actual_score.hex",as);save("actual_exp_bf16.hex",ae);save("actual_max.hex",am);save("actual_denom.hex",az);save("actual_recip.hex",arz);}
     printf("{\"scope\":\"QK_EXP_Z_PHASE_ONLY\",\"ctx\":%d,\"scores\":%d,\"exponents\":%d,\"maxima\":%d,\"denominators\":%d,\"data_mismatches\":%d,\"tag_errors\":%d,\"missing_words\":%d,\"fault\":%d,\"exact\":%s,\"cycles\":%llu,\"rows_served\":%llu,\"score_first\":%lld,\"score_last\":%lld,\"exp_first\":%lld,\"exp_last\":%lld,\"denom_last\":%lld}\n",T,ns,ne,nm,nz,wrong,tagerr,missing,fault,exact?"true":"false",(unsigned long long)(cyc-t0),(unsigned long long)served,(long long)scfirst,(long long)sclast,(long long)efirst,(long long)elast,(long long)zlast);
     delete top;return exact?0:1;
 }
