@@ -69,23 +69,36 @@
   "pd": 0.4,
   "threads": 8,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "sdc_extra": [
   "physical/s81_ph_views/hc_hier/cck_cpin_ref.sdc"
  ],
  "job": {
-  "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:s81-suhc-hier-1011",
-  "branch": "claude/el1011-s81hc-cpin",
-  "tag": "v2",
-  "purpose": "s81-suhc-hier-1011 HC centre pin tile ot_s81_hc_cpin via the reference tile flow (contract_hcc slot 575.992 x 200, M5 layer cap; clocks sk + cck via cck_cpin_ref.sdc): v1-89a4bcc13 TT +117.89 / FF -7.14 / DRC 0, R2R +40.43; FF misses are only boundary pin flops (R2O pin flop->port 71 ps -7.14, I2R port->pin flop 48 ps -2.42), hold ECO -1.61 -> deterministic IO hold stages: inhold (port->HB4->BUF->D) + outhold (Q->BUF->HB4->BUF->port), FIRM at the pins",
-  "no_bench_reason": "bit-exactness is gated on dsfd_sp_hc HIER=1/2 (tools/s81_suhc/hc_gate.py NG64 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS); the tile alone has no golden",
+  "benches_from": "tools/s81_suhc/hc_tile_benches_cpin.json",
+  "owner": "Codex:s81-hc-su",
+  "branch": "claude/s81-suhc-r9",
+  "tag": "v3-pinreg",
+  "purpose": "Register each yacc pulse at its own W/E/S pin (keep twins distinct), recipe-2 FIRM pinflops, exact NG256 routed-tuple composition plus failing cpin mutant",
   "views_to": "physical/ref_tile/s81hc_cpin_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_cpin_ref"
  },
  "inhold": true,
  "outhold": true,
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "yacc copies merged to one interior register in closed view: launch418-428ps beyond boundary; reach126-139um versus393um y relay seam",
+  "source": "results/rtl/s81_suhc_20261013/cryys_composition_1013/pair_audit.json"
+ },
+ "structural_change": "Preserve separate W/E/S yacc acceptance pulse flops with keep=true and recipe-2 pin-register FIRM placement; zero cycles added. Current contract pin_request retained pending die child assignment.",
+ "slot_change_request": "el1011-s81die.log: 2026-10-13 Codex HC cpin pin-register defect repair uses current v17 child pin_request pending native HC sublayout and assigned child pins.",
+ "layer_cap": "M5",
  "children": [],
  "inter": []
 }
