@@ -5,7 +5,7 @@
  "sources": [
   "rtl/hbm_accel/tu/ot_hcoll_operand_column512.sv",
   "rtl/lib/ot_rst_relay.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
  ],
  "params": {
   "MUT": 0
@@ -17,8 +17,8 @@
  "clock": "cts",
  "layer_cap": "M5",
  "outline": {
-  "w": 259.2,
-  "h": 90.72
+  "w": 220.32,
+  "h": 127.44
  },
  "pins": {
   "W": [
@@ -37,18 +37,10 @@
  },
  "macros": [
   {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "g_bank?0?*u_mem",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "u_mem",
    "at": [
     23.76,
-    23.76
-   ]
-  },
-  {
-   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "g_bank?1?*u_mem",
-   "at": [
-    140.4,
     23.76
    ]
   }
@@ -64,7 +56,7 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Replace one retained64x512 operand column flop array with2actual128x256 SRAMs; pin-captured requests and localread/boundarypublication3edge reply.8columns haveexplicitindependentclockpins in evolvedTU/EP/body/face; matchingissue/index/inactive4FF parent epoch, numericalintegration/price unresolved.",
+ "structural_change": "Replace one retained64x512 operand column flop array with2actual128x256 SRAMs; pin-captured requests and localread/boundarypublication3edge reply.8columns haveexplicitindependentclockpins in evolvedTU/EP/body/face; matchingissue/index/inactive4FF parent epoch, numericalintegration/price unresolved. Actual2macro R2 GPL-0305 failed and37.8%util channel debt; successor usesoneexact64x512 catalogSRAM171.288x77.76 (larger13320um2 area, explicit dielead tradeoff). No capacity/function/clock/price relaxation.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
@@ -97,7 +89,8 @@
   ],
   "extra_paths": [
    "rtl/hbm_accel/tu",
-   "rtl/model/hbm_pc40_native_sim_20261003"
+   "rtl/model/hbm_pc40_native_sim_20261003",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
   ]
  },
  "children": [],
