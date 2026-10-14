@@ -1,0 +1,61 @@
+{
+  "schema": "native59-retained-partition-evidence-v1",
+  "source_commit": "69330d478",
+  "helper_sha256": "0eaf31d8b6dbecf6cb264accae7c273b60a7793ea94ad846909f24c97ceb6e44",
+  "fleet_host": "ot-epyc4",
+  "fleet_stage": "/srv/opentallas-scratch/codex/native59-valid2-1014",
+  "fleet_unit": "oth-ubuntu-1612465-1791969955",
+  "actual_exit": 0,
+  "archive_sha256": "01e95e9644ceb607433090b0ff710c32df32c9950fe016de5ee804a37de36de4",
+  "generic_clock_ff_bits": {
+    "clk_program[0]": 4160,
+    "clk_program[10]": 4160,
+    "clk_program[11]": 4160,
+    "clk_program[12]": 4160,
+    "clk_program[13]": 4160,
+    "clk_program[14]": 4160,
+    "clk_program[15]": 4160,
+    "clk_program[1]": 4160,
+    "clk_program[2]": 4160,
+    "clk_program[3]": 4160,
+    "clk_program[4]": 4160,
+    "clk_program[5]": 4160,
+    "clk_program[6]": 4160,
+    "clk_program[7]": 4160,
+    "clk_program[8]": 4160,
+    "clk_program[9]": 4160,
+    "clk_control": 12606,
+    "clk_station": 3536
+  },
+  "generic_total_ff_bits": 82702,
+  "functional": {
+    "cycles": 20997,
+    "actual_program_reads": 712,
+    "loads": 150,
+    "vm_writes": 200,
+    "posted_sent": 126,
+    "rank_high_samples": 9727,
+    "rank_truncation_detected": 9727,
+    "late_bank_read_mismatches": 19927
+  },
+  "fixture": "Stage1 control/mechanism fixture, random valid-range input token/position, returned identity from registered c_tag. Fault-free production program/transport not established.",
+  "physical_qualified": false,
+  "slots_assigned": false,
+  "technology_mapped_sinks_or_cts": false,
+  "remaining_gaps": [
+    "Bank read mux/address faces need real pin timing and endpoint registration.",
+    "Common-phase functional adapter only; independent physical clock timings unproved.",
+    "No actual checkpoint ROM program or complete TP8 ring in this proof.",
+    "This exact helper is superseded by c0e0fc0c4 poison/shape/fault freeze change; tightened source requires fresh receipts.",
+    "Actual whole-token epoch allocator/drain/reset fence is owned by HOST/dispatch, not this component."
+  ],
+  "artifacts": {
+    "late.sha256": "615a2b4de572dfc7e7e3d3392be1037b9015c603d13be7b61b40598abee933e5",
+    "rank.log": "a80649724e373960563d1eb048b9c47898677828d00eed7da0ab257e15f7db92",
+    "rank.sha256": "470253fb4a030cefcae417e210ce5c946d6b779b40809f5c6da26e47f1cc2230",
+    "positive.log": "132110b6ba8681e5385badc4b82b09379f109ac5c5d4acbb14b2e5814c9fa370",
+    "positive.sha256": "5c48d2d22aed7880d16ced38efa322c702c360d5dd15583f7309da633a14c158",
+    "census.json": "d2566cd969f2ae67b2bcd04b96ad4c955b104516e78a2d1d30ede658c7a92ae8",
+    "late.log": "119b5a29809d6699c06a36793d1c13e4ac8ceaaea5cc1bdd86d20a73b2660a52"
+  }
+}
