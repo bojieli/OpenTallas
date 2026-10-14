@@ -1,4 +1,10 @@
 `timescale 1ns/1ps
+`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
+`ifndef KVD_Q_FP32
+`define KVD_Q_FP32 0
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // q13-kvleaves 2026-10-13: the near-HBM row-engine control cell qkd_ectl as THREE die leaves (A | B | C, west to east).
 // The one-tile form (qkd_ectl_slot-q13r3: 648 x 129.6 um, 14,806 sinks on one root, TritonCTS insertion 357..538 ps /
@@ -232,7 +238,7 @@ module ot_qkd_ectl_part #(
         else begin er_valid_o <= er_valid_g; er_pd <= {er_pd[0], er_valid_g}; end
     always @(posedge clk) begin er_addr_o <= er_addr_g; er_data_p <= er_data; end
     // the q beat (leaf C): pin flops, mid stage, third stage (with qv_r of the control word), then the S1b copies
-    localparam integer NQB = 8 * HD * 16 / 512;
+    localparam integer NQB = 4 * `KVD_HEADS * HD * (`KVD_Q_FP32 ? 32 : 16) / 512;
     reg  [5:0]        qb_p, qb_m, qb_r;
     reg  [511:0]      qd_p, qd_m, qd_r;
     reg  [6:0]        qcnt;
@@ -314,7 +320,7 @@ module ot_qkd_ectl_part #(
                         rq_t <= tpos(rg_pidx[10:7], rg_pidx[6:0]);
                         rg_idx <= rg_idx + R;
                     end
-                end else if (!rg_g) begin
+                end else if (`KVD_HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_idx <= E;
                 end else begin
                     rg_vph <= 1'b1; rg_g <= 1'b0; rg_gam <= E; rg_k <= 0; rg_j <= 0;
@@ -335,7 +341,7 @@ module ot_qkd_ectl_part #(
                             end else rg_k <= rg_k + 4'd1;
                         end
                     end
-                end else if (!rg_g) begin
+                end else if (`KVD_HEADS == 2 && !rg_g) begin
                     rg_g <= 1'b1; rg_gam <= E; rg_k <= 0; rg_j <= 0;
                 end else rg_run <= 1'b0;
             end
@@ -439,7 +445,7 @@ module ot_qkd_ectl_part #(
                             c_idx <= c_idx + R;
                             if (c_idx == E && !c_g) ev_k_first <= 1'b1;
                         end
-                    end else if (!c_g) begin
+                    end else if (`KVD_HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_idx <= E;
                     end else begin
                         c_vph <= 1'b1; c_g <= 1'b0; c_gam <= E; c_k <= 0; c_j <= 0; k_done <= 1'b1;
@@ -454,7 +460,7 @@ module ot_qkd_ectl_part #(
                                 else c_k <= c_k + 4'd1;
                             end
                         end
-                    end else if (!c_g) begin
+                    end else if (`KVD_HEADS == 2 && !c_g) begin
                         c_g <= 1'b1; c_gam <= E; c_k <= 0; c_j <= 0;
                     end else begin
                         c_fin <= 1'b1; v_done <= 1'b1;

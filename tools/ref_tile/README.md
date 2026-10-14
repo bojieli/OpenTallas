@@ -149,6 +149,12 @@ is hardened leaves with their own roots. CLOSED tiles are not re-judged.
   [--cts]`. The adapter verifies the entire original manifest, staged source, execution script and archive verification
   log, reruns local checks, and shares the live remote parser. It preserves the original identity and writes FAIL if
   the explicitly requested route source or current daemon helpers differ; it never labels the receipt with current HEAD.
+  Gate packing and route refreshes share the effective helper resolver: an older main helper in the daemon is
+  resolved to origin/main's bytes; a daemon-only edit retains its exact content identity. New receipts carry the
+  full effective route helper plan (hashes and modes). New ingested jobs freeze this plan and each helper refresh
+  refuses content/mode drift before sending any bytes; `<run>/cl/helper_overlay_plan.json` records the frozen plan.
+  Older live jobs and CLOSED archives are preserved. Legacy v2 snapshots remain usable when their exact overlays
+  match the effective resolver; an upgraded plan explicitly records the original narrower gate scope.
   Legacy receipts or receipts whose contents differ from the submitted commit/current daemon overlay are refused
   for unclosed tiles; regenerate their gate. CLOSED tiles continue to stand.
 - At submit a `ref_tile` job is REFUSED when the kit's gate result shows more than 15,000 sinks without passing
