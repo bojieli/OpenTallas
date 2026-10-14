@@ -9,7 +9,7 @@ import json
 import math
 from pathlib import Path
 
-W,H=1080.0,492.48
+W,H=1079.976,492.456 # actual exported v1.1 outline; nominal 1080 x 492.48
 CLEAR=5.4
 SHAPES={'front':(648.,32.4),'ktree':(151.2,97.2),'score':(43.2,43.2),
         'lane':(129.6,129.6),'stin':(32.4,43.2),'stk':(32.4,21.6),'nb':(32.4,10.8)}
