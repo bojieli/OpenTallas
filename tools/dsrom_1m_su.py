@@ -156,7 +156,7 @@ def _replay(m, L, st, cx, V):
         z = np.stack([V.matvec_c(wa[g], og[g], V.WO_A_SPLIT) for g in range(m.groups)])
         z = V.to_bf16(z.reshape(-1))
         H = HEADS_DIE
-        cap["attend"] = dict(q=q[:H].copy(), T=int(len(kvm)), s_raw=s_raw[:H].copy(), s=s[:H].copy(), max=mb[:H].copy(),
+        cap["attend"] = dict(q=q[:H].copy(), T=int(len(kvm)), kvm=np.asarray(kvm, F).copy(), s_raw=s_raw[:H].copy(), s=s[:H].copy(), max=mb[:H].copy(),
                              e=e[:H].copy(), es=es[:H].copy(), sink=np.asarray(sink, F)[:H].copy(), den=den[:H].copy(),
                              pv=pv[:H].copy(), o0=o0[:H].copy(), o=o[:H].copy(), cs=cs, attn_scale=F(m.attn_scale),
                              z=z.copy())
@@ -283,6 +283,11 @@ def cmd_golden(a):
         ok["router_recomputed"] = same(V.add(scores, bias), z[f"L{L}.router"])
         ok["experts"] = ids == js["experts"]
         rec["router"] = dict(raw=raw, scores=scores, bias=bias, biased=V.add(scores, bias), ids=ids, weights=wts)
+        # s81-ftok r3: the attention's row set for the scan-service bench (window rows oldest first + the selected
+        # compressed rows of the KV source, ids into that source's compressed rows)
+        rec["attn_rows"] = dict(window=int(min(m.window, len(st["win"][L]))), sel=[int(i) for i in (cx.get("sel") or [])]
+                                if m.ratio[L] > 0 else [], src=m.kv_of.get(L),
+                                ncomp=int(len(st["ckv"][m.kv_of[L]])) if m.kv_of.get(L) is not None else 0)
         rec["experts"] = cap["experts"]
         rec["checks"] = ok
         (out / f"snap_L{L:02d}.pkl").write_bytes(pickle.dumps(rec))

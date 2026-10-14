@@ -195,6 +195,6 @@ def build(snap_path, layer, check_layer=True):
         if f"{L}.{tail}" in su.arg:
             for x in al:
                 alias[f"{L}.{x}"] = f"{L}.{tail}"
-    return dict(arg=su.arg, alias=alias, vm=dict(r.vm), exp=dict(r.exp), jexp=jexp, checks=chk, T=T,
+    return dict(run=r, arg=su.arg, alias=alias, vm=dict(r.vm), exp=dict(r.exp), jexp=jexp, checks=chk, T=T,
                 softmax_fits=sm_ok, qb_fits=qb_ok, router_fits=router_fits, top=r.top,
                 sw_fit=dict(lanes=W, rows_per_expert=ROWS_DIE, lane_ratio=round(W / ROWS_DIE, 3)))

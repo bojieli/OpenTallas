@@ -41,7 +41,10 @@
 // (8) HC NORM output rows and H_STORE rows (the layer output) = CPU golden, bit-exact.
 // MUT (gather endpoint) 2 wrong done tag / 4 dropped done; HMUT (HC core) 1 hc_post does not write h back;
 // +define+OT_S81PH_MUT_TREP (collective output slice 1 pops one cycle early); INP1 (HC f_inp tied 1).  Each must FAIL.
-// Plusargs: +DIR=<stim dir>.
+// Plusargs: +DIR=<stim dir>.  Continuous run (s81-ftok r3): +HIN=<flits> sends the PREVIOUS stage's hop_tx output
+// (header + 640 payload flits, dumped by its +HOUT) as this layer's HIDDEN payload instead of payload.mem (every row
+// checked equal to the golden layer-entry h; the header is the bench's own: the vehicle's die ids are fixed);
+// +HOUT=<file> dumps this layer's hop_tx flits (needs HTX != 0).
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_s81_die_layer;
     parameter integer MUT = 0, HMUT = 0, INP1 = 0, NG = 16, TMAX = 45000, EPER = 97, CHB = 60, CHU = 12, TSR = 7;
@@ -411,8 +414,13 @@ module tb_s81_die_layer;
         end
         for (s = 0; s < S_WR; s = s + 1) if (wq_v[s]) begin vm[wq_row[14 * s +: 14]] = wq_d[512 * s +: 512]; mark(wq_row[14 * s +: 14]); end
 `ifdef TB_SU_REAL
-        // the SU's write slots (full rows; the slab writes whole rows, mask all ones) and its S_RD read slots (LVM)
-        for (s = 0; s < SU_WR; s = s + 1) if (su_wq_v[s]) begin vm[su_wq_row[14 * s +: 14]] = su_wq_d[512 * s +: 512]; mark(su_wq_row[14 * s +: 14]); end
+        // the SU's write slots, under each slot's 32-bit word mask (the QN / QB exponent rows are merged word by word),
+        // and its S_RD read slots (LVM)
+        for (s = 0; s < SU_WR; s = s + 1) if (su_wq_v[s]) begin
+            for (i2 = 0; i2 < 16; i2 = i2 + 1)
+                if (su_wq_mask[16 * s + i2]) vm[su_wq_row[14 * s +: 14]][32 * i2 +: 32] = su_wq_d[512 * s + 32 * i2 +: 32];
+            mark(su_wq_row[14 * s +: 14]);
+        end
         for (i2 = 63; i2 > 0; i2 = i2 - 1) begin su_dl_v[i2] = su_dl_v[i2 - 1]; su_dl_a[i2] = su_dl_a[i2 - 1]; end
         su_dl_v[0] = su_rq_v; su_dl_a[0] = su_rq_row;
         su_rs_v <= su_dl_v[LVM - 1];
@@ -643,7 +651,8 @@ module tb_s81_die_layer;
         assign hx_re = 1'b0; assign hx_ra = 14'd0; assign hx_ov = 1'b0; assign hx_ol = 1'b0; assign hx_dn = 1'b0;
         assign hx_flt = 1'b0; assign hx_od = 512'd0; assign hx_dt = 8'd0; assign hx_fc = 4'd0;
     end endgenerate
-    integer sx;
+    integer sx, hout_fd = 0, hin_bad = 0, hin_n = 0;
+    reg [511:0] hin_m [0:XW];
     always @(posedge ck) begin
         // landing: the cycle of the last HIDDEN row
         if (vwe && vwa == H_BASE + XW - 1 && t_land1 < 0) t_land1 = cyc;
@@ -666,6 +675,7 @@ module tb_s81_die_layer;
             if (swr < XW && swr - tx_rd < tx_lead_min) tx_lead_min = swr - tx_rd;   // rows written ahead of the reader while the store runs
         end
         if (hx_ov) begin
+            if (hout_fd != 0) $fdisplay(hout_fd, "%0128h", hx_od);
             if (tx_n == 0) t_hx0 = cyc;
             else if (tx_n <= XW) begin
                 if (gs_ok[tx_n - 1] && hx_od === gs[tx_n - 1]) tx_ok = tx_ok + 1;
@@ -700,6 +710,16 @@ module tb_s81_die_layer;
         end
         for (w = 0; w < 64; w = w + 1) begin dl_v[w] = 0; dl_a[w] = 0; end
         if (!$value$plusargs("DIR=%s", dir)) $fatal(1, "+DIR");
+        begin : hio
+            string hf;
+            if ($value$plusargs("HIN=%s", hf)) begin
+                for (w = 0; w <= XW; w = w + 1) hin_m[w] = 'x;
+                $readmemh(hf, hin_m); hin_n = XW + 1;
+                for (w = 0; w <= XW; w = w + 1) if (^hin_m[w] === 1'bx) begin hin_n = 0; $display("ERR HIN %s: flit %0d missing", hf, w); end
+                if (hin_n == 0) errors = errors + 1;
+            end
+            if ($value$plusargs("HOUT=%s", hf)) hout_fd = $fopen(hf, "w");
+        end
         fd = $fopen({dir, "/prog.txt"}, "r");
         while (!$feof(fd)) begin
             rc = $fscanf(fd, "%d %d %d %d %d %d %d %d %d %d %d\n", o_port[nop], o_arg[nop], o_dur[nop], o_np[nop],
@@ -799,7 +819,11 @@ module tb_s81_die_layer;
         send_flit(hdr, 1'b0);
         i_v = 0; repeat (PGAP) @(negedge ck);
         t_pay0 = cyc;
-        for (w = 0; w < XW; w = w + 1) send_flit(payload[w], w == XW - 1);
+        if (hin_n > 0) for (w = 0; w < XW; w = w + 1) begin
+            if (hin_m[w + 1] !== payload[w]) begin hin_bad = hin_bad + 1; if (hin_bad < 4) $display("ERR HIN row %0d != golden layer-entry h", w); end
+            send_flit(hin_m[w + 1], w == XW - 1);
+        end
+        else for (w = 0; w < XW; w = w + 1) send_flit(payload[w], w == XW - 1);
         i_v = 0; i_l = 0;
 `endif
         while (jdn < JOBS && cyc < TMAX) @(negedge ck);
@@ -857,6 +881,9 @@ module tb_s81_die_layer;
 `endif
         // per-op timing dump (rom-layer-tput 2026-10-13): cycles of every op of job 0, for the per-class throughput record
         for (w = 0; w < nop; w = w + 1) $display("OPT %0d port %0d dur %0d start %0d end %0d", w, o_port[w], o_dur[w], stt[0][w], endt[0][w]);
+        if (hout_fd != 0) $fclose(hout_fd);
+        $display("HIO hin=%0d hin_bad=%0d hout=%0d", hin_n, hin_bad, hout_fd != 0);
+        if (hin_bad != 0) errors = errors + 1;
         $display("SUMMARY jobs=%0d layer_cycles=%0d (header %0d -> H_STORE done %0d) stage_done_cycle=%0d jobs_done=%0d/%0d dones=%0d/%0d phases_released=%0d field_phases=%0d capture_writes=%0d mismatching_roots=%0d coll_words_die0=%0d coll_errors=%0d coll_incomplete=%0d y_exact=%0d/%0d y_bad=%0d y_consumed=%0d norm_rows_exact=%0d/%0d hstore_rows_exact=%0d/%0d ref_fault=%0d dut_fault=%0d ctrl_flt=%0d fvec=%h stuck=%0d ep_faults=%0d gather_stage_fault=%0d hc_fcode=%0d max_done_latency=%0d errors=%0d first_coll_send=%0d",
                  JOBS, t_hstore - t_layer0, t_layer0, t_hstore, cyc, jdn, JOBS, ndone, JOBS * nop, released, nfp, tot, bad, dn[0], coll_err, xm,
                  y_ok, NY * JOBS, y_bad, yrd, n_ok, NE - NST, st_ok, NST, ref_fault, dst[3], flt, fvec, stk, gst_f, u_g.sf, hfcode, maxlat, errors, first_send_cyc);

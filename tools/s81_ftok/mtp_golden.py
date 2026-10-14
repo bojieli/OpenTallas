@@ -76,6 +76,8 @@ def main():
         def __getitem__(self, t):
             return np.asarray(ck.rows("embed.weight", [int(t)])[0], F)
     m.w["embed.weight"] = EmbedRows()
+    for t_ in sorted(set(ids)):               # a subset zero-fills embedding rows it did not copy (hbm-sim/ds_ckpt)
+        checks[f"embed row {t_} non-zero"] = bool(np.any(m.w["embed.weight"][t_] != 0))
     hs = [np.repeat(np.asarray(m.w["embed.weight"][t], F)[None, :], m.hc, axis=0).astype(F) for t in ids]
     pres = [np.array([1, 0, 0, 0], dtype=F)[:m.hc] for _ in ids]
     eps = F(m.eps)
@@ -152,6 +154,12 @@ def main():
         out.append(int(np.argmax(lg)))
     # the uninstrumented draft (Model.draft) from a fresh state
     state2, _sd, _mh, _mx = DB.build_state(m, V, LC, a.ref)
+    # a checkpoint subset holds zero-filled placeholders for tensors it did not copy (hbm-sim/ds_ckpt: every mtp.* is
+    # zero, which drafts 0, 0, 0, 0, 0 "exactly"): refuse a degenerate draft
+    for st in range(m.n_mtp):
+        checks[f"mtp.{st} weights non-zero (gate, wq_a)"] = bool(np.any(np.asarray(m.lw(m.L + st, "ffn.gate.weight"), F) != 0))
+    checks["markov_head non-zero"] = bool(np.any(np.asarray(mhead[:64], F) != 0))
+    checks["draft logits not constant"] = all(float(np.max(x) - np.min(x)) > 0 for x in fl)
     d_ref, lg_ref = m.draft(y, anchor, state2)
     checks["draft tokens == Model.draft"] = list(map(int, d_ref)) == out[1:]
     checks["draft logits == Model.draft"] = all(same(x, y_) for x, y_ in zip(fl, lg_ref))
