@@ -610,6 +610,8 @@ module tb_dsfd_sp_vm;
                 for (k = 0; k < 5; k = k + 1) if (x_busy[k] == r) x_busy[k] = -1;
                 for (k = 0; k < 4; k = k + 1) if (slot_busy[k] == 1 && slot_tag[k] == r) begin
                     slot_busy[k] = 2; slot_t_done[k] = cyc; region_q.push_back(k);
+                    // XCH baseline (today's contract): the consumer's XGO is issued when the producer's ARMN done arrives
+                    if (MODE == 1 && XCH > 0 && XGOS == 0 && k == 0 && xch_go < 0) begin xrd(2, 2, 2048, XCH); xch_go = cyc; end
                     if (MODE != 3) begin : dchk
                         // done => every expected element of the slot's region has landed at the bank ports (direct
                         // contract check: an early done is caught whether or not the region read-back hits the late row)
@@ -725,7 +727,6 @@ module tb_dsfd_sp_vm;
                     for (r = 0; r < 32; r = r + 1) begin cq_rows.push_back(12288 + r); cq_we.push_back(1); end
                     for (r = 0; r < 32; r = r + 1) begin cq_rows.push_back(12288 + r); cq_we.push_back(0); end
                 end
-                if (XCH > 0 && XGOS == 0 && xch_go < 0 && slot_busy[0] == 2) begin xrd(2, 2, 2048, XCH); xch_go = cyc; end
             end else if (MODE == 4 || MODE == 5) begin
                 // ---------------- LANDING WORST BURST: MODE 4 attention window (svc 64 beats + sel 64 rows back to back,
                 // collector 680 rows at 2/3 a cycle, collective 320 words under t_cts), MODE 5 HC window (hc 64 beats)
