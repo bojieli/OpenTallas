@@ -217,6 +217,7 @@ module ot_lkep_sinkq #(parameter integer W = 545, parameter integer D = 4, param
 endmodule
 
 module ot_hbm_lk_ep #(
+    parameter integer MUT_STATUS_SHARED = 0,
     parameter integer MUT_PHY_SHARED = 0,
     parameter integer MUT_TX_SHARED = 0,
     parameter integer MUT_RX_SHARED = 0,
@@ -244,6 +245,7 @@ module ot_hbm_lk_ep #(
     input  wire [NS*4-1:0] clk_sub,
     input  wire            clk_tx_shared,
     input  wire            clk_rx_shared,
+    input  wire            clk_status_shared,
     input  wire            rst_n,
     input  wire [23:0]     session,
     input  wire            t_v,
@@ -331,14 +333,20 @@ module ot_hbm_lk_ep #(
       assign ak_flat[g*37 +:37]=ak[g]; assign rp_flat[g*32 +:32]=rp_t[g];
     end endgenerate
 `ifdef OT_LKEP_HARD_LEAVES
-    ot_lkep_ctrl_phy u_ctrl_phy(
+    ot_lkep_ctrl_phy_data u_ctrl_phy(
 `else
-    ot_lkep_ctrl_phy #(.NS(NS),.W(W),.TXQ(TXQ),.FCR(FCR),.SQ(SQ),.IDLE_P(IDLE_P),.LW(LW),.RL(RL),
+    ot_lkep_ctrl_phy_data #(.NS(NS),.W(W),.TXQ(TXQ),.FCR(FCR),.SQ(SQ),.IDLE_P(IDLE_P),.LW(LW),.RL(RL),
       .PBD(PBD),.TFD(TFD),.OFD(OFD),.SL(SL),.XR(XR),.MUT_PHY(MUT_PHY_SHARED)) u_ctrl_phy(
 `endif
       .clk(clk),.rst_n(rst_n),.session(session),.t_v(t_v),.t_flit(t_flit),.t_cr(t_cr),.r_cr(r_cr),
-      .x_rx(x_rx),.x_tx(x_tx),.icr_ret(icr_ret),.sf_t(sf_t),.sd_t(sd_t),.ak_flat(ak_flat),.rp_flat(rp_flat),
+      .x_rx(x_rx),.x_tx(x_tx),.icr_ret(icr_ret),.sf_t(sf_t),.sd_t(sd_t),.ak_flat(ak_flat),
       .b_v(b_v),.b_f(b_f),.w_d(w_d),.w_oh(w_oh),.l0_v(l0_v),.fbv(fbv),.rx_v(rx_v),
       .fb_nak(fb_nak),.fb_seq(fb_seq),.c_h(c_h),.fault(fault),.locked(locked),
-      .st_replays(st_replays),.st_drops(st_drops));
+      .st_drops(st_drops));
+`ifdef OT_LKEP_HARD_LEAVES
+    ot_lkep_status_shared u_status(
+`else
+    ot_lkep_status_shared #(.NS(NS),.MUT_STATUS(MUT_STATUS_SHARED)) u_status(
+`endif
+      .clk(HARD_CLOCKS != 0 ? clk_status_shared : clk),.rst_n(rst_n),.rp_flat(rp_flat),.st_replays(st_replays));
 endmodule
