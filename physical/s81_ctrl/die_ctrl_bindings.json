@@ -53,8 +53,10 @@
    "note": "lead s81-ctl v2"
   },
   "hop": {
-   "masters": [],
-   "note": "hop_tx retired; under decision A the stage hand-off is the WFC kit's: kit endpoint for port 7 (mtp-wfc) pending"
+   "masters": [
+    "dsfd_wfc_stg"
+   ],
+   "note": "s81-die-rtl-bind 2026-10-14 (F4): the stage hand-off is the WFC stage kit's -- dsfd_wfc_stg = the hardened kit cluster (rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv under +define+DSFD_WFC_STG_CL_DIE) with the hop endpoint dsfd_wfc_hop_ep (done = the kit's link-out message end); the sequencer's kit done excludes engine 7 (dsfd_stage_seq_c8 KDX 7). Generator: --rtl-bind only (gates rtl/dsrom_sys/mtp/test/run_wfc_hop_ep_gate.sh, rtl/dsrom_sys/s81_ctrl/test/run_stage_seq_c8.sh)"
   },
   "head": {
    "masters": [],

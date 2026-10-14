@@ -5006,6 +5006,8 @@ def ctrl_adapter_buses(hb):
     eng = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11)
     out = []
     for e, k in eng.items():
+        if e == 'hop' and not RTL_BIND:
+            continue          # F4 (--rtl-bind): the hop engine's endpoint lives in the WFC stage kit cluster (dsfd_wfc_hop_ep)
         # band blocks (bk_selector S / bk_collector N) sit in other clock regions across the die: their command lanes
         # need forwarded-clock lane chains with end blocks (as the svc -> selector / collector chains), not common-clock
         # hub stations -- NOT BUILT YET: left unbound, so the die control gate reports sel / col UNBOUND (FAIL)

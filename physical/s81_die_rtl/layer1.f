@@ -17,3 +17,8 @@ rtl/v41die/ot_s81_cfg7_seq.sv
 physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 # hard-macro behavioural models (SRAM / ROM bit arrays) instantiated by the RTL (children of real RTL only)
 +libdir+physical/asap7_memory_macros_v2
+# WFC stage kit: the hardened cluster of the PRICED kit (dsfd_wfc_stg_cl) under the die master name, with the hop
+# endpoint (engine 7)
++define+DSFD_WFC_STG_CL_DIE
+rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
++libdir+physical/s81_ph_views/mtp/macros
