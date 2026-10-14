@@ -143,9 +143,11 @@
        259.2,
        75.6
       ],
-      "status": "r2_pending_fresh_source_gate",
+      "status": "r2_SUBMITTED",
       "fix": "main pin-bank auto gap/columns + WP credited landing FIFO",
-      "reroute_reason": "RTL change and measured south seam congestion; no gate changes"
+      "reroute_reason": "RTL change and measured south seam congestion; no gate changes",
+      "job": "hgi_ix2_wp-r2-b3187c67a",
+      "source_commit": "b3187c67a"
      }
     },
     "lane": {
@@ -192,12 +194,38 @@
      "drain_before": 30,
      "drain_after": 22
     },
-    "production": "ot-epyc4:/srv/opentallas-scratch2/claude/codex-idx-credit-e2e-1013 BASE+MUT2 running, remote118891/118896, mem180GB each",
+    "production": "Final cached-head/control native BASE+MUT2 live EPYC1:/srv/opentallas-scratch/claude/codex-idx-final-e2e-1013 PIDs509959/509963,180GB each; local units codex-idx-final-e2e-{base,mut2}-1013b. Earlier a389 version live EPYC4:/srv/opentallas-scratch2/claude/codex-idx-credit-e2e-1013 PIDs118891/118896; separate source campaign, not final qualification.",
     "systemd_units": [
      "codex-idx-credit-e2e-base-1013",
      "codex-idx-credit-e2e-mut2-1013"
     ],
-    "gate": "fresh source binding v2 gate in progress; known shared parser defect excludes SHA256 digits, coordinator notified; raw evidence retained"
+    "gate": {
+     "schema": "v2",
+     "exact_content_binding": "staged source and current daemon overlay validate true",
+     "sinks": 8529,
+     "tt_max_insertion_ps": 258.2,
+     "tt_spread_ps": 23.1,
+     "tt_boundary_mean_ps": 245.5,
+     "route_job": "hgi_ix2_wp-r2-b3187c67a",
+     "source_commit": "b3187c67a",
+     "status": "SUBMITTED",
+     "prects_diagnostics": {
+      "reg_to_out_setup_ps": -162.3,
+      "reg_to_reg_setup_ps": -40.6,
+      "hold_ps": -14.1
+     },
+     "warning": "CTS model diagnosis is not routed qualification; only util/packer-partselect warnings remain, no boundary/depth warning"
+    },
+    "final_source_commit": "f40ae0c6e RTL / 6f4063648 staged production source"
+   },
+   "phase_observer": {
+    "status": "RUNNING",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/claude/idx-redesign-1013b/trace_L20",
+    "systemd": "codex-idx-native-phase-1013c",
+    "remote_unit": "oth-ubuntu-166892-1791951844",
+    "scope": "baseline exact BASE L20; compiled RTL model reused, original archive main symbol renamed in a copy and observer main linked",
+    "next": "require HGI_E2E PASS, records/cycle equality vs baseline before treating phase trace as evidence"
    }
   }
  ]
