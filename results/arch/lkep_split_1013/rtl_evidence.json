@@ -28,5 +28,14 @@
     "flits_per_cycle_each_direction": 0.749,
     "N": 6000
   },
-  "seeds3_and7": "LIVE_ADMISSION_WAITER"
+  "seeds3_and7": {
+    "qualification": "RTL_ONLY_PHYSICAL_PENDING",
+    "terminal": "ot-run RAN exit0",
+    "cycles": [
+      6264,
+      6546
+    ],
+    "lockstep_instance_pass_count_each": 6,
+    "log": "benches/seeds37.log"
+  }
 }
