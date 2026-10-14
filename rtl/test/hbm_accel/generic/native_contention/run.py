@@ -3,7 +3,7 @@
 Use through ot-run --mem 32 --threads 4; immutable prices are never rewritten.
 """
 import argparse,hashlib,json,os,pathlib,subprocess,sys,re
-ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='673de04e3');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');ap.add_argument('--smoke',action='store_true');a=ap.parse_args()
+ap=argparse.ArgumentParser();ap.add_argument('out');ap.add_argument('--phase',type=int,default=61);ap.add_argument('--mut',type=int,default=0);ap.add_argument('--parent',default='ba12d099a');ap.add_argument('--prepare-only',action='store_true');ap.add_argument('--lint-only',action='store_true');ap.add_argument('--smoke',action='store_true');a=ap.parse_args()
 root=pathlib.Path(__file__).resolve().parents[5];out=pathlib.Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 parent=a.parent;common='64fced1f9';quant='88b62f789';dma='4a49c18bc';vectors='7027d3ab1'
 graph={}
@@ -62,7 +62,7 @@ vecdir=out/'vectors';vecdir.mkdir(exist_ok=True)
 for name in ['recs.txt','meta.json']+[f'{kind}_{k}.hex' for kind in ['in','out'] for k in range(8)]:
  path=f'results/rtl/ref_tile/qdq_native_peer4/vectors/{name}';data=subprocess.check_output(['git','show',f'{vectors}:{path}'],cwd=root)
  (vecdir/name).write_bytes(data);receipt.append({'path':'vectors/'+name,'source_commit':vectors,'sha256':hashlib.sha256(data).hexdigest()})
-(out/'sourcegraph.json').write_text(json.dumps({'parent':parent,'common':common,'quant':quant,'dma_front':dma,'DMA_read_core':core,'vectors':vectors,'phase':a.phase,'mut':a.mut,'clocks_ps':{'engine':833.33325,'VM':1111.111},'immutable_prices':{'quant_per_quarter':168,'DMA147':15674.320143998484},'scope':'actual SU native_h stage/drain; actual quant qpin4; actual DMAfront DQ; actual source39 q10 STORE/FENCE on32-reservation native read bridge, all4 held R owners; fullSUarithmetic/productionDMAcore workload/physical bridge qualification not proven','files':receipt},indent=2)+'\n')
+(out/'sourcegraph.json').write_text(json.dumps({'parent':parent,'common':common,'quant':quant,'dma_front':dma,'DMA_read_core':core,'vectors':vectors,'phase':a.phase,'mut':a.mut,'clocks_ps':{'engine':833.33325,'VM':1111.111},'physical_clock_delivery_and_reset_phase_qualification':'OPEN: explicit nominal clock/global reset bindings only', 'hard_clock_ports':{'station':32,'VM_NC':4,'VM_children':52,'relay':24,'CDC_source':96,'CDC_VM':96,'commit':32,'DMA_bridge':64,'DMA_producer':10},'immutable_prices':{'quant_per_quarter':168,'DMA147':15674.320143998484},'scope':'actual SU native_h stage/drain; actual quant qpin4; actual DMAfront DQ; actual source39 q10 STORE/FENCE on32-reservation native read bridge, all4 held R owners; fullSUarithmetic/productionDMAcore workload/physical bridge qualification not proven','files':receipt},indent=2)+'\n')
 frozen_runner = r'''#!/usr/bin/env python3
 import json,pathlib,os,subprocess,sys,hashlib
 out=pathlib.Path(__file__).resolve().parent

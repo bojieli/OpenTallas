@@ -50,12 +50,20 @@ module tb_hbm_native_threeproducer;
     wire [159:0] parent_fault;wire [3:0] su_rg,su_wg,su_ra,su_wa,quant_drained;
     wire [31:0] su_cd,su_vd,dma_cd,dma_vd;wire [11:0] owner_r,owner_w;
     wire [3:0] su_read_req=stgo|~stdn,su_write_req=(drgo|~drdn)&{4{!park_admission}};
+    wire [95:0] cdc_source_clocks;
+    for(genvar cq=0;cq<4;cq++)for(genvar cb=0;cb<8;cb++)begin:cdc_domains
+      assign cdc_source_clocks[cq*8+cb]=cclk[cq];
+      assign cdc_source_clocks[32+cq*8+cb]=cclk[cq];
+      assign cdc_source_clocks[64+cq*8+cb]=clk;
+    end
     wire [32*280-1:0] admitted_su_wq;
     for(genvar aq=0;aq<4;aq++)for(genvar ab=0;ab<8;ab++)begin:admission_mutant
       assign admitted_su_wq[(aq*8+ab)*280+:280]={su_wq[(aq*8+ab)*280+279]&&((MUT!=11)||su_wg[aq]),su_wq[(aq*8+ab)*280+:279]};
     end
-    ot_hbm_b2_native_owned4 #(.MUT(MUT==10?1:MUT==13?3:0),.FASTFIN(1),.FRONTFAST(1),.HARD_CLOCKS(1)) vehicle(
-      .su_clk(cclk),.quant_clk(cclk),.dma_clk({4{clk}}),.vclk(vmclk),.rst_n(rst_n),.station_clk({32{vmclk}}),
+    ot_hbm_b2_native_owned4 #(.MUT(MUT==10?1:MUT==13?3:0),.FASTFIN(1),.FRONTFAST(1),.HARD_CLOCKS(1),.HARD_VM_CLOCKS(1),.HARD_CDC_CLOCKS(1),.HARD_COMMIT_CLOCKS(1),.VM_NC(4)) vehicle(
+      .su_clk(cclk),.quant_clk(cclk),.dma_clk({4{clk}}),.vclk(vmclk),.rst_n(rst_n),.station_clk({32{vmclk}}),.commit_clk({32{vmclk}}),.commit_rst_n({32{rst_n}}),
+      .cdc_cclk(cdc_source_clocks),.cdc_vclk({96{vmclk}}),.cdc_crst_n({96{rst_n}}),.cdc_vrst_n({96{rst_n}}),
+      .vm_child_clk({52{vmclk}}),.vm_child_rst_n({52{rst_n}}),.relay_clk({24{vmclk}}),.relay_rst_n({24{rst_n}}),
       .su_native_rq(544'b0),.su_native_wq(8992'b0),.su_rreq(su_read_req),.su_wreq(su_write_req),.su_drained(stdn&drdn&~stgo&~drgo),.su_mirror(su_mirror),
       .su_rq(su_rq),.su_rcredit(su_rc),.su_rr(su_rr),.su_wq(admitted_su_wq),.su_wcredit(su_wc),.su_done(su_done),
       .su_rgrant(su_rg),.su_wgrant(su_wg),.su_rack(su_ra),.su_wack(su_wa),
