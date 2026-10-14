@@ -221,9 +221,9 @@ module ot_s81ph_ret_root_s #(
 `endif
         end
     end endgenerate
-    wire        x_v = sv || hv;
-    wire [31:0] x_d = sv ? sum : h_d;
-    wire        x_e = sv ? (st_e | err != 2'd0) : h_e;
+    wire        x_v = cand_pick_sv || hv;
+    wire [31:0] x_d = cand_pick_sv ? sum : h_d;
+    wire        x_e = cand_pick_sv ? (st_e | err != 2'd0) : h_e;
     wire [23:0] x_key = {cand[31:13], cand[4:0]};
     wire [2:0]  x_kk = cand[7:5];
     wire [4:0]  x_lo = cand[12:8];
