@@ -12,6 +12,9 @@ module ot_hbm_b2_peer_mux_lane #(parameter integer NSRC=3,MUT=0)(
 );
  wire [NSRC-1:0] selected_r=(MUT==1)?{rgrant[NSRC-2:0],rgrant[NSRC-1]}:rgrant;
  wire [NSRC-1:0] selected_w=(MUT==1)?{wgrant[NSRC-2:0],wgrant[NSRC-1]}:wgrant;
+ // The held lease arrives before the CDC request output. Split complementary
+ // registered selects drive the lower and upper payload regions independently.
+ (* keep=1 *) reg [NSRC-1:0] wsel_p,wsel_n;
  reg [15:0] rd;reg [279:0] wd;reg rv,wv;
  // Return diagnostics retain the owner sampled at the return edge. They do
  // not sit on the data/credit handoff path.
@@ -20,7 +23,9 @@ module ot_hbm_b2_peer_mux_lane #(parameter integer NSRC=3,MUT=0)(
   rd=0;wd=0;rv=0;wv=0;
   for(integer s=0;s<NSRC;s=s+1)begin
    rd=rd|(src_rq[s*17+:16]&{16{selected_r[s]}});rv=rv|(src_rq[s*17+16]&&selected_r[s]);
-   wd=wd|(src_wq[s*281+:280]&{280{selected_w[s]}});wv=wv|(src_wq[s*281+280]&&selected_w[s]);
+   wd[127:0]=wd[127:0]|(src_wq[s*281+:128]&{128{wsel_p[s]}});
+   wd[279:128]=wd[279:128]|(src_wq[s*281+128+:152]&{152{!wsel_n[s]}});
+   wv=wv|(src_wq[s*281+280]&&wsel_p[s]);
   end
  end
  always @(posedge clk)begin
@@ -32,11 +37,13 @@ module ot_hbm_b2_peer_mux_lane #(parameter integer NSRC=3,MUT=0)(
  always @(posedge clk or negedge rst_n)if(!rst_n)begin
   rq[16]<=0;wq[280]<=0;src_rcredit<=0;src_wcredit<=0;src_done<=0;fault<=0;
   dc_rc<=0;dc_rv<=0;dc_wc<=0;dc_done<=0;dc_ro<=0;dc_wo<=0;
+  wsel_p<=0;wsel_n<='1;
   for(integer s=0;s<NSRC;s=s+1)src_rr[s*257+256]<=0;
  end else begin
   rq[16]<=rv;wq[280]<=wv;
   dc_rc<=rcredit;dc_rv<=rr[256];dc_wc<=wcredit;dc_done<=done;
   dc_ro<=|rgrant;dc_wo<=|wgrant;
+  wsel_p<=selected_w;wsel_n<=~selected_w;
   for(integer s=0;s<NSRC;s=s+1)begin
    src_rcredit[s]<=rgrant[s]&&rcredit;src_rr[s*257+256]<=rgrant[s]&&rr[256];
    src_wcredit[s]<=wgrant[s]&&wcredit;src_done[s]<=wgrant[s]&&done;

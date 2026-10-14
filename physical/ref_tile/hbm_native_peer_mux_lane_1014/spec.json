@@ -44,7 +44,7 @@
   ],
   "src_wq": [
    16.2,
-   213.84
+   141.84
   ],
   "src_rcredit": [
    2.16,
@@ -60,7 +60,7 @@
   ],
   "src_rr": [
    8.64,
-   213.84
+   141.84
   ]
  },
  "route": {
@@ -78,8 +78,8 @@
   "macro_halo_um": 5.4
  },
  "outline": {
-  "w": 216,
-  "h": 64.8
+  "w": 144,
+  "h": 32.4
  },
  "recipe": 2,
  "io_flop_at_pins": {
@@ -92,7 +92,7 @@
  "job": {
   "owner": "Codex:hbm_vm_sm_2240",
   "branch": "codex/hbm-vm-sm-2240",
-  "tag": "ownerbank1",
+  "tag": "ownerbank2",
   "purpose": "Actualnativegroup1 registeredbankownerstation, sharedSU/quant/DMA; sourcependingSRAM/ECCphysicaldebtexplicit, preservesimmutablepricefail192/168",
   "extra_paths": [
    "results/arch/hbm_native_contention_1014",

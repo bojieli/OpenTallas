@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_native_peer_mux_lane_1014",
- "verdict": "WARN",
- "generated": "2026-10-14T03:34:20-0700",
+ "verdict": "FAIL",
+ "generated": "2026-10-14T04:20:14-0700",
  "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "b3536038d4a4add3ecd4f541acb9d09b9308a2f1",
+  "start_commit": "673de04e3595eae42b1fde5cc364a2e47f310aff",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "08c0d4b351f679c1dc5215af0c7f94635b348dc6a91818f43a41932f706b59a4",
-  "manifest_sha256": "0667a330c98aa27a2cbc7fe932da70897a8def2519d47ffe8754289c970a30b4",
+  "archive_sha256": "f25210633f45bdbb384b8de74b53de9e47cf720a77b45c4058736580acc59cfb",
+  "manifest_sha256": "f4433f5c2ac80dc0492f12a22f94296f88858b5042ef284bafef68783ab734e9",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -27219,8 +27219,8 @@
    {
     "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_lane_cdc_owned.sv",
     "kind": "file",
-    "sha256": "d7fe2882fa0b6a0a260654c2bac7e53397198842329b271891402bd867447259",
-    "git_blob": "a5ddb8fa596a254c653b5755c31feff8e532fabe",
+    "sha256": "783ae3930864736c1eec0807b3af04fee2616f2d115e4a4b1bac8e2c7b2f7259",
+    "git_blob": "baec3d1b3113c8b5706dde23a0fb0e62adffb45f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -27235,8 +27235,8 @@
    {
     "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_native_owned4.sv",
     "kind": "file",
-    "sha256": "1ca879cde0be22c511cbd220f47dfb0f867c5dee08861755e540d0b7e5aa6401",
-    "git_blob": "21d788b6414186f65bd0315cd1713ac9c1ed0e03",
+    "sha256": "4e0e907837f53b1f93709bb9d95e4255ed45f6805f2bb3cf08c83b90f3ea8c47",
+    "git_blob": "534667a075e148df3373b70641184fe18dd040f1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -27259,8 +27259,8 @@
    {
     "path": "rtl/hbm_accel/generic/adapters/native_b2/su_quadrant/ot_hbm_b2_peer_mux_lane.sv",
     "kind": "file",
-    "sha256": "e1505cde629377d219064e6bbc0839aa0b624d867b845254e7c75b0689c415ae",
-    "git_blob": "f453737a249822af77838c9c0c538482d47ec5a7",
+    "sha256": "3004e0a1985702aaf518b8184c6bade6f09d12a80ee6c6ffc71cf057fd6a1d76",
+    "git_blob": "05cc5dfe11470dda7d6c9e89743941803abe56a9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -29355,8 +29355,8 @@
    {
     "path": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_native_peer4_owned.sv",
     "kind": "file",
-    "sha256": "742149cdf0b8a77b68afaa6c9f57bd947d64e818366e78b0b2384783ca39db6c",
-    "git_blob": "56774e8c8ffd9c84e87f8adc50f6e715663dbc9a",
+    "sha256": "8fccf0b51b9c9421f4da9a5eee7c39d92707e42d4676f6af0a920aed980571fd",
+    "git_blob": "e74411d2747908c45f008b238faa82997b5cdd29",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -43166,7 +43166,7 @@
     "sha256": "c992d87cfb139930d9000d20f10dd1f4014c33569548e135ff35f5e463b03cce",
     "git_blob": "313052acdfa36b327bb4ebfb8da4e5564d2ccd76",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "rtl/test/hbm_accel/generic/native_contention/run.py",
@@ -43174,7 +43174,7 @@
     "sha256": "196f89bfb660435921c094e071a12613ecfdb0a8a9732a433896e5ef8f6b3d20",
     "git_blob": "4457cc722f7dd685a94e00306e0d87839852e6cd",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "rtl/test/hbm_accel/generic/native_contention/tb_hbm_native_threeproducer.sv",
@@ -43182,7 +43182,7 @@
     "sha256": "9f86e6a8acc637c4ea767914aca46aece0a41c084708886a7ccd48bd92d8b495",
     "git_blob": "91ffac484fbc0af4823b8b34fc16c106d6d3998f",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "rtl/test/hbm_accel/generic/tb_hgi_ctlw_lane2_equiv.sv",
@@ -108387,7 +108387,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "dda1c80c3bd14588fbb228b62531b65b89177eb6",
+   "origin_main": "a194c5cbec457435d84cd98c87a76197a074a5f6",
    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
    "files": [
     {
@@ -108760,11 +108760,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T03:32:26-0700",
-  "remote_script_sha256": "731e952f8022d738424e1b4bb8ccc93dd4beb849e7aabcfd164394af71f987e1",
+  "captured": "2026-10-14T04:18:04-0700",
+  "remote_script_sha256": "cc010e143786bc5cdd27ed671ed3fe2053863204b0e85f62b28c623853e8b79b",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_peer_mux_lane_1014-20261014-033148",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_native_peer_mux_lane_1014-20261014-041737",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -108772,68 +108772,26 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 1079,
+  "max_root_sinks": 573,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 211.9,
-  "tt_spread_ps": 42.3,
+  "tt_insertion_ps": null,
+  "tt_spread_ps": null,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
    "insertion_ps": 300.0,
    "spread_ps": 80.0
   },
-  "clock_measurements": [
-   {
-    "source": "clk",
-    "clock": "core_clk",
-    "tt": {
-     "boundary": {
-      "n": 1079,
-      "mean": 192.3,
-      "min": 169.6,
-      "max": 211.9
-     },
-     "all": {
-      "n": 1079,
-      "mean": 192.3,
-      "min": 169.6,
-      "max": 211.9
-     },
-     "errors": [],
-     "macros": null,
-     "macro_libs": 0
-    }
-   }
-  ],
-  "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "1,079 sinks on the largest root <= 15,000; measured TT insertion 211.9 ps, leaf spread 42.3 ps"
+  "text": "573 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 574 um2 + macros 0 in core 12802: util 4%",
-   "fix": "set \"std_area_um2\": 574 and drop 'outline' (gen sizes to util 0.52)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.high_fanout",
-   "message": "port rgrant[0]: 533 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
-   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.high_fanout",
-   "message": "port rgrant[1]: 533 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
-   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.high_fanout",
-   "message": "port rgrant[2]: 533 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
-   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+   "message": "synthesized std area 296 um2 + macros 0 in core 12802: util 2%",
+   "fix": "set \"std_area_um2\": 296 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
@@ -108843,15 +108801,33 @@
   },
   {
    "severity": "WARN",
-   "check": "textbook.boundary",
-   "message": "1 input->register endpoint(s) > 3 levels (worst rcredit->fault$_DFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)",
-   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+   "check": "textbook.high_fanout",
+   "message": "port wgrant[1]: 285 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "port wgrant[2]: 285 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 4.5% outside 45%-65% (std 574 + macro 0 um2 in 12802 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 2.3% outside 45%-65% (std 301 + macro 0 um2 in 12802 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=1",
+   "fix": ""
   }
  ]
 }
