@@ -11,7 +11,8 @@
     "stage": 0,
     "segment": 0,
     "credit": 1,
-    "trace32": "POR-retained diagnostic counter, never collective identity"
+    "trace32": "POR-retained diagnostic counter, never collective identity",
+    "epoch_zero": "valid with genuine explicit sole allocator grant; never independently allocated/reused"
   },
   "terminal": {
     "identity": "exact epoch16, stage37, original token18, position13, segment0, plus original generation2",
@@ -32,7 +33,7 @@
     "ctrl": "command22 v2, HC unchanged48:229, shared_epoch16 at230:245, valid246; helper owns implementation",
     "metadata": "epoch_valid0 for metadata-only HC; shared grant must match actual token/position/generation before start broadcast"
   },
-  "proof": "component131checks including12 generation-wrapping transactions, withheld execution credit holding next request, reset stale identities, six identity fields, four drain flags, done-zero fault and default-off exact status; three RTL mutants detected. Does not claim actual whole-token engine execution, ND8 transport, physical qualification, or accepted throughput price.",
+  "proof": "component134checks including13 generation-wrapping transactions, withheld execution credit holding next request, reset stale identities, six identity fields, four drain flags, done-zero fault and default-off exact status; three RTL mutants detected. Does not claim actual whole-token engine execution, ND8 transport, physical qualification, or accepted throughput price.",
   "census": "923FF/820portbits, one clock entry; outline pending mapped area and pin capacity",
   "latency_cycles": {
     "HC_capture_to_request": "three receiving clock edges including captured input edge, if initial one request credit available",

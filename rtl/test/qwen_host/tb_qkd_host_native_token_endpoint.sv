@@ -33,6 +33,11 @@ module tb_qkd_host_native_token_endpoint;
  initial begin
  tick(3);@(negedge ck);por_n=1;rst_n=1;hc[181:39]=143'h456123789abcdef;legacy_tk=93'h1234567890abcdef;
  tick(5);check(native_pr==hc[181:39],"actual program metadata");check(off_tk==legacy_tk,"DEFAULT_OFF exact legacy status");
+ // Epoch zero is valid when explicitly granted by the sole allocator.
+ launch(0,100,8191,0);response({16'd0,6'd37,18'd100,13'd8191,6'd0},0,1,0);
+ @(negedge ck);kv_drained=1;vm_drained=1;host_drained=1;collective_drained=1;tick(4);
+ check(local_tk[92]&&!protocol_fault,"sole allocator may grant epoch zero");
+ @(negedge ck);kv_drained=0;vm_drained=0;host_drained=0;collective_drained=0;recycle_credit();
  for(i=1;i<=12;i=i+1)begin
  launch(i,101+i,8191-i,i%4);saved={16'(i),6'd37,18'(101+i),13'(8191-i),6'd0};
  response(saved,i%4,1,0);check(!local_tk[92]&&!result_cr&&!protocol_fault,"terminal waits actual drains");
