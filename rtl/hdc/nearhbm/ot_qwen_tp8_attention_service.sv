@@ -34,6 +34,7 @@ module ot_qwen_tp8_attention_service (
 );
  localparam IDLE=0,QLOAD=1,QK=2,PVSTART=3,PV=4,EMIT=5,BAD=6,RELEASE=7;
  reg [2:0] state;reg start_qk,start_pv;reg [15:0] ep;reg [5:0] layer;
+ reg [6:0] boot_count;
  reg [13:0] ctx;reg [5:0] qnext;reg [4:0] beat;reg local_fault,cleared;
  wire [31:0] raw_req,raw_v,raw_g,checked_rsp,kbad;wire [415:0] raw_t;
  wire [3:0] sf,scdone,nonempty,exp_ready;wire [63:0] edone;wire [255:0] edata;wire [43:0] eaddr;
@@ -44,7 +45,7 @@ module ot_qwen_tp8_attention_service (
  wire [1:0] vf,pf,vdone;wire ff,fvalid;wire [16383:0] fout;wire [15:0] fepoch;
  wire fready=state==EMIT&&result_ready&&beat==31;
  wire [31:0] kc[0:31];wire [31:0] vc[0:1];
- assign request_ready=state==IDLE&&!fault;
+ assign request_ready=state==IDLE&&!fault&&boot_count==80;
  assign busy=state!=IDLE;assign active_epoch=ep;assign active_layer=layer;
  assign result_epoch=ep;assign result_layer=layer;assign result_beat=beat;
  assign result_valid=state==EMIT&&fvalid&&!fault;
@@ -55,13 +56,14 @@ module ot_qwen_tp8_attention_service (
  always @*begin ksum=0;vsum=0;for(integer x=0;x<32;x=x+1)ksum=ksum+kc[x];for(integer x=0;x<2;x=x+1)vsum=vsum+vc[x];end
  assign k_words=ksum;assign v_words=vsum;
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin state<=IDLE;start_qk<=0;start_pv<=0;ep<=0;layer<=0;ctx<=0;qnext<=0;beat<=0;local_fault<=0;cleared<=0;cycles<=0;result_done<=0;end
+  if(!rst_n)begin state<=IDLE;start_qk<=0;start_pv<=0;ep<=0;layer<=0;ctx<=1;boot_count<=0;qnext<=0;beat<=0;local_fault<=0;cleared<=0;cycles<=0;result_done<=0;end
   else begin
    start_qk<=0;start_pv<=0;result_done<=0;
+   if(boot_count<80)boot_count<=boot_count+1'b1;
    if(busy)cycles<=cycles+1;
    if(fault)state<=BAD;
    else case(state)
-    IDLE:if(request_valid)begin
+    IDLE:if(request_valid&&request_ready)begin
      if(!fused_program_capability||request_position>8191||`KVD_HEADS!=1||!`KVD_Q_FP32||!`KVD_QK_ONLY)begin local_fault<=1;state<=BAD;end
      else begin ep<=request_epoch;layer<=request_layer;ctx<=request_position+1'b1;qnext<=0;beat<=0;cleared<=0;cycles<=0;start_qk<=1;state<=QLOAD;end
     end
