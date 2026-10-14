@@ -1,5 +1,5 @@
 {
- "name": "qfd_vm_bay_pad15s0s-bp3s-COMMIT",
+ "name": "qfd_vm_bay_pad15s0s-bp3s-ae1ff1d3b",
  "block": "ot_qfd_vm_bay_pad15s0s",
  "ref_tile": true,
  "owner": "Claude:qwen_tp8_vm6",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-vm6-1014",
-  "commit": "COMMIT",
+  "commit": "ae1ff1d3b",
   "extra_paths": [
    "rtl/qwen_sys/vm_plane_20261013",
    "rtl/hdc",
@@ -121,7 +121,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_bay_pad15s0s/qfd_vm_bay_pad15s0s-bp3s-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_bay_pad15s0s/qfd_vm_bay_pad15s0s-bp3s-ae1ff1d3b"
   }
  ],
  "cycles_added": 0,

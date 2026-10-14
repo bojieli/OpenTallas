@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/ot_hbm_idx_hslice_ready_native_c0-ready0log-5300bde80/record/views/ot_hbm_idx_hslice_ready_native/ot_hbm_idx_hslice_ready_native.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/ot_hbm_idx_hslice_ready_native_c0-ready1pin-bfba4a98a/record/views/ot_hbm_idx_hslice_ready_native/ot_hbm_idx_hslice_ready_native.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 2304 of 2304 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cf_in M5 (124.464,103.571), clk M5 (124.464,103.571), cs_in[0] M5 (124.464,103.571))"
+  "(f) face-pin access: 2304 of 2304 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cf_in M5 (130.608,103.525), clk M5 (130.608,103.525), cs_in[0] M5 (130.608,103.525))"
  ],
- "summary": "ot_hbm_idx_hslice_ready_native 172.8 x 103.68: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 2304 blocked-above 0 blocked-same 0; clock clk insertion 239 ps; pockets M5 0 (closed)",
+ "summary": "ot_hbm_idx_hslice_ready_native 172.8 x 103.68: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 2304 blocked-above 0 blocked-same 0; clock clk insertion 238 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hbm_idx_hslice_ready_native",
   "W": 172.8,
@@ -46,18 +46,18 @@
    "same_examples": [],
    "band_same": 2304,
    "band_examples": [
-    "cf_in M5 (124.464,103.571)",
-    "clk M5 (124.464,103.571)",
-    "cs_in[0] M5 (124.464,103.571)",
-    "cs_in[10] M5 (124.464,103.571)",
-    "cs_in[11] M5 (124.464,103.571)",
-    "cs_in[12] M5 (124.464,103.571)"
+    "cf_in M5 (130.608,103.525)",
+    "clk M5 (130.608,103.525)",
+    "cs_in[0] M5 (130.608,103.525)",
+    "cs_in[10] M5 (130.608,103.525)",
+    "cs_in[11] M5 (130.608,103.525)",
+    "cs_in[12] M5 (130.608,103.525)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 238.97,
-    "min_ps": 167.93
+    "max_ps": 237.98,
+    "min_ps": 171.73
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 1009
+    "added": 719
    },
    "count": 0,
    "area_um2": 0,

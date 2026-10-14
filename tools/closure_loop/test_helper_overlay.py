@@ -1,4 +1,5 @@
 """Actual gate packing and route helper transport share frozen effective contents."""
+import hashlib
 import io
 import os
 import subprocess
@@ -188,15 +189,47 @@ class HelperOverlay(unittest.TestCase):
             CL.ship_helpers('local', str(run), job)
         self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(),before)
 
-    def test_missing_directory_refuses_even_before_source_synced_marker(self):
+    def test_missing_directory_reinstalls_exact_committed_bytes(self):
+        # el1014-root-frozen-helper: move_to_other_host gives an installed job a fresh run directory.
         import shutil
         job, run = self.installed_job()
-        self.assertTrue(job['helper_overlay_installed'])
-        self.assertNotIn('source_synced',job)
+        before = (run/'cl/orfs_hold_mm.tcl').read_bytes()
+        self.commit_helper(b'# later main must not enter the reinstall\n')
         shutil.rmtree(run/'cl')
-        with self.assertRaisesRegex(ValueError,'previously installed frozen helper directory is missing'):
-            CL.ship_helpers('local',str(run),job)
-        self.assertFalse((run/'cl').exists())
+        moved = Path(self.tmp.name)/'moved'
+        CL.ship_helpers('local', str(moved), job)
+        self.assertEqual((moved/'cl/orfs_hold_mm.tcl').read_bytes(), before)
+        self.assertEqual(HO.verify_installed_plan(moved/'cl', job['route_overlay_plan'])['status'], 'verified_original')
+        self.assertEqual(job['helper_overlay_reinstalls'][-1]['source'], 'committed_origin')
+        CL.ship_helpers('local', str(moved), job)   # the reinstalled directory then verifies without writes
+        self.assertFalse(job['helper_overlay_verification']['mutation'])
+
+    def test_missing_directory_reinstalls_daemon_only_bytes_from_content_store(self):
+        import shutil
+        literal = b'# genuine daemon-only bytes\n'
+        (self.daemon / self.rel).write_bytes(literal)
+        job = {'freeze_helper_overlay': True}
+        run = Path(self.tmp.name)/'run'
+        CL.ship_helpers('local', str(run), job)
+        self.assertTrue((CL.HELPER_STORE/hashlib.sha256(literal).hexdigest()).exists())
+        (self.daemon / self.rel).write_bytes(b'# daemon changed later\n')
+        shutil.rmtree(run/'cl')
+        CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(), literal)
+        self.assertEqual(job['helper_overlay_reinstalls'][-1]['source'], 'content_store')
+
+    def test_missing_directory_refuses_when_bytes_unrecoverable(self):
+        import shutil
+        literal = b'# daemon-only bytes never stored\n'
+        (self.daemon / self.rel).write_bytes(literal)
+        job = {'freeze_helper_overlay': True}
+        run = Path(self.tmp.name)/'run'
+        CL.ship_helpers('local', str(run), job)
+        (CL.HELPER_STORE/hashlib.sha256(literal).hexdigest()).write_bytes(b'# tampered store\n')
+        shutil.rmtree(run/'cl')
+        with self.assertRaisesRegex(ValueError, 'directory is missing and its exact bytes are not recoverable'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertFalse((run/'cl/orfs_hold_mm.tcl').exists())
 
     def test_valid_digest_does_not_hide_committed_tree_mismatch(self):
         job, run = self.installed_job()

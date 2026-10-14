@@ -7,6 +7,12 @@ import sys, json, gzip, re
 from collections import defaultdict
 
 plan, rpt, cdj, out = sys.argv[1:5]
+aliases = {}
+alias_file = None
+if '--pin-aliases' in sys.argv:
+    alias_file = sys.argv[sys.argv.index('--pin-aliases') + 1]
+    aliases = json.load(open(alias_file))
+alias_endpoints = 0
 p = json.load(gzip.open(plan))
 mst = {i[0]: i[1] for i in p['insts']}
 drv = {}
@@ -19,9 +25,9 @@ for h in p['hops']:
 cd = json.load(open(cdj))['tiles']
 view = lambda m: cd.get(m, {}).get('view', '?')
 norm = lambda m: re.sub(r'__.*$', '', re.sub(r'(dsfd_h?stn[hv])_\d+(x\d+)?', r'\1_N', re.sub(r'(dsfd_rly)_\d+_', r'\1_N_', m)))
-agg = defaultdict(lambda: dict(n=0, viol=0, wns=1e9, tns=0.0, Lmax=0.0, Lsum=0.0, Ln=0, ex=None, groups=set(), masters=set()))
+agg = defaultdict(lambda: dict(n=0, viol=0, rounded_zero_viol=0, wns=1e9, tns=0.0, Lmax=0.0, Lsum=0.0, Ln=0, ex=None, groups=set(), masters=set()))
 grp = None
-tot = dict(n=0, viol=0)
+tot = dict(n=0, viol=0, rounded_zero_viol=0)
 line_re = re.compile(r'^(\S+?)/([^/\s\[]+)(\[\d+\])?\s+\((\S+)\)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)')
 for ln in open(rpt, errors='ignore'):
     if ln.startswith(('min_delay', 'max_delay')):
@@ -33,8 +39,18 @@ for ln in open(rpt, errors='ignore'):
     inst, port, bit_text, em, req, act, sl = m.groups()
     bit = int(bit_text[1:-1]) if bit_text else 0
     sl = float(sl)
+    is_viol = sl < 0 or "(VIOLATED)" in ln
     tot['n'] += 1
-    ds = [d for d in drv.get((inst, port), []) if d[0] <= bit <= d[1]]
+    lookup_port, lookup_bit = port, bit
+    actual_pin = port + (bit_text or '')
+    master_aliases = aliases.get(mst.get(inst, em), {})
+    mapped = master_aliases.get(actual_pin)
+    if mapped is None and not bit_text:
+        mapped = master_aliases.get(port + '[0]')
+    if mapped is not None:
+        lookup_port, lookup_bit = mapped
+        alias_endpoints += 1
+    ds = [d for d in drv.get((inst, lookup_port), []) if d[0] <= lookup_bit <= d[1]]
     if len(ds) > 1:
         raise ValueError(f'ambiguous plan drivers for {inst}/{port}[{bit}]: {ds}')
     if ds:
@@ -49,7 +65,10 @@ for ln in open(rpt, errors='ignore'):
     a['masters'].add((sm, em))
     if L is not None:
         a['Lmax'] = max(a['Lmax'], L); a['Lsum'] += L; a['Ln'] += 1
-    if sl < 0:
+    if is_viol:
+        if sl == 0:
+            tot["rounded_zero_viol"] += 1
+            a["rounded_zero_viol"] += 1
         tot['viol'] += 1
         a['viol'] += 1; a['tns'] += sl
     if sl < a['wns']:
@@ -62,16 +81,17 @@ for k, a in agg.items():
                 'placeholder' if any(v in k[4].lower() for v in ('interim', 'placeholder', 'blackbox', '?')) else
                 'relay' if 'dsfd_rly_' in k[2] or 'dsfd_rly_' in k[3] else 'real_master_pair')
     rows.append(dict(category=category, group=k[0], cls=k[1], launch=k[2], capture=k[3], views=k[4], endpoints=a['n'], violators=a['viol'],
-                     wns_ps=round(a['wns'], 1), tns_ns=round(a['tns'] / 1000, 1), len_max_um=round(a['Lmax'], 1),
+                     rounded_zero_violators=a['rounded_zero_viol'], tns_ps=round(a['tns'], 1), wns_ps=round(a['wns'], 1), tns_ns=round(a['tns'] / 1000, 1), len_max_um=round(a['Lmax'], 1),
                      len_mean_um=round(a['Lsum'] / a['Ln'], 1) if a['Ln'] else None, example=a['ex'],
                      master_pairs=len(a['masters'])))
 rows.sort(key=lambda r: r['wns_ps'])
 categories = {}
 for r in rows:
-    a = categories.setdefault(r['category'], dict(endpoints=0, violators=0, wns_ps=1e9, tns_ns=0))
+    a = categories.setdefault(r['category'], dict(endpoints=0, violators=0, rounded_zero_violators=0, wns_ps=1e9, tns_ns=0))
     a['endpoints'] += r['endpoints']; a['violators'] += r['violators']
+    a['rounded_zero_violators'] += r['rounded_zero_violators']
     a['wns_ps'] = min(a['wns_ps'], r['wns_ps']); a['tns_ns'] += r['tns_ns']
-json.dump(dict(report=rpt, endpoints=tot['n'], violators=tot['viol'], categories=categories, classes=rows), open(out, 'w'), indent=1)
+json.dump(dict(report=rpt, pin_aliases=alias_file, alias_endpoints=alias_endpoints, endpoints=tot['n'], violators=tot['viol'], rounded_zero_violators=tot['rounded_zero_viol'], categories=categories, classes=rows), open(out, 'w'), indent=1)
 print(rpt, tot)
 for r in rows:
     if r['violators'] or '--all' in sys.argv: print('%-10s %-12s %-34s -> %-34s %-18s n %7d viol %7d wns %8.1f tns %9.1f ns L %6.1f/%s' % (

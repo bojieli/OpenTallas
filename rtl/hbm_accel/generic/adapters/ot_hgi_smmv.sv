@@ -115,6 +115,7 @@ module ot_hgi_smmv #(
     // ================= decode pipeline (D0 pin flops, D1 count fields + checks, D2 products, D3 checks -> window) ====
     reg         d0_v, d1_v, d2_v;
     reg [127:0] hdr0; reg [255:0] a0, b0, o0; reg [20:0] na0, nb0;
+    always @(posedge clk) begin hdr0 <= rec_hdr; a0 <= rec_a; b0 <= rec_b; o0 <= rec_o; na0 <= rec_n_a; nb0 <= rec_n_b; end
     wire [6:0]  opnd = hdr0[99:93];
     wire [1:0]  pf0 = hdr0[65:64];
     wire [3:0]  pp0 = {1'b0, hdr0[68:66]} + 4'd1;
@@ -305,7 +306,8 @@ module ot_hgi_smmv #(
             // r2: one record in decode at a time (held operands): accept again once D3 has committed it
             rdy_r <= !halt_q && !(rec_v && rec_rdy) && !d0_v && !d1_v && !dw_v && ({1'b0, nin} + d2_v < W);
             d0_v <= rec_v && rec_rdy;
-            if (rec_v && rec_rdy) begin hdr0 <= rec_hdr; a0 <= rec_a; b0 <= rec_b; o0 <= rec_o; na0 <= rec_n_a; nb0 <= rec_n_b; end
+            // D0 operand pin flops load UNCONDITIONALLY (always block below): native pin audit 10-14 rec_v capture 257.1 ps
+            // was rec_v -> accept enable of ~940 D0 flops; D1 reads D0 only on d0_v (the edge after the accept), so 0 cycles.
             // ---- D1
             d1_v <= d0_v;
             if (d0_v) begin
