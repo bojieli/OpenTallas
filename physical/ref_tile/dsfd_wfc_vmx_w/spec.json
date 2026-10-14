@@ -1,0 +1,143 @@
+{
+ "name": "dsfd_wfc_vmx_w",
+ "top": "dsfd_wfc_vmx_w",
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "sdc_extra": [
+  "physical/s81_ph_views/mtp/wfc_ser_ref.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/s81_ph_views/mtp/wfc_ser_ref.tcl"
+ ],
+ "sources": [
+  "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv",
+  "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/common/ot_ratio_cdc_fifo.sv"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 108.0
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "f_vw",
+   "f_cs",
+   "f_pf"
+  ],
+  "N": [
+   "t_vc",
+   "f_lf",
+   "f_rf",
+   "t_hks"
+  ],
+  "E": [
+   "t_swv",
+   "t_swd",
+   "f_swr",
+   "f_swa",
+   "f_kdv",
+   "t_ks",
+   "t_ft"
+  ],
+  "S": [
+   "ck",
+   "ckv",
+   "rst",
+   "rsv"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 12,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:el1013-s81-wfcstg",
+  "branch": "claude/el1013-s81-wfcstg",
+  "tag": "p1",
+  "purpose": "S81 sp_wfc priced kit (VM_LINK 1 / POSTED 1 / RD2 1 / VMRQ 64 / WOUTW 8): the WFC -> VM write / START half of dsfd_wfc_vmx as its own leaf (the one-tile vmx is ~66k flops on two roots at these parameters; rq64w8 / rd2s routes stalled). Pin flops, pre-queue, fast -> slow ratio FIFO, write issue + START doorbell, write skid + grant link, credit return, the kit fault register, the HEP start register. Two related clocks ck 1.2 GHz / ckv 0.9 GHz (crossings flop -> flop at the 278 ps window; roots balanced by wfc_ser_ref.tcl). Cycle-exact with the one-tile kit in the cluster lockstep bench.",
+  "structural_change": "the one-tile vmx split by binding into two leaves (this: write / START path, ~7.0k + 5.9k sinks on its two roots)",
+  "benches": [
+   {
+    "name": "lock_stg_r1",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_stg_r1 --case lock_stg_r1 --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "lock_stg_r2_slowvm",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_stg_r2_slowvm --case lock_stg_r2_slowvm --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cl_stg_vmnat",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/cl_stg_vmnat --case cl_stg_vmnat --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "lock_neg_doorbell",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_neg_doorbell --case lock_neg_doorbell --snap --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cl_neg_doorbell",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/cl_neg_doorbell --case cl_neg_doorbell --snap --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/dsfd_wfc_vmx_w/views",
+  "record_to": "results/rtl/ref_tile/dsfd_wfc_vmx_w"
+ },
+ "floorplan_why": "flops only (~12.9k: 528-b pin flops, 4 x 528 pre-queue, 8 x 528 FIFO + its 8 x 528 serial shadow, 2 x 527 skid + 527 link register). Flow W -> E: WFC pins (582 b) on W, VM write link (527 b + grant) and t_ks on E, the lnk credit / faults / HEP start (36 b) on N. Cut: 582 b through a ~108 um M4 face over ~1,100 M2 + M4 tracks -> 0.53; no through traffic.",
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

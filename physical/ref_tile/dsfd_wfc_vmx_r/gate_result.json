@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "dsfd_wfc_vmx_r",
+ "verdict": "WARN",
+ "generated": "2026-10-13T09:27:50-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "5075f59cd",
+ "clock": {
+  "max_root_sinks": 11573,
+  "root": "port:ckv[0]",
+  "cts": true,
+  "tt_insertion_ps": 791.4,
+  "tt_spread_ps": 476.3,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "11,573 sinks on the largest root <= 15,000; measured TT insertion 791.4 ps, leaf spread 476.3 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "pins",
+   "message": "1-bit vector ports ['ck', 'ckv', 'rst', 'rsv', 'f_cst', 't_srv']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])",
+   "fix": "declare them scalar in RTL"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net u_s2f.rp[2]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R): 5,096 loads (1 flops, e.g. u_s2f.rp_w[2]$_DFF_P_) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net u_s2f.rp[0]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R): 3,753 loads (1 flops, e.g. u_s2f.rp_w[0]$_DFF_P_) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "net u_s2f.rp[1]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R): 3,287 loads (1 flops, e.g. u_s2f.rp_w[1]$_DFF_P_) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "4 input->register endpoint(s) > 3 levels (worst f_vr[15]->pred[5]$_SDFFE_PN0P_/D 5 lv, f_vr[15]->pred[4]$_SDFFE_PN0P_/D 4 lv, f_vr[15]->pred[3]$_SDFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  }
+ ]
+}

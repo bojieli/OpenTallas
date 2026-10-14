@@ -1,0 +1,142 @@
+{
+ "name": "dsfd_wfc_vmx_w-p1-COMMIT",
+ "block": "dsfd_wfc_vmx_w",
+ "ref_tile": true,
+ "owner": "Claude:el1013-s81-wfcstg",
+ "purpose": "S81 sp_wfc priced kit (VM_LINK 1 / POSTED 1 / RD2 1 / VMRQ 64 / WOUTW 8): the WFC -> VM write / START half of dsfd_wfc_vmx as its own leaf (the one-tile vmx is ~66k flops on two roots at these parameters; rq64w8 / rd2s routes stalled). Pin flops, pre-queue, fast -> slow ratio FIFO, write issue + START doorbell, write skid + grant link, credit return, the kit fault register, the HEP start register. Two related clocks ck 1.2 GHz / ckv 0.9 GHz (crossings flop -> flop at the 278 ps window; roots balanced by wfc_ser_ref.tcl). Cycle-exact with the one-tile kit in the cluster lockstep bench.",
+ "threads": 12,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/el1013-s81-wfcstg",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_wfc_vmx_w u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/common/ot_ratio_cdc_fifo.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lock_stg_r1",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_stg_r1 --case lock_stg_r1 --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "lock_stg_r2_slowvm",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_stg_r2_slowvm --case lock_stg_r2_slowvm --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cl_stg_vmnat",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/cl_stg_vmnat --case cl_stg_vmnat --snap",
+    "expect": "pass",
+    "pass_regex": "WFC_CL_GATE PASS positives=1",
+    "min_count_regex": "MTP_STG PASS jobs=(\\d+)",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "lock_neg_doorbell",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/lock_neg_doorbell --case lock_neg_doorbell --snap --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cl_neg_doorbell",
+    "cmd": "python3 tools/dsrom_wfc_cl_bench.py --out {RUN}/cl_neg_doorbell --case cl_neg_doorbell --snap --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_wfc_vmx_w/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_wfc_vmx_w/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 12,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_wfc_vmx_w --out {RUN}/record/views/dsfd_wfc_vmx_w  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsfd_wfc_vmx_w/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsfd_wfc_vmx_w/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsfd_wfc_vmx_w/dsfd_wfc_vmx_w-p1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "the one-tile vmx split by binding into two leaves (this: write / START path, ~7.0k + 5.9k sinks on its two roots)"
+}
