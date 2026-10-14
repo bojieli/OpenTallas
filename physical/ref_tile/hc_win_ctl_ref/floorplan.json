@@ -16,7 +16,7 @@
   23.76
  ],
  "why": "spec outline",
- "std_area_um2": 300,
+ "std_area_um2": 318,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -31,16 +31,14 @@
  "pins": {
   "W": [
    "clk",
-   "rst_n"
+   "rst_n",
+   "c_base"
   ],
   "S": [
    "c_start",
    "c_rel",
-   "c_base",
    "c_soff",
    "c_nwords",
-   "c_bound",
-   "c_limit",
    "ready",
    "fault"
   ],
@@ -60,7 +58,9 @@
    "sector_read",
    "sector_live",
    "sector_addr",
-   "sector_fault"
+   "sector_fault",
+   "c_bound",
+   "c_limit"
   ]
  },
  "clock_port": "clk",

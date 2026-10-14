@@ -1,9 +1,9 @@
 {
- "name": "hc_win_ctl_ref-partition1-COMMIT",
+ "name": "hc_win_ctl_ref-spreadfaces-COMMIT",
  "block": "ot_hgi_hc_win_ctl",
  "ref_tile": true,
  "owner": "Codex:hbm_hc_norm",
- "purpose": "Structural clock split of nativeHCwindow; direct-die candidate, measured parent reservation/pins pending",
+ "purpose": "Measured partitioned HC controller with bounded face pin density; candidate plan only, die assigned pins pending",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
@@ -92,7 +92,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hc_win_ctl_ref/hc_win_ctl_ref-partition1-COMMIT"
+   "to": "results/rtl/ref_tile/hc_win_ctl_ref/hc_win_ctl_ref-spreadfaces-COMMIT"
   }
  ],
  "cycles_added": 0,

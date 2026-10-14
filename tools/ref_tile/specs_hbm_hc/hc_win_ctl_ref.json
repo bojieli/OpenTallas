@@ -16,21 +16,19 @@
     "w": 30.24,
     "h": 25.92
   },
-  "std_area_um2": 300,
-  "area_basis": "Temporary estimate, actual sourcebound synthesis/CTS required",
+  "std_area_um2": 318,
+  "area_basis": "Actual corrected-source synthesis in window_ctl_emptyfix_gate.json",
   "pins": {
     "W": [
       "clk",
-      "rst_n"
+      "rst_n",
+      "c_base"
     ],
     "S": [
       "c_start",
       "c_rel",
-      "c_base",
       "c_soff",
       "c_nwords",
-      "c_bound",
-      "c_limit",
       "ready",
       "fault"
     ],
@@ -50,7 +48,9 @@
       "sector_read",
       "sector_live",
       "sector_addr",
-      "sector_fault"
+      "sector_fault",
+      "c_bound",
+      "c_limit"
     ]
   },
   "macros": [],
@@ -62,8 +62,8 @@
   "job": {
     "owner": "Codex:hbm_hc_norm",
     "branch": "codex/hbm-hc-norm-takeover-1013",
-    "tag": "partition1",
-    "purpose": "Structural clock split of nativeHCwindow; direct-die candidate, measured parent reservation/pins pending",
+    "tag": "spreadfaces",
+    "purpose": "Measured partitioned HC controller with bounded face pin density; candidate plan only, die assigned pins pending",
     "extra_paths": [
       "rtl/hbm_accel/generic/peers",
       "rtl/hdc/hbm",
