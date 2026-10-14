@@ -401,6 +401,7 @@ endmodule
 // pops arrive registered from the control.  q and kw leave as two registered copies (W / E fans).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_seq_m_store #(
+    parameter integer HEADS = 2,
     parameter integer DW = 512,
     parameter integer XS = 40,
     parameter integer KD = 8
@@ -431,9 +432,9 @@ module ot_qkvd_seq_m_store #(
     ot_qkvd_seq_m_sfifo #(.W(DW), .D(KD)) u_k (.clk(clk), .rst_n(rst_n), .push(xv && xc == 3'b010), .din(xd), .pop(kp), .dout(kh));
     reg [DW-1:0] kvn [0:7];
     always @(posedge clk) begin
-        if (kp) kvn[ki] <= kh;
+        if (kp) kvn[(HEADS == 1) ? {ki[2],1'b0,ki[0]} : ki] <= kh;
         if (qp) q <= {2{qh}};
-        if (kg) kw <= {2{kvn[{kn, 1'b1}], kvn[{kn, 1'b0}]}};
+        if (kg) kw <= {2{kvn[{kn[1], (HEADS == 1 ? 1'b0 : kn[0]), 1'b1}], kvn[{kn[1], (HEADS == 1 ? 1'b0 : kn[0]), 1'b0}]}};
     end
 endmodule
 
@@ -551,7 +552,7 @@ module ot_qkvd_kv_seq_merged #(
         .s_kidx(s_kidx), .s_kwgo(s_kwgo), .s_kwn(s_kwn), .f_aqm(f_aqm), .f_kwm(f_kwm), .f_kc(f_kc), .f_cr(f_cr),
         .f_af(f_af), .f_mf(f_mf), .hs(hs), .a_out_valid(a_out_valid), .a_out_g(a_out_g), .a_out_beat(a_out_beat),
         .a_out_data(a_out_data), .a_hub_fault(a_hub_fault), .hc(hc), .tk(tk), .fault(fault), .fault_cause(fault_cause));
-    ot_qkvd_seq_m_store #(.DW(512), .XS(XS), .KD(KD)) u_st (.clk(clk), .rst_n(rst_n), .x_v(x3_v), .x_cls(x3_tag[10:8]),
+    ot_qkvd_seq_m_store #(.HEADS(HEADS), .DW(512), .XS(XS), .KD(KD)) u_st (.clk(clk), .rst_n(rst_n), .x_v(x3_v), .x_cls(x3_tag[10:8]),
         .x_d(x3_d), .qpop(s_qpop), .kpop(s_kpop), .kidx(s_kidx), .kwgo(s_kwgo), .kwn(s_kwn), .q(sq), .kw(skw));
     genvar k;
     generate for (k = 0; k < 4; k = k + 1) begin : g_fan

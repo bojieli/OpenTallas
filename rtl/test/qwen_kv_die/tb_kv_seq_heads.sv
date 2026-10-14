@@ -15,7 +15,11 @@ module tb_kv_seq_heads;
  .hs(hs),.a_out_valid(ov),.a_out_g(og),.a_out_beat(ob),.a_out_data(od),.a_hub_fault(1'b0),.hc(182'd0),.tk(),.fault(fault),.fault_cause(cause));
  end else begin:g_cluster
  wire[519:0] ret;wire[9:0] kst;
+ `ifdef NATIVE_MASTER
+ qkd_seq_tp8 dut(
+`else
  qkd_seq #(.HEADS(HEADS),.Q_FP32(Q_FP32)) dut(
+`endif
  .ck(clk),.rst_n(rst_n),.r_x3_d({xv,xt,xd}),.r_x3_cr(xc),.r_sd(56'd0),.r_kvd(kvd),
  .t_ar_d(ret),.t_ar_cr(ov),.t_ds(ds),.t_pw(),
  .aq_WS(aq[0+:540]),.aq_WN(aq[540+:540]),.aq_ES(aq[1080+:540]),.aq_EN(aq[1620+:540]),
