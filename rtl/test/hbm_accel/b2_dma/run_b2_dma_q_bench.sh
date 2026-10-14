@@ -14,6 +14,7 @@ $V --binary -j 8 --top-module tb_hgi_b2_dma_q -Wno-fatal -Wno-lint -Wno-style -W
   -y $S/rtl/lib -y $P \
   $S/rtl/lib/ot_rst_relay.sv $S/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv \
   $S/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v \
+  $S/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v \
   $S/rtl/link/ot_fifo_sram_fwft.sv $S/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v \
   $S/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v \
   $S/rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv $P/ot_hgi_dma_engines.sv $P/ot_hgi_dma_front.sv $P/ot_hgi_dma_back.sv \

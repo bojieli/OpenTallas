@@ -28,8 +28,23 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {}]
-$i setOrient R0; $i setLocation [expr {round(86.4 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 86.4 86.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_256x256_m2_r2c2 {u_land}]
+$i setOrient R0; $i setLocation [expr {round(23.328 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_256x256_m2_r2c2 at 23.328 23.76 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x512_m1_r2c2 {u_wq_mem.g_tile[0].g_m0.u_m}]
+$i setOrient R0; $i setLocation [expr {round(23.328 * $dbu)}] [expr {round(86.4 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x512_m1_r2c2 at 23.328 86.4 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x16_m1 {u_cf_mem*g_m3.u_m}]
+$i setOrient R0; $i setLocation [expr {round(237.6 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x16_m1 at 237.6 23.76 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x16_m1 {u_cf_mem*g_m3.u_m}]
+$i setOrient R0; $i setLocation [expr {round(237.6 * $dbu)}] [expr {round(64.8 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x16_m1 at 237.6 64.8 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x16_m1 {u_cf_mem*g_m3.u_m}]
+$i setOrient R0; $i setLocation [expr {round(237.6 * $dbu)}] [expr {round(108.0 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x16_m1 at 237.6 108.0 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_64x16_m1 {u_cf_mem*g_m3.u_m}]
+$i setOrient R0; $i setLocation [expr {round(237.6 * $dbu)}] [expr {round(151.2 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_64x16_m1 at 237.6 151.2 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
-if {$nb != 1} { error "ref_tile place: expected 1 macros, netlist has $nb" }
+if {$nb != 6} { error "ref_tile place: expected 6 macros, netlist has $nb" }

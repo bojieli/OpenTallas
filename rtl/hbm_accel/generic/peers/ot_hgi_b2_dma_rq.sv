@@ -193,11 +193,13 @@ module ot_hgi_b2_dma_rq #(parameter integer SBIT=35, parameter integer MUT_B2=0,
     wire move_push = (sq_act ? sq_mv_v : (d_mv_v && !to_f && !to_b && !rd_act && b_quiet)) && m_rdy;
     wire move_pop = move_n != 0 && pin_m_rdy;
     wire [226:0] move_in = (sq_act ? sq_mv : d_mv) ^ ((MUT_SEAM == 1) ? (227'd1 << 206) : 227'd0);
-    assign mover_v = move_n != 0;
+    reg move_valid;
+    assign mover_v = move_valid;
     assign mover_cmd = move_head;
     always @(posedge clk or negedge rn) begin
-       if (!rn) move_n <= 0;
+       if (!rn) begin move_n <= 0; move_valid <= 0; end
        else begin
+          move_valid <= (move_n + {1'b0,move_push} - {1'b0,move_pop}) != 0;
           case ({move_push,move_pop})
              2'b10: begin
                 if (move_n == 0) move_head <= move_in; else move_tail <= move_in;

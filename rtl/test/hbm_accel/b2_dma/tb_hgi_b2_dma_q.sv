@@ -83,8 +83,8 @@ module tb_hgi_b2_dma_q;
     bit trace_on; initial trace_on = $test$plusargs("DMA_Q5_TRACE");
     always @(posedge clk) if (rst_n && trace_on) begin
        if (dma_rec[0] && dma_ret[0]) $display("Q5TRACE %0d %s %h", n_rst, trace_abort ? "ABORT" : "REC", dma_rec);
-       if (k_req_v && k_req_rdy) $display("Q5TRACE %0d K %b %h %h %h", n_rst, k_req_we, k_req_addr, k_req_wdata & {256{k_req_we}}, k_req_wstrb & {32{k_req_we}});
-       if (r_req_v && r_req_rdy) $display("Q5TRACE %0d R %b %h %h %h %h", n_rst, r_req_we, r_req_addr, r_req_len, r_req_wdata & {256{r_req_we}}, r_req_wstrb & {32{r_req_we}});
+       if (k_req_v && k_req_rdy) $display("Q5TRACE %0d K %b %h %h %h %h", n_rst, k_req_we, k_req_addr, k_req_tag, k_req_wdata & {256{k_req_we}}, k_req_wstrb & {32{k_req_we}});
+       if (r_req_v && r_req_rdy) $display("Q5TRACE %0d R %b %h %h %h %h %h", n_rst, r_req_we, r_req_addr, r_req_len, r_req_tag, r_req_wdata & {256{r_req_we}}, r_req_wstrb & {32{r_req_we}});
        if (vmq[337]) $display("Q5TRACE %0d VM %h", n_rst, vmq);
        for (integer b = 0; b < 32; b = b + 1) begin
           if (vr2q[b*16+15]) $display("Q5TRACE %0d G%0d %h", n_rst, b, vr2q[b*16 +: 15]);

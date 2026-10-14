@@ -89,7 +89,7 @@ module ot_hgi_b2_dma_q #(
       .vr2q(vr2q), .vr2r_ctrl(vr2r[8256:8224]), .vmq(vmq), .vmr(vmr), .wl(wl), .wl_done(wl_done),
       .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_kq(kc_kq),
       .kv_wv(kc_wv), .kv_wo(kc_wo), .kv_wa(kc_wa), .kv_wd(kc_wd), .kc_v(kc_v), .kc_vs(kc_vs), .kc_vst(kc_vst), .kc_ds(kc_ds),
-      .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .kc_cr(kc_cr), .kc_wrdy(kc_wrdy), .kc_rv(kc_rv), .kc_rwe(kc_rwe));
+      .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .kc_cr(kc_cr), .kc_wrdy(kc_wrdy));
 `ifndef OT_B2_DMA_Q5_HARD
     ot_hgi_dma_kvw_core #(.OWN_B0(1))
 `else
@@ -98,7 +98,7 @@ module ot_hgi_b2_dma_q #(
     u_kc(.clk(clk), .rn(rst_n), .c_v(kc_v), .c_rdy(kc_rdy), .c_vs(kc_vs), .c_vst(kc_vst),
       .c_ds(kc_ds), .c_dst(kc_dst), .c_ns(kc_ns), .c_m(kc_m), .g_gnt(kc_gnt), .g_cr(kc_cr), .kq(kc_kq), .kq_creq(kc_creq),
       .h_v(hv), .h_d(hd), .h_sel0(hs0), .h_sel1(hs1), .h_act(ha), .b0_we(), .b0_wa(), .b0_wd(), .b0_re(), .b0_ra(), .b0_rd(256'd0),
-      .kw_v(kc_wv), .kw_rdy(kc_wrdy), .kw_addr(kc_wa), .kw_wdata(kc_wd), .r_rsp_v(kc_rv), .r_rsp_we(kc_rwe), .kw_wo(kc_wo), .src(kc_src), .done(kc_done), .idle(kc_idle));
+      .kw_v(kc_wv), .kw_rdy(kc_wrdy), .kw_addr(kc_wa), .kw_wdata(kc_wd), .r_rsp_v({3'd0,r_rsp_v}), .r_rsp_we({3'd0,r_rsp_we}), .kw_wo(kc_wo), .src(kc_src), .done(kc_done), .idle(kc_idle));
 `ifndef OT_B2_DMA_Q5_HARD
     ot_hgi_dma_kvw_hold #(.NL(16))
 `else

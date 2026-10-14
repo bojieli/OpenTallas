@@ -7,7 +7,10 @@
   "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_mv.sv",
   "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "rtl/link/ot_fifo_sram_fwft.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v"
  ],
  "params": {
   "B2": 1,
@@ -53,8 +56,6 @@
    "kc_gnt",
    "kc_cr",
    "kc_wrdy",
-   "kc_rv",
-   "kc_rwe",
    "mv_v",
    "mv_rdy",
    "mv",
@@ -118,11 +119,11 @@
   "macro_halo_um": 5.4
  },
  "clock": "spine",
- "structural_change": "Five-way DMA partition: sibling closed KV core and hold leaves; two-entry move skid; pin station behind VM request mux and read-group OR; elastic registered HBM lane mux with qid before pin flop; one compact 280-bit wl pin lane expanded at VM receiver.",
+ "structural_change": "Five-way DMA partition: sibling closed KV core and hold leaves; two-entry move skid; pin station behind VM request mux and read-group OR; elastic registered HBM lane mux with qid before pin flop; one compact 280-bit wl pin lane expanded at VM receiver. Specialise landing input to one B2 lane: one registered raw beat every clock, no multi-stack arbitration; core write acknowledgements wire directly from parent rather than unregistered through-mover forwarding. Replace16x325 write FIFO and64x60 chunk FIFO flop arrays by catalog FWFT SRAM queues with registered heads, same logical capacities/order; new command/ready/valid pin stations; latch fence request until all command/engine/posted writes drain; capture core idle at MV pin.",
  "job": {
   "owner": "Codex:el1013-dma-q5",
   "branch": "claude/el1013-dma-q5",
-  "tag": "q5r1",
+  "tag": "q5sram1",
   "views_to": "physical/ref_tile/b2_dma_mv_q5_ref/views",
   "record_to": "results/rtl/ref_tile/b2_dma_mv_q5_ref",
   "purpose": "New request/mover leaf for the B2 DMA cluster; pin file from die lead pending. Production FRONT0 and closed KV siblings. BACK1 remains separate closed NB8 leaf; unified local8 VM port pending die interface publication. Exact gate also compares every port request payload/ordering to unchanged flat source. Six separate seam mutants bind skid, I-list, group OR, HBM lane mux, compact bank lane, qid. Production class has no simulator price row; rates measured against immutable flat, not re-priced.",
@@ -230,7 +231,57 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
-   "count": 1
+   "count": 1,
+   "inst": "u_land",
+   "at": [
+    23.328,
+    23.76
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u_wq_mem.g_tile[0].g_m0.u_m",
+   "at": [
+    23.328,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "inst": "u_cf_mem*g_m3.u_m",
+   "at": [
+    237.6,
+    23.76
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "inst": "u_cf_mem*g_m3.u_m",
+   "at": [
+    237.6,
+    64.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "inst": "u_cf_mem*g_m3.u_m",
+   "at": [
+    237.6,
+    108.0
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "inst": "u_cf_mem*g_m3.u_m",
+   "at": [
+    237.6,
+    151.2
+   ]
   }
  ],
  "children": [],

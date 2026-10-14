@@ -85,7 +85,7 @@ module ot_hgi_b2_dma_mv #(
     output reg kc_v, output reg [14:0] kc_vs, kc_vst,
     output reg [31:0] kc_ds, kc_dst, output reg [17:0] kc_ns, output reg [19:0] kc_m,
     output wire kc_gnt, output wire [191:0] kc_cr,
-    output wire [3:0] kc_wrdy, kc_rv, kc_rwe,
+    output wire [3:0] kc_wrdy,
     input wire [1:0] qid, input wire il_active, input wire [337:0] il_vmq, output reg [273:0] il_vmr,
     input  wire          clk,
     input  wire          rst_n,
@@ -144,6 +144,10 @@ module ot_hgi_b2_dma_mv #(
     output reg  [279:0]  wl,
     input  wire          wl_done
 );
+    wire command_valid, command_ready;
+    wire [226:0] command_data;
+    ot_hgi_b2_dma_cmd_pin u_cmd_pin(.clk(clk), .rst_n(rst_n), .in_v(mv_v), .in_data(mv), .in_ready(mv_rdy),
+       .out_v(command_valid), .out_data(command_data), .out_ready(command_ready));
     // SVR2=0: sector engine receives group grant/credits only; data pins belong to closed hold leaves.
     wire [8256:0] vr2r = {vr2r_ctrl,8224'd0};
     // ---- per-stack lanes as the engines see them (ir_*); B2: only lane QID reaches the ports (output lane OL)
@@ -159,33 +163,38 @@ module ot_hgi_b2_dma_mv #(
         assign ir_rsp_last = r_rsp_last; assign ir_rsp_data = r_rsp_data;
     end else begin : g_lane_b2
         reg [1:0] rnq; reg [361:0] rh, rt;
-        wire rb_push = ir_req_v[QID] && rnq < 2;
-        wire rb_pop = rnq != 0 && r_req_rdy[OL];
+        reg rb_ready, rb_valid;
+        wire rb_push = ir_req_v[QID] && rb_ready;
+        wire rb_pop = rb_valid && r_req_rdy[OL];
         wire [361:0] rb_in_good = {ir_req_we[QID],ir_req_addr[QID*37 +: 37]+(37'(qid_q)<<35),
            ir_req_len[QID*4 +: 4],ir_req_tag[QID*16 +: 16],ir_req_wdata[QID*256 +: 256],ir_req_wstrb[QID*32 +: 32],16'd0};
         wire [361:0] rb_in = rb_in_good ^ ((MUT_SEAM == 4 && ir_req_we[QID]) ? (362'd1 << 48) : 362'd0);
         always @(posedge clk or negedge rn) begin
-           if (!rn) rnq <= 0;
-           else case ({rb_push,rb_pop})
+           if (!rn) begin rnq <= 0; rb_ready <= 1; rb_valid <= 0; end
+           else begin
+             rb_ready <= (rnq + {1'b0,rb_push} - {1'b0,rb_pop}) < 2;
+             rb_valid <= (rnq + {1'b0,rb_push} - {1'b0,rb_pop}) != 0;
+             case ({rb_push,rb_pop})
               2'b10: begin if (rnq == 0) rh <= rb_in; else rt <= rb_in; rnq <= rnq + 1'b1; end
               2'b01: begin rh <= rt; rnq <= rnq - 1'b1; end
               2'b11: begin if (rnq == 1) rh <= rb_in; else begin rh <= rt; rt <= rb_in; end end
               default: begin end
-           endcase
+             endcase
+           end
         end
         for (genvar l = 0; l < 4; l = l + 1) begin : ln
             if (l == OL) begin : o
-                assign r_req_v[l] = rnq != 0; assign r_req_we[l] = rh[361];
+                assign r_req_v[l] = rb_valid; assign r_req_we[l] = rh[361];
                 assign r_req_addr[l*37 +: 37] = rh[360:324]; assign r_req_len[l*4 +: 4] = rh[323:320];
                 assign r_req_tag[l*16 +: 16] = rh[319:304]; assign r_req_wdata[l*256 +: 256] = rh[303:48];
-                assign r_req_wstrb[l*32 +: 32] = rh[47:16]; assign r_rsp_rdy[l] = ir_rsp_rdy[QID];
+                assign r_req_wstrb[l*32 +: 32] = rh[47:16]; assign r_rsp_rdy[l] = 1'b1; // B2 owns ONE lane: raw pin capture accepts one beat each clock; no lane arbitration.
             end else begin : z
                 assign r_req_v[l] = 1'b0; assign r_req_we[l] = 1'b0; assign r_req_addr[l*37 +: 37] = 37'd0; assign r_req_len[l*4 +: 4] = 4'd0;
                 assign r_req_tag[l*16 +: 16] = 16'd0; assign r_req_wdata[l*256 +: 256] = 256'd0; assign r_req_wstrb[l*32 +: 32] = 32'd0;
                 assign r_rsp_rdy[l] = 1'b0;
             end
             if (l == QID) begin : i
-                assign ir_req_rdy[l] = rnq < 2; assign ir_rsp_v[l] = r_rsp_v[OL]; assign ir_rsp_we[l] = r_rsp_we[OL];
+                assign ir_req_rdy[l] = rb_ready; assign ir_rsp_v[l] = r_rsp_v[OL]; assign ir_rsp_we[l] = r_rsp_we[OL];
                 assign ir_rsp_tag[l*16 +: 16] = r_rsp_tag[OL*16 +: 16]; assign ir_rsp_last[l] = r_rsp_last[OL];
                 assign ir_rsp_data[l*256 +: 256] = r_rsp_data[OL*256 +: 256];
             end else begin : iz
@@ -226,8 +235,9 @@ module ot_hgi_b2_dma_mv #(
                  cm_q[7:5] == 3'd0 && cm_q[47:45] == 3'd0 && cm_q[208:206] == 3'd0 && cm_q[102:98] == 5'd0 &&
                  cm_q[142:138] == 5'd0 && cm_q[205:186] != 20'd0 && cm_q[226:206] != 21'd0;
 
-    reg kc_pending;
-    wire kv_idle = (KVW != 0) ? kv_idle_w && !kc_pending && !kc_v : 1'b1;
+    reg kc_pending, kv_idle_q;
+    always @(posedge clk or negedge rn) if (!rn) kv_idle_q <= 1'b1; else kv_idle_q <= kv_idle_w;
+    wire kv_idle = (KVW != 0) ? kv_idle_q && !kc_pending && !kc_v : 1'b1;
     reg [1:0] qid_q; always @(posedge clk) qid_q <= (MUT_SEAM == 6) ? qid + 2'd1 : qid;
     wire [273:0] vmr_local = il_active ? 274'd0 : vmr;
     always @(posedge clk or negedge rn) if (!rn) il_vmr <= 0; else il_vmr <= il_active ? (vmr ^ ((MUT_SEAM == 2) ? 274'd1 : 274'd0)) : 274'd0;
@@ -247,13 +257,22 @@ module ot_hgi_b2_dma_mv #(
     wire b2_kx;                                                         // B2: the serial engine's lane request is off stack QID
     wire [255:0] s_kd; wire [31:0] s_ks; wire [15:0] s_kt; wire s_krr; wire [337:0] s_vmq;
     reg  f_fault;
-    assign mv_rdy = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
+    assign command_ready = !busy_f && !cv_q && !sel_s && s_mv_rdy && !f_fault;
     ot_hgi_dma_mover_serial #(.MUT_RNE(MUT_RNE), .SXP(PX >= 2 ? 1 : 0)) u_ser (.clk(clk), .rst_n(rn), .mv_v(cv_go && !fast_cmd && cm_q[94:93] != 2'd0),
         .mv_rdy(s_mv_rdy), .mv(cm_q), .mv_done(s_mv_done), .mv_fault(s_mv_fault), .fence_v(1'b0), .fence_rdy(s_fence_rdy),
         .fence_done(s_fence_done), .k_req_v(s_kv), .k_req_rdy(ko_ld && sel_s && !b2_kx), .k_req_we(s_kwe), .k_req_addr(s_ka),
         .k_req_wdata(s_kd), .k_req_wstrb(s_ks), .k_req_tag(s_kt), .k_rsp_v(kr_v && sel_s), .k_rsp_rdy(s_krr),
         .k_rsp_we(kr_we), .k_rsp_data(kr_d), .k_fault((k_fault && sel_s) || b2_kx), .vmq(s_vmq), .vmr(sel_s ? vr_q : 274'd0));
-    assign fence_rdy = !busy_f && s_mv_rdy && s_fence_rdy && kv_idle && !cv_q;
+    reg fence_pending;
+    wire fence_available = !busy_f && s_mv_rdy && s_fence_rdy && kv_idle && !cv_q && !command_valid;
+    assign fence_rdy = !fence_pending;
+    always @(posedge clk or negedge rn) begin
+       if (!rn) fence_pending <= 0;
+       else begin
+          if (fence_v && fence_rdy) fence_pending <= 1;
+          if (fence_pending && fence_available) fence_pending <= 0;
+       end
+    end
     // ================================================================ sector engine
     function automatic [2:0] esz(input [2:0] f);
         esz = (f == 3'd0 || f == 3'd5) ? 3'd4 : (f == 3'd1) ? 3'd2 : 3'd1;
@@ -339,7 +358,7 @@ module ot_hgi_b2_dma_mv #(
     reg [3:0] lq_v; reg [36:0] lq_a [0:3]; reg [3:0] lq_n [0:3]; reg [7:0] lq_t [0:3];
     reg [3:0] lq_we; reg [255:0] lq_d [0:3]; reg [31:0] lq_s [0:3];
     reg  [1:0] wq_hl;                                       // PX: the write queue head's lane, registered
-    wire [1:0] w_l = (PX != 0) ? wq_hl : wq_a[wq_h][31:30]; // the write queue head's stack (its lane)
+    wire [1:0] w_l = (B2 != 0) ? 2'(QID) : wq_head[319:318]; // the write queue head's stack (its lane)
     // ---- VM read group (VR2): per lane a sector in flight, its landing slot, the held response, the credits
     localparam integer GLQ = 32;
     reg [31:0] g_busy, g_hv; reg [7:0] g_slot [0:31]; reg [255:0] g_d [0:31]; reg [5:0] g_cr [0:31]; reg [4:0] g_rr;
@@ -358,7 +377,7 @@ module ot_hgi_b2_dma_mv #(
     reg [3:0] lg; reg [1:0] lgi; reg [2:0] lbc [0:3];
     // ---- chunk FIFO (issue order) and the staged head descriptor {slot 2, rend, dp 6, dsec 37, sp 5, elements 9}
     localparam integer CF = 64;
-    reg [59:0] cf [0:CF-1]; reg [5:0] cf_h, cf_t; reg [6:0] cf_n; reg cd_v; reg [59:0] cd;   // + {slot 2} at [59:58]
+    reg [6:0] cf_n; wire [59:0] cf_head; wire cf_hv, cf_ovf; reg cd_v; reg [59:0] cd;   // + {slot 2} at [59:58]
     // ---- unpack state (the current chunk)
     // (route 51ae5ce55: the elements left in the head source sector (s_room) and in the destination sector (d_room) are
     //  registers that count down)
@@ -373,7 +392,7 @@ module ot_hgi_b2_dma_mv #(
     reg [7:0] k_in; reg [2:0] v_in; reg [7:0] v_kind;      // lane 2 (writes) / VM client (reads), kinds oldest at [0]
     reg [8:0] rd_in;                                        // source sectors issued, not landed
     // ---- write queue
-    reg [255:0] wq_d [0:15]; reg [31:0] wq_s [0:15]; reg [36:0] wq_a [0:15]; reg [3:0] wq_h, wq_t; reg [4:0] wq_n;   // 16: the 8-stage pipe
+    wire [324:0] wq_head; wire wq_hv, wq_ovf; reg [4:0] wq_n;   // 16: the 8-stage pipe
     reg [8:0] wr_in;                                          // writes issued, not acknowledged
     // ---- pipeline registers
     // hgi-1010/c (route f628d5015: sf_h -> p1_sec, the 64-entry landing read under the unpack enable, 18 levels): p1 keeps
@@ -437,7 +456,20 @@ module ot_hgi_b2_dma_mv #(
     reg [3:0] q_ok, q_rend, q_bad; reg [36:0] q_ea [0:3]; reg [3:0] q_ns [0:3]; reg [8:0] q_by [0:3]; reg [36:0] q_ds [0:3];
     reg [4:0] q_ln [0:3]; reg l_v; reg [1:0] l_k; reg [4:0] l_ln;
     // PX: each slot's next values on issue (valid under the same mask as q_*: a slot that issued last cycle is not picked)
-    reg [41:0] q_san [0:3]; reg [23:0] q_rln [0:3]; reg [19:0] q_ron [0:3]; reg [3:0] q_rlst;
+    wire [41:0] q_san [0:3]; reg [23:0] q_rln [0:3]; reg [19:0] q_ron [0:3]; reg [3:0] q_rlst;
+    // Split the 37-bit next-chunk increment: parallel digit increments in R0,
+    // registered carry, two-input high select in R1. Same chunk decision cycle.
+    reg [13:0] sa_inc_lo [0:3]; reg [22:0] sa_inc_hi0 [0:3], sa_inc_hi1 [0:3]; reg [3:0] sa_inc_c;
+    for (genvar si=0; si<4; si=si+1) begin : g_sa_increment
+       wire [36:0] chunk_addr = src_hbm ? {3'd0,rsa[si][41:8]} : rsa[si][41:5];
+       wire [36:0] addr_next = {sa_inc_c[si] ? sa_inc_hi1[si] : sa_inc_hi0[si],sa_inc_lo[si]};
+       always @(posedge clk) begin
+          sa_inc_lo[si] <= chunk_addr[13:0] + 14'd1;
+          sa_inc_c[si] <= &chunk_addr[13:0];
+          sa_inc_hi0[si] <= chunk_addr[36:14]; sa_inc_hi1[si] <= chunk_addr[36:14] + 23'd1;
+       end
+       assign q_san[si] = src_hbm ? {addr_next[33:0],8'd0} : {addr_next[36:0],5'd0};
+    end
     // hbm-fq/mvf 10-11 r2 (route px1a 01a78566e TT -208 / SS -713: rsa / ssp -> q_san / q_ddn 26-31 levels = the c_by chain
     // (src_hbm -> lm -> bav -> compare rrl -> mux) in series with a 42-b add; sstw -> q_nsn / rsa -> rnsa = bare 42-b adds):
     // * q_san is only consumed when the chunk does NOT end the row (!q_rend), where c_by = bav, so rsa + c_by =
@@ -493,7 +525,7 @@ module ot_hgi_b2_dma_mv #(
             q_ok[k] <= c_ok[k]; q_rend[k] <= c_rend[k]; q_bad[k] <= c_bad[k]; q_ea[k] <= c_ea[k]; q_ns[k] <= c_ns[k];
             q_by[k] <= c_by[k]; q_ds[k] <= c_ds[k]; q_ln[k] <= rsa[k][9:5];
             w = {33'd0, c_bv[k] >> sl2}; rn1 = ro[k] + ro_inc;
-            q_san[k] <= src_hbm ? {rsa[k][41:8] + 34'd1, 8'd0} : {rsa[k][41:5] + 37'd1, 5'd0};   // exact when !c_rend
+
             q_rln[k] <= rrl[k] - {15'd0, c_bv[k]};                                     // exact when !c_rend
             {q_dc[k], q_dlo[k]} <= {1'b0, rdd[k][12:0]} + {1'b0, 13'(w << dl2)}; q_dh1[k] <= rdd[k][41:13] + 29'd1;
             {q_nc[k], q_nlo[k]} <= {1'b0, rnsa[k][20:0]} + {1'b0, sstw[20:0]};
@@ -609,13 +641,22 @@ module ot_hgi_b2_dma_mv #(
     // shift: the packed elements to the destination byte offset (a run never crosses the sector: d_room bounds k)
     wire [255:0] put_d = pk_d << {pk_dp[4:0], 3'd0};
     wire [31:0]  put_s = pk_s << pk_dp[4:0];
+    // Native memory queues with two registered head entries. Their credits include pipe reservations.
+    wire [324:0] wq_push_data = {p3_dsec,
+       (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s,
+       ((db_dirty[p3_sl] ? db_dat[p3_sl] : 256'd0) & ~mk(p3_s)) | p3_d};
+    ot_fifo_sram_fwft #(.W(325), .DEPTH(16), .MACRO(0)) u_wq_mem(.clk(clk), .rst_n(rn),
+       .push(p3_v && p3_fl && p3_keep), .wdata(wq_push_data), .pop(iss_kw || iss_vw), .hv(wq_hv), .head(wq_head), .ovf(wq_ovf));
+    wire [59:0] cf_push_data = {r_k,q_rend[r_k],1'b0,rdd[r_k][4:0],q_ds[r_k],rsa[r_k][4:0],9'(q_by[r_k] >> sl2)};
+    ot_fifo_sram_fwft #(.W(60), .DEPTH(64), .MACRO(3)) u_cf_mem(.clk(clk), .rst_n(rn),
+       .push(r_go), .wdata(cf_push_data), .pop(cf_hv && (!cd_v || (cd_v && (!u_cv || (u_go && u_end))))), .hv(cf_hv), .head(cf_head), .ovf(cf_ovf));
     // ---- port issue selection
     reg iss_kw, iss_kr, iss_vw, iss_vr;
     always @* begin
         iss_kw = 1'b0; iss_kr = 1'b0; iss_vw = 1'b0; iss_vr = 1'b0;
         if (busy_f && go_q3 && !f_fault) begin
-            if (wq_n != 5'd0 && dst_hbm && !lq_v[w_l] && wr_in < 9'(KOUT) && (B2 == 0 || w_l == 2'(QID))) iss_kw = 1'b1;   // a full sector to its stack's lane
-            if (wq_n != 5'd0 && !dst_hbm) iss_vw = 1'b1;                      // the wide port: no client slot
+            if (wq_hv && dst_hbm && !lq_v[w_l] && wr_in < 9'(KOUT) && (B2 == 0 || w_l == 2'(QID))) iss_kw = 1'b1;   // a full sector to its stack's lane
+            if (wq_hv && !dst_hbm) iss_vw = 1'b1;                      // the wide port: no client slot
         end
         iss_vr = r_go && !src_hbm && SV == 0; iss_kr = r_go && src_hbm;
     end
@@ -624,7 +665,7 @@ module ot_hgi_b2_dma_mv #(
     wire k_wr_ack = k_rv;                                               // lane 2 carries the sector engine's writes only
     wire v_rd_land = v_rv && !v_kind[0], v_wr_ack = v_rv && v_kind[0];
     // ---- read lanes: requests, the registered landing grant (one sector a cycle), the landing RAM
-    wire [3:0] l_take = ir_rsp_v & lg & ~ir_rsp_we;               // read sectors on the landing grant
+    wire [3:0] l_take = ir_rsp_v & ((B2 != 0) ? 4'b1111 : lg) & ~ir_rsp_we;               // read sectors on the landing grant
     wire [3:0] w_ack = ir_rsp_v & ir_rsp_we & l_wo;                // write acknowledgements (taken on a lane with writes in flight)
     genvar gl;
     for (gl = 0; gl < 4; gl = gl + 1) begin : g_rl
@@ -659,7 +700,7 @@ module ot_hgi_b2_dma_mv #(
     for (genvar gc = 0; gc < 32; gc = gc + 1) begin : g_kc_cr
        assign kc_cr[gc*6 +: 6] = g_cr[gc];
     end
-    assign kc_wrdy = ir_req_rdy; assign kc_rv = ir_rsp_v; assign kc_rwe = ir_rsp_we;
+    assign kc_wrdy = ir_req_rdy;
     assign kb_we = 1'b0; assign kb_re = 1'b0; assign kb_wa = 8'd0; assign kb_ra = 8'd0; assign kb_wd = 256'd0;
     reg [5:0] l_wn [0:3];
     reg [3:0] w_acc_q, w_ack_q;                            // write accepted / acknowledged a lane (pin flops of the handshakes)
@@ -709,21 +750,21 @@ module ot_hgi_b2_dma_mv #(
             mv_done <= 1'b0; mv_fault <= 1'b0; fence_done <= 1'b0; f_vmq <= 338'd0; wl <= 280'd0; mv_src <= 1'b0; src_sent <= 1'b0;
             k_in <= 8'd0; v_in <= 3'd0; v_kind <= 8'd0; rd_in <= 9'd0; wr_in <= 9'd0;
             sf_h <= '0; sf_a <= '0; v_ptr <= '0; sf_n <= 9'd0; lv <= '0; lw_v <= 1'b0; lq_v <= 4'd0; lg <= 4'd0; lgi <= 2'd0; ract <= 4'd0; rrr <= 2'd0;
-            cf_h <= 6'd0; cf_t <= 6'd0; cf_n <= 7'd0; cd_v <= 1'b0; u_cv <= 1'b0; go_q4 <= 1'b0; stp <= 1'b0; stpd <= 1'b0;
+            cf_n <= 7'd0; cd_v <= 1'b0; u_cv <= 1'b0; go_q4 <= 1'b0; stp <= 1'b0; stpd <= 1'b0;
             g_busy <= 32'd0; g_hv <= 32'd0; g_rr <= 5'd0; s_vr2q <= '0; for (integer b = 0; b < 32; b = b + 1) g_cr[b] <= 6'(GLQ);
             w_acc_q <= 4'd0; w_ack_q <= 4'd0; for (integer l = 0; l < 4; l = l + 1) l_wn[l] <= 6'd0;
             for (integer l = 0; l < 4; l = l + 1) lbc[l] <= 3'd0;
-            wq_h <= 4'd0; wq_t <= 4'd0; wq_n <= 5'd0; wq_hl <= 2'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
+            wq_n <= 5'd0; wq_hl <= 2'd0; wq_res <= 5'd0; go_q3 <= 1'b0;
             p1_v <= 1'b0; pr_v <= 1'b0; px_v <= 1'b0; p2_v <= 1'b0; pa_v <= 1'b0; pe_v <= 1'b0; pk_v <= 1'b0; p3_v <= 1'b0; db_dirty <= 4'd0;
         end else begin
             mv_done <= 1'b0; fence_done <= 1'b0; mv_src <= 1'b0;
-            if (fence_v && fence_rdy) fence_done <= 1'b1;
+            if (fence_pending && fence_available) fence_done <= 1'b1;
             // ---- the serial engine's completion and ports
             if (s_mv_done) begin mv_done <= 1'b1; mv_src <= 1'b1; sel_s <= 1'b0; end   // serial engine: source = done
             if (s_mv_fault) mv_fault <= 1'b1;
             cv_q <= cv_q && !kv_take && !cv_go && !b2_flt;            // held while the KV engine is busy / full
-            if (B2 != 0 && (b2_flt || b2_lx || b2_kx)) begin mv_fault <= 1'b1; f_fault <= 1'b1; end
-            if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
+            if (wq_ovf || cf_ovf || (B2 != 0 && (b2_flt || b2_lx || b2_kx))) begin mv_fault <= 1'b1; f_fault <= 1'b1; end
+            if (command_valid && command_ready) begin cv_q <= 1'b1; cm_q <= command_data; end
             if (kv_src) mv_src <= 1'b1;
             if (kv_done) mv_done <= 1'b1;
             if (k_fault && !kv_idle) begin mv_fault <= 1'b1; f_fault <= 1'b1; end
@@ -826,20 +867,19 @@ module ot_hgi_b2_dma_mv #(
                 kpush = 1'b0; kkind = 1'b0; vpush = 1'b0; vkind = 1'b0;
                 // lane requests enter a 2-entry skid (its head drives k_req; k_req_rdy only pops it)
                 if (iss_kw) begin
-                    lq_v[w_l] <= 1'b1; lq_we[w_l] <= 1'b1; lq_a[w_l] <= {wq_a[wq_h][31:0], 5'd0}; lq_n[w_l] <= 4'd1;
-                    lq_d[w_l] <= wq_d[wq_h]; lq_s[w_l] <= wq_s[wq_h]; lq_t[w_l] <= 8'd0;
+                    lq_v[w_l] <= 1'b1; lq_we[w_l] <= 1'b1; lq_a[w_l] <= {wq_head[319:288], 5'd0}; lq_n[w_l] <= 4'd1;
+                    lq_d[w_l] <= wq_head[255:0]; lq_s[w_l] <= wq_head[287:256]; lq_t[w_l] <= 8'd0;
                 end
                 wl[279] <= 1'b0;
                 if (iss_vw) begin : wide
                     reg [7:0] wm; integer t;
-                    for (t = 0; t < 8; t = t + 1) wm[t] = &wq_s[wq_h][4*t +: 4];
-                    wl <= {1'b1, wq_a[wq_h][14:0] ^ ((MUT_SEAM == 5) ? 15'd1 : 15'd0), wq_d[wq_h], wm};
+                    for (t = 0; t < 8; t = t + 1) wm[t] = &wq_head[256+4*t +: 4];
+                    wl <= {1'b1, wq_head[302:288] ^ ((MUT_SEAM == 5) ? 15'd1 : 15'd0), wq_head[255:0], wm};
                 end
                 if (iss_vr) begin
                     f_vmq <= {1'b1, 1'b0, rsa[r_k][31:5], 5'd0, 256'd0, 32'd0, 16'h4D52}; vpush = 1'b1;
                 end
                 // write queue pop
-                if (iss_kw || iss_vw) begin wq_h <= wq_h + 4'd1; end
                 // read lane requests leave their registers when the lane takes them
                 for (integer l = 0; l < 4; l = l + 1) begin
                     if (lq_v[l] && ir_req_rdy[l]) lq_v[l] <= 1'b0;
@@ -849,8 +889,6 @@ module ot_hgi_b2_dma_mv #(
                 // reader: the chunk of slot r_k -> its lane request (HBM) / VM read, its descriptor, its landing slots
                 if (r_go) begin : radv
                     reg [41:0] w;
-                    cf[cf_t] <= {r_k, q_rend[r_k], 1'b0, rdd[r_k][4:0], q_ds[r_k], rsa[r_k][4:0], q_by[r_k] >> sl2};
-                    cf_t <= cf_t + 6'd1;
                     sf_a <= sf_a + 8'(q_ns[r_k]);
                     if (src_hbm) begin
                         lq_v[q_ea[r_k][36:35]] <= 1'b1; lq_we[q_ea[r_k][36:35]] <= 1'b0; lq_a[q_ea[r_k][36:35]] <= {q_ea[r_k][36:5], 5'd0};
@@ -958,9 +996,9 @@ module ot_hgi_b2_dma_mv #(
                     u_cv <= 1'b1; u_left <= cd[8:0]; u_sp <= cd[13:9]; u_dsec <= cd[50:14]; u_dp <= cd[56:51]; u_rend <= cd[57]; u_sl <= cd[59:58];
                     s_room <= room(cd[13:9], sl2); d_room <= room(cd[55:51], dl2);
                 end
-                if (cf_n != 7'd0 && (!cd_v || take_cd)) begin cd <= cf[cf_h]; cd_v <= 1'b1; cf_h <= cf_h + 6'd1; end
+                if (cf_hv && (!cd_v || take_cd)) begin cd <= cf_head; cd_v <= 1'b1; end
                 else if (take_cd) cd_v <= 1'b0;
-                cf_n <= cf_n + {6'd0, r_go} - {6'd0, cf_n != 7'd0 && (!cd_v || take_cd)};
+                cf_n <= cf_n + {6'd0, r_go} - {6'd0, cf_hv && (!cd_v || take_cd)};
             end
             // ---- extract (p1 -> px), convert (px -> p2), encode (p2 -> pe), place (pe -> p3), merge (p3)
             pr_v <= p1_v;
@@ -986,8 +1024,6 @@ module ot_hgi_b2_dma_mv #(
             if (pk_v) begin p3_d <= put_d; p3_s <= put_s; p3_dsec <= pk_dsec; p3_fl <= pk_fl; p3_keep <= pk_keep; p3_sl <= pk_sl; end
             if (p3_v) begin
                 if (p3_fl && p3_keep) begin
-                    wq_d[wq_t] <= ((db_dirty[p3_sl] ? db_dat[p3_sl] : 256'd0) & ~mk(p3_s)) | p3_d;
-                    wq_s[wq_t] <= (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s; wq_a[wq_t] <= p3_dsec; wq_t <= wq_t + 4'd1;
                     db_dirty[p3_sl] <= 1'b0;
                 end else if (p3_fl) db_dirty[p3_sl] <= 1'b0;                  // MUT 2: the partial sector is lost
                 else begin
@@ -996,10 +1032,6 @@ module ot_hgi_b2_dma_mv #(
                 end
             end
             wq_n <= wq_n + {4'd0, p3_v && p3_fl && p3_keep} - {4'd0, iss_kw | iss_vw};
-            begin : hl
-                reg [3:0] nh; nh = wq_h + {3'd0, iss_kw | iss_vw};
-                wq_hl <= (p3_v && p3_fl && p3_keep && wq_t == nh) ? p3_dsec[31:30] : wq_a[nh][31:30];
-            end
             wq_res <= wq_res + {4'd0, u_go && u_fl} - {4'd0, iss_kw | iss_vw} - {4'd0, p3_v && p3_fl && !p3_keep};
             // ---- completion: everything unpacked, the pipe empty, the queue drained and every write acknowledged
             if (busy_f && go_q4 && !f_fault && r_done && !u_cv && !cd_v && cf_n == 7'd0 && !lw_v && lq_v == 4'd0 && !p1_v && !pr_v && !px_v && !p2_v && !pa_v && !pe_v && !pk_v && !p3_v && wq_n == 5'd0 && wr_in == 9'd0 &&
@@ -1053,3 +1085,25 @@ module ot_hgi_b2_dma_mv #(
 `endif
 endmodule
 `default_nettype wire
+
+// Two-entry input pin station: payload, valid and ready are all registered at the face.
+module ot_hgi_b2_dma_cmd_pin(
+ input wire clk, rst_n, in_v, input wire [226:0] in_data, output reg in_ready,
+ output reg out_v, output reg [226:0] out_data, input wire out_ready
+);
+ reg [1:0] count; reg [226:0] tail;
+ wire push = in_v && in_ready, pop = out_v && out_ready;
+ wire [1:0] count_next = count + {1'b0,push} - {1'b0,pop};
+ always @(posedge clk or negedge rst_n) begin
+   if (!rst_n) begin count<=0; in_ready<=1; out_v<=0; end
+   else begin
+     count<=count_next; in_ready<=count_next<2; out_v<=count_next!=0;
+     case ({push,pop})
+       2'b10: begin if (count==0) out_data<=in_data; else tail<=in_data; end
+       2'b01: out_data<=tail;
+       2'b11: begin if (count==1) out_data<=in_data; else begin out_data<=tail; tail<=in_data; end end
+       default: begin end
+     endcase
+   end
+ end
+endmodule
