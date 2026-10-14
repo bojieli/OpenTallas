@@ -1,0 +1,524 @@
+{
+ "schema": "opentallas.hbm_coll_q_port_boundary.v0",
+ "date": "2026-10-14",
+ "status": "PROPOSAL from the die feasibility lead (derived from hfd_coll v13 contract ports); the COLL agent owns the RTL and returns the final list; die tools then assign pins (top-down)",
+ "source": "v13 contract hb_coll (hfd_coll 1399.656 x 1561.68, 49 ports) split per owner-approved v14 step 1 (results/arch/hbm_p2p_1014/STUDY.md)",
+ "masters": {
+  "coll_q3": {
+   "quadrants": [
+    "SW"
+   ],
+   "links": 3
+  },
+  "coll_q2": {
+   "quadrants": [
+    "SE",
+    "NW",
+    "NE"
+   ],
+   "links": 2
+  }
+ },
+ "quadrants": {
+  "SW": {
+   "links": [
+    "S0",
+    "S1",
+    "S2"
+   ],
+   "ports": [
+    {
+     "port": "llk_0",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep S0 (rail-aligned)"
+    },
+    {
+     "port": "llk_1",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep S1 (rail-aligned)"
+    },
+    {
+     "port": "llk_2",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep S2 (rail-aligned)"
+    },
+    {
+     "port": "f_su",
+     "bits": 1024,
+     "dir": "in",
+     "peer": "hb_su_SW"
+    },
+    {
+     "port": "t_su",
+     "bits": 620,
+     "dir": "out",
+     "peer": "hb_su_SW"
+    },
+    {
+     "port": "t_hgi_vmaddr",
+     "bits": 80,
+     "dir": "out",
+     "peer": "hb_vms_SW"
+    },
+    {
+     "port": "f_vcbc",
+     "bits": 2,
+     "dir": "in",
+     "peer": "hb_vms_SW"
+    },
+    {
+     "port": "t_vcb",
+     "bits": 1088,
+     "dir": "out",
+     "peer": "hb_vms_SW only (was a tree to 4 slices; other 3/4 now REPL on the slice ring)"
+    },
+    {
+     "port": "t_tkm_del",
+     "bits": 545,
+     "dir": "out",
+     "peer": "tkm_q_SW (8 closed ot_hgi_coll_tkm_tile; was 4 x 545 to one cluster)"
+    },
+    {
+     "port": "f_tkm_w",
+     "bits": 545,
+     "dir": "in",
+     "peer": "tkm_q_SW"
+    },
+    {
+     "port": "t_tkm_cfg",
+     "bits": 40,
+     "dir": "out",
+     "peer": "tkm_q_SW"
+    },
+    {
+     "port": "f_tkm_st",
+     "bits": 8,
+     "dir": "in",
+     "peer": "tkm_q_SW"
+    },
+    {
+     "port": "t_ring_a",
+     "bits": 256,
+     "dir": "out",
+     "peer": "coll_q NW (2x2 registered peer ring, cross-quadrant reductions / RED_CARRY / top-k partials)"
+    },
+    {
+     "port": "f_ring_a",
+     "bits": 256,
+     "dir": "in",
+     "peer": "coll_q NW"
+    },
+    {
+     "port": "t_ring_b",
+     "bits": 256,
+     "dir": "out",
+     "peer": "coll_q SE"
+    },
+    {
+     "port": "f_ring_b",
+     "bits": 256,
+     "dir": "in",
+     "peer": "coll_q SE"
+    },
+    {
+     "port": "f_hgi_cmdproc",
+     "bits": 968,
+     "dir": "in",
+     "peer": "hb_cmdproc (central sequencer; width to AUDIT per STUDY: 4 copies of 968 b is a new central fan-out)"
+    },
+    {
+     "port": "t_hgi_cmdproc",
+     "bits": 3,
+     "dir": "out",
+     "peer": "hb_cmdproc"
+    },
+    {
+     "port": "f_hgi_cfg",
+     "bits": 40,
+     "dir": "in",
+     "peer": "hb_cmdproc cfg"
+    },
+    {
+     "port": "ck/rst",
+     "bits": 1,
+     "dir": "in",
+     "peer": "die clock phi - R per quadrant; staged reset"
+    }
+   ]
+  },
+  "SE": {
+   "links": [
+    "S3",
+    "S4"
+   ],
+   "ports": [
+    {
+     "port": "llk_0",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep S3 (rail-aligned)"
+    },
+    {
+     "port": "llk_1",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep S4 (rail-aligned)"
+    },
+    {
+     "port": "f_su",
+     "bits": 1024,
+     "dir": "in",
+     "peer": "hb_su_SE"
+    },
+    {
+     "port": "t_su",
+     "bits": 620,
+     "dir": "out",
+     "peer": "hb_su_SE"
+    },
+    {
+     "port": "t_hgi_vmaddr",
+     "bits": 80,
+     "dir": "out",
+     "peer": "hb_vms_SE"
+    },
+    {
+     "port": "f_vcbc",
+     "bits": 2,
+     "dir": "in",
+     "peer": "hb_vms_SE"
+    },
+    {
+     "port": "t_vcb",
+     "bits": 1088,
+     "dir": "out",
+     "peer": "hb_vms_SE only (was a tree to 4 slices; other 3/4 now REPL on the slice ring)"
+    },
+    {
+     "port": "t_tkm_del",
+     "bits": 545,
+     "dir": "out",
+     "peer": "tkm_q_SE (8 closed ot_hgi_coll_tkm_tile; was 4 x 545 to one cluster)"
+    },
+    {
+     "port": "f_tkm_w",
+     "bits": 545,
+     "dir": "in",
+     "peer": "tkm_q_SE"
+    },
+    {
+     "port": "t_tkm_cfg",
+     "bits": 40,
+     "dir": "out",
+     "peer": "tkm_q_SE"
+    },
+    {
+     "port": "f_tkm_st",
+     "bits": 8,
+     "dir": "in",
+     "peer": "tkm_q_SE"
+    },
+    {
+     "port": "t_ring_a",
+     "bits": 256,
+     "dir": "out",
+     "peer": "coll_q SW (2x2 registered peer ring, cross-quadrant reductions / RED_CARRY / top-k partials)"
+    },
+    {
+     "port": "f_ring_a",
+     "bits": 256,
+     "dir": "in",
+     "peer": "coll_q SW"
+    },
+    {
+     "port": "t_ring_b",
+     "bits": 256,
+     "dir": "out",
+     "peer": "coll_q NE"
+    },
+    {
+     "port": "f_ring_b",
+     "bits": 256,
+     "dir": "in",
+     "peer": "coll_q NE"
+    },
+    {
+     "port": "f_hgi_cmdproc",
+     "bits": 968,
+     "dir": "in",
+     "peer": "hb_cmdproc (central sequencer; width to AUDIT per STUDY: 4 copies of 968 b is a new central fan-out)"
+    },
+    {
+     "port": "t_hgi_cmdproc",
+     "bits": 3,
+     "dir": "out",
+     "peer": "hb_cmdproc"
+    },
+    {
+     "port": "f_hgi_cfg",
+     "bits": 40,
+     "dir": "in",
+     "peer": "hb_cmdproc cfg"
+    },
+    {
+     "port": "ck/rst",
+     "bits": 1,
+     "dir": "in",
+     "peer": "die clock phi - R per quadrant; staged reset"
+    }
+   ]
+  },
+  "NW": {
+   "links": [
+    "N0",
+    "N1"
+   ],
+   "ports": [
+    {
+     "port": "llk_0",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep N0 (rail-aligned)"
+    },
+    {
+     "port": "llk_1",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep N1 (rail-aligned)"
+    },
+    {
+     "port": "f_su",
+     "bits": 1024,
+     "dir": "in",
+     "peer": "hb_su_NW"
+    },
+    {
+     "port": "t_su",
+     "bits": 620,
+     "dir": "out",
+     "peer": "hb_su_NW"
+    },
+    {
+     "port": "t_hgi_vmaddr",
+     "bits": 80,
+     "dir": "out",
+     "peer": "hb_vms_NW"
+    },
+    {
+     "port": "f_vcbc",
+     "bits": 2,
+     "dir": "in",
+     "peer": "hb_vms_NW"
+    },
+    {
+     "port": "t_vcb",
+     "bits": 1088,
+     "dir": "out",
+     "peer": "hb_vms_NW only (was a tree to 4 slices; other 3/4 now REPL on the slice ring)"
+    },
+    {
+     "port": "t_tkm_del",
+     "bits": 545,
+     "dir": "out",
+     "peer": "tkm_q_NW (8 closed ot_hgi_coll_tkm_tile; was 4 x 545 to one cluster)"
+    },
+    {
+     "port": "f_tkm_w",
+     "bits": 545,
+     "dir": "in",
+     "peer": "tkm_q_NW"
+    },
+    {
+     "port": "t_tkm_cfg",
+     "bits": 40,
+     "dir": "out",
+     "peer": "tkm_q_NW"
+    },
+    {
+     "port": "f_tkm_st",
+     "bits": 8,
+     "dir": "in",
+     "peer": "tkm_q_NW"
+    },
+    {
+     "port": "t_ring_a",
+     "bits": 256,
+     "dir": "out",
+     "peer": "coll_q SW (2x2 registered peer ring, cross-quadrant reductions / RED_CARRY / top-k partials)"
+    },
+    {
+     "port": "f_ring_a",
+     "bits": 256,
+     "dir": "in",
+     "peer": "coll_q SW"
+    },
+    {
+     "port": "t_ring_b",
+     "bits": 256,
+     "dir": "out",
+     "peer": "coll_q NE"
+    },
+    {
+     "port": "f_ring_b",
+     "bits": 256,
+     "dir": "in",
+     "peer": "coll_q NE"
+    },
+    {
+     "port": "f_hgi_cmdproc",
+     "bits": 968,
+     "dir": "in",
+     "peer": "hb_cmdproc (central sequencer; width to AUDIT per STUDY: 4 copies of 968 b is a new central fan-out)"
+    },
+    {
+     "port": "t_hgi_cmdproc",
+     "bits": 3,
+     "dir": "out",
+     "peer": "hb_cmdproc"
+    },
+    {
+     "port": "f_hgi_cfg",
+     "bits": 40,
+     "dir": "in",
+     "peer": "hb_cmdproc cfg"
+    },
+    {
+     "port": "ck/rst",
+     "bits": 1,
+     "dir": "in",
+     "peer": "die clock phi - R per quadrant; staged reset"
+    }
+   ]
+  },
+  "NE": {
+   "links": [
+    "N2",
+    "N3"
+   ],
+   "ports": [
+    {
+     "port": "llk_0",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep N2 (rail-aligned)"
+    },
+    {
+     "port": "llk_1",
+     "bits": 1122,
+     "dir": "inout bundle (tx+rx as today llk_<link>)",
+     "peer": "lk_ep N3 (rail-aligned)"
+    },
+    {
+     "port": "f_su",
+     "bits": 1024,
+     "dir": "in",
+     "peer": "hb_su_NE"
+    },
+    {
+     "port": "t_su",
+     "bits": 620,
+     "dir": "out",
+     "peer": "hb_su_NE"
+    },
+    {
+     "port": "t_hgi_vmaddr",
+     "bits": 80,
+     "dir": "out",
+     "peer": "hb_vms_NE"
+    },
+    {
+     "port": "f_vcbc",
+     "bits": 2,
+     "dir": "in",
+     "peer": "hb_vms_NE"
+    },
+    {
+     "port": "t_vcb",
+     "bits": 1088,
+     "dir": "out",
+     "peer": "hb_vms_NE only (was a tree to 4 slices; other 3/4 now REPL on the slice ring)"
+    },
+    {
+     "port": "t_tkm_del",
+     "bits": 545,
+     "dir": "out",
+     "peer": "tkm_q_NE (8 closed ot_hgi_coll_tkm_tile; was 4 x 545 to one cluster)"
+    },
+    {
+     "port": "f_tkm_w",
+     "bits": 545,
+     "dir": "in",
+     "peer": "tkm_q_NE"
+    },
+    {
+     "port": "t_tkm_cfg",
+     "bits": 40,
+     "dir": "out",
+     "peer": "tkm_q_NE"
+    },
+    {
+     "port": "f_tkm_st",
+     "bits": 8,
+     "dir": "in",
+     "peer": "tkm_q_NE"
+    },
+    {
+     "port": "t_ring_a",
+     "bits": 256,
+     "dir": "out",
+     "peer": "coll_q NW (2x2 registered peer ring, cross-quadrant reductions / RED_CARRY / top-k partials)"
+    },
+    {
+     "port": "f_ring_a",
+     "bits": 256,
+     "dir": "in",
+     "peer": "coll_q NW"
+    },
+    {
+     "port": "t_ring_b",
+     "bits": 256,
+     "dir": "out",
+     "peer": "coll_q SE"
+    },
+    {
+     "port": "f_ring_b",
+     "bits": 256,
+     "dir": "in",
+     "peer": "coll_q SE"
+    },
+    {
+     "port": "f_hgi_cmdproc",
+     "bits": 968,
+     "dir": "in",
+     "peer": "hb_cmdproc (central sequencer; width to AUDIT per STUDY: 4 copies of 968 b is a new central fan-out)"
+    },
+    {
+     "port": "t_hgi_cmdproc",
+     "bits": 3,
+     "dir": "out",
+     "peer": "hb_cmdproc"
+    },
+    {
+     "port": "f_hgi_cfg",
+     "bits": 40,
+     "dir": "in",
+     "peer": "hb_cmdproc cfg"
+    },
+    {
+     "port": "ck/rst",
+     "bits": 1,
+     "dir": "in",
+     "peer": "die clock phi - R per quadrant; staged reset"
+    }
+   ]
+  }
+ },
+ "open": [
+  "hgi_vmq/vmr (338/274) and rgx q/r/w/a (2 lanes) of the central COLL: decide which quadrant(s) own them or whether they move to the slice ring",
+  "pll/por link/hbm/stream/serial status pins: one per quadrant or collected by cmdproc",
+  "exact bench + mutant per variant, measured cost vs COLL price (today +9.55 %), selector -622 ps fix"
+ ]
+}

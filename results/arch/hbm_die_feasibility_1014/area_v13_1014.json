@@ -43,13 +43,13 @@
    "real_basis": "full leaf + cache vs USABLE 1.453075 mm2 of the slot (ring corridor / control row reservations)",
    "source": "codex-hbm-die-feasibility-1014 sfu_full_geometry_prototype.json (2065b2bc2/0a52f59fd), retained controller 528a4990f",
    "ratio": 1.1485,
-   "replan": "slot +108 um tall (2,016.144 x 1,203.12; +0.2177 mm2 usable) into the hub E-W crossing band (S quarters grow N, N quarters S); band 1,788 -> 1,572 um",
+   "replan": "slot unchanged (2,016.144 x 1,095.12 = 2.2079 mm2): +108 um growth collides with hb_hc_eng 100-um clearance (generator assert); corridor repair instead: the internal ring corridor must shrink 0.755 -> <= 0.539 mm2 (usable 1.4531 -> >= 1.6688) or leave the slot",
    "new_slot_um": [
     2016.144,
-    1203.12
+    1095.12
    ],
-   "new_slot_mm2": 2.4257,
-   "fit": "AREA OK for leaf+cache; 1,022-bit dynamic broadcast tree has no registered distribution (owner: SFU)"
+   "new_slot_mm2": 2.2079,
+   "fit": "FITS ONLY WITH the corridor repair (owner: SFU); 1,022-bit dynamic broadcast tree has no registered distribution"
   },
   {
    "element": "FrontC (SM front cluster C, inside hfd_sm)",
@@ -108,7 +108,7 @@
  ],
  "totals": {
   "idx_growth_mm2": 30.7064,
-  "sfu_growth_mm2": 0.8712,
+  "sfu_growth_mm2": 0.0,
   "die_outline_change": false
  }
 }

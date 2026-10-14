@@ -7800,11 +7800,11 @@ def r25gq_v13():
     # committed round while iterating)
     # hbmdie 10-14 area re-plan (results/arch/hbm_die_feasibility_1014/area_v13_1014.md): native IDX scorer = the
     # free corner band W of the serdes / E of the SM group (2,965 x 4,374 um = 12.97 mm2 vs leaf+macro 9.54 mm2 a
-    # scorer, bottom edge kept, the band below the lk_ep rows / above them in the N); SFU + 108 um tall (full leaf +
-    # cache 1.6688 mm2 > usable 1.4531: +0.2157 mm2 = 108 um x 2,016 um) into the hub's E-W crossing band
+    # scorer, bottom edge kept, the band below the lk_ep rows / above them in the N).  The SFU slot does NOT grow
+    # (+108 um collides with hb_hc_eng's 100-um clearance in the E band): full leaf + cache 1.6688 mm2 fits the
+    # 2.2079 mm2 slot once the SFU's internal ring corridor is <= 0.539 mm2 (today 0.755): a corridor repair (SFU owner)
     if os.environ.get('OT_HBMDIE_V13_AREA', '1') == '1':
         v['idx_score_box'] = dict(w=2965.0, h=4374.0, x=dict(W=11175.0, E=17981.6))
-        v['sfu_h_add'] = 108.0
     c_ = os.environ.get('OT_HBMDIE_CONG', V13_CONG)
     if c_:
         v['cong'] = c_
