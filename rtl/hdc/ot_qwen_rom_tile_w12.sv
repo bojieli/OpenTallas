@@ -188,6 +188,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     output wire [15:0] cx_accepted_context,
     output wire [31:0] cx_accepted_version,
     output wire cx_core_idle,
+    output wire [3*NW+13*AW+13-1:0] cx_accepted_ib,
     // CEXT seams (width 1 and unused when CEXT = 0)
     output wire [((CEXT != 0) ? CODE_BANKS * 14 : 1)-1:0]     cx_rreq,
     input  wire [((CEXT != 0) ? CODE_BANKS * 64 * W : 1)-1:0] cx_rq,
@@ -210,6 +211,17 @@ module ot_qwen_rom_tile_logic_w12 #(
     reg  [TG*32-1:0] xl_q;
     wire             go_i  = IREG ? go_q : ib_go;
     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
+    wire me_ready;
+    // Snapshot the post-IREG descriptor on the same edge that u_me accepts it.
+    // Payload has no reset; cx_op_accept/context qualify its lifetime.
+    generate if (XCONTEXT_EXPORT != 0) begin:g_accepted_ib
+      reg [IBW-1:0] accepted_ib;
+      always @(posedge clk)
+        if (rst_n && go_i && me_ready) accepted_ib <= ib_i;
+      assign cx_accepted_ib = accepted_ib;
+    end else begin:g_accepted_ib_unused
+      assign cx_accepted_ib = {IBW{1'b0}};
+    end endgenerate
     wire [47:0] op_meta_i;
     generate if (XCONTEXT_EXPORT != 0) begin:g_op_meta
       ot_hdc_delay #(.W(48),.D(IREG?1:0),.RESET(0)) u_meta (
@@ -276,7 +288,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
         .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX((XLOCAL != 0) ? TG : 0), .XADDR_FAST(XLOCAL != 0), .XMODE_EXPORT(XMODE_EXPORT), .XCONTEXT_EXPORT(XCONTEXT_EXPORT), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX), .LEXT(CEXT),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
-        .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(cx_core_idle),
+        .clk(clk), .rst_n(rst_n), .go(go_i), .ready(me_ready), .idle(cx_core_idle),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
         .i_xbase(b_xbase), .i_xks(b_xks), .i_xjs(b_xjs), .i_xcs(b_xcs),

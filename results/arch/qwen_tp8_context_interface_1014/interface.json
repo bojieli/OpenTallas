@@ -1,0 +1,38 @@
+{
+  "status": "DEFAULT_OFF_CANDIDATE_PRODUCTION_EXPORTS_LINT_ONLY_PENDING_ACTUAL_CACHE_BINDING",
+  "top": "ot_qwen_rom_tile_nkt_tp8_core_ctx",
+  "control": "ot_qwen_tile_ctl_tp8_ctx",
+  "GT": 3072,
+  "coherent_core_roots": 25,
+  "dispatch_width_bits": 428,
+  "query_width_bits": 170,
+  "accepted_descriptor_bits": 379,
+  "added_state_versus_unexported_native": {
+    "IREG_aligned_metadata": 48,
+    "accepted_metadata": 48,
+    "registered_query_metadata": 49,
+    "accept_event": 1,
+    "accepted_descriptor": 379,
+    "sum": 525
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "739f77e4be3cdb9f362cfc766776456bc71d8f8805eba648eb14e062a8948742",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "474bd7ef339ccd652fea46708e7172284ed3c11e0ed47670321ba37fd6411d06",
+    "rtl/physical/ot_qwen_tile_ctl.sv": "ebc3719576a8ccfa183ba493b25f04904f3327444a384ae29827624eed2416e5",
+    "rtl/physical/ot_qwen_rom_tile_nkt_tp8_core_ctx.sv": "f4047264b57e9818de3daf27f174237cf77ee400308dfcab65e8bac4f78fe52e"
+  },
+  "verification": {
+    "lint": "PASS exit0",
+    "command_file": "results/arch/qwen_tp8_context_interface_1014/lint.sh",
+    "log": "results/arch/qwen_tp8_context_interface_1014/lint.log",
+    "arithmetic_context_binding": "PENDING_WORKER_IMMUTABLE_SOURCE_GATE"
+  },
+  "not_qualified": [
+    "registered cache request/status/lookahead",
+    "cache source-context/version/mode binding",
+    "all-recipient fill acceptance aggregation",
+    "consumer response retirement and replay drain",
+    "physical assigned faces/clock relationships",
+    "full native layer or cycles"
+  ]
+}
