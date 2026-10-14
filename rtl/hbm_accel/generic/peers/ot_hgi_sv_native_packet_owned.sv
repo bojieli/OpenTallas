@@ -37,7 +37,7 @@ module ot_hgi_sv_native_packet_owned(
   .clk(clk),.rst_n(rst_n),.leaf_clk(leaf_clk[63:0]),.legacy_q(lrq),.legacy_r(lrr),
   .rgrant(rgrant),.rack(rack),.rreq(rreq),.drained(rd),.released(),
   .native_rq(native_rq),.native_credit(native_credit),.native_rr(native_rr),.fault(rf));
- ot_hgi_sv_native_write_owned #(.HARD_CLOCKS(1),.SLOTS(4)) writes(
+ ot_hgi_sv_native_write_owned #(.HARD_CLOCKS(1),.LEGACY_SLOTS(4)) writes(
   .clk(clk),.rst_n(rst_n),.leaf_clk(leaf_clk[127:64]),.legacy_q(lwq),.legacy_credit(wc),.legacy_done(wd),.legacy_grant(),
   .wgrant(wgrant),.wack(wack),.wreq(wreq),.drained(wwd),.released(),
   .native_wq(native_wq),.native_credit(native_wcredit),.native_done(native_done),.fault(wf));

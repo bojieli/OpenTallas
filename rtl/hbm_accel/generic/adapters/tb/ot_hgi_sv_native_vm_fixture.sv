@@ -20,7 +20,7 @@ module ot_hgi_sv_native_vm_fixture(
   .rgrant(srg),.rack(sra),.rreq(srreq),.drained(srd),.released(),
   .native_rq(srq),.native_credit(src),.native_rr(srr),.fault(rf));
  assign rr=legacy_r[8223:0];assign rq_cr=legacy_r[8255:8224];assign rg_gnt=legacy_r[8256];
- ot_hgi_sv_native_write_owned #(.HARD_CLOCKS(1),.SLOTS(8)) writes(
+ ot_hgi_sv_native_write_owned #(.HARD_CLOCKS(1),.LEGACY_SLOTS(8)) writes(
   .clk(clk),.rst_n(rst_n),.leaf_clk({64{clk}}),.legacy_q({wg_req,wq}),.legacy_credit(wcredit),.legacy_done(wdone),.legacy_grant(wg_gnt),
   .wgrant(swg),.wack(swa),.wreq(swreq),.drained(swdn),.released(),
   .native_wq(swq),.native_credit(swc),.native_done(swd),.fault(wf));
