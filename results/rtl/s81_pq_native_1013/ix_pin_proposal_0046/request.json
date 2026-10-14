@@ -65,7 +65,7 @@
       "fault"
     ]
   },
-  "die_orientation_proposal": "left two IX MY, right two R0; transformed per-bit pin reach and placement lattice still to verify",
+  "die_orientation_proposal": "MY rejected by actualchecker:640M3pins18nm/640M5pins24nm offtrack. Two independent R0 physicalmaster variants left bt_dS212..231,right24..43; identical logical ports no bus swaps, fixed K6144/VRD64/WBW8.",
   "pins": {
     "bt_d[0]": {
       "face": "S",
@@ -10308,5 +10308,6 @@
       "length": 0.192
     }
   },
-  "controls": "W candidate, exact coordinates pending die endpoints; fault E candidate"
+  "controls": "W candidate, exact coordinates pending die endpoints; fault E candidate",
+  "variant_generation_pending": "Source wrappers and exact native parent binder option pending existing frozen-source Cn gate/submission; candidate only."
 }
