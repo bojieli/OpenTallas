@@ -71,7 +71,9 @@ module tb_hgi_qdq_native_peer4 #(parameter integer MUT=0,PHASE=61,FASTFIN=0,FRON
   for(integer q=0;q<4;q=q+1)begin nretq[q]=0;prevq[q]=0;end
   if (!$value$plusargs("DIR=%s", dir)) $fatal(1, "FATAL: +DIR");
   void'($value$plusargs("ROWS=%d", rows));
-  fd = $fopen({dir, "/recs.txt"}, "r"); void'($fscanf(fd, "%d", nrec));
+  fd = $fopen({dir, "/recs.txt"}, "r");
+  if(!fd)$fatal(1,"FATAL missing production record file %s",dir);
+  if($fscanf(fd,"%d",nrec)!=1 || nrec!=8)$fatal(1,"FATAL production must contain8 records, got%0d",nrec);
   for (k = 0; k < nrec; k = k + 1) begin
    void'($fscanf(fd, "%d %d %d %d %d %d", op[k], n[k], ab[k], ob[k], cost[k], blk[k]));
    ab[k] = ab[k] % 65536; ob[k] = ob[k] % 65536;          // slice-local (sid 0), bank phase unchanged
@@ -83,6 +85,7 @@ module tb_hgi_qdq_native_peer4 #(parameter integer MUT=0,PHASE=61,FASTFIN=0,FRON
    ob[k] = ab[k];
   end
   $fclose(fd);
+  for(k=0;k<nrec;k=k+1)if(n[k]<=0||cost[k]<=0)$fatal(1,"FATAL empty production record%0d",k);
   repeat (4) @(posedge clk); rst_n = 1; repeat (8) @(posedge clk);
   for(integer quad=0;quad<4;quad=quad+1)
   for (k = 0; k < nrec; k = k + 1) begin           // actual DMA preload (untimed)
@@ -118,6 +121,7 @@ module tb_hgi_qdq_native_peer4 #(parameter integer MUT=0,PHASE=61,FASTFIN=0,FRON
    $display("EXACT %0d mismatch %0d", k, bad - bk);
   end
   for(k=0;k<32;k=k+1)if(bank_status[k*18+17])$fatal(1,"FATAL bank%0d status%h",k,bank_status[k*18+:18]);
+  if(words!=13312||total_cost!=168)$fatal(1,"FATAL immutable production shape words%0d cost%0d",words,total_cost);
   if(bad)$fatal(1,"FATAL %0d of %0d words mismatch",bad,words);
   prev=0;for(integer quad=0;quad<4;quad=quad+1)if(prevq[quad]>prev)prev=prevq[quad];
   $display("NATIVE_QDQ_EXACT PASS quadrants=4 records=%0d words=%0d cycles=%0d priced_per_quarter=%0d PHASE=%0d",4*nrec,words,prev,total_cost,phase_run);
