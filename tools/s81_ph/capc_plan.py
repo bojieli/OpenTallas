@@ -143,10 +143,12 @@ def build(assigned):
             period = "[expr {$ot_cc_p * 4.0 / 3.0}]" if port.startswith("ckv") else "$ot_cc_p"
             r = R.get(pin, R.get(port))
             if r is None: raise ValueError(f"clock insertion missing: {pin}")
-            sdc += [f"create_clock -name {name} -period {period} [get_ports {{{pin}}}]",
-                    f"unset_input_delay [get_ports {{{pin}}}]",
+            if name != "core_clk":  # retain the generator's existing core clock and IO references
+                sdc.append(f"create_clock -name {name} -period {period} [get_ports {{{pin}}}]")
+            sdc += [f"unset_input_delay [get_ports {{{pin}}}]",
                     f"set_clock_latency -source {-r:.1f} [get_ports {{{pin}}}]"]
-    sdc += ["set_clock_uncertainty -setup 60 [all_clocks]", "set_clock_uncertainty -hold 25 [all_clocks]",
+    sdc += ["if {[get_property [get_clocks core_clk] is_propagated]} {set_propagated_clock [all_clocks]}",
+            "set_clock_uncertainty -setup 60 [all_clocks]", "set_clock_uncertainty -hold 25 [all_clocks]",
             "set_false_path -from [get_ports {rst[*] rsv[*]}]",
             "unset_output_delay [get_ports {t_vm[*] t_cd[*]}]"]
     for half in range(16):
