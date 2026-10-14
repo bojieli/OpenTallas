@@ -114,6 +114,12 @@ def test():
         assert '-from [get_clocks stream] -to [get_clocks stream__early]' in deep
         assert '-from [get_clocks stream__early] -to [get_clocks stream]' in deep
         assert deep.count('create_clock ') == 2 and 'set_clock_groups' not in deep
+        both_deep = D.clock_tcl({'stream': [('a/ck', 'A', 'ck'), ('b/ck', 'B', 'ck')]},
+                               {'A': {'tt': {'ck': 371.2}}, 'B': {'tt': {'ck': 400}}}, 'tt')
+        assert both_deep.count('create_clock ') == 1
+        assert '-setup 150.000000' not in both_deep
+        assert '-setup 210.000000 -from [get_clocks stream__early] -to [get_clocks stream__early]' in both_deep
+        assert '-hold 100.000000' in both_deep and 'set_clock_groups' not in both_deep
         multi = D.clock_tcl({'stream': [('a/ck', 'A', 'ck'), ('b/ck', 'B', 'ck')],
                              'serial': [('c/ck', 'A', 'ck')]},
                             {'A': {'tt': {'ck': 100}}, 'B': {'tt': {'ck': 301}}}, 'tt')
