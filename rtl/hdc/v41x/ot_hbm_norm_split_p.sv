@@ -103,6 +103,9 @@ module ot_hbm_norm_split_core_p #(
     output wire [N*32-1:0]      ro,
     output wire                 fault
 );
+    generate if(CLOCKED && RR!=BD-1)begin:g_bad_clocked_shape
+        initial $fatal(1,"clocked norm requires one reset stage per control relay stage");
+    end endgenerate
     localparam integer NG  = N / G;
     localparam integer NV  = D / N;
     localparam integer NVP = (NV <= 1) ? 1 : (1 << $clog2(NV));
