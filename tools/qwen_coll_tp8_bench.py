@@ -9,6 +9,8 @@ Qwen3-8B production shape (4,096 FP32 = 256 words of 16 lanes, 2 all-reduces per
 --mutant-define D builds with a negative control (OT_TP8_MUT_OWNER, OT_TP8_MUT_GATHER, OT_ONESHOT_M_MUTANT): some
 case must FAIL.  Prints one line per case and 'COLL_TP8 PASS cases=N' / 'COLL_TP8 FAIL ...'; exit 0 iff all pass."""
 import argparse
+import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -115,12 +117,14 @@ def main():
     ap.add_argument("--mutant-define", default=None)
     ap.add_argument("--only", default=None, help="regex on case names")
     a = ap.parse_args()
+    a.out = a.out.resolve()
     cases = PRODUCTION_CASES if a.production else UNIT_CASES
     if a.only:
         cases = [c for c in cases if re.search(a.only, c[0])]
     a.out.mkdir(parents=True, exist_ok=True)
     exe = build(a.out, a.latu, a.lats, a.mutant_define, a.wrapper_columns)
     bad = []
+    records = []
     for i, (name, nmsg, words, gap, skew, mk, inj, ival, big, tagbad) in enumerate(cases):
         rng = np.random.default_rng(100 + i)
         modes = {"r": [0] * nmsg, "g": [1] * nmsg, "m": list(rng.integers(0, 2, nmsg))}[mk]
@@ -128,15 +132,26 @@ def main():
         vectors(vec, nmsg, words, modes, 1000 + i, big)
         args = [str(exe), f"+VEC={vec}", f"+NMSG={nmsg}", f"+WORDS={words}", f"+GAP={gap}", f"+SKEW={skew}",
                 f"+SEED={7 + i}", f"+INJECT={inj}", f"+TAGBAD={tagbad}"] + ([f"+IVAL={ival}"] if ival else [])
-        txt = subprocess.run(args, capture_output=True, text=True).stdout
+        run = subprocess.run(args, capture_output=True, text=True)
+        txt = run.stdout
+        (a.out / f"{name}.log").write_text(txt + run.stderr)
         m = RES.search(txt)
-        ok = bool(m) and any(l.strip() == "PASS" for l in txt.splitlines())
+        ok = run.returncode == 0 and bool(m) and any(l.strip() == "PASS" for l in txt.splitlines())
         g = m.groups() if m else None
         print(f"case {name} lats={a.lats} mutant={a.mutant_define or '-'} {'PASS' if ok else 'FAIL'} "
               + (f"mismatches={g[7]} out_err={g[8]} fault={g[9]} code={g[10]} words_out={g[11]} cycles={int(g[13]) - int(g[12])}"
                  if g else "no result: " + txt.strip()[-300:]), flush=True)
+        records.append(dict(name=name, exact=ok, returncode=run.returncode, messages=nmsg, words_per_message=words,
+                            mismatches=int(g[7]) if g else None, words_out=int(g[11]) if g else None,
+                            first_input_cycle=int(g[12]) if g else None, last_output_cycle=int(g[13]) if g else None,
+                            cycles=int(g[13]) - int(g[12]) if g else None))
         if not ok:
             bad.append(name)
+    (a.out / "record.json").write_text(json.dumps(dict(schema="opentallas.qwen.tp8.collective.v1", ranks=ND, lanes=LANES,
+        latu=a.latu, lats=a.lats, wrapper_columns=a.wrapper_columns, mutant=a.mutant_define, production=a.production,
+        cycle_span="first accepted input on any rank to last output on all ranks, excludes reset",
+        cases=records, source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SRC},
+        executable_sha256=hashlib.sha256(exe.read_bytes()).hexdigest(), native_layer_qualified=False), indent=2) + "\n")
     if bad:
         print(f"COLL_TP8 FAIL mutant={a.mutant_define or '-'} failed={','.join(bad)}")
         sys.exit(1)

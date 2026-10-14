@@ -61,12 +61,12 @@
  },
  "outline": {
   "w": 64.8,
-  "h": 43.2
+  "h": 54.0
  },
  "job": {
-  "owner": "Claude:el1013-hbm-redesign-idx",
+  "owner": "Codex:el1013-hbm-redesign-idx",
   "branch": "claude/hbm-redesign-idx",
-  "tag": "r0",
+  "tag": "r1",
   "purpose": "IDX.INDEX redesign (owner 10-13) ix2 leaf kc: frame control ct (169 flops: glue, merged) + keep bitmaps ks (4 x 342 b) and kin beats; M5 leaf, every pin a flop, one clock root; cluster production die e2e L24 1,158 (1.072x) exact, token 1.217x, e2e loss 0.282 %",
   "extra_paths": [
    "tools/hgi_unit_tput"
@@ -101,6 +101,9 @@
   "views_to": "physical/ref_tile/hgi_ix2_kc/views",
   "record_to": "results/rtl/ref_tile/hgi_ix2_kc"
  },
+ "std_area_um2": 1513,
+ "structural_change": "Outline 64.8 x 43.2 -> 64.8 x 54.0 um. Increase core area to keep measured synthesized std area 1513 um2 below 60% utilization (previous route refused at >63%).",
+ "slot_change_request": "el1013-hbm-redesign-idx 2026-10-13 Codex: ix2 leaf kc Outline 64.8 x 43.2 -> 64.8 x 54.0 um. Increase core area to keep measured synthesized std area 1513 um2 below 60% utilization (previous route refused at >63%). Same pin faces/layers; pending die lead assigned pin file / next daily contract revision.",
  "params": {},
  "macros": [],
  "children": [],

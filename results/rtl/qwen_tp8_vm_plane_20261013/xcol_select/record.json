@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.vm-xcol-select.v1",
+  "status": "BENCHED_NOT_ROUTED",
+  "latency_enabled_edges": 3,
+  "enabled_by": "registered me_e",
+  "root_words": 2,
+  "root_word_bits": 128,
+  "columns": 32,
+  "bits_per_root_per_column": 4,
+  "full_export_flops_removed": true,
+  "select_only_xline": true,
+  "xqr": 0,
+  "ledger": "PROPOSED; die array delivery and end-to-end measurement required",
+  "sources": {
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xcol_select.sv": "923631c720bc564eddf6a60ca72b283eff2b31320da1b6d48a4c428edf7d3a05",
+    "rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xcol_select.sv": "cb8430a1f45cd31ad35d63d3afcc2502bd52dbcfd59b582e7d56ec948fc71925"
+  },
+  "runs": [
+    {
+      "name": "ok",
+      "result": "PASS",
+      "checks": 3967
+    },
+    {
+      "name": "seed2",
+      "result": "PASS",
+      "checks": 3967
+    },
+    {
+      "name": "prod",
+      "result": "PASS",
+      "checks": 3967
+    },
+    {
+      "name": "mut1",
+      "result": "FAIL",
+      "checks": 3967
+    },
+    {
+      "name": "mut2",
+      "result": "FAIL",
+      "checks": 3967
+    },
+    {
+      "name": "mut3",
+      "result": "FAIL",
+      "checks": 3967
+    }
+  ]
+}

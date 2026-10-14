@@ -8,6 +8,7 @@ module ot_qfd_tt_ctlm_i_fpm #(
     parameter integer MEREG = 3,   // el1011-q-seq: registered REGIONAL engine clock enable (me_mem_ok 3 edges ahead; engine wakes +1)
     parameter integer RRG = 1,     // el1011-q-seq: replicated tile reset
     parameter integer PCUT = 1,    // el1011-q-seq: exact controller path cuts
+    parameter integer G = 6144,    // qwen-tp8/seq: lane groups (TP4 6,144; TP8 3,072 via ot_qfd_tt_ctlm_i_fpm_tp8)
     parameter integer AUD = 33975  // el1011-q-seq: textbook-audit rebuild (no x_addr, SRAM tag delays, kv pin flops, die-input pin flops, kept stations, 128 exact prefix cuts, 1024 setup cuts SC, 32768 p_am pin register: argmax loop +1 cycle; 1207 = the fpsc build)
 ) (
     input  wire clk, input wire rst_n,
@@ -24,14 +25,14 @@ module ot_qfd_tt_ctlm_i_fpm #(
     output wire [18-1:0] kvd_pos, output wire me_clk_en, output wire c_fault,
     // ot_qfd_tt_ctl's non-issue ports
     input  wire up_fault, input wire [15:0] land_cnt,
-    output wire scale_re, output wire [48-1:0] scale_gre, output wire [48*24-1:0] scale_addr,
+    output wire scale_re, output wire [(G >> 7)-1:0] scale_gre, output wire [(G >> 7)*24-1:0] scale_addr,
     input  wire x_rdy, output wire x_dv, output wire [24-1:0] x_dc, x_dcs, output wire [3:0] x_dsp,
-    output wire [13:0] t_sel_e, t_tv_e, input wire [16-1:0] tr_fault,
-    output wire p_v_e2, output wire [113-1:0] p_f_e2, input wire [12*51-1:0] p_am,
-    input  wire [12-1:0] p_fault, input wire fab_fault,
+    output wire [$clog2(G):0] t_sel_e, t_tv_e, input wire [16-1:0] tr_fault,
+    output wire p_v_e2, output wire [113-1:0] p_f_e2, input wire [((G >> 7) / 4)*51-1:0] p_am,
+    input  wire [((G >> 7) / 4)-1:0] p_fault, input wire fab_fault,
     output wire ov, output wire mx_we, output wire [24-1:0] mx_addr, output wire [16-1:0] mx_mask,
     output wire [16*32-1:0] mx_data
 );
-    ot_qfd_tt_ctlm_i #(.PSRAM(1), .HQ2(1), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .AUD(AUD)) u_c (
+    ot_qfd_tt_ctlm_i #(.PSRAM(1), .HQ2(1), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .AUD(AUD)) u_c (
         .clk(clk), .rst_n(rst_n), .h_start(h_start), .token(token), .pos(pos), .prog_base(prog_base), .pw_v(pw_v), .pw_addr(pw_addr), .pw_data(pw_data), .x_oacc(x_oacc), .x_oidle(x_oidle), .x_oprog(x_oprog), .x_orows(x_orows), .kv_ok(kv_ok), .kv_write_drained(kv_write_drained), .me_mem_ok(me_mem_ok), .me_acc_o(me_acc_o), .me_idle_o(me_idle_o), .me_prog_o(me_prog_o), .m_fin_o(m_fin_o), .m_fidx_o(m_fidx_o), .m_fval_o(m_fval_o), .kvd_v(kvd_v), .kvd_wbase(kvd_wbase), .kvd_ts(kvd_ts), .kvd_ks(kvd_ks), .kvd_js(kvd_js), .kvd_wcs(kvd_wcs), .kvd_split(kvd_split), .kvd_jsh(kvd_jsh), .kvd_tiles(kvd_tiles), .kvd_k(kvd_k), .kvd_nout(kvd_nout), .kvd_kindk(kvd_kindk), .kvd_pos(kvd_pos), .me_clk_en(me_clk_en), .c_fault(c_fault), .up_fault(up_fault), .land_cnt(land_cnt), .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .x_rdy(x_rdy), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .t_sel_e(t_sel_e), .t_tv_e(t_tv_e), .tr_fault(tr_fault), .p_v_e2(p_v_e2), .p_f_e2(p_f_e2), .p_am(p_am), .p_fault(p_fault), .fab_fault(fab_fault), .ov(ov), .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data));
 endmodule

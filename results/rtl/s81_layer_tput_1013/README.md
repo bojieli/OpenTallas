@@ -180,3 +180,96 @@ Still without a production-shape measurement: the SU nodes attn.sink, attn.q_rop
 Order of the structural fixes by what they return: H_LOAD / H_STORE streaming (3.45 %, and the hop-count exposure),
 the hierarchical NORM chains (3.57 %: the flat engine meets the price at 0.71x), VM read prefetch with leaf hop 1
 (2.5 to 4.5 %), SU job overlap in the slab control (1.47 %).
+
+## Round 6 candidate scope (Codex takeover, 10-13 evening)
+
+The exact source and raw measurements are preserved in `runs/r6_*` and `r6_scope.json`.
+These measurements establish HC candidate exactness, output flit checks, and cycle
+deltas at production HC width NG256. They do not qualify the complete production
+die layer: the VM and SU/service/select/coefficient engines are behavioural, the
+Engram path is behavioural, and production PHY/FEC/board and die relay stages are
+not present. Any token-path replay using these durations is a modelled share,
+not measured end-to-end tok/s. No accepted-cost row is added by this record.
+
+PIPE-only saves 419/421 layer cycles. PIPE plus landing stream and watermark
+hand-off saves 942/938 cycles to the final flit at L0/L2, with 640/640 exact flits,
+zero early reads and at least 19 rows of writer lead. At LVM54 and PGAP600 the
+stream path passes at adjusted xfer8569/17475; the PGAP400 run fell back to VM
+and is excluded from streaming latency comparisons. Engram L14 never enters the
+landing stream and remains a separate VM-path observation. The original PIPE
+parameter defaults are zero; production default-on and pin-safe landing changes
+are separate candidates requiring fresh gates and physical adoption.
+
+The `r6_pD` batch contains only negative controls: its aggregate gate prints FAIL
+because the harness requires a positive case. Both individual actual mutant
+cases fail as expected. The aggregate FAIL is retained and classified, never
+promoted to a full positive gate. The NG64 PD0 mutant is reduced-shape evidence;
+a fresh NG256 PD0 mutation is running before default-on adoption.
+
+The immutable AR graph has 80 HC POST nodes in 41 changed-h groups, while the
+MTP graph has 86 in 44 groups. This establishes the graph/program requirement
+for changed-h transfers, not a measured deployed H_LOAD/H_STORE count: native
+stage schedules for the full 120-stage allocation are still owed. Hop-only stages
+can forward landing rows without an HC copy; gratuitous H_LOAD/H_STORE jobs
+there would create extra serial work that is absent from the price.
+
+Early r6_pA/B/C/D/E script hashes predate the additive `--su-sched` CLI and
+HC-gate flags committed at f83703651; their RTL hashes match the preserved
+candidate. The pE2/L14/L14b and NG256 HC gate use the final scripts. The
+`--su-sched` replay itself remains unmeasured; only its in-order model was
+regenerated. Generated controller source files in `sources.sha256` are generated
+artifacts, rather than missing authored source.
+
+## Registered landing and schedule gate (r8)
+
+The FD16 landing wrapper captures every incoming face bus and registers every
+outgoing request/response bus. Fresh NG256 positives are exact at L0/L2 for
+330 NORM rows, 640 H_STORE rows and 640 payload flits; the landing mutation
+corrupts all 640 output flits and all 330 NORM rows. `r8_landing_schedule_gate.json`
+binds source af72194a9 and the actual ot-run exit0.
+
+At PGAP600, the same binary with the original SU order takes adjusted xfer
+8533/17439 cycles; the searched order takes 8210/16831. This isolates scheduling
+savings of 323/608 cycles in the candidate bench. SU itself is still behavioral
+at program durations; this is not an accepted native cost or full die price
+qualification. Static GAIN initialization and early COEF/H_LOAD readiness must
+be proved in the steady-token native program: the artificial payload gap allows
+setup to finish before landing and is not a property of the production link.
+
+The watermark8 hand-off in this layer bench has a stall-free producer and a
+measured 19-row lead. The native dispatcher adds committed-row checks, because
+watermark8 alone cannot protect reads if the producer later stalls. Its separate
+real VM/hop and landing fallback/reuse component gates are supporting component
+proofs, while full native lowering and physical adoption remain pending.
+
+The PIPE unit's 76-cycle interface completion cannot be compared directly to
+the immutable HC POST last-output endpoint as qualification: local write-back
+continues after issue-order completion. The gate proves dependent jobs remain
+exact, and the composed layer delta measures their overlap. The diagnostic
+76/112.9 ratio in the r7 record does not establish priced unit throughput.
+
+## Native h materialization is still missing
+
+The price graph contains same-stage HC POST-to-field coefficient and Engram
+read dependencies; `h_materialization_audit.json` lists them with pinned sources.
+For example S001 holds L0.ffn.hc_post then L1.eng.hh/dot, and S002 holds
+L1.ffn.hc_post then L2.attn.hc.fn. The current hierarchical POST updates its
+resident h SRAM; it does not emit the hidden-row VM write packets that these
+real readers need. Behavioral coefficient/Engram engines hide this dependency.
+
+Native lowering must bind an explicit spill/reload or a real POST-to-VM stream
+with committed rows. The graph's 41 changed-h groups therefore cannot establish
+the actual H_STORE/H_LOAD execution count; within-stage transfers may be needed.
+The complete native count stays unknown until these real bindings execute.
+
+## Round 2026-10-14 (rom-tput-1014): count, transfer fix on main, NORM decomposition, VM read, SU gaps
+
+`round_1014.json` holds the facts. h transfers a token (AR): 41 hop transfers on the critical path (40
+substage_hop0 + head.hop), 2 Engram materializations (critical, row HC.H_MAT_ENGRAM), 37 same-stage
+coefficient materializations (POST -> next attn hc.fn / hc.sumsq; >= 6,483 cycles slack, 0 e2e when issued
+after the NORM). The transfer fix (cseq PIPE default 1, FD16 H landing streamer, cut-through hand-off) is on
+main: 723 -> 246 cycles a transfer, HC.H_XFER 3.453 % -> 1.202 %. NORM 727 = 339 (mix + sums over the chain)
++ 74 (rsqrt) + 238 (scale broadcast + rows back) + 39 (rows) + 37 (writer / done): the fix is a tree, not
+faster arithmetic (not built). VM read: leaf hop 1 required (hop 2 = 9.1 % AR upper bound); row VM.READ at
+hop 1 + FE = 2.654 %. attn.q_rope, ffn.bias and ffn.softplus_sqrt have no S81 production RTL (the SU slab has
+no job kind for them): functional gaps for the SU owner; attn.sink is inside SE (under price).

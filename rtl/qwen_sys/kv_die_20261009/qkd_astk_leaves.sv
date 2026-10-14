@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+`ifndef KVD_HEADS
+`define KVD_HEADS 2
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // Qwen3-8B ROM TP8 die (track B), stack aggregator strip qkd_astk / qkd_astk_n (el1013-qwen-kvstrips 2026-10-13).
 // The 220.3 x 7,817 slot held ot_qwen_nearhbm_attn_stack_h minus its engines: a 409,684-flop P.V bank (512 fp32 lanes
@@ -836,7 +839,7 @@ module qkd_astk_ctl (
     reg  [1:0]   kdone, lsent, zsent, pvd;
     reg  [2:0]   lh, mc0, mc1;
     reg  [4:0]   zn0, zn1;                             // block sums sent
-    wire [1:0]   qgo = {kdone[1] && mc1 == 3'd4, kdone[0] && mc0 == 3'd4};
+    wire [1:0]   qgo = {(`KVD_HEADS == 2) && kdone[1] && mc1 == 3'd4, kdone[0] && mc0 == 3'd4};
     // ---- Z block sums: a 16-entry queue, 4 messages each ---------------------------------------------------------------
     reg  [132:0] zf_m [0:15];                          // {sum 128, k 4, g}
     reg  [4:0]   zfw, zfr;
@@ -845,10 +848,10 @@ module qkd_astk_ctl (
     wire         z_ne = zfw != zfr;
     wire [132:0] z_hd = zf_m[zfr[3:0]];
     always @(posedge ck) if (zq[0] && stl == 7'd0) zf_m[zfw[3:0]] <= {zq[137:10], zq[5:2], zq[1]};
-    wire         l_pend = (kdone[0] && !lsent[0]) || (kdone[1] && lsent[0] && !lsent[1]);
+    wire         l_pend = (kdone[0] && !lsent[0]) || (`KVD_HEADS == 2 && kdone[1] && lsent[0] && !lsent[1]);
     wire         lg = lsent[0];
     wire         zd0 = !zsent[0] && qgo[0] && zn0 == nblk && !z_ne;
-    wire         zd1 = !zsent[1] && zsent[0] && qgo[1] && zn1 == nblk && !z_ne;
+    wire         zd1 = (`KVD_HEADS == 2) && !zsent[1] && zsent[0] && qgo[1] && zn1 == nblk && !z_ne;
     // ---- P.V: the two lanes carry the two halves of a beat on the same edge ---------------------------------------------
     reg  [6:0]   stl;                                  // restart: 96 cycles in which the lanes and the Z nodes drain
     wire         quiet = stl == 7'd0;
@@ -881,7 +884,7 @@ module qkd_astk_ctl (
             if (pv_v && pxq[5:1] == 5'd31) pvd[pxq[6]] <= 1'b1;
             sc0 <= sc0 + {8'd0, xq[4:1]}; sc1 <= sc1 + {8'd0, xq[8:5]};
             if (sc0 == n_s) kdone[0] <= 1'b1;
-            if (sc1 == n_s) kdone[1] <= 1'b1;
+            if (`KVD_HEADS == 2 && sc1 == n_s) kdone[1] <= 1'b1;
             if (am_q[0]) begin if (am_q[1]) mc1 <= mc1 + 3'd1; else mc0 <= mc0 + 3'd1; end
             if (stl != 7'd0) stl <= stl - 7'd1;
             if (z_in) begin zfw <= zfw + 5'd1; if (zfw[3:0] == zfr[3:0] && zfw[4] != zfr[4]) zovf <= 1'b1; end

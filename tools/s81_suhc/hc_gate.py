@@ -109,12 +109,14 @@ _H = "rtl/dsrom_sys/s81_suhc/hier/"
 _H2 = dict(HALF=1, RLY=2, RF=4, DW=6)                    # the *h2 kits (crxh2 / cseqh2 / cntreeh2; ccr: module defaults)
 _BIT = lambda w, at: "({{(%s-1){1'b0}}, 1'b1} << (%s))" % (w, at)
 _CR = _H + "ot_s81_hc_crootr.sv"
+# cseq published views predate PIPE: bind their actual behavior explicitly.
+# Current RTL defaults may change, but cannot requalify a changed physical master.
 TILES.update({
     "ot_s81_hc_cpin":     dict(src=_H + "ot_s81_hc_cpin.sv", routed=[{}], mut=("rq_row <= n_rq_row;", "rq_row <= n_rq_row ^ 14'd1;")),
     "ot_s81_hc_caq":      dict(src=_H + "ot_s81_hc_caq.sv", routed=[{}], mut=("x_q <= rdd;", "x_q <= rdd ^ 512'h8000;")),
     "ot_s81_hc_crx":      dict(src=_H + "ot_s81_hc_crx.sv", routed=[_H2], mut=("jb <= j_base;", "jb <= j_base ^ 14'd1;")),
     "ot_s81_hc_ccr":      dict(src=_H + "ot_s81_hc_ccr.sv", routed=[{}], mut=("crd <= ch_rd;", "crd <= ch_rd ^ " + _BIT("RDW", "P_D + 15") + ";")),
-    "ot_s81_hc_cseq":     dict(src=_H + "ot_s81_hc_cseq.sv", routed=[_H2], mut=("ssq <= t_ss;", "ssq <= t_ss ^ 32'h00800000;")),
+    "ot_s81_hc_cseq":     dict(src=_H + "ot_s81_hc_cseq.sv", routed=[dict(_H2, PIPE=0, PD=40)], mut=("ssq <= t_ss;", "ssq <= t_ss ^ 32'h00800000;")),
     "ot_s81_hc_cntree":   dict(src=_H + "ot_s81_hc_cntree.sv", routed=[_H2], mut=("ss <= nv_[1];", "ss <= nv_[1] ^ 32'h00800000;")),
     "ot_s81_hc_ctfn":     dict(src=_CTH, routed=[{}], mut=("fd <= fd_in;", "fd <= fd_in ^ " + _BIT("FDW", "O_D + 15") + ";")),
     "ot_s81_hc_ctfx":     dict(src=_CTH, routed=[{}], mut=("fdx <= fd_in;", "fdx <= fd_in ^ " + _BIT("FXW", "O_D + 15") + ";")),
@@ -482,11 +484,11 @@ HCG = re.compile(r"HCG jobs=(\d+) done=(\d+) err=(\d+) rows=(\d+) fault=(\d+) co
 JOB = re.compile(r"HCJ op=(\d+) kind=(\d+) start=(\d+) done=(\d+)")
 
 
-def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0, pad_hard=0, probes=(), tmut=None, tmax=0):
+def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, lane_specialize=0, pad_hard=0, probes=(), tmut=None, tmax=0, pipe=0, pipe_pd=40):
     # hier: 1 = root split + column chains of octet sub-tiles; 2 = the structural variant (half-octet sub-tiles, split
     # column roots)
     tag = f"ng{ng}_{fp}_m{mut}_a{amut}" + {0: "", 1: "_hier", 2: "_hier2", 3: "_hier3tail"}[hier]
-    tag += f"_cp{cnl_pin}_cs{chain_step}_ls{lane_specialize}"
+    tag += f"_cp{cnl_pin}_cs{chain_step}_ls{lane_specialize}" + (f"_pipe{pipe_pd}" if pipe else "")
     tag += ("_ph" if pad_hard else "") + ("_probe" if probes else "") + (f"_tm-{tmut}" if tmut else "")
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_s81_hc_master"
@@ -498,7 +500,7 @@ def build(out: Path, ng, fp, mut, amut, lvm, hier=0, cnl_pin=0, chain_step=4, la
         srcs = tile_edit(srcs, obj, probes, tmut)
         cmd = [VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_hc_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", f"-GNG={ng}", f"-GMUT={mut}",
-               f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *(["+define+OT_S81_HC_PAD_HARD"] if pad_hard else []), *([f"-GTMAX={tmax}"] if tmax else []), *map(str, srcs), "-CFLAGS", "-O1"]
+               *([f"-GPIPE={pipe}", f"-GPIPE_PD={pipe_pd}"] if pipe else []), f"-GLANE_SPECIALIZE={lane_specialize}", f"-GCNL_PIN={cnl_pin}", f"-GCHAIN_STEP={chain_step}", f"-GAMUT={amut}", f"-GLVM={lvm}", f"-GHIER={min(hier, 1)}", f"-GHALF={int(hier >= 2)}", f"-GCSPLIT={int(hier >= 2)}", f"-GTAIL_SPLIT={2 if hier == 3 else 0}", f"-GHEAD_ROWS={10 if ng == 256 else 2}", *(["+define+OT_S81_HC_PAD_HARD"] if pad_hard else []), *([f"-GTMAX={tmax}"] if tmax else []), *map(str, srcs), "-CFLAGS", "-O1"]
         r = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + r.stdout + r.stderr)
         if r.returncode != 0:
@@ -514,7 +516,7 @@ def cmd_run(a):
         if x not in TILES:
             sys.exit(f"unknown tile {x}: {', '.join(TILES)}")
     exe, tag = build(out, a.ng, a.fp, a.mut, a.amut, a.lvm, a.hier, a.cnl_pin, a.chain_step, a.lane_specialize,
-                     a.pad_hard, probes, a.tile_mut, a.tmax)
+                     a.pad_hard, probes, a.tile_mut, a.tmax, a.pipe, a.pipe_pd)
     res = []
     tiles = None
     for meta in json.loads((out / "runs.json").read_text())["runs"]:
@@ -536,7 +538,7 @@ def cmd_run(a):
         print(meta["run"], "PASS" if row["ok"] else "FAIL", row["err_rows"], "/", row["rows"], "fault", row["fault"],
               "cyc", row["cycles"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.hc_gate.run.v1", generated_utc=datetime.datetime.utcnow().isoformat() + "Z",
-               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, cnl_pin=a.cnl_pin, chain_step=a.chain_step, lane_specialize=a.lane_specialize, runs=res,
+               ng=a.ng, fp=a.fp, mut=a.mut, amut=a.amut, lvm=a.lvm, hier=a.hier, cnl_pin=a.cnl_pin, chain_step=a.chain_step, lane_specialize=a.lane_specialize, pipe=a.pipe, pipe_pd=a.pipe_pd, runs=res,
                status="pass" if res and all(x["ok"] for x in res) and all(t["ok"] for t in (tiles or {}).values()) else "fail",
                pad_hard=a.pad_hard, tile_mut=a.tile_mut, tile_mut_edit=list(TILES[a.tile_mut]["mut"]) if a.tile_mut else None,
                tiles=tiles,
@@ -567,6 +569,8 @@ def main():
     p.add_argument("--cnl-pin", type=int, default=0)
     p.add_argument("--chain-step", type=int, default=4)
     p.add_argument("--lane-specialize", type=int, default=0)
+    p.add_argument("--pipe", type=int, default=0, help="1: ot_s81_hc_cseq PIPE (POST issue-order done; hierarchical slab)")
+    p.add_argument("--pipe-pd", type=int, default=40, help="PIPE guard cycles after the last y beat (0 = negative control: must fail)")
     p.add_argument("--pad-hard", type=int, default=0, help="1: define OT_S81_HC_PAD_HARD (pad leaves at their hardened defaults)")
     p.add_argument("--tmax", type=int, default=0, help="testbench cycle cap (default: the bench's 400000); a mutant that hangs then fails in minutes")
     p.add_argument("--tile-probe", default="", help="comma list of TILES (or all): report every instance + parameters; the run fails unless all are routed tuples")

@@ -176,7 +176,7 @@ def main():
                fullest=[dict(bay=b, tiles=bay_rep[b]['tiles'], slots=bay_rep[b]['slots']) for _, b in fills[:12]],
                full_bays=sum(1 for f, _ in fills if f >= 1.0), pad_row=dict(tiles=sum(v['tiles'] for b, v in bay_rep.items() if bays[b].get('padrow')), slots=sum(b['tiles'] for b in bays.values() if b.get('padrow'))),
                rule='a lane visit = pad pairs in ot_qfd_vm_xpad2_t (60 lanes, 2 stages) then one relay stage in ot_qfd_vm_xrelay_t (64 lanes; kit _w when the next hop goes west); an odd pad stage = one more relay pass',
-               bay_report=bay_rep, bay_tiles=tiles, lane_chain=chain)
+               bay_report=bay_rep, bay_tiles=tiles, lane_chain={name: sorted(cs, key=lambda c: c['visit']) for name, cs in chain.items()})
     Path(a.out).write_text(json.dumps(rep, separators=(',', ':')) + '\n')
     print(json.dumps({k: v for k, v in rep.items() if k not in ('bay_report', 'bay_tiles', 'lane_chain', 'inputs')}, indent=1)[:3000])
 

@@ -1,5 +1,5 @@
 {
- "name": "hgi_ix2_qa-r0-COMMIT",
+ "name": "hgi_ix2_qa-r0-d0ac43800",
  "block": "ot_hgi_idx_ix2_qa",
  "ref_tile": true,
  "owner": "Claude:el1013-hbm-redesign-idx",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-redesign-idx",
-  "commit": "COMMIT",
+  "commit": "d0ac43800",
   "extra_paths": [
    "tools/hgi_unit_tput"
   ]
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hgi_ix2_qa/hgi_ix2_qa-r0-COMMIT"
+   "to": "results/rtl/ref_tile/hgi_ix2_qa/hgi_ix2_qa-r0-d0ac43800"
   }
  ],
  "cycles_added": 0,

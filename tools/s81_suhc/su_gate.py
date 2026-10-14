@@ -322,7 +322,7 @@ JOB = re.compile(r"SUJ op=(\d+) kind=(\d+) start=(-?\d+) done=(-?\d+)")
 def cmd_run(a):
     sh = SHAPES[a.shape]
     out = Path(a.out)
-    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + ("_h" if a.hier else "") + ("_t" if a.tiles else "")
+    tag = f"{a.shape}_{a.fp}_m{a.mut}_a{a.amut}" + ("_h" if a.hier else "") + ("_t" if a.tiles else "") + (f"_lvm{a.lvm}" if a.lvm else "")
     rtl = RTL + (HIER if a.hier else [])
     gen = []
     if a.tiles:        # gate s81su_tiles: the slab with the ROUTED tops dsfd_su_t_<x> in place of the cores (su_tile_tops.py)
@@ -345,7 +345,7 @@ def cmd_run(a):
             srcs = H.dpi_rest(obj) + srcs
         cmd = [H.VERILATOR, "--binary", "--timing", "-O2", "-Wno-fatal", "-Wno-WIDTH", "--top-module", "tb_s81_su_master",
                "-Mdir", str(obj), "-j", "16", "--unroll-count", "4", "-fno-dfg", *[f"-G{k}={v}" for k, v in sh.items()],
-               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *(["-DSU_HIER"] if a.hier else []), *(["-DSU_TILE_TOPS"] if a.tiles else []), *map(str, srcs), "-CFLAGS", "-O1"]
+               f"-GMUT={a.mut}", f"-GAMUT={a.amut}", *([f"-GLVM={a.lvm}"] if a.lvm else []), *(["-DSU_HIER"] if a.hier else []), *(["-DSU_TILE_TOPS"] if a.tiles else []), *map(str, srcs), "-CFLAGS", "-O1"]
         rr = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"build_{tag}.log").write_text(" ".join(cmd) + "\n" + rr.stdout + rr.stderr)
         if rr.returncode != 0:
@@ -373,7 +373,7 @@ def cmd_run(a):
               row["jobs"], "fault", row["fault"], row["fault_code"], "cyc", row["cycles"],
               "early", row["early_done_rows"], flush=True)
     rec = dict(schema="opentallas.s81_suhc.su_gate.run.v1", generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, hier=bool(a.hier), runs=res,
+               shape=a.shape, params=sh, fp=a.fp, mut=a.mut, amut=a.amut, hier=bool(a.hier), lvm=(a.lvm or 10), runs=res,
                status="pass" if res and all(x["ok"] for x in res) else "fail",
                source_sha256={s: H.sha(ROOT / s) for s in H.FP[a.fp] + rtl + [TB]})
     if a.tiles:
@@ -400,6 +400,8 @@ def main():
     p.add_argument("--amut", type=int, default=0)
     p.add_argument("--hier", action="store_true", help="the hierarchical slab dsfd_sp_su_h")
     p.add_argument("--tiles", action="store_true", help="the slab built from the ROUTED tile tops dsfd_su_t_<x> (su_tile_tops.py)")
+    p.add_argument("--lvm", type=int, default=0, help="VM read latency of the bench VM (tb LVM; 0 = the bench default 10): "
+                   "measures how many serial VM read round trips a job class holds")
     p.add_argument("--tmut", type=int, default=0, help="with --tiles: output mutant of tile class K (+tmut=K, no rebuild)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)
