@@ -21,7 +21,10 @@ import subprocess
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+# Keep the invoked overlay root: resolving a symlinked tools/ directory can
+# silently bypass copied RTL overlays. Source reads and hashes use these same
+# logical paths, so the recorded bytes are the ones Verilator receives.
+ROOT = Path(__file__).absolute().parents[1]
 ORIG_COMMIT = "0e8df511"
 TB = ROOT / "rtl/test/tb_qwen_me_partition_w12.sv"
 RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_qwen_me_array_w12", "ot_qwen_rom_tile_w12", "ot_hdc_matvec", "ot_hdc_fpu",

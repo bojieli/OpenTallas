@@ -8,7 +8,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 OUT = ROOT / "results/rtl/v41x_packed_attn_service.json"
 SOURCES = (
     "rtl/chip/ot_chip_v41x_packed_attn_service.sv",
