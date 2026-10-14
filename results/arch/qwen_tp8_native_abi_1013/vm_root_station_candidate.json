@@ -2901,7 +2901,7 @@
     "Actual registered source boundary must align to slot N; no raw VM comb export.",
     "Pin ranges are pitch-count screens only: 0.16um pitch must pass actual oriented LEF/grid/PG legality.",
     "No current station RTL/census/CTS/hold/setup qualification.",
-    "CLK_RX blocks direct downward escape for intersecting columns; derive actual west/east detours and registered branch stages.",
+    "Actual g8 generated CLK_RX OBS M1-M7 blocks lower-layer/station occupancy but NOT M8/M9; derive actual top-layer escape PG demand and registered branch stages from source-bound LEF/view receipts.",
     "Separate live load_step from paused core_step; held VM q_v consumed once by fire/token.",
     "Hold/buffer instruction+GO until core accepts; freezing whole508 station deadlocks fill.",
     "Bind context/version dictionary or explicitly priced epoch drain; preserve full address key.",
@@ -3218,5 +3218,12 @@
       "remaining_slots": 13,
       "conclusion": "Chosen69+32 candidate leaves13slots, below even optimistic data-only transportFFcount lowerbound. NewVMownedregionaltransport slots orchangedband/control/equalization contract needed; not a global impossibility proof."
     }
+  },
+  "layer_scope_correction": {
+    "source": "window_audit actual g8 elements.lef, receipt pending",
+    "VM_wall": "OBS M1-M9",
+    "surrounding_generated_frames": "OBS M1-M7, including CLK_RX/tile/band/slab/tt/SEQ/embgw/PLL",
+    "M8_M9_over_CLK_RX": "Not obstructed by that generated OBS; actual PG/access/capacity remains checked",
+    "M6_metadata_plane": "Unavailable through current M7-capped frames; requires actual master recap/view or explicit channel route, not free canopy capacity"
   }
 }
