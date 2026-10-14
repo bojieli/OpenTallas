@@ -10,8 +10,8 @@ left the order to place_pins (dsfd_vm_fxs: slice-major words crossing a 19-um co
 overlapping W regions).  Order = the data flow of the parent: a word's data bits first, its control bits after them, lanes
 / ports left to right as their neighbours are.  Tracks (ASAP7 make_tracks): M5 x 0.012 + 0.048 k, M3 x 0.009 + 0.036 k,
 M4 y 0.012 + 0.048 k; M5 PG stripes of the kit at 0.300 / 0.492 + 5.4 k (0.12 wide).
-dsfd_vm_clt keeps the pins of its closed view (clt8a LEF), so the M5 view drops into the same sub-slot.
-NOT here: dsfd_vm_fld (structural: see el1013-s81-vmfe.log B6)."""
+dsfd_vm_clt: same outline as the closed clt8a view (the sub-slot), pins re-planned clear of the M5 PG stripes (clt_pins).
+dsfd_vm_fld (B7): bit-sliced plan, see fld_plan."""
 import json, re, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
@@ -91,19 +91,13 @@ def emit(pins, w, h, title):
 
 
 def clt_pins():
-    """the closed clt8a view's pins, verbatim (every pin is M5 on N / S)"""
-    lef = (ROOT / VMM / 'views/dsfd_vm_clt/dsfd_vm_clt.lef').read_text().splitlines(); out = []; name = lay = None
-    for l in lef:
-        s = l.split()
-        if not s: continue
-        if s[0] == 'PIN': name, lay = s[1], None
-        elif s[0] == 'OBS': name = None
-        elif s[0] == 'LAYER' and name: lay = s[1]
-        elif s[0] == 'RECT' and name and lay and name not in ('VDD', 'VSS'):
-            x = round((float(s[1]) + float(s[3])) / 2, 3); y = (float(s[2]) + float(s[4])) / 2
-            assert lay == 'M5', (name, lay)
-            out.append(('N' if y > 100 else 'S', name, 'M5', x)); name = None
-    return out
+    """dsfd_vm_clt at M5 (S3): f_c in bit order on N, the capture word in bit order on S, both on M5 + M3 CLEAR of the kit's M5
+    PG stripes.  The closed clt8a view had every pin on M5 at a 0.096 pitch (its PG was M6): an M5-capped tile cannot keep
+    that row (the stripes at 0.300 / 0.492 + 5.4 k would short 2 pins in 56), so the FE N-face f_cap pins follow THIS plan
+    (slot statement in el1011-s81die.log)."""
+    w, h = 80.64, 230.04
+    return plan(w, h, {'N': [v('f_c', 0, 832)],
+                       'S': [['w_v'] + v('w_row', 0, 14) + v('w_m', 0, 16) + v('w_d', 0, 512) + v('flt', 0, 4) + ['sok', 'rn', 'ck'] + v('gid', 0, 4)]})
 
 
 def relay_groups(d, tags=None):
@@ -120,18 +114,62 @@ def relay_groups(d, tags=None):
 FXR = [(146 * j, 146, 1) for j in range(4)]
 FXA = [(0, 143, 1), (143, 14, 0), (157, 143, 1), (300, 143, 1)]
 FXB = [(14 * j, 14, 0) for j in range(6)] + [(84, 142, 1), (226, 142, 1)]
-fxs_n = [x for j in range(4) for x in v('w_v', j) + v('w_row', 14 * j, 14 * j + 14) + v('w_m', 16 * j, 16 * j + 16) + v('w_d', 512 * j, 512 * j + 512)
-         + v('w_flt', 4 * j, 4 * j + 4) + v('rn_o', j) + v('sok_o', j)]
-fxs_s = [x for j in range(4) for x in [y for s in range(4) for y in v('s_o', (4 * j + s) * 147, (4 * j + s) * 147 + 147)] + v('k_o', 32 * j, 32 * j + 32)]
+CLT_P = 80.64
+
+
+def fxs_plan(w, h):
+    """dsfd_vm_fxs under its clt quad: N pins = the clt S pins of lane j at x + 80.64 j (same M5 track: a straight wire, no jog);
+    S pins lane-major under the lane (slice 0 .. 3 words in w_d bit order, then the counter copy), on M3 + the M5 tracks the N
+    pins do not use"""
+    nmap = {'w_v': lambda j, i: f'w_v[{j}]', 'w_row': lambda j, i: f'w_row[{14 * j + i}]', 'w_m': lambda j, i: f'w_m[{16 * j + i}]',
+            'w_d': lambda j, i: f'w_d[{512 * j + i}]', 'flt': lambda j, i: f'w_flt[{4 * j + i}]', 'sok': lambda j, i: f'sok_o[{j}]',
+            'rn': lambda j, i: f'rn_o[{j}]'}
+    out = []; used = set()
+    for j in range(4):
+        for f, nm, lay, x in clt_pins():
+            b = re.sub(r'\[\d+\]$', '', nm); m = re.search(r'\[(\d+)\]$', nm)
+            if f != 'S' or b not in nmap: continue
+            xx = round(x + CLT_P * j, 3); out.append(('N', nmap[b](j, int(m[1]) if m else 0), lay, xx)); used.add((lay, xx))
+        names = [y for s in range(4) for y in v('s_o', (4 * j + s) * 147, (4 * j + s) * 147 + 147)] + v('k_o', 32 * j, 32 * j + 32)
+        lo, hi = CLT_P * j + 2.4, CLT_P * j + 78.2
+        seq = sorted((x, L) for L in ('M5', 'M3') for x in tracks(L, lo, hi)
+                     if not any((L, round(x + d * TRK[L][1], 3)) in used for d in (-1, 0, 1)))
+        keep = []
+        for x, L in seq:                       # >= 2 tracks apart on a layer
+            if not any(L == l2 and abs(x - x2) < 2 * TRK[L][1] - 1e-6 for x2, l2 in keep[-6:]): keep.append((x, L))
+        assert len(keep) >= len(names), (len(keep), len(names))
+        step = len(keep) / len(names)
+        out += [('S', nm, keep[int(i * step)][1], keep[int(i * step)][0]) for i, nm in enumerate(names)]
+    out += [('W', nm, 'M4', y) for nm, y in zip(['ck', 'rni'], tracks('M4', 6.0, 13.0)[::8])]
+    out += [('E', nm, 'M4', y) for nm, y in zip(v('clf_o', 0, 4) + v('rn_o', 4), tracks('M4', 6.0, 13.0)[::8])]
+    return out
+
+
+def fld_plan(w, h):
+    """dsfd_vm_fld as a bit-sliced 10:1 x 2 mux: lanes 0 .. 4 enter on N and 5 .. 9 on S, BIT-major (bit i of the five lanes on
+    adjacent tracks), so every mux bit is local and no word crosses the core sideways (p1-387900581: lane-major words crossing
+    a 47-um core, GRT markers 10,019).  The drained words leave in bit order: slices 0, 1 on W, slices 2, 3 on E."""
+    def face(l0, extra):
+        nm = [f'ret[{526 * l + i}]' for i in range(526) for l in range(l0, l0 + 5)]
+        return nm + extra
+    n_x = [f'{b}[{l}]' for l in range(5) for b in ('av', 'ovf', 'sflt', 'g')] + v('ok', 0, 3)
+    s_x = [f'{b}[{l}]' for l in range(5, 10) for b in ('av', 'ovf', 'sflt', 'g')] + v('ok', 3) + ['rni', 'ck', 'rn_o', 'ovr_o', 'sflt_o'] + v('t_cts', 0, 3)
+    return plan(w, h, {'N': [face(0, n_x)], 'S': [face(5, s_x)],
+                       'W': [v('s_o', 0, 572) + v('k_o', 0, 32)], 'E': [v('s_o', 572, 1144) + v('k_o', 32, 64)]})
+
+
 fxb_in, fxb_out = relay_groups(FXB, tags=list(range(369, 481)))
 fxb_in += ['i[368]']; fxb_out += ['o[368]']
 # leaf: (outline, pins by face (spec), reset ports, exact plan faces or None, pin ranges, route extras, what)
 L = {
- 'clt': ((80.64, 230.04), {'N': ['f_c'], 'S': ['w_v', 'w_row', 'w_m', 'w_d', 'flt', 'ck', 'rn', 'sok', 'gid']}, ['rn'], 'clt', {}, {'pd': 0.4, 'pin_v': 'M3 M5', 'peak_ram_gb': 32},
+ 'clt': ((80.64, 230.04), {'N': ['f_c'], 'S': ['w_v', 'w_row', 'w_m', 'w_d', 'flt', 'ck', 'rn', 'sok', 'gid']}, ['rn'], 'clt', {}, {'pd': 0.4, 'pin_v': 'M3 M5', 'peak_ram_gb': 32}, 
          'capture lane, RT 1 (S3: match / touch terms from registers; bit- and cycle-exact to the closed clt8a RTL)'),
- 'fxs': ((241.92, 23.76), {'N': ['w_v', 'w_row', 'w_m', 'w_d', 'w_flt', 'sok_o', 'rn_o'], 'S': ['s_o', 'k_o', 'clf_o'], 'W': ['ck', 'rni']}, ['rni'],
-         {'N': [(fxs_n + v('rn_o', 4), None, None)], 'S': [(fxs_s + v('clf_o', 0, 4), None, None)], 'W': [['ck', 'rni']]}, {}, {'pin_v': 'M3 M5'},
-         'order tile of 4 capture lanes: each lane\'s clt word in on N, its 4 slice copies + counter copy out on S under it (lane-major)'),
+ 'fxs': ((322.56, 19.44), {'N': ['w_v', 'w_row', 'w_m', 'w_d', 'w_flt', 'sok_o'], 'S': ['s_o', 'k_o'], 'W': ['ck', 'rni'], 'E': ['clf_o', 'rn_o']}, ['rni'],
+         fxs_plan, {}, {'pin_v': 'M3 M5'},
+         'order tile of 4 capture lanes, as wide as its clt quad: each clt word straight in on N (the clt S pins, same tracks), its 4 slice words + counter copy out on S under it (lane-major)'),
+ 'fld': ((172.8, 69.12), {'N': ['ret', 'av', 'ovf', 'sflt', 'g', 'ok'], 'S': ['rni', 'ck', 'rn_o', 'ovr_o', 'sflt_o', 't_cts'], 'W': ['s_o', 'k_o'], 'E': []}, ['rni'],
+         fld_plan, {}, {'pin_v': 'M3 M5', 'peak_ram_gb': 32},
+         'landing drain as a bit-sliced mux: lanes 0 .. 4 in on N, 5 .. 9 on S, bit-major; drained slice words out on W / E'),
  'fxr': ((43.2, 32.4), {'N': ['i_v', 'i'], 'S': ['o_v', 'o'], 'W': ['ck', 'rni'], 'E': ['rn_o']}, ['rni'],
          {'N': [relay_groups(FXR)[0]], 'S': [relay_groups(FXR)[1]], 'W': [['ck', 'rni']], 'E': [v('rn_o', 0, 2)]}, {}, {'pin_v': 'M3 M5'},
          'capture bundle relay (588 b): in-pin flop -> out-pin flop, N to S'),
@@ -158,6 +196,8 @@ L = {
          None, {'k_i': [2.4, 150.0], 's_o': [2.4, 120.0], 'x_o': [122.0, 160.0]}, {**DENSE, 'peak_ram_gb': 48},
          'central: command decode, counter K, done mux, ports 2 / 5 .. 9 order registers, reset root; dv / dt on a stream pin register'),
 }
+STRUCT = {'fld': 'bit-sliced pin plan (lanes bit-major on N / S, drained words on W / E) on a 172.8 x 69.12 outline: no word crosses the core sideways (p1 lane-major face groups: GRT congestion 10,019 markers)',
+          'fxs': 'outline 322.56 x 19.44 = the clt quad, clt words straight N -> S per lane (p1: slice-major S pins, every lane word crossed the core, GRT-0116)'}
 CLOSED_BEFORE = {'clt': 'the closed clt8a view is M6; S3 re-routes it at M5 with the RT 1 match stage (die window sp_vm/u_fe: M6 over the clt row is the parent\'s)',
                  'fxr': 'p1-dcf82afbe closed the 592-b tile; S2 trims it to the 588 non-constant bits', 'fcw': 'p1-dcf82afbe closed with 1,184 s_o pins; S2: 636'}
 TWO = ('fcc', 'fcn')
@@ -172,7 +212,7 @@ for leaf, ((w, h), pins, rst, exact, rng, rx, what) in L.items():
     assert sorted(named) == sorted(ports), (leaf, sorted(set(ports) ^ set(named)))
     s = {'name': f'{top}_m5', 'top': top, 'kind': 'tile', 'sources': SRC + ([f'{SRAM}/ot_sram_1r1w_64x512_m1_r2c2_bb.v'] if leaf == 'flt' else []),
          'orfs_vars': {'VERILOG_INCLUDE_DIRS': 'rtl/dsrom_sys/s81_ph/vm'}, 'clock_port': 'ck', 'reset_ports': rst,
-         'outline': {'w': w, 'h': h}, 'pins': pins, 'pin_ranges': rng,
+         'outline': {'w': w, 'h': h, **({'exact': True} if leaf in ('clt', 'fxs') else {})}, 'pins': pins, 'pin_ranges': rng,
          'macros': [{'view': SRAM, 'count': 1, 'at': [22.464, 25.92]}] if leaf == 'flt' else [],
          'route': {'pd': 0.5, 'threads': 8, 'peak_ram_gb': 24, 'hold_margin_ns': 0.03 if leaf == 'flt' else 0.01, **rx},
          'job': {'owner': 'Claude:el1013-s81-vmfe/B6', 'branch': 'claude/el1013-s81-vmfe', 'tag': 'p2', 'extra_paths': EXTRA,
@@ -194,6 +234,8 @@ for leaf, ((w, h), pins, rst, exact, rng, rx, what) in L.items():
         s['job']['benched_by'] = 's81_vm_fe_h_lockstep'
     if leaf in CLOSED_BEFORE:
         s['reroute_reason'] = {'kind': 'rtl_change', 'why': CLOSED_BEFORE[leaf]}
+    if leaf in STRUCT:
+        s['structural_change'] = STRUCT[leaf]
     if leaf in TWO:
         s['sdc_extra'] = [f'{VMM}/fe_h_str_clock_ref.sdc']; s['boundary_tcl'] = [f'{VMM}/fe_h_str_boundary.tcl']
     if leaf == 'flt':
@@ -201,7 +243,7 @@ for leaf, ((w, h), pins, rst, exact, rng, rx, what) in L.items():
     else:
         s.update(recipe=1, inhold=True, inhold_drv='BUFx4f_ASAP7_75t_R')
     if exact:
-        pl = clt_pins() if exact == 'clt' else plan(w, h, exact)
+        pl = clt_pins() if exact == 'clt' else exact(w, h) if callable(exact) else plan(w, h, exact)
         got = sorted({re.sub(r'\[\d+\]$', '', nm) for _, nm, _, _ in pl})
         assert got == sorted(ports), (leaf, sorted(set(got) ^ set(ports)))
         nb = {p: 0 for p in ports}

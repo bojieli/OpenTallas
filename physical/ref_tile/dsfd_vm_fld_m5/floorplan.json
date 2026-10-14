@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  259.2,
-  47.52
+  172.8,
+  69.12
  ],
  "core": [
   2.16,
   2.16,
-  257.03999999999996,
-  45.36
+  170.64000000000001,
+  66.96000000000001
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -30,25 +30,26 @@
  },
  "pins": {
   "N": [
-   "ret"
+   "ret",
+   "av",
+   "ovf",
+   "sflt",
+   "g",
+   "ok"
   ],
   "S": [
-   "s_o",
-   "k_o",
-   "g",
-   "t_cts",
+   "rni",
+   "ck",
+   "rn_o",
    "ovr_o",
    "sflt_o",
-   "rn_o",
-   "av",
-   "ok",
-   "ovf",
-   "sflt"
+   "t_cts"
   ],
   "W": [
-   "ck",
-   "rni"
-  ]
+   "s_o",
+   "k_o"
+  ],
+  "E": []
  },
  "clock_port": "ck",
  "blocks": [],
@@ -81,6 +82,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_ph_views/vm_master/fe_h_pins/dsfd_vm_fld.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl"
  ]
