@@ -3,8 +3,9 @@
 // Actual four B2 slices. Shared group1 classes: 0 SU, 1 quant, 2 DMA peer.
 // Native DMA front writes use separate done-only DQ transport, never WRS credits.
 // Source ingress capacity is reserved before posting; permits govern dequeue only.
-module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,SU_NATIVE_RAW=0,HARD_CLOCKS=0)(
+module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,SU_NATIVE_RAW=0,HARD_CLOCKS=0,HARD_VM_CLOCKS=0,VM_NC=4)(
  input wire [3:0] su_clk,quant_clk,dma_clk,input wire vclk,rst_n,input wire [31:0] station_clk,
+ input wire [51:0] vm_child_clk,vm_child_rst_n,input wire [23:0] relay_clk,relay_rst_n,
  input wire [3:0] su_rreq,su_wreq,su_drained,su_mirror,
  input wire [32*17-1:0] su_native_rq,input wire [32*281-1:0] su_native_wq,
  input wire [32*16-1:0] su_rq,output wire [31:0] su_rcredit,output wire [32*257-1:0] su_rr,
@@ -109,7 +110,7 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
  for(genvar b=0;b<32;b=b+1)begin:global_commit
   ot_hbm_b2_mirror_commit #(.MUT(MUT==3?1:0)) commit(.clk(vclk),.rst_n(rst_n),.posted(bwq[b*281+280]),.mirror(bwq[b*281+279]),.local_done(local_bd[b]),.global_busy(|mirror_busy),.done(bd[b]),.fault(mirror_fault[b]));
  end
- ot_hbm_b2_su_vm4_mirror vm(.cclk(probe_clk),.vclk(vclk),.rst_n(rst_n),.permit(probe_permit),.mirror(probe_mirror),
+ ot_hbm_b2_su_vm4_mirror #(.NC(VM_NC),.HARD_CLOCKS(HARD_VM_CLOCKS)) vm(.vm_child_clk(vm_child_clk),.vm_child_rst_n(vm_child_rst_n),.relay_clk(relay_clk),.relay_rst_n(relay_rst_n),.cclk(probe_clk),.vclk(vclk),.rst_n(rst_n),.permit(probe_permit),.mirror(probe_mirror),
   .crq(probe_rq),.crq_credit(probe_rcredit),.crr(probe_rr),.cwq(probe_wq),.cwq_credit(probe_wcredit),.cwq_done(probe_done),
   .peer_rq(brq),.peer_rq_credit(brc),.peer_rr(brr),.peer_wq(bwq),.peer_wq_credit(bwc),.peer_wq_done(local_bd),.dma_q(dma_dq),.dma_done(dma_dq_done),.fault(vf),.mirror_busy(mirror_busy),.bank_status(bank_status));
 endmodule
