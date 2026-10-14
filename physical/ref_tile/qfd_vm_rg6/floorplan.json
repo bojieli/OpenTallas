@@ -38,7 +38,53 @@
    "M2",
    "M9"
   ],
-  "strap_layer": "M8"
+  "strap_layer": "M8",
+  "cluster_layer_grant": {
+   "source": "results/arch/qwen_tp8_1012/vm_cluster_layer_grant_1013.json",
+   "sha256": "dfff006291c0497d481a03af6e51ece7ee87222eb214355527f4e7e59f67bf2b",
+   "obligations": {
+    "schema": "opentallas.cluster-layer-grant.v1",
+    "authority": "Qwen die lead 2026-10-13 19:11 PDT VM ANSWERS (2), binding in contract v5",
+    "source_log": "/home/ubuntu/claude-takeover-20261007/el1011-qwen-tp8.log",
+    "signal_cap": "M9",
+    "masters": [
+     "qfd_vm_rg0",
+     "qfd_vm_rg1",
+     "qfd_vm_rg2",
+     "qfd_vm_rg3",
+     "qfd_vm_rg4",
+     "qfd_vm_rg5",
+     "qfd_vm_rg6",
+     "qfd_vm_rg7",
+     "qfd_vm_band"
+    ],
+    "rectangle_um": {
+     "x": 13284.0,
+     "y": 17051.04,
+     "w": 4838.4,
+     "h": 2546.64
+    },
+    "no_die_signal_through_traffic": true,
+    "die_pg_layers": [
+     "M8",
+     "M9"
+    ],
+    "die_pg": {
+     "width_um": 0.48,
+     "pitch_um": 9.091,
+     "global_offset_um": 0,
+     "starts_with": "GROUND"
+    },
+    "requires_phase_aligned_die_pg": true,
+    "requirements": [
+     "Only die PG M8/M9 over the VM rectangle; no die signal, clock trunk or reset branch crosses",
+     "Die planner treats VM as full M1-M9 wall; placeholder OBS becomes M1-M9",
+     "Cluster PG pins reproduce die straps at phase derived from actual die core origin and cluster placement",
+     "Count M8/M9 lane capacity at94.7percent",
+     "A hold_merge pilot may measure before phase signoff; production requires exact phase audit"
+    ]
+   }
+  }
  },
  "pins": {
   "S": [

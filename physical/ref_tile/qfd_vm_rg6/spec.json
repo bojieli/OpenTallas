@@ -1898,7 +1898,8 @@
    "rtl/qwen_sys/rtl_finish_20261007",
    "rtl/hdc",
    "rtl/physical",
-   "results/arch/qwen_tp8_1012/vm_rg6.json"
+   "results/arch/qwen_tp8_1012/vm_rg6.json",
+   "physical/qwen_vm_region_1013"
   ],
   "benches": [
    {
@@ -1933,7 +1934,14 @@
    }
   ]
  },
+ "cluster_layer_grant": {
+  "source": "results/arch/qwen_tp8_1012/vm_cluster_layer_grant_1013.json",
+  "sha256": "dfff006291c0497d481a03af6e51ece7ee87222eb214355527f4e7e59f67bf2b"
+ },
  "macros": [],
+ "orfs_vars": {
+  "PDN_TCL": "/src/physical/qwen_vm_region_1013/rg6_pdn.tcl"
+ },
  "recipe": 2,
  "io_flop_at_pins": {
   "cols": 4,
