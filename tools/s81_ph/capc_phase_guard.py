@@ -97,4 +97,9 @@ def validate(view, state_root, db_hash=None):
     for name in ("audit.tcl", "audit.log"):
         if sha(view / name) != receipt["audit_sha256"][name]:
             raise ValueError("capture phase audit: audit evidence changed")
+    logged = [json.loads(line.removeprefix("OT_CAPTURE_PHASE "))
+              for line in (view / "audit.log").read_text().splitlines()
+              if line.startswith("OT_CAPTURE_PHASE ")]
+    if logged != receipt["paths"]:
+        raise ValueError("capture phase audit: receipt paths differ from actual audit log")
     return receipt

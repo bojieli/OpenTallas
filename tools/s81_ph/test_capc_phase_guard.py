@@ -27,12 +27,14 @@ class PhaseGuard(unittest.TestCase):
         for name in ['abstract.json', 'dsfd_capt_x8_dual.lef'] + ['dsfd_capt_x8_dual_'+c+'.lib' for c in ('tt', 'ff', 'ss')]:
             (self.view / name).write_text('isolated validation fixture\n')
         for name in ('audit.tcl', 'audit.log'): (self.view / name).write_text('isolated validation fixture\n')
+        paths=[dict(corner=c, launch=a, capture=b, sense=s, startpoint='actual/Q', endpoint='actual/D', slack_ps=1.0) for c in ('tt','ff') for a,b in [('core','serial'),('serial','core')] for s in ('max','min')]
+        (self.view/'audit.log').write_text(''.join('OT_CAPTURE_PHASE '+json.dumps(p)+'\n' for p in paths))
         self.receipt = dict(schema='opentallas.capture.routed_phase_audit.v1', job='fixture', source_commit=commit, source_binding=binding,
             view_sha256={p.name: guard.sha(p) for p in self.view.iterdir() if p.name not in ('audit.tcl','audit.log')},
             routed_db=dict(path=ins['base']+'/6_final.odb', sha256='db-fixture-hash'), phase='pin_source_latency_minus_boundary_R', parasitics='spef',
             period_ps=dict(core=833.333, serial=1111.110667), setup_uncertainty_ps=60, hold_uncertainty_ps=25, cross_domain_exceptions=[],
             clock_R_ps={c: dict(ck=174.3, ckv=204.6) for c in ('tt','ff')},
-            paths=[dict(corner=c, launch=a, capture=b, sense=s, startpoint='actual/Q', endpoint='actual/D', slack_ps=1.0) for c in ('tt','ff') for a,b in [('core','serial'),('serial','core')] for s in ('max','min')],
+            paths=paths,
             audit_sha256={n: guard.sha(self.view/n) for n in ('audit.tcl','audit.log')})
 
     def check(self, receipt=None, digest='db-fixture-hash'):
@@ -67,5 +69,9 @@ class PhaseGuard(unittest.TestCase):
     def test_rejects_route_periods(self):
         r=copy.deepcopy(self.receipt); r['period_ps']=dict(core=770,serial=1026.666667)
         with self.assertRaisesRegex(ValueError,'nominal'): self.check(r)
+
+    def test_rejects_receipt_log_disagreement(self):
+        r=copy.deepcopy(self.receipt); r['paths'][0]['slack_ps']=99
+        with self.assertRaisesRegex(ValueError,'actual audit log'): self.check(r)
 
 if __name__ == '__main__': unittest.main()
