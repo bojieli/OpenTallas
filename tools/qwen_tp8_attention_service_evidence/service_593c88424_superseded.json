@@ -481,5 +481,12 @@
     "Checkpoint vector arithmetic has preloaded current KV and declared synthetic previous FP8 history",
     "No VM storecommit or full layer/token proof",
     "No routed physical or rate qualification"
-  ]
+  ],
+  "diagnostic": {
+    "source_cpp_sha256": "2f9369c3e2952088bb0242088b6a1c6186c2eff018b60f193c8137bf9ef0b864",
+    "binary_sha256": "fa7e5d6914155f1dd2f6fcbf0502d7cde50665254167a86871340287ed5637dc",
+    "unit": "oth-ubuntu-746975-1791961815.scope",
+    "actual_outer_exit": 1,
+    "method": "Read-only internal e/sc/M/RZ state printing in C++; links same frozen593 compiled model archive and RTL. No state forcing, RTL changes, or exponent injection."
+  }
 }
