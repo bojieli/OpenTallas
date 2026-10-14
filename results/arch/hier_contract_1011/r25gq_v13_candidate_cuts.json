@@ -1,0 +1,3004 @@
+{
+ "variant": "r25gqn_v13",
+ "limit": 0.6,
+ "worst": 0.431,
+ "verdict": "PASS",
+ "cuts": {
+  "X_centre_full": {
+   "axis": "x",
+   "pos_um": 16492.2,
+   "span_um": [
+    0.0,
+    25978.9
+   ],
+   "what": "full die",
+   "bits": 63631,
+   "tracks": 601598,
+   "channel_um": 16175.2,
+   "util": 0.106,
+   "top": [
+    [
+     "xt_SE",
+     4136
+    ],
+    [
+     "vring_SW_SE",
+     2148
+    ],
+    [
+     "vring_SE_SW",
+     2148
+    ],
+    [
+     "vring_NW_NE",
+     2148
+    ],
+    [
+     "vring_NE_NW",
+     2148
+    ]
+   ],
+   "by_class": {
+    "hub": 41763,
+    "x_trunk": 8272,
+    "link_flit": 4480,
+    "link": 3896,
+    "index_native": 2990,
+    "control": 899
+   }
+  },
+  "Y_centre_full": {
+   "axis": "y",
+   "pos_um": 12989.5,
+   "span_um": [
+    0.0,
+    32984.4
+   ],
+   "what": "full die",
+   "bits": 55266,
+   "tracks": 923362,
+   "channel_um": 27744.4,
+   "util": 0.06,
+   "top": [
+    [
+     "vring_SW_NW",
+     2148
+    ],
+    [
+     "vring_NW_SW",
+     2148
+    ],
+    [
+     "vring_SE_NE",
+     2148
+    ],
+    [
+     "vring_NE_SE",
+     2148
+    ],
+    [
+     "hgi_idx_cmd",
+     2075
+    ]
+   ],
+   "by_class": {
+    "hub": 40062,
+    "link_flit": 6732,
+    "attn_query": 2328,
+    "x_trunk": 2068,
+    "control": 1798,
+    "index_native": 1762
+   }
+  },
+  "x12_hub": {
+   "axis": "x",
+   "pos_um": 12000.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 10170,
+   "tracks": 105402,
+   "channel_um": 2220.5,
+   "util": 0.096,
+   "top": [
+    [
+     "xt_SW",
+     2068
+    ],
+    [
+     "hgi_lgsw_tap_rdn_sfu_SW_",
+     2065
+    ],
+    [
+     "vmap_SW",
+     1200
+    ],
+    [
+     "vmap_NW",
+     1200
+    ],
+    [
+     "hgi_hc_cmd",
+     939
+    ]
+   ],
+   "by_class": {
+    "hub": 6621,
+    "x_trunk": 2068,
+    "control": 899,
+    "attn_query": 582
+   }
+  },
+  "x13_hub": {
+   "axis": "x",
+   "pos_um": 13000.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 19406,
+   "tracks": 105402,
+   "channel_um": 2220.5,
+   "util": 0.184,
+   "top": [
+    [
+     "hgi_lgnw_wup_1",
+     2243
+    ],
+    [
+     "hb_su_SW_vm_q0n0",
+     2048
+    ],
+    [
+     "xt_SW_3_t0_w0_q1n0",
+     1040
+    ],
+    [
+     "hgi_lgsw_rdn_1_3_t1_w0_q",
+     1040
+    ],
+    [
+     "hgi_lgnw_rdn_1_2_t1_w0_q",
+     1040
+    ]
+   ],
+   "by_class": {
+    "hub": 15857,
+    "x_trunk": 2068,
+    "control": 899,
+    "attn_query": 582
+   }
+  },
+  "x14_hub": {
+   "axis": "x",
+   "pos_um": 14000.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 32023,
+   "tracks": 156226,
+   "channel_um": 4516.6,
+   "util": 0.205,
+   "top": [
+    [
+     "lk_lk_N1",
+     2244
+    ],
+    [
+     "hgi_su_cmd",
+     2198
+    ],
+    [
+     "tkm_del",
+     2180
+    ],
+    [
+     "hgi_lgnw_rdn_1",
+     2067
+    ],
+    [
+     "hgi_sfu_cmd",
+     1174
+    ]
+   ],
+   "by_class": {
+    "hub": 21179,
+    "link_flit": 7854,
+    "control": 1798,
+    "index_native": 610,
+    "attn_query": 582
+   }
+  },
+  "x14.4_hub": {
+   "axis": "x",
+   "pos_um": 14400.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 40081,
+   "tracks": 189062,
+   "channel_um": 6000.0,
+   "util": 0.212,
+   "top": [
+    [
+     "vxl_SW",
+     4130
+    ],
+    [
+     "tkm_del",
+     2180
+    ],
+    [
+     "vring_NW_NE",
+     2148
+    ],
+    [
+     "vring_NE_NW",
+     2148
+    ],
+    [
+     "vrc_cp_wup_w0_q0n0",
+     1136
+    ]
+   ],
+   "by_class": {
+    "hub": 29771,
+    "link_flit": 6732,
+    "control": 1798,
+    "attn_query": 1164,
+    "index_native": 616
+   }
+  },
+  "x15_hub": {
+   "axis": "x",
+   "pos_um": 15000.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 16524,
+   "tracks": 117230,
+   "channel_um": 2754.8,
+   "util": 0.141,
+   "top": [
+    [
+     "xt_SW",
+     2068
+    ],
+    [
+     "lk_lk_N3_0_q0n5",
+     1122
+    ],
+    [
+     "hgi_su_cmd_w1",
+     1094
+    ],
+    [
+     "vring_NE_NW_5_t2_w0",
+     1088
+    ],
+    [
+     "vring_NE_NW_5_t2_w1",
+     1060
+    ]
+   ],
+   "by_class": {
+    "hub": 12164,
+    "x_trunk": 2068,
+    "link_flit": 1122,
+    "attn_query": 582,
+    "index_native": 575,
+    "loader_mem": 13
+   }
+  },
+  "x15.5_hub": {
+   "axis": "x",
+   "pos_um": 15500.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 12760,
+   "tracks": 117230,
+   "channel_um": 2754.8,
+   "util": 0.109,
+   "top": [
+    [
+     "xt_SW",
+     2068
+    ],
+    [
+     "lk_lk_S1_0_q0n0",
+     1122
+    ],
+    [
+     "lk_lk_N3_0_q0n4",
+     1122
+    ],
+    [
+     "vcb_coll_SE_0_q0n0",
+     1088
+    ],
+    [
+     "hb_su_SW_su_SE",
+     1024
+    ]
+   ],
+   "by_class": {
+    "hub": 7280,
+    "link_flit": 2244,
+    "x_trunk": 2068,
+    "attn_query": 582,
+    "index_native": 573,
+    "loader_mem": 13
+   }
+  },
+  "x16_hub": {
+   "axis": "x",
+   "pos_um": 16000.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 18610,
+   "tracks": 117230,
+   "channel_um": 2754.8,
+   "util": 0.159,
+   "top": [
+    [
+     "vring_NE_NW",
+     2148
+    ],
+    [
+     "hgi_idx_cmd",
+     2075
+    ],
+    [
+     "xt_SW",
+     2068
+    ],
+    [
+     "lk_lk_N3_0_q0n3",
+     1122
+    ],
+    [
+     "vcb_coll_SE_0_q0n1",
+     1088
+    ]
+   ],
+   "by_class": {
+    "hub": 14246,
+    "x_trunk": 2068,
+    "link_flit": 1122,
+    "attn_query": 582,
+    "index_native": 579,
+    "loader_mem": 13
+   }
+  },
+  "x16.5_hub": {
+   "axis": "x",
+   "pos_um": 16500.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 23228,
+   "tracks": 189062,
+   "channel_um": 6000.0,
+   "util": 0.123,
+   "top": [
+    [
+     "vring_NW_NE",
+     2148
+    ],
+    [
+     "vring_NE_NW",
+     2148
+    ],
+    [
+     "xt_SE_0_t3_q0n2",
+     2068
+    ],
+    [
+     "idx_score_NE",
+     1224
+    ],
+    [
+     "vrc_att_wup_0_w0",
+     1136
+    ]
+   ],
+   "by_class": {
+    "hub": 18561,
+    "x_trunk": 2068,
+    "index_native": 1797,
+    "host": 789,
+    "loader_mem": 13
+   }
+  },
+  "x17_hub": {
+   "axis": "x",
+   "pos_um": 17000.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 33248,
+   "tracks": 154398,
+   "channel_um": 4434.0,
+   "util": 0.215,
+   "top": [
+    [
+     "vring_SE_NE",
+     4296
+    ],
+    [
+     "vrc_att_wup",
+     2241
+    ],
+    [
+     "vcb_SE_NE",
+     2176
+    ],
+    [
+     "vring_NE_SE",
+     2148
+    ],
+    [
+     "vring_NW_NE",
+     2148
+    ]
+   ],
+   "by_class": {
+    "hub": 30405,
+    "control": 899,
+    "host": 789,
+    "attn_query": 582,
+    "index_native": 573
+   }
+  },
+  "x18_hub": {
+   "axis": "x",
+   "pos_um": 18000.0,
+   "span_um": [
+    10000.0,
+    16000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 33289,
+   "tracks": 121562,
+   "channel_um": 2950.6,
+   "util": 0.274,
+   "top": [
+    [
+     "hb_su_SE_vm",
+     10240
+    ],
+    [
+     "xt_SE",
+     2068
+    ],
+    [
+     "vrc_hce_wup_0_w0_q0n4",
+     1136
+    ],
+    [
+     "vrc_hce_wup_0_w1_q0n4",
+     1105
+    ],
+    [
+     "vrc_hce_wup_3_w1_q0n0",
+     1105
+    ]
+   ],
+   "by_class": {
+    "hub": 28951,
+    "x_trunk": 2068,
+    "control": 899,
+    "host": 789,
+    "attn_query": 582
+   }
+  },
+  "y10_hub": {
+   "axis": "y",
+   "pos_um": 10000.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 27610,
+   "tracks": 130261,
+   "channel_um": 3343.5,
+   "util": 0.212,
+   "top": [
+    [
+     "lk_lk_S0",
+     3366
+    ],
+    [
+     "lk_lk_S2",
+     2244
+    ],
+    [
+     "xt_SE",
+     2068
+    ],
+    [
+     "hgi_lgsw_wup_1_6_t0_w0",
+     1136
+    ],
+    [
+     "lk_lk_S0_1_t12_q0n0",
+     1122
+    ]
+   ],
+   "by_class": {
+    "link_flit": 13464,
+    "hub": 9198,
+    "index_native": 2364,
+    "x_trunk": 2068,
+    "expert_req": 516
+   }
+  },
+  "y11_hub": {
+   "axis": "y",
+   "pos_um": 11000.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 37320,
+   "tracks": 158081,
+   "channel_um": 4600.3,
+   "util": 0.236,
+   "top": [
+    [
+     "hgi_su_cmd_t10_q0n0",
+     2198
+    ],
+    [
+     "xt_SE",
+     2068
+    ],
+    [
+     "hb_vm_su_SW",
+     2048
+    ],
+    [
+     "hb_su_SW_vm_q0n1",
+     2048
+    ],
+    [
+     "hb_su_SW_su_SE",
+     2048
+    ]
+   ],
+   "by_class": {
+    "hub": 32045,
+    "x_trunk": 2068,
+    "index_native": 1792,
+    "control": 899,
+    "expert_req": 516
+   }
+  },
+  "y12_hub": {
+   "axis": "y",
+   "pos_um": 12000.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 35340,
+   "tracks": 131753,
+   "channel_um": 3411.0,
+   "util": 0.268,
+   "top": [
+    [
+     "hgi_su_cmd",
+     2198
+    ],
+    [
+     "vring_SW_NW",
+     2148
+    ],
+    [
+     "vring_NW_SW",
+     2148
+    ],
+    [
+     "vring_NE_SE",
+     2148
+    ],
+    [
+     "xt_SE",
+     2068
+    ]
+   ],
+   "by_class": {
+    "hub": 28426,
+    "link_flit": 2244,
+    "x_trunk": 2068,
+    "index_native": 1187,
+    "control": 899,
+    "expert_req": 516
+   }
+  },
+  "y12.5_hub": {
+   "axis": "y",
+   "pos_um": 12500.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 44121,
+   "tracks": 162367,
+   "channel_um": 4794.0,
+   "util": 0.272,
+   "top": [
+    [
+     "hgi_su_cmd",
+     2198
+    ],
+    [
+     "vring_SW_NW",
+     2148
+    ],
+    [
+     "vring_NW_SW",
+     2148
+    ],
+    [
+     "vring_SE_NE",
+     2148
+    ],
+    [
+     "hgi_idx_cmd",
+     2075
+    ]
+   ],
+   "by_class": {
+    "hub": 33417,
+    "link_flit": 3366,
+    "index_native": 2374,
+    "x_trunk": 2068,
+    "control": 1798,
+    "attn_query": 582
+   }
+  },
+  "y13_hub": {
+   "axis": "y",
+   "pos_um": 13000.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 48819,
+   "tracks": 162367,
+   "channel_um": 4794.0,
+   "util": 0.301,
+   "top": [
+    [
+     "hgi_su_cmd",
+     2198
+    ],
+    [
+     "vring_SW_NW",
+     2148
+    ],
+    [
+     "vring_NW_SW",
+     2148
+    ],
+    [
+     "vring_SE_NE",
+     2148
+    ],
+    [
+     "vring_NE_SE",
+     2148
+    ]
+   ],
+   "by_class": {
+    "hub": 37056,
+    "link_flit": 5610,
+    "x_trunk": 2068,
+    "control": 1798,
+    "index_native": 1189,
+    "attn_query": 582
+   }
+  },
+  "y14_hub": {
+   "axis": "y",
+   "pos_um": 14000.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 48037,
+   "tracks": 162735,
+   "channel_um": 4810.6,
+   "util": 0.295,
+   "top": [
+    [
+     "tkm_del",
+     2180
+    ],
+    [
+     "vring_SW_NW",
+     2148
+    ],
+    [
+     "vring_SE_NE",
+     2148
+    ],
+    [
+     "hgi_idx_cmd",
+     2075
+    ],
+    [
+     "xt_SW_2_t0_q0n0",
+     2068
+    ]
+   ],
+   "by_class": {
+    "hub": 35849,
+    "x_trunk": 4136,
+    "link_flit": 3366,
+    "index_native": 2372,
+    "control": 1798,
+    "expert_req": 516
+   }
+  },
+  "y14.6_hub": {
+   "axis": "y",
+   "pos_um": 14600.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 41700,
+   "tracks": 131753,
+   "channel_um": 3411.0,
+   "util": 0.317,
+   "top": [
+    [
+     "vring_SW_NW",
+     2148
+    ],
+    [
+     "vring_NW_SW",
+     2148
+    ],
+    [
+     "vring_NE_SE",
+     2148
+    ],
+    [
+     "xt_SW",
+     2068
+    ],
+    [
+     "xt_SE",
+     2068
+    ]
+   ],
+   "by_class": {
+    "hub": 29284,
+    "link_flit": 4488,
+    "x_trunk": 4136,
+    "index_native": 2370,
+    "attn_query": 1164,
+    "expert_req": 258
+   }
+  },
+  "y15_hub": {
+   "axis": "y",
+   "pos_um": 15000.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 55725,
+   "tracks": 158081,
+   "channel_um": 4600.3,
+   "util": 0.353,
+   "top": [
+    [
+     "lk_lk_N2",
+     4488
+    ],
+    [
+     "tkm_del",
+     4360
+    ],
+    [
+     "lk_lk_N1",
+     2244
+    ],
+    [
+     "xt_SW",
+     2068
+    ],
+    [
+     "xt_SE_0_t3_q0n3",
+     2068
+    ]
+   ],
+   "by_class": {
+    "hub": 38311,
+    "link_flit": 10098,
+    "x_trunk": 4136,
+    "index_native": 1758,
+    "attn_query": 1164,
+    "expert_req": 258
+   }
+  },
+  "y16_hub": {
+   "axis": "y",
+   "pos_um": 16000.0,
+   "span_um": [
+    12000.0,
+    18000.0
+   ],
+   "what": "hub line (cuts_v07)",
+   "bits": 37488,
+   "tracks": 105622,
+   "channel_um": 2230.4,
+   "util": 0.355,
+   "top": [
+    [
+     "lk_lk_N2",
+     3366
+    ],
+    [
+     "vxl_SW",
+     2065
+    ],
+    [
+     "vxl_SE",
+     2065
+    ],
+    [
+     "hb_vm_su_SW",
+     2048
+    ],
+    [
+     "hb_vm_su_SE",
+     2048
+    ]
+   ],
+   "by_class": {
+    "hub": 24878,
+    "link_flit": 6732,
+    "index_native": 2374,
+    "control": 1798,
+    "attn_query": 1164,
+    "expert_req": 516
+   }
+  },
+  "hb_tkm_W": {
+   "axis": "x",
+   "pos_um": 8566.3,
+   "span_um": [
+    15777.8,
+    18622.4
+   ],
+   "what": "235-um channel W of hb_tkm",
+   "bits": 3593,
+   "tracks": 89636,
+   "channel_um": 2844.6,
+   "util": 0.04,
+   "top": [
+    [
+     "rt_NW",
+     2165
+    ],
+    [
+     "cd_NW",
+     899
+    ],
+    [
+     "tr_NW0",
+     529
+    ]
+   ],
+   "by_class": {
+    "result_trunk": 2165,
+    "control": 899,
+    "attn_out": 529
+   }
+  },
+  "hb_tkm_E": {
+   "axis": "x",
+   "pos_um": 11056.0,
+   "span_um": [
+    15777.8,
+    18622.4
+   ],
+   "what": "235-um channel E of hb_tkm",
+   "bits": 8278,
+   "tracks": 89636,
+   "channel_um": 2844.6,
+   "util": 0.092,
+   "top": [
+    [
+     "rt_NW_e_t2_q0n0",
+     2165
+    ],
+    [
+     "xt_NW",
+     2068
+    ],
+    [
+     "hb_su_NW_vm_q0n5",
+     2048
+    ],
+    [
+     "ct_NW",
+     899
+    ],
+    [
+     "tr_NW0",
+     529
+    ]
+   ],
+   "by_class": {
+    "result_trunk": 2165,
+    "hub": 2088,
+    "x_trunk": 2068,
+    "attn_out": 1058,
+    "control": 899
+   }
+  },
+  "hb_coll_E": {
+   "axis": "x",
+   "pos_um": 16464.8,
+   "span_um": [
+    10401.5,
+    12963.2
+   ],
+   "what": "658-um channel E of hb_coll",
+   "bits": 8884,
+   "tracks": 80720,
+   "channel_um": 2561.7,
+   "util": 0.11,
+   "top": [
+    [
+     "vcb_coll_SE_0_q0n2",
+     1088
+    ],
+    [
+     "hgi_idx_cmd_t10_w0_q0n2",
+     1040
+    ],
+    [
+     "hgi_idx_cmd_t10_w0_q0n6",
+     1040
+    ],
+    [
+     "hb_su_SE_coll",
+     1024
+    ],
+    [
+     "hb_su_NE_coll_t11_q0n0",
+     1024
+    ]
+   ],
+   "by_class": {
+    "hub": 8095,
+    "host": 789
+   }
+  },
+  "hb_coll_S": {
+   "axis": "y",
+   "pos_um": 10750.3,
+   "span_um": [
+    14236.0,
+    16635.6
+   ],
+   "what": "302-um channel S of hb_coll",
+   "bits": 22524,
+   "tracks": 75614,
+   "channel_um": 2399.7,
+   "util": 0.298,
+   "top": [
+    [
+     "xt_SE",
+     2068
+    ],
+    [
+     "hb_su_SW_su_SE",
+     2048
+    ],
+    [
+     "lk_lk_S0",
+     1122
+    ],
+    [
+     "lk_lk_S0_1_t12_q0n2",
+     1122
+    ],
+    [
+     "lk_lk_S1",
+     1122
+    ]
+   ],
+   "by_class": {
+    "hub": 9722,
+    "link_flit": 7854,
+    "index_native": 2364,
+    "x_trunk": 2068,
+    "expert_req": 516
+   }
+  },
+  "hb_cmdproc_W": {
+   "axis": "x",
+   "pos_um": 14543.1,
+   "span_um": [
+    13833.8,
+    16237.7
+   ],
+   "what": "386-um channel W of hb_cmdproc",
+   "bits": 31075,
+   "tracks": 75750,
+   "channel_um": 2404.0,
+   "util": 0.41,
+   "top": [
+    [
+     "lk_lk_N0",
+     2244
+    ],
+    [
+     "lk_lk_N2",
+     2244
+    ],
+    [
+     "vring_NW_NE",
+     2148
+    ],
+    [
+     "vring_NE_NW",
+     2148
+    ],
+    [
+     "xt_SW",
+     2068
+    ]
+   ],
+   "by_class": {
+    "hub": 17938,
+    "link_flit": 8976,
+    "x_trunk": 2068,
+    "control": 899,
+    "index_native": 612,
+    "attn_query": 582
+   }
+  },
+  "hb_cmdproc_N": {
+   "axis": "y",
+   "pos_um": 15847.9,
+   "span_um": [
+    14236.0,
+    16635.6
+   ],
+   "what": "220-um channel N of hb_cmdproc",
+   "bits": 31514,
+   "tracks": 73086,
+   "channel_um": 2285.4,
+   "util": 0.431,
+   "top": [
+    [
+     "hb_su_NE_su_NW",
+     3072
+    ],
+    [
+     "lk_lk_N2",
+     2244
+    ],
+    [
+     "vring_NW_NE",
+     2148
+    ],
+    [
+     "vring_NE_NW",
+     2148
+    ],
+    [
+     "xt_SE_0_t3_q0n1",
+     2068
+    ]
+   ],
+   "by_class": {
+    "hub": 21710,
+    "link_flit": 5610,
+    "x_trunk": 2068,
+    "attn_query": 1164,
+    "index_native": 575,
+    "expert_req": 387
+   }
+  },
+  "hb_quant_W": {
+   "axis": "x",
+   "pos_um": 14711.5,
+   "span_um": [
+    15458.1,
+    17106.1
+   ],
+   "what": "49-um channel W of hb_quant",
+   "bits": 20638,
+   "tracks": 51929,
+   "channel_um": 1648.0,
+   "util": 0.397,
+   "top": [
+    [
+     "xt_SW",
+     2068
+    ],
+    [
+     "vxl_SW",
+     2065
+    ],
+    [
+     "vrc_cp_wup_w0",
+     1136
+    ],
+    [
+     "vrc_q_wup_w0",
+     1136
+    ],
+    [
+     "vrc_cp_wup_w1",
+     1105
+    ]
+   ],
+   "by_class": {
+    "hub": 17015,
+    "x_trunk": 2068,
+    "attn_query": 582,
+    "index_native": 573,
+    "expert_req": 387,
+    "loader_mem": 13
+   }
+  },
+  "hb_quant_S": {
+   "axis": "y",
+   "pos_um": 15847.9,
+   "span_um": [
+    14236.0,
+    16635.6
+   ],
+   "what": "220-um channel S of hb_quant",
+   "bits": 31514,
+   "tracks": 73086,
+   "channel_um": 2285.4,
+   "util": 0.431,
+   "top": [
+    [
+     "hb_su_NE_su_NW",
+     3072
+    ],
+    [
+     "lk_lk_N2",
+     2244
+    ],
+    [
+     "vring_NW_NE",
+     2148
+    ],
+    [
+     "vring_NE_NW",
+     2148
+    ],
+    [
+     "xt_SE_0_t3_q0n1",
+     2068
+    ]
+   ],
+   "by_class": {
+    "hub": 21710,
+    "link_flit": 5610,
+    "x_trunk": 2068,
+    "attn_query": 1164,
+    "index_native": 575,
+    "expert_req": 387
+   }
+  },
+  "hb_quant_N": {
+   "axis": "y",
+   "pos_um": 16757.3,
+   "span_um": [
+    14236.0,
+    16635.6
+   ],
+   "what": "302-um channel N of hb_quant",
+   "bits": 25477,
+   "tracks": 66583,
+   "channel_um": 1991.7,
+   "util": 0.383,
+   "top": [
+    [
+     "xt_SW",
+     2068
+    ],
+    [
+     "xt_SW_0_q0n0",
+     2068
+    ],
+    [
+     "xt_SE",
+     2068
+    ],
+    [
+     "xt_SE_0_q0n0",
+     2068
+    ],
+    [
+     "hb_vm_su_SE",
+     2048
+    ]
+   ],
+   "by_class": {
+    "hub": 11674,
+    "x_trunk": 8272,
+    "link_flit": 2244,
+    "index_native": 1723,
+    "attn_query": 1164,
+    "expert_req": 387
+   }
+  },
+  "hb_dbk_SW_W": {
+   "axis": "x",
+   "pos_um": 14371.8,
+   "span_um": [
+    8520.2,
+    9813.9
+   ],
+   "what": "43-um channel W of hb_dbk_SW",
+   "bits": 6447,
+   "tracks": 40767,
+   "channel_um": 1293.8,
+   "util": 0.158,
+   "top": [
+    [
+     "lk_lk_S0_1_t12_q0n12",
+     1122
+    ],
+    [
+     "lk_lk_S1_1_t11_q0n4",
+     1122
+    ],
+    [
+     "vring_SE_SW_7_w0",
+     1088
+    ],
+    [
+     "vring_SW_SE_0_w1",
+     1060
+    ],
+    [
+     "vring_SE_SW_7_w1",
+     1060
+    ]
+   ],
+   "by_class": {
+    "hub": 4061,
+    "link_flit": 2244,
+    "expert_req": 129,
+    "loader_mem": 13
+   }
+  },
+  "hb_dbk_SW_E": {
+   "axis": "x",
+   "pos_um": 14711.8,
+   "span_um": [
+    8520.2,
+    9813.9
+   ],
+   "what": "49-um channel E of hb_dbk_SW",
+   "bits": 4060,
+   "tracks": 40767,
+   "channel_um": 1293.8,
+   "util": 0.1,
+   "top": [
+    [
+     "lk_lk_S1",
+     1122
+    ],
+    [
+     "vring_SW_SE_0_w1_q0n0",
+     1060
+    ],
+    [
+     "idx_score_SW_e_q0n0",
+     610
+    ],
+    [
+     "idx_query_SW",
+     571
+    ],
+    [
+     "hgi_vmq_idx",
+     338
+    ]
+   ],
+   "by_class": {
+    "hub": 1406,
+    "index_native": 1182,
+    "link_flit": 1122,
+    "expert_req": 258,
+    "idx_sel": 92
+   }
+  },
+  "hb_dbk_SE_E": {
+   "axis": "x",
+   "pos_um": 17748.3,
+   "span_um": [
+    8520.2,
+    9813.9
+   ],
+   "what": "43-um channel E of hb_dbk_SE",
+   "bits": 6656,
+   "tracks": 40767,
+   "channel_um": 1293.8,
+   "util": 0.163,
+   "top": [
+    [
+     "lw_SE",
+     2317
+    ],
+    [
+     "vdb_SE",
+     2065
+    ],
+    [
+     "vring_SW_SE_7_w1_q0n0_q1",
+     1060
+    ],
+    [
+     "vring_SE_SW_0_w1",
+     1060
+    ],
+    [
+     "vdb_SE_r_q0n0",
+     129
+    ]
+   ],
+   "by_class": {
+    "hub": 4326,
+    "loader_mem": 2330
+   }
+  },
+  "hb_dbk_NW_W": {
+   "axis": "x",
+   "pos_um": 14371.8,
+   "span_um": [
+    16069.4,
+    17363.1
+   ],
+   "what": "43-um channel W of hb_dbk_NW",
+   "bits": 10918,
+   "tracks": 40767,
+   "channel_um": 1293.8,
+   "util": 0.268,
+   "top": [
+    [
+     "vdb_NW",
+     2065
+    ],
+    [
+     "hb_vm_su_SW",
+     2048
+    ],
+    [
+     "vrc_q_wup_w0_q0n0",
+     1136
+    ],
+    [
+     "vrc_q_wup_w1_q0n0",
+     1105
+    ],
+    [
+     "vrc_q_rdn_w0",
+     1040
+    ]
+   ],
+   "by_class": {
+    "hub": 10918
+   }
+  },
+  "hb_dbk_NW_E": {
+   "axis": "x",
+   "pos_um": 14711.5,
+   "span_um": [
+    16069.4,
+    17363.1
+   ],
+   "what": "49-um channel E of hb_dbk_NW",
+   "bits": 12464,
+   "tracks": 40767,
+   "channel_um": 1293.8,
+   "util": 0.306,
+   "top": [
+    [
+     "vxl_SW",
+     2065
+    ],
+    [
+     "hb_vm_su_SW",
+     2048
+    ],
+    [
+     "vrc_q_wup_w0",
+     1136
+    ],
+    [
+     "vring_NW_NE_2_t1_w0",
+     1088
+    ],
+    [
+     "vring_NW_NE_2_t1_w1",
+     1060
+    ]
+   ],
+   "by_class": {
+    "hub": 12206,
+    "expert_req": 258
+   }
+  },
+  "hb_dbk_NE_E": {
+   "axis": "x",
+   "pos_um": 17748.3,
+   "span_um": [
+    16069.4,
+    17363.1
+   ],
+   "what": "43-um channel E of hb_dbk_NE",
+   "bits": 3648,
+   "tracks": 40767,
+   "channel_um": 1293.8,
+   "util": 0.089,
+   "top": [
+    [
+     "vring_NE_NW_0_w0",
+     1088
+    ],
+    [
+     "vxl_NE_0_w0",
+     1040
+    ],
+    [
+     "vxl_NE_0_w1",
+     1025
+    ],
+    [
+     "dbk_mv_NE",
+     229
+    ],
+    [
+     "vxl_NE_r_5_q0n0",
+     129
+    ]
+   ],
+   "by_class": {
+    "hub": 3648
+   }
+  },
+  "hb_vms_SW_W": {
+   "axis": "x",
+   "pos_um": 13294.6,
+   "span_um": [
+    8498.6,
+    11183.4
+   ],
+   "what": "210-um channel W of hb_vms_SW",
+   "bits": 20579,
+   "tracks": 84599,
+   "channel_um": 2684.8,
+   "util": 0.243,
+   "top": [
+    [
+     "hgi_lgsw_wup",
+     2243
+    ],
+    [
+     "hgi_lgsw_tap_rdn_su_SW",
+     2065
+    ],
+    [
+     "hb_su_SW_vm_q0n1",
+     2048
+    ],
+    [
+     "hgi_lgsw_wup_1_6_t0_w0",
+     1136
+    ],
+    [
+     "lk_lk_S0_1_t12_q0n5",
+     1122
+    ]
+   ],
+   "by_class": {
+    "hub": 16791,
+    "link_flit": 2244,
+    "control": 899,
+    "loader_mem": 645
+   }
+  },
+  "hb_vms_SW_E": {
+   "axis": "x",
+   "pos_um": 14371.8,
+   "span_um": [
+    8498.6,
+    11183.4
+   ],
+   "what": "43-um channel E of hb_vms_SW",
+   "bits": 14447,
+   "tracks": 84599,
+   "channel_um": 2684.8,
+   "util": 0.171,
+   "top": [
+    [
+     "lk_lk_S0_1_t12_q0n3",
+     1122
+    ],
+    [
+     "lk_lk_S0_1_t12_q0n12",
+     1122
+    ],
+    [
+     "lk_lk_S1",
+     1122
+    ],
+    [
+     "lk_lk_S1_1_t11_q0n4",
+     1122
+    ],
+    [
+     "lk_lk_S2",
+     1122
+    ]
+   ],
+   "by_class": {
+    "hub": 8695,
+    "link_flit": 5610,
+    "expert_req": 129,
+    "loader_mem": 13
+   }
+  },
+  "hb_vms_SE_W": {
+   "axis": "x",
+   "pos_um": 17748.3,
+   "span_um": [
+    8498.6,
+    11183.4
+   ],
+   "what": "43-um channel W of hb_vms_SE",
+   "bits": 19830,
+   "tracks": 84599,
+   "channel_um": 2684.8,
+   "util": 0.234,
+   "top": [
+    [
+     "lw_SE",
+     2317
+    ],
+    [
+     "xt_SE",
+     2068
+    ],
+    [
+     "vdb_SE",
+     2065
+    ],
+    [
+     "vcb_coll_SE_3_q0n1",
+     1088
+    ],
+    [
+     "vcb_SE_NE",
+     1088
+    ]
+   ],
+   "by_class": {
+    "hub": 14643,
+    "loader_mem": 2330,
+    "x_trunk": 2068,
+    "host": 789
+   }
+  },
+  "hb_vms_SE_E": {
+   "axis": "x",
+   "pos_um": 18825.9,
+   "span_um": [
+    8498.6,
+    11183.4
+   ],
+   "what": "211-um channel E of hb_vms_SE",
+   "bits": 24647,
+   "tracks": 84599,
+   "channel_um": 2684.8,
+   "util": 0.291,
+   "top": [
+    [
+     "hgi_lgse_wup_1_3_t0_w0_q",
+     2272
+    ],
+    [
+     "hgi_lgse_wup",
+     2243
+    ],
+    [
+     "xt_SE_5_t2_q0n0",
+     2068
+    ],
+    [
+     "xt_SE",
+     2068
+    ],
+    [
+     "hgi_lgse_rdn_1",
+     2067
+    ]
+   ],
+   "by_class": {
+    "hub": 19722,
+    "x_trunk": 4136,
+    "host": 789
+   }
+  },
+  "hb_vms_NW_W": {
+   "axis": "x",
+   "pos_um": 13294.6,
+   "span_um": [
+    14699.9,
+    17384.7
+   ],
+   "what": "210-um channel W of hb_vms_NW",
+   "bits": 18461,
+   "tracks": 84599,
+   "channel_um": 2684.8,
+   "util": 0.218,
+   "top": [
+    [
+     "tkm_del",
+     4360
+    ],
+    [
+     "hgi_lgnw_rdn",
+     2067
+    ],
+    [
+     "hb_vm_su_SW",
+     2048
+    ],
+    [
+     "hgi_lgnw_wup_0_w0",
+     1136
+    ],
+    [
+     "hgi_lgnw_wup_1_4_t1_w0",
+     1136
+    ]
+   ],
+   "by_class": {
+    "hub": 17816,
+    "loader_mem": 645
+   }
+  },
+  "hb_vms_NW_E": {
+   "axis": "x",
+   "pos_um": 14371.8,
+   "span_um": [
+    14699.9,
+    17384.7
+   ],
+   "what": "43-um channel E of hb_vms_NW",
+   "bits": 35319,
+   "tracks": 84599,
+   "channel_um": 2684.8,
+   "util": 0.417,
+   "top": [
+    [
+     "vring_NW_NE",
+     2148
+    ],
+    [
+     "vring_NE_NW",
+     2148
+    ],
+    [
+     "vxl_SW",
+     2065
+    ],
+    [
+     "vdb_NW",
+     2065
+    ],
+    [
+     "hb_vm_su_SW",
+     2048
+    ]
+   ],
+   "by_class": {
+    "hub": 29709,
+    "link_flit": 5610
+   }
+  },
+  "hb_vms_NE_W": {
+   "axis": "x",
+   "pos_um": 17748.3,
+   "span_um": [
+    14699.9,
+    17384.7
+   ],
+   "what": "43-um channel W of hb_vms_NE",
+   "bits": 18754,
+   "tracks": 84599,
+   "channel_um": 2684.8,
+   "util": 0.222,
+   "top": [
+    [
+     "vrc_att_wup_3_w0_q0n0",
+     1136
+    ],
+    [
+     "vrc_att_wup_3_w1_q0n0",
+     1105
+    ],
+    [
+     "vcb_SE_NE_14_q0n0",
+     1088
+    ],
+    [
+     "vring_SE_NE_14_w0",
+     1088
+    ],
+    [
+     "vring_NE_SE_0_w0_q0n0",
+     1088
+    ]
+   ],
+   "by_class": {
+    "hub": 18754
+   }
+  },
+  "hb_vms_NE_E": {
+   "axis": "x",
+   "pos_um": 18825.9,
+   "span_um": [
+    14699.9,
+    17384.7
+   ],
+   "what": "211-um channel E of hb_vms_NE",
+   "bits": 9342,
+   "tracks": 84599,
+   "channel_um": 2684.8,
+   "util": 0.11,
+   "top": [
+    [
+     "hgi_lgne_rdn",
+     2067
+    ],
+    [
+     "hb_vm_su_NE_t5_q0n3",
+     2048
+    ],
+    [
+     "hgi_lgne_wup_0_w0",
+     1136
+    ],
+    [
+     "hgi_lgne_rdn_1_0_w1",
+     1027
+    ],
+    [
+     "hb_su_NE_coll",
+     1024
+    ]
+   ],
+   "by_class": {
+    "hub": 9342
+   }
+  },
+  "C_x3.8_y2.7": {
+   "axis": "y",
+   "pos_um": 2728.1,
+   "span_um": [
+    2232.1,
+    5878.7
+   ],
+   "what": "SM column channel 3839-4272 (cut C), +- half an SM",
+   "bits": 17277,
+   "tracks": 43758,
+   "channel_um": 432.4,
+   "util": 0.395,
+   "top": [
+    [
+     "rh_SW",
+     1623
+    ],
+    [
+     "wl_sm4",
+     1102
+    ],
+    [
+     "wl_sm5",
+     1102
+    ],
+    [
+     "wl_sm6",
+     1102
+    ],
+    [
+     "ks0_SW",
+     1102
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 5449,
+    "weight": 3306,
+    "x_trunk": 3110,
+    "x_leaf": 3102,
+    "result_trunk": 1623,
+    "result_leaf": 540
+   },
+   "channel_only": {
+    "span_um": [
+     3839.2,
+     4271.6
+    ],
+    "bits": 17277,
+    "tracks": 7870,
+    "ratio": 2.195,
+    "by_class": {
+     "kv_rows": 5449,
+     "weight": 3306,
+     "x_trunk": 3110,
+     "x_leaf": 3102,
+     "result_trunk": 1623,
+     "result_leaf": 540
+    }
+   }
+  },
+  "C_x7.5_y2.7": {
+   "axis": "y",
+   "pos_um": 2728.1,
+   "span_um": [
+    5878.7,
+    9524.7
+   ],
+   "what": "SM column channel 7486-7918 (cut C), +- half an SM",
+   "bits": 5260,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.12,
+   "top": [
+    [
+     "wl_sm7_0_t1_q0n0",
+     1102
+    ],
+    [
+     "wl_sm3",
+     1099
+    ],
+    [
+     "xh_SW_2a",
+     1026
+    ],
+    [
+     "xl_sm6a",
+     1024
+    ],
+    [
+     "lq_SW",
+     351
+    ]
+   ],
+   "by_class": {
+    "weight": 2201,
+    "x_trunk": 1026,
+    "x_leaf": 1024,
+    "loader_mem": 658,
+    "expert_req": 258,
+    "weight_req": 89
+   },
+   "channel_only": {
+    "span_um": [
+     7485.7,
+     7917.7
+    ],
+    "bits": 5260,
+    "tracks": 7862,
+    "ratio": 0.669,
+    "by_class": {
+     "weight": 2201,
+     "x_trunk": 1026,
+     "x_leaf": 1024,
+     "loader_mem": 658,
+     "expert_req": 258,
+     "weight_req": 89
+    }
+   }
+  },
+  "C_x24.2_y2.7": {
+   "axis": "y",
+   "pos_um": 2728.1,
+   "span_um": [
+    22596.8,
+    26242.9
+   ],
+   "what": "SM column channel 24204-24636 (cut C), +- half an SM",
+   "bits": 16139,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.369,
+   "top": [
+    [
+     "lw_SE",
+     2317
+    ],
+    [
+     "wl_sm12",
+     1102
+    ],
+    [
+     "wl_sm13",
+     1102
+    ],
+    [
+     "wl_sm14",
+     1102
+    ],
+    [
+     "ks0_SE",
+     1102
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 4347,
+    "weight": 3306,
+    "x_trunk": 3094,
+    "loader_mem": 2962,
+    "x_leaf": 2048,
+    "weight_req": 135
+   },
+   "channel_only": {
+    "span_um": [
+     24203.9,
+     24635.9
+    ],
+    "bits": 16139,
+    "tracks": 7862,
+    "ratio": 2.053,
+    "by_class": {
+     "kv_rows": 4347,
+     "weight": 3306,
+     "x_trunk": 3094,
+     "loader_mem": 2962,
+     "x_leaf": 2048,
+     "weight_req": 135
+    }
+   }
+  },
+  "C_x27.8_y2.7": {
+   "axis": "y",
+   "pos_um": 2728.1,
+   "span_um": [
+    26242.9,
+    29889.0
+   ],
+   "what": "SM column channel 27850-28282 (cut C), +- half an SM",
+   "bits": 11060,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.253,
+   "top": [
+    [
+     "rt_SE",
+     2165
+    ],
+    [
+     "wl_sm15_0_t0_q0n0",
+     1102
+    ],
+    [
+     "wl_sm11",
+     1099
+    ],
+    [
+     "rh_SE_1_t1_q0n0",
+     1083
+    ],
+    [
+     "xh_SE_3b",
+     1042
+    ]
+   ],
+   "by_class": {
+    "result_trunk": 3788,
+    "x_leaf": 3102,
+    "weight": 2201,
+    "x_trunk": 1042,
+    "control": 450,
+    "result_leaf": 270
+   },
+   "channel_only": {
+    "span_um": [
+     27850.0,
+     28282.0
+    ],
+    "bits": 11060,
+    "tracks": 7862,
+    "ratio": 1.407,
+    "by_class": {
+     "result_trunk": 3788,
+     "x_leaf": 3102,
+     "weight": 2201,
+     "x_trunk": 1042,
+     "control": 450,
+     "result_leaf": 270
+    }
+   }
+  },
+  "C_x3.8_y5.1": {
+   "axis": "y",
+   "pos_um": 5069.5,
+   "span_um": [
+    2232.1,
+    5878.7
+   ],
+   "what": "SM column channel 3839-4272 (cut C), +- half an SM",
+   "bits": 9441,
+   "tracks": 43758,
+   "channel_um": 432.4,
+   "util": 0.216,
+   "top": [
+    [
+     "ks0_SW",
+     1102
+    ],
+    [
+     "ks1_SW",
+     1102
+    ],
+    [
+     "ks3_SW",
+     1102
+    ],
+    [
+     "wl_sm6",
+     1099
+    ],
+    [
+     "xh_SW_2b",
+     1042
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 4347,
+    "x_trunk": 2068,
+    "weight": 1099,
+    "x_leaf": 1039,
+    "control": 450,
+    "result_leaf": 270
+   },
+   "channel_only": {
+    "span_um": [
+     3839.2,
+     4271.6
+    ],
+    "bits": 9441,
+    "tracks": 7870,
+    "ratio": 1.2,
+    "by_class": {
+     "kv_rows": 4347,
+     "x_trunk": 2068,
+     "weight": 1099,
+     "x_leaf": 1039,
+     "control": 450,
+     "result_leaf": 270
+    }
+   }
+  },
+  "C_x7.5_y5.1": {
+   "axis": "y",
+   "pos_um": 5069.5,
+   "span_um": [
+    5878.7,
+    9524.7
+   ],
+   "what": "SM column channel 7486-7918 (cut C), +- half an SM",
+   "bits": 7668,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.175,
+   "top": [
+    [
+     "lw_SW",
+     2317
+    ],
+    [
+     "xl_sm4_t0_q0n8",
+     2063
+    ],
+    [
+     "wl_sm7",
+     1099
+    ],
+    [
+     "xl_sm6a",
+     1024
+    ],
+    [
+     "lr_SW",
+     294
+    ]
+   ],
+   "by_class": {
+    "x_leaf": 3087,
+    "loader_mem": 2624,
+    "weight": 1099,
+    "result_leaf": 810,
+    "weight_req": 44,
+    "kv_credit": 4
+   },
+   "channel_only": {
+    "span_um": [
+     7485.7,
+     7917.7
+    ],
+    "bits": 7668,
+    "tracks": 7862,
+    "ratio": 0.975,
+    "by_class": {
+     "x_leaf": 3087,
+     "loader_mem": 2624,
+     "weight": 1099,
+     "result_leaf": 810,
+     "weight_req": 44,
+     "kv_credit": 4
+    }
+   }
+  },
+  "C_x24.2_y5.1": {
+   "axis": "y",
+   "pos_um": 5069.5,
+   "span_um": [
+    22596.8,
+    26242.9
+   ],
+   "what": "SM column channel 24204-24636 (cut C), +- half an SM",
+   "bits": 13534,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.309,
+   "top": [
+    [
+     "lw_SE",
+     2317
+    ],
+    [
+     "xl_sm12_t0_q0n1",
+     2063
+    ],
+    [
+     "ks0_SE_2_t4_q0n0",
+     1102
+    ],
+    [
+     "ks1_SE",
+     1102
+    ],
+    [
+     "ks2_SE",
+     1102
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 4347,
+    "loader_mem": 3269,
+    "x_leaf": 3087,
+    "weight": 1099,
+    "x_trunk": 1026,
+    "result_leaf": 540
+   },
+   "channel_only": {
+    "span_um": [
+     24203.9,
+     24635.9
+    ],
+    "bits": 13534,
+    "tracks": 7862,
+    "ratio": 1.721,
+    "by_class": {
+     "kv_rows": 4347,
+     "loader_mem": 3269,
+     "x_leaf": 3087,
+     "weight": 1099,
+     "x_trunk": 1026,
+     "result_leaf": 540
+    }
+   }
+  },
+  "C_x27.8_y5.1": {
+   "axis": "y",
+   "pos_um": 5069.5,
+   "span_um": [
+    26242.9,
+    29889.0
+   ],
+   "what": "SM column channel 27850-28282 (cut C), +- half an SM",
+   "bits": 7757,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.177,
+   "top": [
+    [
+     "rt_SE_0_t8_q0n0",
+     2165
+    ],
+    [
+     "ks3_SE_3_t2_q0n0",
+     1102
+    ],
+    [
+     "wl_sm15",
+     1099
+    ],
+    [
+     "xh_SE_3b",
+     1042
+    ],
+    [
+     "xl_sm14b",
+     1039
+    ]
+   ],
+   "by_class": {
+    "result_trunk": 2165,
+    "kv_rows": 1102,
+    "weight": 1099,
+    "x_trunk": 1042,
+    "x_leaf": 1039,
+    "result_leaf": 810
+   },
+   "channel_only": {
+    "span_um": [
+     27850.0,
+     28282.0
+    ],
+    "bits": 7757,
+    "tracks": 7862,
+    "ratio": 0.987,
+    "by_class": {
+     "result_trunk": 2165,
+     "kv_rows": 1102,
+     "weight": 1099,
+     "x_trunk": 1042,
+     "x_leaf": 1039,
+     "result_leaf": 810
+    }
+   }
+  },
+  "C_x3.8_y6.8": {
+   "axis": "y",
+   "pos_um": 6763.0,
+   "span_um": [
+    2232.1,
+    5878.7
+   ],
+   "what": "SM column channel 3839-4272 (cut C), +- half an SM",
+   "bits": 5685,
+   "tracks": 43758,
+   "channel_um": 432.4,
+   "util": 0.13,
+   "top": [
+    [
+     "ks0_SW",
+     1102
+    ],
+    [
+     "ks1_SW",
+     1102
+    ],
+    [
+     "ks2_SW",
+     1102
+    ],
+    [
+     "ks3_SW",
+     1102
+    ],
+    [
+     "kv_SW",
+     1041
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 5449,
+    "control_leaf": 224,
+    "kv_credit": 12
+   },
+   "channel_only": {
+    "span_um": [
+     3839.2,
+     4271.6
+    ],
+    "bits": 5685,
+    "tracks": 7870,
+    "ratio": 0.722,
+    "by_class": {
+     "kv_rows": 5449,
+     "control_leaf": 224,
+     "kv_credit": 12
+    }
+   }
+  },
+  "C_x24.2_y6.8": {
+   "axis": "y",
+   "pos_um": 6763.0,
+   "span_um": [
+    22596.8,
+    26242.9
+   ],
+   "what": "SM column channel 24204-24636 (cut C), +- half an SM",
+   "bits": 9978,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.228,
+   "top": [
+    [
+     "rt_SE",
+     2165
+    ],
+    [
+     "xl_sm15_q0n0",
+     2063
+    ],
+    [
+     "ks0_SE",
+     1102
+    ],
+    [
+     "ks1_SE",
+     1102
+    ],
+    [
+     "ks2_SE",
+     1102
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 4347,
+    "result_trunk": 2165,
+    "x_leaf": 2063,
+    "control": 899,
+    "result_leaf": 270,
+    "control_leaf": 224
+   },
+   "channel_only": {
+    "span_um": [
+     24203.9,
+     24635.9
+    ],
+    "bits": 9978,
+    "tracks": 7862,
+    "ratio": 1.269,
+    "by_class": {
+     "kv_rows": 4347,
+     "result_trunk": 2165,
+     "x_leaf": 2063,
+     "control": 899,
+     "result_leaf": 270,
+     "control_leaf": 224
+    }
+   }
+  },
+  "C_x3.8_y19.2": {
+   "axis": "y",
+   "pos_um": 19217.6,
+   "span_um": [
+    2232.1,
+    5878.7
+   ],
+   "what": "SM column channel 3839-4272 (cut C), +- half an SM",
+   "bits": 4959,
+   "tracks": 43758,
+   "channel_um": 432.4,
+   "util": 0.113,
+   "top": [
+    [
+     "xl_sm23_q0n0",
+     2063
+    ],
+    [
+     "ks5_NW_5_t4_q0n1",
+     1102
+    ],
+    [
+     "xl_sm22a_t12_q0n2",
+     1024
+    ],
+    [
+     "rl_sm23_q0n0",
+     270
+    ],
+    [
+     "rl_sm22_q0n6",
+     270
+    ]
+   ],
+   "by_class": {
+    "x_leaf": 3087,
+    "kv_rows": 1102,
+    "result_leaf": 540,
+    "control_leaf": 224,
+    "kv_credit": 6
+   },
+   "channel_only": {
+    "span_um": [
+     3839.2,
+     4271.6
+    ],
+    "bits": 4959,
+    "tracks": 7870,
+    "ratio": 0.63,
+    "by_class": {
+     "x_leaf": 3087,
+     "kv_rows": 1102,
+     "result_leaf": 540,
+     "control_leaf": 224,
+     "kv_credit": 6
+    }
+   }
+  },
+  "C_x24.2_y19.2": {
+   "axis": "y",
+   "pos_um": 19217.6,
+   "span_um": [
+    22596.8,
+    26242.9
+   ],
+   "what": "SM column channel 24204-24636 (cut C), +- half an SM",
+   "bits": 6729,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.154,
+   "top": [
+    [
+     "rt_NE",
+     2165
+    ],
+    [
+     "xl_sm31_q0n0",
+     2063
+    ],
+    [
+     "ks4_NE",
+     1102
+    ],
+    [
+     "cd_NE",
+     899
+    ],
+    [
+     "rl_sm30_q0n0",
+     270
+    ]
+   ],
+   "by_class": {
+    "result_trunk": 2165,
+    "x_leaf": 2063,
+    "kv_rows": 1102,
+    "control": 899,
+    "result_leaf": 270,
+    "control_leaf": 224
+   },
+   "channel_only": {
+    "span_um": [
+     24203.9,
+     24635.9
+    ],
+    "bits": 6729,
+    "tracks": 7862,
+    "ratio": 0.856,
+    "by_class": {
+     "result_trunk": 2165,
+     "x_leaf": 2063,
+     "kv_rows": 1102,
+     "control": 899,
+     "result_leaf": 270,
+     "control_leaf": 224
+    }
+   }
+  },
+  "C_x3.8_y20.9": {
+   "axis": "y",
+   "pos_um": 20911.0,
+   "span_um": [
+    2232.1,
+    5878.7
+   ],
+   "what": "SM column channel 3839-4272 (cut C), +- half an SM",
+   "bits": 9150,
+   "tracks": 43758,
+   "channel_um": 432.4,
+   "util": 0.209,
+   "top": [
+    [
+     "rt_NW",
+     2165
+    ],
+    [
+     "ks5_NW",
+     1102
+    ],
+    [
+     "wl_sm22",
+     1099
+    ],
+    [
+     "xh_NW_2b",
+     1042
+    ],
+    [
+     "xh_NW_2a",
+     1026
+    ]
+   ],
+   "by_class": {
+    "result_trunk": 2705,
+    "x_trunk": 2068,
+    "kv_rows": 1102,
+    "weight": 1099,
+    "x_leaf": 1024,
+    "result_leaf": 540
+   },
+   "channel_only": {
+    "span_um": [
+     3839.2,
+     4271.6
+    ],
+    "bits": 9150,
+    "tracks": 7870,
+    "ratio": 1.163,
+    "by_class": {
+     "result_trunk": 2705,
+     "x_trunk": 2068,
+     "kv_rows": 1102,
+     "weight": 1099,
+     "x_leaf": 1024,
+     "result_leaf": 540
+    }
+   }
+  },
+  "C_x7.5_y20.9": {
+   "axis": "y",
+   "pos_um": 20911.0,
+   "span_um": [
+    5878.7,
+    9524.7
+   ],
+   "what": "SM column channel 7486-7918 (cut C), +- half an SM",
+   "bits": 5768,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.132,
+   "top": [
+    [
+     "ks4_NW",
+     1102
+    ],
+    [
+     "ks6_NW",
+     1102
+    ],
+    [
+     "ks7_NW",
+     1102
+    ],
+    [
+     "wl_sm23",
+     1099
+    ],
+    [
+     "xl_sm22b",
+     1039
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 3306,
+    "weight": 1099,
+    "x_leaf": 1039,
+    "result_leaf": 270,
+    "weight_req": 44,
+    "kv_credit": 10
+   },
+   "channel_only": {
+    "span_um": [
+     7485.7,
+     7917.7
+    ],
+    "bits": 5768,
+    "tracks": 7862,
+    "ratio": 0.734,
+    "by_class": {
+     "kv_rows": 3306,
+     "weight": 1099,
+     "x_leaf": 1039,
+     "result_leaf": 270,
+     "weight_req": 44,
+     "kv_credit": 10
+    }
+   }
+  },
+  "C_x24.2_y20.9": {
+   "axis": "y",
+   "pos_um": 20911.0,
+   "span_um": [
+    22596.8,
+    26242.9
+   ],
+   "what": "SM column channel 24204-24636 (cut C), +- half an SM",
+   "bits": 6648,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.152,
+   "top": [
+    [
+     "xl_sm28_q0n1",
+     2063
+    ],
+    [
+     "ks4_NE",
+     1102
+    ],
+    [
+     "wl_sm30",
+     1099
+    ],
+    [
+     "xl_sm30a",
+     1024
+    ],
+    [
+     "lq_NE",
+     351
+    ]
+   ],
+   "by_class": {
+    "x_leaf": 3087,
+    "kv_rows": 1102,
+    "weight": 1099,
+    "loader_mem": 658,
+    "result_leaf": 540,
+    "control_leaf": 112
+   },
+   "channel_only": {
+    "span_um": [
+     24203.9,
+     24635.9
+    ],
+    "bits": 6648,
+    "tracks": 7862,
+    "ratio": 0.846,
+    "by_class": {
+     "x_leaf": 3087,
+     "kv_rows": 1102,
+     "weight": 1099,
+     "loader_mem": 658,
+     "result_leaf": 540,
+     "control_leaf": 112
+    }
+   }
+  },
+  "C_x27.8_y20.9": {
+   "axis": "y",
+   "pos_um": 20911.0,
+   "span_um": [
+    26242.9,
+    29889.0
+   ],
+   "what": "SM column channel 27850-28282 (cut C), +- half an SM",
+   "bits": 11987,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.274,
+   "top": [
+    [
+     "xl_sm30b",
+     2078
+    ],
+    [
+     "rh_NE",
+     1623
+    ],
+    [
+     "ks5_NE_2_t1_q0n2",
+     1102
+    ],
+    [
+     "ks6_NE",
+     1102
+    ],
+    [
+     "ks7_NE",
+     1102
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 3306,
+    "x_leaf": 3117,
+    "x_trunk": 2068,
+    "result_trunk": 1623,
+    "weight": 1099,
+    "control": 450
+   },
+   "channel_only": {
+    "span_um": [
+     27850.0,
+     28282.0
+    ],
+    "bits": 11987,
+    "tracks": 7862,
+    "ratio": 1.525,
+    "by_class": {
+     "kv_rows": 3306,
+     "x_leaf": 3117,
+     "x_trunk": 2068,
+     "result_trunk": 1623,
+     "weight": 1099,
+     "control": 450
+    }
+   }
+  },
+  "C_x3.8_y23.3": {
+   "axis": "y",
+   "pos_um": 23252.4,
+   "span_um": [
+    2232.1,
+    5878.7
+   ],
+   "what": "SM column channel 3839-4272 (cut C), +- half an SM",
+   "bits": 3402,
+   "tracks": 43758,
+   "channel_um": 432.4,
+   "util": 0.078,
+   "top": [
+    [
+     "wl_sm20",
+     1102
+    ],
+    [
+     "wl_sm21",
+     1102
+    ],
+    [
+     "wl_sm22",
+     1102
+    ],
+    [
+     "rq_sm20_1_q0n0",
+     45
+    ],
+    [
+     "rq_sm22_1_q0n0",
+     45
+    ]
+   ],
+   "by_class": {
+    "weight": 3306,
+    "weight_req": 90,
+    "kv_credit": 6
+   },
+   "channel_only": {
+    "span_um": [
+     3839.2,
+     4271.6
+    ],
+    "bits": 3402,
+    "tracks": 7870,
+    "ratio": 0.432,
+    "by_class": {
+     "weight": 3306,
+     "weight_req": 90,
+     "kv_credit": 6
+    }
+   }
+  },
+  "C_x7.5_y23.3": {
+   "axis": "y",
+   "pos_um": 23252.4,
+   "span_um": [
+    5878.7,
+    9524.7
+   ],
+   "what": "SM column channel 7486-7918 (cut C), +- half an SM",
+   "bits": 5536,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.127,
+   "top": [
+    [
+     "lw_NW",
+     2317
+    ],
+    [
+     "wl_sm23",
+     1102
+    ],
+    [
+     "ks7_NW",
+     1102
+    ],
+    [
+     "lq_NW",
+     351
+    ],
+    [
+     "lr_NW",
+     294
+    ]
+   ],
+   "by_class": {
+    "loader_mem": 2975,
+    "weight": 1102,
+    "kv_rows": 1102,
+    "expert_req": 258,
+    "weight_req": 89,
+    "kv_credit": 10
+   },
+   "channel_only": {
+    "span_um": [
+     7485.7,
+     7917.7
+    ],
+    "bits": 5536,
+    "tracks": 7862,
+    "ratio": 0.704,
+    "by_class": {
+     "loader_mem": 2975,
+     "weight": 1102,
+     "kv_rows": 1102,
+     "expert_req": 258,
+     "weight_req": 89,
+     "kv_credit": 10
+    }
+   }
+  },
+  "C_x24.2_y23.3": {
+   "axis": "y",
+   "pos_um": 23252.4,
+   "span_um": [
+    22596.8,
+    26242.9
+   ],
+   "what": "SM column channel 24204-24636 (cut C), +- half an SM",
+   "bits": 4864,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.111,
+   "top": [
+    [
+     "wl_sm28",
+     1102
+    ],
+    [
+     "wl_sm29",
+     1102
+    ],
+    [
+     "wl_sm30",
+     1102
+    ],
+    [
+     "ks4_NE",
+     1102
+    ],
+    [
+     "lq_NE",
+     351
+    ]
+   ],
+   "by_class": {
+    "weight": 3306,
+    "kv_rows": 1102,
+    "loader_mem": 364,
+    "weight_req": 90,
+    "kv_credit": 2
+   },
+   "channel_only": {
+    "span_um": [
+     24203.9,
+     24635.9
+    ],
+    "bits": 4864,
+    "tracks": 7862,
+    "ratio": 0.619,
+    "by_class": {
+     "weight": 3306,
+     "kv_rows": 1102,
+     "loader_mem": 364,
+     "weight_req": 90,
+     "kv_credit": 2
+    }
+   }
+  },
+  "C_x27.8_y23.3": {
+   "axis": "y",
+   "pos_um": 23252.4,
+   "span_um": [
+    26242.9,
+    29889.0
+   ],
+   "what": "SM column channel 27850-28282 (cut C), +- half an SM",
+   "bits": 4502,
+   "tracks": 43745,
+   "channel_um": 432.0,
+   "util": 0.103,
+   "top": [
+    [
+     "wl_sm31",
+     1102
+    ],
+    [
+     "ks5_NE_0_t0_q0n0",
+     1102
+    ],
+    [
+     "ks6_NE",
+     1102
+    ],
+    [
+     "wl_sm27",
+     1099
+    ],
+    [
+     "rq_sm31",
+     45
+    ]
+   ],
+   "by_class": {
+    "kv_rows": 2204,
+    "weight": 2201,
+    "weight_req": 89,
+    "kv_credit": 8
+   },
+   "channel_only": {
+    "span_um": [
+     27850.0,
+     28282.0
+    ],
+    "bits": 4502,
+    "tracks": 7862,
+    "ratio": 0.573,
+    "by_class": {
+     "kv_rows": 2204,
+     "weight": 2201,
+     "weight_req": 89,
+     "kv_credit": 8
+    }
+   }
+  }
+ }
+}

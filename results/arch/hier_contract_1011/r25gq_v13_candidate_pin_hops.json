@@ -1,0 +1,1220 @@
+{
+ "rule": "pin-to-pin half perimeter <= 500 um per die net (register at the pin both ends)",
+ "reach_um": 500.0,
+ "nets": 40233,
+ "reset_nets": 29319,
+ "hops_over": 81,
+ "data_hops_over": 65,
+ "reset_nets_over": 16,
+ "bits_over": 76621,
+ "max_um": 6516.2,
+ "box_to_box_nets": 96,
+ "box_to_box_over": 0,
+ "box_to_box_masters": {
+  "hfd_idx_score_native_grid": 68,
+  "hfd_attn_half_lo": 16,
+  "hfd_idx_sel_native_qend": 12
+ },
+ "hist": {
+  "1200-2000": 25,
+  "800-1200": 20,
+  "500-600": 14,
+  "600-800": 14,
+  ">2000": 8
+ },
+ "by_cause": {
+  "station <-> station": {
+   "hops": 44,
+   "bits": 50091,
+   "max_um": 3639.3
+  },
+  "reset net": {
+   "hops": 16,
+   "bits": 16,
+   "max_um": 1225.1
+  },
+  "block <-> station: hfd_su": {
+   "hops": 5,
+   "bits": 9409,
+   "max_um": 6516.2
+  },
+  "block <-> station: hfd_svc": {
+   "hops": 5,
+   "bits": 6725,
+   "max_um": 1485.6
+  },
+  "block <-> station: hfd_hgi_vms": {
+   "hops": 4,
+   "bits": 4391,
+   "max_um": 978.4
+  },
+  "block <-> block: hfd_cmdproc/hfd_hgi_vms_NW": {
+   "hops": 2,
+   "bits": 2065,
+   "max_um": 726.1
+  },
+  "block <-> station: hfd_hc": {
+   "hops": 2,
+   "bits": 32,
+   "max_um": 720.6
+  },
+  "block <-> station: hfd_sm": {
+   "hops": 1,
+   "bits": 1039,
+   "max_um": 1403.1
+  },
+  "block <-> block: hfd_hgi_idx/hfd_idx_sel_native_qend": {
+   "hops": 1,
+   "bits": 612,
+   "max_um": 1162.3
+  },
+  "block <-> station: hfd_sfu": {
+   "hops": 1,
+   "bits": 2241,
+   "max_um": 722.6
+  }
+ },
+ "examples": [
+  {
+   "net": "hb_vm_su_SW_t17",
+   "cls": "hub",
+   "bits": 2048,
+   "um": 6516.2,
+   "pins": 2,
+   "ends": [
+    "wq3968_hb_vm_su_SW.b",
+    "hb_su_SW.f_vm"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_su",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgse_wup_2_0_w1",
+   "cls": "hub",
+   "bits": 1107,
+   "um": 3639.3,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgSE_hc.t_lgSE_wup@1136:2242",
+    "hb_stn_lgSE_sfu.f_lgSE_wup@1136:2242"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgse_wup_2_0_w0",
+   "cls": "hub",
+   "bits": 1136,
+   "um": 3531.0,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgSE_hc.t_lgSE_wup@0:1135",
+    "hb_stn_lgSE_sfu.f_lgSE_wup@0:1135"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hb_vm_su_NW_t2",
+   "cls": "hub",
+   "bits": 2048,
+   "um": 3301.2,
+   "pins": 2,
+   "ends": [
+    "wq4049_hb_vm_su_NW.b",
+    "hb_su_NW.f_vm"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_su",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgnw_wup_1_4_t1_w1",
+   "cls": "hub",
+   "bits": 1107,
+   "um": 2500.9,
+   "pins": 2,
+   "ends": [
+    "wq5135_hgi_lgnw_wup_1_4.b@1136:2242",
+    "hb_stn_lgNW_su.f_lgNW_wup@1136:2242"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgne_wup_2_0_w1",
+   "cls": "hub",
+   "bits": 1107,
+   "um": 2280.5,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgNE_hc.t_lgNE_wup@1136:2242",
+    "hb_stn_lgNE_sfu.f_lgNE_wup@1136:2242"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgnw_wup_1_4_t1_w0",
+   "cls": "hub",
+   "bits": 1136,
+   "um": 2278.2,
+   "pins": 2,
+   "ends": [
+    "wq5135_hgi_lgnw_wup_1_4.b@0:1135",
+    "hb_stn_lgNW_su.f_lgNW_wup@0:1135"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgne_wup_2_0_w0",
+   "cls": "hub",
+   "bits": 1136,
+   "um": 2172.2,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgNE_hc.t_lgNE_wup@0:1135",
+    "hb_stn_lgNE_sfu.f_lgNE_wup@0:1135"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "xt_SW_0_t6",
+   "cls": "x_trunk",
+   "bits": 2068,
+   "um": 1998.7,
+   "pins": 2,
+   "ends": [
+    "wq2049_xt_SW_0.b",
+    "w23_xt_SW.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hb_su_NE_su_NW_t14",
+   "cls": "hub",
+   "bits": 1024,
+   "um": 1948.7,
+   "pins": 2,
+   "ends": [
+    "wq4205_hb_su_NE_su_NW.b",
+    "wq4206_hb_su_NE_su_NW.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "lk_lk_N0_2_t7",
+   "cls": "link_flit",
+   "bits": 1122,
+   "um": 1947.4,
+   "pins": 2,
+   "ends": [
+    "wq4510_lk_lk_N0_2.b",
+    "wq4511_lk_lk_N0_2.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgse_rdn_1_0_t0_w1",
+   "cls": "hub",
+   "bits": 1027,
+   "um": 1860.6,
+   "pins": 2,
+   "ends": [
+    "wq5112_hgi_lgse_rdn_1_0.b@1040:2066",
+    "hb_stn_lgSE_sfu.f_lgSE_rdn@1040:2066"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "lk_lk_N2_2_t12",
+   "cls": "link_flit",
+   "bits": 1122,
+   "um": 1856.2,
+   "pins": 2,
+   "ends": [
+    "wq4559_lk_lk_N2_2.b",
+    "w645_lk_lk_N2.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgne_rdn_2_0_w1",
+   "cls": "hub",
+   "bits": 1027,
+   "um": 1742.2,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgNE_sfu.t_lgNE_rdn@1040:2066",
+    "hb_stn_lgNE_hc.f_lgNE_rdn@1040:2066"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ks6_NE_3_t2",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 1720.3,
+   "pins": 2,
+   "ends": [
+    "wq3903_ks6_NE_3.b",
+    "w594_ks6_NE.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vring_SE_SW_5_t7_w1",
+   "cls": "hub",
+   "bits": 1060,
+   "um": 1700.8,
+   "pins": 2,
+   "ends": [
+    "wq5074_vring_SE_SW_5.b@1088:2147",
+    "wq1623_vring_SE_SW.a@1088:2147"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgnw_rdn_1_0_w1",
+   "cls": "hub",
+   "bits": 1027,
+   "um": 1675.8,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgNW_su.t_lgNW_rdn@1040:2066",
+    "wq5116_hgi_lgnw_rdn_1_2.a@1040:2066"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_idx_cmd_t10_w1",
+   "cls": "hub",
+   "bits": 1035,
+   "um": 1658.7,
+   "pins": 2,
+   "ends": [
+    "wq4276_hgi_idx_cmd.b@1040:2074",
+    "wq4277_hgi_idx_cmd.a@1040:2074"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vring_SE_SW_5_t7_w0",
+   "cls": "hub",
+   "bits": 1088,
+   "um": 1487.3,
+   "pins": 2,
+   "ends": [
+    "wq5074_vring_SE_SW_5.b@0:1087",
+    "wq1623_vring_SE_SW.a@0:1087"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "lw_SE_e_t2",
+   "cls": "loader_mem",
+   "bits": 2317,
+   "um": 1485.6,
+   "pins": 2,
+   "ends": [
+    "wq2970_lw_SE_e.b",
+    "svc_SE_s3.wd"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_svc",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgnw_rdn_1_0_w0",
+   "cls": "hub",
+   "bits": 1040,
+   "um": 1470.0,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgNW_su.t_lgNW_rdn@0:1039",
+    "wq5116_hgi_lgnw_rdn_1_2.a@0:1039"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "lk_lk_N1_2_t10",
+   "cls": "link_flit",
+   "bits": 1122,
+   "um": 1432.4,
+   "pins": 2,
+   "ends": [
+    "wq4537_lk_lk_N1_2.b",
+    "w640_lk_lk_N1.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "xl_sm9b",
+   "cls": "x_leaf",
+   "bits": 1039,
+   "um": 1403.1,
+   "pins": 2,
+   "ends": [
+    "w179_xmSE1b.t0",
+    "sm9.x@1024:2062"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_sm",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rh_NE_1_t1",
+   "cls": "result_trunk",
+   "bits": 1083,
+   "um": 1314.0,
+   "pins": 2,
+   "ends": [
+    "wq3722_rh_NE_1.b",
+    "w488_rgNE2.a2"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vring_NW_NE_2_t0_w0",
+   "cls": "hub",
+   "bits": 1088,
+   "um": 1307.8,
+   "pins": 2,
+   "ends": [
+    "wq5075_vring_NW_NE_2.b@0:1087",
+    "wq5076_vring_NW_NE_2.a@0:1087"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vring_NW_NE_2_t0_w1",
+   "cls": "hub",
+   "bits": 1060,
+   "um": 1307.8,
+   "pins": 2,
+   "ends": [
+    "wq5075_vring_NW_NE_2.b@1088:2147",
+    "wq5076_vring_NW_NE_2.a@1088:2147"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "cd_NE_0_t10",
+   "cls": "control",
+   "bits": 450,
+   "um": 1304.3,
+   "pins": 2,
+   "ends": [
+    "wq3755_cd_NE_0.b",
+    "wq3756_cd_NE_0.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgsw_wup_1_6_t0_w0",
+   "cls": "hub",
+   "bits": 1136,
+   "um": 1269.8,
+   "pins": 2,
+   "ends": [
+    "wq5111_hgi_lgsw_wup_1_6.b@0:1135",
+    "hb_stn_lgSW_su.f_lgSW_wup@0:1135"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgsw_wup_1_6_t0_w1",
+   "cls": "hub",
+   "bits": 1107,
+   "um": 1269.8,
+   "pins": 2,
+   "ends": [
+    "wq5111_hgi_lgsw_wup_1_6.b@1136:2242",
+    "hb_stn_lgSW_su.f_lgSW_wup@1136:2242"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ks3_SE_0",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 1255.6,
+   "pins": 3,
+   "ends": [
+    "svc_SE_s2.ks3",
+    "wq6058_ks3_SE_0.a",
+    "wq396_ksg3SE0.a"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_svc",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_20868",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 1225.1,
+   "pins": 2,
+   "ends": [
+    "rr_stream_20868.o",
+    "rr_stream_5547.i"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgsw_rdn_1_0_t0_w0",
+   "cls": "hub",
+   "bits": 1040,
+   "um": 1203.4,
+   "pins": 2,
+   "ends": [
+    "wq5100_hgi_lgsw_rdn_1_0.b@0:1039",
+    "wq5101_hgi_lgsw_rdn_1_3.a@0:1039"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgsw_rdn_1_0_t0_w1",
+   "cls": "hub",
+   "bits": 1027,
+   "um": 1203.4,
+   "pins": 2,
+   "ends": [
+    "wq5100_hgi_lgsw_rdn_1_0.b@1040:2066",
+    "wq5101_hgi_lgsw_rdn_1_3.a@1040:2066"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hb_su_SE_vm",
+   "cls": "hub",
+   "bits": 2048,
+   "um": 1171.3,
+   "pins": 2,
+   "ends": [
+    "hb_su_SE.t_vm",
+    "wq4014_hb_su_SE_vm.a"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_su",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_sel_to",
+   "cls": "idx_sel",
+   "bits": 612,
+   "um": 1162.3,
+   "pins": 2,
+   "ends": [
+    "idx_selector.to",
+    "hb_hgi_idx.f_sel_to"
+   ],
+   "kind": "data",
+   "cause": "block <-> block: hfd_hgi_idx/hfd_idx_sel_native_qend",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vring_NE_NW_5_t2_w1",
+   "cls": "hub",
+   "bits": 1060,
+   "um": 1110.4,
+   "pins": 2,
+   "ends": [
+    "wq5079_vring_NE_NW_5.b@1088:2147",
+    "wq1651_vring_NE_NW.a@1088:2147"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_link_rr_link_3150",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 1094.2,
+   "pins": 2,
+   "ends": [
+    "rr_link_3150.o",
+    "rr_link_3151.i"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_21341",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 1079.8,
+   "pins": 2,
+   "ends": [
+    "rr_stream_21341.o",
+    "idx_score_NW.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_21367",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 1072.1,
+   "pins": 2,
+   "ends": [
+    "rr_stream_21367.o",
+    "idx_score_SW.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_21353",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 1069.5,
+   "pins": 2,
+   "ends": [
+    "rr_stream_21353.o",
+    "idx_score_NE.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_21352",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 1047.5,
+   "pins": 2,
+   "ends": [
+    "rr_stream_21352.o",
+    "idx_score_SE.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgnw_wup_0_w0",
+   "cls": "hub",
+   "bits": 1136,
+   "um": 978.4,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgNW_su.t_lgNW_wup@0:1135",
+    "hb_vms_NW.f_lgNW_wup@0:1135"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_hgi_vms",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_21340",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 962.4,
+   "pins": 2,
+   "ends": [
+    "rr_stream_21340.o",
+    "rr_stream_5545.i"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rh_NE_3",
+   "cls": "result_trunk",
+   "bits": 540,
+   "um": 953.9,
+   "pins": 2,
+   "ends": [
+    "w486_rgNE3.b",
+    "w488_rgNE2.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_link_rr_link_4116",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 947.8,
+   "pins": 2,
+   "ends": [
+    "rr_link_4116.o",
+    "rr_link_1156.i"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hb_su_NE_su_NW_t15",
+   "cls": "hub",
+   "bits": 1024,
+   "um": 945.1,
+   "pins": 2,
+   "ends": [
+    "wq4206_hb_su_NE_su_NW.b",
+    "hb_su_NW.f_su_ew"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_su",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "lw_SW_8_t1",
+   "cls": "loader_mem",
+   "bits": 2317,
+   "um": 915.8,
+   "pins": 2,
+   "ends": [
+    "wq2384_lw_SW_8.b",
+    "w81_lw_SW.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ksg7SE_0_12_t0",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 914.0,
+   "pins": 2,
+   "ends": [
+    "wq5036_ksg7SE_0_12.b",
+    "wq485_ksg7SE0.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgse_wup_1_0_w0",
+   "cls": "hub",
+   "bits": 1136,
+   "um": 896.2,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgSE_sfu.t_lgSE_wup@0:1135",
+    "wq5115_hgi_lgse_wup_1_3.a@0:1135"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgse_wup_1_0_w1",
+   "cls": "hub",
+   "bits": 1107,
+   "um": 896.2,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgSE_sfu.t_lgSE_wup@1136:2242",
+    "wq5115_hgi_lgse_wup_1_3.a@1136:2242"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ks3_SW_0",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 858.2,
+   "pins": 3,
+   "ends": [
+    "svc_SW_s2.ks3",
+    "wq2475_ks3_SW_0.a",
+    "wq5602_ks3_SW_0.a"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_svc",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "lw_SE_8_t1",
+   "cls": "loader_mem",
+   "bits": 2317,
+   "um": 851.2,
+   "pins": 2,
+   "ends": [
+    "wq2967_lw_SE_8.b",
+    "w229_lw_SE.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgnw_wup_0_w1",
+   "cls": "hub",
+   "bits": 1107,
+   "um": 833.2,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgNW_su.t_lgNW_wup@1136:2242",
+    "hb_vms_NW.f_lgNW_wup@1136:2242"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_hgi_vms",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_21364",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 795.0,
+   "pins": 2,
+   "ends": [
+    "rr_stream_21364.o",
+    "hb_vm_nw.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_link_rr_link_3158",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 765.5,
+   "pins": 2,
+   "ends": [
+    "rr_link_3158.o",
+    "rr_link_3159.i"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ksg1SW_0_3",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 753.9,
+   "pins": 2,
+   "ends": [
+    "wq76_ksg1SW0.b",
+    "wq77_ksg1SW0.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_serial_rr_serial_2324",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 753.4,
+   "pins": 2,
+   "ends": [
+    "rr_serial_2324.o",
+    "wq4206_hb_su_NE_su_NW.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vrc_cp_rdn_w0",
+   "cls": "hub",
+   "bits": 1040,
+   "um": 726.1,
+   "pins": 2,
+   "ends": [
+    "hb_vms_NW.t_rccp_rdn@0:1039",
+    "hb_cmdproc.f_rccp_rdn@0:1039"
+   ],
+   "kind": "data",
+   "cause": "block <-> block: hfd_cmdproc/hfd_hgi_vms_NW",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgse_tap_wup_sfu_SE",
+   "cls": "hub",
+   "bits": 2241,
+   "um": 722.6,
+   "pins": 2,
+   "ends": [
+    "hb_sfu_SE.t_lgSE_wup",
+    "hb_stn_lgSE_sfu.f_lgSEc_wup"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_sfu",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vmap_NE_r_0",
+   "cls": "hub",
+   "bits": 16,
+   "um": 720.6,
+   "pins": 2,
+   "ends": [
+    "hb_hc_NE.t_hgi_vmap",
+    "wq10265_vmap_NE_r_0.a"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_hc",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vmap_NW_r_0",
+   "cls": "hub",
+   "bits": 16,
+   "um": 717.4,
+   "pins": 2,
+   "ends": [
+    "hb_hc_NW.t_hgi_vmap",
+    "wq10260_vmap_NW_r_0.a"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_hc",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ksg5SE_0_6",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 713.4,
+   "pins": 2,
+   "ends": [
+    "wq447_ksg5SE0.b",
+    "wq448_ksg5SE0.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vrc_cp_rdn_w1",
+   "cls": "hub",
+   "bits": 1025,
+   "um": 702.3,
+   "pins": 2,
+   "ends": [
+    "hb_vms_NW.t_rccp_rdn@1040:2064",
+    "hb_cmdproc.f_rccp_rdn@1040:2064"
+   ],
+   "kind": "data",
+   "cause": "block <-> block: hfd_cmdproc/hfd_hgi_vms_NW",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ksg0SW_0_3",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 689.1,
+   "pins": 2,
+   "ends": [
+    "wq31_ksg0SW0.b",
+    "wq32_ksg0SW0.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ksg6SE_0_8",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 634.8,
+   "pins": 2,
+   "ends": [
+    "wq463_ksg6SE0.b",
+    "wq464_ksg6SE0.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_5551",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 626.0,
+   "pins": 2,
+   "ends": [
+    "rr_stream_5551.o",
+    "rr_stream_16017.i"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ks6_NE_2",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 602.7,
+   "pins": 2,
+   "ends": [
+    "w592_ks6_NE.b",
+    "w593_ks6_NE.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_20289",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 576.0,
+   "pins": 2,
+   "ends": [
+    "rr_stream_20289.o",
+    "wq8618_hgi_sel_ev.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "lk_lk_S0_1_t5",
+   "cls": "link_flit",
+   "bits": 1122,
+   "um": 571.0,
+   "pins": 2,
+   "ends": [
+    "wq4429_lk_lk_S0_1.b",
+    "wq4430_lk_lk_S0_1.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_14691",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 565.0,
+   "pins": 2,
+   "ends": [
+    "rr_stream_14691.o",
+    "rr_stream_4010.i"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_21354",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 554.1,
+   "pins": 2,
+   "ends": [
+    "rr_stream_21354.o",
+    "w829_idx_score_credit_NW.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgne_wup_1_0_w1",
+   "cls": "hub",
+   "bits": 1107,
+   "um": 553.0,
+   "pins": 2,
+   "ends": [
+    "hb_stn_lgNE_sfu.t_lgNE_wup@1136:2242",
+    "wq5139_hgi_lgne_wup_1_2.a@1136:2242"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ks0_SE_0_t2",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 552.5,
+   "pins": 2,
+   "ends": [
+    "wq3008_ks0_SE_0.b",
+    "w242_ks0_SE.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgnw_tap_wup_su_NW",
+   "cls": "hub",
+   "bits": 2241,
+   "um": 547.2,
+   "pins": 2,
+   "ends": [
+    "hb_su_NW.t_lgNW_wup",
+    "hb_stn_lgNW_su.f_lgNWc_wup"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_su",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ks7_NE_0",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 545.5,
+   "pins": 3,
+   "ends": [
+    "svc_NE_s7.ks7",
+    "wq3913_ks7_NE_0.a",
+    "wq7171_ks7_NE_0.a"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_svc",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vring_SE_SW_7_w1",
+   "cls": "hub",
+   "bits": 1060,
+   "um": 530.2,
+   "pins": 2,
+   "ends": [
+    "wq1624_vring_SE_SW.b@1088:2147",
+    "hb_vms_SW.f_ring_SE@1088:2147"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_hgi_vms",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "ks1_SE_0",
+   "cls": "kv_rows",
+   "bits": 1102,
+   "um": 529.8,
+   "pins": 3,
+   "ends": [
+    "svc_SE_s0.ks1",
+    "wq3019_ks1_SE_0.a",
+    "wq6029_ks1_SE_0.a"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_svc",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vring_NW_NE_2_t1_w1",
+   "cls": "hub",
+   "bits": 1060,
+   "um": 526.7,
+   "pins": 2,
+   "ends": [
+    "wq5076_vring_NW_NE_2.b@1088:2147",
+    "wq9410_vring_NW_NE_2_t1_w1.a"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "hgi_lgne_rdn_1_0_t0_w1_q0n2",
+   "cls": "hub",
+   "bits": 1027,
+   "um": 521.9,
+   "pins": 2,
+   "ends": [
+    "wq10046_hgi_lgne_rdn_1_0_t0_w1.b",
+    "hb_stn_lgNE_sfu.f_lgNE_rdn@1040:2066"
+   ],
+   "kind": "data",
+   "cause": "station <-> station",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "rst_stream_rr_stream_4466",
+   "cls": "reset_tree",
+   "bits": 1,
+   "um": 506.7,
+   "pins": 15,
+   "ends": [
+    "rr_stream_4466.o",
+    "wq3936_hb_cmdproc_mtp.rst",
+    "wq3947_hb_mtp_cmdproc.rst",
+    "wq4333_hgi_dma_cmd.rst"
+   ],
+   "kind": "reset",
+   "cause": "reset net",
+   "measure": "pin-to-pin"
+  },
+  {
+   "net": "vring_SE_SW_7_w0",
+   "cls": "hub",
+   "bits": 1088,
+   "um": 500.3,
+   "pins": 2,
+   "ends": [
+    "wq1624_vring_SE_SW.b@0:1087",
+    "hb_vms_SW.f_ring_SE@0:1087"
+   ],
+   "kind": "data",
+   "cause": "block <-> station: hfd_hgi_vms",
+   "measure": "pin-to-pin"
+  }
+ ],
+ "verdict": "FAIL"
+}
