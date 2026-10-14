@@ -1,0 +1,231 @@
+{
+  "source_commit": "b646b9303",
+  "unit": "oth-ubuntu-1537640-1791969678",
+  "exit": 0,
+  "actual_numeric_outputs": [
+    680,
+    936
+  ],
+  "valid_queries": [
+    680,
+    872
+  ],
+  "local_drain_events": [
+    6,
+    22
+  ],
+  "final_output_latency_coherent_edges": 46,
+  "local_drain_latency_coherent_edges": 49,
+  "native_query_minus_output_peak": 46,
+  "peak_scope": "selected arithmetic query/output count excludes transport and queued event service; not global ledger bound",
+  "drain_identity": "registered old query context/version",
+  "incoming_node_n_va": 0,
+  "node_drain_qualified": false,
+  "global_seal_qualified": false,
+  "failed_assumed48_unit": "oth-ubuntu-1517202-1791969458",
+  "mutants": [
+    "timer47_instead48",
+    "wrong_issue_context"
+  ],
+  "trace": [
+    {
+      "op": 0,
+      "tid": 0,
+      "last_issue_cc": 86,
+      "final_output_cc": 132,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 1,
+      "tid": 127,
+      "last_issue_cc": 419,
+      "final_output_cc": 465,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 2,
+      "tid": 512,
+      "last_issue_cc": 955,
+      "final_output_cc": 1001,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 3,
+      "tid": 767,
+      "last_issue_cc": 1445,
+      "final_output_cc": 1491,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 4,
+      "tid": 511,
+      "last_issue_cc": 1790,
+      "final_output_cc": 1836,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 5,
+      "tid": 703,
+      "last_issue_cc": 2210,
+      "final_output_cc": 2256,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 6,
+      "tid": 0,
+      "last_issue_cc": 2744,
+      "final_output_cc": 2790,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 7,
+      "tid": 0,
+      "last_issue_cc": 3052,
+      "final_output_cc": 3098,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 8,
+      "tid": 0,
+      "last_issue_cc": 3356,
+      "final_output_cc": 3402,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 9,
+      "tid": 0,
+      "last_issue_cc": 3653,
+      "final_output_cc": 3699,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 10,
+      "tid": 0,
+      "last_issue_cc": 3954,
+      "final_output_cc": 4000,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 11,
+      "tid": 0,
+      "last_issue_cc": 4256,
+      "final_output_cc": 4302,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 12,
+      "tid": 0,
+      "last_issue_cc": 4558,
+      "final_output_cc": 4604,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 13,
+      "tid": 0,
+      "last_issue_cc": 4859,
+      "final_output_cc": 4905,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 14,
+      "tid": 0,
+      "last_issue_cc": 5161,
+      "final_output_cc": 5207,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 15,
+      "tid": 0,
+      "last_issue_cc": 5466,
+      "final_output_cc": 5512,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 16,
+      "tid": 0,
+      "last_issue_cc": 5769,
+      "final_output_cc": 5815,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 17,
+      "tid": 0,
+      "last_issue_cc": 6072,
+      "final_output_cc": 6118,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 18,
+      "tid": 0,
+      "last_issue_cc": 6375,
+      "final_output_cc": 6421,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 19,
+      "tid": 0,
+      "last_issue_cc": 6699,
+      "final_output_cc": 6745,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 20,
+      "tid": 0,
+      "last_issue_cc": 7023,
+      "final_output_cc": 7069,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    },
+    {
+      "op": 21,
+      "tid": 0,
+      "last_issue_cc": 7347,
+      "final_output_cc": 7393,
+      "latency": 46,
+      "outstanding": 0,
+      "peak": 46
+    }
+  ],
+  "scope": "actual selected lifetime parent numeric local output/drain safety; no arbitrary incoming node, provider replay, CDC or aggregate seal/physical/performance qualification"
+}

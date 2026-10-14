@@ -1,0 +1,5 @@
+{
+  "before": "identities[selected]<={issue_context,issue_version};",
+  "after": "identities[selected]<={16'd0,issue_version};",
+  "sha256": "5c982834e8dd13be867419666581a65690a8760045ded699dc946a470323135c"
+}
