@@ -243,13 +243,13 @@
     "needs": [
      "iverilog"
     ],
-    "fail_regex": "^FAIL native_coll_port "
+    "fail_regex": "^FAIL native_coll_port sent=[1-9][0-9]* .*fault_ck=1 fault_ckd=1"
    },
    {
     "name": "native_local_ib_bypass_mutant",
     "cmd": "bash physical/qwen_romio_slots/bench_coll_native.sh {RUN}/bench/bypass_mutant bypass_mutant",
     "expect": "fail",
-    "fail_regex": "^FAIL native_coll_port ",
+    "fail_regex": "^FAIL native_coll_port sent=[1-9][0-9]* .*pair_mismatch=[1-9]",
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
