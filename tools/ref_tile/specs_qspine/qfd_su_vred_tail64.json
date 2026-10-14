@@ -68,8 +68,8 @@
  "job": {
   "owner": "Codex smallmasters",
   "branch": "claude/el1013-qwen-r3b-spine",
-  "tag": "p2",
-  "purpose": "Native64 regional reduction with actual add4/mul5 cuts; unchanged ordered arithmetic, +22resultedges vs original measured pending",
+  "tag": "p4",
+  "purpose": "Native64 ordered regional reduction add4/mul5, valid-only multiplier cuts/output; measured +22 result edges, separate nine child clocks",
   "cycles_added": 22,
   "benches": [
    {

@@ -250,6 +250,7 @@ module ot_hdc_fp32_mul_lat #(
     wire [1:0]  e_err;
     wire [31:0] e_code;
     assign {e_v, e_byp, e_err, e_over, e_code} = c6;
+    generate if (DRST != 0) begin : g_output_reset
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
@@ -259,6 +260,17 @@ module ot_hdc_fp32_mul_lat #(
             else begin y <= (e_code[30:0] == 31'd0) ? 32'd0 : e_code; err <= E_NONE; end
         end
     end
+    end else begin : g_output_valid_reset
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) valid_out <= 1'b0;
+            else valid_out <= e_v;
+        end
+        always @(posedge clk) begin
+            if (e_byp) begin y <= 32'd0; err <= e_err; end
+            else if (e_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+            else begin y <= (e_code[30:0] == 31'd0) ? 32'd0 : e_code; err <= E_NONE; end
+        end
+    end endgenerate
 endmodule
 
 module ot_hdc_fp32_mul_lat4 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,

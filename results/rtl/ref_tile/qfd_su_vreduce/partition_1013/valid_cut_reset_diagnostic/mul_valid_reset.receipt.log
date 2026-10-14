@@ -1,0 +1,6 @@
+ot-run: ot-epyc4       admits   683 GB (avail 910, growth 84, headroom 48, waiters 0/0 GB) load 43/128 running 17 disk 1245 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-342797-1791955824 after 0 s
+PASS valid-only multiplier reset checked=2654 asynchronous_resets=130
+tb_mul_valid_reset.sv:24: $finish called at 40186000 (1ps)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-342797-1791955824): exit 0

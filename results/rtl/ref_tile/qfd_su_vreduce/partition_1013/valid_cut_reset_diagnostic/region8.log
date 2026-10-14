@@ -1,0 +1,20 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_su_vred_region8_20261013-222814.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_su_vred_region8_20261013-222814.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qfd_su_vred_region8-20261013-222814
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 141 s (gate total 423 s)
+GATE INFO util: synthesized std area 10564 um2 + macros 0 in core 21574: util 49%
+GATE INFO textbook: WARN ot_hdc_vreduce_region8 cells 85,075 flops 13,238 depth 638.5 ps util 0.4436 reach 0.0 um (1.5 s)
+GATE WARN textbook.high_fanout: reset port rst_n: 359 loads (359 flops, e.g. busy_out$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.logic_depth: reg->reg stage g_chunk[0].g_step[1].u_op.u_m.genblk1.g_line.line[131]$_DFF_P_ -> g_chunk[0].g_step[2].u_op.g_cut.u_add.s1_small[0]$_DFF_P_/D: ~638 ps estimated (15 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.util_channel: utilisation 44.4% outside 45%-65% (std 9571 + macro 0 um2 in 21574 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 283.8..307.2 ps (spread 23.4), boundary mean 295.2; tt insertion all 215.5..236.7 ps (spread 21.2), boundary mean 225.7; ff insertion all 173.9..193.8 ps (spread 19.9), boundary mean 183.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: reg->out        1 paths, worst slack -51.1 ps (e.g. v_out)
+GATE INFO path_classes: reg->reg      299 paths, worst slack -1.0 ps (e.g. g_sq[7].g_cut.u_sq.s1_rows[216]$_DFF_P_/D)
+GATE INFO path_classes: in->reg       300 paths, worst slack 468.6 ps (e.g. u_mxl.line[23]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -5.1094295461240335e-11 hold WNS 7.837147597555827e-12
+GATE INFO clock_rule: root port:clk: 13,238 sinks on the largest root <= 15,000; measured TT insertion 236.7 ps, leaf spread 21.2 ps
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/r3b-spine/physical/ref_tile/qfd_su_vred_region8/source_binding_history/ac611cec695829805801da405e809553be1dd552b8e446f1d46dab4d936aa5f9.json
+GATE: qfd_su_vred_region8/gate_result.json written (exact staged source binding; commit it with the kit)

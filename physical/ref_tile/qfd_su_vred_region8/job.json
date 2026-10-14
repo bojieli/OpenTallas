@@ -1,9 +1,9 @@
 {
- "name": "qfd_su_vred_region8-p3-COMMIT",
+ "name": "qfd_su_vred_region8-p4-COMMIT",
  "block": "ot_hdc_vreduce_region8",
  "ref_tile": true,
  "owner": "Codex smallmasters",
- "purpose": "Native64 regional reduction with add4/mul5, valid-only reset at multiplier cuts; ordered arithmetic, measured +22 result edges versus original",
+ "purpose": "Native64 ordered regional reduction add4/mul5, valid-only multiplier cuts/output; measured +22 result edges, separate nine child clocks",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
@@ -95,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_su_vred_region8/qfd_su_vred_region8-p2-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_su_vred_region8/qfd_su_vred_region8-p4-COMMIT"
   }
  ],
  "cycles_added": 22,
