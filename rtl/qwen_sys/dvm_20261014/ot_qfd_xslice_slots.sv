@@ -46,7 +46,9 @@ module ot_qfd_xcol #(
     parameter integer AW = 24, parameter integer NW = 18, parameter integer XCW = 12, parameter integer TG = 4,
     parameter integer NH = 8, parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer DX = 8
 ) (
-    input  wire          ck,
+    // Entry 0 belongs to the head; entries 1..NH to its hardened leaves.
+    // The die delivers phi-R independently at each entry.
+    input  wire [NH:0]   ck,
     input  wire          rst_n,
     input  wire [15:0]   tid0,
     input  wire [1+(3*NW+13*AW+13)+(2+AW+2*XCW+4+NW+1)+(2+(AW-6)+6+64+1024)-1:0] h_in,
@@ -69,7 +71,7 @@ module ot_qfd_xcol #(
     wire [NH*28-1:0] lr_p;
     wire [NH*64-1:0] lq;
     ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .TG(TG), .NH(NH), .SMIN(SMIN), .SMAX(SMAX), .DX(DX)) u_head (
-        .ck(ck), .rst_n(rst_n), .tid0(tid0), .a_d(h_in), .a_r(h_in_r), .b_d(h_out), .b_r(h_out_r),
+        .ck(ck[0]), .rst_n(rst_n), .tid0(tid0), .a_d(h_in), .a_r(h_in_r), .b_d(h_out), .b_r(h_out_r),
         .n_d(n_d), .n_r(n_r), .s_d(s_d), .s_r(s_r),
         .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
         .lc_v(lc_v), .lc_ep(lc_ep), .lr_v(lr_v), .lr_t(lr_t), .lr_ep(lr_ep), .lr_p(lr_p),
@@ -93,7 +95,7 @@ module ot_qfd_xcol #(
 `else
             ot_qfd_xs_leaf u_leaf (
 `endif
-                .clk(ck), .rst_n(rst_n),
+                .clk(ck[LF+1]), .rst_n(rst_n),
                 .w_v(wv[j]), .w_ep(wep[j]), .w_off(woff[j]), .w_m(wm[j]), .w_d(wd[j]), .w_ctl(wc[j]),
                 .c_v(cv[j]), .c_ep(cep[j]),
                 .wo_v(wv[j+1]), .wo_ep(wep[j+1]), .wo_off(woff[j+1]), .wo_m(wm[j+1]), .wo_d(wd[j+1]), .wo_ctl(wc[j+1]),
@@ -105,7 +107,7 @@ module ot_qfd_xcol #(
 endmodule
 
 module qfd_xcol_e (
-    input  wire          ck,
+    input  wire [8:0]    ck,
     input  wire          rst_n,
     input  wire [15:0]   tid0,
     input  wire [1+379+73+1114-1:0] w_d,
@@ -123,7 +125,7 @@ module qfd_xcol_e (
 endmodule
 
 module qfd_xcol_w (
-    input  wire          ck,
+    input  wire [8:0]    ck,
     input  wire          rst_n,
     input  wire [15:0]   tid0,
     input  wire [1+379+73+1114-1:0] e_d,
