@@ -1,0 +1,85 @@
+{
+  "name": "hc_chunk_scan2_ref",
+  "top": "ot_hgi_hc_chunk_scan2",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_scan5.sv",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 34.56,
+    "h": 32.4
+  },
+  "std_area_um2": 450,
+  "area_basis": "Temporary estimate; actual mapped synthesis and CTS required",
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "clr",
+      "v0",
+      "m0",
+      "d0_lo",
+      "d0_hi"
+    ],
+    "S": [
+      "v1",
+      "m1",
+      "d1_lo",
+      "d1_hi"
+    ],
+    "E": [
+      "out_v",
+      "out_lo",
+      "out_hi",
+      "out_meta",
+      "fault"
+    ],
+    "N": []
+  },
+  "macros": [],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 16
+  },
+  "job": {
+    "owner": "Codex:hbm_hc_norm",
+    "branch": "codex/hbm-hc-norm-takeover-1013",
+    "tag": "scan2",
+    "purpose": "Bounded collector packet scan leaf; 16 direct-die mux leaves plus16 closed304bit relays; assigned slots/pins pending",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/peers",
+      "rtl/hbm_accel/die_glue",
+      "rtl/lib"
+    ],
+    "benches": [
+      {
+        "name": "collector_exact",
+        "cmd": "XDEF=-DHC_STORELEAF J=8 bash rtl/hbm_accel/generic/peers/run_hc_eng_b2.sh {RUN}/bench/exact coll && grep -q \"^HGI_HC_COLL_B2 PASS\" {RUN}/bench/exact/run.log",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 16
+      },
+      {
+        "name": "scan_mux_mutant",
+        "cmd": "XDEF=\"-DHC_STORELEAF -DHMUT=14\" J=8 bash rtl/hbm_accel/generic/peers/run_hc_eng_b2.sh {RUN}/bench/scan_mux coll && grep -q \"^HGI_HC_COLL_B2 PASS\" {RUN}/bench/scan_mux/run.log",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 16
+      }
+    ],
+    "views_to": "physical/ref_tile/hc_chunk_scan2_ref/views",
+    "record_to": "results/rtl/ref_tile/hc_chunk_scan2_ref"
+  },
+  "slot_change_request": {
+    "request": "results/arch/hbm_native_1013/hc_norm_takeover/slot_partition_request.json",
+    "reason": "New bounded collector scan root has no v12 childslot; no route until actual pins and measured outline"
+  }
+}
