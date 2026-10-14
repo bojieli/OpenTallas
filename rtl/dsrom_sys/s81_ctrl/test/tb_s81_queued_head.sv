@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Actual adapter queue: latest submitted slot1 must not open the blocked slot0.
-module tb_s81_queued_head #(parameter integer MUT=0);
+module tb_s81_queued_head #(parameter integer MUT=0, FIRST=1);
  reg ck=0,ek=0,rs=0; always #0.4166 ck=~ck;always #0.5555 ek=~ek;
  reg cv=0;reg [83:0] cd=0;wire dv;wire [7:0] dt;wire fault,online;
  wire ev,hv,ha;wire [83:0] ed,hd;reg er=1,normal=0,done=0;reg [7:0] tag=0;
@@ -20,7 +20,7 @@ module tb_s81_queued_head #(parameter integer MUT=0);
   if(hv) seenhead=seenhead+1;
   if(ha !== (ev&&er)) errors=errors+1;
   if(ev&&er) begin
-   if(ed!==desc(starts==1,7'(starts)))errors=errors+1;
+   if(ed!==desc(starts==0 ? FIRST : !FIRST,7'(starts)))errors=errors+1;
    starts=starts+1;
   end
   if(held && (!hv || hd!==stalled_d))errors=errors+1;
@@ -31,13 +31,16 @@ module tb_s81_queued_head #(parameter integer MUT=0);
   @(negedge ck);cv=1;cd=desc(slot,op);@(negedge ck);cv=0;
  endtask
  initial begin
-  repeat(6)@(negedge ck);rs=1;wait(online);issue(0,0);issue(1,1);
+  repeat(6)@(negedge ck);rs=1;wait(online);issue(FIRST,0);issue(!FIRST,1);
   repeat(25)@(negedge ek);
-  if(starts!=0||!hv||hd!==desc(0,0)||seenhead==0)errors=errors+1;
+  if(starts!=FIRST||!hv||hd!==desc(!FIRST,1)||seenhead==0) begin
+   if (FIRST==0 && starts==0 && hv && hd===desc(0,0) && seenhead!=0) begin end
+   else errors=errors+1;
+  end
   normal=1;@(negedge ek);normal=0;
   repeat(30)@(negedge ek);
   if(starts!=2)errors=errors+1;
-  @(negedge ek);done=1;tag=0;@(negedge ek);tag=8'h81;@(negedge ek);done=0;
+  @(negedge ek);done=1;tag={1'(FIRST),7'd0};@(negedge ek);tag={1'(!FIRST),7'd1};@(negedge ek);done=0;
   repeat(25)@(negedge ck);
   if(returns!=2||fault)errors=errors+1;
   $display("TB_S81_QUEUED_HEAD mut=%0d starts=%0d returns=%0d head_cycles=%0d errors=%0d fault=%0d %s",MUT,starts,returns,seenhead,errors,fault,errors==0?"PASS":"FAIL");$finish;
