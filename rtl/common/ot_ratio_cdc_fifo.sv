@@ -86,13 +86,10 @@ module ot_ratio_cdc_fifo #(
     always_ff @(posedge wclk) begin
         rp_w   <= rp;
     end
-    generate if (LOCAL_CTRL) begin : g_local_rstate
-        logic [1:0] r_st_w_n;
-        always_ff @(posedge wclk) r_st_w_n <= ~r_st;
-        assign r_st_w = ~r_st_w_n;
-    end else begin : g_original_rstate
-        always_ff @(posedge wclk) r_st_w <= r_st;
-    end endgenerate
+    // Retain the original positive read-state sample. The native QN source
+    // then has its ordinary polarity restoration, avoiding the measured short
+    // reverse hold cone; no sampling edge or externally visible state changes.
+    always_ff @(posedge wclk) r_st_w <= r_st;
     assign w_live = (w_st == S_RUN) && (r_st_w != S_DOWN);
     wire full = LOCAL_CTRL ? ((wp[AW] != rp_w[AW]) && (wp[AW-1:0] == rp_w[AW-1:0]))
                            : ((wp - rp_w) == (AW+1)'(DEPTH));
@@ -137,7 +134,13 @@ module ot_ratio_cdc_fifo #(
     logic [1:0]    w_st_r;              // sampler of w_st
     logic          r_take;
 
-    always_ff @(posedge rclk) wp_r <= wp_pub;
+    generate if (LOCAL_CTRL) begin : g_local_wpointer
+        logic [AW:0] wp_r_n;
+        always_ff @(posedge rclk) wp_r_n <= ~wp_pub;
+        assign wp_r = ~wp_r_n;
+    end else begin : g_original_wpointer
+        always_ff @(posedge rclk) wp_r <= wp_pub;
+    end endgenerate
     generate if (LOCAL_CTRL) begin : g_local_shadow
         logic [W-1:0] sh_n [DEPTH];
         always_ff @(posedge rclk)
