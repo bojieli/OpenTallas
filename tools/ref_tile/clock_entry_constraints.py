@@ -169,6 +169,44 @@ proc ot_ce_corner {} {
   }
   error "OT_ENTRIES: ambiguous actual loaded child corners [dict keys $found]"
 }
+# get_property pin arrival_max_rise is a DATA arrival query. On a clock-only
+# macro pin it returns an infinity sentinel even with a finite propagated clock
+# path. Read the actual rising clock path in the current analysis scene instead.
+proc ot_ce_finite {value} {
+  return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
+}
+proc ot_ce_clock_wire {pin clock} {
+  set scene [get_property [sta::cmd_scene] name]
+  set clock_name [get_full_name $clock]
+  set values {}
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    set paths [$vertex path_iterator rise max]
+    while {[$paths has_next]} {
+      set path [$paths next]
+      # OpenSTA's Path tag identifies scene, rise/max, clock and propagation.
+      # Match the complete fixed fields, never accept another scene's path.
+      set tag [$path tag]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "^max" ||
+          [lindex $tag 3] ne $clock_name || [lindex $tag 4] ne "^" ||
+          [string first "(clock prop)" $tag] < 0} continue
+      set arrival [sta::time_sta_ui [$path arrival]]
+      if {[ot_ce_finite $arrival]} { lappend values $arrival }
+    }
+    $paths finish
+  }
+  if {[llength $values] != 1} {
+    # Synthesis/floorplan have no extracted entry wire. This is solely a finite
+    # pre-CTS diagnostic reference; routed gates must measure a clock path.
+    if {![llength $values] && [info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+        (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+      puts "OT_ENTRIES PRE_CTS_ZERO_WIRE [get_full_name $pin] scene=$scene"
+      return 0.0
+    }
+    error "OT_ENTRIES: missing unique finite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+  }
+  return [lindex $values 0]
+}
 proc ot_ce_apply {} {
   set corner [ot_ce_corner]
   set clk [get_clocks core_clk]
@@ -196,8 +234,10 @@ proc ot_ce_apply {} {
       set port [lindex $ports 0]; set name [get_full_name $port]
       if {$name ni $::ot_ce_ports || [dict exists $seen $name]} { error "OT_ENTRIES: duplicate or undeclared source $name" }
       dict set seen $name 1
-      set wire [get_property $pin arrival_max_rise]
-      if {![string is double -strict $wire]} { error "OT_ENTRIES: missing entry wire clock arrival on [get_full_name $pin]" }
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      if {[llength $clock] != 1} { error "OT_ENTRIES: $name has no unique related clock" }
+      set wire [ot_ce_clock_wire $pin $clock]
+      if {![ot_ce_finite $wire]} { error "OT_ENTRIES: nonfinite entry wire clock arrival on [get_full_name $pin]" }
       if {abs($wire) < 1.0e-9 && [info exists ::ot_ce_require_wire] && $::ot_ce_require_wire} {
         # A zero arrival is admissible only if actual source and child pin are
         # physically coincident. Missing parasitics/ideal clocks cannot qualify.
@@ -246,6 +286,7 @@ proc ot_ce_apply {} {
     if {$deep} { lappend highclocks $clock } else { lappend lowclocks $clock }
     puts "OT_ENTRIES LEVEL [get_full_name $p] deep=$deep basis=$level_basis"
     set latency [expr {$ref - $wire - $mean}]
+    if {![ot_ce_finite $ref] || ![ot_ce_finite $latency]} { error "OT_ENTRIES: nonfinite reference/source latency on [get_full_name $p]" }
     set_clock_latency -source $latency $clock
     lappend low [expr {$ref + $lo - $mean}]; lappend high [expr {$ref + $hi - $mean}]
     dict lappend domain_low $domain [expr {$ref + $lo - $mean}]
