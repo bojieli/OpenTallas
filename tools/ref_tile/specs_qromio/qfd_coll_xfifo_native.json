@@ -11,7 +11,8 @@
   "rtl/lib/ot_reset_sync.sv",
   "rtl/lib/ot_hdly.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
-  "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1_bb.v"
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v"
  ],
  "params": {},
  "clock_port": "ck",
@@ -20,7 +21,7 @@
  ],
  "outline": {
   "w": 259.2,
-  "h": 324
+  "h": 328.32
  },
  "layer_cap": "M5",
  "recipe": 2,
@@ -31,7 +32,7 @@
    "count": 1,
    "at": [
     41.04,
-    190.08
+    123.12
    ],
    "orient": "R0"
   },
@@ -41,7 +42,17 @@
    "count": 1,
    "at": [
     41.04,
-    54
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "inst": "*u_sq*g_ib_mem*u_ib",
+   "count": 1,
+   "at": [
+    41.04,
+    224.64
    ],
    "orient": "R0"
   }
@@ -131,7 +142,7 @@
    129.4
   ]
  },
- "refglob": "*",
+ "refglob": "*u_cq*g_ipr*pd*",
  "sdc_extra": [
   "physical/qwen_romio_slots/qfd_coll_xfifo_native.sdc"
  ],
@@ -140,7 +151,11 @@
   "allow_none": true
  },
  "orfs_vars": {
-  "OT_OFLOP_GAP": "4.5"
+  "OT_OFLOP_GAP": "4.5",
+  "OT_MEG_MASTER": "ot_sram_1r1w*_m1",
+  "OT_MEG_EXPECT": "3",
+  "OT_MEG_BAND": "2.16",
+  "OT_MEG_EDGES": "EW"
  },
  "route": {
   "pd": 0.55,
@@ -155,7 +170,7 @@
    "v": "M5"
   }
  },
- "structural_change": "Native TP8 local CDC: unchanged credit-CDC algorithm with 546forward,517return {err,rank3,last,data512},N8 reservation,CR32/ENG_IB32/LCR32,CQ_AD256,RRW9 derived from capacity260. TWO dual-clock SRAM macros replace flop arrays:64x546forward,256x517return. Posted receiver credits are registered inside the leaf; source/consumer composition must prove operation discipline. Old l8n closed WCQ516/N4/CR8 view cannot represent native ports. No clock or price changes.",
+ "structural_change": "n1 gate REFUSED:CKD20,310flops,17,472ofthese are SQIBUF32x546; ir[1]17475loads. Actuallargest-root CKDTTmax506/spread99(scopedprobe), primaryCK458/spread93. n2 replaces ONLY synchronous SQreceive store with real32x5461R1WSRAM, lookahead head read+same-write bypass, preserving everyexternal valid/credit/data/fault edge; paired oldflopstore/newmacrostore bench verifies. SameCR32/ENG_IB32/LCR32/N8/CQ_AD256, no newcycles,no clock changes,no reprice. Rootcount expected<15000; coreIOreference nowCK-specific u_cq.g_ipr.pd, CKDreference remains domain-specific. 3SRAMs with2.16um M5edgeguards, OBSunchanged.",
  "reroute_reason": {
   "kind": "param_change",
   "params": {
@@ -170,16 +185,17 @@
    "MEMM": 1
   }
  },
- "slot_change_request": "Native collective-port leaf inside io_xfifo700.248x1563.816: proposed259.2x324 near(+423.36,+1190.16) next to10 nativeW546 link leaves. Native pin assignment from die tools pending; current closed TP4port request W sequencer,E engine adapted to native record widths. seq_su CRED32/postedacceptance composition still required; UNQUALIFIED until exact chain proof.",
+ "slot_change_request": "Native collective-port leaf inside io_xfifo700.248x1563.816: proposed259.2x328.32 near(+423.36,+1190.16) next to10 nativeW546 link leaves. Native pin assignment from die tools pending; current closed TP4port request W sequencer,E engine adapted to native record widths. seq_su CRED32/postedacceptance composition still required; UNQUALIFIED until exact chain proof.",
  "job": {
   "owner": "Codex:qwen_small/io",
   "branch": "claude/el1013-qwen-r3b-io",
-  "tag": "n1",
+  "tag": "n2",
   "purpose": "Native TP8 local port credit reservation and posted-return macro leaf; qualifies only with seq_su CRED32 composition",
   "extra_paths": [
    "physical/qwen_romio_slots",
    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
-   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1"
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1"
   ],
   "benches": [
    {
@@ -227,9 +243,23 @@
      "iverilog"
     ],
     "fail_regex": "^FAIL native_coll_port "
+   },
+   {
+    "name": "native_local_ib_bypass_mutant",
+    "cmd": "bash physical/qwen_romio_slots/bench_coll_native.sh {RUN}/bench/bypass_mutant bypass_mutant",
+    "expect": "fail",
+    "fail_regex": "^FAIL native_coll_port ",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
    }
   ],
   "views_to": "physical/ref_tile/qfd_coll_xfifo_native/views",
   "record_to": "results/rtl/ref_tile/qfd_coll_xfifo_native"
- }
+ },
+ "boundary_tcl": [
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
+ ]
 }

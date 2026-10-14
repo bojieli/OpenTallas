@@ -14,6 +14,19 @@ module tb_qfd_coll_xfifo_native;
         .i_seq_coll_v(sv),.i_seq_coll(sd),.i_seq_coll_cr(sc),
         .o_seq_coll_v(ev),.o_seq_coll(ed),.o_seq_coll_cr(ec),
         .i_coll_seq_v(rv),.i_coll_seq(rd),.o_coll_seq_v(ov),.o_coll_seq(od),.fault_ck(fc),.fault_ckd(fd));
+    wire sc_ref,ev_ref,ov_ref,fc_ref,fd_ref;
+    wire [545:0] ed_ref;wire [516:0] od_ref;
+    qfd_coll_xfifo_native #(.IBMEM(0)) ref_reg_store(.ck(ck),.ckd(ckd),.rst_n(rst_n),
+        .i_seq_coll_v(sv),.i_seq_coll(sd),.i_seq_coll_cr(sc_ref),
+        .o_seq_coll_v(ev_ref),.o_seq_coll(ed_ref),.o_seq_coll_cr(ec),
+        .i_coll_seq_v(rv),.i_coll_seq(rd),.o_coll_seq_v(ov_ref),.o_coll_seq(od_ref),.fault_ck(fc_ref),.fault_ckd(fd_ref));
+    integer pair_bad=0;
+    always @(negedge ck) if(go) begin
+        if(ev!==ev_ref||fc!==fc_ref||(ev&&(ed!==ed_ref))) pair_bad=pair_bad+1;
+    end
+    always @(negedge ckd) if(go) begin
+        if(sc!==sc_ref||ov!==ov_ref||fd!==fd_ref||(ov&&(od!==od_ref))) pair_bad=pair_bad+1;
+    end
     function integer gather(input integer m); gather=(m%3)!=0; endfunction
     function [511:0] data(input integer m,input integer rank);
         integer k; reg [31:0] x;
@@ -64,13 +77,13 @@ module tb_qfd_coll_xfifo_native;
         repeat(20)@(negedge ckd);rst_n=1;
         repeat(40)@(negedge ckd);go=1;
         fork
-            begin wait(cm==M||bad!=0||eng_bad!=0||fc||fd);repeat(300)@(negedge ckd);end
+            begin wait(cm==M||bad!=0||eng_bad!=0||pair_bad!=0||fc||fd);repeat(300)@(negedge ckd);end
             begin repeat(M*80+20000)@(negedge ckd);end
         join_any
         disable fork;
-        if(ns==M&&cm==M&&bad==0&&eng_bad==0&&!fc&&!fd&&(&seen0)&&(&seen1))
-            $display("PASS native_coll_port messages=%0d words=%0d cycles=%0d rank3 exact posted everybeat; data everybit0and1",cm,nr,cycles);
-        else $display("FAIL native_coll_port sent=%0d complete=%0d words=%0d mismatch=%0d engine_mismatch=%0d fault_ck=%0d fault_ckd=%0d",ns,cm,nr,bad,eng_bad,fc,fd);
+        if(ns==M&&cm==M&&bad==0&&eng_bad==0&&pair_bad==0&&!fc&&!fd&&(&seen0)&&(&seen1))
+            $display("PASS native_coll_port messages=%0d words=%0d cycles=%0d rank3 exact posted everybeat; data everybit0and1 pair_mismatch=%0d",cm,nr,cycles,pair_bad);
+        else $display("FAIL native_coll_port sent=%0d complete=%0d words=%0d mismatch=%0d engine_mismatch=%0d fault_ck=%0d fault_ckd=%0d pair_mismatch=%0d",ns,cm,nr,bad,eng_bad,fc,fd,pair_bad);
         $finish;
     end
 endmodule

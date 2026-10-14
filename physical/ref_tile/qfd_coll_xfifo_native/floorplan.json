@@ -7,13 +7,13 @@
   0,
   0,
   259.2,
-  324.0
+  328.32
  ],
  "core": [
   2.16,
   2.16,
   257.03999999999996,
-  321.84
+  326.15999999999997
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -60,7 +60,7 @@
    "inst": "*u_sq*g_mm*g_64x546*u_m",
    "idx": 0,
    "x": 41.04,
-   "y": 190.08,
+   "y": 123.12,
    "w": 178.632,
    "h": 81.0,
    "orient": "R0",
@@ -73,9 +73,22 @@
    "inst": "*u_cq*g_mm*g_256x517*u_m",
    "idx": 0,
    "x": 41.04,
-   "y": 54.0,
+   "y": 23.76,
    "w": 171.72,
    "h": 77.22,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "macro",
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "master": "ot_sram_1r1w_32x546_m1",
+   "inst": "*u_sq*g_ib_mem*u_ib",
+   "idx": 0,
+   "x": 41.04,
+   "y": 224.64,
+   "w": 177.768,
+   "h": 81.0,
    "orient": "R0",
    "offtrack": 0
   }
@@ -91,6 +104,8 @@
   "rtl/lib/ot_hdly.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v",
   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_bb.v",
+  "physical/qwen_coll_cx/macro_edge_m5_guard.tcl",
   "physical/ref_tile/qfd_coll_xfifo_native/kit.env",
   "physical/ref_tile/qfd_coll_xfifo_native/clock.sdc",
   "physical/ref_tile/qfd_coll_xfifo_native/signoff.sdc",
@@ -123,6 +138,10 @@
   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1_tt.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_ss.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_ff.lib",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
   "physical/ref_tile/qfd_coll_xfifo_native/place.tcl"
  ]
 }
