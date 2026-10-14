@@ -47,7 +47,7 @@ module tb_hfd_lk_ep_shared;
       if(rst_n) begin
         shared_edges=shared_edges+1;
         if({a_tcr,a_rv,a_rf,a_x,a_f,a_l,b_tcr,b_rv,b_rf,b_x,b_f,b_l} !== {ga_tcr,ga_rv,ga_rf,ga_x,ga_f,ga_l,gb_tcr,gb_rv,gb_rf,gb_x,gb_f,gb_l})
-          $fatal(1,"LKEP_SHARED %s FAIL edge=%0d",MUT_TX_SHARED!=0?"MUTANT":"EXACT",shared_edges);
+          $fatal(1,"LKEP_SHARED %s FAIL edge=%0d",(MUT_TX_SHARED!=0 || MUT_RX_SHARED!=0 || MUT_PHY_SHARED!=0)?"MUTANT":"EXACT",shared_edges);
       end
     end
     // ---- lane with bit errors (one register each way, like the PHY)
