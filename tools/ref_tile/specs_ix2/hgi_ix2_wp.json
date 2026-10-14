@@ -56,7 +56,7 @@
  "job": {
   "owner": "Codex:el1013-hbm-redesign-idx",
   "branch": "claude/hbm-redesign-idx",
-  "tag": "r2",
+  "tag": "r3-corridor",
   "purpose": "IDX.INDEX redesign (owner 10-13) ix2 leaf wp: four sector packers + 8 write lanes (2,258 b on the 388.8 um S face = 0.56 of 10.3 slots/um; the flat adapter failed PPL at 1.03); M5 leaf, every pin a flop, one clock root; cluster production die e2e L24 1,158 (1.072x) exact, token 1.217x, e2e loss 0.282 %",
   "extra_paths": [
    "tools/hgi_unit_tput"
@@ -92,6 +92,14 @@
   "record_to": "results/rtl/ref_tile/hgi_ix2_wp"
  },
  "std_area_um2": 6507,
- "structural_change": "R1 GRT0116: 47 track overflow total, congestion concentrated at south hold/pin-flop seam x54-65um y4-7um (recorded congestion-30.rpt). Apply main pin-bank structural repair: auto hold-depth-derived pin flop gap and staggered columns (io_flop_at_pins.tcl OT_OFLOP_AUTO), separating launch flops behind FIRM hold banks instead of interleaving fixed gap1/cols4. Retain r1 outline259.2x75.6 and VM cut0.423; gates/layers unchanged. Also D landing FIFO4->16 with guarded pin-landing credit returns/deferred acknowledgement counter: reserve six entries for four outstanding credits plus landing stages. Exact equivalence3x100 PASS, mutants1/2/3 FAIL; saturated683-beat shape2 cycles1025->853 (-172), draining tail30->22; CLOSED PK and all other leaves unchanged. Fresh noCTS synthesis of first credit form exposed d_v->pending counter5 levels and D FIFO read->packer16 levels. Final form keeps credit arithmetic behind captured dv_q/d_cr and current d_v only drives the pin ACK flop through2 levels; cache D head with same-cycle empty/pop landing bypass to isolate FIFO mux from packer word placement.",
- "slot_change_request": "el1013-hbm-redesign-idx 2026-10-13 Codex: ix2 leaf wp Outline 194.4 x 64.8 -> 259.2 x 75.6 um. Widen VM face by 33% (2258 bits / (259.2 um x 20.6 tracks/um) = 0.423), increase core area by 57%; failed GRT had 1693 markers and no decreasing trend. Separate pin-access demand from packer placement; no layer/timing gate changed. Same pin faces/layers; pending die lead assigned pin file / next daily contract revision."
+ "structural_change": "R2 failed GRT with132 total overflow: M2 9/M3 52/M4 23/M5 48. South wwq/hold-chain seam at x200-233um y1.7-4.6um dominates congestion-30.rpt. Preserve identical recipe2 BUF-HB4-BUF output and HB4-BUF input circuits, but replace coincident three-cell FIRM seeds with disjoint measured-width chains, each in three legal inward rows; greedily allocate separate lanes for overlapping x intervals. Derive launch-flop anchoring behind this actual hold corridor with unchanged shared auto planner. No RTL, pin face, outline, layer, hold margin, clock, price or behavioural contract changed. Fresh sourcebound CTS measures new physical placement before routing.",
+ "slot_change_request": "el1013-hbm-redesign-idx 2026-10-13 Codex: ix2 leaf wp Outline 194.4 x 64.8 -> 259.2 x 75.6 um. Widen VM face by 33% (2258 bits / (259.2 um x 20.6 tracks/um) = 0.423), increase core area by 57%; failed GRT had 1693 markers and no decreasing trend. Separate pin-access demand from packer placement; no layer/timing gate changed. Same pin faces/layers; pending die lead assigned pin file / next daily contract revision.",
+ "recipe": 2,
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/ref_tile/hgi_ix2_wp/wp_hold_corridor.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/ref_tile/hgi_ix2_wp/wp_hold_release.tcl"
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false
 }
