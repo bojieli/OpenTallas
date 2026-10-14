@@ -51,7 +51,7 @@ def main():
  for v in children:
   if v['stage']==0:continue
   prev=next(t for t in children if t['role']==v['role'] and t['stage']==v['stage']-1)
-  for bit in range(v['width']):
+  for bit in range(v.get('used_width',v['width'])):
    key=lambda n:n if v['width']==1 else f'{n}[{bit}]'
    sp=prev['pins'][key('o')];dp=v['pins'][key('i')]
    hops.append({'source':prev['instance'],'sink':v['instance'],'bit':bit,'length_um':round(abs(sp['x']-dp['x'])+abs(sp['y']-dp['y']),3)})

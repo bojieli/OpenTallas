@@ -491,5 +491,13 @@ place_pin -pin_name {rc[4]} -layer M5 -location {47.388000 43.158000} -force_to_
 place_pin -pin_name {rc[5]} -layer M5 -location {47.484000 43.158000} -force_to_die_boundary
 place_pin -pin_name {rc[6]} -layer M5 -location {47.580000 43.158000} -force_to_die_boundary
 place_pin -pin_name {rc[7]} -layer M5 -location {47.676000 43.158000} -force_to_die_boundary
+place_pin -pin_name {roots_ready[0]} -layer M5 -location {48.924000 43.158000} -force_to_die_boundary
+place_pin -pin_name {roots_ready[1]} -layer M5 -location {49.020000 43.158000} -force_to_die_boundary
+place_pin -pin_name {roots_ready[2]} -layer M5 -location {49.116000 43.158000} -force_to_die_boundary
+place_pin -pin_name {roots_ready[3]} -layer M5 -location {49.212000 43.158000} -force_to_die_boundary
+place_pin -pin_name {roots_ready[4]} -layer M5 -location {49.308000 43.158000} -force_to_die_boundary
+place_pin -pin_name {roots_ready[5]} -layer M5 -location {49.404000 43.158000} -force_to_die_boundary
+place_pin -pin_name {roots_ready[6]} -layer M5 -location {49.500000 43.158000} -force_to_die_boundary
+place_pin -pin_name {roots_ready[7]} -layer M5 -location {49.596000 43.158000} -force_to_die_boundary
 place_pin -pin_name {rst} -layer M4 -location {0.042000 3.468000} -force_to_die_boundary
 place_pin -pin_name {rsv} -layer M4 -location {0.042000 3.660000} -force_to_die_boundary

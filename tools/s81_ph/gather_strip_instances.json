@@ -3,6 +3,7 @@
   "relay_cycles": {
     "tst": 4,
     "cs": 4,
+    "root_ready": 4,
     "rc": 6,
     "tc": 1,
     "f_cd_serial": 1,
@@ -444,291 +445,323 @@
     },
     {
       "instance": "u_strip.cs_0_0",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 48,
       "role": "cs0",
       "stage": 0,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_0_1",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 49,
       "role": "cs0",
       "stage": 1,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_0_2",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 50,
       "role": "cs0",
       "stage": 2,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_0_3",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 51,
       "role": "cs0",
       "stage": 3,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_1_0",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 52,
       "role": "cs1",
       "stage": 0,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_1_1",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 53,
       "role": "cs1",
       "stage": 1,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_1_2",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 54,
       "role": "cs1",
       "stage": 2,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_1_3",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 55,
       "role": "cs1",
       "stage": 3,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_2_0",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 56,
       "role": "cs2",
       "stage": 0,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_2_1",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 57,
       "role": "cs2",
       "stage": 1,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_2_2",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 58,
       "role": "cs2",
       "stage": 2,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_2_3",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 59,
       "role": "cs2",
       "stage": 3,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_3_0",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 60,
       "role": "cs3",
       "stage": 0,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_3_1",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 61,
       "role": "cs3",
       "stage": 1,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_3_2",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 62,
       "role": "cs3",
       "stage": 2,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_3_3",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 63,
       "role": "cs3",
       "stage": 3,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_4_0",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 64,
       "role": "cs4",
       "stage": 0,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_4_1",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 65,
       "role": "cs4",
       "stage": 1,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_4_2",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 66,
       "role": "cs4",
       "stage": 2,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_4_3",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 67,
       "role": "cs4",
       "stage": 3,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_5_0",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 68,
       "role": "cs5",
       "stage": 0,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_5_1",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 69,
       "role": "cs5",
       "stage": 1,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_5_2",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 70,
       "role": "cs5",
       "stage": 2,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_5_3",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 71,
       "role": "cs5",
       "stage": 3,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_6_0",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 72,
       "role": "cs6",
       "stage": 0,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_6_1",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 73,
       "role": "cs6",
       "stage": 1,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_6_2",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 74,
       "role": "cs6",
       "stage": 2,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_6_3",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 75,
       "role": "cs6",
       "stage": 3,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_7_0",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 76,
       "role": "cs7",
       "stage": 0,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_7_1",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 77,
       "role": "cs7",
       "stage": 1,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_7_2",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 78,
       "role": "cs7",
       "stage": 2,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.cs_7_3",
-      "master": "dsfd_rly_2_WE",
-      "width": 2,
+      "master": "dsfd_rly_63_WE",
+      "width": 63,
       "clock_index": 79,
       "role": "cs7",
       "stage": 3,
-      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE"
+      "view": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+      "used_width": 3
     },
     {
       "instance": "u_strip.rc_0_0",

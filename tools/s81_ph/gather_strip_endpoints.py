@@ -26,6 +26,7 @@ def main():
    g=int(role[2:])
    for b in range(2):
     hop(f'{role}.leaf{b}',{'x':148.572+.096*b+216*g,'y':61.674},pin(chain[0],'i',b));hop(f'{role}.ctl{b}',pin(chain[-1],'o',b),ctl('cs',2*g+b))
+   hop(f'{role}.ready_leaf',{'x':148.764+216*g,'y':61.674},pin(chain[0],'i',2));hop(f'{role}.ready_ctl',pin(chain[-1],'o',2),ctl('roots_ready',g))
   elif role.startswith('rc'):
    g=int(role[2:]);hop(f'{role}.ctl',ctl('rc',g),pin(chain[0],'i'));hop(f'{role}.top',pin(chain[-1],'o'),{'x':138.684+216*g,'y':778.71})
   elif role=='tc':

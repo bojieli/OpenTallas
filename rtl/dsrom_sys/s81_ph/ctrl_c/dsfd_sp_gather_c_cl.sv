@@ -176,11 +176,11 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
     wire [23:0] tst = {rE5[690 +: 2], rE4[759 +: 2], rE3[759 +: 2], rE2[759 +: 2], rE1[759 +: 2], rE0[690 +: 2], rW5[690 +: 2], rW4[759 +: 2], rW3[759 +: 2], rW2[759 +: 2], rW1[759 +: 2], rW0[690 +: 2]};
     wire [7:0] rc; wire [15:0] cs; wire [162:0] tc;
 `ifdef S81PH_GTH_CONTROL_STRIP
-    wire [23:0] tst_ctl; wire [15:0] cs_ctl; wire [7:0] rc_ctl; wire [162:0] tc_ctl; wire [11:0] fcd_ctl;
-    dsfd_gth_strip u_strip (.ck_r(ck_r), .rst(rst[0]), .rsv(rsv[0]), .tst_i(tst), .cs_i(cs), .rc_i(rc_ctl), .tc_i(tc_ctl), .fcd_i(f_cd),
-        .tst_o(tst_ctl), .cs_o(cs_ctl), .rc_o(rc), .tc_o(tc), .fcd_o(fcd_ctl));
+    wire [23:0] tst_ctl; wire [15:0] cs_ctl; wire [7:0] rc_ctl; wire [162:0] tc_ctl; wire [11:0] fcd_ctl; wire [7:0] roots_ready;
+    dsfd_gth_strip u_strip (.ck_r(ck_r), .rst(rst[0]), .rsv(rsv[0]), .tst_i(tst), .cs_i(cs), .ready_i({rs_a[35],rs_a[30],rs_a[25],rs_a[20],rs_a[15],rs_a[10],rs_a[5],rs_a[0]}), .rc_i(rc_ctl), .tc_i(tc_ctl), .fcd_i(f_cd),
+        .tst_o(tst_ctl), .cs_o(cs_ctl), .ready_o(roots_ready), .rc_o(rc), .tc_o(tc), .fcd_o(fcd_ctl));
 `else
-    wire [23:0] tst_ctl = tst; wire [15:0] cs_ctl = cs; wire [7:0] rc_ctl; wire [162:0] tc_ctl; wire [11:0] fcd_ctl = f_cd;
+    wire [23:0] tst_ctl = tst; wire [15:0] cs_ctl = cs; wire [7:0] rc_ctl; wire [162:0] tc_ctl; wire [11:0] fcd_ctl = f_cd; wire [7:0] roots_ready = 8'hFF;
     assign rc = rc_ctl; assign tc = tc_ctl;
 `endif
     // leaf (g, k) = index 4 g + k; plain buses (no hierarchical references)
@@ -219,7 +219,7 @@ module `S81PH_GTH_CL_NAME #(parameter integer ROOTD = 128, parameter integer MUT
 `else
     dsfd_gth_ctl #(.MUT(MUT)) u_ctl (
 `endif
-        .ck(ck[0]), .rst(rst[0]), .ckv(ckv[0]), .rsv(rsv[0]), .f_vm(f_vm[159:0]), .tst(tst_ctl), .cs(cs_ctl),
+        .ck(ck[0]), .rst(rst[0]), .ckv(ckv[0]), .rsv(rsv[0]), .f_vm(f_vm[159:0]), .tst(tst_ctl), .cs(cs_ctl), .roots_ready(roots_ready),
         .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st), .f_cd(fcd_ctl), .t_xgo(t_xgo), .tc(tc_ctl), .rc(rc_ctl));
     assign t_capture[6946:6784] = tc;
 endmodule

@@ -44,7 +44,8 @@
   "N": [
    "rc",
    "cs",
-   "tst"
+   "tst",
+   "roots_ready"
   ],
   "W": [
    "rst",
@@ -67,7 +68,7 @@
   "benches": [
    {
     "name": "gather_cl_gate",
-    "cmd": "J=16 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "cmd": "CONTROL_STRIP=1 DIE_CLOCKS=1 RESTART=1 J=16 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
     "expect": "pass",
     "pass_regex": "GATHER_CL_GATE PASS",
     "threads": 16,
@@ -78,7 +79,7 @@
    },
    {
     "name": "gather_cl_neg_xgo",
-    "cmd": "RAW=1 MODES=xgo J=16 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclx rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "cmd": "CONTROL_STRIP=1 DIE_CLOCKS=1 RESTART=1 RAW=1 MODES=xgo J=16 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclx rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
     "expect": "fail",
     "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
     "threads": 16,

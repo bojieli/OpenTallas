@@ -19,6 +19,7 @@ module dsfd_gth_ctl #(parameter integer MUT = 0) (
     input  wire         rsv,
     input  wire [159:0] f_vm,
     input  wire [23:0]  tst,                 // trunk i (rW0..5, rE0..5): [2i +: 2] = {fault, live}
+    input  wire [7:0]   roots_ready,          // actual bottom rso, returned through four registered stages
     input  wire [15:0]  cs,                  // column g: [2g +: 2] = {busy, fault}
     input  wire [84:0]  c_cmd,
     output wire [8:0]   c_done,
@@ -34,6 +35,12 @@ module dsfd_gth_ctl #(parameter integer MUT = 0) (
     always @(posedge ckv or negedge rsv) if (!rsv) rv_q <= 2'b00; else rv_q <= {rv_q[0], 1'b1};
     wire rs_n = rst_s[1], rv_n = rv_q[1];
     always @(posedge ck or negedge rs_n) if (!rs_n) rc <= 8'h00; else rc <= 8'hFF;
+    // Each leaf rso is its active-low reset synchronizer output in the stream domain.
+    // Capture the eight actual bottom-leaf release acknowledgements at this face.
+    (* keep = "true" *) reg [7:0] roots_ready_q;
+    always @(posedge ck or negedge rst)
+        if (!rst) roots_ready_q <= 8'd0;
+        else roots_ready_q <= roots_ready;
     // ---- status
     reg [23:0] tq; reg [15:0] cq_s;
     always @(posedge ck) begin tq <= tst; cq_s <= cs; end
@@ -109,37 +116,29 @@ module dsfd_gth_ctl #(parameter integer MUT = 0) (
             if (dbad) sf <= 1'b1;
         end
     assign tc = {tr[162:160], cq, cqv};
-    // Public reset/start contract: the adapter's two-edge local reset must not
-    // discard a command captured on the first post-deassert edge. Preserve the
-    // producer's eight outstanding credits; queued commands return no credit.
-    // The normal online, empty-queue path keeps the original command cycle.
-    reg [84:0] boot_q [0:7];
-    reg [2:0] boot_wp, boot_rp; reg [3:0] boot_n; reg boot_fault;
-    wire [1:0] ep_st;
-    wire boot_bypass = ep_st[1] && boot_n == 0;
-    wire boot_pop = ep_st[1] && boot_n != 0;
-    wire boot_capture = c_cmd[84] && !boot_bypass;
-    wire boot_push = boot_capture && (boot_n < 8 || boot_pop);
-    wire [84:0] ep_cmd = boot_bypass ? c_cmd : boot_pop ? boot_q[boot_rp] : 85'd0;
-    always @(posedge ck or negedge rst)
-        if (!rst) begin boot_wp <= 0; boot_rp <= 0; boot_n <= 0; boot_fault <= 0; end
-        else begin
-            if (boot_capture && !boot_push) boot_fault <= 1'b1;
+    // One explicit command pin stage (+1 stream cycle) preserves a command
+    // on the first post-deassert edge through the adapter's two-edge reset.
+    // The existing QD8 queues/credits remain authoritative; no extra credit.
+    (* keep = "true" *) reg cmd_pin_v;
+    (* keep = "true" *) reg [83:0] cmd_pin_d;
+    always @(posedge ck) cmd_pin_d <= c_cmd[83:0];
 `ifdef S81PH_GTH_MUT_BOOTDROP
-            // Negative control: lose every command buffered before online.
-            if (boot_push) begin boot_q[boot_wp] <= 85'd0; boot_wp <= boot_wp + 1'b1; end
+    reg cmd_first_edge_seen;
+    always @(posedge ck or negedge rst)
+        if (!rst) begin cmd_pin_v <= 0; cmd_first_edge_seen <= 0; end
+        else begin cmd_pin_v <= c_cmd[84] && cmd_first_edge_seen; cmd_first_edge_seen <= 1; end
 `else
-            if (boot_push) begin boot_q[boot_wp] <= c_cmd; boot_wp <= boot_wp + 1'b1; end
+    always @(posedge ck or negedge rst)
+        if (!rst) cmd_pin_v <= 0;
+        else cmd_pin_v <= c_cmd[84];
 `endif
-            if (boot_pop) boot_rp <= boot_rp + 1'b1;
-            case ({boot_push, boot_pop})
-                2'b10: boot_n <= boot_n + 1'b1;
-                2'b01: boot_n <= boot_n - 1'b1;
-                default: boot_n <= boot_n;
-            endcase
-        end
-    assign c_st = ep_st;
+    wire [84:0] ep_cmd = {cmd_pin_v,cmd_pin_d};
+`ifdef S81PH_GTH_MUT_EARLYSTART
+    wire roots_issue_ok = 1'b1; // Negative control: issue before actual bottom reset release.
+`else
+    wire roots_issue_ok = &roots_ready_q;
+`endif
     ot_s81_slab_ep #(.QD(8), .JQ(1), .MUT(MUT)) u_ep (.c_clk(ck), .c_rst_n(rst), .c_cmd(ep_cmd), .c_done(c_done),
-        .c_st(ep_st), .e_clk(ck), .e_rst_n(rst), .j_v(jv), .j_d(jd), .j_new(jnew), .j_new_d(jnd),
-        .j_present(sn != 0), .j_done(dn), .slab_fault(sf | boot_fault), .ep_fault(epf));
+        .c_st(c_st), .e_clk(ck), .e_rst_n(rst), .j_v(jv), .j_d(jd), .j_new(jnew), .j_new_d(jnd),
+        .j_present(sn != 0 && roots_issue_ok), .j_done(dn), .slab_fault(sf), .ep_fault(epf));
 endmodule

@@ -36,14 +36,14 @@ build() {
       +define+S81PH_GTH_CL_NAME=dsfd_sp_gather_c_cl $SDEF --top-module tb_s81ph_gather_cl $2 --Mdir $OUT/obj_$1 -o sim $FILES > $OUT/build_$1.log 2>&1
 }
 run() { # mode case expect need want
-  $OUT/obj_$1/sim +STIM=$OUT/$2.txt +EXPECT=$3 +NEED=$4 +RESTART=${RESTART:-0} > $OUT/run_$1_$2.log 2>&1
+  $OUT/obj_$1/sim +STIM=$OUT/$2.txt +EXPECT=$3 +NEED=$4 +RESTART=${RESTART:-0} +EARLY_CMD=${EARLY_CMD:-0} +RESET_PHASE=${RESET_PHASE:-0} > $OUT/run_$1_$2.log 2>&1
   res=$(grep -h '^RESULT' $OUT/run_$1_$2.log | tail -1)
   [ -z "$res" ] && res="RESULT FAIL (aborted: $(grep -h -m1 -i 'error' $OUT/run_$1_$2.log $OUT/build_$1.log | cut -c1-120))"
   echo "$1 $2 expect=$3 need=$4 want=$5: $res | $(grep -h '^SUMMARY' $OUT/run_$1_$2.log | tail -1)"
 }
 for m in $MODES; do
   case $m in base) X="";; lane) X="+define+S81PH_GTH_CL_MUT_LANE";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
-    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; esac
+    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; early) X="+define+S81PH_GTH_MUT_EARLYSTART";; esac
   ( build $m "$X" ) &
 done
 wait
@@ -54,6 +54,7 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
       base) for c in $REAL; do run base $c 0 1 PASS & done; run base stress 0 1 PASS & run base ovf 1 0 PASS &
             run base refuse 0 1 REFUSED & ;;
       ovf)  run ovf ovf 1 0 FAIL & ;;
+      early) run $m stress 0 1 FAIL & ;;
       lane|nofwd) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
       *)    run $m $FIRST 0 0 FAIL & ;;
     esac
