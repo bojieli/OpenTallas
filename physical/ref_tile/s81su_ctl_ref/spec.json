@@ -64,13 +64,14 @@
   "pd": 0.45,
   "threads": 16,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:el1011-s81su",
-  "branch": "claude/el1011-s81su",
-  "tag": "v2",
-  "purpose": "el1011-s81su: dsfd_su_t_ctl re-kit for SW v3 (ctl NSW 8 -> 16: the SW exps rows are written a beat by the 16 SW quant slots); M5 layer cap (pg_layer M7 dropped), kit on main >= dc5594311; contract slot s81.json sp_su_s/ctl",
+  "owner": "Claude:el1013-s81su-qual",
+  "branch": "claude/el1013-s81su-qual",
+  "tag": "v3",
+  "purpose": "SU control tile v3, pin-register defect (pinreg audit 10-13: clk->pin 247 ps on dn_kind, pin->flop 519 ps on p_rf against 166.7 ps): the RTL already has one flop behind every sk-domain input pin and a flop on every output; v2's placer pulled those flops into the core. Kit recipe 2: pin flops and hold stages FIRM at the pins (io_flop_at_pins + inhold/outhold), hold 30 ps. Same RTL, outline, pins, cycles (v2 CLOSED TT +64.95 / FF +7.97)",
   "benches": [
    {
     "name": "exact_full_hier",
@@ -95,7 +96,21 @@
   "views_to": "physical/ref_tile/s81su_ctl_ref/views",
   "record_to": "results/rtl/ref_tile/s81su_ctl_ref"
  },
+ "recipe": 2,
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/pinreg_audit_1013/s81_compensated.json",
+  "cell": "dsfd_su_t_ctl",
+  "pair_cost_ps": 766.1,
+  "fix": "kit recipe 2 (pin flops and hold stages FIRM at the pins): the RTL already has one flop behind every pin, the closed route placed them up to ~464 um inside the tile (worst p_rf 515 ps pin -> flop)"
+ },
  "params": {},
  "children": [],
- "inter": []
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
 }
