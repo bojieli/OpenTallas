@@ -73,7 +73,15 @@ module ot_hgi_sfu_native_quarter #(parameter integer ENABLE_NATIVE=0)(
     output wire [15:0] lane_fault, lane_coll
 );
 localparam N=16, AW=24, NW=16;
-wire [1741:0] control;
+wire [1741:0] control, raw_control;
+`ifdef OT_SFU_PHASE_MUTANT
+// Genuine negative control: add a physical control register edge without shifting retirement metadata.
+reg [1741:0] shifted_control;
+always @(posedge clk) shifted_control<=raw_control;
+assign control=shifted_control;
+`else
+assign control=raw_control;
+`endif
 wire [15:0] l_vm_we,l_kv_we,l_rov;
 wire [383:0] l_vm_waddr,l_kv_waddr;
 wire [511:0] l_vm_wdata,l_kv_wdata,l_rox;
@@ -165,7 +173,7 @@ ot_hgi_sfu_ctl_extract #(.ENABLE_NATIVE(ENABLE_NATIVE)) u_ctl (
 .dbg_res(dbg_res),
 .dbg_sseq(dbg_sseq),
 .admission_fault(admission_fault),
-.grid_control(control),.l_fault(lane_fault),.l_coll(lane_coll),.l_rov(l_rov),
+.grid_control(raw_control),.l_fault(lane_fault),.l_coll(lane_coll),.l_rov(l_rov),
 .l_vm_we(l_vm_we),.l_kv_we(l_kv_we),.l_vm_waddr(l_vm_waddr),.l_kv_waddr(l_kv_waddr),
 .l_vm_wdata(l_vm_wdata),.l_kv_wdata(l_kv_wdata),.l_rox(l_rox));
 ot_hgi_sfu_arithmetic_grid u_grid (

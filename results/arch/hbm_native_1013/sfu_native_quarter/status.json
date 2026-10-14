@@ -9,7 +9,7 @@
     "reason": "Current c12 oracle passesSFUT0 to old frozen CLOSED lane without SFUT parameter. Preserved build.log; r3 uses frozen oracle."
   },
   "r3": {
-    "result": "RUNNING",
+    "result": "PASS39193cyclechecks,1026emits,192descriptors,15090exact write words/addresses,warmreset,reductionrefused",
     "source": "candidate5fd04161d + r3_manifest.sha256",
     "actual_closed_body": "all frozen physical/ref_tile/sfu_lane_ring3_rt/src files; mapper/grid parentsource SHA pinnedmanifest",
     "params": "BCAST1 RET5 metadata/payload0, mapper4+CLOSED b_q1+LEAF1",
@@ -20,12 +20,20 @@
       "production price",
       "physical controller/quarter views",
       "side/reduction functions"
-    ]
+    ],
+    "runtime_s": 1032.375,
+    "scope": "Synthetic descriptor/control/arithmetic phase oracle with source-frozen CLOSEDbody and original c12; not native local8 cache, VM CDC, production throughput or new physical qualification"
   },
   "full_chunks": {
     "result": "PASS5337cyclechecks,2543valid,848collisions,3warmresets,all7depths",
     "negative_control": "drop valid at actual high139\u2192low138 interchunk crossing, FAILcycle39",
     "scope": "W75 andW60 fullhorizon chronologicalcontrol proofs pass, includingPIN_CAPTURE1 data/valid gates; STATUS_REG1 verifies original coll/busy +1edge atPIN_CAPTURE0; PIN1 composed status alignment open. No physical/native qualification."
   },
-  "root_rule": "full-horizon payload75/60 \u00d7138 gives10350/8280FF perroot; plusvalid138 andcaptureregoptional; exactlyfourroots, slotsunassigned"
+  "root_rule": "full-horizon payload75/60 \u00d7138 gives10350/8280FF perroot; plusvalid138 andcaptureregoptional; exactlyfourroots, slotsunassigned",
+  "r4_mutant": {
+    "result": "COMPILING",
+    "mutation": "OT_SFU_PHASE_MUTANT adds real1742bit control register edge to grid while retirement metadata remainsunshifted; checker reads actual shifted grid bus",
+    "source": "r4_mut_manifest.sha256",
+    "normal_source_relation": "default preprocessing retains direct raw_control\u2192control alias, same active graph as r3 source; strict production/native source gate stillpending"
+  }
 }

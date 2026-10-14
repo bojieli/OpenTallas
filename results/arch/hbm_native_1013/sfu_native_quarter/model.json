@@ -9,7 +9,8 @@
     "quarters": 4,
     "body_per_quarter": 16,
     "mapper_per_quarter": 16,
-    "requested_local_banks": 8
+    "requested_local_banks": 8,
+    "aggregate_elements_per_cycle_max": 64
   },
   "params": {
     "N": 16,
@@ -46,7 +47,13 @@
     "control_note": "BCAST1 t_emit prices original LEAF1; mapper4 and CLOSED b_q1 shift every raw/staged control together by5",
     "return_note": "retirement metadata RET5; write payload bypasses old RET5 because mapper4+b_q1 already shifts actual lane data5",
     "closed_input_register": 1,
-    "closed_leaf_register": 1
+    "closed_leaf_register": 1,
+    "composed_from_raw_broadcast": {
+      "NONE_direct_M1_mul_path": 45,
+      "EXP_direct_M1_mul_path": 139,
+      "SIGM_SILU_direct_M1_mul_path": 167,
+      "note": "rawmapper4+CLOSEDb_q1+LEAF1+fetch4+PRE1+M1mul7+M2_6+AD7+SFUdepth+E1_7+E2_6+OUT1; divideM1 adds15,gatheradds4"
+    }
   },
   "boundaries": {
     "controller_to_grid_bits": 1742,
@@ -106,6 +113,7 @@
   },
   "price": {
     "production_cycles": "UNMEASURED",
-    "token_latency": "cannot compose until local8 cache and native VM group assignment measured"
+    "token_latency": "cannot compose until local8 cache and native VM group assignment measured",
+    "scope": "actual phase proof15090words is synthetic, not a production throughput campaign or old price validation"
   }
 }
