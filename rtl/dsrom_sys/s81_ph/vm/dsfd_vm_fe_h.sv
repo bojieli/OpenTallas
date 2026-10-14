@@ -687,8 +687,17 @@ module dsfd_vm_fcn (
     wire [2:0] xp_c = arg[20:18];        // X op: streamer index
     wire x_go = arg[17];
     reg [4:0] x_act;
+`ifdef OT_SPVM_XGOS
+    // XGOS (claude s81-grpA r3, default-off VM-read variant): XGO arg[16] = wait, arg[15:14] = producer slot.  The
+    // streamer is loaded at once but starts only when the slot COMPLETES (or at once if the slot completed and was not
+    // re-armed since): the controller no longer waits for the producer's ARMN done to issue the consumer's XGO.
+    reg [4:0] x_wt, x_rel;              // waiting on a slot / release pulse (row-completion counter section)
+    wire x_hold_new = vop == 3'd7 && x_go && xp_c < 3'd5 && (x_wt[xp_c] || x_rel[xp_c]);
+`else
+    wire x_hold_new = 1'b0;
+`endif
     wire imm_op = vop == 3'd1 || vop == 3'd2 || vop == 3'd4 || vop == 3'd6 || (vop == 3'd7 && !x_go);
-    assign ad_r = !(imm_op && imm_v) && !(vop == 3'd5 && cq_n == CQD) && !(vop == 3'd7 && x_go && xp_c < 3'd5 && x_act[xp_c]);
+    assign ad_r = !(imm_op && imm_v) && !(vop == 3'd5 && cq_n == CQD) && !(vop == 3'd7 && x_go && xp_c < 3'd5 && x_act[xp_c]) && !x_hold_new;
     wire acc = ad_v && ad_r;
     wire is_armb = acc && vop == 3'd1, is_armr = acc && vop == 3'd2, is_arm = acc && vop == 3'd3;
     wire is_pid = acc && vop == 3'd4, is_prd = acc && vop == 3'd5;
@@ -739,7 +748,12 @@ module dsfd_vm_fcn (
         if (!rn) x_act <= 5'd0;
         else for (xi = 0; xi < 5; xi = xi + 1) begin
             if (is_xmap && xp_c == xi[2:0]) begin x_bus[xi] <= arg[16:13]; x_n[xi] <= arg[12:0]; end
+`ifdef OT_SPVM_XGOS
+            if (is_xgo && xp_c == xi[2:0]) begin x_act[xi] <= !arg[16]; x_b[xi] <= arg[13:0]; x_c[xi] <= 13'd0; x_tag[xi] <= ctag; end
+            else if (x_rel[xi]) x_act[xi] <= 1'b1;
+`else
             if (is_xgo && xp_c == xi[2:0]) begin x_act[xi] <= 1'b1; x_b[xi] <= arg[13:0]; x_c[xi] <= 13'd0; x_tag[xi] <= ctag; end
+`endif
             else if (x_last[xi]) x_act[xi] <= 1'b0;
             else if (x_act[xi]) x_c[xi] <= x_c[xi] + 13'd1;
         end
@@ -1022,6 +1036,32 @@ module dsfd_vm_fcn (
                    sl_n[kk], sl_cnt[kk], sl_need[kk], k_r[kk*NP +: NP]);
 `endif
 
+`ifdef OT_SPVM_XGOS
+    // XGOS release: x_fr[s] = slot s completed and not re-armed since (set by its completion, cleared when an ARMN of s is
+    // accepted, in command order with the XGOS).  A waiting streamer is released by its slot's completion pulse; an XGOS
+    // that arrives after the completion is released at once.  One registered cycle (x_rel) before the streamer starts.
+    reg [NSLOT-1:0] x_fr; reg [1:0] x_ws [0:4];
+    always @(posedge clk) begin : p_xgos integer xi, kk;
+        if (!rn) begin x_wt <= 5'd0; x_rel <= 5'd0; x_fr <= {NSLOT{1'b0}}; end
+        else begin
+            for (kk = 0; kk < NSLOT; kk = kk + 1) begin
+                if (cmpl[kk]) x_fr[kk] <= 1'b1;
+                if (is_arm && arm_s == kk[1:0]) x_fr[kk] <= 1'b0;
+            end
+            for (xi = 0; xi < 5; xi = xi + 1) begin
+                x_rel[xi] <= 1'b0;
+                if (is_xgo && arg[16] && xp_c == xi[2:0]) begin
+`ifdef OT_SPVM_MUT_XGOS_EARLY
+                    x_rel[xi] <= 1'b1;                                              // MUTANT: starts without its slot
+`else
+                    if (x_fr[arg[15:14]] || cmpl[arg[15:14]]) x_rel[xi] <= 1'b1;
+                    else begin x_wt[xi] <= 1'b1; x_ws[xi] <= arg[15:14]; end
+`endif
+                end else if (x_wt[xi] && cmpl[x_ws[xi]]) begin x_wt[xi] <= 1'b0; x_rel[xi] <= 1'b1; end
+            end
+        end
+    end
+`endif
     // ---- end verbatim
     // FE status: fault wires from the other leaves enter pin flops (sticky sources; rule 3)
     reg [15:0] clf_q; reg so_q, ovr_q, sflt_q, err_q;
