@@ -4881,8 +4881,8 @@
     {
       "master": "qkd_host_ctrl_token_service_packet",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_ctrl_token_service_packet.sv",
-      "source_revision": "b8d9486c7",
-      "source_sha256": "cca15c4e0496efe087bc911924b9b0aeaf00dad9f0a9440032dea51bdd8e9c75",
+      "source_revision": "8bb9a6c00",
+      "source_sha256": "5ad73d69799b4908bdc04cd8b89120dd69047a4ce6467a5a28d2b333da41f049",
       "ports": [
         {
           "name": "ck",
@@ -5382,7 +5382,7 @@
           "seam": "CAPTURED_INPUT"
         }
       ],
-      "flop_bits": 6245,
+      "flop_bits": 6249,
       "clock_entries": [
         "ck"
       ],
@@ -5396,7 +5396,7 @@
         "ENABLE_TOKEN": 0
       },
       "alternative_to": "qkd_host_ctrl_service_packet",
-      "identity": "HC22v2 token epoch230:245 validity246 service epoch247:262; sole external central allocator; POR-retained rank witness and held cancellation"
+      "identity": "HC22v2 token epoch230:245 validity246 service epoch247:262; CTRL23v2 bit64 PERMIT matchingepoch after all8 genuinepending; sole external central allocator; POR-retained rank witness and held cancellation"
     },
     {
       "master": "qfd_xf_ch546",
@@ -6590,7 +6590,17 @@
         246.24,
         172.8
       ],
-      "outline_status": "VARIANT_UNVERIFIED_OLD_CONTROLLER_GEOMETRY_ONLY",
+      "outline_status": "UNMEASURED_VARIANT_NO_OLD_CONTROLLER_FIT_ALIAS",
+      "flop_bits": 12719,
+      "clock_flop_bits": {
+        "pll_hbm": 9780,
+        "ck": 2939
+      },
+      "census_receipt_revision": "81e04cdf8",
+      "census_receipt": "physical/qkd_host_integration/evidence/controller_census_81e04cdf8/registered_port_request.json",
+      "physical_pin_assignment": "UNASSIGNED",
+      "current_view": null,
+      "registration_blocker": "co[0] three generic combinational cells from HBM state; separate pin-register candidate and exact read-credit proof required",
       "ports": [
         {
           "name": "pll_hbm",
