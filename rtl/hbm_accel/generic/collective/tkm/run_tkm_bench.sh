@@ -60,5 +60,6 @@ matrix)
   for m in 1 2 3 4; do run mut${m}_$P FAIL obj_mut$m $P & done
   wait ;;
 esac
-if grep -q "^WRONG\|BUILD FAIL" "$O/SUMMARY"; then echo "HGI_TKM FAIL" >> "$O/SUMMARY"; else echo "HGI_TKM PASS" >> "$O/SUMMARY"; fi
+if grep -q "^WRONG\|BUILD FAIL" "$O/SUMMARY"; then echo "HGI_TKM FAIL" >> "$O/SUMMARY"; cat "$O/SUMMARY"; exit 1; fi
+echo "HGI_TKM PASS" >> "$O/SUMMARY"
 cat "$O/SUMMARY"

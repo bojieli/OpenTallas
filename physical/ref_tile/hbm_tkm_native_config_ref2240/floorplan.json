@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  25.92,
-  25.92
+  23.76,
+  23.76
  ],
  "core": [
   2.16,
   2.16,
-  23.76,
-  23.76
+  21.6,
+  21.6
  ],
  "why": "spec outline",
- "std_area_um2": null,
+ "std_area_um2": 197,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -35,18 +35,22 @@
    "packet"
   ],
   "E": [
-   "start",
-   "fault",
+   "obase",
+   "rbase",
+   "has_r"
+  ],
+  "N": [
    "n",
-   "k",
-   "nout",
    "g",
    "gbase",
    "pf",
-   "obase",
-   "rbase",
-   "has_r",
    "reservations"
+  ],
+  "S": [
+   "start",
+   "fault",
+   "k",
+   "nout"
   ]
  },
  "clock_port": "clk",

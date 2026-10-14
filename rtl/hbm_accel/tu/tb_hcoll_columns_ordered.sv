@@ -135,7 +135,7 @@ module tb_hcoll_columns_ordered #(
         , .SYNCPHY(1)
 `endif
         )
-      dut (.landing_clk({NPT{clk}}),.reduce_clk({LANES{clk}}),.column_clk({DNC{clk}}),.port_clk({NPT{clk}}),.byp(1'b0),.gsz(4'hf),.mcast_all(1'b0),.mcast_group_size(8'd96),.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
+      dut (.landing_capture_clk({NPT{clk}}),.landing_clk({NPT{clk}}),.reduce_clk({LANES{clk}}),.column_clk({DNC{clk}}),.port_clk({NPT{clk}}),.byp(1'b0),.gsz(4'hf),.mcast_all(1'b0),.mcast_group_size(8'd96),.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
 `ifdef TU_GSZPORT
            .gsz(4'(`TU_GSZPORT)),
 `ifdef TU_MCAST_ALL

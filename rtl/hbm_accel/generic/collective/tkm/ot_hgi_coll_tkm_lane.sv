@@ -49,7 +49,7 @@ module ot_hgi_coll_tkm_lane #(parameter integer MUT=0, HEAD_SEAM=0)(
  end
  wire fo;wire[679:0]fd;wire[6:0]fcnt;
  localparam integer STAGES=HEAD_SEAM?5:3;
- wire fpop=!fifo_empty&&live_use&&(4'(head_n)+4'(landing_v)-4'(pop_use&&live_use)<4'(STAGES));
+ wire fpop=!fifo_empty&&live_use&&(4'(head_n)+4'(landing_v)-4'(HEAD_SEAM&&pop_use&&live_use)<4'(STAGES));
  ot_hcoll_sfifo #(.W(680),.AW(6))u_fifo(.clk(clk),.rst_n(rr[0]),.push(decoded_v),.din(decoded_e),
   .pop(fpop),.empty(fifo_empty),.dout(fd),.ovf(fo),.count(fcnt));
  reg ld_v;reg[679:0]ld_e;reg[82:0]tau_p;

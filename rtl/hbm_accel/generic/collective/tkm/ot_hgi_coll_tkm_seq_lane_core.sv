@@ -146,9 +146,9 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     always @(posedge clk)begin head_pin<=lane_heads;mask_pin<=lane_masks;epoch_pin<=lane_epochs;hn_pin<=lane_hn;end
     for(genvar l=0;l<DEL;l=l+1)begin:g_lane_faces
      assign head_offset[l]=consume_epoch[l]-epoch_pin[8*l+:8];
-     assign st_e[l][0]=(head_offset[l]<4)?head_pin[2720*l+680*head_offset[l]+:680]:680'd0;
+     assign st_e[l][0]=(head_offset[l]<4)?head_pin[2720*l+680*head_offset[l][1:0]+:680]:680'd0;
      assign st_e[l][1]='0;assign st_e[l][2]='0;
-     assign st_m[l][0]=(head_offset[l]<4)?mask_pin[32*l+8*head_offset[l]+:8]:8'd0;
+     assign st_m[l][0]=(head_offset[l]<4)?mask_pin[32*l+8*head_offset[l][1:0]+:8]:8'd0;
      assign st_m[l][1]='0;assign st_m[l][2]='0;
      assign dn[l]=consume_mask[l];assign occ[l]=occ_pin[8*l+:8];
      assign st_n[l]=(head_offset[l]<8'(hn_pin[3*l+:3]))?2'd1:2'd0;

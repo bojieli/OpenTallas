@@ -2,9 +2,9 @@
 module tb_hcoll_landing545;
  parameter MUT=0;
  reg clk=0;always #5 clk=~clk;reg rn=0,push=0,pop=0;reg[544:0]data;reg[7:0]pe=0;
- wire valid,fault;wire[544:0]head;wire[7:0]epoch;
+ wire valid,fault;wire[3814:0]heads;wire[544:0]head=heads[0+:545];wire[3:0]count;wire[7:0]epoch;
  reg[544:0]gold[0:299];integer checked=0;
- ot_hcoll_landing545 #(.MUT(MUT))dut(.clk(clk),.rst_n(rn),.push(push),.data(data),.pop(pop),.pop_epoch(pe),.valid(valid),.head(head),.head_epoch(epoch),.fault(fault));
+ ot_hcoll_landing545 #(.MUT(MUT))dut(.clk(clk),.rst_n(rn),.push(push),.data(data),.pop(pop),.pop_epoch(pe),.valid(valid),.heads(heads),.head_count(count),.head_epoch(epoch),.fault(fault));
  task automatic retire_head(input integer k);
   begin
    wait(valid&&epoch==8'(k));@(negedge clk);

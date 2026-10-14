@@ -10,7 +10,8 @@
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
  ],
  "params": {
-  "MUT": 0
+  "MUT": 0,
+  "HEAD_SEAM": 1
  },
  "clock_port": "clk",
  "reset_ports": [
@@ -40,7 +41,10 @@
    "decoded_v",
    "decoded_mask",
    "early_valid",
-   "fault"
+   "fault",
+   "heads_e",
+   "heads_m",
+   "head_epoch"
   ],
   "W": [
    "clk",
@@ -50,7 +54,8 @@
    "cfg_pf",
    "ins_live",
    "sel_take",
-   "sel_pop"
+   "sel_pop",
+   "sel_epoch"
   ],
   "E": [
    "tau"
@@ -82,7 +87,7 @@
    ]
   }
  ],
- "structural_change": "Split43904flop sequencer into4 true ownroot ingress leaves and retainedstatecore. Remove reset-derived payloadenables. Capturefd/taubeforemask. Reduce decodedpayload680b crossing to8validbits without data/capacity/math change. Selectorfeedback/permit pinregistering remains explicit physical debt; probe is not adoption.",
+ "structural_change": "Split43904flop sequencer into4 true ownroot ingress leaves and retainedstatecore. Remove reset-derived payloadenables. Capturefd/taubeforemask. Reduce decodedpayload680b crossing to8validbits without data/capacity/math change. Selectorfeedback/permit pinregistering remains explicit physical debt; probe is not adoption. NativeHEAD_SEAM1actual5staging4mirrors andregisteredpop/epoch/live/permit; CAP64 preserved, producer full852560entries/320packet/epochwrapPASS +IDmutFAIL. Fullshape95 all30PASSsyn_sel2899pricebound2948.66; freshphysicalclock/pinsgate required. HEAD0 retainsoriginalfpopfallback.",
  "route": {
   "pd": 0.52,
   "threads": 8,
@@ -97,7 +102,7 @@
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
-  "tag": "probe1",
+  "tag": "r2headseam",
   "hold_merge": true,
   "purpose": "Ingress clock/sizing diagnosis after actual43904flop monolithfail; feedbackpin/adoption/parent slot gates unresolved",
   "extra_paths": [
@@ -107,25 +112,25 @@
   ],
   "benches": [
    {
-    "name": "lane_extract_exact",
-    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_lane_extract.sh {RUN}/bench/lane 0",
+    "name": "native_ingress_full85",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_ingress_native.sh {RUN}/bench/exact",
     "expect": "pass",
-    "pass_regex": "TKM_LANE_EXTRACT PASS",
-    "threads": 8,
-    "peak_ram_gb": 16,
+    "pass_regex": "INGRESS_NATIVE PASS full85entries=2560 packets=320 epoch_wrap=1",
+    "threads": 1,
+    "peak_ram_gb": 2,
     "needs": [
-     "verilator"
+     "iverilog"
     ]
    },
    {
-    "name": "lane_extract_id_mutant",
-    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_lane_extract.sh {RUN}/bench/id_mut 1",
+    "name": "native_ingress_id_mutant",
+    "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_ingress_native.sh {RUN}/bench/mut 1",
     "expect": "fail",
-    "fail_regex": "TKM_LANE_EXTRACT FAIL decoder",
-    "threads": 8,
-    "peak_ram_gb": 16,
+    "fail_regex": "INGRESS_NATIVE FAIL full85",
+    "threads": 1,
+    "peak_ram_gb": 2,
     "needs": [
-     "verilator"
+     "iverilog"
     ]
    }
   ]

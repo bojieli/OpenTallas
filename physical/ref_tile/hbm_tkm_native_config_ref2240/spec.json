@@ -15,8 +15,8 @@
  "clock": "cts",
  "layer_cap": "M5",
  "outline": {
-  "w": 25.92,
-  "h": 25.92
+  "w": 23.76,
+  "h": 23.76
  },
  "pins": {
   "W": [
@@ -25,18 +25,22 @@
    "packet"
   ],
   "E": [
-   "start",
-   "fault",
+   "obase",
+   "rbase",
+   "has_r"
+  ],
+  "N": [
    "n",
-   "k",
-   "nout",
    "g",
    "gbase",
    "pf",
-   "obase",
-   "rbase",
-   "has_r",
    "reservations"
+  ],
+  "S": [
+   "start",
+   "fault",
+   "k",
+   "nout"
   ]
  },
  "route": {
@@ -47,7 +51,7 @@
   "macro_halo_um": 5.4
  },
  "hold_merge": true,
- "structural_change": "Actualnative40own-flop config/reservation root preservesall151bits (5words+commit), indices62grantACK framescannotcorruptconfig. WiresonlynativeTKMcompositionconnects32CLOSEDtiles+4ingress+selector+buffer+nativeoutput+config roots; producerpacing, actualdiepins,STATUS8andfullshapeprice remainunadopted. Independent64full151configs+16reservationbitmapsPASS/missingwordmutFAIL.",
+ "structural_change": "Actualnative40own-flop config/reservation root preservesall151bits (5words+commit), indices62grantACK framescannotcorruptconfig. WiresonlynativeTKMcompositionconnects32CLOSEDtiles+4ingress+selector+buffer+nativeoutput+config roots; producerpacing, actualdiepins,STATUS8andfullshapeprice remainunadopted. Independent64full151configs+16reservationbitmapsPASS/missingwordmutFAIL. ActualR1 Epinband12.18um>45%core21.6 and43.8%stdutil; R2splitoutputsE/N/S +23.76sqactual197/378=52%std, retainrecipe2hold/insertion andnormalizeexplicitdeclaredport widths.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
@@ -91,5 +95,6 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "std_area_um2": 197
 }

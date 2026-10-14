@@ -136,6 +136,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
 ) (
     input wire[NPT-1:0]port_clk,
     input wire[NPT-1:0]landing_clk,
+    input wire[NPT-1:0]landing_capture_clk,
     input wire[NC-1:0]column_clk,
     input wire[LANES-1:0]reduce_clk,
     input  wire                 clk,
@@ -407,22 +408,26 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
                 .ph_rx_v(ph_rx_v[p]), .ph_rx_flit(ph_rx_flit[p*PWT +: PWT]),
                 .rb_v(s_rbv[p]), .rb_d(s_rbd[p]), .rb_cr(rbcr_q[p]), .stall(pstall[p]), .fault(pfault[p]));
             if(LANDING_HARD)begin:g_landing_hard
-                wire valid,fault;wire[544:0]head;wire[7:0]epoch;
-                reg[544:0]head_pin;reg[7:0]epoch_pin,consume_epoch,credit_epoch;
-                reg valid_pin,fault_pin;
-                always @(posedge clk)begin head_pin<=head;epoch_pin<=epoch;end
+                wire valid,fault;wire[3814:0]heads;wire[7:0]epoch;wire[3:0]count;
+                wire[3814:0]head_pin;wire[7:0]epoch_pin;wire[3:0]count_pin;
+                wire valid_pin,fault_pin;
+                reg[7:0]consume_epoch,credit_epoch,pop_epoch_out;reg pop_out;
+                wire[7:0]offset=consume_epoch-epoch_pin;
                 always @(posedge clk or negedge rst_n)begin
-                    if(!rst_n)begin consume_epoch<=0;credit_epoch<=0;valid_pin<=0;fault_pin<=0;end
+                    if(!rst_n)begin consume_epoch<=0;credit_epoch<=0;pop_out<=0;pop_epoch_out<=0;end
                     else begin
-                        valid_pin<=valid;fault_pin<=fault;credit_epoch<=epoch_pin;
+                        credit_epoch<=epoch_pin;pop_out<=rb_pop[p]&&!rb_empty[p];pop_epoch_out<=consume_epoch;
                         if(rb_pop[p]&&!rb_empty[p])consume_epoch<=consume_epoch+1'b1;
                     end
                 end
                 ot_hcoll_landing545 u_land(.clk(landing_clk[p]),.rst_n(rst_n),.push(lv_q[p]),.data(ld_q[p]),
-                    .pop(rb_pop[p]),.pop_epoch(consume_epoch),.valid(valid),.head(head),.head_epoch(epoch),.fault(fault));
-                assign rb_head[p]=PWT'(head_pin);assign rb_empty[p]=!valid_pin||(epoch_pin!=consume_epoch);
+                    .pop(pop_out),.pop_epoch(pop_epoch_out),.valid(valid),.heads(heads),.head_count(count),.head_epoch(epoch),.fault(fault));
+                ot_hcoll_landing_capture7 u_capture(.clk(landing_capture_clk[p]),.rst_n(rst_n),.valid(valid),.fault(fault),
+                    .heads(heads),.epoch(epoch),.count(count),.out_heads(head_pin),.out_epoch(epoch_pin),.out_count(count_pin),
+                    .out_valid(valid_pin),.out_fault(fault_pin));
+                assign rb_head[p]=(offset<7)?PWT'(head_pin[545*offset+:545]):PWT'(0);
+                assign rb_empty[p]=!valid_pin||(offset>=7)||(offset>=8'(count_pin));
                 assign rb_ovf[p]=fault_pin;
-                // Return credit only after the actual leaf pop has advanced its epoch.
                 assign landing_credit[p]=(epoch_pin!=credit_epoch);
                 assign landing_pending[p]=(epoch_pin!=consume_epoch);
             end else begin:g_landing_original

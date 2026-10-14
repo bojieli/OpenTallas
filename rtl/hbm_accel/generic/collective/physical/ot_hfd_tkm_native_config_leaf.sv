@@ -4,10 +4,21 @@
 // wire but are ignored by the configuration decoder. Producer pacing remains
 // an explicit parent contract; this leaf invents no flight delay or sideband.
 module ot_hfd_tkm_native_config_leaf(
- input wire clk,rst_n,input wire[39:0]packet,
- output wire start,fault,output wire[11:0]n,output wire[12:0]k,nout,
- output wire[7:0]g,gbase,output wire[15:0]pf,output wire[39:0]obase,rbase,output wire has_r,
- output wire[3:0]reservations
+ input wire clk,
+ input wire rst_n,
+ input wire [39:0] packet,
+ output wire start,
+ output wire fault,
+ output wire [11:0] n,
+ output wire [12:0] k,
+ output wire [12:0] nout,
+ output wire [7:0] g,
+ output wire [7:0] gbase,
+ output wire [15:0] pf,
+ output wire [39:0] obase,
+ output wire [39:0] rbase,
+ output wire has_r,
+ output wire [3:0] reservations
 );
  wire[0:0]rr;
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));

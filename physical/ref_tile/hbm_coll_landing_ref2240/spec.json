@@ -16,8 +16,8 @@
  "clock": "cts",
  "layer_cap": "M5",
  "outline": {
-  "w": 82.08,
-  "h": 82.08
+  "w": 120.96,
+  "h": 120.96
  },
  "pins": {
   "W": [
@@ -30,7 +30,8 @@
   ],
   "E": [
    "valid",
-   "head",
+   "heads",
+   "head_count",
    "head_epoch",
    "fault"
   ]
@@ -43,7 +44,7 @@
   "macro_halo_um": 5.4
  },
  "hold_merge": true,
- "structural_change": "Actual8x545landingFIFO inindependentownroot. Pin-capturedpush/data andepoch-guardedpop; coherentpublishedhead/dataepoch. Corecaptureshead/epoch, suppressesstalehead, returnscreditonlyafteractualleafpop. ExistingCAP8andCLOSEDportsunchanged; parentphysical9actuallandingclockentries, fullnativeproof/price pending.",
+ "structural_change": "Actual8x545landingFIFO inindependentownroot. Pin-capturedpush/data andepoch-guardedpop; coherentpublishedhead/dataepoch. Corecaptureshead/epoch, suppressesstalehead, returnscreditonlyafteractualleafpop. ExistingCAP8andCLOSEDportsunchanged; parentphysical9actuallandingclockentries, fullnativeproof/price pending. R1singleheadbodyprice2247.8vs1667.3=34.8%FAIL; R2sevenpublishedheads CAP8same, registeredcorepop withper-portthree-stagecoherentcapture roots maintainsII1 despite6edgeflight. Independent512full54564full8bursts II1PASS,300staleheadguardPASS/stalemutFAIL. Realoutline120.96 for3815dataoutputpins and~9150actualFF, measure beforequalification.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
@@ -58,6 +59,17 @@
     "cmd": "bash rtl/hbm_accel/tu/run_landing.sh {RUN}/bench/exact",
     "expect": "pass",
     "pass_regex": "LANDING PASS full545 checked=300",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "landing_full8_II1",
+    "cmd": "bash rtl/hbm_accel/tu/run_landing_window.sh {RUN}/bench/window",
+    "expect": "pass",
+    "pass_regex": "LANDING_WINDOW PASS full545 checked=512 full8bursts=64 II=1",
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
