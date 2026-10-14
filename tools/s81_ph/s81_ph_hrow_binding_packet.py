@@ -61,6 +61,13 @@ def main():
  with gzip.open(OUT/'closed_child_ss_ff_timing_facts.json.gz','wt') as f:json.dump(timing_facts,f,separators=(',',':'))
  packet['closed_child_timing_facts']=ref(OUT/'closed_child_ss_ff_timing_facts.json.gz')
  packet['missing_final_relay_timing_masters']=[m for m in masters if m not in P.CHILDREN]
+ for name in ['native207_evidence.json','native207_consumed_contract_slice.json']:
+  side=OUT/name
+  if side.exists():
+   key='current_consumed_native207' if name=='native207_evidence.json' else 'current_consumed_native207_contract'
+   packet[key]=json.loads(side.read_text());mapping[key]=json.loads(side.read_text())
+ packet['clock_reset_delivery_route_scope']='Data/localrn81363pairs only;88globalclockroots/61originalreset sinks require actualallocatorroutes, loads/skew and aggregatecapacity validation.'
+ packet['source_binding_prerequisite']=dict(owner='root whole-native source integration',required_next='Commit actualproduction TD instance/physicaldie/realclock andresetproducer graph beforeallocator tap/phase assignment')
  for n,v in [('packet.json',packet),('physical_pins.json',pins),('allocator_request.json',request),('source_graph.json',graph),('replacement_mapping.json',mapping)]: (OUT/n).write_text(json.dumps(v,indent=1)+'\n')
  with (OUT/'physical_pins.csv').open('w') as f:
   writer=csv.writer(f);writer.writerow(['instance','master','pin','kind','rtl_source','orientation','x_slot_um','y_slot_um','face','layers','actual_pin_evidence'])
