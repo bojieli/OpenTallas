@@ -50,10 +50,8 @@ module qkd_ahub_core #(
     input  wire [127:0]  si_data,
     input  wire [3:0]    pi_valid,
     input  wire [3:0]    pi_g,
-    output reg           mo_valid,
-    output reg           mo_g,
-    output reg  [1:0]    mo_hh,
-    output reg  [31:0]   mo_data,
+    // lmax result, one registered copy a stack (die nets am_<st>: {valid, g, hh 2, data 32} = 36 b each, contract v1)
+    (* keep = "true", dont_touch = "true" *) output reg  [143:0] am,
     output reg           out_valid,
     output reg           out_g,
     output reg  [5:0]    out_beat,
@@ -348,14 +346,15 @@ module qkd_ahub_core #(
 
     // ---- registered outputs -----------------------------------------------------------------------------------------
     always @(posedge clk or negedge rl[7]) begin
-        if (!rl[7]) begin mo_valid <= 1'b0; out_valid <= 1'b0; fault <= 1'b0; ev <= 8'd0; end
+        if (!rl[7]) begin for (h_ = 0; h_ < 4; h_ = h_ + 1) am[36*h_ + 35] <= 1'b0; out_valid <= 1'b0; fault <= 1'b0; ev <= 8'd0; end
         else begin
-            mo_valid <= mo_valid_i; out_valid <= tag_o[6]; fault <= fault_i;
+            for (h_ = 0; h_ < 4; h_ = h_ + 1) am[36*h_ + 35] <= mo_valid_i;
+            out_valid <= tag_o[6]; fault <= fault_i;
             ev <= {tag_o[6], p_ready, rz_ok, msent, mo_valid_i, 1'b0};
         end
     end
     always @(posedge clk) begin
-        mo_g <= mo_g_i; mo_hh <= mo_hh_i; mo_data <= mo_data_i;
+        for (h_ = 0; h_ < 4; h_ = h_ + 1) am[36*h_ +: 35] <= {mo_g_i, mo_hh_i, mo_data_i};
         out_g <= tag_o[5]; out_beat <= {1'b0, tag_o[4:0]}; out_data <= y_q;
     end
 `ifndef SYNTHESIS
@@ -420,6 +419,12 @@ module ot_qwen_nearhbm_attn_hub_d #(
     output wire          fault,
     output wire [7:0]    ev
 );
+    wire [143:0] am;       // the four per-stack lmax copies; the hub's mo_* is copy 0 (the bench checks all four agree)
+    assign {mo_valid, mo_g, mo_hh, mo_data} = am[35:0];
+`ifndef SYNTHESIS
+    always @(posedge clk) if (am[35:0] !== am[71:36] || am[35:0] !== am[107:72] || am[35:0] !== am[143:108])
+        $display("AHUB_D am copies disagree at %0t", $time);
+`endif
     wire [3:0]   zh_start;  wire [511:0] zh_we, zh_sid;  wire [15:0] zh_iv;  wire [3:0] zh_g;  wire [23:0] zh_p;
     wire [255:0] zh_root;   wire [15:0]  zh_err;
     wire         rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
@@ -428,7 +433,7 @@ module ot_qwen_nearhbm_attn_hub_d #(
                     .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY)) u_core (
         .clk(clk), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
         .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g),
-        .mo_valid(mo_valid), .mo_g(mo_g), .mo_hh(mo_hh), .mo_data(mo_data), .out_valid(out_valid), .out_g(out_g),
+        .am(am), .out_valid(out_valid), .out_g(out_g),
         .out_beat(out_beat), .out_data(out_data), .fault(fault), .ev(ev),
         .zh_start(zh_start), .zh_we(zh_we), .zh_sid(zh_sid), .zh_iv(zh_iv), .zh_g(zh_g), .zh_p(zh_p),
         .zh_root(zh_root), .zh_err(zh_err), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
