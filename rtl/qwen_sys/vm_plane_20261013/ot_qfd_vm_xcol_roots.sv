@@ -28,21 +28,10 @@ module ot_qfd_vm_xcol_roots #(
  reg [15:0] ep1,ep2;reg v1=0,v2=0;
  wire [NROOT*4-1:0] rank;
  reg [NROOT*4-1:0] rank2;
- genvar r,k;
+ genvar r;
  generate for(r=0;r<NROOT;r=r+1) begin:g_root
-  for(k=0;k<4;k=k+1) begin:g_bit
-   reg pick;integer p,s;
-   always @* begin
-    pick=0;
-    // All source indices are elaboration constants after loop unrolling.
-    // Mutant1 changes the phase,2 changes the root,3 changes split masking.
-    for(p=0;p<(1<<PHW);p=p+1) for(s=0;s<=SMAX;s=s+1)
-     if(ph1==p && sp1==s) pick=line_bits[
-      ((NROOT*((MUT==1)?((p+1)%(1<<PHW)):p)+(MUT==2?(r+1)%NROOT:r))*4+k)
-      & ((1<<(MUT==3?((s+1)%(SMAX+1)):s))-1)];
-   end
-   assign rank[r*4+k]=pick;
-  end
+  ot_qfd_vm_root_rank #(.SMAX(SMAX),.NROOT(NROOT),.PHW(PHW),.ROOT_ID(r),.MUT(MUT)) u_rank(
+   .line_bits(line_bits),.phase(ph1),.split(sp1),.q(rank[r*4+:4]));
  end endgenerate
  always @(posedge clk) if(me) begin
   if(o_v) split<=o_sp;
@@ -50,4 +39,24 @@ module ot_qfd_vm_xcol_roots #(
   rank2<=rank;ph2<=ph1;ep2<=ep1;v2<=v1;
   q<=rank2;q_phase<=ph2;q_epoch<=ep2;q_v<=v2;
  end
+endmodule
+
+// Four-output rank groups keep Yosys parameter derivation bounded. The source
+// expressions remain constant indices; no monolithic128-output AST expansion.
+module ot_qfd_vm_root_rank #(
+ parameter integer SMAX=11,NROOT=32,PHW=4,ROOT_ID=0,MUT=0
+)(input wire [(1<<SMAX)-1:0] line_bits,input wire [PHW-1:0] phase,
+ input wire [3:0] split,output wire [3:0] q);
+ genvar k;
+ generate for(k=0;k<4;k=k+1)begin:g_bit
+  reg pick;integer p,s;
+  always @*begin
+   pick=0;
+   for(p=0;p<(1<<PHW);p=p+1)for(s=0;s<=SMAX;s=s+1)
+    if(phase==p && split==s)pick=line_bits[
+     ((NROOT*((MUT==1)?((p+1)%(1<<PHW)):p)+(MUT==2?(ROOT_ID+1)%NROOT:ROOT_ID))*4+k)
+     &((1<<(MUT==3?((s+1)%(SMAX+1)):s))-1)];
+  end
+  assign q[k]=pick;
+ end endgenerate
 endmodule
