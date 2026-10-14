@@ -6709,9 +6709,13 @@ def write_netlist(m, k, path, top='hfd_die'):
     by = {it.name: it for it in m['insts']}
     conns = defaultdict(list)
     top_ports = m.get('top_input_ports', {})
+    if k > 1:       # v14: the bundled GRT model has no die pins (the ckgen bumps refclk / por_n are k = 1 STA / DEF only)
+        top_ports = {}
     declarations = ', '.join(f'input wire {name}' for name in top_ports)
     V = [f'// tools/hbm_accel_die_fp.py: die-level nets only (k = {k})', f'module {top} ({declarations});']
     for bid, cls, bits, eps in m['buses']:
+        if k > 1 and any(e[0] == 'TOP' for e in eps):
+            continue
         n = bits if k == 1 else max(1, math.ceil(bits / k))
         net = f'n_{bid}'
         V.append(f'  wire [{n - 1}:0] {net};')
