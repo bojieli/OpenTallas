@@ -1,0 +1,57 @@
+"""Mechanism tests only; fixtures are not an allocation or native execution."""
+import copy
+import gzip
+import hashlib
+import json
+import tempfile
+import unittest
+from pathlib import Path
+from native_stage_lowering import lower
+
+
+class Lowering(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name);self.binding=self.root/'b';self.binding.mkdir()
+        (self.root/'endpoint.sv').write_text('module endpoint; endmodule\n')
+        sm={'PHW_required_by_stage':[9,9],'rank_dies':[{'stage':s,'rank':r,'die_id':4*s+r} for s in range(2) for r in range(4)]}
+        (self.binding/'stage_map.json').write_text(json.dumps(sm))
+        (self.binding/'inventory.json').write_text(json.dumps({'stages':2,'TP':4,'layer_dies':8}))
+        with gzip.open(self.binding/'matrix_map.jsonl.gz','wt') as f:f.write(json.dumps({'layer':0,'alias':'m','stage':0})+'\n')
+        pins={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in self.binding.iterdir()}
+        endpoint_sha=hashlib.sha256((self.root/'endpoint.sv').read_bytes()).hexdigest()
+        def job(ident,engine,arg,**more):
+            return dict(source_id=ident,engine=engine,arg=arg,endpoint_source='endpoint.sv',endpoint_source_sha256=endpoint_sha,**more)
+        self.req={'allocation_sha256':pins,'candidate_only':True,'hc_hwords':640,'source_jobs':['field','load','store'],
+                  'stages':[{'stage':0,'boot':[{'engine':2,'arg':5<<20}],
+                      'operations':[job('load',2,0,h_region_base=0,h_region_rows=640),
+                          job('field',0,3,field_phase=3,matrices=[[0,'m']]),
+                          job('store',2,(1<<20)|2048,h_region_base=2048,h_region_rows=640)]},
+                     {'stage':1,'boot':[],'operations':[]}]}
+    def tearDown(self):self.tmp.cleanup()
+    def compile(self):return lower(self.req,self.binding,self.root)
+    def test_real_slot_flag_and_distinct_boot(self):
+        r=self.compile();p=r['programs'][0]
+        self.assertEqual(p['token'],[0x2800000,3,0x2900800]);self.assertEqual(p['boot'],[0x2500000])
+        self.assertEqual(r['transfer_descriptor_counts'],{'hload':1,'hstore':1})
+        self.assertIsNone(r['native_executed_transfer_count']);self.assertFalse(r['dispatch_eligible'])
+    def test_missing_real_stage_refused(self):
+        self.req['stages'].pop()
+        with self.assertRaisesRegex(ValueError,'every real stage'):self.compile()
+    def test_matrix_stage_swap_refused(self):
+        self.req['stages'][0]['stage']=1;self.req['stages'][1]['stage']=0
+        with self.assertRaisesRegex(ValueError,'different physical stage'):self.compile()
+    def test_gain_cannot_delay_landing(self):
+        self.req['stages'][0]['operations'][0]['arg']=5<<20
+        with self.assertRaisesRegex(ValueError,'GAIN reload'):self.compile()
+    def test_changed_endpoint_pin_refused(self):
+        (self.root/'endpoint.sv').write_text('module changed; endmodule\n')
+        with self.assertRaisesRegex(ValueError,'source contract changed'):self.compile()
+    def test_missing_source_job_refused(self):
+        self.req['source_jobs'].append('omitted')
+        with self.assertRaisesRegex(ValueError,'source jobs omitted'):self.compile()
+    def test_slot_vm_overflow_refused(self):
+        self.req['stages'][0]['operations'][0].update(arg=16000,h_region_base=16000)
+        with self.assertRaisesRegex(ValueError,'two-slot H region'):self.compile()
+
+
+if __name__=='__main__':unittest.main()
