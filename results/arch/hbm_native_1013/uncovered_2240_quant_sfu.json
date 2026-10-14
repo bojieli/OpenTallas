@@ -45,7 +45,7 @@
         "text": "auto-react: no recipe; structural fix needed (noted in hgi-1010.log)"
       },
       "successor_source": "170fb0969",
-      "next_gate": "q8e recipe1/pin_min_tracks1 d46e4d4a6 CTS pending",
+      "next_gate": "route TT>=0 FF>=0 DRC0; child lint; real insertion and per-pair reach after export",
       "behavior": {
         "exact_records": 8,
         "exact_words": 3328,
@@ -53,6 +53,19 @@
         "price": 168,
         "ratio": 1.0892857142857142,
         "mutant2_wrong": 2898
+      },
+      "current_job": "qdq_wr_ref-q8e-85c81f4c2",
+      "source_commit": "85c81f4c29724a82d57342017f84e390c3313dcd",
+      "status": "SUBMITTED_UNQUALIFIED",
+      "pre_route": {
+        "status": "PASS",
+        "sinks": 5280,
+        "tt_insertion_max_ps": 475.9,
+        "tt_spread_ps": 30.1,
+        "tt_boundary_mean_ps": 459.1,
+        "setup_ps": 63.3,
+        "hold_ps": 26.3,
+        "depth_ps": 503.4
       }
     },
     {
@@ -312,7 +325,7 @@
     }
   ],
   "notes": {
-    "qdq": "q8 four-leaf wires parent 9d9be7232; fr/core/asm CLOSED, wr NEEDS_RTL TT-112.55 FF-2.32 DRC6; q8e parallel head-read/control structural repair in progress.",
+    "qdq": "q8 four-leaf wires parent source 9d9be7232; fr/core/asm CLOSED. New write leaf q8e route submitted as qdq_wr_ref-q8e-85c81f4c2, source 85c81f4c2. Exact eight records and 3,328 words pass at unchanged 183/168 cycles; mutant2 detects 2,898 wrong words. Source-bound CTS PASS with 5,280 sinks, TT insertion 475.9 ps and spread 30.1 ps. Parent uses early trunk phase for R>300. Route closure, child lint and actual per-pair reach remain required; no physical qualification is claimed.",
     "quant": "WQ3 wires-only split source 088e33d6d on claude/hbm-quant-split-1013: control leaf w1 is RUNNING and preserved; data leaf w2 failed GRT with about 17,000 markers concentrated at the SRAM west edge (x 25-100, y 50-125 um). Read-output fanout intersects gather input escape and macro obstructions. A separate gather leaf and result/write leaf is a structural candidate; no further route is claimed. Main ot_hgi_quant_unit selects WQ0 or WQ2 and does not bind WQ3. The current die uses qdq_q_pin4. Read/write lane-group leaves await a signed M6 PORT grant or approved slot change; provisional 31a02920b is not authorization. Aliases remain in coverage until actual composition is established.",
     "sfu": "hfd_sfu remains required: four quarters over 64 CLOSED ot_su12_sfu lanes. The legacy rtl_tiled_r25gq envelope has 11,818 input bits, 11,863 output bits, an 8,257-bit f_lgW_rdn bus and negedge clock-root lockups. It does not prove native B2 quarter closure. Watermark integration source d27cf80e6 measured a synthetic 32-producer / 8-consumer pair: 186 SFU cycles versus price 120 (1.55x), which is not native eight-lane production qualification. Native quarter control, watermark source, physical reach and timing remain open. No old envelope route was launched.",
     "ctlw": "Explicit successor source 7d0ad0538: SV=1 selects ot_hgi_sv_unit, containing sv_head, sixteen sv_lane2 leaves and sv_lmem. It replaces ctlw for the current SU.VOP redesign. Historical aliases remain recorded; the native physical and production gate belongs to suvop_collect and remains open.",
