@@ -215,18 +215,18 @@ module ot_qfd_crom_lbuf_ready_epoch #(
                     val_r[(val_r[0] && tag_r[0] != tpos_q) ? 1 : 0] <= 1'b0;
                     tag_r[(val_r[0] && tag_r[0] != tpos_q) ? 1 : 0] <= tpos_q;
                 end else if (!nxt_res) begin
-                    tok_pend <= 1'b0;
+                    if(!tok_q)tok_pend <= 1'b0;
                     busy <= 1'b1; f_st <= nxt; f_r <= 0;
                     if (nxt == S_HEAD) begin f_kind <= F_HEADB; f_n <= NHD; val_f <= 1'b0; end
                     else begin f_kind <= F_STAGE; f_n <= NWIN; val_n[par(nxt)] <= 1'b0; tag_n[par(nxt)] <= nxt; end
                 end else if (stage_q == S_HEAD && !nxt_rope_res) begin
-                    tok_pend <= 1'b0;
+                    if(!tok_q)tok_pend <= 1'b0;
                     busy <= 1'b1; f_kind <= F_ROPE; f_pos <= tpos1_q; f_r <= 0; f_n <= 1;
                     // replace the rope row that is not the current token's
                     f_slot <= (val_r[0] && tag_r[0] == tpos_q) ? 1'b1 : 1'b0;
                     val_r[(val_r[0] && tag_r[0] == tpos_q) ? 1 : 0] <= 1'b0;
                     tag_r[(val_r[0] && tag_r[0] == tpos_q) ? 1 : 0] <= tpos1_q;
-                end else tok_pend <= 1'b0;
+                end else if(!tok_q)tok_pend <= 1'b0;
             end
         end
     end

@@ -185,13 +185,13 @@ module tb_qfd_su_cbuf64_native_l0;
     integer c;
     reg cb_rst_n=0,cb_tok_start=0,cb_epoch=0;reg[17:0]cb_tpos=100;
     wire[7:0]cb_rdy,cb_fault;wire[47:0]cb_rs,cb_fs;wire[15:0]cb_fc;
-    wire cb_ready=(&cb_rdy)&&(cb_rs==48'd0);
+    wire cb_ready,joined_fault;wire[5:0]joined_stage;wire[17:0]joined_pos;wire[143:0]cb_rpos;
     wire[63:0]cb_fr;wire[1535:0]cb_fa;reg[4095:0]cb_fq;
-    qfd_su_cbuf_native_l0_entries64 #(.MUT(CBUF_MUT),.GROUP_MUT(GROUP_MUT),.RESET_MUT(RESET_MUT))cbuf(
+    qfd_su_cbuf_native_l0_reqepoch_entries64 #(.MUT(CBUF_MUT),.GROUP_MUT(GROUP_MUT),.RESET_MUT(RESET_MUT))cbuf(
      .ck({8{clk}}),.rst_n(cb_rst_n),.epoch(cb_epoch),.crom_re(d_crom_re),.crom_addr(d_crom_addr),
      .crom_stage(6'd0),.crom_q(d_crom_q),.stage(6'd0),.tok_start(cb_tok_start),.tpos(cb_tpos),
-     .st_rdy(cb_rdy),.st_rdy_stage(cb_rs),.f_re(cb_fr),.f_addr(cb_fa),.f_stage(cb_fs),
-     .f_q(cb_fq),.f_fault(8'd0),.f_lat(5'd11),.fault(cb_fault),.fault_code(cb_fc));
+     .st_rdy(cb_rdy),.st_rdy_stage(cb_rs),.st_rdy_tpos(cb_rpos),.f_re(cb_fr),.f_addr(cb_fa),.f_stage(cb_fs),
+     .f_q(cb_fq),.f_fault(8'd0),.f_lat(5'd12),.fault(cb_fault),.fault_code(cb_fc));
     reg[4095:0]farpipe[0:10];integer fg,fl,fi;
     always @(posedge clk)begin
      for(fi=10;fi>0;fi=fi-1)farpipe[fi]<=farpipe[fi-1];
@@ -201,13 +201,14 @@ module tb_qfd_su_cbuf64_native_l0;
     always @*cb_fq=farpipe[10];
     integer cb_waits=0,cb_epochs=0,stage_go_count=0,stage_early=0;
     wire stage_go,stage_tok;wire[17:0]stage_gtok,stage_gpos;wire[5:0]stage_cur;
-    ot_qfd_stage_gate #(.NW(18),.MUT(STAGE_MUT))stage_admission(
+    qfd_cbuf_ready_join8 ready_join(.ck(clk),.rst_n(cb_rst_n),.st_rdy(cb_rdy),.st_rdy_stage(cb_rs),.st_rdy_tpos(cb_rpos),.fault(cb_fault),.cb_st_rdy(cb_ready),.cb_st_rdy_stage(joined_stage),.cb_st_rdy_tpos(joined_pos),.cb_fault(joined_fault));
+    ot_qfd_stage_gate_native_epoch #(.NW(18),.NG(1),.MUT(STAGE_MUT))stage_admission(
      .clk(clk),.rst_n(cb_rst_n),.h_start(cb_tok_start),.stage(6'd0),.token(18'd5),.pos(cb_tpos),
-     .st_rdy(cb_ready),.st_rdy_stage(6'd0),.go(stage_go),.tok_start(stage_tok),
+     .st_rdy(cb_ready),.st_rdy_stage(joined_stage),.st_rdy_tpos(joined_pos),.go(stage_go),.tok_start(stage_tok),
      .go_token(stage_gtok),.go_pos(stage_gpos),.cur_stage(stage_cur));
     always @(posedge clk)if(cb_rst_n&&stage_go)begin
      stage_go_count=stage_go_count+1;
-     if(!cb_ready||stage_gpos!=cb_tpos||stage_cur!=0)stage_early=stage_early+1;
+     if(!cb_ready||joined_pos!=stage_gpos||stage_gpos!=cb_tpos||stage_cur!=0)stage_early=stage_early+1;
     end
     task prime_cbuf(input integer position,input integer new_epoch);
      integer wt;begin
@@ -316,6 +317,8 @@ module tb_qfd_su_cbuf64_native_l0;
             if(ops%5==4)nin=1;
             if(ops%5==3)begin nin=64;nout=1;end
             cbase=bbase;cso=bso;csi=bsi;
+            if(!bsrc)begin bbase=abase;bso=aso;bsi=asi;end
+            if(!csrc)begin cbase=abase;cso=aso;csi=asi;end
             dbase = hw_ | ($random(seed) & 24'h0fff); dso = $random(seed) & 24'h3f; dsi = 1;
             rbase = hw_ | 24'h2000 | ($random(seed) & 24'h0fff); rso = $random(seed) & 24'h3f;
             imm1 = fp($random(seed)); imm2 = fp($random(seed));

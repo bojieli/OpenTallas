@@ -34,3 +34,8 @@ rtl/physical/ot_qfd_su_cbuf_native_l0_entries64.sv
 rtl/physical/ot_qfd_su_cbuf_native_l0.sv
 rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv
 rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv
+rtl/physical/ot_qfd_su_cbuf_native_l0_reqepoch_entries64.sv
+rtl/physical/ot_qfd_su_cbuf_native_l0_reqepoch.sv
+rtl/physical/ot_qfd_crom_lbuf_ready_epoch.sv
+rtl/physical/ot_qfd_cbuf_ready_join8.sv
+rtl/physical/ot_qfd_stage_gate_native_epoch.sv
