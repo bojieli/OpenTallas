@@ -153,3 +153,53 @@ module qfd_tt_up4 #(
         end
     end endgenerate
 endmodule
+
+// ---- qfd_tt_up4_w: the slot WITHOUT a parent (el1013-qwen-small-masters r3, two-level form) ---------------------------
+// The four leaves have no net between them, so the slot tt_up4_0 needs neither a parent route nor a pin stage: the die
+// places 4 x ot_qfd_band_upper (kit qfd_tt_up4_leaf, 64.8 x 205.2, one row, words in on S, out on N) and gives each its
+// own clock entry.  This wrapper is the RTL of that binding (wires only, per-leaf bundles = the leaf's own pins); it is
+// what the composition bench runs (tb_qfd_band_lanes CL=2) and what the die netlist instantiates leaf by leaf.
+//   pw_l<l>[383:0] = leaf l's band words: [32*(b*4 + j)] = band b, lane 4l + j        (in,  leaf S face)
+//   pv_l<l>[2:0], lf_l<l>[2:0] = the bands' valid / fault, one copy a leaf (die fan-out) (in,  leaf S face)
+//   sel_l<l>[25:0] = {tv_e[12:0], sel_e[12:0]}, one copy a leaf (die fan-out)            (in,  leaf W face)
+//   ty_l<l>[383:0] = leaf l's tree-top words: [32*(k*4 + j)] = word k, lane 4l + j      (out, leaf N face)
+//   tu_l<l>, tv_l<l>, flt_l<l> = tt_use / tt_v / fault of leaf l (the die uses leaf 0's tu / tv and ORs the faults in
+//   its fault chain)                                                                     (out, leaf N face)
+// Cycles: none added (the leaf pin registers are the stations): the tree top answers as the flat NL 16 block does.
+// OT_QFD_UP4_MUT: leaves 1 and 2 receive each other's band-0 words (bench mutant only).
+module qfd_tt_up4_w #(
+    parameter integer DLY  = 1,           // soft build / bench only; the hard leaf is DLY 1
+    parameter integer LNK  = 0,
+    parameter integer TREE_LAT = 7,
+    parameter integer TCUT = 7,
+    parameter integer LMUT = 0
+) (
+    input  wire [3:0]        ck,          // one clock entry a leaf
+    input  wire [3:0]        rst_n,
+    input  wire [4*384-1:0]  pw_l,
+    input  wire [4*3-1:0]    pv_l,
+    input  wire [4*3-1:0]    lf_l,
+    input  wire [4*26-1:0]   sel_l,
+    output wire [4*384-1:0]  ty_l,
+    output wire [3:0]        tu_l,
+    output wire [3:0]        tv_l,
+    output wire [3:0]        flt_l
+);
+    genvar l;
+    generate for (l = 0; l < 4; l = l + 1) begin : g_leaf
+`ifdef OT_QFD_UP4_MUT
+        localparam integer LS = (l == 1) ? 2 : (l == 2) ? 1 : l;
+        wire [383:0] lpw = {pw_l[384*l + 128 +: 256], pw_l[384*LS +: 128]};
+`else
+        wire [383:0] lpw = pw_l[384*l +: 384];
+`endif
+`ifdef OT_QFD_UP4_HARD
+        ot_qfd_band_upper u_leaf (
+`else
+        ot_qfd_band_upper #(.NL(4), .NB(3), .LNK(LNK), .DLY(DLY), .TREE_LAT(TREE_LAT), .MUT(LMUT), .TCUT(TCUT), .LG(12)) u_leaf (
+`endif
+            .clk(ck[l]), .rst_n(rst_n[l]), .pw(lpw), .pw_v(pv_l[3*l +: 3]), .lf(lf_l[3*l +: 3]),
+            .sel_e(sel_l[26*l +: 13]), .tv_e(sel_l[26*l + 13 +: 13]),
+            .tt_ty(ty_l[384*l +: 384]), .tt_use(tu_l[l]), .tt_v(tv_l[l]), .fault(flt_l[l]));
+    end endgenerate
+endmodule
