@@ -1,0 +1,15 @@
+{
+  "status": "COMPONENT_PASS_NOT_WHOLE_LAYER_BOUND",
+  "source_sha256": {
+    "tools/qwen_tp8_native_dispatch_audit.py": "7a5383dd4a9fbfd0b35df4b5ba0e4f95bcbb96864c03183764b101ba290ada81",
+    "rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_me_provider_dispatch.sv": "88379cfdb3bf505fbb9dcead601cdfd2fe4e4638f6d2847fe82ee3886f760bcb",
+    "rtl/test/qwen_system/tb_qwen_tp8_me_provider_dispatch.sv": "4aaab6461371213eb056ba099409d93bc363e49138f1b83f0ec39cd300983298"
+  },
+  "actual_unit": "oth-ubuntu-211669-1791954818",
+  "host": "ot-agidock128",
+  "positive": "DISPATCH_PASS",
+  "mutant": "NEXT_selector_progress_corruption observed DISPATCH_FAIL",
+  "profile_source_commit": "14065c8c7",
+  "architecture_adopted": false,
+  "performance_measured": false
+}
