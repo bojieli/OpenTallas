@@ -1,8 +1,11 @@
 `timescale 1ps/1fs
 module tb_hgi_sv_native_packet_smoke;
+`ifndef SMUT
+ `define SMUT 0
+`endif
  reg clk=0,vclk=0,rst_n=0;always #416.666625 clk=~clk;always #555.5555 vclk=~vclk;
  reg[337:0]su_q=0,bench_q=0;wire[273:0]su_r,bench_r;wire[420:0]fault;wire[3:0]released;
- ot_hgi_sv_native_vm_fixture dut(.clk(clk),.vclk(vclk),.rst_n(rst_n),
+ ot_hgi_sv_native_vm_fixture #(.PACKET_MUT(`SMUT)) dut(.clk(clk),.vclk(vclk),.rst_n(rst_n),
   .rg_req(1'b0),.wg_req(1'b0),.rg_gnt(),.wg_gnt(),.rq(512'b0),.rq_cr(),.rr(),
   .wq(8960'b0),.wcredit(),.wdone(),.su_q(su_q),.bench_q(bench_q),.su_r(su_r),.bench_r(bench_r),.fault(fault),.released(released));
  integer errors=0,checks=0;

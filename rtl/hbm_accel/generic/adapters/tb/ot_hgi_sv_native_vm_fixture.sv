@@ -1,7 +1,7 @@
 `timescale 1ps/1fs
 `default_nettype none
 // Functional integration fixture only. No physical clock/pin or slot grant.
-module ot_hgi_sv_native_vm_fixture(
+module ot_hgi_sv_native_vm_fixture #(parameter integer PACKET_MUT=0)(
  input wire clk,vclk,rst_n,
  input wire rg_req,wg_req,output wire rg_gnt,wg_gnt,
  input wire [511:0] rq,output wire[31:0]rq_cr,output wire[8223:0]rr,
@@ -25,7 +25,7 @@ module ot_hgi_sv_native_vm_fixture(
   .wgrant(swg),.wack(swa),.wreq(swreq),.drained(swdn),.released(),
   .native_wq(swq),.native_credit(swc),.native_done(swd),.fault(wf));
  assign sdr=srd&swdn&{4{!rg_req&&!wg_req}};
- ot_hgi_sv_native_packet_owned packets(.clk(clk),.rst_n(rst_n),.leaf_clk({128{clk}}),
+ ot_hgi_sv_native_packet_owned #(.MUT(PACKET_MUT)) packets(.clk(clk),.rst_n(rst_n),.leaf_clk({128{clk}}),
   .su_q(su_q),.bench_q(bench_q),.su_r(su_r),.bench_r(bench_r),
   .rgrant(drg),.wgrant(dwg),.rack(dra),.wack(dwa),.rreq(drreq),.wreq(dwreq),.drained(dd),
   .native_rq(drq),.native_credit(drc),.native_rr(drr),.native_wq(dwq),.native_wcredit(dwc),.native_done(dwd),.fault(pf));

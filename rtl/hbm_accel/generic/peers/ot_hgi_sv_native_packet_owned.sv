@@ -3,7 +3,7 @@
 // Source-bound SV rfile packet writes (at most four outstanding) and the
 // sequential external preload/readback client. All accesses use global S15.
 // Whole-word masks only: the SV emits four identical mask bits per word.
-module ot_hgi_sv_native_packet_owned(
+module ot_hgi_sv_native_packet_owned #(parameter integer MUT=0)(
  input wire clk,rst_n,input wire [127:0] leaf_clk,
  input wire [337:0] su_q,bench_q,
  output reg [273:0] su_r,bench_r,
@@ -27,7 +27,7 @@ module ot_hgi_sv_native_packet_owned(
   lrq=0;lwq=0;lrq[512]=read_pending!=0||(q[337]&&!q[336]);lwq[8960]=write_pending!=0||(q[337]&&q[336]);
   if(q[337])begin
    if(q[336])begin
-    lwq[lane*280+:280]={1'b1,sector,q[303:48],q[47],q[43],q[39],q[35],q[31],q[27],q[23],q[19]};
+    lwq[lane*280+:280]={1'b1,sector,q[303:48]^((MUT==1)?256'd1:256'd0),q[47],q[43],q[39],q[35],q[31],q[27],q[23],q[19]};
    end else lrq[lane*16+:16]={1'b1,sector};
   end
   pick=-1;
