@@ -130,7 +130,7 @@
   "branch": "codex/s81-gather-leaf-v18",
   "tag": "g2",
   "purpose": "S81 gather (dsfd_sp_gather_c, 2.9 M flops flat, does not fit its slot): hardened 4-root leaf of the gather cluster (E half: lanes enter E, leave W). Each root = ot_s81ph_ret_root_s (step B, S = 8 open rows = 2 x the measured real bound 4; S = 16 does not fit the slot: g1 stopped at FLOORPLAN_MARGIN, util 0.716): input queue in a 128 x 66 1R1W array, CAM-free pairing store {open-row slot, parent node} in a 256 x 34 array; cycle-identical to ot_s81ph_ret_root_p inside both capacities, sticky fault on a 9th open row. REAL field order (production binding d9f84be9, all 40 layers, golden experts): at most 4 (row, pos) open per root. Every port a flop at the pin; lanes passed on registered; column chain registered.",
-  "structural_change": "22,552 flops per root (128 x 65 queue flops, 128-entry key CAM, 128 x 33 data flops, nine 128-b one-hot vectors, free list) -> two small SRAM arrays + ~2.7k flops per root; 128 roots as 32 leaves of 4 roots (two abutted array stacks per leaf, pins W / E); g2: pairing store 512 x 34 (S 16) -> 256 x 34 (S 8) after g1 failed the floor-plan margin (std 9,899 + arrays 11,369 um2 = 0.716 of the largest leaf the slot allows); zero-cycle SS repair after actualSS internal setup -163.68/-157.09ps: predecode heap/onehot in existing candidate epoch and explicit per-bank/per-node valid writes, avoiding candidate barrel-selector fanout and nested dense EV updates; exact root272/full128root32leaf11-case gates +6 mutants pass, latencydelta0; unchanged SRAMs/outline/assigned pins. Still a physical candidate, not adopted or qualified.",
+  "structural_change": "22,552 flops per root (128 x 65 queue flops, 128-entry key CAM, 128 x 33 data flops, nine 128-b one-hot vectors, free list) -> two small SRAM arrays + ~2.7k flops per root; 128 roots as 32 leaves of 4 roots (two abutted array stacks per leaf, pins W / E); g2: pairing store 512 x 34 (S 16) -> 256 x 34 (S 8) after g1 failed the floor-plan margin (std 9,899 + arrays 11,369 um2 = 0.716 of the largest leaf the slot allows); zero-cycle SS repair after actualSS internal setup -163.68/-157.09ps: predecode heap/onehot in existing candidate epoch and explicit per-bank/per-node valid writes, avoiding candidate barrel-selector fanout and nested dense EV updates; exact root272/full128root32leaf11-case gates +6 mutants pass, latencydelta0; unchanged SRAMs/outline/assigned pins. Still a physical candidate, not adopted or qualified.; same-edge opposite-face forwarding roles: 1464 parallel li/ci samples, unchanged c+k-2 epoch. Full12-case cluster gate and seven mutants pass. Input-role survival and SS boundary pair budget are not yet physically proven.",
   "benches": [
    {
     "name": "root_s_lockstep",
@@ -146,11 +146,11 @@
    },
    {
     "name": "gather_cl_gate",
-    "cmd": "LOCAL_BANKS=1 DIE_CLOCKS=1 SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "cmd": "ROLE_SPLIT=1 LOCAL_BANKS=1 DIE_CLOCKS=1 SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
     "expect": "pass",
     "pass_regex": "GATHER_CL_GATE PASS",
     "min_count_regex": "GATHER_CL_GATE PASS \\(([0-9]+) runs\\)",
-    "threads": 28,
+    "threads": 32,
     "peak_ram_gb": 64,
     "needs": [
      "verilator"
@@ -158,7 +158,7 @@
    },
    {
     "name": "gather_cl_neg_chain",
-    "cmd": "LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=chain SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclm rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "cmd": "ROLE_SPLIT=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=chain SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclm rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
     "expect": "fail",
     "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
     "threads": 4,
@@ -169,7 +169,7 @@
    },
    {
     "name": "gather_cl_neg_ovf",
-    "cmd": "LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=ovf SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclo rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "cmd": "ROLE_SPLIT=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=ovf SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gclo rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
     "expect": "fail",
     "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
     "threads": 4,
@@ -180,7 +180,18 @@
    },
    {
     "name": "gather_cl_neg_heap_epoch",
-    "cmd": "LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=heap SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_heap rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "cmd": "ROLE_SPLIT=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=heap SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_heap rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
+    "expect": "fail",
+    "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 4,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gather_cl_neg_role_epoch",
+    "cmd": "ROLE_SPLIT=1 LOCAL_BANKS=1 DIE_CLOCKS=1 RAW=1 MODES=role SS=8 J=4 bash rtl/dsrom_sys/s81_ph/test/run_gather_cl.sh $PWD {RUN}/gcl_role rtl/dsrom_sys/s81_ph/test/real_order_trace.json '2 20'",
     "expect": "fail",
     "fail_regex": "GATHER_CL_NEGATIVE FAIL_AS_REQUIRED",
     "threads": 4,
@@ -204,7 +215,8 @@
    "results/rtl/s81_ph_20261006/gather",
    "physical/s81_die_pins/v18/gather_leaves",
    "physical/dsrom_window_source",
-   "physical/hbm_accel_die_views/stations/bench"
+   "physical/hbm_accel_die_views/stations/bench",
+   "physical/s81_ph_views/gather/leaf_role_split"
   ],
   "views_to": "physical/ref_tile/dsfd_gth_re/views",
   "record_to": "results/rtl/ref_tile/dsfd_gth_re"
@@ -212,6 +224,19 @@
  "floorplan_why": "190.08 x 164.16: the slot (1727.976 x 803.496) gives 8 columns x 4 rows of leaves: column pitch 216 at most, row pitch 185.5, so a leaf is <= 194.4 x 164.16. 8 arrays of 28..30-um height cannot each keep 20-um channels in that box, so the four pairing arrays (256 x 34: 38.664 x 28.92) and the four queue arrays (128 x 66: 37.368 x 28.104) are two ABUTTED N-S stacks (pins on W / E only; pitch 28.944 / 28.128 = array height + 0.024 so every array stays on the M4 track grid): pairing stack at x 22.5, queue stack at x 130.5, root g at level g of both, its logic in the 69-um band between them. 20-um channels round both stacks. Std ~8.4k um2 (the g1 route synthesized 9,899 um2 at S 16) + arrays 8.7k um2 in 29.7k um2 of core = 0.575. Lanes W -> E: 276 b end here, 828 b cross both stacks through the N / S channels (~2.1k M2 + M4 tracks: 0.51 at the first stack); chain N -> S 636 -> 848 b along the band (M3 / M5).",
  "io_tcl": "physical/s81_die_pins/v18/gather_leaves/dsfd_gth_re.tcl",
  "defines": [
-  "S81PH_GTH_LOCAL_BANKS"
- ]
+  "S81PH_GTH_LOCAL_BANKS",
+  "S81PH_GTH_ROLE_SPLIT"
+ ],
+ "io_flop_at_pins": false,
+ "inhold": false,
+ "outhold": false,
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/s81_ph_views/gather/leaf_role_split/pre_gpl.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/s81_ph_views/gather/leaf_role_split/pre_dpl.tcl",
+  "OT_IOHOLD_IN": "1",
+  "OT_INHOLD_DRV": "BUFx4f_ASAP7_75t_R",
+  "OT_OFLOP_HOPS": "8",
+  "OT_OFLOP_COLS": "4",
+  "OT_OFLOP_ALLOW_NONE": "1"
+ }
 }
