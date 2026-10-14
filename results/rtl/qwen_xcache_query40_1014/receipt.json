@@ -1,0 +1,23 @@
+{
+  "source_commit": "b646b9303",
+  "unit": "oth-ubuntu-1468629-1791969088",
+  "exit": 0,
+  "six_operation_fixture": {
+    "outputs": 680,
+    "requests": 680,
+    "durable_query_callbacks": 680,
+    "reactive_misses": 143,
+    "base_edges": 4568
+  },
+  "all_split_22_operation_diagnostic": {
+    "outputs": 936,
+    "requests": 872,
+    "durable_query_callbacks": 872,
+    "base_edges": 10920
+  },
+  "max_pending_query_callback": 1,
+  "query_sequence_bits": 40,
+  "events_do_not_certify_retirement_or_seal": true,
+  "scope": "selected actual tile canonical GT3072 numeric/address oracle; finite hash operands, explicit base ACKs and reactive fills; no whole-token/provider snapshot/whole-consumer lifetime/physical/CDC/registered-credit/throughput qualification",
+  "failed_fixture_runs": "preserved historical duplicate-context reference stimulus; guarded production refuses duplicate while XADMIT0 reference accepts; corrected fixture retains reset and waits actual acceptance"
+}
