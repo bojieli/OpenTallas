@@ -1,0 +1,15 @@
+{
+  "status": "UNQUALIFIED_SOURCE_LAUNCH_DEFECT",
+  "source_commit": "01dd39027",
+  "source_snapshot": "/tmp/ref_gate_dsfd_vm_bgl28_mc_20261014-013548.source_snapshot.json",
+  "measurement": "CTS6 TT placement RC, outputload0 and reestimate, sourceclockphase0, inputtagsremoved againsteveryclock/clock_fall; saved implementationSDC770ps (period independent raw R/o diagnostic, not signoff verdict)",
+  "req_root_R_mean_ps": 254.6073199669199,
+  "f_we2_arrival_ps": 612.5082,
+  "f_o_ps": 357.90088003308006,
+  "ret_root_R_mean_ps": 266.02624723787545,
+  "o_v9_arrival_ps": 522.0081,
+  "ret_o_ps": 255.98185276212456,
+  "limit_ps": 220,
+  "clock_driver_binding": "UNBOUND150psideal",
+  "route_qualified": false
+}
