@@ -157,5 +157,60 @@
       "tt": "OT_WS max 3.587186103715112e-12 min -3.15966697250758e-11"
     }
   },
-  "clock_api_sha256": "9406acbaa756f113963e7fbf8f5502043f94e8ee56b4e380d6002b8fcb247074"
+  "clock_api_sha256": "9406acbaa756f113963e7fbf8f5502043f94e8ee56b4e380d6002b8fcb247074",
+  "literal_bus_source_results": [
+    "OT_ENTRIES COMP tt ck_g[0] -> a/ck[0] wire=0.000000 R=342.4 latency=7.5 phi=349.9",
+    "OT_ENTRIES COMP tt ckv_g[0] -> a/ckv[0] wire=0.000000 R=349.9 latency=0.0 phi=349.9",
+    "OT_ENTRIES COMP tt ck_g[1] -> b/ck[0] wire=0.000000 R=342.4 latency=7.5 phi=349.9",
+    "OT_ENTRIES COMP tt ckv_g[1] -> b/ckv[0] wire=0.000000 R=349.9 latency=0.0 phi=349.9",
+    "OT_ENTRIES COMP DONE tt 4 entries phi=349.9 boundary=334.5..363.69999999999993",
+    "DUAL_PATH tt cs max before=6.108447 after=-211.391571 expected=-211.391553",
+    "DUAL_PATH tt cs min before=127.665405 after=35.165398 expected=35.16540500000001",
+    "DUAL_PATH tt sc max before=-72.780060 after=-275.280090 expected=-275.28006",
+    "DUAL_PATH tt sc min before=198.069458 after=90.569443 expected=90.569458",
+    "DUAL_REF tt a/ck[0] arrival=7.500000 R=342.4 phi=349.9",
+    "DUAL_REF tt b/ck[0] arrival=7.500000 R=342.4 phi=349.9",
+    "DUAL_REF tt a/ckv[0] arrival=0.000000 R=349.9 phi=349.9",
+    "DUAL_REF tt b/ckv[0] arrival=0.000000 R=349.9 phi=349.9",
+    "DUAL_PASS tt UNQUALIFIED tightened-constraint actual ETM both directions max/min; zero-wire API accounting only",
+    "OT_ENTRIES COMP ff ck_g[0] -> a/ck[0] wire=0.000000 R=277.6 latency=6.5 phi=284.1",
+    "OT_ENTRIES COMP ff ckv_g[0] -> a/ckv[0] wire=0.000000 R=284.1 latency=0.0 phi=284.1",
+    "OT_ENTRIES COMP ff ck_g[1] -> b/ck[0] wire=0.000000 R=277.6 latency=6.5 phi=284.1",
+    "OT_ENTRIES COMP ff ckv_g[1] -> b/ckv[0] wire=0.000000 R=284.1 latency=0.0 phi=284.1",
+    "OT_ENTRIES COMP DONE ff 4 entries phi=284.1 boundary=270.69999999999993..297.80000000000007",
+    "DUAL_PATH ff cs max before=84.317139 after=-132.182877 expected=-132.182861",
+    "DUAL_PATH ff cs min before=88.340973 after=-5.159040 expected=-5.159026999999995",
+    "DUAL_PATH ff sc max before=-4.313550 after=-207.813568 expected=-207.81355",
+    "DUAL_PATH ff sc min before=158.211151 after=51.711163 expected=51.711151",
+    "DUAL_REF ff a/ck[0] arrival=6.500000 R=277.6 phi=284.1",
+    "DUAL_REF ff b/ck[0] arrival=6.500000 R=277.6 phi=284.1",
+    "DUAL_REF ff a/ckv[0] arrival=0.000000 R=284.1 phi=284.1",
+    "DUAL_REF ff b/ckv[0] arrival=0.000000 R=284.1 phi=284.1",
+    "DUAL_PASS ff UNQUALIFIED tightened-constraint actual ETM both directions max/min; zero-wire API accounting only",
+    "OT_ENTRIES COMP ss ck_g[0] -> a/ck[0] wire=0.000000 R=449.8 latency=10.0 phi=459.8",
+    "OT_ENTRIES COMP ss ckv_g[0] -> a/ckv[0] wire=0.000000 R=459.8 latency=0.0 phi=459.8",
+    "OT_ENTRIES COMP ss ck_g[1] -> b/ck[0] wire=0.000000 R=449.8 latency=10.0 phi=459.8",
+    "OT_ENTRIES COMP ss ckv_g[1] -> b/ckv[0] wire=0.000000 R=459.8 latency=0.0 phi=459.8",
+    "OT_ENTRIES COMP DONE ss 4 entries phi=459.8 boundary=440.7..473.99999999999994",
+    "DUAL_PATH ss cs max before=-129.927795 after=-349.927795 expected=-349.927795",
+    "DUAL_PATH ss cs min before=189.544159 after=99.544151 expected=99.54415900000001",
+    "DUAL_PATH ss sc max before=-205.352509 after=-405.352539 expected=-405.352509",
+    "DUAL_PATH ss sc min before=262.892334 after=152.892365 expected=152.892334",
+    "DUAL_REF ss a/ck[0] arrival=10.000000 R=449.8 phi=459.8",
+    "DUAL_REF ss b/ck[0] arrival=10.000000 R=449.8 phi=459.8",
+    "DUAL_REF ss a/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
+    "DUAL_REF ss b/ckv[0] arrival=0.000000 R=459.8 phi=459.8",
+    "DUAL_PASS ss UNQUALIFIED tightened-constraint actual ETM both directions max/min; zero-wire API accounting only"
+  ],
+  "literal_bus_source_run": [
+    "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-255289-1791953098): exit 0"
+  ],
+  "final_clock_api_sha256": "e3e7da38ec541486a7943bb7d19ba8cc0e2a8ea9ceb1c0fb5cdf796d63365bfa",
+  "final_clock_api_version": 1,
+  "literal_source_ports": [
+    "ck_g[0]",
+    "ckv_g[0]",
+    "ck_g[1]",
+    "ckv_g[1]"
+  ]
 }

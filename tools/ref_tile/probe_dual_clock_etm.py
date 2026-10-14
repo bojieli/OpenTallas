@@ -9,6 +9,7 @@ import argparse
 import importlib.util
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -19,6 +20,7 @@ def main():
     p.add_argument('--period', type=float, default=833.333, help='Core route/signoff period; serial stays related4/3')
     p.add_argument('--tool-root', required=True, type=Path)
     p.add_argument('--out', required=True, type=Path)
+    p.add_argument('--bus-clock-sources', action='store_true', help='Use exact literal top-level clock bus bits for two actual children')
     p.add_argument('--diagnostic-record', type=Path, help='Audit record for a tightened copied-SDC fixture; keep it with generated evidence')
     p.add_argument('--unmapped-input-mutant', action='store_true', help='Add an actual top data input absent from domain lists; API must reject it')
     p.add_argument('--zero-source-mutant', action='store_true', help='Erase source compensation after application; numerical oracle must reject it')
@@ -46,12 +48,21 @@ def main():
             'clock_entry_domains': {
                 'core': {'ratio': [1, 1], 'ports': ['ac', 'bc'], 'inputs': [], 'outputs': []},
                 'serial': {'ratio': [4, 3], 'ports': ['av', 'bv'], 'inputs': [], 'outputs': []}}}
+    if args.bus_clock_sources:
+        source_map = {'ac': 'ck_g[0]', 'av': 'ckv_g[0]', 'bc': 'ck_g[1]', 'bv': 'ckv_g[1]'}
+        spec['clock_port'] = source_map[spec['clock_port']]
+        spec['clock_ports'] = [source_map[p] for p in spec['clock_ports']]
+        for d in spec['clock_entry_domains'].values():
+            d['ports'] = [source_map[p] for p in d['ports']]
     modpath = args.tool_root / 'tools/ref_tile/clock_entry_constraints.py'
     import sys
     sys.path.insert(0, str(modpath.parent))
     module_spec = importlib.util.spec_from_file_location('clock_entry_constraints', modpath)
     api = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(api)
+    provenance['clock_api_version'] = getattr(api, 'ENTRY_DOMAIN_API_VERSION', None)
+    provenance['literal_bus_clock_sources'] = args.bus_clock_sources
+    (args.out / 'provenance.json').write_text(json.dumps(provenance, indent=2))
     (args.out / 'spec.json').write_text(json.dumps(spec, indent=2))
     (args.out / 'probe.v').write_text('''module probe(input ac,av,bc,bv);
 wire [53:0] ab;
@@ -60,9 +71,16 @@ dsfd_wfc_vmx a(.ck(ac), .ckv(av), .t_cd(ab), .f_cs(ba));
 dsfd_wfc_vmx b(.ck(bc), .ckv(bv), .f_kd(ab), .t_ks(ba));
 endmodule
 ''')
+    if args.bus_clock_sources:
+        net = args.out / 'probe.v'
+        content = net.read_text()
+        for old, new in source_map.items():
+            content = re.sub(r'\b' + old + r'\b', new, content)
+        content = content.replace('input ck_g[0],ckv_g[0],ck_g[1],ckv_g[1]', 'input [1:0] ck_g,ckv_g')
+        net.write_text(content)
     if args.unmapped_input_mutant:
         net = args.out / 'probe.v'
-        net.write_text(net.read_text().replace('input ac,av,bc,bv', 'input ac,av,bc,bv,unmapped'))
+        net.write_text(net.read_text().replace('input ac,av,bc,bv', 'input ac,av,bc,bv,unmapped').replace('input [1:0] ck_g,ckv_g', 'input [1:0] ck_g,ckv_g,input unmapped'))
     constraints = api.generate(spec, args.out)
     if args.zero_source_mutant:
         constraints += '\nforeach c [get_clocks ot_entry_*] {set_clock_latency -source 0 $c}\n'

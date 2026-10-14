@@ -16,7 +16,7 @@ python3 tools/ref_tile/probe_dual_clock_etm.py \
   --diagnostic-record /path/to/diagnostic_exception_provenance.json
 ```
 
-The fixture needs `dsfd_wfc_vmx_{tt,ff,ss}.lib`, `dsfd_wfc_vmx.lef`, and actual `insertion_core_clk.json` / `insertion_ser_clk.json`. The builder stages an exact per-pin `clock_measurements` record and hashes its source files and the tested clock API. Omit `--diagnostic-record` for an original qualified export. Add `--period 770` for route-clock scaling. After copying the generated directory to a fleet host, run its `run.sh` inside `openroad/orfs:asap7lock` through `ot-run`; `/probe` must mount that directory.
+The fixture needs `dsfd_wfc_vmx_{tt,ff,ss}.lib`, `dsfd_wfc_vmx.lef`, and actual `insertion_core_clk.json` / `insertion_ser_clk.json`. The builder stages an exact per-pin `clock_measurements` record and hashes its source files and the tested clock API. Omit `--diagnostic-record` for an original qualified export. Add `--period 770` for route-clock scaling. `--bus-clock-sources` uses exact literal top-level bits `ck_g[0]`, `ckv_g[0]`, `ck_g[1]`, `ckv_g[1]` and records the tested API version and hash; all three actual corners passed this source association. After copying the generated directory to a fleet host, run its `run.sh` inside `openroad/orfs:asap7lock` through `ot-run`; `/probe` must mount that directory.
 
 `--unmapped-input-mutant` must fail actual IO-domain coverage. `--zero-source-mutant` must fail per-pin numerical compensation. These mutants use the same actual ETMs.
 
