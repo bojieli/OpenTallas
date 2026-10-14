@@ -1,0 +1,8 @@
+{
+  "source_quant": "3430b8aac",
+  "lane_CDC_source": "db3a21211",
+  "model": "Separatepeerwrapper retains4qpin4,32actualLQ10CDC lanes; exposes32cdrained onquadrantclientclocks and32vdrained onVMclock;4qdrained conjunctall8clientlanes, complementprotectedaccepted-recordledger0,noactiveRG/WGrequest,nostickyledger/aperture/CDCfault",
+  "ledger": "Eachaccepted rec valid&&ret.ready increments; eachactual ret.done decrements. Count6bits/complement6bits, capacity32, stickyunder/overflow. Fourroots52newstatebits, noextra payload/edge",
+  "source_lease": "Parentmustkeeppermit/grants andsid/mirrorstableuntilbothactualsourceandVMdrains acknowledged; clientqdrainedalone doesnotproveVMquiet",
+  "physical": "32unclosedCDCpayload/ECCarrays +4ledgerclockrootsdistinct; noclosedSAR/ECCalias; actualH100pinpairs andparentmux/leasesVMowner"
+}
