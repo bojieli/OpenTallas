@@ -10,25 +10,29 @@ import numpy as np
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/hier_contract'))
 import pin_align as PA
-OUT=ROOT/'results/arch/s81_hrow_native_placement_1013'
+BASE_OUT=ROOT/'results/arch/s81_hrow_native_placement_1013'
+OUT=BASE_OUT
 W,H=2998.08,1769.04
 CHILDREN={'dsfd_mtp_hrow_ing':'hrow5_ing','dsfd_mtp_hrow_hub':'hrow5_hub','dsfd_mtp_hrow_cbe':'hrow5_cbe_cx','dsfd_mtp_hrow_cbw':'hrow5_cbw_cx'}
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def masters():
  out={}
- for m,k in CHILDREN.items():
-  p=ROOT/'physical/ref_tile'/k/'views'/m/(m+'.lef');t=p.read_text();sz=re.search(r'SIZE\s+(\S+) BY (\S+)',t);ps={}
-  for n,b in re.findall(r'\n\s*PIN (\S+)\n(.*?)\n\s*END \1',t,re.S):
-   r=re.search(r'LAYER (\S+) ;\s*RECT\s+([^;]+);',b)
-   if r:
-    x0,y0,x1,y1=map(float,r[2].split());ps[n]=((x0+x1)/2,(y0+y1)/2,r[1])
-  out[m]=dict(w=float(sz[1]),h=float(sz[2]),pins=ps,evidence=str(p.relative_to(ROOT)),sha256=digest(p),kind='closed_child_lef')
- for m in ['dsfd_hrow_r2079','dsfd_hrow_r1025','dsfd_hrow_r23','dsfd_hrow_r15','dsfd_die_rstsync']:
-  p=OUT/'pins'/m/'pins.json';d=json.loads(p.read_text());ps={}
-  for n,v in d['pins'].items():
-   b=v['boxes'][0];x0,y0,x1,y1=b['rect_um'];ps[n]=((x0+x1)/2,(y0+y1)/2,b['layer'])
-  out[m]=dict(w=d['outline_um'][0],h=d['outline_um'][1],pins=ps,evidence=str(p.relative_to(ROOT)),sha256=digest(p),odb_sha256=d['odb_sha256'],kind='actual_cts_pins_route_pending')
+ for m,k in dict(CHILDREN,**{n:n+'_m5' for n in ['dsfd_hrow_r2079','dsfd_hrow_r1025','dsfd_hrow_r23','dsfd_hrow_r15','dsfd_die_rstsync']}).items():
+  p=ROOT/'physical/ref_tile'/k/'views'/m/(m+'.lef')
+  if p.exists():
+   t=p.read_text();sz=re.search(r'SIZE\s+(\S+) BY (\S+)',t);ps={}
+   for n,b in re.findall(r'\n\s*PIN (\S+)\n(.*?)\n\s*END \1',t,re.S):
+    r=re.search(r'LAYER (\S+) ;\s*RECT\s+([^;]+);',b)
+    if r:
+     x0,y0,x1,y1=map(float,r[2].split());ps[n]=((x0+x1)/2,(y0+y1)/2,r[1])
+   out[m]=dict(w=float(sz[1]),h=float(sz[2]),pins=ps,evidence=str(p.relative_to(ROOT)),sha256=digest(p),kind='closed_child_lef')
+  else:
+   p=BASE_OUT/'pins'/m/'pins.json';d=json.loads(p.read_text());ps={}
+   for n,v in d['pins'].items():
+    b=v['boxes'][0];x0,y0,x1,y1=b['rect_um'];ps[n]=((x0+x1)/2,(y0+y1)/2,b['layer'])
+   out[m]=dict(w=d['outline_um'][0],h=d['outline_um'][1],pins=ps,evidence=str(p.relative_to(ROOT)),sha256=digest(p),odb_sha256=d['odb_sha256'],kind='actual_cts_pins_route_pending')
  return out
+
 MP=masters()
 def vec(p,n,base=0):return [f'{p}[{k}]' for k in range(base,base+n)]
 class Plan:
@@ -124,21 +128,29 @@ class Plan:
   spec=importlib.util.spec_from_file_location('fe',ROOT/'tools/s81_ph/s81_ph_vm_fe_h_floorplan.py');fe=importlib.util.module_from_spec(spec);spec.loader.exec_module(fe);fe.W,fe.H=W,H
   return fe.Plan.check_cuts(self)
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--placements',type=Path);ap.add_argument('--cuts',action='store_true');ap.add_argument('--ut',type=int,choices=[1,2],default=1);ap.add_argument('--distributed-reset',action='store_true');ap.add_argument('--edge-cuts',action='store_true');ap.add_argument('--max-grid-wire-um',type=float);a=ap.parse_args();p=Plan(a.ut)
+ global OUT
+ ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path);ap.add_argument('--placements',type=Path);ap.add_argument('--cuts',action='store_true');ap.add_argument('--ut',type=int,choices=[1,2],default=1);ap.add_argument('--distributed-reset',action='store_true');ap.add_argument('--edge-cuts',action='store_true');ap.add_argument('--max-grid-wire-um',type=float);a=ap.parse_args();
+ if a.out:OUT=a.out
+ OUT.mkdir(parents=True,exist_ok=True)
+ p=Plan(a.ut)
  if a.placements:
-  for n,z in json.loads(a.placements.read_text())['instances'].items():p.inst[n].update(z)
+  for n,z in json.loads(a.placements.read_text())['instances'].items():
+   if n in p.inst:p.inst[n].update(z)
  if a.distributed_reset:p.distributed_reset()
+ if a.placements:
+  for n,z in json.loads(a.placements.read_text())['instances'].items():
+   if n in p.inst:p.inst[n].update(z)
  bad,rows=p.evaluate();cuts=p.cut_check() if a.cuts else None
  if a.edge_cuts:
   import s81_ph_hrow_route_cuts as RC
   cuts=RC.check(p,W,H,dump_path=OUT/'grid_routes.json.gz',wire_limit_um=a.max_grid_wire_um)
  source=ROOT/'rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv'
  graph={'clock':dict(source_port='ck',drivers=[],sinks=[dict(instance=n,pin='ck',point_um=list(p.pin(n,'ck')[:2])) for n in p.inst],rtl_net='ck',physical_source_binding=None,status='No adopted native die clock/reset ABI; source ck is a real RTL port, physical driver not assigned'), 'asynchronous_reset':dict(source_port='rst',sinks=[dict(instance=n,pin='rst',point_um=list(p.pin(n,'rst')[:2])) for n,z in p.inst.items() if 'rst' in MP[z['master']]['pins']]),'relay_reset':dict(driver='g_hrst/u_rs.rn',sinks=[n+'.rn' for n,z in p.inst.items() if z['master'].startswith('dsfd_hrow_r')],buffer_tree=None)}
- res=dict(schema='opentallas.s81_hrow_native_candidate.v1',outline_um=[W,H],rtl_source=str(source.relative_to(ROOT)),rtl_sha256=digest(source),relay_rtl_sha256=digest(ROOT/'rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv'),parameters=dict(HARD_RELAYS=1,CQ=3,WK=7,P=2,UT=a.ut,DISTRIBUTED_RST=int(a.distributed_reset)),relay_bits=12660+6237*(a.ut-1),reset_sync_bits=(2*(24+3*(a.ut-1)) if a.distributed_reset else 2),instances=p.inst,masters={m:{k:v for k,v in z.items() if k!='pins'} for m,z in MP.items()},placement_violations=bad,hops=rows,connectivity_edges=p.edges,cuts=cuts,clock_reset_graph=graph,unmodelled=['Assigned parent boundary pins and external hops','Physical die clock source, insertion, phase and skew','Physical reset driver and buffer-tree placement','Final routed relay LEFs and SS/FF clock timing','Constant f_pid/f_bid and cd[0] tie-cell placements'],pass_=False,cut_scope='Explicit grid-edge A* candidate routes using actual landing cells and face-normal escape segments; maximum8-bit groups,10.8um grid,full/local54um cuts,M2-M7. Per-pair500um is Manhattan geometry only, not routed timing.',status='OPEN diagnostic candidate; no parent closure or valid physical clock graph claimed')
+ res=dict(schema='opentallas.s81_hrow_native_candidate.v1',outline_um=[W,H],rtl_source=str(source.relative_to(ROOT)),rtl_sha256=digest(source),relay_rtl_sha256=digest(ROOT/'rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv'),parameters=dict(HARD_RELAYS=1,CQ=3,WK=7,P=2,UT=a.ut,DISTRIBUTED_RST=int(a.distributed_reset)),relay_bits=12660+6237*(a.ut-1),reset_sync_bits=(2*(24+3*(a.ut-1)) if a.distributed_reset else 2),instances=p.inst,masters={m:{k:v for k,v in z.items() if k!='pins'} for m,z in MP.items()},placement_violations=bad,hops=rows,connectivity_edges=p.edges,cuts=cuts,clock_reset_graph=graph,unmodelled=['Assigned parent boundary pins and external hops','Physical die clock source, insertion, phase and skew','Physical reset driver and buffer-tree placement','Actual per-pair operating slew/load/wire RC and clock delivery','Constant f_pid/f_bid and cd[0] tie-cell placements'],pass_=False,cut_scope='Explicit grid-edge A* candidate routes using actual landing cells and face-normal escape segments; maximum8-bit groups,10.8um grid,full/local54um cuts,M2-M7. Per-pair500um is routed geometric screening only, not extracted RC/timing.',status='OPEN diagnostic candidate; no parent closure or valid physical clock graph claimed')
  if a.distributed_reset:
   graph['relay_reset']=dict(drivers=[e['source']+'.rn' for e in p.edges if e['cls']=='local_reset_release'],sinks=[e['sink']+'.rn' for e in p.edges if e['cls']=='local_reset_release'],release_edges=2,global_rst_delivery_binding=None,global_ck_delivery_binding=None,status='Local two-edge release conditioned directly from original rst/ck; global delivery remains OPEN')
  res['pass']=res.pop('pass_')
- price=OUT/'ut2_distributed_price_pending.json'
+ price=BASE_OUT/'ut2_distributed_price_pending.json'
  if price.exists():res['production_proof']=json.loads(price.read_text()).get('production_proof')
  bench=ROOT/'rtl/dsrom_sys/mtp/tb_mtp_hrow.sv'
  res['clock_reset_graph']['bench_only_source']=dict(path=str(bench.relative_to(ROOT)),sha256=digest(bench),instance='u_st',clock_connection='ck(clk)',reset_connection='rst(rst_n)',clock_generator='always #0.5 clk = ~clk',period_ns=1.0,production_binding=False)

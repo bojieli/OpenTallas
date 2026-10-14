@@ -1,8 +1,35 @@
 #!/usr/bin/env python3
 """Independently replay saved route demand, connectivity and exact-pin length diagnostics."""
-import argparse,collections,gzip,hashlib,json
+import argparse,collections,gzip,hashlib,json,sys
 from pathlib import Path
 import numpy as np
+
+def final_pin_rebind(path,candidate):
+ root=Path(__file__).resolve().parents[2];sys.path.insert(0,str(root/'tools/hier_contract'))
+ import child_lint
+ c=json.load(open(candidate));geometries={}
+ for master,m in c['masters'].items():
+  evidence=root/m['evidence'];assert hashlib.sha256(evidence.read_bytes()).hexdigest()==m['sha256']
+  assert m['kind']=='closed_child_lef','Final screen must not fall back to CTS or planned pins'
+  geometries[master]=child_lint.parse_lef(evidence.read_text())
+ def point(instance,pin):
+  z=c['instances'][instance];m=geometries[z['master']];rect=m['pins'][pin]['rects'][0];x=(rect[1]+rect[3])/2;y=(rect[2]+rect[4])/2
+  if z['orient']=='MX':y=m['H']-y
+  elif z['orient']=='MY':x=m['W']-x
+  else:assert z['orient']=='R0'
+  return [x+z['x'],y+z['y']]
+ d=json.load(gzip.open(path,'rt'));count=0;expected=set()
+ for e in c['connectivity_edges']:
+  for sp,dp in zip(e['source_pins'],e['sink_pins']):expected.add((e['cls'],e['source'],sp,e['sink'],dp))
+ observed=set()
+ for r in d['routes']:
+  for q in r['exact_pairs']:
+   key=(r['cls'],r['source_instance'],q['source_pin'],r['sink_instance'],q['sink_pin']);assert key not in observed;observed.add(key)
+   for direction,instance,pin in [('source',r['source_instance'],q['source_pin']),('sink',r['sink_instance'],q['sink_pin'])]:
+    actual=point(instance,pin);assert max(abs(actual[i]-q[direction+'_point_um'][i]) for i in (0,1))<1e-7,(key,direction,actual,q[direction+'_point_um'])
+   count+=1
+ assert observed==expected,(len(observed),len(expected),list(expected-observed)[:3])
+ return dict(actual_final_lef_pin_rebind_pass=True,exact_bit_pairs=count,independent_parser='child_lint.parse_lef',candidate_sha256=hashlib.sha256(candidate.read_bytes()).hexdigest(),master_final_lef_sha256={m:d['sha256'] for m,d in c['masters'].items()})
 
 def replay(path):
  d=json.load(gzip.open(path,'rt'));C=[np.array(d['capacity_H']),np.array(d['capacity_V'])];U=[np.array(d['escape_demand_H']),np.array(d['escape_demand_V'])];over=[];counts=collections.Counter();worst=0.;normal={'E':(1,0),'W':(-1,0),'N':(0,1),'S':(0,-1)}
@@ -29,7 +56,9 @@ def replay(path):
  for i,axis in enumerate([0,1]):
   a=np.apply_along_axis(lambda x:np.convolve(x,np.ones(5),'valid'),axis,U[i]);b=np.apply_along_axis(lambda x:np.convolve(x,np.ones(5),'valid'),axis,C[i]);wins.append(float((a/b).max()))
  edge=[float((U[i]/C[i]).max()) for i in range(2)];audit=dict(schema='opentallas.hrow_route_replay.v1',artifact_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),groups=len(d['routes']),full_cut_max=full,window54um_cut_max=wins,edge_capacity_max=edge,pass_=max(full+wins)<=.6 and max(edge)<=1.0,connectivity_and_normal_escapes_pass=True)
- lengths=dict(schema='opentallas.hrow_route_length_diagnostic.v1',groups_over500=len(over),bits_over500=sum(counts.values()),classes_over500=dict(counts),exact_pairs=sum(r['bits'] for r in d['routes']),actual_rc_budget_status='OPEN final relay ETMs/driver-load wire budgets unassigned;500um diagnostic only',worst_polyline_um=round(worst,4),over_budget_groups=over)
+ lengths=dict(schema='opentallas.hrow_route_length_diagnostic.v1',groups_over500=len(over),bits_over500=sum(counts.values()),classes_over500=dict(counts),exact_pairs=sum(r['bits'] for r in d['routes']),actual_rc_budget_status='OPEN actual production clock/reset delivery, operating load/slew and routed wire RC budgets unassigned;500um geometric diagnostic only',worst_polyline_um=round(worst,4),over_budget_groups=over)
  return audit,lengths
 if __name__=='__main__':
- a=argparse.ArgumentParser();a.add_argument('artifact',type=Path);a.add_argument('--out',type=Path,required=True);a.add_argument('--lengths',type=Path,required=True);x=a.parse_args();audit,lengths=replay(x.artifact);x.out.write_text(json.dumps(audit,indent=1)+'\n');x.lengths.write_text(json.dumps(lengths,indent=1)+'\n');print(json.dumps(audit));print({k:v for k,v in lengths.items() if k!='over_budget_groups'})
+ a=argparse.ArgumentParser();a.add_argument('artifact',type=Path);a.add_argument('--out',type=Path,required=True);a.add_argument('--lengths',type=Path,required=True);a.add_argument('--candidate',type=Path);x=a.parse_args();audit,lengths=replay(x.artifact);
+ if x.candidate:audit.update(final_pin_rebind(x.artifact,x.candidate))
+ x.out.write_text(json.dumps(audit,indent=1)+'\n');x.lengths.write_text(json.dumps(lengths,indent=1)+'\n');print(json.dumps(audit));print({k:v for k,v in lengths.items() if k!='over_budget_groups'})
