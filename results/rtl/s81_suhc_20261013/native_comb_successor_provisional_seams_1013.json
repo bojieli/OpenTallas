@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.hc.native_comb_seam_screen.v1",
-  "status": "PROVISIONAL CTS DIAGNOSIS ONLY: CCF/pad models are placed CTS estimates, no routed qualification; fixed die reservation geometry",
+  "status": "PROVISIONAL CTS DIAGNOSIS ONLY: actual successor assigned pins and placed CTS arcs; no routed qualification",
   "geometry_model": "actual closed LEF first pin rectangle, Manhattan; routing can only add length",
   "timing_model": "measured TT/FF worst bus arcs and insertion compensation; no placeholder sides",
   "seams": [
@@ -1593,8 +1593,17 @@
   ],
   "fail_count": 23,
   "missing_count": 0,
-  "model_sources": {
-    "ccf": "native_provisional_models/ccf",
-    "pad": "native_provisional_models/pad"
-  }
+  "actual_master_substitutions": {
+    "u_cf": {
+      "reference_cell": "ot_s81_hc_ccf",
+      "actual_successor_cell": "ot_s81_hc_ccf",
+      "status": "provisional placed CTS arcs, not routed view"
+    },
+    "u_pd.u_f5r1": {
+      "reference_cell": "ot_s81_hc_pad_f5r1",
+      "actual_successor_cell": "ot_s81_hc_pad_fv4fd5r1",
+      "status": "provisional placed CTS arcs, not routed view"
+    }
+  },
+  "provisional_model_source": "native_provisional_models/provisional_bus_timing.json"
 }
