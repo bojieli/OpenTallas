@@ -582,28 +582,34 @@ def apply(v, m, G):
         rec['die_lane_windows'] = v.DIE_LANE_WINDOWS
 
     # ---------------------------------------------------------------- T18 reset sequencer leaves, new reset nets
-    pll, ck = by['pll'], by['clk_rx']
-    # r9: qkd_rstseq is the CLOSED leaf (qkd_rstseq-kc1-b4a0a3156, 21.6 x 21.6); its reset input is por_n (PLL lock)
-    rk = v.Inst('rstseq', 'qkd_rstseq', round(v.dn(pll.x - RSTSEQ_KV - 4.32, v.GX), 4), pll.y, RSTSEQ_KV, RSTSEQ_KV,
-                kind='ctl', region='kv_centre', domain=pll.domain)
-    split.setdefault('qkd_rstseq', {})['rsi'] = [('por_n', 1)]
+    # qwen-split compute die (2026-10-14): no PLL on this die; the KV/system die forwards clock + reset over the D2D bump
+    # pair (r22k ckb_rom / rs_bump), so the compute reset leaf qfd_rstseq takes rst_fwd_s from the bump synchroniser
+    pll, ck = by.get('pll'), by['clk_rx']
     rr = v.Inst('rstseq_rom', 'qfd_rstseq', round(v.up(ck.x + ck.w + 4.32, v.GX), 4), ck.y, 54.0 - S, 54.0 - S,
                 kind='ctl', region='hub', domain='stream_1p2')
-    m['insts'] += [rk, rr]
+    if pll is not None:
+        # r9: qkd_rstseq is the CLOSED leaf (qkd_rstseq-kc1-b4a0a3156, 21.6 x 21.6); its reset input is por_n (PLL lock)
+        rk = v.Inst('rstseq', 'qkd_rstseq', round(v.dn(pll.x - RSTSEQ_KV - 4.32, v.GX), 4), pll.y, RSTSEQ_KV, RSTSEQ_KV,
+                    kind='ctl', region='kv_centre', domain=pll.domain)
+        split.setdefault('qkd_rstseq', {})['rsi'] = [('por_n', 1)]
+        m['insts'] += [rk, rr]
+    else:
+        m['insts'] += [rr]
     nb, ckr = [], False
     for b, c, n, e in B:
         if b == 'rst_fwd_s':
-            e = [('rstseq', 'rso_fwd'), ('rstseq_rom', 'rsi')]
+            e = [('rstseq', 'rso_fwd'), ('rstseq_rom', 'rsi')] if pll is not None else [('rs_bump', 'rso_f'), ('rstseq_rom', 'rsi')]
         else:
             e = [('rstseq', p) if (i, p[:4]) == ('pll', 'rso_') else ('rstseq_rom', p) if (i, p[:4]) == ('clk_rx', 'rso_')
                  else (i, p) for i, p in e]
-        if b == 'clk_core_c':
+        if b == 'clk_core_c' and pll is not None:
             e = e + [('rstseq', 'ck')]
         if re.fullmatch(r'clk_r\d+', b) and not ckr:
             e, ckr = e + [('rstseq_rom', 'ck')], True
         nb.append((b, c, n, e))
     B = nb
-    B.append(('pll_lock', 'spine_local', 1, [('pll', 'lock'), ('rstseq', 'rsi')]))
+    if pll is not None:
+        B.append(('pll_lock', 'spine_local', 1, [('pll', 'lock'), ('rstseq', 'rsi')]))
     # r9: the two ROM-side reset roots (seq_su, tt_ctlm) are resets like rst_field / rst_spine: class 'reset', so a root
     # farther than the reach from its sink becomes a registered repeater tree (_reset_tree), not a 1-b data relay chain
     # (run b2: rst_seq_ctlm, 17 data relays, ended on tt_ctlm's area pin at the block centre: no relay site in reach)
@@ -613,7 +619,7 @@ def apply(v, m, G):
                                                                     'qfd_su_cbuf_g')]
     B += [('rst_field', 'reset', 1, [('rstseq_rom', 'rso_f')] + field),
           ('rst_spine', 'reset', 1, [('rstseq_rom', 'rso_s')] + spine)]
-    rec['reset'] = dict(rst_field=len(field), rst_spine=len(spine), leaves=['rstseq', 'rstseq_rom'])
+    rec['reset'] = dict(rst_field=len(field), rst_spine=len(spine), leaves=(['rstseq'] if pll is not None else []) + ['rstseq_rom'])
 
     # ---------------------------------------------------------------- T21 ROM IO
     # (a) host SerDes = the re-shaped abstract, E edge kept; its FDI pins are on the W face, so the two SerDes clusters W
@@ -742,6 +748,12 @@ def apply(v, m, G):
     if torn:
         m.setdefault('tp8b_kv', {}).setdefault('torn_chains', []).extend(torn)
 
+    # ---------------------------------------------------------------- qwen-split compute die: contract slot table
+    if getattr(G, 'TP8', None) and G.TP8.get('split') == 'compute':
+        sys.path.insert(0, str(HERE.parent / 'qwen_split'))
+        import compute_spine as _CS
+        rec['split_compute'] = _CS.place(v, m, G)
+        B = m['buses']
     # ---------------------------------------------------------------- overlap / outline gate
     ins = sorted(m['insts'], key=lambda i: i.x)
     ov = []

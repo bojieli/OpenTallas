@@ -5,7 +5,7 @@ CAP_MODE v3: bits per cut vs usable tracks, relay pin faces included as hop endp
 
 usage (repo root): python3 tools/qwen_tp8/relay_data_run.py OUTDIR   -> OUTDIR/relay_run.json, OUTDIR/rom_tp8b.json
 Set OT_RELAY_DUMP=FILE for the allocator's per-chain dump, OT_RELAY_GATE=warn to record misses instead of raising."""
-import json, sys, time
+import json, os, sys, time
 from pathlib import Path
 sys.path.insert(0, 'tools'); sys.path.insert(0, 'results/arch/qwen_tp8_1012')
 import die_top_lint as D, cuts as C
@@ -28,7 +28,7 @@ except Exception as e:   # noqa: BLE001
     import traceback
     cost = dict(error=repr(e), trace=traceback.format_exc()[-1500:])
 r = dict(m.get('r21_relays') or {})
-rec = dict(schema='opentallas.qwen-tp8.relay-data-run.v1', recipe='tp8b', die=m['die'], build_s=round(time.time() - t),
+rec = dict(schema='opentallas.qwen-tp8.relay-data-run.v1', recipe='tp8b' + ('+split_compute' if os.environ.get('OT_TP8_SPLIT') else ''), split_compute=m.get('split_compute'), die=m['die'], build_s=round(time.time() - t),
            relays={k: r.get(k) for k in ('pitch_um', 'max_um', 'relays', 'masters', 'classes', 'clock_nets_missing', 'repaired',
                                          'unrepaired', 'cut_over', 'off_plan', 'rip_up', 'gap_tier', 'wall_avoid', 'retry', 'jog_fix', 'pair_check', 'relay_flop_bits', 'relay_area_mm2', 'reach_um',
                                          'max_pin_to_pin_um', 'over_reach')},

@@ -327,7 +327,7 @@ def _tp8b_f2(v, m):
                 ov.append((p.name, q.name))
     m['tp8b'] = dict(die_um=[W, H], spine_w=round(spine_w + kvc, 3), kvc_w=kvc, kv_strip_w=kvs, io_dy=dy,
                      io_x=[round(io[0].x, 3), round(io[-1].x + io[-1].w, 3)], overlaps=ov[:20], n_overlaps=len(ov))
-    if ov:
+    if ov and TP8.get('split') != 'compute':      # split compute die: spine re-placed after tp8b_v5, gated there
         raise SystemExit(f'tp8b: {len(ov)} overlaps, e.g. {ov[:6]}')
 
 
@@ -845,6 +845,10 @@ def _tp8_spine(v, m):
                 break
         if dy is not None:
             break
+    if dy is None and TP8.get('split') == 'compute':
+        # qwen-split compute die: the spine is re-placed from the contract slot table (qwen_split/compute_spine.py) after
+        # tp8b_v5; the window search of the merged die does not apply
+        dy, mv = 0.0, (set(), 0.0)
     if dy is None:
         occ = sorted((round(b_.x), round(b_.y), round(b_.y + b_.h), b_.name) for b_ in fixed)
         raise SystemExit(f'tp8 spine: no window for the VM stack in segment {seg0} (W {W:.1f}); stack '

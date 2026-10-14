@@ -162,6 +162,16 @@ if os.environ.get('OT_TP8_TILE'):
     _tb, _th, _rg, _cp = (float(q) for q in os.environ['OT_TP8_TILE'].split(','))
     QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg,
                             f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp))
+# qwen-split compute die (owner 2026-10-14 06:45: Qwen -> two-die split; compute-die lead, el1014-qwen-split-compute.log):
+# OT_TP8_SPLIT=compute builds the tp8b F2 ROM field WITHOUT the KV halves / KV centre (they are the KV/system die): the r22k
+# link end (ucie_kv PHY + qfd_d2d_rom + ckb_rom forwarded-clock bump + rs_bump reset sync) stays, the KV die's PLL forwards
+# the clock.  Slot (contract v1-a = Codex split candidate codex/qwen-split-feasibility-1013): tile 399.6 x 1,442.88, column
+# pitch 472.608, row gap 43.2 (row pitch 1,486.08 as tp8b), spine sub-column OT_TP8_SPLIT_SPINE um (default 5,200 total).
+if os.environ.get('OT_TP8_SPLIT') == 'compute':
+    _tb, _th, _rg, _cp = (float(q) for q in os.environ.get('OT_TP8_SPLIT_TILE', '399.6,1442.88,43.2,472.608').split(','))
+    QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg, split='compute',
+                            f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp, kv=False, kv_w=0.0, kv_ch=0.0, host_serdes=False, io_chan=400.0,
+                                    spine_w=float(os.environ.get('OT_TP8_SPLIT_SPINE', '6700'))))
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
