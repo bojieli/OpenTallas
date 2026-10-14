@@ -29,11 +29,22 @@ foreach a $ends {
 foreach child {win io ws pb1 pb0 pb2 lkp sink} {
   set regs [get_cells -quiet *u_rst_${child}*]
   if {![llength $regs]} { error "ENGC reset cells missing: $child" }
-  set q [get_pins -of_objects $regs -filter "direction==output"]
-  set d [get_pins -of_objects $regs -filter "direction==input"]
+  # Only sequential QN/D pins form the conditioner stage chain. Synthesis
+  # also names reset input inverters under u_rst_<child>; including their Y
+  # pins mislabeled external recovery as a stage-to-stage data path.
+  set q {}; set d {}; set async_controls {}
+  foreach pin [get_pins -of_objects $regs] {
+    set name [get_full_name $pin]
+    if {[string match */QN $name]} { lappend q $pin }
+    if {[string match */D $name]} { lappend d $pin }
+    if {[string match */RESETN $name]} { lappend async_controls $pin }
+  }
+  if {[llength $q] != 2 || [llength $d] != 2 || [llength $async_controls] != 2} {
+    error "ENGC reset stages not exactly two: $child Q=[llength $q] D=[llength $d] R=[llength $async_controls]"
+  }
   set rpin rst
   if {$child in {lkp sink}} { set rpin rst_n }
-  foreach pair [list [list STAGES $q $d] [list CHILD $q [get_pins u_${child}/$rpin]] [list ASYNC [get_ports {rst[0]}] $d]] {
+  foreach pair [list [list STAGES $q $d] [list CHILD $q [get_pins u_${child}/$rpin]] [list ASYNC [get_ports {rst[0]}] $async_controls]] {
     lassign $pair tag from to
     set v [ot_w $from $to $kind]
     puts "RESET $C $kind $child $tag $v"
