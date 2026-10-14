@@ -46,11 +46,12 @@ module ot_ratio_cdc_fifo #(
     parameter int W     = 64,
     parameter int DEPTH = 4,            // entries, power of two
     parameter int HOLD  = 2,            // extra DOWN cycles of each side; (HOLD + 1) * T_own must exceed T_peer
-    parameter int LAG   = 0             // CLAUDE S81-PH 2026-10-07: 1 = the write pointer is published one write cycle
+    parameter int LAG   = 0,            // CLAUDE S81-PH 2026-10-07: 1 = the write pointer is published one write cycle
                                         // after the entry is written (wp_pub), so an entry is stable >= T_w + one
                                         // window before any read edge can use it: the mem -> sh arcs become a
                                         // max-delay T_w data path with no hold check (capt_x mem -> sh hold -5 at
                                         // +42 setup); +1 write cycle of latency
+    parameter int LOCAL_CTRL = 0       // local same-epoch decode; enabled only by the capture successor
 ) (
     input  logic         wclk,
     input  logic         wrst_n,        // synchronous to wclk
@@ -84,10 +85,18 @@ module ot_ratio_cdc_fifo #(
 
     always_ff @(posedge wclk) begin
         rp_w   <= rp;
-        r_st_w <= r_st;
     end
+    generate if (LOCAL_CTRL) begin : g_local_rstate
+        logic [1:0] r_st_w_n;
+        always_ff @(posedge wclk) r_st_w_n <= ~r_st;
+        assign r_st_w = ~r_st_w_n;
+    end else begin : g_original_rstate
+        always_ff @(posedge wclk) r_st_w <= r_st;
+    end endgenerate
     assign w_live = (w_st == S_RUN) && (r_st_w != S_DOWN);
-    assign w_rdy  = wrst_n && w_live && ((wp - rp_w) != (AW+1)'(DEPTH));
+    wire full = LOCAL_CTRL ? ((wp[AW] != rp_w[AW]) && (wp[AW-1:0] == rp_w[AW-1:0]))
+                           : ((wp - rp_w) == (AW+1)'(DEPTH));
+    assign w_rdy  = wrst_n && w_live && !full;
     assign w_fire = w_v && w_rdy;
     always_ff @(posedge wclk) begin
         if (!wrst_n) begin
@@ -130,34 +139,91 @@ module ot_ratio_cdc_fifo #(
 
     always_ff @(posedge rclk) begin
         wp_r   <= wp_pub;
-        w_st_r <= w_st;
         for (int i = 0; i < DEPTH; i++) sh[i] <= mem[i];
     end
+    generate if (LOCAL_CTRL) begin : g_local_wstate
+        logic [1:0] w_st_r_n;
+        always_ff @(posedge rclk) w_st_r_n <= ~w_st;
+        assign w_st_r = ~w_st_r_n;
+    end else begin : g_original_wstate
+        always_ff @(posedge rclk) w_st_r <= w_st;
+    end endgenerate
     assign r_live = (r_st == S_RUN) && (w_st_r != S_DOWN);
     assign r_v    = rrst_n && r_live && (wp_r != rp);
-    assign r_d    = sh[rp[AW-1:0]];
     assign r_take = r_v && r_rdy;
+    logic [AW:0] rp_next;
+    always_comb begin
+        rp_next = rp;
+        if (!rrst_n) rp_next = '0;
+        else case (r_st)
+            S_DOWN, S_WAIT: rp_next = '0;
+            default: if (w_st_r == S_DOWN) rp_next = '0;
+                     else if (r_take) rp_next = rp + 1'b1;
+        endcase
+    end
+    generate if (LOCAL_CTRL) begin : g_local_read
+        always_ff @(posedge rclk) rp <= rp_next;
+        for (genvar off = 0; off < W; off = off + 16) begin : g_slice
+            localparam int SW = (W - off < 16) ? W - off : 16;
+            wire [DEPTH*SW-1:0] words;
+            for (genvar bank = 0; bank < DEPTH; bank = bank + 1) begin : g_word
+                assign words[bank*SW +: SW] = sh[bank][off +: SW];
+            end
+            // Retain local selector banks instead of merging them into one
+            // high-fanout pointer decode. The selected epoch is still rp.
+            (* keep_hierarchy *) ot_ratio_cdc_fifo_read_slice #(.W(SW), .DEPTH(DEPTH), .AW(AW)) u_read
+                (.rclk(rclk), .rp_next(rp_next[AW-1:0]), .words(words), .data(r_d[off +: SW]));
+        end
+    end else begin : g_original_read
+        assign r_d = sh[rp[AW-1:0]];
+    end endgenerate
     always_ff @(posedge rclk) begin
         if (!rrst_n) begin
-            r_st <= S_DOWN; r_cnt <= CW'(HOLD); r_ok <= 1'b0; rp <= '0;
+            r_st <= S_DOWN; r_cnt <= CW'(HOLD); r_ok <= 1'b0;
+            if (!LOCAL_CTRL) rp <= '0;
         end else begin
             case (r_st)
                 S_DOWN: begin
-                    rp <= '0;
+                    if (!LOCAL_CTRL) rp <= '0;
                     if (w_st_r != S_RUN) r_ok <= 1'b1;
                     if (r_cnt != '0) r_cnt <= r_cnt - 1'b1;
                     else if (r_ok || w_st_r != S_RUN) r_st <= S_WAIT;
                 end
                 S_WAIT: begin
-                    rp <= '0;
+                    if (!LOCAL_CTRL) rp <= '0;
                     if (w_st_r != S_DOWN) r_st <= S_RUN;
                 end
                 default: begin // S_RUN
                     if (w_st_r == S_DOWN) begin
-                        r_st <= S_DOWN; r_cnt <= CW'(HOLD); r_ok <= 1'b1; rp <= '0;
-                    end else if (r_take) rp <= rp + 1'b1;
+                        r_st <= S_DOWN; r_cnt <= CW'(HOLD); r_ok <= 1'b1;
+                        if (!LOCAL_CTRL) rp <= '0;
+                    end else if (r_take) begin
+                        if (!LOCAL_CTRL) rp <= rp + 1'b1;
+                    end
                 end
             endcase
         end
+    end
+endmodule
+
+// A selector is registered from the SAME next pointer as the binary rp. It
+// therefore selects the same bank at every edge, adding no data/valid cycle.
+// Negative storage uses the native QN flop output directly for the bank mask.
+module ot_ratio_cdc_fifo_read_slice #(
+    parameter int W = 16,
+    parameter int DEPTH = 4,
+    parameter int AW = $clog2(DEPTH)
+) (
+    input logic rclk,
+    input logic [AW-1:0] rp_next,
+    input logic [DEPTH*W-1:0] words,
+    output logic [W-1:0] data
+);
+    logic [DEPTH-1:0] bank_n;
+    always_ff @(posedge rclk)
+        for (int bank = 0; bank < DEPTH; bank++) bank_n[bank] <= !(rp_next == AW'(bank));
+    always_comb begin
+        data = '0;
+        for (int bank = 0; bank < DEPTH; bank++) data |= words[bank*W +: W] & {W{!bank_n[bank]}};
     end
 endmodule

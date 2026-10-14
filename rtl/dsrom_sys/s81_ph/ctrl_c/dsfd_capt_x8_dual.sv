@@ -11,7 +11,7 @@ module dsfd_capt_x8_dual (
     input wire [63:0] f_sn,
     output wire [63:0] t_st
 );
-    dsfd_capt_x #(.NR(8), .LD(4)) u_half
+    dsfd_capt_x #(.NR(8), .LD(4), .LOCAL_CTRL(1)) u_half
         (.ck(ck), .rst(rst), .ckv(ckv), .rsv(rsv), .f_w(f_w),
          .t_vm(t_vm), .t_ho(t_ho), .f_sn(f_sn), .t_st(t_st));
 endmodule

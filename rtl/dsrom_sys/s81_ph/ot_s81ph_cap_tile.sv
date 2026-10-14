@@ -411,7 +411,8 @@ endmodule
 // sinks).  Every dsfd_capt_x input is captured at its pin, every output leaves from a flop.  +2 write latency.
 module dsfd_capt_x #(
     parameter integer NR = 16,
-    parameter integer LD = 4
+    parameter integer LD = 4,
+    parameter integer LOCAL_CTRL = 0
 ) (
     input  wire [0:0]        ck,
     input  wire [0:0]        rst,
@@ -444,7 +445,7 @@ module dsfd_capt_x #(
         reg ho;
         wire wr;
         wire [2:0] npop = (!wr || hc == 3'd0) ? 3'd0 : (hc == 3'd1) ? 3'd1 : 3'd2;
-        wire crdy = (hc - npop) < 3'd4;
+        wire crdy = LOCAL_CTRL ? (!hc[2] || (wr && !hc[1])) : ((hc - npop) < 3'd4);
         always @(posedge ck[0] or negedge rs_n)
             if (!rs_n) begin hr <= 2'd0; hw <= 2'd0; hc <= 3'd0; ho <= 1'b0; end
             else begin
@@ -455,7 +456,7 @@ module dsfd_capt_x #(
             end
         assign hovf[g] = ho;
         wire cv; wire [102:0] cd;
-        ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD), .LAG(1)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
+        ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD), .LAG(1), .LOCAL_CTRL(LOCAL_CTRL)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
             .w_d({h[hr + 2'd1], hc >= 3'd2, h[hr]}), .rclk(ckv[0]), .rrst_n(rsv_h[H]), .r_v(cv), .r_rdy(1'b1),
             .r_d(cd), .w_live(), .r_live());
         reg [1:0] ov; reg [101:0] od;
@@ -469,7 +470,7 @@ module dsfd_capt_x #(
     reg [63:0] snq;
     always @(posedge ck[0]) snq <= f_sn;
     wire s_v; wire [63:0] s_d;
-    ot_ratio_cdc_fifo #(.W(64), .DEPTH(2)) u_s (.wclk(ck[0]), .wrst_n(rst_h[1]), .w_v(1'b1), .w_rdy(), .w_d(snq),
+    ot_ratio_cdc_fifo #(.W(64), .DEPTH(2), .LOCAL_CTRL(LOCAL_CTRL)) u_s (.wclk(ck[0]), .wrst_n(rst_h[1]), .w_v(1'b1), .w_rdy(), .w_d(snq),
         .rclk(ckv[0]), .rrst_n(rsv_h[1]), .r_v(s_v), .r_rdy(1'b1), .r_d(s_d), .w_live(), .r_live());
     reg [63:0] stq;
     always @(posedge ckv[0] or negedge rsv_h[1]) if (!rsv_h[1]) stq <= 64'd0; else if (s_v) stq <= s_d;
