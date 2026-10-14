@@ -47,3 +47,7 @@ Heavy gate: ot-run4GiB EPYC1 unit oth-ubuntu-176023-1791945789, exit0.
 Landing initial run: ot-run2GiB EPYC1 oth-ubuntu-197126-1791945982 completed all
 three simulations; its first parser rejected Icarus's trailing finish line.
 The corrected parser independently validates all preserved raw simulation logs.
+
+Corrected full landing gate rerun completed through ot-run2GiB EPYC1 unit
+oth-ubuntu-199813-1791946017, exit0; all three raw traces and final receipt are
+preserved. It was admitted after a verified 60-second memory wait.

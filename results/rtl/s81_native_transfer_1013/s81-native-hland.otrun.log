@@ -4,3 +4,8 @@ ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-native-hlan
 ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-native-hland/src
 ot-run: -> ot-epyc1tb (will queue: admits -65 GB < 2 GB)
 ot-heavy: waiting for memory on ot-epyc1tb: need 2 GB, admissible -55 GB: available 327 GB, growth charged 318 GB, young 55 GB, headroom 64 GB, real floor 227 GB
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-199813-1791946017 after 60 s
+HLAND_FALLBACK mut=0 got=640 early=0 bad=0 stream=1 vm=2 fault=0 code=0 PASS
+HLAND_FALLBACK mut=1 got=640 early=1190 bad=1191 stream=0 vm=0 fault=0 code=0 FAIL
+HLAND_FALLBACK mut=2 got=640 early=0 bad=1280 stream=1 vm=2 fault=0 code=0 FAIL
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-199813-1791946017): exit 0
