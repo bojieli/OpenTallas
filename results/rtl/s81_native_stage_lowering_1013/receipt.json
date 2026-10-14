@@ -46,10 +46,25 @@
     "slot_gate/verdicts.log": "510400c26fb1403e892abe65651793ea7168263daf18b1583a49574d28f7cc37",
     "slot_gate/base.log": "78125d0e890b84ed314351b4bc8feb3903d2131b5e57147e9e4b274b3fff3e30",
     "slot_gate/unrebase.log": "56a076641bfbf90099ee050d6205ca3056060e41ee3bee326d5f6b62ea42a1a2",
+    "commit_gate/verdicts.log": "b5efb02abeea8a6119b041eaa4fe3b3f8a957c71701b6efe9c149b46c1011d31",
+    "commit_gate/mask_mut.log": "b2f44a73f1c79231980c75c6564de360ad7af2cf32aabf959928a65477e70bf6",
+    "commit_gate/base.log": "2fd56938f17fcccab29660817616c54d44c1218cb0e973535d2914e67bf3f2a5",
+    "commit_gate/early_mut.log": "c8164ceeb443c2d8898a87b8f54ba5b1abb64fb784f6749c339c7b4cc856c3f7",
+    "commit_gate/stalled.log": "72ce52fb0ff78ccc7ed35cafb126f9c1a6f68f41b183b9036703867283404e06",
     "head_gate/base_early.log": "cf330066c0a33054ca8e2db514ac52a206a11b43e900abaa3a52ede05b7af949",
     "head_gate/latest.log": "522497e4b242cffc7e78d3c2d66e43186af3d7e7834397d989f6327b303e5e5f",
     "head_gate/verdicts.log": "6ded746dd0c1891b261a26f99f99791a5a08478c2f94d5bedbfe3b874254a1a3",
     "head_gate/circular.log": "1c9067838fdc21f32316c77e4ce0bb212d6941a51e5c497e7814bdf3122a2640",
     "head_gate/base_latest.log": "80190a8c12148b6ce64dc085cedc08234d476de3b5d75cb9da9570cf22871662"
-  }
+  },
+  "macro_commit_gate": {
+    "source": "a00ee8873",
+    "unit": "oth-ubuntu-298408-1791947972",
+    "host": "ot-epyc1tb",
+    "exit": 0,
+    "positive": "640 payload rows exact through actual 32-bank serve/macro commit metadata; producer pauses and link/return stalls",
+    "mutants": "early-read 633 data errors; partial mask fault2 and no hop publication",
+    "limits": "No full arithmetic or complete native token schedule; MACRO0 retains actual VM bank queue and serve path"
+  },
+  "initial_head_mutant": "First mutation failed on idle data at 5ns, too early to establish a valid-head error. Valid-only corruption successor is running; initial small failure record preserved."
 }
