@@ -112,13 +112,25 @@ def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
     return max(0.0, chip_area - logical)
 
 
-def rtl_ports(sources, top, root=None, dirs=False):
+def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     root = root or ROOT
     texts = []
     for f in sources:
         p = root / f
         if p.exists():
             texts.append(p.read_text(errors="replace"))
+    # A spec with "defines" selects its interface by `ifdef (as synthesis and the kit lint do, ref_tile.py VERILOG_DEFINES):
+    # run the real Verilog preprocessor with the same -DSYNTHESIS + spec defines, else the text parser takes the
+    # `ifdef/`endif tokens for port names (HROW ACK candidates 066ec43c5).  No defines: the plain text parse, unchanged.
+    if defines:
+        files = [root / f for f in sources if (root / f).exists()]
+        inc = sorted({str(p.parent) for p in files})
+        cmd = ["iverilog", "-g2012", "-E", "-o", "-", "-DSYNTHESIS"]
+        cmd += ["-D" + d for d in defines] + ["-I" + p for p in inc] + [str(p) for p in files]
+        run = subprocess.run(cmd, capture_output=True, text=True)
+        if run.returncode:
+            raise RT.SpecError("RTL port preprocessing failed: " + run.stderr[-2000:])
+        texts = [run.stdout]
     # a module named through a macro (`define X top ... module `X: dsfd_coll_cb / cbf) is not seen by the text parser
     texts = [re.sub(r"\bmodule\s+`(\w+)", lambda m: f"module {top}" if re.search(
         rf"`define\s+{m.group(1)}\s+{re.escape(top)}\b", tx) else m.group(0), tx) for tx in texts]
@@ -440,12 +452,12 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     if re.search(r"define_pdn_grid[^\n]*-macro", pdn) and "ot_ref_present" not in pdn:
         g.add("FAIL", "pdn", "macro grid without a present-master guard (PDN-0217)", "re-run gen")
     # pins vs RTL
-    ports = rtl_ports(spec["sources"], spec["top"])
+    ports = rtl_ports(spec["sources"], spec["top"], defines=spec.get("defines"))
     check_pins(g, spec, ports)
     # pin plan vs the ROUTE's pin placement (same settings as the route: one source of truth), recipe-2 pin-flop spread
     plan = check_pin_fit(g, spec, strict_widths(spec["sources"], spec["top"], spec.get("params")), fresh["outline"])
     tcl = ROOT / OFLOP_TCL
-    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True), fresh["outline"],
+    check_oflop(g, spec, plan, rtl_ports(spec["sources"], spec["top"], dirs=True, defines=spec.get("defines")), fresh["outline"],
                 tcl.read_text(errors="replace") if tcl.is_file() else None)
     # RTL lint
     files = [str(ROOT / f) for f in spec["sources"] if (ROOT / f).exists()]
@@ -944,7 +956,10 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          + ([sp["contract"]["file"]] if sp.get("contract") else [])
          # job.benches_from too (flowfix 10-13): gen_job reads the shared bench template, and without it the whole gate
          # went SKIP "gate error FileNotFoundError" for every kit that has one (all s81hc_cry* / ctr* kits of 10-13)
-         + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else []))
+         + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else [])
+         # cluster M8/M9 grant (VM6 10-14): ref_tile reads it at ROOT; without it every granted cluster (qfd_vm_rg* /
+         # qfd_vm_band and their probes) was REFUSED "cluster layer grant source must be an existing repository file"
+         + ([sp["cluster_layer_grant"]["source"]] if (sp.get("cluster_layer_grant") or {}).get("source") else []))
 
 
 def check_slot_fit(g: Gate, kd: Path, job: dict, repo: str, commit: str = "") -> dict | None:

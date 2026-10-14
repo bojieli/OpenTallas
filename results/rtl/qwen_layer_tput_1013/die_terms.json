@@ -123,6 +123,61 @@
     "QROM_TWS=93",
     "QROM_OPTRACE=1"
    ]
+  },
+  "qF_all_ml15_x16": {
+   "exact": true,
+   "stage_cycles": {
+    "L0": 7244,
+    "L1": 6892,
+    "L2": 6892
+   },
+   "layer_x": "0/12",
+   "kv": "0/12",
+   "executable_sha256": "7bdea80d92b271fe6545566739cea2002a54d4da98fa878d3994e56884681b14",
+   "env": [
+    "QROM_ORD=10",
+    "QROM_BD=93",
+    "QROM_LAT=365",
+    "QROM_TWS=93",
+    "QROM_XVM=17",
+    "QROM_OPTRACE=1"
+   ]
+  },
+  "qG_all_ml15_x14": {
+   "exact": true,
+   "stage_cycles": {
+    "L0": 7234,
+    "L1": 6880,
+    "L2": 6880
+   },
+   "layer_x": "0/12",
+   "kv": "0/12",
+   "executable_sha256": "4d05f15fc2ad2ad0479e0c380a9d5763924cbc7b5db1f4ab148cbd3fa9f14ff8",
+   "env": [
+    "QROM_ORD=10",
+    "QROM_BD=91",
+    "QROM_LAT=365",
+    "QROM_TWS=93",
+    "QROM_XVM=15",
+    "QROM_OPTRACE=1"
+   ]
+  },
+  "qH_all_ml15_x16_mut": {
+   "exact": false,
+   "stage_cycles": {
+    "L0": 4855
+   },
+   "layer_x": "16384/4",
+   "kv": "0/0",
+   "executable_sha256": "7f0716df52185e3179dfd0f1efd342fa6d9f189198d2342a56e42768fe657b76",
+   "env": [
+    "QROM_ORD=10",
+    "QROM_BD=93",
+    "QROM_LAT=365",
+    "QROM_TWS=93",
+    "QROM_XVM=17",
+    "QROM_OPTRACE=1"
+   ]
   }
  },
  "terms": {
@@ -270,6 +325,68 @@
      "added_cycles": 8748.0,
      "e2e_loss_pct": 3.388
     }
+   },
+   "all_terms_vm_x16": {
+    "run": "qF_all_ml15_x16",
+    "exact": true,
+    "layer_x": "0/12",
+    "kv": "0/12",
+    "stage_cycles": {
+     "L0": 7244,
+     "L1": 6892,
+     "L2": 6892
+    },
+    "what": "issue relays + die relays + SU ML 15 + VM x read +16 edges in ONE exact run of the TP4 vehicle",
+    "vm_x_read_delta": {
+     "L1": 96,
+     "L0": 81,
+     "alone_on_s22ml7": {
+      "L1": 96,
+      "L0": 80
+     }
+    },
+    "composed_layer": 7174.0,
+    "ratio": 1.0496,
+    "qualified": true,
+    "token": {
+     "base_cycles": 249431.0,
+     "added_cycles": 11885.0,
+     "e2e_loss_pct": 4.548
+    }
+   },
+   "all_terms_vm_x14": {
+    "run": "qG_all_ml15_x14",
+    "exact": true,
+    "layer_x": "0/12",
+    "kv": "0/12",
+    "stage_cycles": {
+     "L0": 7234,
+     "L1": 6880,
+     "L2": 6880
+    },
+    "what": "issue relays + die relays + SU ML 15 + VM x read +14 edges in ONE exact run of the TP4 vehicle",
+    "vm_x_read_delta": {
+     "L1": 84,
+     "L0": 71,
+     "alone_on_s22ml7": {
+      "L1": 84,
+      "L0": 70
+     }
+    },
+    "composed_layer": 7162.0,
+    "ratio": 1.0478,
+    "qualified": true,
+    "token": {
+     "base_cycles": 249431.0,
+     "added_cycles": 11455.0,
+     "e2e_loss_pct": 4.391
+    }
+   },
+   "all_terms_mutant": {
+    "what": "qF built with --comp 0, L0",
+    "exact": false,
+    "layer_x": "16384/4",
+    "fails_as_required": true
    }
   }
  },
