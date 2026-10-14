@@ -1,0 +1,9 @@
+MISMATCH cyc=3 o 0 cf 1 rf 0
+MISMATCH cyc=4 o 0 cf 1 rf 0
+MISMATCH cyc=5 o 0 cf 1 rf 0
+MISMATCH cyc=6 o 0 cf 1 rf 0
+MISMATCH cyc=7 o 0 cf 1 rf 0
+ATTNHALF role=4 mut=1 cycles=4000 mismatches=3997 ov=3468
+[0] %Fatal: tb_hfd_attn_half_b.sv:126: Assertion failed in TOP.tb_hfd_attn_half_b: ATTNHALF FAIL role=4 mut=1 mismatches=3997 ov=3468
+%Error: /srv/opentallas-scratch/claude/codex-attention-native-pair-1014/src/rtl/test/tb_hfd_attn_half_b.sv:126: Verilog $stop
+Aborting...

@@ -1,0 +1,4 @@
+{"schema":"opentallas.hbm.attention_native_pair_receipt.v1","date":"2026-10-14T06:49:11-07:00","by":"Claude hbm-group-B (rerun of the interrupted Codex E4 pair after adding ot_hdc_v41x_attn_die_tile_b.sv to the sourcegraph, c512baef5)",
+ "host":"ot-epyc4","dir":"/srv/opentallas-scratch/claude/codex-attention-native-pair-1014","positive":{"unit":"oth-ubuntu-2875422-1791984988","result":"ATTNHALF role=4 mut=0 cycles=4000 mismatches=0 ov=3468 -> PASS"},
+ "mutant":{"unit":"oth-ubuntu-2875423-1791984988","mutation":"MUT1 flipped xp link bit","result":"ATTNHALF FAIL role=4 mut=1 mismatches=3997 -> FAIL as required"},
+ "scope":"padded-native lo/hi component pair vs the independent one-piece reference, ROLE4/LDK1/CG1; no ATT producer/PS/die clock/route qualification"}
