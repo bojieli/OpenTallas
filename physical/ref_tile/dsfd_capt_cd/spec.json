@@ -1,0 +1,92 @@
+{
+ "name": "dsfd_capt_cd",
+ "top": "dsfd_capt_cd",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv"
+ ],
+ "params": {},
+ "clock_port": "ckv",
+ "reset_ports": [
+  "rsv"
+ ],
+ "outline": {
+  "w": 15.12,
+  "h": 15.12
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "f_st"
+  ],
+  "N": [
+   "t_cd"
+  ],
+  "E": [
+   "ckv",
+   "rsv"
+  ]
+ },
+ "outhold": true,
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:el1013-s81-capture",
+  "branch": "s81-spwfc-1013",
+  "tag": "v1",
+  "purpose": "S81 capture cluster dsfd_sp_capture_c: the fld DONE word {toggle, fault, phase} (16 serial-clock flops, text of ctrl_c/dsfd_sp_capture_c.sv) as a hardened leaf. It was flat cluster logic; the cluster is now wires + closed children with one clock entry per child (the first cluster's single-pin spine measured 1,222 ps insertion / 226 ps spread). Outline and layers of the 15.12-um die relay class (M5 cap, M5 PG pitch 2.7).",
+  "benches": [
+   {
+    "name": "capc_lockstep_exact",
+    "cmd": "bash tools/s81_ph/capc_bench.sh {RUN}/bench t1 'mix mix11 mix12 mix13 trace err over range rreq'",
+    "expect": "pass",
+    "pass_regex": "^CAPC_BENCH PASS",
+    "min_count_regex": "CAPC_BENCH PASS cases=([0-9]+)",
+    "threads": 12,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "capc_mut_notog",
+    "cmd": "bash tools/s81_ph/capc_bench.sh {RUN}/bench m2 'mix mix11' S81PH_CAPCD_MUT_NOTOG",
+    "expect": "fail",
+    "fail_regex": "CAPC_BENCH FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "tools/s81_ph",
+   "rtl/v41rom",
+   "rtl/proto",
+   "rtl/gpu",
+   "rtl/hdc",
+   "rtl/common",
+   "rtl/dsrom_sys/rd64_capture",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_glue"
+  ],
+  "views_to": "physical/ref_tile/dsfd_capt_cd/views",
+  "record_to": "results/rtl/ref_tile/dsfd_capt_cd"
+ },
+ "floorplan_why": "16 flops + the 2-flop reset synchroniser: the 15.12 x 15.12 die relay outline class (the smallest closed class; M5 PG pitch 2.7). Status in on W (from the capture tile left of the control tile), DONE word out on N (to the dsfd_rly_15_SN stage toward the cluster's N face), serial clock and reset on E.",
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true
+}
