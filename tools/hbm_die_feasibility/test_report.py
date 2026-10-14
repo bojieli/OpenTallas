@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 from report import area, pack
 from private_pin_screen import center, edge
+from clear_space import search
 
 ROOT=Path(__file__).resolve().parents[2]
 REPORT=ROOT/'results/arch/hbm_die_feasibility_1014/geometry_source_report.json'
@@ -21,6 +22,11 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(d['max_manhattan_um'],354.06)
         self.assertFalse(d['wire_delay_measured']);self.assertFalse(d['qualified'])
         self.assertTrue(all(e['measured_wire_ps'] is None for e in d['representative_window_edges']))
+
+    def test_search_includes_obstacle_beyond_origin_range(self):
+        c={'die_um':[100,100],'children':[{'instance':'neighbor','xy_um':[21,10],'w_um':5,'h_um':20}],'routing_corridor_reservations':[],'ring_device_column_reservations':[]}
+        count,valid=search(c,10,10,[10,10,20,20],10)
+        self.assertEqual(count,1);self.assertEqual(valid,[])
 
     def test_touching_faces_are_not_overlap(self):
         self.assertEqual(area([0,0,10,10],[10,0,20,10]),0)
