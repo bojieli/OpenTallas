@@ -54,7 +54,8 @@ module ot_qwen_xdelivery_ack_bank #(
       for(i=0;i<N;i=i+1) begin outstanding[i]<=0; issued[i]<=0; retired[i]<=0; end
     end else if(ENABLE) begin
       if(begin_v) begin
-        if(active && !drained) fault<=1;
+        if(issue_v || retire_v || seal_v) fault<=1; // BEGIN_EVENT_FENCE_SCALAR
+        else if(active && !drained) fault<=1;
         else begin
           active<=1; context_q<=begin_context; version_q<=begin_version;
           participants<=participant_mask; sealed<=0;
@@ -116,7 +117,8 @@ module ot_qwen_xdelivery_ack_vector #(
     if(!rst_n || fenced_clear) begin
       active<=0;control_fault<=0;context_q<=0;version_q<=0;participants<=0;
     end else if(ENABLE && begin_v) begin
-      if(active && !drained) control_fault<=1;
+      if((|issue_v) || (|retire_v) || (|seal_v)) control_fault<=1; // BEGIN_EVENT_FENCE_VECTOR
+      else if(active && !drained) control_fault<=1;
       else begin active<=1;context_q<=begin_context;version_q<=begin_version;participants<=participant_mask;end
     end
   end

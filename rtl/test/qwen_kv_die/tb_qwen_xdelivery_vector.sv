@@ -56,6 +56,16 @@ module tb_qwen_xdelivery_vector;
     issue_v=0;retire_version={N{32'd5}};issue_seq=0;
     issue_seq[23*SW+32]=1;issue_v[23]=1;step;issue_v=0;
     if(!fault) $fatal(1,"query sequence high bit truncated");
+    // Initialization is not an event sink: no simultaneous tuple may vanish.
+    for(q=0;q<3;q=q+1) begin
+      issue_v=0;retire_v=0;seal_v=0;fenced_clear=1;step;fenced_clear=0;
+      begin_v=1;
+      if(q==0) issue_v[0]=1;
+      if(q==1) retire_v[0]=1;
+      if(q==2) seal_v[0]=1;
+      step;begin_v=0;issue_v=0;retire_v=0;seal_v=0;
+      if(!fault || drained) $fatal(1,"vector begin overlap silently dropped event");
+    end
     $display("PASS vector:48 simultaneous queries,49 outstanding stages, all-recipient drain, stale version and full40-bit identity");
     $finish;
   end

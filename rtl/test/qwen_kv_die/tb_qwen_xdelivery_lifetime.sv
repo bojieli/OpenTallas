@@ -91,6 +91,12 @@ module tb_qwen_xdelivery_lifetime;
     if(!bank_fault || drained) $fatal(1,"late version ACK retired new request");
     fenced_clear=1;step;fenced_clear=0;
     if(bank_fault || drained) $fatal(1,"fenced clear failed");
+    for(j=0;j<3;j=j+1) begin
+      issue_v=0;retire_v=0;seal_v=0;fenced_clear=1;step;fenced_clear=0;
+      begin_v=1;issue_v=(j==0);retire_v=(j==1);seal_v=(j==2);
+      step;begin_v=0;issue_v=0;retire_v=0;seal_v=0;
+      if(!bank_fault || drained) $fatal(1,"scalar begin overlap silently dropped event");
+    end
     $display("PASS lifetime: 12 held operations, 3 context wraps, backpressure, consumer drain, late ACK");
     $finish;
   end

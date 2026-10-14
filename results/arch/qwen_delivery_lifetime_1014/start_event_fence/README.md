@@ -1,0 +1,3 @@
+Bank initialization now rejects any simultaneous issue, retire, or seal event with a sticky fault. It cannot silently discard that tuple. Production must complete bank initialization before dispatching actual events; the rejection does not introduce a replay mechanism. Scalar and 48-recipient vector fixtures each check all three collision kinds. Two new mutants remove the guard and fail the corresponding observation. The admitted gate preserves all previous cases: two positives and twelve observed failing mutants,14 cases total.
+
+The earlier f9bb1fc09 gate and exact generic census stay immutable. This successor adds combinational guards, but has no fresh mapped area/CTS/census receipt, no assigned pins, and no full-field/native-cost adoption.

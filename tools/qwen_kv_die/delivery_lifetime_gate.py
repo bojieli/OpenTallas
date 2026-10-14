@@ -6,6 +6,8 @@ src=root/'ot_qwen_xdelivery_lifetime.sv'
 tb=root/'tb_qwen_xdelivery_lifetime.sv'
 original=src.read_text()
 cases=[('positive',None,None,None),
+ ('begin_overlap_mutant','if(issue_v || retire_v || seal_v) fault<=1; // BEGIN_EVENT_FENCE_SCALAR','if(1\'b0) fault<=1; // BEGIN_EVENT_FENCE_SCALAR','scalar begin overlap silently dropped event'),
+ ('vector_begin_overlap_mutant','if((|issue_v) || (|retire_v) || (|seal_v)) control_fault<=1; // BEGIN_EVENT_FENCE_VECTOR','if(1\'b0) control_fault<=1; // BEGIN_EVENT_FENCE_VECTOR','vector begin overlap silently dropped event'),
  ('version_mutant','retire_version==version_q','1\'b1','late version ACK'),
  ('source_drain_mutant','source_output_drained && !fault','1\'b1 && !fault','release before source quiescence'),
  ('context_mutant','accept_context!=held_context','1\'b0','late context acceptance'),
