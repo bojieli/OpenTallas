@@ -1,0 +1,110 @@
+{
+  "status": "SOURCE_OWNED_CANDIDATE_REQUEST_NOT_ADOPTED",
+  "source_base": "65f7d4154",
+  "baseline_evidence": "0c2cf23fb+43f6f4e22",
+  "hook": "physical/s81_ph_views/gather/clock_leaf_candidate/per_macro.tcl",
+  "hook_sha256": "10d2ad58941b372ccc6952f14ebf74de6c6e3f352f16c3522f05d715c6c5654c",
+  "intake": "pre_cts_extra after deployedwrapper; wrap native CTS and append eight actual per-macro leaves before remaining nativeCTS repair/SDC stages",
+  "new_buffers": 8,
+  "new_registers": 0,
+  "epochs_added": 0,
+  "cell": "BUFx24_ASAP7_75t_R",
+  "buffer_ABI": {
+    "input": "A",
+    "output": "Y"
+  },
+  "connections": "actual originalmacroCLK net -> newBUF.A ; newBUF.Y -> new dedicated CLOCK net -> corresponding actual macro/clk",
+  "association": [
+    {
+      "macro": "u_l.g_r[0].u_root.u_bm.genblk1.genblk1.g_b8.u_m",
+      "pin": "clk",
+      "baseline_clock_net": "clknet_1_0__leaf_ck",
+      "baseline_TTarrival_ps": 243.5,
+      "baseline_TTslew_ps": 214.4
+    },
+    {
+      "macro": "u_l.g_r[0].u_root.u_qm.g_q.u_m",
+      "pin": "clk",
+      "baseline_clock_net": "clknet_1_1__leaf_ck",
+      "baseline_TTarrival_ps": 220.4,
+      "baseline_TTslew_ps": 143.1
+    },
+    {
+      "macro": "u_l.g_r[1].u_root.u_bm.genblk1.genblk1.g_b8.u_m",
+      "pin": "clk",
+      "baseline_clock_net": "clknet_1_0__leaf_ck",
+      "baseline_TTarrival_ps": 236.8,
+      "baseline_TTslew_ps": 195.1
+    },
+    {
+      "macro": "u_l.g_r[1].u_root.u_qm.g_q.u_m",
+      "pin": "clk",
+      "baseline_clock_net": "clknet_1_1__leaf_ck",
+      "baseline_TTarrival_ps": 213.8,
+      "baseline_TTslew_ps": 124.8
+    },
+    {
+      "macro": "u_l.g_r[2].u_root.u_bm.genblk1.genblk1.g_b8.u_m",
+      "pin": "clk",
+      "baseline_clock_net": "clknet_1_0__leaf_ck",
+      "baseline_TTarrival_ps": 224.9,
+      "baseline_TTslew_ps": 160.5
+    },
+    {
+      "macro": "u_l.g_r[2].u_root.u_qm.g_q.u_m",
+      "pin": "clk",
+      "baseline_clock_net": "clknet_1_1__leaf_ck",
+      "baseline_TTarrival_ps": 212.7,
+      "baseline_TTslew_ps": 121.7
+    },
+    {
+      "macro": "u_l.g_r[3].u_root.u_bm.genblk1.genblk1.g_b8.u_m",
+      "pin": "clk",
+      "baseline_clock_net": "clknet_1_0__leaf_ck",
+      "baseline_TTarrival_ps": 231.6,
+      "baseline_TTslew_ps": 179.9
+    },
+    {
+      "macro": "u_l.g_r[3].u_root.u_qm.g_q.u_m",
+      "pin": "clk",
+      "baseline_clock_net": "clknet_1_1__leaf_ck",
+      "baseline_TTarrival_ps": 219.3,
+      "baseline_TTslew_ps": 140.1
+    }
+  ],
+  "placement": "actual native row/site/orientation, excludes every current placedcell and macros plusunchanged5.4umhalo; chooses nearest free sitewithin20um, refusesifnone; actual bufferY\u2192macroCLK distance logged",
+  "frozen_flow": {
+    "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "deployed_daemon": "85fcc1f9",
+    "effective_helpers": "all46 baseline source_snapshot archived under drive_cts_040136; new candidate mustfreeze own exact bytes and revalidate current daemon"
+  },
+  "unchanged": {
+    "outline_um": [
+      190.08,
+      164.16
+    ],
+    "die_ownedpins": "c837aa3c7",
+    "clockperiod_ps": 833.333,
+    "uncertainty_setup_hold_ps": [
+      60,
+      25
+    ],
+    "all_register_TT_bounds_ps": [
+      300,
+      80
+    ],
+    "macro_slew_warning_ps": 120,
+    "input_transition_ps": 150,
+    "outputload_fF": 80,
+    "IO_delays": "unchanged"
+  },
+  "required_before_admission": [
+    "actual topology8 and8macro/clk correspondences",
+    "actual allcorner rawarrival/clockpath/slew for all8 loadedmacros andall13077realroot sinks",
+    "DPL native legality/nooverlap/forwardD/Q<=100",
+    "SSmax/FFmin fullsame/related internal/data/reset checks",
+    "allperbit diepairs withfreshR andactualwire/phase",
+    "current frozenv2 source/buffer/hook/bench matching",
+    "no route/admission from WARNlabel; nativefalse untilactualgates"
+  ]
+}
