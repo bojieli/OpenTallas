@@ -1,0 +1,18 @@
+ot-run: ot-agidock128  admits   -84 GB (avail 93, growth 72, headroom 24, waiters 2/96 GB) load 16/64 running 7 disk 327 GB 
+ot-run: -> ot-agidock128 (will queue: admits -84 GB < 24 GB)
+ot-heavy: request 24G is charged 13G (class 'run.py' measured peak 4.6G, n=2+0 proved); the cap stays 24G
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 13 GB, admissible 12 GB: available 93 GB, growth charged 72 GB, young 56 GB, headroom 24 GB, real floor 25 GB; class 'run.py' measured peak 4.6G, n=2+0 proved
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-314886-1791957425 after 40 s
+baseline_1 0
+baseline_2 0
+baseline_3 0
+baseline_4 0
+baseline_1_nan_sparse 0
+hardleaf_1 0
+hardleaf_2 0
+hardleaf_3 0
+hardleaf_4 0
+hardleaf_1_nan_sparse 0
+mutant_1 1
+QH_FUNCTIONAL_DONE
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-314886-1791957425): exit 0

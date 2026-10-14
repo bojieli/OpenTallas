@@ -1,0 +1,60 @@
+{
+  "source_commit": "0f299b735",
+  "verdict": "ALL_FIVE_CASES_STATISTICS_EQUAL",
+  "additional_reported_cycles": 0,
+  "case_comparison": [
+    {
+      "case": "1",
+      "exact_baseline_statistics_equal": true,
+      "records": [
+        "SEQ matched=7799 dropped_at_reset=2 extra_delay_cycles min=9 max=23 mean_x1000=16739",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 3 28 261 98 1027 778 5604",
+        "SEQ serviced_wait_beats=69463",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2602880 exempt=81 seed=1 cycles=2602924 gated_edges=2566019 closed_cycles=37364 hits=196793 issues=274753 rows=7801 nonzero=6519 classes=255 wraps=5232 qadv=649 restarts=382 rejected=13133 go_closed=434 go_drain=34 go_open=19 resets=15"
+      ]
+    },
+    {
+      "case": "2",
+      "exact_baseline_statistics_equal": true,
+      "records": [
+        "SEQ matched=7769 dropped_at_reset=9 extra_delay_cycles min=9 max=25 mean_x1000=16668",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 4 18 364 112 1071 777 5423",
+        "SEQ serviced_wait_beats=73541",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2518665 exempt=81 seed=2 cycles=2518706 gated_edges=2481855 closed_cycles=37315 hits=189049 issues=274001 rows=7778 nonzero=6393 classes=255 wraps=5056 qadv=598 restarts=352 rejected=12147 go_closed=433 go_drain=41 go_open=20 resets=15"
+      ]
+    },
+    {
+      "case": "3",
+      "exact_baseline_statistics_equal": true,
+      "records": [
+        "SEQ matched=7833 dropped_at_reset=6 extra_delay_cycles min=9 max=25 mean_x1000=16744",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 8 7 306 113 1040 837 5522",
+        "SEQ serviced_wait_beats=76392",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2615902 exempt=86 seed=3 cycles=2615952 gated_edges=2580452 closed_cycles=35956 hits=196913 issues=279049 rows=7839 nonzero=6455 classes=255 wraps=6064 qadv=637 restarts=387 rejected=12608 go_closed=435 go_drain=32 go_open=20 resets=16"
+      ]
+    },
+    {
+      "case": "4",
+      "exact_baseline_statistics_equal": true,
+      "records": [
+        "SEQ matched=7531 dropped_at_reset=4 extra_delay_cycles min=9 max=24 mean_x1000=16725",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 2 17 289 55 959 867 5342",
+        "SEQ serviced_wait_beats=66408",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2474767 exempt=106 seed=4 cycles=2474825 gated_edges=2436718 closed_cycles=38579 hits=186449 issues=261793 rows=7535 nonzero=6302 classes=255 wraps=5624 qadv=640 restarts=376 rejected=12207 go_closed=438 go_drain=34 go_open=20 resets=20"
+      ]
+    },
+    {
+      "case": "1_nan_sparse",
+      "exact_baseline_statistics_equal": true,
+      "records": [
+        "SEQ matched=7785 dropped_at_reset=2 extra_delay_cycles min=9 max=24 mean_x1000=16695",
+        "SEQ extra_delay_hist 0 0 0 0 0 0 0 0 0 9 35 299 106 1066 829 5441",
+        "SEQ serviced_wait_beats=71552",
+        "PASS QP=1 XS=1 CAP=0 P1=1 L=2 compared=2562788 exempt=106 seed=1 cycles=2562848 gated_edges=2526089 closed_cycles=37226 hits=192953 issues=275433 rows=7787 nonzero=7787 classes=255 wraps=5912 qadv=646 restarts=356 rejected=12724 go_closed=437 go_drain=41 go_open=18 resets=20"
+      ]
+    }
+  ],
+  "mutant_explicit_mismatch_cycle": 2086,
+  "physical_admission": false,
+  "native_PQ1_proof": "OPEN"
+}

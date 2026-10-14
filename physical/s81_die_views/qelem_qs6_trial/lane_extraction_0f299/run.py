@@ -1,0 +1,16 @@
+import json,subprocess,hashlib,time
+from pathlib import Path
+base=Path(__file__).resolve().parent;src=base/'src';out=base/'proof';out.mkdir(exist_ok=True)
+sources=['rtl/v41rom/ot_v41_rom_elem_q_w10.sv', 'rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv', 'rtl/v41rom/ot_v41_rom_elem_w10.sv', 'rtl/v41rom/ot_v41_rom_elem_qx_w10.sv', 'rtl/v41rom/ot_v41_rom_elem_q_qx_w10.sv', 'rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv', 'rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv', 'rtl/v41rom/ot_v41_elem_pq_tags.sv', 'rtl/v41rom/ot_v41_kreg.sv', 'rtl/v41rom/ot_v41_chain3.sv', 'rtl/v41rom/ot_v41_bterm.sv', 'rtl/v41rom/ot_v41_chain.sv', 'rtl/v41rom/ot_v41_segtree.sv', 'rtl/v41rom/ot_v41_bf16_lanes.sv', 'rtl/v41rom/ot_v41_fadd.sv', 'rtl/v41rom/ot_v41_bmul2.sv', 'rtl/v41rom/ot_v41_bterm2_w10.sv', 'rtl/v41rom/ot_v41_chain2.sv', 'rtl/v41rom/ot_v41_segtree2.sv', 'rtl/v41rom/ot_v41_bf16_lanes2.sv', 'rtl/v41rom/ot_v41_bterm3_w10.sv', 'rtl/v41rom/ot_v41_bterm4_w10.sv', 'rtl/v41rom/ot_v41_bterm5_w10.sv', 'rtl/v41rom/ot_v41_segtree3.sv', 'rtl/v41rom/ot_v41_segtree4.sv', 'rtl/v41rom/ot_v41_segtree5.sv', 'rtl/v41rom/ot_v41_segtree6.sv', 'rtl/v41rom/ot_v41_chain4.sv', 'rtl/v41rom/ot_v41_fadd2.sv', 'rtl/hdc/ot_hdc_fpu.sv', 'rtl/hdc/ot_hdc_fp32_mul_pipe.sv', 'rtl/hdc/ot_hdc_delay.sv', 'rtl/hdc/ot_hdc_cg.sv', 'rtl/common/ot_prefix.sv', 'rtl/proto/ot_fp32_add_rne_pipe.sv', 'rtl/test/tb_dsrom_qx_exact.sv']
+receipt={'source_commit':'0f299b735','schema':'opentallas.s81.q_lane_extraction.functional_gate.v1','physical_admission':False,'scope':'PQ0 exact existingreference; nativePQ1 owed','source_sha256':{s:hashlib.sha256((src/s).read_bytes()).hexdigest() for s in sources},'runs':[]}
+for label,defs in [('baseline',[]),('hardleaf',['+define+QX_QH=1']),('mutant',['+define+QX_QH=1','+define+S81_QH_MUTANT_LANE0_VALID'])]:
+ cmd=[ '/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator','--binary','--timing','-Wno-fatal','-Wno-lint','-Wno-style','--top-module','tb_dsrom_qx_exact','--Mdir',str(out/label),'-j','8','-CFLAGS','-O1','+define+QT_CHECK','+define+QP_CHECK','+define+QX_DUT_PQ0','+define+QX_QM=5','+define+QX_QS=6']+defs+[str(src/s) for s in sources]
+ with (out/(label+'.build.log')).open('w') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,cwd=src)
+ receipt.setdefault('builds',{})[label]={'returncode':r.returncode,'command':cmd};(out/'gate.json').write_text(json.dumps(receipt,indent=2))
+ if r.returncode:raise SystemExit(r.returncode)
+ for seed,sparse in ([(1,False)] if label=='mutant' else [(1,False),(2,False),(3,False),(4,False),(1,True)]):
+  name=f'{label}_{seed}'+('_nan_sparse' if sparse else '');cmd=[str(out/label/'Vtb_dsrom_qx_exact'),f'+seed={seed}']+(['+nan_sparse'] if sparse else [])
+  with (out/(name+'.log')).open('w') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,cwd=src)
+  receipt['runs'].append({'name':name,'returncode':r.returncode,'log_sha256':hashlib.sha256((out/(name+'.log')).read_bytes()).hexdigest()});(out/'gate.json').write_text(json.dumps(receipt,indent=2));print(name,r.returncode,flush=True)
+  if (label!='mutant' and r.returncode!=0) or (label=='mutant' and r.returncode==0):raise SystemExit(1)
+receipt['verdict']='POSITIVE_PASS_MUTANT_FAIL';(out/'gate.json').write_text(json.dumps(receipt,indent=2));print('QH_FUNCTIONAL_DONE',flush=True)
