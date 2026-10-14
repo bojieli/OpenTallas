@@ -63,7 +63,7 @@ module ot_hgi_b2_dma_q #(
     wire [226:0] mover_cmd; wire [337:0] mover_vmq; wire [273:0] mover_vmr; wire il_active; wire [337:0] il_vmq; wire [279:0] mover_wl;
     wire kc_v, kc_rdy, kc_idle, kc_creq, kc_src, kc_done, kc_gnt;
     wire [14:0] kc_vs, kc_vst; wire [31:0] kc_ds, kc_dst; wire [17:0] kc_ns; wire [19:0] kc_m;
-    wire [191:0] kc_cr; wire [511:0] kc_kq; wire [3:0] kc_wv, kc_wo, kc_wrdy, kc_rv, kc_rwe;
+    wire [191:0] kc_cr,credit_source; wire [511:0] kc_kq; wire [3:0] kc_wv, kc_wo, kc_wrdy, kc_rv, kc_rwe;
     wire [147:0] kc_wa; wire [1023:0] kc_wd;
     wire [31:0] hv; wire [1023:0] hd; wire [63:0] hs0, hs1; wire ha;
     wire [3:0] rv, rwe, rrr; wire [147:0] ra; wire [15:0] rl; wire [63:0] rt; wire [1023:0] rwd; wire [127:0] rws;
@@ -135,7 +135,7 @@ module ot_hgi_b2_dma_q #(
       .vr2q(vr2q), .vr2r_ctrl(vr2r[8256:8224]), .vmq(fast_packet), .vmr(packet_mover_return), .wl(wl), .wl_done(wl_done),
       .kv_c_rdy(kc_rdy), .kv_idle_w(kc_idle), .kv_creq(kc_creq), .kv_src(kc_src), .kv_done(kc_done), .kv_kq(kc_kq),
       .kv_wv(kc_wv), .kv_wo(kc_wo), .kv_wa(kc_wa), .kv_wd(kc_wd), .kc_v(kc_v), .kc_vs(kc_vs), .kc_vst(kc_vst), .kc_ds(kc_ds),
-      .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .kc_cr(kc_cr), .kc_wrdy(kc_wrdy));
+      .kc_dst(kc_dst), .kc_ns(kc_ns), .kc_m(kc_m), .kc_gnt(kc_gnt), .credit_source(credit_source), .kc_wrdy(kc_wrdy));
 `ifndef OT_B2_DMA_Q5_HARD
     ot_hgi_dma_kvw_core #(.OWN_B0(1))
 `else
@@ -185,7 +185,7 @@ module ot_hgi_b2_dma_q #(
       .vmr(ser_vmr));
     ot_hgi_b2_dma_land_dp u_dp(.clk(q5_clock[6]),.rst_n(rst_n),
       .land_write(land_write),.land_read(land_read),.source_format(source_format),.decoded(decoded));
-    ot_hgi_b2_dma_kface u_kface(.clk(q5_clock[7]),.rst_n(rst_n),
+    ot_hgi_b2_dma_kface u_kface(.clk(q5_clock[7]),.rst_n(rst_n),.credit_source(credit_source),.kc_cr(kc_cr),
       .request(mv_k_request),.request_ready(mv_k_ready),
       .k_req_v(k_req_v),.k_req_rdy(k_req_rdy),.k_req_we(k_req_we),.k_req_addr(k_req_addr),
       .k_req_wdata(k_req_wdata),.k_req_wstrb(k_req_wstrb),.k_req_tag(k_req_tag),

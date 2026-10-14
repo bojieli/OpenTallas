@@ -107,7 +107,7 @@ module ot_hgi_b2_dma_mv #(
     input wire [147:0] kv_wa, input wire [1023:0] kv_wd,
     output reg kc_v, output reg [14:0] kc_vs, kc_vst,
     output reg [31:0] kc_ds, kc_dst, output reg [17:0] kc_ns, output reg [19:0] kc_m,
-    output wire kc_gnt, output reg [191:0] kc_cr,
+    output wire kc_gnt, output wire [191:0] credit_source,
     output wire [3:0] kc_wrdy,
     input wire [1:0] qid, output wire vm_serial_owner,
     input  wire          clk,
@@ -659,11 +659,15 @@ module ot_hgi_b2_dma_mv #(
        wl[278:0] <= {wq_head[302:288] ^ ((MUT_SEAM == 5) ? 15'd1 : 15'd0),wq_head[255:0],mask_words};
     end
     // Native memory queues with two registered head entries. Their credits include pipe reservations.
-    wire [324:0] wq_push_data = {p3_dsec,
-       (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s,
-       ((db_dirty[p3_sl] ? db_dat[p3_sl] : 256'd0) & ~mk(p3_s)) | p3_d};
+    // Keep the flush reservation charged at p3; enqueue the registered bank on the next edge.
+    // A same-bank update on that edge occurs after the FIFO samples the previous assembled payload.
+    reg wq_pending_push;reg [1:0] wq_pending_slot;reg [36:0] wq_pending_dest;
+    always @(posedge clk or negedge rn)
+      if(!rn)wq_pending_push<=0;else wq_pending_push<=p3_v&&p3_fl&&p3_keep;
+    always @(posedge clk)if(p3_v&&p3_fl&&p3_keep)begin wq_pending_slot<=p3_sl;wq_pending_dest<=p3_dsec;end
+    wire [324:0] wq_push_data = {wq_pending_dest,db_strb[wq_pending_slot],db_dat[wq_pending_slot]};
     ot_fifo_sram_fwft #(.W(325), .DEPTH(16), .MACRO(0)) u_wq_mem(.clk(clk), .rst_n(rn),
-       .push(p3_v && p3_fl && p3_keep), .wdata(wq_push_data), .pop(iss_kw || iss_vw), .hv(wq_hv), .head(wq_head), .ovf(wq_ovf));
+       .push(wq_pending_push), .wdata(wq_push_data), .pop(iss_kw || iss_vw), .hv(wq_hv), .head(wq_head), .ovf(wq_ovf));
     wire [59:0] cf_push_data = {r_k,q_rend[r_k],1'b0,rdd[r_k][4:0],q_ds[r_k],rsa[r_k][4:0],9'(q_by[r_k] >> sl2)};
     ot_fifo_sram_fwft #(.W(60), .DEPTH(64), .MACRO(3)) u_cf_mem(.clk(clk), .rst_n(rn),
        .push(r_go), .wdata(cf_push_data), .pop(cf_hv && (!cd_v || (cd_v && (!u_cv || (u_go && u_end))))), .hv(cf_hv), .head(cf_head), .ovf(cf_ovf));
@@ -736,10 +740,8 @@ module ot_hgi_b2_dma_mv #(
        end
     end
     assign kc_gnt = g_gnt;
-    for (genvar gc = 0; gc < 32; gc = gc + 1) begin : g_kc_cr
-       always @(posedge clk or negedge rn)
-         if (!rn) kc_cr[gc*6 +: 6] <= 6'(GLQ);
-         else kc_cr[gc*6 +: 6] <= g_cr[gc];
+    for (genvar gc = 0; gc < 32; gc = gc + 1) begin : g_credit_source
+       assign credit_source[gc*6 +: 6] = g_cr[gc]; // registered counter source; output pin capture is in Kface
     end
     assign kb_we = 1'b0; assign kb_re = 1'b0; assign kb_wa = 8'd0; assign kb_ra = 8'd0; assign kb_wd = 256'd0;
     reg [5:0] l_wn [0:3];
@@ -1059,13 +1061,10 @@ module ot_hgi_b2_dma_mv #(
             p3_v <= pk_v;
             if (pk_v) begin p3_d <= put_d; p3_s <= put_s; p3_dsec <= pk_dsec; p3_fl <= pk_fl; p3_keep <= pk_keep; p3_sl <= pk_sl; end
             if (p3_v) begin
-                if (p3_fl && p3_keep) begin
-                    db_dirty[p3_sl] <= 1'b0;
-                end else if (p3_fl) db_dirty[p3_sl] <= 1'b0;                  // MUT 2: the partial sector is lost
-                else begin
-                    db_dat[p3_sl] <= ((db_dirty[p3_sl] ? db_dat[p3_sl] : 256'd0) & ~mk(p3_s)) | p3_d;
-                    db_strb[p3_sl] <= (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s; db_dirty[p3_sl] <= 1'b1;
-                end
+                // Final assembly lands in the existing bank even on flush, before pending enqueue.
+                db_dat[p3_sl] <= ((db_dirty[p3_sl] ? db_dat[p3_sl] : 256'd0) & ~mk(p3_s)) | p3_d;
+                db_strb[p3_sl] <= (db_dirty[p3_sl] ? db_strb[p3_sl] : 32'd0) | p3_s;
+                db_dirty[p3_sl] <= !p3_fl;
             end
             wq_n <= wq_n + {4'd0, p3_v && p3_fl && p3_keep} - {4'd0, iss_kw | iss_vw};
             wq_res <= wq_res + {4'd0, u_go && u_fl} - {4'd0, iss_kw | iss_vw} - {4'd0, p3_v && p3_fl && !p3_keep};

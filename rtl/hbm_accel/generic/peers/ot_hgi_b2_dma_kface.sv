@@ -3,7 +3,8 @@
 // Independent hard-face clock root. Each accepted request retains all342 payload bits.
 // Registered ready stops external backpressure at this two-slot station.
 module ot_hgi_b2_dma_kface(
- input wire clk,rst_n,input wire [342:0] request,output reg request_ready,
+ input wire clk,rst_n,input wire [191:0] credit_source,output reg [191:0] kc_cr,
+ input wire [342:0] request,output reg request_ready,
  output reg k_req_v,input wire k_req_rdy,output wire k_req_we,
  output wire [36:0] k_req_addr,output wire [255:0] k_req_wdata,
  output wire [31:0] k_req_wstrb,output wire [15:0] k_req_tag,
@@ -12,6 +13,12 @@ module ot_hgi_b2_dma_kface(
  reg [1:0] reset_release;always @(posedge clk or negedge rst_n)
    if(!rst_n) reset_release<=0;else reset_release<={reset_release[0],1'b1};
  wire rn=reset_release[1];
+ // Exact existing legacy32 credit-vector edge, moved out of the wide MV launch region.
+ // Native bank-ten-credit allocation remains a separate real transport contract.
+ for(genvar lane=0;lane<32;lane=lane+1)begin : g_credit_pin
+   always @(posedge clk or negedge rn)
+     if(!rn)kc_cr[lane*6 +:6]<=6'd32;else kc_cr[lane*6 +:6]<=credit_source[lane*6 +:6];
+ end
  reg [1:0] count;reg [341:0] head,tail;
  wire push=request[342]&&request_ready,pop=k_req_v&&k_req_rdy;
  wire [1:0] next_count=count+{1'b0,push}-{1'b0,pop};
