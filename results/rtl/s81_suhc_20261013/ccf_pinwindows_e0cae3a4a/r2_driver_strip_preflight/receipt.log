@@ -1,0 +1,12 @@
+ot-run: ot-epyc1tb     admits   416 GB (avail 642, growth 86, headroom 64, waiters 0/0 GB) load 58/128 running 15 disk 979 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1333448-1791961492 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_IOFLOP fixed 3291 output-port and 3292 input-port flops at their pins (1 ports not single-flop)
+PAD_DRIVER_STRIP: 3291 output ports, 6582 existing drivers anchored; FF gap 8.104, no cells/nets added
+OT_OFLOP released 13165 output-port flops for DPL
+PAD_STRIP_VERIFY counts 24872 26578 6586 == 24872 26578 6586; all driver cells released; output ports 3291
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1333448-1791961492): exit 0

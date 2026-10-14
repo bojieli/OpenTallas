@@ -45,19 +45,17 @@
     "benches_from": "tools/s81_suhc/hc_tile_benches_fv4fd5r2.json",
     "owner": "Codex:s81_hc_ccf",
     "branch": "codex-s81-ccf-pinreg-1013",
-    "tag": "v5-nativeM2-HB1-outputstrip",
-    "purpose": "R2 input capture passes136/146ps; actual return outputdriver-to-pin wire116ps remains. Existing outputstrip recipe with smaller HB1 fixes driverlocation while preserving all hold constraints and native assigned pins; fresh actualTT/FF proof required.",
+    "tag": "v6-nativeM2-existing-driver-strip",
+    "purpose": "Keep native M2 geometry and unchanged RTL/hold constraints; anchor all existing dedicated output INV/BUF chains beside pins, standard FFs behind a separate band. No added cells/nets in preflight; actual CTS TT/FF gate required.",
     "views_to": "physical/ref_tile/s81hc_pad_fv4fd5r2_ref/views",
     "record_to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref"
   },
   "layer_cap": "M5",
   "structural_change": "FV4/FD5/R2: separate return W-face capture and E-face launch flops. Downstream R5 plus R5 reuses the existing closed master instead of R6 plus R5; total transaction/return epochs are preserved. Fixed hold stages omitted; all constraints and automatic hold repair remain active.",
-  "io_flop_at_pins": {
-    "cols": 16
-  },
+  "io_flop_at_pins": false,
   "recipe": 2,
   "inhold": false,
-  "outhold": true,
+  "outhold": false,
   "boundary_tcl": [
     "physical/s81_hc_pinplan/pin_window_max.sdc"
   ],
@@ -71,7 +69,9 @@
     "physical/s81_hc_pinplan/pin_window_initial_max.sdc"
   ],
   "orfs_vars": {
-    "OT_INHOLD_MASTER": "HB1xp67_ASAP7_75t_R"
+    "PRE_GLOBAL_PLACE_TCL": "physical/s81_hc_pinplan/pad_output_driver_strip.tcl",
+    "PRE_DETAIL_PLACE_TCL": "physical/qwen_die_masters/out_flop_release.tcl",
+    "OT_PAD_DRIVER_FF_HELPER": "physical/qwen_die_masters/io_flop_at_pins.tcl"
   },
-  "boundary_hold_experiment": "Inputs remain no fixedHB4 (fresh measuredcapture<=146.1). Outputs use existingrecipe2 leadBUF/HB1/BUF pin strip rather than130psHB4. All MIN/hold/uncertainty/period unchanged; HB1 is a physical delaycell candidate needing actual hold/window proof."
+  "boundary_hold_experiment": "All fixedHB stages omitted; input windows already136/146ps. HB1 outputstrip measured setup\u2212353.86ps and is retired. New placement-only hook fixes 6582 existing outputdrivers plus6583 existing pinFFs, releases all for DPL, preserves netlist and every MIN/hold budget."
 }
