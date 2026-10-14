@@ -1,0 +1,47 @@
+{
+ "schema": 1,
+ "source": "2c8d7dc72affecea7d5743221c619795a9942f57",
+ "clock_ps": 833.333,
+ "native_parameters": {
+  "scorers": 4,
+  "keys_per_scorer_per_beat": 16,
+  "keys_per_engine": 4,
+  "engines_per_scorer": 4,
+  "index_heads": 32,
+  "heads_per_chunk": 8,
+  "chunks_per_engine": 4,
+  "head_key_hslice_per_chunk": 32
+ },
+ "required_hslices_per_native_scorer": 512,
+ "required_hslices_per_die_native_indexer": 2048,
+ "v12_planned_hslices_per_grid": 32,
+ "under_count_factor": 16,
+ "proof_sources": {
+  "physical/hbm_accel_die_views/index/rtl/hfd_idx_score_native.sv": "L16 nativewrapper",
+  "physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv": "NS=L/NK, NK4, array_l IH32",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv": "array_l instantiates NS engines; eachengine NCH=IH/8 chunks; chunk_l NKT=NK",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_chunk_el.sv": "NKT columns x8 head slices",
+  "tools/hbm_accel_die_hier_contract.py": "hfd_idx_score_native_grid enumerates only4columns x8slices"
+ },
+ "existing_closed_slice_outlines": {
+  "m5_slot_um": [
+   172.8,
+   103.68
+  ]
+ },
+ "minimum_slice_outline_area_per_scorer_um2": 9172942.848000001,
+ "existing_native_grid_outline_um": [
+  2000.16,
+  2646.0
+ ],
+ "existing_native_grid_area_um2": 5292423.36,
+ "minimum_slice_outline_occupancy_ratio": 1.7332216687971085,
+ "boundaries": {
+  "input_key_payload_bits_per_native_beat": 8704,
+  "score_output_bits_per_native_beat": 610,
+  "query_bus_bits": 571
+ },
+ "latency_for_direct_chunk_el_substitution_cycles": 23,
+ "status": "STRUCTURAL_SIZING_REQUIRED_BEFORE_PARENT_PNR",
+ "action": "Develop full-shape hierarchical native scorer with2048 actualclosed head-key leaves or measured alternative sharing, then sizeactual slot/registeredseams/throughput. Do not use32-child placeholder grid as production view."
+}
