@@ -527,13 +527,14 @@ module dsfd_capt_row_local #(parameter integer LD = 4) (
                 if (vm_valid && !crdy) ho <= 1'b1;
             end
         generate if (1) begin : g_local_store
-            for (genvar off = 0; off < 51; off = off + 17) begin : g_slice
-                wire [67:0] words;
-                (* keep_hierarchy *) dsfd_capt_hold_slice u_store
+            for (genvar off = 0; off < 51; off = off + 8) begin : g_slice
+                localparam integer SW = (51-off < 8) ? 51-off : 8;
+                wire [4*SW-1:0] words;
+                (* keep_hierarchy *) dsfd_capt_hold_slice #(.W(SW)) u_store
                     (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
-                     .hw(hw), .din(din[off +: 17]), .words(words));
+                     .hw(hw), .din(din[off +: SW]), .words(words));
                 for (genvar bank = 0; bank < 4; bank = bank + 1)
-                    assign h[bank][off +: 17] = words[17*bank +: 17];
+                    assign h[bank][off +: SW] = words[SW*bank +: SW];
             end
         end
         endgenerate
@@ -550,17 +551,24 @@ endmodule
 
 // Local hold-buffer slices retain independent write-enable cones at the same
 // write edge. Storage contents, address and reset gating match the flat bank.
-module dsfd_capt_hold_slice (
+module dsfd_capt_hold_slice #(parameter integer W = 17) (
     input wire ck, rs_n, valid, ready,
     input wire [1:0] hw,
-    input wire [16:0] din,
-    output wire [67:0] words
+    input wire [W-1:0] din,
+    output wire [4*W-1:0] words
 );
-    reg [16:0] h [0:3];
-    always @(posedge ck) if (rs_n && valid && ready) h[hw] <= din;
+    reg [W-1:0] h [0:3];
+    // Same write epoch/address as hw: reset selects bank0, every accepted
+    // row rotates one bank. Negative storage exposes the native QN mask.
+    (* keep *) reg [3:0] bank_n;
+    always @(posedge ck or negedge rs_n)
+        if (!rs_n) bank_n <= 4'b1110;
+        else if (valid && ready) bank_n <= {bank_n[2:0], bank_n[3]};
     genvar bank;
     generate for (bank = 0; bank < 4; bank = bank + 1) begin : g_bank
-        assign words[17*bank +: 17] = h[bank];
+        always @(posedge ck)
+            if (rs_n && valid && ready && !bank_n[bank]) h[bank] <= din;
+        assign words[W*bank +: W] = h[bank];
     end endgenerate
 endmodule
 
