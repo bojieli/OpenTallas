@@ -1,0 +1,194 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "qfd_tile_nk_ckskel",
+ "verdict": "WARN",
+ "generated": "2026-10-13T18:37:29-0700",
+ "host": "ot-epyc4",
+ "cts": true,
+ "commit": "6f0c46b81",
+ "clock": {
+  "max_root_sinks": 14,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": 893.0,
+  "tt_spread_ps": 94.8,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "14 sinks on the largest root <= 15,000; measured TT insertion 893.0 ps, leaf spread 94.8 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_rpair#0: origin (22.464, 23.76) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_rpair#0: origin (22.464, 174.96) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_rpair#0: origin (22.464, 982.824) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_rpair#0: origin (22.464, 1134.024) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_rpair#0: origin (22.464, 1285.224) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_node#0: origin (22.464, 345.6) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_lsl#0: origin (103.68, 328.32) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_lsl#0: origin (233.28, 328.32) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_lsl#0: origin (103.68, 492.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_lsl#0: origin (233.28, 492.48) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_lsl#0: origin (103.68, 656.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_lsl#0: origin (233.28, 656.64) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_lsl#0: origin (103.68, 820.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "macro_grid",
+   "message": "ot_qwen_tile_lsl#0: origin (233.28, 820.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "fix": "build the child on the common lattice"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_rpair: (f) face-pin access: 1040 of 1040 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ad_d[0] M4 (0.060,28.272), ad_d[10] M4 (0.060,28.272), ad_d[11] M4 (0.060,28.272))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_rpair: (f) face-pin access: 1040 of 1040 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ad_d[0] M4 (0.060,28.272), ad_d[10] M4 (0.060,28.272), ad_d[11] M4 (0.060,28.272))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_rpair: (f) face-pin access: 1040 of 1040 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ad_d[0] M4 (0.060,28.272), ad_d[10] M4 (0.060,28.272), ad_d[11] M4 (0.060,28.272))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_rpair: (f) face-pin access: 1040 of 1040 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ad_d[0] M4 (0.060,28.272), ad_d[10] M4 (0.060,28.272), ad_d[11] M4 (0.060,28.272))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_rpair: (f) face-pin access: 1040 of 1040 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ad_d[0] M4 (0.060,28.272), ad_d[10] M4 (0.060,28.272), ad_d[11] M4 (0.060,28.272))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_node: (f) face-pin access: 2564 of 2567 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a[0] M4 (0.060,10.896), a[100] M4 (0.060,10.896), a[101] M4 (0.060,10.896))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.539,104.208), lfault[1] M4 (99.539,104.208), lfault[2] M4 (99.539,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.539,104.208), lfault[1] M4 (99.539,104.208), lfault[2] M4 (99.539,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.539,104.208), lfault[1] M4 (99.539,104.208), lfault[2] M4 (99.539,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.539,104.208), lfault[1] M4 (99.539,104.208), lfault[2] M4 (99.539,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.539,104.208), lfault[1] M4 (99.539,104.208), lfault[2] M4 (99.539,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.539,104.208), lfault[1] M4 (99.539,104.208), lfault[2] M4 (99.539,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.539,104.208), lfault[1] M4 (99.539,104.208), lfault[2] M4 (99.539,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  },
+  {
+   "severity": "WARN",
+   "check": "children",
+   "message": "ot_qwen_tile_lsl: (f) face-pin access: 265 of 465 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. lfault[0] M4 (99.539,104.208), lfault[1] M4 (99.539,104.208), lfault[2] M4 (99.539,104.208))",
+   "fix": "export the child's clock insertion (ref_tile export)"
+  }
+ ]
+}

@@ -67,6 +67,11 @@ module ot_qwen_me_array_w12 #(
     parameter integer NDH = 0,            // q13 spec r5 leaf 2: the tiles' tree node as the hardened leaf ot_qwen_tile_node (needs W 16)
     parameter integer BMUT = 0,           // bench boundary mutant of the node seam (ot_qwen_rom_tile_logic_w12 BMUT)
     parameter integer TMUT = 0,
+    // q18: CTH 1 = THIN tiles: each tile's control logic is ot_qwen_rom_tile_logic_w12 CEXT 1 (= the hardened control
+    // leaf ot_qwen_tile_ctl) and its hardened children stand beside it in ot_qwen_tile_kids (the silicon wiring; bank
+    // rows as the soft row logic on the bench's macros).  CMUT = that wiring's bench mutants.  Needs W 16, TG 4, HIER 2.
+    parameter integer CTH = 0,
+    parameter integer CMUT = 0,
     parameter integer ANR = 0,            // ot_qwen_rom_tile_logic_w12 ANR (hardcore-1010 D)
     parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_qwen_w12_matvec_part SCALE_LOCAL)
     parameter integer CODE_BANKS = 2,
@@ -219,17 +224,40 @@ module ot_qwen_me_array_w12 #(
                 assign na = {W*32{1'b0}}; assign nb = {W*32{1'b0}}; assign nva = 1'b0;
             end
             wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
+            wire [W*32-1:0] ny_l, ny_k, to_l, to_k;
+            wire            nvy_l, nvy_k, tvo_l, tvo_k;
+            wire [((CTH != 0) ? CODE_BANKS * 14 : 1)-1:0]     cx_rreq;
+            wire [((CTH != 0) ? CODE_BANKS * 64 * W : 1)-1:0] cx_rq;
+            wire [((CTH != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (7 + TG * HIER * 32 + TG * 32) : 1)-1:0] cx_ld;
+            wire [((CTH != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (HIER * 32 + TG * HIER + 1) : 1)-1:0]   cx_lq;
+            wire [W*32-1:0] cx_td;
+            wire            cx_tvd, cx_nfault;
             ot_qwen_rom_tile_logic_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .NDH(NDH), .BMUT(BMUT), .TMUT(TMUT), .ANR(ANR), .BAW(BAW),
+                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .NDH(NDH), .BMUT(BMUT), .TMUT((CTH != 0) ? 0 : TMUT), .CEXT(CTH), .ANR(ANR), .BAW(BAW),
                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
                 .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
-                .t_out(lw[LT][t*W*32 +: W*32]), .t_vout(lvv[LT][t]),
-                .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny), .n_vy(nvy), .fault(tile_fault[t]),
+                .t_out(to_l), .t_vout(tvo_l),
+                .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny_l), .n_vy(nvy_l), .fault(tile_fault[t]),
                 .rom_ce(t_rom_ce[t*CODE_BANKS +: CODE_BANKS]), .rom_addr(t_rom_addr[t*12 +: 12]),
                 .rom_rd(t_rom_rd[t*2*CODE_BANKS*266 +: 2*CODE_BANKS*266]),
                 .kvs_r_ce(), .kvs_r_addr(), .kvs_rd({TG*W*8{1'b0}}),
-                .kv_re(t_kv_re[t]), .kv_addr(t_kv_addr[t*TG*AW +: TG*AW]), .kv_q(kvq));
+                .kv_re(t_kv_re[t]), .kv_addr(t_kv_addr[t*TG*AW +: TG*AW]), .kv_q(kvq),
+                .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
+            if (CTH != 0) begin : g_kids
+                wire [2*CODE_BANKS*13-1:0] krq;      // the rows' macro requests: the bench reads its images by rom_ce / rom_addr
+                ot_qwen_tile_kids #(.CODE_BANKS(CODE_BANKS), .RPS(1), .ROM_MUT(ROM_MUT), .TMUT(TMUT), .CMUT((t == 0) ? CMUT : 0)) u_k (
+                    .clk(clk), .rst_n(rst_n), .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq),
+                    .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
+                    .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny_k), .n_vy(nvy_k), .t_out(to_k), .t_vout(tvo_k),
+                    .rom_req_m(krq), .rom_rd(t_rom_rd[t*2*CODE_BANKS*266 +: 2*CODE_BANKS*266]));
+                assign ny = ny_k; assign nvy = nvy_k;
+                assign lw[LT][t*W*32 +: W*32] = to_k; assign lvv[LT][t] = tvo_k;
+            end else begin : g_nokids
+                assign ny = ny_l; assign nvy = nvy_l;
+                assign lw[LT][t*W*32 +: W*32] = to_l; assign lvv[LT][t] = tvo_l;
+                assign cx_rq = 1'b0; assign cx_lq = 1'b0; assign cx_nfault = 1'b0;
+            end
         end
     endgenerate
     assign t_lvl = lw[TCUT][NPT*W*32-1:0];

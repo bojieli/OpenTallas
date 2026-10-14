@@ -234,6 +234,10 @@ module ot_qwen_w12_matvec_part #(
     parameter integer LRR = 0,            // el1011-q-tile h3: one reset relay flop per hardened leaf (1-cycle later leaf release)
     parameter integer XTX = 0,            // el1011-q-tile r3 (HIER_HARD): XTX registered transmit rungs in front of every hardened
                                           // leaf (v/first/split/w and the ROUNDED x), one kept copy per leaf; +XTX cycles of latency
+    // q18 (2026-10-13) LEXT = 1 (needs HIER_HARD): the hardened lane-slice leaves stand OUTSIDE this module (the thin tile
+    // parent instantiates them).  Per leaf g: lx_d = {rst_l, tx_q} (the leaf's reset relay and its last transmit rung:
+    // v, first, split, w, x) and lx_q = {tfault, lfault, t_out}.  Same registers, same edges: a pure re-hierarchy.
+    parameter integer LEXT = 0,
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input  wire              clk,
@@ -308,7 +312,9 @@ module ot_qwen_w12_matvec_part #(
     output wire [W*32-1:0]   t_out,
     output wire              t_vout,
     output wire              t_fault,
-    output wire              active_o
+    output wire              active_o,
+    output wire [((LEXT != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (7 + G * HIER * 32 + G * 32) : 1)-1:0] lx_d,
+    input  wire [((LEXT != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (HIER * 32 + G * HIER + 1) : 1)-1:0] lx_q
 );
     localparam integer LW = $clog2(W);
     localparam integer LG = $clog2(G);
@@ -842,7 +848,39 @@ end endgenerate
                 assign w_in[32*gl +: 32] = s2_w[32*((gl / HIER) * W + g * HIER + (gl % HIER)) +: 32];
                 assign lfault[(gl / HIER) * W + g * HIER + (gl % HIER)] = lf[gl];
             end
-            if (HIER_HARD != 0) begin : g_hd
+            if (HIER_HARD != 0 && LEXT != 0) begin : g_hx
+                //: LRR: one reset relay flop per leaf (asynchronous assert, release one edge later), so the tile reset port
+                //: drives 8 relay flops instead of every leaf's relays across the frame
+                wire rst_l;
+                if (LRR != 0) begin : g_lrr
+                    (* keep *) reg rq;
+                    always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                    assign rst_l = rq;
+                end else begin : g_lrn
+                    assign rst_l = rst_n;
+                end
+                //: XTX: registered transmit rungs per leaf (one kept instance per leaf and rung, so Yosys opt_merge cannot
+                //: fold the 8 identical copies back into one broadcast).  Rung 1 takes the ROUNDED / masked x (s3x_d), so the
+                //: BF16 round + mask is the only logic before a register and every later hop is register -> wire ->
+                //: register (<= ~350 um each across the 1,296 um cluster).  Only the valid bit is reset.
+                localparam integer XW = 1 + 1 + 4 + G * HIER * 32 + G * 32;
+                wire [XW-1:0] tx_d = {s2_v, s2_first, s2_tag[TW-6 -: 4], w_in, s3x_d[G*32-1:0]};
+                wire [XW-1:0] tx_q;
+                if (XTX > 0) begin : g_tx
+                    wire [XW*(XTX+1)-1:0] tc;
+                    assign tc[XW-1:0] = tx_d;
+                    genvar rr;
+                    for (rr = 0; rr < XTX; rr = rr + 1) begin : g_r
+                        ot_qwen_tx_ff #(.W(XW)) u_tx (.clk(clk), .rst_n(rst_l), .d(tc[XW*rr +: XW]), .q(tc[XW*(rr+1) +: XW]));
+                    end
+                    assign tx_q = tc[XW*XTX +: XW];
+                end else begin : g_ntx
+                    assign tx_q = tx_d;
+                end
+                localparam integer LQW = HIER * 32 + G * HIER + 1;
+                assign lx_d[(XW + 1) * g +: (XW + 1)] = {rst_l, tx_q};
+                assign {stf[g], lf, top[HIER*32*g +: HIER*32]} = lx_q[LQW * g +: LQW];
+            end else if (HIER_HARD != 0) begin : g_hd
 `ifndef SYNTHESIS
                 initial if (G != 4 || HIER != 2 || IL != 8 || MUL_LAT != 8 || ACC_LAT != 7 || TREE_LAT != 7 || LRST != 3 || ANR != 1) begin
                     $display("FAIL HIER_HARD: engine parameters differ from the hardened leaf ot_qwen_tile_lsl"); $finish;
@@ -891,6 +929,9 @@ end endgenerate
     end else begin : g_flat
         assign lvl_h = {GI*W*32{1'b0}};
         assign tfault_h = 1'b0;
+    end endgenerate
+    generate if (LEXT == 0) begin : g_nlx
+        assign lx_d = 1'b0;
     end endgenerate
     generate if (LANES && HIER == 0) begin : g_lanes
         for (g = 0; g < G; g = g + 1) begin : g_grp

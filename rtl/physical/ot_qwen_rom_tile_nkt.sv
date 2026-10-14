@@ -1,0 +1,36 @@
+`timescale 1ns/1ps
+// q18 (2026-10-13): the THIN Qwen ROM die tile master: the pins of ot_qwen_rom_tile_nk (r5: RPH 2 + NDH 1 + RQR 1, XTX 2)
+// over hardened children ONLY -- ot_qwen_tile_ctl (every tile register outside the other leaves) and ot_qwen_tile_kids
+// (5 bank rows, 8 lane slices, the tree node, wired).  No register, no gate at this level: the parent is wires and the
+// clock / reset distribution to 15 child pins.  Cycle-exact to ot_qwen_rom_tile_nk at the same parameters.
+module ot_qwen_rom_tile_nkt #(
+    parameter integer CMUT = 0
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [15:0]       tile_id,
+    input  wire              ib_go,
+    input  wire [378:0]      ib,
+    input  wire [127:0]      xl,
+    output wire [511:0]      t_out,
+    output wire              t_vout,
+    input  wire [511:0]      n_a,
+    input  wire [511:0]      n_b,
+    input  wire              n_va,
+    output wire [511:0]      n_y,
+    output wire              n_vy,
+    output wire              fault
+);
+    wire [69:0]   cx_rreq;
+    wire [5119:0] cx_rq;
+    wire [3127:0] cx_ld;
+    wire [583:0]  cx_lq;
+    wire [511:0]  cx_td;
+    wire          cx_tvd, cx_nfault;
+    ot_qwen_tile_ctl u_ctl (.clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .fault(fault),
+        .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault));
+    ot_qwen_tile_kids #(.CODE_BANKS(5), .RPS(0), .CMUT(CMUT)) u_kids (.clk(clk), .rst_n(rst_n),
+        .cx_rreq(cx_rreq), .cx_rq(cx_rq), .cx_ld(cx_ld), .cx_lq(cx_lq), .cx_td(cx_td), .cx_tvd(cx_tvd), .cx_nfault(cx_nfault),
+        .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .t_out(t_out), .t_vout(t_vout),
+        .rom_req_m(), .rom_rd({2*5*266{1'b0}}));
+endmodule

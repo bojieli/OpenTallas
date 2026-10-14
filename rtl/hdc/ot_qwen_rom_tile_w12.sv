@@ -118,6 +118,13 @@ module ot_qwen_rom_tile_logic_w12 #(
     //   q14: with NDH 1 the TOREG t_out / t_vout pin registers are the leaf's feed-through registers (needs TOREG 1).
     parameter integer NDH = 0,
     parameter integer BMUT = 0,
+    // q18 (2026-10-13) CEXT = 1 (needs ROM_PIPE, RPH != 0, NDH = 1, HIER_HARD = 1): this module is the tile's CONTROL LEAF
+    // (ot_qwen_tile_ctl): every hardened child stands outside it and its seams leave through the cx_* ports -- the bank
+    // rows (cx_rreq = per bank {ad_d[11:0], any_d, ce_d}; cx_rq = the rows' relay words), the lane-slice leaves (cx_ld /
+    // cx_lq = ot_qwen_w12_matvec_part lx_d / lx_q) and the tree node (cx_td / cx_tvd = its t_d / t_vd feed-through,
+    // cx_nfault = its fault pin; n_a / n_b / n_va / n_y / n_vy / t_out / t_vout are wired pin <-> node by the parent).
+    // Same registers, same edges as CEXT = 0: a pure re-hierarchy.
+    parameter integer CEXT = 0,
     parameter integer NREG = 1,
     parameter integer KV_LOCAL = 1,
     parameter integer KV_AW = 7,          // local KV words: 2^KV_AW
@@ -163,7 +170,15 @@ module ot_qwen_rom_tile_logic_w12 #(
     // global KV port (KV_LOCAL = 0)
     output wire              kv_re,
     output wire [TG*AW-1:0]  kv_addr,
-    input  wire [TG*W*32-1:0] kv_q
+    input  wire [TG*W*32-1:0] kv_q,
+    // CEXT seams (width 1 and unused when CEXT = 0)
+    output wire [((CEXT != 0) ? CODE_BANKS * 14 : 1)-1:0]     cx_rreq,
+    input  wire [((CEXT != 0) ? CODE_BANKS * 64 * W : 1)-1:0] cx_rq,
+    output wire [((CEXT != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (7 + TG * HIER * 32 + TG * 32) : 1)-1:0] cx_ld,
+    input  wire [((CEXT != 0) ? (W / ((HIER > 0) ? HIER : 1)) * (HIER * 32 + TG * HIER + 1) : 1)-1:0]   cx_lq,
+    output wire [W*32-1:0]   cx_td,
+    output wire              cx_tvd,
+    input  wire              cx_nfault
 );
     localparam integer IBW = 3 * NW + 13 * AW + 13;
     localparam integer RX = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ((ROM_CAPX == 2) ? 1 : 0) + ((RQR != 0) ? 1 : 0)) : 0;   // extra memory cycles of the ROM pipeline
@@ -234,7 +249,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign t_vout = t_vout_i;
     end endgenerate
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
+        .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX), .LEXT(CEXT),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
@@ -251,11 +266,22 @@ module ot_qwen_rom_tile_logic_w12 #(
         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
         .progress(), .fault(me_fault),
         .i_gbase({16'd0, tile_id_i} * TG), .t_in({W*32{1'b0}}), .t_fault_in(1'b0),
-        .t_out(t_out_i), .t_vout(t_vout_i), .t_fault(), .active_o());
+        .t_out(t_out_i), .t_vout(t_vout_i), .t_fault(), .active_o(), .lx_d(cx_ld), .lx_q(cx_lq));
 
     // -- upper tree node ---------------------------------------------------------
     wire node_fault;
-    generate if (NDH != 0) begin : g_ndh
+    generate if (CEXT != 0) begin : g_ndx
+        if (NDH == 0 || RPH == 0 || ROM_PIPE == 0 || HIER_HARD == 0 || BMUT != 0) begin : g_bad
+            initial begin $display("FAIL CEXT needs ROM_PIPE, RPH != 0, NDH = 1, HIER_HARD = 1, BMUT = 0"); $finish; end
+        end
+        assign cx_td = t_out_i;
+        assign cx_tvd = t_vout_i;
+        assign node_fault = cx_nfault;
+        assign t_out_nd = {W*32{1'b0}};
+        assign t_vout_nd = 1'b0;
+        assign n_y = {W*32{1'b0}};
+        assign n_vy = 1'b0;
+    end else if (NDH != 0) begin : g_ndh
         if (W != 16 || NREG != 1 || TREE_LAT != 7 || ANR != 1 || TOREG == 0) begin : g_bad
             initial $error("NDH needs W 16, NREG 1, TREE_LAT 7, ANR 1, TOREG 1 (the fixed hardened leaf ot_qwen_tile_node)");
         end
@@ -469,7 +495,12 @@ module ot_qwen_rom_tile_logic_w12 #(
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_rb
                 assign ce_pre[b] = (b < SB) ? rq_ce_s[ROM_ARELAY-1][b] : rq_ce_n[ROM_ARELAY-1][b];
                 wire [2*2*PWB-1:0] r_q;
-                if (RPH == 2) begin : g_hd
+                if (CEXT != 0) begin : g_hx
+                    assign cx_rreq[14*b +: 14] = {(b < SB) ? adm_pre : adm_pre_n, (b < SB) ? any_s : any_n, ce_pre[b]};
+                    assign r_q = cx_rq[2*2*PWB*b +: 2*2*PWB];
+                    assign rom_req_m[13*b +: 13] = 13'd0;
+                    assign rom_req_m[13*(CODE_BANKS+b) +: 13] = 13'd0;
+                end else if (RPH == 2) begin : g_hd
                     if (PWB != 256 || ROM_CAP2 != 1 || ROM_CAPX != 2 || BAW != 12 || ROM_MUT != 0 || TMUT != 0) begin : g_hbad
                         initial begin $display("FAIL RPH = 2: parameters differ from the hardened leaf ot_qwen_tile_rpair"); $finish; end
                     end
@@ -497,7 +528,7 @@ module ot_qwen_rom_tile_logic_w12 #(
             end
 `ifndef SYNTHESIS
             integer mk;
-            always @(negedge clk) if (rst_n && RPH == 1) for (mk = 0; mk < 2*CODE_BANKS; mk = mk + 1)
+            always @(negedge clk) if (rst_n && RPH == 1 && CEXT == 0) for (mk = 0; mk < 2*CODE_BANKS; mk = mk + 1)
                 if (rom_req_m[13*mk+12] !== rom_ce[mk % CODE_BANKS] ||
                     (rom_ce[mk % CODE_BANKS] && rom_req_m[13*mk +: 12] !== rom_addr_b[12*(mk % CODE_BANKS) +: 12])) begin
                     $display("FAIL rph macro %0d request copy %h != ce %b addr %h", mk, rom_req_m[13*mk +: 13],
@@ -671,6 +702,11 @@ module ot_qwen_rom_tile_logic_w12 #(
         end else begin : g_kvgnocap
             assign me_kv_q = kv_q;
         end
+    end endgenerate
+    generate if (CEXT == 0) begin : g_ncx
+        assign cx_rreq = 1'b0;
+        assign cx_td = {W*32{1'b0}};
+        assign cx_tvd = 1'b0;
     end endgenerate
 endmodule
 
