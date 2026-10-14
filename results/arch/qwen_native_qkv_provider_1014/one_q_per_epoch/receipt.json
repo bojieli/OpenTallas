@@ -1,0 +1,35 @@
+{
+  "status": "EXACT_PROVIDER_TOP_MECHANISM_NOT_FULL_NATIVE_LAYER_NOT_ROUTED",
+  "source_commit": "8486d1e6a",
+  "source_sha256": {
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_native_posted.sv": "cddf417b57f9c4272c93d91016cd911073e02ee92e22ae60efa4ea8a87cb8a2a",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_native_q_reader.sv": "3f8c5f87efa2b7cb419c2ef37ec882993e121d55e69b79057a2ac5f75f825466",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_native_kv_commit_fence.sv": "2b27c6d17d8783c87c2b5201113f29e65259ad9424c344b4c1ed1c46ce90f353",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_native_kv_row_provider.sv": "8a88b7d55d0c5774535affa85b7ea26a09dfbf85139df042a571a400bb8e9c61",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_native_qkv_provider.sv": "c63cd422a35b1a1f40c0b4af7db94ffc42439ca538e4f9f3c4b2ea62ef179419",
+    "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv": "f676cc8af34fb9fec24752ea96911147bb2cfac818483bf1f30ff3634c2acd9d",
+    "rtl/test/qwen_su_kv_native/tb_provider_top.sv": "643f4d6adb9e709286f5f2992579988ab2577beef4398e137cb13b6b880a3a51"
+  },
+  "remote": {
+    "host": "ot-epyc1tb",
+    "unit": "oth-ubuntu-750045-1791957223",
+    "directory": "/srv/opentallas-scratch/codex/qwen-provider-top-r2",
+    "exit": 0
+  },
+  "positive": "Q32 KV2 actual four-quadrant backing writes1024bytes ACK8,147artificialcycles",
+  "rejection_cases": [
+    "stale storage acknowledgment prevents committed",
+    "stale VM response emits zero Q words",
+    "duplicate Q start for same reserved epoch rejected"
+  ],
+  "limitations": [
+    "Lane writes in this targeted bench are source-shaped fixtures, not a compiled actual SU or checkpoint execution; full native layer integration belongs native_dispatch",
+    "Accepted issue_kind must derive from actual accepted pinned instruction, never fetch PC; instruction signature not decoded inside this provider",
+    "VM request/response adapter must bind actual exclusive/shared bankread admission and actual returned payload with matched tags; no physical VM integration here",
+    "QR committed prerequisite must be identity-bound by the composed VM provider; no automatic rounding/conversion of Q",
+    "row_ready must reserve allfour quadrants; store ACK must bind actual memory commit, not enqueue nor physical wire arrival",
+    "Historical actual store implementation is reused as a functional primitive; its old master/clock qualification is not inherited by this wrapper",
+    "No CDC/physical corners/current assigned pins/CTS/SS/FF/GRT evidence",
+    "147cycles is artificial memory/ACK schedule, not production throughput or immutableprice"
+  ]
+}
