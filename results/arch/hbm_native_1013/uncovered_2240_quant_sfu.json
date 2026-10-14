@@ -37,12 +37,22 @@
       "snapshot_category": "needs redesign (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "REQUIRED_Q8_NATIVE_CHILD",
       "latest_snapshot": {
         "t": 1791950011.0,
         "job": "qdq_wr_ref-q8d-9d9be7232",
         "status": "NEEDS_RTL",
         "text": "auto-react: no recipe; structural fix needed (noted in hgi-1010.log)"
+      },
+      "successor_source": "170fb0969",
+      "next_gate": "q8e recipe1/pin_min_tracks1 d46e4d4a6 CTS pending",
+      "behavior": {
+        "exact_records": 8,
+        "exact_words": 3328,
+        "cycles": 183,
+        "price": 168,
+        "ratio": 1.0892857142857142,
+        "mutant2_wrong": 2898
       }
     },
     {
@@ -51,13 +61,18 @@
       "snapshot_category": "needs redesign (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "CURRENT_PRODUCTION_DEFAULT_FLAT_WITH_OPTIN_SUCCESSOR",
       "latest_snapshot": {
         "t": 1791821153.0,
         "job": "hgi_suctlw-fb-c473fb8d3-tc-r2-cl",
         "status": "NEEDS_RTL",
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hgi_suctlw-fb-c473fb8d3-tc-r2-cl.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
-      }
+      },
+      "closed_successor": "ctlw_lane2_ref-l3-281763d84",
+      "closed_source": "281763d84",
+      "parent_candidate": "ot_hgi_su_ctlw_slice_hp",
+      "production_source": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:OT_CTLW_SLICES defaults0; OT_CTLW_SLICE_H optin",
+      "adopted": false
     },
     {
       "element": "ot_hgi_su_ctlw_slice",
@@ -65,13 +80,18 @@
       "snapshot_category": "needs redesign (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "CURRENT_PRODUCTION_DEFAULT_FLAT_WITH_OPTIN_SUCCESSOR",
       "latest_snapshot": {
         "t": 1791884853.0,
         "job": "ctlw_slice_rtf-f-e1e57cf4b",
         "status": "NEEDS_HUMAN",
         "text": "route bulk released (drive-resume disk cleanup, NEEDS_HUMAN; MB before/after 38 38); kept 6_final.*, 5_2_route.odb, logs/reports/json"
-      }
+      },
+      "closed_successor": "ctlw_lane2_ref-l3-281763d84",
+      "closed_source": "281763d84",
+      "parent_candidate": "ot_hgi_su_ctlw_slice_hp",
+      "production_source": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:OT_CTLW_SLICES defaults0; OT_CTLW_SLICE_H optin",
+      "adopted": false
     },
     {
       "element": "hfd_sfu",
@@ -79,13 +99,22 @@
       "snapshot_category": "flow failure (no live job)",
       "die_used": true,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "REQUIRED_CURRENT_CONTRACT",
       "latest_snapshot": {
         "t": 1791821151.0,
         "job": "hbm_sfu_quarter_r24_1ad3621a6",
         "status": "NEEDS_HUMAN",
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hbm_sfu_quarter_r24_1ad3621a6.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
-      }
+      },
+      "current_master": "hfd_sfu",
+      "count": 4,
+      "outline_um": [
+        2016.144,
+        1095.12
+      ],
+      "child_master": "ot_su12_sfu",
+      "child_count_total": 64,
+      "open": "native quarter control/watermark composition"
     },
     {
       "element": "ot_hbm_norm_engine_view",
@@ -107,13 +136,21 @@
       "snapshot_category": "flow failure (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "REQUIRED_CURRENT_CONTRACT",
       "latest_snapshot": {
         "t": 1791897628.0,
         "job": "qdq_q_ref-q5-f67dcf2d4",
         "status": "FLOORPLAN_MARGIN",
         "text": "deep release (fail, 0 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json"
-      }
+      },
+      "current_master": "ot_hgi_qdq_q_pin4",
+      "slot": "hb_quant/u_qdq",
+      "outline_um": [
+        622.08,
+        596.16
+      ],
+      "successor": "q8 four-leaf wires parent",
+      "source": "9d9be7232"
     },
     {
       "element": "ot_hgi_quant_wide",
@@ -121,13 +158,16 @@
       "snapshot_category": "flow failure (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "ALTERNATIVE_WQ3_PHYSICAL_SUCCESSOR_NOT_CURRENT_CONTRACT_MASTER",
       "latest_snapshot": {
         "t": 1791821153.0,
         "job": "hgi_quant_wide_n-1dc0a88ca-tc-cl",
         "status": "REFUSED",
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hgi_quant_wide_n-1dc0a88ca-tc-cl.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
-      }
+      },
+      "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
+      "source_branch": "claude/hbm-quant-split-1013",
+      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
     },
     {
       "element": "ot_hgi_quant_wide_h",
@@ -135,13 +175,16 @@
       "snapshot_category": "flow failure (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "ALTERNATIVE_WQ3_PHYSICAL_SUCCESSOR_NOT_CURRENT_CONTRACT_MASTER",
       "latest_snapshot": {
         "t": 1791923523.0,
         "job": "qw_h3p_ref-f3-9044d689a",
         "status": "CANCELLED",
         "text": "deep release (fail, 0 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json"
-      }
+      },
+      "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
+      "source_branch": "claude/hbm-quant-split-1013",
+      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
     },
     {
       "element": "ot_hgi_quant_wide_ov",
@@ -149,13 +192,16 @@
       "snapshot_category": "flow failure (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "ALTERNATIVE_WQ3_PHYSICAL_SUCCESSOR_NOT_CURRENT_CONTRACT_MASTER",
       "latest_snapshot": {
         "t": 1791923524.0,
         "job": "qw_ov_ref-ov2-cx-493cb25e6",
         "status": "CANCELLED",
         "text": "deep release (nearmiss, 0 MB): kept 5_2_route.odb, 6_final.*, objects/, src, receipt-referenced paths, logs/reports/json"
-      }
+      },
+      "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
+      "source_branch": "claude/hbm-quant-split-1013",
+      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
     },
     {
       "element": "ot_hgi_qw_ovd",
@@ -163,13 +209,16 @@
       "snapshot_category": "flow failure (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "ALTERNATIVE_WQ3_PHYSICAL_SUCCESSOR_NOT_CURRENT_CONTRACT_MASTER",
       "latest_snapshot": {
         "t": 1791947070.0,
         "job": "qw_ovd_ref-w1-9734cdc71",
         "status": "NEEDS_HUMAN",
         "text": "deep release (fail, 0 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json"
-      }
+      },
+      "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
+      "source_branch": "claude/hbm-quant-split-1013",
+      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
     },
     {
       "element": "ot_hgi_qdq_q_pin4",
@@ -177,13 +226,21 @@
       "snapshot_category": "cancelled only",
       "die_used": true,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "REQUIRED_CURRENT_CONTRACT",
       "latest_snapshot": {
         "t": 1791924570.0,
         "job": "qdq_q_ref-q7-fc3cf212a",
         "status": "CANCELLED",
         "text": "deep release (nearmiss, 0 MB): kept 5_2_route.odb, 6_final.*, objects/, src, receipt-referenced paths, logs/reports/json"
-      }
+      },
+      "current_master": "ot_hgi_qdq_q_pin4",
+      "slot": "hb_quant/u_qdq",
+      "outline_um": [
+        622.08,
+        596.16
+      ],
+      "successor": "q8 four-leaf wires parent",
+      "source": "9d9be7232"
     },
     {
       "element": "ot_hgi_qw_lgr",
@@ -191,13 +248,16 @@
       "snapshot_category": "cancelled only",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "ALTERNATIVE_WQ3_PHYSICAL_SUCCESSOR_NOT_CURRENT_CONTRACT_MASTER",
       "latest_snapshot": {
         "t": 1791947070.0,
         "job": "qw_lgr_ref-w1-775544459",
         "status": "FLOORPLAN_MARGIN",
         "text": "deep release (fail, 0 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json"
-      }
+      },
+      "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
+      "source_branch": "claude/hbm-quant-split-1013",
+      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
     },
     {
       "element": "ot_hgi_qw_lgw",
@@ -205,13 +265,16 @@
       "snapshot_category": "cancelled only",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "ALTERNATIVE_WQ3_PHYSICAL_SUCCESSOR_NOT_CURRENT_CONTRACT_MASTER",
       "latest_snapshot": {
         "t": 1791948149.0,
         "job": "qw_lgw_ref-w2-70cd2dec0",
         "status": "FLOORPLAN_MARGIN",
         "text": "deep release (fail, 0 MB): kept 6_final.*, receipt-referenced paths, logs/reports/json"
-      }
+      },
+      "production_gate": "quant_wide_ov184/168=1.095; WQ2 751/168=4.47",
+      "source_branch": "claude/hbm-quant-split-1013",
+      "open": "ovd congestion, lgr/lgw unsigned PORT grant, actual die slot binding"
     },
     {
       "element": "ot_su12_sfu_lanex",
@@ -219,13 +282,15 @@
       "snapshot_category": "cancelled only",
       "die_used": false,
       "closed": false,
-      "requiredness": "PENDING_ACTUAL_MASTER_AUDIT",
+      "requiredness": "HISTORICAL_ALTERNATIVE_NOT_CURRENT_DIE_MASTER",
       "latest_snapshot": {
         "t": 1791821151.0,
         "job": "hbm_sfu_lanex-1dcd1efb6-tc-cl",
         "status": "CANCELLED",
         "text": "NOTE spec in /tmp/claude-review-20261003/closure_jobs/hbm_sfu_lanex-1dcd1efb6-tc-cl.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)"
-      }
+      },
+      "current_master": "ot_su12_sfu",
+      "proof": "r25gq v12 slots carry 64 ot_su12_sfu; hub_quarter_gen lane=ot_su12_sfu; no lanex binding. Historical alternative source unresolved, row retained."
     }
   ],
   "notes": {
