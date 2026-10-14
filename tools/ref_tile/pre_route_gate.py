@@ -603,7 +603,9 @@ def gate_consumed(data: bytes, kd: Path, spec: dict, referenced, entries) -> dic
     views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
     seeds = list(spec.get("sources") or []) + sorted(referenced) + list(SB.GATE_TOOLS) + list(SHIP_HELPERS)
     paths = SB.consumed_closure(SB.archive_contents(data), seeds, [kit, *views, *extra], PATH_RE)
-    return SB.consumed_record(paths, entries, "staged archive closure at gate time")
+    # the kit's job.json is the route's job spec, not a gate input (no remote step reads it; submit_check re-checks the
+    # submitted job itself): its tag/purpose edits never invalidate a gate
+    return SB.consumed_record(paths - {f"{kit}/job.json"}, entries, "staged archive closure at gate time")
 
 
 class _BlobFiles(dict):
@@ -660,7 +662,7 @@ def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
         views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
         seeds = list(spec.get("sources") or []) + list(fp.get("referenced") or []) + list(SB.GATE_TOOLS) + \
             list(binding.get("daemon_overlays") or [])
-        paths = SB.consumed_closure(files, seeds, [kit, *views, *extra], PATH_RE)
+        paths = SB.consumed_closure(files, seeds, [kit, *views, *extra], PATH_RE) - {f"{kit}/job.json"}
     except (KeyError, ValueError, TypeError, OSError):
         return None
     finally:

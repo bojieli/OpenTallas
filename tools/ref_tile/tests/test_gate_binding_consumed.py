@@ -80,6 +80,7 @@ class ConsumedSourceBinding(unittest.TestCase):
         self.assertTrue({RTL, INC, HOOK, GATE, f'{KIT}/spec.json', f'{KIT}/pre_gpl.tcl'} <= used, used)
         self.assertNotIn(OTHER_SPEC, used)
         self.assertNotIn(UNUSED_HOOK, used)       # named only in a comment
+        self.assertNotIn(f'{KIT}/job.json', used)  # the route's job spec, not a gate input
         self.assertEqual(self.binding['consumed']['sha256'][RTL],
                          {e['path']: e['sha256'] for e in self.binding['files']}[RTL])
 
