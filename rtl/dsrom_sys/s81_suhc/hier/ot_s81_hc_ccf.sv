@@ -9,7 +9,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_ccf #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer FIFO_SLICE = 0, KEEP_POP = 0, Y_RELAY = 0,
+    parameter integer FIFO_SLICE = 0, KEEP_POP = 0, Y_RELAY = 0, PIN_CAPTURE = 1,
     parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW
 ) (
     input  wire                 sk, srs,
@@ -44,25 +44,40 @@ module ot_s81_hc_ccf #(
     localparam integer YB = $clog2(YD + FP);
     localparam integer YDC = 1 << YB;
     assign ch_rst = rs_n;
+    // One synthesis-preserved capture per face bit. Distributed local POST copies consume
+    // this stage rather than the die port. The matching forward pad gives up one stage,
+    // so chain issue, FIFO pop, return and completion keep their production cycle counts.
+    wire [FVW-1:0] fv_face;
+    wire [FSW-1:0] fd_face;
+    generate if(PIN_CAPTURE) begin:g_face_capture
+        (* keep="true" *) reg [FVW-1:0] fv_pin;
+        (* keep="true" *) reg [FSW-1:0] fd_pin;
+        always @(posedge sk or negedge rs_n)
+            if(!rs_n) fv_pin<=0; else fv_pin<=fv_i;
+        always @(posedge sk) fd_pin<=fd_i;
+        assign fv_face=fv_pin; assign fd_face=fd_pin;
+    end else begin:g_face_legacy
+        assign fv_face=fv_i; assign fd_face=fd_i;
+    end endgenerate
     // the POST pop selects the y slice into ch_fd: one kept copy of the pop bit per 128-bit slice of the data field
     // (no 3,600-load select net; textbook high_fanout class 2)
     localparam integer NPS = (FDD + 127) / 128;
     wire [NPS-1:0] pop_s;
     generate if(KEEP_POP) begin:g_pop_keep
         for(genvar k=0;k<NPS;k=k+1) begin:g_k
-            ot_s81_hc_ccf_keep_ff u_k(.clk(sk),.rst_n(rs_n),.d(fv_i[S_RD]),.q(pop_s[k]));
+            ot_s81_hc_ccf_keep_ff u_k(.clk(sk),.rst_n(rs_n),.d(fv_face[S_RD]),.q(pop_s[k]));
         end
     end else begin:g_pop_old
         reg [NPS-1:0] p;
-        always @(posedge sk or negedge rs_n) if(!rs_n) p<=0; else p<={NPS{fv_i[S_RD]}};
+        always @(posedge sk or negedge rs_n) if(!rs_n) p<=0; else p<={NPS{fv_face[S_RD]}};
         assign pop_s=p;
     end endgenerate
     reg [FVW-1:0] fv_p;
     reg [FSW-1:0] fd_p;
     reg           ya;
     reg [YS1-1:0] y1;
-    always @(posedge sk or negedge rs_n) if (!rs_n) begin fv_p <= 0; ya <= 1'b0; end else begin fv_p <= fv_i; ya <= n_yacc; end
-    always @(posedge sk) begin fd_p <= fd_i; y1 <= n_y; end
+    always @(posedge sk or negedge rs_n) if (!rs_n) begin fv_p <= 0; ya <= 1'b0; end else begin fv_p <= fv_face; ya <= n_yacc; end
+    always @(posedge sk) begin fd_p <= fd_face; y1 <= n_y; end
     reg [YB:0]    yn1;
     reg [YB-1:0]  yw, yr;
     wire pop = fv_p[S_RD];

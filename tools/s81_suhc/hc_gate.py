@@ -91,7 +91,7 @@ _PADS, _CTH, _CRY = ("rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv", "rtl/
                      "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv")
 TILES = {
     "ot_s81_hc_pad_f8":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
-    "ot_s81_hc_pad_f5r1":  dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
+    "ot_s81_hc_pad_f4r1":  dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
     "ot_s81_hc_pad_r6":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
     "ot_s81_hc_pad_r5":    dict(src=_PADS, routed=[{}], mut=(".D(DEPTH)) u_d", ".D(DEPTH-1)) u_d")),
     "ot_s81_hc_pad_meta2": dict(src=_PADS, routed=[{}], mut=(".D(DEPTH),.RESET(1))u_v", ".D(DEPTH-1),.RESET(1))u_v")),
@@ -125,7 +125,7 @@ TILES.update({
     "ot_s81_hc_crootr_f": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=(".D(RF)) u_rfd", ".D(RF - 1)) u_rfd")),
     "ot_s81_hc_crootr_r": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("s_rd <= rd_r;", "s_rd <= rd_r ^ " + _BIT("RDW", "P_D + 15") + ";")),
     "ot_s81_hc_crootr_w": dict(src=_CR, routed=[dict(C=0), dict(C=2)], mut=("p_w <= w_r;", "p_w <= w_r ^ 2'd2;")),
-    "ot_s81_hc_ccf":      dict(src=_H + "ot_s81_hc_ccf.sv", routed=[dict(HALF=1, RLY=2, RF=5, DW=6, FIFO_SLICE=512, KEEP_POP=1, Y_RELAY=1)],
+    "ot_s81_hc_ccf":      dict(src=_H + "ot_s81_hc_ccf.sv", routed=[dict(HALF=1, RLY=2, RF=5, DW=6, FIFO_SLICE=512, KEEP_POP=1, Y_RELAY=1, PIN_CAPTURE=1)],
                                mut=("ty[YS1-1:0] = yf_head;", "ty[YS1-1:0] = yf_head ^ " + _BIT("YS1", "30") + ";")),
     # r8: the y path is 11 slice leaves a column root (ot_s81_hc_crooty YLEAF 1); ot_s81_hc_crooty_y (11 SRAM macros, never
     # closed) is the lockstep reference only (tools/s81_suhc/cryy_split_bench.sh) and is not elaborated in production
