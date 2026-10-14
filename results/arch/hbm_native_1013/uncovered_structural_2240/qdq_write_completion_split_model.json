@@ -89,5 +89,15 @@
     "mechanism": "Registered queue-nonempty derived from captured snapshot/pop state removes count decode at raw ACK capture; compact private root shortens ACK-to-finish path",
     "added_edges": 0,
     "status": "unassigned alternative; actual routed pins and slot approval required"
+  },
+  "fin_captured_ack_alternative": {
+    "snapshot_bits": 65,
+    "added_completion_edges": 1,
+    "projected_native_cycles": 185,
+    "immutable_cycles": 168,
+    "projected_ratio": 1.1011904761904763,
+    "actual_native_measurement": null,
+    "mechanism": "ACK dedicated first capture; separate private pop and output launch registers/reset regions; no raw ACK bypass",
+    "status": "unqualified opt-in; actual native price and body pin audit mandatory"
   }
 }
