@@ -93,5 +93,27 @@
   "physical_startup_requirements": [
     "raw-reset buffering/recovery proof",
     "actual child clock plus entry-wire R and related phases"
-  ]
+  ],
+  "observed_public_status_edges": {
+    "source_single_cycle_pulse_to_tc": {
+      "trunk_fault": 8,
+      "column_fault": 9,
+      "column_busy": 8,
+      "all_trunk_live": 8
+    },
+    "c_st": "endpoint online/fault baseline; aggregate g_fault remains on tc[160], not wired into c_st",
+    "test_cases": 29,
+    "fault_behavior": "each trunk/column fault latches through subsequent cycles until reset; one-cycle busy/live pulses retained"
+  },
+  "startup_cycle_contract": {
+    "command_pin_cycles": 1,
+    "command_queue_capacity": 8,
+    "rst_release_to_ctl_rc_edges": 3,
+    "strip_rc_cycles": 6,
+    "leaf_sync_cycles_per_row": 2,
+    "rows_per_column": 4,
+    "bottom_rso_to_ctl_ready_cycles": 5,
+    "issue_requires": "all eight registered actual bottom rso; observed command/start proof at first six edges and independent serial reset offsets",
+    "raw_reset_physical_qualification": false
+  }
 }
