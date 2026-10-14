@@ -1,0 +1,7 @@
+# Actual route CTS diagnostics, not final routed qualification
+
+Job qfd_tt_ctlm_tree-native-current-s1-2984e0c51, immutable source2984e0c51. The actual route logs exclude u_cg.u_icg and report zero gate clones. Explicit WC=TT/BC=FF native ENA setup+11.46ps/hold+444.11ps. Actual clock domains are primary626FF+2RAM R732.25ps and gated9813FF+4RAM R726.17ps. Gate estimates are not substituted for these actual route-CTS values.
+
+The route's overall CTS setup−158.487ps/hold−354.442ps are boundary paths under actual multi-scene link-budget contexts, not native ENA failures. Worst setup is p_v_e2, arrival1110.42 vsrequired951.93 under actual link budget (virtual reference728.933ps; outputmax487ps, defaultskew150/link114, sender223ps). Setup scene named ss uses WC=TT under TC guard; it is not the slow process corner. SS-scene hold has early mininput reference298.136ps; FF scene replays actualFF reference545.196ps. No constraints changed. GRT improved setup to−29.252ps; final routed qualification still pending.
+
+Separate actual slow process probe WC=SS/BC=FF has native ENA setup−301.55ps/hold+444.11ps. SS means primary1014.28/gated1003.20ps, boundary1017.47/1002.74. This leaves native all-corner and parent qualification unresolved. Final6_final/SPEF proof must replace CTS diagnostics. Existing head ARG2 SS−369.77 sensitivity remains separate; selected complete ARG1/ARG2 view families must not mix.
