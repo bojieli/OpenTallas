@@ -41,6 +41,11 @@ DW = 508
 VM_ENV = dict(x=13284.0, y=17051.04, w=4838.4, h=2546.64)   # r11 / contract v5: VM slot change request v2 (VM3 10-13 18:08) ACCEPTED
 VM_OBS_TOP = 9                         # r11: region / band clusters are M9-capped; the die keeps only its M8 / M9 PG straps there
 RHEAD_LAT_Y = 8.64                     # r11: legal origin lattice of the head frame in y (M6 nb pins + site rows; ot_mts::place)
+HEAD_RROW = 0.0                        # r12: optional relay row between far and near head (34.56 fits the 73.5-um inter-engine slack)
+                                       # but OFF: it moves the far-head pair from 466.75 to ~501 um (> 500 reach) and would need a relay
+                                       # on far heads only (unequal ectl->head depth).  With the adopted pin plan the far pair is a
+                                       # direct hop; its budget (o_ectl + 354.7 ps wire + s_head <= 683.3) is owed by ectl A/B
+                                       # (o 258 ps > 220 defect) and the head pin flops
 WCTL_H = 129.6                         # r11 / v5: closed qkd_kvwq_ctl_bin-sl2 is 172.8 x 129.6, N-aligned in the old 518.4 slot
 SU_X = 16424.64                      # the VM stream's SU reservation column (el1011-qwen-tp8.log 04:20)
 RHEAD_WH, RHEAD_OLD_W = (712.8, 453.6), 648.0   # coordinator 10-13: qkh_head_hs grant (v4 T9 was 691.2)
@@ -433,18 +438,31 @@ def apply(v, m, G):
         lo = [q for q in o if q.y < ec.y]
         hi = [q for q in o if q.y > ec.y]
         lim = ec.y - 2.16
-        for q in reversed(lo):
+        for k, q in enumerate(reversed(lo)):
             y = math.floor((lim - q.h) / L + 1e-9) * L
             lat_moves += abs(y - q.y) > 1e-6
             q.y = round(y, 4)
-            lim = q.y - 2.16
+            lim = q.y - 2.16 - (HEAD_RROW if k == 0 and len(lo) == 2 else 0.0)
         lim = ec.y + ec.h + 2.16
-        for q in hi:
+        for k, q in enumerate(hi):
             y = math.ceil(lim / L - 1e-9) * L
             lat_moves += abs(y - q.y) > 1e-6
             q.y = round(y, 4)
-            lim = q.y + q.h + 2.16
-    rec['rhead_lattice'] = dict(lattice_y=L, heads_moved=int(lat_moves))
+            lim = q.y + q.h + 2.16 + (HEAD_RROW if k == 0 and len(hi) == 2 else 0.0)
+    # r12: the relay rows must not push an engine into its neighbour (heads of one stack column, sorted by y)
+    col = {}
+    for i in m['insts']:
+        if i.master == 'qkd_rhead':
+            col.setdefault((i.name.split('_')[1], round(i.x, 1)), []).append(i)
+    clash = []
+    for k_, hs in col.items():
+        hs.sort(key=lambda q: q.y)
+        for a_, b_ in zip(hs, hs[1:]):
+            if a_.y + a_.h + 2.16 > b_.y + 1e-6:
+                clash.append((a_.name, b_.name, round(b_.y - a_.y - a_.h, 3)))
+    if clash:
+        raise RuntimeError(f'r12 head relay rows: {len(clash)} head overlaps, first {clash[:3]}')
+    rec['rhead_lattice'] = dict(lattice_y=L, heads_moved=int(lat_moves), relay_row_um=HEAD_RROW)
 
     # ---------------------------------------------------------------- r9 pin alignment at the die (pin_align FAIL classes)
     # (1) the attention stack is as tall as the head column it serves (4 engines x (4 heads + ectl) = 8,164.8 um; the
@@ -1381,9 +1399,12 @@ def _wrap(v, m, G, peers):
             pw1 = v.port_widths(model, 1)
             for mn in VIEWS:
                 adopt_view(M, mn, split, vrec, pw1)
-            # Candidate only: no default pin change or source-view edit.
+            # die lead r12 (2026-10-14): ADOPTED as the die's pin assignment for the UN-CLOSED head parent (top-down pin
+            # assignment, owner 10-13 18:22): head ti / e / s pins stand straight above / below the real ectl A / B / C leaf
+            # pins (g9: all 128 unrepaired te / ts paths and the 315 over-reach hops were 422-432 um of x offset between the
+            # far head's pin and its ectl pin).  OT_TP8_ECTL_PIN_REPLAN_CANDIDATE=0 restores the legacy pins (diagnostic).
             import os
-            if os.environ.get('OT_TP8_ECTL_PIN_REPLAN_CANDIDATE') == '1':
+            if os.environ.get('OT_TP8_ECTL_PIN_REPLAN_CANDIDATE', '1') != '0':
                 from qwen_tp8.ectl_pin_replan_candidate import apply as head_pin_candidate
                 head_pin_candidate(model, M)
             align_abutted(v, model, M, pw1, split, model['tp8b_v5'].setdefault('pin_align', {}))
