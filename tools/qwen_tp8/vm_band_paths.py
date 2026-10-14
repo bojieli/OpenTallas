@@ -34,7 +34,9 @@ def union(intervals):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--root-contract', type=Path)
-    a = ap.parse_args()
+    ap.add_argument('--candidate-controls',type=Path)
+    ap.add_argument('--closed-column-view',type=Path)
+    args = ap.parse_args()
     file = 'results/arch/qwen_tp8_1012/vm_band_composition_codex.json'
     comp = json.loads((ROOT/file).read_text())
     x0,y0=comp['origin_um'];W,H=comp['outline_um']
@@ -56,7 +58,9 @@ def main():
             f=next((ROOT/c['view']).glob('*.lef'))
             viewpins[c['view']]=read(f)[1]
             hashes[str(f.relative_to(ROOT))]=hashlib.sha256(f.read_bytes()).hexdigest()
-    old=ROOT/'physical/ref_tile/qfd_vm_xcol_t/views/ot_qfd_vm_xcol_t/ot_qfd_vm_xcol_t.lef'
+    column_view=args.closed_column_view
+    if column_view and not column_view.is_absolute():column_view=ROOT/column_view
+    old=next(column_view.glob('*.lef')) if column_view else ROOT/'physical/ref_tile/qfd_vm_xcol_t/views/ot_qfd_vm_xcol_t/ot_qfd_vm_xcol_t.lef'
     oldpins=read(old)[1];hashes[str(old.relative_to(ROOT))]=hashlib.sha256(old.read_bytes()).hexdigest()
     def pin(stage,port,bit):
         c=children[stage['bay'],stage['slot']]
@@ -83,12 +87,13 @@ def main():
                     A=pin(path[k],'q',bit),B=pin(path[k+1],'d',bit),
                     launch=path[k],capture=path[k+1]))
             cp=oldpins[f'{port}[{s["output"][1]+bit}]'];c=colchildren[col]
-            edges.append(dict(kind='provisional_column_input',lane=s['lane'],bit=bit,
+            edges.append(dict(kind='closed_column_input' if column_view else 'provisional_column_input',lane=s['lane'],bit=bit,
                 launch=path[-1],
+                capture_column=col,capture_pin=f'{port}[{s["output"][1]+bit}]',
                 A=pin(path[-1],'q',bit),B=[x0+c['at'][0]+cp['x'],y0+c['at'][1]+cp['y']]))
     root_edges=[]; root_coverage=None
-    if a.root_contract:
-        root=json.loads(a.root_contract.read_text())
+    if args.root_contract:
+        root=json.loads(args.root_contract.read_text())
         assert root['schema']=='opentallas.qwen.vm-band-actual-root-paths.v1'
         assert root['pin_assignment']=='die-assigned'
         root_edges=root['edges']
@@ -97,6 +102,10 @@ def main():
         # Include every transport stage, tags and controls in the SAME demand model.
         assert {'root_source','root_transport','root_tags','root_control'} <= {e['kind'] for e in root_edges}
         edges+=root_edges
+    if args.candidate_controls:
+        candidate=json.loads(args.candidate_controls.read_text())
+        assert candidate['qualification'] is False and candidate['status']=='CANDIDATE_SLOT_GRAPH_NOT_ASSIGNED'
+        edges+=candidate['candidate_control_edges']
     for e in edges:
         e['length_um']=round(abs(e['A'][0]-e['B'][0])+abs(e['A'][1]-e['B'][1]),4)
     timing={}
@@ -110,10 +119,14 @@ def main():
         return timing[view]
     missing_timing=[];pair_failures=[]
     for e in edges:
-        if e['kind'] not in ('closed_tile_to_closed_tile','regional_boundary_lower_bound'):continue
-        la,ca=e['launch'],e['capture'];lc=children[la['bay'],la['slot']];cc=children[ca['bay'],ca['slot']]
+        if e['kind'] not in ('closed_tile_to_closed_tile','regional_boundary_lower_bound','closed_column_input'):continue
+        la=e['launch'];lc=children[la['bay'],la['slot']]
+        if e['kind']=='closed_column_input':
+            cc=dict(view=str(column_view.relative_to(ROOT)));capture_pin=e['capture_pin']
+        else:
+            ca=e['capture'];cc=children[ca['bay'],ca['slot']];capture_pin=f'd[{ca["bit0"]+ca.get("bit_permutation",list(range(8)))[e["bit"]]}]'
         lm,lr=metrics(lc['view']);cm,cr=metrics(cc['view'])
-        lp=lm[f'q[{la["bit0"]+la.get("bit_permutation",list(range(8)))[e["bit"]]}]'];cp=cm[f'd[{ca["bit0"]+ca.get("bit_permutation",list(range(8)))[e["bit"]]}]']
+        lp=lm[f'q[{la["bit0"]+la.get("bit_permutation",list(range(8)))[e["bit"]]}]'];cp=cm[capture_pin]
         if lp['out'] is None or cp['inp'] is None or not lp['clk'] or not cp['clk']:
             missing_timing.append(dict(lane=e['lane'],bit=e['bit']));continue
         lref=lr[lp['clk'][0]];cref=cr[cp['clk'][0]]
@@ -124,6 +137,8 @@ def main():
         available=833.3333333333-60-skew
         reach=min(500,(available-o-s)/.76)
         e['pair_reach_um']=round(reach,4)
+        e['deep_entry_reach_um']=round(min(500,(833.3333333333-210-o-s)/.76),4)
+        e['deep_entry_slack_ps']=round(833.3333333333-210-o-s-.76*e['length_um'],4)
         e['pair_slack_ps']=round(available-o-s-.76*e['length_um'],4)
         if e['length_um']>reach:pair_failures.append(e)
     bykind=collections.defaultdict(list)
@@ -201,6 +216,7 @@ def main():
                         failed_by_kind=dict(collections.Counter(e['kind'] for e in pair_failures)),
                         worst_slack_ps=min((e['pair_slack_ps'] for e in edges if 'pair_slack_ps' in e),default=None),
                         failures=pair_failures,hold='not yet measured on band routed parasitics'),
+        deep_entry_screen=dict(setup_reserve_ps=210,failed_by_kind=dict(collections.Counter(e['kind']for e in edges if 'deep_entry_reach_um'in e and e['length_um']>e['deep_entry_reach_um'])),classification='conservative screen until actual childclock-entry delivery classification; not waived by shallow local childR'),
         pg_occupancy=pg_fraction,pg_note='actual pairedPG occupancy from authority receipt; band PG geometry not yet built',
         layer_grant=dict(path=str(grantfile.relative_to(ROOT)),sha256=hashlib.sha256(grantfile.read_bytes()).hexdigest(),
                          actual_pg_receipt=grant['actual_pg_receipt'],core_origin_um=grant['die_pg']['core_origin_um']),
@@ -210,7 +226,8 @@ def main():
                     ['boundary assigned pins and pair-specific timing reach','new column real input pins'],
         root_payload_coverage=len(root_coverage) if root_coverage else 0,
         edges=edges,boundary_requests=boundary)
-    out=ROOT/'results/arch/qwen_tp8_1012/vm_band_paths_codex.json'
+    out=ROOT/('results/arch/qwen_tp8_1012/vm_band_paths_closed_station_candidate_codex.json' if args.candidate_controls and column_view else 'results/arch/qwen_tp8_1012/vm_band_paths_closed_column_codex.json' if column_view else 'results/arch/qwen_tp8_1012/vm_band_paths_station_candidate_codex.json' if args.candidate_controls else 'results/arch/qwen_tp8_1012/vm_band_paths_codex.json')
+    if args.candidate_controls:report['candidate_controls']=dict(path=str(args.candidate_controls),sha256=hashlib.sha256(args.candidate_controls.read_bytes()).hexdigest(),unresolved='no source entry, local equalization packing, loader/fill-fire, or root gather paths included')
     detail=dict(edges=report.pop('edges'),boundary_requests=report.pop('boundary_requests'))
     details=out.with_suffix('.details.json.gz')
     with gzip.open(details,'wt') as f:json.dump(detail,f,separators=(',',':'))

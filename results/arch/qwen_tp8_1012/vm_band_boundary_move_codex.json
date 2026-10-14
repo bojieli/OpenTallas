@@ -1,0 +1,519 @@
+{
+ "schema": "opentallas.qwen.vm-band-regional-lasttile-move-bound.v1",
+ "qualification": false,
+ "status": "OUTGOING_CONSTRAINT_ONLY_NOT_PLACEMENT",
+ "packet_sha256": "6cb591c95470eda5e21952f1bb649a6f2001107cc8558b2850003fdc9971bc10",
+ "moves": [
+  {
+   "bay": "vm_g1_sB_7",
+   "slot": 0,
+   "region": 1,
+   "original_origin_um": [
+    15353.28,
+    17750.88
+   ],
+   "outgoing_boundary_bits": 160,
+   "launch_view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "corner_constraints": {
+    "tt": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33250.49764035093,
+      33903.50574122804
+     ],
+     "v_origin_interval_um": [
+      -3044.1915570175015,
+      -2345.0496403509237
+     ],
+     "continuous_minimum_L1_move_um": 146.33764035092463,
+     "continuous_closest_origin_um": [
+      15426.448820175465,
+      17824.048820175463
+     ],
+     "near_minimum_lattice_origin_um": [
+      15422.4,
+      17828.64
+     ],
+     "lattice_L1_move_um": 146.88,
+     "delta_um": [
+      69.12,
+      77.76
+     ]
+    },
+    "ss": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33458.13864035093,
+      33717.00066228067
+     ],
+     "v_origin_interval_um": [
+      -2834.3183596490803,
+      -2552.690640350924
+     ],
+     "continuous_minimum_L1_move_um": 353.9786403509279,
+     "continuous_closest_origin_um": [
+      15452.724000000004,
+      18005.41464035093
+     ],
+     "near_minimum_lattice_origin_um": [
+      15448.32,
+      18010.08
+     ],
+     "lattice_L1_move_um": 354.24,
+     "delta_um": [
+      95.04,
+      259.2
+     ]
+    }
+   },
+   "outgoing_lanes": [
+    "vm_g0_b0_xf0>p15",
+    "vm_g0_b0_xf0>p16",
+    "vm_g0_b0_xf1>p15",
+    "vm_g0_b0_xf1>p16",
+    "vm_g0_b1_xf0>p16",
+    "vm_g0_b4_xf0>p15",
+    "vm_g0_b4_xf0>p16",
+    "vm_g0_b4_xf1>p15",
+    "vm_g0_b4_xf1>p16",
+    "vm_g0_b5_xf0>p16",
+    "vm_g1_b0_xf0>p15",
+    "vm_g1_b0_xf0>p16",
+    "vm_g1_b0_xf1>p15",
+    "vm_g1_b0_xf1>p16",
+    "vm_g1_b4_xf1>p14",
+    "vm_g1_b4_xf1>p16",
+    "vm_g1_b6_xf0>p14",
+    "vm_g1_b6_xf0>p15",
+    "vm_g1_b6_xf0>p16",
+    "vm_g1_b6_xf1>p16"
+   ]
+  },
+  {
+   "bay": "vm_g1_sB_7",
+   "slot": 1,
+   "region": 1,
+   "original_origin_um": [
+    15374.880000000001,
+    17750.88
+   ],
+   "outgoing_boundary_bits": 80,
+   "launch_view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "corner_constraints": {
+    "tt": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33102.84716666671,
+      33758.2510570175
+     ],
+     "v_origin_interval_um": [
+      -3198.5710570174997,
+      -2543.1671666667094
+     ],
+     "continuous_minimum_L1_move_um": 167.16716666670936,
+     "continuous_closest_origin_um": [
+      15291.296416666646,
+      17834.463583333356
+     ],
+     "near_minimum_lattice_origin_um": [
+      15286.32,
+      17830.8
+     ],
+     "lattice_L1_move_um": 168.48,
+     "delta_um": [
+      -88.56,
+      79.92
+     ]
+    },
+    "ss": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33314.37357456145,
+      33543.91963596487
+     ],
+     "v_origin_interval_um": [
+      -2984.2396359648683,
+      -2754.693574561446
+     ],
+     "continuous_minimum_L1_move_um": 378.693574561446,
+     "continuous_closest_origin_um": [
+      15279.84,
+      18034.533574561447
+     ],
+     "near_minimum_lattice_origin_um": [
+      15282.0,
+      18038.16
+     ],
+     "lattice_L1_move_um": 380.16,
+     "delta_um": [
+      -92.88,
+      287.28
+     ]
+    }
+   },
+   "outgoing_lanes": [
+    "vm_g2_b7_xf0>p11",
+    "vm_g2_b7_xf0>p13",
+    "vm_g3_b0_xf1>p11",
+    "vm_g3_b1_xf1>p11",
+    "vm_g3_b2_xf1>p11",
+    "vm_g3_b3_xf0>p11",
+    "vm_g3_b4_xf1>p11",
+    "vm_g3_b5_xf0>p11",
+    "vm_g3_b6_xf1>p11",
+    "vm_g3_b7_xf0>p11"
+   ]
+  },
+  {
+   "bay": "vm_g1_sB_7",
+   "slot": 2,
+   "region": 1,
+   "original_origin_um": [
+    15396.480000000001,
+    17750.88
+   ],
+   "outgoing_boundary_bits": 208,
+   "launch_view": "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w",
+   "corner_constraints": {
+    "tt": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33109.649640350915,
+      33784.274978070134
+     ],
+     "v_origin_interval_um": [
+      -3190.202978070134,
+      -2515.5776403509226
+     ],
+     "continuous_minimum_L1_move_um": 161.17764035092296,
+     "continuous_closest_origin_um": [
+      15315.891179824539,
+      17831.46882017546
+     ],
+     "near_minimum_lattice_origin_um": [
+      15310.08,
+      17826.48
+     ],
+     "lattice_L1_move_um": 162.0,
+     "delta_um": [
+      -86.4,
+      75.6
+     ]
+    },
+    "ss": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33318.71811403513,
+      33573.680622806976
+     ],
+     "v_origin_interval_um": [
+      -2979.608622806976,
+      -2724.646114035133
+     ],
+     "continuous_minimum_L1_move_um": 370.24611403513336,
+     "continuous_closest_origin_um": [
+      15297.036,
+      18021.68211403513
+     ],
+     "near_minimum_lattice_origin_um": [
+      15297.12,
+      18023.04
+     ],
+     "lattice_L1_move_um": 371.52,
+     "delta_um": [
+      -99.36,
+      272.16
+     ]
+    }
+   },
+   "outgoing_lanes": [
+    "vm_g1_b4_xf0>p12",
+    "vm_g1_b4_xf0>p13",
+    "vm_g1_b4_xf1>p11",
+    "vm_g1_b4_xf1>p12",
+    "vm_g1_b4_xf1>p13",
+    "vm_g1_b5_xf0>p13",
+    "vm_g1_b6_xf0>p11",
+    "vm_g1_b6_xf0>p12",
+    "vm_g1_b6_xf0>p13",
+    "vm_g2_b0_xf0>p11",
+    "vm_g2_b1_xf0>p11",
+    "vm_g2_b1_xf0>p13",
+    "vm_g2_b1_xf1>p11",
+    "vm_g2_b1_xf1>p13",
+    "vm_g2_b1_xf1>p8",
+    "vm_g2_b2_xf1>p11",
+    "vm_g2_b2_xf1>p12",
+    "vm_g2_b3_xf0>p11",
+    "vm_g2_b3_xf0>p13",
+    "vm_g2_b4_xf0>p11",
+    "vm_g2_b5_xf0>p11",
+    "vm_g2_b5_xf0>p13",
+    "vm_g2_b5_xf1>p13",
+    "vm_g3_b0_xf0>p11",
+    "vm_g3_b1_xf0>p11",
+    "vm_g3_b5_xf1>p11"
+   ]
+  },
+  {
+   "bay": "vm_g1_sB_8",
+   "slot": 0,
+   "region": 1,
+   "original_origin_um": [
+    15353.28,
+    17850.24
+   ],
+   "outgoing_boundary_bits": 288,
+   "launch_view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "corner_constraints": {
+    "tt": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33412.76066666672,
+      34003.33442543856
+     ],
+     "v_origin_interval_um": [
+      -2834.892280701709,
+      -2327.193574561449
+     ],
+     "continuous_minimum_L1_move_um": 209.2406666667157,
+     "continuous_closest_origin_um": [
+      15457.90033333336,
+      17954.86033333336
+     ],
+     "near_minimum_lattice_origin_um": [
+      15452.64,
+      17960.4
+     ],
+     "lattice_L1_move_um": 209.52,
+     "delta_um": [
+      99.36,
+      110.16
+     ]
+    },
+    "ss": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33616.74036403514,
+      33817.97121491224
+     ],
+     "v_origin_interval_um": [
+      -2632.064793859604,
+      -2512.5567850877646
+     ],
+     "continuous_minimum_L1_move_um": 413.2203640351363,
+     "continuous_closest_origin_um": [
+      15552.091789473689,
+      18064.648574561452
+     ],
+     "near_minimum_lattice_origin_um": [
+      15547.68,
+      18070.56
+     ],
+     "lattice_L1_move_um": 414.72,
+     "delta_um": [
+      194.4,
+      220.32
+     ]
+    }
+   },
+   "outgoing_lanes": [
+    "vm_g0_b0_xf0>p17",
+    "vm_g0_b0_xf0>p20",
+    "vm_g0_b0_xf1>p20",
+    "vm_g0_b1_xf0>p17",
+    "vm_g0_b1_xf0>p20",
+    "vm_g0_b1_xf1>p17",
+    "vm_g0_b1_xf1>p20",
+    "vm_g0_b4_xf0>p20",
+    "vm_g0_b4_xf1>p20",
+    "vm_g0_b4_xf1>p23",
+    "vm_g0_b5_xf0>p17",
+    "vm_g0_b5_xf0>p20",
+    "vm_g0_b5_xf1>p20",
+    "vm_g0_b5_xf1>p23",
+    "vm_g1_b0_xf0>p17",
+    "vm_g1_b0_xf1>p17",
+    "vm_g1_b0_xf1>p20",
+    "vm_g1_b0_xf1>p23",
+    "vm_g1_b1_xf0>p20",
+    "vm_g1_b1_xf0>p23",
+    "vm_g1_b4_xf0>p15",
+    "vm_g1_b4_xf1>p15",
+    "vm_g1_b4_xf1>p17",
+    "vm_g1_b4_xf1>p20",
+    "vm_g1_b4_xf1>p23",
+    "vm_g1_b4_xf1>p26",
+    "vm_g1_b6_xf1>p14",
+    "vm_g1_b6_xf1>p15",
+    "vm_g1_b6_xf1>p17",
+    "vm_g1_b6_xf1>p20",
+    "vm_g1_b6_xf1>p21",
+    "vm_g1_b6_xf1>p22",
+    "vm_g1_b6_xf1>p23",
+    "vm_g1_b6_xf1>p26",
+    "vm_g1_b6_xf1>p29",
+    "vm_g1_b6_xf1>p31"
+   ]
+  },
+  {
+   "bay": "vm_g1_sB_8",
+   "slot": 1,
+   "region": 1,
+   "original_origin_um": [
+    15374.880000000001,
+    17850.24
+   ],
+   "outgoing_boundary_bits": 296,
+   "launch_view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "corner_constraints": {
+    "tt": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33412.10970614039,
+      33805.24988596487
+     ],
+     "v_origin_interval_um": [
+      -2828.992741228029,
+      -2500.2727587719737
+     ],
+     "continuous_minimum_L1_move_um": 186.9897061403899,
+     "continuous_closest_origin_um": [
+      15455.918473684209,
+      17956.19123245618
+     ],
+     "near_minimum_lattice_origin_um": [
+      15450.48,
+      17962.56
+     ],
+     "lattice_L1_move_um": 187.92,
+     "delta_um": [
+      75.6,
+      112.32
+     ]
+    },
+    "ss": {
+     "outgoing_fixed_band_endpoints_feasible": false,
+     "u_origin_interval_um": [
+      33622.204916666706,
+      33616.07312280697
+     ],
+     "v_origin_interval_um": [
+      -2616.9501096490817,
+      -2689.175890350922
+     ]
+    }
+   },
+   "outgoing_lanes": [
+    "vm_g0_b2_xf1>p23",
+    "vm_g0_b3_xf0>p23",
+    "vm_g0_b3_xf0>p26",
+    "vm_g0_b3_xf1>p22",
+    "vm_g0_b3_xf1>p26",
+    "vm_g0_b4_xf0>p17",
+    "vm_g0_b4_xf1>p17",
+    "vm_g0_b5_xf1>p17",
+    "vm_g0_b6_xf0>p17",
+    "vm_g0_b6_xf0>p20",
+    "vm_g0_b6_xf0>p22",
+    "vm_g0_b6_xf0>p23",
+    "vm_g0_b6_xf1>p23",
+    "vm_g0_b6_xf1>p26",
+    "vm_g0_b6_xf1>p29",
+    "vm_g0_b7_xf1>p17",
+    "vm_g1_b1_xf0>p17",
+    "vm_g1_b1_xf1>p22",
+    "vm_g1_b2_xf1>p15",
+    "vm_g1_b2_xf1>p16",
+    "vm_g1_b2_xf1>p17",
+    "vm_g1_b2_xf1>p20",
+    "vm_g1_b2_xf1>p21",
+    "vm_g1_b2_xf1>p29",
+    "vm_g1_b3_xf0>p17",
+    "vm_g1_b3_xf0>p20",
+    "vm_g1_b3_xf0>p23",
+    "vm_g1_b3_xf1>p15",
+    "vm_g1_b3_xf1>p17",
+    "vm_g1_b3_xf1>p20",
+    "vm_g1_b3_xf1>p22",
+    "vm_g1_b3_xf1>p29",
+    "vm_g1_b3_xf1>p31",
+    "vm_g1_b6_xf1>p11",
+    "vm_g1_b6_xf1>p12",
+    "vm_g2_b5_xf1>p11",
+    "vm_g3_b4_xf0>p11"
+   ]
+  },
+  {
+   "bay": "vm_g1_sB_8",
+   "slot": 2,
+   "region": 1,
+   "original_origin_um": [
+    15396.480000000001,
+    17850.24
+   ],
+   "outgoing_boundary_bits": 8,
+   "launch_view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+   "corner_constraints": {
+    "tt": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33000.9642061404,
+      33851.58779385961
+     ],
+     "v_origin_interval_um": [
+      -3369.499793859609,
+      -2518.8762061403986
+     ],
+     "continuous_minimum_L1_move_um": 65.11620614039839,
+     "continuous_closest_origin_um": [
+      15363.921896929802,
+      17882.7981030702
+     ],
+     "near_minimum_lattice_origin_um": [
+      15361.92,
+      17882.64
+     ],
+     "lattice_L1_move_um": 66.96,
+     "delta_um": [
+      -34.56,
+      32.4
+     ]
+    },
+    "ss": {
+     "outgoing_fixed_band_endpoints_feasible": true,
+     "u_origin_interval_um": [
+      33183.79719298251,
+      33668.7548070175
+     ],
+     "v_origin_interval_um": [
+      -3186.6668070175037,
+      -2701.7091929825037
+     ],
+     "continuous_minimum_L1_move_um": 247.94919298250352,
+     "continuous_closest_origin_um": [
+      15272.505403508749,
+      17974.214596491252
+     ],
+     "near_minimum_lattice_origin_um": [
+      15266.88,
+      17969.04
+     ],
+     "lattice_L1_move_um": 248.4,
+     "delta_um": [
+      -129.6,
+      118.8
+     ]
+    }
+   },
+   "outgoing_lanes": [
+    "vm_g1_b6_xf1>p13"
+   ]
+  }
+ ],
+ "caveats": [
+  "No predecessor/internal region links or whole-geometry checked; proposed origins are not assigned placements.",
+  "TT all-bit min(500,pair reach) uses conservative deep entry210ps totalreserve and .2um margin. SS same .76 wire screening is diagnostic, not authorized corner signoff.",
+  "Independent-source bit index/phase order and all existing lane stages preserved by endpoint constraint only."
+ ]
+}
