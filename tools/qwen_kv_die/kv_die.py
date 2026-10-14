@@ -276,9 +276,18 @@ SPLIT_BINDINGS = dict(
 
 # v1.2: the strip frames bind the wires-only compositions of their CLOSED leaves (tools/qwen_kv_die/kv_strips.py ->
 # rtl/qwen_sys/split_20261014/qkd_strips_s.sv), each leaf its own clock entry
-SPLIT_ONLY_BINDINGS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n')
+SPLIT_ONLY_BINDINGS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_embgw')
 SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), qkd_astk=KS.astk_binding(),
                       qkd_astk_n=KS.astk_binding())
+# v1.2: the embedding gateway binds its CLOSED view's RTL (qkd_embgw sl2): the link words gq / gr and the host words hb / est
+# match; emf / emr do NOT (gateway {kind 2, seq 4, data 281, v} 288 + cr / 520 + cr vs the landing engine's 530-b
+# {cr, pad 5, tag 11, data 512, v}): an RTL interface defect between two closed views (elements: land_emb 'ifw' re-route
+# to the gateway's words, 12:40) -> port bind MISMATCH until one side changes
+SPLIT_BINDINGS['qkd_embgw'] = dict(
+    module='qkd_embgw', file='rtl/physical/ot_qwen_kv_gwhost_slots.sv',
+    ports=dict(gq=['r_ea', 't_ecr'], gr=['t_eq'], hb=['hb', 'hb_cr'], est=['est'], ck=['ck'], rst_n=['rst_n'],
+               **{f'emf_{q}': [f'emf_{q}', f'emf_{q}_cr'] for q in STACKS},
+               **{f'emr_{q}': [f'emr_{q}', f'emr_{q}_cr'] for q in STACKS}), classed={})
 
 
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict

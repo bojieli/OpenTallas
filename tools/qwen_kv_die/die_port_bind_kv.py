@@ -27,7 +27,10 @@ import kv_die as K  # noqa: E402
 
 HARD_PHY = {'ot_hbm3e_phy': 'HBM3E PHY analog (digital layer = HBM controller qkd_ctrl/qkd_ctrl_pc)',
             'ot_qkvd_ucie_x64_phy': 'UCIe x64 PHY analog (digital layer = D2D adapter: framing/credits ot_qkvd_d2d, CRC/retry/FEC)',
-            'ot_qfd_serdes_112g_x12_phy': 'host SerDes PHY analog (digital layer = host link adapter in qkd_host)'}
+            'ot_qfd_serdes_112g_x12_phy': 'host SerDes PHY analog (digital layer = host link adapter in qkd_host)',
+            # v1.2: the clock / reset forwarding bump pair to the compute die is two pad cells (no logic; the compute
+            # side's receiver qfd_clkrx / reset synchroniser are its digital layer)
+            'qkd_ckbump': 'clock / reset forwarding bump pair to the compute die: pad cells, no logic (by design)'}
 
 
 def header(text, mod):
