@@ -127,7 +127,9 @@ module ot_qwen_die_cdc_ch #(
                         if (!wr_n) begin iw_c <= 0; ir_c <= 0; iv_c <= 0; full_c <= 0; end
                         else begin
 `ifdef OT_CDC_IBPTR_MUT_CURRENT
-                            iw_c <= iw[IA-1:0]; ir_c <= ir[IA-1:0]; full_c <= ib_full;
+                            // One-sided stale read pointer: moving both pointers
+                            // together can merely rotate the physical rows.
+                            iw_c <= iw_next[IA-1:0]; ir_c <= ir[IA-1:0]; full_c <= full_next;
 `else
                             iw_c <= iw_next[IA-1:0]; ir_c <= ir_next[IA-1:0]; full_c <= full_next;
 `endif
