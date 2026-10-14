@@ -13,6 +13,7 @@ import subprocess
 from pathlib import Path
 
 TOP = 'ot_qfd_seq_su_bi_native8_candidate'
+PARTITION = 'ot_qfd_native8_retained_partition_candidate'
 SOURCES = [
     'rtl/physical/ot_qfd_seq_su_bi_native8_candidate.sv',
     'rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv',
@@ -38,7 +39,7 @@ def number(value):
     return int(value, 2) if isinstance(value, str) else int(value)
 
 
-def census(path):
+def census(path, top):
     mods = json.loads(path.read_text())['modules']
     roots = collections.Counter()
     rows, macros, unsupported = [], [], []
@@ -81,7 +82,8 @@ def census(path):
         row['clock_ff_bits'] = dict(row['clock_ff_bits'])
         rows.append(row)
 
-    walk(TOP, TOP, {b: pname for pname, p in mods[TOP]['ports'].items() for b in p['bits']})
+    walk(top, top, {b: pname if len(p['bits']) == 1 else '%s[%d]' % (pname, i)
+                   for pname, p in mods[top]['ports'].items() for i, b in enumerate(p['bits'])})
     return {'total_generic_ff_bits': sum(roots.values()), 'clock_ff_bits': dict(roots),
             'instances': rows, 'blackbox_macros': macros, 'unsupported_state': unsupported}
 
@@ -90,6 +92,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--psram', type=int, choices=[0, 1], required=True)
+    ap.add_argument('--partition', action='store_true')
     ap.add_argument('--yosys', default=str(Path.home() / '.local/opentallas-tools/yosys-0.68/bin/yosys'))
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
@@ -105,12 +108,16 @@ def main():
     assert count == 1
     profile = a.out / 'native8_profile.sv'
     profile.write_text(specialized)
+    if a.partition:
+        assert a.psram == 0
+    top = PARTITION if a.partition else TOP
+    extra_sources = ['rtl/physical/ot_qfd_native8_retained_partition_candidate.sv'] if a.partition else []
     icg = a.out / 'icg_abi_only.v'
     icg.write_text('(* blackbox *) module ICGx1_ASAP7_75t_R(input CLK,ENA,SE,output GCLK); endmodule\n')
-    script = 'read_verilog -defer -sv -D SYNTHESIS ' + ' '.join([str(profile), *SOURCES[1:]]) + '\n'
+    script = 'read_verilog -defer -sv -D SYNTHESIS ' + ' '.join([str(profile), *SOURCES[1:], *extra_sources]) + '\n'
     script += 'read_verilog -lib ' + str(icg) + '\n'
     script += 'read_verilog -lib -sv ' + MACRO + '\n'
-    script += 'hierarchy -check -top ' + TOP + '\n'
+    script += 'hierarchy -check -top ' + top + '\n'
     script += 'proc\nopt\nmemory_dff\nmemory_collect\nopt_clean\n'
     script += 'write_json ' + str(a.out / 'retained.json') + '\n'
     script += 'memory_map\nopt\nstat\nwrite_json ' + str(a.out / 'mapped.json') + '\n'
@@ -121,15 +128,15 @@ def main():
     if run.returncode:
         raise SystemExit(run.returncode)
     result = {'schema': 'opentallas.native8.sequencer-retained-census.v1',
-              'source_commit': '4fb280f39', 'top': TOP, 'parameters': params,
-              'source_sha256': {p: sha(p) for p in [*SOURCES, MACRO]},
+              'source_commit': '4fb280f39', 'top': top, 'parameters': params,
+              'source_sha256': {p: sha(p) for p in [*SOURCES, MACRO, *extra_sources]},
               'census_script_sha256': sha(__file__), 'yosys_script_sha256': sha(yp),
               'analysis_profile_sha256': sha(profile),
               'analysis_profile_transform': 'Only PSRAM parameter default specialized; all original body bytes and other native8 defaults preserved.',
               'icg_abi_only_sha256': sha(icg),
               'icg_characterized': False,
-              'retained': census(a.out / 'retained.json'),
-              'mapped': census(a.out / 'mapped.json'),
+              'retained': census(a.out / 'retained.json', top),
+              'mapped': census(a.out / 'mapped.json', top),
               'physical_qualified': False, 'slots_assigned': False,
               'clock_sink_rule': 'Generic FF bit counts are a source census, not cell-mapped clock sinks. New roots require <=15000 actual sinks or measured CTS insertion<=300ps/spread<=80ps.',
               'legacy_closed_alias_used': False, 'CROM_latency_or_VL_adoption': False}
