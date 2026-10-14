@@ -77,6 +77,8 @@ module ot_qwen_nearhbm_attn_hub_p #(
     output reg           out_g,
     output reg  [5:0]    out_beat,
     output reg  [511:0]  out_data,
+    output wire [127:0] native_reciprocal,
+    output wire native_rz_ok,
     output reg           fault,
     output reg  [7:0]    ev
 );
@@ -308,6 +310,8 @@ module ot_qwen_nearhbm_attn_hub_p #(
     reg [2:0]  rcnt;
     reg [31:0] rz [0:7];
     reg [1:0]  rz_ok;
+    assign native_reciprocal = {rz[3],rz[2],rz[1],rz[0]};
+    assign native_rz_ok = rz_ok[0];
     reg        rg_out;
     always @(posedge clk or negedge rl[6]) if (!rl[6]) rv1 <= 1'b0; else rv1 <= rv0;
     always @(posedge clk) begin

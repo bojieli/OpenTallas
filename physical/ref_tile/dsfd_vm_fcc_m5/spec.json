@@ -21,11 +21,12 @@
  "clock_port": "ck",
  "reset_ports": [
   "rni",
-  "rss"
+  "rss",
+  "rst"
  ],
  "outline": {
   "w": 181.44,
-  "h": 112.32
+  "h": 129.6
  },
  "pins": {
   "N": [
@@ -35,7 +36,8 @@
    "vre",
    "vra",
    "cks",
-   "rss"
+   "rss",
+   "rst"
   ],
   "S": [
    "s_o"
@@ -65,12 +67,13 @@
   "pd": 0.5,
   "threads": 16,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:el1013-s81-vmfe/B6",
-  "branch": "claude/el1013-s81-vmfe",
-  "tag": "p2",
+  "owner": "Codex:s81_vmfe_misc_2240",
+  "branch": "codex/s81-vmfe-misc-2240",
+  "tag": "p5",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/mtp",
@@ -82,21 +85,31 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/s81_ph_views/vm_master",
-   "results/arch"
+   "results/arch",
+   "physical/redesign_ds/coll_split"
   ],
-  "purpose": "el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf dsfd_vm_fcc at M5 (ctrl ratio CDC (cks -> ck), ports 3 / 4 order registers); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline 181.44 x 112.32; pin faces by data flow, bit-ordered ranges. TWO clocks at their TRUE periods: ck 1,111.1 ps / cks 833.3 ps (base = the stream clock), each domain referenced to its own propagated tree, inter-clock insertion balanced (fe_h_str_boundary.tcl). ",
+  "purpose": "el1013-s81-vmfe/B6 dsfd_vm_fe_h leaf dsfd_vm_fcc at M5 (ctrl VM crossing cks -> ck as a real two-clock CDC (2 x ot_async_fifo 527 x 16, Gray pointers through 2-flop synchronisers; B8), ports 3 / 4 order registers); contract dsfd_vm_fe_h_if.svh after S2 (slice words carry only non-constant bits) / S3 (clt RT 1) / S5 (flag relay, one relay tile a lane); outline 181.44 x 112.32; pin faces by data flow, bit-ordered ranges. TWO clocks at their TRUE periods: ck 1,111.1 ps / cks 833.3 ps (base = the stream clock), each domain referenced to its own propagated tree, inter-clock insertion balanced (fe_h_str_boundary.tcl).  p5 corrects actual p4 route utilization64.7% (12377um2/19129um2) with181.44x129.6 outline; unchanged CDC RTL/native cycles; measured area targets55.8%.",
   "benched_by": "s81_vm_fe_h_lockstep"
  },
+ "structural_change": "B8, coordinator decision 10-13 (b): the ctrl VM crossing is rebuilt as a real two-clock CDC (2 x ot_async_fifo 527 x 16 EXT_RST: storage written and held in the stream domain, Gray pointers through 2-flop synchronisers, entry read only after the synchronised pointer; one reset synchroniser a domain on rst & rss + a registered stage). p1 (3 routes): ot_ratio_cdc_fifo rewrote the read-domain shadow sh[] from mem[] every cycle = 8,432 flop -> flop arcs between two independent clock trees (hold -46 .. -56 ps stalled; at the true periods setup -140.7 ps and 2,039 stalled hold arcs); p4: recipe2 pin flops and hold stages at pins, 30ps hold margin, face-pin access keepout. p5: actual p4 route FLOORPLAN_MARGIN util64.7%; height129.6 grows real core area to target55.8%, no clock/pin/register waiver.",
  "sdc_extra": [
   "physical/s81_ph_views/vm_master/fe_h_str_clock_ref.sdc"
  ],
  "boundary_tcl": [
   "physical/s81_ph_views/vm_master/fe_h_str_boundary.tcl"
  ],
- "recipe": 1,
+ "recipe": 2,
  "inhold": true,
  "inhold_drv": "BUFx4f_ASAP7_75t_R",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reroute_reason": {
+  "kind": "rtl_change"
+ },
  "params": {},
  "children": [],
- "inter": []
+ "inter": [],
+ "outhold": true
 }
