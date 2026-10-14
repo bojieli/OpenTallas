@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.quant_peer4_binding.v1",
+  "top": "ot_hgi_qdq_native_peer4",
+  "source": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_native_peer4.sv",
+  "endpoint_source": "85c81f4c29724a82d57342017f84e390c3313dcd",
+  "native_vehicle_source": "e3fda112c / d79e3750a ownerhbm_vm_sm_2240",
+  "binding": "4qpin4 coreclock endpoints;32actual lane_cdc LQ10 into nativeVMvehicle group1 exportedports. Group0 SU untouched.",
+  "ports_lint": "PASS actualport declarations extracted from qpin4 and e3fda112c lane_cdc; no blackbox arithmetic/CDC qualificationclaim",
+  "native_bitmapping": {
+    "read": "{v,mirror,mirror?sid00:q,localsector13}",
+    "write": "{v,mirror,mirror?sid00:q,localsector13,data256,mask8}",
+    "reject": "validsector highbits14:13!=0 ormirrorlocalsectorbit12; stickyadapterfault and noacceptedbadbeat; failure/abort handling external"
+  },
+  "clock_orientation": "cclk[q] engineCK833.333ps; vclkVM CKV1111.111ps3:4; protected actualCDCfifo, credits/done reverseFIFO",
+  "ownership": "Externalrg/wg arbitergrants; CDCpermit separate. Parent mustholdpermit/mirrorapertureuntil actualendpoint+CDCqueuedtrafficdrain. Noadhoctiedproducergrants.",
+  "unclosed_physical": [
+    "q8e wr autoECO",
+    "32CDCpayload/controlqueues",
+    "actualparentclock/pin/cut/reach",
+    "mirror/ownership/drain proof"
+  ],
+  "next_gate": "VMowner binds actual4B2slices+4qpin4 productionrecords with matchinggolden andmutants. Sourceports lint isnotnativeproof."
+}
