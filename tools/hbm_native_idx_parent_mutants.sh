@@ -2,7 +2,8 @@
 set -euo pipefail
 base=$(realpath "$1");out=$(realpath -m "$2")
 mkdir "$out"
-bin="$base/obj/Vtb_hbm_idx_parent_owned_native"
+binary_name=${3:-Vtb_hbm_idx_parent_owned_native}
+bin="$base/obj/$binary_name"
 for mut in LANE GID KEEP SVAL QORD;do
  d="$out/$mut";mkdir "$d"
  cp "$base/vectors/"{expected.json,frames.txt,keep.mem,lines.mem,qblk.mem} "$d/"
