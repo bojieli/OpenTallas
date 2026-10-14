@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 `default_nettype none
-// Result/write leaf split from source 088e33d6d: existing registers and latency unchanged.
+// Wires-only compatibility wrapper over result SRAM and four existing row stages.
 module ot_hgi_qw_ovw #(
     parameter integer LQ = 16
 ) (
@@ -27,91 +27,19 @@ module ot_hgi_qw_ovw #(
     input  wire              d_df,
     input  wire [511:0]      d_y
 );
-    localparam integer OD = 64, OW = 6;         // = SRAM words
-    localparam integer CW = $clog2(LQ + 1);
-    reg f_rst; always @(posedge clk) f_rst <= rst_n;
-    wire [2:0] rr_n;                            // 0 control, 1 counters / relays, 2 decoder tiles
-    ot_rst_relay #(.REGIONS(3)) u_rst (.clk(clk), .rst_n_in(f_rst), .rst_n(rr_n));
-    function automatic [31:0] lanes(input [4:0] l0, input [2:0] nn);
-        lanes = 0;
-        for (integer j = 0; j < 4; j = j + 1) if (j < nn) lanes[5'(l0 + j)] = 1'b1;
-    endfunction
-    // ---------------------------------------------------------------- seam RX from the control head
-    reg wg_ok, mw_v; reg [OW-1:0] mw_a; reg [14:0] mw_sec; reg [2:0] mw_n;
-    always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin wg_ok <= 0; mw_v <= 0; end
-        else begin wg_ok <= c_wg; mw_v <= c_mw_v; end       // x_v = the one-head 'launch'
-    always @(posedge clk) begin mw_a <= c_mw_a; mw_sec <= c_mw_sec; mw_n <= c_mw_n; end   // x_hd = gh[6]
-    // ---------------------------------------------------------------- result capture, SRAM FIFO
-    reg yc_v, yc_f, yc_df; reg [511:0] yc;
-    always @(posedge clk or negedge rr_n[0]) if (!rr_n[0]) begin yc_v <= 0; yc_f <= 0; yc_df <= 0; end
-        else begin yc_v <= d_vo; yc_f <= d_vo && d_f; yc_df <= d_df; end
-    always @(posedge clk) yc <= d_y;
-    reg [14:0] mq_sec [0:OD-1]; reg [2:0] mq_n [0:OD-1];
-    reg [OW-1:0] od_h, od_t; reg [OW:0] od_n;
-    // write credits (take last cycle's hit vector)
-    reg [31:0] ev_wcr, hit_w; reg [CW-1:0] wcr [0:31];
-    always @(posedge clk or negedge rr_n[1])
-        if (!rr_n[1]) begin ev_wcr <= 0; for (integer b = 0; b < 32; b = b + 1) wcr[b] <= LQ[CW-1:0]; end
-        else begin
-            ev_wcr <= {l_wcr3, l_wcr2, l_wcr1, l_wcr0};
-            for (integer b = 0; b < 32; b = b + 1) wcr[b] <= wcr[b] + CW'(ev_wcr[b]) - CW'(hit_w[b]);
-        end
-    // write head lookahead: hd_* = meta of entry od_h, re-read every edge for the next od_h.  Exact: an entry counts in od_n
-    // only after its gather/decode/capture pipeline (>= 5 edges after its meta write), so mq is settled when hd reads it.
-    reg [14:0] hd_sec; reg [2:0] hd_n; reg [31:0] hd_ln;
-    wire [14:0] w_sec0 = hd_sec; wire [2:0] w_n = hd_n;
-    reg [31:0] w_ok_l;
-    always @* for (integer b = 0; b < 32; b = b + 1) w_ok_l[b] = wcr[b] > CW'(hit_w[b]);
-    wire w_cr_ok = &(~hd_ln | w_ok_l);
-    wire w_fire = !d_bad && wg_ok && od_n != 0 && w_cr_ok;   // wg_ok implies busy
-    wire [OW-1:0] od_hn = w_fire ? od_h + 1'b1 : od_h;
-    always @(posedge clk) begin
-        hd_sec <= mq_sec[od_hn]; hd_n <= mq_n[od_hn]; hd_ln <= lanes(mq_sec[od_hn][4:0], mq_n[od_hn]);
-        if (mw_v) begin mq_sec[mw_a] <= mw_sec; mq_n[mw_a] <= mw_n; end
-    end
-    always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin od_h <= 0; od_t <= 0; od_n <= 0; hit_w <= 0; d_bad <= 0; d_wf <= 0; end
-        else begin
-            hit_w <= w_fire ? hd_ln : 32'd0; d_wf <= w_fire;
-            if (yc_v) begin od_t <= od_t + 1'b1; if (yc_f) d_bad <= 1'b1; end
-            if (yc_df) d_bad <= 1'b1;
-            od_n <= od_n + (OW+1)'(yc_v) - (OW+1)'(w_fire);
-            if (w_fire) od_h <= od_h + 1'b1;
-        end
-    // registered SRAM read issue (next to u_od): rf_* = w_fire / od_h / head meta one edge later
-    reg rf_v; reg [OW-1:0] rf_a; reg [14:0] rf_sec; reg [2:0] rf_n;
-    always @(posedge clk) begin rf_a <= od_h; rf_sec <= w_sec0; rf_n <= w_n; end
-    wire [511:0] od_rd;
-    ot_sram_1r1w_64x512_m1_r2c2 u_od (.clk(clk), .r_ce_in(rf_v), .r_addr_in(rf_a), .rd_out(od_rd),
-        .w_ce_in(yc_v), .w_addr_in(od_t), .wd_in(yc), .w_mask_in({512{1'b1}}),
-        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
-    // write beat: capture the SRAM read, per-lane valid / slot / sector a cycle later, relay to the write quads
-    (* keep *) reg [511:0] wc_y [0:3];           // one copy a leaf row (each ~400 um from this head: no shared 4-leaf net)
-    reg wm_v; reg [14:0] wm_sec; reg [2:0] wm_n;
-    reg [31:0] wv1; reg [3:0] ws1 [0:31]; reg [14:0] wsec1 [0:31];
-    always @(posedge clk) begin
-        for (integer r = 0; r < 4; r = r + 1) wc_y[r] <= od_rd;
-        wm_sec <= rf_sec; wm_n <= rf_n;
-        for (integer b = 0; b < 32; b = b + 1) begin
-            ws1[b] <= 4'(1) << 2'(b - wm_sec[4:0]); wsec1[b] <= wm_sec + 15'(5'(b - wm_sec[4:0]));
-        end
-    end
-    always @(posedge clk or negedge rr_n[1])
-        if (!rr_n[1]) begin rf_v <= 0; wm_v <= 0; wv1 <= 0; end
-        else begin
-            rf_v <= w_fire; wm_v <= rf_v;
-            for (integer b = 0; b < 32; b = b + 1) wv1[b] <= wm_v && (5'(b - wm_sec[4:0]) < 5'(wm_n));
-        end
-    wire [32*4-1:0] ws_f; wire [32*15-1:0] wsec_f;
-    genvar gi;
-    generate for (gi = 0; gi < 32; gi = gi + 1) begin : g_lo
-        assign ws_f[gi*4 +: 4] = ws1[gi]; assign wsec_f[gi*15 +: 15] = wsec1[gi];
-    end endgenerate
-    assign {l_wv3, l_wv2, l_wv1, l_wv0} = wv1;
-    assign {l_ws3, l_ws2, l_ws1, l_ws0} = ws_f;
-    assign {l_wsec3, l_wsec2, l_wsec1, l_wsec0} = wsec_f;
-    assign l_wy0 = wc_y[0]; assign l_wy1 = wc_y[1]; assign l_wy2 = wc_y[2]; assign l_wy3 = wc_y[3];
-    initial if ((LQ & (LQ - 1)) != 0) $fatal(1, "ot_hgi_qw_ovd: LQ");
+    wire row_rst_n,wm_v;wire [14:0]wm_sec;wire [2:0]wm_n;wire [511:0]row_y;
+`ifdef OT_HARD_CHILDREN
+    ot_hgi_qw_ovr u_rf (
+`else
+    ot_hgi_qw_ovr #(.LQ(LQ)) u_rf (
+`endif
+      .clk(clk),.rst_n(rst_n),.l_wcr0(l_wcr0),.l_wcr1(l_wcr1),.l_wcr2(l_wcr2),.l_wcr3(l_wcr3),
+      .c_mw_v(c_mw_v),.c_mw_a(c_mw_a),.c_mw_sec(c_mw_sec),.c_mw_n(c_mw_n),.c_wg(c_wg),
+      .d_wf(d_wf),.d_bad(d_bad),.d_vo(d_vo),.d_f(d_f),.d_df(d_df),.d_y(d_y),
+      .row_rst_n(row_rst_n),.wm_v(wm_v),.wm_sec(wm_sec),.wm_n(wm_n),.row_y(row_y));
+    ot_hgi_qw_ovrow u_row0(.clk(clk),.rst_n(row_rst_n),.row_j(2'd0),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.i_y(row_y),.o_v(l_wv0),.o_slot(l_ws0),.o_sec(l_wsec0),.o_y(l_wy0));
+    ot_hgi_qw_ovrow u_row1(.clk(clk),.rst_n(row_rst_n),.row_j(2'd1),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.i_y(row_y),.o_v(l_wv1),.o_slot(l_ws1),.o_sec(l_wsec1),.o_y(l_wy1));
+    ot_hgi_qw_ovrow u_row2(.clk(clk),.rst_n(row_rst_n),.row_j(2'd2),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.i_y(row_y),.o_v(l_wv2),.o_slot(l_ws2),.o_sec(l_wsec2),.o_y(l_wy2));
+    ot_hgi_qw_ovrow u_row3(.clk(clk),.rst_n(row_rst_n),.row_j(2'd3),.i_v(wm_v),.i_sec(wm_sec),.i_n(wm_n),.i_y(row_y),.o_v(l_wv3),.o_slot(l_ws3),.o_sec(l_wsec3),.o_y(l_wy3));
 endmodule
 `default_nettype wire

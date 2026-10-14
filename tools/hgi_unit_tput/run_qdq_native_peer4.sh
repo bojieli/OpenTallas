@@ -29,7 +29,7 @@ src=("${hdc[@]}" physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hb
      physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
      rtl/hbm_accel/generic/qw/ot_hgi_qdq_native_peer4.sv "$out/native_common/ot_hbm_b2_lane_cdc.sv" "$out/native_common/ot_hbm_b2_su_vm4.sv" "$out/native_common/ot_hbm_accel_cdc_fifo_p2.sv" rtl/test/hbm_accel/generic/tb_hgi_qdq_native_peer4.sv)
 m=${MUT:-0}
-"$VL" --binary --timing -O2 -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT="$m" --top-module tb_hgi_qdq_native_peer4 -Mdir "$out/obj" -o sim "${src[@]}" > "$out/build.log" 2>&1 || { tail -30 "$out/build.log";exit 2; }
+"$VL" --binary --timing -O2 -CFLAGS -O0 -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT="$m" --top-module tb_hgi_qdq_native_peer4 -Mdir "$out/obj" -o sim "${src[@]}" > "$out/build.log" 2>&1 || { tail -30 "$out/build.log";exit 2; }
 set +e
 "$out/obj/sim" +DIR="$vec" +PHASE="${PHASE:-61}" > "$out/run.log" 2>&1
 rc=$?

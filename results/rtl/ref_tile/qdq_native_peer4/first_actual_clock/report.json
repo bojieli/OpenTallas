@@ -1,0 +1,32 @@
+{
+  "source": "672643e4d",
+  "common_source": "64fced1f9",
+  "clock": "engine833.333ps4:VM1111.111ps3",
+  "positive": [
+    {
+      "phase": 61,
+      "records": 32,
+      "words": 13312,
+      "mismatch": 0,
+      "cycles": 186,
+      "immutable_price_per_quarter": 168,
+      "ratio": 1.1071428571428572,
+      "qualification": "PRICE_MISS"
+    },
+    {
+      "phase": 487,
+      "records": 32,
+      "words": 13312,
+      "mismatch": 0,
+      "cycles": 186,
+      "immutable_price_per_quarter": 168,
+      "ratio": 1.1071428571428572,
+      "qualification": "PRICE_MISS"
+    }
+  ],
+  "mutants": {
+    "header": "faultq0before0dones",
+    "actualassembly_lane_map": "11592wrongof13312words"
+  },
+  "physical": "q8eWRnotclosed;32CDCpayload/controlFIFOsnewphysicalrequirements; leasesretainedthroughreadback release/quietproofopen"
+}
