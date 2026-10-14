@@ -16,7 +16,8 @@
     "q_rounding": "hdc_golden.decode_token_tp to_bf16 immediately before score matvec",
     "score_split": 128,
     "pv_split": 256,
-    "z_chunk": 128
+    "z_chunk": 8,
+    "z_exported_block_positions": 128
   },
   "candidate": {
     "compile_defines": [
@@ -33,5 +34,11 @@
     "New HEADS1 control/head/astk/seq bodies require actual source/parameter-specific physical views; historical HEADS2 CLOSED views do not qualify changed bodies.",
     "HSUB and ECTL3 native profile are explicitly refused until their actual body adaptation.",
     "Full sequencer/formatter/native program composition and output retirement counters are pending."
-  ]
+  ],
+  "counterevidence": {
+    "case": "P8191 seed1 normal",
+    "output_words_different": 364,
+    "output_words_compared": 512,
+    "source": "pv256_counterproof8192.json"
+  }
 }
