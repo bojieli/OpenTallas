@@ -81,7 +81,7 @@ class HelperOverlay(unittest.TestCase):
         # Provenance differs from literal daemon; exact content must not claim daemon HEAD.
         self.assertIsNone(binding['commit'])
 
-    def test_later_effective_drift_rejected_before_refresh_changes_existing_run(self):
+    def test_later_main_drift_reuses_exact_committed_execution_without_writes(self):
         _, binding = self.gate()
         job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
         run = Path(self.tmp.name) / 'run'
@@ -89,9 +89,11 @@ class HelperOverlay(unittest.TestCase):
         before = (run / 'cl/orfs_hold_mm.tcl').read_bytes()
         self.commit_helper(b'# helper changed after gate and first route ship\n')
         self.assertFalse(SB.validate(binding, self.root, self.daemon, self.tip)[0])
-        with self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY.*drift'):
-            CL.ship_helpers('local', str(run), job)
+        mtime = (run / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns
+        CL.ship_helpers('local', str(run), job)
         self.assertEqual((run / 'cl/orfs_hold_mm.tcl').read_bytes(), before)
+        self.assertEqual((run / 'cl/orfs_hold_mm.tcl').stat().st_mtime_ns, mtime)
+        self.assertFalse(job['helper_overlay_verification']['mutation'])
         self.assertEqual(job['route_overlay_plan']['origin_main'], self.tip)
 
     def test_unrelated_main_commit_does_not_relabel_or_invalidate_plan(self):
@@ -122,11 +124,172 @@ class HelperOverlay(unittest.TestCase):
         CL.ship_helpers('local', str(run), job)
         self.assertEqual((run / 'cl/helper_overlay_plan.json').read_text().strip(), __import__('json').dumps(frozen, indent=1))
         (self.daemon / self.rel).chmod(0o755)
-        with self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY.*drift'):
+        CL.ship_helpers('local', str(run), job)
+        (run / 'cl/orfs_hold_mm.tcl').chmod(0o755)
+        with self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY.*mode mismatch'):
             CL.ship_helpers('local', str(run), job)
         damaged = dict(frozen, content_sha256='not-the-original-digest')
         current, _ = HO.capture_plan(self.daemon, self.root)
         self.assertFalse(HO.compare_plans(damaged, current)[0])
+
+    def installed_job(self):
+        _, binding = self.gate()
+        job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
+        run = Path(self.tmp.name) / 'run'
+        CL.ship_helpers('local', str(run), job)
+        return job, run
+
+    def test_missing_or_tampered_executed_helper_is_not_repaired(self):
+        for damaged in (None, b'# different executed helper\n'):
+            with self.subTest(damaged=damaged):
+                job, run = self.installed_job()
+                path = run / 'cl/orfs_hold_mm.tcl'
+                path.unlink() if damaged is None else path.write_bytes(damaged)
+                with self.assertRaisesRegex(ValueError, 'FROZEN_HELPER_OVERLAY.*(missing|bytes mismatch)'):
+                    CL.ship_helpers('local', str(run), job)
+                self.assertEqual(path.read_bytes() if path.exists() else None, damaged)
+                # Restore this test fixture only before the next independent case.
+                path.write_bytes(self.new)
+
+    def test_missing_sidecar_cannot_relabel_existing_files(self):
+        job, run = self.installed_job()
+        (run / 'cl/helper_overlay_plan.json').unlink()
+        with self.assertRaisesRegex(ValueError, 'sidecar is missing'):
+            CL.ship_helpers('local', str(run), job)
+
+    def test_missing_job_plan_cannot_overwrite_executed_helpers(self):
+        job, run = self.installed_job()
+        before = (run/'cl/orfs_hold_mm.tcl').read_bytes()
+        del job['route_overlay_plan']
+        self.commit_helper(b'# later current helper\n')
+        with self.assertRaisesRegex(ValueError, 'original job helper plan is missing'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(),before)
+
+    def test_missing_directory_refuses_even_before_source_synced_marker(self):
+        import shutil
+        job, run = self.installed_job()
+        self.assertTrue(job['helper_overlay_installed'])
+        self.assertNotIn('source_synced',job)
+        shutil.rmtree(run/'cl')
+        with self.assertRaisesRegex(ValueError,'previously installed frozen helper directory is missing'):
+            CL.ship_helpers('local',str(run),job)
+        self.assertFalse((run/'cl').exists())
+
+    def test_valid_digest_does_not_hide_committed_tree_mismatch(self):
+        job, run = self.installed_job()
+        original = job['route_overlay_plan']
+        other = self.commit_helper(b'# different committed path\n')
+        damaged = dict(original, origin_main=other)
+        job['route_overlay_plan'] = damaged
+        (run / 'cl/helper_overlay_plan.json').write_text(__import__('json').dumps(damaged))
+        with self.assertRaisesRegex(ValueError, 'committed tree mismatch'):
+            CL.ship_helpers('local', str(run), job)
+
+    def test_missing_tree_and_blob_hash_tampering_are_refused(self):
+        _, binding = self.gate()
+        frozen = binding['route_overlay_plan']
+        with self.assertRaisesRegex(ValueError, 'committed tree unavailable'):
+            HO.committed_frozen_payloads(self.root, dict(frozen, origin_main='0'*40))
+        damaged = __import__('copy').deepcopy(frozen)
+        damaged['files'][0]['sha256'] = '0'*64
+        damaged['content_sha256'] = HO.digest(damaged['files'])
+        with self.assertRaisesRegex(ValueError, 'bytes missing or tampered'):
+            HO.committed_frozen_payloads(self.root, damaged)
+
+    def test_new_job_still_resolves_current_helpers_and_old_uninstalled_plan_refuses(self):
+        _, binding = self.gate()
+        self.commit_helper(b'# new current helper\n')
+        job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
+        with self.assertRaisesRegex(ValueError, 'effective route helper drift'):
+            CL.ship_helpers('local', str(Path(self.tmp.name)/'uninstalled'), job)
+        fresh = {'freeze_helper_overlay': True}
+        run = Path(self.tmp.name)/'fresh'
+        CL.ship_helpers('local', str(run), fresh)
+        self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(), b'# new current helper\n')
+
+    def test_negative_metrics_are_still_rejected_after_honest_recovery(self):
+        job, run = self.installed_job()
+        self.commit_helper(b'# unrelated later tool fix\n')
+        CL.ship_helpers('local', str(run), job)
+        for metrics in ({'tt_ps':-55.31,'ff_ps':4.38,'drc':0},
+                        {'tt_ps':20,'ff_ps':-0.4,'drc':0},
+                        {'tt_ps':1e16,'ff_ps':10,'drc':0}):
+            self.assertFalse(CL.eco_passes(metrics, 0), metrics)
+        self.assertTrue(CL.eco_passes({'tt_ps':0,'ff_ps':0,'drc':0},0))
+
+    def recovered_gate(self):
+        import hashlib
+        data, binding = self.gate()
+        staged = Path(self.tmp.name)/'staged'
+        staged.mkdir()
+        with tarfile.open(fileobj=io.BytesIO(data)) as archive:
+            archive.extractall(staged)
+        script = b'original executed gate script'
+        binding['remote_script_sha256'] = hashlib.sha256(script).hexdigest()
+        identity = binding.get('commit') or 'snapshot-sha256:'+binding['manifest_sha256']
+        (staged/'SOURCE_COMMIT').write_text(identity)
+        log = ('GATE_SOURCE_ARCHIVE_SHA256='+binding['archive_sha256']+'\n').encode()
+        recovered = SB.recover_verified_snapshot(binding,staged,log,script)
+        receipt = HO.verify_staged_helpers(staged,binding['route_overlay_plan'],[self.rel])
+        receipt['manifest_sha256'] = binding['manifest_sha256']
+        recovered['helper_recovery'] = receipt
+        return staged,recovered
+
+    def test_explicit_gate_recovery_preserves_old_identity_but_new_submission_stays_current(self):
+        staged,binding = self.recovered_gate()
+        before = binding['identity'],binding['start_commit'],binding['commit'],binding['manifest_sha256']
+        self.commit_helper(b'# later effective main change\n')
+        self.assertFalse(SB.validate(binding,self.root,self.daemon,self.tip)[0])
+        self.assertTrue(SB.validate(binding,self.root,self.daemon,self.tip,frozen_recovery=True)[0])
+        self.assertEqual(before,(binding['identity'],binding['start_commit'],binding['commit'],binding['manifest_sha256']))
+        self.assertFalse(SB.validate(binding,self.root,self.daemon,self.tip,route_overlay=False,frozen_recovery=True)[0])
+
+    def test_gate_original_helper_missing_bytes_mode_and_forged_receipt_refuse(self):
+        staged,binding = self.recovered_gate()
+        plan = binding['route_overlay_plan']
+        path = staged/self.rel
+        path.write_bytes(b'# changed actual gate bytes\n')
+        with self.assertRaisesRegex(ValueError,'bytes mismatch'):
+            HO.verify_staged_helpers(staged,plan,[self.rel])
+        path.unlink()
+        with self.assertRaisesRegex(ValueError,'missing'):
+            HO.verify_staged_helpers(staged,plan,[self.rel])
+        path.write_bytes(self.new);path.chmod(0o755)
+        with self.assertRaisesRegex(ValueError,'mode mismatch'):
+            HO.verify_staged_helpers(staged,plan,[self.rel])
+        binding['helper_recovery']['manifest_sha256'] = '0'*64
+        self.assertFalse(SB.validate(binding,self.root,self.daemon,self.tip,frozen_recovery=True)[0])
+
+    def test_daemon_only_snapshot_cannot_gain_committed_recovery_identity(self):
+        (self.daemon/self.rel).write_bytes(b'# uncommitted original daemon helper\n')
+        _,binding = self.recovered_gate()
+        self.assertIsNone(binding['commit'])
+        self.assertFalse(SB.validate(binding,self.root,self.daemon,self.tip,frozen_recovery=True)[0])
+
+    def test_gate_recovery_does_not_waive_changed_producer_source(self):
+        (self.root/'tools/producer.v').write_text('module producer; endmodule\n')
+        self.git('add','tools/producer.v');self.git('commit','-m','producer input')
+        self.tip = self.git('rev-parse','HEAD')
+        self.git('update-ref','refs/remotes/origin/main',self.tip)
+        _,binding = self.recovered_gate()
+        original = self.tip
+        (self.root/'tools/producer.v').write_text('module producer; wire changed; endmodule\n')
+        self.git('add','tools/producer.v');self.git('commit','-m','different producer')
+        later = self.git('rev-parse','HEAD')
+        self.git('update-ref','refs/remotes/origin/main',later)
+        self.assertFalse(SB.validate(binding,self.root,self.daemon,later,frozen_recovery=True)[0])
+        self.assertTrue(SB.validate(binding,self.root,self.daemon,original,frozen_recovery=True)[0])
+
+    def test_original_tree_must_be_committed_main_history_not_an_unmerged_branch(self):
+        _,binding = self.gate()
+        self.git('checkout','-b','private-tool-change')
+        (self.root/self.rel).write_bytes(b'# private helper\n')
+        self.git('add',self.rel);self.git('commit','-m','not on main')
+        private = self.git('rev-parse','HEAD')
+        frozen,_ = HO.capture_plan(self.daemon,self.root,head=private)
+        with self.assertRaisesRegex(ValueError,'not retained main history'):
+            HO.committed_frozen_payloads(self.root,frozen)
 
     def test_existing_live_job_without_freeze_marker_is_not_rewritten(self):
         job = {'status': 'RUNNING'}

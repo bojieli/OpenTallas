@@ -12,14 +12,19 @@
 // stays the GT 6,144 lane (a group g < 3072 >> s only reads bands 0..2's positions, so the same lane is the golden).
 // MUT = 3: the upper's band-index mutant (band words in reverse band order; MUT 2 is a no-op at NB 3) -> FAIL.
 // NBP = 6 (default) is the unchanged TP4 bench (same LG 13, same stimulus).
+// qwen-tp8/spine 2026-10-12: at NB 3 the upper holds level 11 only (LG - 11 levels; level 12 = LG is the port's hold),
+// so the bands' ty is 8 edges earlier (LAT_B 38 + 2 LNK); the GT-6,144 lane's level-12 hold is a copy for every
+// in-range group (3072 >> s, s <= 11), so the same lane stays the golden.  MUT = 4: the pre-fix 2-level upper -> FAIL at NB 3
+// (a no-op at NB 6).
 module tb_qfd_band_lanes;
     parameter integer NL = 4, LNK = 0, MUT = 0, NOPS = 3000, SEED = 1;
     parameter integer RDMEM = 0, BANR = 0;   // el1011-q-seq: DUT delay lines in SRAM (2 = one-edge-short mutant) / valid-only adder resets
     parameter integer NBP = 6;               // bands: 6 (TP4, GT 6,144) or 3 (TP8, GT 3,072)
+    parameter integer BL = 0;                // el1013-qwen-small-masters r3b: 1 = each band is the slot composition qfd_sp_band_lanes (16 x qfd_bl_lane); 2 = its lnk strap wrong
     parameter integer CDLY = 2;              // CL=1: leaf c-tap delay of the cluster (1 = the hardened leaf, selects one edge late)
     parameter integer CL = 0;                // el1013-qwen-small-masters: 1 = the tree top is the die CLUSTER cell qfd_tt_up4 (NL 16, NBP 3, LNK 1:
                                              // its two pin stages ARE the one link relay stage; no u_l1..u_l4 delay on its links, sel undelayed)
-    localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK;
+    localparam integer NB = NBP, LG = $clog2(NB * 1024), LAT_L = 41, LAT_B = 46 + 2 * LNK - 8 * (13 - LG);   // qwen-tp8/spine: the upper has LG-11 levels
     reg clk = 0, rst_n = 0;
     always #5 clk = ~clk;
     // ---- stimulus -----------------------------------------------------------------------------------------------
@@ -44,17 +49,29 @@ module tb_qfd_band_lanes;
     wire [3*NL*32-1:0] tt, tt_r;
     wire tu, tvv, tu_r, tv_r2, uf;
     generate for (b = 0; b < NB; b = b + 1) begin : g_band
-        ot_qfd_band_lanes #(.NL(NL), .LNK(LNK), .MUT(MUT == 1 ? 1 : 0), .RDMEM(RDMEM), .BANR(BANR), .LG(LG)) u_b (
-            .clk(clk), .rst_n(rst_n), .b0(b == 0), .tw(din[b*8*NL*32 +: 8*NL*32]), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
-            .tt_ty(b == 0 ? tt_r : {3*NL*32{1'b0}}), .tt_use(b == 0 ? tu_r : 1'b0), .tt_v(b == 0 ? tv_r2 : 1'b0),
-            .pw(pw[b*NL*32 +: NL*32]), .pw_v(pv[b]), .ty(ty[b]), .fault(bf[b]));
+        if (BL == 0) begin : g_flatb
+            ot_qfd_band_lanes #(.NL(NL), .LNK(LNK), .MUT((MUT == 1 || MUT == 4) ? MUT : 0), .RDMEM(RDMEM), .BANR(BANR), .LG(LG)) u_b (
+                .clk(clk), .rst_n(rst_n), .b0(b == 0), .tw(din[b*8*NL*32 +: 8*NL*32]), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
+                .tt_ty(b == 0 ? tt_r : {3*NL*32{1'b0}}), .tt_use(b == 0 ? tu_r : 1'b0), .tt_v(b == 0 ? tv_r2 : 1'b0),
+                .pw(pw[b*NL*32 +: NL*32]), .pw_v(pv[b]), .ty(ty[b]), .fault(bf[b]));
+        end else begin : g_slotb
+            // el1013-qwen-small-masters r3b: the band is the die slot composition qfd_sp_band_lanes (16 hardened one-lane
+            // leaves qfd_bl_lane, wires only), driven through its contract bundles; the link relay count is its strap
+            // (BL = 2: strap one stage short of the bench's relays -> must FAIL)
+            wire [512:0] spw;
+            initial if (NL != 16 || NB != 3) begin $display("FAIL qfd_band_lanes BL needs NL 16, NBP 3"); $fatal(1); end
+            qfd_sp_band_lanes u_b (.ck(clk), .rst_n(rst_n), .b0(b == 0), .lnk(6'(BL == 2 ? LNK + 1 : LNK)), .tw(din[b*8*NL*32 +: 8*NL*32]),
+                .c({tv[LG:0], sel[LG:0]}), .tt(b == 0 ? {tv_r2, tu_r, tt_r} : 1538'd0), .pw(spw), .ty(ty[b]), .f(bf[b]));
+            assign pw[b*NL*32 +: NL*32] = spw[511:0];
+            assign pv[b] = spw[512];
+        end
     end endgenerate
     generate if (CL == 0) begin : g_flat
         ot_hdc_delay #(.W(NB*NL*32), .D(LNK)) u_l1 (.clk(clk), .rst_n(rst_n), .d(pw), .q(pw_r));
         ot_hdc_delay #(.W(2*NB), .D(LNK), .RESET(1)) u_l2 (.clk(clk), .rst_n(rst_n), .d({pv, bf}), .q({pv_r, bf_r}));
         ot_hdc_delay #(.W(3*NL*32), .D(LNK)) u_l3 (.clk(clk), .rst_n(rst_n), .d(tt), .q(tt_r));
         ot_hdc_delay #(.W(2), .D(LNK), .RESET(1)) u_l4 (.clk(clk), .rst_n(rst_n), .d({tu, tvv}), .q({tu_r, tv_r2}));
-        ot_qfd_band_upper #(.NL(NL), .NB(NB), .LNK(LNK), .MUT((MUT == 2 || MUT == 3) ? MUT : 0), .LG(LG)) u_up (
+        ot_qfd_band_upper #(.NL(NL), .NB(NB), .LNK(LNK), .MUT((MUT == 2 || MUT == 3 || MUT == 4) ? MUT : 0), .LG(LG)) u_up (
             .clk(clk), .rst_n(rst_n), .pw(pw_r), .pw_v(pv_r), .lf(bf_r), .sel_e(sel[LG:0]), .tv_e(tv[LG:0]),
             .tt_ty(tt), .tt_use(tu), .tt_v(tvv), .fault(uf));
     end else if (CL == 2) begin : g_w
@@ -110,6 +127,8 @@ module tb_qfd_band_lanes;
     reg        hv [0:HN-1];
     reg [3:0]  hs [0:HN-1];
     reg [48*NL*32-1:0] yh [0:127];   // the lane's y by cycle (mod 128)
+    reg [8*NL*32-1:0] tyh [0:NB-1][0:127];   // the bands' ty by cycle (mod 128): at NB 3 the bands lead the LG-13 lane (LAT_B < LAT_L)
+    localparam integer LAT_C = (LAT_B > LAT_L) ? LAT_B : LAT_L;   // check op n-LAT_C once both its band and lane words exist
     integer n = 0, i, k, g, s, ops = 0, checks = 0, groups = 0, errors = 0, seed = SEED;
     initial begin seed = SEED; $display("SEED=%0d", seed); end  // runtime seed: Verilator 5.050 drops a declaration initialiser read only by $random (tools/seed_init_lint.py)
     integer lv, d;
@@ -132,15 +151,16 @@ module tb_qfd_band_lanes;
         repeat (3) @(posedge clk);
         @(negedge clk); rst_n = 1;
         while (n < NOPS + 200) begin
-            // ---- check outputs (negedge n: the lane's y is op n-41, the bands' ty op n-LAT_B) ---------------------------
+            // ---- check outputs (negedge n: op n-LAT_C; its ty at +LAT_B, the lane's y at +41) ---------------------------
             yh[n % 128] = ry;
-            if (n >= LAT_B && hv[(n - LAT_B) % HN]) begin
-                s = hs[(n - LAT_B) % HN];
+            for (i = 0; i < NB; i = i + 1) tyh[i][n % 128] = ty[i];
+            if (n >= LAT_C && hv[(n - LAT_C) % HN]) begin
+                s = hs[(n - LAT_C) % HN];
                 for (g = 0; g < ((NB * 1024) >> s); g = g + 1) begin
                     for (k = 0; k < NL; k = k + 1) begin
-                        if (ty[band_of(s, g)][32*(slot_of(s, g)*NL + k) +: 32] !== yh[(n - LAT_B + LAT_L) % 128][32*(g*NL + k) +: 32]) begin
-                            if (errors < 5) $display("MISMATCH op@%0d split %0d group %0d lane %0d: band %h lane %h", n - LAT_B, s, g, k,
-                                ty[band_of(s, g)][32*(slot_of(s, g)*NL + k) +: 32], yh[(n - LAT_B + LAT_L) % 128][32*(g*NL + k) +: 32]);
+                        if (tyh[band_of(s, g)][(n - LAT_C + LAT_B) % 128][32*(slot_of(s, g)*NL + k) +: 32] !== yh[(n - LAT_C + LAT_L) % 128][32*(g*NL + k) +: 32]) begin
+                            if (errors < 5) $display("MISMATCH op@%0d split %0d group %0d lane %0d: band %h lane %h", n - LAT_C, s, g, k,
+                                tyh[band_of(s, g)][(n - LAT_C + LAT_B) % 128][32*(slot_of(s, g)*NL + k) +: 32], yh[(n - LAT_C + LAT_L) % 128][32*(g*NL + k) +: 32]);
                             errors = errors + 1;
                         end
                         checks = checks + 1;
