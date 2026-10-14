@@ -153,7 +153,8 @@ endmodule
               '// No CROM5 or VL adoption; functional bench uses a common-phase clock adapter.\n')
     tb = Path('rtl/test/tb_qfd_seq_su_native8_candidate.sv').read_text().replace('ot_qfd_seq_su_bi_native8_candidate','ot_qfd_seq_su_bi_native8_tag59_candidate')
     tb=tb.replace('wire [32-1:0] c_tag_0, c_tag_1;', 'wire [59-1:0] c_tag_0, c_tag_1;')
-    tb=tb.replace('.stage_in(6\'d0),', '.coll_epoch(16\'d17), .r_tag(59\'d0), .cb_st_rdy_tpos(tp_pos), .stage_in(6\'d0),')
+    tb=tb.replace('.stage_in(6\'d0),', '.coll_epoch(16\'d17), .r_tag(c_tag_0), .cb_st_rdy_tpos(tp_pos), .stage_in(6\'d1),')
+    tb=tb.replace('.cb_st_rdy_stage(6\'d0)', '.cb_st_rdy_stage(6\'d1)')
     tb = tb.replace('module tb_qfd_seq_su_native8_candidate;', 'module tb_qfd_native59_retained_partition;')
     tb, count = re.subn(r'ot_qfd_seq_su_bi_native8_tag59_candidate #\([^\n]+\) u1 \(',
                        'ot_qfd_native59_retained_partition_candidate u1 (', tb)

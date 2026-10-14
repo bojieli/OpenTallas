@@ -127,7 +127,7 @@ module tb_qfd_native59_retained_partition;
     ot_qfd_seq_su_bi_native8_tag59_candidate #(.PSRAM(0), .PMUT(0)) u0 (
         .clk(clk), .rst_n(rst_n),
         .h_start(h_start),
-        .coll_epoch(16'd17), .r_tag(59'd0), .cb_st_rdy_tpos(tp_pos), .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
+        .coll_epoch(16'd17), .r_tag(c_tag_0), .cb_st_rdy_tpos(tp_pos), .stage_in(6'd1), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd1),   // constant buffer always resident (d7e8ac5da gate)
         .tp_token(tp_token),
         .tp_pos(tp_pos),
         .kv_write_drained(kv_write_drained),
@@ -223,7 +223,7 @@ module tb_qfd_native59_retained_partition;
     ot_qfd_native59_retained_partition_candidate u1 (
         .clk_control(clk), .clk_station(clk), .clk_program({16{clk}}), .rst_n(rst_n),
         .h_start(h_start),
-        .coll_epoch(16'd17), .r_tag(59'd0), .cb_st_rdy_tpos(tp_pos), .stage_in(6'd0), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd0),   // constant buffer always resident (d7e8ac5da gate)
+        .coll_epoch(16'd17), .r_tag(c_tag_0), .cb_st_rdy_tpos(tp_pos), .stage_in(6'd1), .cb_st_rdy(1'b1), .cb_st_rdy_stage(6'd1),   // constant buffer always resident (d7e8ac5da gate)
         .tp_token(tp_token),
         .tp_pos(tp_pos),
         .kv_write_drained(kv_write_drained),
