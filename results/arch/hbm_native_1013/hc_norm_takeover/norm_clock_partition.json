@@ -3,7 +3,7 @@
   "state": "RTL_CANDIDATE_EXACT_PENDING",
   "top": "ot_hbm_norm_split_view_g8pc",
   "source_sha256": {
-    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "362ae99769b76ab02cb0e9b2795c0e85c10845c457b396c3f1a08fb5625ca620",
+    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "310c1e9c94d4a74311e222423fbcf230a0380030c45755260f20bf3543cedc4c",
     "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "d3b4f28929f5fffa18ef6dac8b52e681bd4b743e033b912140a9ed1c148c0cf2"
   },
   "accepted_children": {
@@ -16,13 +16,14 @@
   },
   "root_roles": {
     "clk_tile": 8,
-    "clk_bcast": 8,
     "clk_chunk": 7,
     "clk_vector_connected": 127,
     "clk_vector_active": 79,
     "clk_scalar": 3,
     "clk_quant": 2,
-    "clk_parent_remaining_state": 1
+    "clk_parent_remaining_state": 1,
+    "clk_control_relay": 24,
+    "clk_rstd_relay": 24
   },
   "active_vector_node_indices": [
     1,
@@ -107,7 +108,7 @@
   ],
   "state_partition": {
     "ot_hbm_norm_sum_node": "Golden padded heap binary nodes, each ownclock, input pinflops, held output/data publicationflops, local synchronized reset; preserves rowassociation and left/right arithmeticorder",
-    "broadcast": "Existing bounded139-bit BD4 and33-bit RBD3/reset chains, independently rooted pergroup; ownhardviews still needed",
+    "broadcast": "One independent root per140-bit control+reset stage (24) and per33-bit rstd stage(24); three bounded stages pergroup. No long group-wide hardened clock root.",
     "chunk": "Seven original golden adders now independent clock entries; wrappers/views still needed",
     "scalar": "Originaldivc/eps/rsqrt now separate clock entries; localreset/pin-hardening/view evidence still needed",
     "quant": "Two originalactquant roots now separate entries; ownleaf boundary/views still needed",
