@@ -81,9 +81,12 @@ def delivery_record(case, sinks, measured=None):
         ins = next((s.get('internal_ps') for s in ss if s.get('internal_ps')), None)
         src = next((s.get('insertion_source') for s in ss if s.get('insertion_source')), None)
         r_tt = (ins or {}).get('tt')
-        level = 'unmeasured' if r_tt is None else ('common' if r_tt <= R_COMMON_MAX_PS else 'early_tap')
         if mst == 'hfd_rly':
             src = 'relay recipe (analytic)'
+        analytic = bool(src and 'analytic' in src)
+        qualified_source = bool(src and ('clock_tree_path' in src or src.startswith('measured')))
+        missing_R = r_tt is None or not (qualified_source or analytic)
+        level = 'unmeasured' if missing_R else ('common' if r_tt <= R_COMMON_MAX_PS else 'early_tap')
         spr = view_spread(case, mst, measured)
         trees = view_clock_trees(case, mst)
         for s in ss:
@@ -93,7 +96,7 @@ def delivery_record(case, sinks, measured=None):
         tiles[mst] = dict(instances=len({s['instance'] for s in ss}), clock_pins=len(ss), R_ps=ins, R_source=src, level=level,
                           spread_source='routed boundary insertion metadata' if spr else None,
                           etm_clock_tree_ps=trees or None,
-                          hop_skew_ps=90 if level == 'common' else 150, missing_R_evidence=r_tt is None,
+                          hop_skew_ps=90 if level == 'common' else 150, missing_R_evidence=missing_R, analytic_pathfinding_R=analytic,
                           spread_ps=spr or None,
                           spread_defect=bool(spr and max(spr.values()) > SPREAD_MAX_PS),
                           entry_tt_ps=[ent[0], ent[-1]] if ent else None,

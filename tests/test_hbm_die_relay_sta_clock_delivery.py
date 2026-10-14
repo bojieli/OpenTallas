@@ -128,3 +128,18 @@ def test_unmeasured_delivery_record_exposes_missing_R(tmp_path):
     assert tile['hop_skew_ps'] == 150
     assert record['summary']['unmeasured'] == ['tile']
     assert sinks['u/ck']['level'] == 'unmeasured'
+
+
+def test_estimated_R_cannot_claim_common_budget(tmp_path):
+    s = sink('u')
+    s.update(internal_ps={'tt': 150}, insertion_source='view Liberty min ck->out - offset')
+    tile = S.delivery_record(tmp_path, {'u/ck': s})['tiles']['tile']
+    assert tile['R_ps']['tt'] == 150  # retain the estimate visibly
+    assert tile['level'] == 'unmeasured' and tile['missing_R_evidence']
+    assert tile['hop_skew_ps'] == 150
+    s['insertion_source'] = 'view Liberty clock_tree_path (min+max)/2'
+    tile = S.delivery_record(tmp_path, {'u/ck': s})['tiles']['tile']
+    assert tile['level'] == 'common' and not tile['missing_R_evidence']
+    s['insertion_source'] = 'placeholder recipe (analytic, hfd_ph_<corner>.lib)'
+    tile = S.delivery_record(tmp_path, {'u/ck': s})['tiles']['tile']
+    assert tile['level'] == 'common' and tile['analytic_pathfinding_R']
