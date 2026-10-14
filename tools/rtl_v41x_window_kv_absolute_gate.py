@@ -9,7 +9,7 @@ import re
 import subprocess
 import tempfile
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).absolute().parents[1]
 RTL = ROOT / "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv"
 TB = ROOT / "rtl/test/tb_hdc_v41x_window_kv_blocks.sv"
 OUT = ROOT / "results/rtl/hdc_v41x_window_kv_blocks.json"

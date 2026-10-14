@@ -1,12 +1,12 @@
 {
   "schema": "opentallas.s81.vmfe_misc.coverage.v1",
-  "source_commit": "c4ab49c1836e53073daaf16bf8e1dc1111dc28f4",
+  "source_commit": "352df847363f4caadb3b6aa4ee186cbe495fd8b2",
   "source_sha256": {
-    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "f80eacbd2b9e98f1db01f3771b54322ef88c478cc74c04c7730a3995f154a428",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "f15f6ca231c0fce105715eb5eea239bb3fe2d5cd702892c156064f11fd7f5451",
     "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv": "6a564096256c0253de7ced686cd6e8e7800073f96efe9b41f5f08b5a91ca471a",
     "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h_if.svh": "a2a0618f132e448a6dddb8e4bde609be17b11ae23a0689b5377c9fa0bfa4c765",
     "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv": "990c783f6b446a002b22a93d0f9f017164d720dc97fb59250d9a8c708272a12f",
-    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv": "8f4caa8c45698ad732337f001e7561cd54d9c5543aaa0b1c59288e04e1c9b0f8",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv": "9d0ea0467b770d68709ecdb30a3bec8d259b377aec18c92b6d4359fdb04491ba",
     "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv": "326eb75abbada35015b492a141608e41b5364c97ddbbe7de06cf356e4945d8d1",
     "rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340.sv": "81d7a26eb2638f99a164e9c4793fdba0ada5052d5cbaffbde1d0ee5fc63ae054",
     "rtl/dsrom_sys/mtp/ot_dsrom_markov_head_full340_h.sv": "93c0bc66a8151fe5b9664da681d5f38e4df57b5436c8f503107c755dcee5fb0a",
@@ -15,11 +15,11 @@
   "selected_fe_q3_provenance": "879f8e658",
   "selected_fe_rtl_byte_identical_to_q3": true,
   "q3_record": "results/arch/s81_vm_fe_h_b8_q3_1013.json",
-  "fresh_helpers_from": "a694182a6",
+  "fresh_helpers_from": "current46 effective helper freeze exact validated daemon overlay",
   "rows": [
     {
       "element": "dsfd_vm_fe",
-      "action": "native composition and constructive plan actively in work",
+      "action": "active source, physical and binding work as recorded",
       "replacement": [
         "dsfd_vm_fe_h",
         "dsfd_vm_clt",
@@ -37,7 +37,7 @@
       ],
       "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv",
       "state": "OPEN",
-      "note": "R3 (+2 capture cycles), KD3 (+1 counter alignment stage), XRT1 and CCA1. Current v18 FE requested outline1520.064x889.92 allocated by contract_trial da5faf138 but native FE/client/clock pins pending. Hand A fresh replay FAIL82 placement and11 hop classes; no pin/reach/cut waiver.",
+      "note": "Actual wide candidate still unallocated (117 currentfield collisions); finite actualpin searches have1/2 overlaps and long reset/status. R3/KD3 selected unchanged. Genuine113serial+4stream terminalconsumer ACK source in implementation; successor pins/state physical OPEN.",
       "slot": {
         "allocated_geometry_candidate": true,
         "contract_source": "da5faf138:physical/s81_die_pins/v18/contract_trial.json",
@@ -55,28 +55,25 @@
     },
     {
       "element": "dsfd_vm_fcc",
-      "action": "p4 fresh CTS launched",
-      "session": 85520,
+      "action": "active source, physical and binding work as recorded",
       "memory_gb": 24,
       "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv",
-      "state": "OPEN",
-      "note": "real Gray CDC, per-domain reset, keep DEPTH16; previous17460 stream sinks insertion238.6..251.9/spread13.3 qualifies count exception. Fresh p4 frozen helper receipt required; old clock record alone not route closure."
+      "state": "OPEN_NATIVE_SS_SOURCE_CLOCK_BINDING",
+      "note": "Historical tool CLOSED p5 TT+117.73 FF+3.68 DRC0, SS sensitivity\u2212174.19. ActualSS path classification requested; trueCDC retained, no gatewaiver or added cycle fromoldhandoff."
     },
     {
       "element": "dsfd_vm_fcn",
-      "action": "p4 fresh CTS launched",
-      "session": 60229,
+      "action": "active source, physical and binding work as recorded",
       "memory_gb": 16,
       "state": "OPEN",
-      "note": "B9 completed CTS has actual reg->out dv WNS\u2212244.3ps; recipe2 places pin register and hold stage at face. No false path waiver of same-domain paths."
+      "note": "Freshcurrenthelper gate recovery terminalWARN0FAIL setup+63.8 hold\u22125.1. Oldp4 helperdrift NEEDS_HUMAN preserved; actual no live old route verified. Freshsource intake next."
     },
     {
       "element": "dsfd_vm_fld",
-      "action": "p4 fresh CTS launched",
-      "session": 16858,
+      "action": "active source, physical and binding work as recorded",
       "memory_gb": 16,
       "state": "OPEN",
-      "note": "p2 TT+13/FF+27.67 DRC0 but child_lint298 covered face pins. P4 keeps full outer pin depth clear above pins and places pin flops/hold cells; no CLOSED claim."
+      "note": "Freshcurrenthelper CTS recovery in flight session27919,8GB. Oldp4 helperdrift NEEDS_HUMAN preserved; actual no live old route verified."
     },
     {
       "element": "dsfd_vm_fra",
@@ -98,7 +95,7 @@
     },
     {
       "element": "dsfd_vm_be",
-      "action": "native die ownstate mapping prepared for v18 integration",
+      "action": "active source, physical and binding work as recorded",
       "replacement": [
         "dsfd_vm_be_sl"
       ],
@@ -145,17 +142,17 @@
         "tt_ps": 36.0,
         "ff_ps": 16.53
       },
-      "note": "Actual current dsfd_sp_vm_m and proven MC BGR preserve MD12 and six control stages. Hardening generic code already proves this actual 1348-bit relay composition. 688-bit MD9 and 1128-bit EP1 counts are historical/unselected. Four CLOSED BE_SL children alone do not qualify parent; actual source-view/cap audit and clock/reset drivers remain required."
+      "note": "Selected54hardmasters1352FF EP2MD12. Genuine2605 contactsuccessor diagnostic route s81be-access-Efaces-slot48-5b6ab0a5b RUNNING CTS; actualslotAP PASS atx64.752+475.2s, .576 allocator legality OPEN. Own ACK source5ec865fb2 macrooff preprocessedRTL identical55740b883; goldstoppedserial/stream PASS mirror mutantfails. Candidate adds16FF/newleafpins, views/sourceclockbindings OPEN."
     },
     {
       "element": "dsfd_vm_bgh",
-      "action": "production graph selection verified, native successor still open",
+      "action": "active source, physical and binding work as recorded",
       "state": "UNSELECTED_NS2_HALF_SLICE_VARIANT",
       "replacement": [
         "dsfd_vm_bgr"
       ],
       "source": "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv",
-      "note": "bgh NS2/DW256 old half-slice wrapper. Actual dsfd_sp_vm_m is NS4,NP28,NPR10,DW128,NSTG4 BGR x16. No global supersession/qualification claim beyond this production composition."
+      "note": "Actual selectedNP28NPR10 BGR24root successor active. FAST4H1 numerical10/10 CTS+66.55/+7.73, actualf357.9/o256>220. DefaultoffH2unit10/10 and fullnativeNP28\u00d716gold64k0errorslatp0/p1=81; morefullcases/driverrepairgates active. No allocation/clockbinding/route qualification."
     },
     {
       "element": "dsfd_host_protected",
@@ -186,7 +183,7 @@
     },
     {
       "element": "dsfd_mtp_hrow",
-      "action": "source-bound die relay/child mapping verified; root owns running MTP composition gate",
+      "action": "active source, physical and binding work as recorded",
       "state": "OPEN_DIE_COMPOSITION",
       "replacement": [
         "dsfd_mtp_hrow_ing",
@@ -206,7 +203,7 @@
         "reset": "one actual reset synchroniser plus declared relay resets"
       },
       "source": "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv",
-      "note": "All four hardchildren CLOSED stand. Hrow_td owns equal-delay UT1 U-turn registers2079bits/part, plus return/event/read-request relays. Child closure alone does not establish parent physical closure."
+      "note": "OptinUT2/dist88instances18897relay+54syncFF fullyproven; defaultUT1 historical12660+2. All81363 registeredpairs\u2264500, localcuts<.60. Five smallmasters CLOSED and genuine recovery/removal routedreplay positive; asyncETMlabel gap preserved. Big r1025/r2079 r3 noaddedstate/sameoutline currentgatesPASS and routesRUNNING source638822a32. Actualnative207 no productionhrowinstance/sourceck/rst unassigned."
     },
     {
       "element": "ot_dsrom_markov_row_K256",
@@ -239,5 +236,6 @@
       "session": 16858,
       "log": "/tmp/codex-s81-vmfe-p4-fld.log"
     }
-  }
+  },
+  "as_of": "2026-10-14T02:25:00-07:00"
 }

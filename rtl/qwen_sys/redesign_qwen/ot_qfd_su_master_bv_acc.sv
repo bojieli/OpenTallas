@@ -30,7 +30,15 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     parameter integer HID = 4096,
     parameter integer CRD = 4,
     parameter integer VL = 7,               // the banked vector memory's extra read latency (answer at 1 + VL)
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // Functional composition options; preserve original positional parameter slots.
+    // A physical parent still needs independent child clocks and relay leaves.
+    parameter integer LT = 0,
+    parameter integer LOFF = 0,
+    parameter integer RD = 2,
+    parameter integer LMIN = 0,
+    parameter integer RED_ENTRIES = 0,
+    parameter integer ALIGN_ENTRIES = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -93,7 +101,8 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     output wire              wrom_fault
 );
     localparam integer MC = OS + IS + CRX;
-    localparam integer ML = (VL > MC) ? VL : MC;
+    localparam integer MBASE = (VL > MC) ? VL : MC;
+    localparam integer ML = (LMIN > MBASE) ? LMIN : MBASE;
     localparam integer FI = 2*NW + 1 + 3*AW + 1 + 3*AW + 1 + 3*AW + 2 + 2 + 3 + 3 + 1 + 1 + 2 + 3*AW + 2 + 1 + 2*AW + 64;
     wire rs;
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
@@ -109,7 +118,6 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     wire [SW*64-1:0] crom_m = (MUT != 0) ? (crom_q ^ {{(SW*64-1){1'b0}}, 1'b1}) : crom_q;
     ot_hdc_delay #(.W(FI + NW + SW*64 + 512), .D(IS)) u_if (.clk(clk), .rst_n(rst_n),
         .d({f_d, tok, crom_m, eq_data}), .q({f_q, tok_q, crq_q0, eqd_q}));
-    ot_hdc_delay #(.W(SW*64), .D(ML - MC)) u_crl (.clk(clk), .rst_n(rst_n), .d(crq_q0), .q(crq_q));
     ot_hdc_delay #(.W(4), .D(IS), .RESET(1)) u_ig (.clk(clk), .rst_n(rst_n), .d({go, a_src, ea_cr, eq_v}),
         .q({go_q, asrc_q, cr_q, eqv_q}));
     // ---- embedding row buffer + decode; the go is held while a row is fetched ----
@@ -135,23 +143,44 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     always @(posedge clk) emb_sel <= s_va_re & ~e_va_re;
     wire [SW-1:0] emb_sel_m;
     wire [SW*32-1:0] emb_m, vaq_v, vbq_m, vcq_m;
-    ot_hdc_delay #(.W(SW + SW*32), .D(ML)) u_eml (.clk(clk), .rst_n(rst_n), .d({emb_sel, e_va_q}), .q({emb_sel_m, emb_m}));
     wire [3*SW*32-1:0] vq_new;
-    ot_hdc_delay #(.W(3*SW*32), .D(ML - VL)) u_vml (.clk(clk), .rst_n(rst_n), .d(s_q), .q(vq_new));
     // the base port contract: a lane's registered answer HOLDS when the lane did not read (the memory answers every
     // lane of a descriptor; the lanes that did not strobe keep their previous value, so the lane datapath sees the
     // base's sequence of values, ML edges later)
     reg  [3*SW-1:0] vm_m1;
     always @(posedge clk) vm_m1 <= {vc_re, vb_re, e_va_re};
     wire [3*SW-1:0] vm_mk;
-    ot_hdc_delay #(.W(3*SW), .D(ML), .RESET(1)) u_vmk (.clk(clk), .rst_n(rst_n), .d(vm_m1), .q(vm_mk));
-    reg  [3*SW*32-1:0] vq_hold;
     wire [3*SW*32-1:0] vq_eff;
     genvar gl;
-    generate for (gl = 0; gl < 3*SW; gl = gl + 1) begin : g_hold
-        assign vq_eff[gl*32 +: 32] = vm_mk[gl] ? vq_new[gl*32 +: 32] : vq_hold[gl*32 +: 32];
+    generate if (ALIGN_ENTRIES == 0) begin : g_legacy_align
+        ot_hdc_delay #(.W(SW*64), .D(ML-MC)) u_crl (.clk(clk),.rst_n(rst_n),.d(crq_q0),.q(crq_q));
+        ot_hdc_delay #(.W(SW+SW*32), .D(ML)) u_eml (.clk(clk),.rst_n(rst_n),.d({emb_sel,e_va_q}),.q({emb_sel_m,emb_m}));
+        ot_hdc_delay #(.W(3*SW*32), .D(ML-VL)) u_vml (.clk(clk),.rst_n(rst_n),.d(s_q),.q(vq_new));
+        ot_hdc_delay #(.W(3*SW), .D(ML), .RESET(1)) u_vmk (.clk(clk),.rst_n(rst_n),.d(vm_m1),.q(vm_mk));
+        reg [3*SW*32-1:0] vq_hold;
+        for (gl=0;gl<3*SW;gl=gl+1) begin:g_hold
+            assign vq_eff[gl*32+:32]=vm_mk[gl]?vq_new[gl*32+:32]:vq_hold[gl*32+:32];
+        end
+        always @(posedge clk) vq_hold<=vq_eff;
+    end else begin:g_align_children
+        initial if (SW%4!=0 || ML<VL || ML<MC) $error("ALIGN_ENTRIES needs four-lane groups and nonnegative delays");
+        // Functional composition ties the independently clocked children to clk.
+        // The physical parent uses separate entries and needs actual phi/RC proof.
+        for(gl=0;gl<SW/4;gl=gl+1) begin:g_group
+            wire [383:0] vq,ve;
+            wire [11:0] mk;
+            for(genvar o=0;o<3;o=o+1) begin:g_operand
+                assign vq[o*128+:128]=s_q[o*SW*32+gl*128+:128];
+                assign mk[o*4+:4]=vm_m1[o*SW+gl*4+:4];
+                assign vq_eff[o*SW*32+gl*128+:128]=ve[o*128+:128];
+            end
+            ot_qfd_su_align_group4 #(.ML(ML),.VL(VL),.MC(MC)) u_align (
+                .clk(clk),.rst_n(rst_n),.vm_q(vq),.vm_mask(mk),.vm_eff(ve),
+                .crom_q(crq_q0[gl*256+:256]),.crom_m(crq_q[gl*256+:256]),
+                .emb_q(e_va_q[gl*128+:128]),.emb_m(emb_m[gl*128+:128]),
+                .emb_sel(emb_sel[gl*4+:4]),.emb_sel_m(emb_sel_m[gl*4+:4]));
+        end
     end endgenerate
-    always @(posedge clk) vq_hold <= vq_eff;
     assign {vcq_m, vbq_m, vaq_v} = vq_eff;
     wire [SW*32-1:0] vaq_m;
     generate for (gl = 0; gl < SW; gl = gl + 1) begin : g_amux
@@ -176,7 +205,7 @@ module ot_qfd_sp_su64_sfu_bv_acc #(
     assign sw_a0 = vm_waddr[0 +: AW];
     assign sw_a1 = vm_waddr[AW +: AW];
     wire [15:0] s_progress, s_rows;
-    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML)) u_su (
+    ot_hdc_vstream #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LT(LT), .LOFF(LOFF), .RD(RD), .RED_ENTRIES(RED_ENTRIES)) u_su (
         .clk(clk), .rst_n(rs), .go(go_s), .ready(s_ready), .idle(s_idle),
         .i_nout(q_nout), .i_nin(q_nin),
         .i_asrc(q_asrc), .i_abase(q_abase), .i_aso(q_aso), .i_asi(q_asi),

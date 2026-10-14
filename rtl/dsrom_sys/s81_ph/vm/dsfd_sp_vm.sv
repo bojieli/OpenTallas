@@ -1,3 +1,10 @@
+`ifdef OT_VMFE_FLD_PARALLEL_ARB
+`include "dsfd_vm_fld_pick2.svh"
+`endif
+`ifdef OT_SPVM_RESET_ACK
+`include "dsfd_vm_reset_ack.svh"
+`include "dsfd_vm_fe_h_if.svh"
+`endif
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------
 // dsfd_sp_vm v2 -- the S81 layer-die VM master (s81-vm-1011 under ds-1010, 2026-10-11).  Serial (0.9 GHz) domain
@@ -356,6 +363,9 @@ module dsfd_vm_clt #(
     output wire [15:0]  w_m,
     output wire [511:0] w_d,
     output wire [3:0]   flt
+`ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, output wire rst_ack
+`endif
 );
     wire clk = ck[0];
     reg [831:0] cp; reg rn_r, sok_r; reg [3:0] gid_r;
@@ -380,6 +390,9 @@ module dsfd_vm_clt #(
 `endif
     dsfd_vm_cl #(.LA(LA), .LTO(LTO)) u_c (.clk(clk), .rn(rn_r), .gid(gid_r), .ev(lvx), .ea(la), .ed(ld), .slot_ok(sok_r),
         .w_v(w_v[0]), .w_row(w_row), .w_m(w_m), .w_d(w_d), .flt(flt));
+`ifdef OT_SPVM_RESET_ACK
+    dsfd_vm_reset_ack u_reset_ack (.clk(clk), .request_n(reset_epoch_n), .local_release(rn_r), .consumer_live(1'b1), .ack(rst_ack));
+`endif
 endmodule
 
 // ================================================================================================ landing lane
@@ -599,10 +612,18 @@ module dsfd_vm_fe #(
         (* keep = 1 *) reg [1:0] xw_t; (* keep = 1 *) reg [1:0] xr_t;
         always @(posedge cks[0] or negedge xw0) if (!xw0) xw_t <= 2'b00; else xw_t <= 2'b11;
         always @(posedge clk or negedge xr0) if (!xr0) xr_t <= 2'b00; else xr_t <= 2'b11;
-        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)) u_cc0 (.wr_clk(cks[0]), .wr_rst_n(xw_t[0]), .wr_valid(sw_v[0]),
+        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+`ifdef OT_VMFE_FCC_PIPE
+            , .FIFO_PIPE(1)
+`endif
+            ) u_cc0 (.wr_clk(cks[0]), .wr_rst_n(xw_t[0]), .wr_valid(sw_v[0]),
             .wr_ready(cw_rdy[0]), .wr_data(sw_d0), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[0]), .rd_valid(xr_v[0]),
             .rd_ready(cr_take[0]), .rd_data(cr_d0), .rd_underflow());
-        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)) u_cc1 (.wr_clk(cks[0]), .wr_rst_n(xw_t[1]), .wr_valid(sw_v[1]),
+        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)
+`ifdef OT_VMFE_FCC_PIPE
+            , .FIFO_PIPE(1)
+`endif
+            ) u_cc1 (.wr_clk(cks[0]), .wr_rst_n(xw_t[1]), .wr_valid(sw_v[1]),
             .wr_ready(cw_rdy[1]), .wr_data(sw_d1), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[1]), .rd_valid(xr_v[1]),
             .rd_ready(cr_take[1]), .rd_data(cr_d1), .rd_underflow());
         assign cr_v = rn ? xr_v : 2'b00;        // nothing is popped while the serial order registers are in reset
@@ -805,6 +826,9 @@ module dsfd_vm_fe #(
     reg [6:0] lc [0:NLL-1];             // rows written and not yet granted, per lane
     reg [$clog2(NLL)-1:0] ll_ptr; reg [NLP-1:0] lp_v; reg [NLP*14-1:0] lp_row; reg [NLP*512-1:0] lp_d;
     reg [NLP-1:0] lsel_v; reg [$clog2(NLL)-1:0] lsel [0:NLP-1];
+`ifdef OT_VMFE_FLD_PARALLEL_ARB
+`include "dsfd_vm_fld_parallel_arb.svh"
+`else
     always @* begin : p_l562 integer li, lj, lk;
         ll_tk = {NLL{1'b0}}; lsel_v = {NLP{1'b0}};
         for (lk = 0; lk < NLP; lk = lk + 1) lsel[lk] = {$clog2(NLL){1'b0}};
@@ -821,6 +845,7 @@ module dsfd_vm_fe #(
             if (lc[lj] != 7'd0 && lk < NLP) begin ll_tk[lj] = 1'b1; lsel_v[lk] = 1'b1; lsel[lk] = lj; lk = lk + 1; end
         end
     end
+`endif
     reg [NLL-1:0] sd_oh [0:NLP-1][0:LSD-1]; reg [NLP-1:0] sd_v [0:LSD-1];
     always @(posedge clk) begin : p_l578 integer lk, li, i; reg [511:0] dsel; reg [13:0] rsel;
         if (!rn) begin
@@ -1037,12 +1062,37 @@ module dsfd_vm_fe #(
         if (!rn) k2_arm <= 1'b0; else k2_arm <= k_arm;
         k2_s <= k_s; k2_need <= k_arg[18:0]; k2_tag <= k_tag; k2_user <= k_user; k2_ntf <= st_ntf[k_s];
     end
+`ifdef OT_VMFE_FCN_SUM_PIPE
+    // Stage K3: reduce the four K2 groups before the wide count/compare.
+    // ARM metadata and read hits advance with the same accepted operation.
+    reg [9:0] k3_inc [0:NSLOT-1]; reg [NSLOT-1:0] k3_hr;
+    reg k3_arm; reg [1:0] k3_s; reg [18:0] k3_need; reg [7:0] k3_tag;
+    reg [9:0] k3_user; reg k3_ntf;
+    always @(posedge clk) begin : p_k3 integer kk;
+        for (kk = 0; kk < NSLOT; kk = kk + 1)
+            k3_inc[kk] <= ({2'd0, k2_g[kk*4]} + {2'd0, k2_g[kk*4+1]})
+                         + ({2'd0, k2_g[kk*4+2]} + {2'd0, k2_g[kk*4+3]});
+        k3_hr <= k2_hr;
+        if (!rn) k3_arm <= 1'b0; else k3_arm <= k2_arm;
+        k3_s <= k2_s; k3_need <= k2_need; k3_tag <= k2_tag;
+        k3_user <= k2_user; k3_ntf <= k2_ntf;
+    end
+`endif
     reg [9:0] inc [0:NSLOT-1];
     reg [NSLOT-1:0] hit_r, cmpl;
     always @* begin : p_l691 integer kk;
         for (kk = 0; kk < NSLOT; kk = kk + 1) begin
+`ifdef OT_VMFE_FCN_SUM_PIPE
+`ifdef OT_VMFE_FCN_SUM_PIPE_MUT
+            inc[kk] = k3_inc[kk] ^ 10'd1;
+`else
+            inc[kk] = k3_inc[kk];
+`endif
+            hit_r[kk] = k3_hr[kk];
+`else
             inc[kk] = ({2'd0, k2_g[kk*4]} + {2'd0, k2_g[kk*4 + 1]}) + ({2'd0, k2_g[kk*4 + 2]} + {2'd0, k2_g[kk*4 + 3]});
             hit_r[kk] = k2_hr[kk];
+`endif
 `ifdef OT_SPVM_MUT_EARLY
             cmpl[kk] = sl_arm[kk] && sl_cnt[kk] + inc[kk] + 19'd1 >= sl_need[kk];   // MUTANT: one element early
 `else
@@ -1091,11 +1141,19 @@ module dsfd_vm_fe #(
             if (k_armb) begin st_base[k_s] <= k_arg[13:0]; st_ntf[k_s] <= k_arg[18]; end
             if (k_armr) st_n[k_s] <= k_arg[14:0];
             if (k_arm) begin sl_base[k_s] <= st_base[k_s]; sl_n[k_s] <= st_n[k_s]; end   // range half: stage K compares
+`ifdef OT_VMFE_FCN_SUM_PIPE
+            if (k3_arm) begin                                                            // counter half: with the K2 sums
+                if (sl_arm[k3_s] || sl_dp[k3_s] || sl_rp[k3_s]) rearm <= 1'b1;
+                sl_arm[k3_s] <= 1'b1; t_rdy[k3_s] <= 1'b0; sl_ntf[k3_s] <= k3_ntf; sl_user[k3_s] <= k3_user;
+                sl_need[k3_s] <= k3_need; sl_cnt[k3_s] <= 19'd0; sl_tag[k3_s] <= k3_tag;
+            end
+`else
             if (k2_arm) begin                                                            // counter half: with the K2 sums
                 if (sl_arm[k2_s] || sl_dp[k2_s] || sl_rp[k2_s]) rearm <= 1'b1;
                 sl_arm[k2_s] <= 1'b1; t_rdy[k2_s] <= 1'b0; sl_ntf[k2_s] <= k2_ntf; sl_user[k2_s] <= k2_user;
                 sl_need[k2_s] <= k2_need; sl_cnt[k2_s] <= 19'd0; sl_tag[k2_s] <= k2_tag;
             end
+`endif
             // engine done output (one a cycle)
             ed_v <= d_slot || d_p2 || d_x || d_imm;
             ed_t <= d_slot ? dsel_tag : d_p2 ? pd_q[pd_h] : d_x ? x_tag[xsel] : imm_t;
@@ -1148,6 +1206,9 @@ module dsfd_vm_fsr (
     input  wire [3583:0] i_d,  input wire [3:0]   i_rf,
     output reg  [27:0]   o_v,  output reg [27:0]  o_we, output reg [391:0] o_row, output reg [111:0] o_mask,
     output reg  [3583:0] o_d,  output reg [3:0]   o_rf
+`ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, output wire rst_ack
+`endif
 );
     reg rn_q;
     reg [27:0] v1, we1; reg [391:0] row1; reg [111:0] m1; reg [3583:0] d1;
@@ -1158,6 +1219,9 @@ module dsfd_vm_fsr (
         o_we <= we1; o_row <= row1; o_mask <= m1; o_d <= d1;
         o_rf <= i_rf;
     end
+`ifdef OT_SPVM_RESET_ACK
+    dsfd_vm_reset_ack u_reset_ack (.clk(ck), .request_n(reset_epoch_n), .local_release(rn_q), .consumer_live(1'b1), .ack(rst_ack));
+`endif
 endmodule
 
 // ================================================================================================ back end
@@ -1197,6 +1261,9 @@ module dsfd_vm_be_rcdc #(
     output reg           o_v,
     output wire [W-1:0]  o_d,
     output wire [NC-1:0] o_vc
+`ifdef OT_SPVM_RESET_ACK
+    , output wire w_online, r_online
+`endif
 );
     localparam integer AW = $clog2(DEPTH);
     localparam integer CW = $clog2(HOLD + 1);
@@ -1211,6 +1278,11 @@ module dsfd_vm_be_rcdc #(
     always @(posedge wclk) begin rp_w <= rp; r_st_w <= r_st; end
     wire w_live = (w_st == S_RUN) && (r_st_w != S_DOWN);
     assign w_rdy = wrst_n && w_live && ((wp - rp_w) != DP);
+`ifdef OT_SPVM_RESET_ACK
+    // Export actual rendezvous state, independent of FIFO occupancy or traffic.
+    assign w_online = wrst_n && w_live;
+    assign r_online = rrst_n && r_live;
+`endif
     wire w_fire = w_v && w_rdy;
     reg [AW:0] wp_nx;
     always @* begin
@@ -1334,6 +1406,10 @@ module dsfd_vm_be_sl #(
     output reg  [0:0]        flt,
     output reg  [31:0]       fvec,
     output reg  [2:0]        max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , input wire reset_epoch_n, reset_epoch_s_n
+    , output reg rst_ack, rst_ack_s
+`endif
 );
     localparam integer KX = 4;          // in-tile alignment relays after the control pin flops (DIE_D + 1 + KX + XT = MD + 1)
     reg [4:0] sflt;                     // this cycle {x_col, x_mis, r_ovf, p_mis, p_ovf}
@@ -1349,6 +1425,37 @@ module dsfd_vm_be_sl #(
     dsfd_vm_be_kreg #(.W(1), .ID(4)) u_rn_p (.clk(clk), .d(rn_in[0]), .q(rn_p));
     dsfd_vm_be_kreg #(.W(1), .ID(5)) u_rn_w (.clk(clk), .d(rn_in[0]), .q(rn_w));
     dsfd_vm_be_kreg #(.W(1), .ID(6)) u_rns (.clk(sclk), .d(rns_in[0]), .q(rns));
+`ifdef OT_SPVM_RESET_ACK
+    wire [1:0] cdc_w_online, cdc_r_online;
+    reg ack_reset_seen, ack_reset_seen_s;
+`ifdef OT_SPVM_MUT_ACK_EPOCH_FORWARD
+    wire ack_epoch_n = rn_in[0], ack_epoch_s_n = rns_in[0];
+`else
+    wire ack_epoch_n = reset_epoch_n, ack_epoch_s_n = reset_epoch_s_n;
+`endif
+    wire all_local_rn = rn_i && rn_x && rn_c && rn_p && rn_w;
+    wire no_local_rn = !(rn_i || rn_x || rn_c || rn_p || rn_w);
+`ifdef OT_SPVM_MUT_ACK_MIRROR
+    always @* begin rst_ack = rn_in[0]; rst_ack_s = rns_in[0]; end
+`else
+    // Witness reset at the real consumer clock; a stopped clock cannot acknowledge
+    // a reset pulse it never sampled. ACK state adds no datapath admission logic.
+    always @(posedge clk or negedge ack_epoch_n) begin
+        if (!ack_epoch_n) begin ack_reset_seen <= 1'b0; rst_ack <= 1'b0; end
+        else begin
+            if (no_local_rn) ack_reset_seen <= 1'b1;
+            rst_ack <= ack_reset_seen && all_local_rn && (&cdc_w_online);
+        end
+    end
+    always @(posedge sclk or negedge ack_epoch_s_n) begin
+        if (!ack_epoch_s_n) begin ack_reset_seen_s <= 1'b0; rst_ack_s <= 1'b0; end
+        else begin
+            if (!rns) ack_reset_seen_s <= 1'b1;
+            rst_ack_s <= ack_reset_seen_s && rns && (&cdc_r_online);
+        end
+    end
+`endif
+`endif
     // ---------------------------------------------------------------- pin flops (stage 0)
     reg [NP-1:0] q_v; reg [NP*128-1:0] q_d; reg [3:0] q_f; reg [2:0] q_o;
     always @(posedge clk) begin
@@ -1455,10 +1562,18 @@ module dsfd_vm_be_sl #(
     wire [1:0] rtk = {rr_v[1] && rr_nx, rr_v[0] && !rr_nx};
     dsfd_vm_be_rcdc #(.W(128), .DEPTH(8), .HOLD(2), .NC(NC), .IDB(100)) u_rc0 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[0]),
         .w_rdy(rw_rdy[0]), .w_d(wq_d0), .rclk(sclk), .rrst_n(rns), .r_v(rr_v[0]), .r_rdy(rtk[0]),
-        .o_v(o_vr[0]), .o_d(o_d0), .o_vc(o_vc0));
+        .o_v(o_vr[0]), .o_d(o_d0), .o_vc(o_vc0)
+`ifdef OT_SPVM_RESET_ACK
+        , .w_online(cdc_w_online[0]), .r_online(cdc_r_online[0])
+`endif
+        );
     dsfd_vm_be_rcdc #(.W(128), .DEPTH(8), .HOLD(2), .NC(NC), .IDB(200)) u_rc1 (.wclk(clk), .wrst_n(rn_c), .w_v(wq_v[1]),
         .w_rdy(rw_rdy[1]), .w_d(wq_d1), .rclk(sclk), .rrst_n(rns), .r_v(rr_v[1]), .r_rdy(rtk[1]),
-        .o_v(o_vr[1]), .o_d(o_d1), .o_vc(o_vc1));
+        .o_v(o_vr[1]), .o_d(o_d1), .o_vc(o_vc1)
+`ifdef OT_SPVM_RESET_ACK
+        , .w_online(cdc_w_online[1]), .r_online(cdc_r_online[1])
+`endif
+        );
     always @(posedge sclk) begin : p_vr integer c;
         if (!rns) begin rr_nx <= 1'b0; vrv <= 1'b0; end
         else begin
@@ -1600,6 +1715,9 @@ module dsfd_vm_be #(
     output reg  [0:0]          flt,
     output reg  [31:0]         fvec,
     output reg  [2:0]          max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , output wire [NS-1:0] rst_ack, rst_ack_s
+`endif
 );
     localparam integer KX = 4;          // dsfd_vm_be_sl in-tile alignment relays
     localparam integer DIE_D = MD - KX - XT;   // die control relay stages (DIE_D + 1 + KX + XT = MD + 1, as v3's 1 + R + XT)
@@ -1663,7 +1781,12 @@ module dsfd_vm_be #(
             .f_m5s(dm5[DIE_D-1]), .c_l0r(rr), .fe_flt(gs == 0 ? fe_flt : 16'd0), .st_i(st[gs]), .st_o(st[gs+1]),
             .srq_d(srq_d[gs]), .srq_v(srq_v[gs]), .vrv(vrv_s[gs]), .vrq(vrq_s[gs]), .bl_d(bl_d[gs]), .bl_v(bl_v[gs]),
             .c_l0v(c_l0v_s[gs]), .c_l0d(p2_s[gs]), .t_p2c(t_p2c_s[gs]),
-            .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs]));
+            .t_err(terr_s[gs]), .flt(flt_s[gs]), .fvec(fvec_s[gs]), .max_occ(mocc_s[gs])
+`ifdef OT_SPVM_RESET_ACK
+            , .reset_epoch_n(rst[0]), .reset_epoch_s_n(rss[0])
+            , .rst_ack(rst_ack[gs]), .rst_ack_s(rst_ack_s[gs])
+`endif
+            );
         // this slice's bits of every response (S-FACE CONTRACT v3/v4: at this tile's x range)
         assign t_srq[128*gs +: 128] = srq_d[gs][127:0];
         assign t_srq[513 + 128*gs +: 128] = srq_d[gs][255:128];
@@ -1711,7 +1834,19 @@ module dsfd_sp_vm_m #(
     output wire [NSLOT-1:0] t_rdy,
     output wire [0:0]    c_l0v, output wire [603:0] c_l0d, input wire [0:0] c_l0r,
     output wire [0:0]    flt, output wire [31:0] fvec, output wire [2:0] max_occ
+`ifdef OT_SPVM_RESET_ACK
+    , output wire [40+24*`VMFE_R:0] fe_rst_ack
+    , output wire [3:0] fe_rst_ack_s
+    , output wire [NS-1:0] be_rst_ack, be_rst_ack_s
+    , output wire [NS*4-1:0] bank_rst_ack
+`endif
 );
+`ifdef OT_SPVM_RESET_ACK
+`ifndef OT_SPVM_FE_H_SUBST
+    initial $error("VM reset ACK candidate requires actual selected FE_H_SUBST consumers");
+    assign fe_rst_ack = '0; assign fe_rst_ack_s = '0;
+`endif
+`endif
     localparam integer NP = 28, NPR = 10, NT = 4, RA = 14, OW = 3;
     // el1011-ds-vm/bgq28: the hard tile's enqueue pipeline (EP, = dsfd_vm_bgq28) adds ED = EP + 1 cycles to every op
 `ifdef OT_VM28_EP1
@@ -1755,7 +1890,11 @@ module dsfd_sp_vm_m #(
         .t_srg(h_srg), .t_ks(h_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
         .cv(cv), .cd(cd), .dv(h_dv), .dt(h_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(h_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
         .c_wv(h_cwv), .c_wd(h_cwd), .c_wr(c_wr), .t_rdy(h_rdy), .f_p2c(p2c),
-        .m_v(hmv), .m_we(hmwe), .m_row(hmrow), .m_mask(hmm), .m_d(hmd), .m_rf(hmrf), .fe_flt(h_flt));
+        .m_v(hmv), .m_we(hmwe), .m_row(hmrow), .m_mask(hmm), .m_d(hmd), .m_rf(hmrf), .fe_flt(h_flt)
+`ifdef OT_SPVM_RESET_ACK
+        , .rst_ack(fe_rst_ack), .rst_ack_s(fe_rst_ack_s)
+`endif
+        );
 `endif
 `ifdef OT_SPVM_FE_H_SUBST
     assign mv = hmv; assign mwe = hmwe; assign mrow = hmrow; assign mm = hmm; assign md = hmd; assign mrf = hmrf;
@@ -1801,7 +1940,11 @@ module dsfd_sp_vm_m #(
                 .i_v(cv_[t]), .i_we(cwe[t]), .i_row(crow[t]), .i_mask(cm[t]), .i_d(cd_[t]),
                 .f_v(cv_[t+1]), .f_we(cwe[t+1]), .f_row(crow[t+1]), .f_mask(cm[t+1]), .f_d(cd_[t+1]),
                 .r_v(cov[t]), .r_d(cod[t]), .r_f(cof[t]), .r_o(coo[t]),
-                .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1]));
+                .o_v(cov[t+1]), .o_d(cod[t+1]), .o_f(cof[t+1]), .o_o(coo[t+1])
+`ifdef OT_SPVM_RESET_ACK
+                , .reset_ack(bank_rst_ack[4*h+t])
+`endif
+                );
 `endif
 `ifdef OT_SPVM_BGTRACE
             // simulation only: the production request trace at the head of slice 0 (replayed by tb_dsfd_vm_bgl_lockstep)
@@ -1832,5 +1975,9 @@ module dsfd_sp_vm_m #(
         .f_vx({f0v[9], f0v[8], f0v[2], f0v[7], f0v[6]}), .f_wex({f0we[9], f0we[8], f0we[2], f0we[7], f0we[6]}),
         .f_mx({f0d[9*128 +: 4], f0d[8*128 +: 4], f0d[2*128 +: 4], f0d[7*128 +: 4], f0d[6*128 +: 4]}),
         .t_srq(t_srq), .t_err(t_err), .vrv(vrv), .vrq(vrq), .t_bl(t_bl),
-        .c_l0v(c_l0v), .c_l0d(c_l0d), .c_l0r(c_l0r), .t_p2c(p2c), .flt(flt), .fvec(fvec), .max_occ(max_occ));
+        .c_l0v(c_l0v), .c_l0d(c_l0d), .c_l0r(c_l0r), .t_p2c(p2c), .flt(flt), .fvec(fvec), .max_occ(max_occ)
+`ifdef OT_SPVM_RESET_ACK
+        , .rst_ack(be_rst_ack), .rst_ack_s(be_rst_ack_s)
+`endif
+        );
 endmodule

@@ -20,8 +20,29 @@ yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i}
 # fine opt_merge folds identical bits (ot_gpu_router_topk_f: v_r <= {P{in_valid}} 16 bits -> 1 flop even with keep on
 # the vector cell).  Map the kept cells to per-bit gate-level flip-flops first (techmap of the selection only; splitcells
 # is not enough: it splits by output use, and a vector used whole stays one cell), then mark every bit cell.
+# OT_KEEP_PIN_REGS=1 (el1014-root-recipe2, ref_tile kit recipe 2): also keep every register of the TOP module that drives a
+# top output port directly or through inverters / buffers.  Distinct RTL pin registers with equal D (Qwen cache R2: f_addr
+# bits equal across lane groups) were folded by opt_merge into one flop driving up to 7 pins, which cannot sit at any
+# one of them (123 TT launches > 220 ps).  Kept, each stays its own flop and io_flop_at_pins.tcl anchors it at its pin.
+# Registers inside submodules and RTL-shared registers (one reg on two ports) are split after synthesis by
+# physical/common_flow/pin_reg_split.tcl (PRE_GLOBAL_PLACE).  Unset / 0 = the hook above, unchanged.
+set ot_kr_pin [expr {[info exists ::env(OT_KEEP_PIN_REGS)] && $::env(OT_KEEP_PIN_REGS) eq "1" && [info exists ::env(DESIGN_NAME)]}]
+if {$ot_kr_pin} {
+  yosys opt_clean
+  yosys select -set ot_kpo [format {%s/o:*} $::env(DESIGN_NAME)]
+  yosys select -set ot_kpc {*}{@ot_kpo %ci5:+$not,$pos,$buf,$_NOT_,$_BUF_[A,Y] %ci1 t:$*dff* t:$_*DFF* %u %i}
+  yosys select -set ot_kc {*}{@ot_kc @ot_kpc %u}
+}
 yosys techmap {*}{@ot_kc}
 yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* t:$_*DFF* t:$_*LATCH* %u %u %u %i}
+if {$ot_kr_pin} {
+  # re-derive after the techmap (the vector cells above are now per-bit $_DFF_* cells)
+  yosys select -set ot_kpc {*}{@ot_kpo %ci5:+$not,$pos,$buf,$_NOT_,$_BUF_[A,Y] %ci1 t:$*dff* t:$_*DFF* %u %i}
+  set ot_kp_s [string trim [yosys tee -q -s result.string select -list {*}{@ot_kpc}]]
+  set ot_kp_n [expr {$ot_kp_s eq "" ? 0 : [llength [split $ot_kp_s "\n"]]}]
+  yosys select -set ot_kc {*}{@ot_kc @ot_kpc %u}
+  puts "OT_KEEP_PIN_REGS: $ot_kp_n top-level pin register cells kept"
+}
 yosys setattr -set keep 1 {*}{@ot_kc}
 set ot_kr_n [llength [split [string trim [yosys tee -q -s result.string select -list {*}{@ot_kc}]] "\n"]]
 puts "OT_KEEP_REGS: keep set on $ot_kr_n register cells driving keep wires"

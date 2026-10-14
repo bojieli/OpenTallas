@@ -21,6 +21,18 @@ if {$ot_ih_drv ne ""} {
   set ot_ih_dm [[ord::get_db] findMaster $ot_ih_drv]
   if {$ot_ih_dm eq "NULL"} { error "INHOLD: $ot_ih_drv missing" }
 }
+# Pad sized from the measured hold need (el1014-root-recipe2, 2026-10-14; ref_tile recipe 2 / spec "hold_pad"): the
+# pad above is the default (recipe 2: HB2xp67); ports whose name matches OT_HOLD_PAD_STRONG_RE take
+# OT_HOLD_PAD_STRONG_MASTER (default HB4xp67) instead -- only where a routed FF report measured the HB2 pad short.  An
+# HB4 pad on every pin costs ~120 ps TT of native launch / capture budget (Qwen cache R2 239.6 ps > 220; FF output hold
+# +36 ps = overpadded; the HB2 run: +15.3).  Unset = every port takes the default pad (unchanged behaviour).
+set ot_ih_sre [expr {[info exists ::env(OT_HOLD_PAD_STRONG_RE)] ? $::env(OT_HOLD_PAD_STRONG_RE) : ""}]
+set ot_ih_sm "NULL"
+if {$ot_ih_sre ne ""} {
+  set ot_ih_sm [[ord::get_db] findMaster [expr {([info exists ::env(OT_HOLD_PAD_STRONG_MASTER)] && $::env(OT_HOLD_PAD_STRONG_MASTER) ne "") ? $::env(OT_HOLD_PAD_STRONG_MASTER) : "HB4xp67_ASAP7_75t_R"}]]
+  if {$ot_ih_sm eq "NULL"} { error "INHOLD: strong pad master missing" }
+}
+set ot_ih_ns 0
 set ot_ih_firm {}
 set ot_ih_n 0; set ot_ih_skip 0; set ot_ih_pnets {}; set ot_ih_dnets {}
 foreach bt [$ot_ih_blk getBTerms] {
@@ -32,7 +44,9 @@ foreach bt [$ot_ih_blk getBTerms] {
   set d [lindex $its 0]; set ff [$d getInst]
   if {![string match "DFF*" [[$ff getMaster] getName]] || [[$d getMTerm] getName] ne "D"} { incr ot_ih_skip; continue }
   set name [format "ot_inhold_%05d" $ot_ih_n]; set nn [format "ot_inhold_n%05d" $ot_ih_n]
-  set cell [odb::dbInst_create $ot_ih_blk $ot_ih_m $name]
+  set pm $ot_ih_m
+  if {$ot_ih_sm ne "NULL" && [regexp -- $ot_ih_sre [$bt getName]]} { set pm $ot_ih_sm; incr ot_ih_ns }
+  set cell [odb::dbInst_create $ot_ih_blk $pm $name]
   set n2 [odb::dbNet_create $ot_ih_blk $nn]
   $d disconnect
   [$cell findITerm A] connect $net
@@ -57,8 +71,8 @@ foreach bt [$ot_ih_blk getBTerms] {
   foreach bp [$bt getBPins] { foreach bx [$bp getBoxes] {
     set x [expr {([$bx xMin] + [$bx xMax]) / 2}]; set y [expr {([$bx yMin] + [$bx yMax]) / 2}]; break } ; break }
   set ca [$ot_ih_blk getCoreArea]
-  set x [expr {max([$ca xMin], min($x, [$ca xMax] - [$ot_ih_m getWidth]))}]
-  set y [expr {max([$ca yMin], min($y, [$ca yMax] - [$ot_ih_m getHeight]))}]
+  set x [expr {max([$ca xMin], min($x, [$ca xMax] - [$pm getWidth]))}]
+  set y [expr {max([$ca yMin], min($y, [$ca yMax] - [$pm getHeight]))}]
   $cell setOrient R0; $cell setLocation $x $y
   if {$drv ne ""} {
     $cell setPlacementStatus FIRM; lappend ot_ih_firm [$cell getName]
@@ -77,4 +91,4 @@ if {$ot_ih_n > 0} {
 if {[info exists ::env(RESULTS_DIR)]} {
   set fh [open $::env(RESULTS_DIR)/ot_inhold_firm.txt w]; puts $fh [join $ot_ih_firm "\n"]; close $fh
 }
-puts "INHOLD: $ot_ih_n input hold cells ($ot_ih_master, dont_touch; driver '$ot_ih_drv', [llength $ot_ih_firm] FIRM for GPL), $ot_ih_skip inputs skipped (clock / reset / multi-sink / non-DFF)"
+puts "INHOLD: $ot_ih_n input hold cells ($ot_ih_master; $ot_ih_ns strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver '$ot_ih_drv', [llength $ot_ih_firm] FIRM for GPL), $ot_ih_skip inputs skipped (clock / reset / multi-sink / non-DFF)"

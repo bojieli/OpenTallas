@@ -218,6 +218,7 @@ endmodule
 
 module ot_hbm_lk_ep #(
     parameter integer MUT_TX_SHARED = 0,
+    parameter integer MUT_RX_SHARED = 0,
     parameter integer HARD_CLOCKS = 0,     // physical parent delivers one compensated clock at each hard child pin
     parameter integer NS     = 3,          // retry pipelines (sub-channels) per link, 1..3
     parameter integer W      = 545,
@@ -241,13 +242,14 @@ module ot_hbm_lk_ep #(
     input  wire            clk,
     input  wire [NS*4-1:0] clk_sub,
     input  wire            clk_tx_shared,
+    input  wire            clk_rx_shared,
     input  wire            rst_n,
     input  wire [23:0]     session,
     input  wire            t_v,
     input  wire [W-1:0]    t_flit,
     output reg             t_cr,
-    output reg             r_v,
-    output reg  [W-1:0]    r_flit,
+    output wire            r_v,
+    output wire [W-1:0]    r_flit,
     input  wire            r_cr,
     output wire [LW-1:0]   x_tx,
     input  wire [LW-1:0]   x_rx,
@@ -474,35 +476,18 @@ module ot_hbm_lk_ep #(
         if (!rrx) drop <= 1'b0;
         else drop <= (|sd_t) || (c_v && (c_sub >= NS)) || (p_v && !p_ok);
 
-    // ---------------------------------------------------------------- tile out stage 1 -> consumer FIFO -> strict round-robin merge
-    wire [NS-1:0]    oh_v;
-    wire [W-1:0]     oh_d [0:NS-1];
-    reg  [NS-1:0]    opop;
-    generate for (g = 0; g < NS; g = g + 1) begin : g_out
-        ot_lkep_sinkc #(.W(W), .D(OFD), .N(RL), .SL(SL)) u_q (.clk(clk), .rst_c(rrx), .i_v(oh_vt[g]), .i_d(oh_dt[g]),
-            .h_v(oh_v[g]), .h_d(oh_d[g]), .pop(opop[g]), .crq(ocrq[g]));
+    // Existing RX consumer FIFOs and strict merge stay together with their registered outputs.
+    wire [NS*W-1:0] oh_dt_flat;
+    generate for(g=0;g<NS;g=g+1) begin:g_oh_flat
+      assign oh_dt_flat[g*W +: W]=oh_dt[g];
     end endgenerate
-    reg  [1:0]    msel;
-    reg  [W-1:0]  o_d;
-    integer       u;
-    always @(*) begin
-        opop = 0;
-`ifndef OT_LKEP_MUT_MERGE
-        for (u = 0; u < NS; u = u + 1) if (msel == u) opop[u] = oh_v[u];
+`ifdef OT_LKEP_HARD_LEAVES
+    ot_lkep_rx_shared u_rx_shared(
 `else
-        for (u = 0; u < NS; u = u + 1) if (msel == u) opop[u] = oh_v[u];   // mutant: an empty turn takes the first non-empty sub
-        if (opop == 0) for (u = NS - 1; u >= 0; u = u - 1) if (oh_v[u]) opop = {{(NS-1){1'b0}}, 1'b1} << u;
+    ot_lkep_rx_shared #(.NS(NS),.W(W),.OFD(OFD),.RL(RL),.SL(SL),.MUT_RX(MUT_RX_SHARED)) u_rx_shared(
 `endif
-        o_d = {W{1'b0}};
-        for (u = 0; u < NS; u = u + 1) o_d = o_d | ({W{opop[u]}} & oh_d[u]);
-    end
-    always @(posedge clk) r_flit <= o_d;
-    always @(posedge clk or negedge rrx)
-        if (!rrx) begin r_v <= 1'b0; msel <= 0; end
-        else begin
-            r_v <= |opop;
-            if (oh_v[msel]) msel <= (msel == NS - 1) ? 2'd0 : msel + 1'b1;
-        end
+      .clk(HARD_CLOCKS != 0 ? clk_rx_shared : clk),.rst_n(rst_n),
+      .oh_vt(oh_vt),.oh_dt_flat(oh_dt_flat),.ocrq(ocrq),.r_v(r_v),.r_flit(r_flit));
 
     // ---------------------------------------------------------------- status (tile status registers)
     integer v;
