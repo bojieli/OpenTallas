@@ -3,8 +3,10 @@
 // Actual four B2 slices. Shared group1 classes: 0 SU, 1 quant, 2 DMA peer.
 // Native DMA front writes use separate done-only DQ transport, never WRS credits.
 // Source ingress capacity is reserved before posting; permits govern dequeue only.
-module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,SU_NATIVE_RAW=0,HARD_CLOCKS=0,HARD_VM_CLOCKS=0,VM_NC=4)(
+module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,SU_NATIVE_RAW=0,HARD_CLOCKS=0,HARD_VM_CLOCKS=0,HARD_CDC_CLOCKS=0,HARD_COMMIT_CLOCKS=0,VM_NC=4)(
  input wire [3:0] su_clk,quant_clk,dma_clk,input wire vclk,rst_n,input wire [31:0] station_clk,
+ input wire [31:0] commit_clk,commit_rst_n,
+ input wire [95:0] cdc_cclk,cdc_vclk,cdc_crst_n,cdc_vrst_n,
  input wire [51:0] vm_child_clk,vm_child_rst_n,input wire [23:0] relay_clk,relay_rst_n,
  input wire [3:0] su_rreq,su_wreq,su_drained,su_mirror,
  input wire [32*17-1:0] su_native_rq,input wire [32*281-1:0] su_native_wq,
@@ -62,7 +64,8 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
    else if(qa&&qreleased&&!qaccept)begin qa<=0;qan<=1;end
   end
  end
- ot_hgi_qdq_native_peer4_owned #(.MUT_QDQ(MUT==2?1:0),.FASTFIN(FASTFIN),.FRONTFAST(FRONTFAST)) quant(
+ ot_hgi_qdq_native_peer4_owned #(.MUT_QDQ(MUT==2?1:0),.FASTFIN(FASTFIN),.FRONTFAST(FRONTFAST),.HARD_CDC_CLOCKS(HARD_CDC_CLOCKS)) quant(
+  .lane_cclk(cdc_cclk[32+:32]),.lane_vclk(cdc_vclk[32+:32]),.lane_crst_n(cdc_crst_n[32+:32]),.lane_vrst_n(cdc_vrst_n[32+:32]),
   .cclk(quant_clk),.vclk(vclk),.rst_n(rst_n),.permit(qrg|qwg),.mirror(qmeta),.rec(qrec_admitted),.ret(qret_raw),
   .rg_req(qreqr),.wg_req(qreqw),.rg_gnt(qrg),.wg_gnt(qwg),.vm_rg_gnt(qvgr),.vm_wg_gnt(qvgw),
   .peer_rq(qrq),.peer_rq_credit(qrc),.peer_rr(qrr),.peer_wq(qwq),.peer_wq_credit(qwc),.peer_wq_done(qd),
@@ -82,13 +85,13 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
    always @(posedge su_clk[q] or negedge rst_n)if(!rst_n)af<=0;else if(!SU_NATIVE_RAW&&bad)af<=1;
    always @(posedge vclk or negedge rst_n)if(!rst_n)begin af1<=0;af2<=0;an1<=1;an2<=1;end else begin af1<=af|scfg_fault[q];af2<=af1;an1<=~(af|scfg_fault[q]);an2<=an1;end
    wire allow=!af2&&(af2==~an2);wire lf;
-   ot_hbm_b2_lane_cdc_owned slink(.cclk(su_clk[q]),.vclk(vclk),.rst_n(rst_n),.permit(rg[0]|wg[0]),.vrpermit(vrg[0]&&allow),.vwpermit(vwg[0]&&allow),
+   ot_hbm_b2_lane_cdc_owned #(.HARD_RESETS(HARD_CDC_CLOCKS)) slink(.cclk(HARD_CDC_CLOCKS?cdc_cclk[q*8+b]:su_clk[q]),.vclk(HARD_CDC_CLOCKS?cdc_vclk[q*8+b]:vclk),.crst_n(cdc_crst_n[q*8+b]),.vrst_n(cdc_vrst_n[q*8+b]),.rst_n(rst_n),.permit(rg[0]|wg[0]),.vrpermit(vrg[0]&&allow),.vwpermit(vwg[0]&&allow),
     .crq(SU_NATIVE_RAW?su_native_rq[(q*8+b)*17+:17]:{r[15],smeta[q],smeta[q]?2'b00:2'(q),r[12:0]}),.crq_credit(su_rcredit[q*8+b]),.crr(su_rr[(q*8+b)*257+:257]),
     .cwq(SU_NATIVE_RAW?su_native_wq[(q*8+b)*281+:281]:{w[279],smeta[q],smeta[q]?2'b00:2'(q),w[276:264],w[263:0]}),.cwq_credit(su_wcredit[q*8+b]),.cwq_done(su_done[q*8+b]),
     .vrq(srq[b*17+:17]),.vrq_credit(src[b]),.vrr(srr[b*257+:257]),.vwq(swq[b*281+:281]),.vwq_credit(swc[b]),.vwq_done(sd[b]),
     .fault(lf),.cdrained(cd[b]),.vdrained(vd[b]),.rready(rrdy[b]),.wready(wrdy[b]),.cquiescent(squiet[q*8+b]));
    assign fault[q*8+b]=lf|af|scfg_fault[q];assign su_cdrained[q*8+b]=cd[b];assign su_vdrained[q*8+b]=vd[b];
-   ot_hbm_b2_lane_cdc_owned dlink(.cclk(dma_clk[q]),.vclk(vclk),.rst_n(rst_n),.permit(rg[2]|wg[2]),.vrpermit(vrg[2]),.vwpermit(vwg[2]),
+   ot_hbm_b2_lane_cdc_owned #(.HARD_RESETS(HARD_CDC_CLOCKS)) dlink(.cclk(HARD_CDC_CLOCKS?cdc_cclk[64+q*8+b]:dma_clk[q]),.vclk(HARD_CDC_CLOCKS?cdc_vclk[64+q*8+b]:vclk),.crst_n(cdc_crst_n[64+q*8+b]),.vrst_n(cdc_vrst_n[64+q*8+b]),.rst_n(rst_n),.permit(rg[2]|wg[2]),.vrpermit(vrg[2]),.vwpermit(vwg[2]),
     .crq(dma_rq[(q*8+b)*17+:17]),.crq_credit(dma_rcredit[q*8+b]),.crr(dma_rr[(q*8+b)*257+:257]),
     .cwq(dma_wq[(q*8+b)*281+:281]),.cwq_credit(dma_wcredit[q*8+b]),.cwq_done(dma_wdone[q*8+b]),
     .vrq(srq[(16+b)*17+:17]),.vrq_credit(src[16+b]),.vrr(srr[(16+b)*257+:257]),.vwq(swq[(16+b)*281+:281]),.vwq_credit(swc[16+b]),.vwq_done(sd[16+b]),
@@ -108,7 +111,7 @@ module ot_hbm_b2_native_owned4 #(parameter integer MUT=0,FASTFIN=0,FRONTFAST=0,S
  for(genvar z=0;z<4;z=z+1)assign fault[64+z*8+:8]=qfault[z*8+:8]|{8{qcfg_fault[z]}};
  assign fault[128+:32]=vf|mirror_fault;
  for(genvar b=0;b<32;b=b+1)begin:global_commit
-  ot_hbm_b2_mirror_commit #(.MUT(MUT==3?1:0)) commit(.clk(vclk),.rst_n(rst_n),.posted(bwq[b*281+280]),.mirror(bwq[b*281+279]),.local_done(local_bd[b]),.global_busy(|mirror_busy),.done(bd[b]),.fault(mirror_fault[b]));
+  ot_hbm_b2_mirror_commit #(.MUT(MUT==3?1:0)) commit(.clk(HARD_COMMIT_CLOCKS?commit_clk[b]:vclk),.rst_n(HARD_COMMIT_CLOCKS?commit_rst_n[b]:rst_n),.posted(bwq[b*281+280]),.mirror(bwq[b*281+279]),.local_done(local_bd[b]),.global_busy(|mirror_busy),.done(bd[b]),.fault(mirror_fault[b]));
  end
  ot_hbm_b2_su_vm4_mirror #(.NC(VM_NC),.HARD_CLOCKS(HARD_VM_CLOCKS)) vm(.vm_child_clk(vm_child_clk),.vm_child_rst_n(vm_child_rst_n),.relay_clk(relay_clk),.relay_rst_n(relay_rst_n),.cclk(probe_clk),.vclk(vclk),.rst_n(rst_n),.permit(probe_permit),.mirror(probe_mirror),
   .crq(probe_rq),.crq_credit(probe_rcredit),.crr(probe_rr),.cwq(probe_wq),.cwq_credit(probe_wcredit),.cwq_done(probe_done),

@@ -5,8 +5,9 @@
 // Engine CK833.333ps -> VM CKV1111.111ps; no pulse crosses these ports directly.
 // permit/mirror must remain owned and stable until the actual endpoint and CDC
 // queues drain. Exclusive read/write grants are supplied by the parent arbiter.
-module ot_hgi_qdq_native_peer4_owned #(parameter integer MUT_QDQ=0, MUT_CDC=0, FASTFIN=0, FRONTFAST=0) (
+module ot_hgi_qdq_native_peer4_owned #(parameter integer MUT_QDQ=0, MUT_CDC=0, FASTFIN=0, FRONTFAST=0, HARD_CDC_CLOCKS=0) (
  input wire [3:0] cclk,
+ input wire [31:0] lane_cclk,lane_vclk,lane_crst_n,lane_vrst_n,
  input wire vclk, rst_n,
  input wire [3:0] permit, mirror,
  input wire [4*683-1:0] rec,
@@ -66,8 +67,8 @@ module ot_hgi_qdq_native_peer4_owned #(parameter integer MUT_QDQ=0, MUT_CDC=0, F
    always @(posedge vclk or negedge rst_n)if(!rst_n)begin af1<=0;af2<=0;afn1<=1;afn2<=1;end
    else begin af1<=aperture_fault;af2<=af1;afn1<=~aperture_fault;afn2<=afn1;end
    wire vallow=!af2&&(af2==~afn2);
-   ot_hbm_b2_lane_cdc_owned #(.LQ(10),.MUT(MUT_CDC)) link(
-    .cclk(cclk[q]),.vclk(vclk),.rst_n(rst_n),
+   ot_hbm_b2_lane_cdc_owned #(.LQ(10),.MUT(MUT_CDC),.HARD_RESETS(HARD_CDC_CLOCKS)) link(
+    .cclk(HARD_CDC_CLOCKS?lane_cclk[q*8+b]:cclk[q]),.vclk(HARD_CDC_CLOCKS?lane_vclk[q*8+b]:vclk),.crst_n(lane_crst_n[q*8+b]),.vrst_n(lane_vrst_n[q*8+b]),.rst_n(rst_n),
     .permit(permit[q]&&!bad&&!aperture_fault),.vrpermit(vm_rg_gnt[q]&&vallow),.vwpermit(vm_wg_gnt[q]&&vallow),
     .crq({r[15],mirror[q],mirror[q]?2'b00:2'(q),r[12:0]}),
     .crq_credit(rq_credit[b]),.crr(rr[b*257+:257]),
