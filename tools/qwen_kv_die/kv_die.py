@@ -278,7 +278,9 @@ SPLIT_BINDINGS = dict(
 
 # v1.2: the strip frames bind the wires-only compositions of their CLOSED leaves (tools/qwen_kv_die/kv_strips.py ->
 # rtl/qwen_sys/split_20261014/qkd_strips_s.sv), each leaf its own clock entry
-SPLIT_ONLY_BINDINGS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_embgw')
+SPLIT_ONLY_BINDINGS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_embgw', 'qkd_ctrl', 'qkd_ctrl_n')
+SPLIT_PHY = 'qkd_hbm3e_phy_pc'
+SPLIT_BINDINGS.update(qkd_ctrl=KS.ctrl_binding(), qkd_ctrl_n=KS.ctrl_binding())
 SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), qkd_astk=KS.astk_binding(),
                       qkd_astk_n=KS.astk_binding())
 # v1.2: the embedding gateway binds its CLOSED view's RTL (qkd_embgw sl2): the link words gq / gr and the host words hb / est
@@ -742,6 +744,10 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         for n, mst, x, y, w, h, o, k, dom in rows:
             half = 'N' if y + h / 2 > MARGIN + stack_h + GY / 2 else 'S'
             add(n, mst, x, y+edge_chan+band_shift[half], w, h, o, k, 'phy' if k == 'phy' else ('ctrl' if k == 'ctrl' else 'strip'), dom)
+    if split:
+        for it_ in ins:
+            if it_.master == 'ot_hbm3e_phy':
+                it_.master = SPLIT_PHY     # v1.2: the PHY-only abstract with per-PC DFI words (no controller inside)
     ystack = {'S': MARGIN+edge_chan+band_shift['S'], 'N': MARGIN+edge_chan + stack_h + GY+band_shift['N']}
     xc = Wk / 2
     for st in STACKS:
@@ -830,6 +836,8 @@ def _buses(m, T, r):
     # r21c band buses (dfi, PHY <-> controller <-> CDC, CDC core sides <-> landing, HBM clocks / resets), renamed
     for bid, cl, bits, eps in T['buses']:
         ne = [(('land_' + i.split('_')[1]) if i.startswith('lfifo_') else i, p) for i, p in eps]
+        if m['geo'].get('split') and cl == 'phy_dfi':
+            continue          # v1.2: per-PC DFI words (below) between the controller strip's leaves and the PHY abstract
         if all(i in names for i, _ in ne):
             B.append((bid, cl, bits, ne))
     add = B.append
@@ -912,6 +920,24 @@ def _buses(m, T, r):
         # v1.2: the host's embedding words to the gateway (qkd_embgw hb 283 + hb_cr back) and its status word est
         add(('hb', 'kvn', 283 + 1, [('host', 'hb'), ('embgw', 'hb')]))
         add(('est', 'spine_local', 13, [('embgw', 'est'), ('host', 'est')]))
+        # v1.2: the controller strip is 32 qkd_ctrl_pc + qkd_ctrl_kc (CLOSED leaves): every leaf its own core and HBM
+        # clock entry; the HBM clock / reset are driven by the PLL / reset-sequencer frame (r21c's controller element
+        # held the HBM PLL: the leaves only take pll_hbm / hrst); the PHY abstract qkd_hbm3e_phy_pc takes each PC's DFI
+        # words po / pi (the controller is our RTL, not inside the PHY model)
+        for st in STACKS:
+            ctl_ = f'ctrl_{st}'
+            for i_, (bid_, cl_, bits_, eps_) in enumerate(B):
+                if (ctl_, 'ck') in eps_:
+                    eps_ = [e for e in eps_ if e != (ctl_, 'ck')] + [(ctl_, c_) for c_ in KS.CTRL_CLK]
+                if bid_ == f'clk_hbm_{st}':
+                    eps_ = [('pll', f'hbm_{st}')] + [e for e in eps_ if e != (ctl_, 'pll_hbm')] + \
+                           [(ctl_, c_) for c_ in KS.CTRL_HCLK]
+                if bid_ == f'rst_hbm_{st}':
+                    eps_ = [('pll', f'hro_{st}')] + list(eps_)
+                B[i_] = (bid_, cl_, bits_, eps_)
+            for k_ in range(32):
+                add((f'dpo_{st}_{k_}', 'phy_dfi', KS.W_PO, [(ctl_, f'po{k_}'), (f'phy_{st}', f'po{k_}')]))
+                add((f'dpi_{st}_{k_}', 'phy_dfi', KS.W_PI, [(f'phy_{st}', f'pi{k_}'), (ctl_, f'pi{k_}')]))
         # v1.2: the CDC core-side resets come from the stack's core reset tree (the landing strip's leaves have no
         # crst output: r21c's land.crst was a frame port)
         for st in STACKS:
@@ -1284,6 +1310,8 @@ def masters(m, k=1, port_bits=None):
             w, h = (183.72,183.72) if name == 'qkd_cdc_wleaf' and m['geo'].get('kv_wq_leaf_s') else (t['w'],t['h'])
             mm = F.Master(name, w, h, t['obs_top'], t['note'])
             for p in (dict.fromkeys(t['order']) if name == 'qkd_cdc_wleaf' else t['order']):
+                if m['geo'].get('split') and name in ('qkd_ctrl', 'qkd_ctrl_n') and p not in used.get(name, {}):
+                    continue      # v1.2: the strip composition has no r21c 'phy' bundle / 'ck' / 'pll_hbm' frame ports
                 if name == 'qkd_cdc_wleaf' and p == 'ci':
                     sp = t['ports'][p]
                     for pn, lo, width in [('wi', 0, 290), ('wr', 290, 11), ('cf', 301, 1)]:
@@ -1313,6 +1341,11 @@ def masters(m, k=1, port_bits=None):
             for p_, bits_ in sorted(used.get(mst, {}).items()):
                 mm.face(p_, bits_, 'N', 'M5', w / 2 if p_ == 'fdi' else 6.0 + 2.0 * len(mm.order), 1)
             M[mst] = mm
+            continue
+        if mst == SPLIT_PHY:
+            # v1.2: HBM3E PHY-only abstract (analog model; its digital layer = qkd_ctrl_pc): outline and M1-M4 blockage of
+            # the v2_ew PHY abstract, per-PC DFI words on the controller face (pins: _strip_face_pins)
+            M[mst] = F.Master(mst, w, h, 4, 'HBM3E PHY abstract, PHY only: per-PC DFI po (in) / pi (out) on the controller face')
             continue
         if mst not in M:
             M[mst] = F.Master(mst, w, h, 7 if not mst.startswith('qkd_rly') else 3, RTL.get(mst, mst))
@@ -1485,6 +1518,15 @@ def _split_pins(M, m=None):
             for p_, (x_, y_) in pos.items():
                 if p_ in hm.ports:
                     hm.ports[p_] = ('area', 1, round(x_, 3), round(y_, 3), 1)
+    for mn in ('qkd_ctrl', 'qkd_ctrl_n'):
+        if mn in M:
+            hm = M[mn]
+            pos = {**{f'ck_p{k}': (hm.w / 2 - 20.0, STRIP_PC_PITCH * k + 190.08 + 86.4) for k in range(32)},
+                   **{f'hk_p{k}': (hm.w / 2 + 20.0, STRIP_PC_PITCH * k + 190.08 + 86.4) for k in range(32)},
+                   'ck_k': (hm.w / 2 - 10.0, 12096.0 + 21.6), 'hk_k': (hm.w / 2 + 10.0, 12096.0 + 21.6)}
+            for p_, (x_, y_) in pos.items():
+                if p_ in hm.ports:
+                    hm.ports[p_] = ('area', 1, round(x_, 3), round(min(y_, hm.h - 2.0), 3), 1)
     for mn in ('qkd_astk', 'qkd_astk_n'):
         if mn in M:
             hm = M[mn]
@@ -1641,13 +1683,24 @@ LEVEL_PIN_MASTERS = ('qkd_land', 'qkd_land_n', 'qkd_astk', 'qkd_astk_n', 'qkd_se
 
 
 STRIP_ES_Y, STRIP_ER_Y, STRIP_KF_Y, STRIP_PC_PITCH = 60.0, 240.0, 6150.0, 378.0
+PHY_STRIP_DY = 71.28           # the PHY band starts 71.28 um above its controller strip's end (r21c band)
 
 
 def _strip_face_pins(mst, mm):
     """v1.2: the landing <-> controller strip words of PC k (es<k> / er<k>) leave both strips level with PC k (local y
     378 k + 60 / + 240, clear of the CDC words c<k>i / c<k>o) on the faces that face each other across the CDC column;
     the controller strip's fault kf at y 6,150"""
-    if mst not in ('qkd_land', 'qkd_land_n', 'qkd_ctrl', 'qkd_ctrl_n'):
+    if mst not in ('qkd_land', 'qkd_land_n', 'qkd_ctrl', 'qkd_ctrl_n', SPLIT_PHY):
+        return
+    for p, sp in list(mm.ports.items()):
+        mt = re.fullmatch(r'(po|pi)(\d+)', p)
+        if sp[0] == 'face' and mt:
+            y = STRIP_PC_PITCH * int(mt.group(2)) + (200.0 if mt.group(1) == 'po' else 236.0)
+            if mst == SPLIT_PHY:
+                mm.ports[p] = ('face', sp[1], 'W', 'M4', y - PHY_STRIP_DY, 1)
+            else:
+                mm.ports[p] = ('face', sp[1], 'E', 'M4', y, 1)
+    if mst == SPLIT_PHY:
         return
     for p, sp in list(mm.ports.items()):
         if sp[0] != 'face':

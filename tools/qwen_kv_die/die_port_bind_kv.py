@@ -30,7 +30,8 @@ HARD_PHY = {'ot_hbm3e_phy': 'HBM3E PHY analog (digital layer = HBM controller qk
             'ot_qfd_serdes_112g_x12_phy': 'host SerDes PHY analog (digital layer = host link adapter in qkd_host)',
             # v1.2: the clock / reset forwarding bump pair to the compute die is two pad cells (no logic; the compute
             # side's receiver qfd_clkrx / reset synchroniser are its digital layer)
-            'qkd_ckbump': 'clock / reset forwarding bump pair to the compute die: pad cells, no logic (by design)'}
+            'qkd_ckbump': 'clock / reset forwarding bump pair to the compute die: pad cells, no logic (by design)',
+            'qkd_hbm3e_phy_pc': 'HBM3E PHY analog, PHY only (v1.2): per-PC DFI po / pi; digital layer = qkd_ctrl_pc x32 (REAL)'}
 
 
 def header(text, mod):
