@@ -735,6 +735,7 @@ module ot_hgi_sv_head #(
     // registered at take, so stage 1 is a 3:1 select and the 8 x 24 products only
     reg [15:0] no_m1, ni_m1, nih_m1;
     reg [27:0] pn [0:5][0:7];                           // nibble x 24 partial products (a nibbles 0-3, c nibbles 4-7)
+    reg [27:0] pnl [0:5][0:7]; reg [27:0] pnh [0:5][0:7]; // B4: the two pair sums of each nibble product (one adder an edge)
     reg [31:0] pq0 [0:5]; reg [31:0] pq1 [0:5]; reg [31:0] pq2 [0:5]; reg [31:0] pq3 [0:5]; reg [39:0] pacc [0:5];
     reg [15:0] rm_a [0:5]; reg [15:0] rm_c [0:5]; reg [23:0] rso [0:5]; reg [23:0] rsi [0:5]; reg [39:0] s01 [0:5]; reg [39:0] s23 [0:5];
     reg [15:0] m_a [0:5]; reg [15:0] m_c [0:5]; reg [18:0] mhi [0:5]; reg [5:0] m_badv;
@@ -743,6 +744,21 @@ module ot_hgi_sv_head #(
         m_c[k] = (k == 5) ? 16'd0 : (bhalf && (k == 1 || k == 3)) ? nih_m1 : ni_m1;
         mhi[k] = {1'b0, c_base[k][17:0]} + {1'b0, pacc[k][17:0]};
         m_badv[k] = c_used[k] && (c_base[k][23:18] != 6'd0 || pacc[k][39:18] != 22'd0 || mhi[k][18]);
+    end
+    // SPAN multiply pipeline (B4): free-running, no reset, no state enable (see D_MUL); 6 edges operand -> pacc.
+    always @(posedge clk) for (integer k = 0; k < 6; k = k + 1) begin
+        rm_a[k] <= m_a[k]; rm_c[k] <= m_c[k]; rso[k] <= c_so[k]; rsi[k] <= c_si[k];
+        for (integer h = 0; h < 4; h = h + 1) begin
+            pnl[k][h]     <= ({28{rm_a[k][4*h]}}     & {4'd0, rso[k]}) + ({28{rm_a[k][4*h + 1]}} & {3'd0, rso[k], 1'd0});
+            pnh[k][h]     <= ({28{rm_a[k][4*h + 2]}} & {2'd0, rso[k], 2'd0}) + ({28{rm_a[k][4*h + 3]}} & {1'd0, rso[k], 3'd0});
+            pnl[k][4 + h] <= ({28{rm_c[k][4*h]}}     & {4'd0, rsi[k]}) + ({28{rm_c[k][4*h + 1]}} & {3'd0, rsi[k], 1'd0});
+            pnh[k][4 + h] <= ({28{rm_c[k][4*h + 2]}} & {2'd0, rsi[k], 2'd0}) + ({28{rm_c[k][4*h + 3]}} & {1'd0, rsi[k], 3'd0});
+        end
+        for (integer h = 0; h < 8; h = h + 1) pn[k][h] <= pnl[k][h] + pnh[k][h];
+        pq0[k] <= {4'd0, pn[k][0]} + {pn[k][1], 4'd0}; pq1[k] <= {4'd0, pn[k][2]} + {pn[k][3], 4'd0};
+        pq2[k] <= {4'd0, pn[k][4]} + {pn[k][5], 4'd0}; pq3[k] <= {4'd0, pn[k][6]} + {pn[k][7], 4'd0};
+        s01[k] <= {8'd0, pq0[k]} + {pq1[k], 8'd0}; s23[k] <= {8'd0, pq2[k]} + {pq3[k], 8'd0};
+        pacc[k] <= s01[k] + s23[k];
     end
     reg [17:0] lo [0:5]; reg [17:0] hi [0:5]; reg [5:0] rv;
     // Parallel with the existing classification edges: no allocation-side subtract/add chain.
@@ -951,21 +967,13 @@ module ot_hgi_sv_head #(
                 // SPAN: (nr - 1) so + (ni - 1) si, all 6 regions at once: 4 x 24 nibble products, byte products, sum,
                 // extent (4 edges; 10-13: the 8 x 24 product in one edge was a 27-level stage, ~995 ps)
                 D_MUL: begin
-                    for (integer k = 0; k < 6; k = k + 1) begin
-                        // B3 (head gate r4-pre: m_a -> pn 21 levels, pq -> pacc 4-input 40-b add -64 ps): operand selects
-                        // registered first (rm_*), the 4-input sum split into two pair sums (s01 / s23) and their add.
-                        // Two more MUL edges a record (mph 0..5); decode runs ahead of execution, so no service cycle.
-                        rm_a[k] <= m_a[k]; rm_c[k] <= m_c[k]; rso[k] <= c_so[k]; rsi[k] <= c_si[k];
-                        for (integer h = 0; h < 4; h = h + 1) begin
-                            pn[k][h]     <= nib24(rm_a[k][4*h +: 4], rso[k]);
-                            pn[k][4 + h] <= nib24(rm_c[k][4*h +: 4], rsi[k]);
-                        end
-                        pq0[k] <= {4'd0, pn[k][0]} + {pn[k][1], 4'd0}; pq1[k] <= {4'd0, pn[k][2]} + {pn[k][3], 4'd0};
-                        pq2[k] <= {4'd0, pn[k][4]} + {pn[k][5], 4'd0}; pq3[k] <= {4'd0, pn[k][6]} + {pn[k][7], 4'd0};
-                        s01[k] <= {8'd0, pq0[k]} + {pq1[k], 8'd0}; s23[k] <= {8'd0, pq2[k]} + {pq3[k], 8'd0};
-                        pacc[k] <= s01[k] + s23[k];
-                    end
-                    if (mph == 4'd5) begin
+                    // B3 (head gate r4-pre: m_a -> pn 21 levels, pq -> pacc 4-input 40-b add -64 ps): operand selects
+                    // registered first (rm_*), the 4-input sum split into two pair sums (s01 / s23) and their add.
+                    // B4 (head gate r4-pre2: rm_a -> pn 21 levels -38 ps; one OR2 enable net with 3,008 loads = the D_MUL
+                    // decode enabling every pipeline register): the pipeline below is FREE-RUNNING (no state enable; its
+                    // operands are registers that hold still from take through D_MUL, so mph == 6 sees the same values)
+                    // and each nibble product is two registered pair sums plus their add.  MUL 7 edges a record (mph 0..6).
+                    if (mph == 4'd6) begin
                         for (integer k = 0; k < 6; k = k + 1) begin lo[k] <= c_base[k][17:0]; hi[k] <= mhi[k][17:0]; end
                         if (cpair) begin lo[0] <= c_base[0][17:0] & ~18'd1; hi[0] <= mhi[0][17:0] | 18'd1; end
                         if (m_badv != 6'd0) begin dfault <= 1'b1; dstt <= D_FAULT; end   // an operand word >= 2^18
