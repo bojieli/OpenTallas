@@ -1,0 +1,50 @@
+{
+  "candidate_only": true,
+  "parent": "qfd_sp_su64_sfu",
+  "source_commit": "baac1408f",
+  "master": "ot_qfd_su_align_group4",
+  "count": 16,
+  "actual_parameters": {
+    "ML": 15,
+    "VL": 7,
+    "MC": 4
+  },
+  "declared_state_per_child": 8432,
+  "root_count_unmeasured": true,
+  "outline_requested_um": [
+    129.6,
+    108.0
+  ],
+  "outline_qualified": false,
+  "clock_entries": [
+    "clk_g0",
+    "clk_g1",
+    "clk_g2",
+    "clk_g3",
+    "clk_g4",
+    "clk_g5",
+    "clk_g6",
+    "clk_g7",
+    "clk_g8",
+    "clk_g9",
+    "clk_g10",
+    "clk_g11",
+    "clk_g12",
+    "clk_g13",
+    "clk_g14",
+    "clk_g15"
+  ],
+  "source_staging_remaining_global_bits": 256,
+  "ports_per_child": {
+    "vm_q": 384,
+    "crom_q": 256,
+    "emb_q": 128,
+    "emb_sel": 4,
+    "vm_mask": 12,
+    "vm_eff": 384,
+    "crom_m": 256,
+    "emb_m": 128,
+    "emb_sel_m": 4
+  },
+  "required_work": "Exact subslot/pins, mapper/CTS/root census, first/last capture, phi-minus-R and actual data-wire/hold proof. Current native CROM5 requires distinct MC6 configuration/alignment9 source proof before separate actual views; no MC4 CLOSED alias. External VM VL remains7 pending adopted source ledger. No full SU frame fit or accepted cost."
+}
