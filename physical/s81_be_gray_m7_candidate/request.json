@@ -1,0 +1,129 @@
+{
+  "schema": "opentallas.be_gray_m7_successor_request.v1",
+  "status": "REQUESTED_UNALLOCATED_UNROUTED",
+  "top": "dsfd_vm_be_sl",
+  "source_commit": "8cd806853",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv": "531ff23c22e581e79e5498076d2a1d821c5245dd819d6207d9e42b414b33ad9c",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_sp_vm.sv": "ca250822b05604134ee3498174a599bb355028135edaf94d6b62d99d00a1e225",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "c1fbe955248218349f483c8e554feb5658a2474bb5169c2a198b8306d3601553",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgq_sys.sv": "990c783f6b446a002b22a93d0f9f017164d720dc97fb59250d9a8c708272a12f",
+    "rtl/dsrom_sys/mtp/dsfd_vm_wfc_ep.sv": "3585ce988a6169ac8cf1b287d7f2aefe2948b01f26a4d7de1458ba986ef822c2",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_rtt.sv": "7d1c01eed80cd2fa59746e5216d7c84ab2c5f5a692f8a8130a421fab1715b168",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
+    "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv": "08ae0f922a82d1ca82c6e9ef81a71a955e0b97b491341a094bd14163522181b6",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "611872cc885af05808aeaa1386602ad03b37339519d67991fda40e394a314ee8",
+    "rtl/lib/ot_async_fifo.sv": "ae6a81497e7575cf780cffca8486c3b5663a7a079d7fa3fed46d1dce5f5c23d7",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/common/ot_ratio_cdc_fifo.sv": "b608b11a3e676f0a83ddfba49b6187b5991e2d443a4d1c5269274ee6587e8557",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv": "6a564096256c0253de7ced686cd6e8e7800073f96efe9b41f5f08b5a91ca471a"
+  },
+  "outline_um": [
+    302.4,
+    92.88
+  ],
+  "signal_contacts": 4099,
+  "actual_signal_and_PG_cap": "M7",
+  "parent_strap": "M8",
+  "eligibility_waived": false,
+  "old_CLOSED_replaced": false,
+  "default_off_define": "OT_BE_RCDC_GRAY",
+  "structural_change": "Capture stable selected published entry; per-accepted-pointer Gray publication and two-flop pointer/online crossings; true raw reset epoch conditions both local domains. New raw input and four final-reset ACK outputs. No clock correlation or margin relaxation.",
+  "new_contacts": {
+    "raw_epoch_n": {
+      "layer": "M4",
+      "face": "E",
+      "rectangle_um": [
+        302.208,
+        8.016,
+        302.4,
+        8.04
+      ],
+      "parent_physical_source_or_sink": null
+    },
+    "cdc_rst_ack[0]": {
+      "layer": "M4",
+      "face": "E",
+      "rectangle_um": [
+        302.208,
+        9.072,
+        302.4,
+        9.096
+      ],
+      "parent_physical_source_or_sink": null
+    },
+    "cdc_rst_ack[1]": {
+      "layer": "M4",
+      "face": "E",
+      "rectangle_um": [
+        302.208,
+        9.168,
+        302.4,
+        9.192
+      ],
+      "parent_physical_source_or_sink": null
+    },
+    "cdc_rst_ack_s[0]": {
+      "layer": "M4",
+      "face": "E",
+      "rectangle_um": [
+        302.208,
+        10.272,
+        302.4,
+        10.296
+      ],
+      "parent_physical_source_or_sink": null
+    },
+    "cdc_rst_ack_s[1]": {
+      "layer": "M4",
+      "face": "E",
+      "rectangle_um": [
+        302.208,
+        10.368,
+        302.4,
+        10.392
+      ],
+      "parent_physical_source_or_sink": null
+    }
+  },
+  "old_contact_count_preserved": 4094,
+  "full_depth_halo_um": 0.072,
+  "routed_connectivity": false,
+  "global_VM_origin_requested_um": [
+    14036.112,
+    12804.48
+  ],
+  "BE_base_x_requested_um": 64.752,
+  "BE_y_requested_um": 21.6,
+  "BE_pitch_requested_um": 475.2,
+  "allocator_lattice_acceptance": "OPEN_UNALLOCATED",
+  "root_existing_two_ACK_successor_integrated": false,
+  "consumer_conditioner_FF": 32,
+  "additional_controller_capture_FF": 32,
+  "generic_state_delta_all_four_leaves": -8160,
+  "mapped_ASAP7_state": null,
+  "global_launch_clock_reset_binding": null,
+  "qualification_required": [
+    "exact source-native gates",
+    "fresh all46 helper intake",
+    "actual raw routed contacts and strict M7 lint",
+    "actual AP all orientations/global slots",
+    "SS setup +15ps and FF hold +15ps, DRC0",
+    "actual raw reset and per-ACK collector binding",
+    "full parent source-pair, cuts and source-slot allocation"
+  ],
+  "kit_sha256": {
+    "physical/s81_be_gray_m7_candidate/helper_overlay_plan.json": "49bc945e71b99e181a1c58cfb9a4740bbcb1083055055c9e10e9b2ed87d1611b",
+    "physical/s81_be_gray_m7_candidate/io_place.tcl": "31adf02d913e757b51c658709c450ad14b8c564cd317a42d988d0fd1b971df95",
+    "physical/s81_be_gray_m7_candidate/margin.sdc": "fc48ec67e99fe295df969c4e685c1e937d40e99112d68ceca53261223e8f4e7f",
+    "physical/s81_be_gray_m7_candidate/full_depth_keepout.tcl": "7c0e1621e7f8d197fedb8cc7c79591e4523e1b00369377a4b10baaf8e2e176b1",
+    "physical/s81_be_gray_m7_candidate/post_cts.tcl": "c4898d81a24e166939a26065e5b60f9af365d2d27534590a65f825c8bbcaaac3",
+    "physical/s81_be_gray_m7_candidate/pdn.tcl": "a7cd1702729a1b3cc352daa0d22e1341405e499a46dbefe10aa54747e0e4028a",
+    "physical/s81_be_gray_m7_candidate/exact_gate_binding.json": "301ac4db2be899ab85fc9213ffd756f2257a09c1ea39ff57a8486eb2903507d5",
+    "physical/s81_be_gray_m7_candidate/target_contacts_unrouted.lef": "0133b096468cb29b11ec44542a79ddcdcc80c8082f2e2caf671e99830b805179",
+    "physical/s81_be_gray_m7_candidate/ports.json": "1fb4398f8e78a82781022aa4e0cca853112af84525016540e8aa656e6ada8113",
+    "physical/s81_be_gray_m7_candidate/launch.sh": "81cc40eee2797071063d8c70772f974939ba73f41d957ffb4f5a0aa8d5aa69a8"
+  }
+}
