@@ -10,6 +10,7 @@ module ot_hgi_b2_dma_q #(
     parameter integer MUT_CORE_LOOK = 0,
     parameter integer MUT_CORE_ADV = 0,
     parameter integer MUT_GROUP_OWN = 0,
+    parameter integer MUT_SER_PUB = 0,
     parameter integer HARD_CLOCKS = 0, // physical parent: ten independent die-compensated clock entries
     parameter integer FRONT = 0,
     parameter integer VR2 = 1,
@@ -108,9 +109,9 @@ module ot_hgi_b2_dma_q #(
       .mover_fv(mover_fv), .pin_m_fence_rdy(mover_frdy), .pin_m_fence_done(mover_fdone),
       .il_vmq(il_vmq), .il_active(il_active), .vmr(mover_vmr));
 `ifndef OT_B2_DMA_Q5_HARD
-    ot_hgi_b2_dma_mv #(.VR2(VR2), .KVW(KVW), .SVR2(0), .MUT_SEAM(MUT_SEAM), .PX(2), .B2(1), .QID(0), .MUT_B2(MUT_B2))
+    ot_hgi_b2_dma_mv_ser_pub #(.VR2(VR2), .KVW(KVW), .SVR2(0), .MUT_SEAM(MUT_SEAM), .PX(2), .B2(1), .QID(0), .MUT_B2(MUT_B2),.MUT_SER_PUB(MUT_SER_PUB))
 `else
-    ot_hgi_b2_dma_mv
+    ot_hgi_b2_dma_mv_ser_pub
 `endif
     u_mv(
       .land_write(land_write),.land_read(land_read),.source_format(source_format),.decoded(decoded),
