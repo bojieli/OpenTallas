@@ -1,0 +1,110 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "ot_qwen_tile_ctl_strip",
+ "verdict": "FAIL",
+ "generated": "2026-10-13T20:14:38-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "0e8cb4c5d",
+ "clock": {
+  "max_root_sinks": 14164,
+  "root": "port:clk",
+  "cts": true,
+  "tt_insertion_ps": null,
+  "tt_spread_ps": null,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "verdict": "PASS",
+  "text": "14,164 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "47.52 x 1404.0 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 8215 um2 + macros 0 in core 60466: util 14%",
+   "fix": "set \"std_area_um2\": 8215 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 14,164 flops > 8,000 spread over a 43 x 1400 um outline (> 600 um) (+0 ICGs, 0 macro clock pins; e.g. fault$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "reset port rst_n: 376 loads (220 flops, e.g. fault$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.high_fanout",
+   "message": "port ib_go: 314 loads (0 flops, e.g. None) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "512 output bit(s) combinational from input ports (e.g. cx_lq[9]->cx_td[9] 0 lv, cx_lq[99]->cx_td[90] 0 lv, cx_lq[98]->cx_td[89] 0 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "130 input->register endpoint(s) > 3 levels (worst ib[87]->u_xcapture.xl[9]$_DFFE_PN0P_/D 9 lv, ib[87]->u_xcapture.xl[99]$_DFFE_PN0P_/D 9 lv, ib[87]->u_xcapture.xl[98]$_DFFE_PN0P_/D 9 lv): register the boundary (pin flops / registered outputs)",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "1153 stage(s) beyond 500 um reach: insert relay flops",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin cx_lq[59] -> pin cx_td[59]: up to 861 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin cx_lq[57] -> pin cx_td[57]: up to 861 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "FAIL",
+   "check": "textbook.wire_reach",
+   "message": "combinational path pin cx_lq[29] -> pin cx_td[29]: up to 861 um with no register (> 500 um)",
+   "fix": "relay flops every <= 500 um, or move the logic next to its pins/macros"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 9.0% outside 45%-65% (std 5443 + macro 0 um2 in 60466 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=1",
+   "fix": ""
+  }
+ ]
+}
