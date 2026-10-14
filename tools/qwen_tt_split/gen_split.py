@@ -120,5 +120,17 @@ module ot_tt_ce_delay #(parameter integer W=1,D=1,RESET=0)(
 endmodule
 '''
 Path('rtl/physical/ot_qfd_tt_ctlm_split.sv').write_text(text)
+
+# Fixed hard parent: no parameter overrides on hard-child names.
+fixed=[]
+for n in ports:
+ if n=='clk': fixed+=['    input wire ck_head','    input wire ck_tree'];continue
+ w=ports[n][1].replace('$clog2(G)','12').replace('XW','24').replace('G','3072')
+ fixed.append(f'    {ports[n][0]} wire {w} {n}')
+fp='// Fixed wires-only parent, one entry per independently rooted child.\nmodule ot_qfd_tt_ctlm_split_hard (\n'+',\n'.join(fixed)+f'\n);\n    wire [{CW-1}:0] cmd; wire [{RW-1}:0] ret;\n'
+for module,names,clock in [('qfd_tt_ctlm_head',headnames,'ck_head'),('qfd_tt_ctlm_tree',treenames,'ck_tree')]:
+ fp+='    '+module+' u_'+('head' if 'head' in module else 'tree')+' (\n'+',\n'.join('        .'+n+'('+ (clock if n=='clk' else n) +')' for n in names)+',\n        .cmd(cmd),.ret(ret));\n'
+fp+='endmodule\n'
+Path('rtl/physical/ot_qfd_tt_ctlm_split_parent.sv').write_text(fp)
 Path('physical/qfd_tt_ctlm_split/seam.json').write_text(json.dumps({'command_bits':CW,'return_bits':RW,'command_lsb_first':dict(zip(cmdnames,cmdwidth)),'return_lsb_first':dict(zip(retnames,retwidth)),'station_cycles':{'head_launch':1,'tree_capture':1,'tree_launch':1,'head_capture':1},'original_DCU':2,'original_DUC':2,'added_station_cycles':0,'clock':'independent roots/native MEREG3 ICGs with tree-local pruned controller shadow; no clock or enable forwarding'},indent=1)+'\n')
 print(CW,RW,headnames,treenames)

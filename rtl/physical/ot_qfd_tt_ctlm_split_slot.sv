@@ -150,7 +150,7 @@ module qfd_tt_ctlm_s (
     assign w_fab_fault = fab;
     assign cf = w_c_fault;
     assign ovf = w_ov;
-    ot_qfd_tt_ctlm_split #(.PSRAM(1),.HQ2(1),.MEREG(3),.RRG(1),.PCUT(1),.G(3072),.AUD(33975)) u_body (
+    ot_qfd_tt_ctlm_split_hard u_body (
         .ck_head(ck_head),
         .ck_tree(ck_tree),
         .rst_n(w_rst_n),

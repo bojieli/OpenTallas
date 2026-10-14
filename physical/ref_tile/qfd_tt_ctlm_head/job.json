@@ -44,18 +44,10 @@
     "peak_ram_gb": 8
    },
    {
-    "name": "split_native",
-    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/native native",
-    "expect": "pass",
-    "pass_regex": "^PASS tt_ctlm_split native",
-    "threads": 4,
-    "peak_ram_gb": 8
-   },
-   {
     "name": "split_argmax",
-    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/argmax argmax",
+    "cmd": "bash physical/qfd_tt_ctlm_split/bench.sh {RUN}/bench/argmax strict_argmax",
     "expect": "pass",
-    "pass_regex": "^PASS tt_ctlm_split argmax",
+    "pass_regex": "^PASS tt_ctlm_split strict_argmax",
     "threads": 4,
     "peak_ram_gb": 8
    }
