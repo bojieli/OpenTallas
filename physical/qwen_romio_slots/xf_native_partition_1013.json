@@ -383,7 +383,33 @@
       ]
     }
   ],
-  "collective_local_port": "native548 forward/518return port CDC still required; inherited l8n closed views stand pending native pin plan",
+  "collective_local_port": {
+    "cell": "qfd_coll_xfifo_native",
+    "kit": "qfd_coll_xfifo_native",
+    "proposed_at": [
+      423.36,
+      1190.16
+    ],
+    "outline": {
+      "w": 259.2,
+      "h": 324
+    },
+    "orient": "R0",
+    "forward_payload_bits": 546,
+    "return_payload_bits": 517,
+    "return_bundle_bits": 518,
+    "posted_consumer": true,
+    "params": {
+      "N": 8,
+      "CR": 32,
+      "ENG_IB": 32,
+      "LCR": 32,
+      "CQ_AD": 256,
+      "PIPE": 2,
+      "MEMM": 1
+    },
+    "state": "prototype; dieassignedpins, CTS, fullnativeSEQcomposition pending"
+  },
   "die_obligations": [
     "consume exact leaf port request and emit assigned pins",
     "connect independent UCIeP/R records to production driver and PHY adapter",
