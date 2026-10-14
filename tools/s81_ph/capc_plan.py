@@ -118,7 +118,12 @@ def build(assigned):
                 raise ValueError(f"{port}: unexpected assigned face {face}")
             name = port if count == 1 else f"{port}[{bit}]"
             pins.append((name, face, along))
-            tcl.append(f"place_pin -pin_name {{{name}}} -layer {layer} "
+            pin_arg = "{" + name + "}"
+            if port in {"rst", "rsv"}:  # vector or scalar form may survive synthesis
+                tcl.append(f"set capc_reset_pin {{{port}[0]}}")
+                tcl.append(f"if {{![llength [get_ports -quiet $capc_reset_pin]]}} {{set capc_reset_pin {{{port}}}}")
+                pin_arg = "$capc_reset_pin"
+            tcl.append(f"place_pin -pin_name {pin_arg} -layer {layer} "
                        f"-location {{{along:.3f} {H_CL if face == 'N' else 0.0}}} "
                        f"-pin_size {{0.024 {depth}}} -force_to_die_boundary")
     # ---- clocks
