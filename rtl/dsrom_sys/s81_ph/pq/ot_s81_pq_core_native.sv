@@ -81,8 +81,12 @@ module ot_s81_pq_core_native (
     // RG11 selects exactly twelve count groups in this controller. The
     // group region census is external: each tier/half has 10 or 11 regions,
     // not eleven equal groups and a seven-region tail.
+`ifdef OT_PQ_CTL_FIXED
+    ot_s81_pq_ctl_fixed_native u_ctl (
+`else
     ot_s81_pq_ctl_native #(.PHW(9), .SAW(11), .R(128), .VAW(19), .VRD(64), .KMAX(6144),
         .BST(2), .NSEG(8), .PQ(1), .RG(11), .XRV(1), .XCAP(16), .RPT(2), .BW(1633)) u_ctl (
+`endif
         .clk(ck_ctl), .rst_n(rst_n), .go(go), .i_ph(i_ph), .i_np(i_np), .i_xbase(i_xbase),
         .i_xps(i_xps), .i_obase(i_obase), .i_ops(i_ops), .i_fmt(i_fmt),
         .ready(ready), .idle(idle), .x_re(x_re), .x_addr(x_addr), .x_rv(x_rv), .f_fault(fault_to_ctl),
@@ -94,10 +98,17 @@ module ot_s81_pq_core_native (
         .rom_sa(rom_sa), .rom_sq(rom_sq));
 `ifdef OT_PQ_BENCH_TELEMETRY
     assign read_consumed = {b_consume, q_consume};
+`ifdef OT_PQ_CTL_FIXED
+    assign read_speculative = {u_ctl.u_native.hw[0] && u_ctl.u_native.h_fam && !b_consume,
+                              u_ctl.u_native.hw[0] && !u_ctl.u_native.h_fam && !q_consume};
+    assign observed_k = u_ctl.u_native.ld_kk;
+    assign observed_load_active = u_ctl.u_native.ld_run;
+`else
     assign read_speculative = {u_ctl.hw[0] && u_ctl.h_fam && !b_consume,
                               u_ctl.hw[0] && !u_ctl.h_fam && !q_consume};
     assign observed_k = u_ctl.ld_kk;
     assign observed_load_active = u_ctl.ld_run;
+`endif
 `ifdef OT_PQ_REFERENCE
     assign qb_q0_index = 0; assign qb_q1_index = 0; assign qb_pair_valid = 0;
 `else
@@ -1936,7 +1947,14 @@ module ot_s81_pq_fault_pin (
     reg [17:0] captured;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin captured <= 0; fault <= 0; end
-        else begin captured <= faults; fault <= fault || |captured; end
+        else begin
+`ifdef OT_S81_PQ_FAULT_MUT
+            captured <= faults | 18'd1;
+`else
+            captured <= faults;
+`endif
+            fault <= fault || |captured;
+        end
 endmodule
 
 // Native BC physical slice0: 409 bits, exact source permutation in bc_slice_request_2250.json.
