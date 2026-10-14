@@ -404,7 +404,7 @@ endmodule
 
 // ---- the centre
 module ot_hgi_hc_ctl_b2 #(
-    parameter integer STORELEAF=0,CLOCKED=0,
+    parameter integer LINKLEAF=0,STORELEAF=0,CLOCKED=0,
     parameter integer D   = 5120,
     parameter integer RLQ = 6,               // relay flops centre <-> quarter (each way)
     parameter integer CD  = 16,
@@ -468,6 +468,23 @@ module ot_hgi_hc_ctl_b2 #(
     wire [3:0] s_v; wire [4*258-1:0] s_d; wire [4*6-1:0] s_st;
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
+        if(LINKLEAF)begin:g_hard_link
+            wire[139:0]dn_o;wire[89:0]ck_o;wire[258:0]sc_o;wire[7:0]fb_o;
+            if(RLQ!=6)begin:g_invalid_link always @(posedge clk)$fatal(1,"Fixed quarter link requires RLQ6");end
+            if(MUT==16)begin:g_assoc_mut
+                ot_hgi_hc_quarter_link6_assoc_mut u_link(.clk(CLOCKED?clk_quarter_link[gq]:clk),.rst_n(rst_n),
+                    .dn_i({cv,cop,cx,cd}),.ck_i({q_ck_v[2*gq+:2],q_ck[gq*88+:88]}),
+                    .sc_i({q_sc_v[gq],q_sc[gq*258+:258]}),.fb_i({q_stat[gq*6+:6],k_cr[2*gq+:2]}),.*);
+            end else begin:g_real
+                ot_hgi_hc_quarter_link6 u_link(.clk(CLOCKED?clk_quarter_link[gq]:clk),.rst_n(rst_n),
+                    .dn_i({cv,cop,cx,cd}),.ck_i({q_ck_v[2*gq+:2],q_ck[gq*88+:88]}),
+                    .sc_i({q_sc_v[gq],q_sc[gq*258+:258]}),.fb_i({q_stat[gq*6+:6],k_cr[2*gq+:2]}),.*);
+            end
+            assign {q_dn_v[gq],q_dn[gq*139+:139]}=dn_o;
+            assign {k_v[2*gq+:2],k_d[gq*88+:88]}=ck_o;
+            assign {s_v[gq],s_d[gq*258+:258]}=sc_o;
+            assign {s_st[gq*6+:6],q_ck_cr[2*gq+:2]}=fb_o;
+        end else begin:g_original_link
         ot_hgi_hc_rly #(.W(139), .N(RLQ)) u_dn (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .v(cv), .d({cop, cx, cd}), .vq(q_dn_v[gq]),
             .q(q_dn[gq*139 +: 139]));
         ot_hgi_hc_rly #(.W(44), .N(RLQ)) u_k0 (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .v(q_ck_v[2*gq]), .d(q_ck[gq*88 +: 44]),
@@ -478,6 +495,7 @@ module ot_hgi_hc_ctl_b2 #(
         ot_hgi_hc_rly #(.W(258), .N(RLQ)) u_sc (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .v(q_sc_v[gq]), .d(q_sc[gq*258 +: 258]),
             .vq(s_v[gq]), .q(s_d[gq*258 +: 258]));
         ot_hdc_delay #(.W(6), .D(RLQ), .RESET(1)) u_st (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .d(q_stat[gq*6 +: 6]), .q(s_st[gq*6 +: 6]));
+            end
     end endgenerate
 
     // ---- scalars
@@ -578,7 +596,7 @@ endmodule
 module ot_hgi_hc_eng_b2 #(
     parameter integer D   = 5120,
     parameter integer CLOCKED = 0, COEFFLEAF=0,
-    parameter integer STORELEAF = 0,
+    parameter integer LINKLEAF = 0, STORELEAF = 0,
     parameter integer LQ  = 32,
     parameter integer FD  = 64,
     parameter integer HSL = 1,
@@ -616,7 +634,7 @@ module ot_hgi_hc_eng_b2 #(
 );
     wire [3:0] q_dn_v; wire [4*139-1:0] q_dn; wire [7:0] q_ck_v, q_ck_cr; wire [4*88-1:0] q_ck;
     wire [3:0] q_sc_v; wire [4*258-1:0] q_sc; wire [4*6-1:0] q_stat;
-    ot_hgi_hc_ctl_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.D(D), .RLQ(RLQ), .CD(CD), .MUT(MUT)) u_ctl (.clk(CLOCKED?clk_ctl:clk), .rst_n(rst_n), .clk_coll(clk_coll),.clk_quarter_link(clk_quarter_link), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.job_v_i(job_v),
+    ot_hgi_hc_ctl_b2 #(.LINKLEAF(LINKLEAF),.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.D(D), .RLQ(RLQ), .CD(CD), .MUT(MUT)) u_ctl (.clk(CLOCKED?clk_ctl:clk), .rst_n(rst_n), .clk_coll(clk_coll),.clk_quarter_link(clk_quarter_link), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.job_v_i(job_v),
         .job_rdy(job_rdy), .job_i(job), .g_rdy_i(g_rdy), .done(done), .fault(fault), .idle(idle), .rg_req(rg_req),
         .rg_gnt(rg_gnt), .wg_req(wg_req), .wg_gnt(wg_gnt), .q_dn_v(q_dn_v), .q_dn(q_dn), .q_ck_v(q_ck_v), .q_ck(q_ck),
         .q_ck_cr(q_ck_cr), .q_sc_v(q_sc_v), .q_sc(q_sc), .q_stat(q_stat));

@@ -31,7 +31,7 @@ module ot_hgi_hc_quarter_link6_assoc_mut(
  input wire[258:0]sc_i,input wire[7:0]fb_i,
  output wire[139:0]dn_o,output wire[89:0]ck_o,output wire[258:0]sc_o,output wire[7:0]fb_o
 );
- wire[89:0]bad_ck={ck_i[88],ck_i[89],ck_i[43:0],ck_i[87:44]};
+ wire[89:0]bad_ck={ck_i[89:88],ck_i[87:76],ck_i[31:0],ck_i[43:32],ck_i[75:44]};
  ot_hgi_hc_quarter_link6 u(.clk(clk),.rst_n(rst_n),.dn_i(dn_i),.ck_i(bad_ck),.sc_i(sc_i),.fb_i(fb_i),.*);
 endmodule
 `default_nettype wire

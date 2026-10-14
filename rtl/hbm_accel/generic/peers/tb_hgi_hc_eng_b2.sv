@@ -60,7 +60,12 @@ module tb_hgi_hc_eng_b2;
 `else
     localparam integer BCOEFF=0;
 `endif
-    ot_hgi_hc_eng_b2 #(.COEFFLEAF(BCOEFF),.STORELEAF(BSTORE),.CLOCKED(BCLOCKED),.D(HD), .LQ(LQ), .RLQ(`RLQV), .CD(`CDV), .MUT(`HMUT)) u_e (.clk(clk), .rst_n(rst_n), .job_v(job_v),
+`ifdef HC_LINKLEAF
+    localparam integer BLINK=1;
+`else
+    localparam integer BLINK=0;
+`endif
+    ot_hgi_hc_eng_b2 #(.LINKLEAF(BLINK),.COEFFLEAF(BCOEFF),.STORELEAF(BSTORE),.CLOCKED(BCLOCKED),.D(HD), .LQ(LQ), .RLQ(`RLQV), .CD(`CDV), .MUT(`HMUT)) u_e (.clk(clk), .rst_n(rst_n), .job_v(job_v),
         .clk_quarter_link({4{clk}}),.clk_ctl(clk),.clk_coll(clk),.clk_qst({4{clk}}),.clk_cat({4{clk}}),.clk_lane({32{clk}}),.clk_coeff({32{clk}}),.clk_store({20{clk}}),.clk_scan({32{clk}}),.clk_block_add({31{clk}}),.clk_heap_add({31{clk}}),.clk_sl({256{clk}}), .clk_chunk({224{clk}}), .job_rdy(job_rdy), .job(jw),
         .g_rdy(g_rdy), .done(e_done), .fault(e_fault), .idle(e_idle), .wrq(e_rq), .wrq_cr(own ? rq_cr : 32'd0),
         .wrr(own ? rr : '0), .wwq(e_wq), .wwq_cr(own ? w2_cr : 32'd0), .wwq_done(own ? w2_done : 32'd0),
