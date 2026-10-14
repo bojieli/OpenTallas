@@ -60,13 +60,13 @@
     }
   },
   "clock": "spine",
-  "structural_change": "Five-way DMA partition: sibling closed KV core and hold leaves; two-entry move skid; pin station behind VM request mux and read-group OR; elastic registered HBM lane mux with qid before pin flop; one compact 280-bit wl pin lane expanded at VM receiver.",
+  "structural_change": "Three same-RTL routes terminal TT+56.98/FF+18.88 DRC1. Actual retained arg1 5_route_drc.rpt short obstruction vs vmr[273] M5 at56.118..56.136,86.293..86.316 NEcorner. Structural pin window repair: VM input/output north pins constrained to1.08..55.08um, preserving fullM5PG and all pin flops, outline56.16x86.4 unchanged; keeps both bus ends off physical corner/adjacent obstruction. No timing/clock/DRC acceptance relaxation.",
   "job": {
-    "owner": "Codex:el1013-dma-q5",
-    "branch": "claude/el1013-dma-q5",
-    "tag": "q5r2",
-    "views_to": "physical/ref_tile/b2_dma_rq_q5_ref/views",
-    "record_to": "results/rtl/ref_tile/b2_dma_rq_q5_ref",
+    "owner": "Codex:hbm_dma_lkep_2240",
+    "branch": "codex/hbm-dma-mv-repair-2240",
+    "tag": "q5ncorner1",
+    "views_to": "physical/ref_tile/b2_dma_serial_q5_ref/views",
+    "record_to": "results/rtl/ref_tile/b2_dma_serial_q5_ref",
     "purpose": "Independent element serial DMA root, extracted after measured MV clock refusal. Command/response pins captured, status registered; downstream MV supplies registered elastic HBM request ready. Exact immutable-flat real-port request comparison and all seven seam mutants bound; provisional pins and129.6x86.4 outline require die window approval. No price row found: UNMEASURED-vs-price.",
     "benches": [
       {
@@ -179,7 +179,17 @@
       "rtl/model/hbm_pc40_native_sim_20261003",
       "physical/asap7_memory_macros"
     ],
-    "structural_change": " Serial engine split into a sixth independent root after actual SRAM MV gate15494 sinks/565.9ps refusal; command/response/status pin registers and two-entry registered serial HBM request station; no reset on wide MV payloads. Split serial1448-pin east face intoE command/HBM836bits andN VM612bits after realfloorplan pin_density14.5bits/um/layer stop; bothfaces below12 threshold."
+    "structural_change": "Three same-RTL routes terminal TT+56.98/FF+18.88 DRC1. Actual retained arg1 5_route_drc.rpt short obstruction vs vmr[273] M5 at56.118..56.136,86.293..86.316 NEcorner. Structural pin window repair: VM input/output north pins constrained to1.08..55.08um, preserving fullM5PG and all pin flops, outline56.16x86.4 unchanged; keeps both bus ends off physical corner/adjacent obstruction. No timing/clock/DRC acceptance relaxation."
   },
-  "std_area_um2": 2003
+  "std_area_um2": 2003,
+  "pin_ranges": {
+    "vmr": [
+      1.08,
+      55.08
+    ],
+    "vmq": [
+      1.08,
+      55.08
+    ]
+  }
 }
