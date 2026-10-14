@@ -38,7 +38,7 @@ class RowBackend {
  std::deque<WriteAck> completed_writes;
  std::deque<RowReturn> completed_rows;
  using IdentityKey=std::tuple<uint32_t,uint32_t,uint32_t,uint32_t,unsigned>;
- std::set<IdentityKey> acknowledged,pending_writes;
+ std::set<IdentityKey> acknowledged,pending_writes,declared_image;
  VerilatedContext& ctx;
  unsigned current_position;
  uint64_t ticket_next=1,core_next=553667,hbm_next=512000;
@@ -100,19 +100,29 @@ class RowBackend {
   return enqueue_quarter(id,data);
  }
  uint64_t enqueue_quarter(const QuarterIdentity& id,const Quarter& data){
-  auto p=native_map(id);if(id.row.pos!=current_position)throw std::runtime_error("current-token writer position mismatch");
-  if(!pending_writes.insert(ik(id)).second)throw std::runtime_error("duplicate in-flight quarter identity");
-  acknowledged.erase(ik(id));uint64_t t=ticket_next++;channels[p.index()].writes.push_back({t,id,data});return t;
+  if(id.row.pos!=current_position)throw std::runtime_error("current-token writer position mismatch");return enqueue_controller_quarter(id,data);
  }
+ uint64_t enqueue_prior_quarter_via_actual_controller(const QuarterIdentity&id,const Quarter&data){
+  if(id.row.pos>=current_position)throw std::runtime_error("prior actual writer includes current/future token");return enqueue_controller_quarter(id,data);
+ }
+ private:
+ uint64_t enqueue_controller_quarter(const QuarterIdentity& id,const Quarter& data){
+  auto p=native_map(id);if(id.row.pos>current_position)throw std::runtime_error("writer future position mismatch");
+  if(!pending_writes.insert(ik(id)).second)throw std::runtime_error("duplicate in-flight quarter identity");
+  acknowledged.erase(ik(id));declared_image.erase(ik(id));uint64_t t=ticket_next++;channels[p.index()].writes.push_back({t,id,data});return t;
+ }
+ public:
  // Prior-cache preload is an explicit harness operation. Caller supplies a
  // declared ECC288 DRAM image; no current-token preload is accepted.
  void declare_prior_quarter(const QuarterIdentity&id,const Codeword&code){
   auto p=native_map(id);if(id.row.pos>=current_position)throw std::runtime_error("prior preload includes current/future token");
-  channels[p.index()].phy.memory[p.address()]=code;++declared_preloads;
+  if(pending_writes.count(ik(id)))throw std::runtime_error("preload overlaps pending actual writer");
+  channels[p.index()].phy.memory[p.address()]=code;declared_image.insert(ik(id));++declared_preloads;
  }
  bool row_is_committed(const RowIdentity&id)const{
-  if(id.pos<current_position)return true;
-  for(unsigned q=0;q<4;q++)if(!acknowledged.count(ik({id,q})))return false;return true;
+  bool all_ack=true,all_declared=true;
+  for(unsigned q=0;q<4;q++){all_ack&=acknowledged.count(ik({id,q}))!=0;all_declared&=declared_image.count(ik({id,q}))!=0;}
+  return all_ack||(id.pos<current_position&&all_declared);
  }
  uint64_t request_row(const RowIdentity&id){
   if(id.pos>current_position||!row_is_committed(id))throw std::runtime_error("row request before actual current-token ACKs");

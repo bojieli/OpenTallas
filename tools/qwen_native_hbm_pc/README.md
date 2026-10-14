@@ -125,3 +125,13 @@ checks. Prior preload uses the gate's explicit ECC image initializer; current
 payloads always take the real RTL host-write path. Physical codeword corruption
 and incorrect sector-adapter coordinates produce observed failures. This tests
 backend integration and addresses, not production kernel execution or cost.
+
+For immutable raw FP8 prior-cache inputs, use
+`enqueue_prior_quarter_via_actual_controller(identity, raw_data32)`. It requires
+position less than the current token and uses the identical real
+host_es→controller ECC→PHY write→WDONE ACK path as current writes. No C++ encoder
+is involved. `row_is_committed` now requires all four matching actual write ACKs,
+or (for prior rows only) all four explicitly declared ECC preload quarters.
+Uninitialized, partially preloaded and pending prior rows cannot be read.
+The full-layer parent should initialize raw prior payloads through this method;
+the targeted gate also retains separately declared prior DRAM image coverage.
