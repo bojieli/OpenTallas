@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "old_source": "3144b850c before pin-only fault copy",
+  "new_source": "e0cae3a4a with fault pin copy",
+  "stimulus": "actual CCF FIFOhead bit30 mutant",
+  "all3_chain_err_rows_fault_fault_code_total_cycles_and_job_cycles_identical": true,
+  "qualification_scope": "functional fault epoch only; no timing claim"
+}
