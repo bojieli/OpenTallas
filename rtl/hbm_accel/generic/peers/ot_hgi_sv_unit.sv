@@ -463,7 +463,7 @@ module ot_hgi_sv_ctl #(
     parameter integer SLB = 16,
     parameter integer LQ = 8,              // ONE constant = ot_hgi_vm_unit LQ (VM lane queue depth, power of two) = the credits a lane holds
     parameter integer EP0 = 0,             // frame epoch after a scrub (bench: 14 makes the chain's in-place sink wrap 15 -> 1)
-    parameter integer MUT_V = 0,          // 3 in-place gate off, 4 forward reader takes no pin, 6 scalar bypass slot ^ 1, 7 tail frame keeps its old write epoch
+    parameter integer MUT_V = 0,          // 3 in-place gate off, 4 forward reader takes no pin, 6 scalar bypass slot ^ 1, 7 tail frame keeps its old write epoch, 8 no EXT stream credit (the vec runs ahead of the stage)
     parameter integer NSJ = 6
 ) (
     input  wire          clk,
@@ -925,6 +925,7 @@ module ot_hgi_sv_ctl #(
                     ip_on <= ip_on_n;
                     for (integer e = 0; e < 8; e = e + 1)
                         if ((s_ov[0][e] || s_ov[1][e]) && !(ip_on_n && ip_e == 3'(e))) tb_fok[e] <= 1'b0;
+                    sl_lvw[dslot] <= c_lvw;                    // EVERY record (the EXT stream credit needs it without an O sink)
                     rk <= 3'd4; dstt <= D_AA;
                 end
                 // ALLOC edge A (region rk, order O R A B C D): decide forward / in place / allocate, pin
@@ -1009,7 +1010,7 @@ module ot_hgi_sv_ctl #(
                         sl_ov[dslot] <= 1'b1; sl_opin[dslot] <= 1'b1; sl_ovsec[dslot] <= cur_lo[17:3];
                         sl_on[dslot] <= 14'(cur_hi[17:3] - cur_lo[17:3]) + 14'd1; sl_olsec[dslot] <= a_lb[17:3];
                         sl_oep[dslot] <= a_ep; sl_olo3[dslot] <= cur_lo[2:0]; sl_odense[dslot] <= c_dense[4];
-                        sl_olive[dslot] <= c_olive; sl_oovs[dslot] <= sv_s != 4'd0; sl_lvw[dslot] <= c_lvw; sl_otwo[dslot] <= a_tw;
+                        sl_olive[dslot] <= c_olive; sl_oovs[dslot] <= sv_s != 4'd0; sl_otwo[dslot] <= a_tw;
                     end else if (rk == 3'd5) begin
                         sl_rv[dslot] <= 1'b1; sl_rslot[dslot] <= a_lb[7:6]; sl_rvsec[dslot] <= cur_lo[17:3];
                         sl_rns[dslot] <= 4'(cur_hi[17:3] - cur_lo[17:3]) + 4'd1;
@@ -1268,7 +1269,7 @@ module ot_hgi_sv_ctl #(
                     r_on <= rvw_on; r_lo3 <= rvw_lo3; r_lvw <= rvw_lvw; r_oep <= rvw_oep; r_ofr <= rvw_ofr;
                     r_olive <= rvw_olive; r_ov <= rvw_ov; r_ext <= ext_s || ext_i; r_otwo <= rvw_otwo;
                     if (ext_s || ext_i) begin
-                        wl[669:628] <= {f_mul, f_lead, xs, 2'd3}; x_seq <= xs; r_seq <= xs; xs <= xs + 8'd1;
+                        wl[669:628] <= (MUT_V == 8) ? 42'd0 : {f_mul, f_lead, xs, 2'd3}; x_seq <= xs; r_seq <= xs; xs <= xs + 8'd1;
                     end else wl[669:628] <= 42'd0;
                     x_cnt <= 16'd0; gs_r <= 14'd0; gi_r <= 14'd0;
                     ssel <= fd[3] ? (ssel_n & ~NSJ'(8'd1 << fd[2:0])) : ssel_n; sp_bl <= BLV;   // (a slot freed this edge is out)
@@ -1377,7 +1378,7 @@ module ot_hgi_sv_ctl #(
             hfault <= 1'b0; su_fault_r <= 1'b0;
         end else begin
             ret_tag <= rh;
-            ret_ok <= !ev_ret && s_v[rh] && s_cd[rh] && (s_nop[rh] || ((!sl_ov[rh] || s_odone[rh]) && (!sl_rv[rh] || s_rdone[rh]))) &&
+            ret_ok <= !ev_ret && s_v[rh] && s_cd[rh] && stc[rh] && (s_nop[rh] || ((!sl_ov[rh] || s_odone[rh]) && (!sl_rv[rh] || s_rdone[rh]))) &&
                       rp != rh && dp != rh && rdp != rh && !hfault;
             rec_done <= ev_ret && !hfault;
             if (ev_ret) rh <= rh + 3'd1;
