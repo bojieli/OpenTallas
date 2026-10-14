@@ -178,6 +178,9 @@ if {![llength [get_clocks -quiet ot_entry_161]]} { create_clock -name ot_entry_1
 if {![llength [get_clocks -quiet ot_entry_162]]} { create_clock -name ot_entry_162 -period $ot_fence_period [get_ports {bank_clks[163]}] }
 if {![llength [get_clocks -quiet ot_entry_163]]} { create_clock -name ot_entry_163 -period $ot_fence_period [get_ports {bank_clks[164]}] }
 if {![llength [get_clocks -quiet ot_unused_ack_clock]]} { create_clock -name ot_unused_ack_clock -period $ot_fence_period [get_ports {bank_clks[34]}] }
+# Secondary clock sources were initially normal inputs in generic clock.sdc.
+# Remove all clock-source data delays before measuring actual wire delivery.
+unset_input_delay [get_ports {clk bank_clks*}]
 # OT_CLOCK_ENTRY_DOMAIN_API_VERSION 1
 # AUTO clock entries: bound insertion.json boundary refs; no ETM arc modification.
 set ::ot_ce_refs [dict create {ot_hbm_native_fence_bank18/clk} {tt {54.7 55.5 56.1} ff {41.0 41.6 42.2} ss {78.3 79.4 80.2}} {ot_hbm_native_fence_bank128/clk} {tt {80.3 82.4 84.5} ff {60.7 63.1 65.3} ss {115.0 117.0 119.0}} {ot_hbm_native_fence_bank32/clk} {tt {60.9 61.9 62.6} ff {45.3 46.1 46.7} ss {88.6 89.9 91.0}} {ot_hbm_native_fence_bank9/clk} {tt {52.4 53.4 54.5} ff {39.1 40.0 41.0} ss {74.9 76.2 77.5}} {ot_hbm_native_fence_bank8/clk} {tt {51.9 52.2 52.3} ff {38.8 39.1 39.3} ss {74.1 74.4 74.5}}]

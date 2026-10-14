@@ -126,7 +126,9 @@ if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports til
 # ---- sdc_extra physical/hbm_native_bounded_cdc_1014/related_domains.sdc
 # Related PLL /3 and /4 clocks. No asynchronous groups or crossing exceptions.
 set ot_bound_period [expr {[get_property [get_clocks core_clk] period]*4.0/3.0}]
-if {![llength [get_clocks -quiet vm_clk]]} { create_clock -name vm_clk -period $ot_bound_period [get_ports rclk] }
+create_clock -name vm_clk -period $ot_bound_period [get_ports rclk]
+unset_input_delay [get_ports {wclk rclk}]
+puts "BOUNDED_CDC_PERIODS core=[get_property [get_clocks core_clk] period] vm=[get_property [get_clocks vm_clk] period] ratio=4/3"
 set_clock_uncertainty -setup 150 -from [get_clocks {core_clk vm_clk}] -to [get_clocks {core_clk vm_clk}]
 set_clock_uncertainty -hold 100 -from [get_clocks {core_clk vm_clk}] -to [get_clocks {core_clk vm_clk}]
 foreach {c ins outs} {core_clk {wrst_n we wdata* wepoch*} {full rd_freed* w_fault} vm_clk {rrst_n re repoch*} {rdata* empty r_fault}} {
