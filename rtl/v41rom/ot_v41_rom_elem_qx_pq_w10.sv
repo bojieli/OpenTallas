@@ -406,9 +406,33 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             if (!rst_n) begin r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
             else if (wen) begin r_xs_v <= xs_v; r_xb_v <= xb_v; end
         always @(posedge wclk) if (wen) begin
-            r_xs_p <= xs_p; r_xs_b <= xs_b; r_xs_sv <= xs_sv; r_xs_q0 <= xs_q0; r_xs_e0 <= xs_e0;
-            r_xs_q1 <= xs_q1; r_xs_e1 <= xs_e1; r_xs_pos <= xs_pos; r_xb_pos <= xb_pos; r_xb_b <= xb_b;
-            r_xb_sv <= xb_sv; r_xb_u <= xb_u; r_xb_d <= xb_d;
+            r_xs_p <= xs_p; r_xs_b <= xs_b; r_xs_sv <= xs_sv; r_xs_e0 <= xs_e0;
+            r_xs_e1 <= xs_e1; r_xs_pos <= xs_pos; r_xb_pos <= xb_pos; r_xb_b <= xb_b;
+            r_xb_sv <= xb_sv; r_xb_u <= xb_u;
+        end
+        // QS6: one kept enable per 32 payload bits. Every enable is the
+        // same registered ICG decision as wen, so the captured beat and its
+        // enabled edge are unchanged. Avoid one enable's >1500-load tree.
+        for (genvar eg = 0; eg < 48; eg = eg + 1) begin : g_payload_enable
+            wire en;
+            if (QS >= 6 && QZ != 0 && CG != 0) begin : g_local
+                ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_en
+                    (.clk(clk), .arst_n(rst_n_pin), .d(qz_zd), .q(en));
+            end else begin : g_shared
+                assign en = wen;
+            end
+            if (eg < 8) begin : g_q0
+                always @(posedge wclk) if (en) r_xs_q0[32*eg +: 32] <= xs_q0[32*eg +: 32];
+            end else if (eg < 16) begin : g_q1
+                always @(posedge wclk) if (en) r_xs_q1[32*(eg-8) +: 32] <= xs_q1[32*(eg-8) +: 32];
+            end else begin : g_bf
+                always @(posedge wclk) if (en) r_xb_d[32*(eg-16) +: 32] <= xb_d[32*(eg-16) +: 32];
+            end
+`ifdef QP_CHECK
+            always @(negedge clk) if (rst_n_pin && en !== wen) begin
+                $display("QS6_CHECK FAIL: payload enable %0d differs", eg); $fatal(1);
+            end
+`endif
         end
         // configuration writes are not registered: the class registers must be final one cycle before go_e so the
         // registered sub-block facts below are current when go_e starts the walkers
