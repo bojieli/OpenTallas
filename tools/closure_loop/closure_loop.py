@@ -2511,16 +2511,27 @@ def ship_helpers(host, run, job=None):
                     job["helper_overlay_verification"] = dict(receipt, verified_at=now_iso(),
                                                                host=host, run=run, mutation=False)
                     return
-                if job.get("source_synced") or job.get("helper_overlay_installed") or job.get("helper_overlay_verification"):
+                origin = job.get("bench_helper_origin")
+                if origin:
+                    if origin == dict(host=host, run=run):
+                        raise ValueError("bench helper origin must be a different execution location")
+                    original = installed_helper_receipt(origin["host"], origin["run"], frozen)
+                    if original.get("status") != "verified_original":
+                        raise ValueError("bench helper origin has no verified original execution")
+                    payloads = HO.committed_frozen_payloads(REPO, frozen)
+                    modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+                    job["bench_helper_origin_verification"] = dict(original, **origin, verified_at=now_iso())
+                elif job.get("source_synced") or job.get("helper_overlay_installed") or job.get("helper_overlay_verification"):
                     raise ValueError("previously installed frozen helper directory is missing")
             except (ValueError, OSError, subprocess.SubprocessError) as ex:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
-        current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
-        modes = {f["path"]: f["mode"] for f in current["files"]}
-        frozen = job.setdefault("route_overlay_plan", current)
-        ok, why = HO.compare_plans(frozen, current)
-        if not ok:
-            raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+        if payloads is None:
+            current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
+            modes = {f["path"]: f["mode"] for f in current["files"]}
+            frozen = job.setdefault("route_overlay_plan", current)
+            ok, why = HO.compare_plans(frozen, current)
+            if not ok:
+                raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
         for helper in HELPERS:
@@ -4247,15 +4258,66 @@ def offload_bench_location(j, fleet, st):
         if not ok:
             continue
         v = dict(j, host=h, run=f"{cfg['base']}/{j['name']}-bench", resume=None, checkpoint_affinity=None)
+        # A new bench directory is not the route's executed helper directory.
+        # Relocate only after read-only verification at the original location;
+        # ship_helpers then installs the original committed payload, never main's
+        # newer bytes, and leaves the original execution untouched.
+        if j.get("freeze_helper_overlay") and j.get("route_overlay_plan"):
+            v["bench_helper_origin"] = dict(host=j["host"], run=j["run"])
         try:
             sync_source(v)
         except Exception as ex:  # noqa: BLE001
             event(j, f"bench offload: source sync to {h} failed: {str(ex)[:200]}")
             continue
+        if v.get("bench_helper_origin_verification"):
+            verification = installed_helper_receipt(h, v["run"], v["route_overlay_plan"])
+            if verification.get("status") != "verified_original":
+                raise ValueError("bench destination helper installation was not verified")
+            j.setdefault("bench_helper_relocations", []).append(dict(
+                origin=v["bench_helper_origin_verification"], destination=dict(host=h, run=v["run"]),
+                verification=verification, verified_at=now_iso()))
         with FLEET_LOCK:
             fleet._launched(h, 0, 0)
         return dict(host=h, run=v["run"], attempt=j["attempt"])
     return None
+
+
+BENCH_MEM_OFFLOAD_WAIT_S = 30 * 60
+
+
+def memory_offload_bench(j, fleet, st, stl, location, why):
+    """HBM group A 2026-10-14 (hgi_xp_bfm-recover1 / hgi_xp_rdc-recover2margin sat READY for hours): a bench whose spec
+    peak_ram_gb does not fit the ARTIFACT host (AGIdock 128 GB, MemAvailable 70-93 GB, bench 96 GB) waited forever --
+    offload_bench_location() only offloaded for missing tools.  After BENCH_MEM_OFFLOAD_WAIT_S of waiting, move the
+    bench chain to a host that fits it now, through the same offload path (source synced to <base>/<name>-bench).
+    Benches that read route products ({RUN}/routes, physical_artifacts) stay on the artifact host.  The chain restarts
+    on the new host: receipts made at the old location are dropped (their build products are not there), as in
+    vanished_bench_location().  Returns the new location or None."""
+    if any("routes/" in (b.get("cmd") or "") or "physical_artifacts" in (b.get("cmd") or "")
+           for b in bench_stages(stl)):
+        return None
+    since = j.get("bwait_since")
+    if not since:
+        return None
+    try:
+        waited = time.time() - dt.datetime.fromisoformat(since).timestamp()
+    except ValueError:
+        return None
+    if waited < BENCH_MEM_OFFLOAD_WAIT_S:
+        return None
+    off = offload_bench_location(j, fleet, st)
+    if off is None:
+        return None
+    tr = j.get("btrack") or {}
+    old = location.get("run")
+    lost = [k for k, e in tr.items() if e.get("run") == old and e.get("state") != "running"]
+    for k in lost:
+        tr.pop(k, None)
+        (j.get("benches") or {}).pop(k, None)
+    j["bench_location"] = off
+    event(j, f"bench track: offloaded to {off['host']}:{off['run']} after {int(waited // 60)} min waiting on "
+             f"{location.get('host')} ({why}); chain restarts there (dropped receipts: {', '.join(lost) or 'none'})")
+    return off
 
 
 def bench_track(j, fleet, stl):
@@ -4263,7 +4325,12 @@ def bench_track(j, fleet, stl):
     if not j.get("bench_par") or j["status"] in TERMINAL or j["status"] in ("QUEUED", "SYNC", "MIGRATING"):
         return True
     tr = j.setdefault("btrack", {})
-    for st in bench_stages(stl):
+    # A relocation can invalidate an earlier artifact receipt while a later
+    # bench is already running. Poll that bench before a pending predecessor;
+    # otherwise the one-at-a-time guard prevents its completion being collected.
+    ordered = sorted(bench_stages(stl),
+                     key=lambda st: tr.get(st["key"], {}).get("state") != "running")
+    for st in ordered:
         k = st["key"]
         if k in j["benches"]:
             continue
@@ -4288,14 +4355,25 @@ def bench_track(j, fleet, stl):
                 event(j, f"bench track: offloaded to {location['host']}:{location['run']} (job host {j['host']} lacks bench tools)")
             host = location["host"]
             fleet.probe(host)
+            launch_token = None
             with FLEET_LOCK:
                 ok, why = fleet.fits(host, st["threads"], st["ram"])
-                if not ok:
+                if ok:
+                    launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
+            if not ok:
+                off = memory_offload_bench(j, fleet, st, stl, location, why)
+                if off is None:
                     if j.get("bwait") != why:
                         j["bwait"] = why
+                        j.setdefault("bwait_since", now_iso())
                         event(j, f"bench track: {k} waiting for capacity on artifact host {host}: {why}")
                     return True
-                launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
+                location, host = off, off["host"]
+                with FLEET_LOCK:
+                    ok, why = fleet.fits(host, st["threads"], st["ram"])
+                    if not ok:
+                        return True
+                    launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
             n = (e or {}).get("n", 0) + 1
             v = dict(j, host=host, run=location["run"], attempt=f"{location['attempt']}b{n}")
             try:
@@ -4305,6 +4383,7 @@ def bench_track(j, fleet, stl):
             j["bench_location"] = location
             tr[k] = dict(state="running", tag=v["stage_tag"], host=host, run=location["run"], n=n, started=now_iso(), stage_source=v.get("stage_source"))
             j["bwait"] = None
+            j.pop("bwait_since", None)
             event(j, f"bench track: launched {k} ({v['stage_tag']}) beside {j.get('stage_key')}")
             return True
         v = _bview(j, e)
