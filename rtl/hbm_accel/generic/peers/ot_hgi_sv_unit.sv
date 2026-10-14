@@ -737,9 +737,14 @@ module ot_hgi_sv_head #(
     // Parallel with the existing classification edges: no allocation-side subtract/add chain.
     // hi/lo already include the pair-mode alignment; these payload registers need no reset.
     reg [17:0] alloc_span [0:5]; reg [18:0] alloc_ext [0:5];
+    reg [23:0] alloc_delta [0:5], fwd_delta [0:3]; reg [17:0] fwd_origin [0:3];
     always @(posedge clk) begin
-        if (dstt == D_CL0) for (integer k = 0; k < 6; k = k + 1) alloc_span[k] <= hi[k] - lo[k];
+        if (dstt == D_CL0) for (integer k = 0; k < 6; k = k + 1) begin
+            alloc_span[k] <= hi[k] - lo[k]; alloc_delta[k] <= c_base[k] - {6'd0, lo[k]};
+        end
         if (dstt == D_CL1) for (integer k = 0; k < 6; k = k + 1) alloc_ext[k] <= {1'b0, alloc_span[k]} + {11'd0, lo[k][7:0]};
+        if (dstt == D_SK0) for (integer q = 0; q < 4; q = q + 1) fwd_origin[q] <= tb_lo[f_e[q]];
+        if (dstt == D_SK1) for (integer q = 0; q < 4; q = q + 1) fwd_delta[q] <= c_base[q] - {6'd0, fwd_origin[q]};
     end
     reg [7:0] h_in [0:3]; reg [7:0] h_eq [0:3]; reg [7:0] h_ov [0:3]; reg [7:0] s_ov [0:1]; reg [7:0] s_ovs [0:1];
     reg [7:0] o_eq; reg [3:0] sv_s;
@@ -987,7 +992,7 @@ module ot_hgi_sv_head #(
                     end else if (aa_fault) begin dfault <= 1'b1; dstt <= D_FAULT; end
                     else if (aa_go) begin
                         dstt <= D_AB; stallc <= 4'd0;
-                        a_stg <= is_src && !fw_ok; a_big <= a_large; a_delta <= c_base[rk] - {6'd0, cur_lo}; a_tw <= ipnow ? ip_two : a_two;
+                        a_stg <= is_src && !fw_ok; a_big <= a_large; a_delta <= alloc_delta[rk]; a_tw <= ipnow ? ip_two : a_two;
                         if (ipnow) begin                                           // IN PLACE: e's local words, a new epoch
                             a_lb <= tb_lb[ip_e]; a_ep <= ip_ep; fr_ep[ip_f] <= ip_ep;
                             if (ip_two) begin fr_ep[ip_fn] <= ip_ep; if (ip_wrap) fr_wrap[ip_fn] <= 1'b1; end
@@ -1005,7 +1010,7 @@ module ot_hgi_sv_head #(
                             tb_stg[vic] <= 1'b1; tb_kind[vic] <= K_RS; tb_lo[vic] <= cur_lo; tb_hi[vic] <= cur_hi;
                             tb_lb[vic] <= {1'b1, 10'd0, rfs[1:0], 3'd0, cur_lo[2:0]}; tb_own[vic] <= dslot;
                         end else if (fw_ok) begin                                  // FORWARD: e's local words, pinned
-                            a_delta <= c_base[rk] - {6'd0, tb_lo[fe]};
+                            a_delta <= fwd_delta[aq];
                             a_lb <= (fw_rs && MUT_V == 6) ? (tb_lb[fe] ^ 19'h00040) : tb_lb[fe];
                             if (fw_rs) begin
                                 if (!sl_rpin[dslot][tb_lb[fe][7:6]] && MUT_V != 4) begin
