@@ -40,7 +40,7 @@ def main():
         "name": name, "block": "dsfd_engram_c", "element": "dsfd_engram_c", "owner": "Claude:el1013-s81-engram",
         "purpose": "S81 layer1e Engram cluster dsfd_engram_c, ALL-TILE composition (slot 1188 x 432): the top level holds no register; "
                    "8 hardened children (closed lkp / sink leaves + T_WIN / T_IO / T_WS / T_PBB / T_PBC x2, all views child_lint clean) "
-                   "each behind a clock entry chain (ot_engc_ck_entry: N HB4xp67 + BUFx12 at the child's clock pin). CTS-stop gate: "
+                   "clocked by a pre-placed balanced spine with a separate leaf at each child clock pin. CTS-stop gate: "
                    f"{C}/gate (leaf spread <= 80 ps TT and FF). IO against the fixed vclk {a.vclk} ps (no top register to measure).",
         "hosts": ["ot-epyc4", "ot-epyc1tb", "ot-agidock128"], "threads": 16, "peak_ram_gb": 32,
         "source": {"branch": a.branch, "commit": a.commit},
@@ -68,8 +68,8 @@ def main():
                     "post_sdc": ["physical/s81_ph_views/common/signoff_unc60.sdc"]},
         "record": [{"from": "{RUN}/record", "to": "physical/s81_ph_views/closed/dsfd_engram_c"}],
         "structural_change": "all-tile cluster, no top register, 8 hard clock pins; replaces the soft-tree monolith (12 failed routes: hold stalled "
-                             "-206.5 ps at 16,258 sinks/root, SRAM read path -1568.6 ps). New in this submission: per-child clock entry delay "
-                             "(kept HB4 chain + BUFx12 driver placed at each child's clock pin, leaf spread 64 ps TT / 66 ps FF measured after CTS, "
+                             "-206.5 ps at 16,258 sinks/root, SRAM read path -1568.6 ps). New in this submission: pre-placed clock spine with per-child insertion targets "
+                             "(g13 measured leaf spread 67.4 ps TT / 64.8 ps FF after CTS, max clock-pin slew 21.7 ps, "
                              "was 400 ps with the bare top tree), children re-routed with face-pin keepout (child_lint 0 pins blocked), sliver rows "
                              "removed before the PDN, child seams that hold rows opened to >= 12 um (io +4.32 / lkp -4.32 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, leaf / die reset release multicycle 2 (rst_mcp2 intent), fixed vclk.",
     }
