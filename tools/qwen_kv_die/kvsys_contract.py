@@ -42,12 +42,13 @@ EXTRA = dict(
         reach_rules=['die pin -> first register <= 500 um (ti / e into the front quarters at the S face, s from score4, '
                      'nb from the nb2 leaves on the E face)', 'inside the head every register-to-register hop <= 500 um']),
     qkd_ectl=dict(
-        rtl='rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv qkd_ectl3_s = qkd_ectl_a_tp8 | qkd_ectl_b_tp8 | qkd_ectl_c_tp8 '
-            '(rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv, native HEADS 1 / Q_FP32 1)',
+        rtl='rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv qkd_ectl3_direct_s = qkd_ectl_a/b/c_tp8_direct '
+            '(direct seams, no B feed-through; native HEADS 1 / Q_FP32 1; jobs qkd_ectl_{a,b,c}_tp8_direct-dr1-7de44a889)',
         clock_entries={'ck_a': 'ck[0] (leaf A)', 'ck_b': 'ck[1] (leaf B)', 'ck_c': 'ck[2] (leaf C)'},
         subslots=dict(a=dict(xy=[0.0, 0.0], wh=[254.88, 129.6]), b=dict(xy=[254.88, 0.0], wh=[254.88, 129.6]),
                       c=dict(xy=[509.76, 0.0], wh=[138.24, 129.6])),
-        note='the historical closed A/B/C views are HEADS 2 / Q_FP32 0 builds: native views are owed (Codex 11:05). The t0 / t1 '
+        note='the tp3 closed A/B views FAIL the native audit (feed-through flops capture at one face, launch at the other); '
+             'the direct-seam leaves are routing (dr1). The t0 / t1 '
              'pins (S / N face, M5, 6-track pitch, x 8.5..457.5) are bit-aligned with every head ti; e0/e1 + s0/s1 side by '
              'side at x 470 / 490 (S), e2/e3 + s2/s3 the same on N'),
     qkd_land=dict(

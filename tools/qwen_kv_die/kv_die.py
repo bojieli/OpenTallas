@@ -238,7 +238,9 @@ SPLIT_BINDINGS = dict(
                            **{f'ck_{t}{i}': f'ck_{t}0' for t in 'itabl' for i in range(1, 16)}},
                    classed={'hid': 'by_design: die-top strap (tie cells), the head index of this tile'}),
     # v1.1: the three native TP8 control leaves A / B / C behind the wires-only qkd_ectl3_s, ck[0..2] = die ck_a / ck_b / ck_c
-    qkd_ectl=dict(module='qkd_ectl3_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv',
+    # v1.2: the DIRECT-seam parent (Codex 5f3e5767f / 00f42ca01: no B feed-through flops; C launches straight to A over B;
+    # exact 3,705 / 4,137 PASS, A/B/C mutants FAIL) = the structural fix of the tp3 views' native-audit FAIL; same ports
+    qkd_ectl=dict(module='qkd_ectl3_direct_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv',
                   ports=dict(si=['si'], so=['so'], t0=['t0'], t1=['t1'], e0=['e0'], e1=['e1'], e2=['e2'], e3=['e3'],
                              s0=['s0'], s1=['s1'], s2=['s2'], s3=['s3'], rq=['rq'], rs=['rs'], ck_a=['ck'], rst_n=['rst_n']),
                   sliced=dict(ck_b='ck_a', ck_c='ck_a'),
