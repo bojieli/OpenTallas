@@ -186,6 +186,19 @@ module tb_hgi_hc_eng_b2;
     // the engine retires only after its last write is in the macro: count the VM write dones while it owns the lanes
     integer wdn = 0;
     always @(posedge clk) if (own) for (integer b = 0; b < 32; b = b + 1) if (w2_done[b]) wdn = wdn + 1;
+    // Gain-ready is a real producer/consumer permission. The memory fixture is
+    // preloaded, so output equality alone would miss a premature gain read.
+    integer early_gain_reads = 0;
+    always @(posedge clk) if (own && jw[148:147] == 0 && !g_rdy) begin
+        for (integer bl = 0; bl < 32; bl = bl + 1) begin
+            if (e_rq[bl*16+15] && e_rq[bl*16+:15] >= (jw[35:18] >> 3) &&
+                e_rq[bl*16+:15] < ((jw[35:18] >> 3) + HD/32)) begin
+                early_gain_reads = early_gain_reads + 1;
+                errors = errors + 1;
+                if (early_gain_reads < 3) $display("ERR gain read before producer ready lane %0d", bl);
+            end
+        end
+    end
     integer cyc_case [0:15];
     initial begin
         repeat (3) @(posedge clk);
@@ -222,6 +235,7 @@ module tb_hgi_hc_eng_b2;
             lanes_run();
             tot = tot + 1;
         end
+        $display("protocol: early_gain_reads %0d", early_gain_reads);
         $display("summary: %0d HC B2 engine cases, %0d sectors checked, %0d sector errors, stale chunks %0d", tot, checked, errors, u_e.u_ctl.c_stale);
         if (errors == 0 && tot == NCASE) $display("HGI_HC_ENG_B2 PASS"); else $display("HGI_HC_ENG_B2 FAIL errors=%0d", errors);
         $finish;

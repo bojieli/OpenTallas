@@ -10,6 +10,7 @@ module ot_hgi_hc_lane_b2 #(
     parameter integer QID = 0,
     parameter integer LQ  = 32,
     parameter integer FD  = 64,
+    parameter integer TD = 2 * LQ,            // bounded in-flight read associations, independent of return credits
     parameter integer HSL = 1,               // 1: the FP datapath as 8 hard element slices (ot_hgi_hc_lane_sl, own clock
                                              //    tree, registered in/out => +2 cycles); 0: flat (one 114k-flop clock root)
     parameter integer MUT = 0
@@ -75,11 +76,17 @@ module ot_hgi_hc_lane_b2 #(
     // top's scalar fetch / weight broadcast / GO relay (~2 RL + the scalar round trip) overlaps the reads.  Responses land
     // in a ring of RG sector groups {y, r0..r3} (the PRE x / gain buffers, idle on HC_POST); the k sweep consumes a whole
     // group a 4-cycle sweep (1.25 reads a cycle, faster than the 1-a-cycle read lane) once GO has delivered the weights.
-    // Scalar reads now interleave with data reads on the bank lane: an in-order 1-bit tag FIFO (depth LQ = the lane's
-    // credits) tells a scalar response from a data one.
+    // Queue credits return before a read response completes. Track the response
+    // association in a separate finite tag ring, guarded by actual outstanding
+    // occupancy. A scalar command is retained until both queues admit it.
     localparam integer RG = (2 * NM) / 5;    // ring groups (8 at D 5120)
     localparam integer RGB = (RG > 1) ? $clog2(RG) : 1;
-    localparam integer TB = (LQ > 1) ? $clog2(LQ) : 1;
+    localparam integer TB = (TD > 1) ? $clog2(TD) : 1;
+    localparam integer TNB = $clog2(TD + 1);
+    reg [TNB-1:0] tn;
+    wire tag_room = tn < TNB'(TD);
+    reg scalar_wait; reg [14:0] scalar_sec;
+    wire scalar_issue = scalar_wait && cr != '0 && tag_room;
     reg pf;                                  // HC_POST: reads may issue (from JOB)
     reg [RGB-1:0] rgp, cgp; reg [MB:0] cg;   // ring write / consume group pointers, groups consumed
     function automatic [255:0] bf2f(input [127:0] h);
@@ -107,8 +114,8 @@ module ot_hgi_hc_lane_b2 #(
     reg  iss; reg [14:0] isec;
     always @* begin
         iss = 1'b0; isec = '0;
-        if (scr_mine) begin iss = 1'b1; isec = dd_q[14:0]; end
-        else if ((run || pf) && cr != '0 && !rd_done) begin
+        if (scalar_issue) begin iss = 1'b1; isec = scalar_sec; end
+        else if ((run || pf) && cr != '0 && tag_room && !rd_done && !scr_mine) begin
             if (post) begin
                 if (it != 3'd0 || (({1'b0, occ} + 8'(4 * (gs - gp)) + 8'd4 <= 8'(FD)) && ((gs - cg) < (MB+1)'(RG)))) begin
                     iss = 1'b1;
@@ -132,14 +139,16 @@ module ot_hgi_hc_lane_b2 #(
     reg [255:0] xb [0:NM-1], gb [0:NM-1];    // PRE: x and gain of the lane's sectors
     reg sw; reg [1:0] kk;                    // HC_POST k sweep
     reg mx_v;                                // PRE: a sector's h quad to the mix
-    reg [LQ-1:0] tgq; reg [TB-1:0] tgw, tgr;  // tag FIFO: 1 = a scalar read
+    reg [TD-1:0] tgq; reg [TB-1:0] tgw, tgr;  // tag FIFO: 1 = a scalar read
     wire tg_h = tgq[tgr];
-    always @(posedge clk) if (iss) tgq[tgw] <= scr_mine;
+    always @(posedge clk) if (iss) tgq[tgw] <= scalar_issue;
     always @(posedge clk or negedge rl)
-        if (!rl) begin tgw <= '0; tgr <= '0; end
+        if (!rl) begin tgw <= '0; tgr <= '0; tn <= '0; end
         else begin
-            if (iss) tgw <= (tgw == TB'(LQ - 1)) ? '0 : tgw + 1'b1;
-            if (rv_q) tgr <= (tgr == TB'(LQ - 1)) ? '0 : tgr + 1'b1;
+            if (iss) tgw <= (tgw == TB'(TD - 1)) ? '0 : tgw + 1'b1;
+            if (rv_q) tgr <= (tgr == TB'(TD - 1)) ? '0 : tgr + 1'b1;
+            if (iss && !rv_q) tn <= tn + 1'b1;
+            else if (!iss && rv_q) tn <= tn - 1'b1;
         end
     wire rsp = rv_q && !tg_h;                // a data response
     wire srsp = rv_q && tg_h;                // a scalar response
@@ -260,7 +269,7 @@ module ot_hgi_hc_lane_b2 #(
     reg [7:0] npop;
     always @(posedge clk or negedge rl) begin
         if (!rl) begin
-            run <= 1'b0; g_ok <= 1'b0; r_ok <= 1'b0; scp <= 1'b0; scx <= '0; cr <= QB'(LQ); im <= '0; it <= '0; ph_b <= 1'b0;
+            run <= 1'b0; g_ok <= 1'b0; r_ok <= 1'b0; scp <= 1'b0; scalar_wait <= 1'b0; scx <= '0; cr <= QB'(LQ); im <= '0; it <= '0; ph_b <= 1'b0;
             pf <= 1'b0; rgp <= '0; cgp <= '0; cg <= '0;
             gs <= '0; gp <= '0; occ <= '0; rm <= '0; rt <= '0; rph_b <= 1'b0; sw <= 1'b0; kk <= '0; mx_v <= 1'b0;
             sc_run <= 1'b0; sm <= '0; om <= '0; ym <= '0; xm <= '0; cm <= '0; ok <= '0; wcr <= QB'(LQ);
@@ -277,13 +286,17 @@ module ot_hgi_hc_lane_b2 #(
             end
             if (c_go) run <= 1'b1;
             if (c_grdy) g_ok <= 1'b1;
-            if (scr_mine) begin scp <= 1'b1; scx <= dx_q; end
+            if (scr_mine) begin
+                scalar_wait <= 1'b1; scalar_sec <= dd_q[14:0]; scx <= dx_q;
+                if (scalar_wait || scp) flt <= 1'b1;
+            end
+            if (scalar_issue) begin scalar_wait <= 1'b0; scp <= 1'b1; end
             // credits
             if (iss && !wrq_cr_q) cr <= cr - 1'b1; else if (!iss && wrq_cr_q) cr <= cr + 1'b1;
             if (pop && !wwq_cr_q) wcr <= wcr - 1'b1; else if (!pop && wwq_cr_q) wcr <= wcr + 1'b1;
             if (push && !pop) occ <= occ + 1'b1; else if (!push && pop) occ <= occ - 1'b1;
             // issue counters
-            if (iss && !scr_mine) begin
+            if (iss && !scalar_issue) begin
                 if (post) begin
                     if (it == 3'd0) gs <= gs + 1'b1;
                     if (it == 3'd4) begin it <= '0; im <= im + 1'b1; end else it <= it + 1'b1;
@@ -328,7 +341,7 @@ module ot_hgi_hc_lane_b2 #(
             if (push) npush <= npush + 1'b1;
             if (pop) npop <= npop + 1'b1;
             if (run && npush == nexp_l && npop == nexp_l && !f_hv && cr == QB'(LQ) && (MUT == 4 || wcr == QB'(LQ))) fin <= 1'b1;
-            if ((|hf) || (|mf) || (|sf) || (|cf) || (|f1) || (|f2) || ovf) flt <= 1'b1;
+            if ((|hf) || (|mf) || (|sf) || (|cf) || (|f1) || (|f2) || ovf || (rv_q && tn == '0)) flt <= 1'b1;
         end
     end
     always @(posedge clk) if (x_v) xb[xm] <= xl; else if (rsp && post && rs_w < 8'(NM)) xb[rs_w] <= rd_q;
