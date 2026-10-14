@@ -66,7 +66,12 @@ module ot_qwen_die_coll_xfifo #(
     wire grs_n;
     ot_reset_sync u_grs (.clk(ckd), .async_rst_n(rst_n), .sync_rst_n(grs_n));
     reg red_q, ocr_q, gcr_q, gf_q;
-    reg [7:0] rr;                                         // return words not yet reserved
+`ifdef OT_NCOLL_MUT_NARROW_RR
+    localparam integer RRW = 8; // negative control: native RRES260 truncates at256
+`else
+    localparam integer RRW = $clog2(RRES + 1);
+`endif
+    reg [RRW-1:0] rr;                                         // return words not yet reserved
     reg [5:0] pend;                                       // forward credits withheld for want of return space
     wire [5:0] avail = pend + {5'b0, sq_icr};
 `ifdef OT_NCOLL_MUT_NOREFUND_CHECK
@@ -74,7 +79,7 @@ module ot_qwen_die_coll_xfifo #(
 `else
     wire       grant = (avail != 0) && (rr >= N);
 `endif
-    wire [7:0] rr_n  = rr + (red_q ? N - 1 : 0) + {7'b0, ocr_q} - (grant ? N : 0);
+    wire [RRW-1:0] rr_n  = rr + (red_q ? N - 1 : 0) + {{(RRW-1){1'b0}}, ocr_q} - (grant ? N : 0);
     always @(posedge ckd or negedge grs_n)
         if (!grs_n) begin red_q <= 1'b0; ocr_q <= 1'b0; gcr_q <= 1'b0; gf_q <= 1'b0; rr <= RRES - CR * N; pend <= 6'd0; end
         else begin
