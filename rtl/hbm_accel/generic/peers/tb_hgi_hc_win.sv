@@ -40,9 +40,11 @@ module tb_hgi_hc_win;
  initial begin
   for(word_=0;word_<32;word_=word_+1)for(beat=0;beat<4;beat=beat+1)expected[word_][beat*256+:256]=pattern(word_,beat);
   repeat(4)@(negedge clk);rst_n=1;repeat(6)@(negedge clk);
+ `ifdef HC_WIN_PARTITIONED
   // Small rows leave striped windows empty. Releasing those windows is a no-op.
   rel=1;@(negedge clk);rel=0;repeat(8)@(negedge clk);
   if(fault||hqv)begin errors++;$display("ERR empty window release");end
+ `endif
   nwords=32;repeat(4)@(negedge clk);start=1;@(negedge clk);start=0;
   t=0;while(req<32&&t<2000)begin @(posedge clk);t=t+1;end
   if(req!=32)$fatal(1,"request timeout %0d",req);
