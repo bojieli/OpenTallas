@@ -1,0 +1,260 @@
+{
+  "source_revision": "e5cd1f3e7",
+  "netlist_sha256": "9b8d93e65063faff09ee200512a022abf61e4b16d6480ff8aee2af87022f75e1",
+  "local_control_dffs": 63,
+  "mapped_cells": [
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].iw_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].iw_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].iw_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].iw_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].iw_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[5].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[5].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[5].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[5].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[5].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[5].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[5].iw_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[6].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[6].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[6].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[6].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[6].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[6].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[6].iw_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[7].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[7].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[7].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[7].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[7].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[7].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[7].iw_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[8].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[8].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[8].ir_c[2]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[8].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[8].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[8].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[8].iw_c[2]$_DFF_PN0_"
+    }
+  ],
+  "scope": "Local feedback counters ownership in mapped synthesis; actual physical corner timing independent."
+}

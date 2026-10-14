@@ -1,0 +1,5 @@
+ot-run: ot-agidock128  admits   -96 GB (avail 83, growth 6, headroom 24, waiters 2/152 GB) load 62/64 running 2 disk 280 GB 
+ot-run: -> ot-agidock128 (will queue: admits -96 GB < 2 GB)
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-397864-1791958629 after 1 s
+FAIL native_coll_port sent=98 complete=53 words=302 mismatch=300 engine_mismatch=0 fault_ck=0 fault_ckd=0 pair_mismatch=301
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-397864-1791958629): exit 1
