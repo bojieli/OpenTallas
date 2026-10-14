@@ -38,7 +38,7 @@
     "why_genuine": "actual clocked1742bit register inserted in candidate control\u2192arithmetic grid source, no checker-only mutation"
   },
   "r5_four_root": {
-    "result": "COMPILING",
+    "result": "PASS 39193 cycle checks, 1026 emits, 192 descriptors, 15090 exact write words/addresses, warm reset",
     "source_manifest": "r5_split_manifest.sha256",
     "selection": "SPLIT_S_PIPE1 explicit; default0 remainsmonolithic alternative",
     "source_graph": "actual controllercwi registered outputs to4 chronological roots thenlive135bits reconstructedcws, existingE1/E2/out/retire unchanged",
@@ -48,6 +48,8 @@
       "physical root/pins/slot/cut/hops",
       "local8 cache/sectorpack/lease/ACK/native VMgroup1",
       "production throughput"
-    ]
+    ],
+    "runtime_s": 970.849,
+    "scope": "Synthetic full chronological four-root controller with actual frozen 16 CLOSED lanes and 16 mappers; no native cache/VM/group/production qualification"
   }
 }

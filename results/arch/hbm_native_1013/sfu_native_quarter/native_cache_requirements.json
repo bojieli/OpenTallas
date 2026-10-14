@@ -12,12 +12,13 @@
     "sector": "scalar_addr >>3",
     "local_main_sector_bits": 13,
     "native_sector16": "{mirror, quarter_sid[1:0], local_sector[12:0]} for main; mirror uses global slice0, reject nonzero global slice bits",
-    "read": "8 x {valid1,local_sector13} via authoritative CDC/mux queue ABI; exact sector packet must retain identity and FIFO ordering",
+    "read": "Engine adapter: 8 x 16 {valid,sector15}; native CDC: 8 x 17 {valid,mirror,sid2,local13}",
     "response": "8 x {valid1,data256}; no implicit tag field",
-    "write": "8 x {valid1,sector13,data256,mask8}; credit and done are separate",
+    "write": "Engine adapter: 8 x 280 {valid,sector15,data256,mask8}; native CDC: 8 x 281 {valid,sec16,data256,mask8}; queue credit distinct from committed done",
     "source_binding_reference": "rtl/hbm_accel/generic/qw/ot_hgi_qdq_native_peer4.sv",
     "source_sha256": "d15953ecea774947f9edb0108b236e07481f663786c38f4437c9b813393d9183",
-    "warning": "local bank index is VM bank, not arithmetic lane. 16-lane quarter cannot be renamed8-lane endpoint."
+    "warning": "local bank index is VM bank, not arithmetic lane. 16-lane quarter cannot be renamed8-lane endpoint.",
+    "adapter_aperture": "Reject engine sector[14:13] != 0; reject mirror sector[12] in quant adapter. This is not the full VM mirror aperture."
   },
   "raw_grid_abi": {
     "vi": "16 scalar gather-index requests, each addr24 + re1",
@@ -155,5 +156,38 @@
     "main aperture rejects high address bits; mirror read/write ownership cannot change under outstanding transactions",
     "physical pins/cut and controller clock roots unassigned",
     "immutable production price/throughput UNMEASURED"
-  ]
+  ],
+  "actual_glu_record": {
+    "source": "rtl/hbm_accel/generic/adapters/ot_hgi_sfu_record.sv, LEGACY0",
+    "streams": [
+      "A gate with a_min imm3 L and SILU",
+      "C up with c_clip and E1 MULC",
+      "B route weight with E2 MULB"
+    ],
+    "D": "unused",
+    "sectors_per_16lane_issue": 6,
+    "bytes_per_issue": 192,
+    "balanced_VM_bytes_per_engine_edge": 192,
+    "aligned_three_stream_bank_histogram": [
+      3,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "four_contiguous_vectors_bank_reads": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "limits": "Ideal balanced reads alone saturate native8 x 256-bit bandwidth at 4:3 engine:VM edges. No headroom for shared-group competition; prefetch must cover measured native RTT and real frame/response ownership. No throughput claim."
+  }
 }

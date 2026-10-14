@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.sfu.bank_lifetime.v1",
+  "qualified": false,
+  "scope": "Independent per-bank client identity/credit/ACK seam. No assigned group1 owner or local cache composition.",
+  "replication": 8,
+  "LQ": 10,
+  "native_read_bits": 17,
+  "native_write_bits": 281,
+  "native_response_bits": 257,
+  "identity_entries_per_direction": 10,
+  "identity_bits": 32,
+  "estimated_payload_ff": 1517,
+  "roots": "One engine root per bank; actual synthesis/CTS required, not assigned.",
+  "ordering": "Read identity pops only on ordered native response. Write identity pops only on committed done. Queue credit can return before done.",
+  "fence": "Stop new acceptance; retain owner request until all identities/credits/output and captured input pulses drained and external real path_quiet asserted. path_quiet cannot be inferred from local ACK counts.",
+  "address_guard": "Bank sector[2:0] equals bank strap; main sector[14:13] equals slice strap; mirror sector[14:13] must be zero. Invalid requests never enter native lane and latch fault.",
+  "negative_control": "MUT_EARLY_RELEASE ignores committed write debt and external path_quiet during fence; must fail owner lifetime test.",
+  "open": [
+    "Full eight-bank owner aggregation and real shared NSRC arbitration",
+    "Actual native CDC/VM source composition",
+    "Cache frame/epoch assembly and watermark",
+    "Registered status integration into quarter retire",
+    "CTS pins/clock/shape/cut/hop/slot",
+    "Production measurement"
+  ]
+}
