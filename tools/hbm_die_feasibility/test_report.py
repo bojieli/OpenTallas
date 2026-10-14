@@ -49,6 +49,17 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(d['hc_summary']['per_reservation_used_envelope_um'],[1231.2,470.88])
         self.assertFalse(d['private_pin_binding_qualified'])
 
+    def test_sfu_broadcast_geometry_bound_does_not_invent_rc_or_pins(self):
+        from sfu_broadcast_screen import bounds
+        rows=[{'xy_um':[i*105.84,0],'w_um':103.68,'h_um':54,'orientation':'R0'} for i in range(16)]
+        self.assertAlmostEqual(bounds(rows)['optimal_single_source_worst_L1_lower_bound_um'],793.8)
+        rows[1]['orientation']='MY'
+        with self.assertRaises(ValueError):bounds(rows)
+        d=json.loads((REPORT.parent/'sfu_broadcast_conditional_geometry.json').read_text())
+        self.assertAlmostEqual(d['right_control_column_to_left_mapper_face_lower_bound_um'],1641.6)
+        self.assertIsNone(d['actual_RC_delay_ps']);self.assertIsNone(d['actual_launch_capture_window_ps'])
+        self.assertFalse(d['qualified']);self.assertFalse(d['new_mapper_physical_pins_bound'])
+
     def test_actual_clock_probe_retains_negative_paths_and_offset_conservation(self):
         import gzip
         from clock_ratio_check import validate
