@@ -12,14 +12,21 @@
 // MUT 1: the record header drops the A operand bit -> the unit faults (must FAIL);
 // MUT 2: engine lane-to-sector mutant (assembly takes sector j from lane j ^ 1) -> wrong words (must FAIL).
 module tb_hgi_qdq_q_tput;
- parameter integer MUT = 0, S = 1;
+ parameter integer MUT = 0, S = 1, SPANPIPE = 0, PIN4 = 0;
  reg clk = 0; always #416 clk = ~clk; reg rst_n = 0;
  reg [682:0] rec = 0; wire [2:0] ret;
  reg [337:0] bq = 0; wire [273:0] br;
  wire [8*16-1:0] rq; wire [7:0] rq_cr, wq_cr, wq_done; wire [8*257-1:0] rr; wire [8*280-1:0] wq;
- ot_hgi_qdq_q #(.MUT(MUT == 2 ? 1 : 0)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
+ generate if (PIN4) begin : g_pin4
+ ot_hgi_qdq_q_pin4 #(.MUT(MUT == 2 ? 1 : 0), .SPANPIPE(SPANPIPE)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
+   .wrq(rq), .wrq_cr(rq_cr), .wrr_p0(rr[513:0]), .wrr_p1(rr[1027:514]), .wrr_p2(rr[1541:1028]), .wrr_p3(rr[2055:1542]), .wwq(wq), .wwq_cr(wq_cr), .wwq_done(wq_done),
+   .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1));
+ end else begin : g_core
+ ot_hgi_qdq_q #(.MUT(MUT == 2 ? 1 : 0), .SPANPIPE(SPANPIPE)) dut (.clk(clk), .rst_n(rst_n), .rec(rec), .ret(ret),
    .wrq(rq), .wrq_cr(rq_cr), .wrr(rr), .wwq(wq), .wwq_cr(wq_cr), .wwq_done(wq_done),
    .rg_req(), .rg_gnt(1'b1), .wg_req(), .wg_gnt(1'b1));
+ end endgenerate
+
  // S relay stages each way (the lanestation + chain flops between the client and the slice face)
  reg [8*16-1:0] rq_d [0:S]; reg [8*280-1:0] wq_d [0:S]; reg [7:0] rcr_d [0:S], wcr_d [0:S], wdn_d [0:S];
  reg [8*257-1:0] rr_d [0:S];
@@ -47,6 +54,8 @@ module tb_hgi_qdq_q_tput;
  reg [255:0] gin [0:127]; reg [255:0] gout [0:127];
  integer nrec, fd, k, s, j, op [0:15], n [0:15], ab [0:15], ob [0:15], cost [0:15], blk [0:15], iss [0:15];
  integer cyc = 0, words = 0, bad = 0, bk = 0, total_cost = 0, nret = 0, t0 = 0, prev = 0, started = 0;
+ integer rows = 1;   // +ROWS=m: every record walks m rows (row stride = n, in place; rows > 0 read / write beyond the vectors:
+                     // only row 0 is compared) -- exercises the read walk's row advance, which the m = 1 production shapes do not
  string dir, fn;
  reg [255:0] sd;
  always @(posedge clk) cyc <= cyc + 1;
@@ -73,10 +82,17 @@ module tb_hgi_qdq_q_tput;
  reg [127:0] h; reg [255:0] da, dd;
  initial begin
   if (!$value$plusargs("DIR=%s", dir)) $fatal(1, "FATAL: +DIR");
+  void'($value$plusargs("ROWS=%d", rows));
   fd = $fopen({dir, "/recs.txt"}, "r"); void'($fscanf(fd, "%d", nrec));
   for (k = 0; k < nrec; k = k + 1) begin
    void'($fscanf(fd, "%d %d %d %d %d %d", op[k], n[k], ab[k], ob[k], cost[k], blk[k]));
    ab[k] = ab[k] % 65536; ob[k] = ob[k] % 65536;          // slice-local (sid 0), bank phase unchanged
+  end
+  // multi-row walk: IN PLACE (O = A, legal: a beat is read before it is written), so the m-row range stays inside the
+  // record's own region (the production bases are >= 1,792 words apart)
+  if (rows > 1) for (k = 0; k < nrec; k = k + 1) begin
+   if (rows * n[k] > 1792) $fatal(1, "FATAL: +ROWS too large for the record regions");
+   ob[k] = ab[k];
   end
   $fclose(fd);
   repeat (4) @(posedge clk); rst_n = 1; repeat (8) @(posedge clk);
@@ -90,7 +106,8 @@ module tb_hgi_qdq_q_tput;
    while (!ret[0]) @(negedge clk);
    h = 128'd0; h[127:124] = 4'd4; h[123:118] = 6'(op[k]); h[99:93] = (MUT == 1) ? 7'b0010000 : 7'b0010001;
    if (op[k] == 6) h[71:64] = 8'd16;
-   da = desc(3'd0, 40'(ab[k]), 20'(n[k]), 20'd1, 32'd0); dd = desc(3'd0, 40'(ob[k]), 20'(n[k]), 20'd1, 32'd0);
+   da = desc(3'd0, 40'(ab[k]), 20'(n[k]), 20'(rows), rows > 1 ? 32'(n[k]) : 32'd0);
+   dd = desc(3'd0, 40'(ob[k]), 20'(n[k]), 20'(rows), rows > 1 ? 32'(n[k]) : 32'd0);
    rec = {21'(n[k]), 21'(n[k]), dd, da, h, 1'b1}; iss[k] = cyc - t0; total_cost = total_cost + cost[k];
    @(negedge clk); rec[0] = 0;
   end
@@ -111,6 +128,8 @@ module tb_hgi_qdq_q_tput;
   end
   for (k = 0; k < 8; k = k + 1) if (bank_status[k*18 + 17]) $fatal(1, "FATAL: bank %0d status %h", k, bank_status[k*18 +: 18]);
   if (bad) $fatal(1, "FATAL: %0d of %0d words mismatch", bad, words);
+  if (rows > 1) $display("PASS HGI_QDQ_Q_ROWS rows=%0d records=%0d words=%0d cycles=%0d S=%0d", rows, nrec, words, prev, S);
+  else
   $display("PASS HGI_QDQ_Q_TPUT records=%0d words=%0d cycles=%0d priced=%0d S=%0d", nrec, words, prev, total_cost, S);
   $finish;
  end

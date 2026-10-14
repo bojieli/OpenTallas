@@ -1,27 +1,28 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
  "name": "qdq_q_ref",
- "top": "ot_hgi_qdq_q",
+ "top": "ot_hgi_qdq_q_pin4",
  "kind": "cluster",
  "die": [
   0,
   0,
-  466.56,
-  466.56
+  622.08,
+  596.16
  ],
  "core": [
   2.16,
   2.16,
-  464.4,
-  464.4
+  619.9200000000001,
+  594.0
  ],
- "why": "util 0.52 of std 45000 + macros 63739 um2",
- "std_area_um2": 45000,
+ "why": "spec outline",
+ "std_area_um2": 10756.264,
  "layer_contract": {
   "children": {
    "ot_hgi_qw_dxl": "M6",
    "ot_hgi_qw_dbq": "M6",
-   "ot_hgi_qw_daq": "M6"
+   "ot_hgi_qw_daq": "M6",
+   "ot_hgi_qdq_lq": "M5"
   },
   "pg_layer": "M7",
   "rlayers": [
@@ -34,7 +35,10 @@
   "W": [
    "wrq",
    "wrq_cr",
-   "wrr",
+   "wrr_p0",
+   "wrr_p1",
+   "wrr_p2",
+   "wrr_p3",
    "rg_req",
    "rg_gnt"
   ],
@@ -58,10 +62,10 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
-   "inst": "u_od.g_tile[0].g_m0.u_m",
+   "inst": "u_qdq.u_od.g_tile[0].g_m0.u_m",
    "idx": 0,
-   "x": 43.2,
-   "y": 86.4,
+   "x": 259.2,
+   "y": 43.2,
    "w": 171.288,
    "h": 77.76,
    "orient": "R0",
@@ -71,10 +75,10 @@
    "kind": "child",
    "view": "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
    "master": "ot_hgi_qw_dxl",
-   "inst": "g_d3.u_dec.u_dxl",
+   "inst": "u_qdq.g_d3.u_dec.u_dxl",
    "idx": 0,
-   "x": 259.2,
-   "y": 86.4,
+   "x": 302.4,
+   "y": 345.6,
    "w": 120.96,
    "h": 120.96,
    "orient": "R0",
@@ -84,10 +88,10 @@
    "kind": "child",
    "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
    "master": "ot_hgi_qw_dbq",
-   "inst": "g_d3.u_dec.u_dbq",
+   "inst": "u_qdq.g_d3.u_dec.u_dbq",
    "idx": 0,
-   "x": 43.2,
-   "y": 259.2,
+   "x": 475.2,
+   "y": 345.6,
    "w": 120.96,
    "h": 120.96,
    "orient": "R0",
@@ -97,23 +101,108 @@
    "kind": "child",
    "view": "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq",
    "master": "ot_hgi_qw_daq",
-   "inst": "g_d3.u_dec.u_daq",
+   "inst": "u_qdq.g_d3.u_dec.u_daq",
    "idx": 0,
-   "x": 216.0,
-   "y": 259.2,
+   "x": 302.4,
+   "y": 172.8,
    "w": 129.6,
    "h": 129.6,
    "orient": "R0",
    "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+   "master": "ot_hgi_qdq_lq",
+   "inst": "u_qdq.g_lq[0].u_lq",
+   "idx": 0,
+   "x": 25.92,
+   "y": 43.2,
+   "w": 114.48,
+   "h": 114.48,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+   "master": "ot_hgi_qdq_lq",
+   "inst": "u_qdq.g_lq[1].u_lq",
+   "idx": 0,
+   "x": 25.92,
+   "y": 181.44,
+   "w": 114.48,
+   "h": 114.48,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+   "master": "ot_hgi_qdq_lq",
+   "inst": "u_qdq.g_lq[2].u_lq",
+   "idx": 0,
+   "x": 25.92,
+   "y": 319.68,
+   "w": 114.48,
+   "h": 114.48,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq",
+   "master": "ot_hgi_qdq_lq",
+   "inst": "u_qdq.g_lq[3].u_lq",
+   "idx": 0,
+   "x": 25.92,
+   "y": 457.92,
+   "w": 114.48,
+   "h": 114.48,
+   "orient": "R0",
+   "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "ot_hgi_qdq_lq#0: origin (25.92, 43.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_hgi_qdq_lq#0: origin (25.92, 181.44) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_hgi_qdq_lq#0: origin (25.92, 319.68) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "ot_hgi_qdq_lq#0: origin (25.92, 457.92) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "util",
+   "utilisation 34% outside 45%-60% (std 10756 + macro 111801 in core 365615 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/lib/ot_rst_relay.sv",
   "rtl/link/ot_fifo_sram_fwft.sv",
   "rtl/hbm_accel/generic/ot_hgi_quant_record.sv",
   "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec3.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qdq_lq.sv",
   "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q.sv",
+  "rtl/hbm_accel/generic/qw/ot_hgi_qdq_q_pin4.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
   "physical/ref_tile/qdq_q_ref/kit.env",
   "physical/ref_tile/qdq_q_ref/clock.sdc",
@@ -149,6 +238,22 @@
   "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq_ss.lib",
   "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq_ff.lib",
   "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq/ot_hgi_qw_daq_tt.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq.lef",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_ss.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_ff.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_tt.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq.lef",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_ss.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_ff.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_tt.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq.lef",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_ss.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_ff.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_tt.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq.lef",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_ss.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_ff.lib",
+  "physical/ref_tile/qdq_lq_ref/views/ot_hgi_qdq_lq/ot_hgi_qdq_lq_tt.lib",
   "physical/ref_tile/qdq_q_ref/place.tcl"
  ]
 }

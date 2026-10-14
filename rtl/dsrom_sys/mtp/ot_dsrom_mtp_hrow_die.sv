@@ -1,0 +1,72 @@
+// dsfd_mtp_hrow on the S81 die (coordinator decision 2026-10-13 07:55): the four hardened rev-5 tiles (ing x 3, hub x 1,
+// cbe x 15, cbw x 15: rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv, NOT edited: the closed routes stay bound to it) placed
+// by the die, with die relays.  This is dsfd_mtp_hrow_tc plus UT registered relay stages on the U-turn hop of every
+// part's chain (bank 4 east end -> bank 5: measured 336..509 um for 2,079 b; with the relay every hop <= 500 um).
+//
+// Chain order of one part p (three parts, identical):
+//   ing_p --t_wc 1,039 b, WD = 2 CQ + 1 - WK = 0 relays (the head bank abuts its ing tile)--> cbe bank 0 -> 1 -> 2 -> 3 -> 4
+//        (eastward, tile to tile, no relay) --UT = 1 relay: w 1,039 + r 15 + d 1,025 = 2,079 b--> cbw bank 5 -> 6 -> 7 -> 8 -> 9
+//        (westward, tile to tile, no relay) --d 1,025 b, P = 2 relays--> hub f_pr<p>
+//   ing_p --t_ev 21 b + t_flt 2 b, CQ - 1 = 2 relays--> hub;   hub t_rc<p> 15 b --CQ = 3 relays--> cbe bank 0 (f_r)
+// Die relay flops: 3 x (21 x 2 + 2 x 2 + 15 x 3 + 1,025 x 2 + 2,079 x UT) = 6,423 + 6,237 = 12,660 at UT = 1 (+ one reset
+// synchroniser).  The U-turn relay delays w, r and d by the same UT edges for banks 5..9, so the write-before-read order
+// at every bank is the one of tc; a row's result reaches the hub UT edges later for every bank (bank < 5: d crosses the
+// relay; bank >= 5: r does), equal for the three parts; the hub takes the result by its valid bit (no latency constant).
+// Gate: tools/mtp_hrow_gate.py --tiles --uturn (bench tb_mtp_hrow.sv, define OT_HROW_DIE).
+module dsfd_mtp_hrow_td #(
+    parameter integer NW = 21, parameter integer USER_W = 10, parameter integer MAXU = 8, parameter integer RS = 16,
+    parameter integer AW = 24, parameter integer FWD_P = 9, parameter integer RET_P = 9,
+    parameter integer FWD_Q = 6, parameter integer RET_Q = 6,
+    parameter integer CQ = 3, parameter integer WK = 7, parameter integer P = 2,
+    parameter integer UT = 1         // die relay stages on the U-turn hop (cbe bank 4 -> cbw bank 5), w / r / d alike
+) (
+    input  wire           ck, rst,
+    input  wire [514:0]   f_hp0, f_hp1, f_hp2,
+    output wire [2:0]     t_hpg,
+    input  wire [AW:0]    f_vrq,
+    output wire           t_vrq,
+    output wire [1024:0]  t_vrs,
+    input  wire [USER_W:0] f_clr,
+    output wire [2:0]     t_flt
+);
+    localparam integer WD = 2 * CQ + 1 - WK;
+    initial if (CQ < 1 || WD < 0) $fatal(1, "hrow_td: CQ >= 1 and WK <= 2 CQ + 1");
+    wire rn;
+    ot_dsrom_mtp_rstsync u_rs (.clk(ck), .rst_n_async(rst), .rst_n(rn));
+    wire [514:0] fin [0:2];
+    assign fin[0] = f_hp0; assign fin[1] = f_hp1; assign fin[2] = f_hp2;
+    wire [20:0] ev [0:2]; wire [20:0] evh [0:2]; wire [1:0] ifl [0:2]; wire [1:0] iflh [0:2];
+    wire [14:0] rc [0:2]; wire [1024:0] pp [0:2]; wire [1024:0] pph [0:2];
+    genvar gp, gk;
+    generate for (gp = 0; gp < 3; gp = gp + 1) begin : g_part
+        wire [1038:0] wc; wire [1038:0] cw [0:10]; wire [14:0] cr [0:10]; wire [1024:0] cd [0:10];
+        wire [1038:0] uw; wire [14:0] ur; wire [1024:0] ud;          // bank 4's chain outputs, before the U-turn relays
+        ot_dsrom_mtp_hrow_rly #(.W(1039), .N(UT)) u_uw (.clk(ck), .rst_n(rn), .i(uw), .o(cw[5]));
+        ot_dsrom_mtp_hrow_rly #(.W(15), .N(UT)) u_ur (.clk(ck), .rst_n(rn), .i(ur), .o(cr[5]));
+        ot_dsrom_mtp_hrow_rly #(.W(1025), .N(UT)) u_ud (.clk(ck), .rst_n(rn), .i(ud), .o(cd[5]));
+        dsfd_mtp_hrow_ing #(.NW(NW), .USER_W(USER_W), .MAXU(MAXU), .RS(RS), .FWD_P(FWD_P), .RET_P(RET_P), .WK(WK)) u_ig (
+            .ck(ck), .rst(rst), .f_hp(fin[gp]), .t_hpg(t_hpg[gp]), .f_pid(gp[1:0]), .t_wc(wc), .t_ev(ev[gp]), .t_flt(ifl[gp]));
+        ot_dsrom_mtp_hrow_rly #(.W(21), .N(CQ - 1)) u_ev (.clk(ck), .rst_n(rn), .i(ev[gp]), .o(evh[gp]));
+        ot_dsrom_mtp_hrow_rly #(.W(2), .N(CQ - 1)) u_if (.clk(ck), .rst_n(rn), .i(ifl[gp]), .o(iflh[gp]));
+        ot_dsrom_mtp_hrow_rly #(.W(1039), .N(WD)) u_wd (.clk(ck), .rst_n(rn), .i(wc), .o(cw[0]));
+        ot_dsrom_mtp_hrow_rly #(.W(15), .N(CQ)) u_rc (.clk(ck), .rst_n(rn), .i(rc[gp]), .o(cr[0]));
+        assign cd[0] = '0;
+        for (gk = 0; gk < 10; gk = gk + 1) begin : g_c
+            if (gk == 4) begin : g_e
+                dsfd_mtp_hrow_cbe u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(uw), .f_r(cr[gk]),
+                                       .t_r(ur), .f_d(cd[gk]), .t_d(ud));
+            end else if (gk < 4) begin : g_e
+                dsfd_mtp_hrow_cbe u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(cw[gk+1]), .f_r(cr[gk]),
+                                       .t_r(cr[gk+1]), .f_d(cd[gk]), .t_d(cd[gk+1]));
+            end else begin : g_w
+                dsfd_mtp_hrow_cbw u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(cw[gk+1]), .f_r(cr[gk]),
+                                       .t_r(cr[gk+1]), .f_d(cd[gk]), .t_d(cd[gk+1]));
+            end
+        end
+        ot_dsrom_mtp_hrow_rly #(.W(1025), .N(P)) u_rp (.clk(ck), .rst_n(rn), .i(cd[10]), .o(pph[gp]));
+    end endgenerate
+    dsfd_mtp_hrow_hub #(.USER_W(USER_W), .MAXU(MAXU), .RS(RS), .AW(AW), .FWD_Q(FWD_Q), .RET_Q(RET_Q)) u_hub (
+        .ck(ck), .rst(rst), .f_vrq(f_vrq), .t_vrq(t_vrq), .t_vrs(t_vrs), .f_clr(f_clr), .t_flt(t_flt),
+        .f_ev0(evh[0]), .f_ev1(evh[1]), .f_ev2(evh[2]), .f_if0(iflh[0]), .f_if1(iflh[1]), .f_if2(iflh[2]),
+        .t_rc0(rc[0]), .t_rc1(rc[1]), .t_rc2(rc[2]), .f_pr0(pph[0]), .f_pr1(pph[1]), .f_pr2(pph[2]));
+endmodule

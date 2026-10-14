@@ -310,14 +310,14 @@ def window_scope(cuts: Path, placement: Path | None, grts: list[str], thr: float
             box = (c["pos"], lo, c["pos"], hi) if c["ax"] == "x" else (lo, c["pos"], hi, c["pos"])
             for m in sorted({i["m"] for i in ins if _hit(i, box[0] - 1e-3, box[1], box[2] + 1e-3, box[3])
                              or _hit(i, box[0], box[1] - 1e-3, box[2], box[3] + 1e-3)}):
-                add(m, {"src": cuts.name, "ax": c["ax"], "pos": c["pos"], "win": c["win"], "util": c["util"],
+                add(m, {"src": cuts.name, "path": str(cuts), "ax": c["ax"], "pos": c["pos"], "win": c["win"], "util": c["util"],
                         "frees": "M6" if c["ax"] == "x" else "M7"})
     for g in grts or []:
         rep, _, pl = g.partition(":")
         ins = _insts(Path(pl)) if pl else []
         for b in grt_boxes(Path(rep)):
             for m in sorted({i["m"] for i in ins if _hit(i, *b[:4])}):
-                add(m, {"src": Path(rep).name, "grt_overflow": list(b[:4]), "layer": b[4], "frees": "M6"})
+                add(m, {"src": Path(rep).name, "path": str(rep), "grt_overflow": list(b[:4]), "layer": b[4], "frees": "M6"})
     return scope
 
 
@@ -853,6 +853,9 @@ def prepare(row, rec, st) -> dict | None:
         prev = t.get("reason", "") if t.get("state") == "gate_fail" else \
             (jload(JOBS / f"{t['job']}.json") or {}).get("reason", "") if t.get("state_m5") == "failed" and t.get("job") else ""
         spec, snap = build_spec(row, rec, f, prev or "")
+        # an M5 re-route is the CLOSED tile under a lower cap, not a new design: it keeps the recipe its closed route was
+        # generated with (kit recipe 1 unless the closed spec says otherwise), never the new-kit default
+        spec.setdefault("recipe", 1)
         kd = f"physical/ref_tile/{spec['name']}"
         if git("ls-files", "--", kd).strip() and t.get("kit") != kd:
             raise SpecSkip(f"kit dir {kd} exists (not ours)")
@@ -967,6 +970,18 @@ def run(a, rows, closed, st):
     submit(st, {r["cell"]: r.get("windows", []) for r in rows if r["state"] == "eligible"})
 
 
+def reroute_reason(cell: str, windows: list) -> dict:
+    """the die-window evidence of a selected tile as the closure loop's CLOSED_STANDS gate reads it (spec
+    "reroute_reason" kind die_window: slot, the measured cut or GRT overflow, its source file)"""
+    w = next((x for x in windows if "util" in x), None) or (windows[0] if windows else {})
+    rr = {"kind": "die_window", "slot": cell, "source": w.get("path") or w.get("src") or ""}
+    if "util" in w:
+        rr.update(cut=float(w["util"]), window={k: w[k] for k in ("ax", "pos", "win", "frees") if k in w})
+    elif "grt_overflow" in w:
+        rr.update(grt_overflow=w["grt_overflow"], layer=w.get("layer"))
+    return rr
+
+
 def submit(st: dict, scope: dict):
     """drop every committed (gated, pushed) kit's job spec into the loop intake once; re-checks live jobs first"""
     _, live, pending = records()
@@ -981,6 +996,7 @@ def submit(st: dict, scope: dict):
         if job["block"] in live or job["block"] in pending:
             t.update(state="skip", reason="live job appeared before submit")
             continue
+        job["reroute_reason"] = reroute_reason(cell, scope[cell])   # the loop's CLOSED_STANDS gate verifies it
         sub = subprocess.run([sys.executable, str(ROOT / "tools/closure_loop/submit_lint.py"), "check", str(jp)],
                              cwd=ROOT, capture_output=True, text=True)
         if sub.returncode:

@@ -59,7 +59,18 @@ module ot_qfd_crom #(
     // the e1 input station with the address (registered at the pin, 0 added edges), so ONE hardened group tile serves all
     // eight groups (the die ties group g's crom_lb to 8 g); LB then only names the mask images (simulation personalisation,
     // as any ROM).  LBS = 0 leaves crom_lb unused.
-    parameter integer LBS = 0
+    parameter integer LBS = 0,
+    // RLY (q13 2026-10-13; 0 = unchanged): relay stages for the slot-shaped M5 group tile (all pins on one short face of a
+    // 518-um column of six macros).  RLY = 1 adds 3 edges (strobe -> q = 8): the macro-column select lands in a column
+    // register (e3a), every macro gets its own {ce, addr} register beside its pins (e3b, wire only), and the per-lane
+    // answer select lands in a lane register (e5a) before the output station at the pins (e5b, wire only).  No stage
+    // then carries logic plus the column-long wire, and the macro's address / clk->q paths are local.
+    parameter integer RLY = 0,
+    // RSTR = 1 (q13 r2, die tile): the rst_n port drives only an ot_rst_relay (2 sync + 1 relay flop, two kept region
+    // copies: pin stations + decode + faults / the valid side band); release is 3 edges after the port, the same edge in
+    // both regions; strobes are ignored until then.  The RLY {ce, addr} relay registers carry no reset (datapath: they
+    // follow the reset valid band within two edges, and a ROM read without a valid is discarded).
+    parameter integer RSTR = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -84,11 +95,24 @@ module ot_qfd_crom #(
     wire [SW-1:0]    re1;
     wire [SW*AW-1:0] a1;
     wire [LW-1:0]    st1;
-    ot_hdc_delay #(.W(SW), .D(1), .RESET(1)) u_is_re (.clk(clk), .rst_n(rst_n), .d(crom_re), .q(re1));
-    ot_hdc_delay #(.W(SW*AW + LW), .D(1)) u_is_a (.clk(clk), .rst_n(rst_n), .d({crom_addr, crom_stage}), .q({a1, st1}));
+    wire rst_a, rst_c;                          // region resets: pin stations + decode + faults / valid side band
+    generate if (RSTR != 0) begin : g_rr
+        // the ot_rst_relay structure (rtl/lib/ot_rst_relay.sv), in line: this file is compiled by many benches without rtl/lib
+        (* async_reg = "true" *) reg [1:0] rr_s;
+        (* keep = "true", dont_touch = "true" *) reg [1:0] rr_q;      // one kept copy per region
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin rr_s <= 2'b00; rr_q <= 2'd0; end
+            else begin rr_s <= {rr_s[0], 1'b1}; rr_q <= {2{rr_s[1]}}; end
+        end
+        assign {rst_c, rst_a} = rr_q;
+    end else begin : g_nrr
+        assign rst_a = rst_n; assign rst_c = rst_n;
+    end endgenerate
+    ot_hdc_delay #(.W(SW), .D(1), .RESET(1)) u_is_re (.clk(clk), .rst_n(rst_a), .d(crom_re), .q(re1));
+    ot_hdc_delay #(.W(SW*AW + LW), .D(1)) u_is_a (.clk(clk), .rst_n(rst_a), .d({crom_addr, crom_stage}), .q({a1, st1}));
     wire [5:0] lb1;
     generate if (LBS != 0) begin : g_lbs
-        ot_hdc_delay #(.W(6), .D(1)) u_is_lb (.clk(clk), .rst_n(rst_n), .d(crom_lb), .q(lb1));
+        ot_hdc_delay #(.W(6), .D(1)) u_is_lb (.clk(clk), .rst_n(rst_a), .d(crom_lb), .q(lb1));
     end else begin : g_lbp
         assign lb1 = LB[5:0];
     end endgenerate
@@ -101,10 +125,13 @@ module ot_qfd_crom #(
     reg  [SW*RW-1:0] t_row;
     reg  [SW-1:0]    t_rng, t_al;
     integer l;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            t_v <= 0; t_rng <= 0; t_al <= 0;
-        end else begin
+    // q13 r2: the decode is combinational next-state; only the valid / fault strobes carry a reset (a datapath register
+    // in the reset block would use the reset as its enable: 249 extra loads on the reset net)
+    reg  [SW-1:0]    t_v_n, t_rng_n, t_al_n;
+    reg  [SW*3-1:0]  t_kind_n;
+    reg  [SW*RW-1:0] t_row_n;
+    always @(*) begin
+        t_v_n = 0; t_rng_n = 0; t_al_n = 0; t_kind_n = 0; t_row_n = 0;
             for (l = 0; l < SW; l = l + 1) begin : g_dec
                 reg [AW-1:0] a, off;
                 reg [2:0] k;
@@ -124,14 +151,18 @@ module ot_qfd_crom #(
                 else if (a < A_END) begin k = K_NARROW; off = a - A_DSC0; r = lbase + R_QKR64 + off[6 +: RW]; end
                 else k = K_BAD;
                 if ((k == K_WIDE || k == K_NARROW) && off[5:0] != (l[5:0] + lb1)) al = 1'b0;
-                t_v[l] <= re1[l];
-                t_kind[l*3 +: 3] <= k;
-                t_row[l*RW +: RW] <= r;
-                t_rng[l] <= re1[l] && k == K_BAD;
-                t_al[l] <= re1[l] && !al;
+                t_v_n[l] = re1[l];
+                t_kind_n[l*3 +: 3] = k;
+                t_row_n[l*RW +: RW] = r;
+                t_rng_n[l] = re1[l] && k == K_BAD;
+                t_al_n[l] = re1[l] && !al;
             end
-        end
     end
+    always @(posedge clk or negedge rst_a) begin
+        if (!rst_a) begin t_v <= 0; t_rng <= 0; t_al <= 0; end
+        else begin t_v <= t_v_n; t_rng <= t_rng_n; t_al <= t_al_n; end
+    end
+    always @(posedge clk) begin t_kind <= t_kind_n; t_row <= t_row_n; end
 
     // ---- e3: macro columns (address = first active lane's row) ----
     wire [WC-1:0]    w_ce;
@@ -168,6 +199,40 @@ module ot_qfd_crom #(
         end
     endgenerate
 
+    // macro-facing {ce, addr}: direct (RLY 0) or through the column register and the per-macro register (RLY 1)
+    wire [WC*2-1:0]    wm_ce;
+    wire [WC*2*12-1:0] wm_a;
+    wire [NC*2-1:0]    nm_ce;
+    wire [NC*2*12-1:0] nm_a;
+    generate
+        for (g = 0; g < WC; g = g + 1) begin : g_wa
+            for (d = 0; d < 2; d = d + 1) begin : g_d
+                if (RLY != 0) begin : g_r
+                    reg ce0, ce1; reg [11:0] a0, a1;
+                    always @(posedge clk) begin ce0 <= w_ce[g] && w_row[g*RW + 12] == d[0]; ce1 <= ce0; end
+                    always @(posedge clk) begin a0 <= w_row[g*RW +: 12]; a1 <= a0; end
+                    assign wm_ce[g*2 + d] = ce1; assign wm_a[(g*2 + d)*12 +: 12] = a1;
+                end else begin : g_d0
+                    assign wm_ce[g*2 + d] = w_ce[g] && w_row[g*RW + 12] == d[0];
+                    assign wm_a[(g*2 + d)*12 +: 12] = w_row[g*RW +: 12];
+                end
+            end
+        end
+        for (g = 0; g < NC; g = g + 1) begin : g_na
+            for (d = 0; d < 2; d = d + 1) begin : g_d
+                if (RLY != 0) begin : g_r
+                    reg ce0, ce1; reg [11:0] a0, a1;
+                    always @(posedge clk) begin ce0 <= n_ce[g] && n_row[g*RW + 12] == d[0]; ce1 <= ce0; end
+                    always @(posedge clk) begin a0 <= n_row[g*RW +: 12]; a1 <= a0; end
+                    assign nm_ce[g*2 + d] = ce1; assign nm_a[(g*2 + d)*12 +: 12] = a1;
+                end else begin : g_d0
+                    assign nm_ce[g*2 + d] = n_ce[g] && n_row[g*RW + 12] == d[0];
+                    assign nm_a[(g*2 + d)*12 +: 12] = n_row[g*RW +: 12];
+                end
+            end
+        end
+    endgenerate
+
     // the macros (their read register is the e3 stage) and the e4 capture flops
     wire [WC*2*266-1:0] w_rd;
     wire [NC*2*266-1:0] n_rd;
@@ -181,7 +246,7 @@ module ot_qfd_crom #(
 `else
                 ot_rom_4096x266_m8 #(.INSTANCE($sformatf("crom_w_c%0d_d%0d", g + LB / WL, d))) u_m (.clk(clk),
 `endif
-                    .ce_in(w_ce[g] && w_row[g*RW + 12] == d[0]), .addr_in(w_row[g*RW +: 12]),
+                    .ce_in(wm_ce[g*2 + d]), .addr_in(wm_a[(g*2 + d)*12 +: 12]),
                     .rd_out(w_rd[(g*2 + d)*266 +: 266]));
                 always @(posedge clk) w_cap[(g*2 + d)*256 +: 256] <= w_rd[(g*2 + d)*266 +: 256];
             end
@@ -193,7 +258,7 @@ module ot_qfd_crom #(
 `else
                 ot_rom_4096x266_m8 #(.INSTANCE($sformatf("crom_n_c%0d_d%0d", g + LB / NL, d))) u_m (.clk(clk),
 `endif
-                    .ce_in(n_ce[g] && n_row[g*RW + 12] == d[0]), .addr_in(n_row[g*RW +: 12]),
+                    .ce_in(nm_ce[g*2 + d]), .addr_in(nm_a[(g*2 + d)*12 +: 12]),
                     .rd_out(n_rd[(g*2 + d)*266 +: 266]));
                 always @(posedge clk) n_cap[(g*2 + d)*256 +: 256] <= n_rd[(g*2 + d)*266 +: 256];
             end
@@ -204,18 +269,40 @@ module ot_qfd_crom #(
     reg [SW-1:0]   m_v, c_v;
     reg [SW*3-1:0] m_kind, c_kind;
     reg [SW-1:0]   m_dp, c_dp;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin m_v <= 0; c_v <= 0; end
-        else begin m_v <= t_v; c_v <= m_v; end
+    // the side band follows the address relays (RLY 1: two more edges before the macro edge)
+    wire [SW-1:0]   t_dp;
+    wire [SW-1:0]   x_v, x_dp;
+    wire [SW*3-1:0] x_kind;
+    generate
+        for (g = 0; g < SW; g = g + 1) begin : g_tdp
+            assign t_dp[g] = t_row[g*RW + 12];
+        end
+        if (RLY != 0) begin : g_xr
+            reg [SW-1:0] v0, v1, dp0, dp1; reg [SW*3-1:0] k0, k1;
+            always @(posedge clk or negedge rst_c) begin
+                if (!rst_c) begin v0 <= 0; v1 <= 0; end
+                else begin v0 <= t_v; v1 <= v0; end
+            end
+            always @(posedge clk) begin k0 <= t_kind; k1 <= k0; dp0 <= t_dp; dp1 <= dp0; end
+            assign x_v = v1; assign x_kind = k1; assign x_dp = dp1;
+        end else begin : g_x0
+            assign x_v = t_v; assign x_kind = t_kind; assign x_dp = t_dp;
+        end
+    endgenerate
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) begin m_v <= 0; c_v <= 0; end
+        else begin m_v <= x_v; c_v <= m_v; end
     end
     always @(posedge clk) begin
-        m_kind <= t_kind; c_kind <= m_kind;
-        for (l = 0; l < SW; l = l + 1) m_dp[l] <= t_row[l*RW + 12];
+        m_kind <= x_kind; c_kind <= m_kind;
+        m_dp <= x_dp;
         c_dp <= m_dp;
     end
 
     // ---- e5: output station (held when not read) ----
     reg [SW*64-1:0] q_r;
+    reg [SW*64-1:0] s_w;                        // RLY 1: e5a lane register (select result), e5b = q_r at the pins
+    reg [SW-1:0]    s_v;
     always @(posedge clk) begin
         for (l = 0; l < SW; l = l + 1) begin : g_out
             reg [63:0] w;
@@ -225,15 +312,22 @@ module ot_qfd_crom #(
                 K_QSC:    w = QSCALE_WORD;
                 default:  w = 64'd0;
             endcase
-            if (c_v[l]) q_r[l*64 +: 64] <= w;
+            if (RLY != 0) begin
+                s_w[l*64 +: 64] <= w;
+                if (s_v[l]) q_r[l*64 +: 64] <= s_w[l*64 +: 64];
+            end else if (c_v[l]) q_r[l*64 +: 64] <= w;
         end
+    end
+    always @(posedge clk or negedge rst_c) begin
+        if (!rst_c) s_v <= 0;
+        else s_v <= c_v;
     end
     assign crom_q = (MUT != 0) ? (q_r ^ {{(SW*64-1){1'b0}}, 1'b1}) : q_r;
 
     // ---- faults (sticky, first cause) ----
     reg f_rng, f_al, f_dis;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_a) begin
+        if (!rst_a) begin
             f_rng <= 1'b0; f_al <= 1'b0; f_dis <= 1'b0; fault <= 1'b0; fault_code <= 2'd0;
         end else begin
             f_rng <= |t_rng; f_al <= |t_al; f_dis <= (|w_dis) || (|n_dis);
@@ -285,4 +379,25 @@ module ot_qfd_crom_gs #(
 );
     ot_qfd_crom #(.SW(8), .LB(IMG_LB), .LBS(1), .MUT(MUT)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
         .crom_stage(crom_stage), .crom_lb(crom_lb), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
+endmodule
+
+
+// Die master qfd_crom_g, slot-shaped M5 tile (q13 2026-10-13): ot_qfd_crom_gs (lane-base strap: ONE hardened tile for the
+// 8 groups) with the RLY 1 relay stages; strobe -> q = 8 edges at this master's pins (was 5).  IMG_LB / MUT as crom_gs.
+module ot_qfd_crom_gr #(
+    parameter integer IMG_LB = 0,
+    parameter integer MUT = 0
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire [7:0]        crom_re,
+    input  wire [8*24-1:0]   crom_addr,
+    input  wire [5:0]        crom_stage,
+    input  wire [5:0]        crom_lb,
+    output wire [8*64-1:0]   crom_q,
+    output wire              fault,
+    output wire [1:0]        fault_code
+);
+    ot_qfd_crom #(.SW(8), .LB(IMG_LB), .LBS(1), .MUT(MUT), .RLY(1), .RSTR(1)) u_c (.clk(clk), .rst_n(rst_n), .crom_re(crom_re),
+        .crom_addr(crom_addr), .crom_stage(crom_stage), .crom_lb(crom_lb), .crom_q(crom_q), .fault(fault), .fault_code(fault_code));
 endmodule
