@@ -173,8 +173,8 @@
     {
       "master": "qkd_host_rx_pad",
       "flop_bits": 1557,
-      "role": "FDI clock registered exact DATA1024 padding checker",
-      "instances_per_die": 1,
+      "role": "old pass-through source retained; five-credit adapter prolongedstall causesCDCfault/drop",
+      "instances_per_die": 0,
       "clock_entries": [
         "clk"
       ],
@@ -183,7 +183,7 @@
         86.4
       ],
       "area_request_um2": 7464.960000000001,
-      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "outline_status": "SUPERSEDED_UNBACKED5_TO4_ADMISSION",
       "layer_cap": "M5",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_rx_pad.sv",
@@ -363,6 +363,33 @@
       "physical_gate_residual": "gate-only balanced89a9e16aa spread22.9/R409.8 reported; SSroute/DRC/childlint/sourceprice/diephase remainunqualified",
       "production_binding": "qkd_host_control_packet_capture/qkd_host_control_prompt_capture PROMPT_READ_LATENCY4/PB_READ_PIPE5",
       "functional_gate": "actualFMT1/ND8 12steps3genwrap/die7held/all7peers/15commands/CQ10IRQ andUEguard PASS; sixmutantsFAIL"
+    },
+    {
+      "master": "qkd_host_rx_pad5",
+      "flop_bits": 4208,
+      "role": "actual adapter externalRXcredit5 elastic queue5; reserves downstreamCDCcredit4; fullDATA1024 padding check beforeclass528",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "clk"
+      ],
+      "outline_request_um": [
+        86.4,
+        172.8
+      ],
+      "area_request_um2": 14929.920000000002,
+      "outline_status": "UNVERIFIED_NEW_ELASTIC_SOURCE_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED_FDI_INPUT_FACE_TO_ACTUAL_ADAPTER_CDC_OUTPUT_NEIGHBOR",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv",
+      "sha256": "b2f029fe7a387566e102086f659531b0093048e6326541dc0ec025b671ba7194",
+      "capacity": {
+        "source_initial": 5,
+        "queue_words": 5,
+        "word_bits": 528,
+        "downstream_reserved_credits": 4
+      },
+      "clock_contract": "same compensated PHY clock family as adapter RX output and CDC write entry; actual setup/hold required",
+      "functional_gate": "96RX/96TX under300corecycle stall; direct48payload/padding/ghostcredit/overflow; dataMUTfails; oldpassCDFw_fault thenword16lost"
     }
   ],
   "existing_children": [
@@ -487,7 +514,7 @@
       "rck"
     ],
     "native_collective_instances_borrowed": 0,
-    "binding": "qkd_host_phy_cdc u_rx/u_tx",
+    "binding": "qkd_host_phy_cdc5 u_rx/u_tx; real adapter r5 backed by elasticRXpad5",
     "slot_assignment": "DIE_LEAD_REQUIRED",
     "measured_existing_master_route": "IOowner qfd_xf_ch546 n2 gatePASS submitted source560d99bef actual90.72x129.6; hostinstance placement notproven"
   },

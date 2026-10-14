@@ -26,7 +26,7 @@ def ports(name,path):
    n=entry
   clk='ck'
   if name=='qkd_host_native_qm' and n in ['h_v','h_cls','h_d','h_crn','t_v','t_d','t_cr']:clk='clk_h'
-  if name in ['qkd_host_if_pins','qkd_host_csr_pins','qkd_host_rst_pins','qkd_host_rx_pad']:clk='clk'
+  if name in ['qkd_host_if_pins','qkd_host_csr_pins','qkd_host_rst_pins','qkd_host_rx_pad','qkd_host_rx_pad5']:clk='clk'
   if name=='qkd_ctrl_pc_host' and n in ['ci','co','ki','ko','pi','po','hrst','pc','pll_hbm','fi','fo']:clk='pll_hbm'
   if name=='qkd_host_visibility_fence' and n in ['in_v','in_d','in_cr','out_v','out_d','out_cr','landed_debug','fault']:clk='clk_h'
   special=n in ['ck','clk','pll_hbm','rst_n','rsi','hrst','por_n','clk_h','clk_i','clk_i_bank','clk_i_out']

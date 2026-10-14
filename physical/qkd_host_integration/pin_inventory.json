@@ -1282,7 +1282,7 @@
     {
       "master": "qkd_host_rx_pad",
       "flop_bits": 1557,
-      "instances_per_die": 1,
+      "instances_per_die": 0,
       "clock_entries": [
         "clk"
       ],
@@ -1291,7 +1291,7 @@
         86.4
       ],
       "area_request_um2": 7464.960000000001,
-      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "outline_status": "SUPERSEDED_UNBACKED5_TO4_ADMISSION",
       "layer_cap": "M5",
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_rx_pad.sv",
@@ -1968,6 +1968,97 @@
           "direction": "output",
           "width": 1,
           "registered_domain": "ck",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ]
+    },
+    {
+      "master": "qkd_host_rx_pad5",
+      "flop_bits": 4208,
+      "instances_per_die": 1,
+      "clock_entries": [
+        "clk"
+      ],
+      "outline_request_um": [
+        86.4,
+        172.8
+      ],
+      "area_request_um2": 14929.920000000002,
+      "outline_status": "UNVERIFIED_NEW_ELASTIC_SOURCE_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED_FDI_INPUT_FACE_TO_ACTUAL_ADAPTER_CDC_OUTPUT_NEIGHBOR",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_rx_pad5.sv",
+      "capacity": {
+        "source_initial": 5,
+        "queue_words": 5,
+        "word_bits": 528,
+        "downstream_reserved_credits": 4
+      },
+      "clock_contract": "same compensated PHY clock family as adapter RX output and CDC write entry; actual setup/hold required",
+      "functional_gate": "96RX/96TX under300corecycle stall; direct48payload/padding/ghostcredit/overflow; dataMUTfails; oldpassCDFw_fault thenword16lost",
+      "source_sha256": "b2f029fe7a387566e102086f659531b0093048e6326541dc0ec025b671ba7194",
+      "ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "in_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "in_d",
+          "direction": "input",
+          "width": 1024,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "in_cr",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "out_v",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "out_d",
+          "direction": "output",
+          "width": 546,
+          "registered_domain": "clk",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "out_cr",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "clk",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "clk",
           "seam": "REGISTERED_OUTPUT"
         }
       ]
