@@ -21,7 +21,7 @@ PORT_WH = (1036.8, 2462.4)      # qfd_port_tiles_* slot: 2.553 mm2 >= the measur
 RES_WH = (777.6, 518.4)
 LANES_WH = (777.6, 1131.84)
 SU_WH = (3240.0, 3672.0)        # qfd_sp_su64_sfu: 64-lane component 4.84 mm2 children + reducer + glue (Codex 3434 x 2570 bbox)
-VM_WH = (4838.4, 2546.64)       # accepted VM envelope (contract v5 VM answers, 10-13 19:11)
+VM_WH = (4708.8, 2203.2)        # TRIMMED central VM (owner 08:20 PT 10-14: distributed x slices adopted; banks / SU ports / row reads only, M7 cap, no wall)
 CTLM_WH = (777.6, 1814.4)
 UP4_WH = (345.6, 388.8)
 CLKRX_WH = (412.488, 412.488)

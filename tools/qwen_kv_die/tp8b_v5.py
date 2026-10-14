@@ -40,6 +40,13 @@ sys.path.insert(0, str(HERE.parent / 'hier_contract'))
 DW = 508
 VM_ENV = dict(x=13284.0, y=17051.04, w=4838.4, h=2546.64)   # r11 / contract v5: VM slot change request v2 (VM3 10-13 18:08) ACCEPTED
 VM_OBS_TOP = 9                         # r11: region / band clusters are M9-capped; the die keeps only its M8 / M9 PG straps there
+import os as _os
+SPLIT_COMPUTE = _os.environ.get('OT_TP8_SPLIT') == 'compute'
+if SPLIT_COMPUTE:
+    # owner 08:20 PT 10-14: distributed x slices adopted -> TRIMMED central VM (banks / SU ports / row reads), M7 cap, no
+    # M8/M9 grant, no wall (compute-die contract v1; tools/qwen_split/compute_spine.py places it)
+    VM_ENV = dict(VM_ENV, w=4708.8, h=2203.2)
+    VM_OBS_TOP = 7
 RHEAD_LAT_Y = 8.64                     # r11: legal origin lattice of the head frame in y (M6 nb pins + site rows; ot_mts::place)
 HEAD_RROW = 0.0                        # r12: optional relay row between far and near head (34.56 fits the 73.5-um inter-engine slack)
                                        # but OFF: it moves the far-head pair from 466.75 to ~501 um (> 500 reach) and would need a relay
@@ -387,7 +394,7 @@ def apply(v, m, G):
                 ties += [(i.name, 'crom_lb', 6, 8 * g)]
     su.x, su.y = su_new[0], su_new[1]
     v.SU_VM_NORTH = True
-    v.WALL_AVOID = True          # r9: the VM region spans the spine: planned paths go round walls (_relays)
+    v.WALL_AVOID = not SPLIT_COMPUTE   # r9: the VM region spans the spine: planned paths go round walls (_relays); split: M7-cap VM, no wall
     ck = by.get('clk_rx')
     bl = by.get('sp_band_lanes_1')
     if ck is not None and bl is not None:
