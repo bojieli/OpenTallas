@@ -19,7 +19,7 @@ module ot_hgi_dma_front_xsw6b #(
   .ix_v(ix_v),.ix_rdy(ix_rdy),.ix_cmd(ix_cmd),.id_v(id_v),.id_rdy(id_rdy),.id(id),
   .dq(dq),.dq_rdy(dq_rdy),.dd(dd),.dd_cr(dd_cr),.xs_oh(picks),.xs_ls(sectors),.xs_v(legacy_v),
   .lease_grant(lease_grant),.lease_busy(lease_busy),.wl_done(wl_done),.wl_rdy(8'hff),.wl_credit(wl_credit),.fmt_bad(vm_bad),.issue_v(issue_v));
- ot_hgi_dma_front_xs_vm #(.NIN(2*NL),.NBS(8),.MUT(MUT)) formatter(.clk(slice_clk),.xo(picks),.ls(sectors),.wd(wd),.v_o(v),.bad_o(vm_bad));
+ ot_hgi_dma_front_xs_vm2 #(.NIN(2*NL),.NBS(8),.MUT(MUT)) formatter(.clk(slice_clk),.xo(picks),.ls_a(sectors[0+:NL*277]),.ls_b(sectors[NL*277+:NL*277]),.wd(wd),.v_o(v),.bad_o(vm_bad));
  for(genvar b=0;b<8;b=b+1)assign vm_packet[b*281+:281]={v[b],wd[b*280+:280]};
 endmodule
 `default_nettype wire
