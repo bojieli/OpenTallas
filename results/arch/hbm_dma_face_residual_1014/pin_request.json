@@ -1,5 +1,5 @@
 {
-  "source": "03a48a940",
+  "source": "9000f754c",
   "canonical_main": "7c976b0e6",
   "clock_helper_sha256": "72c87207be8e0712657bebbdf869bb6131db8c5f5f4654c3b796f28ea7c592ad",
   "status": "UNASSIGNED",
@@ -35,7 +35,7 @@
     ],
     "Kface": [
       64.8,
-      23.76
+      43.2
     ],
     "VMface": [
       112.32,
@@ -47,5 +47,6 @@
     ]
   },
   "parent_fit_approved": false,
-  "native_contract": "Separate group1 shared arbiter/ten bank credits and actual4:3 CDC; DQ done-only highestpriority. Legacy32 GLQ32 semantics unchanged."
+  "native_contract": "Separate group1 shared arbiter/ten bank credits and actual4:3 CDC; DQ done-only highestpriority. Legacy32 GLQ32 semantics unchanged.",
+  "K_why": "Required pin/holdfixed cells779.6 plusmovable504.6 exceeded127% ofoldcore;largeractualoutline CTS TT+131.6ps FF+29.9ps. No slotassigned."
 }
