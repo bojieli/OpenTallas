@@ -32,3 +32,10 @@ requirements, including all five failed mutants. Source hashes and
 verdicts are in die_clock_sources.sha256 and die_clock_verdicts.log.
 Completion payload pin registers were added separately at 6b103146e;
 their full hierarchy positive + xgo mutant regression is pending.
+
+The 6b103146e completion payload pin-register regression completed
+(ot-run 32 GB, EPYC4, unit oth-ubuntu-4080312-1791944926, exit 0):
+GATHER_CL_GATE PASS (6 runs). Full L2/L20 and stress remain exact,
+sticky overflow and coverage refusal remain observed, and xgo mutant
+fails. In the bundled-toggle protocol the payload register is sampled
+before the toggle event, so measured completion cycle delta stays zero.
