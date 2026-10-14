@@ -28,7 +28,7 @@
         "sha256": "0aa826882d50d3ada7902abbe02b21a959a4b4df8b3560ad01859a6ebdda0120"
       },
       "status": "5source-qualified CTS prototypes, ANYpins/unexportedhardlibs, no closednativeparent; groupedTXnewcandidate underway",
-      "clock_coverage_question": "compactCTL declared8921 vs measuredall7767 censusstage/clockcoverage pending"
+      "clock_coverage": "Actual4_1 CTS ODB7767FF equals ck.json all.n7767 (7675DFFHQN+92ASR); complete postCTS coverage. Prelayout8921 to7767 optimization provenance still under audit."
     },
     {
       "name": "native_KV_seq",
@@ -49,14 +49,14 @@
       "name": "native_host",
       "owner": "/root/qwen_host_integration",
       "receipt": {
-        "commit": "cde600aa4",
+        "commit": "b21676b9a",
         "path": "physical/qkd_host_integration/pin_inventory.json",
-        "sha256": "8f99583e01d8462a33bf0f0e1ae3e8c970d563f5a91af9a2e1f6be147a5abf1d"
+        "sha256": "eb510b5b84e5b0937c16250f804aacbc12bd9d084b640418775391bb25f49183"
       },
-      "status": "24requested/candidate master ABI entries/2500links; source1d5435003 nativeQM6clockfamily actualcensus. Extra2W546 CDC besides2HOSTPHY and10collective explicit; bridgeRTL/source/census/ports notqualified. Role reset240FF/86.4square requested, old103FF resetinstances0. AlloutlinesUNVERIFIED/nooldQMclockalias.",
-      "mandatory_seams": "packet833ps toQMhost1000ps515ingress/65completion/count5 unresolved; receiverinitial5->CDCIBUF4 capacity translation unproved",
-      "declared_master_entries": 24,
-      "connectivity_records": 2500
+      "status": "28 requested/candidate master ABIs, 2508 links. Native QM six-clock families and four dedicated HOST W546 CDC leaves explicit. Queue10303FF/pacer16FF source components measured, full original FDI ng8 bridge2048 sectors/69755 cycles functional only. qfd_link_adp512 historical instances0; actual eight CLOSED128 leaves bound in distinct unqualified split parent842.4. All outlines and distribution remain UNVERIFIED.",
+      "mandatory_seams": "833ps packet to1000ps QM host unrelated; new real16x514 ingress queue reserves CDC4 and local count5 credit pacer, physical seam and native throughput unqualified. Receiver R5 capacity adapter still requires actual structural binding.",
+      "declared_master_entries": 28,
+      "connectivity_records": 2508
     },
     {
       "name": "native_SU_formatter",
@@ -96,7 +96,17 @@
         "path": "results/arch/qwen_tp8_cache_ack_1013/recipient_expectation.json",
         "sha256": "8c014aca70b5b1bc4e114111fbc8637edd210adbec755de5a65a12a355ce1dea"
       },
-      "status": "Expected768TIDmap only, no actualstrap/32fabric/acceptedload orquiescenceACK; livej_repeatoverlap defect alsoopen"
+      "status": "768 TID map is expectation only. New production accepted-IB379/context16/version32/query-mode export and separate cache event toggles implemented in default-off candidates. Full consumer/node/replay drain and real recipient bindings remain open; response capture is not retirement.",
+      "accepted_interface": {
+        "commit": "a778c2ba6",
+        "path": "results/arch/qwen_tp8_context_interface_1014/interface.json",
+        "sha256": "71bec20d4217deaa0563d88a0cd7f983d980d65eceb5b35e2c2abbb93a48f006"
+      },
+      "event_interface": {
+        "commit": "c58d1436e",
+        "path": "results/rtl/qwen_xcache_events_1014/interface.json",
+        "sha256": "bf1d95f4afcbdfb1b966992334d37dc1cb90ebca3a38694bb5f75cd39f832be2"
+      }
     },
     {
       "name": "native_TT_head_ARG2",
@@ -107,11 +117,21 @@
         "sha256": "66427c59f8a3a9314ef36015c867eb177549217e27af3330fdd6214e7782639c"
       },
       "status": "ARG2immutableclockref; sharedmainpath nowARG1d38d, nevermix variants; SSnegative/allspread82.2 retained, parentnotadopted"
+    },
+    {
+      "name": "delivery_lifetime_component",
+      "owner": "/root/qwen_die",
+      "receipt": {
+        "commit": "ad6904156",
+        "path": "results/arch/qwen_delivery_lifetime_1014/receipt.json",
+        "sha256": "d72acf10a7541315842a4da25c52b63ac5614595341fad6b6f2370d55e06f858"
+      },
+      "status": "Default-off held accepted descriptor/VM reservation and ordered recipient ledger; component positive+4 mutants only. 16x192 banks7346Q/root+1985Q control=119521 analytical bits. Actual tile/VM events, seals, clocks, pins and native cost remain unbound."
     }
   ],
   "other_open_physical": {
-    "SU_alignment": "Source0cc1b8a81 VL7/LMIN15 randomizedcomponentproof; declared100352addedstate, newcomplete16leafequationalignment135168bits onlyequivalencecandidate, notbv_acc integration/physical views",
-    "adapter": "NewCLOSED128leaf source owneredge;8leafparent842.4unclosed, newcreditproxy1252.8candidateexternal4/internal12capacity explicit; allnewparams namedviews required",
+    "SU_alignment": "4c45b454f fullSW64+regional reducer120 component operations/1117 events/282 tuples, VL7/LMIN15 only. Refavg94.07/dut177.99 and delta36..413; not native image price. Complete16-leaf alignment candidate135168 bits not integrated physical views; future VM external CLOCK/ENGINE debt must rebind.",
+    "adapter": "Source03afb6d02 proxy candidate externalTX4/R5: measured+16cycles unit proof, generic66575FF/78roots/max9275+8SRAM. Requested1360.8 parentH lacks constructive78-station placement/reach/PG/power; no adoption. Existing8-leaf842.4 parent remains unqualified.",
     "collective_local": "N8/credit32/return517 nativeLOCALn9 gateopen; no oldN4/credit8 alias; UCIeP546+R514 transport simultaneous1060>1024 requires actualserializedrate proof"
   },
   "release_gate": "Finalv5 constructivegeometry/currentrealmasters/assignedpins/registeredfaces/clockPG/nativeprotocol/cost and realdieGRT+3cornerSTA remainrequired; no target or gate relaxed"
