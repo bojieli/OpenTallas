@@ -1,0 +1,77 @@
+{
+  "schema": "native8-retained-partition-evidence-v1",
+  "source_commit": "c75cf7efa",
+  "source_archive_sha256": "7a4deb164dcdf06a44ba593c05df08dc75d092b4262140ac48e78e838b18704c",
+  "native_clone_sha256": "d4fcfff07bbeb45ad40a659034172ba348d6fe3763ed45b777fd16cdc46d3db7",
+  "partition_sha256": "2963c223f0c733950c2d122d5f83558b6387c5fcdaad99fa1a39934ac780d726",
+  "parameters": {
+    "G": 3072,
+    "D": 8,
+    "NW": 18,
+    "SW": 64,
+    "CRED": 32,
+    "RB": 3,
+    "IS": 1,
+    "OS": 1,
+    "PSRAM": 0
+  },
+  "fleet_host": "ot-epyc4",
+  "fleet_stage": "/srv/opentallas-scratch/codex/native8-retained-partition-c75cf7efa",
+  "jobs": [
+    {
+      "unit": "oth-ubuntu-1424763-1791968478",
+      "kind": "yosys_generic_ff_census",
+      "exit": 0
+    },
+    {
+      "unit": "oth-ubuntu-1424764-1791968478",
+      "kind": "common_phase_equivalence_and_mutants",
+      "exit": 0
+    }
+  ],
+  "clock_roots": {
+    "control": 12568,
+    "station": 3416,
+    "program_bank_each": 4160,
+    "program_bank_count": 16
+  },
+  "total_generic_ff_bits": 82544,
+  "functional": {
+    "cycles": 20997,
+    "program_reads": 712,
+    "loads": 150,
+    "core_done": 17395,
+    "coll": 1145,
+    "vm_writes": 200,
+    "posted_sent": 126,
+    "rank_high_samples": 9727,
+    "rank_truncation_detected": 9727,
+    "late_bank_read_mismatches": 19927
+  },
+  "qualification": {
+    "physical": false,
+    "actual_checkpoint_program": false,
+    "production_ring": false,
+    "independent_clock_timing": false,
+    "prolonged_credit32_depletion": false,
+    "tag32_native18_safe": false,
+    "position_admission_safe": false
+  },
+  "gaps": [
+    "Generic FF bits are not mapped sink/CTS results; slots and clock entries are unassigned.",
+    "Program read address/mux faces need pin registration and real path timing.",
+    "Functional bench ties all candidate clocks to a common phase.",
+    "Legacy shared helper truncates native18 token top two bits in 32-bit tag; position low8 lifecycle safety not established.",
+    "Old stage-ready metadata lacks position identity; a distinct tagged-ready profile is required.",
+    "Posted credits need prolonged depletion, stale/extra return and reset lifecycle proofs."
+  ],
+  "artifacts": {
+    "late.sha256": "8ce3efcdde6153db61c2a79bfba6e7aaed6b389731e75efd048501d2c0ce4e27",
+    "rank.log": "2062d1a1a1d14b458f69459f947aeb5649cacf228d3bc4a593dcf83d24290fde",
+    "rank.sha256": "b12dff7c0c80ba22f793097fa70afd88751f9ec730b6369b4f856926a39aacee",
+    "positive.log": "e26246406ab29096acbe8cc79f2cab2754797db97cf11ee1689e9bbc14f5237e",
+    "positive.sha256": "8eea8f0efa834c9d46ab03695475d845e13e9bb6b5edc55eeb42c0478771d3ed",
+    "census.json": "cf2dfcc5a423ebc0b092d071d1c16a843b56730288bd150ae09f730fc1f09544",
+    "late.log": "6534671974cda3b94b2d622961fbc3b269ccbc5202f0e3f290f7898bdb473727"
+  }
+}

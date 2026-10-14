@@ -1,0 +1,3467 @@
+{
+  "schema": "opentallas.native8.sequencer-retained-census.v1",
+  "source_commit": "4fb280f39",
+  "top": "ot_qfd_native8_retained_partition_candidate",
+  "parameters": {
+    "G": 3072,
+    "D": 8,
+    "NW": 18,
+    "SW": 64,
+    "CRED": 32,
+    "RB": 3,
+    "IS": 1,
+    "OS": 1,
+    "RT": 4,
+    "PSRAM": 0,
+    "RRG": 0,
+    "PCUT": 0,
+    "OLAG": 0,
+    "HQ2": 0,
+    "PMUT": 0,
+    "RLY": 0
+  },
+  "source_sha256": {
+    "rtl/physical/ot_qfd_seq_su_bi_native8_candidate.sv": "d4fcfff07bbeb45ad40a659034172ba348d6fe3763ed45b777fd16cdc46d3db7",
+    "rtl/qwen_sys/redesign_qwen/ot_qfd_seq_su_bi.sv": "84fbd3975bf4ccbe436f3864057fcf42e89b9f1f6fa6bfd62e6ebe4447d40597",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
+    "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv": "f7c420676f57d6b377b89cd52da7d78f9332e2a7d762dca039565076c5a49dfa",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv": "0fe1d499dad8a137f237b66077e499e40a50ec8e259ea04c77e7eae3fe248207",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145",
+    "rtl/physical/ot_qfd_native8_retained_partition_candidate.sv": "2963c223f0c733950c2d122d5f83558b6387c5fcdaad99fa1a39934ac780d726"
+  },
+  "census_script_sha256": "0da1eb5369682ebd5ed33c74717506845b07ebbb51c6b6f6ada6274a04cd9541",
+  "yosys_script_sha256": "a537cd8ed1c0de6d28d7f7055586a450eb3682e52ca83b34ff82c8833d0218d2",
+  "analysis_profile_sha256": "d4fcfff07bbeb45ad40a659034172ba348d6fe3763ed45b777fd16cdc46d3db7",
+  "analysis_profile_transform": "Only PSRAM parameter default specialized; all original body bytes and other native8 defaults preserved.",
+  "icg_abi_only_sha256": "67940a5049925fb60b221000ca5355f8038593227285582da13e7b0a2c219b7f",
+  "icg_characterized": false,
+  "retained": {
+    "total_generic_ff_bits": 81968,
+    "clock_ff_bits": {
+      "clk_program[0]": 4160,
+      "clk_program[10]": 4160,
+      "clk_program[11]": 4160,
+      "clk_program[12]": 4160,
+      "clk_program[13]": 4160,
+      "clk_program[14]": 4160,
+      "clk_program[15]": 4160,
+      "clk_program[1]": 4160,
+      "clk_program[2]": 4160,
+      "clk_program[3]": 4160,
+      "clk_program[4]": 4160,
+      "clk_program[5]": 4160,
+      "clk_program[6]": 4160,
+      "clk_program[7]": 4160,
+      "clk_program[8]": 4160,
+      "clk_program[9]": 4160,
+      "clk_control": 11992,
+      "clk_station": 3416
+    },
+    "instances": [
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[0].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[0]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[10].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[10]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[11].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[11]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[12].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[12]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[13].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[13]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[14].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[14]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[15].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[15]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[1].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[1]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[2].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[2]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[3].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[3]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[4].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[4]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[5].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[5]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[6].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[6]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[7].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[7]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[8].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[8]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[9].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[9]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[0].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[10].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[11].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[12].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[13].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[14].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[15].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[16].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[17].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[18].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[19].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[1].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[20].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[21].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[22].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[23].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[24].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[25].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[26].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[27].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[28].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[29].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[2].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[30].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[31].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[32].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[33].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[34].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[35].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[36].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[37].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[38].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[39].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[3].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[40].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[41].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[42].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[43].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[44].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[45].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[46].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[47].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[48].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[49].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[4].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[50].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[51].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[52].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[53].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[54].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[55].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[56].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[57].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[58].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[59].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[5].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[60].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[61].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[62].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[63].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[6].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[7].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[8].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[9].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_me_cg.u_me_cg",
+        "module": "ot_hdc_cg",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/u_dyn_tiles_split",
+        "module": "$paramod$efe1b26c15aea2b1eda7f501e8b0933eda1841a9\\ot_hdc_dyn_ttiles",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/u_dyn_tiles_zero",
+        "module": "$paramod$efe1b26c15aea2b1eda7f501e8b0933eda1841a9\\ot_hdc_dyn_ttiles",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl",
+        "module": "$paramod$25d78e09737774aaade106ae33643265700da7fd\\ot_qwen_rom_core_ctrl_x_bi",
+        "local_ff_bits": 6886,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 6886
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_rs",
+        "module": "$paramod\\ot_qfd_rst_stn\\D=s32'00000000000000000000000000000001",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_seq",
+        "module": "$paramod$a3e6a8bd27aca79bffb69e2ad43f7121ca742748\\ot_qwen_tp_seq_w12_vrl",
+        "local_ff_bits": 4868,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 4868
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_sgate",
+        "module": "$paramod$053b2c8840d3638e930d3daca16f20b556be0d4f\\ot_qfd_stage_gate",
+        "local_ff_bits": 43,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 43
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_shell",
+        "module": "$paramod$0763a695f861ff2f848c46ebca3abc1e27768cda\\ot_qfd_issue_shell",
+        "local_ff_bits": 19,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 19
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control",
+        "module": "ot_qfd_native8_control_state_leaf",
+        "local_ff_bits": 175,
+        "local_memories": [
+          {
+            "name": "desc_mem",
+            "bits": 512,
+            "width": 64,
+            "words": 8,
+            "write_clocks": [
+              "clk_control"
+            ]
+          }
+        ],
+        "clock_ff_bits": {
+          "clk_control": 175
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_c_ready",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_cbr",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_cbs",
+        "module": "$paramod$fc618f8669747dd534a3238eab1256836ad1af59\\ot_hdc_delay",
+        "local_ff_bits": 12,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 12
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_dw_addr",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_dw_data",
+        "module": "$paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\\ot_hdc_delay",
+        "local_ff_bits": 64,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 64
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_dw_v",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_h_start",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_kv_write_drained",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_acc",
+        "module": "$paramod$e64cf4fd172a104dfe6abf4d8df5b0b013609d3f\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_fault",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_idle",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_kv_we",
+        "module": "$paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\\ot_hdc_delay",
+        "local_ff_bits": 64,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 64
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_progress",
+        "module": "$paramod$13dd041e5e42386f022f17996867483d6b8489cb\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_progress_rows",
+        "module": "$paramod$13dd041e5e42386f022f17996867483d6b8489cb\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_ready",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_rt_active",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_rt_inflight",
+        "module": "$paramod$ee8858a7502a1871c5096ba7b539d3ffd0f531b2\\ot_hdc_delay",
+        "local_ff_bits": 8,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 8
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_wrom_addr",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_wrom_re",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pw_addr",
+        "module": "$paramod$79a777a006c5d6fd69e4856698502c2be03f6366\\ot_hdc_delay",
+        "local_ff_bits": 10,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 10
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pw_data",
+        "module": "$paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\\ot_hdc_delay",
+        "local_ff_bits": 64,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 64
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pw_v",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_data",
+        "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+        "local_ff_bits": 512,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 512
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_err",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_last",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_rank",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_valid",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_tp_pos",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_tp_token",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_vm_rq",
+        "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+        "local_ff_bits": 512,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 512
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_fidx",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_fval",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_oacc",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_ofin",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_oidle",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_oprog",
+        "module": "$paramod$19dbe3dcf9eeda1a9fcd3b852d2c9c30c3f7784f\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_data",
+        "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+        "local_ff_bits": 512,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 512
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_last",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_mode",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_tag",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_valid",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_cb",
+        "module": "$paramod$77c3feaa57b10947677822a9fe302f43ce78248c\\ot_hdc_delay",
+        "local_ff_bits": 25,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 25
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_coll_busy",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_core_fault",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kv_write_flush",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_js",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_jsh",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_k",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_kindk",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_ks",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_nout",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_pos",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_split",
+        "module": "$paramod$9915e66cac05dacca1bfdcef8f4506d31f5e2d4a\\ot_hdc_delay",
+        "local_ff_bits": 4,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 4
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_tiles",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_ts",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_v",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_wbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_wcs",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_me_pos_o",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_me_prog_base_o",
+        "module": "$paramod$fc618f8669747dd534a3238eab1256836ad1af59\\ot_hdc_delay",
+        "local_ff_bits": 12,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 12
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_me_start_o",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_me_token_o",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_go",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_abase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_ad",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_asi",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_aso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_asrc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_bbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_bsi",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_bso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_bsrc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_cbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_csi",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_cso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_csrc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_dbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_dsi",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_dso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_dst",
+        "module": "$paramod$0b8b66d32c4786e3a54b6fdb37d52d4a54190a2e\\ot_hdc_delay",
+        "local_ff_bits": 2,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 2
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_imm1",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_imm2",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_ma",
+        "module": "$paramod$0b8b66d32c4786e3a54b6fdb37d52d4a54190a2e\\ot_hdc_delay",
+        "local_ff_bits": 2,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 2
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_mb",
+        "module": "$paramod$0b8b66d32c4786e3a54b6fdb37d52d4a54190a2e\\ot_hdc_delay",
+        "local_ff_bits": 2,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 2
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_mc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_md",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_nin",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_nout",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_rbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_red",
+        "module": "$paramod$0b8b66d32c4786e3a54b6fdb37d52d4a54190a2e\\ot_hdc_delay",
+        "local_ff_bits": 2,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 2
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_redsq",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_rso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_sfu",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_rom_fault",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_s_done",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_s_fault",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_seq_ntok",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_seq_nval",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_acc_o",
+        "module": "$paramod$e64cf4fd172a104dfe6abf4d8df5b0b013609d3f\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_asrc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_idle_o",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_prog_o",
+        "module": "$paramod$13dd041e5e42386f022f17996867483d6b8489cb\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_rows_o",
+        "module": "$paramod$13dd041e5e42386f022f17996867483d6b8489cb\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_tok",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_raddr",
+        "module": "$paramod$ee8858a7502a1871c5096ba7b539d3ffd0f531b2\\ot_hdc_delay",
+        "local_ff_bits": 8,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 8
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_re",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_waddr",
+        "module": "$paramod$ee8858a7502a1871c5096ba7b539d3ffd0f531b2\\ot_hdc_delay",
+        "local_ff_bits": 8,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 8
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_wdata",
+        "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+        "local_ff_bits": 512,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 512
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_we",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_rs",
+        "module": "$paramod\\ot_qfd_rst_stn\\D=s32'00000000000000000000000000000001",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station",
+        "module": "ot_qfd_native8_station_leaf",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate",
+        "module": "ot_qfd_native8_retained_partition_candidate",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      }
+    ],
+    "blackbox_macros": [
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_me_cg.u_me_cg/u_icg",
+        "type": "ICGx1_ASAP7_75t_R",
+        "clock": []
+      }
+    ],
+    "unsupported_state": []
+  },
+  "mapped": {
+    "total_generic_ff_bits": 82544,
+    "clock_ff_bits": {
+      "clk_program[0]": 4160,
+      "clk_program[10]": 4160,
+      "clk_program[11]": 4160,
+      "clk_program[12]": 4160,
+      "clk_program[13]": 4160,
+      "clk_program[14]": 4160,
+      "clk_program[15]": 4160,
+      "clk_program[1]": 4160,
+      "clk_program[2]": 4160,
+      "clk_program[3]": 4160,
+      "clk_program[4]": 4160,
+      "clk_program[5]": 4160,
+      "clk_program[6]": 4160,
+      "clk_program[7]": 4160,
+      "clk_program[8]": 4160,
+      "clk_program[9]": 4160,
+      "clk_control": 12568,
+      "clk_station": 3416
+    },
+    "instances": [
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[0].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[0]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[10].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[10]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[11].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[11]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[12].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[12]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[13].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[13]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[14].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[14]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[15].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[15]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[1].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[1]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[2].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[2]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[3].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[3]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[4].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[4]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[5].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[5]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[6].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[6]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[7].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[7]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[8].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[8]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/g_program[9].u_bank",
+        "module": "ot_qfd_native8_program_lane_leaf",
+        "local_ff_bits": 4160,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_program[9]": 4160
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[0].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[10].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[11].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[12].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[13].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[14].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[15].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[16].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[17].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[18].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[19].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[1].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[20].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[21].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[22].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[23].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[24].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[25].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[26].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[27].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[28].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[29].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[2].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[30].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[31].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[32].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[33].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[34].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[35].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[36].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[37].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[38].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[39].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[3].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[40].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[41].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[42].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[43].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[44].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[45].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[46].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[47].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[48].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[49].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[4].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[50].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[51].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[52].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[53].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[54].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[55].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[56].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[57].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[58].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[59].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[5].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[60].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[61].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[62].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[63].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[6].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[7].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[8].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_int8_embed.g_embed_decode[9].u_decode",
+        "module": "ot_hdc_qwen_int8_embed_decode",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_me_cg.u_me_cg",
+        "module": "ot_hdc_cg",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/u_dyn_tiles_split",
+        "module": "$paramod$efe1b26c15aea2b1eda7f501e8b0933eda1841a9\\ot_hdc_dyn_ttiles",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/u_dyn_tiles_zero",
+        "module": "$paramod$efe1b26c15aea2b1eda7f501e8b0933eda1841a9\\ot_hdc_dyn_ttiles",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl",
+        "module": "$paramod$25d78e09737774aaade106ae33643265700da7fd\\ot_qwen_rom_core_ctrl_x_bi",
+        "local_ff_bits": 6886,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 6886
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_rs",
+        "module": "$paramod\\ot_qfd_rst_stn\\D=s32'00000000000000000000000000000001",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_seq",
+        "module": "$paramod$a3e6a8bd27aca79bffb69e2ad43f7121ca742748\\ot_qwen_tp_seq_w12_vrl",
+        "local_ff_bits": 4868,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 4868
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_sgate",
+        "module": "$paramod$053b2c8840d3638e930d3daca16f20b556be0d4f\\ot_qfd_stage_gate",
+        "local_ff_bits": 43,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 43
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_shell",
+        "module": "$paramod$0763a695f861ff2f848c46ebca3abc1e27768cda\\ot_qfd_issue_shell",
+        "local_ff_bits": 19,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 19
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control",
+        "module": "ot_qfd_native8_control_state_leaf",
+        "local_ff_bits": 751,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_control": 751
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_c_ready",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_cbr",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_cbs",
+        "module": "$paramod$fc618f8669747dd534a3238eab1256836ad1af59\\ot_hdc_delay",
+        "local_ff_bits": 12,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 12
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_dw_addr",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_dw_data",
+        "module": "$paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\\ot_hdc_delay",
+        "local_ff_bits": 64,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 64
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_dw_v",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_h_start",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_kv_write_drained",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_acc",
+        "module": "$paramod$e64cf4fd172a104dfe6abf4d8df5b0b013609d3f\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_fault",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_idle",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_kv_we",
+        "module": "$paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\\ot_hdc_delay",
+        "local_ff_bits": 64,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 64
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_progress",
+        "module": "$paramod$13dd041e5e42386f022f17996867483d6b8489cb\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_progress_rows",
+        "module": "$paramod$13dd041e5e42386f022f17996867483d6b8489cb\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_ready",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_rt_active",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_rt_inflight",
+        "module": "$paramod$ee8858a7502a1871c5096ba7b539d3ffd0f531b2\\ot_hdc_delay",
+        "local_ff_bits": 8,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 8
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_wrom_addr",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pi_su_wrom_re",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pw_addr",
+        "module": "$paramod$79a777a006c5d6fd69e4856698502c2be03f6366\\ot_hdc_delay",
+        "local_ff_bits": 10,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 10
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pw_data",
+        "module": "$paramod$e9c41b4f994acad3c194eb8e342acb75e395e4c8\\ot_hdc_delay",
+        "local_ff_bits": 64,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 64
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_pw_v",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_data",
+        "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+        "local_ff_bits": 512,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 512
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_err",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_last",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_rank",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_r_valid",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_tp_pos",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_tp_token",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_vm_rq",
+        "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+        "local_ff_bits": 512,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 512
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_fidx",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_fval",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_oacc",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_ofin",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_oidle",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_i_x_oprog",
+        "module": "$paramod$19dbe3dcf9eeda1a9fcd3b852d2c9c30c3f7784f\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_data",
+        "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+        "local_ff_bits": 512,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 512
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_last",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_mode",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_tag",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_c_valid",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_cb",
+        "module": "$paramod$77c3feaa57b10947677822a9fe302f43ce78248c\\ot_hdc_delay",
+        "local_ff_bits": 25,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 25
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_coll_busy",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_core_fault",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kv_write_flush",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_js",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_jsh",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_k",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_kindk",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_ks",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_nout",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_pos",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_split",
+        "module": "$paramod$9915e66cac05dacca1bfdcef8f4506d31f5e2d4a\\ot_hdc_delay",
+        "local_ff_bits": 4,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 4
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_tiles",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_ts",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_v",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_wbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_kvd_wcs",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_me_pos_o",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_me_prog_base_o",
+        "module": "$paramod$fc618f8669747dd534a3238eab1256836ad1af59\\ot_hdc_delay",
+        "local_ff_bits": 12,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 12
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_me_start_o",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_me_token_o",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_go",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_abase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_ad",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_asi",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_aso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_asrc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_bbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_bsi",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_bso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_bsrc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_cbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_csi",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_cso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_csrc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_dbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_dsi",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_dso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_dst",
+        "module": "$paramod$0b8b66d32c4786e3a54b6fdb37d52d4a54190a2e\\ot_hdc_delay",
+        "local_ff_bits": 2,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 2
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_imm1",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_imm2",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_ma",
+        "module": "$paramod$0b8b66d32c4786e3a54b6fdb37d52d4a54190a2e\\ot_hdc_delay",
+        "local_ff_bits": 2,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 2
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_mb",
+        "module": "$paramod$0b8b66d32c4786e3a54b6fdb37d52d4a54190a2e\\ot_hdc_delay",
+        "local_ff_bits": 2,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 2
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_mc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_md",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_nin",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_nout",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_rbase",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_red",
+        "module": "$paramod$0b8b66d32c4786e3a54b6fdb37d52d4a54190a2e\\ot_hdc_delay",
+        "local_ff_bits": 2,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 2
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_redsq",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_rso",
+        "module": "$paramod$514c4100ec87717c53839245c8253b1d3a5c8218\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_po_su_i_sfu",
+        "module": "$paramod$86410170c436700764e392cc49cd3900bee058be\\ot_hdc_delay",
+        "local_ff_bits": 3,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 3
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_rom_fault",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_s_done",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_s_fault",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_seq_ntok",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_seq_nval",
+        "module": "$paramod$6655575c56cc6a09005f52d1aee038f1d768e9c8\\ot_hdc_delay",
+        "local_ff_bits": 32,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 32
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_acc_o",
+        "module": "$paramod$e64cf4fd172a104dfe6abf4d8df5b0b013609d3f\\ot_hdc_delay",
+        "local_ff_bits": 24,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 24
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_asrc",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_idle_o",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_prog_o",
+        "module": "$paramod$13dd041e5e42386f022f17996867483d6b8489cb\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_rows_o",
+        "module": "$paramod$13dd041e5e42386f022f17996867483d6b8489cb\\ot_hdc_delay",
+        "local_ff_bits": 16,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 16
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_su_tok",
+        "module": "$paramod$873e98c765894f967e35105bc3728f374fb8a7bb\\ot_hdc_delay",
+        "local_ff_bits": 18,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 18
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_raddr",
+        "module": "$paramod$ee8858a7502a1871c5096ba7b539d3ffd0f531b2\\ot_hdc_delay",
+        "local_ff_bits": 8,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 8
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_re",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_waddr",
+        "module": "$paramod$ee8858a7502a1871c5096ba7b539d3ffd0f531b2\\ot_hdc_delay",
+        "local_ff_bits": 8,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 8
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_wdata",
+        "module": "$paramod$33b97cb24e514d7f6e21800270d66ed18a708c4a\\ot_hdc_delay",
+        "local_ff_bits": 512,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 512
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_o_vm_we",
+        "module": "$paramod$8de78af6131ecb245f46105ac5f47885f86304b5\\ot_hdc_delay",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station/u_rs",
+        "module": "$paramod\\ot_qfd_rst_stn\\D=s32'00000000000000000000000000000001",
+        "local_ff_bits": 1,
+        "local_memories": [],
+        "clock_ff_bits": {
+          "clk_station": 1
+        }
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_station",
+        "module": "ot_qfd_native8_station_leaf",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      },
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate",
+        "module": "ot_qfd_native8_retained_partition_candidate",
+        "local_ff_bits": 0,
+        "local_memories": [],
+        "clock_ff_bits": {}
+      }
+    ],
+    "blackbox_macros": [
+      {
+        "instance": "ot_qfd_native8_retained_partition_candidate/u_control/u_ctrl/g_me_cg.u_me_cg/u_icg",
+        "type": "ICGx1_ASAP7_75t_R",
+        "clock": []
+      }
+    ],
+    "unsupported_state": []
+  },
+  "physical_qualified": false,
+  "slots_assigned": false,
+  "clock_sink_rule": "Generic FF bit counts are a source census, not cell-mapped clock sinks. New roots require <=15000 actual sinks or measured CTS insertion<=300ps/spread<=80ps.",
+  "legacy_closed_alias_used": false,
+  "CROM_latency_or_VL_adoption": false
+}
