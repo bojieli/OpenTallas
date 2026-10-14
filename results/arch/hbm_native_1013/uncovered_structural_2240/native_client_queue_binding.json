@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.native_client_queue_binding.v1",
+  "quant": {
+    "source": "85c81f4c29724a82d57342017f84e390c3313dcd",
+    "top": "ot_hgi_qdq_q_pin4",
+    "instance": "hb_quant/u_qdq",
+    "quadrant_local_lanes": 8,
+    "lane_to_bank": "localbank b = sector[2:0]; parent quadrant selects VM slice",
+    "packet_read_bits": 16,
+    "packet_read": "{valid,sector15}",
+    "packet_response_bits": 257,
+    "packet_response": "{valid,data256} in order per lane; pairs concatenatep3,p2,p1,p0",
+    "packet_write_bits": 280,
+    "packet_write": "{valid,sector15,data256,wmask8}",
+    "native_adaptation": "Native17/281 needs explicit mirrored sid addition, preservingsector and localbank; owner hbm_vm_sm_2240",
+    "credits": 10,
+    "credit_counter_bits": 4,
+    "credit_semantics": "rcr/wcr counts initialized10 and addcredit-return minusacceptedissue. LQ does not index storage.",
+    "credit_source": [
+      "rtl/hbm_accel/generic/qw/ot_hgi_qdq_core.sv:45/179/183",
+      "rtl/hbm_accel/generic/qw/ot_hgi_qdq_wr.sv:40/123/128"
+    ],
+    "storage_depths": {
+      "LD": 16,
+      "NB": 32,
+      "RQ": 16,
+      "OD": 64
+    },
+    "storage_wrap": "poweroftwo pointers; qdq_lq initial LDpoweroftwo fatal; no10entry pointer",
+    "grants": "rg_req/rg_gnt, wg_req/wg_gnt held through readwalk/writedrain; exclusive-group arbitration external",
+    "clock": "single endpoint clk on engineCK833.333ps; actual VM CKV1111.111ps3:4 adapter outside endpoint; thissource does not itself contain related-clock CDC",
+    "status": "q8e wr autoCOMBOECO; parent native3:4/exclusive-group proof open"
+  },
+  "sfu": {
+    "source": "c1080eae2 arithmeticgrid; mapper resetrepair239d22c78",
+    "status": "arithmetic only, no qualifiednativeVMendpoint",
+    "shape": "4 quarters each16 CLOSEDlane5 arithmeticbodies and16 fouredge laneindex mappers; local8VMcache/head/ack/controller open",
+    "controller": "mustmatch GSH1 KIMM1 DENR1 SFUT0 DRING3:exp94,silu122, plus mapper4edge phase/cost",
+    "unassigned_slots": [
+      "nativecontroller/headstate",
+      "local8VMresponsecollector/transposition/cache",
+      "actualwriteACK/drain/watermark"
+    ]
+  },
+  "legacy_ctlw": {
+    "source": "origin/main historical ot_hgi_su_ctlw/slice",
+    "closed_depth": 8,
+    "native_depth": 10,
+    "safe_to_bind_closed_LQ8_to10": false,
+    "finding": "dq arrays sizeLQ while pointerclog2(LQ) naturallywrap2^QB; LQ10 reachesindices10..15 unless explicitwrap/newstorage. NewSVsource isseparate owner; legacyproof doesnot qualify it.",
+    "references": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:1338/1349",
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:2616/2627"
+    ],
+    "successor_owner": "/root/hbm_idx_smmv_2240/suvop_collect"
+  },
+  "physical": "All newleaves M5, closedconstituents stand. No inventedM6PORTgrant. Assignedpins cut<=.60, perpair L-H>=100, clockphi-R and actualclockwaveforms stillrequire nativeparent receipts."
+}
