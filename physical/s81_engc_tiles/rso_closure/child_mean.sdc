@@ -4,7 +4,16 @@
 create_clock -name core_clk -period 833.333 [get_ports ck]
 create_clock -name vclk -period 833.333
 set_clock_latency -source 0 [get_clocks core_clk]
-set_propagated_clock [get_clocks core_clk]
+# Placement starts with an ideal clock. Propagating its unbuffered thousands
+# of sink loads before CTS produces meaningless multi-nanosecond skew and
+# drives placement repair against a tree that does not exist. Once CTS cells
+# exist (including later stage reloads), use that actual propagated tree.
+set ot_engc_cts_buffers [get_cells -quiet -hierarchical {clkbuf*}]
+if {[llength $ot_engc_cts_buffers]} {
+    set_propagated_clock [get_clocks core_clk]
+} else {
+    unset_propagated_clock [get_clocks core_clk]
+}
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 foreach clock [all_clocks] {
@@ -21,4 +30,4 @@ set_output_delay -75 -min -clock vclk [all_outputs]
 source /src/physical/common_flow/io_ref_routed.sdc
 if {![dict exists $ot_ir_ins core_clk]} { error "ENGC child boundary mean unavailable" }
 lassign [dict get $ot_ir_ins core_clk] R lo hi n kind
-puts "ENGC_CHILD_MEAN core_clk R=$R lo=$lo hi=$hi n=$n kind=$kind; source0 fixed833.333 H100"
+puts "ENGC_CHILD_MEAN core_clk R=$R lo=$lo hi=$hi n=$n kind=$kind cts_buffers=[llength $ot_engc_cts_buffers]; source0 fixed833.333 H100"
