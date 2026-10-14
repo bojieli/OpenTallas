@@ -1,3 +1,14 @@
+CURRENT STATUS (2026-10-14): HISTORICAL SNAPSHOT UNIT ONLY; NOT ADOPTED.
+The descriptions below preserve the original two-root512-line experiment.
+Current native delivery candidates use actual accepted IB/context/version,
+40-bit per-query identity and one128-bit cache response per tile query.
+They must preserve changing k/j address and captured normalization mode.
+No snapshot cost, old508-bit packet, two-root route or dictionary149-bit
+lower bound qualifies the current production transport.
+See results/arch/qwen_delivery_lifetime_1014/contract.json and the
+source-hashed current_native_inventory_index.json in
+results/arch/qwen_tp8_native_abi_1013 for current obligations and open gates.
+
 CRITICAL SCOPE CORRECTION (2026-10-13): this unit protocol proves one snapshot
 of512quad lines only. It is NOT a full matvec delivery implementation.
 ot_qwen_w12_matvec.sv changes x_addr on every active issue edge according to
