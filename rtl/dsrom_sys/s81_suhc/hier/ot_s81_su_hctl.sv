@@ -22,7 +22,9 @@ module ot_s81_su_hctl #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16,
     parameter integer S_RD = 16, S_WR = 16, NSW = 4, NQB = 2, NQN = 1, NKV = 1,
     parameter integer MUT = 0,
-    parameter integer RAL = 16
+    parameter integer RAL = 16,
+    parameter integer QRW = 2           // QR rope rows read a cycle (2: rows j, j + 1 of a head on slots 0 / 1; the rxt
+                                        // tile takes the pair and writes two result rows on write slots 0 / 1)
 ) (
     input  wire                   clk,
     input  wire                   rst_n,
@@ -198,6 +200,12 @@ module ot_s81_su_hctl #(
                         rq_v[0] <= 1; rq_v[1] <= 1;
                         rq_row[13:0] <= ibase + {1'b0, ri[13:1]};
                         rq_row[27:14] <= ibase + {1'b0, ri[13:1]} + p0[14 +: 14];
+                        ri <= ri + 2;
+                    end else if (kind == K_QR && QRW > 1 && ri < nrow) begin
+                        // QR pair issue (s81-romB3 2026-10-14): rope rows j, j + 1 (j even) of head h on slots 0 / 1
+                        rq_v[0] <= 1; rq_v[1] <= 1;
+                        rq_row[13:0] <= ibase + {ri[13:2], 5'd0} + 14'd28 + {12'd0, ri[1:0]};
+                        rq_row[27:14] <= ibase + {ri[13:2], 5'd0} + 14'd29 + {12'd0, ri[1:0]};
                         ri <= ri + 2;
                     end else if (kind != K_RB && ri < nrow && (kind != K_RA || xs == 0)) begin
                         rq_v[0] <= 1;

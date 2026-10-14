@@ -147,7 +147,7 @@ module dsfd_sp_su_h #(
     wire [S_WR-1:0]    p_uv;
     wire               rst_c;
     ot_s81_su_ctl #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
-                    .S_RD(S_RD), .S_WR(S_WR), .NSW((SW_W >= 64) ? SW_W / 64 : 1), .NQB(QB_NB / 2), .NQN(QN_N / 64), .NKV(NKV), .MUT(MUT), .AMUT(AMUT)) u_ctl (
+                    .S_RD(S_RD), .S_WR(S_WR), .NSW((SW_W >= 64) ? SW_W / 64 : 1), .NQB(QB_NB / 2), .NQN(QN_N / 64), .NKV(NKV), .MUT(MUT), .AMUT(AMUT), .QRW((RXH != 0) ? 2 : 1)) u_ctl (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(cc_v), .c_cmd_d(cc_d), .c_done_v(cd_v),
         .c_done_tag(cd_t), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_c),
         .p_rq_v(c_rq_v), .p_rq_row(c_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),
@@ -369,6 +369,7 @@ module dsfd_sp_su_h #(
     wire        xrv [0:NTL]; wire [31:0] xrd [0:NTL];
     // RXH: the head-placed rxt's outputs, merged at stop 0
     wire        rx_v, rx_fu, rx_fo, rx_alive; wire [13:0] rx_a; wire [15:0] rx_m; wire [511:0] rx_d;
+    wire        rx_v2; wire [13:0] rx_a2; wire [511:0] rx_d2;     // QR pair: the second result row (write slot 1)
     genvar t;
     generate for (t = 0; t < NTL; t = t + 1) begin : g_t
         localparam integer B1 = NQN, B2 = NQN + 1, B3 = B2 + NQB, B4 = B3 + NSWS, B5 = B4 + NSM;
@@ -652,9 +653,10 @@ module dsfd_sp_su_h #(
             if (RXH != 0) begin : g_head
                 // spine-head tile: tap = stop 0's down register, write slot merged at stop 0 (rx_*); its own stop
                 // here relays the spines only
-                ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
+                ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT), .QW(2)) u_rxt (
                     .clk(sk), .rst_in(rst[0]), .dn_st_i(dst[0]), .dn_kind_i(dkd[0]), .dn_jid_i(dji[0]), .dn_v_i(dv[0]),
-                    .dn_d_i(dd[0]), .o_v(rx_v), .o_a(rx_a), .o_m(rx_m), .o_d(rx_d), .o_fu(rx_fu), .o_fo(rx_fo),
+                    .dn_d_i(dd[0]), .o_v(rx_v), .o_a(rx_a), .o_m(rx_m), .o_d(rx_d), .o_v2(rx_v2), .o_a2(rx_a2), .o_d2(rx_d2),
+                    .o_fu(rx_fu), .o_fo(rx_fo),
                     .o_alive(rx_alive), .o_den(), .o_rdy(), .o_rjid());
                 assign o_v = 1'b0; assign o_a = 0; assign o_m = 0; assign o_d = 0;
                 assign o_fu = 1'b0; assign o_fo = 1'b0; assign o_alive = 1'b1; assign o_den = 1'b1; assign o_rdy = 1'b0;
@@ -662,8 +664,9 @@ module dsfd_sp_su_h #(
             end else begin : g_tail
                 ot_s81_su_rxt #(.S_RD(S_RD), .LM(LM), .LA(LA), .XMUT(XMUT)) u_rxt (
                     .clk(sk), .rst_in(rst[t]), .dn_st_i(dst[t]), .dn_kind_i(dkd[t]), .dn_jid_i(dji[t]), .dn_v_i(dv[t]),
-                    .dn_d_i(dd[t]), .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_fu(o_fu), .o_fo(o_fo), .o_alive(o_alive),
-                    .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+                    .dn_d_i(dd[t]), .o_v(o_v), .o_a(o_a), .o_m(o_m), .o_d(o_d), .o_v2(), .o_a2(), .o_d2(), .o_fu(o_fu), .o_fo(o_fo),
+                    .o_alive(o_alive), .o_den(o_den), .o_rdy(o_rdy), .o_rjid(o_rjid));
+                assign rx_v2 = 1'b0; assign rx_a2 = 0; assign rx_d2 = 0;
                 assign rx_v = 1'b0; assign rx_a = 0; assign rx_m = 0; assign rx_d = 0;
                 assign rx_fu = 1'b0; assign rx_fo = 1'b0; assign rx_alive = 1'b1;
             end
@@ -703,6 +706,8 @@ module dsfd_sp_su_h #(
                     ud_q[512 * s +: 512] <= o_d[512 * (s - W0) +: 512];
                 end else if (t == 0 && s == 0 && rx_v) begin
                     ua_q[13:0] <= rx_a; um_q[15:0] <= rx_m; ud_q[511:0] <= rx_d;
+                end else if (t == 0 && s == 1 && rx_v2) begin
+                    ua_q[27:14] <= rx_a2; um_q[31:16] <= 16'hFFFF; ud_q[1023:512] <= rx_d2;
                 end else begin
                     ua_q[14 * s +: 14] <= ua[t + 1][14 * s +: 14]; um_q[16 * s +: 16] <= um[t + 1][16 * s +: 16];
                     ud_q[512 * s +: 512] <= ud[t + 1][512 * s +: 512];
@@ -711,7 +716,7 @@ module dsfd_sp_su_h #(
         always @(posedge sk or negedge rst[t]) begin
             if (!rst[t]) begin uv_q <= 0; ufu_q <= 0; ufo_q <= 0; ual_q <= 0; ude_q <= 0; urd_q <= 0; urj_q <= 0; end
             else begin
-                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && rx_v);
+                for (s = 0; s < S_WR; s = s + 1) uv_q[s] <= uv[t + 1][s] || (s >= W0 && s < W0 + WS && o_v[s - W0]) || (t == 0 && s == 0 && rx_v) || (t == 0 && s == 1 && rx_v2);
                 ufu_q <= ufu[t + 1] || o_fu || (t == 0 && rx_fu); ufo_q <= ufo[t + 1] || o_fo || (t == 0 && rx_fo);
                 ual_q <= ual[t + 1] && o_alive && (t != 0 || rx_alive);
                 ude_q <= ude[t + 1] && o_den; urd_q <= urd[t + 1] || o_rdy; urj_q <= o_rdy ? o_rjid : urj[t + 1];
