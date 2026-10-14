@@ -15,6 +15,7 @@ foreach mp_inst [$mp_block getInsts] {
   } else {continue}
   if {[dict exists $mp_map $mp_key]} {error "S81_DQ_SITE duplicate used forwarding role $mp_key"}
   dict set mp_map $mp_key $mp_inst
+  $mp_inst setDoNotTouch 0
   $mp_inst setPlacementStatus PLACED
 }
 if {[dict size $mp_map]!=1464} {error "S81_DQ_SITE expected1464 used forwarding FFs, got[dict size $mp_map]"}
@@ -55,7 +56,12 @@ set mp_report [open $mp_report_file w]
 puts $mp_report "output\tinput\tflop\tmaster\torient\tx_um\ty_um\tD_x_um\tD_y_um\tQ_x_um\tQ_y_um\tinput_D_manhattan_um\tQ_output_manhattan_um"
 set mp_keep [open $::env(RESULTS_DIR)/s81_midpoint_used_cells.txt w]
 set mp_pin_cache [dict create];set mp_worst 0.0
-foreach mp_key [lsort [dict keys $mp_map]] {
+# EW windows are narrower: allocate them first in actual bit/ordinate order,
+# then let the more flexible N/S forwarding roles use remaining legal rows.
+set mp_order {}
+for {set bit 0} {$bit<828} {incr bit} {lappend mp_order "lo\[$bit\]"}
+for {set bit 212} {$bit<848} {incr bit} {lappend mp_order "co\[$bit\]"}
+foreach mp_key $mp_order {
   set mp_inst [dict get $mp_map $mp_key];set mp_master [$mp_inst getMaster]
   regexp {^(lo|co)\[([0-9]+)\]$} $mp_key -> mp_kind mp_bit
   if {$mp_kind eq "lo"} {set mp_input "li\[[expr {$mp_bit+276}]\]"} else {set mp_input "ci\[[expr {$mp_bit-212}]\]"}
@@ -121,11 +127,11 @@ foreach mp_key [lsort [dict keys $mp_map]] {
   if {$best eq {}} {error "S81_DQ_SITE no legal row/site satisfying BOTH100um D/Q windows for $mp_input->$mp_key"}
   lassign $best x y orient dx dy qx qy md mq
   $mp_inst setOrient $orient;$mp_inst setLocation $x $y
-  $mp_inst setPlacementStatus FIRM;$mp_inst setDoNotTouch 1
+  $mp_inst setPlacementStatus FIRM
   dict lappend mp_busy $y [list $x [expr {$x+$w}]]
   set mp_worst [expr {max($mp_worst,$md/double($mp_dbu),$mq/double($mp_dbu))}]
   puts $mp_keep [$mp_inst getName]
   puts $mp_report "$mp_key\t$mp_input\t[$mp_inst getName]\t[$mp_master getName]\t$orient\t[expr {$x/double($mp_dbu)}]\t[expr {$y/double($mp_dbu)}]\t[expr {($x+$dx)/double($mp_dbu)}]\t[expr {($y+$dy)/double($mp_dbu)}]\t[expr {($x+$qx)/double($mp_dbu)}]\t[expr {($y+$qy)/double($mp_dbu)}]\t[expr {$md/double($mp_dbu)}]\t[expr {$mq/double($mp_dbu)}]"
 }
 close $mp_report;close $mp_keep
-puts "S81_DQ_SITE selected1464 legal used FF sites/rows, both actual D/Q windows<=100um, max $mp_worst um; FIRM and dont_touch, no extra state/epoch. CTS verification remains required."
+puts "S81_DQ_SITE selected1464 legal used FF sites/rows, both actual D/Q windows<=100um, max $mp_worst um; FIRM (reset remains repairable), no extra state/epoch. CTS verification remains required."
