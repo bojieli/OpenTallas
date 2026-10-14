@@ -1,5 +1,6 @@
 # Three RELATED clocks. No asynchronous groups, false paths, multicycle paths,
 # or period relaxation. Internal bank/relay paths remain timed at the real period.
+source /src/physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_nominal.tcl
 set ot_mc_period [get_property [get_clocks core_clk] period]
 create_clock -name req_clk -period $ot_mc_period [get_ports ck_req]
 create_clock -name ret_clk -period $ot_mc_period [get_ports ck_ret]
@@ -26,6 +27,8 @@ proc ot_bgl_mc_ports {patterns} {
 proc ot_bgl_mc_mean {clock patterns} {
     set values {}; set best_values {}
     set pins {}
+    set allowed [dict create]
+    foreach p [all_registers -clock_pins -clock [get_clocks $clock]] { dict set allowed [get_full_name $p] 1 }
     if {$patterns eq {ALL}} {
         set pins [all_registers -clock_pins -clock [get_clocks $clock]]
     } else {
@@ -36,6 +39,7 @@ proc ot_bgl_mc_mean {clock patterns} {
         }
     }
     foreach p $pins {
+        if {![dict exists $allowed [get_full_name $p]]} { continue }
         set a [get_property $p arrival_max_rise]
         set best [get_property $p arrival_min_rise]
         if {[string is double -strict $a] && [string is double -strict $best]} {
@@ -58,9 +62,9 @@ proc ot_bgl_mc_mean {clock patterns} {
 }
 # Pin ownership is explicit. Request input/output share rb0; return input/output
 # use rt/so in H1. Bank input straps/reset reference bank rst/gidq clocks.
-set ot_mc_owners [list [list req_clk {i_v* i_we* i_row* i_mask* i_d*} {f_v* f_we* f_row* f_mask* f_d*} {u.f_v* u.f_we* u.f_row* u.f_mask* u.f_d*}] \
-    [list ret_clk {r_v* r_d* r_f* r_o*} {o_v* o_d* o_f* o_o*} {u.o_v* u.o_d* u.o_f* u.o_o*}] \
-    [list core_clk {rs grp* bi*} {} {*gidq*}]]
+set ot_mc_owners [list [list req_clk {i_v* i_we* i_row* i_mask* i_d*} {f_v* f_we* f_row* f_mask* f_d*} {ALL}] \
+    [list ret_clk {r_v* r_d* r_f* r_o*} {o_v* o_d* o_f* o_o*} {ALL}] \
+    [list core_clk {rs grp* bi*} {} {u.gidq* u.rst_s*}]]
 set ot_mc_post [expr {![info exists ::ot_ref_pre_cts] || !$::ot_ref_pre_cts}]
 set ot_mc_physical [get_clocks {core_clk req_clk ret_clk}]
 # Clear previous compensation before EACH measurement; arrivals below are RAW.
@@ -92,14 +96,17 @@ unset_input_delay [get_ports {ck ck_req ck_ret}]
 if {$ot_mc_post} {
     dict for {clock references} $ot_mc_refs {
         lassign $references R Rmin
-        set_clock_latency -source -max [expr {-$R}] [get_clocks $clock]
-        set_clock_latency -source -min [expr {-$Rmin}] [get_clocks $clock]
-        puts "BGL_MC_DELIVERY root=$clock period=$ot_mc_period phi=0 R_max=$R R_min=$Rmin source_max=[expr {-$R}] source_min=[expr {-$Rmin}]"
+        if {![dict exists $::ot_bgl_mc_nominal_refs $clock]} { error "BGL_MC missing bound nominalTT reference for $clock" }
+        set nominal_R [dict get $::ot_bgl_mc_nominal_refs $clock]
+        # ONE physical source phase, used unchanged for early/late and TT/FF/SS.
+        # Actual min/max corner tree variation remains in every timed crossing.
+        set_clock_latency -source [expr {-$nominal_R}] [get_clocks $clock]
+        puts "BGL_MC_DELIVERY root=$clock period=$ot_mc_period phi=0 nominal_R=$nominal_R source_latency=[expr {-$nominal_R}] raw_max_R=$R raw_min_R=$Rmin"
     }
     dict for {from refs_from} $ot_mc_refs {
-        set Rf [lindex $refs_from 0]
+        set Rf [dict get $::ot_bgl_mc_nominal_refs $from]
         dict for {to refs_to} $ot_mc_refs {
-            set Rt [lindex $refs_to 0]
+            set Rt [dict get $::ot_bgl_mc_nominal_refs $to]
             if {$from eq $to} { continue }
             set skew [expr {$Rf > 300.0 || $Rt > 300.0 ? 150.0 : 90.0}]
             set_clock_uncertainty -setup [expr {60.0+$skew}] -from [get_clocks $from] -to [get_clocks $to]

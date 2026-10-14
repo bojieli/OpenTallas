@@ -1,0 +1,37 @@
+{
+  "schema": "s81.bgl28.nominal_clock_reference.v1",
+  "status": "DIAGNOSTIC_CTS_REFERENCE_NOT_ROUTED",
+  "source_commit": "d68dd8b50",
+  "source_snapshot_manifest": "/tmp/ref_gate_dsfd_vm_bgl28_mc_20261014-001522.source_snapshot.json",
+  "source_snapshot_sha256": "c9a38e5276fba4701e005ddbdca7319001f076be93822d02926a8dcc82e29363",
+  "source_host": "ot-epyc4",
+  "source_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc-20261014-001522",
+  "library_corner": "tt",
+  "parasitics": "placement",
+  "measurement_normalization": "All clock/input-delay tags removed for every rise/fall clock; all actual root source latencies reset to0 before raw measurement",
+  "clock_delivery": "One fixed nominal TT source phase -R per actual root, same value for early and late and all Liberty corners; no independent FF alignment",
+  "driver_assumptions": {
+    "source_slew_ps": 150,
+    "physical_die_driver_binding": "UNBOUND"
+  },
+  "boundaries": {
+    "core_clk": {
+      "n": 7,
+      "mean_ps": 399.83634742857146,
+      "min_ps": 388.708344,
+      "max_ps": 404.644287
+    },
+    "req_clk": {
+      "n": 4146,
+      "mean_ps": 257.92370948528753,
+      "min_ps": 247.950272,
+      "max_ps": 283.33313
+    },
+    "ret_clk": {
+      "n": 1299,
+      "mean_ps": 266.2012852193996,
+      "min_ps": 261.700806,
+      "max_ps": 270.135925
+    }
+  }
+}

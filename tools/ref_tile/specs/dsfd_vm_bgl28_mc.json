@@ -250,8 +250,11 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
    "physical/ref_tile_specs/ds_vm",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
-  ]
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_nominal.json"
+  ],
+  "hold_merge": true,
+  "notes": "UNQUALIFIED DIAGNOSTIC: independent ideal clock sources use fixed nominal CTS TT -R at150ps slew for all early/late/corners; physical die driver/slot binding and raw multi-root export are required. Do not publish compensated near-zeroR views."
  },
  "layer_cap": "M5",
  "recipe": 2,
