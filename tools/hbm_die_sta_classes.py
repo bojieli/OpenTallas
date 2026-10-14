@@ -44,7 +44,7 @@ def norm(m):
 
 
 STATION_VIEW = re.compile(r'hfd_(stn_r|meso_r|mcast_r|gath_r|cdist_r)\d')
-RELAY_KINDS = ('sta_relay', 'real_station', 'relay')
+RELAY_KINDS = ('sta_relay', 'real_station', 'relay', 'relay_ph')
 DIGITS = re.compile(r'\d+')
 
 
@@ -70,6 +70,10 @@ def case_bind_map(case):
             kinds[n] = 'interim'
         else:
             kinds[n] = 'real'
+    pj = case / 'placeholder_masters.json'      # die --placeholder-all: one bundled library, kinds listed here
+    if pj.exists():
+        for n, k in json.loads(pj.read_text())['masters'].items():
+            kinds.setdefault(n, k)
     meta, chain_of = {}, {}
     rj = case / 'relays.json'
     if rj.exists():
@@ -91,8 +95,8 @@ def flop_times(ctx):
     if not ctx:
         return out
     sinks = dict(ctx.get('sinks') or {})
-    sinks.update(ctx.get('relays') or {})
-    sinks.update(ctx.get('added') or {})
+    for k in ('view_sinks', 'relay_sinks', 'relays', 'added'):
+        sinks.update(ctx.get(k) or {})
     for k, s in sinks.items():
         e, i = s.get('entry_ps') or {}, s.get('internal_ps') or {}
         if not e:
