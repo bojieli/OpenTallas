@@ -79,6 +79,7 @@ module dsfd_engram_c_rso #(
     wire [7:0] s_rdy, s_perr, s_rdy_pipe, s_perr_pipe, rdy_w, perr_w; wire s_we; wire [10:0] s_wa; wire [511:0] s_wd;
     wire [17:0] jn; wire [15:0] wn;
     wire [5:0] w_oh, x0_oh, x0_pipe_oh, x1_oh, r0_oh, r1_oh, r2_oh; wire [7:0] w_a, x0_a, x0_pipe_a, x1_a, r0_a, r1_a, r2_a;
+    wire [3:0] vrel_sk_pipe;
     wire [255:0] b1_d, rd0, rd1, rd2w; wire [319:0] x_d, x0_d, x0_pipe_d; wire [63:0] x1_d;
 
     // ---------------- cluster clock entry (el1013-s81-engram 2026-10-13): the 8 hardened children have different
@@ -164,6 +165,11 @@ module dsfd_engram_c_rso #(
     ot_engc_t_pbc_rso u_pb2 (.ck(ck_pb2), .rst(rst_pb2_n), .rso(child_rso[5]), .w_oh(x1_oh), .w_a(x1_a), .w_d({192'd0, x1_d}), .x_d(64'd0),
         .x_oh(), .x_a(), .x_do(), .r_oh(r2_oh), .r_a(r2_a), .r_d(rd2w));
 
+    // Carry the release event and its slot together across the long WIN-to-SINK
+    // hop. This costs one slot-release cycle and never retimes only valid.
+    ot_engc_release_pipe u_release_sink (.clk(ck[0]), .rst_n(rst_sink_n),
+        .release_i(vrel_sk), .release_o(vrel_sk_pipe));
+
     // ---------------- closed leaves (in synthesis: hardened views, built at exactly these parameter values)
 `ifdef SYNTHESIS
     dsfd_engram_lkp u_lkp (
@@ -184,6 +190,6 @@ module dsfd_engram_c_rso #(
         .ck(ck_sink), .rst_n(rst_sink_n), .in_v(f_ai[3:0]), .in_r(t_air), .in_col(f_ai[23:4]), .in_beat(f_ai[35:24]),
         .in_slot(f_ai[47:36]), .in_d(f_ai[1103:48]), .st_v(f_ai[1107:1104]), .st_slot(f_ai[1119:1108]),
         .st_bad(f_ai[1123:1120]), .wr_en(s_we), .wr_addr(s_wa), .wr_data(s_wd), .rdy(s_rdy), .perr(s_perr),
-        .rel_v(vrel_sk[0]), .rel_slot(vrel_sk[3:1]));
+        .rel_v(vrel_sk_pipe[0]), .rel_slot(vrel_sk_pipe[3:1]));
 endmodule
 

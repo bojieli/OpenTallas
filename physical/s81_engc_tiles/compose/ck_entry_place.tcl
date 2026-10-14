@@ -133,3 +133,20 @@ foreach ot_i [$ot_cp_b getInsts] {
 }
 if {$ot_trans_cells < 334} { error "ENGC coherent transit registers missing" }
 puts "ENGC transit place cells=$ot_trans_cells near PB0 write pin ($ot_x,$ot_y)"
+
+# The four coherent release bits land at the actual SINK release pins.
+set ot_sink [$ot_cp_b findInst u_sink]
+set ot_relpin [$ot_sink findITerm rel_v]
+if {$ot_relpin eq "NULL"} { error "ENGC SINK release pin absent" }
+set ot_bb [$ot_relpin getBBox]
+set ot_x [expr {([$ot_bb xMin]+[$ot_bb xMax])/2}]
+set ot_y [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
+set ot_release_cells 0
+foreach ot_i [$ot_cp_b getInsts] {
+  if {![string match *u_release_sink* [$ot_i getName]]} continue
+  lassign [ot_engc_relay_target $ot_i $ot_sink $ot_x $ot_y] ot_tx ot_ty
+  ot_engc_place_output_cone $ot_i $ot_tx $ot_ty
+  incr ot_release_cells
+}
+if {$ot_release_cells < 4} { error "ENGC coherent release registers missing" }
+puts "ENGC release place cells=$ot_release_cells near SINK release pin ($ot_x,$ot_y)"

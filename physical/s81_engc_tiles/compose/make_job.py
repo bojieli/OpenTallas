@@ -38,7 +38,7 @@ def main():
     mv = " ".join("--macro-view " + m.split("=")[1] for m in MACROS.split())
     spec = {
         "name": name, "block": "dsfd_engram_c", "element": "dsfd_engram_c", "owner": "Claude:el1013-s81-engram",
-        "purpose": "S81 layer1e Engram cluster dsfd_engram_c, ALL-TILE composition (slot 1188 x 432): the top holds 16 reset and 350 data relay flops; "
+        "purpose": "S81 layer1e Engram cluster dsfd_engram_c, ALL-TILE composition (slot 1188 x 432): the top holds 16 reset and 354 data relay flops; "
                    "8 hardened children (closed lkp / sink leaves + T_WIN / T_IO / T_WS / T_PBB / T_PBC x2, all views child_lint clean) "
                    "clocked by a pre-placed balanced spine with a separate leaf at each child clock pin. CTS-stop gate: "
                    f"{C}/gate. Diagnostic IO virtual references {a.vclk}/{a.vclk_ff} ps remain unqualified until actual native source binding; positive-edge child boundary means replace fall-max/hand-offset targets.",
@@ -50,7 +50,7 @@ def main():
                  "expect": "pass", "pass_regex": "^ENGRAM_C_GATE PASS", "threads": 8, "peak_ram_gb": 16, "needs": ["verilator"], "timeout_s": 10800},
                 {"name": "engram_c_neg_earlydone", "cmd": "python3 tools/s81_svceng/engram_c_gate.py --quick --neg earlydone --out {RUN}/bench_engc_neg",
                  "expect": "fail", "fail_regex": "ENGRAM_C_NEG earlydone FAIL", "threads": 2, "peak_ram_gb": 6, "needs": ["verilator"], "timeout_s": 10800}],
-            "calibrate": {"enabled": False, "reason": "diagnostic only: 16 reset and 350 data flops are present. Actual child and parent logic insertion, corner source driver and native reset/clock binding are required before closure submission; scalar ENGC_VCLK_PS is not adopted"},
+            "calibrate": {"enabled": False, "reason": "diagnostic only: 16 reset and 354 data flops are present. Actual child and parent logic insertion, corner source driver and native reset/clock binding are required before closure submission; scalar ENGC_VCLK_PS is not adopted"},
             "route": {"cmd": route,
                       "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
                       "logs": ["{RUN}/routes/{LABEL}/run.log"], "threads": 16, "peak_ram_gb": 32},
@@ -66,7 +66,7 @@ def main():
                     "checks": [{"name": "lef_check_MATCH", "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""}],
                     "post_sdc": ["physical/s81_ph_views/common/signoff_unc60.sdc"]},
         "record": [{"from": "{RUN}/record", "to": "physical/s81_ph_views/closed/dsfd_engram_c"}],
-        "structural_change": "unqualified diagnostic candidate: positive-edge TT boundary means from seven exact original child routes replace fall-edge maximum insertion targets; all hand offsets removed. Ordinary BUFx24 clock pad cells replace weak HB4 pads to test actual corner tracking with targets unchanged. The parent owns 16 kept local reset flops and 350 coherent status/write transit flops. Reset conditioners share exact child clock branches; data relays use ordinary spine leaves and each bit is placed with its mapped output cone at the actual destination pin. Child face keepouts and own-M7 pocket normalization are preserved; row-bearing seams >=12um and sliver-row removal preserve power access. Normal recovery/removal and H1 hold100 remain; no reset timing exception. Actual native clock source, corner driver, reset lifecycle and assigned pins still need binding before closure submission.",
+        "structural_change": "unqualified diagnostic candidate: positive-edge TT boundary means from seven exact original child routes replace fall-edge maximum insertion targets; all hand offsets removed. Ordinary BUFx24 clock pad cells replace weak HB4 pads to test actual corner tracking with targets unchanged. The parent owns 16 kept local reset flops and 354 coherent status/write transit/release flops. Reset conditioners share exact child clock branches; data relays use ordinary spine leaves and each bit is placed with its mapped output cone at the actual destination pin. Child face keepouts and own-M7 pocket normalization are preserved; row-bearing seams >=12um and sliver-row removal preserve power access. Normal recovery/removal and H1 hold100 remain; no reset timing exception. Actual native clock source, corner driver, reset lifecycle and assigned pins still need binding before closure submission.",
     }
     print(json.dumps(spec, indent=1))
 
