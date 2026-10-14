@@ -7,7 +7,6 @@ module ot_qwen_slab_pg_core #(
     parameter integer AW = 24,
     parameter integer NW = 16,
     parameter integer GT = 6144,
-    parameter integer GID = 95,
     parameter integer SCALE_BANKS = 16,
     parameter integer COLS = 4,             // macro columns: banks c*BPC .. c*BPC+BPC-1 share a column copy
     parameter integer MUL_LAT = 6,
@@ -46,6 +45,7 @@ module ot_qwen_slab_pg_core #(
     parameter integer SMIN = 7,
     parameter integer SMAX = 11
 ) (
+    input wire [6:0]         gid, // static group identity, captured at the face
     input  wire              clk,
     input  wire              rst_n,
     // block word in (the block's forwarded clock) and on to the tree top
@@ -91,6 +91,8 @@ module ot_qwen_slab_pg_core #(
     ot_qwen_slab_pg_rcopy #(.AW(1)) u_rsb (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rs_bw), .addr_q());
 
     // ---- boundary registers (cycle 1) ---------------------------------------------------------------
+    reg [6:0] t_gid;
+    always @(posedge clk) t_gid <= gid;
     reg              t_v, t_last, t_oen, t_amax, t_rmax, t_wsrc, t_mmode;
     reg  [3:0]       t_split;
     reg  [NW:0]      t_nb, t_lb, t_nout;
@@ -108,52 +110,24 @@ module ot_qwen_slab_pg_core #(
     // dn / dl = nout - (nb + GID*W*IL) / nout - (lb + GID*W) (exact, DW-bit signed) and lane l iff d > l.
     // BANDF: the group held at split s (constant per instance and split), its in-range flag
     localparam integer TB = TCUT + 3;
-    function automatic integer bf_g(input integer sp);
-        bf_g = (BANDF == 0) ? GID : (sp <= TB) ? (((GID >> 3) << (TB - sp)) + (GID & 7)) : (GID & 7);
-    endfunction
-    function automatic integer bf_ok(input integer sp);
-        bf_ok = (BANDF == 0) ? (GID < (GT >> sp)) :
-                (sp < SMIN || sp > SMAX) ? 0 :
-                (sp <= TB) ? (((GID & 7) >> (TB - sp)) == 0) : (((GID >> 3) == 0) && ((GID & 7) < (GT >> sp)));
-    endfunction
     wire [DW-1:0] CDN, CDL;
     wire [AW-1:0] CSB;
     wire [NW-1:0] CRB;
     wire [AW-1:0] gots;
     wire          gok;
-    generate if (BANDF == 0) begin : g_gid
-        assign CDN = 1 - GID * W * IL; assign CDL = 1 - GID * W;
-        assign CSB = GID * IL; assign CRB = GID * W * IL;
-        assign gok = GID < (GT >> t_split);
-        // GID * ots for the result address (RTL o_addr1 = r_oa + (gb + q) * r_ots)
-        ot_qwen_slab_pg_cmul #(.W(AW), .K(GID)) u_gots (.a(t_ots), .p(gots));
-    end else begin : g_band
-        wire [16*DW-1:0] cdn_s, cdl_s;
-        wire [16*AW-1:0] csb_s, gots_s;
-        wire [16*NW-1:0] crb_s;
-        wire [15:0]      ok_s;
-        genvar sp;
-        for (sp = 0; sp < 16; sp = sp + 1) begin : g_s
-            localparam integer GS = bf_g(sp);
-            localparam integer OK = bf_ok(sp);
-            localparam [DW-1:0] KDN = 1 - GS * W * IL, KDL = 1 - GS * W;
-            localparam [AW-1:0] KSB = GS * IL;
-            localparam [NW-1:0] KRB = GS * W * IL;
-            assign ok_s[sp] = (OK != 0);
-            if (OK != 0) begin : g_on
-                assign cdn_s[sp*DW +: DW] = KDN; assign cdl_s[sp*DW +: DW] = KDL;
-                assign csb_s[sp*AW +: AW] = KSB; assign crb_s[sp*NW +: NW] = KRB;
-                ot_qwen_slab_pg_cmul #(.W(AW), .K(GS)) u_gots (.a(t_ots), .p(gots_s[sp*AW +: AW]));
-            end else begin : g_off
-                assign cdn_s[sp*DW +: DW] = 0; assign cdl_s[sp*DW +: DW] = 0;
-                assign csb_s[sp*AW +: AW] = 0; assign crb_s[sp*NW +: NW] = 0; assign gots_s[sp*AW +: AW] = 0;
-            end
-        end
-        assign CDN = cdn_s[t_split*DW +: DW]; assign CDL = cdl_s[t_split*DW +: DW];
-        assign CSB = csb_s[t_split*AW +: AW]; assign CRB = crb_s[t_split*NW +: NW];
-        assign gots = gots_s[t_split*AW +: AW];
-        assign gok = ok_s[t_split];
-    end endgenerate
+    // Runtime group strap keeps ONE physical core view for every die group; all products are exact integers.
+    wire [AW-1:0] gid_ext = {{(AW-7){1'b0}}, t_gid};
+    wire [AW-1:0] group_id = (BANDF == 0) ? gid_ext :
+        ((t_split <= TCUT+3) ? (((gid_ext >> 3) << (TCUT+3-t_split)) + (gid_ext & 7)) : (gid_ext & 7));
+    assign CDN = 1 - group_id * W * IL;
+    assign CDL = 1 - group_id * W;
+    assign CSB = group_id * IL;
+    assign CRB = group_id * W * IL;
+    assign gok = (BANDF == 0) ? (gid_ext < (GT >> t_split)) :
+        ((t_split < SMIN || t_split > SMAX) ? 1'b0 :
+          ((t_split <= TCUT+3) ? (((gid_ext & 7) >> (TCUT+3-t_split)) == 0) :
+             ((gid_ext >> 3) == 0 && (gid_ext & 7) < (GT >> t_split))));
+    assign gots = t_ots * group_id;
     wire [DW-1:0] dn, dl;
     wire [DW-1:0] nb_ext = {{(DW-NW-1){1'b0}}, t_nb};
     wire [DW-1:0] lb_ext = {{(DW-NW-1){1'b0}}, t_lb};
@@ -482,6 +456,12 @@ module ot_qwen_slab_pg_entries #(
     assign bw_rdy=1'b0; assign tw_v=1'b0; assign tw_d={W*32{1'b0}};
     assign bw_w_fault=1'b0; assign bw_r_fault=1'b0; assign bw_w_live=1'b0; assign bw_r_live=1'b0;
     localparam integer BPC = SCALE_BANKS / COLS;
+    wire [6:0] leaf_gid;
+`ifdef OT_SLAB_GID_MUT
+    assign leaf_gid = GID[6:0] ^ 7'd1;
+`else
+    assign leaf_gid = GID[6:0];
+`endif
     wire core_gre1, core_rs0;
     wire [AW-1:0] core_addr1;
     wire [COLS*256-1:0] col_m5;
@@ -498,9 +478,9 @@ module ot_qwen_slab_pg_entries #(
 `ifdef OT_SLAB_PG_CORE_HARD
     ot_qwen_slab_pg_core u_core (
 `else
-    ot_qwen_slab_pg_core #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .GID(GID), .SCALE_BANKS(SCALE_BANKS), .COLS(COLS), .MUL_LAT(MUL_LAT), .BW_FIFO(BW_FIFO), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT), .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX)) u_core (
+    ot_qwen_slab_pg_core #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .SCALE_BANKS(SCALE_BANKS), .COLS(COLS), .MUL_LAT(MUL_LAT), .BW_FIFO(BW_FIFO), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT), .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX)) u_core (
 `endif
-        .clk(clk), .rst_n(rst_n), .p_v(p_v), .p_last(p_last), .p_oen(p_oen), .p_amax(p_amax), .p_rmax(p_rmax), .p_wsrc(p_wsrc), .p_mmode(p_mmode), .p_split(p_split), .p_nb(p_nb), .p_lb(p_lb), .p_nout(p_nout), .p_sbase(p_sbase), .p_oa(p_oa), .p_ots(p_ots), .res_in(res_in), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data), .ov(ov), .am_tv(am_tv), .am_top(am_top), .am_rmax(am_rmax), .fault(fault), .core_gre1(core_gre1), .core_addr1(core_addr1), .col_m5(core_col_m5), .core_rs0(core_rs0), .lane_v(lane_v), .lane_ws(lane_ws), .lane_a(lane_a), .lane_s(lane_s), .lane_y(lane_y), .lane_vo(lane_vo), .lane_err(lane_err));
+        .gid(leaf_gid), .clk(clk), .rst_n(rst_n), .p_v(p_v), .p_last(p_last), .p_oen(p_oen), .p_amax(p_amax), .p_rmax(p_rmax), .p_wsrc(p_wsrc), .p_mmode(p_mmode), .p_split(p_split), .p_nb(p_nb), .p_lb(p_lb), .p_nout(p_nout), .p_sbase(p_sbase), .p_oa(p_oa), .p_ots(p_ots), .res_in(res_in), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data), .ov(ov), .am_tv(am_tv), .am_top(am_top), .am_rmax(am_rmax), .fault(fault), .core_gre1(core_gre1), .core_addr1(core_addr1), .col_m5(core_col_m5), .core_rs0(core_rs0), .lane_v(lane_v), .lane_ws(lane_ws), .lane_a(lane_a), .lane_s(lane_s), .lane_y(lane_y), .lane_vo(lane_vo), .lane_err(lane_err));
     wire [3:0] col_ck = {ck_col3,ck_col2,ck_col1,ck_col0};
     wire [3:0] lane_ck = {ck_lane3,ck_lane2,ck_lane1,ck_lane0};
     genvar c;
