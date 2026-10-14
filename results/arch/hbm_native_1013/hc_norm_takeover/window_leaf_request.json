@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.leaf_slot_request.v1",
+  "master": "ot_hgi_hc_win",
+  "state": "RTL_CANDIDATE_NOT_ROUTED",
+  "source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win.sv": "b2ac9c84ad692fc29294e707f3fa24cb3e0438e21bb6bb98759c0e371a083a95"
+  },
+  "replaces": "Each g_win[k] window state and raw capture in native ot_hgi_hc_tile",
+  "instances_per_sys_bank": 4,
+  "sys_banks_per_quarter": 2,
+  "quarters": 4,
+  "total": 32,
+  "candidate_outline_um": [
+    216.0,
+    151.2
+  ],
+  "outline_status": "Predecessor macro arithmetic estimate; must fit assigned die frame and measured synth; not a slot",
+  "hard_macros": {
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "count": 4
+  },
+  "pin_counts": {
+    "input": 400,
+    "output": 1077
+  },
+  "registered_interfaces": [
+    "control start/release/base/offset/nwords/bounds",
+    "HBM return valid/tag/beat/data",
+    "memory read request/address",
+    "one-seat credit return",
+    "HBM request valid/address/length/tag",
+    "ROM data/valid",
+    "ready/fault"
+  ],
+  "clock_entry": "clk, own leaf root; insertion/spread unmeasured",
+  "top_layer": "M5",
+  "structural_changes": [
+    "Base+offset registered inside leaf before window start",
+    "Read address captured before bound compare/subtraction",
+    "Raw SRAM capture followed by masked registered data at output",
+    "One native request receiver credit; source emits only when seat held"
+  ],
+  "next": [
+    "Leaf exact+HBM reorder/backpressure/mutant gate",
+    "Measure sinks and assigned-pin pre-route clock",
+    "Bind leaf into parent with explicit observed read latency and independent child clocks",
+    "Measure exact scalar HC cycle count and physical parent"
+  ]
+}
