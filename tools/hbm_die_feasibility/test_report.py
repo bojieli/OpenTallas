@@ -49,6 +49,15 @@ class GeometryTests(unittest.TestCase):
         self.assertEqual(d['hc_summary']['per_reservation_used_envelope_um'],[1231.2,470.88])
         self.assertFalse(d['private_pin_binding_qualified'])
 
+    def test_actual_idx_cut_counts_and_lower_bound_remain_unqualified(self):
+        d=json.loads((REPORT.parent/'idx_cut_source_screen.json').read_text())
+        self.assertEqual(d['all_source_hashes_verified'],43)
+        self.assertEqual(d['actual_clock_names'],2353)
+        self.assertEqual(d['actual_catalog_macro_instances'],124)
+        self.assertEqual(d['max_retained_glue_bits_per_root'],13860)
+        self.assertGreater(d['lower_bound_ratio_vs_legacy_slots'],1.80)
+        self.assertFalse(d['fresh_ready_physical_accepted']);self.assertFalse(d['qualified'])
+
     def test_full_sfu_prototype_preserves_selected_master_and_is_not_grant(self):
         d=json.loads((REPORT.parent/'sfu_full_geometry_prototype.json').read_text())
         self.assertEqual(d['master_count'],36)
