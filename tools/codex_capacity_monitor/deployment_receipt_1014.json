@@ -9,5 +9,11 @@
   "notify_coordinator": false,
   "automatic_continuation_operational": false,
   "limitation": "Default supported control socket absent; no guessed alternative or new daemon.",
-  "status": "background observer running, connection blocked"
+  "status": "background observer running, connection blocked",
+  "runtime_monitor_sha256": "d83523a9ea2e93a25e0a1b56a5ed38846d30adb9536d45d7c979fbde204ed53e",
+  "launcher_sha256": "dbd305f40a911356a31399e152bc3c1656177b7e3bc6ba44220a5eed4ec0a67a",
+  "source_commits": [
+    "cddda6987",
+    "680698046"
+  ]
 }
