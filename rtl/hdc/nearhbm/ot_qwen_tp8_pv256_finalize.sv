@@ -89,7 +89,8 @@ module ot_qwen_tp8_pv_final_ctl(
      if(forward1&&!(|r1))begin forward1<=0;p1_ready<=1;end
      if(forward_r&&!(|rr))begin forward_r<=0;reciprocal_ready<=1;end
      if((&ov)&&!take_output)out_valid<=1;
-     if(out_valid&&ready_q&&!take_output)begin out_valid<=0;take_output<=1;end
+     // External ready/valid retirement occurs on this edge, never a delayed ready level.
+     if(out_valid&&out_ready&&!take_output)begin out_valid<=0;take_output<=1;end
      if(take_output&&!(|ov))begin take_output<=0;active<=0;end
     end
    end
