@@ -1,0 +1,1299 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2025  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+
+-- Executing script file `./out/tail64.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/physical/ot_hdc_vreduce_entries64.sv
+Parsing SystemVerilog input from `rtl/physical/ot_hdc_vreduce_entries64.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_vreduce_region8'.
+Storing AST representation for module `$abstract\ot_hdc_vreduce_tail64'.
+Storing AST representation for module `$abstract\ot_hdc_vreduce_entries64'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_vreduce.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_vreduce.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_vred_op'.
+Storing AST representation for module `$abstract\ot_hdc_vreduce'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_sfu.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_sfu.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_vline'.
+Storing AST representation for module `$abstract\ot_hdc_exp'.
+Storing AST representation for module `$abstract\ot_hdc_recip'.
+Storing AST representation for module `$abstract\ot_hdc_rsqrt'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_fastfp.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_fastfp.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksa'.
+Storing AST representation for module `$abstract\ot_hdc_lzc32'.
+Storing AST representation for module `$abstract\ot_hdc_mul24_rows'.
+Storing AST representation for module `$abstract\ot_hdc_mul24_sum'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_add_fast'.
+Storing AST representation for module `$abstract\ot_hdc_fp32_mul_fast'.
+Storing AST representation for module `$abstract\ot_hdc_qadd'.
+Storing AST representation for module `$abstract\ot_hdc_qmul'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_ksadd_k'.
+Storing AST representation for module `$abstract\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: rtl/hdc/ot_hdc_delay.sv
+Parsing SystemVerilog input from `rtl/hdc/ot_hdc_delay.sv' to AST representation.
+Storing AST representation for module `$abstract\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vreduce_tail64'.
+Generating RTLIL representation for module `\ot_hdc_vreduce_tail64'.
+
+8.1. Analyzing design hierarchy..
+Top module:  \ot_hdc_vreduce_tail64
+Parameter \D = 3
+
+8.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+Parameter \D = 3
+Generating RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+
+8.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 60
+Parameter \D = 3
+Generating RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+
+8.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vred_op'.
+Parameter \LA = 3
+Generating RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \W = 26
+Parameter \D = 3
+
+8.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 26
+Parameter \D = 3
+Generating RTLIL representation for module `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \W = 26
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \W = 26
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Reprocessing module ot_hdc_vreduce_tail64 because instantiated module $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011 has become available.
+Generating RTLIL representation for module `\ot_hdc_vreduce_tail64'.
+
+8.6. Analyzing design hierarchy..
+Top module:  \ot_hdc_vreduce_tail64
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \W = 60
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \W = 26
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \W = 26
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \LA = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011'.
+Parameter \W = 26
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay'.
+Parameter \D = 3
+Found cached RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011'.
+
+8.7. Analyzing design hierarchy..
+Top module:  \ot_hdc_vreduce_tail64
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011
+Used module:     $paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011
+Used module:     $paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay
+Parameter \W = 33
+Parameter \D = 3
+
+8.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 33
+Parameter \D = 3
+Generating RTLIL representation for module `$paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay'.
+
+8.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_qadd'.
+Generating RTLIL representation for module `\ot_hdc_qadd'.
+
+8.10. Analyzing design hierarchy..
+Top module:  \ot_hdc_vreduce_tail64
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011
+Used module:     $paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011
+Used module:         $paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay
+Used module:         \ot_hdc_qadd
+Used module:     $paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay
+
+8.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_fp32_add_fast'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_fast'.
+
+8.12. Analyzing design hierarchy..
+Top module:  \ot_hdc_vreduce_tail64
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011
+Used module:     $paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011
+Used module:         $paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay
+Used module:         \ot_hdc_qadd
+Used module:             \ot_hdc_fp32_add_fast
+Used module:     $paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay
+Parameter \W = 24
+
+8.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksa'.
+Parameter \W = 24
+Generating RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000'.
+Parameter \W = 8
+
+8.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksa'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+
+8.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_lzc32'.
+Generating RTLIL representation for module `\ot_hdc_lzc32'.
+Parameter \W = 28
+
+8.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksa'.
+Parameter \W = 28
+Generating RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000'.
+Parameter \W = 31
+
+8.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksa'.
+Parameter \W = 31
+Generating RTLIL representation for module `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111'.
+
+8.18. Analyzing design hierarchy..
+Top module:  \ot_hdc_vreduce_tail64
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011
+Used module:     $paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011
+Used module:         $paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay
+Used module:         \ot_hdc_qadd
+Used module:             \ot_hdc_fp32_add_fast
+Used module:                 $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000
+Used module:                 $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000
+Used module:                 \ot_hdc_lzc32
+Used module:                 $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100
+Used module:                 $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111
+Used module:     $paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay
+
+8.19. Analyzing design hierarchy..
+Top module:  \ot_hdc_vreduce_tail64
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011
+Used module:     $paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011
+Used module:         $paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay
+Used module:         \ot_hdc_qadd
+Used module:             \ot_hdc_fp32_add_fast
+Used module:                 $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000
+Used module:                 $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000
+Used module:                 \ot_hdc_lzc32
+Used module:                 $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100
+Used module:                 $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111
+Used module:     $paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay
+Removing unused module `$abstract\ot_hdc_delay'.
+Removing unused module `$abstract\ot_hdc_inc_k'.
+Removing unused module `$abstract\ot_hdc_ksadd_k'.
+Removing unused module `$abstract\ot_hdc_qmul'.
+Removing unused module `$abstract\ot_hdc_qadd'.
+Removing unused module `$abstract\ot_hdc_fp32_mul_fast'.
+Removing unused module `$abstract\ot_hdc_fp32_add_fast'.
+Removing unused module `$abstract\ot_hdc_mul24_sum'.
+Removing unused module `$abstract\ot_hdc_mul24_rows'.
+Removing unused module `$abstract\ot_hdc_lzc32'.
+Removing unused module `$abstract\ot_hdc_ksa'.
+Removing unused module `$abstract\ot_hdc_rsqrt'.
+Removing unused module `$abstract\ot_hdc_recip'.
+Removing unused module `$abstract\ot_hdc_exp'.
+Removing unused module `$abstract\ot_hdc_vline'.
+Removing unused module `$abstract\ot_hdc_vreduce'.
+Removing unused module `$abstract\ot_hdc_vred_op'.
+Removing unused module `$abstract\ot_hdc_vreduce_entries64'.
+Removing unused module `$abstract\ot_hdc_vreduce_tail64'.
+Removing unused module `$abstract\ot_hdc_vreduce_region8'.
+Removed 20 unused modules.
+Mapping positional arguments of cell $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.u_add (ot_hdc_qadd).
+
+9. Executing PROC pass (convert processes to netlists).
+
+9.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+9.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$433 in module ot_hdc_vreduce_tail64.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$423 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$414 in module ot_hdc_vreduce_tail64.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$404 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$395 in module ot_hdc_vreduce_tail64.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$385 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$376 in module ot_hdc_vreduce_tail64.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$366 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$357 in module ot_hdc_vreduce_tail64.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$347 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$338 in module ot_hdc_vreduce_tail64.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$328 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$319 in module ot_hdc_vreduce_tail64.
+Marked 2 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$309 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$300 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$293 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$285 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:188$257 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/physical/ot_hdc_vreduce_entries64.sv:80$254 in module ot_hdc_vreduce_tail64.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/ot_hdc_sfu.sv:21$191 in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/ot_hdc_fastfp.sv:0$526 in module ot_hdc_fp32_add_fast.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/ot_hdc_fastfp.sv:0$509 in module ot_hdc_fp32_add_fast.
+Marked 4 switch rules as full_case in process $proc$rtl/hdc/ot_hdc_fastfp.sv:284$505 in module ot_hdc_fp32_add_fast.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/ot_hdc_fastfp.sv:263$486 in module ot_hdc_fp32_add_fast.
+Marked 1 switch rules as full_case in process $proc$rtl/hdc/ot_hdc_fastfp.sv:222$466 in module ot_hdc_fp32_add_fast.
+Removed a total of 0 dead cases.
+
+9.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 21 redundant assignments.
+Promoted 201 assignments to connections.
+
+9.4. Executing PROC_INIT pass (extract init attributes).
+
+9.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$433'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$423'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$414'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$404'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$395'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$385'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$376'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$366'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$357'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$347'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$338'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$328'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$319'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$309'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$300'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$293'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$285'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:188$257'.
+Found async reset \rst_n in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:80$254'.
+Found async reset \rst_n in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_sfu.sv:21$191'.
+Found async reset \rst_n in `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:284$505'.
+Found async reset \rst_n in `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:263$486'.
+Found async reset \rst_n in `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:222$466'.
+
+9.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~26 debug messages>
+
+9.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$439'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$435'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$433'.
+     1/1: $0\g_time[7].qv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$427'.
+     1/1: $0\g_time[7].held[31:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$423'.
+     1/1: $0\g_time[7].held_v[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$416'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$414'.
+     1/1: $0\g_time[6].qv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$408'.
+     1/1: $0\g_time[6].held[31:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$404'.
+     1/1: $0\g_time[6].held_v[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$397'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$395'.
+     1/1: $0\g_time[5].qv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$389'.
+     1/1: $0\g_time[5].held[31:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$385'.
+     1/1: $0\g_time[5].held_v[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$378'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$376'.
+     1/1: $0\g_time[4].qv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$370'.
+     1/1: $0\g_time[4].held[31:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$366'.
+     1/1: $0\g_time[4].held_v[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$359'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$357'.
+     1/1: $0\g_time[3].qv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$351'.
+     1/1: $0\g_time[3].held[31:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$347'.
+     1/1: $0\g_time[3].held_v[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$340'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$338'.
+     1/1: $0\g_time[2].qv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$332'.
+     1/1: $0\g_time[2].held[31:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$328'.
+     1/1: $0\g_time[2].held_v[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$321'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$319'.
+     1/1: $0\g_time[1].qv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$313'.
+     1/1: $0\g_time[1].held[31:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$309'.
+     1/1: $0\g_time[1].held_v[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$302'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$300'.
+     1/1: $0\g_tree[3].rv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$299'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$298'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$295'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$293'.
+     1/1: $0\g_tree[2].rv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$292'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$291'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$290'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$287'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$285'.
+     1/1: $0\g_tree[1].rv[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$284'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$283'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$282'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$281'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$280'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:195$268'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:188$257'.
+     1/2: $0\fault[0:0]
+     2/2: $0\o_we[0:0]
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:81$256'.
+Creating decoders for process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:80$254'.
+     1/3: $0\ifault[7:0]
+     2/3: $0\ibusy[7:0]
+     3/3: $0\cv[0:0]
+Creating decoders for process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$209'.
+Creating decoders for process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$203'.
+Creating decoders for process `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$193'.
+Creating decoders for process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_sfu.sv:21$191'.
+     1/1: $0\line[2:0]
+Creating decoders for process `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$215'.
+Creating decoders for process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$1340'.
+Creating decoders for process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$993'.
+Creating decoders for process `\ot_hdc_lzc32.$proc$rtl/hdc/ot_hdc_fastfp.sv:60$898'.
+Creating decoders for process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$830'.
+Creating decoders for process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$543'.
+Creating decoders for process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+     1/2: $1\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:214$445.$result[27:0]$535
+     2/2: $1\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:214$445.lost[27:0]$534
+Creating decoders for process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+     1/2: $1\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:213$444.$result[27:0]$518
+     2/2: $1\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:213$444.lost[27:0]$517
+Creating decoders for process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:284$505'.
+     1/3: $0\err[1:0]
+     2/3: $0\y[31:0]
+     3/3: $0\valid_out[0:0]
+Creating decoders for process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+Creating decoders for process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:263$486'.
+     1/1: $0\s2_v[0:0]
+Creating decoders for process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+Creating decoders for process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:222$466'.
+     1/1: $0\s1_v[0:0]
+
+9.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\lvl[0]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\lvl[1]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\lvl[2]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\lvl[3]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\tt[0]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\tt[1]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\tt[2]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\tt[3]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\sv[0]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\sv[1]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\sv[2]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\sv[3]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\sv[4]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\sv[5]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\sv[6]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\sv[7]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\st[0]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\st[1]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\st[2]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\st[3]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\st[4]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\st[5]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\st[6]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `\ot_hdc_vreduce_tail64.\st[7]' from process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+No latch inferred for signal `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.\okey$func$rtl/hdc/ot_hdc_vreduce.sv:50$195.$result' from process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$209'.
+No latch inferred for signal `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.\okey$func$rtl/hdc/ot_hdc_vreduce.sv:50$197.$result' from process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$209'.
+No latch inferred for signal `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.\okey$func$rtl/hdc/ot_hdc_vreduce.sv:50$197.x' from process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$209'.
+No latch inferred for signal `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.\okey$func$rtl/hdc/ot_hdc_vreduce.sv:50$194.$result' from process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$203'.
+No latch inferred for signal `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.\okey$func$rtl/hdc/ot_hdc_vreduce.sv:50$196.$result' from process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$203'.
+No latch inferred for signal `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.\okey$func$rtl/hdc/ot_hdc_vreduce.sv:50$196.x' from process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$203'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.\i' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$1340'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.\l' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$1340'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.\pn' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$1340'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.\gn' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$1340'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.\p' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$1340'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.\g' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$1340'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.\i' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$993'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.\l' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$993'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.\pn' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$993'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.\gn' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$993'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.\p' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$993'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.\g' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$993'.
+No latch inferred for signal `\ot_hdc_lzc32.\L' from process `\ot_hdc_lzc32.$proc$rtl/hdc/ot_hdc_fastfp.sv:60$898'.
+No latch inferred for signal `\ot_hdc_lzc32.\v' from process `\ot_hdc_lzc32.$proc$rtl/hdc/ot_hdc_fastfp.sv:60$898'.
+No latch inferred for signal `\ot_hdc_lzc32.\vn' from process `\ot_hdc_lzc32.$proc$rtl/hdc/ot_hdc_fastfp.sv:60$898'.
+No latch inferred for signal `\ot_hdc_lzc32.\c' from process `\ot_hdc_lzc32.$proc$rtl/hdc/ot_hdc_fastfp.sv:60$898'.
+No latch inferred for signal `\ot_hdc_lzc32.\cn' from process `\ot_hdc_lzc32.$proc$rtl/hdc/ot_hdc_fastfp.sv:60$898'.
+No latch inferred for signal `\ot_hdc_lzc32.\k' from process `\ot_hdc_lzc32.$proc$rtl/hdc/ot_hdc_fastfp.sv:60$898'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.\i' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$830'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.\l' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$830'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.\pn' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$830'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.\gn' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$830'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.\p' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$830'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.\g' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$830'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.\i' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$543'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.\l' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$543'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.\pn' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$543'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.\gn' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$543'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.\p' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$543'.
+No latch inferred for signal `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.\g' from process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$543'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:214$445.lost' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:214$445.val' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:214$445.d' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:214$445.man' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:214$445.$result' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:214$443.$result' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:213$444.lost' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:213$444.val' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:213$444.d' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:213$444.man' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:213$444.$result' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+No latch inferred for signal `\ot_hdc_fp32_add_fast.\jam28$func$rtl/hdc/ot_hdc_fastfp.sv:213$442.$result' from process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+
+9.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay.\genblk1.g_line.line' using process `$paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$439'.
+  created $dff cell `$procdff$1811' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[7].q' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$435'.
+  created $dff cell `$procdff$1812' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[7].qt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$435'.
+  created $dff cell `$procdff$1813' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[7].qv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$433'.
+  created $adff cell `$procdff$1818' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[7].held' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$427'.
+  created $dff cell `$procdff$1819' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[7].held_v' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$423'.
+  created $adff cell `$procdff$1824' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[6].q' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$416'.
+  created $dff cell `$procdff$1825' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[6].qt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$416'.
+  created $dff cell `$procdff$1826' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[6].qv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$414'.
+  created $adff cell `$procdff$1831' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[6].held' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$408'.
+  created $dff cell `$procdff$1832' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[6].held_v' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$404'.
+  created $adff cell `$procdff$1837' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[5].q' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$397'.
+  created $dff cell `$procdff$1838' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[5].qt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$397'.
+  created $dff cell `$procdff$1839' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[5].qv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$395'.
+  created $adff cell `$procdff$1844' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[5].held' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$389'.
+  created $dff cell `$procdff$1845' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[5].held_v' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$385'.
+  created $adff cell `$procdff$1850' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[4].q' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$378'.
+  created $dff cell `$procdff$1851' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[4].qt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$378'.
+  created $dff cell `$procdff$1852' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[4].qv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$376'.
+  created $adff cell `$procdff$1857' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[4].held' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$370'.
+  created $dff cell `$procdff$1858' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[4].held_v' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$366'.
+  created $adff cell `$procdff$1863' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[3].q' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$359'.
+  created $dff cell `$procdff$1864' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[3].qt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$359'.
+  created $dff cell `$procdff$1865' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[3].qv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$357'.
+  created $adff cell `$procdff$1870' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[3].held' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$351'.
+  created $dff cell `$procdff$1871' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[3].held_v' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$347'.
+  created $adff cell `$procdff$1876' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[2].q' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$340'.
+  created $dff cell `$procdff$1877' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[2].qt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$340'.
+  created $dff cell `$procdff$1878' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[2].qv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$338'.
+  created $adff cell `$procdff$1883' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[2].held' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$332'.
+  created $dff cell `$procdff$1884' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[2].held_v' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$328'.
+  created $adff cell `$procdff$1889' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[1].q' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$321'.
+  created $dff cell `$procdff$1890' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[1].qt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$321'.
+  created $dff cell `$procdff$1891' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[1].qv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$319'.
+  created $adff cell `$procdff$1896' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[1].held' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$313'.
+  created $dff cell `$procdff$1897' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_time[1].held_v' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$309'.
+  created $adff cell `$procdff$1902' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[3].rt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$302'.
+  created $dff cell `$procdff$1903' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[3].rv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$300'.
+  created $adff cell `$procdff$1908' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[3].q [255:32]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$299'.
+  created $dff cell `$procdff$1909' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[3].q [31:0]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$298'.
+  created $dff cell `$procdff$1910' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[2].rt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$295'.
+  created $dff cell `$procdff$1911' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[2].rv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$293'.
+  created $adff cell `$procdff$1916' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[2].q [255:64]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$292'.
+  created $dff cell `$procdff$1917' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[2].q [63:32]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$291'.
+  created $dff cell `$procdff$1918' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[2].q [31:0]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$290'.
+  created $dff cell `$procdff$1919' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[1].rt' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$287'.
+  created $dff cell `$procdff$1920' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[1].rv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$285'.
+  created $adff cell `$procdff$1925' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[1].q [255:128]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$284'.
+  created $dff cell `$procdff$1926' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[1].q [127:96]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$283'.
+  created $dff cell `$procdff$1927' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[1].q [95:64]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$282'.
+  created $dff cell `$procdff$1928' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[1].q [63:32]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$281'.
+  created $dff cell `$procdff$1929' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\g_tree[1].q [31:0]' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$280'.
+  created $dff cell `$procdff$1930' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\o_addr' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:195$268'.
+  created $dff cell `$procdff$1931' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\o_data' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:195$268'.
+  created $dff cell `$procdff$1932' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\o_we' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:188$257'.
+  created $adff cell `$procdff$1937' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\fault' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:188$257'.
+  created $adff cell `$procdff$1942' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\ct' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:81$256'.
+  created $dff cell `$procdff$1943' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\chunk' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:81$256'.
+  created $dff cell `$procdff$1944' with positive edge clock.
+Creating register for signal `\ot_hdc_vreduce_tail64.\cv' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:80$254'.
+  created $adff cell `$procdff$1949' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\ibusy' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:80$254'.
+  created $adff cell `$procdff$1954' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_vreduce_tail64.\ifault' using process `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:80$254'.
+  created $adff cell `$procdff$1959' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay.\genblk1.g_line.line' using process `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$193'.
+  created $dff cell `$procdff$1960' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011.\line' using process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_sfu.sv:21$191'.
+  created $adff cell `$procdff$1965' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay.\genblk1.g_line.line' using process `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$215'.
+  created $dff cell `$procdff$1966' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\err' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:284$505'.
+  created $adff cell `$procdff$1971' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_fp32_add_fast.\y' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:284$505'.
+  created $adff cell `$procdff$1976' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_fp32_add_fast.\valid_out' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:284$505'.
+  created $adff cell `$procdff$1981' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s2_val' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+  created $dff cell `$procdff$1982' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s2_exp' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+  created $dff cell `$procdff$1983' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s2_code' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+  created $dff cell `$procdff$1984' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s2_err' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+  created $dff cell `$procdff$1985' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s2_zero' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+  created $dff cell `$procdff$1986' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s2_sign' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+  created $dff cell `$procdff$1987' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s2_byp' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+  created $dff cell `$procdff$1988' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s2_v' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:263$486'.
+  created $adff cell `$procdff$1993' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_small' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+  created $dff cell `$procdff$1994' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_big' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+  created $dff cell `$procdff$1995' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_exp' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+  created $dff cell `$procdff$1996' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_code' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+  created $dff cell `$procdff$1997' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_err' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+  created $dff cell `$procdff$1998' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_sign' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+  created $dff cell `$procdff$1999' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_sub' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+  created $dff cell `$procdff$2000' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_byp' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+  created $dff cell `$procdff$2001' with positive edge clock.
+Creating register for signal `\ot_hdc_fp32_add_fast.\s1_v' using process `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:222$466'.
+  created $adff cell `$procdff$2006' with positive edge clock and positive level reset.
+
+9.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+9.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$439'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:0$438'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$435'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$433'.
+Found and cleaned up 1 empty switch in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$427'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$427'.
+Found and cleaned up 2 empty switches in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$423'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$423'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$416'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$414'.
+Found and cleaned up 1 empty switch in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$408'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$408'.
+Found and cleaned up 2 empty switches in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$404'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$404'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$397'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$395'.
+Found and cleaned up 1 empty switch in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$389'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$389'.
+Found and cleaned up 2 empty switches in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$385'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$385'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$378'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$376'.
+Found and cleaned up 1 empty switch in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$370'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$370'.
+Found and cleaned up 2 empty switches in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$366'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$366'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$359'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$357'.
+Found and cleaned up 1 empty switch in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$351'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$351'.
+Found and cleaned up 2 empty switches in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$347'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$347'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$340'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$338'.
+Found and cleaned up 1 empty switch in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$332'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$332'.
+Found and cleaned up 2 empty switches in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$328'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$328'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:175$321'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:171$319'.
+Found and cleaned up 1 empty switch in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$313'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:158$313'.
+Found and cleaned up 2 empty switches in `\ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$309'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:153$309'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$302'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$300'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$299'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$298'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$295'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$293'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$292'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$291'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$290'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:122$287'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:118$285'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:114$284'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$283'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$282'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$281'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:111$280'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:195$268'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:188$257'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:81$256'.
+Removing empty process `ot_hdc_vreduce_tail64.$proc$rtl/physical/ot_hdc_vreduce_entries64.sv:80$254'.
+Removing empty process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$209'.
+Removing empty process `$paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_vreduce.sv:0$203'.
+Removing empty process `$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$193'.
+Removing empty process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011.$proc$rtl/hdc/ot_hdc_sfu.sv:21$191'.
+Removing empty process `$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay.$proc$rtl/hdc/ot_hdc_delay.sv:35$215'.
+Removing empty process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$1340'.
+Removing empty process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$993'.
+Removing empty process `ot_hdc_lzc32.$proc$rtl/hdc/ot_hdc_fastfp.sv:60$898'.
+Removing empty process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$830'.
+Removing empty process `$paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.$proc$rtl/hdc/ot_hdc_fastfp.sv:32$543'.
+Found and cleaned up 1 empty switch in `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+Removing empty process `ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$526'.
+Found and cleaned up 1 empty switch in `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+Removing empty process `ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:0$509'.
+Found and cleaned up 3 empty switches in `\ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:284$505'.
+Removing empty process `ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:284$505'.
+Removing empty process `ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:267$488'.
+Removing empty process `ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:263$486'.
+Removing empty process `ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:226$468'.
+Removing empty process `ot_hdc_fp32_add_fast.$proc$rtl/hdc/ot_hdc_fastfp.sv:222$466'.
+Cleaned up 26 empty switches.
+
+9.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay.
+Optimizing module ot_hdc_vreduce_tail64.
+<suppressed ~45 debug messages>
+Optimizing module $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011.
+Optimizing module $paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011.
+<suppressed ~2 debug messages>
+Optimizing module $paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111.
+<suppressed ~31 debug messages>
+Optimizing module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100.
+<suppressed ~28 debug messages>
+Optimizing module ot_hdc_lzc32.
+<suppressed ~31 debug messages>
+Optimizing module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000.
+<suppressed ~8 debug messages>
+Optimizing module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000.
+<suppressed ~24 debug messages>
+Optimizing module ot_hdc_fp32_add_fast.
+<suppressed ~22 debug messages>
+Optimizing module ot_hdc_qadd.
+<suppressed ~1 debug messages>
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay..
+Finding unused cells or wires in module \ot_hdc_vreduce_tail64..
+Finding unused cells or wires in module $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011..
+Finding unused cells or wires in module $paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011..
+Finding unused cells or wires in module $paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111..
+Finding unused cells or wires in module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100..
+Finding unused cells or wires in module \ot_hdc_lzc32..
+Finding unused cells or wires in module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000..
+Finding unused cells or wires in module \ot_hdc_fp32_add_fast..
+Finding unused cells or wires in module \ot_hdc_qadd..
+Removed 57 unused cells and 576 unused wires.
+<suppressed ~71 debug messages>
+
+11. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$1a47021e5e68174e17b5f239bbce96999266a77b\ot_hdc_delay..
+Finding unused cells or wires in module $paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\ot_hdc_delay..
+Finding unused cells or wires in module $paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000001000..
+Finding unused cells or wires in module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011000..
+Finding unused cells or wires in module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011100..
+Finding unused cells or wires in module $paramod\ot_hdc_ksa\W=s32'00000000000000000000000000011111..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000011..
+Finding unused cells or wires in module $paramod\ot_hdc_vred_op\LA=s32'00000000000000000000000000000011..
+Finding unused cells or wires in module \ot_hdc_fp32_add_fast..
+Finding unused cells or wires in module \ot_hdc_lzc32..
+Finding unused cells or wires in module \ot_hdc_qadd..
+Finding unused cells or wires in module \ot_hdc_vreduce_tail64..
+{
+   "creator": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+   "invocation": "stat -width -json ",
+   "modules": {
+      "$paramod$1a47021e5e68174e17b5f239bbce96999266a77b\\ot_hdc_delay": {
+         "num_wires":         5,
+         "num_wire_bits":     167,
+         "num_pub_wires":     5,
+         "num_pub_wire_bits": 167,
+         "num_ports":         4,
+         "num_port_bits":     68,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         1,
+         "num_cells_by_type": {
+            "$dff_99": 1
+         }
+      },
+      "$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\\ot_hdc_delay": {
+         "num_wires":         5,
+         "num_wire_bits":     132,
+         "num_pub_wires":     5,
+         "num_pub_wire_bits": 132,
+         "num_ports":         4,
+         "num_port_bits":     54,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         1,
+         "num_cells_by_type": {
+            "$dff_78": 1
+         }
+      },
+      "$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\\ot_hdc_delay": {
+         "num_wires":         5,
+         "num_wire_bits":     302,
+         "num_pub_wires":     5,
+         "num_pub_wire_bits": 302,
+         "num_ports":         4,
+         "num_port_bits":     122,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         1,
+         "num_cells_by_type": {
+            "$dff_180": 1
+         }
+      },
+      "$paramod\\ot_hdc_ksa\\W=s32'00000000000000000000000000001000": {
+         "num_wires":         61,
+         "num_wire_bits":     197,
+         "num_pub_wires":     11,
+         "num_pub_wire_bits": 126,
+         "num_ports":         5,
+         "num_port_bits":     26,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         59,
+         "num_cells_by_type": {
+            "$and_1": 34,
+            "$and_8": 1,
+            "$or_1": 21,
+            "$xor_8": 3
+         }
+      },
+      "$paramod\\ot_hdc_ksa\\W=s32'00000000000000000000000000011000": {
+         "num_wires":         248,
+         "num_wire_bits":     544,
+         "num_pub_wires":     11,
+         "num_pub_wire_bits": 238,
+         "num_ports":         5,
+         "num_port_bits":     74,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         262,
+         "num_cells_by_type": {
+            "$and_1": 164,
+            "$and_24": 1,
+            "$or_1": 94,
+            "$xor_24": 3
+         }
+      },
+      "$paramod\\ot_hdc_ksa\\W=s32'00000000000000000000000000011100": {
+         "num_wires":         300,
+         "num_wire_bits":     636,
+         "num_pub_wires":     11,
+         "num_pub_wire_bits": 266,
+         "num_ports":         5,
+         "num_port_bits":     86,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         318,
+         "num_cells_by_type": {
+            "$and_1": 200,
+            "$and_28": 1,
+            "$or_1": 114,
+            "$xor_28": 3
+         }
+      },
+      "$paramod\\ot_hdc_ksa\\W=s32'00000000000000000000000000011111": {
+         "num_wires":         339,
+         "num_wire_bits":     705,
+         "num_pub_wires":     11,
+         "num_pub_wire_bits": 287,
+         "num_ports":         5,
+         "num_port_bits":     95,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         360,
+         "num_cells_by_type": {
+            "$and_1": 227,
+            "$and_31": 1,
+            "$or_1": 129,
+            "$xor_31": 3
+         }
+      },
+      "$paramod\\ot_hdc_vline\\D=s32'00000000000000000000000000000011": {
+         "num_wires":         5,
+         "num_wire_bits":     10,
+         "num_pub_wires":     5,
+         "num_pub_wire_bits": 10,
+         "num_ports":         4,
+         "num_port_bits":     7,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         1,
+         "num_cells_by_type": {
+            "$adff_3": 1
+         }
+      },
+      "$paramod\\ot_hdc_vred_op\\LA=s32'00000000000000000000000000000011": {
+         "num_wires":         22,
+         "num_wire_bits":     394,
+         "num_pub_wires":     16,
+         "num_pub_wire_bits": 295,
+         "num_ports":         8,
+         "num_port_bits":     101,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         11,
+         "num_cells_by_type": {
+            "$ge_32": 1,
+            "$logic_and_1": 1,
+            "$logic_not_1": 1,
+            "$mux_32": 4,
+            "$not_32": 2,
+            "$paramod$1a47021e5e68174e17b5f239bbce96999266a77b\\ot_hdc_delay": 1,
+            "ot_hdc_qadd": 1
+         }
+      },
+      "\\ot_hdc_fp32_add_fast": {
+         "num_wires":         132,
+         "num_wire_bits":     1705,
+         "num_pub_wires":     75,
+         "num_pub_wire_bits": 964,
+         "num_ports":         8,
+         "num_port_bits":     102,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         107,
+         "num_cells_by_type": {
+            "$add_9": 1,
+            "$adff_1": 3,
+            "$adff_2": 1,
+            "$adff_32": 1,
+            "$and_28": 2,
+            "$dff_1": 6,
+            "$dff_2": 2,
+            "$dff_24": 1,
+            "$dff_27": 1,
+            "$dff_28": 1,
+            "$dff_32": 2,
+            "$dff_8": 2,
+            "$eq_8": 3,
+            "$eq_9": 1,
+            "$ge_8": 2,
+            "$ge_9": 1,
+            "$le_8": 1,
+            "$logic_and_1": 3,
+            "$logic_not_1": 1,
+            "$logic_not_28": 1,
+            "$logic_not_31": 3,
+            "$logic_not_8": 2,
+            "$logic_or_1": 5,
+            "$mux_1": 1,
+            "$mux_2": 4,
+            "$mux_24": 2,
+            "$mux_27": 3,
+            "$mux_28": 3,
+            "$mux_32": 7,
+            "$mux_8": 5,
+            "$not_28": 3,
+            "$not_31": 1,
+            "$not_8": 3,
+            "$or_1": 1,
+            "$or_27": 1,
+            "$or_28": 2,
+            "$paramod\\ot_hdc_ksa\\W=s32'00000000000000000000000000001000": 4,
+            "$paramod\\ot_hdc_ksa\\W=s32'00000000000000000000000000011000": 1,
+            "$paramod\\ot_hdc_ksa\\W=s32'00000000000000000000000000011100": 2,
+            "$paramod\\ot_hdc_ksa\\W=s32'00000000000000000000000000011111": 1,
+            "$reduce_bool_8": 2,
+            "$reduce_or_2": 1,
+            "$reduce_or_28": 4,
+            "$shl_27": 2,
+            "$shl_28": 2,
+            "$shr_28": 2,
+            "$sub_5": 1,
+            "$sub_8": 1,
+            "$xor_1": 1,
+            "ot_hdc_lzc32": 1
+         }
+      },
+      "\\ot_hdc_lzc32": {
+         "num_wires":         83,
+         "num_wire_bits":     741,
+         "num_pub_wires":     8,
+         "num_pub_wire_bits": 486,
+         "num_ports":         2,
+         "num_port_bits":     38,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         63,
+         "num_cells_by_type": {
+            "$mux_5": 31,
+            "$mux_6": 1,
+            "$or_1": 31
+         }
+      },
+      "\\ot_hdc_qadd": {
+         "num_wires":         10,
+         "num_wire_bits":     104,
+         "num_pub_wires":     9,
+         "num_pub_wire_bits": 103,
+         "num_ports":         7,
+         "num_port_bits":     100,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         3,
+         "num_cells_by_type": {
+            "$logic_and_1": 1,
+            "$reduce_bool_2": 1,
+            "ot_hdc_fp32_add_fast": 1
+         }
+      },
+      "\\ot_hdc_vreduce_tail64": {
+         "num_wires":         295,
+         "num_wire_bits":     5948,
+         "num_pub_wires":     185,
+         "num_pub_wire_bits": 5404,
+         "num_ports":         12,
+         "num_port_bits":     549,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         228,
+         "num_cells_by_type": {
+            "$adff_1": 20,
+            "$adff_8": 2,
+            "$dff_24": 1,
+            "$dff_256": 1,
+            "$dff_26": 11,
+            "$dff_32": 22,
+            "$logic_and_1": 44,
+            "$logic_not_1": 29,
+            "$logic_or_1": 16,
+            "$mux_1": 14,
+            "$mux_32": 14,
+            "$paramod$bf974d08a153004e7ebe3526b9a3a14b4e3f4127\\ot_hdc_delay": 3,
+            "$paramod$edf4898782eb5ce2b2e0bf532e375f235964f824\\ot_hdc_delay": 7,
+            "$paramod\\ot_hdc_vline\\D=s32'00000000000000000000000000000011": 10,
+            "$paramod\\ot_hdc_vred_op\\LA=s32'00000000000000000000000000000011": 14,
+            "$reduce_or_2": 1,
+            "$reduce_or_4": 14,
+            "$reduce_or_8": 5
+         }
+      }
+   },
+      "design": {
+         "num_wires":         23957,
+         "num_wire_bits":     98438,
+         "num_pub_wires":     3099,
+         "num_pub_wire_bits": 58078,
+         "num_ports":         1058,
+         "num_port_bits":     13591,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         23552,
+         "num_cells_by_type": {
+            "$add_9": 14,
+            "$adff_1": 62,
+            "$adff_2": 14,
+            "$adff_3": 10,
+            "$adff_32": 14,
+            "$adff_8": 2,
+            "$and_1": 12978,
+            "$and_24": 14,
+            "$and_28": 56,
+            "$and_31": 14,
+            "$and_8": 56,
+            "$dff_1": 84,
+            "$dff_180": 7,
+            "$dff_2": 28,
+            "$dff_24": 15,
+            "$dff_256": 1,
+            "$dff_26": 11,
+            "$dff_27": 14,
+            "$dff_28": 14,
+            "$dff_32": 50,
+            "$dff_78": 3,
+            "$dff_8": 28,
+            "$dff_99": 14,
+            "$eq_8": 42,
+            "$eq_9": 14,
+            "$ge_32": 14,
+            "$ge_8": 28,
+            "$ge_9": 14,
+            "$le_8": 14,
+            "$logic_and_1": 114,
+            "$logic_not_1": 57,
+            "$logic_not_28": 14,
+            "$logic_not_31": 42,
+            "$logic_not_8": 28,
+            "$logic_or_1": 86,
+            "$mux_1": 28,
+            "$mux_2": 56,
+            "$mux_24": 28,
+            "$mux_27": 42,
+            "$mux_28": 42,
+            "$mux_32": 168,
+            "$mux_5": 434,
+            "$mux_6": 14,
+            "$mux_8": 70,
+            "$not_28": 42,
+            "$not_31": 14,
+            "$not_32": 28,
+            "$not_8": 42,
+            "$or_1": 7938,
+            "$or_27": 14,
+            "$or_28": 28,
+            "$reduce_bool_2": 14,
+            "$reduce_bool_8": 28,
+            "$reduce_or_2": 15,
+            "$reduce_or_28": 56,
+            "$reduce_or_4": 14,
+            "$reduce_or_8": 5,
+            "$shl_27": 28,
+            "$shl_28": 28,
+            "$shr_28": 28,
+            "$sub_5": 14,
+            "$sub_8": 14,
+            "$xor_1": 14,
+            "$xor_24": 42,
+            "$xor_28": 84,
+            "$xor_31": 42,
+            "$xor_8": 168
+         }
+      }
+}
+
+End of script. Logfile hash: 193ab6b493, CPU: user 0.09s system 0.01s, MEM: 24.18 MB peak
+Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)
+Time spent: 48% 1x hierarchy (0 sec), 23% 2x opt_clean (0 sec), ...
