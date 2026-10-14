@@ -225,7 +225,8 @@ module dsfd_wfc_hep #(parameter integer NW = 21, parameter integer USER_W = 10, 
 endmodule
 
 // dsfd_wfc_hep_t: the issue-epoch table as a die tile (ckv domain).  State per user {last pos NW, epoch EW} in ONE
-// ot_sram_1r1w_512x128_m4_r2c2 (two users a word: user[8:0] = address, user[9] = the 32-bit half, masked write) and a
+// ot_sram_1r1w_512x64_m4_r2c2 (physical/s81_ph_views/mtp/macros, tools/s81_ph/wfc_macros.py: 96.6 x 29.7 um; the catalog's
+// 512 x 128 is 174 um wide and half unused; two users a word: user[8:0] = address, user[9] = the 32-bit half, masked write) and a
 // seen bit per user in flops (the reset state; the array powers up random and is never read as valid before its
 // user's first start).  Pipeline, every port a register or the macro's own pin register:
 //   edge 1  pins {start, user, pos} -> pin flops s1 and, in parallel, the macro's read address / enable
@@ -243,7 +244,7 @@ module dsfd_wfc_hep_t #(parameter integer NW = 21, parameter integer USER_W = 10
     output wire [USER_W+NW+EW:0] t_hep       // {v, user, pos, epoch}, from a flop; 0 unless a start arrived 3 edges ago
 );
     localparam integer HW = 32;              // one user's field in the 128-bit word
-    initial if (USER_W != 10 || NW + EW > HW) $fatal(1, "dsfd_wfc_hep_t: the 512 x 128 macro holds 1,024 users x <= 32 b");
+    initial if (USER_W != 10 || NW + EW > HW) $fatal(1, "dsfd_wfc_hep_t: the 512 x 64 macro holds 1,024 users x <= 32 b");
     wire clk = ckv[0];
     wire f_st = f_hks[USER_W+NW]; wire [USER_W-1:0] f_u = f_hks[NW +: USER_W]; wire [NW-1:0] f_p = f_hks[NW-1:0];
     // reset: a pin flop, then one kept copy per quarter of the seen bits (the raw pin drove 1,057 loads in the gate);
@@ -252,7 +253,7 @@ module dsfd_wfc_hep_t #(parameter integer NW = 21, parameter integer USER_W = 10
     reg r0; (* keep *) reg [NR-1:0] rr; (* keep *) reg rc;
     always @(posedge clk) begin r0 <= rsv[0]; rr <= {NR{r0}}; rc <= r0; end
     reg s1_st, s2_st; reg [USER_W-1:0] s1_u, s2_u; reg [NW-1:0] s1_p, s2_p;       // s1: pin flops
-    wire [127:0] rq;
+    wire [2*HW-1:0] rq;
     reg [NW+EW-1:0] rw;
     always @(posedge clk) begin
         s1_st <= f_st && rc; s1_u <= f_u; s1_p <= f_p;
@@ -290,10 +291,10 @@ module dsfd_wfc_hep_t #(parameter integer NW = 21, parameter integer USER_W = 10
         for (qi = 0; qi < NR; qi = qi + 1) if (!rr[qi]) seen[qi*QS +: QS] <= {QS{1'b0}};
     end
     wire [HW-1:0] wh = HW'({s2_p, e_n});
-    ot_sram_1r1w_512x128_m4_r2c2 u_m (.clk(clk), .r_ce_in(f_st), .r_addr_in(f_u[8:0]), .rd_out(rq),
-        .w_ce_in(s2_st), .w_addr_in(s2_u[8:0]), .wd_in({64'd0, wh, wh}),
-        .w_mask_in({64'd0, {HW{s2_u[USER_W-1]}}, {HW{!s2_u[USER_W-1]}}}),
-        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
+    ot_sram_1r1w_512x64_m4_r2c2 u_m (.clk(clk), .r_ce_in(f_st), .r_addr_in(f_u[8:0]), .rd_out(rq),
+        .w_ce_in(s2_st), .w_addr_in(s2_u[8:0]), .wd_in({wh, wh}),
+        .w_mask_in({{HW{s2_u[USER_W-1]}}, {HW{!s2_u[USER_W-1]}}}),
+        .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(12'd0));
     assign t_hep = o;
 endmodule
 

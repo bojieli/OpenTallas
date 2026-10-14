@@ -20,7 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CASES = {'exact': ([], 'pass'), 'neg_stale': (['OT_WFCHEP_MUT_STALE'], 'fail'), 'neg_nofwd': (['OT_WFCHEP_MUT_NOFWD'], 'fail'),
          'neg_nofwd2': (['OT_WFCHEP_MUT_NOFWD2'], 'fail')}
-MACRO = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v'
+MACRO = 'physical/s81_ph_views/mtp/macros/ot_sram_1r1w_512x64_m4_r2c2/ot_sram_1r1w_512x64_m4_r2c2.v'
 TB = r'''
 module tb_wfc_hep;
     localparam integer NW = 21, UW = 10, EW = 4, N = 200000;
