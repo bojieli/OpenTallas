@@ -55,6 +55,7 @@ module tb_hgi_e2e;
     // el1011-hbm-idxs: IDX_IXW = 1 (with IDX_NATIVE) runs IDX.INDEX on ot_hgi_idx_index_w over a dedicated 32-lane VM wide
     // read / write group (hgi_e2e_vmlanes, grants tied high); the packet client stays for the other IDX ops
     parameter integer IDX_IXW = 0;
+    parameter integer IDX_TK2 = 0;      // el1013 redesign-idx: 1 = IDX.TOPK on ot_hgi_idx_tk2 (k <= 8, the route.top6 shape)
     parameter integer CP_IKS_I = IDX_NATIVE;   // hbmdie-1011: the CP passes an HBM operand I (IDX.INDEX IKS key region)
     // hgi-1010/h (2026-10-10) MTP=1: the DS DSpark job through the die -- the real native controller hgi_mtp_native, the MX1
     // MTP collar hfd_cmdproc_s_mtp_native_mx1_mtp (job / provider / emit queue / transaction join) and ot_hgi_cp_die MTP=1
@@ -390,7 +391,7 @@ module tb_hgi_e2e;
         wire [89:0] s_fs; wire [1047:0] s_qb; wire s_qbr; wire [344:0] s_kin; wire [611:0] s_to; wire s_toc;
         wire [71:0] s_co; wire s_coc; wire [1:0] s_ev; wire [511:0] s_iks;
         wire [8*16-1:0] i_wrq; wire [7:0] i_wrq_cr, i_wwq_cr, i_wwq_done; wire [8*257-1:0] i_wrr; wire [8*280-1:0] i_wwq;
-        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1), .IKS_EVEN(1), .IXW(IDX_IXW)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
+        ot_hgi_idx_unit #(.MUT(IDX_MUT), .NGLOB(1), .IKS(1), .IKS_EVEN(1), .IXW(IDX_IXW), .TK2(IDX_TK2)) u_i (.clk(clk), .rst_n(rst_n), .rec(idx_rec), .ret(i_ret),
             .vmq(vq), .vmr(vr), .sel_fs(s_fs), .sel_qb(s_qb), .sel_qbr(s_qbr), .sel_kin(s_kin), .sel_to(s_to),
             .sel_toc(s_toc), .sel_co(s_co), .sel_coc(s_coc), .sel_ev(s_ev), .iks_e(s_iks),
             .wrq(i_wrq), .wrq_cr(i_wrq_cr), .wrr(i_wrr), .rg_req(), .rg_gnt(1'b1),
