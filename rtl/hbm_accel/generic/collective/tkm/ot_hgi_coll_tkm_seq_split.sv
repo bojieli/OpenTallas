@@ -46,14 +46,15 @@ module ot_hgi_coll_tkm_seq_split #(
     output wire  [31:0]          stat_surv       // survivors taken
 );
  wire[DEL-1:0]perm,ft,dv,fe,ldv,d0v,d1v,pop;
- wire[DEL*680-1:0]de,he;
+ wire[DEL*680-1:0]he;
+ wire[DEL*8-1:0]nv_mask;
  wire[DEL*8-1:0]hm,dn,occ,take;
  wire[DEL*2-1:0]hn;
  wire live;wire[82:0]tau;wire[7:0]g,gb;wire[15:0]pf;
  assign del_permit=perm;
  ot_hgi_coll_tkm_seq_lane_core #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_core(
    .lane_d0v(d0v),.lane_d1v(d1v),.lane_permit(perm),.lane_fault(ft),.lane_dv(dv),.lane_fe(fe),.lane_ldv(ldv),
-   .lane_de(de),.lane_he(he),.lane_hm(hm),.lane_dn(dn),.lane_occ(occ),.lane_hn(hn),.lane_take(take),.lane_pop(pop),
+   .lane_nv_mask(nv_mask),.lane_he(he),.lane_hm(hm),.lane_dn(dn),.lane_occ(occ),.lane_hn(hn),.lane_take(take),.lane_pop(pop),
    .lane_live(live),.lane_tau(tau),.lane_g(g),.lane_gb(gb),.lane_pf(pf),
    .chain_entry(chain_entry),
    .chain_valid(chain_valid),
@@ -92,7 +93,7 @@ module ot_hgi_coll_tkm_seq_split #(
   ot_hgi_coll_tkm_lane #(.MUT(MUT))u_lane(.clk(lane_clk[l]),.rst_n(rst_n),
    .del_valid(del_valid[l]),.del_reserve(del_reserve[l]),.del_flit(del_flit[PWT*l+:PWT]),
    .cfg_g(g),.cfg_gbase(gb),.cfg_pf(pf),.ins_live(live),.tau(tau),.sel_take(take[8*l+:8]),.sel_pop(pop[l]),
-   .del_permit(perm[l]),.fault(ft[l]),.early_valid(early),.decoded_v(dv[l]),.decoded_e(de[680*l+:680]),
+   .del_permit(perm[l]),.fault(ft[l]),.early_valid(early),.decoded_v(dv[l]),.decoded_mask(nv_mask[8*l+:8]),
    .head_e(he[680*l+:680]),.head_m(hm[8*l+:8]),.taken(dn[8*l+:8]),.head_n(hn[2*l+:2]),.occ(occ[8*l+:8]),
    .landing_v(ldv[l]),.fifo_empty(fe[l]));
  end

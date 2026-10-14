@@ -14,6 +14,9 @@ TKM_SOURCES=()
 if [ "${TKM_CLUSTER:-0}" = 1 ]; then
   TKM_SOURCES=(-DOT_TKM_CLUSTER_BENCH rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_cluster.sv)
 fi
+if [ "${TKM_LANES:-0}" = 1 ]; then
+  TKM_SOURCES+=(-DOT_TKM_LANE_SPLIT rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_lane.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_seq_lane_core.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_seq_split.sv)
+fi
 build() {  # build <obj> [verilator -G/-D ...]
   local ob=$O/$1; shift
   ( cd "$R" && $V --binary --timing -j $J -O2 --x-assign fast --x-initial fast -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \

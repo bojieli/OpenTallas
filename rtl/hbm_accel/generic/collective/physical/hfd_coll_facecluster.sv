@@ -4,7 +4,131 @@
 // Die ports exactly as the r16g generator master (tools/hbm_die_views.py ports); default-off: nothing
 // instantiates it except the die view route.  [link] 2026-10-10 R25GQ hfd_coll (one regeneration, lead): ot_hfd_coll_r25gq = ot_hgi_coll_ep NPT 9 (one port per hfd_lk_ep on llk_S0..S4, N0..N3: [0] tx_v [545:1] tx_flit [546] rx_credit out, [547] rx_v [1092:548] rx_flit [1093] sw_cr in, [1117:1094] session out, [1118] fault [1119] locked in, [1121:1120] chain fclk), SWCRED 32 (= lk_ep TXQ), RXAW 8 (slice 256-flit SRAM rb), PIPE 1, RGXHW 1, RFMT 0 + ot_hgi_coll_rgx_hbm / ot_hgi_coll_rgx_snk (hgi-1010/c, LQ 32) + LINK_SESSION cfg word 47.  vmw2 up {c_req [8960], c_q [8959:0]}, down {c_gnt [64], c_cr [63:32], c_rsp [31:0]} (hgi_die_dispatch: {c_req, lanes}, {c_gnt, credits, dones}).
 module hfd_coll_facecluster (
-    input wire [118:0] face_clk,
+    input wire face_ck0,
+    input wire face_ck1,
+    input wire face_ck2,
+    input wire face_ck3,
+    input wire face_ck4,
+    input wire face_ck5,
+    input wire face_ck6,
+    input wire face_ck7,
+    input wire face_ck8,
+    input wire face_ck9,
+    input wire face_ck10,
+    input wire face_ck11,
+    input wire face_ck12,
+    input wire face_ck13,
+    input wire face_ck14,
+    input wire face_ck15,
+    input wire face_ck16,
+    input wire face_ck17,
+    input wire face_ck18,
+    input wire face_ck19,
+    input wire face_ck20,
+    input wire face_ck21,
+    input wire face_ck22,
+    input wire face_ck23,
+    input wire face_ck24,
+    input wire face_ck25,
+    input wire face_ck26,
+    input wire face_ck27,
+    input wire face_ck28,
+    input wire face_ck29,
+    input wire face_ck30,
+    input wire face_ck31,
+    input wire face_ck32,
+    input wire face_ck33,
+    input wire face_ck34,
+    input wire face_ck35,
+    input wire face_ck36,
+    input wire face_ck37,
+    input wire face_ck38,
+    input wire face_ck39,
+    input wire face_ck40,
+    input wire face_ck41,
+    input wire face_ck42,
+    input wire face_ck43,
+    input wire face_ck44,
+    input wire face_ck45,
+    input wire face_ck46,
+    input wire face_ck47,
+    input wire face_ck48,
+    input wire face_ck49,
+    input wire face_ck50,
+    input wire face_ck51,
+    input wire face_ck52,
+    input wire face_ck53,
+    input wire face_ck54,
+    input wire face_ck55,
+    input wire face_ck56,
+    input wire face_ck57,
+    input wire face_ck58,
+    input wire face_ck59,
+    input wire face_ck60,
+    input wire face_ck61,
+    input wire face_ck62,
+    input wire face_ck63,
+    input wire face_ck64,
+    input wire face_ck65,
+    input wire face_ck66,
+    input wire face_ck67,
+    input wire face_ck68,
+    input wire face_ck69,
+    input wire face_ck70,
+    input wire face_ck71,
+    input wire face_ck72,
+    input wire face_ck73,
+    input wire face_ck74,
+    input wire face_ck75,
+    input wire face_ck76,
+    input wire face_ck77,
+    input wire face_ck78,
+    input wire face_ck79,
+    input wire face_ck80,
+    input wire face_ck81,
+    input wire face_ck82,
+    input wire face_ck83,
+    input wire face_ck84,
+    input wire face_ck85,
+    input wire face_ck86,
+    input wire face_ck87,
+    input wire face_ck88,
+    input wire face_ck89,
+    input wire face_ck90,
+    input wire face_ck91,
+    input wire face_ck92,
+    input wire face_ck93,
+    input wire face_ck94,
+    input wire face_ck95,
+    input wire face_ck96,
+    input wire face_ck97,
+    input wire face_ck98,
+    input wire face_ck99,
+    input wire face_ck100,
+    input wire face_ck101,
+    input wire face_ck102,
+    input wire face_ck103,
+    input wire face_ck104,
+    input wire face_ck105,
+    input wire face_ck106,
+    input wire face_ck107,
+    input wire face_ck108,
+    input wire face_ck109,
+    input wire face_ck110,
+    input wire face_ck111,
+    input wire face_ck112,
+    input wire face_ck113,
+    input wire face_ck114,
+    input wire face_ck115,
+    input wire face_ck116,
+    input wire face_ck117,
+    input wire face_ck118,
+    input wire body_ck0,
+    input wire body_ck1,
+    input wire body_ck2,
+    input wire body_ck3,
+    input wire monitor_clk,
+    input wire reset_clk,
     input wire [24:0] f_cmdproc,
     input wire [39:0] f_hgi_cfg,
     input wire [967:0] f_hgi_cmdproc,
@@ -56,9 +180,11 @@ module hfd_coll_facecluster (
     /* NOT A GENERATOR PORT (generator-side defect, see note) */ input wire refclk,
     /* NOT A GENERATOR PORT (generator-side defect, see note) */ input wire por
 );
+    wire[118:0]face_clk={face_ck118,face_ck117,face_ck116,face_ck115,face_ck114,face_ck113,face_ck112,face_ck111,face_ck110,face_ck109,face_ck108,face_ck107,face_ck106,face_ck105,face_ck104,face_ck103,face_ck102,face_ck101,face_ck100,face_ck99,face_ck98,face_ck97,face_ck96,face_ck95,face_ck94,face_ck93,face_ck92,face_ck91,face_ck90,face_ck89,face_ck88,face_ck87,face_ck86,face_ck85,face_ck84,face_ck83,face_ck82,face_ck81,face_ck80,face_ck79,face_ck78,face_ck77,face_ck76,face_ck75,face_ck74,face_ck73,face_ck72,face_ck71,face_ck70,face_ck69,face_ck68,face_ck67,face_ck66,face_ck65,face_ck64,face_ck63,face_ck62,face_ck61,face_ck60,face_ck59,face_ck58,face_ck57,face_ck56,face_ck55,face_ck54,face_ck53,face_ck52,face_ck51,face_ck50,face_ck49,face_ck48,face_ck47,face_ck46,face_ck45,face_ck44,face_ck43,face_ck42,face_ck41,face_ck40,face_ck39,face_ck38,face_ck37,face_ck36,face_ck35,face_ck34,face_ck33,face_ck32,face_ck31,face_ck30,face_ck29,face_ck28,face_ck27,face_ck26,face_ck25,face_ck24,face_ck23,face_ck22,face_ck21,face_ck20,face_ck19,face_ck18,face_ck17,face_ck16,face_ck15,face_ck14,face_ck13,face_ck12,face_ck11,face_ck10,face_ck9,face_ck8,face_ck7,face_ck6,face_ck5,face_ck4,face_ck3,face_ck2,face_ck1,face_ck0};
+    wire[3:0]body_clk={body_ck3,body_ck2,body_ck1,body_ck0};
     wire clk = refclk;
-    reg [1:0] rst_s; always @(posedge clk) rst_s <= {rst_s[0], por};
-    wire rst_n = ~rst_s[1];
+    wire rst_n;
+    ot_hfd_coll_reset_leaf u_reset (.clk(reset_clk),.por(por),.rst_n(rst_n));
     wire [24:0] i_f_cmdproc;
     ot_hbm_coll_face_pipe512 u_face_0 (.clk(face_clk[0]), .d(512'(f_cmdproc[0 +: 25])), .q(face_q_0));
     wire [511:0] face_q_0;
@@ -280,13 +406,8 @@ module hfd_coll_facecluster (
     assign w_co_rgx_c_cr = {i_f_hgi_vmw2[63:32]};
     assign w_co_rgx_c_rsp = {i_f_hgi_vmw2[31:0]};
     assign w_co_rgx_xwa = {i_f_hgi_rgxa1[0:0], i_f_hgi_rgxa0[0:0]};
-    ot_hfd_coll_r25gq u_co (.clk(w_co_clk), .rst_n(w_co_rst_n), .rank(w_co_rank), .pf(w_co_pf), .go(w_co_go), .inj_idx(w_co_inj_idx), .inj_rd(w_co_inj_rd), .inj_q(w_co_inj_q), .del_valid(w_co_del_valid), .del_flit(w_co_del_flit), .fault(w_co_fault), .stat_credit_stall(w_co_stat_credit_stall), .hgi_rec(w_co_hgi_rec), .hgi_ret(w_co_hgi_ret), .hgi_cfg(w_co_hgi_cfg), .hgi_rowfmt_o(w_co_hgi_rowfmt_o), .hgi_rowfmt_i(w_co_hgi_rowfmt_i), .hgi_vmaddr(w_co_hgi_vmaddr), .hgi_del_obase(w_co_hgi_del_obase), .lk_tx_v(w_co_lk_tx_v), .lk_tx_flit(w_co_lk_tx_flit), .lk_rx_credit(w_co_lk_rx_credit), .lk_rx_v(w_co_lk_rx_v), .lk_rx_flit(w_co_lk_rx_flit), .lk_sw_cr(w_co_lk_sw_cr), .lk_session(w_co_lk_session), .lk_fault(w_co_lk_fault), .lk_locked(w_co_lk_locked), .lk_status(w_co_lk_status), .rgx_xq(w_co_rgx_xq), .rgx_xr(w_co_rgx_xr), .rgx_vmq(w_co_rgx_vmq), .rgx_vmr(w_co_rgx_vmr), .rgx_c_req(w_co_rgx_c_req), .rgx_c_gnt(w_co_rgx_c_gnt), .rgx_c_q(w_co_rgx_c_q), .rgx_c_cr(w_co_rgx_c_cr), .rgx_c_rsp(w_co_rgx_c_rsp), .rgx_xw(w_co_rgx_xw), .rgx_xwa(w_co_rgx_xwa));
-    for (genvar k = 0; k < 94; k = k + 1) begin : g_sink_w_co_hgi_rowfmt_o
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_co_hgi_rowfmt_o[k]), .q());
-    end
-    for (genvar k = 0; k < 18; k = k + 1) begin : g_sink_w_co_lk_status
-        (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_co_lk_status[k]), .q());
-    end
+    ot_hfd_coll_body_cluster u_co (.child_clk(body_clk), .clk(w_co_clk), .rst_n(w_co_rst_n), .rank(w_co_rank), .pf(w_co_pf), .go(w_co_go), .inj_idx(w_co_inj_idx), .inj_rd(w_co_inj_rd), .inj_q(w_co_inj_q), .del_valid(w_co_del_valid), .del_flit(w_co_del_flit), .fault(w_co_fault), .stat_credit_stall(w_co_stat_credit_stall), .hgi_rec(w_co_hgi_rec), .hgi_ret(w_co_hgi_ret), .hgi_cfg(w_co_hgi_cfg), .hgi_rowfmt_o(w_co_hgi_rowfmt_o), .hgi_rowfmt_i(w_co_hgi_rowfmt_i), .hgi_vmaddr(w_co_hgi_vmaddr), .hgi_del_obase(w_co_hgi_del_obase), .lk_tx_v(w_co_lk_tx_v), .lk_tx_flit(w_co_lk_tx_flit), .lk_rx_credit(w_co_lk_rx_credit), .lk_rx_v(w_co_lk_rx_v), .lk_rx_flit(w_co_lk_rx_flit), .lk_sw_cr(w_co_lk_sw_cr), .lk_session(w_co_lk_session), .lk_fault(w_co_lk_fault), .lk_locked(w_co_lk_locked), .lk_status(w_co_lk_status), .rgx_xq(w_co_rgx_xq), .rgx_xr(w_co_rgx_xr), .rgx_vmq(w_co_rgx_vmq), .rgx_vmr(w_co_rgx_vmr), .rgx_c_req(w_co_rgx_c_req), .rgx_c_gnt(w_co_rgx_c_gnt), .rgx_c_q(w_co_rgx_c_q), .rgx_c_cr(w_co_rgx_c_cr), .rgx_c_rsp(w_co_rgx_c_rsp), .rgx_xw(w_co_rgx_xw), .rgx_xwa(w_co_rgx_xwa));
+    (* keep *)ot_hfd_coll_monitor_leaf u_monitor(.clk(monitor_clk),.d({w_co_hgi_rowfmt_o,w_co_lk_status}),.q());
     wire fclk_0; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0));
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1));
     wire fclk_2; ot_fwd_clk_inv u_fclk_2 (.a(clk), .y(fclk_2));

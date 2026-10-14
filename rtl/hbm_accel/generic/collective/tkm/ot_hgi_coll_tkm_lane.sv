@@ -7,11 +7,13 @@ module ot_hgi_coll_tkm_lane #(parameter integer MUT=0)(
  input wire [15:0] cfg_pf,input wire ins_live,
  input wire [82:0] tau,input wire [7:0] sel_take,input wire sel_pop,
  output wire del_permit,output reg fault,output wire [1:0] early_valid,
- output reg decoded_v,output reg [679:0] decoded_e,
+ output reg decoded_v,output wire [7:0] decoded_mask,
  output wire [679:0] head_e,output wire [7:0] head_m,
  output reg [7:0] taken,output reg [1:0] head_n,
  output reg [7:0] occ,output wire landing_v,output wire fifo_empty
 );
+ reg[679:0]decoded_e;
+ for(genvar n=0;n<8;n=n+1)begin:g_count_pin assign decoded_mask[n]=decoded_e[85*n+83];end
  wire [1:0] rr;
  ot_rst_relay #(.REGIONS(2),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst
   (.clk(clk),.rst_n_in(rst_n),.rst_n(rr));

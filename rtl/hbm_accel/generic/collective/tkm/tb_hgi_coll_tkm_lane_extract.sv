@@ -13,7 +13,7 @@ module tb_hgi_coll_tkm_lane_extract #(parameter integer MUT_LANE=0);
  ot_hgi_coll_tkm_lane #(.MUT(MUT_LANE)) dut(.clk(clk),.rst_n(rst_n),.del_valid(dv[0]),.del_reserve(dr[0]),.del_flit(df[544:0]),
   .cfg_g(gold.g_q),.cfg_gbase(gold.gb_q),.cfg_pf(gold.pf_q),.ins_live(gold.ins_live),.tau(gold.tau),
   .sel_take(gold.sel_take[0]),.sel_pop(gold.sel_pop[0]),.del_permit(p),.fault(ft),.early_valid(early),
-  .decoded_v(decv),.decoded_e(de),.head_e(he),.head_m(hm),.taken(taken),.head_n(hn),.occ(occ),
+  .decoded_v(decv),.decoded_mask(),.head_e(he),.head_m(hm),.taken(taken),.head_n(hn),.occ(occ),
   .landing_v(ldv),.fifo_empty(fe));
  integer checked=0,cyc=0,flits=0;
  always @(negedge clk)begin
@@ -24,7 +24,7 @@ module tb_hgi_coll_tkm_lane_extract #(parameter integer MUT_LANE=0);
       ldv!==gold.ld_v[0]||fe!==gold.fe[0]||early!=={gold.d1_v[0],gold.d0_v[0]})begin
     $display("TKM_LANE_EXTRACT FAIL controls cycle=%0d checks=%0d p=%b/%b hn=%d/%d occ=%d/%d",cyc,checked,p,permit[0],hn,gold.st_n[0],occ,gold.occ[0]);$fatal(1);
    end
-   if(decv&&de!==gold.d2_e[0])begin $display("TKM_LANE_EXTRACT FAIL decoder cycle=%0d",cyc);$fatal(1);end
+   if(decv&&dut.decoded_e!==gold.d2_e[0])begin $display("TKM_LANE_EXTRACT FAIL decoder cycle=%0d",cyc);$fatal(1);end
    if(hn!=0&&(he!==gold.st_e[0][0]||hm!==gold.st_m[0][0]))begin $display("TKM_LANE_EXTRACT FAIL head cycle=%0d",cyc);$fatal(1);end
   end
  end

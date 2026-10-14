@@ -9,7 +9,42 @@ module ot_hgi_coll_tkm_cluster #(
     parameter integer CAP  = 64,
     parameter integer MUT  = 0
 ) (
-    input wire [((KMAX+63)/64)-1:0] tile_clk,
+    input wire tile_ck0,
+    input wire tile_ck1,
+    input wire tile_ck2,
+    input wire tile_ck3,
+    input wire tile_ck4,
+    input wire tile_ck5,
+    input wire tile_ck6,
+    input wire tile_ck7,
+    input wire tile_ck8,
+    input wire tile_ck9,
+    input wire tile_ck10,
+    input wire tile_ck11,
+    input wire tile_ck12,
+    input wire tile_ck13,
+    input wire tile_ck14,
+    input wire tile_ck15,
+    input wire tile_ck16,
+    input wire tile_ck17,
+    input wire tile_ck18,
+    input wire tile_ck19,
+    input wire tile_ck20,
+    input wire tile_ck21,
+    input wire tile_ck22,
+    input wire tile_ck23,
+    input wire tile_ck24,
+    input wire tile_ck25,
+    input wire tile_ck26,
+    input wire tile_ck27,
+    input wire tile_ck28,
+    input wire tile_ck29,
+    input wire tile_ck30,
+    input wire tile_ck31,
+    input wire lane_ck0,
+    input wire lane_ck1,
+    input wire lane_ck2,
+    input wire lane_ck3,
     input  wire                 clk,
     input  wire                 rst_n,
     input  wire                 start,          // one edge: configuration below valid
@@ -38,6 +73,8 @@ module ot_hgi_coll_tkm_cluster #(
     output wire  [31:0]          stat_ins,       // blocks inserted
     output wire  [31:0]          stat_surv       // survivors taken
 );
+    wire [31:0] tile_clk={tile_ck31,tile_ck30,tile_ck29,tile_ck28,tile_ck27,tile_ck26,tile_ck25,tile_ck24,tile_ck23,tile_ck22,tile_ck21,tile_ck20,tile_ck19,tile_ck18,tile_ck17,tile_ck16,tile_ck15,tile_ck14,tile_ck13,tile_ck12,tile_ck11,tile_ck10,tile_ck9,tile_ck8,tile_ck7,tile_ck6,tile_ck5,tile_ck4,tile_ck3,tile_ck2,tile_ck1,tile_ck0};
+    wire [3:0] lane_clk={lane_ck3,lane_ck2,lane_ck1,lane_ck0};
     localparam integer NT = (KMAX+63)/64;
     wire [339:0] chain_entry, chain_up;
     wire chain_valid;
@@ -56,7 +93,7 @@ module ot_hgi_coll_tkm_cluster #(
     ot_hgi_coll_tkm_seq u_seq (
 `else
 `ifdef OT_TKM_LANE_SPLIT
-    ot_hgi_coll_tkm_seq_split #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_seq(.lane_clk({DEL{clk}}),
+    ot_hgi_coll_tkm_seq_split #(.KMAX(KMAX),.DEL(DEL),.FW(FW),.PWT(PWT),.CAP(CAP),.MUT(MUT))u_seq(.lane_clk(lane_clk),
 `else
     ot_hgi_coll_tkm_seq #(.KMAX(KMAX), .DEL(DEL), .FW(FW), .PWT(PWT), .CAP(CAP), .MUT(MUT)) u_seq (
 `endif

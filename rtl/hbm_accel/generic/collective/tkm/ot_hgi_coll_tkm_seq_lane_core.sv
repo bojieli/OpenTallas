@@ -18,7 +18,8 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     input wire [((KMAX+63)/64)-1:0] chain_busy,
     input wire [DEL-1:0] lane_d0v,lane_d1v,
     input wire [DEL-1:0] lane_permit,lane_fault,lane_dv,lane_fe,lane_ldv,
-    input wire [DEL*680-1:0] lane_de,lane_he,
+    input wire [DEL*680-1:0] lane_he,
+    input wire [DEL*8-1:0] lane_nv_mask,
     input wire [DEL*8-1:0] lane_hm,lane_dn,lane_occ,
     input wire [DEL*2-1:0] lane_hn,
     output wire [DEL*8-1:0] lane_take,
@@ -112,7 +113,6 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     wire rn=rr[0];
     wire [DEL-1:0] d2_v=lane_dv,d0_v=lane_d0v,d1_v=lane_d1v;
-    wire [679:0] d2_e[0:DEL-1];
     wire [DEL-1:0] fe=lane_fe,ld_v=lane_ldv;
     wire [7:0]occ[0:DEL-1];
     wire [679:0]st_e[0:DEL-1][0:2];
@@ -121,7 +121,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     assign lane_live=ins_live;assign lane_tau=tau;
     assign lane_g=g_q;assign lane_gb=gb_q;assign lane_pf=pf_q;
     for(genvar l=0;l<DEL;l=l+1)begin:g_lane_faces
-     assign d2_e[l]=lane_de[680*l+:680];assign st_e[l][0]=lane_he[680*l+:680];
+     assign st_e[l][0]=lane_he[680*l+:680];
      assign st_e[l][1]='0;assign st_e[l][2]='0;
      assign st_m[l][0]=lane_hm[8*l+:8];assign st_m[l][1]='0;assign st_m[l][2]='0;
      assign dn[l]=lane_dn[8*l+:8];assign occ[l]=lane_occ[8*l+:8];assign st_n[l]=lane_hn[2*l+:2];
@@ -255,7 +255,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             if (ph == P_INS) begin : cnt
                 reg [18:0] a_;
                 a_ = nel;
-                for (l = 0; l < DEL; l = l + 1) if (d2_v[l]) for (s = 0; s < 8; s = s + 1) a_ = a_ + 19'(d2_e[l][EW*s + VB]);
+                for (l = 0; l < DEL; l = l + 1) if (d2_v[l]) for (s = 0; s < 8; s = s + 1) a_ = a_ + 19'(lane_nv_mask[8*l+s]);
                 nel <= a_;
             end
             if (ph == P_INS) rcv <= rcv + 24'(d2_v[0]) + 24'(d2_v[1]) + 24'(d2_v[2]) + 24'(d2_v[3]);
