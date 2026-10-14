@@ -1,0 +1,87 @@
+{
+  "name": "hc_chunk_store32_ref",
+  "top": "ot_hgi_hc_chunk_store32",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_chunk_store32.sv"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 34.56,
+    "h": 34.56
+  },
+  "std_area_um2": 450,
+  "area_basis": "Temporary estimate; source-bound synth and CTS required",
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "clr"
+    ],
+    "N": [
+      "wr_v",
+      "wr_tag",
+      "wr_data"
+    ],
+    "S": [
+      "scan_v",
+      "scan_group"
+    ],
+    "E": [
+      "scan_o_v",
+      "scan_data",
+      "full",
+      "fault"
+    ]
+  },
+  "macros": [],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 16
+  },
+  "job": {
+    "owner": "Codex:hbm_hc_norm",
+    "branch": "codex/hbm-hc-norm-takeover-1013",
+    "tag": "store32",
+    "purpose": "Measured bounded collector data state; candidate direct-die leaf, no assigned slot/pins or whole-layer credit",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/peers",
+      "rtl/lib"
+    ],
+    "benches": [
+      {
+        "name": "exact",
+        "cmd": "J=8 bash rtl/hbm_accel/generic/peers/run_hc_chunk_store32.sh {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "HC_CHUNK_STORE PASS",
+        "threads": 8,
+        "peak_ram_gb": 8
+      },
+      {
+        "name": "data_mutant",
+        "cmd": "XDEF=-DSMUT=1 J=8 bash rtl/hbm_accel/generic/peers/run_hc_chunk_store32.sh {RUN}/bench/data_mutant",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 8
+      },
+      {
+        "name": "duplicate_mutant",
+        "cmd": "XDEF=-DSMUT=2 J=8 bash rtl/hbm_accel/generic/peers/run_hc_chunk_store32.sh {RUN}/bench/duplicate_mutant",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 8
+      }
+    ],
+    "views_to": "physical/ref_tile/hc_chunk_store32_ref/views",
+    "record_to": "results/rtl/ref_tile/hc_chunk_store32_ref"
+  },
+  "slot_change_request": {
+    "reason": "No v12 matched child slot; new local blockstore direct-die expansion request, measured outline and assigned pins pending",
+    "request": "results/arch/hbm_native_1013/hc_norm_takeover/slot_partition_request.json"
+  }
+}
