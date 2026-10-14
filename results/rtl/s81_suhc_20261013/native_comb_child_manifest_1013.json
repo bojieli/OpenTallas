@@ -69,7 +69,14 @@
       "clock_delivery": null,
       "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_ccf.json",
       "clock_pin_connection": "sk_leaf[0]",
-      "physical_hierarchy": "u_cb.u_cf"
+      "physical_hierarchy": "u_cb.u_cf",
+      "pre_cts_clock_evidence": {
+        "boundary_mean_ps": 689.8,
+        "spread_ps": 32.1,
+        "sinks": 14196,
+        "TT_phase_relative_to_phi_ps": -689.8,
+        "scope": "completed CTS provisional; current closed old-view R cannot bind successor"
+      }
     },
     {
       "instance": "u_pd.u_f5r1",
@@ -113,7 +120,14 @@
       "clock_delivery": null,
       "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r1.json",
       "clock_pin_connection": "sk_leaf[1]",
-      "physical_hierarchy": "u_cb.u_pd.u_f5r1"
+      "physical_hierarchy": "u_cb.u_pd.u_f5r1",
+      "pre_cts_clock_evidence": {
+        "boundary_mean_ps": 194.0,
+        "spread_ps": 24.6,
+        "sinks": 7826,
+        "TT_phase_relative_to_phi_ps": -194.0,
+        "scope": "completed CTS provisional; not closed view"
+      }
     },
     {
       "instance": "u_pd.u_f8",
