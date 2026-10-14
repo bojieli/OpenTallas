@@ -328,6 +328,13 @@ def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
         if cap not in (None, "M5") or s.get("pg_layer") not in (None, "M5"):
             raise SpecError("M6 pin-only grant requires signal/PG layer_cap M5")
         return "M5", "pin-only grant"
+    if cap is None and s["name"] not in LEGACY_KITS:
+        # re-read: the closure daemon imports this module once, and a native-launch re-kit
+        # (tools/ref_tile/rekit_native_launch.py) freezes a closed pre-M5 kit here while it runs
+        try:
+            LEGACY_KITS.update(json.loads((Path(__file__).resolve().parent / "legacy_layer_kits.json").read_text())["kits"])
+        except (OSError, ValueError, KeyError):
+            pass
     if cap is None and s["name"] in LEGACY_KITS:
         return LEGACY_KITS[s["name"]], "legacy"
     if cap is None and s.get("pg_layer") not in (None, "M5"):

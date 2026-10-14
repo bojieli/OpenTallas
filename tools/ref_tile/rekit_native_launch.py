@@ -258,6 +258,22 @@ def keep_closed_layers(s: dict) -> str | None:
     return f"kit frozen at its closed layer contract (PG {pg}) in {LEGACY_FILE.relative_to(ROOT)}"
 
 
+DAEMON = Path(os.environ.get("CL_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
+
+
+def sync_daemon_legacy():
+    """the loop's submit gate regenerates the kit with the daemon tree's ref_tile.py, which reads ITS
+    legacy_layer_kits.json: copy ours there when it only adds entries (a daemon-only edit is never overwritten)"""
+    dst = DAEMON / "tools/ref_tile/legacy_layer_kits.json"
+    try:
+        mine, theirs = json.loads(LEGACY_FILE.read_text()), json.loads(dst.read_text())
+    except (OSError, ValueError):
+        return
+    if theirs["kits"] != mine["kits"] and all(mine["kits"].get(k) == v for k, v in theirs["kits"].items()):
+        dst.write_text(LEGACY_FILE.read_text())
+        print(f"REKIT: synced {LEGACY_FILE.name} to the closure daemon tree")
+
+
 def write_kit(a: dict, audit=AUDIT) -> dict:
     s = new_spec(a, audit)
     note = keep_closed_layers(s)
@@ -388,6 +404,7 @@ def cmd_rekit(args) -> int:
     git("commit", "-q", "-m", f"native launch re-kit: job specs at {c1}\n\nCo-Authored-By: Claude Opus 5.5 "
         f"<noreply@anthropic.com>")
     push_main()
+    sync_daemon_legacy()
     INTAKE.mkdir(parents=True, exist_ok=True)
     for a, w in done:
         job = json.loads((ROOT / w["kit"] / "job.json").read_text())
