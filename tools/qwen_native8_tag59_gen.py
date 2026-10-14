@@ -19,14 +19,16 @@ h=h.replace('    assign c_tag      = {tok_r, pos_r[7:0], {(8 - DAW){1\'b0}}, seg
       if (!rst_n) begin epoch_r<=0;stage_r<=0;end
       else if (start && st==S_IDLE && identity_valid) begin epoch_r<=tag_epoch;stage_r<=tag_stage;end''')
 h=h.replace('            case (st)','''            // Reject before receive counters, vector writes or argmax updates.
-            if (r_valid && (st != S_COLL || !return_match)) fault <= 1'b1;
+            if (r_valid && (st != S_COLL || !return_acceptable)) fault <= 1'b1;
             if (CRED!=0 && c_ready && c_cred==CRED && !c_fire) fault <= 1'b1;
             case (st)''')
 h=h.replace('S_IDLE: if (start) begin','S_IDLE: if (start && !identity_valid) fault <= 1\'b1; else if (start) begin')
-h=h.replace('if (r_valid) begin','if (r_valid && return_match) begin')
-h=h.replace('else if (st == S_COLL && r_valid && kind == K_AR)', 'else if (st == S_COLL && r_valid && return_match && kind == K_AR)')
+h=h.replace('    wire [8:0]   rx_total = (kind == K_ARGMAX) ? N : nw;', '    wire [8:0]   rx_total = (kind == K_ARGMAX) ? N : nw;\n    wire return_acceptable = return_match && !r_err && (r_last == (rx_k == rx_total - 1\'b1)) && (kind == K_AR || r_rank == rx_k[RB-1:0]);')
+h=h.replace('if (r_valid) begin','if (r_valid && return_acceptable && !fault) begin')
+h=h.replace('else if (st == S_COLL && r_valid && kind == K_AR)', 'else if (st == S_COLL && r_valid && return_acceptable && !fault && kind == K_AR)')
 # Cap invalid extra returned credits in distinct helper, with protocol fault above.
 h=h.replace('else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8\'d1 : 8\'d0) + (c_ready ? 8\'d1 : 8\'d0);', 'else if (CRED != 0) c_cred <= c_cred - (c_fire ? 8\'d1 : 8\'d0) + ((c_ready && (c_cred < CRED || c_fire)) ? 8\'d1 : 8\'d0);')
+h=h.replace('assign c_valid = (st == S_COLL)', 'assign c_valid = !fault && (st == S_COLL)')
 assert 'pos_r[7:0]' not in h
 Path('rtl/physical/ot_qwen_tp_seq_w12_vrl_native59.sv').write_text('`timescale 1ns/1ps\n// Distinct functional prototype; allocator and transport must supply actual TAG59.\n'+h+'\n')
 s=base.replace('module ot_qfd_seq_su_bi_native8_candidate','module ot_qfd_seq_su_bi_native8_tag59_candidate')

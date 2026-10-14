@@ -157,6 +157,16 @@ endmodule
     tb=tb.replace('.cb_st_rdy_stage(6\'d0)', '.cb_st_rdy_stage(6\'d1)')
     tb=re.sub(r'(^            tp_token = [^;]+;)', r'\1 tp_token=tp_token%151936;',tb,flags=re.M)
     tb=re.sub(r'(^            tp_pos = [^;]+;)', r'\1 tp_pos=tp_pos%8192;',tb,flags=re.M)
+    tb=tb.replace('            r_valid = ', '            r_valid = ',1)
+    tb=tb.replace('        end\n    endtask\n    wire out_mismatch', '''            pi_su_fault=0; r_err=0;
+            if(r_valid)begin
+              r_valid=(u0.u_seq.st==5);
+              r_last=(u0.u_seq.rx_k==u0.u_seq.rx_total-1);
+              r_rank=u0.u_seq.rx_k[2:0];
+            end
+        end
+    endtask
+    wire out_mismatch''')
     tb = tb.replace('module tb_qfd_seq_su_native8_candidate;', 'module tb_qfd_native59_retained_partition;')
     tb, count = re.subn(r'ot_qfd_seq_su_bi_native8_tag59_candidate #\([^\n]+\) u1 \(',
                        'ot_qfd_native59_retained_partition_candidate u1 (', tb)

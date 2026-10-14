@@ -32,7 +32,8 @@ module tb_qwen_native59_argmax;
    @(negedge clk);
   end
   rv=0;rl=0;@(negedge clk);
-  if(!done||next_token!=151935||next_val!=32'h43000000||(fault!=(MUT!=0)))bad=bad+1;
+  if(MUT)begin if(done||!fault||dut.rx_k!=7||next_token!=0)bad=bad+1;end
+  else if(!done||next_token!=151935||next_val!=32'h43000000||fault)bad=bad+1;
   if(bad)$fatal(1,"ARGMAX59 bad=%0d token=%0d value=%x fault=%0d",bad,next_token,next_val,fault);
   $display("PASS ARGMAX59 mutant=%0d actual_row0=132944 local_row=18991 global_token=%0d rank_returns=8 fault=%0d",MUT,next_token,fault);$finish;
  end

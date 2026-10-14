@@ -106,7 +106,7 @@ module ot_qwen_tp_seq_w12_vrl_native59 #(
     integer       rd_i, rd_n;
     always @(*) begin rd_n = 0; for (rd_i = 0; rd_i < VRL; rd_i = rd_i + 1) rd_n = rd_n + rd_p[rd_i]; end
     reg [7:0] c_cred;   // credit mode: a word leaves only with a credit (valid = send)
-    assign c_valid = (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);
+    assign c_valid = !fault && (st == S_COLL) && (q_n != 0) && (CRED == 0 || c_cred != 8'd0);
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
@@ -121,6 +121,7 @@ module ot_qwen_tp_seq_w12_vrl_native59 #(
     wire [31:0]  g_val = r_data[31:0];
     wire [NW-1:0] g_idx = r_data[32 +: NW];
     wire [8:0]   rx_total = (kind == K_ARGMAX) ? N : nw;
+    wire return_acceptable = return_match && !r_err && (r_last == (rx_k == rx_total - 1'b1)) && (kind == K_AR || r_rank == rx_k[RB-1:0]);
 
     always @(*) begin
         vm_re = rd_go;
@@ -140,7 +141,7 @@ module ot_qwen_tp_seq_w12_vrl_native59 #(
             vm_we <= 1'b0;
             rd_p <= (VRL > 1) ? {rd_p, rd_go} : rd_go;
             // Reject before receive counters, vector writes or argmax updates.
-            if (r_valid && (st != S_COLL || !return_match)) fault <= 1'b1;
+            if (r_valid && (st != S_COLL || !return_acceptable)) fault <= 1'b1;
             if (CRED!=0 && c_ready && c_cred==CRED && !c_fire) fault <= 1'b1;
             case (st)
                 S_IDLE: if (start && !identity_valid) fault <= 1'b1; else if (start) begin
@@ -180,7 +181,7 @@ module ot_qwen_tp_seq_w12_vrl_native59 #(
                     if (c_fire) begin q_r <= q_r + 1'b1; tx_k <= tx_k + 1'b1; end
                     q_n <= q_n + (rd_v ? 1'b1 : 1'b0) - (c_fire ? 1'b1 : 1'b0);
                     // receive
-                    if (r_valid && return_match) begin
+                    if (r_valid && return_acceptable && !fault) begin
                         if (r_err) fault <= 1'b1;
                         rx_k <= rx_k + 1'b1;
                         if (r_last != (rx_k == rx_total - 1'b1)) fault <= 1'b1;
@@ -213,5 +214,5 @@ module ot_qwen_tp_seq_w12_vrl_native59 #(
     // vm_wdata: the AR receive word (the S_COLL / r_valid / K_AR edge of the main block), own reset copy
     always @(posedge clk or negedge rst_nw)
         if (!rst_nw) vm_wdata <= {FW{1'b0}};
-        else if (st == S_COLL && r_valid && return_match && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);
+        else if (st == S_COLL && r_valid && return_acceptable && !fault && kind == K_AR) vm_wdata <= r_data ^ FW'(RMUT != 0);
 endmodule
