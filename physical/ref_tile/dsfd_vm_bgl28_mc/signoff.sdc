@@ -136,6 +136,12 @@ set_clock_uncertainty -hold 25 [all_clocks]
 # The default single-root hook runs before this scoped hook in signoff.sdc.
 # Clear ALL clock and clock-fall data tags, including clock-source ports, before
 # reading any arrival. OpenSTA unset_input_delay without -clock clears all tags.
+foreach ot_mc_clock [all_clocks] {
+    unset_input_delay -clock $ot_mc_clock [all_inputs]
+    unset_input_delay -clock $ot_mc_clock -clock_fall [all_inputs]
+    unset_output_delay -clock $ot_mc_clock [all_outputs]
+    unset_output_delay -clock $ot_mc_clock -clock_fall [all_outputs]
+}
 unset_input_delay [all_inputs]
 unset_output_delay [all_outputs]
 proc ot_bgl_mc_ports {patterns} {
