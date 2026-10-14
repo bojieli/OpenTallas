@@ -23,7 +23,7 @@ struct Inputs {
  bool result_valid=false,result_done=false,result_fault=false;
  uint64_t result_tag=0;unsigned result_generation=0,result_token=0,result_value=0,result_cycles=0,result_cause=0;
 };
-struct Admission {unsigned rank,generation,token,position;uint64_t tag,edge;};
+struct Admission {unsigned rank,generation,token,position;uint64_t tag,edge;std::array<uint32_t,5> program_metadata{};};
 class HostOwner {
  struct Context:VerilatedContext {Context(){threads(1);}};
  Context ctx;
@@ -180,7 +180,8 @@ public:
   unsigned prior_accepted=cohort.accepted_ranks;
   std::array<Admission,8> offered{};
   for(unsigned r=0;r<8;++r){auto*h=host_for_rank(r);offered[r]={r,h->native_request_gen,
-    h->native_request_token,h->native_request_pos,h->native_request_tag,core_edges};}
+    h->native_request_token,h->native_request_pos,h->native_request_tag,core_edges};
+    for(unsigned w=0;w<5;++w)offered[r].program_metadata[w]=h->native_pr[w];}
   bool cohort_terminal_required=cohort.terminal_valid;
   clocks(CORE,true);evaluate(); // all pin inputs remain frozen across every rise
   unsigned accepted_now=cohort.accepted_ranks&~prior_accepted;

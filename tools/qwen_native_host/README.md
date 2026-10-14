@@ -64,3 +64,9 @@ The explicit new HOST binding from owner6e5aacdb3 uses physical HOST ID
 retain physical IDs. `host_for_rank(rank)` selects the corresponding actual
 HOST instance; accepted cohort pulses/credits and native boot/kst/drain inputs
 are explicitly permuted. This does not assert a historical board strap mapping.
+
+Accepted cohort events also retain the actual forwarded `native_pr143` bits.
+The zero-PW/DW metadata fixture sends no valid program override. Checkpoint ROM
+and helper descriptor banks are externally installed fixtures; the current
+HOST functional candidate does not select or authenticate those banks. Their
+source-bound program identity is separate from HOST transport provenance.

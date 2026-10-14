@@ -9,7 +9,7 @@ int main(int argc,char**argv){
   unsigned phase=0,bar_index=0,bar_baseline=0;uint64_t delayed_begin=0;bool paused=false;
   const std::array<std::pair<unsigned,unsigned>,9> bars={{{0x10,0x100},{0x14,0},{0x18,2},
      {0x24,0x800},{0x28,0},{0x2c,5},{0x3c,1},{0x08,1},{0x1c,1}}};
-  std::ofstream trace(out+"/actual_admissions.txt");
+  std::ofstream trace(out+"/actual_admissions.txt"),metadata(out+"/actual_program_metadata.txt");
   for(unsigned n=0;n<1600000;++n){
    in.por_n=n>=8;in.link_up=n>=24?63:0;
    for(unsigned r=0;r<8;++r)in.boot[r]=n>=24?3:0;
@@ -41,7 +41,9 @@ int main(int argc,char**argv){
    }
    auto old_admissions=h.admissions.size();h.low(in);h.rise();h.fall();
    for(size_t a=old_admissions;a<h.admissions.size();++a){auto&e=h.admissions[a];
-    trace<<e.rank<<" "<<e.edge<<" "<<std::hex<<e.tag<<std::dec<<" "<<e.generation<<" "<<e.token<<" "<<e.position<<"\n";}
+    trace<<e.rank<<" "<<e.edge<<" "<<std::hex<<e.tag<<std::dec<<" "<<e.generation<<" "<<e.token<<" "<<e.position<<"\n";
+    metadata<<e.rank<<" "<<e.edge<<" ";for(unsigned w=0;w<5;++w)metadata<<std::hex<<e.program_metadata[4-w]<<" ";metadata<<std::dec<<"\n";
+    for(auto word:e.program_metadata)if(word)throw std::runtime_error("unexpected HOST PW/DW program override in fixture");}
    if(h.fault())throw std::runtime_error("actual allocator/cohort identity fault");
    for(unsigned r=0;r<8;++r)if(h.hosts[r]->service_abort||h.hosts[r]->service_faults||h.boards[r]->faults){
     std::cerr<<"RTL_FAULT rank="<<r<<" core="<<n<<" hostfaults="<<h.hosts[r]->service_faults
