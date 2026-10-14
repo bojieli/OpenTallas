@@ -1,7 +1,7 @@
-ot-run: ot-epyc1tb     admits   368 GB (avail 595, growth 136, headroom 64, waiters 0/0 GB) load 126/128 running 32 disk 1169 GB 
-ot-run: ot-epyc4       admits   -60 GB (avail 474, growth 465, headroom 48, waiters 2/21 GB) load 79/128 running 23 disk 1266 GB 
+ot-run: ot-epyc1tb     admits   368 GB (avail 595, growth 136, headroom 64, waiters 0/0 GB) load 126/128 running 32 disk 1169 GB
+ot-run: ot-epyc4       admits   -60 GB (avail 474, growth 465, headroom 48, waiters 2/21 GB) load 79/128 running 23 disk 1266 GB
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81bf-direct-1013
-ot-run: ot-agidock128  admits    34 GB (avail 84, growth 51, headroom 24, waiters 0/0 GB) load 14/64 running 14 disk 361 GB 
+ot-run: ot-agidock128  admits    34 GB (avail 84, growth 51, headroom 24, waiters 0/0 GB) load 14/64 running 14 disk 361 GB
 ot-run: -> ot-epyc1tb
 ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-247324-1791946631 after 0 s
 PQ_IX_SRAM PASS par=0 checks=16480 independent_reads=3072 rows=96 replicas=4 macros=8 parity_fault=1

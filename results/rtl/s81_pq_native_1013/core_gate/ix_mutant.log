@@ -1,7 +1,7 @@
-ot-run: ot-epyc1tb     admits   249 GB (avail 476, growth 155, headroom 64, waiters 0/0 GB) load 131/128 running 29 disk 1170 GB 
-ot-run: ot-epyc4       admits   238 GB (avail 508, growth 221, headroom 48, waiters 0/0 GB) load 78/128 running 21 disk 1285 GB 
+ot-run: ot-epyc1tb     admits   249 GB (avail 476, growth 155, headroom 64, waiters 0/0 GB) load 131/128 running 29 disk 1170 GB
+ot-run: ot-epyc4       admits   238 GB (avail 508, growth 221, headroom 48, waiters 0/0 GB) load 78/128 running 21 disk 1285 GB
 ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81bf-direct-1013
-ot-run: ot-agidock128  admits    10 GB (avail 76, growth 74, headroom 24, waiters 0/0 GB) load 40/64 running 18 disk 356 GB 
+ot-run: ot-agidock128  admits    10 GB (avail 76, growth 74, headroom 24, waiters 0/0 GB) load 40/64 running 18 disk 356 GB
 ot-run: -> ot-epyc4
 ot-heavy: admitted on regular-crane as oth-ubuntu-4173009-1791946949 after 0 s
 /srv/opentallas-scratch/codex/s81bf-direct-1013/native_r6_ix/bench
