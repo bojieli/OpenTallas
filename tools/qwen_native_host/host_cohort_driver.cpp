@@ -1,4 +1,7 @@
 #include "host_owner.hpp"
+#ifdef QWEN_HOST_DRAIN_GATE
+#include "qkd_host_drain_8bb.hpp"
+#endif
 #include <iostream>
 #include <filesystem>
 using namespace qwen_native_host;
@@ -6,7 +9,7 @@ int main(int argc,char**argv){
  try{
   std::string out=argc>1?argv[1]:".";std::filesystem::create_directories(out);
   HostOwner h;Inputs in;in.engine_admit_ready=true;
-  unsigned phase=0,bar_index=0,bar_baseline=0;uint64_t delayed_begin=0;bool paused=false;
+  unsigned phase=0,bar_index=0,bar_baseline=0;uint64_t delayed_begin=0;bool paused=false,reported=false;
   const std::array<std::pair<unsigned,unsigned>,9> bars={{{0x10,0x100},{0x14,0},{0x18,2},
      {0x24,0x800},{0x28,0},{0x2c,5},{0x3c,1},{0x08,1},{0x1c,1}}};
   std::ofstream trace(out+"/actual_admissions.txt"),metadata(out+"/actual_program_metadata.txt");
@@ -56,7 +59,7 @@ int main(int argc,char**argv){
      throw std::runtime_error("missing actual cohort admission provenance");
     for(auto&e:h.admissions)if(e.tag!=h.tag()||e.generation!=h.generation()||e.token!=0||e.position!=0)
      throw std::runtime_error("actual endpoint tuple mismatch");
-    std::ofstream f(out+"/receipt.json");
+    if(!reported){std::ofstream f(out+"/receipt.json");
     f<<"{\n  \"scope\": \"ACTUAL_EIGHT_HOST_ALLOCATOR_COHORT_CONTROL_WITH_EXPLICIT_BOARD_AND_BOOT_FIXTURES\",\n"
       <<"  \"passed\": true, \"whole_token\": false, \"native_numerical_execution\": false,\n"
       <<"  \"startup_boot_producer\": \"fixture local_boot3; genuine producer binding pending\",\n"
@@ -65,7 +68,19 @@ int main(int argc,char**argv){
       <<"  \"delayed_peer7_core_edges\": "<<n-delayed_begin<<", \"core_edges\": "<<h.core_edges<<",\n"
       <<"  \"real_PHY_delay_cycles\": 223, \"completion_callback_offered\": false\n}\n";
     std::cout<<"PASS actual eight endpoint admissions core="<<h.core_edges<<" epoch="<<h.epoch()<<" tag="
-        <<std::hex<<h.tag()<<std::dec<<"\n";return 0;
+        <<std::hex<<h.tag()<<std::dec<<"\n";reported=true;}
+#ifdef QWEN_HOST_DRAIN_GATE
+    bool transport=h.router.router_empty()&&h.router.fdi_pipelines_empty();
+    for(unsigned id=0;id<8;++id){auto host_report=qkd_host_fixture::host_transport_drain(*h.hosts[id]);
+     auto board_report=qkd_host_fixture::board_transport_drain(*h.boards[id]);transport&=host_report.drained()&&board_report.drained();
+     if(n%1000==0&&!host_report.drained())std::cout<<"DRAIN_BLOCK HOST="<<id<<" bits="<<host_report.blocked<<" first="<<host_report.first<<"\n";
+     if(n%1000==0&&!board_report.drained())std::cout<<"DRAIN_BLOCK BOARD="<<id<<" bits="<<board_report.blocked<<" first="<<board_report.first<<"\n";
+    }
+    if(!transport)continue;
+    std::ofstream d(out+"/pre_terminal_receipt.json");d<<"{\"scope\":\"ACTUAL_PRE_TERMINAL_TRANSPORT_QUIESCENCE_NOT_POST_RETIREMENT\",\"passed\":true,\"actual_core_edge\":"<<h.core_edges<<",\"whole_token\":false,\"numerical_callback_offered\":false}\n";
+    std::cout<<"PASS actual all-eight PRE_TERMINAL transport drain core="<<h.core_edges<<"\n";
+#endif
+    return 0;
    }
   }
   throw std::runtime_error("bounded control observer ended before actual eight-rank admission");

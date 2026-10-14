@@ -20,6 +20,9 @@ struct Inputs {
  std::array<uint16_t,8> kst{};
  uint8_t link_up=0;
  uint8_t kv_drained=0,vm_drained=0,collective_drained=0,host_drained=0;
+ // A real POST_TERMINAL retirement certificate, qualified by the consumed
+ // terminal identity. PRE_TERMINAL HOST drain alone cannot admit another token.
+ bool post_terminal_retired=false;uint64_t post_terminal_tag=0;unsigned post_terminal_generation=0;
  bool result_valid=false,result_done=false,result_fault=false;
  uint64_t result_tag=0;unsigned result_generation=0,result_token=0,result_value=0,result_cycles=0,result_cause=0;
 };
@@ -37,7 +40,7 @@ class HostOwner {
  // composition's137000fs phase. Other rising families have distinct phases.
  std::array<uint64_t,5> next={553667,637002,1110336,892504,693006};
  std::array<bool,5> level{};
- bool primed=false,terminal_pending=false,terminal_rearm=false;
+ bool primed=false,terminal_pending=false,terminal_rearm=false,post_terminal_pending=false;
  uint64_t acknowledged_tag=0;unsigned acknowledged_gen=0;
  uint64_t terminal_tag=0;unsigned terminal_gen=0;bool terminal_done=false,terminal_fault=false;
  Inputs inputs{};
@@ -66,7 +69,7 @@ class HostOwner {
  void connect(){
   allocator.por_n=cohort.por_n=inputs.por_n;
   allocator.warm_ready=cohort.warm_ready=hosts[0]->host_rst_n&&hosts[0]->service_ready&&hosts[0]->sys_ready&&
-      !hosts[0]->package_abort&&!hosts[0]->service_abort;
+      !hosts[0]->package_abort&&!hosts[0]->service_abort&&!post_terminal_pending;
   allocator.request_valid=hosts[0]->token_request_valid;allocator.request_token=hosts[0]->token_request_token;
   allocator.request_position=hosts[0]->token_request_position;allocator.request_generation=hosts[0]->token_request_generation;
   allocator.grant_ready=hosts[0]->token_grant_ready;
@@ -163,7 +166,12 @@ public:
  }
  void low(const Inputs& in){
   inputs=in;
-  if(!in.por_n){terminal_pending=false;terminal_rearm=false;}
+  if(!in.por_n){terminal_pending=false;terminal_rearm=false;post_terminal_pending=false;}
+  if(in.post_terminal_retired){
+   if(!post_terminal_pending||in.post_terminal_tag!=acknowledged_tag||
+      in.post_terminal_generation!=acknowledged_gen)throw std::runtime_error("stale POST_TERMINAL retirement certificate");
+   post_terminal_pending=false;
+  }
   bool cancels_clear=true;for(auto*h:hosts)cancels_clear&=!h->cancel_valid;
   if(terminal_rearm&&!in.result_valid&&cancels_clear&&!allocator.terminal_accepted)terminal_rearm=false;
   if(in.result_valid){if(terminal_pending||terminal_rearm)throw std::runtime_error("duplicate native terminal snapshot");
@@ -189,10 +197,13 @@ public:
   for(unsigned r=0;r<8;++r)if((accepted_now>>r)&1)admissions.push_back(offered[r]);
   ++core_edges;next[CORE]+=half[CORE];settle();
   if(allocator.terminal_accepted){if(cohort_terminal_required&&!cohort.terminal_accepted)throw std::runtime_error("allocator/cohort terminal ownership disagreement");
-   acknowledged_tag=terminal_tag;acknowledged_gen=terminal_gen;terminal_pending=false;terminal_rearm=true;}
+   acknowledged_tag=terminal_tag;acknowledged_gen=terminal_gen;terminal_pending=false;terminal_rearm=true;post_terminal_pending=true;}
   primed=false;
  }
  void fall(){advance_other(next[CORE]);clocks(CORE,false);evaluate();next[CORE]+=half[CORE];settle();}
+ bool awaiting_post_terminal_retirement()const{return post_terminal_pending;}
+ uint64_t acknowledged_terminal_tag()const{return acknowledged_tag;}
+ unsigned acknowledged_terminal_generation()const{return acknowledged_gen;}
  bool dispatch()const{return cohort.dispatched;}
  bool fault()const{return allocator.identity_fault||cohort.identity_fault;}
  uint64_t tag()const{return cohort.cohort_tag;}
