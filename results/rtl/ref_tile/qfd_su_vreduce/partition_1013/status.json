@@ -1,5 +1,5 @@
 {
- "status": "VALUE_PROOF_PASS_PIN_BUSY_CAPTURE_AND_HARDWARE_SEAM_VALIDATION_RETEST_PENDING",
+ "status": "EXACT_FUNCTIONAL_PASS_3CYCLE_PHYSICAL_DIAGNOSIS_NOT_SUBMITTED",
  "regional_leaves": 8,
  "regional_flops_each": 11154,
  "tail_flops": 7100,
@@ -31,5 +31,24 @@
   "result_delta_max": 3,
   "data_mutant_errors": 120
  },
- "busy_contract": "All child busy outputs registered; thin parent only wires busy from tail. Busy starts after registered propagation, requiring real SU inflight control in integration proof; result edges +3 proven prior to busy-only change."
+ "busy_contract": "All child busy outputs registered; thin parent only wires busy from tail. Busy starts after registered propagation, requiring real SU inflight control in integration proof; result edges +3 proven prior to busy-only change.",
+ "negative_controls": {
+  "data_errors": 120,
+  "phase_fault_errors": 474
+ },
+ "mapped_region": {
+  "sinks": 9278,
+  "TTmax_ps": 370.4,
+  "spread_ps": 63.7,
+  "util": 0.1322,
+  "internal_setup_ps_at770": -77.5
+ },
+ "mapped_tail": {
+  "sinks": 7172,
+  "TTmax_ps": 295.8,
+  "spread_ps": 38.8,
+  "util": 0.1421,
+  "internal_setup_ps_at770": -11.8
+ },
+ "next": "Compact outlines at measured area and add4/mul5 arithmetic cuts, exact original order+mutants and measured new latency before routing."
 }

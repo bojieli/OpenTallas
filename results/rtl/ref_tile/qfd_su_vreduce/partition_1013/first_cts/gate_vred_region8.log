@@ -1,0 +1,19 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_su_vred_region8_20261013-212459.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_su_vred_region8_20261013-212459.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qfd_su_vred_region8-20261013-212459
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 415 s (gate total 1024 s)
+GATE WARN util: synthesized std area 7791 um2 + macros 0 in core 59458: util 13%  -> FIX: set "std_area_um2": 7791 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hdc_vreduce_region8 cells 58,749 flops 9,278 depth 778.5 ps util 0.1322 reach 0.0 um (1.7 s)
+GATE WARN textbook.high_fanout: reset port rst_n: 573 loads (573 flops, e.g. busy_out$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.logic_depth: reg->reg stage g_chunk[0].g_step[1].u_op.u_add.g_f.u.s1_small[2]$_DFF_P_ -> g_chunk[0].g_step[1].u_op.u_add.g_f.u.s2_val[19]$_DFF_P_/D: ~778 ps estimated (21 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.util_channel: utilisation 13.2% outside 45%-65% (std 7860 + macro 0 um2 in 59458 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 403.7..474.6 ps (spread 70.9), boundary mean 423.0; tt insertion all 306.7..370.4 ps (spread 63.7), boundary mean 322.9; ff insertion all 247.8..306.5 ps (spread 58.7), boundary mean 262.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: reg->out       38 paths, worst slack -230.8 ps (e.g. v_out)
+GATE INFO path_classes: reg->reg      262 paths, worst slack -77.5 ps (e.g. g_sq[5].u_sq.g_f.u.s2_prod[47]$_DFF_P_/D)
+GATE INFO path_classes: in->reg       300 paths, worst slack 504.4 ps (e.g. g_sq[0].u_sq.g_f.u.y[3]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS -2.307941615597997e-10 hold WNS -7.579886718289686e-11
+GATE INFO clock_rule: root port:clk: 9,278 sinks on the largest root <= 15,000; measured TT insertion 370.4 ps, leaf spread 63.7 ps
+PRE_ROUTE_GATE: WARN (0 fail, 4 warn)
+GATE: qfd_su_vred_region8/gate_result.json written (exact staged source binding; commit it with the kit)

@@ -1,0 +1,16 @@
+ot-run: ot-epyc4       admits   451 GB (avail 721, growth 222, headroom 48, waiters 0/0 GB) load 35/128 running 26 disk 1260 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-174262-1791951996 after 1 s
+UNEXPECTED_FAULT
+UNEXPECTED_FAULT
+UNEXPECTED_FAULT
+UNEXPECTED_FAULT
+UNEXPECTED_FAULT
+UNEXPECTED_FAULT
+UNEXPECTED_FAULT
+UNEXPECTED_FAULT
+UNEXPECTED_FAULT
+FAIL VRED errors=474
+FATAL: rtl/test/tb_hdc_vreduce_entries64.sv:39: 
+       Time: 155540000  Scope: tb_hdc_vred_phase_mut.u_test
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-174262-1791951996): exit 1
