@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.dma_q5_gate.v1",
   "branch": "claude/el1013-dma-q5",
-  "source_commit": "f24c88250",
+  "source_commit": "49d9fbadc",
   "status": "RTL BENCHED; PHYSICAL/LOCAL8/BACK1 INTEGRATION INCOMPLETE",
   "flat_reference_commit": "6403f77f2",
   "port_gate": {
@@ -144,5 +144,10 @@
       "evidence": "serial_large_cts_gate_result.json",
       "note": "clock rulePASS; actualstd2003/util19%, compact56.16x86.4 shapegate live"
     }
+  ],
+  "submitted": [
+    "b2_dma_rq_q5_ref-q5r1-49d9fbadc",
+    "b2_dma_mv_q5_ref-q5sram1-49d9fbadc",
+    "b2_dma_serial_q5_ref-q5r1-49d9fbadc"
   ]
 }

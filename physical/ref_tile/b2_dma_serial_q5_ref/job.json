@@ -1,5 +1,5 @@
 {
- "name": "b2_dma_serial_q5_ref-q5r1-f24c88250",
+ "name": "b2_dma_serial_q5_ref-q5r1-49d9fbadc",
  "block": "ot_hgi_b2_dma_serial",
  "ref_tile": true,
  "owner": "Codex:el1013-dma-q5",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/el1013-dma-q5",
-  "commit": "f24c88250",
+  "commit": "49d9fbadc",
   "extra_paths": [
    "rtl/test/hbm_accel/b2_dma",
    "rtl/hbm_accel/generic/peers",
@@ -180,7 +180,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/b2_dma_rq_q5_ref/b2_dma_serial_q5_ref-q5r1-f24c88250"
+   "to": "results/rtl/ref_tile/b2_dma_rq_q5_ref/b2_dma_serial_q5_ref-q5r1-49d9fbadc"
   }
  ],
  "cycles_added": 0,
