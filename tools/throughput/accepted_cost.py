@@ -362,6 +362,40 @@ def accept(led, design, unit, root=ROOT, note="", owner_exception=""):
     return row
 
 
+def remeasure(led, design, unit, losses, basis, evidence, note, grade="committed_bench", date=None):
+    """Replace a row's end-to-end loss by a new MEASUREMENT of the same design (e.g. a modelled token share now measured
+    at the layer) WITHOUT touching its decision: status, accepted_date, acceptance_note and owner_exception stay as
+    they are (an accepted row stays accepted -- the owner accepted the design, not the number).  losses = {workload:
+    e2e %}; the previous per-workload losses and basis are kept under `remeasured_from` (a list, newest last)."""
+    row = find(led, design, unit)
+    if row is None:
+        raise LedgerError(f"no row {design} {unit}")
+    if grade not in GRADES:
+        raise LedgerError(f"grade must be one of {GRADES}")
+    if not losses:
+        raise LedgerError("remeasure needs at least one --loss WORKLOAD=PCT")
+    ev = str(evidence or "").split(" ")[0]
+    if grade == "committed_bench" and (not ev or not (ROOT / ev).exists()):
+        raise LedgerError(f"evidence path {ev!r} is not in the repository")
+    prev = dict(e2e_loss_pct=row["e2e_loss_pct"], share_basis=row.get("share_basis"), evidence=row.get("evidence"),
+                per_workload={k: v.get("e2e_loss_pct") for k, v in row["per_workload"].items()},
+                date=row.get("date"))
+    row.setdefault("remeasured_from", []).append(prev)
+    for k, v in losses.items():
+        row["per_workload"].setdefault(k, {})
+        row["per_workload"][k].update(e2e_loss_pct=round(float(v), 3), source=evidence, model=basis)
+    row["e2e_loss_pct"] = max(v["e2e_loss_pct"] for v in row["per_workload"].values())
+    row["binding_workload"] = max(row["per_workload"], key=lambda k: row["per_workload"][k]["e2e_loss_pct"])
+    row["within_unit_limit"] = row["e2e_loss_pct"] <= UNIT_LIMIT
+    row["share_basis"] = basis
+    row["evidence"] = evidence
+    row["evidence_grade"] = grade
+    row["date"] = date or datetime.date.today().isoformat()
+    if note:
+        row["note"] = (row.get("note", "") + " | " + note).lstrip(" |")
+    return row
+
+
 def check(led, root=ROOT):
     """Violations of a ledger as written (hand edits included)."""
     bad = []
@@ -431,6 +465,14 @@ def main(argv=None):
     p.add_argument("unit")
     p.add_argument("--note", default="", help="the acceptance decision: who, when, basis")
     p.add_argument("--owner-exception", default="", help="OWNER decision accepting above the unit/design limit")
+    p = sub.add_parser("remeasure", help="new measured loss of an existing row; its decision (status) is unchanged")
+    p.add_argument("design", choices=DESIGNS)
+    p.add_argument("unit")
+    p.add_argument("--loss", action="append", default=[], metavar="WORKLOAD=PCT", help="measured e2e loss a workload")
+    p.add_argument("--basis", required=True, help="the measured share basis (what was measured, how)")
+    p.add_argument("--evidence", required=True)
+    p.add_argument("--grade", choices=GRADES, default="committed_bench")
+    p.add_argument("--note", default="")
     sub.add_parser("table")
     sub.add_parser("check")
     a = ap.parse_args(argv)
@@ -451,6 +493,12 @@ def main(argv=None):
             accept(led, a.design, a.unit, note=a.note, owner_exception=a.owner_exception)
             save_ledger(led, a.ledger)
             print(f"ACCEPTED {a.design} {a.unit}")
+        elif a.cmd == "remeasure":
+            r = remeasure(led, a.design, a.unit, dict(x.split("=", 1) for x in a.loss), a.basis, a.evidence, a.note,
+                          a.grade)
+            save_ledger(led, a.ledger)
+            print(f"REMEASURED {a.design} {a.unit}: e2e {r['e2e_loss_pct']} % ({r['binding_workload']}), status "
+                  f"{r['status']}; {a.design} totals {json.dumps(led['totals'][a.design])}")
         elif a.cmd == "table":
             print(table(led))
         else:

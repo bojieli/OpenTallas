@@ -240,3 +240,20 @@ def test_unpriced_serial_job_has_no_ratio_and_is_judged_by_its_loss():
     assert "unit limit" in AC.refusal(led, over)
     led["rows"] += [ok, over]
     assert AC.check(led) == [] and "unpriced" in AC.table(led)
+
+
+def test_remeasure_keeps_the_decision():
+    led = AC.empty_ledger()
+    r = row(loss=9.0)
+    AC.propose(led, r)
+    AC.accept(led, "s81", "u", note="owner", owner_exception="owner exception")
+    AC.remeasure(led, "s81", "u", {"ar": 1.5}, "layer bench", "AGENTS.md", "measured")
+    x = AC.find(led, "s81", "u")
+    assert x["status"] == "accepted" and x["owner_exception"] == "owner exception" and x["acceptance_note"] == "owner"
+    assert x["e2e_loss_pct"] == 1.5 and x["share_basis"] == "layer bench"
+    assert x["remeasured_from"][0]["e2e_loss_pct"] == 9.0
+    assert AC.totals(led)["s81"]["accepted_pct"] == 1.5
+    with pytest.raises(AC.LedgerError):
+        AC.remeasure(led, "s81", "u", {"ar": 1.0}, "b", "no/such/file", "")
+    with pytest.raises(AC.LedgerError):
+        AC.remeasure(led, "s81", "nope", {"ar": 1.0}, "b", "AGENTS.md", "")
