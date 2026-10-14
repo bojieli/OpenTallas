@@ -58,7 +58,7 @@
     "rtl/physical/ot_qfd_su_align_entries64.sv": "047bf5912323d1365adb629e8fc41705955843325497587ed5365bf1b98c51af",
     "rtl/physical/ot_hdc_vreduce_entries64.sv": "5d49d87ce82af59487a59d16a01299dc3d4bf46d3e3d7a3d30518940e39d1ca8",
     "rtl/physical/ot_hdc_vred_pending_guard.sv": "969d2ddc01fda268092aded65b5e41101f55fc691169023c5e1390b412921abc",
-    "rtl/hdc/ot_hdc_vstream.sv": "418279d7a8b8c209f19197e0711d689131c2ff07bbcd5e9128562dec9aa1e43a",
+    "rtl/hdc/ot_hdc_vstream.sv": "11813ce7fc537e69f44fecd058c89dc1827991803cd297d459ef22c83fc898b0",
     "rtl/hdc/ot_hdc_vstream_lane_t.sv": "74307a138f1cbc0656d384b2774aaa8dab89dff52e3f6ec2d5c26f98a132c27a",
     "rtl/hdc/ot_hdc_vstream_sfu_t.sv": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
     "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
@@ -82,5 +82,6 @@
     "8x216x216candidate wideroutline+37,324.8um2 vsoldgroupoutline, constructivefitunassigned",
     "N8RANK3CRED32retained-state physicalpartition delegated native_service_glue, wholeprogramcomposition remainsopen",
     "NoSSheadline/full36/headpayload/pricingadoption"
-  ]
+  ],
+  "preserved_failed_build": "v1 source6fae02ae7 PINNOTFOUND RED_ENTRIES; importedmatchingbaac1408f vstreamdependency forv2"
 }
