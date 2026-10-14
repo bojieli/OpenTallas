@@ -1,0 +1,15 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1-bit vector ports ['rs']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsfd_vm_bgl28_mc5_h1pcs_20261014-052201.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_vm_bgl28_mc5_h1pcs_20261014-052201.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_bgl28_mc5_h1pcs-20261014-052201
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 62 s (gate total 91 s)
+GATE WARN util: synthesized std area 9280 um2 + macros 5178 in core 36952: util 39%  -> FIX: set "std_area_um2": 9280 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_vm_bgl28_mc5_h1pcs cells 66,516 flops 16,963 depth 458.4 ps util 0.387 reach 45.6 um (1.1 s)
+GATE WARN textbook.boundary: 28 input->register endpoint(s) > 3 levels (worst i_row[86]->u_leaf.u.hpair_q[7]$_DFF_PN0_/D 4 lv, i_row[86]->u_leaf.u.hpair_q[6]$_DFF_PN0_/D 4 lv, i_row[59]->u_leaf.u.hpair_q[5]$_DFF_PN0_/D 4 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.util_channel: utilisation 38.7% outside 45%-65% (std 9123 + macro 5178 um2 in 36952 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO clock_rule: root port:ck: 7,455 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: FAIL (1 fail, 5 warn)
+GATE: dsfd_vm_bgl28_mc5_h1pcs/gate_result.json written (exact staged source binding; commit it with the kit)
