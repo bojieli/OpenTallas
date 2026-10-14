@@ -10,7 +10,7 @@
   386.64
  ],
  "source_sha256": {
-  "results/arch/qwen_tp8_1012/vm_band_composition_codex.json": "a1867fe387a6d485eb92d157af90d9eaed9a6322bfbaa84e2b43858460a3e984",
+  "results/arch/qwen_tp8_1012/vm_band_composition_codex.json": "a8b9fc1e9bc2a7ad13eb9efdeb0c989290da1e4f73a1867eeba53229ed6d6eac",
   "results/arch/qwen_tp8_1012/vm_leaf_plan_claude.json": "4bdcb1bedf37ad79393d1d2d236331117af2a7bae841ff4c3e55636166e2ee78"
  },
  "preserved_existing_whole_tiles": 270,
@@ -2071,5 +2071,7 @@
   },
   "request": "full21coordinates/full96address or proven replicatedissue-state; no assignedfinalpins",
   "source_tags": "prototype epoch16 only; unit echo/alignment checks do not prove tokencontroller/native freshness"
- }
+ },
+ "metadata_refresh_note": "Current composition metadata reference refreshed after adding production_protocol_caveat only; geometry, children, all4096 lane identities/private inputs/depths and frozen band RTL verified unchanged. generation_composition_metadata_sha256 preserves original generation metadata; compiled RTL/bench source SHA and terminal execution receipts remain untouched.",
+ "generation_composition_metadata_sha256": "a1867fe387a6d485eb92d157af90d9eaed9a6322bfbaa84e2b43858460a3e984"
 }

@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen.vm-band-integration-map.v1",
- "composition_sha256": "a1867fe387a6d485eb92d157af90d9eaed9a6322bfbaa84e2b43858460a3e984",
+ "composition_sha256": "a8b9fc1e9bc2a7ad13eb9efdeb0c989290da1e4f73a1867eeba53229ed6d6eac",
  "band_sha256": "6163c327878be116db043826f20cbab75d806e050ecd7d3e321f66bec702b895",
  "source_private_order": "Composition private d_s/n ordering preserved; independent globalbank8*r+b and16bankbits+8*xf derives referenceinput halves/offsets, never segmentoutput positions.",
  "mapping": [
@@ -57350,5 +57350,7 @@
   }
  ],
  "physical_assignment": "UNASSIGNED",
- "production_throughput": "UNMEASURED"
+ "production_throughput": "UNMEASURED",
+ "metadata_refresh_note": "Current composition metadata reference refreshed after adding production_protocol_caveat only; geometry, children, all4096 lane identities/private inputs/depths and frozen band RTL verified unchanged. generation_composition_metadata_sha256 preserves original generation metadata; compiled RTL/bench source SHA and terminal execution receipts remain untouched.",
+ "generation_composition_metadata_sha256": "a1867fe387a6d485eb92d157af90d9eaed9a6322bfbaa84e2b43858460a3e984"
 }
