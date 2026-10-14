@@ -157,6 +157,15 @@ class HelperOverlay(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'sidecar is missing'):
             CL.ship_helpers('local', str(run), job)
 
+    def test_missing_job_plan_cannot_overwrite_executed_helpers(self):
+        job, run = self.installed_job()
+        before = (run/'cl/orfs_hold_mm.tcl').read_bytes()
+        del job['route_overlay_plan']
+        self.commit_helper(b'# later current helper\n')
+        with self.assertRaisesRegex(ValueError, 'original job helper plan is missing'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(),before)
+
     def test_valid_digest_does_not_hide_committed_tree_mismatch(self):
         job, run = self.installed_job()
         original = job['route_overlay_plan']
