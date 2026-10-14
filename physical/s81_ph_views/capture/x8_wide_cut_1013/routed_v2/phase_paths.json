@@ -1,0 +1,85 @@
+{
+  "qualification_status": "UNQUALIFIED_DRC_1",
+  "source_commit": "bc2c93f9283e5099cb77b06de663d27cfd5a3ff3",
+  "job": "dsfd_capt_x8_dual-v2-bc2c93f92",
+  "parasitics": "spef",
+  "phase": "pin_source_latency_minus_boundary_R",
+  "period_ps": {
+    "core": 833.333,
+    "serial": 1111.110667
+  },
+  "paths": [
+    {
+      "corner": "tt",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "max",
+      "startpoint": "u_half.g_r[5].u_x.w_st[1]$_SDFFE_PN0P_/QN",
+      "endpoint": "u_half.g_r[5].u_x.w_st_r[1]$_DFF_P_/D",
+      "slack_ps": 25.350235
+    },
+    {
+      "corner": "tt",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "min",
+      "startpoint": "u_half.g_r[4].u_x.mem[2][76]$_DFFE_PP_/QN",
+      "endpoint": "u_half.g_r[4].u_x.sh[2][76]$_DFF_P_/D",
+      "slack_ps": 76.338173
+    },
+    {
+      "corner": "tt",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "max",
+      "startpoint": "u_half.u_s.r_st[0]$_SDFFE_PN0P_/QN",
+      "endpoint": "u_half.u_s.r_st_w[0]$_DFF_P_/D",
+      "slack_ps": 81.726685
+    },
+    {
+      "corner": "tt",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "min",
+      "startpoint": "u_half.g_r[6].u_x.rp[0]$_SDFFE_PP0P_/QN",
+      "endpoint": "u_half.g_r[6].u_x.rp_w[0]$_DFF_P_/D",
+      "slack_ps": 23.589998
+    },
+    {
+      "corner": "ff",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "max",
+      "startpoint": "u_half.g_r[5].u_x.w_st[1]$_SDFFE_PN0P_/QN",
+      "endpoint": "u_half.g_r[5].u_x.w_st_r[1]$_DFF_P_/D",
+      "slack_ps": 80.222191
+    },
+    {
+      "corner": "ff",
+      "launch": "core",
+      "capture": "serial",
+      "sense": "min",
+      "startpoint": "u_half.g_r[7].u_x.mem[1][76]$_DFFE_PP_/QN",
+      "endpoint": "u_half.g_r[7].u_x.sh[1][76]$_DFF_P_/D",
+      "slack_ps": 44.508579
+    },
+    {
+      "corner": "ff",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "max",
+      "startpoint": "u_half.u_s.r_st[0]$_SDFFE_PN0P_/QN",
+      "endpoint": "u_half.u_s.r_st_w[0]$_DFF_P_/D",
+      "slack_ps": 119.147194
+    },
+    {
+      "corner": "ff",
+      "launch": "serial",
+      "capture": "core",
+      "sense": "min",
+      "startpoint": "u_half.g_r[5].u_x.rp[0]$_SDFFE_PP0P_/QN",
+      "endpoint": "u_half.g_r[5].u_x.rp_w[0]$_DFF_P_/D",
+      "slack_ps": 6.396352
+    }
+  ]
+}

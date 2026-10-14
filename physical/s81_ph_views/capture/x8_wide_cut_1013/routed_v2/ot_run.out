@@ -1,0 +1,25 @@
+ot-run: ot-epyc1tb     admits   553 GB (avail 779, growth 44, headroom 64, waiters 0/0 GB) load 33/128 running 9 disk 1520 GB 
+ot-run: ot-epyc4       skipped: no /srv/opentallas/claude/s81capture-routed-phase-v2
+ot-run: ot-pve1        skipped: no /srv/opentallas/claude/s81capture-routed-phase-v2
+ot-run: ot-agidock128  skipped: no /srv/opentallas/claude/s81capture-routed-phase-v2
+ot-run: -> ot-epyc1tb
+ot-heavy: request 16G is charged 13G (class 'run.py' measured peak 4.6G, n=2+0 proved); the cap stays 16G
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-704669-1791956667 after 0 s
+CK_SS_MEAN=174 CK_SS_ALL_MEAN=170 CK_SS_MIN=167 CK_SS_ALL_MIN=163 CK_SS_MAX=178 CK_SS_ALL_MAX=178 CK_TT_MEAN=174 CK_TT_ALL_MEAN=170 CK_TT_MIN=167 CK_TT_ALL_MIN=163 CK_TT_MAX=178 CK_TT_ALL_MAX=178 CK_FF_MEAN=142 CK_FF_ALL_MEAN=138 CK_FF_MIN=136 CK_FF_ALL_MIN=130 CK_FF_MAX=147 CK_FF_ALL_MAX=147 CK_SSLIB_MEAN=227 CK_SSLIB_MIN=221 CK_SSLIB_MAX=232 CK_SSLIB_ALL_MEAN=223 CK_SSLIB_ALL_MIN=217 CK_SSLIB_ALL_MAX=232 CK_ROUTE_REF=TT
+CK_SS_MEAN=209 CK_SS_ALL_MEAN=202 CK_SS_MIN=192 CK_SS_ALL_MIN=190 CK_SS_MAX=220 CK_SS_ALL_MAX=220 CK_TT_MEAN=209 CK_TT_ALL_MEAN=202 CK_TT_MIN=192 CK_TT_ALL_MIN=190 CK_TT_MAX=220 CK_TT_ALL_MAX=220 CK_FF_MEAN=167 CK_FF_ALL_MEAN=161 CK_FF_MIN=152 CK_FF_ALL_MIN=150 CK_FF_MAX=178 CK_FF_ALL_MAX=178 CK_SSLIB_MEAN=273 CK_SSLIB_MIN=252 CK_SSLIB_MAX=285 CK_SSLIB_ALL_MEAN=265 CK_SSLIB_ALL_MIN=251 CK_SSLIB_ALL_MAX=285 CK_ROUTE_REF=TT
+CORNER tt rc 0
+OT_CAPTURE_PHASE {"corner":"tt","launch":"core","capture":"serial","sense":"max","startpoint":"u_half.g_r[5].u_x.w_st[1]$_SDFFE_PN0P_/QN","endpoint":"u_half.g_r[5].u_x.w_st_r[1]$_DFF_P_/D","slack_ps":25.350235}
+OT_CAPTURE_PHASE {"corner":"tt","launch":"core","capture":"serial","sense":"min","startpoint":"u_half.g_r[4].u_x.mem[2][76]$_DFFE_PP_/QN","endpoint":"u_half.g_r[4].u_x.sh[2][76]$_DFF_P_/D","slack_ps":76.338173}
+OT_CAPTURE_PHASE {"corner":"tt","launch":"serial","capture":"core","sense":"max","startpoint":"u_half.u_s.r_st[0]$_SDFFE_PN0P_/QN","endpoint":"u_half.u_s.r_st_w[0]$_DFF_P_/D","slack_ps":81.726685}
+OT_CAPTURE_PHASE {"corner":"tt","launch":"serial","capture":"core","sense":"min","startpoint":"u_half.g_r[6].u_x.rp[0]$_SDFFE_PP0P_/QN","endpoint":"u_half.g_r[6].u_x.rp_w[0]$_DFF_P_/D","slack_ps":23.589998}
+CORNER ff rc 0
+OT_CAPTURE_PHASE {"corner":"ff","launch":"core","capture":"serial","sense":"max","startpoint":"u_half.g_r[5].u_x.w_st[1]$_SDFFE_PN0P_/QN","endpoint":"u_half.g_r[5].u_x.w_st_r[1]$_DFF_P_/D","slack_ps":80.222191}
+OT_CAPTURE_PHASE {"corner":"ff","launch":"core","capture":"serial","sense":"min","startpoint":"u_half.g_r[7].u_x.mem[1][76]$_DFFE_PP_/QN","endpoint":"u_half.g_r[7].u_x.sh[1][76]$_DFF_P_/D","slack_ps":44.508579}
+OT_CAPTURE_PHASE {"corner":"ff","launch":"serial","capture":"core","sense":"max","startpoint":"u_half.u_s.r_st[0]$_SDFFE_PN0P_/QN","endpoint":"u_half.u_s.r_st_w[0]$_DFF_P_/D","slack_ps":119.147194}
+OT_CAPTURE_PHASE {"corner":"ff","launch":"serial","capture":"core","sense":"min","startpoint":"u_half.g_r[5].u_x.rp[0]$_SDFFE_PP0P_/QN","endpoint":"u_half.g_r[5].u_x.rp_w[0]$_DFF_P_/D","slack_ps":6.396352}
+CORNER ss rc 0
+OT_CAPTURE_SENSITIVITY {"corner":"ss","launch":"core","capture":"serial","sense":"max","startpoint":"u_half.g_r[5].u_x.w_st[1]$_SDFFE_PN0P_/QN","endpoint":"u_half.g_r[5].u_x.w_st_r[1]$_DFF_P_/D","slack_ps":-72.318459}
+OT_CAPTURE_SENSITIVITY {"corner":"ss","launch":"core","capture":"serial","sense":"min","startpoint":"u_half.g_r[5].u_x.mem[0][5]$_DFFE_PP_/QN","endpoint":"u_half.g_r[5].u_x.sh[0][5]$_DFF_P_/D","slack_ps":127.686668}
+OT_CAPTURE_SENSITIVITY {"corner":"ss","launch":"serial","capture":"core","sense":"max","startpoint":"u_half.u_s.r_st[0]$_SDFFE_PN0P_/QN","endpoint":"u_half.u_s.r_st_w[0]$_DFF_P_/D","slack_ps":11.748574}
+OT_CAPTURE_SENSITIVITY {"corner":"ss","launch":"serial","capture":"core","sense":"min","startpoint":"u_half.g_r[6].u_x.rp[0]$_SDFFE_PP0P_/QN","endpoint":"u_half.g_r[6].u_x.rp_w[0]$_DFF_P_/D","slack_ps":48.480305}
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-704669-1791956667): exit 0

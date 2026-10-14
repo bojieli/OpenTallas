@@ -44,8 +44,8 @@
  "job": {
   "owner": "Codex:s81-capture",
   "branch": "s81-spwfc-1013",
-  "tag": "v2",
-  "purpose": "Aspect-ratio structural repair after narrow NR8 GRT congestion9695: widen60.48 to123.12 um, shorten270 to136.08 um. PG-aware cross-domain mem+status+pointer cut3464bits / (3420M3+2451usableM5)=0.590. Two leaves stack vertically within unchanged parent1728x561.6, roots/transactions/cycles unchanged.",
+  "tag": "v3",
+  "purpose": "Actual assigned-pin repair after wide v2 DRC1: CK61.548 conflicts with f_w24861.596 on M5 (spacing bbox61.560,0..61.584,0.227). Die-reviewed6e20fb09c relocates scalar controls to vacant east centres114.012/114.204/114.396, actual44M5PG rectangles clear both faces and1.392um nearest stripe clearance (reviewda5faf138). Outline123.12x136.08, data pins and transaction semantics retained. Corrected golden-bench monitor indices isolate timeout counter; exact9PASS and observed KSWAP121697 mismatches/zero timeouts at b2b1fc71a.",
   "extra_paths": [
    "tools/s81_ph",
    "rtl/dsrom_sys/s81_ph",
@@ -58,7 +58,7 @@
     "name": "capc_exact",
     "cmd": "bash tools/s81_ph/capc_bench.sh {RUN}/bench t1 'mix mix11 mix12 mix13 trace err over range rreq'",
     "expect": "pass",
-    "pass_regex": "^CAPC_BENCH PASS",
+    "pass_regex": "^CAPC_BENCH PASS cases=9$",
     "threads": 12,
     "peak_ram_gb": 24
    },
@@ -66,7 +66,7 @@
     "name": "capc_mut_kswap",
     "cmd": "bash tools/s81_ph/capc_bench.sh {RUN}/bench m1 'mix' S81PH_CAPC_MUT_KSWAP",
     "expect": "fail",
-    "fail_regex": "CAPC_BENCH FAIL",
+    "fail_regex": "CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL",
     "threads": 8,
     "peak_ram_gb": 16
    }
@@ -79,8 +79,8 @@
  ],
  "recipe": 2,
  "clock": "cts",
- "structural_change": "Aspect-ratio structural repair after narrow NR8 GRT congestion9695: widen60.48 to123.12 um, shorten270 to136.08 um. PG-aware cross-domain mem+status+pointer cut3464bits / (3420M3+2451usableM5)=0.590. Two leaves stack vertically within unchanged parent1728x561.6, roots/transactions/cycles unchanged.",
- "slot_change_request": "el1011-s81die.log wide x8 vertical stack approved2026-10-13:123.12x136.08,68parent roots, unchanged1728x561.6 parent; exact die-reviewed pins pending",
+ "structural_change": "Actual assigned-pin repair after wide v2 DRC1: CK61.548 conflicts with f_w24861.596 on M5 (spacing bbox61.560,0..61.584,0.227). Die-reviewed6e20fb09c relocates scalar controls to vacant east centres114.012/114.204/114.396, actual44M5PG rectangles clear both faces and1.392um nearest stripe clearance (reviewda5faf138). Outline123.12x136.08, data pins and transaction semantics retained. Corrected golden-bench monitor indices isolate timeout counter; exact9PASS and observed KSWAP121697 mismatches/zero timeouts at b2b1fc71a.",
+ "slot_change_request": "Die authoritative scalar pin repair6e20fb09c + actual PG reviewda5faf138; parent ck_x/ckv_x projection updated, parent1728x561.6 retained",
  "boundary_tcl": [
   "physical/s81_ph_views/capture/x8_dual_boundary.tcl"
  ],

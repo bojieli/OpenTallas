@@ -1,0 +1,28 @@
+{
+  "pid": 636712,
+  "cmd": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/bench/obj_m1/sim +UNORD +STIM=/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/bench/stim_mix.txt ",
+  "source": "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/bench_src_a1/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_capture.sv",
+  "source_sha256": "bcdcb5975a61e29b20630ccae1c13eb895da0e3b665dc55e9e1555be2eeee8d7",
+  "processes": [
+    [
+      632647,
+      "bash /srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/cl/run.sh bench_capc_mut_kswap.a1b1 "
+    ],
+    [
+      632652,
+      "bash /srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/cl/bench_capc_mut_kswap.a1b1.sh "
+    ],
+    [
+      632655,
+      "bash tools/s81_ph/capc_bench.sh /srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/bench m1 mix S81PH_CAPC_MUT_KSWAP "
+    ],
+    [
+      636712,
+      "/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/bench/obj_m1/sim +UNORD +STIM=/srv/opentallas/claude/closure-loop/dsfd_capt_x8_dual-v2-bc2c93f92/bench/stim_mix.txt "
+    ]
+  ],
+  "physical_stage": "finished, DRC1, actual phase probes complete",
+  "qualification": "unqualified; defective test termination is not caught mutant"
+}
+TERMINATED_VERIFIED_SUPERSEDED_DEFECTIVE_SIM_ONLY 636712
+PRESERVED_ALL_WIDE_SOURCE_ROUTE_LOGS_AND_RACE_HISTORY
