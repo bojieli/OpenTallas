@@ -59,30 +59,42 @@ def measured_clock_refs(lib_path, insertion_path, corner):
 
 
 def clock_tcl(doms, leaves, corner):
-    # Each synchronous domain is ONE clock with multiple roots at leaf inputs.
-    # Source latency shifts the physical boundary; propagated ETMs retain their
-    # measured internal insertion. Network latency would replace that insertion.
+    # Each domain has related shallow / earlier-tap clock objects. Separate
+    # domains remain asynchronous; no exception is created between levels.
+    # Source latency shifts the boundary while propagated ETMs retain insertion.
     lines = ['# DOMS ' + ' '.join(sorted(doms)), '# INSERTION_COMPENSATED ' + corner,
              '# OWNER_CLOCK_BUDGET v1', 'set_cmd_units -time ps', 'set ot_clock_bound 0']
+    domain_clocks = {}
     for d, entries in sorted(doms.items()):
-        lines.append('set ot_pins {}')
-        for pin, _, _ in entries:
-            lines += [f'set p [get_pins -quiet {{{pin}}}]',
-                      f'if {{[llength $p] != 1}} {{ error "clock boundary pin missing or ambiguous: {pin}" }}',
-                      'lappend ot_pins [lindex $p 0]']
-        lines.append(f'create_clock -name {d} -period {PERIOD.get(d, 1024.0):.6f} $ot_pins')
-        # A deep TT boundary reference requires an earlier trunk level. With
-        # one synchronous clock object we conservatively charge the domain's
-        # largest inter-level skew to every pair, including same-level pairs.
-        skew = 150.0 if any(leaves[m]['tt'][p] > 300.0 for _, m, p in entries) else 90.0
-        lines += [f'# BUDGET {d}: setup 60 + skew {skew:g} ps; hold H1 100 ps; '
-                  + ('conservative domain-wide inter-level bound' if skew == 150 else 'same-level bound'),
-                  f'set_clock_uncertainty -setup {60.0 + skew:.6f} [get_clocks {d}]',
-                  f'set_clock_uncertainty -hold 100.000000 [get_clocks {d}]']
+        levels = {}
         for pin, master, libpin in entries:
-            r = leaves[master][corner][libpin]
-            lines += [f'set_clock_latency -source -clock [get_clocks {d}] {-r:.6f} [get_pins {{{pin}}}]',
-                      'incr ot_clock_bound']
+            level = int(leaves[master]['tt'][libpin] > 300.0)
+            levels.setdefault(level, []).append((pin, master, libpin))
+        names = {level: d if level == 0 else d + '__early' for level in levels}
+        domain_clocks[d] = list(names.values())
+        for level, group in sorted(levels.items()):
+            name = names[level]
+            lines.append('set ot_pins {}')
+            for pin, _, _ in group:
+                lines += [f'set p [get_pins -quiet {{{pin}}}]',
+                          f'if {{[llength $p] != 1}} {{ error "clock boundary pin missing or ambiguous: {pin}" }}',
+                          'lappend ot_pins [lindex $p 0]']
+            lines.append(f'create_clock -name {name} -period {PERIOD.get(d, 1024.0):.6f} $ot_pins')
+            for pin, master, libpin in group:
+                r = leaves[master][corner][libpin]
+                lines += [f'set_clock_latency -source -clock [get_clocks {name}] {-r:.6f} [get_pins {{{pin}}}]',
+                          'incr ot_clock_bound']
+        # Exact owner tree-link budget: pair_check.py SKEW_SHALLOW / SKEW_DEEP,
+        # HOLD_TREE (50 ps margin + 50 ps die skew). Either earlier end costs150.
+        for launch, lname in sorted(names.items()):
+            for capture, cname in sorted(names.items()):
+                skew = 150.0 if launch or capture else 90.0
+                lines += [f'# BUDGET {lname} -> {cname}: setup 60 + skew {skew:g} ps; hold H1 100 ps',
+                          f'set_clock_uncertainty -setup {60.0 + skew:.6f} -from [get_clocks {lname}] -to [get_clocks {cname}]',
+                          f'set_clock_uncertainty -hold 100.000000 -from [get_clocks {lname}] -to [get_clocks {cname}]']
+    if len(domain_clocks) > 1:
+        lines.append('set_clock_groups -asynchronous ' + ' '.join(
+            '-group [get_clocks {' + ' '.join(names) + '}]' for names in domain_clocks.values()))
     lines += ['set_propagated_clock [all_clocks]',
               f'puts "OT_COMPENSATED_CLOCK corner={corner} bound=$ot_clock_bound"']
     return '\n'.join(lines) + '\n'
@@ -179,7 +191,7 @@ def main():
                  clock_source_drivers={d: len(set(p)) for d, p in doms.items()},
                  clock_nets=len(sinks), clock_nets_without_driver=undriven[:40],
                  clock_delivery='phi - measured boundary mean, per corner; ideal planned delivery at leaf pins',
-                 clock_budget='setup 60 + 90 ps; 60 + 150 ps for every domain containing any TT R > 300 ps (conservative all pairs); hold H1 100 ps',
+                 clock_budget='related shallow/early levels: setup 60 + 90 ps shallow/shallow, 60 + 150 ps when either TT R > 300 ps; hold H1 50 margin + 50 skew = 100 ps',
                  insertion_ps={m: v for m, v in leaves.items() if m in views['real']},
                  note='PATHFINDING: unbound masters remain assumed single-flop views; no physical die CTS proof')
     (out / 'views.json').write_text(json.dumps(views, indent=1) + '\n')

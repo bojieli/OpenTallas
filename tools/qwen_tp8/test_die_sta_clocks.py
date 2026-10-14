@@ -25,11 +25,13 @@ def fixture(out):
         tree = '\n'.join(f'timing () {{ timing_type : {kind}_clock_tree_path; cell_rise (load1) {{ index_1 ("1, 2"); values ("{r}, {r}"); }} cell_fall (load1) {{ index_1 ("1, 2"); values ("{r}, {r}"); }} }}' for kind in ['min', 'max'])
         text = text[:at] + text[at:].replace('clock : true; capacitance : 2.0; }', 'clock : true; capacitance : 2.0;\n' + tree + '\n}', 1)
     (out / 'probe.lib').write_text(text)
-    (out / 'probe.v').write_text('module probe(input ck, input d, output q); wire n; A a(.ck(ck),.d(d),.q(n)); B b(.ck(ck),.d(n),.q(q)); endmodule\n')
+    (out / 'probe.v').write_text('module probe(input ck, input d, output q); wire n; A a(.ck(ck),.d(q),.q(n)); B b(.ck(ck),.d(n),.q(q)); endmodule\n')
     leaves = {'A': {'tt': {'ck': 100}}, 'B': {'tt': {'ck': 300}}}
     doms = {'stream': [('a/ck', 'A', 'ck'), ('b/ck', 'B', 'ck')]}
     (out / 'clocks.tcl').write_text(D.clock_tcl(doms, leaves, 'tt'))
     (out / 'probe.lef').write_text('VERSION 5.8 ;\n' + ''.join(f'MACRO {m}\n CLASS BLOCK ;\n ORIGIN 0 0 ;\n SIZE 10 BY 10 ;\n' + ''.join(f' PIN {p}\n DIRECTION {d} ;\n USE SIGNAL ;\n PORT\n LAYER M2 ;\n RECT 1 1 2 2 ;\n END\n END {p}\n' for p, d in [('ck','INPUT'),('d','INPUT'),('q','OUTPUT')]) + f'END {m}\n' for m in ['A','B']) + 'END LIBRARY\n')
+    early = {'A': {'tt': {'ck': 100}}, 'B': {'tt': {'ck': 400}}}
+    (out / 'early.tcl').write_text(D.clock_tcl(doms, early, 'tt'))
     (out / 'probe.tcl').write_text('''read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef
 read_lef /work/probe.lef
 read_liberty /work/probe.lib
@@ -50,6 +52,16 @@ puts "SOURCE_LATENCY_DELTA [expr {$compensated - $baseline}]"
 if {abs($compensated - $baseline + 200.0) > 0.001} {error "source compensation did not change setup slack by -200ps"}
 report_checks -from a/q -to b/d -path_delay max -format full_clock_expanded -digits 3
 report_checks -from a/q -to b/d -path_delay min -format full_clock_expanded -digits 3
+set backward [get_property [lindex [find_timing_paths -from b/q -to a/d -path_delay max] 0] slack]
+source /work/early.tcl
+puts RELATED_EARLY_LEVEL
+set forward_early [get_property [lindex [find_timing_paths -from a/q -to b/d -path_delay max] 0] slack]
+set backward_early [get_property [lindex [find_timing_paths -from b/q -to a/d -path_delay max] 0] slack]
+if {abs($forward_early - $compensated + 160) > 0.001} {error "forward early budget: expected -100 phase -60 uncertainty"}
+if {abs($backward_early - $backward - 40) > 0.001} {error "backward early budget: expected +100 phase -60 uncertainty"}
+report_checks -from a/q -to b/d -path_delay max -format full_clock_expanded -digits 3
+report_checks -from b/q -to a/d -path_delay max -format full_clock_expanded -digits 3
+puts PAIR_BUDGET_ASSERTIONS_PASS
 exit
 ''')
 
@@ -98,8 +110,15 @@ def test():
         assert '-setup 150.000000' in s and '-hold 100.000000' in s
         deep = D.clock_tcl({'stream': [('a/ck', 'A', 'ck'), ('b/ck', 'B', 'ck')]},
                            {'A': {'tt': {'ck': 100}}, 'B': {'tt': {'ck': 301}}}, 'tt')
-        assert '-setup 210.000000' in deep and 'conservative domain-wide' in deep
-        assert deep.count('create_clock ') == 1 and 'set_clock_groups' not in deep
+        assert '-setup 210.000000' in deep and '-setup 150.000000' in deep
+        assert '-from [get_clocks stream] -to [get_clocks stream__early]' in deep
+        assert '-from [get_clocks stream__early] -to [get_clocks stream]' in deep
+        assert deep.count('create_clock ') == 2 and 'set_clock_groups' not in deep
+        multi = D.clock_tcl({'stream': [('a/ck', 'A', 'ck'), ('b/ck', 'B', 'ck')],
+                             'serial': [('c/ck', 'A', 'ck')]},
+                            {'A': {'tt': {'ck': 100}}, 'B': {'tt': {'ck': 301}}}, 'tt')
+        assert '-group [get_clocks {stream stream__early}]' in multi
+        assert '-group [get_clocks {stream__early}]' not in multi
         assert 'set_false_path' not in s and 'set_clock_groups' not in s
         consumer = Path(__file__).resolve().parents[1] / 'qwen_kv_die/chain/sta_tcl.py'
         (p / 'clocks_ff.tcl').write_text(s.replace('COMPENSATED tt', 'COMPENSATED ff'))

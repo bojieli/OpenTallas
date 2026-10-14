@@ -155,7 +155,7 @@ if compensated_clock_budget:
     # phi-R files carry the owner setup skew and H1 hold bounds themselves.
     # The generic 60/25 defaults would overwrite these strict budgets.
     unc = ''
-if 'set_clock_groups' not in clocks:
+if not compensated_clock_budget and 'set_clock_groups' not in clocks:
     clocks += '\nset_clock_groups -asynchronous ' + ' '.join(f'-group {d_}' for d_ in DOMS)
 unc += ocv_src
 rd = '\n'.join(f'read_liberty {x}' for x in libs)
