@@ -1,10 +1,11 @@
 {
   "schema": "opentallas.slot_partition_request.v1",
-  "source_commit": "68f13267b",
+  "source_commit": "f7fad067c HC scalar;43fb197fd native residual;01f83170b norm node abort repair",
   "source_sha256": {
     "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "f44350897d0c6d771992d7dbe96f79e8aa667085225b0de57e40d598a7f76dec",
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "93f112cf07ecf8cfc71d65d10ad4a3e659fd8dba1869e0376e3d717ff069e3e6",
-    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "eb23a2a630d368bce0d00cb0072bd7163f2e648a1ced385681749d7512d50b3c"
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "b1077be2bcbd1a129b4d521e4cd968e81e820c963586be862dbf3d699bdf7db5",
+    "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "9119d052dec52368a11694abf479934f9f95eafaef0bd865c4af61370fbca554",
+    "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "be6ab417e31a36500e04f1577b2978717134c45efa1acb7d84ea28f10cb1dfa9"
   },
   "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
   "contract_version": 12,
@@ -34,10 +35,29 @@
         "Publish slots for window/control scalar SYS bank and residual child masters together; 88 legacy shells are not coverage"
       ],
       "outline_um": null,
-      "clock_evidence": "Arithmetic slice is historically CLOSED job hgi_hc_lanesl_b-6656b8688-tc-cl; published source-matched LEF/ETM/insertion must be recovered. New control/collector sink evidence not measured."
+      "clock_evidence": "Accepted SL CLOSED source6656b8688 is archived locally with immutable finalODB/SPEF; current ot_hgi_hc_lane_sl module body byte-identical. Checked view recovery in progress, no reroute. New own-state leaves need actual roots and assigned pins.",
+      "physical_partition_progress": {
+        "window": "window_partition_request.json;32ctl+128sector actual measured roots, no die-assigned pins",
+        "collector_block_store": {
+          "master": "ot_hgi_hc_chunk_store32",
+          "proposed_count": 20,
+          "integrated_in_native_collector": false,
+          "outline_um": [
+            51.84,
+            49.68
+          ],
+          "std_area_um2": 1078,
+          "clock_sinks": 1398,
+          "TT_boundary_mean_ps": 99.8,
+          "TT_spread_ps": 4.2,
+          "source": "7d84495f0",
+          "actual_gates": "results/rtl/hbm_hc_b2_1013/chunk_store32/receipt.json"
+        },
+        "remaining": "32lane own-state incl PRE buffers and7chunk adders/lane;4quarter station own-state;4concentrators;central ingress/selector/control;shared31chunk and19heap arithmetic nodes;scalarSYS control andSinkhorn"
+      }
     },
     {
-      "master": "ot_hbm_norm_split_view_g8p",
+      "master": "ot_hbm_norm_split_view_g8pc",
       "slot_status": "NO_SLOT_IN_V12",
       "candidate_outline_um": [
         1612.656,
@@ -59,7 +79,31 @@
         "Harden split-core own logic into bounded leaves; expand parent with independent child clock pins",
         "Audit MX power-pin mirror or use legal new parent orientations without changing child abstract geometry",
         "Exact composition and all protocol mutants; measure throughput at native VM endpoint composition"
-      ]
+      ],
+      "candidate_partition": {
+        "source": "e71f1dde9 composition with01f83170b node abort repair; full repair composition gates running",
+        "accepted_tiles": 8,
+        "accepted_relay_leaves": {
+          "hbfd_rly_136_WE": 24,
+          "hbfd_rly_48_WE": 48
+        },
+        "new_sum_nodes": 79,
+        "declared_vector_clock_entries": 127,
+        "pruned_vector_entries": 48,
+        "node_outline_um": [
+          36.288,
+          34.56
+        ],
+        "node_abortfix_CTS": "running; prior node646sink TT99.3/spread4.6 is old-source evidence",
+        "remaining_unhardened_arithmetic_roots": {
+          "chunk_adders": 7,
+          "scalar": 3,
+          "quant": 2
+        },
+        "remaining_parent_ownstate": "source extraction/measured sink count pending",
+        "production_binding": "No actual production RTL instantiation of standalone norm engine found; native SU record path uses its own microsequence. Candidate cannot cover historical monolith until assigned successor binding is proven."
+      }
     }
-  ]
+  ],
+  "contract_sha256": "f1c9332f12fd679b53f9536f8fd94265a8d028be31bba7d494793f5d5a504f94"
 }
