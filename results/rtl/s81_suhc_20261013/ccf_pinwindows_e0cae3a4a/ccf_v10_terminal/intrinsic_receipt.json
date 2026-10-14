@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.s81.hc.ccf_intrinsic_gate.v1",
+  "source_commit": "16ee5be7a",
+  "tt_setup_wns_ps": 5.171751915611367,
+  "ff_internal_hold_min_ps": 11.4479,
+  "standalone_unnormalized_input_hold_wns_ps": -482.4189381302801,
+  "input_capture_max_ps": {
+    "FV": 95.90776,
+    "FD": 91.32738,
+    "NY": 93.8958,
+    "YACC": 95.55126,
+    "SRS": 70.3557
+  },
+  "output_launch_max_ps": {
+    "FV": 160.96211,
+    "FD": 176.60884,
+    "RESET": 158.36525,
+    "FAULT": 151.71858
+  },
+  "capture_owner_limit_ps": 190,
+  "launch_owner_limit_ps": 220,
+  "actual_final_signal_pins": 6627,
+  "actual_assigned_pin_match": true,
+  "intrinsic_windows_pass": true,
+  "internal_hold_pass_zero": true,
+  "final_routed_hold_goal_ps": 15,
+  "routed_hold_goal_not_claimed": true,
+  "route_admission": false,
+  "remaining": [
+    "actual complete external native peer, source clock/phase/reset protocol and layer/slot admission",
+    "routed source views and strict final corner signoff"
+  ]
+}
