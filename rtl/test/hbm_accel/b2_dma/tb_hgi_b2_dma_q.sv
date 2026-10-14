@@ -79,9 +79,10 @@ module tb_hgi_b2_dma_q;
         .vmq(vmq), .vmr(vmr), .vr2q(vr2q), .vr2r(vr2r), .wl(q5_wl), .wl_bank(q5_bank), .wl_done(|wl_done));
     end endgenerate
     wire rec_rdy = dma_ret[0], rec_done = dma_ret[1], rec_fault = dma_ret[2];
+    bit trace_abort = 0;
     bit trace_on; initial trace_on = $test$plusargs("DMA_Q5_TRACE");
     always @(posedge clk) if (rst_n && trace_on) begin
-       if (dma_rec[0] && dma_ret[0]) $display("Q5TRACE %0d REC %h", n_rst, dma_rec);
+       if (dma_rec[0] && dma_ret[0]) $display("Q5TRACE %0d %s %h", n_rst, trace_abort ? "ABORT" : "REC", dma_rec);
        if (k_req_v && k_req_rdy) $display("Q5TRACE %0d K %b %h %h %h", n_rst, k_req_we, k_req_addr, k_req_wdata & {256{k_req_we}}, k_req_wstrb & {32{k_req_we}});
        if (r_req_v && r_req_rdy) $display("Q5TRACE %0d R %b %h %h %h %h", n_rst, r_req_we, r_req_addr, r_req_len, r_req_wdata & {256{r_req_we}}, r_req_wstrb & {32{r_req_we}});
        if (vmq[337]) $display("Q5TRACE %0d VM %h", n_rst, vmq);
@@ -110,6 +111,7 @@ module tb_hgi_b2_dma_q;
     integer n_rreq = 0, n_kreq = 0, n_vpk = 0, n_g = 0, n_wl = 0;
     bit quiet = 1;                                              // no record outstanding: any request is an error
     integer bp_seed = SEED ^ 32'h7a1bfc03;
+    function automatic integer bp_rnd(input integer n); bp_rnd = int'($unsigned($random(bp_seed)) % $unsigned(n)); endfunction
     function automatic bit hold;
        integer br; begin br = int'($unsigned($random(bp_seed)) % 4); hold = bp == 1 ? br == 0 : bp == 2 ? br != 0 : 0; end
     endfunction
@@ -227,7 +229,7 @@ module tb_hgi_b2_dma_q;
                 n_vpk = n_vpk + 1;
                 if (quiet) bad("VM packet with no record outstanding");
                 if (vmq[335:309] >= 27'd32768) bad($sformatf("VM packet sector %h beyond the slice", vmq[335:309]));
-                vq[(vh + vn) % 16] = vmq; vd[(vh + vn) % 16] = cyc + VLAT + ((bp != 0) ? rnd(6) : 0);
+                vq[(vh + vn) % 16] = vmq; vd[(vh + vn) % 16] = cyc + VLAT + ((bp != 0) ? bp_rnd(6) : 0);
                 if (vn > 0 && vd[(vh + vn) % 16] <= vd[(vh + vn - 1) % 16]) vd[(vh + vn) % 16] = vd[(vh + vn - 1) % 16] + 1;
                 vn = vn + 1;
                 if (vn > 4) bad("VM packet client: more than 4 outstanding");
@@ -244,7 +246,7 @@ module tb_hgi_b2_dma_q;
             vr2r <= '0; gcr_d1 <= 0; gcr_d2 <= 0; gwait = 0;
             for (integer b = 0; b < 32; b = b + 1) begin gh[b] = 0; gn[b] = 0; gcr[b] = 8; end
         end else begin
-            if (!vr2q[512]) begin vr2r[8256] <= 1'b0; gwait = (bp != 0) ? rnd(5) : 0; end
+            if (!vr2q[512]) begin vr2r[8256] <= 1'b0; gwait = (bp != 0) ? bp_rnd(5) : 0; end
             else if (gwait > 0) gwait = gwait - 1;
             else vr2r[8256] <= 1'b1;
             gcr_d2 <= gcr_d1; gcr_d1 <= 32'd0; vr2r[8255:8224] <= gcr_d2;
@@ -314,7 +316,7 @@ module tb_hgi_b2_dma_q;
     reg [127:0] hdr; reg [255:0] ra, ro; reg [20:0] nA, nO;
     task automatic reset_all;
         begin
-            @(negedge clk); rst_n = 0; dma_rec = 0; quiet = 1;
+            @(negedge clk); rst_n = 0; dma_rec = 0; quiet = 1; trace_abort = 0;
             exp_vw.delete(); got_vw.delete(); exp_hb.delete(); got_hb.delete(); exp_rd.delete(); last_ws = -1;
             repeat (6) @(negedge clk); rst_n = 1; repeat (6) @(negedge clk); done_seen = 0; fault_seen = 0; n_rst = n_rst + 1;
         end
@@ -509,7 +511,7 @@ module tb_hgi_b2_dma_q;
             ro = 0; ro[1:0] = 2'd1; ro[47:8] = 40'd16384; ro[67:48] = 20'd2048; ro[87:68] = 20'd1; ro[119:88] = 32'd2048;
             nA = 21'd2048; nO = 21'd2048;
             for (integer i = 0; i < 2048; i = i + 1) begin exp_vw[16384 + i] = dec(0, gaddr(hb0 + 4 * i)); exp_rd[gaddr(hb0 + 4 * i) & ~64'd31] = 1; end
-            send(); repeat (40 + rnd(120)) @(negedge clk);
+            trace_abort = 1; send(); repeat (40 + rnd(120)) @(negedge clk);
             reset_all();
             repeat (40) @(negedge clk);
             if (done_seen || fault_seen) bad("done / fault after a reset with no record");

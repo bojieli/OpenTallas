@@ -1,0 +1,163 @@
+{
+  "name": "b2_dma_mv_q5_ref",
+  "top": "ot_hgi_b2_dma_mv",
+  "kind": "tile",
+  "recipe": 2,
+  "sources": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_mv.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hbm_accel/generic/peers/ot_hgi_dma_mover_serial.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v"
+  ],
+  "params": {
+    "B2": 1,
+    "QID": 0,
+    "VR2": 1,
+    "SVR2": 0,
+    "KVW": 1,
+    "PX": 2
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 345.6,
+    "h": 216.0
+  },
+  "layer_cap": "M5",
+  "pins": {
+    "W": [
+      "qid",
+      "clk",
+      "rst_n"
+    ],
+    "E": [
+      "kv_c_rdy",
+      "kv_idle_w",
+      "kv_creq",
+      "kv_src",
+      "kv_done",
+      "kv_kq",
+      "kv_wv",
+      "kv_wo",
+      "kv_wa",
+      "kv_wd",
+      "kc_v",
+      "kc_vs",
+      "kc_vst",
+      "kc_ds",
+      "kc_dst",
+      "kc_ns",
+      "kc_m",
+      "kc_gnt",
+      "kc_cr",
+      "kc_wrdy",
+      "kc_rv",
+      "kc_rwe",
+      "mv_v",
+      "mv_rdy",
+      "mv",
+      "mv_done",
+      "mv_fault",
+      "mv_src",
+      "fence_v",
+      "fence_rdy",
+      "fence_done"
+    ],
+    "N": [
+      "il_active",
+      "il_vmq",
+      "il_vmr",
+      "vr2q",
+      "vr2r",
+      "vmq",
+      "vmr",
+      "wl",
+      "wl_done"
+    ],
+    "S": [
+      "k_req_v",
+      "k_req_rdy",
+      "k_req_we",
+      "k_req_addr",
+      "k_req_wdata",
+      "k_req_wstrb",
+      "k_req_tag",
+      "k_rsp_v",
+      "k_rsp_rdy",
+      "k_rsp_we",
+      "k_rsp_data",
+      "k_fault",
+      "r_req_v",
+      "r_req_rdy",
+      "r_req_addr",
+      "r_req_len",
+      "r_req_tag",
+      "r_req_we",
+      "r_req_wdata",
+      "r_req_wstrb",
+      "r_rsp_v",
+      "r_rsp_we",
+      "r_rsp_rdy",
+      "r_rsp_tag",
+      "r_rsp_last",
+      "r_rsp_data"
+    ]
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 32
+  },
+  "clock": "spine",
+  "structural_change": "Five-way DMA partition: sibling closed KV core and hold leaves; two-entry move skid; pin station behind VM request mux and read-group OR; elastic registered HBM lane mux with qid before pin flop; one compact 280-bit wl pin lane expanded at VM receiver.",
+  "job": {
+    "owner": "Codex:el1013-dma-q5",
+    "branch": "claude/el1013-dma-q5",
+    "tag": "q5r1",
+    "views_to": "physical/ref_tile/b2_dma_mv_q5_ref/views",
+    "record_to": "results/rtl/ref_tile/b2_dma_mv_q5_ref",
+    "purpose": "New request/mover leaf for the B2 DMA cluster; pin file from die lead pending. Production FRONT0 and closed KV siblings. BACK1 remains separate closed NB8 leaf; unified local8 VM port pending die interface publication.",
+    "benches": [
+      {
+        "name": "b2_dma_q_exact",
+        "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/b2_dma_q_exact",
+        "expect": "pass",
+        "pass_regex": "B2_DMA_Q PASS checked=\\d+",
+        "min_count_regex": "B2_DMA_Q PASS checked=(\\d+)",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "b2_dma_q_wrongstack_mutant",
+        "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/b2_dma_q_wrongstack_mutant mut",
+        "expect": "fail",
+        "fail_regex": "B2_DMA_Q FAIL",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "rtl/test/hbm_accel/b2_dma",
+      "rtl/hbm_accel/generic/peers",
+      "rtl/hbm_accel/generic/adapters",
+      "rtl/lib",
+      "rtl/link",
+      "rtl/model/hbm_pc40_native_sim_20261003",
+      "physical/asap7_memory_macros"
+    ]
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+      "count": 1
+    }
+  ]
+}

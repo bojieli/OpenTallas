@@ -1,0 +1,97 @@
+{
+  "name": "b2_dma_rq_q5_ref",
+  "top": "ot_hgi_b2_dma_rq",
+  "kind": "tile",
+  "recipe": 2,
+  "sources": [
+    "rtl/hbm_accel/generic/peers/ot_hgi_b2_dma_rq.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv",
+    "rtl/hbm_accel/generic/peers/ot_hgi_b2_qrot.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 172.8,
+    "h": 129.6
+  },
+  "layer_cap": "M5",
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "qid",
+      "dma_rec",
+      "dma_ret"
+    ],
+    "E": [
+      "mover_v",
+      "mover_cmd",
+      "pin_m_rdy",
+      "m_done",
+      "m_fault",
+      "m_src",
+      "mover_fv",
+      "m_fence_rdy",
+      "m_fence_done"
+    ],
+    "N": [
+      "il_vmq",
+      "il_active",
+      "vmr"
+    ],
+    "S": []
+  },
+  "route": {
+    "pd": 0.5,
+    "threads": 16,
+    "peak_ram_gb": 32
+  },
+  "clock": "spine",
+  "structural_change": "Five-way DMA partition: sibling closed KV core and hold leaves; two-entry move skid; pin station behind VM request mux and read-group OR; elastic registered HBM lane mux with qid before pin flop; one compact 280-bit wl pin lane expanded at VM receiver.",
+  "job": {
+    "owner": "Codex:el1013-dma-q5",
+    "branch": "claude/el1013-dma-q5",
+    "tag": "q5r1",
+    "views_to": "physical/ref_tile/b2_dma_rq_q5_ref/views",
+    "record_to": "results/rtl/ref_tile/b2_dma_rq_q5_ref",
+    "purpose": "New request/mover leaf for the B2 DMA cluster; pin file from die lead pending. Production FRONT0 and closed KV siblings. BACK1 remains separate closed NB8 leaf; unified local8 VM port pending die interface publication.",
+    "benches": [
+      {
+        "name": "b2_dma_q_exact",
+        "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/b2_dma_q_exact",
+        "expect": "pass",
+        "pass_regex": "B2_DMA_Q PASS checked=\\d+",
+        "min_count_regex": "B2_DMA_Q PASS checked=(\\d+)",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "b2_dma_q_wrongstack_mutant",
+        "cmd": "bash rtl/test/hbm_accel/b2_dma/run_b2_dma_q_bench.sh {RUN}/bench/b2_dma_q_wrongstack_mutant mut",
+        "expect": "fail",
+        "fail_regex": "B2_DMA_Q FAIL",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "rtl/test/hbm_accel/b2_dma",
+      "rtl/hbm_accel/generic/peers",
+      "rtl/hbm_accel/generic/adapters",
+      "rtl/lib",
+      "rtl/link",
+      "rtl/model/hbm_pc40_native_sim_20261003",
+      "physical/asap7_memory_macros"
+    ]
+  }
+}
