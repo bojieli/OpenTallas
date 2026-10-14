@@ -282,8 +282,8 @@
   {
    "element": "dsfd_su_t_pin",
    "target": "DeepSeek ROM",
-   "owner": "Claude:el1013-s81su-qual",
-   "recorded_at": "2026-10-13T21:26:33.199764+00:00",
+   "owner": "Codex:s81-hc-su",
+   "recorded_at": "2026-10-14T02:29:24.946885+00:00",
    "description": "S81 SU routed top qualified by the routed-top composition gate s81su_tiles under RTL float primitives (--fp rtl): the SU slab with every engine core replaced by its routed top is bit-exact at the full shape, and the output mutant of this class fails. Standalone routed top only: SU throughput is judged per layer (accepted-cost ledger), the SU slot assembly is the die lead's.",
    "source": {
     "commit": "f6ff6785b63986e3e8b54bbfa7fc2236288b60f0",
@@ -308,20 +308,21 @@
     }
    },
    "physical": {
-    "status": "CLOSED: dsfd_su_t_pin_rt-rt-77e72f74a (CLOSED TT +132.69 / FF +20.92 ps DRC 0; SS sensitivity -5.71 ps)",
+    "status": "CLOSED: s81su_pinns_ref-v1-6494b8a37, TT +251.66 / FF +2.45 ps, DRC 0; child_lint PASS",
     "corners": {
      "route": "TT",
      "hold": "FF"
     },
     "evidence": [
-     "results/closure_loop/dsfd_su_t_pin_rt-rt-77e72f74a/verdict.json",
-     "physical/ref_tile/dsfd_su_t_pin_rt/views"
+     "physical/ref_tile/s81su_pinns_ref/views/dsfd_su_t_pin",
+     "results/rtl/ref_tile/s81su_pinns_ref/s81su_pinns_ref-v1-6494b8a37",
+     "results/rtl/s81_suhc_20261013/su_denseraudit_1013.json"
     ]
    },
    "integration": {
-    "status": "view installed; pin-register defect open (audit v2 pair cost 724.8 ps): rebuild dsfd_su_t_pin_rt-rt2 routing",
+    "status": "View installed; routed hierarchy behavior identical to RTL-float routed-top exact + mutant qualification. Only keep=true attributes changed in pin core. Die slot assembly and pair checks remain with die lead.",
     "evidence": [
-     "results/rtl/ref_tile/s81su_tiles_gate_f6ff6785b/qualification.json"
+     "results/rtl/s81_suhc_20261013/su_denseraudit_1013.json"
     ]
    }
   },
@@ -693,8 +694,8 @@
   {
    "element": "dsfd_su_t_smd",
    "target": "DeepSeek ROM",
-   "owner": "Claude:el1013-s81su-qual",
-   "recorded_at": "2026-10-13T21:26:33.199914+00:00",
+   "owner": "Codex:s81-hc-su",
+   "recorded_at": "2026-10-14T02:29:25.223566+00:00",
    "description": "S81 SU routed top qualified by the routed-top composition gate s81su_tiles under RTL float primitives (--fp rtl): the SU slab with every engine core replaced by its routed top is bit-exact at the full shape, and the output mutant of this class fails. Standalone routed top only: SU throughput is judged per layer (accepted-cost ledger), the SU slot assembly is the die lead's.",
    "source": {
     "commit": "f6ff6785b63986e3e8b54bbfa7fc2236288b60f0",
@@ -719,19 +720,21 @@
     }
    },
    "physical": {
-    "status": "CLOSED: s81su_smd_ref-v1-47c31b637 (CLOSED TT +113.87 / FF +2.27 ps DRC 0; SS sensitivity -226.55 ps)",
+    "status": "CLOSED: s81su_smd_u65_ref-v1-6494b8a37, TT +93.51 / FF +23.35 ps, DRC 0; child_lint PASS",
     "corners": {
      "route": "TT",
      "hold": "FF"
     },
     "evidence": [
-     "~/.local/state/closure_loop/jobs (job state; record branch codex/closure-record-s81su_smd_ref-v1-47c31b637)"
+     "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+     "results/rtl/ref_tile/s81su_smd_u65_ref/s81su_smd_u65_ref-v1-6494b8a37",
+     "results/rtl/s81_suhc_20261013/su_denseraudit_1013.json"
     ]
    },
    "integration": {
-    "status": "VIEW NOT INSTALLED on main: exported before the export-SDC fix (abc334b14), on branch codex/closure-record-s81su_smd_ref-v1-47c31b637; checked re-export pending",
+    "status": "View installed; routed hierarchy behavior identical to RTL-float routed-top exact + mutant qualification. Only keep=true attributes changed in pin core. Die slot assembly and pair checks remain with die lead.",
     "evidence": [
-     "results/rtl/ref_tile/s81su_tiles_gate_f6ff6785b/qualification.json"
+     "results/rtl/s81_suhc_20261013/su_denseraudit_1013.json"
     ]
    }
   },

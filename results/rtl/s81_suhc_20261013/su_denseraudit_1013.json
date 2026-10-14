@@ -1,0 +1,296 @@
+{
+ "schema": "opentallas.s81su.denseraudit.v1",
+ "gate": "results/rtl/ref_tile/s81su_tiles_gate_f6ff6785b/qualification.json",
+ "gate_source": "f6ff6785b",
+ "route_source": "6494b8a37",
+ "method": "All hierarchy module text compared after stripping comments, whitespace and keep=true synthesis attributes only. Parameter headers included. keep attributes preserve separate physically placed pin flops without changing simulation semantics.",
+ "tiles": {
+  "dsfd_su_t_pin": {
+   "job": "s81su_pinns_ref-v1-6494b8a37",
+   "sources": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_tiles.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv"
+   ],
+   "hierarchy_identical": [
+    "dsfd_su_t_pin",
+    "ot_s81_su_pin"
+   ],
+   "keep_attributes_added": {
+    "ot_s81_su_pin": 6
+   },
+   "hashes": {
+    "dsfd_su_t_pin": "2c1aeee4a098463d1cb126e5ffc6eb3b396c8292b7ee52c0c6bdaf7ba0bfa0ea",
+    "ot_s81_su_pin": "0eb61e036c886f8c558bd1cd095ab6fedeaf318024efe883950e76dee1c41480"
+   },
+   "gate_exact": {
+    "status": "pass",
+    "fp": "rtl",
+    "runs": [
+     {
+      "run": "golden_L0",
+      "err_rows": 0,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     },
+     {
+      "run": "golden_L2",
+      "err_rows": 0,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     },
+     {
+      "run": "stress_0",
+      "err_rows": 0,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     }
+    ]
+   },
+   "mutant": {
+    "status": "fail",
+    "fp": "rtl",
+    "runs": [
+     {
+      "run": "golden_L0",
+      "err_rows": 594,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     },
+     {
+      "run": "golden_L2",
+      "err_rows": 594,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     },
+     {
+      "run": "stress_0",
+      "err_rows": 594,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     }
+    ]
+   },
+   "physical": {
+    "tt_ps": 251.66,
+    "ff_ps": 2.45,
+    "drc": 0,
+    "outline": [
+     453.6,
+     64.8
+    ],
+    "child_lint": "PASS",
+    "tt_boundary": {
+     "n": 8698,
+     "mean": 306.0,
+     "min": 284.0,
+     "max": 346.9
+    }
+   },
+   "view": "physical/ref_tile/s81su_pinns_ref/views/dsfd_su_t_pin",
+   "instance_count": 4,
+   "area_saved_mm2": 0.9704447999999999
+  },
+  "dsfd_su_t_smd": {
+   "job": "s81su_smd_u65_ref-v1-6494b8a37",
+   "sources": [
+    "rtl/dsrom_sys/s81_suhc/hier/dsfd_su_t_sm.sv",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv"
+   ],
+   "hierarchy_identical": [
+    "dsfd_su_t_smd",
+    "ot_s81_su_smd",
+    "ot_hdc_kinc",
+    "ot_hdc_inc_k",
+    "ot_hdc_vline",
+    "ot_hdc_delay",
+    "ot_dsrom_su_fdiv_f12",
+    "ot_hdc_kadd",
+    "ot_hdc_ksadd_k",
+    "ot_dsrom_su_softmax_mul",
+    "ot_hdc_qmul_lat",
+    "ot_hdc_fp32_mul_lat4",
+    "ot_hdc_fp32_mul_lat",
+    "ot_hdc_w11_cut",
+    "ot_hdc_mul24_rows_k",
+    "ot_hdc_mul_kcp48",
+    "ot_hdc_mul24_rows",
+    "ot_hdc_lzc32",
+    "ot_hdc_fp32_mul_f12_l6",
+    "ot_hdc_fp32_mul_f12",
+    "ot_hdc_f12_cut",
+    "ot_hdc_fp32_mul_f12_l5",
+    "ot_hdc_fp32_mul_fast",
+    "ot_hdc_mul24_sum",
+    "ot_hdc_ksa",
+    "ot_dsrom_su_softmax_mul11",
+    "ot_hdc_fp32_mul_f12r",
+    "ot_dsrom_su_softmax_mul9",
+    "ot_dsrom_su_softmax_add",
+    "ot_hdc_qadd_lat",
+    "ot_hdc_fp32_add_lat3",
+    "ot_hdc_fp32_add_lat",
+    "ot_hdc_fp32_add_f12_l5x",
+    "ot_hdc_fp32_add_f12",
+    "ot_hdc_fp32_add_f12_l5s",
+    "ot_hdc_fp32_add_f12_l4",
+    "ot_hdc_fp32_add_fast",
+    "ot_dsrom_su_softmax_add11",
+    "ot_hdc_fp32_add_f12r",
+    "ot_dsrom_su_softmax_add9",
+    "ot_dsrom_su_softmax_add6"
+   ],
+   "keep_attributes_added": {},
+   "hashes": {
+    "dsfd_su_t_smd": "070995831ed14256e3079bae08943484c037e5374ae0c031d4485c8f01d5f395",
+    "ot_s81_su_smd": "2b12bb4fc4d70b8c9c9fc2ab3d6d8ed6d750735eb23dc7da00aabb994d2c085c",
+    "ot_hdc_kinc": "6750fe025c17a246f75d5450bd37f7ff9d237a95de861c366f681345eee61125",
+    "ot_hdc_inc_k": "627f827df307cf5f55fcc245cddb16a5713698e9249c53c094a2556bb4454723",
+    "ot_hdc_vline": "aa67a8eab7d0e6aca358e6a5d59e4b8a405915e313febdd195e1a4225852854e",
+    "ot_hdc_delay": "762b4caa219986339b6263a1a7e988bf19eedbbfee7c344ffb6dfadd53d31dd8",
+    "ot_dsrom_su_fdiv_f12": "bd5f2e17f6e30ae3eadfd62cc44aaae9d286ff4f0bee247fbef737a39928a5af",
+    "ot_hdc_kadd": "b1c13e162020155be7434b510e6d49c31d3ef783006a6e997ca59808a45d26f6",
+    "ot_hdc_ksadd_k": "71bd6d7556ea70bea15c1a8daf589c870b6972416a68f3ad86520368c7d8cc6d",
+    "ot_dsrom_su_softmax_mul": "eb8076557a2afad937e30cb969104462f31980e709beba0ec6b3dd62cbb7f8fa",
+    "ot_hdc_qmul_lat": "5d05b3086f39bddffa4144137dcc0193c5705acada2716724a0709f3746eea7e",
+    "ot_hdc_fp32_mul_lat4": "62ef5c6399fe90a6a54bfedd6684c8e00c166e9a6fc69d0f45908edabd543ddd",
+    "ot_hdc_fp32_mul_lat": "d80f9e0e6f75d96426f275224059fe3b406e89cf8d4145ac7791a00e7f55eba6",
+    "ot_hdc_w11_cut": "cb3e4231c8474ea0ce824897a12ed5bfb4ef38fcb4de88edb4180ff81f464100",
+    "ot_hdc_mul24_rows_k": "1e56fd8b16f91e27c8280aa0651e91932b3f6b657ae4064067411231ba322d9f",
+    "ot_hdc_mul_kcp48": "de3f1a1db208e19140946efdeaf015dc5b1d681d1f29d737b8a2fa3fba6db7d7",
+    "ot_hdc_mul24_rows": "a4f6b8333d96495e48df2af1325528a16741f98337a048ca25bf0eb98b6d7ba2",
+    "ot_hdc_lzc32": "d4b7b9e2defc62e0c942cfe17a6cfd1e5e732f87b92c7b2d777fcad7c4c5a4b8",
+    "ot_hdc_fp32_mul_f12_l6": "99bf226fa8e725134c53dce0a57bab8e42a3069673b13e0fcbf5e876875eaf66",
+    "ot_hdc_fp32_mul_f12": "b844ed5d573d21c4845863efe4c4d03f4180e98b89662c87d3249e30e9bfb304",
+    "ot_hdc_f12_cut": "45c2e32123f89e96e5af1a30ddf169311fd235a915445fcdf262d5126aece56b",
+    "ot_hdc_fp32_mul_f12_l5": "c66d499f317b2c5d19a5d121e37551ea0bd5daccdcfcc4b4e7be58197bd82da9",
+    "ot_hdc_fp32_mul_fast": "6c3c0bd6000cae4025eba8182700d13a606b5a2a295263738b01ec549592302a",
+    "ot_hdc_mul24_sum": "65aedead81818454227ee97f1d321b33174ec345e85dd6b4a44803e5b6281028",
+    "ot_hdc_ksa": "eea9a4c6346f0c8e959e398ec982ac56b66b10307b7ad403a97cb6d2ccfdb07a",
+    "ot_dsrom_su_softmax_mul11": "c43dfa0a736787f39400050f2784772e706c68217a0523476fa530fe6b21696e",
+    "ot_hdc_fp32_mul_f12r": "b3ced3dbb3efb425adca8dc223b51dc1bdd24e9a2f89f92cbcddd3d71ad5b290",
+    "ot_dsrom_su_softmax_mul9": "6bd9defe03e24cac4d06068feb73429b6df583e171a180bd3a43fddded3582f3",
+    "ot_dsrom_su_softmax_add": "0f2822c1aaf9191ae63768dff7b5b0345073493b021a07e87a890a831f3bebc9",
+    "ot_hdc_qadd_lat": "72e7b99de51ec61f0bd4dd2623eec4e38293d383185c54c1367528983823d102",
+    "ot_hdc_fp32_add_lat3": "de6425a0efe297fbef77606257de4ad1ba01e02c146891dc5e956c9a75b9b92d",
+    "ot_hdc_fp32_add_lat": "e5fa8a2b88176ccb1f93a32e329e8d2915da8dff24417e1f626c1a5d283a5bc9",
+    "ot_hdc_fp32_add_f12_l5x": "35e587cc226960b8423ce518f212a3ac87ff9d9983cd451e400a63d4af6403c3",
+    "ot_hdc_fp32_add_f12": "2fdfbdb777d94f7de2db3e61dae5cf111155565c607666d1398bfb972566d9d5",
+    "ot_hdc_fp32_add_f12_l5s": "016cbb8af6f292bea845ba1c882a253f7de38e276b184acbc299c487a5545216",
+    "ot_hdc_fp32_add_f12_l4": "69cb73bd8551671206d1a08c56c5ad21715f906e0caf1b250eda48c504812de3",
+    "ot_hdc_fp32_add_fast": "d3095a0188e4d98e5e0e1968543e9b2de910d66b9a006a3cece23d8df3d797b4",
+    "ot_dsrom_su_softmax_add11": "2f2aaabf7975b0c79a5b61ab391e1f116aac6ad141ac5a40c27c61f3bccd7857",
+    "ot_hdc_fp32_add_f12r": "c622c2416d7fee0ec8d94636374fb6e9134076ef44cfa9a947e9f7d7c0c0c15d",
+    "ot_dsrom_su_softmax_add9": "45099b7ff1c9553c1de70eee3e00c89c29c3e0b22e8d95c8b8ec551c789b7575",
+    "ot_dsrom_su_softmax_add6": "bccb0929f80f2e559805b2b3e7f6b45c78f77e7d9ac13c67b22fa9f8f2291366"
+   },
+   "gate_exact": {
+    "status": "pass",
+    "fp": "rtl",
+    "runs": [
+     {
+      "run": "golden_L0",
+      "err_rows": 0,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     },
+     {
+      "run": "golden_L2",
+      "err_rows": 0,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     },
+     {
+      "run": "stress_0",
+      "err_rows": 0,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     }
+    ]
+   },
+   "mutant": {
+    "status": "fail",
+    "fp": "rtl",
+    "runs": [
+     {
+      "run": "golden_L0",
+      "err_rows": 512,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     },
+     {
+      "run": "golden_L2",
+      "err_rows": 512,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     },
+     {
+      "run": "stress_0",
+      "err_rows": 512,
+      "rows": 1722,
+      "cycles": 3146,
+      "jobs_done": 11,
+      "fault": 0
+     }
+    ]
+   },
+   "physical": {
+    "tt_ps": 93.51,
+    "ff_ps": 23.35,
+    "drc": 0,
+    "outline": [
+     108,
+     108
+    ],
+    "child_lint": "PASS",
+    "tt_boundary": {
+     "n": 207,
+     "mean": 190.4,
+     "min": 179.6,
+     "max": 199.5
+    }
+   },
+   "view": "physical/ref_tile/s81su_smd_u65_ref/views/dsfd_su_t_smd",
+   "instance_count": 128,
+   "area_saved_mm2": 0.3798171647999999
+  }
+ }
+}
