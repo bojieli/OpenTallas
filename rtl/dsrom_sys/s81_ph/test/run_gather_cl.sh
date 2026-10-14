@@ -10,11 +10,6 @@
 set -u
 SRC=$1; OUT=$2; TRACE=${3:-}; LAYERS=${4:-"0 2 14"}
 VL=${VL:-verilator}; J=${J:-16}; MODES=${MODES:-"base lane chain nofwd xgo ovf"}
-ROLE_DEF=""
-if [ "${ROLE_SPLIT:-0}" = 1 ]; then
- ROLE_DEF="+define+S81PH_GTH_ROLE_SPLIT"
- if [ -z "${RAW:-}" ]; then MODES="$MODES role"; fi
-fi
 LOCAL_DEF=""
 if [ "${LOCAL_BANKS:-0}" = 1 ]; then
  LOCAL_DEF="+define+S81PH_GTH_LOCAL_BANKS"
@@ -42,7 +37,7 @@ REAL=""
 if [ -n "$TRACE" ]; then for L in $LAYERS; do $G real 0 $OUT/real_L$L.txt --trace $TRACE --layer $L && REAL="$REAL real_L$L"; done; fi
 build() {
   $VL --binary --timing -j $J -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT --unroll-count 64 -CFLAGS -O1 \
-      +define+S81PH_GTH_CL_NAME=dsfd_sp_gather_c_cl $SDEF $ROLE_DEF $LOCAL_DEF --top-module tb_s81ph_gather_cl $2 --Mdir $OUT/obj_$1 -o sim $FILES > $OUT/build_$1.log 2>&1
+      +define+S81PH_GTH_CL_NAME=dsfd_sp_gather_c_cl $SDEF $LOCAL_DEF --top-module tb_s81ph_gather_cl $2 --Mdir $OUT/obj_$1 -o sim $FILES > $OUT/build_$1.log 2>&1
 }
 run() { # mode case expect need want
   $OUT/obj_$1/sim +STIM=$OUT/$2.txt +EXPECT=$3 +NEED=$4 > $OUT/run_$1_$2.log 2>&1
@@ -52,7 +47,7 @@ run() { # mode case expect need want
 }
 for m in $MODES; do
   case $m in base) X="";; lane) X="+define+S81PH_GTH_CL_MUT_LANE";; chain) X="+define+S81PH_MUT_CHAIN";; nofwd) X="+define+S81PH_MUT_NOFWD";;
-    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; role) X="+define+S81PH_MUT_ROLE_PHASE";; esac
+    xgo) X="+define+S81PH_MUT_XGO";; ovf) X="+define+S81PH_MUT_OVF";; heap) X="+define+S81PH_MUT_HEAP_PHASE";; esac
   ( build $m "$X" ) &
 done
 wait
@@ -63,7 +58,7 @@ FIRST=$(echo $REAL stress | awk '{print $1}')
       base) for c in $REAL; do run base $c 0 1 PASS & done; run base stress 0 1 PASS & run base ovf 1 0 PASS &
             run base refuse 0 1 REFUSED & ;;
       ovf)  run ovf ovf 1 0 FAIL & ;;
-      lane|nofwd|heap|role) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
+      lane|nofwd|heap) run $m stress 0 0 FAIL & ;;     # need root-specific rows / back-to-back same-row partials: the stress case
       *)    run $m $FIRST 0 0 FAIL & ;;
     esac
   done

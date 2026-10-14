@@ -31,21 +31,12 @@ module ot_s81ph_root_leaf #(
     input  wire                       rs,    // active low, async assert; from the leaf above (or the ctl leaf)
     output wire                       rso,
     input  wire [69*(NRT+NLT)-1:0]    li,
-    output wire [69*NLT-1:0]          lo,
+    output reg  [69*NLT-1:0]          lo,
     input  wire [53*NCI-1:0]          ci,
-    output wire [53*(NCI+NRT)-1:0]    co,
+    output reg  [53*(NCI+NRT)-1:0]    co,
     input  wire [1:0]                 fi,
     output reg  [1:0]                 fo
 );
-`ifdef S81PH_GTH_ROLE_SPLIT
-    // Preserve the original input sampling flops independently from output
-    // launch flops. Both sample the same incoming D at the same edge.
-    (* keep = 1, dont_touch = 1 *) reg [69*NLT-1:0] lo_input_role;
-    (* keep = 1, dont_touch = 1 *) reg [53*(NCI+NRT)-1:0] co_input_role;
-`else
-    reg [69*NLT-1:0] lo_input_role;
-    reg [53*(NCI+NRT)-1:0] co_input_role;
-`endif
     reg [1:0] rst_s;                         // rst_s[1]: the margin SDC's rst_mcp2 cell name
     always @(posedge ck or negedge rs) if (!rs) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rl = rst_s[1];
@@ -58,58 +49,35 @@ module ot_s81ph_root_leaf #(
     always @(posedge ck or negedge rl)
         if (!rl) begin
             lv <= {NRT{1'b0}}; busy_l <= {NRT{1'b0}}; flt_l <= 1'b0; fo <= 2'b00;
-            for (j = 0; j < NLT; j = j + 1) lo_input_role[69*j] <= 1'b0;
-            for (j = 0; j < NCI + NRT; j = j + 1) co_input_role[53*j] <= 1'b0;
+            for (j = 0; j < NLT; j = j + 1) lo[69*j] <= 1'b0;
+            for (j = 0; j < NCI + NRT; j = j + 1) co[53*j] <= 1'b0;
         end else begin
             for (j = 0; j < NRT; j = j + 1) begin
                 lv[j] <= li[69*j];
                 if (lv[j]) busy_l[j] <= lw[68*j + 66];
                 if (rf[j] || (lv[j] && lw[68*j + 67])) flt_l <= 1'b1;
 `ifdef S81PH_MUT_CHAIN
-                co_input_role[53*j] <= rv[j ^ 1];       // MUTANT: own results of roots 2 i / 2 i + 1 leave in swapped chain slots
+                co[53*j] <= rv[j ^ 1];       // MUTANT: own results of roots 2 i / 2 i + 1 leave in swapped chain slots
 `else
-                co_input_role[53*j] <= rv[j];
+                co[53*j] <= rv[j];
 `endif
             end
-            for (j = 0; j < NLT; j = j + 1) lo_input_role[69*j] <= li[69*(NRT+j)];
-            for (j = 0; j < NCI; j = j + 1) co_input_role[53*(NRT+j)] <= ci[53*j];      // slot valids: reset (no start-up garbage)
+            for (j = 0; j < NLT; j = j + 1) lo[69*j] <= li[69*(NRT+j)];
+            for (j = 0; j < NCI; j = j + 1) co[53*(NRT+j)] <= ci[53*j];      // slot valids: reset (no start-up garbage)
             fo <= fi | {|busy_l, flt_l};
         end
     always @(posedge ck) begin
         for (j = 0; j < NRT; j = j + 1) begin
             lw[68*j +: 68] <= li[69*j + 1 +: 68];
 `ifdef S81PH_MUT_CHAIN
-            co_input_role[53*j + 1 +: 52] <= {re[j ^ 1], rpos[3*(j ^ 1) +: 3], rrow[16*(j ^ 1) +: 16], rfp[32*(j ^ 1) +: 32]};
+            co[53*j + 1 +: 52] <= {re[j ^ 1], rpos[3*(j ^ 1) +: 3], rrow[16*(j ^ 1) +: 16], rfp[32*(j ^ 1) +: 32]};
 `else
-            co_input_role[53*j + 1 +: 52] <= {re[j], rpos[3*j +: 3], rrow[16*j +: 16], rfp[32*j +: 32]};
+            co[53*j + 1 +: 52] <= {re[j], rpos[3*j +: 3], rrow[16*j +: 16], rfp[32*j +: 32]};
 `endif
         end
-        for (j = 0; j < NLT; j = j + 1) lo_input_role[69*j + 1 +: 68] <= li[69*(NRT+j) + 1 +: 68];
-        for (j = 0; j < NCI; j = j + 1) co_input_role[53*(NRT+j) + 1 +: 52] <= ci[53*j + 1 +: 52];
+        for (j = 0; j < NLT; j = j + 1) lo[69*j + 1 +: 68] <= li[69*(NRT+j) + 1 +: 68];
+        for (j = 0; j < NCI; j = j + 1) co[53*(NRT+j) + 1 +: 52] <= ci[53*j + 1 +: 52];
     end
-`ifdef S81PH_GTH_ROLE_SPLIT
-    wire [53*NCI-1:0] co_forward_role;
-    (* keep_hierarchy = 1, dont_touch = 1 *)
-    ot_s81ph_forward_output_role #(.NLT(NLT), .NCI(NCI)) u_forward_output_role
-        (.ck(ck), .rl(rl),
-`ifdef S81PH_MUT_ROLE_PHASE
-         .li(lo_input_role), .ci(co_input_role[53*NRT +: 53*NCI]),
-`else
-         .li(li[69*NRT +: 69*NLT]), .ci(ci),
-`endif
-         .lo(lo), .co(co_forward_role));
-    assign co = {co_forward_role, co_input_role[53*NRT-1:0]};
-`ifndef SYNTHESIS
-`ifndef S81PH_MUT_ROLE_PHASE
-    always @(negedge ck) if (rl)
-        if (lo !== lo_input_role || co_forward_role !== co_input_role[53*NRT +: 53*NCI])
-            $fatal(1, "forward physical roles changed the sampling epoch");
-`endif
-`endif
-`else
-    assign lo = lo_input_role;
-    assign co = co_input_role;
-`endif
     genvar g;
     generate for (g = 0; g < NRT; g = g + 1) begin : g_r
         ot_s81ph_ret_root_s #(.S(S), .QD(128), .SRAM(SRAM)) u_root (.clk(ck), .rst_n(rl),
@@ -117,32 +85,6 @@ module ot_s81ph_root_leaf #(
             .r_v(rv[g]), .r_row(rrow[16*g +: 16]), .r_pos(rpos[3*g +: 3]), .r_fp32(rfp[32*g +: 32]),
             .r_bf16(rbf[16*g +: 16]), .r_e(re[g]), .fault(rf[g]));
     end endgenerate
-endmodule
-
-// Dedicated opposite-face forward outputs sample the incoming pin directly;
-// this is a physical-role split, with no additional forwarding epoch.
-(* keep_hierarchy = 1, dont_touch = 1 *)
-module ot_s81ph_forward_output_role #(
-    parameter integer NLT = 12, parameter integer NCI = 12
-) (
-    input wire ck, input wire rl,
-    input wire [69*NLT-1:0] li, input wire [53*NCI-1:0] ci,
-    (* keep = 1, dont_touch = 1 *) output reg [69*NLT-1:0] lo,
-    (* keep = 1, dont_touch = 1 *) output reg [53*NCI-1:0] co
-);
-    integer j;
-    always @(posedge ck or negedge rl)
-        if (!rl) begin
-            for (j=0; j<NLT; j=j+1) lo[69*j] <= 1'b0;
-            for (j=0; j<NCI; j=j+1) co[53*j] <= 1'b0;
-        end else begin
-            for (j=0; j<NLT; j=j+1) lo[69*j] <= li[69*j];
-            for (j=0; j<NCI; j=j+1) co[53*j] <= ci[53*j];
-        end
-    always @(posedge ck) begin
-        for (j=0; j<NLT; j=j+1) lo[69*j+1 +: 68] <= li[69*j+1 +: 68];
-        for (j=0; j<NCI; j=j+1) co[53*j+1 +: 52] <= ci[53*j+1 +: 52];
-    end
 endmodule
 
 // open-row slots per root of the hardened cells: 8 (256 x 34 store).  Real field-order bound = 4 open (row, pos) per root
