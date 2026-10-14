@@ -1,0 +1,29 @@
+{
+  "status": "SOURCE_BOUND_ACTUAL_TILED_STORAGE_OBSERVER_RUNNING_NO_PHYSICAL_ADOPTION",
+  "fixture_source": "b9853a4c6",
+  "writer_and_memory_source": "64e16e88d",
+  "parameters": {
+    "SW": 8,
+    "VMT": 1,
+    "VL": 15,
+    "RV": 1,
+    "RO": 2,
+    "NRB": 16,
+    "NRBS": 16,
+    "NSU": 3,
+    "NG": 2,
+    "NSB": 8
+  },
+  "commitpoints": {
+    "copy0": "vm.g_tile.g_t[og].u_t.g_b[ob].u_bt.p_we at actual rowbank posedge",
+    "SUreplica": "vm.g_tile.g_t[og].u_t.g_c[oc].g_j[os].u_st.p_swe[0] at actual rowbank_s posedge"
+  },
+  "accepted_write_points": {
+    "copy0": "vm.bw_we[og*8+ob]",
+    "SUreplica": "vm.ws_we[og*8+os] separately for every replica"
+  },
+  "pending_rule": "Upstream real e1/k1/formed/skid/merge writes OR current BW/WS writes OR per-bank accepted-minus-stored obligations; no delayed-intent timeout",
+  "observer_state": "64 counters x8=512 benchmark bits; underflow/overflow assertions; not production physical seam",
+  "reset_scope": "fixture released reset and completed preload; reset flush is not allocator transport certification",
+  "scope": "Real original tiled-source read/write arithmetic composition with full247 diagnostic provenance; not actual nativeTP8 capacity/weights/physical clocks/global release"
+}
