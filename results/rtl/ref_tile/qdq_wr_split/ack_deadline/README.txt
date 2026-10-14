@@ -1,0 +1,2 @@
+CDC source matches immutable64fced1f9 exactly. 64 transactions per phase, zero-extra-edge VM commit feeds actual vwq valid directly into return FIFO. This intentionally returns sooner than protected native VM commit. Snapshot admission deadline engine edge2 is checked on every returned ACK.
+Initial88d20f389 bench stimulus mistakenly used15-bit address in281-bit native write port, leaving valid bit280 zero; both timeout logs retained as invalid-stimulus diagnostics. Corrected stimulus uses actual16-bit native address and asserts valid280.

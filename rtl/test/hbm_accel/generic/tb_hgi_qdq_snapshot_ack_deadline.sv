@@ -23,7 +23,7 @@ module tb_hgi_qdq_snapshot_ack_deadline;
  initial begin
   repeat(10)@(negedge cclk);rst_n=1;repeat(10)@(negedge cclk);
   for(integer k=0;k<64;k=k+1)begin
-   @(posedge cclk);#0.002;cwq={1'b1,15'd5,256'(k),8'hff};launch_time=$realtime;launch_edge=edge_no;
+   @(posedge cclk);#0.002;cwq={1'b1,16'd5,256'(k),8'hff};launch_time=$realtime;launch_edge=edge_no;
    @(posedge cclk);#0.002;cwq=0;
    wait(done);@(negedge cclk);repeat(4)@(negedge cclk);
   end
