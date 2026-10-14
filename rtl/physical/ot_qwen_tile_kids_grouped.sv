@@ -109,8 +109,13 @@ module ot_qwen_tile_kids_grouped #(
     generate if (SPLIT != 0) begin : g_return_leaves
         localparam integer SB = (CODE_BANKS+1)/2;
         wire [1023:0] rs, rn;
-        ot_qwen_tile_rqr #(.NR(SB)) u_s (.clk((MCLK != 0) ? clk_rqr[0] : clk), .d(cx_rq[1024*SB-1:0]), .q(rs));
-        ot_qwen_tile_rqr #(.NR(CODE_BANKS-SB)) u_n (.clk((MCLK != 0) ? clk_rqr[1] : clk), .d(cx_rq[1024*CODE_BANKS-1:1024*SB]), .q(rn));
+        if (CODE_BANKS == 5) begin:g_native_fixed
+          ot_qwen_tile_rqr_s u_s (.clk((MCLK != 0)?clk_rqr[0]:clk),.d(cx_rq[3071:0]),.q(rs));
+          ot_qwen_tile_rqr_n u_n (.clk((MCLK != 0)?clk_rqr[1]:clk),.d(cx_rq[5119:3072]),.q(rn));
+        end else begin:g_bench_generic
+          ot_qwen_tile_rqr #(.NR(SB)) u_s (.clk((MCLK != 0)?clk_rqr[0]:clk),.d(cx_rq[1024*SB-1:0]),.q(rs));
+          ot_qwen_tile_rqr #(.NR(CODE_BANKS-SB)) u_n (.clk((MCLK != 0)?clk_rqr[1]:clk),.d(cx_rq[1024*CODE_BANKS-1:1024*SB]),.q(rn));
+        end
         assign cx_rqr = {(CMUT == 5) ? 1024'd0 : rn, rs};
     end else begin : g_return_unused
         assign cx_rqr = 2048'd0;
