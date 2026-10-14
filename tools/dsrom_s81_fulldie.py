@@ -2876,6 +2876,11 @@ ALIGN_JOGS = False             # --align-jogs (r5 10-14): move a station facing 
 SPLIT_FAR_PINS = False         # --split-far-pins (r5 10-14): a local chain whose assigned target pins split into a run + a far trailing group gets its own chain to that group
 HOP_PLAN_R = {}                # --hop-pair: planned hop -> its effective plan reach (pair limit - margin)
 HOP_ITER = 0                   # --hop-iter N: re-plan the hop fix on the built die up to N times (new over-limit hops)
+HOP_SPREAD = 0                  # --hop-spread BITS (s81-die r6 2026-10-14): a hub hop of a bus >= BITS wide is planned at
+                                #   R - (half pin extent of the driver port + of the load port): the gate judges the WORST bit,
+                                #   the plan the group anchor (xsp6: hc_s -> hc_t tf2 3,056 b staged at <= 480 um anchors came
+                                #   out 744-775 um per bit; collective -> vm 948 um)
+HOP_SPREAD_R = {}               # planned hop -> spread-reduced reach (pass 2 counts its stages with it)
 HOP_PAIR = 0.0                 # --hop-pair UM: hop-fix plans each hop against its real pair limit minus UM (pin spread margin)
 XSITES = {}                    # (frame, slot) -> [(x, y) xa site, (x, y) xb site]  (lower-left corners)
 CK_RULE = False               # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
@@ -3524,6 +3529,26 @@ HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_res
             'hbm_read', 'hbm_req', 'bfh')    # hbm_req (s81-gen --ctrl-rq): abutting controller faces, as hbm_read
 
 
+def _half_extent(Mx, it, port):
+    """half the extent of a port's (slice's) pins along its face, um (0 when unknown / real macro)"""
+    p = Mx.ports.get(pslice(port)[0]) if Mx is not None else None
+    lo_, hi_ = pslice(port)[1:]
+    if p and p[0] == 'rects':
+        pins_ = p[1] if lo_ is None else p[1][lo_:hi_ + 1]
+        if not pins_:
+            return 0.0
+        xs = [(r[0] + r[2]) / 2 for _, _, r in pins_]
+        ys = [(r[1] + r[3]) / 2 for _, _, r in pins_]
+        return max(max(xs) - min(xs), max(ys) - min(ys)) / 2
+    if p and p[0] == 'face':
+        _, n_, face, ly_, c, pt_ = p
+        if ly_ not in TRK:
+            return 0.0
+        nb = n_ if lo_ is None else (hi_ - lo_ + 1)
+        return nb * TRK[ly_][1] * pt_ / 2
+    return 0.0
+
+
 def _anchor(Mx, it, port):
     """die coordinates of a port's anchor (generated face centre) on a placed instance; None for real macros"""
     p = Mx.ports.get(pslice(port)[0]) if Mx is not None else None
@@ -3590,6 +3615,10 @@ def hop_plan(m):
                 lim_ = pair.limit(d.name, d.master, pslice(eps[0][1])[0], l_.name, l_.master, pslice(e[1])[0])
                 if lim_ < pair.default:          # a real (judged) pair limit; placeholders keep the flat rule
                     R = min(R, lim_ - HOP_PAIR)
+            if HOP_SPREAD and cls == 'hub' and bits >= HOP_SPREAD:
+                sp_ = _half_extent(M.get(d.master), d, eps[0][1]) + _half_extent(M.get(l_.master), l_, e[1])
+                R = max(R - sp_, 120.0)
+                HOP_SPREAD_R[(eps[0][0], eps[0][1], e[0], e[1])] = R
             if L > R or (hard and L > PIN_SEG):
                 plan[(eps[0][0], eps[0][1], e[0], e[1])] = (round(L, 1), a, b, cls)
                 if pair is not None:
@@ -5452,6 +5481,8 @@ def _hop_fix(m, P):
                                        else HOP_R_CC)
             if HOP_PAIR and not fwd and key in HOP_PLAN_R:
                 R = min(R, HOP_PLAN_R[key] + HOP_PAIR)     # --hop-pair: the hop's own pair reach (the gate's limit)
+            if key in HOP_SPREAD_R:
+                R = min(R, HOP_SPREAD_R[key])             # --hop-spread: worst-bit reach of a wide hub bus
             n = math.ceil(L / (R - 20.0) - 1e-9) - 1
             reg = next((x.region for x in (d0, l0) if x.region and x.region.startswith('frame_')), None)
             if fwd:
@@ -8579,6 +8610,8 @@ def die_options(ap):
                     'return-tree node pins in fixed slots (abutted stack bit-aligned), slot-station xa / xb on the pins of '
                     'their abutting column relay (pin_align gate: 0 FAIL in the field frames)')
     ap.add_argument('--hend-vr-nobp', action='store_true', help='s81 grpA 10-14: wide (>= 512 b) m2l VR hub ends: ot_meso_fifo NOBP + WCHK (r_rdy is tied 1; the negedge pin register no longer fans out to every ring write enable in half a cycle); same words / cycles')
+    ap.add_argument('--hop-spread', type=int, default=0, help='s81-die r6: plan hub hops of buses >= N bits at R minus the '
+                    'half pin extents of both ports (the gate judges the worst bit)')
     ap.add_argument('--pq-g', action='store_true', help='s81-die r6: PQ return topology G (the gather roots are the roots; '
                     'no frame pq_root row; PQ core count inputs await the count-only RWB leaves)')
     ap.add_argument('--cfifo-fall-launch', action='store_true', help='s81-die r6: the x-lane station that taps a cfifo '
@@ -8702,7 +8735,8 @@ def apply_options(a):
         HC_T_FWD, HC_T_RET = hc_rtl_widths()
     if getattr(a, 'pdn_field_cov', 0.0):
         COV['field'] = COV['channel'] = float(a.pdn_field_cov)
-    global HOP_PAIR, HOP_ITER
+    global HOP_PAIR, HOP_ITER, HOP_SPREAD
+    HOP_SPREAD = int(getattr(a, 'hop_spread', 0) or 0)
     HOP_PAIR = float(getattr(a, 'hop_pair', 0.0) or 0.0)
     HOP_ITER = int(getattr(a, 'hop_iter', 0) or 0)
     assert not X_SITE_PAIR or XB_RGAP_FIRST, '--x-site-pair needs --xb-rgap-first (and --xb-rgap)'
