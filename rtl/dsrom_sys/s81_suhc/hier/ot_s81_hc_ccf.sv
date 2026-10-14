@@ -9,8 +9,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_ccf #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer FIFO_SLICE = 0, KEEP_POP = 0, Y_RELAY = 0, PIN_CAPTURE = 1,
-    parameter integer MUT = 0, AMUT = 0, RF = 1, RT = 1, RW = 2, YD = 16, HALF = 0, RLY = 1, DW = 3 + RW
+    parameter integer FIFO_SLICE = 512, KEEP_POP = 1, Y_RELAY = 1, PIN_CAPTURE = 1,
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6
 ) (
     input  wire                 sk, srs,
     input  wire [FVW-1:0]       fv_i,
@@ -22,7 +22,7 @@ module ot_s81_hc_ccf #(
     output reg  [FDW-1:0]       ch_fd,
     output reg                  yfl
 );
-    // the comb's geometry (identical to ot_s81_hc_comb; defaults = the hardened NG 256 HIER=1 configuration)
+    // Production hard-master defaults match the routed NG256 HIER3 tuple; soft parents pass their tuple.
     localparam integer NS = NG / GS;
     localparam integer NP = (NS + NCOL - 1) / NCOL;
     localparam integer L1 = (NS - 2 * NP > 0) ? NS - 2 * NP : 0;
