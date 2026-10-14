@@ -10,7 +10,7 @@ K requests have 32 ordered engine queues (four stacks, eight engines). Each fini
 
 Results are 32 ascending registered 512-bit FP32 beats. A producer holds each beat under backpressure. `result_done` records only acceptance of beat31. It does not mean that vector memory committed any result. Native dispatch must wait for the separately observed 32 VM commit acknowledgements before dependent O projection or token completion. The service waits for finalizer release before accepting the next descriptor, and requires fresh score-phase clearing before admitting its V phase.
 
-The functional harness uses real Q/K/V input rows and canonical golden outputs. Its response model has a synthetic latency and intentionally does not qualify HBM bandwidth, physical routing, clock trees, workload rates, or a full token. The common-clock adapter also does not qualify the independent clock entries' delivery.
+The functional harness uses actual Q/K/V input rows and canonical golden outputs. The full-width build uses the existing simulation-only FP32 add/multiply and fast-FP DPI stand-ins with their RTL latency/valid pipelines; it exercises the actual H/SFU/control/transport/SRAM/tree ordering rather than compiling every bit-level FPU instance. This is functional arithmetic evidence with that explicit substitution, and does not prove every full-width bit-level FPU instance or any physical timing. Its response model has a synthetic latency and intentionally does not qualify HBM bandwidth, physical routing, clock trees, workload rates, or a full token. The common-clock adapter also does not qualify the independent clock entries' delivery.
 
 Build/run only under measured `ot-run` admission (initial requested class 32 GB, eight build threads):
 
