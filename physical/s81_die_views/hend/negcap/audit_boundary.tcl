@@ -15,6 +15,7 @@ foreach l [split [exec sh -c "grep -h 'ADDITIONAL_LEFS\\|ADDITIONAL_LIBS' /work/
 read_db $base/4_1_cts.odb
 if {[file exists $base/4_cts.sdc]} { read_sdc $base/4_cts.sdc } elseif {[file exists $base/4_1_cts.sdc]} { read_sdc $base/4_1_cts.sdc } else { error "no post-CTS SDC" }
 set_propagated_clock [all_clocks]
+source $plat/setRC.tcl
 estimate_parasitics -placement
 
 foreach c {core_clk w_fi0 vw vclk} {

@@ -45,6 +45,8 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v, pin_balance}` | route knobs (770 ps over-constraint); `pin_balance: true` places pins uniformly over each face region alternating the pin_h / pin_v layers per 32-pin chunk (OT_PIN_BALANCE_H/V) for dense faces |
 | `job {owner, branch, tag, purpose, benches, benched_by, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields; `benches` / `benched_by`: see "Behavioural bench at submit" |
 
+Extra SDC files that measure a soft clock tree must honor `::ot_ref_pre_cts`: it is 1 in the initial route SDC and 0 at signoff and after CTS. Create every real and virtual domain, uncertainty, and crossing constraint in both stages; defer propagation and virtual-clock insertion measurement until the buffered tree exists. A `boundary_tcl` hook restores those domains after every boundary reset. Signoff propagates all clocks again after extra files recreate them.
+
 ## What the kit does by construction (pitfall -> mechanism)
 
 | pitfall (2026-10-11) | mechanism |
