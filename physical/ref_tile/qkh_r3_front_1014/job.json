@@ -1,5 +1,5 @@
 {
- "name": "qkh_r3_front_1014-r3-COMMIT",
+ "name": "qkh_r3_front_1014-r3-4b09775e6",
  "block": "ot_qkh_head_front_native",
  "ref_tile": true,
  "owner": "Codex:coordinator-kvsys-1014-pm",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/coordinator-takeover-1014-pm",
-  "commit": "COMMIT",
+  "commit": "4b09775e65c091219d8dbcd1e3821bbc13de4db0",
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkh_r3_front_1014/qkh_r3_front_1014-r3-COMMIT"
+   "to": "results/rtl/ref_tile/qkh_r3_front_1014/qkh_r3_front_1014-r3-4b09775e6"
   }
  ],
  "cycles_added": 0,
