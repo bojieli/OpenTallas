@@ -45,7 +45,14 @@
       "baseline_source": "0ff9801c2"
     }
   },
-  "N10_LOCAL_native_gold_TP_pending": true,
+  "N10_LOCAL_native_gold_TP_pending": false,
   "raw_clock_stopped_RTL_fixture_PASS": true,
-  "mapped_async_conditioner_functional_fixture_PASS": true
+  "mapped_async_conditioner_functional_fixture_PASS": true,
+  "N10_LOCAL_native_gold_TP_PASS": true,
+  "native_proof_record": "local_native/record.json",
+  "native_proof_source_commit": "2e054e8e96dda2573b42d9ebf88e4b374e360b08",
+  "native_proof_receipt_commit": "cfb537fed67f0ae2b5fef6da363fc0e83f518ab9",
+  "requested_geometry_receipt_commit": "e83bfc166",
+  "requested_geometry_owner": "codex/s81-be-native-placement",
+  "requested_geometry_not_physical_binding": true
 }
