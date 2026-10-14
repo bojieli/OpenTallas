@@ -1,0 +1,32 @@
+{
+  "core_event_parent_commit": "b646b9303",
+  "lifetime_commit": "f9bb1fc09",
+  "unit": "oth-ubuntu-1536698-1791969658",
+  "exit": 0,
+  "participant_count": 768,
+  "bound_tiles": [
+    767
+  ],
+  "bank_index": 15,
+  "bank_recipients": 48,
+  "recipient_index": 47,
+  "SEQ_W": 40,
+  "COUNT_W": 7,
+  "accepted_count": 1,
+  "actual_query_obligations": 8,
+  "actual_outputs": 8,
+  "durable_fills": 8,
+  "retired_count": 0,
+  "outstanding_count": 8,
+  "sealed_count": 0,
+  "query_ack": "only after actual vector issue_v&&issue_ready capture; not arithmetic retirement",
+  "global_release_blocked": true,
+  "fixture_coherent_edges": 180,
+  "fixture_base_edges": 207,
+  "scope": "selected actual acceptance/query ledger composition; no synthetic peer accepts/seals/retirement or global release; no provider snapshot/CDC/registered credit/physical/throughput qualification",
+  "mutants": [
+    "held_query_level_duplicate",
+    "stale_query_version",
+    "one_recipient_as_wholefield"
+  ]
+}

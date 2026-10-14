@@ -1,0 +1,5 @@
+PASS actualb646+f9 selected-tile query ledger fullGT3072 participant_count768 accepted_count1 queries=8 outputs=8 fills=8 callbacks=1 coherent_edges=180 base_edges=207 release_blocked=1
+- rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:102: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 5.056 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

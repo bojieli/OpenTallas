@@ -1,0 +1,50 @@
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:62:28: Can't find definition of 'u_ctl' in dotted scope/variable: 'dut.u_ctl'
+   62 |   actual_accept=rst_n&&dut.u_ctl.u_logic.u_me.go&&dut.u_ctl.u_logic.u_me.ready;
+      |                            ^~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:62:34: Can't find definition of 'u_logic' in dotted scope/variable: 'dut.u_logic'
+   62 |   actual_accept=rst_n&&dut.u_ctl.u_logic.u_me.go&&dut.u_ctl.u_logic.u_me.ready;
+      |                                  ^~~~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:62:42: Can't find definition of 'u_me' in dotted scope/variable: 'dut.u_me'
+   62 |   actual_accept=rst_n&&dut.u_ctl.u_logic.u_me.go&&dut.u_ctl.u_logic.u_me.ready;
+      |                                          ^~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:62:55: Can't find definition of 'u_ctl' in dotted scope/variable: 'dut.u_ctl'
+   62 |   actual_accept=rst_n&&dut.u_ctl.u_logic.u_me.go&&dut.u_ctl.u_logic.u_me.ready;
+      |                                                       ^~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:62:61: Can't find definition of 'u_logic' in dotted scope/variable: 'dut.u_logic'
+   62 |   actual_accept=rst_n&&dut.u_ctl.u_logic.u_me.go&&dut.u_ctl.u_logic.u_me.ready;
+      |                                                             ^~~~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:62:69: Can't find definition of 'u_me' in dotted scope/variable: 'dut.u_me'
+   62 |   actual_accept=rst_n&&dut.u_ctl.u_logic.u_me.go&&dut.u_ctl.u_logic.u_me.ready;
+      |                                                                     ^~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:64:47: Can't find definition of 'u_ctl' in dotted scope/variable: 'dut.u_ctl'
+   64 |   else if(actual_accept)begin expected_ib=dut.u_ctl.u_logic.ib_i;expected_ctx=dut.u_ctl.u_logic.op_meta_i[15:0];expected_ver=dut.u_ctl.u_logic.op_meta_i[47:16];accepted=1;end
+      |                                               ^~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:64:53: Can't find definition of 'u_logic' in dotted scope/variable: 'dut.u_logic'
+   64 |   else if(actual_accept)begin expected_ib=dut.u_ctl.u_logic.ib_i;expected_ctx=dut.u_ctl.u_logic.op_meta_i[15:0];expected_ver=dut.u_ctl.u_logic.op_meta_i[47:16];accepted=1;end
+      |                                                     ^~~~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:64:83: Can't find definition of 'u_ctl' in dotted scope/variable: 'dut.u_ctl'
+   64 |   else if(actual_accept)begin expected_ib=dut.u_ctl.u_logic.ib_i;expected_ctx=dut.u_ctl.u_logic.op_meta_i[15:0];expected_ver=dut.u_ctl.u_logic.op_meta_i[47:16];accepted=1;end
+      |                                                                                   ^~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:64:89: Can't find definition of 'u_logic' in dotted scope/variable: 'dut.u_logic'
+   64 |   else if(actual_accept)begin expected_ib=dut.u_ctl.u_logic.ib_i;expected_ctx=dut.u_ctl.u_logic.op_meta_i[15:0];expected_ver=dut.u_ctl.u_logic.op_meta_i[47:16];accepted=1;end
+      |                                                                                         ^~~~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:64:130: Can't find definition of 'u_ctl' in dotted scope/variable: 'dut.u_ctl'
+   64 |   else if(actual_accept)begin expected_ib=dut.u_ctl.u_logic.ib_i;expected_ctx=dut.u_ctl.u_logic.op_meta_i[15:0];expected_ver=dut.u_ctl.u_logic.op_meta_i[47:16];accepted=1;end
+      |                                                                                                                                  ^~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: rtl/test/qwen_kv_die/tb_qwen_actual_query_ledger.sv:64:136: Can't find definition of 'u_logic' in dotted scope/variable: 'dut.u_logic'
+   64 |   else if(actual_accept)begin expected_ib=dut.u_ctl.u_logic.ib_i;expected_ctx=dut.u_ctl.u_logic.op_meta_i[15:0];expected_ver=dut.u_ctl.u_logic.op_meta_i[47:16];accepted=1;end
+      |                                                                                                                                        ^~~~~~~
+        ... Known scopes under 'dut': u_cache, u_core
+%Error: Exiting due to 12 error(s)
