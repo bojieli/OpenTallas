@@ -12,7 +12,7 @@ module tb_qkd_host_token_transport;
  .ck(ck),.rst_n(rst),.die_id(3'd0),.rx_v(1'b0),.rx_d(512'd0),.tx_v(tx),.tx_d(packet),.tx_cr(txcredit),
  .local_tk(93'd0),.local_kst(10'd0),.local_boot(2'd3),.cmd_v(cmd),.cmd_hc(raw),.cmd_cr(cr),.hc(hc),.fault(ff),
  .startup_allowed(1'b1),.local_service_ready(1'b1),.local_service_epoch(16'd0),.begin_v(1'b0),.begin_epoch(16'd0),
- .por_n(rst),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.package_abort(abort),.abort_drained(drains),.token_request_valid(req),.token_request_ready(rr),
+ .por_n(rst),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.token_allocator_fault(1'b0),.package_abort(abort),.abort_drained(drains),.token_request_valid(req),.token_request_ready(rr),
  .token_request_token(rt),.token_request_position(rp),.token_request_generation(rg),
  .token_grant_valid(gv),.token_grant_ready(gr),.token_grant_epoch(ge),.token_grant_token(gt),
  .token_grant_position(gp),.token_grant_generation(gg),.token_grant_tag(tag),

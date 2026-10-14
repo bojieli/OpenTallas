@@ -18,10 +18,19 @@ else
 fi
 cat "$out/token$mut.log"
 done
-iverilog -g2012 -s tb_qkd_host_token_allocator_transport -o "$out/actual_allocator" "$A/rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv" "$root/rtl/qwen_sys/host_20261013/qkd_host_ctrl_token_service_packet.sv" "$root/rtl/test/qwen_host/tb_qkd_host_token_allocator_transport.sv"
-vvp "$out/actual_allocator" > "$out/actual_allocator.log" 2>&1
-grep -q 'PASS actual token allocator transport' "$out/actual_allocator.log"
-cat "$out/actual_allocator.log"
+for mut in 0 17;do
+iverilog -g2012 -s tb_qkd_host_token_allocator_transport -Ptb_qkd_host_token_allocator_transport.MUT=$mut -o "$out/actual_allocator$mut" "$A/rtl/qwen_sys/redesign_qwen/ot_qwen_tp8_token_epoch_allocator.sv" "$root/rtl/qwen_sys/host_20261013/qkd_host_ctrl_token_service_packet.sv" "$root/rtl/test/qwen_host/tb_qkd_host_token_allocator_transport.sv"
+set +e
+vvp "$out/actual_allocator$mut" > "$out/actual_allocator$mut.log" 2>&1
+rc=$?
+set -e
+if [ "$mut" = 0 ];then
+ if [ "$rc" != 0 ] || ! grep -q 'PASS actual token allocator transport' "$out/actual_allocator$mut.log";then cat "$out/actual_allocator$mut.log";exit 1;fi
+else
+ if [ "$rc" = 0 ] || ! grep -q FATAL "$out/actual_allocator$mut.log";then cat "$out/actual_allocator$mut.log";exit 1;fi
+fi
+cat "$out/actual_allocator$mut.log"
+done
 for mut in 0 11;do
 iverilog -g2012 -s tb_qkd_host_token_replay -Ptb_qkd_host_token_replay.MUT=$mut -o "$out/replay$mut" "$root/rtl/qwen_sys/host_20261013/qkd_host_ctrl_token_service_packet.sv" "$root/rtl/test/qwen_host/tb_qkd_host_token_replay.sv"
 set +e
@@ -39,3 +48,16 @@ iverilog -g2012 -s tb_qkd_host_ctrl_token_legacy -o "$out/legacy" "$root/rtl/qwe
 vvp "$out/legacy" > "$out/legacy.log" 2>&1
 grep -q 'PASS CTRL8_PACKET' "$out/legacy.log"
 cat "$out/legacy.log"
+for mut in 0 20;do
+iverilog -g2012 -s tb_qkd_host_token_service_replay -Ptb_qkd_host_token_service_replay.MUT=$mut -o "$out/service-replay$mut" "$P/rtl/qwen_sys/host_20261013/qkd_host_guard_fifo.sv" "$P/rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv" "$root/rtl/qwen_sys/host_20261013/qkd_host_ctrl_token_service_packet.sv" "$root/rtl/test/qwen_host/tb_qkd_host_token_service_replay.sv"
+set +e
+vvp "$out/service-replay$mut" > "$out/service-replay$mut.log" 2>&1
+rc=$?
+set -e
+if [ "$mut" = 0 ];then
+ if [ "$rc" != 0 ] || ! grep -q 'PASS token service replay' "$out/service-replay$mut.log";then cat "$out/service-replay$mut.log";exit 1;fi
+else
+ if [ "$rc" = 0 ] || ! grep -q FATAL "$out/service-replay$mut.log";then cat "$out/service-replay$mut.log";exit 1;fi
+fi
+cat "$out/service-replay$mut.log"
+done

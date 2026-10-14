@@ -2,7 +2,7 @@ module tb_qkd_host_token_allocator_transport;
  timeunit 1ns;timeprecision 1ps;
  parameter integer MUT=0;
  reg ck=0;always #0.4165 ck=~ck;
- reg por=0,warm=1;reg rst=0,cmd=0,abort=0;wire rr,gv,av,ad,ack;reg[3:0]drains=0;
+ reg fault_inject=0;reg por=0,warm=1;reg rst=0,cmd=0,abort=0;wire rr,gv,av,ad,ack;reg[3:0]drains=0;
  reg[181:0]raw=0;wire[15:0]ge;wire[17:0]gt,gp;wire[1:0]gg;wire[58:0]tag;wire allocfault,allocbusy;
  wire tx,cr,req,gr,tev,cv,cd,cf,ff;wire[511:0]packet;wire[181:0]hc;
  wire[17:0]rt,rp;wire[1:0]rg,cgen;wire[15:0]epoch;wire[58:0]ctag;wire[3:0]cda;
@@ -12,7 +12,7 @@ module tb_qkd_host_token_allocator_transport;
  .ck(ck),.rst_n(rst),.die_id(3'd0),.rx_v(1'b0),.rx_d(512'd0),.tx_v(tx),.tx_d(packet),.tx_cr(txcredit),
  .local_tk(93'd0),.local_kst(10'd0),.local_boot(2'd3),.cmd_v(cmd),.cmd_hc(raw),.cmd_cr(cr),.hc(hc),.fault(ff),
  .startup_allowed(1'b1),.local_service_ready(1'b1),.local_service_epoch(16'd0),.begin_v(1'b0),.begin_epoch(16'd0),
- .por_n(por),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.package_abort(abort),.abort_drained(drains),.token_request_valid(req),.token_request_ready(rr),
+ .por_n(por),.token_wrap_fence_valid(1'b0),.token_wrap_drained(1'b0),.token_wrap_link_reset_seen(1'b0),.token_wrap_retraining_done(1'b0),.token_allocator_fault(allocfault),.package_abort(abort),.abort_drained({(drains[3]&&!dut.busy&&dut.cn==0&&!dut.cv&&!tx&&!txcredit),drains[2:0]}),.token_request_valid(req),.token_request_ready(rr),
  .token_request_token(rt),.token_request_position(rp),.token_request_generation(rg),
  .token_grant_valid(gv),.token_grant_ready(gr),.token_grant_epoch(ge),.token_grant_token(gt),
  .token_grant_position(gp),.token_grant_generation(gg),.token_grant_tag(tag),
@@ -42,7 +42,7 @@ module tb_qkd_host_token_allocator_transport;
  task reset;begin rst=0;cmd=0;abort=0;drains=0;tick(6);rst=1;tick(8);end endtask
  task sendhc(input reg[181:0]h);begin raw=h;expected=h;cmd=1;tick(1);cmd=0;tick(6);end endtask
  ot_qwen_tp8_token_epoch_allocator allocator(.clk(ck),.por_n(por),.warm_ready(warm),
- .request_valid(req),.request_ready(rr),.request_token(rt),.request_position(rp),.request_generation(rg),
+ .request_valid(req),.request_ready(rr),.request_token(fault_inject?18'd151936:rt),.request_position(rp),.request_generation(rg),
  .grant_valid(gv),.grant_ready(gr),.grant_epoch(ge),.grant_token(gt),.grant_position(gp),.grant_generation(gg),.grant_tag(tag),
  .allocated_valid(av),.allocated_delivered(ad),.terminal_valid(cv),.terminal_tag(ctag),.terminal_generation(cgen),
  .terminal_done(cd),.terminal_fault(cf),.terminal_kv_drained(cda[0]),.terminal_vm_drained(cda[1]),
@@ -79,6 +79,10 @@ module tb_qkd_host_token_allocator_transport;
  drains=15;tick(20);check(!allocbusy&&!cv&&!allocfault,"midgrant reset retires only genuine retained identity after actual drains");
  warm=1;reset();expected=0;expected[38]=1;expected[35:18]=1300;expected[17:0]=67;sendhc(expected);tick(40);
  check(ge==4&&local_starts==1&&packets==7&&!allocfault&&!ff,"fresh allocation after reset-drain cancel uses next retained epoch4");
+ abort=1;drains=15;tick(20);check(!allocbusy&&!allocfault,"epoch4 genuine abort retires before fault injection");
+ reset();local_starts=0;packets=0;credits=0;requests=0;req_last=0;fault_inject=1;
+ expected=0;expected[38]=1;expected[35:18]=1400;expected[17:0]=68;sendhc(expected);tick(30);
+ check(allocfault&&ff&&!av&&!cv&&local_starts==0&&packets==0,"actual rejected allocator token propagates identity fault before watchdog; never-accepted request has no cancel identity");
  $display("PASS actual token allocator transport checks=%0d epoch0/1cancel/2 retained",checks);$finish;
  end
  initial begin tick(2000);$fatal(1,"timeout");end
