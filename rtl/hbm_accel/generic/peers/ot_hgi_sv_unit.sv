@@ -457,7 +457,7 @@ endmodule
 //    job is busy and the blanked shome / dhome is seen, 5-edge cool-down before the next request.
 //
 // DEVIATIONS from DESIGN.md (stated, see the report):
-//  D1 (closed 10-13) span multiply: 6 parallel 4 x (8 x 24) pipelines, 3 edges (+0.8k flops over the serial form).
+//  D1 (closed 10-13) span multiply: 6 parallel pipelines of 8 x (4 x 24) nibble products, 4 edges.
 //  D2 the word FIFO is {wl, q1} + the decode register w (three decoded words: RUN + 2 ahead = the stage lookahead).
 //  D3 allocation order is O, R, then A..D (sink table entries are mandatory and are taken first); every region
 //     takes two edges (decide / relocate).
@@ -706,6 +706,7 @@ module ot_hgi_sv_ctl #(
     // span multiply: 6 regions in parallel, 3 edges (partial products, sum, extent); the (n - 1) factors are
     // registered at take, so stage 1 is a 3:1 select and the 8 x 24 products only
     reg [15:0] no_m1, ni_m1, nih_m1;
+    reg [27:0] pn [0:5][0:7];                           // nibble x 24 partial products (a nibbles 0-3, c nibbles 4-7)
     reg [31:0] pq0 [0:5]; reg [31:0] pq1 [0:5]; reg [31:0] pq2 [0:5]; reg [31:0] pq3 [0:5]; reg [39:0] pacc [0:5];
     reg [15:0] m_a [0:5]; reg [15:0] m_c [0:5]; reg [18:0] mhi [0:5]; reg [5:0] m_badv;
     always @* for (integer k = 0; k < 6; k = k + 1) begin
@@ -884,14 +885,19 @@ module ot_hgi_sv_ctl #(
                         else dstt <= D_MUL;
                     end
                 end
-                // SPAN: (nr - 1) so + (ni - 1) si, all 6 regions at once: products, sum, extent (3 edges)
+                // SPAN: (nr - 1) so + (ni - 1) si, all 6 regions at once: 4 x 24 nibble products, byte products, sum,
+                // extent (4 edges; 10-13: the 8 x 24 product in one edge was a 27-level stage, ~995 ps)
                 D_MUL: begin
                     for (integer k = 0; k < 6; k = k + 1) begin
-                        pq0[k] <= {24'd0, m_a[k][7:0]} * {8'd0, c_so[k]}; pq1[k] <= {24'd0, m_a[k][15:8]} * {8'd0, c_so[k]};
-                        pq2[k] <= {24'd0, m_c[k][7:0]} * {8'd0, c_si[k]}; pq3[k] <= {24'd0, m_c[k][15:8]} * {8'd0, c_si[k]};
+                        for (integer h = 0; h < 4; h = h + 1) begin
+                            pn[k][h]     <= {24'd0, m_a[k][4*h +: 4]} * {4'd0, c_so[k]};
+                            pn[k][4 + h] <= {24'd0, m_c[k][4*h +: 4]} * {4'd0, c_si[k]};
+                        end
+                        pq0[k] <= {4'd0, pn[k][0]} + {pn[k][1], 4'd0}; pq1[k] <= {4'd0, pn[k][2]} + {pn[k][3], 4'd0};
+                        pq2[k] <= {4'd0, pn[k][4]} + {pn[k][5], 4'd0}; pq3[k] <= {4'd0, pn[k][6]} + {pn[k][7], 4'd0};
                         pacc[k] <= {8'd0, pq0[k]} + {pq1[k], 8'd0} + {8'd0, pq2[k]} + {pq3[k], 8'd0};
                     end
-                    if (mph == 4'd2) begin
+                    if (mph == 4'd3) begin
                         for (integer k = 0; k < 6; k = k + 1) begin lo[k] <= c_base[k][17:0]; hi[k] <= mhi[k][17:0]; end
                         if (cpair) begin lo[0] <= c_base[0][17:0] & ~18'd1; hi[0] <= mhi[0][17:0] | 18'd1; end
                         if (m_badv != 6'd0) begin dfault <= 1'b1; dstt <= D_FAULT; end   // an operand word >= 2^18
@@ -1365,7 +1371,11 @@ module ot_hgi_sv_ctl #(
     reg [1:0] qs; reg [2:0] qv_tag; reg qv_v, qv_nop, qv_rv, qv_rdy; reg [3:0] q_i; reg [2:0] outst;
     wire qv_ok = qv_v && qv_tag == rdp;
     wire [14:0] q_vs = sl_rvsec[rdp] + {11'd0, q_i};
-    wire q_iss = qs == Q_WT && rf_rrv && rf_rm != 8'd0;
+    // rfile read return: pin flops (10-13: the return went straight into the packet register and the FSM)
+    reg rrv_q; reg [255:0] rrd_q; reg [7:0] rrm_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rrv_q <= 1'b0; else rrv_q <= rf_rrv;
+    always @(posedge clk) begin rrd_q <= rf_rd; rrm_q <= rf_rm; end
+    wire q_iss = qs == Q_WT && rrv_q && rrm_q != 8'd0;
     assign ev_rd = qs == Q_ACK && outst == 3'd0;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -1382,11 +1392,11 @@ module ot_hgi_sv_ctl #(
                     else if (qv_rdy && !hfault) begin q_i <= 4'd0; qs <= Q_RD; end
                 end
                 Q_RD: if (outst < 3'd4) begin rf_rv <= 1'b1; rf_rsec <= {sl_rslot[rdp], q_i[2:0]}; qs <= Q_WT; end
-                Q_WT: if (rf_rrv) begin
-                    if (rf_rm != 8'd0)
-                        vmq <= {1'b1, 1'b1, {12'd0, q_vs}, 5'd0, rf_rd,
-                                {{4{rf_rm[7]}}, {4{rf_rm[6]}}, {4{rf_rm[5]}}, {4{rf_rm[4]}},
-                                 {4{rf_rm[3]}}, {4{rf_rm[2]}}, {4{rf_rm[1]}}, {4{rf_rm[0]}}}, 16'h5357};
+                Q_WT: if (rrv_q) begin
+                    if (rrm_q != 8'd0)
+                        vmq <= {1'b1, 1'b1, {12'd0, q_vs}, 5'd0, rrd_q,
+                                {{4{rrm_q[7]}}, {4{rrm_q[6]}}, {4{rrm_q[5]}}, {4{rrm_q[4]}},
+                                 {4{rrm_q[3]}}, {4{rrm_q[2]}}, {4{rrm_q[1]}}, {4{rrm_q[0]}}}, 16'h5357};
                     q_i <= q_i + 4'd1;
                     qs <= (q_i + 4'd1 == sl_rns[rdp]) ? Q_ACK : Q_RD;
                 end
