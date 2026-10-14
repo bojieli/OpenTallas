@@ -9,7 +9,8 @@ def run(case):
  if name in ('split_mask_mutant','stride16_mutant'):
   case_src=out/('src_'+name);shutil.copytree(src,case_src,dirs_exist_ok=True)
   f=case_src/'rtl/hdc/ot_qwen_w12_matvec.sv';text=f.read_text()
-  before,after=('split_r > xab','split_r >= xab') if name=='split_mask_mutant' else ('(xcs_r << xab)','((xcs_r & 24\'h00FFFF) << xab)')
+  mask_before='i_split > xab' if 'i_split > xab' in text else 'split_r > xab'
+  before,after=(mask_before,mask_before.replace(' > ',' >= ')) if name=='split_mask_mutant' else ('(xcs_r << xab)','((xcs_r & 24\'h00FFFF) << xab)')
   if text.count(before)!=1:raise RuntimeError('mutation source not unique')
   f.write_text(text.replace(before,after))
   (out/(name+'_provenance.json')).write_text(json.dumps({'mutation':name,'before':before,'after':after,'sha256':hashlib.sha256(f.read_bytes()).hexdigest()},indent=2)+'\n')
