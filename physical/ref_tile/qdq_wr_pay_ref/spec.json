@@ -74,8 +74,8 @@
  },
  "job": {
   "owner": "Codex:qdq-write-completion-split",
-  "branch": "codex-qdq-write-completion-split",
-  "tag": "p9",
+  "branch": "claude/hbm-qdq-pay-p10",
+  "tag": "p10",
   "views_to": "physical/ref_tile/qdq_wr_pay_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_wr_pay_ref",
   "purpose": "Registered-empty-bypass PAY candidate EMPTY_BYPASS1. Dedicated45056word gate forces1148SRAMwrites/readbacks and256actualbypasses; pending/native184 target with capturedACKFIN, exactsource fullnative required beforeadoption.",
@@ -135,7 +135,7 @@
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
  "recipe": 2,
- "structural_change": "p7 GRT-0116 (1,965 overflow, 2,178 markers at x 80-140 incl. 1,041 capacity-0 over-macro gcells) is a cut failure, not a pin spread: the 64x512 SRAM has ALL pins on its W/E M4 edges; head rd_out 512 (W edge) and the EMPTY_BYPASS y path fan into 8 x 280 WWQ lane registers across the whole N face, so ~540 nets cross the N channel horizontally (macro top 101.52 -> die 125.28 = 23.76 um, ~580 usable M2+M4 tracks: 0.94 > 0.60); p8 only re-spread the S face y pins (does not touch that cut) and also collided dfault with y[58]. p9: outline 259.2 x 142.56 with the macro pinned at y 23.76 -> N channel 41.04 um (~1,000 tracks: 0.54); S channel unchanged (y[0..265] -> W-edge wd_in, y[266..511] -> E-edge wd_in, index-ordered pins: <= 0.36). RTL unchanged.",
+ "structural_change": "p10: p9 removed the GRT congestion (routed DRC 0) but TT -137.85: SRAM-head ESL regs / mh_o -> wwq payload 17 levels because the fire cone (credits, hit, bypass eligibility) was the load ENABLE of all 2,232 payload flops; p10 loads the payload every edge from the registered head pointer and keeps w_fire&&w_hit only on the 8 valid flops (same edge, no cycle, RTL ot_hgi_qdq_wr_pay). Outline/pins as p9. Previous: p7 GRT-0116 (1,965 overflow, 2,178 markers at x 80-140 incl. 1,041 capacity-0 over-macro gcells) is a cut failure, not a pin spread: the 64x512 SRAM has ALL pins on its W/E M4 edges; head rd_out 512 (W edge) and the EMPTY_BYPASS y path fan into 8 x 280 WWQ lane registers across the whole N face, so ~540 nets cross the N channel horizontally (macro top 101.52 -> die 125.28 = 23.76 um, ~580 usable M2+M4 tracks: 0.94 > 0.60); p8 only re-spread the S face y pins (does not touch that cut) and also collided dfault with y[58]. p9: outline 259.2 x 142.56 with the macro pinned at y 23.76 -> N channel 41.04 um (~1,000 tracks: 0.54); S channel unchanged (y[0..265] -> W-edge wd_in, y[266..511] -> E-edge wd_in, index-ordered pins: <= 0.36). RTL unchanged.",
  "clock": "spine",
  "params": {
   "EMPTY_BYPASS": 1

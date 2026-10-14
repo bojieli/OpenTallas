@@ -134,8 +134,12 @@ module ot_hgi_qdq_wr_pay #(
         if (f_m_v) begin mq_o[mq_t] <= f_m[18:4]; mq_n[mq_t] <= f_m[3:1]; mq_z[mq_t] <= f_m[0]; end
         {mh_o, mh_n, mh_z} <= ({19{!w_fire}} & mq_head0) | ({19{w_fire}} & mq_head1);
         snapshot <= snapshot_counts; // first registered launch, same edge as WWQ
+        // p10 (Claude 10-14, p9 route TT -137.85: SRAM head / bypass -> wwq 17 levels with w_fire, i.e. the credit / hit /
+        // bypass-eligibility cone, as the load enable of 2,232 payload flops): the payload is loaded EVERY edge from the
+        // registered head pointer (s from mh_o) and is only meaningful when the lane's valid bit (wwq[279], still
+        // w_fire && w_hit) is set; the fire cone now drives 8 valid flops, not the payload enables.  Same edge, no cycle.
         for (integer b = 0; b < 8; b = b + 1) begin
-            if (w_fire && w_hit[b]) begin
+            begin
                 reg [255:0] d; reg [1:0] s; reg [127:0] c; s = 2'(3'(b - w_sec0[2:0]));
                 // decoded constant-index sector select (one-hot AND-OR, no runtime part-select)
                 c = ({128{s == 2'd0}} & result_head[127:0]) | ({128{s == 2'd1}} & result_head[255:128]) |
