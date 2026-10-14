@@ -1079,8 +1079,8 @@
    ]
   },
   {
-   "die_pin": "ck_t0",
-   "rtl": "ck_station[0]",
+   "die_pin": "ck_i0",
+   "rtl": "ck_stin[0]",
    "face": "W",
    "layers": [
     "M4"
@@ -1091,80 +1091,116 @@
    ]
   },
   {
-   "die_pin": "ck_t1",
-   "rtl": "ck_station[1]",
+   "die_pin": "ck_i1",
+   "rtl": "ck_stin[1]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    109.98,
-    109.98
+    107.004,
+    107.004
    ]
   },
   {
-   "die_pin": "ck_t2",
-   "rtl": "ck_station[2]",
+   "die_pin": "ck_i2",
+   "rtl": "ck_stin[2]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    120.012,
-    120.012
+    114.012,
+    114.012
    ]
   },
   {
-   "die_pin": "ck_t3",
-   "rtl": "ck_station[3]",
+   "die_pin": "ck_i3",
+   "rtl": "ck_stin[3]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    129.996,
-    129.996
+    121.02,
+    121.02
    ]
   },
   {
-   "die_pin": "ck_t4",
-   "rtl": "ck_station[4]",
+   "die_pin": "ck_i4",
+   "rtl": "ck_stin[4]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    139.98,
-    139.98
+    127.98,
+    127.98
    ]
   },
   {
-   "die_pin": "ck_t5",
-   "rtl": "ck_station[5]",
+   "die_pin": "ck_i5",
+   "rtl": "ck_stin[5]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    150.012,
-    150.012
+    134.988,
+    134.988
    ]
   },
   {
-   "die_pin": "ck_t6",
-   "rtl": "ck_station[6]",
+   "die_pin": "ck_i6",
+   "rtl": "ck_stin[6]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    159.996,
-    159.996
+    141.996,
+    141.996
    ]
   },
   {
-   "die_pin": "ck_t7",
-   "rtl": "ck_station[7]",
+   "die_pin": "ck_i7",
+   "rtl": "ck_stin[7]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    149.004,
+    149.004
+   ]
+  },
+  {
+   "die_pin": "ck_i8",
+   "rtl": "ck_stin[8]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    156.012,
+    156.012
+   ]
+  },
+  {
+   "die_pin": "ck_i9",
+   "rtl": "ck_stin[9]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    163.02,
+    163.02
+   ]
+  },
+  {
+   "die_pin": "ck_i10",
+   "rtl": "ck_stin[10]",
    "face": "W",
    "layers": [
     "M4"
@@ -1175,68 +1211,92 @@
    ]
   },
   {
-   "die_pin": "ck_t8",
-   "rtl": "ck_station[8]",
+   "die_pin": "ck_i11",
+   "rtl": "ck_stin[11]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    180.012,
-    180.012
+    176.988,
+    176.988
    ]
   },
   {
-   "die_pin": "ck_t9",
-   "rtl": "ck_station[9]",
+   "die_pin": "ck_i12",
+   "rtl": "ck_stin[12]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    189.996,
-    189.996
+    183.996,
+    183.996
    ]
   },
   {
-   "die_pin": "ck_t10",
-   "rtl": "ck_station[10]",
+   "die_pin": "ck_i13",
+   "rtl": "ck_stin[13]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    199.98,
-    199.98
+    191.004,
+    191.004
    ]
   },
   {
-   "die_pin": "ck_t11",
-   "rtl": "ck_station[11]",
+   "die_pin": "ck_i14",
+   "rtl": "ck_stin[14]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    210.012,
-    210.012
+    198.012,
+    198.012
    ]
   },
   {
-   "die_pin": "ck_t12",
-   "rtl": "ck_station[12]",
+   "die_pin": "ck_i15",
+   "rtl": "ck_stin[15]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    219.996,
-    219.996
+    205.02,
+    205.02
    ]
   },
   {
-   "die_pin": "ck_t13",
-   "rtl": "ck_station[13]",
+   "die_pin": "ck_o0",
+   "rtl": "ck_stout[0]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    216.012,
+    216.012
+   ]
+  },
+  {
+   "die_pin": "ck_o1",
+   "rtl": "ck_stout[1]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    223.02,
+    223.02
+   ]
+  },
+  {
+   "die_pin": "ck_o2",
+   "rtl": "ck_stout[2]",
    "face": "W",
    "layers": [
     "M4"
@@ -1247,27 +1307,159 @@
    ]
   },
   {
-   "die_pin": "ck_t14",
-   "rtl": "ck_station[14]",
+   "die_pin": "ck_o3",
+   "rtl": "ck_stout[3]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    240.012,
-    240.012
+    236.988,
+    236.988
    ]
   },
   {
-   "die_pin": "ck_t15",
-   "rtl": "ck_station[15]",
+   "die_pin": "ck_o4",
+   "rtl": "ck_stout[4]",
    "face": "W",
    "layers": [
     "M4"
    ],
    "offset_um": [
-    249.996,
-    249.996
+    243.996,
+    243.996
+   ]
+  },
+  {
+   "die_pin": "ck_o5",
+   "rtl": "ck_stout[5]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    251.004,
+    251.004
+   ]
+  },
+  {
+   "die_pin": "ck_o6",
+   "rtl": "ck_stout[6]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    258.012,
+    258.012
+   ]
+  },
+  {
+   "die_pin": "ck_o7",
+   "rtl": "ck_stout[7]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    265.02,
+    265.02
+   ]
+  },
+  {
+   "die_pin": "ck_o8",
+   "rtl": "ck_stout[8]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    271.98,
+    271.98
+   ]
+  },
+  {
+   "die_pin": "ck_o9",
+   "rtl": "ck_stout[9]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    278.988,
+    278.988
+   ]
+  },
+  {
+   "die_pin": "ck_o10",
+   "rtl": "ck_stout[10]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    285.996,
+    285.996
+   ]
+  },
+  {
+   "die_pin": "ck_o11",
+   "rtl": "ck_stout[11]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    293.004,
+    293.004
+   ]
+  },
+  {
+   "die_pin": "ck_o12",
+   "rtl": "ck_stout[12]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    300.012,
+    300.012
+   ]
+  },
+  {
+   "die_pin": "ck_o13",
+   "rtl": "ck_stout[13]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    307.02,
+    307.02
+   ]
+  },
+  {
+   "die_pin": "ck_o14",
+   "rtl": "ck_stout[14]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    313.98,
+    313.98
+   ]
+  },
+  {
+   "die_pin": "ck_o15",
+   "rtl": "ck_stout[15]",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    320.988,
+    320.988
    ]
   },
   {
@@ -1278,8 +1470,8 @@
     "M4"
    ],
    "offset_um": [
-    267.996,
-    267.996
+    331.98,
+    331.98
    ]
   },
   {
@@ -1290,8 +1482,8 @@
     "M4"
    ],
    "offset_um": [
-    277.98,
-    277.98
+    338.988,
+    338.988
    ]
   },
   {
@@ -1302,8 +1494,8 @@
     "M4"
    ],
    "offset_um": [
-    288.012,
-    288.012
+    345.996,
+    345.996
    ]
   },
   {
@@ -1314,8 +1506,8 @@
     "M4"
    ],
    "offset_um": [
-    297.996,
-    297.996
+    353.004,
+    353.004
    ]
   },
   {
@@ -1326,8 +1518,8 @@
     "M4"
    ],
    "offset_um": [
-    307.98,
-    307.98
+    360.012,
+    360.012
    ]
   },
   {
@@ -1338,8 +1530,8 @@
     "M4"
    ],
    "offset_um": [
-    318.012,
-    318.012
+    367.02,
+    367.02
    ]
   },
   {
@@ -1350,8 +1542,8 @@
     "M4"
    ],
    "offset_um": [
-    327.996,
-    327.996
+    373.98,
+    373.98
    ]
   },
   {
@@ -1362,8 +1554,8 @@
     "M4"
    ],
    "offset_um": [
-    337.98,
-    337.98
+    380.988,
+    380.988
    ]
   },
   {
@@ -1374,8 +1566,8 @@
     "M4"
    ],
    "offset_um": [
-    348.012,
-    348.012
+    387.996,
+    387.996
    ]
   },
   {
@@ -1386,8 +1578,8 @@
     "M4"
    ],
    "offset_um": [
-    357.996,
-    357.996
+    395.004,
+    395.004
    ]
   },
   {
@@ -1398,8 +1590,8 @@
     "M4"
    ],
    "offset_um": [
-    367.98,
-    367.98
+    402.012,
+    402.012
    ]
   },
   {
@@ -1410,8 +1602,8 @@
     "M4"
    ],
    "offset_um": [
-    378.012,
-    378.012
+    409.02,
+    409.02
    ]
   },
   {
@@ -1422,8 +1614,8 @@
     "M4"
    ],
    "offset_um": [
-    387.996,
-    387.996
+    415.98,
+    415.98
    ]
   },
   {
@@ -1434,8 +1626,8 @@
     "M4"
    ],
    "offset_um": [
-    397.98,
-    397.98
+    422.988,
+    422.988
    ]
   },
   {
@@ -1446,8 +1638,8 @@
     "M4"
    ],
    "offset_um": [
-    408.012,
-    408.012
+    429.996,
+    429.996
    ]
   },
   {
@@ -1458,8 +1650,8 @@
     "M4"
    ],
    "offset_um": [
-    417.996,
-    417.996
+    437.004,
+    437.004
    ]
   }
  ],
@@ -1474,6 +1666,198 @@
    "offset_um": [
     24.012,
     24.012
+   ]
+  },
+  "ck_i0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    99.996,
+    99.996
+   ]
+  },
+  "ck_i1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    107.004,
+    107.004
+   ]
+  },
+  "ck_i10": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    169.98,
+    169.98
+   ]
+  },
+  "ck_i11": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    176.988,
+    176.988
+   ]
+  },
+  "ck_i12": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    183.996,
+    183.996
+   ]
+  },
+  "ck_i13": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    191.004,
+    191.004
+   ]
+  },
+  "ck_i14": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    198.012,
+    198.012
+   ]
+  },
+  "ck_i15": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    205.02,
+    205.02
+   ]
+  },
+  "ck_i2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    114.012,
+    114.012
+   ]
+  },
+  "ck_i3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    121.02,
+    121.02
+   ]
+  },
+  "ck_i4": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    127.98,
+    127.98
+   ]
+  },
+  "ck_i5": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    134.988,
+    134.988
+   ]
+  },
+  "ck_i6": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    141.996,
+    141.996
+   ]
+  },
+  "ck_i7": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    149.004,
+    149.004
+   ]
+  },
+  "ck_i8": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    156.012,
+    156.012
+   ]
+  },
+  "ck_i9": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    163.02,
+    163.02
    ]
   },
   "ck_k": {
@@ -1496,8 +1880,8 @@
     "M4"
    ],
    "offset_um": [
-    267.996,
-    267.996
+    331.98,
+    331.98
    ]
   },
   "ck_l1": {
@@ -1508,8 +1892,8 @@
     "M4"
    ],
    "offset_um": [
-    277.98,
-    277.98
+    338.988,
+    338.988
    ]
   },
   "ck_l10": {
@@ -1520,8 +1904,8 @@
     "M4"
    ],
    "offset_um": [
-    367.98,
-    367.98
+    402.012,
+    402.012
    ]
   },
   "ck_l11": {
@@ -1532,11 +1916,131 @@
     "M4"
    ],
    "offset_um": [
-    378.012,
-    378.012
+    409.02,
+    409.02
    ]
   },
   "ck_l12": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    415.98,
+    415.98
+   ]
+  },
+  "ck_l13": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    422.988,
+    422.988
+   ]
+  },
+  "ck_l14": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    429.996,
+    429.996
+   ]
+  },
+  "ck_l15": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    437.004,
+    437.004
+   ]
+  },
+  "ck_l2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    345.996,
+    345.996
+   ]
+  },
+  "ck_l3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    353.004,
+    353.004
+   ]
+  },
+  "ck_l4": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    360.012,
+    360.012
+   ]
+  },
+  "ck_l5": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    367.02,
+    367.02
+   ]
+  },
+  "ck_l6": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    373.98,
+    373.98
+   ]
+  },
+  "ck_l7": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    380.988,
+    380.988
+   ]
+  },
+  "ck_l8": {
    "bits": 1,
    "dir": "INOUT",
    "face": "W",
@@ -1548,126 +2052,6 @@
     387.996
    ]
   },
-  "ck_l13": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    397.98,
-    397.98
-   ]
-  },
-  "ck_l14": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    408.012,
-    408.012
-   ]
-  },
-  "ck_l15": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    417.996,
-    417.996
-   ]
-  },
-  "ck_l2": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    288.012,
-    288.012
-   ]
-  },
-  "ck_l3": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    297.996,
-    297.996
-   ]
-  },
-  "ck_l4": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    307.98,
-    307.98
-   ]
-  },
-  "ck_l5": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    318.012,
-    318.012
-   ]
-  },
-  "ck_l6": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    327.996,
-    327.996
-   ]
-  },
-  "ck_l7": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    337.98,
-    337.98
-   ]
-  },
-  "ck_l8": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    348.012,
-    348.012
-   ]
-  },
   "ck_l9": {
    "bits": 1,
    "dir": "INOUT",
@@ -1676,8 +2060,200 @@
     "M4"
    ],
    "offset_um": [
-    357.996,
-    357.996
+    395.004,
+    395.004
+   ]
+  },
+  "ck_o0": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    216.012,
+    216.012
+   ]
+  },
+  "ck_o1": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    223.02,
+    223.02
+   ]
+  },
+  "ck_o10": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    285.996,
+    285.996
+   ]
+  },
+  "ck_o11": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    293.004,
+    293.004
+   ]
+  },
+  "ck_o12": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    300.012,
+    300.012
+   ]
+  },
+  "ck_o13": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    307.02,
+    307.02
+   ]
+  },
+  "ck_o14": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    313.98,
+    313.98
+   ]
+  },
+  "ck_o15": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    320.988,
+    320.988
+   ]
+  },
+  "ck_o2": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    229.98,
+    229.98
+   ]
+  },
+  "ck_o3": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    236.988,
+    236.988
+   ]
+  },
+  "ck_o4": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    243.996,
+    243.996
+   ]
+  },
+  "ck_o5": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    251.004,
+    251.004
+   ]
+  },
+  "ck_o6": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    258.012,
+    258.012
+   ]
+  },
+  "ck_o7": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    265.02,
+    265.02
+   ]
+  },
+  "ck_o8": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    271.98,
+    271.98
+   ]
+  },
+  "ck_o9": {
+   "bits": 1,
+   "dir": "INOUT",
+   "face": "W",
+   "layers": [
+    "M4"
+   ],
+   "offset_um": [
+    278.988,
+    278.988
    ]
   },
   "ck_s": {
@@ -1690,198 +2266,6 @@
    "offset_um": [
     72.012,
     72.012
-   ]
-  },
-  "ck_t0": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    99.996,
-    99.996
-   ]
-  },
-  "ck_t1": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    109.98,
-    109.98
-   ]
-  },
-  "ck_t10": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    199.98,
-    199.98
-   ]
-  },
-  "ck_t11": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    210.012,
-    210.012
-   ]
-  },
-  "ck_t12": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    219.996,
-    219.996
-   ]
-  },
-  "ck_t13": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    229.98,
-    229.98
-   ]
-  },
-  "ck_t14": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    240.012,
-    240.012
-   ]
-  },
-  "ck_t15": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    249.996,
-    249.996
-   ]
-  },
-  "ck_t2": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    120.012,
-    120.012
-   ]
-  },
-  "ck_t3": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    129.996,
-    129.996
-   ]
-  },
-  "ck_t4": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    139.98,
-    139.98
-   ]
-  },
-  "ck_t5": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    150.012,
-    150.012
-   ]
-  },
-  "ck_t6": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    159.996,
-    159.996
-   ]
-  },
-  "ck_t7": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    169.98,
-    169.98
-   ]
-  },
-  "ck_t8": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    180.012,
-    180.012
-   ]
-  },
-  "ck_t9": {
-   "bits": 1,
-   "dir": "INOUT",
-   "face": "W",
-   "layers": [
-    "M4"
-   ],
-   "offset_um": [
-    189.996,
-    189.996
    ]
   },
   "e": {
@@ -1945,8 +2329,8 @@
    ]
   }
  },
- "contract_version": "1.1",
- "source": "kv_die.py case --kv-wq-mirror --split @ a5e4779f9 (claude/qwen-split-kvsys-1014); prep tools/qwen_kv_die/chain/kvsys_prep.sh",
+ "contract_version": "1.1 (errata 2026-10-14 13:4x)",
+ "source": "027ac5870 (generator), case /tmp kvs3 prep; slot / data pins identical to v1.1 a5e4779f9",
  "rule": "die-assigned (top-down, owner 10-13): the tile kit consumes these faces / layers / offsets; a pin the tile cannot build is a request in el1014-qwen-split-kvsys.log (next revision)",
  "subslots_canonical_R0": {
   "note": "canonical orientation R0 = control tile BELOW (S face = control face). Heads below their control tile are placed MX by the die (their S face then faces up). A feasible fit, not a mandate: the head team may move children inside the slot but must keep the die pins and the reach rules below",
@@ -1976,11 +2360,12 @@
     43.2
    ]
   },
-  "stations": "16 x station <= 32.4 x 32.4, in the 43.2-um column gaps beside their lanes (2 per gap per row)"
+  "stations": "head r2: 16 stin + 16 stout leaves (<= 54 x 43.2) in the 43.2-um column gaps / free cells: stin between the front and its lane, stout between its lane and the E face / ktree"
  },
  "reach_rules": [
   "die pin -> first register <= 500 um: the ti / e inputs land in the front at the S face, s leaves the score; nb leaves on the E face (astk side)",
-  "inside the head every register-to-register hop <= 500 um: with the head 1,080 um wide, the native station (one leaf, D = 2 co-located) CANNOT reach both its lane and the E face from the far columns (nb from a column-0 station to the E face ~ 900 um): split the station nb stage into station D 1 + an nb relay leaf D 1 at the E side (latency unchanged), and keep every station within 500 um of the front f_dr pins (else split the front NRS stage the same way)"
+  "inside the head every register-to-register hop <= 500 um (head r2 stin / stout split does this in the old 734.4 x 855.36 slot; re-plan it in THIS slot with the front on the S = control face, so the ectl -> far-head hop stays <= 500 um: the old slot puts the far head 855+ um from its control tile, a die-level hop no intra-head plan can fix)"
  ],
- "clock_rule": "each entry is delivered at phi - R_child (R = that child view's insertion.json boundary mean); the die model holds them as 35 separate CTS sinks on the stack trunk (frames: R 0 until the views exist)"
+ "clock_rule": "each entry is delivered at phi - R_child (R = that child view's insertion.json boundary mean); the die model holds them as 51 separate CTS sinks on the stack trunk (head r2 d7c8b1909: front, ktree, score, 16 stin, 16 stout, 16 lane8; frames: R 0 until the views exist)",
+ "errata": "head r2 (d7c8b1909, stin / stout split) replaced the 35-entry native head: the die binds 51 clock entries (ck_f / ck_k / ck_s, ck_i0-15 = ck_stin, ck_o0-15 = ck_stout, ck_l0-15 = ck_lane) on the W face; outline, faces and every data pin unchanged"
 }
