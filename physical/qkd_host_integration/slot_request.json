@@ -1,0 +1,188 @@
+{
+  "status": "PRODUCTION_COMPONENT_RTL_AND_BENCH_ONLY_NO_FULL_HOST_QUALIFICATION",
+  "date": "2026-10-13T20:10:24.565408-07:00",
+  "base_branch": "codex/qwen-host-integrate-1013",
+  "current_parent_slot_um": [
+    777.576,
+    518.376
+  ],
+  "parent_fit": "UNPROVEN",
+  "children": [
+    {
+      "master": "qkd_host_axi_packet",
+      "flop_bits": 3472,
+      "role": "die0 HOST AXI termination",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        86.4,
+        172.8
+      ],
+      "area_request_um2": 14929.920000000002,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_axi_packet.sv",
+      "sha256": "8c708d5de055184ddb521cb18347a3a90866828eb894d3aac90dd4c13e06feb8"
+    },
+    {
+      "master": "qkd_host_ctrl_packet",
+      "flop_bits": 5467,
+      "role": "DIE0 ND8 transport; peer configuration measured separately",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        129.6,
+        172.8
+      ],
+      "area_request_um2": 22394.88,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_ctrl_packet.sv",
+      "sha256": "d28949933e86bfc0ff9b04155bebeba732794018772a9bf769f2f57a7dbc3d17"
+    },
+    {
+      "master": "qkd_host_ingest_map",
+      "flop_bits": 4439,
+      "role": "local production KV/embedding prefill mapper",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        129.6,
+        172.8
+      ],
+      "area_request_um2": 22394.88,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_map.sv",
+      "sha256": "36a310d43df175fab68c93e69a598055f7b130459019ebb2a89fd364cef5f6e9"
+    },
+    {
+      "master": "qkd_host_visibility_fence",
+      "flop_bits": 696,
+      "role": "local completion visibility",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck",
+        "clk_h"
+      ],
+      "outline_request_um": [
+        64.8,
+        86.4
+      ],
+      "area_request_um2": 5598.72,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_visibility_fence.sv",
+      "sha256": "3b259728ed1569207f9c5acdf77600141648699b12ec4ea60fd7e8a34608ce80"
+    },
+    {
+      "master": "qkd_host_static_pc",
+      "flop_bits": 4141,
+      "role": "at each logical PC, alongside controller static port",
+      "instances_per_die": 128,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        129.6,
+        172.8
+      ],
+      "area_request_um2": 22394.88,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+      "sha256": "dbeff5405f1386e09915e4f2f205896afb88c285b2805168c2084613d4544d09"
+    },
+    {
+      "master": "qkd_host_ingest_station",
+      "flop_bits": null,
+      "role": "at each logical PC registered forward/credit/ACK seam",
+      "instances_per_die": 128,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        86.4,
+        86.4
+      ],
+      "area_request_um2": 7464.960000000001,
+      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_ingest_station.sv",
+      "sha256": "28931dd981edaf460f2be7d928e3bea62ca8ea2cff8fa3ee72f78c36e96b460c"
+    }
+  ],
+  "existing_children": [
+    {
+      "master": "qkd_host_ctl",
+      "instances": "DIE0 only",
+      "sinks": 935,
+      "outline_um": [
+        64.8,
+        108
+      ],
+      "route": "qkd_host_ctl-hc1-71ffdaf23 pending"
+    },
+    {
+      "master": "qfd_io_host_qm",
+      "clocks": [
+        "clk_h",
+        "clk_i",
+        "ck"
+      ],
+      "outline_um": [
+        370,
+        410
+      ],
+      "view": "CLOSED export assigned root",
+      "timing_ps": {
+        "TT": 32.28,
+        "FF": 1.92
+      },
+      "throughput_ratio": 1.002
+    },
+    {
+      "master": "ot_host_if FMT1 / physical prompt / CSR reset",
+      "status": "STILL_REQUIRES_PHYSICAL_PARTITION_AND_ND8_RESET_BOOT_BINDING"
+    }
+  ],
+  "controller_variant": {
+    "master": "qkd_ctrl_pc_host",
+    "instances": 128,
+    "old_closed_master_untouched": true,
+    "added_seam": [
+      "completion_v",
+      "completion_we",
+      "completion_fault"
+    ],
+    "outline": "current qkd_ctrl_pc246.24x172.8 candidate; variant fit/clock gate required",
+    "bench": "3072 exact sectors 28 KV writes 3 static writes 10 issued/retired observer events; event polarity mutant fails"
+  },
+  "required_contract_revisions": [
+    "HOST/CTRL addressed version1 board endpoint transport and per-die DIE role",
+    "ing530 => forward291 plus reverse32 credit bits per stack",
+    "128 local physical write ACKs => registered popcount8 then held-snapshot fence",
+    "128 static arbiter/station sites with separate roots and pin files",
+    "controller host observer variant pins and three-domain reset contract"
+  ],
+  "remaining": [
+    "full HOST class mux/credit and existing NG8 adapter binding",
+    "host_if FMT1 leaf + prompt SRAM + CSR/reset leaves bound to original ND8 controller",
+    "full static32-node chains+relays and saturation/hotPC composed bench",
+    "boot checksum/marker and reset sequence peer binding",
+    "full ingest composition benchmark against closed price5117 and production layer measurement",
+    "CTS gates/route/real views and die timing for every new component"
+  ]
+}
