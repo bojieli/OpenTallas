@@ -328,6 +328,13 @@ def tile_cap(s: dict, slot: dict | None) -> tuple[str, str]:
         if cap not in (None, "M5") or s.get("pg_layer") not in (None, "M5"):
             raise SpecError("M6 pin-only grant requires signal/PG layer_cap M5")
         return "M5", "pin-only grant"
+    if cap is None and s["name"] not in LEGACY_KITS:
+        # re-read: the closure daemon imports this module once, and a native-launch re-kit
+        # (tools/ref_tile/rekit_native_launch.py) freezes a closed pre-M5 kit here while it runs
+        try:
+            LEGACY_KITS.update(json.loads((Path(__file__).resolve().parent / "legacy_layer_kits.json").read_text())["kits"])
+        except (OSError, ValueError, KeyError):
+            pass
     if cap is None and s["name"] in LEGACY_KITS:
         return LEGACY_KITS[s["name"]], "legacy"
     if cap is None and s.get("pg_layer") not in (None, "M5"):
@@ -1445,7 +1452,10 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
     if base is not None and ck.exists():
         insertion = o / "insertion.json"
         insertion.unlink(missing_ok=True)  # a failed measurement cannot retain a prior route's clock record
-        cr = subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--all-clocks", "--output", str(insertion)])
+        # --raw-source: the published R is the physical tree from the clock pin (the die delivers phi - R), never an
+        # arrival a compensated entry SDC (set_clock_latency -source -R) pulled to ~0
+        cr = subprocess.run([sys.executable, str(ck), "--base", str(base), "--routed", "--all-clocks", "--raw-source",
+                             "--output", str(insertion)])
         if cr.returncode:
             (o / "CLOCK_INSERTION_FAILED").write_text(f"clock measurement exit {cr.returncode}; no insertion.json published\n")
         else:
