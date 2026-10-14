@@ -32,14 +32,33 @@ module ot_hbm_xp_buf_rptr #(parameter integer TW = 25, parameter integer MUT_LAN
     (* keep = 1 *) reg [8:0] mbf_c;
     // read pointer: one kept copy of the beat count and the format bit per 128-b chunk of ob_d (select fan-out <= 128 x 8)
     (* keep = 1 *) reg [2:0] ecnt_o [0:15]; (* keep = 1 *) reg [15:0] mbf_o;
-    // output chunk oc of beat e: BF16 = {944'd0, slice e, 80'd0}; block-dot = slices 2e, 2e+1
-    function automatic [127:0] sel_d(input integer oc, input bf, input [2:0] e);
-        reg [2047:0] w;
-        begin
-            w = bf ? {944'd0, fl[1024*e +: 1024], 80'd0} : fl[2048*e[1:0] +: 2048];
-            sel_d = w[128*oc +: 128];
+    // READ SELECT AS SHARED COLUMN MUXES (A3 HBM group A 2026-10-14, after rptr1-19de62865 GRT-0116: 91 horizontal
+    // markers at the N face).  Cut arithmetic of rptr1: image bit fl[i] with i mod 2048 >= 1024 fed ob_d[i mod 2048]
+    // (block-dot) AND ob_d[80 + i mod 1024] (BF16), 944 bits apart (~101 um), so ~4 x 944 = 3,776 wires crossed a mid
+    // vertical cut against 3,728 horizontal tracks (108 um x 46.4 tr/um x 0.744) before the writes.  Here every image bit
+    // has ONE load: column r (0..1023) keeps m_lo[r] = fl[r + 2048 s] and m_hi[r] = fl[1024 + r + 2048 s] (4:1, s = the
+    // slice pair: block-dot e[1:0], BF16 e[2:1]); ob_d[r] = m_lo[r], ob_d[1024 + r] = m_hi[r] (block-dot) and
+    // ob_d[80 + r] = e[0] ? m_hi[r] : m_lo[r] (BF16) -- the same words, one wire a column (the N-face pin file interleaves
+    // ob_d[r] / ob_d[1024 + r] so the BF16 80-bit offset is the only horizontal traffic: ~160 + 80 wires a cut).
+    wire [1023:0] m_lo, m_hi;
+    genvar gr;
+    generate for (gr = 0; gr < 1024; gr = gr + 1) begin : g_col
+        localparam integer CL = gr / 128;
+        wire [1:0] s_lo = mbf_o[CL] ? ecnt_o[CL][2:1] : ecnt_o[CL][1:0];
+        wire [1:0] s_hi = mbf_o[8 + CL] ? ecnt_o[8 + CL][2:1] : ecnt_o[8 + CL][1:0];
+        assign m_lo[gr] = (s_lo == 2'd0) ? fl[gr] : (s_lo == 2'd1) ? fl[2048 + gr] : (s_lo == 2'd2) ? fl[4096 + gr] : fl[6144 + gr];
+        assign m_hi[gr] = (s_hi == 2'd0) ? fl[1024 + gr] : (s_hi == 2'd1) ? fl[3072 + gr] : (s_hi == 2'd2) ? fl[5120 + gr] : fl[7168 + gr];
+    end endgenerate
+    wire [2047:0] ob_n;                 // next ob_d of an emit beat
+    generate for (gr = 0; gr < 2048; gr = gr + 1) begin : g_ob
+        localparam integer OC = gr / 128;
+        if (gr >= 80 && gr < 1104) begin : g_bf
+            wire bfv = ecnt_o[OC][0] ? m_hi[gr - 80] : m_lo[gr - 80];
+            assign ob_n[gr] = mbf_o[OC] ? bfv : ((gr < 1024) ? m_lo[gr % 1024] : m_hi[gr % 1024]);
+        end else begin : g_bd
+            assign ob_n[gr] = mbf_o[OC] ? 1'b0 : ((gr < 1024) ? m_lo[gr % 1024] : m_hi[gr % 1024]);
         end
-    endfunction
+    end endgenerate
     (* keep=1 *) reg [63:0] bf_write,clear_chunk;
     (* keep=1 *) reg [15:0] flat_lo_write,flat_hi_write;
     integer c;
@@ -62,8 +81,7 @@ module ot_hbm_xp_buf_rptr #(parameter integer TW = 25, parameter integer MUT_LAN
             ob_v <= 1'b1; ob_eop <= (ecnt == elast) && mlc;
             ob_addr <= mbf ? mab + {4'd0, ecnt} : mab + {4'd0, mtp, ecnt[1]};
             ob_grp <= mbf ? 7'd1 : {6'd0, ecnt[0]};
-            for (integer oc = 0; oc < 16; oc = oc + 1)
-                ob_d[128*oc +: 128] <= sel_d(oc, mbf_o[oc], ecnt_o[oc]);
+            ob_d <= ob_n;
             if (ecnt == elast - 3'd2) tok_o <= 1'b1;                       // the next buffer may follow with no gap
             if (ecnt == elast) begin st <= 2'd0; e_act <= 1'b0; ecnt <= 3'd0; for (integer oc = 0; oc < 16; oc = oc + 1) ecnt_o[oc] <= 3'd0; end
             else begin ecnt <= ecnt + 3'd1; for (integer oc = 0; oc < 16; oc = oc + 1) ecnt_o[oc] <= ecnt + 3'd1; end
