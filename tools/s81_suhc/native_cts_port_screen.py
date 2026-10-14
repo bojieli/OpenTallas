@@ -62,6 +62,8 @@ def main():
         ports.setdefault(A.bus_of(name),{})[name]=m['inp']
     rec['capture_ports']={bus:{'bits':len(v),'min_ps':min(v.values()),'max_ps':max(v.values()),
                               'worst_bits':sorted(v,key=v.get,reverse=True)[:8]} for bus,v in ports.items()}
+    after={x:hashlib.sha256((base/x).read_bytes()).hexdigest() for x in ('4_1_cts.odb',sdc)}
+    assert after==rec['input_sha256'], 'CTS checkpoint changed during diagnostic extraction; discard this screen'
     (out/'provisional_insertion.json').write_text(json.dumps(rec,indent=2)+'\n')
     print(json.dumps(rec['capture_ports'],indent=2))
 
