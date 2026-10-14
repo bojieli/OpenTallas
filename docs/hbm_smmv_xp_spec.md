@@ -221,3 +221,11 @@ example's keys. `_plan` / `_todo` are not `ref_tile.py` keys and must be dropped
 - weight / result buses sharing a column channel with the spine (cut C 0.30 to 0.65);
 - T2 sinks and area (RTL not written); all std-cell areas (measured unit costs applied to counted flops, no synthesis);
 - the free site south of the slice (checked against die slots only).
+
+## Production compiler stacked image (2026-10-13)
+
+`tools/hgi_sim/ds_native.py` emits one record per expert slot for w1 and w3. The `ffn.experts.w13` extent has 4,608 rows per expert and records index it with the router ID and the full expert stride. The shared expert has a corresponding fixed `ffn.shared_experts.w13.weight` extent. To make each die's 48 rows contiguous, the physical image orders `[w1 rank0 rows; w3 rank0 rows; w1 rank1 rows; w3 rank1 rows; ...]`. Manifest `row_order=tp96_w1_w3_shards` and `matrix_rows=2304` specify this mapping; `_wrows` supplies the checkpoint rows in that order to the simulator and image exporter. The checkpoint tensors keep their original names and contents.
+
+Each die writes its 48 outputs at the beginning of that slot's g buffer. SwiGLU reads 24 gate rows at offset 0 and 24 up rows at offset 24. The remaining gather and w2 layout stays at its original global row offsets. Hazard writes name both original g/u regions, and record price provenance includes both original op IDs. The immutable prices are added.
+
+`PYTHONPATH=tools python3 -m unittest hgi_sim.test_ds_stacked_experts -v` checks all 96 ranks, all seven slots, fused and unfused SwiGLU, wire descriptor roundtrip, indexed expert stride, checkpoint row mapping across shard boundaries, and mismatched-pair refusal. These tests do not replace full checkpoint bit-exact validation or physical qualification. The latency evidence under `results/rtl/tput_map_1011/hbm_smmv_xp/latency_1013` keeps flat and hardened-leaf measurements separate.
