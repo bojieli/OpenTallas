@@ -197,7 +197,12 @@
    "h": "M4",
    "v": "M3 M5"
   },
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 40,
+   "extra": "-distance_between_buffers 40"
+  }
  },
  "job": {
   "owner": "Claude:el1011-ds-vm/be",
