@@ -16096,3 +16096,16 @@ def hbm_sm_pub_parent_stations_model():
     none are inferred from a slice route or credited as timing closure here.
     """
     return json.loads((ROOT / 'results/rtl/hgi_sm_pub_parent_stations_20261013/sizing.json').read_text())
+
+
+def hbm_qdq_ordered_one_row_front_model():
+    """Unassigned fast/general frontend slots; immutable 168-cycle price."""
+    return {"price_cycles": 168, "fast_front_edges": 4,
+            "general_front_extra_edges": 1, "records_per_cycle": 1,
+            "retire_slots": 16, "retire_payload_bits": 16 * 190,
+            "retire_ready_bits": 16, "tag_pipeline_bits": 8 * 4,
+            "fast_s2_boundary_bits": 333, "general_boundary_bits": 191,
+            "retire_output_bits": 192, "memory_bytes_per_cycle": 0,
+            "macs_per_cycle": 0,
+            "slot_requests_um": [(129.6, 71.28), (172.8, 103.68)],
+            "parent_pin_clock_pg_status": "unassigned; no native qualification"}
