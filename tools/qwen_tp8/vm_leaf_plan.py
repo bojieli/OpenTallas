@@ -60,7 +60,8 @@ SUY = (10.8, 276.48, 516.24, 781.92)      # right SU column: an answer leaf (21.
 
 
 class Plan:
-    def __init__(self, sc, band_relays, pad_rows=0):
+    def __init__(self, sc, band_relays, pad_rows=0, planes=32):
+        self.planes = planes
         self.pad_rows = pad_rows; self.PR = G(pad_rows * (97.2 + 2.16))          # VM3: pad rows between the column row and each region row
         self.scs = list(sc) if isinstance(sc, (list, tuple)) else [sc] * 4; self.band_relays = band_relays     # strip tile columns per REGION COLUMN
         self.geo = []; x = 0.0
@@ -141,17 +142,20 @@ class Plan:
             self.strip(f'vm_g{r}_sB', X + self.sB, Y, r, blocked=blk)
             if r % 4 == 3: self.strip(f'vm_g{r}_sE', X + self.RW + 4.32, Y, r)
         # ---- band: one row of 32 bit-plane column leaves (d_lo S, d_hi N, x_q plane W / E) ----
-        yb = Y0 + RH + self.PR; PW, PH = s['ot_qfd_vm_xcol_t']; pitch = G((self.EW - 8.64 - PW) / 31 // 2.16 * 2.16); CB = max(BAND, G(PH + 8.64)); self.BAND = G(CB + 2 * self.PR)
+        # FALLBACK 2026-10-14 (--planes 16, OT XHP = 1): only the bit planes 16 .. 31 (the BF16 half the ME multiplier reads) are
+        # transported, so the band holds 16 column leaves at twice the pitch (plane 16 + k at slot k, spread over the width)
+        NPL = self.planes; P0 = 32 - NPL
+        yb = Y0 + RH + self.PR; PW, PH = s['ot_qfd_vm_xcol_t']; pitch = G((self.EW - 8.64 - PW) / (NPL - 1) // 2.16 * 2.16); CB = max(BAND, G(PH + 8.64)); self.BAND = G(CB + 2 * self.PR)
         # VM3 pad rows: one bay row of pad / relay tiles on each face of the column row (pad_rows per side).  Every lane lands
         # through the bay of its column face, so the equalisation stages sit at the consumer and the strips hold relays only
         th = s['ot_qfd_vm_xrelay_t'][1]; npt = int((pitch - 4.32 + SGAP) // (TW + SGAP)); bw = G(npt * TW + (npt - 1) * SGAP)
-        for p in range(32 if self.pad_rows else 0):
+        for p in range(NPL if self.pad_rows else 0):
             cx = X0 + 4.32 + pitch * p
             for k in range(self.pad_rows):
-                self.bays.append(dict(n=f'vm_pad_{p}_S{k}', x=G(cx + (PW - bw) / 2 // 2.16 * 2.16), y=G(yb - (k + 1) * (th + 2.16) + 2.16), w=bw, h=th, tiles=npt, region=-1, padrow=1, plane=p, face=0))
-                self.bays.append(dict(n=f'vm_pad_{p}_N{k}', x=G(cx + (PW - bw) / 2 // 2.16 * 2.16), y=G(yb + CB + k * (th + 2.16)), w=bw, h=th, tiles=npt, region=-1, padrow=1, plane=p, face=1))
-        for p in range(32):
-            pl = A(f'vm_xcol_{p}', 'ot_qfd_vm_xcol_t', X0 + 4.32 + pitch * p, yb + 4.32, plane=p, region=-1)
+                self.bays.append(dict(n=f'vm_pad_{P0 + p}_S{k}', x=G(cx + (PW - bw) / 2 // 2.16 * 2.16), y=G(yb - (k + 1) * (th + 2.16) + 2.16), w=bw, h=th, tiles=npt, region=-1, padrow=1, plane=P0 + p, face=0))
+                self.bays.append(dict(n=f'vm_pad_{P0 + p}_N{k}', x=G(cx + (PW - bw) / 2 // 2.16 * 2.16), y=G(yb + CB + k * (th + 2.16)), w=bw, h=th, tiles=npt, region=-1, padrow=1, plane=P0 + p, face=1))
+        for p in range(NPL):
+            pl = A(f'vm_xcol_{P0 + p}', 'ot_qfd_vm_xcol_t', X0 + 4.32 + pitch * p, yb + 4.32, plane=P0 + p, region=-1)
             self.me.append((pl['n'], pl['x'], pl['y'] + PH / 2))
         self.band = dict(band_um=self.BAND, pad_rows_per_side=self.pad_rows, pad_row_um=self.PR, column_band_um=CB, pad_bay_tiles=npt, request_0420_um=BAND, column_pitch_um=pitch, column_outline_um=[PW, PH], used_um=G(PH + 8.64),
                          fits=PW <= pitch - 4.32 + 1e-6, grows_um=round(self.BAND - BAND, 3))
@@ -273,13 +277,14 @@ def main():
     global Y0
     ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('out'); ap.add_argument('--strip-cols', default='2', help='tile columns of the relay strips: one number, or one per region column (e.g. 3,4,4,3)'); ap.add_argument('--band-relays', type=int, default=0); ap.add_argument('--pad-rows', type=int, default=0, help='pad / relay bay rows on each face of the column row'); ap.add_argument('--grow-south', type=float, default=0.0, help='move the envelope origin south by this many um (keeps the N face)')
     ap.add_argument('--region-spec', default='')
+    ap.add_argument('--planes', type=int, default=32, choices=(16, 32), help='bit planes transported: 32 = every plane; 16 = FALLBACK XHP 1 (planes 16 .. 31 only)')
     ap.add_argument('--size', action='append', default=[], help='MODULE=WxH: what-if outline of a leaf (recorded in the report)')
     a = ap.parse_args(); d = json.loads(Path(a.net).read_text())
     for o in a.size:
         m, v = o.split('='); NEW[m] = tuple(float(t) for t in v.split('x')); SIZE_SRC[m] = 'WHAT-IF --size ' + o
     a.strip_cols = [int(v) for v in a.strip_cols.split(',')]; a.strip_cols = a.strip_cols * 4 if len(a.strip_cols) == 1 else a.strip_cols
     Y0 = G(Y0 - a.grow_south)                                   # VM3: the envelope grows to the south (its N face and the SU abutment stay)
-    pl = Plan(a.strip_cols, a.band_relays, a.pad_rows).build(); ch, bays, size = pl.ch, pl.bays, pl.size
+    pl = Plan(a.strip_cols, a.band_relays, a.pad_rows, a.planes).build(); ch, bays, size = pl.ch, pl.bays, pl.size
     gone = ('sp_vector_memory', 'sp_su64_sfu'); rly = ('qfd_rly', 'qkd_rly')
     old = [i for i in d['insts'] if i['n'] not in gone and not i['m'].startswith(rly)]
     relays = [i for i in d['insts'] if i['m'].startswith(rly)]
@@ -309,13 +314,13 @@ def main():
         o['over_500'] += s_['est_um'] > 500; o['over_400'] += s_['est_um'] > 400
     seam_bad = {k: v['over_500'] for k, v in sk.items() if v['over_500']}
     ok = not hard and near == 0 and not peer and offgrid == 0 and inside and min(xs) > spine[0] + 20 and max(xs) < spine[1] - 20 and not any(ov(a_, su64, 20.0) for a_ in objs) and pl.band['fits']
-    rep = dict(status='LEAF_PLAN_V2', owner='claude/qwen-tp8-vm-phys', options=dict(strip_cols=a.strip_cols, band_relays=a.band_relays, pad_rows=a.pad_rows, grow_south=a.grow_south, what_if_sizes=a.size),
+    rep = dict(status='LEAF_PLAN_V2', owner='claude/qwen-tp8-vm-phys', options=dict(strip_cols=a.strip_cols, band_relays=a.band_relays, pad_rows=a.pad_rows, grow_south=a.grow_south, what_if_sizes=a.size, planes=a.planes),
         verdict='PASS' if ok and not seam_bad and met['level1_max_wire_um'] <= 500 and met['level0_max_wire_um'] <= 500 else 'REJECT', kit_gates=GATE,
         region_seams=dict(rule='leaf register -> wire <= 500 um -> leaf register.  centroid = L1 between the two pin-group centroids (real LEF pins of the closed views, face centres of the new leaves); est = centroid + a quarter of the two pin spans (the worst bit of a bus whose pins are spread along both faces)',
                           seams=dict(sk), violating=seam_bad),
         me_tree=met, control_trees=control_trees(pl), plane_band=pl.band,
         inputs={str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [a.net, __file__] + [str(ROOT / v) for v in VIEW.values()] + [str(ROOT / 'physical/ref_tile' / k / f) for k in KIT.values() for f in ('floorplan.json', 'gate_result.json') if (ROOT / 'physical/ref_tile' / k / f).exists()]},
-        slot=dict(shape=f'4 x 2 regions, widths {[g_["RW"] for g_ in pl.geo]} x {RH} um (relay strips sW / sA / sB of {a.strip_cols} tile columns per region column) + {pl.BAND} um band (one row of 32 bit-plane column leaves) between the rows; region r at column r % 4, row r // 4',
+        slot=dict(shape=f'4 x 2 regions, widths {[g_["RW"] for g_ in pl.geo]} x {RH} um (relay strips sW / sA / sB of {a.strip_cols} tile columns per region column) + {pl.BAND} um band (one row of {a.planes} bit-plane column leaves) between the rows; region r at column r % 4, row r // 4',
                   origin_um=[X0, Y0], size_um=[pl.EW, round(2 * RH + pl.BAND, 3)], area_mm2=round(pl.EW * (2 * RH + pl.BAND) / 1e6, 4), spine_x_um=[round(spine[0], 3), round(spine[1], 3)],
                   bbox_um=[round(min(xs), 3), round(min(ys), 3), round(max(xs), 3), round(max(ys), 3)],
                   region_origins={r: list(pl.origin(r)) for r in range(8)}, region_um=[[g_['RW'], RH] for g_ in pl.geo], region_column_geometry=pl.geo, unit_x_um=[pl.geo[0]['U0'], pl.geo[0]['U1']],

@@ -24,7 +24,7 @@ from pathlib import Path
 import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'results/arch/qwen_tp8_1012'))
 import cuts as C
-LIM = 0.60; TERM_BAY = 51.0; TILE_W = 17.28; PAD2_W = 480; PAD2_WIDE = 640
+LIM = 0.60; CLUSTER = 0; TERM_BAY = 51.0; TILE_W = 17.28; PAD2_W = 480; PAD2_WIDE = 640
 
 
 def by_layer(ax, cp, lo, hi, blocks, cap5):
@@ -39,7 +39,7 @@ def by_layer(ax, cp, lo, hi, blocks, cap5):
             if e > end: t += e - max(a, end); end = e
         return t
     cov, cov5 = union(iv), union(iv5); Lw = hi - lo; hi_, lo_, lw_ = ('M8', 'M6', 'M4') if ax == 'x' else ('M9', 'M7', 'M5')
-    return {hi_: round(0.75 * Lw * C.TPU[hi_]), lo_ + '_over_M5_leaves': round(cov5 * 0.75 * C.TPU[lo_]), lo_ + '_channel': round((Lw - cov) * 0.75 * C.TPU[lo_]),
+    return {(hi_ + '_die_only_NOT_counted' if CLUSTER else hi_): round(0.75 * Lw * C.TPU[hi_]), lo_ + '_over_M5_leaves': round(cov5 * 0.75 * C.TPU[lo_]), lo_ + '_channel': round((Lw - cov) * 0.75 * C.TPU[lo_]),
             lw_ + '_channel': round((Lw - cov) * 0.5 * C.TPU[lw_]), 'leaf_cover_um': round(cov5, 1), 'other_block_um': round(cov - cov5, 1)}
 
 
@@ -48,7 +48,16 @@ def main():
     ap.add_argument('--pad-density', type=int, default=1); ap.add_argument('--label', default=''); ap.add_argument('--wcong', type=float, default=0.3); ap.add_argument('--bcong', type=float, default=0.2)
     ap.add_argument('--debug', action='store_true'); ap.add_argument('--slack', type=int, default=0); ap.add_argument('--hopw', type=float, default=0.25); ap.add_argument('--passes', type=int, default=12)
     ap.add_argument('--relay-w', type=int, default=1); ap.add_argument('--pad-reserve', type=float, default=128.0); ap.add_argument('--save-routes', default=''); ap.add_argument('--load-routes', default=''); ap.add_argument('--repair', type=int, default=3); ap.add_argument('--pf0', type=float, default=0.5); ap.add_argument('--pfg', type=float, default=1.6); ap.add_argument('--hf', type=float, default=0.3); ap.add_argument('--pad-flow', type=int, default=0); ap.add_argument('--pad-wide', type=int, default=0); ap.add_argument('--pad-prio', type=int, default=0)
+    # FALLBACK 2026-10-14: --cluster 1 = the VM rectangle is a hardened cluster WITHOUT the M8 / M9 grant: its lanes and seams see
+    # only M4 - M7 (M6 / M7 over the M5 leaves, M4 - M7 in channels); the die's M8 / M9 above it carry the die buses, which are then
+    # NOT demand on the cluster's tracks (reported separately against M8 / M9).  --limit: the owner's tracks-per-cut rule (0.55)
+    ap.add_argument('--cluster', type=int, default=0); ap.add_argument('--limit', type=float, default=0.60)
     a = ap.parse_args(); d = json.loads(Path(a.net).read_text()); p = json.loads(Path(a.plan).read_text())
+    global LIM, CLUSTER; LIM = a.limit; CLUSTER = a.cluster
+    _usable = C.usable
+    def usable_c(ax, cp, edges, blocks_, cap5_, clb_):
+        u, cov = _usable(ax, cp, edges, blocks_, cap5_, clb_)
+        return (u - 0.75 * np.diff(edges) * C.TPU['M8' if ax == 'x' else 'M9'], cov) if a.cluster else (u, cov)
     ch = p['children']; bays = p['x_relay_bays']; pins = p['real_pins']; LB = 8 // a.ser
     old = [i for i in d['insts'] if i['n'] not in p['geometry']['removed'] and not i['m'].startswith(('qfd_rly', 'qkd_rly'))]
     C.CAP_MODE = 'v3'; C.CLUSTER = C.CLUSTER + ('UNSIZED_SU64_ACTUAL_LEAF_ENVELOPE',)
@@ -76,7 +85,8 @@ def main():
     K = {(c['plane'], f, k): term((c['x'] + c['w'] * (2 * k + 1) / 8, c['y'] + (c['h'] if f else 0.0)), c['n'] + ('.d_hi' if f else '.d_lo') + f'[r{k}]', c['w'] / 8)
          for c in ch if c['m'] == 'ot_qfd_vm_xcol_t' for f in (0, 1) for k in range(4)}
     regof = {c['n']: c['region'] for c in ch if c['m'] == 'ot_qfd_vm_xfifo8_t'}
-    jobs = [dict(name=f'{s}>p{q}', A=S[s], Q=K[q, regof[s] // 4, regof[s] % 4], bits=LB) for s in S for q in range(32)]
+    PLANES = sorted({c['plane'] for c in ch if c['m'] == 'ot_qfd_vm_xcol_t'})          # FALLBACK --planes 16: only the kept planes
+    jobs = [dict(name=f'{s}>p{q}', A=S[s], Q=K[q, regof[s] // 4, regof[s] % 4], bits=LB) for s in S for q in PLANES]
     P = np.round(np.array(P), 3); N = len(P); AL = np.concatenate((np.zeros(NB), np.array(AL)))
     padrow = [bool(b_.get('padrow')) for b_ in bays] + [False] * (N - NB); PADROW = any(padrow); KSET = set(K.values()); SSET = set(S.values())
     def est(u, v, dist):
@@ -96,7 +106,7 @@ def main():
         if key not in ccache:
             ax, k, w = key; lo, hi = AX[ax][k], AX[ax][k + 1]; bounds = np.array([w, w + 260.0])
             qs = [(lo + hi) / 2] + [float(v) for v in np.arange(math.ceil(lo / 12.5) * 12.5, hi, 12.5) if lo < v < hi]
-            ccache[key] = max(0.0, LIM * min(C.usable(ax, q, bounds, blocks, cap5, clb)[0][0] for q in qs) - max(base.cut(ax, q, bounds)[0][0] + seam_cut(ax, q, w, w + 260.0) for q in qs))
+            ccache[key] = max(0.0, LIM * min(usable_c(ax, q, bounds, blocks, cap5, clb)[0][0] for q in qs) - max((0 if a.cluster else base.cut(ax, q, bounds)[0][0]) + seam_cut(ax, q, w, w + 260.0) for q in qs))
         return ccache[key]
     def legkeys(ax, lo, hi, other):
         lo, hi = min(lo, hi), max(lo, hi)
@@ -368,7 +378,7 @@ def main():
             for lo in win:
                 bits = int(T[(T[:, other] >= lo) & (T[:, other] < lo + 260), 4].sum())
                 if not bits: continue
-                bounds = np.array([lo, lo + 260.0]); u = float(C.usable(ax, cp, bounds, blocks, cap5, clb)[0][0]); ex = int(base.cut(ax, cp, bounds)[0][0]); sb = int(seam_cut(ax, cp, lo, lo + 260.0))
+                bounds = np.array([lo, lo + 260.0]); u = float(usable_c(ax, cp, bounds, blocks, cap5, clb)[0][0]); ex = 0 if a.cluster else int(base.cut(ax, cp, bounds)[0][0]); sb = int(seam_cut(ax, cp, lo, lo + 260.0))
                 worst.append(dict(ax=ax, pos=float(cp), win=[float(lo), float(lo + 260)], lane_bits=bits, region_seam_bits=sb, existing_die_bits=ex, usable=round(u, 1), util=round((ex + sb + bits) / u, 4)))
     worst.sort(key=lambda r: -r['util'])
     for r in worst[:12]: r['tracks_by_layer'] = by_layer(r['ax'], r['pos'], r['win'][0], r['win'][1], blocks, cap5)
@@ -383,7 +393,7 @@ def main():
         k = 0 if ax == 'x' else 1
         for cp in cps:
             bits = sum(j['bits'] for j in jobs if (P[j['A'], k] - cp) * (P[j['Q'], k] - cp) < 0)
-            bounds = np.array([lo, hi]); u = float(C.usable(ax, cp, bounds, blocks, cap5, clb)[0][0]); ex = int(base.cut(ax, cp, bounds)[0][0]); sb = int(seam_cut(ax, cp, lo, hi))
+            bounds = np.array([lo, hi]); u = float(usable_c(ax, cp, bounds, blocks, cap5, clb)[0][0]); ex = 0 if a.cluster else int(base.cut(ax, cp, bounds)[0][0]); sb = int(seam_cut(ax, cp, lo, hi))
             coarse.append(dict(ax=ax, pos=round(cp, 2), win=[round(lo, 1), round(hi, 1)], lane_bits=bits, region_seam_bits=sb, existing_die_bits=ex, usable=round(u), util=round((ex + sb + bits) / u, 4),
                                tracks_by_layer=by_layer(ax, cp, lo, hi, blocks, cap5)))
     allst = [h_ for v in done for h_ in v['stage_um']]
@@ -397,7 +407,7 @@ def main():
     hist = collections.Counter(v['relay_stages'] for v in done)
     ok = not fail and (not worst or worst[0]['util'] <= LIM) and pad_fail == 0 and max(c['util'] for c in coarse) <= LIM and stage_audit['over_500'] == 0
     bayfill = sorted(((nused[v] + padload[v]) / cap[v] for v in range(NB)), reverse=True)
-    rep = dict(status='PLANE_LANES_V2', owner='claude/qwen-tp8-vm-phys', label=a.label, pad_rows=padrow_rep, options=dict(ser=a.ser, pad_density=a.pad_density, slack=a.slack, relay_w=a.relay_w, plan=p['options']), router=dict(kind='negotiated congestion (rip-up and re-route), hop-bounded: every lane <= min depth of the farthest lane + slack', depth_target=DT, passes=passes, repair=dict(rounds=a.repair, repaired=repaired, unrepaired=unrepaired), unreachable=unreach[:20]),
+    rep = dict(status='PLANE_LANES_V2', owner='claude/qwen-tp8-vm-phys', label=a.label, pad_rows=padrow_rep, options=dict(ser=a.ser, pad_density=a.pad_density, slack=a.slack, relay_w=a.relay_w, cluster=a.cluster, limit=a.limit, planes=len(PLANES), plan=p['options']), router=dict(kind='negotiated congestion (rip-up and re-route), hop-bounded: every lane <= min depth of the farthest lane + slack', depth_target=DT, passes=passes, repair=dict(rounds=a.repair, repaired=repaired, unrepaired=unrepaired), unreachable=unreach[:20]),
         inputs={str(v): hashlib.sha256(Path(v).read_bytes()).hexdigest() for v in (a.net, a.plan, __file__)},
         verdict='PASS_PLAN_LEVEL' if ok else 'REJECT', limit=LIM, lanes_requested=len(jobs), lanes_routed=len(done), lanes_failed=len(fail),
         bits_requested=sum(j['bits'] for j in jobs), bits_routed=sum(v['bits'] for v in done), lane_bits=LB,

@@ -39,6 +39,10 @@ module tb_qfd_vm_bv_ports;
     // early, an earlier tap of the stall loop: needs XMK <= RSD - 2), line / x_q leaf owners (XLO; pass XVM + XQR + 2).
     // MWD: me_want lookahead depth in negedges (0 = XMK + 1); a tree-less run at the same MWD has the same stimulus.
     parameter integer XTK = 0, XMK = 0, XMF = 16, XLO = 0, XQR = 0, MWD = 0;
+    // qwen-vm-fallback 1014: XHP = 1 half-plane x transport.  The x check becomes the memory's XHP contract: every seat's
+    // bits 31:16 equal the reference, bits 15:0 are 0.  Non-vacuity: the reference must show nonzero low halves at
+    // compared seats (else the zeroing is untested) -- the XHP line prints the count and the run FAILS below 1,000.
+    parameter integer XHP = 0;
     parameter integer DBGC = 0, DBGN = 12;     // write-side trace window (diagnostics only)
     parameter integer SQD = 4, WDIR = 0, WDC = 2000;   // skid capacity (the memory's SQD), directed burst and its cycle
     localparam integer NRBS = 16;              // SU replica banks: the bank space of the write arbiter
@@ -90,7 +94,7 @@ module tb_qfd_vm_bv_ports;
     end endgenerate
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
         .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
-        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS)) dut (
+        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS), .XHP(XHP)) dut (
         .clk(clk), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e), .me_en_t(me_en_t), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),
         .s_re0(s_re0), .s_re1(s_re1), .s_a0(s_a0), .s_a1(s_a1), .s_q(s_q),
@@ -140,9 +144,12 @@ module tb_qfd_vm_bv_ports;
         if (XLO != 0) begin : g_cv_l
             reg [31:0] p;
             always @(posedge clk) begin
-                p <= dut.g_xown.xr[31:0];
-                if (started_e && p !== dut.g_xown.xr[31:0]) n_lq = n_lq + 1;
+                p <= dut.g_xown.xr[XHP*16*NX +: 32];          // XHP: the first kept plane (plane 16)
+                if (started_e && p !== dut.g_xown.xr[XHP*16*NX +: 32]) n_lq = n_lq + 1;
             end
+        end
+        if (XHP != 0) begin : g_cv_h                            // a build asking XHP must elaborate the half relays
+            wire hw0 = dut.g_tile.g_t[0].g_xhalf.hw[0];
         end
     endgenerate
     wire tree_vac = (XMK != 0 && (n_mt < 100 || n_tchk < 1000)) || (XTK != 0 && n_pc < 100) || (XLO != 0 && n_lq < 100);
@@ -175,6 +182,8 @@ module tb_qfd_vm_bv_ports;
     reg [511:0] rexp [0:63]; reg [5:0] rw_p, rr_p;
     integer vi, xs, l, o, q, e, s;
     integer bad_x, bad_s, bad_r, bad_land, bad_img, n_s, n_r, n_land, tuples, cyc, started;
+    integer n_xlo = 0;
+    localparam [NX*32-1:0] XHM = {NX{32'hFFFF0000}};
     always @(posedge clk) if (rst_n) begin : refm
         reg [31:0] a; reg [NX*32-1:0] rq; reg [3*SW*32-1:0] sq; integer si, hl;
         // reads first
@@ -374,7 +383,8 @@ module tb_qfd_vm_bv_ports;
         for (cyc = 0; cyc < CYCLES; cyc = cyc + 1) begin
             @(negedge clk);
             // ---- compare outputs of the last edge ----
-            if (started >= 0 && cyc > started && d_xq !== r_xq) bad_x = bad_x + 1;
+            if (started >= 0 && cyc > started && (XHP == 0 ? d_xq !== r_xq : d_xq !== (r_xq & XHM))) bad_x = bad_x + 1;
+            if (XHP != 0 && started >= 0 && cyc > started && (r_xq & ~XHM) != 0) n_xlo = n_xlo + 1;
             for (o = 0; o < 3; o = o + 1) if (sev[VL][o]) begin
                 n_s = n_s + 1;
                 if (s_q[o*SW*32 +: SW*32] !== sexp[VL][o*SW*32 +: SW*32]) bad_s = bad_s + 1;
@@ -483,7 +493,9 @@ module tb_qfd_vm_bv_ports;
         $display("WQ SQD=%0d max_waiting mx=%0d rd=%0d seq=%0d waits=%0d model_overflow=%0d dut_overflow=%0d WDIR=%0d",
                  SQD, mo_max[0], mo_max[1], mo_max[2], m_waits, m_ovf, d_ovf, WDIR);
         if (m_ovf != d_ovf) $display("skid capacity rule: the memory overflowed %0d times, the rule's model %0d", d_ovf, m_ovf);
+        if (XHP != 0) $display("XHP kept_planes=16..31 compared_edges_with_nonzero_reference_low_halves=%0d", n_xlo);
         if (tree_vac) $display("FAIL qfd_vm_bv_ports TREE-VACUOUS x=%0d", bad_x);
+        else if (XHP != 0 && n_xlo < 1000) $display("FAIL qfd_vm_bv_ports XHP-VACUOUS low-half edges=%0d", n_xlo);
         else
         if (m_ovf == d_ovf && (WDIR != 1 || mo_max[2] == SQD) && bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
             !w_hazard && !(|l_fault) && land_cnt == nburst[15:0] && nburst > 500 && n_s > 1000 && n_r > 1000 && tuples > 500)

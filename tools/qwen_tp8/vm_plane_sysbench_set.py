@@ -225,6 +225,41 @@ RUNS = [
         "PRODUCTION shape, PLAN parameters, mutant: a plane-control tree node is transparent", mem=PM, prod=1),
 ]
 
+# ---- FALLBACK (qwen-vm-fallback 2026-10-14): XHP = 1, half-plane x transport (planes 16 .. 31 only; x_q low halves 0).
+#      --set fallback runs ONLY these and writes results/rtl/qwen_tp8_vm_plane_20261013/fallback_xhp/record.json.  Every XHP
+#      PASS must reproduce its full-plane reference's counts (the stimulus does not depend on the x transport) and print the
+#      bench's XHP line (>= 1,000 compared edges whose reference had nonzero low halves: the zeroing is exercised).
+REC_FB = "results/rtl/qwen_tp8_vm_plane_20261013/fallback_xhp"
+H = " -GXHP=1"
+FB_PLAN = "-GXPR=12 -GXVM=40 -GXTK=7"      # the production PLAN parameters of option b; --fb-xpr N replaces XPR / XVM
+FB_RUNS = [
+    run("fb_ref_r21", R21 + " -GXVM=32 -GXPR=10 -GMWD=3", "PASS", "REFERENCE (full planes): no trees, lookahead 3, r21"),
+    run("fb_xhp_r21", R21 + " -GXVM=32 -GXPR=10" + H, "PASS", "XHP, no trees / owners (flat line), r21", C_R21),
+    run("fb_xhp_r21_m7", R21 + " -GXVM=32 -GXPR=10 -GMUT=7" + H, "FAIL", "XHP mutant: planes 16 and 17 swapped"),
+    run("fb_xhp_r21_m15", R21 + " -GXVM=32 -GXPR=10 -GMUT=15" + H, "FAIL", "XHP mutant: relays take bits 30:15 (half one plane low)"),
+    run("fb_xhp_tr_r21", R21 + " -GXVM=36 -GXPR=10 " + T + H, "PASS", "XHP + ALL trees + owners, r21: XVM 36",
+        same_as="fb_ref_r21", tree=TR),
+    run("fb_xhp_tr_r21_m3", R21 + " -GXVM=36 -GXPR=10 -GMUT=3 " + T + H, "FAIL", "XHP + trees, mutant: plane 21 fine rotation"),
+    run("fb_xhp_tr_r21_m6", R21 + " -GXVM=36 -GXPR=10 -GMUT=6 " + T + H, "FAIL", "XHP + trees, mutant: one half relay free-runs"),
+    run("fb_xhp_tr_r21_m10", R21 + " -GXVM=36 -GXPR=10 -GMUT=10 " + T + H, "FAIL", "XHP + trees, mutant: line leaf 19 wrong source"),
+    run("fb_xhp_tr_r21_m11", R21 + " -GXVM=36 -GXPR=10 -GMUT=11 " + T + H, "FAIL", "XHP + trees, mutant: half face 0 free-runs"),
+    run("fb_xhp_tr_r21_m13", R21 + " -GXVM=36 -GXPR=10 -GMUT=13 " + T + H, "FAIL", "XHP + trees, mutant: one x_q relay (plane 23) free-runs"),
+    run("fb_xhp_tr_r21_m15", R21 + " -GXVM=36 -GXPR=10 -GMUT=15 " + T + H, "FAIL", "XHP + trees, mutant: half one plane low"),
+    run("fb_ref_n64", N64 + " -GXVM=31 -GXPR=10 -GMWD=3", "PASS", "REFERENCE (full planes): NRB=64 region_quarter, no trees",
+        None, RQ, 8),
+    run("fb_xhp_n64_rl", N64 + " -GXVM=35 -GXPR=10 " + T + H, "PASS", "XHP, NRB=64 region_leaf tile, ALL trees + owners: XVM 35",
+        None, RL, 8, same_as="fb_ref_n64", tree=TR),
+    run("fb_prod_ref", "", "PASS", "PRODUCTION shape REFERENCE (full planes, no trees, lookahead 3): XVM 34",
+        mem=12, prod=0, wq=dict(model_overflow=0, dut_overflow=0)),
+    run("fb_xhp_prod", FB_PLAN + H, "PASS", "PRODUCTION shape, XHP at the plan parameters (trees + owners)",
+        mem=PM, prod=1, same_as="fb_prod_ref", tree=TRP, wq=dict(model_overflow=0, dut_overflow=0)),
+    run("fb_xhp_prod_s9", FB_PLAN + " -GSEED=9" + H, "PASS", "PRODUCTION shape, XHP, SEED 9", mem=PM, prod=1, tree=TRP),
+    run("fb_xhp_prod_m15", FB_PLAN + " -GMUT=15" + H, "FAIL", "PRODUCTION shape XHP mutant: half one plane low", mem=PM, prod=1),
+    run("fb_xhp_prod_m6", FB_PLAN + " -GMUT=6" + H, "FAIL", "PRODUCTION shape XHP mutant: one half relay free-runs", mem=PM, prod=1),
+    run("fb_xhp_prod_m3", FB_PLAN + " -GMUT=3" + H, "FAIL", "PRODUCTION shape XHP mutant: plane 21 fine rotation", mem=PM, prod=1),
+    run("fb_xhp_prod_m13", FB_PLAN + " -GMUT=13" + H, "FAIL", "PRODUCTION shape XHP mutant: one x_q relay free-runs", mem=PM, prod=1),
+]
+
 
 def sh(cmd, **kw):
     return subprocess.run(cmd, shell=True, capture_output=True, text=True, **kw)
@@ -241,7 +276,15 @@ def main():
     ap.add_argument("--rdir", default="claude-vm-verif-1013/A")
     ap.add_argument("--only", default="")
     ap.add_argument("--collect", action="store_true")
+    ap.add_argument("--set", default="main", choices=("main", "fallback"))
+    ap.add_argument("--fb-xpr", type=int, default=0, help="fallback: the plan's relay depth (XVM = 28 + XPR at RO 1)")
     a = ap.parse_args()
+    global RUNS, REC
+    if a.set == "fallback":
+        if a.fb_xpr:
+            for r in FB_RUNS:
+                r["args"] = r["args"].replace("-GXPR=12 -GXVM=40", f"-GXPR={a.fb_xpr} -GXVM={28 + a.fb_xpr}")
+        RUNS, REC = FB_RUNS, REC_FB
     RDIR = a.rdir
     if not a.host:
         pk = sh("ot-run --mem 64 --pick -- true")
@@ -380,7 +423,7 @@ def main():
                 o["ok"] = False
                 bad.append(r["name"] + "-counts-differ-from-" + r["same_as"])
     cross = {}
-    if not a.only:
+    if not a.only and a.set == "main":
         cross = {"xpr0_eq_xpr10_r21": same("base_r21", "bp_r21"), "n64_base_rq_eq_bp_rq": same("n64_base_rq", "n64_bp_rq"),
                  "n64_grp_eq_region_tile": same("n64_base", "n64_base_rq"),
                  "n64_region_leaf_eq_quarter": same("n64_base_rl", "n64_base_rq") and same("n64_bp_rl", "n64_bp_rq")}
@@ -393,7 +436,7 @@ def main():
     rec = {
         "record": "qwen_tp8_vm_plane_system_bench",
         "date": datetime.date.today().isoformat(),
-        "ok": not bad and not a.only,
+        "ok": not bad and not a.only, "set": a.set,
         "not_ok_because": bad + (["partial set (--only)"] if a.only else []),
         "bench": "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv (top tb_qfd_vm_bv_ports): bench shape ELEMS 16384 / SW 8, and the "
                  "PRODUCTION shape (runs with production_shape true: ELEMS 177808, SW 64, NRB 64, SMAX 11, 14 strides)",

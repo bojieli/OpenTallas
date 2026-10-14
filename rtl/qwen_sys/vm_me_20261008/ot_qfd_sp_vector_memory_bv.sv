@@ -161,7 +161,16 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer XMK = 0,
     parameter integer XMF = 16,
     parameter integer XLO = 0,
-    parameter integer XQR = 0
+    parameter integer XQR = 0,
+    // qwen-vm-fallback 2026-10-14 (0 = unchanged; needs the bit plane: VMT = 1, XPR != 0).  XHP = 1: HALF-PLANE x transport,
+    // the owner's 10-14 FALLBACK for the VM bit plane.  Only bit planes 16 .. 31 of every x element (sign, exponent and the
+    // 7 BF16 mantissa bits) cross the relays, the column leaves (16 instead of 32), the x_q relays and the faces; x_q
+    // carries element c as {x[31:16], 16'h0}.  Exact for the matrix engine, the only x_q consumer: every x operand goes to
+    // a BF16 x BF16 lane multiplier that reads b[31:16] alone (ot_qwen_w12_bmul / ot_hdc_bmul: sign b[31], exponent
+    // b[30:23], mantissa b[22:16], zero test b[30:16]).  It is the hi-first 2:1 serialisation of the lanes with the second
+    // (never consumed) phase elided: half the lane wires and relay bits, 0 added edges, the beat rate unchanged.
+    // MUT = 15 (XHP only): the relays take bits 30:15 instead of 31:16 (the kept half one plane low): must FAIL.
+    parameter integer XHP = 0
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -234,6 +243,11 @@ module ot_qfd_sp_vector_memory_bv #(
     localparam integer XOWN = (XBP != 0 && XLO != 0) ? 1 : 0;                 // line / x_q owned by leaves
     localparam integer XO = (XOWN != 0) ? XQR + 2 : 0;                        // their added x edges
     localparam integer XVMI = XVM - XO;                                       // the schedule's x latency
+    localparam integer PL0 = (XHP != 0) ? 16 : 0;                             // XHP: the lowest transported bit plane
+    localparam integer PMP = PL0 + 5;                                         // the mutants' plane (MUT 3 / 4 / 5)
+    generate if (XHP != 0 && !(VMT != 0 && XPR != 0)) begin : g_xhp_bad
+        initial begin $display("FATAL ot_qfd_sp_vector_memory_bv: XHP needs the bit-plane transport (VMT 1, XPR != 0)"); $finish; end
+    end endgenerate
     // XS: the tile FIFO is pushed 4 clocks after the beat's issue edge (relays RV, pin flop, macro, capture); the pop
     // must land at least one edge later (a same-edge pop of an empty FIFO reads the entry being written: gate 18:3x
     // DBG OVF push=1 pop=1 cnt=0), so the pop source is one stage later than the push and x gains RV + RO + 2 edges.
@@ -821,7 +835,7 @@ module ot_qfd_sp_vector_memory_bv #(
                     always @(posedge clk) if (mxg) r <= xw[(kq-1)*8*512 +: 8*512];
                     assign xw[kq*8*512 +: 8*512] = r;
                 end
-            end else begin : g_xleaf            // one 512-b relay leaf per bank per stage, own me replica
+            end else if (XHP == 0) begin : g_xleaf   // one 512-b relay leaf per bank per stage, own me replica
                 genvar kb;
                 for (kq = 1; kq <= XRN; kq = kq + 1) begin : g_xr
                     for (kb = 0; kb < 8; kb = kb + 1) begin : g_b
@@ -829,6 +843,21 @@ module ot_qfd_sp_vector_memory_bv #(
                             .MUT((MUT == 6 && g == 0 && kb == 3 && kq == XRN) ? 1 : 0)) u_r (.clk(clk),
                             .me_e(me_lf[g*MCG + 1 + (kq-1)*8 + kb]),
                             .d(xw[((kq-1)*8 + kb)*512 +: 512]), .q(xw[(kq*8 + kb)*512 +: 512]));
+                    end
+                end
+            end else begin : g_xhalf            // XHP: only the upper 16 bits of each of the tile's 128 elements, 4 x 512-b
+                genvar kb, ke;                  //      relay leaves per stage (hw[k*16 +: 16] = element k's bits 31:16)
+                wire [(XRN+1)*2048-1:0] hw;
+                for (ke = 0; ke < 128; ke = ke + 1) begin : g_e
+                    assign hw[ke*16 +: 16] = xo[ke*32 + ((MUT == 15) ? 15 : 16) +: 16];   // MUT 15: the half one plane low
+                    assign xw[XRN*8*512 + ke*32 +: 32] = {hw[XRN*2048 + ke*16 +: 16], 16'h0};
+                end
+                for (kq = 1; kq <= XRN; kq = kq + 1) begin : g_xr
+                    for (kb = 0; kb < 4; kb = kb + 1) begin : g_b
+                        ot_qfd_vm_xrelay_t #(.W(512), .MEREG((MEE != 0) ? 1 : 0),
+                            .MUT((MUT == 6 && g == 0 && kb == 3 && kq == XRN) ? 1 : 0)) u_r (.clk(clk),
+                            .me_e(me_lf[g*MCG + 1 + (kq-1)*8 + kb]),
+                            .d(hw[((kq-1)*4 + kb)*512 +: 512]), .q(hw[(kq*4 + kb)*512 +: 512]));
                     end
                 end
             end
@@ -898,11 +927,13 @@ module ot_qfd_sp_vector_memory_bv #(
             for (pb = 0; pb < NRB*16; pb = pb + 1) begin : g_i
                 assign pd[pb] = capx[pb*32 + pl];
             end
-            if (XOWN == 0) begin : g_pl        // XOWN: the plane is inside ot_qfd_vm_xcol_t (g_xown), which takes pd and pcq
+            if (XOWN == 0 && pl < PL0) begin : g_plz   // XHP: a dropped plane is a constant 0
+                assign pq_all[pl*BEAT +: BEAT] = {BEAT{1'b0}};
+            end else if (XOWN == 0) begin : g_pl  // XOWN: the plane is inside ot_qfd_vm_xcol_t (g_xown), which takes pd and pcq
                 ot_qfd_vm_xplane_t #(.NRB(NRB), .MEREG((MEE != 0) ? 1 : 0),
-                    .MUT((pl == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0)) u_p (.clk(clk),
+                    .MUT((pl == PMP && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0)) u_p (.clk(clk),
                     .me_e(me_lf[MB_P + pl]), .d(pd), .c_a(pcq[pl*PCW + NVW +: LNRB+4]), .c_nv(pcq[pl*PCW +: NVW]), .q(pq));
-                assign pq_all[((MUT == 7 && pl < 2) ? 1 - pl : pl)*BEAT +: BEAT] = pq;
+                assign pq_all[((MUT == 7 && pl - PL0 < 2) ? 2 * PL0 + 1 - pl : pl)*BEAT +: BEAT] = pq;
             end
             for (pb = 0; pb < BEAT; pb = pb + 1) begin : g_o
                 assign bvs[pb*32 + pl] = pq_all[pl*BEAT + pb];
@@ -980,29 +1011,37 @@ module ot_qfd_sp_vector_memory_bv #(
             wire [LCW-1:0] w = lcq[lp*LCW +: LCW];
             // PLAN 2026-10-13: plane + line of one bit position are ONE leaf (ot_qfd_vm_xcol_t); MUT 7 swaps the data
             // of planes 0 and 1 at the leaves' inputs (the bv plane is no longer a net of this module)
-            localparam integer PSRC = (MUT == 7 && lp < 2) ? 1 - lp : lp;
+            localparam integer PSRC = (MUT == 7 && lp - PL0 < 2 && lp >= PL0) ? 2 * PL0 + 1 - lp : lp;
+            if (lp < PL0) begin : g_cz                                     // XHP: a dropped plane has no column leaf
+                assign xr[lp*NX +: NX] = {NX{1'b0}};
+            end else begin : g_c
             wire [NRB*16-1:0] cd;
             for (lb = 0; lb < NRB*16; lb = lb + 1) begin : g_i
                 assign cd[lb] = capx[lb*32 + PSRC];
             end
             ot_qfd_vm_xcol_t #(.NRB(NRB), .SMIN(SMIN), .SMAX(SMAX), .BMAX(BMAX), .ND(ND), .DSET(DSET),
-                .MEREG((MEE != 0) ? 1 : 0), .PMUT((lp == 5 && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0),
-                .LMUT((MUT == 10 && lp == 3) ? 1 : 0)) u_l (.clk(clk), .me_e(me_lf[MB_P + lp]),
+                .MEREG((MEE != 0) ? 1 : 0), .PMUT((lp == PMP && MUT >= 3 && MUT <= 5) ? MUT - 2 : 0),
+                .LMUT((MUT == 10 && lp == PL0 + 3) ? 1 : 0)) u_l (.clk(clk), .me_e(me_lf[MB_P + lp]),
                 .d_lo(cd[NRB*8-1:0]), .d_hi(cd[NRB*16-1:NRB*8]),
                 .c_a(g_plane.pcq[lp*XPCW + XNVW +: LNRB+4]), .c_nv(g_plane.pcq[lp*XPCW +: XNVW]),
                 .c_v(w[LCW-1]), .c_d(w[LB + 9 +: ND]), .c_j(w[9 +: LB]), .c_sp(w[8:5]),
                 .o_v(w[4]), .o_sp(w[3:0]), .q_lo(xr[lp*NX +: NX/2]), .q_hi(xr[lp*NX + NX/2 +: NX/2]));
+            end
         end
         for (lk = 1; lk <= XQR; lk = lk + 1) begin : g_r
-            for (lp = 0; lp < 32; lp = lp + 1) begin : g_p
+            for (lp = 0; lp < PL0; lp = lp + 1) begin : g_z
+                assign xr[(lk*32 + lp)*NX +: NX] = {NX{1'b0}};
+            end
+            for (lp = PL0; lp < 32; lp = lp + 1) begin : g_p
                 for (ls = 0; ls < NQS; ls = ls + 1) begin : g_s
                     ot_qfd_vm_xrelay_t #(.W(RWX), .MEREG((MEE != 0) ? 1 : 0),
-                        .MUT((MUT == 13 && lk == XQR && lp == 7 && ls == 0) ? 1 : 0)) u_r (.clk(clk),
+                        .MUT((MUT == 13 && lk == XQR && lp == PL0 + 7 && ls == 0) ? 1 : 0)) u_r (.clk(clk),
                         .me_e(me_lf[MB_QR + ((lk-1)*32 + lp)*NQS + ls]),
                         .d(xr[((lk-1)*32 + lp)*NX + ls*RWX +: RWX]), .q(xr[(lk*32 + lp)*NX + ls*RWX +: RWX]));
                 end
             end
         end
+        if (XHP == 0) begin : g_ff
         for (lf = 0; lf < NF; lf = lf + 1) begin : g_f
             wire [FW-1:0] fd;
             for (lb = 0; lb < FW; lb = lb + 1) begin : g_b
@@ -1010,6 +1049,20 @@ module ot_qfd_sp_vector_memory_bv #(
             end
             ot_qfd_vm_xqface_t #(.W(FW), .MEREG((MEE != 0) ? 1 : 0), .MUT((MUT == 11 && lf == 0) ? 1 : 0)) u_f (
                 .clk(clk), .me_e(me_lf[MB_F + lf]), .d(fd), .q(x_q[lf*FW +: FW]));
+        end
+        end else begin : g_fh
+        //: XHP: the faces carry the 16 kept bits of FW / 16 elements each (half the faces); x_q's low 16 bits are 0
+        for (lf = 0; lf < NF / 2; lf = lf + 1) begin : g_f
+            wire [FW-1:0] fd, fq;
+            for (lb = 0; lb < FW; lb = lb + 1) begin : g_b
+                assign fd[lb] = xr[(XQR*32 + 16 + (lb % 16))*NX + (lf*FW + lb) / 16];
+            end
+            ot_qfd_vm_xqface_t #(.W(FW), .MEREG((MEE != 0) ? 1 : 0), .MUT((MUT == 11 && lf == 0) ? 1 : 0)) u_f (
+                .clk(clk), .me_e(me_lf[MB_F + lf]), .d(fd), .q(fq));
+            for (lb = 0; lb < FW / 16; lb = lb + 1) begin : g_o
+                assign x_q[(lf*(FW/16) + lb)*32 +: 32] = {fq[lb*16 +: 16], 16'h0};
+            end
+        end
         end
     end endgenerate
 
