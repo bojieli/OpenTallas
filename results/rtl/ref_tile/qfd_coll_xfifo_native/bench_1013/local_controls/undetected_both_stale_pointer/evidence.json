@@ -1,0 +1,7 @@
+{
+  "source_revision": "1af32b2ad",
+  "observed_exit": 0,
+  "expected": "fail",
+  "qualified": false,
+  "reason": "Both pointers shifted together; full exact test did not detect this mutation. Replaced with one-sided stale read pointer."
+}

@@ -1,0 +1,5 @@
+ot-run: ot-agidock128  admits    60 GB (avail 86, growth 16, headroom 24, waiters 0/0 GB) load 19/64 running 6 disk 343 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-249079-1791956238 after 1 s
+PASS native_coll_port messages=3000 words=17000 cycles=17319 rank3 exact posted everybeat; data everybit0and1 pair_mismatch=0
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-249079-1791956238): exit 0

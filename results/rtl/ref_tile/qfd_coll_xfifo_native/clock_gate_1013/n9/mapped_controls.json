@@ -1,0 +1,130 @@
+{
+  "source_revision": "27fc3bff5",
+  "remote": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_xfifo_native-20261013-225112",
+  "netlist_sha256": "11c6811b43178e2ac9ba5c32a49a45a88199431898367fe751dc9ab233bc35c5",
+  "local_control_dffs": 30,
+  "slices": 5,
+  "mapped_cells": [
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].full_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[0].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].full_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[1].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].full_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[2].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].full_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[3].iw_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].full_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].ir_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].ir_c[1]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].iv_c$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].iw_c[0]$_DFF_PN0_"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_port.u_cq.g_ibw.g_store.g_local.g_slice[4].iw_c[1]$_DFF_PN0_"
+    }
+  ],
+  "scope": "Synthesis preserves all 30 current-state control registers (6 per 128-bit slice); timing and route fanout remain independently measured."
+}
