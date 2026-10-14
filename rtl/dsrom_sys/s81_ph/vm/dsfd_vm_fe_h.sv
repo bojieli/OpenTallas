@@ -333,6 +333,9 @@ module dsfd_vm_fld (
     reg [6:0] lc [0:NLL-1];             // rows written and not yet granted, per lane
     reg [$clog2(NLL)-1:0] ll_ptr; reg [NLP-1:0] lp_v; reg [NLP*14-1:0] lp_row; reg [NLP*512-1:0] lp_d;
     reg [NLP-1:0] lsel_v; reg [$clog2(NLL)-1:0] lsel [0:NLP-1];
+`ifdef OT_VMFE_FLD_PARALLEL_ARB
+`include "dsfd_vm_fld_parallel_arb.svh"
+`else
     always @* begin : p_l562 integer li, lj, lk;
         ll_tk = {NLL{1'b0}}; lsel_v = {NLP{1'b0}};
         for (lk = 0; lk < NLP; lk = lk + 1) lsel[lk] = {$clog2(NLL){1'b0}};
@@ -349,6 +352,7 @@ module dsfd_vm_fld (
             if (lc[lj] != 7'd0 && lk < NLP) begin ll_tk[lj] = 1'b1; lsel_v[lk] = 1'b1; lsel[lk] = lj; lk = lk + 1; end
         end
     end
+`endif
     reg [NLL-1:0] sd_oh [0:NLP-1][0:LSD-1]; reg [NLP-1:0] sd_v [0:LSD-1];
     always @(posedge clk) begin : p_l578 integer lk, li, i; reg [511:0] dsel; reg [13:0] rsel;
         if (!rn) begin
