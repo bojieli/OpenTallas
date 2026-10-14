@@ -55,7 +55,17 @@ foreach k {ucie serdes} { create_clock -name $k -period 833.333 [get_pins -quiet
 # qwen-tp8 r10: a case-specific clock file ($OT_STA_CLOCKS: create_clock lines, first line '# DOMS a b c') replaces the
 # built-in die clocks (the merged tp8b die has the KV PLL, the clock receiver and four strip PLLs)
 if os.environ.get('OT_STA_CLOCKS'):
-    _ct = Path(os.environ['OT_STA_CLOCKS']).read_text()
+    _cp = Path(os.environ['OT_STA_CLOCKS'].format(corner=c))
+    if _cp.is_dir():
+        _cp = _cp / f'clocks_{c}.tcl'
+    elif _cp.name == 'clocks.tcl' and _cp.with_name(f'clocks_{c}.tcl').exists():
+        _cp = _cp.with_name(f'clocks_{c}.tcl')
+    _ct = _cp.read_text()
+    if '# INSERTION_COMPENSATED ' in _ct:
+        if f'# INSERTION_COMPENSATED {c}\n' not in _ct:
+            raise ValueError(f'wrong clock measurement corner: {_cp} for {c}')
+        if plan:
+            raise ValueError('measured clock plan cannot override phi-R source-compensated clocks')
     DOMS = _ct.splitlines()[0].split()[2:]
     clocks = _ct
 lat, ocv_src = '', ''
