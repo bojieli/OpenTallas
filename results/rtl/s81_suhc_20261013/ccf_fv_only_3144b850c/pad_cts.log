@@ -1,0 +1,20 @@
+GATE WARN util: utilisation 21% outside 45%-60% (std 2681 + macro 0 in core 12728 um2)  -> FIX: resize the outline to util 0.50-0.55 (drop 'outline', set util)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 20.9 pins/um (r_o): recipe-2 hold stages take 7.01 um behind the face, the pin flops need gap 9.0 um and 16 columns (derived in the flow)
+GATE INFO oflop: N face 20.9 pins/um (v_i, d_i): recipe-2 hold stages take 4.57 um behind the face, the pin flops need gap 5.9 um and 41 columns (derived in the flow)
+GATE INFO oflop: S face 20.9 pins/um (v_o, d_o): recipe-2 hold stages take 7.01 um behind the face, the pin flops need gap 9.0 um and 41 columns (derived in the flow)
+GATE INFO oflop: W face 20.9 pins/um (sk, srs, r_i): recipe-2 hold stages take 4.57 um behind the face, the pin flops need gap 5.9 um and 16 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 24 GB; inputs ship there before admission
+GATE INFO remote: remote log /tmp/ref_gate_s81hc_pad_fv4fd5r1_ref_20261013-212319.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81hc_pad_fv4fd5r1_ref-20261013-212319
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 25 s (gate total 414 s)
+GATE WARN util: synthesized std area 2710 um2 + macros 0 in core 12728: util 21%  -> FIX: set "std_area_um2": 2710 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_s81_hc_pad_fv4fd5r1 cells 16,788 flops 7,826 depth 11.7 ps util 0.213 reach 69.0 um (0.2 s)
+GATE WARN textbook.util_channel: utilisation 21.3% outside 45%-65% (std 2711 + macro 0 um2 in 12728 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 235.9..266.6 ps (spread 30.7), boundary mean 251.5; tt insertion all 181.7..206.3 ps (spread 24.6), boundary mean 194.0; ff insertion all 148.6..170.0 ps (spread 21.4), boundary mean 159.1; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO path_classes: reg->out      300 paths, worst slack 130.8 ps (e.g. r_o[1271])
+GATE INFO path_classes: reg->reg       28 paths, worst slack 619.2 ps (e.g. u_v.genblk1.g_line.line[22]$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 1.3079118343917173e-10 hold WNS 3.0448144006101074e-12
+GATE INFO clock_rule: root port:sk: 7,826 sinks on the largest root <= 15,000; measured TT insertion 206.3 ps, leaf spread 24.6 ps
+PRE_ROUTE_GATE: WARN (0 fail, 3 warn)
+GATE: s81hc_pad_fv4fd5r1_ref/gate_result.json written (clock evidence for the submit gate: commit it with the kit)
