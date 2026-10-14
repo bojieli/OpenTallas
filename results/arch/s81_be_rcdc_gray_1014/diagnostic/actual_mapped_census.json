@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.be_gray_actual_mapped_census.v1",
+  "source_commit": "c7cf30d5d",
+  "netlist_path": "/srv/opentallas-scratch2/claude/closure-loop/s81be-gray-m7-c7cf30d5d/routes/s81be_gray_m7_c7cf30d5d/work/orfs/results/asap7/opentallas_dsfd_vm_be_sl_asap7_s81ph_s81be_gray_m7_c7cf30d5d/base/1_2_yosys.v",
+  "netlist_sha256": "0347746bc1b9a62a041401048e6bc931a5ad508aac92c9df26cde30ab7070fdf",
+  "effective_define": "-DSYNTHESIS -DOT_BE_RCDC_GRAY",
+  "top": "dsfd_vm_be_sl",
+  "top_mapped_FF_by_master": {
+    "DFFHQNx1_ASAP7_75t_R": 16021,
+    "DFFASRHQNx1_ASAP7_75t_R": 4
+  },
+  "top_mapped_FF": 16025,
+  "FIFO_modules": [],
+  "actual_synthesis_metrics": {
+    "synth__design__io": 4099,
+    "synth__design__nets": 64798,
+    "synth__design__die__area": 0,
+    "synth__design__core__area": 0,
+    "synth__design__instance__count": 63384,
+    "synth__design__instance__area": 8955.31,
+    "synth__design__instance__count__stdcell": 63384,
+    "synth__design__instance__area__stdcell": 8955.31,
+    "synth__design__instance__count__macros": 0,
+    "synth__design__instance__area__macros": 0,
+    "synth__design__instance__count__padcells": 0,
+    "synth__design__instance__area__padcells": 0,
+    "synth__design__instance__count__cover": 0,
+    "synth__design__instance__area__cover": 0,
+    "synth__design__rows": 0,
+    "synth__design__sites": 0,
+    "synth__flow__warnings__count": 20,
+    "synth__flow__errors__count": 0,
+    "synth__flow__warnings__count:STA-1212": 1001,
+    "synth__flow__warnings__type_count": 1
+  },
+  "physical_qualified": false,
+  "final_route_FF": null,
+  "old_CLOSED_replaced": false,
+  "flattened_FIFO_FF_namespaces": {
+    "u_rc0": 1204,
+    "u_rc1": 1204
+  },
+  "conditioner_instances": [
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_rc0.u_gray.u_rrs.reset_pipe[1]$_DFF_PN0_",
+      "connections": "\n    .CLK(cks),\n    .D(\\u_rc0.u_gray.u_rrs.reset_pipe[0] ),\n    .QN(_11111_),\n    .RESETN(raw_epoch_n),\n    .SETN(_53567_)"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_rc0.u_gray.u_wrs.reset_pipe[1]$_DFF_PN0_",
+      "connections": "\n    .CLK(ck),\n    .D(\\u_rc0.u_gray.u_wrs.reset_pipe[0] ),\n    .QN(_11112_),\n    .RESETN(raw_epoch_n),\n    .SETN(_53567_)"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_rc1.u_gray.u_rrs.reset_pipe[0]$_DFF_PN0_",
+      "connections": "\n    .CLK(cks),\n    .D(_53567_),\n    .QN(_06763_),\n    .RESETN(raw_epoch_n),\n    .SETN(_53567_)"
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u_rc1.u_gray.u_wrs.reset_pipe[0]$_DFF_PN0_",
+      "connections": "\n    .CLK(ck),\n    .D(_53567_),\n    .QN(_06769_),\n    .RESETN(raw_epoch_n),\n    .SETN(_53567_)"
+    }
+  ],
+  "ACK_output_buffers": [
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "instance": "_98068_",
+      "connections": "\n    .A(\\u_rc0.reset_ack_w ),\n    .Y(cdc_rst_ack[0])"
+    },
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "instance": "_98069_",
+      "connections": "\n    .A(\\u_rc0.reset_ack_w ),\n    .Y(cdc_rst_ack[1])"
+    },
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "instance": "_98070_",
+      "connections": "\n    .A(\\u_rc0.reset_ack_r ),\n    .Y(cdc_rst_ack_s[0])"
+    },
+    {
+      "master": "BUFx2_ASAP7_75t_R",
+      "instance": "_98071_",
+      "connections": "\n    .A(\\u_rc0.reset_ack_r ),\n    .Y(cdc_rst_ack_s[1])"
+    }
+  ],
+  "mapped_conditioner_FF_per_leaf": 4,
+  "mapped_conditioner_FF_four_leaves": 16,
+  "exported_ACK_ports_per_leaf": 4,
+  "distinct_final_ACK_sources_per_leaf": 2,
+  "nominal_generic_conditioner_FF_four_leaves": 32,
+  "controller_capture_FF_for_16_exported_ACK_signals": 32,
+  "physical_controller_binding": null
+}
