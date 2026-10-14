@@ -1,0 +1,5 @@
+SV_NATIVE_PACKET PASS checks=256
+- /srv/opentallas-scratch/claude/codex-sv-native-packet-955/src/rtl/hbm_accel/generic/adapters/tb/tb_hgi_sv_native_packet_smoke.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 15us; walltime 3.271 s; speed 4.666 us/s
+- Verilator: cpu 3.271 s on 1 threads; allocated 25 MB

@@ -1,0 +1,61 @@
+{
+  "owner": "/root/hbm_hc_norm",
+  "historical_requirements": {
+    "hfd_attn_half_lo": {
+      "production_required": true,
+      "count": 32,
+      "native_children_each": 89
+    },
+    "hfd_attn_half_hi": {
+      "production_required": true,
+      "count": 32,
+      "native_children_each": 54
+    }
+  },
+  "native_component_commit": "a95a4adfc",
+  "producer_source_commit": "8c33fcd81653f46392b3e01048a0789241facca8",
+  "native_children_total": 4576,
+  "published_contract": "v12 r25gq",
+  "candidate_geometry_commit": "bb9fa3a2766ef179666bb01892f7c0088d3911a1",
+  "candidate_geometry_sha256": "b8f1dfec4e73b8bc9ee68b6b3976a8881e01c6b1739e388f3b9367ba77ca38f2",
+  "params": {
+    "lo": {
+      "CG": 1,
+      "ROWEW": 1,
+      "NK": 3,
+      "NC": 1,
+      "NR": 2,
+      "PMID": 3,
+      "NFR": 4,
+      "NLL": 3,
+      "NXP": 3,
+      "LDKR": 16
+    },
+    "hi": {
+      "CG": 1,
+      "ROWEW": 1,
+      "PMID": 2,
+      "NFC": 2,
+      "NL": 8,
+      "NLL": 3,
+      "NI": 6
+    }
+  },
+  "evidence": {
+    "fpipe": "SAT exact all input/unknown initial states after four-fill; bit inversion observed counterexample",
+    "transaction": "retained twolevel lockh6roles+6negatives on main, fd655cde6 adapter throughput separate",
+    "native_pair_transaction": "fresh padded-native proof preparing",
+    "process_audit": "E1/E4 no inherited attn-phys-f55/att3-b6f/half processes, checked before new proof"
+  },
+  "open": [
+    "Actual complete PS-entry/ATT producer and result binding",
+    "Current candidate cross-component bit connections",
+    "Native clock phases/drivers/reset source binding",
+    "M6 SN-bank MX track incompatibility and M5 signal phases",
+    "Die/cluster route STA DRC IR"
+  ],
+  "cancelled_or_refused_rows_retired": false,
+  "native_whole_attention_qualified": false,
+  "physical_qualified": false,
+  "ledger_eligible": false
+}

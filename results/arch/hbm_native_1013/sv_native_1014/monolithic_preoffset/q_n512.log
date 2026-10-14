@@ -1,0 +1,369 @@
+SV 0 load SCRUB leaf slot 0 frame 0
+SV 1 load SCRUB leaf slot 1 frame 1
+SV 2 load SCRUB leaf slot 2 frame 2
+SV 3 load SCRUB leaf slot 3 frame 3
+SV 268 stage slot 0 done (scrub 1 rec slot 0)
+SV 524 stage slot 1 done (scrub 1 rec slot 0)
+SV 780 stage slot 2 done (scrub 1 rec slot 0)
+SV 1036 stage slot 3 done (scrub 1 rec slot 0)
+SV 163659 take slot 0 no 1 ni 4096 m1 1 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 163664  region 0 lo 0 hi 4095 base 0 so 0 si 1 dense 1
+SV 163664  region 1 lo 186368 hi 186368 base 186368 so 0 si 0 dense 0
+SV 163664  region 4 lo 0 hi 4095 base 0 so 0 si 1 dense 1
+SV 163667  classify slot 0 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 1 tb_v 00000000 fok 00000000 live 00000000
+SV 163669  alloc slot 0 rk 4    SINK lb 0 frame 0 ep 1 vic 0 rfs 4 bp 0
+SV 163672  alloc slot 0 rk 0   STAGE lb 4352 frame 0 ep 1 vic 1 rfs 4 bp 4104
+SV 163674  alloc slot 0 rk 1   STAGE lb 8704 frame 0 ep 1 vic 1 rfs 4 bp 8456
+SV 163678 decoded slot 0
+SV 163680 take slot 1 no 1 ni 1536 m1 1 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 163685  region 0 lo 8192 hi 9727 base 8192 so 0 si 1 dense 1
+SV 163685  region 1 lo 156672 hi 158207 base 156672 so 0 si 1 dense 1
+SV 163685  region 4 lo 9728 hi 11263 base 9728 so 0 si 1 dense 1
+SV 163688  classify slot 1 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 00000001 fok 00000001 live 00000001
+SV 163689  alloc slot 1 rk 4    SINK lb 8960 frame 0 ep 1 vic 1 rfs 4 bp 8713
+SV 163692  alloc slot 1 rk 0   STAGE lb 10752 frame 0 ep 1 vic 2 rfs 4 bp 10504
+SV 163694  alloc slot 1 rk 1   STAGE lb 12544 frame 0 ep 1 vic 2 rfs 4 bp 12296
+SV 163698 decoded slot 1
+SV 163700 take slot 2 no 10 ni 128 m1 1 m2 0 qm 3 ad 1 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 163702 load STAGE leaf slot 0 rec slot 0 vsec 0 n 512 lsec 544 strm 1
+SV 163704 load STAGE leaf slot 1 rec slot 0 vsec 23296 n 1 lsec 1088 strm 0
+SV 163705  region 0 lo 11264 hi 12543 base 11264 so 128 si 1 dense 0
+SV 163705  region 1 lo 12544 hi 12607 base 12544 so 0 si 1 dense 0
+SV 163705  region 3 lo 12608 hi 12671 base 12608 so 0 si 1 dense 0
+SV 163705  region 4 lo 12800 hi 14079 base 12800 so 128 si 1 dense 1
+SV 163706 load STAGE leaf slot 2 rec slot 1 vsec 1024 n 192 lsec 1344 strm 1
+SV 163708  classify slot 2 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 1 tb_v 00000011 fok 00000011 live 00000011
+SV 163708 load STAGE leaf slot 3 rec slot 1 vsec 19584 n 192 lsec 1568 strm 1
+SV 163709  alloc slot 2 rk 4    SINK lb 14336 frame 0 ep 1 vic 2 rfs 4 bp 14088
+SV 163712  alloc slot 2 rk 0   STAGE lb 15872 frame 0 ep 1 vic 3 rfs 4 bp 15624
+SV 163714  alloc slot 2 rk 1   STAGE lb 17408 frame 0 ep 1 vic 3 rfs 4 bp 17160
+SV 163715 load STAGE leaf slot 4 rec slot 2 vsec 1408 n 160 lsec 1984 strm 0
+SV 163717  alloc slot 2 rk 3   STAGE lb 17728 frame 0 ep 1 vic 3 rfs 4 bp 17480
+SV 163717 load STAGE leaf slot 5 rec slot 2 vsec 1568 n 8 lsec 2176 strm 0
+SV 163730 stage slot 1 done (scrub 0 rec slot 0)
+SV 163731 load STAGE leaf slot 1 rec slot 2 vsec 1576 n 8 lsec 2216 strm 0
+SV 163733 set slot 0 ext_s 1 ext_i 0 ssel_n 000001
+SV 163734 go slot 0 ext 1 oep 1 ofr 0 A 4352 B 8704 C 0 D 0 O 0 R 0
+SV 163748 stage slot 5 done (scrub 0 rec slot 2)
+SV 163754 stage slot 2 done (scrub 0 rec slot 1)
+SV 163755 stage slot 1 done (scrub 0 rec slot 2)
+SV 163760 stage slot 3 done (scrub 0 rec slot 1)
+SV 163761 stage slot 4 done (scrub 0 rec slot 2)
+SV 163770 stage slot 0 done (scrub 0 rec slot 0)
+SV 163789 load DRAIN leaf slot 0 rec slot 0 vsec 0 n 512 lsec 0 ep 1 dense 1 live 1
+SV 163799 idle slot 0 vf 0 x_cnt 16383 gs 16383 gi 16383
+SV 163800 decoded slot 2
+SV 163802 take slot 3 no 1 ni 1024 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 163802 set slot 1 ext_s 0 ext_i 0 ssel_n 000000
+SV 163803 go slot 1 ext 0 oep 1 ofr 0 A 10752 B 12544 C 0 D 0 O 8960 R 0
+SV 163805 load DRAIN leaf slot 1 rec slot 1 vsec 1216 n 192 lsec 1120 ep 1 dense 1 live 0
+SV 163807  region 0 lo 12800 hi 13823 base 12800 so 0 si 1 dense 1
+SV 163807  region 4 lo 14080 hi 15103 base 14080 so 0 si 1 dense 1
+SV 163810  classify slot 3 hit 0001 e 2 0 0 0 ipc 0000 ip_on 0 ip_e 2 lvw 9 olive 1 tb_v 00000111 fok 00000111 live 00000111
+SV 163811  alloc slot 3 rk 4    SINK lb 17920 frame 0 ep 1 vic 3 rfs 4 bp 17800
+SV 163814  alloc slot 3 rk 0     FWD lb 14336 frame 0 ep 1 vic 4 rfs 4 bp 18952
+SV 163835 idle slot 1 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 163835 drain slot 0 done rec slot 0
+SV 163836 decoded slot 3
+SV 163837 retire slot 0
+SV 163838 take slot 4 no 8 ni 8192 m1 3 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 0 red 2 strm 0
+SV 163838 set slot 2 ext_s 0 ext_i 0 ssel_n 000000
+SV 163839 go slot 2 ext 0 oep 1 ofr 0 A 15872 B 17408 C 0 D 17728 O 14336 R 0
+SV 163841 load DRAIN leaf slot 0 rec slot 2 vsec 1600 n 160 lsec 1792 ep 1 dense 1 live 1
+SV 163843  region 0 lo 15104 hi 80639 base 15104 so 8192 si 1 dense 1
+SV 163843  region 5 lo 146176 hi 146183 base 146176 so 1 si 0 dense 1
+SV 163846  classify slot 4 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 00001111 fok 00001110 live 00001110
+SV 163848  alloc slot 4 rk 5   RFILE lb 262144 frame 0 ep 1 vic 4 rfs 4 bp 18952
+SV 163850  alloc slot 4 rk 0   STAGE lb 65536 frame 1 ep 1 vic 5 rfs 5 bp 18952
+SV 163858 load STAGE leaf slot 0 rec slot 4 vsec 1888 n 8192 lsec 8192 strm 1
+SV 163869 drain slot 1 done rec slot 1
+SV 163871 idle slot 2 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 163871 retire slot 1
+SV 163872 decoded slot 4
+SV 163874 take slot 5 no 8 ni 8192 m1 3 m2 0 qm 0 ad 3 sfu 1 e1 0 e2 0 dst 1 red 1 strm 0
+SV 163874 set slot 3 ext_s 0 ext_i 0 ssel_n 000000
+SV 163875 go slot 3 ext 0 oep 1 ofr 0 A 14336 B 0 C 0 D 0 O 17920 R 0
+SV 163877 load DRAIN leaf slot 1 rec slot 3 vsec 1760 n 128 lsec 2240 ep 1 dense 1 live 1
+SV 163879  region 0 lo 15104 hi 80639 base 15104 so 8192 si 1 dense 1
+SV 163879  region 1 lo 146176 hi 146183 base 146176 so 1 si 0 dense 0
+SV 163879  region 4 lo 80640 hi 146175 base 80640 so 8192 si 1 dense 1
+SV 163879  region 5 lo 146304 hi 146311 base 146304 so 1 si 0 dense 1
+SV 163882  classify slot 5 hit 0011 e 5 4 0 0 ipc 0000 ip_on 0 ip_e 5 lvw 7 olive 1 tb_v 00111111 fok 00111100 live 00011100
+SV 163883  alloc slot 5 rk 4    SINK lb 131072 frame 2 ep 1 vic 6 rfs 5 bp 18952
+SV 163885  alloc slot 5 rk 5   RFILE lb 262208 frame 0 ep 1 vic 7 rfs 5 bp 18952
+SV 163887  alloc slot 5 rk 0     FWD lb 65536 frame 1 ep 1 vic 0 rfs 6 bp 18952
+SV 163889  alloc slot 5 rk 1  BYPASS lb 262144 frame 0 ep 1 vic 0 rfs 6 bp 18952
+SV 163902 drain slot 0 done rec slot 2
+SV 163904 retire slot 2
+SV 163906 idle slot 3 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 163907 decoded slot 5
+SV 163909 take slot 6 no 8 ni 8192 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 163909 set slot 4 ext_s 1 ext_i 0 ssel_n 000001
+SV 163910 go slot 4 ext 1 oep 0 ofr 0 A 65536 B 0 C 0 D 0 O 0 R 262144
+SV 163914  region 0 lo 80640 hi 146175 base 80640 so 8192 si 1 dense 1
+SV 163914  region 4 lo 80640 hi 146175 base 80640 so 8192 si 1 dense 1
+SV 163917  classify slot 6 hit 0001 e 6 0 0 0 ipc 0001 ip_on 1 ip_e 6 lvw 9 olive 1 tb_v 11111111 fok 11111000 live 11011000
+SV 163918  alloc slot 6 rk 4 INPLACE lb 131072 frame 2 ep 2 vic 0 rfs 6 bp 18952
+SV 163921  alloc slot 6 rk 0     FWD lb 131072 frame 2 ep 1 vic 0 rfs 6 bp 18952
+SV 163936 drain slot 1 done rec slot 3
+SV 163938 retire slot 3
+SV 164201 stage slot 0 done (scrub 0 rec slot 4)
+SV 164286 idle slot 4 vf 0 x_cnt 16383 gs 16383 gi 16383
+SV 164287 decoded slot 6
+SV 164289 take slot 7 no 8 ni 128 m1 4 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 164289 set slot 5 ext_s 0 ext_i 0 ssel_n 000000
+SV 164290 go slot 5 ext 0 oep 1 ofr 2 A 65536 B 262144 C 0 D 0 O 131072 R 262208
+SV 164292 rdrain rec slot 4 sector 18272 mask 11111111
+SV 164294  region 0 lo 146432 hi 147455 base 146432 so 128 si 1 dense 1
+SV 164294  region 1 lo 146304 hi 146311 base 146304 so 1 si 0 dense 0
+SV 164294  region 4 lo 147456 hi 148479 base 147456 so 128 si 1 dense 1
+SV 164297  classify slot 7 hit 0010 e 0 7 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 7 olive 1 tb_v 11111111 fok 11110000 live 11010000
+SV 164298  alloc slot 7 rk 4    SINK lb 19200 frame 0 ep 1 vic 0 rfs 6 bp 18952
+SV 164301  alloc slot 7 rk 0   STAGE lb 20480 frame 0 ep 1 vic 1 rfs 6 bp 20232
+SV 164303  alloc slot 7 rk 1  BYPASS lb 262208 frame 0 ep 1 vic 1 rfs 6 bp 21512
+SV 164308 rdrain done rec slot 4
+SV 164309 load STAGE leaf slot 0 rec slot 7 vsec 18304 n 128 lsec 2560 strm 1
+SV 164310 retire slot 4
+SV 164338 stage slot 0 done (scrub 0 rec slot 7)
+SV 164399 load DRAIN leaf slot 0 rec slot 5 vsec 10080 n 8192 lsec 16384 ep 1 dense 1 live 1
+SV 164908 drain slot 0 done rec slot 5
+SV 164936 idle slot 5 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 164937 decoded slot 7
+SV 164937 frame 1 freed ep 1
+SV 164939 take slot 0 no 1 ni 4096 m1 1 m2 0 qm 0 ad 2 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 164939 set slot 6 ext_s 0 ext_i 1 ssel_n 000000
+SV 164940 go slot 6 ext 1 oep 2 ofr 2 A 131072 B 0 C 0 D 0 O 131072 R 0
+SV 164942 rdrain rec slot 5 sector 18288 mask 11111111
+SV 164944  region 0 lo 152576 hi 156671 base 152576 so 0 si 1 dense 1
+SV 164944  region 1 lo 156672 hi 160767 base 156672 so 0 si 1 dense 1
+SV 164944  region 2 lo 0 hi 4095 base 0 so 0 si 1 dense 1
+SV 164944  region 4 lo 0 hi 4095 base 0 so 0 si 1 dense 1
+SV 164947  classify slot 0 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 1 tb_v 11011111 fok 11000001 live 11000001
+SV 164948  alloc slot 0 rk 4    SINK lb 21760 frame 0 ep 1 vic 5 rfs 4 bp 21512
+SV 164951  alloc slot 0 rk 0   STAGE lb 26112 frame 0 ep 1 vic 1 rfs 4 bp 25864
+SV 164951 rdrain done rec slot 5
+SV 164953  alloc slot 0 rk 1   STAGE lb 30464 frame 0 ep 1 vic 1 rfs 4 bp 30216
+SV 164953 retire slot 5
+SV 164955  alloc slot 0 rk 2   STAGE lb 34816 frame 0 ep 1 vic 1 rfs 4 bp 34568
+SV 164959 load STAGE leaf slot 0 rec slot 0 vsec 19072 n 512 lsec 3264 strm 1
+SV 164961 load STAGE leaf slot 1 rec slot 0 vsec 19584 n 512 lsec 3808 strm 1
+SV 164963 load STAGE leaf slot 2 rec slot 0 vsec 0 n 512 lsec 4352 strm 1
+SV 165037 stage slot 0 done (scrub 0 rec slot 0)
+SV 165040 stage slot 1 done (scrub 0 rec slot 0)
+SV 165041 load DRAIN leaf slot 0 rec slot 6 vsec 10080 n 8192 lsec 16384 ep 2 dense 1 live 1
+SV 165042 stage slot 2 done (scrub 0 rec slot 0)
+SV 165097 idle slot 6 vf 0 x_cnt 16383 gs 16383 gi 16383
+SV 165098 decoded slot 0
+SV 165100 take slot 1 no 1 ni 6144 m1 1 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 165100 set slot 7 ext_s 0 ext_i 0 ssel_n 000000
+SV 165101 go slot 7 ext 0 oep 1 ofr 0 A 20480 B 262208 C 0 D 0 O 19200 R 0
+SV 165103 load DRAIN leaf slot 1 rec slot 7 vsec 18432 n 128 lsec 2400 ep 1 dense 1 live 1
+SV 165105  region 0 lo 162816 hi 168959 base 162816 so 0 si 1 dense 1
+SV 165105  region 1 lo 156672 hi 162815 base 156672 so 0 si 1 dense 1
+SV 165105  region 4 lo 168960 hi 175103 base 168960 so 0 si 1 dense 1
+SV 165108  classify slot 1 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 11111111 fok 01100001 live 01100001
+SV 165109  alloc slot 1 rk 4    SINK lb 39168 frame 0 ep 1 vic 1 rfs 4 bp 38920
+SV 165112  alloc slot 1 rk 0   STAGE lb 45568 frame 0 ep 1 vic 2 rfs 4 bp 45320
+SV 165114  alloc slot 1 rk 1   STAGE lb 51968 frame 0 ep 1 vic 2 rfs 4 bp 51720
+SV 165120 load STAGE leaf slot 0 rec slot 1 vsec 20352 n 768 lsec 5696 strm 1
+SV 165122 load STAGE leaf slot 1 rec slot 1 vsec 19584 n 768 lsec 6496 strm 1
+SV 165154 idle slot 7 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 165155 decoded slot 1
+SV 165157 take slot 2 no 1 ni 4096 m1 1 m2 0 qm 0 ad 2 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 165157 set slot 0 ext_s 0 ext_i 0 ssel_n 000000
+SV 165158 go slot 0 ext 0 oep 1 ofr 0 A 26112 B 30464 C 34816 D 0 O 21760 R 0
+SV 165162  region 0 lo 182272 hi 186367 base 182272 so 0 si 1 dense 1
+SV 165162  region 1 lo 156672 hi 160767 base 156672 so 0 si 1 dense 1
+SV 165162  region 2 lo 0 hi 4095 base 0 so 0 si 1 dense 1
+SV 165162  region 4 lo 0 hi 4095 base 0 so 0 si 1 dense 1
+SV 165165  classify slot 2 hit 0100 e 0 0 5 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 1 tb_v 11111111 fok 01100011 live 01100011
+SV 165166  alloc slot 2 rk 4    SINK lb 58368 frame 0 ep 1 vic 2 rfs 4 bp 58120
+SV 165171  alloc slot 2 rk 0   STAGE lb 65536 frame 1 ep 2 vic 3 rfs 4 bp 0
+SV 165173  alloc slot 2 rk 1   STAGE lb 69888 frame 1 ep 2 vic 3 rfs 4 bp 4104
+SV 165174 load STAGE leaf slot 2 rec slot 2 vsec 22784 n 512 lsec 8192 strm 1
+SV 165175  alloc slot 2 rk 2     FWD lb 21760 frame 0 ep 2 vic 3 rfs 4 bp 8456
+SV 165176 load STAGE leaf slot 3 rec slot 2 vsec 19584 n 512 lsec 8736 strm 1
+SV 165195 idle slot 0 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 165196 decoded slot 2
+SV 165198 set slot 1 ext_s 1 ext_i 0 ssel_n 000011
+SV 165199 go slot 1 ext 1 oep 1 ofr 0 A 45568 B 51968 C 0 D 0 O 39168 R 0
+SV 165203 stage slot 0 done (scrub 0 rec slot 1)
+SV 165209 stage slot 1 done (scrub 0 rec slot 1)
+SV 165242 stage slot 2 done (scrub 0 rec slot 2)
+SV 165243 stage slot 3 done (scrub 0 rec slot 2)
+SV 165248 idle slot 1 vf 0 x_cnt 16383 gs 16383 gi 16383
+SV 165251 set slot 2 ext_s 0 ext_i 0 ssel_n 000000
+SV 165252 go slot 2 ext 0 oep 1 ofr 0 A 65536 B 69888 C 21760 D 0 O 58368 R 0
+SV 165289 idle slot 2 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 165387 drain slot 0 done rec slot 6
+SV 165388 load DRAIN leaf slot 0 rec slot 0 vsec 0 n 512 lsec 2720 ep 1 dense 1 live 1
+SV 165389 retire slot 6
+SV 165390 frame 2 freed ep 2
+SV 165392 drain slot 1 done rec slot 7
+SV 165393 load DRAIN leaf slot 1 rec slot 1 vsec 21120 n 768 lsec 4896 ep 1 dense 1 live 0
+SV 165394 retire slot 7
+SV 165434 drain slot 0 done rec slot 0
+SV 165436 retire slot 0
+SV 165437 load DRAIN leaf slot 0 rec slot 2 vsec 0 n 512 lsec 7296 ep 1 dense 1 live 1
+SV 165464 drain slot 1 done rec slot 1
+SV 165466 retire slot 1
+SV 165484 drain slot 0 done rec slot 2
+SV 165486 retire slot 2
+SV 165487 frame 0 freed ep 1
+SHARED case 0: agent bursts read 10 write 5 (group shared with the SU)
+REC 0 0 accept 0 retire 181
+REC 0 1 accept 3 retire 215
+REC 0 2 accept 24 retire 248
+REC 0 3 accept 44 retire 282
+REC 0 4 accept 146 retire 654
+REC 0 5 accept 182 retire 1297
+REC 0 6 accept 218 retire 1733
+REC 0 7 accept 253 retire 1738
+REC 0 8 accept 633 retire 1780
+REC 0 9 accept 1283 retire 1810
+REC 0 10 accept 1444 retire 1830
+CASE 0 service 1831 span 191 stage 646 compute 1515 drain 1132 other 0
+PRICE 0 0 priced 67.0
+PRICE 0 1 priced 62.0
+PRICE 0 2 priced 62.0
+PRICE 0 3 priced 61.0
+PRICE 0 4 priced 302.0
+PRICE 0 5 priced 524.0
+PRICE 0 6 priced 187.0
+PRICE 0 7 priced 78.0
+PRICE 0 8 priced 67.0
+PRICE 0 9 priced 71.0
+PRICE 0 10 priced 67.0
+THROUGHPUT case 0: service 1831 price sum 1548.0 (11 records) ratio service/price 1.183
+CASECHK 0: 10082 sink sectors, 0 guard words; errors 0 (written words 0, guard words 0)
+SV 289151 take slot 3 no 1 ni 2043 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 289156  region 0 lo 4096 hi 6138 base 4096 so 2043 si 1 dense 1
+SV 289156  region 4 lo 148483 hi 150525 base 148483 so 2043 si 1 dense 1
+SV 289159  classify slot 3 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 10010000 fok 00000000 live 00000000
+SV 289160  alloc slot 3 rk 4    SINK lb 74243 frame 1 ep 2 vic 0 rfs 4 bp 8456
+SV 289163  alloc slot 3 rk 0   STAGE lb 76544 frame 1 ep 2 vic 1 rfs 4 bp 10758
+SV 289168 decoded slot 3
+SV 289170 take slot 4 no 1 ni 2043 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 289175  region 0 lo 175104 hi 177146 base 175104 so 2043 si 1 dense 1
+SV 289175  region 4 lo 177411 hi 179453 base 177411 so 2043 si 1 dense 1
+SV 289178  classify slot 4 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 10010001 fok 00000001 live 00000001
+SV 289179  alloc slot 4 rk 4    SINK lb 78595 frame 1 ep 2 vic 1 rfs 4 bp 13059
+SV 289182  alloc slot 4 rk 0   STAGE lb 80896 frame 1 ep 2 vic 2 rfs 4 bp 15110
+SV 289187 decoded slot 4
+SV 289189 take slot 5 no 8 ni 1021 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 289194  region 0 lo 186624 hi 194791 base 186624 so 1021 si 1 dense 1
+SV 289194  region 4 lo 194821 hi 202988 base 194821 so 1021 si 1 dense 1
+SV 289194 load STAGE leaf slot 0 rec slot 3 vsec 512 n 256 lsec 9568 strm 1
+SV 289196 load STAGE leaf slot 1 rec slot 4 vsec 21888 n 256 lsec 10112 strm 1
+SV 289197  classify slot 5 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 10010011 fok 00000011 live 00000011
+SV 289197 set slot 3 ext_s 1 ext_i 0 ssel_n 000001
+SV 289198  alloc slot 5 rk 4    SINK lb 82949 frame 1 ep 2 vic 2 rfs 4 bp 17411
+SV 289198 go slot 3 ext 1 oep 2 ofr 1 A 76544 B 0 C 0 D 0 O 74243 R 0
+SV 289201  alloc slot 5 rk 0   STAGE lb 91136 frame 1 ep 2 vic 3 rfs 4 bp 25589
+SV 289204 load STAGE leaf slot 2 rec slot 5 vsec 23328 n 1021 lsec 11392 strm 1
+SV 289240 stage slot 0 done (scrub 0 rec slot 3)
+SV 289243 stage slot 1 done (scrub 0 rec slot 4)
+SV 289268 idle slot 3 vf 0 x_cnt 16383 gs 16383 gi 16383
+SV 289269 decoded slot 5
+SV 289271 take slot 6 no 8 ni 1021 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 289271 set slot 4 ext_s 0 ext_i 0 ssel_n 000000
+SV 289272 go slot 4 ext 0 oep 2 ofr 1 A 80896 B 0 C 0 D 0 O 78595 R 0
+SV 289276  region 0 lo 203008 hi 211175 base 203008 so 1021 si 1 dense 1
+SV 289276  region 4 lo 211205 hi 219372 base 211205 so 1021 si 1 dense 1
+SV 289277 stage slot 2 done (scrub 0 rec slot 5)
+SV 289279  classify slot 6 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 10010111 fok 00000111 live 00000111
+SV 289280  alloc slot 6 rk 4    SINK lb 99333 frame 1 ep 2 vic 3 rfs 4 bp 33776
+SV 289281 load DRAIN leaf slot 0 rec slot 3 vsec 18560 n 256 lsec 9280 ep 2 dense 1 live 0
+SV 289283  alloc slot 6 rk 0   STAGE lb 107520 frame 1 ep 2 vic 5 rfs 4 bp 41973
+SV 289283 load DRAIN leaf slot 1 rec slot 4 vsec 22176 n 256 lsec 9824 ep 2 dense 1 live 0
+SV 289291 load STAGE leaf slot 0 rec slot 6 vsec 25376 n 1021 lsec 13440 strm 1
+SV 289305 idle slot 4 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 289306 decoded slot 6
+SV 289308 take slot 7 no 1 ni 1 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 289308 set slot 5 ext_s 0 ext_i 0 ssel_n 000000
+SV 289309 go slot 5 ext 0 oep 2 ofr 1 A 91136 B 0 C 0 D 0 O 82949 R 0
+SV 289313  region 0 lo 219392 hi 219392 base 219392 so 1 si 1 dense 1
+SV 289313  region 4 lo 219652 hi 219652 base 219652 so 1 si 1 dense 1
+SV 289316  classify slot 7 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 1 tb_v 10011111 fok 00001111 live 00001111
+SV 289317  alloc slot 7 rk 4    SINK lb 115716 frame 1 ep 2 vic 5 rfs 4 bp 50160
+SV 289317 drain slot 0 done rec slot 3
+SV 289318 load DRAIN leaf slot 0 rec slot 5 vsec 24352 n 1022 lsec 10368 ep 2 dense 1 live 0
+SV 289319 retire slot 3
+SV 289320  alloc slot 7 rk 0   STAGE lb 115968 frame 1 ep 2 vic 6 rfs 4 bp 50189
+SV 289323 load STAGE leaf slot 1 rec slot 7 vsec 27424 n 1 lsec 14496 strm 1
+SV 289341 drain slot 1 done rec slot 4
+SV 289343 retire slot 4
+SV 289349 stage slot 1 done (scrub 0 rec slot 7)
+SV 289354 idle slot 5 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 289355 decoded slot 7
+SV 289357 take slot 0 no 1 ni 5 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 289357 stage slot 0 done (scrub 0 rec slot 6)
+SV 289357 set slot 6 ext_s 1 ext_i 0 ssel_n 000001
+SV 289358 go slot 6 ext 1 oep 2 ofr 1 A 107520 B 0 C 0 D 0 O 99333 R 0
+SV 289360 load DRAIN leaf slot 1 rec slot 6 vsec 26400 n 1022 lsec 12416 ep 2 dense 1 live 0
+SV 289362  region 0 lo 219904 hi 219908 base 219904 so 5 si 1 dense 1
+SV 289362  region 4 lo 220166 hi 220170 base 220166 so 5 si 1 dense 1
+SV 289365  classify slot 0 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 10111111 fok 00101100 live 00101100
+SV 289366  alloc slot 0 rk 4    SINK lb 116230 frame 1 ep 2 vic 6 rfs 4 bp 50441
+SV 289369  alloc slot 0 rk 0   STAGE lb 116480 frame 1 ep 2 vic 0 rfs 4 bp 50707
+SV 289403 idle slot 6 vf 0 x_cnt 16383 gs 16383 gi 16383
+SV 289404 decoded slot 0
+SV 289404 load STAGE leaf slot 0 rec slot 0 vsec 27488 n 1 lsec 14560 strm 1
+SV 289406 take slot 1 no 37 ni 11 m1 0 m2 0 qm 0 ad 0 sfu 0 e1 0 e2 0 dst 1 red 0 strm 0
+SV 289406 set slot 7 ext_s 0 ext_i 0 ssel_n 000000
+SV 289407 go slot 7 ext 0 oep 2 ofr 1 A 115968 B 0 C 0 D 0 O 115716 R 0
+SV 289411  region 0 lo 220416 hi 220822 base 220416 so 11 si 1 dense 1
+SV 289411  region 4 lo 220931 hi 221625 base 220931 so 19 si 1 dense 0
+SV 289414  classify slot 1 hit 0000 e 0 0 0 0 ipc 0000 ip_on 0 ip_e 0 lvw 9 olive 0 tb_v 11111111 fok 01101100 live 01101100
+SV 289415  alloc slot 1 rk 4    SINK lb 116739 frame 1 ep 2 vic 0 rfs 4 bp 50957
+SV 289418  alloc slot 1 rk 0   STAGE lb 117504 frame 1 ep 2 vic 1 rfs 4 bp 51906
+SV 289420 drain slot 0 done rec slot 5
+SV 289421 load DRAIN leaf slot 0 rec slot 7 vsec 27456 n 1 lsec 14464 ep 2 dense 1 live 1
+SV 289422 load STAGE leaf slot 1 rec slot 1 vsec 27552 n 51 lsec 14688 strm 1
+SV 289422 retire slot 5
+SV 289430 stage slot 0 done (scrub 0 rec slot 0)
+SV 289437 idle slot 7 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 289438 decoded slot 1
+SV 289440 set slot 0 ext_s 0 ext_i 0 ssel_n 000000
+SV 289441 go slot 0 ext 0 oep 2 ofr 1 A 116480 B 0 C 0 D 0 O 116230 R 0
+SV 289449 stage slot 1 done (scrub 0 rec slot 1)
+SV 289466 drain slot 0 done rec slot 7
+SV 289467 load DRAIN leaf slot 0 rec slot 0 vsec 27520 n 2 lsec 14528 ep 2 dense 1 live 0
+SV 289471 idle slot 0 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 289471 drain slot 1 done rec slot 6
+SV 289473 retire slot 6
+SV 289474 set slot 1 ext_s 0 ext_i 0 ssel_n 000000
+SV 289475 go slot 1 ext 0 oep 2 ofr 1 A 117504 B 0 C 0 D 0 O 116739 R 0
+SV 289475 retire slot 7
+SV 289499 drain slot 0 done rec slot 0
+SV 289501 retire slot 0
+SV 289506 idle slot 1 vf 0 x_cnt 0 gs 16383 gi 16383
+SV 289632 load DRAIN leaf slot 0 rec slot 1 vsec 27616 n 88 lsec 14592 ep 2 dense 0 live 0
+SV 289662 drain slot 0 done rec slot 1
+SV 289664 retire slot 1
+SHARED case 1: agent bursts read 14 write 7 (group shared with the SU)
+REC 1 0 accept 0 retire 171
+REC 1 1 accept 3 retire 195
+REC 1 2 accept 22 retire 274
+REC 1 3 accept 41 retire 325
+REC 1 4 accept 123 retire 327
+REC 1 5 accept 160 retire 353
+REC 1 6 accept 209 retire 516
+CASE 1 service 517 span 112 stage 194 compute 284 drain 248 other 0
+PRICE 1 0 priced 63.0
+PRICE 1 1 priced 63.0
+PRICE 1 2 priced 75.0
+PRICE 1 3 priced 75.0
+PRICE 1 4 priced 60.0
+PRICE 1 5 priced 60.0
+PRICE 1 6 priced 61.0
+THROUGHPUT case 1: service 517 price sum 457.0 (7 records) ratio service/price 1.131
+THROUGHPUT case 1 is SINK_UNSTAGED: exactness only, not a production price
+CASECHK 1: 2643 sink sectors, 309 guard words; errors 0 (written words 0, guard words 0)
+CASECHK 1 is SINK_UNSTAGED
+summary: 2 production-shape cases, 101800 sink-sector words checked (written = golden, rest = pre-op)
+HGI_SU_PROD PASS
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_su_prod.sv:467: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 649us; walltime 8021.417 s; speed 80.910 ns/s
+- Verilator: cpu 8020.735 s on 1 threads; allocated 425 MB
