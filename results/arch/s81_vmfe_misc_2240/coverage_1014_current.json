@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.s81.vmfe-misc.active-coverage.v1",
-  "generated": "2026-10-14T04:12:02.375899-07:00",
-  "source_commit": "03aa35cfb78d7f41d295cfd9731acad6b987f6a1",
+  "generated": "2026-10-14T05:52:29.574754-07:00",
+  "source_commit": "54e70c8edf90741f9a028b9f3d258dc2c10d47f8",
   "qualification": "Explicit candidates and tool verdicts; no whole-native CLOSED claim",
   "rows": [
     {
@@ -11,8 +11,8 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "selected": "R3,KD3,XRT1,CCA1",
-      "active": "FSR actualM5port-major pins + talleroutline repack searchs11, fullreach/cuts; FCCPIPE/FCNcmdpipe trueclock physicalgate; 141consumerACKsignals/282nominalconsumer-witnessFF graph; controller separately requires282captureFF; captureproducer dependency retained",
-      "open": "wholefieldallocation, actualper-pairsourceperiod/rootR/RC/resetrefclk/ACKportsphysical; fullreach\u2264pairbudget/500 andcuts\u2264.60 notpassed"
+      "active": "Exact S11 normal-escape receipt108904 pairs/3891>500,worst572.382; S19 escape-reserved independent search completed0directviolations/12overlaps; actual CLOSED FSR plus final FCC/FCN/FLD pin packets; next joint allocation/placement and strict cuts",
+      "open": "Actual native source/period/clock/reset/RC and legal wholefield allocation; candidate geometry notclosed"
     },
     {
       "elements": [
@@ -20,8 +20,8 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "old_tool_closed": "p5 b35448723 TT117.73 FF3.68 DRC0; SS\u2212174.19",
-      "active": "PIPE1 +1384nominalandactualCTSFF; sourceexact649efc5a0 RUNNING; actualstreamroot18684sinks measuredTT222.8/spread17.6, gate186.24/10.81; exactgold+observedmutants inpacket",
-      "open": "CTSfinalmeasure, routeTTFFSS, actualsource-binding/latency/readiness/parentgeometry"
+      "active": "PIPE source649efc5a0 CLOSED TT182.74/FF19.81/SS65.73/DRC0 recorde5134300; final routed every-pin/each-clock packet83f2ed256",
+      "open": "Native parent/source clock, phase, refclk reset and ACK physical integration remain unbound"
     },
     {
       "elements": [
@@ -29,8 +29,8 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "old_terminal": "p4r c34727fcc TT\u22123.758771/FF21.75/DRC1; SS\u2212342.85",
-      "active": "FCNonehotprototype preserved; stronger reservedslotCMDPIPE nominal85FF/actualCTS+43FF,+1streamcandidate f42456482 exactgold42765checks/63966lockstep0,TP+1serialcompletion,mutant5actualerrors expectedFAIL; sourceexact99faef982 RUNNING",
-      "open": "candidateproofs/finalCTS, actualSS/wiring/sourceclock/resetcontract"
+      "active": "CMDPIPE source99faef982 CLOSED TT65.34/FF23.90/SS-356.01/DRC0. Exact same-domain k2_g6.1\u2192t_rdy1. K3 aligned sum85actualextraFF proved gold42636/63966zero and37muterrors; TP589/555 P2done328. Fresh gate67.506/25.938, exacta46ff5b50 live route",
+      "open": "K3 routed SS; native parent/source clocks/reset and physical collector bindings"
     },
     {
       "elements": [
@@ -38,8 +38,8 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "old_tool_closed": "p4r c34727fcc recordd3f6acb7d TT16.64/FF23.20/DRC0; SS\u2212369.02",
-      "active": "record-onlyrootintake, source-boundSSID pathclassification next",
-      "open": "nativeSS, source-clock/reset/RCparentassignment"
+      "active": "PARALLEL source6922f6793 CLOSED TT66.19/FF20.15/SS-279.48/DRC0; actual lc8.1\u2192g3. New fixed-rank sourcea9b377306 unit16384/gold43245/63966zero,5378muterrors,TP588/554/P2done327; physical54e70c8ed freshCTS gate RUNNING",
+      "open": "Actual SS successor verdict and native clocks/reset/RC/geometry bindings"
     },
     {
       "elements": [
@@ -47,8 +47,8 @@
       ],
       "owner": "s81_vmfe_misc_2240",
       "old_closed": "oldM6 345.6x25.92 stands",
-      "active": "NewM5port-major345.6x51.84 same8293FF/twostages successor CLOSED a1aac2369 TT280.81/FF19.10/SS164.66/DRC0; finalpins8300; parentstrictreachS12has0directhopviolations/2overlaps, fullcutreplay pending",
-      "open": "newroute/actualfinalLEF, parentplacement/cuts/reach/clock andallocation"
+      "active": "M5 portmajor345.6x51.84 same8293FF/twostages CLOSED TT280.81/FF19.10/SS164.66/DRC0 recorda1aac2369; all final8300pins/routedclock receipt saved",
+      "open": "Native parent placement/cuts/actual sourceclock, perpair RC, reset, wholeallocation"
     },
     {
       "elements": [
@@ -57,8 +57,8 @@
       ],
       "owner": "be_native_placement",
       "selected": "MD12 hard54masters 1348relay+4syncFF; standaloneMD9 andEP1/MD11 unselected",
-      "active": "trueGrayselected-entryCDC successor8cd806853 fullnativevariants; N10fault160FF/+10faultcycles actualCLOSEDf16pins176paths\u2264493.316 noobstaclecrossings; BESS/virtualpeerclassification",
-      "open": "BEnewleafview, collectorACKhookup, clockphase/RC/resetdriver, wholefield1973.784x4067.256request unallocated, fullparentcuts/pairedsourceproof"
+      "active": "Gray selected-memory source8cd806853 exact source/native/mutants pass; diagnostic actualmem\u2192od SS-339.278,firstGray FF-76.468,unboundIOhold-90.627. Actual root15584 and controls3080/3040. Separate P2 roots source767aae960 kitbbf89192d AP/lintPASS, numerical proof running; N10 local reset sixgold/TPPASS14ee5b078",
+      "open": "New roots native producer/phase/R/null; actual mapped root/control census/gate; qualified scopedCDC data stability/pin policy, actual refclk reset/ACKcollector and1973.784x4067.256 unallocatedparent/fullcuts"
     },
     {
       "elements": [
@@ -67,8 +67,8 @@
       ],
       "owner": "bgr28_native_closure",
       "selected": "flatNP28 NSTG4, NS2unselected",
-      "active": "MC24 H1pincopy/fullnative12cases, H2matrix15cases, actualRESETfanoutsplit/ACK; CTS10rawf272.2/o252.8 >220; structuraloutputhold-chain12f probe next",
-      "open": "actual\u2264220sourceprofiles/fixedTTpairclock/RC, native384bankACKcollector, fullparentleaf/clocks/placement"
+      "active": "MC40 five roots15/15 native owner557 cases PASS4994bf1fa; S-entry CTS13r2 live exact gate. Corrected CTS12 TT/FF/SS negative hold retained. Source same-edge FAST4_ONEHOT saturation successor targets actual hpair\u2192e_sel SS-200.75 without newstate/cycles",
+      "open": "Gate exactperport220ps/fixedTTzero-loadhold, actual SS, fullbank640ACKphysicalcollector/resetrefclk/wholeparent clocks andgeometry"
     },
     {
       "elements": [
@@ -76,8 +76,8 @@
       ],
       "owner": "hrow_native_placement",
       "old_closed": "four arithmeticchildren stand",
-      "active": "UT2distributed88masters 18897relay+54syncFF; all9relaymasters finalCLOSED; freshr4actualLEF81363pairs max499.7915 localcuts.597/.596; independentrectangleverifier andactualasyncresetproof running",
-      "open": "actualper-pairbudget/clockdriverperiodR/RC/refclkresetphase, recovery/removal mappedasyncpins, finalparentadoption"
+      "active": "Strict r4 actualfinal81,363pairs max499.8695 everyedgeH.59719/V.59554/window.59625/.58736 PASSgeometry; actual mappedasyncrecovery/removalpositive. ACK94/188nomFF sourceef45a3fd8 paritysixexactproductionrunsPASS1cf582aee. Five separateACKphysicalgates source066ec43c5; four gateWARN0FAIL exactdaemonvalidationTRUE,hubactive. New121contacts cannotinherit oldstrictcuts",
+      "open": "Actual pair/nativeperiod/sourceclock/R/phase/RC/resetrefclk, qualifiedACKsource ABI and freshcuts, finalparentadoption"
     },
     {
       "elements": [
@@ -85,7 +85,9 @@
         "dsfd_vm_frg"
       ],
       "status": "SUPERSEDED_IN_SELECTED_NATIVE",
-      "replacement": "closed dsfd_vm_frm"
+      "replacement": "closed dsfd_vm_frm",
+      "source_successor_proof": "results/arch/s81_vmfe_misc_2240/source_selection/fra_frg_successor.json",
+      "proof": "No actual FRA/FRG instance; g_ll[0..9].u_m real FRM edge-registers grant1bit and ARM15bits; 12FRMinstances total withK copies; successor view CLOSED, native parent open"
     },
     {
       "elements": [
