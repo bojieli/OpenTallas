@@ -54,7 +54,7 @@
     "physical/s81_be_access_m7_candidate/pdn.tcl": "a7cd1702729a1b3cc352daa0d22e1341405e499a46dbefe10aa54747e0e4028a",
     "physical/s81_be_access_m7_candidate/exact_gate_binding.json": "e6568256779f66ee149676f674c3627d2fdd74c2d1cb5a8227a80f75b258889f",
     "physical/s81_be_access_m7_candidate/ports.json": "2c3981b27bce974b07620cef8fe3c51a742fe0e999b12a3ac314100c891804b9",
-    "physical/s81_be_access_m7_candidate/launch.sh": "bff5d5efaa5a89b7fd8395a97ed8ff4ed459ffd8344b13e36426cfa59b687ad4"
+    "physical/s81_be_access_m7_candidate/launch.sh": "9b2867163020fa357cbc81df795e8555f0be0bb3522859bcfb01a797b39fb188"
   },
   "validation": {
     "pin_identity_check": "results/arch/s81_be_view_audit_1014/kit_pin_identity_check.json",
@@ -62,5 +62,6 @@
     "full_physical_qualification": false
   },
   "helper_count": 46,
-  "helper_plan_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca"
+  "helper_plan_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
+  "diagnostic_signoff_checker": "tools/s81_ph/s81_be_access_diagnostic_signoff.py"
 }
