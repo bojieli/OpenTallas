@@ -109,7 +109,11 @@ def main(argv=None):
                 slack = float(t[-1])
             except ValueError:
                 continue
-            sp, ep = t[0], t[1]
+            # summary rows: '<start pin> (<cell>) <end pin> (<cell>) <slack>'
+            toks = [x for x in t[:-1] if not x.startswith('(')]
+            if len(toks) < 2:
+                continue
+            sp, ep = toks[0], toks[1]
             if '/' not in ep:
                 continue
             n += 1
