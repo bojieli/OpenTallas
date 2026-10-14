@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.suvop.collected_evidence.v1",
+  "source_logic": "0cf7ad368",
+  "source_kit": "3af85cc1b",
+  "immutable_prices": {
+    "qwen": 1548,
+    "deepseek": 2912
+  },
+  "production": [
+    {
+      "model": "deepseek",
+      "N": 512,
+      "M": 128,
+      "LQ": 8,
+      "service_cycles": 2736,
+      "ratio": 0.9395604395604396,
+      "exact": "FULL PASS",
+      "log": "/home/ubuntu/claude-takeover-20261007/suvop-codex-evidence/ds-alloc-n512-lq8.log"
+    },
+    {
+      "model": "qwen",
+      "N": 512,
+      "M": 128,
+      "LQ": 8,
+      "service_cycles": 1939,
+      "ratio": 1.2525839793281655,
+      "exact": "CASE0 PASS; auxiliary still live PID2806977",
+      "qualified": false
+    },
+    {
+      "model": "qwen",
+      "N": 512,
+      "M": 128,
+      "LQ": 16,
+      "service_cycles": 1660,
+      "ratio": 1.0723514211886305,
+      "exact": "CASE0 PASS; auxiliary still live PID2806979",
+      "qualified": false,
+      "purpose": "matched VM/SU queue diagnostic; physical adoption pending"
+    }
+  ],
+  "reduced_shape": {
+    "N64_q": "PASS",
+    "N64_d": "PASS",
+    "N64_m6": "FAIL66568"
+  },
+  "mutants": {
+    "MUT1": "leaf FAIL",
+    "MUT2": "leaf FAIL",
+    "MUT5": "leaf FAIL",
+    "MUT4": "FWD_PIN FAIL34507",
+    "MUT7": "TWO_FRAME FAIL4",
+    "MUT6": "N64 FAIL66568",
+    "MUT8": "old-source n512 FAIL53903",
+    "MUT3": "OPEN production and four-relay directed mutant PASS; stronger observable killing case required"
+  },
+  "physical": {
+    "closed_LQ8_leaf": "hgi_sv_lane2-r1-spread-1fe4e13fb",
+    "new_head": "UNSUBMITTED; CTS setup -111.1ps",
+    "repair_source": "bd3eeb0d9",
+    "repair_CTS_PID": 3235087
+  }
+}
