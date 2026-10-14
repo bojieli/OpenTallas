@@ -11,7 +11,7 @@
     "parent": "sp_hc_s",
     "outline": {
       "w": 575.992,
-      "h": 816.48
+      "h": 840.24
     },
     "origin": {
       "x": 619.92,
@@ -25,9 +25,23 @@
       "registered_out": true
     },
     "clock_entry": {
-      "pin": "ck",
-      "face": "N",
-      "layer": "M4"
+      "pins": [
+        "sk_leaf[0]",
+        "sk_leaf[1]",
+        "sk_leaf[2]",
+        "sk_leaf[3]",
+        "sk_leaf[4]",
+        "sk_leaf[5]",
+        "sk_leaf[6]",
+        "sk_leaf[7]",
+        "sk_leaf[8]",
+        "sk_leaf[9]",
+        "sk_leaf[10]",
+        "sk_leaf[11]",
+        "sk_leaf[12]",
+        "sk_leaf[13]"
+      ],
+      "delivery": "per-corner phi-R at each actual closed child sk pin; successor CTS requests provisional only"
     },
     "target_insertion_ps": 250.0,
     "version": 13,
@@ -41,7 +55,7 @@
       "signal_max_layer": "M6"
     },
     "view_cap": "M7",
-    "view_status": "legacy cap M7 (no closed view measured): valid while child_lint passes at view_cap; re-route at M5 opportunistically",
+    "view_status": "NEW NAMED NATIVE PARENT: no closed parent view, actual child timing/source/clock contract required",
     "layer_cap": "M6",
     "notes": "v11: comb tiles at HIER2 params (cpadh2 forward pad +1 stage for comb RF 5, kit s81hc_cpadh2_ref v1rf5); ccf 410.4 x 542.16 inside this slot",
     "sub_tiles": [
@@ -71,8 +85,8 @@
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        0,
-        0
+        0.0,
+        0.0
       ],
       "kit": "s81hc_ccfh2_ref",
       "production_params": {
@@ -90,24 +104,40 @@
         "parent_net": "sk_leaf[0]",
         "delivery": "phi - measured boundary R for THIS child, never common entry phase",
         "level": "early_tap",
-        "hop_skew_ps": 150.0,
-        "provisional_tt_phase_relative_to_phi_ps": -689.8
+        "hop_skew_ps": 150.0
       },
-      "status": "REFERENCE OLD PIN_CAPTURE0 VIEW; successor PIN_CAPTURE1 pending",
+      "status": "PROVISIONAL ACTUAL CTS REFERENCE ONLY; fresh source/routed view pending",
       "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_ccf.json",
       "clock_delivery": null,
-      "target_insertion_ps": 689.8,
-      "submit_gate": "WAIT provisional face screen and actual peer distances; ordinary setup/hold closure still required",
-      "pre_cts_clock_evidence": {
-        "boundary_mean_ps": 689.8,
-        "max_insertion_ps": 708.4,
-        "spread_ps": 32.1,
-        "sinks": 14196,
-        "source_commit": "3144b850c",
-        "scope": "completed CTS provisional; not routed view",
-        "ordinary_setup_ps": -149.58,
-        "ordinary_hold_ps": -123.32
-      }
+      "target_insertion_ps": 640.2,
+      "submit_gate": "WAIT actual fresh source gate, internal hold, full external peer and source/clock contract, routed views",
+      "provisional_measured_clock_delivery": {
+        "tt": {
+          "phi_minus_R_ps": -640.2,
+          "boundary_mean_ps": 640.2,
+          "min_ps": 626.9,
+          "max_ps": 658.4,
+          "spread_ps": 31.5
+        },
+        "ss": {
+          "phi_minus_R_ps": -834.9,
+          "boundary_mean_ps": 834.9,
+          "min_ps": 796.1,
+          "max_ps": 882.2,
+          "spread_ps": 86.1
+        },
+        "ff": {
+          "phi_minus_R_ps": -521.5,
+          "boundary_mean_ps": 521.5,
+          "min_ps": 508.9,
+          "max_ps": 536.8,
+          "spread_ps": 27.9
+        }
+      },
+      "provisional_source_commit": "e0cae3a4a",
+      "route_admission": false,
+      "current_physical_source_commit": "16ee5be7a",
+      "current_physical_gate": "ot-epyc4:.../s81hc_ccfh2_ref-20261014-014144 live54337"
     },
     {
       "name": "sp_hc_s/comb/u_pd.u_f5r1",
@@ -117,13 +147,13 @@
         "h": 99.36
       },
       "origin": {
-        "x": 1040.04,
-        "y": 7408.8,
+        "x": 766.8,
+        "y": 7959.6,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        420.12,
-        0.0
+        146.88,
+        550.8
       ],
       "kit": "s81hc_pad_fv4fd5r2_ref",
       "production_params": {
@@ -139,10 +169,10 @@
         "parent_net": "sk_leaf[1]",
         "delivery": "phi - measured boundary R for THIS child, never common entry phase"
       },
-      "status": "WAIT R2 CTS and routed successor view; old R1 R194 not applicable",
+      "status": "PROVISIONAL ACTUAL CTS REFERENCE ONLY; fresh source/routed view pending",
       "assigned_pins": "physical/s81_die_pins/v18/ot_s81_hc_pad_fv4fd5r2.json",
       "clock_delivery": null,
-      "target_insertion_ps": null,
+      "target_insertion_ps": 196.8,
       "historical_R1_pre_cts_clock": {
         "boundary_mean_ps": 194.0,
         "max_insertion_ps": 206.3,
@@ -150,7 +180,32 @@
         "source_commit": "f65a06258",
         "scope": "preCTS, not routed view"
       },
-      "submit_gate": "WAIT actual R2 clock/pin timing; no old R1 timing binding"
+      "submit_gate": "WAIT actual fresh source gate, internal hold, full external peer and source/clock contract, routed views",
+      "provisional_measured_clock_delivery": {
+        "tt": {
+          "phi_minus_R_ps": -196.8,
+          "boundary_mean_ps": 196.8,
+          "min_ps": 187.2,
+          "max_ps": 203.4,
+          "spread_ps": 16.2
+        },
+        "ss": {
+          "phi_minus_R_ps": -255.8,
+          "boundary_mean_ps": 255.8,
+          "min_ps": 244.1,
+          "max_ps": 263.7,
+          "spread_ps": 19.6
+        },
+        "ff": {
+          "phi_minus_R_ps": -161.1,
+          "boundary_mean_ps": 161.1,
+          "min_ps": 152.7,
+          "max_ps": 166.8,
+          "spread_ps": 14.1
+        }
+      },
+      "provisional_source_commit": "6aabed703",
+      "route_admission": false
     },
     {
       "name": "sp_hc_s/comb/u_pd.u_f8",
@@ -160,13 +215,13 @@
         "h": 49.68
       },
       "origin": {
-        "x": 1040.04,
-        "y": 7516.8,
+        "x": 913.68,
+        "y": 7959.6,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        420.12,
-        108.0
+        293.76,
+        550.8
       ],
       "kit": "s81hc_pad_f8_ref",
       "production_params": {},
@@ -200,13 +255,13 @@
         "h": 155.52
       },
       "origin": {
-        "x": 1040.04,
-        "y": 7575.12,
+        "x": 984.896,
+        "y": 8069.76,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        420.12,
-        166.32
+        364.976,
+        660.96
       ],
       "kit": "s81hc_cseqh2_ref",
       "production_params": {
@@ -245,13 +300,13 @@
         "h": 151.2
       },
       "origin": {
-        "x": 1040.04,
-        "y": 7739.280000000001,
+        "x": 634.976,
+        "y": 8067.6,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        420.12,
-        330.48
+        15.056,
+        658.8
       ],
       "kit": "s81hc_ccrh2_ref",
       "production_params": {
@@ -290,13 +345,13 @@
         "h": 99.36
       },
       "origin": {
-        "x": 1040.04,
-        "y": 7899.12,
+        "x": 619.92,
+        "y": 7959.6,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        420.12,
-        490.32
+        0.0,
+        550.8
       ],
       "kit": "s81hc_pad_r5_ref",
       "production_params": {
@@ -324,14 +379,13 @@
           "boundary_spread_ps": 12.400000000000006
         }
       },
-      "reserved_outline": {
-        "w": 138.24,
-        "h": 114.48
-      },
-      "unused_reserved_height_um": 15.12,
       "target_insertion_ps": 179.1,
       "immutable_view": "physical/ref_tile/s81hc_pad_r5_ref/views/ot_s81_hc_pad_r5",
-      "immutable_lef_sha256": "7d07cdf275f03dbc56bca27e89fcc8399dffd7583ea2826216a980e031a23573"
+      "immutable_lef_sha256": "7d07cdf275f03dbc56bca27e89fcc8399dffd7583ea2826216a980e031a23573",
+      "historical_reserved_outline": {
+        "w": 138.24,
+        "h": 114.48
+      }
     },
     {
       "name": "sp_hc_s/comb/u_pd.u_r5",
@@ -341,13 +395,13 @@
         "h": 99.36
       },
       "origin": {
-        "x": 1040.04,
-        "y": 8022.24,
+        "x": 1038.96,
+        "y": 7842.96,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        420.12,
-        613.44
+        419.04,
+        434.16
       ],
       "kit": "s81hc_pad_r5_ref",
       "production_params": {},
@@ -381,13 +435,13 @@
         "h": 69.12
       },
       "origin": {
-        "x": 1040.04,
-        "y": 8130.24,
+        "x": 1038.96,
+        "y": 7765.2,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        420.12,
-        721.44
+        419.04,
+        356.4
       ],
       "kit": "s81hc_crxh2_ref",
       "production_params": {
@@ -426,13 +480,13 @@
         "h": 15.12
       },
       "origin": {
-        "x": 1040.04,
-        "y": 8208.0,
+        "x": 913.68,
+        "y": 8043.84,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        420.12,
-        799.2
+        293.76,
+        635.04
       ],
       "kit": "s81hc_pad_meta2_ref",
       "production_params": {},
@@ -466,13 +520,13 @@
         "h": 181.44
       },
       "origin": {
-        "x": 619.92,
-        "y": 7959.6,
+        "x": 794.816,
+        "y": 8067.6,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        0,
-        550.8
+        174.896,
+        658.8
       ],
       "kit": "s81hc_cntreeh2_ref",
       "production_params": {
@@ -511,13 +565,13 @@
         "h": 110.16
       },
       "origin": {
-        "x": 810.0,
-        "y": 7959.6,
+        "x": 1060.56,
+        "y": 7950.96,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        190.08,
-        550.8
+        440.64,
+        542.16
       ],
       "kit": "s81hc_caq_ref",
       "production_params": {},
@@ -551,13 +605,13 @@
         "h": 110.16
       },
       "origin": {
-        "x": 928.8,
-        "y": 7959.6,
+        "x": 1038.96,
+        "y": 7646.4,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        308.88,
-        550.8
+        419.04,
+        237.6
       ],
       "kit": "s81hc_caq_ref",
       "production_params": {},
@@ -591,13 +645,13 @@
         "h": 110.16
       },
       "origin": {
-        "x": 810.0,
-        "y": 8078.4,
+        "x": 1085.752,
+        "y": 7408.8,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        190.08,
-        669.5999999999999
+        465.832,
+        0.0
       ],
       "kit": "s81hc_caq_ref",
       "production_params": {},
@@ -631,13 +685,13 @@
         "h": 110.16
       },
       "origin": {
-        "x": 928.8,
-        "y": 8078.4,
+        "x": 1038.96,
+        "y": 7527.6,
         "orient": "R0"
       },
       "origin_in_comb_um": [
-        308.88,
-        669.5999999999999
+        419.04,
+        118.8
       ],
       "kit": "s81hc_caq_ref",
       "production_params": {},
@@ -666,6 +720,21 @@
   ],
   "parent_source": "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_hc_comb_native.sv",
   "parent_source_sha256": "6a0c1133557d594905354f24a1905c26417ad6ef272507de17a58400d41ae22c",
-  "open_seams_source": "results/rtl/s81_suhc_20261013/native_comb_seam_screen_1013.json",
-  "status": "CANDIDATE CHILD ROWS ONLY; closed reference rows retained, new CCF and pad require routed successor views; 23 old failing seams remain open"
+  "open_seams_source": "results/rtl/s81_suhc_20261013/native_repack_v7_v9/milp_r0_headroom_candidate_seams.json",
+  "status": "PROPOSED_REPACK_NOT_ADMITTED: 78 actual internal seams pass setup>=76.0 hold>=35.3; actual external full family/source/clock/reset and routed views remain",
+  "actual_family_binding": "results/rtl/s81_suhc_20261013/native_repack_v7_v9/actual_family_and_clock_binding.json",
+  "geometry_delta_vs_assigned": {
+    "height_um": 23.76,
+    "area_um2": 13685.57,
+    "area_percent": 2.910052910052909
+  },
+  "geometry_delta_vs_original_slot": {
+    "baseline_outline_um": [
+      575.992,
+      640
+    ],
+    "height_um": 200.24,
+    "area_um2": 115336.638,
+    "area_percent": 31.28749999999998
+  }
 }
