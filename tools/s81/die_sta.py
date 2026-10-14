@@ -22,7 +22,7 @@ _g = next((sys.argv[i + 1] for i, x in enumerate(sys.argv[:-1]) if x == '--gen-r
 sys.path.insert(0, str(Path(_g) / 'tools' if _g else ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
 
-CLK_NAMES = ('ck', 'clk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
+CLK_NAMES = ('ck', 'clk', 'sk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
 # s81-die 2026-10-13 (c6p STA by path class, results/physical/die_iter_1012/s81/c6p_sta_classes_1013): FF cq 32 ps against
 # hold 15 + die hold uncertainty 50 made EVERY short placeholder hop a hold violation (1,010,469 endpoints at >= -33.3 ps).
 # A pin-registered tile owes the contract minimum clk -> pin of 65 ps at FF (the relay kits build it: outhold
