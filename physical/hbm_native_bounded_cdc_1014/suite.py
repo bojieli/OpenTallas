@@ -6,11 +6,11 @@ cases=[]
 for w in [16,1]:
  for phase in [61,487]:
   for rev in [0,1]:cases.append((f'exact_w{w}_p{phase}_r{rev}',w,phase,rev,0,0,0))
-cases += [('simultaneous_edges',16,0,0,0,0,0),('sram_single_correct',16,61,0,0,1,0),('sram_double_poison',16,61,0,0,2,0),('source_rail',16,487,0,0,3,0),('pending_epoch',16,487,0,0,4,0),('held_payload',16,61,0,0,5,0),('ue_bypass_mutant',16,61,0,2,2,1),('slot_overwrite_mutant',16,487,0,1,0,1),('premature_credit_mutant',16,61,0,4,0,1)]
+cases += [('simultaneous_edges',16,0,0,0,0,0),('sram_single_correct',16,61,0,0,1,0),('sram_double_poison',16,61,0,0,2,0),('source_rail',16,487,0,0,3,0),('epoch_rail',16,487,0,0,6,0),('epoch_clear_mutant',16,487,0,6,6,1),('pending_epoch',16,487,0,0,4,0),('held_payload',16,61,0,0,5,0),('ue_bypass_mutant',16,61,0,2,2,1),('slot_overwrite_mutant',16,487,0,1,0,1),('premature_credit_mutant',16,61,0,4,0,1)]
 rec=[]
 for name,w,phase,rev,mut,mode,negative in cases:
  r=subprocess.run(['bash',str(ROOT/'physical/hbm_native_bounded_cdc_1014/bench.sh'),str(out/name),str(w),str(phase),str(rev),str(mut),str(mode)],cwd=ROOT,text=True,capture_output=True)
- log=r.stdout+r.stderr;accepted=(r.returncode!=0 and bool(re.search('PAYLOAD_MISMATCH|LOGICAL_CAPACITY|unexpected consumer fault',log))) if negative else (r.returncode==0 and 'PASS' in log)
+ log=r.stdout+r.stderr;accepted=(r.returncode!=0 and bool(re.search('PAYLOAD_MISMATCH|LOGICAL_CAPACITY|unexpected consumer fault|EPOCH_RAIL_FAULT_CLEARED',log))) if negative else (r.returncode==0 and 'PASS' in log)
  item={'case':name,'W':w,'phase_ps':phase,'reverse':rev,'MUT':mut,'MODE':mode,'expect':'fail' if negative else 'pass','returncode':r.returncode,'expectation_met':accepted,'output':log}
  m=re.search(r'first_access_ps=([\d.]+)',log)
  if m:item['first_access_ps']=float(m[1])

@@ -86,15 +86,18 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  end
  wire record_ok=!(|decode_ue)&&(decoded[W+:32]==r_epoch)&&(decoded[W+32+:PW]==rb);
  wire output_bad=(MUT==2)?1'b0:out_v&&(!record_ok||(out_data!=decoded[W-1:0]));
+ // Constant physical resets. Caller epochs bind synchronously on a real local clock edge.
+ // Peer epoch pairs start invalid (both rails zero), blocking source activity until synchronized.
  always @(posedge wclk or negedge wrst_n)begin
   if(!wrst_n)begin
    wb<=0;wb_n<='1;commit_seq<=0;commit_n<='1;fetch_seq<=0;fetch_n<='1;publish_seq<=0;publish_n<='1;freed<=0;freed_n<='1;
    enc_addr<=0;enc_addr_n<='1;read_addr<=0;read_addr_n<='1;enc_v<=0;enc_v_n<=1;read_v<=0;read_v_n<=1;wf<=0;wf_n<=1;
-   w_epoch<=wepoch;w_epoch_n<=~wepoch;ack1<=0;ack2<=0;ackn1<='1;ackn2<='1;re1<=~wepoch;re2<=~wepoch;ren1<=wepoch;ren2<=wepoch;
+   w_epoch<=0;w_epoch_n<='1;ack1<=0;ack2<=0;ackn1<='1;ackn2<='1;re1<=0;re2<=0;ren1<=0;ren2<=0;
   end else begin
    ack1<=ack_gray;ack2<=ack1;ackn1<=~ack_gray;ackn2<=ackn1;
    re1<=r_epoch;re2<=re1;ren1<=r_epoch_n;ren2<=ren1;
-   if(wepoch!=w_epoch)begin
+   if(wbad&&MUT!=6)begin wf<=1;wf_n<=0;end
+   else if(wepoch!=w_epoch)begin
     if((wb!=released)||enc_v||read_v)begin wf<=1;wf_n<=0;end
     else begin
     w_epoch<=wepoch;w_epoch_n<=~wepoch;wb<=0;wb_n<='1;commit_seq<=0;commit_n<='1;fetch_seq<=0;fetch_n<='1;publish_seq<=0;publish_n<='1;freed<=0;freed_n<='1;
@@ -114,15 +117,15 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  end
  always @(posedge rclk or negedge rrst_n)begin
   if(!rrst_n)begin
-   rb<=0;rb_n<='1;rx_v<=0;rx_v_n<=1;out_v<=0;out_v_n<=1;rf<=0;rf_n<=1;r_epoch<=repoch;r_epoch_n<=~repoch;
-   pub1<=0;pub2<=0;pubn1<='1;pubn2<='1;we1<=~repoch;we2<=~repoch;wen1<=repoch;wen2<=repoch;
+   rb<=0;rb_n<='1;rx_v<=0;rx_v_n<=1;out_v<=0;out_v_n<=1;rf<=0;rf_n<=1;r_epoch<=0;r_epoch_n<='1;
+   pub1<=0;pub2<=0;pubn1<='1;pubn2<='1;we1<=0;we2<=0;wen1<=0;wen2<=0;
   end else begin
    pub1<=pub_gray;pub2<=pub1;pubn1<=~pub_gray;pubn2<=pubn1;we1<=w_epoch;we2<=we1;wen1<=w_epoch_n;wen2<=wen1;
-   if(repoch!=r_epoch)begin
+   if(rbad||output_bad)begin rf<=1;rf_n<=0;out_v<=0;out_v_n<=1;end
+   else if(repoch!=r_epoch)begin
     if(out_v||rx_v||((we2==r_epoch)&&pub_ok&&(gray(rb)!=pub2)))begin rf<=1;rf_n<=0;end
     else begin r_epoch<=repoch;r_epoch_n<=~repoch;rb<=0;rb_n<='1;rx_v<=0;rx_v_n<=1;out_v<=0;out_v_n<=1;rf<=0;rf_n<=1;end
    end
-   else if(rbad||output_bad)begin rf<=1;rf_n<=0;out_v<=0;out_v_n<=1;end
    else if(dest_epoch_ok&&!rf)begin
     if(out_v&&re)begin rb<=rb+1'b1;rb_n<=~(rb+1'b1);out_v<=0;out_v_n<=1;end
     if(rx_v)begin

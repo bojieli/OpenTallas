@@ -41,6 +41,12 @@ module tb_sram_cdc;
   wait(received==TOTAL);repeat(8)@(negedge wclk);
   if(freed_total!=TOTAL)$fatal(1,"second epoch credit total");
   if(MODE==1&&ce_checks!=2)$fatal(1,"single error correction was not observed twice: %0d",ce_checks);
+  if(MODE==6)begin
+   @(negedge wclk);inj_done=1;dut.w_epoch[0]=~dut.w_epoch[0];#1;
+   if(!w_fault||!full)$fatal(1,"EPOCH_RAIL immediate corruption escaped");
+   repeat(3)begin @(posedge wclk);#1;if(!w_fault||!full)$fatal(1,"EPOCH_RAIL_FAULT_CLEARED");end
+   $display("SRAM_CDC_BOUNDARY PASS epoch rail fault persists without caller epoch change");$finish;
+  end
   if(MODE==3)begin
    @(negedge wclk);dut.fetch_n[0]=~dut.fetch_n[0];#1;
    if(!w_fault||!full)$fatal(1,"SOURCE_CONTROL_RAIL not fail closed");
@@ -73,7 +79,7 @@ module tb_sram_cdc;
   if(dut.read_v&&dut.source_safe)begin landings=landings+1;if(first_publish<0)first_publish=wcycles;end
   freed_total=freed_total+rd_freed;
   if(freed_total>received)$fatal(1,"PREMATURE_SOURCE_CREDIT %0d > %0d",freed_total,received);
-  if(w_fault)$fatal(1,"unexpected source fault before boundary injection");
+  if(w_fault&&!(MODE==6&&inj_done))$fatal(1,"unexpected source fault before boundary injection");
  end
  // Long initial and recurring stalls fill all eight source-held slots.
  always @(negedge rclk)begin

@@ -3,12 +3,12 @@
   "source_sha256": {
     "physical/hbm_native_bounded_cdc_1014/w16_spec.json": "b5bfe56bef1a29873f7c63566cdad53e33549ce9c61fea127b99976ac27a2153",
     "physical/hbm_native_bounded_cdc_1014/related_domains.sdc": "c3ad319827e913a1609f55c12c63584d39fc124b39b20fe41514d550411e8ac6",
-    "physical/hbm_native_bounded_cdc_1014/suite.py": "4fd91b6c8f1c24585b8efd8e547c32621f634607705295ed7e2b6f6e413ae1fd",
+    "physical/hbm_native_bounded_cdc_1014/suite.py": "1ec426e6da514010eca1fd60f3fd83f6c07e0f4c064daeb0e177d5ada8867039",
     "physical/hbm_native_bounded_cdc_1014/census.py": "ee2c33b2ea6a771246c7fc51dee779d203e6e10c18fdf47daed83684715ae01e",
-    "physical/hbm_native_bounded_cdc_1014/tb_bounded_cdc.sv": "4e365f724a3548d4e46c9aaadd08066e399692fd2a05fe70f68f45be4c4e698a",
+    "physical/hbm_native_bounded_cdc_1014/tb_bounded_cdc.sv": "a5686983c20630db5acc3026d0806f1d15a26407fd4d376562279d2665164220",
     "physical/hbm_native_bounded_cdc_1014/physical_boundary.tcl": "8af6dda33af2f3f8dbd52fcc0077d3d71c517235183aefc3e922fb4f019ebe25",
     "physical/hbm_native_bounded_cdc_1014/w1_spec.json": "07dffc983c3d5dd1faa4df4938a4bdbc4c8aea3e904f6695a05ec3c692d2e108",
-    "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv": "1bd48f6ccedd208d019f1b8cfd1504ea04b4da0e37e614b7a190c611a218e5dc",
+    "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv": "a906ba1ae6e5afe968dd05d32058d9394c3228542b4c2f32572fd05c22c77b16",
     "physical/hbm_native_bounded_cdc_1014/bench.sh": "ddf4a79f2a5293699b4211a7353cd84f872f8f459562cf7ad6b96a6b2ea0d863"
   },
   "logical_capacity": 16,
@@ -18,5 +18,7 @@
   "encoding": "Payload+epoch+sequence together, 32-bit words protected by 39-bit SECDED. All real FF-bank stored bits protected; no raw payload array.",
   "ABI": "Same explicit wepoch/repoch caller obligation and core4:VM3 ports as SRAM backend.",
   "production_adoption": false,
-  "physical_area": "Requires actual ASIC synthesis; logical FF count never treated as routed area."
+  "physical_area": "Requires actual ASIC synthesis; logical FF count never treated as routed area.",
+  "constant_async_resets": true,
+  "epoch_binding": "Real clock edge; peer epoch complementary pairs reset invalid (0/0). Corrupt local epoch rails take priority over caller epoch changes and fail closed."
 }

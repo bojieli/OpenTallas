@@ -1,0 +1,11 @@
+GATE_SOURCE_ARCHIVE_SHA256=188465b451bf9d80e894ed2a9004f0acf16354f3dd5cbe3cfa3dd25789627fab
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=1 GATE_FLOW_S=11
+GATE_FLOWERR FAILED: FlowError: ORFS synthesis failed with exit 2:
+
+--- stderr
+ot-run: ot-epyc1tb     admits   646 GB (avail 872, growth 58, headroom 64, waiters 0/0 GB) load 34/128 running 11 disk 780 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2848639-1791977834 after 0 s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2848639-1791977834): exit 0

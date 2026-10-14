@@ -204,8 +204,11 @@
     "analogmetastability andSRAMtransistorlayout/SPICE/silicon"
   ],
   "source_sha256": {
-    "physical/hbm_native_sram_cdc_1014/tb_sram_cdc.sv": "79ebca41be595ca263c1527224f91598409812ccff4dca3fae351a63df36613e",
-    "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv": "e79e4f57e04a9e6c02ca919e5499410d5b2a45aeba57948c5ef594e802451c7c",
+    "physical/hbm_native_sram_cdc_1014/suite.py": "e8ec2c4c97a88ca386323190db41e611d6b8be698addbede86204fd70000abdd",
+    "physical/hbm_native_sram_cdc_1014/tb_sram_cdc.sv": "d7454140608edfdf8eef33ed1a457106425acac6fd1efce974d604eebc57535f",
+    "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv": "ccc42085ebc721142b5c08459c7503104518746cac6eb258a41d6264767472ad",
     "physical/hbm_native_sram_cdc_1014/bench.sh": "0822b9dba7955ed68586527d4e768975e5b0c3061477a6e8c66953de2be7fdd9"
-  }
+  },
+  "constant_async_resets": true,
+  "epoch_binding": "Real clock edge; peer epoch complementary pairs reset invalid (0/0). Corrupt local epoch rails take priority over caller epoch changes and fail closed."
 }
