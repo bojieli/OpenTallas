@@ -29,39 +29,50 @@
     },
     "t_xgo": {
       "domain": "stream",
-      "cycles": 0
+      "cycles": [
+        0,
+        1
+      ],
+      "reason": "one extra command cycle when descriptor arrival is critical; none when phase operand arrival dominates"
     },
     "c_cmd": {
       "domain": "stream",
-      "cycles": 0
+      "cycles": 1,
+      "reason": "dedicated pin register, preserving first-edge commands through native adapter reset"
     },
     "f_vm": {
       "domain": "serial",
       "cycles": 0
+    },
+    "root_reset_ready_feedback": {
+      "domain": "stream",
+      "transport_cycles": 4,
+      "ctl_capture_cycles": 1,
+      "sources": "all eight actual bottom rso flops"
     }
   },
   "conditional_serialized_phase_round_trip": {
-    "additional_time_ps": 1944.444,
-    "average_stream_cycles": 2.3333333333333335,
+    "additional_time_ps": 2777.777,
+    "average_stream_cycles": 3.3333333333333335,
     "stream_edge_range": [
-      2,
-      3
+      3,
+      4
     ],
-    "assumption": "tc forward transport and serial capture completion are serialized on the causal phase path; overlap and fullnative scheduler must be measured"
+    "assumption": "command pin stage, tc forward transport and serial capture completion all lie on serialized causal phase path; measure native scheduler/overlap"
   },
   "fixture_layers": {
     "L2": {
       "phases": 25,
       "conditional_added_stream_edges": [
-        50,
-        75
+        75,
+        100
       ]
     },
     "L20": {
       "phases": 24,
       "conditional_added_stream_edges": [
-        48,
-        72
+        72,
+        96
       ]
     }
   },
@@ -73,5 +84,14 @@
   ],
   "measured_production_ratio": null,
   "measured_end_to_end_toks_loss": null,
-  "ledger_acceptance": null
+  "ledger_acceptance": null,
+  "native_command_capacity": {
+    "QD": 8,
+    "extra_credits": 0,
+    "test": "eight initial commands retained and completed; uncredited ninth sticky fault and no ninth start/done"
+  },
+  "physical_startup_requirements": [
+    "raw-reset buffering/recovery proof",
+    "actual child clock plus entry-wire R and related phases"
+  ]
 }
