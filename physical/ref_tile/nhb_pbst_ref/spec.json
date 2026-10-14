@@ -59,7 +59,7 @@
  "job": {
   "owner": "Claude:el1014-qwen-kvsys-elements",
   "branch": "claude/qwen-kvsys-ahub-1014",
-  "tag": "np1",
+  "tag": "np2",
   "purpose": "Beat-store tile of the KV/system die ahub composition (ot_qkd_ahub_die, 4 instances): native pin re-route.",
   "extra_paths": [
    "results/arch/qwen_kv_die_20261009"
@@ -105,7 +105,8 @@
   "capture_ps": 267.7,
   "fix": "445 pdata inputs over 190 (worst pdata[392] 267.7, q5b recipe-1 kit: the pd_b pin flops sit by the SRAMs): recipe-2 kit (pin flops FIRM at the pins + HB2 pads, dedicated launch flops), RTL unchanged."
  },
- "structural_change": " np1: recipe 1 -> 2 (pin flops at the pins) for the native capture budget.",
+ "structural_change": " np1: recipe 1 -> 2 (pin flops at the pins) for the native capture budget. np2: TritonCTS spread 88.5 ps (> 80) on the recipe-2 kit (pin flops along the S face, two SRAMs) -> balanced clock spine.",
+ "clock": "spine",
  "params": {},
  "children": [],
  "inter": [],
