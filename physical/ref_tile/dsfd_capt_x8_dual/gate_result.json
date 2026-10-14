@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "dsfd_capt_x8_dual",
  "verdict": "WARN",
- "generated": "2026-10-14T00:25:12-0700",
- "host": "ot-epyc4",
+ "generated": "2026-10-14T00:39:16-0700",
+ "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "ed2704752548c4b6938def5ece64baefa0b656d5",
+  "start_commit": "a5bc70a71a37e5b6209bcc2739c0167f07938612",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "3942c44a97510195fa82defa1846851e918f576a43a77e1d61351128f29df534",
-  "manifest_sha256": "1509d66405435b150d5b87b2a5ad7ada90e6690c2cb7254d3e76fb063197d4ce",
+  "archive_sha256": "0858120a18ec18d58f87d4efa05c4042e02973684d88f8b5f140395e21d183f4",
+  "manifest_sha256": "78d4051270861aaf3c541bdd5e9b54778d7d4501197fca0c5089577c21263b7a",
   "files": [
    {
     "path": "physical/common_flow/cg_pushdown.tcl",
@@ -22979,8 +22979,8 @@
    {
     "path": "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv",
     "kind": "file",
-    "sha256": "4de89421330bc153f936e225964944055d449d46e2ebc9c8d2bae3de5e1fd4b1",
-    "git_blob": "af8e0edb966a5f3678ad4e794b95d5458cec9ca2",
+    "sha256": "bf1412f6c2634834a0aa0d13008146606070dfada1f1a276bee95fa3656df62f",
+    "git_blob": "982c5e306c8f4acc404b0d14731b157d07fcde7a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -105185,11 +105185,11 @@
     "matches_provenance_commit": true
    }
   ],
-  "captured": "2026-10-14T00:20:21-0700",
-  "remote_script_sha256": "a27b7b58d1425fd33a4f33736eb6cc48c09f4478505410f87c0400686fe990c3",
+  "captured": "2026-10-14T00:31:51-0700",
+  "remote_script_sha256": "780bbb1cbf6cb8edc35558eee1afb13b2726540556cc11bd1435270e710f1a74",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261014-001954",
+  "remote_host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_capt_x8_dual-20261014-003115",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -105197,11 +105197,11 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 5744,
+  "max_root_sinks": 5752,
   "root": "port:ck[0]",
   "cts": true,
-  "tt_insertion_ps": 204.5,
-  "tt_spread_ps": 16.5,
+  "tt_insertion_ps": 205.4,
+  "tt_spread_ps": 18.2,
   "declared_clock": "cts",
   "limits": {
    "sinks": 15000,
@@ -105215,15 +105215,15 @@
     "tt": {
      "boundary": {
       "n": 483,
-      "mean": 196.8,
-      "min": 193.3,
-      "max": 199.9
+      "mean": 198.1,
+      "min": 192.4,
+      "max": 202.4
      },
      "all": {
-      "n": 5744,
-      "mean": 196.9,
-      "min": 188.0,
-      "max": 204.5
+      "n": 5752,
+      "mean": 196.3,
+      "min": 187.2,
+      "max": 205.4
      },
      "errors": [],
      "macros": null,
@@ -105236,15 +105236,15 @@
     "tt": {
      "boundary": {
       "n": 896,
-      "mean": 220.4,
-      "min": 213.8,
-      "max": 230.2
+      "mean": 224.2,
+      "min": 208.2,
+      "max": 233.9
      },
      "all": {
-      "n": 4671,
-      "mean": 218.4,
-      "min": 209.8,
-      "max": 230.5
+      "n": 4678,
+      "mean": 219.8,
+      "min": 204.6,
+      "max": 233.9
      },
      "errors": [],
      "macros": null,
@@ -105254,7 +105254,7 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "5,744 sinks on the largest root <= 15,000; measured TT insertion 204.5 ps, leaf spread 16.5 ps"
+  "text": "5,752 sinks on the largest root <= 15,000; measured TT insertion 205.4 ps, leaf spread 18.2 ps"
  },
  "items": [
   {
@@ -105266,13 +105266,13 @@
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 5173 um2 + macros 0 in core 15653: util 33%",
-   "fix": "set \"std_area_um2\": 5173 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 5208 um2 + macros 0 in core 15653: util 33%",
+   "fix": "set \"std_area_um2\": 5208 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 33.1% outside 45%-65% (std 5180 + macro 0 um2 in 15653 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 33.3% outside 45%-65% (std 5215 + macro 0 um2 in 15653 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]

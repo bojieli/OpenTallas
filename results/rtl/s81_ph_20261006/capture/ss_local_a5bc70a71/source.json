@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.capture.prototype_bench_source.v1",
+  "source_commit": "a5bc70a71a37e5b6209bcc2739c0167f07938612",
+  "actual_rtl_git_hashes_equal": 4669,
+  "archive_sha256": "cfa2d7b05f9c4c28f66bfafef21f39d53dcad88bf04eab22ae6dec55466cdd39",
+  "scope": "isolated row hierarchy structural prototype; no physical/native qualification",
+  "bench": {
+    "exact_cases": 9,
+    "exact_mismatches": 0,
+    "mutant": "KSWAP",
+    "mutant_mismatches": 121697,
+    "mutant_mismatching_roots": 128,
+    "mutant_timeouts": 0
+  },
+  "gate_manifest_sha256": "78d4051270861aaf3c541bdd5e9b54778d7d4501197fca0c5089577c21263b7a",
+  "gate_scope": "unqualified repair-context diagnostics: first CTS hook omitted dual-clock IO rebind; separate correction34948a0cf pending integration/fresh gate"
+}
