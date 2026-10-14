@@ -472,7 +472,10 @@ module dsfd_vm_fe #(
     parameter integer LGL = 2,          // landing grant relay stages (arbiter -> lane)
     parameter integer LDL = 2,          // landing data relay stages (lane -> drain mux)
     parameter integer DVR = 0,          // 1: engine done dv / dt leave a pin register (stream domain, +1 stream cycle on every done)
-    parameter integer LVX = 0           // extra relay stages lane -> drain on the written-row flag o_av and on room_ok (ok)
+    parameter integer LVX = 0,          // extra relay stages lane -> drain on the written-row flag o_av and on room_ok (ok)
+    parameter integer XRT = 0,          // 1: engine adapter with one reset synchroniser a domain + registered reset tree (no cross-domain reset arc)
+    parameter integer CCA = 0           // 1: the ctrl VM crossing is a REAL two-clock CDC (Gray pointers through 2-flop synchronisers,
+                                        // ot_async_fifo DEPTH 16) instead of the related-clock ot_ratio_cdc_fifo: +2 serial cycles an op
 ) (
     input  wire [0:0]    ck,            // serial clock / reset
     input  wire [0:0]    rst,
@@ -579,10 +582,37 @@ module dsfd_vm_fe #(
     wire [526:0] sw_d1 = (s_f && s_tg) ? s_fd : s_ro;
     always @(posedge cks[0]) if (!rns) s_tg <= 1'b0; else if (s_f && !s_s) s_tg <= ~s_tg;
     wire [1:0] cw_rdy, cr_v, cw_live; wire [526:0] cr_d0, cr_d1; reg [1:0] cr_take; reg s_ovf;
-    ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
-        .rclk(clk), .rrst_n(rn), .r_v(cr_v[0]), .r_rdy(cr_take[0]), .r_d(cr_d0), .w_live(cw_live[0]), .r_live());
-    ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc1 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[1]), .w_rdy(cw_rdy[1]), .w_d(sw_d1),
-        .rclk(clk), .rrst_n(rn), .r_v(cr_v[1]), .r_rdy(cr_take[1]), .r_d(cr_d1), .w_live(cw_live[1]), .r_live());
+    generate if (CCA != 0) begin : g_cca
+        // el1013-s81-vmfe/B8 (coordinator decision 10-13 (b)): with ot_ratio_cdc_fifo every storage bit crossed EVERY read
+        // cycle (mem[i] (cks tree) -> sh[i] (ck tree), 2 x 8 x 527 flop -> flop arcs) and had to meet the 277.8-ps window AND
+        // the coincident-edge hold between two independently built clock trees: -140.7 ps setup, 2,039 stalled hold arcs.
+        // Here the storage is written and held in the stream domain only (its write register s_wd / s_wa is same-domain),
+        // the pointers cross Gray-coded through 2-flop synchronisers, and an entry is read (mem -> read mux -> the serial
+        // order register) only after the synchronised pointer has published it, >= 2 serial cycles after it was written:
+        // the only cross-clock arcs are pointer / online -> first synchroniser flop and stable storage -> order register
+        // (max-delay, datapath only).  Reset: one synchroniser a domain on the pin-level AND of both asynchronous resets
+        // (an assertion of either flushes both sides), then one registered stage; no cross-domain reset arc.
+        wire x_arn = rst[0] & rss[0];
+        wire xw0, xr0; wire [1:0] xr_v;
+        ot_reset_sync u_xw (.clk(cks[0]), .async_rst_n(x_arn), .sync_rst_n(xw0));
+        ot_reset_sync u_xr (.clk(clk), .async_rst_n(x_arn), .sync_rst_n(xr0));
+        (* keep = 1 *) reg [1:0] xw_t; (* keep = 1 *) reg [1:0] xr_t;
+        always @(posedge cks[0] or negedge xw0) if (!xw0) xw_t <= 2'b00; else xw_t <= 2'b11;
+        always @(posedge clk or negedge xr0) if (!xr0) xr_t <= 2'b00; else xr_t <= 2'b11;
+        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)) u_cc0 (.wr_clk(cks[0]), .wr_rst_n(xw_t[0]), .wr_valid(sw_v[0]),
+            .wr_ready(cw_rdy[0]), .wr_data(sw_d0), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[0]), .rd_valid(xr_v[0]),
+            .rd_ready(cr_take[0]), .rd_data(cr_d0), .rd_underflow());
+        ot_async_fifo #(.WIDTH(527), .DEPTH(16), .EXT_RST(1)) u_cc1 (.wr_clk(cks[0]), .wr_rst_n(xw_t[1]), .wr_valid(sw_v[1]),
+            .wr_ready(cw_rdy[1]), .wr_data(sw_d1), .wr_overflow(), .rd_clk(clk), .rd_rst_n(xr_t[1]), .rd_valid(xr_v[1]),
+            .rd_ready(cr_take[1]), .rd_data(cr_d1), .rd_underflow());
+        assign cr_v = rn ? xr_v : 2'b00;        // nothing is popped while the serial order registers are in reset
+        assign cw_live = 2'b11;
+    end else begin : g_ncca
+        ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc0 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[0]), .w_rdy(cw_rdy[0]), .w_d(sw_d0),
+            .rclk(clk), .rrst_n(rn), .r_v(cr_v[0]), .r_rdy(cr_take[0]), .r_d(cr_d0), .w_live(cw_live[0]), .r_live());
+        ot_ratio_cdc_fifo #(.W(527), .DEPTH(8)) u_cc1 (.wclk(cks[0]), .wrst_n(rns), .w_v(sw_v[1]), .w_rdy(cw_rdy[1]), .w_d(sw_d1),
+            .rclk(clk), .rrst_n(rn), .r_v(cr_v[1]), .r_rdy(cr_take[1]), .r_d(cr_d1), .w_live(cw_live[1]), .r_live());
+    end endgenerate
     always @(posedge cks[0]) if (!rns) s_ovf <= 1'b0;
         else if ((sw_v[0] && !cw_rdy[0]) || (sw_v[1] && !cw_rdy[1])) s_ovf <= 1'b1;   // incl. ops before the crossing is up
     // serial side: pop in alternation order, <= 2 a cycle: first -> lane A (p3), second -> lane B (p4)
@@ -610,7 +640,17 @@ module dsfd_vm_fe #(
     always @(posedge clk) if (!rn) a_p2c <= 1'b0; else a_p2c <= f_p2c[0];
 
     // ---------------------------------------------------------------- engine adapter (stream c side, serial e side)
-    wire ad_v, ad_r; wire [83:0] ad_d; wire ad_flt, ad_on;
+    wire ad_v, ad_r; wire [83:0] ad_d; wire ad_flt_c, ad_on; wire ad_flt;
+    // XRT 1 (B8): the adapter's fault is a STREAM-domain level (cf || ef_c2) read by the serial fault register: it crosses
+    // through a stream register and a 2-flop synchroniser (sticky, so +3 cycles on a fault that is already fatal)
+    generate if (XRT != 0) begin : g_afs
+        reg ad_flt_q; (* async_reg = "true" *) reg [1:0] ad_flt_s;
+        always @(posedge cks[0]) ad_flt_q <= ad_flt_c;
+        always @(posedge clk) ad_flt_s <= {ad_flt_s[0], ad_flt_q};
+        assign ad_flt = ad_flt_s[1];
+    end else begin : g_nafs
+        assign ad_flt = ad_flt_c;
+    end endgenerate
     reg ed_v; reg [7:0] ed_t;
     // engine command pin flops (el1011-ds-vm/fe6): cv / cd enter a register at the pin (stream domain, +1 stream cycle on
     // every command alike) so the adapter's tag lookup (cd -> cpending[tag] -> admit -> u_cmd, 14 levels) starts at a flop
@@ -626,9 +666,9 @@ module dsfd_vm_fe #(
     end else begin : g_ndvr
         assign dv[0] = ad_dv; assign dt = ad_dt;
     end endgenerate
-    ot_s81_engine_adapter #(.QD(8)) u_ad (
+    ot_s81_engine_adapter #(.QD(8), .XRT(XRT)) u_ad (
         .c_clk(cks[0]), .c_rst_n(rss[0]), .c_cmd_v(cv_p), .c_cmd_d(cd_p), .c_done_v(ad_dv), .c_done_tag(ad_dt),
-        .fault(ad_flt), .online(ad_on),
+        .fault(ad_flt_c), .online(ad_on),
         .e_clk(clk), .e_rst_n(rst[0]), .e_cmd_v(ad_v), .e_cmd_d(ad_d), .e_cmd_ready(ad_r), .e_inputs_present(1'b1),
         .e_done_v(ed_v), .e_done_tag(ed_t));
     wire [2:0] vop = ad_d[30:28];       // arg[23:21]
@@ -1655,9 +1695,9 @@ module dsfd_sp_vm_m #(
 `ifdef OT_SPVM_REF_FRL
     `include "dsfd_vm_fe_h_if.svh"
     // the hierarchy's stage counts (lockstep reference)
-    localparam integer FRL = `VMFE_FRL, FKD = `VMFE_KD, FLDL = `VMFE_LDL, FLGL = `VMFE_LGL, FLAL = `VMFE_LAL, FDVR = `VMFE_DVR, FLVX = `VMFE_LVX;
+    localparam integer FRL = `VMFE_FRL, FKD = `VMFE_KD, FLDL = `VMFE_LDL, FLGL = `VMFE_LGL, FLAL = `VMFE_LAL, FDVR = `VMFE_DVR, FLVX = `VMFE_LVX, FXRT = `VMFE_XRT, FCCA = `VMFE_CCA;
 `else
-    localparam integer FRL = 2, FKD = 1, FLDL = 2, FLGL = 2, FLAL = 2, FDVR = 0, FLVX = 0;
+    localparam integer FRL = 2, FKD = 1, FLDL = 2, FLGL = 2, FLAL = 2, FDVR = 0, FLVX = 0, FXRT = 0, FCCA = 0;
 `endif
                                         // el1011-ds-vm/fe: FE order register -> slice pin relay stages (shifts f_* and o_*
                                         // alike: MD, the tile-3 f_* -> o_* skew, is unchanged)
@@ -1669,7 +1709,7 @@ module dsfd_sp_vm_m #(
     wire [NS*4-1:0] fmrf; wire [15:0] f_flt;
     wire [0:0] f_swg, f_srg, f_dv, f_cwv; wire [52:0] f_ks; wire [7:0] f_dt; wire [2:0] f_cts; wire [9:0] f_cwd; wire [NSLOT-1:0] f_rdy;
     dsfd_vm_fe #(.NS(NS), .VF(VF), .VR(VR), .NSLOT(NSLOT), .P2D(P2D), .CQD(CQD), .LA(LA), .LTO(LTO), .NSVC(NSVC), .LD(LD),
-                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LAL(FLAL), .LGL(FLGL), .LDL(FLDL), .DVR(FDVR), .LVX(FLVX)) u_fe (
+                 .NLP(NLP), .LMACRO(LMACRO), .FRL(FRL), .KD(FKD), .LAL(FLAL), .LGL(FLGL), .LDL(FLDL), .DVR(FDVR), .LVX(FLVX), .XRT(FXRT), .CCA(FCCA)) u_fe (
         .ck(ck), .rst(rst), .cks(cks), .rss(rss), .f_swv(f_swv), .f_swd(f_swd), .t_swg(f_swg), .f_srv(f_srv), .f_srd(f_srd),
         .t_srg(f_srg), .t_ks(f_ks), .f_cap(f_cap), .vwe(vwe), .vwa(vwa), .vwd(vwd), .vre(vre), .vra(vra),
         .cv(cv), .cd(cd), .dv(f_dv), .dt(f_dt), .f_svc(f_svc), .f_coll(f_coll), .t_cts(f_cts), .f_sel(f_sel), .f_col(f_col), .f_hc(f_hc),
