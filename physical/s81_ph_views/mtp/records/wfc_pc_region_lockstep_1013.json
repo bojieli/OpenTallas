@@ -1,0 +1,286 @@
+{
+ "all_ok": true,
+ "snap": true,
+ "cases": [
+  {
+   "case": "cl_stg_r1",
+   "base": "stg_r1",
+   "mode": "cl",
+   "defines": [],
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17939 vmslow=0 core_user_mismatch_at_start=0",
+   "lock": null,
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "cl_stg_vmnat",
+   "base": "stg_vmnat",
+   "mode": "cl",
+   "defines": [],
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12031 vmslow=0 core_user_mismatch_at_start=0",
+   "lock": null,
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "cl_stg_r2_slowvm",
+   "base": "stg_r2_slowvm",
+   "mode": "cl",
+   "defines": [],
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17939 vmslow=1 core_user_mismatch_at_start=0",
+   "lock": null,
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "lock_stg_r1",
+   "base": "stg_r1",
+   "mode": "lock",
+   "defines": [],
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17939 vmslow=0 core_user_mismatch_at_start=0",
+   "lock": "WFC_CL_LOCK fast_edges=17932 slow_edges=13449 active=3271 bad=0",
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "lock_stg_vmnat",
+   "base": "stg_vmnat",
+   "mode": "lock",
+   "defines": [],
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12031 vmslow=0 core_user_mismatch_at_start=0",
+   "lock": "WFC_CL_LOCK fast_edges=12024 slow_edges=9018 active=2186 bad=0",
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "lock_stg_r2_slowvm",
+   "base": "stg_r2_slowvm",
+   "mode": "lock",
+   "defines": [],
+   "expect": "pass",
+   "got": "pass",
+   "verdict": "OK",
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17939 vmslow=1 core_user_mismatch_at_start=0",
+   "lock": "WFC_CL_LOCK fast_edges=17932 slow_edges=13449 active=3347 bad=0",
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "cl_neg_noadv",
+   "base": "stg_r1",
+   "mode": "cl",
+   "defines": [
+    "OT_WFCVMXR_MUT_NOADV"
+   ],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: outbound word 3 of (u0 p0) (staging / prefetch)",
+   "lock": null,
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "cl_neg_swap",
+   "base": "stg_r1",
+   "mode": "cl",
+   "defines": [
+    "OT_WFCVMX_MUT_RD2_SWAP"
+   ],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: outbound word 0 of (u0 p0) (staging / prefetch)",
+   "lock": null,
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "cl_neg_predoff",
+   "base": "stg_r1",
+   "mode": "cl",
+   "defines": [
+    "OT_WFCVMX_MUT_PREDOFF"
+   ],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: fault wfc 0 lnk 0 vmx 1",
+   "lock": null,
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "cl_neg_doneearly",
+   "base": "stg_r1",
+   "mode": "cl",
+   "defines": [
+    "OT_WFCVMX_MUT_DONEEARLY"
+   ],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: outbound word 0 of (u0 p0) (staging / prefetch)",
+   "lock": null,
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "lock_neg_noadv",
+   "base": "stg_r1",
+   "mode": "lock",
+   "defines": [
+    "OT_WFCVMXR_MUT_NOADV"
+   ],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: lockstep, cluster != kit on 17351 edges (compared 17932 + 13449, active 3271)",
+   "lock": "WFC_CL_LOCK fast_edges=17932 slow_edges=13449 active=3271 bad=17351",
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "cl_neg_doorbell",
+   "base": "stg_r1",
+   "mode": "cl",
+   "defines": [
+    "OT_WFCVMXW_MUT_DOORBELL"
+   ],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "FAIL: VM write address",
+   "lock": null,
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  },
+  {
+   "case": "lock_neg_doorbell",
+   "base": "stg_r1",
+   "mode": "lock",
+   "defines": [
+    "OT_WFCVMXW_MUT_DOORBELL"
+   ],
+   "expect": "fail",
+   "got": "fail",
+   "verdict": "OK",
+   "result": "MTP_STG FAIL: lockstep, cluster != kit on 120 edges (compared 17932 + 13449, active 3271)",
+   "lock": "WFC_CL_LOCK fast_edges=17932 slow_edges=13449 active=3271 bad=120",
+   "snap": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv": "d839f6c424ba7453a4364fe43e05121b3969cd9436facd90f36bd744b1eb5384",
+    "rtl/dsrom_sys/mtp/closed_snap/ot_rom_pkg_ctrl_wfc_tokpipe.9f7a7f35e.sv": "cf2a55e43cd77154968b954c0c559af3ec4e2134bbfe07b89c19e45a2c18ee9f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv": "813e5f56b48a75b7ba3c470b9b8eb11e2779c6ea7847d7cbe1fcae587179c3fc",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::dsfd_wfc_lnk": "accb82f721cf259e3cb1d903c3784e29f18d22c7538a9bd1b0d6e07128888cbf",
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv::ot_dsrom_mtp_rstsync": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_ltx": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv::ot_dsrom_mtp_lrx": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f"
+   }
+  }
+ ],
+ "source_hashes": {
+  "rtl/common/ot_ratio_cdc_fifo.sv": "0791c2735ed4a069ba9e6700faf8eeb3c55aa5483b8c101b37d59fe190bd2d98",
+  "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv": "8d35011700625e73e859b714052bd61fe0e93eac6bbcce4d69ef6f2e9ffaa8a2",
+  "tools/dsrom_wfc_cl_bench.py": "31867c0628ed8fc8d7bf049e94881ccf9ef880fb244b39e3bd37b0f4badece44"
+ },
+ "clock_entries": true
+}

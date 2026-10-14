@@ -98,7 +98,7 @@ module dsfd_wfc_vmx_w #(
     assign t_vc = vc_ret;
     // =========================================================== the crossing
     wire s_v; wire [PW-1:0] s_d; wire s_rdy;
-    ot_ratio_cdc_fifo #(.W(PW), .DEPTH(DEPTH), .LAG(LAG)) u_f2s (.wclk(fclk), .wrst_n(frst_n), .w_v(f_wv), .w_rdy(f_wr), .w_d(f_wd),
+    ot_ratio_cdc_fifo #(.W(PW), .DEPTH(DEPTH), .LAG(LAG), .PTR_GROUP_W(32)) u_f2s (.wclk(fclk), .wrst_n(frst_n), .w_v(f_wv), .w_rdy(f_wr), .w_d(f_wd),
         .rclk(sclk), .rrst_n(srst_n), .r_v(s_v), .r_rdy(s_rdy), .r_d(s_d), .w_live(), .r_live());
     // =========================================================== slow domain
     reg [WOUTW-1:0] wout; reg busy, k_start; reg [USER_W-1:0] k_user; reg [NW-1:0] k_token, k_pos; reg fault_s;
@@ -267,7 +267,7 @@ module dsfd_wfc_vmx_r #(
     end endgenerate
     // =========================================================== the crossing
     wire r_v; wire [RWE-1:0] r_d;
-    ot_ratio_cdc_fifo #(.W(RWE), .DEPTH(RDEPTH), .LAG(LAG)) u_s2f (.wclk(sclk), .wrst_n(srst_n), .w_v(q_v), .w_rdy(q_rdy), .w_d(q_d),
+    ot_ratio_cdc_fifo #(.W(RWE), .DEPTH(RDEPTH), .LAG(LAG), .PTR_GROUP_W(64)) u_s2f (.wclk(sclk), .wrst_n(srst_n), .w_v(q_v), .w_rdy(q_rdy), .w_d(q_d),
         .rclk(fclk), .rrst_n(frst_n), .r_v(r_v), .r_rdy(1'b1), .r_d(r_d), .w_live(), .r_live());
     // =========================================================== fast domain
     wire r_done = r_v && r_d[RWE-1];
@@ -308,6 +308,16 @@ module dsfd_wfc_vmx_r #(
     wire [IB-2:0] wa_o = wi[IB-1:1];
     wire [FLIT-1:0] wd_e = wi[0] ? wd1 : wd0, wd_o = wi[0] ? wd0 : wd1;
     // the predicted read: pred = the staging index of the next read; the pin address is checked one edge later
+    // One-hot successor keeps the pin read-enable out of counter/wrap logic.
+    // The encoded successor depends only on local state and is available before
+    // the pin strobe; the strobe is just a flop enable (latency unchanged).
+    reg [SD-1:0] pred_oh;
+    reg [IB-1:0] pred_advance;
+    always @* begin
+        pred_advance = 0;
+        for (integer i = 0; i < SD; i = i + 1)
+            if (pred_oh[i]) pred_advance = pred_advance | IB'((i == SD-1) ? 0 : i+1);
+    end
     reg [IB-1:0] pred; reg pchk_v; reg [VWA-1:0] pchk_a; reg [IB-1:0] pchk_p; reg pfault;
     wire [VWA-1:0] ra = vm_raddr - TXB[VWA-1:0];
     reg adv_q, rd_go, rd_bk, pr_e, pr_o; reg [IB-1:0] rd_ix;
@@ -316,10 +326,14 @@ module dsfd_wfc_vmx_r #(
     wire [IB:0] p2 = {1'b0, pred} + 2'd2;
     always @(posedge fclk) begin
         if (!frst_n) begin
+            pred_oh <= `ifdef OT_WFCVMX_MUT_PREDOFF SD'(2) `else SD'(1) `endif;
             pred <= `ifdef OT_WFCVMX_MUT_PREDOFF 1 `else 0 `endif; pchk_v <= 1'b0; pfault <= 1'b0;
             adv_q <= 1'b0; rd_go <= 1'b0; pr_e <= 1'b0; pr_o <= 1'b0;
         end else begin
-            if (vm_re) pred <= (pred == SD - 1) ? {IB{1'b0}} : pred + 1'b1;
+            if (vm_re) begin
+                pred <= pred_advance;
+                pred_oh <= {pred_oh[SD-2:0], pred_oh[SD-1]};
+            end
             pchk_v <= vm_re; pchk_a <= ra; pchk_p <= pred;
 `ifndef OT_WFCVMX_MUT_NOPCHK
             if (pchk_v && pchk_a != {{(VWA-IB){1'b0}}, pchk_p}) pfault <= 1'b1;
@@ -393,8 +407,9 @@ endmodule
 
 // the cluster parent: wires and five constant ties (the WFC's unused SOURCE inputs); every net child pin -> child pin
 // or child pin -> cluster pin, driven and captured by registers inside the children
-module dsfd_wfc_stg_cl (
+module dsfd_wfc_stg_cl #(parameter bit CLOCK_ENTRIES = 0) (
     input  wire [0:0] ck, ckv, rst, rsv,
+    input  wire [0:0] ck_wfc, ck_lnk, ck_vmx, ckv_vmx,
     input  wire [0:0] f_liv, input  wire [512:0] f_lid, output wire [0:0] t_lir,
     output wire [0:0] t_lov, output wire [512:0] t_lod, input  wire [0:0] f_lor,
     output wire [0:0] t_swv, output wire [526:0] t_swd, input wire [0:0] f_swr, input wire [0:0] f_swa,
@@ -412,7 +427,11 @@ module dsfd_wfc_stg_cl (
     wire [29:0] kv_base_nc; wire pr_re_nc; wire [9:0] pr_user_nc; wire [20:0] pr_pos_nc; wire [3:0] pr_blk_nc;
     wire core_busy_nc, tok_valid_nc, wf_issue_nc, wf_reject_nc, wf_squash_nc;
     wire [9:0] tok_user_nc, users_done_nc; wire [20:0] tok_pos_nc, tok_id_nc; wire [512:0] dw_nc;
-    wire clk = ck[0];
+    wire [0:0] wfc_ck = CLOCK_ENTRIES ? ck_wfc : ck;
+    wire [0:0] lnk_ck = CLOCK_ENTRIES ? ck_lnk : ck;
+    wire [0:0] vmx_ck = CLOCK_ENTRIES ? ck_vmx : ck;
+    wire [0:0] vmx_ckv = CLOCK_ENTRIES ? ckv_vmx : ckv;
+    wire clk = wfc_ck[0];
     ot_dsrom_wfc_tokpipe_stg u_wfc (
         .clk(clk), .rst_n(rst[0]), .cfg_users(10'd0), .cfg_prompt_len(21'd0), .cfg_gen_len(21'd0),
         .in_valid(w_in_valid), .in_ready(w_in_ready), .in_data(w_in_data), .in_last(w_in_last),
@@ -424,13 +443,57 @@ module dsfd_wfc_stg_cl (
         .core_busy(core_busy_nc), .tok_valid(tok_valid_nc), .tok_user(tok_user_nc), .tok_pos(tok_pos_nc), .tok_id(tok_id_nc),
         .users_done(users_done_nc), .proto_fault(proto_fault), .wf_issue(wf_issue_nc), .wf_reject(wf_reject_nc),
         .wf_squash(wf_squash_nc));
-    dsfd_wfc_lnk u_lnk (.ck(ck), .rst(rst), .f_liv(f_liv), .f_lid(f_lid), .t_lir(t_lir),
+    dsfd_wfc_lnk u_lnk (.ck(lnk_ck), .rst(rst), .f_liv(f_liv), .f_lid(f_lid), .t_lir(t_lir),
         .t_wiv(w_in_valid), .t_wid({w_in_last, w_in_data}), .f_wig(w_in_ready),
         .f_wov(w_out_valid), .f_wod({w_out_last, w_out_data}), .t_wog(w_out_ready),
         .t_lov(t_lov), .t_lod(t_lod), .f_lor(f_lor), .t_dw(dw_nc), .f_vc(vc_ret), .t_ft(lnk_ft));
-    dsfd_wfc_vmx_p u_vp (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+    dsfd_wfc_vmx_p u_vp (.ck(vmx_ck), .ckv(vmx_ckv), .rst(rst), .rsv(rsv),
         .f_vw({vm_we, vm_waddr, vm_wdata}), .f_cs({core_start, core_user, core_token, core_pos}),
         .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq), .t_cd(cd), .t_vc(vc_ret), .f_pf(proto_fault), .f_lf(lnk_ft),
         .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .t_srv(t_srv), .t_srd(t_srd), .f_srr(f_srr),
         .f_srq(f_srq), .t_ks(t_ks), .f_kd(f_kd), .t_hep(t_hep), .t_ft(t_ft));
+endmodule
+
+// Wires-only production parent: die delivers each root at phi minus the
+// corresponding closed child insertion. No parent CTS root or hidden clock delay.
+module dsfd_wfc_stg_pc (
+
+    input  wire [0:0] rst, rsv,
+    input  wire [0:0] ck_wfc, ck_lnk, ck_vmx, ckv_vmx,
+    input  wire [0:0] f_liv, input  wire [512:0] f_lid, output wire [0:0] t_lir,
+    output wire [0:0] t_lov, output wire [512:0] t_lod, input  wire [0:0] f_lor,
+    output wire [0:0] t_swv, output wire [526:0] t_swd, input wire [0:0] f_swr, input wire [0:0] f_swa,
+    output wire [0:0] t_srv, output wire [30:0] t_srd, input wire [0:0] f_srr,
+    input  wire [1025:0] f_srq,
+    output wire [52:0] t_ks, input wire [53:0] f_kd,
+    output wire [35:0] t_hep,
+    output wire [3:0] t_ft
+);
+    dsfd_wfc_stg_cl #(.CLOCK_ENTRIES(1)) u_cluster (
+        .ck(1'b0), .ckv(1'b0),
+        .rst(rst),
+        .rsv(rsv),
+        .ck_wfc(ck_wfc),
+        .ck_lnk(ck_lnk),
+        .ck_vmx(ck_vmx),
+        .ckv_vmx(ckv_vmx),
+        .f_liv(f_liv),
+        .f_lid(f_lid),
+        .t_lir(t_lir),
+        .t_lov(t_lov),
+        .t_lod(t_lod),
+        .f_lor(f_lor),
+        .t_swv(t_swv),
+        .t_swd(t_swd),
+        .f_swr(f_swr),
+        .f_swa(f_swa),
+        .t_srv(t_srv),
+        .t_srd(t_srd),
+        .f_srr(f_srr),
+        .f_srq(f_srq),
+        .t_ks(t_ks),
+        .f_kd(f_kd),
+        .t_hep(t_hep),
+        .t_ft(t_ft)
+    );
 endmodule

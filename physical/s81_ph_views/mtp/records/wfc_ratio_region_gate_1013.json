@@ -1,0 +1,658 @@
+{
+  "ok": true,
+  "rtl_sha256": "0791c2735ed4a069ba9e6700faf8eeb3c55aa5483b8c101b37d59fe190bd2d98",
+  "words": 20000,
+  "pointer_group_width": 7,
+  "positives": [
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "sparse",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_sparse_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "sparse",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_sparse_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "sparse",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_sparse_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "sparse",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_sparse_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "saturate",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_saturate_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "saturate",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_saturate_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "saturate",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_saturate_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "saturate",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_saturate_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "random",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_random_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "random",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_random_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "random",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_random_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "random",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_random_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "backpressure",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_backpressure_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "backpressure",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_backpressure_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "backpressure",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_backpressure_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "backpressure",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_backpressure_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "reset",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_reset_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "reset",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_reset_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "reset",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_reset_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "f2s",
+      "mode": "reset",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_f2s_reset_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "sparse",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_sparse_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "sparse",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_sparse_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "sparse",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_sparse_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "sparse",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_sparse_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "saturate",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_saturate_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "saturate",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_saturate_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "saturate",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_saturate_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "saturate",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_saturate_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "random",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_random_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "random",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_random_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "random",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_random_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "random",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_random_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "backpressure",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_backpressure_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "backpressure",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_backpressure_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "backpressure",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_backpressure_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "backpressure",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_backpressure_3.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "reset",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_reset_0.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "reset",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_reset_1.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "reset",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_reset_2.log"
+    },
+    {
+      "depth": 4,
+      "direction": "s2f",
+      "mode": "reset",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d4_s2f_reset_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "sparse",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_sparse_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "sparse",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_sparse_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "sparse",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_sparse_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "sparse",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_sparse_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "saturate",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_saturate_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "saturate",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_saturate_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "saturate",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_saturate_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "saturate",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_saturate_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "random",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_random_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "random",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_random_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "random",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_random_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "random",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_random_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "backpressure",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_backpressure_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "backpressure",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_backpressure_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "backpressure",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_backpressure_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "backpressure",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_backpressure_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "reset",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_reset_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "reset",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_reset_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "reset",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_reset_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "f2s",
+      "mode": "reset",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_f2s_reset_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "sparse",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_sparse_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "sparse",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_sparse_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "sparse",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_sparse_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "sparse",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_sparse_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "saturate",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_saturate_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "saturate",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_saturate_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "saturate",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_saturate_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "saturate",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_saturate_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "random",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_random_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "random",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_random_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "random",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_random_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "random",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_random_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "backpressure",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_backpressure_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "backpressure",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_backpressure_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "backpressure",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_backpressure_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "backpressure",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_backpressure_3.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "reset",
+      "phase": 0,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_reset_0.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "reset",
+      "phase": 1,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_reset_1.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "reset",
+      "phase": 2,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_reset_2.log"
+    },
+    {
+      "depth": 8,
+      "direction": "s2f",
+      "mode": "reset",
+      "phase": 3,
+      "ok": true,
+      "log": "/srv/opentallas-scratch/claude/el1013-wfcstg/codex-clock-entries/region_gate/d8_s2f_reset_3.log"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "stale_pointer",
+      "caught": true
+    },
+    {
+      "name": "wrong_region_word",
+      "caught": true
+    }
+  ]
+}

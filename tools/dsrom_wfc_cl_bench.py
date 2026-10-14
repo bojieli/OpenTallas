@@ -113,14 +113,14 @@ def snap_sources(srcs):
     return out, pins
 
 
-def cl_tb(mode):
+def cl_tb(mode, entries=False):
     tb, body = K.kit_tb(1, 12)
     assert body.count(KIT_INST) == 1, 'kit instance'
     if mode == 'cl':
         body = body.replace(KIT_INST, 'dsfd_wfc_stg_cl u_kit (')
         def al(m):
             n = m.group(1)
-            return 'u_kit.' + ALIAS.get(n, 'u_wfc.' + n)
+            return ('u_kit.u_cluster.' if entries else 'u_kit.') + ALIAS.get(n, 'u_wfc.' + n)
         body = re.sub(r'\bu_kit\.(\w+)', al, body)
     else:
         a = body.index(KIT_INST); e = body.index(');\n', body.index('.t_hep(k_hep)', a)) + 3
@@ -131,13 +131,20 @@ def cl_tb(mode):
                             '        if (lk_bad != 0 || lk_f < 10000 || lk_act < 100) begin $display("MTP_STG FAIL: lockstep, cluster != kit on '
                             '%0d edges (compared %0d + %0d, active %0d)", lk_bad, lk_f, lk_s, lk_act); $finish; end\n'
                             '        $display("MTP_STG PASS')
+    if entries:
+        # Exercise the actual production parent, with all child entries driven by
+        # their logically related source clocks; physical insertion is die STA.
+        body = body.replace('dsfd_wfc_stg_cl u_kit (', 'dsfd_wfc_stg_pc u_kit (')
+        body = body.replace('dsfd_wfc_stg_cl u_cl (', 'dsfd_wfc_stg_pc u_cl (')
+        body = re.sub(r'(dsfd_wfc_stg_pc u_(?:kit|cl)\s*\()\s*\.ck\(fclk\), \.ckv\(sclk\),',
+                      r'\1.ck_wfc(fclk), .ck_lnk(fclk), .ck_vmx(fclk), .ckv_vmx(sclk),', body)
     return tb, body
 
 
-def run(name, out, snap):
+def run(name, out, snap, entries=False):
     base, mode, defs, expect = CASES[name]
     spec = B.cases()[base]
-    tb, body = cl_tb('lock' if mode.startswith('lock') else 'cl')
+    tb, body = cl_tb('lock' if mode.startswith('lock') else 'cl', entries)
     d = out / name; d.mkdir(parents=True, exist_ok=True)
     (d / 'tb.sv').write_text(body)
     srcs = [str(ROOT / s) for s in list(B.COMMON) + K.EXTRA + [CL, MAC]]
@@ -165,13 +172,14 @@ def run(name, out, snap):
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument('--out', type=Path, required=True); p.add_argument('--case'); p.add_argument('--jobs', type=int, default=6)
+    p.add_argument('--clock-entries', action='store_true', help='exercise wires-only parent with per-child clock inputs')
     p.add_argument('--snap', action='store_true', help='closed children at their closed-commit RTL (closed_snap manifest)')
     p.add_argument('--raw-negative', action='store_true', help='one expected-FAIL case: exit 1 when it fails as required')
     a = p.parse_args(); a.out = a.out.resolve(); a.out.mkdir(parents=True, exist_ok=True)
     names = a.case.split(',') if a.case else list(CASES)
     import concurrent.futures as cf
     with cf.ThreadPoolExecutor(a.jobs) as ex:
-        recs = list(ex.map(lambda n: run(n, a.out, a.snap), names))
+        recs = list(ex.map(lambda n: run(n, a.out, a.snap, a.clock_entries), names))
     ok = all(r['verdict'] == 'OK' for r in recs)
     (a.out / 'summary.json').write_text(json.dumps(dict(all_ok=ok, snap=a.snap, cases=recs), indent=1) + '\n')
     for r in recs:

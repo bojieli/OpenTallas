@@ -46,11 +46,12 @@ module ot_ratio_cdc_fifo #(
     parameter int W     = 64,
     parameter int DEPTH = 4,            // entries, power of two
     parameter int HOLD  = 2,            // extra DOWN cycles of each side; (HOLD + 1) * T_own must exceed T_peer
-    parameter int LAG   = 0             // CLAUDE S81-PH 2026-10-07: 1 = the write pointer is published one write cycle
+    parameter int LAG   = 0,             // CLAUDE S81-PH 2026-10-07: 1 = the write pointer is published one write cycle
                                         // after the entry is written (wp_pub), so an entry is stable >= T_w + one
                                         // window before any read edge can use it: the mem -> sh arcs become a
                                         // max-delay T_w data path with no hold check (capt_x mem -> sh hold -5 at
                                         // +42 setup); +1 write cycle of latency
+    parameter int PTR_GROUP_W = 0        // 0 legacy mux; otherwise regional read-pointer flops (no latency)
 ) (
     input  logic         wclk,
     input  logic         wrst_n,        // synchronous to wclk
@@ -135,7 +136,23 @@ module ot_ratio_cdc_fifo #(
     end
     assign r_live = (r_st == S_RUN) && (w_st_r != S_DOWN);
     assign r_v    = rrst_n && r_live && (wp_r != rp);
-    assign r_d    = sh[rp[AW-1:0]];
+    generate if (PTR_GROUP_W > 0) begin : g_region
+        localparam int NG = (W + PTR_GROUP_W - 1) / PTR_GROUP_W;
+        for (genvar g = 0; g < NG; g++) begin : g_ptr
+            localparam int BW = ((g+1)*PTR_GROUP_W > W) ? W-g*PTR_GROUP_W : PTR_GROUP_W;
+            // Independent physical copies of the SAME transition, not samples of
+            // rp: sampling rp would use yesterday's word after a retirement.
+            // Keep prevents synthesis from merging the regional mux drivers.
+            (* keep = 1 *) logic [AW:0] local_rp;
+            always_ff @(posedge rclk) begin
+                if (!rrst_n || r_st != S_RUN || w_st_r == S_DOWN) local_rp <= '0;
+                else if (r_take) local_rp <= local_rp + 1'b1;
+            end
+            assign r_d[g*PTR_GROUP_W +: BW] = sh[local_rp[AW-1:0]][g*PTR_GROUP_W +: BW];
+        end
+    end else begin : g_shared_ptr
+        assign r_d    = sh[rp[AW-1:0]];
+    end endgenerate
     assign r_take = r_v && r_rdy;
     always_ff @(posedge rclk) begin
         if (!rrst_n) begin

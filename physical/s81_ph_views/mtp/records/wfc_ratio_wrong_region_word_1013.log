@@ -1,0 +1,21 @@
+ERROR t=15000ps: order/gap/dup in epoch 0: 0 -> 0
+ERROR t=16667ps: order/gap/dup in epoch 0: 0 -> 0
+ERROR t=18333ps: order/gap/dup in epoch 0: 0 -> 0
+ERROR t=25833ps: order/gap/dup in epoch 0: 2 -> 7
+ERROR t=26667ps: order/gap/dup in epoch 0: 7 -> 4
+ERROR t=46667ps: order/gap/dup in epoch 0: 13 -> 18
+ERROR t=50000ps: order/gap/dup in epoch 0: 21 -> 18
+ERROR t=65833ps: order/gap/dup in epoch 0: 28 -> 33
+ERROR t=66667ps: order/gap/dup in epoch 0: 33 -> 30
+ERROR t=82500ps: order/gap/dup in epoch 0: 38 -> 43
+ERROR t=83333ps: order/gap/dup in epoch 0: 43 -> 40
+ERROR t=85000ps: order/gap/dup in epoch 0: 40 -> 45
+ERROR t=86667ps: order/gap/dup in epoch 0: 46 -> 43
+ERROR t=98333ps: order/gap/dup in epoch 0: 44 -> 49
+ERROR t=100833ps: order/gap/dup in epoch 0: 49 -> 46
+ERROR t=109167ps: order/gap/dup in epoch 1: 2 -> 7
+ERROR t=110000ps: order/gap/dup in epoch 1: 7 -> 4
+ERROR t=128333ps: order/gap/dup in epoch 1: 15 -> 20
+ERROR t=136667ps: order/gap/dup in epoch 1: 25 -> 22
+ERROR t=141667ps: order/gap/dup in epoch 1: 23 -> 28
+RESULT dir=s2f mode=reset phase=1 words=20000 accepted=20000 delivered=19759 flushed=266 epochs=153 resets_w=62 resets_r=95 words_per_ns=0.5916 errors=4872 FAIL
