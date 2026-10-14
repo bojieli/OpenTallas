@@ -168,8 +168,19 @@ SPLIT_HEAD_V11 = (1080.0, 492.48)
 # per-child clock entries (die ports, each its own CTS sink, delivered at phi - R of that child): die port -> RTL port
 # head r2 (d7c8b1909, kvsys-elements 11:39): the lane station is split into stin (front -> lane) and stout (lane -> ktree /
 # astk) leaves, each its own root: 51 entries = front, ktree, score, 16 stin, 16 stout, 16 lane8
-HEAD_CLK = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_i{i}' for i in range(16)] + [f'ck_o{i}' for i in range(16)] +
-            [f'ck_l{i}' for i in range(16)])
+HEAD_CLK_R2 = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_i{i}' for i in range(16)] + [f'ck_o{i}' for i in range(16)] +
+               [f'ck_l{i}' for i in range(16)])
+# v1.2: head r4 (Codex, main b5103f681 / plan results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json): the front
+# is four row-quarter leaves and every lane has stin | stk (KP D2) | nb1 | nb2 (NB D2 as two D1 leaves) + its lane8:
+# 86 entries = 4 front + ktree + score + 16 x (stin, stk, nb1, nb2, lane); same data ports / cycles as r2 (exact head
+# reference PASS 3,515, mutants FAIL).  Die port -> RTL: ck_f<q> -> ck_front[q], ck_k -> ck_kt, ck_s -> ck_score,
+# ck_i<l> -> ck_stin[l], ck_t<l> -> ck_stk[l], ck_a<l> -> ck_nb1[l], ck_b<l> -> ck_nb2[l], ck_l<l> -> ck_lane[l]
+HEAD_R4_PLAN = 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json'
+HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
+            [f'ck_{t}{i}' for t in 'itabl' for i in range(16)])
+HEAD_CLK_CHILD = dict(**{f'ck_f{q}': f'front{q}' for q in range(4)}, ck_k='ktree', ck_s='score',
+                      **{f'ck_{t}{i}': f'{c}{i}' if c in ('stin', 'stk', 'lane') else f'{c}_{i}'
+                         for t, c in zip('itabl', ('stin', 'stk', 'nb1', 'nb2', 'lane')) for i in range(16)})
 ECTL_CLK = ['ck_a', 'ck_b', 'ck_c']
 # v1.2: the attention hub is the wires-only composition ot_qkd_ahub_die (kvsys-elements 33048f31a): the CLOSED core
 # (qkd_ahub_core hd2) + 13 hardened tiles (4 ot_nhb_zh, ot_qkh_recip_leaf, 4 ot_nhb_pbst, 4 ot_nhb_pvlg), each its own clock
@@ -207,13 +218,14 @@ _BASE_BINDINGS = {k: BINDINGS[k] for k in ('qkd_rhead', 'qkd_seq', 'qkd_ectl', '
 _BASE_BINDINGS_LATE = ('qkd_kvwq_ctl_bin', 'qkd_kvwq_leaf_s_w129_m')     # defined further down; captured at first _set_geometry call
 SPLIT_BINDINGS = dict(
     # v1.1: the native head (wires-only parent of 35 hardened children, each its own clock entry)
-    qkd_rhead=dict(module='ot_qkh_head_native', file='rtl/qwen_sys/split_20261014/ot_qkh_head_native.sv',
+    qkd_rhead=dict(module='ot_qkh_head_native_r4', file='rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv',
                    parameters=dict(Q_FP32=1),
                    ports=dict(ti=['c_in', 'row_in', 'lt_in', 'q_valid_in', 'q_beat_in', 'q_data_in'], e=['e_in'],
-                              s=['sc_d', 'sc_f', 'g_f'], nb=['nb_d'], ck_f=['ck_front'], ck_k=['ck_kt'], ck_s=['ck_score'],
-                              ck_i0=['ck_stin'], ck_o0=['ck_stout'], ck_l0=['ck_lane'], rst_n=['rst_n']),
-                   sliced={**{f'ck_i{i}': 'ck_i0' for i in range(1, 16)}, **{f'ck_o{i}': 'ck_o0' for i in range(1, 16)},
-                           **{f'ck_l{i}': 'ck_l0' for i in range(1, 16)}},
+                              s=['sc_d', 'sc_f', 'g_f'], nb=['nb_d'], ck_f0=['ck_front'], ck_k=['ck_kt'], ck_s=['ck_score'],
+                              ck_i0=['ck_stin'], ck_t0=['ck_stk'], ck_a0=['ck_nb1'], ck_b0=['ck_nb2'], ck_l0=['ck_lane'],
+                              rst_n=['rst_n']),
+                   sliced={**{f'ck_f{q}': 'ck_f0' for q in range(1, 4)},
+                           **{f'ck_{t}{i}': f'ck_{t}0' for t in 'itabl' for i in range(1, 16)}},
                    classed={'hid': 'by_design: die-top strap (tie cells), the head index of this tile'}),
     # v1.1: the three native TP8 control leaves A / B / C behind the wires-only qkd_ectl3_s, ck[0..2] = die ck_a / ck_b / ck_c
     qkd_ectl=dict(module='qkd_ectl3_s', file='rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv',
@@ -1367,13 +1379,13 @@ def _split_pins(M, m=None):
                     hm.ports[p_] = ('face', hm.ports[p_][1], 'S', 'M5', x_, pt_)
             if 'nb' in hm.ports:
                 hm.ports['nb'] = ('face', hm.ports['nb'][1], 'E', 'M4', HEAD[1] / 2, 2)
-            # 35 clock entries + reset on the W face (M4), at the rows of the children they enter (front / ktree / score
-            # at the control-facing end, then the 16 stations, then the 16 lanes)
-            ys = [24.0, 48.0, 72.0] + [100.0 + 7.0 * i for i in range(16)] + [216.0 + 7.0 * i for i in range(16)] + \
-                 [332.0 + 7.0 * i for i in range(16)]
-            for p_, y_ in zip(HEAD_CLK, ys):
+            # v1.2 (head r4): each of the 86 clock entries is an AREA pin at the centre of the child it clocks (Codex r4
+            # plan, canonical R0 = control face S): one CTS sink per child, delivered there at phi - R of that child
+            ch = json.loads((ROOT / HEAD_R4_PLAN).read_text())['children']
+            for p_ in HEAD_CLK:
                 if p_ in hm.ports:
-                    hm.ports[p_] = ('face', 1, 'W', 'M4', y_, 1)
+                    x0, y0, w0, h0 = ch[HEAD_CLK_CHILD[p_]]
+                    hm.ports[p_] = ('area', 1, round(x0 + w0 / 2, 3), round(y0 + h0 / 2, 3), 1)
             if 'rst_n' in hm.ports:
                 hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 440.0, 1)
     # v1.2: the hub composition's 14 clock entries = area pins in one row across the slot (one CTS sink each; the
