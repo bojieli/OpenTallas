@@ -21,10 +21,12 @@ def main():
     q, k, v = R.make_case(ctx, 1, 'normal')
     products = np.zeros((4, ctx, 128), dtype=np.float32)
     den = []
+    exp_bf16 = np.zeros((ctx, 4), dtype=np.uint16)
     for h in range(4):
         scores = G.mul(G.matvec_il(k[:, 0, :], G.to_bf16(q[h]), 128), R.SCALE)
         e = G.exp(G.add(scores, G.neg(scores.max())))
         den.append(G.lane_sum(e))
+        exp_bf16[:, h] = (G.bits(G.to_bf16(e)) >> 16).astype(np.uint16)
         products[h] = G.mul(v[:, 0, :], G.to_bf16(e)[:, None])
     leaves = np.zeros((4, 256, 128), dtype=np.float32)
     map_rows = []
@@ -45,6 +47,8 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)
     G.bits(products).astype('<u4').tofile(args.out / 'products.bin')
     G.bits(leaves).astype('<u4').tofile(args.out / 'leaves.bin')
+    R.fp8_encode(v[:, 0]).tofile(args.out / 'v-fp8.bin')
+    exp_bf16.astype('<u2').tofile(args.out / 'exp-bf16.bin')
     (args.out / 'ownership.json').write_text(json.dumps(map_rows) + '\n')
     files = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in args.out.iterdir() if p.is_file()}
     report = dict(context=ctx, position=ctx-1, query_heads=4, kv_heads=1, hd=128,

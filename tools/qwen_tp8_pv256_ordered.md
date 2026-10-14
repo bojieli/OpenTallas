@@ -47,3 +47,39 @@ single16-lane reference serialized all8192 invocations and measured1471835 cycle
 with stalls. It is deliberately not submitted as a priced production replacement.
 Placement, per-clock-root sinks, port dimensions, actual pair reach and wire/cut
 budgets are pending. Replication alone is not proof of physical or throughput fit.
+
+## Raw V-row candidate
+
+`ot_qwen_tp8_vrow_merge` implements the lower-traffic alternative as a new,
+uninstantiated transport module. One native owner pair has eight finite request
+slots. Every request records its source-owned position/epoch; the physical memory
+adapter echoes the slot, position and epoch with the actual FP8 V128B row and four
+BF16 exp values8B. Responses may arrive out of order, but downstream emission
+follows issue order. The per-residue scoreboard refuses anything other than
+ascending `c+256n`. Request and returned data are stored before presentation.
+Output backpressure holds data/tags stable; duplicate, unsolicited, wrong-position
+and stale-epoch returns fault. A new epoch begins only after all rows drain.
+
+The positive row gate feeds actual FP8 V and BF16 e to the real
+`ot_qwen_nearhbm_prod` RTL, four query heads x128 dimensions per row. Pair0 passes
+4096rows/2097152 product words in8034cycles, with2760 out-of-order responses.
+Pair1 passes the same count in8105cycles, with2757 out-of-order responses. Both
+data mutants produce four incorrect actual RTL product words. Position ordering,
+return tag and epoch mutations each fault. These cycles measure this component's
+finite synthetic memory responder, not the real HBM controller or a priced layer.
+All8192 rows and4194304 products are covered; QK and exp are still scalar inputs.
+
+Full-context partial-state map is `state[head][c][dimension]`, with c0..255.
+One owner pair stores c0..127 or128..255. Within a pair, the eight canonical residue
+contexts of one group (`c=128PAIR+8gam+j`, j0..7) may interleave through the original
+eight-cycle arithmetic recurrence while physical t[8] alternates each256 positions.
+There are sixteen groups per pair. The row harness uses this actual group/round/j
+order. It does not implement or qualify the existing head engine's accumulation
+state, hard SRAM banks, reduction tree, interleaving or production schedule.
+
+Run `tools/qwen_tp8_vrow_prod_run.sh` inside an admitted staged scratch reservation;
+the product-merge gate uses `tools/qwen_tp8_pv256_ordered_run.sh`. Both produce raw
+positive and intentional-mutant observations. Source manifests, actual binary
+hashes and raw verdicts live in `results/arch/qwen_tp8_pv256_ordered_1013`.
+The two admitted units exited0: `oth-ubuntu-3381924-1791951952` and
+`oth-ubuntu-3400082-1791952338`, each requested8GB/fourthreads on AGI.
