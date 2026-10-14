@@ -36,10 +36,16 @@ def main():
     ap.add_argument('--root-contract', type=Path)
     ap.add_argument('--candidate-controls',type=Path)
     ap.add_argument('--closed-column-view',type=Path)
+    ap.add_argument('--joint-geometry',type=Path)
+    ap.add_argument('--joint-staging',type=Path)
+    ap.add_argument('--regional-stations',type=Path)
     args = ap.parse_args()
     file = 'results/arch/qwen_tp8_1012/vm_band_composition_codex.json'
     comp = json.loads((ROOT/file).read_text())
     x0,y0=comp['origin_um'];W,H=comp['outline_um']
+    if args.joint_geometry:
+        jointgeometry=json.loads(args.joint_geometry.read_text());assert jointgeometry['qualification'] is False
+        comp['children']=jointgeometry['candidate_children']
     children = {(c['bay'],c['slot']):c for c in comp['children'] if 'bay' in c}
     plan=json.loads((ROOT/'results/arch/qwen_tp8_1012/vm_leaf_plan_claude.json').read_text())
     packing=json.loads((ROOT/'results/arch/qwen_tp8_1012/vm_bay_tiles_claude.json').read_text())
@@ -91,6 +97,19 @@ def main():
                 launch=path[-1],
                 capture_column=col,capture_pin=f'{port}[{s["output"][1]+bit}]',
                 A=pin(path[-1],'q',bit),B=[x0+c['at'][0]+cp['x'],y0+c['at'][1]+cp['y']]))
+    if args.joint_staging:
+        assert args.joint_geometry and args.regional_stations
+        joint=json.loads(args.joint_staging.read_text());selected=next(v for v in joint['alternatives']if v['all688_bits_necessary_screens_pass'])
+        regional=json.loads(args.regional_stations.read_text());regionalbits={e['lane']+'|'+str(e['bit']):(st,e)for st in regional['stations']for lane in st['matches']for e in lane['bits']}
+        hot={(e['lane'],e['bit'])for st in selected['stages']for e in st['bits']}
+        edges=[e for e in edges if not(e['kind']=='regional_boundary_lower_bound' and (e['lane'],e['bit'])in hot)]
+        relaypacket=json.load(gzip.open(ROOT/'results/arch/qwen_tp8_1012/vm_band_boundary_packet_codex.json.gz','rt'))
+        for stage in selected['stages']:
+            for e in stage['bits']:
+                st,re=regionalbits[e['lane']+'|'+str(e['bit'])];rb=int(e['regional_q_pin'].split('[')[1][:-1]);pd=relaypacket['one_stage_relay_actual_pins']['W']['d'][rb]['xy_um'];B=[st['at_um'][0]+pd[0],st['at_um'][1]+pd[1]]
+                edges.append(dict(kind='candidate_joint_region_input',lane=e['lane'],bit=e['bit'],A=re['original_launch_xy_um'],B=B,deep_entry_slack_ps=re['input_hop_tt_deep210_margin_ps']))
+                for kind,aa,bb,screen in [('candidate_joint_band_input',e['A'],e['D'],e['first_hop_screens']),('candidate_joint_band_output',e['Q'],e['B'],e['second_hop_screens'])]:
+                    edges.append(dict(kind=kind,lane=e['lane'],bit=e['bit'],A=aa,B=bb,deep_entry_slack_ps=screen[0]))
     root_edges=[]; root_coverage=None
     if args.root_contract:
         root=json.loads(args.root_contract.read_text())
@@ -106,6 +125,10 @@ def main():
         candidate=json.loads(args.candidate_controls.read_text())
         assert candidate['qualification'] is False and candidate['status']=='CANDIDATE_SLOT_GRAPH_NOT_ASSIGNED'
         edges+=candidate['candidate_control_edges']
+        for st in candidate['stations']:
+            xx,yy=st['slot']['at']
+            for n,fan in enumerate(candidate['station_fan_shapes']):
+                dx,dy=fan['at_relative_um'];comp['children'].append(dict(inst=f'candidate_control_c{st["column"]}_f{n}',at=[xx+dx-x0,yy+dy-y0],outline_um=[12.96,8.64 if fan['master']=='me' else 17.28],view=f'physical/ref_tile/qfd_vm_fan_{fan["master"]}/views/ot_qfd_vm_fan_t'))
     for e in edges:
         e['length_um']=round(abs(e['A'][0]-e['B'][0])+abs(e['A'][1]-e['B'][1]),4)
     timing={}
@@ -226,7 +249,8 @@ def main():
                     ['boundary assigned pins and pair-specific timing reach','new column real input pins'],
         root_payload_coverage=len(root_coverage) if root_coverage else 0,
         edges=edges,boundary_requests=boundary)
-    out=ROOT/('results/arch/qwen_tp8_1012/vm_band_paths_closed_station_candidate_codex.json' if args.candidate_controls and column_view else 'results/arch/qwen_tp8_1012/vm_band_paths_closed_column_codex.json' if column_view else 'results/arch/qwen_tp8_1012/vm_band_paths_station_candidate_codex.json' if args.candidate_controls else 'results/arch/qwen_tp8_1012/vm_band_paths_codex.json')
+    out=ROOT/('results/arch/qwen_tp8_1012/vm_band_paths_joint_candidate_codex.json' if args.joint_geometry else 'results/arch/qwen_tp8_1012/vm_band_paths_closed_station_candidate_codex.json' if args.candidate_controls and column_view else 'results/arch/qwen_tp8_1012/vm_band_paths_closed_column_codex.json' if column_view else 'results/arch/qwen_tp8_1012/vm_band_paths_station_candidate_codex.json' if args.candidate_controls else 'results/arch/qwen_tp8_1012/vm_band_paths_codex.json')
+    if args.joint_geometry:report['joint_candidate_inputs']={str(p):hashlib.sha256(p.read_bytes()).hexdigest()for p in (args.joint_geometry,args.joint_staging,args.regional_stations)}
     if args.candidate_controls:report['candidate_controls']=dict(path=str(args.candidate_controls),sha256=hashlib.sha256(args.candidate_controls.read_bytes()).hexdigest(),unresolved='no source entry, local equalization packing, loader/fill-fire, or root gather paths included')
     detail=dict(edges=report.pop('edges'),boundary_requests=report.pop('boundary_requests'))
     details=out.with_suffix('.details.json.gz')

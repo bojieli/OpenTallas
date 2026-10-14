@@ -8,9 +8,9 @@ from pinreg_audit import parse_lib,clock_refs,pin_metrics
 
 
 @lru_cache(None)
-def timing(view):
-    p=ROOT/view;lib=parse_lib(next(p.glob('*_tt.lib')))
-    refs=clock_refs(lib,json.loads((p/'insertion.json').read_text()),'tt')
+def timing(view,corner='tt'):
+    p=ROOT/view;lib=parse_lib(next(p.glob(f'*_{corner}.lib')))
+    refs=clock_refs(lib,json.loads((p/'insertion.json').read_text()),corner)
     return pin_metrics(lib,refs),refs
 
 

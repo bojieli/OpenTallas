@@ -2,13 +2,17 @@
 """Slot-based control station candidate graph using real fan pins and TT sides.
 Source entries/column consumers/gather ABI remain unassigned; no route is implied.
 """
-import collections,hashlib,json,math
+import argparse,collections,hashlib,json,math
 from pathlib import Path
 from vm_lef_pins import read
 from vm_band_pair import timing
 ROOT=Path(__file__).resolve().parents[2];A=ROOT/'results/arch/qwen_tp8_1012'
 def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--joint-geometry',type=Path);args=ap.parse_args()
  comp=json.loads((A/'vm_band_composition_codex.json').read_text());packet=json.loads((A/'vm_band_boundary_packet_codex.json').read_text());pool=packet['spare_slots'];cols=sorted((c for c in comp['children']if c['inst'].startswith('u_c')),key=lambda c:int(c['inst'][3:]));x0,y0=comp['origin_um']
+ if args.joint_geometry:
+  joint=json.loads(args.joint_geometry.read_text());reserved={(c['candidate_destination']['bay'],c['candidate_destination']['slot'])for c in joint['candidate_children']if 'candidate_destination'in c}
+  pool=[s for s in pool if (s['bay'],s['slot'])not in reserved]
  free=set(range(len(pool)));stations=[]
  for col,c in enumerate(cols):
   cx=x0+c['at'][0]+c['outline_um'][0]/2;cy=y0+c['at'][1]+c['outline_um'][1]/2
@@ -62,5 +66,5 @@ def main():
   setup_reserve_ps=210,station_count=32,spare_slot_count=len(pool),unassigned_remaining_whole_slots=len(free),
   candidate_control_edges=candidate_edges,station_fan_shapes=[{k:v for k,v in b.items()if k!='bits'}for b in bundle],stations=stations,actual_TT_valid_station_links=links,schedule=schedule,
   caveats=['Station slots are greedy alternatives; they may conflict with boundary-extension or gather candidates.','Real source entry/column fanout/gather pins not assigned; this graph only checks all actual station fan d/q bits.','Existing logical3levels cannot replace graph hop schedule; source phases/epochs/ME require re-alignment and full bench.','Local epoch16 opaque dictionary versus direct21 request/capture/drain costs remain conditional.','No combined route cut or SS/hold/clock entry classification proof.'])
- (A/'vm_band_station_candidate_codex.json').write_text(json.dumps(out,indent=1)+'\n');print(dict(graph_edges=len(links),schedule=schedule))
+ (A/('vm_band_station_joint_candidate_codex.json' if args.joint_geometry else 'vm_band_station_candidate_codex.json')).write_text(json.dumps(out,indent=1)+'\n');print(dict(graph_edges=len(links),schedule=schedule))
 if __name__=='__main__':main()
