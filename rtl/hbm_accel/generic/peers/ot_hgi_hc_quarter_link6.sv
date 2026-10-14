@@ -25,13 +25,13 @@ module ot_hgi_hc_quarter_link6(
  assign ck_o={valid[5][2:1],data[5][345:258]};
  assign sc_o={valid[5][0],data[5][257:0]};assign fb_o=feedback[5];
 endmodule
-// Independent negative adapter: quarter chunk0/chunk1 association is wrong.
+// Independent negative adapter: corrupt chunk magnitudes while preserving every tag and valid.
 module ot_hgi_hc_quarter_link6_assoc_mut(
  input wire clk,rst_n,input wire[139:0]dn_i,input wire[89:0]ck_i,
  input wire[258:0]sc_i,input wire[7:0]fb_i,
  output wire[139:0]dn_o,output wire[89:0]ck_o,output wire[258:0]sc_o,output wire[7:0]fb_o
 );
- wire[89:0]bad_ck={ck_i[89:88],ck_i[87:76],ck_i[31:0],ck_i[43:32],ck_i[75:44]};
+ wire[89:0]bad_ck={ck_i[89:88],ck_i[87:76],(ck_i[75:44]^32'h00800000),ck_i[43:32],(ck_i[31:0]^32'h00800000)};
  ot_hgi_hc_quarter_link6 u(.clk(clk),.rst_n(rst_n),.dn_i(dn_i),.ck_i(bad_ck),.sc_i(sc_i),.fb_i(fb_i),.*);
 endmodule
 `default_nettype wire
