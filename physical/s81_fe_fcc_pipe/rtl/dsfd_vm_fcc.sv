@@ -1,3 +1,4 @@
+(* keep_hierarchy = "yes" *)
 module dsfd_vm_be_kreg #(parameter integer W = 1, parameter integer ID = 0) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
     always @(posedge clk) q <= d;
 endmodule
@@ -48,6 +49,7 @@ module dsfd_vm_fob #(parameter integer STALE = 0, parameter integer WEV = 1, par
     assign k_o = {k_v, k_we, k_row, k_m};
 endmodule
 
+(* keep_hierarchy = "yes" *)
 module dsfd_vm_fcc (
     input  wire [0:0]    ck, input wire rni,
     input  wire [0:0]    cks, input wire [0:0] rss,
@@ -314,6 +316,7 @@ module ot_async_fifo #(
     end
 endmodule
 
+(* keep_hierarchy = "yes" *)
 module ot_async_fifo_select_copy #(parameter integer W=16,ID=0,RESET_ONE=0)
 (input wire clk,rst_n,input wire [W-1:0] d,output reg [W-1:0] q);
     (* keep = 1 *) wire [W-1:0] dq=d;

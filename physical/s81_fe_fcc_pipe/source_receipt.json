@@ -1,7 +1,7 @@
 {
   "schema": "opentallas.s81.fcc-pipe-source.v1",
   "status": "UNALLOCATED_SOURCE_CANDIDATE",
-  "canonical_commit": "ff1bc711b81186089327b4daaea73f0b615fc384",
+  "canonical_commit": "0310939bd2664a05be43352a05e7b970dc8d6679",
   "source_files": {
     "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "74c2b0684587683573d204bba5d6371c4a6a6900f90e434e25fc0e5ee1dad6bf",
     "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_fe_h.sv": "cc49538e13cbc8be8d4b0e1d97add56619227275846d35f2c5c2f704afec86fa",
@@ -16,7 +16,7 @@
     "OT_SPVM_RESET_ACK",
     "OT_VMFE_MUT_FCC_PIPE_SELECT"
   ],
-  "derived_sha256": "b69aefc2da5b37d6bdeb558e9f0fcb6f372433e5737115bc560397cdb999fc86",
+  "derived_sha256": "2886d077f9a47463b7ea056471066b7be917063297dac8321e033fb017bcf66e",
   "nominal_extra_ff": 1384,
   "new_outline_um": [
     181.44,
