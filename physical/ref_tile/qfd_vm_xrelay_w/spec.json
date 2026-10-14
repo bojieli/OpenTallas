@@ -70,7 +70,12 @@
   ],
   "views_to": "physical/ref_tile/qfd_vm_xrelay_w/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_xrelay_w",
-  "cycles_added": 0
+  "cycles_added": 0,
+  "reroute_reason": {
+   "kind": "slot_change",
+   "slot_change_request": "el1011-qwen-tp8.log 2026-10-13 PLAN: VM SLOT CHANGE REQUEST v2 (bit-plane VM, die-assembled leaves: regions of bank / SU / FIFO leaves with per-consumer control leaves, one row of 32 xcol leaves in the band, relay strips)",
+   "why": "mirrored pin faces (d on E, q on W) for the westward x lanes of the strip plan; the closed qfd_vm_xrelay_t view has d on W, q on E (the die may instead place the closed view mirrored about y where its lattice allows)"
+  }
  },
  "macros": [],
  "children": [],
