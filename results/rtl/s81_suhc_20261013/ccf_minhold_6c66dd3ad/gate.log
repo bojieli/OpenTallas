@@ -1,0 +1,16 @@
+GATE WARN util: utilisation 34% outside 45%-60% (std 6855 + macro 66617 in core 218406 um2)  -> FIX: resize the outline to util 0.50-0.55 (drop 'outline', set util)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 24 GB; inputs ship there before admission
+GATE INFO remote: remote log /tmp/ref_gate_s81hc_ccfh2_ref_20261013-215151.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81hc_ccfh2_ref-20261013-215151
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 100 s (gate total 3023 s)
+GATE WARN util: synthesized std area 6855 um2 + macros 66617 in core 218406: util 34%  -> FIX: set "std_area_um2": 6855 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_s81_hc_ccf cells 48,972 flops 14,191 depth 338.4 ps util 0.337 reach 0.0 um (1.7 s)
+GATE WARN textbook.util_channel: utilisation 33.7% outside 45%-65% (std 6988 + macro 66617 um2 in 218406 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR DPL-0033] detailed placement checks failed during check placement.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 4 (fine) leaves 1796 sinks 14194 cells 13101 leaf arrival 778.5..810.2 ps (spread 31.8) pad 62.7 / 16.2 ps
+GATE INFO clock_spine: OT_SPINE iter 5 (fine) leaves 1796 sinks 14194 cells 13159 leaf arrival 781.5..810.2 ps (spread 28.7) pad 62.7 / 16.4 ps
+GATE INFO clock_rule: root port:sk: 14,196 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+PRE_ROUTE_GATE: FAIL (1 fail, 4 warn)
+GATE: s81hc_ccfh2_ref/gate_result.json written (clock evidence for the submit gate: commit it with the kit)
