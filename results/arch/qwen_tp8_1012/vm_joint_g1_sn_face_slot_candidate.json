@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.vm-sn-face-slot-candidate.v1",
+ "status": "DIAGNOSTIC_SLOT_PURPOSE_ONLY_NOT_FROZEN",
+ "region": 1,
+ "source_prototype_commit": "05fc106df",
+ "proposed_engine_edges_added": 1,
+ "proposed_total_XPR_with_one_added_band_edge": 14,
+ "purpose": "Replace rejected tall W regional exit stations, not add another pipeline edge. All688 exact old source-to-SN and SN-to-band paths still require actual ETM mapping and DATA RC. These N slots do not claim an S slot fits12.96um.",
+ "existing_masters_preserved": 152,
+ "geometry_gap_um": 2.16,
+ "geometry_collisions": [],
+ "outer_N_gap_um": 2.16,
+ "source_hashes": {
+  "physical/ref_tile/qfd_vm_rr4_t/views/ot_qfd_vm_rr4_t/ot_qfd_vm_rr4_t.lef": "71dfa93c4318712499cd2e1dd16537ce9141979f4821cb92f60da6df6ebdd549",
+  "physical/ref_tile/qfd_vm_rr2_t/views/ot_qfd_vm_rr2_t/ot_qfd_vm_rr2_t.lef": "dfeef8730941c7dfff712ff161e971cf91346a2f86f531db9ad8d2fd11af856c",
+  "physical/ref_tile/qfd_tree_delay2_t/views/ot_qwen_tree_delay2_t/ot_qwen_tree_delay2_t.lef": "408a0097b7e719879aec8d939c45c4d4090ae818ec68281ea5224d1559222ade",
+  "physical/ref_tile/qfd_vm_bank_t/views/ot_qfd_vm_bank_t/ot_qfd_vm_bank_t.lef": "c79b13f7c056921b359ee878738fb7dcf01a133bb5b7e3859db34d4c75bdd986",
+  "physical/ref_tile/qfd_vm_bctl_t/views/ot_qfd_vm_bctl_t/ot_qfd_vm_bctl_t.lef": "3ba36cafc3dee6772e0724d07edf6685380047a38c8aa965094a9bbbc07b2fec",
+  "physical/ref_tile/qfd_tree_delay1_t/views/ot_qwen_tree_delay1_t/ot_qwen_tree_delay1_t.lef": "9077b7e7aa5446a0464855e9ed339f706fed577e16de896a155d276328597498",
+  "physical/ref_tile/qfd_vm_xfifo8_codex/views/ot_qfd_vm_xfifo8_t/ot_qfd_vm_xfifo8_t.lef": "8c7d4cf5304127905a70980710125584d1749e18772049c4dac14590c411fb45",
+  "physical/ref_tile/qfd_vm_su1024_codex/views/ot_qfd_vm_su1024_t/ot_qfd_vm_su1024_t.lef": "a5412001f131fc25103d247908617296f566f5505a7fd63069c5e3e139922634",
+  "physical/ref_tile/qfd_vm_su_t/views/ot_qfd_vm_su_t/ot_qfd_vm_su_t.lef": "6300ca86d6e7a56ebf657172332f933eecfd0cc1d666e37f867be7bfbc4eacb7",
+  "physical/ref_tile/qfd_vm_sctl_t/views/ot_qfd_vm_sctl_t/ot_qfd_vm_sctl_t.lef": "1960b253c6a45ef4cc9be156e781a78e88a1b4eca8ba93cc83e7f4fcd83244cd",
+  "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t/ot_qfd_vm_xpad2_t.lef": "acc2e5b4932504eda7bfa19b425b1d9834b896e5b619ef29fab68d0438031e58",
+  "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t/ot_qfd_vm_xrelay_t.lef": "5b9c49d7b139b7196fa20e4920590dfcd08f18062be377f6e4421e8d6b35447e",
+  "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w/ot_qfd_vm_xrelay_w.lef": "e44328bad38c54bf64fdf93de9f0c806685ce9292f104a05f8e2947d4ed43c4c",
+  "results/arch/qwen_tp8_1012/vm_leaf_plan_claude.json": "4bdcb1bedf37ad79393d1d2d236331117af2a7bae841ff4c3e55636166e2ee78",
+  "results/arch/qwen_tp8_1012/vm_bay_tiles_claude.json": "c30a0e30f9733809447f29960e12e8b61bf045df99d5f40e6cd34e8662710675",
+  "results/arch/qwen_tp8_1012/vm_rg6.json": "7d5c388cb79d0ee333451d123e5371af3e79cf524fdb9bca57a30657e7facfb4"
+ },
+ "stations": [
+  {
+   "name": "g1_sn_exit1",
+   "at_um": [
+    15318.72,
+    18115.92
+   ],
+   "outline_um": [
+    129.6,
+    12.96
+   ],
+   "master": "ot_qfd_vm_face_sn_e1",
+   "d_face": "S",
+   "q_face": "N",
+   "clock_pin": "clk",
+   "engine_early_pin": "me_e"
+  },
+  {
+   "name": "g1_sn_exit2",
+   "at_um": [
+    15450.48,
+    18115.92
+   ],
+   "outline_um": [
+    129.6,
+    12.96
+   ],
+   "master": "ot_qfd_vm_face_sn_e1",
+   "d_face": "S",
+   "q_face": "N",
+   "clock_pin": "clk",
+   "engine_early_pin": "me_e"
+  }
+ ],
+ "assigned_pins": null,
+ "actual_normalized_endpoint_data": null
+}
