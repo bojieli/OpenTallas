@@ -11,12 +11,27 @@
 #   post_drt  the plain serial boundary (io_plain.sdc was just read)
 set ot_sb_stage [file tail [dict get [info frame -1] file]]
 puts "OT_SER hook invoked caller=$ot_sb_stage"
+# Balance the sequential sinks themselves. report_clock_latency's first row is
+# an extremum over unrelated macro and register trees, not their mean; it can
+# delay the wrong root in this mixed SRAM / flop block.
 proc ot_ser_lat {clk} {
-  sta::redirect_string_begin
-  set rc [catch {report_clock_latency -clock $clk}]
-  set s [sta::redirect_string_end]
-  if {!$rc && [regexp {rise -> rise.*?([0-9.]+)\s+([0-9.]+)\s+latency} $s -> lo hi]} { return [expr {($lo + $hi) / 2.0}] }
-  return -1
+  sta::find_timing_paths -path_delay max -group_path_count 1
+  set sum 0.0; set count 0; set lo 1e30; set hi -1e30
+  set blk [ord::get_db_block]
+  foreach p [all_registers -clock_pins -clock [get_clocks $clk]] {
+    set cell [get_cells -quiet -of_objects $p]
+    if {![llength $cell]} continue
+    set inst [$blk findInst [get_full_name $cell]]
+    if {$inst ne "NULL" && [[$inst getMaster] isBlock]} continue
+    set v [get_property $p arrival_max_rise]
+    if {![string is double -strict $v]} continue
+    set sum [expr {$sum + $v}]; incr count
+    set lo [expr {min($lo, $v)}]; set hi [expr {max($hi, $v)}]
+  }
+  if {$count == 0} { return -1 }
+  set mean [expr {$sum / $count}]
+  puts "OT_SER_SINKS $clk registers=$count mean=$mean min=$lo max=$hi"
+  return $mean
 }
 proc ot_ser_port_of {clk} {
   set src [get_property [get_clocks $clk] sources]
@@ -59,6 +74,7 @@ proc ot_ser_balance {} {
     [$b findITerm A] connect $n
     [$b findITerm Y] connect $nn
     incr k
+    detailed_placement
     estimate_parasitics -placement
     set now [ot_ser_lat $early]
   }
