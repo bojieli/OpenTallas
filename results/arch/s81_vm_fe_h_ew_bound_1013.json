@@ -1,0 +1,384 @@
+{
+ "schema": "opentallas.s81_vm_fe_h.ew_bound.v1",
+ "agent": "el1013-s81-vmfe/B8",
+ "outline": [
+  1520.064,
+  695.52
+ ],
+ "limit": 0.6,
+ "tracks_per_um_usable": {
+  "free": 39.54,
+  "over_m5_leaf": 12.5,
+  "over_fsr": 0.0
+ },
+ "no_lane_in_slot_bound": 0.533,
+ "cases": [
+  {
+   "case": "frozen structure, clt row at x 0",
+   "clt_row_x0": 0.0,
+   "two_level_drain": false,
+   "lane_um": [
+    216.0,
+    129.6
+   ],
+   "m8_tracks_per_um": 0.0,
+   "height_um": 695.52,
+   "bound": 0.653,
+   "worst_cut_x": 912.6000000000001,
+   "demand_bits": {
+    "capture": 4429,
+    "b4b5": 1522,
+    "returns": 2248,
+    "k": 160
+   },
+   "supply_tracks": 12808,
+   "cuts_over_0p60": 17,
+   "lanes_x0": [
+    0.0,
+    0.0,
+    216.0,
+    432.0,
+    1080.0,
+    1080.0,
+    1296.0,
+    1304.064,
+    1304.064,
+    1304.064
+   ],
+   "centres": {
+    "fld": 976.0,
+    "fcn": 860.0,
+    "fcc": 282.0,
+    "fcw": 174.0
+   },
+   "premux_x": null
+  },
+  {
+   "case": "frozen structure, clt row centred (+115.2)",
+   "clt_row_x0": 115.2,
+   "two_level_drain": false,
+   "lane_um": [
+    216.0,
+    129.6
+   ],
+   "m8_tracks_per_um": 0.0,
+   "height_um": 695.52,
+   "bound": 0.819,
+   "worst_cut_x": 826.2000000000002,
+   "demand_bits": {
+    "capture": 4704,
+    "b4b5": 1522,
+    "returns": 2810,
+    "k": 256
+   },
+   "supply_tracks": 11348,
+   "cuts_over_0p60": 50,
+   "lanes_x0": [
+    0.0,
+    108.0,
+    216.0,
+    324.0,
+    432.0,
+    864.0,
+    1080.0,
+    1080.0,
+    1296.0,
+    1296.0
+   ],
+   "centres": {
+    "fld": 868.0,
+    "fcn": 228.0,
+    "fcc": 776.0,
+    "fcw": 1184.0
+   },
+   "premux_x": null
+  },
+  {
+   "case": "two-level drain (5 lanes -> pre-mux -> fld)",
+   "clt_row_x0": 0.0,
+   "two_level_drain": true,
+   "lane_um": [
+    216.0,
+    129.6
+   ],
+   "m8_tracks_per_um": 0.0,
+   "height_um": 695.52,
+   "bound": 0.592,
+   "worst_cut_x": 1085.4000000000003,
+   "demand_bits": {
+    "capture": 3130,
+    "b4b5": 1010,
+    "returns": 1654,
+    "k": 96
+   },
+   "supply_tracks": 9946,
+   "cuts_over_0p60": 0,
+   "lanes_x0": [
+    0.0,
+    0.0,
+    216.0,
+    864.0,
+    1080.0,
+    1080.0,
+    1296.0,
+    1296.0,
+    1296.0,
+    1304.064
+   ],
+   "centres": {
+    "fld": 120.0,
+    "fcn": 498.0,
+    "fcc": 668.0,
+    "fcw": 818.0
+   },
+   "premux_x": [
+    60.0,
+    1234.0
+   ]
+  },
+  {
+   "case": "lane tile 190.08 x 103.68 (cluster free-area rule)",
+   "clt_row_x0": 0.0,
+   "two_level_drain": false,
+   "lane_um": [
+    190.08,
+    103.68
+   ],
+   "m8_tracks_per_um": 0.0,
+   "height_um": 695.52,
+   "bound": 0.624,
+   "worst_cut_x": 793.8000000000002,
+   "demand_bits": {
+    "capture": 4704,
+    "b4b5": 1778,
+    "returns": 1686,
+    "k": 224
+   },
+   "supply_tracks": 13450,
+   "cuts_over_0p60": 9,
+   "lanes_x0": [
+    0.0,
+    108.0,
+    216.0,
+    648.0,
+    1080.0,
+    1080.0,
+    1296.0,
+    1296.0,
+    1304.064,
+    1304.064
+   ],
+   "centres": {
+    "fld": 976.0,
+    "fcn": 120.0,
+    "fcc": 506.0,
+    "fcw": 1346.0
+   },
+   "premux_x": null
+  },
+  {
+   "case": "lane tile 190.08 x 103.68 + two-level drain",
+   "clt_row_x0": 0.0,
+   "two_level_drain": true,
+   "lane_um": [
+    190.08,
+    103.68
+   ],
+   "m8_tracks_per_um": 0.0,
+   "height_um": 695.52,
+   "bound": 0.577,
+   "worst_cut_x": 405.00000000000006,
+   "demand_bits": {
+    "capture": 3822,
+    "b4b5": 1065,
+    "returns": 1092,
+    "k": 160
+   },
+   "supply_tracks": 10647,
+   "cuts_over_0p60": 0,
+   "lanes_x0": [
+    0.0,
+    0.0,
+    216.0,
+    216.0,
+    972.0,
+    1080.0,
+    1188.0,
+    1296.0,
+    1304.064,
+    1304.064
+   ],
+   "centres": {
+    "fld": 922.0,
+    "fcn": 806.0,
+    "fcc": 506.0,
+    "fcw": 698.0
+   },
+   "premux_x": [
+    168.0,
+    1234.0
+   ]
+  },
+  {
+   "case": "M8 H grant over the slot (75 % of 12.5 / um)",
+   "clt_row_x0": 0.0,
+   "two_level_drain": false,
+   "lane_um": [
+    216.0,
+    129.6
+   ],
+   "m8_tracks_per_um": 9.375,
+   "height_um": 695.52,
+   "bound": 0.416,
+   "worst_cut_x": 912.6000000000001,
+   "demand_bits": {
+    "capture": 4429,
+    "b4b5": 1778,
+    "returns": 2248,
+    "k": 160
+   },
+   "supply_tracks": 20730,
+   "cuts_over_0p60": 0,
+   "lanes_x0": [
+    0.0,
+    108.0,
+    216.0,
+    432.0,
+    1080.0,
+    1080.0,
+    1304.064,
+    1304.064,
+    1304.064,
+    1304.064
+   ],
+   "centres": {
+    "fld": 976.0,
+    "fcn": 336.0,
+    "fcc": 228.0,
+    "fcw": 1346.0
+   },
+   "premux_x": null
+  },
+  {
+   "case": "slot height +64.8 um",
+   "clt_row_x0": 0.0,
+   "two_level_drain": false,
+   "lane_um": [
+    216.0,
+    129.6
+   ],
+   "m8_tracks_per_um": 0.0,
+   "height_um": 760.3199999999999,
+   "bound": 0.539,
+   "worst_cut_x": 1085.4000000000003,
+   "demand_bits": {
+    "capture": 3130,
+    "b4b5": 1266,
+    "returns": 2248,
+    "k": 96
+   },
+   "supply_tracks": 12508,
+   "cuts_over_0p60": 0,
+   "lanes_x0": [
+    0.0,
+    0.0,
+    216.0,
+    540.0,
+    1080.0,
+    1080.0,
+    1296.0,
+    1296.0,
+    1304.064,
+    1304.064
+   ],
+   "centres": {
+    "fld": 976.0,
+    "fcn": 174.0,
+    "fcc": 228.0,
+    "fcw": 1238.0
+   },
+   "premux_x": null
+  },
+  {
+   "case": "slot height +129.6 um",
+   "clt_row_x0": 0.0,
+   "two_level_drain": false,
+   "lane_um": [
+    216.0,
+    129.6
+   ],
+   "m8_tracks_per_um": 0.0,
+   "height_um": 825.12,
+   "bound": 0.458,
+   "worst_cut_x": 685.8000000000002,
+   "demand_bits": {
+    "capture": 4448,
+    "b4b5": 1709,
+    "returns": 1686,
+    "k": 256
+   },
+   "supply_tracks": 17698,
+   "cuts_over_0p60": 0,
+   "lanes_x0": [
+    0.0,
+    108.0,
+    216.0,
+    540.0,
+    1080.0,
+    1080.0,
+    1296.0,
+    1296.0,
+    1304.064,
+    1304.064
+   ],
+   "centres": {
+    "fld": 976.0,
+    "fcn": 174.0,
+    "fcc": 444.0,
+    "fcw": 1238.0
+   },
+   "premux_x": null
+  },
+  {
+   "case": "slot height +194.4 um",
+   "clt_row_x0": 0.0,
+   "two_level_drain": false,
+   "lane_um": [
+    216.0,
+    129.6
+   ],
+   "m8_tracks_per_um": 0.0,
+   "height_um": 889.92,
+   "bound": 0.393,
+   "worst_cut_x": 912.6000000000001,
+   "demand_bits": {
+    "capture": 4429,
+    "b4b5": 1778,
+    "returns": 2248,
+    "k": 160
+   },
+   "supply_tracks": 21896,
+   "cuts_over_0p60": 0,
+   "lanes_x0": [
+    0.0,
+    0.0,
+    216.0,
+    432.0,
+    1080.0,
+    1080.0,
+    1304.064,
+    1304.064,
+    1304.064,
+    1304.064
+   ],
+   "centres": {
+    "fld": 976.0,
+    "fcn": 336.0,
+    "fcc": 282.0,
+    "fcw": 1076.0
+   },
+   "premux_x": null
+  }
+ ],
+ "reading": "bound = demand lower bound / supply upper bound of the worst vertical cut for the best placement found; > 0.60: no plan can pass; <= 0.60: NOT a pass (pin access, reach, local windows and the detour onto the clt-row M6 are not in it)"
+}
