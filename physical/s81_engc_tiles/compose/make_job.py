@@ -78,7 +78,7 @@ def main():
                              "-206.5 ps at 16,258 sinks/root, SRAM read path -1568.6 ps). New in this submission: per-child clock entry delay "
                              "(kept HB4 chain + BUFx12 driver placed at each child's clock pin, leaf spread 64 ps TT / 66 ps FF measured after CTS, "
                              "was 400 ps with the bare top tree), children re-routed with face-pin keepout (child_lint 0 pins blocked), sliver rows "
-                             "removed before the PDN, child seams that hold rows opened to >= 12 um (win / io +3.456 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, leaf / die reset release multicycle 2 (rst_mcp2 intent), fixed vclk.",
+                             "removed before the PDN, child seams that hold rows opened to >= 12 um (io +4.32 / lkp -4.32 um in y, pb0 -3.456 and sink -2.16 um in x), no port buffers, leaf / die reset release multicycle 2 (rst_mcp2 intent), fixed vclk.",
     }
     print(json.dumps(spec, indent=1))
 
