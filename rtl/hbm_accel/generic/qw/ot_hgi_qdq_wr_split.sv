@@ -9,9 +9,10 @@ module ot_hgi_qdq_wr_split #(parameter integer LQ=10,OD=64,RQ=16)(
  input wire [511:0] y,output wire [2239:0] wwq,
  input wire [7:0] wwq_cr,wwq_done,
  output wire wg_req,input wire wg_gnt,i_act,
- output wire o_wf,o_fin,o_bad,o_idle
+ output wire o_wf,o_fin,o_bad,o_idle,
+ output wire pay_bad,fin_bad
 );
- wire snapshot_v;wire [63:0] snapshot;wire pay_bad,fin_bad,fin_idle;
+ wire snapshot_v;wire [63:0] snapshot;wire fin_idle;
  ot_hgi_qdq_wr_pay #(.LQ(LQ),.OD(OD),.RQ(RQ)) u_pay(
  .clk(clk_pay),.rst_n(rst_n),.m_v(m_v),.m(m),.i_bad(i_bad),.vo(vo),.qfault(qfault),.dfault(dfault),.y(y),
  .wwq(wwq),.wwq_cr(wwq_cr),.wg_req(wg_req),.wg_gnt(wg_gnt),.i_act(i_act),
