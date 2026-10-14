@@ -42,7 +42,7 @@
   "allow_none": true
  },
  "route": {
-  "pd": 0.15,
+  "pd": 0.35,
   "threads": 16,
   "peak_ram_gb": 24,
   "pin_min_tracks": 1,
@@ -50,11 +50,11 @@
    "group_max": 1
   }
  },
- "structural_change": "ovd w2 failed GRT with about17000markers at SRAM west edge, crossing gather escape and read-output fanout. Remove all gather state and decoder launch outputs from SRAM leaf; make independent no-macro gather leaf. Existing state/register edges unchanged; preserve closed decoder and lane constituents. Gather86.4um width leaves three1024-bit vertical streams above low decoder-aligned output: conservative M3+M5 capacity about2940 afterderate, >1.0cut. Width172.8 supplies about5880 beforePGreserve; all-fanout placement atoldwidth diverged twice. Widened leaf and parent alternative864um, no added edge.",
+ "structural_change": "ovd w2 failed GRT with about17000markers at SRAM west edge, crossing gather escape and read-output fanout. Remove all gather state and decoder launch outputs from SRAM leaf; make independent no-macro gather leaf. Existing state/register edges unchanged; preserve closed decoder and lane constituents. Gather86.4um width leaves three1024-bit vertical streams above low decoder-aligned output: conservative M3+M5 capacity about2940 afterderate, >1.0cut. Width172.8 supplies about5880 beforePGreserve; all-fanout placement atoldwidth diverged twice. Widened leaf and parent alternative864um, no added edge. Measured s3 GPL has21465FIRM hold/pin cells but only4149movable/312um2 logic, then >650% inflation/divergence. Keep pin flops, omit fixed pre-placement hold chains for this sparse gather leaf; route must still meet unchanged FF hold and may add actual hold repair.",
  "job": {
   "owner": "Codex:hbm_quant_sfu_2240",
   "branch": "codex/hbm-quant-sfu-2240",
-  "tag": "s3",
+  "tag": "s4",
   "purpose": "Alternative WQ3 data-head structural split: gather and SRAM/write state are separate leaves, existing registers reassigned with zero additional edges; no native die adoption claimed. Pin-bound 4096-bit W input face and1024-bit E output face fixes388.8um height despite measured1711um2 standard area; sparse placement target0.15 avoids filler-dominated GPL divergence seen at0.50. Width172.8 provides routing capacity for3\u00d71024 vertical streams; source area remains pin/channel-bound.",
   "benched_by": "quant_wide_ov",
   "extra_paths": [
@@ -91,5 +91,7 @@
  },
  "why_floorplan": "cluster centre (216, 259.2), 259.2 x 172.8: W face = gather pin registers of rows 1 / 2 (facing, 71 um), S / N faces west = rows 0 / 3 (<= 440 um), E face = decoder x (dxl W face 43 um away) and the write beat of rows 1 / 2, S / N faces east = the write beat of rows 0 / 3 (<= ~510 um to the write leaves at x 730), S face = decode result y from daq's S pins and the control seam; pins on every track (4,096 gather pins: 0.57 of the W face, <= 0.67 elsewhere); w2: explicit balanced pin placement (pin_balance, a disjoint range for every port): w1 crashed twice at IO placement in the route (PPL-0086: the route's 32-pin ordered groups did not fit the N face; the gate's placement does not form those groups and had passed)",
  "clock": "spine",
- "recipe": 2
+ "recipe": 2,
+ "inhold": false,
+ "outhold": false
 }
