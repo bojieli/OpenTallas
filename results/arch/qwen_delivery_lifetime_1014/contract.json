@@ -95,5 +95,10 @@
     "max_queries": 549755813888,
     "query_rate": "actual x_re nonzero every active coherent edge, max1/tile/step",
     "local_outstanding": "Actual final TOREG46 coherent steps after last issue; clear47. Declared local drain49 is conservative two additional steps. Actual query-output peak46 excludes transport; full event/ACK peak and buffering still require trace."
+  },
+  "identity_domains": {
+    "operation_context16": "Internal next_context in component is an accepted-operation namespace only; it must not replace HOST/dispatch whole-token epoch allocation.",
+    "shared_token16": "Full TAG59 sole shared allocator ownership remains HOST/dispatch. Real shared-token binding to held descriptor, VM query/event records and output/drain provenance is pending. No second whole-token allocator implemented or adopted.",
+    "production_missing_seam": "Current component held descriptor lacks actual shared-token input/storage; future source-bound composition must bind or add it and measure extra seam/state/cycles before adoption."
   }
 }
