@@ -38,7 +38,7 @@
     862
   ],
   "throughput_price_status": "UNMEASURED-vs-price; no repricing or throughput qualification claimed",
-  "physical_status": "source-bound CTS running; mapped flop census pending",
+  "physical_status": "source-bound CTS admitted; synthesis/floorplan/PDN complete, placement running",
   "qualified": false,
   "mutants": {
     "1": {
@@ -70,5 +70,20 @@
       "errors": 7
     }
   },
-  "mutants_launcher_exit": 0
+  "mutants_launcher_exit": 0,
+  "mapped_census": {
+    "dff_cells": 14674,
+    "baseline_dff_cells": 13751,
+    "added_dff_cells": 923,
+    "under_15000": true,
+    "count_command": "rg -c \"^[[:space:]]*DFF\" 1_2_yosys.v",
+    "std_area_um2": 10315.6,
+    "instance_area_um2": 32253.5
+  },
+  "physical_run": {
+    "host": "ot-epyc1tb",
+    "remote_dir": "/srv/opentallas-scratch/claude/ref_gate/b2_dma_mv_q5_ref-20261013-230557",
+    "source_commit": "9b1e5547d",
+    "local_gate_session": 99756
+  }
 }
