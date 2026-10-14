@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.be_gray_actual_pre_repair_paths.v1",
+  "source_commit": "c7cf30d5d",
+  "snapshot": "4_1_pre_repair_setup_hold.odb",
+  "SDC": "exact4_1_pre_repair_setup_hold.sdc copied byteidentical to gray_snapshot_report/3_place.sdc for official load/mm sync",
+  "constraints_changed": false,
+  "correlation_credit": false,
+  "SS_worst_ps": -339.2782,
+  "SS_startpoint": " u_rc1.u_gray.g_c[1].mem[5][53]$_DFFE_PP_",
+  "SS_endpoint": "u_rc1.u_gray.g_c[1].od[53]$_DFFE_PP_",
+  "FF_worst_ps": -90.6271,
+  "FF_startpoint": " o_d[703] (input port clocked by ot_lb_v_core_clk)",
+  "FF_endpoint": "q_d[703]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clk)",
+  "FF_path_class": "unbound actual-parent source virtual IO; no global source timing correlation justified",
+  "physical_qualified": false,
+  "old_CLOSED_replaced": false
+}
