@@ -51,8 +51,13 @@ proc clock_tree_synthesis {args} {
     set macro [$b findInst u_$child]
     set net [[$macro findITerm ck] getNet]
     if {$net eq "NULL"} { error "ENGC macro clock disconnected: $child" }
+    # Spine completion protects its leaf nets; open only this branch while
+    # adding the two local reset clocks, then restore the same protection.
+    $net setDoNotTouch 0
+    [$it getInst] setDoNotTouch 0
     $it connect $net
     [$it getInst] setDoNotTouch 1
+    $net setDoNotTouch 1
     puts "ENGC reset clock [[$it getInst] getName]/[[$it getMTerm] getName] = u_${child}/ck net [$net getName]"
   }
   estimate_parasitics -placement
