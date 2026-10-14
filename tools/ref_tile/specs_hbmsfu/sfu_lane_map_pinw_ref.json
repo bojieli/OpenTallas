@@ -1,0 +1,114 @@
+{
+ "name": "sfu_lane_map_pinw_ref",
+ "top": "ot_hgi_sfu_lane_map",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_delay_ring.sv",
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 103.68,
+  "h": 54.0
+ },
+ "util": 0.52,
+ "clock": "spine",
+ "recipe": 2,
+ "macros": [],
+ "pins": {
+  "N": [
+   "o_ld_c"
+  ],
+  "W": [
+   "o_pass",
+   "o_o_v",
+   "o_i_v",
+   "o_krow",
+   "o_ls",
+   "o_lvw",
+   "o_emit"
+  ],
+  "E": [
+   "i_pass",
+   "i_o_v",
+   "i_i_v",
+   "i_krow",
+   "i_ls",
+   "i_lvw"
+  ],
+  "S": [
+   "ld_terms",
+   "lane_j",
+   "i_emit",
+   "clk",
+   "rst_n"
+  ]
+ },
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "refglob": "*terms0*",
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 1
+ },
+ "job": {
+  "owner": "Codex:hbm_quant_sfu_2240",
+  "branch": "codex/hbm-quant-sfu-2240",
+  "tag": "p2",
+  "views_to": "physical/ref_tile/sfu_lane_map_pinw_ref/views",
+  "record_to": "results/rtl/ref_tile/sfu_lane_map_pinw_ref",
+  "purpose": "Native mapper boundary pin redesign against actual CLOSED lane pins. Original m2 exact/mutant/warm-reset proof and routedTT193.19/FF23.91DRC0 stand. Actual657connected-bit audit finds26setupfails at proposedabovebody placement; worstpass111->ca_ad1 length377.688 versus333.917reach. Move allmapped output pins fromE toW toward CLOSED lane Wcapture face; move rawinputs toE. Height54 within93.0um rowgap; actualparentclock/PG/cut/assignedgeometry stillpending. No arithmetic/register/SDCchange.",
+  "benches": [
+   {
+    "name": "lane_index_exact",
+    "cmd": "MUT=0 bash tools/hgi_unit_tput/run_sfu_lane_map.sh {RUN}/map_m0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "pass_regex": "SFU_LANE_MAP PASS checks=4096 errors=0"
+   },
+   {
+    "name": "lane_index_mutant",
+    "cmd": "MUT=1 bash tools/hgi_unit_tput/run_sfu_lane_map.sh {RUN}/map_m1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "fail_regex": "SFU_LANE_MAP FAIL checks=4096 errors=24552"
+   }
+  ]
+ },
+ "cycles_added": 4,
+ "slot_change_request": {
+  "contract": "r25gq v12",
+  "parent": "hfd_sfu",
+  "master": "ot_hgi_sfu_lane_map",
+  "replicas_per_quarter": 16,
+  "outline_um": [
+   103.68,
+   54.0
+  ],
+  "reason": "Actual per-bit mapper->CLOSEDlane receipt26setupfails; native pin face Wpassthrough/Erawinput replaces old Epassthrough/Wrawinput. Existing mapperm2 remainsclosedphysical view. Unassigned nativequarter child approvalpending."
+ },
+ "structural_change": "Actual CLOSEDmapper m2 hasexactly1registered-output violation(o_pass111->ca_ad1 q_lb222.7>220), plus26realbitsetupfailures in proposednativequarter. Changed native slot pins/outline, same reset-safe RTL/fouredge behavior, no SDCrelaxation orclosedarithmeticbody reroute. W all542mapped outputpins, E541raw inputpins; partialpassthrough-onlyswap leaves o_v/i_v/lvw misses and isretaineddiagnostic.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": {
+   "contract": "r25gq v12",
+   "parent": "hfd_sfu",
+   "master": "ot_hgi_sfu_lane_map",
+   "replicas_per_quarter": 16,
+   "outline_um": [
+    103.68,
+    54.0
+   ],
+   "reason": "Actual per-bit mapper->CLOSEDlane receipt26setupfails; native pin face Wpassthrough/Erawinput replaces old Epassthrough/Wrawinput. Existing mapperm2 remainsclosedphysical view. Unassigned nativequarter child approvalpending."
+  }
+ }
+}
