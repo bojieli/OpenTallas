@@ -15,19 +15,27 @@ set_propagated_clock [all_clocks]
 read_sdc /diag/w18_extra.sdc
 read_sdc /diag/routed_ioref_ff.sdc
 
+set_clock_latency -source 0 [all_clocks]
+report_units
+puts "OT_SCENE ff ports=ck,ck_tx edges=posedge declaredsource_slew=150ps"
+report_clock_properties [all_clocks]
 foreach phase {raw compensated} {
  if {$phase eq "compensated"} {
-  set_clock_latency -source -0.2433000 [get_clocks core_clk]
-  set_clock_latency -source -0.1904000 [get_clocks tx_clk]
+  set_clock_latency -source [sta::time_sta_ui -2.433e-10] [get_clocks core_clk]
+  set_clock_latency -source [sta::time_sta_ui -1.904e-10] [get_clocks tx_clk]
  }
+ foreach pair {{core_clk tx_clk} {tx_clk core_clk}} {
  foreach mode {max min} {
-  set fr [all_registers -clock core_clk -output_pins]
-  set to [all_registers -clock tx_clk -data_pins]
+  set fr [all_registers -clock [lindex $pair 0] -output_pins]
+  set to [all_registers -clock [lindex $pair 1] -data_pins]
   set ps [find_timing_paths -from $fr -to $to -path_delay $mode -group_path_count 100000 -endpoint_path_count 1]
   set worst INF
   foreach p $ps {set v [get_property $p slack];if {$worst eq "INF" || $v<$worst} {set worst $v}}
-  puts "OT_TX_PHASE ff $phase $mode paths=[llength $ps] worst_s=$worst"
+  set worst_ps INF
+  if {$worst ne "INF"} {set worst_ps [expr {$worst/[sta::time_sta_ui 1e-12]}]}
+  puts "OT_TX_PHASE ff $phase pair=$pair $mode paths=[llength $ps] worst_ps=$worst_ps"
   report_checks -from $fr -to $to -path_delay $mode -group_path_count 3 -format full_clock_expanded -digits 6
+ }
  }
 }
 puts "OT_TX_PHASE_DONE"
