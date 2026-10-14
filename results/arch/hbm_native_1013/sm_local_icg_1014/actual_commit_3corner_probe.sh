@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-R=$PWD
+R=$(dirname "$(readlink -f "$0")")
 C=$R/routes/gate/work/orfs
 image=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29
 for corner in tt ff ss; do

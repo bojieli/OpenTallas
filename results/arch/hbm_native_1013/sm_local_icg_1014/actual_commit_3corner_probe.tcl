@@ -31,6 +31,7 @@ if {[info exists ::env(OT_GATE_SIGNOFF_SDC)]} {
   puts "GATE_PC constraints saved CTS SDC (diagnostic; no signoff boundary replay)"
 }
 
+unset_input_delay [get_ports {local_enable_commit local_enable_commit_aux local_raw_*}]
 sta::worst_slack_cmd max
 foreach pin {u_enable_mirror/CLK u_enable_aux_mirror/CLK} {
  set p [get_pins $pin]

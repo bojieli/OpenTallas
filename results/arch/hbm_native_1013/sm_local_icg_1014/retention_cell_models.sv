@@ -200,3 +200,5 @@ endmodule
 
 module INVx4_ASAP7_75t_R(input A, output Y); assign Y=~A; endmodule
 module BUFx6f_ASAP7_75t_R(input A, output Y); assign Y=A; endmodule
+module NAND4xp75_ASAP7_75t_R(input A,B,C,D, output Y); assign Y=~(A&B&C&D); endmodule
+module NAND2x2_ASAP7_75t_R(input A,B, output Y); assign Y=~(A&B); endmodule

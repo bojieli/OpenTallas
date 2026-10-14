@@ -32,7 +32,10 @@ for v in ('eg','wg'):
     leaf['ports']['local_cgi']={'direction':'input','bits':[local_cgi]}
     own['port_directions']['local_cgi']='input';own['connections']['local_cgi']=own['connections']['cut_4'][:]
     local_nor_cell=copy.deepcopy(nor);local_nor_cell['connections']['D']=[local_cgi];local_nor_cell['connections']['Y']=[local_nor];leaf['cells']['u_local_enable_nor']=local_nor_cell
-    local_nand_cell=copy.deepcopy(nand);local_nand_cell['connections']['E']=[local_nor];local_nand_cell['connections']['Y']=[local_next];leaf['cells']['u_local_enable_nand']=local_nand_cell
+    product_n=nxt;product=nxt+1;nxt+=2
+    leaf['cells']['u_local_enable_nand4']={'hide_name':0,'type':'NAND4xp75_ASAP7_75t_R','parameters':{},'attributes':{},'port_directions':{'A':'input','B':'input','C':'input','D':'input','Y':'output'},'connections':{**{p:nand['connections'][p][:] for p in ('A','B','C','D')},'Y':[product_n]}}
+    leaf['cells']['u_local_enable_product_inv']={'hide_name':0,'type':'INVx1_ASAP7_75t_R','parameters':{},'attributes':{},'port_directions':{'A':'input','Y':'output'},'connections':{'A':[product_n],'Y':[product]}}
+    leaf['cells']['u_local_enable_nand']={'hide_name':0,'type':'NAND2x2_ASAP7_75t_R','parameters':{},'attributes':{},'port_directions':{'A':'input','B':'input','Y':'output'},'connections':{'A':[product],'B':[local_nor],'Y':[local_next]}}
     dedicated_qn=nxt; dedicated_ena=nxt+1;nxt+=2
     commit=nxt;nxt+=1
     leaf['ports']['local_enable_commit']={'direction':'input','bits':[commit]}
@@ -73,7 +76,7 @@ for v in ('eg','wg'):
     (OUT/f'{v}_mut.json').write_text(json.dumps(mutant)+'\n')
     for name in [f'{v}_gold.json',f'{v}_surrogates.sv',f'{v}_tb.sv','retention_cell_models.sv']:
         shutil.copy2(SRC/name,OUT/name)
-    with (OUT/'retention_cell_models.sv').open('a') as f: f.write('\nmodule INVx4_ASAP7_75t_R(input A, output Y); assign Y=~A; endmodule\nmodule BUFx6f_ASAP7_75t_R(input A, output Y); assign Y=A; endmodule\n')
+    with (OUT/'retention_cell_models.sv').open('a') as f: f.write('\nmodule INVx4_ASAP7_75t_R(input A, output Y); assign Y=~A; endmodule\nmodule BUFx6f_ASAP7_75t_R(input A, output Y); assign Y=A; endmodule\nmodule NAND4xp75_ASAP7_75t_R(input A,B,C,D, output Y); assign Y=~(A&B&C&D); endmodule\nmodule NAND2x2_ASAP7_75t_R(input A,B, output Y); assign Y=~(A&B); endmodule\n')
     gold=json.loads((OUT/f'{v}_gold.json').read_text())
     for mod in gold['modules'].values():
         mod['cells']={n:c for n,c in mod['cells'].items() if c['type']!='$scopeinfo'}
@@ -88,7 +91,7 @@ for v in ('eg','wg'):
     spec['pre_cts_extra']=[str((OUT/'local_clock_preserve.tcl').relative_to(ROOT))]
     spec['pins']['N']+=sum(([p['raw'],p['gclk']] for p in clockports),[])
     spec['sdc_extra']=[str((OUT/'local_generated_clocks.sdc').relative_to(ROOT))]
-    spec['structural_change']='Duplicate original NOR4/NAND5 enable decode on dedicated local_cgi normal data pin (same original bit4 parent source), isolating mirror path from original late-register input hold buffers while retaining all original cut4 constraints. Six retained BUFx6f stages on auxiliary mirror clock branch; real generated GCLK exported at clock ports. Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.'
+    spec['structural_change']='Factor mirror NAND5 into NAND2x2(AND4(originalA..D),NOR4(original busy/cgi)) to remove weak high-fanout decode driver, no Boolean or edge change. Duplicate original NOR4/NAND5 enable decode on dedicated local_cgi normal data pin (same original bit4 parent source), isolating mirror path from original late-register input hold buffers while retaining all original cut4 constraints. Six retained BUFx6f stages on auxiliary mirror clock branch; real generated GCLK exported at clock ports. Split mirrored original ENA into four critical XS/PT_E/PT_W gates and eight auxiliary gates with independent small commit clock roots, INVx4 direct local distribution. Move twelve original parent real ICGs inside distinct own master; mirror original ENA DFF and inverter on identical D/RAW clock to drive local gates without exported ordinary-data hold chain. Preserve all995 original logical registers and ordinary cut8870 data constraint; no cycle/phase relaxation.'
     spec['slot_change_request']={'kind':'local_clock_entry','parent':'native SM compact tile','outline_um':[84.24,73.44],'additional_clock_pins':26,'additional_data_pin':{'local_cgi':'Original bit4 same parent source; separate normal IO constraints, registered ENA capture after duplicated original two-gate decode; original cut4 ordinary-data hold branch retained'},'enable_commit_clock':{'logical_source':'original raw bit2','delivered_phase':'phi-Rown, same tap as own raw input','critical_group_indices':[4,9,10,11],'critical_insertion_max_ps':20,'auxiliary_insertion_min_ps':55,'auxiliary_group_indices':[0,1,2,3,5,6,7,8],'auxiliary_insertion_target_ps':80,'required_gate':'Measured mirror launch CLK arrival and D setup/hold from original own state + all original cgi/reset/pause source pins; no zero-wire or zero-slew assumption'},'status':'PENDING_REAL_MULTICLOCK_CTS_GATING_PULSE_AND_DIE_REACH','source':str((OUT/'manifest.json').relative_to(ROOT))}
     spec['job'].update(branch='codex/sm-gate-structural-1014',owner='Codex:sm_gate_structural',tag='localicg1',purpose=spec['structural_change'],extra_paths=[str(OUT.relative_to(ROOT))])
     for b in spec['job']['benches']:b['cmd']=b['cmd'].replace('sm_own_logic/','sm_local_icg_1014/')
