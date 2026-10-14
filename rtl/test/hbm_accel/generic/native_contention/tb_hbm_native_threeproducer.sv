@@ -28,11 +28,25 @@ module tb_hbm_native_threeproducer;
     wire [8*281-1:0] producer_packet;wire [7:0] producer_issue,vm_bad;wire leasebusy;
     wire [31:0] producer_credit,producer_done,qfault,native_done;wire [3:0] drained,lfault;wire [7:0] rfault;wire [32*281-1:0] native_dq;wire [31:0] dma_valid;
     for(genvar b=0;b<32;b++)assign dma_valid[b]=native_dq[b*281+280];
-    ot_hgi_dma_front_xsw6b #(.QID(0),.NL(8),.LD(16),.SBIT(SBIT),.STACK_BYTES(36'(SB)),.MUT(MUT))dut(
-      .clk(clk),.lane_clk({8{clk}}),.slice_clk(clk),.rst_n(rst_n),.mv_v(mv_v),.mv_rdy(mv_rdy),.mv(mv),.mv_done(mv_done),.mv_fault(mv_fault),
+`ifdef FRONT12
+    ot_hgi_dma_front_xsw12 #
+`else
+    ot_hgi_dma_front_xsw6b #
+`endif
+(.QID(0),.NL(8),.LD(16),.SBIT(SBIT),.STACK_BYTES(36'(SB)),.MUT(MUT))dut(
+      .clk(clk),.lane_clk({8{clk}}),
+`ifndef FRONT12
+      .slice_clk(clk),
+`endif
+      .rst_n(rst_n),.mv_v(mv_v),.mv_rdy(mv_rdy),.mv(mv),.mv_done(mv_done),.mv_fault(mv_fault),
       .ix_v(ix_v),.ix_rdy(ix_rdy),.ix_cmd(ix_cmd),.id_v(id_v),.id_rdy(id_rdy),.id(id),.dq(dq),.dq_rdy(dq_rdy),.dd(dd),.dd_cr(dd_cr),
       .lease_grant(1'b1),.lease_busy(leasebusy),.wl_credit(producer_credit[7:0]),.wl_done(producer_done[7:0]),.issue_v(producer_issue),.vm_packet(producer_packet),.vm_bad(vm_bad));
-    ot_hgi_dma_vm_transport tr(.source_clk(cclk),.vm_clk(vmclk),.rst_n(rst_n),.lease_grant(4'hf),.producer_busy({3'd0,leasebusy}),
+`ifdef FRONT12
+    ot_hgi_dma_vm_transport9 tr(
+`else
+    ot_hgi_dma_vm_transport tr(
+`endif
+.source_clk(cclk),.vm_clk(vmclk),.rst_n(rst_n),.lease_grant(4'hf),.producer_busy({3'd0,leasebusy}),
       .issue_v({24'd0,producer_issue}),.source_packet({{24*281{1'b0}},producer_packet}),.source_credit(producer_credit),.source_done(producer_done),.queue_fault(qfault),.drained(drained),.lease_fault(lfault),
       .dma_q(native_dq),.dma_done(native_done),.router_fault(rfault));
     // ---- memories
