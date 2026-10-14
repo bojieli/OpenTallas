@@ -11,7 +11,7 @@ SRC="$W/test/nearhbm/ot_qwen_qkez_phase_tb.sv $W/test/nearhbm/ot_qwen_nearhbm_at
  $W/test/nearhbm/ot_qwen_nearhbm_attn_hub_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_prod.sv $W/hdc/ot_hdc_sfu_q.sv \
  $W/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv \
  $W/hdc/ot_hdc_sfu.sv $W/hdc/ot_hdc_delay.sv $W/hdc/ot_hdc_fpu.sv $W/hdc/ot_hdc_fp32_mul_pipe.sv \
- $W/proto/ot_fp32_add_rne_pipe.sv"
+ $W/proto/ot_fp32_add_rne_pipe.sv $W/hdc/ot_hdc_fp32_add_lat_nr.sv"
 CPP="$W/test/nearhbm/tb_qwen_qkez_phase.cpp"
 if [ "$FP" = "real" ]; then
   SRC="$SRC $W/hdc/ot_hdc_fastfp.sv $W/hdc/ot_hdc_prefix.sv $W/hdc/ot_hdc_fp32_add_lat.sv $W/hdc/ot_hdc_fp32_mul_lat.sv"
