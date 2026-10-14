@@ -155,7 +155,9 @@
   "OT_MEG_MASTER": "ot_sram_1r1w*_m1",
   "OT_MEG_EXPECT": "3",
   "OT_MEG_BAND": "2.16",
-  "OT_MEG_EDGES": "EW"
+  "OT_MEG_EDGES": "EW",
+  "OT_SPINE_PORT": "ckd",
+  "OT_SPINE_CTS_REST": "1"
  },
  "route": {
   "pd": 0.55,
@@ -175,7 +177,7 @@
   },
   "macro_halo_um": 5.4
  },
- "structural_change": "n1 gate REFUSED:CKD20,310flops,17,472ofthese are SQIBUF32x546; ir[1]17475loads. Actuallargest-root CKDTTmax506/spread99(scopedprobe), primaryCK458/spread93. n2 replaces ONLY synchronous SQreceive store with real32x5461R1WSRAM, lookahead head read+same-write bypass, preserving everyexternal valid/credit/data/fault edge; paired oldflopstore/newmacrostore bench verifies. SameCR32/ENG_IB32/LCR32/N8/CQ_AD256, no newcycles,no clock changes,no reprice. Rootcount expected<15000; coreIOreference nowCK-specific u_cq.g_ipr.pd, CKDreference remains domain-specific. 3SRAMs with2.16um M5edgeguards, OBSunchanged. n2 CK boundaryspread101.5ps is a defect; n3 uses explicit CTS sink clusters16/30um to balance the physical tree, unchanged clocks and RTL.",
+ "structural_change": "n1 gate REFUSED:CKD20,310flops,17,472ofthese are SQIBUF32x546; ir[1]17475loads. Actuallargest-root CKDTTmax506/spread99(scopedprobe), primaryCK458/spread93. n2 replaces ONLY synchronous SQreceive store with real32x5461R1WSRAM, lookahead head read+same-write bypass, preserving everyexternal valid/credit/data/fault edge; paired oldflopstore/newmacrostore bench verifies. SameCR32/ENG_IB32/LCR32/N8/CQ_AD256, no newcycles,no clock changes,no reprice. Rootcount expected<15000; coreIOreference nowCK-specific u_cq.g_ipr.pd, CKDreference remains domain-specific. 3SRAMs with2.16um M5edgeguards, OBSunchanged. n2 CK boundaryspread101.5ps is a defect; n3 uses explicit CTS sink clusters16/30um to balance the physical tree, unchanged clocks and RTL. n3 actualCK boundary69.7ps passes,CKD119.5ps fails; n4 uses existing balanced-spine on CKD only and existing OT_SPINE_CTS_REST1 for CK, no shared name collision or clock timing changes.",
  "reroute_reason": {
   "kind": "param_change",
   "params": {
@@ -194,7 +196,7 @@
  "job": {
   "owner": "Codex:qwen_small/io",
   "branch": "claude/el1013-qwen-r3b-io",
-  "tag": "n3",
+  "tag": "n4",
   "purpose": "Native TP8 local port credit reservation and posted-return macro leaf; qualifies only with seq_su CRED32 composition",
   "extra_paths": [
    "physical/qwen_romio_slots",
@@ -267,6 +269,7 @@
  "boundary_tcl": [
   "physical/qwen_coll_cx/macro_edge_m5_guard.tcl"
  ],
+ "clock": "spine",
  "children": [],
  "inter": [],
  "inhold": true,
