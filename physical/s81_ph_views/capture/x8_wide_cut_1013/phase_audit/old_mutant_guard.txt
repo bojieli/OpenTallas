@@ -1,0 +1,13 @@
+{
+  "pid": 14087,
+  "cmd": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/bench/obj_m1/sim +UNORD +STIM=/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/bench/stim_mix.txt ",
+  "source": "/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/bench_src_a1/rtl/dsrom_sys/s81_ph/test/tb_s81ph_gather_capture.sv",
+  "source_sha256": "bcdcb5975a61e29b20630ccae1c13eb895da0e3b665dc55e9e1555be2eeee8d7",
+  "defect": "monitor and timeout driver share integer k"
+}
+OWNED_PROCESS 14087 /srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/bench/obj_m1/sim +UNORD +STIM=/srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/bench/stim_mix.txt 
+OWNED_PROCESS 4189223 bash /srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/cl/run.sh bench_capc_mut_kswap.a1b1 
+OWNED_PROCESS 4189228 bash /srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/cl/bench_capc_mut_kswap.a1b1.sh 
+OWNED_PROCESS 4189231 bash tools/s81_ph/capc_bench.sh /srv/opentallas-scratch2/claude/closure-loop/dsfd_capt_x8_dual-v1-955c7b33b/bench m1 mix S81PH_CAPC_MUT_KSWAP 
+TERMINATED_ONLY_VERIFIED_SUPERSEDED_SIM 14087
+KEPT_SOURCE_AND_LOGS_FOR_DAEMON_COLLECTION

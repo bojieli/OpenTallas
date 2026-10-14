@@ -16,7 +16,7 @@ Placement (cluster 1728.0 x 561.6, children MX = inputs N, outputs S): x[g] at (
 ctl at (820.8, 172.8), the station relays R0 in one row at y 519.552 (0.576-um track lattice, 35.136 pitch = 15.12 +
 20.016 channel), dsfd_capt_cd under the control tile.  Every block keeps >= 20 um to its neighbours and the core edge.
 """
-import argparse, json, re, sys
+import argparse, json, re, sys, os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -63,6 +63,8 @@ def trk(v):
 
 
 def build(assigned):
+    from capc_phase_guard import validate
+    validate(ROOT / V["x"], Path(os.environ.get("CL_STATE", str(Path.home() / ".local/state/closure_loop"))))
     L = {k: lef(v) for k, v in V.items()}
     blocks, kids = [], []
 
