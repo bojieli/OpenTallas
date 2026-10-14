@@ -6,6 +6,7 @@ The result is a structural candidate, not a physical clock or timing contract.
 """
 import argparse
 import hashlib
+import gzip
 import json
 import re
 from collections import defaultdict
@@ -141,9 +142,10 @@ def main():
     ap.add_argument('output', type=Path)
     ap.add_argument('--top', default='ot_v41_rom_elem_q_qxpq_w10')
     args = ap.parse_args()
-    result, receipt = extract(json.loads(args.source.read_text()), args.top)
+    raw = gzip.open(args.source, 'rb').read() if args.source.suffix == '.gz' else args.source.read_bytes()
+    result, receipt = extract(json.loads(raw), args.top)
     args.output.mkdir(parents=True, exist_ok=True)
-    receipt['source_graph_sha256'] = hashlib.sha256(args.source.read_bytes()).hexdigest()
+    receipt['source_graph_sha256'] = hashlib.sha256(raw).hexdigest()
     (args.output / 'partitioned.json').write_text(json.dumps(result))
     (args.output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print(json.dumps([(g['group'], g['cells'], g['actual_boundary_bits']) for g in receipt['groups']]))
