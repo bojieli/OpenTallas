@@ -1,0 +1,150 @@
+{
+  "schema": "opentallas.slot_partition_response.v1",
+  "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
+  "contract_version": 12,
+  "contract_changed": false,
+  "request_commit": "53f1454ae",
+  "request_path": "results/arch/hbm_native_1013/hc_norm_takeover/slot_partition_request.json",
+  "status": "STRUCTURAL_PARTITION_ACCEPTED_FOR_PLANNING_FIT_PENDING",
+  "reservations": [
+    {
+      "name": "hb_hc_SW",
+      "cell": "hfd_hc",
+      "outline": {
+        "w": 2263.68,
+        "h": 1499.04
+      },
+      "origin": {
+        "x": 8563.968,
+        "y": 11136.96,
+        "orient": "R0"
+      }
+    },
+    {
+      "name": "hb_hc_SE",
+      "cell": "hfd_hc",
+      "outline": {
+        "w": 2263.68,
+        "h": 1499.04
+      },
+      "origin": {
+        "x": 21293.288,
+        "y": 11136.96,
+        "orient": "MY"
+      }
+    },
+    {
+      "name": "hb_hc_NW",
+      "cell": "hfd_hc",
+      "outline": {
+        "w": 2263.68,
+        "h": 1499.04
+      },
+      "origin": {
+        "x": 8563.968,
+        "y": 13340.16,
+        "orient": "R0"
+      }
+    },
+    {
+      "name": "hb_hc_NE",
+      "cell": "hfd_hc",
+      "outline": {
+        "w": 2263.68,
+        "h": 1499.04
+      },
+      "origin": {
+        "x": 21293.288,
+        "y": 13340.16,
+        "orient": "MY"
+      }
+    },
+    {
+      "name": "hb_su_SW",
+      "cell": "hfd_su",
+      "outline": {
+        "w": 2016.144,
+        "h": 2808.0
+      },
+      "origin": {
+        "x": 11173.248,
+        "y": 7976.88,
+        "orient": "R0"
+      }
+    },
+    {
+      "name": "hb_su_SE",
+      "cell": "hfd_su",
+      "outline": {
+        "w": 2016.144,
+        "h": 2808.0
+      },
+      "origin": {
+        "x": 18931.472,
+        "y": 7976.88,
+        "orient": "MY"
+      }
+    },
+    {
+      "name": "hb_su_NW",
+      "cell": "hfd_su",
+      "outline": {
+        "w": 2016.144,
+        "h": 2808.0
+      },
+      "origin": {
+        "x": 11173.248,
+        "y": 15195.648,
+        "orient": "MX"
+      }
+    },
+    {
+      "name": "hb_su_NE",
+      "cell": "hfd_su",
+      "outline": {
+        "w": 2016.144,
+        "h": 2808.0
+      },
+      "origin": {
+        "x": 18931.472,
+        "y": 15195.648,
+        "orient": "R180"
+      }
+    }
+  ],
+  "hc": {
+    "direct_die_expansion": "Preserve accepted arithmetic children; harden every retained own-logic partition with independent clock entry; no third hard hierarchy required.",
+    "unmeasured_outlines": [
+      "32 ot_hgi_hc_win scalar SYS leaves (four SRAMs each)",
+      "32 residual lane own-logic leaves",
+      "qst/control/cat/collector own-logic leaves"
+    ],
+    "legacy_shells_are_coverage": false,
+    "required_before_assigned_pins": [
+      "source-matched closed child LEF/ETM/insertion recovery",
+      "measured own-logic outlines and register/pin census",
+      "source exact bench and actual mutant",
+      "complete placement/hop/cut/clock audit"
+    ]
+  },
+  "norm": {
+    "closed_child_count": 8,
+    "closed_child_outline_um": [
+      365.04,
+      365.04
+    ],
+    "candidate_frame_um": [
+      1612.656,
+      972.0
+    ],
+    "candidate_parent": "hb_su_<quarter>",
+    "frame_is_assigned_slot": false,
+    "required_before_fit": [
+      "harden retained norm parent logic with independent clock roots",
+      "zero overlap with all SU VOP children and real other children",
+      "actual transformed pin and PG mirroring access audit",
+      "native contract bitexact bench and mutant"
+    ]
+  },
+  "no_fit_or_release_claim": true
+}
