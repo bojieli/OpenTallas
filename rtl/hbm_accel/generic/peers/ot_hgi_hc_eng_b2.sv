@@ -412,7 +412,7 @@ module ot_hgi_hc_ctl_b2 #(
 ) (
     input  wire              clk,
     input  wire              rst_n,
-    input wire clk_coll,
+    input wire clk_coll,input wire[3:0]clk_quarter_link,
     input wire[19:0]clk_store,input wire[31:0]clk_scan,
     input wire[30:0]clk_block_add,clk_heap_add,
     input  wire              job_v_i,
@@ -468,16 +468,16 @@ module ot_hgi_hc_ctl_b2 #(
     wire [3:0] s_v; wire [4*258-1:0] s_d; wire [4*6-1:0] s_st;
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
-        ot_hgi_hc_rly #(.W(139), .N(RLQ)) u_dn (.clk(clk), .rst_n(rst_n), .v(cv), .d({cop, cx, cd}), .vq(q_dn_v[gq]),
+        ot_hgi_hc_rly #(.W(139), .N(RLQ)) u_dn (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .v(cv), .d({cop, cx, cd}), .vq(q_dn_v[gq]),
             .q(q_dn[gq*139 +: 139]));
-        ot_hgi_hc_rly #(.W(44), .N(RLQ)) u_k0 (.clk(clk), .rst_n(rst_n), .v(q_ck_v[2*gq]), .d(q_ck[gq*88 +: 44]),
+        ot_hgi_hc_rly #(.W(44), .N(RLQ)) u_k0 (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .v(q_ck_v[2*gq]), .d(q_ck[gq*88 +: 44]),
             .vq(k_v[2*gq]), .q(k_d[gq*88 +: 44]));
-        ot_hgi_hc_rly #(.W(44), .N(RLQ)) u_k1 (.clk(clk), .rst_n(rst_n), .v(q_ck_v[2*gq + 1]), .d(q_ck[gq*88 + 44 +: 44]),
+        ot_hgi_hc_rly #(.W(44), .N(RLQ)) u_k1 (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .v(q_ck_v[2*gq + 1]), .d(q_ck[gq*88 + 44 +: 44]),
             .vq(k_v[2*gq + 1]), .q(k_d[gq*88 + 44 +: 44]));
-        ot_hdc_delay #(.W(2), .D(RLQ), .RESET(1)) u_cr (.clk(clk), .rst_n(rst_n), .d(k_cr[2*gq +: 2]), .q(q_ck_cr[2*gq +: 2]));
-        ot_hgi_hc_rly #(.W(258), .N(RLQ)) u_sc (.clk(clk), .rst_n(rst_n), .v(q_sc_v[gq]), .d(q_sc[gq*258 +: 258]),
+        ot_hdc_delay #(.W(2), .D(RLQ), .RESET(1)) u_cr (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .d(k_cr[2*gq +: 2]), .q(q_ck_cr[2*gq +: 2]));
+        ot_hgi_hc_rly #(.W(258), .N(RLQ)) u_sc (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .v(q_sc_v[gq]), .d(q_sc[gq*258 +: 258]),
             .vq(s_v[gq]), .q(s_d[gq*258 +: 258]));
-        ot_hdc_delay #(.W(6), .D(RLQ), .RESET(1)) u_st (.clk(clk), .rst_n(rst_n), .d(q_stat[gq*6 +: 6]), .q(s_st[gq*6 +: 6]));
+        ot_hdc_delay #(.W(6), .D(RLQ), .RESET(1)) u_st (.clk(CLOCKED?clk_quarter_link[gq]:clk), .rst_n(rst_n), .d(q_stat[gq*6 +: 6]), .q(s_st[gq*6 +: 6]));
     end endgenerate
 
     // ---- scalars
@@ -593,7 +593,7 @@ module ot_hgi_hc_eng_b2 #(
     input wire [223:0] clk_chunk,
     input wire [31:0]clk_coeff,
     input wire [31:0]clk_lane,input wire [3:0]clk_qst,clk_cat,
-    input wire clk_ctl,clk_coll,
+    input wire clk_ctl,clk_coll,input wire[3:0]clk_quarter_link,
     input wire[19:0]clk_store,input wire[31:0]clk_scan,
     input wire[30:0]clk_block_add,clk_heap_add,
     input  wire              job_v,
@@ -616,7 +616,7 @@ module ot_hgi_hc_eng_b2 #(
 );
     wire [3:0] q_dn_v; wire [4*139-1:0] q_dn; wire [7:0] q_ck_v, q_ck_cr; wire [4*88-1:0] q_ck;
     wire [3:0] q_sc_v; wire [4*258-1:0] q_sc; wire [4*6-1:0] q_stat;
-    ot_hgi_hc_ctl_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.D(D), .RLQ(RLQ), .CD(CD), .MUT(MUT)) u_ctl (.clk(CLOCKED?clk_ctl:clk), .rst_n(rst_n), .clk_coll(clk_coll), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.job_v_i(job_v),
+    ot_hgi_hc_ctl_b2 #(.STORELEAF(STORELEAF),.CLOCKED(CLOCKED),.D(D), .RLQ(RLQ), .CD(CD), .MUT(MUT)) u_ctl (.clk(CLOCKED?clk_ctl:clk), .rst_n(rst_n), .clk_coll(clk_coll),.clk_quarter_link(clk_quarter_link), .clk_store(clk_store),.clk_scan(clk_scan),.clk_block_add(clk_block_add),.clk_heap_add(clk_heap_add),.job_v_i(job_v),
         .job_rdy(job_rdy), .job_i(job), .g_rdy_i(g_rdy), .done(done), .fault(fault), .idle(idle), .rg_req(rg_req),
         .rg_gnt(rg_gnt), .wg_req(wg_req), .wg_gnt(wg_gnt), .q_dn_v(q_dn_v), .q_dn(q_dn), .q_ck_v(q_ck_v), .q_ck(q_ck),
         .q_ck_cr(q_ck_cr), .q_sc_v(q_sc_v), .q_sc(q_sc), .q_stat(q_stat));
