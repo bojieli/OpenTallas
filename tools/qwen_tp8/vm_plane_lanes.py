@@ -47,7 +47,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('net'); ap.add_argument('plan'); ap.add_argument('out'); ap.add_argument('--ser', type=int, default=1)
     ap.add_argument('--pad-density', type=int, default=1); ap.add_argument('--label', default=''); ap.add_argument('--wcong', type=float, default=0.3); ap.add_argument('--bcong', type=float, default=0.2)
     ap.add_argument('--debug', action='store_true'); ap.add_argument('--slack', type=int, default=0); ap.add_argument('--hopw', type=float, default=0.25); ap.add_argument('--passes', type=int, default=12)
-    ap.add_argument('--relay-w', type=int, default=1); ap.add_argument('--pad-reserve', type=float, default=128.0); ap.add_argument('--save-routes', default=''); ap.add_argument('--load-routes', default=''); ap.add_argument('--repair', type=int, default=3); ap.add_argument('--pf0', type=float, default=0.5); ap.add_argument('--pfg', type=float, default=1.6); ap.add_argument('--hf', type=float, default=0.3)
+    ap.add_argument('--relay-w', type=int, default=1); ap.add_argument('--pad-reserve', type=float, default=128.0); ap.add_argument('--save-routes', default=''); ap.add_argument('--load-routes', default=''); ap.add_argument('--repair', type=int, default=3); ap.add_argument('--pf0', type=float, default=0.5); ap.add_argument('--pfg', type=float, default=1.6); ap.add_argument('--hf', type=float, default=0.3); ap.add_argument('--pad-flow', type=int, default=0)
     a = ap.parse_args(); d = json.loads(Path(a.net).read_text()); p = json.loads(Path(a.plan).read_text())
     ch = p['children']; bays = p['x_relay_bays']; pins = p['real_pins']; LB = 8 // a.ser
     old = [i for i in d['insts'] if i['n'] not in p['geometry']['removed'] and not i['m'].startswith(('qfd_rly', 'qkd_rly'))]
@@ -285,7 +285,37 @@ def main():
                 if nc < cost.get(st, float('inf')): cost[st] = nc; prev[st] = ((u, k, f), ('move', u, v, fh)); heapq.heappush(heap, (nc, k2, v, 0))
         if a.debug and len(pad_failed) < 6: print('  layered none', j['name'], 'states', len(best), dict(why), 'maxk', max((k_ for _, k_, _ in best), default=0), file=sys.stderr)
         return None
-    todo2 = [i for i in sorted(sol, key=lambda i: -len(sol[i][0])) if pad_simple(i) > 0]; todo2.sort(key=lambda i: len(sol[i][0]))
+    def pad_flow():
+        """pass 1 as ONE transportation problem (--pad-flow 1): lanes -> the bays of their own routed paths, min cost flow.  The
+        greedy pass let the long lanes (many bays to choose from) fill the centre bays that the short lanes (one or two bays
+        on the path, ten or eleven pads to place) have no alternative to.  Unit = one pad PAIR (2 stages in ot_qfd_vm_xpad2_t,
+        bits * 512 / 480 of bay room); an odd last stage is booked as a whole unit here (conservative) and charged exactly
+        (one relay share) in padload.  A bay next to the band costs more (lanes land there)."""
+        import networkx as nx
+        G = nx.DiGraph(); unit = {}; need = {}
+        for i in sol:
+            path = sol[i][0]; n = depth - (len(path) - 1)
+            if n <= 0: padat[i] = collections.Counter(); continue
+            need[i] = n; G.add_edge('s', ('l', i), capacity=(n + 1) // 2, weight=0)
+            for b in {v for _, v, _ in path[:-1]}: G.add_edge(('l', i), ('b', b), capacity=(n + 1) // 2, weight=6 if landing[b] else 1)
+        ub = jobs[0]['bits'] * 512.0 / PAD2_W
+        for b in range(NB):
+            if ('b', b) in G: G.add_edge(('b', b), 't', capacity=max(0, int((spare(b) - a.pad_reserve) // ub)), weight=0)
+        fl = nx.max_flow_min_cost(G, 's', 't'); left = {}
+        for i, n in need.items():
+            at = collections.Counter(); rem_ = n
+            for (_, b), u in sorted(fl[('l', i)].items(), key=lambda kv: -kv[1]):
+                st = min(2 * u, rem_)
+                if st > 0: at[b] += st; rem_ -= st
+            padat[i] = at
+            for b, k in at.items(): padload[b] += charge(k) * jobs[i]['bits']
+            if rem_ > 0: left[i] = rem_
+        return left
+    if a.pad_flow:
+        left = pad_flow(); todo2 = sorted(left, key=lambda i: len(sol[i][0]))
+        print('pad_flow', json.dumps(dict(lanes_left=len(left), stages_left=sum(left.values()))), file=sys.stderr, flush=True)
+    else:
+        todo2 = [i for i in sorted(sol, key=lambda i: -len(sol[i][0])) if pad_simple(i) > 0]; todo2.sort(key=lambda i: len(sol[i][0]))
     for i in todo2:
         old = sol[i]; bits = jobs[i]['bits']; unpad(i); place(i, old[0], -1); ban = set(); bank = set(); okk = False
         for _ in range(10):
