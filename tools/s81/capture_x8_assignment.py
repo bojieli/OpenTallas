@@ -137,6 +137,8 @@ def main(request):
     gather=json.loads((OUT/'dsfd_sp_gather_c.json').read_text())
     gather['ports']['t_capture']=spec([['S',ly,c,d] for _,ly,c,d in capture['ports']['f_gather']['per_bit']])
     gather['ports']['f_cd']=spec([['S',ly,c,d] for _,ly,c,d in capture['ports']['t_cd']['per_bit']])
+    gather['ports']['rst']=spec([['E','M4',52.332,.192]])
+    gather['ports']['rsv']=spec([['E','M4',52.524,.192]])
     for port,s in gather['ports'].items():
         for row in s['per_bit']:
             if port.startswith('ck'):
