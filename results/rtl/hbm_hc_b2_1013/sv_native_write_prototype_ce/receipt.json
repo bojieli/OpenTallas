@@ -1,0 +1,18 @@
+{
+  "source_commit": "ce4764905",
+  "actual_source_sha256": {
+    "ot_hgi_sv_native_write_owned.sv": "895904d556e0360f1e0b0d91c95d5d4f8445bd2c70bee55fd2fc1dc16bf22148",
+    "tb_hgi_sv_native_write_owned.sv": "c296b0d17f427cfee21a6fe273965554cc071ca83dbb974690108b9601d4d329"
+  },
+  "mismatches": [],
+  "exact": "PASS1009maskedwrites/1009commits cycles152",
+  "mutants": {
+    "wrong_credit_owner": "FAIL1871",
+    "wrong_commit_owner": "FAIL1357",
+    "credit_as_done": "FAIL1009"
+  },
+  "scope": "Independent variable-latency bank model only; actual native VM/SV/ROW_NORM composition remains open",
+  "physical_qualified": false,
+  "whole_layer_qualified": false,
+  "ledger_eligible": false
+}
