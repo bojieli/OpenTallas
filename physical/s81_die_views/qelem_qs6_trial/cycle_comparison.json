@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.qelem.qs6_trial.v1",
+  "source_commit": "0fddf8c8d",
+  "candidate": "QS6",
+  "baseline": "QS5",
+  "vehicle": "PQ0 exact reference gate; not native PQ1",
+  "compared_cycles": 12775002,
+  "added_cycles_observed": 0,
+  "runs": [
+    {
+      "seed": 1,
+      "name": "pos_qs6u",
+      "coverage_identical": true,
+      "sequence_latency_hist_identical": true
+    },
+    {
+      "seed": 2,
+      "name": "pos_qs6u",
+      "coverage_identical": true,
+      "sequence_latency_hist_identical": true
+    },
+    {
+      "seed": 3,
+      "name": "pos_qs6u",
+      "coverage_identical": true,
+      "sequence_latency_hist_identical": true
+    },
+    {
+      "seed": 4,
+      "name": "pos_qs6u",
+      "coverage_identical": true,
+      "sequence_latency_hist_identical": true
+    },
+    {
+      "seed": 1,
+      "name": "pos_qs6u_nan_sparse",
+      "coverage_identical": true,
+      "sequence_latency_hist_identical": true
+    }
+  ],
+  "production_adoption": false
+}
