@@ -102,6 +102,7 @@
 module ot_hbm_accel_tu_endpoint_psg_cluster #(
     parameter integer HARD_CLOCKS=1,
     parameter integer COLUMN_HARD=0,
+    parameter integer COLUMN_MUT=0,
     parameter integer REDUCE_HARD=0,
     parameter integer ENABLE = 0,
     parameter integer REARM = 0, // opt-in; production pclk must equal clk
@@ -431,6 +432,9 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
         wire [NC-1:0] column_reply;
         wire issue_return;
         wire column_pending;
+        reg[3*LAT+2:0]reduce_flight;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)reduce_flight<=0;else reduce_flight<={reduce_flight[3*LAT+1:0],issue_return};
         wire [15:0] issue_index;
         if(COLUMN_HARD)begin:g_issue_epoch
             reg[3:0]iv;
@@ -447,7 +451,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
                 wire[511:0]reply;
                 reg[3:0]inactive;
                 always @(posedge clk)inactive<={inactive[2:0],(c>=NA)};
-                ot_hcoll_operand_column512 u_column(.clk(column_clk[c]),.rst_n(rst_n),
+                ot_hcoll_operand_column512 #(.MUT(COLUMN_MUT))u_column(.clk(column_clk[c]),.rst_n(rst_n),
                     .w_v(NC>1&&cw_v[c]),.w_addr(6'(cw_fl[c])),.w_data(512'(cw_d[c])),
                     .r_v(issue),.r_addr(6'(rptr<OF?rptr:0)),.rd_v(column_reply[c]),.rd_data(reply));
                 assign opsel[c]=inactive[3]?{FW{1'b0}}:FW'(reply);
@@ -476,6 +480,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
                     .reply_v(reply_v[ln]),.reply(lvl[LV][0][32*ln+:32]),
                     .reply_index(reply_indices[16*ln+:16]),.reply_err());
             end
+            for(genvar l=1;l<LV;l=l+1)begin:g_unused_valid assign lvv[l]=1'b0;end
             assign lvv[LV]=&reply_v;assign ti_v=&reply_v;assign ti_d=reply_indices[0+:16];
         end else begin:g_reduce_original
         for (genvar l = 1; l <= LV; l = l + 1) begin : g_lv
@@ -760,7 +765,7 @@ module ot_hbm_accel_tu_endpoint_psg_cluster #(
                        inj_done && (NC==1 || (BYP && byp_sum==byp_sum_exp && byp_xor==byp_xor_exp) ||
                                  (!BYP && rptr>=OF && produced_count==ROF && own_count==ROF)) &&
                        {15'd0, tx_count}==expected_tx && {15'd0, delivery_count}==expected_delivery && rx_pending==0 &&
-                       (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !issue && !column_pending)
+                       (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !issue && !column_pending && !(REDUCE_HARD && (|reduce_flight)))
                         completed<=1;
 `ifdef OT_COLL_MUT_PREMATURE_DONE
                     if(k>=PF)completed<=1;

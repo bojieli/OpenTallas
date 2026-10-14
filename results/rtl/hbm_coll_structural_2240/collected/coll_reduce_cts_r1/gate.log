@@ -1,0 +1,13 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: W face 10.5 pins/um (clk, rst_n, operands): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc1tb for 24 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_coll_reduce_lane_ref2240_20261014-040631.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_coll_reduce_lane_ref2240_20261014-040631.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hbm_coll_reduce_lane_ref2240-20261014-040631
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 73 s (gate total 96 s)
+GATE FAIL io_place: IO placement failed: [ERROR GPL-0301] Utilization 150.216 % exceeds 100%.  -> FIX: fix the pin plan / pin layers
+GATE FAIL util: synthesized std area 3883 um2 + macros 0 in core 2468: util 157%  -> FIX: set "std_area_um2": 3883 and drop 'outline' (gen sizes to util 0.52)
+GATE FAIL cts_run: placement / CTS of the kit failed: [ERROR GPL-0301] Utilization 150.216 % exceeds 100%.  -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE WARN clock_rule: the synthesized netlist's clock sinks were not reported: clock sinks unknown; no measured clock tree (no --cts gate evidence)  -> FIX: read the remote log (textbook lint line 'clock_roots')
+PRE_ROUTE_GATE: FAIL (3 fail, 2 warn)
+GATE: hbm_coll_reduce_lane_ref2240/gate_result.json written (exact staged source binding; commit it with the kit)

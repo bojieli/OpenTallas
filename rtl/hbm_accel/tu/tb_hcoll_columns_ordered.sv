@@ -50,6 +50,7 @@
 `define TU_RXAW 8
 `endif
 module tb_hcoll_columns_ordered #(
+    parameter integer MUT_COLUMN=0, NATIVE_REDUCE=0,
     parameter integer NC = `TU_NC, NOG = `TU_NOG, PFMAX = `TU_PFMAX, BF16 = `TU_BF16,
     parameter integer INJ = `TU_INJ, DEL = `TU_DEL, NPT = `TU_NPT, RXAW = `TU_RXAW,
     parameter integer LANES = 16, HUBW = 35, WSTG = 14, BITS_X100 = 72000, PWB = 545, LAT = 7,
@@ -129,12 +130,12 @@ module tb_hcoll_columns_ordered #(
 `endif
     `TU_DUT #(.ENABLE(1), .NC(DNC), .NOG(DNG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
-        .SWCRED(1 << RXAW), .LAT(LAT),.COLUMN_HARD(1)
+        .SWCRED(1 << RXAW), .LAT(LAT),.COLUMN_HARD(1),.COLUMN_MUT(MUT_COLUMN),.REDUCE_HARD(NATIVE_REDUCE)
 `ifdef TU_SYNCPHY
         , .SYNCPHY(1)
 `endif
         )
-      dut (.column_clk({DNC{clk}}),.port_clk({NPT{clk}}),.byp(1'b0),.gsz(4'hf),.mcast_all(1'b0),.mcast_group_size(8'd96),.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
+      dut (.reduce_clk({LANES{clk}}),.column_clk({DNC{clk}}),.port_clk({NPT{clk}}),.byp(1'b0),.gsz(4'hf),.mcast_all(1'b0),.mcast_group_size(8'd96),.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
 `ifdef TU_GSZPORT
            .gsz(4'(`TU_GSZPORT)),
 `ifdef TU_MCAST_ALL
@@ -152,7 +153,7 @@ module tb_hcoll_columns_ordered #(
     wire[DEL-1:0]ref_dv;wire[DEL*PWT-1:0]ref_dfl;wire ref_flt;wire[31:0]ref_cst;
     ot_hbm_accel_tu_endpoint_ps #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
-        .SWCRED(1 << RXAW), .LAT(LAT),.COLUMN_HARD(1)
+        .SWCRED(1 << RXAW), .LAT(LAT),.COLUMN_HARD(1),.COLUMN_MUT(MUT_COLUMN),.REDUCE_HARD(NATIVE_REDUCE)
 `ifdef TU_SYNCPHY
         , .SYNCPHY(1)
 `endif
@@ -296,6 +297,8 @@ module tb_hcoll_columns_ordered #(
                  seed0, rank, pf, t_done - t_issue, (t_done - t_issue) / T_CORE, t_fdep - t_issue, t_ldep - t_issue,
                  t_farr - t_issue, t_larr - t_issue, t_fres - t_issue, t_lres - t_issue, t_done - t_larr,
                  ndep, narr, nres, got, own_ok, mism, flt, cst);
+        if(mism!=0||flt||own_ok!=ROF||got!=TOT)$fatal(1,"ORDERED_COLL FAIL mismatches=%0d own=%0d",mism,own_ok);
+        $display("ORDERED_COLL PASS full512 got=%0d own_exact=%0d",got,own_ok);
         $finish;
     end
     initial begin #(400000.0); $display("TUTIMEOUT got=%0d of %0d ndep=%0d narr=%0d", got, TOT, ndep, narr); $finish; end

@@ -20,8 +20,8 @@
  "clock": "cts",
  "layer_cap": "M5",
  "outline": {
-  "w": 54,
-  "h": 54
+  "w": 90.72,
+  "h": 90.72
  },
  "pins": {
   "W": [
@@ -46,7 +46,7 @@
   "macro_halo_um": 5.4
  },
  "hold_merge": true,
- "structural_change": "16ownclock seven-adder ordered8contributor32bitFP32 lanes replace retained112adder tree. OriginalLAT7 and pairwise order unchanged; requestcapture+replypub2explicit proposededges; matchingnativeindex and valid. Prototype numerical219replies and bitmut proof; actualparentfullproof/price/die fit unresolved.",
+ "structural_change": "16ownclock seven-adder ordered8contributor32bitFP32 lanes replace retained112adder tree. OriginalLAT7 and pairwise order unchanged; requestcapture+replypub2explicit proposededges; matchingnativeindex and valid. Prototype numerical219replies and bitmut proof; actualparentfullproof/price/die fit unresolved. ActualR1 area3883um2 initial54sq GPL0301util157% receiptkept; resize90.72sq true52%util, no logic/clock/budget relaxation.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
@@ -89,5 +89,6 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "std_area_um2": 3883
 }

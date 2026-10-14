@@ -1,0 +1,13 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/collcolumns96-2240
+ot-run: ot-epyc4       admits   568 GB (avail 795, growth 117, headroom 48, waiters 0/0 GB) load 44/128 running 11 disk 1003 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/collcolumns96-2240
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/collcolumns96-2240
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2112449-1791975908 after 0 s
+TUCFG seed=3 rank=19 NC=8 NOG=12 PF=384 INJ=2 DEL=4 NPT=8 RXAW=8 BUDGET=377.60 CRED=113.80 T_CORE=0.833333 T_PHY=1.000000 TOT=2304
+TUDONE seed=3 rank=19 pf=384 lat_ns=1392.780 lat_cyc=1671.3 tx_first_ns=48.372 tx_last_ns=645.516 rx_first_ns=426.174 rx_last_ns=1106.718 res_first_ns=492.060 res_last_ns=645.516 deliver_tail_ns=286.062 ndep=360 narr=2616 nres=24 got=2304 own_exact=24 mismatches=0 faults=0 credit_stall=0
+- rtl/hbm_accel/tu/tb_hcoll_columns_ordered.sv:299: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.234 s; speed 7.729 us/s
+- Verilator: cpu 0.234 s on 1 threads; allocated 19 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2112449-1791975908): exit 0
