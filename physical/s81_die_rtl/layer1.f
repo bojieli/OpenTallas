@@ -22,3 +22,12 @@ physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
 +define+DSFD_WFC_STG_CL_DIE
 rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv
 +libdir+physical/s81_ph_views/mtp/macros
+# BF pair (x512): the CLOSED compact199 views under their die names (tools/s81/gen_bf_die_wrappers.py: die bit i = the
+# view pin tools/s81/bf_direct_pins.groups names; closed routes' parameters); dsfd_bf_front.xb = the native BF stream
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv
+rtl/dsrom_sys/s81_die_bind/dsfd_bf_front.sv
+rtl/s81/ot_s81_bf_front.sv
+rtl/v41rom/ot_v41_bf_col.sv
+rtl/v41rom/ot_v41_bf_front_core.sv
+# BF weight ROM macro model (bit array; the macro is hard IP)
+physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v
