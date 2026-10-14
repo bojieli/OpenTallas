@@ -80,7 +80,7 @@
  "job": {
   "owner": "Claude:el1013-qwen-romspine",
   "branch": "claude/el1013-qwen-romspine",
-  "tag": "sl1",
+  "tag": "sl2",
   "purpose": "Qwen ROM TP8 contract v4b slot cell qfd_seq_su (1 instance seq_su, 518.376^2): first slot-shaped view under the die master name. Body = ot_qfd_seq_su_bi PSRAM 1 / HQ2 1 / RRG 1 / PCUT 1 at the TP8 setting D 8 / G 3,072 (qwen-tp8/seq f8aa5e43a, cherry-picked: 3-bit collective rank) (closed as qfd_seq_su_bi-febra-dace0dae3 at 518.4^2, M8 era); the wrapper is WIRING ONLY (generated from the packing table), every body port is an IS/OS = 1 pin flop. 2 x ot_sram_1r1w_64x512_m1_r2c2 program store. Cut: 3,594 pin bits over 4 faces of 518 um (N 1,651 b on M5 = 0.31 of the 10,799 N-face M3/M5 tracks at 48 nm; the widest internal cut is the 1,024-b program word between the two SRAMs and the head FIFO, 1,024 b over ~4 x 518 um / 0.048 um x 0.5 usable = 0.05) <= 0.60. Clock: sinks per root measured by the --cts gate (gate_result.json).",
   "benches": [
    {
@@ -120,5 +120,10 @@
     "note": "OT_QFD_SEQ_SU_SLOT_MUT swaps vwr bits 0 / 1 inside the cell (a packing error): 9,144 mismatches"
    }
   ]
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "contract": "results/arch/hier_contract_1012/qwen_rom_tp8.json version 4, slot seq_su",
+  "note": "the closed views (qfd_seq_su-fea / -feb @ f3e3d6b6f, top ot_qfd_seq_su_bi) have the M8-era pin regions, raw body ports and layers M4-M7; the die binds the slot cell qfd_seq_su with the 33 contract bundles on the v4 faces at cap M5"
  }
 }
