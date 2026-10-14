@@ -1,5 +1,5 @@
 {
- "name": "lkep_rp_ref-s1-COMMIT",
+ "name": "lkep_rp_ref-s1-e4598e48e",
  "block": "ot_lkep_rp",
  "ref_tile": true,
  "owner": "Codex:hbm_lkep",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/el1013-lkep-split",
-  "commit": "COMMIT",
+  "commit": "e4598e48e",
   "extra_paths": [
    "results/rtl/hbm_retry_txrx_pin_20261010",
    "rtl/common",
@@ -119,7 +119,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/lkep_rp_ref/lkep_rp_ref-s1-COMMIT"
+   "to": "results/rtl/ref_tile/lkep_rp_ref/lkep_rp_ref-s1-e4598e48e"
   }
  ],
  "cycles_added": 0,
