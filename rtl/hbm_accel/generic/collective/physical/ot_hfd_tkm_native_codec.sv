@@ -171,3 +171,17 @@ module ot_hfd_tkm_write_credit_rx(
    end
   end
 endmodule
+// Proposed native40 reservation receiver. The sender must bind this two-edge
+// pin-to-publication latency to the actual native545 DEL flight; no guessed
+// DEL-valid delay is embedded here and no packet payload bit is repurposed.
+module ot_hfd_tkm_reservation_rx #(parameter integer MUT=0)(
+ input wire clk,rst_n,input wire[39:0]control,output reg[3:0]del_reserve
+);
+ reg[39:0]control_pin;
+ always @(posedge clk)control_pin<=control;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)del_reserve<=0;
+  else if(control_pin[39:38]==0&&control_pin[37:32]==62)
+   del_reserve<=(MUT==1)?{control_pin[2:0],control_pin[3]}:control_pin[3:0];
+  else del_reserve<=0;
+endmodule

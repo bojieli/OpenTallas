@@ -1,0 +1,20 @@
+checked 30848 O words over 13 gathers, 2592 delivery flits
+REC 0 n 1280 pf 1 disp 0 ret 725 service 725
+REC 1 n 512 pf 1 disp 324 ret 745 service 20
+REC 2 n 5120 pf 4 disp 648 ret 1117 service 372
+REC 3 n 384 pf 1 disp 972 ret 1369 service 252
+REC 4 n 2304 pf 2 disp 1296 ret 1717 service 348
+REC 5 n 2304 pf 2 disp 1620 ret 2041 service 324
+REC 6 n 2304 pf 2 disp 1944 ret 2365 service 324
+REC 7 n 2304 pf 2 disp 2268 ret 2689 service 324
+REC 8 n 2304 pf 2 disp 2592 ret 3013 service 324
+REC 9 n 2304 pf 2 disp 2916 ret 3337 service 324
+REC 10 n 2304 pf 2 disp 3240 ret 3661 service 324
+REC 11 n 5120 pf 4 disp 3564 ret 4033 service 372
+REC 12 n 2304 pf 2 disp 3888 ret 4309 service 276
+SEQUENCE 13 gathers in 4310 cycles (LAT 453 CRED 137 rank 37)
+HGI_COLL_PIPE PASS
+- rtl/hbm_accel/generic/collective/tb_hgi_coll_pipe.sv:210: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.309 s; speed 13.274 us/s
+- Verilator: cpu 0.309 s on 1 threads; allocated 75 MB

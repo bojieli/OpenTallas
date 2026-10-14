@@ -41,6 +41,27 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0, ACK_SEAM=0)(
             tinv = !t[84] ? {EW{1'b0}} : (!t[83] ? {1'b1, 1'b1, b_[49:18], b_[81:50], b_[17:0], t[0]} : {1'b0, 1'b1, b_, t[0]});
         end
     endfunction
+ // Payload enables come only from local captured control, never the reset relay.
+ always @(posedge clk)begin:p_dat
+  reg[EW-1:0]lx[0:15],e_;reg[12:0]cnt_;reg[15:0]m_;reg[FW-1:0]od_,rd_;
+  if(cell_v_q)begin
+   for(integer i_=0;i_<16;i_=i_+1)lx[i_]=lb[i_];
+   for(integer s_=0;s_<4;s_=s_+1)begin
+    lx[4*slot_q+s_]=tinv(cell_q[EW*s_+:EW]);lb[4*slot_q+s_]<=tinv(cell_q[EW*s_+:EW]);
+   end
+   if(slot_q==3||last_q)begin
+    cnt_=((nout_q-outn)>=16)?13'd16:(nout_q-outn);m_=(cnt_==16)?16'hffff:16'((17'd1<<cnt_[4:0])-1);
+    for(integer i_=0;i_<16;i_=i_+1)begin
+     e_=lx[i_];od_[32*i_+:32]=(13'(i_)<cnt_)?((MUT==1)?e_[50:19]:~e_[50:19]):32'd0;
+     rd_[32*i_+:32]=(13'(i_)<cnt_)?unkey(e_[82:51],e_[0]):32'd0;
+    end
+    lq_d[lq_t]<=od_;lq_a[lq_t]<=ob_next;lq_m[lq_t]<=m_;
+    if(hr_q)begin lq_d[3'(lq_t+3'd1)]<=rd_;lq_a[3'(lq_t+3'd1)]<=rb_next;lq_m[3'(lq_t+3'd1)]<=m_;end
+    for(integer i_=0;i_<16;i_=i_+1)lb[i_]<=0;
+   end
+  end
+  if(start_q)for(integer i_=0;i_<16;i_=i_+1)lb[i_]<=0;
+ end
  always @(posedge clk)if(lq_pop)begin w_addr<=lq_a[lq_h];w_mask<=lq_m[lq_h];w_data<=lq_d[lq_h];end
  always @(posedge clk or negedge rn)begin
   if(!rn)begin
@@ -48,38 +69,22 @@ module ot_hgi_coll_tkm_packer #(parameter integer FW=512, MUT=0, ACK_SEAM=0)(
    nout_q<=1;ob_q<=0;rb_q<=0;ob_next<=0;rb_next<=0;hr_q<=0;
    outn<=0;line<=0;lp<=0;lq_n<=0;lq_h<=0;lq_t<=0;
   end else begin
-            begin : pk
-                reg [3:0] n_; reg [2:0] t_; reg [12:0] cnt_; reg [FW-1:0] od_, rd_; reg [15:0] m_; reg [EW-1:0] e_;
-                reg [EW-1:0] lx [0:15];
-                n_ = lq_n; t_ = lq_t;
-                if (lq_pop) begin
-                    w_seq<=!w_seq;w_v <= 1'b1;
-                    lq_h <= lq_h + 3'd1; n_ = n_ - 4'd1;
-                end else if (accepted) w_v <= 1'b0;
-                if (cell_v_q) begin
-                    for (i = 0; i < 16; i = i + 1) lx[i] = lb[i];
-                    for (s = 0; s < 4; s = s + 1) begin lx[4 * slot_q + s] = tinv(cell_q[EW*s +: EW]); lb[4 * slot_q + s] <= tinv(cell_q[EW*s +: EW]); end
-                    
-                    if (slot_q == 2'd3 || last_q) begin
-                        cnt_ = ((nout_q - outn) >= 13'd16) ? 13'd16 : (nout_q - outn);
-                        m_ = (cnt_ == 13'd16) ? 16'hFFFF : 16'((17'd1 << cnt_[4:0]) - 17'd1);
-                        for (i = 0; i < 16; i = i + 1) begin
-                            e_ = lx[i];
-                            od_[32*i +: 32] = (13'(i) < cnt_) ? ((MUT == 1) ? e_[50:19] : ~e_[50:19]) : 32'd0;
-                            rd_[32*i +: 32] = (13'(i) < cnt_) ? unkey(e_[82:51], e_[0]) : 32'd0;
-                        end
-                        lq_d[t_] <= od_; lq_a[t_] <= ob_next; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1;
-                        if (hr_q) begin lq_d[t_] <= rd_; lq_a[t_] <= rb_next; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1; end
-                        ob_next<=ob_next+40'd16;rb_next<=rb_next+40'd16;line <= line + 9'd1; outn <= outn + cnt_; lp <= lp + 10'd1;
-                        for (i = 0; i < 16; i = i + 1) lb[i] <= {EW{1'b0}};
-                    end
-                end
-                lq_n <= n_; lq_t <= t_;
+            begin:pk
+             reg[3:0]n_;reg[2:0]t_;reg[12:0]cnt_;
+             n_=lq_n;t_=lq_t;
+             if(lq_pop)begin w_seq<=!w_seq;w_v<=1;lq_h<=lq_h+1'b1;n_=n_-1'b1;end
+             else if(accepted)w_v<=0;
+             if(cell_v_q&&(slot_q==3||last_q))begin
+              cnt_=((nout_q-outn)>=16)?13'd16:(nout_q-outn);
+              t_=t_+1'b1;n_=n_+1'b1;
+              if(hr_q)begin t_=t_+1'b1;n_=n_+1'b1;end
+              ob_next<=ob_next+40'd16;rb_next<=rb_next+40'd16;line<=line+1'b1;outn<=outn+cnt_;lp<=lp+1'b1;
+             end
+             lq_n<=n_;lq_t<=t_;
             end
    if(start_q)begin
     nout_q<=nout_pin;ob_q<=ob_pin;rb_q<=rb_pin;ob_next<=ob_pin;rb_next<=rb_pin;hr_q<=hr_pin;
     outn<=0;line<=0;lp<=0;
-    for(i=0;i<16;i=i+1)lb[i]<=0;
    end
   end
  end

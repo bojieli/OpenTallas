@@ -1,0 +1,159 @@
+{
+  "name": "hbm_tkm_selector_ref2240",
+  "top": "ot_hgi_coll_tkm_seq_lane_core",
+  "kind": "tile",
+  "sources": [
+    "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_seq_lane_core.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "params": {
+    "KMAX": 2048,
+    "DEL": 4,
+    "FW": 512,
+    "PWT": 545,
+    "CAP": 64,
+    "MUT": 0
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "clock": "cts",
+  "layer_cap": "M5",
+  "outline": {
+    "w": 120.96,
+    "h": 120.96
+  },
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "lane_heads0",
+      "lane_masks0",
+      "lane_epoch0",
+      "lane_hn0",
+      "lane_d0v",
+      "lane_d1v",
+      "lane_dv",
+      "lane_nv_mask",
+      "lane_occ",
+      "lane_ldv",
+      "lane_fault",
+      "lane_take",
+      "lane_pop",
+      "lane_take_epochs"
+    ],
+    "E": [
+      "lane_heads1",
+      "lane_masks1",
+      "lane_epoch1",
+      "lane_hn1",
+      "buf_w_v",
+      "buf_w_addr",
+      "buf_w_data",
+      "buf_r_v",
+      "buf_r_addr",
+      "buf_rd_v",
+      "buf_rd_data"
+    ],
+    "N": [
+      "lane_heads2",
+      "lane_masks2",
+      "lane_epoch2",
+      "lane_hn2",
+      "chain_tau",
+      "chain_busy",
+      "chain_entry",
+      "chain_valid",
+      "chain_up"
+    ],
+    "S": [
+      "lane_heads3",
+      "lane_masks3",
+      "lane_epoch3",
+      "lane_hn3",
+      "chain_clr",
+      "chain_conv",
+      "chain_tt",
+      "chain_tl",
+      "lane_live",
+      "lane_tau",
+      "lane_g",
+      "lane_gb",
+      "lane_pf",
+      "start",
+      "cfg_n",
+      "cfg_k",
+      "cfg_g",
+      "cfg_gbase",
+      "cfg_pf",
+      "cfg_nout",
+      "cfg_obase",
+      "cfg_rbase",
+      "cfg_has_r",
+      "busy",
+      "done",
+      "fault",
+      "stat_cycles",
+      "stat_ins",
+      "stat_surv",
+      "w_v",
+      "pack_empty",
+      "pack_queued",
+      "pack_lines",
+      "pack_start",
+      "pack_cell_v",
+      "pack_last",
+      "pack_cell",
+      "pack_slot",
+      "pack_nout",
+      "pack_obase",
+      "pack_rbase",
+      "pack_has_r"
+    ]
+  },
+  "route": {
+    "pd": 0.52,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pin_balance": {
+      "h": "M3 M5",
+      "v": "M2 M4"
+    }
+  },
+  "structural_change": "Real old core WNS-1324ps and boundaryspread97.6ps: move2SRAMs+packer to separate roots, capture triplehead/mask/epoch and feedback pins, balanced prefix replaces serial32-slot rank. 1024xfull340buffer exact/mut and15-case integrated small PASS; independent1280full85heads and631masked IDs exact/mut. Diagnostic ownrootCTS, not source/price waiver.",
+  "job": {
+    "owner": "Codex:coll_clusters2240",
+    "branch": "codex/hbm-coll-clusters-2240",
+    "tag": "r1macrofree",
+    "hold_merge": true,
+    "purpose": "Actual macro-free own-flop selector after hard buffer/output cuts; typed4lane pin mirrors, balanced prefixes, captured mask/credit/head/packer seams. No route adoption before source-bound fullshape/price.",
+    "benches": [
+      {
+        "name": "selector_masked_wrap",
+        "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_head_seam.sh {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "HEAD_SEAM PASS",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "selector_stale_mask",
+        "cmd": "bash rtl/hbm_accel/generic/collective/tkm/run_head_seam.sh {RUN}/bench/mut 5",
+        "expect": "fail",
+        "fail_regex": "HEAD_SEAM FAIL repeated",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "extra_paths": [
+      "rtl/hbm_accel/generic/collective/tkm"
+    ]
+  }
+}

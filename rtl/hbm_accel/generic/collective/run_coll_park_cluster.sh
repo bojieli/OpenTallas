@@ -9,7 +9,7 @@ D="${DEFS:-}"; [ -n "${PIPE:-}" ] && D="$D +define+PIPE"
 SRC="rtl/hbm_accel/generic/collective/ot_hgi_coll_park.sv rtl/hbm_accel/generic/collective/ot_hgi_coll_park_queue.sv rtl/hbm_accel/generic/collective/ot_hgi_coll_park_fault.sv rtl/hbm_accel/generic/collective/ot_coll_park_fifo.sv rtl/lib/ot_rst_relay.sv
  rtl/hbm_accel/generic/collective/ot_hgi_coll_ep_cluster.sv rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv
  rtl/hbm_accel/generic/collective/ot_hgi_coll_record.sv rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv
- rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv
+ rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg_cluster.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv
  rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv
  rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv
  rtl/link/ot_link_afifo.sv rtl/hbm_accel/generic/ot_hgi_cfg.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_park_cluster.sv"

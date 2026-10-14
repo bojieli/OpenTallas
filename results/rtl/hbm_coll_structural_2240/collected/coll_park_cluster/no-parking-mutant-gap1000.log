@@ -1,0 +1,32 @@
+ERR fault (record faults 11012028, block fault 1)
+ERR retired 0 of 13
+ERR gather 0 word 0 (rank 0): count 2 value da554243 want da5a0000
+ERR gather 0 word 1 (rank 0): count 2 value 5a4adb5c want 5a5b9919
+ERR gather 0 word 2 (rank 0): count 2 value 5a487475 want 5a593232
+ERR gather 0 word 3 (rank 0): count 2 value 5a4e0d8e want 5a5ecb4b
+ERR gather 0 word 4 (rank 0): count 2 value 5a4fa6a7 want 5a5c6464
+ERR gather 0 word 5 (rank 0): count 2 value 5a4d3fc0 want 5a5dfd7d
+ERR gather 0 word 6 (rank 0): count 2 value 5a42d8d9 want 5a539696
+ERR gather 0 word 7 (rank 0): count 2 value da4071f2 want da512faf
+ERR gather 0 word 8 (rank 0): count 2 value 5a460b0b want 5a56c8c8
+ERR gather 0 word 9 (rank 0): count 2 value 5a47a424 want 5a5461e1
+checked 30848 O words over 13 gathers, 191 delivery flits
+REC 0 n 1280 pf 1 disp 0 ret -1 service -1
+REC 1 n 512 pf 1 disp 1124 ret -1 service -1
+REC 2 n 5120 pf 4 disp 1002126 ret -1 service -1
+REC 3 n 384 pf 1 disp 2003128 ret -1 service -1
+REC 4 n 2304 pf 2 disp 3004130 ret -1 service -1
+REC 5 n 2304 pf 2 disp 4005132 ret -1 service -1
+REC 6 n 2304 pf 2 disp 5006134 ret -1 service -1
+REC 7 n 2304 pf 2 disp 6007136 ret -1 service -1
+REC 8 n 2304 pf 2 disp 7008138 ret -1 service -1
+REC 9 n 2304 pf 2 disp 8009140 ret -1 service -1
+REC 10 n 2304 pf 2 disp 9010142 ret -1 service -1
+REC 11 n 5120 pf 4 disp 10011144 ret -1 service -1
+REC 12 n 2304 pf 2 disp 11012146 ret -1 service -1
+SEQUENCE 13 gathers in 11012148 cycles (LAT 453 CRED 137 rank 37)
+HGI_COLL_PIPE FAIL errors=30837
+- rtl/hbm_accel/generic/collective/tb_hgi_coll_park_cluster.sv:210: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9ms; walltime 601.676 s; speed 15.265 us/s
+- Verilator: cpu 601.656 s on 1 threads; allocated 76 MB

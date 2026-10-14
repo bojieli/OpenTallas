@@ -10,13 +10,17 @@ module ot_hfd_tkm_native_output_leaf # (parameter integer MUT=0)(
  input wire[39:0]native_control,
  input wire core_done,core_busy,core_fault,
  output wire[544:0]native_write,
- output wire done,busy,fault,
+ output reg done,busy,fault,
  output wire[3:0]queued,output wire[9:0]lines_pushed,output wire pack_empty
 );
  wire[0:0]rr;
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
  reg done_pin,busy_pin,fault_pin;
  always @(posedge clk)begin done_pin<=core_done;busy_pin<=core_busy;fault_pin<=core_fault;end
+ wire codec_done,codec_busy,codec_fault;
+ always @(posedge clk or negedge rr[0])
+  if(!rr[0])begin done<=0;busy<=0;fault<=0;end
+  else begin done<=codec_done;busy<=codec_busy;fault<=codec_fault;end
  wire wv,wr;wire[39:0]wa;wire[15:0]wm;wire[511:0]wd;
  wire[15:0]pending;wire[4:0]leases;
  ot_hgi_coll_tkm_packer #(.MUT(MUT))u_pack(.clk(clk),.rst_n(rst_n),.start(start),
@@ -26,6 +30,6 @@ module ot_hfd_tkm_native_output_leaf # (parameter integer MUT=0)(
   .queued(queued),.lines_pushed(lines_pushed),.empty(pack_empty));
  ot_hfd_tkm_write_credit_tx u_codec(.clk(clk),.rst_n(rr[0]),.control(native_control),
   .w_v(wv),.w_addr(wa),.w_mask(wm),.w_data(wd),.w_rdy(wr),.packet(native_write),
-  .core_done(done_pin),.core_busy(busy_pin),.core_fault(fault_pin),.done(done),.busy(busy),.fault(fault),
+  .core_done(done_pin),.core_busy(busy_pin),.core_fault(fault_pin),.done(codec_done),.busy(codec_busy),.fault(codec_fault),
   .outstanding(pending),.leases(leases));
 endmodule

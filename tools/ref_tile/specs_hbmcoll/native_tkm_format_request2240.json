@@ -80,6 +80,7 @@
     "source": "rtl/hbm_accel/generic/collective/physical/ot_hfd_tkm_native_output_leaf.sv",
     "destination": "ot_hfd_tkm_write_credit_rx in ot_hfd_tkm_native_codec.sv",
     "bench": "NATIVE_OUTPUT exact 16 O/R writes,256words with full40b carry/masks/negativezero + IDmutant; native credit64writes1024words + earlycompletionmutant",
-    "physical": "Packer and source encoder/lease controller share one delivered own-flop root. Native control40 captured; internal ready never crosses hard boundary. Requires measuredCTS and actual price/clock/die binding."
+    "physical": "Packer and source encoder/lease controller share one delivered own-flop root. Native control40 captured; internal ready never crosses hard boundary. Requires measuredCTS and actual price/clock/die binding.",
+    "status_publication": "one explicit registered output stage for DONE/BUSY/FAULT, counted in source-to-native completion price; these native semantics are proposed, not an adopted epoch modification"
   }
 }
