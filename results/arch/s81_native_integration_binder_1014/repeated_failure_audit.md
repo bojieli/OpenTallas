@@ -187,3 +187,15 @@ four-family per-bit reach/alignment/cut screen at the current die outline.
 Registered-stage cost must be explicit if zero-epoch topology cannot close.
 Missing native bindings, new reset ACK views and physical clock producers must
 remain visible rather than being replaced by legacy LEF coordinates or labels.
+
+The independent FP32 reference `532b9b058` subsequently passed 104,657 exact
+bit/error comparisons at the existing eight edges, including six short-reset
+cases; the copied-source RNE tie-away mutant failed at comparison 539. It uses
+integer units of 2^-149 and one RNE quantization, so it does not share the DUT
+adder. Read-only genuine INV sizing candidate `4044815ca` preserves Boolean
+A/Y connections, state and epochs, and improves the original arithmetic cone.
+It exposes a separate SS key-enable path `s2_hit → skey6` at -75.33 ps.
+The fresh SS async recovery deficit of -34.34 ps also remains open, separately
+from data WNS. Neither stronger drive nor the independent numerical proof
+qualifies the full tile; real enable/reset cones and normal FF hold and
+recovery/removal checks still govern the next source-bound physical gate.
