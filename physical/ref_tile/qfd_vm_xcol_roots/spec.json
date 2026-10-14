@@ -13,7 +13,8 @@
   "SMAX": 11,
   "BMAX": 8,
   "ND": 14,
-  "NROOT": 32
+  "NROOT": 32,
+  "SNAPSHOT": 1
  },
  "clock_port": "clk",
  "reset_ports": [],
@@ -66,8 +67,8 @@
  "job": {
   "owner": "Codex:qwen_vm",
   "branch": "claude/qwen-tp8-vm-phys",
-  "tag": "rt3",
-  "purpose": "Replace full-array replication and two arbitrary line selectors with32 parallel fixed cyclic quad-line roots (quad=32phase+root), constant-entry split/phase mux ranks,3 enabled-edge tagged outputs;128 outputbits per column,4096 sourcepayload per band. Split constant-root ranks into32four-bit modules to bound frontend elaboration (monolithicbaseline still running at10min). Also preserveall4-bit split codes0..15 inclidentityaboveSMAX; actualtimingmeasuredroute.",
+  "tag": "rt4",
+  "purpose": "Restore exact legacy registered-o_v snapshot with2048 unreplicated FF;32 cyclic roots stream concurrently with nextline preparation. Three enabled-edge output/tag primitive, production band epoch drain obligation remains open.",
   "views_to": "physical/ref_tile/qfd_vm_xcol_roots/views",
   "record_to": "results/rtl/ref_tile/qfd_vm_xcol_roots",
   "cycles_added": 3,
@@ -129,6 +130,26 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "roots_mut4",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-PINMISSING -Wno-TIMESCALEMOD -j 2 --top-module tb_qfd_vm_xcol_roots -GNRB=64 -GSMAX=11 -GMUT=4 --Mdir {RUN}/bench/roots_mut4 rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xcol_roots.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xcol_roots.sv > {RUN}/bench/roots_mut4.build.log 2>&1 && {RUN}/bench/roots_mut4/Vtb_qfd_vm_xcol_roots > {RUN}/bench/roots_mut4.log 2>&1; grep -q '^PASS xcol_roots' {RUN}/bench/roots_mut4.log",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "roots_mut5",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-PINMISSING -Wno-TIMESCALEMOD -j 2 --top-module tb_qfd_vm_xcol_roots -GNRB=64 -GSMAX=11 -GMUT=5 --Mdir {RUN}/bench/roots_mut5 rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xcol_roots.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xcol_roots.sv > {RUN}/bench/roots_mut5.build.log 2>&1 && {RUN}/bench/roots_mut5/Vtb_qfd_vm_xcol_roots > {RUN}/bench/roots_mut5.log 2>&1; grep -q '^PASS xcol_roots' {RUN}/bench/roots_mut5.log",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "hold_merge": "Primitive candidate only; die32root/cache band contract and end-to-end throughput not yet measured"
@@ -142,5 +163,5 @@
  },
  "inhold": true,
  "outhold": true,
- "structural_change": "Replace full-array replication and two arbitrary line selectors with32 parallel fixed cyclic quad-line roots (quad=32phase+root), constant-entry split/phase mux ranks,3 enabled-edge tagged outputs;128 outputbits per column,4096 sourcepayload per band. Split constant-root ranks into32four-bit modules to bound frontend elaboration (monolithicbaseline still running at10min). Completelegacyfullsplit0..15selectorcontract."
+ "structural_change": "Restore exact legacy registered-o_v snapshot with2048 unreplicated FF;32 cyclic roots stream concurrently with nextline preparation. Three enabled-edge output/tag primitive, production band epoch drain obligation remains open."
 }
