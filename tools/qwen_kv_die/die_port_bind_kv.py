@@ -111,8 +111,11 @@ def main(argv=None):
     ap.add_argument('die_v')
     ap.add_argument('--out', required=True)
     ap.add_argument('--split', action='store_true', help='the split KV/system die bindings (kv_die._set_geometry(True))')
+    ap.add_argument('--relay-rtl', help='v1.2: the generated relay RTL (tools/qwen_kv_die/kv_relays.py); its modules bind '
+                                        'the qkd_rly_* masters (else they stay class RELAY = stub)')
     a = ap.parse_args(argv)
     K._set_geometry(a.split)
+    rtxt = Path(a.relay_rtl).read_text() if a.relay_rtl else None
     wires, insts = parse_die(a.die_v)
     rep = {}
     by_m = defaultdict(list)
@@ -123,6 +126,17 @@ def main(argv=None):
         r = dict(n_instances=len(lst), die_ports=len(dp))
         if mst in HARD_PHY:
             r.update(cls='HARD_PHY', note=HARD_PHY[mst])
+        elif mst.startswith('qkd_rly') and rtxt is not None:
+            _, ports = header(rtxt, mst)
+            if ports is None:
+                r.update(cls='RELAY', note=f'no module {mst} in {a.relay_rtl}')
+            else:
+                bad = [dict(die_port=p_, die=w_, rtl=evalw(ports[p_][1], {}) if p_ in ports else None)
+                       for p_, w_ in dp.items() if p_ not in ports or evalw(ports[p_][1], {}) != w_]
+                miss = sorted(set(ports) - set(dp))
+                r.update(cls='REAL' if not bad and not miss else 'MISMATCH', module=mst, file=a.relay_rtl,
+                         note='die relay: generated register RTL, per-bit direction (kv_relays.py)',
+                         width_or_missing=bad, die_ports_not_bound=[], rtl_inputs_unconnected=miss, rtl_outputs_unread=[])
         elif mst.startswith('qkd_rly'):
             r.update(cls='RELAY', note='die-top relay register: only a generated lint stub module exists (no RTL relay master)')
         elif mst not in K.BINDINGS:

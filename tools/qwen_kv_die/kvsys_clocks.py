@@ -104,7 +104,7 @@ def main(argv=None):
             (a.out / f'clocks_{c}.tcl').write_text(clock_tcl(doms, leaves, c))
     rec = dict(schema='opentallas.qwen_kvsys_clocks.v1', sinks=sinks, domains={d: len(v) for d, v in doms.items()},
                measured=src, assumed_ideal=sorted(m_ for m_ in leaves if m_ not in src),
-               per_child_entries=dict(qkd_ectl=K.ECTL_CLK, qkd_rhead=K.HEAD_CLK),
+               per_child_entries=dict(qkd_ectl=K.ECTL_CLK, qkd_rhead=K.HEAD_CLK, qkd_ahub=K.AHUB_CLK),
                rule='phi - R per sink, R = insertion.json boundary mean of the bound view (per corner); frames ideal (R 0)')
     (a.out / 'clocks.json').write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps({k: rec[k] for k in ('sinks', 'domains')} | dict(measured=list(src))))

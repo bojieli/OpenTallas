@@ -171,6 +171,10 @@ SPLIT_HEAD_V11 = (1080.0, 492.48)
 HEAD_CLK = (['ck_f', 'ck_k', 'ck_s'] + [f'ck_i{i}' for i in range(16)] + [f'ck_o{i}' for i in range(16)] +
             [f'ck_l{i}' for i in range(16)])
 ECTL_CLK = ['ck_a', 'ck_b', 'ck_c']
+# v1.2: the attention hub is the wires-only composition ot_qkd_ahub_die (kvsys-elements 33048f31a): the CLOSED core
+# (qkd_ahub_core hd2) + 13 hardened tiles (4 ot_nhb_zh, ot_qkh_recip_leaf, 4 ot_nhb_pbst, 4 ot_nhb_pvlg), each its own clock
+# entry (die port -> RTL ck_core / ck_zh[i] / ck_recip / ck_pbst[i] / ck_pvlg[i]); am[143:0] = 4 registered per-stack copies
+AHUB_CLK = ['ck_c'] + [f'ck_z{i}' for i in range(4)] + ['ck_r'] + [f'ck_p{i}' for i in range(4)] + [f'ck_v{i}' for i in range(4)]
 SPLIT_FRAMES = dict(qkd_seq=(604.8, 475.2), qkd_lnk=(777.6, 129.6), qkd_embgw=(172.8, 216.0), qkd_ahub=(1175.04, 760.32))
 BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink', file='rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink.sv',
     ports=dict(rf=['r_v', 'r_d', 'r_cr'], tf=['t_v', 't_d', 't_cr'],
@@ -199,7 +203,7 @@ def _set_geometry(split):
 
 # split die masters bind to the RTL the split actually instantiates (NO STUBS, owner 08:05 PT): the hierarchical head
 # cluster, the merged-die sequencer cluster qkd_seq (native HEADS 1 / Q_FP32 1 profile = its parameters)
-_BASE_BINDINGS = {k: BINDINGS[k] for k in ('qkd_rhead', 'qkd_seq', 'qkd_ectl')}
+_BASE_BINDINGS = {k: BINDINGS[k] for k in ('qkd_rhead', 'qkd_seq', 'qkd_ectl', 'qkd_ahub')}
 _BASE_BINDINGS_LATE = ('qkd_kvwq_ctl_bin', 'qkd_kvwq_leaf_s_w129_m')     # defined further down; captured at first _set_geometry call
 SPLIT_BINDINGS = dict(
     # v1.1: the native head (wires-only parent of 35 hardened children, each its own clock entry)
@@ -235,7 +239,17 @@ SPLIT_BINDINGS = dict(
                             **{f'kc_{q}': [f'kc_{q}'] for q in STACKS}, **{f'af_{q}': [f'af_{q}'] for q in STACKS},
                             **{f'mf_{q}': [f'mf_{q}'] for q in STACKS},
                             ar=['ar'], hf=['hf'], hs=['hs'], hc=['hc'], tk=['tk'], kst=['kst'], ck=['ck'], rst_n=['rst_n']),
-                 classed={}))
+                 classed={}),
+    qkd_ahub=dict(module='ot_qkd_ahub_die', file='rtl/hdc/nearhbm/ot_qkd_ahub_core.sv',
+                  ports=dict(ap_WS=['si_valid', 'si_type', 'si_g', 'si_hh', 'si_k', 'si_any', 'si_data', 'pi_valid',
+                                    'pi_g', 'pi_beat', 'pi_data'],
+                             am_WS=['am'], ao=['out_valid', 'out_g', 'out_beat', 'out_data'], hs=['start'], hf=['fault'],
+                             ck_c=['ck_core'], ck_z0=['ck_zh'], ck_r=['ck_recip'], ck_p0=['ck_pbst'], ck_v0=['ck_pvlg'],
+                             rst_n=['rst_n']),
+                  sliced=dict(ap_WN='ap_WS', ap_ES='ap_WS', ap_EN='ap_WS', am_WN='am_WS', am_ES='am_WS', am_EN='am_WS',
+                              **{f'ck_z{i}': 'ck_z0' for i in range(1, 4)}, **{f'ck_p{i}': 'ck_p0' for i in range(1, 4)},
+                              **{f'ck_v{i}': 'ck_v0' for i in range(1, 4)}),
+                  classed={'ev': 'debug: hub event word (unread on the die)'}))
 
 
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
@@ -777,7 +791,8 @@ def _buses(m, T, r):
         add((f'rst_core_{st}', 'reset', 1, [('pll', f'rso_{st}'), (f'ctrl_{st}', 'rsi')] +
              [(n, 'rst_n') for n in dict.fromkeys(n for n, _ in grp) if not n.startswith('cdc_')]))   # the CDC core resets come from land.crst (r21c rst_kv)
     cen = ['d2d_kv', 'seq', 'embgw', 'ahub', 'host'] + (['lnk'] if m['geo'].get('split') else [])
-    add(('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c')] + [(n, 'ck') for n in cen] +
+    add(('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c')] +
+         [(n, c_) for n in cen for c_ in (AHUB_CLK if (n == 'ahub' and m['geo'].get('split')) else ['ck'])] +
          [('ucie_rom', 'clk'), ('serdes_host', 'clk')]))
     add(('rst_core_c', 'reset', 1, [('pll', 'rso_c')] + [(n, 'rst_n') for n in cen] +
          [('ucie_rom', 'rst_n'), ('serdes_host', 'rst_n')]))
@@ -1361,6 +1376,13 @@ def _split_pins(M, m=None):
                     hm.ports[p_] = ('face', 1, 'W', 'M4', y_, 1)
             if 'rst_n' in hm.ports:
                 hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 440.0, 1)
+    # v1.2: the hub composition's 14 clock entries = area pins in one row across the slot (one CTS sink each; the
+    # elements' child sub-slot plan moves each to its child's clock pin)
+    if 'qkd_ahub' in M:
+        hm = M['qkd_ahub']
+        for j_, p_ in enumerate(AHUB_CLK):
+            if p_ in hm.ports:
+                hm.ports[p_] = ('area', 1, round(hm.w * (j_ + 1) / (len(AHUB_CLK) + 1), 3), hm.h / 2, 1)
     # the link bridge abuts the KV end: its rf / tf faces take the KV end's bit positions (v1 drew them ~220 um apart:
     # the 1.47 fine window of the d2d | lnk face); lx / lr leave its S face over the sequencer's lx / lr pins
     if m is not None and 'qkd_lnk' in M and 'qkd_d2d' in M:
