@@ -13,11 +13,11 @@
   "rst_n"
  ],
  "outline": {
-  "w": 60.48,
-  "h": 60.48
+  "w": 38.88,
+  "h": 38.88
  },
  "std_area_um2": 296,
- "area_basis": "Actual raw mapped area296; recipe2 pinhold expansion caused GPLutil202.113% of849um2 core (~1716um2 effective). Expanded physical core3154 targets54% of actual post-hold area; do not shrink from raw pre-hold area.",
+ "area_basis": "Measured raw synth296um2; post-IOhold placement570.69um2 and CTS593.756um2 from actual run JSON. Core1194.39 targets49.7% actual CTSarea. Prior GPL202% was a placement-demand statistic, not1716um2 physicalarea; large60.48frame measured only18.8% postCTSutil.",
  "pins": {
   "W": [
    "clk",

@@ -1,0 +1,125 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "utilisation 9% outside 45%-60% (std 296 + macro 0 in core 3154 um2)",
+   "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 10.5 pins/um (out_v, out_lo, out_hi): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "S face 10.5 pins/um (v1, m1, d1_lo): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 21 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "W face 10.5 pins/um (clk, rst_n, clr): recipe-2 hold stages take 2.3 um behind the face, the pin flops need gap 2.9 um and 6 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc1tb for 16 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hc_chunk_scan2_ref_20261014-013200.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hc_chunk_scan2_ref_20261014-013200.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hc_chunk_scan2_ref-20261014-013200",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc1tb in 21 s (gate total 92 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 296 um2 + macros 0 in core 3154: util 9%",
+   "fix": "set \"std_area_um2\": 296 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hgi_hc_chunk_scan2 cells 1,393 flops 797 depth 90.0 ps util 0.0941 reach 0.0 um (0.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 9.4% outside 45%-65% (std 297 + macro 0 um2 in 3154 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 119.9..126.5 ps (spread 6.6), boundary mean 123.3; tt insertion all 86.3..93.1 ps (spread 6.8), boundary mean 90.1; ff insertion all 67.5..74.3 ps (spread 6.8), boundary mean 71.5; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hc_chunk_scan2_ref/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      265 paths, worst slack 240.4 ps (e.g. out_hi[41])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg        38 paths, worst slack 360.3 ps (e.g. a[81]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg        5 paths, worst slack 629.1 ps (e.g. fault$_DFFE_PN0P_/RESETN)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 2.403750531954074e-10 hold WNS 2.5621199606362666e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 797 sinks on the largest root <= 15,000; measured TT insertion 93.1 ps, leaf spread 6.8 ps",
+   "fix": ""
+  }
+ ]
+}

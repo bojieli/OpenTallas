@@ -72,13 +72,18 @@
             60.48
           ],
           "mux_raw_std_area_um2": 296,
-          "mux_recipe2_posthold_effective_area_um2": 1716,
           "mux_clock_sinks": 797,
           "TT_boundary_mean_ps": 90.1,
           "TT_spread_ps": 6.8,
-          "status": "CTS WARN rawutil9%;actual compulsory holdcells need larger core. No assignedpins or route.",
+          "status": "Large60.48frame clockWARN but actualCTSutil18.8%; actualpostholdarea measured, compact38.88frame probe next. The1716estimate fromGPLutil was not actualarea. No assignedpin/route/fit credit.",
           "clock_evidence": "chunk_scan2_remote_gate2.json",
-          "transaction_proof": "results/rtl/hbm_hc_b2_1013/collector_stores2/receipt.json"
+          "transaction_proof": "results/rtl/hbm_hc_b2_1013/collector_stores2/receipt.json",
+          "mux_measured_postIOhold_std_area_um2": 570.69,
+          "mux_measured_postCTS_std_area_um2": 593.756,
+          "mux_compact_candidate_outline_um": [
+            38.88,
+            38.88
+          ]
         }
       }
     },
