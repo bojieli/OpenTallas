@@ -329,7 +329,7 @@ def _bus(base, n):
     return [f'{base}[{i}]' for i in range(n)]
 
 
-_PSL = re.compile(r'^(.+)\[(\d+):(\d+)\]$')
+_PSL = re.compile(r'^(.+)\[(\d+)(?::(\d+))?\]$')
 
 
 def pslice(port):
@@ -337,7 +337,7 @@ def pslice(port):
     2026-10-07 port slicing: one port served by several nets, e.g. a 512-b link tx by two 256-b final stations).
     Returns (base, lo, hi) with lo = hi = None for a whole port."""
     mm = _PSL.match(port)
-    return (mm.group(1), int(mm.group(2)), int(mm.group(3))) if mm else (port, None, None)
+    return (mm.group(1), int(mm.group(2)), int(mm.group(3) or mm.group(2))) if mm else (port, None, None)
 
 
 def real_ports():
@@ -3338,6 +3338,17 @@ HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_res
 def _anchor(Mx, it, port):
     """die coordinates of a port's anchor (generated face centre) on a placed instance; None for real macros"""
     p = Mx.ports.get(pslice(port)[0]) if Mx is not None else None
+    if p and p[0] == 'rects':
+        lo_, hi_ = pslice(port)[1:]
+        pins_ = p[1] if lo_ is None else p[1][lo_:hi_+1]
+        assert pins_, (it.name, port, 'no physical pin anchor')
+        ax = sum((r[0]+r[2])/2 for _,_,r in pins_)/len(pins_)
+        ay = sum((r[1]+r[3])/2 for _,_,r in pins_)/len(pins_)
+        if it.orient in ('MY','R180'):
+            ax = it.w-ax
+        if it.orient in ('MX','R180'):
+            ay = it.h-ay
+        return it.x+ax,it.y+ay
     if not p or p[0] != 'face':
         return None
     _, n_, face, ly_, c, pt_ = p
