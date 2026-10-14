@@ -3153,6 +3153,8 @@ class Placer:
         reach = reach or FWD_REACH
         step = cross_step or (h if horiz else w) + 2.16
         cands = _near_cands(span, rows, step)
+        if span >= 600.0:
+            cands = _near_reachable_prefix(cands, span, rows, step, cx, cy, w, h, allowed, prev, reach, nxt, nreach, horiz)
         for a, c in cands:
             dx, dy = (a, c) if horiz else (c, a)
             x = dn(cx + dx - w / 2, GX)
@@ -3186,6 +3188,45 @@ def _near_cands(span, rows, step):
             cr += [step * i, -step * i]
         _NEAR_CANDS[k] = sorted(((a, c) for a in al for c in cr), key=lambda t_: abs(t_[0]) + 0.6 * abs(t_[1]))
     return _NEAR_CANDS[k]
+
+
+_NEAR_COSTS = {}
+
+def _near_reachable_prefix(cands, span, rows, step, cx, cy, w, h, allowed, prev, reach, nxt, nreach, horiz):
+    """Keep an exact ordered prefix containing every potentially legal candidate.
+
+    Large failed-placement retries otherwise scan offsets thousands of microns
+    beyond both endpoint reaches. This only skips impossible suffix candidates;
+    the original strict Manhattan, occupancy and rectangle tests still decide.
+    """
+    import bisect
+    eps = 2e-6
+    def feasible(offset, axis):
+        center, size, grid = (cx, w, GX) if axis == 0 else (cy, h, GY)
+        lo = dn(center + offset - size / 2, grid)
+        mid = lo + size / 2
+        if not any(lo >= r[axis] - eps and lo + size <= r[axis + 2] + eps for r in allowed):
+            return False
+        if prev is not None and abs(mid - prev[axis]) > reach + eps:
+            return False
+        if nxt is not None and abs(mid - nxt[axis]) > nreach + eps:
+            return False
+        return True
+    along = [0.0]
+    for i in range(1, int(span / 4.32) + 1):
+        along.extend((-4.32 * i, 4.32 * i))
+    across = [0.0]
+    for i in range(1, rows + 1):
+        across.extend((step * i, -step * i))
+    aa = [v for v in along if feasible(v, 0 if horiz else 1)]
+    cc = [v for v in across if feasible(v, 1 if horiz else 0)]
+    if not aa or not cc:
+        return []
+    maximum_cost = max(map(abs, aa)) + 0.6 * max(map(abs, cc))
+    key = (span, rows, step)
+    if key not in _NEAR_COSTS:
+        _NEAR_COSTS[key] = [abs(a) + 0.6 * abs(c) for a, c in cands]
+    return cands[:bisect.bisect_right(_NEAR_COSTS[key], maximum_cost + eps)]
 
 
 def _poly_len(P):
