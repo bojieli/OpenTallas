@@ -1444,13 +1444,23 @@ def _split_pins(M, m=None):
                     hm.ports[p_] = ('face', hm.ports[p_][1], 'S', 'M5', x_, pt_)
             if 'nb' in hm.ports:
                 hm.ports['nb'] = ('face', hm.ports['nb'][1], 'E', 'M4', HEAD[1] / 2, 2)
-            # v1.2 (head r4): each of the 86 clock entries is an AREA pin at the centre of the child it clocks (Codex r4
-            # plan, canonical R0 = control face S): one CTS sink per child, delivered there at phi - R of that child
+            # v1.2 (head r4): the 86 clock entries (+ reset) are W-face M4 pins (an M8 area pin breaks the MX head's
+            # mirror-legal origin: kvs4 real case 'qkd_rhead MX y: site grid never meets the legal residues mod 240'),
+            # each level with the centre of the child it clocks (Codex r4 plan, canonical R0 = control face S), de-
+            # overlapped at >= 1.2 um; one CTS sink per child, delivered at phi - R of that child
             ch = json.loads((ROOT / HEAD_R4_PLAN).read_text())['children']
-            for p_ in HEAD_CLK:
-                if p_ in hm.ports:
-                    x0, y0, w0, h0 = ch[HEAD_CLK_CHILD[p_]]
-                    hm.ports[p_] = ('area', 1, round(x0 + w0 / 2, 3), round(y0 + h0 / 2, 3), 1)
+            want = sorted((ch[HEAD_CLK_CHILD[p_]][1] + ch[HEAD_CLK_CHILD[p_]][3] / 2, p_) for p_ in HEAD_CLK if p_ in hm.ports)
+            ys_, last = {}, 2.0 - 1.2
+            for y_, p_ in want:
+                last = max(y_, last + 1.2)
+                ys_[p_] = last
+            top = HEAD[1] - 12.0
+            if ys_ and max(ys_.values()) > top:          # pack downward from the top when the run overflows the face
+                for p_ in sorted(ys_, key=ys_.get, reverse=True):
+                    ys_[p_] = min(ys_[p_], top)
+                    top = ys_[p_] - 1.2
+            for p_, y_ in ys_.items():
+                hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
             if 'rst_n' in hm.ports:
                 hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 440.0, 1)
     # v1.2: the strip compositions' leaf clock entries = area pins at each leaf (land: PC leaf k beside its CDC on the E
