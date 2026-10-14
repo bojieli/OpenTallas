@@ -1,5 +1,5 @@
 {
- "name": "s81_rly_266_ew-v3-COMMIT",
+ "name": "s81_rly_266_ew-v3-f96151f35",
  "block": "dsfd_rly_266_EW",
  "ref_tile": true,
  "owner": "Claude:s81-die",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/el1011-s81dieit",
-  "commit": "COMMIT"
+  "commit": "f96151f35"
  },
  "stages": {
   "bench": [
@@ -87,7 +87,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_rly_266_ew/s81_rly_266_ew-v3-COMMIT"
+   "to": "results/rtl/ref_tile/s81_rly_266_ew/s81_rly_266_ew-v3-f96151f35"
   }
  ],
  "cycles_added": 0,
