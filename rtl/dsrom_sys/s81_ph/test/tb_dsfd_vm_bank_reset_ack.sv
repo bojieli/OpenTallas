@@ -6,7 +6,7 @@ module tb_dsfd_vm_bank_reset_ack;
  always #5 if(enq) cq=~cq;
  always #5 if(ent) ct=~ct;
  wire [2:0] ack; wire flat_ack;
- dsfd_vm_bgl #(.NP(28),.NPR(10),.NB(32),.NBL(8),.QD(4),.RQ(8),.MACRO(0),.DW(128),.CLOCK_SPLIT(1),.PREHIT(1),.FAST4(1),.FORWARD_HOP(2)) u_mc
+ dsfd_vm_bgl #(.NP(28),.NPR(10),.NB(32),.NBL(8),.QD(4),.RQ(8),.MACRO(0),.DW(128),.CLOCK_SPLIT(1),.PREHIT(1),.FAST4(1),.FORWARD_HOP(2),.RESET_FANOUT_SPLIT(1)) u_mc
  (.ck(ck),.ck_req(cq),.ck_ret(ct),.rs(req),.grp(2'd0),.bi(3'd0),.i_v(28'd0),.i_we(28'd0),.i_row(392'd0),.i_mask(112'd0),.i_d(3584'd0),.r_v(10'd0),.r_d(1280'd0),.r_f(4'd0),.r_o(3'd0),.reset_ack(ack));
  dsfd_vm_bgr #(.NP(28),.NPR(10),.NB(32),.NBL(8),.QD(4),.RQ(8),.MACRO(0),.DW(128),.NSTG(4),.EP(2)) u_flat
  (.ck(ck),.rs(req),.grp(2'd0),.i_v(28'd0),.i_we(28'd0),.i_row(392'd0),.i_mask(112'd0),.i_d(3584'd0),.r_v(10'd0),.r_d(1280'd0),.r_f(4'd0),.r_o(3'd0),.reset_ack(flat_ack));

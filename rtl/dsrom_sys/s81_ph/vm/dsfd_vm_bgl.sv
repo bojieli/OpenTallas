@@ -38,7 +38,8 @@ module dsfd_vm_bgl #(
     // Zero keeps the legacy compile-time selection. Two enables the explicit
     // registered N-to-S successor; bank EP2/ED3 is independent of this hop.
     parameter integer FORWARD_HOP = 0,
-    parameter integer PIN_OUTPUT_COPY = 0
+    parameter integer PIN_OUTPUT_COPY = 0,
+    parameter integer RESET_FANOUT_SPLIT = 0
 ) (
     input  wire [0:0]          ck,
     input  wire                ck_req,
@@ -109,10 +110,22 @@ module dsfd_vm_bgl #(
     reg [1:0] rst_s;
     always @(posedge clk or negedge rs[0]) if (!rs[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
     wire rst_i = rst_s[1];
+    wire rst_hist;
+    generate if (RESET_FANOUT_SPLIT) begin : g_reset_hist_split
+        // Complemented two-stage conditioner keeps a distinct physical relay;
+        // release epoch/stage count is identical to the original bank reset.
+        (* keep = 1, dont_touch = 1 *) reg [1:0] rst_hist_b;
+        always @(posedge clk or negedge rs[0])
+            if (!rs[0]) rst_hist_b <= 2'b11;
+            else rst_hist_b <= {rst_hist_b[0], 1'b0};
+        assign rst_hist = ~rst_hist_b[1];
+    end else begin : g_reset_hist_original
+        assign rst_hist = rst_i;
+    end endgenerate
 `ifdef OT_SPVM_RESET_ACK
     // Actual external epoch request clears witnesses even with stopped roots.
     // These leaves have no separate online protocol; rst_* gates real consumers.
-    dsfd_vm_reset_ack u_ack_bank (.clk(clk), .request_n(rs[0]), .local_release(rst_i), .consumer_live(rst_i), .ack(reset_ack[0]));
+    dsfd_vm_reset_ack #(.N(2)) u_ack_bank (.clk(clk), .request_n(rs[0]), .local_release({rst_i,rst_hist}), .consumer_live(rst_i && rst_hist), .ack(reset_ack[0]));
     dsfd_vm_reset_ack u_ack_req (.clk(req_clk), .request_n(rs[0]), .local_release(rst_req), .consumer_live(rst_req), .ack(reset_ack[1]));
     dsfd_vm_reset_ack u_ack_ret (.clk(ret_clk), .request_n(rs[0]), .local_release(rst_ret), .consumer_live(rst_ret), .ack(reset_ack[2]));
 `endif
@@ -463,8 +476,8 @@ module dsfd_vm_bgl #(
     reg [NPR-1:0] lh_v [0:HHL-1];                   // read issued on port p (any bank): the return-valid slot
     reg [NPR-1:0] lh_o [0:HHL-1];                   // ... and it is this bank's
     integer hh, p;
-    always @(posedge clk or negedge rst_i)
-        if (!rst_i) for (hh = 0; hh < HHL; hh = hh + 1) begin lh_v[hh] <= {NPR{1'b0}}; lh_o[hh] <= {NPR{1'b0}}; end
+    always @(posedge clk or negedge rst_hist)
+        if (!rst_hist) for (hh = 0; hh < HHL; hh = hh + 1) begin lh_v[hh] <= {NPR{1'b0}}; lh_o[hh] <= {NPR{1'b0}}; end
         else begin
             lh_v[0] <= rb0_v[NPR-1:0] & ~rb0_we[NPR-1:0];
             lh_o[0] <= hit[NPR-1:0] & ~rb0_we[NPR-1:0];
@@ -630,7 +643,7 @@ module dsfd_vm_bgq28h (
 endmodule
 
 
-module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0, parameter integer PIN_OUTPUT_COPY = 0) (
+module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0, parameter integer PIN_OUTPUT_COPY = 0, parameter integer RESET_FANOUT_SPLIT = 0) (
     input wire ck, input wire ck_req, input wire ck_ret, input wire [0:0] rs, input wire [1:0] grp, input wire [2:0] bi,
     input  wire [27:0] i_v, input wire [27:0] i_we, input wire [28*14-1:0] i_row, input wire [28*4-1:0] i_mask,
     input  wire [28*128-1:0] i_d,
@@ -647,7 +660,7 @@ module dsfd_vm_bgl28_mc #(parameter integer FORWARD_HOP = 0, parameter integer P
 `else
     localparam integer MACRO = 1;
 `endif
-    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1), .FAST4(1), .FORWARD_HOP(FORWARD_HOP), .PIN_OUTPUT_COPY(PIN_OUTPUT_COPY)) u (
+    dsfd_vm_bgl #(.NP(28), .NPR(10), .NB(32), .NBL(8), .QD(4), .RQ(8), .MACRO(MACRO), .DW(128), .CLOCK_SPLIT(1), .BAL_PREFIX(0), .PREHIT(1), .FAST4(1), .FORWARD_HOP(FORWARD_HOP), .PIN_OUTPUT_COPY(PIN_OUTPUT_COPY), .RESET_FANOUT_SPLIT(RESET_FANOUT_SPLIT)) u (
         .ck(ck), .ck_req(ck_req), .ck_ret(ck_ret), .rs(rs), .grp(grp), .bi(bi), .i_v(i_v), .i_we(i_we), .i_row(i_row), .i_mask(i_mask), .i_d(i_d),
         .f_v(f_v), .f_we(f_we), .f_row(f_row), .f_mask(f_mask), .f_d(f_d), .r_v(r_v), .r_d(r_d), .r_f(r_f), .r_o(r_o),
         .o_v(o_v), .o_d(o_d), .o_f(o_f), .o_o(o_o)

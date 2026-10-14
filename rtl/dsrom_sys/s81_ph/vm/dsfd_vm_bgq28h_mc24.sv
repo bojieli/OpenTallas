@@ -2,7 +2,7 @@
 // Numerical benches tie clocks; physical die delivers each routed root phi-R.
 // S81 wires-only eight-entry bank parent. Data, bank straps and all child pipeline stages unchanged.
 // The die delivers one synchronous phi-R clock at each actual child entry.
-module dsfd_vm_bgq28h_mc24 #(parameter integer FORWARD_HOP = 0, parameter integer PIN_OUTPUT_COPY = 0) (
+module dsfd_vm_bgq28h_mc24 #(parameter integer FORWARD_HOP = 0, parameter integer PIN_OUTPUT_COPY = 0, parameter integer RESET_FANOUT_SPLIT = 0) (
     input wire ck_bank_l0, ck_bank_l1, ck_bank_l2, ck_bank_l3, ck_bank_l4, ck_bank_l5, ck_bank_l6, ck_bank_l7, input wire ck_req_l0, ck_req_l1, ck_req_l2, ck_req_l3, ck_req_l4, ck_req_l5, ck_req_l6, ck_req_l7, input wire ck_ret_l0, ck_ret_l1, ck_ret_l2, ck_ret_l3, ck_ret_l4, ck_ret_l5, ck_ret_l6, ck_ret_l7, input wire [0:0] rs, input wire [1:0] grp,
     input  wire [27:0] i_v, input wire [27:0] i_we, input wire [28*14-1:0] i_row, input wire [28*4-1:0] i_mask,
     input  wire [28*128-1:0] i_d,
@@ -31,7 +31,7 @@ module dsfd_vm_bgq28h_mc24 #(parameter integer FORWARD_HOP = 0, parameter intege
     genvar k;
     generate for (k = 0; k < NL; k = k + 1) begin : g_l
         wire [2:0] bk = k;
-        (* keep = 1 *) dsfd_vm_bgl28_mc #(.FORWARD_HOP(FORWARD_HOP), .PIN_OUTPUT_COPY(PIN_OUTPUT_COPY)) u_l (
+        (* keep = 1 *) dsfd_vm_bgl28_mc #(.FORWARD_HOP(FORWARD_HOP), .PIN_OUTPUT_COPY(PIN_OUTPUT_COPY), .RESET_FANOUT_SPLIT(RESET_FANOUT_SPLIT)) u_l (
             .ck(ck_leaf[k]), .ck_req(ck_req_leaf[k]), .ck_ret(ck_ret_leaf[k]), .rs(rs), .grp(grp), .bi(bk),
             .i_v(cv[k]), .i_we(cwe[k]), .i_row(crow[k]), .i_mask(cm[k]), .i_d(cd[k]),
             .f_v(cv[k+1]), .f_we(cwe[k+1]), .f_row(crow[k+1]), .f_mask(cm[k+1]), .f_d(cd[k+1]),
