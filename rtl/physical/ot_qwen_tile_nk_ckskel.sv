@@ -31,3 +31,39 @@ module ot_qwen_tile_nk_ckskel (
                               .t_d(512'd0), .t_vd(1'b0), .t_out(to), .t_vout(tvo));
     assign fault = ndf | (|tf) | (|nf);
 endmodule
+
+// q18: per-GROUP clock skeletons (same purpose: measurement only).  One clock entry per group of children:
+//   _rows: NR bank rows on one entry; _lane: the lane block (8 lane slices + the tree node) on one entry.
+module ot_qwen_tile_nk_ckskel_rows #(parameter integer NR = 3) (
+    input  wire clk,
+    input  wire rst_n,
+    output wire fault
+);
+    wire [NR-1:0] nf;
+    genvar i;
+    generate for (i = 0; i < NR; i = i + 1) begin : g_rp
+        wire [1023:0] rq;
+        ot_qwen_tile_rpair u_rp (.clk(clk), .rst_n(rst_n), .ce_d(1'b0), .any_d(1'b0), .ad_d(12'd0), .r_q(rq));
+        assign nf[i] = rq[0];
+    end endgenerate
+    assign fault = |nf;
+endmodule
+
+module ot_qwen_tile_nk_ckskel_lane (
+    input  wire clk,
+    input  wire rst_n,
+    output wire fault
+);
+    wire [7:0] tf;
+    wire       ndf;
+    genvar i;
+    generate for (i = 0; i < 8; i = i + 1) begin : g_sl
+        wire [63:0] t; wire [7:0] lf;
+        ot_qwen_tile_lsl u_lh (.clk(clk), .rst_n(rst_n), .v_d(1'b0), .first_d(1'b0), .split_d(4'd0), .w_d(256'd0),
+                               .x_d(128'd0), .t_out(t), .lfault(lf), .tfault(tf[i]));
+    end endgenerate
+    wire [511:0] y, to; wire vy, tvo;
+    ot_qwen_tile_node u_node (.clk(clk), .rst_n(rst_n), .a(512'd0), .b(512'd0), .va(1'b0), .y(y), .vy(vy), .fault(ndf),
+                              .t_d(512'd0), .t_vd(1'b0), .t_out(to), .t_vout(tvo));
+    assign fault = ndf | (|tf);
+endmodule
