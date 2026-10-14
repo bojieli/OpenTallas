@@ -26,8 +26,8 @@ int main(int argc,char**argv){
  if(!load(d))return 2;int ctx=kv.size()/2;
  Vot_qwen_tp8_attention_service t;uint64_t cy=0;auto tick=[&](){t.clk=0;t.eval();t.clk=1;t.eval();cy++;};
  t.rst_n=0;t.request_valid=0;t.q_valid=0;t.k_rsp_valid=0;t.v_rsp_valid=0;t.k_req_ready=0;t.v_req_ready=0;t.result_ready=0;t.fused_program_capability=1;
- for(int i=0;i<8;i++)tick();t.rst_n=1;for(int i=0;i<(mode=="coldboot"?0:80);i++)tick();
- bool stalls=mode=="stalls";bool mutant=mode!="steady"&&mode!="stalls"&&mode!="restart"&&mode!="coldboot";
+ for(int i=0;i<8;i++)tick();t.rst_n=1;for(int i=0;i<(mode=="coldboot"?0:(mode=="idle"?2000:80));i++)tick();
+ bool stalls=mode=="stalls";bool mutant=mode!="steady"&&mode!="stalls"&&mode!="restart"&&mode!="coldboot"&&mode!="idle";
  unsigned outputs=0,errors=0,epochs=0;uint64_t kcount=0,vcount=0,first=cy;bool changed=false;
  for(int round=0;round<(mode=="restart"?2:1);round++){
   if(round&&argc>3){if(!load(argv[3]))return 2;ctx=kv.size()/2;}
