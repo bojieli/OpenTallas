@@ -34,9 +34,11 @@ int main(int argc,char**argv){
   int epoch=17+round,layer=6+round;
   t.request_epoch=epoch;t.request_layer=layer;t.request_position=ctx-1-(mode=="context");t.fused_program_capability=mode!="capability";t.request_valid=1;tick();t.request_valid=0;
   const uint64_t frame_k=kcount,frame_v=vcount;
+  bool qheld=false,result_held=false;unsigned held_beat=0,held_epoch=0,held_layer=0;
+  uint32_t held_data[16]={0};uint32_t khold=0;unsigned vhold=0;uint16_t kt_hold[32]={0},vt_hold[4]={0};unsigned vs_hold[4]={0};
   int qb=0,ob=0;std::deque<Return>kq[32],vq[4];
   for(unsigned step=0;step<250000;step++){
-   t.clk=0;t.eval();t.q_valid=qb<32&&(!stalls||cy%7!=0);t.q_beat=qb;
+   t.clk=0;t.eval();t.q_valid=qb<32&&(qheld||!stalls||cy%7!=0);t.q_beat=qb;
    for(int j=0;j<16;j++)t.q_data[j]=q[qb<32?qb*16+j:j];
    if(mode=="q_order"&&qb==7)t.q_beat=6;
    if(mode=="precision")for(int j=0;j<16;j++)t.q_data[j]&=0xffff0000u; // wrong early BF16 truncation replaces lossless FP32 transport
@@ -55,7 +57,14 @@ int main(int argc,char**argv){
     if(!changed&&mode=="v_epoch"){put(t.v_rsp_epoch,16*i,16,epoch-1);changed=true;}
     for(int j=0;j<128;j++)put(t.v_rsp_data,1024*i+8*j,8,kv[ctx+r.t][j]);
    }
-   t.eval();bool qt=t.q_valid&&t.q_ready;
+   t.eval();bool qt=t.q_valid&&t.q_ready;qheld=t.q_valid&&!t.q_ready;
+   if(result_held){if(!t.result_valid||t.result_beat!=held_beat||t.result_epoch!=held_epoch||t.result_layer!=held_layer)errors++;for(int j=0;j<16;j++)if(t.result_data[j]!=held_data[j])errors++;}
+   result_held=t.result_valid&&!t.result_ready;
+   if(result_held){held_beat=t.result_beat;held_epoch=t.result_epoch;held_layer=t.result_layer;for(int j=0;j<16;j++)held_data[j]=t.result_data[j];}
+   for(int i=0;i<32;i++){if((khold&(1u<<i))&&(!(t.k_req_valid&(1u<<i))||bits(t.k_req_t,13*i,13)!=kt_hold[i]))errors++;kt_hold[i]=bits(t.k_req_t,13*i,13);}
+   khold=t.k_req_valid&~t.k_req_ready;
+   for(int i=0;i<4;i++){if((vhold&(1u<<i))&&(!(t.v_req_valid&(1u<<i))||bits(t.v_req_t,14*i,14)!=vt_hold[i]||bits(t.v_req_slot,3*i,3)!=vs_hold[i]))errors++;vt_hold[i]=bits(t.v_req_t,14*i,14);vs_hold[i]=bits(t.v_req_slot,3*i,3);}
+   vhold=t.v_req_valid&~t.v_req_ready;
    for(int i=0;i<32;i++)if((t.k_req_valid&t.k_req_ready)&(1u<<i)){int pos=bits(t.k_req_t,13*i,13);if(pos>=ctx)return 3;kq[i].push_back({pos,0,cy+16});kcount++;}
    for(int i=0;i<4;i++)if((t.v_req_valid&t.v_req_ready)&(1u<<i)){int pos=bits(t.v_req_t,14*i,14),slot=bits(t.v_req_slot,3*i,3);if(pos>=ctx)return 3;vq[i].push_back({pos,slot,cy+16+(stalls?slot%3:0)});vcount++;}
    for(int i=0;i<4;i++)if((t.v_rsp_valid&t.v_rsp_ready)&(1u<<i))vq[i].pop_front();
