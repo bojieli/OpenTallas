@@ -71,8 +71,8 @@ module ot_hgi_hc_win_ctl #(
     end
 endmodule
 
-module ot_hgi_hc_win_sector #(parameter integer SECTOR=0,MUT=0)(
- input wire clk,rst_n,live,
+module ot_hgi_hc_win_sector #(parameter integer MUT=0)(
+ input wire clk,rst_n,live,input wire[1:0]sid,
  input wire hr_v,input wire [10:0]hr_tag,input wire [1:0]hr_beat,
  input wire[127:0]hr_data_lo,hr_data_hi,
  input wire read_v,input wire[6:0]read_addr,
@@ -80,13 +80,13 @@ module ot_hgi_hc_win_sector #(parameter integer SECTOR=0,MUT=0)(
 );
  reg[255:0]rom_data;assign {rom_hi,rom_lo}=rom_data;
  wire[0:0]rn;ot_rst_relay #(.REGIONS(1))u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rn));
- reg live_q,hr_q,re_q;reg[10:0]tag_q;reg[1:0]beat_q;reg[255:0]data_q;reg[6:0]addr_q;
- always @(posedge clk)begin tag_q<=hr_tag;beat_q<=hr_beat;data_q<={hr_data_hi,hr_data_lo};addr_q<=read_addr;end
+ reg live_q,hr_q,re_q;reg[1:0]sid_q;reg[10:0]tag_q;reg[1:0]beat_q;reg[255:0]data_q;reg[6:0]addr_q;
+ always @(posedge clk)begin sid_q<=sid;tag_q<=hr_tag;beat_q<=hr_beat;data_q<={hr_data_hi,hr_data_lo};addr_q<=read_addr;end
  always @(posedge clk or negedge rn[0])begin
   if(!rn[0])begin live_q<=0;hr_q<=0;re_q<=0;end
   else begin live_q<=live;hr_q<=hr_v;re_q<=read_v;end
  end
- wire write=hr_q&&live_q&&tag_q[10:7]!=4'd8&&beat_q==2'(SECTOR);
+ wire write=hr_q&&live_q&&tag_q[10:7]!=4'd8&&beat_q==sid_q;
  wire[255:0]raw;
  ot_sram_1r1w_128x256_m1_r2c2 u_mem(.clk(clk),.r_ce_in(re_q),.r_addr_in(addr_q),.rd_out(raw),
   .w_ce_in(write),.w_addr_in({2'd0,tag_q[4:0]}),.wd_in(data_q),.w_mask_in({256{1'b1}}),
@@ -116,7 +116,7 @@ module ot_hgi_hc_win_partitioned #(parameter integer MUT=0)(
   .hq_v(hq_v),.hq_addr(hq_addr),.hq_len(hq_len),.hq_tag(hq_tag),.hq_cr(hq_cr),.ready(ready),.fault(fault));
  wire[3:0]ck={clk_mem3,clk_mem2,clk_mem1,clk_mem0};
  for(genvar s=0;s<4;s=s+1)begin:g_sector
-  ot_hgi_hc_win_sector #(.SECTOR(s),.MUT((s==0)?MUT:0))u_data(.clk(ck[s]),.rst_n(rst_n),.live(live),
+  ot_hgi_hc_win_sector #(.MUT((s==0)?MUT:0))u_data(.clk(ck[s]),.rst_n(rst_n),.live(live),.sid(2'(s)),
    .hr_v(hr_v),.hr_tag(hr_tag),.hr_beat(hr_beat),.hr_data_lo(hr_data_lo),.hr_data_hi(hr_data_hi),
    .read_v(rv),.read_addr(ra),.rom_v(sv[s]),.rom_lo(data[s*256+:128]),.rom_hi(data[s*256+128+:128]),.fault(sf[s]));
  end

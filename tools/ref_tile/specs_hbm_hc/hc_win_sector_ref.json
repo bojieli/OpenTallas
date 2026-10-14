@@ -1,0 +1,93 @@
+{
+  "name": "hc_win_sector_ref",
+  "top": "ot_hgi_hc_win_sector",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win_partitioned.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+  ],
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 140.832,
+    "h": 86.4
+  },
+  "std_area_um2": 450,
+  "area_basis": "Temporary estimate, actual sourcebound synthesis/CTS required",
+  "pins": {
+    "W": [
+      "clk",
+      "rst_n",
+      "sid"
+    ],
+    "S": [
+      "live",
+      "read_v",
+      "read_addr",
+      "fault"
+    ],
+    "N": [
+      "hr_v",
+      "hr_tag",
+      "hr_beat",
+      "hr_data_lo",
+      "hr_data_hi"
+    ],
+    "E": [
+      "rom_v",
+      "rom_lo",
+      "rom_hi"
+    ]
+  },
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "inst": "u_mem",
+      "at": [
+        23.328,
+        23.76
+      ],
+      "at_exact": true
+    }
+  ],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 16
+  },
+  "job": {
+    "owner": "Codex:hbm_hc_norm",
+    "branch": "codex/hbm-hc-norm-takeover-1013",
+    "tag": "partition1",
+    "purpose": "Structural clock split of nativeHCwindow; direct-die candidate, measured parent reservation/pins pending",
+    "extra_paths": [
+      "rtl/hbm_accel/generic/peers",
+      "rtl/hdc/hbm",
+      "rtl/lib",
+      "physical/asap7_memory_macros"
+    ],
+    "benches": [
+      {
+        "name": "partition_exact",
+        "cmd": "XDEF=-DHC_WIN_PARTITIONED bash rtl/hbm_accel/generic/peers/run_hc_win.sh {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "HC_WIN PASS",
+        "threads": 8,
+        "peak_ram_gb": 8
+      },
+      {
+        "name": "partition_mut_data",
+        "cmd": "XDEF=\"-DHC_WIN_PARTITIONED -DWMUT=1\" bash rtl/hbm_accel/generic/peers/run_hc_win.sh {RUN}/bench/mut_data",
+        "expect": "fail",
+        "threads": 8,
+        "peak_ram_gb": 8
+      }
+    ],
+    "views_to": "physical/ref_tile/hc_win_sector_ref/views",
+    "record_to": "results/rtl/ref_tile/hc_win_sector_ref"
+  }
+}
