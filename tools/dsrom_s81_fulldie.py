@@ -4089,7 +4089,8 @@ def build_r8(variant=None):
             if k_ in hub:
                 hub[k_].master = ms_
         if 'sseq' in hub:   # s81die-1011/ctrl: per-engine c/d/s pins on the stream clock (kit / program faces cross)
-            hub['sseq'].master = 'dsfd_stage_seq_c'
+            # F4 (--rtl-bind): a layer1 die has engines 0..7 only (stage programs); its master has no pins for 8..11
+            hub['sseq'].master = 'dsfd_stage_seq_c8' if (RTL_BIND and DIE_KIND == 'layer1') else 'dsfd_stage_seq_c'
     m['buses'] = []
     buses_r8(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
@@ -4647,6 +4648,13 @@ def buses_r8(m):
             rst['stream'].append((it.name, 'rs'))
         elif it.master == 'dsfd_stage_seq':                    # option A sequencer: the kit's serial (ckv) side
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
+        elif RTL_BIND and it.master in DUAL_CLOCK_MASTERS and not _assigned_clock_entries(it):
+            # s81-die-rtl-bind 2026-10-14 (F3): *_c masters whose RTL runs two domains: stream ck / rst AND the serial
+            # ckv / rsv (gather, capture: the VM-side crossing; stage_seq_c: kit / program / status side)
+            dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
+            dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
+        elif RTL_BIND and it.master == CTRL_SVC_JOIN:          # F8: the svc join endpoint runs on the stream clock
+            dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
         elif it.master in ('dsfd_wfc_src', 'dsfd_wfc_stg', 'dsfd_wfc_cr2'):   # mtp-wfc: the kit's vmx slow side is the serial domain
             dom['stream'].append((it.name, 'ck')); rst['stream'].append((it.name, 'rst'))
             dom['serial'].append((it.name, 'ckv')); rst['serial'].append((it.name, 'rsv'))
@@ -4878,6 +4886,8 @@ RTL_HUB_WIDTHS = False          # --rtl-hub-widths (s81die-1011/ctrl, die lead d
 RTL_HUB_BITS = {('gather', 'capture'): 6947, ('capture', 'vm'): 13376, ('collective', 'vm'): 2100}
 RTL_ABUT_GAP = 21.6             # um between the abutting wide pairs (pin flops on both faces; no logic between)
 RTL_HUB_EXTRA = (('vm', 'collective', 592, 't_collective', 'f_vm'), ('vm', 'collective', 3, 'tcs', 'ts'))
+RTL_BIND = False                # --rtl-bind (s81-die-rtl-bind 2026-10-14)
+DUAL_CLOCK_MASTERS = ('dsfd_sp_gather_c', 'dsfd_sp_capture_c', 'dsfd_stage_seq_c', 'dsfd_stage_seq_c8')
 CTRL_SVC_MASTER = 'dsfd_svc_c'        # svc_<st> under --ctrl-adapters: j / jd job pins from dsfd_svc_join (engine 4)
 CTRL_SVC_JOIN = 'dsfd_svc_join'
 
@@ -8266,6 +8276,10 @@ def die_options(ap):
                     'm2l / r2l end relays di<j>) capture on the falling forwarded-clock edge (half-cycle hop, as the stations)')
     ap.add_argument('--peer-pin-pos', action='store_true', help='s81-die v16: a slab port stands on the pin group of its '
                     'station / link-end peer (laid first), not on the peer outline centre')
+    ap.add_argument('--rtl-bind', action='store_true', help='s81-die-rtl-bind 2026-10-14 (owner NO STUBS rule): die nets '
+                    'bound to the masters\' REAL RTL ports -- serial ckv / rsv of the two-clock *_c masters (F3), svc_join '
+                    'ck / rst (F8), the layer1 sequencer master dsfd_stage_seq_c8 (engines 0..7, F4).  Changes pins: '
+                    'adopt with a regenerated pin set')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
                     't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
@@ -8367,6 +8381,8 @@ def apply_options(a):
     XB_RGAP_FIRST = bool(getattr(a, 'xb_rgap_first', False))
     FWD_NEGCAP = bool(getattr(a, 'fwd_negcap', False))
     WFC_PRICED = bool(getattr(a, 'wfc_priced', False))
+    global RTL_BIND
+    RTL_BIND = bool(getattr(a, 'rtl_bind', False))
     assert not WFC_PRICED or (WFC_KIT and not getattr(a, 'wfc_crp', False)), '--wfc-priced: the --wfc-kit stage / source kit (not --wfc-crp)'
     global WFC_CRP, STAGE_SEQ
     WFC_CRP = bool(getattr(a, 'wfc_crp', False)) and WFC_KIT
