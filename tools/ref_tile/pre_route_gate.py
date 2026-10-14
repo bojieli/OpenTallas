@@ -606,6 +606,68 @@ def gate_consumed(data: bytes, kd: Path, spec: dict, referenced, entries) -> dic
     return SB.consumed_record(paths, entries, "staged archive closure at gate time")
 
 
+class _BlobFiles(dict):
+    """{path: bytes} view of a staged manifest whose payloads are read lazily from the git object store by blob id."""
+    def __init__(self, entries):
+        super().__init__()
+        self.blobs = {e["path"]: e["git_blob"] for e in entries if e.get("kind") == "file"}
+        self.proc = None
+
+    def __contains__(self, k):
+        return k in self.blobs
+
+    def __iter__(self):
+        return iter(self.blobs)
+
+    def __getitem__(self, k):
+        if not dict.__contains__(self, k):
+            if self.proc is None:
+                self.proc = subprocess.Popen(["git", "-C", str(ROOT), "cat-file", "--batch"],
+                                             stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            self.proc.stdin.write((self.blobs[k] + "\n").encode())
+            self.proc.stdin.flush()
+            head = self.proc.stdout.readline().split()
+            if len(head) != 3 or head[1] != b"blob":
+                raise KeyError(f"staged blob {self.blobs[k]} of {k} not in the object store")
+            data = self.proc.stdout.read(int(head[2]))
+            self.proc.stdout.read(1)
+            dict.__setitem__(self, k, data)
+        return dict.__getitem__(self, k)
+
+    def close(self):
+        if self.proc is not None:
+            self.proc.stdin.close()
+            self.proc.wait()
+
+
+def reconstruct_consumed(binding: dict, kd: Path) -> dict | None:
+    """The consumed-file record of a gate that predates it (snapshot v1 without "consumed"), derived by the same closure
+    from the gate's own staged bytes (manifest git blobs, read back from the object store) -- never from today's tree.
+    None when any needed staged blob is unavailable: the gate is then validated exactly as before (full snapshot)."""
+    # kd may be the submit hook's materialised copy (a temp dir): the kit path is the staged spec.json path it ends with
+    kits = sorted({e["path"][:-len("/spec.json")] for e in binding.get("files") or []
+                   if e["path"].endswith(f"/{kd.name}/spec.json") and kd.as_posix().endswith(e["path"][:-len("/spec.json")])},
+                  key=len, reverse=True)
+    if not kits:
+        return None
+    kit = kits[0]
+    files = _BlobFiles(binding.get("files") or [])
+    try:
+        spec = json.loads(files[f"{kit}/spec.json"])
+        fp = json.loads(files[f"{kit}/floorplan.json"]) if f"{kit}/floorplan.json" in files else {}
+        job = json.loads(files[f"{kit}/job.json"]) if f"{kit}/job.json" in files else {}
+        extra = [str(x) for x in ((job.get("source") or {}).get("extra_paths") or [])]
+        views = [it["view"] for it in list(spec.get("macros") or []) + list(spec.get("children") or []) if it.get("view")]
+        seeds = list(spec.get("sources") or []) + list(fp.get("referenced") or []) + list(SB.GATE_TOOLS) + \
+            list(binding.get("daemon_overlays") or [])
+        paths = SB.consumed_closure(files, seeds, [kit, *views, *extra], PATH_RE)
+    except (KeyError, ValueError, TypeError, OSError):
+        return None
+    finally:
+        files.close()
+    return SB.consumed_record(paths, binding["files"], "reconstructed from the gate's staged manifest blobs")
+
+
 def absent_working_inputs(seeds):
     # The archive is made from the working tree, not git show.  A sparse checkout
     # can contain the hook but omit a committed helper that the hook sources.
@@ -841,6 +903,12 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
     try:
         d = json.loads((kd / CLOCK_RESULT).read_text())
         binding = d.get("source_binding")
+        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and "consumed" not in binding \
+                and binding.get("files"):
+            rec = reconstruct_consumed(binding, kd)
+            if rec is not None:
+                binding = {**binding, "consumed": rec}
+                d["source_binding"] = binding
         ok, reason = SB.validate(binding, ROOT, DAEMON_TREE, source_commit)
         if not ok:
             return no(reason)

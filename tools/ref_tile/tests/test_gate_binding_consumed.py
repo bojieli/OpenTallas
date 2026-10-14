@@ -101,6 +101,36 @@ class ConsumedSourceBinding(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn(f'route source differs from staged snapshot: {OTHER_SPEC}', why)
 
+    def write_gate(self, binding):
+        (self.root / KIT / 'gate_result.json').write_text(json.dumps(
+            {'source_binding': binding, 'clock': {'max_root_sinks': 9000, 'verdict': 'PASS'}}))
+
+    def test_v1_gate_without_record_is_reconstructed_from_its_staged_blobs(self):
+        # the live pr4 gate predates the record: the same closure over its own staged blobs passes it as-is
+        self.write_gate(self.legacy)
+        rec = PG.reconstruct_consumed(self.legacy, self.root / KIT)
+        self.assertEqual(rec['paths'], self.binding['consumed']['paths'])
+        # submit_check passes the kit materialised in a temp dir, outside ROOT
+        self.assertEqual(PG.reconstruct_consumed(self.legacy, Path(self.tmp.name) / 'materialised' / KIT)['paths'],
+                         rec['paths'])
+        later = self.commit({OTHER_SPEC: b'{"tag": "i3"}\n'})
+        g = PG.Gate()
+        PG.check_clock_evidence(g, self.root / KIT, source_commit=later)
+        self.assertNotIn('FAIL', [i['severity'] for i in g.items if i['check'] == 'source_binding'], g.items)
+        later = self.commit({RTL: b'module ot_slab; wire y; endmodule\n'})
+        g = PG.Gate()
+        PG.check_clock_evidence(g, self.root / KIT, source_commit=later)
+        fail = [i for i in g.items if i['check'] == 'source_binding' and i['severity'] == 'FAIL']
+        self.assertTrue(fail and RTL in fail[0]['message'], g.items)
+
+    def test_v1_gate_with_unrecoverable_staged_blob_is_handled_as_before(self):
+        b = json.loads(json.dumps(self.legacy))
+        for e in b['files']:
+            if e['path'] == f'{KIT}/pre_gpl.tcl':
+                e['git_blob'] = 'f' * 40         # a dirty staged hook never committed: closure cannot be rebuilt
+        b['manifest_sha256'] = SB.canonical_digest(b['files'])
+        self.assertIsNone(PG.reconstruct_consumed(b, self.root / KIT))
+
     def assert_refused(self, rel, data):
         later = self.commit({rel: data, OTHER_SPEC: b'{"tag": "i4"}\n'})
         ok, why = SB.validate(self.binding, self.root, self.daemon, later)
