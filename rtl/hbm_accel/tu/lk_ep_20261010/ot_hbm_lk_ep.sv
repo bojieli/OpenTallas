@@ -217,6 +217,7 @@ module ot_lkep_sinkq #(parameter integer W = 545, parameter integer D = 4, param
 endmodule
 
 module ot_hbm_lk_ep #(
+    parameter integer MUT_TX_SHARED = 0,
     parameter integer HARD_CLOCKS = 0,     // physical parent delivers one compensated clock at each hard child pin
     parameter integer NS     = 3,          // retry pipelines (sub-channels) per link, 1..3
     parameter integer W      = 545,
@@ -395,13 +396,17 @@ module ot_hbm_lk_ep #(
     // hard leaf. All outward packet and credit pins leave existing registers.
     wire b_v;
     wire [FFW-1:0] b_f;
+    wire [NS*TW-1:0] th_dt_flat;
+    generate for(g=0;g<NS;g=g+1) begin:g_th_flat
+      assign th_dt_flat[g*TW +: TW]=th_dt[g];
+    end endgenerate
 `ifdef OT_LKEP_HARD_LEAVES
     ot_lkep_tx_shared u_tx_shared(
 `else
-    ot_lkep_tx_shared #(.NS(NS),.W(W),.TFD(TFD),.RL(RL),.SL(SL),.IDLE_P(IDLE_P)) u_tx_shared(
+    ot_lkep_tx_shared #(.NS(NS),.W(W),.TFD(TFD),.RL(RL),.SL(SL),.IDLE_P(IDLE_P),.MUT_TX(MUT_TX_SHARED)) u_tx_shared(
 `endif
       .clk(HARD_CLOCKS != 0 ? clk_tx_shared : clk),.rst_n(rst_n),
-      .th_vt(th_vt),.th_dt(th_dt),.tcrq(tcrq),.b_v(b_v),.b_f(b_f));
+      .th_vt(th_vt),.th_dt_flat(th_dt_flat),.tcrq(tcrq),.b_v(b_v),.b_f(b_f));
 
     // ---------------------------------------------------------------- reverse frame out (acks + credit count)
     reg  [1:0]    rsub;

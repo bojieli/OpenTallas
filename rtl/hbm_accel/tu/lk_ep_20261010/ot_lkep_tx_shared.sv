@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 // Existing consumer FIFO, grant and packet-capture registers kept together so
 // the FIFO head mux never becomes an unregistered inter-leaf output.
-module ot_lkep_tx_shared #(parameter integer NS=3,W=545,TFD=4,RL=2,SL=64,IDLE_P=1024)(
+module ot_lkep_tx_shared #(parameter integer NS=3,W=545,TFD=4,RL=2,SL=64,IDLE_P=1024,MUT_TX=0)(
  input wire clk,rst_n,
  input wire [NS-1:0] th_vt,
- input wire [W+36-1:0] th_dt [0:NS-1],
+ input wire [NS*(W+36)-1:0] th_dt_flat,
  output wire [NS-1:0] tcrq,
  output reg b_v,
  output reg [W+52-1:0] b_f
@@ -13,7 +13,11 @@ module ot_lkep_tx_shared #(parameter integer NS=3,W=545,TFD=4,RL=2,SL=64,IDLE_P=
  reg [1:0] rs; reg rto;
  always @(posedge clk or negedge rst_n) if(!rst_n) rs<=0;else rs<={rs[0],1'b1};
  always @(posedge clk) rto<=rs[1];
+ wire [TW-1:0] th_dt [0:NS-1];
  genvar g;
+ generate for(g=0;g<NS;g=g+1) begin:g_flat
+  assign th_dt[g]=th_dt_flat[g*TW +: TW];
+ end endgenerate
     // ---------------------------------------------------------------- TX out: tile sink stage 1 -> consumer FIFO -> grant
     wire [NS-1:0]    th_v;
     wire [TW-1:0]    th_d [0:NS-1];
@@ -48,7 +52,7 @@ module ot_lkep_tx_shared #(parameter integer NS=3,W=545,TFD=4,RL=2,SL=64,IDLE_P=
         for (i2 = 0; i2 < NS; i2 = i2 + 1)
             if (gnt[i2]) a_h <= {th_d[i2][TW-1:W], i2[1:0], th_d[i2][W-1:0]};
         x_h <= a_h;
-        b_f <= {x_crc, x_h};
+        b_f <= {x_crc, x_h} ^ (MUT_TX != 0 && x_v ? {{(FFW-1){1'b0}},1'b1} : {FFW{1'b0}});
     end
     ot_crc_pipe #(.W(HB), .N(14), .POLY(14'h0805), .INIT(14'h3FFF), .NP(4)) u_crc_t (.clk(clk), .d(a_h), .crc(x_crc));
     always @(posedge clk or negedge rto)
