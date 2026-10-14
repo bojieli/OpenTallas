@@ -62,8 +62,8 @@
  "job": {
   "owner": "Claude:el1013-s81-gather",
   "branch": "claude/s81-gather-1014",
-  "tag": "g2",
-  "purpose": "S81 gather cluster control leaf (everything of dsfd_sp_gather_c that is not a root: VM phase CDC fifo, phase stage, slab endpoint, command pin stage, completion payload at pin, bottom-rso readiness), die-assigned v18 ctl pins (502), 129.6 x 43.2; sits in the 61-um S strip of the gather cluster.",
+  "tag": "g4",
+  "purpose": "S81 gather cluster control leaf, v4: everything of dsfd_sp_gather_c that is not a root (VM phase CDC fifo, phase stage, slab endpoint, command pin stage, completion payload at pin, bottom-rso readiness); status input cs widened 16 -> 64 ({busy, fault} of each of the 32 direct leaves, ORed after the pin register: same cycle as the v3 column OR). 129.6 x 43.2 in the 61-um S strip.",
   "benches": [
    {
     "name": "gather_cl_gate",
@@ -106,7 +106,12 @@
    "physical/s81_die_pins/v18/gather_leaves"
   ],
   "views_to": "physical/ref_tile/dsfd_gth_ctl/views",
-  "record_to": "results/rtl/ref_tile/dsfd_gth_ctl"
+  "record_to": "results/rtl/ref_tile/dsfd_gth_ctl",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "gather v4 direct leaves: cs 16 -> 64 (per-leaf status; the v3 through-leaf column OR chain is removed)"
+  },
+  "structural_change": "cs 16 -> 64 per-leaf status OR (gather v4 direct); N-face strip endpoint pins re-spaced for 64 cs bits (rc / roots_ready moved E)"
  },
  "floorplan_why": "Actual129.6x43.2 ctl at1598.4,8.64 in61umstrip; direct Epins mirror authoritativev18 and registered strip endpoints remain pendingqualification",
  "io_tcl": "physical/s81_ph_views/gather/control_strip/dsfd_gth_ctl.tcl",
@@ -117,5 +122,10 @@
   "cols": 4
  },
  "children": [],
- "inter": []
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }
