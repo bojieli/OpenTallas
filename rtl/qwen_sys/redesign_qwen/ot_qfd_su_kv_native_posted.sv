@@ -18,6 +18,13 @@ module ot_qfd_su_kv_native_posted #(
  input wire word_ready,
  output reg fault,output reg [7:0] fault_code
 );
+ // Every arriving face bit is captured before decode/arbitration.
+ reg eb_q,iv_q;reg [17:0] ep_q,ino_q,ini_q;reg [1:0] ik_q;
+ reg [63:0] we_q;reg [1535:0] wa_q;reg [2047:0] wd_q;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin eb_q<=0;iv_q<=0;ep_q<=0;ino_q<=0;ini_q<=0;ik_q<=0;we_q<=0;wa_q<=0;wd_q<=0;end
+  else begin eb_q<=epoch_begin;ep_q<=epoch_pos;iv_q<=issue_v;ik_q<=issue_kind;ino_q<=issue_nout;ini_q<=issue_nin;we_q<=kv_we;wa_q<=kv_waddr;wd_q<=kv_wdata;end
+ end
  function automatic [8:0] encode(input [31:0] b);
   reg [7:0] e;reg [22:0] m;begin
    e=b[30:23];m=b[22:0];
@@ -42,15 +49,15 @@ module ot_qfd_su_kv_native_posted #(
  reg [23:0] e;reg [19:0] a;reg [16:0] w;reg [12:0] pp;
  reg [8:0] code;reg [2:0] allowed;
  wire take=word_v&&word_ready;
- assign epoch_ready=ENABLE!=0&&!active&&!word_v&&!fault;
+ assign epoch_ready=ENABLE!=0&&!active&&!word_v&&!fault&&!eb_q&&!epoch_begin;
  assign drained=!active&&!word_v;
  always_comb begin
   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=0;
   allowed=issued;
-  if(issue_v&&issue_kind<3)allowed[issue_kind]=1;
+  if(iv_q&&ik_q<3)allowed[ik_q]=1;
   e=0;a=0;w=0;pp=0;code=0;dim=0;head=0;kind=0;idx=0;halfidx=0;
-  for(li=0;li<64;li=li+1)if(kv_we[li])begin
-   e=kv_waddr[24*li+:24];a=e[23:4];code=encode(kv_wdata[32*li+:32]);
+  for(li=0;li<64;li=li+1)if(we_q[li])begin
+   e=wa_q[24*li+:24];a=e[23:4];code=encode(wd_q[32*li+:32]);
    if(a<VBASE)begin
     kind=0;head=a[16];dim=a[6:0];pp={a[15:7],e[3:0]};
     if(!allowed[dim<64?1:2])err[2]=1;
@@ -73,14 +80,14 @@ module ot_qfd_su_kv_native_posted #(
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin active<=0;pos<=0;issued<=0;seen<=0;sent<=0;bytes_r<=0;word_v<=0;word_tag<=0;word_data<=0;fault<=0;fault_code<=0;end
   else if(ENABLE!=0)begin
-   if(epoch_begin)begin
-    if(!epoch_ready||epoch_pos>=8192)begin fault<=1;fault_code[4]<=1;end
-    else begin active<=1;pos<=epoch_pos[12:0];issued<=0;seen<=0;sent<=(HEADS==1?8'hCC:8'h00);end
+   if(eb_q)begin
+    if(active||word_v||fault||ep_q>=8192)begin fault<=1;fault_code[4]<=1;end
+    else begin active<=1;pos<=ep_q[12:0];issued<=0;seen<=0;sent<=(HEADS==1?8'hCC:8'h00);end
    end else begin
     seen<=seen_n;sent<=sent_n;bytes_r<=bytes_n;
-    if(issue_v)begin
-     if(!active||issue_kind>=3||issue_nout!=HEADS||issue_nin!=(issue_kind==0?128:64)||issued[issue_kind])begin fault<=1;fault_code[5]<=1;end
-     else issued[issue_kind]<=1;
+    if(iv_q)begin
+     if(!active||ik_q>=3||ino_q!=HEADS||ini_q!=(ik_q==0?128:64)||issued[ik_q])begin fault<=1;fault_code[5]<=1;end
+     else issued[ik_q]<=1;
     end
     if(|err)begin fault<=1;fault_code<=fault_code|err;end
     if(!fault&&!(|err)&&choose&&(!word_v||take))begin
