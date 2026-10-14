@@ -93,15 +93,16 @@ def delivery_record(case, sinks, measured=None):
         tiles[mst] = dict(instances=len({s['instance'] for s in ss}), clock_pins=len(ss), R_ps=ins, R_source=src, level=level,
                           spread_source='routed boundary insertion metadata' if spr else None,
                           etm_clock_tree_ps=trees or None,
-                          hop_skew_ps=150 if level == 'early_tap' else 90, spread_ps=spr or None,
+                          hop_skew_ps=90 if level == 'common' else 150, missing_R_evidence=r_tt is None,
+                          spread_ps=spr or None,
                           spread_defect=bool(spr and max(spr.values()) > SPREAD_MAX_PS),
                           entry_tt_ps=[ent[0], ent[-1]] if ent else None,
                           regions=len({s.get('region') for s in ss}))
     return dict(sta_reference='source entry_ps remains physical phi - R; propagated source clocks retain the ETM I/O '
                               'tables unchanged in the validated OpenSTA 3.1.0 flow; tree arcs are metadata only',
                 rule='clock pin delivered at phi - R (region flop target - the bound view\'s insertion); R <= 300 ps one '
-                     'level (hop budget 60 + SKEW 90), R > 300 ps early tap (60 + SKEW 150 on hops with either endpoint on an early tap); boundary '
-                     'spread <= 80 ps', skew_all=SKEW_ALL, tiles=tiles,
+                     'level (hop budget 60 + SKEW 90), R > 300 ps early tap (60 + SKEW 150 on hops with either endpoint on an early tap); '
+                     'missing R uses conservative SKEW 150 in both directions until measured; boundary spread <= 80 ps', skew_all=SKEW_ALL, tiles=tiles,
                 summary=dict(common=sum(1 for t_ in tiles.values() if t_['level'] == 'common'),
                              early_tap=sorted(k for k, t_ in tiles.items() if t_['level'] == 'early_tap'),
                              unmeasured=sorted(k for k, t_ in tiles.items() if t_['level'] == 'unmeasured'),
@@ -253,11 +254,13 @@ def compose(case, ctx, measured=None):
 
 def constraints(sinks, corner):
     L = ['set_cmd_units -time ns -capacitance fF',
-         'set ot_clock_missing {}', 'set ot_clock_bound 0', 'set ot_dom [dict create]', 'set ot_lat {}', 'set ot_level_clocks [dict create]', 'set ot_early 0', 'set ot_etm_corrected 0']
+         'set ot_clock_missing {}', 'set ot_clock_bound 0', 'set ot_dom [dict create]', 'set ot_lat {}', 'set ot_level_clocks [dict create]', 'set ot_early 0', 'set ot_unmeasured 0', 'set ot_etm_corrected 0']
     for key, s in sorted(sinks.items()):
         pin = key if '[' in s['port'] else key + '[0]'
-        early = s.get('level') == 'early_tap' and not SKEW_ALL
-        clk = s['domain'] + ('__early_tap' if early else '')
+        level = s.get('level', 'unmeasured')
+        conservative = level != 'common' and not SKEW_ALL
+        suffix = '__early_tap' if level == 'early_tap' else '__unmeasured'
+        clk = s['domain'] + (suffix if conservative else '')
         # die-gaps 2026-10-08: the r25 kit left 22 view clocks unbound (paths untimed): the hub quarters hfd_hc /
         # hfd_sfu / hfd_su enter their clock on ck0..ck7 (one die net) and the SerDes / host PHY macros on 'clk', while
         # the die model names every sink port 'ck'.  Fallbacks: <inst>/clk, then <inst>/ck? (all taps, same entry).
@@ -268,9 +271,10 @@ def constraints(sinks, corner):
                  f'dict set ot_level_clocks {clk} {s["domain"]}; '
                  f'foreach pp $p {{ lappend ot_lat [list {clk} {s["entry_ps"][corner] / 1000:.6f} '
                  f'{s["entry_ps"][corner] / 1000:.6f} $pp] }}'
-                 + (' ; incr ot_early [llength $p]' if early else '') + ' }')
+                 + (' ; incr ot_early [llength $p]' if conservative and level == 'early_tap' else
+                    ' ; incr ot_unmeasured [llength $p]' if conservative else '') + ' }')
     for d, per in PERIOD_PS.items():
-        for clk in (d, d + '__early_tap'):
+        for clk in (d, d + '__early_tap', d + '__unmeasured'):
             L.append(f'if {{[dict exists $ot_dom {clk}]}} {{ create_clock -name {clk} -period {per / 1000:.6f} [dict get $ot_dom {clk}] }}')
     # Actual OpenSTA 3.1.0 probes with a published hbfd_rly8 ETM show
     # propagated source-clock timing is byte-identical with clock-tree groups
@@ -287,15 +291,16 @@ def constraints(sinks, corner):
           f'set_clock_uncertainty -setup {0.210 if SKEW_ALL else 0.150:.3f} [all_clocks]',
           'set_clock_uncertainty -hold 0.025 [all_clocks]',
           # Pair constraints cover early launch -> common capture as well as the reverse.
+          # Missing insertion is not evidence of a common level: use 210 ps in both directions.
           # Preserve 210 ps on early -> early until a shared early trunk is qualified.
           'dict for {a da} $ot_level_clocks { dict for {b db} $ot_level_clocks { '
-          'if {$da eq $db && ([string match *__early_tap $a] || [string match *__early_tap $b])} { '
+          'if {$da eq $db && ([string match *__early_tap $a] || [string match *__early_tap $b] || [string match *__unmeasured $a] || [string match *__unmeasured $b])} { '
           'set_clock_uncertainty -setup -from [get_clocks $a] -to [get_clocks $b] 0.210 } } }',
           # mesochronous domains: no synchronous timing between different die clocks (crossings are FIFO / forwarded)
           'set cl [all_clocks]',
           'dict for {a da} $ot_level_clocks { dict for {b db} $ot_level_clocks { '
           'if {$da ne $db} { set_false_path -from [get_clocks $a] -to [get_clocks $b] } } }',
-          f'puts "OT_CLOCK_CONTEXT corner={corner} bound=$ot_clock_bound missing=[llength $ot_clock_missing] early_tap_pins=$ot_early etm_corrected_pins=$ot_etm_corrected"',
+          f'puts "OT_CLOCK_CONTEXT corner={corner} bound=$ot_clock_bound missing=[llength $ot_clock_missing] early_tap_pins=$ot_early unmeasured_pins=$ot_unmeasured etm_corrected_pins=$ot_etm_corrected"',
           'puts "OT_CLOCK_MISSING [lrange $ot_clock_missing 0 40]"']
     return '\n'.join(L) + '\n'
 
