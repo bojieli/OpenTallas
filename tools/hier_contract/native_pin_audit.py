@@ -271,6 +271,36 @@ def main(argv=None) -> int:
             md.append(f"| {r['view']} | {r['cell']} | {r['closed_by']} | {r['launch_ps']} ({r['launch_pin']}) | "
                       f"{r['capture_ps']} ({r['capture_pin']}) | {r['comb_pins']} | {'ins' if r['insertion'] else 'lib est'} | "
                       f"{'PASS' if r['pass'] else 'FAIL'} | {r['used']} |")
+    # re-route candidates: failing views the dies bind, with the closed_stands pin_register reroute_reason ready to paste
+    cands = []
+    for d in ORDER:
+        for r in json.loads((out / f"{d}.json").read_text())["views"]:
+            if r["used"] != "yes" or r.get("pass", True):
+                continue
+            hints = []
+            if r.get("launch_over"):
+                hints.append(f"{r['launch_over']} outputs over {LAUNCH_PS:.0f} (worst {r['launch_pin']} {r['launch_ps']}): one "
+                             "dedicated flop per output pin at the pin, HB2 pad (recipe 2 on main >= 36de4b87f)")
+            if r.get("capture_over"):
+                rst = r["capture_pin"] and re.match(r"(rst|rs$|reset)", r["capture_pin"])
+                hints.append(f"{r['capture_over']} inputs over {CAPTURE_PS:.0f} (worst {r['capture_pin']} {r['capture_ps']})"
+                             + (": the reset input needs its own capture flop at the pin (local reset release)" if rst else
+                                ": single capture flop at each input pin, HB2 pad"))
+            if r.get("comb_pins"):
+                hints.append(f"{r['comb_pins']} combinational pins: register them")
+            if (r.get("spread_ps") or 0) > 80:
+                hints.append(f"boundary clock spread {r['spread_ps']} ps > 80: balance the boundary registers / split the root")
+            cands.append(dict(design=d, cell=r["cell"], view=r["view"], job=r.get("job"), launch_ps=r.get("launch_ps"),
+                              capture_ps=r.get("capture_ps"), spread_ps=r.get("spread_ps"), r_from=r["ref_src"],
+                              reroute_reason=dict(kind="pin_register", source=f"{out}/{d}.json", cell=r["lib_cell"] or r["cell"],
+                                                  launch_ps=r.get("launch_ps"), capture_ps=r.get("capture_ps"),
+                                                  fix="; ".join(hints))))
+    (out / "reroute_candidates.json").write_text(json.dumps(dict(schema="opentallas.native_pin_audit.candidates.v1",
+                                                                  source=head, candidates=cands), indent=1) + "\n")
+    md += ["", "## Re-route candidates (fail AND bound by the die)", "",
+           "| design | cell | view | launch | capture | spread | fix |", "|---|---|---|---:|---:|---:|---|"]
+    md += [f"| {c['design']} | {c['cell']} | {c['view']} | {c['launch_ps']} | {c['capture_ps']} | {c['spread_ps']} | "
+           f"{c['reroute_reason']['fix']} |" for c in cands]
     (out / "README.md").write_text("\n".join(md) + "\n")
     print(json.dumps(dict(summary=summary, dropped=dict(dropped), seconds=round(time.time() - t0, 1))))
     return 0
