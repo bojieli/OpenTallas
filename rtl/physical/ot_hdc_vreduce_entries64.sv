@@ -16,7 +16,7 @@ module ot_hdc_vreduce_region8 #(parameter integer AW=24) (
     wire [SW-1:0]    fsq;
     genvar l;
     generate for (l = 0; l < SW; l = l + 1) begin : g_sq
-        ot_hdc_qmul u_sq (clk, rst_n, iv && isq, x_in[32*l +: 32], x_in[32*l +: 32], xsq[32*l +: 32], fsq[l]);
+        ot_hdc_qmul u_sq (clk, rst_n, iv && isq, ix[32*l +: 32], ix[32*l +: 32], xsq[32*l +: 32], fsq[l]);
     end endgenerate
     wire [SW*32-1:0] xq;
     wire [TAG-1:0]   tq;

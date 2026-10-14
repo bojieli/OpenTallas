@@ -1,0 +1,13 @@
+MISMATCH idx=2 got=43e26e89 exp=43e5c5f9 addr=018002/018002 delta=3
+MISMATCH idx=5 got=4477ad4d exp=4474d587 addr=018005/018005 delta=3
+MISMATCH idx=8 got=439262ab exp=43957398 addr=018008/018008 delta=3
+MISMATCH idx=11 got=444c3a24 exp=444e4dfa addr=01800b/01800b delta=3
+MISMATCH idx=17 got=44248112 exp=442251a8 addr=018011/018011 delta=3
+MISMATCH idx=20 got=448e91e6 exp=448c8b60 addr=018014/018014 delta=3
+MISMATCH idx=23 got=44009dac exp=43fccdc6 addr=018017/018017 delta=3
+MISMATCH idx=26 got=4473014f exp=4468b7d6 addr=01801a/01801a delta=3
+MISMATCH idx=29 got=43a0b00e exp=43a0aaae addr=01801d/01801d delta=3
+MISMATCH idx=32 got=44501443 exp=443fcde9 addr=018020/018020 delta=3
+FAIL VRED errors=34
+FATAL: rtl/test/tb_hdc_vreduce_entries64.sv:38: 
+       Time: 155540000  Scope: tb_hdc_vreduce_entries64
