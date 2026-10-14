@@ -4,6 +4,7 @@
 New leaves require their assigned regions and physical qualification; closed lane/ktree views stand.
 """
 import argparse
+import hashlib
 import itertools
 import json
 import math
@@ -36,7 +37,34 @@ def candidates(shape,fixed):
             r=(x,round(iy*CLEAR,6),w,h)
             if not any(overlap(r,f) for f in fixed):yield r
 
-def plan():
+def read_pins(path):
+    pins={};pin=None
+    with Path(path).open() as f:
+        for line in f:
+            t=line.split()
+            if t[:1]==['PIN']:pin=t[1]
+            elif pin and t[:1]==['RECT'] and pin not in pins:
+                x0,y0,x1,y1=map(float,t[1:5]);pins[pin]=((x0+x1)/2,(y0+y1)/2)
+            elif t[:1]==['END'] and len(t)>1 and t[1]==pin:pin=None
+    return pins
+
+
+def region(points):
+    x0=min(x for x,y in points);x1=max(x for x,y in points)
+    y0=min(y for x,y in points);y1=max(y for x,y in points)
+    return [(x0,y0),(x1,y0),(x0,y1),(x1,y1)]
+
+
+def plan(closed_pins=None):
+    root=Path(__file__).resolve().parents[2]
+    views={'lane':('qkh_lane8_ref_b','ot_qkh_lane8'), 'ktree':('qkh_ktree_ref','ot_qkh_ktree'),
+           'score':('qkh_native_score_1014','ot_qkh_head_score_native')}
+    paths={k:(Path(closed_pins)/f'{cell}.lef' if closed_pins else
+              root/'physical'/'ref_tile'/kit/'views'/cell/f'{cell}.lef')
+           for k,(kit,cell) in views.items()}
+    pins={k:read_pins(p) for k,p in paths.items()}
+    def at(kind,r,names):return region([(r[0]+pins[kind][n][0],r[1]+pins[kind][n][1]) for n in names])
+
     front=(216.,5.4,*SHAPES['front']);kt=(388.8,54.,*SHAPES['ktree']);score=(550.8,54.,*SHAPES['score'])
     grid=[(43.2+172.8*c,54.+151.2*r,*SHAPES['lane']) for c in range(6) for r in range(3)
           if not (r==0 and c in (2,3))]
@@ -52,18 +80,22 @@ def plan():
     # Place the farthest lanes first; every pin in each region is bounded.
     for t in sorted(lanes,key=lambda t:-lanes[t][1]):
         lane=lanes[t];x,y=lane[:2]
-        li=[(x+0.7,y),(x+24.,y)];lo=[(x+129.6,y+48.),(x+129.6,y+93.)]
+        li=at('lane',lane,[n for n in pins['lane'] if n.split('[')[0] in
+            ('c_in','row_in','e_in','lt_in','hid','q_valid_in','q_beat_in','q_data_in')])
+        lo=at('lane',lane,[n for n in pins['lane'] if n.split('[')[0] in ('kp','kpv','gf')])
+        nb=at('lane',lane,[f'nb[{j}]' for j in range(64)])
+        lr=at('lane',lane,['rst_n'])
         choices=[]
         for r in free['stin']:
             if any(overlap(r,f) for f in placed):continue
             a=bound(fronts[t],face(r,'E'));b=bound(face(r,'S'),li)
-            choices.append((max(a,b),a+b,r,a,b))
+            c=bound(face(r,'S'),lr)
+            choices.append((max(a,b,c),a+b+c,r,a,b,c))
         if not choices:raise ValueError('no stin placement')
-        _,_,sin,a,b=min(choices);placed.append(sin);children[f'stin{t}']=sin
-        hops.extend([(f'front->stin{t}',a),(f'stin{t}->lane{t}',b)])
+        _,_,sin,a,b,c=min(choices);placed.append(sin);children[f'stin{t}']=sin
+        hops.extend([(f'front->stin{t}',a),(f'stin{t}->lane{t}',b),(f'stin{t}.reset->lane{t}',c)])
         # The closed ktree north-face group for this unchanged logical lane index.
-        kp_x=kt[0]+101.34-96.0*t/15
-        kp=[(kp_x-3.2,kt[1]+97.2),(kp_x+3.2,kt[1]+97.2)]
+        kp=at('ktree',kt,[f'kp_in[{j}]' for j in range(32*t,32*(t+1))]+[f'gf_in[{t}]']+(['kpv_in'] if t==0 else []))
         choices=[]
         for r in free['stk']:
             if any(overlap(r,f) for f in placed):continue
@@ -74,18 +106,18 @@ def plan():
         hops.extend([(f'lane{t}->stk{t}',a),(f'stk{t}->ktree',b)])
         # v1.1 assigned nb E-face region: 197.100..295.308 at 0.096 um/bit.
         target=[(W,197.1+0.096*64*t),(W,197.1+0.096*(64*t+63))]
-        lc=centre(lo);tc=centre(target)
+        lc=centre(nb);tc=centre(target)
         ideal1=tuple(lc[k]+(tc[k]-lc[k])/3 for k in range(2))
         ideal2=tuple(lc[k]+2*(tc[k]-lc[k])/3 for k in range(2))
         available=[r for r in free['nb'] if not any(overlap(r,f) for f in placed)]
-        c1=[r for r in available if bound(lo,face(r,'W'))<=500]
+        c1=[r for r in available if bound(nb,face(r,'W'))<=500]
         c2=[r for r in available if bound(face(r,'E'),target)<=500]
         dist=lambda r,p:abs(r[0]+r[2]/2-p[0])+abs(r[1]+r[3]/2-p[1])
         c1=sorted(c1,key=lambda r:dist(r,ideal1))[:100]
         c2=sorted(c2,key=lambda r:dist(r,ideal2))[:100]
         best=None
         for r1 in c1:
-            a=bound(lo,face(r1,'W'))
+            a=bound(nb,face(r1,'W'))
             for r2 in c2:
                 if overlap(r1,r2):continue
                 b=bound(face(r1,'E'),face(r2,'W'));c=bound(face(r2,'E'),target)
@@ -104,16 +136,23 @@ def plan():
         hops.append((f'die_{name}->front (bit matched)',front[1]))
     score_target=[(706.092,0.),(709.26,0.)]
     # pack_fault is an independent scalar connection, not part of f_t.
-    pack_pin=[(550.8,front[1]+front[3])]
-    hops.extend([('ktree->score',bound(face(kt,'E'),face(score,'W'))),
-                 ('front.pack_fault->score',bound(pack_pin,face(score,'N'))),
-                 ('score->die_s',bound(face(score,'S'),score_target)),
-                 ('score.kt_rst_n->ktree',bound(face(score,'W'),face(kt,'E')))])
+    pack_input=at('score',score,['pack_fault'])
+    pack_pin=[(pack_input[0][0],front[1]+front[3])]
+    hops.extend([('ktree->score',bound(at('ktree',kt,[n for n in pins['ktree'] if n.split('[')[0] in ('sc_d','sc_f','g_f')]),at('score',score,[n for n in pins['score'] if n.split('[')[0] in ('sc_i','sf_i','gf_i')]))),
+                 ('front.pack_fault->score',bound(pack_pin,pack_input)),
+                 ('score->die_s',bound(at('score',score,[n for n in pins['score'] if n.split('[')[0] in ('sc_o','sf_o','gf_o')]),score_target)),
+                 ('score.kt_rst_n->ktree',bound(at('score',score,['kt_rst_n']),at('ktree',kt,['rst_n'])))])
     ov=[(a,b) for a,b in itertools.combinations(children,2) if overlap(children[a],children[b])]
     outside=[n for n,r in children.items() if r[0]<0 or r[1]<0 or r[0]+r[2]>W+1e-6 or r[1]+r[3]>H+1e-6]
     clocks=[dict(child=n,rtl_clock=('ck_'+n if n in ['front','score'] else 'ck_kt' if n=='ktree' else
              f"ck_{'nb1' if n.startswith('nb1_') else 'nb2' if n.startswith('nb2_') else ''.join(c for c in n if not c.isdigit())}[{n.split('_')[-1] if '_' in n else ''.join(c for c in n if c.isdigit())}]"),
              child_clock_pin='clk',clock_pin_assignment='actual leaf pin required at hardening') for n in children]
+    for entry in clocks:
+        n=entry['child'];kind='lane' if n.startswith('lane') else n
+        if kind in pins:
+            r=children[n];xy=pins[kind]['clk']
+            entry.update(clock_pin_assignment='exported closed-view pin',
+                         slot_xy_um=[round(r[0]+xy[0],6),round(r[1]+xy[1],6)])
     assert len(children)==len(clocks)==83
     worst=max(hops,key=lambda h:h[1]);valid=not ov and not outside and worst[1]<=500
     return dict(schema='qwen-kvsys-head-native-plan/r3',slot='qkd_rhead',contract='kvsys_v1.1',
@@ -125,14 +164,15 @@ def plan():
         shared_children={n:list(children[n]) for n in ['front','ktree','score']},lanes=sorted(rows,key=lambda r:r['lane']),
         children={n:list(r) for n,r in children.items()},clock_entries=clocks,
         parent_data_pin_assignments=dict(front_S_bit_matched=parent_inputs,
-            front_pack_fault_N=list(pack_pin[0]),score_output_S=list(score_target)),
+            front_pack_fault_N=list(pack_pin[0]),parent_score_output_S=list(score_target),closed_score_outputs_face='E'),
         reset_rule='preserve the RTL reset topology; assign the external asynchronous reset distribution '
                    'and measure recovery/removal and native reset paths before physical qualification',
+        closed_pin_sources={k:dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for k,p in paths.items()},
         hops=[dict(name=n,um=round(d,3)) for n,d in hops],
         qualification='geometry assignment proposal; fresh leaf physical views, actual clock pins and native pair reach required')
 
 def main():
-    a=argparse.ArgumentParser();a.add_argument('out',type=Path);args=a.parse_args();r=plan()
+    a=argparse.ArgumentParser();a.add_argument('out',type=Path);a.add_argument('--closed-pins',type=Path);args=a.parse_args();r=plan(args.closed_pins)
     args.out.parent.mkdir(parents=True,exist_ok=True);args.out.write_text(json.dumps(r,indent=2)+'\n')
     print(json.dumps({k:r[k] for k in ['valid','clock_entries_per_head','worst_hop','overlaps','outside']}))
     return 0 if r['valid'] else 1
