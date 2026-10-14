@@ -1,0 +1,1204 @@
+{
+  "schema": "opentallas.s81.native_hc_actual_source_bit_screen.v1",
+  "status": "CONDITIONAL common-phi per-corner phi-R request only; full external/source/reset/routed checks remain",
+  "actual_internal_bits": 13413,
+  "actual_internal_bus_joins": 74,
+  "judged_bits": 13411,
+  "noarc_bits": 2,
+  "fail_bits": 0,
+  "min_setup_ps": 90.8847,
+  "min_hold_ps": 31.0819,
+  "groups": [
+    {
+      "a": [
+        "g_aq[0].u_caq",
+        "e"
+      ],
+      "b": [
+        "u_rx",
+        "a_e"
+      ],
+      "bits": 10,
+      "judged_bits": 10,
+      "noarc_bits": 0,
+      "min_setup_ps": 266.8528,
+      "min_hold_ps": 61.624,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[0].u_caq",
+        "f"
+      ],
+      "b": [
+        "u_rx",
+        "a_f"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 252.8505,
+      "min_hold_ps": 70.8165,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[0].u_caq",
+        "iqo"
+      ],
+      "b": [
+        "u_rx",
+        "a_iq"
+      ],
+      "bits": 24,
+      "judged_bits": 24,
+      "noarc_bits": 0,
+      "min_setup_ps": 253.0595,
+      "min_hold_ps": 64.0619,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[0].u_caq",
+        "vo"
+      ],
+      "b": [
+        "u_rx",
+        "a_vo"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 252.4687,
+      "min_hold_ps": 102.2873,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[1].u_caq",
+        "e"
+      ],
+      "b": [
+        "u_rx",
+        "a_e"
+      ],
+      "bits": 10,
+      "judged_bits": 10,
+      "noarc_bits": 0,
+      "min_setup_ps": 331.054,
+      "min_hold_ps": 53.4034,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[1].u_caq",
+        "f"
+      ],
+      "b": [
+        "u_rx",
+        "a_f"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 319.8144,
+      "min_hold_ps": 60.8931,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[1].u_caq",
+        "iqo"
+      ],
+      "b": [
+        "u_rx",
+        "a_iq"
+      ],
+      "bits": 24,
+      "judged_bits": 24,
+      "noarc_bits": 0,
+      "min_setup_ps": 311.3533,
+      "min_hold_ps": 55.3108,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[1].u_caq",
+        "vo"
+      ],
+      "b": [
+        "u_rx",
+        "a_vo"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 313.0114,
+      "min_hold_ps": 93.641,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[2].u_caq",
+        "e"
+      ],
+      "b": [
+        "u_rx",
+        "a_e"
+      ],
+      "bits": 10,
+      "judged_bits": 10,
+      "noarc_bits": 0,
+      "min_setup_ps": 110.3033,
+      "min_hold_ps": 87.2686,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[2].u_caq",
+        "f"
+      ],
+      "b": [
+        "u_rx",
+        "a_f"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 104.2203,
+      "min_hold_ps": 92.0383,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[2].u_caq",
+        "iqo"
+      ],
+      "b": [
+        "u_rx",
+        "a_iq"
+      ],
+      "bits": 24,
+      "judged_bits": 24,
+      "noarc_bits": 0,
+      "min_setup_ps": 98.5012,
+      "min_hold_ps": 89.9397,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[2].u_caq",
+        "vo"
+      ],
+      "b": [
+        "u_rx",
+        "a_vo"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 98.6862,
+      "min_hold_ps": 127.9853,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[3].u_caq",
+        "e"
+      ],
+      "b": [
+        "u_rx",
+        "a_e"
+      ],
+      "bits": 10,
+      "judged_bits": 10,
+      "noarc_bits": 0,
+      "min_setup_ps": 233.8049,
+      "min_hold_ps": 68.433,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[3].u_caq",
+        "f"
+      ],
+      "b": [
+        "u_rx",
+        "a_f"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 229.3349,
+      "min_hold_ps": 74.7119,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[3].u_caq",
+        "iqo"
+      ],
+      "b": [
+        "u_rx",
+        "a_iq"
+      ],
+      "bits": 24,
+      "judged_bits": 24,
+      "noarc_bits": 0,
+      "min_setup_ps": 212.6891,
+      "min_hold_ps": 64.9481,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "g_aq[3].u_caq",
+        "vo"
+      ],
+      "b": [
+        "u_rx",
+        "a_vo"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 223.3343,
+      "min_hold_ps": 106.7206,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cf",
+        "yfl"
+      ],
+      "b": [
+        "u_seq",
+        "c_yfl"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 228.4802,
+      "min_hold_ps": 73.9123,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "e_o"
+      ],
+      "b": [
+        "u_nt",
+        "c_ex"
+      ],
+      "bits": 512,
+      "judged_bits": 512,
+      "noarc_bits": 0,
+      "min_setup_ps": 136.8868,
+      "min_hold_ps": 43.0109,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "p_o"
+      ],
+      "b": [
+        "u_nt",
+        "c_pi"
+      ],
+      "bits": 8,
+      "judged_bits": 8,
+      "noarc_bits": 0,
+      "min_setup_ps": 322.1709,
+      "min_hold_ps": 61.341,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "v_o"
+      ],
+      "b": [
+        "u_nt",
+        "c_rvt"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 365.5781,
+      "min_hold_ps": 57.079,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "v_o"
+      ],
+      "b": [
+        "u_rx",
+        "c_rv"
+      ],
+      "bits": 8,
+      "judged_bits": 7,
+      "noarc_bits": 1,
+      "min_setup_ps": 108.0849,
+      "min_hold_ps": 84.6718,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cr.u_core",
+        "cpi_o"
+      ],
+      "b": [
+        "u_cr.g_meta.u_m",
+        "p_i"
+      ],
+      "bits": 8,
+      "judged_bits": 8,
+      "noarc_bits": 0,
+      "min_setup_ps": 157.4645,
+      "min_hold_ps": 83.3457,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cr.u_core",
+        "crd_o"
+      ],
+      "b": [
+        "u_pd.u_f5r1",
+        "r_i"
+      ],
+      "bits": 2156,
+      "judged_bits": 2156,
+      "noarc_bits": 0,
+      "min_setup_ps": 134.1258,
+      "min_hold_ps": 31.0819,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cr.u_core",
+        "crv_o"
+      ],
+      "b": [
+        "u_cr.g_meta.u_m",
+        "v_i"
+      ],
+      "bits": 8,
+      "judged_bits": 8,
+      "noarc_bits": 0,
+      "min_setup_ps": 150.8108,
+      "min_hold_ps": 77.6308,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_cr.u_core",
+        "ex1_o"
+      ],
+      "b": [
+        "u_cr.g_meta.u_m",
+        "e_i"
+      ],
+      "bits": 512,
+      "judged_bits": 512,
+      "noarc_bits": 0,
+      "min_setup_ps": 90.8847,
+      "min_hold_ps": 68.1526,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_nt",
+        "ss"
+      ],
+      "b": [
+        "u_seq",
+        "t_ss"
+      ],
+      "bits": 32,
+      "judged_bits": 32,
+      "noarc_bits": 0,
+      "min_setup_ps": 179.6109,
+      "min_hold_ps": 74.9581,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_nt",
+        "ss_v"
+      ],
+      "b": [
+        "u_seq",
+        "t_ssv"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 182.0776,
+      "min_hold_ps": 81.8225,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_nt",
+        "tflt"
+      ],
+      "b": [
+        "u_seq",
+        "t_flt"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 213.4144,
+      "min_hold_ps": 70.5317,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_f5r1",
+        "d_o"
+      ],
+      "b": [
+        "u_cf",
+        "fd_i"
+      ],
+      "bits": 1128,
+      "judged_bits": 1128,
+      "noarc_bits": 0,
+      "min_setup_ps": 168.1651,
+      "min_hold_ps": 31.7543,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_f5r1",
+        "r_o"
+      ],
+      "b": [
+        "u_pd.u_r6",
+        "d_i"
+      ],
+      "bits": 2156,
+      "judged_bits": 2156,
+      "noarc_bits": 0,
+      "min_setup_ps": 141.9997,
+      "min_hold_ps": 98.0793,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_f5r1",
+        "v_o"
+      ],
+      "b": [
+        "u_cf",
+        "fv_i"
+      ],
+      "bits": 7,
+      "judged_bits": 7,
+      "noarc_bits": 0,
+      "min_setup_ps": 154.7281,
+      "min_hold_ps": 78.2245,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_f8",
+        "d_o"
+      ],
+      "b": [
+        "u_pd.u_f5r1",
+        "d_i"
+      ],
+      "bits": 1128,
+      "judged_bits": 1128,
+      "noarc_bits": 0,
+      "min_setup_ps": 223.9099,
+      "min_hold_ps": 73.1643,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_f8",
+        "v_o"
+      ],
+      "b": [
+        "u_pd.u_f5r1",
+        "v_i"
+      ],
+      "bits": 7,
+      "judged_bits": 7,
+      "noarc_bits": 0,
+      "min_setup_ps": 230.0833,
+      "min_hold_ps": 81.5298,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "c_d"
+      ],
+      "bits": 512,
+      "judged_bits": 512,
+      "noarc_bits": 0,
+      "min_setup_ps": 203.3745,
+      "min_hold_ps": 61.3401,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "c_d"
+      ],
+      "bits": 512,
+      "judged_bits": 512,
+      "noarc_bits": 0,
+      "min_setup_ps": 197.7755,
+      "min_hold_ps": 61.1702,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "c_d"
+      ],
+      "bits": 512,
+      "judged_bits": 512,
+      "noarc_bits": 0,
+      "min_setup_ps": 91.1433,
+      "min_hold_ps": 78.9091,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "c_d"
+      ],
+      "bits": 512,
+      "judged_bits": 512,
+      "noarc_bits": 0,
+      "min_setup_ps": 105.727,
+      "min_hold_ps": 73.2082,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_r5",
+        "d_o"
+      ],
+      "b": [
+        "u_rx",
+        "c_rd"
+      ],
+      "bits": 108,
+      "judged_bits": 108,
+      "noarc_bits": 0,
+      "min_setup_ps": 280.6965,
+      "min_hold_ps": 57.0545,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_pd.u_r6",
+        "d_o"
+      ],
+      "b": [
+        "u_pd.u_r5",
+        "d_i"
+      ],
+      "bits": 2156,
+      "judged_bits": 2156,
+      "noarc_bits": 0,
+      "min_setup_ps": 119.9027,
+      "min_hold_ps": 82.8586,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_kind"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "kind"
+      ],
+      "bits": 3,
+      "judged_bits": 3,
+      "noarc_bits": 0,
+      "min_setup_ps": 140.381,
+      "min_hold_ps": 106.6289,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_kind"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "kind"
+      ],
+      "bits": 3,
+      "judged_bits": 3,
+      "noarc_bits": 0,
+      "min_setup_ps": 375.0021,
+      "min_hold_ps": 72.0531,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_kind"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "kind"
+      ],
+      "bits": 3,
+      "judged_bits": 3,
+      "noarc_bits": 0,
+      "min_setup_ps": 158.8642,
+      "min_hold_ps": 103.905,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_kind"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "kind"
+      ],
+      "bits": 3,
+      "judged_bits": 3,
+      "noarc_bits": 0,
+      "min_setup_ps": 284.7141,
+      "min_hold_ps": 85.3587,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "iq"
+      ],
+      "bits": 24,
+      "judged_bits": 24,
+      "noarc_bits": 0,
+      "min_setup_ps": 106.465,
+      "min_hold_ps": 84.2637,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "t_u"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 153.9884,
+      "min_hold_ps": 99.9211,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "iq"
+      ],
+      "bits": 24,
+      "judged_bits": 24,
+      "noarc_bits": 0,
+      "min_setup_ps": 325.86,
+      "min_hold_ps": 38.8197,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "t_u"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 335.8008,
+      "min_hold_ps": 108.7075,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "iq"
+      ],
+      "bits": 24,
+      "judged_bits": 24,
+      "noarc_bits": 0,
+      "min_setup_ps": 111.584,
+      "min_hold_ps": 79.1946,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "t_u"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 111.4429,
+      "min_hold_ps": 146.0212,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "iq"
+      ],
+      "bits": 24,
+      "judged_bits": 24,
+      "noarc_bits": 0,
+      "min_setup_ps": 259.0032,
+      "min_hold_ps": 60.0983,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rd"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "t_u"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 246.7061,
+      "min_hold_ps": 122.0227,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_run"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "run"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 131.859,
+      "min_hold_ps": 111.2219,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_run"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "run"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 366.4801,
+      "min_hold_ps": 76.6462,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_run"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "run"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 150.3422,
+      "min_hold_ps": 108.4981,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_run"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "run"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 276.1921,
+      "min_hold_ps": 89.9518,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rv"
+      ],
+      "b": [
+        "g_aq[0].u_caq",
+        "rv_u"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 120.3688,
+      "min_hold_ps": 114.349,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rv"
+      ],
+      "b": [
+        "g_aq[1].u_caq",
+        "rv_u"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 366.7931,
+      "min_hold_ps": 71.3379,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rv"
+      ],
+      "b": [
+        "g_aq[2].u_caq",
+        "rv_u"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 133.6393,
+      "min_hold_ps": 116.1929,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "o_rv"
+      ],
+      "b": [
+        "g_aq[3].u_caq",
+        "rv_u"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 258.8059,
+      "min_hold_ps": 97.2352,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "x_f1"
+      ],
+      "b": [
+        "u_seq",
+        "x_f1"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 226.6577,
+      "min_hold_ps": 72.0045,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "x_f4"
+      ],
+      "b": [
+        "u_seq",
+        "x_f4"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 147.0115,
+      "min_hold_ps": 141.7237,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "x_pob"
+      ],
+      "b": [
+        "u_seq",
+        "x_pob"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 166.7674,
+      "min_hold_ps": 122.7756,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_rx",
+        "x_wdone"
+      ],
+      "b": [
+        "u_seq",
+        "x_wdone"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 171.6999,
+      "min_hold_ps": 114.645,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "base"
+      ],
+      "b": [
+        "u_rx",
+        "j_base"
+      ],
+      "bits": 14,
+      "judged_bits": 14,
+      "noarc_bits": 0,
+      "min_setup_ps": 149.3961,
+      "min_hold_ps": 54.2809,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "c_fd"
+      ],
+      "b": [
+        "u_pd.u_f8",
+        "d_i"
+      ],
+      "bits": 1128,
+      "judged_bits": 1127,
+      "noarc_bits": 1,
+      "min_setup_ps": 113.0848,
+      "min_hold_ps": 46.7741,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "c_fv"
+      ],
+      "b": [
+        "u_pd.u_f8",
+        "v_i"
+      ],
+      "bits": 7,
+      "judged_bits": 7,
+      "noarc_bits": 0,
+      "min_setup_ps": 145.3177,
+      "min_hold_ps": 90.028,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "f_q"
+      ],
+      "b": [
+        "u_rx",
+        "j_fq"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 114.99,
+      "min_hold_ps": 166.1629,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "f_y"
+      ],
+      "b": [
+        "u_rx",
+        "j_fy"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 153.9757,
+      "min_hold_ps": 135.994,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "fault"
+      ],
+      "b": [
+        "u_rx",
+        "j_flt"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 145.4725,
+      "min_hold_ps": 150.4133,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "j_civ"
+      ],
+      "b": [
+        "u_rx",
+        "j_civ"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 190.6707,
+      "min_hold_ps": 103.6213,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "j_end"
+      ],
+      "b": [
+        "u_rx",
+        "j_end"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 193.6342,
+      "min_hold_ps": 104.3734,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "j_v"
+      ],
+      "b": [
+        "u_rx",
+        "j_v"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 221.5365,
+      "min_hold_ps": 88.0379,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "kind"
+      ],
+      "b": [
+        "u_rx",
+        "j_kind"
+      ],
+      "bits": 3,
+      "judged_bits": 3,
+      "noarc_bits": 0,
+      "min_setup_ps": 188.6197,
+      "min_hold_ps": 107.6801,
+      "fail_bits": 0
+    },
+    {
+      "a": [
+        "u_seq",
+        "ngo"
+      ],
+      "b": [
+        "u_nt",
+        "ngo_i"
+      ],
+      "bits": 1,
+      "judged_bits": 1,
+      "noarc_bits": 0,
+      "min_setup_ps": 106.3828,
+      "min_hold_ps": 153.67,
+      "fail_bits": 0
+    }
+  ],
+  "route_admission": false,
+  "noarc_physical_proof": "noarc_physical_proofs.json",
+  "unresolved_noarc_bits": 0,
+  "constant_launch_bits": 1,
+  "unused_capture_bits": 1,
+  "all_actual_internal_source_joins_accounted": true,
+  "clock_relation_scope": "Conditional requested common phi with per-corner phi-R; actual named whole-field clock source graph remains pending"
+}

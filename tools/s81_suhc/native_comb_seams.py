@@ -53,7 +53,14 @@ def screen(plan, model_overrides=None, geometry_overrides=None):
             return
         L=max(distances)
         r=pair_check.check(die,dict(a=(ai,by[ai]['cell'],ap),b=(bi,by[bi]['cell'],bp),um=L))
-        rows.append(dict(a=[ai,ap],b=[bi,bp],width=width,a_offset=ao,b_offset=bo,bits=len(distances),worst_manhattan_um=round(L,3),timing=r))
+        # Setup must use the longest bit wire; hold may only credit the shortest.
+        # A max-length bus hold credit can hide a faster bit's true hold debt.
+        hold_r=pair_check.check(die,dict(a=(ai,by[ai]['cell'],ap),b=(bi,by[bi]['cell'],bp),um=min(distances)))
+        if hold_r.get('hold_ps') is not None:
+            r['hold_ps']=hold_r['hold_ps']
+            if r['hold_ps']<0:
+                r['status']='fail' if r.get('setup_ps',0)<0 else 'hold'
+        rows.append(dict(a=[ai,ap],b=[bi,bp],width=width,a_offset=ao,b_offset=bo,bits=len(distances),shortest_hold_manhattan_um=round(min(distances),3),worst_manhattan_um=round(L,3),timing=r))
 
     for p,w in (('v',7),('d',1128)):
         seam('u_seq','c_f'+p,'u_pd.u_f8',p+'_i',w)

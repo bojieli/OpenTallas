@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.s81.native_hc_actual_noarc_proof.v1",
+  "status": "Actual original closed ODB proof, no timing arc invented",
+  "proofs": [
+    {
+      "a": [
+        "u_seq",
+        "c_fd[38]"
+      ],
+      "b": [
+        "u_pd.u_f8",
+        "d_i[38]"
+      ],
+      "status": "ACTUAL_CONSTANT_HIGH_LAUNCH",
+      "master": "ot_s81_hc_cseq",
+      "closed_route_source": "70eafa55c",
+      "actual_output_driver": {
+        "instance": "_139953__1",
+        "master": "TIEHIx1_ASAP7_75t_R",
+        "pin": "H"
+      },
+      "source_odb_sha256": "386d3bc5266c93986ae1cfcd82ef3d5056ab71ac4abf617a916393f3e4489b1e",
+      "record": "noarc_cseq.log"
+    },
+    {
+      "a": [
+        "u_cr.g_meta.u_m",
+        "v_o[4]"
+      ],
+      "b": [
+        "u_rx",
+        "c_rv[4]"
+      ],
+      "status": "ACTUAL_UNUSED_CAPTURE",
+      "master": "ot_s81_hc_crx",
+      "closed_route_source": "70eafa55c",
+      "actual_bterm_net": "c_rv[4]",
+      "actual_input_iterm_loads": 0,
+      "record": "noarc_crx.log"
+    }
+  ]
+}

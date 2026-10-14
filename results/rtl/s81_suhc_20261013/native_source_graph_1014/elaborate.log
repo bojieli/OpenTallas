@@ -1,0 +1,120 @@
+ot-run: ot-epyc4       admits   688 GB (avail 915, growth 136, headroom 48, waiters 0/0 GB) load 25/128 running 13 disk 1095 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1622761-1791970016 after 0 s
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/diag/elaborate.ys' --
+
+1. Executing Verilog-2005 frontend: /diag/leaf_interfaces.sv
+Parsing SystemVerilog input from `/diag/leaf_interfaces.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_hc_ccf'.
+Generating RTLIL representation for module `\ot_s81_hc_pad_fv4fd5r2'.
+Generating RTLIL representation for module `\ot_s81_hc_pad_f8'.
+Generating RTLIL representation for module `\ot_s81_hc_cseq'.
+Generating RTLIL representation for module `\ot_s81_hc_ccr'.
+Generating RTLIL representation for module `\ot_s81_hc_pad_r5'.
+Generating RTLIL representation for module `\ot_s81_hc_crx'.
+Generating RTLIL representation for module `\ot_s81_hc_pad_meta2'.
+Generating RTLIL representation for module `\ot_s81_hc_cntree'.
+Generating RTLIL representation for module `\ot_s81_hc_caq'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /diag/wrappers.sv
+Parsing SystemVerilog input from `/diag/wrappers.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_hc_cpad_split'.
+Generating RTLIL representation for module `\ot_s81_hc_ccr_align'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /diag/parent.sv
+Parsing SystemVerilog input from `/diag/parent.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_sp_hc_comb_native'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \dsfd_sp_hc_comb_native
+Used module:     \ot_s81_hc_cpad_split
+Used module:     \ot_s81_hc_ccr_align
+Parameter \PHYS_CLK = 1
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_hc_cpad_split'.
+Parameter \PHYS_CLK = 1
+Generating RTLIL representation for module `$paramod\ot_s81_hc_cpad_split\PHYS_CLK=s32'00000000000000000000000000000001'.
+Parameter \PHYS_CLK = 1
+
+4.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_hc_ccr_align'.
+Parameter \PHYS_CLK = 1
+Generating RTLIL representation for module `$paramod\ot_s81_hc_ccr_align\PHYS_CLK=s32'00000000000000000000000000000001'.
+
+4.4. Analyzing design hierarchy..
+Top module:  \dsfd_sp_hc_comb_native
+Used module:     $paramod\ot_s81_hc_cpad_split\PHYS_CLK=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_s81_hc_ccr_align\PHYS_CLK=s32'00000000000000000000000000000001
+
+4.5. Analyzing design hierarchy..
+Top module:  \dsfd_sp_hc_comb_native
+Used module:     $paramod\ot_s81_hc_cpad_split\PHYS_CLK=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_s81_hc_ccr_align\PHYS_CLK=s32'00000000000000000000000000000001
+Removing unused module `\ot_s81_hc_ccr_align'.
+Removing unused module `\ot_s81_hc_cpad_split'.
+Removed 2 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_sp_hc_comb_native.
+Optimizing module $paramod\ot_s81_hc_ccr_align\PHYS_CLK=s32'00000000000000000000000000000001.
+Optimizing module $paramod\ot_s81_hc_cpad_split\PHYS_CLK=s32'00000000000000000000000000000001.
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_s81_hc_ccr_align\PHYS_CLK=s32'00000000000000000000000000000001.
+Deleting now unused module $paramod\ot_s81_hc_cpad_split\PHYS_CLK=s32'00000000000000000000000000000001.
+<suppressed ~2 debug messages>
+
+7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module dsfd_sp_hc_comb_native.
+
+8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dsfd_sp_hc_comb_native..
+
+9. Executing JSON backend.
+
+End of script. Logfile hash: b0d3186680, time: 1.18s, user: 1.19s, system: 0.02s, MEM: 35.77 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 65% 4x read_verilog (0 sec), 31% 1x hierarchy (0 sec), ...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1622761-1791970016): exit 0

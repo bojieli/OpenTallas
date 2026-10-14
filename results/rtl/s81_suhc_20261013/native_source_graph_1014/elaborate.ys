@@ -1,0 +1,7 @@
+read_verilog -sv -D SYNTHESIS -D OT_S81_HC_COMB_HARD -D OT_S81_HC_PAD_HARD /diag/leaf_interfaces.sv /diag/wrappers.sv /diag/parent.sv
+hierarchy -check -top dsfd_sp_hc_comb_native
+proc
+flatten
+opt_expr
+opt_clean
+write_json /diag/source_graph.json

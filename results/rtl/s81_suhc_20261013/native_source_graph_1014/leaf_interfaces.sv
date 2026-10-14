@@ -1,0 +1,200 @@
+(* blackbox *) module ot_s81_hc_ccf (ch_rst, n_yacc, sk, srs, yfl, VSS, VDD, ch_fd, ch_fv, fd_i, fv_i, n_y);
+output wire ch_rst;
+input wire n_yacc;
+input wire sk;
+input wire srs;
+output wire yfl;
+input wire VSS;
+input wire VDD;
+output wire [2919:0] ch_fd;
+output wire [6:0] ch_fv;
+input wire [1127:0] fd_i;
+input wire [6:0] fv_i;
+input wire [2559:0] n_y;
+endmodule
+
+(* blackbox *) module ot_s81_hc_pad_fv4fd5r2 (sk, srs, VDD, VSS, d_i, d_o, r_i, r_o, v_i, v_o);
+input wire sk;
+input wire srs;
+input wire VDD;
+input wire VSS;
+input wire [1127:0] d_i;
+output wire [1127:0] d_o;
+input wire [2155:0] r_i;
+output wire [2155:0] r_o;
+input wire [6:0] v_i;
+output wire [6:0] v_o;
+endmodule
+
+(* blackbox *) module ot_s81_hc_pad_f8 (sk, srs, VDD, VSS, d_i, d_o, v_i, v_o);
+input wire sk;
+input wire srs;
+input wire VDD;
+input wire VSS;
+input wire [1127:0] d_i;
+output wire [1127:0] d_o;
+input wire [6:0] v_i;
+output wire [6:0] v_o;
+endmodule
+
+(* blackbox *) module ot_s81_hc_cseq (c_yfl, cck, crs, e_flt, f_q, f_y, fault, j_civ, j_end, j_v, n_cmd_v, n_done_v, n_flt, n_inp, n_online, n_yacc, n_ypop, ngo, sk, srs, t_flt, t_ssv, w_flt, x_f1, x_f4, x_pob, x_wdone, VDD, VSS, base, c_fd, c_fv, e_fd, e_fv, kind, n_cmd_d, n_done_tag, n_fcode, n_rq_row, n_rq_v, n_rs_d, n_rs_v, t_ss, w_fd, w_fv);
+parameter integer PIPE=0, PD=40;
+input wire c_yfl;
+input wire cck;
+input wire crs;
+input wire e_flt;
+output wire f_q;
+output wire f_y;
+output wire fault;
+output wire j_civ;
+output wire j_end;
+output wire j_v;
+input wire n_cmd_v;
+output wire n_done_v;
+output wire n_flt;
+input wire n_inp;
+output wire n_online;
+input wire n_yacc;
+output wire n_ypop;
+output wire ngo;
+input wire sk;
+input wire srs;
+input wire t_flt;
+input wire t_ssv;
+input wire w_flt;
+input wire x_f1;
+input wire x_f4;
+input wire x_pob;
+input wire x_wdone;
+input wire VDD;
+input wire VSS;
+output wire [13:0] base;
+output wire [1127:0] c_fd;
+output wire [6:0] c_fv;
+output wire [1127:0] e_fd;
+output wire [6:0] e_fv;
+output wire [2:0] kind;
+input wire [83:0] n_cmd_d;
+output wire [7:0] n_done_tag;
+output wire [3:0] n_fcode;
+output wire [27:0] n_rq_row;
+output wire [1:0] n_rq_v;
+input wire [1023:0] n_rs_d;
+input wire [1:0] n_rs_v;
+input wire [31:0] t_ss;
+output wire [1127:0] w_fd;
+output wire [6:0] w_fv;
+endmodule
+
+(* blackbox *) module ot_s81_hc_ccr (sk, srs, VDD, VSS, ch_rd, ch_rv, cpi_o, crd_o, crv_o, ex1_o);
+input wire sk;
+input wire srs;
+input wire VDD;
+input wire VSS;
+input wire [2155:0] ch_rd;
+input wire [7:0] ch_rv;
+output wire [7:0] cpi_o;
+output wire [2155:0] crd_o;
+output wire [7:0] crv_o;
+output wire [511:0] ex1_o;
+endmodule
+
+(* blackbox *) module ot_s81_hc_pad_r5 (sk, srs, VDD, VSS, d_i, d_o);
+input wire sk;
+input wire srs;
+input wire VDD;
+input wire VSS;
+input wire [2155:0] d_i;
+output wire [2155:0] d_o;
+endmodule
+
+(* blackbox *) module ot_s81_hc_crx (j_civ, j_end, j_flt, j_fq, j_fy, j_v, o_run, sk, srs, x_f1, x_f4, x_pob, x_wdone, VDD, VSS, a_e, a_f, a_iq, a_vo, c_rd, c_rv, e_h, e_rd, e_rv, e_x, j_base, j_kind, o_kind, o_rd, o_rv, w_h, w_rd, w_rv);
+input wire j_civ;
+input wire j_end;
+input wire j_flt;
+input wire j_fq;
+input wire j_fy;
+input wire j_v;
+output wire o_run;
+input wire sk;
+input wire srs;
+output wire x_f1;
+output wire x_f4;
+output wire x_pob;
+output wire x_wdone;
+input wire VDD;
+input wire VSS;
+input wire [39:0] a_e;
+input wire [3:0] a_f;
+input wire [95:0] a_iq;
+input wire [3:0] a_vo;
+input wire [107:0] c_rd;
+input wire [7:0] c_rv;
+output wire [123:0] e_h;
+input wire [107:0] e_rd;
+input wire [7:0] e_rv;
+output wire [1023:0] e_x;
+input wire [13:0] j_base;
+input wire [2:0] j_kind;
+output wire [2:0] o_kind;
+output wire [107:0] o_rd;
+output wire [3:0] o_rv;
+output wire [123:0] w_h;
+input wire [107:0] w_rd;
+input wire [7:0] w_rv;
+endmodule
+
+(* blackbox *) module ot_s81_hc_pad_meta2 (sk, srs, VDD, VSS, e_i, e_o, p_i, p_o, v_i, v_o);
+input wire sk;
+input wire srs;
+input wire VDD;
+input wire VSS;
+input wire [511:0] e_i;
+output wire [511:0] e_o;
+input wire [7:0] p_i;
+output wire [7:0] p_o;
+input wire [7:0] v_i;
+output wire [7:0] v_o;
+endmodule
+
+(* blackbox *) module ot_s81_hc_cntree (c_rvt, e_rvt, ngo_i, sk, srs, ss_v, tflt, w_rvt, VDD, VSS, c_ex, c_pi, e_ex, e_pi, ss, w_ex, w_pi);
+input wire c_rvt;
+input wire e_rvt;
+input wire ngo_i;
+input wire sk;
+input wire srs;
+output wire ss_v;
+output wire tflt;
+input wire w_rvt;
+input wire VDD;
+input wire VSS;
+input wire [511:0] c_ex;
+input wire [7:0] c_pi;
+input wire [383:0] e_ex;
+input wire [7:0] e_pi;
+output wire [31:0] ss;
+input wire [383:0] w_ex;
+input wire [7:0] w_pi;
+endmodule
+
+(* blackbox *) module ot_s81_hc_caq (f, odd, run, rv_u, sk, srs, t_u, vo, VDD, VSS, c_d, cq, e, e_d, iq, iqo, kind, w_d, wd);
+output wire f;
+input wire odd;
+input wire run;
+input wire rv_u;
+input wire sk;
+input wire srs;
+input wire t_u;
+output wire vo;
+input wire VDD;
+input wire VSS;
+input wire [511:0] c_d;
+output wire [255:0] cq;
+output wire [9:0] e;
+input wire [511:0] e_d;
+input wire [23:0] iq;
+output wire [23:0] iqo;
+input wire [2:0] kind;
+input wire [511:0] w_d;
+output wire [511:0] wd;
+endmodule
