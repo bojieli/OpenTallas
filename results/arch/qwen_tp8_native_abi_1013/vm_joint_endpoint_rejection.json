@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.qwen-tp8.vm-joint-endpoint-rejection.v1",
+  "source_commit": "4c14ae277",
+  "source_path": "results/arch/qwen_tp8_1012/vm_joint_g1_station_endpoint_screen.json",
+  "sha256": "754bd5c06bb61f17c7e5fa1bfd4364d5a4056ea97367047c55703ebafa931e8b",
+  "status": "REJECTED_FOR_FULL_INTERFACE_CONTRACT; NO_PHYSICAL_FREEZE_OR_ROUTE",
+  "normalization": "o=O_child-R_child; s=S_child+R_child. Do not subtract R twice.",
+  "launch_limit_ps": 220,
+  "capture_limit_ps": 190,
+  "zero_wire_failing_output_pin_count": 53,
+  "geometric_failing_output_pin_count": 688,
+  "meaning": "53 is a count of failing q pins, not a53ps output delay.",
+  "stations": [
+    {
+      "station": "g1_exit1",
+      "bits": 488,
+      "zero_wire_launch_over220_bits": 39,
+      "north_face_TT_screen_over220_bits": 488
+    },
+    {
+      "station": "g1_exit2",
+      "bits": 200,
+      "zero_wire_launch_over220_bits": 14,
+      "north_face_TT_screen_over220_bits": 200
+    }
+  ],
+  "first_actual_example": {
+    "lane": "vm_g0_b0_xf1>p16",
+    "bit": 0,
+    "pin": "q[488]",
+    "compensated_launch_ps": 209.36557,
+    "north_face_distance_um": 164.24400000000242,
+    "TT_geometric_data_wire_screen_ps": 124.82544000000183,
+    "full_TT_geometric_launch_screen_ps": 334.1910100000018
+  },
+  "ME_capture": {
+    "normalized_pin_setup_ps": 119.8,
+    "estimated_DATA_wire_ps": 152.6,
+    "total_ps": 272.4,
+    "limit_ps": 190,
+    "qualified": false
+  },
+  "clock_wire": "Compensated separately percorner; never sum clock entry delay into DATA endpoint.",
+  "needed": "Actual shallow ENGINE-qualified registered launch face/internal reach staging; no sourcefreeze orroute from rejectedWcandidate.",
+  "adopted": false,
+  "qualified": false
+}
