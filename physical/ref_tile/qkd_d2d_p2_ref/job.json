@@ -1,5 +1,5 @@
 {
- "name": "qkd_d2d_p2_ref-q16-COMMIT",
+ "name": "qkd_d2d_p2_ref-q16-133062899",
  "block": "ot_qkvd_kv_end",
  "ref_tile": true,
  "owner": "Claude:q13-kvleaves",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 112,
  "source": {
   "branch": "claude/q13b-kvend",
-  "commit": "COMMIT",
+  "commit": "133062899",
   "extra_paths": [
    "rtl/test/qwen_kv_die",
    "rtl/lib",
@@ -140,7 +140,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_d2d_p2_ref/qkd_d2d_p2_ref-q16-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_d2d_p2_ref/qkd_d2d_p2_ref-q16-133062899"
   }
  ],
  "cycles_added": 0,
