@@ -2,11 +2,26 @@ import json
 import unittest
 from pathlib import Path
 from report import area, pack
+from private_pin_screen import center, edge
 
 ROOT=Path(__file__).resolve().parents[2]
 REPORT=ROOT/'results/arch/hbm_die_feasibility_1014/geometry_source_report.json'
 
 class GeometryTests(unittest.TestCase):
+    def test_literal_pin_layer_and_shape_fail_closed(self):
+        self.assertEqual(center([['M4',[0,0,0.084,0.024]]]),('M4',[0.042,0.012]))
+        with self.assertRaises(ValueError): center([['M6',[0,0,1,1]]])
+        with self.assertRaises(ValueError): center([])
+        with self.assertRaises(ValueError): center([['M4',[0,0,1,1]],['M4',[2,2,3,3]]])
+
+    def test_literal_screen_covers_all_internal_bits_without_rc_credit(self):
+        d=json.loads((REPORT.parent/'private_pin_screen_summary.json').read_text())
+        self.assertEqual(d['covered_internal_edge_bits'],1280)
+        self.assertEqual(d['covered_clock_reset_roots'],160)
+        self.assertEqual(d['max_manhattan_um'],354.06)
+        self.assertFalse(d['wire_delay_measured']);self.assertFalse(d['qualified'])
+        self.assertTrue(all(e['measured_wire_ps'] is None for e in d['representative_window_edges']))
+
     def test_touching_faces_are_not_overlap(self):
         self.assertEqual(area([0,0,10,10],[10,0,20,10]),0)
         self.assertEqual(area([0,0,10,10],[9,9,20,20]),1)
