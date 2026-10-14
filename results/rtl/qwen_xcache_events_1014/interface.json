@@ -1,0 +1,48 @@
+{
+  "status": "DEFAULT_OFF_EVENT_PROTOCOL_UNIT_AND_PARENT_LINT_ONLY",
+  "top": "ot_qwen_tile_tp8_context_events",
+  "clock_entries": {
+    "core_ctl": 1,
+    "rp": 5,
+    "sl": 8,
+    "node": 1,
+    "tx_group": 1,
+    "rqr": 2,
+    "cache_response": 1,
+    "cache_store": 1,
+    "total": 20,
+    "coherent_core_family": 19,
+    "loader_family": 1
+  },
+  "logical_flops": {
+    "cache_store": 10960,
+    "cache_response": 337,
+    "sum": 11297,
+    "increase_over_context32": 1728
+  },
+  "tuple_width_bits": 207,
+  "tuple_order_msb_to_lsb": [
+    "context16",
+    "vm_version32",
+    "j_repeat1",
+    "epoch21",
+    "address96",
+    "operand_token16",
+    "root5",
+    "phase4",
+    "recipient16"
+  ],
+  "source_sha256": {
+    "rtl/physical/ot_qwen_xcache_context32_events.sv": "184341079635575c0f5874b33142547dce5a4da7ae80f5f1fc6b6b08fb15b4c9",
+    "rtl/physical/ot_qwen_rom_tile_nkt_tp8_core_grouped_ctx.sv": "eb075d2fe3b491becaab9cb106fef3af74d9132da03e529049833e560940101b",
+    "rtl/physical/ot_qwen_tile_tp8_context_events.sv": "24396a31ad0e716402ca0bfb3f5b4a7f2648b5797ae86bc9f779b68cd7c5d111"
+  },
+  "open": [
+    "actual production arithmetic eventparent",
+    "registered request/status/lookahead",
+    "relatedclock phase/CDC ack crossing",
+    "fresh perleaf CTS and faces",
+    "allrecipient source freshness/drain retirement",
+    "outside node/tree n_va lifetime"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "status": "EVENT_MAILBOX_UNIT_GATE_PASS_NOT_CDC_ARITHMETIC_OR_PHYSICAL",
+  "source_sha256": "184341079635575c0f5874b33142547dce5a4da7ae80f5f1fc6b6b08fb15b4c9",
+  "bench_sha256": "1022b17b44c9e4ebd1416bc045d8bb1d7f0abaf71ef418ad245d12c94e60a31b",
+  "cases": {
+    "positive": {
+      "exit": 0,
+      "source_sha256": "184341079635575c0f5874b33142547dce5a4da7ae80f5f1fc6b6b08fb15b4c9"
+    },
+    "ignored_fill_credit": {
+      "exit": 1,
+      "source_sha256": "f1ec92b2747971d40fc4ed63c90512f1834394cf503d90c1dbdf0e7514511639"
+    },
+    "wrong_root_provenance": {
+      "exit": 1,
+      "source_sha256": "7b67a488a295bff67ab3ceea6429e86b42625a05b53340bccd609293b93c5e5b"
+    },
+    "one_shot_fill_level": {
+      "exit": 1,
+      "source_sha256": "e66644935dd7f13dac0829ca3c5f19f3566a264c7b5b98b15089017c8c140be7"
+    }
+  }
+}
