@@ -1,0 +1,67 @@
+{
+ "name": "qkd_seq_xs_tp8",
+ "top": "qkd_seq_xs_tp8",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qwen_kv_centre_slots.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv",
+  "rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_desc.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/physical/ot_qwen_kv_seq_tp8.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "x_v",
+   "x_cls",
+   "x_d",
+   "qpop",
+   "kpop",
+   "kidx",
+   "kwgo",
+   "kwn",
+   "ck",
+   "rst_n"
+  ],
+  "W": [
+   "q_w",
+   "kw_w"
+  ],
+  "E": [
+   "q_e",
+   "kw_e"
+  ]
+ },
+ "outline": {
+  "w": 108.0,
+  "h": 105.84
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "description": "Unsubmitted native TP8 candidate. Fixed HEADS1/Q_FP321 source wrapper; actual four KVN and 32 FP32 Q, 32 RES. Transport/control bench only; arithmetic, assigned pins, native view exports and parent per-child clock delivery pending.",
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

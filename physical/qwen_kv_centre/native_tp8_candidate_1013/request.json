@@ -1,0 +1,81 @@
+{
+  "status": "CANDIDATE_GATE_ONLY_UNVERIFIED",
+  "native_source_commit": "4b66ce3a4",
+  "fixed_profile": {
+    "HEADS": 1,
+    "Q_FP32": 1
+  },
+  "final_v5_assigned_pins": false,
+  "parent_outline_um": [
+    604.8,
+    475.2
+  ],
+  "child_outline_requests_um": {
+    "qkd_seq_core_tp8": [
+      108,
+      43.2
+    ],
+    "qkd_seq_xs_tp8": [
+      108,
+      105.84
+    ]
+  },
+  "clock_entries": {
+    "clk_core": "u_core",
+    "clk_xs0": "g_xs[0].u_xs",
+    "clk_xs1": "g_xs[1].u_xs",
+    "clk_xs2": "g_xs[2].u_xs",
+    "clk_xs3": "g_xs[3].u_xs",
+    "clk_fan0": "g_fan[0].u_fan",
+    "clk_fan1": "g_fan[1].u_fan",
+    "clk_fan2": "g_fan[2].u_fan",
+    "clk_fan3": "g_fan[3].u_fan"
+  },
+  "entry_clock_child_pin": "ck",
+  "fan_reuse": {
+    "closed_commit": "0f9a940a0",
+    "body_same": true,
+    "body_sha256": "4015a240693bc600d8a3f20e0bd906e068b162345232d6aea2e3d8b654b2f975",
+    "params": {},
+    "views_sha256": {
+      "qkd_seq_fan_ss.lib": "dd2ff7e994b739258dde86b76b4840b33bff57b35eee048368ba8db763d607e8",
+      "insertion.json": "72baba985b707902b53858b51bac29f950a9514b3e9a22ccab2a1d11b943bd48",
+      "qkd_seq_fan_ff.lib": "043b540a7f45f1930c66c17cb6e4a5cbda4d948ca1795ff71e6b7e362cfa563a",
+      "qkd_seq_fan_tt.lib": "80cb1deb593f4ee8bfedd73e60f71345ac319765c30489b5abcc7ad7060db8e7",
+      "qkd_seq_fan.lef": "d21f765f5c9548b1cba588e3488842203edcfc9958be272dea36f053032c5248"
+    }
+  },
+  "gates": {
+    "core_local_session": 93668,
+    "xs_local_session": 22285,
+    "mem_gb_each": 8,
+    "cts": true,
+    "route_submitted": false,
+    "core_status": "TERMINAL_EXIT0_WARN",
+    "core_result": {
+      "mapped_sinks": 2677,
+      "std_area_um2": 1424,
+      "TT_max_ps": 135.3,
+      "TT_spread_ps": 10.1,
+      "TT_mean_ps": 129.1,
+      "SS_mean_ps": 174.2,
+      "FF_mean_ps": 103.1,
+      "setup_wns_ps": 40.5595,
+      "hold_wns_ps": 26.5267,
+      "warnings": [
+        "35% utilization on copied outline",
+        "regional reset has 696 loads; current physical pass is not a structural waiver"
+      ]
+    },
+    "xs_remote": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qkd_seq_xs_tp8-20261013-213421",
+    "xs_status": "RUNNING",
+    "xs_remote_script_pid": 216237
+  },
+  "requirements": [
+    "Use real native core/xs LEF and TT/FF/SS insertion before parent clock generation.",
+    "Deliver each entry phi-R measured in actual corner; related clocks with setup150/210 by pair and hold100.",
+    "Actual pin-by-pin launch/capture reach and registered boundary audit required.",
+    "Copied bundle-based cut script is a candidate screen, not actual native pin or PG proof.",
+    "Native control/transport component gate does not prove attention arithmetic or end-to-end production rate."
+  ]
+}

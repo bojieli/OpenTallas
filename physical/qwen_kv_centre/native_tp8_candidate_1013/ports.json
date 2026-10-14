@@ -1,0 +1,415 @@
+{
+  "qkd_seq_core_tp8": {
+    "ports": {
+      "ck": [
+        1,
+        false
+      ],
+      "rst_n": [
+        1,
+        false
+      ],
+      "x3_v": [
+        1,
+        false
+      ],
+      "x3_tag": [
+        11,
+        true
+      ],
+      "x3_cr": [
+        1,
+        false
+      ],
+      "r_sd": [
+        56,
+        true
+      ],
+      "r_kvd": [
+        44,
+        true
+      ],
+      "t_ar_d": [
+        520,
+        true
+      ],
+      "t_ar_cr": [
+        1,
+        false
+      ],
+      "t_ds": [
+        187,
+        true
+      ],
+      "t_pw": [
+        75,
+        true
+      ],
+      "s_qpop": [
+        1,
+        false
+      ],
+      "s_kpop": [
+        1,
+        false
+      ],
+      "s_kidx": [
+        3,
+        true
+      ],
+      "s_kwgo": [
+        1,
+        false
+      ],
+      "s_kwn": [
+        2,
+        true
+      ],
+      "f_aqm_w": [
+        28,
+        true
+      ],
+      "f_aqm_e": [
+        28,
+        true
+      ],
+      "f_kwm_w": [
+        23,
+        true
+      ],
+      "f_kwm_e": [
+        23,
+        true
+      ],
+      "f_kc_w": [
+        33,
+        true
+      ],
+      "f_kc_e": [
+        33,
+        true
+      ],
+      "f_cr_w": [
+        2,
+        true
+      ],
+      "f_cr_e": [
+        2,
+        true
+      ],
+      "f_af_w": [
+        2,
+        true
+      ],
+      "f_af_e": [
+        2,
+        true
+      ],
+      "f_mf_w": [
+        2,
+        true
+      ],
+      "f_mf_e": [
+        2,
+        true
+      ],
+      "hs": [
+        1,
+        false
+      ],
+      "ar": [
+        520,
+        true
+      ],
+      "hf": [
+        1,
+        false
+      ],
+      "hc": [
+        182,
+        true
+      ],
+      "tk": [
+        93,
+        true
+      ],
+      "kst": [
+        10,
+        true
+      ]
+    },
+    "face_bits": {
+      "N": 905,
+      "S": 808,
+      "W": 90,
+      "E": 90
+    }
+  },
+  "qkd_seq_xs_tp8": {
+    "ports": {
+      "ck": [
+        1,
+        false
+      ],
+      "rst_n": [
+        1,
+        false
+      ],
+      "x_v": [
+        1,
+        false
+      ],
+      "x_cls": [
+        3,
+        true
+      ],
+      "x_d": [
+        128,
+        true
+      ],
+      "qpop": [
+        1,
+        false
+      ],
+      "kpop": [
+        1,
+        false
+      ],
+      "kidx": [
+        3,
+        true
+      ],
+      "kwgo": [
+        1,
+        false
+      ],
+      "kwn": [
+        2,
+        true
+      ],
+      "q_w": [
+        128,
+        true
+      ],
+      "q_e": [
+        128,
+        true
+      ],
+      "kw_w": [
+        256,
+        true
+      ],
+      "kw_e": [
+        256,
+        true
+      ]
+    },
+    "face_bits": {
+      "N": 142,
+      "W": 384,
+      "E": 384
+    }
+  },
+  "qkd_seq_tp8": {
+    "ports": {
+      "clk_core": [
+        1,
+        false
+      ],
+      "clk_xs0": [
+        1,
+        false
+      ],
+      "clk_xs1": [
+        1,
+        false
+      ],
+      "clk_xs2": [
+        1,
+        false
+      ],
+      "clk_xs3": [
+        1,
+        false
+      ],
+      "clk_fan0": [
+        1,
+        false
+      ],
+      "clk_fan1": [
+        1,
+        false
+      ],
+      "clk_fan2": [
+        1,
+        false
+      ],
+      "clk_fan3": [
+        1,
+        false
+      ],
+      "rst_n": [
+        1,
+        false
+      ],
+      "r_x3_d": [
+        524,
+        true
+      ],
+      "r_x3_cr": [
+        1,
+        false
+      ],
+      "r_sd": [
+        56,
+        true
+      ],
+      "r_kvd": [
+        44,
+        true
+      ],
+      "t_ar_d": [
+        520,
+        true
+      ],
+      "t_ar_cr": [
+        1,
+        false
+      ],
+      "t_ds": [
+        187,
+        true
+      ],
+      "t_pw": [
+        75,
+        true
+      ],
+      "aq_WS": [
+        540,
+        true
+      ],
+      "aq_WN": [
+        540,
+        true
+      ],
+      "aq_ES": [
+        540,
+        true
+      ],
+      "aq_EN": [
+        540,
+        true
+      ],
+      "kvn_WS_d": [
+        1047,
+        true
+      ],
+      "kvn_WN_d": [
+        1047,
+        true
+      ],
+      "kvn_ES_d": [
+        1047,
+        true
+      ],
+      "kvn_EN_d": [
+        1047,
+        true
+      ],
+      "kvn_WS_cr": [
+        1,
+        false
+      ],
+      "kvn_WN_cr": [
+        1,
+        false
+      ],
+      "kvn_ES_cr": [
+        1,
+        false
+      ],
+      "kvn_EN_cr": [
+        1,
+        false
+      ],
+      "kc_WS": [
+        33,
+        true
+      ],
+      "kc_WN": [
+        33,
+        true
+      ],
+      "kc_ES": [
+        33,
+        true
+      ],
+      "kc_EN": [
+        33,
+        true
+      ],
+      "af_WS": [
+        1,
+        false
+      ],
+      "af_WN": [
+        1,
+        false
+      ],
+      "af_ES": [
+        1,
+        false
+      ],
+      "af_EN": [
+        1,
+        false
+      ],
+      "mf_WS": [
+        1,
+        false
+      ],
+      "mf_WN": [
+        1,
+        false
+      ],
+      "mf_ES": [
+        1,
+        false
+      ],
+      "mf_EN": [
+        1,
+        false
+      ],
+      "ar": [
+        520,
+        true
+      ],
+      "hf": [
+        1,
+        false
+      ],
+      "hs": [
+        1,
+        false
+      ],
+      "hc": [
+        182,
+        true
+      ],
+      "tk": [
+        93,
+        true
+      ],
+      "kst": [
+        10,
+        true
+      ]
+    },
+    "face_bits": {
+      "N": 1417,
+      "S": 808,
+      "W": 3246,
+      "E": 3246
+    }
+  }
+}
