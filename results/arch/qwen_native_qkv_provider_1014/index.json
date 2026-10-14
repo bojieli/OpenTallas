@@ -1,0 +1,29 @@
+{
+  "current_source": "8486d1e6a",
+  "current_gate_receipt": "one_q_per_epoch/receipt.json",
+  "current_gate_unit": "oth-ubuntu-750045-1791957223",
+  "current_gate_exit": 0,
+  "current_gate_logs": {
+    "positive": "one_q_per_epoch/positive.log",
+    "stale_storage_ack": "one_q_per_epoch/ack.log",
+    "stale_VM_response": "one_q_per_epoch/qstale.log",
+    "duplicate_Q_start": "one_q_per_epoch/qrepeat.log"
+  },
+  "historical_component_and_first_top_receipt": "receipt.json",
+  "historical_source": "fd8fb858c",
+  "storage_geometry_clarification": {
+    "logical_KV_heads": 1,
+    "head_dimensions": 128,
+    "format": "FP8 E4M3",
+    "useful_K_bytes": 128,
+    "useful_V_bytes": 128,
+    "useful_KV_bytes_per_token": 256,
+    "row_data_layout": "row_data[8*d+:8] is canonical dimension d, for d=0..127; row_kind0=K and1=V",
+    "targeted_test_geometry": "four complete fixture replicas, not fourheads, not padded sectors, not dimension shards",
+    "each_fixture_quadrant_q": "landing[q][0..127]=K dimensions0..127; landing[q][128..255]=V dimensions0..127",
+    "fixture_total_byte_writes": 1024,
+    "fixture_storage_ack_events": 8,
+    "actual_controller_geometry": "Not established. The actual composition must bind quadrant storage placement/replication/sharding and its source-backed commit acknowledgments. This test does not price fourfold physical storage or bandwidth."
+  },
+  "source_and_prior_proofs_preserved": true
+}
