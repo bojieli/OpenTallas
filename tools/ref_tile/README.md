@@ -28,7 +28,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `sources`, `params`, `clock_port`, `reset_ports` | RTL, top parameters, clock port, reset ports |
 | `outline {w,h}` / `std_area_um2` + `util` / `contract {file, slot}` | outline: explicit (snapped up to the 2.16 lattice; `"exact": true` keeps the given size: a drop-in replacement inside a fixed sub-slot), sized to util (0.52 default), or the die contract slot |
 | `pins {N,S,E,W: [port base names]}` | per-face port groups; base names only (`ck`, never `ck[0]`); every port exactly once |
-| `macros [{view, count, at?, orient?, inst?}]` | SRAM/ROM views (DIR holds NAME.lef + NAME_{ss,ff,tt}.lib) |
+| `macros [{view, count, at?, at_exact?, orient?, inst?}]` | SRAM/ROM views (DIR holds NAME.lef + NAME_{ss,ff,tt}.lib); `at_exact: true` takes `at` unsnapped (an abutted N-S stack: pitch = array height + 0.024 um; off-track pins FAIL) |
 | `children [{view, count, at?, inst?}]` | hard children (cluster): views exported by this flow |
 | `layer_cap` | leaf (2026-10-12 contract, `results/arch/hier_contract_1011/layer_usage_1012.md`): signals AND PG stop at M5 (default; PG stripes on M5 as pins, pins on M4/M5, parent straps M6, die signals M6/M7 over the tile, M8/M9 die power + global). `M6` only as a die-lead exception with `layer_cap_grant: "<lead>: <reason>"` (pin-dense edge relays / stations). Kits generated before the cut (`legacy_layer_kits.json`) keep PG M6/M7, signals <= M6; a new spec with `pg_layer` M6/M7 and no grant is refused. Contract slots carry `layer_cap` (new routes) and `view_cap` (the closed view's own cap, valid while child_lint passes at it) |
 | `pg_layer` | leaf: derived from `layer_cap` (legacy kits only: M6 or M7); cluster: M7 |

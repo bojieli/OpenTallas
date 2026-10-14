@@ -421,7 +421,7 @@ def blocks_of(s: dict) -> list:
             m = read_view_lef(it["view"])
             out.append({"kind": kind, "view": it["view"], "master": m["name"], "inst": it.get("inst"),
                         "w": m["W"], "h": m["H"], "at": it.get("at"), "orient": it.get("orient", "R0"),
-                        "count": int(it.get("count", 1))})
+                        "count": int(it.get("count", 1)), "exact": bool(it.get("at_exact"))})
     # expand counts (identical instances placed in a row)
     exp = []
     for b in out:
@@ -517,6 +517,13 @@ def place_blocks(s: dict, W: float, H: float, blocks: list) -> list:
             off = sum(v["offtrack"] for v in r["layers"].values())
             if off:   # off-lattice view (not built by this flow): nearest on-track origin instead
                 bx, by, off = on_track(b, bx, by)
+        elif b.get("exact") and b.get("at"):
+            # macro item "at_exact": the origin as given, not snapped to the (0.432, 2.16) macro lattice: an abutted
+            # N-S stack needs pitch = array height + 0.024 (abutted_stack); the pins must already be on track there
+            bx, by = float(b["at"][0]), float(b["at"][1])
+            r = cmta.check_placement(track_macro(b["view"]) if b.get("_tm") is None else b["_tm"], b["orient"],
+                                     round(bx * 1000), round(by * 1000))
+            off = sum(v["offtrack"] for v in r["layers"].values())
         else:
             bx, by = snap(b["_xy"][0], GRID_X), snap(b["_xy"][1], GRID_Y)
             bx, by, off = on_track(b, bx, by)
