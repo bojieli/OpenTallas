@@ -46,8 +46,8 @@
   "benches_from": "tools/s81_suhc/hc_tile_benches_fv4fd5r2.json",
   "owner": "Codex:s81_hc_ccf",
   "branch": "codex-s81-ccf-pinreg-1013",
-  "tag": "v6-nativeM2-existing-driver-strip",
-  "purpose": "Keep native M2 geometry and unchanged RTL/hold constraints; anchor all existing dedicated output INV/BUF chains beside pins, standard FFs behind a separate band. No added cells/nets in preflight; actual CTS TT/FF gate required.",
+  "tag": "v7-nativeM2-sized-driver-strip",
+  "purpose": "Retain sized BUF24 final pin drivers and INV5 upstream, reserve32umregisterband and keep side driver cells out of N/S corners. Connectivity/counts unchanged; original MIN/hold repair remains enabled before final drivers. Require fresh actual TT/FF clock/pin windows.",
   "views_to": "physical/ref_tile/s81hc_pad_fv4fd5r2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_pad_fv4fd5r2_ref"
  },
@@ -74,7 +74,7 @@
   "PRE_DETAIL_PLACE_TCL": "physical/qwen_die_masters/out_flop_release.tcl",
   "OT_PAD_DRIVER_FF_HELPER": "physical/qwen_die_masters/io_flop_at_pins.tcl"
  },
- "boundary_hold_experiment": "All fixedHB stages omitted; input windows already136/146ps. HB1 outputstrip measured setup\u2212353.86ps and is retired. New placement-only hook fixes 6582 existing outputdrivers plus6583 existing pinFFs, releases all for DPL, preserves netlist and every MIN/hold budget.",
+ "boundary_hold_experiment": "No fixedHB stages. Sized existing finalBUF24 cannot be removed or resized; its inputnet stays free for normal hold repair. Registerband32um, W/E outputdriver positions compressed away from N/S corners; pins untouched. Actual hold/window proof mandatory.",
  "params": {},
  "children": [],
  "inter": []
