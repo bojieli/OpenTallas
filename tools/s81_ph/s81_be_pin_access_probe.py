@@ -12,7 +12,7 @@ ROOT=Path(__file__).resolve().parents[2]
 
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('lef',type=Path);ap.add_argument('work',type=Path);ap.add_argument('--aligned-tracks',action='store_true');ap.add_argument('--m7-pin-shift',type=float,choices=[0,.016,.032],default=0);ap.add_argument('--parent-be-slots',action='store_true');ap.add_argument('--master',default='dsfd_vm_be_sl');ap.add_argument('--relay-rows',action='store_true');ap.add_argument('--relay-y-offset',type=float,choices=[0,.024],default=0);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('lef',type=Path);ap.add_argument('work',type=Path);ap.add_argument('--aligned-tracks',action='store_true');ap.add_argument('--m7-pin-shift',type=float,choices=[0,.016,.032],default=0);ap.add_argument('--parent-be-slots',action='store_true');ap.add_argument('--be-x-shift',type=float,choices=[0,-.048],default=0);ap.add_argument('--master',default='dsfd_vm_be_sl');ap.add_argument('--relay-rows',action='store_true');ap.add_argument('--relay-y-offset',type=float,choices=[0,.024],default=0);a=ap.parse_args()
     lef=a.lef.resolve();work=a.work.resolve();work.mkdir(parents=True,exist_ok=True)
     station=ROOT/'physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh'
     prefix=station.read_text().split('docker run --rm',1)[0]
@@ -29,7 +29,7 @@ def main():
     if a.m7_pin_shift==.032:
         placements=[('R0',10.4,10.368),('MX',333.152,10.392),('MY',10.368,124.416),('R180',333.12,124.44)]
     if a.parent_be_slots:
-        placements=[('R0',.144+64.8+475.2*k,21.6) for k in range(4)]
+        placements=[('R0',.144+64.8+a.be_x_shift+475.2*k,21.6) for k in range(4)]
         t=re.sub(r'initialize_floorplan -die_area \{[^}]+\} -core_area \{[^}]+\}', 'initialize_floorplan -die_area {0 0 1887.384 196.56} -core_area {0 0 1887.384 196.56}',t)
     if a.relay_rows:
         placements=[('R0',.144+21.6+64.8*(k%2),117.72+43.2*(k//2)+a.relay_y_offset) for k in range(4)]
@@ -44,7 +44,7 @@ def main():
     with (work/'pa.log').open('w') as log:r=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT)
     text=(work/'pa.log').read_text();done='OT_PA DONE' in text;failed=text.count('DRT-0073')
     record=dict(schema='opentallas.be_pin_access_probe.v1',lef_sha256=sha(lef),station_generator_sha256=sha(station),tcl_sha256=sha(tcl),image=image,image_id=image_id,
-        parent_signal_layers='M2-M7',master=a.master,orientations=[p[0] for p in placements] if a.parent_be_slots or a.relay_rows else ['R0','MX','MY','R180'],track_phase_policy='actual_requested_relay_rows_plus_global_phase_UNALLOCATED' if a.relay_rows else ('actual_requested_BE_slots_plus_VM_global_phase_mod_192_UNALLOCATED' if a.parent_be_slots else ('M7_and_M4_orientation_phases;M5_contact_width_checked_by_actual_AP' if a.aligned_tracks else 'legacy_station_placement')),m7_pin_shift_um=a.m7_pin_shift,relay_y_offset_um=a.relay_y_offset,placements=placements if a.aligned_tracks or a.parent_be_slots or a.relay_rows else None,clock_or_route_qualification=False,
+        parent_signal_layers='M2-M7',master=a.master,orientations=[p[0] for p in placements] if a.parent_be_slots or a.relay_rows else ['R0','MX','MY','R180'],track_phase_policy='actual_requested_relay_rows_plus_global_phase_UNALLOCATED' if a.relay_rows else ('actual_requested_BE_slots_plus_VM_global_phase_mod_192_UNALLOCATED' if a.parent_be_slots else ('M7_and_M4_orientation_phases;M5_contact_width_checked_by_actual_AP' if a.aligned_tracks else 'legacy_station_placement')),m7_pin_shift_um=a.m7_pin_shift,relay_y_offset_um=a.relay_y_offset,be_x_shift_um=a.be_x_shift,placements=placements if a.aligned_tracks or a.parent_be_slots or a.relay_rows else None,clock_or_route_qualification=False,
         headroom_meminfo=headroom,threads=4,elapsed_s=time.time()-start,child_peak_rss_kb=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss,
         returncode=r.returncode,DRT0073=failed,OT_PA_DONE=done,pass_=bool(r.returncode==0 and done and failed==0),command=command)
     (work/'record.json').write_text(json.dumps(record,indent=2)+'\n')

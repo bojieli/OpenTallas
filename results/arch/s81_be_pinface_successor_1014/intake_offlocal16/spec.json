@@ -1,0 +1,124 @@
+{
+  "name": "s81be-access-pinface16-dafe40194",
+  "block": "dsfd_vm_be_sl",
+  "owner": "Codex:s81_vmfe_misc_2240/be_native_placement",
+  "source": {
+    "branch": "codex/s81-be-native-placement",
+    "commit": "dafe401940ada8c041b4835984b03870177559f7",
+    "extra_paths": [
+      "results/arch/s81_vmfe_misc_2240/relay_proofs",
+      "results/arch/s81_be_native_mc_placement_1014/inputs",
+      "results/arch/s81_be_view_audit_1014",
+      "results/arch/s81_be_pinface_successor_1014"
+    ]
+  },
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc4",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "purpose": "Diagnostic route of genuine 3902-contact BE physical interface change; 4094 identities and exact RTL/state/latency retained. Unallocated actual-M7 request; old CLOSED preserved.",
+  "structural_change": "bl_d1000 S/M5\u2192E/M4; cks0 W/M4\u2192E/M4;2603 S/M5 contact widths24\u219272nm;1297 N/M7 contacts x+16nm at actual global VM origin;full-depth72nm keepout and inward M5 PG",
+  "hold_merge": "DIAGNOSTIC ONLY: genuine unallocated pin-face request at VM global(14036.112,12804.48), actual M7/PG7; M6 eligibility not waived; old CLOSED preserved; no adoption until exact wired contacts/AP/SS/FF/DRC and source/slot/clock/reset binding.",
+  "auto_merge": false,
+  "merge_target": null,
+  "slot_change_request": {
+    "status": "REQUESTED_UNALLOCATED",
+    "old_declared_cap": "M6",
+    "actual_legacy_cap": "M7",
+    "candidate_actual_cap": "M7",
+    "parent_strap": "M8",
+    "outline_um": [
+      302.4,
+      92.88
+    ],
+    "eligibility_waived": false,
+    "old_CLOSED_replaced": false,
+    "pin_face_request": "results/arch/s81_be_pinface_successor_1014/global_phase_generated/request.json: genuine per-bit face/layer/coordinate changes; old CLOSED stands, unallocated M7 request",
+    "global_VM_origin_um": [
+      14036.112,
+      12804.48
+    ],
+    "changed_contacts": 3902
+  },
+  "no_bench_reason": "Existingnativegold63966lockstep0,TP554,observedstale mutantFAIL sourcepinned proof reusedonlyafterall exactsourcehashesmatch physical/s81_be_access_m7_candidate/exact_gate_binding.json; freshsource/helpercheck stageverifiesbinding. No arithmeticbench rerun duplicated.",
+  "stages": {
+    "bench": [
+      {
+        "name": "existing_native_evidence_source_binding",
+        "cmd": "python3 tools/s81_ph/s81_be_access_required_checks.py --cl {CL} --out {RUN}/required_checks_bench.json",
+        "expect": "pass",
+        "pass_regex": "BE_ACCESS_REQUIRED_CHECKS_PASS",
+        "threads": 1,
+        "peak_ram_gb": 2
+      },
+      {
+        "name": "target_contacts_four_orientations",
+        "cmd": "python3 tools/s81_ph/s81_be_pin_access_probe.py results/arch/s81_be_pinface_successor_1014/global_phase_generated/target_contacts_unrouted.lef {RUN}/target_AP_orientations --aligned-tracks --m7-pin-shift .016",
+        "expect": "pass",
+        "pass_regex": "\"pass_\": true",
+        "threads": 4,
+        "peak_ram_gb": 8
+      },
+      {
+        "name": "target_contacts_actual_global_slots",
+        "cmd": "python3 tools/s81_ph/s81_be_pin_access_probe.py results/arch/s81_be_pinface_successor_1014/global_phase_generated/target_contacts_unrouted.lef {RUN}/target_AP_global --parent-be-slots --m7-pin-shift .016",
+        "expect": "pass",
+        "pass_regex": "\"pass_\": true",
+        "threads": 4,
+        "peak_ram_gb": 8
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "ActualrelatedCK/CKS preserved; localper-clock virtuals re-referencedfromactualCTS/routedboundarymeans; no guessed globalinsertion; routecheckpoint measuresR."
+    },
+    "route": {
+      "cmd": "python3 tools/s81_ph/s81_be_access_required_checks.py --cl {CL} --out {RUN}/required_checks_route.json && SRC={SRC} OUT={RUN}/routes CORES={THREADS} NEED=32 bash physical/s81_be_access_m7_candidate/launch.sh {LABEL}",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "needs": [
+        "orfs"
+      ]
+    },
+    "signoff": {
+      "cmd": "python3 tools/s81_ph/s81_be_access_diagnostic_signoff.py --run {RUN}/routes/{LABEL} --out {RUN}/diagnostic_signoff.json",
+      "needs": [
+        "orfs"
+      ]
+    }
+  },
+  "verdict": {
+    "metrics_cmd": "python3 -c \"import json; print(json.dumps(json.load(open('{RUN}/diagnostic_signoff.json'))['metrics']))\"",
+    "checks": [
+      {
+        "name": "actual_M7_AP_and_SS_FF_DRC",
+        "cmd": "python3 -c \"import json; d=json.load(open('{RUN}/diagnostic_signoff.json')); assert d['diagnostic_checks_pass']\""
+      },
+      {
+        "name": "routed_at_actual_SS",
+        "cmd": "python3 {CL}/route_corner_check.py {RUN}/routes/{LABEL} --want SS"
+      }
+    ]
+  },
+  "hold_eco": {
+    "enabled": false,
+    "reason": "Preservefirstactualfullhalo diagnostic result; no automaticreplacement"
+  },
+  "cycles_added": 0,
+  "route_corner": "WC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "budget": {
+    "enabled": false,
+    "reason": "Diagnosticpreservesactuallegacydualclockperiods andcurrentper-domainIOpolicy; actualglobalclock/resetdriversandR remainopen; no headlineclosure"
+  },
+  "resource_basis": "Sameclosed302.4x92.88 leafsource/inventory plus12existingreset-holdcells; reserve32GiB againstmeasuredhostcapacity through admission, no per-process RAMlimit ordeadline. RequiredpredecessorAP runs separately at8GiB capacityreservation.",
+  "reroute_reason": {
+    "kind": "slot_change",
+    "slot_change_request": "results/arch/s81_be_pinface_successor_1014/global_phase_generated/request.json: genuine per-bit face/layer/coordinate changes; old CLOSED stands, unallocated M7 request"
+  }
+}

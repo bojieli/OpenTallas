@@ -10,7 +10,7 @@ def residual(center,layer):
  if r<0:r+=p
  return min(r,p-r)
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--target',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args();origin=(D('14036.112'),D('12804.48'));base=ROOT/'results/arch/s81_be_native_mc_placement_1014';old=base/'inputs/be_sl_c15e2bf6a.lef';rows=[]
+ ap=argparse.ArgumentParser();ap.add_argument('--target',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--target-BE-base-x',type=str,default='64.8');a=ap.parse_args();origin=(D('14036.112'),D('12804.48'));base=ROOT/'results/arch/s81_be_native_mc_placement_1014';old=base/'inputs/be_sl_c15e2bf6a.lef';rows=[]
  for label,path in [('legacy_closed_actual_LEF',old),('target_unrouted_contact_request',a.target)]:
   m=C.parse_lef(path.read_text());off=[]
   for sl in range(4):
@@ -18,7 +18,7 @@ def main():
     if p['use']!='SIGNAL':continue
     for layer,x,y,u,v in p['rects']:
      if layer not in PITCH:continue
-     coordinate=origin[0]+D('64.8')+D('475.2')*sl+(D(str(x))+D(str(u)))/2 if layer in ['M5','M7'] else origin[1]+D('21.6')+(D(str(y))+D(str(v)))/2
+     coordinate=origin[0]+D(a.target_BE_base_x if label=='target_unrouted_contact_request' else '64.8')+D('475.2')*sl+(D(str(x))+D(str(u)))/2 if layer in ['M5','M7'] else origin[1]+D('21.6')+(D(str(y))+D(str(v)))/2
      r=residual(coordinate,layer)
      if r:off.append(dict(instance=f'g_s[{sl}].u_sl',pin=name,layer=layer,global_preferred_axis_center_um=str(coordinate),nearest_track_distance_um=str(r)))
   rows.append(dict(scope=label,LEF=str(path),off_track_center_count=len(off),off_track_centers=off))

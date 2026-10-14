@@ -14,7 +14,7 @@ def main():
         subprocess.run([sys.executable,str(ROOT/'tools/hier_contract/abstract_pin_stub.py'),str(raw),str(clean)],stdout=log,stderr=subprocess.STDOUT,check=True)
     lint=C.lint(str(clean),libs=str(run/'view'),cap='M7',strict_pockets=True)
     (access/'child_lint_M7.json').write_text(json.dumps(lint,indent=2)+'\n')
-    target=ROOT/'results/arch/s81_be_pinface_successor_1014/global_phase_generated/target_contacts_unrouted.lef'
+    target=ROOT/'results/arch/s81_be_pinface_successor_1014/selected_Efaces_slot48/target_contacts_unrouted.lef'
     expected=C.parse_lef(target.read_text());actual=C.parse_lef(raw.read_text());missing=[]
     expected_ids={n for n,p in expected['pins'].items() if p['use']=='SIGNAL'}
     actual_ids={n for n,p in actual['pins'].items() if p['use']=='SIGNAL'}
@@ -25,9 +25,9 @@ def main():
     contact_match=bool(expected_ids==actual_ids and not missing)
     (access/'actual_contact_matching.json').write_text(json.dumps(dict(pass_=contact_match,expected=len(expected_ids),actual=len(actual_ids),missing_contacts=missing),indent=2)+'\n')
     # Readonly reference export raw and isolated clean candidate remain separate.
-    subprocess.run([sys.executable,str(ROOT/'tools/s81_ph/s81_be_pin_access_probe.py'),str(clean),str(access/'AP_M7'),'--aligned-tracks','--m7-pin-shift','.016'],check=False)
+    subprocess.run([sys.executable,str(ROOT/'tools/s81_ph/s81_be_pin_access_probe.py'),str(clean),str(access/'AP_M7'),'--aligned-tracks'],check=False)
     AP=json.loads((access/'AP_M7/record.json').read_text())
-    subprocess.run([sys.executable,str(ROOT/'tools/s81_ph/s81_be_pin_access_probe.py'),str(clean),str(access/'AP_global_parent'),'--parent-be-slots','--m7-pin-shift','.016'],check=False)
+    subprocess.run([sys.executable,str(ROOT/'tools/s81_ph/s81_be_pin_access_probe.py'),str(clean),str(access/'AP_global_parent'),'--parent-be-slots','--be-x-shift=-.048'],check=False)
     parent_AP=json.loads((access/'AP_global_parent/record.json').read_text())
     sta=json.loads((run/'corner_sta.json').read_text());physical=json.loads((run/'physical.json').read_text())
     ss=(sta.get('setup_ss') or {}).get('worst_slack_ps');ff=(sta.get('hold_ff') or {}).get('worst_slack_ps')

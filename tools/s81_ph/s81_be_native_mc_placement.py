@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / 'results/arch/s81_be_native_mc_placement_1014'
 W, OLD_H, H, Y, SIZE, PITCH = 1887.384, 136.08, 196.56, 117.72, 32.4, 64.8
 SL_PITCH = 475.2
+BE_BASE_X = 64.8
+BE_PIN_REQUEST = False
 BE_LEF = BASE/'inputs/be_sl_c15e2bf6a.lef'
 def derive_configuration(ep1):
     src=(ROOT/'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv').read_text()
@@ -59,7 +61,7 @@ def build(bindings):
     # Placement targets interpolate along the actual logical chain. BGR has no
     # qualified source pin abstract yet; x=183.6 is only a search seed, never a pin.
     for s in range(4):
-        dest=64.8+SL_PITCH*s
+        dest=BE_BASE_X+SL_PITCH*s
         for r in range(DIE_D):add(f'g_s[{s}].g_hard.g_ctl[{r}].u_r','dsfd_be_r55_m5',237.6+(dest-237.6)*(r+1)/DIE_D,'ck',55)
         for d in ['c','s']:
             for r in range(3):add(f'g_s[{s}].g_hard.g_rst[{r}].u_{d}','dsfd_die_r1_m5',W/2+(dest-W/2)*(r+1)/3,'ck' if d=='c' else 'cks',1)
@@ -73,8 +75,8 @@ def build(bindings):
     endpoints={}
     for slice_id in range(4):
         for port,xy in sl.items():
-            point=(round(64.8+SL_PITCH*slice_id+xy[0],6),round(21.6+xy[1],6))
-            endpoints[point]=dict(instance=f'g_s[{slice_id}].u_sl',master='dsfd_vm_be_sl',pin=port,source_scope='c15e2bf6a actual ETM/LEF; current cap eligibility pending')
+            point=(round(BE_BASE_X+SL_PITCH*slice_id+xy[0],6),round(21.6+xy[1],6))
+            endpoints[point]=dict(instance=f'g_s[{slice_id}].u_sl',master='dsfd_vm_be_sl',pin=port,source_scope='UNROUTED genuine interface target request; raw-route ETM pending' if BE_PIN_REQUEST else 'c15e2bf6a actual ETM/LEF; current cap eligibility pending')
     def pin(n,p):
         c=by[n];x,y=pins[c['master']][p];point=[round(c['x']+x,6),round(c['y']+y,6)]
         endpoints[tuple(point)]=dict(instance=n,master=c['master'].removesuffix('_m5'),pin=p,logical_clock=c['clock'],source_scope='actual CTS pin; routed ETM pending')
@@ -117,14 +119,14 @@ def build(bindings):
             packing.append(dict(slice=s,bit=b,source=source,destination=destname))
             external(source,pin(n(0),f'i[{b}]'),'control_source')
             for r in range(DIE_D-1):pair(f'ctl_s{s}_b{b}_r{r}',pin(n(r),f'o[{b}]'),pin(n(r+1),f'i[{b}]'),'control_relay')
-            x,y=sl[destname];pair(f'ctl_s{s}_b{b}_sink',pin(n(DIE_D-1),f'o[{b}]'),[64.8+SL_PITCH*s+x,21.6+y],'control_sink')
+            x,y=sl[destname];pair(f'ctl_s{s}_b{b}_sink',pin(n(DIE_D-1),f'o[{b}]'),[BE_BASE_X+SL_PITCH*s+x,21.6+y],'control_sink')
         for d,root,out in [('c','u_rs','rn_in[0]'),('s','u_rss','rns_in[0]')]:
             n=lambda r:f'g_s[{s}].g_hard.g_rst[{r}].u_{d}'
             pair(f'rn{d}_s{s}_0',pin('g_hrst.'+root,'rn'),pin(n(0),'i'),'reset_relay')
             for r in range(2):pair(f'rn{d}_s{s}_{r+1}',pin(n(r),'o'),pin(n(r+1),'i'),'reset_relay')
-            x,y=sl[out];pair(f'rn{d}_s{s}_sink',pin(n(2),'o'),[64.8+SL_PITCH*s+x,21.6+y],'reset_sink')
+            x,y=sl[out];pair(f'rn{d}_s{s}_sink',pin(n(2),'o'),[BE_BASE_X+SL_PITCH*s+x,21.6+y],'reset_sink')
         n=f'g_s[{s}].g_hard.u_ready';external('sp_vm.c_l0r[0]',pin(n,'i'),'ready_source')
-        x,y=sl['c_l0r[0]'];pair(f'ready_s{s}_sink',pin(n,'o'),[64.8+SL_PITCH*s+x,21.6+y],'ready_sink')
+        x,y=sl['c_l0r[0]'];pair(f'ready_s{s}_sink',pin(n,'o'),[BE_BASE_X+SL_PITCH*s+x,21.6+y],'ready_sink')
     for n,reset in [('u_rs','rst'),('u_rss','rss')]:
         external(f'sp_vm.{reset}[0]',pin('g_hrst.'+n,'rst'),'async_reset_source')
     # Discrete 2D swaps optimize actual relay/sink and explicitly provisional
@@ -191,7 +193,7 @@ def build(bindings):
         for ix in range(nx):
             x=(ix+.5)*grid;y=(iy+.5)*grid
             inrelay=any(c['x']<=x<c['x']+SIZE and c['y']<=y<c['y']+SIZE for c in cells)
-            inslice=any(64.8+SL_PITCH*s<=x<367.2+SL_PITCH*s and 21.6<=y<114.48 for s in range(4))
+            inslice=any(BE_BASE_X+SL_PITCH*s<=x<367.2+SL_PITCH*s and 21.6<=y<114.48 for s in range(4))
             width=min(grid,W-ix*grid);height=min(grid,H-iy*grid)
             ch[iy,ix]=height*.8*(0 if inslice else 1/.064 if inrelay else 7/.270/2+1/.048+1/.064)
             cv[iy,ix]=width*.8*(0 if inslice else .85/.064 if inrelay else 1/.036/2+1/.048+.85/.064)
@@ -201,7 +203,7 @@ def build(bindings):
         if kind.endswith('sink'):
             # W sinks approached immediately outside the macro; S ready approached below it.
             if kind=='ready_sink':
-                origin=64.8+SL_PITCH*int(p['net'].split('_')[1][1:])
+                origin=BE_BASE_X+SL_PITCH*int(p['net'].split('_')[1][1:])
                 left=min([origin-3.24,origin+302.4+3.24],key=lambda x:abs(a[0]-x)+abs(b[0]-x))
                 pts=[a,[left,a[1]],[left,18.36],[b[0],18.36],b]
             else:pts=[a,[b[0]-3.24,a[1]],[b[0]-3.24,b[1]],b]
@@ -238,14 +240,14 @@ def build(bindings):
     over=[p for p in pairs if p['reach_um']>500]
     return dict(schema='opentallas.be_native_placement_request.v1',status='requested_not_adopted',
         selected_BE_LEF=dict(path=str(BE_LEF.relative_to(ROOT)),sha256=digest(BE_LEF),eligibility='capM6 stillINVALID; candidateM7 export requiresactualparentaccessprobe/acceptedlegacyviewcap'),source_commit='4beabe410d050e61103985cd44aa7725a1f141ae',candidate_pin_request_commit='cc460927f',MC_source_facts=dict(source_snapshot='results/arch/s81_be_native_mc_placement_1014/inputs/bgl_mc_cc460927f.sv',ED=actual_mc_ed,QD=QD,HL=QD+4+actual_mc_ed,HOP1=1,HHL=QD+3+actual_mc_ed,return_minus_forward_skew=MD,defines=['OT_VMBGL_HOP1'],CLOCK_SPLIT=1,source_integration='native MC parent notyetbuilt; plannedleafg_l[7].u_l'),selected_candidate_support='proven MC H1 meansforwardhop1, retainsEP2/ED3/HL11; noOT_VM28_EP1. Actualnativeparent sourceintegration pending',source_files={p:digest(ROOT/p) for p in ['rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv','rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv']},configuration=dict(NS=4,HARD_RELAYS=1,**CONFIG),production_default_configuration=derive_configuration(False),inputs={str(p.relative_to(ROOT)):digest(p) for p in sorted((BASE/'inputs').iterdir())},
-        slot_request=dict(current_be_height_um=OLD_H,requested_be_height_um=H,delta_height_um=round(H-OLD_H,6),north_band_um=round(H-114.48,6),
+        slot_request=dict(requested_BE_base_x_um=BE_BASE_X,BE_origin_manufacturing_grid_request=BE_BASE_X!=64.8,BE_origin_allocator_lattice_acceptance="OPEN" if BE_BASE_X!=64.8 else "baseline",current_be_height_um=OLD_H,requested_be_height_um=H,delta_height_um=round(H-OLD_H,6),north_band_um=round(H-114.48,6),
             current_vm_outline_um=[1541.784,3952.776],superseded_h1_vm_request_um=[W,3970.056],requested_vm_outline_um=[W,round(3952.776+H-OLD_H,6)],move_bgq_fe_y_um=round(H-OLD_H,6),
             preserve='BE_SL y21.6 and MC EP2/MD12 six control stages; x64.8+475.2s perwidecandidate; no added latency',extra_height_over_h1_request_um=round(H-153.36,6),column_pitch_um=PITCH,face_channel_um=PITCH-SIZE,vertical_gap_um=10.8,rows=2,adopted=False),
         state_epochs=dict(standalone_MD9=dict(DIE_D=3,cells=42,relay_bits=688,total_bits=692,selected=False,channel_rule_valid=False),production_EP2=dict(EP=2,ED=3,MD=12,DIE_D=6,cells=54,relay_bits=1348,total_bits=1352),unqualified_EP1_variant=dict(EP=1,ED=2,MD=11,DIE_D=5,cells=50,relay_bits=1128,total_bits=1132,selected=False),candidate_MC_H1=dict(EP=2,ED=3,MD=12,DIE_D=6,cells=54,relay_bits=1348,total_bits=1352),geometry_latency_delta_cycles=0,candidate_MC_vs_production_control_stage_delta=0),
         placement_lattice=dict(site_um=.054,row_um=.270,channel_grid_um=.064,min_channel_width_tracks=505,cell_outline_site_steps=600,cell_outline_row_steps=120,valid=all(abs(c['x']/.054-round(c['x']/.054))<1e-6 and abs(c['y']/.270-round(c['y']/.270))<1e-6 for c in cells)),
         cells=cells,ownstate=dict(control=4*55*DIE_D,reset_ready=28,relay_bits=4*55*DIE_D+28,reset_synchronizers=4,total_bits=4*55*DIE_D+32,
             convention='proven MC H1 retainsEP2 and six control stages per slice; EP1 fiftycellplan unqualifiedseparatevariant'),channel_rule=dict(source='contract seam_rules.channels',actual_pin_faces=['W','E'],required_min_gap_um=20,planned_gap_um=32.4,min_snapped_M7_track_span_um=min(channel_track_spans),NS_gap_um=10.8,NS_basis='10.8 explicitreservedrowgap; actualrelayIOP hasonlyW/Epins; finalmacroPG/pinhaloqualification stillrequiresroutedLEF',violations=channel_violations),
-        pin_sources=dict(relay='actual CTS IOP TCL (candidate, route pending)',be_sl='actual c15e2bf6a LEF; die must bind selected source/view'),
+        pin_sources=dict(relay='actual CTS IOP TCL (candidate, route pending)',be_sl='UNROUTED target contacts; all electrical route/ETM/source-slot binding OPEN' if BE_PIN_REQUEST else 'actual c15e2bf6a LEF; die must bind selected source/view'),
         control_bit_mapping=packing,pairs=pairs,pending_source_pairs=pending,
         placement_violations=violations,reach_over_500=over,routed_length_over_500=[p for p in pairs if p['routed_length_um']>500],zero_capacity_crossings=zero_capacity,cuts=cuts,cut_limit=.6,
         cut_scope='partial candidate ownstate:1356 actual relay/BE pairs plus220 UNQUALIFIED BGR requested pin pairs;6 boundary sources and all BE unrelated buses excluded; endpoint macro landings excluded',pair_counts=dict(actual_relay_be=1356,unqualified_bgr_source=220,actual_qualified_source_debt=len(pending)),candidate_clock_obligations=dict(control_source='ck_req_l7 candidate root fromg_l[7].u_l.u.rb0_*; actualproductionlaunch clock remainsck',capture='BE relayck',delivery='R/FFhold/skew require actualroutedviews; destination clock doesnotestablish source/resetdriverreference'),
@@ -257,9 +259,9 @@ def build(bindings):
         pass_=False)
 
 def main():
-    global H,BE_LEF
-    ap=argparse.ArgumentParser();ap.add_argument('--be-lef',type=Path);ap.add_argument('--be-height',type=float,default=196.56);ap.add_argument('--bindings',type=Path);ap.add_argument('--out',type=Path,default=BASE/'request.json');a=ap.parse_args()
-    H=a.be_height
+    global H,BE_LEF,BE_BASE_X,BE_PIN_REQUEST
+    ap=argparse.ArgumentParser();ap.add_argument('--be-lef',type=Path);ap.add_argument('--be-base-x',type=float,default=64.8);ap.add_argument('--be-pin-request',action='store_true');ap.add_argument('--be-height',type=float,default=196.56);ap.add_argument('--bindings',type=Path);ap.add_argument('--out',type=Path,default=BASE/'request.json');a=ap.parse_args()
+    H=a.be_height;BE_BASE_X=a.be_base_x;BE_PIN_REQUEST=a.be_pin_request
     if a.be_lef:BE_LEF=a.be_lef.resolve()
     d=build(json.loads(a.bindings.read_text()) if a.bindings else {})
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(d,indent=2)+'\n')
