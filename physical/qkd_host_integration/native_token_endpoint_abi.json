@@ -33,5 +33,12 @@
     "metadata": "epoch_valid0 for metadata-only HC; shared grant must match actual token/position/generation before start broadcast"
   },
   "proof": "component127checks including12 genuine request/result test transactions and two failing RTL mutants; does not claim actual whole-token engine execution, ND8 transport, physical qualification, or accepted throughput price",
-  "census": "923FF/820portbits, one clock entry; outline pending mapped area and pin capacity"
+  "census": "923FF/820portbits, one clock entry; outline pending mapped area and pin capacity",
+  "latency_cycles": {
+    "HC_capture_to_request": "three receiving clock edges including captured input edge, if initial one request credit available",
+    "terminal_capture_to_done": "three receiving clock edges including captured input edge, if all actual drain flags already true",
+    "last_drain_input_to_done": "two receiving clock edges once matching terminal is stored",
+    "metadata_capture_to_native_pr": "two receiving clock edges"
+  },
+  "reset_contract": "POR resets allocator identity; host_rst_n clears endpoint slots/credits but does not reset sole allocator. Deassert endpoint reset only after genuine engine/HOST/transport drain and coherent link reset/retraining fence; untagged request/result credits from an earlier reset epoch must not survive. Shared grant delivery requires warm service readiness and actual token/gen matching; no local ready fabrication."
 }
