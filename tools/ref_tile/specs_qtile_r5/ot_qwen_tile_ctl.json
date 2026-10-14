@@ -20,7 +20,8 @@
   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
   "rtl/hdc/ot_hdc_sfu.sv",
-  "rtl/proto/ot_fp32_add_rne_pipe.sv"
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/physical/ot_qwen_xline_delivery.sv"
  ],
  "clock_port": "clk",
  "reset_ports": [
@@ -80,7 +81,7 @@
   "owner": "Codex:q19-tile",
   "branch": "claude/q14-tile-parent",
   "tag": "c1",
-  "purpose": "Control hardened leaf removing every own register from the thin parent; pin geometry provisional until die v5 assigned."
+  "purpose": "Control hardened leaf removing every own register from the thin parent; pin geometry provisional until die v5 assigned. Includes die 508-bit LOAD/EXEC local x cache (130 registers)."
  },
  "structural_change": "Harden 14034 tile parent flops under one independent leaf root; parent wires only."
 }
