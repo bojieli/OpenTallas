@@ -176,6 +176,12 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  wire dec_rec_ok=!dec_ue&&(dec_epoch==r_epoch)&&(dec_seq==dec_xseq);
  wire rx_fetch=dest_epoch_ok&&!rf&&!rbad&&!output_bad&&!dec_bad&&(repoch_p==r_epoch)&&
   (!rx_v||!dec_v||!out_v)&&pub_ok&&(gray(rfp)!=pub2);
+ // the re pin reaches only an AND with a register-only enable and the rb / out_v / empty_q flops
+ wire r_ok_now=!(rbad||output_bad||dec_bad)&&(repoch_p==r_epoch)&&dest_epoch_ok&&!rf;
+ wire pop=re&&out_v&&r_ok_now;
+ wire [PW-1:0] rb_inc=rb+1'b1;
+ wire r_rebind=!(rbad||output_bad||dec_bad)&&(repoch_p!=r_epoch)&&
+  !(out_v||rx_v||dec_v||((we2==r_epoch)&&pub_ok&&(gray(rb)!=pub2)));
  reg [PW-1:0] rb_x,rfp_x,rx_seq_x;reg [31:0] r_epoch_x;reg rx_v_x,dec_v_x,out_v_x,rf_x,rx_ld,dec_ld,out_ld;
  always @* begin
   rb_x=rb;rfp_x=rfp;rx_seq_x=rx_seq;r_epoch_x=r_epoch;rx_v_x=rx_v;dec_v_x=dec_v;out_v_x=out_v;rf_x=rf;
@@ -186,7 +192,7 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
    else begin r_epoch_x=repoch_p;rb_x=0;rfp_x=0;rx_v_x=1'b0;dec_v_x=1'b0;out_v_x=1'b0;rf_x=1'b0;end
   end
   else if(dest_epoch_ok&&!rf)begin
-   if(out_v&&re)begin rb_x=rb+1'b1;out_v_x=1'b0;end            // the only use of the re pin
+   if(pop)begin rb_x=rb_inc;out_v_x=1'b0;end                    // the only use of the re pin
    if(dec_v&&!out_v)begin                                     // dec -> out (out empty at this edge)
     if(dec_rec_ok||(MUT==2))begin out_ld=1'b1;out_v_x=1'b1;dec_v_x=1'b0;end
     else begin rf_x=1'b1;out_v_x=1'b0;end
@@ -203,7 +209,7 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
    empty_q<=1'b1;r_fault_q<=1'b0;
   end else begin
    pub1<=pub_gray;pub2<=pub1;pubn1<=~pub_gray;pubn2<=pubn1;we1<=w_epoch;we2<=we1;wen1<=w_epoch_n;wen2<=wen1;
-   if(rb_x!=rb)begin rb<=rb_x;rb_n<=~rb_x;end if(rfp_x!=rfp)begin rfp<=rfp_x;rfp_n<=~rfp_x;end if(r_epoch_x!=r_epoch)begin r_epoch<=r_epoch_x;r_epoch_n<=~r_epoch_x;end 
+   if(r_rebind)begin rb<=0;rb_n<='1;end else if(pop)begin rb<=rb_inc;rb_n<=~rb_inc;end if(rfp_x!=rfp)begin rfp<=rfp_x;rfp_n<=~rfp_x;end if(r_epoch_x!=r_epoch)begin r_epoch<=r_epoch_x;r_epoch_n<=~r_epoch_x;end 
    if(rx_v_x!=rx_v)begin rx_v<=rx_v_x;rx_v_n<=~rx_v_x;end if(dec_v_x!=dec_v)begin dec_v<=dec_v_x;dec_v_n<=~dec_v_x;end if(out_v_x!=out_v)begin out_v<=out_v_x;out_v_n<=~out_v_x;end if(rf_x!=rf)begin rf<=rf_x;rf_n<=~rf_x;end 
    empty_q<=rf_x||!out_v_x||!dest_ok_x;r_fault_q<=rf_x;
   end
