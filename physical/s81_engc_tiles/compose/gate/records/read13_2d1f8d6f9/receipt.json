@@ -1,0 +1,22 @@
+{
+  "source_commit": "2d1f8d6f95a76df36e67d8a5337867b939260bb4",
+  "terminal_units": [
+    "1829306",
+    "1829305"
+  ],
+  "exit": 0,
+  "admission": false,
+  "verdict": "SOURCE_ONLY_PASS",
+  "positive_cases": 5,
+  "original_negatives_caught": 5,
+  "positive_element_mismatches": 0,
+  "isolated_cycles": 509.7,
+  "immutable_price_cycles": 500,
+  "ratio": 1.0194,
+  "back_to_back_cycles_per_token": 355.1,
+  "ACK": "exact PASS, both omitted-final-state mutants FUNCTIONAL_FAIL_CAUGHT",
+  "physical": "New hard RSO/R1 master views/pins and source-binding remain open; no physical adoption.",
+  "read_variant": "Distinct ot_engc_t_io_rso_r1 rv_q10/read14 paired with coherent576-bit return step; valid tags preserved",
+  "return_skew_negative": "FUNCTIONAL_FAIL_CAUGHT: 1468153 element mismatches with all240 dumps present and normal benchmark finish",
+  "later_source": "4667f7442 adds one registered final-release ACK edge only; fresh ACK proof pending"
+}
