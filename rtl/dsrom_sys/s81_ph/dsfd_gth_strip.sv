@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Gather control strip: 133 CLOSED one-cycle relay instances; parent contains wires only.
-module dsfd_gth_strip(input wire [132:0] ck_r, input wire rst,
+module dsfd_gth_strip(input wire [132:0] ck_r, input wire rst, input wire rsv,
 input wire [23:0] tst_i, input wire [15:0] cs_i, input wire [7:0] rc_i,
 input wire [162:0] tc_i, input wire [11:0] fcd_i,
 output wire [23:0] tst_o, output wire [15:0] cs_o, output wire [7:0] rc_o,
@@ -214,6 +214,6 @@ output wire [162:0] tc_o, output wire [11:0] fcd_o);
     dsfd_rly_54_EW tc_2 (.ck(ck_r[130]), .rs(rst), .i(tc_i[108 +: 54]), .o(tc_o[108 +: 54]));
     dsfd_rly_1_EW tc_3 (.ck(ck_r[131]), .rs(rst), .i(tc_i[162]), .o(tc_o[162]));
     wire [14:0] fcd_padded;
-    dsfd_rly_15_EN fcd (.ck(ck_r[132]), .rs(rst), .i({3'b0, fcd_i}), .o(fcd_padded));
+    dsfd_rly_15_EN fcd (.ck(ck_r[132]), .rs(rsv), .i({3'b0, fcd_i}), .o(fcd_padded));
     assign fcd_o = fcd_padded[11:0];
 endmodule

@@ -4,7 +4,7 @@ r=Path(__file__).resolve().parents[2];out=r/'rtl/dsrom_sys/s81_ph/dsfd_gth_strip
 s=['`timescale 1ns/1ps','// Gather control strip: 133 CLOSED one-cycle relay instances; parent contains wires only.', 'module dsfd_gth_strip(input wire [132:0] ck_r, input wire rst, input wire rsv,', 'input wire [23:0] tst_i, input wire [15:0] cs_i, input wire [7:0] rc_i,', 'input wire [162:0] tc_i, input wire [11:0] fcd_i,', 'output wire [23:0] tst_o, output wire [15:0] cs_o, output wire [7:0] rc_o,', 'output wire [162:0] tc_o, output wire [11:0] fcd_o);']
 manifest=[]
 def inst(name,master,d,q,width,role,stage):
- idx=len(manifest);s.append(f'    {master} {name} (.ck(ck_r[{idx}]), .rs({'rsv' if role=='f_cd' else 'rst'}), .i({d}), .o({q}));')
+ idx=len(manifest);reset='rsv' if role=='f_cd' else 'rst';s.append(f'    {master} {name} (.ck(ck_r[{idx}]), .rs({reset}), .i({d}), .o({q}));')
  manifest.append(dict(instance='u_strip.'+name,master=master,width=width,clock_index=idx,role=role,stage=stage,view='physical/ref_tile/s81_rly_'+master[9:].lower()+'/views/'+master))
 for bus,n in [('tst',12),('cs',8)]:
  for g in range(n):
