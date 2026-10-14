@@ -87,6 +87,10 @@ module ot_hgi_coll_tkm_cluster #(
         .stat_cycles(stat_cycles),
         .stat_ins(stat_ins),
         .stat_surv(stat_surv));
+`ifndef SYNTHESIS
+    // Preserve the existing benchmark phase trace through the extracted sequencer.
+    wire [3:0] ph = u_seq.ph;
+`endif
     for (genvar t=0; t<NT; t=t+1) begin : g_t
 `ifdef OT_TKM_TILE_HARD
         ot_hgi_coll_tkm_tile u_t (
