@@ -210,8 +210,8 @@
       "flop_bits": 71,
       "macro_clock_pins": 1,
       "clock_sink_total": 72,
-      "role": "actual8192x18 SECDED physical1024x256 prompt with capturedrequest/registeredresponse",
-      "instances_per_die": 1,
+      "role": "retained original q3/fault4 diagnostic source, not activecandidate",
+      "instances_per_die": 0,
       "clock_entries": [
         "ck"
       ],
@@ -219,7 +219,7 @@
         237.6,
         129.6
       ],
-      "outline_status": "UNVERIFIED_REQUEST_NOT_ROUTED",
+      "outline_status": "SUPERSEDED_FUNCTIONAL_Q3_CTS_FAIL_NEG234PS",
       "pin_assignment": "DIE_LEAD_REQUIRED_HOST_HOSTIF_CTL_FACES_FROM_ACTUAL_CANDIDATE_PLACEMENT",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_prompt_pins.sv",
       "macro": {
@@ -278,6 +278,91 @@
       "pin_assignment": "DIE_LEAD_REQUIRED",
       "source": "rtl/qwen_sys/host_20261013/qkd_host_hc_station.sv",
       "sha256": "7f1a8f836bb114e19ece0154ca915408f840a9ba9b2e060b8f857e8bdd6f31c9"
+    },
+    {
+      "master": "qkd_host_native_qm",
+      "flop_bits": 32800,
+      "role": "actual native originalBF16\u2192FP8 QM with six clock entries and registeredmacroreadcommands",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck",
+        "clk_h",
+        "clk_i",
+        "clk_i_bank[0]",
+        "clk_i_bank[1]",
+        "clk_i_out"
+      ],
+      "clock_root_ff": {
+        "ck": 350,
+        "clk_h": 8871,
+        "clk_i": 12725,
+        "clk_i_bank[0]": 4234,
+        "clk_i_bank[1]": 4234,
+        "clk_i_out": 2386
+      },
+      "macro_clock_pins": {
+        "clk_i_bank[0]": 16,
+        "clk_i_bank[1]": 16
+      },
+      "outline_request_um": [
+        370,
+        410
+      ],
+      "area_request_um2": 151700,
+      "outline_status": "UNVERIFIED_NEW_SOURCE_SAME_GEOMETRY_REQUEST_NOT_OLD_VIEW_REUSE",
+      "layer_cap": "M5",
+      "pin_assignment": "DIE_LEAD_REQUIRED",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv",
+      "sha256": "76cab365e4d14165bfe34b611d6931dea5c07e2e5b4d97cca4ae21a31e93bfa1",
+      "engine_source": "rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv",
+      "params": {
+        "AW": 32,
+        "HDMAX": 128,
+        "KVHMAX": 2,
+        "NATIVE_ROWS": 1,
+        "QPIPE": 2,
+        "RMW_EN": 0,
+        "HFA": 4
+      },
+      "clock_contract": "ck833ps/host1000ps asynchronous originalFIFOs; fouringest1666.7ps entries synchronous and insertioncompensated; actualcrossrootsetup/hold and per-rootspread proof required",
+      "macro_floorplan": "32 actual51.408x20.790 macros; new PG/window/pins/CTS/DRC required; oldupperOBS/clockview remainsunqualified",
+      "functional_gate": "2048actualcontrollerPHY/prefix5310cycles; onehead864/3256; readlatencyMUT5 fails independentBF16sector; static/controllercomponentonly nofulltransportprice"
+    },
+    {
+      "master": "qkd_host_prompt_capture_pins",
+      "flop_bits": 332,
+      "macro_clock_pins": 1,
+      "clock_sink_total_coarse": 333,
+      "physical_mapped_logic_sinks_observed": 267,
+      "role": "candidate actual8192x18 SECDED prompt capture256 beforelane/ECC q4/fault5",
+      "instances_per_die": 1,
+      "clock_entries": [
+        "ck"
+      ],
+      "outline_request_um": [
+        237.6,
+        129.6
+      ],
+      "area_request_um2": 30792.96,
+      "outline_status": "UNQUALIFIED_NEW_CAPTURE_SOURCE_BALANCED_CLOCK_DIAGNOSTIC_ONLY",
+      "pin_assignment": "DIE_LEAD_FINAL_PLACEMENT_PHASE_REQUIRED_GATE_ONLY_WREQ_ERESP_NCLK",
+      "source": "rtl/physical/ot_qkd_host_prompt_capture_pins.sv",
+      "sha256": "21aed2eed1a840cef105bbc2ecd8fa6f908f2b886a71bc3507a08ebe2800a6a5",
+      "macro": {
+        "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "outline_um": [
+          174.744,
+          70.47
+        ],
+        "count": 1,
+        "halo_um": 5.4
+      },
+      "data_latency_edges": 4,
+      "fault_latency_edges": 5,
+      "physical_owner": "qwen_edge_coverage_2240",
+      "physical_gate_residual": "gate-only balanced89a9e16aa spread22.9/R409.8 reported; SSroute/DRC/childlint/sourceprice/diephase remainunqualified",
+      "production_binding": "qkd_host_control_packet_capture/qkd_host_control_prompt_capture PROMPT_READ_LATENCY4/PB_READ_PIPE5",
+      "functional_gate": "actualFMT1/ND8 12steps3genwrap/die7held/all7peers/15commands/CQ10IRQ andUEguard PASS; sixmutantsFAIL"
     }
   ],
   "existing_children": [
@@ -488,5 +573,19 @@
     "reported_by": "qwen_split_feasibility",
     "required": "nativecontroller variant width/clock gate plus actual pin/PG/channel assignment; dimensions alone do not qualify fit",
     "edge_clearance": "10.8um total vertical residual; generic20umedgechannel requires repack or actual alignedface/channelproof; no freepocketclaim"
+  },
+  "qm_host_clock_seam": {
+    "packet_core_period_ps": 833.3,
+    "QM_host_period_ps": 1000,
+    "status": "UNRESOLVED_CDC_REQUIRED_OR_SOURCE_EXACT_NEW_HOST_CLOCK_TIMING_VARIANT",
+    "raw_bus_crossing_permitted": false,
+    "additional_dedicated_W546_CDC_if_profile_preserved": 2,
+    "additional_cdc_outline_um": [
+      90.72,
+      129.6
+    ],
+    "credit_station": "countedcredit/capacitybridge required; source/actualFF/clock/pins pending",
+    "collective_CDF_borrowed": 0,
+    "original_class_QM_functional_bench": "same1ns family; doesnotprove833\u21921000 assembly"
   }
 }
