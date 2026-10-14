@@ -1,5 +1,6 @@
-ot_qfd_vm_gctl_t flops=883 cells:  $_DFF_PN0_ 135; $_DFF_P_ 748;
-ot_qfd_vm_rowrd_t flops=1664 cells:  $_DFF_PN0_ 128; $_DFF_P_ 1536;
+ot_qfd_vm_bctl_t flops=78 cells:  $_DFF_PN0_ 13; $_DFF_P_ 65;
+ot_qfd_vm_sctl_t flops=82 cells:  $_DFF_PN0_ 10; $_DFF_P_ 72;
+ot_qfd_vm_rr4_t flops=603 cells:  $_DFF_PN0_ 89; $_DFF_P_ 514;
+ot_qfd_vm_rr2_t flops=609 cells:  $_DFF_PN0_ 95; $_DFF_P_ 514;
 ot_qfd_vm_delay1_t flops=512 cells:  $_DFF_P_ 512;
 ot_qfd_vm_delay2_t flops=1024 cells:  $_DFF_P_ 1024;
-ot_qfd_vm_gctl_t after_synth_opt_merge flops=849

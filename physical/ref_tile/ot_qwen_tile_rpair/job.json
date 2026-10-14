@@ -1,5 +1,5 @@
 {
- "name": "ot_qwen_tile_rpair-r5a-COMMIT",
+ "name": "ot_qwen_tile_rpair-r5a-9dbc5f1b0",
  "block": "ot_qwen_tile_rpair",
  "ref_tile": true,
  "owner": "Claude:q13-tile-rpair",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/q13-tile-rpair",
-  "commit": "COMMIT"
+  "commit": "9dbc5f1b0"
  },
  "stages": {
   "bench": [
@@ -129,7 +129,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_qwen_tile_rpair/ot_qwen_tile_rpair-r5a-COMMIT"
+   "to": "results/rtl/ref_tile/ot_qwen_tile_rpair/ot_qwen_tile_rpair-r5a-9dbc5f1b0"
   }
  ],
  "cycles_added": 0,

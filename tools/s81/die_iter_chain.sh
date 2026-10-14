@@ -14,7 +14,7 @@ KIND=$(echo "$A" | grep -o -- '--die [a-z0-9]*' | awk '{print $2}'); AK=$(echo "
 st(){ echo "$(date -u +%FT%TZ) $*" >> $M/STATUS.log; }
 st "start src $(cat $S/SOURCE_SHA) recipe $R kind $KIND"
 /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py real $A --work $M/a_real > $M/real_gen.log 2>&1 || { st "GEN_FAIL $(grep -a 'OT_HOP_GATE\|hop gate' $M/real_gen.log | tail -1)"; exit 1; }
-st "GEN_DONE $(grep -a OT_HOP_GATE $M/real_gen.log | tail -1)"
+st "GEN_DONE $(grep -a OT_HOP_GATE $M/real_gen.log | tail -1) $(grep -a OT_VIEW_BINDING $M/real_gen.log | tail -1)"
 ( for w in spine field; do
     I=$M/ir_$w; /srv/opentallas-scratch/admit.sh 40 -- python3 tools/dsrom_s81_fulldie.py irm $A --work $I --window $w > $M/ir_gen_$w.log 2>&1 || { st IR_GEN_FAIL $w; continue; }
     /srv/opentallas-scratch/admit.sh 60 -- docker run --rm --name dieit_${TAG}_ir_$w --cpus=16 --memory=120g -v $I:/work -w /work openroad/orfs:asap7lock \
@@ -34,7 +34,7 @@ C=$M/clock; mkdir -p $C
   rm -rf $M/kit; mkdir -p $M/kit
   /srv/opentallas-scratch/admit.sh 60 -- python3 tools/s81/die_sta.py kit --gen-root $S --views-root $S --s81-opts "$AK" --die $KIND \
       --out $M/kit --clock-plan $C/plan.json.gz --index-out $M/kit/index.json > $M/kit/kit.log 2>&1; echo $? > $M/kit/kit.exit
-  echo $S > $M/kit/src_root; st "KIT rc=$(cat $M/kit/kit.exit)"; [ "$(cat $M/kit/kit.exit)" = 0 ] ) &
+  echo $S > $M/kit/src_root; st "KIT rc=$(cat $M/kit/kit.exit) $(python3 -c "import json,sys;d=json.load(open('$M/kit/clock_delivery.json'));print('CLOCK_DELIVERY common',d['masters_common'],'early_tap',d['masters_early_tap'],'deep_pins',d['deep_clock_pins'],'estimated_R',len(d['estimated_R']),'spread_defects',len(d['spread_defects']))" 2>/dev/null)"; [ "$(cat $M/kit/kit.exit)" = 0 ] ) &
 CK=$!
 D=$M/a_real; date -u +%FT%TZ > $D/run.log.start
 /srv/opentallas-scratch/admit.sh 40 -- docker run --rm --name dieit_${TAG}_place --cpus=$T --memory=60g -v $D:/work -w /work openroad/orfs:asap7lock \
@@ -43,7 +43,8 @@ echo $? > $D/run.log.exit; date -u +%FT%TZ > $D/run.log.end; st "PLACE rc=$(cat 
 wait $CK || { st CLOCK_OR_KIT_FAIL; exit 1; }
 [ "$(cat $D/run.log.exit)" = 0 ] || { st PLACE_FAIL; exit 1; }
 sed -e "s/--name s81_grt_/--name dieit_grt_/" -e "s/--name s81_sta_/--name dieit_sta_/" $S/physical/s81_die_views/dietop/dietop_grt_sta.sh > $M/dietop_grt_sta.sh; chmod +x $M/dietop_grt_sta.sh
-cd $M && /srv/opentallas-scratch/admit.sh 120 -- $M/dietop_grt_sta.sh a_real grt kit 48 400 || { st GRT_STA_FAIL; exit 1; }
+# OT_GRT_ITERS (s81-die v16): global_route -congestion_iterations (default 30; the v16 release case runs 12)
+cd $M && /srv/opentallas-scratch/admit.sh 120 -- $M/dietop_grt_sta.sh a_real grt kit 48 400 9.6 ${OT_GRT_ITERS:-30} || { st GRT_STA_FAIL; exit 1; }
 grep -q OT_SPEF $M/grt/sta_tt.log || { st STA_NO_SPEF; exit 1; }
 for c in tt ff ss; do echo "$c $(grep -E "^(worst slack|tns)" $M/grt/sta_$c.log | tr "\n" " ")"; done > $M/grt/summary.txt
 st "CHAIN_DONE $(tr '\n' ' ' < $M/grt/summary.txt)"

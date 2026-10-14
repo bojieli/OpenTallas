@@ -143,6 +143,58 @@ BINDINGS = dict(
                             ck=['clk'], rst_n=['rst_n']),
                  classed={}),
 )
+# qwen-split/kvsys 2026-10-14 (owner 06:45 PT: Qwen two-die split, compute die + KV/SYSTEM die): build(split=True) is the
+# KV/system die v1 (contract results/arch/qwen_split_1014/CONTRACT_KVSYS.md, link results/arch/qwen_split_1014/LINK.md):
+#   - the head slot is the CLOSED hierarchical head cluster ot_qwen_nearhbm_head_hs 734.4 x 855.36 (route qkh_head_hs_ref-q13b);
+#     the engine column (4 heads + ectl) grows to 3,551 um and the stack group to 14.3 mm, so each stack band (PHY / ctrl /
+#     CDC / landing, 12.1 mm) is centred on a 14.3-mm stack pitch and the die grows N-S (both long edges stay HBM shoreline)
+#   - the N-edge centre column ends the die link: ucie (UCIe x64 macro) | qkd_d2d (ot_qkvd_kv_end SPL 1, 777.6 x 518.4 kit
+#     qkd_d2d_p2_ref) | qkd_lnk (ot_qkvd_split_kvlink, abutted) and the sequencer qkd_seq (merged-die cluster, 604.8 x 475.2)
+#     talks to qkd_lnk on lx / lr (x3 / sd / kvd in, ar / ds / pw out) instead of the old rf / tf words
+#   - qkd_embgw = the closed view outline 172.8 x 216; its SU face (EMBQ / EMBD) ends on qkd_lnk (gq / gr)
+#   - qkd_ahub = the hard-reciprocal hub kit outline 1175.04 x 760.32 (qkd_ahub_ref-q13b)
+SPLIT_HEAD = (734.4, 855.36)
+SPLIT_FRAMES = dict(qkd_seq=(604.8, 475.2), qkd_lnk=(777.6, 129.6), qkd_embgw=(172.8, 216.0), qkd_ahub=(1175.04, 760.32))
+BINDINGS['qkd_lnk'] = dict(module='ot_qkvd_split_kvlink', file='rtl/qwen_sys/split_20261014/ot_qkvd_split_kvlink.sv',
+    ports=dict(rf=['r_v', 'r_d', 'r_cr'], tf=['t_v', 't_d', 't_cr'],
+               # bit order = the sequencer cluster's: r_x3_d = {v, tag, d} (d at bit 0), t_ar_d = {v, d 519}
+               lx=['x3_d', 'x3_tag', 'x3_v', 'sd', 'kvd', 'ar_cr'], lr=['ar_d', 'ar_v', 'ds', 'pw', 'x3_cr'],
+               gq=['ea_v', 'ea_kind', 'ea_addr', 'ea_cr'], gr=['eq_v', 'eq_d'], d2df=['d2d_fault', 'd2d_cause'], flt=['fault'],
+               ck=['clk'], rst_n=['rst_n']),
+    classed={})
+_BASE = dict(HEAD=HEAD, ECTL=ECTL, ENG_H=ENG_H, RENG=RENG, TILE_Y=dict(TILE_Y), FRAMES=dict(FRAMES))
+
+
+def _set_geometry(split):
+    """module geometry for the plain KV die (split False) or the split KV/system die (split True)"""
+    global HEAD, ENG_H, RENG, TILE_Y, FRAMES
+    HEAD = SPLIT_HEAD if split else _BASE['HEAD']
+    ENG_H = 4 * HEAD[1] + ECTL[1] + 4 * GY
+    RENG = (HEAD[0], ENG_H)
+    TILE_Y = dict(h0=0.0, h1=HEAD[1] + GY, c=2 * (HEAD[1] + GY), h2=2 * (HEAD[1] + GY) + ECTL[1] + GY,
+                  h3=3 * (HEAD[1] + GY) + ECTL[1] + GY)
+    FRAMES = dict(_BASE['FRAMES'], **(SPLIT_FRAMES if split else {}))
+    for k_, v_ in (SPLIT_BINDINGS if split else _BASE_BINDINGS).items():
+        BINDINGS[k_] = v_
+
+
+# split die masters bind to the RTL the split actually instantiates (NO STUBS, owner 08:05 PT): the hierarchical head
+# cluster, the merged-die sequencer cluster qkd_seq (native HEADS 1 / Q_FP32 1 profile = its parameters)
+_BASE_BINDINGS = {k: BINDINGS[k] for k in ('qkd_rhead', 'qkd_seq')}
+SPLIT_BINDINGS = dict(
+    qkd_rhead=dict(module='ot_qwen_nearhbm_head_hs', file='rtl/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv',
+                   ports=dict(ti=['c_in', 'row_in', 'lt_in', 'q_valid_in', 'q_beat_in', 'q_data_in'], e=['e_in'],
+                              s=['sc_d', 'sc_f', 'g_f'], nb=['nb_d'], ck=['clk'], rst_n=['rst_n']),
+                   classed={'hid': 'by_design: die-top strap (tie cells), the head index of this tile'}),
+    qkd_seq=dict(module='qkd_seq', file='rtl/physical/ot_qwen_kv_centre_slots.sv', parameters=dict(HEADS=1, Q_FP32=1),
+                 ports=dict(lx=['r_x3_d', 'r_sd', 'r_kvd', 't_ar_cr'], lr=['t_ar_d', 't_ds', 't_pw', 'r_x3_cr'],
+                            **{f'aq_{q}': [f'aq_{q}'] for q in STACKS}, **{f'kvn_{q}': [f'kvn_{q}_d', f'kvn_{q}_cr'] for q in STACKS},
+                            **{f'kc_{q}': [f'kc_{q}'] for q in STACKS}, **{f'af_{q}': [f'af_{q}'] for q in STACKS},
+                            **{f'mf_{q}': [f'mf_{q}'] for q in STACKS},
+                            ar=['ar'], hf=['hf'], hs=['hs'], hc=['hc'], tk=['tk'], kst=['kst'], ck=['ck'], rst_n=['rst_n']),
+                 classed={}))
+
+
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
 FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_d minus its engines (re-cut D: q beat broadcast, node staging, '
                            'P.V levels 4-7; recut.json)',
@@ -183,6 +235,156 @@ BINDINGS['qkd_kvwq_ctl_bin_h'] = copy.deepcopy(BINDINGS['qkd_kvwq_ctl_bin'])
 BINDINGS['qkd_kvwq_ctl_bin_h']['parameters'] = dict(FLANE_BINARY=1, HEAD_PIPE=1)
 BINDINGS['qkd_kvwq_leaf_s_w129_m'] = copy.deepcopy(BINDINGS['qkd_kvwq_leaf_s_w129'])
 
+# el1013-qwen-kvstrips 2026-10-13 (coordinator-accepted slot change): the controller strip qkd_ctrl / qkd_ctrl_n is 32
+# die slots of ONE hardened master qkd_ctrl_pc (PC k at strip y = 378 k, pc[4:0] strapped) + one qkd_ctrl_kc leaf at the
+# N end (strip y = 12,096); the PHY is re-pinned per PC (po / pi face the leaf).  The masters' ports ARE the die buses;
+# STRIP_FIELDS gives each bus's fields LSB first (the benches generate their offsets from it).
+STRIP_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv'
+STRIP_FIELDS = dict(
+    qkd_ctrl_pc=dict(
+        ci=[('h_cred', 3), ('h_wv', 1), ('h_wsec', 24), ('h_cv', 1), ('h_csec', 24), ('h_cdata', 256), ('h_ctag', 9),
+            ('h_fault', 1)],                                                   # = qkd_cdc_wleaf ho
+        co=[('h_lv', 1), ('h_lsec', 17), ('h_lrow', 8), ('h_ldata', 256), ('h_hand', 1), ('h_wcon', 1), ('h_av', 1),
+            ('h_atag', 9)],                                                    # = qkd_cdc_wleaf hi
+        es=[('s_v', 1), ('w_d', 256), ('s_row', 19), ('s_col', 5), ('s_bank', 5), ('s_we', 1), ('w_v', 1)],
+        er=[('e_v', 1), ('e_data', 256), ('e_ce', 1), ('e_ue', 1), ('s_credit', 1), ('fault_core', 1)],
+        po=[('row_v', 1), ('row_op', 3), ('row_bank', 5), ('row_row', 19), ('col_v', 1), ('col_we', 1),
+            ('col_bank', 5), ('col_col', 5), ('wd', 288)],
+        pi=[('r_v', 1), ('r_d', 288)], ki=[('k_v', 1), ('k_d', 32)], ko=[('k_v', 1), ('k_d', 32)]),
+    qkd_ctrl_kc=dict(kc=[('kc_v', 1), ('kc_d', 32)], ko=[('k_v', 1), ('k_d', 32)]))
+assert [f for f, _ in STRIP_FIELDS['qkd_ctrl_pc']['ci']] == BINDINGS['qkd_cdc_wleaf']['ports']['ho']
+assert [f for f, _ in STRIP_FIELDS['qkd_ctrl_pc']['co']] == BINDINGS['qkd_cdc_wleaf']['ports']['hi']
+BINDINGS['qkd_ctrl_pc'] = dict(module='qkd_ctrl_pc', file=STRIP_FILE,
+    ports=dict(ci=['ci'], co=['co'], es=['es'], er=['er'], po=['po'], pi=['pi'], ki=['ki'], ko=['ko'], fi=['fi'],
+               fo=['fo'], pc=['pc'], pll_hbm=['pll_hbm'], hrst=['hrst'], ck=['ck'], rsi=['rsi']), classed={})
+BINDINGS['qkd_ctrl_kc'] = dict(module='qkd_ctrl_kc', file=STRIP_FILE,
+    ports=dict(kc=['kc'], ko=['ko'], fi=['fi'], kf=['kf'], pll_hbm=['pll_hbm'], hrst=['hrst'], ck=['ck'],
+               rsi=['rsi']), classed={})
+
+# KV landing strip qkd_land / qkd_land_n -> 32 x qkd_land_pc (E half, one a PC slot) + 8 x qkd_land_grp (W half, one a row
+# engine beside its four PCs) + 1 x qkd_land_emb (N end).  Strip slot 4 i + q hosts logical PC {q, G(i)} (LAND_GROUP_ORDER:
+# i = 0 at the S end; every group then sits beside its engine's rq / rs pins).
+LAND_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_land_strip.sv'
+LAND_GROUP_ORDER = (4, 5, 0, 1, 2, 3, 6, 7)
+STRIP_FIELDS.update(
+    qkd_land_pc=dict(
+        li=[('l_v', 1), ('l_sec', 17), ('l_row', 8), ('l_data', 256)], lp=[('l_pop', 1)],          # = qkd_cdc_wleaf co
+        gw=[('v', 1), ('layer', 6), ('j', 10), ('data', 256)],
+        es=STRIP_FIELDS['qkd_ctrl_pc']['es'], er=STRIP_FIELDS['qkd_ctrl_pc']['er'],
+        dni=[('v', 1), ('kind', 1), ('bc', 1), ('pc', 5), ('side', 1), ('s_we', 1), ('w_v', 1), ('s_bank', 5),
+             ('s_col', 5), ('s_row', 19), ('w_d', 256), ('tag', 2)],
+        upi=[('v', 1), ('side', 1), ('tag', 2), ('e_data', 256), ('e_ce', 1), ('e_ue', 1)]),
+    qkd_land_grp=dict(
+        rq=[('req_valid', 1), ('req_v', 1), ('req_g', 1), ('req_t', 13)], rs=[('rsp_valid', 1), ('rsp_data', 1024)],
+        lt=[('lay_start', 1), ('lay_T', 14), ('lay_idx', 6)],
+        kn=[('kvw_v', 1), ('kvw_vg', 2), ('kvw_t', 14), ('kvw_layer', 6), ('kvw_d', 1024)]),
+    qkd_land_emb=dict(emf=[('i_v', 1), ('i_d', 523), ('pad', 5), ('o_cr', 1)], emr=[('o_v', 1), ('o_d', 523), ('pad', 5), ('i_cr', 1)]))
+assert [f for f, _ in STRIP_FIELDS['qkd_land_pc']['li']] + ['l_pop'] == BINDINGS['qkd_cdc_wleaf']['ports']['co']
+assert [f for f, _ in STRIP_FIELDS['qkd_land_grp']['rq']] == BINDINGS['qkd_ectl']['ports']['rq']
+BINDINGS['qkd_land_pc'] = dict(module='qkd_land_pc', file=LAND_FILE,
+    ports={k: [k] for k in ('li', 'lp', 'cf', 'gw', 'gc', 'es', 'er', 'dni', 'dno', 'upi', 'upo', 'cri', 'cro', 'fi', 'fo',
+                            'lpc', 'ck', 'rst_n')}, classed={})
+BINDINGS['qkd_land_grp'] = dict(module='qkd_land_grp', file=LAND_FILE,
+    ports={k: [k] for k in ('gw0', 'gw1', 'gw2', 'gw3', 'gc0', 'gc1', 'gc2', 'gc3', 'rq', 'rs', 'lt', 'kn', 'fi', 'fo', 'g',
+                            's', 'ck', 'rst_n')}, classed={})
+BINDINGS['qkd_land_emb'] = dict(module='qkd_land_emb', file=LAND_FILE,
+    ports={k: [k] for k in ('emf', 'emr', 'dno', 'upi', 'cri', 'fi', 'gfi', 'mf', 'st', 'ck', 'rst_n')}, classed={})
+
+# el1013-qwen-kvstrips 2026-10-13: the stack aggregator qkd_astk / qkd_astk_n (ot_qwen_nearhbm_attn_stack_h minus its
+# engines) -> two 162 um columns of hardened leaves (ASTK_W 324 requested) (rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv; exact bench
+# physical/qkd_astk_strip/bench.sh against the golden aggregator; die wiring = rtl/test/qwen_kv_die/
+# ot_qwen_nearhbm_attn_stack_k.sv ot_qkd_astk_strip).  Per row (engines 2 r on the W, 2 r + 1 on the E; rows counted from
+# the end away from the hub) and column, bottom to top: head 0 A, B; head 1 A, B; ex, ex, ep, ex, ex; head 2 A, B;
+# head 3 A, B (A = level-4 tree cell, B = the row's second-level cell); 4 x qkd_astk_zn + qkd_astk_ctl at the hub end.
+ASTK_FILE = 'rtl/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv'
+ASTK_LEAF = dict(qkd_astk_pv=(162.0, 103.68), qkd_astk_ex=(162.0, 149.04), qkd_astk_ep=(162.0, 345.6), qkd_astk_zn=(86.4, 86.4),
+                 qkd_astk_ctl=(324.0, 43.2))
+STRIP_FIELDS.update(
+    qkd_astk_pv=dict(
+        cfg=[('h', 2), ('lvl', 2), ('am', 2), ('bm', 2), ('ym', 2), ('ath', 3), ('bth', 3), ('far', 1), ('tdir', 1)],
+        nc=[('v', 1), ('beat', 4), ('g', 1), ('gam', 4)],                    # = qkd_ectl so[421:412]
+        li=[('v', 1), ('idx', 4), ('g', 1), ('d', 128)],                     # stream word (lo, each lane of ui / uo / di / do_)
+        pi=[('v', 1), ('beat', 5), ('g', 1), ('d', 256)],                    # P.V lane word
+        ci=[('start', 1), ('gmax', 5)]),
+    qkd_astk_ep=dict(
+        qi=[('start', 1), ('T', 14), ('q_valid', 1), ('q_beat', 6), ('q_data', 512), ('kdone', 2), ('m_v', 1), ('m_g', 1),
+            ('m_hh', 2), ('m_data', 32)],
+        xi=[('fault', 1), ('cnt0', 4), ('cnt1', 4), ('any', 2), ('lmax', 256)],
+        zi=[('v', 1), ('tok', 1), ('g', 1), ('k', 4), ('gam', 4), ('sum', 128), ('row', 512)],
+        ri=[('v', 1), ('g', 1), ('k', 4), ('gam', 4), ('row', 512)],
+        xa=[('v', 1), ('pos', 1), ('s', 32), ('m', 32)] * 4, xe=[('v', 1), ('fault', 1), ('e', 32)] * 4,
+        sq=[('engine', 3), ('stack', 2)]),
+    qkd_astk_zn=dict(zi=[('v', 1), ('g', 1), ('k', 4), ('slot', 4), ('sum', 128)], zc=[('stack', 2), ('level', 2)],
+                     tc=[('start', 1), ('T', 14)]),
+    qkd_astk_ctl=dict(
+        aq=[('start', 1), ('T', 14), ('layer', 6), ('q_valid', 1), ('q_beat', 6), ('q_data', 512)],
+        lt=[('start', 1), ('T', 14), ('layer', 6)], am=[('v', 1), ('g', 1), ('hh', 2), ('data', 32)],
+        ap=[('so_valid', 1), ('so_type', 2), ('so_g', 1), ('so_hh', 2), ('so_k', 4), ('so_any', 1), ('so_data', 32),
+            ('pv_done', 2), ('pv_valid', 1), ('pv_g', 1), ('pv_beat', 6), ('pv_data', 512)]))
+STRIP_FIELDS['qkd_astk_ep']['zo'] = STRIP_FIELDS['qkd_astk_ep']['zi']
+STRIP_FIELDS['qkd_astk_ep']['xo'] = STRIP_FIELDS['qkd_astk_ep']['xi']
+STRIP_FIELDS['qkd_astk_ctl']['qo'] = STRIP_FIELDS['qkd_astk_ep']['qi']
+STRIP_FIELDS['qkd_astk_ctl']['xi'] = STRIP_FIELDS['qkd_astk_ep']['xi']
+_ASTK_LANES = ('ui', 'uo', 'di', 'do_', 'pi', 'po', 'ci', 'co', 'kui', 'kuo', 'kdi', 'kdo', 'tui', 'tuo', 'tdi', 'tdo', 'fi', 'fo')
+BINDINGS['qkd_astk_pv'] = dict(module='qkd_astk_pv', file=ASTK_FILE,
+    ports={k: [k] for k in ('cfg', 'wa', 'wb', 'nc', 'nd', 'nco', 'ndo', 'cra', 'crb', 'li', 'lo', 'lci', 'lco', 'ck', 'rst_n')
+           + _ASTK_LANES}, classed={})
+BINDINGS['qkd_astk_ex'] = dict(module='qkd_astk_ex', file=ASTK_FILE,
+    ports={k: [k] for k in ('xa', 'xe', 'ck', 'rst_n') + _ASTK_LANES}, classed={})
+BINDINGS['qkd_astk_ep'] = dict(module='qkd_astk_ep', file=ASTK_FILE,
+    ports={k: [k] for k in ('sq', 'so', 'si', 'qi', 'xi', 'xo', 'zi', 'zo', 'ri', 'xa', 'xe', 'cr', 'ck', 'rst_n') + _ASTK_LANES},
+    classed={})
+BINDINGS['qkd_astk_zn'] = dict(module='qkd_astk_zn', file=ASTK_FILE,
+    ports={k: [k] for k in ('zc', 'tc', 'zi', 'zo', 'fi', 'fo', 'ck', 'rst_n')}, classed={})
+BINDINGS['qkd_astk_ctl'] = dict(module='qkd_astk_ctl', file=ASTK_FILE,
+    ports={k: [k] for k in ('st', 'aq', 'lt', 'am', 'ap', 'af', 'qo', 'xi', 'co', 'px', 'py', 'zi', 'fx', 'fy', 'fz', 'ck', 'rst_n')},
+    classed={})
+assert sum(w for _, w in STRIP_FIELDS['qkd_astk_ep']['qi']) == 572 and sum(w for _, w in STRIP_FIELDS['qkd_astk_ep']['zi']) == 651
+assert sum(w for _, w in STRIP_FIELDS['qkd_astk_ctl']['ap']) == 565 and sum(w for _, w in STRIP_FIELDS['qkd_astk_ctl']['aq']) == 540
+assert [f for f, _ in STRIP_FIELDS['qkd_astk_pv']['nc']] == ['v', 'beat', 'g', 'gam']
+
+
+def astk_cfg(h, lvl=0, am=0, bm=0, ym=0, ath=0, bth=0, far=0, tdir=0):
+    """qkd_astk_pv strap word (STRIP_FIELDS order, LSB first)."""
+    return h | lvl << 2 | am << 4 | bm << 6 | ym << 8 | ath << 10 | bth << 13 | far << 16 | tdir << 17
+
+
+def astk_plan(stack=0):
+    """The strip's leaf instances in its own frame (y from the end away from the hub; N stacks: the strip is placed MX).
+    Rows of (name, master, column, y, straps).  Column x = 0 (W, X cells: kk mod 4 < 2) / 162 (E, Y cells)."""
+    out = []
+    ph, eh, xh = ASTK_LEAF['qkd_astk_pv'][1], ASTK_LEAF['qkd_astk_ep'][1], ASTK_LEAF['qkd_astk_ex'][1]
+    row_h = ENG_H + GY                       # an engine row
+    used = 8 * ph + eh + 4 * xh
+    assert used <= row_h, (used, row_h)
+    gap = (row_h - used) / 12                # the die's relay stations stand in the gaps
+    for r in range(4):
+        for c in range(2):
+            y = r * row_h + gap / 2
+            eng = 2 * r + c
+
+            def put(name, master, straps):
+                nonlocal y
+                out.append((name, master, c, round(y, 3), straps))
+                y += ASTK_LEAF[master][1] + gap
+            lvl_b, am_b, bm_b, ym_b = ((1, 0, 2, 1), (2, 1, 2, 1), (1, 0, 2, 2), (3, 1, 0, 0))[r]
+            ath_b, bth_b = ((0, 2), (0, 4), (4, 6), (0, 0))[r]
+            for hp in range(4):
+                if hp == 2:
+                    put(f'ex_{eng}_0', 'qkd_astk_ex', {}); put(f'ex_{eng}_1', 'qkd_astk_ex', {})
+                    put(f'ep_{eng}', 'qkd_astk_ep', dict(sq=stack << 3 | eng))
+                    put(f'ex_{eng}_2', 'qkd_astk_ex', {}); put(f'ex_{eng}_3', 'qkd_astk_ex', {})
+                put(f'pva_{r}_{hp}_{"xy"[c]}', 'qkd_astk_pv',
+                    dict(cfg=astk_cfg(hp, ym=2 if r in (1, 3) else 0, ath=2 * r, bth=2 * r + 1, far=int(hp in (0, 3)))))
+                put(f'pvb_{r}_{hp}_{"xy"[c]}', 'qkd_astk_pv', dict(cfg=astk_cfg(hp, lvl_b, am_b, bm_b, ym_b, ath_b, bth_b)))
+    top = 4 * row_h                          # the hub end: 237.6 um beyond the four engine rows (slot change request)
+    zh = ASTK_LEAF['qkd_astk_zn'][1]
+    for z in range(4):
+        out.append((f'zn_{z}', 'qkd_astk_zn', z % 2, round(top + zh * (z // 2), 3), dict(zc=z << 2 | stack)))
+    out.append(('ctl', 'qkd_astk_ctl', 0, round(top + 2 * zh, 3), dict(st=stack)))
+    return out
+
+
 
 def _write_tiles(m, add):
     """Opt-in candidate.  Closed ctl/leaf tiles; the explicit OR encoder remains unclosed.
@@ -202,6 +404,10 @@ def _write_tiles(m, add):
                 # Shift the column88.56um to fit the lowest leaf inside the die.
                 if side == 'E':
                     cdc.x -= 183.72-cdc.w # grow inward, preserve controller-side gap
+                if m['geo'].get('split'):
+                    # kvs1 real case: the bound qkd_cdc_wleaf view (183.6, its own pin residues) snapped 0.216 um toward the
+                    # controller strip, which then snapped onto the PHY: keep 2.16 um of slack on the controller side
+                    cdc.x += 2.16 if side == 'W' else -2.16
                 cdc.w = cdc.h = 183.72
                 cdc.y += 88.56
                 lw = 129.6 if m['geo'].get('kv_wq_wide') else 86.4
@@ -337,11 +543,12 @@ def _band(T, side, Wk):
 _PIN_HINT = {}
 
 
-def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False):
+def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False):
     """qwen-1010/b 2026-10-10: two passes -- the second plans every relay chain from the pins the first pass drew (a
     shared master's pin is the one its first instance's peers set), so each hop is measured pin to pin on the die."""
     kw = dict(r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, kv_wq_head=kv_wq_head,
-              kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
+              kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror, split=split)
+    _set_geometry(split)
     _PIN_HINT.clear()
     m = _build(**kw)
     best = None
@@ -372,7 +579,7 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
     return best[1]
 
 
-def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False):
+def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False):
     kv_wq_wide = kv_wq_wide or kv_wq_mirror
     kv_wq_leaf_s = kv_wq_leaf_s or kv_wq_head or kv_wq_wide
     kv_wq_binary = kv_wq_binary or kv_wq_leaf_s
@@ -381,13 +588,29 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     I = T['insts']
     stack_h = I['ctrl_WS']['h']
     edge_chan = CHAN if kv_wq_leaf_s else 0.0
-    Hk = up(2 * (MARGIN+edge_chan) + 2 * stack_h + GY, GY)
+    # split: the engine group (4 engine columns of 4 heads + ectl) is taller than the 12.1-mm band: stack pitch sp, the band
+    # centred on it (band_shift per half)
+    gh_ = 4 * RENG[1] + 3 * GY
+    # 2 x CHAN of relay channel above and below each group: the S | N groups leave a 518-um channel between them (the
+    # col-1 engines' KV rows krq / krs and the centre words cross the W / E stack walls there)
+    # every shift is a multiple of 43.2 um (= 900 / 675 / 540 tracks of M4-5 / M6-7 / M8-9 and 160 rows): a shifted band
+    # keeps the legal origin residues of its hard macros (kvs1 real case: phy_WN MY had no legal origin at a GY shift)
+    LAT = 43.2
+    sp = (stack_h + up(max(0.0, gh_ + 4 * CHAN - stack_h), LAT)) if split else stack_h
+    band_shift = {'S': up((sp - stack_h) / 2, LAT), 'N': up((sp - stack_h) / 2, LAT) + (sp - stack_h)}
+    # split: the S engine groups reach down to the die edge, where the host SerDes PHY (2,400 wide, wider than the centre
+    # column) sits: lift everything above it by d0
+    d0 = up(max(0.0, SERDES[2] + GY + 2 * CHAN - (edge_chan + (sp - gh_) / 2)), LAT) if split else 0.0
+    band_shift = {k: v + d0 for k, v in band_shift.items()}
+    Hk = up(2 * (MARGIN+edge_chan) + 2 * sp + GY + d0, GY)
     # x layout (W half; E mirrors)
     x_land = I['cdc_WS_0']['x'] + I['cdc_WS_0']['w'] + GX
     leaf_shift = ((518.4 if kv_wq_head else 432.0) + GX if kv_wq_leaf_s else 518.4 + GX) if kv_wq_leaves else 0.0
     x_grp = up(x_land + leaf_shift + LAND_W + CHAN, GX)
     grp_w = 2 * RENG[0] + ASTK_W + 2 * GX
     centre_w = max(UCIE[1], FRAMES["qkd_ahub"][0]) + 4 * CHAN   # re-cut H engines are 1,953 um: the centre relay channel needs 2 x 259 (was 2 x 130)
+    if split:
+        centre_w = max(UCIE[1], FRAMES['qkd_ahub'][0], FRAMES['qkd_d2d'][0]) + 4 * CHAN
     Wk = up(2 * (x_grp + grp_w) + centre_w, 2 * GX)
     m = dict(die=dict(w=Wk, h=Hk), insts=[], buses=[], regions=[], geo={})
     ins = m['insts']
@@ -401,8 +624,9 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         rows, dy = _band(T, side, Wk)
         band_dy[side] = {half:offset+edge_chan for half,offset in dy.items()}
         for n, mst, x, y, w, h, o, k, dom in rows:
-            add(n, mst, x, y+edge_chan, w, h, o, k, 'phy' if k == 'phy' else ('ctrl' if k == 'ctrl' else 'strip'), dom)
-    ystack = {'S': MARGIN+edge_chan, 'N': MARGIN+edge_chan + stack_h + GY}
+            half = 'N' if y + h / 2 > MARGIN + stack_h + GY / 2 else 'S'
+            add(n, mst, x, y+edge_chan+band_shift[half], w, h, o, k, 'phy' if k == 'phy' else ('ctrl' if k == 'ctrl' else 'strip'), dom)
+    ystack = {'S': MARGIN+edge_chan+band_shift['S'], 'N': MARGIN+edge_chan + stack_h + GY+band_shift['N']}
     xc = Wk / 2
     for st in STACKS:
         side, half = st[0], st[1]
@@ -424,9 +648,15 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             ex = gx if col == 0 else gx + RENG[0] + ASTK_W + 2 * GX
             ey = gy + (e % 4) * (RENG[1] + GY)
             o_up, o_dn = ('R0', 'MX') if col == 0 else ('MY', 'R180')
+            # split (kvs1 real case: 'qkd_rhead MX y has no legal origin'): the closed head_hs view has horizontal pins on
+            # M4 AND M6, which no y-mirrored origin can put on both track grids -> v1 places every head unflipped in y
+            # (R0 / MY); the heads below the control tile then face it with their N (output) face: element-queue item
+            # (MY is illegal too: its vertical pins sit on M3 and M5): every split head is R0, so the col-1 heads' nb (E face)
+            # faces away from the aggregator
+            hd_dn, hd_up = ('R0', 'R0') if split else (o_dn, o_up)
             for h in range(4):
                 add(f'head_{st}_{e}_{h}', 'qkd_rhead', ex, ey + TILE_Y[f'h{h}'], HEAD[0] - SHAVE, HEAD[1] - SHAVE,
-                    o_dn if h < 2 else o_up, 'row_engine', 'attn')
+                    hd_dn if h < 2 else hd_up, 'row_engine', 'attn')
             add(f'ectl_{st}_{e}', 'qkd_ectl', ex, ey + TILE_Y['c'], ECTL[0] - SHAVE, ECTL[1] - SHAVE,
                 o_up, 'row_engine', 'attn')
     # centre column: N edge stack, hub, S edge host
@@ -436,6 +666,12 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     add('d2d_kv', 'qkd_d2d', xc - dw / 2, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
     sw, sh = FRAMES['qkd_seq']
     sy = up(uy - 2 * GY - dh - sh, GY)
+    if split:
+        # qkd_lnk abuts the KV end (its rf / tf faces = the KV end's r / t faces); the sequencer below it
+        lw_, lh_ = FRAMES['qkd_lnk']
+        ly = up(uy - GY - dh, GY) - GY - lh_
+        add('lnk', 'qkd_lnk', xc - lw_ / 2, up(ly - GY, GY), lw_ - SHAVE, lh_ - SHAVE, 'R0', 'd2d', 'io')
+        sy = up(ly - 2 * GY - sh - 4 * CHAN, GY)
     add('seq', 'qkd_seq', xc - sw / 2, sy, sw - SHAVE, sh - SHAVE, 'R0', 'seq', 'ctl')
     gw_, gh_ = FRAMES['qkd_embgw']
     add('embgw', 'qkd_embgw', xc - gw_ / 2, up(sy - GY - gh_, GY), gw_ - SHAVE, gh_ - SHAVE, 'R0', 'embgw', 'ctl')
@@ -449,7 +685,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         'io', 'link_serdes')
     tw, th = FRAMES['qkd_host']
     add('host', 'qkd_host', xc - tw / 2, MARGIN + SERDES[2] + GY, tw - SHAVE, th - SHAVE, 'R0', 'host', 'io')
-    m['geo'] = dict(x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
+    m['geo'] = dict(split=split, stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
                     ystack=ystack, r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, leaf_shift=leaf_shift, edge_channel=edge_chan, kv_wq_head=kv_wq_head, kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror)
     if kv_wq_leaves:
         _write_tiles(m, add)
@@ -481,7 +717,7 @@ def _buses(m, T, r):
              [(f'ctrl_{st}', 'ck')]))   # qwen-1010/b: the kc stream-command FIFO's write side (reset: rsi, below)
         add((f'rst_core_{st}', 'reset', 1, [('pll', f'rso_{st}'), (f'ctrl_{st}', 'rsi')] +
              [(n, 'rst_n') for n, _ in grp if not n.startswith('cdc_')]))   # the CDC core resets come from land.crst (r21c rst_kv)
-    cen = ['d2d_kv', 'seq', 'embgw', 'ahub', 'host']
+    cen = ['d2d_kv', 'seq', 'embgw', 'ahub', 'host'] + (['lnk'] if m['geo'].get('split') else [])
     add(('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c')] + [(n, 'ck') for n in cen] +
          [('ucie_rom', 'clk'), ('serdes_host', 'clk')]))
     add(('rst_core_c', 'reset', 1, [('pll', 'rso_c')] + [(n, 'rst_n') for n in cen] +
@@ -490,8 +726,15 @@ def _buses(m, T, r):
     add(('rst_fwd', 'reset', 1, [('pll', 'rso_fwd'), ('ckb_kv', 'rs')]))
     # the link
     add(('d2d_fdi', 'd2d_fdi', FDI_UCIE, [('d2d_kv', 'fdi'), ('ucie_rom', 'fdi')]))
-    add(('d2d_dn', 'd2d_face', 4 * (W + 1) + 4, [('d2d_kv', 'rf'), ('seq', 'rf')]))       # CTL Q KVN EMBQ + credits back
-    add(('d2d_up', 'd2d_face', 3 * (W + 1) + 3, [('seq', 'tf'), ('d2d_kv', 'tf')]))       # RES EMBD HCTL + credits back
+    split = m['geo'].get('split')
+    lend = 'lnk' if split else 'seq'
+    add(('d2d_dn', 'd2d_face', 4 * (W + 1) + 4, [('d2d_kv', 'rf'), (lend, 'rf')]))       # CTL Q KVN EMBQ + credits back
+    add(('d2d_up', 'd2d_face', 3 * (W + 1) + 3, [(lend, 'tf'), ('d2d_kv', 'tf')]))       # RES EMBD HCTL/SCTL + credits back
+    if split:
+        # LINK.md: the bridge <-> sequencer ROM-side faces (x3 {v, tag 11, d 512}, sd 56, kvd 44, ar credit) and back (ar
+        # {v, 519}, ds 187, pw 75, x3 credit)
+        add(('lx', 'spine_local', 1 + 11 + 512 + 56 + 44 + 1, [('lnk', 'lx'), ('seq', 'lx')]))
+        add(('lr', 'spine_local', 1 + 519 + 187 + 75 + 1, [('seq', 'lr'), ('lnk', 'lr')]))
     # attention
     for st in STACKS:
         add((f'aq_{st}', 'spine_local', 1 + 14 + 6 + 1 + 6 + 512, [('seq', f'aq_{st}'), (f'astk_{st}', 'aq')]))
@@ -523,16 +766,21 @@ def _buses(m, T, r):
         add((f'ing_{st}', 'kvn', W + 2, [('host', f'ing_{st}'), (f'land_{st}', 'ing')]))
     add(('ares', 'spine_local', 1 + 1 + 6 + 512, [('ahub', 'ao'), ('seq', 'ar')]))
     add(('hs', 'spine_local', 1, [('seq', 'hs'), ('ahub', 'hs')]))                  # layer start to the hub
-    add(('d2df', 'spine_local', 6, [('d2d_kv', 'flt'), ('seq', 'd2df')]))            # link-end fault + cause
+    add(('d2df', 'spine_local', 6, [('d2d_kv', 'flt'), (lend, 'd2df')]))            # link-end fault + cause
     add(('kst', 'spine_local', 10, [('seq', 'kst'), ('host', 'kst')]))               # KV-die status to the host
     add(('hf', 'spine_local', 1, [('ahub', 'hf'), ('seq', 'hf')]))                  # hub fault
     for st in STACKS:
         add((f'af_{st}', 'spine_local', 1, [(f'astk_{st}', 'af'), ('seq', f'af_{st}')]))
         add((f'mf_{st}', 'spine_local', 1, [(f'land_{st}', 'mf'), ('seq', f'mf_{st}')]))
-    add(('gq', 'kvn', W + 2, [('seq', 'gq'), ('embgw', 'gq')]))
-    add(('gr', 'kvn', W + 2, [('embgw', 'gr'), ('seq', 'gr')]))
-    add(('hc', 'kvn', W + 2, [('host', 'hc'), ('seq', 'hc')]))
-    add(('tk', 'kvn', W + 2, [('seq', 'tk'), ('host', 'tk')]))
+    if split:   # EMBQ / EMBD: the SU's embedding face crosses the link and ends on the gateway (LINK.md classes 3 / 5)
+        add(('gq', 'kvn', 1 + 1 + 24 + 1, [('lnk', 'gq'), ('embgw', 'gq')]))
+        add(('gr', 'kvn', 1 + 512, [('embgw', 'gr'), ('lnk', 'gr')]))
+        add(('lflt', 'spine_local', 1, [('lnk', 'flt'), ('host', 'lflt')]))          # link + bridge fault -> host status (LINK.md open item 1)
+    else:
+        add(('gq', 'kvn', W + 2, [('seq', 'gq'), ('embgw', 'gq')]))
+        add(('gr', 'kvn', W + 2, [('embgw', 'gr'), ('seq', 'gr')]))
+    add(('hc', 'kvn', 182 if split else W + 2, [('host', 'hc'), ('seq', 'hc')]))      # split: the merged sequencer's hc / tk levels
+    add(('tk', 'kvn', 93 if split else W + 2, [('seq', 'tk'), ('host', 'tk')]))
     add(('host_fdi', 'd2d_fdi', FDI_SERDES, [('host', 'fdi'), ('serdes_host', 'fdi')]))
 
 
@@ -1265,6 +1513,7 @@ def main(argv=None):
     ap.add_argument('--kv-wq-head', action='store_true', help='candidate 216x648 binary ctl with one head capture edge')
     ap.add_argument('--kv-wq-wide', action='store_true', help='candidate 129.6um south-face leaf')
     ap.add_argument('--kv-wq-mirror', action='store_true', help='candidate single-layer mirror-legal wide leaf; head capture remains opt-in')
+    ap.add_argument('--split', action='store_true', help='qwen-split 2026-10-14: the KV/SYSTEM die of the two-die split (CONTRACT_KVSYS.md)')
     a = ap.parse_args(argv)
     a.kv_wq_wide = a.kv_wq_wide or a.kv_wq_mirror
     a.kv_wq_leaf_s = a.kv_wq_leaf_s or a.kv_wq_head or a.kv_wq_wide
@@ -1272,7 +1521,7 @@ def main(argv=None):
     a.kv_wq_leaves = a.kv_wq_leaves or a.kv_wq_binary
     if a.mode == 'case' and a.kv_wq_leaves and not a.kv_wq_mirror:
         ap.error('per-PC leaf candidate is plan-only: encoder and closed-view pin/context gates remain open')
-    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror)
+    m = build(a.r, kv_wq_leaves=a.kv_wq_leaves, kv_wq_binary=a.kv_wq_binary, kv_wq_leaf_s=a.kv_wq_leaf_s, kv_wq_head=a.kv_wq_head, kv_wq_wide=a.kv_wq_wide, kv_wq_mirror=a.kv_wq_mirror, split=a.split)
     if a.mode == 'case':
         m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
         print(json.dumps(case(m, a.out)))

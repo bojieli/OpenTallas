@@ -14,7 +14,7 @@
  ],
  "outline": {
   "w": 64.8,
-  "h": 21.6
+  "h": 23.76
  },
  "macros": [],
  "pins": {
@@ -39,8 +39,8 @@
  "job": {
   "owner": "Claude:hbmdie-lead",
   "branch": "claude/hbm-native-die-1013",
-  "tag": "v1",
-  "purpose": "HBM R25GQ die relay family: hbfd_rly_624_SN, one register stage of width class 624 b (in S / out N, ck + rs W), 64.8 x 21.6 um, M5 cap, pins at 2 tracks on one layer a face, flops at the pins, minimum output delay at the pin (outhold); replaces the generated per-instance relay station placeholders of its class (tools/hbm_die_rly_kits.py --map)",
+  "tag": "v2",
+  "purpose": "HBM R25GQ die relay family: hbfd_rly_624_SN, one register stage of width class 624 b (in S / out N, ck + rs W), 64.8 x 23.76 um, M5 cap, pins at 2 tracks on one layer a face, flops at the pins, minimum output delay at the pin (outhold); replaces the generated per-instance relay station placeholders of its class (tools/hbm_die_rly_kits.py --map)",
   "benches": [
    {
     "name": "exact_words",

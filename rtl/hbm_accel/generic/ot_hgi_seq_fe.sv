@@ -221,11 +221,13 @@ module ot_hgi_seq_fe #(
                              (db_entry_q == 2'd2) ? md_d_r[95:64] : kern_off, 4'd0};
     wire [39:0] img_a = {md_d_r[123:96], 12'd0};
     reg [20:0] img_l; reg [19:0] img_ha, img_hb;
+    // kern_off in two edges (s1 route 983266320: be_jl_kernel_r -> 11:1 x 32 select -> zero test -> 32-b add -> select was
+    // the block's only TT miss, -59.6 ps on 28 endpoints): edge 1 = the kernel-table select, edge 2 = zero test / add.
+    reg jl_v2, kpl_q; reg [31:0] kb_q, loff_q;
     always @(posedge clk) begin
-        if (be_jl_v_r) begin
-            db_entry_q <= be_jl_entry_r; pos0 <= (be_jl_pos_r == 20'd0);
-            kern_off <= (kern_base == 32'd0) ? 32'd0 : kern_pl ? kern_base + be_jl_loff_r : kern_base;
-        end
+        jl_v2 <= be_jl_v_r; kb_q <= kern_base; kpl_q <= kern_pl; loff_q <= be_jl_loff_r;
+        if (be_jl_v_r) begin db_entry_q <= be_jl_entry_r; pos0 <= (be_jl_pos_r == 20'd0); end
+        if (jl_v2) kern_off <= (kb_q == 32'd0) ? 32'd0 : kpl_q ? kb_q + loff_q : kb_q;
         img_l <= {1'b0, img_a[19:0]} + {1'b0, entry_off[19:0]};
         img_ha <= img_a[39:20]; img_hb <= entry_off[39:20];
         img_q <= {img_ha + img_hb + {19'd0, img_l[20]}, img_l[19:0]};
@@ -236,7 +238,12 @@ module ot_hgi_seq_fe #(
     reg [2:0]  fs;
     reg [RB:0] rp, rdp;                  // record header pointer / next ring word to read
     reg        ep;                       // FIFO epoch (a redirect drops older reads)
-    reg [2:0]  rv, rodd, rep;            // read pipe: valid, started at an odd word, epoch
+    reg [3:0]  rv, rodd, rep;            // read pipe: valid, started at an odd word, epoch (4 edges since s3: + rd_sec_q)
+    // s3 (s2 route 031099211: TT -55.2 on 50 endpoints, all rb_qq -> bank select x 256 -> word select -> FIFO entry
+    // select -> fqv, 14-15 levels launched 106 ps late beside the ring macros): the selected sector is registered once
+    // more before the FIFO.  The reader is credit-based (fcred at issue, returned at pop), so the pipe depth is free.
+    reg [255:0] rd_sec_q;
+    always @(posedge clk) rd_sec_q <= rd_sec;
     reg [FD*128-1:0] fqv;                // shift FIFO: word 0 is the head
     reg [4:0]  fq_n, fcred;              // words held / free credits (FD - held - in the read pipe)
     reg [FD+1:0] fq_th;                  // v2.3: thermometer copy of fq_n (fq_th[j] = j < fq_n), registered
@@ -338,18 +345,18 @@ module ot_hgi_seq_fe #(
     // ---- reader: one sector a cycle while the ring has it and the FIFO has room
     wire [RB:0] ravail = wv ? (wp - rdp) : {(RB+1){1'b0}};
     wire        rd_iss = run_f && !fe_flush && (ravail != {(RB+1){1'b0}}) && fcred >= 5'd2;
-    wire        push_ok = rv[2] && (rep[2] == ep) && !fe_flush;
-    wire [1:0]  sc = !push_ok ? 2'd0 : rodd[2] ? 2'd1 : 2'd2;
-    wire [127:0] pw0 = rodd[2] ? rd_sec[255:128] : rd_sec[127:0];
-    wire [127:0] pw1 = rd_sec[255:128];
+    wire        push_ok = rv[3] && (rep[3] == ep) && !fe_flush;
+    wire [1:0]  sc = !push_ok ? 2'd0 : rodd[3] ? 2'd1 : 2'd2;
+    wire [127:0] pw0 = rodd[3] ? rd_sec_q[255:128] : rd_sec_q[127:0];
+    wire [127:0] pw1 = rd_sec_q[255:128];
     // ---- loop-from-VM reply (BE)
     wire        lv_rsp = be_lv_v_r; wire [15:0] lv_rcnt = be_lv_cnt_r;
     // ---- FIFO data (no reset), v2.4 lazy shift: storage entry i takes storage word i + pq when i < fq_n (view kept),
     // pushed word 0 at i == fq_n, pushed word 1 at i == fq_n + 1.  Writes in a flush cycle are harmless (fq_th clears),
     // so the data path carries the raw push (no fe_flush cone).
     wire [FD+4:0] feq = {3'b000, fq_th[FD:0] & ~fq_th[FD+1:1], !fq_th[0]};    // feq[m] = (m == fq_n)
-    wire        push_raw = rv[2] && (rep[2] == ep);
-    wire [1:0]  scr = !push_raw ? 2'd0 : rodd[2] ? 2'd1 : 2'd2;
+    wire        push_raw = rv[3] && (rep[3] == ep);
+    wire [1:0]  scr = !push_raw ? 2'd0 : rodd[3] ? 2'd1 : 2'd2;
     wire [1:0]  pq_n = fe_flush ? 2'd0 : pc;
     genvar gi;
     generate for (gi = 0; gi < FD; gi = gi + 1) begin : g_fq
@@ -397,12 +404,12 @@ module ot_hgi_seq_fe #(
     integer fk;
     always @(posedge clk or negedge rn_f) begin
         if (!rn_f) begin
-            fs <= F_HALT; rp <= 0; rdp <= 0; frp <= 0; ep <= 1'b0; rv <= 3'b000; rodd <= 3'b000; rep <= 3'b000;
+            fs <= F_HALT; rp <= 0; rdp <= 0; frp <= 0; ep <= 1'b0; rv <= 4'b0000; rodd <= 4'b0000; rep <= 4'b0000;
             fq_n <= 5'd0; fcred <= FD; depth <= 2'd0; Lc <= 16'd0; L1c <= 16'd0; settle <= 2'd0; pi <= 4'd0;
             rd_ptr <= 0; rcl <= RC_DISC; rskip <= 1'b0;
         end else begin
             // reader pipe
-            rv <= {rv[1:0], rd_iss}; rodd <= {rodd[1:0], rdp[0]}; rep <= {rep[1:0], ep};
+            rv <= {rv[2:0], rd_iss}; rodd <= {rodd[2:0], rdp[0]}; rep <= {rep[2:0], ep};
             if (rd_iss) begin rd_ptr <= rdp; rdp <= {rdp[RB:1] + {{(RB-1){1'b0}}, 1'b1}, 1'b0}; end
             if (settle != 2'd0) settle <= settle - 2'd1;
             // FIFO occupancy / credits (pops return credits, issues take them)
@@ -522,7 +529,9 @@ module ot_hgi_seq_fe #(
         // S2 item: the flat it_d staging
         fe_s2i_d <= fe_it; fe_s2i_tag <= ctag; fe_s2i_slot <= fe_sl; fe_s2i_sut <= fe_sut; fe_s2i_np0 <= (hq_np == 3'd0);
         // S2 alloc: the header's entry (from the FIFO head at the header pop) or a FENCE / LOOP-from-VM entry (from h)
-        if (fe_halloc) begin
+        // (the header branch loads on the state decode alone, as the flat d_ld: the TX data only matter under fe_s2a_v,
+        // and the header decode -> fe_halloc -> 170 TX enables was the FE's longest stage, ~600 ps in the pre-route gate)
+        if (fs == F_H) begin
             fe_s2a_tag <= qt; fe_s2a_hdr <= hw; fe_s2a_kind <= q_akind;
             fe_s2a_rdy0 <= (hw_rc == RC_FLT) || (!hw_tmpl && hw_np == 3'd0); fe_s2a_L <= Lc; fe_s2a_L1 <= L1c;
         end else if (fe_aalloc) begin

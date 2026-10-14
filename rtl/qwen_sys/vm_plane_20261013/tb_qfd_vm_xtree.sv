@@ -192,7 +192,7 @@ module tb_qfd_vm_xtree #(
             if (bad != 0)
                 $display("FAIL qfd_vm_xtree first=%0d bad=%0d of %0d XMUT=%0d", first, bad, n_chk, XMUT);
             else if (n_chk < CYCLES / 2 || n_stall < CYCLES / 8 || n_upd < CYCLES / 16 || n_now < CYCLES / 16 || lo_d < 8 ||
-                     lo_j < 8 || lo_ws < 8 || lo_rs < 8 || n_ctchg < CYCLES / 4 || n_fchg < CYCLES / 16)
+                     lo_j < 8 || lo_ws < 8 || lo_rs < 8 || n_ctchg < CYCLES / 4 || n_fchg < 64 || n_fchg * 4 < n_upd)
                 $display("FAIL qfd_vm_xtree VACUOUS checks=%0d stalls=%0d xq_updates=%0d bounded_writes=%0d min_d=%0d min_j=%0d min_wsp=%0d min_rsp=%0d ctl_changes=%0d face_changes=%0d",
                          n_chk, n_stall, n_upd, n_now, lo_d, lo_j, lo_ws, lo_rs, n_ctchg, n_fchg);
             else

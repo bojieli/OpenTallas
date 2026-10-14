@@ -172,6 +172,14 @@ class Analyze(unittest.TestCase):
         rec = PA.analyze(ins[:2], [("n", "data", 8, [("a", "o"), ("b", "i")])], self.lefs, names)
         self.assertEqual(rec["by_order"], {"reversed": 1})
 
+    def test_inset_face_pins_are_face_pins(self):
+        a = lef("A", 50.0, 20.0, [(f"o[{i}]", "M4", 49.4, 5 + i * 0.096, 49.6, 5.024 + i * 0.096) for i in range(8)])   # 0.4 um inset
+        b = lef("B", 50.0, 20.0, [(f"i[{i}]", "M4", 0.4, 5 + i * 0.096, 0.6, 5.024 + i * 0.096) for i in range(8)])
+        c = lef("C", 50.0, 20.0, [(f"i[{i}]", "M8", 20.0, 5 + i * 0.096, 20.2, 5.024 + i * 0.096) for i in range(8)])   # interior
+        rec = PA.analyze([_It("a", "A", 0, 0), _It("b", "B", 80, 0), _It("c", "C", 80, 40)],
+                         [("n", "data", 8, [("a", "o"), ("b", "i"), ("c", "i")])], [a, b, c])
+        self.assertEqual(rec["by_kind"], {"straight": 1, "area": 1})
+
     def test_later_lef_overrides(self):
         moved = lef("B", 50.0, 20.0, [(f"i[{i}]", "M4", 0.0, 10 + i * 0.096, 0.1, 10.024 + i * 0.096) for i in range(8)])
         rec = PA.analyze([_It("a", "A", 0, 0), _It("b", "B", 80, 0)], [("n", "data", 8, [("a", "o"), ("b", "i")])],

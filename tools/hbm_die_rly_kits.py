@@ -13,7 +13,8 @@ A per-instance master cannot be hardened; a WIDTH CLASS can:
     2 x hbfd_rly_1136), each on its own leaf of the region clock tree;
   * pins: one layer a face at 2 tracks a bit under the M5 cap (M4 on E / W, M5 on N / S), so the data face is
     Wc x 0.096 um + 4.32 um long (the generator's station face is 0.048 um a bit + 20 um, i.e. one pin on EVERY track
-    of one layer: not buildable; this is the slot change the family asks of the next preset), 21.6 um deep;
+    of one layer: not buildable; this is the slot change the family asks of the next preset), 21.6 um deep (N-S strips
+    of the classes >= 304 b: 23.76 um, see depth()); the v13 preset r25gqn_v13 places its stations at these outlines;
   * ck / rs on a third face; flops at the pins; minimum output delay built at the output pins (outhold).
 
 NOT in this family (reported by --map): forwarded-clock link stages (a, b, rst and no ck: the clock rides in the bus,
@@ -47,9 +48,21 @@ def face_len(w: int) -> float:
     return max(DEPTH, round(math.ceil((w * PIN_UM + MARGIN) / LAT - 1e-9) * LAT, 2))
 
 
+def depth(w: int, flow: str) -> float:
+    """strip depth along the flow.  v2 (10-13): the N-S strips of the classes >= 304 b are 23.76 um deep -- their v1
+    kits (recipe 2: flops and hold cells at both pin faces) were 61.1-61.5 % utilised at 21.6 um (FLOORPLAN_MARGIN,
+    limit 60 %); +2.16 um gives 54-56 %.  The E-W strips of those classes (recipe 1 + outhold) and every class
+    <= 136 b closed at 21.6 um and stand."""
+    return 23.76 if (flow in ("SN", "NS") and w >= 304) else DEPTH
+
+
+def tag(w: int, flow: str) -> str:
+    return "v2" if depth(w, flow) != DEPTH else "v1"
+
+
 def outline(w: int, flow: str) -> dict:
     ln = face_len(w)
-    return {"w": DEPTH, "h": ln} if flow in ("WE", "EW") else {"w": ln, "h": DEPTH}
+    return {"w": depth(w, flow), "h": ln} if flow in ("WE", "EW") else {"w": ln, "h": depth(w, flow)}
 
 
 def master(w: int, flow: str) -> str:
@@ -93,7 +106,7 @@ def spec(w: int, flow: str, owner: str, branch: str) -> dict:
         # (child_lint (b); the S81 relay family closed at this pitch)
         "route": {"pd": 0.45, "threads": 4, "peak_ram_gb": 8, "m5_pg_pitch": 2.7},
         "job": {
-            "owner": owner, "branch": branch, "tag": "v1",
+            "owner": owner, "branch": branch, "tag": tag(w, flow),
             "purpose": f"HBM R25GQ die relay family: {mst}, one register stage of width class {w} b (in {fi} / out {fo}, "
                        f"ck + rs {cf}), {o['w']} x {o['h']} um, M5 cap, pins at 2 tracks on one layer a face, flops at "
                        "the pins, minimum output delay at the pin (outhold); replaces the generated per-instance relay "

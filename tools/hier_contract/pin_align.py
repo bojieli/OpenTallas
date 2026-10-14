@@ -79,6 +79,7 @@ NORMAL = {"E": (1, 0), "W": (-1, 0), "N": (0, 1), "S": (0, -1)}
 FLIP_X = {"E": "W", "W": "E", "N": "N", "S": "S", None: None}
 FLIP_Y = {"N": "S", "S": "N", "E": "E", "W": "W", None: None}
 EPS = 0.0015
+FACE_TOL_UM = 1.0                # a pin within 1 um of an edge is a face pin (inset face pins)
 JOG_BINS = (0.048, 5.0, 20.0, 36.0, 100.0)                       # um: straight-bundle max jog histogram edges
 JOG_BINS_LABEL = ("<= 1 track", "<= 5", "<= 20", "<= 36", "<= 100", "> 100")
 _PSL = re.compile(r"^(.*)\[(\d+):(\d+)\]$")
@@ -146,16 +147,12 @@ def read_pins(lef_texts, want=None):
 
 
 def _face(r, W, H):
+    """the face a pin rect belongs to: the nearest macro edge within FACE_TOL_UM (generated abstracts inset their
+    face pins: dsrom_s81_fulldie --face-pin-inset), else None (an area pin)"""
     _, x0, y0, x1, y1 = r
-    if y0 <= EPS:
-        return "S"
-    if y1 >= H - EPS:
-        return "N"
-    if x0 <= EPS:
-        return "W"
-    if x1 >= W - EPS:
-        return "E"
-    return None
+    d = {"S": y0, "N": H - y1, "W": x0, "E": W - x1}
+    f = min(d, key=d.get)
+    return f if d[f] <= FACE_TOL_UM else None
 
 
 def place(it, w, h, p):

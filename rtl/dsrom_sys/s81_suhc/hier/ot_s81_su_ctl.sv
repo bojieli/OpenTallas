@@ -22,22 +22,26 @@ module ot_s81_su_pin #(
     output reg  [KR*14-1:0]   rq_row,
     input  wire [KR-1:0]      rs_v,
     input  wire [KR*512-1:0]  rs_d,
-    output reg  [KW-1:0]      wq_v,
+    (* keep = "true" *) output reg  [KW-1:0]      wq_v,
     output reg  [KW*14-1:0]   wq_row,
     output reg  [KW*16-1:0]   wq_mask,
     output reg  [KW*512-1:0]  wq_d,
-    output reg  [KR-1:0]      dn_v,
-    output reg  [KR*512-1:0]  dn_d,
+    (* keep = "true" *) output reg  [KR-1:0]      dn_v,
+    (* keep = "true" *) output reg  [KR*512-1:0]  dn_d,
     input  wire [KW-1:0]      up_v,
     input  wire [KW*14-1:0]   up_a,
     input  wire [KW*16-1:0]   up_m,
     input  wire [KW*512-1:0]  up_d,
     input  wire [KR-1:0]      c_rq_v,
     input  wire [KR*14-1:0]   c_rq_row,
-    output reg  [KR-1:0]      c_rv,
-    output reg  [KR*30-1:0]   c_rf,
-    output reg  [KW-1:0]      c_uv
+    (* keep = "true" *) output reg  [KR-1:0]      c_rv,
+    (* keep = "true" *) output reg  [KR*30-1:0]   c_rf,
+    (* keep = "true" *) output reg  [KW-1:0]      c_uv
 );
+    // ONE FLOP A PIN (el1013-s81su, pin rt2 TT -10.55): dn_v / c_rv, wq_v / c_uv and c_rf / dn_d[..] register the same value for
+    // ports on different faces; synthesis merged each pair into one flop, whose second port was then 213 ps of wire +
+    // the output hold stage away.  The twins are (* keep *) registers (physical/common_flow/ot_keep_regs.tcl keeps the
+    // flop cells), so every output port has its own flop at its own pin.  Function unchanged.
     reg rr0, rr1;
     always @(posedge clk or negedge rst_in) if (!rst_in) begin rr0 <= 1'b0; rr1 <= 1'b0; end else begin rr0 <= 1'b1; rr1 <= rr0; end
     wire rst_n = rr1;
@@ -65,7 +69,7 @@ endmodule
 
 module ot_s81_su_ctl #(
     parameter integer QN_N = 256, KV_N = 512, QB_NB = 32, SW_W = 1024, SM_H = 16, SM_LPH = 16,
-    parameter integer S_RD = 16, S_WR = 16, NSW = 8, NQB = 4, NQN = 2, NKV = 2, MUT = 0, AMUT = 0
+    parameter integer S_RD = 16, S_WR = 16, NSW = 8, NQB = 4, NQN = 2, NKV = 2, MUT = 0, AMUT = 0, QRW = 2
 ) (
     input  wire                cck, crs,
     input  wire                sk, srs,
@@ -129,7 +133,7 @@ module ot_s81_su_ctl #(
     wire [31:0] jobs;
     wire        bsy;
     ot_s81_su_hctl #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
-                     .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(NQB), .NQN(NQN), .NKV(NKV), .MUT(MUT)) u_core (
+                     .S_RD(S_RD), .S_WR(S_WR), .NSW(NSW), .NQB(NQB), .NQN(NQN), .NKV(NKV), .MUT(MUT), .QRW(QRW)) u_core (
         .clk(sk), .rst_n(s1), .e_cmd_v(e_v), .e_cmd_d(e_d), .e_cmd_ready(e_r), .e_done_v(d_v), .e_done_tag(d_t),
         .rq_v(p_rq_v), .rq_row(p_rq_row), .rs_v(rv_q), .rs_f(rf_q), .busy(bsy), .fault(c_flt), .fault_code(fcode),
         .st_jobs(jobs),

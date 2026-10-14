@@ -38,6 +38,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import shlex
 import sys
@@ -146,10 +147,21 @@ QWEN_TP8A = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(2, 10), row_gap=669.6, 
 # slot (column pitch 394.848 = slot + 83.8-um column channel; row gap 190.08), 3 compact bands of 16 blocks, the spine
 # widened to 4,589 um (KV-centre sub-column), KV-die halves 3.7 mm + 100-um channel on the W / E edges, all IO in one S
 # band under a 400-um IO word channel (qwen_rom_fulldie_b3r2._tp8b_f2)
-QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=190.08, tile_body=311.04, tile_h=1296.0,
+# r8 (coordinator DECISION 2026-10-13, tile growth): the tile slot grows 21.6 um (rpair 648 + kvl 108 + lsl 561.6 = 1,317.6)
+# and the row gap gives it back (190.08 -> 168.48): row pitch 1,486.08 and the die height (25,870.32 < 26.0 mm) are
+# unchanged; the tiles are M5-capped, so die M6 over the tile field carries horizontal buses (tile_m6: cuts.py
+# CLUSTER_PLAN 'M6'); relay sites stay in the row gaps / column corridors
+QWEN_TP8B = dict(QWEN_R22KO4, tp8=dict(bands=3, ch_rows=(1, 15), row_gap=168.48, tile_body=311.04, tile_h=1317.6,
                                        spine_gap=171.936, root_spread=True,
                                        f2=dict(cols=48, rows=16, col_pitch=394.848, spine_w=4589.0, kv_w=3700.0,
-                                               kv_ch=100.0, io_chan=480.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4)))
+                                               kv_ch=100.0, io_chan=480.0, crom_ch=151.2, kv=True, w_ch=200.0, ab_ch=400.0, host_serdes=True, host_serdes_w=2400.0, io_gap=4.32, kvc_east=True, kv_xch=86.4, tile_m6=True, v5=True)))
+# r10 (coordinator 2026-10-13 18:30, q15 / q17 tile stream): the tile PARENT as submitted (qfd_tile_nk_r5-fp1-63e7ca004) is
+# 362.88 x 1,442.88.  OT_TP8_TILE="body,height,row_gap,col_pitch" builds the die with that slot (pathfinding variant: the
+# station corridor needs 52.68 um, so the column pitch grows with the body; the row pitch 1,486.08 is kept)
+if os.environ.get('OT_TP8_TILE'):
+    _tb, _th, _rg, _cp = (float(q) for q in os.environ['OT_TP8_TILE'].split(','))
+    QWEN_TP8B['tp8'] = dict(QWEN_TP8B['tp8'], tile_body=_tb, tile_h=_th, row_gap=_rg,
+                            f2=dict(QWEN_TP8B['tp8']['f2'], col_pitch=_cp))
 R22K_FAMILY = ('r22k', 'r22kcs', 'r22ks', 'r22ko4', 'r22ksv', 'tp8a', 'tp8b')
 QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
                 'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
@@ -2546,6 +2558,12 @@ def run_pin_align(die, out, tag='', views_json=None):
     """mode pin_align: build the die model, write <out>/<die><tag>_pin_align.json; exit code 1 on FAIL (gate mode fail)"""
     m, pw, M, tool = build(die)
     R8_ACTIVE[0] = die.startswith('s81r8')
+    GLUE_CASE[0] = None
+    if R8_ACTIVE[0]:          # as run_lint: the r8 glue masters are bound from the case's own glue RTL
+        out.mkdir(parents=True, exist_ok=True)
+        gp_ = (out / f'{die}{tag}_glue.sv').resolve()
+        gp_.write_text(S.glue_rtl(m))
+        GLUE_CASE[0] = str(gp_)
     real = real_blocks(die, m)
     views = {}
     if views_json:

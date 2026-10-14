@@ -10,7 +10,9 @@ module ot_qwen_nearhbm_attn_hub #(
     parameter integer HD = 128,
     parameter integer ADD_LAT = 7,
     parameter integer MUL_LAT = 6,
-    parameter integer ZW = 4
+    parameter integer ZW = 4,
+    // Number of four-query-head groups: historical TP4=2, native TP8=1.
+    parameter integer HEADS = 2
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -41,6 +43,14 @@ module ot_qwen_nearhbm_attn_hub #(
     output reg           fault,
     output wire [7:0]    ev
 );
+`ifndef SYNTHESIS
+    initial begin
+        if (HEADS != 1 && HEADS != 2) $fatal(1, "attention hub HEADS must be 1 or 2");
+    end
+`endif
+    // Keep the interface stable; a one-group profile never accepts dummy group 1.
+    wire [3:0] si_active = si_valid & ((HEADS == 1) ? ~si_g : 4'b1111);
+    wire [3:0] pi_active = pi_valid & ((HEADS == 1) ? ~pi_g : 4'b1111);
     localparam integer NBEAT = 4 * HD / 16;
     localparam integer BPH = HD / 16;
     wire [15:0] pf;
@@ -55,7 +65,7 @@ module ot_qwen_nearhbm_attn_hub #(
     reg [7:0]  lany;                             // {g, s}
     reg [4:0]  lcnt0, lcnt1;
     reg [1:0]  msent;
-    wire       mg = msent[0];                    // the g being sent
+    wire       mg = (HEADS == 1) ? 1'b0 : msent[0];                    // the g being sent
     reg [2:0]  mh;
     // pipelined: A reads the 4 stacks' local maxima of (g, h), B and C compare pairwise (order-free: max is exact)
     wire       mready = !msent[mg] && (mg ? (lcnt1 == 5'd16) : (lcnt0 == 5'd16));
@@ -94,18 +104,18 @@ module ot_qwen_nearhbm_attn_hub #(
             if (start) begin lcnt0 <= 0; lcnt1 <= 0; lany <= 0; msent <= 0; mh <= 0; end
             else begin
                 for (s_ = 0; s_ < 4; s_ = s_ + 1)
-                    if (si_valid[s_] && si_type[2*s_ +: 2] == 2'd0) begin
+                    if (si_active[s_] && si_type[2*s_ +: 2] == 2'd0) begin
                         lm[{si_g[s_], s_[1:0], si_hh[2*s_ +: 2]}] <= si_data[32*s_ +: 32];
                         if (si_any[s_]) lany[4*si_g[s_] + s_] <= 1'b1;
                     end
-                lcnt0 <= lcnt0 + ((si_valid[0] && si_type[1:0] == 0 && !si_g[0]) ? 1 : 0)
-                               + ((si_valid[1] && si_type[3:2] == 0 && !si_g[1]) ? 1 : 0)
-                               + ((si_valid[2] && si_type[5:4] == 0 && !si_g[2]) ? 1 : 0)
-                               + ((si_valid[3] && si_type[7:6] == 0 && !si_g[3]) ? 1 : 0);
-                lcnt1 <= lcnt1 + ((si_valid[0] && si_type[1:0] == 0 && si_g[0]) ? 1 : 0)
-                               + ((si_valid[1] && si_type[3:2] == 0 && si_g[1]) ? 1 : 0)
-                               + ((si_valid[2] && si_type[5:4] == 0 && si_g[2]) ? 1 : 0)
-                               + ((si_valid[3] && si_type[7:6] == 0 && si_g[3]) ? 1 : 0);
+                lcnt0 <= lcnt0 + ((si_active[0] && si_type[1:0] == 0 && !si_g[0]) ? 1 : 0)
+                               + ((si_active[1] && si_type[3:2] == 0 && !si_g[1]) ? 1 : 0)
+                               + ((si_active[2] && si_type[5:4] == 0 && !si_g[2]) ? 1 : 0)
+                               + ((si_active[3] && si_type[7:6] == 0 && !si_g[3]) ? 1 : 0);
+                lcnt1 <= lcnt1 + ((si_active[0] && si_type[1:0] == 0 && si_g[0]) ? 1 : 0)
+                               + ((si_active[1] && si_type[3:2] == 0 && si_g[1]) ? 1 : 0)
+                               + ((si_active[2] && si_type[5:4] == 0 && si_g[2]) ? 1 : 0)
+                               + ((si_active[3] && si_type[7:6] == 0 && si_g[3]) ? 1 : 0);
                 if (mready) begin
                     if (mh == 3'd3) begin mh <= 0; msent[mg] <= 1'b1; end else mh <= mh + 3'd1;
                 end
@@ -181,7 +191,7 @@ module ot_qwen_nearhbm_attn_hub #(
             if (zwi[7*z + 6])
                 for (h_ = 0; h_ < 4; h_ = h_ + 1) zm[{zg, h_[1:0], zwi[7*z +: 6]}] <= zy[32*(4*z + h_) +: 32];
         for (s_ = 0; s_ < 4; s_ = s_ + 1)
-            if (si_valid[s_] && si_type[2*s_ +: 2] == 2'd1)
+            if (si_active[s_] && si_type[2*s_ +: 2] == 2'd1)
                 zm[{si_g[s_], si_hh[2*s_ +: 2], si_k[4*s_ +: 4], s_[1:0]}] <= si_data[32*s_ +: 32];
         if (rvo) rz[{rg_out, rcnt[1:0]}] <= ry;
     end
@@ -197,24 +207,24 @@ module ot_qwen_nearhbm_attn_hub #(
                     if (zwi[7*z + 6])
                         for (h_ = 0; h_ < 4; h_ = h_ + 1) zv[{zg, h_[1:0], zwi[7*z +: 6]}] <= 1'b1;
                 for (s_ = 0; s_ < 4; s_ = s_ + 1)
-                    if (si_valid[s_] && si_type[2*s_ +: 2] == 2'd1) zv[{si_g[s_], si_hh[2*s_ +: 2], si_k[4*s_ +: 4], s_[1:0]}] <= 1'b1;
+                    if (si_active[s_] && si_type[2*s_ +: 2] == 2'd1) zv[{si_g[s_], si_hh[2*s_ +: 2], si_k[4*s_ +: 4], s_[1:0]}] <= 1'b1;
             end
             if (|zerr || (rvo && rfault) || (|pf)) fault <= 1'b1;
             if (start) begin
                 zdc0 <= 0; zdc1 <= 0; zrun <= 1'b0; zg <= 1'b0; zdone_tree <= 2'b00; rz_ok <= 2'b00; rcnt <= 0;
                 zwait_recip <= 1'b0; fault <= 1'b0;
             end else begin
-                zdc0 <= zdc0 + ((si_valid[0] && si_type[1:0] == 2 && !si_g[0]) ? 1 : 0)
-                             + ((si_valid[1] && si_type[3:2] == 2 && !si_g[1]) ? 1 : 0)
-                             + ((si_valid[2] && si_type[5:4] == 2 && !si_g[2]) ? 1 : 0)
-                             + ((si_valid[3] && si_type[7:6] == 2 && !si_g[3]) ? 1 : 0);
-                zdc1 <= zdc1 + ((si_valid[0] && si_type[1:0] == 2 && si_g[0]) ? 1 : 0)
-                             + ((si_valid[1] && si_type[3:2] == 2 && si_g[1]) ? 1 : 0)
-                             + ((si_valid[2] && si_type[5:4] == 2 && si_g[2]) ? 1 : 0)
-                             + ((si_valid[3] && si_type[7:6] == 2 && si_g[3]) ? 1 : 0);
+                zdc0 <= zdc0 + ((si_active[0] && si_type[1:0] == 2 && !si_g[0]) ? 1 : 0)
+                             + ((si_active[1] && si_type[3:2] == 2 && !si_g[1]) ? 1 : 0)
+                             + ((si_active[2] && si_type[5:4] == 2 && !si_g[2]) ? 1 : 0)
+                             + ((si_active[3] && si_type[7:6] == 2 && !si_g[3]) ? 1 : 0);
+                zdc1 <= zdc1 + ((si_active[0] && si_type[1:0] == 2 && si_g[0]) ? 1 : 0)
+                             + ((si_active[1] && si_type[3:2] == 2 && si_g[1]) ? 1 : 0)
+                             + ((si_active[2] && si_type[5:4] == 2 && si_g[2]) ? 1 : 0)
+                             + ((si_active[3] && si_type[7:6] == 2 && si_g[3]) ? 1 : 0);
                 if (!zrun && !zwait_recip) begin
                     if (!zdone_tree[0] && zdc0 == 3'd4) begin zrun <= 1'b1; zg <= 1'b0; zl <= 3'd1; zp <= 0; zwt <= 0; end
-                    else if (zdone_tree[0] && !zdone_tree[1] && zdc1 == 3'd4) begin
+                    else if (HEADS == 2 && zdone_tree[0] && !zdone_tree[1] && zdc1 == 3'd4) begin
                         zrun <= 1'b1; zg <= 1'b1; zl <= 3'd1; zp <= 0; zwt <= 0;
                     end
                 end else if (zrun) begin
@@ -247,7 +257,7 @@ module ot_qwen_nearhbm_attn_hub #(
     reg [1:0]   pdone;
     always @(posedge clk) begin
         for (s_ = 0; s_ < 4; s_ = s_ + 1)
-            if (pi_valid[s_]) pb[{pi_g[s_], s_[1:0], pi_beat[6*s_ +: 5]}] <= pi_data[512*s_ +: 512];
+            if (pi_active[s_]) pb[{pi_g[s_], s_[1:0], pi_beat[6*s_ +: 5]}] <= pi_data[512*s_ +: 512];
     end
     wire p_ready = rz_ok[pg] && !pdone[pg] && (pc[{pg, 2'd0}] > pp) && (pc[{pg, 2'd1}] > pp) &&
                    (pc[{pg, 2'd2}] > pp) && (pc[{pg, 2'd3}] > pp);
@@ -255,9 +265,9 @@ module ot_qwen_nearhbm_attn_hub #(
         if (!rst_n) begin pg <= 1'b0; pp <= 0; pdone <= 2'b00; for (i_ = 0; i_ < 8; i_ = i_ + 1) pc[i_] <= 0; end
         else if (start) begin pg <= 1'b0; pp <= 0; pdone <= 2'b00; for (i_ = 0; i_ < 8; i_ = i_ + 1) pc[i_] <= 0; end
         else begin
-            for (s_ = 0; s_ < 4; s_ = s_ + 1) if (pi_valid[s_]) pc[{pi_g[s_], s_[1:0]}] <= pc[{pi_g[s_], s_[1:0]}] + 6'd1;
+            for (s_ = 0; s_ < 4; s_ = s_ + 1) if (pi_active[s_]) pc[{pi_g[s_], s_[1:0]}] <= pc[{pi_g[s_], s_[1:0]}] + 6'd1;
             if (p_ready) begin
-                if (pp == NBEAT - 1) begin pp <= 0; pdone[pg] <= 1'b1; pg <= 1'b1; end
+                if (pp == NBEAT - 1) begin pp <= 0; pdone[pg] <= 1'b1; pg <= (HEADS == 2); end
                 else pp <= pp + 6'd1;
             end
         end

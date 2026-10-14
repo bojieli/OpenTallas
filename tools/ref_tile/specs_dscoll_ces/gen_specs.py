@@ -187,6 +187,10 @@ def view(key):
     return f"physical/ref_tile/dscoll_{key}/views/{LEAVES[key]['top']}"
 
 
+def ioref(name):
+    return f"physical/redesign_ds/coll_split/{name}_child_ioref.sdc"
+
+
 def cluster_spec(s0):
     core, cesp = ("cesc0", "cesp0") if s0 else ("cescn", "cespn")
     name, top = ("dscoll_ces0_sp", "dsfd_coll_ces0") if s0 else ("dscoll_cesn_sp", "dsfd_coll_cesn")
@@ -198,7 +202,22 @@ def cluster_spec(s0):
     return {"name": name, "top": top, "kind": "cluster", "sources": SRC, "defines": ["OT_S81PH_COLL_CES_SPLIT"],
             "clock_port": "ck", "reset_ports": ["rs"], "outline": {"w": CL_W, "h": CL_H}, "child_lattice_um": 8.64,
             "children": kids, "pins": pins, "pin_ranges": {k: v for k, v in CL_RANGES.items() if k in sum(pins.values(), [])},
-            "route": {"pd": 0.3, "threads": 8, "peak_ram_gb": 32}, "structural_change": STRUCT,
+            # E / W pins on M4 only, as the leaves' own E / W faces (straight M4 from the cluster edge to the relay pins): with
+            # 'M4 M6' PPL placed the 845-b / 1,304-b groups in fallback mode outside their ranges (PPL-0102 x1000, PPL-0107)
+            "route": {"pd": 0.3, "threads": 8, "peak_ram_gb": 32, "pin_h": "M4"}, "structural_change": STRUCT,
+            # clock entry: the spine balances every child clock pin to that child's ROUTED boundary insertion R
+            # (views/<child>/insertion.json tt.boundary.mean: core 322 / 312, relays 127-166, lane 114, output 98 ps);
+            # the cluster has no register, so its IO reference is child clock pin + R (wires_only_ioref.py)
+            "child_clock_ref": "boundary", "sdc_extra": [ioref(name)], "boundary_tcl": [ioref(name)],
+            "slot_change_request": "el1011-s81die.log 2026-10-13 07:37 + 17:40 (s81-cesn): sp_collective/ce_s* slot "
+                                   "302.4 x 341.28 (flat lane-slice, M5) -> 432.0 x 345.6 hardened cluster of M5 leaves "
+                                   "(parent routes M6 / M7 over them, PG M7, strap M8); pin faces N q / W xl / E tx+pt / S bw",
+            **({"reroute_reason": {"kind": "rtl_change",
+                                   "why": "the four lane-slices of a collective run one seam latency LSEAM in lockstep "
+                                          "(asserted): the split cesn (flat cesn missed hold in three routes at 22.8k "
+                                          "sinks / root) needs ces0 built from the same leaves; the closed flat ces0 "
+                                          "(dscoll_ces0_cxsp d8b0f7a0e) has no seam stage and cannot pair with it"}}
+               if s0 else {}),
             "why_floorplan": "wires-only parent: 10 hard leaves, no register and no logic of its own; outline set by the "
                              "leaves and their >= 20 um channels (see gen_specs.py CLUSTER)",
             "job": {"owner": "Claude:s81-cesn-1013", "branch": "claude/s81-cesn-1013", "tag": "sp1",
@@ -219,6 +238,9 @@ def main():
         p.write_text(json.dumps(c, indent=1) + "\n")
         missing = [k["view"] for k in c["children"] if not (ROOT / k["view"]).is_dir()]
         print("wrote", p.relative_to(ROOT), f"(kit NOT generable yet: {len(set(missing))} child views missing)" if missing else "")
+        if not missing:      # the IO reference literals come from the child views: regenerate with them
+            import subprocess
+            subprocess.run([sys.executable, str(ROOT / "tools/ref_tile/wires_only_ioref.py"), str(p), str(ROOT / ioref(c["name"]))], check=True)
     return 0
 
 

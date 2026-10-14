@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper/ot_qfd_band_upper.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/qfd_tt_up4_leaf-lf1-421afad00/record/views/ot_qfd_band_upper/ot_qfd_band_upper.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 779 of 805 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. clk M5 (61.584,205.045), rst_n M5 (61.584,205.045), fault M6 (64.645,64.448))"
+  "(f) face-pin access: 777 of 805 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. fault M5 (57.600,204.037), tt_use M5 (57.600,204.037), tt_v M5 (57.600,204.037))"
  ],
- "summary": "ot_qfd_band_upper 64.8 x 205.2: PG M6 VDD 19 stripes (95% spread, 100% cov) / VSS 19 stripes (95% spread, 100% cov); strap M7; face pins 805 blocked-above 0 blocked-same 0; clock clk insertion 236 ps",
+ "summary": "ot_qfd_band_upper 64.8 x 205.2: PG M5 VDD 12 stripes (92% spread, 100% cov) / VSS 12 stripes (92% spread, 100% cov); strap M6; face pins 805 blocked-above 0 blocked-same 0; clock clk insertion 240 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_qfd_band_upper",
   "W": 64.8,
@@ -14,51 +14,63 @@
   "pg": {
    "nets": {
     "VDD": {
-     "top_layer": "M6",
-     "stripes": 19,
-     "dir": "H",
-     "spread": 0.947,
+     "top_layer": "M5",
+     "stripes": 12,
+     "dir": "V",
+     "spread": 0.917,
      "coverage": 1.0,
-     "shapes_on_top": 19
+     "shapes_on_top": 12
     },
     "VSS": {
-     "top_layer": "M6",
-     "stripes": 19,
-     "dir": "H",
-     "spread": 0.947,
+     "top_layer": "M5",
+     "stripes": 12,
+     "dir": "V",
+     "spread": 0.917,
      "coverage": 1.0,
-     "shapes_on_top": 19
+     "shapes_on_top": 12
     }
    },
-   "top_layer": "M6",
+   "top_layer": "M5",
    "ok": true,
    "why": []
   },
-  "pg_layer": "M6",
-  "strap_layer": "M7",
+  "pg_layer": "M5",
+  "strap_layer": "M6",
   "cap": null,
   "face": {
    "face_pins": 805,
    "blocked_above": 0,
-   "covered_below": 100,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 779,
+   "band_same": 777,
    "band_examples": [
-    "clk M5 (61.584,205.045)",
-    "rst_n M5 (61.584,205.045)",
-    "fault M6 (64.645,64.448)",
-    "tt_ty[0] M6 (64.645,64.448)",
-    "tt_ty[10] M6 (64.645,64.448)",
-    "tt_ty[11] M6 (64.645,64.448)"
+    "fault M5 (57.600,204.037)",
+    "tt_use M5 (57.600,204.037)",
+    "tt_v M5 (57.600,204.037)",
+    "lf[0] M5 (59.424,0.016)",
+    "lf[1] M5 (59.424,0.016)",
+    "lf[2] M5 (59.424,0.016)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 236.06,
-    "min_ps": 178.48
+    "max_ps": 239.6,
+    "min_ps": 180.58
    }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 993
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }

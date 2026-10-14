@@ -144,6 +144,26 @@ HC_ROW_SECT = 8 * HC_RS              # sectors of one fn row (2,560 = 81,920 B =
 HC_SET_BYTES = (4 + 24 * HC_ROW_SECT) * 32
 HC_STRIPE_LOC = 30 << 30             # STRIPE4 HC rows: stack-local base (24 GiB) of the striped row region (4 stacks)
 HC_STRIPE = {}                       # stack-local row base -> (layer, which, row o)
+# Physical stack capacity: the die's loader / DMA engines refuse a stack-local byte address >= STACK_BYTES
+# (rtl ot_hbm_loader_service_join / ot_hgi_dma_back STACK_BYTES = 22,500,000,000 = 20.95 GiB; stack = address [36:35]).
+STACK_BYTES = 22_500_000_000
+# DATA WINDOW (2026-10-13): stack-local [DATA_WIN, DATA_WIN + DATA_WIN_BYTES) is reserved ON EVERY STACK for data rows
+# that live on all four stacks (the MTP column slots: ds_mtp_kernels.COLB).  Inside the physical capacity; the weight
+# manifest (stack 2 upwards) skips it (Manifest.place), a fixed-base extent in it is refused.  NOT yet moved into it
+# (their owners regenerate vectors): the HC stripe rows -- HC_STRIPE_LOC = stack-local 30 GiB is ABOVE STACK_BYTES, so
+# the real die's loader address check refuses every HC row prefetch; the first 256 MiB of the window is kept for them.
+DATA_WIN = 20 << 30
+DATA_WIN_BYTES = 512 << 20
+assert DATA_WIN + DATA_WIN_BYTES <= STACK_BYTES
+
+
+def data_window_hit(base, size):
+    """end of the reserved data window that [base, base + size) intersects on some stack, else None"""
+    for s_ in range(4):
+        lo = (s_ << 35) + DATA_WIN
+        if base < lo + DATA_WIN_BYTES and lo < base + size:
+            return lo + DATA_WIN_BYTES
+    return None
 # E-HOME (owner rule, lead GO 10-10): each Engram table lives in the HBM of 4 home dies (layer 1: ranks 0-3, layer 14:
 # ranks 4-7), 288 B rows {256 B E4M3 codes | 8 B UE8M0 | 24 B 0}, rows split contiguously over the 4 homes
 EG_HOMES = [[0, 1, 2, 3], [4, 5, 6, 7]]
@@ -307,6 +327,10 @@ class Manifest:
             base = -(-base // 544) * 544
             ex = dict(lines=True, gk=gk, gbytes=8 * SM_LB)
         size = rb * rows * n_experts
+        skip = data_window_hit(base, size)
+        if skip is not None:                 # the extent would cross a stack's reserved data window: place it after
+            base = -(-skip // 544) * 544 if lines else skip
+            assert data_window_hit(base, size) is None, (key, base, size)
         if base + size > MAN_END:
             raise MC.Fault(3, f"per-die HBM footprint: {key} ends at {(base + size) / 2**30:.1f} GiB > the "
                               f"{MAN_END / 2**30:.0f} GiB manifest window of the die's 128 GiB")
@@ -319,10 +343,17 @@ class Manifest:
 
     def place_at(self, key, base, rows, cols, fmt):
         """a fixed-base extent (IKS key regions: row-aligned, independent of placement order)"""
+        if data_window_hit(base, int(-(-cols * ESZ[fmt] // 32) * 32) * rows) is not None:
+            raise MC.Fault(3, f"fixed-base extent {key} at {base:#x} lies in a stack's reserved data window")
         rb = -(-int(cols * ESZ[fmt]) // 32) * 32
         e = dict(key=key, base=base, rows=rows, cols=cols, fmt=fmt, rowbytes=rb, experts=1, estride=rb * rows)
         self.ent.append(e)
         return e
+
+    def holds(self, addr):
+        """is addr inside a placed extent?  The stack bits make flat addresses >= WBASE that are NOT weights (a data
+        region on stack 2 / 3: the MTP column slots' rows there), so "an address >= WBASE" is not "a weight"."""
+        return any(e["base"] <= addr < e["base"] + e["estride"] * e["experts"] for e in self.ent)
 
     def find(self, addr):
         for e in self.ent:
@@ -472,7 +503,8 @@ class Lower:
                     tag=tag or op["tag"], family="mv." + op["fn"]), rd or [],
                 [] if desc["O"].space == "STREAM" else [out], run and r1 > r0)
 
-        for op in ops:
+        stacked_slots = set()
+        for oi, op in enumerate(ops):
             self.cur_op = op
             k = op["kind"]
             if k == "local":
@@ -573,9 +605,9 @@ class Lower:
                                    lay.vm[f"e{i}.u"] - lay.vm["e0.u"] == i * sg for i in range(ns))
                         t = dict(a_min=1, imm3=f32u(m.limit), sfu=I.SFU_SILU, c_clip=1, e1=I.E1_MULC, e2=I.E2_MULB,
                                  rnd=1, dst=I.DST_VM)
-                        desc = dict(A=V("e0.g", r1 - r0, off=r0, m=ns, stride=sg),
+                        desc = dict(A=V("e0.g", r1 - r0, m=ns, stride=sg),
                                     B=V("route_w", r1 - r0, m=ns, stride=1, ibcast=1),
-                                    C=V("e0.u", r1 - r0, off=r0, m=ns, stride=sg),
+                                    C=V("e0.g", r1 - r0, off=r1-r0, m=ns, stride=sg),
                                     O=V("ea", r1 - r0, off=r0, m=ns, stride=2304))
                         su("swiglu", "swiglu", desc, [f"e{i}.{x}" for i in range(ns) for x in "gu"] + ["route_w"],
                            [f"ea.s{i}" for i in range(ns)], **t)
@@ -583,7 +615,7 @@ class Lower:
                     e = op["slot"]
                     r0, r1 = W.even(2304)[rank]
                     t = dict(a_min=1, imm3=f32u(m.limit), sfu=I.SFU_SILU, c_clip=1, e1=I.E1_MULC, rnd=1, dst=I.DST_VM)
-                    desc = dict(A=V(f"e{e}.g", r1 - r0, off=r0), C=V(f"e{e}.u", r1 - r0, off=r0),
+                    desc = dict(A=V(f"e{e}.g", r1 - r0), C=V(f"e{e}.g", r1 - r0, off=r1-r0),
                                 O=V("ea", r1 - r0, off=e * 2304 + r0))
                     if e < m.k_exp:
                         t["e2"] = I.E2_MULB
@@ -699,6 +731,35 @@ class Lower:
                     slot, mat = w
                     xin = f"ea.s{slot}" if mat == "w2" else x          # per-slot region names
                     xd = V("ea", 2304, off=slot * 2304) if mat == "w2" else V(x, op["k"])
+                    if mat == "w3" and slot in stacked_slots:
+                        continue                    # both matrices were emitted by the preceding w1
+                    if mat == "w1":
+                        peer = ops[oi + 1] if oi + 1 < len(ops) else {}
+                        if not (peer.get("kind") == "mv" and tuple(peer.get("w", ())) == (slot, "w3") and
+                                peer["rows"] == op["rows"] and peer["k"] == op["k"] and
+                                peer["fmt"] == fmt and peer["x"] == x):
+                            raise ValueError("stacked expert requires adjacent matching w1 / w3")
+                        # Each rank's [w1 rows; w3 rows] is contiguous in the physical image.
+                        # The checkpoint remains unchanged; _wrows maps this explicit row order.
+                        key = (f"{P}ffn.experts.w13" if slot < m.k_exp else
+                               f"{P}ffn.shared_experts.w13.weight")
+                        ent = self.W(key, 2 * op["n"], op["k"], fmt,
+                                     n_experts=m.n_exp if slot < m.k_exp else 1, lines=True)
+                        ent["row_order"] = "tp96_w1_w3_shards"
+                        ent["matrix_rows"] = op["n"]
+                        bd = MDesc(space="HBM", fmt=HFMT[fmt], base=ent["base"] + 2 * r0 * ent["rowbytes"],
+                                   n=op["k"], m=max(2 * (r1 - r0), 1), stride=ent["rowbytes"],
+                                   indexed=int(slot < m.k_exp), dyn_mul=ent["estride"] if slot < m.k_exp else 0)
+                        desc = dict(A=xd, B=bd, O=V(f"e{slot}.g", max(2 * (r1-r0), 1), fmt=out_fmt))
+                        if slot < m.k_exp:
+                            desc["I"] = U32V(lay.vm["rid"] + slot, 1)
+                        rec = Rec("SM", "MATVEC", param={"bf16":0,"fp8":1,"fp4":2}[fmt], desc=desc,
+                                  tag=f"expert slot {slot} w1+w3", family="mv.linear_q")
+                        add(rec, [xin, "rid"] if slot < m.k_exp else [xin],
+                            [f"e{slot}.g", f"e{slot}.u"], r1 > r0)
+                        rec.src = (L, op["id"], [peer["id"]])  # immutable price = both original ops
+                        stacked_slots.add(slot)
+                        continue
                     if slot < m.k_exp:          # routed: weight base through the router's id word (C3b)
                         mv(op, xd, (r0, r1), op["out"], op["n"], f"{P}ffn.experts.{mat}", fmt, out_fmt,
                            expert_slot=slot, rd=[xin, "rid"])
@@ -1204,6 +1265,28 @@ def ds_units(m, man, golib):
     def wrows(e, ex, r0, nrows, c0, ncols, L):
         key = e["key"].split("@c")[0]                 # a column-slice entry names its matrix + column offset
         c0 = c0 + e.get("col_off", 0)
+        if e.get("row_order") == "tp96_w1_w3_shards":
+            pieces = []
+            end = r0 + nrows
+            for lo, hi in W.even(e["matrix_rows"]):
+                for mat, start in (("w1", 2 * lo), ("w3", lo + hi)):
+                    a, z = max(r0, start), min(end, start + hi - lo)
+                    if a >= z:
+                        continue
+                    if e["experts"] > 1:
+                        name = f"{key.rsplit('.', 1)[0]}.{ex}.{mat}.weight"
+                    else:
+                        name = key.replace(".w13.weight", f".{mat}.weight")
+                    pieces.append(golib.wrows(name, lo + a - start, lo + z - start))
+            if not pieces:
+                raise ValueError(f"stacked expert row interval outside image: {r0}+{nrows}")
+            if isinstance(pieces[0], V_.Q8):
+                w = V_.Q8(np.concatenate([p.q for p in pieces]), np.concatenate([p.e for p in pieces]))
+            else:
+                w = np.concatenate(pieces)
+            if c0 or ncols != w.shape[1]:
+                w = (w.q[:, c0:c0+ncols], w.e) if isinstance(w, V_.Q8) else w[:, c0:c0+ncols]
+            return w
         if e["experts"] > 1:
             pre, mat = key.rsplit(".", 1)
             name = f"{pre}.{ex}.{mat}.weight"
@@ -1388,6 +1471,8 @@ def ds_units(m, man, golib):
             return base_load(M, r, L)               # a STRIPE4 data row (the MTP column swap), not an HC weight row
         if not (a.space == "HBM" and a.base >= WBASE):
             return base_load(M, r, L)
+        if a.base >> 37 == 0 and not man.holds(a.base):
+            return base_load(M, r, L)               # a linear data region on stack 2 / 3 (native MTP swap rows)
         for die in M.dies:
             base, n, _, _, _ = M.eff(a, die, L)
             if base >> 37 == 1 and (base & ((1 << 35) - 1)) in HC_STRIPE:   # STRIPE4 HC weight row, 8 bank segments
@@ -1432,7 +1517,8 @@ def ds_units(m, man, golib):
             if (o.base & ((1 << 35) - 1)) in HC_STRIPE:
                 raise MC.Fault(3, f"STRIPE4 store {o.base:#x} into an HC weight row")
             return base_store(M, r, L)
-        if o.space == "HBM" and (o.base >= WBASE or (IKS[0] and KBASE <= o.base < CKBASE)):   # index key -> key store (G16)
+        if o.space == "HBM" and ((o.base >= WBASE and man.holds(o.base)) or
+                                 (IKS[0] and KBASE <= o.base < CKBASE)):                     # index key -> key store (G16)
             e, _, grp, _ = man.find(o.base)
             for die in M.dies:
                 golib.st.ik[int(e["key"][7:])][grp] = M.read(r.desc["A"], die, L)
@@ -1757,6 +1843,11 @@ def main():
             assert encode_program(dec) == b_
             for x, y in zip(dec, recs):
                 x.tag, x.family = y.tag, y.family
+                # Provenance and implicit model operands are compiler annotations,
+                # not ABI fields. Keep them attached after validating the wire image.
+                for attr in ("hc_row", "implicit"):
+                    if hasattr(y, attr):
+                        setattr(x, attr, getattr(y, attr))
             progs.append(dec)
             nbytes += len(b_)
             if r == 0 and a.program_out:

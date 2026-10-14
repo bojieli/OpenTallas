@@ -644,13 +644,14 @@ module ot_rom_oneshot_die_m #(
             end
         end
         if (CT != 0) begin : g_ct
-            initial if (N != 4 || DEPTH != 32 || IB != 4 || FW != 512 || PW != 546 || MEMM == 0 || FSL == 0 || IBH == 0 || TXK == 0)
-                $error("ot_rom_oneshot_die_m CT: N 4, DEPTH 32, IB 4, LANES 16, TAGW 32, MEMM 1, FSL 1, IBH 1, TXK 1");
+            initial if (N != 4 || (DEPTH != 32 && DEPTH != 64) || IB != 4 || FW != 512 || PW != 546 || MEMM == 0 || FSL == 0 || IBH == 0 || TXK == 0)
+                $error("ot_rom_oneshot_die_m CT: N 4, DEPTH 32 | 64 (ot_coll_col_tile_d64), IB 4, LANES 16, TAGW 32, MEMM 1, FSL 1, IBH 1, TXK 1");
+            localparam integer WB = (DEPTH == 64) ? 6 : 5;
             localparam integer NC = (PW + 127) / 128;   // 5 columns: 4 data + 1 {tag, mode, last}
             wire [PW-1:0] inrec = {in_tag, in_mode, in_last, in_data};
-            wire [N*5-1:0] wpall;
+            wire [N*WB-1:0] wpall;
             for (gr = 0; gr < N; gr = gr + 1) begin : g_wp
-                assign wpall[gr*5 +: 5] = wp[gr];
+                assign wpall[gr*WB +: WB] = wp[gr];
             end
             for (gk = 0; gk < NC; gk = gk + 1) begin : g_c
                 localparam integer LO = gk * 128;
@@ -671,9 +672,15 @@ module ot_rom_oneshot_die_m #(
                     end
                     assign s0f[gr*PW + LO +: SW] = s0o[gr*128 +: SW];
                 end
+                if (DEPTH == 64) begin : g_d64
+                (* keep_hierarchy *) ot_coll_col_tile_d64 u_ct (.clk(clk), .rst_n(rst_n), .rank_oh(SELF),
+                    .in_d(ind), .rx_d(rxd), .c_ibw(iv_q && !ib_full), .c_iw(iw[1:0]), .c_fire(fire), .c_ir(ir[1:0]),
+                    .c_push(push), .c_wp(wpall), .c_l1(l1all), .c_gidx(gc_idx), .s0(s0o), .go(goo), .tx(txo));
+                end else begin : g_d32
                 (* keep_hierarchy *) ot_coll_col_tile u_ct (.clk(clk), .rst_n(rst_n), .rank_oh(SELF),
                     .in_d(ind), .rx_d(rxd), .c_ibw(iv_q && !ib_full), .c_iw(iw[1:0]), .c_fire(fire), .c_ir(ir[1:0]),
                     .c_push(push), .c_wp(wpall), .c_l1(l1all), .c_gidx(gc_idx), .s0(s0o), .go(goo), .tx(txo));
+                end
                 assign tx_rec[LO +: SW] = txo[SW-1:0];
                 if (gk < FW / 128) begin : g_go
                     assign ct_go[LO +: 128] = goo;

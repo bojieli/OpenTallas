@@ -1,14 +1,22 @@
 {
- "name": "qfd_vm_xqface_t-sz-COMMIT",
+ "name": "qfd_vm_xqface_t-xq1-d6fcb8405",
  "block": "ot_qfd_vm_xqface_t",
  "ref_tile": true,
- "owner": "Claude:qwen_tp8_vm_phys",
- "purpose": "SIZE ONLY (RTL not final): x_q register at the consumer face.",
+ "owner": "Claude:qwen_tp8_vm_plan",
+ "purpose": "Qwen TP8 VM x_q face leaf (64 per die, at the x consumer): 1,024 me-enabled flops (element-major x_q slice) + me replica; 1,025 flops, one root. Bench = xtree leaf miter + face free-run mutant + x_q relay mutant.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
   "branch": "claude/qwen-tp8-vm-phys",
-  "commit": "COMMIT"
+  "commit": "d6fcb8405",
+  "extra_paths": [
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/vm_die_split_20261012",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "rtl/physical",
+   "rtl/hdc",
+   "rtl/qwen_sys/vm_plane_20261013"
+  ]
  },
  "stages": {
   "bench": [
@@ -18,6 +26,36 @@
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xt_ok",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xtree  --Mdir {RUN}/bench/xt_ok rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xtree.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/xt_ok.build.log 2>&1 && {RUN}/bench/xt_ok/Vtb_qfd_vm_xtree > {RUN}/bench/xt_ok.log 2>&1; tail -3 {RUN}/bench/xt_ok.log; grep -q '^PASS qfd_vm_xtree' {RUN}/bench/xt_ok.log",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xt_mut4",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xtree -GXMUT=4 --Mdir {RUN}/bench/xt_mut4 rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xtree.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/xt_mut4.build.log 2>&1 && {RUN}/bench/xt_mut4/Vtb_qfd_vm_xtree > {RUN}/bench/xt_mut4.log 2>&1; tail -3 {RUN}/bench/xt_mut4.log; grep -q '^PASS qfd_vm_xtree' {RUN}/bench/xt_mut4.log",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xt_mut7",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --output-split 20000 --output-split-cfuncs 2000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_xtree -GXMUT=7 --Mdir {RUN}/bench/xt_mut7 rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xtree.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv > {RUN}/bench/xt_mut7.build.log 2>&1 && {RUN}/bench/xt_mut7/Vtb_qfd_vm_xtree > {RUN}/bench/xt_mut7.log 2>&1; tail -3 {RUN}/bench/xt_mut7.log; grep -q '^PASS qfd_vm_xtree' {RUN}/bench/xt_mut7.log",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 6,
     "needs": [
      "verilator"
     ]
@@ -71,7 +109,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_vm_xqface_t/qfd_vm_xqface_t-sz-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_vm_xqface_t/qfd_vm_xqface_t-xq1-d6fcb8405"
   }
  ],
  "cycles_added": 0,

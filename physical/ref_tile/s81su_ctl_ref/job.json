@@ -1,5 +1,5 @@
 {
- "name": "s81su_ctl_ref-v3-COMMIT",
+ "name": "s81su_ctl_ref-v3-136b26407",
  "block": "dsfd_su_t_ctl",
  "ref_tile": true,
  "owner": "Claude:el1013-s81su-qual",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/el1013-s81su-qual",
-  "commit": "COMMIT",
+  "commit": "136b26407",
   "extra_paths": [
    "results/rtl/hbm_su_fused_compiler_20261005"
   ]
@@ -90,7 +90,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81su_ctl_ref/s81su_ctl_ref-v3-COMMIT"
+   "to": "results/rtl/ref_tile/s81su_ctl_ref/s81su_ctl_ref-v3-136b26407"
   }
  ],
  "cycles_added": 0,
