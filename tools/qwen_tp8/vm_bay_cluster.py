@@ -50,6 +50,10 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('bay', nargs='?'); ap.add_argument('--alias', action='store_true')
     ap.add_argument('--tiles', default='results/arch/qwen_tp8_1012/vm_bay_tiles_claude.json'); ap.add_argument('--plan', default='results/arch/qwen_tp8_1012/vm_leaf_plan_claude.json')
     ap.add_argument('--frame', type=float, default=21.6); ap.add_argument('--tag', default='')
+    ap.add_argument('--spread', type=int, default=1, help='slot pitch multiplier: 2 = every tile beside an empty slot (one 512-b face per channel)')
+    ap.add_argument('--cap', default='M7', help='cluster signal cap; M8 / M9 need --grant (digest-bound cluster layer grant)')
+    ap.add_argument('--grant', default='', help='cluster layer grant JSON (schema opentallas.cluster-layer-grant.v1) naming this master')
+    ap.add_argument('--jobtag', default='bp2')
     a = ap.parse_args()
     alias()
     if a.alias or not a.bay: return
@@ -143,8 +147,9 @@ def main():
     # ---------------------------------------------------------------- lane table + spec
     fr = a.frame; g = lambda v, q=2.16: round(round(v / q) * q, 4)
     x0 = g(fr + 2.16); y0 = g(fr + 4.32)
-    W_ = g((x0 + B['tiles'] * (TW + SGAP) - SGAP + fr + 2.16) / 8.64 + 0.4999, 1) * 8.64; H_ = g((y0 + 97.2 + fr + 2.16) / 8.64 + 0.4999, 1) * 8.64
-    children = [dict(view=VIEW[t['kind']], count=1, inst=f'u_t{t["slot"]}', at=[g(x0 + t['slot'] * (TW + SGAP)), y0], orient='R0') for t in tl]
+    PIT = a.spread * (TW + SGAP); NS = (B['tiles'] - 1) * a.spread + 1
+    W_ = g((x0 + NS * (TW + SGAP) - SGAP + fr + 2.16) / 8.64 + 0.4999, 1) * 8.64; H_ = g((y0 + 97.2 + fr + 2.16) / 8.64 + 0.4999, 1) * 8.64
+    children = [dict(view=VIEW[t['kind']], count=1, inst=f'u_t{t["slot"]}', at=[g(x0 + t['slot'] * PIT), y0], orient='R0') for t in tl]
     children.append(dict(view=VIEW['F'], count=1, inst='u_fan', at=[g(x0 + 2.16), g(y0 - 12.96)], orient='R0'))
     pins = {'W': [p for p in ('d_w', 'q_w') if (nin if p[0] == 'd' else nout)[p[2]]], 'E': [p for p in ('d_e', 'q_e') if (nin if p[0] == 'd' else nout)[p[2]]],
             'S': ['clk', 'me_d'] + [p for p in ('d_s', 'q_s') if (nin if p[0] == 'd' else nout)[p[2]]], 'N': [p for p in ('d_n', 'q_n') if (nin if p[0] == 'd' else nout)[p[2]]]}
@@ -155,16 +160,20 @@ def main():
     def bench(n, args, exp): return dict(name=n, cmd=vb % ((args, n) + (n,) * 5), expect=exp, threads=2, peak_ram_gb=4, needs=['verilator'])
     spec = dict(name=f'qfd_vm_bay_{tag}', top=top, kind='cluster', sources=srcs, params={}, clock_port='clk', reset_ports=[], hard_define='OT_QFD_VM_HARD', defines=['OT_QFD_VM_HARD'],
                 outline=dict(w=W_, h=H_), child_lattice_um=2.16, children=children,
-                abut_plan=dict(channel_um=4.32, edge_um=8.64, why='the VM lane plan stands relay / pad tiles at 21.6-um pitch (4.32-um channels, pins face to face); this probe routes the fullest bay to measure that channel'), pins=pins, inter=['*'], refglob='*',
+                abut_plan=dict(channel_um=4.32, edge_um=8.64, why=f'the VM lane plan stands relay / pad tiles at {PIT:.2f}-um pitch ({PIT - TW:.2f}-um channels, pins face to face) with the me fan stage 4.32 um under the tile row; this probe routes the fullest bay to measure those channels'), pins=pins, inter=['*'], refglob='*',
                 slot_change_request='el1011-qwen-tp8.log 2026-10-13 VM4: bay PILOT, not a die slot: the fullest pad-row bay of the tile-level lane plan with a 21.6-um routing frame; the band cluster takes these tiles flat',
                 route=dict(pd=0.5, period_ps=770, threads=8, peak_ram_gb=16, hold_margin_ns=0.03),
-                job=dict(owner='Claude:qwen_tp8_vm4', branch='claude/qwen-tp8-vm-phys', tag='bp2',
-                         purpose=f'Qwen TP8 VM lane-bay PILOT ({a.bay}, the fullest pad-row bay: {len(tl)} closed tiles in {B["tiles"]} slots at the plan pitch 21.6 um, 4.32-um channels, '
-                                 f'{len(lanes)} lanes of 8 b, {sum(8 * l["stages"] for l in lanes)} stage bits; wires + hard children only): measures the real congestion / DRC / timing of abutted relay and pad tiles '
+                job=dict(owner='Claude:qwen_tp8_vm6', branch='claude/qwen-vm6-1014', tag=a.jobtag,
+                         purpose=f'Qwen TP8 VM lane-bay PILOT ({a.bay}, the fullest pad-row bay: {len(tl)} closed tiles in {B["tiles"]} slots at slot pitch x{a.spread}, '
+                                 f'{len(lanes)} lanes of 8 b, {sum(8 * l["stages"] for l in lanes)} stage bits; wires + hard children only; slot pitch {PIT:.2f} um, signal cap {a.cap}): measures the real congestion / DRC / timing of the relay and pad tiles '
                                  'with their closed pins before the band and region clusters are cut. Bench = every lane against its planned me-enabled stage count, every clock; mutants: one lane a tile short, two lanes swapped.',
                          hold_merge='physical probe of one lane bay (congestion pilot): the die sees the band cluster, never this block',
                          extra_paths=[P, 'rtl/hdc', 'results/arch/qwen_tp8_1012/vm_bay_' + tag + '.json'],
                          benches=[bench('bay_ok', '-GSEED=1', 'pass'), bench('bay_ok_s2', '-GSEED=2', 'pass'), bench('bay_mut1', '-GMUT=1', 'fail'), bench('bay_mut2', '-GMUT=2', 'fail')]))
+    if a.cap != 'M7':
+        gp = ROOT / a.grant
+        spec['signal_max_layer'] = a.cap
+        spec['cluster_layer_grant'] = dict(source=a.grant, sha256=hashlib.sha256(gp.read_bytes()).hexdigest())
     (ROOT / f'physical/ref_tile/qfd_vm_bay_{tag}.spec.json').write_text(json.dumps(spec, indent=1) + '\n')
     rec = dict(schema='opentallas.qwen-tp8.vm-bay.v1', bay=a.bay, top=top, bay_um=[B['x'], B['y'], B['w'], B['h']], slots=B['tiles'], tiles=[dict(slot=t['slot'], kind=t['kind'], kit=t['kit'], lanes=len(t['lanes'])) for t in tl],
                outline_um=[W_, H_], tile_origin_um=[x0, y0], frame_um=fr, ports=dict(inputs={f'd_{f}': 8 * nin[f] for f in 'wesn' if nin[f]}, outputs={f'q_{f}': 8 * nout[f] for f in 'wesn' if nout[f]}),
