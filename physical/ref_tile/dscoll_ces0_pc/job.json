@@ -1,5 +1,5 @@
 {
- "name": "dscoll_ces0_pc-pc2-COMMIT",
+ "name": "dscoll_ces0_pc-pc2-566af60a7",
  "block": "dsfd_coll_ces0_pc",
  "ref_tile": true,
  "owner": "Claude:s81-romB2-1014",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/s81-romB2-ces",
-  "commit": "COMMIT",
+  "commit": "566af60a702eb0a85aad7679bebf00db3a504372",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/lib",
@@ -248,7 +248,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_ces0_pc/dscoll_ces0_pc-pc2-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_ces0_pc/dscoll_ces0_pc-pc2-566af60a7"
   }
  ],
  "cycles_added": 0,
