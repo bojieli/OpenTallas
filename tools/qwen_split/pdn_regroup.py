@@ -12,7 +12,13 @@ M9 unchanged: every instance phase is one of P8 / 2.16 values, so the macro grid
 grids, kept as they are).  Same stripes per instance (one M8 lattice everywhere: macro stripes land on core stripes),
 same connects.
 
-    python3 tools/qwen_split/pdn_regroup.py CASE_DIR [--p8 8.64] [--out pdn_r6.tcl]
+MEASURED (C3 case, 13,509 instances): pdngen inserts ~32 instance grids a minute whatever the grouping (r5 2,365
+grids and r6 4 grids alike), so the r5 case PDN is ~7 h single-threaded.  r7 = r6 + `--skip-prefix rly_`: the die
+relays get no macro grid.  The core M8 / M9 lattice runs over them either way (the macro M8 stripes of r6 lie on the
+core stripes), so GRT resources are unchanged; only the relays' M7 -> M8 vias are missing: check_power_grid reports
+the relays as islands (a recorded PDN scope item, not a timing input).
+
+    python3 tools/qwen_split/pdn_regroup.py CASE_DIR [--p8 8.64] [--out pdn_r6.tcl] [--skip-prefix rly_]
 reads CASE_DIR/pdn.tcl + CASE_DIR/floorplan_placed.def, writes CASE_DIR/<out> and prints a JSON summary.
 """
 import argparse, json, re
@@ -38,7 +44,7 @@ def placed(def_path):
     return pos
 
 
-def regroup(case, p8, out):
+def regroup(case, p8, out, skip_prefix=()):
     case = Path(case)
     src = (case / 'pdn.tcl').read_text().split('\n')
     pos = placed(case / 'floorplan_placed.def')
@@ -63,8 +69,12 @@ def regroup(case, p8, out):
     head[core_m8[0]] = re.sub(r'-pitch [0-9.]+', f'-pitch {p8:.3f}', head[core_m8[0]])
     head[0] = '# r6 full-die PDN (tools/qwen_split/pdn_regroup.py): M8 core + macro stripes at %.3f um = %d x %.2f-um macro lattice (one phase per lattice row class), M9 bump pitch unchanged' % (p8, round(p8 / GY), GY)
     groups, missing = {}, []
+    skipped = 0
     for g in m8:
         for n in g['names']:
+            if skip_prefix and n.startswith(tuple(skip_prefix)):
+                skipped += 1
+                continue
             if n not in pos:
                 missing.append(n)
                 continue
@@ -82,7 +92,8 @@ def regroup(case, p8, out):
         L += g['lines']
     (case / out).write_text('\n'.join(L) + '\n')
     return dict(case=str(case), out=out, p8=p8, m8_grids_before=len(m8), m8_grids_after=len(groups),
-                m5_grids=len(m5), instances=sum(len(v) for v in groups.values()),
+                m5_grids=len(m5), instances=sum(len(v) for v in groups.values()), skipped_no_macro_grid=skipped,
+                skip_prefix=list(skip_prefix),
                 phases={str(k): len(v) for k, v in sorted(groups.items())})
 
 
@@ -91,5 +102,7 @@ if __name__ == '__main__':
     ap.add_argument('case')
     ap.add_argument('--p8', type=float, default=8.64)
     ap.add_argument('--out', default='pdn_r6.tcl')
+    ap.add_argument('--skip-prefix', action='append', default=[],
+                    help='instances (name prefix) that get NO macro grid (r7: rly_ -- see the module note)')
     a = ap.parse_args()
-    print(json.dumps(regroup(a.case, a.p8, a.out)))
+    print(json.dumps(regroup(a.case, a.p8, a.out, a.skip_prefix)))
