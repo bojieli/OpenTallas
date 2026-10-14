@@ -3560,6 +3560,212 @@
       "role": "genuine ND8 package reset on role0; genuine own-boot ND1 reset on peers; identity mutation fail closed"
     },
     {
+      "master": "qkd_host_service_guard",
+      "source": "rtl/qwen_sys/host_20261013/qkd_host_service_guard.sv",
+      "source_revision": "290111b8e",
+      "source_sha256": "bb321da2993a6de061bc1e772618579849d74061acccbf1afc7500e1648789d7",
+      "ports": [
+        {
+          "name": "ck_guard",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "CLOCK_RESET"
+        },
+        {
+          "name": "raw_faults",
+          "direction": "input",
+          "width": 25,
+          "registered_domain": "ASYNC_STICKY_2FF_TO_ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "die_id",
+          "direction": "input",
+          "width": 3,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "physical_faults",
+          "direction": "input",
+          "width": 8,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "transport_faults",
+          "direction": "input",
+          "width": 8,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "accepted_ing_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "accepted_ing_cls",
+          "direction": "input",
+          "width": 2,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "accepted_ing_header",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "done_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "done_d",
+          "direction": "input",
+          "width": 64,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "boot_barrier_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "boot_barrier_target",
+          "direction": "input",
+          "width": 32,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_v",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "begin_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "pending_advertised",
+          "direction": "input",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "pending_epoch",
+          "direction": "input",
+          "width": 16,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "local_tk",
+          "direction": "input",
+          "width": 93,
+          "registered_domain": "ck_guard",
+          "seam": "CAPTURED_INPUT"
+        },
+        {
+          "name": "guarded_tk",
+          "direction": "output",
+          "width": 93,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "abort",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_ready",
+          "direction": "output",
+          "width": 1,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "service_epoch",
+          "direction": "output",
+          "width": 16,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "diag_raw",
+          "direction": "output",
+          "width": 26,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "status",
+          "direction": "output",
+          "width": 32,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "groups",
+          "direction": "output",
+          "width": 4,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "physical_diag",
+          "direction": "output",
+          "width": 8,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        },
+        {
+          "name": "transport_diag",
+          "direction": "output",
+          "width": 8,
+          "registered_domain": "ck_guard",
+          "seam": "REGISTERED_OUTPUT"
+        }
+      ],
+      "flop_bits_coarse": 12561,
+      "clock_entries": [
+        "ck_guard"
+      ],
+      "instances_per_die": 0,
+      "candidate_instances_per_die": 1,
+      "outline_status": "PENDING_MAPPED_AREA_PIN_CAPACITY_DO_NOT_RESERVE_PLACEHOLDER",
+      "physical_qualified": false,
+      "default_off_protocol_candidate": true
+    },
+    {
       "master": "qfd_xf_ch546",
       "source": "rtl/physical/ot_qwen_die_cdc_ch.sv",
       "params": {
