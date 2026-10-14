@@ -112,21 +112,16 @@
    "v": "M5",
    "h": "M4"
   },
-  "cts_sink": {
-   "size": 16,
-   "diameter_um": 30,
-   "extra": "-sink_clustering_levels 2 -distance_between_buffers 30"
-  },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "recipe": 2,
- "structural_change": "Native TP8 leaf (Codex 5cb653641/253415d19): HEADS 1 / Q_FP32 1 fixed in RTL; historical HEADS2/Q_FP32 0 views are not native and are not reused. Same three-leaf partition, seams and face plan as the closed q17/q16 leaves; recipe-2 pin registers (native pin audit 07:12: historical leaves FAIL launch 300-420 ps); own ck entry per leaf (wrapper qkd_ectl3_s ck[2:0]). tp1b: pre-route --cts on the native A kit measured TT insertion 339.9 / leaf spread 116.6 ps (7,011 sinks, 2 SRAM macros, clock pin N face centre) > the 80 ps die delivery bound: explicit TritonCTS sink clustering (16 sinks / 30 um, 2 levels, buffers every 30 um).",
+ "structural_change": "Native TP8 leaf (Codex 5cb653641/253415d19): HEADS 1 / Q_FP32 1 fixed in RTL; historical HEADS2/Q_FP32 0 views are not native and are not reused. Same three-leaf partition, seams and face plan as the closed q17/q16 leaves; recipe-2 pin registers (native pin audit 07:12: historical leaves FAIL launch 300-420 ps); own ck entry per leaf (wrapper qkd_ectl3_s ck[2:0]). tp2: pre-route --cts on the native A kit measured leaf spread 116.6 ps (TritonCTS; sink clustering 102-127, an abutted W-side macro stack 112.9) > the 80 ps die delivery bound -> balanced pre-placed clock spine (clock: spine, as the clusters): measured TT insertion 367.4 / spread 31.2 ps (7,011 sinks). R > 300 ps: the die taps it earlier on the trunk (SKEW 150 hops).",
  "slot_change_request": "qkd_ectl slot (32 x 647.976 x 129.576, contract v1, pins/qkd_ectl.json faces kept: rq/rs W, si/so E, t0 S, t1 N, e/s S/N) -> three abutting native leaves W to E qkd_ectl_a_tp8 254.88 | qkd_ectl_b_tp8 254.88 | qkd_ectl_c_tp8 138.24 x 129.6 (wrapper rtl/qwen_sys/split_20261014/qkd_ectl3_s.sv), each its own ck entry (phi - R); die generator must bind the three leaves + seams (lead queue rank 2).",
  "job": {
   "owner": "Claude:el1014-qwen-kvsys-elements",
   "branch": "claude/qwen-kvsys-el-1014",
-  "tag": "tp1b",
+  "tag": "tp2",
   "purpose": "Native TP8 ECTL leaf A (HEADS1/Q_FP32 1) for the KV/system die three-clock ectl.",
   "benches": [
    {
@@ -188,6 +183,7 @@
  },
  "inhold": true,
  "outhold": true,
+ "clock": "spine",
  "children": [],
  "inter": []
 }
