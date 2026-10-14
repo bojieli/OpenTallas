@@ -1,0 +1,19 @@
+{
+  "status": "DEFAULT_OFF_UNQUALIFIED_MODEL_REQUEST",
+  "source_commit": "34bc56933",
+  "parameter": "FORWARD_HOP=2 (default0 preserves compile-time H1/H2 choice)",
+  "forward_per_leaf_cycles": 2,
+  "return_per_leaf_cycles": 2,
+  "tile8_forward_cycles": 16,
+  "flat_reference_forward_cycles": 6,
+  "lockstep_delay_cycles": 10,
+  "bank_EP": 2,
+  "bank_ED": 3,
+  "BE_MD": 12,
+  "o_minus_f_cycles": 12,
+  "req_root_owner": "N rb0 + S rb1; every bank crossing related and timed",
+  "slot_allocation": "PENDING",
+  "production_selected": false,
+  "measured_layer_tok_s_cost": "OPEN; no price or budget waiver",
+  "whole_native_parent_cycle_proof": "OPEN; no production cycle-model change"
+}

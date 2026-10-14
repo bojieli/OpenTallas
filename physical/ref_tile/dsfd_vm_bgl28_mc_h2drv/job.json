@@ -1,0 +1,201 @@
+{
+ "name": "dsfd_vm_bgl28_mc_h2drv-h2driver-COMMIT",
+ "block": "dsfd_vm_bgl28_mc",
+ "ref_tile": true,
+ "owner": "Codex:bgr28_native_closure",
+ "purpose": "UNQUALIFIED H2 pin-register diagnostic; preserve EP2/ED3/MD12, forward and return tile latency16 versus H1 8.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "codex/s81-bgr28-native",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/common",
+   "tools/s81_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile_specs/ds_vm",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "physical/ref_tile_specs/ds_vm/dsfd_vm_bgl28_mc_nominal.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_vm_bgl28_mc #(.FORWARD_HOP(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_VMBGL_HOP1 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bgl.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact_gold",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold gold",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_gold_s2",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/gold_s2 gold_s2",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_gold_s2: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "exact_stress",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/stress stress",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BGL_stress: PASS",
+    "min_count_regex": "returned (\\d+)"
+   },
+   {
+    "name": "neg_relay",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_RELAY mut_RELAY",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_RELAY: FAIL"
+   },
+   {
+    "name": "neg_id",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ID mut_ID",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ID: FAIL"
+   },
+   {
+    "name": "neg_j0",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_J0 mut_J0",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_J0: FAIL"
+   },
+   {
+    "name": "neg_order",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_ORDER mut_ORDER",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_ORDER: FAIL"
+   },
+   {
+    "name": "neg_mask",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_MASK mut_MASK",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_MASK: FAIL"
+   },
+   {
+    "name": "neg_hit_alignment",
+    "cmd": "BGL_DEFINES='+define+OT_VMBGL_HOP1 +define+OT_VMBGL_MC_PARENT' BGL_ARGS='-GMC_HOP=2' bash rtl/dsrom_sys/s81_ph/test/run_bgl_bench.sh {RUN}/bench/mut_HIT mut_HIT",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "BGL_mut_HIT: FAIL"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsfd_vm_bgl28_mc_h2drv/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsfd_vm_bgl28_mc_h2drv/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsfd_vm_bgl28_mc_h2drv --out {RUN}/record/views/dsfd_vm_bgl28_mc --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsfd_vm_bgl28_mc_h2drv/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsfd_vm_bgl28_mc/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsfd_vm_bgl28_mc/dsfd_vm_bgl28_mc_h2drv-h2driver-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "UNQUALIFIED DIAGNOSTIC: independent ideal clock sources use fixed nominal CTS TT -R at150ps slew for all early/late/corners; physical die driver/slot binding and raw multi-root export are required. Do not publish compensated near-zeroR views. H2 diagnostic reuses H1 nominal clock reference only provisionally to collect new raw R; requires fresh bound H2 nominal reference and full numerical/clock/per-bit reach evidence before any route.",
+ "merge_target": null,
+ "hold_merge": true,
+ "structural_change": "H1 FAST4 actual CTS6 setup+66.55 hold+7.73 but raw load0 output launch f357.9/o256 exceeds220. Default-off FORWARD_HOP2 moves rb1 to request root and selects separate N-input/S-output flop stages, with existing two-cycle return model; bank ED3 and BE MD12 retained. New raw R required; output surplus buffers require hold-safe repair. Wider slot remains unallocated. H2 driver candidate disables redundant generic port buffering after explicit recipe2 pin BUF/HB4/BUF stages, and uses actual BUFx12f lead/final drivers instead of4f (input stages also use12f). HB4 delays remain, all setup/hold checked; no IO/clock/skew relaxation. This experiment requires actual gate and raw output profile before acceptance."
+}
