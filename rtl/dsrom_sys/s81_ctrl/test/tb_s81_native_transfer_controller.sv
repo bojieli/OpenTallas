@@ -15,13 +15,13 @@ module tb_s81_native_transfer_controller #(parameter integer MUT=0,STALL=0);
  wire[31:0] jobs;
  assign dnv={9'd0,hdone[8],2'd0};assign dnt={72'd0,hdone[7:0],16'd0};
  ot_s81_ctrl #(.ROLE(0),.MY_ID(17),.SRC_LO(16),.SRC_HI(16),.MAXU(16),.XW(640),.RXB(0),.TXB(6144),
- .H_TRANSFER(1),.HC_SLOT_REBASE(MUT!=1),.USE_VM_RVALID(1),.OUT_DEPTH(4),.STUCK(10000)) ctrl(
+ .H_TRANSFER(1),.HC_SLOT_REBASE(1),.USE_VM_RVALID(1),.OUT_DEPTH(4),.STUCK(10000)) ctrl(
  .clk(ck),.rst_n(rst),.source_token_dead(1'b0),.eng_rb_v(1'b0),.eng_rb_user(12'd0),.eng_rb_n(3'd0),
  .pw_v(pw),.pw_a(pa),.pw_d(pd),.prog_len(8'd3),.cfg_users_static(12'd16),
  .in_valid(iv),.in_ready(ir),.in_data(id),.in_last(il),.out_valid(ov),.out_ready(outready),.out_data(od),.out_last(ol),
  .cmd_v(cmdv),.cmd_d(cmdd),.dn_v(dnv),.dn_tag(dnt),.hop_go(1'b0),.vm_we(vmwe),.vm_waddr(vmwa),.vm_wdata(vmwd),
  .vm_re(vmre),.vm_raddr(vmra),.vm_rq(m_od[11*512+:512]),.vm_rvalid(m_ov[11]),
- .hc_queue_head(MUT==2?(head^86'd1):head),.hc_normal_inputs_present(1'b0),.hc_inputs_present(hcgo),
+ .hc_queue_head(MUT==2?(head^86'd128):head),.hc_normal_inputs_present(1'b0),.hc_inputs_present(hcgo),
  .hc_vm_rq_v(hrq),.hc_vm_rq_row(hra),.hc_vm_rs_v(hrs),.hc_vm_rs_d(hrd),
  .transfer_vm_rq_v(trq),.transfer_vm_rq_row(tra),.transfer_vm_rs_v(trs),.transfer_vm_rs_d(trd),
  .hc_commit_v(commit),.hc_commit_row(commit_a),.hc_commit_mask(MUT==3?(commit_m&{32{16'h0001}}):commit_m),
@@ -60,13 +60,13 @@ module tb_s81_native_transfer_controller #(parameter integer MUT=0,STALL=0);
  end
  always @(negedge ck)if(rst)outready=!(STALL&&cy%11<5);
  task automatic send(input [511:0] data,input bit islast);
-  @(negedge ck);iv=1;id=data;il=islast;
+  iv=1;id=data;il=islast;
   do @(posedge ck);while(!ir);
   @(negedge ck);iv=0;il=0;
  endtask
  initial begin
   repeat(6)@(negedge ck);rst=1;repeat(15)@(negedge ck);
-  pw=1;pa=0;pd=28'h2800000;@(negedge ck);pa=1;pd=28'h2901800;
+  pw=1;pa=0;pd=MUT==1?28'h2000000:28'h2800000;@(negedge ck);pa=1;pd=MUT==1?28'h2101800:28'h2901800;
   @(negedge ck);pa=2;pd=28'h7000121;@(negedge ck);pw=0;repeat(6)@(negedge ck);
   for(integer user=0;user<2;user=user+1)begin
    id=0;id[11:0]=17;id[23:12]=16;id[27:24]=1;id[39:28]=640;id[51:40]=user;
