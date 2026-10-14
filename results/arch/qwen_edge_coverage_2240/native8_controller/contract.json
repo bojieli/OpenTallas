@@ -43,5 +43,33 @@
     "producer_admission": "TOK_STAGE/ST_READY typed actualproducer lowering notimplemented/proven bydispatch stream",
     "native_qualification": "Need actualprogram handshake plusrealphysical readlatency5, resetepochs/stall pipeline, exactstagepayload/nativepricebeforeparentbinding."
   },
-  "new_physical_profile_needs": "Actual pin/slot requirements, countedclock partition/physicalstateleaf, N8rank517b localreturn binding/CRED32protocol. No oldCLOSED N4/CRED0/sourcealias."
+  "new_physical_profile_needs": "Actual pin/slot requirements, countedclock partition/physicalstateleaf, N8rank517b localreturn binding/CRED32protocol. No oldCLOSED N4/CRED0/sourcealias.",
+  "accepted_production_SU_producer": {
+    "source": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_master_bv_acc.sv @4c45b454f",
+    "proof": "2bb77d9ea fullSW64+regional; defaultoffalignmentcontinuation baac1408f active",
+    "pins": {
+      "crom_re": 64,
+      "crom_addr": 1536,
+      "crom_q": 4096
+    },
+    "lane_address": "24*l",
+    "lane_data": "64*l",
+    "strobe": "emit&&(bsrc||csrc), addr=bsrc?curb:curc",
+    "ALT_B": "lo32+hi32",
+    "ALT_C": "lo32 when BnotALT",
+    "ready_ack": "None. Nonstallable deterministic response, staleholdwhenunstrobbed",
+    "old_external_latency": "1+CRX2=3 edges; IS1+OS1 MC4 core5, ML15 pads11 tocore16",
+    "real_cbuf5_candidate_binding": {
+      "CRX": 4,
+      "IS": 1,
+      "OS": 1,
+      "MC": 6,
+      "VL": 15,
+      "ML": 15,
+      "padding_edges": 9,
+      "core_total_response_edges": 16,
+      "status": "PARAMETER_RELATION_ONLY; requires source-exact actual8group frequest/fq5 timeline+stage0nativepayload differential, noextraunpricedreturnheadstage."
+    },
+    "stage_admission": "Controllercb_stage/tok_start/tpos/st_ready only; fullproducerissue/admission actualprogram topology notyetqualified."
+  }
 }
