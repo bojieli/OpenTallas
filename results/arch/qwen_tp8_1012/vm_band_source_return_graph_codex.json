@@ -27093,14 +27093,16 @@
   "ActualPC/LC/ME deepphysicalfan/read/write/release/output_step ready-replay paths.",
   "Actualsource/gather/regionendpoint220/190 +SSRC +allACKreturn/resetflush geometry.",
   "Sourcewriteversion stability through load whilecorepaused; commoninstruction immutable untileligibleGO.",
-  "Nativehalf/cachemaster identities andrequiredphase mask; downsteam ACK routing/stages andslotcensus."
+  "Nativehalf/cachemaster identities andrequiredphase mask; downsteam ACK routing/stages andslotcensus.",
+  "Actualparent readmode mustfollowoldpreupdate request; loadmode resolvedfilldescriptor. Modecounterexample/repair underx_delivery audit, notadopted."
  ],
  "physical_candidate_status": "688geometric/pair candidate nowREJECTED full220/190 endpointcontract (4c14ae277); noRTLfreeze/reroute/ABIadoption",
  "credit_and_ACK_progress_constraints": {
   "no_allocation_credit": "Stopallocations andinjectsel_v0 bubbles; keep load/source/gather advancing todrain outstandingtokens unlessactualdownstreambackpressure requiresregisteredstall.",
-  "ACK_while_core_paused": "Cache-fill/context-acceptance ACK mustprogress independentlyof core_step; ACKwaitingforGO/computeconsumption deadlocks16-phasepreload with8credits.",
+  "ACK_while_core_paused": "CacheACK meansrequired fillsdurablyresident AND per-tokentransport/replay quiescent; independentof GO/coreconsumption. Actualsource/gather compositionunbound; helperdoesnotgateloadstep.",
   "backpressure": "Onready0 retainunaccepted event/token/data inpending/skid/replay; heldq_vdoesnotauthorize duplicateacceptedreturn.",
   "burst_completion": "Requiredphase completion mustpersistafterperphase entriesretire untilGO/consumption; actualnativephase mask/census remainspending.",
-  "reset": "Drain/flushACK mustcoverallphysicaltransport, pendingevents andbothhalfcaches beforetokenreuse; no generationdropwithoutactualinvariant."
+  "reset": "Drain/flushACK mustcoverallphysicaltransport, pendingevents andbothhalfcaches beforetokenreuse; no generationdropwithoutactualinvariant.",
+  "compute_consumption_safety": "Separatecontext-tagged/bankedresidency orpriceddrain protectsdatauntilcomputeconsumes it. No circular ACKwaitingforGO."
  }
 }
