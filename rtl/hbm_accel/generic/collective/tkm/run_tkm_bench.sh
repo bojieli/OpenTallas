@@ -15,12 +15,12 @@ if [ "${TKM_CLUSTER:-0}" = 1 ]; then
   TKM_SOURCES=(-DOT_TKM_CLUSTER_BENCH rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_cluster.sv)
 fi
 if [ "${TKM_LANES:-0}" = 1 ]; then
-  TKM_SOURCES+=(-DOT_TKM_LANE_SPLIT rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_lane.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_seq_lane_core.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_seq_split.sv)
+  TKM_SOURCES+=(-DOT_TKM_LANE_SPLIT rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_lane.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_seq_lane_core.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_seq_split.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_packer.sv)
 fi
 build() {  # build <obj> [verilator -G/-D ...]
   local ob=$O/$1; shift
   ( cd "$R" && $V --binary --timing -j $J -O2 --x-assign fast --x-initial fast -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD \
-    -Wno-MULTIDRIVEN -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm -Mdir "$ob" -Irtl/hbm_accel/generic "${TKM_SOURCES[@]}" "$@" \
+    -Wno-MULTIDRIVEN -Wno-WIDTHCONCAT --top-module tb_hgi_coll_tkm -Mdir "$ob" -Irtl/hbm_accel/generic "${TKM_SOURCES[@]}" -GTKM_KMAX="${TKM_KMAX:-2048}" "$@" \
     rtl/hbm_accel/generic/collective/tkm/tb_hgi_coll_tkm.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv rtl/lib/ot_rst_relay.sv \
     rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_src.sv rtl/hbm_accel/generic/collective/rgx/ot_hgi_coll_rgx_sink.sv \
     rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv \

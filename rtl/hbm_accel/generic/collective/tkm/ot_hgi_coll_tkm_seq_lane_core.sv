@@ -18,12 +18,14 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     input wire [((KMAX+63)/64)-1:0] chain_busy,
     input wire [DEL-1:0] lane_d0v,lane_d1v,
     input wire [DEL-1:0] lane_permit,lane_fault,lane_dv,lane_fe,lane_ldv,
+    input wire[DEL*2040-1:0]lane_heads,input wire[DEL*24-1:0]lane_masks,input wire[DEL*8-1:0]lane_epochs,
+    output reg[DEL*8-1:0]lane_take_epochs,
     input wire [DEL*680-1:0] lane_he,
     input wire [DEL*8-1:0] lane_nv_mask,
     input wire [DEL*8-1:0] lane_hm,lane_dn,lane_occ,
     input wire [DEL*2-1:0] lane_hn,
-    output wire [DEL*8-1:0] lane_take,
-    output wire [DEL-1:0] lane_pop,
+    output reg [DEL*8-1:0] lane_take,
+    output reg [DEL-1:0] lane_pop,
     output wire lane_live,
     output wire [82:0] lane_tau,
     output wire [7:0] lane_g,lane_gb,
@@ -40,11 +42,11 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     input  wire [39:0]          cfg_obase,      // O: VM word address (16-word aligned)
     input  wire [39:0]          cfg_rbase,      // R: VM word address (16-word aligned)
     input  wire                 cfg_has_r,
-    output reg                  w_v,
-    output reg  [39:0]          w_addr,
-    output reg  [15:0]          w_mask,
-    output reg  [FW-1:0]        w_data,
-    input  wire                 w_rdy,
+    input wire w_v, pack_empty,
+    input wire[3:0] pack_queued,input wire[9:0] pack_lines,
+    output reg pack_start,pack_cell_v,pack_last,
+    output reg[339:0]pack_cell,output reg[1:0]pack_slot,
+    output wire[12:0]pack_nout,output wire[39:0]pack_obase,pack_rbase,output wire pack_has_r,
     output wire                 busy,
     output reg                  done,           // one edge: every output line accepted
     output reg                  fault,
@@ -112,7 +114,10 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     wire [0:0] rr;
     ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     wire rn=rr[0];
-    wire [DEL-1:0] d2_v=lane_dv,d0_v=lane_d0v,d1_v=lane_d1v;
+    reg[DEL-1:0]count_v;reg[DEL*8-1:0]count_mask;
+    always @(posedge clk or negedge rn)if(!rn)count_v<=0;else count_v<=lane_dv;
+    always @(posedge clk)count_mask<=lane_nv_mask;
+    wire [DEL-1:0] d2_v=count_v,d0_v=lane_d0v,d1_v=lane_d1v;
     wire [DEL-1:0] fe=lane_fe,ld_v=lane_ldv;
     wire [7:0]occ[0:DEL-1];
     wire [679:0]st_e[0:DEL-1][0:2];
@@ -120,12 +125,36 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     wire [1:0]st_n[0:DEL-1];
     assign lane_live=ins_live;assign lane_tau=tau;
     assign lane_g=g_q;assign lane_gb=gb_q;assign lane_pf=pf_q;
+    // Three head mirrors cover the registered command round trip without reusing a stale mask.
+    reg[DEL*2040-1:0]head_pin;reg[DEL*24-1:0]mask_pin;
+    reg[DEL*8-1:0]epoch_pin;reg[DEL*2-1:0]hn_pin;
+    reg[7:0]consume_epoch[0:DEL-1],consume_mask[0:DEL-1];
+    wire[7:0]head_offset[0:DEL-1];
+    always @(posedge clk)begin head_pin<=lane_heads;mask_pin<=lane_masks;epoch_pin<=lane_epochs;hn_pin<=lane_hn;end
     for(genvar l=0;l<DEL;l=l+1)begin:g_lane_faces
-     assign st_e[l][0]=lane_he[680*l+:680];
+     assign head_offset[l]=consume_epoch[l]-epoch_pin[8*l+:8];
+     assign st_e[l][0]=(head_offset[l]<3)?head_pin[2040*l+680*head_offset[l]+:680]:680'd0;
      assign st_e[l][1]='0;assign st_e[l][2]='0;
-     assign st_m[l][0]=lane_hm[8*l+:8];assign st_m[l][1]='0;assign st_m[l][2]='0;
-     assign dn[l]=lane_dn[8*l+:8];assign occ[l]=lane_occ[8*l+:8];assign st_n[l]=lane_hn[2*l+:2];
-     assign lane_take[8*l+:8]=sel_take[l];assign lane_pop[l]=sel_pop[l];
+     assign st_m[l][0]=(head_offset[l]<3)?mask_pin[24*l+8*head_offset[l]+:8]:8'd0;
+     assign st_m[l][1]='0;assign st_m[l][2]='0;
+     assign dn[l]=consume_mask[l];assign occ[l]=lane_occ[8*l+:8];
+     assign st_n[l]=(head_offset[l]<8'(hn_pin[2*l+:2]))?2'd1:2'd0;
+    end
+    always @(posedge clk or negedge rn)begin
+     if(!rn)begin
+      lane_take<=0;lane_pop<=0;lane_take_epochs<=0;
+      for(integer l=0;l<DEL;l=l+1)begin consume_epoch[l]<=0;consume_mask[l]<=0;end
+     end else begin
+      lane_pop<=ins_live?sel_pop:'0;
+      for(integer l=0;l<DEL;l=l+1)begin
+       lane_take[8*l+:8]<=ins_live?sel_take[l]:8'd0;
+       lane_take_epochs[8*l+:8]<=consume_epoch[l];
+       if(ins_live)begin
+        if(sel_pop[l])begin consume_epoch[l]<=consume_epoch[l]+1'b1;consume_mask[l]<=0;end
+        else consume_mask[l]<=consume_mask[l]|sel_take[l];
+       end
+      end
+     end
     end
     reg start_p; reg [11:0] cfg_n_p; reg [12:0] cfg_k_p, cfg_nout_p; reg [7:0] cfg_g_p, cfg_gbase_p; reg [15:0] cfg_pf_p;
     reg [39:0] cfg_obase_p, cfg_rbase_p; reg cfg_has_r_p;
@@ -197,21 +226,12 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             .rr_en(2'b0), .rr_addr(18'd0), .cr_en(2'b0), .cr_sel(16'd0));
     end
     reg [BA:0] cnv, cap, rdn; reg [12:0] cneed; reg [3:0] qcnt; reg [3:0] wcnt;
-    reg [EW-1:0] lb [0:15]; reg [9:0] lp;               // output line buffer, lines pushed
     integer c, s, a, b, l, i;
-    // ---------------------------------------------------------------- output packer
-    reg [12:0] outn;                           // elements shifted out
-    reg [12:0] wrn;                            // elements written (O lines)
-    reg [8:0]  line;                           // output line index
-    // ---------------------------------------------------------------- main sequential
-    // output step: one 16-element line an edge (the array shifts up 4 cells); O line (+ R line) into a 4-line queue that
-    // the write port drains one line an edge; a step needs room for its lines
-    reg [FW-1:0] lq_d [0:7]; reg [39:0] lq_a [0:7]; reg [15:0] lq_m [0:7]; reg [3:0] lq_n; reg [2:0] lq_h, lq_t;
-    wire lq_pop = (lq_n != 4'd0) && (!w_v || w_rdy);
-    // P_OUT conveyor: a cell (4 elements) an edge while the 8-line queue has room for every line issued and not yet
-    // pushed (registered counts only; the cells reach the packer 2 edges after the decision)
+    assign pack_nout=nout_q;assign pack_obase=ob_q;assign pack_rbase=rb_q;assign pack_has_r=hr_q;
+    // Account for every issued line until the separate packer publishes its count.
+    // The returned queued count can lag safely: line debt includes all pending cells.
     wire [10:0] lines_iss = 11'((cnv + 1 + 3) >> 2);
-    wire [11:0] lq_need = 12'(lq_n) + 12'(lines_iss - 11'(lp)) * (hr_q ? 12'd2 : 12'd1);
+    wire [11:0] lq_need = 12'(pack_queued) + 12'(lines_iss - 11'(pack_lines)) * (hr_q ? 12'd2 : 12'd1);
     wire pgo = (ph == P_OUT) && (13'(cnv) < cneed) && (lq_need <= 12'd8);
     // select (combinational over the registered staging heads)
     reg [EW-1:0] sel_e [0:3]; reg [2:0] sel_n; reg [7:0] sel_take [0:DEL-1]; reg [DEL-1:0] sel_pop;
@@ -234,16 +254,15 @@ module ot_hgi_coll_tkm_seq_lane_core #(
     wire ins_live = (ph == P_INS);
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            ph <= P_IDLE; fault <= 1'b0; done <= 1'b0; w_v <= 1'b0; w_addr <= 40'd0; w_mask <= 16'd0; w_data <= '0;
+            ph <= P_IDLE; fault <= 1'b0; done <= 1'b0; pack_start<=0;pack_cell_v<=0;pack_cell<=0;pack_slot<=0;pack_last<=0;
             stat_cycles <= 32'd0; stat_ins <= 32'd0; stat_surv <= 32'd0;
             n_q <= 12'd1; k_q <= 13'd1; nel <= 19'd0; g_q <= 8'd1; gb_q <= 8'd0; pf_q <= 16'd1; nout_q <= 13'd1; ob_q <= 40'd0; rb_q <= 40'd0; hr_q <= 1'b0;
             tot_q <= 24'd0; cact_q <= '0; tc_q <= '0; ts_q <= 2'd0; rcv <= 24'd0; tau <= '0;
             start_p<=0;e1_v<=0;e2_v<=0;
-            outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 4'd0; lq_h <= 3'd0; lq_t <= 3'd0;
             ctl_conv <= 1'b0; ctl_clr <= 1'b0; eb_v <= 1'b0; bw_v <= 1'b0; br_v <= 1'b0; br_q <= 1'b0; rd2_v <= 1'b0;
-            cnv <= '0; cap <= '0; rdn <= '0; cneed <= 13'd0; qcnt <= 4'd0; wcnt <= 4'd0; lp <= 10'd0; tau_t <= '0; tau_l <= '0;
+            cnv <= '0; cap <= '0; rdn <= '0; cneed <= 13'd0; qcnt <= 4'd0; wcnt <= 4'd0; tau_t <= '0; tau_l <= '0;
         end else begin
-            done <= 1'b0;
+            done <= 1'b0;pack_start<=0;pack_cell_v<=0;
             if (busy) stat_cycles <= stat_cycles + 32'd1;
             start_p <= start;
             tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> logic paths)
@@ -252,11 +271,15 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             tau_t <= TW'((nout_q - 13'd1) / PT); tau_l <= LW'((nout_q - 13'd1) % PT);
             cneed <= (nout_q + 13'd3) >> 2;
             for(l=0;l<DEL;l=l+1)if(lane_fault[l])fault<=1'b1;
-            if (ph == P_INS) begin : cnt
-                reg [18:0] a_;
-                a_ = nel;
-                for (l = 0; l < DEL; l = l + 1) if (d2_v[l]) for (s = 0; s < 8; s = s + 1) a_ = a_ + 19'(lane_nv_mask[8*l+s]);
-                nel <= a_;
+            if(ph==P_INS)begin:cnt
+                reg[3:0]n_[0:DEL-1];reg[4:0]pair0,pair1;
+                for(integer l=0;l<DEL;l=l+1)begin
+                    n_[l]=4'(count_mask[8*l])+4'(count_mask[8*l+1])+4'(count_mask[8*l+2])+4'(count_mask[8*l+3])+
+                          4'(count_mask[8*l+4])+4'(count_mask[8*l+5])+4'(count_mask[8*l+6])+4'(count_mask[8*l+7]);
+                    if(!count_v[l])n_[l]=0;
+                end
+                pair0=5'(n_[0])+5'(n_[1]);pair1=5'(n_[2])+5'(n_[3]);
+                nel<=nel+19'(pair0)+19'(pair1);
             end
             if (ph == P_INS) rcv <= rcv + 24'(d2_v[0]) + 24'(d2_v[1]) + 24'(d2_v[2]) + 24'(d2_v[3]);
             if ((rcv + 24'(d2_v[0]) + 24'(d2_v[1]) + 24'(d2_v[2]) + 24'(d2_v[3])) > tot_q && ph == P_INS) fault <= 1'b1;
@@ -302,34 +325,9 @@ module ot_hgi_coll_tkm_seq_lane_core #(
             br_v <= (ph == P_INS2) && (13'(rdn) < cneed);
             if ((ph == P_INS2) && (13'(rdn) < cneed)) begin br_a <= BA'(rdn); rdn <= rdn + 1'b1; end
             br_q <= br_v; rd2_v <= br_q; rd2 <= b_q[4*EW-1:0];
-            // ---- output (P_OUT): conveyed cells -> a 16-element line every 4 cells -> O line (+ R line) into the queue
-            begin : pk
-                reg [3:0] n_; reg [2:0] t_; reg [12:0] cnt_; reg [FW-1:0] od_, rd_; reg [15:0] m_; reg [EW-1:0] e_;
-                reg [EW-1:0] lx [0:15];
-                n_ = lq_n; t_ = lq_t;
-                if (lq_pop) begin
-                    w_v <= 1'b1; w_addr <= lq_a[lq_h]; w_mask <= lq_m[lq_h]; w_data <= lq_d[lq_h];
-                    lq_h <= lq_h + 3'd1; n_ = n_ - 4'd1;
-                end else if (w_v && w_rdy) w_v <= 1'b0;
-                if (ph == P_OUT && dconv3) begin
-                    for (i = 0; i < 16; i = i + 1) lx[i] = lb[i];
-                    for (s = 0; s < 4; s = s + 1) begin lx[4 * cap[1:0] + s] = tinv(t_up[0][EW*s +: EW]); lb[4 * cap[1:0] + s] <= tinv(t_up[0][EW*s +: EW]); end
-                    cap <= cap + 1'b1;
-                    if (cap[1:0] == 2'd3 || 13'(cap) + 13'd1 == cneed) begin
-                        cnt_ = ((nout_q - outn) >= 13'd16) ? 13'd16 : (nout_q - outn);
-                        m_ = (cnt_ == 13'd16) ? 16'hFFFF : 16'((17'd1 << cnt_[4:0]) - 17'd1);
-                        for (i = 0; i < 16; i = i + 1) begin
-                            e_ = lx[i];
-                            od_[32*i +: 32] = (13'(i) < cnt_) ? ((MUT == 1) ? e_[50:19] : ~e_[50:19]) : 32'd0;
-                            rd_[32*i +: 32] = (13'(i) < cnt_) ? unkey(e_[82:51], e_[0]) : 32'd0;
-                        end
-                        lq_d[t_] <= od_; lq_a[t_] <= ob_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1;
-                        if (hr_q) begin lq_d[t_] <= rd_; lq_a[t_] <= rb_q + {27'd0, line, 4'd0}; lq_m[t_] <= m_; t_ = t_ + 3'd1; n_ = n_ + 4'd1; end
-                        line <= line + 9'd1; outn <= outn + cnt_; lp <= lp + 10'd1;
-                        for (i = 0; i < 16; i = i + 1) lb[i] <= {EW{1'b0}};
-                    end
-                end
-                lq_n <= n_; lq_t <= t_;
+            if(ph==P_OUT&&dconv3)begin
+                pack_cell_v<=1;pack_cell<=t_up[0];pack_slot<=cap[1:0];pack_last<=(13'(cap)+13'd1==cneed);
+                cap<=cap+1'b1;
             end
             // ---- phase control
             case (ph)
@@ -338,13 +336,13 @@ module ot_hgi_coll_tkm_seq_lane_core #(
                     ob_q <= cfg_obase_p; rb_q <= cfg_rbase_p; hr_q <= cfg_has_r_p;
                     rcv <= 24'd0; tau <= '0;
                     stat_ins <= 32'd0; stat_surv <= 32'd0; stat_cycles <= 32'd0;
-                    outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lp <= 10'd0;
+                    pack_start<=1;
                     ctl_clr <= 1'b1; wcnt <= 4'd0;
                     ph <= P_CLR0;
                 end
                 // the chain clears 2 edges after ctl_clr; the tau tree settles 3 more
                 P_CLR0: begin wcnt <= wcnt + 4'd1; tau <= '0; if (wcnt == 4'd7) ph <= P_INS; end
-                P_INS: if (rcv == tot_q && d0_v == '0 && d1_v == '0 && d2_v == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
+                P_INS: if (rcv == tot_q && d0_v == '0 && d1_v == '0 && d2_v == '0 && lane_dv == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
                            st_n[0] == 2'd0 && st_n[1] == 2'd0 && st_n[2] == 2'd0 && st_n[3] == 2'd0)
                     ph <= P_DRAIN;
                 P_DRAIN: if (qcnt >= 4'd4) begin
@@ -357,7 +355,7 @@ module ot_hgi_coll_tkm_seq_lane_core #(
                 P_CLR2: begin wcnt <= wcnt + 4'd1; if (wcnt == 4'd4) begin rdn <= '0; ph <= P_INS2; end end
                 P_INS2: if (13'(rdn) == cneed) ph <= P_DRAIN2;
                 P_DRAIN2: if (qcnt >= 4'd4) begin cnv <= '0; cap <= '0; ph <= P_OUT; end
-                P_OUT: if (13'(cap) == cneed && lq_n == 4'd0 && !dconv1 && !dconv2 && !dconv3) ph <= P_FLUSH;
+                P_OUT: if (13'(cap) == cneed && pack_empty && !pack_cell_v && !dconv1 && !dconv2 && !dconv3) ph <= P_FLUSH;
                 P_FLUSH: if (!w_v) begin ph <= P_IDLE; done <= 1'b1; end
                 default: ph <= P_IDLE;
             endcase
