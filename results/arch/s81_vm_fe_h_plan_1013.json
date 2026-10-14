@@ -67,13 +67,13 @@
   "dsfd_vm_flt": {
    "outline": [
     216.0,
-    125.28
+    129.6
    ],
    "std_cell_area_um2": 1553.37,
    "flops": 4078,
-   "core_um2": 25604.8,
-   "util_std_plus_macro": 0.581,
-   "util_std_cells_only": 0.126,
+   "core_um2": 26519.3,
+   "util_std_plus_macro": 0.561,
+   "util_std_cells_only": 0.118,
    "macro_at": [
     22.464,
     23.76
@@ -82,7 +82,7 @@
     "W": 20.304,
     "E": 20.088,
     "S": 21.6,
-    "N": 21.576
+    "N": 25.896
    }
   },
   "dsfd_vm_fld": {
@@ -363,8 +363,8 @@
    "A@864"
   ],
   "worst_cut_ratio_at_x": [
-   0.583,
-   685.5
+   0.59,
+   1053.5
   ]
  },
  "search_old_outline": {
@@ -378,7 +378,7 @@
   "frozen contract (taller outline only)": {
    "lanes_at_decided_outline": 7,
    "min_outline_height_for_10_lanes": {
-    "h_um": 736.56,
+    "h_um": 740.88,
     "fld_x": 810.0,
     "lanes": [
      "EA",
@@ -393,7 +393,7 @@
      "B@810"
     ],
     "worst_cut": [
-     0.596,
+     0.599,
      1069.5
     ]
    }
@@ -401,7 +401,7 @@
   "av / ok / ovf / sflt +1 relay stage (reach 950 um)": {
    "lanes_at_decided_outline": 8,
    "min_outline_height_for_10_lanes": {
-    "h_um": 736.56,
+    "h_um": 740.88,
     "fld_x": 810.0,
     "lanes": [
      "EA",
@@ -416,7 +416,7 @@
      "A@810"
     ],
     "worst_cut": [
-     0.596,
+     0.599,
      1069.5
     ]
    }
@@ -424,7 +424,7 @@
   "S2 bundle tiles trimmed to non-constant bits": {
    "lanes_at_decided_outline": 10,
    "min_outline_height_for_10_lanes": {
-    "h_um": 682.56,
+    "h_um": 689.04,
     "fld_x": 837.0,
     "lanes": [
      "EB",
@@ -439,7 +439,7 @@
      "A@810"
     ],
     "worst_cut": [
-     0.596,
+     0.595,
      1096.5
     ]
    }
@@ -447,7 +447,7 @@
   "S3 clt re-routed at M5 (M6 free over the clt row)": {
    "lanes_at_decided_outline": 10,
    "min_outline_height_for_10_lanes": {
-    "h_um": 663.12,
+    "h_um": 669.6,
     "fld_x": 810.0,
     "lanes": [
      "EA",
@@ -462,7 +462,7 @@
      "B@810"
     ],
     "worst_cut": [
-     0.597,
+     0.596,
      1069.5
     ]
    }
@@ -470,7 +470,7 @@
   "S4 lane returns daisy-chained (one 546-b bus a cut)": {
    "lanes_at_decided_outline": 9,
    "min_outline_height_for_10_lanes": {
-    "h_um": 706.32,
+    "h_um": 710.64,
     "fld_x": 351.0,
     "lanes": [
      "EB",
@@ -485,7 +485,7 @@
      "B@810"
     ],
     "worst_cut": [
-     0.599,
+     0.597,
      815.5
     ]
    }
@@ -493,7 +493,7 @@
   "S2 + S3": {
    "lanes_at_decided_outline": 10,
    "min_outline_height_for_10_lanes": {
-    "h_um": 609.12,
+    "h_um": 615.6,
     "fld_x": 837.0,
     "lanes": [
      "EB",
@@ -508,7 +508,7 @@
      "A@810"
     ],
     "worst_cut": [
-     0.598,
+     0.597,
      1096.5
     ]
    }
@@ -516,7 +516,7 @@
   "S3 + S4": {
    "lanes_at_decided_outline": 10,
    "min_outline_height_for_10_lanes": {
-    "h_um": 635.04,
+    "h_um": 637.2,
     "fld_x": 351.0,
     "lanes": [
      "EB",
@@ -531,7 +531,7 @@
      "B@810"
     ],
     "worst_cut": [
-     0.596,
+     0.598,
      815.5
     ]
    }

@@ -20,14 +20,14 @@ STUB = """(* blackbox *) module ot_sram_1r1w_64x512_m1_r2c2 (input clk, input r_
     input w_ce_in, input [5:0] w_addr_in, input [511:0] wd_in, input [511:0] w_mask_in, input [1:0] rr_en, input [11:0] rr_addr,
     input [1:0] cr_en, input [17:0] cr_sel); endmodule
 """
-LEAVES = ['dsfd_vm_fxs', 'dsfd_vm_fxr', 'dsfd_vm_frg', 'dsfd_vm_fra', 'dsfd_vm_frr', 'dsfd_vm_flt', 'dsfd_vm_fld', 'dsfd_vm_fcc', 'dsfd_vm_fcw', 'dsfd_vm_fcn', 'dsfd_vm_fsr', 'dsfd_vm_clt']
+LEAVES = ['dsfd_vm_fxs', 'dsfd_vm_fxr', 'dsfd_vm_fxa', 'dsfd_vm_fxb', 'dsfd_vm_frm', 'dsfd_vm_flt', 'dsfd_vm_fld', 'dsfd_vm_fcc', 'dsfd_vm_fcw', 'dsfd_vm_fcn', 'dsfd_vm_fsr', 'dsfd_vm_clt']
 KIT = ['dsfd_vm_wfc_ep', 'ot_dsrom_mtp_rstsync', 'ot_s81_engine_adapter', 'ot_sram_1r1w_64x512_m1_r2c2']
 CLK = {'ck', 'cks'}
 EXEMPT = {   # leaf -> ports legally unregistered at the pin (reason in the dsfd_vm_fe_h.sv header)
     'dsfd_vm_flt': {'stride', 'off'},       # straps: registered (st_q / of_q) anyway; listed for the parent ties
     'dsfd_vm_fcw': {'rst', 'f_swv', 'f_swd', 'f_srv', 'f_srd', 't_swg', 't_srg', 't_ks'},   # dsfd_vm_wfc_ep owns the pin registers
     'dsfd_vm_fcc': {'rss'},
-    'dsfd_vm_fcn': {'rst', 'rss', 'cv', 'cd', 'dv', 'dt', 'c_wr'},   # rstsync / engine adapter c side / ready of a held output
+    'dsfd_vm_fcn': {'rst', 'rss', 'cv', 'cd', 'c_wr'},   # rstsync / cv, cd pin flops in the cks domain (checked: flop sinks only) / ready of a held output
     'dsfd_vm_clt': {'gid'},
 }
 FF_OK = {'D', 'SRST', 'EN', 'ARST', 'SET', 'CLR'}

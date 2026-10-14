@@ -951,17 +951,21 @@ module ot_qfd_sp_vector_memory_bv #(
         localparam integer SWW = 1 + ND + LB + 4;
         localparam integer XNVW = $clog2(BEAT + 1);
         localparam integer XPCW = LNRB + 4 + XNVW;
-        wire [7*SWW-1:0] stg;                                  // the line-write word at stage n (6 = s6 ... 3 = s3)
-        assign stg[6*SWW +: SWW] = {s6_bv, s6_d, s6_j, s6_sp};
-        assign stg[5*SWW +: SWW] = {s5_bv, s5_d, s5_j, s5_sp};
-        assign stg[4*SWW +: SWW] = {s4_bv, s4_d, s4_j, s4_sp};
-        assign stg[3*SWW +: SWW] = {s3_bv, s3_d, s3_j, s3_sp};
+        // PLAN 2026-10-13: the placed control chain along the column row needs XTK 7 (13 stations, root at the centre), one
+        // more than the 7-entry word pipeline allowed: the seam-queue part now has QE = max(3, XTK - 3) entries (same taps
+        // for XTK <= 6; the seam queue holds XS >= XTK + 2 entries whenever the bit plane is on).
+        localparam integer QE = (XTK > 6) ? XTK - 3 : 3;
+        wire [(QE+4)*SWW-1:0] stg;                             // the line-write word at stage n (QE + 3 = s6 ... QE = s3)
+        assign stg[(QE+3)*SWW +: SWW] = {s6_bv, s6_d, s6_j, s6_sp};
+        assign stg[(QE+2)*SWW +: SWW] = {s5_bv, s5_d, s5_j, s5_sp};
+        assign stg[(QE+1)*SWW +: SWW] = {s4_bv, s4_d, s4_j, s4_sp};
+        assign stg[QE*SWW +: SWW] = {s3_bv, s3_d, s3_j, s3_sp};
         genvar sq;
-        for (sq = 0; sq < 3; sq = sq + 1) begin : g_sq          // stage 2 = seam-queue entry XS-1, 1 = XS-2, 0 = XS-3
-            assign stg[sq*SWW +: SWW] = {g_xs.qb[XS-3+sq], g_xs.qd[(XS-3+sq)*QWL + 4 +: ND],
-                                         g_xs.qd[(XS-3+sq)*QWL + ND + 4 + AW +: LB], g_xs.qd[(XS-3+sq)*QWL +: 4]};
+        for (sq = 0; sq < QE; sq = sq + 1) begin : g_sq         // stage QE - 1 = seam-queue entry XS-1, ... 0 = XS-QE
+            assign stg[sq*SWW +: SWW] = {g_xs.qb[XS-QE+sq], g_xs.qd[(XS-QE+sq)*QWL + 4 +: ND],
+                                         g_xs.qd[(XS-QE+sq)*QWL + ND + 4 + AW +: LB], g_xs.qd[(XS-QE+sq)*QWL +: 4]};
         end
-        wire [LCW-1:0] lc_d = {stg[(6-XTK)*SWW +: SWW], h_new[XVMI-1-XTK], h_sp[XVMI-1-XTK]};
+        wire [LCW-1:0] lc_d = {stg[(QE+3-XTK)*SWW +: SWW], h_new[XVMI-1-XTK], h_sp[XVMI-1-XTK]};
         wire [32*LCW-1:0] lcq;
         if (XTK == 0) begin : g_cb
             assign lcq = {32{lc_d}};
