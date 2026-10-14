@@ -23,7 +23,12 @@ sys.path.insert(0, str(Path(_g) / 'tools' if _g else ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
 
 CLK_NAMES = ('ck', 'clk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
-K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=32.0, su=10.0, ho=15.0))
+# s81-die 2026-10-13 (c6p STA by path class, results/physical/die_iter_1012/s81/c6p_sta_classes_1013): FF cq 32 ps against
+# hold 15 + die hold uncertainty 50 made EVERY short placeholder hop a hold violation (1,010,469 endpoints at >= -33.3 ps).
+# A pin-registered tile owes the contract minimum clk -> pin of 65 ps at FF (the relay kits build it: outhold
+# BUF-HB4-BUF); the placeholder carries that minimum, so a hop between placeholders is neutral (0 at zero wire) and a
+# placeholder launching into a REAL pin is judged against the real pin's hold with the contract launch.
+K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0), ff=dict(cq=65.0, su=10.0, ho=15.0))
 # s81-die-iter 2026-10-12 (FF hold, r4f SPEF: hco_SW -> xsco_SW -103.7, hr_W<n> -> f_hr_W<n>_o_1 -77.9, hl_W<n> ->
 # g_hl_W<n>_o_sp_collective_0 -77.6 ps): a closed end block (m2l / r2l / l2r, kind 'hend') is balanced on its MEAN clock
 # insertion, but its boundary output flops ride a shorter branch (~80 vs 152 ps), so its outputs launch ~70 ps early
@@ -38,6 +43,12 @@ HOLD_PAD_FF = 120.0
 PAD_NEAR_UM = 100.0
 PAD_SUFFIX = '__hp'
 REL_CLK = {'dsfd_xstg': {'i': 'cw'}}
+# s81-die 2026-10-13: the --cfifo-colck column FIFO is a TWO-domain master (lane write side on xf, column side on cr = its
+# column tree's return; ck only passes to co).  The single-clock placeholder timed its column side on the trunk ck and
+# the clock return cr as data: all of c6p's TT -1,426.8 ps (co -> cr 111 ep, relay -> st / ri 8,960 ep) and the 72,192 FF
+# endpoints at -519..-577 ps (xa / xb / cc launched 548 ps before the column relays' clock).  Inputs AND outputs of a
+# multi-clock glue master are related to the clock that captures / launches them (REL_CLK_COLCK applies with --cfifo-colck).
+REL_CLK_COLCK = {'dsfd_cfifo': dict(xd='xf', st='cr', ri='cr', xa='cr', xb='cr', cc='cr', rs='cr', rd='cr', rf='cr')}
 
 
 def hold_pad_sites(m):
@@ -562,23 +573,26 @@ def interim_lib(cells, corner, pads=None):
                  'downto : true; }')
     for name, area, ports in cells:
         ck = next((c for c in CLK_NAMES if c in ports and ports[c][0] == 'input'), None)
+        rel = dict(next((v_ for m_, v_ in REL_CLK.items() if name.startswith(m_)), {}))
+        if getattr(S, 'CFIFO_COLCK', False):
+            rel.update(next((v_ for m_, v_ in REL_CLK_COLCK.items() if name.startswith(m_)), {}))
+        rel = {p_: c_ for p_, c_ in rel.items() if c_ in ports and ports[c_][0] == 'input'}
         L.append(f' cell ({name}) {{ area : {area:.3f};')
         for p, (d, w) in sorted(ports.items()):
             head = f'  bus ({p}) {{ bus_type : b{w};'
             body = [head, f'   direction : {"input" if d == "input" else "output" if d == "output" else "inout"};']
             if d == 'input':
                 body.append('   capacitance : 1.0;')
-            if p == ck or (d == 'input' and p in CLK_NAMES):     # every clock pin of a multi-clock glue master
+            if p == ck or (d == 'input' and (p in CLK_NAMES or p in rel.values())):     # every clock pin of a multi-clock glue master
                 body.append('   clock : true;')
             elif ck and d == 'input':
-                rck = next((v_[p] for m_, v_ in REL_CLK.items() if name.startswith(m_) and p in v_), ck)
-                rck = rck if rck in ports else ck
+                rck = rel.get(p, ck)
                 pps = HOLD_PAD_FF if p in pads.get(name, ()) else 0.0
                 for tt, v in (('setup_rising', k['su'] + pps * PAD_SCALE[corner]), ('hold_rising', k['ho'] - pps)):
                     body.append(f'   timing () {{ related_pin : "{rck}"; timing_type : {tt}; '
                                 f'rise_constraint (scalar) {{ values ("{v}"); }} fall_constraint (scalar) {{ values ("{v}"); }} }}')
             elif ck and d == 'output':
-                body.append(f'   timing () {{ related_pin : "{ck}"; timing_type : rising_edge; '
+                body.append(f'   timing () {{ related_pin : "{rel.get(p, ck)}"; timing_type : rising_edge; '
                             f'cell_rise (scalar) {{ values ("{k["cq"]}"); }} cell_fall (scalar) {{ values ("{k["cq"]}"); }} '
                             'rise_transition (scalar) { values ("20"); } fall_transition (scalar) { values ("20"); } }')
             body.append('  }')
