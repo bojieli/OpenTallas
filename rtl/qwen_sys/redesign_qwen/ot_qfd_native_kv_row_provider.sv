@@ -30,7 +30,7 @@ module ot_qfd_native_kv_row_provider #(parameter integer ENABLE=0,MUT_ROW=0)(
  .kpop(kpop),.kidx(tag),.kwgo(kwgo),.kwn(kind?2'd2:2'd0),.q(store_q),.kw(store_kw));
  ot_qfd_native_kv_commit_fence #(.ENABLE(ENABLE)) u_commit(
  .clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_layer(begin_layer),.begin_pos(begin_pos),.begin_ready(fence_ready),
- .formatter_emitted(formatter_emitted),.posted_v({4{rt}}),.posted_kind({4{row_kind}}),
+ .formatter_emitted(formatter_emitted&&active&&received==8'h33),.posted_v({4{rt}}),.posted_kind({4{row_kind}}),
  .posted_epoch({4{row_epoch}}),.posted_layer({4{row_layer}}),.posted_pos({4{row_pos}}),
  .ack_v(ack_v),.ack_kind(ack_kind),.ack_epoch(ack_epoch),.ack_layer(ack_layer),.ack_pos(ack_pos),.ack_credit(ack_credit),.committed(committed),.fault(fence_fault));
  always @(posedge clk or negedge rst_n)begin
