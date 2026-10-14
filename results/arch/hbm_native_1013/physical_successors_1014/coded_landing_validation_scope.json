@@ -1,0 +1,27 @@
+{
+  "sram": {
+    "actual_execution_source_hash_matches": {
+      "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv": true,
+      "physical/hbm_native_sram_cdc_1014/suite.py": true,
+      "physical/hbm_native_sram_cdc_1014/bench.sh": true,
+      "physical/hbm_native_sram_cdc_1014/tb_sram_cdc.sv": true,
+      "physical/hbm_native_sram_cdc_1014/source_manifest.json": false
+    },
+    "functional_verdict": "PASS",
+    "case_count": 29,
+    "metadata_scope": "Retain original gate hashes. Source manifests/spec metadata and bounded census register classifier updated after functional execution; execution RTL/bench/TB/suite remain exact tested blobs. Actual full census separately rerun including asynchronous-load register classes."
+  },
+  "bounded": {
+    "actual_execution_source_hash_matches": {
+      "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv": true,
+      "physical/hbm_native_bounded_cdc_1014/census.py": true,
+      "physical/hbm_native_bounded_cdc_1014/tb_bounded_cdc.sv": true,
+      "physical/hbm_native_bounded_cdc_1014/suite.py": true,
+      "physical/hbm_native_bounded_cdc_1014/bench.sh": true,
+      "physical/hbm_native_bounded_cdc_1014/source_manifest.json": false
+    },
+    "functional_verdict": "PASS",
+    "case_count": 21,
+    "metadata_scope": "Retain original gate hashes. Source manifests/spec metadata and bounded census register classifier updated after functional execution; execution RTL/bench/TB/suite remain exact tested blobs. Actual full census separately rerun including asynchronous-load register classes."
+  }
+}

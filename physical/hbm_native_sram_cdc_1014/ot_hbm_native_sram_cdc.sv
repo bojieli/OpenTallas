@@ -45,6 +45,12 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
  (* async_reg="true" *) reg [PW-1:0] ack1,ack2,ackn1,ackn2,pub1,pub2,pubn1,pubn2;
  (* async_reg="true" *) reg [31:0] re1,re2,ren1,ren2,we1,we2,wen1,wen2;
  reg [CW-1:0] enc_code,slots[0:7],rx_code;
+ // Protected coded landing seam: every source slot crosses directly to a bare R-clock FF.
+ // Selection is then entirely within the consumer domain; publication waits two synchronizer edges.
+ reg [CW-1:0] landed_slots[0:7];
+ always @(posedge rclk)begin
+  for(integer landing=0;landing<8;landing=landing+1)landed_slots[landing]<=slots[landing];
+ end
  reg [W-1:0] out_data;
  wire [PW-1:0] ack_gray=gray(rb),pub_gray=gray(publish_seq);
  wire [PW-1:0] released=graybin(ack2);
@@ -133,7 +139,7 @@ module ot_hbm_native_sram_cdc #(parameter integer W=280,AW=4,MUT=0)(
      if(record_ok||(MUT==2))begin out_data<=decoded[W-1:0];out_v<=1;out_v_n<=0;end
      else begin rf<=1;rf_n<=0;out_v<=0;out_v_n<=1;end
     end
-    if(!out_v&&!rx_v&&pub_ok&&(gray(rb)!=pub2))begin rx_code<=slots[rb[2:0]];rx_v<=1;rx_v_n<=0;end
+    if(!out_v&&!rx_v&&pub_ok&&(gray(rb)!=pub2))begin rx_code<=landed_slots[rb[2:0]];rx_v<=1;rx_v_n<=0;end
    end
   end
  end

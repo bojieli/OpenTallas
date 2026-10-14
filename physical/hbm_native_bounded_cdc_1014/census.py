@@ -9,7 +9,7 @@ for w in (16,1):
  if p.returncode:raise RuntimeError(p.stdout[-2000:]+p.stderr[-2000:])
  d=json.loads((dst/'actual.json').read_text())['modules']['ot_hbm_native_bounded_cdc'];clocks={v['bits'][0]:k for k,v in d['ports'].items() if k in ('wclk','rclk')};ff=collections.Counter();storage=0;codebits={b for n,v in d['netnames'].items() if n.startswith('u_codebank.codewords[') for b in v['bits'] if isinstance(b,int)}
  for n,c in d['cells'].items():
-  if c['type'] in ('$dff','$dffe','$adff','$adffe','$sdff','$sdffe'):
+  if c['type'] in ('$dff','$dffe','$adff','$adffe','$sdff','$sdffe','$aldff','$aldffe','$dffsr','$dffsre'):
    bits=int(c['parameters']['WIDTH'],2);ff[clocks[c['connections']['CLK'][0]]]+=bits
    storage+=len(set(c['connections']['Q']) & codebits)
  recs.append({'W':w,'depth':16,'coded_record_bits':78,'stored_codeword_bits':storage,'real_ff_by_root':dict(ff),'real_ff_total':sum(ff.values()),'actual_json_sha256':hashlib.sha256((dst/'actual.json').read_bytes()).hexdigest(),'actual_json':'w'+str(w)+'/actual.json','scope':'Actual Yosys optimized logical FF census; ASIC cell area, pin placement, clock phase and P&R remain unmeasured.'})

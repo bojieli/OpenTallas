@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.native.bounded_cdc.actual_census.v1",
+  "cases": [
+    {
+      "W": 16,
+      "depth": 16,
+      "coded_record_bits": 78,
+      "stored_codeword_bits": 1248,
+      "real_ff_by_root": {
+        "wclk": 2304,
+        "rclk": 946
+      },
+      "real_ff_total": 3250,
+      "actual_json_sha256": "4a976a753ba8235c627fb83d00fef6129ed68341a28f40128903f54d46837c6a",
+      "actual_json": "w16/actual.json",
+      "scope": "Actual Yosys optimized logical FF census; ASIC cell area, pin placement, clock phase and P&R remain unmeasured."
+    },
+    {
+      "W": 1,
+      "depth": 16,
+      "coded_record_bits": 78,
+      "stored_codeword_bits": 1248,
+      "real_ff_by_root": {
+        "wclk": 2288,
+        "rclk": 931
+      },
+      "real_ff_total": 3219,
+      "actual_json_sha256": "1093bebe5291d4408714f0a91f2386438200da95eb348f3aa0fb9322b5a8aaac",
+      "actual_json": "w1/actual.json",
+      "scope": "Actual Yosys optimized logical FF census; ASIC cell area, pin placement, clock phase and P&R remain unmeasured."
+    }
+  ],
+  "claim_boundary": "Distinct sixteen-entry SECDED codeword FF storage, never plain raw payload array or SRAM area inheritance."
+}

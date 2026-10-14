@@ -19,6 +19,10 @@ module tb_sram_cdc;
  endfunction
  initial begin
   repeat(5)@(negedge wclk);wrst_n=1;rrst_n=1;
+  if(MODE==8)begin
+   wait(dut.rb==1&&!dut.out_v&&!dut.rx_v);@(negedge rclk);
+   dut.landed_slots[1][2]=~dut.landed_slots[1][2];dut.landed_slots[1][4]=~dut.landed_slots[1][4];
+  end
   if(MODE==4)begin
    wait(sent>=8);@(negedge wclk);wepoch=3;@(posedge wclk);#1;
    if(!w_fault||!full)$fatal(1,"EARLY_EPOCH discarded pending payload");
@@ -99,7 +103,7 @@ module tb_sram_cdc;
    if(re)received=received+1;
   end else begin empty_stalls=empty_stalls+1;held_valid=0;end
   if(r_fault)begin
-   if(MODE==2)begin
+   if(MODE==2||MODE==8)begin
     if(!empty)$fatal(1,"UE_POISON leaked valid output");
     $display("SRAM_CDC_BOUNDARY PASS uncorrectable payload poisoned W=%0d accepted=%0d received=%0d",W,sent,received);$finish;
    end

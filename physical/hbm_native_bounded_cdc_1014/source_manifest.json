@@ -1,14 +1,14 @@
 {
   "schema": "opentallas.native.bounded_cdc.source.v1",
   "source_sha256": {
-    "physical/hbm_native_bounded_cdc_1014/w16_spec.json": "b5bfe56bef1a29873f7c63566cdad53e33549ce9c61fea127b99976ac27a2153",
-    "physical/hbm_native_bounded_cdc_1014/related_domains.sdc": "c3ad319827e913a1609f55c12c63584d39fc124b39b20fe41514d550411e8ac6",
-    "physical/hbm_native_bounded_cdc_1014/suite.py": "1ec426e6da514010eca1fd60f3fd83f6c07e0f4c064daeb0e177d5ada8867039",
-    "physical/hbm_native_bounded_cdc_1014/census.py": "ee2c33b2ea6a771246c7fc51dee779d203e6e10c18fdf47daed83684715ae01e",
-    "physical/hbm_native_bounded_cdc_1014/tb_bounded_cdc.sv": "a5686983c20630db5acc3026d0806f1d15a26407fd4d376562279d2665164220",
+    "physical/hbm_native_bounded_cdc_1014/w16_spec.json": "5b8907b321d16022f1d85dd1270f806d669049b39ee485a645996a60571ceb64",
+    "physical/hbm_native_bounded_cdc_1014/related_domains.sdc": "aa4547d19643598beb3e99e5938c06031e28fc2345a18678f44ce2d24b29b411",
+    "physical/hbm_native_bounded_cdc_1014/suite.py": "cc94dd9c06832261ce2e6b934353a1acfdf511b7fcd1b32e836bb503584f2adf",
+    "physical/hbm_native_bounded_cdc_1014/census.py": "0a87e9223aa719e0525b7085a0c6d3ecd895bd86b39b8e9d364728baec74b4e9",
+    "physical/hbm_native_bounded_cdc_1014/tb_bounded_cdc.sv": "0463c18c475e1ad305d2aa564f3263522df3e8a25097a3d30a440d5a32829248",
     "physical/hbm_native_bounded_cdc_1014/physical_boundary.tcl": "8af6dda33af2f3f8dbd52fcc0077d3d71c517235183aefc3e922fb4f019ebe25",
-    "physical/hbm_native_bounded_cdc_1014/w1_spec.json": "07dffc983c3d5dd1faa4df4938a4bdbc4c8aea3e904f6695a05ec3c692d2e108",
-    "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv": "a906ba1ae6e5afe968dd05d32058d9394c3228542b4c2f32572fd05c22c77b16",
+    "physical/hbm_native_bounded_cdc_1014/w1_spec.json": "de8876c705e8a5e2bb12363c401f635933f142ca24c7b70a3d45ab741ddce425",
+    "physical/hbm_native_bounded_cdc_1014/ot_hbm_native_bounded_cdc.sv": "6ba6000a599678fbbe4bf15a5e4420f2f9fe7fb3da1e3bb590b62f0a4f4ea9b6",
     "physical/hbm_native_bounded_cdc_1014/bench.sh": "ddf4a79f2a5293699b4211a7353cd84f872f8f459562cf7ad6b96a6b2ea0d863"
   },
   "logical_capacity": 16,
@@ -20,5 +20,7 @@
   "production_adoption": false,
   "physical_area": "Requires actual ASIC synthesis; logical FF count never treated as routed area.",
   "constant_async_resets": true,
-  "epoch_binding": "Real clock edge; peer epoch complementary pairs reset invalid (0/0). Corrupt local epoch rails take priority over caller epoch changes and fail closed."
+  "epoch_binding": "Real clock edge; peer epoch complementary pairs reset invalid (0/0). Corrupt local epoch rails take priority over caller epoch changes and fail closed.",
+  "consumer_landing": "Eight actual coded-word R-clock FF banks, direct source-slot to consumer landing crossings; 8:1 selection occurs only after consumer clock capture. Publication synchronizers provide settling before selection; consumer decoder/epoch/sequence and held-output seal still guard every observed word.",
+  "consumer_coded_landing_slots": 8
 }

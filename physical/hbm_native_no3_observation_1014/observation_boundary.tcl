@@ -1,0 +1,1 @@
+source /src/physical/hbm_native_no3_observation_1014/observation_clock.sdc

@@ -204,11 +204,15 @@
     "analogmetastability andSRAMtransistorlayout/SPICE/silicon"
   ],
   "source_sha256": {
-    "physical/hbm_native_sram_cdc_1014/suite.py": "e8ec2c4c97a88ca386323190db41e611d6b8be698addbede86204fd70000abdd",
-    "physical/hbm_native_sram_cdc_1014/tb_sram_cdc.sv": "d7454140608edfdf8eef33ed1a457106425acac6fd1efce974d604eebc57535f",
-    "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv": "ccc42085ebc721142b5c08459c7503104518746cac6eb258a41d6264767472ad",
+    "physical/hbm_native_sram_cdc_1014/suite.py": "2bb1b9c00db8d2caaefd368a622bf726d1b0c1ddaa1931ad40fb3fcaeb081890",
+    "physical/hbm_native_sram_cdc_1014/w256_spec.json": "ac9535749659e37dd01e71587533cf716e2506d3b74e88769f4b38deb7920794",
+    "physical/hbm_native_sram_cdc_1014/tb_sram_cdc.sv": "832d08985a75c0b80f3613c68b800bc4b2166348c07e757560a5dc65bf37b3a1",
+    "physical/hbm_native_sram_cdc_1014/ot_hbm_native_sram_cdc.sv": "7a9e783091cae3a32f014b2708fcd1b7f59df5fe8d981360a0177597a8952f50",
+    "physical/hbm_native_sram_cdc_1014/w280_spec.json": "03c33eea7bc48d4a46396e774f168e44c0e01177bdaf1c3b77b57b900b23fe83",
     "physical/hbm_native_sram_cdc_1014/bench.sh": "0822b9dba7955ed68586527d4e768975e5b0c3061477a6e8c66953de2be7fdd9"
   },
   "constant_async_resets": true,
-  "epoch_binding": "Real clock edge; peer epoch complementary pairs reset invalid (0/0). Corrupt local epoch rails take priority over caller epoch changes and fail closed."
+  "epoch_binding": "Real clock edge; peer epoch complementary pairs reset invalid (0/0). Corrupt local epoch rails take priority over caller epoch changes and fail closed.",
+  "consumer_landing": "Eight actual coded-word R-clock FF banks, direct source-slot to consumer landing crossings; 8:1 selection occurs only after consumer clock capture. Publication synchronizers provide settling before selection; consumer decoder/epoch/sequence and held-output seal still guard every observed word.",
+  "consumer_coded_landing_slots": 8
 }

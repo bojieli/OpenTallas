@@ -1,0 +1,129 @@
+{
+  "schema": "opentallas.no3.actual_observation_abi_census.v1",
+  "verdict": "PASS",
+  "source_sha256": {
+    "physical/hbm_native_no3_observation_1014/spec.json": "c820aa2f43226d784e9ba41483a6879ac1a4393a5bfb6f66686c5b4fd5569500",
+    "physical/hbm_native_no3_observation_1014/tb_composition.sv": "794062191b1077fa9c3c12d05af0390f30707358524816b2c7abb802af05c426",
+    "physical/hbm_native_no3_observation_1014/observation_clock.sdc": "75dd432c0bcb8b1ad794310bf0bfdc0cdf9884711392e57abb19e87b0133b165",
+    "physical/hbm_native_no3_observation_1014/hard_children_bb.sv": "5b46a87cb93898520678222b548a855d0e0d8948eb1570242bfb123ec1cd1865",
+    "physical/hbm_native_no3_observation_1014/census.py": "2a1c34abf898737f7b537b74e754b332b3d10ae376b268f0551a9b610ba3dace",
+    "physical/hbm_native_no3_observation_1014/observation_boundary.tcl": "ac88843edbdfeb77e7076c4e7691c2bc487bd8375c7a00ff1888785f4e934960",
+    "physical/hbm_native_no3_observation_1014/ot_hbm_native_no3_composition_1014.sv": "0b25ca25bbc5a333441ac6bb7001e5c867005566d08480a9dca003b955c6beff",
+    "physical/hbm_native_no3_observation_1014/bench.sh": "1e17ef0f042e6f11bf6517007327a50b7118c5a1b8c72fdb6925c8c6b7dc47fa",
+    "physical/hbm_native_no3_observation_1014/ot_hbm_native_no3_hub_observe_1014.sv": "990a11ef167d700926a424c977937ba24eaed72f35f864e96d1ad03f672c3257"
+  },
+  "cases": [
+    {
+      "MUT": 0,
+      "verdict": "PASS",
+      "actual_hard_masters": [
+        {
+          "instance": "u_hub",
+          "master": "ot_hbm_native_no3_hub_observe_1014",
+          "clock_pin": "clk_sm",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice0",
+          "master": "ot_hbm_w2_stn_slice8",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice1",
+          "master": "ot_hbm_w2_stn_slice8",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice2",
+          "master": "ot_hbm_w2_stn_slice8",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice3",
+          "master": "ot_hbm_w2_stn_slice8",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice4",
+          "master": "ot_hbm_w2_stn_slice5",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        }
+      ],
+      "master_counts": {
+        "ot_hbm_native_no3_hub_observe_1014": 1,
+        "ot_hbm_w2_stn_slice8": 4,
+        "ot_hbm_w2_stn_slice5": 1
+      },
+      "observation_functional_sinks": [],
+      "own_parent_state": [],
+      "observation_top_output_only": true,
+      "actual_json_sha256": "e908ef32a86b9afeee3e3f15e18cb71ef44ad44a8daf86ac967fd8f6e430b688",
+      "expectation_met": true,
+      "scope": "Literal synthesized candidate composition; five actual existing payload masters plus unchanged body of candidate hub. Not a real die placement/clock/price qualification."
+    },
+    {
+      "MUT": 2,
+      "verdict": "FAIL",
+      "actual_hard_masters": [
+        {
+          "instance": "u_hub",
+          "master": "ot_hbm_native_no3_hub_observe_1014",
+          "clock_pin": "clk_sm",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice0",
+          "master": "ot_hbm_w2_stn_slice8",
+          "clock_pin": "clk",
+          "clock_root": "fclk_observe"
+        },
+        {
+          "instance": "u_slice1",
+          "master": "ot_hbm_w2_stn_slice8",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice2",
+          "master": "ot_hbm_w2_stn_slice8",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice3",
+          "master": "ot_hbm_w2_stn_slice8",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        },
+        {
+          "instance": "u_slice4",
+          "master": "ot_hbm_w2_stn_slice5",
+          "clock_pin": "clk",
+          "clock_root": "clk_sm"
+        }
+      ],
+      "master_counts": {
+        "ot_hbm_native_no3_hub_observe_1014": 1,
+        "ot_hbm_w2_stn_slice8": 4,
+        "ot_hbm_w2_stn_slice5": 1
+      },
+      "observation_functional_sinks": [
+        {
+          "instance": "u_slice0",
+          "port": "clk",
+          "master": "ot_hbm_w2_stn_slice8"
+        }
+      ],
+      "own_parent_state": [],
+      "observation_top_output_only": false,
+      "actual_json_sha256": "e2bab4be9daf695638205088d5c4e074430843b9f156da1ec852e290221a6f91",
+      "expectation_met": true,
+      "scope": "Literal synthesized candidate composition; five actual existing payload masters plus unchanged body of candidate hub. Not a real die placement/clock/price qualification."
+    }
+  ]
+}
