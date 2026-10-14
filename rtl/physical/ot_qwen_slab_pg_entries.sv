@@ -512,7 +512,11 @@ module ot_qwen_slab_pg_entries #(
 `else
     assign core_col_m5 = col_m5;
 `endif
+`ifdef OT_SLAB_PG_CORE_HARD
+    ot_qwen_slab_pg_core u_core (
+`else
     ot_qwen_slab_pg_core #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .GID(GID), .SCALE_BANKS(SCALE_BANKS), .COLS(COLS), .MUL_LAT(MUL_LAT), .BW_FIFO(BW_FIFO), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT), .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX)) u_core (
+`endif
         .clk(clk), .rst_n(rst_n), .bw_clk(bw_clk), .bw_rst_n(bw_rst_n), .bw_v(bw_v), .bw_rdy(bw_rdy), .bw_d(bw_d), .tw_v(tw_v), .tw_rdy(tw_rdy), .tw_d(tw_d), .p_v(p_v), .p_last(p_last), .p_oen(p_oen), .p_amax(p_amax), .p_rmax(p_rmax), .p_wsrc(p_wsrc), .p_mmode(p_mmode), .p_split(p_split), .p_nb(p_nb), .p_lb(p_lb), .p_nout(p_nout), .p_sbase(p_sbase), .p_oa(p_oa), .p_ots(p_ots), .res_in(res_in), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data), .ov(ov), .am_tv(am_tv), .am_top(am_top), .am_rmax(am_rmax), .fault(fault), .bw_w_fault(bw_w_fault), .bw_r_fault(bw_r_fault), .bw_w_live(bw_w_live), .bw_r_live(bw_r_live),
         .core_gre1(core_gre1), .core_addr1(core_addr1), .col_m5(core_col_m5), .core_rs0(core_rs0), .lane_v(lane_v), .lane_ws(lane_ws), .lane_a(lane_a), .lane_s(lane_s), .lane_y(lane_y), .lane_vo(lane_vo), .lane_err(lane_err));
     wire [3:0] col_ck = {ck_col3,ck_col2,ck_col1,ck_col0};
