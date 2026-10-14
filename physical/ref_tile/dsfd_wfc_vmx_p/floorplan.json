@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  781.92,
-  172.8
+  518.4,
+  302.4
  ],
  "core": [
   2.16,
   2.16,
-  779.76,
-  170.64000000000001
+  516.24,
+  300.23999999999995
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -81,8 +81,8 @@
    "master": "ot_sram_1r1w_64x512_m1_r2c2",
    "inst": "*u_so",
    "idx": 0,
-   "x": 216.0,
-   "y": 23.76,
+   "x": 22.464,
+   "y": 125.28,
    "w": 171.288,
    "h": 77.784,
    "orient": "R0",
@@ -94,8 +94,8 @@
    "master": "ot_sram_1r1w_512x64_m4_r2c2",
    "inst": null,
    "idx": 0,
-   "x": 663.12,
-   "y": 88.56,
+   "x": 332.64,
+   "y": 153.36,
    "w": 96.552,
    "h": 29.736,
    "orient": "R0",
@@ -107,7 +107,7 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "*u_rq.g_tile?0?.*u_m",
    "idx": 0,
-   "x": 429.84,
+   "x": 216.0,
    "y": 23.76,
    "w": 94.824,
    "h": 41.064,
@@ -120,7 +120,7 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "*u_rq.g_tile?1?.*u_m",
    "idx": 0,
-   "x": 429.84,
+   "x": 216.0,
    "y": 88.56,
    "w": 94.824,
    "h": 41.064,
@@ -133,8 +133,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "*u_rq.g_tile?2?.*u_m",
    "idx": 0,
-   "x": 546.48,
-   "y": 23.76,
+   "x": 216.0,
+   "y": 153.36,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -146,8 +146,8 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "*u_rq.g_tile?3?.*u_m",
    "idx": 0,
-   "x": 546.48,
-   "y": 88.56,
+   "x": 332.64,
+   "y": 23.76,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -159,22 +159,15 @@
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
    "inst": "*u_rq.g_tile?4?.*u_m",
    "idx": 0,
-   "x": 663.12,
-   "y": 23.76,
+   "x": 332.64,
+   "y": 88.56,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "WARN",
-   "clock_span",
-   "781.92 x 172.8 um: one clock root over > 600 um",
-   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv",
   "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",

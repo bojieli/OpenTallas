@@ -308,17 +308,17 @@ module dsfd_wfc_vmx_r #(
     wire [IB-2:0] wa_o = wi[IB-1:1];
     wire [FLIT-1:0] wd_e = wi[0] ? wd1 : wd0, wd_o = wi[0] ? wd0 : wd1;
     // the predicted read: pred = the staging index of the next read; the pin address is checked one edge later
-    // One-hot successor keeps the pin read-enable out of counter/wrap logic.
-    // The encoded successor depends only on local state and is available before
-    // the pin strobe; the strobe is just a flop enable (latency unchanged).
+    // The local read position is one-hot. The pin read-enable only rotates
+    // this state; binary encoding is local combinational data, so no pin strobe
+    // traverses a counter/wrap network before a capture register.
     reg [SD-1:0] pred_oh;
-    reg [IB-1:0] pred_advance;
+    reg [IB-1:0] pred;
     always @* begin
-        pred_advance = 0;
+        pred = 0;
         for (integer i = 0; i < SD; i = i + 1)
-            if (pred_oh[i]) pred_advance = pred_advance | IB'((i == SD-1) ? 0 : i+1);
+            if (pred_oh[i]) pred = pred | IB'(i);
     end
-    reg [IB-1:0] pred; reg pchk_v; reg [VWA-1:0] pchk_a; reg [IB-1:0] pchk_p; reg pfault;
+    reg pchk_v; reg [VWA-1:0] pchk_a; reg [IB-1:0] pchk_p; reg pfault;
     wire [VWA-1:0] ra = vm_raddr - TXB[VWA-1:0];
     reg adv_q, rd_go, rd_bk, pr_e, pr_o; reg [IB-1:0] rd_ix;
     reg [FLIT-1:0] vm_rq;
@@ -327,11 +327,10 @@ module dsfd_wfc_vmx_r #(
     always @(posedge fclk) begin
         if (!frst_n) begin
             pred_oh <= `ifdef OT_WFCVMX_MUT_PREDOFF SD'(2) `else SD'(1) `endif;
-            pred <= `ifdef OT_WFCVMX_MUT_PREDOFF 1 `else 0 `endif; pchk_v <= 1'b0; pfault <= 1'b0;
+            pchk_v <= 1'b0; pfault <= 1'b0;
             adv_q <= 1'b0; rd_go <= 1'b0; pr_e <= 1'b0; pr_o <= 1'b0;
         end else begin
             if (vm_re) begin
-                pred <= pred_advance;
                 pred_oh <= {pred_oh[SD-2:0], pred_oh[SD-1]};
             end
             pchk_v <= vm_re; pchk_a <= ra; pchk_p <= pred;

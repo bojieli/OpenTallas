@@ -1,0 +1,233 @@
+{
+  "schema": "opentallas.ref_tile.gate_result.v1",
+  "kit": "dsfd_wfc_vmx_p",
+  "verdict": "WARN",
+  "generated": "2026-10-13T20:24:12-0700",
+  "host": "ot-agidock128",
+  "cts": true,
+  "commit": "3ca3adf13",
+  "clock": {
+    "max_root_sinks": 14589,
+    "root": "port:ckv[0]",
+    "cts": true,
+    "tt_insertion_ps": 542.7,
+    "tt_spread_ps": 112.2,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "ck[0]",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 1267,
+            "mean": 483.2,
+            "min": 399.4,
+            "max": 540.9
+          },
+          "all": {
+            "n": 11834,
+            "mean": 430.4,
+            "min": 392.9,
+            "max": 540.9
+          },
+          "errors": [],
+          "macros": {
+            "n": 8,
+            "nets": 8,
+            "max_per_net": 1,
+            "reg_mean": 430.4,
+            "max_slew": 221.3,
+            "max_late": 69.1,
+            "pins": [
+              {
+                "pin": "u_hep.u_m/clk",
+                "arr": 464.4,
+                "slew": 123.5,
+                "late": 34.0,
+                "net": "clknet_3_6__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[0].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 446.7,
+                "slew": 56.9,
+                "late": 16.3,
+                "net": "clknet_3_0__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[1].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 474.1,
+                "slew": 150.4,
+                "late": 43.7,
+                "net": "clknet_3_2__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[2].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 430.5,
+                "slew": 13.2,
+                "late": 0.1,
+                "net": "clknet_3_1__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[3].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 433.9,
+                "slew": 22.6,
+                "late": 3.5,
+                "net": "clknet_3_4__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[4].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 499.5,
+                "slew": 221.3,
+                "late": 69.1,
+                "net": "clknet_3_5__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_se/clk",
+                "arr": 396.5,
+                "slew": 64.7,
+                "late": -33.9,
+                "net": "clknet_1_0_0_ck[0]"
+              },
+              {
+                "pin": "u_vr.u_so/clk",
+                "arr": 395.7,
+                "slew": 63.3,
+                "late": -34.7,
+                "net": "clknet_1_1_0_ck[0]"
+              }
+            ]
+          },
+          "macro_libs": 3
+        }
+      },
+      {
+        "source": "ckv[0]",
+        "clock": "ser_clk",
+        "tt": {
+          "boundary": {
+            "n": 1716,
+            "mean": 481.4,
+            "min": 451.4,
+            "max": 542.7
+          },
+          "all": {
+            "n": 14572,
+            "mean": 473.2,
+            "min": 430.5,
+            "max": 542.7
+          },
+          "errors": [],
+          "macros": {
+            "n": 8,
+            "nets": 8,
+            "max_per_net": 1,
+            "reg_mean": 473.2,
+            "max_slew": 221.3,
+            "max_late": 26.3,
+            "pins": [
+              {
+                "pin": "u_hep.u_m/clk",
+                "arr": 464.4,
+                "slew": 123.5,
+                "late": -8.8,
+                "net": "clknet_3_6__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[0].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 446.7,
+                "slew": 56.9,
+                "late": -26.5,
+                "net": "clknet_3_0__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[1].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 474.1,
+                "slew": 150.4,
+                "late": 0.9,
+                "net": "clknet_3_2__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[2].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 430.5,
+                "slew": 13.2,
+                "late": -42.7,
+                "net": "clknet_3_1__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[3].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 433.9,
+                "slew": 22.6,
+                "late": -39.3,
+                "net": "clknet_3_4__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_rq.g_tile[4].genblk1.genblk1.g_m2.u_m/clk",
+                "arr": 499.5,
+                "slew": 221.3,
+                "late": 26.3,
+                "net": "clknet_3_5__leaf_ckv[0]"
+              },
+              {
+                "pin": "u_vr.u_se/clk",
+                "arr": 396.5,
+                "slew": 64.7,
+                "late": -76.7,
+                "net": "clknet_1_0_0_ck[0]"
+              },
+              {
+                "pin": "u_vr.u_so/clk",
+                "arr": 395.7,
+                "slew": 63.3,
+                "late": -77.5,
+                "net": "clknet_1_1_0_ck[0]"
+              }
+            ]
+          },
+          "macro_libs": 3
+        }
+      }
+    ],
+    "measured_clock": "ser_clk",
+    "verdict": "PASS",
+    "text": "14,589 sinks on the largest root <= 15,000; measured TT insertion 542.7 ps, leaf spread 112.2 ps"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "clock_span",
+      "message": "781.92 x 172.8 um: one clock root over > 600 um",
+      "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+    },
+    {
+      "severity": "WARN",
+      "check": "pins",
+      "message": "1-bit vector ports ['ck', 'ckv', 'rst', 'rsv', 't_vc', 'f_pf']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])",
+      "fix": "declare them scalar in RTL"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.clock_domain",
+      "message": "clock root port ckv[0]: 14,583 flops > 8,000 spread over a 778 x 168 um outline (> 600 um) (+0 ICGs, 6 macro clock pins; e.g. _172063_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+      "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.clock_domain",
+      "message": "clock root port ck[0]: 11,849 flops > 8,000 spread over a 778 x 168 um outline (> 600 um) (+0 ICGs, 2 macro clock pins; e.g. _172061_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+      "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.boundary",
+      "message": "2 input->register endpoint(s) > 3 levels (worst f_vr[15]->u_vr.pred[2]$_SDFFE_PN0P_/D 5 lv, f_vr[15]->u_vr.pred[3]$_SDFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)",
+      "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+    }
+  ],
+  "qualifies_source_binding": false,
+  "qualification_note": "Legacy v1 receipt for prior wide p3 normal-reset snapshot. Does not qualify p4 source or compact layout; full source archive manifest was not captured."
+}
