@@ -12451,7 +12451,8 @@
   "v16 sp_gather: step B capacity answer (rows open per root on the real field order) owed; else +430 um N in v17.",
   "v16 dsfd_bf (s81-bf 07:39): tiles_direct request (2 x bf_col 450.144 + bf_front 100.224 in the same frame, two 1.188 um seam channels) NOT folded: LEF / lib exports and the compact199 compose STA are owed first.",
   "v16 no closed slot-shaped view by name for dsfd_bf, dsfd_pq_root, dsfd_sp_pq.",
-  "v16 pin readiness (die_pin_audit): pin_align 0 FAIL owed before the release GRT; 28 masters / 1,316 instances FIX BY PIN RE-PLAN to post to the element streams; legacy-M7 windows to be decided on the v16 model."
+  "v16 pin readiness (die_pin_audit): pin_align 0 FAIL owed before the release GRT; 28 masters / 1,316 instances FIX BY PIN RE-PLAN to post to the element streams; legacy-M7 windows to be decided on the v16 model.",
+  "v16 pair gate (pinreg pairs) not passed: x_lane relay re-plan (512 hops), 1,153 pin re-plans, cfifo / end-relay capture-edge re-routes."
  ],
  "m6_pin_grants": {
   "rule": "tools/hier_contract/M6_PIN_GRANT.md: exact master, source commit, physical-spec digest, exact bits / face / span; signals and PG stay <= M5",
@@ -13146,7 +13147,8 @@
    "gate": "tools/hier_contract/pin_align.py inside tools/dsrom_s81_fulldie.py real / check (OT_PIN_ALIGN_GATE fail | warn | off)",
    "v14": "7,181 of 115,030 bundles FAIL (57,921 jog > 20 um, 18,819 reordered, 15,111 u-turns); nearly all FIX AT DIE: generated abstracts whose pins the generator places",
    "rule": "v16 must pass at 0 FAIL before a die GRT counts for release; OT_PIN_ALIGN_GATE=warn runs are pathfinding only. Fix in the generator pin placement (pins facing the consumer, bit order kept, no u-turns), never in closed tiles",
-   "v16_generator_changes": "--peer-pin-pos (slab ports on the peer pin group, slice-aware, abutting peers first), --lane-pins 2 with the lane's own face stations, --rly-face-reach"
+   "v16_generator_changes": "--peer-pin-pos (slab ports on the peer pin group, slice-aware, abutting peers first), --lane-pins 2 with the lane's own face stations, --rly-face-reach",
+   "v16_measured": "v16 chain c6 GEN (src 7099e65a, bound relay views): pin_align FAIL 7,045 of 115,341 bundles (WARN 72,787; jog > 20 um 57,931; reordered 21,250; u-turn 14,477) in 19 classes, all generator pin placement in the field frames: dsfd_qbank_S.o_x0 / o_x1 -> q element x0 / x1 2,560 bundles (interleaved order, jog 26-39 um in a 2.37-um gap, cut 2.5-3.6); abutted return-tree nodes dsfd_node_* (gap 0.312 um, jog 1.1-7.3 um) ~3,970 bundles; dsfd_sstn.xa / xb -> dsfd_rly_283_SN / 266_SN 256 bundles (jog 31-57 um, gap 6.8 um). Hub slabs / lanes: 0 FAIL after --peer-pin-pos. NOT fixed in v16: no release GRT until 0 FAIL."
   },
   "legacy_m7": {
    "masters": 27,
@@ -13322,5 +13324,16 @@
    ]
   },
   "closed_stands": "submit gate live: a route of a block with a CLOSED published job needs reroute_reason (die_window / slot_change / param_change / rtl_change / evidence_gap) in its spec"
+ },
+ "pair_gate": {
+  "source": "results/arch/pinreg_audit_1013/pairs/ (main ada53a5be), S81 v15, 114,944 data hops",
+  "rule": "the S81 hop gate judges every hop at min(500 um, pair reach of the two real views) and fails hold races; OT_S81_PAIR_GATE=0 for diagnosis only; v16 must pass it AND pin_align at 0 FAIL before a die GRT counts",
+  "v15": "0 setup fails between two real views; 136 forwarded hops fail HOLD (dsfd_cfifo x128 + 8 m221pq end relays sample a forwarded link on its launch edge, FF hold -94..-206 ps); 1,665 hops with one real end fail setup; 402,553 bits over their pair limit, 6 hold races; 49,163 hops without pin geometry; 15 flagged masters STAND (incl. the 5 station classes x1,540)",
+  "fixes": [
+   "one more die relay on 512 x_lane hops (+290 cycles per AR token = 0.034 %): generator",
+   "pin re-plan on 1,153 hops: generator pin placement",
+   "dsfd_cfifo + 8 m221pq end relays: re-route with a capture-edge fix, reroute_reason die_window (s81-die / s81-rerun own these masters)"
+  ],
+  "v16": "NOT run on the v16 case yet"
  }
 }

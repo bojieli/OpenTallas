@@ -5,7 +5,7 @@
   "max_rate_change": 0.01,
   "rule": "QUALIFIED_BY_BOUND: a natively built op / class whose 10x slowdown moves the token rate by < 1 % (HBM: S2 re-scheduled with the op at 10x; ROM: 9 x class critical cycles / token cycles)"
  },
- "generated_utc": "2026-10-13T20:40:53Z",
+ "generated_utc": "2026-10-13T23:29:56Z",
  "rule": "AGENTS.md Throughput qualification (owner 2026-10-10, main 8a62d15ae): a unit qualifies only when bit-exact + timing-closed + a production-shape throughput bench is within 10 % of its simulator price",
  "qualify_ratio": 1.1,
  "s81_layer": {
@@ -1633,7 +1633,7 @@
    "stalled": false,
    "owner": "Claude:el1013-qwen-elements-r6",
    "target": null,
-   "t": "2026-10-13T09:34:17-07:00",
+   "t": "2026-10-13T15:35:18-07:00",
    "adopted": true
   },
   "ot_attn_lo_root": {
@@ -1726,6 +1726,21 @@
    "t": "2026-10-13T02:45:37-07:00",
    "adopted": true
   },
+  "qkd_seq_core": {
+   "job": "qkd_seq_core-kc2-dbf8a21da",
+   "commit": "dbf8a21da",
+   "bench": "bench_seq_equiv_exact",
+   "line": "COUNTS cycles=91796 compared=91784 layers=160 kvd_launch=160 q_words=5120 kvn_rows=640 res=10240 steps=46 h_starts=1837 fault_steps=5 drain_wait_cycles=67496 pw=3725 dw=1528 kc=322 x3_cr=6400 join_wai",
+   "cycles": 91796,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-qwen-kvcentre",
+   "target": null,
+   "t": "2026-10-13T15:20:08-07:00",
+   "adopted": true
+  },
   "ot_attn_tile_m6h1q": {
    "job": "hbm_attn_quad_cg-pka-04424cd9f-tc-hm10-grta-cl",
    "commit": "04424cd9f",
@@ -1768,7 +1783,7 @@
    "stalled": false,
    "owner": "Claude:s81-sppq",
    "target": null,
-   "t": "2026-10-13T09:05:43-07:00",
+   "t": "2026-10-13T15:35:06-07:00",
    "adopted": true
   },
   "ot_qkvd_sbuf": {
@@ -1966,6 +1981,21 @@
    "t": "2026-10-13T10:26:23-07:00",
    "adopted": true
   },
+  "dsfd_vm_fxr": {
+   "job": "dsfd_vm_fxr_m5-p1-dcf82afbe",
+   "commit": "dcf82afbe",
+   "bench": "bench_s81_vm_fe_h_lockstep_exact",
+   "line": "RESULT cyc=64000 checked=43579 mismatches_or_fails=0 phases=146 arm=146 p2rd=532 done=7208 rows_ready=75 starts=460 p2_words=13927 ctrl_reads=3197 el=235808/235808 cap_ops=14385 max_occ=3 mirror_max=3",
+   "cycles": 64000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-s81-vmfe/B5",
+   "target": null,
+   "t": "2026-10-13T13:56:12-07:00",
+   "adopted": true
+  },
   "dsfd_mtp_seq_rtt": {
    "job": "mtp-seq-rtt-native-61b4bc729-tc",
    "commit": "61b4bc729",
@@ -2039,6 +2069,21 @@
    "owner": "Claude:q14-node",
    "target": null,
    "t": "2026-10-13T13:21:57-07:00",
+   "adopted": true
+  },
+  "qkd_seq_xs": {
+   "job": "qkd_seq_xs-kc2-dbf8a21da",
+   "commit": "dbf8a21da",
+   "bench": "bench_seq_equiv_exact",
+   "line": "COUNTS cycles=91796 compared=91784 layers=160 kvd_launch=160 q_words=5120 kvn_rows=640 res=10240 steps=46 h_starts=1837 fault_steps=5 drain_wait_cycles=67496 pw=3725 dw=1528 kc=322 x3_cr=6400 join_wai",
+   "cycles": 91796,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-qwen-kvcentre",
+   "target": null,
+   "t": "2026-10-13T15:14:08-07:00",
    "adopted": true
   },
   "qfd_embed_ingress_code": {
@@ -2330,6 +2375,21 @@
    "t": "2026-10-12T09:05:53-07:00",
    "adopted": true
   },
+  "dsfd_vm_frr": {
+   "job": "dsfd_vm_frr_m5-p1-dcf82afbe",
+   "commit": "dcf82afbe",
+   "bench": "bench_s81_vm_fe_h_lockstep_exact",
+   "line": "RESULT cyc=64000 checked=43579 mismatches_or_fails=0 phases=146 arm=146 p2rd=532 done=7208 rows_ready=75 starts=460 p2_words=13927 ctrl_reads=3197 el=235808/235808 cap_ops=14385 max_occ=3 mirror_max=3",
+   "cycles": 64000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-s81-vmfe/B5",
+   "target": null,
+   "t": "2026-10-13T13:53:00-07:00",
+   "adopted": true
+  },
   "dsfd_svch_pcs": {
    "job": "svch_pcs-eccab9f14-pd60-tc",
    "commit": "eccab9f14",
@@ -2450,6 +2510,21 @@
    "t": "2026-10-13T13:03:45-07:00",
    "adopted": true
   },
+  "dsfd_su_t_swtl": {
+   "job": "s81su_swtl_ref-v2-noouthold-13223932b",
+   "commit": "13223932b",
+   "bench": "bench_lockstep_exact",
+   "line": "SWT_SPLIT mut=0 cyc=60000 checks=59980 mismatches=0 jobs=555 g=18448 u=17915 pass=9118/9095/9079/9071 fo_cyc=7303 fu_cyc=7477 wnz=13973",
+   "cycles": 60000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-s81su-qual",
+   "target": null,
+   "t": "2026-10-13T14:22:39-07:00",
+   "adopted": true
+  },
   "ot_hgi_coll_row_formatter": {
    "job": "hgi_coll_row_formatter_c130-264ff331a-tc-cl",
    "commit": "264ff331a",
@@ -2481,6 +2556,21 @@
    "kind": "MEASURED_ACCEPT",
    "accept_spaced": true,
    "dense": true
+  },
+  "dsfd_su_t_qbtl": {
+   "job": "s81su_qbtl_ref-v3-pinko-57ee0354e",
+   "commit": "57ee0354e",
+   "bench": "bench_lockstep_exact",
+   "line": "QBT_SPLIT mut=0 cyc=60000 checks=59980 mismatches=0 jobs=555 passes=36018 pass=9032/9009/8992/8985 fo_cyc=29 ob_nz=59725 f4=29477 dnz=36018",
+   "cycles": 60000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-s81su-qual",
+   "target": null,
+   "t": "2026-10-13T14:57:41-07:00",
+   "adopted": true
   },
   "qfd_seq_su_bi_fea": {
    "job": "qfd_seq_su_bi-fearl-19fe61d1d-tc-hm0-cl",
@@ -2527,6 +2617,21 @@
    "t": "2026-10-12T17:46:27-07:00",
    "adopted": true
   },
+  "ot_s81_bf_front": {
+   "job": "el1013-bf-front-align-f003d825f-cl",
+   "commit": "f003d825f",
+   "bench": "bench_bf_pair_txn_exact",
+   "line": "positive ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350'",
+   "cycles": 124422,
+   "item": "issues",
+   "items": 4288,
+   "ii": 29.016,
+   "stalled": false,
+   "owner": "Claude:el1013-s81-bf",
+   "target": null,
+   "t": "2026-10-13T14:04:10-07:00",
+   "adopted": true
+  },
   "qkd_rstseq": {
    "job": "qkd_rstseq-kc1-b4a0a3156",
    "commit": "b4a0a3156",
@@ -2539,7 +2644,7 @@
    "stalled": false,
    "owner": "Claude:el1013-qwen-kvcentre",
    "target": null,
-   "t": "2026-10-13T09:06:45-07:00",
+   "t": "2026-10-13T15:07:35-07:00",
    "adopted": true
   },
   "ot_qfd_vm_bank_t": {
@@ -2674,7 +2779,7 @@
    "stalled": false,
    "owner": "Claude:q13b-kvend",
    "target": null,
-   "t": "2026-10-13T07:58:11-07:00",
+   "t": "2026-10-13T13:58:17-07:00",
    "adopted": true
   },
   "qfd_seq_su_bi_feb": {
@@ -2707,6 +2812,21 @@
    "t": "2026-10-12T09:05:52-07:00",
    "adopted": true
   },
+  "ot_hgi_qdq_asm": {
+   "job": "qdq_asm_ref-q8c-69bca9d93",
+   "commit": "69bca9d93",
+   "bench": "bench_production_qdq_m0",
+   "line": "PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3",
+   "cycles": 183,
+   "item": "words",
+   "items": 3328,
+   "ii": 0.055,
+   "stalled": false,
+   "owner": "Claude:hbm-qdq-q8",
+   "target": null,
+   "t": "2026-10-13T13:53:34-07:00",
+   "adopted": true
+  },
   "qkd_kvwq_leaf_s_w129_m": {
    "job": "qkd_kvwq_leaf_s_w129_m-sl1-4df79ee4f",
    "commit": "4df79ee4f",
@@ -2719,7 +2839,7 @@
    "stalled": false,
    "owner": "Claude:el1013-qwen-elements-r6",
    "target": null,
-   "t": "2026-10-13T07:51:45-07:00",
+   "t": "2026-10-13T13:52:03-07:00",
    "adopted": true
   },
   "ot_hbm_index_global_order": {
@@ -2735,6 +2855,21 @@
    "owner": "Claude:sys-takeover",
    "target": null,
    "t": "2026-10-12T09:05:50-07:00",
+   "adopted": true
+  },
+  "dsfd_su_t_swth": {
+   "job": "s81su_swth_ref-v2-noouthold-13223932b",
+   "commit": "13223932b",
+   "bench": "bench_lockstep_exact",
+   "line": "SWT_SPLIT mut=0 cyc=60000 checks=59980 mismatches=0 jobs=555 g=18448 u=17915 pass=9118/9095/9079/9071 fo_cyc=7303 fu_cyc=7477 wnz=13973",
+   "cycles": 60000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-s81su-qual",
+   "target": null,
+   "t": "2026-10-13T14:19:42-07:00",
    "adopted": true
   },
   "ot_hbm_index_global_order_mt": {
@@ -2794,7 +2929,7 @@
    "stalled": false,
    "owner": "Claude:el1013-qwen-clusters",
    "target": null,
-   "t": "2026-10-13T08:23:31-07:00",
+   "t": "2026-10-13T14:24:33-07:00",
    "adopted": true
   },
   "dsfd_wfc_vmx": {
@@ -2932,6 +3067,21 @@
    "owner": "Claude:safe-hbm",
    "target": null,
    "t": "2026-10-12T09:05:51-07:00",
+   "adopted": true
+  },
+  "dsfd_vm_fcw": {
+   "job": "dsfd_vm_fcw_m5-p1-dcf82afbe",
+   "commit": "dcf82afbe",
+   "bench": "bench_s81_vm_fe_h_lockstep_exact",
+   "line": "RESULT cyc=64000 checked=43579 mismatches_or_fails=0 phases=146 arm=146 p2rd=532 done=7208 rows_ready=75 starts=460 p2_words=13927 ctrl_reads=3197 el=235808/235808 cap_ops=14385 max_occ=3 mirror_max=3",
+   "cycles": 64000,
+   "item": null,
+   "items": null,
+   "ii": null,
+   "stalled": false,
+   "owner": "Claude:el1013-s81-vmfe/B5",
+   "target": null,
+   "t": "2026-10-13T13:54:50-07:00",
    "adopted": true
   },
   "ot_hcoll_port": {
@@ -3254,8 +3404,16 @@
    ]
   },
   {
+   "path": "results/rtl/tput_map_1011/hbm_smmv_xp_latency40/record.json",
+   "commit": "ca15ed1e7",
+   "cls": null,
+   "model": null,
+   "ratio": null,
+   "elements": []
+  },
+  {
    "path": "results/rtl/tput_map_1011/mtp_verify/record.json",
-   "commit": "a1835266d",
+   "commit": "8de0f5a70",
    "cls": "MTP.VERIFY",
    "model": "DS MTP (HBM)",
    "ratio": null,
@@ -3888,8 +4046,10 @@
   "dsfd_vm_bgl28": "^dsfd_vm_",
   "dsfd_vm_bgq28": "^dsfd_vm_",
   "dsfd_vm_clt": "^dsfd_vm_",
+  "dsfd_vm_fcc": "^dsfd_vm_",
   "dsfd_vm_fcw": "^dsfd_vm_",
   "dsfd_vm_fe": "^dsfd_vm_",
+  "dsfd_vm_fld": "^dsfd_vm_",
   "dsfd_vm_flt": "^dsfd_vm_",
   "dsfd_vm_fra": "^dsfd_vm_",
   "dsfd_vm_frg": "^dsfd_vm_",
@@ -3945,13 +4105,21 @@
   "ot_qfd_res_tiles_ctl": null,
   "ot_qfd_su_cbuf_g": null,
   "ot_qfd_vm_bank_t": null,
+  "ot_qfd_vm_bctl_t": null,
+  "ot_qfd_vm_fan_t": null,
   "ot_qfd_vm_gctl_t": null,
   "ot_qfd_vm_grp": null,
+  "ot_qfd_vm_rr2_t": null,
+  "ot_qfd_vm_rr4_t": null,
+  "ot_qfd_vm_sctl_t": null,
   "ot_qfd_vm_su1024_t": null,
   "ot_qfd_vm_su_t": null,
+  "ot_qfd_vm_xcol_t": null,
   "ot_qfd_vm_xfifo32_t": null,
   "ot_qfd_vm_xfifo8_t": null,
+  "ot_qfd_vm_xpad2_t": null,
   "ot_qfd_vm_xplane_t": null,
+  "ot_qfd_vm_xqface_t": null,
   "ot_qfd_vm_xrelay_t": null,
   "ot_qkh_ktree": "tile of ot_qwen_nearhbm_head_h",
   "ot_qkh_lane8": "tile of ot_qwen_nearhbm_head_h",
@@ -4121,6 +4289,9 @@
   "qkd_ctrl_kc": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_ctrl_pc": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_ectl": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_ectl_a": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_ectl_b": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_ectl_c": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_ctl": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_ctl_bin": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_kvwq_grp": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
@@ -4129,7 +4300,10 @@
   "qkd_land_emb": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_land_grp": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
   "qkd_land_pc": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
-  "qkd_rstseq": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)"
+  "qkd_rstseq": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_seq_core": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_seq_fan": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)",
+  "qkd_seq_xs": "^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_)"
  },
  "hbm_datactl_rows": [
   {
@@ -8798,7 +8972,22 @@
      "owner": "tput-map-1011",
      "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "s81su_qbtl_ref-v3-pinko-57ee0354e",
+    "commit": "57ee0354e",
+    "bench": "bench_lockstep_exact",
+    "line": "QBT_SPLIT mut=0 cyc=60000 checks=59980 mismatches=0 jobs=555 passes=36018 pass=9032/9009/8992/8985 fo_cyc=29 ob_nz=59725 f4=29477 dnz=36018",
+    "cycles": 60000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-s81su-qual",
+    "target": null,
+    "t": "2026-10-13T14:57:41-07:00",
+    "adopted": true
+   }
   },
   "dsfd_su_t_qn": {
    "status": "UNMEASURED",
@@ -9150,7 +9339,22 @@
      "owner": "tput-map-1011",
      "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "s81su_swth_ref-v2-noouthold-13223932b",
+    "commit": "13223932b",
+    "bench": "bench_lockstep_exact",
+    "line": "SWT_SPLIT mut=0 cyc=60000 checks=59980 mismatches=0 jobs=555 g=18448 u=17915 pass=9118/9095/9079/9071 fo_cyc=7303 fu_cyc=7477 wnz=13973",
+    "cycles": 60000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-s81su-qual",
+    "target": null,
+    "t": "2026-10-13T14:19:42-07:00",
+    "adopted": true
+   }
   },
   "dsfd_su_t_swtl": {
    "status": "UNMEASURED",
@@ -9172,7 +9376,22 @@
      "owner": "tput-map-1011",
      "src": "name rule ^(dsfd_su_t_|ot_s81_hc_): tput-map-1011: hardened tiles of the S81 SU slab dsfd_sp_su_h / HC slab dsfd_sp_hc (s81-suhc-hier-1011): su class"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "s81su_swtl_ref-v2-noouthold-13223932b",
+    "commit": "13223932b",
+    "bench": "bench_lockstep_exact",
+    "line": "SWT_SPLIT mut=0 cyc=60000 checks=59980 mismatches=0 jobs=555 g=18448 u=17915 pass=9118/9095/9079/9071 fo_cyc=7303 fu_cyc=7477 wnz=13973",
+    "cycles": 60000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-s81su-qual",
+    "target": null,
+    "t": "2026-10-13T14:22:39-07:00",
+    "adopted": true
+   }
   },
   "dsfd_svc_join": {
    "status": "UNMEASURED",
@@ -9717,7 +9936,7 @@
     "adopted": true
    }
   },
-  "dsfd_vm_fcw": {
+  "dsfd_vm_fcc": {
    "status": "UNMEASURED",
    "ratio": null,
    "limiting": {
@@ -9739,7 +9958,66 @@
     }
    ]
   },
+  "dsfd_vm_fcw": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ],
+   "bench_ii": {
+    "job": "dsfd_vm_fcw_m5-p1-dcf82afbe",
+    "commit": "dcf82afbe",
+    "bench": "bench_s81_vm_fe_h_lockstep_exact",
+    "line": "RESULT cyc=64000 checked=43579 mismatches_or_fails=0 phases=146 arm=146 p2rd=532 done=7208 rows_ready=75 starts=460 p2_words=13927 ctrl_reads=3197 el=235808/235808 cap_ops=14385 max_occ=3 mirror_max=3",
+    "cycles": 64000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-s81-vmfe/B5",
+    "target": null,
+    "t": "2026-10-13T13:54:50-07:00",
+    "adopted": true
+   }
+  },
   "dsfd_vm_fe": {
+   "status": "UNMEASURED",
+   "ratio": null,
+   "limiting": {
+    "op": "class:field",
+    "model": "ds_rom",
+    "status": "UNMEASURED",
+    "ratio": null,
+    "owner": "tput-map-1011",
+    "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+   },
+   "ops": [
+    {
+     "op": "class:field",
+     "model": "ds_rom",
+     "status": "UNMEASURED",
+     "ratio": null,
+     "owner": "tput-map-1011",
+     "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
+    }
+   ]
+  },
+  "dsfd_vm_fld": {
    "status": "UNMEASURED",
    "ratio": null,
    "limiting": {
@@ -9847,7 +10125,22 @@
      "owner": "tput-map-1011",
      "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "dsfd_vm_frr_m5-p1-dcf82afbe",
+    "commit": "dcf82afbe",
+    "bench": "bench_s81_vm_fe_h_lockstep_exact",
+    "line": "RESULT cyc=64000 checked=43579 mismatches_or_fails=0 phases=146 arm=146 p2rd=532 done=7208 rows_ready=75 starts=460 p2_words=13927 ctrl_reads=3197 el=235808/235808 cap_ops=14385 max_occ=3 mirror_max=3",
+    "cycles": 64000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-s81-vmfe/B5",
+    "target": null,
+    "t": "2026-10-13T13:53:00-07:00",
+    "adopted": true
+   }
   },
   "dsfd_vm_fsr": {
    "status": "UNMEASURED",
@@ -9906,7 +10199,22 @@
      "owner": "tput-map-1011",
      "src": "name rule ^dsfd_vm_: tput-map-1011: S81 layer-die VM masters / tiles (field class carries dsfd_vm_bg / bgh / bgq)"
     }
-   ]
+   ],
+   "bench_ii": {
+    "job": "dsfd_vm_fxr_m5-p1-dcf82afbe",
+    "commit": "dcf82afbe",
+    "bench": "bench_s81_vm_fe_h_lockstep_exact",
+    "line": "RESULT cyc=64000 checked=43579 mismatches_or_fails=0 phases=146 arm=146 p2rd=532 done=7208 rows_ready=75 starts=460 p2_words=13927 ctrl_reads=3197 el=235808/235808 cap_ops=14385 max_occ=3 mirror_max=3",
+    "cycles": 64000,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-s81-vmfe/B5",
+    "target": null,
+    "t": "2026-10-13T13:56:12-07:00",
+    "adopted": true
+   }
   },
   "dsfd_vm_fxs": {
    "status": "UNMEASURED",
@@ -14362,6 +14670,28 @@
     }
    ]
   },
+  "ot_hgi_qdq_asm": {
+   "status": "QUALIFIED",
+   "ratio": 0.055,
+   "limiting": {
+    "op": "bench II (words)",
+    "model": "rom",
+    "status": "QUALIFIED",
+    "ratio": 0.055,
+    "owner": "Claude:hbm-qdq-q8",
+    "src": "closure job qdq_asm_ref-q8c-69bca9d93 @ 69bca9d93: PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3 (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+   },
+   "ops": [
+    {
+     "op": "bench II (words)",
+     "model": "rom",
+     "status": "QUALIFIED",
+     "ratio": 0.055,
+     "owner": "Claude:hbm-qdq-q8",
+     "src": "closure job qdq_asm_ref-q8c-69bca9d93 @ 69bca9d93: PASS HGI_QDQ_Q_TPUT records=8 words=3328 cycles=183 priced=168 S=3 (fixed-pipeline full-rate rule: <= 1.10 cycles an item)"
+    }
+   ]
+  },
   "ot_hgi_qdq_core": {
    "status": "QUALIFIED",
    "ratio": 0.055,
@@ -14996,7 +15326,7 @@
     "stalled": false,
     "owner": "Claude:s81-sppq",
     "target": null,
-    "t": "2026-10-13T09:05:43-07:00",
+    "t": "2026-10-13T15:35:06-07:00",
     "adopted": true
    }
   },
@@ -15180,7 +15510,7 @@
     "stalled": false,
     "owner": "Claude:el1013-qwen-elements-r6",
     "target": null,
-    "t": "2026-10-13T09:34:17-07:00",
+    "t": "2026-10-13T15:35:18-07:00",
     "adopted": true
    }
   },
@@ -15280,6 +15610,50 @@
     "adopted": true
    }
   },
+  "ot_qfd_vm_bctl_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qfd_vm_fan_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "ot_qfd_vm_gctl_t": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -15303,6 +15677,72 @@
    ]
   },
   "ot_qfd_vm_grp": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qfd_vm_rr2_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qfd_vm_rr4_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qfd_vm_sctl_t": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -15383,6 +15823,28 @@
     "adopted": true
    }
   },
+  "ot_qfd_vm_xcol_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "ot_qfd_vm_xfifo32_t": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
@@ -15427,7 +15889,51 @@
     }
    ]
   },
+  "ot_qfd_vm_xpad2_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
   "ot_qfd_vm_xplane_t": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "unmapped",
+    "model": "rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "-",
+    "src": "no token-path class and no name rule"
+   },
+   "ops": [
+    {
+     "op": "unmapped",
+     "model": "rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "-",
+     "src": "no token-path class and no name rule"
+    }
+   ]
+  },
+  "ot_qfd_vm_xqface_t": {
    "status": "UNQUALIFIED_NO_BENCH",
    "ratio": null,
    "limiting": {
@@ -15879,7 +16385,7 @@
     "stalled": false,
     "owner": "Claude:q13b-kvend",
     "target": null,
-    "t": "2026-10-13T07:58:11-07:00",
+    "t": "2026-10-13T13:58:17-07:00",
     "adopted": true
    }
   },
@@ -16880,6 +17386,21 @@
      "composed": "results/rtl/s81_bf_arch_20261009/compose/summary.json: interface TT +265.8 / FF +45.1 balanced"
     },
     "src": "results/rtl/s81_bf_arch_20261009/bench/{tcg0,hcol}.json + compose/price.json"
+   },
+   "bench_ii": {
+    "job": "el1013-bf-front-align-f003d825f-cl",
+    "commit": "f003d825f",
+    "bench": "bench_bf_pair_txn_exact",
+    "line": "positive ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350'",
+    "cycles": 124422,
+    "item": "issues",
+    "items": 4288,
+    "ii": 29.016,
+    "stalled": false,
+    "owner": "Claude:el1013-s81-bf",
+    "target": null,
+    "t": "2026-10-13T14:04:10-07:00",
+    "adopted": true
    }
   },
   "ot_s81_bf_native": {
@@ -20039,68 +20560,68 @@
    ]
   },
   "qfd_lst_c": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0313,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0313,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: die relay stations (die_relays_430um: 95 per ME op, 26 per all-reduce, priced); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json die_relays: 6093 measured / 5908 priced layer = 1.0313 (term 613 / 428 cycles), exact, QROM_BD=77 QROM_TWS=93 QROM_ORD=10 QROM_LAT=365, --dcu 2 --duc 2 --su-ml 7"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0313,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: die relay stations (die_relays_430um: 95 per ME op, 26 per all-reduce, priced); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json die_relays: 6093 measured / 5908 priced layer = 1.0313 (term 613 / 428 cycles), exact, QROM_BD=77 QROM_TWS=93 QROM_ORD=10 QROM_LAT=365, --dcu 2 --duc 2 --su-ml 7"
     }
    ]
   },
   "qfd_lst_h": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0313,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0313,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: die relay stations (die_relays_430um: 95 per ME op, 26 per all-reduce, priced); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json die_relays: 6093 measured / 5908 priced layer = 1.0313 (term 613 / 428 cycles), exact, QROM_BD=77 QROM_TWS=93 QROM_ORD=10 QROM_LAT=365, --dcu 2 --duc 2 --su-ml 7"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0313,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: die relay stations (die_relays_430um: 95 per ME op, 26 per all-reduce, priced); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json die_relays: 6093 measured / 5908 priced layer = 1.0313 (term 613 / 428 cycles), exact, QROM_BD=77 QROM_TWS=93 QROM_ORD=10 QROM_LAT=365, --dcu 2 --duc 2 --su-ml 7"
     }
    ]
   },
   "qfd_lst_v": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0313,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0313,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: die relay stations (die_relays_430um: 95 per ME op, 26 per all-reduce, priced); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json die_relays: 6093 measured / 5908 priced layer = 1.0313 (term 613 / 428 cycles), exact, QROM_BD=77 QROM_TWS=93 QROM_ORD=10 QROM_LAT=365, --dcu 2 --duc 2 --su-ml 7"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0313,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: die relay stations (die_relays_430um: 95 per ME op, 26 per all-reduce, priced); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json die_relays: 6093 measured / 5908 priced layer = 1.0313 (term 613 / 428 cycles), exact, QROM_BD=77 QROM_TWS=93 QROM_ORD=10 QROM_LAT=365, --dcu 2 --duc 2 --su-ml 7"
     }
    ]
   },
@@ -20208,24 +20729,24 @@
    ]
   },
   "qfd_rly": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0313,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0313,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: die relay stations (die_relays_430um: 95 per ME op, 26 per all-reduce, priced); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json die_relays: 6093 measured / 5908 priced layer = 1.0313 (term 613 / 428 cycles), exact, QROM_BD=77 QROM_TWS=93 QROM_ORD=10 QROM_LAT=365, --dcu 2 --duc 2 --su-ml 7"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0313,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: die relay stations (die_relays_430um: 95 per ME op, 26 per all-reduce, priced); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json die_relays: 6093 measured / 5908 priced layer = 1.0313 (term 613 / 428 cycles), exact, QROM_BD=77 QROM_TWS=93 QROM_ORD=10 QROM_LAT=365, --dcu 2 --duc 2 --su-ml 7"
     }
    ]
   },
@@ -20569,98 +21090,98 @@
    ]
   },
   "qfd_sp_tree_top": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10"
     },
     {
      "op": "class:head",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10"
     }
    ]
   },
   "qfd_sp_tree_top_b": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10"
     }
    ]
   },
   "qfd_sp_tree_top_b_f1a": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^qfd_sp_tree_top: tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^qfd_sp_tree_top: tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^qfd_sp_tree_top: tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^qfd_sp_tree_top: tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"
     }
    ]
   },
   "qfd_sp_tree_top_b_f1b": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^qfd_sp_tree_top: tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^qfd_sp_tree_top: tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^qfd_sp_tree_top: tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^qfd_sp_tree_top: tput-map-1011: spine tree-top (ME issue / status relay of the tile tree; me class)"
     }
    ]
   },
@@ -20969,46 +21490,46 @@
    ]
   },
   "qfd_tt_ctl": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
     }
    ]
   },
   "qfd_tt_ctlm": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
     }
    ],
    "bench_ii": {
@@ -21028,24 +21549,24 @@
    }
   },
   "qfd_tt_up4": {
-   "status": "UNMEASURED",
-   "ratio": null,
+   "status": "QUALIFIED",
+   "ratio": 1.0,
    "limiting": {
     "op": "class:me",
     "model": "qwen_rom",
-    "status": "UNMEASURED",
-    "ratio": null,
+    "status": "QUALIFIED",
+    "ratio": 1.0,
     "owner": "rom-layer-tput-1013",
-    "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
+    "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
    },
    "ops": [
     {
      "op": "class:me",
      "model": "qwen_rom",
-     "status": "UNMEASURED",
-     "ratio": null,
+     "status": "QUALIFIED",
+     "ratio": 1.0,
      "owner": "rom-layer-tput-1013",
-     "src": "by layer: NOT in the per-layer vehicle: tree-top issue / status relays (r22k, 623 cycles a layer priced from split_relays.json; the vehicle has the pin stations only); results/rtl/qwen_layer_tput_1013/record.json @ bd6e82288+30b6440b5: per-layer run (L1 chained, exact, mutant fails) measured 5480 / priced 5480 = 1.0; L1 chained, measured / priced = 5480 / 5480; class ratio = measured windows / priced base windows (no station credit) | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
+     "src": "by layer (die term): results/rtl/qwen_layer_tput_1013/die_terms.json issue_relays: 6103 measured / 6103 priced layer = 1.0 (term 623 / 623 cycles), exact, --dcu 7 --duc 7 --dcu-me 37 --duc-me 37 --su-ml 10 | name rule ^(qfd_ctrl_|qfd_emb_pc|qfd_pc_head|qfd_tt_|qfd_crom_|qfd_q5_|qfd_row_merge): qwen-1010: tile-tree / PC control of the matrix engine (me class)"
     }
    ]
   },
@@ -21181,6 +21702,72 @@
     }
    ]
   },
+  "qkd_ectl_a": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_ectl_b": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_ectl_c": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
   "qkd_kvwq_ctl": {
    "status": "QUALIFIED",
    "ratio": 1.0099,
@@ -21236,7 +21823,7 @@
     "stalled": false,
     "owner": "Claude:el1013-qwen-clusters",
     "target": null,
-    "t": "2026-10-13T08:23:31-07:00",
+    "t": "2026-10-13T14:24:33-07:00",
     "adopted": true
    }
   },
@@ -21317,7 +21904,7 @@
     "stalled": false,
     "owner": "Claude:el1013-qwen-elements-r6",
     "target": null,
-    "t": "2026-10-13T07:51:45-07:00",
+    "t": "2026-10-13T13:52:03-07:00",
     "adopted": true
    }
   },
@@ -21420,7 +22007,103 @@
     "stalled": false,
     "owner": "Claude:el1013-qwen-kvcentre",
     "target": null,
-    "t": "2026-10-13T09:06:45-07:00",
+    "t": "2026-10-13T15:07:35-07:00",
+    "adopted": true
+   }
+  },
+  "qkd_seq_core": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ],
+   "bench_ii": {
+    "job": "qkd_seq_core-kc2-dbf8a21da",
+    "commit": "dbf8a21da",
+    "bench": "bench_seq_equiv_exact",
+    "line": "COUNTS cycles=91796 compared=91784 layers=160 kvd_launch=160 q_words=5120 kvn_rows=640 res=10240 steps=46 h_starts=1837 fault_steps=5 drain_wait_cycles=67496 pw=3725 dw=1528 kc=322 x3_cr=6400 join_wai",
+    "cycles": 91796,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-qwen-kvcentre",
+    "target": null,
+    "t": "2026-10-13T15:20:08-07:00",
+    "adopted": true
+   }
+  },
+  "qkd_seq_fan": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ]
+  },
+  "qkd_seq_xs": {
+   "status": "UNQUALIFIED_NO_BENCH",
+   "ratio": null,
+   "limiting": {
+    "op": "class:kv_die",
+    "model": "qwen_rom",
+    "status": "UNQUALIFIED_NO_BENCH",
+    "ratio": null,
+    "owner": "qwen-1010/b",
+    "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+   },
+   "ops": [
+    {
+     "op": "class:kv_die",
+     "model": "qwen_rom",
+     "status": "UNQUALIFIED_NO_BENCH",
+     "ratio": null,
+     "owner": "qwen-1010/b",
+     "src": "name rule ^(qkd_|ot_qkvd_|qfd_kv|ot_qwen_rom_core_core_kv|qfd_su_kv|ot_qwen_nearhbm_): qwen-1010/b: KV die / attention step: the 1.124 hand rule (superseded audit model) is REMOVED; qwen-1010/b replaces it with the measured KV-die record"
+    }
+   ],
+   "bench_ii": {
+    "job": "qkd_seq_xs-kc2-dbf8a21da",
+    "commit": "dbf8a21da",
+    "bench": "bench_seq_equiv_exact",
+    "line": "COUNTS cycles=91796 compared=91784 layers=160 kvd_launch=160 q_words=5120 kvn_rows=640 res=10240 steps=46 h_starts=1837 fault_steps=5 drain_wait_cycles=67496 pw=3725 dw=1528 kc=322 x3_cr=6400 join_wai",
+    "cycles": 91796,
+    "item": null,
+    "items": null,
+    "ii": null,
+    "stalled": false,
+    "owner": "Claude:el1013-qwen-kvcentre",
+    "target": null,
+    "t": "2026-10-13T15:14:08-07:00",
     "adopted": true
    }
   }
