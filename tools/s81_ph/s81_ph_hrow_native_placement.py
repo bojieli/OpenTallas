@@ -32,7 +32,7 @@ def masters():
 MP=masters()
 def vec(p,n,base=0):return [f'{p}[{k}]' for k in range(base,base+n)]
 class Plan:
- def __init__(self):self.inst={};self.edges=[];self.hops=[];self.build()
+ def __init__(self,ut=1):self.ut=ut;self.inst={};self.edges=[];self.hops=[];self.build()
  def add(self,n,m,x,y,o='R0'):
   self.inst[n]=dict(master=m,x=round(x/2.16)*2.16,y=round(y/2.16)*2.16,orient=o)
  def pin(self,n,p):
@@ -44,15 +44,15 @@ class Plan:
   assert len(pa)==len(pb)
   self.edges.append(dict(cls=c,source=a,source_pins=pa,sink=b,sink_pins=pb))
  def build(self):
-  self.add('u_hub','dsfd_mtp_hrow_hub',1522.8,1252.8)
+  self.add('u_hub','dsfd_mtp_hrow_hub',1522.8,1486.08)
   self.add('g_hrst/u_rs','dsfd_die_rstsync',1488.24,1488.24)
   for p in range(3):
-   n=f'g_part[{p}]';hi=1036.8;lo=172.8;px=43.2+p*963.36
-   self.add(n+'/u_ig','dsfd_mtp_hrow_ing',px+172.8,hi+226.8,'R90')
+   n=f'g_part[{p}]';lo=172.8;hi=lo+4*272.16;px=8.64+p*993.6
+   self.add(n+'/u_ig','dsfd_mtp_hrow_ing',px+172.8,hi+237.6,'R0')
    for k in range(10):
     east=k<5;j=k if east else 9-k
-    self.add(n+f'/g_c[{k}]/'+('g_e' if east else 'g_w')+'/u_b','dsfd_mtp_hrow_'+('cbe' if east else 'cbw'),px if east else px+475.2,hi-j*216 if east else hi-j*216,'MY' if k==5 else 'R0')
-   self.add(n+'/g_hut/g_r[0]/u_r','dsfd_hrow_r2079',px+414.72,43.2,'MX')
+    self.add(n+f'/g_c[{k}]/'+('g_e' if east else 'g_w')+'/u_b','dsfd_mtp_hrow_'+('cbe' if east else 'cbw'),px if east else px+496.8,hi-j*272.16 if east else hi-j*272.16,'MY' if not east else 'R0')
+   for ri in range(self.ut):self.add(n+f'/g_hut/g_r[{ri}]/u_r','dsfd_hrow_r2079',px+(425.52 if self.ut==1 else 280.8+259.2*ri),43.2,'MX')
    # Initial return/event/control chains interpolate pin centroids; exact checks below retain failures.
    for kind,count,ma in [('g_hrp/g_r',2,'dsfd_hrow_r1025'),('g_hev/g_ev',2,'dsfd_hrow_r23'),('g_hev/g_rc',3,'dsfd_hrow_r15')]:
     for k in range(count):self.add(n+f'/{kind}[{k}]/u_r',ma,300,300)
@@ -60,9 +60,10 @@ class Plan:
    self.edge('ing_write',n+'/u_ig',vec('t_wc',1039),bn(0),vec('f_w',1039))
    for k in range(9):
     if k==4:
-     r=n+'/g_hut/g_r[0]/u_r'
+     r=n+'/g_hut/g_r[0]/u_r';last=n+f'/g_hut/g_r[{self.ut-1}]/u_r'
      for src,dst,bits,off in [('w','w',1039,0),('r','r',15,1039),('d','d',1025,1054)]:
-      self.edge('uturn_in',bn(4),vec('t_'+src,bits),r,vec('i',bits,off));self.edge('uturn_out',r,vec('o',bits,off),bn(5),vec('f_'+dst,bits))
+      self.edge('uturn_in',bn(4),vec('t_'+src,bits),r,vec('i',bits,off));self.edge('uturn_out',last,vec('o',bits,off),bn(5),vec('f_'+dst,bits))
+     for ri in range(1,self.ut):self.edge('uturn_stage',n+f'/g_hut/g_r[{ri-1}]/u_r',vec('o',2079),n+f'/g_hut/g_r[{ri}]/u_r',vec('i',2079))
     else:
      for bus,bits in [('w',1039),('r',15),('d',1025)]:self.edge('bank_chain',bn(k),vec('t_'+bus,bits),bn(k+1),vec('f_'+bus,bits))
    def chain(cls,a,pa,b,pb,names,ma):
@@ -86,29 +87,61 @@ class Plan:
   self.hops=[];rows={};bad=[];rs=self.rects()
   for n,(x,y,xx,yy,m) in rs.items():
    if x<0 or y<0 or xx>W+1e-6 or yy>H+1e-6:bad.append('outside '+n)
+   if self.inst[n]['orient'] not in ('R0','MX','MY'):bad.append('illegal orientation '+n)
   ns=list(rs)
   for i,a in enumerate(ns):
    for b in ns[i+1:]:
     A,B=rs[a],rs[b]
     if min(A[2],B[2])-max(A[0],B[0])>1e-6 and min(A[3],B[3])-max(A[1],B[1])>1e-6:bad.append('overlap '+a+' / '+b)
+    if min(A[3],B[3])-max(A[1],B[1])>1e-6:
+     gap=max(A[0],B[0])-min(A[2],B[2])
+     if -1e-6<=gap<20-1e-6:bad.append('W/E channel below20um '+a+' / '+b)
   for e in self.edges:
    A=[self.pin(e['source'],q) for q in e['source_pins']];B=[self.pin(e['sink'],q) for q in e['sink_pins']];ds=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(A,B)];k=int(np.argmax(ds));r=dict(cls=e['cls'],source=e['source'],sink=e['sink'],bits=len(ds),max_um=round(ds[k],3),over_500=sum(x>500 for x in ds),worst_source_pin=e['source_pins'][k],worst_sink_pin=e['sink_pins'][k]);rows.setdefault(e['cls'],[]).append(r);r['pin_alignment']=PA.bundle(A,B);self.hops.append((e['cls'],e['source'],e['sink'],A,B))
   return bad,rows
+ def distributed_reset(self):
+  self.inst.pop('g_hrst/u_rs',None)
+  self.edges=[e for e in self.edges if e['cls']!='reset_direct_rtl']
+  relays=[n for n,z in self.inst.items() if z['master'].startswith('dsfd_hrow_r')]
+  for relay in relays:
+   target=self.pin(relay,'rn');candidates=[]
+   for dy in range(-20,21):
+    for dx in range(-20,21):
+     x=round((target[0]-16.2+dx*21.6)/2.16)*2.16;y=round((target[1]-16.2+dy*21.6)/2.16)*2.16
+     if x<0 or y<0 or x+32.4>W or y+32.4>H:continue
+     legal=True
+     for a,b,aa,bb,_ in self.rects().values():
+      if min(y+32.4,bb)-max(y,b)>1e-6 and max(x,a)-min(x+32.4,aa)<20-1e-6:legal=False;break
+     if legal:candidates.append((abs(x+16.2-target[0])+abs(y+16.2-target[1]),x,y))
+   if not candidates:raise ValueError('No legal nearby reset conditioner '+relay)
+   _,x,y=min(candidates);name=relay.removesuffix('/u_r')+'/g_rst/u_rs';self.add(name,'dsfd_die_rstsync',x,y,'MY' if target[2]=='E' else 'R0')
+   self.edge('local_reset_release',name,['rn'],relay,['rn'])
+
  def cut_check(self):
   # Same explicit grid/capacity and three-pass L/Z search as the FE checker.
   spec=importlib.util.spec_from_file_location('fe',ROOT/'tools/s81_ph/s81_ph_vm_fe_h_floorplan.py');fe=importlib.util.module_from_spec(spec);spec.loader.exec_module(fe);fe.W,fe.H=W,H
   return fe.Plan.check_cuts(self)
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--placements',type=Path);ap.add_argument('--cuts',action='store_true');a=ap.parse_args();p=Plan()
+ ap=argparse.ArgumentParser();ap.add_argument('--placements',type=Path);ap.add_argument('--cuts',action='store_true');ap.add_argument('--ut',type=int,choices=[1,2],default=1);ap.add_argument('--distributed-reset',action='store_true');ap.add_argument('--edge-cuts',action='store_true');a=ap.parse_args();p=Plan(a.ut)
  if a.placements:
   for n,z in json.loads(a.placements.read_text())['instances'].items():p.inst[n].update(z)
+ if a.distributed_reset:p.distributed_reset()
  bad,rows=p.evaluate();cuts=p.cut_check() if a.cuts else None
+ if a.edge_cuts:
+  import s81_ph_hrow_route_cuts as RC
+  cuts=RC.check(p,W,H,dump_path=OUT/'grid_routes.json.gz')
  source=ROOT/'rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv'
  graph={'clock':dict(source_port='ck',drivers=[],sinks=[dict(instance=n,pin='ck',point_um=list(p.pin(n,'ck')[:2])) for n in p.inst],rtl_net='ck',physical_source_binding=None,status='No adopted native die clock/reset ABI; source ck is a real RTL port, physical driver not assigned'), 'asynchronous_reset':dict(source_port='rst',sinks=[dict(instance=n,pin='rst',point_um=list(p.pin(n,'rst')[:2])) for n,z in p.inst.items() if 'rst' in MP[z['master']]['pins']]),'relay_reset':dict(driver='g_hrst/u_rs.rn',sinks=[n+'.rn' for n,z in p.inst.items() if z['master'].startswith('dsfd_hrow_r')],buffer_tree=None)}
- res=dict(schema='opentallas.s81_hrow_native_candidate.v1',outline_um=[W,H],rtl_source=str(source.relative_to(ROOT)),rtl_sha256=digest(source),relay_rtl_sha256=digest(ROOT/'rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv'),parameters=dict(HARD_RELAYS=1,CQ=3,WK=7,P=2,UT=1),relay_bits=12660,reset_sync_bits=2,instances=p.inst,masters={m:{k:v for k,v in z.items() if k!='pins'} for m,z in MP.items()},placement_violations=bad,hops=rows,cuts=cuts,clock_reset_graph=graph,unmodelled=['Assigned parent boundary pins and external hops','Physical die clock source, insertion, phase and skew','Physical reset driver and buffer-tree placement','Final routed relay LEFs and SS/FF clock timing','Constant f_pid/f_bid and cd[0] tie-cell placements'],pass_=False,cut_scope='64-bit centroid L/Z routing heuristic on 10.8um grid; full and local54um windows. No M8 capacity. Exact bit pin lengths checked separately.',status='OPEN diagnostic candidate; no parent closure or valid physical clock graph claimed')
+ res=dict(schema='opentallas.s81_hrow_native_candidate.v1',outline_um=[W,H],rtl_source=str(source.relative_to(ROOT)),rtl_sha256=digest(source),relay_rtl_sha256=digest(ROOT/'rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv'),parameters=dict(HARD_RELAYS=1,CQ=3,WK=7,P=2,UT=a.ut,DISTRIBUTED_RST=int(a.distributed_reset)),relay_bits=12660+6237*(a.ut-1),reset_sync_bits=(2*(24+3*(a.ut-1)) if a.distributed_reset else 2),instances=p.inst,masters={m:{k:v for k,v in z.items() if k!='pins'} for m,z in MP.items()},placement_violations=bad,hops=rows,connectivity_edges=p.edges,cuts=cuts,clock_reset_graph=graph,unmodelled=['Assigned parent boundary pins and external hops','Physical die clock source, insertion, phase and skew','Physical reset driver and buffer-tree placement','Final routed relay LEFs and SS/FF clock timing','Constant f_pid/f_bid and cd[0] tie-cell placements'],pass_=False,cut_scope='Explicit grid-edge A* candidate routes using actual landing cells and face-normal escape segments; maximum8-bit groups,10.8um grid,full/local54um cuts,M2-M7. Per-pair500um is Manhattan geometry only, not routed timing.',status='OPEN diagnostic candidate; no parent closure or valid physical clock graph claimed')
+ if a.distributed_reset:
+  graph['relay_reset']=dict(drivers=[e['source']+'.rn' for e in p.edges if e['cls']=='local_reset_release'],sinks=[e['sink']+'.rn' for e in p.edges if e['cls']=='local_reset_release'],release_edges=2,global_rst_delivery_binding=None,global_ck_delivery_binding=None,status='Local two-edge release conditioned directly from original rst/ck; global delivery remains OPEN')
  res['pass']=res.pop('pass_')
+ price=OUT/'ut2_distributed_price_pending.json'
+ if price.exists():res['production_proof']=json.loads(price.read_text()).get('production_proof')
  bench=ROOT/'rtl/dsrom_sys/mtp/tb_mtp_hrow.sv'
  res['clock_reset_graph']['bench_only_source']=dict(path=str(bench.relative_to(ROOT)),sha256=digest(bench),instance='u_st',clock_connection='ck(clk)',reset_connection='rst(rst_n)',clock_generator='always #0.5 clk = ~clk',period_ns=1.0,production_binding=False)
+ res['pin_alignment_pass']=not any(r['pin_alignment']['verdict']=='FAIL' for vs in rows.values() for r in vs)
+ res['local_routing_cut_pass']=bool(cuts and cuts.get('pass_',False))
  res['internal_data_geometry_pass']=not bad and not any(r['over_500'] for c,vs in rows.items() if c!='reset_direct_rtl' for r in vs)
  contract=Path('/home/ubuntu/wt/el1011-s81dieit/physical/s81_die_pins/v18/contract_trial.json')
  if contract.exists():res['contract_evidence']=dict(path='physical/s81_die_pins/v18/contract_trial.json',source_tree='/home/ubuntu/wt/el1011-s81dieit',sha256=digest(contract),status='Trial representative hrow slot; physical die origin and native clock/reset ABI not adopted')
