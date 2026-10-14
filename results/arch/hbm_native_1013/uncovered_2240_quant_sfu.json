@@ -61,7 +61,7 @@
       "snapshot_category": "needs redesign (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "CURRENT_PRODUCTION_DEFAULT_FLAT_WITH_OPTIN_SUCCESSOR",
+      "requiredness": "EXPLICIT_SUVOP_REDESIGN_SUCCESSOR_SEPARATELY_OPEN",
       "latest_snapshot": {
         "t": 1791821153.0,
         "job": "hgi_suctlw-fb-c473fb8d3-tc-r2-cl",
@@ -72,7 +72,16 @@
       "closed_source": "281763d84",
       "parent_candidate": "ot_hgi_su_ctlw_slice_hp",
       "production_source": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:OT_CTLW_SLICES defaults0; OT_CTLW_SLICE_H optin",
-      "adopted": false
+      "adopted": false,
+      "successor_source": "7d0ad0538",
+      "successor_top": "ot_hgi_sv_unit",
+      "successor_children": [
+        "ot_hgi_sv_head",
+        "ot_hgi_sv_lane2 x16",
+        "ot_hgi_sv_lmem"
+      ],
+      "successor_owner": "/root/hbm_idx_smmv_2240/suvop_collect",
+      "proof": "SV=1 selects redesign in run_su_prod.sh; same WIDE ports; old ctlw is not called by SV top. Native bankmacro/head/leaf composition and physical closure remain open, not qualified by historical ctlw bench."
     },
     {
       "element": "ot_hgi_su_ctlw_slice",
@@ -80,7 +89,7 @@
       "snapshot_category": "needs redesign (no live job)",
       "die_used": false,
       "closed": false,
-      "requiredness": "CURRENT_PRODUCTION_DEFAULT_FLAT_WITH_OPTIN_SUCCESSOR",
+      "requiredness": "EXPLICIT_SUVOP_REDESIGN_SUCCESSOR_SEPARATELY_OPEN",
       "latest_snapshot": {
         "t": 1791884853.0,
         "job": "ctlw_slice_rtf-f-e1e57cf4b",
@@ -91,7 +100,16 @@
       "closed_source": "281763d84",
       "parent_candidate": "ot_hgi_su_ctlw_slice_hp",
       "production_source": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv:OT_CTLW_SLICES defaults0; OT_CTLW_SLICE_H optin",
-      "adopted": false
+      "adopted": false,
+      "successor_source": "7d0ad0538",
+      "successor_top": "ot_hgi_sv_unit",
+      "successor_children": [
+        "ot_hgi_sv_head",
+        "ot_hgi_sv_lane2 x16",
+        "ot_hgi_sv_lmem"
+      ],
+      "successor_owner": "/root/hbm_idx_smmv_2240/suvop_collect",
+      "proof": "SV=1 selects redesign in run_su_prod.sh; same WIDE ports; old ctlw is not called by SV top. Native bankmacro/head/leaf composition and physical closure remain open, not qualified by historical ctlw bench."
     },
     {
       "element": "hfd_sfu",
@@ -297,7 +315,7 @@
     "qdq": "q8 four-leaf wires parent 9d9be7232; fr/core/asm CLOSED, wr NEEDS_RTL TT-112.55 FF-2.32 DRC6; q8e parallel head-read/control structural repair in progress.",
     "quant": "WQ3 wires-only split branch claude/hbm-quant-split-1013; ovc w1 RUNNING preserved, ovd w2 EARLY_FAIL_CONGESTION; lgr/lgw require signed M6 PORT grant or slot change. Provisional pinplan31a02920b is not authorization.",
     "sfu": "hfd_sfu remains required quarter over 64 closed ot_su12_sfu; control/watermark production integration open. lanex source extension alternative not proven adopted.",
-    "ctlw": "two-lane leaf successor + slice_hp hierarchy is optin, production adoption absent; old cancelled ctlw entries retained pending exact source requirement mapping.",
+    "ctlw": "Explicit source successor7d0ad0538 SV=1 ot_hgi_sv_unit over sv_head/16lane2/lmem replaces ctlw for current SU.VOP redesign. Old ctlw aliases retained as historical; native physical/production gate belongs suvop_collect and remains open.",
     "attention": "native real-child components replace physical half routes, source a95a4adfc; generator half_v10 remains placeholder and die_repair_2240 owns phase geometry, no duplicate edits.",
     "norm": "gtile8 CLOSED, g8p native parent child origins from actual365.04sq view available; actual parent contract slot absent; old norm monolith not silently removed."
   }
