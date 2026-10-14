@@ -91,7 +91,7 @@ def reposition(plan, positions, derive_external=False):
     new = []
     for cls, a, b, aa, bb in plan.hops:
         da, db = delta.get(a, (0, 0)), delta.get(b, (0, 0))
-        if derive_external and a.startswith('FE.'):
+        if derive_external and a.startswith('FE.') and cls not in ('f_cap','f_cap_status'):
             da = (db[0], 0)
         if derive_external and b.startswith('FE.'):
             db = (da[0], 0)
@@ -101,6 +101,31 @@ def reposition(plan, positions, derive_external=False):
     for n, (dx, dy) in delta.items():
         m, x, y = plan.inst[n]
         plan.inst[n] = (m, round(x+dx, 3), round(y+dy, 3))
+
+
+def assign_capture(plan, path, fe_x=21.6, fe_y=3060.72):
+    """Bind all 13,376 capture bits to the die lead's real per-bit assignment.
+
+    Its source is the VM boundary, including the small gap above the FE slot.
+    The final 64 capture status bits enter fcn.f_cq, not a CLT lane.
+    """
+    doc = json.loads(Path(path).read_text())
+    bits = doc['ports']['f_capture']['per_bit']
+    if len(bits) != 13376:
+        raise ValueError('native capture assignment must include 13,312 data and 64 status bits')
+    y = doc['outline_um'][1] - fe_y
+    source = [(r[2]-fe_x, y, 'S', r[1]) for r in bits]
+    out = []
+    for cls, a, b, aa, bb in plan.hops:
+        if cls == 'f_cap':
+            lane = int(b.removeprefix('clt'))
+            aa = source[832*lane:832*(lane+1)]
+        elif cls == 'client N' and a.startswith('FE.') and b == 'fcn' and len(aa) == 150:
+            out.append(('f_cap_status', a, b, source[13312:], bb[85:149]))
+            aa = aa[:85] + aa[149:]
+            bb = bb[:85] + bb[149:]
+        out.append((cls,a,b,aa,bb))
+    plan.hops=out
 
 
 class Plan:
@@ -363,6 +388,7 @@ class Plan:
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--variant', default='B'); ap.add_argument('--height', type=float, default=695.52); ap.add_argument('--out', default=None)
     ap.add_argument('--placements', help='replay a source-bound search placement JSON')
+    ap.add_argument('--assigned-capture', help='actual die-lead VM per-bit capture assignment')
     a = ap.parse_args()
     global H
     H = a.height
@@ -371,6 +397,8 @@ def main():
         proposed = json.loads(Path(a.placements).read_text())
         reposition(p, {n: (v['x'], v['y']) for n, v in proposed['instances'].items()},
                    proposed.get('derive_external_pins', False))
+    if a.assigned_capture:
+        assign_capture(p, a.assigned_capture)
     place = p.check_place(); hops = p.check_hops(); cuts = p.check_cuts()
     over = {c: r['len_max'] for c, r in hops.items() if r['len_max'] > HOP_MAX}
     pa_fail = {c: r['verdict'].get('FAIL', 0) for c, r in hops.items() if r['verdict'].get('FAIL')}

@@ -11,9 +11,11 @@ import numpy as np
 import s81_ph_vm_fe_h_floorplan as F
 
 
-def search(height, seed, sweeps):
+def search(height, seed, sweeps, assigned_capture=None):
     F.H = height
     p = F.Plan('A'); names=list(p.inst); idx={n:i for i,n in enumerate(names)}
+    if assigned_capture:
+        F.assign_capture(p, assigned_capture)
     initial=np.array([[v[1],v[2]] for v in p.inst.values()]); xy=initial.copy()
     size=np.array([[F.MP[v[0]][0],F.MP[v[0]][1]] for v in p.inst.values()])
     movable=[i for i,n in enumerate(names) if not n.startswith(('clt','fxs','fsr'))]
@@ -43,7 +45,7 @@ def search(height, seed, sweeps):
             candidate_delta=candidates-xy[i]
             diff=base[None,:]+candidate_delta*(1 if i==ia else -1)
             # Unassigned external client pins follow their proposed leaf x.
-            if ia<0 or ib<0:diff[:,0]=0
+            if (ia<0 or ib<0) and cls not in ('f_cap','f_cap_status'):diff[:,0]=0
             reach=np.max(diff@signs.T+proj,axis=1)
             excess=np.maximum(reach-500,0)
             value+=max(bits,128)*(excess**2)*.2
@@ -65,11 +67,12 @@ def search(height, seed, sweeps):
     placements=p.check_place();hops=p.check_hops()
     return {'schema':'opentallas.s81_vm_fe_h.search.v1','variant':'A','height':height,'seed':seed,'sweeps':sweeps,
             'derive_external_pins':True,'source_sha256':hashlib.sha256(F.SRC.encode()).hexdigest(),
+            'actual_capture_assignment':assigned_capture,
             'placement_violations':placements,'hops_over_500':{k:v['len_max'] for k,v in hops.items() if v['len_max']>500},
             'history':history,'limits':{'hop_um':500,'cut':.60},'closure_claim':False,
             'required_followup':'Replay full cut and actual per-pair reach checker; assign native FE client pins and source clocks.',
             'instances':{n:{'master':m,'x':x,'y':y,'w':F.MP[m][0],'h':F.MP[m][1]} for n,(m,x,y) in p.inst.items()}}
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--height',type=float,default=889.92);ap.add_argument('--seed',type=int,default=1);ap.add_argument('--sweeps',type=int,default=50);ap.add_argument('--out',required=True)
-    a=ap.parse_args();r=search(a.height,a.seed,a.sweeps);Path(a.out).write_text(json.dumps(r,indent=2)+'\n');print('PLACEMENT_SEARCH',len(r['placement_violations']),'overlaps/outline;',r['hops_over_500']);
+    ap=argparse.ArgumentParser();ap.add_argument('--height',type=float,default=889.92);ap.add_argument('--seed',type=int,default=1);ap.add_argument('--sweeps',type=int,default=50);ap.add_argument('--out',required=True);ap.add_argument('--assigned-capture')
+    a=ap.parse_args();r=search(a.height,a.seed,a.sweeps,a.assigned_capture);Path(a.out).write_text(json.dumps(r,indent=2)+'\n');print('PLACEMENT_SEARCH',len(r['placement_violations']),'overlaps/outline;',r['hops_over_500']);
