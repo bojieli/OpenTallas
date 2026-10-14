@@ -1,0 +1,1354 @@
+{
+  "checked_at": "2026-10-14T12:44:03.606853+00:00",
+  "scope": "Eight assigned legacy failed requirements; exact failure/spec/source and bounded successor evidence, no cancellation retirement",
+  "rows": [
+    {
+      "element": "ot_qwen_rom_tile_die",
+      "accountable_owner": "/root/qwen_tile",
+      "retired": false,
+      "legacy_job": "qfd_tile_h3s-r4-cx-8c59114fe",
+      "legacy_source_commit": "8c59114fe2fbca93e61935ccdf22c9b2271716c0",
+      "actual_terminal_status": "NEEDS_RTL",
+      "actual_failure": "TT -100.07 / FF -32.12 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)",
+      "frozen_spec_sha256": "aea69fc6d4ec0461e9713a98d922fa9d01d1d5e6a645f9c1c928c1c1190b5b79",
+      "frozen_spec": {
+        "name": "qfd_tile_h3s-r4-cx-8c59114fe",
+        "block": "ot_qwen_rom_tile_die",
+        "ref_tile": true,
+        "owner": "Codex:qwen_tile",
+        "purpose": "q-tile r3 structural fix of r2 (h3c-r2 GRT repair_timing stuck at TT -233 ps on u_me g_hier g_sl[*].g_hd.u_lh/x_d, h3s GRT -126 / CTS -201 on the same x_d path: s2_x -> BF16 round (32-b kept add) + mask/mux -> unregistered broadcast of 128 b to all 8 hard leaves spread over y 43-1264 um (up to ~640 um from the S2 band), i.e. logic + >500 um wire in one stage). RTL: XTX=2 registered transmit rungs per leaf (ot_qwen_tx_ff, keep_hierarchy, one copy per leaf and rung; rung 1 takes the ROUNDED x; v/first/split/w delayed with it; XDD += XTX so the valid/tag/split lines meet the leaves' results; +2 cycles latency, arithmetic and order unchanged). Floorplan: ROM row pitch 84.24 -> 95.04 um (row gaps 21.3 -> 32.1 um, band y 421.2-864.3) for the macro-leaf clock spine buffers and ROM-edge escape where h3s-r2 hit DRT-0255 (n_b[106] at x 7-11 y 478, clkbuf_sp nets at x 31-35 in the col-0 row gaps y 518/693). Pins, leaves, outline unchanged. Alignment correction preserves Claude uncommitted patch: t_vout, array/spine and bench XD include XTX=2.",
+        "threads": 16,
+        "peak_ram_gb": 64,
+        "source": {
+          "branch": "codex/q-tile-takeover-1013",
+          "commit": "8c59114fe2fbca93e61935ccdf22c9b2271716c0"
+        },
+        "stages": {
+          "bench": [
+            {
+              "name": "lint",
+              "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qwen_rom_tile_die #(.GT(6144), .NW(18), .SMIN(7), .CODE_BANKS(5), .KV_VB(131072), .KV_NH(2), .MEM_EXTRA(1), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(8), .FAST_ISSUE(1), .KV_PREP(4), .ROM_PIPE(1), .ROM_ARELAY(2), .ROM_CAP2(1), .ROM_CAPX(2), .LRST(3), .ARPB(1), .MPR(1), .HIER(2), .HIER_HARD(1), .ANR(1), .TOREG(1), .TIDR(1), .LRR(1), .XTX(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/hdc/ot_hdc_fp32_add_lat_nr.sv && echo lint-ok",
+              "expect": "pass",
+              "threads": 1,
+              "peak_ram_gb": 4,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "tile_die_glue_exact",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/td0 -P tb_qwen_rom_tile_die.NEG=0 rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/td0 | tee {RUN}/bench/td0.log && grep -q '^PASS' {RUN}/bench/td0.log",
+              "expect": "pass",
+              "pass_regex": "^PASS tile_die",
+              "min_count_regex": "writes=(\\d+)",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "tile_die_glue_neg",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/td1 -P tb_qwen_rom_tile_die.NEG=1 rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/td1 | tee {RUN}/bench/td1.log && grep -q '^PASS' {RUN}/bench/td1.log",
+              "expect": "fail",
+              "fail_regex": "^FAIL tile_die",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "rom_pipe_exact_anr",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param SEED=1 --workdir {RUN}/bench/rom_pipe_exact_anr --result {RUN}/bench/rom_pipe_exact_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "rom_pipe_exact_anr_s5",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param SEED=5 --workdir {RUN}/bench/rom_pipe_exact_anr_s5 --result {RUN}/bench/rom_pipe_exact_anr_s5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr_s5.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "rom_pipe_tmut3_anr",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param SEED=2 --param TMUT=3 --workdir {RUN}/bench/rom_pipe_tmut3_anr --result {RUN}/bench/rom_pipe_tmut3_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_tmut3_anr.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+              "expect": "fail",
+              "fail_regex": "MUTVERDICT FAIL",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "add_nr_exact7",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_exact7 -P tb_hdc_add_lat_nr.LAT=7 -P tb_hdc_add_lat_nr.HMUT=0 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_exact7 | tee {RUN}/bench/add_nr_exact7.log && grep -q '^PASS' {RUN}/bench/add_nr_exact7.log",
+              "expect": "pass",
+              "pass_regex": "^PASS add_lat_nr",
+              "min_count_regex": "results=(\\d+)",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "add_nr_exact5",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_exact5 -P tb_hdc_add_lat_nr.LAT=5 -P tb_hdc_add_lat_nr.HMUT=0 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_exact5 | tee {RUN}/bench/add_nr_exact5.log && grep -q '^PASS' {RUN}/bench/add_nr_exact5.log",
+              "expect": "pass",
+              "pass_regex": "^PASS add_lat_nr",
+              "min_count_regex": "results=(\\d+)",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "add_nr_hmut",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_hmut -P tb_hdc_add_lat_nr.LAT=7 -P tb_hdc_add_lat_nr.HMUT=1 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_hmut | tee {RUN}/bench/add_nr_hmut.log && grep -q '^PASS' {RUN}/bench/add_nr_hmut.log",
+              "expect": "fail",
+              "fail_regex": "^FAIL add_lat_nr",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            }
+          ],
+          "calibrate": {
+            "enabled": false,
+            "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+          },
+          "route": {
+            "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/qfd_tile_h3s/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tile_h3s/kit.env {LABEL} {RUN}/routes",
+            "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+            "logs": [
+              "{RUN}/routes/{LABEL}/flow.log"
+            ],
+            "threads": 16,
+            "peak_ram_gb": 64
+          },
+          "collect": {
+            "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tile_h3s --out {RUN}/record/views/ot_qwen_rom_tile_die --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 --macro-view physical/qwen_die_masters/hard/ot_qwen_tile_lsl > {RUN}/record/route/export.log 2>&1"
+          }
+        },
+        "verdict": {
+          "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+          "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+          "checks": [
+            {
+              "name": "ttb_routed_at_TC",
+              "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+            }
+          ],
+          "post_sdc": [
+            "physical/ref_tile/qfd_tile_h3s/signoff.sdc",
+            "physical/common_flow/link_budget_consistent.sdc"
+          ],
+          "macros": [
+            "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+            "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+            "physical/qwen_die_masters/hard/ot_qwen_tile_lsl"
+          ]
+        },
+        "hold_eco": {
+          "enabled": true,
+          "session": "mm",
+          "reason": "ref_tile: corrected FF hold flow"
+        },
+        "budget": {
+          "enabled": false,
+          "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+        },
+        "record": [
+          {
+            "from": "{RUN}/record/views",
+            "to": "physical/ref_tile/qfd_tile_h3s/views"
+          },
+          {
+            "from": "{RUN}/record/route",
+            "to": "results/rtl/ref_tile/qfd_tile_h3s/qfd_tile_h3s-r4-cx-8c59114fe"
+          }
+        ],
+        "cycles_added": 2,
+        "route_hold_corners": "mm",
+        "route_hold_margin_ns": 0.01,
+        "route_corner": "TC",
+        "notes": "generated by tools/ref_tile/ref_tile.py",
+        "merge_target": null
+      },
+      "requirement_gap": "Historical GT6144 compute plus local KV/984-bit landing hop; current TP8 NK excludes that local KV and is not full functional replacement.",
+      "current_successor_evidence": "Common compute partition, native indexed context cache and full numeric proofs; actual KV/landing capability mapping to near-HBM owner remains unbound.",
+      "next_structural_action": "Preserve old KV/landing source; bind D2 topology selection to actual near-HBM predecessor/successor and prove omitted KV/landing/fault behavior before any requirement retirement.",
+      "dependency": "Exact current field selection and near-HBM producer/consumer seam from die/attention owner."
+    },
+    {
+      "element": "ot_qwen_rom_tile_nk",
+      "accountable_owner": "/root/qwen_tile",
+      "retired": false,
+      "legacy_job": "qfd_tile_nk_r5-fp1b-63e7ca004",
+      "legacy_source_commit": "63e7ca0040b5c123751b982001e77f289a2d4a95",
+      "actual_terminal_status": "EARLY_FAIL_HOLD",
+      "actual_failure": "stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -27.6 ps (start -48.11), 5950 it / 11930 buffers, 7267 endpoints in margin, 0.3 h in step, HM guard present",
+      "frozen_spec_sha256": "f784d602e8e32cd0ef5f37a4b7b948119e7442ef1bccf37d9275a29f7738a17a",
+      "frozen_spec": {
+        "name": "qfd_tile_nk_r5-fp1b-63e7ca004",
+        "block": "ot_qwen_rom_tile_nk",
+        "ref_tile": true,
+        "owner": "Claude:q18-tile",
+        "purpose": "TP8 NK die tile from hardened leaves (spec r5, floorplan r5-fp1): 5 x ot_qwen_tile_rpair (ROM bank rows, own ROM clock), ot_qwen_tile_node (W-edge strip: n_a/n_b/n_y pins + t_out feed-through pin registers), 8 x ot_qwen_tile_lsl; top glue (u_me control, XTX rungs, relays, RQR group registers) on one spine root. Outline 362.88 x 1442.88 (slot change request: the closed rpair leaf is 311.04 wide).",
+        "threads": 16,
+        "peak_ram_gb": 64,
+        "source": {
+          "branch": "claude/q14-tile-parent",
+          "commit": "63e7ca004"
+        },
+        "stages": {
+          "bench": [
+            {
+              "name": "lint",
+              "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qwen_rom_tile_nk #(.GT(6144), .NW(18), .SMIN(7), .CODE_BANKS(5), .KV_VB(131072), .KV_NH(2), .MEM_EXTRA(1), .ACC_LAT(7), .TREE_LAT(7), .MUL_LAT(8), .FAST_ISSUE(1), .KV_PREP(4), .ROM_PIPE(1), .ROM_ARELAY(2), .ROM_CAP2(1), .ROM_CAPX(2), .LRST(3), .ARPB(1), .MPR(1), .HIER(2), .HIER_HARD(1), .ANR(1), .TOREG(1), .TIDR(1), .LRR(1), .XTX(2), .RPH(2), .NDH(1), .RQR(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv physical/qwen_die_masters/hard/ot_qwen_tile_lsl/ot_qwen_tile_lsl_bb.v rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_qwen_me_array_w12.sv rtl/hdc/ot_qwen_rom_tile_w12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/physical/ot_qwen_rom_tile_nk.sv physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/physical/bb/ot_qwen_tile_rpair_bb.v rtl/physical/bb/ot_qwen_tile_node_bb.v && echo lint-ok",
+              "expect": "pass",
+              "threads": 1,
+              "peak_ram_gb": 4,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_rom_pipe_exact",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=1 --workdir {RUN}/bench/r5_rom_pipe_exact --result {RUN}/bench/r5_rom_pipe_exact.json; python3 -c \"import json,sys;d=json.load(open('{RUN}/bench/r5_rom_pipe_exact.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control']);sys.exit(0 if d['status']=='pass' else 1)\"",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe PASS .*latency_added=17 ",
+              "threads": 8,
+              "peak_ram_gb": 32,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_rom_pipe_exact_s5",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=5 --workdir {RUN}/bench/r5_rom_pipe_exact_s5 --result {RUN}/bench/r5_rom_pipe_exact_s5.json; python3 -c \"import json,sys;d=json.load(open('{RUN}/bench/r5_rom_pipe_exact_s5.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control']);sys.exit(0 if d['status']=='pass' else 1)\"",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe PASS .*latency_added=17 ",
+              "threads": 8,
+              "peak_ram_gb": 32,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_rom_pipe_tmut3",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=2 --param TMUT=3 --workdir {RUN}/bench/r5_rom_pipe_tmut3 --result {RUN}/bench/r5_rom_pipe_tmut3.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/r5_rom_pipe_tmut3.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+              "expect": "fail",
+              "fail_regex": "MUTVERDICT FAIL",
+              "threads": 8,
+              "peak_ram_gb": 32,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_rpair_seam_tmut5",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=2 --param TMUT=5 --workdir {RUN}/bench/r5_rpair_seam_tmut5 --result {RUN}/bench/r5_rpair_seam_tmut5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/r5_rpair_seam_tmut5.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+              "expect": "fail",
+              "fail_regex": "MUTVERDICT FAIL",
+              "threads": 8,
+              "peak_ram_gb": 32,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_node_seam_bmut2",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=2 --param BMUT=2 --workdir {RUN}/bench/r5_node_seam_bmut2 --result {RUN}/bench/r5_node_seam_bmut2.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/r5_node_seam_bmut2.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+              "expect": "fail",
+              "fail_regex": "MUTVERDICT FAIL",
+              "threads": 8,
+              "peak_ram_gb": 32,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_node_seam_bmut3",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=16 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param XTX=2 --param RPH=1 --param NDH=1 --param RQR=1 --param SEED=2 --param BMUT=3 --workdir {RUN}/bench/r5_node_seam_bmut3 --result {RUN}/bench/r5_node_seam_bmut3.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/r5_node_seam_bmut3.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+              "expect": "fail",
+              "fail_regex": "MUTVERDICT FAIL",
+              "threads": 8,
+              "peak_ram_gb": 32,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_node_boundary_exact",
+              "cmd": "bash tools/qwen_tile_r5_node_bench.sh {RUN}/bench/r5_node_boundary_exact 0",
+              "expect": "pass",
+              "pass_regex": "^PASS tile_r5_node",
+              "threads": 8,
+              "peak_ram_gb": 40,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_node_boundary_bmut2",
+              "cmd": "bash tools/qwen_tile_r5_node_bench.sh {RUN}/bench/r5_node_boundary_bmut2 2",
+              "expect": "fail",
+              "fail_regex": "^FAIL tile_r5_node",
+              "threads": 8,
+              "peak_ram_gb": 40,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "r5_node_boundary_bmut3",
+              "cmd": "bash tools/qwen_tile_r5_node_bench.sh {RUN}/bench/r5_node_boundary_bmut3 3",
+              "expect": "fail",
+              "fail_regex": "^FAIL tile_r5_node",
+              "threads": 8,
+              "peak_ram_gb": 40,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "nk_boundary_exact",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_rom_tile_nk_boundary -P tb_qwen_rom_tile_nk_boundary.NEG=0 -o {RUN}/bench/nk_boundary_exact rtl/test/tb_qwen_rom_tile_nk_boundary.sv rtl/physical/ot_qwen_rom_tile_nk.sv && vvp -n {RUN}/bench/nk_boundary_exact | tee {RUN}/bench/nk_boundary_exact.log && grep -q '^PASS' {RUN}/bench/nk_boundary_exact.log",
+              "expect": "pass",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ],
+              "pass_regex": "^PASS nk_boundary"
+            },
+            {
+              "name": "nk_boundary_mutant",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_rom_tile_nk_boundary -P tb_qwen_rom_tile_nk_boundary.NEG=1 -o {RUN}/bench/nk_boundary_mutant rtl/test/tb_qwen_rom_tile_nk_boundary.sv rtl/physical/ot_qwen_rom_tile_nk.sv && vvp -n {RUN}/bench/nk_boundary_mutant | tee {RUN}/bench/nk_boundary_mutant.log && grep -q '^PASS' {RUN}/bench/nk_boundary_mutant.log",
+              "expect": "fail",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ],
+              "fail_regex": "^FAIL nk_boundary"
+            },
+            {
+              "name": "tile_die_glue_exact",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_rom_tile_die -P tb_qwen_rom_tile_die.NEG=0 -o {RUN}/bench/tile_die_glue_exact rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/tile_die_glue_exact | tee {RUN}/bench/tile_die_glue_exact.log && grep -q '^PASS' {RUN}/bench/tile_die_glue_exact.log",
+              "expect": "pass",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ],
+              "pass_regex": "^PASS tile_die"
+            },
+            {
+              "name": "tile_die_glue_neg",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_rom_tile_die -P tb_qwen_rom_tile_die.NEG=1 -o {RUN}/bench/tile_die_glue_neg rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/tile_die_glue_neg | tee {RUN}/bench/tile_die_glue_neg.log && grep -q '^PASS' {RUN}/bench/tile_die_glue_neg.log",
+              "expect": "fail",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ],
+              "fail_regex": "^FAIL tile_die"
+            }
+          ],
+          "calibrate": {
+            "enabled": false,
+            "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+          },
+          "route": {
+            "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_tile_nk_r5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_tile_nk_r5/kit.env {LABEL} {RUN}/routes",
+            "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+            "logs": [
+              "{RUN}/routes/{LABEL}/flow.log"
+            ],
+            "threads": 16,
+            "peak_ram_gb": 64
+          },
+          "collect": {
+            "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_tile_nk_r5 --out {RUN}/record/views/ot_qwen_rom_tile_nk --macro-view physical/qwen_die_masters/hard/ot_qwen_tile_lsl --macro-view physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node --macro-view physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair > {RUN}/record/route/export.log 2>&1"
+          }
+        },
+        "verdict": {
+          "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+          "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+          "checks": [
+            {
+              "name": "ttb_routed_at_TC",
+              "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+            }
+          ],
+          "post_sdc": [
+            "physical/ref_tile/qfd_tile_nk_r5/signoff.sdc",
+            "physical/common_flow/link_budget_consistent.sdc"
+          ],
+          "macros": [
+            "physical/qwen_die_masters/hard/ot_qwen_tile_lsl",
+            "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+            "physical/ref_tile/ot_qwen_tile_rpair/views/ot_qwen_tile_rpair"
+          ]
+        },
+        "hold_eco": {
+          "enabled": true,
+          "session": "mm",
+          "reason": "ref_tile: corrected FF hold flow"
+        },
+        "budget": {
+          "enabled": false,
+          "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+        },
+        "record": [
+          {
+            "from": "{RUN}/record/views",
+            "to": "physical/ref_tile/qfd_tile_nk_r5/views"
+          },
+          {
+            "from": "{RUN}/record/route",
+            "to": "results/rtl/ref_tile/qfd_tile_nk_r5/qfd_tile_nk_r5-fp1b-63e7ca004"
+          }
+        ],
+        "cycles_added": 4,
+        "route_hold_corners": "mm",
+        "route_hold_margin_ns": 0.03,
+        "route_corner": "TC",
+        "notes": "generated by tools/ref_tile/ref_tile.py",
+        "merge_target": null,
+        "structural_change": "hardened leaves rpair x5 + node + lsl x8 on their own short clock roots, top root = tile glue only (sink count from the remote gate), replaces the flat 34k-48k-sink root of qfd_tile_nk_h4 / h3s (TT -272 / -100); new floorplan r5-fp1 (2 rpair rows S + lane block with the W-edge node strip + 3 mirrored rpair rows N), RQR return relay Clock distribution (q17): the per-leaf spine padding ran away at the first --cts gate (97,219 spine cells, 5.9..6.8 ns); the spine is now the symmetric insertion-aware topology with subtree-common padding (OT_SPINE_SYM 1 + TREE_PAD 1, as the closed head cluster): 8,560 cells, in-leaf arrival spread 36.2 ps at the gate. Resubmission (q18): fp1 was refused FLOORPLAN_MARGIN by the flat-block utilisation rule (65.8% = std 5,332 + macro 334,169 um2 in 515,810); tools/fp_margin_lint.py on main 3c8e24f42 judges a cluster whose macros cover >= 50% of the core on std / (core - macro) = 2.9% <= 60%; the fixed lint run on fp1's own geometry dump PASSes (slivers 0, channel worst 0.078, pin density 5.13 b/um). Same kit, same commit, outline NOT grown (x768 = die area)."
+      },
+      "requirement_gap": "Historical r5 spec actually sets GT6144 despite TP8 prose; failed spine hold with -27.6ps.",
+      "current_successor_evidence": "Distinct GT3072 control/cache/native parent; own state hardened under separate clock entries, merged control metadata clock measured.",
+      "next_structural_action": "Complete STREAM_QUERY and registered live admission, price output/query transport, then construct channel-aware parent with assigned pins and all child phi-R entries.",
+      "dependency": "Live transport phase, die slot/pins and cache current physical footprints."
+    },
+    {
+      "element": "ot_qwen_tile_lsl",
+      "accountable_owner": "/root/qwen_tile",
+      "retired": false,
+      "legacy_job": "ot_qwen_tile_lsl_m5-m5-a0b143e7a",
+      "legacy_source_commit": "a0b143e7a1d49fb42b7628d30d2b5cc83bc2882d",
+      "actual_terminal_status": "NEEDS_RTL",
+      "actual_failure": "bench_rom_pipe_exact_anr expected PASS but rc=1",
+      "frozen_spec_sha256": "0719997220068d2f2cbe648e6e5edc316b8bc4e1bd5f0aed5fdffe4cea4f1966",
+      "frozen_spec": {
+        "name": "ot_qwen_tile_lsl_m5-m5-a0b143e7a",
+        "block": "ot_qwen_tile_lsl",
+        "ref_tile": true,
+        "owner": "Claude:el1011-reroute-m5",
+        "purpose": "M5 re-route (reroute_batch.py) of closed qfd_tile_lsl6-e032e6e6f-tc-hm0-cl (ot_qwen_tile_lsl, RTL e032e6e6f, snapshot of 7 drifted files): same RTL, outline 99.792x140.4, pin faces from the closed view; ref_tile layer cap M5 (signals + PG <= M5, pins M4/M5, parent strap M6). Orig owner Claude:el1011-q-tile",
+        "threads": 8,
+        "peak_ram_gb": 64,
+        "source": {
+          "branch": "claude/el1011-reroute-m5",
+          "commit": "a0b143e7a"
+        },
+        "stages": {
+          "bench": [
+            {
+              "name": "lint",
+              "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qwen_tile_lsl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/ot_qwen_tile_lsl.sv rtl/hdc/ot_qwen_w12_matvec.sv rtl/hdc/ot_hdc_matvec.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv physical/ref_tile/ot_qwen_tile_lsl_m5/src/rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_qwen_w12_arith.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv && echo lint-ok",
+              "expect": "pass",
+              "threads": 1,
+              "peak_ram_gb": 4,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "rom_pipe_exact_anr",
+              "cmd": "B={RUN}/bsrc_m5_0; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_qwen_tile_lsl_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_qwen_tile_lsl_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param SEED=1 --workdir {RUN}/bench/rom_pipe_exact_anr --result {RUN}/bench/rom_pipe_exact_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"\n}",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "note": "[m5rr: run on the e032e6e6f snapshot overlay of physical/ref_tile/ot_qwen_tile_lsl_m5/src]"
+            },
+            {
+              "name": "rom_pipe_exact_anr_s5",
+              "cmd": "B={RUN}/bsrc_m5_1; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_qwen_tile_lsl_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_qwen_tile_lsl_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param SEED=5 --workdir {RUN}/bench/rom_pipe_exact_anr_s5 --result {RUN}/bench/rom_pipe_exact_anr_s5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr_s5.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"\n}",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "note": "[m5rr: run on the e032e6e6f snapshot overlay of physical/ref_tile/ot_qwen_tile_lsl_m5/src]"
+            },
+            {
+              "name": "rom_pipe_tmut2_anr",
+              "cmd": "B={RUN}/bsrc_m5_2; rm -rf $B && mkdir -p $B && for d in *; do ln -s $PWD/$d $B/$d; done && for d in $(cd physical/ref_tile/ot_qwen_tile_lsl_m5/src && ls -d */ | tr -d /); do rm -f $B/$d; cp -a $PWD/$d $B/$d; done && cp -a physical/ref_tile/ot_qwen_tile_lsl_m5/src/. $B/ && cd $B && { mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param SEED=2 --param TMUT=2 --workdir {RUN}/bench/rom_pipe_tmut2_anr --result {RUN}/bench/rom_pipe_tmut2_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_tmut2_anr.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"\n}",
+              "expect": "fail",
+              "fail_regex": "MUTVERDICT FAIL",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "note": "[m5rr: run on the e032e6e6f snapshot overlay of physical/ref_tile/ot_qwen_tile_lsl_m5/src]"
+            }
+          ],
+          "calibrate": {
+            "enabled": false,
+            "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+          },
+          "route": {
+            "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/ot_qwen_tile_lsl_m5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/ot_qwen_tile_lsl_m5/kit.env {LABEL} {RUN}/routes",
+            "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+            "logs": [
+              "{RUN}/routes/{LABEL}/flow.log"
+            ],
+            "threads": 8,
+            "peak_ram_gb": 64
+          },
+          "collect": {
+            "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/ot_qwen_tile_lsl_m5 --out {RUN}/record/views/ot_qwen_tile_lsl  > {RUN}/record/route/export.log 2>&1"
+          }
+        },
+        "verdict": {
+          "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+          "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+          "checks": [
+            {
+              "name": "ttb_routed_at_TC",
+              "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+            }
+          ],
+          "post_sdc": [
+            "physical/ref_tile/ot_qwen_tile_lsl_m5/signoff.sdc",
+            "physical/common_flow/link_budget_consistent.sdc"
+          ],
+          "macros": []
+        },
+        "hold_eco": {
+          "enabled": true,
+          "session": "mm",
+          "reason": "ref_tile: corrected FF hold flow"
+        },
+        "budget": {
+          "enabled": false,
+          "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+        },
+        "record": [
+          {
+            "from": "{RUN}/record/views",
+            "to": "physical/ref_tile/ot_qwen_tile_lsl_m5/views"
+          },
+          {
+            "from": "{RUN}/record/route",
+            "to": "results/rtl/ref_tile/ot_qwen_tile_lsl_m5/ot_qwen_tile_lsl_m5-m5-a0b143e7a"
+          }
+        ],
+        "cycles_added": 0,
+        "route_hold_corners": "mm",
+        "route_hold_margin_ns": 0.01,
+        "route_corner": "TC",
+        "notes": "generated by tools/ref_tile/ref_tile.py",
+        "merge_target": null
+      },
+      "requirement_gap": "Failed M5 reroute never reached arithmetic or route: logical symlink root escaped RTL overlay and provenance hash raised ValueError. Original CLOSED lsl6/e032 remains bound99.792x140.4.",
+      "current_successor_evidence": "Scoped overlay-root fix beab07a70; exact original14 child view binding59f88e1e4.",
+      "next_structural_action": "Replay exact a0 source plus seven archived overlays with corrected invoked root, positive and mutant; only then fresh M5 route with explicit layer-change reason and assigned faces.",
+      "dependency": "Legacy M5 source replay and actual current die pin assignment; no CLOSED reroute without reason."
+    },
+    {
+      "element": "qfd_sp_vector_memory",
+      "accountable_owner": "/root/qwen_tile",
+      "retired": false,
+      "legacy_job": "qfd_sp_vector_memory-fpb-be0c13ba6-tc-hm0-cl",
+      "legacy_source_commit": "be0c13ba6260398059e89bf411acddde10711f05",
+      "actual_terminal_status": "EARLY_FAIL_STALL",
+      "actual_failure": "stuckscan: quiet 217 min but 1.42 cores busy; 3_3_place_gp for 4.4 h (log quiet 217 min): synthesis / placement stall past 4 h -> redesign (flattened arrays, outline)",
+      "frozen_spec_sha256": "39f401de1d5a87c913057941faccb13acd2ff9a8c6b3698aa310b7f7249adcb2",
+      "frozen_spec": {
+        "name": "qfd_sp_vector_memory-fpb-be0c13ba6-tc-hm0-cl",
+        "block": "qfd_sp_vector_memory",
+        "owner": "Claude:fe-push-qwen-1010",
+        "purpose": "fe-push-qwen-1010: vector memory bv (no bv route ever passed floorplan). XQT=1: x-descriptor beat count by a table over the legal descriptor set + span by shift-subtract (floorplan -2,429 ps on x_dsp -> 37-bit /1,008 divide -> h_b[0]); 0 cycles. Fixed macro placement vm_bv_place.tcl instead of RTLMP (MPL-0003 mixed-cluster tiling on every outline). Outline 1036.8 x 6,220.8. Benches: ports XQT=1 x2 seeds exact (same counts as XQT=0), spine-landed exact, table-off-by-one mutant FAILS.",
+        "hosts": [
+          "ot-epyc1tb",
+          "ot-epyc3",
+          "ot-epyc4",
+          "ot-epyc2",
+          "ot-pve1"
+        ],
+        "threads": 16,
+        "peak_ram_gb": 320,
+        "source": {
+          "branch": "claude/fe-push-qwen-1010-vm",
+          "commit": "be0c13ba6260398059e89bf411acddde10711f05",
+          "extra_paths": []
+        },
+        "stages": {
+          "bench": [
+            {
+              "name": "xqt_ports_s3",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GXQT=1 -GSEED=3 -GCYCLES=40000 -GTSR=1 --Mdir {RUN}/bench/xqt_ports_s3 rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/xqt_ports_s3/Vtb_qfd_vm_bv_ports",
+              "expect": "pass",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "pass_regex": "^PASS qfd_vm_bv_ports",
+              "min_count_regex": "tuples=(\\d+)"
+            },
+            {
+              "name": "xqt_ports_s9",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GXQT=1 -GSEED=9 -GCYCLES=40000 -GTSR=1 --Mdir {RUN}/bench/xqt_ports_s9 rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/xqt_ports_s9/Vtb_qfd_vm_bv_ports",
+              "expect": "pass",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "pass_regex": "^PASS qfd_vm_bv_ports",
+              "min_count_regex": "tuples=(\\d+)"
+            },
+            {
+              "name": "xqt_ports_mut",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GXQT=2 -GSEED=3 -GCYCLES=40000 -GTSR=1 --Mdir {RUN}/bench/xqt_ports_mut rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/xqt_ports_mut/Vtb_qfd_vm_bv_ports",
+              "expect": "fail",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "fail_regex": "^FAIL qfd_vm_bv_ports"
+            },
+            {
+              "name": "xqt_landed",
+              "cmd": "mkdir -p {RUN}/bench && JOBS=8 bash rtl/test/qwen_vm_me/run_spine_landed.sh {RUN}/bench/xqt_landed -GXQT=1 -GCYCLES=40000 -GTSR=1",
+              "expect": "pass",
+              "pass_regex": "^PASS qfd_spine_landed",
+              "threads": 8,
+              "peak_ram_gb": 32,
+              "needs": [
+                "verilator"
+              ]
+            }
+          ],
+          "calibrate": {
+            "enabled": false,
+            "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+          },
+          "route": {
+            "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_sp_vector_memory_fpb.sdc' HM=0.000 SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_sp_vector_memory_fpb {LABEL} {RUN}/routes",
+            "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+            "logs": [
+              "{RUN}/routes/{LABEL}/flow.log"
+            ],
+            "threads": 16,
+            "peak_ram_gb": 320
+          },
+          "collect": {
+            "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_sp_vector_memory_fpb --post-sdc physical/qwen_die_masters/signoff/qfd_sp_vector_memory_fpb.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_sp_vector_memory_fpb > {RUN}/record/route/export.log 2>&1"
+          }
+        },
+        "verdict": {
+          "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+          "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+          "checks": [
+            {
+              "name": "ttb_routed_at_TC",
+              "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+            }
+          ],
+          "post_sdc": [
+            "physical/qwen_die_masters/signoff/qfd_sp_vector_memory_fpb.sdc"
+          ],
+          "macros": [
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+            "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+          ]
+        },
+        "hold_eco": {
+          "enabled": true,
+          "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+          "session": "mm"
+        },
+        "budget": {
+          "enabled": false,
+          "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+        },
+        "record": [
+          {
+            "from": "{RUN}/record/route",
+            "to": "results/rtl/fe_push_qwen_1010/qfd_sp_vector_memory-fpb-be0c13ba6-tc-hm0-cl"
+          }
+        ],
+        "cycles_added": 0,
+        "merge_target": null,
+        "route_hold_corners": "mm",
+        "route_hold_margin_ns": 0.0,
+        "route_corner": "TC",
+        "latency_accounting": "XQT: 0 cycles (same edges; ports bench every x seat every cycle)"
+      },
+      "requirement_gap": "Flat be0c XQT1 1036.8x6220.8 placement stalled4.4h; cancellation does not replace full VM capacity/ports.",
+      "current_successor_evidence": "Actual tiled writer command/admission and real storage drain proofs b985/86fed; TP4 group functional mapping2999; RG6/source roots remain prototypes.",
+      "next_structural_action": "Export distinct production actual per-bank completion/frontiers and compose full native writer lease; bind legacy full VM addressing/capacity/SU/row/X capabilities to region and source normalization.",
+      "dependency": "Current VM region physical clock/pin contract and actual X-query normalization/HOST ingress."
+    },
+    {
+      "element": "qfd_tile_e",
+      "accountable_owner": "/root/qwen_tile",
+      "retired": false,
+      "legacy_job": "qfd_tile_e_h3-8c1e8805e-tc-hm0-cl",
+      "legacy_source_commit": "8c1e8805e652acc18761bea74409ac25228a77e4",
+      "actual_terminal_status": "NEEDS_HUMAN",
+      "actual_failure": "route crashed twice (rc=1 ok-check failed;; first error: qfd_tile_e_h3_8c1e8805e_tc_hm0_cl/flow.log: [ERROR GRT-0232] Routing congestion too high. Check the congestion heatmap in the GUI. [step do-5_1_grt]; resource=False)",
+      "frozen_spec_sha256": "a2f153b2b0f7086b2b03a6da49ab82a36c63d683333026288120b68cf084e430",
+      "frozen_spec": {
+        "name": "qfd_tile_e_h3-8c1e8805e-tc-hm0-cl",
+        "block": "qfd_tile_e",
+        "owner": "Claude:el1011-q-tile",
+        "purpose": "el1011-q-tile h3 (qfd_tile_e_h3): ONE hardened replicated tile (GLUE PLACEMENT: glue tile-level). 307.8 x 1291.656 outline (h2 util 64.4% -> ~55%), 8 hard leaves ot_qwen_tile_lsl from qfd_tile_lsl6 (signals M2-M6, exact abstract), TOREG t_out pin regs (+1 cycle), TIDR, LRR, pdn_tile_h2 (M7 straps). Gate exact HIER_HARD (latency_added 13/14 = +1 TOREG) + TMUT3 FAIL. [idle1012] resubmit of qfd_tile_e_h3-e8c9b89df-tc-hm0-cl on hard leaf views from qfd_tile_lsl6-e032e6e6f post keepout-aware hold ECO (child_lint c+f PASS; old views DRT-0073 on leaf E-face pins); branch = main >= f4abe8c83.",
+        "threads": 16,
+        "peak_ram_gb": 64,
+        "source": {
+          "branch": "claude/el1011-q-tile",
+          "commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "stages": {
+          "bench": [
+            {
+              "name": "tile_die_glue_exact",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/td0 -P tb_qwen_rom_tile_die.NEG=0 rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/td0 | tee {RUN}/bench/td0.log && grep -q '^PASS' {RUN}/bench/td0.log",
+              "expect": "pass",
+              "pass_regex": "^PASS tile_die",
+              "min_count_regex": "writes=(\\d+)",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "tile_die_glue_neg",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/td1 -P tb_qwen_rom_tile_die.NEG=1 rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/td1 | tee {RUN}/bench/td1.log && grep -q '^PASS' {RUN}/bench/td1.log",
+              "expect": "fail",
+              "fail_regex": "^FAIL tile_die",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "rom_pipe_exact_anr",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=1 --workdir {RUN}/bench/rom_pipe_exact_anr --result {RUN}/bench/rom_pipe_exact_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "rom_pipe_exact_anr_s5",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=5 --workdir {RUN}/bench/rom_pipe_exact_anr_s5 --result {RUN}/bench/rom_pipe_exact_anr_s5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr_s5.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "rom_pipe_tmut3_anr",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=2 --param TMUT=3 --workdir {RUN}/bench/rom_pipe_tmut3_anr --result {RUN}/bench/rom_pipe_tmut3_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_tmut3_anr.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+              "expect": "fail",
+              "fail_regex": "MUTVERDICT FAIL",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "add_nr_exact7",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_exact7 -P tb_hdc_add_lat_nr.LAT=7 -P tb_hdc_add_lat_nr.HMUT=0 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_exact7 | tee {RUN}/bench/add_nr_exact7.log && grep -q '^PASS' {RUN}/bench/add_nr_exact7.log",
+              "expect": "pass",
+              "pass_regex": "^PASS add_lat_nr",
+              "min_count_regex": "results=(\\d+)",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "add_nr_exact5",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_exact5 -P tb_hdc_add_lat_nr.LAT=5 -P tb_hdc_add_lat_nr.HMUT=0 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_exact5 | tee {RUN}/bench/add_nr_exact5.log && grep -q '^PASS' {RUN}/bench/add_nr_exact5.log",
+              "expect": "pass",
+              "pass_regex": "^PASS add_lat_nr",
+              "min_count_regex": "results=(\\d+)",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "add_nr_hmut",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_hmut -P tb_hdc_add_lat_nr.LAT=7 -P tb_hdc_add_lat_nr.HMUT=1 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_hmut | tee {RUN}/bench/add_nr_hmut.log && grep -q '^PASS' {RUN}/bench/add_nr_hmut.log",
+              "expect": "fail",
+              "fail_regex": "^FAIL add_lat_nr",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            }
+          ],
+          "calibrate": {
+            "enabled": false,
+            "reason": "Qwen die masters reference IO in-run to the block's own propagated clock (io_ref_skew.sdc), i.e. this variant's own insertion; no budget sheet"
+          },
+          "route": {
+            "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.000 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_tile_e_h3.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_tile_e_h3 {LABEL} {RUN}/routes",
+            "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+            "logs": [
+              "{RUN}/routes/{LABEL}/flow.log"
+            ],
+            "threads": 16,
+            "peak_ram_gb": 64
+          },
+          "collect": {
+            "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_tile_e --out {RUN}/record/views/qfd_tile_e --image openroad/orfs:asap7lock --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+          }
+        },
+        "verdict": {
+          "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+          "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+          "checks": [
+            {
+              "name": "ttb_routed_at_TC",
+              "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+            }
+          ],
+          "post_sdc": [
+            "physical/qwen_die_masters/signoff/qfd_tile_e_h3.sdc"
+          ],
+          "macros": [
+            "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+            "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+            "physical/qwen_die_masters/hard/ot_qwen_tile_lsl"
+          ]
+        },
+        "hold_eco": {
+          "enabled": true,
+          "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+          "session": "mm"
+        },
+        "budget": {
+          "enabled": false,
+          "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+        },
+        "cycles_added": 1,
+        "route_hold_corners": "mm",
+        "route_hold_margin_ns": 0.01,
+        "route_corner": "TC",
+        "merge_target": null,
+        "registered_io": false
+      },
+      "requirement_gap": "Historical alternate E slot includes local KV and landing; h3 congestion failed, no CLOSED parent.",
+      "current_successor_evidence": "Common compute leaf proofs only; no claim that NK candidate covers local KV/landing or alternate E geometry.",
+      "next_structural_action": "Map source-selected E capability and alternate slot to current die; preserve local KV/landing proofs and partition necessary state if still instantiated.",
+      "dependency": "Die source selection plus near-HBM capability equivalence; cannot retire from die_used false alone."
+    },
+    {
+      "element": "ot_qfd_vm_bay_pad15s0",
+      "accountable_owner": "/root/qwen_tile",
+      "retired": false,
+      "legacy_job": "qfd_vm_bay_pad15s0-bp2-a6a2fb5a8",
+      "legacy_source_commit": "a6a2fb5a86d032bd38b8d8806742ffb8fd974ebe",
+      "actual_terminal_status": "EARLY_FAIL_CONGESTION",
+      "actual_failure": "global route finished with congestion (GRT-0116): qfd_vm_bay_pad15s0_bp2_a6a2fb5a8/flow.log: [ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer. [step do-5_1_grt]",
+      "frozen_spec_sha256": "72341dcd9f550e56e0a2984cd3e1b00f7d9713009a00a01fcab47a7752e8487a",
+      "frozen_spec": {
+        "name": "qfd_vm_bay_pad15s0-bp2-a6a2fb5a8",
+        "block": "ot_qfd_vm_bay_pad15s0",
+        "ref_tile": true,
+        "owner": "Claude:qwen_tp8_vm4",
+        "purpose": "Qwen TP8 VM lane-bay PILOT (vm_pad_15_S0, the fullest pad-row bay: 6 closed tiles in 6 slots at the plan pitch 21.6 um, 4.32-um channels, 200 lanes of 8 b, 3520 stage bits; wires + hard children only): measures the real congestion / DRC / timing of abutted relay and pad tiles with their closed pins before the band and region clusters are cut. Bench = every lane against its planned me-enabled stage count, every clock; mutants: one lane a tile short, two lanes swapped.",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "source": {
+          "branch": "claude/qwen-tp8-vm-phys",
+          "commit": "a6a2fb5a8",
+          "extra_paths": [
+            "rtl/qwen_sys/vm_plane_20261013",
+            "rtl/hdc",
+            "results/arch/qwen_tp8_1012/vm_bay_pad15s0.json"
+          ]
+        },
+        "stages": {
+          "bench": [
+            {
+              "name": "lint",
+              "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_qfd_vm_bay_pad15s0 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QFD_VM_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/hdc/ot_hdc_delay.sv && echo lint-ok",
+              "expect": "pass",
+              "threads": 1,
+              "peak_ram_gb": 4,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "bay_ok",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_bay_pad15s0 -GSEED=1 --Mdir {RUN}/bench/bay_ok rtl/qwen_sys/vm_plane_20261013/bay/tb_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/hdc/ot_hdc_delay.sv > {RUN}/bench/bay_ok.build.log 2>&1 && {RUN}/bench/bay_ok/Vtb_qfd_vm_bay_pad15s0 > {RUN}/bench/bay_ok.log 2>&1; tail -3 {RUN}/bench/bay_ok.log; grep -q '^PASS qfd_vm_bay_pad15s0' {RUN}/bench/bay_ok.log",
+              "expect": "pass",
+              "threads": 2,
+              "peak_ram_gb": 4,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "bay_ok_s2",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_bay_pad15s0 -GSEED=2 --Mdir {RUN}/bench/bay_ok_s2 rtl/qwen_sys/vm_plane_20261013/bay/tb_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/hdc/ot_hdc_delay.sv > {RUN}/bench/bay_ok_s2.build.log 2>&1 && {RUN}/bench/bay_ok_s2/Vtb_qfd_vm_bay_pad15s0 > {RUN}/bench/bay_ok_s2.log 2>&1; tail -3 {RUN}/bench/bay_ok_s2.log; grep -q '^PASS qfd_vm_bay_pad15s0' {RUN}/bench/bay_ok_s2.log",
+              "expect": "pass",
+              "threads": 2,
+              "peak_ram_gb": 4,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "bay_mut1",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_bay_pad15s0 -GMUT=1 --Mdir {RUN}/bench/bay_mut1 rtl/qwen_sys/vm_plane_20261013/bay/tb_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/hdc/ot_hdc_delay.sv > {RUN}/bench/bay_mut1.build.log 2>&1 && {RUN}/bench/bay_mut1/Vtb_qfd_vm_bay_pad15s0 > {RUN}/bench/bay_mut1.log 2>&1; tail -3 {RUN}/bench/bay_mut1.log; grep -q '^PASS qfd_vm_bay_pad15s0' {RUN}/bench/bay_mut1.log",
+              "expect": "fail",
+              "threads": 2,
+              "peak_ram_gb": 4,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "bay_mut2",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-TIMESCALEMOD -Wno-PINMISSING -CFLAGS -O0 -j 2 --top-module tb_qfd_vm_bay_pad15s0 -GMUT=2 --Mdir {RUN}/bench/bay_mut2 rtl/qwen_sys/vm_plane_20261013/bay/tb_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_bay_pad15s0.sv rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv rtl/hdc/ot_hdc_delay.sv > {RUN}/bench/bay_mut2.build.log 2>&1 && {RUN}/bench/bay_mut2/Vtb_qfd_vm_bay_pad15s0 > {RUN}/bench/bay_mut2.log 2>&1; tail -3 {RUN}/bench/bay_mut2.log; grep -q '^PASS qfd_vm_bay_pad15s0' {RUN}/bench/bay_mut2.log",
+              "expect": "fail",
+              "threads": 2,
+              "peak_ram_gb": 4,
+              "needs": [
+                "verilator"
+              ]
+            }
+          ],
+          "calibrate": {
+            "enabled": false,
+            "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+          },
+          "route": {
+            "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_vm_bay_pad15s0/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_vm_bay_pad15s0/kit.env {LABEL} {RUN}/routes",
+            "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+            "logs": [
+              "{RUN}/routes/{LABEL}/flow.log"
+            ],
+            "threads": 8,
+            "peak_ram_gb": 16
+          },
+          "collect": {
+            "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_vm_bay_pad15s0 --out {RUN}/record/views/ot_qfd_vm_bay_pad15s0 --macro-view physical/ref_tile/qfd_vm_fan_me/views/ot_qfd_vm_fan_t --macro-view physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t --macro-view physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t --macro-view physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w > {RUN}/record/route/export.log 2>&1"
+          }
+        },
+        "verdict": {
+          "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+          "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+          "checks": [
+            {
+              "name": "ttb_routed_at_TC",
+              "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+            }
+          ],
+          "post_sdc": [
+            "physical/ref_tile/qfd_vm_bay_pad15s0/signoff.sdc",
+            "physical/common_flow/link_budget_consistent.sdc"
+          ],
+          "macros": [
+            "physical/ref_tile/qfd_vm_fan_me/views/ot_qfd_vm_fan_t",
+            "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t",
+            "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+            "physical/ref_tile/qfd_vm_xrelay_w/views/ot_qfd_vm_xrelay_w"
+          ]
+        },
+        "hold_eco": {
+          "enabled": true,
+          "session": "mm",
+          "reason": "ref_tile: corrected FF hold flow"
+        },
+        "budget": {
+          "enabled": false,
+          "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+        },
+        "record": [
+          {
+            "from": "{RUN}/record/views",
+            "to": "physical/ref_tile/qfd_vm_bay_pad15s0/views"
+          },
+          {
+            "from": "{RUN}/record/route",
+            "to": "results/rtl/ref_tile/qfd_vm_bay_pad15s0/qfd_vm_bay_pad15s0-bp2-a6a2fb5a8"
+          }
+        ],
+        "cycles_added": 0,
+        "route_hold_corners": "mm",
+        "route_hold_margin_ns": 0.03,
+        "route_corner": "TC",
+        "notes": "generated by tools/ref_tile/ref_tile.py",
+        "merge_target": null,
+        "hold_merge": "physical probe of one lane bay (congestion pilot): the die sees the band cluster, never this block"
+      },
+      "requirement_gap": "Exact a6a bay has six closed data tiles plus fan,4.32um channel at21.6 pitch; actual bp2 overflow2433. Wrong predecessor/successor faces documented.",
+      "current_successor_evidence": "Existing RG6 plan includes full bays but old pilot194326 failed; no qualified successor or cancellation retirement.",
+      "next_structural_action": "Reconstruct exact bay lane graph with per-child clock entries, legal source-bound facing pins and channels; prove stage/ordering then measure current constructive candidate, not repeat old floorplan.",
+      "dependency": "Exact selected RG6 region/bay contract and current source-side clock/epoch/pins; no live region agent."
+    },
+    {
+      "element": "qfd_tile_nk",
+      "accountable_owner": "/root/qwen_tile",
+      "retired": false,
+      "legacy_job": "qfd_tile_nk_h3-8c1e8805e-tc-hm0-cl",
+      "legacy_source_commit": "8c1e8805e652acc18761bea74409ac25228a77e4",
+      "actual_terminal_status": "NEEDS_HUMAN",
+      "actual_failure": "route crashed twice (rc=1 ok-check failed;; first error: qfd_tile_nk_h3_8c1e8805e_tc_hm0_cl/flow.log: [ERROR GRT-0232] Routing congestion too high. Check the congestion heatmap in the GUI. [step do-5_1_grt]; resource=False)",
+      "frozen_spec_sha256": "9337130718bc46c9c3e511e9880aaee3cf919c2724b00cac771a0c88c713f225",
+      "frozen_spec": {
+        "name": "qfd_tile_nk_h3-8c1e8805e-tc-hm0-cl",
+        "block": "qfd_tile_nk",
+        "owner": "Claude:el1011-q-tile",
+        "purpose": "el1011-q-tile h3 NK: die slot qfd_tile_nk (r22ko4 contract D2) = ONE hardened replicated tile without KV slice / landing hop; 288.36 x 1291.656 (~55%); 8 hard leaves (lsl6 views), TOREG/TIDR/LRR; glue tile-level. Gate exact HIER_HARD (+1 cycle TOREG) + TMUT3 FAIL. [idle1012] resubmit of qfd_tile_nk_h3-c7551962f-tc-hm0-cl on hard leaf views from qfd_tile_lsl6-e032e6e6f post keepout-aware hold ECO (child_lint c+f PASS; old views DRT-0073 on leaf E-face pins); branch = main >= f4abe8c83.",
+        "threads": 16,
+        "peak_ram_gb": 64,
+        "source": {
+          "branch": "claude/el1011-q-tile",
+          "commit": "8c1e8805e652acc18761bea74409ac25228a77e4"
+        },
+        "stages": {
+          "bench": [
+            {
+              "name": "rom_pipe_exact_anr",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=1 --workdir {RUN}/bench/rom_pipe_exact_anr --result {RUN}/bench/rom_pipe_exact_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "rom_pipe_exact_anr_s5",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=5 --workdir {RUN}/bench/rom_pipe_exact_anr_s5 --result {RUN}/bench/rom_pipe_exact_anr_s5.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_exact_anr_s5.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+              "expect": "pass",
+              "pass_regex": "^PASS rom_pipe",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "rom_pipe_tmut3_anr",
+              "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=3 --param ARPB=1 --param MPR=1 --param HIER=2 --param ROM_CAP2=1 --param ROM_CAPX=2 --param ANR=1 --param ROM_ARELAY=2 --param HIER_HARD=1 --param TOREG=1 --param TIDR=1 --param LRR=1 --param SEED=2 --param TMUT=3 --workdir {RUN}/bench/rom_pipe_tmut3_anr --result {RUN}/bench/rom_pipe_tmut3_anr.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/rom_pipe_tmut3_anr.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+              "expect": "fail",
+              "fail_regex": "MUTVERDICT FAIL",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ]
+            },
+            {
+              "name": "add_nr_exact7",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_exact7 -P tb_hdc_add_lat_nr.LAT=7 -P tb_hdc_add_lat_nr.HMUT=0 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_exact7 | tee {RUN}/bench/add_nr_exact7.log && grep -q '^PASS' {RUN}/bench/add_nr_exact7.log",
+              "expect": "pass",
+              "pass_regex": "^PASS add_lat_nr",
+              "min_count_regex": "results=(\\d+)",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "add_nr_exact5",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_exact5 -P tb_hdc_add_lat_nr.LAT=5 -P tb_hdc_add_lat_nr.HMUT=0 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_exact5 | tee {RUN}/bench/add_nr_exact5.log && grep -q '^PASS' {RUN}/bench/add_nr_exact5.log",
+              "expect": "pass",
+              "pass_regex": "^PASS add_lat_nr",
+              "min_count_regex": "results=(\\d+)",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            },
+            {
+              "name": "add_nr_hmut",
+              "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hdc_add_lat_nr -o {RUN}/bench/add_nr_hmut -P tb_hdc_add_lat_nr.LAT=7 -P tb_hdc_add_lat_nr.HMUT=1 -P tb_hdc_add_lat_nr.N=100000 rtl/test/tb_hdc_add_lat_nr.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_add_lat_nr.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && vvp -n {RUN}/bench/add_nr_hmut | tee {RUN}/bench/add_nr_hmut.log && grep -q '^PASS' {RUN}/bench/add_nr_hmut.log",
+              "expect": "fail",
+              "fail_regex": "^FAIL add_lat_nr",
+              "threads": 1,
+              "peak_ram_gb": 2,
+              "needs": [
+                "iverilog"
+              ]
+            }
+          ],
+          "calibrate": {
+            "enabled": false,
+            "reason": "Qwen die masters reference IO in-run to the block's own propagated clock (io_ref_skew.sdc), i.e. this variant's own insertion; no budget sheet"
+          },
+          "route": {
+            "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.000 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_tile_nk_h3.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_tile_nk_h3 {LABEL} {RUN}/routes",
+            "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+            "logs": [
+              "{RUN}/routes/{LABEL}/flow.log"
+            ],
+            "threads": 16,
+            "peak_ram_gb": 64
+          },
+          "collect": {
+            "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_tile_nk --out {RUN}/record/views/qfd_tile_nk --image openroad/orfs:asap7lock --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 > {RUN}/record/route/export.log 2>&1"
+          }
+        },
+        "verdict": {
+          "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+          "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+          "checks": [
+            {
+              "name": "ttb_routed_at_TC",
+              "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+            }
+          ],
+          "post_sdc": [
+            "physical/qwen_die_masters/signoff/qfd_tile_nk_h3.sdc"
+          ],
+          "macros": [
+            "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+            "physical/qwen_die_masters/hard/ot_qwen_tile_lsl"
+          ]
+        },
+        "hold_eco": {
+          "enabled": true,
+          "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+          "session": "mm"
+        },
+        "budget": {
+          "enabled": false,
+          "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+        },
+        "cycles_added": 1,
+        "route_hold_corners": "mm",
+        "route_hold_margin_ns": 0.01,
+        "route_corner": "TC",
+        "merge_target": null,
+        "registered_io": false
+      },
+      "requirement_gap": "Historical h3 GT6144 no-KV cluster288.36x1291.656 failed GRT congestion; original registry requirement persists.",
+      "current_successor_evidence": "Common compute partition with14 exact CLOSED views; distinct GT3072/native cache/query identity parent and source-hashed functional gates.",
+      "next_structural_action": "Provide explicit GT6144-to-native3072 selection/shape mapping and complete actual registered transport/census/geometry/parent clocks before physical supersession.",
+      "dependency": "Canonical3072 source selection plus assigned current die faces; legacy throughput ratio cannot transfer."
+    },
+    {
+      "element": "qfd_vm_grp",
+      "accountable_owner": "/root/qwen_tile",
+      "retired": false,
+      "legacy_job": "qfd_vm_grp_b-9144cebda-tc-hm0-cl",
+      "legacy_source_commit": "9144cebda4a4a6aced0d5e3b57b4d0d596aea615",
+      "actual_terminal_status": "NEEDS_HUMAN",
+      "actual_failure": "route crashed twice (rc=1 ok-check failed;; first error: qfd_vm_grp_b_9144cebda_tc_hm0_cl/flow.log: Error: macro_place.tcl, 6 vm_grp_place: unparsed g_b\\[0\\].u_b.g_mac.u_hi [step do-2_2_floorplan_macro]; resource=False)",
+      "frozen_spec_sha256": "b2acad7cad908e4c8a5ada15aee2b95ed7d3e928adfb125ee1825cf43e30f7f0",
+      "frozen_spec": {
+        "name": "qfd_vm_grp_b-9144cebda-tc-hm0-cl",
+        "block": "qfd_vm_grp",
+        "owner": "Claude:el1011-q-sp",
+        "purpose": "el1011-q-sp textbook audit qfd_sp_vector_memory (classes 1/2/3/4/6; main decision near-square slot + me_en one edge early): the VM BANK-GROUP TILE ot_qfd_vm_grp (VMT=1), 8 per VM: 16 x 256x256 + 12 x 1024x256 in a fixed 4-column plan, pin flops on every input, registered outputs, NPP=7 x FIFO, own clock tree / reset relay / me_en replica; signals M2-M6, M6 straps. Variant b: 993.6 x 648.0. Benches: tb_qfd_vm_bv_ports MEE=1 VMT=1 (RV/RO 1/2, 1/1, 2/1; seeds 3/9/5/7; MEE=0) PASS, XQT=2 and MUT=1 mutants FAIL.",
+        "hosts": [
+          "ot-epyc1tb",
+          "ot-epyc2",
+          "ot-epyc3",
+          "ot-epyc4"
+        ],
+        "threads": 16,
+        "peak_ram_gb": 96,
+        "source": {
+          "branch": "claude/el1011-q-sp",
+          "commit": "9144cebda4a4a6aced0d5e3b57b4d0d596aea615"
+        },
+        "stages": {
+          "bench": [
+            {
+              "name": "vmt_s3",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GCYCLES=40000 -GTSR=1 -GXQT=1 -GSEED=3 -GMEE=1 -GVMT=1 -GXVM=17 -GVL=11 --Mdir {RUN}/bench/vmt_s3 rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/vmt_s3/Vtb_qfd_vm_bv_ports",
+              "expect": "pass",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "pass_regex": "^PASS qfd_vm_bv_ports",
+              "min_count_regex": "tuples=(\\d+)"
+            },
+            {
+              "name": "vmt_s9",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GCYCLES=40000 -GTSR=1 -GXQT=1 -GSEED=9 -GMEE=1 -GVMT=1 -GXVM=17 -GVL=11 --Mdir {RUN}/bench/vmt_s9 rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/vmt_s9/Vtb_qfd_vm_bv_ports",
+              "expect": "pass",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "pass_regex": "^PASS qfd_vm_bv_ports",
+              "min_count_regex": "tuples=(\\d+)"
+            },
+            {
+              "name": "vmt_r11",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GCYCLES=40000 -GTSR=1 -GXQT=1 -GSEED=5 -GMEE=1 -GVMT=1 -GRV=1 -GRO=1 -GXVM=16 -GVL=10 --Mdir {RUN}/bench/vmt_r11 rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/vmt_r11/Vtb_qfd_vm_bv_ports",
+              "expect": "pass",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "pass_regex": "^PASS qfd_vm_bv_ports",
+              "min_count_regex": "tuples=(\\d+)"
+            },
+            {
+              "name": "vmt_r21",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GCYCLES=40000 -GTSR=1 -GXQT=1 -GSEED=7 -GMEE=1 -GVMT=1 -GRV=2 -GRO=1 -GXVM=17 -GVL=11 --Mdir {RUN}/bench/vmt_r21 rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/vmt_r21/Vtb_qfd_vm_bv_ports",
+              "expect": "pass",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "pass_regex": "^PASS qfd_vm_bv_ports",
+              "min_count_regex": "tuples=(\\d+)"
+            },
+            {
+              "name": "vmt_nomee",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GCYCLES=40000 -GTSR=1 -GXQT=1 -GSEED=3 -GVMT=1 -GXVM=17 -GVL=11 --Mdir {RUN}/bench/vmt_nomee rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/vmt_nomee/Vtb_qfd_vm_bv_ports",
+              "expect": "pass",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "pass_regex": "^PASS qfd_vm_bv_ports",
+              "min_count_regex": "tuples=(\\d+)"
+            },
+            {
+              "name": "vmt_xmut",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GCYCLES=40000 -GTSR=1 -GXQT=2 -GSEED=3 -GMEE=1 -GVMT=1 -GXVM=17 -GVL=11 --Mdir {RUN}/bench/vmt_xmut rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/vmt_xmut/Vtb_qfd_vm_bv_ports",
+              "expect": "fail",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "fail_regex": "^FAIL qfd_vm_bv_ports"
+            },
+            {
+              "name": "vmt_smut",
+              "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 8 --top-module tb_qfd_vm_bv_ports -GCYCLES=40000 -GTSR=1 -GXQT=1 -GSEED=3 -GMUT=1 -GMEE=1 -GVMT=1 -GXVM=17 -GVL=11 --Mdir {RUN}/bench/vmt_smut rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv && {RUN}/bench/vmt_smut/Vtb_qfd_vm_bv_ports",
+              "expect": "fail",
+              "threads": 8,
+              "peak_ram_gb": 16,
+              "needs": [
+                "verilator"
+              ],
+              "fail_regex": "^FAIL qfd_vm_bv_ports"
+            }
+          ],
+          "calibrate": {
+            "enabled": false,
+            "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+          },
+          "route": {
+            "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_vm_grp_b.sdc' HM=0.000 SRC={SRC} OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' bash physical/qwen_die_masters/jobs/route_master.sh qfd_vm_grp_b {LABEL} {RUN}/routes",
+            "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+            "logs": [
+              "{RUN}/routes/{LABEL}/flow.log"
+            ],
+            "threads": 16,
+            "peak_ram_gb": 128
+          },
+          "collect": {
+            "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_vm_grp_b --post-sdc physical/qwen_die_masters/signoff/qfd_vm_grp_b.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_vm_grp_b > {RUN}/record/route/export.log 2>&1"
+          }
+        },
+        "verdict": {
+          "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+          "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+          "checks": [
+            {
+              "name": "ttb_routed_at_TC",
+              "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+            }
+          ],
+          "post_sdc": [
+            "physical/qwen_die_masters/signoff/qfd_vm_grp_b.sdc"
+          ],
+          "macros": [
+            "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+            "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+          ]
+        },
+        "hold_eco": {
+          "enabled": true,
+          "reason": "post-route mm hold ECO",
+          "session": "mm"
+        },
+        "budget": {
+          "enabled": false,
+          "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+        },
+        "record": [
+          {
+            "from": "{RUN}/record/route",
+            "to": "results/rtl/el1011_q_sp/qfd_vm_grp_b-9144cebda-tc-hm0-cl"
+          },
+          {
+            "from": "{RUN}/record/views",
+            "to": "results/rtl/el1011_q_sp/qfd_vm_grp_b-9144cebda-tc-hm0-cl/views"
+          }
+        ],
+        "cycles_added": 0,
+        "merge_target": null,
+        "route_hold_corners": "mm",
+        "route_hold_margin_ns": 0.0,
+        "route_corner": "TC",
+        "latency_accounting": "VMT tile: x path + RV+RO+2 engine edges (consumer XVM +5 at RV1/RO2), SU answers + RV+RO+1 (VL 7->11), row read + RV+RO+2 (r_qv-tagged); me_en_e one edge early from tt_ctlm (die decision 09:17)"
+      },
+      "requirement_gap": "Original TP4 eight-group VM: NBK8/NSB2/NSU3 DEPTH174/695 NRI2/NRX2/NRS1; old b floorplan parser error and da28 lineage remain.",
+      "current_successor_evidence": "Exact da28-to-current region leaf two positives and12 mutants2999; original CLOSED bank/SU child records stand.",
+      "next_structural_action": "Retain exact TP4 parameter-bound successor; independently bind native region capacity/ports/clock/latency and every memory class before physical group supersession.",
+      "dependency": "RG6 current pin/clock/geometry contract, FIFO NPP7 vs current defaults and full VM functional composition."
+    }
+  ]
+}
