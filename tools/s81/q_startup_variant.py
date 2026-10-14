@@ -1,6 +1,6 @@
 from pathlib import Path
 import hashlib,json
-root=Path('/home/ubuntu/wt/codex-s81-qelem-internal-repair-1013')
+root=Path(__file__).resolve().parents[2]
 src=root/'rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv';wrapper=root/'rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv'
 out=root/'rtl/dsrom_sys/s81_ctrl/q_startup_candidate';out.mkdir(exist_ok=True)
 s=src.read_text().replace('ot_v41_rom_elem_qx_pq_w10','ot_s81_qx_pq_startup_core').replace('ot_s81_q_lane_pair_native','ot_s81_q_lane_pair_startup_native')
