@@ -1,0 +1,7 @@
+{
+  "source_commit": "cf342a34b",
+  "positive": "FAIL1 afterfault row6, sumcorrect but parentfault sticky from previousleaf epoch",
+  "cause": "Local CLR captures atleaf then clears fault one edge later; parent re-latched oldfault before reset reached leaf. Final parent gates oldleaf fault during bounded pipeline clear interval.",
+  "mutation_qualification": false,
+  "ledger_eligible": false
+}

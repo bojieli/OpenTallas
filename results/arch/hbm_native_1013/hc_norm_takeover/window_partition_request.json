@@ -2,7 +2,7 @@
   "schema": "opentallas.slot_partition_request.v1",
   "state": "MEASURED_CTS_CANDIDATE_NO_ASSIGNED_PINS",
   "source_sha256": {
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win_partitioned.sv": "6d56ec1f7ef02914bc2c83c8f76a388cd1ab0c5f853922329a68bf1e51df2a46"
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win_partitioned.sv": "b76e7c0e6754bfecaca158da564be586b1c92921625f4fa185c49b8aba5869b8"
   },
   "replaces": "Unclosed ot_hgi_hc_win flat controller+4SRAM window",
   "reason": "Actual compact CTS boundary spread~101ps / all103.1ps exceeds80ps tile budget despite only2759root sinks; require structural local-memory/data roots",
@@ -37,7 +37,7 @@
     "SYSunit exact18records/693words and MP/POST/XL mutants",
     "Measured case15 cycles<=594; no acceptedcostrow"
   ],
-  "source_commit": "f043c49f6",
+  "source_commit": "f7fad067c",
   "contract_of_record": "results/arch/hier_contract_1011/r25gq.json",
   "contract_version": 12,
   "contract_sha256": "f1c9332f12fd679b53f9536f8fd94265a8d028be31bba7d494793f5d5a504f94",
@@ -48,14 +48,14 @@
         30.24,
         25.92
       ],
-      "std_area_um2": 315,
+      "std_area_um2": 318,
       "clock_sinks": 461,
-      "tt_boundary_mean_ps": 100.2,
-      "tt_all_spread_ps": 6.0,
+      "tt_boundary_mean_ps": 97.7,
+      "tt_all_spread_ps": 4.9,
       "inputs_bits_including_clock_reset": 148,
       "outputs_bits": 61,
-      "evidence": "window_ctl_remote_gate.json",
-      "verdict": "WARN: S-face pin density requires assigned-pin repair"
+      "evidence": "window_ctl_faces_gate.json",
+      "verdict": "WARN only broad unused weight_window partselect; actual synthesis28seconds. Dense S-face pin warning repaired by moving c_base toW and bounds toE; assigned die pins remainmissing"
     },
     "ot_hgi_hc_win_sector": {
       "outline_um": [
@@ -75,11 +75,48 @@
   },
   "assigned_pins": null,
   "equal_clock_scalar_evidence": {
-    "source": "f043c49f6",
-    "state": "FOUR_GATES_RUNNING",
+    "source": "f7fad067c",
+    "state": "EXACT18_693_PASS_WITH_MP418_POST84_XL255_DETECTED",
     "case15_observed_cycles": 540,
     "reference_cycles": 540,
     "ratio": 1.0,
-    "scope": "SYS/QPAIR component with generic32-bank VM backing; not whole layer"
-  }
+    "scope": "SYS/QPAIR component with generic32-bank VM backing; not whole layer",
+    "receipt": "results/rtl/hbm_hc_b2_1013/scalar_partition_clocked2/receipt.json"
+  },
+  "candidate_pin_faces": {
+    "W": [
+      "clk",
+      "rst_n",
+      "c_base"
+    ],
+    "S": [
+      "c_start",
+      "c_rel",
+      "c_soff",
+      "c_nwords",
+      "ready",
+      "fault"
+    ],
+    "N": [
+      "hr_v",
+      "hr_tag",
+      "hr_beat",
+      "hq_v",
+      "hq_addr",
+      "hq_len",
+      "hq_tag",
+      "hq_cr"
+    ],
+    "E": [
+      "rom_re",
+      "rom_addr",
+      "sector_read",
+      "sector_live",
+      "sector_addr",
+      "sector_fault",
+      "c_bound",
+      "c_limit"
+    ]
+  },
+  "candidate_pin_faces_are_assigned": false
 }

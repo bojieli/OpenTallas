@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hc_win_ctl_ref",
  "verdict": "WARN",
- "generated": "2026-10-14T00:59:24-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-14T01:02:10-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "81b095ce07c04b594a5a33d693804c4e2c927e51",
+  "start_commit": "6f4a20b6341dab5dc4155a4c3803bb1e383120c8",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "471f07cb56eed2d40e09676ae85a320548808f2c88fe371a4bfce99914e823f1",
-  "manifest_sha256": "5d247e605dcad08eba64f8a15cd6460739282e658999a5f7e9905f940befb3b6",
+  "archive_sha256": "d4982373341ddb6e721a9668efbd79f20222ad2a17ef81af93bb00ea2c195e77",
+  "manifest_sha256": "def074514242c87a7f8af5c40cd8a26a6f796fcc5babecce9322054b418843f4",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17083,24 +17083,24 @@
    {
     "path": "physical/ref_tile/hc_win_ctl_ref/floorplan.json",
     "kind": "file",
-    "sha256": "6ec5f9b62819833133a3142308c2a0a8ec6160ba8142bd5d602eb7ed6ffdf128",
-    "git_blob": "85c303307bc41680fed03de6d1a7049e2344ab81",
+    "sha256": "7f896cc61421c898299033eeb3a2e99d01155fda747a8295ce1cd4e55cbdd68e",
+    "git_blob": "322efedb8f56d9319fcfe462d8b7ea361180ec64",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hc_win_ctl_ref/job.json",
     "kind": "file",
-    "sha256": "849fcb4122cfaa318c595cde79d294b779ed5f577a1b39adc3a937329c8b129c",
-    "git_blob": "e7d75c3dbd80884bd3471d1e8ce0015b8445ce5b",
+    "sha256": "f2c799707f80d3ef0492394c033a305ed7cea2b246d5318f94f263e896bab807",
+    "git_blob": "d05be9633e0b41ebc6c2d1c808b68525d0323890",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hc_win_ctl_ref/kit.env",
     "kind": "file",
-    "sha256": "a0f457eec6ca6a54b82b40604e3d9da2c45f90860275c836df7c467b4aa75103",
-    "git_blob": "bd3097e53b4b785c0d703097c9f3b60331f6caee",
+    "sha256": "bd0abcb665daac9b4de7601ee97ba4e5f849559e8d2e9e6fbfb1ab008042648f",
+    "git_blob": "83cf5e482d400220270eb21014c80a23c4a24cdc",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17203,8 +17203,8 @@
    {
     "path": "physical/ref_tile/hc_win_ctl_ref/spec.json",
     "kind": "file",
-    "sha256": "726014c272bf5a02eecff084788367ed73c187ac98df9a5493ac352ce4536dcf",
-    "git_blob": "5ff8b897022baaf448bd06c906370649f14d654d",
+    "sha256": "9452ddc96a1d18a4cfc2261a0fa340dc823619124c96b5d9ba24742fd0b9d0f5",
+    "git_blob": "9f04a8087af757c9819c4984344eb769898cb6c0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -84803,8 +84803,8 @@
    {
     "path": "tools/ref_tile/specs_hbm_hc/hc_win_ctl_ref.json",
     "kind": "file",
-    "sha256": "b9a9928d65049eda9973a252088e3c988c25ae4557095973bdfd5dda126c3784",
-    "git_blob": "b2be0529b06eab5b32ca3ef5f2397b5f25cc7373",
+    "sha256": "6de01e3d3bf0f27a626291f79928c99596fac5f6b5d67cd3ea837a655fd847e6",
+    "git_blob": "3d92995bf9568bf305037c13aae63a0464e2a2f7",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -106107,7 +106107,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "18242eef7a526471e7a6621e7c309bb40bde6733",
+   "origin_main": "22c97227f62e68083517f9d5af1116d9d7b0a3e1",
    "content_sha256": "d5df988e7cadf7c8edf6071fc37fc224af1c30752fe3659fd952fba1effdbbca",
    "files": [
     {
@@ -106480,11 +106480,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T00:57:54-0700",
-  "remote_script_sha256": "a48f45bfeff4b778cee304ddbd1d72bf5f176a2773d538ec2fb0dc8774ed0cbb",
+  "captured": "2026-10-14T01:00:55-0700",
+  "remote_script_sha256": "dd4a391b8ce692297e38469d8f9667f6852a4e9c9d92d89bcd4cc84bb8e155ee",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hc_win_ctl_ref-20261014-005732",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hc_win_ctl_ref-20261014-010025",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -106495,8 +106495,8 @@
   "max_root_sinks": 461,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 100.9,
-  "tt_spread_ps": 5.4,
+  "tt_insertion_ps": 100.3,
+  "tt_spread_ps": 4.9,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -106510,15 +106510,15 @@
     "tt": {
      "boundary": {
       "n": 202,
-      "mean": 98.6,
-      "min": 95.6,
-      "max": 100.8
+      "mean": 97.7,
+      "min": 95.9,
+      "max": 100.3
      },
      "all": {
       "n": 461,
-      "mean": 98.4,
-      "min": 95.5,
-      "max": 100.9
+      "mean": 97.5,
+      "min": 95.4,
+      "max": 100.3
      },
      "errors": [],
      "macros": null,
@@ -106528,15 +106528,9 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "461 sinks on the largest root <= 15,000; measured TT insertion 100.9 ps, leaf spread 5.4 ps"
+  "text": "461 sinks on the largest root <= 15,000; measured TT insertion 100.3 ps, leaf spread 4.9 ps"
  },
  "items": [
-  {
-   "severity": "WARN",
-   "check": "oflop",
-   "message": "S face 10.5 pins/um (c_start, c_rel, c_base): recipe-2 hold stages take 3.52 um behind the face, the pin flops need gap 4.5 um and 21 columns = 10.17 um, more than 45% of the 21.6 um core behind the face (GRT-0116 class)",
-   "fix": "a longer edge or pins on two layers (lower face density), or drop the pin hold stages of this face (\"outhold\": false + route.hold_delay in RTL)"
-  },
   {
    "severity": "WARN",
    "check": "rtl",

@@ -1,0 +1,18 @@
+ERR row 0: ss 440000bc expected 44a36739 flt 0
+ERR row 1: ss 4571deb2 expected 46361f8a flt 0
+ERR row 2: ss 462f6cf0 expected 46fa1484 flt 0
+row 3 ABORT after 14 cycles
+ERR row 4: ss 4721f82a expected 47c9bbf8 flt 0
+row 5: fault raised as required
+ERR row 6: ss 47aefb63 expected 48547e4a flt 0
+row 7: fault raised as required
+ERR row 8: ss 480d208b expected 48b74312 flt 0
+ERR row 9: ss 4829e627 expected 48e7ca81 flt 0
+ERR row 10: ss 483fec43 expected 490c2678 flt 0
+ERR row 11: ss 48752bcf expected 492a5875 flt 0
+summary: 0 rows exact, 2 faults raised, stale dropped 10, max outstanding 16 of 16 credits, credit-starved slot-cycles 5431
+HGI_HC_COLL_B2 FAIL errors=9
+- rtl/hbm_accel/generic/peers/tb_hgi_hc_coll_b2.sv:173: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.093 s; speed 107.510 us/s
+- Verilator: cpu 0.093 s on 1 threads; allocated 10 MB

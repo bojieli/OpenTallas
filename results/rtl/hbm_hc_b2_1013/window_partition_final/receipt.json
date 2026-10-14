@@ -1,0 +1,26 @@
+{
+  "source_commit": "f7fad067c",
+  "actual_source_sha256": {
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_win_partitioned.sv": "b76e7c0e6754bfecaca158da564be586b1c92921625f4fa185c49b8aba5869b8",
+    "rtl/hbm_accel/generic/peers/tb_hgi_hc_win.sv": "db8489d14a0d4ef0bb63890db1578079b74ee1f4aa263cec0a82bfc2e624cccd",
+    "rtl/hbm_accel/generic/peers/run_hc_win.sh": "8c2e0dd5cb0aca958c10fc4a5756fc4852e224ecf676e0b68882eecbde343119",
+    "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv": "af3b26131ecf4c810831d96a8363a62d5e5c25a962fb927b3b59530eba51fa3b",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "matches_immutable_source": true,
+  "mismatches": [],
+  "exact": {
+    "requests": 32,
+    "SRAMrows": 32,
+    "errors": 0,
+    "empty_release_regression": "PASS"
+  },
+  "detected_mutant_errors": {
+    "data": 32,
+    "tag": 64,
+    "credit": 31
+  },
+  "physical_qualified": false,
+  "ledger_eligible": false
+}

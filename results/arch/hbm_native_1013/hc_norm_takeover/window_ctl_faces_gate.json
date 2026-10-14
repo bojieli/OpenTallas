@@ -1,0 +1,113 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "E face 6.2 pins/um (rom_re, rom_addr, sector_read): recipe-2 hold stages take 2.08 um behind the face, the pin flops need gap 2.7 um and 4 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "oflop",
+   "message": "N face 6.5 pins/um (hr_v, hr_tag, hr_beat): recipe-2 hold stages take 2.18 um behind the face, the pin flops need gap 2.8 um and 13 columns (derived in the flow)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "rtl",
+   "message": "runtime_partselect: 1 runtime-indexed part-select(s), 1,024 bits (1 >= 64 b; e.g. ot_hdc_v41x_weight_window: ][(segment*BURST_MAX+beat)*SB +: SB] (1024 b write)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory",
+   "fix": "decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc4 for 16 GB; inputs ship there before admission",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hc_win_ctl_ref_20261014-010025.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hc_win_ctl_ref_20261014-010025.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/hc_win_ctl_ref-20261014-010025",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc4 in 29 s (gate total 75 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 318 um2 + macros 0 in core 560: util 57%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS ot_hgi_hc_win_ctl cells 2,149 flops 461 depth 496.8 ps util 0.5864 reach 0.0 um (0.0 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 138.4..144.3 ps (spread 5.9), boundary mean 141.0; tt insertion all 95.4..100.3 ps (spread 4.9), boundary mean 97.7; ff insertion all 71.2..76.1 ps (spread 4.9), boundary mean 73.6; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hc_win_ctl_ref/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      456 paths, worst slack 155.5 ps (e.g. hq_addr[34]$_DFFE_PP_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out       53 paths, worst slack 227.9 ps (e.g. fault)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "in->reg        22 paths, worst slack 357.0 ps (e.g. addr_q[2]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 1.5547280129979413e-10 hold WNS 2.677194577138664e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_rule",
+   "message": "root port:clk: 461 sinks on the largest root <= 15,000; measured TT insertion 100.3 ps, leaf spread 4.9 ps",
+   "fix": ""
+  }
+ ]
+}

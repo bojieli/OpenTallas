@@ -1,0 +1,18 @@
+row 0: exact ss 44a36739, 186 cycles, stale dropped 0
+row 1: exact ss 46361f8a, 621 cycles, stale dropped 0
+row 2: exact ss 46fa1484, 678 cycles, stale dropped 0
+row 3 ABORT after 14 cycles
+row 4: exact ss 47c9bbf8, 244 cycles, stale dropped 10
+ERR row 5: a bad tag was accepted silently
+row 6: exact ss 48547e4a, 243 cycles, stale dropped 0
+row 7: fault raised as required
+row 8: exact ss 48b74312, 241 cycles, stale dropped 0
+row 9: exact ss 48e7ca81, 684 cycles, stale dropped 0
+row 10: exact ss 490c2678, 631 cycles, stale dropped 0
+row 11: exact ss 492a5875, 186 cycles, stale dropped 0
+summary: 9 rows exact, 1 faults raised, stale dropped 10, max outstanding 16 of 16 credits, credit-starved slot-cycles 5394
+HGI_HC_COLL_B2 FAIL errors=1
+- rtl/hbm_accel/generic/peers/tb_hgi_hc_coll_b2.sv:173: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.104 s; speed 98.822 us/s
+- Verilator: cpu 0.104 s on 1 threads; allocated 10 MB

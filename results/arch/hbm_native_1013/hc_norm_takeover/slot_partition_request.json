@@ -2,7 +2,7 @@
   "schema": "opentallas.slot_partition_request.v1",
   "source_commit": "f7fad067c HC scalar;43fb197fd native residual;01f83170b norm node abort repair",
   "source_sha256": {
-    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "524acac534020c9c03fab9564ca1b844b4fbda3247eab2e207a44fba7df56dce",
+    "rtl/hbm_accel/generic/peers/ot_hgi_hc_eng_b2.sv": "e713a764858598d4a9c59ea7b328742a7c912a56de351fe5118ad2208cca9938",
     "rtl/hbm_accel/generic/peers/ot_hgi_hc_lane_b2.sv": "1da6dbe69de3d2dfed2abda5105269a1d3b5eb131696f7eb19b46d36a9afbae9",
     "rtl/hdc/v41x/ot_hbm_norm_split_p.sv": "9119d052dec52368a11694abf479934f9f95eafaef0bd865c4af61370fbca554",
     "rtl/hdc/v41x/ot_hbm_norm_sum_node.sv": "be6ab417e31a36500e04f1577b2978717134c45efa1acb7d84ea28f10cb1dfa9"
@@ -35,13 +35,13 @@
         "Publish slots for window/control scalar SYS bank and residual child masters together; 88 legacy shells are not coverage"
       ],
       "outline_um": null,
-      "clock_evidence": "Accepted SL CLOSED source6656b8688 is archived locally with immutable finalODB/SPEF; current ot_hgi_hc_lane_sl module body byte-identical. Checked view recovery in progress, no reroute. New own-state leaves need actual roots and assigned pins.",
+      "clock_evidence": "CLOSED SL body/source equal6656; raw archived DB/SPEF hashes verified and checked export reproducesTT142.89/FF0.72. RoutedTTmean212.6/spread22.2. Exact ownstub/pocket correction leaves224 above-layer blocked face pins; unqualified views under results/rtl/hbm_hc_b2_1013/closed_sl_recovery, cannot yet bind parent.",
       "physical_partition_progress": {
         "window": "window_partition_request.json;32ctl+128sector actual measured roots, no die-assigned pins",
         "collector_block_store": {
           "master": "ot_hgi_hc_chunk_store32",
           "proposed_count": 20,
-          "integrated_in_native_collector": false,
+          "integrated_in_native_collector": true,
           "outline_um": [
             51.84,
             49.68
@@ -51,14 +51,34 @@
           "TT_boundary_mean_ps": 99.8,
           "TT_spread_ps": 4.2,
           "source": "7d84495f0",
-          "actual_gates": "results/rtl/hbm_hc_b2_1013/chunk_store32/receipt.json"
+          "actual_gates": "results/rtl/hbm_hc_b2_1013/chunk_store32/receipt.json",
+          "integration_source": "24b3831d7 opt-in STORELEAF1; actual native exact+scanmut jobs running"
         },
         "remaining": "32lane own-state incl PRE buffers and7chunk adders/lane;4quarter station own-state;4concentrators;central ingress/selector/control;shared31chunk and19heap arithmetic nodes;scalarSYS control andSinkhorn",
         "explicit_clock_API": {
-          "source": "81b095ce0",
+          "source": "24b3831d7",
           "accepted_SL_clock_pins": 256,
           "chunk_adder_clock_pins": 224,
-          "mode": "CLOCKED1 actual native exact/m2 jobs live; related equal clock proof only until physical pin/phase closure"
+          "mode": "SL256/chunk224 API source81 exact+mutPASS. STORELEAF20+scan32+block31+heap31 newer native gates RUNNING; relatedequalclock logical proof only.",
+          "clock_entries_declared": 594,
+          "heap_entries_pruned": 12
+        },
+        "collector_scan": {
+          "source": "dbd8e138d",
+          "new_mux2_count": 16,
+          "closed_relay304_WE_count": 16,
+          "mux_outline_um": [
+            60.48,
+            60.48
+          ],
+          "mux_raw_std_area_um2": 296,
+          "mux_recipe2_posthold_effective_area_um2": 1716,
+          "mux_clock_sinks": 797,
+          "TT_boundary_mean_ps": 90.1,
+          "TT_spread_ps": 6.8,
+          "status": "CTS WARN rawutil9%;actual compulsory holdcells need larger core. No assignedpins or route.",
+          "clock_evidence": "chunk_scan2_remote_gate2.json",
+          "transaction_proof": "results/rtl/hbm_hc_b2_1013/collector_stores2/receipt.json"
         }
       }
     },
