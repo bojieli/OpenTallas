@@ -11,8 +11,8 @@
  "clock": "cts",
  "layer_cap": "M5",
  "outline": {
-  "w": 108,
-  "h": 97.2
+  "w": 28.08,
+  "h": 84.24
  },
  "pins": {
   "W": [
@@ -30,11 +30,11 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Replace hfd_coll five-stage face registers with 512-bit hard leaves, each owning 2560 flops and independent clock root. Core extraction and physical child placement remain prerequisites; no parent closure claim.",
+ "structural_change": "Measured2560sinks/std858um2 initial108x97.2 util9%. Compact pin-face rectangle25.92x86.4 core21.6x82.08 util48.4%, retain512ports eachW/E and recipe2 hold/pin hooks. 119 face leaves area0.2665mm2 before channels, inside0.718mm2 remaining afternineCLOSEDports; corebody and actual placement still owed. Actual recipe2 W/E pin-cell bands total22.76um; revisedcore23.76um accommodates both, stdutil45.2%, footprint0.2814mm2 for119leaves.",
  "job": {
   "owner": "Codex:coll_clusters2240",
   "branch": "codex/hbm-coll-clusters-2240",
-  "tag": "r1",
+  "tag": "r2compact",
   "purpose": "Own-flop 512b hard face leaf preserves immutable hfd_coll five-cycle register chain with original cell comparator and early publication mutant",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective/physical",
@@ -65,6 +65,7 @@
    }
   ]
  },
+ "std_area_um2": 858,
  "macros": [],
  "children": [],
  "inter": [],
