@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     skipped: no /tmp/native-012400-audit
+ot-run: ot-epyc4       admits   663 GB (avail 890, growth 111, headroom 48, waiters 0/0 GB) load 76/128 running 13 disk 515 GB 
+ot-run: ot-pve1        skipped: no /tmp/native-012400-audit
+ot-run: ot-agidock128  skipped: no /tmp/native-012400-audit
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1355621-1791967476 after 0 s
+/usr/bin/bash: /tmp/native-012400-audit/run_all.sh: No such file or directory
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1355621-1791967476): exit 127

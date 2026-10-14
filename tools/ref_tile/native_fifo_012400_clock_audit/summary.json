@@ -1,0 +1,267 @@
+{
+  "scope": "Actual corrected native FIFO 012400 standalone TT/FF/SS placement-RC diagnostics only; no physical source-slew, die phase or MM qualification.",
+  "source_commit": "a35be745ac4eccf211cfc21e95a64c963b20cf9f",
+  "source_archive_sha256": "266b9555461a8e19bd89a6b281e08d4f7b6e14ad21487b40939800f51396b2b9",
+  "actual_host": "ot-epyc4",
+  "actual_root": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_xfifo_native-20261014-012400",
+  "canonical_TT_sha256": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
+  "canonical_corner_changes": "FF/SS whole clones change STD library selector, actual additional SRAM library suffix, and corner marker. No constraint changes; explicit libraries read errors fail. Inherited TTplacementRC label in cloned output is cosmetic, not the loaded library corner.",
+  "phase_policy": "Actual source phase0, raw insertion metrics. No phi-R source compensation applied. Any physical die compensation is separate, with actual per-root boundary R and phase/native epoch proof still required.",
+  "source_policy": "core source slew0; CKD150ps explicit and clock-only tags. Die-driver CKD bound unknown; sensitivity0 is diagnostic fixed-original-IO budget only, not qualification.",
+  "expected_macro_owners": {
+    "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/wclk": "ck",
+    "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/rclk": "ck",
+    "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/rclk": "ckd",
+    "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/wclk": "ckd",
+    "u_port.u_sq.g_ib_mem.u_ib/clk": "ckd"
+  },
+  "corners": {
+    "tt": {
+      "root_metrics": {
+        "tt_source150": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 688.0574327391118,
+            "min_ps": 676.090271,
+            "max_ps": 707.4151
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 449.6699333603914,
+            "min_ps": 432.489166,
+            "max_ps": 462.09906
+          }
+        },
+        "tt_source0_fixed_original_IO": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 688.0574327391118,
+            "min_ps": 676.090271,
+            "max_ps": 707.4151
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 423.912112636931,
+            "min_ps": 406.731354,
+            "max_ps": 436.341217
+          }
+        },
+        "tt_restored150": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 688.0574327391118,
+            "min_ps": 676.090271,
+            "max_ps": 707.4151
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 449.6699333603914,
+            "min_ps": 432.489166,
+            "max_ps": 462.09906
+          }
+        }
+      },
+      "slacks": {
+        "tt_source150": {
+          "setup_ps": 216.49604331486216,
+          "hold_ps": 11.577072633883745
+        },
+        "tt_source0_fixed_original_IO": {
+          "setup_ps": 216.49615433716463,
+          "hold_ps": 11.577072633883745
+        },
+        "tt_restored150": {
+          "setup_ps": 216.49604331486216,
+          "hold_ps": 11.577072633883745
+        }
+      },
+      "macro_owners": {
+        "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/wclk": "ck",
+        "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/rclk": "ck",
+        "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/rclk": "ckd",
+        "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/wclk": "ckd",
+        "u_port.u_sq.g_ib_mem.u_ib/clk": "ckd"
+      },
+      "CKD_source0_minus150_mean_ps": -25.757820723460384,
+      "source150_restore_exact": true,
+      "CLK_only_source_tag": true
+    },
+    "ff": {
+      "root_metrics": {
+        "ff_source150": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 541.9772440834203,
+            "min_ps": 531.73822,
+            "max_ps": 567.381775
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 359.3985801489743,
+            "min_ps": 346.199799,
+            "max_ps": 372.362061
+          }
+        },
+        "ff_source0_fixed_original_IO": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 541.9772440834203,
+            "min_ps": 531.73822,
+            "max_ps": 567.381775
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 342.6109952973536,
+            "min_ps": 329.412231,
+            "max_ps": 355.574432
+          }
+        },
+        "ff_restored150": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 541.9772440834203,
+            "min_ps": 531.73822,
+            "max_ps": 567.381775
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 359.3985801489743,
+            "min_ps": 346.199799,
+            "max_ps": 372.362061
+          }
+        }
+      },
+      "slacks": {
+        "ff_source150": {
+          "setup_ps": 301.04846393541607,
+          "hold_ps": 9.726885963345921
+        },
+        "ff_source0_fixed_original_IO": {
+          "setup_ps": 312.56808252777546,
+          "hold_ps": 9.726885963345921
+        },
+        "ff_restored150": {
+          "setup_ps": 301.04846393541607,
+          "hold_ps": 9.726885963345921
+        }
+      },
+      "macro_owners": {
+        "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/wclk": "ck",
+        "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/rclk": "ck",
+        "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/rclk": "ckd",
+        "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/wclk": "ckd",
+        "u_port.u_sq.g_ib_mem.u_ib/clk": "ckd"
+      },
+      "CKD_source0_minus150_mean_ps": -16.787584851620693,
+      "source150_restore_exact": true,
+      "CLK_only_source_tag": true
+    },
+    "ss": {
+      "root_metrics": {
+        "ss_source150": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 932.7548094377414,
+            "min_ps": 883.668579,
+            "max_ps": 972.196411
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 591.9646728174248,
+            "min_ps": 566.630188,
+            "max_ps": 613.282715
+          }
+        },
+        "ss_source0_fixed_original_IO": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 932.7548094377414,
+            "min_ps": 883.668579,
+            "max_ps": 972.196411
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 555.7711207826345,
+            "min_ps": 530.436584,
+            "max_ps": 577.089172
+          }
+        },
+        "ss_restored150": {
+          "ck": {
+            "n": 4891,
+            "mean_ps": 932.7548094377414,
+            "min_ps": 883.668579,
+            "max_ps": 972.196411
+          },
+          "ckd": {
+            "n": 3363,
+            "mean_ps": 591.9646728174248,
+            "min_ps": 566.630188,
+            "max_ps": 613.282715
+          }
+        }
+      },
+      "slacks": {
+        "ss_source150": {
+          "setup_ps": -68.59202095199635,
+          "hold_ps": -13.026024703322037
+        },
+        "ss_source0_fixed_original_IO": {
+          "setup_ps": -68.59190992969388,
+          "hold_ps": -13.026024703322037
+        },
+        "ss_restored150": {
+          "setup_ps": -68.59202095199635,
+          "hold_ps": -13.026024703322037
+        }
+      },
+      "macro_owners": {
+        "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/wclk": "ck",
+        "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/rclk": "ck",
+        "u_port.u_cq.g_afw.u_af.g_mm.genblk1.genblk1.g_256x517.u_m/rclk": "ckd",
+        "u_port.u_sq.g_afw.u_af.g_mm.genblk1.genblk1.genblk1.g_64x546.u_m/wclk": "ckd",
+        "u_port.u_sq.g_ib_mem.u_ib/clk": "ckd"
+      },
+      "CKD_source0_minus150_mean_ps": -36.19355203479029,
+      "source150_restore_exact": true,
+      "CLK_only_source_tag": true
+    }
+  },
+  "MM_status": "Original source config WC TC/BC preserved; MMscene not independently replayed.",
+  "known_limits": [
+    "SS setup and hold are negative and remain failures.",
+    "Old010028 absent secondary tree occurred because native pre_cts_extra hook was not invoked by generator; frozen primary-only spine/restCTS0 source observed there is consequence, not a demand to alter intended native topology. Corrected f12c05ec2 invokes existing dual-spine hook and restores CKD.",
+    "No helper/source/clock/reset/IO exceptions changed; no reroute, release or source-slew approval."
+  ],
+  "artifacts_sha256": {
+    "actual_db_sdc_hash.receipt.txt": "cba09e62f0a41c437a7d90f7a4d3aea71aae6ec335d7904876a672a5b0758613",
+    "expected_macro_owners.json": "460d1fdd623df1352d690b11bca95f85a9d2a2740c58997be5d6c1202ea80727",
+    "run_all.receipt.log": "1e1cdc6d0c860a88ffda6f44a029c6e8075021ea9ace313329a342fb6be90b7e",
+    "frozen_signoff.sdc": "4353a5d9ab34300e23f39b11fc5289f2318d3336a234dfe1ced86131e69cdac8",
+    "executed_tt.sdc": "55a46b02a1392f3af568e2b5f7b29a720709bfb7aa8ff7a34268b7b2c3061fc1",
+    "frozen_config.mk": "1c205a4fdfbfcdcb03575e75e116a7e214456e84d5157aed4ad0c5ef54e5144d",
+    "audit_tt.tcl": "be78e004fa1d0b6cd302f9fcd7ee1df496b11ce23e3c124e5df01313101c91f7",
+    "audit_ss.receipt.log": "060dc25948576c233826149a9d95d1e19a728efd92addd739528e4a89f9dd3f9",
+    "qfd_coll_xfifo_native.sdc": "d13e15f4af8de6c99a2ac30cb47a65b0a41ee4e9a68150ecf35839083c739b17",
+    "image_inspect.json": "cbc62e1ea26712a4586d6877b025bdb8d1679749923a4e128c22de04579b92b6",
+    "initial_HB_traversal_rejection.receipt.log": "076bf46a7278bdcfb74ce38fa946f45cd5ea4dad3e45058c0bcf3402cf0f3ae1",
+    "native_dual_spine.tcl": "6f1ee9bdf7c2c9d2b6ae67a2700cd06dedcd0fd2e0ddb49ce79b84d9e9b33913",
+    "executed_ss.sdc": "46a2040427051233196957e9a07a5058041e4c7a1c465162a5bf2ff4b661b8d4",
+    "source_binding.json.gz": "b56611fdb551b7585da896ca23f3ff2f1e4a26d0e2cd72086eb71d1d67ee5493",
+    "frozen_pre_cts.tcl": "4d4c8e7e68922b22d463dacaf0174af306e247c9e327fd0aebc449cf72b16f95",
+    "prepare.py": "5c8a58f55a05c8baf89c20a38ec6817d8775b05b80a91ac3d405be9c0e61425c",
+    "audit_ss.tcl": "99f4e1e86cad739ca13343e7f18660816f5ee70fbd6ca24114393bc1b27ccae7",
+    "audit_ff.receipt.log": "fbb057763c017606050de944369c1c8438bef5e5a38cf703f780c2cfca862599",
+    "canonical_ff.tcl": "dd0190f1a773f6610a1834718ce8b00c838d32a08780236cbbd7980c5fcce52c",
+    "initial_missing_preparation.receipt.log": "7aa70910994c9a8acc46c87e6495200932e98b8b207a6995a89aa356008733a6",
+    "pc.log": "0673fadd3804dd2387112fe6c584465610b82bde72bac8619b3ce2e0a4f23abc",
+    "canonical_ss.tcl": "f4397a8d9ebcc55f0e4bdbe7a1116e0cc2c777ecf4599ff77a7daf5590144b00",
+    "executed_ff.sdc": "0272e0b6cc4cdf76452d864c8d14cdd2ce167fc94847649920a4b9ea1e1c6f73",
+    "ck.json": "a98faca896ce07d16a23400c7c8c400fc8ed089ce9549eca922d0ebf868e11b9",
+    "canonical_tt.tcl": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
+    "audit_ff.tcl": "3f3677ab9a84305888d1fa0ec2b8ea93f11b4d7e504627626ad9034292c6d2b5",
+    "audit_tt.receipt.log": "b77c6853703fabc8e8e346ed90b9521fb802498f30b8b516104cce998716532d",
+    "frozen_path_classes.tcl": "47d06c968afc42e5773c9490bab1c13d02d042fc7221f32bf9c76ce4efc54f73",
+    "run_all.sh": "c72a4e69afc7abb6af3222abe8f6da1e02de1e6046b7fa0adc3cfdff346fa68b"
+  }
+}
