@@ -70,11 +70,37 @@
  "job": {
   "owner": "Codex:qdq-write-completion-split",
   "branch": "codex-qdq-write-completion-split",
-  "tag": "p2",
+  "tag": "p3",
   "views_to": "physical/ref_tile/qdq_wr_pay_ref/views",
   "record_to": "results/rtl/ref_tile/qdq_wr_pay_ref",
-  "purpose": "Opt-in native candidate real SRAM payload leaf; snapshot+valid captured by distinct completion root. Parent slot unresolved, throughput must qualify actual native4 driver.",
-  "benched_by": "qdq_native_peer4_split"
+  "purpose": "Opt-in native candidate real SRAM payload leaf; snapshot+valid captured by distinct completion root. Parent slot unresolved, throughput must qualify actual native4 driver. Dedicated real payload macro gate verifies36864 outputwords,288 posted snapshots,queue/counterwraps,exact golden BF16-to-FP32 placement and actual payload/snapshot RTL mutants. This standalone leaf gate does not qualify native4 production price.",
+  "benches": [
+   {
+    "name": "payload_sram_exact",
+    "cmd": "MUT=0 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "pass_regex": "PASS QDQ_WR_PAY words=36864 snapshots=288",
+    "min_count_regex": "words=(36864)"
+   },
+   {
+    "name": "payload_bit_mutant",
+    "cmd": "MUT=1 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m1",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "PAY word/address mismatch"
+   },
+   {
+    "name": "snapshot_count_mutant",
+    "cmd": "MUT=2 bash tools/hgi_unit_tput/run_qdq_wr_pay.sh {RUN}/pay_m2",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 1,
+    "fail_regex": "PAY post-write snapshot mismatch"
+   }
+  ]
  },
  "pin_ranges": {
   "y": [

@@ -1,0 +1,6 @@
+{
+  "source_sha256": "87deaef6499f70ca2404af1e538c05dac42ac1529d9948f5412cfbb869baf1a4",
+  "mutant_sha256": "ca4db216ca9c57f5684c59af50cb4a41a3d27553f08e90f4dee8a7d3ade55a81",
+  "from": "d[k*32 +: 32] = {c[k*16 +: 16], 16'd0};",
+  "to": "d[k*32 +: 32] = {c[k*16 +: 16], 16'd0} ^ 32'd1;"
+}
