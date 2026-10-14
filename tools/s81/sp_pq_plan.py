@@ -155,8 +155,8 @@ def nets(I):
         for j in range(1024):
             d = xi.pin("d", j)
             out.append(("x_q", cpin("x_q", 1024 * h + j, "S", d), [d[:2]]))
-            out.append((f"xq{h}", xi.pin("q", j)[:2], [aq.pin("x", j)[:2], I[f"u_ix{h}"].pin("xw", j)[:2],
-                                                    I[f"u_ix{h + 2}"].pin("xw", j)[:2]]))
+            out.append((f"xq{h}.aq", xi.pin("q", j)[:2], [aq.pin("x", j)[:2]]))
+            out.append((f"xq{h}.ix", xi.pin("q", j)[:2], [I[f"u_ix{h}"].pin("xw", j)[:2], I[f"u_ix{h + 2}"].pin("xw", j)[:2]]))
         for k in range(256):
             out.append((f"aq_q{h}", aq.pin("q", k)[:2], [I["u_qb"].pin("aq_q", 256 * h + k)[:2]]))
         for k in range(10):
@@ -256,6 +256,88 @@ def insertions():
         out[k] = {c: dict(mean=j[c]["all"]["mean"], min=j[c]["all"]["min"], max=j[c]["all"]["max"], sinks=j[c]["all"]["n"])
                   for c in ("tt", "ff", "ss") if c in j}
     return out
+
+
+# ---------------------------------------------------------------------------------------------------- hop timing
+# A hop A -> B of L um closes when  o_A + W_PS_UM * L + s_B <= T - U - SKEW  (die statement, tools/hier_contract/
+# pinreg_audit.py): o = clock pin -> output pin minus the child's clock target, s = setup at the input pin plus the target,
+# both read from the child's TT ETM; the cluster spine delivers every child's clock pin at  phi - target.  target =
+# boundary-mean insertion (insertion.json) + CK_OFFSET_PS[kind].  '<= 500 um' alone is not a rule for these tiles:
+# T_CTL launches aq_vin 308 ps after its reference and T_AQ's insertion spans 254..430 ps (gate 10-13).
+T_PS, U_PS, SKEW_PS, W_PS_UM, MARGIN_PS = 833.333, 60.0, 50.0, 0.76, 30.0
+CK_OFFSET_PS = {"aq": 30.0}        # T_AQ's clock pin 30 ps earlier than its boundary mean: q -> T_QB gains, x / v lose
+# bus prefix -> [(driver kind, pin, sink kind, pin)]; None = a cluster pin
+PAIR = {"x_q": [(None, None, "xin", "d")], "xq.aq": [("xin", "q", "aq", "x")], "xq.ix": [("xin", "q", "ix", "xw")],
+        "aq_q": [("aq", "q", "qb", "aq_q")], "aq_e": [("aq", "e", "qb", "aq_e")], "aqf": [("aq", "fault", "ctl", "aqf")],
+        "aq_vin": [("ctl", "aq_vin", "aq", "v")], "ba_v": [("ctl", "ba_v_o", "ix", "ba_v")],
+        "ba_blk": [("ctl", "ba_blk_o", "ix", "ba_blk")], "h_hi": [("ctl", "h_hi_o", "ix", "h_hi")],
+        "hw7": [("ctl", "hw_o", "ix", "hw7")], "aqi": [("ctl", "aqi_o", "qb", "aqi_d")],
+        "h_b": [("ctl", "h_b0_o", "qb", "h_b0"), ("ctl", "h_b1_o", "qb", "h_b1")], "hw_sv": [("ctl", "hw_o", "qb", "hw_sv")],
+        "mdr": [("ctl", "mdr_o", "ret", "mdr")], "q2f": [("ret", "q2f", "ctl", "q2f_i")], "ga": [("ret", "ga", "ctl", "ga_i")],
+        "r_in": [(None, None, "ret", n) for n in ("r_v", "r_row", "r_pos", "r_fp32", "r_bf16", "r_e")],
+        "w_out": [("ret", n, None, None) for n in ("w_we", "w_addr", "w_data")],
+        "ctl_in": [(None, None, "ctl", n) for n in ("go", "i_ph", "i_np", "i_xbase", "i_xps", "i_obase", "i_ops", "i_fmt", "x_rv", "f_fault")],
+        "ctl_out": [("ctl", n, None, None) for n in ("o_ready", "o_idle", "o_x_re", "o_x_addr", "o_fault", "o_ev")],
+        "rom": [("ctl", n, None, None) for n in ("rom_pa0", "rom_pa1", "rom_sa")] + [(None, None, "ctl", n) for n in ("rom_pq0", "rom_pq1", "rom_sq")],
+        "bc.ix": [("ix", "bt_d", "bc", "d")], "bc.ctl": [("ctl", "bc_hr_o", "bc", "d")],
+        "bc.qb_he": [("qb", "he0", "bc", "d"), ("qb", "he1", "bc", "d")], "bc.qb_hq": [("qb", "hq0", "bc", "d"), ("qb", "hq1", "bc", "d")],
+        "bc.s": [("bc", "q", "bc", "d")], "o_bus": [("bc", "q", None, None)]}
+
+
+def bus_class(bus):
+    b = re.sub(r"^(xq|aq_q|aq_e)\d", r"\1", bus)
+    if b in PAIR:
+        return b
+    return max((k for k in PAIR if b.startswith(k)), key=len, default=None)
+
+
+def etm():
+    """per child kind: clock target (ps) and raw ETM numbers per pin base (clock pin -> output, setup at input), TT"""
+    sys.path.insert(0, str(ROOT / "tools/hier_contract"))
+    import pinreg_audit as PA  # noqa: E402
+    out = {}
+    for k, v in VIEWS.items():
+        lib = PA.parse_lib(ROOT / v / (Path(v).name + "_tt.lib"))
+        ins = json.loads((ROOT / v / "insertion.json").read_text())["tt"]
+        o, s = {}, {}
+        for n, p in lib["pins"].items():
+            base = re.sub(r"\[\d+\]$", "", n)
+            for typ, _, tb in p["arcs"]:
+                if typ == "rising_edge":
+                    f = [tb[x][0] for x in ("cell_rise", "cell_fall") if tb.get(x)]
+                    if f:
+                        o[base] = max(o.get(base, -1e9), max(f))
+                elif typ and typ.startswith("setup_"):
+                    c = [x for y in ("rise_constraint", "fall_constraint") for x in tb.get(y, [])]
+                    if c:
+                        s[base] = max(s.get(base, -1e9), max(c))
+        out[k] = dict(target=ins["boundary"]["mean"] + CK_OFFSET_PS.get(k, 0.0), boundary=ins["boundary"], o=o, s=s)
+    return out
+
+
+def timing(hp):
+    """[(bus, pair, o, s, L, slack)]: slack of every bus against the hop statement (cluster pins: o / s at the pin reported)"""
+    E = etm()
+    rows = []
+    for bus, h in hp.items():
+        c = bus_class(bus)
+        if c is None:
+            rows.append(dict(bus=bus, error="no pin pair for this bus"))
+            continue
+        for a, ap, z, zp in PAIR[c]:
+            o = E[a]["o"][ap] - E[a]["target"] if a else None
+            s = E[z]["s"][zp] + E[z]["target"] if z else None
+            L = h["max_um"]
+            r = dict(bus=bus, pair=f"{a or 'IN'}.{ap or ''} -> {z or 'OUT'}.{zp or ''}", L_um=L)
+            if a and z:
+                r.update(o_ps=round(o, 1), s_ps=round(s, 1), slack_ps=round(T_PS - U_PS - SKEW_PS - MARGIN_PS - o - s - W_PS_UM * L, 1),
+                         reach_um=round((T_PS - U_PS - SKEW_PS - MARGIN_PS - o - s) / W_PS_UM, 1))
+            elif a:
+                r.update(o_ps=round(o, 1), o_at_cluster_pin_ps=round(o + W_PS_UM * L, 1))
+            else:
+                r.update(s_ps=round(s, 1), s_at_cluster_pin_ps=round(s + W_PS_UM * L, 1))
+            rows.append(r)
+    return rows, {k: dict(target_ps=round(v["target"], 1), boundary=v["boundary"]) for k, v in E.items()}
 
 
 TRK = 0.048
@@ -364,6 +446,17 @@ def main():
     print("worst cut", worst_cut, "| cuts > 0.60:", [c for c in ct if c["util"] > 0.60][:8])
     print("LEGALITY", "OK" if not bad else bad[:10])
     print("HOPS", "OK (all <= 500 um)" if not over else f"OVER 500: {over}")
+    tm, targets = timing(hp)
+    neg = [r for r in tm if r.get("slack_ps", 0) < 0 or r.get("error")]
+    worst = {}
+    for r in tm:
+        if "slack_ps" in r and (r["pair"] not in worst or r["slack_ps"] < worst[r["pair"]]["slack_ps"]):
+            worst[r["pair"]] = r
+    for r in sorted(worst.values(), key=lambda r: r["slack_ps"])[:14]:
+        print(f"  T {r['bus']:20s} {r['pair']:34s} o {r['o_ps']:6.1f} s {r['s_ps']:6.1f} L {r['L_um']:6.1f} reach {r['reach_um']:6.1f} slack {r['slack_ps']:7.1f}")
+    io = [r for r in tm if "o_at_cluster_pin_ps" in r or "s_at_cluster_pin_ps" in r]
+    print("  cluster pins: worst o", max((r.get("o_at_cluster_pin_ps", 0), r["bus"]) for r in io), "worst s", max((r.get("s_at_cluster_pin_ps", 0), r["bus"]) for r in io))
+    print("TIMING", "OK (every hop >= 0 with %g ps margin, skew %g)" % (MARGIN_PS, SKEW_PS) if not neg else f"FAIL: {[(r['bus'], r.get('slack_ps', r.get('error'))) for r in neg][:8]}")
     ins = insertions()
     print("child TT insertion (ps):", {k: (v and v["tt"]["mean"]) for k, v in ins.items()})
     if a.write:
@@ -380,11 +473,12 @@ def main():
     rec = dict(schema="opentallas.s81.sp_pq_plan.v1", outline=[W_CL, H_CL], gx=GX, child_insertion_ps=ins,
                cluster_pins={f: sum(1 for v in cp.values() if v[0] == f) for f in "NSEW"},
                children={n: dict(kind=i.kind, at=[round(i.x, 3), round(i.y, 3)], orient=i.o, w=i.w, h=i.h) for n, i in I.items()},
-               hops=hp, cuts=ct, worst_cut=worst_cut, legality=bad)
+               hops=hp, cuts=ct, worst_cut=worst_cut, legality=bad, hop_timing=tm, clock_targets=targets,
+               hop_rule=dict(T_ps=T_PS, unc_ps=U_PS, skew_ps=SKEW_PS, margin_ps=MARGIN_PS, wire_ps_um=W_PS_UM, ck_offset_ps=CK_OFFSET_PS))
     if a.json:
         a.json.parent.mkdir(parents=True, exist_ok=True)
         a.json.write_text(json.dumps(rec, indent=1) + "\n")
-    return 0 if not bad and not over and worst_cut["util"] <= 0.60 else 1
+    return 0 if not bad and not over and not neg and worst_cut["util"] <= 0.60 else 1
 
 
 if __name__ == "__main__":

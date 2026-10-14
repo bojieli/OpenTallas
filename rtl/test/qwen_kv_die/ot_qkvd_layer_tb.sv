@@ -155,6 +155,9 @@ module ot_qkvd_layer_tb #(
 `ifdef KVD_PF
                      , .PF(1)                        // q13-kvh: push pin flops at the hardened buffers
 `endif
+`ifdef KVD_SPL
+                     , .SPL(1)                       // q13-kvleaves: thin cluster over hard pin-registered tiles (ot_qkvd_ke_cluster)
+`endif
                      ) u_kv (
         .clk(clk), .rst_n(rst_n), .t_v(kt_v), .t_d(kt_d), .t_cr(kt_cr), .r_v(kr_v), .r_d(kr_d), .r_cr(kr_cr),
         .tx_up(kv_up), .tx_v(kv_txv), .tx_flit(kv_txf), .rx_v(kv_rxv), .rx_flit(kv_rxf), .fault(faults[1]),
