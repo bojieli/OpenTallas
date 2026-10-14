@@ -37,7 +37,10 @@ module tb_qfd_cbuf_reqhead_native_l0 #(parameter integer MUT = 0, parameter inte
     // GATE 1: the buffer sees the stage / token start the seq_su gate sends (cb_stage / cb_tok_start)
     reg h_start = 0; reg [LW-1:0] h_stage = 0;
     wire g_go, g_tok; wire [NW-1:0] g_token, g_pos; wire [LW-1:0] g_stage;
-    assign g_go=1'b0; assign g_tok=1'b0; assign g_stage=stage_tb;
+    ot_qfd_stage_gate #(.NW(NW),.MUT(GMUT)) u_stage (
+      .clk(clk),.rst_n(rst_n),.h_start(h_start),.stage(h_stage),.token(18'd5),.pos(tpos),
+      .st_rdy(st_rdy0),.st_rdy_stage(st_rdy_stage),.go(g_go),.go_token(g_token),.go_pos(g_pos),
+      .cur_stage(g_stage),.tok_start(g_tok));
     wire [LW-1:0] stage = (GATE != 0) ? g_stage : stage_tb;
     wire tok_start = (GATE != 0) ? g_tok : tok_start_tb;
     wire [SW*64-1:0] q; wire st_rdy0, fault; wire [LW-1:0] st_rdy_stage; wire [1:0] fcode;
