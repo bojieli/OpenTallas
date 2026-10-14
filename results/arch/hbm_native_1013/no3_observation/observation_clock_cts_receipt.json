@@ -1,0 +1,29 @@
+{
+  "source_commit": "07423714813a0eaf09398e39631b56ef2a56fabd",
+  "physical_scope": "Actual freshly generated NO3 observation hub CTS database, FF cells and placement-estimated parasitics, nominal833.333 signoff waveform. This is not routed SPEF or native die adoption.",
+  "source_abi": "Six literal clk_sm master roots; observation output has no functional sink.",
+  "clock_period_ps": 833.333,
+  "output_arrivals_ps": {
+    "rise_min": 304.598877,
+    "rise_max": 314.790588,
+    "fall_min": 718.61853,
+    "fall_max": 728.993225
+  },
+  "conservative_pulse_width_ps": {
+    "high": 403.82794199999995,
+    "low": 408.93865199999993
+  },
+  "output_load_fF": 80,
+  "wire_capacitance_fF": 0.377817,
+  "total_capacitance_fF": 80.377815,
+  "slew_ps": {
+    "rise_max": 259.6633,
+    "fall_max": 220.928741
+  },
+  "output_max_slew_slack_ps": 0.34,
+  "output_driver_max_cap_slack_fF": 11.78,
+  "original_generic_data_output_FF_slack_ps": -67.24,
+  "old_receipt_preserved": true,
+  "route_and_real_native_fanout_phase_open": true,
+  "report_sha256": "11c8f15120ee8ef5ec418f528f83a320213cd44add36bc3bba3101aeccb094bc"
+}

@@ -1,0 +1,24 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc1tb for 8 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_hbm_native_bounded_cdc_w1_1014_20261014-054839.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_hbm_native_bounded_cdc_w1_1014_20261014-054839.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/hbm_native_bounded_cdc_w1_1014-20261014-054839
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 51 s (gate total 508 s)
+GATE WARN util: synthesized std area 1446 um2 + macros 0 in core 3658: util 40%  -> FIX: set "std_area_um2": 1446 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN ot_hbm_native_bounded_cdc cells 10,284 flops 2,267 depth 621.8 ps util 0.4155 reach 3.0 um (0.1 s)
+GATE WARN textbook.high_fanout: port wrst_n: 290 loads (288 flops, e.g. ack1[0]$_DFF_PN0_) > 256: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast  -> FIX: no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)
+GATE WARN textbook.boundary: 5 output bit(s) combinational from input ports (e.g. wepoch[6]->rd_freed[2] 7 lv, wepoch[6]->rd_freed[1] 7 lv, wepoch[6]->rd_freed[0] 7 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.boundary: 1571 input->register endpoint(s) > 3 levels (worst wepoch[0]->u_codebank.codewords[9][9]$_DFFE_PP_/D 14 lv, wepoch[0]->u_codebank.codewords[9][8]$_DFFE_PP_/D 14 lv, wepoch[0]->u_codebank.codewords[9][7]$_DFFE_PP_/D 14 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.boundary: 7 register->output bit(s) > 3 levels (worst rx_code[13]$_DFFE_PP_->r_fault 16 lv, rx_code[13]$_DFFE_PP_->empty 15 lv, w_epoch[24]$_DFFE_PN0P_->rd_freed[2] 10 lv): register the boundary (pin flops / registered outputs)  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.logic_depth: reg->reg stage rx_code[13]$_DFFE_PP_ -> rb[0]$_DFFE_PN0P_/D: ~622 ps estimated (16 logic levels) > 600 ps: pipeline / restructure the stage  -> FIX: pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration
+GATE WARN textbook.util_channel: utilisation 41.6% outside 45%-65% (std 1520 + macro 0 um2 in 3658 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 155.2..176.0 ps (spread 20.8), boundary mean 167.4; tt insertion all 113.1..129.4 ps (spread 16.3), boundary mean 122.4; ff insertion all 89.2..102.6 ps (spread 13.4), boundary mean 96.7; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.550 vs spec PD 0.55
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/hbm_native_bounded_cdc_w1_1014/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: in->out         4 paths, worst slack -193.3 ps (e.g. full)
+GATE INFO path_classes: in->reg       596 paths, worst slack -128.4 ps (e.g. u_codebank.codewords[12][7]$_DFFE_PP_/D)
+GATE INFO path_classes: reg->reg      300 paths, worst slack -109.9 ps (e.g. we1[16]$_DFF_PN0_/D)
+GATE INFO path_classes: setup WNS -1.9328294520448708e-10 hold WNS -4.9139706193024324e-11
+GATE INFO clock_rule: root port:wclk: 1,588 sinks on the largest root <= 15,000; measured TT insertion 129.4 ps, leaf spread 16.3 ps
+PRE_ROUTE_GATE: WARN (0 fail, 7 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/codex-hbm-native-physical-1014/physical/ref_tile/hbm_native_bounded_cdc_w1_1014/source_binding_history/42046e0097af0d149e59968031ece1700524f35e609088342a01753dd5bc6444.json
+GATE: hbm_native_bounded_cdc_w1_1014/gate_result.json written (exact staged source binding; commit it with the kit)
