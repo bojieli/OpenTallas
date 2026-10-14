@@ -2,16 +2,16 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "hgi_ix2_wp",
  "verdict": "WARN",
- "generated": "2026-10-13T18:07:07-0700",
- "host": "ot-epyc1tb",
+ "generated": "2026-10-13T18:28:40-0700",
+ "host": "ot-epyc4",
  "cts": true,
- "commit": "00dc05bdf",
+ "commit": "449f87c8b",
  "clock": {
-  "max_root_sinks": 6516,
+  "max_root_sinks": 7636,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 342.5,
-  "tt_spread_ps": 66.5,
+  "tt_insertion_ps": 214.4,
+  "tt_spread_ps": 27.8,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -19,7 +19,7 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "6,516 sinks on the largest root <= 15,000; measured TT insertion 342.5 ps, leaf spread 66.5 ps"
+  "text": "7,636 sinks on the largest root <= 15,000; measured TT insertion 214.4 ps, leaf spread 27.8 ps"
  },
  "items": [
   {
@@ -27,24 +27,6 @@
    "check": "rtl",
    "message": "runtime_partselect: 1 runtime-indexed part-select(s), 256 bits (1 >= 64 b; e.g. ot_hgi_idx_ix2_pack: nd[{28'd0, wx}*32 +: 32] (256 b write)): each is a wide $shift/$shiftx; yosys SHARE pairs them (hours). Fix: decoded constant-index slices (one-hot compare + AND-OR per destination), or a real memory",
    "fix": "decoded constant-index slices; the --remote synthesis smoke decides (a SHARE stall FAILs there)"
-  },
-  {
-   "severity": "WARN",
-   "check": "util",
-   "message": "synthesized std area 5016 um2 + macros 0 in core 14949: util 34%",
-   "fix": "set \"std_area_um2\": 5016 and drop 'outline' (gen sizes to util 0.52)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.logic_depth",
-   "message": "reg->reg stage wcred[3][1]$_DFF_PN1_ -> u_p3.e_d[0]$_DFFE_PP_/D: ~665 ps estimated (15 logic levels) > 600 ps: pipeline / restructure the stage",
-   "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.util_channel",
-   "message": "utilisation 33.7% outside 45%-65% (std 5040 + macro 0 um2 in 14949 um2): shrink the outline (long wires / sparse placement)",
-   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
 }
