@@ -72,7 +72,7 @@ def main(request):
                 rows.append([face,layer,round(x,3),.192])
                 n+=1
             ports[p]=spec(rows)
-    for p,face,x in [('ck','S',61.548),('rst','S',61.74),('t_ho','S',61.932),('ckv','N',61.548),('rsv','N',61.74)]:
+    for p,face,x in [('ck','S',114.012),('rst','S',114.204),('t_ho','S',114.396),('ckv','N',114.012),('rsv','N',114.204)]:
         ports[p]=spec([[face,'M5',x,.192]])
     leaf=dict(schema='opentallas.s81.assigned_pins.v1',master='dsfd_capt_x8_dual',case='v18',outline_um=[123.12,136.08],
               source='tools/s81/capture_x8_assignment.py; exact parent RTL x8 slice map 733ab4b39',
@@ -96,8 +96,8 @@ def main(request):
                         px=.009+round((px-.009)/.036)*.036
                 rows[1664*g+832*h+i]=['S',ly,round(px,3),d]
             k=2*g+h
-            capture['ports']['ck_x']['per_bit'][k]=['N','M5',round(lx+61.548,3),.192]
-            capture['ports']['ckv_x']['per_bit'][k]=['S','M5',round(lx+61.548,3),.192]
+            capture['ports']['ck_x']['per_bit'][k]=['N','M5',round(lx+114.012,3),.192]
+            capture['ports']['ckv_x']['per_bit'][k]=['S','M5',round(lx+114.012,3),.192]
     for i,(_,ly,c,d) in enumerate(ports['t_st']['per_bit']):
         rows[13312+i]=['S',ly,round(xg[3]-2.304+c,3),d]
     assert all(rows)

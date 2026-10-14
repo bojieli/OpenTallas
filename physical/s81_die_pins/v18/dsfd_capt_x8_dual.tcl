@@ -1375,8 +1375,8 @@ place_pin -pin_name {t_st[60]} -layer M5 -location {112.044 135.984} -pin_size {
 place_pin -pin_name {t_st[61]} -layer M3 -location {112.041 135.984} -pin_size {0.018 0.192} -force_to_die_boundary
 place_pin -pin_name {t_st[62]} -layer M5 -location {112.284 135.984} -pin_size {0.024 0.192} -force_to_die_boundary
 place_pin -pin_name {t_st[63]} -layer M3 -location {112.293 135.984} -pin_size {0.018 0.192} -force_to_die_boundary
-place_pin -pin_name {ck} -layer M5 -location {61.548 0.096} -pin_size {0.024 0.192} -force_to_die_boundary
-place_pin -pin_name {rst} -layer M5 -location {61.740 0.096} -pin_size {0.024 0.192} -force_to_die_boundary
-place_pin -pin_name {t_ho} -layer M5 -location {61.932 0.096} -pin_size {0.024 0.192} -force_to_die_boundary
-place_pin -pin_name {ckv} -layer M5 -location {61.548 135.984} -pin_size {0.024 0.192} -force_to_die_boundary
-place_pin -pin_name {rsv} -layer M5 -location {61.740 135.984} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {ck[0]} -layer M5 -location {114.012 0.096} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {rst} -layer M5 -location {114.204 0.096} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {t_ho} -layer M5 -location {114.396 0.096} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {ckv[0]} -layer M5 -location {114.012 135.984} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {rsv} -layer M5 -location {114.204 135.984} -pin_size {0.024 0.192} -force_to_die_boundary
