@@ -1,0 +1,50 @@
+{
+ "source_commit": "23b4a1820",
+ "exact": {
+  "requests": 20185,
+  "streams": 1037,
+  "records": 235,
+  "checks": 114741,
+  "reset_events": 18,
+  "faults": 10,
+  "core_bits": 33598976,
+  "core_reset_edges": 112,
+  "invalid_lanes": 2096268
+ },
+ "observed_mutants": [
+  "MUT_SEAM=1",
+  "MUT_SEAM=2",
+  "MUT_SEAM=3",
+  "MUT_SEAM=4",
+  "MUT_SEAM=5",
+  "MUT_SEAM=6",
+  "MUT_SEAM=7",
+  "MUT_CORE_PIN=1",
+  "MUT_CORE_LOOK=1",
+  "MUT_CORE_ADV=1",
+  "MUT_GROUP_OWN=1",
+  "MUT_SER_PUB=1"
+ ],
+ "rates_cycles": [
+  690,
+  362,
+  872,
+  210
+ ],
+ "arithmetic_model": "results/arch/hbm_dma_face_residual_1014/core_issue_prefix_model.json",
+ "old_core_preserved": true,
+ "module": "ot_hgi_b2_dma_mv_ser_pub",
+ "prefix_checks": 365536,
+ "old_ea20_module_preserved": true,
+ "encoded_shadow_line": "KQ_PIN_GOLD bits=33598976 reset_edges=112 invalid_lanes=2096268 mutant=0",
+ "original_capture_edges_preserved": true,
+ "registered_first_capture": "owned_q samples actualkc_creq onoriginalMVedge; finalgroupvr2q512 ORs request512|owned_q onoriginalgroupedge",
+ "physical_gate": "OPEN",
+ "source_dependency_difference": "DistinctMVtop andcmd-pinhelper name; exactnext-owner gatedpublication274FF onoriginalvr_q edge, rawvr_q kept; wrapper/bench addMUT_SER_PUB and full274-bit old-mask shadow",
+ "publication_gold": "SER_PUB_GOLD bits=17980702 reset_edges=112 invalid_edges=40573 mutant=0",
+ "serial_publication_bit_checks": 17980702,
+ "serial_publication_reset_edges": 112,
+ "serial_publication_invalid_edges": 40573,
+ "serial_owner_truth_cases": 128,
+ "old_mv_module_preserved": "ot_hgi_b2_dma_mv at4d78e250b"
+}
