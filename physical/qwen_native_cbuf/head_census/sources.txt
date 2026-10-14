@@ -27,8 +27,6 @@ rtl/hdc/ot_hdc_reduce.sv
 rtl/hdc/ot_hdc_reduce_q.sv
 rtl/proto/ot_fp32_add_rne_pipe.sv
 rtl/proto/ot_fp32_mul_rne_pipe.sv
-physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
-physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 rtl/physical/ot_qfd_su_cbuf_native_l0_entries64.sv
 rtl/physical/ot_qfd_su_cbuf_native_l0.sv
 rtl/qwen_sys/redesign_qwen/ot_qfd_crom_lbuf.sv
@@ -41,3 +39,4 @@ rtl/physical/ot_qfd_stage_gate_native_epoch.sv
 rtl/physical/ot_qfd_sp_su64_sfu_bv_acc_crom5_entries_candidate.sv
 rtl/physical/ot_hdc_vstream_crom5_entries_candidate.sv
 rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv
+physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v
