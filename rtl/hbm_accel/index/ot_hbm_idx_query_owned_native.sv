@@ -41,7 +41,7 @@ module ot_hbm_idx_query_bank_native #(parameter integer BANK=0)(
  end
 endmodule
 module ot_hbm_idx_query_owned_native(
- input wire clk,clk_quant,input wire [3:0] clk_bank,
+ input wire clk,clk_quant,clk_quant_delay,input wire [3:0] clk_bank,
  input wire por_n,start,output wire start_ready,
  input wire block_v,output wire block_r,
  input wire [4:0] block_head,input wire [1:0] block_number,
@@ -62,7 +62,7 @@ module ot_hbm_idx_query_owned_native(
  assign ql_sc=scales[sent[4:0]*32+:32];assign ql_w=weights[sent[4:0]*16+:16];
  assign ql_v=active&&sent<32&&(&seen[sent[4:0]*4+:4])&&!fault;
  wire qv,qfault;wire[255:0]q;wire signed[9:0]qe;wire[511:0]qy;
- ot_hdc_actquant quant(.clk(clk_quant),.rst_n(por_n),.v(take),.fp4(1'b1),.x(block_data),
+ ot_hbm_idx_actquant_owned_native quant(.clk(clk_quant),.clk_delay(clk_quant_delay),.rst_n(por_n),.v(take),.fp4(1'b1),.x(block_data),
   .vo(qv),.q(q),.e(qe),.y(qy),.fault(qfault));
  for(genvar b=0;b<4;b=b+1)begin:gbank
   ot_hbm_idx_query_bank_native #(.BANK(b))bank(
