@@ -34,7 +34,6 @@ module tb_hgi_b2_dma_q;
     parameter integer MUT_CORE_PIN = 0;
     parameter integer MUT_CORE_LOOK = 0;
     parameter integer MUT_CORE_ADV = 0;
-    parameter integer MUT_GROUP_OWN = 0;
     longint core_pin_checked=0,core_pin_reset=0,core_pin_invalid=0;
     parameter integer NREC = 40;                        // random records per qid
     parameter integer SEED = 20261013;
@@ -79,7 +78,7 @@ module tb_hgi_b2_dma_q;
     // VM-side adapter, deliberately OUTSIDE the tile: expand one pin lane into its bank.
     always @* begin vm_wl = '0; if (q5_wl[279]) vm_wl[q5_bank*280 +: 280] = q5_wl; end
     assign wl = vm_wl;
-    ot_hgi_b2_dma_q #(.HARD_CLOCKS(CLOCK_ENTRIES), .MUT_CORE_PIN(MUT_CORE_PIN),.MUT_CORE_LOOK(MUT_CORE_LOOK),.MUT_CORE_ADV(MUT_CORE_ADV),.MUT_GROUP_OWN(MUT_GROUP_OWN), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .leaf_clk({10{clk}}), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
+    ot_hgi_b2_dma_q #(.HARD_CLOCKS(CLOCK_ENTRIES), .MUT_CORE_PIN(MUT_CORE_PIN),.MUT_CORE_LOOK(MUT_CORE_LOOK),.MUT_CORE_ADV(MUT_CORE_ADV), .MUT_B2(MUT_B2), .MUT_SEAM(MUT_SEAM)) dut (.clk(clk), .leaf_clk({10{clk}}), .rst_n(rst_n), .qid(qid), .dma_rec(dma_rec), .dma_ret(dma_ret),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
         .k_rsp_data(k_rsp_data),

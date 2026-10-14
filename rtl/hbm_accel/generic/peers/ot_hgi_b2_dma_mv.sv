@@ -998,7 +998,7 @@ module ot_hgi_b2_dma_mv #(
                     g_busy[rsa[r_k][9:5]] <= 1'b1; g_slot[rsa[r_k][9:5]] <= sf_a;
                     s_vr2q[rsa[r_k][9:5]*16 +: 16] <= {1'b1, rsa[r_k][19:5]};
                 end
-                s_vr2q[512] <= VR2 != 0 && ((SV != 0 && busy_f && !src_hbm && go_q4 && !r_done) || g_busy != 32'd0 || !g_home);
+                s_vr2q[512] <= VR2 != 0 && ((SV != 0 && busy_f && !src_hbm && go_q4 && !r_done) || g_busy != 32'd0 || !g_home || kv_creq);
                 if (v_rd_land) v_ptr <= v_ptr + 8'd1;
                 for (integer l = 0; l < 4; l = l + 1) if (lk_take[l]) lbc[l] <= lk_last[l] ? 3'd0 : lbc[l] + 3'd1;
                 // next grant: rotating from the lane after the current grant, among the lanes with a sector waiting
