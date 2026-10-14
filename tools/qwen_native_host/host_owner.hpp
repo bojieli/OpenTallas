@@ -12,6 +12,8 @@
 #include <fstream>
 
 namespace qwen_native_host {
+// Native-owned boot/kst/drain arrays and masks use native rank.
+// HOST and router arrays retain physical HOST ID=2*PKG+DIE.
 struct Inputs {
  bool por_n=false,engine_admit_ready=false;
  std::array<uint8_t,8> boot{};
@@ -72,12 +74,12 @@ class HostOwner {
   cohort.begin_tag=allocator.grant_tag;cohort.begin_generation=allocator.grant_generation;
   cohort.request_valid=0;zero(cohort.request_tag);cohort.request_generation=0;
   bool ready=inputs.engine_admit_ready;
-  for(unsigned r=0;r<8;++r){auto&h=*hosts[r];auto&b=*boards[r];
+  for(unsigned id=0;id<8;++id){unsigned r=native_rank_for_host(id);auto&h=*hosts[id];auto&b=*boards[id];
    h.por_n=inputs.por_n;h.phy_up=b.phy_up=1;h.link_up=inputs.link_up;
    h.local_boot=inputs.boot[r];h.local_kst=inputs.kst[r];b.rst_n=h.host_rst_n;
    h.token_allocator_fault=allocator.identity_fault||cohort.identity_fault;
-   h.token_request_ready=r==0&&allocator.request_ready;
-   h.token_grant_valid=r==0&&allocator.grant_valid;h.token_grant_tag=allocator.grant_tag;
+   h.token_request_ready=id==0&&allocator.request_ready;
+   h.token_grant_valid=id==0&&allocator.grant_valid;h.token_grant_tag=allocator.grant_tag;
    h.token_grant_epoch=allocator.grant_epoch;h.token_grant_token=allocator.grant_token;
    h.token_grant_position=allocator.grant_position;h.token_grant_generation=allocator.grant_generation;
    h.allocated_valid=allocator.allocated_valid;h.allocated_delivered=allocator.allocated_delivered;
@@ -140,6 +142,9 @@ class HostOwner {
   time_fs=until;ctx.time(time_fs/1000);
  }
 public:
+ static unsigned native_rank_for_host(unsigned id){if(id>=8)throw std::out_of_range("HOST ID");return 4*(id%2)+id/2;}
+ static unsigned host_id_for_rank(unsigned rank){if(rank>=8)throw std::out_of_range("native rank");return 2*(rank%4)+rank/4;}
+ Vqkd_host_token_service* host_for_rank(unsigned rank)const{return hosts[host_id_for_rank(rank)];}
  std::array<Vqkd_host_token_service*,8> hosts{};
  std::array<Vqkd_host_board_port_fixture*,8> boards{};
  qkd_host_fixture::Router router;
@@ -174,8 +179,8 @@ public:
   if(allocator.grant_valid&&allocator.grant_ready)++actual_grants;
   unsigned prior_accepted=cohort.accepted_ranks;
   std::array<Admission,8> offered{};
-  for(unsigned r=0;r<8;++r)offered[r]={r,hosts[r]->native_request_gen,
-    hosts[r]->native_request_token,hosts[r]->native_request_pos,hosts[r]->native_request_tag,core_edges};
+  for(unsigned r=0;r<8;++r){auto*h=host_for_rank(r);offered[r]={r,h->native_request_gen,
+    h->native_request_token,h->native_request_pos,h->native_request_tag,core_edges};}
   bool cohort_terminal_required=cohort.terminal_valid;
   clocks(CORE,true);evaluate(); // all pin inputs remain frozen across every rise
   unsigned accepted_now=cohort.accepted_ranks&~prior_accepted;

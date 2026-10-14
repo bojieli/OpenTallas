@@ -49,3 +49,18 @@ It pins the four archives, wrapper/driver and router header. Public generated
 headers are needed; no private layout is guessed. The source remains a functional
 candidate until its actual gate passes. There is no physical, cache, rate, cost
 or complete-token acceptance from elaboration/linking or startup fixtures.
+
+The mapped actual eight-HOST admission gate passed in unit
+`2617717-1791981785`, exit 0: SYS ready at CORE3922, genuine root ING
+permission6862, all-eight service ready8853, delayed peer7 release20734,
+and actual cohort dispatch21064. It observed eight accepted endpoint events,
+one allocation and one grant at epoch0, with no numerical callback.
+The unchanged generated HOST C++ was recompiled with O1 in unit2548715;
+generated source hashes were verified equal and this fresh behavioral gate
+qualifies that archive for this admission scope only.
+
+The explicit new HOST binding from owner6e5aacdb3 uses physical HOST ID
+`2*PKG+DIE` and native rank `4*DIE+PKG`. HOST/router arrays and CTRL masks
+retain physical IDs. `host_for_rank(rank)` selects the corresponding actual
+HOST instance; accepted cohort pulses/credits and native boot/kst/drain inputs
+are explicitly permuted. This does not assert a historical board strap mapping.
