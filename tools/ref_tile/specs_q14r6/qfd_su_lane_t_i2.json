@@ -151,7 +151,8 @@
  },
  "orfs_vars": {
   "OT_INHOLD_MASTER": "HB2xp67_ASAP7_75t_R",
-  "OT_INHOLD_DRV": "BUFx2_ASAP7_75t_R"
+  "OT_INHOLD_DRV": "BUFx2_ASAP7_75t_R",
+  "OT_SPINE_SYM": "1"
  },
  "recipe": 2,
  "job": {
@@ -234,7 +235,7 @@
   "record_to": "results/rtl/ref_tile/qfd_su_lane_t_i2"
  },
  "hard_define": "OT_SU_LANE_HARD",
- "structural_change": "r8: clock port moved onto the middle channel (W y 167-177, beside the four child clock pins: spine depth/pads cut, boundary spread) + boundary FF hold-repair margin 5 ps (route.io_hold_margin_ns, signoff_ffrepair.sdc; reg->reg keeps 30 ps; sign-off unchanged). Same RTL, outline and pin faces as io1.",
+ "structural_change": "r8: clock port moved onto the middle channel (W y 167-177, beside the four child clock pins) + symmetric insertion-aware spine (OT_SPINE_SYM=1: the children tap the tree early by their own insertion instead of a count-bisection tree rooted at the S-face centroid that reached u_rcp through 16 stages and padded every pin flop by ~600 ps) + boundary FF hold-repair margin 5 ps (route.io_hold_margin_ns, signoff_ffrepair.sdc; reg->reg keeps 30 ps; sign-off unchanged). Same RTL, outline and pin faces as io1.",
  "macros": [],
  "inter": [],
  "inhold": true,
@@ -247,7 +248,7 @@
   "cell": "ot_hdc_vstream_lane_t",
   "launch_ps": 223.4,
   "capture_ps": 298.6,
-  "fix": "clock port beside the child clock pins (spine pads ~600 -> ~200 ps, boundary spread) and the boundary hold-repair margin 30 -> 5 ps (route-time FF repair SDC only): removes the 3 route hold BUFx2 per input / output that put capture at 190-299 ps"
+  "fix": "clock port beside the child clock pins + symmetric insertion-aware spine (OT_SPINE_SYM=1; pads ~600 ps -> true imbalance) and the boundary hold-repair margin 30 -> 5 ps (route-time FF repair SDC only): removes the 3 route hold BUFx2 per input / output that put capture at 190-299 ps"
  },
  "pin_ranges": {
   "clk": [
