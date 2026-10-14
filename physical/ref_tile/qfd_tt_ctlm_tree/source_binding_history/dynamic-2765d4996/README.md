@@ -1,0 +1,11 @@
+# Current-native-subtree candidate 2765d4996
+
+Fresh source-bound gate PASS. Actual terminal4_1_cts.odb/4_cts.sdc WC=TT/BC=FF native ENA setup+27.73ps and hold+425.52ps. Actual ORFS final overall setup+0.764944ps (TNS0), hold+6.47482ps. These tight overall margins require actual routed closure; this is not parent qualification. Plain-port worst output in domains.log is only a diagnostic; flow applies the original source-pinned io_ref boundary. No timing exception, changed uncertainty, new phase or clock/enable forwarding. Same one nativeICG protected through route withOT_CG_EXCLUDE=u_cg.u_icg.
+
+Final two-domain TT actual census: primary628clockpins=626FF+2programRAM,703.122..725.917ps,R714.394;234boundarypins703.528..725.917,R712.871. Native gated9817clockpins=9813FF+4tagRAM,697.593..731.191,R712.687;2107boundarypins698.716..729.528,R712.615. Total10439FF+6RAM unchanged. Public clockclk mapscore_clk; generated branch is same nativeICG GCLK, not an unrelated clock. Per-pin actualmapping and six macroclocks retained in domains.log.
+
+Combined gate TTspread33.6ps/Rboundary712.6;FFspread28.9/Rboundary555.8;SSspread75.2/Rboundary982.4. Macroclockflagfalse. Synthesis root11493sinks<=15000. Public CLOSED head module bytes unchanged. Actual hierarchy95-bit logical private returnABI has onlyTWO live stationFF moved to gated domain; source-width95-bit toggle estimate is not physical saving. Actual two-pin idle clock-edge estimate61320, watts/leakage/capacitance unmeasured. Strict/argmax/fault/preedge epoch/activity proofs source f72cf4aea unchanged.
+
+The original one-shot gated insertion680.616ps under unbufferedICGinput becomes581.974ps after buffering. Standard primary balance now remeasures actual gated pins andICG CLK every iteration; eight iterations converge to26.8ps modeledspread, final realallspread33.6ps. All46 actual stagedhelper SHA/modes and effective daemon resolver bytes match the capturedprofile. Only excluded gate/result/history artifacts were added after terminal; shipped source/spec/internaljob remained frozen.
+
+Actual clock entry remainsS213.12..214.56 (parentx472.32..473.76), other pins unchanged. Candidateparent648x280.8/head237.6sq/tree388.8x280.8/21.6seam is provisional pending actual die fit, clock delivery/wire/hold and power adoption. Earlier failed candidates remain unqualified.

@@ -1,0 +1,232 @@
+[
+  {
+    "path": "physical/common_flow/cg_pushdown.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/clk_net_protect.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/edge_sliver_block.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/grt_macro_top_layer.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/grt_macro_top_layer_post.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/io_ref_routed.sdc",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/link_budget_consistent.sdc",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/link_budget_hook.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/macro_cts_cluster.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/macro_sliver_block.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/common_flow/nbr_clk_measured_ttb.sdc",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "physical/qwen_die_masters/pinflop_ref.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/cal_classify.sh",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/ck_insertion.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/eco_recovery.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/h1_patch.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/hold_corners_patch.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/hold_eco.sh",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/hold_eco.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/hold_eco_corner.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/hold_eco_sdc.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/hold_eco_window.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/lane_kh_overlay.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/macro_views.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/meas_resta.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/path_summary.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/pinflop_overlay.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/resume_check.sh",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/resume_patch.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/route_corner_check.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/tt_overlay.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/tt_resta.sh",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/vtswap_eco.sh",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/closure_loop/vtswap_eco.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/fp_margin_lint.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/fp_margin_lint.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/hier_contract/child_lint.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/hier_contract/m6_pin_grant.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/orfs_hold_mm.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/orfs_hold_mm.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/preroute_gate.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/preroute_gate.tcl",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/textbook_lint.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/tt_views/view_export.py",
+    "sha_matches": true,
+    "mode_matches": true
+  },
+  {
+    "path": "tools/w18/corner_sta.py",
+    "sha_matches": true,
+    "mode_matches": true
+  }
+]

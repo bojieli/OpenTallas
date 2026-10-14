@@ -1,0 +1,661 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_qfd_tt_ctlm_tree_asap7_ref_gate/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_qfd_tt_ctlm_tree_asap7_ref_gate/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_pre_cts.tcl
+REF_TILE spine: child insertion targets 
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+OT_SPINE through ICG u_cg.u_icg: spine on net ec
+OT_SPINE through ICG: 0 cells moved beside the clock pin (0 port-net cells FIRM + dont_touch, enable cone movable)
+OT_SPINE iter 0 (coarse) leaves 324 sinks 9817 cells 648 leaf arrival 2189.1..2327.1 ps (spread 138.0) pad 60.0 / 14.0 ps
+OT_SPINE tree pad: 208 early leaves served by 78 pad cells
+OT_SPINE iter 1 (coarse) leaves 324 sinks 9817 cells 726 leaf arrival 2251.5..2341.6 ps (spread 90.1) pad 73.0 / 14.0 ps
+OT_SPINE tree pad: 234 early leaves served by 76 pad cells
+OT_SPINE iter 2 (fine) leaves 324 sinks 9817 cells 802 leaf arrival 2272.2..2341.3 ps (spread 69.1) pad 73.0 / 21.0 ps
+OT_SPINE tree pad: 134 early leaves served by 69 pad cells
+OT_SPINE iter 3 (fine) leaves 324 sinks 9817 cells 871 leaf arrival 2289.3..2341.3 ps (spread 52.0) pad 73.0 / 16.5 ps
+OT_SPINE tree pad: 110 early leaves served by 68 pad cells
+OT_SPINE iter 4 (fine) leaves 324 sinks 9817 cells 939 leaf arrival 2305.3..2341.3 ps (spread 36.0) pad 73.0 / 16.3 ps
+OT_SPINE tree pad: 16 early leaves served by 15 pad cells
+OT_SPINE iter 5 (fine) leaves 324 sinks 9817 cells 954 leaf arrival 2311.9..2341.3 ps (spread 29.4) pad 73.0 / 21.9 ps
+OT_SPINE tree pad: 0 early leaves served by 0 pad cells
+OT_SPINE legal: check_placement clean after 954 spine cells
+OT_SPINE done port clk buffers 954
+TT_DUAL_SPINE gated latest 2341.310547 ICG_CLK 1660.694092 measured subtree 680.6164550000001 ps
+OT_SPINE sym: 29 flop leaves, 1 insertion leaves (1 on their earliest tap), 18 tree nodes, estimated latest flop leaf 597 ps
+TT_DUAL_SPINE current gated latest 735.362854 ICG_CLK 153.386658 subtree 581.976196 ps
+OT_SPINE iter 0 (coarse) leaves 30 sinks 629 cells 51 leaf arrival 255.7..735.4 ps (spread 479.7) pad 60.0 / 14.0 ps
+OT_SPINE tree pad: 29 early leaves served by 3 pad cells
+TT_DUAL_SPINE current gated latest 731.190796 ICG_CLK 149.216522 subtree 581.9742739999999 ps
+OT_SPINE iter 1 (coarse) leaves 30 sinks 629 cells 54 leaf arrival 445.4..731.2 ps (spread 285.8) pad 63.3 / 14.0 ps
+OT_SPINE tree pad: 29 early leaves served by 9 pad cells
+TT_DUAL_SPINE current gated latest 731.190796 ICG_CLK 149.216522 subtree 581.9742739999999 ps
+OT_SPINE iter 2 (coarse) leaves 30 sinks 629 cells 63 leaf arrival 629.2..731.2 ps (spread 102.0) pad 62.5 / 14.0 ps
+OT_SPINE tree pad: 3 early leaves served by 3 pad cells
+TT_DUAL_SPINE current gated latest 731.190796 ICG_CLK 149.216522 subtree 581.9742739999999 ps
+OT_SPINE iter 3 (coarse) leaves 30 sinks 629 cells 66 leaf arrival 658.6..731.2 ps (spread 72.6) pad 72.6 / 14.0 ps
+OT_SPINE tree pad: 22 early leaves served by 11 pad cells
+TT_DUAL_SPINE current gated latest 731.190796 ICG_CLK 149.216522 subtree 581.9742739999999 ps
+OT_SPINE iter 4 (fine) leaves 30 sinks 629 cells 77 leaf arrival 659.5..731.2 ps (spread 71.7) pad 72.6 / 12.8 ps
+OT_SPINE tree pad: 24 early leaves served by 8 pad cells
+TT_DUAL_SPINE current gated latest 731.190796 ICG_CLK 149.216522 subtree 581.9742739999999 ps
+OT_SPINE iter 5 (fine) leaves 30 sinks 629 cells 85 leaf arrival 676.0..731.2 ps (spread 55.2) pad 72.6 / 16.0 ps
+OT_SPINE tree pad: 16 early leaves served by 10 pad cells
+TT_DUAL_SPINE current gated latest 731.190796 ICG_CLK 149.216522 subtree 581.9742739999999 ps
+OT_SPINE iter 6 (fine) leaves 30 sinks 629 cells 95 leaf arrival 692.4..731.2 ps (spread 38.8) pad 72.6 / 16.4 ps
+OT_SPINE tree pad: 8 early leaves served by 4 pad cells
+TT_DUAL_SPINE current gated latest 731.190796 ICG_CLK 149.216522 subtree 581.9742739999999 ps
+OT_SPINE iter 7 (fine) leaves 30 sinks 629 cells 99 leaf arrival 700.9..731.2 ps (spread 30.3) pad 72.6 / 16.4 ps
+OT_SPINE tree pad: 1 early leaves served by 1 pad cells
+TT_DUAL_SPINE current gated latest 731.190796 ICG_CLK 149.216522 subtree 581.9742739999999 ps
+OT_SPINE iter 8 (fine) leaves 30 sinks 629 cells 100 leaf arrival 704.4..731.2 ps (spread 26.8) pad 72.6 / 20.7 ps
+OT_SPINE tree pad: 0 early leaves served by 0 pad cells
+OT_SPINE legal: check_placement clean after 100 spine cells
+OT_SPINE done port clk buffers 100
+TT_DUAL_SPINE complete: independent primary and native-gated local trees
+QDM PINFLOP reference: 879 input pin flops, median arrival 707.583008 (range 699.106750 .. 725.520508)
+QDM reference pin cmd_data[183]$_DFF_P_/CLK clock arrival max 707.583008 min 538.587036 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+Took 116 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 106301.03 um^2
+[INFO DPL-0007] Movable instances area: 7978.29 um^2
+[INFO DPL-0008] Fixed instances area within core: 42788.79 um^2
+[INFO DPL-0009] Utilization: 47.8%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 70263 cells
+[INFO DPL-0393]   height 152 row(s): 4 cells
+[INFO DPL-0393]   height 288 row(s): 2 cells
+[INFO DPL-0500] Runtime: 0.66s
+Placement Analysis
+---------------------------------
+total displacement       9813.3 u
+average displacement        0.1 u
+max displacement            1.4 u
+original HPWL          519925.6 u
+legalized HPWL         527256.9 u
+delta HPWL                    1 %
+
+estimate_parasitics -placement
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 4 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 4 out of 4 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -16.552 |   -35716.6 |      -39.0 |      4 | p_v_e2
+      10* |       1 |       8 |        0 |      0 |     0 |    +0.0% |  -17.905 |   -35734.9 |      -45.0 |      4 | u_shadow.u_ctrl_me.o_cnt1\[23\]$_DFFE_PN0P_/D
+      16* |       2 |      12 |        0 |      0 |     1 |    +0.0% |   -5.183 |   -35685.8 |       -9.4 |      4 | u_shadow.u_ctrl_me.o_cnt1\[23\]$_DFFE_PN0P_/D
+      18* |       2 |      12 |        1 |      0 |     1 |    +0.0% |   -3.269 |   -35680.5 |       -3.3 |      4 | u_tt.u_ctl.g_scb.rk_jr\[28\]$_DFF_P_/D
+      19* |       2 |      12 |        1 |      0 |     1 |    +0.0% |   -3.269 |   -35680.5 |       -3.3 |      4 | u_tt.u_ctl.g_scb.rk_jr\[28\]$_DFF_P_/D
+      20* |       2 |      12 |        1 |      0 |     1 |    +0.0% |   -3.269 |   -35680.5 |       -3.3 |      4 | u_tt.u_ctl.g_scb.rk_jr\[28\]$_DFF_P_/D
+      21* |       2 |      12 |        2 |      0 |     1 |    +0.0% |    0.517 |   -35677.2 |        0.0 |      4 | x_dv
+      21* |       2 |      12 |        2 |      0 |     1 |    +0.0% |    0.517 |   -35677.2 |        0.0 |      4 | x_dv
+    final |       2 |      12 |        2 |      0 |     1 |    +0.0% |    0.517 |   -35677.2 |        0.0 |      0 | x_dv
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 2 buffers.
+[INFO RSZ-0040] Inserted 2 buffers.
+[INFO RSZ-0051] Resized 12 instances: 12 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 1 instances.
+[INFO RSZ-0505] Runtime: 5.86s
+Took 6 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+OT_HOLD_GUARD start: hold ws -102.22 tns -68804.8 viol 1211 (margin 10, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 2658 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -102.224 | -67556.398 | u_shadow.g_rrg.g_r[2].r$_DFF_PN0_/RESETN
+       10 |       0 |      10 |            0 |    +0.0% | -92.089 | -66980.875 | g_dpin.dpin_q[13]$_DFF_P_/D
+       20 |       0 |      20 |            0 |    +0.0% | -90.703 | -66820.586 | u_tt.u_ctl.g_ami.pam_pin[154]$_DFF_P_/D
+       30 |       0 |      28 |            0 |    +0.0% | -90.279 | -66692.547 | cmd_data[186]$_DFF_P_/D
+       40 |       0 |      38 |            0 |    +0.0% | -89.539 | -66533.109 | u_tt.u_ctl.g_ami.pam_pin[150]$_DFF_P_/D
+       50 |       0 |      48 |            0 |    +0.0% | -89.034 | -66373.523 | cmd_data[328]$_DFF_P_/D
+       60 |       0 |      58 |            0 |    +0.0% | -88.229 | -66212.289 | u_tt.u_ctl.g_ami.pam_pin[158]$_DFF_P_/D
+       70 |       0 |      68 |            0 |    +0.0% | -87.396 | -66049.984 | u_tt.u_ctl.g_ami.pam_pin[236]$_DFF_P_/D
+       80 |       0 |      78 |            0 |    +0.0% | -86.651 | -65890.000 | u_tt.u_ctl.g_ami.pam_pin[25]$_DFF_P_/D
+       90 |       0 |      88 |            0 |    +0.0% | -85.952 | -65729.406 | g_dpin.dpin_q[19]$_DFF_P_/D
+      100 |       0 |      98 |            0 |    +0.0% | -85.424 | -65567.961 | u_tt.u_ctl.g_ami.pam_pin[225]$_DFF_P_/D
+      110 |       0 |     108 |            0 |    +0.0% | -85.184 | -65408.430 | g_dpin.dpin_q[18]$_DFF_P_/D
+      120 |       0 |     118 |            0 |    +0.0% | -85.001 | -65247.812 | u_tt.u_ctl.g_ami.pam_pin[240]$_DFF_P_/D
+      130 |       0 |     128 |            0 |    +0.0% | -84.800 | -65088.875 | u_shadow.u_isd.q[28]$_DFF_P_/D
+      140 |       0 |     138 |            0 |    +0.0% | -84.543 | -64929.227 | cmd_data[215]$_DFF_P_/D
+      150 |       0 |     148 |            0 |    +0.0% | -84.378 | -64768.484 | u_tt.u_ctl.g_ami.pam_pin[214]$_DFF_P_/D
+      160 |       0 |     158 |            0 |    +0.0% | -84.217 | -64607.562 | u_tt.u_ctl.g_ami.pam_pin[165]$_DFF_P_/D
+      170 |       0 |     168 |            0 |    +0.0% | -83.888 | -64446.676 | u_tt.u_ctl.g_ami.pam_pin[9]$_DFF_P_/D
+      180 |       0 |     178 |            0 |    +0.0% | -83.725 | -64286.191 | u_tt.u_ctl.g_ami.pam_pin[32]$_DFF_P_/D
+      190 |       0 |     188 |            0 |    +0.0% | -83.460 | -64122.738 | u_tt.u_ctl.g_ami.pam_pin[30]$_DFF_P_/D
+      200 |       0 |     198 |            0 |    +0.0% | -83.248 | -63961.445 | u_tt.u_ctl.g_ami.pam_pin[115]$_DFF_P_/D
+      210 |       0 |     208 |            0 |    +0.0% | -82.944 | -63799.781 | u_tt.u_ctl.g_ami.pam_pin[79]$_DFF_P_/D
+      220 |       0 |     218 |            0 |    +0.0% | -82.621 | -63637.188 | cmd_data[201]$_DFF_P_/D
+      230 |       0 |     228 |            0 |    +0.0% | -82.477 | -63475.789 | u_tt.u_ctl.g_ami.pam_pin[12]$_DFF_P_/D
+      240 |       0 |     238 |            0 |    +0.0% | -82.267 | -63314.184 | u_shadow.u_isd.q[17]$_DFF_P_/D
+      250 |       0 |     248 |            0 |    +0.0% | -81.990 | -63152.309 | u_tt.u_ctl.g_ami.pam_pin[189]$_DFF_P_/D
+      260 |       0 |     258 |            0 |    +0.0% | -81.641 | -62989.238 | cmd_data[265]$_DFF_P_/D
+      270 |       0 |     268 |            0 |    +0.0% | -81.201 | -62828.406 | g_dpin.dpin_q[30]$_DFF_P_/D
+      280 |       0 |     278 |            0 |    +0.0% | -80.959 | -62668.000 | u_tt.u_ctl.g_ami.pam_pin[18]$_DFF_P_/D
+      290 |       0 |     288 |            0 |    +0.0% | -80.679 | -62504.598 | u_tt.u_ctl.g_ami.pam_pin[174]$_DFF_P_/D
+      300 |       0 |     298 |            0 |    +0.0% | -80.207 | -62343.531 | u_tt.u_ctl.g_ami.pam_pin[203]$_DFF_P_/D
+      310 |       0 |     308 |            0 |    +0.0% | -79.831 | -62181.520 | u_tt.u_ctl.g_ami.pam_pin[121]$_DFF_P_/D
+      320 |       0 |     318 |            0 |    +0.0% | -79.528 | -62019.590 | u_tt.u_ctl.g_ami.pam_pin[197]$_DFF_P_/D
+      330 |       0 |     328 |            0 |    +0.0% | -79.052 | -61857.633 | u_shadow.u_isd.q[76]$_DFF_P_/D
+      340 |       0 |     338 |            0 |    +0.0% | -78.553 | -61695.168 | g_dpin.dpin_q[9]$_DFF_P_/D
+      350 |       0 |     348 |            0 |    +0.0% | -78.553 | -61533.441 | g_dpin.dpin_q[9]$_DFF_P_/D
+      360 |       0 |     358 |            0 |    +0.1% | -78.553 | -61372.277 | g_dpin.dpin_q[9]$_DFF_P_/D
+      370 |       0 |     368 |            0 |    +0.1% | -78.553 | -61211.609 | g_dpin.dpin_q[9]$_DFF_P_/D
+      380 |       0 |     378 |            0 |    +0.1% | -78.553 | -61050.109 | g_dpin.dpin_q[9]$_DFF_P_/D
+      390 |       0 |     388 |            0 |    +0.1% | -78.553 | -60889.625 | g_dpin.dpin_q[9]$_DFF_P_/D
+      400 |       0 |     398 |            0 |    +0.1% | -78.553 | -60728.832 | g_dpin.dpin_q[9]$_DFF_P_/D
+      410 |       0 |     408 |            0 |    +0.1% | -78.553 | -60568.887 | g_dpin.dpin_q[9]$_DFF_P_/D
+      420 |       0 |     418 |            0 |    +0.1% | -78.553 | -60408.211 | g_dpin.dpin_q[9]$_DFF_P_/D
+      430 |       0 |     428 |            0 |    +0.1% | -78.553 | -60247.211 | g_dpin.dpin_q[9]$_DFF_P_/D
+      440 |       0 |     438 |            0 |    +0.1% | -78.553 | -60087.039 | g_dpin.dpin_q[9]$_DFF_P_/D
+      450 |       0 |     448 |            0 |    +0.1% | -78.553 | -59925.137 | g_dpin.dpin_q[9]$_DFF_P_/D
+      460 |       0 |     458 |            0 |    +0.1% | -78.553 | -59763.375 | g_dpin.dpin_q[9]$_DFF_P_/D
+      470 |       0 |     468 |            0 |    +0.1% | -78.553 | -59602.781 | g_dpin.dpin_q[9]$_DFF_P_/D
+      480 |       0 |     478 |            0 |    +0.1% | -78.553 | -59441.254 | g_dpin.dpin_q[9]$_DFF_P_/D
+      490 |       0 |     488 |            0 |    +0.1% | -78.553 | -59280.305 | g_dpin.dpin_q[9]$_DFF_P_/D
+      500 |       0 |     498 |            0 |    +0.1% | -78.553 | -59117.629 | g_dpin.dpin_q[9]$_DFF_P_/D
+      510 |       0 |     508 |            0 |    +0.1% | -78.553 | -58956.930 | g_dpin.dpin_q[9]$_DFF_P_/D
+      520 |       0 |     518 |            0 |    +0.1% | -78.553 | -58795.797 | g_dpin.dpin_q[9]$_DFF_P_/D
+      530 |       0 |     528 |            0 |    +0.1% | -78.553 | -58635.742 | g_dpin.dpin_q[9]$_DFF_P_/D
+      540 |       0 |     538 |            0 |    +0.1% | -78.553 | -58474.500 | g_dpin.dpin_q[9]$_DFF_P_/D
+      550 |       0 |     548 |            0 |    +0.1% | -78.553 | -58312.430 | g_dpin.dpin_q[9]$_DFF_P_/D
+      560 |       0 |     558 |            0 |    +0.1% | -78.553 | -58150.887 | g_dpin.dpin_q[9]$_DFF_P_/D
+      570 |       0 |     568 |            0 |    +0.1% | -78.553 | -57989.656 | g_dpin.dpin_q[9]$_DFF_P_/D
+      580 |       0 |     578 |            0 |    +0.1% | -78.553 | -57828.340 | g_dpin.dpin_q[9]$_DFF_P_/D
+      590 |       0 |     588 |            0 |    +0.1% | -78.553 | -57665.117 | g_dpin.dpin_q[9]$_DFF_P_/D
+      600 |       0 |     598 |            0 |    +0.1% | -78.553 | -57504.297 | g_dpin.dpin_q[9]$_DFF_P_/D
+      610 |       0 |     608 |            0 |    +0.1% | -78.553 | -57344.430 | g_dpin.dpin_q[9]$_DFF_P_/D
+      620 |       0 |     618 |            0 |    +0.1% | -78.553 | -57181.824 | g_dpin.dpin_q[9]$_DFF_P_/D
+      630 |       0 |     628 |            0 |    +0.1% | -78.553 | -57020.141 | g_dpin.dpin_q[9]$_DFF_P_/D
+      640 |       0 |     638 |            0 |    +0.1% | -78.553 | -56860.988 | g_dpin.dpin_q[9]$_DFF_P_/D
+      650 |       0 |     648 |            0 |    +0.1% | -78.553 | -56699.055 | g_dpin.dpin_q[9]$_DFF_P_/D
+      660 |       0 |     658 |            0 |    +0.1% | -78.553 | -56537.660 | g_dpin.dpin_q[9]$_DFF_P_/D
+      670 |       0 |     668 |            0 |    +0.1% | -78.553 | -56375.613 | g_dpin.dpin_q[9]$_DFF_P_/D
+      680 |       0 |     678 |            0 |    +0.1% | -78.553 | -56213.738 | g_dpin.dpin_q[9]$_DFF_P_/D
+      690 |       0 |     688 |            0 |    +0.1% | -78.553 | -56051.922 | g_dpin.dpin_q[9]$_DFF_P_/D
+      700 |       0 |     698 |            0 |    +0.1% | -78.553 | -55891.457 | g_dpin.dpin_q[9]$_DFF_P_/D
+      710 |       0 |     708 |            0 |    +0.1% | -78.553 | -55729.652 | g_dpin.dpin_q[9]$_DFF_P_/D
+      720 |       0 |     718 |            0 |    +0.1% | -78.553 | -55568.531 | g_dpin.dpin_q[9]$_DFF_P_/D
+      730 |       0 |     728 |            0 |    +0.1% | -78.553 | -55405.883 | g_dpin.dpin_q[9]$_DFF_P_/D
+      740 |       0 |     738 |            0 |    +0.1% | -78.553 | -55245.688 | g_dpin.dpin_q[9]$_DFF_P_/D
+      750 |       0 |     748 |            0 |    +0.1% | -78.553 | -55084.781 | g_dpin.dpin_q[9]$_DFF_P_/D
+      760 |       0 |     758 |            0 |    +0.1% | -78.553 | -54921.254 | g_dpin.dpin_q[9]$_DFF_P_/D
+      770 |       0 |     768 |            0 |    +0.1% | -78.553 | -54761.707 | g_dpin.dpin_q[9]$_DFF_P_/D
+      780 |       0 |     778 |            0 |    +0.1% | -78.553 | -54601.211 | g_dpin.dpin_q[9]$_DFF_P_/D
+      790 |       0 |     788 |            0 |    +0.1% | -78.553 | -54439.977 | g_dpin.dpin_q[9]$_DFF_P_/D
+      800 |       0 |     798 |            0 |    +0.1% | -78.553 | -54278.672 | g_dpin.dpin_q[9]$_DFF_P_/D
+      810 |       0 |     808 |            0 |    +0.1% | -78.553 | -54115.934 | g_dpin.dpin_q[9]$_DFF_P_/D
+      820 |       0 |     818 |            0 |    +0.1% | -78.553 | -53955.445 | g_dpin.dpin_q[9]$_DFF_P_/D
+      830 |       0 |     828 |            0 |    +0.1% | -78.553 | -53794.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+      840 |       0 |     838 |            0 |    +0.1% | -78.553 | -53633.004 | g_dpin.dpin_q[9]$_DFF_P_/D
+      850 |       0 |     848 |            0 |    +0.1% | -78.553 | -53472.320 | g_dpin.dpin_q[9]$_DFF_P_/D
+      860 |       0 |     858 |            0 |    +0.1% | -78.553 | -53311.281 | g_dpin.dpin_q[9]$_DFF_P_/D
+      870 |       0 |     868 |            0 |    +0.1% | -78.553 | -53150.898 | g_dpin.dpin_q[9]$_DFF_P_/D
+      880 |       0 |     878 |            0 |    +0.1% | -78.553 | -52989.090 | g_dpin.dpin_q[9]$_DFF_P_/D
+      890 |       0 |     898 |            0 |    +0.1% | -78.553 | -52894.324 | g_dpin.dpin_q[9]$_DFF_P_/D
+      900 |       0 |     918 |            0 |    +0.1% | -78.553 | -52818.820 | g_dpin.dpin_q[9]$_DFF_P_/D
+      910 |       0 |     938 |            0 |    +0.1% | -78.553 | -52777.145 | g_dpin.dpin_q[9]$_DFF_P_/D
+      920 |       0 |     954 |            0 |    +0.1% | -78.553 | -52751.203 | g_dpin.dpin_q[9]$_DFF_P_/D
+      930 |       0 |     974 |            0 |    +0.1% | -78.553 | -52723.688 | g_dpin.dpin_q[9]$_DFF_P_/D
+      940 |       0 |     994 |            0 |    +0.1% | -78.553 | -52708.227 | g_dpin.dpin_q[9]$_DFF_P_/D
+      950 |       0 |    1006 |            0 |    +0.1% | -78.553 | -52708.227 | g_dpin.dpin_q[9]$_DFF_P_/D
+      960 |       0 |    1022 |            0 |    +0.1% | -78.553 | -52692.898 | g_dpin.dpin_q[9]$_DFF_P_/D
+      970 |       0 |    1042 |            0 |    +0.1% | -78.553 | -52682.062 | g_dpin.dpin_q[9]$_DFF_P_/D
+      980 |       0 |    1062 |            0 |    +0.2% | -78.553 | -52668.727 | g_dpin.dpin_q[9]$_DFF_P_/D
+      990 |       0 |    1082 |            0 |    +0.2% | -78.553 | -52659.922 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1000 |       0 |    1102 |            0 |    +0.2% | -78.553 | -52657.000 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1010 |       0 |    1122 |            0 |    +0.2% | -78.553 | -52653.316 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1020 |       0 |    1142 |            0 |    +0.2% | -78.553 | -52650.582 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1030 |       0 |    1162 |            0 |    +0.2% | -78.553 | -52645.629 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1040 |       0 |    1182 |            0 |    +0.2% | -78.553 | -52645.168 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1050 |       0 |    1202 |            0 |    +0.2% | -78.553 | -52644.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1060 |       0 |    1222 |            0 |    +0.2% | -78.553 | -52644.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1070 |       0 |    1242 |            0 |    +0.2% | -78.553 | -52644.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1080 |       0 |    1261 |            0 |    +0.2% | -78.553 | -52644.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1090 |       0 |    1281 |            0 |    +0.2% | -78.553 | -52644.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1100 |       0 |    1301 |            0 |    +0.2% | -78.553 | -52644.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1110 |       0 |    1320 |            0 |    +0.2% | -78.553 | -52644.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1120 |       0 |    1340 |            0 |    +0.2% | -78.553 | -52644.895 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1130 |       0 |    1359 |            0 |    +0.2% | -78.553 | -52643.723 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1140 |       0 |    1378 |            0 |    +0.2% | -78.553 | -52643.723 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1150 |       0 |    1397 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1160 |       0 |    1413 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1170 |       0 |    1429 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1180 |       0 |    1441 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1190 |       0 |    1456 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1200 |       0 |    1467 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1210 |       0 |    1479 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1220 |       0 |    1491 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1230 |       0 |    1501 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1240 |       0 |    1513 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1250 |       0 |    1524 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1260 |       0 |    1535 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1270 |       0 |    1545 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1280 |       0 |    1555 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1290 |       0 |    1566 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1300 |       0 |    1576 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1310 |       0 |    1586 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1320 |       0 |    1596 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1330 |       0 |    1606 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1340 |       0 |    1617 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1350 |       0 |    1628 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1360 |       0 |    1638 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1370 |       0 |    1648 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1380 |       0 |    1658 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1390 |       0 |    1668 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1400 |       0 |    1678 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1410 |       0 |    1688 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1420 |       0 |    1699 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1430 |       0 |    1710 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1440 |       0 |    1720 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1450 |       0 |    1730 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1460 |       0 |    1740 |            0 |    +0.2% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1470 |       0 |    1750 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1480 |       0 |    1760 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1490 |       0 |    1770 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1500 |       0 |    1780 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1510 |       0 |    1790 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1520 |       0 |    1800 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1530 |       0 |    1810 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1540 |       0 |    1820 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1550 |       0 |    1830 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1560 |       0 |    1840 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1570 |       0 |    1850 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1580 |       0 |    1860 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1590 |       0 |    1870 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1600 |       0 |    1880 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1610 |       0 |    1890 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1620 |       0 |    1900 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1630 |       0 |    1910 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1640 |       0 |    1921 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1650 |       0 |    1931 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1660 |       0 |    1941 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1670 |       0 |    1951 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1680 |       0 |    1961 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1690 |       0 |    1971 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1700 |       0 |    1981 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1710 |       0 |    1991 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1720 |       0 |    2001 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1730 |       0 |    2011 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1740 |       0 |    2021 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1750 |       0 |    2031 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1760 |       0 |    2041 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1770 |       0 |    2051 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1780 |       0 |    2061 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1790 |       0 |    2071 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1800 |       0 |    2081 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1810 |       0 |    2091 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1820 |       0 |    2100 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1830 |       0 |    2110 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1840 |       0 |    2120 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1850 |       0 |    2130 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1860 |       0 |    2140 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1870 |       0 |    2150 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1880 |       0 |    2160 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1890 |       0 |    2170 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1900 |       0 |    2180 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1910 |       0 |    2190 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1920 |       0 |    2200 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1930 |       0 |    2210 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1940 |       0 |    2220 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1950 |       0 |    2230 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1960 |       0 |    2240 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1970 |       0 |    2250 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1980 |       0 |    2260 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     1990 |       0 |    2270 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2000 |       0 |    2280 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2010 |       0 |    2290 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2020 |       0 |    2300 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2030 |       0 |    2310 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2040 |       0 |    2320 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2050 |       0 |    2330 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2060 |       0 |    2340 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2070 |       0 |    2350 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2080 |       0 |    2360 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2090 |       0 |    2369 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2100 |       0 |    2377 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2110 |       0 |    2387 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2120 |       0 |    2397 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2130 |       0 |    2407 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2140 |       0 |    2417 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2150 |       0 |    2427 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2160 |       0 |    2437 |            0 |    +0.3% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2170 |       0 |    2447 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2180 |       0 |    2457 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2190 |       0 |    2467 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2200 |       0 |    2477 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2210 |       0 |    2487 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2220 |       0 |    2497 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2230 |       0 |    2507 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2240 |       0 |    2517 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2250 |       0 |    2527 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2260 |       0 |    2537 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2270 |       0 |    2547 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2280 |       0 |    2557 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2290 |       0 |    2567 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2300 |       0 |    2577 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2310 |       0 |    2587 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2320 |       0 |    2597 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2330 |       0 |    2607 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2340 |       0 |    2617 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2350 |       0 |    2627 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2360 |       0 |    2637 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2370 |       0 |    2647 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2380 |       0 |    2657 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2390 |       0 |    2667 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2400 |       0 |    2677 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2410 |       0 |    2687 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2420 |       0 |    2697 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2430 |       0 |    2707 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2440 |       0 |    2717 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2450 |       0 |    2727 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2460 |       0 |    2736 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2470 |       0 |    2746 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2480 |       0 |    2756 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2490 |       0 |    2766 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2500 |       0 |    2776 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2510 |       0 |    2786 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2520 |       0 |    2795 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2530 |       0 |    2805 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2540 |       0 |    2815 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2550 |       0 |    2825 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2560 |       0 |    2835 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2570 |       0 |    2845 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2580 |       0 |    2855 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2590 |       0 |    2865 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2600 |       0 |    2875 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2610 |       0 |    2885 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2620 |       0 |    2895 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2630 |       0 |    2905 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2640 |       0 |    2915 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+     2650 |       0 |    2925 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+    final |       0 |    2934 |            0 |    +0.4% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 2934 hold buffers.
+[INFO RSZ-0506] Runtime: 4.10s
+OT_HOLD_GUARD chunk 1: hold ws -78.55 (+23.67) tns -52649.4 (+23.5%) viol 877, 4 s
+repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 892 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -78.553 | -52643.344 | g_dpin.dpin_q[9]$_DFF_P_/D
+       10 |       0 |      18 |            0 |    +0.0% | -75.672 | -52364.055 | g_dpin.dpin_q[12]$_DFF_P_/D
+       20 |       0 |      38 |            0 |    +0.0% | -74.533 | -52056.688 | cmd_data[216]$_DFF_P_/D
+       30 |       0 |      58 |            0 |    +0.0% | -73.982 | -51748.969 | cmd_data[231]$_DFF_P_/D
+       40 |       0 |      78 |            0 |    +0.0% | -73.401 | -51441.082 | u_tt.u_ctl.g_ami.pam_pin[145]$_DFF_P_/D
+       50 |       0 |      98 |            0 |    +0.0% | -72.358 | -51132.582 | u_tt.u_ctl.g_ami.pam_pin[138]$_DFF_P_/D
+       60 |       0 |     118 |            0 |    +0.0% | -71.636 | -50821.180 | u_tt.u_ctl.g_ami.pam_pin[236]$_DFF_P_/D
+       70 |       0 |     138 |            0 |    +0.0% | -70.888 | -50510.957 | cmd_data[175]$_DFF_P_/D
+       80 |       0 |     158 |            0 |    +0.0% | -70.278 | -50201.805 | u_tt.u_ctl.g_ami.pam_pin[219]$_DFF_P_/D
+       90 |       0 |     178 |            0 |    +0.0% | -69.727 | -49892.543 | u_tt.u_ctl.g_ami.pam_pin[21]$_DFF_P_/D
+      100 |       0 |     198 |            0 |    +0.0% | -69.357 | -49583.703 | cmd_data[225]$_DFF_P_/D
+      110 |       0 |     218 |            0 |    +0.0% | -69.103 | -49275.391 | u_shadow.u_isd.q[29]$_DFF_P_/D
+      120 |       0 |     238 |            0 |    +0.0% | -68.958 | -48965.316 | u_tt.u_ctl.g_ami.pam_pin[24]$_DFF_P_/D
+      130 |       0 |     258 |            0 |    +0.0% | -68.659 | -48655.379 | u_tt.u_ctl.g_ami.pam_pin[13]$_DFF_P_/D
+      140 |       0 |     278 |            0 |    +0.0% | -68.411 | -48345.312 | u_tt.u_ctl.g_ami.pam_pin[183]$_DFF_P_/D
+      150 |       0 |     298 |            0 |    +0.0% | -68.171 | -48034.957 | g_dpin.dpin_q[15]$_DFF_P_/D
+      160 |       0 |     318 |            0 |    +0.0% | -67.886 | -47723.305 | u_tt.u_ctl.g_ami.pam_pin[228]$_DFF_P_/D
+      170 |       0 |     338 |            0 |    +0.0% | -67.639 | -47412.609 | cmd_data[275]$_DFF_P_/D
+      180 |       0 |     358 |            0 |    +0.1% | -67.392 | -47101.941 | u_tt.u_ctl.g_ami.pam_pin[188]$_DFF_P_/D
+      190 |       0 |     378 |            0 |    +0.1% | -67.170 | -46790.652 | u_tt.u_ctl.g_ami.pam_pin[10]$_DFF_P_/D
+      200 |       0 |     398 |            0 |    +0.1% | -66.975 | -46479.000 | u_shadow.g_kvreg.kv_ok_q$_DFF_P_/D
+      210 |       0 |     418 |            0 |    +0.1% | -66.517 | -46168.984 | u_shadow.u_isd.q[24]$_DFF_P_/D
+      220 |       0 |     438 |            0 |    +0.1% | -66.319 | -45857.301 | u_tt.u_ctl.g_ami.pam_pin[82]$_DFF_P_/D
+      230 |       0 |     458 |            0 |    +0.1% | -66.164 | -45545.461 | u_tt.u_ctl.g_ami.pam_pin[99]$_DFF_P_/D
+      240 |       0 |     478 |            0 |    +0.1% | -65.923 | -45234.762 | u_tt.u_ctl.g_ami.pam_pin[231]$_DFF_P_/D
+      250 |       0 |     498 |            0 |    +0.1% | -65.718 | -44923.223 | u_tt.u_ctl.g_ami.pam_pin[200]$_DFF_P_/D
+      260 |       0 |     518 |            0 |    +0.1% | -65.354 | -44614.008 | u_tt.u_ctl.g_ami.pam_pin[118]$_DFF_P_/D
+      270 |       0 |     538 |            0 |    +0.1% | -64.979 | -44303.051 | u_tt.u_ctl.g_ami.pam_pin[88]$_DFF_P_/D
+      280 |       0 |     558 |            0 |    +0.1% | -64.595 | -43991.617 | u_shadow.u_isd.q[90]$_DFF_P_/D
+      290 |       0 |     578 |            0 |    +0.1% | -64.247 | -43680.414 | u_tt.u_ctl.g_ami.pam_pin[203]$_DFF_P_/D
+      300 |       0 |     598 |            0 |    +0.1% | -63.892 | -43369.020 | u_tt.u_ctl.g_ami.pam_pin[192]$_DFF_P_/D
+      310 |       0 |     618 |            0 |    +0.1% | -63.529 | -43057.824 | u_tt.u_ctl.g_ami.pam_pin[101]$_DFF_P_/D
+      320 |       0 |     638 |            0 |    +0.1% | -62.986 | -42746.086 | u_shadow.u_isd.q[79]$_DFF_P_/D
+      330 |       0 |     658 |            0 |    +0.1% | -62.563 | -42434.207 | u_shadow.u_isd.q[57]$_DFF_P_/D
+      340 |       0 |     678 |            0 |    +0.1% | -62.158 | -42123.223 | u_shadow.u_isd.q[103]$_DFF_P_/D
+      350 |       0 |     698 |            0 |    +0.1% | -61.660 | -41813.262 | u_tt.u_ctl.g_ami.pam_pin[254]$_DFF_P_/D
+      360 |       0 |     718 |            0 |    +0.1% | -61.370 | -41502.754 | u_shadow.u_isd.q[110]$_DFF_P_/D
+      370 |       0 |     738 |            0 |    +0.1% | -61.003 | -41192.074 | cmd_data[45]$_DFF_P_/D
+      380 |       0 |     758 |            0 |    +0.1% | -60.544 | -40882.684 | cmd_data[140]$_DFF_P_/D
+      390 |       0 |     778 |            0 |    +0.1% | -60.206 | -40573.211 | cmd_data[80]$_DFF_P_/D
+      400 |       0 |     798 |            0 |    +0.1% | -59.803 | -40264.336 | cmd_data[179]$_DFF_P_/D
+      410 |       0 |     818 |            0 |    +0.1% | -59.530 | -39955.035 | u_tt.u_ctl.g_ami.pam_pin[271]$_DFF_P_/D
+      420 |       0 |     838 |            0 |    +0.1% | -59.040 | -39646.164 | u_tt.u_ctl.g_ami.pam_pin[262]$_DFF_P_/D
+      430 |       0 |     858 |            0 |    +0.1% | -58.816 | -39335.953 | g_dpin.dpin_q[38]$_DFF_P_/D
+      440 |       0 |     878 |            0 |    +0.1% | -58.634 | -39025.883 | u_shadow.u_isd.q[70]$_DFF_P_/D
+      450 |       0 |     898 |            0 |    +0.1% | -58.338 | -38715.203 | u_tt.u_ctl.g_ami.pam_pin[246]$_DFF_P_/D
+      460 |       0 |     918 |            0 |    +0.1% | -57.995 | -38405.414 | g_dpin.dpin_q[0]$_DFF_P_/D
+      470 |       0 |     938 |            0 |    +0.1% | -57.692 | -38095.695 | u_tt.u_ctl.g_ami.pam_pin[288]$_DFF_P_/D
+      480 |       0 |     958 |            0 |    +0.1% | -57.287 | -37786.309 | cmd_data[285]$_DFF_P_/D
+      490 |       0 |     978 |            0 |    +0.1% | -56.980 | -37477.754 | cmd_data[229]$_DFF_P_/D
+      500 |       0 |     998 |            0 |    +0.1% | -56.758 | -37168.691 | cmd_data[198]$_DFF_P_/D
+      510 |       0 |    1018 |            0 |    +0.1% | -56.438 | -36858.547 | u_tt.u_ctl.g_ami.pam_pin[273]$_DFF_P_/D
+      520 |       0 |    1038 |            0 |    +0.1% | -56.213 | -36549.691 | cmd_data[271]$_DFF_P_/D
+      530 |       0 |    1058 |            0 |    +0.2% | -56.047 | -36241.828 | cmd_data[261]$_DFF_P_/D
+      540 |       0 |    1078 |            0 |    +0.2% | -55.772 | -35934.352 | g_dpin.dpin_q[2]$_DFF_P_/D
+      550 |       0 |    1098 |            0 |    +0.2% | -55.594 | -35625.793 | cmd_data[244]$_DFF_P_/D
+      560 |       0 |    1118 |            0 |    +0.2% | -55.477 | -35316.012 | u_shadow.u_isd.q[120]$_DFF_P_/D
+      570 |       0 |    1138 |            0 |    +0.2% | -55.276 | -35006.363 | u_shadow.u_isd.q[8]$_DFF_P_/D
+      580 |       0 |    1158 |            0 |    +0.2% | -55.164 | -34695.871 | cmd_data[85]$_DFF_P_/D
+      590 |       0 |    1178 |            0 |    +0.2% | -55.034 | -34388.262 | cmd_data[88]$_DFF_P_/D
+      600 |       0 |    1198 |            0 |    +0.2% | -54.929 | -34080.922 | u_shadow.u_isd.q[40]$_DFF_P_/D
+      610 |       0 |    1218 |            0 |    +0.2% | -54.814 | -33771.820 | cmd_data[77]$_DFF_P_/D
+      620 |       0 |    1238 |            0 |    +0.2% | -54.657 | -33463.301 | cmd_data[34]$_DFF_P_/D
+      630 |       0 |    1258 |            0 |    +0.2% | -54.477 | -33154.223 | cmd_data[108]$_DFF_P_/D
+      640 |       0 |    1278 |            0 |    +0.2% | -54.306 | -32844.805 | cmd_data[234]$_DFF_P_/D
+      650 |       0 |    1298 |            0 |    +0.2% | -54.223 | -32534.598 | cmd_data[203]$_DFF_P_/D
+      660 |       0 |    1318 |            0 |    +0.2% | -54.059 | -32226.223 | cmd_data[168]$_DFF_P_/D
+      670 |       0 |    1338 |            0 |    +0.2% | -53.942 | -31917.449 | cmd_data[193]$_DFF_P_/D
+      680 |       0 |    1358 |            0 |    +0.2% | -53.801 | -31608.434 | u_shadow.u_isd.q[124]$_DFF_P_/D
+      690 |       0 |    1378 |            0 |    +0.2% | -53.734 | -31298.256 | u_shadow.u_isd.q[136]$_DFF_P_/D
+      700 |       0 |    1398 |            0 |    +0.2% | -53.593 | -30989.971 | cmd_data[204]$_DFF_P_/D
+      710 |       0 |    1418 |            0 |    +0.2% | -53.437 | -30681.924 | cmd_data[297]$_DFF_P_/D
+      720 |       0 |    1438 |            0 |    +0.2% | -53.338 | -30373.115 | cmd_data[160]$_DFF_P_/D
+      730 |       0 |    1458 |            0 |    +0.2% | -53.215 | -30064.533 | u_tt.u_ctl.g_ami.pam_pin[65]$_DFF_P_/D
+      740 |       0 |    1478 |            0 |    +0.2% | -52.985 | -29754.738 | cmd_data[184]$_DFF_P_/D
+      750 |       0 |    1498 |            0 |    +0.2% | -52.852 | -29447.242 | u_shadow.u_isd.q[41]$_DFF_P_/D
+      760 |       0 |    1518 |            0 |    +0.2% | -52.750 | -29137.371 | u_shadow.u_isd.q[34]$_DFF_P_/D
+      770 |       0 |    1538 |            0 |    +0.2% | -52.538 | -28827.660 | cmd_data[65]$_DFF_P_/D
+      780 |       0 |    1558 |            0 |    +0.2% | -52.250 | -28519.047 | u_shadow.u_isd.q[39]$_DFF_P_/D
+      790 |       0 |    1578 |            0 |    +0.2% | -51.963 | -28209.842 | cmd_data[19]$_DFF_P_/D
+      800 |       0 |    1598 |            0 |    +0.2% | -51.844 | -27899.408 | u_tt.u_ctl.g_ami.pam_pin[62]$_DFF_P_/D
+      810 |       0 |    1618 |            0 |    +0.2% | -51.681 | -27591.277 | cmd_data[72]$_DFF_P_/D
+      820 |       0 |    1638 |            0 |    +0.2% | -51.414 | -27283.238 | cmd_data[87]$_DFF_P_/D
+      830 |       0 |    1658 |            0 |    +0.2% | -51.165 | -26975.357 | cmd_data[10]$_DFF_P_/D
+      840 |       0 |    1678 |            0 |    +0.2% | -50.823 | -26666.350 | u_shadow.u_isd.q[141]$_DFF_P_/D
+      850 |       0 |    1698 |            0 |    +0.2% | -50.488 | -26355.914 | cmd_data[356]$_DFF_P_/D
+      860 |       0 |    1718 |            0 |    +0.2% | -49.944 | -26048.730 | u_shadow.u_isd.q[135]$_DFF_P_/D
+      870 |       0 |    1738 |            0 |    +0.2% | -49.026 | -25739.705 | cmd_data[156]$_DFF_P_/D
+      880 |       0 |    1756 |            0 |    +0.3% | -47.518 | -25585.783 | g_dpin.dpin_q[9]$_DFF_P_/D
+      890 |       0 |    1766 |            0 |    +0.3% | -47.518 | -25585.783 | g_dpin.dpin_q[9]$_DFF_P_/D
+      900 |       0 |    1797 |            0 |    +0.3% | -44.904 | -25261.646 | u_tt.u_ctl.g_ami.pam_pin[148]$_DFF_P_/D
+      910 |       0 |    1837 |            0 |    +0.3% | -43.934 | -24816.074 | cmd_data[211]$_DFF_P_/D
+      920 |       0 |    1877 |            0 |    +0.3% | -43.306 | -24379.436 | cmd_data[287]$_DFF_P_/D
+      930 |       0 |    1917 |            0 |    +0.3% | -42.599 | -23949.840 | cmd_data[241]$_DFF_P_/D
+      940 |       0 |    1957 |            0 |    +0.3% | -41.540 | -23526.076 | cmd_data[327]$_DFF_P_/D
+      950 |       0 |    1997 |            0 |    +0.3% | -40.753 | -23115.010 | u_tt.u_ctl.g_ami.pam_pin[124]$_DFF_P_/D
+      960 |       0 |    2037 |            0 |    +0.3% | -40.020 | -22710.113 | u_tt.u_ctl.g_ami.pam_pin[223]$_DFF_P_/D
+      970 |       0 |    2077 |            0 |    +0.3% | -39.429 | -22313.055 | u_tt.u_ctl.g_ami.pam_pin[141]$_DFF_P_/D
+      980 |       0 |    2117 |            0 |    +0.3% | -38.842 | -21921.143 | u_tt.u_ctl.g_ami.pam_pin[73]$_DFF_P_/D
+      990 |       0 |    2157 |            0 |    +0.3% | -38.522 | -21533.691 | cmd_data[376]$_DFF_P_/D
+     1000 |       0 |    2197 |            0 |    +0.3% | -38.268 | -21149.293 | g_dpin.dpin_q[19]$_DFF_P_/D
+     1010 |       0 |    2237 |            0 |    +0.3% | -37.936 | -20768.436 | g_dpin.dpin_q[20]$_DFF_P_/D
+     1020 |       0 |    2277 |            0 |    +0.3% | -37.720 | -20390.291 | u_tt.u_ctl.g_ami.pam_pin[232]$_DFF_P_/D
+     1030 |       0 |    2317 |            0 |    +0.3% | -37.454 | -20014.250 | u_tt.u_ctl.g_ami.pam_pin[5]$_DFF_P_/D
+     1040 |       0 |    2357 |            0 |    +0.3% | -37.135 | -19641.080 | u_tt.u_ctl.g_ami.pam_pin[76]$_DFF_P_/D
+     1050 |       0 |    2397 |            0 |    +0.3% | -36.899 | -19270.822 | u_tt.u_ctl.g_ami.pam_pin[211]$_DFF_P_/D
+     1060 |       0 |    2437 |            0 |    +0.3% | -36.664 | -18903.068 | g_dpin.dpin_q[16]$_DFF_P_/D
+     1070 |       0 |    2477 |            0 |    +0.4% | -36.320 | -18538.439 | u_tt.u_ctl.g_ami.pam_pin[212]$_DFF_P_/D
+     1080 |       0 |    2515 |            0 |    +0.4% | -36.099 | -18176.059 | u_tt.u_ctl.g_ami.pam_pin[163]$_DFF_P_/D
+     1090 |       0 |    2546 |            0 |    +0.4% | -35.889 | -17816.098 | u_tt.u_ctl.g_ami.pam_pin[31]$_DFF_P_/D
+     1100 |       0 |    2576 |            0 |    +0.4% | -35.525 | -17458.811 | u_shadow.u_isd.q[24]$_DFF_P_/D
+     1110 |       0 |    2606 |            0 |    +0.4% | -35.219 | -17104.623 | u_tt.u_ctl.g_ami.pam_pin[34]$_DFF_P_/D
+     1120 |       0 |    2636 |            0 |    +0.4% | -35.029 | -16753.307 | u_tt.u_ctl.g_ami.pam_pin[116]$_DFF_P_/D
+     1130 |       0 |    2666 |            0 |    +0.4% | -34.882 | -16403.461 | u_tt.u_ctl.g_ami.pam_pin[180]$_DFF_P_/D
+     1140 |       0 |    2696 |            0 |    +0.4% | -34.667 | -16055.821 | u_tt.u_ctl.g_ami.pam_pin[106]$_DFF_P_/D
+     1150 |       0 |    2726 |            0 |    +0.4% | -34.308 | -15709.932 | u_tt.u_ctl.g_ami.pam_pin[100]$_DFF_P_/D
+     1160 |       0 |    2756 |            0 |    +0.4% | -33.974 | -15368.146 | u_tt.u_ctl.g_ami.pam_pin[204]$_DFF_P_/D
+     1170 |       0 |    2786 |            0 |    +0.4% | -33.502 | -15030.793 | u_tt.u_ctl.g_ami.pam_pin[131]$_DFF_P_/D
+     1180 |       0 |    2816 |            0 |    +0.4% | -33.157 | -14697.123 | g_dpin.dpin_q[39]$_DFF_P_/D
+     1190 |       0 |    2846 |            0 |    +0.4% | -32.835 | -14366.956 | u_tt.u_ctl.g_ami.pam_pin[113]$_DFF_P_/D
+     1200 |       0 |    2876 |            0 |    +0.4% | -32.451 | -14040.362 | u_shadow.u_isd.q[64]$_DFF_P_/D
+     1210 |       0 |    2906 |            0 |    +0.4% | -31.810 | -13717.751 | u_shadow.u_isd.q[60]$_DFF_P_/D
+     1220 |       0 |    2936 |            0 |    +0.4% | -31.548 | -13400.950 | u_tt.u_ctl.g_ami.pam_pin[197]$_DFF_P_/D
+     1230 |       0 |    2966 |            0 |    +0.4% | -31.054 | -13086.668 | u_shadow.u_isd.q[87]$_DFF_P_/D
+     1240 |       0 |    2996 |            0 |    +0.4% | -30.755 | -12777.139 | u_tt.u_ctl.g_ami.pam_pin[254]$_DFF_P_/D
+     1250 |       0 |    3026 |            0 |    +0.4% | -30.319 | -12471.116 | u_shadow.u_isd.q[115]$_DFF_P_/D
+     1260 |       0 |    3056 |            0 |    +0.4% | -30.173 | -12168.681 | u_shadow.u_isd.q[118]$_DFF_P_/D
+     1270 |       0 |    3086 |            0 |    +0.4% | -29.688 | -11869.380 | u_shadow.u_isd.q[82]$_DFF_P_/D
+     1280 |       0 |    3116 |            0 |    +0.4% | -29.293 | -11574.049 | cmd_data[183]$_DFF_P_/D
+     1290 |       0 |    3146 |            0 |    +0.4% | -29.017 | -11282.519 | cmd_data[115]$_DFF_P_/D
+     1300 |       0 |    3176 |            0 |    +0.5% | -28.596 | -10993.896 | u_tt.u_ctl.g_ami.pam_pin[266]$_DFF_P_/D
+     1310 |       0 |    3206 |            0 |    +0.5% | -28.345 | -10709.047 | u_shadow.u_isd.q[107]$_DFF_P_/D
+     1320 |       0 |    3236 |            0 |    +0.5% | -27.924 | -10427.751 | g_dpin.dpin_q[38]$_DFF_P_/D
+     1330 |       0 |    3266 |            0 |    +0.5% | -27.565 | -10150.050 | u_tt.u_ctl.g_ami.pam_pin[300]$_DFF_P_/D
+     1340 |       0 |    3296 |            0 |    +0.5% | -27.323 | -9875.333 | u_shadow.u_isd.q[104]$_DFF_P_/D
+     1350 |       0 |    3326 |            0 |    +0.5% | -27.103 | -9602.798 | g_dpin.dpin_q[5]$_DFF_P_/D
+     1360 |       0 |    3356 |            0 |    +0.5% | -26.767 | -9333.525 | g_dpin.dpin_q[6]$_DFF_P_/D
+     1370 |       0 |    3386 |            0 |    +0.5% | -26.489 | -9067.236 | cmd_data[285]$_DFF_P_/D
+     1380 |       0 |    3416 |            0 |    +0.5% | -26.092 | -8803.881 | cmd_data[290]$_DFF_P_/D
+     1390 |       0 |    3446 |            0 |    +0.5% | -25.944 | -8544.011 | u_shadow.g_kvreg.kvwd_q$_DFF_P_/D
+     1400 |       0 |    3476 |            0 |    +0.5% | -25.595 | -8285.950 | u_tt.u_ctl.g_ami.pam_pin[282]$_DFF_P_/D
+     1410 |       0 |    3506 |            0 |    +0.5% | -25.403 | -8030.542 | cmd_data[138]$_DFF_P_/D
+     1420 |       0 |    3536 |            0 |    +0.5% | -25.246 | -7777.320 | u_shadow.u_isd.q[15]$_DFF_P_/D
+     1430 |       0 |    3566 |            0 |    +0.5% | -24.962 | -7525.763 | cmd_data[137]$_DFF_P_/D
+     1440 |       0 |    3596 |            0 |    +0.5% | -24.785 | -7277.099 | cmd_data[244]$_DFF_P_/D
+     1450 |       0 |    3626 |            0 |    +0.5% | -24.595 | -7030.080 | cmd_data[238]$_DFF_P_/D
+     1460 |       0 |    3656 |            0 |    +0.5% | -24.449 | -6784.627 | cmd_data[181]$_DFF_P_/D
+     1470 |       0 |    3686 |            0 |    +0.5% | -24.311 | -6540.840 | u_shadow.u_isd.q[126]$_DFF_P_/D
+     1480 |       0 |    3716 |            0 |    +0.5% | -24.218 | -6298.061 | cmd_data[15]$_DFF_P_/D
+     1490 |       0 |    3746 |            0 |    +0.5% | -24.107 | -6056.343 | cmd_data[75]$_DFF_P_/D
+     1500 |       0 |    3776 |            0 |    +0.5% | -23.955 | -5815.938 | u_tt.u_ctl.g_ami.pam_pin[61]$_DFF_P_/D
+     1510 |       0 |    3806 |            0 |    +0.5% | -23.788 | -5577.338 | u_shadow.u_isd.q[123]$_DFF_P_/D
+     1520 |       0 |    3836 |            0 |    +0.5% | -23.582 | -5340.560 | cmd_data[71]$_DFF_P_/D
+     1530 |       0 |    3866 |            0 |    +0.6% | -23.467 | -5105.348 | u_shadow.u_isd.q[40]$_DFF_P_/D
+     1540 |       0 |    3896 |            0 |    +0.6% | -23.363 | -4871.242 | cmd_data[269]$_DFF_P_/D
+     1550 |       0 |    3926 |            0 |    +0.6% | -23.178 | -4638.467 | cmd_data[62]$_DFF_P_/D
+     1560 |       0 |    3956 |            0 |    +0.6% | -23.041 | -4407.392 | cmd_data[101]$_DFF_P_/D
+     1570 |       0 |    3986 |            0 |    +0.6% | -22.957 | -4177.342 | cmd_data[134]$_DFF_P_/D
+     1580 |       0 |    4016 |            0 |    +0.6% | -22.834 | -3948.254 | cmd_data[296]$_DFF_P_/D
+     1590 |       0 |    4046 |            0 |    +0.6% | -22.724 | -3720.433 | cmd_data[204]$_DFF_P_/D
+     1600 |       0 |    4076 |            0 |    +0.6% | -22.617 | -3493.518 | cmd_data[194]$_DFF_P_/D
+     1610 |       0 |    4106 |            0 |    +0.6% | -22.462 | -3267.822 | u_shadow.u_isd.q[33]$_DFF_P_/D
+     1620 |       0 |    4136 |            0 |    +0.6% | -22.285 | -3044.058 | u_shadow.u_isd.q[124]$_DFF_P_/D
+     1630 |       0 |    4166 |            0 |    +0.6% | -22.177 | -2821.680 | cmd_data[339]$_DFF_P_/D
+     1640 |       0 |    4196 |            0 |    +0.6% | -22.009 | -2600.533 | u_tt.u_ctl.g_ami.pam_pin[65]$_DFF_P_/D
+     1650 |       0 |    4226 |            0 |    +0.6% | -21.819 | -2381.233 | cmd_data[317]$_DFF_P_/D
+     1660 |       0 |    4256 |            0 |    +0.6% | -21.628 | -2164.100 | u_shadow.u_isd.q[14]$_DFF_P_/D
+     1670 |       0 |    4286 |            0 |    +0.6% | -21.364 | -1949.018 | cmd_data[188]$_DFF_P_/D
+     1680 |       0 |    4316 |            0 |    +0.6% | -21.138 | -1736.249 | cmd_data[237]$_DFF_P_/D
+     1690 |       0 |    4346 |            0 |    +0.6% | -20.985 | -1525.232 | cmd_data[349]$_DFF_P_/D
+     1700 |       0 |    4375 |            0 |    +0.6% | -20.767 | -1316.097 | cmd_data[224]$_DFF_P_/D
+     1710 |       0 |    4402 |            0 |    +0.6% | -20.617 | -1109.250 | u_tt.u_ctl.g_ami.pam_pin[62]$_DFF_P_/D
+     1720 |       0 |    4425 |            0 |    +0.6% | -20.349 | -904.108 | cmd_data[57]$_DFF_P_/D
+     1730 |       0 |    4445 |            0 |    +0.6% | -20.038 | -702.005 | cmd_data[98]$_DFF_P_/D
+     1740 |       0 |    4465 |            0 |    +0.6% | -19.578 | -503.774 | cmd_data[345]$_DFF_P_/D
+     1750 |       0 |    4485 |            0 |    +0.6% | -19.047 | -310.203 | cmd_data[340]$_DFF_P_/D
+     1760 |       0 |    4505 |            0 |    +0.6% | -18.304 | -122.724 | cmd_data[355]$_DFF_P_/D
+    final |       0 |    4519 |            0 |    +0.6% |  10.006 |   0.000 | u_tt.scale_addr[489]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 4519 hold buffers.
+[INFO RSZ-0506] Runtime: 4.68s
+Took 5 seconds: repair_timing -setup_margin 0 -hold_margin 10 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 2: hold ws 10.01 (+88.56) tns 0.0 (+100.0%) viol 0, 9 s
+detailed_placement
+[INFO DPL-0006] Core area: 106301.03 um^2
+[INFO DPL-0007] Movable instances area: 8522.40 um^2
+[INFO DPL-0008] Fixed instances area within core: 42788.79 um^2
+[INFO DPL-0009] Utilization: 48.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 77716 cells
+[INFO DPL-0393]   height 152 row(s): 4 cells
+[INFO DPL-0393]   height 288 row(s): 2 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      28087 |      4973 |     21983
+        1 |      28828 |      4064 |     20085
+        2 |      24078 |      3460 |     17320
+        3 |      19594 |      3178 |     14940
+        4 |      16713 |      3015 |     12897
+        5 |      14761 |      2922 |     11428
+        6 |      12847 |      2706 |      9967
+        7 |      11534 |      2406 |      9015
+        8 |      10444 |      2249 |      8051
+        9 |       9329 |      2109 |      7152
+       10 |       8372 |      1902 |      6356
+       20 |       3666 |       953 |      2711
+       30 |       1782 |       502 |      1280
+       40 |        943 |       282 |       661
+       50 |        305 |       105 |       200
+       60 |        155 |        49 |       106
+       70 |        139 |        41 |        98
+       80 |         80 |        24 |        56
+       90 |         36 |        14 |        22
+       99 |          4 |         2 |         2
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 4 for 3 consecutive iterations.
+Using old diamond search for 2 remaining illegal cells.
+diamond recovery: recovered 2/2 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 14.00s
+Placement Analysis
+---------------------------------
+total displacement      13953.5 u
+average displacement        0.2 u
+max displacement           10.9 u
+original HPWL          528141.8 u
+legalized HPWL         539722.9 u
+delta HPWL                    2 %
+
+Took 14 seconds: detailed_placement
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 51311 um^2 48% utilization.
+source /work/hooks/post_cts_post_cts.tcl
+write_db /work/results/asap7/opentallas_qfd_tt_ctlm_tree_asap7_ref_gate/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_qfd_tt_ctlm_tree_asap7_ref_gate/base/4_cts.sdc
+Elapsed time: 2:58.02[h:]min:sec. CPU time: user 335.11 sys 36.12 (208%). Peak memory: 1886244KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb          178           1842 6c5a18b00bda7fb96ca1

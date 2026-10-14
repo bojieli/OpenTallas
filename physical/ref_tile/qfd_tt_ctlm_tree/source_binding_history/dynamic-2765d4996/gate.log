@@ -1,0 +1,24 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO oflop: E face 9.1 pins/um (scale_addr): recipe-2 hold stages take 3.05 um behind the face, the pin flops need gap 3.9 um and 5 columns (derived in the flow)
+GATE INFO oflop: N face 9.1 pins/um (p_f_e2): recipe-2 hold stages take 3.05 um behind the face, the pin flops need gap 3.9 um and 18 columns (derived in the flow)
+GATE INFO oflop: S face 9.1 pins/um (mx_data): recipe-2 hold stages take 3.05 um behind the face, the pin flops need gap 3.9 um and 18 columns (derived in the flow)
+GATE INFO oflop: W face 8.0 pins/um (ret): recipe-2 hold stages take 2.68 um behind the face, the pin flops need gap 3.4 um and 5 columns (derived in the flow)
+GATE INFO remote: ot-run selected ot-epyc4 for 16 GB; inputs ship there before admission
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qfd_tt_ctlm_tree_20261014-000528.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qfd_tt_ctlm_tree_20261014-000528.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_tt_ctlm_tree-20261014-000528
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc4 in 201 s (gate total 660 s)
+GATE INFO util: synthesized std area 9388 um2 + macros 42205 in core 106301: util 49%
+GATE INFO textbook: PASS qfd_tt_ctlm_tree cells 80,897 flops 11,487 depth 471.8 ps util 0.4629 reach 0.0 um (1.3 s)
+GATE INFO cts_calibration: ss insertion all 949.9..1025.1 ps (spread 75.2), boundary mean 982.4; tt insertion all 697.6..731.2 ps (spread 33.6), boundary mean 712.6; ff insertion all 541.0..569.9 ps (spread 28.9), boundary mean 555.8; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 7 (fine) leaves 30 sinks 629 cells 99 leaf arrival 700.9..731.2 ps (spread 30.3) pad 72.6 / 16.4 ps
+GATE INFO clock_spine: OT_SPINE iter 8 (fine) leaves 30 sinks 629 cells 100 leaf arrival 704.4..731.2 ps (spread 26.8) pad 72.6 / 20.7 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qfd_tt_ctlm_tree/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->out        3 paths, worst slack 62.7 ps (e.g. x_dv)
+GATE INFO path_classes: reg->reg      592 paths, worst slack 69.5 ps (e.g. u_shadow.u_ctrl_me.o_cnt1[23]$_DFFE_PN0P_/D)
+GATE INFO path_classes: in->reg         5 paths, worst slack 234.8 ps (e.g. u_shadow.g_rrg.g_r[3].r$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 6.265810092997981e-11 hold WNS 1.7358392501165554e-11
+GATE INFO clock_rule: root port:clk: 11,493 sinks on the largest root <= 15,000; measured TT insertion 731.2 ps, leaf spread 33.6 ps
+PRE_ROUTE_GATE: PASS (0 fail, 0 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/r3b-host/physical/ref_tile/qfd_tt_ctlm_tree/source_binding_history/e6b9222b209d74bbe9cfbef50a0b4a136c411f399f5f0f73e93a6dde48152d34.json
+GATE: qfd_tt_ctlm_tree/gate_result.json written (exact staged source binding; commit it with the kit)
