@@ -76,7 +76,12 @@
   "views_to": "physical/ref_tile/s81hc_ccr_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccr_ref"
  },
- "params": {},
+ "params": {
+  "HALF": 0,
+  "RLY": 1,
+  "RF": 1,
+  "DW": 5
+ },
  "children": [],
  "inter": []
 }

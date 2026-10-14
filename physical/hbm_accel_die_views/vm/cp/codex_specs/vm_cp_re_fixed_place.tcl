@@ -1,9 +1,10 @@
-# vm_cp_re PRE_GLOBAL_PLACE hook (FACE2 2026-10-13): placement BY CONSTRUCTION, no RePlAce.
-# The tile is a ~3 % utilised fork (tap[2063] W -> se + ne E, one merged flop per bit): RePlAce diverged (GPL-0305)
-# in cx1 (free flops) and cx2 (flops FIRM at pins).  Here global_placement is replaced by a river plan:
-#   * a flop fed from a W/E pin and driving W/E pins sits on its OWN vertical column x_i (rank of its input pin y,
-#     spread linearly over the core width) at its input pin's y: the bit turns vertical once, in its own column,
-#     between its three pins (2,063 columns over ~4,140 M3+M5 tracks, cut 0.50);
+# vm_cp_re PRE_GLOBAL_PLACE hook (FACE2/FACE3 2026-10-13): placement BY CONSTRUCTION, no RePlAce.
+# The tile is a sparse fork (tap[2063] W -> se S + ne N from cx4 on, one merged flop per bit): RePlAce diverged
+# (GPL-0305) in cx1 (free flops) and cx2 (flops FIRM at pins); cx3 (se + ne on E) congested at the se|ne seam.
+# Here global_placement is replaced by a river plan (cx4: every fork flop takes the corner rule below = its S/N pin
+# column x, its tap pin y, so tap run, flop and both output pins share one M4 track and one M3 track):
+#   * (cx1-cx3 geometry only) a flop fed from a W/E pin and driving W/E pins sits on its OWN vertical column x_i (rank of
+#     its input pin y, spread linearly over the core width) at its input pin y;
 #   * a flop fed from an S/N pin and driving a W/E pin sits at the corner (x of the input pin, y of the output pin);
 #   * every other cell (port buffers, inverters) sits at the port it touches, else at its flop.
 # Cells are packed per row left to right (1 site gap) and left PLACED: detailed placement only legalises.

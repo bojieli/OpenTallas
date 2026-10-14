@@ -1,12 +1,13 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81su_qnq_sp8_ref-v5-sp8-2df2353b8/record/views/dsfd_su_t_qnq/dsfd_su_t_qnq.lef",
+ "lef": "/home/ubuntu/wt/codex-takeover-coord-1013-pm/physical/ref_tile/s81su_qnq_sp8_ref/views/dsfd_su_t_qnq/dsfd_su_t_qnq.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 2143 of 2143 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cfg_b[0] M5 (112.080,0.016), cfg_b[1] M5 (112.080,0.016), cfg_b[2] M5 (112.080,0.016))"
+  "(f) face-pin access: 2143 of 2143 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. cfg_b[0] M5 (112.080,0.016), cfg_b[1] M5 (112.080,0.016), cfg_b[2] M5 (112.080,0.016))",
+  "(h) pockets: 1582 open own-layer pocket rects on M5 (5535.13 um2; gaps < 1.536 um between the child's own obstacles; largest (175.512,138.133)-(176.928,231.587), (149.544,35.845)-(151.008,121.475), (170.112,136.691)-(171.552,221.219)); view exported before the pocket fix (no OT_OBS_CLOSED marker): a parent routing on M5 must lint with --strict-pockets; fix: tools/hier_contract/abstract_pin_stub.py IN.lef OUT.lef: closes own-top-layer gaps between the child's own obstacles and writes the OT_OBS_CLOSED marker (then re-run child_lint)"
  ],
- "summary": "dsfd_su_t_qnq 259.2 x 259.2: PG M5 VDD 48 stripes (98% spread, 100% cov) / VSS 48 stripes (98% spread, 100% cov); strap M6; face pins 2143 blocked-above 0 blocked-same 0; clock ck insertion 653 ps",
+ "summary": "dsfd_su_t_qnq 259.2 x 259.2: PG M5 VDD 48 stripes (98% spread, 100% cov) / VSS 48 stripes (98% spread, 100% cov); strap M6; face pins 2143 blocked-above 0 blocked-same 0; clock ck insertion 653 ps; pockets M5 1582 (legacy view)",
  "info": {
   "cell": "dsfd_su_t_qnq",
   "W": 259.2,
@@ -36,7 +37,7 @@
   },
   "pg_layer": "M5",
   "strap_layer": "M6",
-  "cap": null,
+  "cap": "M5",
   "face": {
    "face_pins": 2143,
    "blocked_above": 0,
@@ -59,6 +60,18 @@
     "max_ps": 652.76,
     "min_ps": 506.76
    }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": null,
+   "count": 1582,
+   "area_um2": 5535.132,
+   "examples": [
+    "(175.512,138.133)-(176.928,231.587)",
+    "(149.544,35.845)-(151.008,121.475)",
+    "(170.112,136.691)-(171.552,221.219)"
+   ]
   }
  }
 }
