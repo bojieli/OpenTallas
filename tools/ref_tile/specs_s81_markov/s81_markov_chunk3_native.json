@@ -16,7 +16,7 @@
   ],
   "outline": {
     "w": 43.2,
-    "h": 54.0
+    "h": 71.28
   },
   "pins": {
     "S": [
@@ -47,7 +47,7 @@
     "name": "s81_markov_chunk3_native",
     "outline": [
       43.2,
-      54.0
+      71.28
     ],
     "pin_faces": {
       "S": [
@@ -71,7 +71,7 @@
   "job": {
     "owner": "Codex:s81-rom-2250",
     "branch": "codex/s81-rom-2250",
-    "tag": "g1",
+    "tag": "g2",
     "purpose": "Original K256PINREG1CUT511SPLIT9 row partitioned to39real clocks, ring skew preserves every original interface epoch; parent wires only. No thresholds relaxed.",
     "benches": [
       {
@@ -84,6 +84,17 @@
           "iverilog"
         ],
         "pass_regex": "all_native_checks_PASS"
+      },
+      {
+        "name": "native_owned_mutant",
+        "cmd": "python3 tools/s81/markov_native_bench.py {RUN}/owned_mutant chunk3 && vvp {RUN}/owned_mutant/chunk3_mut.vvp +DIR={RUN}/owned_mutant",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 3,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MARKOV_NATIVE_EPOCH_MISMATCH|nonexact|unexpected input stall"
       }
     ],
     "views_to": "physical/ref_tile/s81_markov_chunk3_native/views",
@@ -100,7 +111,32 @@
   },
   "io_tcl": "physical/ref_tile_specs/s81_markov_native/chunk3_pins.tcl",
   "reroute_reason": {
-    "kind": "rtl_change",
-    "why": "genuine fixedK256 native source partition replaces unclosed cancelled flat43267sink requirement"
+    "kind": "slot_change",
+    "why": "Actual firstroute FLOORPLAN_MARGIN: util: utilisation 60.1% > 60% (std 1161 + macro 0 um2 in 1932 um2): grow the outline to <= 55-60%. Grow honestheight54.0to71.28 to budget actualORFS mappedstdlib+requiredholdbuffers; source/clocks/epochs/nativeparams unchanged; no adoptedparent dieallocation.",
+    "slot_change_request": {
+      "name": "s81_markov_chunk3_native",
+      "outline": [
+        43.2,
+        71.28
+      ],
+      "pin_faces": {
+        "S": [
+          "sum",
+          "p"
+        ],
+        "N": [
+          "y",
+          "vout",
+          "bad"
+        ],
+        "W": [
+          "clk",
+          "rst_n",
+          "vin"
+        ],
+        "E": []
+      },
+      "reason": "true K25639root physical source partition; diagnostic candidate, native head parent and die allocation OPEN"
+    }
   }
 }

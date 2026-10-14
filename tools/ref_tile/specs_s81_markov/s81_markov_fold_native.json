@@ -82,6 +82,17 @@
           "iverilog"
         ],
         "pass_regex": "all_native_checks_PASS"
+      },
+      {
+        "name": "native_owned_mutant",
+        "cmd": "python3 tools/s81/markov_native_bench.py {RUN}/owned_mutant fold && vvp {RUN}/owned_mutant/fold_mut.vvp +DIR={RUN}/owned_mutant",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 3,
+        "needs": [
+          "iverilog"
+        ],
+        "fail_regex": "MARKOV_NATIVE_EPOCH_MISMATCH|nonexact|unexpected input stall"
       }
     ],
     "views_to": "physical/ref_tile/s81_markov_fold_native/views",

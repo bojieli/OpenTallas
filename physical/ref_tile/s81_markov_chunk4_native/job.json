@@ -1,5 +1,5 @@
 {
- "name": "s81_markov_chunk4_native-g1-COMMIT",
+ "name": "s81_markov_chunk4_native-g2-COMMIT",
  "block": "ot_s81_markov_chunk4_native",
  "ref_tile": true,
  "owner": "Codex:s81-rom-2250",
@@ -41,6 +41,17 @@
      "iverilog"
     ],
     "pass_regex": "all_native_checks_PASS"
+   },
+   {
+    "name": "native_owned_mutant",
+    "cmd": "python3 tools/s81/markov_native_bench.py {RUN}/owned_mutant chunk4 && vvp {RUN}/owned_mutant/chunk4_mut.vvp +DIR={RUN}/owned_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 3,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "MARKOV_NATIVE_EPOCH_MISMATCH|nonexact|unexpected input stall"
    }
   ],
   "calibrate": {
@@ -91,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81_markov_chunk4_native/s81_markov_chunk4_native-g1-COMMIT"
+   "to": "results/rtl/ref_tile/s81_markov_chunk4_native/s81_markov_chunk4_native-g2-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -102,7 +113,32 @@
  "merge_target": null,
  "structural_change": "Original K256PINREG1CUT511SPLIT9 row partitioned to39real clocks, ring skew preserves every original interface epoch; parent wires only. No thresholds relaxed.",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "genuine fixedK256 native source partition replaces unclosed cancelled flat43267sink requirement"
+  "kind": "slot_change",
+  "why": "Actual firstroute FLOORPLAN_MARGIN: util: utilisation 60.8% > 60% (std 1379 + macro 0 um2 in 2267 um2): grow the outline to <= 55-60%. Grow honestheight62.64to82.08 to budget actualORFS mappedstdlib+requiredholdbuffers; source/clocks/epochs/nativeparams unchanged; no adoptedparent dieallocation.",
+  "slot_change_request": {
+   "name": "s81_markov_chunk4_native",
+   "outline": [
+    43.2,
+    82.08
+   ],
+   "pin_faces": {
+    "S": [
+     "sum",
+     "p"
+    ],
+    "N": [
+     "y",
+     "vout",
+     "bad"
+    ],
+    "W": [
+     "clk",
+     "rst_n",
+     "vin"
+    ],
+    "E": []
+   },
+   "reason": "true K25639root physical source partition; diagnostic candidate, native head parent and die allocation OPEN"
+  }
  }
 }
