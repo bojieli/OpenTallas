@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.be_gray_stability_assertion_gate.v1",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm.sv": "c1fbe955248218349f483c8e554feb5658a2474bb5169c2a198b8306d3601553",
+    "rtl/dsrom_sys/s81_ph/test/tb_dsfd_be_rcdc_gray.sv": "5dd00cc36c08e7b6b96abc509f25dd97cc0aaa147e55b29601bae87b2b62b3d5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+  },
+  "exact_RTL_unchanged_from_native_gate": true,
+  "isolated_W": 16,
+  "physical_leaf_W": 128,
+  "depth": 8,
+  "NC": 2,
+  "serial_period_ns": 12,
+  "stream_period_ns": 9,
+  "read_phases_ns": [
+    0,
+    1,
+    5,
+    8
+  ],
+  "selected_capture_sample_age_minimum_ns": 30,
+  "sample_observation_offset_ns": 1,
+  "slot_reuse_minimum_since_actual_read_edge_ns": 24,
+  "normal_RUN_epoch_scope": true,
+  "formal_proof": false,
+  "cases": [
+    {
+      "tag": "phase0_gold",
+      "phase": 0,
+      "mutant": null,
+      "expected": "pass",
+      "observed_rc": 0,
+      "pass_": true
+    },
+    {
+      "tag": "phase1_gold",
+      "phase": 1,
+      "mutant": null,
+      "expected": "pass",
+      "observed_rc": 0,
+      "pass_": true
+    },
+    {
+      "tag": "phase5_gold",
+      "phase": 5,
+      "mutant": null,
+      "expected": "pass",
+      "observed_rc": 0,
+      "pass_": true
+    },
+    {
+      "tag": "phase8_gold",
+      "phase": 8,
+      "mutant": null,
+      "expected": "pass",
+      "observed_rc": 0,
+      "pass_": true
+    },
+    {
+      "tag": "phase1_OT_BE_RCDC_MUT_WRONG_ENTRY",
+      "phase": 1,
+      "mutant": "OT_BE_RCDC_MUT_WRONG_ENTRY",
+      "expected": "fail",
+      "observed_rc": 1,
+      "pass_": true
+    },
+    {
+      "tag": "phase1_OT_BE_RCDC_MUT_EARLY_PUB",
+      "phase": 1,
+      "mutant": "OT_BE_RCDC_MUT_EARLY_PUB",
+      "expected": "fail",
+      "observed_rc": 1,
+      "pass_": true
+    },
+    {
+      "tag": "phase1_OT_BE_RCDC_MUT_MISS_EPOCH",
+      "phase": 1,
+      "mutant": "OT_BE_RCDC_MUT_MISS_EPOCH",
+      "expected": "fail",
+      "observed_rc": 1,
+      "pass_": true
+    }
+  ],
+  "expected_verdicts_pass": true,
+  "physical_qualified": false,
+  "clock_policy_applied": false,
+  "percorner_transport_or_phase_budget_bound": false
+}

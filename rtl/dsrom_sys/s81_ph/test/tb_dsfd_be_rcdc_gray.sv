@@ -10,9 +10,14 @@ module tb_dsfd_be_rcdc_gray;
     integer sent=0,got=0,head=0,tail=0,errors=0,epoch=0;
     integer expected[0:10000];time wt[0:10000];time lo=999999,hi=0;
     time slot_written[0:7];
+    realtime slot_read_time[0:7];integer slot_read_epoch[0:7];
+    integer si; initial for(si=0;si<8;si=si+1) begin slot_read_epoch[si]=-1;slot_read_time[si]=0;end
     reg [3:0] prev_pub=0;reg prev_running=0;integer pi;reg[3:0]delta;
     always @(posedge wclk) begin
-      if(wv&&wr) slot_written[dut.wp[2:0]]=$time;
+      if(wv&&wr) begin
+        if(checking && slot_read_epoch[dut.wp[2:0]]==epoch && $realtime-slot_read_time[dut.wp[2:0]]<24) begin $display("CDC_BAD slot reused before two serial cycles age=%0f",$realtime-slot_read_time[dut.wp[2:0]]);errors=errors+1;end
+        slot_written[dut.wp[2:0]]=$time;
+      end
       #1;
       if(dut.w_st==2'b11 && prev_running && dut.wp_gray_pub!=prev_pub) begin
         delta=dut.wp_gray_pub^prev_pub;
@@ -39,10 +44,11 @@ module tb_dsfd_be_rcdc_gray;
     always @(posedge wclk) if (wv&&wr) begin expected[tail]=wd;wt[tail]=$time;tail=tail+1;sent=sent+1; end
     always @(negedge rclk) rr=rn&&raw&&(($time%56)!=5);
     always @(posedge rclk) begin
+      if(checking && dut.r_take) begin slot_read_time[dut.rp[2:0]]=$realtime;slot_read_epoch[dut.rp[2:0]]=epoch;end
       #1;
       if (checking&&ov) begin
         if(head>=tail || od!==16'(expected[head]) || ovc!==2'b11) begin $display("CDC_BAD t=%0t head%0d tail%0d got%h expected%h vc%h",$time,head,tail,od,expected[head],ovc);errors=errors+1; end
-        if($time-wt[head]<12) begin $display("CDC_BAD selected entry not stable full serial cycle age=%0d",$time-wt[head]);errors=errors+1;end
+        if($time-wt[head]<30) begin $display("CDC_BAD selected entry before LAG1 plus two stream cycles age=%0d",$time-wt[head]);errors=errors+1;end
         if($time-wt[head]<lo)lo=$time-wt[head];if($time-wt[head]>hi)hi=$time-wt[head];head=head+1;got=got+1;
       end
     end

@@ -23,4 +23,9 @@ out['distinct_final_ACK_sources_per_leaf']=2
 out['nominal_generic_conditioner_FF_four_leaves']=32
 out['controller_capture_FF_for_16_exported_ACK_signals']=32
 out['physical_controller_binding']=None
+out['mapped_memory_to_selected_output_groups']=[dict(fifo=i,source_memory_FF=[m.group(2) for m in re.finditer(r'^  (DFF\S+)\s+(\S+)\s*\(',text,re.M) if m.group(2).startswith('\\u_rc'+str(i)+'.u_gray.g_c') and '.mem[' in m.group(2)],capture_selected_output_FF=[m.group(2) for m in re.finditer(r'^  (DFF\S+)\s+(\S+)\s*\(',text,re.M) if m.group(2).startswith('\\u_rc'+str(i)+'.u_gray.g_c') and '.od[' in m.group(2)]) for i in (0,1)]
+out['first_pointer_synchronizer_FF']=[m.group(2) for m in re.finditer(r'^  (DFF\S+)\s+(\S+)\s*\(',text,re.M) if re.search(r'\.(rp_gw1|wp_gr1)\[',m.group(2))]
+out['second_pointer_synchronizer_FF']=[m.group(2) for m in re.finditer(r'^  (DFF\S+)\s+(\S+)\s*\(',text,re.M) if re.search(r'\.(rp_gw2|wp_gr2)\[',m.group(2))]
+out['first_online_synchronizer_FF']=[m.group(2) for m in re.finditer(r'^  (DFF\S+)\s+(\S+)\s*\(',text,re.M) if re.search(r'\.(rd_w1|rr_w1|wd_r1|wr_r1)\$',m.group(2))]
+out['second_online_synchronizer_FF']=[m.group(2) for m in re.finditer(r'^  (DFF\S+)\s+(\S+)\s*\(',text,re.M) if re.search(r'\.(rd_w2|rr_w2|wd_r2|wr_r2)\$',m.group(2))]
 print(json.dumps(out,indent=2))
