@@ -318679,5 +318679,28 @@
   "all-bit real-pin hop audit and combined cut model",
   "M7local PG and phase-alignedM8/M9",
   "fullband CTS/GRT/DRT and wholeVM end-to-end composition"
- ]
+ ],
+ "production_protocol_caveat": {
+  "status": "CONDITIONAL_BUDGET_NOT_COMPLETE_NATIVE_ABI",
+  "authority": "qwen_die/x_delivery actualproductionx_epoch{k18,j3} 21bits; 2026-10-13 followup",
+  "data_bits_per_root": 128,
+  "roots": 32,
+  "halves": 2,
+  "common_instruction_bits": 380,
+  "common_instruction_packing": "ib379 + ib_go1; independent from root fillvalid",
+  "response_options": {
+   "opaque16": {
+    "native_bits": 147,
+    "fallback_bits": 149,
+    "requires": "actual full21coords + instruction/VMversion dictionary; no reuse until allreturns/drain; resetflush; NOTproven"
+   },
+   "direct21": {
+    "native_bits": 152,
+    "fallback_bits": 154,
+    "requires": "21coordinate fields, additional context only omitted with oneinstruction-inflight/freshness proof; NOTproven"
+   }
+  },
+  "request": "full21coordinates/full96address or proven replicatedissue-state; no assignedfinalpins",
+  "source_tags": "prototype epoch16 only; unit echo/alignment checks do not prove tokencontroller/native freshness"
+ }
 }

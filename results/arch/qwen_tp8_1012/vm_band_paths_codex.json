@@ -3,7 +3,7 @@
  "status": "INCOMPLETE_PHYSICAL_CONTRACT",
  "qualification": false,
  "source": "results/arch/qwen_tp8_1012/vm_band_composition_codex.json",
- "source_sha256": "a1867fe387a6d485eb92d157af90d9eaed9a6322bfbaa84e2b43858460a3e984",
+ "source_sha256": "a8b9fc1e9bc2a7ad13eb9efdeb0c989290da1e4f73a1867eeba53229ed6d6eac",
  "lef_sha256": {
   "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t/ot_qfd_vm_xrelay_t.lef": "5b9c49d7b139b7196fa20e4920590dfcd08f18062be377f6e4421e8d6b35447e",
   "physical/ref_tile/qfd_vm_xpad2_t/views/ot_qfd_vm_xpad2_t/ot_qfd_vm_xpad2_t.lef": "acc2e5b4932504eda7bfa19b425b1d9834b896e5b619ef29fab68d0438031e58",
@@ -26,26 +26,1469 @@
  "lanes": 4096,
  "boundary_bits": 32768,
  "path_bits_by_kind": {
+  "regional_boundary_lower_bound": 32768,
   "provisional_column_input": 32768,
   "closed_tile_to_closed_tile": 71336
  },
  "max_length_by_kind": {
+  "regional_boundary_lower_bound": 615.6,
   "provisional_column_input": 498.564,
   "closed_tile_to_closed_tile": 497.388
  },
- "over500": [],
+ "over500": [
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p17",
+   "bit": 0,
+   "A": [
+    15370.518,
+    17870.172
+   ],
+   "B": [
+    15642.762,
+    18179.82
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p17|7|2|360",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 360,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 581.892,
+   "pair_reach_um": 469.3483,
+   "pair_slack_ps": -85.5332
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p17",
+   "bit": 1,
+   "A": [
+    15370.518,
+    17870.268
+   ],
+   "B": [
+    15642.762,
+    18179.916
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p17|7|2|360",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 360,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 581.892,
+   "pair_reach_um": 463.9853,
+   "pair_slack_ps": -89.6091
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p17",
+   "bit": 2,
+   "A": [
+    15370.518,
+    17870.364
+   ],
+   "B": [
+    15642.762,
+    18180.012
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p17|7|2|360",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 360,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 581.892,
+   "pair_reach_um": 466.8229,
+   "pair_slack_ps": -87.4525
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p17",
+   "bit": 3,
+   "A": [
+    15370.518,
+    17870.46
+   ],
+   "B": [
+    15642.762,
+    18180.108
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p17|7|2|360",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 360,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 581.892,
+   "pair_reach_um": 467.731,
+   "pair_slack_ps": -86.7624
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p17",
+   "bit": 4,
+   "A": [
+    15370.518,
+    17870.556
+   ],
+   "B": [
+    15642.762,
+    18180.204
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p17|7|2|360",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 360,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 581.892,
+   "pair_reach_um": 453.6314,
+   "pair_slack_ps": -97.478
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p17",
+   "bit": 5,
+   "A": [
+    15370.518,
+    17870.652
+   ],
+   "B": [
+    15642.762,
+    18180.3
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p17|7|2|360",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 360,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 581.892,
+   "pair_reach_um": 461.6794,
+   "pair_slack_ps": -91.3616
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p17",
+   "bit": 6,
+   "A": [
+    15370.518,
+    17870.748
+   ],
+   "B": [
+    15642.762,
+    18180.396
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p17|7|2|360",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 360,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 581.892,
+   "pair_reach_um": 456.7983,
+   "pair_slack_ps": -95.0712
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p17",
+   "bit": 7,
+   "A": [
+    15370.518,
+    17870.844
+   ],
+   "B": [
+    15642.762,
+    18180.492
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p17|7|2|360",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 360,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 581.892,
+   "pair_reach_um": 466.1311,
+   "pair_slack_ps": -87.9783
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p20",
+   "bit": 0,
+   "A": [
+    15370.518,
+    17870.94
+   ],
+   "B": [
+    15642.762,
+    18153.708
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 8,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p20|7|2|0",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 555.012,
+   "pair_reach_um": 471.1699,
+   "pair_slack_ps": -63.72
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p20",
+   "bit": 1,
+   "A": [
+    15370.518,
+    17871.036
+   ],
+   "B": [
+    15642.762,
+    18153.804
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 8,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p20|7|2|0",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 555.012,
+   "pair_reach_um": 460.1139,
+   "pair_slack_ps": -72.1225
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p20",
+   "bit": 2,
+   "A": [
+    15370.518,
+    17871.132
+   ],
+   "B": [
+    15642.762,
+    18153.9
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 8,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p20|7|2|0",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 555.012,
+   "pair_reach_um": 470.8043,
+   "pair_slack_ps": -63.9979
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p20",
+   "bit": 3,
+   "A": [
+    15370.518,
+    17871.228
+   ],
+   "B": [
+    15642.762,
+    18153.996
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 8,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p20|7|2|0",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 555.012,
+   "pair_reach_um": 474.8206,
+   "pair_slack_ps": -60.9454
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p20",
+   "bit": 4,
+   "A": [
+    15370.518,
+    17871.324
+   ],
+   "B": [
+    15642.762,
+    18154.092
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 8,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p20|7|2|0",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 555.012,
+   "pair_reach_um": 470.3593,
+   "pair_slack_ps": -64.336
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p20",
+   "bit": 5,
+   "A": [
+    15370.518,
+    17871.42
+   ],
+   "B": [
+    15642.762,
+    18154.188
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 8,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p20|7|2|0",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 555.012,
+   "pair_reach_um": 468.287,
+   "pair_slack_ps": -65.911
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p20",
+   "bit": 6,
+   "A": [
+    15370.518,
+    17871.516
+   ],
+   "B": [
+    15642.762,
+    18154.284
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 8,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p20|7|2|0",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 555.012,
+   "pair_reach_um": 472.5766,
+   "pair_slack_ps": -62.6509
+  },
+  {
+   "kind": "regional_boundary_lower_bound",
+   "lane": "vm_g0_b0_xf0>p20",
+   "bit": 7,
+   "A": [
+    15370.518,
+    17871.612
+   ],
+   "B": [
+    15642.762,
+    18154.38
+   ],
+   "launch": {
+    "bay": "vm_g1_sB_8",
+    "visit": 6,
+    "slot": 0,
+    "kind": "E",
+    "bit0": 8,
+    "stages": 1
+   },
+   "capture": {
+    "bay": "vm_pad_15_S0",
+    "visit": 7,
+    "placement_id": "vm_g0_b0_xf0>p20|7|2|0",
+    "bit_permutation": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "slot": 2,
+    "kind": "E",
+    "bit0": 0,
+    "stages": 1
+   },
+   "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+   "length_um": 555.012,
+   "pair_reach_um": 451.808,
+   "pair_slack_ps": -78.4351
+  }
+ ],
  "pair_setup": {
   "corner": "tt",
   "wire_ps_per_um": 0.76,
   "clock": "phi-R compensated; boundary spread included",
   "missing": 0,
-  "failed_bits": 0,
-  "worst_slack_ps": 0.1521,
-  "failures": [],
+  "failed_bits": 8325,
+  "failed_by_kind": {
+   "regional_boundary_lower_bound": 8325
+  },
+  "worst_slack_ps": -121.6365,
+  "failures": [
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf0>p26",
+    "bit": 0,
+    "A": [
+     16934.358,
+     17871.708
+    ],
+    "B": [
+     17131.002,
+     18163.692
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 16,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf0>p26|11|3|40",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 40,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 488.628,
+    "pair_reach_um": 468.2418,
+    "pair_slack_ps": -15.4935
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf0>p26",
+    "bit": 1,
+    "A": [
+     16934.358,
+     17871.804
+    ],
+    "B": [
+     17131.002,
+     18163.788
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 16,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf0>p26|11|3|40",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 40,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 488.628,
+    "pair_reach_um": 468.7891,
+    "pair_slack_ps": -15.0776
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf0>p26",
+    "bit": 2,
+    "A": [
+     16934.358,
+     17871.9
+    ],
+    "B": [
+     17131.002,
+     18163.884
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 16,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf0>p26|11|3|40",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 40,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 488.628,
+    "pair_reach_um": 467.828,
+    "pair_slack_ps": -15.808
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf0>p26",
+    "bit": 3,
+    "A": [
+     16934.358,
+     17871.996
+    ],
+    "B": [
+     17131.002,
+     18163.98
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 16,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf0>p26|11|3|40",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 40,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 488.628,
+    "pair_reach_um": 466.0783,
+    "pair_slack_ps": -17.1378
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf0>p26",
+    "bit": 4,
+    "A": [
+     16934.358,
+     17872.092
+    ],
+    "B": [
+     17131.002,
+     18164.076
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 16,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf0>p26|11|3|40",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 40,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 488.628,
+    "pair_reach_um": 458.9813,
+    "pair_slack_ps": -22.5315
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf0>p26",
+    "bit": 5,
+    "A": [
+     16934.358,
+     17872.188
+    ],
+    "B": [
+     17131.002,
+     18164.172
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 16,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf0>p26|11|3|40",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 40,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 488.628,
+    "pair_reach_um": 463.2296,
+    "pair_slack_ps": -19.3028
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf0>p26",
+    "bit": 6,
+    "A": [
+     16934.358,
+     17872.284
+    ],
+    "B": [
+     17131.002,
+     18164.268
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 16,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf0>p26|11|3|40",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 40,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 488.628,
+    "pair_reach_um": 459.3936,
+    "pair_slack_ps": -22.2182
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf0>p26",
+    "bit": 7,
+    "A": [
+     16934.358,
+     17872.38
+    ],
+    "B": [
+     17131.002,
+     18164.364
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 16,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf0>p26|11|3|40",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 40,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 488.628,
+    "pair_reach_um": 468.3556,
+    "pair_slack_ps": -15.407
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf1>p26",
+    "bit": 0,
+    "A": [
+     16934.358,
+     17876.316
+    ],
+    "B": [
+     17131.002,
+     18165.228
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 32,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf1>p26|11|3|56",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 56,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 485.556,
+    "pair_reach_um": 451.2239,
+    "pair_slack_ps": -26.0924
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf1>p26",
+    "bit": 1,
+    "A": [
+     16934.358,
+     17876.412
+    ],
+    "B": [
+     17131.002,
+     18165.324
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 32,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf1>p26|11|3|56",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 56,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 485.556,
+    "pair_reach_um": 453.5285,
+    "pair_slack_ps": -24.3409
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf1>p26",
+    "bit": 2,
+    "A": [
+     16934.358,
+     17876.508
+    ],
+    "B": [
+     17131.002,
+     18165.42
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 32,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf1>p26|11|3|56",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 56,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 485.556,
+    "pair_reach_um": 450.6075,
+    "pair_slack_ps": -26.5609
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf1>p26",
+    "bit": 3,
+    "A": [
+     16934.358,
+     17876.604
+    ],
+    "B": [
+     17131.002,
+     18165.516
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 32,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf1>p26|11|3|56",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 56,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 485.556,
+    "pair_reach_um": 439.4173,
+    "pair_slack_ps": -35.0654
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf1>p26",
+    "bit": 4,
+    "A": [
+     16934.358,
+     17876.7
+    ],
+    "B": [
+     17131.002,
+     18165.612
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 32,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf1>p26|11|3|56",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 56,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 485.556,
+    "pair_reach_um": 453.5283,
+    "pair_slack_ps": -24.341
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf1>p26",
+    "bit": 5,
+    "A": [
+     16934.358,
+     17876.796
+    ],
+    "B": [
+     17131.002,
+     18165.708
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 32,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf1>p26|11|3|56",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 56,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 485.556,
+    "pair_reach_um": 453.4302,
+    "pair_slack_ps": -24.4156
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf1>p26",
+    "bit": 6,
+    "A": [
+     16934.358,
+     17876.892
+    ],
+    "B": [
+     17131.002,
+     18165.804
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 32,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf1>p26|11|3|56",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 56,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 485.556,
+    "pair_reach_um": 462.5116,
+    "pair_slack_ps": -17.5137
+   },
+   {
+    "kind": "regional_boundary_lower_bound",
+    "lane": "vm_g0_b0_xf1>p26",
+    "bit": 7,
+    "A": [
+     16934.358,
+     17876.988
+    ],
+    "B": [
+     17131.002,
+     18165.9
+    ],
+    "launch": {
+     "bay": "vm_g3_sW_8",
+     "visit": 10,
+     "slot": 0,
+     "kind": "E",
+     "bit0": 32,
+     "stages": 1
+    },
+    "capture": {
+     "bay": "vm_pad_25_S0",
+     "visit": 11,
+     "placement_id": "vm_g0_b0_xf1>p26|11|3|56",
+     "bit_permutation": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+     ],
+     "slot": 3,
+     "kind": "E",
+     "bit0": 56,
+     "stages": 1
+    },
+    "note": "real leaf pins; exact regional and band boundary pins/routed seam not assigned",
+    "length_um": 485.556,
+    "pair_reach_um": 475.235,
+    "pair_slack_ps": -7.844
+   }
+  ],
   "hold": "not yet measured on band routed parasitics"
  },
- "pg_occupancy": 0.1055989440105599,
- "pg_note": "conservative bothnet9.091pitch; actual die-phase contract pending",
+ "pg_occupancy": 0.105598944,
+ "pg_note": "actual pairedPG occupancy from authority receipt; band PG geometry not yet built",
+ "layer_grant": {
+  "path": "results/arch/qwen_tp8_1012/vm_cluster_layer_grant_1013.json",
+  "sha256": "436a02eb1250587711c955780cf4b5711c563de4d2d839909da042bd9e99d751",
+  "actual_pg_receipt": {
+   "source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/summary.json",
+   "sha256": "d74684965c957c563886b9b0bf4fec8c7fdb76146096b64ee4d870dd8b230fc0",
+   "lead_commit": "90240975c",
+   "csv_source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/stripes.csv",
+   "csv_sha256": "18f9bd34973bb982fffb0d9c1f59dfc05aa21d08101ba312cfdb72cb20707794",
+   "run_log_source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/run.log",
+   "run_log_sha256": "14d3f04dbe826ac68221360e4905b4c52d2d5565906ceabec050ba6d67053c87",
+   "ot_unit": "oth-ubuntu-294642-1791947794",
+   "exit": 0,
+   "source_odb": {
+    "host": "ot-epyc1tb",
+    "path": "/srv/opentallas-scratch/claude/qwen-tp8-die/it2/case_r22k/floorplan_pdn.odb",
+    "sha256": "41b2ebe3a239ddf8f51c067f6046b1638d7ac7f96b8209b4f9f2923a6fef9f55",
+    "hash_ot_unit": "oth-ubuntu-342278-1791949955",
+    "exit": 0,
+    "receipt_source": "results/arch/qwen_tp8_1013/pg_stripe_audit_1013/odb_sha256_receipt.log",
+    "receipt_sha256": "031563939a70a53b499b380922e46b3629266043f74af7c5b1bcf0090258c9e6"
+   }
+  },
+  "core_origin_um": [
+   0.0,
+   0.0
+  ]
+ },
  "combined_cut_model": {
   "route": "explicit x-then-y L, no router claim",
   "worst": {
@@ -60,25 +1503,25 @@
     "capacity_tracks": 2613.44,
     "ratio": 1.004041,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
    },
    "y": {
     "axis": "y",
-    "cut_um": 18182.88,
+    "cut_um": 18167.76,
     "span_um": [
-     14714.0,
-     14974.0
+     14194.0,
+     14454.0
     ],
-    "demand_bits": 1486,
-    "capacity_tracks": 6059.48,
-    "ratio": 0.245236,
+    "demand_bits": 2088,
+    "capacity_tracks": 5946.98,
+    "ratio": 0.351103,
     "layer_capacity": {
-     "M9": 2180.1025739742604,
+     "M9": 2180.102574,
      "M7": 3046.875,
-     "M5": 832.499999998593
+     "M5": 719.9999999987616
     }
    }
   },
@@ -94,7 +1537,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.603037,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -110,7 +1553,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.603037,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -126,7 +1569,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.603037,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -142,7 +1585,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.603037,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -158,7 +1601,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.603037,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -174,7 +1617,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.603037,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -190,7 +1633,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.603037,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -206,7 +1649,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.609159,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -222,7 +1665,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.609159,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -238,7 +1681,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.609159,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -254,7 +1697,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.609159,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -270,7 +1713,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.609159,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -286,7 +1729,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.609159,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -302,7 +1745,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.609159,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -318,7 +1761,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.618342,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -334,7 +1777,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.618342,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -350,7 +1793,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.618342,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -366,7 +1809,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.618342,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -382,7 +1825,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.618342,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -398,7 +1841,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.618342,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -414,7 +1857,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.618342,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -430,7 +1873,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.627525,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -446,7 +1889,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.740786,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -462,7 +1905,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.740786,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -478,7 +1921,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.740786,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -494,7 +1937,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.740786,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -510,7 +1953,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.740786,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -526,7 +1969,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.740786,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -542,7 +1985,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.740786,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -558,7 +2001,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.771397,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -574,7 +2017,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.83568,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -590,7 +2033,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.83568,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -606,7 +2049,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.83568,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -622,7 +2065,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.83568,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -638,7 +2081,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.83568,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -654,7 +2097,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.83568,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -670,7 +2113,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.83568,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -686,7 +2129,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -702,7 +2145,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -718,7 +2161,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -734,7 +2177,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -750,7 +2193,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -766,7 +2209,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -782,7 +2225,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -798,7 +2241,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66885,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -814,7 +2257,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.677651,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -830,7 +2273,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.679947,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -846,7 +2289,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.688747,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -862,7 +2305,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697165,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -878,7 +2321,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.705966,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -894,7 +2337,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.708262,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -910,7 +2353,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.677268,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -926,7 +2369,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.679564,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -942,7 +2385,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.670763,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -958,7 +2401,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.67459,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -974,7 +2417,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.671911,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -990,7 +2433,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.664259,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1006,7 +2449,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.664641,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1022,7 +2465,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.75877,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1038,7 +2481,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.775989,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1054,7 +2497,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.705201,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1070,7 +2513,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713619,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1086,7 +2529,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.722419,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1102,7 +2545,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.730837,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1118,7 +2561,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.739638,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1134,7 +2577,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.748056,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1150,7 +2593,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.753796,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1166,7 +2609,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.611152,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1182,7 +2625,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.617495,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1198,7 +2641,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1214,7 +2657,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1230,7 +2673,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1246,7 +2689,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1262,7 +2705,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1278,7 +2721,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1294,7 +2737,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1310,7 +2753,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1326,7 +2769,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1342,7 +2785,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1358,7 +2801,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1374,7 +2817,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1390,7 +2833,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1406,7 +2849,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1422,7 +2865,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1438,7 +2881,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1454,7 +2897,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1470,7 +2913,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1486,7 +2929,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1502,7 +2945,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1518,7 +2961,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.619977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1534,7 +2977,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.820375,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1550,7 +2993,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.820375,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1566,7 +3009,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.820375,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1582,7 +3025,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.820375,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1598,7 +3041,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.820375,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1614,7 +3057,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.820375,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1630,7 +3073,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.820375,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1646,7 +3089,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.648659,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1662,7 +3105,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.648659,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -1678,7 +3121,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1694,7 +3137,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1710,7 +3153,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1726,7 +3169,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1742,7 +3185,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1758,7 +3201,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1774,7 +3217,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1790,7 +3233,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.646657,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1806,7 +3249,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648953,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1822,7 +3265,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.640152,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1838,7 +3281,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.647805,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1854,7 +3297,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.647423,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1870,7 +3313,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.640535,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1886,7 +3329,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.649336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1902,7 +3345,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66885,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1918,7 +3361,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.677651,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1934,7 +3377,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.686069,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1950,7 +3393,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.69487,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1966,7 +3409,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.703288,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1982,7 +3425,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.712088,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -1998,7 +3441,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.720506,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2014,7 +3457,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624464,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2030,7 +3473,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624464,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2046,7 +3489,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624464,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2062,7 +3505,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624464,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2078,7 +3521,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624464,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2094,7 +3537,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624464,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2110,7 +3553,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624464,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2126,7 +3569,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.743847,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2142,7 +3585,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.633648,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2158,7 +3601,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.633648,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2174,7 +3617,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.633648,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2190,7 +3633,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.633648,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2206,7 +3649,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.633648,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2222,7 +3665,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.633648,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2238,7 +3681,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.633648,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2254,7 +3697,7 @@
     "capacity_tracks": 5294.48,
     "ratio": 0.619513,
     "layer_capacity": {
-     "M8": 2180.1025739742604,
+     "M8": 2180.102574,
      "M6": 3046.875,
      "M4": 67.49999999988745
     }
@@ -2270,7 +3713,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2286,7 +3729,7 @@
     "capacity_tracks": 5294.48,
     "ratio": 0.619513,
     "layer_capacity": {
-     "M8": 2180.1025739742604,
+     "M8": 2180.102574,
      "M6": 3046.875,
      "M4": 67.49999999988745
     }
@@ -2302,7 +3745,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2318,7 +3761,7 @@
     "capacity_tracks": 5294.48,
     "ratio": 0.619513,
     "layer_capacity": {
-     "M8": 2180.1025739742604,
+     "M8": 2180.102574,
      "M6": 3046.875,
      "M4": 67.49999999988745
     }
@@ -2334,7 +3777,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2350,7 +3793,7 @@
     "capacity_tracks": 5294.48,
     "ratio": 0.619513,
     "layer_capacity": {
-     "M8": 2180.1025739742604,
+     "M8": 2180.102574,
      "M6": 3046.875,
      "M4": 67.49999999988745
     }
@@ -2366,7 +3809,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2382,7 +3825,7 @@
     "capacity_tracks": 5294.48,
     "ratio": 0.619513,
     "layer_capacity": {
-     "M8": 2180.1025739742604,
+     "M8": 2180.102574,
      "M6": 3046.875,
      "M4": 67.49999999988745
     }
@@ -2398,7 +3841,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2414,7 +3857,7 @@
     "capacity_tracks": 5294.48,
     "ratio": 0.619513,
     "layer_capacity": {
-     "M8": 2180.1025739742604,
+     "M8": 2180.102574,
      "M6": 3046.875,
      "M4": 67.49999999988745
     }
@@ -2430,7 +3873,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2446,7 +3889,7 @@
     "capacity_tracks": 5294.48,
     "ratio": 0.619513,
     "layer_capacity": {
-     "M8": 2180.1025739742604,
+     "M8": 2180.102574,
      "M6": 3046.875,
      "M4": 67.49999999988745
     }
@@ -2462,7 +3905,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2478,7 +3921,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2494,7 +3937,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.689895,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2510,7 +3953,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.698313,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2526,7 +3969,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.707114,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2542,7 +3985,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.715532,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2558,7 +4001,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.724333,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2574,7 +4017,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.732751,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2590,7 +4033,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.735429,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2606,7 +4049,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710175,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2622,7 +4065,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710175,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2638,7 +4081,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710175,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2654,7 +4097,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710175,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2670,7 +4113,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710175,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2686,7 +4129,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710175,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2702,7 +4145,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710175,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2718,7 +4161,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.783641,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2734,7 +4177,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.789764,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2750,7 +4193,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.789764,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2766,7 +4209,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.789764,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2782,7 +4225,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.789764,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2798,7 +4241,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.789764,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2814,7 +4257,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.789764,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2830,7 +4273,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.789764,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2846,7 +4289,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.783641,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2862,7 +4305,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2878,7 +4321,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2894,7 +4337,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2910,7 +4353,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2926,7 +4369,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2942,7 +4385,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2958,7 +4401,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2974,7 +4417,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.68339,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -2990,7 +4433,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.685686,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3006,7 +4449,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.676886,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3022,7 +4465,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.684538,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3038,7 +4481,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.684156,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3054,7 +4497,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.675738,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3070,7 +4513,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.666937,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3086,7 +4529,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.731603,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3102,7 +4545,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.689895,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3118,7 +4561,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.698313,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3134,7 +4577,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.707114,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3150,7 +4593,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.715532,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3166,7 +4609,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.724333,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3182,7 +4625,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.732751,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3198,7 +4641,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.735429,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3214,7 +4657,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.811191,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3230,7 +4673,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.819992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3246,7 +4689,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3262,7 +4705,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3278,7 +4721,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3294,7 +4737,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3310,7 +4753,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3326,7 +4769,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3342,7 +4785,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3358,7 +4801,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.721468,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -3374,7 +4817,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.721468,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -3390,7 +4833,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.721468,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -3406,7 +4849,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.930574,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3422,7 +4865,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.930574,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3438,7 +4881,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.930574,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3454,7 +4897,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.930574,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3470,7 +4913,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.930574,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3486,7 +4929,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.930574,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3502,7 +4945,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.930574,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3518,7 +4961,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.684538,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3534,7 +4977,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3550,7 +4993,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3566,7 +5009,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704435,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3582,7 +5025,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.696017,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3598,7 +5041,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.687217,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3614,7 +5057,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.678799,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3630,7 +5073,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.669998,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3646,7 +5089,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.681095,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3662,7 +5105,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.686834,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3678,7 +5121,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.695252,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3694,7 +5137,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3710,7 +5153,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.70941,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3726,7 +5169,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.71821,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3742,7 +5185,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.726628,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3758,7 +5201,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3774,7 +5217,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3790,7 +5233,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3806,7 +5249,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3822,7 +5265,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3838,7 +5281,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3854,7 +5297,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3870,7 +5313,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3886,7 +5329,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.676503,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3902,7 +5345,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.676503,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3918,7 +5361,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.676503,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3934,7 +5377,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.676503,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3950,7 +5393,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.676503,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3966,7 +5409,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.676503,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3982,7 +5425,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.676503,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -3998,7 +5441,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.671146,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4014,7 +5457,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4030,7 +5473,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658519,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4046,7 +5489,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.650101,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4062,7 +5505,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.6413,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4078,7 +5521,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.632882,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4094,7 +5537,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624082,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4110,7 +5553,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.6413,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4126,7 +5569,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.650101,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4142,7 +5585,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658519,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4158,7 +5601,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4174,7 +5617,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.675738,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4190,7 +5633,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.684538,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4206,7 +5649,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.692956,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4222,7 +5665,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.701757,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4238,7 +5681,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4254,7 +5697,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4270,7 +5713,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4286,7 +5729,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4302,7 +5745,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4318,7 +5761,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4334,7 +5777,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4350,7 +5793,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4366,7 +5809,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4382,7 +5825,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4398,7 +5841,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4414,7 +5857,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4430,7 +5873,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4446,7 +5889,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4462,7 +5905,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.727776,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4478,7 +5921,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4494,7 +5937,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710558,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4510,7 +5953,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.70214,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4526,7 +5969,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.693339,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4542,7 +5985,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.684921,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4558,7 +6001,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.67612,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4574,7 +6017,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.690278,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4590,7 +6033,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.699079,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4606,7 +6049,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.701374,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4622,7 +6065,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.710175,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4638,7 +6081,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.718593,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4654,7 +6097,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.727394,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4670,7 +6113,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.735812,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4686,7 +6129,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4702,7 +6145,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4718,7 +6161,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4734,7 +6177,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4750,7 +6193,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4766,7 +6209,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4782,7 +6225,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.756092,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4798,7 +6241,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4814,7 +6257,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4830,7 +6273,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4846,7 +6289,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4862,7 +6305,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4878,7 +6321,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4894,7 +6337,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4910,7 +6353,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.706349,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4926,7 +6369,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4942,7 +6385,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.68913,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4958,7 +6401,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.680712,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4974,7 +6417,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.671911,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -4990,7 +6433,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.663493,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5006,7 +6449,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.654693,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5022,7 +6465,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.671911,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5038,7 +6481,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.680712,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5054,7 +6497,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.68913,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5070,7 +6513,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5086,7 +6529,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.706349,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5102,7 +6545,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.712088,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5118,7 +6561,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.720506,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5134,7 +6577,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630586,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5150,7 +6593,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630586,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5166,7 +6609,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630586,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5182,7 +6625,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630586,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5198,7 +6641,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630586,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5214,7 +6657,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630586,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5230,7 +6673,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630586,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5246,7 +6689,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.749969,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5262,7 +6705,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5278,7 +6721,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5294,7 +6737,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5310,7 +6753,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5326,7 +6769,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5342,7 +6785,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5358,7 +6801,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5374,7 +6817,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648188,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5390,7 +6833,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63977,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5406,7 +6849,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630969,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5422,7 +6865,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.622551,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5438,7 +6881,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.61375,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5454,7 +6897,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.605332,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5470,7 +6913,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.663876,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5486,7 +6929,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.628673,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5502,7 +6945,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.637091,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5518,7 +6961,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5534,7 +6977,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.65431,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5550,7 +6993,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.663111,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5566,7 +7009,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.671529,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5582,7 +7025,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.677268,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5598,7 +7041,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5614,7 +7057,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5630,7 +7073,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5646,7 +7089,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5662,7 +7105,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5678,7 +7121,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5694,7 +7137,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5710,7 +7153,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648953,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5726,7 +7169,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648953,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5742,7 +7185,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648953,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5758,7 +7201,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648953,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5774,7 +7217,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648953,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5790,7 +7233,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648953,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5806,7 +7249,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.648953,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5822,7 +7265,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5838,7 +7281,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.774458,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5854,7 +7297,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5870,7 +7313,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5886,7 +7329,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5902,7 +7345,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5918,7 +7361,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5934,7 +7377,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5950,7 +7393,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.645892,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5966,7 +7409,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.681477,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5982,7 +7425,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.686069,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -5998,7 +7441,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.69487,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6014,7 +7457,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.692574,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6030,7 +7473,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.693722,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6046,7 +7489,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.70214,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6062,7 +7505,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.707879,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6078,7 +7521,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6094,7 +7537,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6110,7 +7553,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6126,7 +7569,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6142,7 +7585,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6158,7 +7601,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6174,7 +7617,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6190,7 +7633,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6206,7 +7649,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.725481,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6222,7 +7665,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6238,7 +7681,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6254,7 +7697,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6270,7 +7713,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6286,7 +7729,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6302,7 +7745,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6318,7 +7761,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.719358,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6334,7 +7777,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6350,7 +7793,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6366,7 +7809,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6382,7 +7825,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6398,7 +7841,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6414,7 +7857,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6430,7 +7873,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.704053,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6446,7 +7889,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.62676,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6462,7 +7905,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.618342,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6478,7 +7921,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.609541,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6494,7 +7937,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.601123,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6510,7 +7953,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.601123,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6526,7 +7969,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.606863,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6542,7 +7985,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658136,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6558,7 +8001,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658136,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6574,7 +8017,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658136,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6590,7 +8033,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658136,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6606,7 +8049,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658136,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6622,7 +8065,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658136,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6638,7 +8081,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.658136,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6654,7 +8097,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.615564,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -6670,7 +8113,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.615564,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -6686,7 +8129,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.615564,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -6702,7 +8145,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.615564,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -6718,7 +8161,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6734,7 +8177,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6750,7 +8193,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6766,7 +8209,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6782,7 +8225,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6798,7 +8241,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6814,7 +8257,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.713236,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6830,7 +8273,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.814252,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6846,7 +8289,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6862,7 +8305,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6878,7 +8321,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6894,7 +8337,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6910,7 +8353,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6926,7 +8369,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6942,7 +8385,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6958,7 +8401,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6974,7 +8417,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -6990,7 +8433,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7006,7 +8449,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7022,7 +8465,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7038,7 +8481,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7054,7 +8497,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.652014,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7070,7 +8513,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.68186,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7086,7 +8529,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.673442,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7102,7 +8545,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.664641,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7118,7 +8561,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.656223,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7134,7 +8577,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.647423,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7150,7 +8593,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.639004,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7166,7 +8609,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.630204,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7182,7 +8625,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.641683,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7198,7 +8641,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.63403,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7214,7 +8657,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.642831,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7230,7 +8673,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.640535,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7246,7 +8689,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.631734,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7262,7 +8705,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.623316,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7278,7 +8721,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.62523,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7294,7 +8737,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.737725,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7310,7 +8753,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7326,7 +8769,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7342,7 +8785,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7358,7 +8801,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7374,7 +8817,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7390,7 +8833,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7406,7 +8849,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.700992,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7422,7 +8865,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.604533,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -7438,7 +8881,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.604533,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -7454,7 +8897,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7470,7 +8913,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7486,7 +8929,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7502,7 +8945,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7518,7 +8961,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7534,7 +8977,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7550,7 +8993,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.878536,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7566,7 +9009,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.741325,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -7582,7 +9025,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.741325,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -7598,7 +9041,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.741325,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -7614,7 +9057,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.933635,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7630,7 +9073,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.933635,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7646,7 +9089,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.933635,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7662,7 +9105,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.933635,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7678,7 +9121,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.933635,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7694,7 +9137,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.933635,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7710,7 +9153,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.933635,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7726,7 +9169,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.834915,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7742,7 +9185,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.826497,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7758,7 +9201,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.817696,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7774,7 +9217,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.809278,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7790,7 +9233,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.800477,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7806,7 +9249,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.792059,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7822,7 +9265,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.783259,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7838,7 +9281,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.791677,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7854,7 +9297,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.784024,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7870,7 +9313,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.792825,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7886,7 +9329,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.790529,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7902,7 +9345,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.781728,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7918,7 +9361,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.77331,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7934,7 +9377,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.775223,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7950,7 +9393,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7966,7 +9409,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7982,7 +9425,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -7998,7 +9441,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8014,7 +9457,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8030,7 +9473,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8046,7 +9489,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.697931,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8062,7 +9505,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.622183,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -8078,7 +9521,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.622183,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -8094,7 +9537,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.622183,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -8110,7 +9553,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.795886,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8126,7 +9569,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.795886,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8142,7 +9585,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.795886,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8158,7 +9601,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.795886,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8174,7 +9617,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.795886,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8190,7 +9633,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.795886,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8206,7 +9649,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.795886,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8222,7 +9665,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.801243,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8238,7 +9681,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.792825,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8254,7 +9697,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.784024,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8270,7 +9713,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.775606,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8286,7 +9729,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.766805,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8302,7 +9745,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.758387,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8318,7 +9761,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.749587,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8334,7 +9777,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.767188,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8350,7 +9793,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759535,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8366,7 +9809,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.768336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8382,7 +9825,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.76604,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8398,7 +9841,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.757239,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8414,7 +9857,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.748821,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8430,7 +9873,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.744612,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8446,7 +9889,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.628802,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -8462,7 +9905,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.635146,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -8478,7 +9921,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.869352,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8494,7 +9937,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.869352,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8510,7 +9953,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.869352,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8526,7 +9969,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.869352,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8542,7 +9985,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.869352,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8558,7 +10001,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.869352,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8574,7 +10017,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.869352,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8590,7 +10033,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.688373,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -8606,7 +10049,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.688373,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -8622,7 +10065,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.688373,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -8638,7 +10081,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.936696,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8654,7 +10097,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.936696,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8670,7 +10113,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.936696,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8686,7 +10129,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.936696,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8702,7 +10145,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.936696,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8718,7 +10161,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.936696,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8734,7 +10177,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.936696,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8750,7 +10193,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.614516,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8766,7 +10209,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.606098,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8782,7 +10225,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.6413,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8798,7 +10241,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.6325,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8814,7 +10257,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624847,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8830,7 +10273,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.633648,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8846,7 +10289,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.631352,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8862,7 +10305,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.622551,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8878,7 +10321,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.614133,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8894,7 +10337,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.768336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8910,7 +10353,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.768336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8926,7 +10369,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.768336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8942,7 +10385,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.768336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8958,7 +10401,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.768336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8974,7 +10417,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.768336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -8990,7 +10433,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.768336,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9006,7 +10449,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.617771,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -9022,7 +10465,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.617771,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -9038,7 +10481,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 1.004041,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9054,7 +10497,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 1.004041,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9070,7 +10513,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 1.004041,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9086,7 +10529,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 1.004041,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9102,7 +10545,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 1.004041,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9118,7 +10561,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 1.004041,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9134,7 +10577,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 1.004041,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9150,7 +10593,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.606739,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -9166,7 +10609,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.606739,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -9182,7 +10625,7 @@
     "capacity_tracks": 3625.94,
     "ratio": 0.606739,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 1079.9999999982751
     }
@@ -9198,7 +10641,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9214,7 +10657,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9230,7 +10673,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9246,7 +10689,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9262,7 +10705,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9278,7 +10721,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9294,7 +10737,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.759153,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9310,7 +10753,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.632882,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9326,7 +10769,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.624464,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9342,7 +10785,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.615664,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9358,7 +10801,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.607246,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9374,7 +10817,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.621021,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9390,7 +10833,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9406,7 +10849,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9422,7 +10865,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9438,7 +10881,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9454,7 +10897,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9470,7 +10913,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9486,7 +10929,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.66732,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9502,7 +10945,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.670381,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9518,7 +10961,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.670381,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9534,7 +10977,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.670381,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9550,7 +10993,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.670381,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9566,7 +11009,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.670381,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9582,7 +11025,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.670381,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9598,7 +11041,7 @@
     "capacity_tracks": 2613.44,
     "ratio": 0.670381,
     "layer_capacity": {
-     "M8": 1061.8776537234578,
+     "M8": 1061.8776537359952,
      "M6": 1484.0624999999932,
      "M4": 67.49999999988745
     }
@@ -9613,7 +11056,7 @@
  "root_payload_coverage": 0,
  "all_bit_details": {
   "path": "results/arch/qwen_tp8_1012/vm_band_paths_codex.details.json.gz",
-  "sha256": "f9bde7314d4ed8ccee56bba91a08187b0b1658dc82e7db6fb66f2c3892ed2237"
+  "sha256": "cde5dba474104090af442a0162893a5153b25ce8dd2840ecfd1ed22cb1a86add"
  },
- "over500_count": 0
+ "over500_count": 5136
 }

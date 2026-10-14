@@ -1,0 +1,5 @@
+PASS integration SMAX=9 MUT=0 actual_columns=32 actual_source_roots=32 fan_children=116 actual_padtiles=270 payload=4096 lane_checks=16216064 checks=126688 valids=2663 stalls=1017
+- rtl/qwen_sys/vm_plane_20261013/band_integration/tb_qfd_vm_band_integration.sv:17544: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 8.392 s; speed 4.767 us/s
+- Verilator: cpu 8.392 s on 1 threads; allocated 18 MB

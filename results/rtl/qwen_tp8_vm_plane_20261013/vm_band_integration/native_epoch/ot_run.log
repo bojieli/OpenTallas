@@ -1,0 +1,6 @@
+FAIL integration SMAX=9 MUT=2 errors=3959 checks=126688 lane_checks=16216064
+[40007000] %Fatal: tb_qfd_vm_band_integration.sv:17543: Assertion failed in tb_qfd_vm_band_integration: FAIL integration
+%Error: rtl/qwen_sys/vm_plane_20261013/band_integration/tb_qfd_vm_band_integration.sv:17543: Verilog $stop
+Aborting...
+INTEGRATION_MODE=native_epoch RUN_EXIT=1
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-440382-1791951287): exit 0

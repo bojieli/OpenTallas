@@ -173,13 +173,19 @@ def main():
            'end end']
     for i,s in enumerate(segments):
         d=s['stages']; inp=f'{s["input"][0]}[{s["input"][1]} +: 8]'
-        col=int(s['output'][0].split('_')[0][3:]);off=s['output'][1]+(512 if s['output'][0].endswith('hi') else 0)
+        # Derive the golden bank-major vector from the immutable lane identity,
+        # not from the candidate's chosen column-wire destination tuple.
+        source,plane=s['lane'].split('>')
+        rg,bk,xf=map(int,re.fullmatch(r'vm_g(\d+)_b(\d+)_xf(\d+)',source).groups())
+        col=int(plane[1:]);off=16*(8*rg+bk)+8*xf
+        golden_wire=f'col{col}_d_'+('lo' if off<512 else 'hi')
+        golden_offset=off%512
         tb += [f'reg [{d*8-1}:0] delay{i}=0;',
                f'always @(posedge clk) if(me_prev) delay{i}<='+
                (f'{{delay{i}[{d*8-9}:0],{inp}}};' if d>1 else inp+';'),
                f'assign ref_inputs[{col*1024+off} +: 8]=delay{i}[{d*8-8} +: 8];',
                f'always @(posedge clk) begin #1;if(cyc>40)begin lane_checks=lane_checks+1;',
-               f'if(dut.{s["output"][0]}[{s["output"][1]} +: 8] !== delay{i}[{d*8-8} +: 8]) errors=errors+1;end end']
+               f'if(dut.{golden_wire}[{golden_offset} +: 8] !== delay{i}[{d*8-8} +: 8]) errors=errors+1;end end']
     for col in range(32):
         tb += [f'wire [1007:0] bv{col};wire [NX-1:0] line{col};reg [127:0] expected2_{col}=0,expected3_{col}=0;',
                f'ot_qfd_vm_xplane_t #(.NRB(64)) ref_p{col}(.clk(clk),.me_e(me),.d(ref_inputs[{col*1024} +: 1024]),.c_a(c_a),.c_nv(c_nv),.q(bv{col}));',

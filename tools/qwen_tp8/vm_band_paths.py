@@ -14,6 +14,7 @@ import json
 import math
 from pathlib import Path
 from vm_lef_pins import read
+from vm_bay_cluster import VIEW
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools/hier_contract'))
 from pinreg_audit import parse_lib, clock_refs, pin_metrics
@@ -38,6 +39,16 @@ def main():
     comp = json.loads((ROOT/file).read_text())
     x0,y0=comp['origin_um'];W,H=comp['outline_um']
     children = {(c['bay'],c['slot']):c for c in comp['children'] if 'bay' in c}
+    plan=json.loads((ROOT/'results/arch/qwen_tp8_1012/vm_leaf_plan_claude.json').read_text())
+    packing=json.loads((ROOT/'results/arch/qwen_tp8_1012/vm_bay_tiles_claude.json').read_text())
+    allbays={b['n']:b for b in plan['x_relay_bays']}
+    # Region lane leaf placements stand unchanged in the current rg6 pilot;
+    # the b6 input-core relocation affects no X lane leaf. This is an exact
+    # leaf-pin lower bound, still NOT the two hardened clusters' routed seam.
+    for bn,ts in packing['bay_tiles'].items():
+        if allbays[bn].get('padrow'):continue
+        for t in ts:
+            children[bn,t['slot']]=dict(view=VIEW[t['kind']],at=[allbays[bn]['x']-x0+t['slot']*21.6,allbays[bn]['y']-y0])
     colchildren={int(c['inst'][3:]):c for c in comp['children'] if c['inst'].startswith('u_c')}
     viewpins={}; hashes={}
     for c in children.values():
@@ -59,6 +70,14 @@ def main():
             # Boundary inputs lack assigned physical pins: record, do not certify.
             boundary.append(dict(lane=s['lane'],bit=bit,port=s['input'],peer=s['predecessor'],
                                  first_visit=s['first_visit'],destination=pin(path[0],'d',bit)))
+            unordered=packing['lane_chain'][s['lane']]
+            original=sorted(unordered,key=lambda q:q['visit'])
+            if s['first_visit']:
+                v=original[s['first_visit']-1]
+                launch=dict(bay=v['bay'],visit=v['visit'],**v['tiles'][-1])
+                edges.append(dict(kind='regional_boundary_lower_bound',lane=s['lane'],bit=bit,
+                    A=pin(launch,'q',bit),B=pin(path[0],'d',bit),launch=launch,capture=path[0],
+                    note='real leaf pins; exact regional and band boundary pins/routed seam not assigned'))
             for k in range(len(path)-1):
                 edges.append(dict(kind='closed_tile_to_closed_tile',lane=s['lane'],bit=bit,
                     A=pin(path[k],'q',bit),B=pin(path[k+1],'d',bit),
@@ -91,7 +110,7 @@ def main():
         return timing[view]
     missing_timing=[];pair_failures=[]
     for e in edges:
-        if e['kind']!='closed_tile_to_closed_tile':continue
+        if e['kind'] not in ('closed_tile_to_closed_tile','regional_boundary_lower_bound'):continue
         la,ca=e['launch'],e['capture'];lc=children[la['bay'],la['slot']];cc=children[ca['bay'],ca['slot']]
         lm,lr=metrics(lc['view']);cm,cr=metrics(cc['view'])
         lp=lm[f'q[{la["bit0"]+la.get("bit_permutation",list(range(8)))[e["bit"]]}]'];cp=cm[f'd[{ca["bit0"]+ca.get("bit_permutation",list(range(8)))[e["bit"]]}]']
@@ -112,7 +131,12 @@ def main():
     # Closed M5 children block lower routing layers. Cap upper layers for BOTH
     # net-specific 0.48/9.091 stripes. This conservative occupancy is 10.56%,
     # pending resolution of the grant's 5.3% versus actual net-specific geometry.
-    pg_fraction=2*.48/9.091
+    grantfile=ROOT/'results/arch/qwen_tp8_1012/vm_cluster_layer_grant_1013.json'
+    grant=json.loads(grantfile.read_text())
+    assert grant['no_die_signal_through_traffic'] and grant['die_pg_layers']==['M8','M9']
+    assert 'qfd_vm_band' in grant['masters'] and grant['signal_cap']=='M9'
+    pg_fraction=grant['die_pg']['combined_track_fraction']
+    assert abs(pg_fraction-2*grant['die_pg']['width_um']/grant['die_pg']['pitch_um'])<1e-8
     blocks=[(x0+c['at'][0],y0+c['at'][1],x0+c['at'][0]+c['outline_um'][0],
              y0+c['at'][1]+c['outline_um'][1]) for c in comp['children']]
     horizontal=[];vertical=[]
@@ -174,9 +198,12 @@ def main():
         over500=[e for e in edges if e['length_um']>500],
         pair_setup=dict(corner='tt',wire_ps_per_um=.76,clock='phi-R compensated; boundary spread included',
                         missing=len(missing_timing),failed_bits=len(pair_failures),
+                        failed_by_kind=dict(collections.Counter(e['kind'] for e in pair_failures)),
                         worst_slack_ps=min((e['pair_slack_ps'] for e in edges if 'pair_slack_ps' in e),default=None),
                         failures=pair_failures,hold='not yet measured on band routed parasitics'),
-        pg_occupancy=pg_fraction,pg_note='conservative bothnet9.091pitch; actual die-phase contract pending',
+        pg_occupancy=pg_fraction,pg_note='actual pairedPG occupancy from authority receipt; band PG geometry not yet built',
+        layer_grant=dict(path=str(grantfile.relative_to(ROOT)),sha256=hashlib.sha256(grantfile.read_bytes()).hexdigest(),
+                         actual_pg_receipt=grant['actual_pg_receipt'],core_origin_um=grant['die_pg']['core_origin_um']),
         combined_cut_model=dict(route='explicit x-then-y L, no router claim',worst=worst,over_limit=windows),
         unresolved=['boundary assigned pins and pair-specific timing reach',
                     'new column real input/output pins','4096bit gather plus tags and controls'] if not root_edges else

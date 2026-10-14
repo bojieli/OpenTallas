@@ -1,0 +1,2 @@
+PASS gather NRB=64 SMAX=11 phases=16 LAT=1 roots=32 data_bits=4096 tagged_bits=672 cycles=800 enabled=318 stalls=482 allbitcoverage=PASS allphasecoverage=PASS
+/tmp/vm-gather-hvsw6ekd/tb_qfd_vm_band_gather.sv:80: $finish called at 8006000 (1ps)

@@ -1,0 +1,265 @@
+{
+ "schema": "opentallas.qwen.vm-band-gather-bench.v1",
+ "status": "LOGICAL_FULL32_PASS_PHYSICAL_AND_ROOT_DELIVERY_UNMEASURED",
+ "NRB": 64,
+ "columns": 32,
+ "roots": 32,
+ "data_bits": 4096,
+ "input_order": "plane_data[128*column+4*root+element]",
+ "output_order": "root_words[128*root+32*element+column]",
+ "tag_source": "rootr receives columnr phase +epoch16+valid; actual assigned source/station remains pending",
+ "source_sha256": {
+  "rtl/qwen_sys/vm_plane_20261013/band_gather/tb_qfd_vm_band_gather.sv": "f2d7e09f75beb6fcb9c53c201ae3b20473ebbdc022404eedf31f7a8ed11c8f0a",
+  "rtl/qwen_sys/vm_plane_20261013/band_gather/ot_qfd_vm_band_gather.sv": "786b6f6b03954855765424f6297361735d65353084e3e77b7920225a4af7474b",
+  "rtl/qwen_sys/vm_plane_20261013/band_controls/ot_qfd_vm_band_controls.sv": "57954e70ea9c565926ccad8f8b8146fa6092ffa2bc8f56730e9702120d1c6a7b",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25"
+ },
+ "runs": [
+  {
+   "name": "smax9_lat1_mut0",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 1,
+   "mutant": 0,
+   "returncode": 0,
+   "expected_result": "PASS",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat1_mut0.log"
+  },
+  {
+   "name": "smax9_lat1_mut1",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 1,
+   "mutant": 1,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat1_mut1.log"
+  },
+  {
+   "name": "smax9_lat1_mut2",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 1,
+   "mutant": 2,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat1_mut2.log"
+  },
+  {
+   "name": "smax9_lat1_mut3",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 1,
+   "mutant": 3,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat1_mut3.log"
+  },
+  {
+   "name": "smax9_lat1_mut4",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 1,
+   "mutant": 4,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat1_mut4.log"
+  },
+  {
+   "name": "smax9_lat3_mut0",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 3,
+   "mutant": 0,
+   "returncode": 0,
+   "expected_result": "PASS",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat3_mut0.log"
+  },
+  {
+   "name": "smax9_lat3_mut1",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 3,
+   "mutant": 1,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat3_mut1.log"
+  },
+  {
+   "name": "smax9_lat3_mut2",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 3,
+   "mutant": 2,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat3_mut2.log"
+  },
+  {
+   "name": "smax9_lat3_mut3",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 3,
+   "mutant": 3,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat3_mut3.log"
+  },
+  {
+   "name": "smax9_lat3_mut4",
+   "SMAX": 9,
+   "phases": 4,
+   "LAT": 3,
+   "mutant": 4,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax9_lat3_mut4.log"
+  },
+  {
+   "name": "smax11_lat1_mut0",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 1,
+   "mutant": 0,
+   "returncode": 0,
+   "expected_result": "PASS",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat1_mut0.log"
+  },
+  {
+   "name": "smax11_lat1_mut1",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 1,
+   "mutant": 1,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat1_mut1.log"
+  },
+  {
+   "name": "smax11_lat1_mut2",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 1,
+   "mutant": 2,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat1_mut2.log"
+  },
+  {
+   "name": "smax11_lat1_mut3",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 1,
+   "mutant": 3,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat1_mut3.log"
+  },
+  {
+   "name": "smax11_lat1_mut4",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 1,
+   "mutant": 4,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat1_mut4.log"
+  },
+  {
+   "name": "smax11_lat3_mut0",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 3,
+   "mutant": 0,
+   "returncode": 0,
+   "expected_result": "PASS",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat3_mut0.log"
+  },
+  {
+   "name": "smax11_lat3_mut1",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 3,
+   "mutant": 1,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat3_mut1.log"
+  },
+  {
+   "name": "smax11_lat3_mut2",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 3,
+   "mutant": 2,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat3_mut2.log"
+  },
+  {
+   "name": "smax11_lat3_mut3",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 3,
+   "mutant": 3,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat3_mut3.log"
+  },
+  {
+   "name": "smax11_lat3_mut4",
+   "SMAX": 11,
+   "phases": 16,
+   "LAT": 3,
+   "mutant": 4,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/smax11_lat3_mut4.log"
+  }
+ ],
+ "bench_scope": "actual full116fan controls/ME composition + EXACTLY logicalproxyalignment (three actual W512/MEREG1 relay stages) + parameterized gather; compare all4096data bits and32tags perclock under stalls. Every live data/tag bit observed as0and1; all4/16phases observed. Adversarial column-specific epoch salt proves designated-column tagselection. Source data changes even during stalls.",
+ "mutants": {
+  "1": "wrong transpose rootword[4*col+k]",
+  "2": "one512bit relay bank ignores stalls",
+  "3": "root13 wrong epoch",
+  "4": "wrong designated tag source column"
+ },
+ "latency": {
+  "logicalproxyalignment_enabled_edges": 3,
+  "gather_tested_enabled_edges": [
+   1,
+   3
+  ],
+  "free_me_edges": 2,
+  "local_MEREG_free_edges": 1
+ },
+ "exclusions": [
+  "Does not instantiate actual xcol_roots/sourceconsumer/line_store; source-root+3 semantics NOT proved.",
+  "LAT1/LAT3 are logical parameter checks; neither is physical routeintent.",
+  "No final boundary pins, rootstation coordinates, physical per-bit paths or clockpair timing.",
+  "Rootdelivery latency and production throughput/price UNMEASURED; no qualification."
+ ],
+ "production_protocol_caveat": {
+  "status": "CONDITIONAL_BUDGET_NOT_COMPLETE_NATIVE_ABI",
+  "authority": "qwen_die/x_delivery actualproductionx_epoch{k18,j3} 21bits; 2026-10-13 followup",
+  "data_bits_per_root": 128,
+  "roots": 32,
+  "halves": 2,
+  "common_instruction_bits": 380,
+  "common_instruction_packing": "ib379 + ib_go1; independent from root fillvalid",
+  "response_options": {
+   "opaque16": {
+    "native_bits": 147,
+    "fallback_bits": 149,
+    "requires": "actual full21coords + instruction/VMversion dictionary; no reuse until allreturns/drain; resetflush; NOTproven"
+   },
+   "direct21": {
+    "native_bits": 152,
+    "fallback_bits": 154,
+    "requires": "21coordinate fields, additional context only omitted with oneinstruction-inflight/freshness proof; NOTproven"
+   }
+  },
+  "request": "full21coordinates/full96address or proven replicatedissue-state; no assignedfinalpins",
+  "source_tags": "prototype epoch16 only; unit echo/alignment checks do not prove tokencontroller/native freshness"
+ }
+}

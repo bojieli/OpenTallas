@@ -1,0 +1,83 @@
+{
+  "schema": "opentallas.qwen.vm-band-integration-submissions.v1",
+  "time": "2026-10-13T21:16:22.089761-07:00",
+  "source_sha256": {
+    "rtl/qwen_sys/vm_plane_20261013/band_integration/tb_qfd_vm_band_integration.sv": "6f63106411bdb506fc44e6f5c3edfecc2249cb309f37a3716ae57938ce25bb9e",
+    "rtl/qwen_sys/vm_plane_20261013/band/ot_qfd_vm_band.sv": "6163c327878be116db043826f20cbab75d806e050ecd7d3e321f66bec702b895",
+    "rtl/qwen_sys/vm_plane_20261013/band_controls/ot_qfd_vm_band_controls.sv": "57954e70ea9c565926ccad8f8b8146fa6092ffa2bc8f56730e9702120d1c6a7b",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xcol_roots.sv": "c09ba46c0220cef6d255071e500f207c614c3b94f2d43b626abe7432f92a54d3",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv": "2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25",
+    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xpad2.sv": "2a7a6d3a3ec95a9c419b6c9f4baae57033e4b154d3f0a32022f15ba3664a1827",
+    "rtl/qwen_sys/vm_plane_20261013/bay/ot_qfd_vm_xrelay_w.sv": "5fa9b91488fd846067785087db4c8d3606b1944ac5d2751fa83c726af1e4d8d6",
+    "tools/qwen_tp8/vm_band_integration_gate.sh": "91dd52299a8b60729445dcb14ec11eb50c4ce3f6882a7d460f87975841f7b326"
+  },
+  "jobs": [
+    {
+      "mode": "native",
+      "session_id": 33599,
+      "unit": "oth-ubuntu-440380-1791951287",
+      "host": "ot-epyc1tb",
+      "mem_gb": 8,
+      "threads": 4,
+      "remote_dir": "/var/tmp/ot-vm-band-integration-20261013-codex",
+      "verified_live_gate_pid": 440380,
+      "otrun_exit": 0
+    },
+    {
+      "mode": "native_delay",
+      "session_id": 93817,
+      "unit": "oth-ubuntu-440381-1791951287",
+      "host": "ot-epyc1tb",
+      "mem_gb": 8,
+      "threads": 4,
+      "remote_dir": "/var/tmp/ot-vm-band-integration-20261013-codex",
+      "verified_live_gate_pid": 440381,
+      "otrun_exit": 0
+    },
+    {
+      "mode": "native_epoch",
+      "session_id": 57845,
+      "unit": "oth-ubuntu-440382-1791951287",
+      "host": "ot-epyc1tb",
+      "mem_gb": 8,
+      "threads": 4,
+      "remote_dir": "/var/tmp/ot-vm-band-integration-20261013-codex",
+      "verified_live_gate_pid": 440382,
+      "otrun_exit": 0
+    },
+    {
+      "mode": "fallback",
+      "session_id": 69064,
+      "unit": "oth-ubuntu-440385-1791951287",
+      "host": "ot-epyc1tb",
+      "mem_gb": 16,
+      "threads": 4,
+      "remote_dir": "/var/tmp/ot-vm-band-integration-20261013-codex",
+      "verified_live_gate_pid": 440385,
+      "otrun_exit": 0
+    },
+    {
+      "mode": "fallback_delay",
+      "session_id": 87208,
+      "unit": "oth-ubuntu-440389-1791951287",
+      "host": "ot-epyc1tb",
+      "mem_gb": 16,
+      "threads": 4,
+      "remote_dir": "/var/tmp/ot-vm-band-integration-20261013-codex",
+      "verified_live_gate_pid": 440389,
+      "otrun_exit": 0
+    },
+    {
+      "mode": "fallback_epoch",
+      "session_id": 10088,
+      "unit": "oth-ubuntu-440392-1791951287",
+      "host": "ot-epyc1tb",
+      "mem_gb": 16,
+      "threads": 4,
+      "remote_dir": "/var/tmp/ot-vm-band-integration-20261013-codex",
+      "verified_live_gate_pid": 440392,
+      "otrun_exit": 0
+    }
+  ]
+}

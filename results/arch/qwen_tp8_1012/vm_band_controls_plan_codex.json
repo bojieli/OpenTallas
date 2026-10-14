@@ -1,2052 +1,2075 @@
 {
-  "schema": "opentallas.qwen.vm-band-controls-plan.v1",
-  "status": "LOGICAL_TOPOLOGY_ONLY_NO_PHYSICAL_ASSIGNMENT",
-  "origin_um": [
-    13284.0,
-    18131.04
-  ],
-  "outline_um": [
-    4838.4,
-    386.64
-  ],
-  "source_sha256": {
-    "results/arch/qwen_tp8_1012/vm_band_composition_codex.json": "a1867fe387a6d485eb92d157af90d9eaed9a6322bfbaa84e2b43858460a3e984",
-    "results/arch/qwen_tp8_1012/vm_leaf_plan_claude.json": "4bdcb1bedf37ad79393d1d2d236331117af2a7bae841ff4c3e55636166e2ee78"
+ "schema": "opentallas.qwen.vm-band-controls-plan.v1",
+ "status": "LOGICAL_TOPOLOGY_ONLY_NO_PHYSICAL_ASSIGNMENT",
+ "origin_um": [
+  13284.0,
+  18131.04
+ ],
+ "outline_um": [
+  4838.4,
+  386.64
+ ],
+ "source_sha256": {
+  "results/arch/qwen_tp8_1012/vm_band_composition_codex.json": "a1867fe387a6d485eb92d157af90d9eaed9a6322bfbaa84e2b43858460a3e984",
+  "results/arch/qwen_tp8_1012/vm_leaf_plan_claude.json": "4bdcb1bedf37ad79393d1d2d236331117af2a7bae841ff4c3e55636166e2ee78"
+ },
+ "preserved_existing_whole_tiles": 270,
+ "preserved_source_columns": 32,
+ "preserved_existing_lanes": 4096,
+ "unoccupied_whole_pad_slots": [
+  {
+   "bay": "vm_pad_0_S0",
+   "physical_slot": 0,
+   "at_um": [
+    13296.96,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
   },
-  "preserved_existing_whole_tiles": 270,
-  "preserved_source_columns": 32,
-  "preserved_existing_lanes": 4096,
-  "unoccupied_whole_pad_slots": [
-    {
-      "bay": "vm_pad_0_S0",
-      "physical_slot": 0,
-      "at_um": [
-        13296.96,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_0_S0",
-      "physical_slot": 1,
-      "at_um": [
-        13318.56,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_0_S0",
-      "physical_slot": 2,
-      "at_um": [
-        13340.16,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_0_S0",
-      "physical_slot": 3,
-      "at_um": [
-        13361.759999999998,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_0_S0",
-      "physical_slot": 4,
-      "at_um": [
-        13383.359999999999,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_0_N0",
-      "physical_slot": 2,
-      "at_um": [
-        13340.16,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_0_N0",
-      "physical_slot": 3,
-      "at_um": [
-        13361.759999999998,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_0_N0",
-      "physical_slot": 4,
-      "at_um": [
-        13383.359999999999,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_0_N0",
-      "physical_slot": 5,
-      "at_um": [
-        13404.96,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_1_S0",
-      "physical_slot": 0,
-      "at_um": [
-        13446.0,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_1_S0",
-      "physical_slot": 1,
-      "at_um": [
-        13467.6,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_1_S0",
-      "physical_slot": 2,
-      "at_um": [
-        13489.2,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_1_N0",
-      "physical_slot": 2,
-      "at_um": [
-        13489.2,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_1_N0",
-      "physical_slot": 3,
-      "at_um": [
-        13510.8,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_1_N0",
-      "physical_slot": 4,
-      "at_um": [
-        13532.4,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_1_N0",
-      "physical_slot": 5,
-      "at_um": [
-        13554.0,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_2_S0",
-      "physical_slot": 0,
-      "at_um": [
-        13595.04,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_2_S0",
-      "physical_slot": 1,
-      "at_um": [
-        13616.640000000001,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_2_N0",
-      "physical_slot": 1,
-      "at_um": [
-        13616.640000000001,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_2_N0",
-      "physical_slot": 2,
-      "at_um": [
-        13638.240000000002,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_3_N0",
-      "physical_slot": 4,
-      "at_um": [
-        13830.48,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_4_S0",
-      "physical_slot": 0,
-      "at_um": [
-        13893.12,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_4_N0",
-      "physical_slot": 0,
-      "at_um": [
-        13893.12,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_4_N0",
-      "physical_slot": 1,
-      "at_um": [
-        13914.720000000001,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_5_S0",
-      "physical_slot": 5,
-      "at_um": [
-        14150.16,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_5_N0",
-      "physical_slot": 0,
-      "at_um": [
-        14042.16,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_5_N0",
-      "physical_slot": 1,
-      "at_um": [
-        14063.76,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_6_N0",
-      "physical_slot": 2,
-      "at_um": [
-        14234.400000000001,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_6_N0",
-      "physical_slot": 3,
-      "at_um": [
-        14256.0,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_6_N0",
-      "physical_slot": 5,
-      "at_um": [
-        14299.2,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_7_N0",
-      "physical_slot": 3,
-      "at_um": [
-        14405.039999999999,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_7_N0",
-      "physical_slot": 5,
-      "at_um": [
-        14448.24,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_8_S0",
-      "physical_slot": 2,
-      "at_um": [
-        14532.480000000001,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_8_S0",
-      "physical_slot": 5,
-      "at_um": [
-        14597.28,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_8_N0",
-      "physical_slot": 2,
-      "at_um": [
-        14532.480000000001,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_8_N0",
-      "physical_slot": 5,
-      "at_um": [
-        14597.28,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_9_S0",
-      "physical_slot": 0,
-      "at_um": [
-        14638.32,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_9_S0",
-      "physical_slot": 1,
-      "at_um": [
-        14659.92,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_9_N0",
-      "physical_slot": 2,
-      "at_um": [
-        14681.52,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_9_N0",
-      "physical_slot": 3,
-      "at_um": [
-        14703.119999999999,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_9_N0",
-      "physical_slot": 5,
-      "at_um": [
-        14746.32,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_10_N0",
-      "physical_slot": 3,
-      "at_um": [
-        14852.16,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_11_S0",
-      "physical_slot": 5,
-      "at_um": [
-        15044.4,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_11_N0",
-      "physical_slot": 2,
-      "at_um": [
-        14979.6,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_11_N0",
-      "physical_slot": 5,
-      "at_um": [
-        15044.4,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_12_S0",
-      "physical_slot": 0,
-      "at_um": [
-        15085.44,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_12_S0",
-      "physical_slot": 1,
-      "at_um": [
-        15107.04,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_12_N0",
-      "physical_slot": 0,
-      "at_um": [
-        15085.44,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_12_N0",
-      "physical_slot": 1,
-      "at_um": [
-        15107.04,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_12_N0",
-      "physical_slot": 2,
-      "at_um": [
-        15128.640000000001,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_13_N0",
-      "physical_slot": 0,
-      "at_um": [
-        15234.48,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_13_N0",
-      "physical_slot": 2,
-      "at_um": [
-        15277.68,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_14_N0",
-      "physical_slot": 5,
-      "at_um": [
-        15491.52,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_15_N0",
-      "physical_slot": 2,
-      "at_um": [
-        15575.76,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_15_N0",
-      "physical_slot": 5,
-      "at_um": [
-        15640.56,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_16_S0",
-      "physical_slot": 0,
-      "at_um": [
-        15681.6,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_16_S0",
-      "physical_slot": 1,
-      "at_um": [
-        15703.2,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_16_S0",
-      "physical_slot": 5,
-      "at_um": [
-        15789.6,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_16_N0",
-      "physical_slot": 2,
-      "at_um": [
-        15724.800000000001,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_16_N0",
-      "physical_slot": 3,
-      "at_um": [
-        15746.4,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_17_S0",
-      "physical_slot": 0,
-      "at_um": [
-        15830.64,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_17_S0",
-      "physical_slot": 1,
-      "at_um": [
-        15852.24,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_17_S0",
-      "physical_slot": 2,
-      "at_um": [
-        15873.84,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_17_N0",
-      "physical_slot": 4,
-      "at_um": [
-        15917.039999999999,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_17_N0",
-      "physical_slot": 5,
-      "at_um": [
-        15938.64,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_18_S0",
-      "physical_slot": 5,
-      "at_um": [
-        16087.68,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_18_N0",
-      "physical_slot": 3,
-      "at_um": [
-        16044.48,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_18_N0",
-      "physical_slot": 5,
-      "at_um": [
-        16087.68,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_19_S0",
-      "physical_slot": 5,
-      "at_um": [
-        16236.72,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_19_N0",
-      "physical_slot": 5,
-      "at_um": [
-        16236.72,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_20_S0",
-      "physical_slot": 4,
-      "at_um": [
-        16364.16,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_20_S0",
-      "physical_slot": 5,
-      "at_um": [
-        16385.760000000002,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_20_N0",
-      "physical_slot": 4,
-      "at_um": [
-        16364.16,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_20_N0",
-      "physical_slot": 5,
-      "at_um": [
-        16385.760000000002,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_21_S0",
-      "physical_slot": 4,
-      "at_um": [
-        16513.2,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_21_S0",
-      "physical_slot": 5,
-      "at_um": [
-        16534.8,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_21_N0",
-      "physical_slot": 0,
-      "at_um": [
-        16426.8,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_21_N0",
-      "physical_slot": 1,
-      "at_um": [
-        16448.399999999998,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_21_N0",
-      "physical_slot": 5,
-      "at_um": [
-        16534.8,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_23_S0",
-      "physical_slot": 4,
-      "at_um": [
-        16811.280000000002,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_23_N0",
-      "physical_slot": 5,
-      "at_um": [
-        16832.88,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_24_S0",
-      "physical_slot": 3,
-      "at_um": [
-        16938.719999999998,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_24_S0",
-      "physical_slot": 4,
-      "at_um": [
-        16960.32,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_24_S0",
-      "physical_slot": 5,
-      "at_um": [
-        16981.92,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_24_N0",
-      "physical_slot": 4,
-      "at_um": [
-        16960.32,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_24_N0",
-      "physical_slot": 5,
-      "at_um": [
-        16981.92,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_25_N0",
-      "physical_slot": 4,
-      "at_um": [
-        17109.36,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_25_N0",
-      "physical_slot": 5,
-      "at_um": [
-        17130.96,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_26_S0",
-      "physical_slot": 4,
-      "at_um": [
-        17258.4,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_26_S0",
-      "physical_slot": 5,
-      "at_um": [
-        17280.0,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_26_N0",
-      "physical_slot": 5,
-      "at_um": [
-        17280.0,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_27_S0",
-      "physical_slot": 5,
-      "at_um": [
-        17429.04,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_27_N0",
-      "physical_slot": 4,
-      "at_um": [
-        17407.440000000002,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_27_N0",
-      "physical_slot": 5,
-      "at_um": [
-        17429.04,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_28_S0",
-      "physical_slot": 4,
-      "at_um": [
-        17556.480000000003,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_28_N0",
-      "physical_slot": 5,
-      "at_um": [
-        17578.08,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_29_N0",
-      "physical_slot": 3,
-      "at_um": [
-        17683.92,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_29_N0",
-      "physical_slot": 4,
-      "at_um": [
-        17705.52,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_29_N0",
-      "physical_slot": 5,
-      "at_um": [
-        17727.12,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_30_S0",
-      "physical_slot": 2,
-      "at_um": [
-        17811.36,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_30_S0",
-      "physical_slot": 3,
-      "at_um": [
-        17832.96,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_30_S0",
-      "physical_slot": 4,
-      "at_um": [
-        17854.56,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_30_S0",
-      "physical_slot": 5,
-      "at_um": [
-        17876.16,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_30_N0",
-      "physical_slot": 3,
-      "at_um": [
-        17832.96,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_30_N0",
-      "physical_slot": 4,
-      "at_um": [
-        17854.56,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_30_N0",
-      "physical_slot": 5,
-      "at_um": [
-        17876.16,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_31_S0",
-      "physical_slot": 2,
-      "at_um": [
-        17960.4,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_31_S0",
-      "physical_slot": 3,
-      "at_um": [
-        17982.0,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_31_S0",
-      "physical_slot": 4,
-      "at_um": [
-        18003.600000000002,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_31_S0",
-      "physical_slot": 5,
-      "at_um": [
-        18025.2,
-        18133.2
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_31_N0",
-      "physical_slot": 2,
-      "at_um": [
-        17960.4,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_31_N0",
-      "physical_slot": 3,
-      "at_um": [
-        17982.0,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_31_N0",
-      "physical_slot": 4,
-      "at_um": [
-        18003.600000000002,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
-    },
-    {
-      "bay": "vm_pad_31_N0",
-      "physical_slot": 5,
-      "at_um": [
-        18025.2,
-        18418.32
-      ],
-      "outline_um": [
-        17.28,
-        97.2
-      ]
+  {
+   "bay": "vm_pad_0_S0",
+   "physical_slot": 1,
+   "at_um": [
+    13318.56,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_0_S0",
+   "physical_slot": 2,
+   "at_um": [
+    13340.16,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_0_S0",
+   "physical_slot": 3,
+   "at_um": [
+    13361.759999999998,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_0_S0",
+   "physical_slot": 4,
+   "at_um": [
+    13383.359999999999,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_0_N0",
+   "physical_slot": 2,
+   "at_um": [
+    13340.16,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_0_N0",
+   "physical_slot": 3,
+   "at_um": [
+    13361.759999999998,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_0_N0",
+   "physical_slot": 4,
+   "at_um": [
+    13383.359999999999,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_0_N0",
+   "physical_slot": 5,
+   "at_um": [
+    13404.96,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_1_S0",
+   "physical_slot": 0,
+   "at_um": [
+    13446.0,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_1_S0",
+   "physical_slot": 1,
+   "at_um": [
+    13467.6,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_1_S0",
+   "physical_slot": 2,
+   "at_um": [
+    13489.2,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_1_N0",
+   "physical_slot": 2,
+   "at_um": [
+    13489.2,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_1_N0",
+   "physical_slot": 3,
+   "at_um": [
+    13510.8,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_1_N0",
+   "physical_slot": 4,
+   "at_um": [
+    13532.4,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_1_N0",
+   "physical_slot": 5,
+   "at_um": [
+    13554.0,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_2_S0",
+   "physical_slot": 0,
+   "at_um": [
+    13595.04,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_2_S0",
+   "physical_slot": 1,
+   "at_um": [
+    13616.640000000001,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_2_N0",
+   "physical_slot": 1,
+   "at_um": [
+    13616.640000000001,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_2_N0",
+   "physical_slot": 2,
+   "at_um": [
+    13638.240000000002,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_3_N0",
+   "physical_slot": 4,
+   "at_um": [
+    13830.48,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_4_S0",
+   "physical_slot": 0,
+   "at_um": [
+    13893.12,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_4_N0",
+   "physical_slot": 0,
+   "at_um": [
+    13893.12,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_4_N0",
+   "physical_slot": 1,
+   "at_um": [
+    13914.720000000001,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_5_S0",
+   "physical_slot": 5,
+   "at_um": [
+    14150.16,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_5_N0",
+   "physical_slot": 0,
+   "at_um": [
+    14042.16,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_5_N0",
+   "physical_slot": 1,
+   "at_um": [
+    14063.76,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_6_N0",
+   "physical_slot": 2,
+   "at_um": [
+    14234.400000000001,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_6_N0",
+   "physical_slot": 3,
+   "at_um": [
+    14256.0,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_6_N0",
+   "physical_slot": 5,
+   "at_um": [
+    14299.2,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_7_N0",
+   "physical_slot": 3,
+   "at_um": [
+    14405.039999999999,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_7_N0",
+   "physical_slot": 5,
+   "at_um": [
+    14448.24,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_8_S0",
+   "physical_slot": 2,
+   "at_um": [
+    14532.480000000001,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_8_S0",
+   "physical_slot": 5,
+   "at_um": [
+    14597.28,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_8_N0",
+   "physical_slot": 2,
+   "at_um": [
+    14532.480000000001,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_8_N0",
+   "physical_slot": 5,
+   "at_um": [
+    14597.28,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_9_S0",
+   "physical_slot": 0,
+   "at_um": [
+    14638.32,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_9_S0",
+   "physical_slot": 1,
+   "at_um": [
+    14659.92,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_9_N0",
+   "physical_slot": 2,
+   "at_um": [
+    14681.52,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_9_N0",
+   "physical_slot": 3,
+   "at_um": [
+    14703.119999999999,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_9_N0",
+   "physical_slot": 5,
+   "at_um": [
+    14746.32,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_10_N0",
+   "physical_slot": 3,
+   "at_um": [
+    14852.16,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_11_S0",
+   "physical_slot": 5,
+   "at_um": [
+    15044.4,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_11_N0",
+   "physical_slot": 2,
+   "at_um": [
+    14979.6,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_11_N0",
+   "physical_slot": 5,
+   "at_um": [
+    15044.4,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_12_S0",
+   "physical_slot": 0,
+   "at_um": [
+    15085.44,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_12_S0",
+   "physical_slot": 1,
+   "at_um": [
+    15107.04,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_12_N0",
+   "physical_slot": 0,
+   "at_um": [
+    15085.44,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_12_N0",
+   "physical_slot": 1,
+   "at_um": [
+    15107.04,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_12_N0",
+   "physical_slot": 2,
+   "at_um": [
+    15128.640000000001,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_13_N0",
+   "physical_slot": 0,
+   "at_um": [
+    15234.48,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_13_N0",
+   "physical_slot": 2,
+   "at_um": [
+    15277.68,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_14_N0",
+   "physical_slot": 5,
+   "at_um": [
+    15491.52,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_15_N0",
+   "physical_slot": 2,
+   "at_um": [
+    15575.76,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_15_N0",
+   "physical_slot": 5,
+   "at_um": [
+    15640.56,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_16_S0",
+   "physical_slot": 0,
+   "at_um": [
+    15681.6,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_16_S0",
+   "physical_slot": 1,
+   "at_um": [
+    15703.2,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_16_S0",
+   "physical_slot": 5,
+   "at_um": [
+    15789.6,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_16_N0",
+   "physical_slot": 2,
+   "at_um": [
+    15724.800000000001,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_16_N0",
+   "physical_slot": 3,
+   "at_um": [
+    15746.4,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_17_S0",
+   "physical_slot": 0,
+   "at_um": [
+    15830.64,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_17_S0",
+   "physical_slot": 1,
+   "at_um": [
+    15852.24,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_17_S0",
+   "physical_slot": 2,
+   "at_um": [
+    15873.84,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_17_N0",
+   "physical_slot": 4,
+   "at_um": [
+    15917.039999999999,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_17_N0",
+   "physical_slot": 5,
+   "at_um": [
+    15938.64,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_18_S0",
+   "physical_slot": 5,
+   "at_um": [
+    16087.68,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_18_N0",
+   "physical_slot": 3,
+   "at_um": [
+    16044.48,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_18_N0",
+   "physical_slot": 5,
+   "at_um": [
+    16087.68,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_19_S0",
+   "physical_slot": 5,
+   "at_um": [
+    16236.72,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_19_N0",
+   "physical_slot": 5,
+   "at_um": [
+    16236.72,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_20_S0",
+   "physical_slot": 4,
+   "at_um": [
+    16364.16,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_20_S0",
+   "physical_slot": 5,
+   "at_um": [
+    16385.760000000002,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_20_N0",
+   "physical_slot": 4,
+   "at_um": [
+    16364.16,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_20_N0",
+   "physical_slot": 5,
+   "at_um": [
+    16385.760000000002,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_21_S0",
+   "physical_slot": 4,
+   "at_um": [
+    16513.2,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_21_S0",
+   "physical_slot": 5,
+   "at_um": [
+    16534.8,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_21_N0",
+   "physical_slot": 0,
+   "at_um": [
+    16426.8,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_21_N0",
+   "physical_slot": 1,
+   "at_um": [
+    16448.399999999998,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_21_N0",
+   "physical_slot": 5,
+   "at_um": [
+    16534.8,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_23_S0",
+   "physical_slot": 4,
+   "at_um": [
+    16811.280000000002,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_23_N0",
+   "physical_slot": 5,
+   "at_um": [
+    16832.88,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_24_S0",
+   "physical_slot": 3,
+   "at_um": [
+    16938.719999999998,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_24_S0",
+   "physical_slot": 4,
+   "at_um": [
+    16960.32,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_24_S0",
+   "physical_slot": 5,
+   "at_um": [
+    16981.92,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_24_N0",
+   "physical_slot": 4,
+   "at_um": [
+    16960.32,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_24_N0",
+   "physical_slot": 5,
+   "at_um": [
+    16981.92,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_25_N0",
+   "physical_slot": 4,
+   "at_um": [
+    17109.36,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_25_N0",
+   "physical_slot": 5,
+   "at_um": [
+    17130.96,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_26_S0",
+   "physical_slot": 4,
+   "at_um": [
+    17258.4,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_26_S0",
+   "physical_slot": 5,
+   "at_um": [
+    17280.0,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_26_N0",
+   "physical_slot": 5,
+   "at_um": [
+    17280.0,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_27_S0",
+   "physical_slot": 5,
+   "at_um": [
+    17429.04,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_27_N0",
+   "physical_slot": 4,
+   "at_um": [
+    17407.440000000002,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_27_N0",
+   "physical_slot": 5,
+   "at_um": [
+    17429.04,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_28_S0",
+   "physical_slot": 4,
+   "at_um": [
+    17556.480000000003,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_28_N0",
+   "physical_slot": 5,
+   "at_um": [
+    17578.08,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_29_N0",
+   "physical_slot": 3,
+   "at_um": [
+    17683.92,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_29_N0",
+   "physical_slot": 4,
+   "at_um": [
+    17705.52,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_29_N0",
+   "physical_slot": 5,
+   "at_um": [
+    17727.12,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_30_S0",
+   "physical_slot": 2,
+   "at_um": [
+    17811.36,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_30_S0",
+   "physical_slot": 3,
+   "at_um": [
+    17832.96,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_30_S0",
+   "physical_slot": 4,
+   "at_um": [
+    17854.56,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_30_S0",
+   "physical_slot": 5,
+   "at_um": [
+    17876.16,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_30_N0",
+   "physical_slot": 3,
+   "at_um": [
+    17832.96,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_30_N0",
+   "physical_slot": 4,
+   "at_um": [
+    17854.56,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_30_N0",
+   "physical_slot": 5,
+   "at_um": [
+    17876.16,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_31_S0",
+   "physical_slot": 2,
+   "at_um": [
+    17960.4,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_31_S0",
+   "physical_slot": 3,
+   "at_um": [
+    17982.0,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_31_S0",
+   "physical_slot": 4,
+   "at_um": [
+    18003.600000000002,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_31_S0",
+   "physical_slot": 5,
+   "at_um": [
+    18025.2,
+    18133.2
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_31_N0",
+   "physical_slot": 2,
+   "at_um": [
+    17960.4,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_31_N0",
+   "physical_slot": 3,
+   "at_um": [
+    17982.0,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_31_N0",
+   "physical_slot": 4,
+   "at_um": [
+    18003.600000000002,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  },
+  {
+   "bay": "vm_pad_31_N0",
+   "physical_slot": 5,
+   "at_um": [
+    18025.2,
+    18418.32
+   ],
+   "outline_um": [
+    17.28,
+    97.2
+   ]
+  }
+ ],
+ "available_slots": 114,
+ "logical_control_tiles": 116,
+ "co_pack_vertical_capacity_per_slot": 5,
+ "minimum_slots_by_count": 24,
+ "logical_tree": {
+  "pc_levels": [
+   1,
+   4,
+   32
+  ],
+  "lc_payload_levels": [
+   1,
+   4,
+   32
+  ],
+  "lc_tag_levels": [
+   1,
+   4,
+   32
+  ],
+  "me_levels": [
+   1,
+   4
+  ],
+  "enabled_edges": 3,
+  "free_me_edges": 2,
+  "own_child_clock_entries": 116,
+  "common_parent_clock_tree": false
+ },
+ "masters": [
+  {
+   "master": "qfd_vm_fan_pc",
+   "instances": 37,
+   "params": {
+    "W": 20,
+    "EN": 1,
+    "MEREG": 1
+   },
+   "outline": {
+    "w": 12.96,
+    "h": 17.28
+   },
+   "view": "physical/ref_tile/qfd_vm_fan_pc/views/ot_qfd_vm_fan_t",
+   "insertion": {
+    "schema": "opentallas.closure_loop.ck_insertion.v1",
+    "base": "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_fan_pc-fp2-422b0e7ba/routes/qfd_vm_fan_pc_fp2_422b0e7ba/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_pc_fp2_422b0e7ba/base",
+    "db": "6_final.odb",
+    "sdc": "6_final.sdc",
+    "clock": "core_clk",
+    "parasitics": "spef",
+    "ss": {
+     "boundary": {
+      "n": 21,
+      "mean": 74.2,
+      "min": 73.4,
+      "max": 74.8
+     },
+     "all": {
+      "n": 21,
+      "mean": 74.2,
+      "min": 73.4,
+      "max": 74.8
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    },
+    "tt": {
+     "boundary": {
+      "n": 21,
+      "mean": 51.9,
+      "min": 51.3,
+      "max": 52.4
+     },
+     "all": {
+      "n": 21,
+      "mean": 51.9,
+      "min": 51.3,
+      "max": 52.4
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    },
+    "ff": {
+     "boundary": {
+      "n": 21,
+      "mean": 38.8,
+      "min": 38.3,
+      "max": 39.3
+     },
+     "all": {
+      "n": 21,
+      "mean": 38.8,
+      "min": 38.3,
+      "max": 39.3
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    },
+    "route_corner": null,
+    "macro_clk": {
+     "n": 0,
+     "slew_ps": 120.0,
+     "late_ps": 30.0,
+     "flag": false,
+     "outliers": []
+    },
+    "env": {
+     "CK_SS_MEAN": 74,
+     "CK_SS_ALL_MEAN": 74,
+     "CK_SS_MIN": 73,
+     "CK_SS_ALL_MIN": 73,
+     "CK_SS_MAX": 75,
+     "CK_SS_ALL_MAX": 75,
+     "CK_TT_MEAN": 52,
+     "CK_TT_ALL_MEAN": 52,
+     "CK_TT_MIN": 51,
+     "CK_TT_ALL_MIN": 51,
+     "CK_TT_MAX": 52,
+     "CK_TT_ALL_MAX": 52,
+     "CK_FF_MEAN": 39,
+     "CK_FF_ALL_MEAN": 39,
+     "CK_FF_MIN": 38,
+     "CK_FF_ALL_MIN": 38,
+     "CK_FF_MAX": 39,
+     "CK_FF_ALL_MAX": 39,
+     "CK_ROUTE_REF": "SS"
+    },
+    "lib_clock_pin": "clk",
+    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+    "clock_measurements": {
+     "clk": {
+      "schema": "opentallas.closure_loop.ck_insertion.v1",
+      "base": "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_fan_pc-fp2-422b0e7ba/routes/qfd_vm_fan_pc_fp2_422b0e7ba/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_pc_fp2_422b0e7ba/base",
+      "db": "6_final.odb",
+      "sdc": "6_final.sdc",
+      "clock": "core_clk",
+      "parasitics": "spef",
+      "ss": {
+       "boundary": {
+        "n": 21,
+        "mean": 74.2,
+        "min": 73.4,
+        "max": 74.8
+       },
+       "all": {
+        "n": 21,
+        "mean": 74.2,
+        "min": 73.4,
+        "max": 74.8
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      },
+      "tt": {
+       "boundary": {
+        "n": 21,
+        "mean": 51.9,
+        "min": 51.3,
+        "max": 52.4
+       },
+       "all": {
+        "n": 21,
+        "mean": 51.9,
+        "min": 51.3,
+        "max": 52.4
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      },
+      "ff": {
+       "boundary": {
+        "n": 21,
+        "mean": 38.8,
+        "min": 38.3,
+        "max": 39.3
+       },
+       "all": {
+        "n": 21,
+        "mean": 38.8,
+        "min": 38.3,
+        "max": 39.3
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      },
+      "route_corner": null,
+      "macro_clk": {
+       "n": 0,
+       "slew_ps": 120.0,
+       "late_ps": 30.0,
+       "flag": false,
+       "outliers": []
+      },
+      "env": {
+       "CK_SS_MEAN": 74,
+       "CK_SS_ALL_MEAN": 74,
+       "CK_SS_MIN": 73,
+       "CK_SS_ALL_MIN": 73,
+       "CK_SS_MAX": 75,
+       "CK_SS_ALL_MAX": 75,
+       "CK_TT_MEAN": 52,
+       "CK_TT_ALL_MEAN": 52,
+       "CK_TT_MIN": 51,
+       "CK_TT_ALL_MIN": 51,
+       "CK_TT_MAX": 52,
+       "CK_TT_ALL_MAX": 52,
+       "CK_FF_MEAN": 39,
+       "CK_FF_ALL_MEAN": 39,
+       "CK_FF_MIN": 38,
+       "CK_FF_ALL_MIN": 38,
+       "CK_FF_MAX": 39,
+       "CK_FF_ALL_MAX": 39,
+       "CK_ROUTE_REF": "SS"
+      },
+      "lib_clock_pin": "clk",
+      "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+     }
     }
-  ],
-  "available_slots": 114,
-  "logical_control_tiles": 116,
-  "co_pack_vertical_capacity_per_slot": 5,
-  "minimum_slots_by_count": 24,
-  "logical_tree": {
-    "pc_levels": [
-      1,
-      4,
-      32
-    ],
-    "lc_payload_levels": [
-      1,
-      4,
-      32
-    ],
-    "lc_tag_levels": [
-      1,
-      4,
-      32
-    ],
-    "me_levels": [
-      1,
-      4
-    ],
-    "enabled_edges": 3,
-    "free_me_edges": 2,
-    "own_child_clock_entries": 116,
-    "common_parent_clock_tree": false
+   }
   },
-  "masters": [
-    {
-      "master": "qfd_vm_fan_pc",
-      "instances": 37,
-      "params": {
-        "W": 20,
-        "EN": 1,
-        "MEREG": 1
-      },
-      "outline": {
-        "w": 12.96,
-        "h": 17.28
-      },
-      "view": "physical/ref_tile/qfd_vm_fan_pc/views/ot_qfd_vm_fan_t",
-      "insertion": {
-        "schema": "opentallas.closure_loop.ck_insertion.v1",
-        "base": "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_fan_pc-fp2-422b0e7ba/routes/qfd_vm_fan_pc_fp2_422b0e7ba/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_pc_fp2_422b0e7ba/base",
-        "db": "6_final.odb",
-        "sdc": "6_final.sdc",
-        "clock": "core_clk",
-        "parasitics": "spef",
-        "ss": {
-          "boundary": {
-            "n": 21,
-            "mean": 74.2,
-            "min": 73.4,
-            "max": 74.8
-          },
-          "all": {
-            "n": 21,
-            "mean": 74.2,
-            "min": 73.4,
-            "max": 74.8
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "tt": {
-          "boundary": {
-            "n": 21,
-            "mean": 51.9,
-            "min": 51.3,
-            "max": 52.4
-          },
-          "all": {
-            "n": 21,
-            "mean": 51.9,
-            "min": 51.3,
-            "max": 52.4
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "ff": {
-          "boundary": {
-            "n": 21,
-            "mean": 38.8,
-            "min": 38.3,
-            "max": 39.3
-          },
-          "all": {
-            "n": 21,
-            "mean": 38.8,
-            "min": 38.3,
-            "max": 39.3
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "route_corner": null,
-        "macro_clk": {
-          "n": 0,
-          "slew_ps": 120.0,
-          "late_ps": 30.0,
-          "flag": false,
-          "outliers": []
-        },
-        "env": {
-          "CK_SS_MEAN": 74,
-          "CK_SS_ALL_MEAN": 74,
-          "CK_SS_MIN": 73,
-          "CK_SS_ALL_MIN": 73,
-          "CK_SS_MAX": 75,
-          "CK_SS_ALL_MAX": 75,
-          "CK_TT_MEAN": 52,
-          "CK_TT_ALL_MEAN": 52,
-          "CK_TT_MIN": 51,
-          "CK_TT_ALL_MIN": 51,
-          "CK_TT_MAX": 52,
-          "CK_TT_ALL_MAX": 52,
-          "CK_FF_MEAN": 39,
-          "CK_FF_ALL_MEAN": 39,
-          "CK_FF_MIN": 38,
-          "CK_FF_ALL_MIN": 38,
-          "CK_FF_MAX": 39,
-          "CK_FF_ALL_MAX": 39,
-          "CK_ROUTE_REF": "SS"
-        },
-        "lib_clock_pin": "clk",
-        "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
-        "clock_measurements": {
-          "clk": {
-            "schema": "opentallas.closure_loop.ck_insertion.v1",
-            "base": "/srv/opentallas-scratch2/claude/closure-loop/qfd_vm_fan_pc-fp2-422b0e7ba/routes/qfd_vm_fan_pc_fp2_422b0e7ba/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_pc_fp2_422b0e7ba/base",
-            "db": "6_final.odb",
-            "sdc": "6_final.sdc",
-            "clock": "core_clk",
-            "parasitics": "spef",
-            "ss": {
-              "boundary": {
-                "n": 21,
-                "mean": 74.2,
-                "min": 73.4,
-                "max": 74.8
-              },
-              "all": {
-                "n": 21,
-                "mean": 74.2,
-                "min": 73.4,
-                "max": 74.8
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "tt": {
-              "boundary": {
-                "n": 21,
-                "mean": 51.9,
-                "min": 51.3,
-                "max": 52.4
-              },
-              "all": {
-                "n": 21,
-                "mean": 51.9,
-                "min": 51.3,
-                "max": 52.4
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "ff": {
-              "boundary": {
-                "n": 21,
-                "mean": 38.8,
-                "min": 38.3,
-                "max": 39.3
-              },
-              "all": {
-                "n": 21,
-                "mean": 38.8,
-                "min": 38.3,
-                "max": 39.3
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "route_corner": null,
-            "macro_clk": {
-              "n": 0,
-              "slew_ps": 120.0,
-              "late_ps": 30.0,
-              "flag": false,
-              "outliers": []
-            },
-            "env": {
-              "CK_SS_MEAN": 74,
-              "CK_SS_ALL_MEAN": 74,
-              "CK_SS_MIN": 73,
-              "CK_SS_ALL_MIN": 73,
-              "CK_SS_MAX": 75,
-              "CK_SS_ALL_MAX": 75,
-              "CK_TT_MEAN": 52,
-              "CK_TT_ALL_MEAN": 52,
-              "CK_TT_MIN": 51,
-              "CK_TT_ALL_MIN": 51,
-              "CK_TT_MAX": 52,
-              "CK_TT_ALL_MAX": 52,
-              "CK_FF_MEAN": 39,
-              "CK_FF_ALL_MEAN": 39,
-              "CK_FF_MIN": 38,
-              "CK_FF_ALL_MIN": 38,
-              "CK_FF_MAX": 39,
-              "CK_FF_ALL_MAX": 39,
-              "CK_ROUTE_REF": "SS"
-            },
-            "lib_clock_pin": "clk",
-            "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
-          }
-        }
-      }
+  {
+   "master": "qfd_vm_fan_lc",
+   "instances": 74,
+   "params": {
+    "W": 28,
+    "EN": 1,
+    "MEREG": 1
+   },
+   "outline": {
+    "w": 12.96,
+    "h": 17.28
+   },
+   "view": "physical/ref_tile/qfd_vm_fan_lc/views/ot_qfd_vm_fan_t",
+   "insertion": {
+    "schema": "opentallas.closure_loop.ck_insertion.v1",
+    "base": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_fan_lc-fl2-422b0e7ba/routes/qfd_vm_fan_lc_fl2_422b0e7ba/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_lc_fl2_422b0e7ba/base",
+    "db": "6_final.odb",
+    "sdc": "6_final.sdc",
+    "clock": "core_clk",
+    "parasitics": "spef",
+    "ss": {
+     "boundary": {
+      "n": 29,
+      "mean": 75.1,
+      "min": 74.3,
+      "max": 75.8
+     },
+     "all": {
+      "n": 29,
+      "mean": 75.1,
+      "min": 74.3,
+      "max": 75.8
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
     },
-    {
-      "master": "qfd_vm_fan_lc",
-      "instances": 74,
-      "params": {
-        "W": 28,
-        "EN": 1,
-        "MEREG": 1
-      },
-      "outline": {
-        "w": 12.96,
-        "h": 17.28
-      },
-      "view": "physical/ref_tile/qfd_vm_fan_lc/views/ot_qfd_vm_fan_t",
-      "insertion": {
-        "schema": "opentallas.closure_loop.ck_insertion.v1",
-        "base": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_fan_lc-fl2-422b0e7ba/routes/qfd_vm_fan_lc_fl2_422b0e7ba/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_lc_fl2_422b0e7ba/base",
-        "db": "6_final.odb",
-        "sdc": "6_final.sdc",
-        "clock": "core_clk",
-        "parasitics": "spef",
-        "ss": {
-          "boundary": {
-            "n": 29,
-            "mean": 75.1,
-            "min": 74.3,
-            "max": 75.8
-          },
-          "all": {
-            "n": 29,
-            "mean": 75.1,
-            "min": 74.3,
-            "max": 75.8
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "tt": {
-          "boundary": {
-            "n": 29,
-            "mean": 52.4,
-            "min": 51.8,
-            "max": 52.9
-          },
-          "all": {
-            "n": 29,
-            "mean": 52.4,
-            "min": 51.8,
-            "max": 52.9
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "ff": {
-          "boundary": {
-            "n": 29,
-            "mean": 39.1,
-            "min": 38.7,
-            "max": 39.6
-          },
-          "all": {
-            "n": 29,
-            "mean": 39.1,
-            "min": 38.7,
-            "max": 39.6
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "route_corner": null,
-        "macro_clk": {
-          "n": 0,
-          "slew_ps": 120.0,
-          "late_ps": 30.0,
-          "flag": false,
-          "outliers": []
-        },
-        "env": {
-          "CK_SS_MEAN": 75,
-          "CK_SS_ALL_MEAN": 75,
-          "CK_SS_MIN": 74,
-          "CK_SS_ALL_MIN": 74,
-          "CK_SS_MAX": 76,
-          "CK_SS_ALL_MAX": 76,
-          "CK_TT_MEAN": 52,
-          "CK_TT_ALL_MEAN": 52,
-          "CK_TT_MIN": 52,
-          "CK_TT_ALL_MIN": 52,
-          "CK_TT_MAX": 53,
-          "CK_TT_ALL_MAX": 53,
-          "CK_FF_MEAN": 39,
-          "CK_FF_ALL_MEAN": 39,
-          "CK_FF_MIN": 39,
-          "CK_FF_ALL_MIN": 39,
-          "CK_FF_MAX": 40,
-          "CK_FF_ALL_MAX": 40,
-          "CK_ROUTE_REF": "SS"
-        },
-        "lib_clock_pin": "clk",
-        "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
-        "clock_measurements": {
-          "clk": {
-            "schema": "opentallas.closure_loop.ck_insertion.v1",
-            "base": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_fan_lc-fl2-422b0e7ba/routes/qfd_vm_fan_lc_fl2_422b0e7ba/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_lc_fl2_422b0e7ba/base",
-            "db": "6_final.odb",
-            "sdc": "6_final.sdc",
-            "clock": "core_clk",
-            "parasitics": "spef",
-            "ss": {
-              "boundary": {
-                "n": 29,
-                "mean": 75.1,
-                "min": 74.3,
-                "max": 75.8
-              },
-              "all": {
-                "n": 29,
-                "mean": 75.1,
-                "min": 74.3,
-                "max": 75.8
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "tt": {
-              "boundary": {
-                "n": 29,
-                "mean": 52.4,
-                "min": 51.8,
-                "max": 52.9
-              },
-              "all": {
-                "n": 29,
-                "mean": 52.4,
-                "min": 51.8,
-                "max": 52.9
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "ff": {
-              "boundary": {
-                "n": 29,
-                "mean": 39.1,
-                "min": 38.7,
-                "max": 39.6
-              },
-              "all": {
-                "n": 29,
-                "mean": 39.1,
-                "min": 38.7,
-                "max": 39.6
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "route_corner": null,
-            "macro_clk": {
-              "n": 0,
-              "slew_ps": 120.0,
-              "late_ps": 30.0,
-              "flag": false,
-              "outliers": []
-            },
-            "env": {
-              "CK_SS_MEAN": 75,
-              "CK_SS_ALL_MEAN": 75,
-              "CK_SS_MIN": 74,
-              "CK_SS_ALL_MIN": 74,
-              "CK_SS_MAX": 76,
-              "CK_SS_ALL_MAX": 76,
-              "CK_TT_MEAN": 52,
-              "CK_TT_ALL_MEAN": 52,
-              "CK_TT_MIN": 52,
-              "CK_TT_ALL_MIN": 52,
-              "CK_TT_MAX": 53,
-              "CK_TT_ALL_MAX": 53,
-              "CK_FF_MEAN": 39,
-              "CK_FF_ALL_MEAN": 39,
-              "CK_FF_MIN": 39,
-              "CK_FF_ALL_MIN": 39,
-              "CK_FF_MAX": 40,
-              "CK_FF_ALL_MAX": 40,
-              "CK_ROUTE_REF": "SS"
-            },
-            "lib_clock_pin": "clk",
-            "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
-          }
-        }
-      }
+    "tt": {
+     "boundary": {
+      "n": 29,
+      "mean": 52.4,
+      "min": 51.8,
+      "max": 52.9
+     },
+     "all": {
+      "n": 29,
+      "mean": 52.4,
+      "min": 51.8,
+      "max": 52.9
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
     },
-    {
-      "master": "qfd_vm_fan_me",
-      "instances": 5,
-      "params": {
-        "W": 1,
-        "EN": 0,
-        "MEREG": 1
+    "ff": {
+     "boundary": {
+      "n": 29,
+      "mean": 39.1,
+      "min": 38.7,
+      "max": 39.6
+     },
+     "all": {
+      "n": 29,
+      "mean": 39.1,
+      "min": 38.7,
+      "max": 39.6
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    },
+    "route_corner": null,
+    "macro_clk": {
+     "n": 0,
+     "slew_ps": 120.0,
+     "late_ps": 30.0,
+     "flag": false,
+     "outliers": []
+    },
+    "env": {
+     "CK_SS_MEAN": 75,
+     "CK_SS_ALL_MEAN": 75,
+     "CK_SS_MIN": 74,
+     "CK_SS_ALL_MIN": 74,
+     "CK_SS_MAX": 76,
+     "CK_SS_ALL_MAX": 76,
+     "CK_TT_MEAN": 52,
+     "CK_TT_ALL_MEAN": 52,
+     "CK_TT_MIN": 52,
+     "CK_TT_ALL_MIN": 52,
+     "CK_TT_MAX": 53,
+     "CK_TT_ALL_MAX": 53,
+     "CK_FF_MEAN": 39,
+     "CK_FF_ALL_MEAN": 39,
+     "CK_FF_MIN": 39,
+     "CK_FF_ALL_MIN": 39,
+     "CK_FF_MAX": 40,
+     "CK_FF_ALL_MAX": 40,
+     "CK_ROUTE_REF": "SS"
+    },
+    "lib_clock_pin": "clk",
+    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+    "clock_measurements": {
+     "clk": {
+      "schema": "opentallas.closure_loop.ck_insertion.v1",
+      "base": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_fan_lc-fl2-422b0e7ba/routes/qfd_vm_fan_lc_fl2_422b0e7ba/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_lc_fl2_422b0e7ba/base",
+      "db": "6_final.odb",
+      "sdc": "6_final.sdc",
+      "clock": "core_clk",
+      "parasitics": "spef",
+      "ss": {
+       "boundary": {
+        "n": 29,
+        "mean": 75.1,
+        "min": 74.3,
+        "max": 75.8
+       },
+       "all": {
+        "n": 29,
+        "mean": 75.1,
+        "min": 74.3,
+        "max": 75.8
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
       },
-      "outline": {
-        "w": 12.96,
-        "h": 8.64
+      "tt": {
+       "boundary": {
+        "n": 29,
+        "mean": 52.4,
+        "min": 51.8,
+        "max": 52.9
+       },
+       "all": {
+        "n": 29,
+        "mean": 52.4,
+        "min": 51.8,
+        "max": 52.9
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
       },
-      "view": "physical/ref_tile/qfd_vm_fan_me/views/ot_qfd_vm_fan_t",
-      "insertion": {
-        "schema": "opentallas.closure_loop.ck_insertion.v1",
-        "base": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_fan_me-fm3-03b5519e0/routes/qfd_vm_fan_me_fm3_03b5519e0/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_me_fm3_03b5519e0/base",
-        "db": "6_final.odb",
-        "sdc": "6_final.sdc",
-        "clock": "core_clk",
-        "parasitics": "spef",
-        "ss": {
-          "boundary": {
-            "n": 1,
-            "mean": 0.1,
-            "min": 0.1,
-            "max": 0.1
-          },
-          "all": {
-            "n": 1,
-            "mean": 0.1,
-            "min": 0.1,
-            "max": 0.1
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "tt": {
-          "boundary": {
-            "n": 1,
-            "mean": 0.1,
-            "min": 0.1,
-            "max": 0.1
-          },
-          "all": {
-            "n": 1,
-            "mean": 0.1,
-            "min": 0.1,
-            "max": 0.1
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "ff": {
-          "boundary": {
-            "n": 1,
-            "mean": 0.1,
-            "min": 0.1,
-            "max": 0.1
-          },
-          "all": {
-            "n": 1,
-            "mean": 0.1,
-            "min": 0.1,
-            "max": 0.1
-          },
-          "errors": [],
-          "macros": null,
-          "macro_libs": 0
-        },
-        "route_corner": null,
-        "macro_clk": {
-          "n": 0,
-          "slew_ps": 120.0,
-          "late_ps": 30.0,
-          "flag": false,
-          "outliers": []
-        },
-        "env": {
-          "CK_SS_MEAN": 0,
-          "CK_SS_ALL_MEAN": 0,
-          "CK_SS_MIN": 0,
-          "CK_SS_ALL_MIN": 0,
-          "CK_SS_MAX": 0,
-          "CK_SS_ALL_MAX": 0,
-          "CK_TT_MEAN": 0,
-          "CK_TT_ALL_MEAN": 0,
-          "CK_TT_MIN": 0,
-          "CK_TT_ALL_MIN": 0,
-          "CK_TT_MAX": 0,
-          "CK_TT_ALL_MAX": 0,
-          "CK_FF_MEAN": 0,
-          "CK_FF_ALL_MEAN": 0,
-          "CK_FF_MIN": 0,
-          "CK_FF_ALL_MIN": 0,
-          "CK_FF_MAX": 0,
-          "CK_FF_ALL_MAX": 0,
-          "CK_ROUTE_REF": "SS"
-        },
-        "lib_clock_pin": "clk",
-        "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
-        "clock_measurements": {
-          "clk": {
-            "schema": "opentallas.closure_loop.ck_insertion.v1",
-            "base": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_fan_me-fm3-03b5519e0/routes/qfd_vm_fan_me_fm3_03b5519e0/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_me_fm3_03b5519e0/base",
-            "db": "6_final.odb",
-            "sdc": "6_final.sdc",
-            "clock": "core_clk",
-            "parasitics": "spef",
-            "ss": {
-              "boundary": {
-                "n": 1,
-                "mean": 0.1,
-                "min": 0.1,
-                "max": 0.1
-              },
-              "all": {
-                "n": 1,
-                "mean": 0.1,
-                "min": 0.1,
-                "max": 0.1
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "tt": {
-              "boundary": {
-                "n": 1,
-                "mean": 0.1,
-                "min": 0.1,
-                "max": 0.1
-              },
-              "all": {
-                "n": 1,
-                "mean": 0.1,
-                "min": 0.1,
-                "max": 0.1
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "ff": {
-              "boundary": {
-                "n": 1,
-                "mean": 0.1,
-                "min": 0.1,
-                "max": 0.1
-              },
-              "all": {
-                "n": 1,
-                "mean": 0.1,
-                "min": 0.1,
-                "max": 0.1
-              },
-              "errors": [],
-              "macros": null,
-              "macro_libs": 0
-            },
-            "route_corner": null,
-            "macro_clk": {
-              "n": 0,
-              "slew_ps": 120.0,
-              "late_ps": 30.0,
-              "flag": false,
-              "outliers": []
-            },
-            "env": {
-              "CK_SS_MEAN": 0,
-              "CK_SS_ALL_MEAN": 0,
-              "CK_SS_MIN": 0,
-              "CK_SS_ALL_MIN": 0,
-              "CK_SS_MAX": 0,
-              "CK_SS_ALL_MAX": 0,
-              "CK_TT_MEAN": 0,
-              "CK_TT_ALL_MEAN": 0,
-              "CK_TT_MIN": 0,
-              "CK_TT_ALL_MIN": 0,
-              "CK_TT_MAX": 0,
-              "CK_TT_ALL_MAX": 0,
-              "CK_FF_MEAN": 0,
-              "CK_FF_ALL_MEAN": 0,
-              "CK_FF_MIN": 0,
-              "CK_FF_ALL_MIN": 0,
-              "CK_FF_MAX": 0,
-              "CK_FF_ALL_MAX": 0,
-              "CK_ROUTE_REF": "SS"
-            },
-            "lib_clock_pin": "clk",
-            "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
-          }
-        }
-      }
+      "ff": {
+       "boundary": {
+        "n": 29,
+        "mean": 39.1,
+        "min": 38.7,
+        "max": 39.6
+       },
+       "all": {
+        "n": 29,
+        "mean": 39.1,
+        "min": 38.7,
+        "max": 39.6
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      },
+      "route_corner": null,
+      "macro_clk": {
+       "n": 0,
+       "slew_ps": 120.0,
+       "late_ps": 30.0,
+       "flag": false,
+       "outliers": []
+      },
+      "env": {
+       "CK_SS_MEAN": 75,
+       "CK_SS_ALL_MEAN": 75,
+       "CK_SS_MIN": 74,
+       "CK_SS_ALL_MIN": 74,
+       "CK_SS_MAX": 76,
+       "CK_SS_ALL_MAX": 76,
+       "CK_TT_MEAN": 52,
+       "CK_TT_ALL_MEAN": 52,
+       "CK_TT_MIN": 52,
+       "CK_TT_ALL_MIN": 52,
+       "CK_TT_MAX": 53,
+       "CK_TT_ALL_MAX": 53,
+       "CK_FF_MEAN": 39,
+       "CK_FF_ALL_MEAN": 39,
+       "CK_FF_MIN": 39,
+       "CK_FF_ALL_MIN": 39,
+       "CK_FF_MAX": 40,
+       "CK_FF_ALL_MAX": 40,
+       "CK_ROUTE_REF": "SS"
+      },
+      "lib_clock_pin": "clk",
+      "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+     }
     }
-  ],
-  "geometry_warning": "116 fans can co-pack five17.28um-high fans per97.2um-high whole spare slot; the resulting minimum24slots proves only a footprint count and legal spare-slot inventory. A central source to a band end has about2419um span, at least5<=500um hops even with ideal pins; 3control stages cannot establish a full-band reach proof. Do not instantiate this topology physically until redesigned for real boundaries/stations.",
-  "requirements": [
-    "Die-assigned boundary/control/me source pins and32station coordinates with allowed scheduler early taps.",
-    "Balanced registered station chain/tree or multiple source entries, <=500um AND pair-specific o+s wirebudget at every actualpin.",
-    "Depth can grow7 or more; explicit source-root3enabled-edge tags and c_a/c_n/control consumer alignment must be reproved with scheduler changes.",
-    "ME source routing must be owned inside VM; free-running ME path depth and each fan MEREG must align payload capture under stalls.",
-    "Each of116logical child clocks delivered phi-R at its own entry; no parent CTS.",
-    "Use only spare whole padslots. Preserve existing270tile placements, fine offsets, permutations and4096lanes.",
-    "VM owns all inside distribution; no die signal/reset trunk over M1-M9blocked VM. Local PG M7; die PG M8/M9 .48um/net at9.091um pitch reserves10.56percent pending authority."
-  ],
-  "previous_control_tree": {
-    "stations": 13,
-    "station_x_um": [
-      13288.32,
-      13716.0,
-      14143.68,
-      14454.72,
-      14904.0,
-      15353.28,
-      15685.92,
-      16135.2,
-      16584.48,
-      16917.12,
-      17344.8,
-      17772.48,
-      18083.52
-    ],
-    "station_y_um": 18087.84,
-    "root_station": 6,
-    "levels_K": 7,
-    "XTK": 7,
-    "max_station_hop_um": 449.3,
-    "max_station_to_column_um": 418.0,
-    "fan_tiles_per_tree": 49,
-    "fan_tiles": {
-      "qfd_vm_fan_pc": 49,
-      "qfd_vm_fan_lc": 49
-    },
-    "rule_ok": true,
-    "rtl_limit": "XTK <= 6: the line-control word is tapped from a 7-entry pipeline (stg) in ot_qfd_sp_vector_memory_bv",
-    "root": "the parent schedule logic (seam queue) has no physical owner yet: its control words enter at the root station"
+   }
   },
-  "physical_boundary_and_station_assignment": "PENDING; no coordinates guessed",
-  "bench_record": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/record.json"
+  {
+   "master": "qfd_vm_fan_me",
+   "instances": 5,
+   "params": {
+    "W": 1,
+    "EN": 0,
+    "MEREG": 1
+   },
+   "outline": {
+    "w": 12.96,
+    "h": 8.64
+   },
+   "view": "physical/ref_tile/qfd_vm_fan_me/views/ot_qfd_vm_fan_t",
+   "insertion": {
+    "schema": "opentallas.closure_loop.ck_insertion.v1",
+    "base": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_fan_me-fm3-03b5519e0/routes/qfd_vm_fan_me_fm3_03b5519e0/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_me_fm3_03b5519e0/base",
+    "db": "6_final.odb",
+    "sdc": "6_final.sdc",
+    "clock": "core_clk",
+    "parasitics": "spef",
+    "ss": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    },
+    "tt": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    },
+    "ff": {
+     "boundary": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "all": {
+      "n": 1,
+      "mean": 0.1,
+      "min": 0.1,
+      "max": 0.1
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    },
+    "route_corner": null,
+    "macro_clk": {
+     "n": 0,
+     "slew_ps": 120.0,
+     "late_ps": 30.0,
+     "flag": false,
+     "outliers": []
+    },
+    "env": {
+     "CK_SS_MEAN": 0,
+     "CK_SS_ALL_MEAN": 0,
+     "CK_SS_MIN": 0,
+     "CK_SS_ALL_MIN": 0,
+     "CK_SS_MAX": 0,
+     "CK_SS_ALL_MAX": 0,
+     "CK_TT_MEAN": 0,
+     "CK_TT_ALL_MEAN": 0,
+     "CK_TT_MIN": 0,
+     "CK_TT_ALL_MIN": 0,
+     "CK_TT_MAX": 0,
+     "CK_TT_ALL_MAX": 0,
+     "CK_FF_MEAN": 0,
+     "CK_FF_ALL_MEAN": 0,
+     "CK_FF_MIN": 0,
+     "CK_FF_ALL_MIN": 0,
+     "CK_FF_MAX": 0,
+     "CK_FF_ALL_MAX": 0,
+     "CK_ROUTE_REF": "SS"
+    },
+    "lib_clock_pin": "clk",
+    "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+    "clock_measurements": {
+     "clk": {
+      "schema": "opentallas.closure_loop.ck_insertion.v1",
+      "base": "/srv/opentallas-scratch/claude/closure-loop/qfd_vm_fan_me-fm3-03b5519e0/routes/qfd_vm_fan_me_fm3_03b5519e0/work/orfs/results/asap7/opentallas_ot_qfd_vm_fan_t_asap7_ref_qfd_vm_fan_me_fm3_03b5519e0/base",
+      "db": "6_final.odb",
+      "sdc": "6_final.sdc",
+      "clock": "core_clk",
+      "parasitics": "spef",
+      "ss": {
+       "boundary": {
+        "n": 1,
+        "mean": 0.1,
+        "min": 0.1,
+        "max": 0.1
+       },
+       "all": {
+        "n": 1,
+        "mean": 0.1,
+        "min": 0.1,
+        "max": 0.1
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      },
+      "tt": {
+       "boundary": {
+        "n": 1,
+        "mean": 0.1,
+        "min": 0.1,
+        "max": 0.1
+       },
+       "all": {
+        "n": 1,
+        "mean": 0.1,
+        "min": 0.1,
+        "max": 0.1
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      },
+      "ff": {
+       "boundary": {
+        "n": 1,
+        "mean": 0.1,
+        "min": 0.1,
+        "max": 0.1
+       },
+       "all": {
+        "n": 1,
+        "mean": 0.1,
+        "min": 0.1,
+        "max": 0.1
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      },
+      "route_corner": null,
+      "macro_clk": {
+       "n": 0,
+       "slew_ps": 120.0,
+       "late_ps": 30.0,
+       "flag": false,
+       "outliers": []
+      },
+      "env": {
+       "CK_SS_MEAN": 0,
+       "CK_SS_ALL_MEAN": 0,
+       "CK_SS_MIN": 0,
+       "CK_SS_ALL_MIN": 0,
+       "CK_SS_MAX": 0,
+       "CK_SS_ALL_MAX": 0,
+       "CK_TT_MEAN": 0,
+       "CK_TT_ALL_MEAN": 0,
+       "CK_TT_MIN": 0,
+       "CK_TT_ALL_MIN": 0,
+       "CK_TT_MAX": 0,
+       "CK_TT_ALL_MAX": 0,
+       "CK_FF_MEAN": 0,
+       "CK_FF_ALL_MEAN": 0,
+       "CK_FF_MIN": 0,
+       "CK_FF_ALL_MIN": 0,
+       "CK_FF_MAX": 0,
+       "CK_FF_ALL_MAX": 0,
+       "CK_ROUTE_REF": "SS"
+      },
+      "lib_clock_pin": "clk",
+      "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+     }
+    }
+   }
+  }
+ ],
+ "geometry_warning": "116 fans can co-pack five17.28um-high fans per97.2um-high whole spare slot; the resulting minimum24slots proves only a footprint count and legal spare-slot inventory. A central source to a band end has about2419um span, at least5<=500um hops even with ideal pins; 3control stages cannot establish a full-band reach proof. Do not instantiate this topology physically until redesigned for real boundaries/stations.",
+ "requirements": [
+  "Die-assigned boundary/control/me source pins and32station coordinates with allowed scheduler early taps.",
+  "Balanced registered station chain/tree or multiple source entries, <=500um AND pair-specific o+s wirebudget at every actualpin.",
+  "Depth can grow7 or more; explicit source-root3enabled-edge tags and c_a/c_n/control consumer alignment must be reproved with scheduler changes.",
+  "ME source routing must be owned inside VM; free-running ME path depth and each fan MEREG must align payload capture under stalls.",
+  "Each of116logical child clocks delivered phi-R at its own entry; no parent CTS.",
+  "Use only spare whole padslots. Preserve existing270tile placements, fine offsets, permutations and4096lanes.",
+  "VM owns all inside distribution; no die signal/reset trunk over M1-M9blocked VM. Local PG M7; die PG M8/M9 .48um/net at9.091um pitch reserves10.56percent pending authority."
+ ],
+ "previous_control_tree": {
+  "stations": 13,
+  "station_x_um": [
+   13288.32,
+   13716.0,
+   14143.68,
+   14454.72,
+   14904.0,
+   15353.28,
+   15685.92,
+   16135.2,
+   16584.48,
+   16917.12,
+   17344.8,
+   17772.48,
+   18083.52
+  ],
+  "station_y_um": 18087.84,
+  "root_station": 6,
+  "levels_K": 7,
+  "XTK": 7,
+  "max_station_hop_um": 449.3,
+  "max_station_to_column_um": 418.0,
+  "fan_tiles_per_tree": 49,
+  "fan_tiles": {
+   "qfd_vm_fan_pc": 49,
+   "qfd_vm_fan_lc": 49
+  },
+  "rule_ok": true,
+  "rtl_limit": "XTK <= 6: the line-control word is tapped from a 7-entry pipeline (stg) in ot_qfd_sp_vector_memory_bv",
+  "root": "the parent schedule logic (seam queue) has no physical owner yet: its control words enter at the root station"
+ },
+ "physical_boundary_and_station_assignment": "PENDING; no coordinates guessed",
+ "bench_record": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/record.json",
+ "production_protocol_caveat": {
+  "status": "CONDITIONAL_BUDGET_NOT_COMPLETE_NATIVE_ABI",
+  "authority": "qwen_die/x_delivery actualproductionx_epoch{k18,j3} 21bits; 2026-10-13 followup",
+  "data_bits_per_root": 128,
+  "roots": 32,
+  "halves": 2,
+  "common_instruction_bits": 380,
+  "common_instruction_packing": "ib379 + ib_go1; independent from root fillvalid",
+  "response_options": {
+   "opaque16": {
+    "native_bits": 147,
+    "fallback_bits": 149,
+    "requires": "actual full21coords + instruction/VMversion dictionary; no reuse until allreturns/drain; resetflush; NOTproven"
+   },
+   "direct21": {
+    "native_bits": 152,
+    "fallback_bits": 154,
+    "requires": "21coordinate fields, additional context only omitted with oneinstruction-inflight/freshness proof; NOTproven"
+   }
+  },
+  "request": "full21coordinates/full96address or proven replicatedissue-state; no assignedfinalpins",
+  "source_tags": "prototype epoch16 only; unit echo/alignment checks do not prove tokencontroller/native freshness"
+ }
 }

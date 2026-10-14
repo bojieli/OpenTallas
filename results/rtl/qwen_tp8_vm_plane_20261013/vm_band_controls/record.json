@@ -1,83 +1,106 @@
 {
-  "schema": "opentallas.qwen.vm-band-controls-bench.v1",
-  "status": "LOGICAL_FULL32_PASS_PHYSICAL_AND_END_TO_END_UNRESOLVED",
-  "NRB": 64,
-  "columns": 32,
-  "tagged_payload_bits_native": 67,
-  "tagged_payload_bits_fallback": 69,
-  "source_sha256": {
-    "rtl/qwen_sys/vm_plane_20261013/band_controls/tb_qfd_vm_band_controls.sv": "0731680deb2fcea10daa92944bec5306537fd649bce77c5505c8e3924328cf86",
-    "rtl/qwen_sys/vm_plane_20261013/band_controls/ot_qfd_vm_band_controls.sv": "57954e70ea9c565926ccad8f8b8146fa6092ffa2bc8f56730e9702120d1c6a7b",
-    "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242"
+ "schema": "opentallas.qwen.vm-band-controls-bench.v1",
+ "status": "LOGICAL_FULL32_PASS_PHYSICAL_AND_END_TO_END_UNRESOLVED",
+ "NRB": 64,
+ "columns": 32,
+ "tagged_payload_bits_native": 67,
+ "tagged_payload_bits_fallback": 69,
+ "source_sha256": {
+  "rtl/qwen_sys/vm_plane_20261013/band_controls/tb_qfd_vm_band_controls.sv": "0731680deb2fcea10daa92944bec5306537fd649bce77c5505c8e3924328cf86",
+  "rtl/qwen_sys/vm_plane_20261013/band_controls/ot_qfd_vm_band_controls.sv": "57954e70ea9c565926ccad8f8b8146fa6092ffa2bc8f56730e9702120d1c6a7b",
+  "rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv": "3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242"
+ },
+ "runs": [
+  {
+   "name": "smax9_mut0",
+   "SMAX": 9,
+   "phases": 4,
+   "mutant": 0,
+   "returncode": 0,
+   "expected_result": "PASS",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax9_mut0.log"
   },
-  "runs": [
-    {
-      "name": "smax9_mut0",
-      "SMAX": 9,
-      "phases": 4,
-      "mutant": 0,
-      "returncode": 0,
-      "expected_result": "PASS",
-      "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax9_mut0.log"
-    },
-    {
-      "name": "smax9_mut1",
-      "SMAX": 9,
-      "phases": 4,
-      "mutant": 1,
-      "returncode": 1,
-      "expected_result": "FAIL",
-      "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax9_mut1.log"
-    },
-    {
-      "name": "smax9_mut2",
-      "SMAX": 9,
-      "phases": 4,
-      "mutant": 2,
-      "returncode": 1,
-      "expected_result": "FAIL",
-      "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax9_mut2.log"
-    },
-    {
-      "name": "smax11_mut0",
-      "SMAX": 11,
-      "phases": 16,
-      "mutant": 0,
-      "returncode": 0,
-      "expected_result": "PASS",
-      "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax11_mut0.log"
-    },
-    {
-      "name": "smax11_mut1",
-      "SMAX": 11,
-      "phases": 16,
-      "mutant": 1,
-      "returncode": 1,
-      "expected_result": "FAIL",
-      "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax11_mut1.log"
-    },
-    {
-      "name": "smax11_mut2",
-      "SMAX": 11,
-      "phases": 16,
-      "mutant": 2,
-      "returncode": 1,
-      "expected_result": "FAIL",
-      "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax11_mut2.log"
-    }
-  ],
-  "bench_scope": "All32 full20/28bit control payloads plus separate28bit tag bank (19native/21fallback livebits) through actual fan primitives; actual two free-running ME stages plus each fan MEREG; 640 cycles and input changes during stalls. Independent serial register reference; every live control/tag bit observed as both0and1. Both full32 delay and epoch mutants fail for both production phase counts.",
-  "latency": {
-    "control_enabled_edges": 3,
-    "me_free_edges": 2,
-    "fan_local_MEREG_free_edges": 1,
-    "existing_source_root_enabled_edges": 3,
-    "control_plus_source_root_enabled_edges": 6
+  {
+   "name": "smax9_mut1",
+   "SMAX": 9,
+   "phases": 4,
+   "mutant": 1,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax9_mut1.log"
   },
-  "exclusions": [
-    "Does not instantiate source roots or data c_a/c_n/control consumers; source-root +3 alignment is unresolved.",
-    "Synthetic phase/epoch/valid tags exercise bit transport; no production scheduler semantics are asserted.",
-    "No assigned boundary pins, no assigned station coordinates, no per-pin physical pair timing proof.",
-    "No throughput or die timing qualification."
-  ]
+  {
+   "name": "smax9_mut2",
+   "SMAX": 9,
+   "phases": 4,
+   "mutant": 2,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax9_mut2.log"
+  },
+  {
+   "name": "smax11_mut0",
+   "SMAX": 11,
+   "phases": 16,
+   "mutant": 0,
+   "returncode": 0,
+   "expected_result": "PASS",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax11_mut0.log"
+  },
+  {
+   "name": "smax11_mut1",
+   "SMAX": 11,
+   "phases": 16,
+   "mutant": 1,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax11_mut1.log"
+  },
+  {
+   "name": "smax11_mut2",
+   "SMAX": 11,
+   "phases": 16,
+   "mutant": 2,
+   "returncode": 1,
+   "expected_result": "FAIL",
+   "log": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_controls/smax11_mut2.log"
+  }
+ ],
+ "bench_scope": "All32 full20/28bit control payloads plus separate28bit tag bank (19native/21fallback livebits) through actual fan primitives; actual two free-running ME stages plus each fan MEREG; 640 cycles and input changes during stalls. Independent serial register reference; every live control/tag bit observed as both0and1. Both full32 delay and epoch mutants fail for both production phase counts.",
+ "latency": {
+  "control_enabled_edges": 3,
+  "me_free_edges": 2,
+  "fan_local_MEREG_free_edges": 1,
+  "existing_source_root_enabled_edges": 3,
+  "control_plus_source_root_enabled_edges": 6
+ },
+ "exclusions": [
+  "Does not instantiate source roots or data c_a/c_n/control consumers; source-root +3 alignment is unresolved.",
+  "Synthetic phase/epoch/valid tags exercise bit transport; no production scheduler semantics are asserted.",
+  "No assigned boundary pins, no assigned station coordinates, no per-pin physical pair timing proof.",
+  "No throughput or die timing qualification."
+ ],
+ "production_protocol_caveat": {
+  "status": "CONDITIONAL_BUDGET_NOT_COMPLETE_NATIVE_ABI",
+  "authority": "qwen_die/x_delivery actualproductionx_epoch{k18,j3} 21bits; 2026-10-13 followup",
+  "data_bits_per_root": 128,
+  "roots": 32,
+  "halves": 2,
+  "common_instruction_bits": 380,
+  "common_instruction_packing": "ib379 + ib_go1; independent from root fillvalid",
+  "response_options": {
+   "opaque16": {
+    "native_bits": 147,
+    "fallback_bits": 149,
+    "requires": "actual full21coords + instruction/VMversion dictionary; no reuse until allreturns/drain; resetflush; NOTproven"
+   },
+   "direct21": {
+    "native_bits": 152,
+    "fallback_bits": 154,
+    "requires": "21coordinate fields, additional context only omitted with oneinstruction-inflight/freshness proof; NOTproven"
+   }
+  },
+  "request": "full21coordinates/full96address or proven replicatedissue-state; no assignedfinalpins",
+  "source_tags": "prototype epoch16 only; unit echo/alignment checks do not prove tokencontroller/native freshness"
+ }
 }

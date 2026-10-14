@@ -1,0 +1,120 @@
+{
+ "schema": "opentallas.qwen.vm-band-gather-plan.v1",
+ "status": "LOGICAL_ONLY_UNMEASURED_ROOT_DELIVERY_AND_PRICE",
+ "root_delivery": "UNMEASURED",
+ "production_throughput": "UNMEASURED",
+ "production_price": "UNMEASURED",
+ "qualification": false,
+ "input_order": "q[128*col+4*root+k]",
+ "output_order": "rootword[128*root+32*k+col]",
+ "roots": 32,
+ "columns": 32,
+ "elements_per_root_per_phase": 4,
+ "data_bits": 4096,
+ "tags": {
+  "phase_native_bits": 2,
+  "phase_fallback_bits": 4,
+  "epoch_bits": 16,
+  "valid_bits": 1,
+  "logical_designated_column": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27,
+   28,
+   29,
+   30,
+   31
+  ],
+  "physical_assignment": "PENDING"
+ },
+ "logical_latency_parameters_tested": [
+  1,
+  3
+ ],
+ "routing_latency": "UNASSIGNED; LAT is not a physical route intent",
+ "master": {
+  "name": "qfd_vm_xrelay_t",
+  "params": {
+   "W": 512,
+   "MEREG": 1
+  },
+  "outline": {
+   "w": 17.28,
+   "h": 97.2
+  },
+  "view": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t",
+  "insertion_source": "physical/ref_tile/qfd_vm_xrelay_t/views/ot_qfd_vm_xrelay_t/insertion.json",
+  "insertion_sha256": "f074edc5c5cc64e50d77d3e7d956be241a4d999e076cde8b4e28209abad51248"
+ },
+ "logical_child_counts_per_latency_stage": {
+  "data_W512": 8,
+  "padded_tag_W512": 2,
+  "own_child_clock_entries": 10
+ },
+ "tag_padding": {
+  "padded_width": 1024,
+  "input_tags": 896,
+  "unused_bits": 128
+ },
+ "bench_alignment": "EXACTLY logicalproxyalignment: full116fan composition followed by data through3actualrelay stages to match fan-control enableddepth. No actual sourceconsumer/line_store pipeline instantiated.",
+ "physical_requirements": [
+  "Die assigned32root stations and registered pin payload order including tags.",
+  "All actual data and designated-source-tag paths need equal enabled-edge latency with ME free-running path depth and localMEREG correctly scheduled.",
+  "Final paths stay entirely VM owned within existing band; no die signal/reset distribution over blockedVM.",
+  "Keep all270existing tiles/4096lanes and allfine/permutation mappings.",
+  "Every physical relay has independent phi-R childclock entry and actual per-pin TT/FF hop budget <=500um; no parent CTS.",
+  "Longer fan/gather depths need fullscheduler sourceconsumer c_a/c_nv/control alignment proof and measured rootdelivery.",
+  "Need physical cut tracks and PG subtraction at .48/net M8/M9 pitch9.091um; current reserved fraction10.56percent until authority resolves5.3percent claim.",
+  "Every new gather/relay physical tile must fit the assigned contract; accepted closed views stand.",
+  "Production throughput/price remains UNMEASURED pending integratedrealroots/end-to-end benchmark."
+ ],
+ "bench_record": "results/rtl/qwen_tp8_vm_plane_20261013/vm_band_gather/record.json",
+ "production_protocol_caveat": {
+  "status": "CONDITIONAL_BUDGET_NOT_COMPLETE_NATIVE_ABI",
+  "authority": "qwen_die/x_delivery actualproductionx_epoch{k18,j3} 21bits; 2026-10-13 followup",
+  "data_bits_per_root": 128,
+  "roots": 32,
+  "halves": 2,
+  "common_instruction_bits": 380,
+  "common_instruction_packing": "ib379 + ib_go1; independent from root fillvalid",
+  "response_options": {
+   "opaque16": {
+    "native_bits": 147,
+    "fallback_bits": 149,
+    "requires": "actual full21coords + instruction/VMversion dictionary; no reuse until allreturns/drain; resetflush; NOTproven"
+   },
+   "direct21": {
+    "native_bits": 152,
+    "fallback_bits": 154,
+    "requires": "21coordinate fields, additional context only omitted with oneinstruction-inflight/freshness proof; NOTproven"
+   }
+  },
+  "request": "full21coordinates/full96address or proven replicatedissue-state; no assignedfinalpins",
+  "source_tags": "prototype epoch16 only; unit echo/alignment checks do not prove tokencontroller/native freshness"
+ }
+}

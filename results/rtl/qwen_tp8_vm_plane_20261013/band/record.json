@@ -3,7 +3,7 @@
  "status": "FULL32_NATIVE_FALLBACK_PASS_TWO_MUTANTS_FAIL_PHYSICAL_UNRESOLVED",
  "qualification": false,
  "source_sha256": {
-  "tools/qwen_tp8/vm_band_cluster.py": "f0930d43ce5be0bd21aa39b239e0e13c0176112a64c874164451046403e319e9",
+  "tools/qwen_tp8/vm_band_cluster.py": "79fa30cc35cc64ab9f556f14acd701733125e5d6d30eb121466728b267c5f21f",
   "tools/qwen_tp8/vm_band_miter.sh": "53b425d8e0f3765e546d68e1fe13cf1e318399ae3f3230557da281200ddde72e",
   "rtl/qwen_sys/vm_plane_20261013/band/ot_qfd_vm_band.sv": "6163c327878be116db043826f20cbab75d806e050ecd7d3e321f66bec702b895",
   "rtl/qwen_sys/vm_plane_20261013/band/tb_qfd_vm_band.sv": "c95aee01fd670a6728c276e4ffe06a880f01f6defc15a8cbc0be642026e281a7",
@@ -37,5 +37,29 @@
   "fallback.log": "0fcbfa4d5744ef1c2aa325217eaba8d301adb861951527d4f6aac013d911b6b5",
   "lane_mutant.log": "b9867dc932a76151454a4f27d47e4708494b2c776cd9d98c90dc57079afbfe3b",
   "root_mutant.log": "6ba667b42013063b149dd1d78b6c518c606668cdae362c3619e872c8c2878837"
+ },
+ "generator_note": "Goldenbankoffsetnowderivedfromimmutablelaneidentity(globalbank=8*r+b,bitoffset=16*bank+8*xf); regeneratedRTL/TB byteidenticaltoexecutedproof.",
+ "production_protocol_caveat": {
+  "status": "CONDITIONAL_BUDGET_NOT_COMPLETE_NATIVE_ABI",
+  "authority": "qwen_die/x_delivery actualproductionx_epoch{k18,j3} 21bits; 2026-10-13 followup",
+  "data_bits_per_root": 128,
+  "roots": 32,
+  "halves": 2,
+  "common_instruction_bits": 380,
+  "common_instruction_packing": "ib379 + ib_go1; independent from root fillvalid",
+  "response_options": {
+   "opaque16": {
+    "native_bits": 147,
+    "fallback_bits": 149,
+    "requires": "actual full21coords + instruction/VMversion dictionary; no reuse until allreturns/drain; resetflush; NOTproven"
+   },
+   "direct21": {
+    "native_bits": 152,
+    "fallback_bits": 154,
+    "requires": "21coordinate fields, additional context only omitted with oneinstruction-inflight/freshness proof; NOTproven"
+   }
+  },
+  "request": "full21coordinates/full96address or proven replicatedissue-state; no assignedfinalpins",
+  "source_tags": "prototype epoch16 only; unit echo/alignment checks do not prove tokencontroller/native freshness"
  }
 }

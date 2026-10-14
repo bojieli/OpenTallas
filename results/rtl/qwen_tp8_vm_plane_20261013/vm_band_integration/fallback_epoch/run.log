@@ -1,0 +1,4 @@
+FAIL integration SMAX=11 MUT=2 errors=3959 checks=126688 lane_checks=16216064
+[40007000] %Fatal: tb_qfd_vm_band_integration.sv:17543: Assertion failed in tb_qfd_vm_band_integration: FAIL integration
+%Error: rtl/qwen_sys/vm_plane_20261013/band_integration/tb_qfd_vm_band_integration.sv:17543: Verilog $stop
+Aborting...

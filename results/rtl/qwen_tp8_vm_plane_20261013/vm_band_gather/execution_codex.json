@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.qwen.vm-band-gather-execution.v1",
+  "time": "2026-10-13T20:58:25.764908-07:00",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-77973-1791950211",
+  "admission": "ot-run --mem2 --threads1 --dir /var/tmp/ot-vm-band-gather-20261013-codex",
+  "exit": 0,
+  "authoritative_final_line": "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-77973-1791950211): exit 0",
+  "verified_record_sha256": "d8ef590369bd9a87b4cea5ef515f762702eb4c4db4a3e0668c3f0888b91e86da",
+  "verified_cases": 20,
+  "normal_passes": 4,
+  "expected_mutant_failures": 16,
+  "record_source_hashes_match_current_worktree": true
+}
