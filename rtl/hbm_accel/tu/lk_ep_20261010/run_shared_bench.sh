@@ -9,7 +9,7 @@ b=rtl/hbm_accel/tu/lk_ep_20261010
  rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv \
  rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv \
  rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv "$b/ot_crc_par.sv" "$b/ot_hbm_lk_ep.sv" "$b/ot_lkep_sub.sv" \
- "$b/ot_lkep_tx_shared.sv" "$b/ot_hbm_lk_ep_shared_golden.sv" "$b/tb_hfd_lk_ep_shared.sv" > "$out/build.log" 2>&1
+ "$b/ot_lkep_rx_shared.sv" "$b/ot_lkep_tx_shared.sv" "$b/ot_hbm_lk_ep_shared_golden.sv" "$b/tb_hfd_lk_ep_shared.sv" > "$out/build.log" 2>&1
 set +e
 "$out/obj/sim" "$@" > "$out/run.log" 2>&1
 rc=$?

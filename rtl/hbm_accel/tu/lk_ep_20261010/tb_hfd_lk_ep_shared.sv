@@ -7,6 +7,7 @@
 // PASS needs: N flits each way delivered, replays > 0 when ERRP > 0, no fault.
 module tb_hfd_lk_ep_shared;
     parameter integer MUT_TX_SHARED = 0;
+    parameter integer MUT_RX_SHARED = 0;
     parameter integer NS = 3;
     parameter integer FCR = 256;
     parameter integer TXQ = 32;
@@ -29,10 +30,10 @@ module tb_hfd_lk_ep_shared;
     wire [LW-1:0]  a_x, b_x;
     reg  [LW-1:0]  a2b, b2a;
     wire [31:0]    a_rep = A.st_replays, b_rep = B.st_replays; wire [15:0] a_dr = A.st_drops, b_dr = B.st_drops;
-    ot_hbm_lk_ep #(.HARD_CLOCKS(1), .MUT_TX_SHARED(MUT_TX_SHARED), .NS(NS), .TXQ(TXQ), .FCR(FCR)) A (.clk(clk), .clk_sub({NS*4{clk}}), .clk_tx_shared(clk), .rst_n(rst_n), .session(24'h5A), .t_v(a_tv), .t_flit(a_tf),
+    ot_hbm_lk_ep #(.HARD_CLOCKS(1), .MUT_TX_SHARED(MUT_TX_SHARED), .MUT_RX_SHARED(MUT_RX_SHARED), .NS(NS), .TXQ(TXQ), .FCR(FCR)) A (.clk(clk), .clk_sub({NS*4{clk}}), .clk_tx_shared(clk), .clk_rx_shared(clk), .rst_n(rst_n), .session(24'h5A), .t_v(a_tv), .t_flit(a_tf),
         .t_cr(a_tcr), .r_v(a_rv), .r_flit(a_rf), .r_cr(a_rcr), .x_tx(a_x), .x_rx(b2a), .fault(a_f),
         .locked(a_l));
-    ot_hbm_lk_ep #(.HARD_CLOCKS(1), .MUT_TX_SHARED(MUT_TX_SHARED), .NS(NS), .TXQ(TXQ), .FCR(FCR)) B (.clk(clk), .clk_sub({NS*4{clk}}), .clk_tx_shared(clk), .rst_n(rst_n), .session(24'h5A), .t_v(b_tv), .t_flit(b_tf),
+    ot_hbm_lk_ep #(.HARD_CLOCKS(1), .MUT_TX_SHARED(MUT_TX_SHARED), .MUT_RX_SHARED(MUT_RX_SHARED), .NS(NS), .TXQ(TXQ), .FCR(FCR)) B (.clk(clk), .clk_sub({NS*4{clk}}), .clk_tx_shared(clk), .clk_rx_shared(clk), .rst_n(rst_n), .session(24'h5A), .t_v(b_tv), .t_flit(b_tf),
         .t_cr(b_tcr), .r_v(b_rv), .r_flit(b_rf), .r_cr(b_rcr), .x_tx(b_x), .x_rx(a2b), .fault(b_f),
         .locked(b_l));
     wire ga_tcr,ga_rv,ga_f,ga_l,gb_tcr,gb_rv,gb_f,gb_l;
