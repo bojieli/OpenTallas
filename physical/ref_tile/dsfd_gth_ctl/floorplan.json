@@ -34,7 +34,9 @@
    "c_cmd",
    "c_done",
    "c_st",
-   "t_xgo"
+   "t_xgo",
+   "ck",
+   "ckv"
   ],
   "S": [
    "tc",
@@ -46,8 +48,6 @@
    "tst"
   ],
   "W": [
-   "ck",
-   "ckv",
    "rst",
    "rsv"
   ]
@@ -68,6 +68,11 @@
   "physical/ref_tile/dsfd_gth_ctl/signoff.sdc",
   "physical/ref_tile/dsfd_gth_ctl/pdn.tcl",
   "physical/ref_tile/dsfd_gth_ctl/pre_cts.tcl",
+  "physical/ref_tile/dsfd_gth_ctl/post_cts.tcl",
+  "physical/ref_tile/dsfd_gth_ctl/post_grt.tcl",
+  "physical/ref_tile/dsfd_gth_ctl/pre_drt.tcl",
+  "physical/ref_tile/dsfd_gth_ctl/pre_fill.tcl",
+  "physical/ref_tile/dsfd_gth_ctl/post_fill.tcl",
   "physical/ref_tile/dsfd_gth_ctl/pre_grt.tcl",
   "physical/ref_tile/dsfd_gth_ctl/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -79,6 +84,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/s81_ph_views/gather/control_strip/dsfd_gth_ctl.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
